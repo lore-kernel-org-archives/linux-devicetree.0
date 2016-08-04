@@ -1,97 +1,150 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC][PATCH 2/4] dt-bindings: power: reset: Add document for
- sram-reboot-mode driver
-Date: Thu, 4 Aug 2016 13:08:52 -0500
-Message-ID: <20160804180852.GA5967@rob-hp-laptop>
-References: <1470265523-27557-1-git-send-email-john.stultz@linaro.org>
- <1470265523-27557-3-git-send-email-john.stultz@linaro.org>
+From: Brendan Jackman <brendan.jackman@arm.com>
+Subject: Re: [PATCH v2 02/14] dt/bindings: update binding for PM domain idle
+ states
+Date: Thu, 4 Aug 2016 19:15:00 +0100
+Message-ID: <20160804181500.GE1732@brendan-thinkstation>
+References: <1469829385-11511-1-git-send-email-lina.iyer@linaro.org>
+ <1469829385-11511-3-git-send-email-lina.iyer@linaro.org>
+ <20160804152453.GB1732@brendan-thinkstation>
+ <20160804162844.GC1207@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1470265523-27557-3-git-send-email-john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vishal Bhoj <vishal.bhoj-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20160804162844.GC1207@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, Axel Haslam <ahaslam+renesas@baylibre.com>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 03, 2016 at 04:05:21PM -0700, John Stultz wrote:
-> Add device tree binding document for reboot-mode driver
-> 
-> Cc: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Cc: Heiko Stübner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Cc: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Vishal Bhoj <vishal.bhoj-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/power/reset/sram-reboot-mode.txt      | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/sram-reboot-mode.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/reset/sram-reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/sram-reboot-mode.txt
-> new file mode 100644
-> index 0000000..0a0ed05
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/sram-reboot-mode.txt
-> @@ -0,0 +1,35 @@
-> +SRAM reboot mode driver
+On Thu, Aug 04, 2016 at 10:28:44AM -0600, Lina Iyer wrote:
+> Hi Brenden,
+>
+> On Thu, Aug 04 2016 at 09:24 -0600, Brendan Jackman wrote:
+> >Hi Lina,
+> >
+> >These bindings are the reason for my interest in this patchset; I'm hoping to be
+> >able to do some work based on them in order to generically describe the cost of
+> >idle states for use in the Energy Aware Scheduling (EAS)[1] energy model.
+> >
+> I think that's a fair idea - idle states accounting their own cost.
+>
+> >Mark Rutland expressed concern [2] in the thread for the previous version of
+> >this patchset that there are now two possible locations for the list of idle
+> >states; that hasn't been addressed. My own instinct is that this is OK: in the
+> >real world, power domain (e.g. cluster) idle states are a property of the power
+> >domain and not of the CPU it contains - the DT should reflect this.
+> >
+> Absolutely.
+>
+> >However, since there are existing platform DTs with cluster-level suspend states
+> >(which are platform-coordinated rather than OS-initiated) in cpu-idle-states, do
+> >we have a backwards-compatibility issue? e.g. say we have a platform with a DT
+> >like this:
+> >
+> Your concern is very valid and this is the exactly the difference
+> between Platform coordinated (PC) mode and OS-Initiated (OSI) mode. In
+> PC, the domain state is an extension of the CPU state and rightful place
+> for that is the cpu-idle-states property. Just like the example you
+> have.
+>
+> >	cpu@0 {
+> >		/*...*/
+> >		cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+> >	};
+> >
+> >	idle-states {
+> >		CPU_SLEEP: cpu-sleep {
+> >			/*...*/
+> >		};
+> >		CLUSTER_SLEEP: cluster-sleep {
+> >			/*...*/
+> >		};
+> >	};
+> >
+> >and in order to enable OS-initiated cluster suspend it changes to this:
+> >
+> Platforms that have OSI will have this format you mention below. If the
+> platform supports the OSI it will respond to the PSCI_FEATURES and
+> PSCI_SET_SUSPEND mode (patch 10 of this series). If the OSI mode is
+> available snd if the DT has the domains defined for the CPU, then the
+> OSI mode is chosen otherwise, it reverts to using PC mode. This code
+> snippet from my patches does exactly that -
+>
+> if (psci_has_osi_pd) {
+>        int ret;
+>        const struct cpu_pd_ops psci_pd_ops = {
+>                .populate_state_data = psci_pd_populate_state_data,
+>                .power_off = psci_pd_power_off,
+>        };
+>
+>        ret = of_setup_cpu_pd_single(cpu, &psci_pd_ops);
+>        if (!ret)
+>                ret = psci_set_suspend_mode_osi(true);
+>        if (ret)
+>                pr_warn("CPU%d: Error setting PSCI OSI mode\n", cpu);
+> }
+>
+> >	cpu@0 {
+> >		/*...*/
+> >		cpu-idle-states = <&CPU_SLEEP>;
+> >		power-domains = <CPU_PD>;
+> >	};
+> >
+> >	idle-states {
+> >		CPU_SLEEP: cpu-sleep {
+> >			/*...*/
+> >		};
+> >	};
+> >
+> >	/*... elsewhere ... */
+> >
+> >	CLUSTER_SLEEP: cluster-sleep {
+> >		/*...*/
+> >	};
+> >
+> >	CPU_PD {
+> >	/*...*/
+> >		idle-states = <&CLUSTER_SLEEP>;
+> >	};
+> >
+> >Then old kernels which don't have CPU PM Domains will lose the ability to
+> >suspend clusters. I've phrased this as a question because I'm not clear on what
+> >we require in terms of backwards/forwards compatibility with DTs - excuse my
+> >ignorance. What are your thoughts on this?
+> >
+> So, if the DT has only support for cluster modes in cpu-idle-states and
+> not the OSI specific representation, then it would continue to use only
+> PC mode to power down the cluster, even though the firmware may have
+> been updated to support OSI.
+>
+> That means, all the existing platforms will continue to work the way
+> they do even with these patches in place.
+>
+> Moreover, the way the PSCI state ids are for PC and OS intiated fall in
+> line with how we represent in the DT. PC cluster states are represented
+> in the original format and the OSI follow the extended state format. The
+> composite is made by an OR of the CPU state and the cluster idle state.
+>
 
-Bindings don't describe drivers.
+OK, this makes sense - I understand that these patches will not affect the
+behaviour if the DT stays the same. My question, though is what happens when a
+new DT with the new OSI structure is given to an older kernel without these
+patches applied.
 
-> +
-> +This driver get reboot mode magic value form reboot-mode driver
+Example: right now we support PC cluster suspend on the Juno platform (see
+juno*.dts). Let's say Juno's firmware comes to support OSI suspend and we want
+to use that in Linux. We apply these patches then update the .dts, adding a CPU
+power domain tree, removing CLUSTER_SLEEP_0 from cpu-idle-states and adding it
+to the relevant power domain node's idle-states. Now we have OSI suspend on
+Juno. But then if we take our new DTB and feed it to a v4.7 kernel it will not
+be able to enter CLUSTER_SLEEP_0 because it is not in cpu-idle-states. Before we
+modified the DTB, v4.7 kernels were capable of entering CLUSTER_SLEEP_0 in PC
+mode.
 
-s/form/from/
+Does that make sense - do we expect newer DTBs to be compatible with older
+kernels, and if so how can we add OSI support to existing platforms without
+breaking older kernels?
 
-> +and stores it in a SRAM address. Then the bootloader
-> +can read it and take different action according to the magic
-> +value stored.
-
-Might say "on the next reboot" somewhere in here.
-
-> +
-> +This DT node should be represented as a sub-node of a "mmio-sram" node.
-> +
-> +Required properties:
-> +- compatible: should be "sram-reboot-mode"
-> +- reg: offset from the sram range where to store the magic value(in bytes)
-> +
-> +The rest of the properties should follow the generic reboot-mode discription
-> +found in reboot-mode.txt
-> +
-> +Example:
-> +
-> +	sram@5f01000 {
-> +		compatible = "mmio-sram";
-> +		reg = <0x0 0x05f01000 0x0 0x00001000>;
-> +		ranges = <0x0 0x0 0x05f01000 0x00001000>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		reboot-mode@0 {
-> +			compatible = "sram-reboot-mode";
-> +			reg = <0x0 0x4>;
-> +
-> +			mode-normal     = <0x77665501>;
-> +			mode-bootloader = <0x77665500>;
-> +			mode-recovery   = <0x77665502>;
-> +		};
-> +	};
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Brendan
