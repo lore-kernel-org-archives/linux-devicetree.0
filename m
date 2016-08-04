@@ -1,55 +1,76 @@
-From: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
-Subject: [PATCH 1/1] imx53.dtsi: Add IPU nodes for csi
-Date: Thu,  4 Aug 2016 15:47:32 +0200
-Message-ID: <1470318452-31391-1-git-send-email-fabien.lahoudere@collabora.co.uk>
-References: <CAOMZO5BoRsrHv-+5c9bAXO2NCya8sPqmmpy9DOfav6NvQ+VMLQ@mail.gmail.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH 1/3] drm/i2c: tda998x: Improve tda998x_configure_audio()
+ audio related pdata
+Date: Thu, 4 Aug 2016 14:31:36 +0100
+Message-ID: <20160804133135.GN5783@n2100.arm.linux.org.uk>
+References: <cover.1470129989.git.jsarha@ti.com>
+ <5adcd94104080abcd5b072a5d6a85b85c5ea0584.1470129989.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5BoRsrHv-+5c9bAXO2NCya8sPqmmpy9DOfav6NvQ+VMLQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5adcd94104080abcd5b072a5d6a85b85c5ea0584.1470129989.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We have the following messages that tell csi devices are not used:
-imx-ipuv3 18000000.ipu: no port@0 node in /soc/ipu@18000000, not using CSI0
-imx-ipuv3 18000000.ipu: no port@1 node in /soc/ipu@18000000, not using CSI1
+On Tue, Aug 02, 2016 at 03:05:07PM +0300, Jyri Sarha wrote:
+> @@ -787,19 +792,13 @@ tda998x_configure_audio(struct tda998x_priv *priv,
+>  	reg_clear(priv, REG_AIP_CNTRL_0, AIP_CNTRL_0_RST_CTS);
+>  
+>  	/* Write the channel status */
+> -	buf[0] = IEC958_AES0_CON_NOT_COPYRIGHT;
+> -	buf[1] = 0x00;
+> -	buf[2] = IEC958_AES3_CON_FS_NOTID;
+> -	buf[3] = IEC958_AES4_CON_ORIGFS_NOTID |
+> -			IEC958_AES4_CON_MAX_WORDLEN_24;
+> -	reg_write_range(priv, REG_CH_STAT_B(0), buf, 4);
+> +	reg_write_range(priv, REG_CH_STAT_B(0), params->status, 4);
 
-So we add them in the common device tree to make CSI ports available on
-imx53 boards.
+Take a close look at the code you are replacing here - the buffer
+contents is not AES bytes 0, 1, 2, 3, 4, but AES bytes 0, 1, 3, 4
+- byte 2 is not present in this array.  I don't think you've noticed
+this as your second patch merely copies verboten the IEC status:
 
-Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
----
- arch/arm/boot/dts/imx53.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
++       memcpy(audio.status, params->iec.status,
++              min(sizeof(audio.status), sizeof(params->iec.status)));
 
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index c1bc97c..0777b41 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -136,6 +136,14 @@
- 			clock-names = "bus", "di0", "di1";
- 			resets = <&src 2>;
- 
-+			ipu_csi0: port@0 {
-+				reg = <0>;
-+			};
-+
-+			ipu_csi1: port@1 {
-+				reg = <1>;
-+			};
-+
- 			ipu_di0: port@2 {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
+assuming that it is bytes 0-3.  Byte 2 is stored separately for each
+I2S channel in the following registers.
+
+> diff --git a/include/drm/i2c/tda998x.h b/include/drm/i2c/tda998x.h
+> index 3e419d9..24be7aa 100644
+> --- a/include/drm/i2c/tda998x.h
+> +++ b/include/drm/i2c/tda998x.h
+> @@ -1,6 +1,19 @@
+>  #ifndef __DRM_I2C_TDA998X_H__
+>  #define __DRM_I2C_TDA998X_H__
+>  
+> +#define AFMT_UNUSED	0
+> +#define AFMT_SPDIF	1
+> +#define AFMT_I2S	2
+
+I'd prefer this to stay an enum please.
+
+> +struct tda998x_audio_params {
+> +	u8 config;
+> +	u8 format;
+> +	unsigned sample_width;
+> +	unsigned sample_rate;
+> +	struct hdmi_audio_infoframe cea;
+
+With this addition, this file will need to include linux/hdmi.h.
+
+> +	u8 status[4];
+
+A comment here about the missing byte 2 would probably be a good idea.
+
 -- 
-2.7.4
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
