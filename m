@@ -1,119 +1,73 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC PATCH v2 1/4] Documentation: DT: net: Add Xilinx
- gmiitorgmii converter device tree binding documentation
-Date: Thu, 4 Aug 2016 10:34:30 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5DCC2F@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1467623084-15471-1-git-send-email-appanad@xilinx.com>
- <1467623084-15471-2-git-send-email-appanad@xilinx.com>
- <20160704140458.GC3282@lunn.ch>
- <03CA77BA8AF6F1469AEDFBDA1322A7B74A193913@XAP-PVEXMBX02.xlnx.xilinx.com>
- <20160706142121.GI19800@lunn.ch>
- <03CA77BA8AF6F1469AEDFBDA1322A7B74A19393B@XAP-PVEXMBX02.xlnx.xilinx.com>
- <C246CAC1457055469EF09E3A7AC4E11A4A5C2387@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20160727080526.GH11538@lunn.ch>
- <971c966a-5335-310b-0a1a-3f1b7ee2f841@gmail.com>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH 2/2 v16] drm/bridge: Add I2C based driver for ps8640 bridge
+Date: Thu, 4 Aug 2016 12:35:59 +0200
+Message-ID: <CAFqH_53PgPs3_h7XNFEu4u0W6GW7vyWCNFf2vq8Yn7sH2LbFwA@mail.gmail.com>
+References: <1464861445-11086-1-git-send-email-jitao.shi@mediatek.com>
+ <1464861445-11086-2-git-send-email-jitao.shi@mediatek.com>
+ <CACvgo53002XCPLufbJHQLC1uL1nNS7_0gh=napedetmvT6FoSw@mail.gmail.com>
+ <CAGS+omDsDS5tx=+Efq8LWNd3-asU4r2h=-AE6vdKgfG-p6vdAA@mail.gmail.com>
+ <CAKMK7uEkUOq1CB3tj_1Qx50fBpw9B39+c3asX6MPNexT=dv9fA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <971c966a-5335-310b-0a1a-3f1b7ee2f841-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAKMK7uEkUOq1CB3tj_1Qx50fBpw9B39+c3asX6MPNexT=dv9fA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, stonea168@163.com, ML dri-devel <dri-devel@lists.freedesktop.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Thierry Reding <treding@nvidia.com>, devicetree <devicetree@vger.kernel.org>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, =?UTF-8?B?RWRkaWUgSHVhbmcgKOm7g+aZuuWCkSk=?= <eddie.huang@mediatek.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream <srv_heupstream@mediatek.com>, Emil Velikov <emil>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
-
-> 
-> On 27/07/2016 01:05, Andrew Lunn wrote:
-> > Hi Appana
-> >
-> > Here is roughly what i was thinking:
-> >
-> > struct priv {
-> >        phy_device *master;
-> >        phy_device *slave;
-> >        struct phy_driver *slave_drv;
-> > };
-> >
-> > phy_status_clone(phy_device *master, phy_device *slave) {
-> > 	master->speed = slave->speed;
-> > 	master->duplex = slave->duplex;
-> > 	master->pause = slave->pause;
-> > }
-> >
-> > read_status(struct phy_device *phydev) {
-> > 	struct priv *priv = phydev->priv;
-> >
-> > 	/* Get the status from the slave, and duplicate in into the
-> > 	 * master */
-> > 	 slave_drv->read_status(priv->slave);
-> > 	 phy_status_clone(priv->master, priv->slave);
-> >
-> > 	 /* Update the gmiitorgmii with the current link parameters */
-> > 	 update_link(master);
-> > }
-> >
-> > config_init(struct phy_device *phydev) {
-> > 	struct priv *priv = phydev->priv;
-> >
-> > 	/* Configure the slave, and duplicate in into the master */
-> > 	slave_drv->config_init(priv->slave);
-> > 	phy_status_clone(priv->master, priv->slave); }
-> >
-> > struct phy_driver master_drv = {
-> >        .read_status = read_status,
-> >        .config_init = config_init,
-> >        .soft_reset  = ...
-> >        .suspend = ...
-> > };
-> >
-> > probe(mdio_device *mdio)
-> > {
-> > 	struct priv *priv = devm_alloc();
-> >
-> > 	/* Use the phy-handle property to find the slave phy */
-> > 	node_phy = of_parse_phandle(mdio->of_node, "phy", 0);
-> > 	priv->slave = of_phy_find_device(node_phy);
-> >
-> > 	/* Create the master phy on the control address. Use the phy
-> > 	   ID from the slave. */
-> > 	priv->master = phy_device_create(mdio->bus, mdio->addr,
-> > 	  				 phy->slave->phy_id,
-> > 					 phy->slave->is_c45,
-> > 					 phy->slave->c45_ids);
-> >
-> > 	slave_dev_drv = phydev->mdio.dev.driver;
-> > 	priv->slave_drv = to_phy_driver(slave_dev_drv);
-> > 	priv->master->mdio.dev.driver = master_drv;
-> 
-> The key here is really that except for the phy_driver::read_status callback, we
-> want to defer every operation to the slave (full MDIO register range compatible)
-> PHY.
-
-Will fix it in the next version...
-
-> 
-> > }
-> >
-> > It would however be nice to only have one phydev structure, so you are
-> > not copying status and settings backwards and forwards from one to the
-> > other all the time, and need a wrapper for every function in
-> > phy_driver. Studying the structures a bit, that might be possible. You
-> > would then only need to wrap the read_status(), so that when the link
-> > speed/duplex changes, you can configure the converter as appropriate.
-> 
-> Agreed.
-
-Will implement as suggested by Andrew...
-
-Regards,
-Kedar.
-
-> --
-> Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MjAxNi0wNy0xMiAxMjoxMyBHTVQrMDI6MDAgRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNo
+PjoKPiBPbiBXZWQsIEp1biAyOSwgMjAxNiBhdCA2OjMxIEFNLCBEYW5pZWwgS3VydHogPGRqa3Vy
+dHpAY2hyb21pdW0ub3JnPiB3cm90ZToKPj4gT24gRnJpLCBKdW4gMTcsIDIwMTYgYXQgMzoxNCBB
+TSwgRW1pbCBWZWxpa292IDxlbWlsLmwudmVsaWtvdkBnbWFpbC5jb20+IHdyb3RlOgo+Pj4+ICtz
+dGF0aWMgc3NpemVfdCBwczg2NDBfdXBkYXRlX2Z3X3N0b3JlKHN0cnVjdCBkZXZpY2UgKmRldiwK
+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkZXZpY2Vf
+YXR0cmlidXRlICphdHRyLAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgY29uc3QgY2hhciAqYnVmLCBzaXplX3QgY291bnQpCj4+Pj4gK3sKPj4+PiArICAgICAgIHN0
+cnVjdCBpMmNfY2xpZW50ICpjbGllbnQgPSB0b19pMmNfY2xpZW50KGRldik7Cj4+Pj4gKyAgICAg
+ICBzdHJ1Y3QgcHM4NjQwICpwc19icmlkZ2UgPSBpMmNfZ2V0X2NsaWVudGRhdGEoY2xpZW50KTsK
+Pj4+PiArICAgICAgIGNvbnN0IHN0cnVjdCBmaXJtd2FyZSAqZnc7Cj4+Pj4gKyAgICAgICBpbnQg
+ZXJyb3I7Cj4+Pj4gKwo+Pj4+ICsgICAgICAgZXJyb3IgPSByZXF1ZXN0X2Zpcm13YXJlKCZmdywg
+UFNfRldfTkFNRSwgZGV2KTsKPj4+IENhbiB0aGUgZGV2aWNlIG9wZXJhdGUgd2l0aG91dCBhIGZp
+cm13YXJlID8gSWYgbm90LCB3aHkgaXMgdGhlCj4+PiBmaXJtd2FyZSBsb2FkZWQgc28gbGF0ZXIv
+YWZ0ZXIgdXNlciBpbnRlcmFjdGlvbiAodmlhIHN5c2ZzKSA/IEkgZG9uJ3QKPj4+IHJlY2FsbCBh
+bnkgb3RoZXIgZHJpdmVyIGluIERSTSB0byB1c2Ugc3VjaCBhbiBhcHByb2FjaC4KPj4KPj4gVGhl
+IFBTODY0MCBoYXMgaW50ZXJuYWwgZmxhc2gsIHNvIGl0IHNob3VsZCBhbHdheXMgYWxyZWFkeSBo
+YXZlIGEKPj4gd29ya2luZyBmaXJtd2FyZS4KPj4gVGhpcyBzeXNmcyBpbnRlcmZhY2UgaXMgdXNl
+ZnVsIGZvciB1c2VyIHNwYWNlIGluaXRpYXRlZCBmaWVsZCBmaXJtd2FyZSB1cGRhdGVzLgo+Cj4g
+TWlnaHQgYmUgYmV0dGVyIHRvIGp1c3QgZG8gYSByZXF1ZXN0X2Zpcm13YXJlIG9uIGRyaXZlciBs
+b2FkLCBhbmQKPiBzaW1wbHkgcHJvY2VlZCBpZiBpdCdzIG5vdCB0aGVyZS4gQWRkaW5nIGEgc3lz
+ZnMgaW50ZXJmYWNlICh3aGljaCBpcwo+IGFiaSkgc2VlbXMgd2F5IHRvbyBtdWNoIG92ZXJraWxs
+IGZvciB0aGlzIGltby4gSWYgeW91IHdhbnQgdG8gdXBncmFkZQo+IHRoZSBmaXJtd2FyZSB5b3Ug
+Y2FuIHRoZW4ganVzdCBkcm9wIGl0IGludG8gdGhlIHJpZ2h0IGRpcmVjdG9yeSwgd2l0aAo+IG5v
+IGZ1cnRoZXIgaW50ZXJhY3Rpb24gbmVlZGVkLgoKSU1ITyBJJ20gbm90IHN1cmUgaWYgZm9yIHRo
+aXMgdXNlIGNhc2UgcmVxdWVzdF9maXJtd2FyZSBvbiBkcml2ZXIgbG9hZAppcyBhIGdvb2QgaWRl
+YS4gRmxhc2ggdGhlIG5vbi12b2xhdGlsZSBpbnRlcm5hbCBjaGlwIGNhbiBiZSBhIHNsb3cKb3Bl
+cmF0aW9uIGFuZCBpZiB5b3UgZm9yZ2V0IHRvIHJlbW92ZSB0aGUgZmlybXdhcmUgYWZ0ZXIgZHJv
+cCBpdCBpbnRvCnRoZSByaWdodCBkaXJlY3RvcnkgYXBhcnQgZnJvbSBzbG93IGRvd24gdGhlIGRy
+aXZlciBwcm9iZSB5b3UgY2FuCmRhbWFnZSB0aGUgY2hpcCBkZXBlbmRpbmcgb24gdGhlIHdyaXRl
+IGVuZHVyYW5jZSBvZiB0aGUgY2hpcC4KClRoaXMgc3lzZnMgaW50ZXJmYWNlIGlzIHVzZWQgb24g
+b3RoZXIgc3Vic3lzdGVtcyB3aGVuIHRoZXJlIGlzIGEKbm9uLXZvbGF0aWxlIG1lbW9yeSwgYXMg
+ZXhhbXBsZSB5b3UgY2FuIHNlZSBhdCBbMV0sIFsyXS4gVW5mb3J0dW5hdGVseQpub3QgYWxsIGFy
+ZSB1c2luZyB0aGUgc2FtZSBzeXNmcyBpbnRlcmZhY2UgYW5kIG1heWJlIHRoaXMgc2hvdWxkIGJl
+CnN0YW5kYXJkaXplZCAobWF5YmUgaXQncyBhbiBvcHBvcnR1bml0eSB0byBkZWZpbmUgaXQpCgpS
+ZWdhcmRzLAogRW5yaWMKClsxXSBodHRwOi8vbHhyLmZyZWUtZWxlY3Ryb25zLmNvbS9zb3VyY2Uv
+ZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi93ZHQ4N3h4X2kyYy5jI0w5MjIKWzJdIGh0dHA6Ly9s
+eHIuZnJlZS1lbGVjdHJvbnMuY29tL3NvdXJjZS9kcml2ZXJzL3Njc2kvcG04MDAxL3BtODAwMV9j
+dGwuYyNMNzMyCgoKPiAtRGFuaWVsCj4gLS0KPiBEYW5pZWwgVmV0dGVyCj4gU29mdHdhcmUgRW5n
+aW5lZXIsIEludGVsIENvcnBvcmF0aW9uCj4gKzQxICgwKSA3OSAzNjUgNTcgNDggLSBodHRwOi8v
+YmxvZy5mZndsbC5jaAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
