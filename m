@@ -1,68 +1,128 @@
 From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH v2 09/17] ARM: dts: mvebu: armada-39x: enable watchdog for all
- Armada-39x SoCs
-Date: Thu,  4 Aug 2016 12:14:12 +0200
-Message-ID: <1470305660-6601-10-git-send-email-jaz@semihalf.com>
+Subject: [PATCH v2 13/17] ARM: dts: mvebu: armada-395: add support for the Armada 395 SoC family
+Date: Thu,  4 Aug 2016 12:14:16 +0200
+Message-ID: <1470305660-6601-14-git-send-email-jaz@semihalf.com>
 References: <1470305660-6601-1-git-send-email-jaz@semihalf.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1470305660-6601-1-git-send-email-jaz@semihalf.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, andrew@lunn.ch, jason@lakedaemon.net, jaz@semihalf.com, linux@armlinux.org.uk, nadavh@marvell.com, alior@marvell.com, robh+dt@kernel.org, gregory.clement@free-electrons.com, mw@semihalf.com, thomas.petazzoni@free-electrons.com, sebastian.hesselbarth@gmail.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, mw@semihalf.com, jaz@semihalf.com, alior@marvell.com, nadavh@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-The whole Armada 39x SoC family of processors has watchdog which can be
-supported with existing driver.
+Beside interfaces described in the armada-39x.dtsi, the Armada 395 SoC
+family supports: 2 x SATA3 (2 ports in one unit) and the USB3.0
 
 Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-Reviewed-by: Lior Amsalem <alior@marvell.com>
-Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm/boot/dts/armada-39x.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ .../devicetree/bindings/arm/marvell/armada-39x.txt | 11 +++-
+ arch/arm/boot/dts/armada-395.dtsi                  | 76 ++++++++++++++++++++++
+ 2 files changed, 85 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/armada-395.dtsi
 
-diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
-index 03dc0ec..5e01438 100644
---- a/arch/arm/boot/dts/armada-39x.dtsi
-+++ b/arch/arm/boot/dts/armada-39x.dtsi
-@@ -322,6 +322,14 @@
- 				clock-names = "nbclk", "fixed";
- 			};
+diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-39x.txt b/Documentation/devicetree/bindings/arm/marvell/armada-39x.txt
+index 53d4ff9..2d92212 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/armada-39x.txt
++++ b/Documentation/devicetree/bindings/arm/marvell/armada-39x.txt
+@@ -8,8 +8,15 @@ Required root node property:
  
-+			watchdog@20300 {
-+				compatible = "marvell,armada-380-wdt";
-+				reg = <0x20300 0x34>, <0x20704 0x4>,
-+				      <0x18260 0x4>;
-+				clocks = <&coreclk 2>, <&refclk>;
-+				clock-names = "nbclk", "fixed";
+  - compatible: must contain "marvell,armada390"
+ 
+-In addition, boards using the Marvell Armada 398 SoC shall have the
+-following property before the previous one:
++In addition, boards using the Marvell Armada 395 SoC shall have the
++following property before the common "marvell,armada390" one:
++
++Required root node property:
++
++compatible: must contain "marvell,armada395"
++
++Boards using the Marvell Armada 398 SoC shall have the following
++property before the common "marvell,armada390" one:
+ 
+ Required root node property:
+ 
+diff --git a/arch/arm/boot/dts/armada-395.dtsi b/arch/arm/boot/dts/armada-395.dtsi
+new file mode 100644
+index 0000000..ab5dc49
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-395.dtsi
+@@ -0,0 +1,76 @@
++/*
++ * Device Tree Include file for Marvell Armada 395 SoC.
++ *
++ * Copyright (C) 2016 Marvell
++ *
++ * Grzegorz Jaszczyk <jaz@semihalf.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "armada-39x.dtsi"
++
++/ {
++	compatible = "marvell,armada395", "marvell,armada390";
++
++	soc {
++		internal-regs {
++			pinctrl@18000 {
++				compatible = "marvell,mv88f6925-pinctrl";
++				reg = <0x18000 0x20>;
 +			};
 +
- 			cpurst@20800 {
- 				compatible = "marvell,armada-370-cpu-reset";
- 				reg = <0x20800 0x10>;
-@@ -534,5 +542,12 @@
- 			#clock-cells = <0>;
- 			clock-frequency = <1000000000>;
- 		};
++			sata@a8000 {
++				compatible = "marvell,armada-380-ahci";
++				reg = <0xa8000 0x2000>;
++				interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&gateclk 15>;
++				status = "disabled";
++			};
 +
-+		/* 25 MHz reference crystal */
-+		refclk: oscillator {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <25000000>;
++			usb3@f0000 {
++				compatible = "marvell,armada-380-xhci";
++				reg = <0xf0000 0x4000>,<0xf4000 0x4000>;
++				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&gateclk 9>;
++				status = "disabled";
++			};
 +		};
- 	};
- };
++	};
++};
 -- 
 1.8.3.1
