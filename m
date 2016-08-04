@@ -1,73 +1,90 @@
-From: Rich Felker <dalias@libc.org>
-Subject: [PATCH v6 2/2] irqchip: add J-Core AIC driver
+From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Subject: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
 Date: Thu, 04 Aug 2016 04:30:37 +0000
-Message-ID: <c3b89ef74aaa6477575dbe2d410eb1d182503243.147018b6529.git.dalias@libc.org>
-References: <cover.147018b6529.git.dalias@libc.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.147018b6529.git.dalias@libc.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Message-ID: <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
+References: <cover.147018b3518.git.dalias@libc.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.147018b3518.git.dalias-8zAoT0mYgF4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There are two versions of the J-Core interrupt controller in use, aic1
-which generates interrupts with programmable priorities, but only
-supports 8 irq lines and maps them to cpu traps in the range 17 to 24,
-and aic2 which uses traps in the range 64-127 and supports up to 128
-irqs, with priorities dependent on the interrupt number. The Linux
-driver does not make use of priorities anyway.
+At the hardware level, the J-Core PIT is integrated with the interrupt
+controller, but it is represented as its own device and has an
+independent programming interface. It provides a 12-bit countdown
+timer, which is not presently used, and a periodic timer. The interval
+length for the latter is programmable via a 32-bit throttle register
+whose units are determined by a bus-period register. The periodic
+timer is used to implement both periodic and oneshot clock event
+modes; in oneshot mode the interrupt handler simply disables the timer
+as soon as it fires.
 
-For simplicity, there is no aic1-specific logic in the driver beyond
-setting the priority register, which is necessary for interrupts to
-work at all. Eventually aic1 will likely be phased out, but it's
-currently in use in deployments and all released bitstream binaries.
+Despite its device tree node representing an interrupt for the PIT,
+the actual irq generated is programmable, not hard-wired. The driver
+is responsible for programming the PIT to generate the hardware irq
+number that the DT assigns to it.
 
-Signed-off-by: Rich Felker <dalias@libc.org>
+On SMP configurations, J-Core provides cpu-local instances of the PIT;
+no broadcast timer is needed. This driver supports the creation of the
+necessary per-cpu clock_event_device instances. The code has been
+tested and works on SMP, but will not be usable without additional
+J-Core SMP-support patches and appropriate hardware capable of running
+SMP.
+
+A nanosecond-resolution clocksource is provided using the J-Core "RTC"
+registers, which give a 64-bit seconds count and 32-bit nanoseconds.
+The driver converts these to a 64-bit nanoseconds count.
+
+Signed-off-by: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
 ---
- drivers/irqchip/Kconfig         |  7 +++
- drivers/irqchip/Makefile        |  1 +
- drivers/irqchip/irq-jcore-aic.c | 94 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 102 insertions(+)
- create mode 100644 drivers/irqchip/irq-jcore-aic.c
+ drivers/clocksource/Kconfig     |   9 ++
+ drivers/clocksource/Makefile    |   1 +
+ drivers/clocksource/jcore-pit.c | 242 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/cpuhotplug.h      |   1 +
+ 4 files changed, 253 insertions(+)
+ create mode 100644 drivers/clocksource/jcore-pit.c
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 5495a5b..ab84ce3 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -156,6 +156,13 @@ config PIC32_EVIC
- 	select GENERIC_IRQ_CHIP
- 	select IRQ_DOMAIN
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 5677886..3210ca5 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -407,6 +407,15 @@ config SYS_SUPPORTS_SH_TMU
+ config SYS_SUPPORTS_EM_STI
+         bool
  
-+config JCORE_AIC
-+	bool "J-Core integrated AIC"
++config CLKSRC_JCORE_PIT
++	bool "J-Core PIT timer driver"
 +	depends on OF && (SUPERH || COMPILE_TEST)
-+	select IRQ_DOMAIN
++	depends on GENERIC_CLOCKEVENTS
++	depends on HAS_IOMEM
 +	help
-+	  Support for the J-Core integrated AIC.
++	  This enables build of clocksource and clockevent driver for
++	  the integrated PIT in the J-Core synthesizable, open source SoC.
 +
- config RENESAS_INTC_IRQPIN
- 	bool
- 	select IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 4c203b6..ee7e3ca 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_I8259)			+= irq-i8259.o
- obj-$(CONFIG_IMGPDC_IRQ)		+= irq-imgpdc.o
- obj-$(CONFIG_IRQ_MIPS_CPU)		+= irq-mips-cpu.o
- obj-$(CONFIG_SIRF_IRQ)			+= irq-sirfsoc.o
-+obj-$(CONFIG_JCORE_AIC)			+= irq-jcore-aic.o
- obj-$(CONFIG_RENESAS_INTC_IRQPIN)	+= irq-renesas-intc-irqpin.o
- obj-$(CONFIG_RENESAS_IRQC)		+= irq-renesas-irqc.o
- obj-$(CONFIG_VERSATILE_FPGA_IRQ)	+= irq-versatile-fpga.o
-diff --git a/drivers/irqchip/irq-jcore-aic.c b/drivers/irqchip/irq-jcore-aic.c
+ config SH_TIMER_CMT
+ 	bool "Renesas CMT timer driver" if COMPILE_TEST
+ 	depends on GENERIC_CLOCKEVENTS
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index fd9d6df..cf87f40 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -5,6 +5,7 @@ obj-$(CONFIG_ATMEL_TCB_CLKSRC)	+= tcb_clksrc.o
+ obj-$(CONFIG_X86_PM_TIMER)	+= acpi_pm.o
+ obj-$(CONFIG_SCx200HR_TIMER)	+= scx200_hrt.o
+ obj-$(CONFIG_CS5535_CLOCK_EVENT_SRC)	+= cs5535-clockevt.o
++obj-$(CONFIG_CLKSRC_JCORE_PIT)		+= jcore-pit.o
+ obj-$(CONFIG_SH_TIMER_CMT)	+= sh_cmt.o
+ obj-$(CONFIG_SH_TIMER_MTU2)	+= sh_mtu2.o
+ obj-$(CONFIG_SH_TIMER_TMU)	+= sh_tmu.o
+diff --git a/drivers/clocksource/jcore-pit.c b/drivers/clocksource/jcore-pit.c
 new file mode 100644
-index 0000000..5e5e3bb
+index 0000000..23dee50
 --- /dev/null
-+++ b/drivers/irqchip/irq-jcore-aic.c
-@@ -0,0 +1,94 @@
++++ b/drivers/clocksource/jcore-pit.c
+@@ -0,0 +1,242 @@
 +/*
-+ * J-Core SoC AIC driver
++ * J-Core SoC PIT/clocksource driver
 + *
 + * Copyright (C) 2015-2016 Smart Energy Instruments, Inc.
 + *
@@ -76,89 +93,254 @@ index 0000000..5e5e3bb
 + * for more details.
 + */
 +
-+#include <linux/irq.h>
-+#include <linux/io.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/interrupt.h>
++#include <linux/clockchips.h>
++#include <linux/clocksource.h>
++#include <linux/sched_clock.h>
 +#include <linux/cpu.h>
-+#include <linux/of.h>
++#include <linux/cpuhotplug.h>
 +#include <linux/of_address.h>
 +#include <linux/of_irq.h>
 +
-+#define JCORE_AIC_MAX_HWIRQ	127
-+#define JCORE_AIC1_MIN_HWIRQ	16
-+#define JCORE_AIC2_MIN_HWIRQ	64
++#define PIT_IRQ_SHIFT		12
++#define PIT_PRIO_SHIFT		20
++#define PIT_ENABLE_SHIFT	26
++#define PIT_IRQ_MASK		0x3f
++#define PIT_PRIO_MASK		0xf
 +
-+#define JCORE_AIC1_INTPRI_REG	8
++#define REG_PITEN		0x00
++#define REG_THROT		0x10
++#define REG_COUNT		0x14
++#define REG_BUSPD		0x18
++#define REG_SECHI		0x20
++#define REG_SECLO		0x24
++#define REG_NSEC		0x28
 +
-+static struct irq_chip jcore_aic;
++struct jcore_pit {
++	struct clock_event_device	ced;
++	__iomem void			*base;
++	unsigned long			periodic_delta;
++	unsigned			cpu;
++	u32				enable_val;
++};
 +
-+static int jcore_aic_irqdomain_map(struct irq_domain *d, unsigned int irq,
-+				   irq_hw_number_t hwirq)
++static __iomem void		*jcore_pit_base;
++static struct clocksource	jcore_cs;
++struct jcore_pit __percpu	*jcore_pit_percpu;
++
++static notrace u64 jcore_sched_clock_read(void)
 +{
-+	struct irq_chip *aic = d->host_data;
++	u32 seclo, nsec, seclo0;
++	__iomem void *base = jcore_pit_base;
 +
-+	irq_set_chip_and_handler(irq, aic, handle_simple_irq);
++	seclo = __raw_readl(base + REG_SECLO);
++	do {
++		seclo0 = seclo;
++		nsec  = __raw_readl(base + REG_NSEC);
++		seclo = __raw_readl(base + REG_SECLO);
++	} while (seclo0 != seclo);
++
++	return seclo * NSEC_PER_SEC + nsec;
++}
++
++static cycle_t jcore_clocksource_read(struct clocksource *cs)
++{
++	return jcore_sched_clock_read();
++}
++
++static int jcore_pit_disable(struct jcore_pit *pit)
++{
++	__raw_writel(0, pit->base + REG_PITEN);
++	return 0;
++}
++
++static int jcore_pit_set(unsigned long delta, struct jcore_pit *pit)
++{
++	jcore_pit_disable(pit);
++	__raw_writel(delta, pit->base + REG_THROT);
++	__raw_writel(pit->enable_val, pit->base + REG_PITEN);
++	return 0;
++}
++
++static int jcore_pit_set_state_shutdown(struct clock_event_device *ced)
++{
++	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
++
++	return jcore_pit_disable(pit);
++}
++
++static int jcore_pit_set_state_oneshot(struct clock_event_device *ced)
++{
++	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
++
++	return jcore_pit_disable(pit);
++}
++
++static int jcore_pit_set_state_periodic(struct clock_event_device *ced)
++{
++	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
++
++	return jcore_pit_set(pit->periodic_delta, pit);
++}
++
++static int jcore_pit_set_next_event(unsigned long delta,
++				    struct clock_event_device *ced)
++{
++	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
++
++	return jcore_pit_set(delta, pit);
++}
++
++static int jcore_pit_local_init(unsigned cpu)
++{
++	struct jcore_pit *pit = this_cpu_ptr(jcore_pit_percpu);
++	unsigned buspd, freq;
++
++	pr_info("Local J-Core PIT init on cpu %u\n", pit->cpu);
++
++	buspd = __raw_readl(pit->base + REG_BUSPD);
++	freq = DIV_ROUND_CLOSEST(NSEC_PER_SEC, buspd);
++	pit->periodic_delta = DIV_ROUND_CLOSEST(NSEC_PER_SEC, HZ*buspd);
++
++	clockevents_config_and_register(&pit->ced, freq, 1, ULONG_MAX);
 +
 +	return 0;
 +}
 +
-+static const struct irq_domain_ops jcore_aic_irqdomain_ops = {
-+	.map = jcore_aic_irqdomain_map,
-+	.xlate = irq_domain_xlate_onecell,
-+};
-+
-+static void noop(struct irq_data *data)
++static int jcore_pit_local_shutdown(unsigned cpu)
 +{
++	return 0;
 +}
 +
-+int __init aic_irq_of_init(struct device_node *node, struct device_node *parent)
++static irqreturn_t jcore_timer_interrupt(int irq, void *dev_id)
 +{
-+	unsigned min_irq = JCORE_AIC2_MIN_HWIRQ;
-+	unsigned dom_sz = JCORE_AIC_MAX_HWIRQ+1;
-+	struct irq_domain *domain;
++	struct jcore_pit *pit = this_cpu_ptr(dev_id);
 +
-+	pr_info("Initializing J-Core AIC\n");
++	if (clockevent_state_oneshot(&pit->ced))
++		jcore_pit_disable(pit);
 +
-+	/* AIC1 needs priority initialization to receive interrupts. */
-+	if (of_device_is_compatible(node, "jcore,aic1")) {
-+		unsigned cpu;
++	pit->ced.event_handler(&pit->ced);
 +
-+		for_each_present_cpu(cpu) {
-+			void __iomem *base = of_iomap(node, cpu);
++	return IRQ_HANDLED;
++}
 +
-+			if (!base) {
-+				pr_err("Unable to map AIC for cpu %u\n", cpu);
-+				return -ENOMEM;
-+			}
-+			__raw_writel(0xffffffff, base + JCORE_AIC1_INTPRI_REG);
-+			iounmap(base);
-+		}
-+		min_irq = JCORE_AIC1_MIN_HWIRQ;
++static int __init jcore_pit_init(struct device_node *node)
++{
++	int err;
++	unsigned pit_irq, cpu;
++	unsigned long hwirq;
++	u32 irqprio, enable_val;
++
++	jcore_pit_base = of_iomap(node, 0);
++	if (!jcore_pit_base) {
++		pr_err("Error: Cannot map base address for J-Core PIT\n");
++		return -ENXIO;
++	}
++
++	pit_irq = irq_of_parse_and_map(node, 0);
++	if (!pit_irq) {
++		pr_err("Error: J-Core PIT has no IRQ\n");
++		return -ENXIO;
++	}
++
++	pr_info("Initializing J-Core PIT at %p IRQ %d\n",
++		jcore_pit_base, pit_irq);
++
++	jcore_cs.name = "jcore_pit_cs";
++	jcore_cs.rating = 400;
++	jcore_cs.read = jcore_clocksource_read;
++	jcore_cs.mult = 1;
++	jcore_cs.shift = 0;
++	jcore_cs.mask = CLOCKSOURCE_MASK(32);
++	jcore_cs.flags = CLOCK_SOURCE_IS_CONTINUOUS;
++
++	err = clocksource_register_hz(&jcore_cs, NSEC_PER_SEC);
++	if (err) {
++		pr_err("Error registering clocksource device: %d\n", err);
++		return err;
++	}
++
++	sched_clock_register(jcore_sched_clock_read, 32, NSEC_PER_SEC);
++
++	jcore_pit_percpu = alloc_percpu(struct jcore_pit);
++	if (!jcore_pit_percpu) {
++		pr_err("Failed to allocate memory for clock event device\n");
++		return -ENOMEM;
++	}
++
++	err = request_irq(pit_irq, jcore_timer_interrupt,
++			  IRQF_TIMER | IRQF_PERCPU,
++			  "jcore_pit", jcore_pit_percpu);
++	if (err) {
++		pr_err("pit irq request failed: %d\n", err);
++		return err;
 +	}
 +
 +	/*
-+	 * The irq chip framework requires either mask/unmask or enable/disable
-+	 * function pointers to be provided, but the hardware does not have any
-+	 * such mechanism; the only interrupt masking is at the cpu level and
-+	 * it affects all interrupts. We provide dummy mask/unmask. The hardware
-+	 * handles all interrupt control and clears pending status when the cpu
-+	 * accepts the interrupt.
++	 * The J-Core PIT is not hard-wired to a particular IRQ, but
++	 * integrated with the interrupt controller such that the IRQ it
++	 * generates is programmable. The programming interface has a
++	 * legacy field which was an interrupt priority for AIC1, but
++	 * which is OR'd onto bits 2-5 of the generated IRQ number when
++	 * used with J-Core AIC2, so set it to match these bits.
 +	 */
-+	jcore_aic.irq_mask = noop;
-+	jcore_aic.irq_unmask = noop;
-+	jcore_aic.name = "AIC";
++	hwirq = irq_get_irq_data(pit_irq)->hwirq;
++	irqprio = (hwirq >> 2) & PIT_PRIO_MASK;
++	enable_val = (1U << PIT_ENABLE_SHIFT)
++		   | (hwirq << PIT_IRQ_SHIFT)
++		   | (irqprio << PIT_PRIO_SHIFT);
 +
-+	domain = irq_domain_add_linear(node, dom_sz, &jcore_aic_irqdomain_ops,
-+				       &jcore_aic);
-+	if (!domain)
-+		return -ENOMEM;
-+	irq_create_strict_mappings(domain, min_irq, min_irq, dom_sz - min_irq);
++	for_each_present_cpu(cpu) {
++		struct jcore_pit *pit = per_cpu_ptr(jcore_pit_percpu, cpu);
++
++		pit->base = of_iomap(node, cpu);
++		if (!pit->base) {
++			pr_err("Unable to map PIT for cpu %u\n", cpu);
++			continue;
++		}
++
++		pit->ced.name = "jcore_pit";
++		pit->ced.features = CLOCK_EVT_FEAT_PERIODIC
++				  | CLOCK_EVT_FEAT_ONESHOT
++				  | CLOCK_EVT_FEAT_PERCPU;
++		pit->ced.cpumask = cpumask_of(cpu);
++		pit->ced.rating = 400;
++		pit->ced.irq = pit_irq;
++		pit->ced.set_state_shutdown = jcore_pit_set_state_shutdown;
++		pit->ced.set_state_periodic = jcore_pit_set_state_periodic;
++		pit->ced.set_state_oneshot = jcore_pit_set_state_oneshot;
++		pit->ced.set_next_event = jcore_pit_set_next_event;
++
++		pit->cpu = cpu;
++		pit->enable_val = enable_val;
++	}
++
++	cpuhp_setup_state(CPUHP_AP_JCORE_TIMER_STARTING,
++			  "AP_JCORE_TIMER_STARTING",
++			  jcore_pit_local_init, jcore_pit_local_shutdown);
 +
 +	return 0;
 +}
 +
-+IRQCHIP_DECLARE(jcore_aic2, "jcore,aic2", aic_irq_of_init);
-+IRQCHIP_DECLARE(jcore_aic1, "jcore,aic1", aic_irq_of_init);
++CLOCKSOURCE_OF_DECLARE(jcore_pit, "jcore,pit", jcore_pit_init);
+diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+index 242bf53..e95ed7d 100644
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -50,6 +50,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_ARM_ARCH_TIMER_STARTING,
+ 	CPUHP_AP_ARM_GLOBAL_TIMER_STARTING,
+ 	CPUHP_AP_DUMMY_TIMER_STARTING,
++	CPUHP_AP_JCORE_TIMER_STARTING,
+ 	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
+ 	CPUHP_AP_ARM_TWD_STARTING,
+ 	CPUHP_AP_METAG_TIMER_STARTING,
 -- 
 2.8.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
