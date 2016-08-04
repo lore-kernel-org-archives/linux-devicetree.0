@@ -1,233 +1,198 @@
-From: YT Shen <yt.shen@mediatek.com>
-Subject: [PATCH v6 09/10] drm/mediatek: add support for Mediatek SoC MT2701
-Date: Thu, 4 Aug 2016 19:07:23 +0800
-Message-ID: <1470308844-20895-10-git-send-email-yt.shen@mediatek.com>
-References: <1470308844-20895-1-git-send-email-yt.shen@mediatek.com>
+From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Subject: [RFC PATCH v3 2/2] net: phy: Add gmiitorgmii converter support
+Date: Thu, 4 Aug 2016 17:43:09 +0530
+Message-ID: <1470312789-28275-2-git-send-email-appanad@xilinx.com>
+References: <1470312789-28275-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1470308844-20895-1-git-send-email-yt.shen@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Mao Huang <littlecvr@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1470312789-28275-1-git-send-email-appanad@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, appanad@xilinx.com, f.fainelli@gmail.com, andrew@lunn.ch, punnaia@xilinx.com, anirudh@xilinx.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGQgc3VwcG9ydCBmb3IgdGhlIE1lZGlhdGVrIE1UMjcwMSBESVNQIHN1YnN5
-c3RlbS4KVGhlcmUgaXMgb25seSBvbmUgT1ZMIGVuZ2luZSBpbiBNVDI3MDEuCgpTaWduZWQtb2Zm
-LWJ5OiBZVCBTaGVuIDx5dC5zaGVuQG1lZGlhdGVrLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMgICAgIHwgICAgNiArKysrKysKIGRyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMgICAgfCAgICA2ICsrKysrKwogZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgICAgICB8ICAgMTcgKysrKysrKysrKysrKysrCiBk
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jIHwgICAgNyArKysrKysK
-IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmggfCAgICAxICsKIGRy
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICAgICAgfCAgIDI5ICsrKysrKysr
-KysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMgICAg
-ICAgICAgfCAgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlwaV90eC5jICAg
-ICAgfCAgIDMxICsrKysrKysrKysrKysrKysrKysrKysrKysrLQogOCBmaWxlcyBjaGFuZ2VkLCA5
-NyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
-a19kaXNwX292bC5jCmluZGV4IGViNWMwNWUuLjFkYTBhNzEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMKQEAgLTI4NiwxMSArMjg2LDE3IEBAIHN0YXRpYyBpbnQgbXRr
-X2Rpc3Bfb3ZsX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCXJldHVybiAw
-OwogfQogCitzdGF0aWMgY29uc3Qgc3RydWN0IG10a19kZHBfY29tcF9kcml2ZXJfZGF0YSBtdDI3
-MDFfb3ZsX2RyaXZlcl9kYXRhID0geworCS5vdmwgPSB7MHgwMDQwLCAxIDw8IDEyLCAwfQorfTsK
-Kwogc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2NvbXBfZHJpdmVyX2RhdGEgbXQ4MTczX292
-bF9kcml2ZXJfZGF0YSA9IHsKIAkub3ZsID0gezB4MGY0MCwgMCwgMSA8PCAxMn0KIH07CiAKIHN0
-YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG10a19kaXNwX292bF9kcml2ZXJfZHRfbWF0
-Y2hbXSA9IHsKKwl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcwMS1kaXNwLW92bCIsCisJ
-ICAuZGF0YSA9ICZtdDI3MDFfb3ZsX2RyaXZlcl9kYXRhfSwKIAl7IC5jb21wYXRpYmxlID0gIm1l
-ZGlhdGVrLG10ODE3My1kaXNwLW92bCIsCiAJICAuZGF0YSA9ICZtdDgxNzNfb3ZsX2RyaXZlcl9k
-YXRhfSwKIAl7fSwKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlz
-cF9yZG1hLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jCmluZGV4
-IGZiMGRiNTAuLjUwNmEzNTMgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
-dGtfZGlzcF9yZG1hLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3Jk
-bWEuYwpAQCAtMjI1LDExICsyMjUsMTcgQEAgc3RhdGljIGludCBtdGtfZGlzcF9yZG1hX3JlbW92
-ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCXJldHVybiAwOwogfQogCitzdGF0aWMg
-Y29uc3Qgc3RydWN0IG10a19kZHBfY29tcF9kcml2ZXJfZGF0YSBtdDI3MDFfcmRtYV9kcml2ZXJf
-ZGF0YSA9IHsKKwkucmRtYV9maWZvX3BzZXVkb19zaXplID0gU1pfNEssCit9OworCiBzdGF0aWMg
-Y29uc3Qgc3RydWN0IG10a19kZHBfY29tcF9kcml2ZXJfZGF0YSBtdDgxNzNfcmRtYV9kcml2ZXJf
-ZGF0YSA9IHsKIAkucmRtYV9maWZvX3BzZXVkb19zaXplID0gU1pfOEssCiB9OwogCiBzdGF0aWMg
-Y29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdGtfZGlzcF9yZG1hX2RyaXZlcl9kdF9tYXRjaFtd
-ID0geworCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQyNzAxLWRpc3AtcmRtYSIsCisJICAu
-ZGF0YSA9ICZtdDI3MDFfcmRtYV9kcml2ZXJfZGF0YX0sCiAJeyAuY29tcGF0aWJsZSA9ICJtZWRp
-YXRlayxtdDgxNzMtZGlzcC1yZG1hIiwKIAkgIC5kYXRhID0gJm10ODE3M19yZG1hX2RyaXZlcl9k
-YXRhfSwKIAl7fSwKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2RkcC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKaW5kZXggYTli
-MjA5Yy4uODEzMGYzZCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-cm1fZGRwLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKQEAg
-LTYwLDYgKzYwLDEzIEBACiAjZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9QV00xCQlCSVQo
-MjQpCiAjZGVmaW5lIE1UODE3M19NVVRFWF9NT0RfRElTUF9PRAkJQklUKDI1KQogCisjZGVmaW5l
-IE1UMjcwMV9NVVRFWF9NT0RfRElTUF9PVkwJCUJJVCgzKQorI2RlZmluZSBNVDI3MDFfTVVURVhf
-TU9EX0RJU1BfV0RNQQkJQklUKDYpCisjZGVmaW5lIE1UMjcwMV9NVVRFWF9NT0RfRElTUF9DT0xP
-UgkJQklUKDcpCisjZGVmaW5lIE1UMjcwMV9NVVRFWF9NT0RfRElTUF9CTFMJCUJJVCg5KQorI2Rl
-ZmluZSBNVDI3MDFfTVVURVhfTU9EX0RJU1BfUkRNQTAJCUJJVCgxMCkKKyNkZWZpbmUgTVQyNzAx
-X01VVEVYX01PRF9ESVNQX1JETUExCQlCSVQoMTIpCisKICNkZWZpbmUgTVVURVhfU09GX1NJTkdM
-RV9NT0RFCQkwCiAjZGVmaW5lIE1VVEVYX1NPRl9EU0kwCQkJMQogI2RlZmluZSBNVVRFWF9TT0Zf
-RFNJMQkJCTIKQEAgLTkyLDYgKzk5LDE1IEBAIHN0cnVjdCBtdGtfZGRwIHsKIAljb25zdCB1bnNp
-Z25lZCBpbnQJCSptdXRleF9tb2Q7CiB9OwogCitzdGF0aWMgY29uc3QgdW5zaWduZWQgaW50IG10
-MjcwMV9tdXRleF9tb2RbRERQX0NPTVBPTkVOVF9JRF9NQVhdID0geworCVtERFBfQ09NUE9ORU5U
-X0JMU10gPSBNVDI3MDFfTVVURVhfTU9EX0RJU1BfQkxTLAorCVtERFBfQ09NUE9ORU5UX0NPTE9S
-MF0gPSBNVDI3MDFfTVVURVhfTU9EX0RJU1BfQ09MT1IsCisJW0REUF9DT01QT05FTlRfT1ZMMF0g
-PSBNVDI3MDFfTVVURVhfTU9EX0RJU1BfT1ZMLAorCVtERFBfQ09NUE9ORU5UX1JETUEwXSA9IE1U
-MjcwMV9NVVRFWF9NT0RfRElTUF9SRE1BMCwKKwlbRERQX0NPTVBPTkVOVF9SRE1BMV0gPSBNVDI3
-MDFfTVVURVhfTU9EX0RJU1BfUkRNQTEsCisJW0REUF9DT01QT05FTlRfV0RNQTBdID0gTVQyNzAx
-X01VVEVYX01PRF9ESVNQX1dETUEsCit9OworCiBzdGF0aWMgY29uc3QgdW5zaWduZWQgaW50IG10
-ODE3M19tdXRleF9tb2RbRERQX0NPTVBPTkVOVF9JRF9NQVhdID0gewogCVtERFBfQ09NUE9ORU5U
-X0FBTF0gPSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfQUFMLAogCVtERFBfQ09NUE9ORU5UX0NPTE9S
-MF0gPSBNVDgxNzNfTVVURVhfTU9EX0RJU1BfQ09MT1IwLApAQCAtMzkwLDYgKzQwNiw3IEBAIHN0
-YXRpYyBpbnQgbXRrX2RkcF9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIH0K
-IAogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgZGRwX2RyaXZlcl9kdF9tYXRjaFtd
-ID0geworCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQyNzAxLWRpc3AtbXV0ZXgiLCAuZGF0
-YSA9IG10MjcwMV9tdXRleF9tb2R9LAogCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTcz
-LWRpc3AtbXV0ZXgiLCAuZGF0YSA9IG10ODE3M19tdXRleF9tb2R9LAogCXt9LAogfTsKZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9kcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCmluZGV4IDRiNGU0NDkuLjQ2
-NTgxOWIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9j
-b21wLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwpA
-QCAtMTEyLDYgKzExMiw3IEBAIHN0cnVjdCBtdGtfZGRwX2NvbXBfbWF0Y2ggewogCiBzdGF0aWMg
-Y29uc3Qgc3RydWN0IG10a19kZHBfY29tcF9tYXRjaCBtdGtfZGRwX21hdGNoZXNbRERQX0NPTVBP
-TkVOVF9JRF9NQVhdID0gewogCVtERFBfQ09NUE9ORU5UX0FBTF0JPSB7IE1US19ESVNQX0FBTCwJ
-MCwgTlVMTCB9LAorCVtERFBfQ09NUE9ORU5UX0JMU10JPSB7IE1US19ESVNQX1BXTSwJMCwgTlVM
-TCB9LAogCVtERFBfQ09NUE9ORU5UX0NPTE9SMF0JPSB7IE1US19ESVNQX0NPTE9SLAkwLCAmZGRw
-X2NvbG9yIH0sCiAJW0REUF9DT01QT05FTlRfQ09MT1IxXQk9IHsgTVRLX0RJU1BfQ09MT1IsCTEs
-ICZkZHBfY29sb3IgfSwKIAlbRERQX0NPTVBPTkVOVF9EUEkwXQk9IHsgTVRLX0RQSSwJCTAsIE5V
-TEwgfSwKQEAgLTEzMCwxMSArMTMxLDE3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2RkcF9j
-b21wX21hdGNoIG10a19kZHBfbWF0Y2hlc1tERFBfQ09NUE9ORU5UX0lEX01BWF0gPSB7CiAJW0RE
-UF9DT01QT05FTlRfV0RNQTFdCT0geyBNVEtfRElTUF9XRE1BLAkxLCBOVUxMIH0sCiB9OwogCitz
-dGF0aWMgY29uc3Qgc3RydWN0IG10a19kZHBfY29tcF9kcml2ZXJfZGF0YSBtdDI3MDFfY29sb3Jf
-ZHJpdmVyX2RhdGEgPSB7CisJLmNvbG9yX29mZnNldCA9IDB4MGYwMCwKK307CisKIHN0YXRpYyBj
-b25zdCBzdHJ1Y3QgbXRrX2RkcF9jb21wX2RyaXZlcl9kYXRhIG10ODE3M19jb2xvcl9kcml2ZXJf
-ZGF0YSA9IHsKIAkuY29sb3Jfb2Zmc2V0ID0gMHgwYzAwLAogfTsKIAogc3RhdGljIGNvbnN0IHN0
-cnVjdCBvZl9kZXZpY2VfaWQgbXRrX2Rpc3BfY29sb3JfZHJpdmVyX2R0X21hdGNoW10gPSB7CisJ
-eyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtZGlzcC1jb2xvciIsCisJICAuZGF0YSA9
-ICZtdDI3MDFfY29sb3JfZHJpdmVyX2RhdGF9LAogCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWss
-bXQ4MTczLWRpc3AtY29sb3IiLAogCSAgLmRhdGEgPSAmbXQ4MTczX2NvbG9yX2RyaXZlcl9kYXRh
-fSwKIAl7fSwKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
-cF9jb21wLmggYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oCmlu
-ZGV4IDUzMDY1YzcuLjA4NTBhYTQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9tdGtfZHJtX2RkcF9jb21wLmgKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-cm1fZGRwX2NvbXAuaApAQCAtNDAsNiArNDAsNyBAQCBlbnVtIG10a19kZHBfY29tcF90eXBlIHsK
-IAogZW51bSBtdGtfZGRwX2NvbXBfaWQgewogCUREUF9DT01QT05FTlRfQUFMLAorCUREUF9DT01Q
-T05FTlRfQkxTLAogCUREUF9DT01QT05FTlRfQ09MT1IwLAogCUREUF9DT01QT05FTlRfQ09MT1Ix
-LAogCUREUF9DT01QT05FTlRfRFBJMCwKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9tdGtfZHJtX2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2
-LmMKaW5kZXggODBiNGY1NC4uMjUwM2YwNCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcm1fZHJ2LmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-cm1fZHJ2LmMKQEAgLTEwOSw2ICsxMDksMTkgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fbW9k
-ZV9jb25maWdfZnVuY3MgbXRrX2RybV9tb2RlX2NvbmZpZ19mdW5jcyA9IHsKIAkuYXRvbWljX2Nv
-bW1pdCA9IG10a19hdG9taWNfY29tbWl0LAogfTsKIAorc3RhdGljIGNvbnN0IGVudW0gbXRrX2Rk
-cF9jb21wX2lkIG10MjcwMV9tdGtfZGRwX21haW5bXSA9IHsKKwlERFBfQ09NUE9ORU5UX09WTDAs
-CisJRERQX0NPTVBPTkVOVF9SRE1BMCwKKwlERFBfQ09NUE9ORU5UX0NPTE9SMCwKKwlERFBfQ09N
-UE9ORU5UX0JMUywKKwlERFBfQ09NUE9ORU5UX0RTSTAsCit9OworCitzdGF0aWMgY29uc3QgZW51
-bSBtdGtfZGRwX2NvbXBfaWQgbXQyNzAxX210a19kZHBfZXh0W10gPSB7CisJRERQX0NPTVBPTkVO
-VF9SRE1BMSwKKwlERFBfQ09NUE9ORU5UX0RQSTAsCit9OworCiBzdGF0aWMgY29uc3QgZW51bSBt
-dGtfZGRwX2NvbXBfaWQgbXQ4MTczX210a19kZHBfbWFpbltdID0gewogCUREUF9DT01QT05FTlRf
-T1ZMMCwKIAlERFBfQ09NUE9ORU5UX0NPTE9SMCwKQEAgLTEyOCw2ICsxNDEsMTQgQEAgc3RhdGlj
-IGNvbnN0IGVudW0gbXRrX2RkcF9jb21wX2lkIG10ODE3M19tdGtfZGRwX2V4dFtdID0gewogCURE
-UF9DT01QT05FTlRfRFBJMCwKIH07CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX21tc3lzX2Ry
-aXZlcl9kYXRhIG10MjcwMV9tbXN5c19kcml2ZXJfZGF0YSA9IHsKKwkubWFpbl9wYXRoID0gbXQy
-NzAxX210a19kZHBfbWFpbiwKKwkubWFpbl9sZW4gPSBBUlJBWV9TSVpFKG10MjcwMV9tdGtfZGRw
-X21haW4pLAorCS5leHRfcGF0aCA9IG10MjcwMV9tdGtfZGRwX2V4dCwKKwkuZXh0X2xlbiA9IEFS
-UkFZX1NJWkUobXQyNzAxX210a19kZHBfZXh0KSwKKwkuc2hhZG93X3JlZ2lzdGVyID0gdHJ1ZSwK
-K307CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX21tc3lzX2RyaXZlcl9kYXRhIG10ODE3M19t
-bXN5c19kcml2ZXJfZGF0YSA9IHsKIAkubWFpbl9wYXRoID0gbXQ4MTczX210a19kZHBfbWFpbiwK
-IAkubWFpbl9sZW4gPSBBUlJBWV9TSVpFKG10ODE3M19tdGtfZGRwX21haW4pLApAQCAtMzMxLDE2
-ICszNTIsMjIgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBjb21wb25lbnRfbWFzdGVyX29wcyBtdGtf
-ZHJtX29wcyA9IHsKIH07CiAKIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG10a19k
-ZHBfY29tcF9kdF9pZHNbXSA9IHsKKwl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcwMS1k
-aXNwLW92bCIsICAgLmRhdGEgPSAodm9pZCAqKU1US19ESVNQX09WTCB9LAogCXsgLmNvbXBhdGli
-bGUgPSAibWVkaWF0ZWssbXQ4MTczLWRpc3Atb3ZsIiwgICAuZGF0YSA9ICh2b2lkICopTVRLX0RJ
-U1BfT1ZMIH0sCisJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtZGlzcC1yZG1hIiwg
-IC5kYXRhID0gKHZvaWQgKilNVEtfRElTUF9SRE1BIH0sCiAJeyAuY29tcGF0aWJsZSA9ICJtZWRp
-YXRlayxtdDgxNzMtZGlzcC1yZG1hIiwgIC5kYXRhID0gKHZvaWQgKilNVEtfRElTUF9SRE1BIH0s
-CiAJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtZGlzcC13ZG1hIiwgIC5kYXRhID0g
-KHZvaWQgKilNVEtfRElTUF9XRE1BIH0sCisJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3
-MDEtZGlzcC1jb2xvciIsIC5kYXRhID0gKHZvaWQgKilNVEtfRElTUF9DT0xPUiB9LAogCXsgLmNv
-bXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWRpc3AtY29sb3IiLCAuZGF0YSA9ICh2b2lkICop
-TVRLX0RJU1BfQ09MT1IgfSwKIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1kaXNw
-LWFhbCIsICAgLmRhdGEgPSAodm9pZCAqKU1US19ESVNQX0FBTH0sCiAJeyAuY29tcGF0aWJsZSA9
-ICJtZWRpYXRlayxtdDgxNzMtZGlzcC1nYW1tYSIsIC5kYXRhID0gKHZvaWQgKilNVEtfRElTUF9H
-QU1NQSwgfSwKIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1kaXNwLXVmb2UiLCAg
-LmRhdGEgPSAodm9pZCAqKU1US19ESVNQX1VGT0UgfSwKKwl7IC5jb21wYXRpYmxlID0gIm1lZGlh
-dGVrLG10MjcwMS1kc2kiLAkgICAgICAuZGF0YSA9ICh2b2lkICopTVRLX0RTSSB9LAogCXsgLmNv
-bXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWRzaSIsICAgICAgICAuZGF0YSA9ICh2b2lkICop
-TVRLX0RTSSB9LAogCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWRwaSIsICAgICAg
-ICAuZGF0YSA9ICh2b2lkICopTVRLX0RQSSB9LAorCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWss
-bXQyNzAxLWRpc3AtbXV0ZXgiLCAuZGF0YSA9ICh2b2lkICopTVRLX0RJU1BfTVVURVggfSwKIAl7
-IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1kaXNwLW11dGV4IiwgLmRhdGEgPSAodm9p
-ZCAqKU1US19ESVNQX01VVEVYIH0sCisJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEt
-ZGlzcC1wd20iLCAgIC5kYXRhID0gKHZvaWQgKilNVEtfRElTUF9QV00gfSwKIAl7IC5jb21wYXRp
-YmxlID0gIm1lZGlhdGVrLG10ODE3My1kaXNwLXB3bSIsICAgLmRhdGEgPSAodm9pZCAqKU1US19E
-SVNQX1BXTSB9LAogCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWRpc3Atb2QiLCAg
-ICAuZGF0YSA9ICh2b2lkICopTVRLX0RJU1BfT0QgfSwKIAl7IH0KQEAgLTUxNCw2ICs1NDEsOCBA
-QCBzdGF0aWMgU0lNUExFX0RFVl9QTV9PUFMobXRrX2RybV9wbV9vcHMsIG10a19kcm1fc3lzX3N1
-c3BlbmQsCiAJCQkgbXRrX2RybV9zeXNfcmVzdW1lKTsKIAogc3RhdGljIGNvbnN0IHN0cnVjdCBv
-Zl9kZXZpY2VfaWQgbXRrX2RybV9vZl9pZHNbXSA9IHsKKwl7IC5jb21wYXRpYmxlID0gIm1lZGlh
-dGVrLG10MjcwMS1tbXN5cyIsCisJICAuZGF0YSA9ICZtdDI3MDFfbW1zeXNfZHJpdmVyX2RhdGF9
-LAogCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLW1tc3lzIiwKIAkgIC5kYXRhID0g
-Jm10ODE3M19tbXN5c19kcml2ZXJfZGF0YX0sCiAJeyB9CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-c2kuYwppbmRleCAzMzczMDE5Li44YjhhNjI5IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2RzaS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNp
-LmMKQEAgLTEzMDAsNiArMTMwMCw3IEBAIHN0YXRpYyBpbnQgbXRrX2RzaV9yZW1vdmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldikKIH0KIAogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZp
-Y2VfaWQgbXRrX2RzaV9vZl9tYXRjaFtdID0geworCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWss
-bXQyNzAxLWRzaSIgfSwKIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1kc2kiIH0s
-CiAJeyB9LAogfTsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlw
-aV90eC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmMKaW5kZXggMDY2
-NmYxNS4uNmMyYWVjMCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19t
-aXBpX3R4LmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmMKQEAg
-LTE2LDYgKzE2LDcgQEAKICNpbmNsdWRlIDxsaW51eC9kZWxheS5oPgogI2luY2x1ZGUgPGxpbnV4
-L2lvLmg+CiAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+CisjaW5jbHVkZSA8bGludXgvb2ZfZGV2
-aWNlLmg+CiAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+CiAjaW5jbHVkZSA8bGlu
-dXgvcGh5L3BoeS5oPgogCkBAIC04Nyw2ICs4OCw5IEBACiAKICNkZWZpbmUgTUlQSVRYX0RTSV9Q
-TExfQ09OMgkweDU4CiAKKyNkZWZpbmUgTUlQSVRYX0RTSV9QTExfVE9QCTB4NjQKKyNkZWZpbmUg
-UkdfRFNJX01QUExMX1BSRVNFUlZFCQkoMHhmZiA8PCA4KQorCiAjZGVmaW5lIE1JUElUWF9EU0lf
-UExMX1BXUgkweDY4CiAjZGVmaW5lIFJHX0RTSV9NUFBMTF9TRE1fUFdSX09OCQlCSVQoMCkKICNk
-ZWZpbmUgUkdfRFNJX01QUExMX1NETV9JU09fRU4JCUJJVCgxKQpAQCAtMTIzLDEwICsxMjcsMTYg
-QEAKICNkZWZpbmUgU1dfTE5UMl9IU1RYX1BSRV9PRQkJQklUKDI0KQogI2RlZmluZSBTV19MTlQy
-X0hTVFhfT0UJCQlCSVQoMjUpCiAKK3N0cnVjdCBtdGtfbWlwaXR4X2RhdGEgeworCWNvbnN0IHUz
-MiBkYXRhOworfTsKKwogc3RydWN0IG10a19taXBpX3R4IHsKIAlzdHJ1Y3QgZGV2aWNlICpkZXY7
-CiAJdm9pZCBfX2lvbWVtICpyZWdzOwogCXUzMiBkYXRhX3JhdGU7CisJY29uc3Qgc3RydWN0IG10
-a19taXBpdHhfZGF0YSAqZHJpdmVyX2RhdGE7CisKIAlzdHJ1Y3QgY2xrX2h3IHBsbF9odzsKIAlz
-dHJ1Y3QgY2xrICpwbGw7CiB9OwpAQCAtMjQ1LDYgKzI1NSwxMCBAQCBzdGF0aWMgaW50IG10a19t
-aXBpX3R4X3BsbF9wcmVwYXJlKHN0cnVjdCBjbGtfaHcgKmh3KQogCW10a19taXBpX3R4X2NsZWFy
-X2JpdHMobWlwaV90eCwgTUlQSVRYX0RTSV9QTExfQ09OMSwKIAkJCSAgICAgICBSR19EU0lfTVBQ
-TExfU0RNX1NTQ19FTik7CiAKKwltdGtfbWlwaV90eF91cGRhdGVfYml0cyhtaXBpX3R4LCBNSVBJ
-VFhfRFNJX1BMTF9UT1AsCisJCQkJUkdfRFNJX01QUExMX1BSRVNFUlZFLAorCQkJCW1pcGlfdHgt
-PmRyaXZlcl9kYXRhLT5kYXRhKTsKKwogCXJldHVybiAwOwogfQogCkBAIC0yNTcsNiArMjcxLDkg
-QEAgc3RhdGljIHZvaWQgbXRrX21pcGlfdHhfcGxsX3VucHJlcGFyZShzdHJ1Y3QgY2xrX2h3ICpo
-dykKIAltdGtfbWlwaV90eF9jbGVhcl9iaXRzKG1pcGlfdHgsIE1JUElUWF9EU0lfUExMX0NPTjAs
-CiAJCQkgICAgICAgUkdfRFNJX01QUExMX1BMTF9FTik7CiAKKwltdGtfbWlwaV90eF91cGRhdGVf
-Yml0cyhtaXBpX3R4LCBNSVBJVFhfRFNJX1BMTF9UT1AsCisJCQkJUkdfRFNJX01QUExMX1BSRVNF
-UlZFLCAwKTsKKwogCW10a19taXBpX3R4X3VwZGF0ZV9iaXRzKG1pcGlfdHgsIE1JUElUWF9EU0lf
-UExMX1BXUiwKIAkJCQlSR19EU0lfTVBQTExfU0RNX0lTT19FTiB8CiAJCQkJUkdfRFNJX01QUExM
-X1NETV9QV1JfT04sCkBAIC0zOTMsNiArNDEwLDcgQEAgc3RhdGljIGludCBtdGtfbWlwaV90eF9w
-cm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCWlmICghbWlwaV90eCkKIAkJcmV0
-dXJuIC1FTk9NRU07CiAKKwltaXBpX3R4LT5kcml2ZXJfZGF0YSA9IG9mX2RldmljZV9nZXRfbWF0
-Y2hfZGF0YShkZXYpOwogCW1lbSA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09V
-UkNFX01FTSwgMCk7CiAJbWlwaV90eC0+cmVncyA9IGRldm1faW9yZW1hcF9yZXNvdXJjZShkZXYs
-IG1lbSk7CiAJaWYgKElTX0VSUihtaXBpX3R4LT5yZWdzKSkgewpAQCAtNDUwLDggKzQ2OCwxOSBA
-QCBzdGF0aWMgaW50IG10a19taXBpX3R4X3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
-ZGV2KQogCXJldHVybiAwOwogfQogCitzdGF0aWMgY29uc3Qgc3RydWN0IG10a19taXBpdHhfZGF0
-YSBtdDI3MDFfbWlwaXR4X2RhdGEgPSB7CisJLmRhdGEgPSAoMyA8PCA4KQorfTsKKworc3RhdGlj
-IGNvbnN0IHN0cnVjdCBtdGtfbWlwaXR4X2RhdGEgbXQ4MTczX21pcGl0eF9kYXRhID0geworCS5k
-YXRhID0gKDAgPDwgOCkKK307CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG10
-a19taXBpX3R4X21hdGNoW10gPSB7Ci0JeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMt
-bWlwaS10eCIsIH0sCisJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtbWlwaS10eCIs
-CisJICAuZGF0YSA9ICZtdDI3MDFfbWlwaXR4X2RhdGEgfSwKKwl7IC5jb21wYXRpYmxlID0gIm1l
-ZGlhdGVrLG10ODE3My1taXBpLXR4IiwKKwkgIC5kYXRhID0gJm10ODE3M19taXBpdHhfZGF0YSB9
-LAogCXt9LAogfTsKIAotLSAKMS43LjkuNQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+This patch adds support for gmiitorgmii converter.
+
+The GMII to RGMII IP core provides the Reduced Gigabit Media
+Independent Interface (RGMII) between Ethernet physical media
+Devices and the Gigabit Ethernet controller. This core can
+Switch dynamically between the three different speed modes of
+Operation by configuring the converter register through mdio write.
+
+MDIO interface is used to set operating speed of Ethernet MAC.
+
+Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+---
+Thanks a lot Andrew for your inputs.
+Changes for v3:
+--> Updated the driver as suggested by Andrew.
+Changes for v2:
+--> Passed struct xphy pointer directly to the fix_mac_speed
+API as suggested by the Florian.
+--> Added checks for the phy-node fail case as suggested
+by the Florian
+
+ drivers/net/phy/Kconfig             |   8 +++
+ drivers/net/phy/Makefile            |   1 +
+ drivers/net/phy/xilinx_gmii2rgmii.c | 121 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 130 insertions(+)
+ create mode 100644 drivers/net/phy/xilinx_gmii2rgmii.c
+
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 6dad9a9..eec31a3 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -271,6 +271,14 @@ config MDIO_BCM_IPROC
+ 	  This module provides a driver for the MDIO busses found in the
+ 	  Broadcom iProc SoC's.
+ 
++config XILINX_GMII2RGMII
++       tristate "Xilinx GMII2RGMII converter driver"
++       default y
++       ---help---
++         This driver support xilinx GMII to RGMII IP core it provides
++         the Reduced Gigabit Media Independent Interface(RGMII) between
++         Ethernet physical media devices and the Gigabit Ethernet controller.
++
+ endif # PHYLIB
+ 
+ config MICREL_KS8995MA
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index fcdbb92..8650067 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -44,3 +44,4 @@ obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+ obj-$(CONFIG_MDIO_BCM_UNIMAC)	+= mdio-bcm-unimac.o
+ obj-$(CONFIG_MICROCHIP_PHY)	+= microchip.o
+ obj-$(CONFIG_MDIO_BCM_IPROC)	+= mdio-bcm-iproc.o
++obj-$(CONFIG_XILINX_GMII2RGMII) += xilinx_gmii2rgmii.o
+diff --git a/drivers/net/phy/xilinx_gmii2rgmii.c b/drivers/net/phy/xilinx_gmii2rgmii.c
+new file mode 100644
+index 0000000..56a655a9
+--- /dev/null
++++ b/drivers/net/phy/xilinx_gmii2rgmii.c
+@@ -0,0 +1,121 @@
++/* Xilinx GMII2RGMII Converter driver
++ *
++ * Copyright (C) 2016 Xilinx, Inc.
++ *
++ * Author: Kedareswara rao Appana <appanad@xilinx.com>
++ *
++ * Description:
++ * This driver is developed for Xilinx GMII2RGMII Converter
++ *
++ * This program is free software: you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation, either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/mii.h>
++#include <linux/mdio.h>
++#include <linux/phy.h>
++#include <linux/of_mdio.h>
++
++#define XILINX_GMII2RGMII_REG	0x10
++
++struct gmii2rgmii {
++	struct phy_device *phy_dev;
++	struct phy_driver *phy_drv;
++	struct phy_driver conv_phy_drv;
++	int addr;
++};
++
++static int xgmiitorgmii_read_status(struct phy_device *phydev)
++{
++	struct gmii2rgmii *priv = (struct gmii2rgmii *)phydev->priv;
++	u16 val = 0;
++
++	priv->phy_drv->read_status(phydev);
++
++	val = mdiobus_read(phydev->mdio.bus, priv->addr, XILINX_GMII2RGMII_REG);
++
++	switch (phydev->speed) {
++	case SPEED_1000:
++		val |= BMCR_SPEED1000;
++	case SPEED_100:
++		val |= BMCR_SPEED100;
++	}
++
++	mdiobus_write(phydev->mdio.bus, priv->addr, XILINX_GMII2RGMII_REG, val);
++
++	return 0;
++}
++
++int xgmiitorgmii_probe(struct mdio_device *mdiodev)
++{
++	struct device *dev = &mdiodev->dev;
++	struct device_node *np = dev->of_node, *phy_node;
++	struct gmii2rgmii *priv;
++	int ret;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	phy_node = of_parse_phandle(np, "phy-handle", 0);
++	if (IS_ERR(phy_node)) {
++		dev_err(dev, "Couldn't parse phy-handle\n");
++		ret = -ENODEV;
++		goto out;
++	}
++
++	priv->phy_dev = of_phy_find_device(phy_node);
++	if (!priv->phy_dev) {
++		ret = -EPROBE_DEFER;
++		dev_info(dev, "Couldn't find phydev\n");
++		goto out;
++	}
++
++	priv->addr = mdiodev->addr;
++	priv->phy_drv = priv->phy_dev->drv;
++	memcpy(&priv->conv_phy_drv, priv->phy_dev->drv,
++	       sizeof(struct phy_driver));
++	priv->conv_phy_drv.read_status = xgmiitorgmii_read_status;
++	priv->phy_dev->priv = priv;
++	priv->phy_dev->drv = &priv->conv_phy_drv;
++
++	return 0;
++out:
++	return ret;
++}
++
++static const struct of_device_id xgmiitorgmii_of_match[] = {
++	{ .compatible = "xilinx,gmiitorgmii" },
++};
++MODULE_DEVICE_TABLE(of, xgmiitorgmii_of_match);
++
++static struct mdio_driver xgmiitorgmii_driver = {
++	.probe	= xgmiitorgmii_probe,
++	.mdiodrv.driver = {
++		.name = "xgmiitorgmii",
++		.of_match_table = xgmiitorgmii_of_match,
++	},
++};
++
++static int __init xgmiitorgmii_init(void)
++{
++	return mdio_driver_register(&xgmiitorgmii_driver);
++}
++module_init(xgmiitorgmii_init);
++
++static void __exit xgmiitorgmii_cleanup(void)
++{
++	mdio_driver_unregister(&xgmiitorgmii_driver);
++}
++module_exit(xgmiitorgmii_cleanup);
++
++MODULE_DESCRIPTION("Xilinx GMII2RGMII converter driver");
++MODULE_LICENSE("GPL");
+-- 
+2.1.2
