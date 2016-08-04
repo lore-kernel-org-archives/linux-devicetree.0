@@ -1,91 +1,71 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/6] power: add power sequence library
-Date: Thu, 4 Aug 2016 14:04:57 +0800
-Message-ID: <20160804060457.GA27272@shlinux2>
-References: <1470108652-16812-1-git-send-email-peter.chen@nxp.com>
- <1470108652-16812-3-git-send-email-peter.chen@nxp.com>
- <20160803221658.GD1405@google.com>
+From: Tomeu Vizoso <tomeu.vizoso@gmail.com>
+Subject: Re: [PATCH 08/12] i2c: core: Add support for 'i2c-bus' subnode
+Date: Thu, 4 Aug 2016 08:25:39 +0200
+Message-ID: <CAAObsKDyEJTqDpv7YcwF-fJ9c_Quz2mHMxm+HrScYJkB44jaBQ@mail.gmail.com>
+References: <1466697545-11868-1-git-send-email-jonathanh@nvidia.com>
+ <1466697545-11868-9-git-send-email-jonathanh@nvidia.com>
+ <CAAObsKDGVz0XCxeqt+W31RZ-KEvqPnQaH0dkTUj2zL9oFZrPBw@mail.gmail.com>
+ <d0647634-7fc9-05e1-21b0-f96bccd5fc6a@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160803221658.GD1405-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw3-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <d0647634-7fc9-05e1-21b0-f96bccd5fc6a@nvidia.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 03, 2016 at 03:16:58PM -0700, Matthias Kaehlcke wrote:
-> El Tue, Aug 02, 2016 at 11:30:48AM +0800 Peter Chen ha dit:
-> 
-> > diff --git a/drivers/power/pwrseq/core.c b/drivers/power/pwrseq/core.c
-> >
-> > ...
-> >
-> > +static DEFINE_MUTEX(pwrseq_list_mutex);
-> > +static LIST_HEAD(pwrseq_list);
-> > +
-> > +int pwrseq_get(struct device_node *np, struct pwrseq *p)
-> > +{
-> > +	if (p && p->get)
-> > +		return p->get(np, p);
-> > +
-> > +	return -ENOTSUPP;
-> > +}
-> > +
-> > +int pwrseq_on(struct device_node *np, struct pwrseq *p)
-> > +{
-> > +	if (p && p->on)
-> > +		return p->on(np, p);
-> > +
-> > +	return -ENOTSUPP;
-> > +}
-> > +
-> > +void pwrseq_off(struct pwrseq *p)
-> > +{
-> > +	if (p && p->off)
-> > +		p->off(p);
-> > +}
-> > +
-> > +void pwrseq_put(struct pwrseq *p)
-> > +{
-> > +	if (p && p->put)
-> > +		p->put(p);
-> > +}
-> > +
-> > +void pwrseq_free(struct pwrseq *p)
-> > +{
-> > +	if (p && p->free)
-> > +		p->free(p);
-> > +}
-> > +
-> > +void pwrseq_register(struct pwrseq *pwrseq)
-> > +{
-> > +	mutex_lock(&pwrseq_list_mutex);
-> > +	list_add(&pwrseq->node, &pwrseq_list);
-> > +	mutex_unlock(&pwrseq_list_mutex);
-> > +}
-> > +
-> > +void pwrseq_unregister(struct pwrseq *pwrseq)
-> > +{
-> > +	mutex_lock(&pwrseq_list_mutex);
-> > +	list_del(&pwrseq->node);
-> > +	mutex_unlock(&pwrseq_list_mutex);
-> > +}
-> 
-> What is the purpose of pwrseq_register/unregister()? The pwrseq
-> structs are added and removed from pwrseq_list, but besides that
-> pwrseq_list is not used.
-> 
-
-I had thought we may need to dump the pwrseq list in future for debug
-purpose. I will delete this unnecessary code.
-
--- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMiBBdWd1c3QgMjAxNiBhdCAwODo0OSwgSm9uIEh1bnRlciA8am9uYXRoYW5oQG52aWRpYS5j
+b20+IHdyb3RlOgo+Cj4gT24gMDIvMDgvMTYgMDc6MjYsIFRvbWV1IFZpem9zbyB3cm90ZToKPj4g
+T24gMjMgSnVuZSAyMDE2IGF0IDE3OjU5LCBKb24gSHVudGVyIDxqb25hdGhhbmhAbnZpZGlhLmNv
+bT4gd3JvdGU6Cj4+PiBJZiB0aGUgJ2kyYy1idXMnIGRldmljZS10cmVlIG5vZGUgaXMgcHJlc2Vu
+dCBmb3IgYW4gSTJDIGFkYXB0ZXIgdGhlbgo+Pj4gcGFyc2UgdGhpcyBzdWJub2RlIGZvciBJMkMg
+c2xhdmVzLgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IEpvbiBIdW50ZXIgPGpvbmF0aGFuaEBudmlk
+aWEuY29tPgo+Pj4gLS0tCj4+PiAgZHJpdmVycy9pMmMvaTJjLWNvcmUuYyB8IDEwICsrKysrKysr
+LS0KPj4+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+
+Pj4KPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9pMmMtY29yZS5jIGIvZHJpdmVycy9pMmMv
+aTJjLWNvcmUuYwo+Pj4gaW5kZXggOTUyZDJmMGMwMmM1Li43MWFkNTMyYmUxZDggMTAwNjQ0Cj4+
+PiAtLS0gYS9kcml2ZXJzL2kyYy9pMmMtY29yZS5jCj4+PiArKysgYi9kcml2ZXJzL2kyYy9pMmMt
+Y29yZS5jCj4+PiBAQCAtMTQ1Miw3ICsxNDUyLDcgQEAgc3RhdGljIHN0cnVjdCBpMmNfY2xpZW50
+ICpvZl9pMmNfcmVnaXN0ZXJfZGV2aWNlKHN0cnVjdCBpMmNfYWRhcHRlciAqYWRhcCwKPj4+Cj4+
+PiAgc3RhdGljIHZvaWQgb2ZfaTJjX3JlZ2lzdGVyX2RldmljZXMoc3RydWN0IGkyY19hZGFwdGVy
+ICphZGFwKQo+Pj4gIHsKPj4+IC0gICAgICAgc3RydWN0IGRldmljZV9ub2RlICpub2RlOwo+Pj4g
+KyAgICAgICBzdHJ1Y3QgZGV2aWNlX25vZGUgKmJ1cywgKm5vZGU7Cj4+Pgo+Pj4gICAgICAgICAv
+KiBPbmx5IHJlZ2lzdGVyIGNoaWxkIGRldmljZXMgaWYgdGhlIGFkYXB0ZXIgaGFzIGEgbm9kZSBw
+b2ludGVyIHNldCAqLwo+Pj4gICAgICAgICBpZiAoIWFkYXAtPmRldi5vZl9ub2RlKQo+Pj4gQEAg
+LTE0NjAsMTEgKzE0NjAsMTcgQEAgc3RhdGljIHZvaWQgb2ZfaTJjX3JlZ2lzdGVyX2RldmljZXMo
+c3RydWN0IGkyY19hZGFwdGVyICphZGFwKQo+Pj4KPj4+ICAgICAgICAgZGV2X2RiZygmYWRhcC0+
+ZGV2LCAib2ZfaTJjOiB3YWxraW5nIGNoaWxkIG5vZGVzXG4iKTsKPj4+Cj4+PiAtICAgICAgIGZv
+cl9lYWNoX2F2YWlsYWJsZV9jaGlsZF9vZl9ub2RlKGFkYXAtPmRldi5vZl9ub2RlLCBub2RlKSB7
+Cj4+PiArICAgICAgIGJ1cyA9IG9mX2dldF9jaGlsZF9ieV9uYW1lKGFkYXAtPmRldi5vZl9ub2Rl
+LCAiaTJjLWJ1cyIpOwo+Pj4gKyAgICAgICBpZiAoIWJ1cykKPj4+ICsgICAgICAgICAgICAgICBi
+dXMgPSBvZl9ub2RlX2dldChhZGFwLT5kZXYub2Zfbm9kZSk7Cj4+PiArCj4+PiArICAgICAgIGZv
+cl9lYWNoX2F2YWlsYWJsZV9jaGlsZF9vZl9ub2RlKGJ1cywgbm9kZSkgewo+Pj4gICAgICAgICAg
+ICAgICAgIGlmIChvZl9ub2RlX3Rlc3RfYW5kX3NldF9mbGFnKG5vZGUsIE9GX1BPUFVMQVRFRCkp
+Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgICBjb250aW51ZTsKPj4+ICAgICAgICAgICAgICAg
+ICBvZl9pMmNfcmVnaXN0ZXJfZGV2aWNlKGFkYXAsIG5vZGUpOwo+Pj4gICAgICAgICB9Cj4+PiAr
+Cj4+PiArICAgICAgIG9mX25vZGVfcHV0KGJ1cyk7Cj4+PiAgfQo+Pgo+PiBTb3JyeSBmb3Igbm90
+IGNvbW1lbnRpbmcgZWFybGllciwgYnV0IEkgb25seSBmb3VuZCB0aGUgaXNzdWUgeWVzdGVyZGF5
+Lgo+Pgo+PiBJJ20gYm90aGVyZWQgYXMgd2VsbCBieSB0aGUgIm1vZGFsaWFzIGZhaWx1cmUiIGVy
+cm9yIG1lc3NhZ2UgYnV0IGluIG15Cj4+IGNhc2UgdGhlIG5vZGUgZG9lc24ndCBoYXZlIGFueSBp
+MmMgZGV2aWNlcywgc28gdGhpcyBwYXRjaCBpc24ndCBhCj4+IGNvbXBsZXRlIHNvbHV0aW9uIHRv
+IHRoYXQgcHJvYmxlbS4KPgo+IEJ1dCBpdCBpcyBhIGkyYyBhZGFwdGVyIGNvcnJlY3Q/IEkgZ3Vl
+c3MgSSBkb24ndCBjb21wbGV0ZWx5IHVuZGVyc3RhbmQKPiB0aGUgcHJvYmxlbT8KPgo+PiBIYXMg
+dGhpcyBiZWVuIGNvbnNpZGVyZWQgYWxyZWFkeT8KPgo+IFdoeSBjYW4ndCB5b3UgYWRkIGEgcGxh
+Y2UtaG9sZGVyICdpMmMtYnVzJyBub2RlIGZvciBpMmMgZGV2aWNlcyBzbyB3aGVuCj4gdGhleSBh
+cmUgYWRkaW5nIGluIHRoZSBmdXR1cmUgdGhleSBhcmUgcGxhY2VkIHVuZGVyIHRoaXMgbm9kZT8g
+VGhpcyBpcwo+IHdoYXQgSSBkaWQgZm9yIGRwYXV4LiBTZWUgcGF0Y2ggMTIvMTIgb2YgdGhpcyBz
+ZXJpZXMuCgpIYWRuJ3QgcmVhbGl6ZWQsIGFuZCBpdCBzb3VuZHMgZ29vZCBlbm91Z2ggdG8gbWUu
+CgpUaGFua3MsCgpUb21ldQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
