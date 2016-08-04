@@ -1,51 +1,70 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 10/10] dmaengine: qcom_hidma: add MSI support for
- interrupts
-Date: Thu, 4 Aug 2016 18:16:41 +0530
-Message-ID: <20160804124641.GE9681@localhost>
-References: <1468867177-15007-1-git-send-email-okaya@codeaurora.org>
- <1468867177-15007-11-git-send-email-okaya@codeaurora.org>
- <20160724064256.GA9681@localhost>
- <e6560c8b-e18e-9e32-5b51-c1c12d8551ce@codeaurora.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] spi: add driver for J-Core SPI controller
+Date: Thu, 4 Aug 2016 15:05:16 +0200
+Message-ID: <CAMuHMdURxKP_U649yWPtmyQBh+zasUBDYcK5YKD0eL4MuXVs0A@mail.gmail.com>
+References: <cover.1469686300.git.dalias@libc.org> <2a46090a5a7c177b7eca83f68406650844423e7f.1469686300.git.dalias@libc.org>
+ <20160728191153.GL11806@sirena.org.uk> <20160728194045.GK15995@brightrain.aerifal.cx>
+ <20160728195125.GN11806@sirena.org.uk> <20160730033441.GO15995@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e6560c8b-e18e-9e32-5b51-c1c12d8551ce@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>
-Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "timur@codeaurora.org" <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "cov@codeaurora.org" <cov@codeaurora.org>, "jcm@redhat.com" <jcm@redhat.com>, "eric.auger@linaro.org" <eric.auger@linaro.org>, "agross@codeaurora.org" <agross@codeaurora.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Williams, Dan J" <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160730033441.GO15995-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 24, 2016 at 10:38:11AM -0400, Sinan Kaya wrote:
-> >> +       if (rc)
-> >> +               dev_warn(&pdev->dev,
-> >> +                        "failed to request MSI irq, falling back to wired IRQ\n");
-> >> +       return rc;
-> >> +#else
-> >> +       return -EINVAL;
-> > 
-> > -EINVAL doesnt sound apt here..
-> 
-> What should I use? -ENOENT ?
+Hi Rich,
 
-that sounds okay or EIO
+On Sat, Jul 30, 2016 at 5:34 AM, Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org> wrote:
+> On Thu, Jul 28, 2016 at 08:51:25PM +0100, Mark Brown wrote:
+>> On Thu, Jul 28, 2016 at 03:40:45PM -0400, Rich Felker wrote:
+>> > On Thu, Jul 28, 2016 at 08:11:53PM +0100, Mark Brown wrote:
+>> > > Why are you not using the clock API for this?  Just require a clock and
+>> > > use clk_get_rate() to find out what rate it is.
+>>
+>> > I thought about that but I'm not familiar with it. I can try to figure
+>> > it out quickly and test that approach; don't see any reason it
+>> > shouldn't work. Would you insist on having full support for
+>> > enabling/disabling the clk when it's in use, or would you be happy
+>> > with treating it as a fixed clock that's always-on for now and
+>> > possibly extending it with more functionality later if there's ever
+>> > hardware where that's relevant/helpful?
+>>
+>> It's fine to just enable it at startup and leave it on, though the
+>> runtime PM ops are trivial and you can set auto_runtime_pm to have the
+>> core do the gets and puts.
+>
+> I was able to get it working via the clk api and I'll include support
+> for this in the next version of the patch, but to actually use it
+> depends on changing arch/sh to use the common clk framework; otherwise
+> there's no way to provide a suitable clk in the DT and have
+> [devm_]clk_get actually pick it up. Should I keep around the option of
+> using clock-frequency too? That would be most convenient.
+>
+> I do have a pending patch from Sato-san to switch arch/sh over to CCF
+> but it's part of a series and I don't think it's ready to merge. I may
+> be able to merge just a minimal, safe subset that won't break legacy
+> non-DT configurations, though.
 
-> >> +                       return false;
-> >> +
-> >> +               ret = strcmp(of_compat, "qcom,hidma-1.1");
-> >> +       } else {
-> >> +               ret = strcmp(acpi_device_hid(adev), "QCOM8062");
-> > 
-> > Okay if you ahve a device ID then why do we need new binding? This device as
-> > you said implies the support for MSI interrupts.
-> 
-> 
-> Yes, I do have a new device ID for platforms with MSI capability. 
-> 
-> Which new binding are you referring to?
+I think you can use non-CCF clocks with DT, if you register them first.
+Cfr. the clk_names[] array and shmobile_clk_workaround() function in
+v3.18:arch/arm/mach-shmobile/board-koelsch-reference.c and
+v3.18:arch/arm/mach-shmobile/clock.c
 
-If you have "QCOM8062" why do you need DT to tell hidma-1.1 ?
+Or was that the other way around?
 
--- 
-~Vinod
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
