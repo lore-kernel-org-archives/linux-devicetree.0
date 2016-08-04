@@ -1,86 +1,77 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 2/2 v16] drm/bridge: Add I2C based driver for ps8640
- bridge
-Date: Thu, 4 Aug 2016 12:58:15 +0200
-Message-ID: <20160804105814.GH6232@phenom.ffwll.local>
-References: <1464861445-11086-1-git-send-email-jitao.shi@mediatek.com>
- <1464861445-11086-2-git-send-email-jitao.shi@mediatek.com>
- <CACvgo53002XCPLufbJHQLC1uL1nNS7_0gh=napedetmvT6FoSw@mail.gmail.com>
- <CAGS+omDsDS5tx=+Efq8LWNd3-asU4r2h=-AE6vdKgfG-p6vdAA@mail.gmail.com>
- <CAKMK7uEkUOq1CB3tj_1Qx50fBpw9B39+c3asX6MPNexT=dv9fA@mail.gmail.com>
- <CAFqH_53PgPs3_h7XNFEu4u0W6GW7vyWCNFf2vq8Yn7sH2LbFwA@mail.gmail.com>
+From: Karl Beldan <kbeldan@baylibre.com>
+Subject: [PATCH] ARM: dts: da850: Add missing pin muxing for the UARTs
+Date: Thu,  4 Aug 2016 11:06:56 +0000
+Message-ID: <20160804110656.25318-1-kbeldan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFqH_53PgPs3_h7XNFEu4u0W6GW7vyWCNFf2vq8Yn7sH2LbFwA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo Serra <eballetbo@gmail.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>, Daniel Kurtz <djkurtz@chromium.org>, Mark Rutland <mark.rutland@arm.com>, stonea168@163.com, ML dri-devel <dri-devel@lists.freedesktop.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree <devicetree@vger.kernel.org>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang =?utf-8?B?KOm7g+aZuuWCkSk=?= <eddie.huang@mediatek.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@sam>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, karl.beldan+oss@gmail.com, Kevin Hilman <khilman@baylibre.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Karl Beldan <kbeldan@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2016 at 12:35:59PM +0200, Enric Balletbo Serra wrote:
-> 2016-07-12 12:13 GMT+02:00 Daniel Vetter <daniel@ffwll.ch>:
-> > On Wed, Jun 29, 2016 at 6:31 AM, Daniel Kurtz <djkurtz@chromium.org> wrote:
-> >> On Fri, Jun 17, 2016 at 3:14 AM, Emil Velikov <emil.l.velikov@gmail.com> wrote:
-> >>>> +static ssize_t ps8640_update_fw_store(struct device *dev,
-> >>>> +                                     struct device_attribute *attr,
-> >>>> +                                     const char *buf, size_t count)
-> >>>> +{
-> >>>> +       struct i2c_client *client = to_i2c_client(dev);
-> >>>> +       struct ps8640 *ps_bridge = i2c_get_clientdata(client);
-> >>>> +       const struct firmware *fw;
-> >>>> +       int error;
-> >>>> +
-> >>>> +       error = request_firmware(&fw, PS_FW_NAME, dev);
-> >>> Can the device operate without a firmware ? If not, why is the
-> >>> firmware loaded so later/after user interaction (via sysfs) ? I don't
-> >>> recall any other driver in DRM to use such an approach.
-> >>
-> >> The PS8640 has internal flash, so it should always already have a
-> >> working firmware.
-> >> This sysfs interface is useful for user space initiated field firmware updates.
-> >
-> > Might be better to just do a request_firmware on driver load, and
-> > simply proceed if it's not there. Adding a sysfs interface (which is
-> > abi) seems way too much overkill for this imo. If you want to upgrade
-> > the firmware you can then just drop it into the right directory, with
-> > no further interaction needed.
-> 
-> IMHO I'm not sure if for this use case request_firmware on driver load
-> is a good idea. Flash the non-volatile internal chip can be a slow
-> operation and if you forget to remove the firmware after drop it into
-> the right directory apart from slow down the driver probe you can
-> damage the chip depending on the write endurance of the chip.
+This adds 2 pinctrl groups (rtscts, rxtx) for each of the 3 UARTs.
 
-Ah ok. Explaining this in the commit message would be really good.
+Signed-off-by: Karl Beldan <kbeldan@baylibre.com>
+---
+ arch/arm/boot/dts/da850.dtsi | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-> This sysfs interface is used on other subsystems when there is a
-> non-volatile memory, as example you can see at [1], [2]. Unfortunately
-> not all are using the same sysfs interface and maybe this should be
-> standardized (maybe it's an opportunity to define it)
-
-+1 on standardizing this.
--Daniel
-> 
-> Regards,
->  Enric
-> 
-> [1] http://lxr.free-electrons.com/source/drivers/input/touchscreen/wdt87xx_i2c.c#L922
-> [2] http://lxr.free-electrons.com/source/drivers/scsi/pm8001/pm8001_ctl.c#L732
-> 
-> 
-> > -Daniel
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 25f0f8e..bc10e7e 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -41,6 +41,42 @@
+ 			pinctrl-single,function-mask = <0xf>;
+ 			status = "disabled";
+ 
++			serial0_rtscts_pins: pinmux_serial0_rtscts_pins {
++				pinctrl-single,bits = <
++					/* UART0_RTS UART0_CTS */
++					0x0c 0x22000000 0xff000000
++				>;
++			};
++			serial0_rxtx_pins: pinmux_serial0_rxtx_pins {
++				pinctrl-single,bits = <
++					/* UART0_TXD UART0_RXD */
++					0x0c 0x00220000 0x00ff0000
++				>;
++			};
++			serial1_rtscts_pins: pinmux_serial1_rtscts_pins {
++				pinctrl-single,bits = <
++					/* UART1_CTS UART1_RTS */
++					0x00 0x00440000 0x00ff0000
++				>;
++			};
++			serial1_rxtx_pins: pinmux_serial1_rxtx_pins {
++				pinctrl-single,bits = <
++					/* UART1_TXD UART1_RXD */
++					0x10 0x22000000 0xff000000
++				>;
++			};
++			serial2_rtscts_pins: pinmux_serial2_rtscts_pins {
++				pinctrl-single,bits = <
++					/* UART2_CTS UART2_RTS */
++					0x00 0x44000000 0xff000000
++				>;
++			};
++			serial2_rxtx_pins: pinmux_serial2_rxtx_pins {
++				pinctrl-single,bits = <
++					/* UART2_TXD UART2_RXD */
++					0x10 0x00220000 0x00ff0000
++				>;
++			};
+ 			nand_cs3_pins: pinmux_nand_pins {
+ 				pinctrl-single,bits = <
+ 					/* EMA_OE, EMA_WE */
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.9.0.rc1
