@@ -1,49 +1,108 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
-Date: Thu, 04 Aug 2016 11:21:43 +0200
-Message-ID: <3036653.SbY9jG7XMU@wuerfel>
-References: <1466812008-26686-1-git-send-email-timur@codeaurora.org> <79189959.nJygzEHqi7@wuerfel> <57A26106.50206@codeaurora.org>
+From: Grzegorz Jaszczyk <jaz@semihalf.com>
+Subject: [PATCH v2 00/17] ARM: mvebu: misc Armada 38x/39x DT and v7 defconfig
+ improvements
+Date: Thu,  4 Aug 2016 12:14:03 +0200
+Message-ID: <1470305660-6601-1-git-send-email-jaz@semihalf.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <57A26106.50206@codeaurora.org>
-Sender: netdev-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, catalin.marinas@arm.com
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, andrew@lunn.ch, jason@lakedaemon.net, jaz@semihalf.com, linux@armlinux.org.uk, nadavh@marvell.com, alior@marvell.com, robh+dt@kernel.org, gregory.clement@free-electrons.com, mw@semihalf.com, thomas.petazzoni@free-electrons.com, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, August 3, 2016 4:24:22 PM CEST Timur Tabi wrote:
-> Arnd Bergmann wrote:
-> > As I said, this is inherently driver specific. If setting the 64-bit
-> > mask fails, the driver itself needs to fall back to the 32-bit mask
-> > so it can allocate buffers from ZONE_DMA instead of ZONE_NORMAL.
-> 
-> I just posted a v7 of my patch, but I forgot to fix the dma_set_mask 
-> call.  I'll post a v8 soon, but before I do, what do you think of this:
-> 
-> /* The EMAC itself is capable of 64-bit DMA, so try that first. */
-> ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
-> if (ret) {
->          /* Some platforms may restrict the EMAC's address bus to less
->           * then the size of DDR. In this case, we need to try a
->           * smaller mask.  We could try every possible smaller mask,
->           * but that's overkill.  Instead, just fall to 32-bit, which
->           * should always work.
->           */
->          ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
->          if (ret) {
->                  dev_err(&pdev->dev, "could not set DMA mask\n");
->                  return ret;
->          }
-> }
+Hello,
 
-This is basically ok, but then I think you should pass GFP_DMA
-or GFP_DMA32 to all allocations that the driver does after
-the 64-bit mask fails, otherwise you get a significant overhead
-in the bounce buffers.
+This is the second version of patch-set which enables some commonly used
+features in mvebu_v7_defconfig and updates old or introduces new dts/dtsi
+related to Armada 38x and Armada 39x SoC family. All comments from
+v1 are included, more details in a changelog below.
 
-For data that comes from the network stack, we have no choice
-and always use bounce buffers for data that is beyond the mask.
+Any comments or remarks would be welcome.
 
-	Arnd
+Best regards,
+Grzegorz
+
+Changelog:
+v1 -> v2
+
+- Add at least one line of commit log entry for those patches, which
+contained only commit title.
+
+Suggested by Andrew Lunn and Gregory Clement.
+
+- Drop patch "ARM: mvebu: enable E1000E in mvebu_v7_defconfig", since it
+enables PCIe card which is not a part of the SoC.
+
+Suggested by Russell King and Thomas Petazzoni.
+
+- Change dts prefixes in commit title from "ARM: mvebu: <board_name>" to
+"ARM: dts: mvebu: <board_name>"
+
+Suggested by Gregory Clement.
+
+- Add nodes describing the eeproms connected to I2C buses in
+armada-390-db.dts and armada-395-gp.dts. Also add information about
+connectors used and described in mentioned dts's.
+
+Suggested by Gregory Clement.
+
+- Improve devicetree bindings about required property for Marvell Armada 39x
+family: Armada 398 based boards should have only "marvell,armada398" and not
+"marvell,armada395".
+
+Suggested by Rob Herring.
+
+Grzegorz Jaszczyk (17):
+  ARM: mvebu: enable MTD command line partition table in
+    mvebu_v7_defconfig
+  ARM: mvebu: enable UBI and UBIFS in mvebu_v7_defconfig
+  ARM: dts: mvebu: a385-db-ap: enable USB (orion-ehci) port
+  ARM: dts: mvebu: a385-db-ap: add default partition description for
+    NAND
+  ARM: dts: mvebu: armada-390: add missing compatibility string and
+    bracket
+  ARM: dts: mvebu: armada-39x: update the SDHCI node on Armada 39x
+  ARM: dts: mvebu: armada-39x: enable PMU, CA9 SoC Controller and
+    Coherency fabric
+  ARM: dts: mvebu: armada-39x: enable the thermal sensor in Armada-39x
+    SoCs
+  ARM: dts: mvebu: armada-39x: enable watchdog for all Armada-39x SoCs
+  ARM: dts: mvebu: armada-39x: add missing nodes describing GPIO's
+  ARM: dts: mvebu: armada-39x: add missing nodes describing USB2.0 and
+    USB3.0
+  ARM: dts: mvebu: armada-39x: enable rtc for all Armada-39x SoCs
+  ARM: dts: mvebu: armada-395: add support for the Armada 395 SoC family
+  ARM: dts: mvebu: armada-398: update the dtsi about missing interfaces
+  ARM: dts: mvebu: armada-398-db: enable supported usb interfaces
+  ARM: dts: mvebu: armada-390-db: add support for the Armada 390 DB
+    board
+  ARM: dts: mvebu: armada-395-gp: add support for the Armada 395 GP
+    Board
+
+ .../devicetree/bindings/arm/marvell/armada-39x.txt |  15 +-
+ arch/arm/boot/dts/armada-385-db-ap.dts             |  30 +++-
+ arch/arm/boot/dts/armada-390-db.dts                | 175 +++++++++++++++++++++
+ arch/arm/boot/dts/armada-390.dtsi                  |   3 +
+ arch/arm/boot/dts/armada-395-gp.dts                | 163 +++++++++++++++++++
+ arch/arm/boot/dts/armada-395.dtsi                  |  76 +++++++++
+ arch/arm/boot/dts/armada-398-db.dts                |   8 +
+ arch/arm/boot/dts/armada-398.dtsi                  |  10 +-
+ arch/arm/boot/dts/armada-39x.dtsi                  |  94 ++++++++++-
+ arch/arm/configs/mvebu_v7_defconfig                |   3 +
+ 10 files changed, 570 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm/boot/dts/armada-390-db.dts
+ create mode 100644 arch/arm/boot/dts/armada-395-gp.dts
+ create mode 100644 arch/arm/boot/dts/armada-395.dtsi
+
+-- 
+1.8.3.1
