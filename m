@@ -1,39 +1,52 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH 10/10] dmaengine: qcom_hidma: add MSI support for
- interrupts
-Date: Thu, 4 Aug 2016 09:59:43 -0400
-Message-ID: <497ddb6c-0233-657f-72c6-b844b798ff11@codeaurora.org>
-References: <1468867177-15007-1-git-send-email-okaya@codeaurora.org>
- <1468867177-15007-11-git-send-email-okaya@codeaurora.org>
- <20160724064256.GA9681@localhost>
- <e6560c8b-e18e-9e32-5b51-c1c12d8551ce@codeaurora.org>
- <20160804124641.GE9681@localhost>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH 2/3] drm/i2c: tda998x: Register ASoC hdmi-codec and add
+ audio DT binding
+Date: Thu, 4 Aug 2016 15:07:13 +0100
+Message-ID: <20160804140712.GO5783@n2100.arm.linux.org.uk>
+References: <cover.1470129989.git.jsarha@ti.com>
+ <ce10548e1c28270d80ee99a525e117d0d25f5656.1470129989.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160804124641.GE9681@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "timur@codeaurora.org" <timur@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "cov@codeaurora.org" <cov@codeaurora.org>, "jcm@redhat.com" <jcm@redhat.com>, "eric.auger@linaro.org" <eric.auger@linaro.org>, "agross@codeaurora.org" <agross@codeaurora.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Williams, Dan J" <dan.j.williams@intel.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <ce10548e1c28270d80ee99a525e117d0d25f5656.1470129989.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/4/2016 8:46 AM, Vinod Koul wrote:
->> > Yes, I do have a new device ID for platforms with MSI capability. 
->> > 
->> > Which new binding are you referring to?
-> If you have "QCOM8062" why do you need DT to tell hidma-1.1 ?
+On Tue, Aug 02, 2016 at 03:05:08PM +0300, Jyri Sarha wrote:
+> +	memcpy(audio.status, params->iec.status,
+> +	       min(sizeof(audio.status), sizeof(params->iec.status)));
 
-Unfortunately, DT cannot do a binding with the ACPI names. Similarly, ACPI
-cannot do a binding with the DT name. 
+As mentioned in the other patch, the audio status does not directly
+correspond with the AES bytes, so this ends up causing the driver to
+write the wrong bytes to the wrong registers.
 
-The structure of binding name is also subject to different kind of rules
-for DT and ACPI.
+> +	ret = tda998x_configure_audio(priv,
+> +				      &audio,
+> +				      priv->encoder.crtc->hwmode.clock);
 
-This driver supports both device tree and ACPI. That's why, two different
-names are required.
+What happens if audio changes at the same time that the video mode
+changes?  What protection is there against two threads concurrently
+executing tda998x_configure_audio() ?
+
+> +	priv->audio_pdev = platform_device_register_data(
+> +		dev, HDMI_CODEC_DRV_NAME, PLATFORM_DEVID_AUTO,
+> +		&codec_data, sizeof(codec_data));
+
+I'd much prefer that this was a child of the I2C device, which will
+show the relationship between this virtual platform device and the
+device which it's associated with.  That can be done via
+platform_device_register_full().
+
+Thanks.
 
 -- 
-Sinan Kaya
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
