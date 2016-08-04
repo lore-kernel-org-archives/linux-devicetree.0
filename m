@@ -1,51 +1,52 @@
 From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH v2 14/17] ARM: dts: mvebu: armada-398: update the dtsi about missing interfaces
-Date: Thu,  4 Aug 2016 12:14:17 +0200
-Message-ID: <1470305660-6601-15-git-send-email-jaz@semihalf.com>
+Subject: [PATCH v2 08/17] ARM: dts: mvebu: armada-39x: enable the thermal
+ sensor in Armada-39x SoCs
+Date: Thu,  4 Aug 2016 12:14:11 +0200
+Message-ID: <1470305660-6601-9-git-send-email-jaz@semihalf.com>
 References: <1470305660-6601-1-git-send-email-jaz@semihalf.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1470305660-6601-1-git-send-email-jaz@semihalf.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, mw@semihalf.com, jaz@semihalf.com, alior@marvell.com, nadavh@marvell.com
+Cc: mark.rutland@arm.com, andrew@lunn.ch, jason@lakedaemon.net, jaz@semihalf.com, linux@armlinux.org.uk, nadavh@marvell.com, alior@marvell.com, robh+dt@kernel.org, gregory.clement@free-electrons.com, mw@semihalf.com, thomas.petazzoni@free-electrons.com, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Beside interfaces described in the armada-39x.dtsi and armada-395.dtsi, the
-Armada 398 SoC family supports 2 additional SATA port (2 ports in one unit)
+The whole Armada 39x SoC family of processors has thermal sensor which can
+be supported with existing driver.
 
 Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm/boot/dts/armada-398.dtsi | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/armada-39x.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-398.dtsi b/arch/arm/boot/dts/armada-398.dtsi
-index fdc2591..234a998 100644
---- a/arch/arm/boot/dts/armada-398.dtsi
-+++ b/arch/arm/boot/dts/armada-398.dtsi
-@@ -44,7 +44,7 @@
-  *     OTHER DEALINGS IN THE SOFTWARE.
-  */
- 
--#include "armada-39x.dtsi"
-+#include "armada-395.dtsi"
- 
- / {
- 	compatible = "marvell,armada398", "marvell,armada390";
-@@ -55,6 +55,14 @@
- 				compatible = "marvell,mv88f6928-pinctrl";
- 				reg = <0x18000 0x20>;
+diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
+index 8a22c02..03dc0ec 100644
+--- a/arch/arm/boot/dts/armada-39x.dtsi
++++ b/arch/arm/boot/dts/armada-39x.dtsi
+@@ -413,6 +413,12 @@
+ 				clocks = <&mainpll>;
+ 				clock-output-names = "nand";
  			};
 +
-+			sata@e0000 {
-+				compatible = "marvell,armada-380-ahci";
-+				reg = <0xe0000 0x2000>;
-+				interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&gateclk 30>;
-+				status = "disabled";
++			thermal@e8078 {
++				compatible = "marvell,armada380-thermal";
++				reg = <0xe4078 0x4>, <0xe4074 0x4>;
++				status = "okay";
 +			};
  		};
- 	};
- };
+ 
+ 		pcie-controller {
 -- 
 1.8.3.1
