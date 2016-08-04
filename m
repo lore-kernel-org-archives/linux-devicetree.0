@@ -1,49 +1,53 @@
 From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH v2 15/17] ARM: dts: mvebu: armada-398-db: enable supported usb interfaces
-Date: Thu,  4 Aug 2016 12:14:18 +0200
-Message-ID: <1470305660-6601-16-git-send-email-jaz@semihalf.com>
+Subject: [PATCH v2 12/17] ARM: dts: mvebu: armada-39x: enable rtc for all
+ Armada-39x SoCs
+Date: Thu,  4 Aug 2016 12:14:15 +0200
+Message-ID: <1470305660-6601-13-git-send-email-jaz@semihalf.com>
 References: <1470305660-6601-1-git-send-email-jaz@semihalf.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1470305660-6601-1-git-send-email-jaz@semihalf.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, linux@armlinux.org.uk, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, mw@semihalf.com, jaz@semihalf.com, alior@marvell.com, nadavh@marvell.com
+Cc: mark.rutland@arm.com, andrew@lunn.ch, jason@lakedaemon.net, jaz@semihalf.com, linux@armlinux.org.uk, nadavh@marvell.com, alior@marvell.com, robh+dt@kernel.org, gregory.clement@free-electrons.com, mw@semihalf.com, thomas.petazzoni@free-electrons.com, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The Marvell Armada 398 Development board contains both USB2.0 and USB3.0
-ports, which can be handled by existing drivers.
+Despite that FS states that rtc is present only in A395 and A398 and not in
+A390, the rtc is working with A390.
 
 Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm/boot/dts/armada-398-db.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/armada-39x.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-398-db.dts b/arch/arm/boot/dts/armada-398-db.dts
-index 788c3ba..969b49f 100644
---- a/arch/arm/boot/dts/armada-398-db.dts
-+++ b/arch/arm/boot/dts/armada-398-db.dts
-@@ -108,6 +108,10 @@
- 				status = "okay";
+diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
+index 1225cd8..5bed8b9 100644
+--- a/arch/arm/boot/dts/armada-39x.dtsi
++++ b/arch/arm/boot/dts/armada-39x.dtsi
+@@ -429,6 +429,13 @@
+ 				};
  			};
  
-+			usb@58000 {
-+				status = "okay";
++			rtc@a3800 {
++				compatible = "marvell,armada-380-rtc";
++				reg = <0xa3800 0x20>, <0x184a0 0x0c>;
++				reg-names = "rtc", "rtc-soc";
++				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
 +			};
 +
  			flash@d0000 {
- 				status = "okay";
- 				pinctrl-0 = <&nand_pins>;
-@@ -132,6 +136,10 @@
- 					reg = <0x1000000 0x3f000000>;
- 				};
- 			};
-+
-+			usb3@f8000 {
-+				status = "okay";
-+			};
- 		};
- 
- 		pcie-controller {
+ 				compatible = "marvell,armada370-nand";
+ 				reg = <0xd0000 0x54>;
 -- 
 1.8.3.1
