@@ -1,39 +1,59 @@
-From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v5] arm64: dts: mt8173: add mmsel clocks for 4K support
-Date: Thu, 4 Aug 2016 10:57:18 +0800
-Message-ID: <1470279438-60372-1-git-send-email-bibby.hsieh@mediatek.com>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [RFC][PATCH 3/4] power: reset: Add sram-reboot-mode driver
+Date: Wed, 3 Aug 2016 20:08:52 -0700
+Message-ID: <CALAqxLXL2aTe3DsEngCRuV76svnN-2LkDDuDna+289NWzjRYXg@mail.gmail.com>
+References: <1470265523-27557-1-git-send-email-john.stultz@linaro.org>
+ <1470265523-27557-4-git-send-email-john.stultz@linaro.org> <20160804010341.GH13516@tuxbot>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160804010341.GH13516@tuxbot>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, James Liao <jamesjj.liao@mediatek.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, YH Huang <yh.huang@mediatek.com>, CK Hu <ck.hu@mediatek.com>, Yong Wu <yong.wu@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "dawei.chien@mediatek.com" <dawei.chien@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Junzhi Zhao <junzhi.zhao@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Bibby Hsieh <bibby.hsieh@mediatek.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, Heiko St?bner <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>, Kees Cook <keescook@chromium.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Vishal Bhoj <vishal.bhoj@linaro.org>, devicetree@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-To support HDMI 4K resolution, mmsys need clcok
-mm_sel to be 400MHz.
+On Wed, Aug 3, 2016 at 6:03 PM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> On Wed 03 Aug 16:05 PDT 2016, John Stultz wrote:
+>
+> [..]
+>> diff --git a/drivers/power/reset/sram-reboot-mode.c b/drivers/power/reset/sram-reboot-mode.c
+> [..]
+>> +
+>> +struct sram_reboot_mode {
+>> +     struct reboot_mode_driver reboot;
+>> +     void __iomem *reboot_reason_val_addr;
+>
+> 23 characters is...a lot of characters...
 
-The board .dts file should override the clock rate
-property with the higher VENCPLL frequency the board
-supports HDMI 4K resolution.
+Fair enough. Renamed to reason_addr.
 
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi |    2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 78529e4..c3f32f3 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -690,6 +690,8 @@
- 			compatible = "mediatek,mt8173-mmsys", "syscon";
- 			reg = <0 0x14000000 0 0x1000>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+			assigned-clocks = <&topckgen CLK_TOP_MM_SEL>;
-+			assigned-clock-rates = <400000000>;
- 			#clock-cells = <1>;
- 		};
- 
--- 
-1.7.9.5
+>> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +     if (!res)
+>> +             return PTR_ERR(res);
+>> +
+>> +     sram_rbm->reboot_reason_val_addr = devm_ioremap(&pdev->dev, res->start,
+>> +                                                      resource_size(res));
+>
+> Use devm_ioremap_resource() instead, it saves you the return value check
+> on platform_get_resource() and is cleaner.
+
+Ok. Done.
+
+
+>> +     if (IS_ERR(sram_rbm->reboot_reason_val_addr))
+>> +             return PTR_ERR(sram_rbm->reboot_reason_val_addr);
+>> +
+>> +     ret = reboot_mode_register(&sram_rbm->reboot);
+>
+> I think you should take the time to throw in a
+> devm_reboot_mode_register(), it would save you from the
+> dev_set_drvdata() and you can drop the remove function.
+
+So I've only got a vague sense of what your suggesting here. Do you
+have a pointer to a good example?
+
+thanks
+-john
