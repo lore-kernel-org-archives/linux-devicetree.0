@@ -1,43 +1,42 @@
-From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: device tree verification tools
-Date: Thu, 4 Aug 2016 07:18:34 +0200 (CEST)
-Message-ID: <alpine.DEB.2.10.1608040718110.3293@hadrien>
-References: <alpine.DEB.2.10.1607262241240.3426@hadrien> <87vazh8ln8.fsf@linux.vnet.ibm.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [RFC][PATCH 3/4] power: reset: Add sram-reboot-mode driver
+Date: Wed, 3 Aug 2016 22:29:53 -0700
+Message-ID: <20160804052953.GI13516@tuxbot>
+References: <1470265523-27557-1-git-send-email-john.stultz@linaro.org>
+ <1470265523-27557-4-git-send-email-john.stultz@linaro.org>
+ <20160804010341.GH13516@tuxbot>
+ <CALAqxLXL2aTe3DsEngCRuV76svnN-2LkDDuDna+289NWzjRYXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87vazh8ln8.fsf-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CALAqxLXL2aTe3DsEngCRuV76svnN-2LkDDuDna+289NWzjRYXg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, Heiko St?bner <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>, Kees Cook <keescook@chromium.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Vishal Bhoj <vishal.bhoj@linaro.org>, devicetree@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed 03 Aug 20:08 PDT 2016, John Stultz wrote:
 
+> On Wed, Aug 3, 2016 at 6:03 PM, Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> > On Wed 03 Aug 16:05 PDT 2016, John Stultz wrote:
+> >
+> > [..]
+> >> diff --git a/drivers/power/reset/sram-reboot-mode.c b/drivers/power/reset/sram-reboot-mode.c
+[..]
+> >> +     ret = reboot_mode_register(&sram_rbm->reboot);
+> >
+> > I think you should take the time to throw in a
+> > devm_reboot_mode_register(), it would save you from the
+> > dev_set_drvdata() and you can drop the remove function.
+> 
+> So I've only got a vague sense of what your suggesting here. Do you
+> have a pointer to a good example?
+> 
 
-On Thu, 4 Aug 2016, Stewart Smith wrote:
+https://patchwork.kernel.org/patch/9262691/
+https://patchwork.kernel.org/patch/9262693/
 
-> Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org> writes:
-> > I saw that there will be a microconference on device trees at Linux
-> > Plumbers.  Unfortunately, I won't be able to attend, due to another event
-> > at the same time, but I was wondering what is the status of verification
-> > tools for device tree specifications?
->
-> For a few checks that we want to do for OpenPower systems, we've been
-> adding tests to the FirmWare Test Suite (FWTS)
-> https://wiki.ubuntu.com/FirmwareTestSuite - which does actually catch a
-> case where we messed it up and have something that's technically invalid
-> (i.e. we could have used this a couple of years ago when the mistake was
-> initially made).
-
-Thanks for the information.  Is it easy to see in there what tests are
-done?
-
-thanks,
-julia
-
->
-> --
-> Stewart Smith
-> OPAL Architect, IBM.
->
->
+Regards,
+Bjorn
