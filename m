@@ -1,64 +1,153 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v6 2/2] irqchip: add J-Core AIC driver
-Date: Thu, 4 Aug 2016 16:32:57 +0200
-Message-ID: <CAMuHMdWiGCLQracGnD6Z5JiAJfYMsEdO0m52Xo4mkrVXEHgakg@mail.gmail.com>
-References: <cover.147018b6529.git.dalias@libc.org> <c3b89ef74aaa6477575dbe2d410eb1d182503243.147018b6529.git.dalias@libc.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <c3b89ef74aaa6477575dbe2d410eb1d182503243.147018b6529.git.dalias@libc.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] ARM: dts: da850: Add basic DTS for the L138/C6748 Dev Kit
+Date: Thu,  4 Aug 2016 14:43:32 +0000
+Message-ID: <20160804144332.4841-1-kbeldan@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rich,
+The LCDK is the successor to the late Hawkboard and has the same machine
+number.
+Among the differences are the flash (16bits vs 8bits) and some pins
+(MMC, LEDs, buttons, some external connectors), however the main
+components remain the same (eth. PHY, Audio Codec, Video decoder and
+DAC) except for the main PMIC, different and hard-wired on the LCDK (the
+LDOs and DCDCs are always ON).
+A DT-only boot with this addition gives functional uart, reboot via
+watchdog, rtc, ethernet and MMC (I added the CD gpio for the MMC
+although davinci_mmc doesn't call yet the mmc core OF facilities).
 
-On Thu, Aug 4, 2016 at 6:30 AM, Rich Felker <dalias@libc.org> wrote:
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-jcore-aic.c
+Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/davinci.txt |  4 ++
+ arch/arm/boot/dts/Makefile                        |  1 +
+ arch/arm/boot/dts/omapl138-lcdk.dts               | 71 +++++++++++++++++++++++
+ arch/arm/mach-davinci/da8xx-dt.c                  |  1 +
+ 4 files changed, 77 insertions(+)
+ create mode 100644 arch/arm/boot/dts/omapl138-lcdk.dts
 
-> +int __init aic_irq_of_init(struct device_node *node, struct device_node *parent)
-> +{
-> +       unsigned min_irq = JCORE_AIC2_MIN_HWIRQ;
-> +       unsigned dom_sz = JCORE_AIC_MAX_HWIRQ+1;
-> +       struct irq_domain *domain;
-> +
-> +       pr_info("Initializing J-Core AIC\n");
-> +
-> +       /* AIC1 needs priority initialization to receive interrupts. */
-> +       if (of_device_is_compatible(node, "jcore,aic1")) {
-> +               unsigned cpu;
-> +
-> +               for_each_present_cpu(cpu) {
-> +                       void __iomem *base = of_iomap(node, cpu);
-
-Just double checking, these regions are per-cpu hardware registers,
-and not related to other functionality at all?
-
-I.e. when booting on an SMP-capable system a kernel compiled with
-CONFIG_SMP=n, or using the kernel command line option maxcpus=
-to reduce the number of CPUs, no ill effects happen by not mapping the
-region and not writing to the register below?
-
-> +
-> +                       if (!base) {
-> +                               pr_err("Unable to map AIC for cpu %u\n", cpu);
-> +                               return -ENOMEM;
-> +                       }
-> +                       __raw_writel(0xffffffff, base + JCORE_AIC1_INTPRI_REG);
-> +                       iounmap(base);
-> +               }
-> +               min_irq = JCORE_AIC1_MIN_HWIRQ;
-> +       }
-
-Gr{oetje,eeting}s,
-
-                        Geert
+diff --git a/Documentation/devicetree/bindings/arm/davinci.txt b/Documentation/devicetree/bindings/arm/davinci.txt
+index cfaeda4..1482c74 100644
+--- a/Documentation/devicetree/bindings/arm/davinci.txt
++++ b/Documentation/devicetree/bindings/arm/davinci.txt
+@@ -5,6 +5,10 @@ DA850/OMAP-L138/AM18x Evaluation Module (EVM) board
+ Required root node properties:
+     - compatible = "ti,da850-evm", "ti,da850";
+ 
++DA850/OMAP-L138/AM18x L138/C6748 Development Kit (LCDK) board
++Required root node properties:
++    - compatible = "ti,omapl138-lcdk", "ti,da850";
++
+ EnBW AM1808 based CMC board
+ Required root node properties:
+     - compatible = "enbw,cmc", "ti,da850;
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 414b427..da3f69b 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -105,6 +105,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += \
+ dtb-$(CONFIG_ARCH_BRCMSTB) += \
+ 	bcm7445-bcm97445svmb.dtb
+ dtb-$(CONFIG_ARCH_DAVINCI) += \
++	omapl138-lcdk.dtb \
+ 	da850-enbw-cmc.dtb \
+ 	da850-evm.dtb
+ dtb-$(CONFIG_ARCH_DIGICOLOR) += \
+diff --git a/arch/arm/boot/dts/omapl138-lcdk.dts b/arch/arm/boot/dts/omapl138-lcdk.dts
+new file mode 100644
+index 0000000..fad3b6d
+--- /dev/null
++++ b/arch/arm/boot/dts/omapl138-lcdk.dts
+@@ -0,0 +1,71 @@
++/*
++ * Copyright (c) 2016 BayLibre, Inc.
++ *
++ * Licensed under GPLv2 or later.
++ */
++/dts-v1/;
++#include "da850.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "DA850/AM1808/OMAP-L138 LCDK";
++	compatible = "ti,omapl138-lcdk", "ti,da850";
++
++	aliases {
++		serial2 = &serial2;
++	};
++
++	chosen {
++		bootargs = "console=ttyS2,115200n8 earlycon";
++		stdout-path = "serial2:115200n8";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0xc0000000 0x08000000>;
++	};
++};
++
++&pmx_core {
++	status = "okay";
++};
++
++&serial2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&serial2_rxtx_pins>;
++	status = "okay";
++};
++
++&wdt {
++	status = "okay";
++};
++
++&rtc0 {
++	status = "okay";
++};
++
++&gpio {
++	status = "okay";
++};
++
++&mdio {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mdio_pins>;
++	bus_freq = <2200000>;
++	status = "okay";
++};
++
++&eth0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mii_pins>;
++	status = "okay";
++};
++
++&mmc0 {
++	max-frequency = <50000000>;
++	bus-width = <4>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins>;
++	cd-gpios = <&gpio 64 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
+diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+index 754f478..d5f710c 100644
+--- a/arch/arm/mach-davinci/da8xx-dt.c
++++ b/arch/arm/mach-davinci/da8xx-dt.c
+@@ -49,6 +49,7 @@ static void __init da850_init_machine(void)
+ 
+ static const char *const da850_boards_compat[] __initconst = {
+ 	"enbw,cmc",
++	"ti,omapl138-lcdk",
+ 	"ti,da850-evm",
+ 	"ti,da850",
+ 	NULL,
+-- 
+2.9.0.rc1
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
