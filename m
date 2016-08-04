@@ -1,54 +1,64 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v3 01/12] of: add vendor prefix for J-Core
-Date: Thu, 4 Aug 2016 18:27:57 -0400
-Message-ID: <20160804222757.GO15995@brightrain.aerifal.cx>
-References: <cover.1464148904.git.dalias@libc.org>
- <b6d33800300bde8f1d9a7b88a715d741548fad4a.1464148904.git.dalias@libc.org>
- <CAL_JsqKWq-DBQMWof6hyh0_sS4OPOP7afJXYdaWTiqf15MpKAg@mail.gmail.com>
- <20160727053112.GY15995@brightrain.aerifal.cx>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160727053112.GY15995@brightrain.aerifal.cx>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>
+From: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH V4 0/4] Add driver for GE B850v3 LVDS/DP++ Bridge
+Date: Fri,  5 Aug 2016 00:36:57 +0200
+Message-ID: <cover.1470346720.git.peter.senna@collabora.com>
+References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1464626385-19253-1-git-send-email-peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 27, 2016 at 01:31:12AM -0400, Rich Felker wrote:
-> On Wed, May 25, 2016 at 08:18:06AM -0500, Rob Herring wrote:
-> > On Wed, May 25, 2016 at 12:43 AM, Rich Felker <dalias@libc.org> wrote:
-> > > The J-Core project (j-core.org) produces open source cpu and SoC
-> > > peripheral cores synthesizable as FPGA bitstreams or ASICs.
-> > >
-> > > Signed-off-by: Rich Felker <dalias@libc.org>
-> > 
-> > Please add acks when posting subsequent versions.
-> > 
-> > > ---
-> > >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > > index 86740d4..9c070b8 100644
-> > > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> > > @@ -126,6 +126,7 @@ invensense  InvenSense Inc.
-> > >  isee   ISEE 2007 S.L.
-> > >  isil   Intersil
-> > >  issi   Integrated Silicon Solutions Inc.
-> > > +jcore  J-Core.org
-> > >  jedec  JEDEC Solid State Technology Association
-> > >  karo   Ka-Ro electronics GmbH
-> > >  keymile        Keymile GmbH
-> > > --
-> > > 2.8.1
-> 
-> Since this was previously acked, can I include it in my tree for
-> upstreaming? Or do you want me to submit the patch again?
+The series adds a driver that creates a drm_bridge and a drm_connector for the
+LVDS to DP++ display bridge of the GE B850v3.
 
-Ping. Should this go upstream via me or someone else? It doesn't
-correspond to any specific driver subsystem.
+There are two physical bridges on the video signal pipeline: a STDP4028(LVDS to
+DP) and a STDP2690(DP to DP++).  The hardware and firmware made it complicated
+for this binding to comprise two device tree nodes, as the design goal is to
+configure both bridges based on the LVDS signal, which leave the driver
+powerless to control the video processing pipeline. The two bridges behaves as
+a single bridge, and the driver is only needed for telling the host about EDID /
+HPD, and for giving the host powers to ack interrupts. The video signal
+pipeline is as follows:
 
-Rich
+  Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
+
+The patches from the series:
+ [1/4] Change the imx-ldb driver to allow attaching a bridge and not only a LVDS
+       panel.
+
+ [2/4] Devicetree documentation for the GE B850v3 LVDS/DP++ Bridge
+
+ [3/4] Add the driver, make changes to MAINTAINERS, Kconfig and Makefile
+
+ [4/4] Make the changes to the B850v3 dts file to enable the GE B850v3
+       LVDS/DP++ Bridge.
+
+Changes from V3:
+ - Removed the patch that was configuring the mapping between IPUs and external
+   displays on the dts file
+
+Peter Senna Tschudin (4):
+  drm/imx-ldb: Add support to drm-bridge
+  Documentation/devicetree/bindings: b850v3_lvds_dp
+  drm/bridge: Add driver for GE B850v3 LVDS/DP++ Bridge
+  dts/imx6q-b850v3: Use GE B850v3 LVDS/DP++ Bridge
+
+ .../devicetree/bindings/ge/b850v3-lvds-dp.txt      |  37 ++
+ MAINTAINERS                                        |   8 +
+ arch/arm/boot/dts/imx6q-b850v3.dts                 |  30 ++
+ drivers/gpu/drm/bridge/Kconfig                     |  11 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ drivers/gpu/drm/bridge/ge_b850v3_lvds_dp.c         | 397 +++++++++++++++++++++
+ drivers/gpu/drm/imx/imx-ldb.c                      | 118 +++---
+ 7 files changed, 562 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+ create mode 100644 drivers/gpu/drm/bridge/ge_b850v3_lvds_dp.c
+
+-- 
+2.5.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
