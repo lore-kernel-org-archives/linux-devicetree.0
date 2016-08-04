@@ -1,69 +1,72 @@
-From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH v2 11/17] ARM: dts: mvebu: armada-39x: add missing nodes
- describing USB2.0 and USB3.0
-Date: Thu,  4 Aug 2016 12:14:14 +0200
-Message-ID: <1470305660-6601-12-git-send-email-jaz@semihalf.com>
-References: <1470305660-6601-1-git-send-email-jaz@semihalf.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1470305660-6601-1-git-send-email-jaz@semihalf.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, andrew@lunn.ch, jason@lakedaemon.net, jaz@semihalf.com, linux@armlinux.org.uk, nadavh@marvell.com, alior@marvell.com, robh+dt@kernel.org, gregory.clement@free-electrons.com, mw@semihalf.com, thomas.petazzoni@free-electrons.com, sebastian.hesselbarth@gmail.com
+From: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
+Subject: [PATCH v2 2/2] imx53.dtsi : Add DMA configuration for UART
+Date: Thu,  4 Aug 2016 12:22:37 +0200
+Message-ID: <1470306157-11181-2-git-send-email-fabien.lahoudere@collabora.co.uk>
+References: <CAOMZO5BoRsrHv-+5c9bAXO2NCya8sPqmmpy9DOfav6NvQ+VMLQ@mail.gmail.com>
+ <1470306157-11181-1-git-send-email-fabien.lahoudere@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1470306157-11181-1-git-send-email-fabien.lahoudere@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX
+	/ MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The whole Armada 39x SoC family of processors has one USB2.0 and one
-USB3.0 which all can be supported with existing drivers.
+In order to use sdma with UART, we need to add DMA configuration in device tree.
 
-Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
 ---
- arch/arm/boot/dts/armada-39x.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/arm/boot/dts/imx53.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
-index 0749878..1225cd8 100644
---- a/arch/arm/boot/dts/armada-39x.dtsi
-+++ b/arch/arm/boot/dts/armada-39x.dtsi
-@@ -381,6 +381,14 @@
- 				reg = <0x22000 0x1000>;
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index cd17037..c1bc97c 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -217,6 +217,8 @@
+ 					clocks = <&clks IMX5_CLK_UART3_IPG_GATE>,
+ 					         <&clks IMX5_CLK_UART3_PER_GATE>;
+ 					clock-names = "ipg", "per";
++					dmas = <&sdma 42 4 0>, <&sdma 43 4 0>;
++					dma-names = "rx", "tx";
+ 					status = "disabled";
+ 				};
+ 
+@@ -498,6 +500,8 @@
+ 				clocks = <&clks IMX5_CLK_UART1_IPG_GATE>,
+ 				         <&clks IMX5_CLK_UART1_PER_GATE>;
+ 				clock-names = "ipg", "per";
++				dmas = <&sdma 18 4 0>, <&sdma 19 4 0>;
++				dma-names = "rx", "tx";
+ 				status = "disabled";
  			};
  
-+			usb@58000 {
-+				compatible = "marvell,orion-ehci";
-+				reg = <0x58000 0x500>;
-+				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&gateclk 18>;
-+				status = "disabled";
-+			};
-+
- 			xor@60800 {
- 				compatible = "marvell,armada-380-xor", "marvell,orion-xor";
- 				reg = <0x60800 0x100
-@@ -457,6 +465,14 @@
- 				reg = <0xe4078 0x4>, <0xe4074 0x4>;
- 				status = "okay";
+@@ -508,6 +512,8 @@
+ 				clocks = <&clks IMX5_CLK_UART2_IPG_GATE>,
+ 				         <&clks IMX5_CLK_UART2_PER_GATE>;
+ 				clock-names = "ipg", "per";
++				dmas = <&sdma 12 4 0>, <&sdma 13 4 0>;
++				dma-names = "rx", "tx";
+ 				status = "disabled";
  			};
-+
-+			usb3@f8000 {
-+				compatible = "marvell,armada-380-xhci";
-+				reg = <0xf8000 0x4000>,<0xfc000 0x4000>;
-+				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&gateclk 10>;
-+				status = "disabled";
-+			};
+ 
+@@ -591,6 +597,8 @@
+ 				clocks = <&clks IMX5_CLK_UART4_IPG_GATE>,
+ 				         <&clks IMX5_CLK_UART4_PER_GATE>;
+ 				clock-names = "ipg", "per";
++				dmas = <&sdma 2 4 0>, <&sdma 3 4 0>;
++				dma-names = "rx", "tx";
+ 				status = "disabled";
+ 			};
  		};
+@@ -621,6 +629,8 @@
+ 				clocks = <&clks IMX5_CLK_UART5_IPG_GATE>,
+ 				         <&clks IMX5_CLK_UART5_PER_GATE>;
+ 				clock-names = "ipg", "per";
++				dmas = <&sdma 16 4 0>, <&sdma 17 4 0>;
++				dma-names = "rx", "tx";
+ 				status = "disabled";
+ 			};
  
- 		pcie-controller {
 -- 
-1.8.3.1
+2.7.4
