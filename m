@@ -1,68 +1,47 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
-Date: Thu, 4 Aug 2016 09:24:54 -0500
-Message-ID: <57A35036.2030604@codeaurora.org>
-References: <1466812008-26686-1-git-send-email-timur@codeaurora.org>
- <79189959.nJygzEHqi7@wuerfel> <57A26106.50206@codeaurora.org>
- <3036653.SbY9jG7XMU@wuerfel>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v6 0/2] J-Core interrupt controller support
+Date: Thu, 4 Aug 2016 14:31:18 +0000
+Message-ID: <20160804143118.GU4541@io.lakedaemon.net>
+References: <cover.147018b6529.git.dalias@libc.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <3036653.SbY9jG7XMU@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, catalin.marinas@arm.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.147018b6529.git.dalias@libc.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann wrote:
-> This is basically ok, but then I think you should pass GFP_DMA
-> or GFP_DMA32 to all allocations that the driver does after
-> the 64-bit mask fails, otherwise you get a significant overhead
-> in the bounce buffers.
+Hi Rich,
 
-Well, for starters, ZONE_DMA32 is the same as ZONE_NORMAL on ARM, 
-because CONFIG_ZONE_DMA32 is not defined.
+On Thu, Aug 04, 2016 at 04:30:36AM +0000, Rich Felker wrote:
+> Updated based on feedback from Thomas Gleixner. Removal of unnecessary
+> data allowed some simplification. Magic numbers have been replaced
+> with meaningful (I hope) macro constants, comments added, and minor
+> style issues fixed.
+> 
+> Also, driver was made conditional in Kconfig to avoid it showing up in
+> configurations where it's not relevant.
+> 
+> Rich
+> 
+> 
+> Rich Felker (2):
+>   of: add J-Core interrupt controller bindings
+>   irqchip: add J-Core AIC driver
+> 
+>  .../bindings/interrupt-controller/jcore,aic.txt    | 26 ++++++
+>  drivers/irqchip/Kconfig                            |  7 ++
+>  drivers/irqchip/Makefile                           |  1 +
+>  drivers/irqchip/irq-jcore-aic.c                    | 94 ++++++++++++++++++++++
+>  4 files changed, 128 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/jcore,aic.txt
+>  create mode 100644 drivers/irqchip/irq-jcore-aic.c
 
-#ifdef CONFIG_ZONE_DMA32
-#define OPT_ZONE_DMA32 ZONE_DMA32
-#else
-#define OPT_ZONE_DMA32 ZONE_NORMAL
-#endif
+Once -rc1 drops, I'll put this in a branch, irqchip/jcore.  You can then
+include it as a dep for other branches as needed.
 
-(I wonder if this should say instead:
+thx,
 
-#ifdef CONFIG_ZONE_DMA32
-#define OPT_ZONE_DMA32 ZONE_DMA32
-#else
-#define OPT_ZONE_DMA32 ZONE_DMA  <----
-#endif
-)
-
-However, I'm not sure where I should be using GFP_DMA anyway.  Whenever 
-the driver allocates memory for DMA, it uses dma_zalloc_coherent():
-
-ring_header->v_addr = dma_zalloc_coherent(dev, ring_header->size,
-					 &ring_header->dma_addr,
-					 GFP_KERNEL);
-
-and I don't think I need to pass GFP_DMA to dma_zalloc_coherent.  Every 
-other memory allocation is a kmalloc variant, but that's never for DMA, 
-so that memory can be anywhere.
-
-I found about 70 drivers that fall-back to 32-bit DMA if 64-bit fails. 
-None of them do as you suggest.  They all just set the mask to 64 or 32 
-and that's it.
-
-Some drivers set NETIF_F_HIGHDMA if 64-bit DMA is enabled:
-
-	if (pci_using_dac)
-		netdev->features |= NETIF_F_HIGHDMA;
-
-I could do this, but I think it has no meaning on ARM64 because it 
-depends on CONFIG_HIGHMEM.
-
--- 
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
-Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Jason.
