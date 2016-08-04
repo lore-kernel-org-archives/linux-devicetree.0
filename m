@@ -1,77 +1,95 @@
-From: Karl Beldan <kbeldan@baylibre.com>
-Subject: [PATCH] ARM: dts: da850: Add missing pin muxing for the UARTs
-Date: Thu,  4 Aug 2016 11:06:56 +0000
-Message-ID: <20160804110656.25318-1-kbeldan@baylibre.com>
+From: YT Shen <yt.shen@mediatek.com>
+Subject: [PATCH v6 00/10] MT2701 DRM support
+Date: Thu, 4 Aug 2016 19:07:14 +0800
+Message-ID: <1470308844-20895-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, karl.beldan+oss@gmail.com, Kevin Hilman <khilman@baylibre.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Karl Beldan <kbeldan@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Mao Huang <littlecvr@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds 2 pinctrl groups (rtscts, rxtx) for each of the 3 UARTs.
-
-Signed-off-by: Karl Beldan <kbeldan@baylibre.com>
----
- arch/arm/boot/dts/da850.dtsi | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 25f0f8e..bc10e7e 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -41,6 +41,42 @@
- 			pinctrl-single,function-mask = <0xf>;
- 			status = "disabled";
- 
-+			serial0_rtscts_pins: pinmux_serial0_rtscts_pins {
-+				pinctrl-single,bits = <
-+					/* UART0_RTS UART0_CTS */
-+					0x0c 0x22000000 0xff000000
-+				>;
-+			};
-+			serial0_rxtx_pins: pinmux_serial0_rxtx_pins {
-+				pinctrl-single,bits = <
-+					/* UART0_TXD UART0_RXD */
-+					0x0c 0x00220000 0x00ff0000
-+				>;
-+			};
-+			serial1_rtscts_pins: pinmux_serial1_rtscts_pins {
-+				pinctrl-single,bits = <
-+					/* UART1_CTS UART1_RTS */
-+					0x00 0x00440000 0x00ff0000
-+				>;
-+			};
-+			serial1_rxtx_pins: pinmux_serial1_rxtx_pins {
-+				pinctrl-single,bits = <
-+					/* UART1_TXD UART1_RXD */
-+					0x10 0x22000000 0xff000000
-+				>;
-+			};
-+			serial2_rtscts_pins: pinmux_serial2_rtscts_pins {
-+				pinctrl-single,bits = <
-+					/* UART2_CTS UART2_RTS */
-+					0x00 0x44000000 0xff000000
-+				>;
-+			};
-+			serial2_rxtx_pins: pinmux_serial2_rxtx_pins {
-+				pinctrl-single,bits = <
-+					/* UART2_TXD UART2_RXD */
-+					0x10 0x00220000 0x00ff0000
-+				>;
-+			};
- 			nand_cs3_pins: pinmux_nand_pins {
- 				pinctrl-single,bits = <
- 					/* EMA_OE, EMA_WE */
--- 
-2.9.0.rc1
+VGhpcyBpcyBNVDI3MDEgRFJNIHN1cHBvcnQgUEFUQ0ggdjYsIGJhc2VkIG9uIDQuNy1yYzEuCldl
+IGFkZCBEU0kgaW50ZXJydXB0IGNvbnRyb2wsIHRyYW5zZmVyIGZ1bmN0aW9uIGZvciBNSVBJIERT
+SSBwYW5lbCBzdXBwb3J0LgpNb3N0IGNvZGVzIGFyZSB0aGUgc2FtZSwgZXhjZXB0IHNvbWUgcmVn
+aXN0ZXIgY2hhbmdlZC4KCkZvciBleGFtcGxlOgogLSBESVNQX09WTCBhZGRyZXNzIG9mZnNldCBj
+aGFuZ2VkLCBjb2xvciBmb3JtYXQgZGVmaW5pdGlvbiBjaGFuZ2VkLgogLSBESVNQX1JETUEgZmlm
+byBzaXplIGNoYW5nZWQuCiAtIERJU1BfQ09MT1Igb2Zmc2V0IGNoYW5nZWQuCiAtIE1JUElfVFgg
+c2V0dGluZyBjaGFuZ2VkLgoKV2UgYWRkIGEgbmV3IGNvbXBvbmVudCBERFBfQ09NUE9ORU5UX0JM
+UywgYW5kIHRoZSBjb25uZWN0aW9ucyBhcmUgdXBkYXRlZC4KT1ZMIC0+IFJETUEgLT4gQ09MT1Ig
+LT4gQkxTIC0+IERTSQpSRE1BIC0+IERQSQpBbmQgd2UgaGF2ZSBzaGFkb3cgcmVnaXN0ZXIgc3Vw
+cG9ydCBpbiBNVDI3MDEuCgpDaGFuZ2VzIHNpbmNlIHY1OgotIFJlbW92ZSBEUEkgZGV2aWNlIHRy
+ZWUgYW5kIGNvbXBhdGlibGUgc3RyaW5nCi0gVXNlIG9uZSB3YWl0IHF1ZXVlIHRvIGhhbmRsZSBp
+bnRlcnJ1cHQgc3RhdHVzCi0gVXBkYXRlIHRoZSBpbnRlcnJ1cHQgY2hlY2sgZmxvdyBhbmQgRFNJ
+X0lOVF9BTExfQklUUwotIFVzZSBzYW1lIGZ1bmN0aW9uIGZvciBob3N0IHJlYWQvd3JpdGUgY29t
+bWFuZAotIHZhcmlvdXMgZml4ZXMKCkNoYW5nZXMgc2luY2UgdjQ6Ci0gQWRkIG1lc3NhZ2VzIHdo
+ZW4gdGltZW91dCBpbiBtdGtfZGlzcF9tdXRleF9hY3F1aXJlKCkKLSBBZGQgZGVzY3JpcHRpb25z
+IGZvciBESVNQX1JFR19NVVRFWCByZWdpc3RlcnMKLSBNb3ZlIGNvbm5lY3Rpb24gc2V0dGluZ3Mg
+Zm9yIGRpc3BsYXkgbW9kdWxlcyB0byBhIHNlcGFyYXRlIHBhdGNoCi0gUmVtb3ZlICdtdDI3MDEt
+ZGlzcC13ZG1hJyBiZWNhdXNlIGl0IGlzIHVudXNlZAotIE1vdmUgY2xlYW5pbmcgdXAgYW5kIHJl
+bmFtaW5nIHRvIGEgc2VwYXJhdGUgcGF0Y2gKLSBVc2Ugd2FpdF9ldmVudF9pbnRlcnJ1cHRpYmxl
+X3RpbWVvdXQoKSB0byByZXBsYWNlIHBvbGxpbmcKLSBSZW1vdmUgaXJxX251bSBmcm9tIG10a19k
+c2kgc3RydWN0dXJlCi0gUmVtb3ZlIHJlZHVuZGFudCBhbmQgZGVidWcgY29kZXMKCkNoYW5nZXMg
+c2luY2UgdjM6Ci0gQWRkIERTSSBzdXBwb3J0IGZvciBNSVBJIERTSSBwYW5lbHMKLSBVcGRhdGUg
+QkxTIGJpbmRpbmcgdG8gUFdNIG5vZGVzCi0gUmVtb3ZlIHVmb2UgZGV2aWNlIG5vZGVzCi0gUmVt
+b3ZlIHJlZHVuZGFudCBwYXJlbnRoZXNlcwotIFJlbW92ZSBnbG9iYWwgdmFyaWFibGUgaW5pdGlh
+bGl6YXRpb24KCkNoYW5nZXMgc2luY2UgdjI6Ci0gUmVuYW1lIG10a19kZHBfbXV4X3NlbCB0byBt
+dGtfZGRwX3NvdXRfc2VsCi0gVXBkYXRlIG10MjcwMV9tdGtfZGRwX2V4dCBjb21wb25lbnRzCi0g
+Q2hhbmdlZCB0byBwcmVmaXggbmFtaW5nCi0gUmVvcmRlciB0aGUgcGF0Y2ggc2VyaWVzCi0gVXNl
+IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YSgpIHRvIGdldCBkcml2ZXIgcHJpdmF0ZSBkYXRhCi0g
+VXNlIGlvcG9sbCBtYWNyb3MgdG8gaW1wbGVtZW50IG10a19kaXNwX211dGV4X2FjcXVpcmUoKQot
+IFJlbW92ZWQgZW1wdHkgZGV2aWNlIHRyZWUgbm9kZXMKCkNoYW5nZXMgc2luY2UgdjE6Ci0gUmVt
+b3ZlZCBCTFMgYmluZGluZ3MgYW5kIGNvZGVzLCB3aGljaCBiZWxvbmcgdG8gcHdtIGRyaXZlcgot
+IE1vdmVkIG10a19kaXNwX211dGV4X2FjcXVpcmUoKSBqdXN0IGJlZm9yZSBtdGtfY3J0Y19kZHBf
+Y29uZmlnKCkKLSBTcGxpdCBwYXRjaCBpbnRvIHNtYWxsZXIgcGFydHMKLSBBZGRlZCBjb25zdCBr
+ZXl3b3JkIHRvIGNvbnN0YW50IHN0cnVjdHVyZQotIFJlbW92ZWQgY29kZXMgZm9yIHNwZWNpYWwg
+bWVtb3J5IGFsaWduCgpUaGUgUEFUQ0ggZGVwZW5kcyBvbiB0aGUgZm9sbG93aW5nIHBhdGNoOgpo
+dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzg4MzI0NDEvICgiZHQtYmluZGluZ3M6
+IEFSTTogTWVkaWF0ZWs6IERvY3VtZW50IGJpbmRpbmdzIGZvciBNVDI3MDEiKQpodHRwczovL3Bh
+dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzkyMjI5OTcvICgiZHQtYmluZGluZ3M6IHB3bTogQWRk
+IE1lZGlhVGVrIGRpc3BsYXkgUFdNIGJpbmRpbmdzIikKaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
+Lm9yZy9wYXRjaC85MTY0MDI5LyAoImR0LWJpbmRpbmdzOiBtZWRpYXRlazogYWRkIGRlc2NyaXB0
+aW9ucyBmb3IgbWVkaWF0ZWsgbXQyNzAxIGlvbW11IGFuZCBzbWkiKQpodHRwczovL3BhdGNod29y
+ay5rZXJuZWwub3JnL3BhdGNoLzkxNjQwMTcvICgiaW9tbXUvbWVkaWF0ZWs6IG1vdmUgdGhlIGNv
+bW1vbiBzdHJ1Y3QgaW50byBoZWFkZXIgZmlsZSIpCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
+cmcvcGF0Y2gvOTE2NDAyNS8gKCJtZW1vcnkvbWVkaWF0ZWs6IGFkZCBzdXBwb3J0IGZvciBtdDI3
+MDEiKQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzkxNjQwNDEvICgiaW9tbXUv
+bWVkaWF0ZWs6IGFkZCBzdXBwb3J0IGZvciBtdGsgaW9tbXUgZ2VuZXJhdGlvbiBvbmUgSFciKQpo
+dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzkxNjQwMTMvICgiQVJNOiBkdHM6IG10
+MjcwMTogYWRkIGlvbW11L3NtaSBkdHNpIG5vZGUgZm9yIG10MjcwMSIpCgpUaGFua3MsCnl0LnNo
+ZW4KCllUIFNoZW4gKDgpOgogIGRybS9tZWRpYXRlazogcmVuYW1lIG1hY3JvcywgYWRkIGNoaXAg
+cHJlZml4CiAgZHJtL21lZGlhdGVrOiBhZGQgKmRyaXZlcl9kYXRhIGZvciBkaWZmZXJlbnQgaGFy
+ZHdhcmUgc2V0dGluZ3MKICBkcm0vbWVkaWF0ZWs6IGFkZCBzaGFkb3cgcmVnaXN0ZXIgc3VwcG9y
+dAogIGRybS9tZWRpYXRlazogdXBkYXRlIGRpc3BsYXkgbW9kdWxlIGNvbm5lY3Rpb25zCiAgZHJt
+L21lZGlhdGVrOiBjbGVhbmluZyB1cCBhbmQgcmVmaW5lCiAgZHJtL21lZGlhdGVrOiB1cGRhdGUg
+RFNJIHN1YiBkcml2ZXIgZmxvdwogIGRybS9tZWRpYXRlazogYWRkIHN1cHBvcnQgZm9yIE1lZGlh
+dGVrIFNvQyBNVDI3MDEKICBhcm06IGR0czogbXQyNzAxOiBBZGQgZGlzcGxheSBzdWJzeXN0ZW0g
+cmVsYXRlZCBub2RlcyBmb3IgTVQyNzAxCgpzaGFvbWluZyBjaGVuICgyKToKICBkcm0vbWVkaWF0
+ZWs6IGFkZCBkc2kgaW50ZXJydXB0IGNvbnRyb2wKICBkcm0vbWVkaWF0ZWs6IGFkZCBkc2kgdHJh
+bnNmZXIgZnVuY3Rpb24KCiBhcmNoL2FybS9ib290L2R0cy9tdDI3MDEuZHRzaSAgICAgICAgICAg
+ICAgIHwgICA4NiArKysrKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5j
+ICAgICB8ICAgMzIgKy0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMg
+ICAgfCAgIDE3ICstCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgICAg
+IHwgICA3NSArKy0tCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyAgICAg
+IHwgIDEzOCArKysrKystLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmgg
+ICAgICB8ICAgIDIgKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAu
+YyB8ICAgMzQgKy0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgg
+fCAgIDE0ICsKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICAgICAgfCAg
+IDU0ICsrLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmggICAgICB8ICAg
+IDkgKwogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyAgICAgICAgICB8ICA1MDYg
+KysrKysrKysrKysrKysrKysrKysrKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
+X21pcGlfdHguYyAgICAgIHwgICA3MSArKy0tCiAxMiBmaWxlcyBjaGFuZ2VkLCA4NzggaW5zZXJ0
+aW9ucygrKSwgMTYwIGRlbGV0aW9ucygtKQoKLS0gCjEuNy45LjUKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
