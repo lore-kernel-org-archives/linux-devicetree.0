@@ -1,193 +1,320 @@
-From: Lino Sanfilippo <LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
-Date: Fri, 5 Aug 2016 01:29:02 +0200
-Message-ID: <9ebb6cb7-c793-cd76-5283-c9a659d0398f@gmx.de>
-References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
+From: York Sun <york.sun@nxp.com>
+Subject: [Patch v3 08/11] driver/edac/fsl_ddr: Add support of little endian
+Date: Thu, 4 Aug 2016 15:58:33 -0700
+Message-ID: <1470351518-22404-9-git-send-email-york.sun@nxp.com>
+References: <1470351518-22404-1-git-send-email-york.sun@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470255143-3979-1-git-send-email-timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1470351518-22404-1-git-send-email-york.sun@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-edac@vger.kernel.org
+Cc: morbidrsa@gmail.com, oss@buserror.net, stuart.yoder@nxp.com, bp@alien8.de, York Sun <york.sun@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Thompson <dougthompson@xmission.com>, mchehab@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Timur,
+Get endianness from device tree. Both big endian and little endian
+are supported. Default to big endian for backward compatibility to
+MPC85xx.
 
-On 03.08.2016 22:12, Timur Tabi wrote:
+Signed-off-by: York Sun <york.sun@nxp.com>
 
+---
+Change log
+  v3: no change
+  v2: Separated from "Add support for ARM-based SoCs" patch
 
-> +/* Fill up transmit descriptors */
-> +static void emac_tx_fill_tpd(struct emac_adapter *adpt,
-> +			     struct emac_tx_queue *tx_q, struct sk_buff *skb,
-> +			     struct emac_tpd *tpd)
-> +{
-> +	u16 nr_frags = skb_shinfo(skb)->nr_frags;
-> +	unsigned int len = skb_headlen(skb);
-> +	struct emac_buffer *tpbuf = NULL;
-> +	unsigned int mapped_len = 0;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	/* if Large Segment Offload is (in TCP Segmentation Offload struct) */
-> +	if (TPD_LSO(tpd)) {
-> +		mapped_len = skb_transport_offset(skb) + tcp_hdrlen(skb);
-> +
-> +		tpbuf = GET_TPD_BUFFER(tx_q, tx_q->tpd.produce_idx);
-> +		tpbuf->length = mapped_len;
-> +		tpbuf->dma_addr = dma_map_single(adpt->netdev->dev.parent,
-> +						 skb->data, mapped_len,
-> +						 DMA_TO_DEVICE);
-> +		ret = dma_mapping_error(adpt->netdev->dev.parent,
-> +					tpbuf->dma_addr);
-> +		if (ret) {
-> +			dev_kfree_skb(skb);
-> +			return;
-> +		}
-> +
-> +		TPD_BUFFER_ADDR_L_SET(tpd, lower_32_bits(tpbuf->dma_addr));
-> +		TPD_BUFFER_ADDR_H_SET(tpd, upper_32_bits(tpbuf->dma_addr));
+ .../fsl/ddr.txt}                                   |  6 ++
+ drivers/edac/fsl_ddr_edac.c                        | 83 ++++++++++++++--------
+ 2 files changed, 58 insertions(+), 31 deletions(-)
+ rename Documentation/devicetree/bindings/{powerpc/fsl/mem-ctrlr.txt => memory-controllers/fsl/ddr.txt} (74%)
 
-You should also take big endian systems into account. This means that if the multi-byte values
-in the descriptors require little-endian you have to convert from host byte order to le and
-vice versa. You can use cpu_to_le32() and friends for this. 
-
-
-> +		TPD_BUF_LEN_SET(tpd, tpbuf->length);
-> +		emac_tx_tpd_create(adpt, tx_q, tpd);
-> +	}
-> +
-> +	if (mapped_len < len) {
-> +		tpbuf = GET_TPD_BUFFER(tx_q, tx_q->tpd.produce_idx);
-> +		tpbuf->length = len - mapped_len;
-> +		tpbuf->dma_addr = dma_map_single(adpt->netdev->dev.parent,
-> +						 skb->data + mapped_len,
-> +						 tpbuf->length, DMA_TO_DEVICE);
-> +		ret = dma_mapping_error(adpt->netdev->dev.parent,
-> +					tpbuf->dma_addr);
-> +		if (ret) {
-> +			dev_kfree_skb(skb);
-> +			return;
-> +		}
-> +
-> +		TPD_BUFFER_ADDR_L_SET(tpd, lower_32_bits(tpbuf->dma_addr));
-> +		TPD_BUFFER_ADDR_H_SET(tpd, upper_32_bits(tpbuf->dma_addr));
-> +		TPD_BUF_LEN_SET(tpd, tpbuf->length);
-> +		emac_tx_tpd_create(adpt, tx_q, tpd);
-> +	}
-> +
-> +	for (i = 0; i < nr_frags; i++) {
-> +		struct skb_frag_struct *frag;
-> +
-> +		frag = &skb_shinfo(skb)->frags[i];
-> +
-> +		tpbuf = GET_TPD_BUFFER(tx_q, tx_q->tpd.produce_idx);
-> +		tpbuf->length = frag->size;
-> +		tpbuf->dma_addr = dma_map_page(adpt->netdev->dev.parent,
-> +					       frag->page.p, frag->page_offset,
-> +					       tpbuf->length, DMA_TO_DEVICE);
-> +		ret = dma_mapping_error(adpt->netdev->dev.parent,
-> +					tpbuf->dma_addr);
-> +		if (ret) {
-> +			dev_kfree_skb(skb);
-> +			return;
-> +		}
-
-In case of error you need to undo all mappings that you have done so far.
-
-> +
-> +		TPD_BUFFER_ADDR_L_SET(tpd, lower_32_bits(tpbuf->dma_addr));
-> +		TPD_BUFFER_ADDR_H_SET(tpd, upper_32_bits(tpbuf->dma_addr));
-> +		TPD_BUF_LEN_SET(tpd, tpbuf->length);
-> +		emac_tx_tpd_create(adpt, tx_q, tpd);
-> +	}
-> +
-> +	/* The last tpd */
-> +	emac_tx_tpd_mark_last(adpt, tx_q);
-
-Use a wmb() here to make sure that all writes to the descriptors in dma memory
-are completed before you update the producer register (see memory-barriers.txt
-for the reason why this is needed)
-
-> +	/* The last buffer info contain the skb address,
-> +	 * so it will be freed after unmap
-> +	 */
-> +	tpbuf->skb = skb;
-> +}
-> +
-> +/* Transmit the packet using specified transmit queue */
-> +int emac_mac_tx_buf_send(struct emac_adapter *adpt, struct emac_tx_queue *tx_q,
-> +			 struct sk_buff *skb)
-> +{
-> +	struct emac_tpd tpd;
-> +	u32 prod_idx;
-> +
-> +	memset(&tpd, 0, sizeof(tpd));
-> +
-> +	if (emac_tso_csum(adpt, tx_q, skb, &tpd) != 0) {
-> +		dev_kfree_skb_any(skb);
-> +		return NETDEV_TX_OK;
-> +	}
-> +
-> +	if (skb_vlan_tag_present(skb)) {
-> +		u16 tag;
-> +
-> +		EMAC_VLAN_TO_TAG(skb_vlan_tag_get(skb), tag);
-> +		TPD_CVLAN_TAG_SET(&tpd, tag);
-> +		TPD_INSTC_SET(&tpd, 1);
-> +	}
-> +
-> +	if (skb_network_offset(skb) != ETH_HLEN)
-> +		TPD_TYP_SET(&tpd, 1);
-> +
-> +	emac_tx_fill_tpd(adpt, tx_q, skb, &tpd);
-> +
-> +	netdev_sent_queue(adpt->netdev, skb->len);
-> +
-> +	if (emac_tpd_num_free_descs(tx_q) <= (MAX_SKB_FRAGS + 1))
-> +		netif_stop_queue(adpt->netdev);
-
-Is MAX_SKB_FRAGS + 1 really the max number of descriptors required by your driver?
-There seem to be further descriptors needed for TSO and checksumming.
-Please make sure that you really check against the _max_ possible number of 
-descriptors for a transmission.
-
-
-> +
-> +/* Change the Maximum Transfer Unit (MTU) */
-> +static int emac_change_mtu(struct net_device *netdev, int new_mtu)
-> +{
-> +	unsigned int max_frame = new_mtu + ETH_HLEN + ETH_FCS_LEN + VLAN_HLEN;
-> +	struct emac_adapter *adpt = netdev_priv(netdev);
-> +
-> +	if ((max_frame < EMAC_MIN_ETH_FRAME_SIZE) ||
-> +	    (max_frame > EMAC_MAX_ETH_FRAME_SIZE)) {
-> +		netdev_err(adpt->netdev, "error: invalid MTU setting\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	netif_info(adpt, hw, adpt->netdev,
-> +		   "changing MTU from %d to %d\n", netdev->mtu,
-> +		   new_mtu);
-> +	netdev->mtu = new_mtu;
-> +	adpt->rxbuf_size = new_mtu > EMAC_DEF_RX_BUF_SIZE ?
-> +		ALIGN(max_frame, 8) : EMAC_DEF_RX_BUF_SIZE;
-> +
-> +	if (netif_running(netdev))
-> +		return emac_reinit_locked(adpt);
-
-This does still not look correct. The rxbuf_size is changed while the interface
-is still running. If the rx buffers are refilled now, the rx buffers size does
-not match the size that is configured in the mac, does it?
-You have to stop the rx path first, then change the rx buffer size and then 
-restart the rx path.
-
-Regards,
-Lino
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt b/Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
+similarity index 74%
+rename from Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
+rename to Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
+index f87856f..62623f9 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
++++ b/Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
+@@ -7,6 +7,10 @@ Properties:
+ 		  "fsl,qoriq-memory-controller".
+ - reg		: Address and size of DDR controller registers
+ - interrupts	: Error interrupt of DDR controller
++- little-endian	: Specifies little-endian access to registers
++- big-endian	: Specifies big-endian access to registers
++
++If both little-endian and big-endian are omitted, big-endian will be used.
+ 
+ Example 1:
+ 
+@@ -14,6 +18,7 @@ Example 1:
+ 		compatible = "fsl,bsc9132-memory-controller";
+ 		reg = <0x2000 0x1000>;
+ 		interrupts = <16 2 1 8>;
++		big-endian;
+ 	};
+ 
+ 
+@@ -24,4 +29,5 @@ Example 2:
+ 				"fsl,qoriq-memory-controller";
+ 		reg = <0x8000 0x1000>;
+ 		interrupts = <16 2 1 23>;
++		big-endian;
+ 	};
+diff --git a/drivers/edac/fsl_ddr_edac.c b/drivers/edac/fsl_ddr_edac.c
+index 88ecf7d..b1b7924 100644
+--- a/drivers/edac/fsl_ddr_edac.c
++++ b/drivers/edac/fsl_ddr_edac.c
+@@ -9,7 +9,6 @@
+  * the terms of the GNU General Public License version 2. This program
+  * is licensed "as is" without any warranty of any kind, whether express
+  * or implied.
+- *
+  */
+ #include <linux/module.h>
+ #include <linux/init.h>
+@@ -33,6 +32,20 @@ static int edac_mc_idx;
+ 
+ static u32 orig_ddr_err_disable;
+ static u32 orig_ddr_err_sbe;
++static bool little_endian;
++
++static inline u32 ddr_in32(void __iomem *addr)
++{
++	return little_endian ? ioread32(addr) : ioread32be(addr);
++}
++
++static inline void ddr_out32(void __iomem *addr, u32 value)
++{
++	if (little_endian)
++		iowrite32(value, addr);
++	else
++		iowrite32be(value, addr);
++}
+ 
+ /************************ MC SYSFS parts ***********************************/
+ 
+@@ -45,7 +58,7 @@ static ssize_t fsl_ddr_mc_inject_data_hi_show(struct device *dev,
+ 	struct mem_ctl_info *mci = to_mci(dev);
+ 	struct fsl_ddr_mc_pdata *pdata = mci->pvt_info;
+ 	return sprintf(data, "0x%08x",
+-		       in_be32(pdata->mc_vbase +
++		       ddr_in32(pdata->mc_vbase +
+ 			       MC_DATA_ERR_INJECT_HI));
+ }
+ 
+@@ -56,7 +69,7 @@ static ssize_t fsl_ddr_mc_inject_data_lo_show(struct device *dev,
+ 	struct mem_ctl_info *mci = to_mci(dev);
+ 	struct fsl_ddr_mc_pdata *pdata = mci->pvt_info;
+ 	return sprintf(data, "0x%08x",
+-		       in_be32(pdata->mc_vbase +
++		       ddr_in32(pdata->mc_vbase +
+ 			       MC_DATA_ERR_INJECT_LO));
+ }
+ 
+@@ -67,7 +80,7 @@ static ssize_t fsl_ddr_mc_inject_ctrl_show(struct device *dev,
+ 	struct mem_ctl_info *mci = to_mci(dev);
+ 	struct fsl_ddr_mc_pdata *pdata = mci->pvt_info;
+ 	return sprintf(data, "0x%08x",
+-		       in_be32(pdata->mc_vbase + MC_ECC_ERR_INJECT));
++		       ddr_in32(pdata->mc_vbase + MC_ECC_ERR_INJECT));
+ }
+ 
+ static ssize_t fsl_ddr_mc_inject_data_hi_store(struct device *dev,
+@@ -77,7 +90,7 @@ static ssize_t fsl_ddr_mc_inject_data_hi_store(struct device *dev,
+ 	struct mem_ctl_info *mci = to_mci(dev);
+ 	struct fsl_ddr_mc_pdata *pdata = mci->pvt_info;
+ 	if (isdigit(*data)) {
+-		out_be32(pdata->mc_vbase + MC_DATA_ERR_INJECT_HI,
++		ddr_out32(pdata->mc_vbase + MC_DATA_ERR_INJECT_HI,
+ 			 simple_strtoul(data, NULL, 0));
+ 		return count;
+ 	}
+@@ -91,7 +104,7 @@ static ssize_t fsl_ddr_mc_inject_data_lo_store(struct device *dev,
+ 	struct mem_ctl_info *mci = to_mci(dev);
+ 	struct fsl_ddr_mc_pdata *pdata = mci->pvt_info;
+ 	if (isdigit(*data)) {
+-		out_be32(pdata->mc_vbase + MC_DATA_ERR_INJECT_LO,
++		ddr_out32(pdata->mc_vbase + MC_DATA_ERR_INJECT_LO,
+ 			 simple_strtoul(data, NULL, 0));
+ 		return count;
+ 	}
+@@ -105,7 +118,7 @@ static ssize_t fsl_ddr_mc_inject_ctrl_store(struct device *dev,
+ 	struct mem_ctl_info *mci = to_mci(dev);
+ 	struct fsl_ddr_mc_pdata *pdata = mci->pvt_info;
+ 	if (isdigit(*data)) {
+-		out_be32(pdata->mc_vbase + MC_ECC_ERR_INJECT,
++		ddr_out32(pdata->mc_vbase + MC_ECC_ERR_INJECT,
+ 			 simple_strtoul(data, NULL, 0));
+ 		return count;
+ 	}
+@@ -252,7 +265,7 @@ static void fsl_ddr_mc_check(struct mem_ctl_info *mci)
+ 	int bad_data_bit;
+ 	int bad_ecc_bit;
+ 
+-	err_detect = in_be32(pdata->mc_vbase + MC_ERR_DETECT);
++	err_detect = ddr_in32(pdata->mc_vbase + MC_ERR_DETECT);
+ 	if (!err_detect)
+ 		return;
+ 
+@@ -261,14 +274,14 @@ static void fsl_ddr_mc_check(struct mem_ctl_info *mci)
+ 
+ 	/* no more processing if not ECC bit errors */
+ 	if (!(err_detect & (DDR_EDE_SBE | DDR_EDE_MBE))) {
+-		out_be32(pdata->mc_vbase + MC_ERR_DETECT, err_detect);
++		ddr_out32(pdata->mc_vbase + MC_ERR_DETECT, err_detect);
+ 		return;
+ 	}
+ 
+-	syndrome = in_be32(pdata->mc_vbase + MC_CAPTURE_ECC);
++	syndrome = ddr_in32(pdata->mc_vbase + MC_CAPTURE_ECC);
+ 
+ 	/* Mask off appropriate bits of syndrome based on bus width */
+-	bus_width = (in_be32(pdata->mc_vbase + MC_DDR_SDRAM_CFG) &
++	bus_width = (ddr_in32(pdata->mc_vbase + MC_DDR_SDRAM_CFG) &
+ 			DSC_DBW_MASK) ? 32 : 64;
+ 	if (bus_width == 64)
+ 		syndrome &= 0xff;
+@@ -276,8 +289,8 @@ static void fsl_ddr_mc_check(struct mem_ctl_info *mci)
+ 		syndrome &= 0xffff;
+ 
+ 	err_addr = make64(
+-		in_be32(pdata->mc_vbase + MC_CAPTURE_EXT_ADDRESS),
+-		in_be32(pdata->mc_vbase + MC_CAPTURE_ADDRESS));
++		ddr_in32(pdata->mc_vbase + MC_CAPTURE_EXT_ADDRESS),
++		ddr_in32(pdata->mc_vbase + MC_CAPTURE_ADDRESS));
+ 	pfn = err_addr >> PAGE_SHIFT;
+ 
+ 	for (row_index = 0; row_index < mci->nr_csrows; row_index++) {
+@@ -286,8 +299,8 @@ static void fsl_ddr_mc_check(struct mem_ctl_info *mci)
+ 			break;
+ 	}
+ 
+-	cap_high = in_be32(pdata->mc_vbase + MC_CAPTURE_DATA_HI);
+-	cap_low = in_be32(pdata->mc_vbase + MC_CAPTURE_DATA_LO);
++	cap_high = ddr_in32(pdata->mc_vbase + MC_CAPTURE_DATA_HI);
++	cap_low = ddr_in32(pdata->mc_vbase + MC_CAPTURE_DATA_LO);
+ 
+ 	/*
+ 	 * Analyze single-bit errors on 64-bit wide buses
+@@ -333,7 +346,7 @@ static void fsl_ddr_mc_check(struct mem_ctl_info *mci)
+ 				     row_index, 0, -1,
+ 				     mci->ctl_name, "");
+ 
+-	out_be32(pdata->mc_vbase + MC_ERR_DETECT, err_detect);
++	ddr_out32(pdata->mc_vbase + MC_ERR_DETECT, err_detect);
+ }
+ 
+ static irqreturn_t fsl_ddr_mc_isr(int irq, void *dev_id)
+@@ -342,7 +355,7 @@ static irqreturn_t fsl_ddr_mc_isr(int irq, void *dev_id)
+ 	struct fsl_ddr_mc_pdata *pdata = mci->pvt_info;
+ 	u32 err_detect;
+ 
+-	err_detect = in_be32(pdata->mc_vbase + MC_ERR_DETECT);
++	err_detect = ddr_in32(pdata->mc_vbase + MC_ERR_DETECT);
+ 	if (!err_detect)
+ 		return IRQ_NONE;
+ 
+@@ -362,7 +375,7 @@ static void fsl_ddr_init_csrows(struct mem_ctl_info *mci)
+ 	u32 cs_bnds;
+ 	int index;
+ 
+-	sdram_ctl = in_be32(pdata->mc_vbase + MC_DDR_SDRAM_CFG);
++	sdram_ctl = ddr_in32(pdata->mc_vbase + MC_DDR_SDRAM_CFG);
+ 
+ 	sdtype = sdram_ctl & DSC_SDTYPE_MASK;
+ 	if (sdram_ctl & DSC_RD_EN) {
+@@ -410,7 +423,7 @@ static void fsl_ddr_init_csrows(struct mem_ctl_info *mci)
+ 		csrow = mci->csrows[index];
+ 		dimm = csrow->channels[0]->dimm;
+ 
+-		cs_bnds = in_be32(pdata->mc_vbase + MC_CS_BNDS_0 +
++		cs_bnds = ddr_in32(pdata->mc_vbase + MC_CS_BNDS_0 +
+ 				  (index * MC_CS_BNDS_OFS));
+ 
+ 		start = (cs_bnds & 0xffff0000) >> 16;
+@@ -470,6 +483,13 @@ int fsl_ddr_mc_err_probe(struct platform_device *op)
+ 	mci->ctl_name = pdata->name;
+ 	mci->dev_name = pdata->name;
+ 
++	if (of_find_property(op->dev.of_node, "little-endian", NULL))
++		little_endian = true;
++	else if (of_find_property(op->dev.of_node, "big-endian", NULL))
++		little_endian = false;
++	else
++		little_endian = false;
++
+ 	res = of_address_to_resource(op->dev.of_node, 0, &r);
+ 	if (res) {
+ 		pr_err("%s: Unable to get resource for MC err regs\n",
+@@ -492,7 +512,7 @@ int fsl_ddr_mc_err_probe(struct platform_device *op)
+ 		goto err;
+ 	}
+ 
+-	sdram_ctl = in_be32(pdata->mc_vbase + MC_DDR_SDRAM_CFG);
++	sdram_ctl = ddr_in32(pdata->mc_vbase + MC_DDR_SDRAM_CFG);
+ 	if (!(sdram_ctl & DSC_ECC_EN)) {
+ 		/* no ECC */
+ 		pr_warn("%s: No ECC DIMMs discovered\n", __func__);
+@@ -520,11 +540,11 @@ int fsl_ddr_mc_err_probe(struct platform_device *op)
+ 
+ 	/* store the original error disable bits */
+ 	orig_ddr_err_disable =
+-	    in_be32(pdata->mc_vbase + MC_ERR_DISABLE);
+-	out_be32(pdata->mc_vbase + MC_ERR_DISABLE, 0);
++	    ddr_in32(pdata->mc_vbase + MC_ERR_DISABLE);
++	ddr_out32(pdata->mc_vbase + MC_ERR_DISABLE, 0);
+ 
+ 	/* clear all error bits */
+-	out_be32(pdata->mc_vbase + MC_ERR_DETECT, ~0);
++	ddr_out32(pdata->mc_vbase + MC_ERR_DETECT, ~0);
+ 
+ 	if (edac_mc_add_mc_with_groups(mci, fsl_ddr_dev_groups)) {
+ 		edac_dbg(3, "failed edac_mc_add_mc()\n");
+@@ -532,15 +552,15 @@ int fsl_ddr_mc_err_probe(struct platform_device *op)
+ 	}
+ 
+ 	if (edac_op_state == EDAC_OPSTATE_INT) {
+-		out_be32(pdata->mc_vbase + MC_ERR_INT_EN,
+-			 DDR_EIE_MBEE | DDR_EIE_SBEE);
++		ddr_out32(pdata->mc_vbase + MC_ERR_INT_EN,
++			  DDR_EIE_MBEE | DDR_EIE_SBEE);
+ 
+ 		/* store the original error management threshold */
+-		orig_ddr_err_sbe = in_be32(pdata->mc_vbase +
++		orig_ddr_err_sbe = ddr_in32(pdata->mc_vbase +
+ 					   MC_ERR_SBE) & 0xff0000;
+ 
+ 		/* set threshold to 1 error per interrupt */
+-		out_be32(pdata->mc_vbase + MC_ERR_SBE, 0x10000);
++		ddr_out32(pdata->mc_vbase + MC_ERR_SBE, 0x10000);
+ 
+ 		/* register interrupts */
+ 		pdata->irq = irq_of_parse_and_map(op->dev.of_node, 0);
+@@ -573,6 +593,7 @@ err:
+ 	edac_mc_free(mci);
+ 	return res;
+ }
++EXPORT_SYMBOL_GPL(fsl_ddr_mc_err_probe);
+ 
+ int fsl_ddr_mc_err_remove(struct platform_device *op)
+ {
+@@ -582,13 +603,13 @@ int fsl_ddr_mc_err_remove(struct platform_device *op)
+ 	edac_dbg(0, "\n");
+ 
+ 	if (edac_op_state == EDAC_OPSTATE_INT) {
+-		out_be32(pdata->mc_vbase + MC_ERR_INT_EN, 0);
+ 		irq_dispose_mapping(pdata->irq);
++		ddr_out32(pdata->mc_vbase + MC_ERR_INT_EN, 0);
+ 	}
+ 
+-	out_be32(pdata->mc_vbase + MC_ERR_DISABLE,
+-		 orig_ddr_err_disable);
+-	out_be32(pdata->mc_vbase + MC_ERR_SBE, orig_ddr_err_sbe);
++	ddr_out32(pdata->mc_vbase + MC_ERR_DISABLE,
++		  orig_ddr_err_disable);
++	ddr_out32(pdata->mc_vbase + MC_ERR_SBE, orig_ddr_err_sbe);
+ 
+ 	edac_mc_del_mc(&op->dev);
+ 	edac_mc_free(mci);
+-- 
+2.7.4
