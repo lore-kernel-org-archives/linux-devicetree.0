@@ -1,33 +1,32 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 13/17] ARM: dts: mvebu: armada-395: add support for
- the Armada 395 SoC family
-Date: Thu, 4 Aug 2016 13:18:43 -0500
-Message-ID: <20160804181843.GA17494@rob-hp-laptop>
-References: <1470305660-6601-1-git-send-email-jaz@semihalf.com>
- <1470305660-6601-14-git-send-email-jaz@semihalf.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
+Date: Thu, 4 Aug 2016 13:18:55 -0500
+Message-ID: <57A3870F.8020203@codeaurora.org>
+References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
+ <20160804175541.GA2832@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470305660-6601-14-git-send-email-jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160804175541.GA2832@rob-hp-laptop>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, LinoSanfilippo@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2016 at 12:14:16PM +0200, Grzegorz Jaszczyk wrote:
-> Beside interfaces described in the armada-39x.dtsi, the Armada 395 SoC
-> family supports: 2 x SATA3 (2 ports in one unit) and the USB3.0
-> 
-> Signed-off-by: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/arm/marvell/armada-39x.txt | 11 +++-
->  arch/arm/boot/dts/armada-395.dtsi                  | 76 ++++++++++++++++++++++
->  2 files changed, 85 insertions(+), 2 deletions(-)
->  create mode 100644 arch/arm/boot/dts/armada-395.dtsi
+Rob Herring wrote:
+>> >+- phy-version : the version of the integrated emac phy, either 1 or 2.
+> Sounds like 2 different h/w. The compatible property should distinguish
+> this.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Well, the MAC parts of the EMAC is the same.  I could do 
+qcom,fsm9900-emac for v1 and qcom,qdf2432-emac for v2.  I can't really 
+think of a reason why that wouldn't work.
+
+For ACPI, we can assume that QCOM8070 is a v2 PHY.  If Qualcomm creates 
+another server chip with a v1 PHY, it would need a new ACPI HID.
+
+-- 
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
