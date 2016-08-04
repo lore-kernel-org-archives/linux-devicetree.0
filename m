@@ -1,71 +1,38 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: da850: Add basic DTS for the L138/C6748 Dev Kit
-Date: Thu, 4 Aug 2016 16:13:10 -0500
-Message-ID: <CAL_Jsq+3eWgcYc=wpgVCadSFQUyE+WLfA3kTb10AuoZfiKsKog@mail.gmail.com>
-References: <20160804144332.4841-1-kbeldan@baylibre.com> <20160804182902.GA22499@rob-hp-laptop>
- <20160804210326.GE15013@gobelin>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v2 02/14] dt/bindings: update binding for PM domain idle
+ states
+Date: Thu, 4 Aug 2016 15:23:59 -0600
+Message-ID: <20160804212359.GF1207@linaro.org>
+References: <1469829385-11511-1-git-send-email-lina.iyer@linaro.org>
+ <1469829385-11511-3-git-send-email-lina.iyer@linaro.org>
+ <20160804152453.GB1732@brendan-thinkstation>
+ <20160804162844.GC1207@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160804210326.GE15013@gobelin>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160804162844.GC1207@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Brendan Jackman <brendan.jackman@arm.com>
+Cc: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, Axel Haslam <ahaslam+renesas@baylibre.com>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-+Peter H
+On Thu, Aug 04 2016 at 10:28 -0600, Lina Iyer wrote:
+>On Thu, Aug 04 2016 at 09:24 -0600, Brendan Jackman wrote:
 
-On Thu, Aug 4, 2016 at 4:03 PM, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> On Thu, Aug 04, 2016 at 01:29:02PM -0500, Rob Herring wrote:
->> On Thu, Aug 04, 2016 at 02:43:32PM +0000, Karl Beldan wrote:
->> > The LCDK is the successor to the late Hawkboard and has the same machine
->> > number.
->> > Among the differences are the flash (16bits vs 8bits) and some pins
->> > (MMC, LEDs, buttons, some external connectors), however the main
->> > components remain the same (eth. PHY, Audio Codec, Video decoder and
->> > DAC) except for the main PMIC, different and hard-wired on the LCDK (the
->> > LDOs and DCDCs are always ON).
->> > A DT-only boot with this addition gives functional uart, reboot via
->> > watchdog, rtc, ethernet and MMC (I added the CD gpio for the MMC
->> > although davinci_mmc doesn't call yet the mmc core OF facilities).
-
-[...]
-
->> > +   aliases {
->> > +           serial2 = &serial2;
->> > +   };
->> > +
->> > +   chosen {
->> > +           bootargs = "console=ttyS2,115200n8 earlycon";
+>>idle-states.txt (to which this file refers) says that idle state nodes must come
+>>under /cpus/idle-states. I don't think power domain idle states belong there, so
+>>the documentation should be updated to reflect that.
 >>
->> You don't need console with stdout-path set. And really, earlycon should
->> not be the default.
->>
-> Ok for earlycon.
->
-> For the console, I thought likewise .. until I _struggled_ to understand
-> why the console was disappearing under my feet.
-> It seemed even stranger when I started looking at the codepath because
-> drivers/of/base.c would properly add_preferred_console as expected after
-> the corresponding UART was added. But the reality was there, without it
-> the console was not like stdout-path.
-> Among the commits that could instill doubt as to whether stdout-path
-> rules is f64255b5072d:
-> "The assumption that at least 1 preferred console will be registered
-> when the stdout-path property is set is invalid, which can result in
-> _no_ consoles.", though it didn't answer my question.
-> I started looking whether tty0 was not getting in the way and in the end
-> I came up with setting console.
-> But you seem affirmative.
+>Absolutely right. This should be fixed.
 
-There have been some issues in this area, but I thought they were in
-conjunction with earlycon and solved now. This is a fairly common
-review request for dts files, so I'm surprised if it doesn't work
-right. Maybe having tty0 or not has some influence. Or people just
-accept review comments without testing or caring...
+Sorry, I take it back. idle-states are cpuidle specific idle states and
+possibly include Platform coordinated cluster modes as well (which is
+fine). Its rightful place is under /cpus/idle-states. However, domain
+idle states that are compatible with "arm,idle-state" would not have
+idle-states as the parent node. They would be defined under the domain
+provider node and not the CPUs.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Lina
+
