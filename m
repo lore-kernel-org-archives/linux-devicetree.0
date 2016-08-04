@@ -1,83 +1,168 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v3 1/2] Documentation: DT: net: Add Xilinx
- gmiitorgmii converter device tree binding documentation
-Date: Thu, 4 Aug 2016 13:25:15 -0500
-Message-ID: <20160804182515.GA19890@rob-hp-laptop>
-References: <1470312789-28275-1-git-send-email-appanad@xilinx.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] ARM: dts: da850: Add basic DTS for the L138/C6748 Dev Kit
+Date: Thu, 4 Aug 2016 13:29:02 -0500
+Message-ID: <20160804182902.GA22499@rob-hp-laptop>
+References: <20160804144332.4841-1-kbeldan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1470312789-28275-1-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20160804144332.4841-1-kbeldan@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Karl Beldan <kbeldan@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, karl.beldan+oss@gmail.com, Kevin Hilman <khilman@baylibre.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2016 at 05:43:08PM +0530, Kedareswara rao Appana wrote:
-> Device-tree binding documentation for xilinx gmiitorgmii converter.
+On Thu, Aug 04, 2016 at 02:43:32PM +0000, Karl Beldan wrote:
+> The LCDK is the successor to the late Hawkboard and has the same machine
+> number.
+> Among the differences are the flash (16bits vs 8bits) and some pins
+> (MMC, LEDs, buttons, some external connectors), however the main
+> components remain the same (eth. PHY, Audio Codec, Video decoder and
+> DAC) except for the main PMIC, different and hard-wired on the LCDK (the
+> LDOs and DCDCs are always ON).
+> A DT-only boot with this addition gives functional uart, reboot via
+> watchdog, rtc, ethernet and MMC (I added the CD gpio for the MMC
+> although davinci_mmc doesn't call yet the mmc core OF facilities).
 > 
-> Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Karl Beldan <kbeldan@baylibre.com>
 > ---
-> Changes for v3:
-> --> None.
-> Changes for v2:
-> --> New patch.
+>  Documentation/devicetree/bindings/arm/davinci.txt |  4 ++
+>  arch/arm/boot/dts/Makefile                        |  1 +
+>  arch/arm/boot/dts/omapl138-lcdk.dts               | 71 +++++++++++++++++++++++
+>  arch/arm/mach-davinci/da8xx-dt.c                  |  1 +
+>  4 files changed, 77 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/omapl138-lcdk.dts
 > 
->  .../devicetree/bindings/net/xilinx_gmii2rgmii.txt  | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt b/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
+> diff --git a/Documentation/devicetree/bindings/arm/davinci.txt b/Documentation/devicetree/bindings/arm/davinci.txt
+> index cfaeda4..1482c74 100644
+> --- a/Documentation/devicetree/bindings/arm/davinci.txt
+> +++ b/Documentation/devicetree/bindings/arm/davinci.txt
+> @@ -5,6 +5,10 @@ DA850/OMAP-L138/AM18x Evaluation Module (EVM) board
+>  Required root node properties:
+>      - compatible = "ti,da850-evm", "ti,da850";
+>  
+> +DA850/OMAP-L138/AM18x L138/C6748 Development Kit (LCDK) board
+> +Required root node properties:
+> +    - compatible = "ti,omapl138-lcdk", "ti,da850";
+> +
+>  EnBW AM1808 based CMC board
+>  Required root node properties:
+>      - compatible = "enbw,cmc", "ti,da850;
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 414b427..da3f69b 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -105,6 +105,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += \
+>  dtb-$(CONFIG_ARCH_BRCMSTB) += \
+>  	bcm7445-bcm97445svmb.dtb
+>  dtb-$(CONFIG_ARCH_DAVINCI) += \
+> +	omapl138-lcdk.dtb \
+>  	da850-enbw-cmc.dtb \
+>  	da850-evm.dtb
+>  dtb-$(CONFIG_ARCH_DIGICOLOR) += \
+> diff --git a/arch/arm/boot/dts/omapl138-lcdk.dts b/arch/arm/boot/dts/omapl138-lcdk.dts
 > new file mode 100644
-> index 0000000..79fa504
+> index 0000000..fad3b6d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
-> @@ -0,0 +1,32 @@
-> +XILINX GMIITORGMII Converter Driver Device Tree Bindings
-> +--------------------------------------------------------
+> +++ b/arch/arm/boot/dts/omapl138-lcdk.dts
+> @@ -0,0 +1,71 @@
+> +/*
+> + * Copyright (c) 2016 BayLibre, Inc.
+> + *
+> + * Licensed under GPLv2 or later.
+> + */
+> +/dts-v1/;
+> +#include "da850.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
 > +
-> +The Gigabit Media Independent Interface (GMII) to Reduced Gigabit Media
-> +Independent Interface (RGMII) core provides the RGMII between RGMII-compliant
-> +Ethernet physical media devices (PHY) and the Gigabit Ethernet controller.
-> +This core can be used in all three modes of operation(10/100/1000 Mb/s).
-> +The Management Data Input/Output (MDIO) interface is used to configure the
-> +Speed of operation. This core can switch dynamically between the three
-> +Different speed modes by configuring the conveter register through mdio write.
+> +/ {
+> +	model = "DA850/AM1808/OMAP-L138 LCDK";
+> +	compatible = "ti,omapl138-lcdk", "ti,da850";
 > +
-> +The MDIO is a bus to which the PHY devices are connected.  For each
-> +device that exists on this bus, a child node should be created.  See
-> +the definition of the PHY node in booting-without-of.txt for an example
-> +of how to define a PHY.
+> +	aliases {
+> +		serial2 = &serial2;
+> +	};
 > +
-> +Required properties:
-> +  - compatible : Should be "xilinx,gmiitorgmii"
+> +	chosen {
+> +		bootargs = "console=ttyS2,115200n8 earlycon";
 
-Perhaps xilinx,gmii-to-rgmii.
+You don't need console with stdout-path set. And really, earlycon should 
+not be the default.
 
-This needs some sort of version information in the compatible string.
-
-> +  - reg : The ID number for the phy, usually a small integer
+> +		stdout-path = "serial2:115200n8";
+> +	};
 > +
-> +Example:
-> +	mdio {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +		ethernet-phy@0 {
-> +			......
-> +		};
-> +                gmii_to_rgmii: gmii_to_rgmii@8 {
-
-Don't use underscores in node names.
-
-> +                        compatible = "xilinx,gmiitorgmii";
-> +                        reg = <8>;
-> +                };
-> +        };
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0xc0000000 0x08000000>;
+> +	};
+> +};
+> +
+> +&pmx_core {
+> +	status = "okay";
+> +};
+> +
+> +&serial2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&serial2_rxtx_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&wdt {
+> +	status = "okay";
+> +};
+> +
+> +&rtc0 {
+> +	status = "okay";
+> +};
+> +
+> +&gpio {
+> +	status = "okay";
+> +};
+> +
+> +&mdio {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mdio_pins>;
+> +	bus_freq = <2200000>;
+> +	status = "okay";
+> +};
+> +
+> +&eth0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mii_pins>;
+> +	status = "okay";
+> +};
+> +
+> +&mmc0 {
+> +	max-frequency = <50000000>;
+> +	bus-width = <4>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc0_pins>;
+> +	cd-gpios = <&gpio 64 GPIO_ACTIVE_HIGH>;
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+> index 754f478..d5f710c 100644
+> --- a/arch/arm/mach-davinci/da8xx-dt.c
+> +++ b/arch/arm/mach-davinci/da8xx-dt.c
+> @@ -49,6 +49,7 @@ static void __init da850_init_machine(void)
+>  
+>  static const char *const da850_boards_compat[] __initconst = {
+>  	"enbw,cmc",
+> +	"ti,omapl138-lcdk",
+>  	"ti,da850-evm",
+>  	"ti,da850",
+>  	NULL,
 > -- 
-> 2.1.2
+> 2.9.0.rc1
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
