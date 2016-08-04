@@ -1,108 +1,69 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v2 1/4] Documentation: DT: net: Add Xilinx gmiitorgmii
- converter device tree binding documentation
-Date: Wed, 3 Aug 2016 20:42:08 -0700
-Message-ID: <971c966a-5335-310b-0a1a-3f1b7ee2f841@gmail.com>
-References: <1467623084-15471-1-git-send-email-appanad@xilinx.com>
- <1467623084-15471-2-git-send-email-appanad@xilinx.com>
- <20160704140458.GC3282@lunn.ch>
- <03CA77BA8AF6F1469AEDFBDA1322A7B74A193913@XAP-PVEXMBX02.xlnx.xilinx.com>
- <20160706142121.GI19800@lunn.ch>
- <03CA77BA8AF6F1469AEDFBDA1322A7B74A19393B@XAP-PVEXMBX02.xlnx.xilinx.com>
- <C246CAC1457055469EF09E3A7AC4E11A4A5C2387@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20160727080526.GH11538@lunn.ch>
+From: Raul Piper <raulpblooper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Dynamic Loading and unnloading of Device tree(dtb)
+Date: Thu, 4 Aug 2016 09:23:12 +0530
+Message-ID: <CAEwN+MDiytJ8j3ZzUMPEGyQwJcSFcQApqJo6UhT0Y3ZPLFU6XA@mail.gmail.com>
+References: <CAEwN+MAqQSz7wXYZKrVGwH7arknH-487oC2U5pP0T1N0QxBnWg@mail.gmail.com>
+ <57A247C8.8000909@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160727080526.GH11538-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <57A247C8.8000909-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: kernelnewbies <kernelnewbies-7JyXY6prKcjpASu1u0TL5ti2O/JbrIOy@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/07/2016 01:05, Andrew Lunn wrote:
-> Hi Appana
-> 
-> Here is roughly what i was thinking:
-> 
-> struct priv {
->        phy_device *master;
->        phy_device *slave;
->        struct phy_driver *slave_drv;
-> };
-> 
-> phy_status_clone(phy_device *master, phy_device *slave)
-> {
-> 	master->speed = slave->speed;
-> 	master->duplex = slave->duplex;
-> 	master->pause = slave->pause;
-> }
-> 
-> read_status(struct phy_device *phydev)
-> {
-> 	struct priv *priv = phydev->priv;
-> 
-> 	/* Get the status from the slave, and duplicate in into the
-> 	 * master */
-> 	 slave_drv->read_status(priv->slave);
-> 	 phy_status_clone(priv->master, priv->slave);
-> 
-> 	 /* Update the gmiitorgmii with the current link parameters */
-> 	 update_link(master);
-> }
-> 
-> config_init(struct phy_device *phydev)
-> {
-> 	struct priv *priv = phydev->priv;
-> 
-> 	/* Configure the slave, and duplicate in into the master */
-> 	slave_drv->config_init(priv->slave);
-> 	phy_status_clone(priv->master, priv->slave);
-> }
-> 
-> struct phy_driver master_drv = {
->        .read_status = read_status,
->        .config_init = config_init,
->        .soft_reset  = ...
->        .suspend = ...
-> };
-> 
-> probe(mdio_device *mdio)
-> {
-> 	struct priv *priv = devm_alloc();
-> 
-> 	/* Use the phy-handle property to find the slave phy */
-> 	node_phy = of_parse_phandle(mdio->of_node, "phy", 0);
-> 	priv->slave = of_phy_find_device(node_phy);
-> 
-> 	/* Create the master phy on the control address. Use the phy
-> 	   ID from the slave. */
-> 	priv->master = phy_device_create(mdio->bus, mdio->addr,
-> 	  				 phy->slave->phy_id,
-> 					 phy->slave->is_c45,
-> 					 phy->slave->c45_ids);
-> 
-> 	slave_dev_drv = phydev->mdio.dev.driver;
-> 	priv->slave_drv = to_phy_driver(slave_dev_drv);
-> 	priv->master->mdio.dev.driver = master_drv;
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- <name of the dtb file>.dtb
 
-The key here is really that except for the phy_driver::read_status
-callback, we want to defer every operation to the slave (full MDIO
-register range compatible) PHY.
+This compiles fine.
 
-> }
-> 
-> It would however be nice to only have one phydev structure, so you are
-> not copying status and settings backwards and forwards from one to the
-> other all the time, and need a wrapper for every function in
-> phy_driver. Studying the structures a bit, that might be possible. You
-> would then only need to wrap the read_status(), so that when the link
-> speed/duplex changes, you can configure the converter as appropriate.
-
-Agreed.
---
-Florian
+On Thu, Aug 4, 2016 at 1:06 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 07/25/16 04:17, Raul Piper wrote:
+>> Hi,
+>> Where can I find the example for the  dynamic Loading of the device
+>> tree and its corresponding device driver.
+>> How can I build the dts with or without the kernel source.
+>>
+>> I am getting this error whenever I am trying to build the below sample
+>> dts file using the dtc compiler.
+>>
+>> dtc -O dtb -o leds-ns2.dtb leds-ns2.dts
+>>
+>>
+>> Error: leds-ns2.dts:1.1-2 syntax error
+>
+> That is an error at line 1, columns 1-2. dtc does not understand cpp
+> directives, you need to process leds-ns2.dts with cpp. The Linux
+> build infrastructure does this for .dtb targets in makefiles.
+>
+>> FATAL ERROR: Unable to parse input tree
+>>
+>> Below is the content  of the leds-ns2.dts
+>>
+>> #include <dt-bindings/leds/leds-ns2.h>
+>>
+>>  ns2-leds {
+>>           compatible = "lacie,ns2-leds";
+>>
+>>           blue-sata {
+>>                   label = "ns2:blue:sata";
+>>                   slow-gpio = <&gpio0 29 0>;
+>>                   cmd-gpio = <&gpio0 30 0>;
+>>                   modes-map = <NS_V2_LED_OFF  0 1
+>>                                NS_V2_LED_ON   1 0
+>>                                NS_V2_LED_ON   0 0
+>>                                NS_V2_LED_SATA 1 1>;
+>>           };
+>>   };
+>>
+>> Thanks,
+>> R
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
