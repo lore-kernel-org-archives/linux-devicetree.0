@@ -1,47 +1,101 @@
 From: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dt: da850: add nand_cs3 node label in the dtsi
-Date: Thu, 4 Aug 2016 20:53:34 +0000
-Message-ID: <20160804205334.GB15013@gobelin>
-References: <20160803162528.2337-1-kbeldan@baylibre.com>
- <CAJaRCXNB+fC=0H_A4zSgQmeynZJsacY8kS2dLfstX=gfRzzfpA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: da850: Add basic DTS for the L138/C6748 Dev Kit
+Date: Thu, 4 Aug 2016 20:58:46 +0000
+Message-ID: <20160804205846.GC15013@gobelin>
+References: <20160804144332.4841-1-kbeldan@baylibre.com>
+ <m2popopcqu.fsf@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAJaRCXNB+fC=0H_A4zSgQmeynZJsacY8kS2dLfstX=gfRzzfpA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <m2popopcqu.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Karl Beldan <karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2016 at 08:43:54PM +0000, Karl Beldan wrote:
-> 2016-08-03 16:25 GMT+00:00 Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>:
+On Thu, Aug 04, 2016 at 12:15:05PM -0700, Kevin Hilman wrote:
+> + Sekhar
 > 
-> > This will allow to adjust the related settings in the board files.
+> Hi Karl,
+> 
+> Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+> 
+> > The LCDK is the successor to the late Hawkboard and has the same machine
+> > number.
+> 
+> Machine number is only relevant for legacy (non-DT) boot and this is DT
+> boot, so the machine number bit really relevant for this changelog.
+> 
+Hi Kevin,
+
+It was purely informative.
+
+> BTW, have you tried legacy boot on LCDK with board-omapl138-hawk.c?  I
+> assume it mostly works?
+> 
+Yes.
+
+> > Among the differences are the flash (16bits vs 8bits) and some pins
+> > (MMC, LEDs, buttons, some external connectors), however the main
+> > components remain the same (eth. PHY, Audio Codec, Video decoder and
+> > DAC) except for the main PMIC, different and hard-wired on the LCDK (the
+> > LDOs and DCDCs are always ON).
+> > A DT-only boot with this addition gives functional uart, reboot via
+> > watchdog, rtc, ethernet and MMC (I added the CD gpio for the MMC
+> > although davinci_mmc doesn't call yet the mmc core OF facilities).
 > >
-> > Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 > > Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> 
+> Tested with v4.7 on my LCDK board.
+> 
+> Tested-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> 
+> Note that I also needed CONFIG_RTC_DRV_OMAP=m enabled in
+> davinci_all_defconfig for the RTC driver. Could you add a patch for that
+> to this series as well?
+> 
+No problem. BTW do you also consider CONFIG_ items not arch specific
+(like CONFIG_NET_VENDOR_SMSC) ?
+
+> Also, plese Cc the co-maintainer Sekhar Nori (now Cc'd) on all future
+> davinci patches.
+> 
+Sure.
+
 > > ---
-> >  arch/arm/boot/dts/da850.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> > index 25f0f8e..3a00978 100644
-> > --- a/arch/arm/boot/dts/da850.dtsi
-> > +++ b/arch/arm/boot/dts/da850.dtsi
-> > @@ -375,7 +375,7 @@
-> >                         dma-names = "tx", "rx";
-> >                 };
-> >         };
-> > -       nand_cs3@62000000 {
-> > +       nand_cs3: nand_cs3@62000000 {
-> >                 compatible = "ti,davinci-nand";
-> >                 reg = <0x62000000 0x807ff
-> >                        0x68000000 0x8000>;
-> > --
-> > 2.9.0.rc1
-> >
-Please discard this one, I think I'll move things around for the nand.
+> >  Documentation/devicetree/bindings/arm/davinci.txt |  4 ++
+> >  arch/arm/boot/dts/Makefile                        |  1 +
+> >  arch/arm/boot/dts/omapl138-lcdk.dts               | 71 +++++++++++++++++++++++
+> 
+> I think this should be called da850-lcdk.dts.
+> 
+> The OMAP prefix in the DT directory is just going to cause confusion,
+> and the other DTs using this same SoC are already called da850.
+> 
+That's what I thought too, mainline U-Boot is using omapl138_lcdk but
+yes da850 is less confusing given the code already present (downside is
+when you search for da850 on the net there's nothing).
+
+> Sekhar do you have any opinion here?
+> 
+> [...]
+> 
+> > +/ {
+> > +	model = "DA850/AM1808/OMAP-L138 LCDK";
+> > +	compatible = "ti,omapl138-lcdk", "ti,da850";
+> > +
+> > +	aliases {
+> > +		serial2 = &serial2;
+> > +	};
+> > +
+> > +	chosen {
+> > +		bootargs = "console=ttyS2,115200n8 earlycon";
+> 
+> earlycon is kind of a debug option, so probably should be left out of
+> the default DT.
+> 
+Sure.
  
 Karl
 --
