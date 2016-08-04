@@ -1,34 +1,121 @@
-From: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: da850: Add missing pin muxing for the UARTs
-Date: Thu, 4 Aug 2016 21:00:45 +0000
-Message-ID: <20160804210045.GD15013@gobelin>
-References: <20160804110656.25318-1-kbeldan@baylibre.com>
- <m2eg64pchw.fsf@baylibre.com>
+From: Karl Beldan <kbeldan@baylibre.com>
+Subject: Re: [PATCH] ARM: dts: da850: Add basic DTS for the L138/C6748 Dev Kit
+Date: Thu, 4 Aug 2016 21:03:26 +0000
+Message-ID: <20160804210326.GE15013@gobelin>
+References: <20160804144332.4841-1-kbeldan@baylibre.com>
+ <20160804182902.GA22499@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <m2eg64pchw.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <20160804182902.GA22499@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, karl.beldan+oss@gmail.com, Kevin Hilman <khilman@baylibre.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2016 at 12:20:27PM -0700, Kevin Hilman wrote:
-> Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+On Thu, Aug 04, 2016 at 01:29:02PM -0500, Rob Herring wrote:
+> On Thu, Aug 04, 2016 at 02:43:32PM +0000, Karl Beldan wrote:
+> > The LCDK is the successor to the late Hawkboard and has the same machine
+> > number.
+> > Among the differences are the flash (16bits vs 8bits) and some pins
+> > (MMC, LEDs, buttons, some external connectors), however the main
+> > components remain the same (eth. PHY, Audio Codec, Video decoder and
+> > DAC) except for the main PMIC, different and hard-wired on the LCDK (the
+> > LDOs and DCDCs are always ON).
+> > A DT-only boot with this addition gives functional uart, reboot via
+> > watchdog, rtc, ethernet and MMC (I added the CD gpio for the MMC
+> > although davinci_mmc doesn't call yet the mmc core OF facilities).
+> > 
+> > Signed-off-by: Karl Beldan <kbeldan@baylibre.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/davinci.txt |  4 ++
+> >  arch/arm/boot/dts/Makefile                        |  1 +
+> >  arch/arm/boot/dts/omapl138-lcdk.dts               | 71 +++++++++++++++++++++++
+> >  arch/arm/mach-davinci/da8xx-dt.c                  |  1 +
+> >  4 files changed, 77 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/omapl138-lcdk.dts
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/davinci.txt b/Documentation/devicetree/bindings/arm/davinci.txt
+> > index cfaeda4..1482c74 100644
+> > --- a/Documentation/devicetree/bindings/arm/davinci.txt
+> > +++ b/Documentation/devicetree/bindings/arm/davinci.txt
+> > @@ -5,6 +5,10 @@ DA850/OMAP-L138/AM18x Evaluation Module (EVM) board
+> >  Required root node properties:
+> >      - compatible = "ti,da850-evm", "ti,da850";
+> >  
+> > +DA850/OMAP-L138/AM18x L138/C6748 Development Kit (LCDK) board
+> > +Required root node properties:
+> > +    - compatible = "ti,omapl138-lcdk", "ti,da850";
+> > +
+> >  EnBW AM1808 based CMC board
+> >  Required root node properties:
+> >      - compatible = "enbw,cmc", "ti,da850;
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index 414b427..da3f69b 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -105,6 +105,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += \
+> >  dtb-$(CONFIG_ARCH_BRCMSTB) += \
+> >  	bcm7445-bcm97445svmb.dtb
+> >  dtb-$(CONFIG_ARCH_DAVINCI) += \
+> > +	omapl138-lcdk.dtb \
+> >  	da850-enbw-cmc.dtb \
+> >  	da850-evm.dtb
+> >  dtb-$(CONFIG_ARCH_DIGICOLOR) += \
+> > diff --git a/arch/arm/boot/dts/omapl138-lcdk.dts b/arch/arm/boot/dts/omapl138-lcdk.dts
+> > new file mode 100644
+> > index 0000000..fad3b6d
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/omapl138-lcdk.dts
+> > @@ -0,0 +1,71 @@
+> > +/*
+> > + * Copyright (c) 2016 BayLibre, Inc.
+> > + *
+> > + * Licensed under GPLv2 or later.
+> > + */
+> > +/dts-v1/;
+> > +#include "da850.dtsi"
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +
+> > +/ {
+> > +	model = "DA850/AM1808/OMAP-L138 LCDK";
+> > +	compatible = "ti,omapl138-lcdk", "ti,da850";
+> > +
+> > +	aliases {
+> > +		serial2 = &serial2;
+> > +	};
+> > +
+> > +	chosen {
+> > +		bootargs = "console=ttyS2,115200n8 earlycon";
 > 
-> > This adds 2 pinctrl groups (rtscts, rxtx) for each of the 3 UARTs.
-> >
-> > Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> You don't need console with stdout-path set. And really, earlycon should 
+> not be the default.
 > 
-> Should da850-evm be updated to use the serial2_rxtx_pins also?
-> 
-I could not find the EVM schematics on the net and I only have an LCDK,
-but according to the code it should, however I can't tell whether flow
-control pins are used.
+Ok for earlycon.
+
+For the console, I thought likewise .. until I _struggled_ to understand
+why the console was disappearing under my feet.
+It seemed even stranger when I started looking at the codepath because
+drivers/of/base.c would properly add_preferred_console as expected after
+the corresponding UART was added. But the reality was there, without it
+the console was not like stdout-path.
+Among the commits that could instill doubt as to whether stdout-path
+rules is f64255b5072d:
+"The assumption that at least 1 preferred console will be registered
+when the stdout-path property is set is invalid, which can result in
+_no_ consoles.", though it didn't answer my question.
+I started looking whether tty0 was not getting in the way and in the end
+I came up with setting console.
+But you seem affirmative.
  
 Karl
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
