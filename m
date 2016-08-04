@@ -1,54 +1,88 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v3 3/3] ARM64: dts: amlogic: meson-gxbb: Add watchdog node
-Date: Wed, 3 Aug 2016 17:29:13 -0700
-Message-ID: <CAOi56cUQaFKYu2jNP0AuLOSNnNramu+DNPc+PH7K0gHDZMf+zA@mail.gmail.com>
-References: <1468141867-4172-1-git-send-email-narmstrong@baylibre.com>
- <1468141867-4172-4-git-send-email-narmstrong@baylibre.com>
- <578271D3.4080704@roeck-us.net> <7hbn237aw7.fsf@baylibre.com>
- <m2bn19qsy3.fsf@baylibre.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC][PATCH 3/4] power: reset: Add sram-reboot-mode driver
+Date: Wed, 3 Aug 2016 18:03:41 -0700
+Message-ID: <20160804010341.GH13516@tuxbot>
+References: <1470265523-27557-1-git-send-email-john.stultz@linaro.org>
+ <1470265523-27557-4-git-send-email-john.stultz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <m2bn19qsy3.fsf@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-watchdog@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, lkml <linux-kernel@vger.kernel.org>, Wim Van Sebroeck <wim@iguana.be>, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1470265523-27557-4-git-send-email-john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Heiko St?bner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vishal Bhoj <vishal.bhoj-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 3, 2016 at 5:27 PM, Kevin Hilman <khilman@baylibre.com> wrote:
-> Hi Guenter,
->
-> Kevin Hilman <khilman@baylibre.com> writes:
->
->> Guenter Roeck <linux@roeck-us.net> writes:
->>
->>> On 07/10/2016 02:11 AM, Neil Armstrong wrote:
->>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->>>
->>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->>>
->>> Would this go in through one of the arm trees ?
->>
->> You can take the driver through the watchdog tree, but I'll take the DT
->> stuff through the amlogic tree (and submit via arm-soc).
->>
->> However, with your ack, and since this is a brand new driver, I could
->> take the driver as well.  Just let me know your preference.
->
-> ping... do you have a prefernce here?
->
+On Wed 03 Aug 16:05 PDT 2016, John Stultz wrote:
 
-Oops, just noticed Wim already picked these up.
+[..]
+> diff --git a/drivers/power/reset/sram-reboot-mode.c b/drivers/power/reset/sram-reboot-mode.c
+[..]
+> +
+> +struct sram_reboot_mode {
+> +	struct reboot_mode_driver reboot;
+> +	void __iomem *reboot_reason_val_addr;
 
-Ignore me,
+23 characters is...a lot of characters...
 
-Kevin
+> +};
+> +
+> +static int sram_reboot_mode_write(struct reboot_mode_driver *reboot,
+> +					unsigned int magic)
+> +{
+> +	struct sram_reboot_mode *sram_rbm;
+> +
+> +	sram_rbm = container_of(reboot, struct sram_reboot_mode, reboot);
+> +
+> +	writel(magic, sram_rbm->reboot_reason_val_addr);
+> +	return 0;
+> +}
+> +
+> +static int sram_reboot_mode_probe(struct platform_device *pdev)
+> +{
+> +	struct sram_reboot_mode *sram_rbm;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	sram_rbm = devm_kzalloc(&pdev->dev, sizeof(*sram_rbm), GFP_KERNEL);
+> +	if (!sram_rbm)
+> +		return -ENOMEM;
+> +
+> +	sram_rbm->reboot.dev = &pdev->dev;
+> +	sram_rbm->reboot.write = sram_reboot_mode_write;
+> +
+> +	dev_set_drvdata(&pdev->dev, sram_rbm);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return PTR_ERR(res);
+> +
+> +	sram_rbm->reboot_reason_val_addr = devm_ioremap(&pdev->dev, res->start,
+> +							 resource_size(res));
+
+Use devm_ioremap_resource() instead, it saves you the return value check
+on platform_get_resource() and is cleaner.
+
+> +	if (IS_ERR(sram_rbm->reboot_reason_val_addr))
+> +		return PTR_ERR(sram_rbm->reboot_reason_val_addr);
+> +
+> +	ret = reboot_mode_register(&sram_rbm->reboot);
+
+I think you should take the time to throw in a
+devm_reboot_mode_register(), it would save you from the
+dev_set_drvdata() and you can drop the remove function.
+
+> +	if (ret)
+> +		dev_err(&pdev->dev, "can't register reboot mode\n");
+> +
+> +	return ret;
+> +}
+> +
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
