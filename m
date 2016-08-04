@@ -1,39 +1,79 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: da850: Add missing pin muxing for the UARTs
-Date: Thu, 04 Aug 2016 16:00:35 -0700
-Message-ID: <m2fuqknnqk.fsf@baylibre.com>
-References: <20160804110656.25318-1-kbeldan@baylibre.com>
-	<m2eg64pchw.fsf@baylibre.com> <20160804210045.GD15013@gobelin>
+From: York Sun <york.sun@nxp.com>
+Subject: [Patch v3 11/11] arm64: Update device tree for Layerscape SoCs
+Date: Thu, 4 Aug 2016 15:58:36 -0700
+Message-ID: <1470351518-22404-12-git-send-email-york.sun@nxp.com>
+References: <1470351518-22404-1-git-send-email-york.sun@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160804210045.GD15013@gobelin> (Karl Beldan's message of "Thu,
-	4 Aug 2016 21:00:45 +0000")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1470351518-22404-1-git-send-email-york.sun@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-edac@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Liu Gang <Gang.Liu@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Hou Zhiqiang <B48286@freescale.com>, York Sun <york.sun@nxp.com>, Li Yang <leoli@freescale.com>, yangbo lu <yangbo.lu@freescale.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, stuart.yoder@nxp.com, oss@buserror.net, Rob Herring <robh+dt@kernel.org>, bp@alien8.de, Yuan Yao <yao.yuan@nxp.com>, Mingkai Hu <Mingkai.Hu@freescale.com>, linux-arm-kernel@lists.infradead.org, Rajesh Bhagat <rajesh.bhagat@freescale.com>, morbidrsa@gmail.com, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+Add DDR memory controller nodes to enable EDAC driver.
 
-> On Thu, Aug 04, 2016 at 12:20:27PM -0700, Kevin Hilman wrote:
->> Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
->> 
->> > This adds 2 pinctrl groups (rtscts, rxtx) for each of the 3 UARTs.
->> >
->> > Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> 
->> Should da850-evm be updated to use the serial2_rxtx_pins also?
->> 
-> I could not find the EVM schematics on the net and I only have an LCDK,
-> but according to the code it should, however I can't tell whether flow
-> control pins are used.
+Signed-off-by: York Sun <york.sun@nxp.com>
 
-Ok, let's just leave it for now, since it's working fine.  Sekhar can
-fix that up if he can dig up the schematics.
+---
+Change log
+  v3: no change
+  v2: no change
 
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |  7 +++++++
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 14 ++++++++++++++
+ 2 files changed, 21 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index de0323b..cb33f23 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -196,6 +196,13 @@
+ 			bus-width = <4>;
+ 		};
+ 
++		ddr: memory-controller@1080000 {
++			compatible = "fsl,qoriq-memory-controller";
++			reg = <0x0 0x1080000 0x0 0x1000>;
++			interrupts = <0 144 0x4>;
++			big-endian;
++		};
++
+ 		dspi0: dspi@2100000 {
+ 			compatible = "fsl,ls1043a-dspi", "fsl,ls1021a-v1.0-dspi";
+ 			#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+index 3187c82..3221e5c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+@@ -689,4 +689,18 @@
+ 			interrupts = <0 12 4>;
+ 		};
+ 	};
++
++	ddr1: memory-controller@1080000 {
++		compatible = "fsl,qoriq-memory-controller";
++		reg = <0x0 0x1080000 0x0 0x1000>;
++		interrupts = <0 17 0x4>;
++		little-endian;
++	};
++
++	ddr2: memory-controller@1090000 {
++		compatible = "fsl,qoriq-memory-controller";
++		reg = <0x0 0x1090000 0x0 0x1000>;
++		interrupts = <0 18 0x4>;
++		little-endian;
++	};
+ };
+-- 
+2.7.4
