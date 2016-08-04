@@ -1,142 +1,71 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Thu, 4 Aug 2016 15:42:39 -0400
-Message-ID: <20160804194238.GL15995@brightrain.aerifal.cx>
-References: <cover.147018b3518.git.dalias@libc.org>
- <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
- <20160804082451.GA2509@localhost>
+From: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: da850: Adjust the pinctrl muxing for the NAND
+ on CS3
+Date: Thu, 4 Aug 2016 20:53:05 +0000
+Message-ID: <20160804205305.GA15013@gobelin>
+References: <20160803170627.1773-1-kbeldan@baylibre.com>
+ <CAJaRCXMBi-UQaXkGNaSaKjb6eqoJwhcc9Py8vFEWpVKSn5g5bQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160804082451.GA2509@localhost>
-Sender: linux-sh-owner@vger.kernel.org
-To: Alexnader Kuleshov <kuleshovmail@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+In-Reply-To: <CAJaRCXMBi-UQaXkGNaSaKjb6eqoJwhcc9Py8vFEWpVKSn5g5bQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Karl Beldan <karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2016 at 02:24:51PM +0600, Alexnader Kuleshov wrote:
-> Hello Rich,
+On Thu, Aug 04, 2016 at 08:42:19PM +0000, Karl Beldan wrote:
+> 2016-08-03 17:06 GMT+00:00 Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>:
 > 
-> On 08-04-16, Rich Felker wrote:
-> > At the hardware level, the J-Core PIT is integrated with the interrupt
-> > controller, but it is represented as its own device and has an
-> > independent programming interface. It provides a 12-bit countdown
-> > timer, which is not presently used, and a periodic timer. The interval
-> > length for the latter is programmable via a 32-bit throttle register
-> > whose units are determined by a bus-period register. The periodic
-> > timer is used to implement both periodic and oneshot clock event
-> > modes; in oneshot mode the interrupt handler simply disables the timer
-> > as soon as it fires.
+> > - Adjust the settings to also allow driving EMA_D[8..15] for 16bits
+> >   NANDs. These are shared with GPIO3[0..7] which have no in-tree user.
+> > - Remove the useless CS4 setting
 > >
-> > Despite its device tree node representing an interrupt for the PIT,
-> > the actual irq generated is programmable, not hard-wired. The driver
-> > is responsible for programming the PIT to generate the hardware irq
-> > number that the DT assigns to it.
+> > Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/da850.dtsi | 12 ++++++++----
+> >  1 file changed, 8 insertions(+), 4 deletions(-)
 > >
-> > On SMP configurations, J-Core provides cpu-local instances of the PIT;
-> > no broadcast timer is needed. This driver supports the creation of the
-> > necessary per-cpu clock_event_device instances. The code has been
-> > tested and works on SMP, but will not be usable without additional
-> > J-Core SMP-support patches and appropriate hardware capable of running
-> > SMP.
+> > diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+> > index 3a00978..ae5dc18 100644
+> > --- a/arch/arm/boot/dts/da850.dtsi
+> > +++ b/arch/arm/boot/dts/da850.dtsi
+> > @@ -43,16 +43,20 @@
 > >
-> > A nanosecond-resolution clocksource is provided using the J-Core "RTC"
-> > registers, which give a 64-bit seconds count and 32-bit nanoseconds.
-> > The driver converts these to a 64-bit nanoseconds count.
+> >                         nand_cs3_pins: pinmux_nand_pins {
+> >                                 pinctrl-single,bits = <
+> > -                                       /* EMA_OE, EMA_WE */
+> > -                                       0x1c 0x00110000  0x00ff0000
+> > -                                       /* EMA_CS[4],EMA_CS[3]*/
+> > -                                       0x1c 0x00000110  0x00000ff0
+> > +                                       /* EMA_OE, EMA_WE, EMA_CS[3] */
+> > +                                       0x1c 0x00110010  0x00ff00f0
+> >                                         /*
+> >                                          * EMA_D[0], EMA_D[1], EMA_D[2],
+> >                                          * EMA_D[3], EMA_D[4], EMA_D[5],
+> >                                          * EMA_D[6], EMA_D[7]
+> >                                          */
+> >                                         0x24 0x11111111  0xffffffff
+> > +                                       /*
+> > +                                        * EMA_D[8],  EMA_D[9],  EMA_D[10],
+> > +                                        * EMA_D[11], EMA_D[12], EMA_D[13],
+> > +                                        * EMA_D[14], EMA_D[15]
+> > +                                        */
+> > +                                       0x20 0x11111111  0xffffffff
+> >                                         /* EMA_A[1], EMA_A[2] */
+> >                                         0x30 0x01100000  0x0ff00000
+> >                                 >;
+> > --
+> > 2.9.0.rc1
 > >
-> > Signed-off-by: Rich Felker <dalias@libc.org>
-> > ...
-> > ...
-> > ...
-> > +
-> > +static int jcore_pit_set_state_shutdown(struct clock_event_device *ced)
-> > +{
-> > +	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
-> > +
-> > +	return jcore_pit_disable(pit);
-> > +}
-> > +
-> > +static int jcore_pit_set_state_oneshot(struct clock_event_device *ced)
-> > +{
-> > +	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
-> > +
-> > +	return jcore_pit_disable(pit);
-> > +}
-> 
-> Maybe to use only jcore_pit_set_state_shutdown() for both shutdown/oneshot
-> states as it is implemented for some of others clocksource drivers?
-> 
-> all the more so as described in your commit message, they do the same:
-> 
-> > in oneshot mode the interrupt handler simply disables the timer
-> > as soon as it fires
-> 
-> right?
+Please discard this one I think it is better that I make groups for the
+NAND.
+ 
+Karl
 
-I separated these out semantically due to another request earlier in
-this patch's life cycle. At this point I feel like issues like this
-are really a bikeshed, and rather than changing trivial details back
-and forth over and over I'd like to see it go upstream so that I don't
-have to keep rebasing it on infrastructure that's changing underneath
-it.
-
-> > +static int __init jcore_pit_init(struct device_node *node)
-> > +{
-> > +	int err;
-> > +	unsigned pit_irq, cpu;
-> > +	unsigned long hwirq;
-> > +	u32 irqprio, enable_val;
-> > +
-> > +	jcore_pit_base = of_iomap(node, 0);
-> > +	if (!jcore_pit_base) {
-> > +		pr_err("Error: Cannot map base address for J-Core PIT\n");
-> > +		return -ENXIO;
-> > +	}
-> > +
-> > +	pit_irq = irq_of_parse_and_map(node, 0);
-> > +	if (!pit_irq) {
-> > +		pr_err("Error: J-Core PIT has no IRQ\n");
-> > +		return -ENXIO;
-> > +	}
-> > +
-> > +	pr_info("Initializing J-Core PIT at %p IRQ %d\n",
-> > +		jcore_pit_base, pit_irq);
-> > +
-> > +	jcore_cs.name = "jcore_pit_cs";
-> > +	jcore_cs.rating = 400;
-> > +	jcore_cs.read = jcore_clocksource_read;
-> > +	jcore_cs.mult = 1;
-> > +	jcore_cs.shift = 0;
-> > +	jcore_cs.mask = CLOCKSOURCE_MASK(32);
-> > +	jcore_cs.flags = CLOCK_SOURCE_IS_CONTINUOUS;
-> > +
-> > +	err = clocksource_register_hz(&jcore_cs, NSEC_PER_SEC);
-> > +	if (err) {
-> > +		pr_err("Error registering clocksource device: %d\n", err);
-> > +		return err;
-> > +	}
-> > +
-> > +	sched_clock_register(jcore_sched_clock_read, 32, NSEC_PER_SEC);
-> > +
-> > +	jcore_pit_percpu = alloc_percpu(struct jcore_pit);
-> > +	if (!jcore_pit_percpu) {
-> > +		pr_err("Failed to allocate memory for clock event device\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	err = request_irq(pit_irq, jcore_timer_interrupt,
-> > +			  IRQF_TIMER | IRQF_PERCPU,
-> > +			  "jcore_pit", jcore_pit_percpu);
-> > +	if (err) {
-> > +		pr_err("pit irq request failed: %d\n", err);
-> > +		return err;
-> > +	}
-> 
-> free_percpu() missed in a case when request_irq() failed.
-
-Shall I submit a new version with this change? I don't think it's
-particular useful since you're not going to have a working system if
-the timer fails to initialize anyway, but I can do it if desired.
-
-Rich
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
