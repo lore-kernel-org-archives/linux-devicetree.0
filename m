@@ -1,8 +1,8 @@
 From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH v2 05/17] ARM: dts: mvebu: armada-390: add missing
- compatibility string and bracket
-Date: Thu,  4 Aug 2016 12:14:08 +0200
-Message-ID: <1470305660-6601-6-git-send-email-jaz@semihalf.com>
+Subject: [PATCH v2 07/17] ARM: dts: mvebu: armada-39x: enable PMU,
+ CA9 SoC Controller and Coherency fabric
+Date: Thu,  4 Aug 2016 12:14:10 +0200
+Message-ID: <1470305660-6601-8-git-send-email-jaz@semihalf.com>
 References: <1470305660-6601-1-git-send-email-jaz@semihalf.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,38 +19,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, andrew@lunn.ch, jason@lakedaemon.net, jaz@semihalf.com, linux@armlinux.org.uk, stable@vger.kernel.org, nadavh@marvell.com, alior@marvell.com, robh+dt@kernel.org, gregory.clement@free-electrons.com, mw@semihalf.com, thomas.petazzoni@free-electrons.com, sebastian.hesselbarth@gmail.com
+Cc: mark.rutland@arm.com, andrew@lunn.ch, jason@lakedaemon.net, jaz@semihalf.com, linux@armlinux.org.uk, nadavh@marvell.com, alior@marvell.com, robh+dt@kernel.org, gregory.clement@free-electrons.com, mw@semihalf.com, thomas.petazzoni@free-electrons.com, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The armada-390.dtsi was broken since the first patch which adds Device Tree
-files for Armada 39x SoC was introduced.
+This commit enables:
+- CA9's Performance Monitor Unit
+- CA9 MPcore SoC Controller
+- Coherency fabric
+on Armada 39x, basing on the Armada 38x (which has the same CA9 CPU).
 
 Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+Reviewed-by: Lior Amsalem <alior@marvell.com>
 Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: <stable@vger.kernel.org> # 4.0+
-Fixes 538da83 ("ARM: mvebu: add Device Tree files for Armada 39x SoC and board")
 ---
- arch/arm/boot/dts/armada-390.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/armada-39x.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-390.dtsi b/arch/arm/boot/dts/armada-390.dtsi
-index 094e39c..6cd18d8 100644
---- a/arch/arm/boot/dts/armada-390.dtsi
-+++ b/arch/arm/boot/dts/armada-390.dtsi
-@@ -47,6 +47,8 @@
- #include "armada-39x.dtsi"
+diff --git a/arch/arm/boot/dts/armada-39x.dtsi b/arch/arm/boot/dts/armada-39x.dtsi
+index cb66f20..8a22c02 100644
+--- a/arch/arm/boot/dts/armada-39x.dtsi
++++ b/arch/arm/boot/dts/armada-39x.dtsi
+@@ -78,6 +78,11 @@
+ 		};
+ 	};
  
- / {
-+	compatible = "marvell,armada390";
++	pmu {
++		compatible = "arm,cortex-a9-pmu";
++		interrupts-extended = <&mpic 3>;
++	};
 +
  	soc {
- 		internal-regs {
- 			pinctrl@18000 {
-@@ -54,4 +56,5 @@
- 				reg = <0x18000 0x20>;
+ 		compatible = "marvell,armada390-mbus", "marvell,armadaxp-mbus",
+ 			     "simple-bus";
+@@ -322,6 +327,16 @@
+ 				reg = <0x20800 0x10>;
  			};
- 		};
-+	};
- };
+ 
++			mpcore-soc-ctrl@20d20 {
++				compatible = "marvell,armada-380-mpcore-soc-ctrl";
++				reg = <0x20d20 0x6c>;
++			};
++
++			coherency-fabric@21010 {
++				compatible = "marvell,armada-380-coherency-fabric";
++				reg = <0x21010 0x1c>;
++			};
++
+ 			pmsu@22000 {
+ 				compatible = "marvell,armada-390-pmsu",
+ 					     "marvell,armada-380-pmsu";
 -- 
 1.8.3.1
