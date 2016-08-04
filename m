@@ -1,93 +1,71 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: jcore: add J-Core SPI master bindings" to the spi tree
-Date: Thu, 04 Aug 2016 22:09:32 +0100
-Message-ID: <E1bVPtU-0007O2-Hu@debutante>
-References: <bc53c38fe100bd17b278dfb214eefea323a3ac4a.1470187592.git.dalias@libc.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bc53c38fe100bd17b278dfb214eefea323a3ac4a.1470187592.git.dalias@libc.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.orgMark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: da850: Add basic DTS for the L138/C6748 Dev Kit
+Date: Thu, 4 Aug 2016 16:13:10 -0500
+Message-ID: <CAL_Jsq+3eWgcYc=wpgVCadSFQUyE+WLfA3kTb10AuoZfiKsKog@mail.gmail.com>
+References: <20160804144332.4841-1-kbeldan@baylibre.com> <20160804182902.GA22499@rob-hp-laptop>
+ <20160804210326.GE15013@gobelin>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160804210326.GE15013@gobelin>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
++Peter H
 
-   spi: jcore: add J-Core SPI master bindings
+On Thu, Aug 4, 2016 at 4:03 PM, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> On Thu, Aug 04, 2016 at 01:29:02PM -0500, Rob Herring wrote:
+>> On Thu, Aug 04, 2016 at 02:43:32PM +0000, Karl Beldan wrote:
+>> > The LCDK is the successor to the late Hawkboard and has the same machine
+>> > number.
+>> > Among the differences are the flash (16bits vs 8bits) and some pins
+>> > (MMC, LEDs, buttons, some external connectors), however the main
+>> > components remain the same (eth. PHY, Audio Codec, Video decoder and
+>> > DAC) except for the main PMIC, different and hard-wired on the LCDK (the
+>> > LDOs and DCDCs are always ON).
+>> > A DT-only boot with this addition gives functional uart, reboot via
+>> > watchdog, rtc, ethernet and MMC (I added the CD gpio for the MMC
+>> > although davinci_mmc doesn't call yet the mmc core OF facilities).
 
-has been applied to the spi tree at
+[...]
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+>> > +   aliases {
+>> > +           serial2 = &serial2;
+>> > +   };
+>> > +
+>> > +   chosen {
+>> > +           bootargs = "console=ttyS2,115200n8 earlycon";
+>>
+>> You don't need console with stdout-path set. And really, earlycon should
+>> not be the default.
+>>
+> Ok for earlycon.
+>
+> For the console, I thought likewise .. until I _struggled_ to understand
+> why the console was disappearing under my feet.
+> It seemed even stranger when I started looking at the codepath because
+> drivers/of/base.c would properly add_preferred_console as expected after
+> the corresponding UART was added. But the reality was there, without it
+> the console was not like stdout-path.
+> Among the commits that could instill doubt as to whether stdout-path
+> rules is f64255b5072d:
+> "The assumption that at least 1 preferred console will be registered
+> when the stdout-path property is set is invalid, which can result in
+> _no_ consoles.", though it didn't answer my question.
+> I started looking whether tty0 was not getting in the way and in the end
+> I came up with setting console.
+> But you seem affirmative.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+There have been some issues in this area, but I thought they were in
+conjunction with earlycon and solved now. This is a fairly common
+review request for dts files, so I'm surprised if it doesn't work
+right. Maybe having tty0 or not has some influence. Or people just
+accept review comments without testing or caring...
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 4b87b6da506dc91b45df06984ed55fcb4676c68d Mon Sep 17 00:00:00 2001
-From: Rich Felker <dalias@libc.org>
-Date: Thu, 4 Aug 2016 04:30:37 +0000
-Subject: [PATCH] spi: jcore: add J-Core SPI master bindings
-
-Signed-off-by: Rich Felker <dalias@libc.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/spi/jcore,spi.txt          | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/jcore,spi.txt
-
-diff --git a/Documentation/devicetree/bindings/spi/jcore,spi.txt b/Documentation/devicetree/bindings/spi/jcore,spi.txt
-new file mode 100644
-index 000000000000..93936d16e139
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/jcore,spi.txt
-@@ -0,0 +1,34 @@
-+J-Core SPI master
-+
-+Required properties:
-+
-+- compatible: Must be "jcore,spi2".
-+
-+- reg: Memory region for registers.
-+
-+- #address-cells: Must be 1.
-+
-+- #size-cells: Must be 0.
-+
-+Optional properties:
-+
-+- clocks: If a phandle named "ref_clk" is present, SPI clock speed
-+  programming is relative to the frequency of the indicated clock.
-+  Necessary only if the input clock rate is something other than a
-+  fixed 50 MHz.
-+
-+- clock-names: Clock names, one for each phandle in clocks.
-+
-+See spi-bus.txt for additional properties not specific to this device.
-+
-+Example:
-+
-+spi@40 {
-+	compatible = "jcore,spi2";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	reg = <0x40 0x8>;
-+	spi-max-frequency = <25000000>;
-+	clocks = <&bus_clk>;
-+	clock-names = "ref_clk";
-+}
--- 
-2.8.1
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
