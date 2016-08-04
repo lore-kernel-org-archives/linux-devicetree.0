@@ -1,8 +1,8 @@
 From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: [PATCH v2 03/17] ARM: dts: mvebu: a385-db-ap: enable USB (orion-ehci)
- port
-Date: Thu,  4 Aug 2016 12:14:06 +0200
-Message-ID: <1470305660-6601-4-git-send-email-jaz@semihalf.com>
+Subject: [PATCH v2 05/17] ARM: dts: mvebu: armada-390: add missing
+ compatibility string and bracket
+Date: Thu,  4 Aug 2016 12:14:08 +0200
+Message-ID: <1470305660-6601-6-git-send-email-jaz@semihalf.com>
 References: <1470305660-6601-1-git-send-email-jaz@semihalf.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,32 +19,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, andrew@lunn.ch, jason@lakedaemon.net, jaz@semihalf.com, linux@armlinux.org.uk, nadavh@marvell.com, alior@marvell.com, robh+dt@kernel.org, gregory.clement@free-electrons.com, mw@semihalf.com, thomas.petazzoni@free-electrons.com, sebastian.hesselbarth@gmail.com
+Cc: mark.rutland@arm.com, andrew@lunn.ch, jason@lakedaemon.net, jaz@semihalf.com, linux@armlinux.org.uk, stable@vger.kernel.org, nadavh@marvell.com, alior@marvell.com, robh+dt@kernel.org, gregory.clement@free-electrons.com, mw@semihalf.com, thomas.petazzoni@free-electrons.com, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The Armada 385 Access Point Development board contains USB port, which can
-be handled by existing orion-ehci driver.
+The armada-390.dtsi was broken since the first patch which adds Device Tree
+files for Armada 39x SoC was introduced.
 
 Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: <stable@vger.kernel.org> # 4.0+
+Fixes 538da83 ("ARM: mvebu: add Device Tree files for Armada 39x SoC and board")
 ---
- arch/arm/boot/dts/armada-385-db-ap.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/armada-390.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-385-db-ap.dts b/arch/arm/boot/dts/armada-385-db-ap.dts
-index 2d3fd6e..a18f516 100644
---- a/arch/arm/boot/dts/armada-385-db-ap.dts
-+++ b/arch/arm/boot/dts/armada-385-db-ap.dts
-@@ -155,6 +155,10 @@
- 				bm,pool-short = <3>;
- 			};
+diff --git a/arch/arm/boot/dts/armada-390.dtsi b/arch/arm/boot/dts/armada-390.dtsi
+index 094e39c..6cd18d8 100644
+--- a/arch/arm/boot/dts/armada-390.dtsi
++++ b/arch/arm/boot/dts/armada-390.dtsi
+@@ -47,6 +47,8 @@
+ #include "armada-39x.dtsi"
  
-+			usb@58000 {
-+				status = "okay";
-+			};
+ / {
++	compatible = "marvell,armada390";
 +
- 			/* CON4 */
- 			ethernet@70000 {
- 				pinctrl-names = "default";
+ 	soc {
+ 		internal-regs {
+ 			pinctrl@18000 {
+@@ -54,4 +56,5 @@
+ 				reg = <0x18000 0x20>;
+ 			};
+ 		};
++	};
+ };
 -- 
 1.8.3.1
