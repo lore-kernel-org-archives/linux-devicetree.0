@@ -1,59 +1,109 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [RFC][PATCH 3/4] power: reset: Add sram-reboot-mode driver
-Date: Wed, 3 Aug 2016 20:08:52 -0700
-Message-ID: <CALAqxLXL2aTe3DsEngCRuV76svnN-2LkDDuDna+289NWzjRYXg@mail.gmail.com>
-References: <1470265523-27557-1-git-send-email-john.stultz@linaro.org>
- <1470265523-27557-4-git-send-email-john.stultz@linaro.org> <20160804010341.GH13516@tuxbot>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v2 1/4] Documentation: DT: net: Add Xilinx gmiitorgmii
+ converter device tree binding documentation
+Date: Wed, 3 Aug 2016 20:42:08 -0700
+Message-ID: <971c966a-5335-310b-0a1a-3f1b7ee2f841@gmail.com>
+References: <1467623084-15471-1-git-send-email-appanad@xilinx.com>
+ <1467623084-15471-2-git-send-email-appanad@xilinx.com>
+ <20160704140458.GC3282@lunn.ch>
+ <03CA77BA8AF6F1469AEDFBDA1322A7B74A193913@XAP-PVEXMBX02.xlnx.xilinx.com>
+ <20160706142121.GI19800@lunn.ch>
+ <03CA77BA8AF6F1469AEDFBDA1322A7B74A19393B@XAP-PVEXMBX02.xlnx.xilinx.com>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5C2387@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20160727080526.GH11538@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160804010341.GH13516@tuxbot>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, Heiko St?bner <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>, Kees Cook <keescook@chromium.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Vishal Bhoj <vishal.bhoj@linaro.org>, devicetree@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160727080526.GH11538-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 3, 2016 at 6:03 PM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> On Wed 03 Aug 16:05 PDT 2016, John Stultz wrote:
->
-> [..]
->> diff --git a/drivers/power/reset/sram-reboot-mode.c b/drivers/power/reset/sram-reboot-mode.c
-> [..]
->> +
->> +struct sram_reboot_mode {
->> +     struct reboot_mode_driver reboot;
->> +     void __iomem *reboot_reason_val_addr;
->
-> 23 characters is...a lot of characters...
+On 27/07/2016 01:05, Andrew Lunn wrote:
+> Hi Appana
+> 
+> Here is roughly what i was thinking:
+> 
+> struct priv {
+>        phy_device *master;
+>        phy_device *slave;
+>        struct phy_driver *slave_drv;
+> };
+> 
+> phy_status_clone(phy_device *master, phy_device *slave)
+> {
+> 	master->speed = slave->speed;
+> 	master->duplex = slave->duplex;
+> 	master->pause = slave->pause;
+> }
+> 
+> read_status(struct phy_device *phydev)
+> {
+> 	struct priv *priv = phydev->priv;
+> 
+> 	/* Get the status from the slave, and duplicate in into the
+> 	 * master */
+> 	 slave_drv->read_status(priv->slave);
+> 	 phy_status_clone(priv->master, priv->slave);
+> 
+> 	 /* Update the gmiitorgmii with the current link parameters */
+> 	 update_link(master);
+> }
+> 
+> config_init(struct phy_device *phydev)
+> {
+> 	struct priv *priv = phydev->priv;
+> 
+> 	/* Configure the slave, and duplicate in into the master */
+> 	slave_drv->config_init(priv->slave);
+> 	phy_status_clone(priv->master, priv->slave);
+> }
+> 
+> struct phy_driver master_drv = {
+>        .read_status = read_status,
+>        .config_init = config_init,
+>        .soft_reset  = ...
+>        .suspend = ...
+> };
+> 
+> probe(mdio_device *mdio)
+> {
+> 	struct priv *priv = devm_alloc();
+> 
+> 	/* Use the phy-handle property to find the slave phy */
+> 	node_phy = of_parse_phandle(mdio->of_node, "phy", 0);
+> 	priv->slave = of_phy_find_device(node_phy);
+> 
+> 	/* Create the master phy on the control address. Use the phy
+> 	   ID from the slave. */
+> 	priv->master = phy_device_create(mdio->bus, mdio->addr,
+> 	  				 phy->slave->phy_id,
+> 					 phy->slave->is_c45,
+> 					 phy->slave->c45_ids);
+> 
+> 	slave_dev_drv = phydev->mdio.dev.driver;
+> 	priv->slave_drv = to_phy_driver(slave_dev_drv);
+> 	priv->master->mdio.dev.driver = master_drv;
 
-Fair enough. Renamed to reason_addr.
+The key here is really that except for the phy_driver::read_status
+callback, we want to defer every operation to the slave (full MDIO
+register range compatible) PHY.
 
+> }
+> 
+> It would however be nice to only have one phydev structure, so you are
+> not copying status and settings backwards and forwards from one to the
+> other all the time, and need a wrapper for every function in
+> phy_driver. Studying the structures a bit, that might be possible. You
+> would then only need to wrap the read_status(), so that when the link
+> speed/duplex changes, you can configure the converter as appropriate.
 
->> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +     if (!res)
->> +             return PTR_ERR(res);
->> +
->> +     sram_rbm->reboot_reason_val_addr = devm_ioremap(&pdev->dev, res->start,
->> +                                                      resource_size(res));
->
-> Use devm_ioremap_resource() instead, it saves you the return value check
-> on platform_get_resource() and is cleaner.
-
-Ok. Done.
-
-
->> +     if (IS_ERR(sram_rbm->reboot_reason_val_addr))
->> +             return PTR_ERR(sram_rbm->reboot_reason_val_addr);
->> +
->> +     ret = reboot_mode_register(&sram_rbm->reboot);
->
-> I think you should take the time to throw in a
-> devm_reboot_mode_register(), it would save you from the
-> dev_set_drvdata() and you can drop the remove function.
-
-So I've only got a vague sense of what your suggesting here. Do you
-have a pointer to a good example?
-
-thanks
--john
+Agreed.
+--
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
