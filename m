@@ -1,52 +1,68 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH 2/3] drm/i2c: tda998x: Register ASoC hdmi-codec and add
- audio DT binding
-Date: Thu, 4 Aug 2016 15:07:13 +0100
-Message-ID: <20160804140712.GO5783@n2100.arm.linux.org.uk>
-References: <cover.1470129989.git.jsarha@ti.com>
- <ce10548e1c28270d80ee99a525e117d0d25f5656.1470129989.git.jsarha@ti.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH] [v6] net: emac: emac gigabit ethernet controller driver
+Date: Thu, 4 Aug 2016 09:24:54 -0500
+Message-ID: <57A35036.2030604@codeaurora.org>
+References: <1466812008-26686-1-git-send-email-timur@codeaurora.org>
+ <79189959.nJygzEHqi7@wuerfel> <57A26106.50206@codeaurora.org>
+ <3036653.SbY9jG7XMU@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ce10548e1c28270d80ee99a525e117d0d25f5656.1470129989.git.jsarha-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <3036653.SbY9jG7XMU@wuerfel>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, catalin.marinas@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 02, 2016 at 03:05:08PM +0300, Jyri Sarha wrote:
-> +	memcpy(audio.status, params->iec.status,
-> +	       min(sizeof(audio.status), sizeof(params->iec.status)));
+Arnd Bergmann wrote:
+> This is basically ok, but then I think you should pass GFP_DMA
+> or GFP_DMA32 to all allocations that the driver does after
+> the 64-bit mask fails, otherwise you get a significant overhead
+> in the bounce buffers.
 
-As mentioned in the other patch, the audio status does not directly
-correspond with the AES bytes, so this ends up causing the driver to
-write the wrong bytes to the wrong registers.
+Well, for starters, ZONE_DMA32 is the same as ZONE_NORMAL on ARM, 
+because CONFIG_ZONE_DMA32 is not defined.
 
-> +	ret = tda998x_configure_audio(priv,
-> +				      &audio,
-> +				      priv->encoder.crtc->hwmode.clock);
+#ifdef CONFIG_ZONE_DMA32
+#define OPT_ZONE_DMA32 ZONE_DMA32
+#else
+#define OPT_ZONE_DMA32 ZONE_NORMAL
+#endif
 
-What happens if audio changes at the same time that the video mode
-changes?  What protection is there against two threads concurrently
-executing tda998x_configure_audio() ?
+(I wonder if this should say instead:
 
-> +	priv->audio_pdev = platform_device_register_data(
-> +		dev, HDMI_CODEC_DRV_NAME, PLATFORM_DEVID_AUTO,
-> +		&codec_data, sizeof(codec_data));
+#ifdef CONFIG_ZONE_DMA32
+#define OPT_ZONE_DMA32 ZONE_DMA32
+#else
+#define OPT_ZONE_DMA32 ZONE_DMA  <----
+#endif
+)
 
-I'd much prefer that this was a child of the I2C device, which will
-show the relationship between this virtual platform device and the
-device which it's associated with.  That can be done via
-platform_device_register_full().
+However, I'm not sure where I should be using GFP_DMA anyway.  Whenever 
+the driver allocates memory for DMA, it uses dma_zalloc_coherent():
 
-Thanks.
+ring_header->v_addr = dma_zalloc_coherent(dev, ring_header->size,
+					 &ring_header->dma_addr,
+					 GFP_KERNEL);
+
+and I don't think I need to pass GFP_DMA to dma_zalloc_coherent.  Every 
+other memory allocation is a kmalloc variant, but that's never for DMA, 
+so that memory can be anywhere.
+
+I found about 70 drivers that fall-back to 32-bit DMA if 64-bit fails. 
+None of them do as you suggest.  They all just set the mask to 64 or 32 
+and that's it.
+
+Some drivers set NETIF_F_HIGHDMA if 64-bit DMA is enabled:
+
+	if (pci_using_dac)
+		netdev->features |= NETIF_F_HIGHDMA;
+
+I could do this, but I think it has no meaning on ARM64 because it 
+depends on CONFIG_HIGHMEM.
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
