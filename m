@@ -1,38 +1,98 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v2 02/14] dt/bindings: update binding for PM domain idle
- states
-Date: Thu, 4 Aug 2016 15:23:59 -0600
-Message-ID: <20160804212359.GF1207@linaro.org>
-References: <1469829385-11511-1-git-send-email-lina.iyer@linaro.org>
- <1469829385-11511-3-git-send-email-lina.iyer@linaro.org>
- <20160804152453.GB1732@brendan-thinkstation>
- <20160804162844.GC1207@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] rcar-du: add R8A7792 support
+Date: Thu, 04 Aug 2016 15:01:02 -0700 (PDT)
+Message-ID: <1934824.sESTIjSbbp@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160804162844.GC1207@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Brendan Jackman <brendan.jackman@arm.com>
-Cc: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, Axel Haslam <ahaslam+renesas@baylibre.com>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04 2016 at 10:28 -0600, Lina Iyer wrote:
->On Thu, Aug 04 2016 at 09:24 -0600, Brendan Jackman wrote:
+Add support for the R8A7792 DU; it has 2 DPAD (RGB) outputs.
 
->>idle-states.txt (to which this file refers) says that idle state nodes must come
->>under /cpus/idle-states. I don't think power domain idle states belong there, so
->>the documentation should be updated to reflect that.
->>
->Absolutely right. This should be fixed.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-Sorry, I take it back. idle-states are cpuidle specific idle states and
-possibly include Platform coordinated cluster modes as well (which is
-fine). Its rightful place is under /cpus/idle-states. However, domain
-idle states that are compatible with "arm,idle-state" would not have
-idle-states as the parent node. They would be defined under the domain
-provider node and not the CPUs.
+---
+This patch is against the 'drm/next/du' branch of Laurent Pinchart's 'media.git'
+repo...
 
-Thanks,
-Lina
+ Documentation/devicetree/bindings/display/renesas,du.txt |    4 ++
+ drivers/gpu/drm/rcar-du/rcar_du_drv.c                    |   22 +++++++++++++++
+ 2 files changed, 25 insertions(+), 1 deletion(-)
 
+Index: media/Documentation/devicetree/bindings/display/renesas,du.txt
+===================================================================
+--- media.orig/Documentation/devicetree/bindings/display/renesas,du.txt
++++ media/Documentation/devicetree/bindings/display/renesas,du.txt
+@@ -6,6 +6,7 @@ Required Properties:
+     - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
+     - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
+     - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
++    - "renesas,du-r8a7792" for R8A7792 (R-Car V2H) compatible DU
+     - "renesas,du-r8a7793" for R8A7793 (R-Car M2-N) compatible DU
+     - "renesas,du-r8a7794" for R8A7794 (R-Car E2) compatible DU
+     - "renesas,du-r8a7795" for R8A7795 (R-Car H3) compatible DU
+@@ -25,7 +26,7 @@ Required Properties:
+   - clock-names: Name of the clocks. This property is model-dependent.
+     - R8A7779 uses a single functional clock. The clock doesn't need to be
+       named.
+-    - R8A779[01345] use one functional clock per channel and one clock per LVDS
++    - R8A779[012345] use one functional clock per channel and one clock per LVDS
+       encoder (if available). The functional clocks must be named "du.x" with
+       "x" being the channel numerical index. The LVDS clocks must be named
+       "lvds.x" with "x" being the LVDS encoder numerical index.
+@@ -47,6 +48,7 @@ corresponding to each DU output.
+  R8A7779 (H1)	DPAD 0		DPAD 1		-		-
+  R8A7790 (H2)	DPAD		LVDS 0		LVDS 1		-
+  R8A7791 (M2-W)	DPAD		LVDS 0		-		-
++ R8A7792 (V2H)	DPAD 0		DPAD 1		-		-
+  R8A7793 (M2-N)	DPAD		LVDS 0		-		-
+  R8A7794 (E2)	DPAD 0		DPAD 1		-		-
+  R8A7795 (H3)	DPAD		HDMI 0		HDMI 1		LVDS
+Index: media/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+===================================================================
+--- media.orig/drivers/gpu/drm/rcar-du/rcar_du_drv.c
++++ media/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+@@ -110,6 +110,27 @@ static const struct rcar_du_device_info
+ 	.num_lvds = 1,
+ };
+ 
++static const struct rcar_du_device_info rcar_du_r8a7792_info = {
++	.gen = 2,
++	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
++		  | RCAR_DU_FEATURE_EXT_CTRL_REGS,
++	.num_crtcs = 2,
++	.routes = {
++		/* R8A7792 has two RGB outputs. */
++		[RCAR_DU_OUTPUT_DPAD0] = {
++			.possible_crtcs = BIT(0),
++			.encoder_type = DRM_MODE_ENCODER_NONE,
++			.port = 0,
++		},
++		[RCAR_DU_OUTPUT_DPAD1] = {
++			.possible_crtcs = BIT(1),
++			.encoder_type = DRM_MODE_ENCODER_NONE,
++			.port = 1,
++		},
++	},
++	.num_lvds = 0,
++};
++
+ static const struct rcar_du_device_info rcar_du_r8a7794_info = {
+ 	.gen = 2,
+ 	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
+@@ -161,6 +182,7 @@ static const struct of_device_id rcar_du
+ 	{ .compatible = "renesas,du-r8a7779", .data = &rcar_du_r8a7779_info },
+ 	{ .compatible = "renesas,du-r8a7790", .data = &rcar_du_r8a7790_info },
+ 	{ .compatible = "renesas,du-r8a7791", .data = &rcar_du_r8a7791_info },
++	{ .compatible = "renesas,du-r8a7792", .data = &rcar_du_r8a7792_info },
+ 	{ .compatible = "renesas,du-r8a7793", .data = &rcar_du_r8a7791_info },
+ 	{ .compatible = "renesas,du-r8a7794", .data = &rcar_du_r8a7794_info },
+ 	{ .compatible = "renesas,du-r8a7795", .data = &rcar_du_r8a7795_info },
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
