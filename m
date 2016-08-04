@@ -1,41 +1,86 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiAyLzJdIGlteDUzLmR0c2kgOiBBZGQgRE1BIGNvbmZp?=
- =?UTF-8?B?Z3VyYXRpb24gZm9yIFVBUlQ=?=
-Date: Thu, 04 Aug 2016 13:49:10 +0300
-Message-ID: <1470307750.712399023@f361.i.mail.ru>
-References: <CAOMZO5BoRsrHv-+5c9bAXO2NCya8sPqmmpy9DOfav6NvQ+VMLQ@mail.gmail.com>
- <1470306157-11181-1-git-send-email-fabien.lahoudere@collabora.co.uk>
- <1470306157-11181-2-git-send-email-fabien.lahoudere@collabora.co.uk>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 2/2 v16] drm/bridge: Add I2C based driver for ps8640
+ bridge
+Date: Thu, 4 Aug 2016 12:58:15 +0200
+Message-ID: <20160804105814.GH6232@phenom.ffwll.local>
+References: <1464861445-11086-1-git-send-email-jitao.shi@mediatek.com>
+ <1464861445-11086-2-git-send-email-jitao.shi@mediatek.com>
+ <CACvgo53002XCPLufbJHQLC1uL1nNS7_0gh=napedetmvT6FoSw@mail.gmail.com>
+ <CAGS+omDsDS5tx=+Efq8LWNd3-asU4r2h=-AE6vdKgfG-p6vdAA@mail.gmail.com>
+ <CAKMK7uEkUOq1CB3tj_1Qx50fBpw9B39+c3asX6MPNexT=dv9fA@mail.gmail.com>
+ <CAFqH_53PgPs3_h7XNFEu4u0W6GW7vyWCNFf2vq8Yn7sH2LbFwA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1470306157-11181-2-git-send-email-fabien.lahoudere@collabora.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?RmFiaWVuIExhaG91ZGVyZQ==?= <fabien.lahoudere@collabora.co.uk>
-Cc: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, =?UTF-8?B?b3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EIEZMQVRURU5FRCBERVZJQ0Ug?= =?UTF-8?B?VFJFRSBCSU5ESU5HUw==?= <devicetree@vger.kernel.org>, =?UTF-8?B?UnVzc2VsbCBLaW5n?= <linux@armlinux.org.uk>, =?UTF-8?B?b3BlbiBsaXN0?= <linux-kernel@vger.kernel.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel@pengutronix.de>, =?UTF-8?B?RmFiaW8gRXN0ZXZhbQ==?= <fabio.estevam@nxp.com>, =?UTF-8?B?U2hhd24gR3Vv?= <shawnguo@kernel.org>, =?UTF-8?B?bW9kZXJhdGVkIGxpc3Q6QVJNL0ZSRUVTQ0FMRSBJTVggLyBNWEMgQVJNIEFS?= =?UTF-8?B?Q0hJVEVDVFVSRQ==?= <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFqH_53PgPs3_h7XNFEu4u0W6GW7vyWCNFf2vq8Yn7sH2LbFwA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo Serra <eballetbo@gmail.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>, Daniel Kurtz <djkurtz@chromium.org>, Mark Rutland <mark.rutland@arm.com>, stonea168@163.com, ML dri-devel <dri-devel@lists.freedesktop.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree <devicetree@vger.kernel.org>, Jitao Shi <jitao.shi@mediatek.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang =?utf-8?B?KOm7g+aZuuWCkSk=?= <eddie.huang@mediatek.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@sam>
 List-Id: devicetree@vger.kernel.org
 
-PtCn0LXRgtCy0LXRgNCzLCAgNCDQsNCy0LPRg9GB0YLQsCAyMDE2LCAxMzoyMiArMDM6MDAg0L7R
-giBGYWJpZW4gTGFob3VkZXJlIDxmYWJpZW4ubGFob3VkZXJlQGNvbGxhYm9yYS5jby51az46Cj4K
-PkluIG9yZGVyIHRvIHVzZSBzZG1hIHdpdGggVUFSVCwgd2UgbmVlZCB0byBhZGQgRE1BIGNvbmZp
-Z3VyYXRpb24gaW4gZGV2aWNlIHRyZWUuCj4KPlNpZ25lZC1vZmYtYnk6IEZhYmllbiBMYWhvdWRl
-cmUgPCBmYWJpZW4ubGFob3VkZXJlQGNvbGxhYm9yYS5jby51ayA+Cj4tLS0KPsKgYXJjaC9hcm0v
-Ym9vdC9kdHMvaW14NTMuZHRzaSB8IDEwICsrKysrKysrKysKPsKgMSBmaWxlIGNoYW5nZWQsIDEw
-IGluc2VydGlvbnMoKykKLi4uCgpIZWxsby4KClVBUlQgU0RNQSBoYXMgYmVlbiB0ZXN0ZWQgYnkg
-bWUgZm9yIGkuTVg1MS4KU28sIG9uIG15IG9waW5pb24sIEluIHRoZSBmaXJzdCBwYXJ0IG9mIHRo
-ZSBwYXRjaCwgd2UganVzdCBuZWVkIHRvIHJlbW92ZSBpc19pbXg2cV91YXJ0KCkKY2hlY2sgb24g
-YW5kIGFsd2F5cyBsZXQgdGhlIGRldmljZXRyZWUgZGVjaWRlIGFib3V0IERNQSB1c2FnZS4KClRo
-YW5rcy4KLS0tCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
-aW51eC1hcm0ta2VybmVsCg==
+On Thu, Aug 04, 2016 at 12:35:59PM +0200, Enric Balletbo Serra wrote:
+> 2016-07-12 12:13 GMT+02:00 Daniel Vetter <daniel@ffwll.ch>:
+> > On Wed, Jun 29, 2016 at 6:31 AM, Daniel Kurtz <djkurtz@chromium.org> wrote:
+> >> On Fri, Jun 17, 2016 at 3:14 AM, Emil Velikov <emil.l.velikov@gmail.com> wrote:
+> >>>> +static ssize_t ps8640_update_fw_store(struct device *dev,
+> >>>> +                                     struct device_attribute *attr,
+> >>>> +                                     const char *buf, size_t count)
+> >>>> +{
+> >>>> +       struct i2c_client *client = to_i2c_client(dev);
+> >>>> +       struct ps8640 *ps_bridge = i2c_get_clientdata(client);
+> >>>> +       const struct firmware *fw;
+> >>>> +       int error;
+> >>>> +
+> >>>> +       error = request_firmware(&fw, PS_FW_NAME, dev);
+> >>> Can the device operate without a firmware ? If not, why is the
+> >>> firmware loaded so later/after user interaction (via sysfs) ? I don't
+> >>> recall any other driver in DRM to use such an approach.
+> >>
+> >> The PS8640 has internal flash, so it should always already have a
+> >> working firmware.
+> >> This sysfs interface is useful for user space initiated field firmware updates.
+> >
+> > Might be better to just do a request_firmware on driver load, and
+> > simply proceed if it's not there. Adding a sysfs interface (which is
+> > abi) seems way too much overkill for this imo. If you want to upgrade
+> > the firmware you can then just drop it into the right directory, with
+> > no further interaction needed.
+> 
+> IMHO I'm not sure if for this use case request_firmware on driver load
+> is a good idea. Flash the non-volatile internal chip can be a slow
+> operation and if you forget to remove the firmware after drop it into
+> the right directory apart from slow down the driver probe you can
+> damage the chip depending on the write endurance of the chip.
+
+Ah ok. Explaining this in the commit message would be really good.
+
+> This sysfs interface is used on other subsystems when there is a
+> non-volatile memory, as example you can see at [1], [2]. Unfortunately
+> not all are using the same sysfs interface and maybe this should be
+> standardized (maybe it's an opportunity to define it)
+
++1 on standardizing this.
+-Daniel
+> 
+> Regards,
+>  Enric
+> 
+> [1] http://lxr.free-electrons.com/source/drivers/input/touchscreen/wdt87xx_i2c.c#L922
+> [2] http://lxr.free-electrons.com/source/drivers/scsi/pm8001/pm8001_ctl.c#L732
+> 
+> 
+> > -Daniel
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
