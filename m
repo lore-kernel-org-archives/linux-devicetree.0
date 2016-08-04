@@ -1,56 +1,128 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv2] watchdog: xilinx: Add clock support
-Date: Thu, 4 Aug 2016 08:43:58 +0200
-Message-ID: <bf0f7196-0bdd-581f-ffdd-d5e6c151c55e@xilinx.com>
-References: <1470198518-22286-1-git-send-email-shubhrajyoti.datta@xilinx.com>
- <57A21A64.4090509@roeck-us.net>
+From: Alexnader Kuleshov <kuleshovmail@gmail.com>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Thu, 4 Aug 2016 14:24:51 +0600
+Message-ID: <20160804082451.GA2509@localhost>
+References: <cover.147018b3518.git.dalias@libc.org>
+ <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57A21A64.4090509-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+Hello Rich,
 
-On 3.8.2016 18:23, Guenter Roeck wrote:
-> On 08/02/2016 09:28 PM, Shubhrajyoti Datta wrote:
->> Add support for the clock. Currently we enable
->> at probe and relinquish at remove.
->>
->> Acked-by: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> 
-> Patch itself looks good.
-> 
-> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> 
-> Do you have a separate patch to add the clock to virtex440-ml507.dts ?
-> 
-> Not that it matters much, I guess - virtex440-ml507.dts says
->         compatible = "xlnx,xps-timebase-wdt-1.00.b";
-> which isn't supported by of_xilinx_wdt.c, and not documented in
-> of-xilinx-wdt.txt. Is that an oversight or on purpose ?
+On 08-04-16, Rich Felker wrote:
+> At the hardware level, the J-Core PIT is integrated with the interrupt
+> controller, but it is represented as its own device and has an
+> independent programming interface. It provides a 12-bit countdown
+> timer, which is not presently used, and a periodic timer. The interval
+> length for the latter is programmable via a 32-bit throttle register
+> whose units are determined by a bus-period register. The periodic
+> timer is used to implement both periodic and oneshot clock event
+> modes; in oneshot mode the interrupt handler simply disables the timer
+> as soon as it fires.
+>
+> Despite its device tree node representing an interrupt for the PIT,
+> the actual irq generated is programmable, not hard-wired. The driver
+> is responsible for programming the PIT to generate the hardware irq
+> number that the DT assigns to it.
+>
+> On SMP configurations, J-Core provides cpu-local instances of the PIT;
+> no broadcast timer is needed. This driver supports the creation of the
+> necessary per-cpu clock_event_device instances. The code has been
+> tested and works on SMP, but will not be usable without additional
+> J-Core SMP-support patches and appropriate hardware capable of running
+> SMP.
+>
+> A nanosecond-resolution clocksource is provided using the J-Core "RTC"
+> registers, which give a 64-bit seconds count and 32-bit nanoseconds.
+> The driver converts these to a 64-bit nanoseconds count.
+>
+> Signed-off-by: Rich Felker <dalias@libc.org>
+> ...
+> ...
+> ...
+> +
+> +static int jcore_pit_set_state_shutdown(struct clock_event_device *ced)
+> +{
+> +	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
+> +
+> +	return jcore_pit_disable(pit);
+> +}
+> +
+> +static int jcore_pit_set_state_oneshot(struct clock_event_device *ced)
+> +{
+> +	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
+> +
+> +	return jcore_pit_disable(pit);
+> +}
 
-We had an internal discussion about ppc405 and ppc440 support and truth
-is Xilinx is not doing any testing on these cpus and the part of that is
-that none is keeping stuff up2date.
+Maybe to use only jcore_pit_set_state_shutdown() for both shutdown/oneshot
+states as it is implemented for some of others clocksource drivers?
 
-I tried to remove xilinx ppc support from U-Boot because I didn't see
-activity there but there were people who invested their time to do
-necessary changes to keep it alive. I think kernel is just a same case.
-I am happy to remove these xilinx ppc4xx dtses from the kernel but I
-expect that there will be others who want to have it there.
-And this is the group who should keep these dtses up2date and test them
-regularly.
+all the more so as described in your commit message, they do the same:
 
-Thanks,
-Michal
+> in oneshot mode the interrupt handler simply disables the timer
+> as soon as it fires
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+right?
+
+> +static int __init jcore_pit_init(struct device_node *node)
+> +{
+> +	int err;
+> +	unsigned pit_irq, cpu;
+> +	unsigned long hwirq;
+> +	u32 irqprio, enable_val;
+> +
+> +	jcore_pit_base = of_iomap(node, 0);
+> +	if (!jcore_pit_base) {
+> +		pr_err("Error: Cannot map base address for J-Core PIT\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	pit_irq = irq_of_parse_and_map(node, 0);
+> +	if (!pit_irq) {
+> +		pr_err("Error: J-Core PIT has no IRQ\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	pr_info("Initializing J-Core PIT at %p IRQ %d\n",
+> +		jcore_pit_base, pit_irq);
+> +
+> +	jcore_cs.name = "jcore_pit_cs";
+> +	jcore_cs.rating = 400;
+> +	jcore_cs.read = jcore_clocksource_read;
+> +	jcore_cs.mult = 1;
+> +	jcore_cs.shift = 0;
+> +	jcore_cs.mask = CLOCKSOURCE_MASK(32);
+> +	jcore_cs.flags = CLOCK_SOURCE_IS_CONTINUOUS;
+> +
+> +	err = clocksource_register_hz(&jcore_cs, NSEC_PER_SEC);
+> +	if (err) {
+> +		pr_err("Error registering clocksource device: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	sched_clock_register(jcore_sched_clock_read, 32, NSEC_PER_SEC);
+> +
+> +	jcore_pit_percpu = alloc_percpu(struct jcore_pit);
+> +	if (!jcore_pit_percpu) {
+> +		pr_err("Failed to allocate memory for clock event device\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	err = request_irq(pit_irq, jcore_timer_interrupt,
+> +			  IRQF_TIMER | IRQF_PERCPU,
+> +			  "jcore_pit", jcore_pit_percpu);
+> +	if (err) {
+> +		pr_err("pit irq request failed: %d\n", err);
+> +		return err;
+> +	}
+
+free_percpu() missed in a case when request_irq() failed.
+
