@@ -1,276 +1,131 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 2/4] irqchip: irq-mvebu-pic: new driver for Marvell
- Armada 7K/8K PIC
-Date: Fri, 5 Aug 2016 15:31:13 +0000
-Message-ID: <20160805153113.GW4541@io.lakedaemon.net>
-References: <1470408921-447-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1470408921-447-3-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] mfd: Add DT bindings documentation for Samsung
+ Exynos LPASS
+Date: Fri, 05 Aug 2016 17:44:33 +0200
+Message-ID: <ac95ed3f-a4c5-e1a9-8470-8d00b14b1f95@samsung.com>
+References: <1467738785-31410-1-git-send-email-s.nawrocki@samsung.com>
+ <20160805133628.GG5243@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470408921-447-3-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-reply-to: <20160805133628.GG5243@dell>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
-
-On Fri, Aug 05, 2016 at 04:55:19PM +0200, Thomas Petazzoni wrote:
-> The Marvell Armada 7K/8K integrates a secondary interrupt controller
-> very originally named "PIC". It is connected to the main GIC via a
-> PPI. Amongst other things, this PIC is used for the ARM PMU.
+On 08/05/2016 03:36 PM, Lee Jones wrote:
+> On Tue, 05 Jul 2016, Sylwester Nawrocki wrote:
 > 
-> This commit adds a simple irqchip driver for this interrupt
-> controller. Since this interrupt controller is not needed early at boot
-> time, we make the driver a proper platform driver rather than use the
-> IRQCHIP_DECLARE() mechanism.
+>> This patch adds documentation of the DT bindings for the Samsung
+>> Exynos SoC Low Power Audio Subsystem.
+>>
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+>> new file mode 100644
+>> index 0000000..7e97c0d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
+>> @@ -0,0 +1,21 @@
+>> +
 > 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/irqchip/Kconfig         |   3 +
->  drivers/irqchip/Makefile        |   1 +
->  drivers/irqchip/irq-mvebu-pic.c | 195 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 199 insertions(+)
->  create mode 100644 drivers/irqchip/irq-mvebu-pic.c
+> Nit: This line is superfluous.
+>
+>> +Samsung Exynos SoC Low Power Audio Subsystem (LPASS)
+>> +
+>> +Required properties:
+>> +
+>> + - compatible : "samsung,exynos5433-lpass"
+>> + - reg : should contain the LPASS top SFR region location and size
+>> + - samsung,pmu-syscon : the phandle to the Power Management Unit node
+>> + - #address-cells: should be 1
+>> + - #size-cells: should be 1
+>> + - ranges: must be present
 > 
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index fa33c50..a6f90c5 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -246,6 +246,9 @@ config MVEBU_ODMI
->  	bool
->  	select GENERIC_MSI_IRQ_DOMAIN
->  
-> +config MVEBU_PIC
-> +	bool
+> These look so much better like:
+> 
+> - compatible  	  : "samsung,exynos5433-lpass"
+> - reg		   	  : should contain the LPASS top SFR region location and size
+> - samsung,pmu-syscon 	  : the phandle to the Power Management Unit node
+> - #address-cells	  : should be 1
+> - #size-cells		  : should be 1
+> - ranges		  : must be present
 
-tri-state?  Is there anything else attached to the PIC besides the PMU?
+OK, will rewrite it this way.
 
-> +
->  config LS_SCFG_MSI
->  	def_bool y if SOC_LS1021A || ARCH_LAYERSCAPE
->  	depends on PCI && PCI_MSI
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index 38853a1..024a78d 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -67,5 +67,6 @@ obj-$(CONFIG_INGENIC_IRQ)		+= irq-ingenic.o
->  obj-$(CONFIG_IMX_GPCV2)			+= irq-imx-gpcv2.o
->  obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
->  obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
-> +obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
->  obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
->  obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
-> diff --git a/drivers/irqchip/irq-mvebu-pic.c b/drivers/irqchip/irq-mvebu-pic.c
-> new file mode 100644
-> index 0000000..4a3aa7f
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-mvebu-pic.c
-> @@ -0,0 +1,195 @@
-> +/*
-> + * Copyright (C) 2016 Marvell
-> + *
-> + * Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/irqchip/chained_irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/module.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define PIC_CAUSE	       0x0
-> +#define PIC_MASK	       0x4
-> +
-> +#define PIC_MAX_IRQS		32
-> +#define PIC_MAX_IRQ_MASK	((1UL << PIC_MAX_IRQS) - 1)
-> +
-> +struct mvebu_pic {
-> +	void __iomem *base;
-> +	u32 parent_irq;
-> +	struct irq_domain *domain;
-> +	struct irq_chip irq_chip;
-> +};
-> +
-> +static void mvebu_pic_reset(struct mvebu_pic *pic)
-> +{
-> +	/* ACK and mask all interrupts */
-> +	writel(0, pic->base + PIC_MASK);
-> +	writel(PIC_MAX_IRQ_MASK, pic->base + PIC_CAUSE);
-> +}
-> +
-> +static void mvebu_pic_eoi_irq(struct irq_data *d)
-> +{
-> +	struct mvebu_pic *pic = irq_data_get_irq_chip_data(d);
-> +
-> +	writel(1 << d->hwirq, pic->base + PIC_CAUSE);
-> +}
-> +
-> +static void mvebu_pic_mask_irq(struct irq_data *d)
-> +{
-> +	struct mvebu_pic *pic = irq_data_get_irq_chip_data(d);
-> +	u32 reg;
-> +
-> +	reg =  readl(pic->base + PIC_MASK);
-> +	reg |= (1 << d->hwirq);
-> +	writel(reg, pic->base + PIC_MASK);
-> +}
-> +
-> +static void mvebu_pic_unmask_irq(struct irq_data *d)
-> +{
-> +	struct mvebu_pic *pic = irq_data_get_irq_chip_data(d);
-> +	u32 reg;
-> +
-> +	reg = readl(pic->base + PIC_MASK);
-> +	reg &= ~(1 << d->hwirq);
-> +	writel(reg, pic->base + PIC_MASK);
-> +}
-> +
-> +static int mvebu_pic_irq_map(struct irq_domain *domain, unsigned int virq,
-> +			     irq_hw_number_t hwirq)
-> +{
-> +	struct mvebu_pic *pic = domain->host_data;
-> +
-> +	irq_set_percpu_devid(virq);
-> +	irq_set_chip_data(virq, pic);
-> +	irq_set_chip_and_handler(virq, &pic->irq_chip,
-> +				 handle_percpu_devid_irq);
-> +	irq_set_status_flags(virq, IRQ_LEVEL);
-> +	irq_set_probe(virq);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops mvebu_pic_domain_ops = {
-> +	.map = mvebu_pic_irq_map,
-> +	.xlate = irq_domain_xlate_onecell,
-> +};
-> +
-> +static void mvebu_pic_handle_cascade_irq(struct irq_desc *desc)
-> +{
-> +	struct mvebu_pic *pic = irq_desc_get_handler_data(desc);
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	unsigned long irqmap, irqn;
-> +	unsigned int cascade_irq;
-> +
-> +	irqmap = readl_relaxed(pic->base + PIC_CAUSE);
-> +	chained_irq_enter(chip, desc);
-> +
-> +	for_each_set_bit(irqn, &irqmap, BITS_PER_LONG) {
-> +		cascade_irq = irq_find_mapping(pic->domain, irqn);
-> +		generic_handle_irq(cascade_irq);
-> +	}
-> +
-> +	chained_irq_exit(chip, desc);
-> +}
-> +
-> +static void mvebu_pic_enable_percpu_irq(void *data)
-> +{
-> +	struct mvebu_pic *pic = data;
-> +
-> +	mvebu_pic_reset(pic);
-> +	enable_percpu_irq(pic->parent_irq, IRQ_TYPE_NONE);
-> +}
-> +
-> +static void mvebu_pic_disable_percpu_irq(void *data)
-> +{
-> +	struct mvebu_pic *pic = data;
-> +
-> +	disable_percpu_irq(pic->parent_irq);
-> +}
-> +
-> +static int mvebu_pic_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct mvebu_pic *pic;
-> +	struct irq_chip *irq_chip;
-> +	struct resource *res;
-> +
-> +	pic = devm_kzalloc(&pdev->dev, sizeof(struct mvebu_pic), GFP_KERNEL);
-> +	if (!pic)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	pic->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(pic->base))
-> +		return PTR_ERR(pic->base);
-> +
-> +	irq_chip = &pic->irq_chip;
-> +	irq_chip->name = dev_name(&pdev->dev);
-> +	irq_chip->irq_mask = mvebu_pic_mask_irq;
-> +	irq_chip->irq_unmask = mvebu_pic_unmask_irq;
-> +	irq_chip->irq_eoi = mvebu_pic_eoi_irq;
-> +
-> +	pic->parent_irq = irq_of_parse_and_map(node, 0);
-> +	if (pic->parent_irq <= 0) {
-> +		dev_err(&pdev->dev, "Failed to parse parent interrupt\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	pic->domain = irq_domain_add_linear(node, PIC_MAX_IRQS,
-> +					    &mvebu_pic_domain_ops, pic);
-> +	if (!pic->domain) {
-> +		dev_err(&pdev->dev, "Failed to allocate irq domain\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	irq_set_chained_handler(pic->parent_irq, mvebu_pic_handle_cascade_irq);
-> +	irq_set_handler_data(pic->parent_irq, pic);
-> +
-> +	on_each_cpu(mvebu_pic_enable_percpu_irq, pic, 1);
-> +
-> +	platform_set_drvdata(pdev, pic);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mvebu_pic_remove(struct platform_device *pdev)
-> +{
-> +	struct mvebu_pic *pic = platform_get_drvdata(pdev);
-> +
-> +	on_each_cpu(mvebu_pic_disable_percpu_irq, pic, 1);
-> +	irq_domain_remove(pic->domain);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id mvebu_pic_of_match[] = {
-> +	{ .compatible = "marvell,armada-8k-pic", },
+>> +Each IP block of the Low Power Audio Subsystem should be specified
+>> +as an optional sub-node. For "samsung,exynos5433-lpass" compatible
+>> +this includes: UART, SLIMBUS, PCM, I2S, DMAC, Timers 0...4, WDT 0...1
+>> +devices.
+>> +
+>> +Bindings of the sub-nodes are described in:
+>> + Documentation/devicetree/bindings/serial/samsung_uart.txt
+>> + Documentation/devicetree/bindings/sound/samsung-i2s.txt
+>> + Documentation/devicetree/bindings/dma/arm-pl330.txt
+> 
+> Use relative path names:
+> 
+> ../serial/samsung_uart.txt
+> ../sound/samsung-i2s.txt
+> ../dma/arm-pl330.txt
 
-You mention 7k in $subject, should you use that here as the youngest
-compatible SoC generation?
+OK, actually I had it this way in one of the versions but somehow
+with full paths it appeared better to me.
 
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, mvebu_pic_of_match);
-> +
-> +static struct platform_driver mvebu_pic_driver = {
-> +	.probe  = mvebu_pic_probe,
-> +	.remove = mvebu_pic_remove,
-> +	.driver = {
-> +		.name = "mvebu-pic",
-> +		.of_match_table = mvebu_pic_of_match,
-> +	},
-> +};
-> +module_platform_driver(mvebu_pic_driver);
-> +
-> +MODULE_AUTHOR("Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:mvebu_pic");
+> Missing example?
 
-thx,
+Yes, omitted deliberately as that appeared quite many more lines
+with fully specified subnodes.  Perhaps I will add it with omitted
+all properties of the subnodes but compatible.
 
-Jason.
+
+ audio-subsystem {
+	compatible = "samsung,exynos5433-lpass";
+	reg = <0x11400000 0x100>, <0x11500000 0x08>;
+	samsung,pmu-syscon = <&pmu_system_controller>;
+	#address-cells = <1>;
+	#size-cells = <1>;
+	ranges;
+
+	adma: adma@11420000 {
+		compatible = "arm,pl330", "arm,primecell";
+		reg = <0x11420000 0x1000>;
+		interrupts = <0 73 0>;
+		clocks = <&cmu_aud CLK_ACLK_DMAC>;
+		clock-names = "apb_pclk";
+		#dma-cells = <1>;
+		#dma-channels = <8>;
+		#dma-requests = <32>;
+        };
+
+	i2s0: i2s0@11440000 {
+		compatible = "samsung,exynos7-i2s";
+		reg = <0x11440000 0x100>;
+		dmas = <&adma 0 &adma 2>;
+		dma-names = "tx", "rx";
+		interrupts = <0 70 0>;
+		clocks = <&cmu_aud CLK_PCLK_AUD_I2S>,
+			 <&cmu_aud CLK_SCLK_AUD_I2S>,
+			 <&cmu_aud CLK_SCLK_I2S_BCLK>;
+		clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
+		pinctrl-names = "default";
+		pinctrl-0 = <&i2s0_bus>;
+		status = "disabled";
+	};
+
+	serial_3: serial@11460000 {
+		compatible = "samsung,exynos5433-uart";
+		reg = <0x11460000 0x100>;
+		interrupts = <0 67 0>;
+		clocks = <&cmu_aud CLK_PCLK_AUD_UART>,
+			 <&cmu_aud CLK_SCLK_AUD_UART>;
+		clock-names = "uart", "clk_uart_baud0";
+		pinctrl-names = "default";
+		pinctrl-0 = <&uart_aud_bus>;
+		status = "disabled";
+	};
+ };
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
