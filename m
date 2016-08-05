@@ -1,119 +1,111 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 1/3] Documentation: mfd: LP873X: Add information for
- the mfd driver
-Date: Fri, 5 Aug 2016 09:05:57 +0100
-Message-ID: <20160805080557.GP5243@dell>
-References: <1467215067-6486-1-git-send-email-j-keerthy@ti.com>
- <1467215067-6486-2-git-send-email-j-keerthy@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1467215067-6486-2-git-send-email-j-keerthy@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, robh+dt@kernel.org, tony@atomide.com
+From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Subject: [PATCH] arm: dts: sun7i-a20-bananapi: name the GPIO lines
+Date: Fri,  5 Aug 2016 10:05:12 +0200
+Message-ID: <1470384312-6604-1-git-send-email-linux@rempel-privat.de>
+References: <CACRpkdYnK=7C=F5hZUo-nYv6Z+Pb+eT7vm1e4hL8N-QgJnuLfg@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdYnK=7C=F5hZUo-nYv6Z+Pb+eT7vm1e4hL8N-QgJnuLfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org
+Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 Jun 2016, Keerthy wrote:
+This names the GPIO lines on the Banana Pi board in accordance with
+the A20_Banana_Pi v1.4 Specification.
 
-> The lp873x series of PMICs have a bunch of regulators and a couple
-> of GPO(General Purpose Outputs).
-> Add information for the mfd and regulator drivers.
+This will make these line names reflect through to userspace
+so that they can easily be identified and used with the new
+character device ABI.
 
-Nit: s/mfd/MFD/
+Some care has been taken to name all lines, not just those used
+by the external connectors, also lines that are muxed into some
+other function than GPIO: these are named "[FOO]" so that users
+can see with lsgpio what all lines are used for.
 
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
-> 
-> Changes in v4:
-> 
->   * Added the GPIO properties.
-> 
-> Changes in v3:
-> 
->   * Changed the example node lable to pmic from lp8733.
-> 
->  Documentation/devicetree/bindings/mfd/lp873x.txt | 59 ++++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/lp873x.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/lp873x.txt b/Documentation/devicetree/bindings/mfd/lp873x.txt
-> new file mode 100644
-> index 0000000..1377c25
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/lp873x.txt
-> @@ -0,0 +1,59 @@
-> +TI LP873X MFD driver
+Ps: most of the text was taken from Linux Wallej patch.
 
-"PMIC MFD" or "MFD PMIC"
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts | 58 ++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-> +Required properties:
-> +  - compatible:		"ti,lp8732", "ti,lp8733"
-> +  - reg:		I2C slave address.
-> +  - gpio-controller :	Marks the device node as a GPIO Controller.
-> +  - #gpio-cells	:	Should be two.  The first cell is the pin number and
-> +			the second cell is used to specify flags.
-> +			See ../gpio/gpio.txt for more information.
-> +  - regulators: :	List of child nodes that specify the regulator
-> +			initialization data.
-
-Please standardise your formatting here.  Sometimes you do ":", other
-times you do " :", and oddly ": :".
-
-> +Example:
-> +
-> +pmic: lp8733@60 {
-> +	compatible = "ti,lp8733";
-> +	reg = <0x60>;
-> +	gpio-controller;
-> +	#gpio-cells = <2>;
-> +
-> +	regulators {
-> +		lp8733_buck0: buck0 {
-> +			regulator-name = "lp8733-buck0";
-> +			regulator-min-microvolt = <800000>;
-> +			regulator-max-microvolt = <1400000>;
-> +			regulator-min-microamp = <1500000>;
-> +			regulator-max-microamp = <4000000>;
-> +			regulator-ramp-delay = <10000>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +
-> +		lp8733_buck1: buck1 {
-> +			regulator-name = "lp8733-buck1";
-> +			regulator-min-microvolt = <800000>;
-> +			regulator-max-microvolt = <1400000>;
-> +			regulator-min-microamp = <1500000>;
-> +			regulator-max-microamp = <4000000>;
-> +			regulator-ramp-delay = <10000>;
-> +			regulator-boot-on;
-> +			regulator-always-on;
-> +		};
-> +
-> +		lp8733_ldo0: ldo0 {
-> +			regulator-name = "lp8733-ldo0";
-> +			regulator-min-microvolt = <800000>;
-> +			regulator-max-microvolt = <3000000>;
-> +			regulator-boot-on;
-> +			regulator-always-on;
-> +		};
-> +
-> +		lp8733_ldo1: ldo1 {
-> +			regulator-name = "lp8733-ldo1";
-> +			regulator-min-microvolt = <800000>;
-> +			regulator-max-microvolt = <3000000>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +	};
-> +};
-
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+index 67c8a76..81ecb89 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -178,6 +178,64 @@
+ };
+ 
+ &pio {
++	/*
++	 * Legend: proper name = the GPIO line is used as GPIO
++	 *         NC = not connected (not routed from the SoC)
++	 *         "[PER]" = pin is muxed for peripheral (not GPIO)
++	 *         "" = no idea, schematic doesn't say, could be
++	 *              unrouted (not connected to any external pin)
++	 */
++	gpio-line-names =
++		/* PA */
++		"[ERXD3]", "[ERXD2]", "[ERXD1]", "[ERXD0]", "[ETXD3]",
++			"[ETXD2]", "[ETXD1]", "[ETXD0]",
++		"[ERXCK]", "[ERXERR]", "[ERXDV]", "[EMDC]", "[EMDIO]",
++			"[ETXEN]", "[ETXCK]", "[ECRS]",
++		"[ECOL]", "[ETXERR]", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PB */
++		"[PMU-SCK]", "[PMU-SDA]", "", "", "", "NC", "NC", "NC",
++		"NC", "USB0-DRV", "NC", "NC", "NC", "NC", "", "",
++		"", "", "", "", "[SCL]", "[SDA]", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PC */
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PD */
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PE */
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PF */
++		"[SD0-D1]", "[SD0-D0]", "[SD0-CLK]", "[SD0-CMD]", "[SD0-D3]",
++			"[SD0-D2]", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PG */
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		/* PH */
++		"TXD0", "RXD0", "IO-1", "IO-8", "USB0-IDDET", "IO-7", "", "",
++		"", "", "SD0-DET", "", "", "", "", "",
++		"NC", "", "", "", "IO-4", "IO-5", "NC", "EMAC-PWR-EN",
++		"LED1", "NC", "NC", "NC", "", "", "", "",
++		/* PI */
++		"", "", "", "[IO-GCLK]", "NC", "NC", "NC", "NC",
++		"NC", "NC", "[SPI-CE0]", "[SPI-CLK]", "[SPI-MOSI]",
++			"[SPI-MISO]", "[SPI-CE1]", "NC",
++		"IO-6", "IO-3", "IO-2", "IO-0", "", "", "", "",
++		"", "", "", "", "", "", "", "";
++
+ 	usb0_id_detect_pin: usb0_id_detect_pin@0 {
+ 		allwinner,pins = "PH4";
+ 		allwinner,function = "gpio_in";
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
