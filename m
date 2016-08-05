@@ -1,87 +1,45 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH v2 03/22] usb: ulpi: Support device discovery via device
- properties
-Date: Fri, 05 Aug 2016 14:40:00 -0700
-Message-ID: <147043320014.26915.7483025835695600714@sboyd-linaro>
-References: <20160707222114.1673-1-stephen.boyd@linaro.org>
- <20160707222114.1673-4-stephen.boyd@linaro.org>
- <20160718022355.GA8568@rob-hp-laptop>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] ARM: dts: r8a7792: fix misindented line
+Date: Sat, 06 Aug 2016 00:52:39 +0300
+Message-ID: <4152284.qHAgBjWaW0@wasted.cogentembedded.com>
+References: <1618499.8bcj8adpVO@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160718022355.GA8568@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Felipe Balbi <balbi@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1618499.8bcj8adpVO-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2016-07-17 19:23:55)
-> On Thu, Jul 07, 2016 at 03:20:54PM -0700, Stephen Boyd wrote:
-> > +-------
-> > +
-> > +usb {
-> > +     compatible = "vendor,usb-controller";
-> > +
-> > +     ulpi {
-> > +             phy {
-> > +                     compatible = "vendor,phy";
-> > +                     ulpi-vendor = /bits/ 16 <0x1d6b>;
-> > +                     ulpi-product = /bits/ 16 <0x0002>;
-> > +             };
-> > +     };
-> 
-> I'm still having concerns about describing both phys and devices. If I 
-> have a controller with 2 ports and 2 devices attached, I'd have 
-> something like this under the USB controller:
-> 
-> ulpi {
->         phy@1 {
->         };
->         phy@2 {
->         };
-> };
+Commit 2a0900655d5e (ARM: dts: r8a7792: add I2C support) had a wrongly
+indented line at the end of the "aliases" subnode -- fix it.
 
-My understanding is there would only be one status="ok" node on the ULPI
-bus for the single phy that a usb controller would have. At the least,
-the kernel's ULPI layer only seems to support one ULPI phy for a
-controller right now. So even if there are two ports, it doesn't mean
-there are two phys.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-> 
-> dev@1 {
-> ...
-> };
-> 
-> dev@2 {
-> ...
-> };
-> 
-> 
-> That doesn't seem the best, but I don't have a better suggestion. Maybe 
-> the device nodes need to go under the phy nodes?
-> 
+---
+This patch is against the 'renesas-devel-20160725-v4.7-rc7' tag of Simon
+Horman's 'renesas.git' repo.
 
-What if we moved the dev@1 and dev@2 to another sub node like "ports" or
-"usb-devices"? Legacy code can support having those devices directly
-underneath the usb controller, but future users would always need to put
-them in a different sub-node so that we can easily differentiate the
-different busses that a usb controller node may support?
+ arch/arm/boot/dts/r8a7792.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'm not sure I see any need to relate the phy to the ports that are on
-the controller, but if that is needed then perhaps you're right and we
-should move the ports underneath the phy. USB core could be modified to
-go through the legacy path or through the phy, if it even exists, to
-find ports.
+Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7792.dtsi
++++ renesas/arch/arm/boot/dts/r8a7792.dtsi
+@@ -31,7 +31,7 @@
+ 		vin3 = &vin3;
+ 		vin4 = &vin4;
+ 		vin5 = &vin5;
+-};
++	};
+ 
+ 	cpus {
+ 		#address-cells = <1>;
 
-Do we typically do this for other phy designs like sata or pci? The phy
-always seemed like a parallel thing to the logical bus that the phy is
-used for.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
