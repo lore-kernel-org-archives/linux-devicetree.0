@@ -1,155 +1,92 @@
-From: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 1/3] ARM: dts: da850: Add basic DTS for the L138/C6748 Dev Kit
-Date: Fri,  5 Aug 2016 14:12:27 +0000
-Message-ID: <20160805141229.20784-2-kbeldan@baylibre.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: da850: Add basic DTS for the L138/C6748 Dev Kit
+Date: Fri, 5 Aug 2016 19:44:18 +0530
+Message-ID: <57A49F3A.9030306@ti.com>
 References: <20160804144332.4841-1-kbeldan@baylibre.com>
- <20160805141229.20784-1-kbeldan@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160805141229.20784-1-kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20160804144332.4841-1-kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The LCDK is the successor to the late Hawkboard.
-Among the differences are the flash (16bits vs 8bits) and some pins
-(MMC, LEDs, buttons, some external connectors), however the main
-components remain the same (eth. phy, audio codec, video decoder and
-DAC) except for the main PMIC, different and hard-wired on the LCDK (the
-LDOs and DCDCs are always on).
-A DT-only boot with this addition gives functional UART, reboot via
-watchdog, RTC, ethernet and MMC (I added the CD GPIO for the MMC
-although davinci_mmc doesn't call the OF facilities of mmc core).
+On Thursday 04 August 2016 08:13 PM, Karl Beldan wrote:
+> The LCDK is the successor to the late Hawkboard and has the same machine
+> number.
+> Among the differences are the flash (16bits vs 8bits) and some pins
+> (MMC, LEDs, buttons, some external connectors), however the main
+> components remain the same (eth. PHY, Audio Codec, Video decoder and
+> DAC) except for the main PMIC, different and hard-wired on the LCDK (the
+> LDOs and DCDCs are always ON).
+> A DT-only boot with this addition gives functional uart, reboot via
+> watchdog, rtc, ethernet and MMC (I added the CD gpio for the MMC
+> although davinci_mmc doesn't call yet the mmc core OF facilities).
+> 
+> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Tested-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/davinci.txt |  4 ++
- arch/arm/boot/dts/Makefile                        |  1 +
- arch/arm/boot/dts/da850-lcdk.dts                  | 70 +++++++++++++++++++++++
- arch/arm/mach-davinci/da8xx-dt.c                  |  1 +
- 4 files changed, 76 insertions(+)
- create mode 100644 arch/arm/boot/dts/da850-lcdk.dts
+C6748 is a pin-compatible DSP-only part which does not run Linux. The
+OMAP-L138 and C6748 LCDKs are physically different boards. So, I would
+just stick with subject line ".. for the OMAP-L138 LCDK board"
 
-diff --git a/Documentation/devicetree/bindings/arm/davinci.txt b/Documentation/devicetree/bindings/arm/davinci.txt
-index cfaeda4..f0841ce 100644
---- a/Documentation/devicetree/bindings/arm/davinci.txt
-+++ b/Documentation/devicetree/bindings/arm/davinci.txt
-@@ -5,6 +5,10 @@ DA850/OMAP-L138/AM18x Evaluation Module (EVM) board
- Required root node properties:
-     - compatible = "ti,da850-evm", "ti,da850";
- 
-+DA850/OMAP-L138/AM18x L138/C6748 Development Kit (LCDK) board
-+Required root node properties:
-+    - compatible = "ti,da850-lcdk", "ti,da850";
-+
- EnBW AM1808 based CMC board
- Required root node properties:
-     - compatible = "enbw,cmc", "ti,da850;
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 414b427..c03e8d4 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -105,6 +105,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += \
- dtb-$(CONFIG_ARCH_BRCMSTB) += \
- 	bcm7445-bcm97445svmb.dtb
- dtb-$(CONFIG_ARCH_DAVINCI) += \
-+	da850-lcdk.dtb \
- 	da850-enbw-cmc.dtb \
- 	da850-evm.dtb
- dtb-$(CONFIG_ARCH_DIGICOLOR) += \
-diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-new file mode 100644
-index 0000000..dc78060
---- /dev/null
-+++ b/arch/arm/boot/dts/da850-lcdk.dts
-@@ -0,0 +1,70 @@
-+/*
-+ * Copyright (c) 2016 BayLibre, Inc.
-+ *
-+ * Licensed under GPLv2 or later.
-+ */
-+/dts-v1/;
-+#include "da850.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "DA850/AM1808/OMAP-L138 LCDK";
-+	compatible = "ti,da850-lcdk", "ti,da850";
-+
-+	aliases {
-+		serial2 = &serial2;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial2:115200n8";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0xc0000000 0x08000000>;
-+	};
-+};
-+
-+&pmx_core {
-+	status = "okay";
-+};
-+
-+&serial2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&serial2_rxtx_pins>;
-+	status = "okay";
-+};
-+
-+&wdt {
-+	status = "okay";
-+};
-+
-+&rtc0 {
-+	status = "okay";
-+};
-+
-+&gpio {
-+	status = "okay";
-+};
-+
-+&mdio {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mdio_pins>;
-+	bus_freq = <2200000>;
-+	status = "okay";
-+};
-+
-+&eth0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mii_pins>;
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	max-frequency = <50000000>;
-+	bus-width = <4>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>;
-+	cd-gpios = <&gpio 64 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-index 754f478..ca99711 100644
---- a/arch/arm/mach-davinci/da8xx-dt.c
-+++ b/arch/arm/mach-davinci/da8xx-dt.c
-@@ -49,6 +49,7 @@ static void __init da850_init_machine(void)
- 
- static const char *const da850_boards_compat[] __initconst = {
- 	"enbw,cmc",
-+	"ti,da850-lcdk",
- 	"ti,da850-evm",
- 	"ti,da850",
- 	NULL,
--- 
-2.9.0.rc1
+> ---
+>  Documentation/devicetree/bindings/arm/davinci.txt |  4 ++
+>  arch/arm/boot/dts/Makefile                        |  1 +
+>  arch/arm/boot/dts/omapl138-lcdk.dts               | 71 +++++++++++++++++++++++
+>  arch/arm/mach-davinci/da8xx-dt.c                  |  1 +
+>  4 files changed, 77 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/omapl138-lcdk.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/davinci.txt b/Documentation/devicetree/bindings/arm/davinci.txt
+> index cfaeda4..1482c74 100644
+> --- a/Documentation/devicetree/bindings/arm/davinci.txt
+> +++ b/Documentation/devicetree/bindings/arm/davinci.txt
+> @@ -5,6 +5,10 @@ DA850/OMAP-L138/AM18x Evaluation Module (EVM) board
+>  Required root node properties:
+>      - compatible = "ti,da850-evm", "ti,da850";
+>  
+> +DA850/OMAP-L138/AM18x L138/C6748 Development Kit (LCDK) board
 
+here too, drop reference to C6748.
+
+> +Required root node properties:
+> +    - compatible = "ti,omapl138-lcdk", "ti,da850";
+
+let the compatible be "ti,da850-lcdk" for consistency.
+
+> +
+>  EnBW AM1808 based CMC board
+>  Required root node properties:
+>      - compatible = "enbw,cmc", "ti,da850;
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 414b427..da3f69b 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -105,6 +105,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += \
+>  dtb-$(CONFIG_ARCH_BRCMSTB) += \
+>  	bcm7445-bcm97445svmb.dtb
+>  dtb-$(CONFIG_ARCH_DAVINCI) += \
+> +	omapl138-lcdk.dtb \
+>  	da850-enbw-cmc.dtb \
+>  	da850-evm.dtb
+>  dtb-$(CONFIG_ARCH_DIGICOLOR) += \
+> diff --git a/arch/arm/boot/dts/omapl138-lcdk.dts b/arch/arm/boot/dts/omapl138-lcdk.dts
+> new file mode 100644
+> index 0000000..fad3b6d
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/omapl138-lcdk.dts
+> @@ -0,0 +1,71 @@
+> +/*
+> + * Copyright (c) 2016 BayLibre, Inc.
+> + *
+> + * Licensed under GPLv2 or later.
+
+are you sure about "or later"?
+
+Thanks,
+Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
