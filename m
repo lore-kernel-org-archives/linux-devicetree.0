@@ -1,72 +1,35 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [RFC PATCH v3 1/2] Documentation: DT: net: Add Xilinx
- gmiitorgmii converter device tree binding documentation
-Date: Fri, 5 Aug 2016 06:48:51 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5DD373@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1470312789-28275-1-git-send-email-appanad@xilinx.com>
- <20160804182515.GA19890@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160804182515.GA19890@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "andrew@lunn.ch" <andrew@lunn.ch>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 0/1] input: touchscreen: Remove duplicate ft6236 driver
+Date: Fri,  5 Aug 2016 09:24:30 +0200
+Message-ID: <1470381871-4086-1-git-send-email-hdegoede@redhat.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+<resend with Noralf's email address fixed>
 
-	Thanks for the review...
+Hi All,
 
-<Snip>
+December 19th 2015 I noticed that a new ft6236 driver had been added to
+the kernel, and that it was in essence just a re-implementation of the
+M09 protocol from the edt-ft5x06 driver, IOW it contains 100% duplicate
+code. I asked the submitter and authors of the new ft6236 driver to test
+there devices with the edt-ft5x06 driver instead, but I got no reply.
 
-> > +XILINX GMIITORGMII Converter Driver Device Tree Bindings
-> > +--------------------------------------------------------
-> > +
-> > +The Gigabit Media Independent Interface (GMII) to Reduced Gigabit
-> > +Media Independent Interface (RGMII) core provides the RGMII between
-> > +RGMII-compliant Ethernet physical media devices (PHY) and the Gigabit
-> Ethernet controller.
-> > +This core can be used in all three modes of operation(10/100/1000 Mb/s).
-> > +The Management Data Input/Output (MDIO) interface is used to
-> > +configure the Speed of operation. This core can switch dynamically
-> > +between the three Different speed modes by configuring the conveter
-> register through mdio write.
-> > +
-> > +The MDIO is a bus to which the PHY devices are connected.  For each
-> > +device that exists on this bus, a child node should be created.  See
-> > +the definition of the PHY node in booting-without-of.txt for an
-> > +example of how to define a PHY.
-> > +
-> > +Required properties:
-> > +  - compatible : Should be "xilinx,gmiitorgmii"
-> 
-> Perhaps xilinx,gmii-to-rgmii.
+January 26th 2016 I asked the submitter and authors of the new ft6236
+driver to test with the edt-ft5x06 driver again, but again got no reply.
 
-Sure...
+Note: this is likely due to my having made an error in Noralf's email
+address with those 2 mails (sorry), so it would be good to give Noralf
+some time to reply now before applying this.
 
-> 
-> This needs some sort of version information in the compatible string.
-
-Sure will fix in the next version...
-
-> 
-> > +  - reg : The ID number for the phy, usually a small integer
-> > +
-> > +Example:
-> > +	mdio {
-> > +                #address-cells = <1>;
-> > +                #size-cells = <0>;
-> > +		ethernet-phy@0 {
-> > +			......
-> > +		};
-> > +                gmii_to_rgmii: gmii_to_rgmii@8 {
-> 
-> Don't use underscores in node names.
-
-Ok will fix in the next version...
+Given the lack of response from the submitter / authors of the ft6236
+driver I believe it is best to just remove it. I've double checked and
+the edt-ft5x06 driver is 100% compatible both wrt wire protocol usage,
+as wrt to the reset gpio usage (and the gpio name in dt).
 
 Regards,
-Kedar.
+
+Hans
