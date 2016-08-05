@@ -1,260 +1,154 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 2/4] irqchip: irq-mvebu-pic: new driver for Marvell Armada 7K/8K PIC
-Date: Fri,  5 Aug 2016 16:55:19 +0200
-Message-ID: <1470408921-447-3-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1470408921-447-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 1/3] ARM: dts: da850: Add basic DTS for the LCDK
+Date: Fri,  5 Aug 2016 14:59:43 +0000
+Message-ID: <20160805145945.24315-2-kbeldan@baylibre.com>
+References: <20160804144332.4841-1-kbeldan@baylibre.com>
+ <20160805145945.24315-1-kbeldan@baylibre.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470408921-447-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20160805145945.24315-1-kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Marvell Armada 7K/8K integrates a secondary interrupt controller
-very originally named "PIC". It is connected to the main GIC via a
-PPI. Amongst other things, this PIC is used for the ARM PMU.
+The LCDK is the successor to the late Hawkboard.
+Among the differences are the flash (16bits vs 8bits) and some pins
+(MMC, LEDs, buttons, some external connectors), however the main
+components remain the same (eth. phy, audio codec, video decoder and
+DAC) except for the main PMIC, different and hard-wired on the LCDK (the
+LDOs and DCDCs are always on).
+A DT-only boot with this addition gives functional UART, reboot via
+watchdog, RTC, ethernet and MMC (I added the CD GPIO for the MMC
+although davinci_mmc doesn't call the OF facilities of mmc core).
 
-This commit adds a simple irqchip driver for this interrupt
-controller. Since this interrupt controller is not needed early at boot
-time, we make the driver a proper platform driver rather than use the
-IRQCHIP_DECLARE() mechanism.
-
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Tested-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- drivers/irqchip/Kconfig         |   3 +
- drivers/irqchip/Makefile        |   1 +
- drivers/irqchip/irq-mvebu-pic.c | 195 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 199 insertions(+)
- create mode 100644 drivers/irqchip/irq-mvebu-pic.c
+ Documentation/devicetree/bindings/arm/davinci.txt |  4 ++
+ arch/arm/boot/dts/Makefile                        |  1 +
+ arch/arm/boot/dts/da850-lcdk.dts                  | 70 +++++++++++++++++++++++
+ arch/arm/mach-davinci/da8xx-dt.c                  |  1 +
+ 4 files changed, 76 insertions(+)
+ create mode 100644 arch/arm/boot/dts/da850-lcdk.dts
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index fa33c50..a6f90c5 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -246,6 +246,9 @@ config MVEBU_ODMI
- 	bool
- 	select GENERIC_MSI_IRQ_DOMAIN
+diff --git a/Documentation/devicetree/bindings/arm/davinci.txt b/Documentation/devicetree/bindings/arm/davinci.txt
+index cfaeda4..3bd60fd 100644
+--- a/Documentation/devicetree/bindings/arm/davinci.txt
++++ b/Documentation/devicetree/bindings/arm/davinci.txt
+@@ -5,6 +5,10 @@ DA850/OMAP-L138/AM18x Evaluation Module (EVM) board
+ Required root node properties:
+     - compatible = "ti,da850-evm", "ti,da850";
  
-+config MVEBU_PIC
-+	bool
++DA850/OMAP-L138/AM18x LCDK board
++Required root node properties:
++    - compatible = "ti,da850-lcdk", "ti,da850";
 +
- config LS_SCFG_MSI
- 	def_bool y if SOC_LS1021A || ARCH_LAYERSCAPE
- 	depends on PCI && PCI_MSI
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 38853a1..024a78d 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -67,5 +67,6 @@ obj-$(CONFIG_INGENIC_IRQ)		+= irq-ingenic.o
- obj-$(CONFIG_IMX_GPCV2)			+= irq-imx-gpcv2.o
- obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
- obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
-+obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
- obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
- obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
-diff --git a/drivers/irqchip/irq-mvebu-pic.c b/drivers/irqchip/irq-mvebu-pic.c
+ EnBW AM1808 based CMC board
+ Required root node properties:
+     - compatible = "enbw,cmc", "ti,da850;
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 414b427..c03e8d4 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -105,6 +105,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += \
+ dtb-$(CONFIG_ARCH_BRCMSTB) += \
+ 	bcm7445-bcm97445svmb.dtb
+ dtb-$(CONFIG_ARCH_DAVINCI) += \
++	da850-lcdk.dtb \
+ 	da850-enbw-cmc.dtb \
+ 	da850-evm.dtb
+ dtb-$(CONFIG_ARCH_DIGICOLOR) += \
+diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
 new file mode 100644
-index 0000000..4a3aa7f
+index 0000000..dbcca0b
 --- /dev/null
-+++ b/drivers/irqchip/irq-mvebu-pic.c
-@@ -0,0 +1,195 @@
++++ b/arch/arm/boot/dts/da850-lcdk.dts
+@@ -0,0 +1,70 @@
 +/*
-+ * Copyright (C) 2016 Marvell
++ * Copyright (c) 2016 BayLibre, Inc.
 + *
-+ * Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
++ * Licensed under GPLv2.
 + */
++/dts-v1/;
++#include "da850.dtsi"
++#include <dt-bindings/gpio/gpio.h>
 +
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/module.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
++/ {
++	model = "DA850/AM1808/OMAP-L138 LCDK";
++	compatible = "ti,da850-lcdk", "ti,da850";
 +
-+#define PIC_CAUSE	       0x0
-+#define PIC_MASK	       0x4
++	aliases {
++		serial2 = &serial2;
++	};
 +
-+#define PIC_MAX_IRQS		32
-+#define PIC_MAX_IRQ_MASK	((1UL << PIC_MAX_IRQS) - 1)
++	chosen {
++		stdout-path = "serial2:115200n8";
++	};
 +
-+struct mvebu_pic {
-+	void __iomem *base;
-+	u32 parent_irq;
-+	struct irq_domain *domain;
-+	struct irq_chip irq_chip;
++	memory {
++		device_type = "memory";
++		reg = <0xc0000000 0x08000000>;
++	};
 +};
 +
-+static void mvebu_pic_reset(struct mvebu_pic *pic)
-+{
-+	/* ACK and mask all interrupts */
-+	writel(0, pic->base + PIC_MASK);
-+	writel(PIC_MAX_IRQ_MASK, pic->base + PIC_CAUSE);
-+}
-+
-+static void mvebu_pic_eoi_irq(struct irq_data *d)
-+{
-+	struct mvebu_pic *pic = irq_data_get_irq_chip_data(d);
-+
-+	writel(1 << d->hwirq, pic->base + PIC_CAUSE);
-+}
-+
-+static void mvebu_pic_mask_irq(struct irq_data *d)
-+{
-+	struct mvebu_pic *pic = irq_data_get_irq_chip_data(d);
-+	u32 reg;
-+
-+	reg =  readl(pic->base + PIC_MASK);
-+	reg |= (1 << d->hwirq);
-+	writel(reg, pic->base + PIC_MASK);
-+}
-+
-+static void mvebu_pic_unmask_irq(struct irq_data *d)
-+{
-+	struct mvebu_pic *pic = irq_data_get_irq_chip_data(d);
-+	u32 reg;
-+
-+	reg = readl(pic->base + PIC_MASK);
-+	reg &= ~(1 << d->hwirq);
-+	writel(reg, pic->base + PIC_MASK);
-+}
-+
-+static int mvebu_pic_irq_map(struct irq_domain *domain, unsigned int virq,
-+			     irq_hw_number_t hwirq)
-+{
-+	struct mvebu_pic *pic = domain->host_data;
-+
-+	irq_set_percpu_devid(virq);
-+	irq_set_chip_data(virq, pic);
-+	irq_set_chip_and_handler(virq, &pic->irq_chip,
-+				 handle_percpu_devid_irq);
-+	irq_set_status_flags(virq, IRQ_LEVEL);
-+	irq_set_probe(virq);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops mvebu_pic_domain_ops = {
-+	.map = mvebu_pic_irq_map,
-+	.xlate = irq_domain_xlate_onecell,
++&pmx_core {
++	status = "okay";
 +};
 +
-+static void mvebu_pic_handle_cascade_irq(struct irq_desc *desc)
-+{
-+	struct mvebu_pic *pic = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned long irqmap, irqn;
-+	unsigned int cascade_irq;
-+
-+	irqmap = readl_relaxed(pic->base + PIC_CAUSE);
-+	chained_irq_enter(chip, desc);
-+
-+	for_each_set_bit(irqn, &irqmap, BITS_PER_LONG) {
-+		cascade_irq = irq_find_mapping(pic->domain, irqn);
-+		generic_handle_irq(cascade_irq);
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static void mvebu_pic_enable_percpu_irq(void *data)
-+{
-+	struct mvebu_pic *pic = data;
-+
-+	mvebu_pic_reset(pic);
-+	enable_percpu_irq(pic->parent_irq, IRQ_TYPE_NONE);
-+}
-+
-+static void mvebu_pic_disable_percpu_irq(void *data)
-+{
-+	struct mvebu_pic *pic = data;
-+
-+	disable_percpu_irq(pic->parent_irq);
-+}
-+
-+static int mvebu_pic_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct mvebu_pic *pic;
-+	struct irq_chip *irq_chip;
-+	struct resource *res;
-+
-+	pic = devm_kzalloc(&pdev->dev, sizeof(struct mvebu_pic), GFP_KERNEL);
-+	if (!pic)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pic->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(pic->base))
-+		return PTR_ERR(pic->base);
-+
-+	irq_chip = &pic->irq_chip;
-+	irq_chip->name = dev_name(&pdev->dev);
-+	irq_chip->irq_mask = mvebu_pic_mask_irq;
-+	irq_chip->irq_unmask = mvebu_pic_unmask_irq;
-+	irq_chip->irq_eoi = mvebu_pic_eoi_irq;
-+
-+	pic->parent_irq = irq_of_parse_and_map(node, 0);
-+	if (pic->parent_irq <= 0) {
-+		dev_err(&pdev->dev, "Failed to parse parent interrupt\n");
-+		return -EINVAL;
-+	}
-+
-+	pic->domain = irq_domain_add_linear(node, PIC_MAX_IRQS,
-+					    &mvebu_pic_domain_ops, pic);
-+	if (!pic->domain) {
-+		dev_err(&pdev->dev, "Failed to allocate irq domain\n");
-+		return -ENOMEM;
-+	}
-+
-+	irq_set_chained_handler(pic->parent_irq, mvebu_pic_handle_cascade_irq);
-+	irq_set_handler_data(pic->parent_irq, pic);
-+
-+	on_each_cpu(mvebu_pic_enable_percpu_irq, pic, 1);
-+
-+	platform_set_drvdata(pdev, pic);
-+
-+	return 0;
-+}
-+
-+static int mvebu_pic_remove(struct platform_device *pdev)
-+{
-+	struct mvebu_pic *pic = platform_get_drvdata(pdev);
-+
-+	on_each_cpu(mvebu_pic_disable_percpu_irq, pic, 1);
-+	irq_domain_remove(pic->domain);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mvebu_pic_of_match[] = {
-+	{ .compatible = "marvell,armada-8k-pic", },
-+	{},
++&serial2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&serial2_rxtx_pins>;
++	status = "okay";
 +};
-+MODULE_DEVICE_TABLE(of, mvebu_pic_of_match);
 +
-+static struct platform_driver mvebu_pic_driver = {
-+	.probe  = mvebu_pic_probe,
-+	.remove = mvebu_pic_remove,
-+	.driver = {
-+		.name = "mvebu-pic",
-+		.of_match_table = mvebu_pic_of_match,
-+	},
++&wdt {
++	status = "okay";
 +};
-+module_platform_driver(mvebu_pic_driver);
 +
-+MODULE_AUTHOR("Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:mvebu_pic");
++&rtc0 {
++	status = "okay";
++};
 +
++&gpio {
++	status = "okay";
++};
++
++&mdio {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mdio_pins>;
++	bus_freq = <2200000>;
++	status = "okay";
++};
++
++&eth0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mii_pins>;
++	status = "okay";
++};
++
++&mmc0 {
++	max-frequency = <50000000>;
++	bus-width = <4>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins>;
++	cd-gpios = <&gpio 64 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
+diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+index 754f478..ca99711 100644
+--- a/arch/arm/mach-davinci/da8xx-dt.c
++++ b/arch/arm/mach-davinci/da8xx-dt.c
+@@ -49,6 +49,7 @@ static void __init da850_init_machine(void)
+ 
+ static const char *const da850_boards_compat[] __initconst = {
+ 	"enbw,cmc",
++	"ti,da850-lcdk",
+ 	"ti,da850-evm",
+ 	"ti,da850",
+ 	NULL,
 -- 
-2.7.4
+2.9.0.rc1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
