@@ -1,62 +1,43 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH 2/3] drm/i2c: tda998x: Register ASoC hdmi-codec and add
- audio DT binding
-Date: Fri, 5 Aug 2016 12:02:39 +0300
-Message-ID: <3a3dcfa4-cec8-53f8-eddb-9a0e04c10ac9@ti.com>
-References: <cover.1470129989.git.jsarha@ti.com>
- <ce10548e1c28270d80ee99a525e117d0d25f5656.1470129989.git.jsarha@ti.com>
- <20160804140712.GO5783@n2100.arm.linux.org.uk>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3] reset: uniphier: add reset controller driver for
+ UniPhier SoCs
+Date: Fri, 05 Aug 2016 11:06:28 +0200
+Message-ID: <1470387988.3141.21.camel@pengutronix.de>
+References: <1470111510-21247-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160804140712.GO5783@n2100.arm.linux.org.uk>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470111510-21247-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMDQvMTYgMTc6MDcsIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCB3cm90ZToKPiBPbiBU
-dWUsIEF1ZyAwMiwgMjAxNiBhdCAwMzowNTowOFBNICswMzAwLCBKeXJpIFNhcmhhIHdyb3RlOgo+
-PiArCW1lbWNweShhdWRpby5zdGF0dXMsIHBhcmFtcy0+aWVjLnN0YXR1cywKPj4gKwkgICAgICAg
-bWluKHNpemVvZihhdWRpby5zdGF0dXMpLCBzaXplb2YocGFyYW1zLT5pZWMuc3RhdHVzKSkpOwo+
-IAo+IEFzIG1lbnRpb25lZCBpbiB0aGUgb3RoZXIgcGF0Y2gsIHRoZSBhdWRpbyBzdGF0dXMgZG9l
-cyBub3QgZGlyZWN0bHkKPiBjb3JyZXNwb25kIHdpdGggdGhlIEFFUyBieXRlcywgc28gdGhpcyBl
-bmRzIHVwIGNhdXNpbmcgdGhlIGRyaXZlciB0bwo+IHdyaXRlIHRoZSB3cm9uZyBieXRlcyB0byB0
-aGUgd3JvbmcgcmVnaXN0ZXJzLgo+IAoKQXMgSSBzYWlkIGVhcmxpZXIsIEknZCByYXRoZXIgaGF2
-ZSBpdCBhcyBwbGFpbiBBRVMvSUVDOTU4IGNoYW5uZWwgc3RhdHVzCmJpdHMgYnVmZmVyLgoKPj4g
-KwlyZXQgPSB0ZGE5OTh4X2NvbmZpZ3VyZV9hdWRpbyhwcml2LAo+PiArCQkJCSAgICAgICZhdWRp
-bywKPj4gKwkJCQkgICAgICBwcml2LT5lbmNvZGVyLmNydGMtPmh3bW9kZS5jbG9jayk7Cj4gCj4g
-V2hhdCBoYXBwZW5zIGlmIGF1ZGlvIGNoYW5nZXMgYXQgdGhlIHNhbWUgdGltZSB0aGF0IHRoZSB2
-aWRlbyBtb2RlCj4gY2hhbmdlcz8gIFdoYXQgcHJvdGVjdGlvbiBpcyB0aGVyZSBhZ2FpbnN0IHR3
-byB0aHJlYWRzIGNvbmN1cnJlbnRseQo+IGV4ZWN1dGluZyB0ZGE5OTh4X2NvbmZpZ3VyZV9hdWRp
-bygpID8KPiAKCk9oLCB5ZXMuIEkgZGVmaW5pdGVseSBuZWVkIHNvbWUgbG9ja2luZyBoZXJlLiBU
-aGUgc2FtZSBsb2NrIGNvdWxkCnByb3RlY3QgdGhlIGF0b21pY2l0eSBvZiB0ZGE5OTh4X2F1ZGlv
-X3BhcmFtcyB1cGRhdGUgYW5kIHVzYWdlLgoKPj4gKwlwcml2LT5hdWRpb19wZGV2ID0gcGxhdGZv
-cm1fZGV2aWNlX3JlZ2lzdGVyX2RhdGEoCj4+ICsJCWRldiwgSERNSV9DT0RFQ19EUlZfTkFNRSwg
-UExBVEZPUk1fREVWSURfQVVUTywKPj4gKwkJJmNvZGVjX2RhdGEsIHNpemVvZihjb2RlY19kYXRh
-KSk7Cj4gCj4gSSdkIG11Y2ggcHJlZmVyIHRoYXQgdGhpcyB3YXMgYSBjaGlsZCBvZiB0aGUgSTJD
-IGRldmljZSwgd2hpY2ggd2lsbAo+IHNob3cgdGhlIHJlbGF0aW9uc2hpcCBiZXR3ZWVuIHRoaXMg
-dmlydHVhbCBwbGF0Zm9ybSBkZXZpY2UgYW5kIHRoZQo+IGRldmljZSB3aGljaCBpdCdzIGFzc29j
-aWF0ZWQgd2l0aC4gIFRoYXQgY2FuIGJlIGRvbmUgdmlhCj4gcGxhdGZvcm1fZGV2aWNlX3JlZ2lz
-dGVyX2Z1bGwoKS4KPiAKClRoYXQgbWF5IGJlIGEgcHJvYmxlbS4gVGhlIEFTb0MgY2FyZCBkZXZp
-Y2UgdHJlZSBiaW5kaW5nIGN1cnJlbnQgbG9va3MKZm9yIHRoZSBBU29DIERBSSdzIHBhcmVudCdz
-IG9mLW5vZGUgaWYgaXQgY2FuIG5vdCBmaW5kIHRoZSBub2RlIGZvciB0aGUKREFJLWRldmljZSBp
-dHNlbGYuIEluZGljYXRpbmcgQVNvQyBEQUktbGluayBieSByZWZlcmVuY2luZyB0aGUgcGFyZW50
-CmkyYyBkZXZpY2Ugc2ltcGx5IHdvbid0IHdvcmssIGJlY2F1c2UgdGhlcmUgbWF5IGJlIG90aGVy
-IEFTb0MgY29kZWNzIG9uCnRoZSBzYW1lIGkyYyBidXMuIEFkZGluZyBhIHNlcGFyYXRlIERULW5v
-ZGUgZm9yIGEgdmlydHVhbCBhdWRpbyBkZXZpY2UKc2hvdWxkIGJlIHBvc3NpYmxlLCBidXQgaXQg
-bmVlZHMgc29tZSB0aGlua2luZyBhbmQgbWF5IGhhdmUgaXRzIG93bgpwcm9ibGVtcy4gSSBjYW4g
-bm90IGZvbGxvdyB0aGUgcmVhc29uaW5nIGJlaGluZCB0aGlzLCBpcyB0aGlzIHJlYWxseQpuZWNl
-c3Nhcnk/CgpCZXN0IHJlZ2FyZHMsCkp5cmkKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+Am Dienstag, den 02.08.2016, 13:18 +0900 schrieb Masahiro Yamada:
+> This is the initial commit for UniPhier reset controller driver.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+[...]
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_ARCH_MESON) += reset-meson.o
+>  obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
+>  obj-$(CONFIG_ARCH_STI) += sti/
+>  obj-$(CONFIG_ARCH_HISI) += hisilicon/
+> +obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
+>  obj-$(CONFIG_ARCH_ZYNQ) += reset-zynq.o
+>  obj-$(CONFIG_ATH79) += reset-ath79.o
+>  obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
+
+Thank you, I have applied this patch with one small change: The Makefile
+change is moved after TI_SYSCON_RESET, like you did in the Kconfig, to
+keep the non-arch symbols in alphabetic order.
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
