@@ -1,297 +1,73 @@
-From: Mirza Krak <mirza.krak@gmail.com>
-Subject: [PATCH 6/6] bus: Add support for Tegra Generic Memory Interface
-Date: Sat,  6 Aug 2016 21:40:52 +0200
-Message-ID: <1470512452-8322-7-git-send-email-mirza.krak@gmail.com>
-References: <1470512452-8322-1-git-send-email-mirza.krak@gmail.com>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [RFC][PATCH 0/4] SRAM based reboot reason driver for HiKey
+Date: Fri, 5 Aug 2016 15:51:20 -0700
+Message-ID: <CALAqxLW=tmpmo7pfvqWijL60VQ8nCj47qW6cH5Hbgs0nwXKTnQ@mail.gmail.com>
+References: <1470265523-27557-1-git-send-email-john.stultz@linaro.org>
+ <8107419f-ded4-6d0f-d2da-7e51bc3f418e@mentor.com> <CAL_JsqLL01G_=b6tV_qsKmPCEJa2Fhp_zk5u9s1-eYdzfHjbxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1470512452-8322-1-git-send-email-mirza.krak@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: swarren@wwwdotorg.org, thierry.reding@gmail.com, gnurou@gmail.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, mturquette@baylibre.com, Mirza Krak <mirza.krak@gmail.com>, sboyd@codeaurora.org, linux@armlinux.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLL01G_=b6tV_qsKmPCEJa2Fhp_zk5u9s1-eYdzfHjbxQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, lkml <linux-kernel@vger.kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>, Kees Cook <keescook@chromium.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Vishal Bhoj <vishal.bhoj@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Mirza Krak <mirza.krak@gmail.com>
+On Fri, Aug 5, 2016 at 3:37 PM, Rob Herring <robh@kernel.org> wrote:
+> On Fri, Aug 5, 2016 at 7:46 AM, Vladimir Zapolskiy
+> <vladimir_zapolskiy@mentor.com> wrote:
+>> Hi John,
+>>
+>> On 08/04/2016 02:05 AM, John Stultz wrote:
+>>>
+>>> Now that Andy's reboot reason core driver has landed, I wanted
+>>> to resubmit a reworked version of my SRAM based reboot reason
+>>> driver.
+>>>
+>>> This allows the kernel to communicate to the bootloader what mode
+>>> it should reboot to using some reserved memory.
+>>>
+>>> Feedback would be very much appreciated!
+>>
+>>
+>> in my opinion the taken approach is wrong, and I've already explained
+>> why and how to rework your driver to shrink the change, please see
+>> https://lkml.org/lkml/2016/1/27/133
+>>
+>> In this case I think that a SRAM device node should just contain
+>> a plain description of partitions, compatible = "sram-reboot-mode" is
+>> clearly not a device on "SRAM bus", it is not a device at all, so
+>> please let's separate policy from mechanism
+>
+> Having a 2nd node for the driver is still not a device on a bus. It
+> adds unneeded complexity to the binding IMO.
+>
+> The current approach also follows the model ramoops is using. Right
+> now it's using reserved-memory, but that could easily be extended to
+> SRAM region as well.
+>
+>> Because my proposed alternative approach separates policy from
+>> mechanism, it for instanse allows to avoid overlappings on SRAM areas,
+>> and still other drivers may serve as consumers of partitions on SRAM.
+>
+> You could still have multiple consumers and having a compatible string
+> doesn't necessarily imply a driver. Though multiple consumers without
+> something arbitrating access sounds like broken design to me.
 
-The Generic Memory Interface bus can be used to connect high-speed
-devices such as NOR flash, FPGAs, DSPs...
+So after running into some issues implementing the feedback that Bjorn
+suggested, I realized we were going to need to not only extend the
+sram driver to probe children, but we'd also have to make it a mfd so
+it wouldn't reserve the entire range and the reboot reason driver
+could map the memory.
 
-Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
----
- drivers/bus/Kconfig     |   7 ++
- drivers/bus/Makefile    |   1 +
- drivers/bus/tegra-gmi.c | 224 ++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 232 insertions(+)
- create mode 100644 drivers/bus/tegra-gmi.c
+That on top of the fact that we're already duplicating much of the
+syscon-reboot-mode driver to work on sram, I decided to just start
+over and use the syscon driver, which works fine here. All that is
+needed is just adding it to the dts.
 
-diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-index 3b205e2..88bbf2c 100644
---- a/drivers/bus/Kconfig
-+++ b/drivers/bus/Kconfig
-@@ -145,6 +145,13 @@ config TEGRA_ACONNECT
- 	  Driver for the Tegra ACONNECT bus which is used to interface with
- 	  the devices inside the Audio Processing Engine (APE) for Tegra210.
- 
-+config TEGRA_GMI
-+	tristate "Tegra Generic Memory Interface bus driver"
-+		depends on ARCH_TEGRA
-+		help
-+			Driver for the Tegra Generic Memory Interface bus which can be used
-+			to attach devices such as NOR, UART, FPGA and more.
-+
- config UNIPHIER_SYSTEM_BUS
- 	tristate "UniPhier System Bus driver"
- 	depends on ARCH_UNIPHIER && OF
-diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
-index ac84cc4..34e2bab 100644
---- a/drivers/bus/Makefile
-+++ b/drivers/bus/Makefile
-@@ -18,5 +18,6 @@ obj-$(CONFIG_OMAP_OCP2SCP)	+= omap-ocp2scp.o
- obj-$(CONFIG_SUNXI_RSB)		+= sunxi-rsb.o
- obj-$(CONFIG_SIMPLE_PM_BUS)	+= simple-pm-bus.o
- obj-$(CONFIG_TEGRA_ACONNECT)	+= tegra-aconnect.o
-+obj-$(CONFIG_TEGRA_GMI)		+= tegra-gmi.o
- obj-$(CONFIG_UNIPHIER_SYSTEM_BUS)	+= uniphier-system-bus.o
- obj-$(CONFIG_VEXPRESS_CONFIG)	+= vexpress-config.o
-diff --git a/drivers/bus/tegra-gmi.c b/drivers/bus/tegra-gmi.c
-new file mode 100644
-index 0000000..7a45442
---- /dev/null
-+++ b/drivers/bus/tegra-gmi.c
-@@ -0,0 +1,224 @@
-+/*
-+ * Driver for NVIDIA Generic Memory Interface
-+ *
-+ * Copyright (C) 2016 Host Mobility AB. All rights reserved.
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/reset.h>
-+
-+#define TEGRA_GMI_CONFIG			0x00
-+#define TEGRA_GMI_CONFIG_GO			BIT(31)
-+#define TEGRA_GMI_BUS_WIDTH_32BIT	BIT(30)
-+#define TEGRA_GMI_MUX_MODE			BIT(28)
-+#define TEGRA_GMI_RDY_BEFORE_DATA	BIT(24)
-+#define TEGRA_GMI_RDY_ACTIVE_HIGH	BIT(23)
-+#define TEGRA_GMI_ADV_ACTIVE_HIGH	BIT(22)
-+#define TEGRA_GMI_OE_ACTIVE_HIGH	BIT(21)
-+#define TEGRA_GMI_CS_ACTIVE_HIGH	BIT(20)
-+#define TEGRA_GMI_CS_SELECT(x)		((x & 0x7) << 4)
-+
-+#define TEGRA_GMI_TIMING0			0x10
-+#define TEGRA_GMI_MUXED_WIDTH(x)	((x & 0xf) << 12)
-+#define TEGRA_GMI_HOLD_WIDTH(x)		((x & 0xf) << 8)
-+#define TEGRA_GMI_ADV_WIDTH(x)		((x & 0xf) << 4)
-+#define TEGRA_GMI_CE_WIDTH(x)		(x & 0xf)
-+
-+#define TEGRA_GMI_TIMING1			0x14
-+#define TEGRA_GMI_WE_WIDTH(x)		((x & 0xff) << 16)
-+#define TEGRA_GMI_OE_WIDTH(x)		((x & 0xff) << 8)
-+#define TEGRA_GMI_WAIT_WIDTH(x)		(x & 0xff)
-+
-+struct tegra_gmi_priv {
-+	void __iomem *base;
-+
-+	u32 snor_config;
-+	u32 snor_timing0;
-+	u32 snor_timing1;
-+
-+	struct clk *clk;
-+};
-+
-+static void tegra_gmi_init(struct device *dev, struct tegra_gmi_priv *priv)
-+{
-+	writel(priv->snor_timing0, priv->base + TEGRA_GMI_TIMING0);
-+	writel(priv->snor_timing1, priv->base + TEGRA_GMI_TIMING1);
-+
-+	priv->snor_config |= TEGRA_GMI_CONFIG_GO;
-+	writel(priv->snor_config, priv->base + TEGRA_GMI_CONFIG);
-+}
-+
-+static int tegra_gmi_parse_dt(struct device *dev, struct tegra_gmi_priv *priv)
-+{
-+	struct device_node *of_node = dev->of_node;
-+	u32 property;
-+
-+	/* configuration */
-+
-+	if (of_property_read_bool(of_node, "nvidia,snor-data-width-32bit"))
-+		priv->snor_config |= TEGRA_GMI_BUS_WIDTH_32BIT;
-+
-+	if (of_property_read_bool(of_node, "nvidia,snor-mux-mode"))
-+		priv->snor_config |= TEGRA_GMI_MUX_MODE;
-+
-+	if (of_property_read_bool(of_node, "nvidia,snor-rdy-active-before-data"))
-+		priv->snor_config |= TEGRA_GMI_RDY_BEFORE_DATA;
-+
-+	if (of_property_read_bool(of_node, "nvidia,snor-rdy-inv"))
-+		priv->snor_config |= TEGRA_GMI_RDY_ACTIVE_HIGH;
-+
-+	if (of_property_read_bool(of_node, "nvidia,snor-adv-inv"))
-+		priv->snor_config |= TEGRA_GMI_ADV_ACTIVE_HIGH;
-+
-+	if (of_property_read_bool(of_node, "nvidia,snor-oe-inv"))
-+		priv->snor_config |= TEGRA_GMI_OE_ACTIVE_HIGH;
-+
-+	if (of_property_read_bool(of_node, "nvidia,snor-cs-inv"))
-+		priv->snor_config |= TEGRA_GMI_CS_ACTIVE_HIGH;
-+
-+	if (!of_property_read_u32(of_node, "nvidia,snor-cs-select", &property))
-+		priv->snor_config |= TEGRA_GMI_CS_SELECT(property);
-+
-+	/* Timing, the default values that are provided are reset values */
-+
-+	if (!of_property_read_u32(of_node, "nvidia,snor-muxed-width", &property))
-+		priv->snor_timing0 |= TEGRA_GMI_MUXED_WIDTH(property);
-+	else
-+		priv->snor_timing0 |= TEGRA_GMI_MUXED_WIDTH(1);
-+
-+	if (!of_property_read_u32(of_node, "nvidia,snor-hold-width", &property))
-+		priv->snor_timing0 |= TEGRA_GMI_HOLD_WIDTH(property);
-+	else
-+		priv->snor_timing0 |= TEGRA_GMI_HOLD_WIDTH(1);
-+
-+	if (!of_property_read_u32(of_node, "nvidia,snor-adv-width", &property))
-+		priv->snor_timing0 |= TEGRA_GMI_ADV_WIDTH(property);
-+	else
-+		priv->snor_timing0 |= TEGRA_GMI_ADV_WIDTH(1);
-+
-+	if (!of_property_read_u32(of_node, "nvidia,snor-ce-width", &property))
-+		priv->snor_timing0 |= TEGRA_GMI_CE_WIDTH(property);
-+	else
-+		priv->snor_timing0 |= TEGRA_GMI_CE_WIDTH(4);
-+
-+	if (!of_property_read_u32(of_node, "nvidia,snor-we-width", &property))
-+		priv->snor_timing1 |= TEGRA_GMI_WE_WIDTH(property);
-+	else
-+		priv->snor_timing1 |= TEGRA_GMI_WE_WIDTH(1);
-+
-+	if (!of_property_read_u32(of_node, "nvidia,snor-oe-width", &property))
-+		priv->snor_timing1 |= TEGRA_GMI_OE_WIDTH(property);
-+	else
-+		priv->snor_timing1 |= TEGRA_GMI_OE_WIDTH(1);
-+
-+	if (!of_property_read_u32(of_node, "nvidia,snor-wait-width", &property))
-+		priv->snor_timing1 |= TEGRA_GMI_WAIT_WIDTH(property);
-+	else
-+		priv->snor_timing1 |= TEGRA_GMI_WAIT_WIDTH(3);
-+
-+	return of_platform_default_populate(of_node, NULL, dev);
-+}
-+
-+static int tegra_gmi_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	struct clk *clk;
-+	struct device *dev = &pdev->dev;
-+	struct reset_control *rst;
-+	struct tegra_gmi_priv *priv;
-+	void __iomem *base;
-+	int ret;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->base = base;
-+
-+	clk = devm_clk_get(dev, "gmi");
-+	if (IS_ERR(clk)) {
-+		dev_err(dev, "can not get clock\n");
-+		return PTR_ERR(clk);
-+	}
-+
-+	priv->clk = clk;
-+
-+	rst = devm_reset_control_get(dev, "gmi");
-+	if (IS_ERR(rst)) {
-+		dev_err(dev, "can not get reset\n");
-+		return PTR_ERR(rst);
-+	}
-+
-+	ret = tegra_gmi_parse_dt(dev, priv);
-+	if (ret) {
-+		dev_err(dev, "fail to create devices.\n");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(clk);
-+	if (ret) {
-+		dev_err(dev, "fail to enable clock.\n");
-+		return ret;
-+	}
-+
-+	reset_control_assert(rst);
-+	udelay(2);
-+	reset_control_deassert(rst);
-+
-+	tegra_gmi_init(dev, priv);
-+
-+	dev_set_drvdata(dev, priv);
-+
-+	return 0;
-+}
-+
-+static int tegra_gmi_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct tegra_gmi_priv *priv = dev_get_drvdata(dev);
-+	void __iomem *base = priv->base;
-+	u32 config;
-+
-+	of_platform_depopulate(dev);
-+
-+	config = readl(base + TEGRA_GMI_CONFIG);
-+	config &= ~TEGRA_GMI_CONFIG_GO;
-+	writel(config, base + TEGRA_GMI_CONFIG);
-+
-+	clk_disable_unprepare(priv->clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id tegra_gmi_id_table[] = {
-+	{ .compatible = "nvidia,tegra20-gmi", },
-+	{ .compatible = "nvidia,tegra30-gmi", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, tegra_gmi_id_table);
-+
-+static struct platform_driver tegra_gmi_driver = {
-+	.probe = tegra_gmi_probe,
-+	.remove = tegra_gmi_remove,
-+	.driver = {
-+		.name		= "tegra-gmi",
-+		.of_match_table	= tegra_gmi_id_table,
-+	},
-+};
-+module_platform_driver(tegra_gmi_driver);
-+
-+MODULE_AUTHOR("Mirza Krak <mirza.krak@gmail.com");
-+MODULE_DESCRIPTION("NVIDIA Tegra GMI Bus Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.1.4
+I know that its not exactly correct usage of the syscon driver, but it
+starts to feel crazy almost completely duplicating the syscon driver
+just to have it named sram.
+
+thanks
+-john
