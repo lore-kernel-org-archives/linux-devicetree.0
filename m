@@ -1,30 +1,62 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 0/2] Add R8A7792 DU support
-Date: Fri, 05 Aug 2016 21:24:40 +0300
-Message-ID: <4031442.KeMCTMarLN@wasted.cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 2/2] ARM: dts: r8a7792: add DU support
+Date: Fri, 05 Aug 2016 21:26:25 +0300
+Message-ID: <6004610.AeQmi3OHEL@wasted.cogentembedded.com>
+References: <4031442.KeMCTMarLN@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <4031442.KeMCTMarLN@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Define the generic R8A7792 part of the DU device node.
 
-   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
-'renesas-devel-20160725-v4.7-rc7' tag. We're adding the R8A7792 DU clocks and
-device nodes. They have been tested on the Blanche board -- I'm not posting the
-Blanche patch only because it also has some strange interaction with the
-Ethernet chip, so that NFS root can't work anymore...
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[1/2] ARM: dts: r8a7792: add DU clocks
-[2/2] ARM: dts: r8a7792: add DU support
+---
+ arch/arm/boot/dts/r8a7792.dtsi |   28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7792.dtsi
++++ renesas/arch/arm/boot/dts/r8a7792.dtsi
+@@ -556,6 +556,34 @@
+ 			status = "disabled";
+ 		};
+ 
++		du: display@feb00000 {
++			compatible = "renesas,du-r8a7792";
++			reg = <0 0xfeb00000 0 0x40000>;
++			reg-names = "du";
++			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&mstp7_clks R8A7792_CLK_DU0>,
++				 <&mstp7_clks R8A7792_CLK_DU1>;
++			clock-names = "du.0", "du.1";
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					du_out_rgb0: endpoint {
++					};
++				};
++				port@1 {
++					reg = <1>;
++					du_out_rgb1: endpoint {
++					};
++				};
++			};
++		};
++
+ 		can0: can@e6e80000 {
+ 			compatible = "renesas,can-r8a7792",
+ 				     "renesas,rcar-gen2-can";
