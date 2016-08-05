@@ -1,13 +1,24 @@
-From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Subject: [PATCH] arm: dts: sun7i-a20-bananapi: name the GPIO lines
-Date: Fri,  5 Aug 2016 10:05:12 +0200
-Message-ID: <1470384312-6604-1-git-send-email-linux@rempel-privat.de>
+From: Oleksij Rempel <linux@rempel-privat.de>
+Subject: [PATCH v2] arm: dts: sun7i-a20-bananapi: name the GPIO lines
+Date: Fri,  5 Aug 2016 10:06:44 +0200
+Message-ID: <1470384404-6796-1-git-send-email-linux@rempel-privat.de>
 References: <CACRpkdYnK=7C=F5hZUo-nYv6Z+Pb+eT7vm1e4hL8N-QgJnuLfg@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdYnK=7C=F5hZUo-nYv6Z+Pb+eT7vm1e4hL8N-QgJnuLfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org
-Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdYnK=7C=F5hZUo-nYv6Z+Pb+eT7vm1e4hL8N-QgJnuLfg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: fixed-term.Oleksij.Rempel@de.bosch.com
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, Oleksij Rempel <linux@rempel-privat.de>
 List-Id: devicetree@vger.kernel.org
 
 This names the GPIO lines on the Banana Pi board in accordance with
@@ -22,13 +33,13 @@ by the external connectors, also lines that are muxed into some
 other function than GPIO: these are named "[FOO]" so that users
 can see with lsgpio what all lines are used for.
 
-Ps: most of the text was taken from Linux Wallej patch.
+Ps: most of the text was taken from Linus Wallej patch.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Cc: devicetree@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
 ---
  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 58 ++++++++++++++++++++++++++++++++
  1 file changed, 58 insertions(+)
@@ -104,8 +115,3 @@ index 67c8a76..81ecb89 100644
  		allwinner,function = "gpio_in";
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
