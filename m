@@ -1,93 +1,61 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: da850: Add basic DTS for the L138/C6748 Dev Kit
-Date: Fri, 5 Aug 2016 19:44:18 +0530
-Message-ID: <57A49F3A.9030306@ti.com>
-References: <20160804144332.4841-1-kbeldan@baylibre.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] generic spidev devices must be registered
+Date: Fri, 5 Aug 2016 15:21:08 +0100
+Message-ID: <20160805142108.GZ10383@sirena.org.uk>
+References: <1470402714-10798-1-git-send-email-fabien.lahoudere@collabora.co.uk>
+ <20160805134342.GD25152@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160804144332.4841-1-kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="sT0SRK93LqpGW452"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160805134342.GD25152@leverpostej>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:SPI SUBSYSTEM" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 04 August 2016 08:13 PM, Karl Beldan wrote:
-> The LCDK is the successor to the late Hawkboard and has the same machine
-> number.
-> Among the differences are the flash (16bits vs 8bits) and some pins
-> (MMC, LEDs, buttons, some external connectors), however the main
-> components remain the same (eth. PHY, Audio Codec, Video decoder and
-> DAC) except for the main PMIC, different and hard-wired on the LCDK (the
-> LDOs and DCDCs are always ON).
-> A DT-only boot with this addition gives functional uart, reboot via
-> watchdog, rtc, ethernet and MMC (I added the CD gpio for the MMC
-> although davinci_mmc doesn't call yet the mmc core OF facilities).
-> 
-> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-C6748 is a pin-compatible DSP-only part which does not run Linux. The
-OMAP-L138 and C6748 LCDKs are physically different boards. So, I would
-just stick with subject line ".. for the OMAP-L138 LCDK board"
+--sT0SRK93LqpGW452
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> ---
->  Documentation/devicetree/bindings/arm/davinci.txt |  4 ++
->  arch/arm/boot/dts/Makefile                        |  1 +
->  arch/arm/boot/dts/omapl138-lcdk.dts               | 71 +++++++++++++++++++++++
->  arch/arm/mach-davinci/da8xx-dt.c                  |  1 +
->  4 files changed, 77 insertions(+)
->  create mode 100644 arch/arm/boot/dts/omapl138-lcdk.dts
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/davinci.txt b/Documentation/devicetree/bindings/arm/davinci.txt
-> index cfaeda4..1482c74 100644
-> --- a/Documentation/devicetree/bindings/arm/davinci.txt
-> +++ b/Documentation/devicetree/bindings/arm/davinci.txt
-> @@ -5,6 +5,10 @@ DA850/OMAP-L138/AM18x Evaluation Module (EVM) board
->  Required root node properties:
->      - compatible = "ti,da850-evm", "ti,da850";
->  
-> +DA850/OMAP-L138/AM18x L138/C6748 Development Kit (LCDK) board
+On Fri, Aug 05, 2016 at 02:43:43PM +0100, Mark Rutland wrote:
+> On Fri, Aug 05, 2016 at 03:11:53PM +0200, Fabien Lahoudere wrote:
+> > Adding spidev in the compatible list, let configure spidev from device tree
+> > instead of C source code.
 
-here too, drop reference to C6748.
+> I'm not keen on this.
 
-> +Required root node properties:
-> +    - compatible = "ti,omapl138-lcdk", "ti,da850";
+> It ties the hardware description to today's use-case, and leaves the DT
+> without information regarding the particuarl device. The binding is also
+> written in terms of the userspace interface, which is backwards.
 
-let the compatible be "ti,da850-lcdk" for consistency.
+> So NAK to this as-is.
 
-> +
->  EnBW AM1808 based CMC board
->  Required root node properties:
->      - compatible = "enbw,cmc", "ti,da850;
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 414b427..da3f69b 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -105,6 +105,7 @@ dtb-$(CONFIG_ARCH_BERLIN) += \
->  dtb-$(CONFIG_ARCH_BRCMSTB) += \
->  	bcm7445-bcm97445svmb.dtb
->  dtb-$(CONFIG_ARCH_DAVINCI) += \
-> +	omapl138-lcdk.dtb \
->  	da850-enbw-cmc.dtb \
->  	da850-evm.dtb
->  dtb-$(CONFIG_ARCH_DIGICOLOR) += \
-> diff --git a/arch/arm/boot/dts/omapl138-lcdk.dts b/arch/arm/boot/dts/omapl138-lcdk.dts
-> new file mode 100644
-> index 0000000..fad3b6d
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omapl138-lcdk.dts
-> @@ -0,0 +1,71 @@
-> +/*
-> + * Copyright (c) 2016 BayLibre, Inc.
-> + *
-> + * Licensed under GPLv2 or later.
+Indeed.  Fabien, please see the *extensive* and repeated previous
+discussions of this topic.  Device tree is there to describe the
+hardware, not the software you currently happen to be using on your
+system.  Please also see the comments in the driver which explain why we
+require a compatible string which is descriptive of the hardware.
 
-are you sure about "or later"?
+--sT0SRK93LqpGW452
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Sekhar
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXpKDSAAoJECTWi3JdVIfQ6OIH/1/cbQhUpJBx5bGDOLQdoz2A
+A7JufH4XkyGqDbicXlX8XE6aBiCGtZSmMX7jSz4UDG3Zk9SkRSzmxrhqGC4ec5HZ
+tdyKwRpnZ+KunFf4m4V80ek26ZS11cYCTRpxZ1haQtpYiBJD2rT/9rn65N9cGA2m
+i1yONN3m/1FP+RWvNheVJ3PTi070fQIMXDOJHusHXqAOqOyfGvllIvXId//c+Zoa
+TcsI+M1KseybLzxU/UEiMQ95Fv6g/An2I0gJloBwr4+gm3XLhoiSaz14hUyUyV8v
+PWEhc8PqXXe/BdS7ppdsq+Jhk42geN0GVdax8Zpsjh47KEeLrfRIjTFdPzl5Pos=
+=Ep5f
+-----END PGP SIGNATURE-----
+
+--sT0SRK93LqpGW452--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
