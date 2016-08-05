@@ -1,109 +1,43 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 3/3] dmaengine: pl330: support transfer unaligned with (burst
- len * burst size)
-Date: Fri,  5 Aug 2016 10:53:22 +0800
-Message-ID: <1470365602-32586-4-git-send-email-shawn.lin@rock-chips.com>
-References: <1470365602-32586-1-git-send-email-shawn.lin@rock-chips.com>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: [PATCH v4 1/2] Documentation: dt: Add new compatible to sunxi mmc
+ driver bindings
+Date: Fri,  5 Aug 2016 10:57:14 +0800
+Message-ID: <20160805025715.5306-2-icenowy@aosc.xyz>
+References: <20160805025715.5306-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1470365602-32586-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160805025715.5306-1-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Ulf Hansson <ulf.hansson@linaro.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michal Suchanek <hramrach@gmail.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Currently pl330 doesn't support transfer which doesn't
-align with burst len * burst size. This should be only
-for single mode. Let's allow it for busrt mode if available.
-
-e.g. transfers 0x10002 bytes:
-First loop 256*16*16=0x10000, burst size is 1, burst length is 16.
-Then the second loop 2 bytes, burst size is 1, burst length is 1.
-
-f0041000:        DMAMOV CCR 0xbc02f1
-f0041006:        DMAMOV SAR 0xdd6c0000
-f004100c:        DMAMOV DAR 0xff1d0400
-f0041012:        DMALP_0 15
-f0041014:        DMALP_1 255
-f0041016:        DMAWFPB 12
-f0041018:        DMALDA
-f0041019:        DMASTPB 12
-f004101b:        DMAFLUSHP 12
-f004101d:        DMALPENDA_1 bjmpto_7
-f004101f:        DMALPENDA_0 bjmpto_b
-f0041021:        DMAMOV CCR 0x800201
-f0041027:        DMALP_1 1
-f0041029:        DMAWFPB 12
-f004102b:        DMALDA
-f004102c:        DMASTPB 12
-f004102e:        DMAFLUSHP 12
-f0041030:        DMALPENDA_1 bjmpto_7
-f0041032:        DMASEV 0
-f0041034:        DMAEND
-
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 ---
+ Documentation/devicetree/bindings/mmc/sunxi-mmc.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/dma/pl330.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index a09bf22..cdb4afc 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -240,6 +240,7 @@ enum pl330_byteswap {
- 
- #define BYTE_TO_BURST(b, ccr)	((b) / BRST_SIZE(ccr) / BRST_LEN(ccr))
- #define BURST_TO_BYTE(c, ccr)	((c) * BRST_SIZE(ccr) * BRST_LEN(ccr))
-+#define BYTE_MOD_BURST_LEN(b, ccr)	(((b) / BRST_SIZE(ccr)) % BRST_LEN(ccr))
- 
- /*
-  * With 256 bytes, we can do more than 2.5MB and 5MB xfers per req
-@@ -1331,6 +1332,19 @@ static inline int _setup_xfer(struct pl330_dmac *pl330,
- 	/* Setup Loop(s) */
- 	off += _setup_loops(pl330, dry_run, &buf[off], pxs);
- 
-+	if (pl330->peripherals_req_type == BURST) {
-+		unsigned int ccr = pxs->ccr;
-+		unsigned long c = 0;
-+
-+		c = BYTE_MOD_BURST_LEN(x->bytes, pxs->ccr);
-+		if (c) {
-+			ccr &= ~(0xf << CC_SRCBRSTLEN_SHFT);
-+			ccr &= ~(0xf << CC_DSTBRSTLEN_SHFT);
-+			off += _emit_MOV(dry_run, &buf[off], CCR, ccr);
-+			off += _loop(pl330, dry_run, &buf[off], &c, pxs);
-+		}
-+	}
-+
- 	return off;
- }
- 
-@@ -1353,9 +1367,12 @@ static int _setup_req(struct pl330_dmac *pl330, unsigned dry_run,
- 	off += _emit_MOV(dry_run, &buf[off], CCR, pxs->ccr);
- 
- 	x = &pxs->desc->px;
--	/* Error if xfer length is not aligned at burst size */
--	if (x->bytes % (BRST_SIZE(pxs->ccr) * BRST_LEN(pxs->ccr)))
--		return -EINVAL;
-+
-+	if (pl330->peripherals_req_type != BURST) {
-+		/* Error if xfer length is not aligned at burst size */
-+		if (x->bytes % (BRST_SIZE(pxs->ccr) * BRST_LEN(pxs->ccr)))
-+			return -EINVAL;
-+	}
- 
- 	off += _setup_xfer(pl330, dry_run, &buf[off], pxs);
- 
+diff --git a/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt b/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
+index 904ff9f..55cdd80 100644
+--- a/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/sunxi-mmc.txt
+@@ -13,6 +13,7 @@ Required properties:
+    * "allwinner,sun5i-a13-mmc"
+    * "allwinner,sun7i-a20-mmc"
+    * "allwinner,sun9i-a80-mmc"
++   * "allwinner,sun50i-a64-mmc"
+  - reg : mmc controller base registers
+  - clocks : a list with 4 phandle + clock specifier pairs
+  - clock-names : must contain "ahb", "mmc", "output" and "sample"
 -- 
-2.3.7
+2.9.2
