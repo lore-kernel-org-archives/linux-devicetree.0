@@ -1,40 +1,41 @@
-From: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 2/3] ARM: davinci_all_defconfig: enable RTC driver as module
-Date: Fri,  5 Aug 2016 14:59:44 +0000
-Message-ID: <20160805145945.24315-3-kbeldan@baylibre.com>
-References: <20160804144332.4841-1-kbeldan@baylibre.com>
- <20160805145945.24315-1-kbeldan@baylibre.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v3] input: touchscreen: Remove duplicate ft6236 driver
+Date: Fri, 5 Aug 2016 17:07:20 +0200
+Message-ID: <72101a2a-ccf0-b0bc-3859-50a43f990027@i2se.com>
+References: <1470381871-4086-1-git-send-email-hdegoede@redhat.com>
+ <1470381871-4086-2-git-send-email-hdegoede@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160805145945.24315-1-kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1470381871-4086-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This driver handles the RTC of most davinci SoCs.
+Hi Hans,
 
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- arch/arm/configs/davinci_all_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Am 05.08.2016 um 09:24 schrieb Hans de Goede:
+> The new(ish) ft6236 simply re-implements the M09 protocol of the
+> (much) older edt-ft5x06.c driver.
+>
+> This commit removes this duplicate driver and adds the i2c ids and
+> dt compatible string to the edt-ft5x06.c driver to keep compatibility.
 
-diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-index f33d042..cc3e702 100644
---- a/arch/arm/configs/davinci_all_defconfig
-+++ b/arch/arm/configs/davinci_all_defconfig
-@@ -188,6 +188,7 @@ CONFIG_LEDS_TRIGGERS=y
- CONFIG_LEDS_TRIGGER_TIMER=m
- CONFIG_LEDS_TRIGGER_HEARTBEAT=m
- CONFIG_RTC_CLASS=y
-+CONFIG_RTC_DRV_OMAP=m
- CONFIG_DMADEVICES=y
- CONFIG_TI_EDMA=y
- CONFIG_EXT2_FS=y
--- 
-2.9.0.rc1
+i think only remove of the driver is incorrect here.
 
+Since there are two similar but still different DT bindings
+
+Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+
+Documentation/devicetree/bindings/input/touchscreen/focaltech-ft6236.txt
+
+the DT handling of edt-ft5x06.c needs to be extended and then finally 
+driver and binding could be removed.
+
+Regards
+Stefan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
