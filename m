@@ -1,131 +1,65 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] mfd: Add DT bindings documentation for Samsung
- Exynos LPASS
-Date: Fri, 05 Aug 2016 17:44:33 +0200
-Message-ID: <ac95ed3f-a4c5-e1a9-8470-8d00b14b1f95@samsung.com>
-References: <1467738785-31410-1-git-send-email-s.nawrocki@samsung.com>
- <20160805133628.GG5243@dell>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/4] irqchip: irq-mvebu-pic: new driver for Marvell
+ Armada 7K/8K PIC
+Date: Fri, 5 Aug 2016 17:58:12 +0200
+Message-ID: <20160805175812.55162108@free-electrons.com>
+References: <1470408921-447-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1470408921-447-3-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20160805153113.GW4541@io.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20160805133628.GG5243@dell>
+In-Reply-To: <20160805153113.GW4541-fahSIxCzskDQ+YiMSub0/l6hYfS7NtTn@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/05/2016 03:36 PM, Lee Jones wrote:
-> On Tue, 05 Jul 2016, Sylwester Nawrocki wrote:
+Hello,
+
+Thanks for the quick feedback!
+
+On Fri, 5 Aug 2016 15:31:13 +0000, Jason Cooper wrote:
+
+> > +config MVEBU_PIC
+> > +	bool  
 > 
->> This patch adds documentation of the DT bindings for the Samsung
->> Exynos SoC Low Power Audio Subsystem.
->>
->> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> tri-state?  Is there anything else attached to the PIC besides the PMU?
 
->> new file mode 100644
->> index 0000000..7e97c0d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
->> @@ -0,0 +1,21 @@
->> +
+tri-state would be fine I believe, it's indeed a secondary interrupt
+controller, not essential for booting the platform.
+
+But then I probably need to rework PATCH 3/4 and not have it
+unconditionally selected by the platform Kconfig option, right?
+
+Regarding what else is attached to the PIC, I have no idea, I don't
+have this information.
+
+> > +static const struct of_device_id mvebu_pic_of_match[] = {
+> > +	{ .compatible = "marvell,armada-8k-pic", },  
 > 
-> Nit: This line is superfluous.
->
->> +Samsung Exynos SoC Low Power Audio Subsystem (LPASS)
->> +
->> +Required properties:
->> +
->> + - compatible : "samsung,exynos5433-lpass"
->> + - reg : should contain the LPASS top SFR region location and size
->> + - samsung,pmu-syscon : the phandle to the Power Management Unit node
->> + - #address-cells: should be 1
->> + - #size-cells: should be 1
->> + - ranges: must be present
-> 
-> These look so much better like:
-> 
-> - compatible  	  : "samsung,exynos5433-lpass"
-> - reg		   	  : should contain the LPASS top SFR region location and size
-> - samsung,pmu-syscon 	  : the phandle to the Power Management Unit node
-> - #address-cells	  : should be 1
-> - #size-cells		  : should be 1
-> - ranges		  : must be present
+> You mention 7k in $subject, should you use that here as the youngest
+> compatible SoC generation?
 
-OK, will rewrite it this way.
+There isn't anything youngest or oldest between 7K and 8K, they both
+got released at the same time. They are really the same family of SoCs,
+the 7K having only one CP110, the 8K having two of them, which provides
+more I/Os.
 
->> +Each IP block of the Low Power Audio Subsystem should be specified
->> +as an optional sub-node. For "samsung,exynos5433-lpass" compatible
->> +this includes: UART, SLIMBUS, PCM, I2S, DMAC, Timers 0...4, WDT 0...1
->> +devices.
->> +
->> +Bindings of the sub-nodes are described in:
->> + Documentation/devicetree/bindings/serial/samsung_uart.txt
->> + Documentation/devicetree/bindings/sound/samsung-i2s.txt
->> + Documentation/devicetree/bindings/dma/arm-pl330.txt
-> 
-> Use relative path names:
-> 
-> ../serial/samsung_uart.txt
-> ../sound/samsung-i2s.txt
-> ../dma/arm-pl330.txt
+For several other IPs, we're using armada-8k as the compatible string:
 
-OK, actually I had it this way in one of the versions but somehow
-with full paths it appeared better to me.
+ * marvell,armada8k-pcie
+ * marvell,armada-8k-xhci
 
-> Missing example?
+(Yes you will already notice how consistent we are in the naming of the
+compatible string :-/).
 
-Yes, omitted deliberately as that appeared quite many more lines
-with fully specified subnodes.  Perhaps I will add it with omitted
-all properties of the subnodes but compatible.
-
-
- audio-subsystem {
-	compatible = "samsung,exynos5433-lpass";
-	reg = <0x11400000 0x100>, <0x11500000 0x08>;
-	samsung,pmu-syscon = <&pmu_system_controller>;
-	#address-cells = <1>;
-	#size-cells = <1>;
-	ranges;
-
-	adma: adma@11420000 {
-		compatible = "arm,pl330", "arm,primecell";
-		reg = <0x11420000 0x1000>;
-		interrupts = <0 73 0>;
-		clocks = <&cmu_aud CLK_ACLK_DMAC>;
-		clock-names = "apb_pclk";
-		#dma-cells = <1>;
-		#dma-channels = <8>;
-		#dma-requests = <32>;
-        };
-
-	i2s0: i2s0@11440000 {
-		compatible = "samsung,exynos7-i2s";
-		reg = <0x11440000 0x100>;
-		dmas = <&adma 0 &adma 2>;
-		dma-names = "tx", "rx";
-		interrupts = <0 70 0>;
-		clocks = <&cmu_aud CLK_PCLK_AUD_I2S>,
-			 <&cmu_aud CLK_SCLK_AUD_I2S>,
-			 <&cmu_aud CLK_SCLK_I2S_BCLK>;
-		clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
-		pinctrl-names = "default";
-		pinctrl-0 = <&i2s0_bus>;
-		status = "disabled";
-	};
-
-	serial_3: serial@11460000 {
-		compatible = "samsung,exynos5433-uart";
-		reg = <0x11460000 0x100>;
-		interrupts = <0 67 0>;
-		clocks = <&cmu_aud CLK_PCLK_AUD_UART>,
-			 <&cmu_aud CLK_SCLK_AUD_UART>;
-		clock-names = "uart", "clk_uart_baud0";
-		pinctrl-names = "default";
-		pinctrl-0 = <&uart_aud_bus>;
-		status = "disabled";
-	};
- };
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
