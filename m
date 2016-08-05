@@ -1,82 +1,78 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 10/11] soc: ti: knav_qmss_queue: use of_property_read_bool
-Date: Fri, 5 Aug 2016 13:47:25 +0100
-Message-ID: <c010a500-87ce-19ad-0109-f57eba3c6981@arm.com>
-References: <1470387411-15879-1-git-send-email-Julia.Lawall@lip6.fr>
- <1470387411-15879-11-git-send-email-Julia.Lawall@lip6.fr>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [RFC][PATCH 0/4] SRAM based reboot reason driver for HiKey
+Date: Fri, 5 Aug 2016 15:46:10 +0300
+Message-ID: <8107419f-ded4-6d0f-d2da-7e51bc3f418e@mentor.com>
+References: <1470265523-27557-1-git-send-email-john.stultz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470387411-15879-11-git-send-email-Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1470265523-27557-1-git-send-email-john.stultz@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>, lkml <linux-kernel@vger.kernel.org>
+Cc: Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>, Kees Cook <keescook@chromium.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Vishal Bhoj <vishal.bhoj@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Julia,
+Hi John,
 
-On 05/08/16 09:56, Julia Lawall wrote:
-> Use of_property_read_bool to check for the existence of a property.
+On 08/04/2016 02:05 AM, John Stultz wrote:
+> Now that Andy's reboot reason core driver has landed, I wanted
+> to resubmit a reworked version of my SRAM based reboot reason
+> driver.
+>
+> This allows the kernel to communicate to the bootloader what mode
+> it should reboot to using some reserved memory.
+>
+> Feedback would be very much appreciated!
 
-This caught my eye since Rob told me off for doing the same recently[1].
+in my opinion the taken approach is wrong, and I've already explained
+why and how to rework your driver to shrink the change, please see
+https://lkml.org/lkml/2016/1/27/133
 
-> The semantic patch that makes this change is as follows:
-> (http://coccinelle.lip6.fr/)
-> 
-> // <smpl>
-> @@
-> expression e1,e2;
-> statement S2,S1;
-> @@
-> -       if (of_get_property(e1,e2,NULL))
-> +       if (of_property_read_bool(e1,e2))
->         S1 else S2
-> // </smpl>
-> 
-> Signed-off-by: Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
-> 
-> ---
->  drivers/soc/ti/knav_qmss_queue.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soc/ti/knav_qmss_queue.c b/drivers/soc/ti/knav_qmss_queue.c
-> index b73e353..56b5d7c 100644
-> --- a/drivers/soc/ti/knav_qmss_queue.c
-> +++ b/drivers/soc/ti/knav_qmss_queue.c
-> @@ -1240,7 +1240,7 @@ static int knav_setup_queue_range(struct knav_device *kdev,
->  	if (of_get_property(node, "qalloc-by-id", NULL))
+In this case I think that a SRAM device node should just contain
+a plain description of partitions, compatible = "sram-reboot-mode" is
+clearly not a device on "SRAM bus", it is not a device at all, so
+please let's separate policy from mechanism
 
-According to the binding, "qalloc-by-id" _is_ a boolean property, so
-this one really does deserve to be of_property_read_bool()...
+Because my proposed alternative approach separates policy from
+mechanism, it for instanse allows to avoid overlappings on SRAM areas,
+and still other drivers may serve as consumers of partitions on SRAM.
 
->  		range->flags |= RANGE_RESERVED;
->  
-> -	if (of_get_property(node, "accumulator", NULL)) {
-> +	if (of_property_read_bool(node, "accumulator")) {
+Please add me to Cc list when you send the next version of the driver.
 
-...whereas "accumulator" must have a value, so this isn't technically
-appropriate. In general, most of these "if the property exists, read the
-property and do stuff" checks are probably a sign of code that could be
-simplified by refactoring the "do stuff" step to just specifically
-handle the "read the property" step returning -EINVAL when it's not present.
+With best wishes,
+Vladimir
 
-Robin.
-
-[1]:https://www.mail-archive.com/iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org/msg13375.html
-
->  		ret = knav_init_acc_range(kdev, node, range);
->  		if (ret < 0) {
->  			devm_kfree(dev, range);
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> thanks
+> -john
+>
+> Cc: Andy Yan <andy.yan@rock-chips.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Heiko Stübner <heiko@sntech.de>
+> Cc: Caesar Wang <wxt@rock-chips.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Guodong Xu <guodong.xu@linaro.org>
+> Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
+> Cc: Vishal Bhoj <vishal.bhoj@linaro.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Android Kernel Team <kernel-team@android.com>
+>
+> John Stultz (4):
+>   drivers: sram: Have sram driver probe children nodes
+>   dt-bindings: power: reset: Add document for sram-reboot-mode driver
+>   power: reset: Add sram-reboot-mode driver
+>   dts: hikey: Add hikey support for sram-reboot-mode
+>
+>  .../bindings/power/reset/sram-reboot-mode.txt      | 35 ++++++++
+>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     | 22 ++++-
+>  drivers/misc/sram.c                                |  3 +
+>  drivers/power/reset/Kconfig                        | 10 +++
+>  drivers/power/reset/Makefile                       |  1 +
+>  drivers/power/reset/sram-reboot-mode.c             | 95 ++++++++++++++++++++++
+>  6 files changed, 165 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/sram-reboot-mode.txt
+>  create mode 100644 drivers/power/reset/sram-reboot-mode.c
+>
