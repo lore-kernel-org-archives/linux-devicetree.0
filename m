@@ -1,42 +1,34 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 1/3] dt/bindings: arm-pl330: add description of arm,pl330-periph-burst
-Date: Fri,  5 Aug 2016 10:53:20 +0800
-Message-ID: <1470365602-32586-2-git-send-email-shawn.lin@rock-chips.com>
-References: <1470365602-32586-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470365602-32586-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: [PATCH v4 0/2] Add support for Allwinner A64 mmc controller
+Date: Fri,  5 Aug 2016 10:57:13 +0800
+Message-ID: <20160805025715.5306-1-icenowy@aosc.xyz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Ulf Hansson <ulf.hansson@linaro.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Michal Suchanek <hramrach@gmail.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the "arm,pl330-periph-burst" for arm-pl330 to
-support busrt mode.
+Allwinner A64 has a slightly modified version of the Allwinner MMC controller.
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+It do not have "output" or "sample" clock input, instead, it can calibrate the
+delay internally.
 
----
+This series of patch added the calibrate feature to the sunxi-mmc driver. It
+is based on works by Andre Przywara <andre.przywara@arm.com>, and now it
+depends on the patch set sent recently by Hans de Goede <hdegoede@redhat.com>,
+which disabled "output" and "sample" clock on A10/13.
+( http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/446187.html )
 
- Documentation/devicetree/bindings/dma/arm-pl330.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/dma/arm-pl330.txt b/Documentation/devicetree/bindings/dma/arm-pl330.txt
-index db7e226..262e97a 100644
---- a/Documentation/devicetree/bindings/dma/arm-pl330.txt
-+++ b/Documentation/devicetree/bindings/dma/arm-pl330.txt
-@@ -16,6 +16,7 @@ Optional properties:
-   - dma-channels: contains the total number of DMA channels supported by the DMAC
-   - dma-requests: contains the total number of DMA requests supported by the DMAC
-   - arm,pl330-broken-no-flushp: quirk for avoiding to execute DMAFLUSHP
-+  - arm,pl330-periph-burst: set peripheral dma request type as burst mode
- 
- Example:
- 
--- 
-2.3.7
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+As the clock and device tree patch for Allwinner A64 is not yet merged, the
+patch set contains no patch to enable it.
