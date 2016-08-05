@@ -1,61 +1,106 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] generic spidev devices must be registered
-Date: Fri, 5 Aug 2016 15:21:08 +0100
-Message-ID: <20160805142108.GZ10383@sirena.org.uk>
-References: <1470402714-10798-1-git-send-email-fabien.lahoudere@collabora.co.uk>
- <20160805134342.GD25152@leverpostej>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v3 13/15] dt/bindings: Add PSCI OS-Initiated PM Domains
+ bindings
+Date: Fri, 5 Aug 2016 08:44:20 -0600
+Message-ID: <20160805144420.GA18773@linaro.org>
+References: <1470351902-43103-1-git-send-email-lina.iyer@linaro.org>
+ <1470351902-43103-14-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="sT0SRK93LqpGW452"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160805134342.GD25152@leverpostej>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:SPI SUBSYSTEM" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470351902-43103-14-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, Device Tree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
++devicetree
 
---sT0SRK93LqpGW452
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Aug 05, 2016 at 02:43:43PM +0100, Mark Rutland wrote:
-> On Fri, Aug 05, 2016 at 03:11:53PM +0200, Fabien Lahoudere wrote:
-> > Adding spidev in the compatible list, let configure spidev from device tree
-> > instead of C source code.
-
-> I'm not keen on this.
-
-> It ties the hardware description to today's use-case, and leaves the DT
-> without information regarding the particuarl device. The binding is also
-> written in terms of the userspace interface, which is backwards.
-
-> So NAK to this as-is.
-
-Indeed.  Fabien, please see the *extensive* and repeated previous
-discussions of this topic.  Device tree is there to describe the
-hardware, not the software you currently happen to be using on your
-system.  Please also see the comments in the driver which explain why we
-require a compatible string which is descriptive of the hardware.
-
---sT0SRK93LqpGW452
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXpKDSAAoJECTWi3JdVIfQ6OIH/1/cbQhUpJBx5bGDOLQdoz2A
-A7JufH4XkyGqDbicXlX8XE6aBiCGtZSmMX7jSz4UDG3Zk9SkRSzmxrhqGC4ec5HZ
-tdyKwRpnZ+KunFf4m4V80ek26ZS11cYCTRpxZ1haQtpYiBJD2rT/9rn65N9cGA2m
-i1yONN3m/1FP+RWvNheVJ3PTi070fQIMXDOJHusHXqAOqOyfGvllIvXId//c+Zoa
-TcsI+M1KseybLzxU/UEiMQ95Fv6g/An2I0gJloBwr4+gm3XLhoiSaz14hUyUyV8v
-PWEhc8PqXXe/BdS7ppdsq+Jhk42geN0GVdax8Zpsjh47KEeLrfRIjTFdPzl5Pos=
-=Ep5f
------END PGP SIGNATURE-----
-
---sT0SRK93LqpGW452--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Aug 04 2016 at 17:06 -0600, Lina Iyer wrote:
+>Add bindings for defining a OS-Initiated based CPU PM domain.
+>
+>Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+>---
+> Documentation/devicetree/bindings/arm/psci.txt | 64 ++++++++++++++++++++++++++
+> 1 file changed, 64 insertions(+)
+>
+>diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
+>index a2c4f1d..e1b2926 100644
+>--- a/Documentation/devicetree/bindings/arm/psci.txt
+>+++ b/Documentation/devicetree/bindings/arm/psci.txt
+>@@ -105,7 +105,71 @@ Case 3: PSCI v0.2 and PSCI v0.1.
+> 		...
+> 	};
+>
+>+PSCI v1.0 onwards, supports OS-Initiated mode for powering off CPU domains
+>+from the firmware. Such PM domains for which the PSCI firmware driver acts
+>+as pseudo-controller, may also be specified in the DT along with the domain
+>+idle states.
+>+
+>+The domain definitions must follow the domain idle state specifications per
+>+[3].
+>+
+>+The domain idle states must be specified using the optional node -
+>+
+>+- domain-states
+>+
+>+The domain states themselves must be compatible with 'arm,idle-state' defined
+>+in [1]  and need to specify the arm,psci-suspend-param property for each idle
+>+state. More information on defining CPU PM domains is available in [4].
+>+
+>+Example: OS-Iniated PSCI based PM domains
+>+
+>+	cpus {
+>+		#address-cells = <1>;
+>+		#size-cells = <0>;
+>+
+>+		CPU0: cpu@0 {
+>+			device_type = "cpu";
+>+			compatible = "arm,cortex-a53", "arm,armv8";
+>+			reg = <0x0>;
+>+			enable-method = "psci";
+>+			power-domains = <&CPU_PD>;
+>+		};
+>+	};
+>+
+>+	psci {
+>+		compatible = "arm,psci-1.0";
+>+		method = "smc";
+>+
+>+		CPU_PD: cpu-pd@0 {
+>+			#power-domain-cells = <0>;
+>+			domain-idle-states = <&CLUSTER_RET>, <&CLUSTER_PWR_DWN>;
+>+		};
+>+
+>+		domain-states {
+>+			CLUSTER_RET: domain_ret {
+>+				compatible = "arm,idle-state";
+>+				arm,psci-suspend-param = <0x1000010>;
+>+				entry-latency-us = <500>;
+>+				exit-latency-us = <500>;
+>+				min-residency-us = <2000>;
+>+			};
+>+
+>+			CLUSTER_PWR_DWN: domain_gdhs {
+>+				compatible = "arm,idle-state";
+>+				arm,psci-suspend-param = <0x1000030>;
+>+				entry-latency-us = <2000>;
+>+				exit-latency-us = <2000>;
+>+				min-residency-us = <6000>;
+>+			};
+>+		};
+>+	};
+>+
+>+
+> [1] Kernel documentation - ARM idle states bindings
+>     Documentation/devicetree/bindings/arm/idle-states.txt
+> [2] Power State Coordination Interface (PSCI) specification
+>     http://infocenter.arm.com/help/topic/com.arm.doc.den0022c/DEN0022C_Power_State_Coordination_Interface.pdf
+>+[3]. PM Domains description
+>+    Documentation/devicetree/bindings/power/power_domain.txt
+>+[4]. CPU PM Domains description
+>+    Documentation/power/cpu_domains.txt
+>-- 
+>2.7.4
+>
