@@ -1,460 +1,370 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] input: touchscreen: Remove duplicate ft6236 driver
-Date: Fri, 5 Aug 2016 09:30:59 +0200
-Message-ID: <72537404-eb05-d6a4-e6f3-ad57afebb25e@redhat.com>
-References: <1470039362-3271-1-git-send-email-hdegoede@redhat.com>
- <1470039362-3271-2-git-send-email-hdegoede@redhat.com>
- <20160804152155.GB5504@dtor-ws>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH V4 3/4] drm/bridge: Add driver for GE B850v3 LVDS/DP++
+ Bridge
+Date: Fri, 5 Aug 2016 09:38:41 +0200
+Message-ID: <CAFqH_528QSgbVON8J5+L-2cC1Zz+bcSvwa95cyE+2UM7RhJFNw@mail.gmail.com>
+References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
+ <cover.1470346720.git.peter.senna@collabora.com>
+ <5e21e0a543b3f5dc2d2140aea3b8544ba13088f5.1470346720.git.peter.senna@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160804152155.GB5504@dtor-ws>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5e21e0a543b3f5dc2d2140aea3b8544ba13088f5.1470346720.git.peter.senna@collabora.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Senna Tschudin <peter.senna@collabora.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Peter Senna Tschudin <peter.senna@gmail.com>, linux@armlinux.org.uk, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, martin.donnelly@ge.com, shawnguo@kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Martyn Welch <martyn.welch@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 04-08-16 17:21, Dmitry Torokhov wrote:
-> On Mon, Aug 01, 2016 at 10:16:02AM +0200, Hans de Goede wrote:
->> The new(ish) ft6236 simply re-implements the M09 protocol of the
->> (much) older edt-ft5x06.c driver.
->>
->> This commit removes this duplicate driver and adds the i2c ids and
->> dt compatible string to the edt-ft5x06.c driver to keep compatibility.
->>
->> Cc: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
->> Cc: Noralf Trønnes <noralf-L59+Z2yzLorF2uMehF1BdA@public.gmane.org>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->
-> Applied, thank you.
-
-Thanks, unfortunately I just discovered I made a copy paste error in
-Noralf's address, (.or instead of .org) so he never saw any of my mails
-on this (fixed now).
-
-Noralf, if you've any hardware you used for testing the ft6236 driver
-can you test that this also works with the edt-ft5x06 driver please?
-
-Regards,
-
-Hans
-
-
-
->
->> ---
->>  drivers/input/touchscreen/Kconfig      |  13 --
->>  drivers/input/touchscreen/Makefile     |   1 -
->>  drivers/input/touchscreen/edt-ft5x06.c |   8 +
->>  drivers/input/touchscreen/ft6236.c     | 326 ---------------------------------
->>  4 files changed, 8 insertions(+), 340 deletions(-)
->>  delete mode 100644 drivers/input/touchscreen/ft6236.c
->>
->> diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
->> index 64e7501..198945d 100644
->> --- a/drivers/input/touchscreen/Kconfig
->> +++ b/drivers/input/touchscreen/Kconfig
->> @@ -305,19 +305,6 @@ config TOUCHSCREEN_EGALAX_SERIAL
->>  	  To compile this driver as a module, choose M here: the
->>  	  module will be called egalax_ts_serial.
->>
->> -config TOUCHSCREEN_FT6236
->> -	tristate "FT6236 I2C touchscreen"
->> -	depends on I2C
->> -	depends on GPIOLIB || COMPILE_TEST
->> -	help
->> -	  Say Y here to enable support for the I2C connected FT6x06 and
->> -	  FT6x36 family of capacitive touchscreen drivers.
->> -
->> -	  If unsure, say N.
->> -
->> -	  To compile this driver as a module, choose M here: the
->> -	  module will be called ft6236.
->> -
->>  config TOUCHSCREEN_FUJITSU
->>  	tristate "Fujitsu serial touchscreen"
->>  	select SERIO
->> diff --git a/drivers/input/touchscreen/Makefile b/drivers/input/touchscreen/Makefile
->> index a4b00d0..a144c4e 100644
->> --- a/drivers/input/touchscreen/Makefile
->> +++ b/drivers/input/touchscreen/Makefile
->> @@ -36,7 +36,6 @@ obj-$(CONFIG_TOUCHSCREEN_ELAN)		+= elants_i2c.o
->>  obj-$(CONFIG_TOUCHSCREEN_ELO)		+= elo.o
->>  obj-$(CONFIG_TOUCHSCREEN_EGALAX)	+= egalax_ts.o
->>  obj-$(CONFIG_TOUCHSCREEN_EGALAX_SERIAL)	+= egalax_ts_serial.o
->> -obj-$(CONFIG_TOUCHSCREEN_FT6236)	+= ft6236.o
->>  obj-$(CONFIG_TOUCHSCREEN_FUJITSU)	+= fujitsu_ts.o
->>  obj-$(CONFIG_TOUCHSCREEN_GOODIX)	+= goodix.o
->>  obj-$(CONFIG_TOUCHSCREEN_ILI210X)	+= ili210x.o
->> diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
->> index d19bf45..481d8ba 100644
->> --- a/drivers/input/touchscreen/edt-ft5x06.c
->> +++ b/drivers/input/touchscreen/edt-ft5x06.c
->> @@ -1071,9 +1071,15 @@ static const struct edt_i2c_chip_data edt_ft5506_data = {
->>  	.max_support_points = 10,
->>  };
->>
->> +static const struct edt_i2c_chip_data edt_ft6236_data = {
->> +	.max_support_points = 2,
->> +};
->> +
->>  static const struct i2c_device_id edt_ft5x06_ts_id[] = {
->>  	{ .name = "edt-ft5x06", .driver_data = (long)&edt_ft5x06_data },
->>  	{ .name = "edt-ft5506", .driver_data = (long)&edt_ft5506_data },
->> +	/* Note no edt- prefix for compatibility with the ft6236.c driver */
->> +	{ .name = "ft6236", .driver_data = (long)&edt_ft6236_data },
->>  	{ /* sentinel */ }
->>  };
->>  MODULE_DEVICE_TABLE(i2c, edt_ft5x06_ts_id);
->> @@ -1084,6 +1090,8 @@ static const struct of_device_id edt_ft5x06_of_match[] = {
->>  	{ .compatible = "edt,edt-ft5306", .data = &edt_ft5x06_data },
->>  	{ .compatible = "edt,edt-ft5406", .data = &edt_ft5x06_data },
->>  	{ .compatible = "edt,edt-ft5506", .data = &edt_ft5506_data },
->> +	/* Note focaltech vendor prefix for compatibility with ft6236.c */
->> +	{ .compatible = "focaltech,ft6236", .data = &edt_ft6236_data },
->>  	{ /* sentinel */ }
->>  };
->>  MODULE_DEVICE_TABLE(of, edt_ft5x06_of_match);
->> diff --git a/drivers/input/touchscreen/ft6236.c b/drivers/input/touchscreen/ft6236.c
->> deleted file mode 100644
->> index d240d2e..0000000
->> --- a/drivers/input/touchscreen/ft6236.c
->> +++ /dev/null
->> @@ -1,326 +0,0 @@
->> -/*
->> - * FocalTech FT6236 TouchScreen driver.
->> - *
->> - * Copyright (c) 2010  Focal tech Ltd.
->> - *
->> - * This software is licensed under the terms of the GNU General Public
->> - * License version 2, as published by the Free Software Foundation, and
->> - * may be copied, distributed, and modified under those terms.
->> - *
->> - * This program is distributed in the hope that it will be useful,
->> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> - * GNU General Public License for more details.
->> - */
->> -
->> -#include <linux/delay.h>
->> -#include <linux/gpio/consumer.h>
->> -#include <linux/i2c.h>
->> -#include <linux/input.h>
->> -#include <linux/input/mt.h>
->> -#include <linux/interrupt.h>
->> -#include <linux/module.h>
->> -#include <linux/property.h>
->> -
->> -#define FT6236_MAX_TOUCH_POINTS		2
->> -
->> -#define FT6236_REG_TH_GROUP		0x80
->> -#define FT6236_REG_PERIODACTIVE		0x88
->> -#define FT6236_REG_LIB_VER_H		0xa1
->> -#define FT6236_REG_LIB_VER_L		0xa2
->> -#define FT6236_REG_CIPHER		0xa3
->> -#define FT6236_REG_FIRMID		0xa6
->> -#define FT6236_REG_FOCALTECH_ID		0xa8
->> -#define FT6236_REG_RELEASE_CODE_ID	0xaf
->> -
->> -#define FT6236_EVENT_PRESS_DOWN		0
->> -#define FT6236_EVENT_LIFT_UP		1
->> -#define FT6236_EVENT_CONTACT		2
->> -#define FT6236_EVENT_NO_EVENT		3
->> -
->> -struct ft6236_data {
->> -	struct i2c_client *client;
->> -	struct input_dev *input;
->> -	struct gpio_desc *reset_gpio;
->> -	u32 max_x;
->> -	u32 max_y;
->> -	bool invert_x;
->> -	bool invert_y;
->> -	bool swap_xy;
->> -};
->> -
->> -/*
->> - * This struct is a touchpoint as stored in hardware.  Note that the id,
->> - * as well as the event, are stored in the upper nybble of the hi byte.
->> - */
->> -struct ft6236_touchpoint {
->> -	union {
->> -		u8 xhi;
->> -		u8 event;
->> -	};
->> -	u8 xlo;
->> -	union {
->> -		u8 yhi;
->> -		u8 id;
->> -	};
->> -	u8 ylo;
->> -	u8 weight;
->> -	u8 misc;
->> -} __packed;
->> -
->> -/* This packet represents the register map as read from offset 0 */
->> -struct ft6236_packet {
->> -	u8 dev_mode;
->> -	u8 gest_id;
->> -	u8 touches;
->> -	struct ft6236_touchpoint points[FT6236_MAX_TOUCH_POINTS];
->> -} __packed;
->> -
->> -static int ft6236_read(struct i2c_client *client, u8 reg, u8 len, void *data)
->> -{
->> -	int error;
->> -
->> -	error = i2c_smbus_read_i2c_block_data(client, reg, len, data);
->> -	if (error < 0)
->> -		return error;
->> -
->> -	if (error != len)
->> -		return -EIO;
->> -
->> -	return 0;
->> -}
->> -
->> -static irqreturn_t ft6236_interrupt(int irq, void *dev_id)
->> -{
->> -	struct ft6236_data *ft6236 = dev_id;
->> -	struct device *dev = &ft6236->client->dev;
->> -	struct input_dev *input = ft6236->input;
->> -	struct ft6236_packet buf;
->> -	u8 touches;
->> -	int i, error;
->> -
->> -	error = ft6236_read(ft6236->client, 0, sizeof(buf), &buf);
->> -	if (error) {
->> -		dev_err(dev, "read touchdata failed %d\n", error);
->> -		return IRQ_HANDLED;
->> -	}
->> -
->> -	touches = buf.touches & 0xf;
->> -	if (touches > FT6236_MAX_TOUCH_POINTS) {
->> -		dev_dbg(dev,
->> -			"%d touch points reported, only %d are supported\n",
->> -			touches, FT6236_MAX_TOUCH_POINTS);
->> -		touches = FT6236_MAX_TOUCH_POINTS;
->> -	}
->> -
->> -	for (i = 0; i < touches; i++) {
->> -		struct ft6236_touchpoint *point = &buf.points[i];
->> -		u16 x = ((point->xhi & 0xf) << 8) | buf.points[i].xlo;
->> -		u16 y = ((point->yhi & 0xf) << 8) | buf.points[i].ylo;
->> -		u8 event = point->event >> 6;
->> -		u8 id = point->id >> 4;
->> -		bool act = (event == FT6236_EVENT_PRESS_DOWN ||
->> -			    event == FT6236_EVENT_CONTACT);
->> -
->> -		input_mt_slot(input, id);
->> -		input_mt_report_slot_state(input, MT_TOOL_FINGER, act);
->> -		if (!act)
->> -			continue;
->> -
->> -		if (ft6236->invert_x)
->> -			x = ft6236->max_x - x;
->> -
->> -		if (ft6236->invert_y)
->> -			y = ft6236->max_y - y;
->> -
->> -		if (ft6236->swap_xy) {
->> -			input_report_abs(input, ABS_MT_POSITION_X, y);
->> -			input_report_abs(input, ABS_MT_POSITION_Y, x);
->> -		} else {
->> -			input_report_abs(input, ABS_MT_POSITION_X, x);
->> -			input_report_abs(input, ABS_MT_POSITION_Y, y);
->> -		}
->> -	}
->> -
->> -	input_mt_sync_frame(input);
->> -	input_sync(input);
->> -
->> -	return IRQ_HANDLED;
->> -}
->> -
->> -static u8 ft6236_debug_read_byte(struct ft6236_data *ft6236, u8 reg)
->> -{
->> -	struct i2c_client *client = ft6236->client;
->> -	u8 val = 0;
->> -	int error;
->> -
->> -	error = ft6236_read(client, reg, 1, &val);
->> -	if (error)
->> -		dev_dbg(&client->dev,
->> -			"error reading register 0x%02x: %d\n", reg, error);
->> -
->> -	return val;
->> -}
->> -
->> -static void ft6236_debug_info(struct ft6236_data *ft6236)
->> -{
->> -	struct device *dev = &ft6236->client->dev;
->> -
->> -	dev_dbg(dev, "Touch threshold is %d\n",
->> -		ft6236_debug_read_byte(ft6236, FT6236_REG_TH_GROUP) * 4);
->> -	dev_dbg(dev, "Report rate is %dHz\n",
->> -		ft6236_debug_read_byte(ft6236, FT6236_REG_PERIODACTIVE) * 10);
->> -	dev_dbg(dev, "Firmware library version 0x%02x%02x\n",
->> -		ft6236_debug_read_byte(ft6236, FT6236_REG_LIB_VER_H),
->> -		ft6236_debug_read_byte(ft6236, FT6236_REG_LIB_VER_L));
->> -	dev_dbg(dev, "Firmware version 0x%02x\n",
->> -		ft6236_debug_read_byte(ft6236, FT6236_REG_FIRMID));
->> -	dev_dbg(dev, "Chip vendor ID 0x%02x\n",
->> -		ft6236_debug_read_byte(ft6236, FT6236_REG_CIPHER));
->> -	dev_dbg(dev, "CTPM vendor ID 0x%02x\n",
->> -		ft6236_debug_read_byte(ft6236, FT6236_REG_FOCALTECH_ID));
->> -	dev_dbg(dev, "Release code version 0x%02x\n",
->> -		ft6236_debug_read_byte(ft6236, FT6236_REG_RELEASE_CODE_ID));
->> -}
->> -
->> -static void ft6236_reset(struct ft6236_data *ft6236)
->> -{
->> -	if (!ft6236->reset_gpio)
->> -		return;
->> -
->> -	gpiod_set_value_cansleep(ft6236->reset_gpio, 1);
->> -	usleep_range(5000, 20000);
->> -	gpiod_set_value_cansleep(ft6236->reset_gpio, 0);
->> -	msleep(300);
->> -}
->> -
->> -static int ft6236_probe(struct i2c_client *client,
->> -			const struct i2c_device_id *id)
->> -{
->> -	struct device *dev = &client->dev;
->> -	struct ft6236_data *ft6236;
->> -	struct input_dev *input;
->> -	u32 fuzz_x = 0, fuzz_y = 0;
->> -	u8 val;
->> -	int error;
->> -
->> -	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
->> -		return -ENXIO;
->> -
->> -	if (!client->irq) {
->> -		dev_err(dev, "irq is missing\n");
->> -		return -EINVAL;
->> -	}
->> -
->> -	ft6236 = devm_kzalloc(dev, sizeof(*ft6236), GFP_KERNEL);
->> -	if (!ft6236)
->> -		return -ENOMEM;
->> -
->> -	ft6236->client = client;
->> -	ft6236->reset_gpio = devm_gpiod_get_optional(dev, "reset",
->> -						     GPIOD_OUT_LOW);
->> -	if (IS_ERR(ft6236->reset_gpio)) {
->> -		error = PTR_ERR(ft6236->reset_gpio);
->> -		if (error != -EPROBE_DEFER)
->> -			dev_err(dev, "error getting reset gpio: %d\n", error);
->> -		return error;
->> -	}
->> -
->> -	ft6236_reset(ft6236);
->> -
->> -	/* verify that the controller is present */
->> -	error = ft6236_read(client, 0x00, 1, &val);
->> -	if (error) {
->> -		dev_err(dev, "failed to read from controller: %d\n", error);
->> -		return error;
->> -	}
->> -
->> -	ft6236_debug_info(ft6236);
->> -
->> -	input = devm_input_allocate_device(dev);
->> -	if (!input)
->> -		return -ENOMEM;
->> -
->> -	ft6236->input = input;
->> -	input->name = client->name;
->> -	input->id.bustype = BUS_I2C;
->> -
->> -	if (device_property_read_u32(dev, "touchscreen-size-x",
->> -				     &ft6236->max_x) ||
->> -	    device_property_read_u32(dev, "touchscreen-size-y",
->> -				     &ft6236->max_y)) {
->> -		dev_err(dev, "touchscreen-size-x and/or -y missing\n");
->> -		return -EINVAL;
->> -	}
->> -
->> -	device_property_read_u32(dev, "touchscreen-fuzz-x", &fuzz_x);
->> -	device_property_read_u32(dev, "touchscreen-fuzz-y", &fuzz_y);
->> -	ft6236->invert_x = device_property_read_bool(dev,
->> -						     "touchscreen-inverted-x");
->> -	ft6236->invert_y = device_property_read_bool(dev,
->> -						     "touchscreen-inverted-y");
->> -	ft6236->swap_xy = device_property_read_bool(dev,
->> -						    "touchscreen-swapped-x-y");
->> -
->> -	if (ft6236->swap_xy) {
->> -		input_set_abs_params(input, ABS_MT_POSITION_X, 0,
->> -				     ft6236->max_y, fuzz_y, 0);
->> -		input_set_abs_params(input, ABS_MT_POSITION_Y, 0,
->> -				     ft6236->max_x, fuzz_x, 0);
->> -	} else {
->> -		input_set_abs_params(input, ABS_MT_POSITION_X, 0,
->> -				     ft6236->max_x, fuzz_x, 0);
->> -		input_set_abs_params(input, ABS_MT_POSITION_Y, 0,
->> -				     ft6236->max_y, fuzz_y, 0);
->> -	}
->> -
->> -	error = input_mt_init_slots(input, FT6236_MAX_TOUCH_POINTS,
->> -				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
->> -	if (error)
->> -		return error;
->> -
->> -	error = devm_request_threaded_irq(dev, client->irq, NULL,
->> -					  ft6236_interrupt, IRQF_ONESHOT,
->> -					  client->name, ft6236);
->> -	if (error) {
->> -		dev_err(dev, "request irq %d failed: %d\n", client->irq, error);
->> -		return error;
->> -	}
->> -
->> -	error = input_register_device(input);
->> -	if (error) {
->> -		dev_err(dev, "failed to register input device: %d\n", error);
->> -		return error;
->> -	}
->> -
->> -	return 0;
->> -}
->> -
->> -#ifdef CONFIG_OF
->> -static const struct of_device_id ft6236_of_match[] = {
->> -	{ .compatible = "focaltech,ft6236", },
->> -	{ }
->> -};
->> -MODULE_DEVICE_TABLE(of, ft6236_of_match);
->> -#endif
->> -
->> -static const struct i2c_device_id ft6236_id[] = {
->> -	{ "ft6236", },
->> -	{ }
->> -};
->> -MODULE_DEVICE_TABLE(i2c, ft6236_id);
->> -
->> -static struct i2c_driver ft6236_driver = {
->> -	.driver = {
->> -		.name = "ft6236",
->> -		.of_match_table = of_match_ptr(ft6236_of_match),
->> -	},
->> -	.probe = ft6236_probe,
->> -	.id_table = ft6236_id,
->> -};
->> -module_i2c_driver(ft6236_driver);
->> -
->> -MODULE_AUTHOR("Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>");
->> -MODULE_AUTHOR("Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>");
->> -MODULE_DESCRIPTION("FocalTech FT6236 TouchScreen driver");
->> -MODULE_LICENSE("GPL v2");
->> --
->> 2.7.4
->>
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUGV0ZXIsCgpPbmx5IG9uZSBjb21tZW50IGJlbG93IGFuZCBvbmUgbml0cGljawoKMjAxNi0w
+OC0wNSAwOjM3IEdNVCswMjowMCBQZXRlciBTZW5uYSBUc2NodWRpbiA8cGV0ZXIuc2VubmFAY29s
+bGFib3JhLmNvbT46Cj4gQWRkIGEgZHJpdmVyIHRoYXQgY3JlYXRlIGEgZHJtX2JyaWRnZSBhbmQg
+YSBkcm1fY29ubmVjdG9yIGZvciB0aGUgTFZEUwo+IHRvIERQKysgZGlzcGxheSBicmlkZ2Ugb2Yg
+dGhlIEdFIEI4NTB2My4KPgo+IFRoZXJlIGFyZSB0d28gcGh5c2ljYWwgYnJpZGdlcyBvbiB0aGUg
+dmlkZW8gc2lnbmFsIHBpcGVsaW5lOiBhCj4gU1REUDQwMjgoTFZEUyB0byBEUCkgYW5kIGEgU1RE
+UDI2OTAoRFAgdG8gRFArKykuICBUaGUgaGFyZHdhcmUgYW5kCj4gZmlybXdhcmUgbWFkZSBpdCBj
+b21wbGljYXRlZCBmb3IgdGhpcyBiaW5kaW5nIHRvIGNvbXByaXNlIHR3byBkZXZpY2UKPiB0cmVl
+IG5vZGVzLCBhcyB0aGUgZGVzaWduIGdvYWwgaXMgdG8gY29uZmlndXJlIGJvdGggYnJpZGdlcyBi
+YXNlZCBvbgo+IHRoZSBMVkRTIHNpZ25hbCwgd2hpY2ggbGVhdmUgdGhlIGRyaXZlciBwb3dlcmxl
+c3MgdG8gY29udHJvbCB0aGUgdmlkZW8KPiBwcm9jZXNzaW5nIHBpcGVsaW5lLiBUaGUgdHdvIGJy
+aWRnZXMgYmVoYXZlcyBhcyBhIHNpbmdsZSBicmlkZ2UsIGFuZAo+IHRoZSBkcml2ZXIgaXMgb25s
+eSBuZWVkZWQgZm9yIHRlbGxpbmcgdGhlIGhvc3QgYWJvdXQgRURJRCAvIEhQRCwgYW5kCj4gZm9y
+IGdpdmluZyB0aGUgaG9zdCBwb3dlcnMgdG8gYWNrIGludGVycnVwdHMuIFRoZSB2aWRlbyBzaWdu
+YWwgcGlwZWxpbmUKPiBpcyBhcyBmb2xsb3dzOgo+Cj4gICBIb3N0IC0+IExWRFN8LS0oU1REUDQw
+MjgpLS18RFAgLT4gRFB8LS0oU1REUDI2OTApLS18RFArKyAtPiBWaWRlbyBvdXRwdXQKPgo+IENj
+OiBEYW5pZWwgVmV0dGVyIDxkYW5pZWwudmV0dGVyQGZmd2xsLmNoPgo+IENjOiBFbnJpYyBCYWxs
+ZXRibyBpIFNlcnJhIDxlbnJpYy5iYWxsZXRib0Bjb2xsYWJvcmEuY29tPgo+IENjOiBQaGlsaXBw
+IFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPgo+IENjOiBSb2IgSGVycmluZyA8cm9iaEBr
+ZXJuZWwub3JnPgo+IENjOiBGYWJpbyBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+Cj4g
+Q0M6IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KPiBDQzogVGhpZXJyeSBSZWRpbmcg
+PHRyZWRpbmdAbnZpZGlhLmNvbT4KPiBDQzogVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5n
+QGdtYWlsLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBTZW5uYSBUc2NodWRpbiA8cGV0ZXIu
+c2VubmFAY29sbGFib3JhLmNvbT4KPiAtLS0KPiBDaGFuZ2VzIGZyb20gVjM6Cj4gIC0gMy80IGlu
+c3RlYWQgb2YgNC81Cj4gIC0gVGVzdGVkIG9uIG5leHQtMjAxNjA4MDQKPgo+IENoYW5nZXMgZnJv
+bSBWMjoKPiAgLSBNYWRlIGl0IGF0b21pYyB0byBiZSBhcHBsaWVkIG9uIG5leHQtMjAxNjA3Mjkg
+b24gdG9wIG9mIExpdSBZaW5nIGNoYW5nZXMKPiAgICB0aGF0IG1hZGUgaW14LWxkYiBhdG9taWMK
+Pgo+IENoYW5nZXMgZnJvbSBWMToKPiAgLSBOZXcgY29tbWl0IG1lc3NhZ2UKPiAgLSBSZW1vdmVk
+IDMgZW1wdHkgZW50cnkgcG9pbnRzCj4gIC0gUmVtb3ZlZCBtZW1vcnkgbGVhayBmcm9tIGdlX2I4
+NTB2M19sdmRzX2RwX2dldF9tb2RlcygpCj4gIC0gQWRkZWQgYSBsb2NrIGZvciBtb2RlIHNldHRp
+bmcKPiAgLSBSZW1vdmVkIGEgZmV3IGJsYW5rIGxpbmVzCj4gIC0gQ2hhbmdlZCB0aGUgb3JkZXIg
+YXQgTWFrZWZpbGUgYW5kIEtjb25maWcKPgo+ICBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAgIDggKwo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcg
+ICAgICAgICAgICAgfCAgMTEgKwo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAg
+ICAgICAgICAgfCAgIDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2dlX2I4NTB2M19sdmRz
+X2RwLmMgfCAzOTcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgNCBmaWxlcyBjaGFu
+Z2VkLCA0MTcgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL2JyaWRnZS9nZV9iODUwdjNfbHZkc19kcC5jCj4KPiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5F
+UlMgYi9NQUlOVEFJTkVSUwo+IGluZGV4IGE1YjY1NjkuLmY1MTEyM2MgMTAwNjQ0Cj4gLS0tIGEv
+TUFJTlRBSU5FUlMKPiArKysgYi9NQUlOVEFJTkVSUwo+IEBAIC01MTQyLDYgKzUxNDIsMTQgQEAg
+VzogICAgICAgaHR0cHM6Ly9saW51eHR2Lm9yZwo+ICBTOiAgICAgTWFpbnRhaW5lZAo+ICBGOiAg
+ICAgZHJpdmVycy9tZWRpYS9yYWRpby9yYWRpby1nZW10ZWsqCj4KPiArR0VORVJBTCBFTEVDVFJJ
+QyBCODUwVjMgTFZEUy9EUCsrIEJSSURHRQo+ICtNOiAgICAgUGV0ZXIgU2VubmEgVHNjaHVkaW4g
+PHBldGVyLnNlbm5hQGNvbGxhYm9yYS5jb20+Cj4gK006ICAgICBNYXJ0aW4gRG9ubmVsbHkgPG1h
+cnRpbi5kb25uZWxseUBnZS5jb20+Cj4gK006ICAgICBNYXJ0eW4gV2VsY2ggPG1hcnR5bi53ZWxj
+aEBjb2xsYWJvcmEuY28udWs+Cj4gK1M6ICAgICBNYWludGFpbmVkCj4gK0Y6ICAgICBkcml2ZXJz
+L2dwdS9kcm0vYnJpZGdlL2dlX2I4NTB2M19kcDIuYwo+ICtGOiAgICAgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2dlL2I4NTB2M19kcDJfYnJpZGdlLnR4dAo+ICsKPiAgR0VORVJJ
+QyBHUElPIEkyQyBEUklWRVIKPiAgTTogICAgIEhhYXZhcmQgU2tpbm5lbW9lbiA8aHNraW5uZW1v
+ZW5AZ21haWwuY29tPgo+ICBTOiAgICAgU3VwcG9ydGVkCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9icmlkZ2UvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZwo+
+IGluZGV4IGI1OTBlNjcuLmI0YjcwZmIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2Jy
+aWRnZS9LY29uZmlnCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnCj4gQEAg
+LTMyLDYgKzMyLDE3IEBAIGNvbmZpZyBEUk1fRFdfSERNSV9BSEJfQVVESU8KPiAgICAgICAgICAg
+RGVzaWdud2FyZSBIRE1JIGJsb2NrLiAgVGhpcyBpcyB1c2VkIGluIGNvbmp1bmN0aW9uIHdpdGgK
+PiAgICAgICAgICAgdGhlIGkuTVg2IEhETUkgZHJpdmVyLgo+Cj4gK2NvbmZpZyBEUk1fR0VfQjg1
+MFYzX0xWRFNfRFAKPiArICAgICAgIHRyaXN0YXRlICJHRSBCODUwdjMgTFZEUyB0byBEUCsrIGRp
+c3BsYXkgYnJpZGdlIgo+ICsgICAgICAgZGVwZW5kcyBvbiBPRgo+ICsgICAgICAgc2VsZWN0IERS
+TV9LTVNfSEVMUEVSCj4gKyAgICAgICBzZWxlY3QgRFJNX1BBTkVMCj4gKyAgICAgICAtLS1oZWxw
+LS0tCj4gKyAgICAgICAgICBUaGlzIGlzIGEgZHJpdmVyIGZvciB0aGUgZGlzcGxheSBicmlkZ2Ug
+b2YKPiArICAgICAgICAgIEdFIEI4NTB2MyB0aGF0IGNvbnZlcnQgZHVhbCBjaGFubmVsIExWRFMK
+PiArICAgICAgICAgIHRvIERQKysuIFRoaXMgaXMgdXNlZCB3aXRoIHRoZSBpLk1YNiBpbXgtbGRi
+Cj4gKyAgICAgICAgICBkcml2ZXIuCj4gKwo+ICBjb25maWcgRFJNX05YUF9QVE4zNDYwCj4gICAg
+ICAgICB0cmlzdGF0ZSAiTlhQIFBUTjM0NjAgRFAvTFZEUyBicmlkZ2UiCj4gICAgICAgICBkZXBl
+bmRzIG9uIE9GCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUg
+Yi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlCj4gaW5kZXggZWZkYjA3ZS4uYjk2MDZm
+MyAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlCj4gKysrIGIv
+ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZQo+IEBAIC0zLDYgKzMsNyBAQCBjY2ZsYWdz
+LXkgOj0gLUlpbmNsdWRlL2RybQo+ICBvYmotJChDT05GSUdfRFJNX0FOQUxPR0lYX0FOWDc4WFgp
+ICs9IGFuYWxvZ2l4LWFueDc4eHgubwo+ICBvYmotJChDT05GSUdfRFJNX0RXX0hETUkpICs9IGR3
+LWhkbWkubwo+ICBvYmotJChDT05GSUdfRFJNX0RXX0hETUlfQUhCX0FVRElPKSArPSBkdy1oZG1p
+LWFoYi1hdWRpby5vCj4gK29iai0kKENPTkZJR19EUk1fR0VfQjg1MFYzX0xWRFNfRFApICs9IGdl
+X2I4NTB2M19sdmRzX2RwLm8KPiAgb2JqLSQoQ09ORklHX0RSTV9OWFBfUFROMzQ2MCkgKz0gbnhw
+LXB0bjM0NjAubwo+ICBvYmotJChDT05GSUdfRFJNX1BBUkFERV9QUzg2MjIpICs9IHBhcmFkZS1w
+czg2MjIubwo+ICBvYmotJChDT05GSUdfRFJNX1NJSTkwMlgpICs9IHNpaTkwMngubwo+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2dlX2I4NTB2M19sdmRzX2RwLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL2dlX2I4NTB2M19sdmRzX2RwLmMKPiBuZXcgZmlsZSBtb2RlIDEw
+MDY0NAo+IGluZGV4IDAwMDAwMDAuLmVlZThlYWMKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvZHJp
+dmVycy9ncHUvZHJtL2JyaWRnZS9nZV9iODUwdjNfbHZkc19kcC5jCj4gQEAgLTAsMCArMSwzOTcg
+QEAKPiArLyoKPiArICogRHJpdmVyIGZvciBHRSBCODUwdjMgRFAgZGlzcGxheSBicmlkZ2UKPiAr
+Cj4gKyAqIENvcHlyaWdodCAoYykgMjAxNiwgQ29sbGFib3JhIEx0ZC4KPiArICogQ29weXJpZ2h0
+IChjKSAyMDE2LCBHZW5lcmFsIEVsZWN0cmljIENvbXBhbnkKPiArCj4gKyAqIFRoaXMgcHJvZ3Jh
+bSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5
+IGl0Cj4gKyAqIHVuZGVyIHRoZSB0ZXJtcyBhbmQgY29uZGl0aW9ucyBvZiB0aGUgR05VIEdlbmVy
+YWwgUHVibGljIExpY2Vuc2UsCj4gKyAqIHZlcnNpb24gMiwgYXMgcHVibGlzaGVkIGJ5IHRoZSBG
+cmVlIFNvZnR3YXJlIEZvdW5kYXRpb24uCj4gKwo+ICsgKiBUaGlzIHByb2dyYW0gaXMgZGlzdHJp
+YnV0ZWQgaW4gdGhlIGhvcGUgaXQgd2lsbCBiZSB1c2VmdWwsIGJ1dCBXSVRIT1VUCj4gKyAqIEFO
+WSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mIE1FUkNIQU5U
+QUJJTElUWSBvcgo+ICsgKiBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0
+aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yCj4gKyAqIG1vcmUgZGV0YWlscy4KPiAr
+Cj4gKyAqIFlvdSBzaG91bGQgaGF2ZSByZWNlaXZlZCBhIGNvcHkgb2YgdGhlIEdOVSBHZW5lcmFs
+IFB1YmxpYyBMaWNlbnNlCj4gKyAqIGFsb25nIHdpdGggdGhpcyBwcm9ncmFtLiAgSWYgbm90LCBz
+ZWUgPGh0dHA6Ly93d3cuZ251Lm9yZy9saWNlbnNlcy8+Lgo+ICsKPiArICogVGhpcyBkcml2ZXIg
+Y3JlYXRlcyBhIGRybV9icmlkZ2UgYW5kIGEgZHJtX2Nvbm5lY3RvciBmb3IgdGhlIExWRFMgdG8g
+RFArKwo+ICsgKiBkaXNwbGF5IGJyaWRnZSBvZiB0aGUgR0UgQjg1MHYzLiBUaGVyZSBhcmUgdHdv
+IHBoeXNpY2FsIGJyaWRnZXMgb24gdGhlIHZpZGVvCj4gKyAqIHNpZ25hbCBwaXBlbGluZTogYSBT
+VERQNDAyOChMVkRTIHRvIERQKSBhbmQgYSBTVERQMjY5MChEUCB0byBEUCsrKS4gSG93ZXZlcgo+
+ICsgKiB0aGUgcGh5c2ljYWwgYnJpZGdlcyBhcmUgYXV0b21hdGljYWxseSBjb25maWd1cmVkIGJ5
+IHRoZSBpbnB1dCB2aWRlbyBzaWduYWwsCj4gKyAqIGFuZCB0aGUgZHJpdmVyIGhhcyBubyBhY2Nl
+c3MgdG8gdGhlIHZpZGVvIHByb2Nlc3NpbmcgcGlwZWxpbmUuIFRoZSBkcml2ZXIgaXMKPiArICog
+b25seSBuZWVkZWQgdG8gcmVhZCBFRElEIGZyb20gdGhlIFNURFAyNjkwIGFuZCB0byBoYW5kbGUg
+SFBEIGV2ZW50cyBmcm9tIHRoZQo+ICsgKiBTVERQNDAyOC4gVGhlIGRyaXZlciBjb21tdW5pY2F0
+ZXMgd2l0aCBib3RoIGJyaWRnZXMgb3ZlciBpMmMuIFRoZSB2aWRlbwo+ICsgKiBzaWduYWwgcGlw
+ZWxpbmUgaXMgYXMgZm9sbG93czoKPiArICoKPiArICogICBIb3N0IC0+IExWRFN8LS0oU1REUDQw
+MjgpLS18RFAgLT4gRFB8LS0oU1REUDI2OTApLS18RFArKyAtPiBWaWRlbyBvdXRwdXQKPiArICoK
+PiArICovCj4gKwo+ICsjaW5jbHVkZSA8bGludXgvZ3Bpby5oPgo+ICsjaW5jbHVkZSA8bGludXgv
+aTJjLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPiArI2luY2x1ZGUgPGxpbnV4L29m
+Lmg+Cj4gKyNpbmNsdWRlIDxkcm0vZHJtX2F0b21pYy5oPgo+ICsjaW5jbHVkZSA8ZHJtL2RybV9h
+dG9taWNfaGVscGVyLmg+Cj4gKyNpbmNsdWRlIDxkcm0vZHJtX2NydGNfaGVscGVyLmg+Cj4gKyNp
+bmNsdWRlIDxkcm0vZHJtX2VkaWQuaD4KPiArI2luY2x1ZGUgPGRybS9kcm1QLmg+Cj4gKwo+ICsv
+Kgo+ICsgKiAyMjBNaHogaXMgYSBsaW1pdGF0aW9uIG9mIHRoZSBob3N0LCBhcyB0aGUgYnJpZGdl
+IGlzIGNhcGFibGUgb2YgdXAgdG8KPiArICogMzMwTWh6LiBTZWUgc2VjdGlvbiA5LjIuMS4yLjQg
+b2YgdGhlIGkuTVggNkR1YWwvNlF1YWQgQXBwbGljYXRpb25zCj4gKyAqIFByb2Nlc3NvciBSZWZl
+cmVuY2UgTWFudWFsIGZvciBtb3JlIGluZm9ybWF0aW9uIGFib3V0IHRoZSAyMjBNaHogbGltaXQu
+Cj4gKyAqIFRoZSBpbXgtbGRiIGRyaXZlciB3aWxsIHdhcm4gYWJvdXQgY2xvY2tzIG92ZXIgMTcw
+TWh6LCBidXQgaXQgc2VlbSB0byB3b3JrCj4gKyAqIGZpbmUuCj4gKyAqLwo+ICsjZGVmaW5lIE1B
+WF9QSVhFTF9DTE9DSyAyMjAwMDAKPiArCj4gKyNkZWZpbmUgRURJRF9FWFRfQkxPQ0tfQ05UIDB4
+N0UKPiArCj4gKyNkZWZpbmUgU1REUDQwMjhfSVJRX09VVF9DT05GX1JFRyAweDAyCj4gKyNkZWZp
+bmUgU1REUDQwMjhfRFBUWF9JUlFfRU5fUkVHIDB4M0MKPiArI2RlZmluZSBTVERQNDAyOF9EUFRY
+X0lSUV9TVFNfUkVHIDB4M0QKPiArI2RlZmluZSBTVERQNDAyOF9EUFRYX1NUU19SRUcgMHgzRQo+
+ICsKPiArI2RlZmluZSBTVERQNDAyOF9EUFRYX0RQX0lSUV9FTiAweDEwMDAKPiArCj4gKyNkZWZp
+bmUgU1REUDQwMjhfRFBUWF9IT1RQTFVHX0lSUV9FTiAweDA0MDAKPiArI2RlZmluZSBTVERQNDAy
+OF9EUFRYX0xJTktfQ0hfSVJRX0VOIDB4MjAwMAo+ICsjZGVmaW5lIFNURFA0MDI4X0RQVFhfSVJR
+X0NPTkZJRyBcCj4gKyAgICAgICAgICAgICAgIChTVERQNDAyOF9EUFRYX0xJTktfQ0hfSVJRX0VO
+IHwgU1REUDQwMjhfRFBUWF9IT1RQTFVHX0lSUV9FTikKPiArCj4gKyNkZWZpbmUgU1REUDQwMjhf
+RFBUWF9IT1RQTFVHX1NUUyAweDAyMDAKPiArI2RlZmluZSBTVERQNDAyOF9EUFRYX0xJTktfU1RT
+IDB4MTAwMAo+ICsjZGVmaW5lIFNURFA0MDI4X0NPTl9TVEFURV9DT05ORUNURUQgXAo+ICsgICAg
+ICAgICAgICAgICAoU1REUDQwMjhfRFBUWF9IT1RQTFVHX1NUUyB8IFNURFA0MDI4X0RQVFhfTElO
+S19TVFMpCj4gKwo+ICsjZGVmaW5lIFNURFA0MDI4X0RQVFhfSE9UUExVR19DSF9TVFMgMHgwNDAw
+Cj4gKyNkZWZpbmUgU1REUDQwMjhfRFBUWF9MSU5LX0NIX1NUUyAweDIwMDAKPiArI2RlZmluZSBT
+VERQNDAyOF9EUFRYX0lSUV9DTEVBUiBcCj4gKyAgICAgICAgICAgICAgIChTVERQNDAyOF9EUFRY
+X0xJTktfQ0hfU1RTIHwgU1REUDQwMjhfRFBUWF9IT1RQTFVHX0NIX1NUUykKPiArCj4gK3N0cnVj
+dCBnZV9iODUwdjNfbHZkc19kcCB7Cj4gKyAgICAgICBzdHJ1Y3QgZHJtX2Nvbm5lY3RvciBjb25u
+ZWN0b3I7Cj4gKyAgICAgICBzdHJ1Y3QgZHJtX2JyaWRnZSBicmlkZ2U7Cj4gKyAgICAgICBzdHJ1
+Y3QgaTJjX2NsaWVudCAqZ2VfYjg1MHYzX2x2ZHNfZHBfaTJjOwo+ICsgICAgICAgc3RydWN0IGky
+Y19jbGllbnQgKmVkaWRfaTJjOwo+ICsgICAgICAgc3RydWN0IGVkaWQgKmVkaWQ7Cj4gKyAgICAg
+ICBzdHJ1Y3QgbXV0ZXggbG9jazsKPiArfTsKPiArCj4gK3N0YXRpYyBpbmxpbmUgc3RydWN0IGdl
+X2I4NTB2M19sdmRzX2RwICoKPiArICAgICAgICAgICAgICAgYnJpZGdlX3RvX2dlX2I4NTB2M19s
+dmRzX2RwKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpCj4gK3sKPiArICAgICAgIHJldHVybiBj
+b250YWluZXJfb2YoYnJpZGdlLCBzdHJ1Y3QgZ2VfYjg1MHYzX2x2ZHNfZHAsIGJyaWRnZSk7Cj4g
+K30KPiArCj4gK3N0YXRpYyBpbmxpbmUgc3RydWN0IGdlX2I4NTB2M19sdmRzX2RwICoKPiArICAg
+ICAgICAgICAgICAgY29ubmVjdG9yX3RvX2dlX2I4NTB2M19sdmRzX2RwKHN0cnVjdCBkcm1fY29u
+bmVjdG9yICpjb25uZWN0b3IpCj4gK3sKPiArICAgICAgIHJldHVybiBjb250YWluZXJfb2YoY29u
+bmVjdG9yLCBzdHJ1Y3QgZ2VfYjg1MHYzX2x2ZHNfZHAsIGNvbm5lY3Rvcik7Cj4gK30KPiArCj4g
+K3U4ICpzdGRwMjY5MF9nZXRfZWRpZChzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50KQo+ICt7Cj4g
+KyAgICAgICBzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmFkYXB0ZXIgPSBjbGllbnQtPmFkYXB0ZXI7Cj4g
+KyAgICAgICB1bnNpZ25lZCBjaGFyIHN0YXJ0ID0gMHgwMDsKPiArICAgICAgIHVuc2lnbmVkIGlu
+dCB0b3RhbF9zaXplOwo+ICsgICAgICAgdTggKmJsb2NrID0ga21hbGxvYyhFRElEX0xFTkdUSCwg
+R0ZQX0tFUk5FTCk7Cj4gKwo+ICsgICAgICAgc3RydWN0IGkyY19tc2cgbXNnc1tdID0gewo+ICsg
+ICAgICAgICAgICAgICB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgLmFkZHIgICA9IGNsaWVu
+dC0+YWRkciwKPiArICAgICAgICAgICAgICAgICAgICAgICAuZmxhZ3MgID0gMCwKPiArICAgICAg
+ICAgICAgICAgICAgICAgICAubGVuICAgID0gMSwKPiArICAgICAgICAgICAgICAgICAgICAgICAu
+YnVmICAgID0gJnN0YXJ0LAo+ICsgICAgICAgICAgICAgICB9LCB7Cj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgLmFkZHIgICA9IGNsaWVudC0+YWRkciwKPiArICAgICAgICAgICAgICAgICAgICAg
+ICAuZmxhZ3MgID0gSTJDX01fUkQsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgLmxlbiAgICA9
+IEVESURfTEVOR1RILAo+ICsgICAgICAgICAgICAgICAgICAgICAgIC5idWYgICAgPSBibG9jaywK
+PiArICAgICAgICAgICAgICAgfQo+ICsgICAgICAgfTsKPiArCj4gKyAgICAgICBpZiAoIWJsb2Nr
+KQo+ICsgICAgICAgICAgICAgICByZXR1cm4gTlVMTDsKPiArCj4gKyAgICAgICBpZiAoaTJjX3Ry
+YW5zZmVyKGFkYXB0ZXIsIG1zZ3MsIDIpICE9IDIpIHsKPiArICAgICAgICAgICAgICAgRFJNX0VS
+Uk9SKCJVbmFibGUgdG8gcmVhZCBFRElELlxuIik7Cj4gKyAgICAgICAgICAgICAgIGdvdG8gZXJy
+Owo+ICsgICAgICAgfQo+ICsKPiArICAgICAgIGlmICghZHJtX2VkaWRfYmxvY2tfdmFsaWQoYmxv
+Y2ssIDAsIGZhbHNlLCBOVUxMKSkgewo+ICsgICAgICAgICAgICAgICBEUk1fRVJST1IoIkludmFs
+aWQgRURJRCBibG9ja1xuIik7Cj4gKyAgICAgICAgICAgICAgIGdvdG8gZXJyOwo+ICsgICAgICAg
+fQo+ICsKPiArICAgICAgIHRvdGFsX3NpemUgPSAoYmxvY2tbRURJRF9FWFRfQkxPQ0tfQ05UXSAr
+IDEpICogRURJRF9MRU5HVEg7Cj4gKyAgICAgICBpZiAodG90YWxfc2l6ZSA+IEVESURfTEVOR1RI
+KSB7Cj4gKyAgICAgICAgICAgICAgIGtmcmVlKGJsb2NrKTsKPiArICAgICAgICAgICAgICAgYmxv
+Y2sgPSBrbWFsbG9jKHRvdGFsX3NpemUsIEdGUF9LRVJORUwpOwo+ICsgICAgICAgICAgICAgICBp
+ZiAoIWJsb2NrKQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBOVUxMOwo+ICsKPiAr
+ICAgICAgICAgICAgICAgLyogWWVzLCByZWFkIHRoZSBlbnRpcmUgYnVmZmVyLCBhbmQgZG8gbm90
+IHNraXAgdGhlIGZpcnN0Cj4gKyAgICAgICAgICAgICAgICAqIEVESURfTEVOR1RIIGJ5dGVzLgo+
+ICsgICAgICAgICAgICAgICAgKi8KPiArICAgICAgICAgICAgICAgc3RhcnQgPSAweDAwOwo+ICsg
+ICAgICAgICAgICAgICBtc2dzWzFdLmxlbiA9IHRvdGFsX3NpemU7Cj4gKyAgICAgICAgICAgICAg
+IG1zZ3NbMV0uYnVmID0gYmxvY2s7Cj4gKwo+ICsgICAgICAgICAgICAgICBpZiAoaTJjX3RyYW5z
+ZmVyKGFkYXB0ZXIsIG1zZ3MsIDIpICE9IDIpIHsKPiArICAgICAgICAgICAgICAgICAgICAgICBE
+Uk1fRVJST1IoIlVuYWJsZSB0byByZWFkIEVESUQgZXh0ZW5zaW9uIGJsb2Nrcy5cbiIpOwo+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIGdvdG8gZXJyOwo+ICsgICAgICAgICAgICAgICB9Cj4gKyAg
+ICAgICB9Cj4gKwo+ICsgICAgICAgcmV0dXJuIGJsb2NrOwo+ICsKPiArZXJyOgo+ICsgICAgICAg
+a2ZyZWUoYmxvY2spOwo+ICsgICAgICAgcmV0dXJuIE5VTEw7Cj4gK30KPiArCj4gK3N0YXRpYyBp
+bnQgZ2VfYjg1MHYzX2x2ZHNfZHBfZ2V0X21vZGVzKHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25u
+ZWN0b3IpCj4gK3sKPiArICAgICAgIHN0cnVjdCBnZV9iODUwdjNfbHZkc19kcCAqcHRuX2JyaWRn
+ZTsKPiArICAgICAgIHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQ7Cj4gKyAgICAgICBpbnQgbnVt
+X21vZGVzID0gMDsKPiArCj4gKyAgICAgICBwdG5fYnJpZGdlID0gY29ubmVjdG9yX3RvX2dlX2I4
+NTB2M19sdmRzX2RwKGNvbm5lY3Rvcik7Cj4gKyAgICAgICBjbGllbnQgPSBwdG5fYnJpZGdlLT5l
+ZGlkX2kyYzsKPiArCj4gKyAgICAgICBtdXRleF9sb2NrKCZwdG5fYnJpZGdlLT5sb2NrKTsKPiAr
+Cj4gKyAgICAgICBrZnJlZShwdG5fYnJpZGdlLT5lZGlkKTsKPiArICAgICAgIHB0bl9icmlkZ2Ut
+PmVkaWQgPSAoc3RydWN0IGVkaWQgKikgc3RkcDI2OTBfZ2V0X2VkaWQoY2xpZW50KTsKPiArCj4g
+KyAgICAgICBpZiAocHRuX2JyaWRnZS0+ZWRpZCkgewo+ICsgICAgICAgICAgICAgICBkcm1fbW9k
+ZV9jb25uZWN0b3JfdXBkYXRlX2VkaWRfcHJvcGVydHkoY29ubmVjdG9yLAo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgcHRuX2JyaWRnZS0+ZWRpZCk7Cj4gKyAgICAgICAgICAgICAg
+IG51bV9tb2RlcyA9IGRybV9hZGRfZWRpZF9tb2Rlcyhjb25uZWN0b3IsIHB0bl9icmlkZ2UtPmVk
+aWQpOwo+ICsgICAgICAgfQo+ICsKPiArICAgICAgIG11dGV4X3VubG9jaygmcHRuX2JyaWRnZS0+
+bG9jayk7Cj4gKwo+ICsgICAgICAgcmV0dXJuIG51bV9tb2RlczsKPiArfQo+ICsKPiArCj4gK3N0
+YXRpYyBlbnVtIGRybV9tb2RlX3N0YXR1cyBnZV9iODUwdjNfbHZkc19kcF9tb2RlX3ZhbGlkKAo+
+ICsgICAgICAgICAgICAgICBzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLCBzdHJ1Y3Qg
+ZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSkKPiArewo+ICsgICAgICAgaWYgKG1vZGUtPmNsb2NrID4g
+TUFYX1BJWEVMX0NMT0NLKSB7Cj4gKyAgICAgICAgICAgICAgIERSTV9JTkZPKCJUaGUgcGl4ZWwg
+Y2xvY2sgZm9yIHRoZSBtb2RlICVzIGlzIHRvbyBoaWdoLCBhbmQgbm90IHN1cHBvcnRlZC4iLAo+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbW9kZS0+bmFtZSk7Cj4gKyAgICAgICAg
+ICAgICAgIHJldHVybiBNT0RFX0NMT0NLX0hJR0g7Cj4gKyAgICAgICB9Cj4gKwo+ICsgICAgICAg
+cmV0dXJuIE1PREVfT0s7Cj4gK30KPiArCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QKPiArZHJtX2Nv
+bm5lY3Rvcl9oZWxwZXJfZnVuY3MgZ2VfYjg1MHYzX2x2ZHNfZHBfY29ubmVjdG9yX2hlbHBlcl9m
+dW5jcyA9IHsKPiArICAgICAgIC5nZXRfbW9kZXMgPSBnZV9iODUwdjNfbHZkc19kcF9nZXRfbW9k
+ZXMsCj4gKyAgICAgICAubW9kZV92YWxpZCA9IGdlX2I4NTB2M19sdmRzX2RwX21vZGVfdmFsaWQs
+Cj4gK307Cj4gKwo+ICtzdGF0aWMgZW51bSBkcm1fY29ubmVjdG9yX3N0YXR1cyBnZV9iODUwdjNf
+bHZkc19kcF9kZXRlY3QoCj4gKyAgICAgICAgICAgICAgIHN0cnVjdCBkcm1fY29ubmVjdG9yICpj
+b25uZWN0b3IsIGJvb2wgZm9yY2UpCj4gK3sKPiArICAgICAgIHN0cnVjdCBnZV9iODUwdjNfbHZk
+c19kcCAqcHRuX2JyaWRnZSA9Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgY29ubmVjdG9yX3Rv
+X2dlX2I4NTB2M19sdmRzX2RwKGNvbm5lY3Rvcik7Cj4gKyAgICAgICBzdHJ1Y3QgaTJjX2NsaWVu
+dCAqZ2VfYjg1MHYzX2x2ZHNfZHBfaTJjID0KPiArICAgICAgICAgICAgICAgICAgICAgICBwdG5f
+YnJpZGdlLT5nZV9iODUwdjNfbHZkc19kcF9pMmM7Cj4gKyAgICAgICBzMzIgbGlua19zdGF0ZTsK
+PiArCj4gKyAgICAgICBsaW5rX3N0YXRlID0gaTJjX3NtYnVzX3JlYWRfd29yZF9kYXRhKGdlX2I4
+NTB2M19sdmRzX2RwX2kyYywKPiArICAgICAgICAgICAgICAgICAgICAgICBTVERQNDAyOF9EUFRY
+X1NUU19SRUcpOwo+ICsKPiArICAgICAgIGlmIChsaW5rX3N0YXRlID09IFNURFA0MDI4X0NPTl9T
+VEFURV9DT05ORUNURUQpCj4gKyAgICAgICAgICAgICAgIHJldHVybiBjb25uZWN0b3Jfc3RhdHVz
+X2Nvbm5lY3RlZDsKPiArCj4gKyAgICAgICBpZiAobGlua19zdGF0ZSA9PSAwKQo+ICsgICAgICAg
+ICAgICAgICByZXR1cm4gY29ubmVjdG9yX3N0YXR1c19kaXNjb25uZWN0ZWQ7Cj4gKwo+ICsgICAg
+ICAgcmV0dXJuIGNvbm5lY3Rvcl9zdGF0dXNfdW5rbm93bjsKPiArfQo+ICsKPiArc3RhdGljIGNv
+bnN0IHN0cnVjdCBkcm1fY29ubmVjdG9yX2Z1bmNzIGdlX2I4NTB2M19sdmRzX2RwX2Nvbm5lY3Rv
+cl9mdW5jcyA9IHsKPiArICAgICAgIC5kcG1zID0gZHJtX2F0b21pY19oZWxwZXJfY29ubmVjdG9y
+X2RwbXMsCj4gKyAgICAgICAuZmlsbF9tb2RlcyA9IGRybV9oZWxwZXJfcHJvYmVfc2luZ2xlX2Nv
+bm5lY3Rvcl9tb2RlcywKPiArICAgICAgIC5kZXRlY3QgPSBnZV9iODUwdjNfbHZkc19kcF9kZXRl
+Y3QsCj4gKyAgICAgICAuZGVzdHJveSA9IGRybV9jb25uZWN0b3JfY2xlYW51cCwKPiArICAgICAg
+IC5yZXNldCA9IGRybV9hdG9taWNfaGVscGVyX2Nvbm5lY3Rvcl9yZXNldCwKPiArICAgICAgIC5h
+dG9taWNfZHVwbGljYXRlX3N0YXRlID0gZHJtX2F0b21pY19oZWxwZXJfY29ubmVjdG9yX2R1cGxp
+Y2F0ZV9zdGF0ZSwKPiArICAgICAgIC5hdG9taWNfZGVzdHJveV9zdGF0ZSA9IGRybV9hdG9taWNf
+aGVscGVyX2Nvbm5lY3Rvcl9kZXN0cm95X3N0YXRlLAo+ICt9Owo+ICsKPiArc3RhdGljIGlycXJl
+dHVybl90IGdlX2I4NTB2M19sdmRzX2RwX2lycV9oYW5kbGVyKGludCBpcnEsIHZvaWQgKmRldl9p
+ZCkKPiArewo+ICsgICAgICAgc3RydWN0IGdlX2I4NTB2M19sdmRzX2RwICpwdG5fYnJpZGdlID0g
+ZGV2X2lkOwo+ICsgICAgICAgc3RydWN0IGkyY19jbGllbnQgKmdlX2I4NTB2M19sdmRzX2RwX2ky
+Ywo+ICsgICAgICAgICAgICAgICAgICAgICAgID0gcHRuX2JyaWRnZS0+Z2VfYjg1MHYzX2x2ZHNf
+ZHBfaTJjOwo+ICsKPiArICAgICAgIG11dGV4X2xvY2soJnB0bl9icmlkZ2UtPmxvY2spOwo+ICsK
+PiArICAgICAgIGkyY19zbWJ1c193cml0ZV93b3JkX2RhdGEoZ2VfYjg1MHYzX2x2ZHNfZHBfaTJj
+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgIFNURFA0MDI4X0RQVFhfSVJRX1NUU19SRUcsIFNU
+RFA0MDI4X0RQVFhfSVJRX0NMRUFSKTsKPiArCj4gKyAgICAgICBtdXRleF91bmxvY2soJnB0bl9i
+cmlkZ2UtPmxvY2spOwo+ICsKPiArICAgICAgIGlmIChwdG5fYnJpZGdlLT5jb25uZWN0b3IuZGV2
+KQo+ICsgICAgICAgICAgICAgICBkcm1fa21zX2hlbHBlcl9ob3RwbHVnX2V2ZW50KHB0bl9icmlk
+Z2UtPmNvbm5lY3Rvci5kZXYpOwo+ICsKPiArICAgICAgIHJldHVybiBJUlFfSEFORExFRDsKPiAr
+fQo+ICsKPiArc3RhdGljIGludCBnZV9iODUwdjNfbHZkc19kcF9hdHRhY2goc3RydWN0IGRybV9i
+cmlkZ2UgKmJyaWRnZSkKPiArewo+ICsgICAgICAgc3RydWN0IGdlX2I4NTB2M19sdmRzX2RwICpw
+dG5fYnJpZGdlCj4gKyAgICAgICAgICAgICAgICAgICAgICAgPSBicmlkZ2VfdG9fZ2VfYjg1MHYz
+X2x2ZHNfZHAoYnJpZGdlKTsKPiArICAgICAgIHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0
+b3IgPSAmcHRuX2JyaWRnZS0+Y29ubmVjdG9yOwo+ICsgICAgICAgc3RydWN0IGkyY19jbGllbnQg
+KmdlX2I4NTB2M19sdmRzX2RwX2kyYwo+ICsgICAgICAgICAgICAgICAgICAgICAgID0gcHRuX2Jy
+aWRnZS0+Z2VfYjg1MHYzX2x2ZHNfZHBfaTJjOwo+ICsgICAgICAgaW50IHJldDsKPiArCj4gKyAg
+ICAgICBpZiAoIWJyaWRnZS0+ZW5jb2Rlcikgewo+ICsgICAgICAgICAgICAgICBEUk1fRVJST1Io
+IlBhcmVudCBlbmNvZGVyIG9iamVjdCBub3QgZm91bmQiKTsKPiArICAgICAgICAgICAgICAgcmV0
+dXJuIC1FTk9ERVY7Cj4gKyAgICAgICB9Cj4gKwo+ICsgICAgICAgY29ubmVjdG9yLT5wb2xsZWQg
+PSBEUk1fQ09OTkVDVE9SX1BPTExfSFBEOwo+ICsKPiArICAgICAgIGRybV9jb25uZWN0b3JfaGVs
+cGVyX2FkZChjb25uZWN0b3IsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgJmdlX2I4NTB2M19s
+dmRzX2RwX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MpOwo+ICsKPiArICAgICAgIHJldCA9IGRybV9j
+b25uZWN0b3JfaW5pdChicmlkZ2UtPmRldiwgY29ubmVjdG9yLAo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICZnZV9iODUwdjNfbHZkc19kcF9jb25uZWN0b3JfZnVuY3MsCj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgRFJNX01PREVfQ09OTkVDVE9SX0Rpc3BsYXlQb3J0KTsKPiArICAgICAgIGlm
+IChyZXQpIHsKPiArICAgICAgICAgICAgICAgRFJNX0VSUk9SKCJGYWlsZWQgdG8gaW5pdGlhbGl6
+ZSBjb25uZWN0b3Igd2l0aCBkcm1cbiIpOwo+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Owo+
+ICsgICAgICAgfQo+ICsKPiArICAgICAgIGRybV9jb25uZWN0b3JfcmVnaXN0ZXIoY29ubmVjdG9y
+KTsKPiArICAgICAgIHJldCA9IGRybV9tb2RlX2Nvbm5lY3Rvcl9hdHRhY2hfZW5jb2Rlcihjb25u
+ZWN0b3IsIGJyaWRnZS0+ZW5jb2Rlcik7Cj4gKyAgICAgICBpZiAocmV0KQo+ICsgICAgICAgICAg
+ICAgICByZXR1cm4gcmV0Owo+ICsKPiArICAgICAgIGRybV9icmlkZ2VfZW5hYmxlKGJyaWRnZSk7
+Cj4gKyAgICAgICBpZiAoZ2VfYjg1MHYzX2x2ZHNfZHBfaTJjLT5pcnEpIHsKPiArICAgICAgICAg
+ICAgICAgZHJtX2hlbHBlcl9ocGRfaXJxX2V2ZW50KGNvbm5lY3Rvci0+ZGV2KTsKPiArCj4gKyAg
+ICAgICAgICAgICAgIHJldCA9IGRldm1fcmVxdWVzdF90aHJlYWRlZF9pcnEoJmdlX2I4NTB2M19s
+dmRzX2RwX2kyYy0+ZGV2LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ2VfYjg1
+MHYzX2x2ZHNfZHBfaTJjLT5pcnEsIE5VTEwsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBnZV9iODUwdjNfbHZkc19kcF9pcnFfaGFuZGxlciwKPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIElSUUZfVFJJR0dFUl9ISUdIIHwgSVJRRl9PTkVTSE9ULAo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgImdlLWI4NTB2My1sdmRzLWRwIiwgcHRuX2JyaWRnZSk7
+Cj4gKyAgICAgICAgICAgICAgIGlmIChyZXQpCj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0
+dXJuIHJldDsKPiArICAgICAgIH0KPiArCj4gKyAgICAgICByZXR1cm4gMDsKPiArfQo+ICsKPiAr
+c3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fYnJpZGdlX2Z1bmNzIGdlX2I4NTB2M19sdmRzX2RwX2Z1
+bmNzID0gewo+ICsgICAgICAgLmF0dGFjaCA9IGdlX2I4NTB2M19sdmRzX2RwX2F0dGFjaCwKPiAr
+fTsKPiArCj4gK3N0YXRpYyBpbnQgZ2VfYjg1MHYzX2x2ZHNfZHBfcHJvYmUoc3RydWN0IGkyY19j
+bGllbnQgKmdlX2I4NTB2M19sdmRzX2RwX2kyYywKPiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lkICppZCkKPiArewo+ICsgICAgICAgc3Ry
+dWN0IGRldmljZSAqZGV2ID0gJmdlX2I4NTB2M19sdmRzX2RwX2kyYy0+ZGV2Owo+ICsgICAgICAg
+c3RydWN0IGdlX2I4NTB2M19sdmRzX2RwICpwdG5fYnJpZGdlOwo+ICsgICAgICAgaW50IHJldDsK
+PiArICAgICAgIHUzMiBlZGlkX2kyY19yZWc7Cj4gKwo+ICsgICAgICAgcHRuX2JyaWRnZSA9IGRl
+dm1fa3phbGxvYyhkZXYsIHNpemVvZigqcHRuX2JyaWRnZSksIEdGUF9LRVJORUwpOwo+ICsgICAg
+ICAgaWYgKCFwdG5fYnJpZGdlKQo+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsKPiAr
+Cj4gKyAgICAgICBtdXRleF9pbml0KCZwdG5fYnJpZGdlLT5sb2NrKTsKPiArCj4gKyAgICAgICBw
+dG5fYnJpZGdlLT5nZV9iODUwdjNfbHZkc19kcF9pMmMgPSBnZV9iODUwdjNfbHZkc19kcF9pMmM7
+Cj4gKyAgICAgICBwdG5fYnJpZGdlLT5icmlkZ2UuZHJpdmVyX3ByaXZhdGUgPSBwdG5fYnJpZGdl
+Owo+ICsgICAgICAgaTJjX3NldF9jbGllbnRkYXRhKGdlX2I4NTB2M19sdmRzX2RwX2kyYywgcHRu
+X2JyaWRnZSk7Cj4gKwo+ICsgICAgICAgcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIoZGV2LT5v
+Zl9ub2RlLCAiZWRpZC1yZWciLCAmZWRpZF9pMmNfcmVnKTsKPiArICAgICAgIGlmIChyZXQpIHsK
+PiArICAgICAgICAgICAgICAgZGV2X2VycihkZXYsICJlZGlkLXJlZyBub3Qgc3BlY2lmaWVkLCBh
+Ym9ydGluZy4uLlxuIik7Cj4gKyAgICAgICAgICAgICAgIHJldHVybiAtRU5PREVWOwo+ICsgICAg
+ICAgfQo+ICsKPiArICAgICAgIHB0bl9icmlkZ2UtPmVkaWRfaTJjID0gZGV2bV9remFsbG9jKGRl
+diwKPiArICAgICAgICAgICAgICAgICAgICAgICBzaXplb2Yoc3RydWN0IGkyY19jbGllbnQpLCBH
+RlBfS0VSTkVMKTsKPiArCj4gKyAgICAgICBpZiAoIXB0bl9icmlkZ2UtPmVkaWRfaTJjKQo+ICsg
+ICAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsKPiArCj4gKyAgICAgICBtZW1jcHkocHRuX2Jy
+aWRnZS0+ZWRpZF9pMmMsIGdlX2I4NTB2M19sdmRzX2RwX2kyYywKPiArICAgICAgICAgICAgICAg
+ICAgICAgICBzaXplb2Yoc3RydWN0IGkyY19jbGllbnQpKTsKPiArCj4gKyAgICAgICBwdG5fYnJp
+ZGdlLT5lZGlkX2kyYy0+YWRkciA9ICh1bnNpZ25lZCBzaG9ydCkgZWRpZF9pMmNfcmVnOwo+ICsK
+PiArICAgICAgIC8qIENvbmZpZ3VyZXMgdGhlIGJyaWRnZSB0byByZS1lbmFibGUgaW50ZXJydXB0
+cyBhZnRlciBlYWNoIGFjayAqLwo+ICsgICAgICAgaTJjX3NtYnVzX3dyaXRlX3dvcmRfZGF0YShn
+ZV9iODUwdjNfbHZkc19kcF9pMmMsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgU1REUDQwMjhf
+SVJRX09VVF9DT05GX1JFRywgU1REUDQwMjhfRFBUWF9EUF9JUlFfRU4pOwoKSSdkIGNoZWNrIGhl
+cmUgYW5kIGJlbG93IHRoZSByZXR1cm4gdmFsdWUuIEd1ZXNzIHRoaXMgaXMgdGhlIGZpcnN0CnBs
+YWNlIHdoZXJlIHRoZSBjb211bmljYXRpb24gd2l0aCB0aGUgY2hpcCB0YWtlcyBwbGFjZSwgaWYg
+c29tZXRoaW5nCmlzIHdyb25nIHdpdGggdGhlIGkyYyBjb21tdW5pY2F0aW9uLCBpLmUgdGhlIGR0
+IGNvbmZpZ3VyZXMgYSB3cm9uZwphZGRyZXNzLCB5b3Ugc2hvdWxkIGZhaWwuCgo+ICsgICAgICAg
+aTJjX3NtYnVzX3dyaXRlX3dvcmRfZGF0YShnZV9iODUwdjNfbHZkc19kcF9pMmMsCj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgU1REUDQwMjhfRFBUWF9JUlFfRU5fUkVHLCBTVERQNDAyOF9EUFRY
+X0lSUV9DT05GSUcpOwo+ICsKPiArICAgICAgIC8qIENsZWFyIHBlbmRpbmcgaW50ZXJydXB0cyBz
+aW5jZSBwb3dlciB1cC4gKi8KPiArICAgICAgIGkyY19zbWJ1c193cml0ZV93b3JkX2RhdGEoZ2Vf
+Yjg1MHYzX2x2ZHNfZHBfaTJjLAo+ICsgICAgICAgICAgICAgICAgICAgICAgIFNURFA0MDI4X0RQ
+VFhfSVJRX1NUU19SRUcsIFNURFA0MDI4X0RQVFhfSVJRX0NMRUFSKTsKPiArCj4gKyAgICAgICBw
+dG5fYnJpZGdlLT5icmlkZ2UuZnVuY3MgPSAmZ2VfYjg1MHYzX2x2ZHNfZHBfZnVuY3M7Cj4gKyAg
+ICAgICBwdG5fYnJpZGdlLT5icmlkZ2Uub2Zfbm9kZSA9IGRldi0+b2Zfbm9kZTsKPiArICAgICAg
+IHJldCA9IGRybV9icmlkZ2VfYWRkKCZwdG5fYnJpZGdlLT5icmlkZ2UpOwo+ICsgICAgICAgaWYg
+KHJldCkgewo+ICsgICAgICAgICAgICAgICBEUk1fRVJST1IoIkZhaWxlZCB0byBhZGQgYnJpZGdl
+XG4iKTsKPiArICAgICAgICAgICAgICAgcmV0dXJuIHJldDsKPiArICAgICAgIH0KPiArCj4gKyAg
+ICAgICByZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIGludCBnZV9iODUwdjNfbHZkc19kcF9y
+ZW1vdmUoc3RydWN0IGkyY19jbGllbnQgKmdlX2I4NTB2M19sdmRzX2RwX2kyYykKPiArewo+ICsg
+ICAgICAgc3RydWN0IGdlX2I4NTB2M19sdmRzX2RwICpwdG5fYnJpZGdlID0KPiArICAgICAgICAg
+ICAgICAgaTJjX2dldF9jbGllbnRkYXRhKGdlX2I4NTB2M19sdmRzX2RwX2kyYyk7Cj4gKwo+ICsg
+ICAgICAgZHJtX2JyaWRnZV9yZW1vdmUoJnB0bl9icmlkZ2UtPmJyaWRnZSk7Cj4gKwo+ICsgICAg
+ICAga2ZyZWUocHRuX2JyaWRnZS0+ZWRpZCk7Cj4gKwo+ICsgICAgICAgcmV0dXJuIDA7Cj4gK30K
+PiArCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgaTJjX2RldmljZV9pZCBnZV9iODUwdjNfbHZkc19k
+cF9pMmNfdGFibGVbXSA9IHsKPiArICAgICAgIHsiYjg1MHYzLWx2ZHMtZHAiLCAwfSwKPiArICAg
+ICAgIHt9LAoKbml0OiBVc2UgeyAvKiBzZW50aW5lbCAqLyB9Cgo+ICt9Owo+ICtNT0RVTEVfREVW
+SUNFX1RBQkxFKGkyYywgZ2VfYjg1MHYzX2x2ZHNfZHBfaTJjX3RhYmxlKTsKPiArCj4gK3N0YXRp
+YyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGdlX2I4NTB2M19sdmRzX2RwX21hdGNoW10gPSB7
+Cj4gKyAgICAgICB7IC5jb21wYXRpYmxlID0gImdlLGI4NTB2My1sdmRzLWRwIiB9LAo+ICsgICAg
+ICAge30sCgpuaXQ6IFVzZSB7IC8qIHNlbnRpbmVsICovIH0KCj4gK307Cj4gK01PRFVMRV9ERVZJ
+Q0VfVEFCTEUob2YsIGdlX2I4NTB2M19sdmRzX2RwX21hdGNoKTsKPiArCj4gK3N0YXRpYyBzdHJ1
+Y3QgaTJjX2RyaXZlciBnZV9iODUwdjNfbHZkc19kcF9kcml2ZXIgPSB7Cj4gKyAgICAgICAuaWRf
+dGFibGUgICAgICAgPSBnZV9iODUwdjNfbHZkc19kcF9pMmNfdGFibGUsCj4gKyAgICAgICAucHJv
+YmUgICAgICAgICAgPSBnZV9iODUwdjNfbHZkc19kcF9wcm9iZSwKPiArICAgICAgIC5yZW1vdmUg
+ICAgICAgICA9IGdlX2I4NTB2M19sdmRzX2RwX3JlbW92ZSwKPiArICAgICAgIC5kcml2ZXIgICAg
+ICAgICA9IHsKPiArICAgICAgICAgICAgICAgLm5hbWUgICAgICAgICAgID0gImdlLGI4NTB2My1s
+dmRzLWRwIiwKPiArICAgICAgICAgICAgICAgLm9mX21hdGNoX3RhYmxlID0gZ2VfYjg1MHYzX2x2
+ZHNfZHBfbWF0Y2gsCj4gKyAgICAgICB9LAo+ICt9Owo+ICttb2R1bGVfaTJjX2RyaXZlcihnZV9i
+ODUwdjNfbHZkc19kcF9kcml2ZXIpOwo+ICsKPiArTU9EVUxFX0FVVEhPUigiUGV0ZXIgU2VubmEg
+VHNjaHVkaW4gPHBldGVyLnNlbm5hQGNvbGxhYm9yYS5jb20+Iik7Cj4gK01PRFVMRV9BVVRIT1Io
+Ik1hcnR5biBXZWxjaCA8bWFydHluLndlbGNoQGNvbGxhYm9yYS5jby51az4iKTsKPiArTU9EVUxF
+X0RFU0NSSVBUSU9OKCJHRSBMVkRTIHRvIERQKysgZGlzcGxheSBicmlkZ2UpIik7Cj4gK01PRFVM
+RV9MSUNFTlNFKCJHUEwgdjIiKTsKPiAtLQo+IDIuNS41Cj4KCkFmdGVyIHNvbHZpbmcgdGhlIGky
+YyB0aGluZywKClJldmlld2VkLWJ5OiBFbnJpYyBCYWxsZXRibyBpIFNlcnJhIDxlbnJpYy5iYWxs
+ZXRib0Bjb2xsYWJvcmEuY29tPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
