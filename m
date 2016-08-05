@@ -1,53 +1,98 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 1/1] imx53.dtsi: Add IPU nodes for csi
-Date: Fri, 05 Aug 2016 11:33:10 +0200
-Message-ID: <1470389590.3141.22.camel@pengutronix.de>
-References: <CAOMZO5BoRsrHv-+5c9bAXO2NCya8sPqmmpy9DOfav6NvQ+VMLQ@mail.gmail.com>
-	 <1470318452-31391-1-git-send-email-fabien.lahoudere@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470318452-31391-1-git-send-email-fabien.lahoudere@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+From: Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCH v2 1/1] Add nvd9128 as a simple panel
+Date: Fri,  5 Aug 2016 11:47:54 +0200
+Message-ID: <1470390477-24892-1-git-send-email-fabien.lahoudere@collabora.co.uk>
+References: <20160804171525.GA15647@rob-hp-laptop>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160804171525.GA15647@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 04.08.2016, 15:47 +0200 schrieb Fabien Lahoudere:
-> We have the following messages that tell csi devices are not used:
-> imx-ipuv3 18000000.ipu: no port@0 node in /soc/ipu@18000000, not using CSI0
-> imx-ipuv3 18000000.ipu: no port@1 node in /soc/ipu@18000000, not using CSI1
-> 
-> So we add them in the common device tree to make CSI ports available on
-> imx53 boards.
-> 
-> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
-> ---
->  arch/arm/boot/dts/imx53.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-> index c1bc97c..0777b41 100644
-> --- a/arch/arm/boot/dts/imx53.dtsi
-> +++ b/arch/arm/boot/dts/imx53.dtsi
-> @@ -136,6 +136,14 @@
->  			clock-names = "bus", "di0", "di1";
->  			resets = <&src 2>;
->  
-> +			ipu_csi0: port@0 {
-> +				reg = <0>;
-> +			};
-> +
-> +			ipu_csi1: port@1 {
-> +				reg = <1>;
-> +			};
-> +
->  			ipu_di0: port@2 {
->  				#address-cells = <1>;
->  				#size-cells = <0>;
+Add New Vision Display 7.0" 800 RGB x 480 TFT LCD panel
 
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+---
+ .../devicetree/bindings/display/panel/nvd,9128.txt |  7 ++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++++++++++
+ 3 files changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/nvd,9128.txt
 
-regards
-Philipp
+diff --git a/Documentation/devicetree/bindings/display/panel/nvd,9128.txt b/Documentation/devicetree/bindings/display/panel/nvd,9128.txt
+new file mode 100644
+index 0000000..17bcd01
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/nvd,9128.txt
+@@ -0,0 +1,7 @@
++New Vision Display 7.0" 800 RGB x 480 TFT LCD panel
++
++Required properties:
++- compatible: should be "nvd,9128"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 68391a4..2ed703a 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -178,6 +178,7 @@ netgear	NETGEAR
+ netlogic	Broadcom Corporation (formerly NetLogic Microsystems)
+ netxeon		Shenzhen Netxeon Technology CO., LTD
+ newhaven	Newhaven Display International
++nvd	New Vision Display
+ nintendo	Nintendo
+ nokia	Nokia
+ nuvoton	Nuvoton Technology Corporation
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 85143d1..eaed716 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1136,6 +1136,29 @@ static const struct panel_desc nec_nl4827hc19_05b = {
+ 	.bus_flags = DRM_BUS_FLAG_PIXDATA_POSEDGE,
+ };
+ 
++static const struct drm_display_mode nvd_9128_mode = {
++	.clock = 29500,
++	.hdisplay = 800,
++	.hsync_start = 800 + 130,
++	.hsync_end = 800 + 130 + 98,
++	.htotal = 800 + 0 + 130 + 98,
++	.vdisplay = 480,
++	.vsync_start = 480 + 10,
++	.vsync_end = 480 + 10 + 50,
++	.vtotal = 480 + 0 + 10 + 50,
++};
++
++static const struct panel_desc nvd_9128 = {
++	.modes = &nvd_9128_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 156,
++		.height = 88,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
++};
++
+ static const struct display_timing okaya_rs800480t_7x0gp_timing = {
+ 	.pixelclock = { 30000000, 30000000, 40000000 },
+ 	.hactive = { 800, 800, 800 },
+@@ -1611,6 +1634,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "nec,nl4827hc19-05b",
+ 		.data = &nec_nl4827hc19_05b,
+ 	}, {
++		.compatible = "nvd,9128",
++		.data = &nvd_9128,
++	}, {
+ 		.compatible = "okaya,rs800480t-7x0gp",
+ 		.data = &okaya_rs800480t_7x0gp,
+ 	}, {
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
