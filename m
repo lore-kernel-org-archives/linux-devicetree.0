@@ -1,59 +1,103 @@
-From: "Shougang Group Co. Ltd." <ahanacek-jQyr/6a42dU@public.gmane.org>
-Subject: Business Proposal
-Date: Fri, 5 Aug 2016 05:34:43 +0200
-Message-ID: <ed01e91758fff44fe60f608e85f7253a.squirrel@webmail.utb.cz>
-Reply-To: zhujimin06-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v6 10/10] arm: dts: mt2701: Add display subsystem
+ related nodes for MT2701
+Date: Fri, 5 Aug 2016 14:18:26 +0800
+Message-ID: <1470377906.16554.23.camel@mtksdaap41>
+References: <1470308844-20895-1-git-send-email-yt.shen@mediatek.com>
+ <1470308844-20895-11-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1470308844-20895-11-git-send-email-yt.shen@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: YT Shen <yt.shen@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Mao Huang <littlecvr@chromium.org>, srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-
--- 
-Shougang Group
-45 Huagong Road Xinji City,
-Hebei Province China.
-webpage: www.shougang.com.cn
-
-
-This is an official request for Professional/consultants who will stand as
-our regional representative to run logistics on behalf of Shougang Group.
-We are only looking for individual or company from USA and Canada. You
-will be entitle to ten percent (10%) of every payment you receive from our
-customers in your region on behalf of the company.
-
-NOTE: You are not require to travel, all communications with our customers
-will be through email or phone. All fees, including taxes will be handled
-by us.
-
-You can apply for this position by filling the information below and send
-back to us;
-
-Full Name:
-Residencial or office address:
-Town:
-State:
-Zipcode:
-Country:
-Current Job:
-If you own a company, please state the company name:
-Prefered Email:
-Gender:
-Age:
-Telephone:
-
-If you have a current job, you can still be part of our business, as
-services for us will not bother with your hours of work.
-
-Respectfully,
-Mr. Zhu Jimin (Chief Executive Officer)
-Shougang Grou
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksIFlUOgoKT24gVGh1LCAyMDE2LTA4LTA0IGF0IDE5OjA3ICswODAwLCBZVCBTaGVuIHdyb3Rl
+Ogo+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgZGV2aWNlIG5vZGVzIGZvciB0aGUgRElTUCBmdW5jdGlv
+biBibG9ja3MgZm9yIE1UMjcwMQo+IAo+IFNpZ25lZC1vZmYtYnk6IFlUIFNoZW4gPHl0LnNoZW5A
+bWVkaWF0ZWsuY29tPgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9tdDI3MDEuZHRzaSB8ICAg
+ODYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNo
+YW5nZWQsIDg2IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9k
+dHMvbXQyNzAxLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9tdDI3MDEuZHRzaQo+IGluZGV4IGYz
+MTM2YmQuLjhmMzVhMGQgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvbXQyNzAxLmR0
+c2kKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9tdDI3MDEuZHRzaQo+IEBAIC0yNCw2ICsyNCwx
+MSBAQAo+ICAJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEiOwo+ICAJaW50ZXJydXB0LXBh
+cmVudCA9IDwmc3lzaXJxPjsKPiAgCj4gKwlhbGlhc2VzIHsKPiArCQlyZG1hMCA9ICZyZG1hMDsK
+PiArCQlyZG1hMSA9ICZyZG1hMTsKPiArCX07Cj4gKwo+ICAJY3B1cyB7Cj4gIAkJI2FkZHJlc3Mt
+Y2VsbHMgPSA8MT47Cj4gIAkJI3NpemUtY2VsbHMgPSA8MD47Cj4gQEAgLTE3MSw2ICsxNzYsMTYg
+QEAKPiAgCQlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQyNzAxX1BPV0VSX0RPTUFJTl9ESVNQ
+PjsKPiAgCX07Cj4gIAo+ICsJbWlwaV90eDA6IG1pcGktZHBoeUAxMDAxMDAwMCB7Cj4gKwkJY29t
+cGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtbWlwaS10eCI7Cj4gKwkJcmVnID0gPDAgMHgxMDAx
+MDAwMCAwIDB4OTA+Owo+ICsJCWNsb2NrcyA9IDwmY2xrMjZtPjsKPiArCQljbG9jay1vdXRwdXQt
+bmFtZXMgPSAibWlwaV90eDBfcGxsIjsKPiArCQkjY2xvY2stY2VsbHMgPSA8MD47Cj4gKwkJI3Bo
+eS1jZWxscyA9IDwwPjsKPiArCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJfTsKPiArCj4gIAlz
+eXNpcnE6IGludGVycnVwdC1jb250cm9sbGVyQDEwMjAwMTAwIHsKPiAgCQljb21wYXRpYmxlID0g
+Im1lZGlhdGVrLG10MjcwMS1zeXNpcnEiLAo+ICAJCQkgICAgICJtZWRpYXRlayxtdDY1Nzctc3lz
+aXJxIjsKPiBAQCAtMjU1LDYgKzI3MCw2OCBAQAo+ICAJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4g
+IAl9Owo+ICAKPiArCW92bEAxNDAwNzAwMCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxt
+dDI3MDEtZGlzcC1vdmwiOwo+ICsJCXJlZyA9IDwwIDB4MTQwMDcwMDAgMCAweDEwMDA+Owo+ICsJ
+CWludGVycnVwdHMgPSA8R0lDX1NQSSAxNTMgSVJRX1RZUEVfTEVWRUxfTE9XPjsKPiArCQljbG9j
+a3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX09WTD47Cj4gKwkJaW9tbXVzID0gPCZpb21tdSBNVDI3
+MDFfTTRVX1BPUlRfRElTUF9PVkxfMD47Cj4gKwkJbWVkaWF0ZWssbGFyYiA9IDwmbGFyYjA+Owo+
+ICsJfTsKPiArCj4gKwlyZG1hMDogcmRtYUAxNDAwODAwMCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJt
+ZWRpYXRlayxtdDI3MDEtZGlzcC1yZG1hIjsKPiArCQlyZWcgPSA8MCAweDE0MDA4MDAwIDAgMHgx
+MDAwPjsKPiArCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTUyIElSUV9UWVBFX0xFVkVMX0xPVz47
+Cj4gKwkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9SRE1BPjsKPiArCQlpb21tdXMgPSA8
+JmlvbW11IE1UMjcwMV9NNFVfUE9SVF9ESVNQX1JETUE+Owo+ICsJCW1lZGlhdGVrLGxhcmIgPSA8
+JmxhcmIwPjsKPiArCX07Cj4gKwo+ICsJd2RtYUAxNDAwOTAwMCB7Cj4gKwkJY29tcGF0aWJsZSA9
+ICJtZWRpYXRlayxtdDI3MDEtZGlzcC13ZG1hIjsKPiArCQlyZWcgPSA8MCAweDE0MDA5MDAwIDAg
+MHgxMDAwPjsKPiArCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTU0IElSUV9UWVBFX0xFVkVMX0xP
+Vz47Cj4gKwkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9XRE1BPjsKPiArCQlpb21tdXMg
+PSA8JmlvbW11IE1UMjcwMV9NNFVfUE9SVF9ESVNQX1dETUE+Owo+ICsJCW1lZGlhdGVrLGxhcmIg
+PSA8JmxhcmIwPjsKPiArCX07Cj4gKwo+ICsJYmxzQDE0MDBhMDAwIHsKPiArCQljb21wYXRpYmxl
+ID0gIm1lZGlhdGVrLG10MjcwMS1kaXNwLXB3bSI7Cj4gKwkJcmVnID0gPDAgMHgxNDAwYTAwMCAw
+IDB4MTAwMD47Cj4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE1NSBJUlFfVFlQRV9MRVZFTF9M
+T1c+Owo+ICsJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfQkxTPjsKPiArCX07CgpZb3Ug
+ZGVwZW5kcyBvbiBbMV0sIGJ1dCB0aGF0IHNlcmllcyBpbmNsdWRlIFsyXSB3aGljaCBhbHNvIGFk
+ZCBhCmRpc3BfYmxzIG5vZGUgd2hpY2ggaGFzIHRoZSBzYW1lIGNvbXBhdGlibGUgc3RyaW5nCiJt
+ZWRpYXRlayxtdDI3MDEtZGlzcC1wd20iLiBJZiB0aGVzZSB0d28gbm9kZSBhcmUgdGhlIHNhbWUs
+IGp1c3QgYWRkIGl0CmluIG9uZSBwYXRjaC4gSWYgdGhleSBhcmUgZGlmZmVyZW50LCBkbyBub3Qg
+dXNlIHRoZSBzYW1lIGNvbXBhdGlibGUKc3RyaW5nLgoKWzFdIGh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcGF0Y2gvOTIyMjk5Ny8gKCJkdC1iaW5kaW5nczogcHdtOiBBZGQKTWVkaWFUZWsg
+ZGlzcGxheSBQV00gYmluZGluZ3MiKQpbMl0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+YXRjaC85MjIzMDA1Lwo+ICsKPiArCWNvbG9yQDE0MDBiMDAwIHsKPiArCQljb21wYXRpYmxlID0g
+Im1lZGlhdGVrLG10MjcwMS1kaXNwLWNvbG9yIjsKPiArCQlyZWcgPSA8MCAweDE0MDBiMDAwIDAg
+MHgxMDAwPjsKPiArCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTU2IElSUV9UWVBFX0xFVkVMX0xP
+Vz47Cj4gKwkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9DT0xPUj47Cj4gKwl9Owo+ICsK
+PiArCWRzaTA6IGRzaUAxNDAwYzAwMCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3
+MDEtZHNpIjsKPiArCQlyZWcgPSA8MCAweDE0MDBjMDAwIDAgMHgxMDAwPjsKPiArCQlpbnRlcnJ1
+cHRzID0gPEdJQ19TUEkgMTU3IElSUV9UWVBFX0xFVkVMX0xPVz47Cj4gKwkJY2xvY2tzID0gPCZt
+bXN5cyBDTEtfTU1fRFNJX0VOR0lORT4sIDwmbW1zeXMgQ0xLX01NX0RTSV9ESUc+LAo+ICsJCQkg
+PCZtaXBpX3R4MD47Cj4gKwkJY2xvY2stbmFtZXMgPSAiZW5naW5lIiwgImRpZ2l0YWwiLCAiaHMi
+Owo+ICsJCW1lZGlhdGVrLHN5c2Nvbi1kc2kgPSA8Jm1tc3lzIDB4MTM4PjsKPiArCQltZWRpYXRl
+ayxzc2MtcmFuZ2UgPSA8NT47Cj4gKwkJcGh5cyA9IDwmbWlwaV90eDA+Owo+ICsJCXBoeS1uYW1l
+cyA9ICJkcGh5IjsKPiArCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJfTsKPiArCj4gKwltdXRl
+eDogbXV0ZXhAMTQwMGUwMDAgewo+ICsJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQyNzAxLWRp
+c3AtbXV0ZXgiOwo+ICsJCXJlZyA9IDwwIDB4MTQwMGUwMDAgMCAweDEwMDA+Owo+ICsJCWludGVy
+cnVwdHMgPSA8R0lDX1NQSSAxNjEgSVJRX1RZUEVfTEVWRUxfTE9XPjsKPiArCQljbG9ja3MgPSA8
+Jm1tc3lzIENMS19NTV9NVVRFWF8zMks+Owo+ICsJfTsKPiArCj4gIAlsYXJiMDogbGFyYkAxNDAx
+MDAwMCB7Cj4gIAkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtc21pLWxhcmIiOwo+ICAJ
+CXJlZyA9IDwwIDB4MTQwMTAwMDAgMCAweDEwMDA+Owo+IEBAIC0yNjYsNiArMzQzLDE1IEBACj4g
+IAkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UMjcwMV9QT1dFUl9ET01BSU5fRElTUD47Cj4g
+IAl9Owo+ICAKPiArCXJkbWExOiByZG1hQDE0MDEyMDAwIHsKPiArCQljb21wYXRpYmxlID0gIm1l
+ZGlhdGVrLG10MjcwMS1kaXNwLXJkbWEiOwo+ICsJCXJlZyA9IDwwIDB4MTQwMTIwMDAgMCAweDEw
+MDA+Owo+ICsJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxNjQgSVJRX1RZUEVfTEVWRUxfTE9XPjsK
+PiArCQljbG9ja3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX1JETUExPjsKPiArCQlpb21tdXMgPSA8
+JmlvbW11IE1UMjcwMV9NNFVfUE9SVF9ESVNQX1JETUExPjsKPiArCQltZWRpYXRlayxsYXJiID0g
+PCZsYXJiMD47Cj4gKwl9Owo+ICsKPiAgCWltZ3N5czogc3lzY29uQDE1MDAwMDAwIHsKPiAgCQlj
+b21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcwMS1pbWdzeXMiLCAic3lzY29uIjsKPiAgCQlyZWcg
+PSA8MCAweDE1MDAwMDAwIDAgMHgxMDAwPjsKClJlZ2FyZHMsCkNLCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
