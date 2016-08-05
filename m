@@ -1,43 +1,53 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3] reset: uniphier: add reset controller driver for
- UniPhier SoCs
-Date: Fri, 05 Aug 2016 11:06:28 +0200
-Message-ID: <1470387988.3141.21.camel@pengutronix.de>
-References: <1470111510-21247-1-git-send-email-yamada.masahiro@socionext.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 1/1] imx53.dtsi: Add IPU nodes for csi
+Date: Fri, 05 Aug 2016 11:33:10 +0200
+Message-ID: <1470389590.3141.22.camel@pengutronix.de>
+References: <CAOMZO5BoRsrHv-+5c9bAXO2NCya8sPqmmpy9DOfav6NvQ+VMLQ@mail.gmail.com>
+	 <1470318452-31391-1-git-send-email-fabien.lahoudere@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470111510-21247-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1470318452-31391-1-git-send-email-fabien.lahoudere@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 02.08.2016, 13:18 +0900 schrieb Masahiro Yamada:
-> This is the initial commit for UniPhier reset controller driver.
+Am Donnerstag, den 04.08.2016, 15:47 +0200 schrieb Fabien Lahoudere:
+> We have the following messages that tell csi devices are not used:
+> imx-ipuv3 18000000.ipu: no port@0 node in /soc/ipu@18000000, not using CSI0
+> imx-ipuv3 18000000.ipu: no port@1 node in /soc/ipu@18000000, not using CSI1
 > 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-[...]
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -7,6 +7,7 @@ obj-$(CONFIG_ARCH_MESON) += reset-meson.o
->  obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
->  obj-$(CONFIG_ARCH_STI) += sti/
->  obj-$(CONFIG_ARCH_HISI) += hisilicon/
-> +obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
->  obj-$(CONFIG_ARCH_ZYNQ) += reset-zynq.o
->  obj-$(CONFIG_ATH79) += reset-ath79.o
->  obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
+> So we add them in the common device tree to make CSI ports available on
+> imx53 boards.
+> 
+> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
+> ---
+>  arch/arm/boot/dts/imx53.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+> index c1bc97c..0777b41 100644
+> --- a/arch/arm/boot/dts/imx53.dtsi
+> +++ b/arch/arm/boot/dts/imx53.dtsi
+> @@ -136,6 +136,14 @@
+>  			clock-names = "bus", "di0", "di1";
+>  			resets = <&src 2>;
+>  
+> +			ipu_csi0: port@0 {
+> +				reg = <0>;
+> +			};
+> +
+> +			ipu_csi1: port@1 {
+> +				reg = <1>;
+> +			};
+> +
+>  			ipu_di0: port@2 {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
 
-Thank you, I have applied this patch with one small change: The Makefile
-change is moved after TI_SYSCON_RESET, like you did in the Kconfig, to
-keep the non-arch symbols in alphabetic order.
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
 regards
 Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
