@@ -1,42 +1,55 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v3] input: touchscreen: Remove duplicate ft6236 driver
-Date: Fri, 5 Aug 2016 17:07:20 +0200
-Message-ID: <72101a2a-ccf0-b0bc-3859-50a43f990027@i2se.com>
-References: <1470381871-4086-1-git-send-email-hdegoede@redhat.com>
- <1470381871-4086-2-git-send-email-hdegoede@redhat.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 1/2] ARM64: dts: meson-gxbb: add MMC support
+Date: Fri, 05 Aug 2016 08:22:13 -0700
+Message-ID: <m2fuqjmeai.fsf@baylibre.com>
+References: <20160803231843.23012-1-khilman@baylibre.com>
+	<20160805034623.GA1883@excalibur.cnev.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470381871-4086-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20160805034623.GA1883@excalibur.cnev.de> (Karsten Merker's
+	message of "Fri, 5 Aug 2016 05:46:23 +0200")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Karsten Merker <merker@debian.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Xing Wu <xing.xu@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, Jerry Cao <jerry.cao@amlogic.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Karsten Merker <merker@debian.org> writes:
 
-Am 05.08.2016 um 09:24 schrieb Hans de Goede:
-> The new(ish) ft6236 simply re-implements the M09 protocol of the
-> (much) older edt-ft5x06.c driver.
+> On Wed, Aug 03, 2016 at 04:18:42PM -0700, Kevin Hilman wrote:
 >
-> This commit removes this duplicate driver and adds the i2c ids and
-> dt compatible string to the edt-ft5x06.c driver to keep compatibility.
+>> Add binding and basic support for the SD/eMMC controller on Amlogic
+>> S905/GXBB devices.
+>> 
+>> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+>> ---
+>>  .../devicetree/bindings/mmc/amlogic,meson-gxbb.txt | 29 +++++++++
+>>  .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 74 ++++++++++++++++++++++
+>>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   | 71 +++++++++++++++++++++
+>>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 36 ++++++++++-
+>>  4 files changed, 209 insertions(+), 1 deletion(-)
+>>  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-gxbb.txt
+>> 
+>> diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gxbb.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gxbb.txt
+>> new file mode 100644
+>> index 000000000000..2bfdf47018c5
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gxbb.txt
+>> @@ -0,0 +1,29 @@
+>> +Amlogic SD / eMMC controller for S905/GXBB family SoCs
+>> +
+>> +The MMC 5.1 compliant host controller on Amlogic provides the
+>> +interface for SD, eMMC and SDIO devices.
+>> +
+>> +This file documents the properties in addition to those available in
+>> +the MMC core bindings, documented by mmc.txt.
+>> +
+>> +Required properties:
+>> +- compatible : contains "amlogic,meson-gxbb"
+>
+> I assume that should be "amlogic,meson-gxbb-mmc" instead of
+> "amlogic,meson-gxbb", shouldn't it?
 
-i think only remove of the driver is incorrect here.
+Correct, thanks for the review.
 
-Since there are two similar but still different DT bindings
-
-Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-
-Documentation/devicetree/bindings/input/touchscreen/focaltech-ft6236.txt
-
-the DT handling of edt-ft5x06.c needs to be extended and then finally 
-driver and binding could be removed.
-
-Regards
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kevin
