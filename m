@@ -1,451 +1,358 @@
-From: Hongtao Jia <hongtao.jia@nxp.com>
-Subject: RE: [PATCH V2 7/7] thermal: qoriq: Add thermal management support
-Date: Fri, 5 Aug 2016 06:26:49 +0000
-Message-ID: <AM4PR0401MB1843FAF38E34EE6D2BCD3AA0EB180@AM4PR0401MB1843.eurprd04.prod.outlook.com>
-References: <1467256118-41754-1-git-send-email-hongtao.jia@nxp.com>
- <AM4PR0401MB18432B70EEB53C04594821DEEB370@AM4PR0401MB1843.eurprd04.prod.outlook.com>
+From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 09/10] drm/mediatek: add support for Mediatek SoC MT2701
+Date: Fri, 5 Aug 2016 14:36:10 +0800
+Message-ID: <1470378970.16554.27.camel@mtksdaap41>
+References: <1470308844-20895-1-git-send-email-yt.shen@mediatek.com>
+ <1470308844-20895-10-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM4PR0401MB18432B70EEB53C04594821DEEB370@AM4PR0401MB1843.eurprd04.prod.outlook.com>
-Content-Language: zh-CN
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "edubezval@gmail.com" <edubezval@gmail.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, Scott Wood <scott.wood@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1470308844-20895-10-git-send-email-yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mao Huang <littlecvr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
+Hi, YT:
 
-If you have any comments please let me know.
+On Thu, 2016-08-04 at 19:07 +0800, YT Shen wrote:
+> This patch add support for the Mediatek MT2701 DISP subsystem.
+> There is only one OVL engine in MT2701.
+> 
+> Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c     |    6 ++++++
+>  drivers/gpu/drm/mediatek/mtk_disp_rdma.c    |    6 ++++++
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c      |   17 +++++++++++++++
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c |    7 ++++++
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |    1 +
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c      |   29 +++++++++++++++++++++++++
+>  drivers/gpu/drm/mediatek/mtk_dsi.c          |    1 +
+>  drivers/gpu/drm/mediatek/mtk_mipi_tx.c      |   31 ++++++++++++++++++++++++++-
+>  8 files changed, 97 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> index eb5c05e..1da0a71 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> @@ -286,11 +286,17 @@ static int mtk_disp_ovl_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct mtk_ddp_comp_driver_data mt2701_ovl_driver_data = {
+> +	.ovl = {0x0040, 1 << 12, 0}
+> +};
+> +
+>  static const struct mtk_ddp_comp_driver_data mt8173_ovl_driver_data = {
+>  	.ovl = {0x0f40, 0, 1 << 12}
+>  };
+>  
+>  static const struct of_device_id mtk_disp_ovl_driver_dt_match[] = {
+> +	{ .compatible = "mediatek,mt2701-disp-ovl",
+> +	  .data = &mt2701_ovl_driver_data},
+>  	{ .compatible = "mediatek,mt8173-disp-ovl",
+>  	  .data = &mt8173_ovl_driver_data},
+>  	{},
+> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
+> index fb0db50..506a353 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
+> @@ -225,11 +225,17 @@ static int mtk_disp_rdma_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct mtk_ddp_comp_driver_data mt2701_rdma_driver_data = {
+> +	.rdma_fifo_pseudo_size = SZ_4K,
+> +};
+> +
+>  static const struct mtk_ddp_comp_driver_data mt8173_rdma_driver_data = {
+>  	.rdma_fifo_pseudo_size = SZ_8K,
+>  };
+>  
+>  static const struct of_device_id mtk_disp_rdma_driver_dt_match[] = {
+> +	{ .compatible = "mediatek,mt2701-disp-rdma",
+> +	  .data = &mt2701_rdma_driver_data},
+>  	{ .compatible = "mediatek,mt8173-disp-rdma",
+>  	  .data = &mt8173_rdma_driver_data},
+>  	{},
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> index a9b209c..8130f3d 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -60,6 +60,13 @@
+>  #define MT8173_MUTEX_MOD_DISP_PWM1		BIT(24)
+>  #define MT8173_MUTEX_MOD_DISP_OD		BIT(25)
+>  
+> +#define MT2701_MUTEX_MOD_DISP_OVL		BIT(3)
+> +#define MT2701_MUTEX_MOD_DISP_WDMA		BIT(6)
+> +#define MT2701_MUTEX_MOD_DISP_COLOR		BIT(7)
+> +#define MT2701_MUTEX_MOD_DISP_BLS		BIT(9)
+> +#define MT2701_MUTEX_MOD_DISP_RDMA0		BIT(10)
+> +#define MT2701_MUTEX_MOD_DISP_RDMA1		BIT(12)
+> +
+>  #define MUTEX_SOF_SINGLE_MODE		0
+>  #define MUTEX_SOF_DSI0			1
+>  #define MUTEX_SOF_DSI1			2
+> @@ -92,6 +99,15 @@ struct mtk_ddp {
+>  	const unsigned int		*mutex_mod;
+>  };
+>  
+> +static const unsigned int mt2701_mutex_mod[DDP_COMPONENT_ID_MAX] = {
+> +	[DDP_COMPONENT_BLS] = MT2701_MUTEX_MOD_DISP_BLS,
+> +	[DDP_COMPONENT_COLOR0] = MT2701_MUTEX_MOD_DISP_COLOR,
+> +	[DDP_COMPONENT_OVL0] = MT2701_MUTEX_MOD_DISP_OVL,
+> +	[DDP_COMPONENT_RDMA0] = MT2701_MUTEX_MOD_DISP_RDMA0,
+> +	[DDP_COMPONENT_RDMA1] = MT2701_MUTEX_MOD_DISP_RDMA1,
+> +	[DDP_COMPONENT_WDMA0] = MT2701_MUTEX_MOD_DISP_WDMA,
+> +};
+> +
+>  static const unsigned int mt8173_mutex_mod[DDP_COMPONENT_ID_MAX] = {
+>  	[DDP_COMPONENT_AAL] = MT8173_MUTEX_MOD_DISP_AAL,
+>  	[DDP_COMPONENT_COLOR0] = MT8173_MUTEX_MOD_DISP_COLOR0,
+> @@ -390,6 +406,7 @@ static int mtk_ddp_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id ddp_driver_dt_match[] = {
+> +	{ .compatible = "mediatek,mt2701-disp-mutex", .data = mt2701_mutex_mod},
+>  	{ .compatible = "mediatek,mt8173-disp-mutex", .data = mt8173_mutex_mod},
+>  	{},
+>  };
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> index 4b4e449..465819b 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> @@ -112,6 +112,7 @@ struct mtk_ddp_comp_match {
+>  
+>  static const struct mtk_ddp_comp_match mtk_ddp_matches[DDP_COMPONENT_ID_MAX] = {
+>  	[DDP_COMPONENT_AAL]	= { MTK_DISP_AAL,	0, NULL },
+> +	[DDP_COMPONENT_BLS]	= { MTK_DISP_PWM,	0, NULL },
+>  	[DDP_COMPONENT_COLOR0]	= { MTK_DISP_COLOR,	0, &ddp_color },
+>  	[DDP_COMPONENT_COLOR1]	= { MTK_DISP_COLOR,	1, &ddp_color },
+>  	[DDP_COMPONENT_DPI0]	= { MTK_DPI,		0, NULL },
+> @@ -130,11 +131,17 @@ static const struct mtk_ddp_comp_match mtk_ddp_matches[DDP_COMPONENT_ID_MAX] = {
+>  	[DDP_COMPONENT_WDMA1]	= { MTK_DISP_WDMA,	1, NULL },
+>  };
+>  
+> +static const struct mtk_ddp_comp_driver_data mt2701_color_driver_data = {
+> +	.color_offset = 0x0f00,
+> +};
+> +
+>  static const struct mtk_ddp_comp_driver_data mt8173_color_driver_data = {
+>  	.color_offset = 0x0c00,
+>  };
+>  
+>  static const struct of_device_id mtk_disp_color_driver_dt_match[] = {
+> +	{ .compatible = "mediatek,mt2701-disp-color",
+> +	  .data = &mt2701_color_driver_data},
+>  	{ .compatible = "mediatek,mt8173-disp-color",
+>  	  .data = &mt8173_color_driver_data},
+>  	{},
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> index 53065c7..0850aa4 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> @@ -40,6 +40,7 @@ enum mtk_ddp_comp_type {
+>  
+>  enum mtk_ddp_comp_id {
+>  	DDP_COMPONENT_AAL,
+> +	DDP_COMPONENT_BLS,
+>  	DDP_COMPONENT_COLOR0,
+>  	DDP_COMPONENT_COLOR1,
+>  	DDP_COMPONENT_DPI0,
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> index 80b4f54..2503f04 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> @@ -109,6 +109,19 @@ static const struct drm_mode_config_funcs mtk_drm_mode_config_funcs = {
+>  	.atomic_commit = mtk_atomic_commit,
+>  };
+>  
+> +static const enum mtk_ddp_comp_id mt2701_mtk_ddp_main[] = {
+> +	DDP_COMPONENT_OVL0,
+> +	DDP_COMPONENT_RDMA0,
+> +	DDP_COMPONENT_COLOR0,
+> +	DDP_COMPONENT_BLS,
+> +	DDP_COMPONENT_DSI0,
+> +};
+> +
+> +static const enum mtk_ddp_comp_id mt2701_mtk_ddp_ext[] = {
+> +	DDP_COMPONENT_RDMA1,
+> +	DDP_COMPONENT_DPI0,
+> +};
+> +
+>  static const enum mtk_ddp_comp_id mt8173_mtk_ddp_main[] = {
+>  	DDP_COMPONENT_OVL0,
+>  	DDP_COMPONENT_COLOR0,
+> @@ -128,6 +141,14 @@ static const enum mtk_ddp_comp_id mt8173_mtk_ddp_ext[] = {
+>  	DDP_COMPONENT_DPI0,
+>  };
+>  
+> +static const struct mtk_mmsys_driver_data mt2701_mmsys_driver_data = {
+> +	.main_path = mt2701_mtk_ddp_main,
+> +	.main_len = ARRAY_SIZE(mt2701_mtk_ddp_main),
+> +	.ext_path = mt2701_mtk_ddp_ext,
+> +	.ext_len = ARRAY_SIZE(mt2701_mtk_ddp_ext),
+> +	.shadow_register = true,
+> +};
+> +
+>  static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
+>  	.main_path = mt8173_mtk_ddp_main,
+>  	.main_len = ARRAY_SIZE(mt8173_mtk_ddp_main),
+> @@ -331,16 +352,22 @@ static const struct component_master_ops mtk_drm_ops = {
+>  };
+>  
+>  static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
+> +	{ .compatible = "mediatek,mt2701-disp-ovl",   .data = (void *)MTK_DISP_OVL },
+>  	{ .compatible = "mediatek,mt8173-disp-ovl",   .data = (void *)MTK_DISP_OVL },
+> +	{ .compatible = "mediatek,mt2701-disp-rdma",  .data = (void *)MTK_DISP_RDMA },
+>  	{ .compatible = "mediatek,mt8173-disp-rdma",  .data = (void *)MTK_DISP_RDMA },
+>  	{ .compatible = "mediatek,mt8173-disp-wdma",  .data = (void *)MTK_DISP_WDMA },
+> +	{ .compatible = "mediatek,mt2701-disp-color", .data = (void *)MTK_DISP_COLOR },
+>  	{ .compatible = "mediatek,mt8173-disp-color", .data = (void *)MTK_DISP_COLOR },
+>  	{ .compatible = "mediatek,mt8173-disp-aal",   .data = (void *)MTK_DISP_AAL},
+>  	{ .compatible = "mediatek,mt8173-disp-gamma", .data = (void *)MTK_DISP_GAMMA, },
+>  	{ .compatible = "mediatek,mt8173-disp-ufoe",  .data = (void *)MTK_DISP_UFOE },
+> +	{ .compatible = "mediatek,mt2701-dsi",	      .data = (void *)MTK_DSI },
+>  	{ .compatible = "mediatek,mt8173-dsi",        .data = (void *)MTK_DSI },
+>  	{ .compatible = "mediatek,mt8173-dpi",        .data = (void *)MTK_DPI },
+> +	{ .compatible = "mediatek,mt2701-disp-mutex", .data = (void *)MTK_DISP_MUTEX },
+>  	{ .compatible = "mediatek,mt8173-disp-mutex", .data = (void *)MTK_DISP_MUTEX },
+> +	{ .compatible = "mediatek,mt2701-disp-pwm",   .data = (void *)MTK_DISP_PWM },
+>  	{ .compatible = "mediatek,mt8173-disp-pwm",   .data = (void *)MTK_DISP_PWM },
+>  	{ .compatible = "mediatek,mt8173-disp-od",    .data = (void *)MTK_DISP_OD },
+>  	{ }
+> @@ -514,6 +541,8 @@ static SIMPLE_DEV_PM_OPS(mtk_drm_pm_ops, mtk_drm_sys_suspend,
+>  			 mtk_drm_sys_resume);
+>  
+>  static const struct of_device_id mtk_drm_of_ids[] = {
+> +	{ .compatible = "mediatek,mt2701-mmsys",
+> +	  .data = &mt2701_mmsys_driver_data},
+>  	{ .compatible = "mediatek,mt8173-mmsys",
+>  	  .data = &mt8173_mmsys_driver_data},
+>  	{ }
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> index 3373019..8b8a629 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> @@ -1300,6 +1300,7 @@ static int mtk_dsi_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id mtk_dsi_of_match[] = {
+> +	{ .compatible = "mediatek,mt2701-dsi" },
+>  	{ .compatible = "mediatek,mt8173-dsi" },
+>  	{ },
+>  };
+> diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> index 0666f15..6c2aec0 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/phy/phy.h>
+>  
+> @@ -87,6 +88,9 @@
+>  
+>  #define MIPITX_DSI_PLL_CON2	0x58
+>  
+> +#define MIPITX_DSI_PLL_TOP	0x64
+> +#define RG_DSI_MPPLL_PRESERVE		(0xff << 8)
+> +
+>  #define MIPITX_DSI_PLL_PWR	0x68
+>  #define RG_DSI_MPPLL_SDM_PWR_ON		BIT(0)
+>  #define RG_DSI_MPPLL_SDM_ISO_EN		BIT(1)
+> @@ -123,10 +127,16 @@
+>  #define SW_LNT2_HSTX_PRE_OE		BIT(24)
+>  #define SW_LNT2_HSTX_OE			BIT(25)
+>  
+> +struct mtk_mipitx_data {
+> +	const u32 data;
+> +};
+> +
+>  struct mtk_mipi_tx {
+>  	struct device *dev;
+>  	void __iomem *regs;
+>  	u32 data_rate;
+> +	const struct mtk_mipitx_data *driver_data;
+> +
+>  	struct clk_hw pll_hw;
+>  	struct clk *pll;
+>  };
+> @@ -245,6 +255,10 @@ static int mtk_mipi_tx_pll_prepare(struct clk_hw *hw)
+>  	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON1,
+>  			       RG_DSI_MPPLL_SDM_SSC_EN);
+>  
+> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_TOP,
+> +				RG_DSI_MPPLL_PRESERVE,
+> +				mipi_tx->driver_data->data);
 
-Thanks.
--Hongtao. 
+This part look like it should be moved to patch of "drm/mediatek: add
+*driver_data for different hardware settings".
 
+> +
+>  	return 0;
+>  }
+>  
+> @@ -257,6 +271,9 @@ static void mtk_mipi_tx_pll_unprepare(struct clk_hw *hw)
+>  	mtk_mipi_tx_clear_bits(mipi_tx, MIPITX_DSI_PLL_CON0,
+>  			       RG_DSI_MPPLL_PLL_EN);
+>  
+> +	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_TOP,
+> +				RG_DSI_MPPLL_PRESERVE, 0);
 
-> -----Original Message-----
-> From: Linuxppc-dev [mailto:linuxppc-dev-
-> bounces+b38951=freescale.com@lists.ozlabs.org] On Behalf Of Hongtao Jia
-> Sent: Tuesday, July 19, 2016 2:54 PM
-> To: edubezval@gmail.com; rui.zhang@intel.com; Scott Wood
-> <scott.wood@nxp.com>
-> Cc: devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org; linux-
-> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> pm@vger.kernel.org
-> Subject: RE: [PATCH V2 7/7] thermal: qoriq: Add thermal management support
-> 
-> Hi Eduardo,
-> 
-> Any comments on this patch?
-> 
-> Thanks.
-> -Hongtao.
-> 
-> > -----Original Message-----
-> > From: Jia Hongtao [mailto:hongtao.jia@nxp.com]
-> > Sent: Thursday, June 30, 2016 11:09 AM
-> > To: edubezval@gmail.com; rui.zhang@intel.com; robh+dt@kernel.org;
-> > galak@codeaurora.org; Scott Wood <scott.wood@nxp.com>;
-> > shawnguo@kernel.org
-> > Cc: linux-pm@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; linuxppc-dev@lists.ozlabs.org; linux-arm-
-> > kernel@lists.infradead.org; Hongtao Jia <hongtao.jia@nxp.com>
-> > Subject: [PATCH V2 7/7] thermal: qoriq: Add thermal management support
-> >
-> > This driver add thermal management support by enabling TMU (Thermal
-> > Monitoring Unit) on QorIQ platform.
-> >
-> > It's based on thermal of framework:
-> > - Trip points defined in device tree.
-> > - Cpufreq as cooling device registered in qoriq cpufreq driver.
-> >
-> > Signed-off-by: Jia Hongtao <hongtao.jia@nxp.com>
-> > ---
-> > Changes of V2:
-> > * Add HAS_IOMEM dependency to fix build error on UM
-> >
-> >  drivers/thermal/Kconfig         |  10 ++
-> >  drivers/thermal/Makefile        |   1 +
-> >  drivers/thermal/qoriq_thermal.c | 328
-> > ++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 339 insertions(+)
-> >  create mode 100644 drivers/thermal/qoriq_thermal.c
-> >
-> > diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig index
-> > 2d702ca..56ef30d 100644
-> > --- a/drivers/thermal/Kconfig
-> > +++ b/drivers/thermal/Kconfig
-> > @@ -195,6 +195,16 @@ config IMX_THERMAL
-> >  	  cpufreq is used as the cooling device to throttle CPUs when the
-> >  	  passive trip is crossed.
-> >
-> > +config QORIQ_THERMAL
-> > +	tristate "QorIQ Thermal Monitoring Unit"
-> > +	depends on THERMAL_OF
-> > +	depends on HAS_IOMEM
-> > +	help
-> > +	  Support for Thermal Monitoring Unit (TMU) found on QorIQ platforms.
-> > +	  It supports one critical trip point and one passive trip point. The
-> > +	  cpufreq is used as the cooling device to throttle CPUs when the
-> > +	  passive trip is crossed.
-> > +
-> >  config SPEAR_THERMAL
-> >  	tristate "SPEAr thermal sensor driver"
-> >  	depends on PLAT_SPEAR || COMPILE_TEST diff --git
-> > a/drivers/thermal/Makefile b/drivers/thermal/Makefile index
-> > 10b07c1..6662232 100644
-> > --- a/drivers/thermal/Makefile
-> > +++ b/drivers/thermal/Makefile
-> > @@ -37,6 +37,7 @@ obj-$(CONFIG_DB8500_THERMAL)	+=
-> db8500_thermal.o
-> >  obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
-> >  obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
-> >  obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
-> > +obj-$(CONFIG_QORIQ_THERMAL)	+= qoriq_thermal.o
-> >  obj-$(CONFIG_DB8500_CPUFREQ_COOLING)	+= db8500_cpufreq_cooling.o
-> >  obj-$(CONFIG_INTEL_POWERCLAMP)	+= intel_powerclamp.o
-> >  obj-$(CONFIG_X86_PKG_TEMP_THERMAL)	+= x86_pkg_temp_thermal.o
-> > diff --git a/drivers/thermal/qoriq_thermal.c
-> > b/drivers/thermal/qoriq_thermal.c new file mode 100644 index
-> > 0000000..644ba52
-> > --- /dev/null
-> > +++ b/drivers/thermal/qoriq_thermal.c
-> > @@ -0,0 +1,328 @@
-> > +/*
-> > + * Copyright 2016 Freescale Semiconductor, Inc.
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > +modify it
-> > + * under the terms and conditions of the GNU General Public License,
-> > + * version 2, as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope it will be useful, but
-> > +WITHOUT
-> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-> > +or
-> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
-> > +License for
-> > + * more details.
-> > + *
-> > + */
-> > +
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/err.h>
-> > +#include <linux/io.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/thermal.h>
-> > +
-> > +#include "thermal_core.h"
-> > +
-> > +#define SITES_MAX	16
-> > +
-> > +/*
-> > + * QorIQ TMU Registers
-> > + */
-> > +struct qoriq_tmu_site_regs {
-> > +	u32 tritsr;		/* Immediate Temperature Site Register */
-> > +	u32 tratsr;		/* Average Temperature Site Register */
-> > +	u8 res0[0x8];
-> > +};
-> > +
-> > +struct qoriq_tmu_regs {
-> > +	u32 tmr;		/* Mode Register */
-> > +#define TMR_DISABLE	0x0
-> > +#define TMR_ME		0x80000000
-> > +#define TMR_ALPF	0x0c000000
-> > +	u32 tsr;		/* Status Register */
-> > +	u32 tmtmir;		/* Temperature measurement interval Register */
-> > +#define TMTMIR_DEFAULT	0x0000000f
-> > +	u8 res0[0x14];
-> > +	u32 tier;		/* Interrupt Enable Register */
-> > +#define TIER_DISABLE	0x0
-> > +	u32 tidr;		/* Interrupt Detect Register */
-> > +	u32 tiscr;		/* Interrupt Site Capture Register */
-> > +	u32 ticscr;		/* Interrupt Critical Site Capture Register */
-> > +	u8 res1[0x10];
-> > +	u32 tmhtcrh;		/* High Temperature Capture Register */
-> > +	u32 tmhtcrl;		/* Low Temperature Capture Register */
-> > +	u8 res2[0x8];
-> > +	u32 tmhtitr;		/* High Temperature Immediate Threshold */
-> > +	u32 tmhtatr;		/* High Temperature Average Threshold */
-> > +	u32 tmhtactr;	/* High Temperature Average Crit Threshold */
-> > +	u8 res3[0x24];
-> > +	u32 ttcfgr;		/* Temperature Configuration Register */
-> > +	u32 tscfgr;		/* Sensor Configuration Register */
-> > +	u8 res4[0x78];
-> > +	struct qoriq_tmu_site_regs site[SITES_MAX];
-> > +	u8 res5[0x9f8];
-> > +	u32 ipbrr0;		/* IP Block Revision Register 0 */
-> > +	u32 ipbrr1;		/* IP Block Revision Register 1 */
-> > +	u8 res6[0x310];
-> > +	u32 ttr0cr;		/* Temperature Range 0 Control Register */
-> > +	u32 ttr1cr;		/* Temperature Range 1 Control Register */
-> > +	u32 ttr2cr;		/* Temperature Range 2 Control Register */
-> > +	u32 ttr3cr;		/* Temperature Range 3 Control Register */
-> > +};
-> > +
-> > +/*
-> > + * Thermal zone data
-> > + */
-> > +struct qoriq_tmu_data {
-> > +	struct thermal_zone_device *tz;
-> > +	struct qoriq_tmu_regs __iomem *regs;
-> > +	int sensor_id;
-> > +	bool little_endian;
-> > +};
-> > +
-> > +static void tmu_write(struct qoriq_tmu_data *p, u32 val, void __iomem
-> > +*addr) {
-> > +	if (p->little_endian)
-> > +		iowrite32(val, addr);
-> > +	else
-> > +		iowrite32be(val, addr);
-> > +}
-> > +
-> > +static u32 tmu_read(struct qoriq_tmu_data *p, void __iomem *addr) {
-> > +	if (p->little_endian)
-> > +		return ioread32(addr);
-> > +	else
-> > +		return ioread32be(addr);
-> > +}
-> > +
-> > +static int tmu_get_temp(void *p, int *temp) {
-> > +	u32 val;
-> > +	struct qoriq_tmu_data *data = p;
-> > +
-> > +	val = tmu_read(data, &data->regs->site[data->sensor_id].tritsr);
-> > +	*temp = (val & 0xff) * 1000;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int qoriq_tmu_get_sensor_id(void) {
-> > +	int ret, id;
-> > +	struct of_phandle_args sensor_specs;
-> > +	struct device_node *np, *sensor_np;
-> > +
-> > +	np = of_find_node_by_name(NULL, "thermal-zones");
-> > +	if (!np)
-> > +		return -ENODEV;
-> > +
-> > +	sensor_np = of_get_next_child(np, NULL);
-> > +	ret = of_parse_phandle_with_args(sensor_np, "thermal-sensors",
-> > +			"#thermal-sensor-cells",
-> > +			0, &sensor_specs);
-> > +	if (ret) {
-> > +		of_node_put(np);
-> > +		of_node_put(sensor_np);
-> > +		return ret;
-> > +	}
-> > +
-> > +	if (sensor_specs.args_count >= 1) {
-> > +		id = sensor_specs.args[0];
-> > +		WARN(sensor_specs.args_count > 1,
-> > +				"%s: too many cells in sensor specifier %d\n",
-> > +				sensor_specs.np->name,
-> > sensor_specs.args_count);
-> > +	} else {
-> > +		id = 0;
-> > +	}
-> > +
-> > +	of_node_put(np);
-> > +	of_node_put(sensor_np);
-> > +
-> > +	return id;
-> > +}
-> > +
-> > +static int qoriq_tmu_calibration(struct platform_device *pdev) {
-> > +	int i, val, len;
-> > +	u32 range[4];
-> > +	const u32 *calibration;
-> > +	struct device_node *np = pdev->dev.of_node;
-> > +	struct qoriq_tmu_data *data = platform_get_drvdata(pdev);
-> > +
-> > +	if (of_property_read_u32_array(np, "fsl,tmu-range", range, 4)) {
-> > +		dev_err(&pdev->dev, "missing calibration range.\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	/* Init temperature range registers */
-> > +	tmu_write(data, range[0], &data->regs->ttr0cr);
-> > +	tmu_write(data, range[1], &data->regs->ttr1cr);
-> > +	tmu_write(data, range[2], &data->regs->ttr2cr);
-> > +	tmu_write(data, range[3], &data->regs->ttr3cr);
-> > +
-> > +	calibration = of_get_property(np, "fsl,tmu-calibration", &len);
-> > +	if (calibration == NULL || len % 8) {
-> > +		dev_err(&pdev->dev, "invalid calibration data.\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	for (i = 0; i < len; i += 8, calibration += 2) {
-> > +		val = of_read_number(calibration, 1);
-> > +		tmu_write(data, val, &data->regs->ttcfgr);
-> > +		val = of_read_number(calibration + 1, 1);
-> > +		tmu_write(data, val, &data->regs->tscfgr);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void qoriq_tmu_init_device(struct qoriq_tmu_data *data) {
-> > +	/* Disable interrupt, using polling instead */
-> > +	tmu_write(data, TIER_DISABLE, &data->regs->tier);
-> > +
-> > +	/* Set update_interval */
-> > +	tmu_write(data, TMTMIR_DEFAULT, &data->regs->tmtmir);
-> > +
-> > +	/* Disable monitoring */
-> > +	tmu_write(data, TMR_DISABLE, &data->regs->tmr); }
-> > +
-> > +static struct thermal_zone_of_device_ops tmu_tz_ops = {
-> > +	.get_temp = tmu_get_temp,
-> > +};
-> > +
-> > +static int qoriq_tmu_probe(struct platform_device *pdev) {
-> > +	int ret;
-> > +	const struct thermal_trip *trip;
-> > +	struct qoriq_tmu_data *data;
-> > +	struct device_node *np = pdev->dev.of_node;
-> > +	u32 site = 0;
-> > +
-> > +	if (!np) {
-> > +		dev_err(&pdev->dev, "Device OF-Node is NULL");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	data = devm_kzalloc(&pdev->dev, sizeof(struct qoriq_tmu_data),
-> > +			    GFP_KERNEL);
-> > +	if (!data)
-> > +		return -ENOMEM;
-> > +
-> > +	platform_set_drvdata(pdev, data);
-> > +
-> > +	data->little_endian = of_property_read_bool(np, "little-endian");
-> > +
-> > +	data->sensor_id = qoriq_tmu_get_sensor_id();
-> > +	if (data->sensor_id < 0) {
-> > +		dev_err(&pdev->dev, "Failed to get sensor id\n");
-> > +		ret = -ENODEV;
-> > +		goto err_iomap;
-> > +	}
-> > +
-> > +	data->regs = of_iomap(np, 0);
-> > +	if (!data->regs) {
-> > +		dev_err(&pdev->dev, "Failed to get memory region\n");
-> > +		ret = -ENODEV;
-> > +		goto err_iomap;
-> > +	}
-> > +
-> > +	qoriq_tmu_init_device(data);	/* TMU initialization */
-> > +
-> > +	ret = qoriq_tmu_calibration(pdev);	/* TMU calibration */
-> > +	if (ret < 0)
-> > +		goto err_tmu;
-> > +
-> > +	data->tz = thermal_zone_of_sensor_register(&pdev->dev, data->sensor_id,
-> > +				data, &tmu_tz_ops);
-> > +	if (IS_ERR(data->tz)) {
-> > +		ret = PTR_ERR(data->tz);
-> > +		dev_err(&pdev->dev,
-> > +			"Failed to register thermal zone device %d\n", ret);
-> > +		goto err_tmu;
-> > +	}
-> > +
-> > +	trip = of_thermal_get_trip_points(data->tz);
-> > +
-> > +	/* Enable monitoring */
-> > +	site |= 0x1 << (15 - data->sensor_id);
-> > +	tmu_write(data, site | TMR_ME | TMR_ALPF, &data->regs->tmr);
-> > +
-> > +	return 0;
-> > +
-> > +err_tmu:
-> > +	iounmap(data->regs);
-> > +
-> > +err_iomap:
-> > +	platform_set_drvdata(pdev, NULL);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static int qoriq_tmu_remove(struct platform_device *pdev) {
-> > +	struct qoriq_tmu_data *data = platform_get_drvdata(pdev);
-> > +
-> > +	thermal_zone_of_sensor_unregister(&pdev->dev, data->tz);
-> > +
-> > +	/* Disable monitoring */
-> > +	tmu_write(data, TMR_DISABLE, &data->regs->tmr);
-> > +
-> > +	iounmap(data->regs);
-> > +	platform_set_drvdata(pdev, NULL);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +#ifdef CONFIG_PM_SLEEP
-> > +static int qoriq_tmu_suspend(struct device *dev) {
-> > +	u32 tmr;
-> > +	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
-> > +
-> > +	/* Disable monitoring */
-> > +	tmr = tmu_read(data, &data->regs->tmr);
-> > +	tmr &= ~TMR_ME;
-> > +	tmu_write(data, tmr, &data->regs->tmr);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int qoriq_tmu_resume(struct device *dev) {
-> > +	u32 tmr;
-> > +	struct qoriq_tmu_data *data = dev_get_drvdata(dev);
-> > +
-> > +	/* Enable monitoring */
-> > +	tmr = tmu_read(data, &data->regs->tmr);
-> > +	tmr |= TMR_ME;
-> > +	tmu_write(data, tmr, &data->regs->tmr);
-> > +
-> > +	return 0;
-> > +}
-> > +#endif
-> > +
-> > +static SIMPLE_DEV_PM_OPS(qoriq_tmu_pm_ops,
-> > +			 qoriq_tmu_suspend, qoriq_tmu_resume);
-> > +
-> > +static const struct of_device_id qoriq_tmu_match[] = {
-> > +	{ .compatible = "fsl,qoriq-tmu", },
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, qoriq_tmu_match);
-> > +
-> > +static struct platform_driver qoriq_tmu = {
-> > +	.driver	= {
-> > +		.name		= "qoriq_thermal",
-> > +		.pm		= &qoriq_tmu_pm_ops,
-> > +		.of_match_table	= qoriq_tmu_match,
-> > +	},
-> > +	.probe	= qoriq_tmu_probe,
-> > +	.remove	= qoriq_tmu_remove,
-> > +};
-> > +module_platform_driver(qoriq_tmu);
-> > +
-> > +MODULE_AUTHOR("Jia Hongtao <hongtao.jia@nxp.com>");
-> > +MODULE_DESCRIPTION("QorIQ Thermal Monitoring Unit driver");
-> > +MODULE_LICENSE("GPL v2");
-> > --
-> > 2.1.0.27.g96db324
-> 
-> _______________________________________________
-> Linuxppc-dev mailing list
-> Linuxppc-dev@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/linuxppc-dev
+This part look like it should be moved to patch of "drm/mediatek: add
+*driver_data for different hardware settings".
+
+> +
+>  	mtk_mipi_tx_update_bits(mipi_tx, MIPITX_DSI_PLL_PWR,
+>  				RG_DSI_MPPLL_SDM_ISO_EN |
+>  				RG_DSI_MPPLL_SDM_PWR_ON,
+> @@ -393,6 +410,7 @@ static int mtk_mipi_tx_probe(struct platform_device *pdev)
+>  	if (!mipi_tx)
+>  		return -ENOMEM;
+>  
+> +	mipi_tx->driver_data = of_device_get_match_data(dev);
+>  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	mipi_tx->regs = devm_ioremap_resource(dev, mem);
+>  	if (IS_ERR(mipi_tx->regs)) {
+> @@ -450,8 +468,19 @@ static int mtk_mipi_tx_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct mtk_mipitx_data mt2701_mipitx_data = {
+> +	.data = (3 << 8)
+> +};
+> +
+> +static const struct mtk_mipitx_data mt8173_mipitx_data = {
+> +	.data = (0 << 8)
+> +};
+
+mt8173_mipitx_data look like it should be moved to patch of
+"drm/mediatek: add *driver_data for different hardware settings". And
+you just add mt2701_mipitx_data in this patch.
+
+> +
+>  static const struct of_device_id mtk_mipi_tx_match[] = {
+> -	{ .compatible = "mediatek,mt8173-mipi-tx", },
+> +	{ .compatible = "mediatek,mt2701-mipi-tx",
+> +	  .data = &mt2701_mipitx_data },
+> +	{ .compatible = "mediatek,mt8173-mipi-tx",
+> +	  .data = &mt8173_mipitx_data },
+>  	{},
+>  };
+>  
+
+Regards,
+CK
