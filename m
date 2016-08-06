@@ -1,54 +1,54 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3] input: touchscreen: Remove duplicate ft6236 driver
-Date: Fri, 5 Aug 2016 19:22:43 -0700
-Message-ID: <20160806022243.GB20562@dtor-ws>
-References: <1470381871-4086-1-git-send-email-hdegoede@redhat.com>
- <1470381871-4086-2-git-send-email-hdegoede@redhat.com>
- <72101a2a-ccf0-b0bc-3859-50a43f990027@i2se.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 1/6] dt-bindings: rockchip-dw-mshc: add description of
+ rockchip, power-invert
+Date: Sat,  6 Aug 2016 13:36:19 +0800
+Message-ID: <1470461784-3955-2-git-send-email-shawn.lin@rock-chips.com>
+References: <1470461784-3955-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <72101a2a-ccf0-b0bc-3859-50a43f990027@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>, linux-input@vger.kernel.org, Sean Cross <xobs@kosagi.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1470461784-3955-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 05, 2016 at 05:07:20PM +0200, Stefan Wahren wrote:
-> Hi Hans,
-> 
-> Am 05.08.2016 um 09:24 schrieb Hans de Goede:
-> >The new(ish) ft6236 simply re-implements the M09 protocol of the
-> >(much) older edt-ft5x06.c driver.
-> >
-> >This commit removes this duplicate driver and adds the i2c ids and
-> >dt compatible string to the edt-ft5x06.c driver to keep compatibility.
-> 
-> i think only remove of the driver is incorrect here.
-> 
-> Since there are two similar but still different DT bindings
-> 
-> Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-> 
-> Documentation/devicetree/bindings/input/touchscreen/focaltech-ft6236.txt
-> 
-> the DT handling of edt-ft5x06.c needs to be extended and then
-> finally driver and binding could be removed.
+rockchip,power-invert is used for rockchip to introduce the flag
+DW_MMC_CARD_PWR_INVERT from DT which should make the power control
+of dw_mmc more flexible according to different hw design.
 
-I believe Hans made sure edt-ft5x06.c can handle focaltech-ft6236
-bindings. Do you see a discrepancy?
+Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Thanks.
+---
 
+ Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+index 07184e8..5640659 100644
+--- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+@@ -30,6 +30,12 @@ Optional Properties:
+   probing, low speeds or in case where all phases work at tuning time.
+   If not specified 0 deg will be used.
+ 
++* rockchip,power-invert: Invert the power control of PWREN register. If adding
++  it, the card should be in power-on state when the power io outputs high level
++  voltage, and it should be in power-off state when outputing low level voltage.
++  otherwise the behaviour of power control should be the opposite way which is
++  the default policy of dw mshc.
++
+ Example:
+ 
+ 	rkdwmmc0@12200000 {
 -- 
-Dmitry
+2.3.7
