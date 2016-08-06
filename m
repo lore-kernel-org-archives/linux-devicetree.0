@@ -1,54 +1,57 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH RFC 2/3] mmc: core: add new cap for 3.3V only DDR MMCs
-Date: Sat, 6 Aug 2016 16:42:33 +0200
-Message-ID: <9356c009-4b34-9d3c-c4b9-c89ced2f8412@denx.de>
-References: <1470488140-10104-1-git-send-email-stefan.wahren@i2se.com>
- <1470488140-10104-3-git-send-email-stefan.wahren@i2se.com>
- <0e38d62a-b3d0-30ca-fca9-bb740ae54d0a@denx.de>
- <16443443.114784.752d0f22-93a7-46e8-bb14-c884787aaea3.open-xchange@email.1und1.de>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH 1/3] drm/i2c: tda998x: Improve
+ tda998x_configure_audio() audio related pdata
+Date: Sat, 6 Aug 2016 17:57:34 +0100
+Message-ID: <20160806165734.GS5783@n2100.arm.linux.org.uk>
+References: <cover.1470129989.git.jsarha@ti.com>
+ <5adcd94104080abcd5b072a5d6a85b85c5ea0584.1470129989.git.jsarha@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <16443443.114784.752d0f22-93a7-46e8-bb14-c884787aaea3.open-xchange@email.1und1.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, Otavio Salvador <otavio@ossystems.com.br>, Holger Schurig <holgerschurig@gmail.com>, linux-mmc@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <5adcd94104080abcd5b072a5d6a85b85c5ea0584.1470129989.git.jsarha@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, airlied@linux.ie, tomi.valkeinen@ti.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/06/2016 04:18 PM, Stefan Wahren wrote:
-> Hi Marek,
-> 
->> Marek Vasut <marex@denx.de> hat am 6. August 2016 um 15:14 geschrieben:
->>
->>
->> On 08/06/2016 02:55 PM, Stefan Wahren wrote:
->>> This patch based on the work of Fabio Estevam:
->>> "[PATCH v2] mmc: core: Do not set mmc voltage to 1.8V when
->>> 'no-1-8-v' is present"
->>>
->>> It adds the support for 3.3V only DDR MMC hosts.
->>
->> Do such cards even exist ? Do you have a link where I can find some ?
-> 
-> i never said anything about SD cards. I mean eMMC modules which usually have 8
-> data pins like this one [1].
-> 
-> Please don't blame me if it's not compatible to i.MX28. It's only an example.
-> 
-> [1] -
-> http://datasheet.octopart.com/THGBM3G4D1FBAIGH2H-Toshiba-datasheet-20748880.pdf
+On Tue, Aug 02, 2016 at 03:05:07PM +0300, Jyri Sarha wrote:
+> @@ -787,19 +792,13 @@ tda998x_configure_audio(struct tda998x_priv *priv,
+>  	reg_clear(priv, REG_AIP_CNTRL_0, AIP_CNTRL_0_RST_CTS);
+>  
+>  	/* Write the channel status */
+> -	buf[0] = IEC958_AES0_CON_NOT_COPYRIGHT;
+> -	buf[1] = 0x00;
+> -	buf[2] = IEC958_AES3_CON_FS_NOTID;
+> -	buf[3] = IEC958_AES4_CON_ORIGFS_NOTID |
+> -			IEC958_AES4_CON_MAX_WORDLEN_24;
+> -	reg_write_range(priv, REG_CH_STAT_B(0), buf, 4);
+> +	reg_write_range(priv, REG_CH_STAT_B(0), params->status, 4);
 
-Interesting, thanks!
+Another couple of points here:
+
+1. I think we should only write the channel status if I2S mode is
+selected - channel status won't be used on SPDIF mode as SPDIF
+supplies its own channel status.
+
+2. I think we should continue writing all the channel status in a
+single I2C transaction, and not breaking it into several different
+transactions to cater for the odd register order.  I don't have
+any direct evidence that one way is better than the other in terms
+of atomicity of the update, but I think having it as a single
+transaction stands a better chance of the chip atomically updating
+the channel status.
 
 -- 
-Best regards,
-Marek Vasut
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
