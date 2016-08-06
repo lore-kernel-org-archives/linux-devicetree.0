@@ -1,88 +1,79 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [RESEND PATCH 4/6] mmc: dw_mmc: split out dw_mci_set_power_reg
-Date: Sat,  6 Aug 2016 15:46:06 +0800
-Message-ID: <1470469566-5841-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1470469503-5676-1-git-send-email-shawn.lin@rock-chips.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v3] input: touchscreen: Remove duplicate ft6236 driver
+Date: Sat, 6 Aug 2016 12:00:39 +0200
+Message-ID: <424ae37d-6ca9-a950-551a-7643cee726d0@redhat.com>
+References: <1470381871-4086-1-git-send-email-hdegoede@redhat.com>
+ <1470381871-4086-2-git-send-email-hdegoede@redhat.com>
+ <72101a2a-ccf0-b0bc-3859-50a43f990027@i2se.com>
+ <20160806022243.GB20562@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1470469503-5676-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160806022243.GB20562@dtor-ws>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Stefan Wahren <stefan.wahren@i2se.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Sean Cross <xobs@kosagi.com>, noralf@tronnes.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Splite out dw_mci_set_power_reg to set PWREN register
-in case that we need more complicated power control.
+Hi,
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+On 06-08-16 04:22, Dmitry Torokhov wrote:
+> On Fri, Aug 05, 2016 at 05:07:20PM +0200, Stefan Wahren wrote:
+>> Hi Hans,
+>>
+>> Am 05.08.2016 um 09:24 schrieb Hans de Goede:
+>>> The new(ish) ft6236 simply re-implements the M09 protocol of the
+>>> (much) older edt-ft5x06.c driver.
+>>>
+>>> This commit removes this duplicate driver and adds the i2c ids and
+>>> dt compatible string to the edt-ft5x06.c driver to keep compatibility.
+>>
+>> i think only remove of the driver is incorrect here.
+>>
+>> Since there are two similar but still different DT bindings
+>>
+>> Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+>>
+>> Documentation/devicetree/bindings/input/touchscreen/focaltech-ft6236.txt
+>>
+>> the DT handling of edt-ft5x06.c needs to be extended and then
+>> finally driver and binding could be removed.
+>
+> I believe Hans made sure edt-ft5x06.c can handle focaltech-ft6236
+> bindings. Do you see a discrepancy?
 
- drivers/mmc/host/dw_mmc.c | 26 ++++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+Correct I've double checked that both the i2c protocol and the
+reset gpio binding are compatible. Devices using the focaltech-ft6236.txt
+binding should work fine with the edt-ft5x06.c driver.
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 0e5ed23..c35a26a 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -1276,10 +1276,25 @@ static void dw_mci_request(struct mmc_host *mmc, struct mmc_request *mrq)
- 	spin_unlock_bh(&host->lock);
- }
- 
-+static inline void dw_mci_set_power_reg(struct dw_mci_slot *slot,
-+					bool enable)
-+{
-+	u32 regs;
-+
-+	if (enable) {
-+		regs = mci_readl(slot->host, PWREN);
-+		regs |= (1 << slot->id);
-+		mci_writel(slot->host, PWREN, regs);
-+	} else {
-+		regs = mci_readl(slot->host, PWREN);
-+		regs &= ~(1 << slot->id);
-+		mci_writel(slot->host, PWREN, regs);
-+	}
-+}
-+
- static int dw_mci_set_power(struct mmc_host *mmc, struct mmc_ios *ios)
- {
- 	struct dw_mci_slot *slot = mmc_priv(mmc);
--	u32 regs;
- 
- 	switch (ios->power_mode) {
- 	case MMC_POWER_UP:
-@@ -1291,9 +1306,7 @@ static int dw_mci_set_power(struct mmc_host *mmc, struct mmc_ios *ios)
- 			return -EINVAL;
- 		}
- 		set_bit(DW_MMC_CARD_NEED_INIT, &slot->flags);
--		regs = mci_readl(slot->host, PWREN);
--		regs |= (1 << slot->id);
--		mci_writel(slot->host, PWREN, regs);
-+		dw_mci_set_power_reg(slot, true);
- 		break;
- 	case MMC_POWER_ON:
- 		if (!slot->host->vqmmc_enabled) {
-@@ -1325,10 +1338,7 @@ static int dw_mci_set_power(struct mmc_host *mmc, struct mmc_ios *ios)
- 		if (!IS_ERR(mmc->supply.vqmmc) && slot->host->vqmmc_enabled)
- 			regulator_disable(mmc->supply.vqmmc);
- 		slot->host->vqmmc_enabled = false;
--
--		regs = mci_readl(slot->host, PWREN);
--		regs &= ~(1 << slot->id);
--		mci_writel(slot->host, PWREN, regs);
-+		dw_mci_set_power_reg(slot, false);
- 		break;
- 	default:
- 		break;
--- 
-2.3.7
+Now if someone can test and confirm that on actual hardware that would be
+great...
+
+And we probably want to remove
+Documentation/devicetree/bindings/input/touchscreen/focaltech-ft6236.txt
+and instead add the compatible string that defines to
+Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+
+I can whip up a patch for that, but as said some testing on actual
+hw would be good, preferably before I write said patch.
+
+Regards,
+
+Hans
+
+
+
+
+
+p.s.
+
+(the v3 in the subject is bogus my bad)
