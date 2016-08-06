@@ -1,64 +1,47 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH 1/3] drm/i2c: tda998x: Improve
- tda998x_configure_audio() audio related pdata
-Date: Sat, 6 Aug 2016 18:56:35 +0100
-Message-ID: <20160806175634.GT5783@n2100.arm.linux.org.uk>
-References: <cover.1470129989.git.jsarha@ti.com>
- <5adcd94104080abcd5b072a5d6a85b85c5ea0584.1470129989.git.jsarha@ti.com>
+From: Mirza Krak <mirza.krak@gmail.com>
+Subject: [PATCH 2/6] clk: tegra: add TEGRA30_CLK_NOR to init table
+Date: Sat,  6 Aug 2016 21:40:48 +0200
+Message-ID: <1470512452-8322-3-git-send-email-mirza.krak@gmail.com>
+References: <1470512452-8322-1-git-send-email-mirza.krak@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <5adcd94104080abcd5b072a5d6a85b85c5ea0584.1470129989.git.jsarha@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, airlied@linux.ie, tomi.valkeinen@ti.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1470512452-8322-1-git-send-email-mirza.krak@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: swarren@wwwdotorg.org, thierry.reding@gmail.com, gnurou@gmail.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, mturquette@baylibre.com, Mirza Krak <mirza.krak@gmail.com>, sboyd@codeaurora.org, linux@armlinux.org.uk, robh+dt@kernel.org, galak@codeaurora.org, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 02, 2016 at 03:05:07PM +0300, Jyri Sarha wrote:
-> @@ -41,7 +41,7 @@ struct tda998x_priv {
->  	u8 vip_cntrl_0;
->  	u8 vip_cntrl_1;
->  	u8 vip_cntrl_2;
-> -	struct tda998x_encoder_params params;
-> +	struct tda998x_audio_params audio_params;
-...
-> @@ -820,7 +819,7 @@ static void tda998x_encoder_set_config(struct tda998x_priv *priv,
->  			    VIP_CNTRL_2_SWAP_F(p->swap_f) |
->  			    (p->mirr_f ? VIP_CNTRL_2_MIRR_F : 0);
->  
-> -	priv->params = *p;
-> +	priv->audio_params = p->audio;
-...
-> @@ -15,16 +28,7 @@ struct tda998x_encoder_params {
->  	u8 swap_e:3;
->  	u8 mirr_e:1;
->  
-> -	u8 audio_cfg;
-> -	u8 audio_clk_cfg;
-> -	u8 audio_frame[6];
-> -
-> -	enum {
-> -		AFMT_SPDIF,
-> -		AFMT_I2S
-> -	} audio_format;
-> -
-> -	unsigned audio_sample_rate;
-> +	struct tda998x_audio_params audio;
+From: Mirza Krak <mirza.krak@gmail.com>
 
-Another point - it would be nice if the name for both tda998x_audio_params
-structures was the same.
+Add TEGRA30_CLK_NOR to init table and set default rate to 127 MHz which
+is max rate.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
+---
+ drivers/clk/tegra/clk-tegra30.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+index 8e2db5e..67f1677 100644
+--- a/drivers/clk/tegra/clk-tegra30.c
++++ b/drivers/clk/tegra/clk-tegra30.c
+@@ -1252,6 +1252,7 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA30_CLK_SDMMC1, TEGRA30_CLK_PLL_P, 48000000, 0 },
+ 	{ TEGRA30_CLK_SDMMC2, TEGRA30_CLK_PLL_P, 48000000, 0 },
+ 	{ TEGRA30_CLK_SDMMC3, TEGRA30_CLK_PLL_P, 48000000, 0 },
++	{ TEGRA30_CLK_NOR, TEGRA30_CLK_PLL_P, 127000000, 0 },
+ 	{ TEGRA30_CLK_PLL_M, TEGRA30_CLK_CLK_MAX, 0, 1 },
+ 	{ TEGRA30_CLK_PCLK, TEGRA30_CLK_CLK_MAX, 0, 1 },
+ 	{ TEGRA30_CLK_CSITE, TEGRA30_CLK_CLK_MAX, 0, 1 },
+--
+2.1.4
