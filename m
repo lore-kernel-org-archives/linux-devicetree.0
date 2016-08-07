@@ -1,81 +1,228 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH RFC 0/3] mmc: mxs-mmc: Implement DDR support
-Date: Sun, 7 Aug 2016 13:37:07 +0200 (CEST)
-Message-ID: <98368157.110813.d9cd30e0-7476-4a28-8bab-dde17515cd9c.open-xchange@email.1und1.de>
-References: <1470488140-10104-1-git-send-email-stefan.wahren@i2se.com>
- <ef08cd86-8366-31b3-1f05-d0c7251cded6@denx.de>
- <299761257.114585.752d0f22-93a7-46e8-bb14-c884787aaea3.open-xchange@email.1und1.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <299761257.114585.752d0f22-93a7-46e8-bb14-c884787aaea3.open-xchange@email.1und1.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Marek Vasut <marex@denx.de>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Otavio Salvador <otavio@ossystems.com.br>, Holger Schurig <holgerschurig@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: sun8i: Add dts file for the Orange Pi Lite SBC
+Date: Sun,  7 Aug 2016 16:16:44 +0200
+Message-ID: <1470579404-28081-1-git-send-email-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+The Orange Pi Lite SBC is a small H3 based SBC, with 512MB RAM,
+micro-sd slot, HDMI out, 2 USB-A connectors, 1 micro-USB connector,
+sdio attached rtl8189ftv wifi and an ir receiver.
 
-> Stefan Wahren <stefan.wahren@i2se.com> hat am 6. August 2016 um 15:48
-> geschrieben:
-> 
-> 
-> Hi Marek,
-> 
-> > Marek Vasut <marex@denx.de> hat am 6. August 2016 um 15:10 geschrieben:
-> > 
-> > 
-> > On 08/06/2016 02:55 PM, Stefan Wahren wrote:
-> > > Based on these discussions: [1], [2] this patch series implements
-> > > DDR support for the MXS MMC host driver. This feature has never been
-> > > ported from the vendor kernel.
-> > > 
-> > > It has been tested on a i.MX28 board with eMMC which is currently
-> > > not in mainline (Duckbill 2).
-> > > 
-> > > * without DDR support
-> > > dd if=/dev/zero of=test bs=8k count=10000
-> > > 81920000 bytes (82 MB) copied, 14.3321 s, 5.7 MB/s
-> > > 
-> > > * with DDR support:
-> > > dd if=/dev/zero of=test bs=8k count=10000
-> > > 81920000 bytes (82 MB) copied, 13.4781 s, 6.1 MB/s
-> > 
-> > Not much of a speedup, how so ?
-> 
-> i agree. Unfortunately i never had the time for a deeper analysis, but i
-> noticed
-> big write performance differences between the vendor kernel 2.6.35 and current
-> mainline kernel in case of writing 100 MB directly to an eMMC partition
-> (factor
-> 2). Implementation of DDR mode was the lower fruit.
-> 
-> I've the suspicion that is related to the usage of DMA engine. Maybe the
-> overhead for AC/BC commands is to big. In the Freescale kernel is an
-> optimization [1].
-> 
-> [1] -
-> http://git.freescale.com/git/cgit.cgi/imx/linux-2.6-imx.git/commit/?h=imx_2.6.35_maintain&id=b09358887fb4b67f6d497fac8cc48475c8bd292d
-> 
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+-Fix the wifi ethernet alias to be ethernet0 as the comment says, rather
+ then ethernet1 (copy and paste error).
+---
+ arch/arm/boot/dts/Makefile                   |   1 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts | 178 +++++++++++++++++++++++++++
+ 2 files changed, 179 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts
 
-here are some additional thoughts about the too little performance gain of DDR
-mode:
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 678abe8..3b280f4 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -767,6 +767,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a83t-allwinner-h8homlet-v2.dtb \
+ 	sun8i-a83t-cubietruck-plus.dtb \
+ 	sun8i-h3-orangepi-2.dtb \
++	sun8i-h3-orangepi-lite.dtb \
+ 	sun8i-h3-orangepi-one.dtb \
+ 	sun8i-h3-orangepi-pc.dtb \
+ 	sun8i-h3-orangepi-pc-plus.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts
+new file mode 100644
+index 0000000..1550fee
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts
+@@ -0,0 +1,178 @@
++/*
++ * Copyright (C) 2016 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun8i-h3.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "Xunlong Orange Pi Lite";
++	compatible = "xunlong,orangepi-lite", "allwinner,sun8i-h3";
++
++	aliases {
++		/* The H3 emac is not used so the wifi is ethernet0 */
++		ethernet0 = &rtl8189ftv;
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&leds_opc>, <&leds_r_opc>;
++
++		pwr_led {
++			label = "orangepi:green:pwr";
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++
++		status_led {
++			label = "orangepi:red:status";
++			gpios = <&pio 0 15 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	r_gpio_keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&sw_r_opc>;
++
++		sw4 {
++			label = "sw4";
++			linux,code = <BTN_0>;
++			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&ehci2 {
++	status = "okay";
++};
++
++&ir {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ir_pins_a>;
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
++	cd-inverted;
++	status = "okay";
++};
++
++&mmc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins_a>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
++
++	/*
++	 * Explicitly define the sdio device, so that we can add an ethernet
++	 * alias for it (which e.g. makes u-boot set a mac-address).
++	 */
++	rtl8189ftv: sdio_wifi@1 {
++		reg = <1>;
++	};
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&ohci2 {
++	status = "okay";
++};
++
++&pio {
++	leds_opc: led_pins@0 {
++		allwinner,pins = "PA15";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&r_pio {
++	leds_r_opc: led_pins@0 {
++		allwinner,pins = "PL10";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	sw_r_opc: key_pins@0 {
++		allwinner,pins = "PL3";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	/* USB VBUS is always on */
++	status = "okay";
++};
+-- 
+2.7.4
 
-* The DDR mode applies only to the DATA lines not to the CMD line. So the plain
-MMC commands can't benefit from that.
-
-* The i.MX28 reference manual mentions a relevant setting:
-
-  17.8.2.2 eMMC DDR operation
-  To boost the performance of SSP running in DDR mode and at the maximum
-frequency, 
-  the DMA interface allows a burst of 4 or 8 32-bit APB transfers per DMA
-request.
-
-I tried to change HW_SSP_DDR_CTRL_DMA_BURST_TYPE with no luck (in case of 8
-bursts the communication to the MMC get lost). AFAIK this register is never
-touched in the vendor kernel.
-
-Regards
-Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
