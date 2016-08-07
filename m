@@ -1,104 +1,46 @@
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: Re: [RFC][PATCH 3/4] power: reset: Add sram-reboot-mode driver
-Date: Fri, 5 Aug 2016 19:23:13 -0400
-Message-ID: <CAP=VYLpE-+GmCA4XDwSvj9wzD-sNtrEZV+dP1XqjG01J+N=7qA@mail.gmail.com>
-References: <1470265523-27557-1-git-send-email-john.stultz@linaro.org> <1470265523-27557-4-git-send-email-john.stultz@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470265523-27557-4-git-send-email-john.stultz@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Caesar Wang <wxt@rock-chips.com>, Kees Cook <keescook@chromium.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Vishal Bhoj <vishal.bhoj@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Android Kernel Team <kernel-team@android.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 0/6] Add support of inverting power control and some minor cleanup
+Date: Sun,  7 Aug 2016 09:33:38 +0800
+Message-ID: <1470533618-16312-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 3, 2016 at 7:05 PM, John Stultz <john.stultz@linaro.org> wrote:
-> Add sram-reboot-mode driver, which enables
-> reboot modes to be specified from sram subnodes.
->
-> Cc: Andy Yan <andy.yan@rock-chips.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Cc: Heiko Stübner <heiko@sntech.de>
-> Cc: Caesar Wang <wxt@rock-chips.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Guodong Xu <guodong.xu@linaro.org>
-> Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
-> Cc: Vishal Bhoj <vishal.bhoj@linaro.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: Android Kernel Team <kernel-team@android.com>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  drivers/power/reset/Kconfig            | 10 ++++
->  drivers/power/reset/Makefile           |  1 +
->  drivers/power/reset/sram-reboot-mode.c | 95 ++++++++++++++++++++++++++++++++++
->  3 files changed, 106 insertions(+)
->  create mode 100644 drivers/power/reset/sram-reboot-mode.c
->
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index 3bfac53..af553ed 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -208,5 +208,15 @@ config SYSCON_REBOOT_MODE
->           register, then the bootloader can read it to take different
->           action according to the mode.
->
-> +config SRAM_REBOOT_MODE
-> +       bool "Generic SRAM reboot mode driver"
 
-Since this is bool, can we dump the module.h and any MODULE_*
-tags from the driver, and register using a builtin variant?
+By default, dw_mmc outputs high level voltage to indicate powering
+up the card and outputs low level vcltage to indicate powering
+off the card. But that is not always correct. The power io should
+be able to control different kind of hw components to supply or
+cutoff power to the card. We have boards that need this patchset
+to make the power control correct. Meanwhile let's expose it to
+DT for board-specific usage.
 
-Thanks,
-Paul.
+
+Changes in v2:
+- fix copy-paste err and typo
+
+Shawn Lin (6):
+  dt-bindings: rockchip-dw-mshc: add description of
+    rockchip,power-invert
+  mmc: dw_mmc: cleanup power setting of set_ios callback
+  mmc: dw_mmc: split out dw_mci_set_power
+  mmc: dw_mmc: split out dw_mci_set_power_reg
+  mmc: dw_mmc: support inverted power control
+  mmc: dw_mmc-rockchip: add parsing of power control from DT
+
+ .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |   6 +
+ drivers/mmc/host/dw_mmc-rockchip.c                 |   8 ++
+ drivers/mmc/host/dw_mmc.c                          | 134 ++++++++++++---------
+ drivers/mmc/host/dw_mmc.h                          |   1 +
+ 4 files changed, 90 insertions(+), 59 deletions(-)
+
+-- 
+2.3.7
+
+
 --
-
-> +       select REBOOT_MODE
-> +       select SRAM
-> +       help
-> +        Say y here will enable reboot mode driver. This will
-> +        get reboot mode arguments and store it in an SRAM
-> +        address, then the bootloader can read it to take different
-> +        action according to the mode.
-> +
->  endif
->
-> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-> index 1be307c..14f23ad 100644
-> --- a/drivers/power/reset/Makefile
-> +++ b/drivers/power/reset/Makefile
-> @@ -24,3 +24,4 @@ obj-$(CONFIG_POWER_RESET_RMOBILE) += rmobile-reset.o
->  obj-$(CONFIG_POWER_RESET_ZX) += zx-reboot.o
->  obj-$(CONFIG_REBOOT_MODE) += reboot-mode.o
->  obj-$(CONFIG_SYSCON_REBOOT_MODE) += syscon-reboot-mode.o
-> +obj-$(CONFIG_SRAM_REBOOT_MODE) += sram-reboot-mode.o
-> diff --git a/drivers/power/reset/sram-reboot-mode.c b/drivers/power/reset/sram-reboot-mode.c
-> new file mode 100644
-> index 0000000..8945dac
-> --- /dev/null
-> +++ b/drivers/power/reset/sram-reboot-mode.c
-> @@ -0,0 +1,95 @@
-> +/*
-> + * Copyright (c) 2016, Linaro Limited
-> + * Based on syscon-reboot-mode.c
-> + * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reboot.h>
-> +#include <linux/regmap.h>
-> +#include "reboot-mode.h"
-> +
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
