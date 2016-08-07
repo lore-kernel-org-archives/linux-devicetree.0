@@ -1,12 +1,14 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH resend 0/1] mmc: pwrseq-simple: Add an optional
- post-power-on-delay
-Date: Sun,  7 Aug 2016 21:02:37 +0200
-Message-ID: <1470596558-23195-1-git-send-email-hdegoede@redhat.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] dt: bindings: Add binding for ESP8089 wifi chips
+Date: Sun, 07 Aug 2016 21:59:13 +0200
+Message-ID: <2936779.FAiO1bqUWV@wuerfel>
+References: <1470596269-20572-1-git-send-email-hdegoede@redhat.com>
+ <1470596269-20572-2-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1470596269-20572-2-git-send-email-hdegoede@redhat.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,24 +18,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-mmc@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf, Rob,
+On Sunday, August 7, 2016 8:57:49 PM CEST Hans de Goede wrote:
+> +Espressif ESP8089 wireless SDIO devices
+> +
+> +This node provides properties for controlling the ESP8089 wireless device.
+> +The node is expected to be specified as a child node to the SDIO controller
+> +that connects the device to the system.
+> +
+> +Required properties:
+> +
+> + - compatible : Should be "esp,esp8089".
 
-Here is a resend of a patch from me from a couple of weeks ago.
+I think it would be good to standardize a compatible string for sdio
+like we have it for other discoverable buses, based on the
+vendor/device ID (or whatever this uses), using something like
 
-There was some discussion about this back then, but if I understood
-correctly, the end-conclusion was that Rob was ok with this change
-(with the caveat that we should not add 6 more confgurable delays
-at other points to the -simple binding later).
+compatible = "sdio1234,5678", "esp,esp8089";
 
-Rob have I understood that correctly, if so can we please have your
-ack for the dt bits of this ?
+> +Optional properties:
+> + - esp,crystal_26M_en: Integer value for the crystal_26M_en firmware parameter
 
-Ulf can you review and if ok merge this once we've Rob's ack ?
+better use '-' instead of '_' for property names.
 
-Thanks & Regards,
-
-Hans
+	Arnd
