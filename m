@@ -1,124 +1,57 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 00/17] ARM: mvebu: misc Armada 38x/39x DT and v7 defconfig improvements
-Date: Mon, 08 Aug 2016 17:03:34 +0200
-Message-ID: <87popjuwu1.fsf@free-electrons.com>
-References: <1470305660-6601-1-git-send-email-jaz@semihalf.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 5/6] ARM: tegra: Add Tegra20 GMI support
+Date: Mon, 8 Aug 2016 16:09:17 +0100
+Message-ID: <af24f4d2-b8bf-993a-13f3-54dade1ebeb7@nvidia.com>
+References: <1470512452-8322-1-git-send-email-mirza.krak@gmail.com>
+ <1470512452-8322-6-git-send-email-mirza.krak@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470305660-6601-1-git-send-email-jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org> (Grzegorz
-	Jaszczyk's message of "Thu, 4 Aug 2016 12:14:03 +0200")
+In-Reply-To: <1470512452-8322-6-git-send-email-mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+To: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grzegorz,
- 
- On Thu, Aug 04 2016, Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org> wrote:
-
-> Hello,
->
-> This is the second version of patch-set which enables some commonly used
-> features in mvebu_v7_defconfig and updates old or introduces new dts/dtsi
-> related to Armada 38x and Armada 39x SoC family. All comments from
-> v1 are included, more details in a changelog below.
->
-> Any comments or remarks would be welcome.
-
-All the patches are applied on the mvbeu branches:
-The first 2 on mvebu/defconfig and all the other on mvebu/dt
-
-Thanks,
-
-Gregory
 
 
->
-> Best regards,
-> Grzegorz
->
-> Changelog:
-> v1 -> v2
->
-> - Add at least one line of commit log entry for those patches, which
-> contained only commit title.
->
-> Suggested by Andrew Lunn and Gregory Clement.
->
-> - Drop patch "ARM: mvebu: enable E1000E in mvebu_v7_defconfig", since it
-> enables PCIe card which is not a part of the SoC.
->
-> Suggested by Russell King and Thomas Petazzoni.
->
-> - Change dts prefixes in commit title from "ARM: mvebu: <board_name>" to
-> "ARM: dts: mvebu: <board_name>"
->
-> Suggested by Gregory Clement.
->
-> - Add nodes describing the eeproms connected to I2C buses in
-> armada-390-db.dts and armada-395-gp.dts. Also add information about
-> connectors used and described in mentioned dts's.
->
-> Suggested by Gregory Clement.
->
-> - Improve devicetree bindings about required property for Marvell Armada 39x
-> family: Armada 398 based boards should have only "marvell,armada398" and not
-> "marvell,armada395".
->
-> Suggested by Rob Herring.
->
-> Grzegorz Jaszczyk (17):
->   ARM: mvebu: enable MTD command line partition table in
->     mvebu_v7_defconfig
->   ARM: mvebu: enable UBI and UBIFS in mvebu_v7_defconfig
->   ARM: dts: mvebu: a385-db-ap: enable USB (orion-ehci) port
->   ARM: dts: mvebu: a385-db-ap: add default partition description for
->     NAND
->   ARM: dts: mvebu: armada-390: add missing compatibility string and
->     bracket
->   ARM: dts: mvebu: armada-39x: update the SDHCI node on Armada 39x
->   ARM: dts: mvebu: armada-39x: enable PMU, CA9 SoC Controller and
->     Coherency fabric
->   ARM: dts: mvebu: armada-39x: enable the thermal sensor in Armada-39x
->     SoCs
->   ARM: dts: mvebu: armada-39x: enable watchdog for all Armada-39x SoCs
->   ARM: dts: mvebu: armada-39x: add missing nodes describing GPIO's
->   ARM: dts: mvebu: armada-39x: add missing nodes describing USB2.0 and
->     USB3.0
->   ARM: dts: mvebu: armada-39x: enable rtc for all Armada-39x SoCs
->   ARM: dts: mvebu: armada-395: add support for the Armada 395 SoC family
->   ARM: dts: mvebu: armada-398: update the dtsi about missing interfaces
->   ARM: dts: mvebu: armada-398-db: enable supported usb interfaces
->   ARM: dts: mvebu: armada-390-db: add support for the Armada 390 DB
->     board
->   ARM: dts: mvebu: armada-395-gp: add support for the Armada 395 GP
->     Board
->
->  .../devicetree/bindings/arm/marvell/armada-39x.txt |  15 +-
->  arch/arm/boot/dts/armada-385-db-ap.dts             |  30 +++-
->  arch/arm/boot/dts/armada-390-db.dts                | 175 +++++++++++++++++++++
->  arch/arm/boot/dts/armada-390.dtsi                  |   3 +
->  arch/arm/boot/dts/armada-395-gp.dts                | 163 +++++++++++++++++++
->  arch/arm/boot/dts/armada-395.dtsi                  |  76 +++++++++
->  arch/arm/boot/dts/armada-398-db.dts                |   8 +
->  arch/arm/boot/dts/armada-398.dtsi                  |  10 +-
->  arch/arm/boot/dts/armada-39x.dtsi                  |  94 ++++++++++-
->  arch/arm/configs/mvebu_v7_defconfig                |   3 +
->  10 files changed, 570 insertions(+), 7 deletions(-)
->  create mode 100644 arch/arm/boot/dts/armada-390-db.dts
->  create mode 100644 arch/arm/boot/dts/armada-395-gp.dts
->  create mode 100644 arch/arm/boot/dts/armada-395.dtsi
->
-> -- 
-> 1.8.3.1
->
+On 06/08/16 20:40, Mirza Krak wrote:
+> From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Add a device node for the GMI controller found on Tegra20.
+> 
+> Signed-off-by: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/tegra20.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+> index 2207c08..9b97863 100644
+> --- a/arch/arm/boot/dts/tegra20.dtsi
+> +++ b/arch/arm/boot/dts/tegra20.dtsi
+> @@ -376,6 +376,17 @@
+>  		status = "disabled";
+>  	};
+>  
+> +
+> +	gmi@70009000 {
+> +		compatible = "nvidia,tegra20-gmi";
+> +		reg = <70009000 0x1000>;
+> +		clocks = <&tegra_car TEGRA20_CLK_NOR>;
+> +		clock-names = "gmi";
+> +		resets = < &tegra_car 42>;
+> +		reset-names = "gmi";
+> +		status = "disabled";
+> +	};
+
+#address-cells, #size-cells and ranges appears to be missing.
+
+Cheers
+Jon
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+nvpublic
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
