@@ -1,54 +1,66 @@
-From: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 4/4] mm: enable CONFIG_MOVABLE_NODE on powerpc
-Date: Mon,  8 Aug 2016 13:27:23 -0500
-Message-ID: <1470680843-28702-5-git-send-email-arbab@linux.vnet.ibm.com>
+From: Reza Arbab <arbab@linux.vnet.ibm.com>
+Subject: [PATCH 2/4] powerpc/mm: create numa nodes for hotplug memory
+Date: Mon,  8 Aug 2016 13:27:21 -0500
+Message-ID: <1470680843-28702-3-git-send-email-arbab@linux.vnet.ibm.com>
 References: <1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470680843-28702-1-git-send-email-arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Bharata B Rao <bharata-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com>
+Sender: owner-linux-mm@kvack.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Jonathan Corbet <corbet@lwn.net>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Onlining memory into ZONE_MOVABLE requires CONFIG_MOVABLE_NODE.
+When scanning the device tree to initialize the system NUMA topology,
+process dt elements with compatible id "ibm,hotplug-aperture" to create
+memoryless numa nodes.
 
-Enable the use of this config option on PPC64 platforms.
+These nodes will be filled when hotplug occurs within the associated
+address range.
 
-Signed-off-by: Reza Arbab <arbab-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
 ---
- Documentation/kernel-parameters.txt | 2 +-
- mm/Kconfig                          | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/mm/numa.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-index 46c030a..07fefd8 100644
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -2344,7 +2344,7 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
- 			that the amount of memory usable for all allocations
- 			is not too small.
+diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
+index 75b9cd6..80d067d 100644
+--- a/arch/powerpc/mm/numa.c
++++ b/arch/powerpc/mm/numa.c
+@@ -708,6 +708,12 @@ static void __init parse_drconf_memory(struct device_node *memory)
+ 	}
+ }
  
--	movable_node	[KNL,X86] Boot-time switch to enable the effects
-+	movable_node	[KNL,X86,PPC] Boot-time switch to enable the effects
- 			of CONFIG_MOVABLE_NODE=y. See mm/Kconfig for details.
++static const struct of_device_id memory_match[] = {
++	{ .type = "memory" },
++	{ .compatible = "ibm,hotplug-aperture" },
++	{ /* sentinel */ }
++};
++
+ static int __init parse_numa_properties(void)
+ {
+ 	struct device_node *memory;
+@@ -752,7 +758,7 @@ static int __init parse_numa_properties(void)
  
- 	MTD_Partition=	[MTD]
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 78a23c5..4154638 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -153,7 +153,7 @@ config MOVABLE_NODE
- 	bool "Enable to assign a node which has only movable memory"
- 	depends on HAVE_MEMBLOCK
- 	depends on NO_BOOTMEM
--	depends on X86_64
-+	depends on X86_64 || PPC64
- 	depends on NUMA
- 	default n
- 	help
+ 	get_n_mem_cells(&n_mem_addr_cells, &n_mem_size_cells);
+ 
+-	for_each_node_by_type(memory, "memory") {
++	for_each_matching_node(memory, memory_match) {
+ 		unsigned long start;
+ 		unsigned long size;
+ 		int nid;
+@@ -1080,7 +1086,7 @@ static int hot_add_node_scn_to_nid(unsigned long scn_addr)
+ 	struct device_node *memory;
+ 	int nid = -1;
+ 
+-	for_each_node_by_type(memory, "memory") {
++	for_each_matching_node(memory, memory_match) {
+ 		unsigned long start, size;
+ 		int ranges;
+ 		const __be32 *memcell_buf;
 -- 
 1.8.3.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
