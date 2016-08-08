@@ -1,163 +1,99 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [Patch v3 08/11] driver/edac/fsl_ddr: Add support of little
- endian
-Date: Mon, 8 Aug 2016 10:50:02 +0200
-Message-ID: <20160808085002.GF20800@nazgul.tnic>
-References: <1470351518-22404-1-git-send-email-york.sun@nxp.com>
- <1470351518-22404-9-git-send-email-york.sun@nxp.com>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH v5 0/6] power: add power sequence library
+Date: Mon, 8 Aug 2016 16:52:05 +0800
+Message-ID: <1470646331-23227-1-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470351518-22404-9-git-send-email-york.sun-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: York Sun <york.sun-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, morbidrsa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, dbaryshkov@gmail.com, dwmw3@infradead.org
+Cc: k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, stillcompiling@gmail.com, linux-kernel@vger.kernel.org, mka@chromium.org, Peter Chen <peter.chen@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2016 at 03:58:33PM -0700, York Sun wrote:
-> Get endianness from device tree. Both big endian and little endian
-> are supported. Default to big endian for backward compatibility to
-> MPC85xx.
-> 
-> Signed-off-by: York Sun <york.sun-3arQi8VN3Tc@public.gmane.org>
-> 
-> ---
-> Change log
->   v3: no change
->   v2: Separated from "Add support for ARM-based SoCs" patch
-> 
->  .../fsl/ddr.txt}                                   |  6 ++
->  drivers/edac/fsl_ddr_edac.c                        | 83 ++++++++++++++--------
->  2 files changed, 58 insertions(+), 31 deletions(-)
->  rename Documentation/devicetree/bindings/{powerpc/fsl/mem-ctrlr.txt => memory-controllers/fsl/ddr.txt} (74%)
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt b/Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
-> similarity index 74%
-> rename from Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
-> rename to Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
-> index f87856f..62623f9 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
-> +++ b/Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
-> @@ -7,6 +7,10 @@ Properties:
->  		  "fsl,qoriq-memory-controller".
->  - reg		: Address and size of DDR controller registers
->  - interrupts	: Error interrupt of DDR controller
-> +- little-endian	: Specifies little-endian access to registers
-> +- big-endian	: Specifies big-endian access to registers
-> +
-> +If both little-endian and big-endian are omitted, big-endian will be used.
->  
->  Example 1:
->  
-> @@ -14,6 +18,7 @@ Example 1:
->  		compatible = "fsl,bsc9132-memory-controller";
->  		reg = <0x2000 0x1000>;
->  		interrupts = <16 2 1 8>;
-> +		big-endian;
->  	};
->  
->  
-> @@ -24,4 +29,5 @@ Example 2:
->  				"fsl,qoriq-memory-controller";
->  		reg = <0x8000 0x1000>;
->  		interrupts = <16 2 1 23>;
-> +		big-endian;
->  	};
+Hi all,
 
-This needs an ACK from DT maintainers. They're on CC.
+This is a follow-up for my last power sequence framework patch set [1].
+According to Rob Herring and Ulf Hansson's comments[2], I use a generic
+power sequence library for parsing the power sequence elements on DT,
+and implement generic power sequence on library. The host driver
+can allocate power sequence instance, and calls pwrseq APIs accordingly.
 
-> diff --git a/drivers/edac/fsl_ddr_edac.c b/drivers/edac/fsl_ddr_edac.c
-> index 88ecf7d..b1b7924 100644
-> --- a/drivers/edac/fsl_ddr_edac.c
-> +++ b/drivers/edac/fsl_ddr_edac.c
+In future, if there are special power sequence requirements, the special
+power sequence library can be created.
 
-...
+This patch set is tested on i.mx6 sabresx evk using a dts change, I use
+two hot-plug devices to simulate this use case, the related binding
+change is updated at patch [1/6], The udoo board changes were tested
+using my last power sequence patch set.[3]
 
-> @@ -470,6 +483,13 @@ int fsl_ddr_mc_err_probe(struct platform_device *op)
->  	mci->ctl_name = pdata->name;
->  	mci->dev_name = pdata->name;
->  
-> +	if (of_find_property(op->dev.of_node, "little-endian", NULL))
-> +		little_endian = true;
-> +	else if (of_find_property(op->dev.of_node, "big-endian", NULL))
-> +		little_endian = false;
-> +	else
-> +		little_endian = false;
+Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
+need to power on itself before it can be found by ULPI bus.
 
-What happened here?
+[1] http://www.spinics.net/lists/linux-usb/msg142755.html
+[2] http://www.spinics.net/lists/linux-usb/msg143106.html
+[3] http://www.spinics.net/lists/linux-usb/msg142815.html
 
-Considering little_endian is static, this should suffice for its
-initialization:
+Changes for v5:
+- Delete pwrseq_register/pwrseq_unregister, which is useless currently
+- Fix the linker error when the pwrseq user is compiled as module
 
-	if (of_find_property(op->dev.of_node, "little-endian", NULL))
-		little_endian = true;
+Changes for v4:
+- Create the patch on next-20160722 
+- Fix the of_node is not NULL after chipidea driver is unbinded [Patch 5/6]
+- Using more friendly wait method for reset gpio [Patch 2/6]
+- Support multiple input clocks [Patch 2/6]
+- Add Rob Herring's ack for DT changes
+- Add Joshua Clayton's Tested-by
 
+Changes for v3:
+- Delete "power-sequence" property at binding-doc, and change related code
+  at both library and user code.
+- Change binding-doc example node name with Rob's comments
+- of_get_named_gpio_flags only gets the gpio, but without setting gpio flags,
+  add additional code request gpio with proper gpio flags
+- Add Philipp Zabel's Ack and MAINTAINER's entry
 
+Changes for v2:
+- Delete "pwrseq" prefix and clock-names for properties at dt binding
+- Should use structure not but its pointer for kzalloc
+- Since chipidea core has no of_node, let core's of_node equals glue
+  layer's at core's probe
 
+Peter Chen (6):
+  binding-doc: power: pwrseq-generic: add binding doc for generic power
+    sequence library
+  power: add power sequence library
+  binding-doc: usb: usb-device: add optional properties for power
+    sequence
+  usb: core: add power sequence handling for USB devices
+  usb: chipidea: let chipidea core device of_node equal's glue layer
+    device of_node
+  ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB property
 
->  	res = of_address_to_resource(op->dev.of_node, 0, &r);
->  	if (res) {
->  		pr_err("%s: Unable to get resource for MC err regs\n",
-> @@ -492,7 +512,7 @@ int fsl_ddr_mc_err_probe(struct platform_device *op)
->  		goto err;
->  	}
->  
-> -	sdram_ctl = in_be32(pdata->mc_vbase + MC_DDR_SDRAM_CFG);
-> +	sdram_ctl = ddr_in32(pdata->mc_vbase + MC_DDR_SDRAM_CFG);
->  	if (!(sdram_ctl & DSC_ECC_EN)) {
->  		/* no ECC */
->  		pr_warn("%s: No ECC DIMMs discovered\n", __func__);
-> @@ -520,11 +540,11 @@ int fsl_ddr_mc_err_probe(struct platform_device *op)
->  
->  	/* store the original error disable bits */
->  	orig_ddr_err_disable =
-> -	    in_be32(pdata->mc_vbase + MC_ERR_DISABLE);
-> -	out_be32(pdata->mc_vbase + MC_ERR_DISABLE, 0);
-> +	    ddr_in32(pdata->mc_vbase + MC_ERR_DISABLE);
-> +	ddr_out32(pdata->mc_vbase + MC_ERR_DISABLE, 0);
->  
->  	/* clear all error bits */
-> -	out_be32(pdata->mc_vbase + MC_ERR_DETECT, ~0);
-> +	ddr_out32(pdata->mc_vbase + MC_ERR_DETECT, ~0);
->  
->  	if (edac_mc_add_mc_with_groups(mci, fsl_ddr_dev_groups)) {
->  		edac_dbg(3, "failed edac_mc_add_mc()\n");
-> @@ -532,15 +552,15 @@ int fsl_ddr_mc_err_probe(struct platform_device *op)
->  	}
->  
->  	if (edac_op_state == EDAC_OPSTATE_INT) {
-> -		out_be32(pdata->mc_vbase + MC_ERR_INT_EN,
-> -			 DDR_EIE_MBEE | DDR_EIE_SBEE);
-> +		ddr_out32(pdata->mc_vbase + MC_ERR_INT_EN,
-> +			  DDR_EIE_MBEE | DDR_EIE_SBEE);
->  
->  		/* store the original error management threshold */
-> -		orig_ddr_err_sbe = in_be32(pdata->mc_vbase +
-> +		orig_ddr_err_sbe = ddr_in32(pdata->mc_vbase +
->  					   MC_ERR_SBE) & 0xff0000;
->  
->  		/* set threshold to 1 error per interrupt */
-> -		out_be32(pdata->mc_vbase + MC_ERR_SBE, 0x10000);
-> +		ddr_out32(pdata->mc_vbase + MC_ERR_SBE, 0x10000);
->  
->  		/* register interrupts */
->  		pdata->irq = irq_of_parse_and_map(op->dev.of_node, 0);
-> @@ -573,6 +593,7 @@ err:
->  	edac_mc_free(mci);
->  	return res;
->  }
-> +EXPORT_SYMBOL_GPL(fsl_ddr_mc_err_probe);
-
-What's that export for?
+ .../bindings/power/pwrseq/pwrseq-generic.txt       |  48 ++++++
+ .../devicetree/bindings/usb/usb-device.txt         |  10 +-
+ MAINTAINERS                                        |   9 ++
+ arch/arm/boot/dts/imx6qdl-udoo.dtsi                |  26 ++--
+ drivers/power/Kconfig                              |   1 +
+ drivers/power/Makefile                             |   1 +
+ drivers/power/pwrseq/Kconfig                       |  20 +++
+ drivers/power/pwrseq/Makefile                      |   2 +
+ drivers/power/pwrseq/core.c                        |  62 ++++++++
+ drivers/power/pwrseq/pwrseq_generic.c              | 168 +++++++++++++++++++++
+ drivers/usb/chipidea/core.c                        |  11 ++
+ drivers/usb/core/Makefile                          |   1 +
+ drivers/usb/core/hub.c                             |  12 +-
+ drivers/usb/core/hub.h                             |  12 ++
+ drivers/usb/core/pwrseq.c                          | 100 ++++++++++++
+ include/linux/power/pwrseq.h                       |  47 ++++++
+ 16 files changed, 513 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+ create mode 100644 drivers/power/pwrseq/Kconfig
+ create mode 100644 drivers/power/pwrseq/Makefile
+ create mode 100644 drivers/power/pwrseq/core.c
+ create mode 100644 drivers/power/pwrseq/pwrseq_generic.c
+ create mode 100644 drivers/usb/core/pwrseq.c
+ create mode 100644 include/linux/power/pwrseq.h
 
 -- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
