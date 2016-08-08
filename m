@@ -1,71 +1,76 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/2] arm64: marvell: add support for the slave CP in Armada 8K
-Date: Mon, 08 Aug 2016 17:30:07 +0200
-Message-ID: <87d1ljuvls.fsf@free-electrons.com>
-References: <1469716556-15299-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [Patch v3 08/11] driver/edac/fsl_ddr: Add support of little
+ endian
+Date: Mon, 8 Aug 2016 16:39:22 +0100
+Message-ID: <20160808153922.GG12649@leverpostej>
+References: <1470351518-22404-1-git-send-email-york.sun@nxp.com>
+ <1470351518-22404-9-git-send-email-york.sun@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469716556-15299-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-	(Thomas Petazzoni's message of "Thu, 28 Jul 2016 16:35:54 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1470351518-22404-9-git-send-email-york.sun@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: York Sun <york.sun@nxp.com>
+Cc: linux-edac@vger.kernel.org, morbidrsa@gmail.com, oss@buserror.net, stuart.yoder@nxp.com, bp@alien8.de, Rob Herring <robh+dt@kernel.org>, Doug Thompson <dougthompson@xmission.com>, mchehab@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
- 
- On Thu, Jul 28 2016, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+On Thu, Aug 04, 2016 at 03:58:33PM -0700, York Sun wrote:
+> Get endianness from device tree. Both big endian and little endian
+> are supported. Default to big endian for backward compatibility to
+> MPC85xx.
+> 
+> Signed-off-by: York Sun <york.sun@nxp.com>
+> 
+> ---
+> Change log
+>   v3: no change
+>   v2: Separated from "Add support for ARM-based SoCs" patch
+> 
+>  .../fsl/ddr.txt}                                   |  6 ++
+>  drivers/edac/fsl_ddr_edac.c                        | 83 ++++++++++++++--------
+>  2 files changed, 58 insertions(+), 31 deletions(-)
+>  rename Documentation/devicetree/bindings/{powerpc/fsl/mem-ctrlr.txt => memory-controllers/fsl/ddr.txt} (74%)
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt b/Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
+> similarity index 74%
+> rename from Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
+> rename to Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
+> index f87856f..62623f9 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
+> +++ b/Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
+> @@ -7,6 +7,10 @@ Properties:
+>  		  "fsl,qoriq-memory-controller".
+>  - reg		: Address and size of DDR controller registers
+>  - interrupts	: Error interrupt of DDR controller
+> +- little-endian	: Specifies little-endian access to registers
+> +- big-endian	: Specifies big-endian access to registers
+> +
+> +If both little-endian and big-endian are omitted, big-endian will be used.
 
-> Hello,
->
-> The following set of two patches add support for the slave CP HW block
-> found in the Armada 8K SoCs. As a reminder:
->
->  - Armada 7K is an SoC with one AP and one CP. The AP is the part that
->    contains the CPU, cache and a few basic I/Os. The CP is the part
->    that contains most interesting I/Os (PCIe, SATA, USB, Ethernet,
->    etc.)
->
->  - Armada 8K is an SoC with one AP and two CPs.
->
-> This set of patches add support for the second CP found in Armada 8K,
-> also called the "slave CP110".
+The binding looks fine.
 
-Both patches applied on mvebu/dt64
+> @@ -470,6 +483,13 @@ int fsl_ddr_mc_err_probe(struct platform_device *op)
+>  	mci->ctl_name = pdata->name;
+>  	mci->dev_name = pdata->name;
+>  
+> +	if (of_find_property(op->dev.of_node, "little-endian", NULL))
+
+Use:	if (of_property_read_bool(dev.of_node, "little-endian"))
+
+> +		little_endian = true;
+> +	else if (of_find_property(op->dev.of_node, "big-endian", NULL))
+	
+Use:	else if (of_property_read_bool(dev.of_node, "big-endian"))
+
+> +		little_endian = false;
+> +	else
+> +		little_endian = false;
+> +
+
+With those fixed up:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
 Thanks,
-
-Gregory
-
->
-> Thanks,
->
-> Thomas
->
-> Thomas Petazzoni (2):
->   arm64: dts: marvell: add description for the slave CP110 in Armada 8K
->   arm64: dts: marvell: add description for the Armada 8040 dev board
->
->  arch/arm64/boot/dts/marvell/Makefile               |   1 +
->  arch/arm64/boot/dts/marvell/armada-8020.dtsi       |   1 +
->  .../{armada-8020.dtsi => armada-8040-db.dts}       | 109 ++++++++-
->  arch/arm64/boot/dts/marvell/armada-8040.dtsi       |   1 +
->  .../arm64/boot/dts/marvell/armada-cp110-slave.dtsi | 246 +++++++++++++++++++++
->  5 files changed, 351 insertions(+), 7 deletions(-)
->  copy arch/arm64/boot/dts/marvell/{armada-8020.dtsi => armada-8040-db.dts} (55%)
->  create mode 100644 arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
->
-> -- 
-> 2.7.4
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Mark.
