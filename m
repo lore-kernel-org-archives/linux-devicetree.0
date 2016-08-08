@@ -1,20 +1,21 @@
 From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: r8a7792: add SD clocks
-Date: Mon, 8 Aug 2016 14:37:08 +0200
-Message-ID: <CAMuHMdU+My7TK+duxqtPDpuXCRkUy4f-sn3M8WBkQXu5vDGPyg@mail.gmail.com>
-References: <4468057.gGDuR4B4DF@wasted.cogentembedded.com> <2958440.dIj6ehVyCb@wasted.cogentembedded.com>
+Subject: Re: [PATCH 1/2] ARM: dts: r8a7792: add VIN clocks
+Date: Mon, 8 Aug 2016 14:42:56 +0200
+Message-ID: <CAMuHMdWeq2tH_jpPJ1sPYiutKCcAXynm8tw6vBW7dC9C1seUeg@mail.gmail.com>
+References: <17288006.ERHB6654v5@wasted.cogentembedded.com> <1477310.o5B8uhf3mT@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2958440.dIj6ehVyCb-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+In-Reply-To: <1477310.o5B8uhf3mT-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 23, 2016 at 8:10 PM, Sergei Shtylyov
+On Sat, Jul 23, 2016 at 9:16 PM, Sergei Shtylyov
 <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Describe the SDHI0 clock and its parent, SD clock in the R8A7792 device tree.
+> Describe the VIN[0-5] clocks and their parent, ZG clock in the R8A7792
+> device  tree.
 >
 > Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
