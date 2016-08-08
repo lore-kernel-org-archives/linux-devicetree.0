@@ -1,7 +1,7 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v5 12/14] arm64/numa: remove some useless code
-Date: Mon, 8 Aug 2016 17:18:17 +0800
-Message-ID: <1470647899-6324-13-git-send-email-thunder.leizhen@huawei.com>
+Subject: [PATCH v5 06/14] of_numa: Use of_get_next_parent to simplify code
+Date: Mon, 8 Aug 2016 17:18:11 +0800
+Message-ID: <1470647899-6324-7-git-send-email-thunder.leizhen@huawei.com>
 References: <1470647899-6324-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,47 +12,39 @@ To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-1. Currently only cpu0 set on cpu_possible_mask and percpu areas have not
-   been initialized.
-2. No reason to limit cpu0 must belongs to node0.
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Use of_get_next_parent() instead of open-code.
+
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/mm/numa.c | 8 --------
- 1 file changed, 8 deletions(-)
+ drivers/of/of_numa.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index d73b0a0..92b1692 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -93,7 +93,6 @@ void numa_clear_node(unsigned int cpu)
-  */
- static void __init setup_node_to_cpumask_map(void)
- {
--	unsigned int cpu;
- 	int node;
+diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+index 3157130..ed7bd22 100644
+--- a/drivers/of/of_numa.c
++++ b/drivers/of/of_numa.c
+@@ -153,8 +153,6 @@ int of_node_to_nid(struct device_node *device)
+ 	np = of_node_get(device);
 
- 	/* setup nr_node_ids if not done yet */
-@@ -106,9 +105,6 @@ static void __init setup_node_to_cpumask_map(void)
- 		cpumask_clear(node_to_cpumask_map[node]);
+ 	while (np) {
+-		struct device_node *parent;
+-
+ 		r = of_property_read_u32(np, "numa-node-id", &nid);
+ 		/*
+ 		 * -EINVAL indicates the property was not found, and
+@@ -165,9 +163,7 @@ int of_node_to_nid(struct device_node *device)
+ 		if (r != -EINVAL)
+ 			break;
+
+-		parent = of_get_parent(np);
+-		of_node_put(np);
+-		np = parent;
++		np = of_get_next_parent(np);
  	}
-
--	for_each_possible_cpu(cpu)
--		set_cpu_numa_node(cpu, NUMA_NO_NODE);
--
- 	/* cpumask_of_node() will now work */
- 	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
- }
-@@ -379,10 +375,6 @@ static int __init numa_init(int (*init_func)(void))
-
- 	setup_node_to_cpumask_map();
-
--	/* init boot processor */
--	cpu_to_node_map[0] = 0;
--	map_cpu_to_node(0, 0);
--
- 	return 0;
- }
-
+ 	if (np && r)
+ 		pr_warn("NUMA: Invalid \"numa-node-id\" property in node %s\n",
 --
 2.5.0
