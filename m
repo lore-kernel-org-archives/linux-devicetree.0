@@ -1,68 +1,59 @@
-From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH v6 6/6] ARM: at91/dt: sama5d2_xplained: Add fast_restart node
-Date: Mon, 8 Aug 2016 18:05:05 +0800
-Message-ID: <1470650705-31418-7-git-send-email-wenyou.yang@atmel.com>
-References: <1470650705-31418-1-git-send-email-wenyou.yang@atmel.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v2 0/6] Add support of inverting power control and some
+ minor cleanup
+Date: Mon, 08 Aug 2016 19:24:31 +0900
+Message-ID: <ee997311-3964-8623-a431-c9a5add7f991@samsung.com>
+References: <CGME20160807013720epcas1p235628058a90efa6f0062b03a4b2e4284@epcas1p2.samsung.com>
+ <1470533618-16312-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470650705-31418-1-git-send-email-wenyou.yang@atmel.com>
+In-reply-to: <1470533618-16312-1-git-send-email-shawn.lin@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wenyou Yang <wenyou.yang@atmel.com>
+To: Shawn Lin <shawn.lin@rock-chips.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add fast_restart node as a pmc's child node to support fast startup
-signal configuration.
+Hi Shawn,
 
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
----
+On 08/07/2016 10:33 AM, Shawn Lin wrote:
+> By default, dw_mmc outputs high level voltage to indicate powering
+> up the card and outputs low level vcltage to indicate powering
+> off the card. But that is not always correct. The power io should
+> be able to control different kind of hw components to supply or
+> cutoff power to the card. We have boards that need this patchset
+> to make the power control correct. Meanwhile let's expose it to
+> DT for board-specific usage.
 
-Changes in v6:
- - Add a new patch to support a new DT_MACHINE for SAMA5D2.
+I have a question for this patch-set. Does DWMMC IP support to invert ON/OFF at Power Enable register?
+Hmm..Well, if use the DW_MMC_CARD_PWR_INVERT, it should also be the similar behavior with Quirks.
 
-Changes in v5:
- - due to the DT property expression change, update the fast restart
-   node's property.
+Other flags are related with dwmmc IP. But this flag (DW_MMC_CARD_PWR_INVERT) is not related with IP side.
+I understood why you needs to add this flag..Is rockchip designed to invert the power controlling?
 
-Changes in v4:
- - add fast_restart node to the DT file.
+But it's not general case. We can discuss about this.
 
-Changes in v3: None
-Changes in v2: None
+Best Regards,
+Jaehoon Chung
 
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index eb4f1ac..714fd82 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -110,6 +110,25 @@
- 		};
- 
- 		apb {
-+			pmc: pmc@f0014000 {
-+				pmc_fast_restart {
-+					compatible = "atmel,sama5d2-pmc-fast-startup";
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					atmel,wakeup-rtc-timer;
-+
-+					wkpin: input@0 {
-+						reg = <0>;
-+					};
-+
-+					gmac_wol: input@10 {
-+						reg = <10>;
-+						atmel,wakeup-active-high;
-+					};
-+				};
-+			};
-+
- 			spi0: spi@f8000000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_spi0_default>;
--- 
-2.7.4
+> 
+> 
+> Changes in v2:
+> - fix copy-paste err and typo
+> 
+> Shawn Lin (6):
+>   dt-bindings: rockchip-dw-mshc: add description of
+>     rockchip,power-invert
+>   mmc: dw_mmc: cleanup power setting of set_ios callback
+>   mmc: dw_mmc: split out dw_mci_set_power
+>   mmc: dw_mmc: split out dw_mci_set_power_reg
+>   mmc: dw_mmc: support inverted power control
+>   mmc: dw_mmc-rockchip: add parsing of power control from DT
+> 
+>  .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |   6 +
+>  drivers/mmc/host/dw_mmc-rockchip.c                 |   8 ++
+>  drivers/mmc/host/dw_mmc.c                          | 134 ++++++++++++---------
+>  drivers/mmc/host/dw_mmc.h                          |   1 +
+>  4 files changed, 90 insertions(+), 59 deletions(-)
+> 
