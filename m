@@ -1,165 +1,61 @@
-From: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v12 4/4] CMDQ: save more energy in idle
-Date: Mon, 8 Aug 2016 16:31:33 +0800
-Message-ID: <1470645093-13309-5-git-send-email-hs.liao@mediatek.com>
-References: <1470645093-13309-1-git-send-email-hs.liao@mediatek.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx: ventana: add RS485 txen gpio support
+Date: Mon, 8 Aug 2016 16:40:29 +0800
+Message-ID: <20160808084029.GE4678@tiger>
+References: <1467207504-5218-1-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470645093-13309-1-git-send-email-hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1467207504-5218-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Monica Wang <monica.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use clk_disable_unprepare instead of clk_disable to save more energy
-when CMDQ is idle.
+On Wed, Jun 29, 2016 at 06:38:24AM -0700, Tim Harvey wrote:
+> The GW54xx, GW53xx, and GW52xx all have an RS485 transceiver that uses an
+> IMX GPIO for the TX enable of the transceiver. Declare this properly.
+> 
+> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6qdl-gw52xx.dtsi | 3 +++
+>  arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 3 +++
+>  arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 3 +++
+>  3 files changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+> index 8bf1020..25ed57d 100644
+> --- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+> @@ -315,6 +315,8 @@
+>  &uart1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_uart1>;
+> +	fsl,uart-has-rtscts;
 
-Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/soc/mediatek/mtk-cmdq.c | 54 +++++++++++++++++++++++++++++++++++------
- 1 file changed, 46 insertions(+), 8 deletions(-)
+This vendor specific property is deprecated.  Please use generic
+uart-has-rtscts instead.
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq.c b/drivers/soc/mediatek/mtk-cmdq.c
-index 988ec68..988f202 100644
---- a/drivers/soc/mediatek/mtk-cmdq.c
-+++ b/drivers/soc/mediatek/mtk-cmdq.c
-@@ -31,6 +31,7 @@
- #include <linux/spinlock.h>
- #include <linux/suspend.h>
- #include <linux/timer.h>
-+#include <linux/workqueue.h>
- #include <soc/mediatek/cmdq.h>
- 
- #define CMDQ_THR_MAX_COUNT		3 /* main, sub, general(misc) */
-@@ -131,10 +132,16 @@ struct cmdq_task {
- 	struct cmdq_task_cb	cb;
- };
- 
-+struct cmdq_clk_release {
-+	struct cmdq		*cmdq;
-+	struct work_struct	release_work;
-+};
-+
- struct cmdq {
- 	struct mbox_controller	mbox;
- 	void __iomem		*base;
- 	u32			irq;
-+	struct workqueue_struct	*clk_release_wq;
- 	struct cmdq_thread	thread[CMDQ_THR_MAX_COUNT];
- 	struct mutex		task_mutex;
- 	struct clk		*clock;
-@@ -300,11 +307,19 @@ static void cmdq_thread_wait_end(struct cmdq_thread *thread,
- static void cmdq_task_exec(struct cmdq_task *task, struct cmdq_thread *thread)
- {
- 	struct cmdq *cmdq = task->cmdq;
--	unsigned long curr_pa, end_pa;
-+	unsigned long curr_pa, end_pa, flags;
- 
- 	task->thread = thread;
- 	if (list_empty(&thread->task_busy_list)) {
--		WARN_ON(clk_enable(cmdq->clock) < 0);
-+		/*
-+		 * Unlock for clk prepare (sleeping function).
-+		 * We are safe to do that since we have task_mutex and
-+		 * only flush will add task.
-+		 */
-+		spin_unlock_irqrestore(&thread->chan->lock, flags);
-+		WARN_ON(clk_prepare_enable(cmdq->clock) < 0);
-+		spin_lock_irqsave(&thread->chan->lock, flags);
-+
- 		WARN_ON(cmdq_thread_reset(cmdq, thread) < 0);
- 
- 		writel(task->pa_base, thread->base + CMDQ_THR_CURR_ADDR);
-@@ -386,6 +401,26 @@ static void cmdq_task_handle_error(struct cmdq_task *task)
- 	cmdq_thread_resume(thread);
- }
- 
-+static void cmdq_clk_release_work(struct work_struct *work_item)
-+{
-+	struct cmdq_clk_release *clk_release = container_of(work_item,
-+			struct cmdq_clk_release, release_work);
-+	struct cmdq *cmdq = clk_release->cmdq;
-+
-+	clk_disable_unprepare(cmdq->clock);
-+	kfree(clk_release);
-+}
-+
-+static void cmdq_clk_release_schedule(struct cmdq *cmdq)
-+{
-+	struct cmdq_clk_release *clk_release;
-+
-+	clk_release = kmalloc(sizeof(*clk_release), GFP_ATOMIC);
-+	clk_release->cmdq = cmdq;
-+	INIT_WORK(&clk_release->release_work, cmdq_clk_release_work);
-+	queue_work(cmdq->clk_release_wq, &clk_release->release_work);
-+}
-+
- static void cmdq_thread_irq_handler(struct cmdq *cmdq,
- 				    struct cmdq_thread *thread)
- {
-@@ -435,7 +470,7 @@ static void cmdq_thread_irq_handler(struct cmdq *cmdq,
- 
- 	if (list_empty(&thread->task_busy_list)) {
- 		cmdq_thread_disable(cmdq, thread);
--		clk_disable(cmdq->clock);
-+		cmdq_clk_release_schedule(cmdq);
- 	} else {
- 		mod_timer(&thread->timeout,
- 			  jiffies + msecs_to_jiffies(CMDQ_TIMEOUT_MS));
-@@ -494,7 +529,7 @@ static void cmdq_thread_handle_timeout(unsigned long data)
- 
- 	cmdq_thread_resume(thread);
- 	cmdq_thread_disable(cmdq, thread);
--	clk_disable(cmdq->clock);
-+	cmdq_clk_release_schedule(cmdq);
- 	spin_unlock_irqrestore(&thread->chan->lock, flags);
- }
- 
-@@ -782,7 +817,7 @@ static int cmdq_suspend(struct device *dev)
- 		msleep(20);
- 	}
- 
--	clk_unprepare(cmdq->clock);
-+	flush_workqueue(cmdq->clk_release_wq);
- 	return 0;
- }
- 
-@@ -790,7 +825,6 @@ static int cmdq_resume(struct device *dev)
- {
- 	struct cmdq *cmdq = dev_get_drvdata(dev);
- 
--	WARN_ON(clk_prepare(cmdq->clock) < 0);
- 	cmdq->suspended = false;
- 	return 0;
- }
-@@ -799,8 +833,8 @@ static int cmdq_remove(struct platform_device *pdev)
- {
- 	struct cmdq *cmdq = platform_get_drvdata(pdev);
- 
-+	destroy_workqueue(cmdq->clk_release_wq);
- 	mbox_controller_unregister(&cmdq->mbox);
--	clk_unprepare(cmdq->clock);
- 	return 0;
- }
- 
-@@ -919,8 +953,12 @@ static int cmdq_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
-+	cmdq->clk_release_wq = alloc_ordered_workqueue(
-+			"%s", WQ_MEM_RECLAIM | WQ_HIGHPRI,
-+			"cmdq_clk_release");
-+
- 	platform_set_drvdata(pdev, cmdq);
--	WARN_ON(clk_prepare(cmdq->clock) < 0);
-+
- 	return 0;
- }
- 
--- 
-1.9.1
+> +	rts-gpio = <&gpio7 1 GPIO_ACTIVE_HIGH>;
 
+I cannot find this property in any bindings doc.  What I found is
+rts-gpios in bindings/serial/serial.txt.  Also, I'm not sure how this
+property is supported by IMX driver.
+
+Shawn
+
+>  	status = "okay";
+>  };
+>  
+> @@ -493,6 +495,7 @@
+>  			fsl,pins = <
+>  				MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA	0x1b0b1
+>  				MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA	0x1b0b1
+> +				MX6QDL_PAD_SD3_DAT4__GPIO7_IO01		0x4001b0b1 /* TEN */
+>  			>;
+>  		};
+>  
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
