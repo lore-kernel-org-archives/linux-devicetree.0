@@ -1,74 +1,72 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH] ARM: dts: add rk3288-firefly-reload
-Date: Mon, 8 Aug 2016 10:29:52 +0800
-Message-ID: <bd51b3c3-b312-babb-b57d-7e6e5a8ee948@rock-chips.com>
-References: <1549971.ctkvOGm2xW@diego> <2868781.4x2gJCRbLH@diego>
- <413ebccd-e8d6-1401-3065-f9a63b4d66e6@rock-chips.com>
- <1815189.oGy6GHMbyM@phil>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH 2/2] dt: bindings: Add binding for ESP8089 wifi chips
+Date: Mon, 08 Aug 2016 10:36:16 +0800
+Message-ID: <1971470623776@web13m.yandex.ru>
+References: <1470596269-20572-1-git-send-email-hdegoede@redhat.com>
+ <1470596269-20572-2-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1815189.oGy6GHMbyM@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: shawn.lin@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, Randy Li <ayaka@soulik.info>, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1470596269-20572-2-git-send-email-hdegoede@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-在 2016/8/7 22:44, Heiko Stuebner 写道:
-> Hi Shawn,
->
-> Am Sonntag, 7. August 2016, 11:40:21 schrieb Shawn Lin:
->> On 2016/7/19 3:46, Heiko Stübner wrote:
->>> Am Montag, 18. Juli 2016, 23:32:32 schrieb Randy Li:
->>>> The Firefly RK3288 Reload is a combination Firefly rk3288 core board
->>>> with the Reload baseboard. Add a dtsi for the Firefly rk3288 core
->>>> which can be included into the dts for the various baseboards
->>>> in the future and dts for Reload base board.
->>>>
->>>> Currently supported are serial console, wired networking, eMMC and
->>>> SD storage, SPFIF, IR receiver, LEDs, SDIO wifi and USB. But only
->>>> the OTG could work on the host mode now, the other USB host can't
->>>> work now, additional patches are required.
->>>>
->>>> Signed-off-by: Randy Li <ayaka@soulik.info>
->>>> Acked-by: Rob Herring <robh@kernel.org>
->>>
->>> applied [0], after some minor reordering - please double check.
->>>
->>> Also, while the branch is named 4.8 this will only go into 4.9, as the
->>> merge- window supposedly opens on the weekend.
->>
->> Sorry for the noise here:), but I find there is some mmc stuff
->> which confuse me. Maybe Randy could elaborate more?
->>
->> Your sdmmc claims to support UHS-I mode like sd-uhs-sdr104, etc, which
->> will ask dw_mmc to switch vqmmc from 3V3 to 1V8 after sending CMD11.
->>
->> But the vqmmc is vccio_sd which is fixed as 3V3? :)
->
-> so far we have only been able to achieve UHS speeds on devices based on the
-> rk808 pmic (I had sucess on veyron and popmetal). The act8846-based boards
-> seem to have some issue when trying to do the switch to 1.8V, resulting in
-> mmc errors and the mmc-core switching back to 3.3V.
-
-Interesting.... I will have a look at it this weekend with Randy face 2
-face....
-
->
-> I think this might be caused by a bug in the act8846 driver or some dts
-> mistake. But so far nobody had the time and enthusiasm to investigate :-)
->
->
-> Heiko
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->
-
-
--- 
-Best Regards
-Shawn Lin
+CgowOC4wOC4yMDE2LCAwMjo1OCwgIkhhbnMgZGUgR29lZGUiIDxoZGVnb2VkZUByZWRoYXQuY29t
+PjoKPiBUaGUgRVNQODA4OSBjaGlwcyBjYW4gbW9zdGx5IGJlIGVudW1lcmF0ZWQgdmlhIHRoZWly
+IHNkaW8gaW50ZXJmYWNlLAo+IGJ1dCB0aGV5IGFyZSBjbG9ja2VkIGJ5IGFuIGV4dGVybmFsIGNy
+eXN0YWwgd2hpY2ggbWF5IGRpZmZlciBmcm9tIG9uZQo+IGJvYXJkIHRvIHRoZSBvdGhlci4KPgo+
+IFRoaXMgY29tbWl0IGFkZHMgYSBiaW5kaW5nIGZvciB0aGUgc2RpbyBjaGlsZCBub2RlIGZvciB0
+aGVzZSBjaGlwcywKPiBhbGxvd2luZyB0byBzcGVjaWZ5IHRoZSBleHRlcm5hbCBjcnlzdGFsIHR5
+cGUgKGZvciBub3csIHRoaXMgYmluZGluZwo+IGNvdWxkIGJlIGJlIGV4dGVuZGVkIHdpdGggZS5n
+LiBPT0IgaXJxIHN1cHBvcnQgbGF0ZXIpLgo+Cj4gVGhlIEFuZHJvaWQgZHJpdmVyIGZvciB0aGlz
+IGNoaXAgdXNlcyBhIHRleHQgZmlsZSB3aXRoIGtleSx2YWx1ZSBwYWlycwo+IHdoaWNoIGdldHMg
+bG9hZGVkIGFzIGZpcm13YXJlIHRvIHBhc3MgdGhpcyBpbmZvIHRvIHRoZSBmaXJtd2FyZS4KPiBU
+aGUgImVzcCxjcnlzdGFsXzI2TV9lbiIgbmFtZSBpcyBjaG9zZW4gdG8gbWF0Y2ggdGhlIGNyeXN0
+YWxfMjZNX2VuCj4ga2V5LW5hbWUgaW4gdGhhdCB0ZXh0IGZpbGUuCj4KPiBOb3RlIHRoYXQgYXQg
+dGhpcyBwb2ludCB0aGVyZSBvbmx5IGlzIGFuIG91dCBvZiB0cmVlIGRyaXZlciBmb3IgdGhpcwo+
+IGhhcmR3YXJlLCB0aGVyZSBpcyBubyBjbGVhciB0aW1lbGluZSAvIHBhdGggZm9yIG1lcmdpbmcg
+dGhpcy4gU3RpbGwKPiBJIGJlbGlldmUgaXQgd291bGQgYmUgZ29vZCB0byBzcGVjaWZ5IHRoZSBi
+aW5kaW5nIGZvciB0aGlzIGluIHRyZWUKPiBub3csIHNvIHRoYXQgYW55IGZ1dHVyZSBtaWdyYXRp
+b24gdG8gYW4gaW4gdHJlZSBkcml2ZXIgd2lsbCBub3QgY2F1c2UKPiBjb21wYXRpYmxpdHkgaXNz
+dWVzLgo+Cj4gQ2M6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy54eXo+Cj4gU2lnbmVkLW9m
+Zi1ieTogSGFucyBkZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4KPiAtLS0KPiDCoC4uLi9i
+aW5kaW5ncy9uZXQvd2lyZWxlc3MvZXNwLGVzcDgwODkudHh0IHwgMzEgKysrKysrKysrKysrKysr
+KysrKysrKwo+IMKgMSBmaWxlIGNoYW5nZWQsIDMxIGluc2VydGlvbnMoKykKPiDCoGNyZWF0ZSBt
+b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3dpcmVsZXNz
+L2VzcCxlc3A4MDg5LnR4dAo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9uZXQvd2lyZWxlc3MvZXNwLGVzcDgwODkudHh0IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL25ldC93aXJlbGVzcy9lc3AsZXNwODA4OS50eHQKPiBuZXcgZmls
+ZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLjg5OGExNDkKPiAtLS0gL2Rldi9udWxsCj4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC93aXJlbGVzcy9lc3As
+ZXNwODA4OS50eHQKPiBAQCAtMCwwICsxLDMxIEBACj4gK0VzcHJlc3NpZiBFU1A4MDg5IHdpcmVs
+ZXNzIFNESU8gZGV2aWNlcwo+ICsKPiArVGhpcyBub2RlIHByb3ZpZGVzIHByb3BlcnRpZXMgZm9y
+IGNvbnRyb2xsaW5nIHRoZSBFU1A4MDg5IHdpcmVsZXNzIGRldmljZS4KPiArVGhlIG5vZGUgaXMg
+ZXhwZWN0ZWQgdG8gYmUgc3BlY2lmaWVkIGFzIGEgY2hpbGQgbm9kZSB0byB0aGUgU0RJTyBjb250
+cm9sbGVyCj4gK3RoYXQgY29ubmVjdHMgdGhlIGRldmljZSB0byB0aGUgc3lzdGVtLgo+ICsKPiAr
+UmVxdWlyZWQgcHJvcGVydGllczoKPiArCj4gKyAtIGNvbXBhdGlibGUgOiBTaG91bGQgYmUgImVz
+cCxlc3A4MDg5Ii4KVGhlcmUncyBhbHNvIGVzcDgyNjYuIChBbmQgdGhlIGRpZmZlcmVuY2Ugb2Yg
+ODA4OSBhbmQgODI2NiBpcyBtYWlubHkgdGhlIGRpZmZlcmVuY2Ugb2YgY3J5c3RhbCBmcmVxdWVu
+Y3kuLi4gMjZNSHogZm9yIDgyNjYsIDQwTUh6IGZvciA4MDg5KQpTbyBtYXliZSBpdCBzaG91bGQg
+YmUgdGhlIGRpZmZlcmVuY2Ugb2YgZHQgY29tcGF0aWJsZT8KPiArCj4gK09wdGlvbmFsIHByb3Bl
+cnRpZXM6Cj4gKyAtIGVzcCxjcnlzdGFsXzI2TV9lbjogSW50ZWdlciB2YWx1ZSBmb3IgdGhlIGNy
+eXN0YWxfMjZNX2VuIGZpcm13YXJlIHBhcmFtZXRlcgo+ICsKPiArRXhhbXBsZToKPiArCj4gKyZt
+bWMxIHsKPiArICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsgI3NpemUtY2VsbHMgPSA8MD47Cj4g
+Kwo+ICsgdm1tYy1zdXBwbHkgPSA8JnJlZ19kbGRvMT47Cj4gKyBtbWMtcHdyc2VxID0gPCZ3aWZp
+X3B3cnNlcT47Cj4gKyBidXMtd2lkdGggPSA8ND47Cj4gKyBub24tcmVtb3ZhYmxlOwo+ICsgc3Rh
+dHVzID0gIm9rYXkiOwo+ICsKPiArIGVzcDgwODk6IHNkaW9fd2lmaUAxIHsKPiArIGNvbXBhdGli
+bGUgPSAiZXNwLGVzcDgwODkiOwo+ICsgcmVnID0gPDE+Owo+ICsgZXNwLGNyeXN0YWxfMjZNX2Vu
+ID0gPDI+Owo+ICsgfTsKPiArfTsKPiAtLQo+IDIuNy40CgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
