@@ -1,53 +1,57 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH RESEND v2 8/8] uio: Use new memtypes in uio_dmem_genirq
-Date: Mon,  8 Aug 2016 11:22:37 +0530
-Message-ID: <1470635557-13416-9-git-send-email-anup.patel@broadcom.com>
-References: <1470635557-13416-1-git-send-email-anup.patel@broadcom.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1470635557-13416-1-git-send-email-anup.patel@broadcom.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: Ankit Jindal <thatsjindal@gmail.com>, Jan Viktorin <viktorin@rehivetech.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Anup Patel <anup.patel@broadcom.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v3 0/4] Add Meson 8b / GXBB support to the IR driver
+Date: Sun, 7 Aug 2016 22:54:59 -0700
+Message-ID: <CAOi56cV=mELtvUVAB8M=x6abfjQ-8dBj4HH8Xieuv14g8ppgWA@mail.gmail.com>
+References: <20160626210622.5257-1-martin.blumenstingl@googlemail.com> <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, mchehab@kernel.org, devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch extends uio_dmem_genirq driver to use recently
-added memtypes as follows:
-1. Use UIO_MEM_DEVICE memtype for MEM resources
-2. Use UIO_MEM_PHYS_CACHE memtype for dynamic regions
-when UIO DT node is marked as DMA coherent.
+Hi Martin,
 
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
----
- drivers/uio/uio_dmem_genirq.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+On Tue, Jun 28, 2016 at 12:17 PM, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+> Newer Amlogic platforms (Meson 8b and GXBB) use a slightly different
+> register layout for their Infrared Remoete Controller. The decoder mode
+> is now configured in another register. Without the changes to the
+> meson-ir driver we are simply getting incorrect "durations" reported
+> from the hardware (because the hardware is not in time measurement aka
+> software decode mode).
+>
+> This problem was also noticed by some people trying to use this on an
+> ODROID-C1 and ODROID-C2 - the workaround there (probably because the
+> datasheets were not publicy available yet at that time) was to switch
+> to ir_raw_event_store_edge (which leaves it up to the kernel to measure
+> the duration of a pulse). See [0] and [1] for the corresponding
+> patches.
 
-diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
-index 1db2559..ce36afd 100644
---- a/drivers/uio/uio_dmem_genirq.c
-+++ b/drivers/uio/uio_dmem_genirq.c
-@@ -327,7 +327,7 @@ static int uio_dmem_genirq_probe(struct platform_device *pdev)
- 			break;
- 		}
- 
--		uiomem->memtype = UIO_MEM_PHYS;
-+		uiomem->memtype = UIO_MEM_DEVICE;
- 		uiomem->addr = r->start;
- 		uiomem->size = resource_size(r);
- 		++uiomem;
-@@ -343,7 +343,12 @@ static int uio_dmem_genirq_probe(struct platform_device *pdev)
- 					" dynamic and fixed memory regions.\n");
- 			break;
- 		}
--		uiomem->memtype = UIO_MEM_PHYS;
-+
-+		if (pdev->dev.of_node &&
-+		    of_dma_is_coherent(pdev->dev.of_node))
-+			uiomem->memtype = UIO_MEM_PHYS_CACHE;
-+		else
-+			uiomem->memtype = UIO_MEM_PHYS;
- 		uiomem->addr = DMEM_MAP_ERROR;
- 		uiomem->size = pdata->dynamic_region_sizes[i];
- 		++uiomem;
--- 
-1.9.1
+I tried this on meson-gxbb-p200 and I'm not seeing any button press
+events with evtest or ir-keytable when using the Amlogic remote that
+came with the board.  Below is the register dump you requested on IRC:
 
+[    1.068347] Registered IR keymap rc-empty
+[    1.072422] input: meson-ir as
+/devices/platform/soc/c8100000.aobus/c8100580.ir/rc/rc0/input0
+[    1.080814] rc rc0: meson-ir as
+/devices/platform/soc/c8100000.aobus/c8100580.ir/rc/rc0
+[    1.088839] input: MCE IR Keyboard/Mouse (meson-ir) as
+/devices/virtual/input/input1
+[    1.096519] rc rc0: lirc_dev: driver ir-lirc-codec (meson-ir)
+registered at minor = 0
+[    1.104119] meson-ir c8100580.ir: receiver initialized
+[    1.109172] IR: reg 0x00 = 0x01d801ac
+[    1.112795] IR: reg 0x04 = 0x00f800ca
+[    1.116416] IR: reg 0x08 = 0x007a0066
+[    1.120037] IR: reg 0x0c = 0x0044002c
+[    1.123660] IR: reg 0x10 = 0x70fa0009
+[    1.127278] IR: reg 0x14 = 0x00000000
+[    1.130907] IR: reg 0x18 = 0x08915c00
+[    1.134527] IR: reg 0x1c = 0x00009f44
+[    1.138152] IR: reg 0x20 = 0x00000002
+
+Kevin
