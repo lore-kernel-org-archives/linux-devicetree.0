@@ -1,7 +1,7 @@
 From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH RESEND v2 2/8] uio: code style cleanup
-Date: Mon,  8 Aug 2016 11:22:31 +0530
-Message-ID: <1470635557-13416-3-git-send-email-anup.patel@broadcom.com>
+Subject: [PATCH RESEND v2 5/8] Documentation: Update documentation for UIO_MEM_PHYS_CACHE and UIO_MEM_DEVICE
+Date: Mon,  8 Aug 2016 11:22:34 +0530
+Message-ID: <1470635557-13416-6-git-send-email-anup.patel@broadcom.com>
 References: <1470635557-13416-1-git-send-email-anup.patel@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1470635557-13416-1-git-send-email-anup.patel@broadcom.com>
@@ -12,38 +12,31 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ankit Jindal <thatsjindal@gmail.com>
 
-This patch fixes the indentation of switch-case block in uio driver.
+This patch updates UIO documentation for new mem region
+types UIO_MEM_PHYS_CACHE and UIO_MEM_DEVICE.
 
 Signed-off-by: Ankit Jindal <thatsjindal@gmail.com>
 Signed-off-by: Anup Patel <anup.patel@broadcom.com>
 ---
- drivers/uio/uio.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ Documentation/DocBook/uio-howto.tmpl | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
-index fba021f..f2729b7 100644
---- a/drivers/uio/uio.c
-+++ b/drivers/uio/uio.c
-@@ -703,13 +703,13 @@ static int uio_mmap(struct file *filep, struct vm_area_struct *vma)
- 	}
+diff --git a/Documentation/DocBook/uio-howto.tmpl b/Documentation/DocBook/uio-howto.tmpl
+index cd0e452..de9dafe 100644
+--- a/Documentation/DocBook/uio-howto.tmpl
++++ b/Documentation/DocBook/uio-howto.tmpl
+@@ -529,8 +529,10 @@ the memory region, it will show up in the corresponding sysfs node.
+ <varname>int memtype</varname>: Required if the mapping is used. Set this to
+ <varname>UIO_MEM_PHYS</varname> if you you have physical memory on your
+ card to be mapped. Use <varname>UIO_MEM_LOGICAL</varname> for logical
+-memory (e.g. allocated with <function>kmalloc()</function>). There's also
+-<varname>UIO_MEM_VIRTUAL</varname> for virtual memory.
++memory (e.g. allocated with <function>kmalloc()</function>). There are also
++<varname>UIO_MEM_VIRTUAL</varname> for virtual memory,
++<varname>UIO_MEM_PHYS_CACHE</varname> for cacheable physical memory and,
++<varname>UIO_MEM_DEVICE</varname> for memory mapped device registers.
+ </para></listitem>
  
- 	switch (idev->info->mem[mi].memtype) {
--		case UIO_MEM_PHYS:
--			return uio_mmap_physical(vma);
--		case UIO_MEM_LOGICAL:
--		case UIO_MEM_VIRTUAL:
--			return uio_mmap_logical(vma);
--		default:
--			return -EINVAL;
-+	case UIO_MEM_PHYS:
-+		return uio_mmap_physical(vma);
-+	case UIO_MEM_LOGICAL:
-+	case UIO_MEM_VIRTUAL:
-+		return uio_mmap_logical(vma);
-+	default:
-+		return -EINVAL;
- 	}
- }
- 
+ <listitem><para>
 -- 
 1.9.1
