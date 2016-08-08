@@ -1,47 +1,53 @@
-From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] device-tree: aqp8064.dtsi: Remove usb phy dr_mode = "host"
-Date: Mon,  8 Aug 2016 15:34:02 -0700
-Message-ID: <1470695643-32169-1-git-send-email-john.stultz@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: John Stultz <john.stultz@linaro.org>
+Subject: [PATCH 2/2] device-tree: nexus7: Add IMEM syscon and reboot reason support
+Date: Mon,  8 Aug 2016 15:34:03 -0700
+Message-ID: <1470695643-32169-2-git-send-email-john.stultz@linaro.org>
+References: <1470695643-32169-1-git-send-email-john.stultz@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1470695643-32169-1-git-send-email-john.stultz@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: John Stultz <john.stultz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Most 8064 devices have micro-usb ports for phy1, so setting
-the dr_mode to host here seems incorrect.
+This patch add the IMEM syscon memory region to the DT,
+as well as addds support for the magic reboot reason
+values that are written to the address for each mode.
 
-Leaving it unspecified should default to otg, and then
-any boards that wish to specify something else, can
-override it in their dts file.
-
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Andy Gross <agross@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- arch/arm/boot/dts/qcom-apq8064.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 9dc83b0..7e43416 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -750,7 +750,6 @@
- 			reg		= <0x12500000 0x400>;
- 			interrupts	= <GIC_SPI 100 IRQ_TYPE_NONE>;
- 			status		= "disabled";
--			dr_mode		= "host";
- 
- 			clocks		= <&gcc USB_HS1_XCVR_CLK>,
- 					  <&gcc USB_HS1_H_CLK>;
+diff --git a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
+index 7b05f07..ff856c3 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dts
+@@ -272,5 +272,19 @@
+ 				vqmmc-supply = <&pm8921_s4>;
+ 			};
+ 		};
++
++		imem@2a03f000 {
++			compatible = "syscon", "simple-mfd";
++			reg = <0x2a03f000 0x1000>;
++
++			reboot-mode {
++				compatible = "syscon-reboot-mode";
++				offset = <0x65c>;
++
++				mode-normal	= <0x77665501>;
++				mode-bootloader	= <0x77665500>;
++				mode-recovery	= <0x77665502>;
++			};
++		};
+ 	};
+ };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
