@@ -1,119 +1,125 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 3/3] ARM: dts: imx6sx-udoo-neo: Add SD
-Date: Mon, 8 Aug 2016 17:00:41 +0200
-Message-ID: <16912a4e-88c8-b11a-16bb-927ee6bf1775@suse.de>
-References: <1467691450-22975-1-git-send-email-afaerber@suse.de>
- <1467691450-22975-4-git-send-email-afaerber@suse.de>
- <20160808141248.GI4678@tiger>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 00/17] ARM: mvebu: misc Armada 38x/39x DT and v7 defconfig improvements
+Date: Mon, 08 Aug 2016 17:03:34 +0200
+Message-ID: <87popjuwu1.fsf@free-electrons.com>
+References: <1470305660-6601-1-git-send-email-jaz@semihalf.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160808141248.GI4678@tiger>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Ettore Chimenti <ettore.chimenti@udoo.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470305660-6601-1-git-send-email-jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org> (Grzegorz
+	Jaszczyk's message of "Thu, 4 Aug 2016 12:14:03 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 08.08.2016 um 16:12 schrieb Shawn Guo:
-> On Tue, Jul 05, 2016 at 06:04:10AM +0200, Andreas Färber wrote:
->> Enable the SDHC node and model the SDIO_PWR GPIO as a regulator.
->> Use the SD card as default trigger for the red LED.
->>
->> Cc: Ettore Chimenti <ettore.chimenti@udoo.org>
->> Signed-off-by: Andreas Färber <afaerber@suse.de>
->> ---
->>  
->>
->>  arch/arm/boot/dts/imx6sx-udoo-neo.dtsi | 34 ++++++++++++++++++++++++++++++++++
->>  1 file changed, 34 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
->> index e074409644d8..85f5e8606dab 100644
->> --- a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
->> +++ b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
->> @@ -56,6 +56,7 @@
->>  			label = "udoo-neo:red:mmc";
->>  			gpios = <&gpio6 0 GPIO_ACTIVE_HIGH>;
->>  			default-state = "off";
->> +			linux,default-trigger = "mmc0";
->>  		};
->>  
->>  		orange {
->> @@ -64,6 +65,17 @@
->>  			default-state = "keep";
->>  		};
->>  	};
->> +
->> +	sdio_pwr_reg: sd-gpio-regulator {
->> +		compatible = "regulator-fixed";
->> +		gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
->> +		enable-active-high;
->> +		regulator-name = "SDIO_PWR";
->> +		regulator-min-microvolt = <3300000>;
->> +		regulator-max-microvolt = <3300000>;
->> +		regulator-boot-on;
->> +		regulator-always-on;
->> +	};
-> 
-> Is it correct to model SDIO power control GPIO as a boot-on and
-> always-on fixed regulator?  It will be powered-on even when SDIO driver
-> is not enabled or loaded.
+Hi Grzegorz,
+ 
+ On Thu, Aug 04 2016, Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org> wrote:
 
-AFAIR the issue was that the driver does not use any -supply properties
-where we could hook this regulator up for enabling. So modeling it as an
-always-on regulator seemed like the only way to ensure it gets enabled
-without relying on the bootloader?
+> Hello,
+>
+> This is the second version of patch-set which enables some commonly used
+> features in mvebu_v7_defconfig and updates old or introduces new dts/dtsi
+> related to Armada 38x and Armada 39x SoC family. All comments from
+> v1 are included, more details in a changelog below.
+>
+> Any comments or remarks would be welcome.
 
-Note that the board boots U-Boot from SD, so it is somewhat likely that
-the rootfs will be on SD, too.
+All the patches are applied on the mvbeu branches:
+The first 2 on mvebu/defconfig and all the other on mvebu/dt
 
-Do you spot anything missing or wrong on the SD node below that would
-explain the reliability issues described in the cover letter?
+Thanks,
 
-Regards,
-Andreas
+Gregory
 
-P.S. Thanks for picking up 1/3 - was waiting on that for preparing a v2.
 
->>  };
->>  
->>  &cpu0 {
->> @@ -230,6 +242,17 @@
->>  				<MX6SX_PAD_CSI_DATA06__UART6_RTS_B	0x1b0b1>,
->>  				<MX6SX_PAD_CSI_DATA07__UART6_CTS_B	0x1b0b1>;
->>  		};
->> +
->> +		pinctrl_usdhc2: usdhc2grp {
->> +			fsl,pins =
->> +				<MX6SX_PAD_SD2_CMD__USDHC2_CMD		0x17059>,
->> +				<MX6SX_PAD_SD2_CLK__USDHC2_CLK		0x10059>,
->> +				<MX6SX_PAD_SD2_DATA0__USDHC2_DATA0	0x17059>,
->> +				<MX6SX_PAD_SD2_DATA1__USDHC2_DATA1	0x17059>,
->> +				<MX6SX_PAD_SD2_DATA2__USDHC2_DATA2	0x17059>,
->> +				<MX6SX_PAD_SD2_DATA3__USDHC2_DATA3	0x17059>,
->> +				<MX6SX_PAD_SD1_DATA0__GPIO6_IO_2	0x17059>; /* CD */
->> +		};
->>  	};
->>  };
->>  
->> @@ -259,3 +282,14 @@
->>  	uart-has-rtscts;
->>  	status = "disabled";
->>  };
->> +
->> +&usdhc2 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pinctrl_usdhc2>;
->> +	bus-width = <4>;
->> +	cd-gpios = <&gpio6 2 GPIO_ACTIVE_LOW>;
->> +	no-1-8-v;
->> +	keep-power-in-suspend;
->> +	wakeup-source;
->> +	status = "okay";
->> +};
+>
+> Best regards,
+> Grzegorz
+>
+> Changelog:
+> v1 -> v2
+>
+> - Add at least one line of commit log entry for those patches, which
+> contained only commit title.
+>
+> Suggested by Andrew Lunn and Gregory Clement.
+>
+> - Drop patch "ARM: mvebu: enable E1000E in mvebu_v7_defconfig", since it
+> enables PCIe card which is not a part of the SoC.
+>
+> Suggested by Russell King and Thomas Petazzoni.
+>
+> - Change dts prefixes in commit title from "ARM: mvebu: <board_name>" to
+> "ARM: dts: mvebu: <board_name>"
+>
+> Suggested by Gregory Clement.
+>
+> - Add nodes describing the eeproms connected to I2C buses in
+> armada-390-db.dts and armada-395-gp.dts. Also add information about
+> connectors used and described in mentioned dts's.
+>
+> Suggested by Gregory Clement.
+>
+> - Improve devicetree bindings about required property for Marvell Armada 39x
+> family: Armada 398 based boards should have only "marvell,armada398" and not
+> "marvell,armada395".
+>
+> Suggested by Rob Herring.
+>
+> Grzegorz Jaszczyk (17):
+>   ARM: mvebu: enable MTD command line partition table in
+>     mvebu_v7_defconfig
+>   ARM: mvebu: enable UBI and UBIFS in mvebu_v7_defconfig
+>   ARM: dts: mvebu: a385-db-ap: enable USB (orion-ehci) port
+>   ARM: dts: mvebu: a385-db-ap: add default partition description for
+>     NAND
+>   ARM: dts: mvebu: armada-390: add missing compatibility string and
+>     bracket
+>   ARM: dts: mvebu: armada-39x: update the SDHCI node on Armada 39x
+>   ARM: dts: mvebu: armada-39x: enable PMU, CA9 SoC Controller and
+>     Coherency fabric
+>   ARM: dts: mvebu: armada-39x: enable the thermal sensor in Armada-39x
+>     SoCs
+>   ARM: dts: mvebu: armada-39x: enable watchdog for all Armada-39x SoCs
+>   ARM: dts: mvebu: armada-39x: add missing nodes describing GPIO's
+>   ARM: dts: mvebu: armada-39x: add missing nodes describing USB2.0 and
+>     USB3.0
+>   ARM: dts: mvebu: armada-39x: enable rtc for all Armada-39x SoCs
+>   ARM: dts: mvebu: armada-395: add support for the Armada 395 SoC family
+>   ARM: dts: mvebu: armada-398: update the dtsi about missing interfaces
+>   ARM: dts: mvebu: armada-398-db: enable supported usb interfaces
+>   ARM: dts: mvebu: armada-390-db: add support for the Armada 390 DB
+>     board
+>   ARM: dts: mvebu: armada-395-gp: add support for the Armada 395 GP
+>     Board
+>
+>  .../devicetree/bindings/arm/marvell/armada-39x.txt |  15 +-
+>  arch/arm/boot/dts/armada-385-db-ap.dts             |  30 +++-
+>  arch/arm/boot/dts/armada-390-db.dts                | 175 +++++++++++++++++++++
+>  arch/arm/boot/dts/armada-390.dtsi                  |   3 +
+>  arch/arm/boot/dts/armada-395-gp.dts                | 163 +++++++++++++++++++
+>  arch/arm/boot/dts/armada-395.dtsi                  |  76 +++++++++
+>  arch/arm/boot/dts/armada-398-db.dts                |   8 +
+>  arch/arm/boot/dts/armada-398.dtsi                  |  10 +-
+>  arch/arm/boot/dts/armada-39x.dtsi                  |  94 ++++++++++-
+>  arch/arm/configs/mvebu_v7_defconfig                |   3 +
+>  10 files changed, 570 insertions(+), 7 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/armada-390-db.dts
+>  create mode 100644 arch/arm/boot/dts/armada-395-gp.dts
+>  create mode 100644 arch/arm/boot/dts/armada-395.dtsi
+>
+> -- 
+> 1.8.3.1
+>
 
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
