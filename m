@@ -1,57 +1,68 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v3 0/4] Add Meson 8b / GXBB support to the IR driver
-Date: Sun, 7 Aug 2016 22:54:59 -0700
-Message-ID: <CAOi56cV=mELtvUVAB8M=x6abfjQ-8dBj4HH8Xieuv14g8ppgWA@mail.gmail.com>
-References: <20160626210622.5257-1-martin.blumenstingl@googlemail.com> <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
+From: <Wenyou.Yang@microchip.com>
+Subject: RE: [PATCH v3 7/7] doc: bindings: act8945a-charger: Update
+ properties
+Date: Mon, 8 Aug 2016 06:05:09 +0000
+Message-ID: <F9F4555C4E01D7469D37975B62D0EFBB395A8A@CHN-SV-EXMX07.mchp-main.com>
+References: <1469755528-8413-1-git-send-email-wenyou.yang@atmel.com>
+ <1469755528-8413-8-git-send-email-wenyou.yang@atmel.com>
+ <20160729214020.GA18140@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, mchehab@kernel.org, devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160729214020.GA18140@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh@kernel.org, wenyou.yang@atmel.com
+Cc: sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, pawel.moll@arm.com, broonie@kernel.org, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nicolas.ferre@atmel.com, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
-
-On Tue, Jun 28, 2016 at 12:17 PM, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
-> Newer Amlogic platforms (Meson 8b and GXBB) use a slightly different
-> register layout for their Infrared Remoete Controller. The decoder mode
-> is now configured in another register. Without the changes to the
-> meson-ir driver we are simply getting incorrect "durations" reported
-> from the hardware (because the hardware is not in time measurement aka
-> software decode mode).
->
-> This problem was also noticed by some people trying to use this on an
-> ODROID-C1 and ODROID-C2 - the workaround there (probably because the
-> datasheets were not publicy available yet at that time) was to switch
-> to ir_raw_event_store_edge (which leaves it up to the kernel to measure
-> the duration of a pulse). See [0] and [1] for the corresponding
-> patches.
-
-I tried this on meson-gxbb-p200 and I'm not seeing any button press
-events with evtest or ir-keytable when using the Amlogic remote that
-came with the board.  Below is the register dump you requested on IRC:
-
-[    1.068347] Registered IR keymap rc-empty
-[    1.072422] input: meson-ir as
-/devices/platform/soc/c8100000.aobus/c8100580.ir/rc/rc0/input0
-[    1.080814] rc rc0: meson-ir as
-/devices/platform/soc/c8100000.aobus/c8100580.ir/rc/rc0
-[    1.088839] input: MCE IR Keyboard/Mouse (meson-ir) as
-/devices/virtual/input/input1
-[    1.096519] rc rc0: lirc_dev: driver ir-lirc-codec (meson-ir)
-registered at minor = 0
-[    1.104119] meson-ir c8100580.ir: receiver initialized
-[    1.109172] IR: reg 0x00 = 0x01d801ac
-[    1.112795] IR: reg 0x04 = 0x00f800ca
-[    1.116416] IR: reg 0x08 = 0x007a0066
-[    1.120037] IR: reg 0x0c = 0x0044002c
-[    1.123660] IR: reg 0x10 = 0x70fa0009
-[    1.127278] IR: reg 0x14 = 0x00000000
-[    1.130907] IR: reg 0x18 = 0x08915c00
-[    1.134527] IR: reg 0x1c = 0x00009f44
-[    1.138152] IR: reg 0x20 = 0x00000002
-
-Kevin
+SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJy
+aW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE2xOo31MIzMMjVIDU6NDAN
+Cj4gVG86IFdlbnlvdSBZYW5nIDx3ZW55b3UueWFuZ0BhdG1lbC5jb20+DQo+IENjOiBTZWJhc3Rp
+YW4gUmVpY2hlbCA8c3JlQGtlcm5lbC5vcmc+OyBEbWl0cnkgRXJlbWluLVNvbGVuaWtvdg0KPiA8
+ZGJhcnlzaGtvdkBnbWFpbC5jb20+OyBEYXZpZCBXb29kaG91c2UgPGR3bXcyQGluZnJhZGVhZC5v
+cmc+OyBQYXdlbA0KPiBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+OyBNYXJrIEJyb3duIDxicm9v
+bmllQGtlcm5lbC5vcmc+OyBJYW4gQ2FtcGJlbGwNCj4gPGlqYytkZXZpY2V0cmVlQGhlbGxpb24u
+b3JnLnVrPjsgS3VtYXIgR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+OyBsaW51eC0NCj4ga2Vy
+bmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFy
+bS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IE5pY29sYXMgRmVycmUgPG5pY29sYXMu
+ZmVycmVAYXRtZWwuY29tPjsgbGludXgtDQo+IHBtQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0
+OiBSZTogW1BBVENIIHYzIDcvN10gZG9jOiBiaW5kaW5nczogYWN0ODk0NWEtY2hhcmdlcjogVXBk
+YXRlIHByb3BlcnRpZXMNCj4gDQo+IE9uIEZyaSwgSnVsIDI5LCAyMDE2IGF0IDA5OjI1OjI4QU0g
+KzA4MDAsIFdlbnlvdSBZYW5nIHdyb3RlOg0KPiA+IER1ZSB0aGUgZHJpdmVyIGltcHJvdmVtZW50
+cywgdXBkYXRlIHRoZSBwcm9wZXJ0aWVzLA0KPiA+ICAtIFJlbW92ZSAiYWN0aXZlLXNlbWksY2hl
+Y2stYmF0dGVyeS10ZW1wZXJhdHVyZSIgcHJvcGVydHkuDQo+ID4gIC0gQWRkIHRoZSBwcm9wZXJ0
+aWVzLCAiYWN0aXZlLXNlbWksaXJxX2dwaW8iDQo+ID4gICAgYW5kICJhY3RpdmUtc2VtaSxsYm8t
+Z3Bpb3MiLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogV2VueW91IFlhbmcgPHdlbnlvdS55YW5n
+QGF0bWVsLmNvbT4NCj4gPiAtLS0NCj4gPg0KPiA+IENoYW5nZXMgaW4gdjM6IE5vbmUNCj4gPiBD
+aGFuZ2VzIGluIHYyOiBOb25lDQo+ID4NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3Bvd2VyL2FjdDg5NDVhLWNoYXJnZXIudHh0IHwgNiArKysrLS0NCj4gPiAgMSBmaWxl
+IGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvYWN0ODk0NWEt
+Y2hhcmdlci50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIv
+YWN0ODk0NWEtY2hhcmdlci50eHQNCj4gPiBpbmRleCBiZWEyNTRjLi5kN2NmMDViIDEwMDY0NA0K
+PiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9hY3Q4OTQ1
+YS1jaGFyZ2VyLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9wb3dlci9hY3Q4OTQ1YS1jaGFyZ2VyLnR4dA0KPiA+IEBAIC00LDEwICs0LDEyIEBAIFJlcXVp
+cmVkIHByb3BlcnRpZXM6DQo+ID4gICAtIGNvbXBhdGlibGU6ICJhY3RpdmUtc2VtaSxhY3Q4OTQ1
+YSIsIHBsZWFzZSByZWZlciB0byAuLi9tZmQvYWN0ODk0NWEudHh0Lg0KPiA+ICAgLSBhY3RpdmUt
+c2VtaSxjaGdsZXYtZ3Bpb3M6IGNoYXJnZSBjdXJyZW50IGxldmVsIHBoYW5kbGUgd2l0aCBhcmdz
+DQo+ID4gICAgIGFzIGRlc2NyaWJlZCBpbiAuLi9ncGlvL2dwaW8udHh0Lg0KPiA+ICsgLSBhY3Rp
+dmUtc2VtaSxpcnFfZ3Bpb3M6IHNwZWNpZnkgdGhlIGNoYXJnZXIgaW50ZXJydXB0IGlucHV0IHBo
+YW5sZQ0KPiA+ICsgICB3aXRoIGFyZ3MgYXMgYXMgZGVzY3JpYmVkIGluIC4uL2dwaW8vZ3Bpby50
+eHQuDQo+IA0KPiBBcyBJIHNhaWQgaW4gdjIsIHRoaXMgc2hvdWxkIGJlIGFuIGludGVycnVwdCBw
+cm9wZXJ0eSBpbnN0ZWFkLg0KDQpTb3JyeSBmb3IgZm9yZ2V0dGluZyB0byBjaGFuZ2UuDQoNCkFj
+Y2VwdGVkLCB3aWxsIGJlIGluIG5leHQgdmVyc2lvbi4gVGhhbmtzLg0KDQo+IA0KPiA+ICsgLSBh
+Y3RpdmUtc2VtaSxsYm8tZ3Bpb3M6IHNwZWNpZnkgdGhlIGxvdyBiYXR0ZXJ5IHZvbHRhZ2UgZGV0
+ZWN0IHBoYW5kbGUNCj4gPiArICAgd2l0aCBhcmdzIGFzIGFzIGRlc2NyaWJlZCBpbiAuLi9ncGlv
+L2dwaW8udHh0Lg0KPiANCj4gTWF5YmUgdGhpcyBvbmUgdG9vLg0KDQpUaGUgY2FwYWNpdHkgbGV2
+ZWwgZnVuY3Rpb24gbmVlZCB0byByZWFkIHRoaXMgcGluIGxldmVsLCBzbyB0aGlzIG9uZSBzaG91
+bGQgbm90DQp1c2UgImludGVycnVwdHMiIHByb3BlcnR5Lg0KDQo+IA0KPiA+DQo+ID4gIE9wdGlv
+bmFsIHByb3BlcnRpZXM6DQo+ID4gLSAtIGFjdGl2ZS1zZW1pLGNoZWNrLWJhdHRlcnktdGVtcGVy
+YXR1cmU6IGJvb2xlYW4gdG8gY2hlY2sgdGhlIGJhdHRlcnkNCj4gPiAtICAgdGVtcGVyYXR1cmUg
+b3Igbm90Lg0KPiA+ICAgLSBhY3RpdmUtc2VtaSxpbnB1dC12b2x0YWdlLXRocmVzaG9sZC1taWNy
+b3ZvbHQ6IHVuaXQ6IG1WOw0KPiA+ICAgICBTcGVjaWZpZXMgdGhlIGNoYXJnZXIncyBpbnB1dCBv
+dmVyLXZvbHRhZ2UgdGhyZXNob2xkIHZhbHVlOw0KPiA+ICAgICBUaGUgdmFsdWUgY2FuIGJlOiA2
+NjAwLCA3MDAwLCA3NTAwLCA4MDAwOyBkZWZhdWx0OiA2NjAwDQo+ID4gLS0NCj4gPiAyLjcuNA0K
+PiA+DQoNCkJlc3QgUmVnYXJkcywNCldlbnlvdSBZYW5nDQo=
