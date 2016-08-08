@@ -1,7 +1,7 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v5 09/14] arm64/numa: support HAVE_SETUP_PER_CPU_AREA
-Date: Mon, 8 Aug 2016 17:18:14 +0800
-Message-ID: <1470647899-6324-10-git-send-email-thunder.leizhen@huawei.com>
+Subject: [PATCH v5 07/14] of_numa: Use pr_fmt()
+Date: Mon, 8 Aug 2016 17:18:12 +0800
+Message-ID: <1470647899-6324-8-git-send-email-thunder.leizhen@huawei.com>
 References: <1470647899-6324-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,108 +12,89 @@ To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-To make each percpu area allocated from its local numa node. Without this
-patch, all percpu areas will be allocated from the node which cpu0 belongs
-to.
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Use pr_fmt to prefix kernel output.
+
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/Kconfig   |  8 ++++++++
- arch/arm64/mm/numa.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 64 insertions(+)
+ drivers/of/of_numa.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 76747d9..05c1bf1 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -573,6 +573,14 @@ config USE_PERCPU_NUMA_NODE_ID
- 	def_bool y
- 	depends on NUMA
+diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+index ed7bd22..019738f 100644
+--- a/drivers/of/of_numa.c
++++ b/drivers/of/of_numa.c
+@@ -16,6 +16,8 @@
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 
-+config HAVE_SETUP_PER_CPU_AREA
-+	def_bool y
-+	depends on NUMA
++#define pr_fmt(fmt) "OF: NUMA: " fmt
 +
-+config NEED_PER_CPU_EMBED_FIRST_CHUNK
-+	def_bool y
-+	depends on NUMA
-+
- source kernel/Kconfig.preempt
- source kernel/Kconfig.hz
-
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 8be5ba3..99401aa 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -25,6 +25,8 @@
- #include <linux/module.h>
  #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/nodemask.h>
+@@ -49,10 +51,9 @@ static void __init of_numa_parse_cpu_nodes(void)
+ 		if (r)
+ 			continue;
 
-+#include <asm/sections.h>
-+
- struct pglist_data *node_data[MAX_NUMNODES] __read_mostly;
- EXPORT_SYMBOL(node_data);
- nodemask_t numa_nodes_parsed __initdata;
-@@ -129,6 +131,60 @@ void __init early_map_cpu_to_node(unsigned int cpu, int nid)
- 	cpu_to_node_map[cpu] = nid;
- }
+-		pr_debug("NUMA: CPU on %u\n", nid);
++		pr_debug("CPU on %u\n", nid);
+ 		if (nid >= MAX_NUMNODES)
+-			pr_warn("NUMA: Node id %u exceeds maximum value\n",
+-				nid);
++			pr_warn("Node id %u exceeds maximum value\n", nid);
+ 		else
+ 			node_set(nid, numa_nodes_parsed);
+ 	}
+@@ -80,7 +81,7 @@ static int __init of_numa_parse_memory_nodes(void)
 
-+#ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
-+unsigned long __per_cpu_offset[NR_CPUS] __read_mostly;
-+EXPORT_SYMBOL(__per_cpu_offset);
-+
-+static int __init early_cpu_to_node(int cpu)
-+{
-+	return cpu_to_node_map[cpu];
-+}
-+
-+static int __init pcpu_cpu_distance(unsigned int from, unsigned int to)
-+{
-+	if (early_cpu_to_node(from) == early_cpu_to_node(to))
-+		return LOCAL_DISTANCE;
-+	else
-+		return REMOTE_DISTANCE;
-+}
-+
-+static void * __init pcpu_fc_alloc(unsigned int cpu, size_t size,
-+				       size_t align)
-+{
-+	int nid = early_cpu_to_node(cpu);
-+
-+	return  memblock_virt_alloc_try_nid(size, align,
-+			__pa(MAX_DMA_ADDRESS), MEMBLOCK_ALLOC_ACCESSIBLE, nid);
-+}
-+
-+static void __init pcpu_fc_free(void *ptr, size_t size)
-+{
-+	memblock_free_early(__pa(ptr), size);
-+}
-+
-+void __init setup_per_cpu_areas(void)
-+{
-+	unsigned long delta;
-+	unsigned int cpu;
-+	int rc;
-+
-+	/*
-+	 * Always reserve area for module percpu variables.  That's
-+	 * what the legacy allocator did.
-+	 */
-+	rc = pcpu_embed_first_chunk(PERCPU_MODULE_RESERVE,
-+				    PERCPU_DYNAMIC_RESERVE, PAGE_SIZE,
-+				    pcpu_cpu_distance,
-+				    pcpu_fc_alloc, pcpu_fc_free);
-+	if (rc < 0)
-+		panic("Failed to initialize percpu areas.");
-+
-+	delta = (unsigned long)pcpu_base_addr - (unsigned long)__per_cpu_start;
-+	for_each_possible_cpu(cpu)
-+		__per_cpu_offset[cpu] = delta + pcpu_unit_offsets[cpu];
-+}
-+#endif
-+
- /**
-  * numa_add_memblk - Set node id to memblk
-  * @nid: NUMA node ID of the new memblk
+ 		if (!i || r) {
+ 			of_node_put(np);
+-			pr_err("NUMA: bad property in memory node\n");
++			pr_err("bad property in memory node\n");
+ 			return r ? : -EINVAL;
+ 		}
+ 	}
+@@ -94,17 +95,17 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
+ 	int entry_count;
+ 	int i;
+
+-	pr_info("NUMA: parsing numa-distance-map-v1\n");
++	pr_info("parsing numa-distance-map-v1\n");
+
+ 	matrix = of_get_property(map, "distance-matrix", NULL);
+ 	if (!matrix) {
+-		pr_err("NUMA: No distance-matrix property in distance-map\n");
++		pr_err("No distance-matrix property in distance-map\n");
+ 		return -EINVAL;
+ 	}
+
+ 	entry_count = of_property_count_u32_elems(map, "distance-matrix");
+ 	if (entry_count <= 0) {
+-		pr_err("NUMA: Invalid distance-matrix\n");
++		pr_err("Invalid distance-matrix\n");
+ 		return -EINVAL;
+ 	}
+
+@@ -119,7 +120,7 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
+ 		matrix++;
+
+ 		numa_set_distance(nodea, nodeb, distance);
+-		pr_debug("NUMA:  distance[node%d -> node%d] = %d\n",
++		pr_debug("distance[node%d -> node%d] = %d\n",
+ 			 nodea, nodeb, distance);
+
+ 		/* Set default distance of node B->A same as A->B */
+@@ -166,7 +167,7 @@ int of_node_to_nid(struct device_node *device)
+ 		np = of_get_next_parent(np);
+ 	}
+ 	if (np && r)
+-		pr_warn("NUMA: Invalid \"numa-node-id\" property in node %s\n",
++		pr_warn("Invalid \"numa-node-id\" property in node %s\n",
+ 			np->name);
+ 	of_node_put(np);
+
 --
 2.5.0
