@@ -1,12 +1,12 @@
 From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v4 4/7] of: add vendor prefix for Pine64
-Date: Mon,  8 Aug 2016 18:21:46 +0100
-Message-ID: <20160808172149.30861-5-andre.przywara@arm.com>
+Subject: [PATCH v4 6/7] arm64: dts: add Pine64 support
+Date: Mon,  8 Aug 2016 18:21:48 +0100
+Message-ID: <20160808172149.30861-7-andre.przywara@arm.com>
 References: <20160808172149.30861-1-andre.przywara@arm.com>
 Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRB6H6UK6QKGQE52SP5IA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRB7H6UK6QKGQEIGN33QA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20160808172149.30861-1-andre.przywara-5wv7dgnIgG8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,23 +19,184 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+The Pine64 is a cost-efficient development board based on the
+Allwinner A64 SoC.
+There are three models: the basic version with Fast Ethernet and
+512 MB of DRAM (Pine64) and two Pine64+ versions, which both
+feature Gigabit Ethernet and additional connectors for touchscreens
+and a camera. Or as my son put it: "Those are smaller and these are
+missing." ;-)
+The two Pine64+ models just differ in the amount of DRAM
+(1GB vs. 2GB). Since U-Boot will figure out the right size for us and
+patches the DT accordingly we just need to provide one DT for the
+Pine64+.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 1992aa9..492f92c 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -199,6 +199,7 @@ parade	Parade Technologies Inc.
- pericom	Pericom Technology Inc.
- phytec	PHYTEC Messtechnik GmbH
- picochip	Picochip Ltd
-+pine64	Pine64
- plathome	Plat'Home Co., Ltd.
- plda	PLDA
- pixcir  PIXCIR MICROELECTRONICS Co., Ltd
+[Maxime: Removed the common DTSI and include directly the pine64 DTS]
+Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm64/boot/dts/Makefile                       |  1 +
+ arch/arm64/boot/dts/allwinner/Makefile             |  5 ++
+ .../boot/dts/allwinner/sun50i-a64-pine64-plus.dts  | 48 ++++++++++++++
+ .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 74 ++++++++++++++++++++++
+ 4 files changed, 128 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/Makefile
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index 6e199c9..ddcbf5a 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -1,4 +1,5 @@
+ dts-dirs += al
++dts-dirs += allwinner
+ dts-dirs += altera
+ dts-dirs += amd
+ dts-dirs += amlogic
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+new file mode 100644
+index 0000000..1e29a5a
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -0,0 +1,5 @@
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
++
++always		:= $(dtb-y)
++subdir-y	:= $(dts-dirs)
++clean-files	:= *.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
+new file mode 100644
+index 0000000..e369e83
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64-plus.dts
+@@ -0,0 +1,48 @@
++/*
++ * Copyright (c) 2016 ARM Ltd.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "sun50i-a64-pine64.dts"
++
++/ {
++	model = "Pine64+";
++	compatible = "pine64,pine64-plus", "allwinner,sun50i-a64";
++};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+new file mode 100644
+index 0000000..077a56f
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+@@ -0,0 +1,74 @@
++/*
++ * Copyright (c) 2016 ARM Ltd.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "sun50i-a64.dtsi"
++
++/ {
++	model = "Pine64";
++	compatible = "pine64,pine64", "allwinner,sun50i-a64";
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		reg = <0x40000000 0x20000000>;
++	};
++
++	aliases {
++		serial0 = &uart0;
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++	status = "okay";
++};
 -- 
 2.9.0
