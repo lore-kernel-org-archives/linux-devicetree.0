@@ -1,92 +1,283 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC][PATCH 0/4] SRAM based reboot reason driver for HiKey
-Date: Mon, 8 Aug 2016 16:48:17 +0300
-Message-ID: <0378e50e-c115-196c-d831-ed15dc660ca4@mentor.com>
-References: <1470265523-27557-1-git-send-email-john.stultz@linaro.org>
- <8107419f-ded4-6d0f-d2da-7e51bc3f418e@mentor.com>
- <CAL_JsqLL01G_=b6tV_qsKmPCEJa2Fhp_zk5u9s1-eYdzfHjbxQ@mail.gmail.com>
+From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH 2/3] EDAC, altera: Add Arria10 SD-MMC EDAC support
+Date: Mon, 8 Aug 2016 09:01:23 -0500
+Message-ID: <4d2b4046-c53c-d2bd-a2b9-dc703202d593@opensource.altera.com>
+References: <1470153381-20517-1-git-send-email-tthayer@opensource.altera.com>
+ <1470153381-20517-3-git-send-email-tthayer@opensource.altera.com>
+ <20160808133615.GA29563@nazgul.tnic>
+Reply-To: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLL01G_=b6tV_qsKmPCEJa2Fhp_zk5u9s1-eYdzfHjbxQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20160808133615.GA29563-K5JNixvcfoxupOikMc4+xw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vishal Bhoj <vishal.bhoj-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Android Kernel Team <kernel-team-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 08/06/2016 01:37 AM, Rob Herring wrote:
-> On Fri, Aug 5, 2016 at 7:46 AM, Vladimir Zapolskiy
-> <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
->> Hi John,
+
+On 08/08/2016 08:36 AM, Borislav Petkov wrote:
+> On Tue, Aug 02, 2016 at 10:56:20AM -0500, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+>> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 >>
->> On 08/04/2016 02:05 AM, John Stultz wrote:
->>>
->>> Now that Andy's reboot reason core driver has landed, I wanted
->>> to resubmit a reworked version of my SRAM based reboot reason
->>> driver.
->>>
->>> This allows the kernel to communicate to the bootloader what mode
->>> it should reboot to using some reserved memory.
->>>
->>> Feedback would be very much appreciated!
+>> Add Altera Arria10 SD-MMC FIFO memory EDAC support. The SD-MMC
+>> is a dual port RAM implementation which is different than any
+>> of the other peripherals and therefore requires additional code.
 >>
+>> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>> ---
+>>  drivers/edac/Kconfig       |    7 ++
+>>  drivers/edac/altera_edac.c |  188 +++++++++++++++++++++++++++++++++++++++++++-
+>>  drivers/edac/altera_edac.h |    5 ++
+>>  3 files changed, 199 insertions(+), 1 deletion(-)
 >>
->> in my opinion the taken approach is wrong, and I've already explained
->> why and how to rework your driver to shrink the change, please see
->> https://lkml.org/lkml/2016/1/27/133
+>> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+>> index 72752f4..394cd16 100644
+>> --- a/drivers/edac/Kconfig
+>> +++ b/drivers/edac/Kconfig
+>> @@ -426,6 +426,13 @@ config EDAC_ALTERA_QSPI
+>>  	  Support for error detection and correction on the
+>>  	  Altera QSPI FIFO Memory for Altera SoCs.
 >>
->> In this case I think that a SRAM device node should just contain
->> a plain description of partitions, compatible = "sram-reboot-mode" is
->> clearly not a device on "SRAM bus", it is not a device at all, so
->> please let's separate policy from mechanism
+>> +config EDAC_ALTERA_SDMMC
+>> +	bool "Altera SDMMC FIFO ECC"
+>> +	depends on EDAC_ALTERA=y && MMC_DW
+>> +	help
+>> +	  Support for error detection and correction on the
+>> +	  Altera SDMMC FIFO Memory for Altera SoCs.
+>> +
+>>  config EDAC_SYNOPSYS
+>>  	tristate "Synopsys DDR Memory Controller"
+>>  	depends on EDAC_MM_EDAC && ARCH_ZYNQ
+>> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+>> index 28247f8..8b5177e 100644
+>> --- a/drivers/edac/altera_edac.c
+>> +++ b/drivers/edac/altera_edac.c
+>> @@ -1393,6 +1393,188 @@ early_initcall(socfpga_init_qspi_ecc);
+>>
+>>  #endif	/* CONFIG_EDAC_ALTERA_QSPI */
+>>
+>> +/********************* SDMMC Device Functions **********************/
+>> +
+>> +#ifdef CONFIG_EDAC_ALTERA_SDMMC
+>> +
+>> +static const struct edac_device_prv_data a10_sdmmceccb_data;
+>> +static int altr_portb_setup(struct altr_edac_device_dev *device)
+>> +{
+>> +	struct edac_device_ctl_info *dci;
+>> +	struct altr_edac_device_dev *altdev;
+>> +	char *ecc_name = "sdmmcb-ecc";
+>> +	int edac_idx, rc;
+>> +	struct device_node *np;
+>> +	const struct edac_device_prv_data *prv = &a10_sdmmceccb_data;
+>> +
+>> +	rc = altr_check_ecc_deps(device);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	/* Create the PortB EDAC device */
+>> +	edac_idx = edac_device_alloc_index();
+>> +	dci = edac_device_alloc_ctl_info(sizeof(*altdev), ecc_name, 1,
+>> +					 ecc_name, 1, 0, NULL, 0, edac_idx);
+>> +	if (!dci) {
+>> +		edac_printk(KERN_ERR, EDAC_DEVICE,
+>> +			    "%s: Unable to allocate PortB EDAC device\n",
+>> +			    ecc_name);
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	/* Initialize the PortB EDAC device structure from PortA structure */
+>> +	altdev = dci->pvt_info;
+>> +	*altdev = *device;
+>> +
+>> +	if (!devres_open_group(&altdev->ddev, altr_portb_setup, GFP_KERNEL))
+>> +		return -ENOMEM;
+>> +
+>> +	/* Update PortB specific values */
+>> +	altdev->edac_dev_name = ecc_name;
+>> +	altdev->edac_idx = edac_idx;
+>> +	altdev->edac_dev = dci;
+>> +	altdev->data = prv;
+>> +	dci->dev = &altdev->ddev;
+>> +	dci->ctl_name = "Altera ECC Manager";
+>> +	dci->mod_name = ecc_name;
+>> +	dci->dev_name = ecc_name;
+>> +
+>> +	/* Find the SD/MMC device tree Node then update the IRQs for PortB */
+>> +	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-sdmmc-ecc");
 >
-> Having a 2nd node for the driver is still not a device on a bus. It
-> adds unneeded complexity to the binding IMO.
-
-What second node for the driver do you mean here? If you reference
-a reset/syscon driver then there should be only a property pointing
-to a partition on SRAM, similar case is found in CODA driver, see
-Documentation/devicetree/bindings/media/coda.txt and in my short term
-plans to do the same for lpc-eth driver.
-
-And a node which describes an area on SRAM is generally needed in both
-cases, however note that with my approach techincally it is possible to
-specify the entire SRAM device as a target partition, sometimes it is
-sufficient but here it is not wanted, because there will be no control
-on offset/size of the particular data stored on SRAM. The essential
-part is the meaning of this added second node, either it is a reserved
-partition (= unified definition independently on consumers) or
-a description with a compatible property for some arbitrary device.
-Why zoo of compatibles under SRAM node should be accepted? Why SRAM
-should be converted to a bus type device? Should be the same done
-with e.g. MTD or NVMEM devices? IMHO clear separation between data
-proiders and data consumers should be preserved if possible, and here
-it appears to be a simpler solution for the given technical problem.
-
-> The current approach also follows the model ramoops is using. Right
-> now it's using reserved-memory, but that could easily be extended to
-> SRAM region as well.
+> So why aren't you doing this thing first in the function so that...
 >
->> Because my proposed alternative approach separates policy from
->> mechanism, it for instanse allows to avoid overlappings on SRAM areas,
->> and still other drivers may serve as consumers of partitions on SRAM.
+>> +	if (!np) {
+>> +		rc = -ENODEV;
+>> +		goto err_release_group_1;
 >
-> You could still have multiple consumers and having a compatible string
-> doesn't necessarily imply a driver. Though multiple consumers without
-> something arbitrating access sounds like broken design to me.
+> ... you can save yourself the unwind work in err_release_group_1?
+>
+> In general, make sure you're doing all the work of poking at the
+> hardware so that you make sure you have the right resources *before* you
+> go and allocate and init stuff here.
+>
+> Should make the error paths simpler and the function body smaller.
 >
 
-Not in this case, the interface to SRAM partitions and/or SRAM as
-a whole deliberately assumes that a memory area is shared among all
-consumers in sense of a memory pool, data resides within the
-given area but it is not inter-shared among consumers.
+Argh. Missed that. The rest of the IRQ queries require the DCI 
+allocation so the functions below will need to unwind but yes, the 
+of_find_compatible_node should move. Thanks!
 
---
-With best wishes,
-Vladimir
+>> +	}
+>> +
+>> +	altdev->sb_irq = irq_of_parse_and_map(np, 2);
+>> +	if (!altdev->sb_irq) {
+>> +		edac_printk(KERN_ERR, EDAC_DEVICE, "Error PortB SBIRQ alloc\n");
+>> +		rc = -ENODEV;
+>> +		goto err_release_group_1;
+>> +	}
+>> +	rc = devm_request_irq(&altdev->ddev, altdev->sb_irq,
+>> +			      prv->ecc_irq_handler,
+>> +			      IRQF_SHARED, ecc_name, altdev);
+>> +	if (rc) {
+>> +		edac_printk(KERN_ERR, EDAC_DEVICE, "PortB SBERR IRQ error\n");
+>> +		goto err_release_group_1;
+>> +	}
+>> +
+>> +	altdev->db_irq = irq_of_parse_and_map(np, 3);
+>> +	if (!altdev->db_irq) {
+>> +		edac_printk(KERN_ERR, EDAC_DEVICE, "Error PortB DBIRQ alloc\n");
+>> +		rc = -ENODEV;
+>> +		goto err_release_group_1;
+>> +	}
+>> +	rc = devm_request_irq(&altdev->ddev, altdev->db_irq,
+>> +			      prv->ecc_irq_handler,
+>> +			      IRQF_SHARED, ecc_name, altdev);
+>> +	if (rc) {
+>> +		edac_printk(KERN_ERR, EDAC_DEVICE, "PortB DBERR IRQ error\n");
+>> +		goto err_release_group_1;
+>> +	}
+>> +
+>> +	rc = edac_device_add_device(dci);
+>> +	if (rc) {
+>> +		edac_printk(KERN_ERR, EDAC_DEVICE,
+>> +			    "edac_device_add_device portB failed\n");
+>> +		rc = -ENOMEM;
+>> +		goto err_release_group_1;
+>> +	}
+>> +	altr_create_edacdev_dbgfs(dci, prv);
+>> +
+>> +	list_add(&altdev->next, &altdev->edac->a10_ecc_devices);
+>> +
+>> +	devres_remove_group(&altdev->ddev, altr_portb_setup);
+>> +
+>> +	return 0;
+>> +
+>> +err_release_group_1:
+>> +	edac_device_free_ctl_info(dci);
+>> +	devres_release_group(&altdev->ddev, altr_portb_setup);
+>> +	edac_printk(KERN_ERR, EDAC_DEVICE,
+>> +		    "%s:Error setting up EDAC device: %d\n", ecc_name, rc);
+>> +	return rc;
+>> +}
+>> +
+>> +static irqreturn_t  altr_edac_a10_ecc_irq_portb(int irq, void *dev_id)
+>> +{
+>> +	struct altr_edac_device_dev *ad = dev_id;
+>> +	void __iomem  *base = ad->base;
+>> +	const struct edac_device_prv_data *priv = ad->data;
+>> +
+>> +	if (irq == ad->sb_irq) {
+>> +		writel(priv->ce_clear_mask,
+>> +		       base + ALTR_A10_ECC_INTSTAT_OFST);
+>> +		edac_device_handle_ce(ad->edac_dev, 0, 0, ad->edac_dev_name);
+>> +		return IRQ_HANDLED;
+>> +	} else if (irq == ad->db_irq) {
+>> +		writel(priv->ue_clear_mask,
+>> +		       base + ALTR_A10_ECC_INTSTAT_OFST);
+>> +		edac_device_handle_ue(ad->edac_dev, 0, 0, ad->edac_dev_name);
+>> +		return IRQ_HANDLED;
+>> +	}
+>> +
+>> +	WARN_ON(1);
+>
+> WARN(1, "Strange IRQ%d on Port B...
+>
+> or something like that which is more informative.
+>
+
+Yes, Good point, I will fix this.
+
+>> +
+>> +	return IRQ_NONE;
+>> +}
+>> +
+>> +static const struct edac_device_prv_data a10_sdmmcecca_data = {
+>> +	.setup = altr_portb_setup,
+>> +	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
+>> +	.ue_clear_mask = ALTR_A10_ECC_DERRPENA,
+>> +	.dbgfs_name = "altr_trigger",
+>> +	.ecc_enable_mask = ALTR_A10_COMMON_ECC_EN_CTL,
+>> +	.ecc_en_ofst = ALTR_A10_ECC_CTRL_OFST,
+>> +	.ce_set_mask = ALTR_A10_ECC_SERRPENA,
+>> +	.ue_set_mask = ALTR_A10_ECC_DERRPENA,
+>> +	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
+>> +	.ecc_irq_handler = altr_edac_a10_ecc_irq,
+>> +	.inject_fops = &altr_edac_a10_device_inject_fops,
+>> +};
+>> +
+>> +static const struct edac_device_prv_data a10_sdmmceccb_data = {
+>> +	.setup = altr_portb_setup,
+>> +	.ce_clear_mask = ALTR_A10_ECC_SERRPENB,
+>> +	.ue_clear_mask = ALTR_A10_ECC_DERRPENB,
+>> +	.dbgfs_name = "altr_trigger",
+>> +	.ecc_enable_mask = ALTR_A10_COMMON_ECC_EN_CTL,
+>> +	.ecc_en_ofst = ALTR_A10_ECC_CTRL_OFST,
+>> +	.ce_set_mask = ALTR_A10_ECC_TSERRB,
+>> +	.ue_set_mask = ALTR_A10_ECC_TDERRB,
+>> +	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
+>> +	.ecc_irq_handler = altr_edac_a10_ecc_irq_portb,
+>> +	.inject_fops = &altr_edac_a10_device_inject_fops,
+>> +};
+>> +
+>> +static int __init socfpga_init_sdmmc_ecc(void)
+>> +{
+>> +	int rc = -ENODEV;
+>> +	struct device_node *child = of_find_compatible_node(NULL, NULL,
+>> +						"altr,socfpga-sdmmc-ecc");
+>> +	if (!child) {
+>> +		edac_printk(KERN_ERR, EDAC_DEVICE, "SDMMC node not found\n");
+>
+> Are you sure you want to issue this error each time the driver loads? Is
+> that even an error condition?
+>
+I see your point. I will change this to a KERN_WARNING so there is some 
+indication why the SDMMC wasn't initialized if SDMMC is enabled in Kconfig.
+
+I will make the changes and re-submit. Thanks for reviewing!
+
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	if (!of_device_is_available(child))
+>> +		goto exit;
+>> +
+>> +	if (validate_parent_available(child))
+>> +		goto exit;
+>> +
+>> +	rc = altr_init_a10_ecc_block(child, ALTR_A10_SDMMC_IRQ_MASK,
+>> +				     a10_sdmmcecca_data.ecc_enable_mask, 1);
+>> +exit:
+>> +	of_node_put(child);
+>> +	return rc;
+>> +}
+>> +
+>> +early_initcall(socfpga_init_sdmmc_ecc);
+>> +
+>> +#endif	/* CONFIG_EDAC_ALTERA_SDMMC */
+>> +
+>>  /********************* Arria10 EDAC Device Functions *************************/
+>>  static const struct of_device_id altr_edac_a10_device_of_match[] = {
+>>  #ifdef CONFIG_EDAC_ALTERA_L2C
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
