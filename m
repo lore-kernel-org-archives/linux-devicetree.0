@@ -1,61 +1,32 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 2/2] dt: bindings: Add binding for ESP8089 wifi chips
-Date: Mon, 08 Aug 2016 20:44:46 +0800
-Message-ID: <276451470660286@web16j.yandex.ru>
-References: <1470596269-20572-1-git-send-email-hdegoede@redhat.com>
- <2936779.FAiO1bqUWV@wuerfel>
- <CAGb2v67+QrOxPd4KeLb9F67A0mSaBqn14PynzCyK=ovRnKA6EQ@mail.gmail.com>
- <52721384.ieJe1WiAoe@wuerfel>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7792: add VIN support
+Date: Mon, 8 Aug 2016 14:46:28 +0200
+Message-ID: <CAMuHMdUyvSo87SA9+VibqkLZ7uWBi1Xj0roEL=V8dk1STO9Ymg@mail.gmail.com>
+References: <17288006.ERHB6654v5@wasted.cogentembedded.com> <2505176.7Q9RZuLBta@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <52721384.ieJe1WiAoe@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <2505176.7Q9RZuLBta@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-CkhpLAowOC4wOC4yMDE2LCAxNzozMCwgIkFybmQgQmVyZ21hbm4iIDxhcm5kQGFybmRiLmRlPjoK
-PiBPbiBNb25kYXksIEF1Z3VzdCA4LCAyMDE2IDExOjU5OjI1IEFNIENFU1QgQ2hlbi1ZdSBUc2Fp
-IHdyb3RlOgo+PiDCoEhpIEFybmQsCj4+Cj4+IMKgT24gTW9uLCBBdWcgOCwgMjAxNiBhdCAzOjU5
-IEFNLCBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPiB3cm90ZToKPj4gwqA+IE9uIFN1bmRh
-eSwgQXVndXN0IDcsIDIwMTYgODo1Nzo0OSBQTSBDRVNUIEhhbnMgZGUgR29lZGUgd3JvdGU6Cj4+
-IMKgPj4gK0VzcHJlc3NpZiBFU1A4MDg5IHdpcmVsZXNzIFNESU8gZGV2aWNlcwo+PiDCoD4+ICsK
-Pj4gwqA+PiArVGhpcyBub2RlIHByb3ZpZGVzIHByb3BlcnRpZXMgZm9yIGNvbnRyb2xsaW5nIHRo
-ZSBFU1A4MDg5IHdpcmVsZXNzIGRldmljZS4KPj4gwqA+PiArVGhlIG5vZGUgaXMgZXhwZWN0ZWQg
-dG8gYmUgc3BlY2lmaWVkIGFzIGEgY2hpbGQgbm9kZSB0byB0aGUgU0RJTyBjb250cm9sbGVyCj4+
-IMKgPj4gK3RoYXQgY29ubmVjdHMgdGhlIGRldmljZSB0byB0aGUgc3lzdGVtLgo+PiDCoD4+ICsK
-Pj4gwqA+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4gwqA+PiArCj4+IMKgPj4gKyAtIGNvbXBh
-dGlibGUgOiBTaG91bGQgYmUgImVzcCxlc3A4MDg5Ii4KPj4gwqA+Cj4+IMKgPiBJIHRoaW5rIGl0
-IHdvdWxkIGJlIGdvb2QgdG8gc3RhbmRhcmRpemUgYSBjb21wYXRpYmxlIHN0cmluZyBmb3Igc2Rp
-bwo+PiDCoD4gbGlrZSB3ZSBoYXZlIGl0IGZvciBvdGhlciBkaXNjb3ZlcmFibGUgYnVzZXMsIGJh
-c2VkIG9uIHRoZQo+PiDCoD4gdmVuZG9yL2RldmljZSBJRCAob3Igd2hhdGV2ZXIgdGhpcyB1c2Vz
-KSwgdXNpbmcgc29tZXRoaW5nIGxpa2UKPj4gwqA+Cj4+IMKgPiBjb21wYXRpYmxlID0gInNkaW8x
-MjM0LDU2NzgiLCAiZXNwLGVzcDgwODkiOwo+Pgo+PiDCoElzIHRoZXJlIGEgY2VudHJhbCByZXBv
-c2l0b3J5IGZvciBTRElPIHZlbmRvci9kZXZpY2UgSURzIHNpbWlsYXIgdG8KPj4gwqBQQ0kgb3Ig
-VVNCIElEcz8KPgo+IE5vIGlkZWEuIEkgYmVsaWV2ZSB0aGUgZXhpc3RpbmcgcmVwb3NpdG9yaWVz
-IGZvciBQQ0kgYW5kIFVTQiBhcmUgbm90Cj4gcHVibGljIGVpdGhlciwgdGhlcmUgaXMganVzdCB0
-aGUgaW5mb3JtYXRpb24gYXQgaHR0cDovL3BjaWRhdGFiYXNlLmNvbS8sCj4gaHR0cDovL3BjaS1p
-ZHMudWN3LmN6LyBvciBodHRwOi8vd3d3LmxpbnV4LXVzYi5vcmcvdXNiLmlkcyB0aGF0Cj4gYXJl
-IG1haW50YWluZWQgYnkgdm9sdW50ZWVycyBhbmQgdGhhdCBhcmUgbm90IGF1dGhvcml0YXJpdmUu
-Cj4KPiBJIGZvdW5kIG9uZSBsaXN0IGF0IGh0dHBzOi8vZ2l0aHViLmNvbS9zeXN0ZW1kL3N5c3Rl
-bWQvYmxvYi9tYXN0ZXIvaHdkYi9zZGlvLmlkcwo+IGJ1dCBpdCdzIHByb2JhYmx5IHZlcnkgaW5j
-b21wbGV0ZS4KTWF5YmUgaXQgc2hvdWxkIGJlIG1haW50YWluZWQgYXMgYSBpbmRlcGVuZGVudCBw
-cm9qZWN0Li4uCj4KPj4gwqBUaGUgdmVuZG9yIElEIEVzcHJlc3NpZiB1c2VzIGlzIDB4NjY2Niwg
-d2hpY2ggc2VlbXMga2luZCBvZiBib2d1cyB0byBtZS4KPgo+IEl0IHByb2JhYmx5IGlzLCBidXQg
-dGhhdCdzIG5vdCBpbXBvcnRhbnQgYXMgbG9uZyBhcyBub3RoaW5nIGVsc2UgdXNlcwo+IHRoYXQg
-SUQuClllcy4uLiBJIHRoaW5rIHRoZSBVU0IgdmVuZG9yIElEIG9mIEFsbHdpbm5lciwgMHgxZjNh
-LCBpcyBhbHNvIG5vdGhpbmcgYXV0aG9yaXRhdGl2ZS4KPgo+IMKgwqDCoMKgwqDCoMKgwqBBcm5k
-CgpUaGFua3MsCkljZW5vd3kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Sat, Jul 23, 2016 at 9:17 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Define the generic R8A7792 parts of the VIN[0-5] device nodes.
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
