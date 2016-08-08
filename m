@@ -1,76 +1,42 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [Patch v3 08/11] driver/edac/fsl_ddr: Add support of little
- endian
-Date: Mon, 8 Aug 2016 16:39:22 +0100
-Message-ID: <20160808153922.GG12649@leverpostej>
-References: <1470351518-22404-1-git-send-email-york.sun@nxp.com>
- <1470351518-22404-9-git-send-email-york.sun@nxp.com>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCH 3/3] ARM: dts: Add Arria10 SD/MMC EDAC devicetree entry
+Date: Mon, 8 Aug 2016 10:56:44 -0500
+Message-ID: <57A8ABBC.6050902@opensource.altera.com>
+References: <1470153381-20517-1-git-send-email-tthayer@opensource.altera.com>
+ <1470153381-20517-4-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1470351518-22404-9-git-send-email-york.sun@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: York Sun <york.sun@nxp.com>
-Cc: linux-edac@vger.kernel.org, morbidrsa@gmail.com, oss@buserror.net, stuart.yoder@nxp.com, bp@alien8.de, Rob Herring <robh+dt@kernel.org>, Doug Thompson <dougthompson@xmission.com>, mchehab@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1470153381-20517-4-git-send-email-tthayer@opensource.altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tthayer@opensource.altera.com, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2016 at 03:58:33PM -0700, York Sun wrote:
-> Get endianness from device tree. Both big endian and little endian
-> are supported. Default to big endian for backward compatibility to
-> MPC85xx.
+
+
+On 08/02/2016 10:56 AM, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
 > 
-> Signed-off-by: York Sun <york.sun@nxp.com>
+> Add the device tree entries needed to support the Altera SD/MMC
+> FIFO buffer EDAC on the Arria10 chip.
 > 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 > ---
-> Change log
->   v3: no change
->   v2: Separated from "Add support for ARM-based SoCs" patch
+>  arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dts |   12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
->  .../fsl/ddr.txt}                                   |  6 ++
->  drivers/edac/fsl_ddr_edac.c                        | 83 ++++++++++++++--------
->  2 files changed, 58 insertions(+), 31 deletions(-)
->  rename Documentation/devicetree/bindings/{powerpc/fsl/mem-ctrlr.txt => memory-controllers/fsl/ddr.txt} (74%)
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt b/Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
-> similarity index 74%
-> rename from Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
-> rename to Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
-> index f87856f..62623f9 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
-> +++ b/Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
-> @@ -7,6 +7,10 @@ Properties:
->  		  "fsl,qoriq-memory-controller".
->  - reg		: Address and size of DDR controller registers
->  - interrupts	: Error interrupt of DDR controller
-> +- little-endian	: Specifies little-endian access to registers
-> +- big-endian	: Specifies big-endian access to registers
-> +
-> +If both little-endian and big-endian are omitted, big-endian will be used.
 
-The binding looks fine.
-
-> @@ -470,6 +483,13 @@ int fsl_ddr_mc_err_probe(struct platform_device *op)
->  	mci->ctl_name = pdata->name;
->  	mci->dev_name = pdata->name;
->  
-> +	if (of_find_property(op->dev.of_node, "little-endian", NULL))
-
-Use:	if (of_property_read_bool(dev.of_node, "little-endian"))
-
-> +		little_endian = true;
-> +	else if (of_find_property(op->dev.of_node, "big-endian", NULL))
-	
-Use:	else if (of_property_read_bool(dev.of_node, "big-endian"))
-
-> +		little_endian = false;
-> +	else
-> +		little_endian = false;
-> +
-
-With those fixed up:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Dinh Nguyen <dinguyen@opensource.altera.com>
 
 Thanks,
-Mark.
+Dinh
