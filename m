@@ -1,7 +1,7 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/8] ARM: dts: sun8i: reference-design-tablet: Add gsl1680 touchscreen node
-Date: Mon,  8 Aug 2016 21:43:13 +0200
-Message-ID: <1470685398-14568-3-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 6/8] ARM: dts: sun8i: Add touchscreen node for sun8i-a23-polaroid-mid2407pxe03
+Date: Mon,  8 Aug 2016 21:43:16 +0200
+Message-ID: <1470685398-14568-6-git-send-email-hdegoede@redhat.com>
 References: <1470685398-14568-1-git-send-email-hdegoede@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1470685398-14568-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
@@ -10,63 +10,39 @@ To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripa
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Almost all sun8i tablets use a gsl1680 touchscreen controller, so add
-a node describing it to reference-design-tablet.dtsi.
-
-Almost all, but not all, so mark it as disabled by default (dts files
-will also need to supply a firmware-name and resolution info).
+Add a node enabling the gsl1680 touchscreen controller found on
+sun8i-a23-polaroid-mid2407pxe03 tablets.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- .../boot/dts/sun8i-reference-design-tablet.dtsi    | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
-index 9d90361..f29897c 100644
---- a/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
-+++ b/arch/arm/boot/dts/sun8i-reference-design-tablet.dtsi
-@@ -63,6 +63,27 @@
- 	};
+diff --git a/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts b/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts
+index e300442..cd64fd61 100644
+--- a/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts
++++ b/arch/arm/boot/dts/sun8i-a23-polaroid-mid2407pxe03.dts
+@@ -48,3 +48,20 @@
+ 	model = "Polaroid MID2407PXE03 tablet";
+ 	compatible = "polaroid,mid2407pxe03", "allwinner,sun8i-a23";
  };
- 
-+&i2c0 {
-+	/*
-+	 * The gsl1680 is rated at 400KHz and it will not work reliable at
-+	 * 100KHz, this has been confirmed on multiple different q8 tablets.
-+	 * The gsl1680 is the only device on this bus.
-+	 */
-+	clock-frequency = <400000>;
 +
-+	gsl1680: touchscreen@40 {
-+		compatible = "silead,gsl1680";
-+		reg = <0x40>;
-+		interrupt-parent = <&pio>;
-+		interrupts = <1 5 IRQ_TYPE_EDGE_FALLING>; /* PB5 */
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ts_power_pin>;
-+		power-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
-+		/* Most tablets use this touchscreen, but not all */
-+		status = "disabled";
-+	};
++&gsl1680 {
++	touchscreen-size-x = <960>;
++	touchscreen-size-y = <640>;
++	touchscreen-inverted-x;
++	touchscreen-inverted-y;
++	touchscreen-fw-name = "silead/gsl1680-polaroid-mid2407pxe03.fw";
++	status = "okay";
 +};
 +
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
-@@ -88,6 +109,13 @@
- 		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
- 	};
- 
-+	ts_power_pin: ts_power_pin@0 {
-+		allwinner,pins = "PH1";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
- 	usb0_id_detect_pin: usb0_id_detect_pin@0 {
- 		allwinner,pins = "PH8";
- 		allwinner,function = "gpio_in";
++&reg_ldo_io1 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-touchscreen";
++	status = "okay";
++};
 -- 
 2.7.4
 
