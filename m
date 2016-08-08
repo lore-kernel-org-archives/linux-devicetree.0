@@ -1,53 +1,41 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH v4 2/7] DT: clk: sunxi: add binding doc for the multi-bus-gates clock
-Date: Mon,  8 Aug 2016 18:21:44 +0100
-Message-ID: <20160808172149.30861-3-andre.przywara@arm.com>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v4 4/7] of: add vendor prefix for Pine64
+Date: Mon,  8 Aug 2016 18:21:46 +0100
+Message-ID: <20160808172149.30861-5-andre.przywara@arm.com>
 References: <20160808172149.30861-1-andre.przywara@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160808172149.30861-1-andre.przywara@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRB6H6UK6QKGQE52SP5IA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160808172149.30861-1-andre.przywara-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Recent Allwinner SoCs introduced a bus gates clock which can have
-different parents for individual gates, even within a single register.
-For the time being we encoded this relation in the driver.
-This commit specifies a new binding which allows to encode this in
-the DT by using a child node for each parent clock used. This allows
-to specify any kind of relation efficiently and also keeps the very
-same kernel driver for all SoCs at the same time.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/clock/sunxi.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index 8f7619d..7d4197e 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -87,6 +87,8 @@ Required properties:
- 	"allwinner,sun9i-a80-usb-phy-clk" - for usb phy gates + resets on A80
- 	"allwinner,sun4i-a10-ve-clk" - for the Video Engine clock
- 	"allwinner,sun6i-a31-display-clk" - for the display clocks
-+	"allwinner,sunxi-multi-bus-gates-clk" - for the multi-parent bus gates
-+	"allwinner,sun50i-a64-bus-gates-clk" - for the bus gates on A64
- 
- Required properties for all clocks:
- - reg : shall be the control register address for the clock.
-@@ -127,6 +129,11 @@ For "allwinner,sun6i-a31-pll6-clk", there are 2 outputs. The first output
- is the normal PLL6 output, or "pll6". The second output is rate doubled
- PLL6, or "pll6x2".
- 
-+The "allwinner,sunxi-multi-bus-gates-clk" holds the actual clocks in
-+child nodes, where each one specifies the parent clock that the particular
-+gates are depending from. The child nodes each follow the common clock
-+binding as described in this document.
-+
- The "allwinner,*-mmc-clk" clocks have three different outputs: the
- main clock, with the ID 0, and the output and sample clocks, with the
- IDs 1 and 2, respectively.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 1992aa9..492f92c 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -199,6 +199,7 @@ parade	Parade Technologies Inc.
+ pericom	Pericom Technology Inc.
+ phytec	PHYTEC Messtechnik GmbH
+ picochip	Picochip Ltd
++pine64	Pine64
+ plathome	Plat'Home Co., Ltd.
+ plda	PLDA
+ pixcir  PIXCIR MICROELECTRONICS Co., Ltd
 -- 
 2.9.0
