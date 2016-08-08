@@ -1,283 +1,32 @@
-From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 2/3] EDAC, altera: Add Arria10 SD-MMC EDAC support
-Date: Mon, 8 Aug 2016 09:01:23 -0500
-Message-ID: <4d2b4046-c53c-d2bd-a2b9-dc703202d593@opensource.altera.com>
-References: <1470153381-20517-1-git-send-email-tthayer@opensource.altera.com>
- <1470153381-20517-3-git-send-email-tthayer@opensource.altera.com>
- <20160808133615.GA29563@nazgul.tnic>
-Reply-To: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: imx6sx-sabreauto: Fix misspelled property
+Date: Mon, 8 Aug 2016 21:58:59 +0800
+Message-ID: <20160808135859.GG4678@tiger>
+References: <1467691450-22975-1-git-send-email-afaerber@suse.de>
+ <1467691450-22975-2-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160808133615.GA29563-K5JNixvcfoxupOikMc4+xw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1467691450-22975-2-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ettore Chimenti <ettore.chimenti-GcR40IO4/Fc@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jul 05, 2016 at 06:04:08AM +0200, Andreas Färber wrote:
+> In commit 99fc5ba0bfb6 ("ARM: dts: imx6sx: add i.mx6sx sabreauto board
+> support") it should've been enable-sdio-wakeup (not -wakup). But that is
+> now considered a legacy name for wakeup-source, so directly use the new
+> name instead, as done in commit 26cefdd15db1 for the other occurrence.
+> 
+> Fixes: 26cefdd15db1 ("ARM: dts: imx: replace legacy wakeup property with 'wakeup-source'")
+> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
 
-
-On 08/08/2016 08:36 AM, Borislav Petkov wrote:
-> On Tue, Aug 02, 2016 at 10:56:20AM -0500, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
->> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->>
->> Add Altera Arria10 SD-MMC FIFO memory EDAC support. The SD-MMC
->> is a dual port RAM implementation which is different than any
->> of the other peripherals and therefore requires additional code.
->>
->> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
->> ---
->>  drivers/edac/Kconfig       |    7 ++
->>  drivers/edac/altera_edac.c |  188 +++++++++++++++++++++++++++++++++++++++++++-
->>  drivers/edac/altera_edac.h |    5 ++
->>  3 files changed, 199 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
->> index 72752f4..394cd16 100644
->> --- a/drivers/edac/Kconfig
->> +++ b/drivers/edac/Kconfig
->> @@ -426,6 +426,13 @@ config EDAC_ALTERA_QSPI
->>  	  Support for error detection and correction on the
->>  	  Altera QSPI FIFO Memory for Altera SoCs.
->>
->> +config EDAC_ALTERA_SDMMC
->> +	bool "Altera SDMMC FIFO ECC"
->> +	depends on EDAC_ALTERA=y && MMC_DW
->> +	help
->> +	  Support for error detection and correction on the
->> +	  Altera SDMMC FIFO Memory for Altera SoCs.
->> +
->>  config EDAC_SYNOPSYS
->>  	tristate "Synopsys DDR Memory Controller"
->>  	depends on EDAC_MM_EDAC && ARCH_ZYNQ
->> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
->> index 28247f8..8b5177e 100644
->> --- a/drivers/edac/altera_edac.c
->> +++ b/drivers/edac/altera_edac.c
->> @@ -1393,6 +1393,188 @@ early_initcall(socfpga_init_qspi_ecc);
->>
->>  #endif	/* CONFIG_EDAC_ALTERA_QSPI */
->>
->> +/********************* SDMMC Device Functions **********************/
->> +
->> +#ifdef CONFIG_EDAC_ALTERA_SDMMC
->> +
->> +static const struct edac_device_prv_data a10_sdmmceccb_data;
->> +static int altr_portb_setup(struct altr_edac_device_dev *device)
->> +{
->> +	struct edac_device_ctl_info *dci;
->> +	struct altr_edac_device_dev *altdev;
->> +	char *ecc_name = "sdmmcb-ecc";
->> +	int edac_idx, rc;
->> +	struct device_node *np;
->> +	const struct edac_device_prv_data *prv = &a10_sdmmceccb_data;
->> +
->> +	rc = altr_check_ecc_deps(device);
->> +	if (rc)
->> +		return rc;
->> +
->> +	/* Create the PortB EDAC device */
->> +	edac_idx = edac_device_alloc_index();
->> +	dci = edac_device_alloc_ctl_info(sizeof(*altdev), ecc_name, 1,
->> +					 ecc_name, 1, 0, NULL, 0, edac_idx);
->> +	if (!dci) {
->> +		edac_printk(KERN_ERR, EDAC_DEVICE,
->> +			    "%s: Unable to allocate PortB EDAC device\n",
->> +			    ecc_name);
->> +		return -ENOMEM;
->> +	}
->> +
->> +	/* Initialize the PortB EDAC device structure from PortA structure */
->> +	altdev = dci->pvt_info;
->> +	*altdev = *device;
->> +
->> +	if (!devres_open_group(&altdev->ddev, altr_portb_setup, GFP_KERNEL))
->> +		return -ENOMEM;
->> +
->> +	/* Update PortB specific values */
->> +	altdev->edac_dev_name = ecc_name;
->> +	altdev->edac_idx = edac_idx;
->> +	altdev->edac_dev = dci;
->> +	altdev->data = prv;
->> +	dci->dev = &altdev->ddev;
->> +	dci->ctl_name = "Altera ECC Manager";
->> +	dci->mod_name = ecc_name;
->> +	dci->dev_name = ecc_name;
->> +
->> +	/* Find the SD/MMC device tree Node then update the IRQs for PortB */
->> +	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-sdmmc-ecc");
->
-> So why aren't you doing this thing first in the function so that...
->
->> +	if (!np) {
->> +		rc = -ENODEV;
->> +		goto err_release_group_1;
->
-> ... you can save yourself the unwind work in err_release_group_1?
->
-> In general, make sure you're doing all the work of poking at the
-> hardware so that you make sure you have the right resources *before* you
-> go and allocate and init stuff here.
->
-> Should make the error paths simpler and the function body smaller.
->
-
-Argh. Missed that. The rest of the IRQ queries require the DCI 
-allocation so the functions below will need to unwind but yes, the 
-of_find_compatible_node should move. Thanks!
-
->> +	}
->> +
->> +	altdev->sb_irq = irq_of_parse_and_map(np, 2);
->> +	if (!altdev->sb_irq) {
->> +		edac_printk(KERN_ERR, EDAC_DEVICE, "Error PortB SBIRQ alloc\n");
->> +		rc = -ENODEV;
->> +		goto err_release_group_1;
->> +	}
->> +	rc = devm_request_irq(&altdev->ddev, altdev->sb_irq,
->> +			      prv->ecc_irq_handler,
->> +			      IRQF_SHARED, ecc_name, altdev);
->> +	if (rc) {
->> +		edac_printk(KERN_ERR, EDAC_DEVICE, "PortB SBERR IRQ error\n");
->> +		goto err_release_group_1;
->> +	}
->> +
->> +	altdev->db_irq = irq_of_parse_and_map(np, 3);
->> +	if (!altdev->db_irq) {
->> +		edac_printk(KERN_ERR, EDAC_DEVICE, "Error PortB DBIRQ alloc\n");
->> +		rc = -ENODEV;
->> +		goto err_release_group_1;
->> +	}
->> +	rc = devm_request_irq(&altdev->ddev, altdev->db_irq,
->> +			      prv->ecc_irq_handler,
->> +			      IRQF_SHARED, ecc_name, altdev);
->> +	if (rc) {
->> +		edac_printk(KERN_ERR, EDAC_DEVICE, "PortB DBERR IRQ error\n");
->> +		goto err_release_group_1;
->> +	}
->> +
->> +	rc = edac_device_add_device(dci);
->> +	if (rc) {
->> +		edac_printk(KERN_ERR, EDAC_DEVICE,
->> +			    "edac_device_add_device portB failed\n");
->> +		rc = -ENOMEM;
->> +		goto err_release_group_1;
->> +	}
->> +	altr_create_edacdev_dbgfs(dci, prv);
->> +
->> +	list_add(&altdev->next, &altdev->edac->a10_ecc_devices);
->> +
->> +	devres_remove_group(&altdev->ddev, altr_portb_setup);
->> +
->> +	return 0;
->> +
->> +err_release_group_1:
->> +	edac_device_free_ctl_info(dci);
->> +	devres_release_group(&altdev->ddev, altr_portb_setup);
->> +	edac_printk(KERN_ERR, EDAC_DEVICE,
->> +		    "%s:Error setting up EDAC device: %d\n", ecc_name, rc);
->> +	return rc;
->> +}
->> +
->> +static irqreturn_t  altr_edac_a10_ecc_irq_portb(int irq, void *dev_id)
->> +{
->> +	struct altr_edac_device_dev *ad = dev_id;
->> +	void __iomem  *base = ad->base;
->> +	const struct edac_device_prv_data *priv = ad->data;
->> +
->> +	if (irq == ad->sb_irq) {
->> +		writel(priv->ce_clear_mask,
->> +		       base + ALTR_A10_ECC_INTSTAT_OFST);
->> +		edac_device_handle_ce(ad->edac_dev, 0, 0, ad->edac_dev_name);
->> +		return IRQ_HANDLED;
->> +	} else if (irq == ad->db_irq) {
->> +		writel(priv->ue_clear_mask,
->> +		       base + ALTR_A10_ECC_INTSTAT_OFST);
->> +		edac_device_handle_ue(ad->edac_dev, 0, 0, ad->edac_dev_name);
->> +		return IRQ_HANDLED;
->> +	}
->> +
->> +	WARN_ON(1);
->
-> WARN(1, "Strange IRQ%d on Port B...
->
-> or something like that which is more informative.
->
-
-Yes, Good point, I will fix this.
-
->> +
->> +	return IRQ_NONE;
->> +}
->> +
->> +static const struct edac_device_prv_data a10_sdmmcecca_data = {
->> +	.setup = altr_portb_setup,
->> +	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
->> +	.ue_clear_mask = ALTR_A10_ECC_DERRPENA,
->> +	.dbgfs_name = "altr_trigger",
->> +	.ecc_enable_mask = ALTR_A10_COMMON_ECC_EN_CTL,
->> +	.ecc_en_ofst = ALTR_A10_ECC_CTRL_OFST,
->> +	.ce_set_mask = ALTR_A10_ECC_SERRPENA,
->> +	.ue_set_mask = ALTR_A10_ECC_DERRPENA,
->> +	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
->> +	.ecc_irq_handler = altr_edac_a10_ecc_irq,
->> +	.inject_fops = &altr_edac_a10_device_inject_fops,
->> +};
->> +
->> +static const struct edac_device_prv_data a10_sdmmceccb_data = {
->> +	.setup = altr_portb_setup,
->> +	.ce_clear_mask = ALTR_A10_ECC_SERRPENB,
->> +	.ue_clear_mask = ALTR_A10_ECC_DERRPENB,
->> +	.dbgfs_name = "altr_trigger",
->> +	.ecc_enable_mask = ALTR_A10_COMMON_ECC_EN_CTL,
->> +	.ecc_en_ofst = ALTR_A10_ECC_CTRL_OFST,
->> +	.ce_set_mask = ALTR_A10_ECC_TSERRB,
->> +	.ue_set_mask = ALTR_A10_ECC_TDERRB,
->> +	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
->> +	.ecc_irq_handler = altr_edac_a10_ecc_irq_portb,
->> +	.inject_fops = &altr_edac_a10_device_inject_fops,
->> +};
->> +
->> +static int __init socfpga_init_sdmmc_ecc(void)
->> +{
->> +	int rc = -ENODEV;
->> +	struct device_node *child = of_find_compatible_node(NULL, NULL,
->> +						"altr,socfpga-sdmmc-ecc");
->> +	if (!child) {
->> +		edac_printk(KERN_ERR, EDAC_DEVICE, "SDMMC node not found\n");
->
-> Are you sure you want to issue this error each time the driver loads? Is
-> that even an error condition?
->
-I see your point. I will change this to a KERN_WARNING so there is some 
-indication why the SDMMC wasn't initialized if SDMMC is enabled in Kconfig.
-
-I will make the changes and re-submit. Thanks for reviewing!
-
->> +		return -ENODEV;
->> +	}
->> +
->> +	if (!of_device_is_available(child))
->> +		goto exit;
->> +
->> +	if (validate_parent_available(child))
->> +		goto exit;
->> +
->> +	rc = altr_init_a10_ecc_block(child, ALTR_A10_SDMMC_IRQ_MASK,
->> +				     a10_sdmmcecca_data.ecc_enable_mask, 1);
->> +exit:
->> +	of_node_put(child);
->> +	return rc;
->> +}
->> +
->> +early_initcall(socfpga_init_sdmmc_ecc);
->> +
->> +#endif	/* CONFIG_EDAC_ALTERA_SDMMC */
->> +
->>  /********************* Arria10 EDAC Device Functions *************************/
->>  static const struct of_device_id altr_edac_a10_device_of_match[] = {
->>  #ifdef CONFIG_EDAC_ALTERA_L2C
+Applied, thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
