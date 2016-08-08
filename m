@@ -1,89 +1,39 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [RFC PATCH v4 1/2] Documentation: DT: net: Add Xilinx gmiitorgmii
- converter device tree binding documentation
-Date: Mon, 8 Aug 2016 12:50:16 +0200
-Message-ID: <b3813524-7531-d294-1def-628b0a28f6bb@xilinx.com>
-References: <1470640505-8279-1-git-send-email-appanad@xilinx.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2] ARM: dts: da850: Add new ECAP and EPWM bindings
+Date: Mon, 8 Aug 2016 16:21:13 +0530
+Message-ID: <57A86421.6030804@ti.com>
+References: <1468264306-3806-1-git-send-email-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1470640505-8279-1-git-send-email-appanad@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, appanad@xilinx.com, f.fainelli@gmail.com, andrew@lunn.ch, punnaia@xilinx.com, anirudh@xilinx.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1468264306-3806-1-git-send-email-fcooper@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 8.8.2016 09:15, Kedareswara rao Appana wrote:
-> Device-tree binding documentation for xilinx gmiitorgmii converter.
+On Tuesday 12 July 2016 12:41 AM, Franklin S Cooper Jr wrote:
+> From: "Cooper Jr., Franklin" <fcooper@ti.com>
 > 
-> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
-> ---
-> Changes for v4:
-> --> Modified compatible as suggested by Rob.
-> --> Removed underscores from the converter node name as suggested by Rob.
-> Changes for v3:
-> --> None.
-> Changes for v2:
-> --> New patch.
-> 
->  .../devicetree/bindings/net/xilinx_gmii2rgmii.txt  | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt b/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
-> new file mode 100644
-> index 0000000..453680d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
-> @@ -0,0 +1,38 @@
-> +XILINX GMIITORGMII Converter Driver Device Tree Bindings
-> +--------------------------------------------------------
-> +
-> +The Gigabit Media Independent Interface (GMII) to Reduced Gigabit Media
-> +Independent Interface (RGMII) core provides the RGMII between RGMII-compliant
-> +Ethernet physical media devices (PHY) and the Gigabit Ethernet controller.
-> +This core can be used in all three modes of operation(10/100/1000 Mb/s).
-> +The Management Data Input/Output (MDIO) interface is used to configure the
-> +Speed of operation. This core can switch dynamically between the three
-> +Different speed modes by configuring the conveter register through mdio write.
-> +
-> +The MDIO is a bus to which the PHY devices are connected.  For each
-> +device that exists on this bus, a child node should be created.  See
-> +the definition of the PHY node in booting-without-of.txt for an example
-> +of how to define a PHY.
-> +
-> +This converter sits between the MAC and the external phy.
-> +MAC <==> GMII2RGMII <==> RGMII_PHY
-> +
-> +Required properties:
-> +  - compatible : Should be "xlnx,gmii-to-rgmii-1.0"
-> +  - reg : The ID number for the phy, usually a small integer
-> +  - phy-handle: Should point to the external phy device.
-> +		See ethernet.txt file in the same directory.
-> +
-> +Example:
-> +	mdio {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +		phy: ethernet-phy@0 {
-> +			......
-> +		};
-> +                gmiitorgmii: gmiitorgmii@8 {
-> +                        compatible = "xlnx,gmii-to-rgmii-1.0";
-> +                        reg = <8>;
-> +			phy-handle = <&phy>;
-> +                };
+> For some devices, the PWMSS is a parent of eCAP and ePWM and provided the
 
-Indentation in this example is quite weird. You are mixing tabs and spaces.
+"and provides .."
 
-Thanks,
-Michal
+> functional clocks for those submodules. The ti,am33xx-ecap and
+> ti,am33xx-ehrpwm were based on this parent child relationship where the
+
+"ti,am33xx-ehrpwm bindings were .."
+
+> functional clock would be grabbed from the module's parent.
+> 
+> However, DA850 doesn't have a PWMSS and the eCAP and ePWM provides their
+> functional clock themselves. Therefore, prefer the new binding that doesn't
+> assume this parent child relationship.
+> 
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+
+Queuing this for v4.9 with above minor commit message fixes made locally.
+
+Regards,
+Sekhar
