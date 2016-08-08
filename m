@@ -1,42 +1,29 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCH 3/3] ARM: dts: Add Arria10 SD/MMC EDAC devicetree entry
-Date: Mon, 8 Aug 2016 10:56:44 -0500
-Message-ID: <57A8ABBC.6050902@opensource.altera.com>
-References: <1470153381-20517-1-git-send-email-tthayer@opensource.altera.com>
- <1470153381-20517-4-git-send-email-tthayer@opensource.altera.com>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v6 0/8] CPUs capacity information for heterogeneous
+ systems
+Date: Mon, 8 Aug 2016 18:49:37 +0200
+Message-ID: <20160808164937.GH6879@twins.programming.kicks-ass.net>
+References: <1468932048-31635-1-git-send-email-juri.lelli@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1470153381-20517-4-git-send-email-tthayer@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tthayer@opensource.altera.com, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1468932048-31635-1-git-send-email-juri.lelli@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Juri Lelli <juri.lelli@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/02/2016 10:56 AM, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
+On Tue, Jul 19, 2016 at 01:40:40PM +0100, Juri Lelli wrote:
+> Patches high level description:
 > 
-> Add the device tree entries needed to support the Altera SD/MMC
-> FIFO buffer EDAC on the Arria10 chip.
-> 
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> ---
->  arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dts |   12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  o 01/08 introduces documentation for the new optional DT binding
+>  o [02-06]/08 add cpu-capacity attribute to TC2, Juno and Juno r2 DTs and
+>    provide parsing of such information at boot time
+>  o [07-08]/08 introduce sysfs attribute
 > 
 
-Acked-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+So generally ok with me; there does seem to be an unfortunate
+duplication of code between arm and arm64 but other than that it looks
+fine.
 
-Thanks,
-Dinh
