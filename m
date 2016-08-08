@@ -1,36 +1,65 @@
-From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v5 14/14] Documentation: remove the constraint on the distances of node pairs
-Date: Mon, 8 Aug 2016 17:18:19 +0800
-Message-ID: <1470647899-6324-15-git-send-email-thunder.leizhen@huawei.com>
-References: <1470647899-6324-1-git-send-email-thunder.leizhen@huawei.com>
+From: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v5 00/14] fix some type infos and bugs for arm64/of numa
+Date: Mon, 8 Aug 2016 17:18:05 +0800
+Message-ID: <1470647899-6324-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470647899-6324-1-git-send-email-thunder.leizhen@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>
-Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Update documentation. This limit is unneccessary.
+v4 -> v5:
+This version has no code changes, just add "Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>"
+into patches 1, 2, 4, 6, 7, 13, 14. Because these patches rely on some acpi numa
+patches, and the latter had not been upstreamed in 4.7, but upstreamed in 4.8-rc1,
+so I resend my patches again.
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/numa.txt | 1 -
- 1 file changed, 1 deletion(-)
+v3 -> v4:
+1. Packed three patches of Kefeng Wang, patch6-8.
+2. Add 6 new patches(9-15) to enhance the numa on arm64.
 
-diff --git a/Documentation/devicetree/bindings/numa.txt b/Documentation/devicetree/bindings/numa.txt
-index 21b3505..c0ea4a7 100644
---- a/Documentation/devicetree/bindings/numa.txt
-+++ b/Documentation/devicetree/bindings/numa.txt
-@@ -48,7 +48,6 @@ distance (memory latency) between all numa nodes.
+v2 -> v3:
+1. Adjust patch2 and patch5 according to Matthias Brugger's advice, to make the
+   patches looks more well. The final code have no change. 
 
-   Note:
- 	1. Each entry represents distance from first node to second node.
--	The distances are equal in either direction.
- 	2. The distance from a node to self (local distance) is represented
- 	with value 10 and all internode distance should be represented with
- 	a value greater than 10.
+v1 -> v2:
+1. Base on https://lkml.org/lkml/2016/5/24/679
+2. Rewrote of_numa_parse_memory_nodes according to Rob Herring's advice. So that it looks more clear.
+3. Rewrote patch 5 because some scenes were not considered before.
+
+Kefeng Wang (3):
+  of_numa: Use of_get_next_parent to simplify code
+  of_numa: Use pr_fmt()
+  arm64: numa: Use pr_fmt()
+
+Zhen Lei (11):
+  of/numa: remove a duplicated pr_debug information
+  of/numa: fix a memory@ node can only contains one memory block
+  arm64/numa: add nid check for memory block
+  of/numa: remove a duplicated warning
+  arm64/numa: avoid inconsistent information to be printed
+  arm64/numa: support HAVE_SETUP_PER_CPU_AREA
+  arm64/numa: define numa_distance as array to simplify code
+  arm64/numa: support HAVE_MEMORYLESS_NODES
+  arm64/numa: remove some useless code
+  of/numa: remove the constraint on the distances of node pairs
+  Documentation: remove the constraint on the distances of node pairs
+
+ Documentation/devicetree/bindings/numa.txt |   1 -
+ arch/arm64/Kconfig                         |  12 ++
+ arch/arm64/include/asm/numa.h              |   1 -
+ arch/arm64/kernel/smp.c                    |   1 +
+ arch/arm64/mm/numa.c                       | 228 ++++++++++++++++-------------
+ drivers/of/of_numa.c                       |  87 +++++------
+ 6 files changed, 180 insertions(+), 150 deletions(-)
+
 --
 2.5.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
