@@ -1,74 +1,77 @@
-From: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
-Subject: [PATCH 2/2] imx53.dtsi : Add DMA configuration for UART
-Date: Mon,  8 Aug 2016 11:29:26 +0200
-Message-ID: <1470648566-11698-2-git-send-email-fabien.lahoudere@collabora.co.uk>
-References: <CAOMZO5DAAU0jUpd2xwgTwL9Y1Bhido35fxvhQ9HGZRXbRnB2Gg@mail.gmail.com>
- <1470648566-11698-1-git-send-email-fabien.lahoudere@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470648566-11698-1-git-send-email-fabien.lahoudere@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: festevam@gmail.com
-Cc: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX
-	/ MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH v6 0/6] ARM: at91: pm: add ULP1 mode support
+Date: Mon, 8 Aug 2016 18:04:59 +0800
+Message-ID: <1470650705-31418-1-git-send-email-wenyou.yang@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wenyou Yang <wenyou.yang@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-In order to use sdma with UART, we need to add DMA configuration
-in device tree.
+The ULP1 (Ultra Low-power mode 1) is introduced by SAMA5D2.
 
-Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
----
- arch/arm/boot/dts/imx53.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+In order to achieve the lowest power consumption, in the ULP1 mode,
+all the clocks are shut off, inclusive the embedded 12MHz RC oscillator.
 
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index cd17037..c1bc97c 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -217,6 +217,8 @@
- 					clocks = <&clks IMX5_CLK_UART3_IPG_GATE>,
- 					         <&clks IMX5_CLK_UART3_PER_GATE>;
- 					clock-names = "ipg", "per";
-+					dmas = <&sdma 42 4 0>, <&sdma 43 4 0>;
-+					dma-names = "rx", "tx";
- 					status = "disabled";
- 				};
- 
-@@ -498,6 +500,8 @@
- 				clocks = <&clks IMX5_CLK_UART1_IPG_GATE>,
- 				         <&clks IMX5_CLK_UART1_PER_GATE>;
- 				clock-names = "ipg", "per";
-+				dmas = <&sdma 18 4 0>, <&sdma 19 4 0>;
-+				dma-names = "rx", "tx";
- 				status = "disabled";
- 			};
- 
-@@ -508,6 +512,8 @@
- 				clocks = <&clks IMX5_CLK_UART2_IPG_GATE>,
- 				         <&clks IMX5_CLK_UART2_PER_GATE>;
- 				clock-names = "ipg", "per";
-+				dmas = <&sdma 12 4 0>, <&sdma 13 4 0>;
-+				dma-names = "rx", "tx";
- 				status = "disabled";
- 			};
- 
-@@ -591,6 +597,8 @@
- 				clocks = <&clks IMX5_CLK_UART4_IPG_GATE>,
- 				         <&clks IMX5_CLK_UART4_PER_GATE>;
- 				clock-names = "ipg", "per";
-+				dmas = <&sdma 2 4 0>, <&sdma 3 4 0>;
-+				dma-names = "rx", "tx";
- 				status = "disabled";
- 			};
- 		};
-@@ -621,6 +629,8 @@
- 				clocks = <&clks IMX5_CLK_UART5_IPG_GATE>,
- 				         <&clks IMX5_CLK_UART5_PER_GATE>;
- 				clock-names = "ipg", "per";
-+				dmas = <&sdma 16 4 0>, <&sdma 17 4 0>;
-+				dma-names = "rx", "tx";
- 				status = "disabled";
- 			};
- 
+The fast startup signal is used as a wake up source for ULP1 mode.
+As soon as the wake up event is asserted, the embedded 12MHz RC
+oscillator restarts automatically, which fast startup signal
+to trigger the PMC to wake up the system from the ULP1 mode can be
+configured via DT.
+
+Changes in v6:
+ - Add Acked-by tag.
+ - Add specific sama5d2_pm_init() for SAMA5D2, which supports ULP1.
+   It is called sama5d2_dt_device_init(). Instead of by reading
+   the PMC version to check if it supports ULP1.
+ - Add comment to describe the platform condition of calling
+   at91_pm_ulp1_mode().
+ - Update the commit log.
+ - Add a new patch to support a new DT_MACHINE for SAMA5D2.
+
+Changes in v5:
+ - to improve the scalability, rework the DT expression part, use
+   the child nodes to describe the wake-up input and its active level.
+ - due to the DT property expression change, update the binding
+   document.
+ - due to the DT property expression change, update the fast restart
+   node's property.
+
+Changes in v4:
+ - add Acked-by tag.
+ - add fast_restart node to the DT file.
+
+Changes in v3:
+ - use 0 and 1, not string, to define the trigger active polarity.
+ - update the property description.
+
+Changes in v2:
+ - fix label pm_exit to ulp_exit.
+ - shorten the pmc-fast-startup property's name.
+ - use the value property, instead of bool property for high
+   or low triggered.
+ - change the property name and property description.
+
+Wenyou Yang (6):
+  ARM: at91: sama5: Add a new DT_MACHINE for SAMA5D2
+  ARM: at91: pm: Create a procedure for the ULP0 mode
+  ARM: at91: pm: Add ULP1 mode support
+  ARM: at91: pm: Configure PMC fast startup signals
+  Documentation: atmel-pmc: Add DT bindings for fast startup
+  ARM: at91/dt: sama5d2_xplained: Add fast_restart node
+
+ .../devicetree/bindings/arm/atmel-pmc.txt          |  52 +++++++
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  19 +++
+ arch/arm/mach-at91/generic.h                       |   2 +
+ arch/arm/mach-at91/pm.c                            |  83 ++++++++++-
+ arch/arm/mach-at91/pm.h                            |   7 +
+ arch/arm/mach-at91/pm_suspend.S                    | 160 ++++++++++++++++++---
+ arch/arm/mach-at91/sama5.c                         |  26 +++-
+ include/linux/clk/at91_pmc.h                       |  16 +++
+ 8 files changed, 338 insertions(+), 27 deletions(-)
+
 -- 
 2.7.4
+
