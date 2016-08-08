@@ -1,36 +1,27 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/6] Add R8A7794/SILK sound DT support
-Date: Mon, 8 Aug 2016 12:59:01 +0200
-Message-ID: <20160808105901.GH17838@verge.net.au>
-References: <3910788.ckTpUWEs6B@wasted.cogentembedded.com>
- <87y44l2uy1.wl%kuninori.morimoto.gx@renesas.com>
+Subject: Re: [PATCH] ARM: dts: r8a7792: fix misindented line
+Date: Mon, 8 Aug 2016 13:03:54 +0200
+Message-ID: <20160808110354.GJ17838@verge.net.au>
+References: <1618499.8bcj8adpVO@wasted.cogentembedded.com>
+ <4152284.qHAgBjWaW0@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87y44l2uy1.wl%kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <4152284.qHAgBjWaW0@wasted.cogentembedded.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 28, 2016 at 11:47:58PM +0000, Kuninori Morimoto wrote:
+On Sat, Aug 06, 2016 at 12:52:39AM +0300, Sergei Shtylyov wrote:
+> Commit 2a0900655d5e (ARM: dts: r8a7792: add I2C support) had a wrongly
+> indented line at the end of the "aliases" subnode -- fix it.
 > 
-> Hi
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 > 
-> >    Here's the set of 6 patches against Simon Horman's 'renesas.git' repo,
-> > 'renesas-devel-20160725-v4.7-rc7' tag. I'm adding the sound device tree support
-> > for the R8A7794 SoC based SILK board.
-> > 
-> > [1/6] ARM: dts: r8a7794: add audio clocks
-> > [2/6] ARM: dts: r8a7794: add MSTP5 clocks
-> > [3/6] ARM: dts: r8a7794: add MSTP10 clocks
-> > [4/6] ARM: dts: r8a7794: add Audio-DMAC support
-> > [5/6] ARM: dts: r8a7794: add sound support
-> > [6/6] ARM: dts: silk: add sound support
-> 
-> For all patches
-> 
-> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> ---
+> This patch is against the 'renesas-devel-20160725-v4.7-rc7' tag of Simon
+> Horman's 'renesas.git' repo.
 
-Thanks, I have queued these up.
+Thanks, I have queued this up for v4.9.
