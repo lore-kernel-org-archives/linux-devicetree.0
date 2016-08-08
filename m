@@ -1,35 +1,45 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/4] soc: qcom: add an EBI2 device tree bindings
-Date: Mon, 08 Aug 2016 23:32:46 +0200
-Message-ID: <2988918.zNxvaGl6en@wuerfel>
-References: <1470691445-27571-1-git-send-email-linus.walleij@linaro.org> <1470691445-27571-2-git-send-email-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2] device-tree: aqp8064.dtsi: Remove usb phy dr_mode = "host"
+Date: Mon,  8 Aug 2016 15:34:02 -0700
+Message-ID: <1470695643-32169-1-git-send-email-john.stultz@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470691445-27571-2-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, August 8, 2016 11:24:02 PM CEST Linus Walleij wrote:
-> +
-> +Required subnode properties:
-> +- chipselect: <N> where N is the chipselect configured in this node
-> +- address-cells: should be <1>
-> +- size-cells: should be <1>
-> +- ranges: bool should be present
-> 
+Most 8064 devices have micro-usb ports for phy1, so setting
+the dr_mode to host here seems incorrect.
 
-I think this should use a proper ranges property that translates
-the address space of the external bus into the parent bus.
+Leaving it unspecified should default to otg, and then
+any boards that wish to specify something else, can
+override it in their dts file.
 
-Just use #address-cells=<2> and make the first cell the cs number,
-as the other similar drivers do, and get rid of the chipselect
-property.
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/qcom-apq8064.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-	Arnd
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 9dc83b0..7e43416 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -750,7 +750,6 @@
+ 			reg		= <0x12500000 0x400>;
+ 			interrupts	= <GIC_SPI 100 IRQ_TYPE_NONE>;
+ 			status		= "disabled";
+-			dr_mode		= "host";
+ 
+ 			clocks		= <&gcc USB_HS1_XCVR_CLK>,
+ 					  <&gcc USB_HS1_H_CLK>;
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
