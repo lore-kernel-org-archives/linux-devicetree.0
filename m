@@ -1,55 +1,74 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: imx53: add support for USB armory board
-Date: Mon, 8 Aug 2016 15:08:03 +0800
-Message-ID: <20160808070803.GB4678@tiger>
-References: <20160628125444.16531-1-andrej@inversepath.com>
- <20160628125444.16531-3-andrej@inversepath.com>
+From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Subject: [RFC PATCH v4 1/2] Documentation: DT: net: Add Xilinx gmiitorgmii converter device tree binding documentation
+Date: Mon, 8 Aug 2016 12:45:04 +0530
+Message-ID: <1470640505-8279-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160628125444.16531-3-andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vagrant Cascadian <vagrant-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, appanad@xilinx.com, f.fainelli@gmail.com, andrew@lunn.ch, punnaia@xilinx.com, anirudh@xilinx.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-One more comment below.
+Device-tree binding documentation for xilinx gmiitorgmii converter.
 
-On Tue, Jun 28, 2016 at 02:54:44PM +0200, andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org wrote:
-> +&iomuxc {
-> +	pinctrl_esdhc1: esdhc1grp {
-> +		fsl,pins = <
-> +			MX53_PAD_SD1_DATA0__ESDHC1_DAT0		0x1d5
-> +			MX53_PAD_SD1_DATA1__ESDHC1_DAT1		0x1d5
-> +			MX53_PAD_SD1_DATA2__ESDHC1_DAT2		0x1d5
-> +			MX53_PAD_SD1_DATA3__ESDHC1_DAT3		0x1d5
-> +			MX53_PAD_SD1_CMD__ESDHC1_CMD		0x1d5
-> +			MX53_PAD_SD1_CLK__ESDHC1_CLK		0x1d5
-> +		>;
-> +	};
-> +
-> +	pinctrl_i2c1_pmic: i2c1grp_pmic {
-> +		fsl,pins = <
-> +			MX53_PAD_EIM_D21__I2C1_SCL	0x0
-> +			MX53_PAD_EIM_D28__I2C1_SDA	0x0
+Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+---
+Changes for v4:
+--> Modified compatible as suggested by Rob.
+--> Removed underscores from the converter node name as suggested by Rob.
+Changes for v3:
+--> None.
+Changes for v2:
+--> New patch.
 
-Please use a proper pin configuration value rather than 0x0.
+ .../devicetree/bindings/net/xilinx_gmii2rgmii.txt  | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
 
-> +		>;
-> +	};
-> +
-> +	pinctrl_led: led {
-> +		fsl,pins = <
-> +			MX53_PAD_DISP0_DAT6__GPIO4_27 0x0
-
-Ditto.
-
-Shawn
-
-> +		>;
-> +	};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt b/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
+new file mode 100644
+index 0000000..453680d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
+@@ -0,0 +1,38 @@
++XILINX GMIITORGMII Converter Driver Device Tree Bindings
++--------------------------------------------------------
++
++The Gigabit Media Independent Interface (GMII) to Reduced Gigabit Media
++Independent Interface (RGMII) core provides the RGMII between RGMII-compliant
++Ethernet physical media devices (PHY) and the Gigabit Ethernet controller.
++This core can be used in all three modes of operation(10/100/1000 Mb/s).
++The Management Data Input/Output (MDIO) interface is used to configure the
++Speed of operation. This core can switch dynamically between the three
++Different speed modes by configuring the conveter register through mdio write.
++
++The MDIO is a bus to which the PHY devices are connected.  For each
++device that exists on this bus, a child node should be created.  See
++the definition of the PHY node in booting-without-of.txt for an example
++of how to define a PHY.
++
++This converter sits between the MAC and the external phy.
++MAC <==> GMII2RGMII <==> RGMII_PHY
++
++Required properties:
++  - compatible : Should be "xlnx,gmii-to-rgmii-1.0"
++  - reg : The ID number for the phy, usually a small integer
++  - phy-handle: Should point to the external phy device.
++		See ethernet.txt file in the same directory.
++
++Example:
++	mdio {
++                #address-cells = <1>;
++                #size-cells = <0>;
++		phy: ethernet-phy@0 {
++			......
++		};
++                gmiitorgmii: gmiitorgmii@8 {
++                        compatible = "xlnx,gmii-to-rgmii-1.0";
++                        reg = <8>;
++			phy-handle = <&phy>;
++                };
++        };
+-- 
+2.1.2
