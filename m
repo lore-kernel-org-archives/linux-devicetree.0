@@ -1,67 +1,75 @@
 From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH RESEND v2 4/8] uio: Add new UIO_MEM_DEVICE type for mem regions
-Date: Mon,  8 Aug 2016 11:22:33 +0530
-Message-ID: <1470635557-13416-5-git-send-email-anup.patel@broadcom.com>
+Subject: [PATCH RESEND v2 6/8] uio: UIO_IRQ_NONE is a valid option for uioinfo->irq
+Date: Mon,  8 Aug 2016 11:22:35 +0530
+Message-ID: <1470635557-13416-7-git-send-email-anup.patel@broadcom.com>
 References: <1470635557-13416-1-git-send-email-anup.patel@broadcom.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1470635557-13416-1-git-send-email-anup.patel@broadcom.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: Ankit Jindal <thatsjindal@gmail.com>, Jan Viktorin <viktorin@rehivetech.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Anup Patel <anup.patel@broadcom.com>
+Cc: Ankit Jindal <thatsjindal@gmail.com>, Jan Viktorin <viktorin@rehivetech.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On ARM64, the MMU supports special memory attributes for device
-memory/registers. Due to this we have pgprot_device() provided
-by asm/pgtable.h of arch/arm64.
+From: Jan Viktorin <viktorin@rehivetech.com>
 
-On architectures that do not have special MMU attribute for device
-memory/registers, the asm-generic/pgtable.h maps pgprot_device()
-to pgprot_noncached().
+We can simplify handling of platform_get_irq into one place as it is
+acceptable to see UIO_IRQ_NONE instead of a valid IRQ number. Some
+devices don't have or don't need any interrupt to be handled. The
+same change has been already done for uio_pdrv_genirq.
 
-This patch introduces a new UIO mem region type UIO_MEM_DEVICE to
-represent device registers/memory. The UIO device drivers should
-prefer this new UIO mem region type for memory mapped device registers.
-
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+Signed-off-by: Jan Viktorin <viktorin@rehivetech.com>
 ---
- drivers/uio/uio.c          | 4 ++++
- include/linux/uio_driver.h | 1 +
- 2 files changed, 5 insertions(+)
+ drivers/uio/uio_dmem_genirq.c | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/uio/uio.c b/drivers/uio/uio.c
-index 0e53076..a00990c 100644
---- a/drivers/uio/uio.c
-+++ b/drivers/uio/uio.c
-@@ -663,6 +663,9 @@ static int uio_mmap_physical(struct vm_area_struct *vma, int memtype)
- 	case UIO_MEM_PHYS_CACHE:
- 		/* Do nothing. */
- 		break;
-+	case UIO_MEM_DEVICE:
-+		vma->vm_page_prot = pgprot_device(vma->vm_page_prot);
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -714,6 +717,7 @@ static int uio_mmap(struct file *filep, struct vm_area_struct *vma)
- 	switch (idev->info->mem[mi].memtype) {
- 	case UIO_MEM_PHYS:
- 	case UIO_MEM_PHYS_CACHE:
-+	case UIO_MEM_DEVICE:
- 		return uio_mmap_physical(vma, idev->info->mem[mi].memtype);
- 	case UIO_MEM_LOGICAL:
- 	case UIO_MEM_VIRTUAL:
-diff --git a/include/linux/uio_driver.h b/include/linux/uio_driver.h
-index 31359aee..7349f95 100644
---- a/include/linux/uio_driver.h
-+++ b/include/linux/uio_driver.h
-@@ -129,6 +129,7 @@ extern void uio_event_notify(struct uio_info *info);
- #define UIO_MEM_LOGICAL		2
- #define UIO_MEM_VIRTUAL		3
- #define UIO_MEM_PHYS_CACHE	4
-+#define UIO_MEM_DEVICE		5
+diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
+index e1134a4..a4d6d81 100644
+--- a/drivers/uio/uio_dmem_genirq.c
++++ b/drivers/uio/uio_dmem_genirq.c
+@@ -154,8 +154,6 @@ static int uio_dmem_genirq_probe(struct platform_device *pdev)
+ 	int i;
  
- /* defines for uio_port->porttype */
- #define UIO_PORT_NONE	0
+ 	if (pdev->dev.of_node) {
+-		int irq;
+-
+ 		/* alloc uioinfo for one device */
+ 		uioinfo = kzalloc(sizeof(*uioinfo), GFP_KERNEL);
+ 		if (!uioinfo) {
+@@ -165,13 +163,6 @@ static int uio_dmem_genirq_probe(struct platform_device *pdev)
+ 		}
+ 		uioinfo->name = pdev->dev.of_node->name;
+ 		uioinfo->version = "devicetree";
+-
+-		/* Multiple IRQs are not supported */
+-		irq = platform_get_irq(pdev, 0);
+-		if (irq == -ENXIO)
+-			uioinfo->irq = UIO_IRQ_NONE;
+-		else
+-			uioinfo->irq = irq;
+ 	}
+ 
+ 	if (!uioinfo || !uioinfo->name || !uioinfo->version) {
+@@ -200,14 +191,18 @@ static int uio_dmem_genirq_probe(struct platform_device *pdev)
+ 	priv->pdev = pdev;
+ 	mutex_init(&priv->alloc_lock);
+ 
++	/* Multiple IRQs are not supported */
+ 	if (!uioinfo->irq) {
+ 		ret = platform_get_irq(pdev, 0);
+-		if (ret < 0) {
++		uioinfo->irq = ret;
++		if (ret == -ENXIO && pdev->dev.of_node)
++			uioinfo->irq = UIO_IRQ_NONE;
++		else if (ret < 0) {
+ 			dev_err(&pdev->dev, "failed to get IRQ\n");
+ 			goto bad1;
+ 		}
+-		uioinfo->irq = ret;
+ 	}
++
+ 	uiomem = &uioinfo->mem[0];
+ 
+ 	for (i = 0; i < pdev->num_resources; ++i) {
 -- 
 1.9.1
 
