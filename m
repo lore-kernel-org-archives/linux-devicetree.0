@@ -1,39 +1,36 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2] ARM: dts: da850: Add new ECAP and EPWM bindings
-Date: Mon, 8 Aug 2016 16:21:13 +0530
-Message-ID: <57A86421.6030804@ti.com>
-References: <1468264306-3806-1-git-send-email-fcooper@ti.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 0/6] Add R8A7794/SILK sound DT support
+Date: Mon, 8 Aug 2016 12:59:01 +0200
+Message-ID: <20160808105901.GH17838@verge.net.au>
+References: <3910788.ckTpUWEs6B@wasted.cogentembedded.com>
+ <87y44l2uy1.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1468264306-3806-1-git-send-email-fcooper@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <87y44l2uy1.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 12 July 2016 12:41 AM, Franklin S Cooper Jr wrote:
-> From: "Cooper Jr., Franklin" <fcooper@ti.com>
+On Thu, Jul 28, 2016 at 11:47:58PM +0000, Kuninori Morimoto wrote:
 > 
-> For some devices, the PWMSS is a parent of eCAP and ePWM and provided the
-
-"and provides .."
-
-> functional clocks for those submodules. The ti,am33xx-ecap and
-> ti,am33xx-ehrpwm were based on this parent child relationship where the
-
-"ti,am33xx-ehrpwm bindings were .."
-
-> functional clock would be grabbed from the module's parent.
+> Hi
 > 
-> However, DA850 doesn't have a PWMSS and the eCAP and ePWM provides their
-> functional clock themselves. Therefore, prefer the new binding that doesn't
-> assume this parent child relationship.
+> >    Here's the set of 6 patches against Simon Horman's 'renesas.git' repo,
+> > 'renesas-devel-20160725-v4.7-rc7' tag. I'm adding the sound device tree support
+> > for the R8A7794 SoC based SILK board.
+> > 
+> > [1/6] ARM: dts: r8a7794: add audio clocks
+> > [2/6] ARM: dts: r8a7794: add MSTP5 clocks
+> > [3/6] ARM: dts: r8a7794: add MSTP10 clocks
+> > [4/6] ARM: dts: r8a7794: add Audio-DMAC support
+> > [5/6] ARM: dts: r8a7794: add sound support
+> > [6/6] ARM: dts: silk: add sound support
 > 
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+> For all patches
+> 
+> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-Queuing this for v4.9 with above minor commit message fixes made locally.
-
-Regards,
-Sekhar
+Thanks, I have queued these up.
