@@ -1,37 +1,89 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: r8a7792: add VIN clocks
-Date: Mon, 8 Aug 2016 14:42:56 +0200
-Message-ID: <CAMuHMdWeq2tH_jpPJ1sPYiutKCcAXynm8tw6vBW7dC9C1seUeg@mail.gmail.com>
-References: <17288006.ERHB6654v5@wasted.cogentembedded.com> <1477310.o5B8uhf3mT@wasted.cogentembedded.com>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH 2/2] dt: bindings: Add binding for ESP8089 wifi chips
+Date: Mon, 08 Aug 2016 20:42:53 +0800
+Message-ID: <264251470660173@web16j.yandex.ru>
+References: <1470596269-20572-1-git-send-email-hdegoede@redhat.com>
+ <1470596269-20572-2-git-send-email-hdegoede@redhat.com>
+ <1971470623776@web13m.yandex.ru>
+ <9518a338-f1f5-848c-ce17-85ec1ebaa213@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1477310.o5B8uhf3mT-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <9518a338-f1f5-848c-ce17-85ec1ebaa213@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 23, 2016 at 9:16 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Describe the VIN[0-5] clocks and their parent, ZG clock in the R8A7792
-> device  tree.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgowOC4wOC4yMDE2LCAxNTozNCwgIkhhbnMgZGUgR29lZGUiIDxoZGVnb2VkZUByZWRoYXQu
+Y29tPjoKPiBIaSwKPgo+IE9uIDA4LTA4LTE2IDA0OjM2LCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+
+PiDCoDA4LjA4LjIwMTYsIDAyOjU4LCAiSGFucyBkZSBHb2VkZSIgPGhkZWdvZWRlQHJlZGhhdC5j
+b20+Ogo+Pj4gwqBUaGUgRVNQODA4OSBjaGlwcyBjYW4gbW9zdGx5IGJlIGVudW1lcmF0ZWQgdmlh
+IHRoZWlyIHNkaW8gaW50ZXJmYWNlLAo+Pj4gwqBidXQgdGhleSBhcmUgY2xvY2tlZCBieSBhbiBl
+eHRlcm5hbCBjcnlzdGFsIHdoaWNoIG1heSBkaWZmZXIgZnJvbSBvbmUKPj4+IMKgYm9hcmQgdG8g
+dGhlIG90aGVyLgo+Pj4KPj4+IMKgVGhpcyBjb21taXQgYWRkcyBhIGJpbmRpbmcgZm9yIHRoZSBz
+ZGlvIGNoaWxkIG5vZGUgZm9yIHRoZXNlIGNoaXBzLAo+Pj4gwqBhbGxvd2luZyB0byBzcGVjaWZ5
+IHRoZSBleHRlcm5hbCBjcnlzdGFsIHR5cGUgKGZvciBub3csIHRoaXMgYmluZGluZwo+Pj4gwqBj
+b3VsZCBiZSBiZSBleHRlbmRlZCB3aXRoIGUuZy4gT09CIGlycSBzdXBwb3J0IGxhdGVyKS4KPj4+
+Cj4+PiDCoFRoZSBBbmRyb2lkIGRyaXZlciBmb3IgdGhpcyBjaGlwIHVzZXMgYSB0ZXh0IGZpbGUg
+d2l0aCBrZXksdmFsdWUgcGFpcnMKPj4+IMKgd2hpY2ggZ2V0cyBsb2FkZWQgYXMgZmlybXdhcmUg
+dG8gcGFzcyB0aGlzIGluZm8gdG8gdGhlIGZpcm13YXJlLgo+Pj4gwqBUaGUgImVzcCxjcnlzdGFs
+XzI2TV9lbiIgbmFtZSBpcyBjaG9zZW4gdG8gbWF0Y2ggdGhlIGNyeXN0YWxfMjZNX2VuCj4+PiDC
+oGtleS1uYW1lIGluIHRoYXQgdGV4dCBmaWxlLgo+Pj4KPj4+IMKgTm90ZSB0aGF0IGF0IHRoaXMg
+cG9pbnQgdGhlcmUgb25seSBpcyBhbiBvdXQgb2YgdHJlZSBkcml2ZXIgZm9yIHRoaXMKPj4+IMKg
+aGFyZHdhcmUsIHRoZXJlIGlzIG5vIGNsZWFyIHRpbWVsaW5lIC8gcGF0aCBmb3IgbWVyZ2luZyB0
+aGlzLiBTdGlsbAo+Pj4gwqBJIGJlbGlldmUgaXQgd291bGQgYmUgZ29vZCB0byBzcGVjaWZ5IHRo
+ZSBiaW5kaW5nIGZvciB0aGlzIGluIHRyZWUKPj4+IMKgbm93LCBzbyB0aGF0IGFueSBmdXR1cmUg
+bWlncmF0aW9uIHRvIGFuIGluIHRyZWUgZHJpdmVyIHdpbGwgbm90IGNhdXNlCj4+PiDCoGNvbXBh
+dGlibGl0eSBpc3N1ZXMuCj4+Pgo+Pj4gwqBDYzogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3Nj
+Lnh5ej4KPj4+IMKgU2lnbmVkLW9mZi1ieTogSGFucyBkZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0
+LmNvbT4KPj4+IMKgLS0tCj4+PiDCoMKgLi4uL2JpbmRpbmdzL25ldC93aXJlbGVzcy9lc3AsZXNw
+ODA4OS50eHQgfCAzMSArKysrKysrKysrKysrKysrKysrKysrCj4+PiDCoMKgMSBmaWxlIGNoYW5n
+ZWQsIDMxIGluc2VydGlvbnMoKykKPj4+IMKgwqBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC93aXJlbGVzcy9lc3AsZXNwODA4OS50eHQKPj4+
+Cj4+PiDCoGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0
+L3dpcmVsZXNzL2VzcCxlc3A4MDg5LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9uZXQvd2lyZWxlc3MvZXNwLGVzcDgwODkudHh0Cj4+PiDCoG5ldyBmaWxlIG1vZGUgMTAw
+NjQ0Cj4+PiDCoGluZGV4IDAwMDAwMDAuLjg5OGExNDkKPj4+IMKgLS0tIC9kZXYvbnVsbAo+Pj4g
+wqArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3dpcmVsZXNzL2Vz
+cCxlc3A4MDg5LnR4dAo+Pj4gwqBAQCAtMCwwICsxLDMxIEBACj4+PiDCoCtFc3ByZXNzaWYgRVNQ
+ODA4OSB3aXJlbGVzcyBTRElPIGRldmljZXMKPj4+IMKgKwo+Pj4gwqArVGhpcyBub2RlIHByb3Zp
+ZGVzIHByb3BlcnRpZXMgZm9yIGNvbnRyb2xsaW5nIHRoZSBFU1A4MDg5IHdpcmVsZXNzIGRldmlj
+ZS4KPj4+IMKgK1RoZSBub2RlIGlzIGV4cGVjdGVkIHRvIGJlIHNwZWNpZmllZCBhcyBhIGNoaWxk
+IG5vZGUgdG8gdGhlIFNESU8gY29udHJvbGxlcgo+Pj4gwqArdGhhdCBjb25uZWN0cyB0aGUgZGV2
+aWNlIHRvIHRoZSBzeXN0ZW0uCj4+PiDCoCsKPj4+IMKgK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+
+PiDCoCsKPj4+IMKgKyAtIGNvbXBhdGlibGUgOiBTaG91bGQgYmUgImVzcCxlc3A4MDg5Ii4KPj4g
+wqBUaGVyZSdzIGFsc28gZXNwODI2Ni4gKEFuZCB0aGUgZGlmZmVyZW5jZSBvZiA4MDg5IGFuZCA4
+MjY2IGlzIG1haW5seSB0aGUgZGlmZmVyZW5jZSBvZiBjcnlzdGFsIGZyZXF1ZW5jeS4uLiAyNk1I
+eiBmb3IgODI2NiwgNDBNSHogZm9yIDgwODkpCj4+IMKgU28gbWF5YmUgaXQgc2hvdWxkIGJlIHRo
+ZSBkaWZmZXJlbmNlIG9mIGR0IGNvbXBhdGlibGU/Cj4KPiAyIG9mIG15IHRhYmxldHMgKGJvdGgg
+UG9sYXJvaWQgb25lcykgdXNlIGEgdmFsdWUgb2YgMiAocmF0aGVyCj4gdGhlbiAwIG9yIDEpIGZv
+ciBjcnlzdGFsXzI2TV9lbiBhbmQgdXNpbmcgYSBkaWZmZXJlbnQgdmFsdWUKPiBkb2VzIG5vdCB3
+b3JrLiBBbm90aGVyIGdlbmVyaWMgcTggZm9ybS1mYWN0b3IgdGFibGV0IEkndmUgd2l0aAo+IGFu
+IGEyMyBuZWVkcyBjcnlzdGFsXzI2TV9lbj0xLiBJbiBhbGwgdGhlc2UgdGFibGV0cyB0aGUgY2hp
+cCBpcwo+IGNsZWFybHkgbWFya2VkIGVzcDgwODksIHNvIHRoZSBjcnlzdGFsXzI2TV9lbiBzZXR0
+aW5nIHNlZW1zIHRvCj4gbm90IGJlIHJlbGF0ZWQgdG8gdGhlIGNoaXAgbW9kZWwgYW5kIGRlcml2
+aW5nIHRoaXMgZnJvbSB0aGUKPiBjb21wYXRpYmxlIHN0cmluZyBzZWVtcyBsaWtlIGEgYmFkIGlk
+ZWEgdG8gbWUuCgpPaCBzdWNoIHN0cmFuZ2UuCgpUaGFua3MsCkljZW5vd3kKPgo+IFJlZ2FyZHMs
+Cj4KPiBIYW5zCj4KPj4+IMKgKwo+Pj4gwqArT3B0aW9uYWwgcHJvcGVydGllczoKPj4+IMKgKyAt
+IGVzcCxjcnlzdGFsXzI2TV9lbjogSW50ZWdlciB2YWx1ZSBmb3IgdGhlIGNyeXN0YWxfMjZNX2Vu
+IGZpcm13YXJlIHBhcmFtZXRlcgo+Pj4gwqArCj4+PiDCoCtFeGFtcGxlOgo+Pj4gwqArCj4+PiDC
+oCsmbW1jMSB7Cj4+PiDCoCsgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4+PiDCoCsgI3NpemUtY2Vs
+bHMgPSA8MD47Cj4+PiDCoCsKPj4+IMKgKyB2bW1jLXN1cHBseSA9IDwmcmVnX2RsZG8xPjsKPj4+
+IMKgKyBtbWMtcHdyc2VxID0gPCZ3aWZpX3B3cnNlcT47Cj4+PiDCoCsgYnVzLXdpZHRoID0gPDQ+
+Owo+Pj4gwqArIG5vbi1yZW1vdmFibGU7Cj4+PiDCoCsgc3RhdHVzID0gIm9rYXkiOwo+Pj4gwqAr
+Cj4+PiDCoCsgZXNwODA4OTogc2Rpb193aWZpQDEgewo+Pj4gwqArIGNvbXBhdGlibGUgPSAiZXNw
+LGVzcDgwODkiOwo+Pj4gwqArIHJlZyA9IDwxPjsKPj4+IMKgKyBlc3AsY3J5c3RhbF8yNk1fZW4g
+PSA8Mj47Cj4+PiDCoCsgfTsKPj4+IMKgK307Cj4+PiDCoC0tCj4+PiDCoDIuNy40CgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
