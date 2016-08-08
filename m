@@ -1,577 +1,107 @@
-From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/4] MIPS: BMIPS: Add support GPIO device nodes
-Date: Mon, 8 Aug 2016 16:06:02 +0200
-Message-ID: <CAOiHx=kxjXiYm_4S3rLOjB0wM-UpQsqfXn+EVq6+FGOH4whuuQ@mail.gmail.com>
-References: <20160808021719.4680-1-jaedon.shin@gmail.com> <20160808021719.4680-3-jaedon.shin@gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 3/3] ARM: dts: imx6sx-udoo-neo: Add SD
+Date: Mon, 8 Aug 2016 22:12:48 +0800
+Message-ID: <20160808141248.GI4678@tiger>
+References: <1467691450-22975-1-git-send-email-afaerber@suse.de>
+ <1467691450-22975-4-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160808021719.4680-3-jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1467691450-22975-4-git-send-email-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Ettore Chimenti <ettore.chimenti@udoo.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-please always include devicetree for any dts(i) related changes.
-
-On 8 August 2016 at 04:17, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Adds GPIO device nodes to BCM7xxx MIPS based SoCs.
->
-> Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Tue, Jul 05, 2016 at 06:04:10AM +0200, Andreas Färber wrote:
+> Enable the SDHC node and model the SDIO_PWR GPIO as a regulator.
+> Use the SD card as default trigger for the red LED.
+> 
+> Cc: Ettore Chimenti <ettore.chimenti@udoo.org>
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
 > ---
->  arch/mips/boot/dts/brcm/bcm7125.dtsi      | 12 ++++++++++
->  arch/mips/boot/dts/brcm/bcm7346.dtsi      | 37 +++++++++++++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7358.dtsi      | 37 +++++++++++++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7360.dtsi      | 37 +++++++++++++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7362.dtsi      | 37 +++++++++++++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7420.dtsi      | 12 ++++++++++
->  arch/mips/boot/dts/brcm/bcm7425.dtsi      | 37 +++++++++++++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm7435.dtsi      | 37 +++++++++++++++++++++++++++++++
->  arch/mips/boot/dts/brcm/bcm97125cbmb.dts  |  4 ++++
->  arch/mips/boot/dts/brcm/bcm97346dbsmb.dts |  8 +++++++
->  arch/mips/boot/dts/brcm/bcm97358svmb.dts  |  8 +++++++
->  arch/mips/boot/dts/brcm/bcm97360svmb.dts  |  8 +++++++
->  arch/mips/boot/dts/brcm/bcm97362svmb.dts  |  8 +++++++
->  arch/mips/boot/dts/brcm/bcm97420c.dts     |  4 ++++
->  arch/mips/boot/dts/brcm/bcm97425svmb.dts  |  8 +++++++
->  arch/mips/boot/dts/brcm/bcm97435svmb.dts  |  8 +++++++
->  16 files changed, 302 insertions(+)
->
-> diff --git a/arch/mips/boot/dts/brcm/bcm7125.dtsi b/arch/mips/boot/dts/brcm/bcm7125.dtsi
-> index 97191f6bca28..746ed06c85de 100644
-> --- a/arch/mips/boot/dts/brcm/bcm7125.dtsi
-> +++ b/arch/mips/boot/dts/brcm/bcm7125.dtsi
-> @@ -197,6 +197,18 @@
->                         status = "disabled";
->                 };
->
-> +               upg_gio: gpio@406700 {
-> +                       compatible = "brcm,brcmstb-gpio";
-> +                       reg = <0x406700 0x80>;
-> +                       #gpio-cells = <2>;
-> +                       #interrupt-cells = <2>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       interrupt-parent = <&upg_irq0_intc>;
-> +                       interrupts = <6>;
-> +                       brcm,gpio-bank-widths = <32 32 32 18>;
-> +               };
+>  
+> 
+>  arch/arm/boot/dts/imx6sx-udoo-neo.dtsi | 34 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
+> index e074409644d8..85f5e8606dab 100644
+> --- a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
+> +++ b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
+> @@ -56,6 +56,7 @@
+>  			label = "udoo-neo:red:mmc";
+>  			gpios = <&gpio6 0 GPIO_ACTIVE_HIGH>;
+>  			default-state = "off";
+> +			linux,default-trigger = "mmc0";
+>  		};
+>  
+>  		orange {
+> @@ -64,6 +65,17 @@
+>  			default-state = "keep";
+>  		};
+>  	};
 > +
->                 ehci0: usb@488300 {
->                         compatible = "brcm,bcm7125-ehci", "generic-ehci";
->                         reg = <0x488300 0x100>;
-> diff --git a/arch/mips/boot/dts/brcm/bcm7346.dtsi b/arch/mips/boot/dts/brcm/bcm7346.dtsi
-> index eb7b19a32e3e..1ef7540238be 100644
-> --- a/arch/mips/boot/dts/brcm/bcm7346.dtsi
-> +++ b/arch/mips/boot/dts/brcm/bcm7346.dtsi
-> @@ -232,6 +232,43 @@
->                         status = "disabled";
->                 };
->
-> +               aon_pm_l2_intc: aon_pm_l2_intc@408440 {
+> +	sdio_pwr_reg: sd-gpio-regulator {
+> +		compatible = "regulator-fixed";
+> +		gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		regulator-name = "SDIO_PWR";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-boot-on;
+> +		regulator-always-on;
+> +	};
 
-interrupt-controller@
+Is it correct to model SDIO power control GPIO as a boot-on and
+always-on fixed regulator?  It will be powered-on even when SDIO driver
+is not enabled or loaded.
 
-> +                       compatible = "brcm,l2-intc";
-> +                       reg = <0x408440 0x30>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-parent = <&periph_intc>;
-> +                       interrupts = <52>;
-> +                       brcm,irq-can-wake;
-> +               };
-> +
-> +               upg_gio: gpio@406700 {
-> +                       compatible = "brcm,brcmstb-gpio";
-> +                       reg = <0x406700 0x60>;
-> +                       #gpio-cells = <2>;
-> +                       #interrupt-cells = <2>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       interrupt-parent = <&upg_irq0_intc>;
-> +                       interrupts = <6>;
-> +                       brcm,gpio-bank-widths = <32 32 16>;
-> +               };
-> +
-> +               upg_gio_aon: gpio@408c00 {
-> +                       compatible = "brcm,brcmstb-gpio";
-> +                       reg = <0x408c00 0x60>;
-> +                       #gpio-cells = <2>;
-> +                       #interrupt-cells = <2>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       interrupt-parent = <&upg_aon_irq0_intc>;
-> +                       interrupts = <6>;
-> +                       interrupts-extended = <&upg_aon_irq0_intc 6>,
-> +                                             <&aon_pm_l2_intc 5>;
-> +                       wakeup-source;
-> +                       brcm,gpio-bank-widths = <27 32 2>;
-> +               };
-> +
->                 enet0: ethernet@430000 {
->                         phy-mode = "internal";
->                         phy-handle = <&phy1>;
-> diff --git a/arch/mips/boot/dts/brcm/bcm7358.dtsi b/arch/mips/boot/dts/brcm/bcm7358.dtsi
-> index b2276b1e12d4..bb099ee046a1 100644
-> --- a/arch/mips/boot/dts/brcm/bcm7358.dtsi
-> +++ b/arch/mips/boot/dts/brcm/bcm7358.dtsi
-> @@ -216,6 +216,43 @@
->                         status = "disabled";
->                 };
->
-> +               aon_pm_l2_intc: aon_pm_l2_intc@408240 {
+Shawn
 
-interrupt-controller@
-
-> +                       compatible = "brcm,l2-intc";
-> +                       reg = <0x408240 0x30>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-parent = <&periph_intc>;
-> +                       interrupts = <49>;
-> +                       brcm,irq-can-wake;
-> +               };
-> +
-> +               upg_gio: gpio@406500 {
-> +                       compatible = "brcm,brcmstb-gpio";
-> +                       reg = <0x406500 0xa0>;
-> +                       #gpio-cells = <2>;
-> +                       #interrupt-cells = <2>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       interrupt-parent = <&upg_irq0_intc>;
-> +                       interrupts = <6>;
-> +                       brcm,gpio-bank-widths = <32 32 32 29 4>;
-> +               };
-> +
-> +               upg_gio_aon: gpio@408c00 {
-> +                       compatible = "brcm,brcmstb-gpio";
-> +                       reg = <0x408c00 0x60>;
-> +                       #gpio-cells = <2>;
-> +                       #interrupt-cells = <2>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       interrupt-parent = <&upg_aon_irq0_intc>;
-> +                       interrupts = <6>;
-> +                       interrupts-extended = <&upg_aon_irq0_intc 6>,
-> +                                             <&aon_pm_l2_intc 5>;
-> +                       wakeup-source;
-> +                       brcm,gpio-bank-widths = <21 32 2>;
-> +               };
-> +
->                 enet0: ethernet@430000 {
->                         phy-mode = "internal";
->                         phy-handle = <&phy1>;
-> diff --git a/arch/mips/boot/dts/brcm/bcm7360.dtsi b/arch/mips/boot/dts/brcm/bcm7360.dtsi
-> index e414af1e14ff..0aeb3de7fbc2 100644
-> --- a/arch/mips/boot/dts/brcm/bcm7360.dtsi
-> +++ b/arch/mips/boot/dts/brcm/bcm7360.dtsi
-> @@ -208,6 +208,43 @@
->                         status = "disabled";
->                 };
->
-> +               aon_pm_l2_intc: aon_pm_l2_intc@408440 {
-
-interrupt-controller@
-
-> +                       compatible = "brcm,l2-intc";
-> +                       reg = <0x408440 0x30>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-parent = <&periph_intc>;
-> +                       interrupts = <49>;
-> +                       brcm,irq-can-wake;
-> +               };
-> +
-> +               upg_gio: gpio@406500 {
-> +                       compatible = "brcm,brcmstb-gpio";
-> +                       reg = <0x406500 0xa0>;
-> +                       #gpio-cells = <2>;
-> +                       #interrupt-cells = <2>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       interrupt-parent = <&upg_irq0_intc>;
-> +                       interrupts = <6>;
-> +                       brcm,gpio-bank-widths = <32 32 32 29 4>;
-> +               };
-> +
-> +               upg_gio_aon: gpio@408c00 {
-> +                       compatible = "brcm,brcmstb-gpio";
-> +                       reg = <0x408c00 0x60>;
-> +                       #gpio-cells = <2>;
-> +                       #interrupt-cells = <2>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       interrupt-parent = <&upg_aon_irq0_intc>;
-> +                       interrupts = <6>;
-> +                       interrupts-extended = <&upg_aon_irq0_intc 6>,
-> +                                             <&aon_pm_l2_intc 5>;
-> +                       wakeup-source;
-> +                       brcm,gpio-bank-widths = <21 32 2>;
-> +               };
-> +
->                 enet0: ethernet@430000 {
->                         phy-mode = "internal";
->                         phy-handle = <&phy1>;
-> diff --git a/arch/mips/boot/dts/brcm/bcm7362.dtsi b/arch/mips/boot/dts/brcm/bcm7362.dtsi
-> index 3bd1c0111d43..9a1f6ffc343d 100644
-> --- a/arch/mips/boot/dts/brcm/bcm7362.dtsi
-> +++ b/arch/mips/boot/dts/brcm/bcm7362.dtsi
-> @@ -204,6 +204,43 @@
->                         status = "disabled";
->                 };
->
-> +               aon_pm_l2_intc: aon_pm_l2_intc@408440 {
-
-interrupt-controller@
-
-> +                       compatible = "brcm,l2-intc";
-> +                       reg = <0x408440 0x30>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-parent = <&periph_intc>;
-> +                       interrupts = <49>;
-> +                       brcm,irq-can-wake;
-> +               };
-> +
-> +               upg_gio: gpio@406500 {
-> +                       compatible = "brcm,brcmstb-gpio";
-> +                       reg = <0x406500 0xa0>;
-> +                       #gpio-cells = <2>;
-> +                       #interrupt-cells = <2>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       interrupt-parent = <&upg_irq0_intc>;
-> +                       interrupts = <6>;
-> +                       brcm,gpio-bank-widths = <32 32 32 29 4>;
-> +               };
-> +
-> +               upg_gio_aon: gpio@408c00 {
-> +                       compatible = "brcm,brcmstb-gpio";
-> +                       reg = <0x408c00 0x60>;
-> +                       #gpio-cells = <2>;
-> +                       #interrupt-cells = <2>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       interrupt-parent = <&upg_aon_irq0_intc>;
-> +                       interrupts = <6>;
-> +                       interrupts-extended = <&upg_aon_irq0_intc 6>,
-> +                                             <&aon_pm_l2_intc 5>;
-> +                       wakeup-source;
-> +                       brcm,gpio-bank-widths = <21 32 2>;
-> +               };
-> +
->                 enet0: ethernet@430000 {
->                         phy-mode = "internal";
->                         phy-handle = <&phy1>;
-> diff --git a/arch/mips/boot/dts/brcm/bcm7420.dtsi b/arch/mips/boot/dts/brcm/bcm7420.dtsi
-> index 27c3d45556b9..0d391d77c780 100644
-> --- a/arch/mips/boot/dts/brcm/bcm7420.dtsi
-> +++ b/arch/mips/boot/dts/brcm/bcm7420.dtsi
-> @@ -213,6 +213,18 @@
->                         status = "disabled";
->                 };
->
-> +               upg_gio: gpio@406700 {
-> +                       compatible = "brcm,brcmstb-gpio";
-> +                       reg = <0x406700 0x80>;
-> +                       #gpio-cells = <2>;
-> +                       #interrupt-cells = <2>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       interrupt-parent = <&upg_irq0_intc>;
-> +                       interrupts = <6>;
-> +                       brcm,gpio-bank-widths = <32 32 32 27>;
-> +               };
-> +
->                 enet0: ethernet@468000 {
->                         phy-mode = "internal";
->                         phy-handle = <&phy1>;
-> diff --git a/arch/mips/boot/dts/brcm/bcm7425.dtsi b/arch/mips/boot/dts/brcm/bcm7425.dtsi
-> index 9ab65d64e948..04306a92b8eb 100644
-> --- a/arch/mips/boot/dts/brcm/bcm7425.dtsi
-> +++ b/arch/mips/boot/dts/brcm/bcm7425.dtsi
-> @@ -231,6 +231,43 @@
->                         status = "disabled";
->                 };
->
-> +               aon_pm_l2_intc: aon_pm_l2_intc@408440 {
-
-interrupt-controller@
-
-> +                       compatible = "brcm,l2-intc";
-> +                       reg = <0x408440 0x30>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-parent = <&periph_intc>;
-> +                       interrupts = <48>;
-> +                       brcm,irq-can-wake;
-> +               };
-> +
-> +               upg_gio: gpio@406700 {
-> +                       compatible = "brcm,brcmstb-gpio";
-> +                       reg = <0x406700 0x80>;
-> +                       #gpio-cells = <2>;
-> +                       #interrupt-cells = <2>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       interrupt-parent = <&upg_irq0_intc>;
-> +                       interrupts = <6>;
-> +                       brcm,gpio-bank-widths = <32 32 32 21>;
-> +               };
-> +
-> +               upg_gio_aon: gpio@4094c0 {
-> +                       compatible = "brcm,brcmstb-gpio";
-> +                       reg = <0x4094c0 0x40>;
-> +                       #gpio-cells = <2>;
-> +                       #interrupt-cells = <2>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       interrupt-parent = <&upg_aon_irq0_intc>;
-> +                       interrupts = <6>;
-> +                       interrupts-extended = <&upg_aon_irq0_intc 6>,
-> +                                             <&aon_pm_l2_intc 5>;
-> +                       wakeup-source;
-> +                       brcm,gpio-bank-widths = <18 4>;
-> +               };
-> +
->                 enet0: ethernet@b80000 {
->                         phy-mode = "internal";
->                         phy-handle = <&phy1>;
-> diff --git a/arch/mips/boot/dts/brcm/bcm7435.dtsi b/arch/mips/boot/dts/brcm/bcm7435.dtsi
-> index 7801169416e7..c4883643ab61 100644
-> --- a/arch/mips/boot/dts/brcm/bcm7435.dtsi
-> +++ b/arch/mips/boot/dts/brcm/bcm7435.dtsi
-> @@ -246,6 +246,43 @@
->                         status = "disabled";
->                 };
->
-> +               aon_pm_l2_intc: aon_pm_l2_intc@408440 {
-
-interrupt-controller@
-
-> +                       compatible = "brcm,l2-intc";
-> +                       reg = <0x408440 0x30>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <1>;
-> +                       interrupt-parent = <&periph_intc>;
-> +                       interrupts = <53>;
-> +                       brcm,irq-can-wake;
-> +               };
-> +
-> +               upg_gio: gpio@406700 {
-> +                       compatible = "brcm,brcmstb-gpio";
-> +                       reg = <0x406700 0x80>;
-> +                       #gpio-cells = <2>;
-> +                       #interrupt-cells = <2>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       interrupt-parent = <&upg_irq0_intc>;
-> +                       interrupts = <6>;
-> +                       brcm,gpio-bank-widths = <32 32 32 21>;
-> +               };
-> +
-> +               upg_gio_aon: gpio@4094c0 {
-> +                       compatible = "brcm,brcmstb-gpio";
-> +                       reg = <0x4094c0 0x40>;
-> +                       #gpio-cells = <2>;
-> +                       #interrupt-cells = <2>;
-> +                       gpio-controller;
-> +                       interrupt-controller;
-> +                       interrupt-parent = <&upg_aon_irq0_intc>;
-> +                       interrupts = <6>;
-> +                       interrupts-extended = <&upg_aon_irq0_intc 6>,
-> +                                             <&aon_pm_l2_intc 5>;
-> +                       wakeup-source;
-> +                       brcm,gpio-bank-widths = <18 4>;
-> +               };
-> +
->                 enet0: ethernet@b80000 {
->                         phy-mode = "internal";
->                         phy-handle = <&phy1>;
-> diff --git a/arch/mips/boot/dts/brcm/bcm97125cbmb.dts b/arch/mips/boot/dts/brcm/bcm97125cbmb.dts
-> index 5c24eacd72dd..91590ff55d52 100644
-> --- a/arch/mips/boot/dts/brcm/bcm97125cbmb.dts
-> +++ b/arch/mips/boot/dts/brcm/bcm97125cbmb.dts
-> @@ -49,6 +49,10 @@
->         status = "okay";
 >  };
->
-> +&upg_gio {
-> +       status = "okay";
-> +};
+>  
+>  &cpu0 {
+> @@ -230,6 +242,17 @@
+>  				<MX6SX_PAD_CSI_DATA06__UART6_RTS_B	0x1b0b1>,
+>  				<MX6SX_PAD_CSI_DATA07__UART6_CTS_B	0x1b0b1>;
+>  		};
 > +
-
-You don't set its status in the dtsi, it will be enabled by default,
-and you can drop this change.
-
->  /* FIXME: USB is wonky; disable it for now */
->  &ehci0 {
->         status = "disabled";
-> diff --git a/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts b/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts
-> index 2c55ab094a29..e91a21f75a13 100644
-> --- a/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts
-> +++ b/arch/mips/boot/dts/brcm/bcm97346dbsmb.dts
-> @@ -57,6 +57,14 @@
->         status = "okay";
+> +		pinctrl_usdhc2: usdhc2grp {
+> +			fsl,pins =
+> +				<MX6SX_PAD_SD2_CMD__USDHC2_CMD		0x17059>,
+> +				<MX6SX_PAD_SD2_CLK__USDHC2_CLK		0x10059>,
+> +				<MX6SX_PAD_SD2_DATA0__USDHC2_DATA0	0x17059>,
+> +				<MX6SX_PAD_SD2_DATA1__USDHC2_DATA1	0x17059>,
+> +				<MX6SX_PAD_SD2_DATA2__USDHC2_DATA2	0x17059>,
+> +				<MX6SX_PAD_SD2_DATA3__USDHC2_DATA3	0x17059>,
+> +				<MX6SX_PAD_SD1_DATA0__GPIO6_IO_2	0x17059>; /* CD */
+> +		};
+>  	};
 >  };
->
-> +&upg_gio {
-> +       status = "okay";
-> +};
-> +
-> +&upg_gio_aon {
-> +       status = "okay";
-> +};
-> +
-
-You don't set their status in the dtsi, they will be enabled by
-default, and you can drop this change.
-
->  &enet0 {
->         status = "okay";
+>  
+> @@ -259,3 +282,14 @@
+>  	uart-has-rtscts;
+>  	status = "disabled";
 >  };
-> diff --git a/arch/mips/boot/dts/brcm/bcm97358svmb.dts b/arch/mips/boot/dts/brcm/bcm97358svmb.dts
-> index 757fe9d5f4df..d475a152eb2a 100644
-> --- a/arch/mips/boot/dts/brcm/bcm97358svmb.dts
-> +++ b/arch/mips/boot/dts/brcm/bcm97358svmb.dts
-> @@ -53,6 +53,14 @@
->         status = "okay";
->  };
->
-> +&upg_gio {
-> +       status = "okay";
-> +};
 > +
-> +&upg_gio_aon {
-> +       status = "okay";
+> +&usdhc2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc2>;
+> +	bus-width = <4>;
+> +	cd-gpios = <&gpio6 2 GPIO_ACTIVE_LOW>;
+> +	no-1-8-v;
+> +	keep-power-in-suspend;
+> +	wakeup-source;
+> +	status = "okay";
 > +};
-> +
-
-You don't set their status in the dtsi, they will be enabled by
-default, and you can drop this change.
-
->  &enet0 {
->         status = "okay";
->  };
-> diff --git a/arch/mips/boot/dts/brcm/bcm97360svmb.dts b/arch/mips/boot/dts/brcm/bcm97360svmb.dts
-> index 496e6ed9fae3..a445a45f51cb 100644
-> --- a/arch/mips/boot/dts/brcm/bcm97360svmb.dts
-> +++ b/arch/mips/boot/dts/brcm/bcm97360svmb.dts
-> @@ -49,6 +49,14 @@
->         status = "okay";
->  };
->
-> +&upg_gio {
-> +       status = "okay";
-> +};
-> +
-> +&upg_gio_aon {
-> +       status = "okay";
-> +};
-> +
-
-You don't set their status in the dtsi, they will be enabled by
-default, and you can drop this change.
-
->  &enet0 {
->         status = "okay";
->  };
-> diff --git a/arch/mips/boot/dts/brcm/bcm97362svmb.dts b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
-> index b880c018f3d8..22b1b506594f 100644
-> --- a/arch/mips/boot/dts/brcm/bcm97362svmb.dts
-> +++ b/arch/mips/boot/dts/brcm/bcm97362svmb.dts
-> @@ -45,6 +45,14 @@
->         status = "okay";
->  };
->
-> +&upg_gio {
-> +       status = "okay";
-> +};
-> +
-> +&upg_gio_aon {
-> +       status = "okay";
-> +};
-> +
-
-You don't set their status in the dtsi, they will be enabled by
-default, and you can drop this change.
-
->  &enet0 {
->         status = "okay";
->  };
-> diff --git a/arch/mips/boot/dts/brcm/bcm97420c.dts b/arch/mips/boot/dts/brcm/bcm97420c.dts
-> index e66271af055e..428c36da91b6 100644
-> --- a/arch/mips/boot/dts/brcm/bcm97420c.dts
-> +++ b/arch/mips/boot/dts/brcm/bcm97420c.dts
-> @@ -59,6 +59,10 @@
->         status = "okay";
->  };
->
-> +&upg_gio {
-> +       status = "okay";
-> +};
-> +
-
-You don't set its status in the dtsi, it will be enabled by default,
-and you can drop this change.
-
->  /* FIXME: MAC driver comes up but cannot attach to PHY */
->  &enet0 {
->         status = "disabled";
-> diff --git a/arch/mips/boot/dts/brcm/bcm97425svmb.dts b/arch/mips/boot/dts/brcm/bcm97425svmb.dts
-> index f091e91b11c5..6adfcd505a03 100644
-> --- a/arch/mips/boot/dts/brcm/bcm97425svmb.dts
-> +++ b/arch/mips/boot/dts/brcm/bcm97425svmb.dts
-> @@ -59,6 +59,14 @@
->         status = "okay";
->  };
->
-> +&upg_gio {
-> +       status = "okay";
-> +};
-> +
-> +&upg_gio_aon {
-> +       status = "okay";
-> +};
-> +
-
-You don't set their status in the dtsi, they will be enabled by
-default, and you can drop this change.
-
->  &enet0 {
->         status = "okay";
->  };
-> diff --git a/arch/mips/boot/dts/brcm/bcm97435svmb.dts b/arch/mips/boot/dts/brcm/bcm97435svmb.dts
-> index 9db84f2a6664..dd8b8fb97053 100644
-> --- a/arch/mips/boot/dts/brcm/bcm97435svmb.dts
-> +++ b/arch/mips/boot/dts/brcm/bcm97435svmb.dts
-> @@ -59,6 +59,14 @@
->         status = "okay";
->  };
->
-> +&upg_gio {
-> +       status = "okay";
-> +};
-> +
-> +&upg_gio_aon {
-> +       status = "okay";
-> +};
-> +
-
-You don't set their status in the dtsi, they will be enabled by
-default, and you can drop this change.
-
->  &enet0 {
->         status = "okay";
->  };
-
-
-Regards
-Jonas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -- 
+> 2.6.6
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
