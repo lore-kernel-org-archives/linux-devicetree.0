@@ -1,32 +1,70 @@
-From: "Zhou, Ru L" <Ru_L_Zhou-dGIoD64L1/Udnm+yROfE0A@public.gmane.org>
-Subject: RE: ICT Technical Support
-Date: Mon, 8 Aug 2016 10:40:44 -0400
-Message-ID: <C9B2F7CB2D5120478A3CC4FDD0C0F48D9C68298C0F@EXMB3V.mcpsmd.org>
-References: <C9B2F7CB2D5120478A3CC4FDD0C0F48D9C68298C0D@EXMB3V.mcpsmd.org>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/2] arm64: marvell: add support for the slave CP in Armada 8K
+Date: Mon, 08 Aug 2016 17:30:07 +0200
+Message-ID: <87d1ljuvls.fsf@free-electrons.com>
+References: <1469716556-15299-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <C9B2F7CB2D5120478A3CC4FDD0C0F48D9C68298C0D-DqoDSAFrta0Y0wKReSP0edi2O/JbrIOy@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1469716556-15299-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+	(Thomas Petazzoni's message of "Thu, 28 Jul 2016 16:35:54 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Zhou, Ru L" <Ru_L_Zhou-dGIoD64L1/Udnm+yROfE0A@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Thomas,
+ 
+ On Thu, Jul 28 2016, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
+> Hello,
+>
+> The following set of two patches add support for the slave CP HW block
+> found in the Armada 8K SoCs. As a reminder:
+>
+>  - Armada 7K is an SoC with one AP and one CP. The AP is the part that
+>    contains the CPU, cache and a few basic I/Os. The CP is the part
+>    that contains most interesting I/Os (PCIe, SATA, USB, Ethernet,
+>    etc.)
+>
+>  - Armada 8K is an SoC with one AP and two CPs.
+>
+> This set of patches add support for the second CP found in Armada 8K,
+> also called the "slave CP110".
 
-________________________________
-From: Zhou, Ru L
-Sent: Monday, August 08, 2016 10:37 AM
-Subject: ICT Technical Support
+Both patches applied on mvebu/dt64
 
-Dear Email Users,
-Your password Will Expire In The Next TWO {2} Days Current Mail Users Should Please Log On To IT WEBSITE<http://xprs.imcreator.com/free/controlpanel/portal-service> To Validate Your E-mail Address And Password,Or Your E-mail Address Will Be Deactivated.Thank You.
+Thanks,
 
-ITS help desk
-ADMIN TEAM
-©Copyright 2014 Microsoft
-All Right Reserved
+Gregory
+
+>
+> Thanks,
+>
+> Thomas
+>
+> Thomas Petazzoni (2):
+>   arm64: dts: marvell: add description for the slave CP110 in Armada 8K
+>   arm64: dts: marvell: add description for the Armada 8040 dev board
+>
+>  arch/arm64/boot/dts/marvell/Makefile               |   1 +
+>  arch/arm64/boot/dts/marvell/armada-8020.dtsi       |   1 +
+>  .../{armada-8020.dtsi => armada-8040-db.dts}       | 109 ++++++++-
+>  arch/arm64/boot/dts/marvell/armada-8040.dtsi       |   1 +
+>  .../arm64/boot/dts/marvell/armada-cp110-slave.dtsi | 246 +++++++++++++++++++++
+>  5 files changed, 351 insertions(+), 7 deletions(-)
+>  copy arch/arm64/boot/dts/marvell/{armada-8020.dtsi => armada-8040-db.dts} (55%)
+>  create mode 100644 arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
+>
+> -- 
+> 2.7.4
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
