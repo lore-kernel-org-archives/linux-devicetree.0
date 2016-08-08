@@ -1,66 +1,41 @@
-From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: [PATCH 2/4] powerpc/mm: create numa nodes for hotplug memory
-Date: Mon,  8 Aug 2016 13:27:21 -0500
-Message-ID: <1470680843-28702-3-git-send-email-arbab@linux.vnet.ibm.com>
-References: <1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com>
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: owner-linux-mm@kvack.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Jonathan Corbet <corbet@lwn.net>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 0/6] Add R8A7794/SILK sound DT support
+Date: Mon, 8 Aug 2016 21:54:54 +0300
+Message-ID: <f2d0ede3-6776-6c50-cdbc-2825295182ce@cogentembedded.com>
+References: <3910788.ckTpUWEs6B@wasted.cogentembedded.com>
+ <87y44l2uy1.wl%kuninori.morimoto.gx@renesas.com>
+ <20160808105901.GH17838@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160808105901.GH17838@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-When scanning the device tree to initialize the system NUMA topology,
-process dt elements with compatible id "ibm,hotplug-aperture" to create
-memoryless numa nodes.
+On 08/08/2016 01:59 PM, Simon Horman wrote:
 
-These nodes will be filled when hotplug occurs within the associated
-address range.
+>>>    Here's the set of 6 patches against Simon Horman's 'renesas.git' repo,
+>>> 'renesas-devel-20160725-v4.7-rc7' tag. I'm adding the sound device tree support
+>>> for the R8A7794 SoC based SILK board.
+>>>
+>>> [1/6] ARM: dts: r8a7794: add audio clocks
+>>> [2/6] ARM: dts: r8a7794: add MSTP5 clocks
+>>> [3/6] ARM: dts: r8a7794: add MSTP10 clocks
+>>> [4/6] ARM: dts: r8a7794: add Audio-DMAC support
+>>> [5/6] ARM: dts: r8a7794: add sound support
+>>> [6/6] ARM: dts: silk: add sound support
+>>
+>> For all patches
+>>
+>> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>
+> Thanks, I have queued these up.
 
-Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
----
- arch/powerpc/mm/numa.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+    Great, TY!
+    However, I noticed that the the latest devel tag is said to be still based 
+on v4.7-rc7 while in practice it's based on v4.8-rc1...
 
-diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-index 75b9cd6..80d067d 100644
---- a/arch/powerpc/mm/numa.c
-+++ b/arch/powerpc/mm/numa.c
-@@ -708,6 +708,12 @@ static void __init parse_drconf_memory(struct device_node *memory)
- 	}
- }
- 
-+static const struct of_device_id memory_match[] = {
-+	{ .type = "memory" },
-+	{ .compatible = "ibm,hotplug-aperture" },
-+	{ /* sentinel */ }
-+};
-+
- static int __init parse_numa_properties(void)
- {
- 	struct device_node *memory;
-@@ -752,7 +758,7 @@ static int __init parse_numa_properties(void)
- 
- 	get_n_mem_cells(&n_mem_addr_cells, &n_mem_size_cells);
- 
--	for_each_node_by_type(memory, "memory") {
-+	for_each_matching_node(memory, memory_match) {
- 		unsigned long start;
- 		unsigned long size;
- 		int nid;
-@@ -1080,7 +1086,7 @@ static int hot_add_node_scn_to_nid(unsigned long scn_addr)
- 	struct device_node *memory;
- 	int nid = -1;
- 
--	for_each_node_by_type(memory, "memory") {
-+	for_each_matching_node(memory, memory_match) {
- 		unsigned long start, size;
- 		int ranges;
- 		const __be32 *memcell_buf;
--- 
-1.8.3.1
-
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+MBR, Sergei
