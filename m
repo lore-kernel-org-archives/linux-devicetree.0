@@ -1,155 +1,248 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH v18 6/6] ARM: socfpga: fpga bridge driver support
-Date: Mon, 8 Aug 2016 14:18:16 -0500
-Message-ID: <alpine.DEB.2.02.1608081416110.11063@linuxheads99>
-References: <20160712193645.9098-1-atull@opensource.altera.com> <20160712193645.9098-7-atull@opensource.altera.com> <CAP=VYLo2jtp57kQe5671xM=4o_ZAU6XG_W1MXU8aPv4Ws7kkDA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP=VYLo2jtp57kQe5671xM=4o_ZAU6XG_W1MXU8aPv4Ws7kkDA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Moritz Fischer <moritz.fischer@ettus.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dinh Nguyen <dinguyen@opensource.altera.com>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, delicious.quinoa@gmail.com, Matthew Gerlach <mgerlach@altera.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/8] ARM: dts: sun8i: Use sun8i-reference-design-tablet for gt90h dts
+Date: Mon,  8 Aug 2016 21:43:11 +0200
+Message-ID: <1470685398-14568-1-git-send-email-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 14 Jul 2016, Paul Gortmaker wrote:
+This results in quite a nice cleanup for this dts file.
 
-> On Tue, Jul 12, 2016 at 3:36 PM, Alan Tull <atull@opensource.altera.com> wrote:
-> > Supports Altera SOCFPGA bridges:
-> >  * fpga2sdram
-> >  * fpga2hps
-> >  * hps2fpga
-> >  * lwhps2fpga
-> >
-> > Allows enabling/disabling the bridges through the FPGA
-> > Bridge Framework API functions.
-> >
-> > The fpga2sdram driver only supports enabling and disabling
-> > of the ports that been configured early on.  This is due to
-> > a hardware limitation where the read, write, and command
-> > ports on the fpga2sdram bridge can only be reconfigured
-> > while there are no transactions to the sdram, i.e. when
-> > running out of OCRAM before the kernel boots.
-> >
-> > Device tree property 'init-val' configures the driver to
-> > enable or disable the bridge during probe.  If the property
-> > does not exist, the driver will leave the bridge in its
-> > current state.
-> >
-> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> > Signed-off-by: Matthew Gerlach <mgerlach@altera.com>
-> > Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
-> > ---
-> > v2:  Use resets instead of directly writing reset registers
-> > v12: Bump version to align with simple-fpga-bus version
-> >      Get rid of the sysfs interface
-> >      fpga2sdram: get configuration stored in handoff register
-> > v13: Remove unneeded WARN_ON
-> >      Change property from init-val to bridge-enable
-> >      Checkpatch cleanup
-> >      Fix email address
-> > v14: use module_platform_driver
-> >      remove unused struct field and some #defines
-> >      don't really need exclamation points on error msgs
-> >      *const* struct fpga_bridge_ops
-> > v15: No change in this patch for v15 of this patch set
-> > v16: No change in this patch for v16 of this patch set
-> > v17: No change to this patch for v17 of this patch set
-> > v18: Eliminate need to specify reset names since only one reset
-> > ---
-> >  drivers/fpga/Kconfig             |   7 ++
-> >  drivers/fpga/Makefile            |   1 +
-> >  drivers/fpga/altera-fpga2sdram.c | 174 ++++++++++++++++++++++++++++++++
-> >  drivers/fpga/altera-hps2fpga.c   | 213 +++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 395 insertions(+)
-> >  create mode 100644 drivers/fpga/altera-fpga2sdram.c
-> >  create mode 100644 drivers/fpga/altera-hps2fpga.c
-> >
-> > diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-> > index ec81e21..b346166 100644
-> > --- a/drivers/fpga/Kconfig
-> > +++ b/drivers/fpga/Kconfig
-> > @@ -39,6 +39,13 @@ config FPGA_BRIDGE
-> >           Say Y here if you want to support bridges connected between host
-> >          processors and FPGAs or between FPGAs.
-> >
-> > +config SOCFPGA_FPGA_BRIDGE
-> > +       bool "Altera SoCFPGA FPGA Bridges"
-> > +       depends on ARCH_SOCFPGA && FPGA_BRIDGE
-> > +       help
-> > +         Say Y to enable drivers for FPGA bridges for Altera SOCFPGA
-> > +         devices.
-> > +
-> >  endif # FPGA
-> >
-> >  endmenu
-> > diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-> > index 8d746c3..e658436 100644
-> > --- a/drivers/fpga/Makefile
-> > +++ b/drivers/fpga/Makefile
-> > @@ -11,6 +11,7 @@ obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)      += zynq-fpga.o
-> >
-> >  # FPGA Bridge Drivers
-> >  obj-$(CONFIG_FPGA_BRIDGE)              += fpga-bridge.o
-> > +obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)      += altera-hps2fpga.o altera-fpga2sdram.o
-> >
-> >  # High Level Interfaces
-> >  obj-$(CONFIG_FPGA_REGION)              += fpga-region.o
-> > diff --git a/drivers/fpga/altera-fpga2sdram.c b/drivers/fpga/altera-fpga2sdram.c
-> > new file mode 100644
-> > index 0000000..91f4a40
-> > --- /dev/null
-> > +++ b/drivers/fpga/altera-fpga2sdram.c
-> > @@ -0,0 +1,174 @@
-> > +/*
-> > + * FPGA to SDRAM Bridge Driver for Altera SoCFPGA Devices
-> > + *
-> > + *  Copyright (C) 2013-2015 Altera Corporation, All Rights Reserved.
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify it
-> > + * under the terms and conditions of the GNU General Public License,
-> > + * version 2, as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope it will be useful, but WITHOUT
-> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> > + * more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License along with
-> > + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> > + */
-> > +
-> > +/*
-> > + * This driver manages a bridge between an FPGA and the SDRAM used by the ARM
-> > + * host processor system (HPS).
-> > + *
-> > + * The bridge contains 4 read ports, 4 write ports, and 6 command ports.
-> > + * Reconfiguring these ports requires that no SDRAM transactions occur during
-> > + * reconfiguration.  The code reconfiguring the ports cannot run out of SDRAM
-> > + * nor can the FPGA access the SDRAM during reconfiguration.  This driver does
-> > + * not support reconfiguring the ports.  The ports are configured by code
-> > + * running out of on chip ram before Linux is started and the configuration
-> > + * is passed in a handoff register in the system manager.
-> > + *
-> > + * This driver supports enabling and disabling of the configured ports, which
-> > + * allows for safe reprogramming of the FPGA, assuming that the new FPGA image
-> > + * uses the same port configuration.  Bridges must be disabled before
-> > + * reprogramming the FPGA and re-enabled after the FPGA has been programmed.
-> > + */
-> > +
-> > +#include <linux/fpga/fpga-bridge.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/mfd/syscon.h>
-> > +#include <linux/module.h
-> 
-> Please don't use module.h in drivers controlled by a bool
-> Kconfig setting.
-> 
-> THanks,
-> Paul.
-> 
+As an added bonus this also enables full otg support. I've tested that
+this works as advertised.
 
-Thanks for the feedback.  Can you provide an example of what you
-would consider to be proper usage in the kernel?
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts | 192 +------------------------------
+ 1 file changed, 1 insertion(+), 191 deletions(-)
 
-Alan
+diff --git a/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts b/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
+index b2ce284..f27ebbb 100644
+--- a/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
++++ b/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
+@@ -42,70 +42,18 @@
+ 
+ /dts-v1/;
+ #include "sun8i-a23.dtsi"
+-#include "sunxi-common-regulators.dtsi"
+-
+-#include <dt-bindings/gpio/gpio.h>
+-#include <dt-bindings/input/input.h>
+-#include <dt-bindings/pinctrl/sun4i-a10.h>
+-#include <dt-bindings/pwm/pwm.h>
++#include "sun8i-reference-design-tablet.dtsi"
+ 
+ / {
+ 	model = "Allwinner GT90H Dual Core Tablet (v4)";
+ 	compatible = "allwinner,gt90h-v4", "allwinner,sun8i-a23";
+-
+-	aliases {
+-		serial0 = &r_uart;
+-	};
+-
+-	backlight: backlight {
+-		compatible = "pwm-backlight";
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&bl_en_pin_gt90h>;
+-		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
+-		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
+-		default-brightness-level = <8>;
+-		enable-gpios = <&pio 7 6 GPIO_ACTIVE_HIGH>; /* PH6 */
+-	};
+-
+-	chosen {
+-		stdout-path = "serial0:115200n8";
+-	};
+ };
+ 
+ &ehci0 {
+ 	status = "okay";
+ };
+ 
+-&i2c0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c0_pins_a>;
+-	status = "okay";
+-};
+-
+-&i2c1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c1_pins_a>;
+-	status = "okay";
+-};
+-
+ &lradc {
+-	vref-supply = <&reg_vcc3v0>;
+-	status = "okay";
+-
+-	button@200 {
+-		label = "Volume Up";
+-		linux,code = <KEY_VOLUMEUP>;
+-		channel = <0>;
+-		voltage = <200000>;
+-	};
+-
+-	button@400 {
+-		label = "Volume Down";
+-		linux,code = <KEY_VOLUMEDOWN>;
+-		channel = <0>;
+-		voltage = <400000>;
+-	};
+-
+ 	button@600 {
+ 		label = "Back";
+ 		linux,code = <KEY_BACK>;
+@@ -114,144 +62,6 @@
+ 	};
+ };
+ 
+-&mmc0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_gt90h>;
+-	vmmc-supply = <&reg_aldo1>;
+-	bus-width = <4>;
+-	cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
+-	cd-inverted;
+-	status = "okay";
+-};
+-
+-&pio {
+-	bl_en_pin_gt90h: bl_en_pin@0 {
+-		allwinner,pins = "PH6";
+-		allwinner,function = "gpio_in";
+-		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+-		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+-	};
+-
+-	mmc0_cd_pin_gt90h: mmc0_cd_pin@0 {
+-		allwinner,pins = "PB4";
+-		allwinner,function = "gpio_in";
+-		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+-		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+-	};
+-};
+-
+-&pwm {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pwm0_pins>;
+-	status = "okay";
+-};
+-
+-&r_rsb {
+-	status = "okay";
+-
+-	axp22x: pmic@3a3 {
+-		compatible = "x-powers,axp223";
+-		reg = <0x3a3>;
+-		interrupt-parent = <&nmi_intc>;
+-		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+-		eldoin-supply = <&reg_dcdc1>;
+-	};
+-};
+-
+-&r_uart {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&r_uart_pins_a>;
+-	status = "okay";
+-};
+-
+-#include "axp22x.dtsi"
+-
+-&reg_aldo1 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <3000000>;
+-	regulator-max-microvolt = <3000000>;
+-	regulator-name = "vcc-io";
+-};
+-
+-&reg_aldo2 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <2350000>;
+-	regulator-max-microvolt = <2650000>;
+-	regulator-name = "vdd-dll";
+-};
+-
+-&reg_aldo3 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <2700000>;
+-	regulator-max-microvolt = <3300000>;
+-	regulator-name = "vcc-pll-avcc";
+-};
+-
+-&reg_dc1sw {
+-	regulator-name = "vcc-lcd";
+-};
+-
+-&reg_dc5ldo {
+-	regulator-always-on;
+-	regulator-min-microvolt = <900000>;
+-	regulator-max-microvolt = <1400000>;
+-	regulator-name = "vdd-cpus";
+-};
+-
+-&reg_dcdc1 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <3000000>;
+-	regulator-max-microvolt = <3000000>;
+-	regulator-name = "vcc-3v0";
+-};
+-
+-&reg_dcdc2 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <900000>;
+-	regulator-max-microvolt = <1400000>;
+-	regulator-name = "vdd-sys";
+-};
+-
+-&reg_dcdc3 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <900000>;
+-	regulator-max-microvolt = <1400000>;
+-	regulator-name = "vdd-cpu";
+-};
+-
+-&reg_dcdc5 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <1500000>;
+-	regulator-max-microvolt = <1500000>;
+-	regulator-name = "vcc-dram";
+-};
+-
+-&reg_dldo1 {
+-	regulator-min-microvolt = <3300000>;
+-	regulator-max-microvolt = <3300000>;
+-	regulator-name = "vcc-wifi";
+-};
+-
+-&reg_rtc_ldo {
+-	regulator-name = "vcc-rtc";
+-};
+-
+-&simplefb_lcd {
+-	vcc-lcd-supply = <&reg_dc1sw>;
+-};
+-
+-/*
+- * FIXME for now we only support host mode and rely on u-boot to have
+- * turned on Vbus which is controlled by the axp223 pmic on the board.
+- *
+- * Once we have axp223 support we should switch to fully supporting otg.
+- */
+-&usb_otg {
+-	dr_mode = "host";
+-	status = "okay";
+-};
+-
+ &usbphy {
+ 	usb1_vbus-supply = <&reg_dldo1>;
+-	status = "okay";
+ };
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
