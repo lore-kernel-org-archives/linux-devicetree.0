@@ -1,29 +1,53 @@
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v6 0/8] CPUs capacity information for heterogeneous
- systems
-Date: Mon, 8 Aug 2016 18:49:37 +0200
-Message-ID: <20160808164937.GH6879@twins.programming.kicks-ass.net>
-References: <1468932048-31635-1-git-send-email-juri.lelli@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1468932048-31635-1-git-send-email-juri.lelli@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Juri Lelli <juri.lelli@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, broonie@kernel.org
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: [PATCH v4 2/7] DT: clk: sunxi: add binding doc for the multi-bus-gates clock
+Date: Mon,  8 Aug 2016 18:21:44 +0100
+Message-ID: <20160808172149.30861-3-andre.przywara@arm.com>
+References: <20160808172149.30861-1-andre.przywara@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160808172149.30861-1-andre.przywara@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 19, 2016 at 01:40:40PM +0100, Juri Lelli wrote:
-> Patches high level description:
-> 
->  o 01/08 introduces documentation for the new optional DT binding
->  o [02-06]/08 add cpu-capacity attribute to TC2, Juno and Juno r2 DTs and
->    provide parsing of such information at boot time
->  o [07-08]/08 introduce sysfs attribute
-> 
+Recent Allwinner SoCs introduced a bus gates clock which can have
+different parents for individual gates, even within a single register.
+For the time being we encoded this relation in the driver.
+This commit specifies a new binding which allows to encode this in
+the DT by using a child node for each parent clock used. This allows
+to specify any kind of relation efficiently and also keeps the very
+same kernel driver for all SoCs at the same time.
 
-So generally ok with me; there does seem to be an unfortunate
-duplication of code between arm and arm64 but other than that it looks
-fine.
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/clock/sunxi.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index 8f7619d..7d4197e 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -87,6 +87,8 @@ Required properties:
+ 	"allwinner,sun9i-a80-usb-phy-clk" - for usb phy gates + resets on A80
+ 	"allwinner,sun4i-a10-ve-clk" - for the Video Engine clock
+ 	"allwinner,sun6i-a31-display-clk" - for the display clocks
++	"allwinner,sunxi-multi-bus-gates-clk" - for the multi-parent bus gates
++	"allwinner,sun50i-a64-bus-gates-clk" - for the bus gates on A64
+ 
+ Required properties for all clocks:
+ - reg : shall be the control register address for the clock.
+@@ -127,6 +129,11 @@ For "allwinner,sun6i-a31-pll6-clk", there are 2 outputs. The first output
+ is the normal PLL6 output, or "pll6". The second output is rate doubled
+ PLL6, or "pll6x2".
+ 
++The "allwinner,sunxi-multi-bus-gates-clk" holds the actual clocks in
++child nodes, where each one specifies the parent clock that the particular
++gates are depending from. The child nodes each follow the common clock
++binding as described in this document.
++
+ The "allwinner,*-mmc-clk" clocks have three different outputs: the
+ main clock, with the ID 0, and the output and sample clocks, with the
+ IDs 1 and 2, respectively.
+-- 
+2.9.0
