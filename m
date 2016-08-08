@@ -1,59 +1,89 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH v2 0/6] Add support of inverting power control and some
- minor cleanup
-Date: Mon, 08 Aug 2016 19:24:31 +0900
-Message-ID: <ee997311-3964-8623-a431-c9a5add7f991@samsung.com>
-References: <CGME20160807013720epcas1p235628058a90efa6f0062b03a4b2e4284@epcas1p2.samsung.com>
- <1470533618-16312-1-git-send-email-shawn.lin@rock-chips.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [RFC PATCH v4 1/2] Documentation: DT: net: Add Xilinx gmiitorgmii
+ converter device tree binding documentation
+Date: Mon, 8 Aug 2016 12:50:16 +0200
+Message-ID: <b3813524-7531-d294-1def-628b0a28f6bb@xilinx.com>
+References: <1470640505-8279-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1470533618-16312-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1470640505-8279-1-git-send-email-appanad@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, appanad@xilinx.com, f.fainelli@gmail.com, andrew@lunn.ch, punnaia@xilinx.com, anirudh@xilinx.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
-
-On 08/07/2016 10:33 AM, Shawn Lin wrote:
-> By default, dw_mmc outputs high level voltage to indicate powering
-> up the card and outputs low level vcltage to indicate powering
-> off the card. But that is not always correct. The power io should
-> be able to control different kind of hw components to supply or
-> cutoff power to the card. We have boards that need this patchset
-> to make the power control correct. Meanwhile let's expose it to
-> DT for board-specific usage.
-
-I have a question for this patch-set. Does DWMMC IP support to invert ON/OFF at Power Enable register?
-Hmm..Well, if use the DW_MMC_CARD_PWR_INVERT, it should also be the similar behavior with Quirks.
-
-Other flags are related with dwmmc IP. But this flag (DW_MMC_CARD_PWR_INVERT) is not related with IP side.
-I understood why you needs to add this flag..Is rockchip designed to invert the power controlling?
-
-But it's not general case. We can discuss about this.
-
-Best Regards,
-Jaehoon Chung
-
+On 8.8.2016 09:15, Kedareswara rao Appana wrote:
+> Device-tree binding documentation for xilinx gmiitorgmii converter.
 > 
+> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+> ---
+> Changes for v4:
+> --> Modified compatible as suggested by Rob.
+> --> Removed underscores from the converter node name as suggested by Rob.
+> Changes for v3:
+> --> None.
+> Changes for v2:
+> --> New patch.
 > 
-> Changes in v2:
-> - fix copy-paste err and typo
+>  .../devicetree/bindings/net/xilinx_gmii2rgmii.txt  | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
 > 
-> Shawn Lin (6):
->   dt-bindings: rockchip-dw-mshc: add description of
->     rockchip,power-invert
->   mmc: dw_mmc: cleanup power setting of set_ios callback
->   mmc: dw_mmc: split out dw_mci_set_power
->   mmc: dw_mmc: split out dw_mci_set_power_reg
->   mmc: dw_mmc: support inverted power control
->   mmc: dw_mmc-rockchip: add parsing of power control from DT
-> 
->  .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |   6 +
->  drivers/mmc/host/dw_mmc-rockchip.c                 |   8 ++
->  drivers/mmc/host/dw_mmc.c                          | 134 ++++++++++++---------
->  drivers/mmc/host/dw_mmc.h                          |   1 +
->  4 files changed, 90 insertions(+), 59 deletions(-)
-> 
+> diff --git a/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt b/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
+> new file mode 100644
+> index 0000000..453680d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
+> @@ -0,0 +1,38 @@
+> +XILINX GMIITORGMII Converter Driver Device Tree Bindings
+> +--------------------------------------------------------
+> +
+> +The Gigabit Media Independent Interface (GMII) to Reduced Gigabit Media
+> +Independent Interface (RGMII) core provides the RGMII between RGMII-compliant
+> +Ethernet physical media devices (PHY) and the Gigabit Ethernet controller.
+> +This core can be used in all three modes of operation(10/100/1000 Mb/s).
+> +The Management Data Input/Output (MDIO) interface is used to configure the
+> +Speed of operation. This core can switch dynamically between the three
+> +Different speed modes by configuring the conveter register through mdio write.
+> +
+> +The MDIO is a bus to which the PHY devices are connected.  For each
+> +device that exists on this bus, a child node should be created.  See
+> +the definition of the PHY node in booting-without-of.txt for an example
+> +of how to define a PHY.
+> +
+> +This converter sits between the MAC and the external phy.
+> +MAC <==> GMII2RGMII <==> RGMII_PHY
+> +
+> +Required properties:
+> +  - compatible : Should be "xlnx,gmii-to-rgmii-1.0"
+> +  - reg : The ID number for the phy, usually a small integer
+> +  - phy-handle: Should point to the external phy device.
+> +		See ethernet.txt file in the same directory.
+> +
+> +Example:
+> +	mdio {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
+> +		phy: ethernet-phy@0 {
+> +			......
+> +		};
+> +                gmiitorgmii: gmiitorgmii@8 {
+> +                        compatible = "xlnx,gmii-to-rgmii-1.0";
+> +                        reg = <8>;
+> +			phy-handle = <&phy>;
+> +                };
+
+Indentation in this example is quite weird. You are mixing tabs and spaces.
+
+Thanks,
+Michal
