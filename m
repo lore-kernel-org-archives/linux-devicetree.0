@@ -1,118 +1,60 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [RFC PATCH v4 2/2] net: phy: Add gmiitorgmii converter support
-Date: Tue, 9 Aug 2016 09:36:14 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5E0880@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1470640505-8279-1-git-send-email-appanad@xilinx.com>
- <1470640505-8279-2-git-send-email-appanad@xilinx.com>
- <03CA77BA8AF6F1469AEDFBDA1322A7B74A1C3E6C@XAP-PVEXMBX02.xlnx.xilinx.com>
+From: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 4/8] arm64: parse cpu capacity-dmips-mhz from DT
+Date: Tue, 9 Aug 2016 10:42:38 +0100
+Message-ID: <20160809094238.GA23236@e106622-lin>
+References: <1468932048-31635-1-git-send-email-juri.lelli@arm.com>
+ <1468932048-31635-5-git-send-email-juri.lelli@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <03CA77BA8AF6F1469AEDFBDA1322A7B74A1C3E6C@XAP-PVEXMBX02.xlnx.xilinx.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "andrew@lunn.ch" <andrew@lunn.ch>, Anirudha Sarangi <anirudh@xilinx.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1468932048-31635-5-git-send-email-juri.lelli-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Punnaiah,
+Hi,
 
-	Thanks for the review...
+this patch needs the fix below, since platforms can boot without a
+cpu-map.
 
-> > +
-> > +#define XILINX_GMII2RGMII_REG	0x10
-> > +#define BMCR_SPEED10		0x00
-> 
-> Move this macro to mii.h
+On 19/07/16 13:40, Juri Lelli wrote:
+[...]
+> @@ -185,6 +328,8 @@ static int __init parse_dt_topology(void)
+>  	if (ret != 0)
+>  		goto out_map;
+>  
+> +	normalize_cpu_capacity();
+> +
+>  	/*
+>  	 * Check that all cores are in the topology; the SMP code will
+>  	 * only mark cores described in the DT as possible.
+> -- 
 
-Sure will fix in the next version...
+--->8---
+ arch/arm64/kernel/topology.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> 
-> > +
-> > +struct gmii2rgmii {
-> > +	struct phy_device *phy_dev;
-> > +	struct phy_driver *phy_drv;
-> > +	struct phy_driver conv_phy_drv;
-> > +	int addr;
-> > +};
-> > +
-> > +static int xgmiitorgmii_read_status(struct phy_device *phydev) {
-> > +	struct gmii2rgmii *priv = (struct gmii2rgmii *)phydev->priv;
-> > +	u16 val = 0;
-> > +
-> > +	priv->phy_drv->read_status(phydev);
-> > +
-> > +	val = mdiobus_read(phydev->mdio.bus, priv->addr,
-> > XILINX_GMII2RGMII_REG);
-> > +
-> 
->     Since its read and then modify, you should mask the speed field With zero and
-> then write new value.
-> 
-
-Sure will fix in the next version...
-
-> 
-> > +	switch (phydev->speed) {
-> > +	case SPEED_1000:
-> > +		val |= BMCR_SPEED1000;
-> > +	case SPEED_100:
-> > +		val |= BMCR_SPEED100;
-> > +	case SPEED_10:
-> > +		val |= BMCR_SPEED10;
-> > +	}
-> > +
-> > +	mdiobus_write(phydev->mdio.bus, priv->addr,
-> > XILINX_GMII2RGMII_REG, val);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +int xgmiitorgmii_probe(struct mdio_device *mdiodev) {
-> > +	struct device *dev = &mdiodev->dev;
-> > +	struct device_node *np = dev->of_node, *phy_node;
-> > +	struct gmii2rgmii *priv;
-> > +	int ret;
-> > +
-> > +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	phy_node = of_parse_phandle(np, "phy-handle", 0);
-> > +	if (IS_ERR(phy_node)) {
-> > +		dev_err(dev, "Couldn't parse phy-handle\n");
-> > +		ret = -ENODEV;
-> > +		goto out;
-> > +	}
-> > +
-> > +	priv->phy_dev = of_phy_find_device(phy_node);
-> > +	if (!priv->phy_dev) {
-> > +		ret = -EPROBE_DEFER;
-> > +		dev_info(dev, "Couldn't find phydev\n");
-> > +		goto out;
-> > +	}
-> > +
-> > +	priv->addr = mdiodev->addr;
-> > +	priv->phy_drv = priv->phy_dev->drv;
-> > +	memcpy(&priv->conv_phy_drv, priv->phy_dev->drv,
-> > +	       sizeof(struct phy_driver));
-> > +	priv->conv_phy_drv.read_status = xgmiitorgmii_read_status;
-> > +	priv->phy_dev->priv = priv;
-> > +	priv->phy_dev->drv = &priv->conv_phy_drv;
-> > +
-> > +	return 0;
-> > +out:
-> > +	return ret;
-> 
-> Since there is no resource cleaning here, you could consider Return from this
-> function in above conditions and avoid goto here.
-> 
-
-Sure will fix in the next version...
-
-Regards,
-Kedar.
-
-> Regards,
-> Punnaiah
+diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+index 56bbd6d41daf..288f511a5f29 100644
+--- a/arch/arm64/kernel/topology.c
++++ b/arch/arm64/kernel/topology.c
+@@ -394,8 +394,10 @@ static int __init parse_dt_topology(void)
+ 	 * cluster with restricted subnodes.
+ 	 */
+ 	map = of_get_child_by_name(cn, "cpu-map");
+-	if (!map)
++	if (!map) {
++		cap_parsing_failed = true;
+ 		goto out;
++	}
+ 
+ 	ret = parse_cluster(map, 0);
+ 	if (ret != 0)
+-- 
+2.7.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
