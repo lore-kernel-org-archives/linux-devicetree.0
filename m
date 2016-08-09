@@ -1,663 +1,169 @@
-From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Subject: [PATCH] regulator: Add LTC3676 support
-Date: Tue,  9 Aug 2016 16:36:07 -0700
-Message-ID: <1470785767-4426-1-git-send-email-tharvey@gateworks.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaffer Kapasi <jkapasi-td5IlybW20HQT0dZR+AlfA@public.gmane.org>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [v10 PATCH 0/5] Rockchip Type-C and DisplayPort driver
+Date: Tue,  9 Aug 2016 16:32:32 -0700
+Message-ID: <1470785557-21974-1-git-send-email-zyw@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, groeck@chromium.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, wulf@rock-chips.com, marcheu@chromium.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kever Yang <kever.yang@rock-chips.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, Kishon Vijay Abraham I <kishon@ti.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the Linear Technology LTC3676
-8-output I2C voltage regulator IC.
-
-Cc: Jaffer Kapasi <jkapasi-td5IlybW20HQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
----
- .../devicetree/bindings/regulator/ltc3676.txt      |  94 ++++
- drivers/regulator/Kconfig                          |   8 +
- drivers/regulator/Makefile                         |   1 +
- drivers/regulator/ltc3676.c                        | 495 +++++++++++++++++++++
- 4 files changed, 598 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/ltc3676.txt
- create mode 100644 drivers/regulator/ltc3676.c
-
-diff --git a/Documentation/devicetree/bindings/regulator/ltc3676.txt b/Documentation/devicetree/bindings/regulator/ltc3676.txt
-new file mode 100644
-index 0000000..d4eb366
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/ltc3676.txt
-@@ -0,0 +1,94 @@
-+Linear Technology LTC3676 8-output regulators
-+
-+Required properties:
-+- compatible: "lltc,ltc3676"
-+- reg: I2C slave address
-+
-+Required child node:
-+- regulators: Contains eight regulator child nodes sw1, sw2, sw3, sw4,
-+  ldo1, ldo2, ldo3, and ldo4, specifying the initialization data as
-+  documented in Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+Each regulator is defined using the standard binding for regulators. The
-+nodes for sw1, sw2, sw3, sw4, ldo1, ldo2 and ldo4 additionally need to specify
-+the resistor values of their external feedback voltage dividers:
-+
-+Required properties (not on ldo3):
-+- lltc,fb-voltage-divider: An array of two integers containing the resistor
-+  values R1 and R2 of the feedback voltage divider in ohms.
-+
-+Regulators sw1, sw2, sw3, sw4 can regulate the feedback reference from:
-+412.5mV to 800mV in 12.5 mV steps. The output voltage thus ranges between
-+0.4125 * (1 + R1/R2) V and 0.8 * (1 + R1/R2) V.
-+
-+Regulators ldo1, ldo2, and ldo4 have a fixed 0.725 V reference and thus output
-+0.725 * (1 + R1/R2) V. The ldo3 regulator is fixed to 1.8 V.  The ldo1 standby
-+regulator can not be disabled and thus should have the regulator-always-on
-+property set.
-+
-+Example:
-+
-+	ltc3676: pmic@3c {
-+		compatible = "lltc,ltc3676";
-+		reg = <0x3c>;
-+
-+		regulators {
-+			sw1_reg: sw1 {
-+				regulator-min-microvolt = <674400>;
-+				regulator-max-microvolt = <1308000>;
-+				lltc,fb-voltage-divider = <127000 200000>;
-+				regulator-ramp-delay = <7000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <1033310>;
-+				regulator-max-microvolt = <200400>;
-+				lltc,fb-voltage-divider = <301000 200000>;
-+				regulator-ramp-delay = <7000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3_reg: sw3 {
-+				regulator-min-microvolt = <674400>;
-+				regulator-max-microvolt = <130800>;
-+				lltc,fb-voltage-divider = <127000 200000>;
-+				regulator-ramp-delay = <7000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw4_reg: sw4 {
-+				regulator-min-microvolt = <868310>;
-+				regulator-max-microvolt = <168400>;
-+				lltc,fb-voltage-divider = <221000 200000>;
-+				regulator-ramp-delay = <7000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo2_reg: ldo2 {
-+				regulator-min-microvolt = <2490375>;
-+				regulator-max-microvolt = <2490375>;
-+				lltc,fb-voltage-divider = <487000 200000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo3_reg: ldo3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+			};
-+
-+			ldo4_reg: ldo4 {
-+				regulator-min-microvolt = <3023250>;
-+				regulator-max-microvolt = <3023250>;
-+				lltc,fb-voltage-divider = <634000 200000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 6c88e31..527bd6a 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -353,6 +353,14 @@ config REGULATOR_LTC3589
- 	  This enables support for the LTC3589, LTC3589-1, and LTC3589-2
- 	  8-output regulators controlled via I2C.
- 
-+config REGULATOR_LTC3676
-+	tristate "LTC3676 8-output voltage regulator"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  This enables support for the LTC3676
-+	  8-output regulators controlled via I2C.
-+
- config REGULATOR_MAX14577
- 	tristate "Maxim 14577/77836 regulator"
- 	depends on MFD_MAX14577
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index f3da9ee..2142a5d 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -47,6 +47,7 @@ obj-$(CONFIG_REGULATOR_LP8788) += lp8788-buck.o
- obj-$(CONFIG_REGULATOR_LP8788) += lp8788-ldo.o
- obj-$(CONFIG_REGULATOR_LP8755) += lp8755.o
- obj-$(CONFIG_REGULATOR_LTC3589) += ltc3589.o
-+obj-$(CONFIG_REGULATOR_LTC3676) += ltc3676.o
- obj-$(CONFIG_REGULATOR_MAX14577) += max14577-regulator.o
- obj-$(CONFIG_REGULATOR_MAX1586) += max1586.o
- obj-$(CONFIG_REGULATOR_MAX77620) += max77620-regulator.o
-diff --git a/drivers/regulator/ltc3676.c b/drivers/regulator/ltc3676.c
-new file mode 100644
-index 0000000..2461193
---- /dev/null
-+++ b/drivers/regulator/ltc3676.c
-@@ -0,0 +1,495 @@
-+/*
-+ * Copyright (C) 2016 Gateworks Corporation, Inc. All Rights Reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2
-+ * as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+#include <linux/i2c.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/of_regulator.h>
-+
-+#define DRIVER_NAME		"ltc3676"
-+
-+/* LTC3676 Registers */
-+#define LTC3676_BUCK1     0x01
-+#define LTC3676_BUCK2     0x02
-+#define LTC3676_BUCK3     0x03
-+#define LTC3676_BUCK4     0x04
-+#define LTC3676_LDOA      0x05
-+#define LTC3676_LDOB      0x06
-+#define LTC3676_SQD1      0x07
-+#define LTC3676_SQD2      0x08
-+#define LTC3676_CNTRL     0x09
-+#define LTC3676_DVB1A     0x0A
-+#define LTC3676_DVB1B     0x0B
-+#define LTC3676_DVB2A     0x0C
-+#define LTC3676_DVB2B     0x0D
-+#define LTC3676_DVB3A     0x0E
-+#define LTC3676_DVB3B     0x0F
-+#define LTC3676_DVB4A     0x10
-+#define LTC3676_DVB4B     0x11
-+#define LTC3676_MSKIRQ    0x12
-+#define LTC3676_MSKPG     0x13
-+#define LTC3676_USER      0x14
-+#define LTC3676_IRQSTAT   0x15
-+#define LTC3676_PGSTATL   0x16
-+#define LTC3676_PGSTATRT  0x17
-+#define LTC3676_HRST      0x1E
-+#define LTC3676_CLIRQ     0x1F
-+
-+#define LTC3676_IRQSTAT_PGOOD_TIMEOUT	BIT(3)
-+#define LTC3676_IRQSTAT_UNDERVOLT_WARN	BIT(4)
-+#define LTC3676_IRQSTAT_UNDERVOLT_FAULT	BIT(5)
-+#define LTC3676_IRQSTAT_THERMAL_WARN	BIT(6)
-+#define LTC3676_IRQSTAT_THERMAL_FAULT	BIT(7)
-+
-+enum ltc3676_reg {
-+	LTC3676_SW1,
-+	LTC3676_SW2,
-+	LTC3676_SW3,
-+	LTC3676_SW4,
-+	LTC3676_LDO1,
-+	LTC3676_LDO2,
-+	LTC3676_LDO3,
-+	LTC3676_LDO4,
-+	LTC3676_NUM_REGULATORS,
-+};
-+
-+struct ltc3676_regulator {
-+	struct regulator_desc desc;
-+
-+	/* External feedback voltage divider */
-+	unsigned int r1;
-+	unsigned int r2;
-+};
-+
-+struct ltc3676 {
-+	struct regmap *regmap;
-+	struct device *dev;
-+	struct ltc3676_regulator regulator_descs[LTC3676_NUM_REGULATORS];
-+	struct regulator_dev *regulators[LTC3676_NUM_REGULATORS];
-+};
-+
-+static int ltc3676_set_suspend_voltage(struct regulator_dev *rdev, int uV)
-+{
-+	struct ltc3676 *ltc3676 = rdev_get_drvdata(rdev);
-+	struct device *dev = ltc3676->dev;
-+	int dcdc = rdev_get_id(rdev);
-+	int sel;
-+
-+	dev_dbg(dev, "%s id=%d uV=%d\n", __func__, dcdc, uV);
-+	sel = regulator_map_voltage_linear(rdev, uV, uV);
-+	if (sel < 0)
-+		return sel;
-+
-+	/* DVBB register follows right after the corresponding DVBA register */
-+	return regmap_update_bits(ltc3676->regmap, rdev->desc->vsel_reg + 1,
-+				  rdev->desc->vsel_mask, sel);
-+}
-+
-+static int ltc3676_set_suspend_mode(struct regulator_dev *rdev,
-+				    unsigned int mode)
-+{
-+	struct ltc3676 *ltc3676= rdev_get_drvdata(rdev);
-+	struct device *dev = ltc3676->dev;
-+	int mask, bit = 0;
-+	int dcdc = rdev_get_id(rdev);
-+
-+	dev_dbg(dev, "%s id=%d mode=%d\n", __func__, dcdc, mode);
-+
-+	/* DVB reference select is bit5 of DVBA reg */
-+	mask = 1 << 5;
-+
-+	if (mode != REGULATOR_MODE_STANDBY)
-+		bit = mask;	/* Select DVBB */
-+
-+	return regmap_update_bits(ltc3676->regmap, rdev->desc->vsel_reg,
-+				  mask, bit);
-+}
-+
-+/* SW1, SW2, SW3, SW4 linear 0.8V-3.3V with scalar via R1/R2 feeback res */
-+static struct regulator_ops ltc3676_linear_regulator_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.list_voltage = regulator_list_voltage_linear,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+	.set_suspend_voltage = ltc3676_set_suspend_voltage,
-+	.set_suspend_mode = ltc3676_set_suspend_mode,
-+};
-+
-+/* LDO1 always on fixed 0.8V-3.3V via scalar via R1/R2 feeback res */
-+static struct regulator_ops ltc3676_fixed_standby_regulator_ops = {
-+};
-+
-+/* LDO2, LDO3 fixed (LDO2 has external scalar via R1/R2 feedback res) */
-+static struct regulator_ops ltc3676_fixed_regulator_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+};
-+
-+#define LTC3676_REG(_name, _ops, en_reg, en_bit, dvba_reg, dvb_mask)   \
-+	[LTC3676_ ## _name] = {                                        \
-+		.desc = {                                              \
-+			.name = #_name,                                \
-+			.n_voltages = (dvb_mask) + 1,                  \
-+			.min_uV = (dvba_reg) ? 412500 : 0,             \
-+			.uV_step = (dvba_reg) ? 12500 : 0,             \
-+			.ramp_delay = (dvba_reg) ? 800 : 0,            \
-+			.fixed_uV = (dvb_mask) ? 0 : 725000,           \
-+			.ops = &ltc3676_ ## _ops ## _regulator_ops,    \
-+			.type = REGULATOR_VOLTAGE,                     \
-+			.id = LTC3676_ ## _name,                       \
-+			.owner = THIS_MODULE,                          \
-+			.vsel_reg = (dvba_reg),                        \
-+			.vsel_mask = (dvb_mask),                       \
-+			.enable_reg = (en_reg),                        \
-+			.enable_mask = (1 << en_bit),                  \
-+		},                                                     \
-+	}
-+
-+#define LTC3676_LINEAR_REG(_name, _en, _dvba)                          \
-+	LTC3676_REG(_name, linear,                                     \
-+		    LTC3676_ ## _en, 7,                                \
-+		    LTC3676_ ## _dvba, 0x1f)
-+
-+#define LTC3676_FIXED_REG(_name, _en_reg, _en_bit) \
-+	LTC3676_REG(_name, fixed, LTC3676_ ## _en_reg, _en_bit, 0, 0)
-+
-+static struct ltc3676_regulator ltc3676_regulators[LTC3676_NUM_REGULATORS] = {
-+	LTC3676_LINEAR_REG(SW1, BUCK1, DVB1A),
-+	LTC3676_LINEAR_REG(SW2, BUCK2, DVB2A),
-+	LTC3676_LINEAR_REG(SW3, BUCK3, DVB3A),
-+	LTC3676_LINEAR_REG(SW4, BUCK4, DVB4A),
-+	LTC3676_REG(LDO1, fixed_standby, 0, 0, 0, 0),
-+	LTC3676_FIXED_REG(LDO2, LDOA, 2),
-+	LTC3676_FIXED_REG(LDO3, LDOA, 5),
-+	LTC3676_FIXED_REG(LDO4, LDOB, 2),
-+};
-+
-+#ifdef CONFIG_OF
-+static struct of_regulator_match ltc3676_matches[] = {
-+	{ .name = "sw1",	},
-+	{ .name = "sw2",	},
-+	{ .name = "sw3",	},
-+	{ .name = "sw4",	},
-+	{ .name = "ldo1",	},
-+	{ .name = "ldo2",	},
-+	{ .name = "ldo3",	},
-+	{ .name = "ldo4",	},
-+};
-+
-+static int ltc3676_parse_regulators_dt(struct ltc3676 *ltc3676)
-+{
-+	struct device *dev = ltc3676->dev;
-+	struct device_node *node;
-+	int i, ret;
-+
-+	node = of_get_child_by_name(dev->of_node, "regulators");
-+	if (!node) {
-+		dev_err(dev, "regulators node not found\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_regulator_match(dev, node, ltc3676_matches,
-+				 ARRAY_SIZE(ltc3676_matches));
-+	of_node_put(node);
-+	if (ret < 0) {
-+		dev_err(dev, "Error parsing regulator init data: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* parse feedback voltage deviders: LDO3 doesn't have them */
-+	for (i = 0; i < LTC3676_NUM_REGULATORS; i++) {
-+		struct ltc3676_regulator *desc = &ltc3676->regulator_descs[i];
-+		struct device_node *np = ltc3676_matches[i].of_node;
-+		u32 vdiv[2];
-+
-+		if (i == LTC3676_LDO3 || !np)
-+			continue;
-+		ret = of_property_read_u32_array(np, "lltc,fb-voltage-divider",
-+						 vdiv, 2);
-+		if (ret) {
-+			dev_err(dev, "Failed to parse voltage divider: %d\n",
-+				ret);
-+			return ret;
-+		}
-+
-+		desc->r1 = vdiv[0];
-+		desc->r2 = vdiv[1];
-+	}
-+
-+	return 0;
-+}
-+
-+static inline struct regulator_init_data *match_init_data(int index)
-+{
-+	return ltc3676_matches[index].init_data;
-+}
-+
-+static inline struct device_node *match_of_node(int index)
-+{
-+	return ltc3676_matches[index].of_node;
-+}
-+#else
-+static int ltc3676_parse_regulators_dt(struct ltc3676_chip *chip)
-+{
-+	return 0;
-+}
-+
-+static inline struct regulator_init_data *match_init_data(int index)
-+{
-+	return NULL;
-+}
-+
-+static inline struct device_node *match_of_node(int index)
-+{
-+	return NULL;
-+}
-+#endif
-+
-+static bool ltc3676_writeable_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+		case LTC3676_IRQSTAT:
-+		case LTC3676_BUCK1:
-+		case LTC3676_BUCK2:
-+		case LTC3676_BUCK3:
-+		case LTC3676_BUCK4:
-+		case LTC3676_LDOA:
-+		case LTC3676_LDOB:
-+		case LTC3676_SQD1:
-+		case LTC3676_SQD2:
-+		case LTC3676_CNTRL:
-+		case LTC3676_DVB1A:
-+		case LTC3676_DVB1B:
-+		case LTC3676_DVB2A:
-+		case LTC3676_DVB2B:
-+		case LTC3676_DVB3A:
-+		case LTC3676_DVB3B:
-+		case LTC3676_DVB4A:
-+		case LTC3676_DVB4B:
-+		case LTC3676_MSKIRQ:
-+		case LTC3676_MSKPG:
-+		case LTC3676_USER:
-+		case LTC3676_HRST:
-+		case LTC3676_CLIRQ:
-+			return true;
-+	}
-+	return false;
-+}
-+
-+static bool ltc3676_readable_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+		case LTC3676_IRQSTAT:
-+		case LTC3676_BUCK1:
-+		case LTC3676_BUCK2:
-+		case LTC3676_BUCK3:
-+		case LTC3676_BUCK4:
-+		case LTC3676_LDOA:
-+		case LTC3676_LDOB:
-+		case LTC3676_SQD1:
-+		case LTC3676_SQD2:
-+		case LTC3676_CNTRL:
-+		case LTC3676_DVB1A:
-+		case LTC3676_DVB1B:
-+		case LTC3676_DVB2A:
-+		case LTC3676_DVB2B:
-+		case LTC3676_DVB3A:
-+		case LTC3676_DVB3B:
-+		case LTC3676_DVB4A:
-+		case LTC3676_DVB4B:
-+		case LTC3676_MSKIRQ:
-+		case LTC3676_MSKPG:
-+		case LTC3676_USER:
-+		case LTC3676_HRST:
-+		case LTC3676_CLIRQ:
-+			return true;
-+	}
-+	return false;
-+}
-+
-+static bool ltc3676_volatile_reg(struct device *dev, unsigned int reg)
-+{
-+	switch (reg) {
-+		case LTC3676_IRQSTAT:
-+		case LTC3676_PGSTATL:
-+		case LTC3676_PGSTATRT:
-+			return true;
-+	}
-+	return false;
-+}
-+
-+static const struct regmap_config ltc3676_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.writeable_reg = ltc3676_writeable_reg,
-+	.readable_reg = ltc3676_readable_reg,
-+	.volatile_reg = ltc3676_volatile_reg,
-+	.max_register = LTC3676_CLIRQ,
-+	.use_single_rw = true,
-+	.cache_type = REGCACHE_RBTREE,
-+};
-+
-+static irqreturn_t ltc3676_isr(int irq, void *dev_id)
-+{
-+	struct ltc3676 *ltc3676 = dev_id;
-+	struct device *dev = ltc3676->dev;
-+	unsigned int i, irqstat, event;
-+
-+	regmap_read(ltc3676->regmap, LTC3676_IRQSTAT, &irqstat);
-+
-+	dev_dbg(dev, "irq%d irqstat=0x%02x\n", irq, irqstat);
-+	if (irqstat & LTC3676_IRQSTAT_THERMAL_WARN) {
-+		dev_info(dev, "Over-temperature Warning\n");
-+		event = REGULATOR_EVENT_OVER_TEMP;
-+		for (i = 0; i < LTC3676_NUM_REGULATORS; i++)
-+			regulator_notifier_call_chain(ltc3676->regulators[i],
-+						      event, NULL);
-+	}
-+
-+	if (irqstat & LTC3676_IRQSTAT_UNDERVOLT_WARN) {
-+		dev_info(dev, "Undervoltage Warning\n");
-+		event = REGULATOR_EVENT_UNDER_VOLTAGE;
-+		for (i = 0; i < LTC3676_NUM_REGULATORS; i++)
-+			regulator_notifier_call_chain(ltc3676->regulators[i],
-+						      event, NULL);
-+	}
-+
-+	/* Clear warning condition */
-+	regmap_write(ltc3676->regmap, LTC3676_CLIRQ, 0);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static inline unsigned int ltc3676_scale(unsigned int uV, u32 r1, u32 r2)
-+{
-+	uint64_t tmp;
-+	if (uV == 0)
-+		return 0;
-+	tmp = (uint64_t)uV * r1;
-+	do_div(tmp, r2);
-+	return uV + (unsigned int)tmp;
-+}
-+
-+static void ltc3676_apply_fb_voltage_divider(struct ltc3676_regulator *rdesc)
-+{
-+	struct regulator_desc *desc = &rdesc->desc;
-+
-+	if (!rdesc->r1 || !rdesc->r2)
-+		return;
-+
-+	desc->min_uV = ltc3676_scale(desc->min_uV, rdesc->r1, rdesc->r2);
-+	desc->uV_step = ltc3676_scale(desc->uV_step, rdesc->r1, rdesc->r2);
-+	desc->fixed_uV = ltc3676_scale(desc->fixed_uV, rdesc->r1, rdesc->r2);
-+}
-+
-+static int ltc3676_regulator_probe(struct i2c_client *client,
-+				    const struct i2c_device_id *id)
-+{
-+	struct device *dev = &client->dev;
-+	struct ltc3676_regulator *descs;
-+	struct ltc3676 *ltc3676;
-+	int i, ret;
-+
-+	ltc3676 = devm_kzalloc(dev, sizeof(*ltc3676), GFP_KERNEL);
-+	if (!ltc3676)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(client, ltc3676);
-+	ltc3676->dev = dev;
-+
-+	descs = ltc3676->regulator_descs;
-+	memcpy(descs, ltc3676_regulators, sizeof(ltc3676_regulators));
-+	descs[LTC3676_LDO3].desc.fixed_uV = 1800000; /* LDO3 is fixed 1.8V */
-+
-+	ltc3676->regmap = devm_regmap_init_i2c(client, &ltc3676_regmap_config);
-+	if (IS_ERR(ltc3676->regmap)) {
-+		ret = PTR_ERR(ltc3676->regmap);
-+		dev_err(dev, "failed to initialize regmap: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = ltc3676_parse_regulators_dt(ltc3676);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < LTC3676_NUM_REGULATORS; i++) {
-+		struct ltc3676_regulator *rdesc = &ltc3676->regulator_descs[i];
-+		struct regulator_desc *desc = &rdesc->desc;
-+		struct regulator_init_data *init_data;
-+		struct regulator_config config = { };
-+
-+		init_data = match_init_data(i);
-+
-+		if (i != LTC3676_LDO3) {
-+			/* skip unused */
-+			if (rdesc->r1 == 0 && rdesc->r2 == 0)
-+				continue;
-+			ltc3676_apply_fb_voltage_divider(rdesc);
-+		}
-+
-+		config.dev = dev;
-+		config.init_data = init_data;
-+		config.driver_data = ltc3676;
-+		config.of_node = match_of_node(i);
-+
-+		ltc3676->regulators[i] = devm_regulator_register(dev, desc,
-+								 &config);
-+		if (IS_ERR(ltc3676->regulators[i])) {
-+			ret = PTR_ERR(ltc3676->regulators[i]);
-+			dev_err(dev, "failed to register regulator %s: %d\n",
-+				desc->name, ret);
-+			return ret;
-+		}
-+	}
-+
-+	regmap_write(ltc3676->regmap, LTC3676_CLIRQ, 0);
-+	if (client->irq) {
-+		ret = devm_request_threaded_irq(dev, client->irq, NULL,
-+						ltc3676_isr,
-+						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-+						client->name, ltc3676);
-+		if (ret) {
-+			dev_err(dev, "Failed to request IRQ: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id ltc3676_i2c_id[] = {
-+	{ "ltc3676" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, ltc3676_i2c_id);
-+
-+static struct i2c_driver ltc3676_driver = {
-+	.driver = {
-+		.name = DRIVER_NAME,
-+	},
-+	.probe = ltc3676_regulator_probe,
-+	.id_table = ltc3676_i2c_id,
-+};
-+module_i2c_driver(ltc3676_driver);
-+
-+MODULE_AUTHOR("Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>");
-+MODULE_DESCRIPTION("Regulator driver for Linear Technology LTC1376");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CkhpIGFsbAoKVGhpcyBzZXJpZXMgcGF0Y2ggaXMgZm9yIHJvY2tjaGlwIFR5cGUtQyBwaHkgYW5k
+IERpc3BsYXlQb3J0IGNvbnRyb2xsZXIKZHJpdmVyLgoKVGhlIFVTQiBUeXBlLUMgUEhZIGlzIGRl
+c2lnbmVkIHRvIHN1cHBvcnQgdGhlIFVTQjMgYW5kIERQIGFwcGxpY2F0aW9ucy4KVGhlIFBIWSBi
+YXNpY2FsbHkgaGFzIHR3byBtYWluIGNvbXBvbmVudHM6IFVTQjMgYW5kIERpc3BseVBvcnQuIFVT
+QjMKb3BlcmF0ZXMgaW4gU3VwZXJTcGVlZCBtb2RlIGFuZCB0aGUgRFAgY2FuIG9wZXJhdGUgYXQg
+UkJSLCBIQlIgYW5kIEhCUjIKZGF0YSByYXRlcy4gVGhlIFR5cGUtQyBjYWJsZSBvcmllbnRhdGlv
+biBkZXRlY3Rpb24gYW5kIFBvd2VyIERlbGl2ZXJ5CihQRCkgaXMgYWNjb21wbGlzaGVkIHVzaW5n
+IGEgUEQgUEhZIG9yIGEgZXhlcm5hbCBQRCBjaGlwLgoKVGhlIERQIGNvbnRyb2xsZXIgaXMgY29t
+cGxpYW50IHdpdGggRGlzcGxheVBvcnQgU3BlY2lmaWNhdGlvbiwKVmVyc2lvbiAxLjMsIFRoaXMg
+SVAgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSByb2NrY2hpcCB0eXBlLWMgUEhZIElQLgpUaGVyZSBp
+cyBhIHVDUFUgaW4gRFAgY29udHJvbGxlciwgaXQgbmVlZCBhIGZpcm13YXJlIHRvIHdvcmssIHBs
+ZWFzZQpwdXQgdGhlIGZpcm13YXJlIGZpbGVbMF0gdG8gL2xpYi9maXJtd2FyZS9yb2NrY2hpcC9k
+cHR4LmJpbi4gVGhlIHVDUFUKaW4gY2hhcmdlIG9mIGF1eCBjb21tdW5pY2F0aW9uIGFuZCBsaW5r
+IHRyYWluaW5nLCB0aGUgaG9zdCB1c2UgbWFpbGJveAp0byBjb21tdW5pY2F0ZSB3aXRoIHRoZSB1
+Y3B1LgoKVGhlIERQIGNvbnRvbGxlciBoYXMgcmVnaXN0ZXIgYSBub3RpZmljYXRpb24gd2l0aCBl
+eHRjb24gQVBJLCB0byBnZXQgdGhlCmFsdCBtb2RlIGZyb20gUEQsIHRoZSBQRCBkcml2ZXIgbmVl
+ZCBjYWxsIHRoZSBkZXZtX2V4dGNvbl9kZXZfYWxsb2NhdGUKdG8gY3JlYXRlIGEgZXh0Y29uIGRl
+dmljZSBhbmQgdXNlIGV4dGNvbl9zZXRfc3RhdGUgdG8gbm90aWZ5IERQCmNvbnRyb2xsZXIuIEFu
+ZCBjYWxsIGV4dGNvbl9zZXRfY2FibGVfcHJvcGVydHkgdG8gc2V0IG9yaWVudGF0aW9uLgoKQWJv
+dXQgdGhlIERQIGF1ZGlvLCBjZG4tZHAgcmVnaXN0ZXJlZCAyIERBSXM6IDAgaXMgSTJTLCAxIGlz
+IFNQRElGLgpXZSBjYW4gcmVmZXJlbmNlIHRoZW0gaW4gc2ltcGxlLWNhcmQuCgpUaGlzIHNlcmll
+cyBpcyBiYXNlZCBvbiBNYXJrIFlhbydzIGJyYW5jaFsxXSBhbmQgQ2hhbndvbyBDaG9pJ3MKZXh0
+Y29uLW5leHQgYnJhbmNoWzJdLCBhbmQgdGhlIGNsayBwYXRjaFszXS4KCkkgdGVzdCB0aGlzIHBh
+dGNoZXMgb24gdGhlIHJrMzM5OS1ldmIgYm9hcmQsIHdpdGggYSBmdXNiMzAyIGRyaXZlciwKdGhp
+cyBicmFuY2ggaGFzIG5vIHJrMzM5OS5kdHNpLCBzbyB0aGUgcGF0Y2ggYWJvdXQgZHRzIGlzIG5v
+dCBpbmNsdWRlZAppbiB0aGlzIHNlcmllcy4KCkZyb20gVjksIHRoZSBUeXBlLUMgUEhZIGlzIHNw
+bGl0IGludG8gdHdvIFBIWXM6IERQIGFuZCBVU0IzLiBUaGUgUEhZCndpbGwgYmUgaW5pdCwgbm8g
+bWF0dGVyIHdoaWNoIFBIWSBiZSBwb3dlcl9vbi4gVGhlIERQIG1vZHVsZSB3aWxsCmVudGVyIEEy
+IG1vZGUgKHN0YW5kYnkgbW9kZSkgYWZ0ZXIgcGh5X2luaXQsIGlmIERQIFBIWSBpcyBwb3dlcmVk
+IG9uLAp0aGUgRFAgbW9kdWxlIHdpbGwgZW50ZXIgdG8gQTAgbW9kZShydW5uaW5nIG1vZGUpLiBU
+aGVuIGlmIERQIFBIWSBpcwpwb3dlcmVkIG9mZiwgRFAgbW9kdWxlIHdpbGwgYmFjayB0byBBMiBt
+b2RlLiBJZiBldmVyeXRoaW5nIGlzCnVuLXBsdWdnZWQsIHBoeSB3aWxsIGJlIGRlaW5pdC4KClsw
+XQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzkyNDk2OTMvClsxXQpodHRwczov
+L2dpdGh1Yi5jb20vbWFya3l6cS9rZXJuZWwtZHJtLXJvY2tjaGlwL3RyZWUvZHJtLXJvY2tjaGlw
+LW5leHQtMjAxNi0wNS0yMwpbMl0KaHR0cHM6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tl
+cm5lbC9naXQvY2hhbndvby9leHRjb24uZ2l0L2xvZy8/aD1leHRjb24tdGVzdAotIGV4dGNvbjog
+QWRkIHRoZSBleHRjb25fdHlwZSB0byBnYXRoZXIgZWFjaCBjb25uZWN0b3IgaW50byBmaXZlIGNh
+dGVnb3J5Ci0gZXh0Y29uOiBBZGQgdGhlIHN1cHBvcnQgZm9yIGV4dGNvbiBwcm9wZXJ0eSBhY2Nv
+cmRpbmcgdG8gZXh0Y29uIHR5cGUKLSBleHRjb246IEFkZCB0aGUgc3VwcG9ydCBmb3IgdGhlIGNh
+cGFiaWxpdHkgb2YgZWFjaCBwcm9wZXJ0eQotIGV4dGNvbjogUmVuYW1lIHRoZSBleHRjb25fc2V0
+L2dldF9zdGF0ZSgpIHRvIG1haW50YWluIHRoZSBmdW5jdGlvbiBuYW1pbmcKcGF0dGVybgotIGV4
+dGNvbjogQWRkIHRoZSBzeW5jaHJvbml6YXRpb24gZXh0Y29uIEFQSXMgdG8gc3VwcG9ydCB0aGUg
+bm90aWZpY2F0aW9uCi0gZXh0Y29uOiBBZGQgRVhUQ09OX0RJU1BfRFAgYW5kIHRoZSBwcm9wZXJ0
+eSBmb3IgVVNCIFR5cGUtQwpbM10KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85
+MjcxOTgxLwoKCkNoYW5nZXMgaW4gdjEwOgotIHJlbW92ZSByb2NrY2hpcCx1cGh5LWRwLXNlbCBw
+cm9wZXJ0eQotIGRvIG5vdCBjb250cm9sIGRwIHNlbGVjdCBhbmQgaHBkIGNvbmZpZyBpbiBwaHkg
+ZHJpdmVyCi0gcmVtb3ZlIHJvY2tjaGlwLHVwaHktZHAtc2VsIHByb3BlcnR5Ci0gYWRkIHBjbGtf
+dmlvX2dyZiBjbG9jawotIGNvbnRyb2wgdGhlIGdyZl9jbGsgaW4gRFAKCkNoYW5nZXMgaW4gdjk6
+Ci0gY2hhbmdlICNwaHktY2VsbHMgdG8gMQotIHRoZSBuZXdfbW9kZSBzaG91bGQgYmUgaW50IG5v
+dCB1OAotIG1vdmUgbXV0ZXhfbG9jaygmdGNwaHktPmxvY2spOyB0byBlYXJsaWVyIHBsYWNlLiBp
+bgogIHJvY2tjaGlwX3VzYjNfcGh5X3Bvd2VyX29mZgotIGJldHRlciBtdXRleCBsb2NrIGZvciBw
+aHkgbW9kZSBhbmQgZmxpcAotIHNwbGl0IHRoZSBUeXBlLUMgUEhZIGludG8gdHdvIFBIWXM6IFVT
+QjMgYW5kIERQCi0gY2hhbmdlICNwaHktY2VsbHMgdG8gMQotIG1vZGlmeSB0aGUgcmVmZXJlbmNl
+IHBoeSA9IDwmdGNwaHkwIDA+LCA8JnRjcGh5MSAwPjsKLSBkbyBub3QgbmVlZCByZXNldCB0aGUg
+cGh5IGJlZm9yZSBwb3dlcl9vbgotIGFkZCBhIG9yaWVudGF0aW9uIGluZm9ybWF0aW9uIGZvciBz
+ZXRfY2FwYWJpbGl0eQotIHJldHJ5IHRvIHJlYWQgZHBjZCBpbiAxMCBzZWNvbmRzCgpDaGFuZ2Vz
+IGluIHY4OgotIHNldCB0aGUgZGVmYXVsdCBjYWJsZSBpZCB0byBFWFRDT05fVVNCX0hPU1QKLSBv
+cHRpbWl6YXRpb24gRXJyb3IgbG9nCi0gb3B0aW1pemF0aW9uIHRoZSBlcnIgbG9nCgpDaGFuZ2Vz
+IGluIHY3OgotIHN1cHBvcnQgbmV3IEFQSSBvZiBleHRjb24KLSBzdXBwb3J0IGZpcm13YXJlIHN0
+YW5kYnkgd2hlbiBubyBkcHR4IGNvbm5lY3Rpb24KLSBvcHRpbWl6YXRpb24gdGhlIGNhbGN1bGF0
+aW9uIG9mIHR1IHNpemUgYW5kIHZhbGlkIHN5bWJvbAoKQ2hhbmdlcyBpbiB2NjoKLSBhZGQgYXNz
+aWduZWQtY2xvY2tzIGFuZCBhc3NpZ25lZC1jbG9jay1yYXRlcwotIGRlbGV0ZSB0aGUgc3VwcG9y
+dCBvZiBQSU5fQVNTSUdOX0EvQgotIHNldCB0aGUgZGVmYXVsdCBtb2RlIHRvIE1PREVfREZQX1VT
+QgotIGRpc2FibGUgRFAgUExMIGF0IFVTQjMgb25seSBtb2RlCi0gYWRkIGFzc2lnbmVkLWNsb2Nr
+cyBhbmQgYXNzaWduZWQtY2xvY2stcmF0ZXMKLSBhZGQgcG93ZXItZG9tYWlucwotIGFkZCBhIHBv
+cnQgc3RydWN0Ci0gc2VsZWN0IFNORF9TT0NfSERNSV9DT0RFQwotIGZvcmNlIHJlc2V0IHRoZSBw
+aHkgd2hlbiBocGQgZGV0ZWN0ZWQKCkNoYW5nZXMgaW4gdjU6Ci0gc3VwcG9ydCBnZXQgcHJvcGVy
+dHkgZnJvbSBleHRjb24KLSByZW1vdmUgUElOIEFTU0lHTiBBL0Igc3VwcG9ydAotIGFscGhhYmV0
+aWNhbCBvcmRlcgotIGRvIG5vdCB1c2UgbG9uZywgdXNlIHUzMiBvciB1NjQKLSByZXR1cm4gTU9E
+RV9DTE9DS19ISUdIIHdoZW4gcmVxdWVzdGVkID4gYWN0dWFsCi0gT3B0aW1pemVkIENvZGluZyBT
+dHlsZQotIGFkZCBhIGZvcm11bGEgdG8gZ2V0IGJldHRlciB0dSBzaXplIGFuZCBzeW1ib2wgdmFs
+dWUuCi0gbW9kaWZ5IGFjY29yZGluZyB0byBTZWFuIFBhdWwncyBjb21tZW50cwotIGZpeGVkIHRo
+ZSBmd193YWl0IGFsd2F5cyAwCgpDaGFuZ2VzIGluIHY0OgotIGFkZCBhICNwaHktY2VsbHMgbm9k
+ZQotIHNlbGVjdCBFWFRDT04KLSB1c2UgcGh5IGZyYW1ld29yayB0byBjb250cm9sIHRoZSBVU0Iz
+IGFuZCBEUCBmdW5jdGlvbgotIHJlbmFtZSBQSU5fTUFQXyB0byBQSU5fQVNTSUdOXwotIGFkZCBh
+IHJlc2V0IG5vZGUKLSBzdXBwb3J0IDIgcGh5cwotIHVzZSBwaHkgZnJhbWV3b3JrIHRvIGNvbnRy
+b2wgRFAgcGh5Ci0gc3VwcG9ydCAyIHBoeXMKCkNoYW5nZXMgaW4gdjM6Ci0gdXNlIGNvbXBhdGli
+bGU6IHJvY2tjaGlwLHJrMzM5OS10eXBlYy1waHkKLSB1c2UgZGFzaGVzIGluc3RlYWQgb2YgdW5k
+ZXJzY29yZXMuCi0gcmVtb3ZlIHRoZSBwaHkgZnJhbWV3b3JrKEtpc2hvbiBWaWpheSBBYnJhaGFt
+IEkpCi0gYWRkIHBhcmVudGhlc2VzIGFyb3VuZCB0aGUgbWFjcm8KLSB1c2UgYSBzaW5nbGUgc3Bh
+Y2UgYmV0d2VlbiB0eXBlIGFuZCBuYW1lCi0gYWRkIHNwYWNlcyBhZnRlciBvcGVuaW5nIGFuZCBi
+ZWZvcmUgY2xvc2luZyBicmFjZXMuCi0gdXNlIHUxNiBmb3IgcmVnaXN0ZXIgdmFsdWUKLSByZW1v
+dmUgdHlwZS1jIHBoeSBoZWFkZXIgZmlsZQotIENvZGluZ1N0eWxlIG9wdGltaXphdGlvbgotIHVz
+ZSBzb21lIGNhYmxlIGV4dGNvbiB0byBnZXQgdHlwZS1jIHBvcnQgaW5mb3JtYXRpb24KLSBhZGQg
+YSBleHRjb24gdG8gbm90aWZ5IERpc3BsYXkgUG9ydAotIGFkZCBTb0Mgc3BlY2lmaWMgY29tcGF0
+aWJsZSBzdHJpbmcKLSByZW1vdmUgcmVnID0gPDE+OwotIHVzZSBFWFRDT05fRElTUF9EUCBhbmQg
+RVhUQ09OX0RJU1BfRFBfQUxUIGNhYmxlIHRvIGdldCBkcCBwb3J0IHN0YXRlLgotIHJlc2V0IHNw
+ZGlmIGJlZm9yZSBjb25maWcgaXQKLSBtb2RpZnkgdGhlIGZpcm13YXJlIGNsayB0byAxMDBNaHoK
+LSByZXRyeSBsb2FkIGZpcm13YXJlIGlmIGZ3IGZpbGUgaXMgcmVxdWVzdGVkIHRvbyBlYXJseQoK
+Q2hhbmdlcyBpbiB2MjoKLSBhZGQgc29tZSByZWdpc3RlcnMgZGVzY3JpcHRpb24KLSBzZWxlY3Qg
+UkVTRVRfQ09OVFJPTExFUgotIGFscGhhYmV0aWMgb3JkZXIKLSBtb2RpZnkgc29tZSBzcGVsbGlu
+ZyBtaXN0YWtlcwotIG1ha2UgbW9kZSBjbGVhbmVyCi0gdXNlIGJvb2wgZm9yIGVuYWJsZS9kaXNh
+YmxlCi0gY2hlY2sgYWxsIG9mIHRoZSByZXR1cm4gdmFsdWUKLSByZXR1cm4gYSBiZXR0ZXIgZXJy
+IG51bWJlcgotIHVzZSBtb3JlIHJlYWR4X3BvbGxfdGltZW91dCgpCi0gY2xrX2Rpc2FibGVfdW5w
+cmVwYXJlKHRjcGh5LT5jbGtfcmVmKTsKLSByZW1vdmUgdW51c2UgZnVuY3Rpb25zLCByb2NrY2hp
+cF90eXBlY19waHlfcG93ZXJfb24vb2ZmCi0gcmVtb3ZlIHVubmVjZXNzYXJ5IHR5cGVjYXN0IGZy
+b20gdm9pZCAqCi0gdXNlIGR0cyBub2RlIHRvIGRpc3Rpbmd1aXNoIGJldHdlZW4gcGh5cy4KLSBB
+bHBoYWJldGljIG9yZGVyCi0gcmVtb3ZlIGV4Y2VzcyBlcnJvciBtZXNzYWdlCi0gdXNlIGRlZmlu
+ZSBjbGtfcmF0ZQotIGNoZWNrIGFsbCByZXR1cm4gdmFsdWUKLSByZW1vdmUgZGV2X3NldF9uYW1l
+KGRwLT5kZXYsICJjZG4tZHAiKTsKLSB1c2Ugc2NoZWR1bGVfZGVsYXllZF93b3JrCi0gcmVtb3Zl
+IG5ldmVyLWNhbGxlZCBmdW5jdGlvbnMKLSByZW1vdmUgc29tZSB1bm5lY2Vzc2FyeSAoKQoKQ2hh
+bmdlcyBpbiB2MToKLSBhZGQgZXh0Y29uIG5vZGUgZGVzY3JpcHRpb24KLSBtb3ZlIHRoZSByZWdp
+c3RlcnMgaW4gcGh5IGRyaXZlcgotIHJlbW92ZSB0aGUgc3VmZml4IG9mIHJlc2V0Ci0gdXBkYXRl
+IHRoZSBsaWNlbmNlIG5vdGUKLSBpbml0IGNvcmUgY2xvY2sgdG8gNTBNSHoKLSB1c2UgZXh0Y29u
+IEFQSQotIHJlbW92ZSB1bnVzZWQgZ2xvYmFsCi0gYWRkIHNvbWUgY29tbWVudHMgZm9yIG1hZ2lj
+IG51bQotIGNoYW5nZSB1c2xlZXBfcmFuZ2UoMTAwMCwgMjAwMCkgdG91c2xlZXBfcmFuZ2UoMTAw
+MCwgMTA1MCkKLSByZW1vdmUgX19mdW5jX18gZnJvbSBkZXZfZXJyCi0gcmV0dXJuIGVyciBudW1i
+ZXIgd2hlbiBnZXQgY2xrIGZhaWxlZAotIHJlbW92ZSBBRERSX0FESiBkZWZpbmUKLSB1c2UgZGV2
+bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJ0Y3BkY29yZSIpCi0gYWRkIGV4dGNvbiBub2RlIGRlc2Ny
+aXB0aW9uCi0gYWRkICNzb3VuZC1kYWktY2VsbHMgZGVzY3JpcHRpb24KLSB1c2UgZXh0Y29uIEFQ
+SQotIHVzZSBoZG1pLWNvZGVjIGZvciB0aGUgRFAgQXNvYwotIGRvIG5vdCBpbml0aWFsaXplIHRo
+ZSAicmV0IgotIHByaW50ayBhIGVyciBsb2cgd2hlbiBkcm1fb2ZfZW5jb2Rlcl9hY3RpdmVfZW5k
+cG9pbnRfaWQKLSBtb2RpZnkgdGhlIGRjbGsgcGluX3BvbCB0byBhIHNpbmdsZSBsaW5lCgpDaHJp
+cyBaaG9uZyAoNSk6CiAgRG9jdW1lbnRhdGlvbjogYmluZGluZ3M6IGFkZCBkdCBkb2MgZm9yIFJv
+Y2tjaGlwIFVTQiBUeXBlLUMgUEhZCiAgcGh5OiBBZGQgVVNCIFR5cGUtQyBQSFkgZHJpdmVyIGZv
+ciByazMzOTkKICBhcm02NDogZHRzOiByb2NrY2hpcDogYWRkIFR5cGUtQyBwaHkgZm9yIFJLMzM5
+OQogIERvY3VtZW50YXRpb246IGJpbmRpbmdzOiBhZGQgZHQgZG9jdW1lbnRhdGlvbiBmb3IgY2Ru
+IERQIGNvbnRyb2xsZXIKICBkcm0vcm9ja2NoaXA6IGNkbi1kcDogYWRkIGNkbiBEUCBzdXBwb3J0
+IGZvciByazMzOTkKCiAuLi4vYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9jZG4tZHAtcm9ja2No
+aXAudHh0ICB8ICA3NCArKwogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1yb2NrY2hp
+cC10eXBlYy50eHQgfCAgODIgKysKIGFyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5
+LmR0c2kgICAgICAgICAgIHwgIDQyICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmln
+ICAgICAgICAgICAgICAgICAgIHwgIDEwICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9NYWtl
+ZmlsZSAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9j
+ZG4tZHAtY29yZS5jICAgICAgICAgICAgIHwgOTEwICsrKysrKysrKysrKysrKysrKysKIGRyaXZl
+cnMvZ3B1L2RybS9yb2NrY2hpcC9jZG4tZHAtY29yZS5oICAgICAgICAgICAgIHwgMTA0ICsrKwog
+ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2Nkbi1kcC1yZWcuYyAgICAgICAgICAgICAgfCA5NTkg
+KysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9jZG4tZHAtcmVn
+LmggICAgICAgICAgICAgIHwgNDgyICsrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hp
+cC9yb2NrY2hpcF9kcm1fdm9wLmMgICAgICAgIHwgIDEzICstCiBkcml2ZXJzL2dwdS9kcm0vcm9j
+a2NoaXAvcm9ja2NoaXBfZHJtX3ZvcC5oICAgICAgICB8ICAgOSArCiBkcml2ZXJzL2dwdS9kcm0v
+cm9ja2NoaXAvcm9ja2NoaXBfdm9wX3JlZy5jICAgICAgICB8ICAgMiArCiBkcml2ZXJzL3BoeS9L
+Y29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgOSArCiBkcml2ZXJzL3Bo
+eS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJz
+L3BoeS9waHktcm9ja2NoaXAtdHlwZWMuYyAgICAgICAgICAgICAgICAgICB8IDk4MSArKysrKysr
+KysrKysrKysrKysrKysKIDE1IGZpbGVzIGNoYW5nZWQsIDM2NzYgaW5zZXJ0aW9ucygrKSwgMyBk
+ZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9jZG4tZHAtcm9ja2NoaXAudHh0CiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktcm9ja2No
+aXAtdHlwZWMudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlw
+L2Nkbi1kcC1jb3JlLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcm9ja2No
+aXAvY2RuLWRwLWNvcmUuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yb2Nr
+Y2hpcC9jZG4tZHAtcmVnLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcm9j
+a2NoaXAvY2RuLWRwLXJlZy5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9waHkvcGh5LXJv
+Y2tjaGlwLXR5cGVjLmMKCi0tIAoxLjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
