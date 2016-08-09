@@ -1,59 +1,75 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/3] dt-bindings: mailbox: Add Amlogic Meson MHU Bindings
-Date: Tue,  9 Aug 2016 10:52:16 +0200
-Message-ID: <1470732737-18391-3-git-send-email-narmstrong@baylibre.com>
-References: <1470732737-18391-1-git-send-email-narmstrong@baylibre.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH 1/3] dt/bindings: arm-pl330: add description of
+ arm,pl330-periph-burst
+Date: Tue, 9 Aug 2016 17:12:40 +0800
+Message-ID: <1d42542f-c43c-5c4b-01b7-ba0ca085004a@rock-chips.com>
+References: <1470365602-32586-1-git-send-email-shawn.lin@rock-chips.com>
+ <1470365602-32586-2-git-send-email-shawn.lin@rock-chips.com>
+ <20160805033410.GJ9681@localhost>
+ <ea3572fa-4bff-87db-d5ad-f406809f8296@rock-chips.com>
+ <0df0ab4f-0032-6487-2c30-b1ccd7d9ae62@metafoo.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470732737-18391-1-git-send-email-narmstrong@baylibre.com>
+In-Reply-To: <0df0ab4f-0032-6487-2c30-b1ccd7d9ae62@metafoo.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, jassisinghbrar@gmail.com, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>
+To: Lars-Peter Clausen <lars@metafoo.de>, Vinod Koul <vinod.koul@intel.com>
+Cc: shawn.lin@rock-chips.com, Rob Herring <robh+dt@kernel.org>, Huibin Hong <huibin.hong@rock-chips.com>, Xing Zheng <zhengxing@rock-chips.com>, devicetree@vger.kernel.org, dianders@chromium.org, briannorris@chromium.org, Caesar Wang <wxt@rock-chips.com>, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/mailbox/meson-mhu.txt      | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/meson-mhu.txt
+Hi Lars-Peter,
 
-diff --git a/Documentation/devicetree/bindings/mailbox/meson-mhu.txt b/Documentation/devicetree/bindings/mailbox/meson-mhu.txt
-new file mode 100644
-index 0000000..4a80b44
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/meson-mhu.txt
-@@ -0,0 +1,33 @@
-+Amlogic Meson MHU Mailbox Driver
-+================================
-+
-+The Amlogic's Meson SoCs Message-Handling-Unit (MHU) is a mailbox controller
-+that has 2 independent channels/links to communicate with remote processor(s).
-+MHU links are hardwired on a platform. A link raises interrupt for any
-+received data. However, there is no specified way of knowing if the sent
-+data has been read by the remote. This driver assumes the sender polls
-+STAT register and the remote clears it after having read the data.
-+
-+Mailbox Device Node:
-+====================
-+
-+Required properties:
-+--------------------
-+- compatible:		Shall be "amlogic,meson-gxbb-mhu"
-+- reg:			Contains the mailbox register address range (base
-+			address and length)
-+- #mbox-cells		Shall be 1 - the index of the channel needed.
-+- interrupts:		Contains the interrupt information corresponding to
-+			each of the 2 links of MHU.
-+
-+Example:
-+--------
-+
-+	mailbox: mailbox@c883c400 {
-+		#mbox-cells = <1>;
-+		compatible = "amlogic,meson-gxbb-mhu";
-+		reg = <0 0xc883c400 0 0x4c>;
-+		interrupts = <0 209 IRQ_TYPE_EDGE_RISING>,
-+			   <0 210 IRQ_TYPE_EDGE_RISING>;
-+		#mbox-cells = <1>;
-+	};
+在 2016/8/9 16:39, Lars-Peter Clausen 写道:
+> On 08/05/2016 09:25 AM, Shawn Lin wrote:
+>> Hi Vinod,
+>>
+>> 在 2016/8/5 11:34, Vinod Koul 写道:
+>>> On Fri, Aug 05, 2016 at 10:53:20AM +0800, Shawn Lin wrote:
+>>>> This patch adds the "arm,pl330-periph-burst" for arm-pl330 to
+>>>> support busrt mode.
+>>>
+>>> why should this be DT property. Only reason I can think of if some hw
+>>> versions support this and some won't.
+>>
+>> yes, if we want to support burst mode, both of the master(pl330) and
+>> client(several peripherals) should implement it, otherwise it will
+>> be broken when enabling.
+>
+> As you said, it is up to the consumer peripheral whether it supports BURST,
+> SINGLE or both. So this is a per client property, but you specify this as a
+> a global property on the producer side.
+
+Thanks for comment.
+
+yup, but what is the proper way to add it ? :)
+
+
+a) If pl330 support BURST as well as all the peripherals, we could
+enable it.
+
+b) If pl300 support BURST, but all the peripherals don't support it,
+we could not enable it.
+
+c) If pl300 support BURST, but not all the peripherals support it,
+we also could not enable it.
+
+the burst feature of peripheral IP may be vendor-specific, but the
+common driver for this peripheral are used for many many vendors which
+means we could not check all of this info. It's very likely to break
+them... I couldn't figure out how many upstreamed peripheral drivers
+who are using pl300 either.
+
+So this check should be done by all this vendors but we could make
+sure we don't break them before they check a), b), c), right?
+
+
+>
+>
+>
+>
+
+
 -- 
-2.7.0
+Best Regards
+Shawn Lin
