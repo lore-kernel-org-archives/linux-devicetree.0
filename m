@@ -1,7 +1,7 @@
 From: Paul Burton <paul.burton@imgtec.com>
-Subject: [PATCH 07/20] MIPS: SEAD3: Probe EHCI controller using DT
-Date: Tue, 9 Aug 2016 13:35:32 +0100
-Message-ID: <20160809123546.10190-8-paul.burton@imgtec.com>
+Subject: [PATCH 09/20] SEAD3: Probe parallel flash via DT
+Date: Tue, 9 Aug 2016 13:35:34 +0100
+Message-ID: <20160809123546.10190-10-paul.burton@imgtec.com>
 References: <20160809123546.10190-1-paul.burton@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,191 +12,100 @@ To: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
 Cc: Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Probe the SEAD3 EHCI controller using device tree rather than platform
+Probe the system parallel flash using device tree rather than platform
 code, in order to reduce the amount of the latter.
-
-Now that no devices probed from platform code require interrupts, remove
-the retrieval of the IRQ domain & sead3int.h.
 
 Signed-off-by: Paul Burton <paul.burton@imgtec.com>
 ---
 
- arch/mips/boot/dts/mti/sead3.dts             |  7 ++++
- arch/mips/include/asm/mips-boards/sead3int.h | 21 ----------
- arch/mips/mti-sead3/sead3-dtshim.c           | 15 ++++++-
- arch/mips/mti-sead3/sead3-platform.c         | 59 ----------------------------
- 4 files changed, 21 insertions(+), 81 deletions(-)
- delete mode 100644 arch/mips/include/asm/mips-boards/sead3int.h
+ arch/mips/boot/dts/mti/sead3.dts     | 17 +++++++++++++++++
+ arch/mips/mti-sead3/sead3-platform.c | 37 ------------------------------------
+ 2 files changed, 17 insertions(+), 37 deletions(-)
 
 diff --git a/arch/mips/boot/dts/mti/sead3.dts b/arch/mips/boot/dts/mti/sead3.dts
-index 29ed194..66f7947 100644
+index 66f7947..7799826 100644
 --- a/arch/mips/boot/dts/mti/sead3.dts
 +++ b/arch/mips/boot/dts/mti/sead3.dts
-@@ -60,6 +60,13 @@
- 		};
+@@ -67,6 +67,23 @@
+ 		interrupts = <0>; /* GIC 0 or CPU 6 */
  	};
  
-+	ehci@1b200000 {
-+		compatible = "mti,sead3-ehci";
-+		reg = <0x1b200000 0x1000>;
++	pflash@1c000000 {
++		compatible = "intel,28f128j3", "cfi-flash";
++		reg = <0x1c000000 0x2000000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
 +
-+		interrupts = <0>; /* GIC 0 or CPU 6 */
++		user-fs@0 {
++			label = "User FS";
++			reg = <0x0 0x1fc0000>;
++		};
++
++		board-config@3e0000 {
++			label = "Board Config";
++			reg = <0x1fc0000 0x40000>;
++		};
 +	};
 +
  	/* UART connected to FTDI & miniUSB socket */
  	uart0: uart@1f000900 {
  		compatible = "ns16550a";
-diff --git a/arch/mips/include/asm/mips-boards/sead3int.h b/arch/mips/include/asm/mips-boards/sead3int.h
-deleted file mode 100644
-index 7fdb9d4..0000000
---- a/arch/mips/include/asm/mips-boards/sead3int.h
-+++ /dev/null
-@@ -1,21 +0,0 @@
--/*
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file "COPYING" in the main directory of this archive
-- * for more details.
-- *
-- * Copyright (C) 2000,2012 MIPS Technologies, Inc.  All rights reserved.
-- *	Douglas Leung <douglas@mips.com>
-- *	Steven J. Hill <sjhill@mips.com>
-- */
--#ifndef _MIPS_SEAD3INT_H
--#define _MIPS_SEAD3INT_H
--
--#include <linux/irqchip/mips-gic.h>
--
--/* CPU interrupt offsets */
--#define CPU_INT_EHCI		2
--
--/* GIC interrupt offsets */
--#define GIC_INT_EHCI		GIC_SHARED_TO_HWIRQ(5)
--
--#endif /* !(_MIPS_SEAD3INT_H) */
-diff --git a/arch/mips/mti-sead3/sead3-dtshim.c b/arch/mips/mti-sead3/sead3-dtshim.c
-index 50f3236..40f8e03 100644
---- a/arch/mips/mti-sead3/sead3-dtshim.c
-+++ b/arch/mips/mti-sead3/sead3-dtshim.c
-@@ -22,9 +22,10 @@ static unsigned char fdt_buf[16 << 10] __initdata;
- 
- static int remove_gic(void *fdt)
- {
-+	const unsigned int cpu_ehci_int = 2;
- 	const unsigned int cpu_uart_int = 4;
- 	const unsigned int cpu_eth_int = 6;
--	int gic_off, cpu_off, uart_off, eth_off, err;
-+	int gic_off, cpu_off, uart_off, eth_off, ehci_off, err;
- 	uint32_t cfg, cpu_phandle;
- 
- 	/* leave the GIC node intact if a GIC is present */
-@@ -93,6 +94,18 @@ static int remove_gic(void *fdt)
- 		return err;
- 	}
- 
-+	ehci_off = fdt_node_offset_by_compatible(fdt, -1, "mti,sead3-ehci");
-+	if (ehci_off < 0) {
-+		pr_err("unable to find EHCI DT node: %d\n", ehci_off);
-+		return ehci_off;
-+	}
-+
-+	err = fdt_setprop_u32(fdt, ehci_off, "interrupts", cpu_ehci_int);
-+	if (err) {
-+		pr_err("unable to set EHCI interrupts property: %d\n", err);
-+		return err;
-+	}
-+
- 	return 0;
- }
- 
 diff --git a/arch/mips/mti-sead3/sead3-platform.c b/arch/mips/mti-sead3/sead3-platform.c
-index f79a890..21047b5 100644
+index 21047b5..5c1f42a 100644
 --- a/arch/mips/mti-sead3/sead3-platform.c
 +++ b/arch/mips/mti-sead3/sead3-platform.c
-@@ -7,16 +7,10 @@
-  */
+@@ -8,44 +8,8 @@
  #include <linux/dma-mapping.h>
  #include <linux/init.h>
--#include <linux/irq.h>
--#include <linux/irqchip/mips-gic.h>
--#include <linux/irqdomain.h>
  #include <linux/leds.h>
- #include <linux/mtd/physmap.h>
--#include <linux/of.h>
+-#include <linux/mtd/physmap.h>
  #include <linux/platform_device.h>
  
--#include <asm/mips-boards/sead3int.h>
--
- static struct mtd_partition sead3_mtd_partitions[] = {
- 	{
- 		.name =		"User FS",
-@@ -118,68 +112,15 @@ static struct platform_device sead3_led_device = {
-         .id     = -1,
- };
- 
--static struct resource ehci_resources[] = {
+-static struct mtd_partition sead3_mtd_partitions[] = {
 -	{
--		.start			= 0x1b200000,
--		.end			= 0x1b200fff,
--		.flags			= IORESOURCE_MEM
+-		.name =		"User FS",
+-		.offset =	0x00000000,
+-		.size =		0x01fc0000,
 -	}, {
--		.flags			= IORESOURCE_IRQ
--	}
+-		.name =		"Board Config",
+-		.offset =	0x01fc0000,
+-		.size =		0x00040000,
+-		.mask_flags =	MTD_WRITEABLE
+-	},
 -};
 -
--static u64 sead3_usbdev_dma_mask = DMA_BIT_MASK(32);
+-static struct physmap_flash_data sead3_flash_data = {
+-	.width		= 4,
+-	.nr_parts	= ARRAY_SIZE(sead3_mtd_partitions),
+-	.parts		= sead3_mtd_partitions
+-};
 -
--static struct platform_device ehci_device = {
--	.name		= "sead3-ehci",
+-static struct resource sead3_flash_resource = {
+-	.start		= 0x1c000000,
+-	.end		= 0x1dffffff,
+-	.flags		= IORESOURCE_MEM
+-};
+-
+-static struct platform_device sead3_flash = {
+-	.name		= "physmap-flash",
 -	.id		= 0,
 -	.dev		= {
--		.dma_mask		= &sead3_usbdev_dma_mask,
--		.coherent_dma_mask	= DMA_BIT_MASK(32)
+-		.platform_data	= &sead3_flash_data,
 -	},
--	.num_resources	= ARRAY_SIZE(ehci_resources),
--	.resource	= ehci_resources
+-	.num_resources	= 1,
+-	.resource	= &sead3_flash_resource,
 -};
 -
+ #define LEDFLAGS(bits, shift)		\
+ 	((bits << 8) | (shift << 8))
+ 
+@@ -113,7 +77,6 @@ static struct platform_device sead3_led_device = {
+ };
+ 
  static struct platform_device *sead3_platform_devices[] __initdata = {
- 	&sead3_flash,
+-	&sead3_flash,
  	&pled_device,
  	&fled_device,
  	&sead3_led_device,
--	&ehci_device,
- };
- 
- static int __init sead3_platforms_device_init(void)
- {
--	const char *intc_compat;
--	struct device_node *node;
--	struct irq_domain *irqd;
--
--	if (gic_present)
--		intc_compat = "mti,gic"
--	else
--		intc_compat = "mti,cpu-interrupt-controller";
--
--	node = of_find_compatible_node(NULL, NULL, intc_compat);
--	if (!node) {
--		pr_err("unable to find interrupt controller DT node\n");
--		return -ENODEV;
--	}
--
--	irqd = irq_find_host(node);
--	if (!irqd) {
--		pr_err("unable to find interrupt controller IRQ domain\n");
--		return -ENODEV;
--	}
--
--	if (gic_present) {
--		ehci_resources[1].start =
--			irq_create_mapping(irqd, GIC_INT_EHCI);
--	} else {
--		ehci_resources[1].start =
--			irq_create_mapping(irqd, CPU_INT_EHCI);
--	}
--
- 	return platform_add_devices(sead3_platform_devices,
- 				    ARRAY_SIZE(sead3_platform_devices));
- }
 -- 
 2.9.2
