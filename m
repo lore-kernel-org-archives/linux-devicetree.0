@@ -1,56 +1,69 @@
-From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Subject: Re: [PATCH v2] console: Don't prefer first registered if DT
- specifies stdout-path
-Date: Tue, 9 Aug 2016 14:57:26 -0700
-Message-ID: <20160809145726.1f9f5e5752c94b3113d77674@linux-foundation.org>
-References: <20160809125010.14150-1-paul.burton@imgtec.com>
-	<20160809151937.26118-1-paul.burton@imgtec.com>
+From: York Sun <york.sun@nxp.com>
+Subject: [Patch v4 9/9] arm64: Update device tree for Layerscape SoCs
+Date: Tue, 9 Aug 2016 14:59:39 -0700
+Message-ID: <1470780000-16750-1-git-send-email-york.sun@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160809151937.26118-1-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Ivan Delalande <colona-nzgTgzXrdUbQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Jan Kara <jack-IBi9RG/b67k@public.gmane.org>, Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-edac@vger.kernel.org
+Cc: morbidrsa@gmail.com, oss@buserror.net, stuart.yoder@nxp.com, bp@alien8.de, York Sun <york.sun@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Shawn Guo <shawnguo@kernel.org>, Olof Johansson <olof@lixom.net>, Liu Gang <Gang.Liu@nxp.com>, Mingkai Hu <Mingkai.Hu@freescale.com>, Rajesh Bhagat <rajesh.bhagat@freescale.com>, Yuan Yao <yao.yuan@nxp.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Li Yang <leoli@freescale.com>, yangbo lu <yangbo.lu@freescale.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 9 Aug 2016 16:19:37 +0100 Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+Add DDR memory controller nodes to enable EDAC driver.
 
-> If a device tree specifies a preferred device for kernel console output
-> via the stdout-path or linux,stdout-path chosen node properties or the
-> stdout alias then the kernel ought to honor it & output the kernel
-> console to that device. As it stands, this isn't the case. Whilst we
-> parse the stdout-path properties & set an of_stdout variable from
-> of_alias_scan(), and use that from of_console_check() to determine
-> whether to add a console device as a preferred console whilst
-> registering it, we also prefer the first registered console if no other
-> has been selected at the time of its registration.
-> 
-> This means that if a console other than the one the device tree selects
-> via stdout-path is registered first, we will switch to using it & when
-> the stdout-path console is later registered the call to
-> add_preferred_console() via of_console_check() is too late to do
-> anything useful. In practice this seems to mean that we switch to the
-> dummy console device fairly early & see no further console output:
-> 
->     Console: colour dummy device 80x25
->     console [tty0] enabled
->     bootconsole [ns16550a0] disabled
-> 
-> Fix this by not automatically preferring the first registered console if
-> one is specified by the device tree. This allows consoles to be
-> registered but not enabled, and once the driver for the console selected
-> by stdout-path calls of_console_check() the driver will be added to the
-> list of preferred consoles before any other console has been enabled.
-> When that console is then registered via register_console() it will be
-> enabled as expected.
+Signed-off-by: York Sun <york.sun@nxp.com>
 
-Looks reasonable.  Could you please do `grep -r stdout-path
-Documentation' and check that everything therein is complete, accurate
-and necessary?
+---
+Change log
+  v4: no change
+  v3: no change
+  v2: no change
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |  7 +++++++
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 14 ++++++++++++++
+ 2 files changed, 21 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index de0323b..cb33f23 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -196,6 +196,13 @@
+ 			bus-width = <4>;
+ 		};
+ 
++		ddr: memory-controller@1080000 {
++			compatible = "fsl,qoriq-memory-controller";
++			reg = <0x0 0x1080000 0x0 0x1000>;
++			interrupts = <0 144 0x4>;
++			big-endian;
++		};
++
+ 		dspi0: dspi@2100000 {
+ 			compatible = "fsl,ls1043a-dspi", "fsl,ls1021a-v1.0-dspi";
+ 			#address-cells = <1>;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+index 3187c82..3221e5c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+@@ -689,4 +689,18 @@
+ 			interrupts = <0 12 4>;
+ 		};
+ 	};
++
++	ddr1: memory-controller@1080000 {
++		compatible = "fsl,qoriq-memory-controller";
++		reg = <0x0 0x1080000 0x0 0x1000>;
++		interrupts = <0 17 0x4>;
++		little-endian;
++	};
++
++	ddr2: memory-controller@1090000 {
++		compatible = "fsl,qoriq-memory-controller";
++		reg = <0x0 0x1090000 0x0 0x1000>;
++		interrupts = <0 18 0x4>;
++		little-endian;
++	};
+ };
+-- 
+2.7.4
