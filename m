@@ -1,69 +1,55 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
-Date: Tue, 9 Aug 2016 12:17:01 -0700
-Message-ID: <214dcbb7-0c3b-1e00-3e50-db513d77b10b@gmail.com>
+Date: Tue, 9 Aug 2016 14:34:00 -0500
+Message-ID: <57AA3028.2080506@codeaurora.org>
 References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
  <9ebb6cb7-c793-cd76-5283-c9a659d0398f@gmx.de>
  <57AA2001.2010904@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <57AA2001.2010904@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57AA2001.2010904-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lino Sanfilippo <LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/2016 11:25 AM, Timur Tabi wrote:
-> I need some help figuring that out.  Like I said, I didn't write this
-> driver initially, so there are parts that I don't really understand.  I
-> copied the above code from other drivers, but after studying your
-> question, I think I understand what you're asking.  I just don't know
-> how to fix it.
-> 
-> First of all, why do other drivers test MAX_SKB_FRAGS + 1?  Why the +1?
+Timur Tabi wrote:
+> I used to work on PowerPC, so I respect making things work for both
+> endians.  However, even I think that this is overkill for my driver.
+> First, there's no way this driver will ever be used on a big-endian
+> system.  Second, I'm pretty sure there are lots of places that would
+> need cpu_to_le32() in order to make this driver big-endian compatible.
+> It would be a huge mess.
+>
+> #define TPD_BUFFER_ADDR_H_SET(tpd, val)    BITS_SET((tpd)->word[3], 18,
+> 30, val)
+>
+> This macros sets specific bits based on the definition of the register.
+>   I could change it to this:
+>
+> #define TPD_BUFFER_ADDR_H_SET(tpd, val) BITS_SET((tpd)->word[3], 18, 30,
+> cpu_to_le32(val))
+>
+> But I honestly don't see what good that will do.  There are still
+> thousands of other places that assume little-endian.
 
-The 1 is for the non-fragment part of the SKB, like its head.
+Ok, so I took another look at this, and even though I still think that 
+it's useless, it seems to be much less difficult to implement than I 
+initially thought.
 
-> 
-> The driver originally used function emac_tx_has_enough_descs() to
-> determine if there is enough room for the new packet.  Then I changed
-> the code as you suggested, and now it guesses how many descriptors need
-> to be free to support the next packet.
+I think all I need to do is to modify the BITS_GET() and BITS_SET() 
+macros in emac-mac.h, as well as any of the RRD_xxx and TPD_xxx macros 
+that do not use BITS_GET() or BITS_SET().  This is a minor change which 
+I will implement in v8 of the patch.
 
-That seems fine and expected.
+Every other hardware access uses readl/writel, which is already endian-safe.
 
-> 
-> If I'm reading emac_tx_fill_tpd() correctly, there could be as many as
-> (2 + skb_shinfo(skb)->nr_frags) descriptors for a given packet.  I don't
-> know how big nr_frags could get, so I don't know how to calculate the
-> number of descriptors I really need.  I'm assuming I need to do
-> something like this:
-
-nr_frags can't be bigger than MAX_SKB_FRAGS, hence these checks all
-other drivers do against 1 + MAX_SKB_FRAGS.
-
-
-> 
-> However, I'm confused about one thing.  Almost every other driver just
-> sets "netdev->mtu = new_mtu" and does nothing else.  I can't find any
-> other driver that actually stops the RX path, reprograms the hardware,
-> and then restarts the RX path.  I know this is a stupid question, but
-> why is my driver doing that?
-
-Most drivers allocate RX buffer sizes that are usually bigger than the
-MTU, but would probably silently fail or expose transient behavior once
-the MTU changes to greater than the size pre-defined.
-
-> 
-> Can I get away with just calling netdev_update_features()?
-
-MTU change is a pretty disruptive change for the HW I typically work
-with since we need to choose a RX buffer size that is aligned to the
-DRAM controller burst size, reprogram the MAC to accept packets up to
-that size, and potentially change the RX ring allocation strategy and
-typical buffer size. None of these requirements are unusual or unique,
-they ost likely apply to most MACs out there, my guess is that MTU
-change is barely tested.
 -- 
-Florian
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
