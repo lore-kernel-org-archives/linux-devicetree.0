@@ -1,311 +1,663 @@
-From: York Sun <york.sun@nxp.com>
-Subject: [Patch v4 6/9] driver/edac/fsl_ddr: Add support of little endian
-Date: Tue, 9 Aug 2016 14:55:43 -0700
-Message-ID: <1470779760-16483-7-git-send-email-york.sun@nxp.com>
-References: <1470779760-16483-1-git-send-email-york.sun@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470779760-16483-1-git-send-email-york.sun@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-edac@vger.kernel.org
-Cc: morbidrsa@gmail.com, oss@buserror.net, stuart.yoder@nxp.com, bp@alien8.de, York Sun <york.sun@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Thompson <dougthompson@xmission.com>, mchehab@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: [PATCH] regulator: Add LTC3676 support
+Date: Tue,  9 Aug 2016 16:36:07 -0700
+Message-ID: <1470785767-4426-1-git-send-email-tharvey@gateworks.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaffer Kapasi <jkapasi-td5IlybW20HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Get endianness from device tree. Both big endian and little endian
-are supported. Default to big endian for backward compatibility to
-MPC85xx.
+This patch adds support for the Linear Technology LTC3676
+8-output I2C voltage regulator IC.
 
-Signed-off-by: York Sun <york.sun@nxp.com>
-
+Cc: Jaffer Kapasi <jkapasi-td5IlybW20HQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 ---
-Change log
-  v4: Absorb name changes by "Rename macros and names"
-      Drop testing for big-endian as suggested
-      Use of_property_read_bool() as suggested
-  v3: no change
-  v2: Separated from "Add support for ARM-based SoCs" patch
+ .../devicetree/bindings/regulator/ltc3676.txt      |  94 ++++
+ drivers/regulator/Kconfig                          |   8 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/ltc3676.c                        | 495 +++++++++++++++++++++
+ 4 files changed, 598 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/ltc3676.txt
+ create mode 100644 drivers/regulator/ltc3676.c
 
- .../fsl/ddr.txt}                                   |  2 +
- drivers/edac/fsl_ddr_edac.c                        | 96 +++++++++++++---------
- 2 files changed, 58 insertions(+), 40 deletions(-)
- rename Documentation/devicetree/bindings/{powerpc/fsl/mem-ctrlr.txt => memory-controllers/fsl/ddr.txt} (86%)
-
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt b/Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
-similarity index 86%
-rename from Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
-rename to Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
-index f87856f..dde6d83 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/mem-ctrlr.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/fsl/ddr.txt
-@@ -7,6 +7,8 @@ Properties:
- 		  "fsl,qoriq-memory-controller".
- - reg		: Address and size of DDR controller registers
- - interrupts	: Error interrupt of DDR controller
-+- little-endian	: Specifies little-endian access to registers
-+		  If omitted, big-endian will be used.
- 
- Example 1:
- 
-diff --git a/drivers/edac/fsl_ddr_edac.c b/drivers/edac/fsl_ddr_edac.c
-index 46b00e1..6d4dd84 100644
---- a/drivers/edac/fsl_ddr_edac.c
-+++ b/drivers/edac/fsl_ddr_edac.c
-@@ -13,7 +13,6 @@
-  * the terms of the GNU General Public License version 2. This program
-  * is licensed "as is" without any warranty of any kind, whether express
-  * or implied.
-- *
-  */
- #include <linux/module.h>
- #include <linux/init.h>
-@@ -37,6 +36,20 @@ static int edac_mc_idx;
- 
- static u32 orig_ddr_err_disable;
- static u32 orig_ddr_err_sbe;
-+static bool little_endian;
+diff --git a/Documentation/devicetree/bindings/regulator/ltc3676.txt b/Documentation/devicetree/bindings/regulator/ltc3676.txt
+new file mode 100644
+index 0000000..d4eb366
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/ltc3676.txt
+@@ -0,0 +1,94 @@
++Linear Technology LTC3676 8-output regulators
 +
-+static inline u32 ddr_in32(void __iomem *addr)
++Required properties:
++- compatible: "lltc,ltc3676"
++- reg: I2C slave address
++
++Required child node:
++- regulators: Contains eight regulator child nodes sw1, sw2, sw3, sw4,
++  ldo1, ldo2, ldo3, and ldo4, specifying the initialization data as
++  documented in Documentation/devicetree/bindings/regulator/regulator.txt.
++
++Each regulator is defined using the standard binding for regulators. The
++nodes for sw1, sw2, sw3, sw4, ldo1, ldo2 and ldo4 additionally need to specify
++the resistor values of their external feedback voltage dividers:
++
++Required properties (not on ldo3):
++- lltc,fb-voltage-divider: An array of two integers containing the resistor
++  values R1 and R2 of the feedback voltage divider in ohms.
++
++Regulators sw1, sw2, sw3, sw4 can regulate the feedback reference from:
++412.5mV to 800mV in 12.5 mV steps. The output voltage thus ranges between
++0.4125 * (1 + R1/R2) V and 0.8 * (1 + R1/R2) V.
++
++Regulators ldo1, ldo2, and ldo4 have a fixed 0.725 V reference and thus output
++0.725 * (1 + R1/R2) V. The ldo3 regulator is fixed to 1.8 V.  The ldo1 standby
++regulator can not be disabled and thus should have the regulator-always-on
++property set.
++
++Example:
++
++	ltc3676: pmic@3c {
++		compatible = "lltc,ltc3676";
++		reg = <0x3c>;
++
++		regulators {
++			sw1_reg: sw1 {
++				regulator-min-microvolt = <674400>;
++				regulator-max-microvolt = <1308000>;
++				lltc,fb-voltage-divider = <127000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <1033310>;
++				regulator-max-microvolt = <200400>;
++				lltc,fb-voltage-divider = <301000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3_reg: sw3 {
++				regulator-min-microvolt = <674400>;
++				regulator-max-microvolt = <130800>;
++				lltc,fb-voltage-divider = <127000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw4_reg: sw4 {
++				regulator-min-microvolt = <868310>;
++				regulator-max-microvolt = <168400>;
++				lltc,fb-voltage-divider = <221000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo2_reg: ldo2 {
++				regulator-min-microvolt = <2490375>;
++				regulator-max-microvolt = <2490375>;
++				lltc,fb-voltage-divider = <487000 200000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo3_reg: ldo3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++			};
++
++			ldo4_reg: ldo4 {
++				regulator-min-microvolt = <3023250>;
++				regulator-max-microvolt = <3023250>;
++				lltc,fb-voltage-divider = <634000 200000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 6c88e31..527bd6a 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -353,6 +353,14 @@ config REGULATOR_LTC3589
+ 	  This enables support for the LTC3589, LTC3589-1, and LTC3589-2
+ 	  8-output regulators controlled via I2C.
+ 
++config REGULATOR_LTC3676
++	tristate "LTC3676 8-output voltage regulator"
++	depends on I2C
++	select REGMAP_I2C
++	help
++	  This enables support for the LTC3676
++	  8-output regulators controlled via I2C.
++
+ config REGULATOR_MAX14577
+ 	tristate "Maxim 14577/77836 regulator"
+ 	depends on MFD_MAX14577
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index f3da9ee..2142a5d 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -47,6 +47,7 @@ obj-$(CONFIG_REGULATOR_LP8788) += lp8788-buck.o
+ obj-$(CONFIG_REGULATOR_LP8788) += lp8788-ldo.o
+ obj-$(CONFIG_REGULATOR_LP8755) += lp8755.o
+ obj-$(CONFIG_REGULATOR_LTC3589) += ltc3589.o
++obj-$(CONFIG_REGULATOR_LTC3676) += ltc3676.o
+ obj-$(CONFIG_REGULATOR_MAX14577) += max14577-regulator.o
+ obj-$(CONFIG_REGULATOR_MAX1586) += max1586.o
+ obj-$(CONFIG_REGULATOR_MAX77620) += max77620-regulator.o
+diff --git a/drivers/regulator/ltc3676.c b/drivers/regulator/ltc3676.c
+new file mode 100644
+index 0000000..2461193
+--- /dev/null
++++ b/drivers/regulator/ltc3676.c
+@@ -0,0 +1,495 @@
++/*
++ * Copyright (C) 2016 Gateworks Corporation, Inc. All Rights Reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2
++ * as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/of.h>
++#include <linux/regmap.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/of_regulator.h>
++
++#define DRIVER_NAME		"ltc3676"
++
++/* LTC3676 Registers */
++#define LTC3676_BUCK1     0x01
++#define LTC3676_BUCK2     0x02
++#define LTC3676_BUCK3     0x03
++#define LTC3676_BUCK4     0x04
++#define LTC3676_LDOA      0x05
++#define LTC3676_LDOB      0x06
++#define LTC3676_SQD1      0x07
++#define LTC3676_SQD2      0x08
++#define LTC3676_CNTRL     0x09
++#define LTC3676_DVB1A     0x0A
++#define LTC3676_DVB1B     0x0B
++#define LTC3676_DVB2A     0x0C
++#define LTC3676_DVB2B     0x0D
++#define LTC3676_DVB3A     0x0E
++#define LTC3676_DVB3B     0x0F
++#define LTC3676_DVB4A     0x10
++#define LTC3676_DVB4B     0x11
++#define LTC3676_MSKIRQ    0x12
++#define LTC3676_MSKPG     0x13
++#define LTC3676_USER      0x14
++#define LTC3676_IRQSTAT   0x15
++#define LTC3676_PGSTATL   0x16
++#define LTC3676_PGSTATRT  0x17
++#define LTC3676_HRST      0x1E
++#define LTC3676_CLIRQ     0x1F
++
++#define LTC3676_IRQSTAT_PGOOD_TIMEOUT	BIT(3)
++#define LTC3676_IRQSTAT_UNDERVOLT_WARN	BIT(4)
++#define LTC3676_IRQSTAT_UNDERVOLT_FAULT	BIT(5)
++#define LTC3676_IRQSTAT_THERMAL_WARN	BIT(6)
++#define LTC3676_IRQSTAT_THERMAL_FAULT	BIT(7)
++
++enum ltc3676_reg {
++	LTC3676_SW1,
++	LTC3676_SW2,
++	LTC3676_SW3,
++	LTC3676_SW4,
++	LTC3676_LDO1,
++	LTC3676_LDO2,
++	LTC3676_LDO3,
++	LTC3676_LDO4,
++	LTC3676_NUM_REGULATORS,
++};
++
++struct ltc3676_regulator {
++	struct regulator_desc desc;
++
++	/* External feedback voltage divider */
++	unsigned int r1;
++	unsigned int r2;
++};
++
++struct ltc3676 {
++	struct regmap *regmap;
++	struct device *dev;
++	struct ltc3676_regulator regulator_descs[LTC3676_NUM_REGULATORS];
++	struct regulator_dev *regulators[LTC3676_NUM_REGULATORS];
++};
++
++static int ltc3676_set_suspend_voltage(struct regulator_dev *rdev, int uV)
 +{
-+	return little_endian ? ioread32(addr) : ioread32be(addr);
++	struct ltc3676 *ltc3676 = rdev_get_drvdata(rdev);
++	struct device *dev = ltc3676->dev;
++	int dcdc = rdev_get_id(rdev);
++	int sel;
++
++	dev_dbg(dev, "%s id=%d uV=%d\n", __func__, dcdc, uV);
++	sel = regulator_map_voltage_linear(rdev, uV, uV);
++	if (sel < 0)
++		return sel;
++
++	/* DVBB register follows right after the corresponding DVBA register */
++	return regmap_update_bits(ltc3676->regmap, rdev->desc->vsel_reg + 1,
++				  rdev->desc->vsel_mask, sel);
 +}
 +
-+static inline void ddr_out32(void __iomem *addr, u32 value)
++static int ltc3676_set_suspend_mode(struct regulator_dev *rdev,
++				    unsigned int mode)
 +{
-+	if (little_endian)
-+		iowrite32(value, addr);
-+	else
-+		iowrite32be(value, addr);
-+}
- 
- /************************ MC SYSFS parts ***********************************/
- 
-@@ -49,8 +62,7 @@ static ssize_t fsl_mc_inject_data_hi_show(struct device *dev,
- 	struct mem_ctl_info *mci = to_mci(dev);
- 	struct fsl_mc_pdata *pdata = mci->pvt_info;
- 	return sprintf(data, "0x%08x",
--		       in_be32(pdata->mc_vbase +
--			       FSL_MC_DATA_ERR_INJECT_HI));
-+		       ddr_in32(pdata->mc_vbase + FSL_MC_DATA_ERR_INJECT_HI));
- }
- 
- static ssize_t fsl_mc_inject_data_lo_show(struct device *dev,
-@@ -60,8 +72,7 @@ static ssize_t fsl_mc_inject_data_lo_show(struct device *dev,
- 	struct mem_ctl_info *mci = to_mci(dev);
- 	struct fsl_mc_pdata *pdata = mci->pvt_info;
- 	return sprintf(data, "0x%08x",
--		       in_be32(pdata->mc_vbase +
--			       FSL_MC_DATA_ERR_INJECT_LO));
-+		       ddr_in32(pdata->mc_vbase + FSL_MC_DATA_ERR_INJECT_LO));
- }
- 
- static ssize_t fsl_mc_inject_ctrl_show(struct device *dev,
-@@ -71,7 +82,7 @@ static ssize_t fsl_mc_inject_ctrl_show(struct device *dev,
- 	struct mem_ctl_info *mci = to_mci(dev);
- 	struct fsl_mc_pdata *pdata = mci->pvt_info;
- 	return sprintf(data, "0x%08x",
--		       in_be32(pdata->mc_vbase + FSL_MC_ECC_ERR_INJECT));
-+		       ddr_in32(pdata->mc_vbase + FSL_MC_ECC_ERR_INJECT));
- }
- 
- static ssize_t fsl_mc_inject_data_hi_store(struct device *dev,
-@@ -81,8 +92,8 @@ static ssize_t fsl_mc_inject_data_hi_store(struct device *dev,
- 	struct mem_ctl_info *mci = to_mci(dev);
- 	struct fsl_mc_pdata *pdata = mci->pvt_info;
- 	if (isdigit(*data)) {
--		out_be32(pdata->mc_vbase + FSL_MC_DATA_ERR_INJECT_HI,
--			 simple_strtoul(data, NULL, 0));
-+		ddr_out32(pdata->mc_vbase + FSL_MC_DATA_ERR_INJECT_HI,
-+			  simple_strtoul(data, NULL, 0));
- 		return count;
- 	}
- 	return 0;
-@@ -95,8 +106,8 @@ static ssize_t fsl_mc_inject_data_lo_store(struct device *dev,
- 	struct mem_ctl_info *mci = to_mci(dev);
- 	struct fsl_mc_pdata *pdata = mci->pvt_info;
- 	if (isdigit(*data)) {
--		out_be32(pdata->mc_vbase + FSL_MC_DATA_ERR_INJECT_LO,
--			 simple_strtoul(data, NULL, 0));
-+		ddr_out32(pdata->mc_vbase + FSL_MC_DATA_ERR_INJECT_LO,
-+			  simple_strtoul(data, NULL, 0));
- 		return count;
- 	}
- 	return 0;
-@@ -109,8 +120,8 @@ static ssize_t fsl_mc_inject_ctrl_store(struct device *dev,
- 	struct mem_ctl_info *mci = to_mci(dev);
- 	struct fsl_mc_pdata *pdata = mci->pvt_info;
- 	if (isdigit(*data)) {
--		out_be32(pdata->mc_vbase + FSL_MC_ECC_ERR_INJECT,
--			 simple_strtoul(data, NULL, 0));
-+		ddr_out32(pdata->mc_vbase + FSL_MC_ECC_ERR_INJECT,
-+			  simple_strtoul(data, NULL, 0));
- 		return count;
- 	}
- 	return 0;
-@@ -256,7 +267,7 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
- 	int bad_data_bit;
- 	int bad_ecc_bit;
- 
--	err_detect = in_be32(pdata->mc_vbase + FSL_MC_ERR_DETECT);
-+	err_detect = ddr_in32(pdata->mc_vbase + FSL_MC_ERR_DETECT);
- 	if (!err_detect)
- 		return;
- 
-@@ -265,23 +276,23 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
- 
- 	/* no more processing if not ECC bit errors */
- 	if (!(err_detect & (DDR_EDE_SBE | DDR_EDE_MBE))) {
--		out_be32(pdata->mc_vbase + FSL_MC_ERR_DETECT, err_detect);
-+		ddr_out32(pdata->mc_vbase + FSL_MC_ERR_DETECT, err_detect);
- 		return;
- 	}
- 
--	syndrome = in_be32(pdata->mc_vbase + FSL_MC_CAPTURE_ECC);
-+	syndrome = ddr_in32(pdata->mc_vbase + FSL_MC_CAPTURE_ECC);
- 
- 	/* Mask off appropriate bits of syndrome based on bus width */
--	bus_width = (in_be32(pdata->mc_vbase + FSL_MC_DDR_SDRAM_CFG) &
--			DSC_DBW_MASK) ? 32 : 64;
-+	bus_width = (ddr_in32(pdata->mc_vbase + FSL_MC_DDR_SDRAM_CFG) &
-+		     DSC_DBW_MASK) ? 32 : 64;
- 	if (bus_width == 64)
- 		syndrome &= 0xff;
- 	else
- 		syndrome &= 0xffff;
- 
- 	err_addr = make64(
--		in_be32(pdata->mc_vbase + FSL_MC_CAPTURE_EXT_ADDRESS),
--		in_be32(pdata->mc_vbase + FSL_MC_CAPTURE_ADDRESS));
-+		ddr_in32(pdata->mc_vbase + FSL_MC_CAPTURE_EXT_ADDRESS),
-+		ddr_in32(pdata->mc_vbase + FSL_MC_CAPTURE_ADDRESS));
- 	pfn = err_addr >> PAGE_SHIFT;
- 
- 	for (row_index = 0; row_index < mci->nr_csrows; row_index++) {
-@@ -290,8 +301,8 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
- 			break;
- 	}
- 
--	cap_high = in_be32(pdata->mc_vbase + FSL_MC_CAPTURE_DATA_HI);
--	cap_low = in_be32(pdata->mc_vbase + FSL_MC_CAPTURE_DATA_LO);
-+	cap_high = ddr_in32(pdata->mc_vbase + FSL_MC_CAPTURE_DATA_HI);
-+	cap_low = ddr_in32(pdata->mc_vbase + FSL_MC_CAPTURE_DATA_LO);
- 
- 	/*
- 	 * Analyze single-bit errors on 64-bit wide buses
-@@ -337,7 +348,7 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
- 				     row_index, 0, -1,
- 				     mci->ctl_name, "");
- 
--	out_be32(pdata->mc_vbase + FSL_MC_ERR_DETECT, err_detect);
-+	ddr_out32(pdata->mc_vbase + FSL_MC_ERR_DETECT, err_detect);
- }
- 
- static irqreturn_t fsl_mc_isr(int irq, void *dev_id)
-@@ -346,7 +357,7 @@ static irqreturn_t fsl_mc_isr(int irq, void *dev_id)
- 	struct fsl_mc_pdata *pdata = mci->pvt_info;
- 	u32 err_detect;
- 
--	err_detect = in_be32(pdata->mc_vbase + FSL_MC_ERR_DETECT);
-+	err_detect = ddr_in32(pdata->mc_vbase + FSL_MC_ERR_DETECT);
- 	if (!err_detect)
- 		return IRQ_NONE;
- 
-@@ -366,7 +377,7 @@ static void fsl_ddr_init_csrows(struct mem_ctl_info *mci)
- 	u32 cs_bnds;
- 	int index;
- 
--	sdram_ctl = in_be32(pdata->mc_vbase + FSL_MC_DDR_SDRAM_CFG);
-+	sdram_ctl = ddr_in32(pdata->mc_vbase + FSL_MC_DDR_SDRAM_CFG);
- 
- 	sdtype = sdram_ctl & DSC_SDTYPE_MASK;
- 	if (sdram_ctl & DSC_RD_EN) {
-@@ -414,8 +425,8 @@ static void fsl_ddr_init_csrows(struct mem_ctl_info *mci)
- 		csrow = mci->csrows[index];
- 		dimm = csrow->channels[0]->dimm;
- 
--		cs_bnds = in_be32(pdata->mc_vbase + FSL_MC_CS_BNDS_0 +
--				  (index * FSL_MC_CS_BNDS_OFS));
-+		cs_bnds = ddr_in32(pdata->mc_vbase + FSL_MC_CS_BNDS_0 +
-+				   (index * FSL_MC_CS_BNDS_OFS));
- 
- 		start = (cs_bnds & 0xffff0000) >> 16;
- 		end   = (cs_bnds & 0x0000ffff);
-@@ -474,6 +485,12 @@ int fsl_mc_err_probe(struct platform_device *op)
- 	mci->ctl_name = pdata->name;
- 	mci->dev_name = pdata->name;
- 
-+	/*
-+	 * Get the endianness of DDR controller registers.
-+	 * Default is big endian.
-+	 */
-+	little_endian = of_property_read_bool(op->dev.of_node, "little-endian");
++	struct ltc3676 *ltc3676= rdev_get_drvdata(rdev);
++	struct device *dev = ltc3676->dev;
++	int mask, bit = 0;
++	int dcdc = rdev_get_id(rdev);
 +
- 	res = of_address_to_resource(op->dev.of_node, 0, &r);
- 	if (res) {
- 		pr_err("%s: Unable to get resource for MC err regs\n",
-@@ -496,7 +513,7 @@ int fsl_mc_err_probe(struct platform_device *op)
- 		goto err;
- 	}
- 
--	sdram_ctl = in_be32(pdata->mc_vbase + FSL_MC_DDR_SDRAM_CFG);
-+	sdram_ctl = ddr_in32(pdata->mc_vbase + FSL_MC_DDR_SDRAM_CFG);
- 	if (!(sdram_ctl & DSC_ECC_EN)) {
- 		/* no ECC */
- 		pr_warn("%s: No ECC DIMMs discovered\n", __func__);
-@@ -523,12 +540,11 @@ int fsl_mc_err_probe(struct platform_device *op)
- 	fsl_ddr_init_csrows(mci);
- 
- 	/* store the original error disable bits */
--	orig_ddr_err_disable =
--	    in_be32(pdata->mc_vbase + FSL_MC_ERR_DISABLE);
--	out_be32(pdata->mc_vbase + FSL_MC_ERR_DISABLE, 0);
-+	orig_ddr_err_disable = ddr_in32(pdata->mc_vbase + FSL_MC_ERR_DISABLE);
-+	ddr_out32(pdata->mc_vbase + FSL_MC_ERR_DISABLE, 0);
- 
- 	/* clear all error bits */
--	out_be32(pdata->mc_vbase + FSL_MC_ERR_DETECT, ~0);
-+	ddr_out32(pdata->mc_vbase + FSL_MC_ERR_DETECT, ~0);
- 
- 	if (edac_mc_add_mc_with_groups(mci, fsl_ddr_dev_groups)) {
- 		edac_dbg(3, "failed edac_mc_add_mc()\n");
-@@ -536,15 +552,15 @@ int fsl_mc_err_probe(struct platform_device *op)
- 	}
- 
- 	if (edac_op_state == EDAC_OPSTATE_INT) {
--		out_be32(pdata->mc_vbase + FSL_MC_ERR_INT_EN,
--			 DDR_EIE_MBEE | DDR_EIE_SBEE);
-+		ddr_out32(pdata->mc_vbase + FSL_MC_ERR_INT_EN,
-+			  DDR_EIE_MBEE | DDR_EIE_SBEE);
- 
- 		/* store the original error management threshold */
--		orig_ddr_err_sbe = in_be32(pdata->mc_vbase +
--					   FSL_MC_ERR_SBE) & 0xff0000;
-+		orig_ddr_err_sbe = ddr_in32(pdata->mc_vbase +
-+					    FSL_MC_ERR_SBE) & 0xff0000;
- 
- 		/* set threshold to 1 error per interrupt */
--		out_be32(pdata->mc_vbase + FSL_MC_ERR_SBE, 0x10000);
-+		ddr_out32(pdata->mc_vbase + FSL_MC_ERR_SBE, 0x10000);
- 
- 		/* register interrupts */
- 		pdata->irq = irq_of_parse_and_map(op->dev.of_node, 0);
-@@ -586,13 +602,13 @@ int fsl_mc_err_remove(struct platform_device *op)
- 	edac_dbg(0, "\n");
- 
- 	if (edac_op_state == EDAC_OPSTATE_INT) {
--		out_be32(pdata->mc_vbase + FSL_MC_ERR_INT_EN, 0);
- 		irq_dispose_mapping(pdata->irq);
-+		ddr_out32(pdata->mc_vbase + FSL_MC_ERR_INT_EN, 0);
- 	}
- 
--	out_be32(pdata->mc_vbase + FSL_MC_ERR_DISABLE,
--		 orig_ddr_err_disable);
--	out_be32(pdata->mc_vbase + FSL_MC_ERR_SBE, orig_ddr_err_sbe);
-+	ddr_out32(pdata->mc_vbase + FSL_MC_ERR_DISABLE,
-+		  orig_ddr_err_disable);
-+	ddr_out32(pdata->mc_vbase + FSL_MC_ERR_SBE, orig_ddr_err_sbe);
- 
- 	edac_mc_del_mc(&op->dev);
- 	edac_mc_free(mci);
++	dev_dbg(dev, "%s id=%d mode=%d\n", __func__, dcdc, mode);
++
++	/* DVB reference select is bit5 of DVBA reg */
++	mask = 1 << 5;
++
++	if (mode != REGULATOR_MODE_STANDBY)
++		bit = mask;	/* Select DVBB */
++
++	return regmap_update_bits(ltc3676->regmap, rdev->desc->vsel_reg,
++				  mask, bit);
++}
++
++/* SW1, SW2, SW3, SW4 linear 0.8V-3.3V with scalar via R1/R2 feeback res */
++static struct regulator_ops ltc3676_linear_regulator_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++	.list_voltage = regulator_list_voltage_linear,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_suspend_voltage = ltc3676_set_suspend_voltage,
++	.set_suspend_mode = ltc3676_set_suspend_mode,
++};
++
++/* LDO1 always on fixed 0.8V-3.3V via scalar via R1/R2 feeback res */
++static struct regulator_ops ltc3676_fixed_standby_regulator_ops = {
++};
++
++/* LDO2, LDO3 fixed (LDO2 has external scalar via R1/R2 feedback res) */
++static struct regulator_ops ltc3676_fixed_regulator_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++};
++
++#define LTC3676_REG(_name, _ops, en_reg, en_bit, dvba_reg, dvb_mask)   \
++	[LTC3676_ ## _name] = {                                        \
++		.desc = {                                              \
++			.name = #_name,                                \
++			.n_voltages = (dvb_mask) + 1,                  \
++			.min_uV = (dvba_reg) ? 412500 : 0,             \
++			.uV_step = (dvba_reg) ? 12500 : 0,             \
++			.ramp_delay = (dvba_reg) ? 800 : 0,            \
++			.fixed_uV = (dvb_mask) ? 0 : 725000,           \
++			.ops = &ltc3676_ ## _ops ## _regulator_ops,    \
++			.type = REGULATOR_VOLTAGE,                     \
++			.id = LTC3676_ ## _name,                       \
++			.owner = THIS_MODULE,                          \
++			.vsel_reg = (dvba_reg),                        \
++			.vsel_mask = (dvb_mask),                       \
++			.enable_reg = (en_reg),                        \
++			.enable_mask = (1 << en_bit),                  \
++		},                                                     \
++	}
++
++#define LTC3676_LINEAR_REG(_name, _en, _dvba)                          \
++	LTC3676_REG(_name, linear,                                     \
++		    LTC3676_ ## _en, 7,                                \
++		    LTC3676_ ## _dvba, 0x1f)
++
++#define LTC3676_FIXED_REG(_name, _en_reg, _en_bit) \
++	LTC3676_REG(_name, fixed, LTC3676_ ## _en_reg, _en_bit, 0, 0)
++
++static struct ltc3676_regulator ltc3676_regulators[LTC3676_NUM_REGULATORS] = {
++	LTC3676_LINEAR_REG(SW1, BUCK1, DVB1A),
++	LTC3676_LINEAR_REG(SW2, BUCK2, DVB2A),
++	LTC3676_LINEAR_REG(SW3, BUCK3, DVB3A),
++	LTC3676_LINEAR_REG(SW4, BUCK4, DVB4A),
++	LTC3676_REG(LDO1, fixed_standby, 0, 0, 0, 0),
++	LTC3676_FIXED_REG(LDO2, LDOA, 2),
++	LTC3676_FIXED_REG(LDO3, LDOA, 5),
++	LTC3676_FIXED_REG(LDO4, LDOB, 2),
++};
++
++#ifdef CONFIG_OF
++static struct of_regulator_match ltc3676_matches[] = {
++	{ .name = "sw1",	},
++	{ .name = "sw2",	},
++	{ .name = "sw3",	},
++	{ .name = "sw4",	},
++	{ .name = "ldo1",	},
++	{ .name = "ldo2",	},
++	{ .name = "ldo3",	},
++	{ .name = "ldo4",	},
++};
++
++static int ltc3676_parse_regulators_dt(struct ltc3676 *ltc3676)
++{
++	struct device *dev = ltc3676->dev;
++	struct device_node *node;
++	int i, ret;
++
++	node = of_get_child_by_name(dev->of_node, "regulators");
++	if (!node) {
++		dev_err(dev, "regulators node not found\n");
++		return -EINVAL;
++	}
++
++	ret = of_regulator_match(dev, node, ltc3676_matches,
++				 ARRAY_SIZE(ltc3676_matches));
++	of_node_put(node);
++	if (ret < 0) {
++		dev_err(dev, "Error parsing regulator init data: %d\n", ret);
++		return ret;
++	}
++
++	/* parse feedback voltage deviders: LDO3 doesn't have them */
++	for (i = 0; i < LTC3676_NUM_REGULATORS; i++) {
++		struct ltc3676_regulator *desc = &ltc3676->regulator_descs[i];
++		struct device_node *np = ltc3676_matches[i].of_node;
++		u32 vdiv[2];
++
++		if (i == LTC3676_LDO3 || !np)
++			continue;
++		ret = of_property_read_u32_array(np, "lltc,fb-voltage-divider",
++						 vdiv, 2);
++		if (ret) {
++			dev_err(dev, "Failed to parse voltage divider: %d\n",
++				ret);
++			return ret;
++		}
++
++		desc->r1 = vdiv[0];
++		desc->r2 = vdiv[1];
++	}
++
++	return 0;
++}
++
++static inline struct regulator_init_data *match_init_data(int index)
++{
++	return ltc3676_matches[index].init_data;
++}
++
++static inline struct device_node *match_of_node(int index)
++{
++	return ltc3676_matches[index].of_node;
++}
++#else
++static int ltc3676_parse_regulators_dt(struct ltc3676_chip *chip)
++{
++	return 0;
++}
++
++static inline struct regulator_init_data *match_init_data(int index)
++{
++	return NULL;
++}
++
++static inline struct device_node *match_of_node(int index)
++{
++	return NULL;
++}
++#endif
++
++static bool ltc3676_writeable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++		case LTC3676_IRQSTAT:
++		case LTC3676_BUCK1:
++		case LTC3676_BUCK2:
++		case LTC3676_BUCK3:
++		case LTC3676_BUCK4:
++		case LTC3676_LDOA:
++		case LTC3676_LDOB:
++		case LTC3676_SQD1:
++		case LTC3676_SQD2:
++		case LTC3676_CNTRL:
++		case LTC3676_DVB1A:
++		case LTC3676_DVB1B:
++		case LTC3676_DVB2A:
++		case LTC3676_DVB2B:
++		case LTC3676_DVB3A:
++		case LTC3676_DVB3B:
++		case LTC3676_DVB4A:
++		case LTC3676_DVB4B:
++		case LTC3676_MSKIRQ:
++		case LTC3676_MSKPG:
++		case LTC3676_USER:
++		case LTC3676_HRST:
++		case LTC3676_CLIRQ:
++			return true;
++	}
++	return false;
++}
++
++static bool ltc3676_readable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++		case LTC3676_IRQSTAT:
++		case LTC3676_BUCK1:
++		case LTC3676_BUCK2:
++		case LTC3676_BUCK3:
++		case LTC3676_BUCK4:
++		case LTC3676_LDOA:
++		case LTC3676_LDOB:
++		case LTC3676_SQD1:
++		case LTC3676_SQD2:
++		case LTC3676_CNTRL:
++		case LTC3676_DVB1A:
++		case LTC3676_DVB1B:
++		case LTC3676_DVB2A:
++		case LTC3676_DVB2B:
++		case LTC3676_DVB3A:
++		case LTC3676_DVB3B:
++		case LTC3676_DVB4A:
++		case LTC3676_DVB4B:
++		case LTC3676_MSKIRQ:
++		case LTC3676_MSKPG:
++		case LTC3676_USER:
++		case LTC3676_HRST:
++		case LTC3676_CLIRQ:
++			return true;
++	}
++	return false;
++}
++
++static bool ltc3676_volatile_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++		case LTC3676_IRQSTAT:
++		case LTC3676_PGSTATL:
++		case LTC3676_PGSTATRT:
++			return true;
++	}
++	return false;
++}
++
++static const struct regmap_config ltc3676_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.writeable_reg = ltc3676_writeable_reg,
++	.readable_reg = ltc3676_readable_reg,
++	.volatile_reg = ltc3676_volatile_reg,
++	.max_register = LTC3676_CLIRQ,
++	.use_single_rw = true,
++	.cache_type = REGCACHE_RBTREE,
++};
++
++static irqreturn_t ltc3676_isr(int irq, void *dev_id)
++{
++	struct ltc3676 *ltc3676 = dev_id;
++	struct device *dev = ltc3676->dev;
++	unsigned int i, irqstat, event;
++
++	regmap_read(ltc3676->regmap, LTC3676_IRQSTAT, &irqstat);
++
++	dev_dbg(dev, "irq%d irqstat=0x%02x\n", irq, irqstat);
++	if (irqstat & LTC3676_IRQSTAT_THERMAL_WARN) {
++		dev_info(dev, "Over-temperature Warning\n");
++		event = REGULATOR_EVENT_OVER_TEMP;
++		for (i = 0; i < LTC3676_NUM_REGULATORS; i++)
++			regulator_notifier_call_chain(ltc3676->regulators[i],
++						      event, NULL);
++	}
++
++	if (irqstat & LTC3676_IRQSTAT_UNDERVOLT_WARN) {
++		dev_info(dev, "Undervoltage Warning\n");
++		event = REGULATOR_EVENT_UNDER_VOLTAGE;
++		for (i = 0; i < LTC3676_NUM_REGULATORS; i++)
++			regulator_notifier_call_chain(ltc3676->regulators[i],
++						      event, NULL);
++	}
++
++	/* Clear warning condition */
++	regmap_write(ltc3676->regmap, LTC3676_CLIRQ, 0);
++
++	return IRQ_HANDLED;
++}
++
++static inline unsigned int ltc3676_scale(unsigned int uV, u32 r1, u32 r2)
++{
++	uint64_t tmp;
++	if (uV == 0)
++		return 0;
++	tmp = (uint64_t)uV * r1;
++	do_div(tmp, r2);
++	return uV + (unsigned int)tmp;
++}
++
++static void ltc3676_apply_fb_voltage_divider(struct ltc3676_regulator *rdesc)
++{
++	struct regulator_desc *desc = &rdesc->desc;
++
++	if (!rdesc->r1 || !rdesc->r2)
++		return;
++
++	desc->min_uV = ltc3676_scale(desc->min_uV, rdesc->r1, rdesc->r2);
++	desc->uV_step = ltc3676_scale(desc->uV_step, rdesc->r1, rdesc->r2);
++	desc->fixed_uV = ltc3676_scale(desc->fixed_uV, rdesc->r1, rdesc->r2);
++}
++
++static int ltc3676_regulator_probe(struct i2c_client *client,
++				    const struct i2c_device_id *id)
++{
++	struct device *dev = &client->dev;
++	struct ltc3676_regulator *descs;
++	struct ltc3676 *ltc3676;
++	int i, ret;
++
++	ltc3676 = devm_kzalloc(dev, sizeof(*ltc3676), GFP_KERNEL);
++	if (!ltc3676)
++		return -ENOMEM;
++
++	i2c_set_clientdata(client, ltc3676);
++	ltc3676->dev = dev;
++
++	descs = ltc3676->regulator_descs;
++	memcpy(descs, ltc3676_regulators, sizeof(ltc3676_regulators));
++	descs[LTC3676_LDO3].desc.fixed_uV = 1800000; /* LDO3 is fixed 1.8V */
++
++	ltc3676->regmap = devm_regmap_init_i2c(client, &ltc3676_regmap_config);
++	if (IS_ERR(ltc3676->regmap)) {
++		ret = PTR_ERR(ltc3676->regmap);
++		dev_err(dev, "failed to initialize regmap: %d\n", ret);
++		return ret;
++	}
++
++	ret = ltc3676_parse_regulators_dt(ltc3676);
++	if (ret)
++		return ret;
++
++	for (i = 0; i < LTC3676_NUM_REGULATORS; i++) {
++		struct ltc3676_regulator *rdesc = &ltc3676->regulator_descs[i];
++		struct regulator_desc *desc = &rdesc->desc;
++		struct regulator_init_data *init_data;
++		struct regulator_config config = { };
++
++		init_data = match_init_data(i);
++
++		if (i != LTC3676_LDO3) {
++			/* skip unused */
++			if (rdesc->r1 == 0 && rdesc->r2 == 0)
++				continue;
++			ltc3676_apply_fb_voltage_divider(rdesc);
++		}
++
++		config.dev = dev;
++		config.init_data = init_data;
++		config.driver_data = ltc3676;
++		config.of_node = match_of_node(i);
++
++		ltc3676->regulators[i] = devm_regulator_register(dev, desc,
++								 &config);
++		if (IS_ERR(ltc3676->regulators[i])) {
++			ret = PTR_ERR(ltc3676->regulators[i]);
++			dev_err(dev, "failed to register regulator %s: %d\n",
++				desc->name, ret);
++			return ret;
++		}
++	}
++
++	regmap_write(ltc3676->regmap, LTC3676_CLIRQ, 0);
++	if (client->irq) {
++		ret = devm_request_threaded_irq(dev, client->irq, NULL,
++						ltc3676_isr,
++						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
++						client->name, ltc3676);
++		if (ret) {
++			dev_err(dev, "Failed to request IRQ: %d\n", ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static const struct i2c_device_id ltc3676_i2c_id[] = {
++	{ "ltc3676" },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, ltc3676_i2c_id);
++
++static struct i2c_driver ltc3676_driver = {
++	.driver = {
++		.name = DRIVER_NAME,
++	},
++	.probe = ltc3676_regulator_probe,
++	.id_table = ltc3676_i2c_id,
++};
++module_i2c_driver(ltc3676_driver);
++
++MODULE_AUTHOR("Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>");
++MODULE_DESCRIPTION("Regulator driver for Linear Technology LTC1376");
++MODULE_LICENSE("GPL v2");
 -- 
-2.7.4
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
