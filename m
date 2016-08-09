@@ -1,104 +1,55 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v5 2/3] Documentation: DT: net: Add Xilinx gmiitorgmii
- converter device tree binding documentation
-Date: Tue, 9 Aug 2016 14:50:09 -0700
-Message-ID: <638248c5-1747-0a7d-58e6-27b7646c4f6d@gmail.com>
-References: <1470735283-23611-1-git-send-email-appanad@xilinx.com>
- <1470735283-23611-3-git-send-email-appanad@xilinx.com>
+From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Subject: Re: [PATCH v2] console: Don't prefer first registered if DT
+ specifies stdout-path
+Date: Tue, 9 Aug 2016 14:57:26 -0700
+Message-ID: <20160809145726.1f9f5e5752c94b3113d77674@linux-foundation.org>
+References: <20160809125010.14150-1-paul.burton@imgtec.com>
+	<20160809151937.26118-1-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470735283-23611-3-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20160809151937.26118-1-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Ivan Delalande <colona-nzgTgzXrdUbQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Borislav Petkov <bp-l3A5Bk7waGM@public.gmane.org>, Jan Kara <jack-IBi9RG/b67k@public.gmane.org>, Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/2016 02:34 AM, Kedareswara rao Appana wrote:
-> Device-tree binding documentation for xilinx gmiitorgmii converter.
+On Tue, 9 Aug 2016 16:19:37 +0100 Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+
+> If a device tree specifies a preferred device for kernel console output
+> via the stdout-path or linux,stdout-path chosen node properties or the
+> stdout alias then the kernel ought to honor it & output the kernel
+> console to that device. As it stands, this isn't the case. Whilst we
+> parse the stdout-path properties & set an of_stdout variable from
+> of_alias_scan(), and use that from of_console_check() to determine
+> whether to add a console device as a preferred console whilst
+> registering it, we also prefer the first registered console if no other
+> has been selected at the time of its registration.
 > 
-> Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes for v5:
-> ---> Fixed Indentation in the example as suggested by Michal.
-> Changes for v4:
-> --> Modified compatible as suggested by Rob.
-> --> Removed underscores from the converter node name as suggested by Rob.
-> Changes for v3:
-> --> None.
-> Changes for v2:
-> --> New patch.
+> This means that if a console other than the one the device tree selects
+> via stdout-path is registered first, we will switch to using it & when
+> the stdout-path console is later registered the call to
+> add_preferred_console() via of_console_check() is too late to do
+> anything useful. In practice this seems to mean that we switch to the
+> dummy console device fairly early & see no further console output:
 > 
->  .../devicetree/bindings/net/xilinx_gmii2rgmii.txt  | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
+>     Console: colour dummy device 80x25
+>     console [tty0] enabled
+>     bootconsole [ns16550a0] disabled
 > 
-> diff --git a/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt b/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
-> new file mode 100644
-> index 0000000..5f48793
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/xilinx_gmii2rgmii.txt
-> @@ -0,0 +1,38 @@
-> +XILINX GMIITORGMII Converter Driver Device Tree Bindings
-> +--------------------------------------------------------
-> +
-> +The Gigabit Media Independent Interface (GMII) to Reduced Gigabit Media
-> +Independent Interface (RGMII) core provides the RGMII between RGMII-compliant
-> +Ethernet physical media devices (PHY) and the Gigabit Ethernet controller.
-> +This core can be used in all three modes of operation(10/100/1000 Mb/s).
-> +The Management Data Input/Output (MDIO) interface is used to configure the
-> +Speed of operation. This core can switch dynamically between the three
-> +Different speed modes by configuring the conveter register through mdio write.
-> +
-> +The MDIO is a bus to which the PHY devices are connected.  For each
-> +device that exists on this bus, a child node should be created.  See
-> +the definition of the PHY node in booting-without-of.txt for an example
-> +of how to define a PHY.
+> Fix this by not automatically preferring the first registered console if
+> one is specified by the device tree. This allows consoles to be
+> registered but not enabled, and once the driver for the console selected
+> by stdout-path calls of_console_check() the driver will be added to the
+> list of preferred consoles before any other console has been enabled.
+> When that console is then registered via register_console() it will be
+> enabled as expected.
 
-I would skip this paragraph which does not really help with
-understanding, and just refer to
-Documentation/devicetree/bindings/net/phy.txt for examples.
+Looks reasonable.  Could you please do `grep -r stdout-path
+Documentation' and check that everything therein is complete, accurate
+and necessary?
 
-
-> +
-> +This converter sits between the ethernet MAC and the external phy.
-> +MAC <==> GMII2RGMII <==> RGMII_PHY
-> +
-> +Required properties:
-> +- compatible	: Should be "xlnx,gmii-to-rgmii-1.0"
-> +- reg		: The ID number for the phy, usually a small integer
-
-You would want specify that "reg" property needs to match the one of the
-PHY (specified via phy-handle) you are converting to/from for this
-"proxy" piece of hardware to work.
-
-If these two have the same "reg" value, is not that going to lead to
-duplicate MDIO devices created on the bus, this may work, based on
-probing ordering, but seems unusual, you don't really need the "reg"
-property here it seems?
-
-> +- phy-handle	: Should point to the external phy device.
-> +		  See ethernet.txt file in the same directory.
-> +
-> +Example:
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		phy: ethernet-phy@0 {
-> +			......
-> +		};
-> +		gmiitorgmii: gmiitorgmii@8 {
-> +			compatible = "xlnx,gmii-to-rgmii-1.0";
-> +			reg = <8>;
-> +			phy-handle = <&phy>;
-> +		};
-> +	};
-> 
-
-
--- 
-Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
