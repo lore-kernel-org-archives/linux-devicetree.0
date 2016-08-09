@@ -1,115 +1,29 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v5 1/2] mfd: Add DT bindings documentation for Samsung Exynos
- LPASS
-Date: Tue, 09 Aug 2016 15:37:54 +0200
-Message-ID: <1470749875-9006-1-git-send-email-s.nawrocki@samsung.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/1] imx53.dtsi: Add IPU nodes for csi
+Date: Tue, 9 Aug 2016 21:38:05 +0800
+Message-ID: <20160809133805.GW4678@tiger>
+References: <CAOMZO5BoRsrHv-+5c9bAXO2NCya8sPqmmpy9DOfav6NvQ+VMLQ@mail.gmail.com>
+ <1470318452-31391-1-git-send-email-fabien.lahoudere@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1470318452-31391-1-git-send-email-fabien.lahoudere@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: broonie@kernel.org, alsa-devel@alsa-project.org, robh@kernel.org, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+To: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation of the DT bindings for the Samsung
-Exynos SoC Low Power Audio Subsystem.
+On Thu, Aug 04, 2016 at 03:47:32PM +0200, Fabien Lahoudere wrote:
+> We have the following messages that tell csi devices are not used:
+> imx-ipuv3 18000000.ipu: no port@0 node in /soc/ipu@18000000, not using CSI0
+> imx-ipuv3 18000000.ipu: no port@1 node in /soc/ipu@18000000, not using CSI1
+> 
+> So we add them in the common device tree to make CSI ports available on
+> imx53 boards.
+> 
+> Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+Updated subject 'ARM: dts: imx53: ...', and applied patch.
 
-Changes since v4:
- - text reformatting, added VIC to the list of sub-devices, relative
-   paths used for the reference DT binding documentation files, added
-   example dts.
-
-Changes since v3:
- - moved to Documentation/devicetree/bindings/mfd,
- - added #address-cells, #size-cells, ranges as required
-   properties,
- - added description of the IP block subnodes and links
-   to their binding's documentation.
-
-Changes since v2:
- - none.
----
- .../bindings/mfd/samsung,exynos5433-lpass.txt      | 70 ++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
-
-diff --git a/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt b/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
-new file mode 100644
-index 0000000..c110e11
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
-@@ -0,0 +1,70 @@
-+Samsung Exynos SoC Low Power Audio Subsystem (LPASS)
-+
-+Required properties:
-+
-+ - compatible		: "samsung,exynos5433-lpass"
-+ - reg			: should contain the LPASS top SFR region location
-+			  and size
-+ - samsung,pmu-syscon	: the phandle to the Power Management Unit node
-+ - #address-cells	: should be 1
-+ - #size-cells		: should be 1
-+ - ranges		: must be present
-+
-+Each IP block of the Low Power Audio Subsystem should be specified as
-+an optional sub-node. For "samsung,exynos5433-lpass" compatible this includes:
-+UART, SLIMBUS, PCM, I2S, DMAC, Timers 0...4, VIC, WDT 0...1 devices.
-+
-+Bindings of the sub-nodes are described in:
-+  ../serial/samsung_uart.txt
-+  ../sound/samsung-i2s.txt
-+  ../dma/arm-pl330.txt
-+
-+
-+Example:
-+
-+audio-subsystem {
-+	compatible = "samsung,exynos5433-lpass";
-+	reg = <0x11400000 0x100>, <0x11500000 0x08>;
-+	samsung,pmu-syscon = <&pmu_system_controller>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges;
-+
-+	adma: adma@11420000 {
-+		compatible = "arm,pl330", "arm,primecell";
-+		reg = <0x11420000 0x1000>;
-+		interrupts = <0 73 0>;
-+		clocks = <&cmu_aud CLK_ACLK_DMAC>;
-+		clock-names = "apb_pclk";
-+		#dma-cells = <1>;
-+		#dma-channels = <8>;
-+		#dma-requests = <32>;
-+	};
-+
-+	i2s0: i2s0@11440000 {
-+		compatible = "samsung,exynos7-i2s";
-+		reg = <0x11440000 0x100>;
-+		dmas = <&adma 0 &adma 2>;
-+		dma-names = "tx", "rx";
-+		interrupts = <0 70 0>;
-+		clocks = <&cmu_aud CLK_PCLK_AUD_I2S>,
-+			 <&cmu_aud CLK_SCLK_AUD_I2S>,
-+			 <&cmu_aud CLK_SCLK_I2S_BCLK>;
-+		clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2s0_bus>;
-+		status = "disabled";
-+	};
-+
-+	serial_3: serial@11460000 {
-+		compatible = "samsung,exynos5433-uart";
-+		reg = <0x11460000 0x100>;
-+		interrupts = <0 67 0>;
-+		clocks = <&cmu_aud CLK_PCLK_AUD_UART>,
-+			 <&cmu_aud CLK_SCLK_AUD_UART>;
-+		clock-names = "uart", "clk_uart_baud0";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&uart_aud_bus>;
-+		status = "disabled";
-+	};
-+ };
---
-1.9.1
+Shawn
