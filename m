@@ -1,32 +1,67 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] mfd: Add Samsung Exynos Low Power Audio Subsystem
- driver
-Date: Tue, 09 Aug 2016 17:36:38 +0200
-Message-ID: <61d700f7-ef66-8278-54ea-8e6e2f1a029e@samsung.com>
-References: <1467738804-31460-1-git-send-email-s.nawrocki@samsung.com>
- <20160809150502.GQ5243@dell>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: Re: [PATCH v18 6/6] ARM: socfpga: fpga bridge driver support
+Date: Tue, 9 Aug 2016 12:00:39 -0400
+Message-ID: <20160809160039.GX29630@windriver.com>
+References: <20160712193645.9098-1-atull@opensource.altera.com>
+ <20160712193645.9098-7-atull@opensource.altera.com>
+ <CAP=VYLo2jtp57kQe5671xM=4o_ZAU6XG_W1MXU8aPv4Ws7kkDA@mail.gmail.com>
+ <alpine.DEB.2.02.1608081416110.11063@linuxheads99>
+ <CAAtXAHev2Dytadp-_Hs0agcSXUTyrFhJQxHcsFd7faOReHzr9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20160809150502.GQ5243@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAtXAHev2Dytadp-_Hs0agcSXUTyrFhJQxHcsFd7faOReHzr9Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <moritz.fischer@ettus.com>
+Cc: atull <atull@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dinh Nguyen <dinguyen@opensource.altera.com>, Devicetree List <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Alan Tull <delicious.quinoa@gmail.com>, Matthew Gerlach <mgerlach@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/2016 05:05 PM, Lee Jones wrote:
->> +static SIMPLE_DEV_PM_OPS(lpass_pm_ops, exynos_lpass_suspend,
->> > +					exynos_lpass_resume);
-> Put this up by the PM functions.
+[Re: [PATCH v18 6/6] ARM: socfpga: fpga bridge driver support] On 08/08/2016 (Mon 13:44) Moritz Fischer wrote:
 
-Sorry, I don't understand this comment, which PM functions do you
-mean exactly?
+> Hi Alan,
+> 
+> On Mon, Aug 8, 2016 at 12:18 PM, atull <atull@opensource.altera.com> wrote:
+> 
+> >> Please don't use module.h in drivers controlled by a bool
+> >> Kconfig setting.
+> >>
+> >> THanks,
+> >> Paul.
+> >>
+> >
+> > Thanks for the feedback.  Can you provide an example of what you
+> > would consider to be proper usage in the kernel?
+> 
+> 
+> I think Paul is suggesting to use
+> 
+> static int __init alt_fpga_bridge_init(void)
+> {
+>         platform_driver_register(&alt_fpga_bridge_driver);
+> }
+> 
+> device_initcall(alt_fpga_bridge_init);
+> 
+> or better:
+> 
+> builtin_platform_driver(&alt_fpga_bridge_driver);
+> 
+> Like for example in: drivers/cpuidle/cpuidle-mvebu-v7.c
 
--- 
+Yes, pretty much that -- if you have a bool Kconfig, you should be using
+builtin registration functions, and have no need for module.h or
+anything MODULE_<xyz> or any module_init/module_exit calls.
+
+An empty file containing nothing but #include <linux/module.h> will
+cause cpp to emit about 750k of goop, so we really should only be using
+it for drivers that are genuinely modular; i.e. tristate Kconfig.
+
 Thanks,
-Sylwester
+Paul.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> 
+> Cheers,
+> 
+> Moritz
