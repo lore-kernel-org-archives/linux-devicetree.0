@@ -1,37 +1,28 @@
-From: Grzegorz Jaszczyk <jaz@semihalf.com>
-Subject: Re: [PATCH v2 00/17] ARM: mvebu: misc Armada 38x/39x DT and v7
- defconfig improvements
-Date: Tue, 9 Aug 2016 12:08:37 +0200
-Message-ID: <CAH76GKOiiAnX2DkZxqM5vLbqGEUUBiQ0UreCW-+842hhJ_MDjQ@mail.gmail.com>
-References: <1470305660-6601-1-git-send-email-jaz@semihalf.com> <87popjuwu1.fsf@free-electrons.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: da850: Add missing pin muxing for the UARTs
+Date: Tue, 9 Aug 2016 15:49:47 +0530
+Message-ID: <57A9AE43.1030302@ti.com>
+References: <20160804110656.25318-1-kbeldan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87popjuwu1.fsf@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Marcin Wojtas <mw@semihalf.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160804110656.25318-1-kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gregory
+On Thursday 04 August 2016 04:36 PM, Karl Beldan wrote:
+> This adds 2 pinctrl groups (rtscts, rxtx) for each of the 3 UARTs.
+> 
+> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-2016-08-08 17:03 GMT+02:00 Gregory CLEMENT <gregory.clement@free-electrons.com>:
-> Hi Grzegorz,
->
->  On Thu, Aug 04 2016, Grzegorz Jaszczyk <jaz@semihalf.com> wrote:
->
->> Hello,
->>
->> This is the second version of patch-set which enables some commonly used
->> features in mvebu_v7_defconfig and updates old or introduces new dts/dtsi
->> related to Armada 38x and Armada 39x SoC family. All comments from
->> v1 are included, more details in a changelog below.
->>
->> Any comments or remarks would be welcome.
->
-> All the patches are applied on the mvbeu branches:
-> The first 2 on mvebu/defconfig and all the other on mvebu/dt
->
+Applying.
 
-Good news - thank you,
-Grzegorz
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
