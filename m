@@ -1,65 +1,40 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 1/3] Documentation: dt: socfpga: Add Arria10 SD-MMC EDAC binding
-Date: Tue, 9 Aug 2016 09:40:51 -0500
-Message-ID: <1470753653-23465-2-git-send-email-tthayer@opensource.altera.com>
-References: <1470753653-23465-1-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCHv2 0/3] Add SD/MMC EDAC for Altera Arria10
+Date: Tue, 9 Aug 2016 09:40:50 -0500
+Message-ID: <1470753653-23465-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1470753653-23465-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: bp@alien8.de, dougthompson@xmission.com, m.chehab@osg.samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, linux@armlinux.org.uk
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-Add the device tree bindings needed to support the Altera SD-MMC
-FIFO buffers EDAC on the Arria10 chip.
+Add the SD/MMC FIFO EDAC module which is a dual-port RAM as
+opposed to the other Arria10 peripheral's single port RAM FIFOs.
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-v2  No change
----
- .../bindings/arm/altera/socfpga-eccmgr.txt         |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Thor Thayer (3):
+  Documentation: dt: socfpga: Add Arria10 SD-MMC EDAC binding
+  EDAC, altera: Add Arria10 SD-MMC EDAC support
+  ARM: dts: Add Arria10 SD/MMC EDAC devicetree entry
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-index ee66df0..4a1714f 100644
---- a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-@@ -122,6 +122,15 @@ Required Properties:
- - interrupts      : Should be single bit error interrupt, then double bit error
- 	interrupt, in this order.
- 
-+SDMMC FIFO ECC
-+Required Properties:
-+- compatible      : Should be "altr,socfpga-sdmmc-ecc"
-+- reg             : Address and size for ECC block registers.
-+- altr,ecc-parent : phandle to parent SD/MMC node.
-+- interrupts      : Should be single bit error interrupt, then double bit error
-+	interrupt, in this order for port A, and then single bit error interrupt,
-+	then double bit error interrupt in this order for port B.
-+
- Example:
- 
- 	eccmgr: eccmgr@ffd06000 {
-@@ -211,4 +220,14 @@ Example:
- 			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>,
- 				     <46 IRQ_TYPE_LEVEL_HIGH>;
- 		};
-+
-+		sdmmc-ecc@ff8c2c00 {
-+			compatible = "altr,socfpga-sdmmc-ecc";
-+			reg = <0xff8c2c00 0x400>;
-+			altr,ecc-parent = <&mmc>;
-+			interrupts = <15 IRQ_TYPE_LEVEL_HIGH>,
-+				     <47 IRQ_TYPE_LEVEL_HIGH>,
-+				     <16 IRQ_TYPE_LEVEL_HIGH>,
-+				     <48 IRQ_TYPE_LEVEL_HIGH>;
-+		};
- 	};
+ .../bindings/arm/altera/socfpga-eccmgr.txt         |   19 ++
+ arch/arm/boot/dts/socfpga_arria10_socdk_sdmmc.dts  |   12 ++
+ drivers/edac/Kconfig                               |    7 +
+ drivers/edac/altera_edac.c                         |  188 +++++++++++++++++++-
+ drivers/edac/altera_edac.h                         |    5 +
+ 5 files changed, 230 insertions(+), 1 deletion(-)
+
 -- 
 1.7.9.5
-
