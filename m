@@ -1,86 +1,408 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: [PATCH 00/20] MIPS: SEAD3 device tree conversion
-Date: Tue, 9 Aug 2016 13:35:25 +0100
-Message-ID: <20160809123546.10190-1-paul.burton@imgtec.com>
+From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 02/20] MIPS: SEAD3: Probe interrupt controllers using DT
+Date: Tue, 9 Aug 2016 13:35:27 +0100
+Message-ID: <20160809123546.10190-3-paul.burton@imgtec.com>
+References: <20160809123546.10190-1-paul.burton@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-leds-owner@vger.kernel.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, Ondrej Zary <linux@rainbow-software.org>, linux-fbdev@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, Kefeng Wang <wangkefeng.wang@huawei.com>, Linus Walleij <linus.walleij@linaro.org>, Jacek Anaszewski <j.anaszewski@samsung.com>, Guenter Roeck <linux@roeck-us.net>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, "Maciej W. Rozycki" <macro@linux-mips.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Simon Horman <horms+renesas@>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160809123546.10190-1-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Matt Redfearn <matt.redfearn-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Although the SEAD3 board has already made some minimal use of device
-tree, until now most peripherals have been left probed by platform code.
+Probe the CPU interrupt controller & optional Global Interrupt
+Controller (GIC) using devicetree rather than platform code. Because the
+bootloader on SEAD3 does not provide a device tree to the kernel & the
+device tree is always built in, we patch out the GIC node during boot if
+we detect that a GIC is not present in the system.
 
-This series converts all SEAD3 peripherals to instead be probed from
-device tree. The amount of platform code is significantly reduced
-leaving SEAD3 primed & ready for a wider task of genericising the
-kernel.
+The appropriate IRQ domain is discovered by platform code setting up
+device IRQ numbers temporarily. It will be removed by further patches
+which move the devices towards being probed via device tree.
 
-Applies atop v4.8-rc1.
+No behavioural change is intended by this patch.
 
-Paul Burton (20):
-  MIPS: SEAD3: Split obj-y entries across lines
-  MIPS: SEAD3: Probe interrupt controllers using DT
-  MIPS: SEAD3: Probe UARTs using DT
-  MIPS: SEAD3: Use generic ns16550a earlycon support
-  MIPS: SEAD3: Probe ethernet controller using DT
-  usb: host: ehci-sead3: Support probing using device tree
-  MIPS: SEAD3: Probe EHCI controller using DT
-  usb: host: ehci-sead3: Remove non-DT probe code
-  SEAD3: Probe parallel flash via DT
-  MIPS: SEAD3: Use register-bit-led driver via DT for LEDs
-  leds: Remove SEAD3 driver
-  MIPS: SEAD3: Reset via generic syscon-reboot driver & DT
-  MIPS: SEAD3: Use generic restart-poweroff driver
-  MIPS: SEAD3: Parse memsize in DT shim
-  MIPS: SEAD3: Drop use of cobalt fbdev driver
-  fbdev: cobalt_lcdfb: Drop SEAD3 support
-  dt-bindings: img-ascii-lcd: Document a binding for simple ASCII LCDs
-  auxdisplay: img-ascii-lcd: driver for simple ASCII LCD displays
-  MIPS: SEAD3: Use img-ascii-lcd driver
-  MIPS: SEAD3: Remove custom read_persistent_clock
+Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+---
 
- .../bindings/auxdisplay/img-ascii-lcd.txt          |  17 +
- MAINTAINERS                                        |   6 +
- arch/mips/Kconfig                                  |   1 -
- arch/mips/boot/dts/mti/sead3.dts                   | 228 +++++++++++
- arch/mips/configs/sead3_defconfig                  |   8 +
- arch/mips/include/asm/mach-sead3/sead3-dtshim.h    |  29 ++
- arch/mips/include/asm/mips-boards/sead3int.h       |  32 --
- arch/mips/mti-sead3/Makefile                       |  10 +-
- arch/mips/mti-sead3/sead3-console.c                |  46 ---
- arch/mips/mti-sead3/sead3-display.c                |  77 ----
- arch/mips/mti-sead3/sead3-dtshim.c                 | 291 ++++++++++++++
- arch/mips/mti-sead3/sead3-init.c                   |  52 ---
- arch/mips/mti-sead3/sead3-int.c                    |  27 +-
- arch/mips/mti-sead3/sead3-lcd.c                    |  43 --
- arch/mips/mti-sead3/sead3-platform.c               | 223 -----------
- arch/mips/mti-sead3/sead3-reset.c                  |  40 --
- arch/mips/mti-sead3/sead3-setup.c                  |  77 +---
- arch/mips/mti-sead3/sead3-time.c                   |   8 -
- drivers/auxdisplay/Kconfig                         |   9 +
- drivers/auxdisplay/Makefile                        |   1 +
- drivers/auxdisplay/img-ascii-lcd.c                 | 443 +++++++++++++++++++++
- drivers/leds/Kconfig                               |  10 -
- drivers/leds/Makefile                              |   1 -
- drivers/leds/leds-sead3.c                          |  78 ----
- drivers/usb/host/ehci-sead3.c                      |  21 +-
- drivers/video/fbdev/Kconfig                        |   2 +-
- drivers/video/fbdev/cobalt_lcdfb.c                 |  42 --
- 27 files changed, 1061 insertions(+), 761 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/auxdisplay/img-ascii-lcd.txt
+ arch/mips/boot/dts/mti/sead3.dts                | 31 +++++++++
+ arch/mips/include/asm/mach-sead3/sead3-dtshim.h | 29 ++++++++
+ arch/mips/include/asm/mips-boards/sead3int.h    |  5 --
+ arch/mips/mti-sead3/Makefile                    |  1 +
+ arch/mips/mti-sead3/sead3-dtshim.c              | 91 +++++++++++++++++++++++++
+ arch/mips/mti-sead3/sead3-int.c                 | 27 ++------
+ arch/mips/mti-sead3/sead3-platform.c            | 43 +++++++++---
+ arch/mips/mti-sead3/sead3-setup.c               | 13 ++--
+ 8 files changed, 196 insertions(+), 44 deletions(-)
  create mode 100644 arch/mips/include/asm/mach-sead3/sead3-dtshim.h
- delete mode 100644 arch/mips/include/asm/mips-boards/sead3int.h
- delete mode 100644 arch/mips/mti-sead3/sead3-console.c
- delete mode 100644 arch/mips/mti-sead3/sead3-display.c
  create mode 100644 arch/mips/mti-sead3/sead3-dtshim.c
- delete mode 100644 arch/mips/mti-sead3/sead3-lcd.c
- delete mode 100644 arch/mips/mti-sead3/sead3-platform.c
- delete mode 100644 arch/mips/mti-sead3/sead3-reset.c
- create mode 100644 drivers/auxdisplay/img-ascii-lcd.c
- delete mode 100644 drivers/leds/leds-sead3.c
 
+diff --git a/arch/mips/boot/dts/mti/sead3.dts b/arch/mips/boot/dts/mti/sead3.dts
+index e4b317d..051b3a9 100644
+--- a/arch/mips/boot/dts/mti/sead3.dts
++++ b/arch/mips/boot/dts/mti/sead3.dts
+@@ -4,10 +4,13 @@
+ /memreserve/ 0x00001000 0x000ef000;	// ROM data
+ /memreserve/ 0x000f0000 0x004cc000;	// reserved
+ 
++#include <dt-bindings/interrupt-controller/mips-gic.h>
++
+ / {
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 	compatible = "mti,sead-3";
++	interrupt-parent = <&gic>;
+ 
+ 	cpus {
+ 		cpu@0 {
+@@ -19,4 +22,32 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x08000000>;
+ 	};
++
++	cpu_intc: interrupt-controller {
++		compatible = "mti,cpu-interrupt-controller";
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
++
++	gic: interrupt-controller@1b1c0000 {
++		compatible = "mti,gic";
++		reg = <0x1b1c0000 0x20000>;
++
++		interrupt-controller;
++		#interrupt-cells = <3>;
++
++		/*
++		 * Declare the interrupt-parent even though the mti,gic
++		 * binding doesn't require it, such that the kernel can
++		 * figure out that cpu_intc is the root interrupt
++		 * controller & should be probed first.
++		 */
++		interrupt-parent = <&cpu_intc>;
++
++		timer {
++			compatible = "mti,gic-timer";
++			interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
++		};
++	};
+ };
+diff --git a/arch/mips/include/asm/mach-sead3/sead3-dtshim.h b/arch/mips/include/asm/mach-sead3/sead3-dtshim.h
+new file mode 100644
+index 0000000..f5d7d9c
+--- /dev/null
++++ b/arch/mips/include/asm/mach-sead3/sead3-dtshim.h
+@@ -0,0 +1,29 @@
++/*
++ * Copyright (C) 2016 Imagination Technologies
++ * Author: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License as published by the
++ * Free Software Foundation; either version 2 of the License, or (at your
++ * option) any later version.
++ */
++
++#ifndef __MIPS_SEAD3_DTSHIM_H__
++#define __MIPS_SEAD3_DTSHIM_H__
++
++#include <linux/init.h>
++
++#ifdef CONFIG_MIPS_SEAD3
++
++extern void __init *sead3_dt_shim(void *fdt);
++
++#else /* !CONFIG_MIPS_SEAD3 */
++
++static inline void *sead3_dt_shim(void *fdt)
++{
++	return fdt;
++}
++
++#endif /* !CONFIG_MIPS_SEAD3 */
++
++#endif /* __MIPS_SEAD3_DTSHIM_H__ */
+diff --git a/arch/mips/include/asm/mips-boards/sead3int.h b/arch/mips/include/asm/mips-boards/sead3int.h
+index 8932c7d..bd85da3 100644
+--- a/arch/mips/include/asm/mips-boards/sead3int.h
++++ b/arch/mips/include/asm/mips-boards/sead3int.h
+@@ -12,12 +12,7 @@
+ 
+ #include <linux/irqchip/mips-gic.h>
+ 
+-/* SEAD-3 GIC address space definitions. */
+-#define GIC_BASE_ADDR		0x1b1c0000
+-#define GIC_ADDRSPACE_SZ	(128 * 1024)
+-
+ /* CPU interrupt offsets */
+-#define CPU_INT_GIC		2
+ #define CPU_INT_EHCI		2
+ #define CPU_INT_UART0		4
+ #define CPU_INT_UART1		4
+diff --git a/arch/mips/mti-sead3/Makefile b/arch/mips/mti-sead3/Makefile
+index 8b03cfb..aad67aa 100644
+--- a/arch/mips/mti-sead3/Makefile
++++ b/arch/mips/mti-sead3/Makefile
+@@ -10,6 +10,7 @@
+ #
+ obj-y := sead3-lcd.o
+ obj-y += sead3-display.o
++obj-y += sead3-dtshim.o
+ obj-y += sead3-init.o
+ obj-y += sead3-int.o
+ obj-y += sead3-platform.o
+diff --git a/arch/mips/mti-sead3/sead3-dtshim.c b/arch/mips/mti-sead3/sead3-dtshim.c
+new file mode 100644
+index 0000000..1592d07
+--- /dev/null
++++ b/arch/mips/mti-sead3/sead3-dtshim.c
+@@ -0,0 +1,91 @@
++/*
++ * Copyright (C) 2016 Imagination Technologies
++ * Author: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License as published by the
++ * Free Software Foundation; either version 2 of the License, or (at your
++ * option) any later version.
++ */
++
++#define pr_fmt(fmt) "sead3-dtshim: " fmt
++
++#include <linux/libfdt.h>
++#include <linux/printk.h>
++
++#include <asm/io.h>
++
++#define SEAD_CONFIG			CKSEG1ADDR(0x1b100110)
++#define SEAD_CONFIG_GIC_PRESENT		BIT(1)
++
++static unsigned char fdt_buf[16 << 10] __initdata;
++
++static int remove_gic(void *fdt)
++{
++	int gic_off, cpu_off, err;
++	uint32_t cfg, cpu_phandle;
++
++	/* leave the GIC node intact if a GIC is present */
++	cfg = __raw_readl((uint32_t *)SEAD_CONFIG);
++	if (cfg & SEAD_CONFIG_GIC_PRESENT)
++		return 0;
++
++	gic_off = fdt_node_offset_by_compatible(fdt, -1, "mti,gic");
++	if (gic_off < 0) {
++		pr_err("unable to find DT GIC node: %d\n", gic_off);
++		return gic_off;
++	}
++
++	err = fdt_nop_node(fdt, gic_off);
++	if (err) {
++		pr_err("unable to nop GIC node\n");
++		return err;
++	}
++
++	cpu_off = fdt_node_offset_by_compatible(fdt, -1,
++			"mti,cpu-interrupt-controller");
++	if (cpu_off < 0) {
++		pr_err("unable to find CPU intc node: %d\n", cpu_off);
++		return cpu_off;
++	}
++
++	cpu_phandle = fdt_get_phandle(fdt, cpu_off);
++	if (!cpu_phandle) {
++		pr_err("unable to get CPU intc phandle\n");
++		return -EINVAL;
++	}
++
++	err = fdt_setprop_u32(fdt, 0, "interrupt-parent", cpu_phandle);
++	if (err) {
++		pr_err("unable to set root interrupt-parent: %d\n", err);
++		return err;
++	}
++
++	return 0;
++}
++
++void __init *sead3_dt_shim(void *fdt)
++{
++	int err;
++
++	if (fdt_check_header(fdt))
++		panic("Corrupt DT");
++
++	/* if this isn't SEAD3, leave the DT alone */
++	if (fdt_node_check_compatible(fdt, 0, "mti,sead-3"))
++		return fdt;
++
++	err = fdt_open_into(fdt, fdt_buf, sizeof(fdt_buf));
++	if (err)
++		panic("Unable to open FDT: %d", err);
++
++	err = remove_gic(fdt_buf);
++	if (err)
++		panic("Unable to patch FDT: %d", err);
++
++	err = fdt_pack(fdt_buf);
++	if (err)
++		panic("Unable to pack FDT: %d\n", err);
++
++	return fdt_buf;
++}
+diff --git a/arch/mips/mti-sead3/sead3-int.c b/arch/mips/mti-sead3/sead3-int.c
+index e31e17f..2e6b732 100644
+--- a/arch/mips/mti-sead3/sead3-int.c
++++ b/arch/mips/mti-sead3/sead3-int.c
+@@ -6,37 +6,18 @@
+  * Copyright (C) 2012 MIPS Technologies, Inc.  All rights reserved.
+  */
+ #include <linux/init.h>
+-#include <linux/irq.h>
++#include <linux/irqchip.h>
+ #include <linux/irqchip/mips-gic.h>
+-#include <linux/io.h>
+ 
+-#include <asm/irq_cpu.h>
+-#include <asm/setup.h>
+-
+-#include <asm/mips-boards/sead3int.h>
+-
+-#define SEAD_CONFIG_GIC_PRESENT_SHF	1
+-#define SEAD_CONFIG_GIC_PRESENT_MSK	(1 << SEAD_CONFIG_GIC_PRESENT_SHF)
+-#define SEAD_CONFIG_BASE		0x1b100110
+-#define SEAD_CONFIG_SIZE		4
+-
+-static void __iomem *sead3_config_reg;
++#include <asm/cpu-info.h>
++#include <asm/irq.h>
+ 
+ void __init arch_init_irq(void)
+ {
+-	if (!cpu_has_veic)
+-		mips_cpu_irq_init();
++	irqchip_init();
+ 
+-	sead3_config_reg = ioremap_nocache(SEAD_CONFIG_BASE, SEAD_CONFIG_SIZE);
+-	gic_present = (__raw_readl(sead3_config_reg) &
+-		       SEAD_CONFIG_GIC_PRESENT_MSK) >>
+-		SEAD_CONFIG_GIC_PRESENT_SHF;
+ 	pr_info("GIC: %spresent\n", (gic_present) ? "" : "not ");
+ 	pr_info("EIC: %s\n",
+ 		(current_cpu_data.options & MIPS_CPU_VEIC) ?  "on" : "off");
+-
+-	if (gic_present)
+-		gic_init(GIC_BASE_ADDR, GIC_ADDRSPACE_SZ, CPU_INT_GIC,
+-			 MIPS_GIC_IRQ_BASE);
+ }
+ 
+diff --git a/arch/mips/mti-sead3/sead3-platform.c b/arch/mips/mti-sead3/sead3-platform.c
+index 73b73ef..12cf905 100644
+--- a/arch/mips/mti-sead3/sead3-platform.c
++++ b/arch/mips/mti-sead3/sead3-platform.c
+@@ -9,8 +9,10 @@
+ #include <linux/init.h>
+ #include <linux/irq.h>
+ #include <linux/irqchip/mips-gic.h>
++#include <linux/irqdomain.h>
+ #include <linux/leds.h>
+ #include <linux/mtd/physmap.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/serial_8250.h>
+ #include <linux/smsc911x.h>
+@@ -204,16 +206,41 @@ static struct platform_device *sead3_platform_devices[] __initdata = {
+ 
+ static int __init sead3_platforms_device_init(void)
+ {
++	const char *intc_compat;
++	struct device_node *node;
++	struct irq_domain *irqd;
++
++	if (gic_present)
++		intc_compat = "mti,gic"
++	else
++		intc_compat = "mti,cpu-interrupt-controller";
++
++	node = of_find_compatible_node(NULL, NULL, intc_compat);
++	if (!node) {
++		pr_err("unable to find interrupt controller DT node\n");
++		return -ENODEV;
++	}
++
++	irqd = irq_find_host(node);
++	if (!irqd) {
++		pr_err("unable to find interrupt controller IRQ domain\n");
++		return -ENODEV;
++	}
++
+ 	if (gic_present) {
+-		uart8250_data[0].irq = MIPS_GIC_IRQ_BASE + GIC_INT_UART0;
+-		uart8250_data[1].irq = MIPS_GIC_IRQ_BASE + GIC_INT_UART1;
+-		ehci_resources[1].start = MIPS_GIC_IRQ_BASE + GIC_INT_EHCI;
+-		sead3_net_resources[1].start = MIPS_GIC_IRQ_BASE + GIC_INT_NET;
++		uart8250_data[0].irq = irq_create_mapping(irqd, GIC_INT_UART0);
++		uart8250_data[1].irq = irq_create_mapping(irqd, GIC_INT_UART1);
++		ehci_resources[1].start =
++			irq_create_mapping(irqd, GIC_INT_EHCI);
++		sead3_net_resources[1].start =
++			irq_create_mapping(irqd, GIC_INT_NET);
+ 	} else {
+-		uart8250_data[0].irq = MIPS_CPU_IRQ_BASE + CPU_INT_UART0;
+-		uart8250_data[1].irq = MIPS_CPU_IRQ_BASE + CPU_INT_UART1;
+-		ehci_resources[1].start = MIPS_CPU_IRQ_BASE + CPU_INT_EHCI;
+-		sead3_net_resources[1].start = MIPS_CPU_IRQ_BASE + CPU_INT_NET;
++		uart8250_data[0].irq = irq_create_mapping(irqd, CPU_INT_UART0);
++		uart8250_data[1].irq = irq_create_mapping(irqd, CPU_INT_UART1);
++		ehci_resources[1].start =
++			irq_create_mapping(irqd, CPU_INT_EHCI);
++		sead3_net_resources[1].start =
++			irq_create_mapping(irqd, CPU_INT_NET);
+ 	}
+ 
+ 	return platform_add_devices(sead3_platform_devices,
+diff --git a/arch/mips/mti-sead3/sead3-setup.c b/arch/mips/mti-sead3/sead3-setup.c
+index edfcaf0..c4fc0c6 100644
+--- a/arch/mips/mti-sead3/sead3-setup.c
++++ b/arch/mips/mti-sead3/sead3-setup.c
+@@ -13,6 +13,7 @@
+ #include <asm/prom.h>
+ #include <asm/fw/fw.h>
+ 
++#include <asm/mach-sead3/sead3-dtshim.h>
+ #include <asm/mips-boards/generic.h>
+ 
+ const char *get_system_type(void)
+@@ -89,20 +90,16 @@ void __init *plat_get_fdt(void)
+ 
+ void __init plat_mem_setup(void)
+ {
++	void *fdt = plat_get_fdt();
++
+ 	/* allow command line/bootloader env to override memory size in DT */
+ 	parse_memsize_param();
+ 
+-	/*
+-	 * Load the builtin devicetree. This causes the chosen node to be
+-	 * parsed resulting in our memory appearing
+-	 */
+-	__dt_setup_arch(__dtb_start);
++	fdt = sead3_dt_shim(fdt);
++	__dt_setup_arch(fdt);
+ }
+ 
+ void __init device_tree_init(void)
+ {
+-	if (!initial_boot_params)
+-		return;
+-
+ 	unflatten_and_copy_device_tree();
+ }
 -- 
 2.9.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
