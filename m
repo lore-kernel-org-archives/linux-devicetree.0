@@ -1,101 +1,131 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] OF: mark released devices as no longer populated
-Date: Tue, 9 Aug 2016 11:48:38 -0500
-Message-ID: <CAL_Jsq+pDeL1_=p06ynrV4CK+h8-Yx_KDbH-W=d-aSdARe3ZHw@mail.gmail.com>
-References: <E1bX3Pw-00088i-KU@rmk-PC.armlinux.org.uk>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: RE: [RFC PATCH 2/3] net: macb: Add support for 1588 for Zynq
+ Ultrascale+ MPSoC
+Date: Tue, 9 Aug 2016 16:56:12 +0000
+Message-ID: <03CA77BA8AF6F1469AEDFBDA1322A7B74A1C4205@XAP-PVEXMBX02.xlnx.xilinx.com>
+References: <1441958258-35441-1-git-send-email-harinik@xilinx.com>
+ <1441958258-35441-3-git-send-email-harinik@xilinx.com>
+ <CAFcVECLfXL-=efbUhNeKhiFQgtfv6Z1+JJckg+js7DM-LfFeSw@mail.gmail.com>
+ <99d6c0ce-c3b9-a919-cedb-0af954bac388@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1bX3Pw-00088i-KU-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, horia.geanta-3arQi8VN3Tc@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <99d6c0ce-c3b9-a919-cedb-0af954bac388@atmel.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Harini Katakam <harinikatakamlinux@gmail.com>, Harini Katakam <harinik@xilinx.com>, Andrei Pistirica <Andrei.Pistirica@microchip.com>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, Boris Brezillon <boris.brezillon@free-electrons.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <michals@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 9, 2016 at 4:33 AM, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
-> When a Linux device is released and cleaned up, we left the OF device
-> node marked as populated.  This causes the Freescale CAAM driver
-> (drivers/crypto/caam) problems when the module is removed and re-
-> inserted:
->
-> JR0 Platform device creation error
-> JR0 Platform device creation error
-> caam 2100000.caam: no queues configured, terminating
-> caam: probe of 2100000.caam failed with error -12
->
-> The reason is that CAAM creates platform devices for each job ring:
->
->         for_each_available_child_of_node(nprop, np)
->                 if (of_device_is_compatible(np, "fsl,sec-v4.0-job-ring") ||
->                     of_device_is_compatible(np, "fsl,sec4.0-job-ring")) {
->                         ctrlpriv->jrpdev[ring] =
->                                 of_platform_device_create(np, NULL, dev);
->
-> which sets OF_POPULATED on the device node, but then it cleans these
-> up:
->
->         /* Remove platform devices for JobRs */
->         for (ring = 0; ring < ctrlpriv->total_jobrs; ring++) {
->                 if (ctrlpriv->jrpdev[ring])
->                         of_device_unregister(ctrlpriv->jrpdev[ring]);
-
-This looks a bit asymmetrical to me with a of_platform_device_* call
-and a of_device_* call.
-
-I think you could use of_platform_{de}populate here instead. That
-would simplify things in the driver a bit too as you wouldn't need to
-store jrpdev. It wouldn't work if there are other child nodes with
-compatible strings which you don't want devices created.
-
->         }
->
-> which leaves OF_POPULATED set.
->
-> Arrange for platform devices with a device node to clear the
-> OF_POPULATED bit when they are released.
->
-> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-> ---
-> Please check this carefully - it may have issues where an of_node
-> pointer is copied from one platform device to another, but IMHO
-> doing that is itself buggy behaviour.
-
-Agreed, that is wrong.
-
->
-> Resending due to wrong list address, sorry.
->
->  include/linux/of_device.h | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-> index cc7dd687a89d..7a8362d0c6d2 100644
-> --- a/include/linux/of_device.h
-> +++ b/include/linux/of_device.h
-> @@ -43,6 +43,7 @@ extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env
->
->  static inline void of_device_node_put(struct device *dev)
->  {
-> +       of_node_clear_flag(dev->of_node, OF_POPULATED);
-
-This would result in clearing the flag twice in the
-of_platform_populate/of_platform_depopulate case. It would do the same
-for other bus types like i2c as well. That doesn't really hurt
-anything that I can think of, but just not the best implementation. I
-think adding a of_platform_device_unregister() call that wraps
-of_platform_device_destroy would be more balanced.
-
-I looked thru all the callers of of_platform_device_create. The only
-other ones affected by this are:
-
-drivers/macintosh/ams/ams-core.c
-drivers/macintosh/therm_adt746x.c
-drivers/macintosh/therm_windtunnel.c
-
-The others either have no remove path or a buggy remove path.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTmljb2xhcywNCg0KIDE1ODggaW1wbGVtZW50YXRpb24gaW4gY2FkZW5jZSBHRU0gSVAgd2Ug
+aGF2ZSBpbiBaeW5xIFVsdGFzY2FsZSsgTVBTb0MgaXMNCkRpZmZlcmVudCB0byB0aGUgb25lIGlu
+IFp5bnEgU09DLg0KDQpJbiBlYXJsaWVyIHZlcnNpb24sIGFsbCB0aW1lc3RhbXAgdmFsdWVzIHdp
+bGwgYmUgc3RvcmVkIGluIHJlZ2lzdGVycyBhbmQgdGhlcmUgaXMgbm8gc3BlY2lmaWMNCk1lY2hh
+bmlzbSB0byBkaXN0aW5ndWlzaCB0aGUgcmVjZWl2ZWQgZXRoZXJuZXQgZnJhbWUgdGhhdCBjb250
+YWlucyB0aW1lIHN0YW1wIGluZm9ybWF0aW9uDQpPdGhlciB0aGFuIHBhcnNpbmcgdGhlIGZyYW1l
+IGZvciBQVFAgcGFja2V0IHR5cGUuDQoNCldlIGhhdmUgYmFzaWMgaW1wbGVtZW50YXRpb24gZm9y
+IGVhcmxpZXIgdmVyc2lvbiBpbiBvdXIgb3V0IG9mIHRyZWUgZHJpdmVyLCB3aGljaCBpcyBnb2lu
+ZyB0byBiZSBkZXByZWNhdGVkDQpTb29uLiBZb3UgY291bGQgYWxzbyBjaGVjayB0aGUgYmVsb3cg
+ZHJpdmVyIGZvciAxNTg4IHN1cHBvcnQuDQpodHRwczovL2dpdGVudGVycHJpc2UueGlsaW54LmNv
+bS9MaW51eC9saW51eC14bG54L2Jsb2IvbWFzdGVyL2RyaXZlcnMvbmV0L2V0aGVybmV0L3hpbGlu
+eC94aWxpbnhfZW1hY3BzLmMNCg0KDQpSZWdhcmRzLA0KUHVubmFpYWgNCg0KPiAtLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBOaWNvbGFzIEZlcnJlIFttYWlsdG86bmljb2xhcy5m
+ZXJyZUBhdG1lbC5jb21dDQo+IFNlbnQ6IFR1ZXNkYXksIEF1Z3VzdCAwOSwgMjAxNiAxMDoxMCBQ
+TQ0KPiBUbzogSGFyaW5pIEthdGFrYW0gPGhhcmluaWthdGFrYW1saW51eEBnbWFpbC5jb20+OyBI
+YXJpbmkgS2F0YWthbQ0KPiA8aGFyaW5pa0B4aWxpbnguY29tPjsgQW5kcmVpIFBpc3RpcmljYSA8
+QW5kcmVpLlBpc3RpcmljYUBtaWNyb2NoaXAuY29tPg0KPiBDYzogZGF2ZW1AZGF2ZW1sb2Z0Lm5l
+dDsgQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxsb25AZnJlZS0NCj4gZWxlY3Ryb25zLmNv
+bT47IGFsZXhhbmRyZS5iZWxsb25pQGZyZWUtZWxlY3Ryb25zLmNvbTsNCj4gbmV0ZGV2QHZnZXIu
+a2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2
+Z2VyLmtlcm5lbC5vcmc7IFB1bm5haWFoIENob3VkYXJ5IEthbGx1cmkNCj4gPHB1bm5haWFAeGls
+aW54LmNvbT47IE1pY2hhbCBTaW1layA8bWljaGFsc0B4aWxpbnguY29tPjsgQW5pcnVkaGENCj4g
+U2FyYW5naSA8YW5pcnVkaEB4aWxpbnguY29tPg0KPiBTdWJqZWN0OiBSZTogW1JGQyBQQVRDSCAy
+LzNdIG5ldDogbWFjYjogQWRkIHN1cHBvcnQgZm9yIDE1ODggZm9yIFp5bnENCj4gVWx0cmFzY2Fs
+ZSsgTVBTb0MNCj4NCj4gTGUgMjEvMDkvMjAxNSDDoCAxOTo0OSwgSGFyaW5pIEthdGFrYW0gYSDD
+qWNyaXQgOg0KPiA+IE9uIEZyaSwgU2VwIDExLCAyMDE1IGF0IDE6MjcgUE0sIEhhcmluaSBLYXRh
+a2FtDQo+ID4gPGhhcmluaS5rYXRha2FtQHhpbGlueC5jb20+IHdyb3RlOg0KPiA+PiBDYWRlbmNl
+IEdFTSBpbiBaeW5xIFVsdHJhc2NhbGUrIE1QU29DIHN1cHBvcnRzIDE1ODggYW5kIHByb3ZpZGVz
+IGENCj4gPj4gMTAyIGJpdCB0aW1lIGNvdW50ZXIgd2l0aCA0OCBiaXRzIGZvciBzZWNvbmRzLCAz
+MCBiaXRzIGZvciBuc2VjcyBhbmQNCj4gPj4gMjQgYml0cyBmb3Igc3ViLW5zZWNzLiBUaGUgdGlt
+ZXN0YW1wIGlzIG1hZGUgYXZhaWxhYmxlIHRvIHRoZSBTVyB0aHJvdWdoDQo+ID4+IHJlZ2lzdGVy
+cyBhcyB3ZWxsIGFzIChtb3JlIHByZWNpc2VseSkgdGhyb3VnaCB1cHBlciB0d28gd29yZHMgaW4N
+Cj4gPj4gYW4gZXh0ZW5kZWQgQkQuDQo+ID4+DQo+ID4+IFRoaXMgcGF0Y2ggZG9lcyB0aGUgZm9s
+bG93aW5nOg0KPiA+PiAtIEFkZHMgTUFDQl9DQVBTX1RTVSBpbiB6eW5xbXBfY29uZmlnLg0KPiA+
+PiAtIFJlZ2lzdGVycyB0byBwdHAgY2xvY2sgZnJhbWV3b3JrIChhZnRlciBjaGVja2luZyBmb3Ig
+dGltZXN0YW1wIHN1cHBvcnQNCj4gaW4NCj4gPj4gICBJUCBhbmQgY2FwYWJpbGl0eSBpbiBjb25m
+aWcpLg0KPiA+PiAtIFRYIEJEIGFuZCBSWCBCRCBjb250cm9sIHJlZ2lzdGVycyBhcmUgd3JpdHRl
+biB0byBwb3B1bGF0ZSB0aW1lc3RhbXAgaW4NCj4gPj4gICBleHRlbmRlZCBCRCB3b3Jkcy4NCj4g
+Pj4gLSBUaW1lciBpbml0aWFsaXphdGlvbiBpcyBkb25lIGJ5IHdyaXRpbmcgdGltZSBvZiBkYXkg
+dG8gdGhlIHRpbWVyIGNvdW50ZXIuDQo+ID4+IC0gbnMgaW5jcmVtZW50IHJlZ2lzdGVyIGlzIHBy
+b2dyYW1tZWQgYXMgTlNfUEVSX1NFQy9UU1VfQ0xLLg0KPiA+PiAgIEZvciBhIDI0IGJpdCBzdWJu
+cyBwcmVjaXNpb24sIHRoZSBzdWJucyBpbmNyZW1lbnQgZXF1YWxzDQo+ID4+ICAgcmVtYWluZGVy
+IG9mIChOU19QRVJfU0VDL1RTVV9DTEspICogKDJeMjQpLg0KPiA+PiAgIFRTVSAoVGltZSBzdGFt
+cCB1bml0KSBjbG9jayBpcyBvYnRhaW5lZCBieSB0aGUgIGRyaXZlciBmcm9tIGRldmljZXRyZWUu
+DQo+ID4+IC0gSFcgdGltZSBzdGFtcCBjYXBhYmlsaXRpZXMgYXJlIGFkdmVydGlzZWQgdmlhIGV0
+aHRvb2wgYW5kIG1hY2IgaW9jdGwgaXMNCj4gPj4gICB1cGRhdGVkIGFjY29yZGluZ2x5Lg0KPiA+
+PiAtIEZvciBhbGwgUFRQIGV2ZW50IGZyYW1lcywgbmFub3NlY29uZHMgYW5kIHRoZSBsb3dlciA1
+IGJpdHMgb2Ygc2Vjb25kcw0KPiBhcmUNCj4gPj4gICBvYnRhaW5lZCBmcm9tIHRoZSBCRC4gVGhp
+cyBvZmZlcnMgYSBwcmVjaXNlIHRpbWVzdGFtcC4gVGhlIHVwcGVyIGJpdHMNCj4gPj4gICAod2hp
+Y2ggZG9udCB2YXJ5IGJldHdlZW4gY29uc2VjdXRpdmUgcGFja2V0cykgYXJlIG9idGFpbmVkIGZy
+b20gdGhlDQo+ID4+ICAgVFgvUlggUFRQIGV2ZW50L1BFRVIgcmVnaXN0ZXJzLiBUaGUgdGltZXN0
+YW1wIG9idGFpbmVkIHRodXMgaXMNCj4gdXBkYXRlZA0KPiA+PiAgIGluIHNrYiBmb3IgdXBwZXIg
+bGF5ZXJzIHRvIGFjY2Vzcy4NCj4gPj4gLSBUaGUgZHJpdmVycyByZWdpc3RlciBmdW5jdGlvbnMg
+d2l0aCBwdHAgdG8gcGVyZm9ybSB0aW1lIGFuZCBmcmVxdWVuY3kNCj4gPj4gICBhZGp1c3RtZW50
+Lg0KPiA+PiAtIFRpbWUgYWRqdXN0bWVudCBpcyBkb25lIGJ5IHdyaXRpbmcgdG8gdGhlIDE1NThf
+QURKVVNUIHJlZ2lzdGVyLg0KPiA+PiAgIFRoZSBjb250cm9sbGVyIHdpbGwgcmVhZCB0aGUgZGVs
+dGEgaW4gdGhpcyByZWdpc3RlciBhbmQgdXBkYXRlIHRoZSB0aW1lcg0KPiA+PiAgIGNvdW50ZXIg
+cmVnaXN0ZXIuIEFsdGVybmF0aXZlbHksIGZvciBsYXJnZSB0aW1lIG9mZnNldCBhZGp1c3RtZW50
+cywNCj4gPj4gICB0aGUgZHJpdmVyIHJlYWRzIHRoZSBzZWNzIGFuZCBuc2VjcyBjb3VudGVyIHZh
+bHVlcywgYWRkcy9zdWJ0cmFjdHMgdGhlDQo+ID4+ICAgZGVsdGEgYW5kIHVwZGF0ZXMgdGhlIHRp
+bWVyIGNvdW50ZXIuIEluIG9yZGVyIHRvIGJlIGFzIHByZWNpc2UgYXMNCj4gcG9zc2libGUsDQo+
+ID4+ICAgbnNlY3MgY291bnRlciBpcyByZWFkIGFnYWluIGlmIHNlY3MgaGFzIGluY3JlbWVudGVk
+IGR1cmluZyB0aGUgY291bnRlcg0KPiByZWFkLg0KPiA+PiAtIEZyZXF1ZW5jeSBhZGp1c3RtZW50
+IGlzIG5vdCBkaXJlY3RseSBzdXBwb3J0ZWQgYnkgdGhpcyBJUC4NCj4gPj4gICBhZGRlbmQgaXMg
+dGhlIGluaXRpYWwgdmFsdWUgbnMgaW5jcmVtZW50IGFuZCBzaW1pbGFybHkgYWRkZW5kZXN1Yi4N
+Cj4gPj4gICBUaGUgcHBiIChwYXJ0cyBwZXIgYmlsbGlvbikgcHJvdmlkZWQgaXMgdXNlZCBhcw0K
+PiA+PiAgIG5zX2luY3IgPSBhZGRlbmQgKy8tIChwcGIvcmF0ZSkuDQo+ID4+ICAgU2ltaWxhcmx5
+IHRoZSByZW1haW5kZXIgb2YgdGhlIGFib3ZlIGlzIHVzZWQgdG8gcG9wdWxhdGUgc3VibnMNCj4g
+aW5jcmVtZW50Lg0KPiA+PiAgIEluIGNhc2UgdGhlIHBwYiByZXF1ZXN0ZWQgaXMgbmVnYXRpdmUg
+QU5EIHN1Ym5zIGFkanVzdG1lbnQgZ3JlYXRlcg0KPiB0aGFuDQo+ID4+ICAgdGhlIGFkZGVuZHN1
+YiwgbnNfaW5jciBpcyByZWR1Y2VkIGJ5IDEgYW5kIHN1Ym5zX2luY3IgaXMgYWRqdXN0ZWQgaW4N
+Cj4gPj4gICBwb3NpdGl2ZSBhY2NvcmRpbmdseS4NCj4gPj4NCj4gPj4gU2lnbmVkLW9mZi1ieTog
+SGFyaW5pIEthdGFrYW0gPGhhcmluaWtAeGlsaW54LmNvbT46DQo+ID4+IC0tLQ0KPiA+PiAgZHJp
+dmVycy9uZXQvZXRoZXJuZXQvY2FkZW5jZS9tYWNiLmMgfCAgMzcyDQo+ICsrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKystDQo+ID4+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNl
+L21hY2IuaCB8ICAgNjQgKysrKysrDQo+ID4+ICAyIGZpbGVzIGNoYW5nZWQsIDQyOCBpbnNlcnRp
+b25zKCspLCA4IGRlbGV0aW9ucygtKQ0KPiA+Pg0KPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9u
+ZXQvZXRoZXJuZXQvY2FkZW5jZS9tYWNiLmMNCj4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRl
+bmNlL21hY2IuYw0KPiA+PiBpbmRleCBiYjI5MzJjLi5iNTMxMDA4IDEwMDY0NA0KPiA+PiAtLS0g
+YS9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2IuYw0KPiA+PiArKysgYi9kcml2ZXJz
+L25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2IuYw0KPiA+PiBAQCAtMzAsNiArMzAsOCBAQA0KPiA+
+PiAgI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPg0KPiA+PiAgI2luY2x1ZGUgPGxpbnV4L29m
+X21kaW8uaD4NCj4NCj4gWy4uXQ0KPg0KPiA+PiArICAgICAgIHVuc2lnbmVkIGludCAgICAgICAg
+ICAgIG5zX2luY3I7DQo+ID4+ICsgICAgICAgdW5zaWduZWQgaW50ICAgICAgICAgICAgc3VibnNf
+aW5jcjsNCj4gPj4gIH07DQo+ID4+DQo+ID4+ICBzdGF0aWMgaW5saW5lIGJvb2wgbWFjYl9pc19n
+ZW0oc3RydWN0IG1hY2IgKmJwKQ0KPiA+PiAtLQ0KPiA+PiAxLjcuOS41DQo+ID4NCj4gPiBQaW5n
+DQo+ID4NCj4gPiBUaGFua3MuDQo+DQo+IEhhcmluaSwNCj4NCj4gSSBjb21lIGJhY2sgdG8gdGhp
+cyBwYXRjaCBvZiBsYXN0IHllYXIgYW5kIEknbSBzb3JyeSBhYm91dCBiZWluZyBzbyBsYXRlDQo+
+IGFuc3dlcmluZyB5b3UuDQo+DQo+IEFuZHJlaSB3aG8gaXMgYWRkZWQgdG8gdGhlIGRpc2N1c3Np
+b24gd2lsbCBoYXZlIHNvbWUgdGltZSB0byBkZWFsIHdpdGgNCj4gdGhpcyBmZWF0dXJlIGFuZCB3
+ZSB3b3VsZCBsaWtlIHRvIG1ha2Ugc29tZSBwcm9ncmVzcyB3aXRoIGl0LiBIZSBhbHJlYWR5DQo+
+IGhhZCBzb21lIHdvcmsgZG9uZSBvbiBoaXMgc2lkZSBiZWZvcmUgSSByZWNhbGwgeW91ciBlbWFp
+bC4NCj4NCj4gU28sIGNvdWxkIHlvdSBwbGVhc2UgcmUtc2VuZCB5b3VyIG9yaWdpbmFsIDE1ODgg
+cGF0Y2ggd2l0aCBBbmRyZWkgaW4NCj4gY29weSBzbyB0aGF0IHdlIGNhbiBhbGwgKHJlLSlzdGFy
+dCB0aGUgZGlzY3Vzc2lvbiBhbmQgcHJvZ3Jlc3MgZm9yDQo+IGFkZGluZyB0aGlzIGZlYXR1cmUu
+DQo+DQo+IFdlIG11c3QgYWxzbyBub3RlIHRoYXQgc29tZSBoYXJkd2FyZSBkaWZmZXJlbmNlcyBi
+ZXR3ZWVuIG91ciBwbGF0Zm9ybXMNCj4gbWF5IGhhdmUgYW4gaW1wYWN0IG9uIHRoZSBjb2RlIGFu
+ZCBob3cgd2UgaW1wbGVtZW50IHRoaW5ncyAoYXMNCj4gaGlnaGxpZ2h0ZWQgb24gdGhpcyBmb3J1
+bToNCj4gaHR0cDovL3d3dy5hdDkxLmNvbS9kaXNjdXNzaW9ucy92aWV3dG9waWMucGhwL2YsMTIv
+dCwyNTQ2Mi5odG1sKS4NCj4gQW55d2F5LCB3ZSdsbCBvdmVyY29tZSB0aGlzIGFuZCBoYXZlIGEg
+d2lkZWx5IHRlc3RlZCBzb2x1dGlvbiBhdCB0aGUgZW5kDQo+IG9mIHRoZSBkYXkhDQo+DQo+IFRo
+YW5rcyBmb3IgeW91ciBwYXRpZW5jZSwgYnllIQ0KPg0KPiBQUzogZm9yIHNvbWUgcmVhc29uLCBJ
+IG9ubHkgaGF2ZSB0aGlzICJwaW5nIiBwYXJ0IG9mIHlvdXIgZW1haWwgYnV0IG5vdA0KPiB0aGUg
+b3JpZ2luYWwgb25lDQo+IC0tDQo+IE5pY29sYXMgRmVycmUNCg0KDQpUaGlzIGVtYWlsIGFuZCBh
+bnkgYXR0YWNobWVudHMgYXJlIGludGVuZGVkIGZvciB0aGUgc29sZSB1c2Ugb2YgdGhlIG5hbWVk
+IHJlY2lwaWVudChzKSBhbmQgY29udGFpbihzKSBjb25maWRlbnRpYWwgaW5mb3JtYXRpb24gdGhh
+dCBtYXkgYmUgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQgb3IgY29weXJpZ2h0ZWQgdW5kZXIgYXBw
+bGljYWJsZSBsYXcuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIGRvIG5v
+dCByZWFkLCBjb3B5LCBvciBmb3J3YXJkIHRoaXMgZW1haWwgbWVzc2FnZSBvciBhbnkgYXR0YWNo
+bWVudHMuIERlbGV0ZSB0aGlzIGVtYWlsIG1lc3NhZ2UgYW5kIGFueSBhdHRhY2htZW50cyBpbW1l
+ZGlhdGVseS4NCg0K
