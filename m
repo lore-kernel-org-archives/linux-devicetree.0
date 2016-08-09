@@ -1,43 +1,38 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] Support for the LCDK
-Date: Tue, 9 Aug 2016 17:29:05 +0530
-Message-ID: <57A9C589.3010600@ti.com>
-References: <20160804144332.4841-1-kbeldan@baylibre.com>
- <20160805202951.2848-1-kbeldan@baylibre.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] Add R8A7792 DU support
+Date: Tue, 9 Aug 2016 14:32:31 +0200
+Message-ID: <20160809123228.GA5878@verge.net.au>
+References: <4031442.KeMCTMarLN@wasted.cogentembedded.com>
+ <4a413062-d7f4-166a-f915-01803bddf441@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160805202951.2848-1-kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4a413062-d7f4-166a-f915-01803bddf441@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 06 August 2016 01:59 AM, Karl Beldan wrote:
-> This depends on "ARM: dts: da850: Add missing pin muxing for the UARTs".
+On Fri, Aug 05, 2016 at 09:28:59PM +0300, Sergei Shtylyov wrote:
+> On 08/05/2016 09:24 PM, Sergei Shtylyov wrote:
 > 
-> Changes from v1:
->  - s/omapl138/da850/
->  - Remove earlycon from bootargs
->  - Remove console=ttyS2,115200n8 from bootargs (workaround for preferred console)
->  - Add patches for CONFIG_SMSC_PHY=y and CONFIG_RTC_DRV_OMAP=m
+> >   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+> >'renesas-devel-20160725-v4.7-rc7' tag. We're adding the R8A7792 DU clocks and
+> >device nodes. They have been tested on the Blanche board -- I'm not posting the
+> >Blanche patch only because it also has some strange interaction with the
+> >Ethernet chip, so that NFS root can't work anymore...
 > 
-> Changes from v2:
->  - [1] Remove references to C6748: replace 'L138/C6748 Dev Kit (LCDK)' with 'LCDK'
->  - Change license from 'GPLv2 or later' to 'GPLv2'
-> 
-> Changes from v3:
->  - revert v2 [1]
+>    Forgot to mention that the patch #2 depends on the R8A7792 DU driver
+> patch posted last night.
 
-Series applied and boot tested on my LCDK.
+Thanks.
 
-For future, when posting a new version, please send as an independent
-series and not reply to the very first posting.
+The driver changes look line an incremental update to what is already done
+for other R-Car Gen2 SoCs. And I am assuming that applying these patches
+without the driver change is harmless - the driver just won't be
+initialised until both the driver and DTS changes are present.
 
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With the above reasoning I have queued up these patches with Geert's
+reviewed-by tag. Please let me know if that is not desirable for some
+reason.
