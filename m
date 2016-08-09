@@ -1,49 +1,27 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/4] mfd: axp20x: Add AXP209 GPIO driver to the mfd
-Date: Tue, 9 Aug 2016 10:58:39 +0100
-Message-ID: <20160809095839.GA5243@dell>
-References: <20160720141139.25098-1-maxime.ripard@free-electrons.com>
- <20160720141139.25098-3-maxime.ripard@free-electrons.com>
+From: =?UTF-8?B?6ZmI6LGq?= <jacobchen110-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: add rk3288-firefly-reload
+Date: Tue, 9 Aug 2016 18:02:23 +0800
+Message-ID: <CAFLEztTROearSEcgzV3EVHFcRcMQpLhAQ6BXP-dDyRDAWybaxg@mail.gmail.com>
+References: <1549971.ctkvOGm2xW@diego> <2868781.4x2gJCRbLH@diego>
+ <413ebccd-e8d6-1401-3065-f9a63b4d66e6@rock-chips.com> <1815189.oGy6GHMbyM@phil>
+ <CAFLEztQ1pa-CCbC8c8+VJ_kg8RyPOb-UHZiKBZffKEw9zyx9Zg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160720141139.25098-3-maxime.ripard@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFLEztQ1pa-CCbC8c8+VJ_kg8RyPOb-UHZiKBZffKEw9zyx9Zg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Jul 2016, Maxime Ripard wrote:
+well，it has already been added....
 
-> Now that we have a GPIO driver for the AXP209, we can add it to our MFD.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/mfd/axp20x.c | 3 +++
->  1 file changed, 3 insertions(+)
+The root cause is not act8846. Firefly have a bug with sdmmc and it
+seems they didn't fix it in firefly-reload.
 
-Applied, thanks.
-
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index fd80b0981f0f..4b3e073c47b7 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -508,6 +508,9 @@ static const struct regmap_irq_chip axp809_regmap_irq_chip = {
->  
->  static struct mfd_cell axp20x_cells[] = {
->  	{
-> +		.name		= "axp20x-gpio",
-> +		.of_compatible	= "x-powers,axp209-gpio",
-> +	}, {
->  		.name		= "axp20x-pek",
->  		.num_resources	= ARRAY_SIZE(axp20x_pek_resources),
->  		.resources	= axp20x_pek_resources,
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+http://bbs.t-firefly.com/forum.php?mod=viewthread&tid=256
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
