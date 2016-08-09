@@ -1,223 +1,74 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/3] dt-bindings: clock: reset: Add GXBB AO Clock and Reset Bindings
-Date: Tue,  9 Aug 2016 11:13:27 +0200
-Message-ID: <1470734008-18849-3-git-send-email-narmstrong@baylibre.com>
-References: <1470734008-18849-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1470734008-18849-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org, mturquette@baylibre.com, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>
+From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: [PATCH] OF: mark released devices as no longer populated
+Date: Tue, 09 Aug 2016 10:26:20 +0100
+Message-ID: <E1bX3Ii-00088A-Gp@rmk-PC.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, horia.geanta-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentations and dt-bindings headers for the AO clock and reset
-controller.
+When a Linux device is released and cleaned up, we left the OF device
+node marked as populated.  This causes the Freescale CAAM driver
+(drivers/crypto/caam) problems when the module is removed and re-
+inserted:
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+JR0 Platform device creation error
+JR0 Platform device creation error
+caam 2100000.caam: no queues configured, terminating
+caam: probe of 2100000.caam failed with error -12
+
+The reason is that CAAM creates platform devices for each job ring:
+
+        for_each_available_child_of_node(nprop, np)
+                if (of_device_is_compatible(np, "fsl,sec-v4.0-job-ring") ||
+                    of_device_is_compatible(np, "fsl,sec4.0-job-ring")) {
+                        ctrlpriv->jrpdev[ring] =
+                                of_platform_device_create(np, NULL, dev);
+
+which sets OF_POPULATED on the device node, but then it cleans these
+up:
+
+        /* Remove platform devices for JobRs */
+        for (ring = 0; ring < ctrlpriv->total_jobrs; ring++) {
+                if (ctrlpriv->jrpdev[ring])
+                        of_device_unregister(ctrlpriv->jrpdev[ring]);
+        }
+
+which leaves OF_POPULATED set.
+
+Arrange for platform devices with a device node to clear the
+OF_POPULATED bit when they are released.
+
+Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
- .../bindings/clock/amlogic,gxbb-aoclkc.txt         | 45 +++++++++++++++
- include/dt-bindings/clock/gxbb-aoclkc.h            | 66 ++++++++++++++++++++++
- include/dt-bindings/reset/gxbb-aoclkc.h            | 66 ++++++++++++++++++++++
- 3 files changed, 177 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
- create mode 100644 include/dt-bindings/clock/gxbb-aoclkc.h
- create mode 100644 include/dt-bindings/reset/gxbb-aoclkc.h
+Please check this carefully - it may have issues where an of_node
+pointer is copied from one platform device to another, but IMHO
+doing that is itself buggy behaviour.
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
-new file mode 100644
-index 0000000..a55d31b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
-@@ -0,0 +1,45 @@
-+* Amlogic GXBB AO Clock and Reset Unit
-+
-+The Amlogic GXBB AO clock controller generates and supplies clock to various
-+controllers within the Always-On part of the SoC.
-+
-+Required Properties:
-+
-+- compatible: should be "amlogic,gxbb-aoclkc"
-+- reg: physical base address of the clock controller and length of memory
-+       mapped region.
-+
-+- #clock-cells: should be 1.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. All available clocks are defined as
-+preprocessor macros in the dt-bindings/clock/gxbb-aoclkc.h header and can be
-+used in device tree sources.
-+
-+- #reset-cells: should be 1.
-+
-+Each reset is assigned an identifier and client nodes can use this identifier
-+to specify the reset which they consume. All available resets are defined as
-+preprocessor macros in the dt-bindings/reset/gxbb-aoclkc.h header and can be
-+used in device tree sources.
-+
-+Example: AO Clock controller node:
-+
-+	clkc_AO: clock-controller@040 {
-+		compatible = "amlogic,gxbb-aoclkc";
-+		reg = <0x0 0x040 0x0 0x4>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+Example: UART controller node that consumes the clock and reset generated
-+  by the clock controller:
-+
-+	uart_AO: serial@4c0 {
-+		compatible = "amlogic,meson-uart";
-+		reg = <0x4c0 0x14>;
-+		interrupts = <0 90 1>;
-+		clocks = <&clkc_AO CLKID_AO_UART1>;
-+		resets = <&clkc_AO RESET_AO_UART1>;
-+		status = "disabled";
-+	};
-diff --git a/include/dt-bindings/clock/gxbb-aoclkc.h b/include/dt-bindings/clock/gxbb-aoclkc.h
-new file mode 100644
-index 0000000..3175148
---- /dev/null
-+++ b/include/dt-bindings/clock/gxbb-aoclkc.h
-@@ -0,0 +1,66 @@
-+/*
-+ * This file is provided under a dual BSD/GPLv2 license.  When using or
-+ * redistributing this file, you may do so under either license.
-+ *
-+ * GPL LICENSE SUMMARY
-+ *
-+ * Copyright (c) 2016 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of version 2 of the GNU General Public License as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
-+ * The full GNU General Public License is included in this distribution
-+ * in the file called COPYING.
-+ *
-+ * BSD LICENSE
-+ *
-+ * Copyright (c) 2016 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions
-+ * are met:
-+ *
-+ *   * Redistributions of source code must retain the above copyright
-+ *     notice, this list of conditions and the following disclaimer.
-+ *   * Redistributions in binary form must reproduce the above copyright
-+ *     notice, this list of conditions and the following disclaimer in
-+ *     the documentation and/or other materials provided with the
-+ *     distribution.
-+ *   * Neither the name of Intel Corporation nor the names of its
-+ *     contributors may be used to endorse or promote products derived
-+ *     from this software without specific prior written permission.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+#ifndef DT_BINDINGS_CLOCK_AMLOGIC_MESON_GXBB_AOCLK
-+#define DT_BINDINGS_CLOCK_AMLOGIC_MESON_GXBB_AOCLK
-+
-+#define CLKID_AO_REMOTE		0
-+#define CLKID_AO_I2C_MASTER	1
-+#define CLKID_AO_I2C_SLAVE	2
-+#define CLKID_AO_UART1		3
-+#define CLKID_AO_UART2		4
-+#define CLKID_AO_IR_BLASTER	5
-+
-+#endif
-diff --git a/include/dt-bindings/reset/gxbb-aoclkc.h b/include/dt-bindings/reset/gxbb-aoclkc.h
-new file mode 100644
-index 0000000..9e3fd60
---- /dev/null
-+++ b/include/dt-bindings/reset/gxbb-aoclkc.h
-@@ -0,0 +1,66 @@
-+/*
-+ * This file is provided under a dual BSD/GPLv2 license.  When using or
-+ * redistributing this file, you may do so under either license.
-+ *
-+ * GPL LICENSE SUMMARY
-+ *
-+ * Copyright (c) 2016 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of version 2 of the GNU General Public License as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
-+ * The full GNU General Public License is included in this distribution
-+ * in the file called COPYING.
-+ *
-+ * BSD LICENSE
-+ *
-+ * Copyright (c) 2016 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions
-+ * are met:
-+ *
-+ *   * Redistributions of source code must retain the above copyright
-+ *     notice, this list of conditions and the following disclaimer.
-+ *   * Redistributions in binary form must reproduce the above copyright
-+ *     notice, this list of conditions and the following disclaimer in
-+ *     the documentation and/or other materials provided with the
-+ *     distribution.
-+ *   * Neither the name of Intel Corporation nor the names of its
-+ *     contributors may be used to endorse or promote products derived
-+ *     from this software without specific prior written permission.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+#ifndef DT_BINDINGS_RESET_AMLOGIC_MESON_GXBB_AOCLK
-+#define DT_BINDINGS_RESET_AMLOGIC_MESON_GXBB_AOCLK
-+
-+#define RESET_AO_REMOTE		0
-+#define RESET_AO_I2C_MASTER	1
-+#define RESET_AO_I2C_SLAVE	2
-+#define RESET_AO_UART1		3
-+#define RESET_AO_UART2		4
-+#define RESET_AO_IR_BLASTER	5
-+
-+#endif
+ include/linux/of_device.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index cc7dd687a89d..7a8362d0c6d2 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -43,6 +43,7 @@ extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env
+ 
+ static inline void of_device_node_put(struct device *dev)
+ {
++	of_node_clear_flag(dev->of_node, OF_POPULATED);
+ 	of_node_put(dev->of_node);
+ }
+ 
 -- 
-2.7.0
+2.1.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
