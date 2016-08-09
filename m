@@ -1,74 +1,42 @@
-From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH] OF: mark released devices as no longer populated
-Date: Tue, 09 Aug 2016 10:33:48 +0100
-Message-ID: <E1bX3Pw-00088i-KU@rmk-PC.armlinux.org.uk>
+From: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [RFC PATCH v5 1/3] net: Add mask for Control register 10Mbps speed
+Date: Tue, 9 Aug 2016 15:04:41 +0530
+Message-ID: <1470735283-23611-2-git-send-email-appanad@xilinx.com>
+References: <1470735283-23611-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
+In-Reply-To: <1470735283-23611-1-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, horia.geanta-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When a Linux device is released and cleaned up, we left the OF device
-node marked as populated.  This causes the Freescale CAAM driver
-(drivers/crypto/caam) problems when the module is removed and re-
-inserted:
+This patch adds mask for the Control register
+10Mbps speed.
 
-JR0 Platform device creation error
-JR0 Platform device creation error
-caam 2100000.caam: no queues configured, terminating
-caam: probe of 2100000.caam failed with error -12
-
-The reason is that CAAM creates platform devices for each job ring:
-
-        for_each_available_child_of_node(nprop, np)
-                if (of_device_is_compatible(np, "fsl,sec-v4.0-job-ring") ||
-                    of_device_is_compatible(np, "fsl,sec4.0-job-ring")) {
-                        ctrlpriv->jrpdev[ring] =
-                                of_platform_device_create(np, NULL, dev);
-
-which sets OF_POPULATED on the device node, but then it cleans these
-up:
-
-        /* Remove platform devices for JobRs */
-        for (ring = 0; ring < ctrlpriv->total_jobrs; ring++) {
-                if (ctrlpriv->jrpdev[ring])
-                        of_device_unregister(ctrlpriv->jrpdev[ring]);
-        }
-
-which leaves OF_POPULATED set.
-
-Arrange for platform devices with a device node to clear the
-OF_POPULATED bit when they are released.
-
-Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 ---
-Please check this carefully - it may have issues where an of_node
-pointer is copied from one platform device to another, but IMHO
-doing that is itself buggy behaviour.
+Changes for v5:
+---> New patch as suggested by Punnaiah.
 
-Resending due to wrong list address, sorry.
-
- include/linux/of_device.h | 1 +
+ include/uapi/linux/mii.h | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index cc7dd687a89d..7a8362d0c6d2 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -43,6 +43,7 @@ extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env
+diff --git a/include/uapi/linux/mii.h b/include/uapi/linux/mii.h
+index 237fac4..15d8510 100644
+--- a/include/uapi/linux/mii.h
++++ b/include/uapi/linux/mii.h
+@@ -48,6 +48,7 @@
+ #define BMCR_SPEED100		0x2000	/* Select 100Mbps              */
+ #define BMCR_LOOPBACK		0x4000	/* TXD loopback bits           */
+ #define BMCR_RESET		0x8000	/* Reset to default state      */
++#define BMCR_SPEED10		0x0000	/* Select 10Mbps               */
  
- static inline void of_device_node_put(struct device *dev)
- {
-+	of_node_clear_flag(dev->of_node, OF_POPULATED);
- 	of_node_put(dev->of_node);
- }
- 
+ /* Basic mode status register. */
+ #define BMSR_ERCAP		0x0001	/* Ext-reg capability          */
 -- 
-2.1.0
+2.1.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
