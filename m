@@ -1,116 +1,182 @@
-From: <yuantian.tang-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 2/2] ahci: qoriq: enable snoopable sata read and write
-Date: Tue, 9 Aug 2016 09:51:22 +0800
-Message-ID: <1470707482-13421-2-git-send-email-yuantian.tang@nxp.com>
-References: <1470707482-13421-1-git-send-email-yuantian.tang@nxp.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v9 01/10] clk: fix initial state of critical clock's
+ parents
+Date: Tue, 9 Aug 2016 13:39:43 +0800
+Message-ID: <1470721183.8551.6.camel@mtksdaap41>
+References: <1466581229-2342-1-git-send-email-erin.lo@mediatek.com>
+	 <1466581229-2342-2-git-send-email-erin.lo@mediatek.com>
+	 <20160702012140.GB17071@codeaurora.org>
+	 <1467604308.26485.4.camel@mtksdaap41>
+	 <146802073038.73491.6675612765998057903@resonance>
+	 <1468225452.31247.7.camel@mtksdaap41> <1470203182.17063.3.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470707482-13421-1-git-send-email-yuantian.tang-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1470203182.17063.3.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, Tang Yuantian <Yuantian.Tang-3arQi8VN3Tc@public.gmane.org>, Tang Yuantian <yuantian.tang-3arQi8VN3Tc@public.gmane.org>
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tang Yuantian <Yuantian.Tang-3arQi8VN3Tc@public.gmane.org>
+On Wed, 2016-08-03 at 13:46 +0800, James Liao wrote:
+> On Mon, 2016-07-11 at 16:24 +0800, James Liao wrote:
+> > Hi Mike,
+> > 
+> > On Fri, 2016-07-08 at 16:32 -0700, Michael Turquette wrote:
+> > > Hi James,
+> > > 
+> > > Quoting James Liao (2016-07-03 20:51:48)
+> > > > On Fri, 2016-07-01 at 18:21 -0700, Stephen Boyd wrote:
+> > > > > (Resending to everyone)
+> > > > > 
+> > > > > On 06/22, Erin Lo wrote:
+> > > > > > From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > > > > 
+> > > > > > This patch fixed wrong state of parent clocks if they are registered
+> > > > > > after critical clocks.
+> > > > > > 
+> > > > > > Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > > > > Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > > > 
+> > > > > It would be nice if you included the information about the
+> > > > > problem from James' previous mail. This says what it does, but
+> > > > > doesn't explain what the problem is and how it is fixing it.
+> > > > > 
+> > > > > > ---
+> > > > > >  drivers/clk/clk.c | 9 ++++++++-
+> > > > > >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > > > > > 
+> > > > > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > > > > > index d584004..e9f5f89 100644
+> > > > > > --- a/drivers/clk/clk.c
+> > > > > > +++ b/drivers/clk/clk.c
+> > > > > > @@ -2388,8 +2388,15 @@ static int __clk_core_init(struct clk_core *core)
+> > > > > >     hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
+> > > > > >             struct clk_core *parent = __clk_init_parent(orphan);
+> > > > > >  
+> > > > > > -           if (parent)
+> > > > > > +           if (parent) {
+> > > > > >                     clk_core_reparent(orphan, parent);
+> > > > > > +
+> > > > > > +                   if (orphan->prepare_count)
+> > > > > > +                           clk_core_prepare(parent);
+> > > > > > +
+> > > > > > +                   if (orphan->enable_count)
+> > > > > > +                           clk_core_enable(parent);
+> > > > > > +           }
+> > > > > >     }
+> > > > > 
+> > > > > I'm pretty sure I pointed this problem out to Mike when the
+> > > > > critical clk patches were being pushed. I can't recall what the
+> > > > > plan was though to fix the problem. I'm pretty sure he said that
+> > > > > clk_core_reparent() would take care of it, but obviously it is
+> > > > > not doing that. Or perhaps it was that clk handoff should figure
+> > > > > out that the parents of a critical clk are also on and thus keep
+> > > > > them on.
+> > > > 
+> > > > Hi Mike
+> > > > 
+> > > > Is there any other patch to fix this issue? Or did I misuse critical
+> > > > clock flag?
+> > > 
+> > > There is no fix yes. Your fix is basically correct. I was mistaken back
+> > > when I told you and Stephen that the framework already took care of
+> > > this.
+> > > 
+> > > However, instead of "open coding" this solution, I would rather re-use
+> > > the __clk_set_parent_{before,after} helpers instead. Can you review/test
+> > > the following patch and let me know what you think?
+> > > 
+> > > Thanks,
+> > > Mike
+> > > 
+> > > 
+> > > 
+> > > From c0163b3f719b1e219b28ad425f94f9ef54a25a8f Mon Sep 17 00:00:00 2001
+> > > From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > > Date: Fri, 8 Jul 2016 16:05:22 -0700
+> > > Subject: [PATCH] clk: migrate ref counts when orphans are reunited
+> > > 
+> > > It's always nice to see families reunited, and this is equally true when
+> > > talking about parent clocks and their children. However, if the orphan
+> > > clk had a positive prepare_count or enable_count, then we would not
+> > > migrate those counts up the parent chain correctly.
+> > > 
+> > > This has manifested with the recent critical clocks feature, which often
+> > > enables clocks very early, before their parents have been registered.
+> > > 
+> > > Fixed by replacing the call to clk_core_reparent with calls to
+> > > __clk_set_parent_{before,after}.
+> > > 
+> > > Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > Cc: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > Signed-off-by: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > > ---
+> > >  drivers/clk/clk.c | 10 ++++++++--
+> > >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > > index 820a939fb6bb..70efe4c4e0cc 100644
+> > > --- a/drivers/clk/clk.c
+> > > +++ b/drivers/clk/clk.c
+> > > @@ -2449,8 +2449,14 @@ static int __clk_core_init(struct clk_core *core)
+> > >  	hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
+> > >  		struct clk_core *parent = __clk_init_parent(orphan);
+> > >  
+> > > -		if (parent)
+> > > -			clk_core_reparent(orphan, parent);
+> > 
+> > Is it correct to remove clk_core_reparent()? It lacks
+> > __clk_recalc_accuracies() and __clk_recalc_rates(), so the new parent's
+> > rate will not propagate correctly.
+> > 
+> > For example, I set vdec_sel as a critical clock. Without your patch, the
+> > result was:
+> > 
+> >     vdecpll         0            0   338000000
+> >        vdecpll_ck   1            1   338000000
+> >           vdec_sel  1            1   338000000
+> > 
+> > With your patch, it became:
+> > 
+> >     vdecpll         1            1   338000000
+> >        vdecpll_ck   1            1           0
+> >           vdec_sel  1            1           0
+> > 
+> > The prepare_count and enable_count are correct with your patch, but the
+> > rates of vdecpll_ck and vdec_sel become incorrect.
+> > 
+> > 
+> > > +		/*
+> > > +		 * we could call __clk_set_parent, but that would result in a
+> > > +		 * reducant call to the .set_rate op, if it exists
+> > > +		 */
+> > > +		if (parent) {
+> > > +			__clk_set_parent_before(orphan, parent);
+> > > +			__clk_set_parent_after(orphan, parent, NULL);
+> > > +		}
+> > >  	}
+> > >  
+> > >  	/*
+> > 
+> 
+> Hi Mike,
+> 
+> Do you have new patches to fix new clock parents? If not, I think we can
+> use my patch first. Is it okay?
+> 
 
-By default the SATA IP on the qoriq SoCs does not generating
-coherent/snoopable transactions.  This patch enable it in the
-sata axicc register.
-In addition, the dma-coherent property must be set on the
-SATA controller nodes.
+Hi Stephen,
 
-Signed-off-by: Tang Yuantian <yuantian.tang-3arQi8VN3Tc@public.gmane.org>
----
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 3 ++-
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 2 ++
- drivers/ata/ahci_qoriq.c                       | 6 ++++++
- 3 files changed, 10 insertions(+), 1 deletion(-)
+Do you have comments for the bug fixing? I prefer to use my patch (clk:
+fix initial state of critical clock's parents). How do you think?
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 6bd46c1..bdcfa59 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -484,10 +484,11 @@
- 		};
- 
- 		sata: sata@3200000 {
--			compatible = "fsl,ls1043a-ahci", "fsl,ls1021a-ahci";
-+			compatible = "fsl,ls1043a-ahci";
- 			reg = <0x0 0x3200000 0x0 0x10000>;
- 			interrupts = <0 69 0x4>;
- 			clocks = <&clockgen 4 0>;
-+			dma-coherent;
- 		};
- 
- 		msi1: msi-controller1@1571000 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index 3187c82..be243f8 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -655,6 +655,7 @@
- 			reg = <0x0 0x3200000 0x0 0x10000>;
- 			interrupts = <0 133 0x4>; /* Level high type */
- 			clocks = <&clockgen 4 3>;
-+			dma-coherent;
- 		};
- 
- 		sata1: sata@3210000 {
-@@ -663,6 +664,7 @@
- 			reg = <0x0 0x3210000 0x0 0x10000>;
- 			interrupts = <0 136 0x4>; /* Level high type */
- 			clocks = <&clockgen 4 3>;
-+			dma-coherent;
- 		};
- 
- 		usb0: usb3@3100000 {
-diff --git a/drivers/ata/ahci_qoriq.c b/drivers/ata/ahci_qoriq.c
-index ed357a1..925c4b6 100644
---- a/drivers/ata/ahci_qoriq.c
-+++ b/drivers/ata/ahci_qoriq.c
-@@ -30,17 +30,20 @@
- #define PORT_PHY3	0xB0
- #define PORT_PHY4	0xB4
- #define PORT_PHY5	0xB8
-+#define PORT_AXICC	0xBC
- #define PORT_TRANS	0xC8
- 
- /* port register default value */
- #define AHCI_PORT_PHY_1_CFG	0xa003fffe
- #define AHCI_PORT_TRANS_CFG	0x08000029
-+#define AHCI_PORT_AXICC_CFG	0x3fffffff
- 
- /* for ls1021a */
- #define LS1021A_PORT_PHY2	0x28183414
- #define LS1021A_PORT_PHY3	0x0e080e06
- #define LS1021A_PORT_PHY4	0x064a080b
- #define LS1021A_PORT_PHY5	0x2aa86470
-+#define LS1021A_AXICC_ADDR	0xC0
- 
- #define SATA_ECC_DISABLE	0x00020000
- 
-@@ -158,16 +161,19 @@ static int ahci_qoriq_phy_init(struct ahci_host_priv *hpriv)
- 		writel(LS1021A_PORT_PHY4, reg_base + PORT_PHY4);
- 		writel(LS1021A_PORT_PHY5, reg_base + PORT_PHY5);
- 		writel(AHCI_PORT_TRANS_CFG, reg_base + PORT_TRANS);
-+		writel(AHCI_PORT_AXICC_CFG, reg_base + LS1021A_AXICC_ADDR);
- 		break;
- 
- 	case AHCI_LS1043A:
- 		writel(AHCI_PORT_PHY_1_CFG, reg_base + PORT_PHY1);
- 		writel(AHCI_PORT_TRANS_CFG, reg_base + PORT_TRANS);
-+		writel(AHCI_PORT_AXICC_CFG, reg_base + PORT_AXICC);
- 		break;
- 
- 	case AHCI_LS2080A:
- 		writel(AHCI_PORT_PHY_1_CFG, reg_base + PORT_PHY1);
- 		writel(AHCI_PORT_TRANS_CFG, reg_base + PORT_TRANS);
-+		writel(AHCI_PORT_AXICC_CFG, reg_base + PORT_AXICC);
- 		break;
- 	}
- 
--- 
-2.1.0.27.g96db324
+
+Best regards,
+
+James
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
