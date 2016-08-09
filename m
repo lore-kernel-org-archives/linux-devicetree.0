@@ -1,29 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] rcar-du: add R8A7792 support
-Date: Tue, 9 Aug 2016 18:51:32 -0500
-Message-ID: <20160809235132.GA25576@rob-hp-laptop>
-References: <1934824.sESTIjSbbp@wasted.cogentembedded.com>
+Subject: Re: [PATCH v3 02/15] dt/bindings: Update binding for PM domain idle
+ states
+Date: Tue, 9 Aug 2016 18:55:37 -0500
+Message-ID: <20160809235537.GA28122@rob-hp-laptop>
+References: <1470351902-43103-1-git-send-email-lina.iyer@linaro.org>
+ <1470351902-43103-3-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1934824.sESTIjSbbp@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: laurent.pinchart@ideasonboard.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+In-Reply-To: <1470351902-43103-3-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, Axel Haslam <ahaslam+renesas@baylibre.com>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2016 at 03:01:02PM -0700, Sergei Shtylyov wrote:
-> Add support for the R8A7792 DU; it has 2 DPAD (RGB) outputs.
+On Thu, Aug 04, 2016 at 05:04:49PM -0600, Lina Iyer wrote:
+> From: Axel Haslam <ahaslam+renesas@baylibre.com>
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Update DT bindings to describe idle states of PM domains.
 > 
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Marc Titinger <mtitinger+renesas@baylibre.com>
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+> [Lina: Added state properties, removed state names, wakeup-latency,
+> added of_pm_genpd_init() API, pruned commit text]
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> [Ulf: Moved around code to make it compile properly, rebased on top of multiple state support]
+
+This change doesn't make sense given this is just a binding doc.
+
 > ---
-> This patch is against the 'drm/next/du' branch of Laurent Pinchart's 'media.git'
-> repo...
-> 
->  Documentation/devicetree/bindings/display/renesas,du.txt |    4 ++
->  drivers/gpu/drm/rcar-du/rcar_du_drv.c                    |   22 +++++++++++++++
->  2 files changed, 25 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/power/power_domain.txt     | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
