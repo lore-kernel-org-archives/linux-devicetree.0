@@ -1,59 +1,116 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] ASoC: samsung: Add machine driver for Exynos5433
- based TM2 board
-Date: Tue, 9 Aug 2016 17:02:09 +0100
-Message-ID: <20160809160209.GB9347@sirena.org.uk>
-References: <1470752514-11409-1-git-send-email-s.nawrocki@samsung.com>
- <1470752514-11409-2-git-send-email-s.nawrocki@samsung.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [RFC PATCH 2/3] net: macb: Add support for 1588 for Zynq
+ Ultrascale+ MPSoC
+Date: Tue, 9 Aug 2016 18:40:08 +0200
+Message-ID: <99d6c0ce-c3b9-a919-cedb-0af954bac388@atmel.com>
+References: <1441958258-35441-1-git-send-email-harinik@xilinx.com>
+ <1441958258-35441-3-git-send-email-harinik@xilinx.com>
+ <CAFcVECLfXL-=efbUhNeKhiFQgtfv6Z1+JJckg+js7DM-LfFeSw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gj572EiMnwbLXET9"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470752514-11409-2-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFcVECLfXL-=efbUhNeKhiFQgtfv6Z1+JJckg+js7DM-LfFeSw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Harini Katakam <harinikatakamlinux@gmail.com>, Harini Katakam <harini.katakam@xilinx.com>, Andrei Pistirica <Andrei.Pistirica@microchip.com>
+Cc: davem@davemloft.net, Boris Brezillon <boris.brezillon@free-electrons.com>, alexandre.belloni@free-electrons.com, netdev@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, "michals@xilinx.com" <michals@xilinx.com>, anirudh@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
+Le 21/09/2015 à 19:49, Harini Katakam a écrit :
+> On Fri, Sep 11, 2015 at 1:27 PM, Harini Katakam
+> <harini.katakam@xilinx.com> wrote:
+>> Cadence GEM in Zynq Ultrascale+ MPSoC supports 1588 and provides a
+>> 102 bit time counter with 48 bits for seconds, 30 bits for nsecs and
+>> 24 bits for sub-nsecs. The timestamp is made available to the SW through
+>> registers as well as (more precisely) through upper two words in
+>> an extended BD.
+>>
+>> This patch does the following:
+>> - Adds MACB_CAPS_TSU in zynqmp_config.
+>> - Registers to ptp clock framework (after checking for timestamp support in
+>>   IP and capability in config).
+>> - TX BD and RX BD control registers are written to populate timestamp in
+>>   extended BD words.
+>> - Timer initialization is done by writing time of day to the timer counter.
+>> - ns increment register is programmed as NS_PER_SEC/TSU_CLK.
+>>   For a 24 bit subns precision, the subns increment equals
+>>   remainder of (NS_PER_SEC/TSU_CLK) * (2^24).
+>>   TSU (Time stamp unit) clock is obtained by the  driver from devicetree.
+>> - HW time stamp capabilities are advertised via ethtool and macb ioctl is
+>>   updated accordingly.
+>> - For all PTP event frames, nanoseconds and the lower 5 bits of seconds are
+>>   obtained from the BD. This offers a precise timestamp. The upper bits
+>>   (which dont vary between consecutive packets) are obtained from the
+>>   TX/RX PTP event/PEER registers. The timestamp obtained thus is updated
+>>   in skb for upper layers to access.
+>> - The drivers register functions with ptp to perform time and frequency
+>>   adjustment.
+>> - Time adjustment is done by writing to the 1558_ADJUST register.
+>>   The controller will read the delta in this register and update the timer
+>>   counter register. Alternatively, for large time offset adjustments,
+>>   the driver reads the secs and nsecs counter values, adds/subtracts the
+>>   delta and updates the timer counter. In order to be as precise as possible,
+>>   nsecs counter is read again if secs has incremented during the counter read.
+>> - Frequency adjustment is not directly supported by this IP.
+>>   addend is the initial value ns increment and similarly addendesub.
+>>   The ppb (parts per billion) provided is used as
+>>   ns_incr = addend +/- (ppb/rate).
+>>   Similarly the remainder of the above is used to populate subns increment.
+>>   In case the ppb requested is negative AND subns adjustment greater than
+>>   the addendsub, ns_incr is reduced by 1 and subns_incr is adjusted in
+>>   positive accordingly.
+>>
+>> Signed-off-by: Harini Katakam <harinik@xilinx.com>:
+>> ---
+>>  drivers/net/ethernet/cadence/macb.c |  372 ++++++++++++++++++++++++++++++++++-
+>>  drivers/net/ethernet/cadence/macb.h |   64 ++++++
+>>  2 files changed, 428 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+>> index bb2932c..b531008 100644
+>> --- a/drivers/net/ethernet/cadence/macb.c
+>> +++ b/drivers/net/ethernet/cadence/macb.c
+>> @@ -30,6 +30,8 @@
+>>  #include <linux/of_device.h>
+>>  #include <linux/of_mdio.h>
 
---gj572EiMnwbLXET9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[..]
 
-On Tue, Aug 09, 2016 at 04:21:54PM +0200, Sylwester Nawrocki wrote:
+>> +       unsigned int            ns_incr;
+>> +       unsigned int            subns_incr;
+>>  };
+>>
+>>  static inline bool macb_is_gem(struct macb *bp)
+>> --
+>> 1.7.9.5
+> 
+> Ping
+> 
+> Thanks.
 
-> +		card->dai_link[i].codec_of_node = codec_dai_node;
-> +		card->dai_link[i].cpu_of_node = cpu_dai_node;
-> +		card->dai_link[i].platform_of_node = cpu_dai_node;
-> +	}
-> +
-> +	priv->codec_mclk1 = of_clk_get_by_name(codec_dai_node, "mclk1");
-> +	if (IS_ERR(priv->codec_mclk1)) {
+Harini,
 
-So, all this of_clk_get_by_name() stuff is messy and is going to need to
-be duplicated for any cards using this CODEC which isn't excellent.  It
-would be a lot nicer if we just did some regular clk_get() calls in the
-MFD and then provided an interface for other drivers to get at those
-clocks (or just had the CODEC driver DTRT internally).
+I come back to this patch of last year and I'm sorry about being so late
+answering you.
 
---gj572EiMnwbLXET9
-Content-Type: application/pgp-signature; name="signature.asc"
+Andrei who is added to the discussion will have some time to deal with
+this feature and we would like to make some progress with it. He already
+had some work done on his side before I recall your email.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+So, could you please re-send your original 1588 patch with Andrei in
+copy so that we can all (re-)start the discussion and progress for
+adding this feature.
 
-iQEcBAEBCAAGBQJXqf6AAAoJECTWi3JdVIfQK/MH/0v5XN/TZNh0pMlbnveM6sWZ
-uy1ZBAR64pgqYFHLtLsM7VCniWccX3qwEbNI1MFZHzDjyMRcGZkaLwIquT/VDLKX
-mYae6sgotAjjaNNvnStwQUf5ksfw2tfJV+0z1Zr9yVnT6stZDASEGVY3J20k7iB4
-TOyR2+nRAu3GEEXoy8jERNkfX77nEFYv4EDeOzITORAK2FmfqFdTAZGO1Qf+ba3s
-djUWeKZEvkmDp5Ob83778N+n3uMPNYQ+Ln8Cpg1yRgMu4mxMQwdPcz2BYsU9BgaM
-4WY0J+Lir64CkL7xemErF0jIF+1foK/hf0aUQNuO5rznnkZb5IdEmxj0vHm4hEU=
-=aCgc
------END PGP SIGNATURE-----
+We must also note that some hardware differences between our platforms
+may have an impact on the code and how we implement things (as
+highlighted on this forum:
+http://www.at91.com/discussions/viewtopic.php/f,12/t,25462.html).
+Anyway, we'll overcome this and have a widely tested solution at the end
+of the day!
 
---gj572EiMnwbLXET9--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for your patience, bye!
+
+PS: for some reason, I only have this "ping" part of your email but not
+the original one
+-- 
+Nicolas Ferre
