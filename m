@@ -1,37 +1,43 @@
-From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: Remove use of skeleton.dtsi from
- bcm283x.dtsi
-Date: Tue, 09 Aug 2016 11:48:29 +0100
-Message-ID: <1470739709.4745.23.camel@hellion.org.uk>
-References: <1470233565-30154-1-git-send-email-ijc@hellion.org.uk>
-	 <20160803144858.GA29054@leverpostej>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: add rk3288-firefly-reload
+Date: Tue, 09 Aug 2016 12:58:49 +0200
+Message-ID: <13761657.UM4fvlJBBq@diego>
+References: <1549971.ctkvOGm2xW@diego> <CAFLEztTROearSEcgzV3EVHFcRcMQpLhAQ6BXP-dDyRDAWybaxg@mail.gmail.com> <C2BE77CA-A59B-4128-8802-E3E36FACDABA@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160803144858.GA29054@leverpostej>
+In-Reply-To: <C2BE77CA-A59B-4128-8802-E3E36FACDABA-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Randy Li <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: =?utf-8?B?6ZmI6LGq?= <jacobchen110-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2016-08-03 at 15:48 +0100, Mark Rutland wrote:
+Am Dienstag, 9. August 2016, 18:06:33 schrieb Randy Li:
+> 從我的 iPad 傳送
 > 
-> > [...]Signed-off-by: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> 
-> I also don't have the relevant hardware to test with, but this looks
-> generally like the right thing. So FWIW:
-> 
-> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > 陈豪 <jacobchen110-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> 於 2016年8月9日 下午6:02 寫道：
+> > 
+> > well，it has already been added....
+> > 
+> > The root cause is not act8846. Firefly have a bug with sdmmc and it
+> > seems they didn't fix it in firefly-reload.
+> > 
+> > http://bbs.t-firefly.com/forum.php?mod=viewthread&tid=256
 
-Thanks (and Stefan too).
+Thanks Jacob for pointing out this issue - I was always wondering why it 
+wasn't working :-) .
 
-I think these things generally go via the arm-soc tree? Arnd & Olaf,
-would it be possible to get this fix in for rc2 please (or in any event
-for 4.8). Although it's an external tree I believe build breakage in
-the split-out DT git repo is worth addressing.
 
-Ian.
+> Yes, Jacob is right. Those high speed options need the voltage down to 1.8v.
+> They should be removed.
+
+Randy, can you provide a follow-up patch that removes these excess properties 
+please?
+
+
+Thanks
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
