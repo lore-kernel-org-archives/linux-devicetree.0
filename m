@@ -1,299 +1,238 @@
-From: <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: patch "usb: misc: Add driver for usb4604" added to usb-next
-Date: Tue, 09 Aug 2016 20:08:54 +0200
-Message-ID: <1470766134225238@kroah.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
+Date: Tue, 9 Aug 2016 13:25:05 -0500
+Message-ID: <57AA2001.2010904@codeaurora.org>
+References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
+ <9ebb6cb7-c793-cd76-5283-c9a659d0398f@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <9ebb6cb7-c793-cd76-5283-c9a659d0398f@gmx.de>
+Sender: netdev-owner@vger.kernel.org
+To: Lino Sanfilippo <LinoSanfilippo@gmx.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Lino Sanfilippo wrote:
 
-This is a note to let you know that I've just added the patch titled
+>> +/* Fill up transmit descriptors */
+>> +static void emac_tx_fill_tpd(struct emac_adapter *adpt,
+>> +			     struct emac_tx_queue *tx_q, struct sk_buff *skb,
+>> +			     struct emac_tpd *tpd)
+>> +{
+>> +	u16 nr_frags = skb_shinfo(skb)->nr_frags;
+>> +	unsigned int len = skb_headlen(skb);
+>> +	struct emac_buffer *tpbuf = NULL;
+>> +	unsigned int mapped_len = 0;
+>> +	unsigned int i;
+>> +	int ret;
+>> +
+>> +	/* if Large Segment Offload is (in TCP Segmentation Offload struct) */
+>> +	if (TPD_LSO(tpd)) {
+>> +		mapped_len = skb_transport_offset(skb) + tcp_hdrlen(skb);
+>> +
+>> +		tpbuf = GET_TPD_BUFFER(tx_q, tx_q->tpd.produce_idx);
+>> +		tpbuf->length = mapped_len;
+>> +		tpbuf->dma_addr = dma_map_single(adpt->netdev->dev.parent,
+>> +						 skb->data, mapped_len,
+>> +						 DMA_TO_DEVICE);
+>> +		ret = dma_mapping_error(adpt->netdev->dev.parent,
+>> +					tpbuf->dma_addr);
+>> +		if (ret) {
+>> +			dev_kfree_skb(skb);
+>> +			return;
+>> +		}
+>> +
+>> +		TPD_BUFFER_ADDR_L_SET(tpd, lower_32_bits(tpbuf->dma_addr));
+>> +		TPD_BUFFER_ADDR_H_SET(tpd, upper_32_bits(tpbuf->dma_addr));
+>
+> You should also take big endian systems into account. This means that if the multi-byte values
+> in the descriptors require little-endian you have to convert from host byte order to le and
+> vice versa. You can use cpu_to_le32() and friends for this.
 
-    usb: misc: Add driver for usb4604
+I used to work on PowerPC, so I respect making things work for both 
+endians.  However, even I think that this is overkill for my driver. 
+First, there's no way this driver will ever be used on a big-endian 
+system.  Second, I'm pretty sure there are lots of places that would 
+need cpu_to_le32() in order to make this driver big-endian compatible. 
+It would be a huge mess.
 
-to my usb git tree which can be found at
-    git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git
-in the usb-next branch.
+#define TPD_BUFFER_ADDR_H_SET(tpd, val)	BITS_SET((tpd)->word[3], 18, 30, 
+val)
 
-The patch will show up in the next release of the linux-next tree
-(usually sometime within the next 24 hours during the week.)
+This macros sets specific bits based on the definition of the register. 
+  I could change it to this:
 
-The patch will also be merged in the next major kernel release
-during the merge window.
+#define TPD_BUFFER_ADDR_H_SET(tpd, val) BITS_SET((tpd)->word[3], 18, 30, 
+cpu_to_le32(val))
 
-If you have any questions about this process, please let me know.
+But I honestly don't see what good that will do.  There are still 
+thousands of other places that assume little-endian.
 
+>> +		TPD_BUF_LEN_SET(tpd, tpbuf->length);
+>> +		emac_tx_tpd_create(adpt, tx_q, tpd);
+>> +	}
+>> +
+>> +	if (mapped_len < len) {
+>> +		tpbuf = GET_TPD_BUFFER(tx_q, tx_q->tpd.produce_idx);
+>> +		tpbuf->length = len - mapped_len;
+>> +		tpbuf->dma_addr = dma_map_single(adpt->netdev->dev.parent,
+>> +						 skb->data + mapped_len,
+>> +						 tpbuf->length, DMA_TO_DEVICE);
+>> +		ret = dma_mapping_error(adpt->netdev->dev.parent,
+>> +					tpbuf->dma_addr);
+>> +		if (ret) {
+>> +			dev_kfree_skb(skb);
+>> +			return;
+>> +		}
+>> +
+>> +		TPD_BUFFER_ADDR_L_SET(tpd, lower_32_bits(tpbuf->dma_addr));
+>> +		TPD_BUFFER_ADDR_H_SET(tpd, upper_32_bits(tpbuf->dma_addr));
+>> +		TPD_BUF_LEN_SET(tpd, tpbuf->length);
+>> +		emac_tx_tpd_create(adpt, tx_q, tpd);
+>> +	}
+>> +
+>> +	for (i = 0; i < nr_frags; i++) {
+>> +		struct skb_frag_struct *frag;
+>> +
+>> +		frag = &skb_shinfo(skb)->frags[i];
+>> +
+>> +		tpbuf = GET_TPD_BUFFER(tx_q, tx_q->tpd.produce_idx);
+>> +		tpbuf->length = frag->size;
+>> +		tpbuf->dma_addr = dma_map_page(adpt->netdev->dev.parent,
+>> +					       frag->page.p, frag->page_offset,
+>> +					       tpbuf->length, DMA_TO_DEVICE);
+>> +		ret = dma_mapping_error(adpt->netdev->dev.parent,
+>> +					tpbuf->dma_addr);
+>> +		if (ret) {
+>> +			dev_kfree_skb(skb);
+>> +			return;
+>> +		}
+>
+> In case of error you need to undo all mappings that you have done so far.
 
->From 740a6a1720f631ef2ad84fc378f2469c37f389c7 Mon Sep 17 00:00:00 2001
-From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Sat, 25 Jun 2016 22:24:54 -0700
-Subject: usb: misc: Add driver for usb4604
+Ok.
 
-This is a minimal driver to support bringing a usb4604 device
-from microchip out of reset and into hub mode. The usb4604 device
-is related to the usb3503 device, but it didn't seem close enough
-to warrant putting both into the same file. This patch borrows
-some of the usb3503 structure and trims it down to just handle
-the optional reset gpio and adds the i2c command to put the
-device into hub mode.
+>
+>> +
+>> +		TPD_BUFFER_ADDR_L_SET(tpd, lower_32_bits(tpbuf->dma_addr));
+>> +		TPD_BUFFER_ADDR_H_SET(tpd, upper_32_bits(tpbuf->dma_addr));
+>> +		TPD_BUF_LEN_SET(tpd, tpbuf->length);
+>> +		emac_tx_tpd_create(adpt, tx_q, tpd);
+>> +	}
+>> +
+>> +	/* The last tpd */
+>> +	emac_tx_tpd_mark_last(adpt, tx_q);
+>
+> Use a wmb() here to make sure that all writes to the descriptors in dma memory
+> are completed before you update the producer register (see memory-barriers.txt
+> for the reason why this is needed)
 
-Datasheet: http://ww1.microchip.com/downloads/en/DeviceDoc/00001716A.pdf
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/usb4604.txt |  19 +++
- drivers/usb/misc/Kconfig                          |   6 +
- drivers/usb/misc/Makefile                         |   1 +
- drivers/usb/misc/usb4604.c                        | 175 ++++++++++++++++++++++
- 4 files changed, 201 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/usb4604.txt
- create mode 100644 drivers/usb/misc/usb4604.c
+Ok.
 
-diff --git a/Documentation/devicetree/bindings/usb/usb4604.txt b/Documentation/devicetree/bindings/usb/usb4604.txt
-new file mode 100644
-index 000000000000..82506d17712c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/usb4604.txt
-@@ -0,0 +1,19 @@
-+SMSC USB4604 High-Speed Hub Controller
-+
-+Required properties:
-+- compatible: Should be "smsc,usb4604"
-+
-+Optional properties:
-+- reg: Specifies the i2c slave address, it is required and should be 0x2d
-+       if I2C is used.
-+- reset-gpios: Should specify GPIO for reset.
-+- initial-mode: Should specify initial mode.
-+                (1 for HUB mode, 2 for STANDBY mode)
-+
-+Examples:
-+	usb-hub@2d {
-+		compatible = "smsc,usb4604";
-+		reg = <0x2d>;
-+		reset-gpios = <&gpx3 5 1>;
-+		initial-mode = <1>;
-+	};
-diff --git a/drivers/usb/misc/Kconfig b/drivers/usb/misc/Kconfig
-index eb8f8d37cd95..47b357760afc 100644
---- a/drivers/usb/misc/Kconfig
-+++ b/drivers/usb/misc/Kconfig
-@@ -240,6 +240,12 @@ config USB_HSIC_USB3503
-        help
-          This option enables support for SMSC USB3503 HSIC to USB 2.0 Driver.
- 
-+config USB_HSIC_USB4604
-+       tristate "USB4604 HSIC to USB20 Driver"
-+       depends on I2C
-+       help
-+         This option enables support for SMSC USB4604 HSIC to USB 2.0 Driver.
-+
- config USB_LINK_LAYER_TEST
- 	tristate "USB Link Layer Test driver"
- 	help
-diff --git a/drivers/usb/misc/Makefile b/drivers/usb/misc/Makefile
-index 3d79faaad2fb..3d1992750da4 100644
---- a/drivers/usb/misc/Makefile
-+++ b/drivers/usb/misc/Makefile
-@@ -24,6 +24,7 @@ obj-$(CONFIG_USB_USS720)		+= uss720.o
- obj-$(CONFIG_USB_SEVSEG)		+= usbsevseg.o
- obj-$(CONFIG_USB_YUREX)			+= yurex.o
- obj-$(CONFIG_USB_HSIC_USB3503)		+= usb3503.o
-+obj-$(CONFIG_USB_HSIC_USB4604)		+= usb4604.o
- obj-$(CONFIG_USB_CHAOSKEY)		+= chaoskey.o
- obj-$(CONFIG_UCSI)			+= ucsi.o
- 
-diff --git a/drivers/usb/misc/usb4604.c b/drivers/usb/misc/usb4604.c
-new file mode 100644
-index 000000000000..e9f37fb746ac
---- /dev/null
-+++ b/drivers/usb/misc/usb4604.c
-@@ -0,0 +1,175 @@
-+/*
-+ * Driver for SMSC USB4604 USB HSIC 4-port 2.0 hub controller driver
-+ * Based on usb3503 driver
-+ *
-+ * Copyright (c) 2012-2013 Dongjin Kim (tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org)
-+ * Copyright (c) 2016 Linaro Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/delay.h>
-+#include <linux/slab.h>
-+#include <linux/module.h>
-+#include <linux/gpio/consumer.h>
-+
-+enum usb4604_mode {
-+	USB4604_MODE_UNKNOWN,
-+	USB4604_MODE_HUB,
-+	USB4604_MODE_STANDBY,
-+};
-+
-+struct usb4604 {
-+	enum usb4604_mode	mode;
-+	struct device		*dev;
-+	struct gpio_desc	*gpio_reset;
-+};
-+
-+static void usb4604_reset(struct usb4604 *hub, int state)
-+{
-+	gpiod_set_value_cansleep(hub->gpio_reset, state);
-+
-+	/* Wait for i2c logic to come up */
-+	if (state)
-+		msleep(250);
-+}
-+
-+static int usb4604_connect(struct usb4604 *hub)
-+{
-+	struct device *dev = hub->dev;
-+	struct i2c_client *client = to_i2c_client(dev);
-+	int err;
-+	u8 connect_cmd[] = { 0xaa, 0x55, 0x00 };
-+
-+	usb4604_reset(hub, 1);
-+
-+	err = i2c_master_send(client, connect_cmd, ARRAY_SIZE(connect_cmd));
-+	if (err < 0) {
-+		usb4604_reset(hub, 0);
-+		return err;
-+	}
-+
-+	hub->mode = USB4604_MODE_HUB;
-+	dev_dbg(dev, "switched to HUB mode\n");
-+
-+	return 0;
-+}
-+
-+static int usb4604_switch_mode(struct usb4604 *hub, enum usb4604_mode mode)
-+{
-+	struct device *dev = hub->dev;
-+	int err = 0;
-+
-+	switch (mode) {
-+	case USB4604_MODE_HUB:
-+		err = usb4604_connect(hub);
-+		break;
-+
-+	case USB4604_MODE_STANDBY:
-+		usb4604_reset(hub, 0);
-+		dev_dbg(dev, "switched to STANDBY mode\n");
-+		break;
-+
-+	default:
-+		dev_err(dev, "unknown mode is requested\n");
-+		err = -EINVAL;
-+		break;
-+	}
-+
-+	return err;
-+}
-+
-+static int usb4604_probe(struct usb4604 *hub)
-+{
-+	struct device *dev = hub->dev;
-+	struct device_node *np = dev->of_node;
-+	struct gpio_desc *gpio;
-+	u32 mode = USB4604_MODE_HUB;
-+
-+	gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(gpio))
-+		return PTR_ERR(gpio);
-+	hub->gpio_reset = gpio;
-+
-+	if (of_property_read_u32(np, "initial-mode", &hub->mode))
-+		hub->mode = mode;
-+
-+	return usb4604_switch_mode(hub, hub->mode);
-+}
-+
-+static int usb4604_i2c_probe(struct i2c_client *i2c,
-+			     const struct i2c_device_id *id)
-+{
-+	struct usb4604 *hub;
-+
-+	hub = devm_kzalloc(&i2c->dev, sizeof(*hub), GFP_KERNEL);
-+	if (!hub)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(i2c, hub);
-+	hub->dev = &i2c->dev;
-+
-+	return usb4604_probe(hub);
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int usb4604_i2c_suspend(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct usb4604 *hub = i2c_get_clientdata(client);
-+
-+	usb4604_switch_mode(hub, USB4604_MODE_STANDBY);
-+
-+	return 0;
-+}
-+
-+static int usb4604_i2c_resume(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct usb4604 *hub = i2c_get_clientdata(client);
-+
-+	usb4604_switch_mode(hub, hub->mode);
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(usb4604_i2c_pm_ops, usb4604_i2c_suspend,
-+		usb4604_i2c_resume);
-+
-+static const struct i2c_device_id usb4604_id[] = {
-+	{ "usb4604", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, usb4604_id);
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id usb4604_of_match[] = {
-+	{ .compatible = "smsc,usb4604" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, usb4604_of_match);
-+#endif
-+
-+static struct i2c_driver usb4604_i2c_driver = {
-+	.driver = {
-+		.name = "usb4604",
-+		.pm = &usb4604_i2c_pm_ops,
-+		.of_match_table = of_match_ptr(usb4604_of_match),
-+	},
-+	.probe		= usb4604_i2c_probe,
-+	.id_table	= usb4604_id,
-+};
-+module_i2c_driver(usb4604_i2c_driver);
-+
-+MODULE_DESCRIPTION("USB4604 USB HUB driver");
-+MODULE_LICENSE("GPL v2");
+>> +/* Transmit the packet using specified transmit queue */
+>> +int emac_mac_tx_buf_send(struct emac_adapter *adpt, struct emac_tx_queue *tx_q,
+>> +			 struct sk_buff *skb)
+>> +{
+>> +	struct emac_tpd tpd;
+>> +	u32 prod_idx;
+>> +
+>> +	memset(&tpd, 0, sizeof(tpd));
+>> +
+>> +	if (emac_tso_csum(adpt, tx_q, skb, &tpd) != 0) {
+>> +		dev_kfree_skb_any(skb);
+>> +		return NETDEV_TX_OK;
+>> +	}
+>> +
+>> +	if (skb_vlan_tag_present(skb)) {
+>> +		u16 tag;
+>> +
+>> +		EMAC_VLAN_TO_TAG(skb_vlan_tag_get(skb), tag);
+>> +		TPD_CVLAN_TAG_SET(&tpd, tag);
+>> +		TPD_INSTC_SET(&tpd, 1);
+>> +	}
+>> +
+>> +	if (skb_network_offset(skb) != ETH_HLEN)
+>> +		TPD_TYP_SET(&tpd, 1);
+>> +
+>> +	emac_tx_fill_tpd(adpt, tx_q, skb, &tpd);
+>> +
+>> +	netdev_sent_queue(adpt->netdev, skb->len);
+>> +
+>> +	if (emac_tpd_num_free_descs(tx_q) <= (MAX_SKB_FRAGS + 1))
+>> +		netif_stop_queue(adpt->netdev);
+>
+> Is MAX_SKB_FRAGS + 1 really the max number of descriptors required by your driver?
+> There seem to be further descriptors needed for TSO and checksumming.
+> Please make sure that you really check against the _max_ possible number of
+> descriptors for a transmission.
+
+I need some help figuring that out.  Like I said, I didn't write this 
+driver initially, so there are parts that I don't really understand.  I 
+copied the above code from other drivers, but after studying your 
+question, I think I understand what you're asking.  I just don't know 
+how to fix it.
+
+First of all, why do other drivers test MAX_SKB_FRAGS + 1?  Why the +1?
+
+The driver originally used function emac_tx_has_enough_descs() to 
+determine if there is enough room for the new packet.  Then I changed 
+the code as you suggested, and now it guesses how many descriptors need 
+to be free to support the next packet.
+
+If I'm reading emac_tx_fill_tpd() correctly, there could be as many as 
+(2 + skb_shinfo(skb)->nr_frags) descriptors for a given packet.  I don't 
+know how big nr_frags could get, so I don't know how to calculate the 
+number of descriptors I really need.  I'm assuming I need to do 
+something like this:
+
+unsigned int max_desc_per_skb = 2 + ????;
+unsigned int num_desc_needed = (MAX_SKB_FRAGS + 1) * max_desc_per_skb;
+
+if (emac_tpd_num_free_descs(tx_q) < num_desc_needed)
+	netif_stop_queue(adpt->netdev);
+
+>> +
+>> +/* Change the Maximum Transfer Unit (MTU) */
+>> +static int emac_change_mtu(struct net_device *netdev, int new_mtu)
+>> +{
+>> +	unsigned int max_frame = new_mtu + ETH_HLEN + ETH_FCS_LEN + VLAN_HLEN;
+>> +	struct emac_adapter *adpt = netdev_priv(netdev);
+>> +
+>> +	if ((max_frame < EMAC_MIN_ETH_FRAME_SIZE) ||
+>> +	    (max_frame > EMAC_MAX_ETH_FRAME_SIZE)) {
+>> +		netdev_err(adpt->netdev, "error: invalid MTU setting\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	netif_info(adpt, hw, adpt->netdev,
+>> +		   "changing MTU from %d to %d\n", netdev->mtu,
+>> +		   new_mtu);
+>> +	netdev->mtu = new_mtu;
+>> +	adpt->rxbuf_size = new_mtu > EMAC_DEF_RX_BUF_SIZE ?
+>> +		ALIGN(max_frame, 8) : EMAC_DEF_RX_BUF_SIZE;
+>> +
+>> +	if (netif_running(netdev))
+>> +		return emac_reinit_locked(adpt);
+>
+> This does still not look correct. The rxbuf_size is changed while the interface
+> is still running. If the rx buffers are refilled now, the rx buffers size does
+> not match the size that is configured in the mac, does it?
+> You have to stop the rx path first, then change the rx buffer size and then
+> restart the rx path.
+
+Ok.  Thanks for catching that.  I didn't notice that adpt->rxbuf_size 
+was used in emac_mac_rx_descs_refill().
+
+However, I'm confused about one thing.  Almost every other driver just 
+sets "netdev->mtu = new_mtu" and does nothing else.  I can't find any 
+other driver that actually stops the RX path, reprograms the hardware, 
+and then restarts the RX path.  I know this is a stupid question, but 
+why is my driver doing that?
+
+Can I get away with just calling netdev_update_features()?
+
 -- 
-2.9.2
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
