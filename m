@@ -1,7 +1,7 @@
 From: Paul Burton <paul.burton@imgtec.com>
-Subject: [PATCH 12/20] MIPS: SEAD3: Reset via generic syscon-reboot driver & DT
-Date: Tue, 9 Aug 2016 13:35:37 +0100
-Message-ID: <20160809123546.10190-13-paul.burton@imgtec.com>
+Subject: [PATCH 13/20] MIPS: SEAD3: Use generic restart-poweroff driver
+Date: Tue, 9 Aug 2016 13:35:38 +0100
+Message-ID: <20160809123546.10190-14-paul.burton@imgtec.com>
 References: <20160809123546.10190-1-paul.burton@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,67 +9,86 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160809123546.10190-1-paul.burton@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove the SEAD3 implementation of _machine_restart & instead make use
-of the generic syscon-reboot driver probed via device tree.
+Remove the custom platform code to restart when instructed to power off,
+instead relying upon the generic restart-poweroff driver probed via DT
+to do the same thing.
+
+Remove also the halt implementation, which is incorrect. The generic
+MIPS version will hang the system as halt should.
 
 Signed-off-by: Paul Burton <paul.burton@imgtec.com>
 ---
 
- arch/mips/boot/dts/mti/sead3.dts  | 12 ++++++++++++
- arch/mips/configs/sead3_defconfig |  3 ++-
- arch/mips/mti-sead3/sead3-reset.c |  9 ---------
- 3 files changed, 14 insertions(+), 10 deletions(-)
+ arch/mips/boot/dts/mti/sead3.dts  |  4 ++++
+ arch/mips/configs/sead3_defconfig |  1 +
+ arch/mips/mti-sead3/Makefile      |  1 -
+ arch/mips/mti-sead3/sead3-reset.c | 31 -------------------------------
+ 4 files changed, 5 insertions(+), 32 deletions(-)
+ delete mode 100644 arch/mips/mti-sead3/sead3-reset.c
 
 diff --git a/arch/mips/boot/dts/mti/sead3.dts b/arch/mips/boot/dts/mti/sead3.dts
-index 563e2636..d661012 100644
+index d661012..ae2e3ab 100644
 --- a/arch/mips/boot/dts/mti/sead3.dts
 +++ b/arch/mips/boot/dts/mti/sead3.dts
-@@ -84,6 +84,18 @@
+@@ -94,6 +94,10 @@
+ 			offset = <0x50>;
+ 			mask = <0x4d>;
  		};
++
++		poweroff {
++			compatible = "restart-poweroff";
++		};
  	};
  
-+	fpga_regs: system-controller@1f000000 {
-+		compatible = "mti,sead3-fpga", "syscon", "simple-mfd";
-+		reg = <0x1f000000 0x200>;
-+
-+		reboot {
-+			compatible = "syscon-reboot";
-+			regmap = <&fpga_regs>;
-+			offset = <0x50>;
-+			mask = <0x4d>;
-+		};
-+	};
-+
  	system-controller@1f000200 {
- 		compatible = "mti,sead3-cpld", "syscon", "simple-mfd";
- 		reg = <0x1f000200 0x300>;
 diff --git a/arch/mips/configs/sead3_defconfig b/arch/mips/configs/sead3_defconfig
-index e1c6582..055af30 100644
+index 055af30..ab4c465 100644
 --- a/arch/mips/configs/sead3_defconfig
 +++ b/arch/mips/configs/sead3_defconfig
-@@ -80,8 +80,9 @@ CONFIG_I2C=y
- CONFIG_I2C_CHARDEV=y
+@@ -81,6 +81,7 @@ CONFIG_I2C_CHARDEV=y
  # CONFIG_I2C_HELPER_AUTO is not set
  CONFIG_SPI=y
-+CONFIG_POWER_RESET=y
-+CONFIG_POWER_RESET_SYSCON=y
+ CONFIG_POWER_RESET=y
++CONFIG_POWER_RESET_RESTART=y
+ CONFIG_POWER_RESET_SYSCON=y
  CONFIG_SENSORS_ADT7475=y
--CONFIG_MFD_SYSCON=y
  CONFIG_BACKLIGHT_LCD_SUPPORT=y
- CONFIG_LCD_CLASS_DEVICE=y
- CONFIG_BACKLIGHT_CLASS_DEVICE=y
+diff --git a/arch/mips/mti-sead3/Makefile b/arch/mips/mti-sead3/Makefile
+index 04ea002..ad722c8 100644
+--- a/arch/mips/mti-sead3/Makefile
++++ b/arch/mips/mti-sead3/Makefile
+@@ -13,6 +13,5 @@ obj-y += sead3-display.o
+ obj-y += sead3-dtshim.o
+ obj-y += sead3-init.o
+ obj-y += sead3-int.o
+-obj-y += sead3-reset.o
+ obj-y += sead3-setup.o
+ obj-y += sead3-time.o
 diff --git a/arch/mips/mti-sead3/sead3-reset.c b/arch/mips/mti-sead3/sead3-reset.c
-index e6fb244..8f548f0 100644
+deleted file mode 100644
+index 8f548f0..0000000
 --- a/arch/mips/mti-sead3/sead3-reset.c
-+++ b/arch/mips/mti-sead3/sead3-reset.c
-@@ -13,14 +13,6 @@
- #define SOFTRES_REG	0x1f000050
- #define GORESET		0x4d
- 
--static void mips_machine_restart(char *command)
++++ /dev/null
+@@ -1,31 +0,0 @@
+-/*
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file "COPYING" in the main directory of this archive
+- * for more details.
+- *
+- * Copyright (C) 2012 MIPS Technologies, Inc.  All rights reserved.
+- */
+-#include <linux/io.h>
+-#include <linux/pm.h>
+-
+-#include <asm/reboot.h>
+-
+-#define SOFTRES_REG	0x1f000050
+-#define GORESET		0x4d
+-
+-static void mips_machine_halt(void)
 -{
 -	unsigned int __iomem *softres_reg =
 -		ioremap(SOFTRES_REG, sizeof(unsigned int));
@@ -77,16 +96,13 @@ index e6fb244..8f548f0 100644
 -	__raw_writel(GORESET, softres_reg);
 -}
 -
- static void mips_machine_halt(void)
- {
- 	unsigned int __iomem *softres_reg =
-@@ -31,7 +23,6 @@ static void mips_machine_halt(void)
- 
- static int __init mips_reboot_setup(void)
- {
--	_machine_restart = mips_machine_restart;
- 	_machine_halt = mips_machine_halt;
- 	pm_power_off = mips_machine_halt;
- 
+-static int __init mips_reboot_setup(void)
+-{
+-	_machine_halt = mips_machine_halt;
+-	pm_power_off = mips_machine_halt;
+-
+-	return 0;
+-}
+-arch_initcall(mips_reboot_setup);
 -- 
 2.9.2
