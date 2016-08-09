@@ -1,298 +1,199 @@
-From: <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: patch "usb: misc: Add driver for usb4604" added to usb-testing
-Date: Tue, 09 Aug 2016 15:49:42 +0200
-Message-ID: <147075058222360@kroah.com>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 1/2] usb: core: add support for HCD providers
+Date: Tue, 9 Aug 2016 15:56:33 +0200
+Message-ID: <20160809135633.GA2723@kroah.com>
+References: <1468326921-26485-1-git-send-email-zajec5@gmail.com>
+ <1468326921-26485-2-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1468326921-26485-2-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jul 12, 2016 at 02:35:19PM +0200, Rafał Miłecki wrote:
+> When working with Device Tree we may need to reference controllers
+> (their nodes) and query for HCDs. This is useful for getting some
+> runtime info about host controllers like e.g. assigned bus number.
+> 
+> Signed-off-by: Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/usb/core/Makefile    |  1 +
+>  drivers/usb/core/provider.c  | 79 ++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/usb/provider.h | 39 ++++++++++++++++++++++
+>  3 files changed, 119 insertions(+)
+>  create mode 100644 drivers/usb/core/provider.c
+>  create mode 100644 include/linux/usb/provider.h
+> 
+> diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
+> index 9780877..20b91d1 100644
+> --- a/drivers/usb/core/Makefile
+> +++ b/drivers/usb/core/Makefile
+> @@ -9,5 +9,6 @@ usbcore-y += port.o of.o
+>  
+>  usbcore-$(CONFIG_PCI)		+= hcd-pci.o
+>  usbcore-$(CONFIG_ACPI)		+= usb-acpi.o
+> +usbcore-$(CONFIG_OF)		+= provider.o
+>  
+>  obj-$(CONFIG_USB)		+= usbcore.o
+> diff --git a/drivers/usb/core/provider.c b/drivers/usb/core/provider.c
+> new file mode 100644
+> index 0000000..4b9165a
+> --- /dev/null
+> +++ b/drivers/usb/core/provider.c
+> @@ -0,0 +1,79 @@
+> +#include <linux/slab.h>
+> +#include <linux/usb/provider.h>
+> +
+> +static DEFINE_MUTEX(hcd_provider_mutex);
+> +static LIST_HEAD(hcd_provider_list);
+> +
+> +struct hcd_provider {
+> +	struct device_node *np;
+> +	struct usb_hcd *(*of_xlate)(struct of_phandle_args *args, void *data);
+> +	void *data;
+> +	struct list_head list;
+> +};
+> +
+> +struct hcd_provider *of_hcd_provider_register(struct device_node *np,
+> +					      struct usb_hcd *(*of_xlate)(struct of_phandle_args *args, void *data),
 
-This is a note to let you know that I've just added the patch titled
-
-    usb: misc: Add driver for usb4604
-
-to my usb git tree which can be found at
-    git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git
-in the usb-testing branch.
-
-The patch will show up in the next release of the linux-next tree
-(usually sometime within the next 24 hours during the week.)
-
-The patch will be merged to the usb-next branch sometime soon,
-after it passes testing, and the merge window is open.
-
-If you have any questions about this process, please let me know.
-
-
->From 740a6a1720f631ef2ad84fc378f2469c37f389c7 Mon Sep 17 00:00:00 2001
-From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Sat, 25 Jun 2016 22:24:54 -0700
-Subject: usb: misc: Add driver for usb4604
-
-This is a minimal driver to support bringing a usb4604 device
-from microchip out of reset and into hub mode. The usb4604 device
-is related to the usb3503 device, but it didn't seem close enough
-to warrant putting both into the same file. This patch borrows
-some of the usb3503 structure and trims it down to just handle
-the optional reset gpio and adds the i2c command to put the
-device into hub mode.
-
-Datasheet: http://ww1.microchip.com/downloads/en/DeviceDoc/00001716A.pdf
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/usb4604.txt |  19 +++
- drivers/usb/misc/Kconfig                          |   6 +
- drivers/usb/misc/Makefile                         |   1 +
- drivers/usb/misc/usb4604.c                        | 175 ++++++++++++++++++++++
- 4 files changed, 201 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/usb4604.txt
- create mode 100644 drivers/usb/misc/usb4604.c
-
-diff --git a/Documentation/devicetree/bindings/usb/usb4604.txt b/Documentation/devicetree/bindings/usb/usb4604.txt
-new file mode 100644
-index 000000000000..82506d17712c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/usb4604.txt
-@@ -0,0 +1,19 @@
-+SMSC USB4604 High-Speed Hub Controller
-+
-+Required properties:
-+- compatible: Should be "smsc,usb4604"
-+
-+Optional properties:
-+- reg: Specifies the i2c slave address, it is required and should be 0x2d
-+       if I2C is used.
-+- reset-gpios: Should specify GPIO for reset.
-+- initial-mode: Should specify initial mode.
-+                (1 for HUB mode, 2 for STANDBY mode)
-+
-+Examples:
-+	usb-hub@2d {
-+		compatible = "smsc,usb4604";
-+		reg = <0x2d>;
-+		reset-gpios = <&gpx3 5 1>;
-+		initial-mode = <1>;
-+	};
-diff --git a/drivers/usb/misc/Kconfig b/drivers/usb/misc/Kconfig
-index eb8f8d37cd95..47b357760afc 100644
---- a/drivers/usb/misc/Kconfig
-+++ b/drivers/usb/misc/Kconfig
-@@ -240,6 +240,12 @@ config USB_HSIC_USB3503
-        help
-          This option enables support for SMSC USB3503 HSIC to USB 2.0 Driver.
- 
-+config USB_HSIC_USB4604
-+       tristate "USB4604 HSIC to USB20 Driver"
-+       depends on I2C
-+       help
-+         This option enables support for SMSC USB4604 HSIC to USB 2.0 Driver.
-+
- config USB_LINK_LAYER_TEST
- 	tristate "USB Link Layer Test driver"
- 	help
-diff --git a/drivers/usb/misc/Makefile b/drivers/usb/misc/Makefile
-index 3d79faaad2fb..3d1992750da4 100644
---- a/drivers/usb/misc/Makefile
-+++ b/drivers/usb/misc/Makefile
-@@ -24,6 +24,7 @@ obj-$(CONFIG_USB_USS720)		+= uss720.o
- obj-$(CONFIG_USB_SEVSEG)		+= usbsevseg.o
- obj-$(CONFIG_USB_YUREX)			+= yurex.o
- obj-$(CONFIG_USB_HSIC_USB3503)		+= usb3503.o
-+obj-$(CONFIG_USB_HSIC_USB4604)		+= usb4604.o
- obj-$(CONFIG_USB_CHAOSKEY)		+= chaoskey.o
- obj-$(CONFIG_UCSI)			+= ucsi.o
- 
-diff --git a/drivers/usb/misc/usb4604.c b/drivers/usb/misc/usb4604.c
-new file mode 100644
-index 000000000000..e9f37fb746ac
---- /dev/null
-+++ b/drivers/usb/misc/usb4604.c
-@@ -0,0 +1,175 @@
-+/*
-+ * Driver for SMSC USB4604 USB HSIC 4-port 2.0 hub controller driver
-+ * Based on usb3503 driver
-+ *
-+ * Copyright (c) 2012-2013 Dongjin Kim (tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org)
-+ * Copyright (c) 2016 Linaro Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/delay.h>
-+#include <linux/slab.h>
-+#include <linux/module.h>
-+#include <linux/gpio/consumer.h>
-+
-+enum usb4604_mode {
-+	USB4604_MODE_UNKNOWN,
-+	USB4604_MODE_HUB,
-+	USB4604_MODE_STANDBY,
-+};
-+
-+struct usb4604 {
-+	enum usb4604_mode	mode;
-+	struct device		*dev;
-+	struct gpio_desc	*gpio_reset;
-+};
-+
-+static void usb4604_reset(struct usb4604 *hub, int state)
-+{
-+	gpiod_set_value_cansleep(hub->gpio_reset, state);
-+
-+	/* Wait for i2c logic to come up */
-+	if (state)
-+		msleep(250);
-+}
-+
-+static int usb4604_connect(struct usb4604 *hub)
-+{
-+	struct device *dev = hub->dev;
-+	struct i2c_client *client = to_i2c_client(dev);
-+	int err;
-+	u8 connect_cmd[] = { 0xaa, 0x55, 0x00 };
-+
-+	usb4604_reset(hub, 1);
-+
-+	err = i2c_master_send(client, connect_cmd, ARRAY_SIZE(connect_cmd));
-+	if (err < 0) {
-+		usb4604_reset(hub, 0);
-+		return err;
-+	}
-+
-+	hub->mode = USB4604_MODE_HUB;
-+	dev_dbg(dev, "switched to HUB mode\n");
-+
-+	return 0;
-+}
-+
-+static int usb4604_switch_mode(struct usb4604 *hub, enum usb4604_mode mode)
-+{
-+	struct device *dev = hub->dev;
-+	int err = 0;
-+
-+	switch (mode) {
-+	case USB4604_MODE_HUB:
-+		err = usb4604_connect(hub);
-+		break;
-+
-+	case USB4604_MODE_STANDBY:
-+		usb4604_reset(hub, 0);
-+		dev_dbg(dev, "switched to STANDBY mode\n");
-+		break;
-+
-+	default:
-+		dev_err(dev, "unknown mode is requested\n");
-+		err = -EINVAL;
-+		break;
-+	}
-+
-+	return err;
-+}
-+
-+static int usb4604_probe(struct usb4604 *hub)
-+{
-+	struct device *dev = hub->dev;
-+	struct device_node *np = dev->of_node;
-+	struct gpio_desc *gpio;
-+	u32 mode = USB4604_MODE_HUB;
-+
-+	gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(gpio))
-+		return PTR_ERR(gpio);
-+	hub->gpio_reset = gpio;
-+
-+	if (of_property_read_u32(np, "initial-mode", &hub->mode))
-+		hub->mode = mode;
-+
-+	return usb4604_switch_mode(hub, hub->mode);
-+}
-+
-+static int usb4604_i2c_probe(struct i2c_client *i2c,
-+			     const struct i2c_device_id *id)
-+{
-+	struct usb4604 *hub;
-+
-+	hub = devm_kzalloc(&i2c->dev, sizeof(*hub), GFP_KERNEL);
-+	if (!hub)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(i2c, hub);
-+	hub->dev = &i2c->dev;
-+
-+	return usb4604_probe(hub);
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int usb4604_i2c_suspend(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct usb4604 *hub = i2c_get_clientdata(client);
-+
-+	usb4604_switch_mode(hub, USB4604_MODE_STANDBY);
-+
-+	return 0;
-+}
-+
-+static int usb4604_i2c_resume(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct usb4604 *hub = i2c_get_clientdata(client);
-+
-+	usb4604_switch_mode(hub, hub->mode);
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(usb4604_i2c_pm_ops, usb4604_i2c_suspend,
-+		usb4604_i2c_resume);
-+
-+static const struct i2c_device_id usb4604_id[] = {
-+	{ "usb4604", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, usb4604_id);
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id usb4604_of_match[] = {
-+	{ .compatible = "smsc,usb4604" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, usb4604_of_match);
-+#endif
-+
-+static struct i2c_driver usb4604_i2c_driver = {
-+	.driver = {
-+		.name = "usb4604",
-+		.pm = &usb4604_i2c_pm_ops,
-+		.of_match_table = of_match_ptr(usb4604_of_match),
-+	},
-+	.probe		= usb4604_i2c_probe,
-+	.id_table	= usb4604_id,
-+};
-+module_i2c_driver(usb4604_i2c_driver);
-+
-+MODULE_DESCRIPTION("USB4604 USB HUB driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.9.2
+Typedef for the function pointer?
 
 
+> +					      void *data)
+> +{
+> +	struct hcd_provider *hcd_provider;
+> +
+> +	if (!np)
+> +		return ERR_PTR(-EINVAL);
+
+How can that be true?
+
+> +
+> +	hcd_provider = kzalloc(sizeof(*hcd_provider), GFP_KERNEL);
+> +	if (!hcd_provider)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	hcd_provider->np = np;
+> +	hcd_provider->of_xlate = of_xlate;
+> +	hcd_provider->data = data;
+> +
+> +	mutex_lock(&hcd_provider_mutex);
+> +	list_add_tail(&hcd_provider->list, &hcd_provider_list);
+> +	mutex_unlock(&hcd_provider_mutex);
+> +
+> +	return hcd_provider;
+> +}
+> +EXPORT_SYMBOL_GPL(of_hcd_provider_register);
+> +
+> +void of_hcd_provider_unregister(struct hcd_provider *hcd_provider)
+> +{
+> +	if (IS_ERR(hcd_provider))
+> +		return;
+> +
+> +	mutex_lock(&hcd_provider_mutex);
+> +	list_del(&hcd_provider->list);
+> +	mutex_unlock(&hcd_provider_mutex);
+> +
+> +	kfree(hcd_provider);
+> +}
+> +EXPORT_SYMBOL_GPL(of_hcd_provider_unregister);
+> +
+> +struct usb_hcd *of_hcd_xlate_simple(struct of_phandle_args *args, void *data)
+> +{
+> +	if (args->args_count != 0)
+> +		return ERR_PTR(-EINVAL);
+
+Huh?
+
+> +	return data;
+
+What is this function for?  Why even have it?
+
+> +}
+> +EXPORT_SYMBOL_GPL(of_hcd_xlate_simple);
+> +
+> +struct usb_hcd *of_hcd_get_from_provider(struct of_phandle_args *args)
+> +{
+> +	struct usb_hcd *hcd = ERR_PTR(-ENOENT);
+> +	struct hcd_provider *provider;
+> +
+> +	if (!args)
+> +		return ERR_PTR(-EINVAL);
+
+How is args not set?
+
+> +
+> +	mutex_lock(&hcd_provider_mutex);
+> +	list_for_each_entry(provider, &hcd_provider_list, list) {
+> +		if (provider->np == args->np) {
+> +			hcd = provider->of_xlate(args, provider->data);
+> +			break;
+> +		}
+> +	}
+> +	mutex_unlock(&hcd_provider_mutex);
+> +
+> +	return hcd;
+> +}
+> +EXPORT_SYMBOL_GPL(of_hcd_get_from_provider);
+> diff --git a/include/linux/usb/provider.h b/include/linux/usb/provider.h
+> new file mode 100644
+> index 0000000..c66e006
+> --- /dev/null
+> +++ b/include/linux/usb/provider.h
+> @@ -0,0 +1,39 @@
+> +#ifndef __USB_CORE_PROVIDER_H
+> +#define __USB_CORE_PROVIDER_H
+> +
+> +#include <linux/of.h>
+> +#include <linux/usb.h>
+> +#include <linux/usb/hcd.h>
+> +
+> +struct hcd_provider;
+> +
+> +#ifdef CONFIG_OF
+> +struct hcd_provider *of_hcd_provider_register(struct device_node *np,
+> +					      struct usb_hcd *(*of_xlate)(struct of_phandle_args *args, void *data),
+> +					      void *data);
+> +void of_hcd_provider_unregister(struct hcd_provider *hcd_provider);
+> +struct usb_hcd *of_hcd_xlate_simple(struct of_phandle_args *args, void *data);
+> +struct usb_hcd *of_hcd_get_from_provider(struct of_phandle_args *args);
+> +#else
+> +static inline
+> +struct hcd_provider *of_hcd_provider_register(struct device_node *np,
+> +					      struct usb_hcd *(*of_xlate)(struct of_phandle_args *args, void *data),
+> +					      void *data)
+> +{
+> +	return ERR_PTR(-ENOSYS);
+> +}
+> +static inline void of_hcd_provider_unregister(struct hcd_provider *hcd_provider)
+> +{
+> +}
+> +static inline struct usb_hcd *of_hcd_xlate_simple(struct of_phandle_args *args,
+> +						  void *data)
+> +{
+> +	return ERR_PTR(-ENOSYS);
+> +}
+> +static inline struct usb_hcd *of_hcd_get_from_provider(struct of_phandle_args *args)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+
+Why all of the "of" stuff?  Why not make it generic for any firmware
+type (acpi, OF, etc.)?
+
+And I really don't like this, isn't there other ways to get this
+information if you really need it?
+
+thanks,
+
+greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
