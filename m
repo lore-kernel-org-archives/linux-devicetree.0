@@ -1,55 +1,100 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
-Date: Tue, 9 Aug 2016 14:34:00 -0500
-Message-ID: <57AA3028.2080506@codeaurora.org>
-References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
- <9ebb6cb7-c793-cd76-5283-c9a659d0398f@gmx.de>
- <57AA2001.2010904@codeaurora.org>
+From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/6] dt/bindings: Add bindings for Tegra GMI controller
+Date: Tue, 9 Aug 2016 22:48:00 +0200
+Message-ID: <CALw8SCVrQeZLQjkapLjk9Me=AVU4kbtOskem8jeEeYDK5tznGg@mail.gmail.com>
+References: <1470512452-8322-1-git-send-email-mirza.krak@gmail.com>
+ <1470512452-8322-4-git-send-email-mirza.krak@gmail.com> <901be576-a810-c630-9b83-de922e945df0@nvidia.com>
+ <CALw8SCV61w6BgtBb8pY4czeB4yFmbtLmB2MuyrvGcvepmRpeBQ@mail.gmail.com> <5e0402db-10ce-75eb-cf95-d9e2d26e3efe@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57AA2001.2010904-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lino Sanfilippo <LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5e0402db-10ce-75eb-cf95-d9e2d26e3efe-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Timur Tabi wrote:
-> I used to work on PowerPC, so I respect making things work for both
-> endians.  However, even I think that this is overkill for my driver.
-> First, there's no way this driver will ever be used on a big-endian
-> system.  Second, I'm pretty sure there are lots of places that would
-> need cpu_to_le32() in order to make this driver big-endian compatible.
-> It would be a huge mess.
+2016-08-09 15:34 GMT+02:00 Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>:
 >
-> #define TPD_BUFFER_ADDR_H_SET(tpd, val)    BITS_SET((tpd)->word[3], 18,
-> 30, val)
+> On 09/08/16 09:40, Mirza Krak wrote:
+>> 2016-08-08 16:44 GMT+02:00 Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>:
+>>>
+>>> On 06/08/16 20:40, Mirza Krak wrote:
+>>>> From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>
+
+<--snip-->
+
+>>>> + - nvidia,snor-we-width: Number of cycles during which WE stays asserted.
+>>>> +   Valid values are 0-15, default is 1
+>>>> + - nvidia,snor-oe-width: Number of cycles during which OE stays asserted.
+>>>> +   Valid values are 0-255, default is 1
+>>>> + - nvidia,snor-wait-width: Number of cycles before READY is asserted.
+>>>> +   Valid values are 0-255, default is 3
+>>>> +
+>>>> +Example with two SJA1000 CAN controllers connected to the GMI bus:
+>>>> +
+>>>> +  gmi@70090000 {
+>>>> +    #address-cells = <1>;
+>>>> +    #size-cells = <1>;
+>>>
+>>> I think 0 for size makes sense. I know that caused you problems before,
+>>> but I am wondering if ...
+>>>
+>>>> +    ranges;
+>>>
+>>> ... ranges is needed here? If we do have it, I am wondering if it should
+>>> be a single entry for the chip-select that is being used. For now we
+>>> could only support a ranges with one entry.
+>>>
+>>>         #address-cells = <1>;
+>>>         #size-cells = <1>;
+>>>         ranges = <4 0x48000000 0x00040000>;
+>>
+>> I prefer if we have "ranges" with one single entry, and warn if user enters
+>> multiple for now, like we discussed earlier. Should have really done it in
+>> this series.
 >
-> This macros sets specific bits based on the definition of the register.
->   I could change it to this:
+> I think I do as well.
 >
-> #define TPD_BUFFER_ADDR_H_SET(tpd, val) BITS_SET((tpd)->word[3], 18, 30,
-> cpu_to_le32(val))
+>>>
+>>>> +    nvidia,snor-mux-mode;
+>>>> +    nvidia,snor-adv-inv;
+>>>> +    nvidia,snor-cs-select = <4>;
+>>>
+>>> I would have expected these under bus@X node as they are specific to the
+>>> GMI CS.
+>>
+>> Yes, that is true.
+>>
+>>>
+>>> I would also expect that the actual chip-select number is encoded in the
+>>> reg property.
+>>>
+>>>> +
+>>>> +    bus@0,0 {
+>>>
+>>> bus@4
+>>
+>> ACK.
+>>
+>>>
+>>> No mention of this bus node in the above documentation.
+>>
+>> I was hesitant documenting it since I am not sure if we really need it
+>> in a generic case? It does make sense in my
+>> specific case. But what would it look like if we could maintain CS in software.
+>>
+>> Do you then have a bus node per CS? I am guessing not. Is it enough to
+>> document it in my "example brief"?
 >
-> But I honestly don't see what good that will do.  There are still
-> thousands of other places that assume little-endian.
+> I see what you mean. May be it is fine to document with the examples
+> below how child devices should be populated. You should also state that
+> currently the GMI only supports one child device currently for the
+> chip-select that is being used.
 
-Ok, so I took another look at this, and even though I still think that 
-it's useless, it seems to be much less difficult to implement than I 
-initially thought.
+Should I really need to state that? Is it not always the case, that
+you have one child device per chip-select?
 
-I think all I need to do is to modify the BITS_GET() and BITS_SET() 
-macros in emac-mac.h, as well as any of the RRD_xxx and TPD_xxx macros 
-that do not use BITS_GET() or BITS_SET().  This is a minor change which 
-I will implement in v8 of the patch.
-
-Every other hardware access uses readl/writel, which is already endian-safe.
-
--- 
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
-Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards
+Mirza
