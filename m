@@ -1,95 +1,114 @@
-From: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v24 9/9] Documentation: dt: chosen properties for arm64 kdump
-Date: Tue,  9 Aug 2016 10:57:47 +0900
-Message-ID: <20160809015747.28591-1-takahiro.akashi@linaro.org>
-References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160809015248.28414-2-takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v2 0/6] Add support of inverting power control and some
+ minor cleanup
+Date: Tue, 9 Aug 2016 10:12:15 +0800
+Message-ID: <8da29b3d-20f1-6529-c985-c462dbdd7fb1@rock-chips.com>
+References: <CGME20160807013720epcas1p235628058a90efa6f0062b03a4b2e4284@epcas1p2.samsung.com>
+ <1470533618-16312-1-git-send-email-shawn.lin@rock-chips.com>
+ <ee997311-3964-8623-a431-c9a5add7f991@samsung.com>
+ <cc785e09-6b33-d451-3d11-728bee3668a5@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <cc785e09-6b33-d451-3d11-728bee3668a5@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: shawn.lin@rock-chips.com, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+On 2016/8/9 9:49, Shawn Lin wrote:
+> Hi,
+>
+> On 2016/8/8 18:24, Jaehoon Chung wrote:
+>> Hi Shawn,
+>>
+>> On 08/07/2016 10:33 AM, Shawn Lin wrote:
+>>> By default, dw_mmc outputs high level voltage to indicate powering
+>>> up the card and outputs low level vcltage to indicate powering
+>>> off the card. But that is not always correct. The power io should
+>>> be able to control different kind of hw components to supply or
+>>> cutoff power to the card. We have boards that need this patchset
+>>> to make the power control correct. Meanwhile let's expose it to
+>>> DT for board-specific usage.
+>>
+>> I have a question for this patch-set. Does DWMMC IP support to invert
+>> ON/OFF at Power Enable register?
+>
+> No.
+>
+>> Hmm..Well, if use the DW_MMC_CARD_PWR_INVERT, it should also be the
+>> similar behavior with Quirks.
+>
+> yup, it makes the power control more complicated than before. :(
+>
+>>
+>> Other flags are related with dwmmc IP. But this flag
+>> (DW_MMC_CARD_PWR_INVERT) is not related with IP side.
+>> I understood why you needs to add this flag..Is rockchip designed to
+>> invert the power controlling?
+>
+> We don't invert the power controlling but our customers do.
+> The HW componet looks like some discrete LDOs which enable the related
+> power supply when outputing low voltage from pwren..
+>
+>>
+>> But it's not general case. We can discuss about this.
+>
+> I have a solution which is to add gpio power control for slot-gpio of
+> mmc core. once finished, we could add pwr_cap_invert just like what we
+> did for cd/wp invert control..
+>
+> Then we could remove PWREN from the default state of
+> pinctrl inside the sdmmc dt node, and let dwmmc request gpio power
+> control stuff after paring the property for pwr_cap_invert..
+>
+> More over, it well fit for all mmc host's requirement of gpio
+> power control and inverted control if they want it. :)
+>
+>
+> That should be legit for us?
+> If it sounds ok to you and Ulf, I will come up with a RFC one for
+> community to comment it.:)
 
-Add documentation for
-	linux,crashkernel-base and crashkernel-size,
-	linux,usable-memory-range, and
-	linux,elfcorehdr
-used by arm64 kexec/kdump to decribe the kdump reserved area, and
-the elfcorehdr's location within it.
+one more, maybe pwrseq is also a choice for us.
+But I'm not sure if it deserves a pwerseq_sd.c ?
 
-Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-[takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org:
-    renamed "usable-memory" to "usable-memory-range",
-    added "linux,crashkernel-base" and "-size" ]
-Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+>
+>>
+>> Best Regards,
+>> Jaehoon Chung
+>>
+>>>
+>>>
+>>> Changes in v2:
+>>> - fix copy-paste err and typo
+>>>
+>>> Shawn Lin (6):
+>>>   dt-bindings: rockchip-dw-mshc: add description of
+>>>     rockchip,power-invert
+>>>   mmc: dw_mmc: cleanup power setting of set_ios callback
+>>>   mmc: dw_mmc: split out dw_mci_set_power
+>>>   mmc: dw_mmc: split out dw_mci_set_power_reg
+>>>   mmc: dw_mmc: support inverted power control
+>>>   mmc: dw_mmc-rockchip: add parsing of power control from DT
+>>>
+>>>  .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |   6 +
+>>>  drivers/mmc/host/dw_mmc-rockchip.c                 |   8 ++
+>>>  drivers/mmc/host/dw_mmc.c                          | 134
+>>> ++++++++++++---------
+>>>  drivers/mmc/host/dw_mmc.h                          |   1 +
+>>>  4 files changed, 90 insertions(+), 59 deletions(-)
+>>>
+>>
+>>
+>>
+>>
+>
+>
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 6ae9d82..236188a 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
- book3e) by some versions of kexec-tools to tell the new kernel that it
- is being booted by kexec, as the booting environment may differ (e.g.
- a different secondary CPU release mechanism)
-+
-+linux,crashkernel-base
-+linux,crashkernel-size
-+----------------------
-+These properties (currently used on PowerPC and arm64) indicates
-+the base address and the size, respectively, of the reserved memory
-+range for crash dump kernel.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,crashkernel-base = <0x9 0xf0000000>;
-+		linux,crashkernel-size = <0x0 0x10000000>;
-+	};
-+};
-+
-+linux,usable-memory-range
-+-------------------------
-+
-+This property (currently used only on arm64) holds the memory range,
-+the base address and the size, which can be used as system ram on
-+the *current* kernel. Note that, if this property is present, any memory
-+regions under "memory" nodes in DT blob or ones marked as "conventional
-+memory" in EFI memory map should be ignored.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-+	};
-+};
-+
-+The main usage is for crash dump kernel to identify its own usable
-+memory and exclude, at its boot time, any other memory areas that are
-+part of the panicked kernel's memory.
-+
-+linux,elfcorehdr
-+----------------
-+
-+This property (currently used only on arm64) holds the memory range,
-+the address and the size, of the elf core header which mainly describes
-+the panicked kernel's memory layout in elf format.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-+		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
-+	};
-+};
+
 -- 
-2.9.0
+Best Regards
+Shawn Lin
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
