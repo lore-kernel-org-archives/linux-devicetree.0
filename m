@@ -1,67 +1,59 @@
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: Re: [PATCH v18 6/6] ARM: socfpga: fpga bridge driver support
-Date: Tue, 9 Aug 2016 12:00:39 -0400
-Message-ID: <20160809160039.GX29630@windriver.com>
-References: <20160712193645.9098-1-atull@opensource.altera.com>
- <20160712193645.9098-7-atull@opensource.altera.com>
- <CAP=VYLo2jtp57kQe5671xM=4o_ZAU6XG_W1MXU8aPv4Ws7kkDA@mail.gmail.com>
- <alpine.DEB.2.02.1608081416110.11063@linuxheads99>
- <CAAtXAHev2Dytadp-_Hs0agcSXUTyrFhJQxHcsFd7faOReHzr9Q@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] ASoC: samsung: Add machine driver for Exynos5433
+ based TM2 board
+Date: Tue, 9 Aug 2016 17:02:09 +0100
+Message-ID: <20160809160209.GB9347@sirena.org.uk>
+References: <1470752514-11409-1-git-send-email-s.nawrocki@samsung.com>
+ <1470752514-11409-2-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gj572EiMnwbLXET9"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAAtXAHev2Dytadp-_Hs0agcSXUTyrFhJQxHcsFd7faOReHzr9Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: atull <atull@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dinh Nguyen <dinguyen@opensource.altera.com>, Devicetree List <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Alan Tull <delicious.quinoa@gmail.com>, Matthew Gerlach <mgerlach@altera.com>
+In-Reply-To: <1470752514-11409-2-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[Re: [PATCH v18 6/6] ARM: socfpga: fpga bridge driver support] On 08/08/2016 (Mon 13:44) Moritz Fischer wrote:
 
-> Hi Alan,
-> 
-> On Mon, Aug 8, 2016 at 12:18 PM, atull <atull@opensource.altera.com> wrote:
-> 
-> >> Please don't use module.h in drivers controlled by a bool
-> >> Kconfig setting.
-> >>
-> >> THanks,
-> >> Paul.
-> >>
-> >
-> > Thanks for the feedback.  Can you provide an example of what you
-> > would consider to be proper usage in the kernel?
-> 
-> 
-> I think Paul is suggesting to use
-> 
-> static int __init alt_fpga_bridge_init(void)
-> {
->         platform_driver_register(&alt_fpga_bridge_driver);
-> }
-> 
-> device_initcall(alt_fpga_bridge_init);
-> 
-> or better:
-> 
-> builtin_platform_driver(&alt_fpga_bridge_driver);
-> 
-> Like for example in: drivers/cpuidle/cpuidle-mvebu-v7.c
+--gj572EiMnwbLXET9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yes, pretty much that -- if you have a bool Kconfig, you should be using
-builtin registration functions, and have no need for module.h or
-anything MODULE_<xyz> or any module_init/module_exit calls.
+On Tue, Aug 09, 2016 at 04:21:54PM +0200, Sylwester Nawrocki wrote:
 
-An empty file containing nothing but #include <linux/module.h> will
-cause cpp to emit about 750k of goop, so we really should only be using
-it for drivers that are genuinely modular; i.e. tristate Kconfig.
+> +		card->dai_link[i].codec_of_node = codec_dai_node;
+> +		card->dai_link[i].cpu_of_node = cpu_dai_node;
+> +		card->dai_link[i].platform_of_node = cpu_dai_node;
+> +	}
+> +
+> +	priv->codec_mclk1 = of_clk_get_by_name(codec_dai_node, "mclk1");
+> +	if (IS_ERR(priv->codec_mclk1)) {
 
-Thanks,
-Paul.
+So, all this of_clk_get_by_name() stuff is messy and is going to need to
+be duplicated for any cards using this CODEC which isn't excellent.  It
+would be a lot nicer if we just did some regular clk_get() calls in the
+MFD and then provided an interface for other drivers to get at those
+clocks (or just had the CODEC driver DTRT internally).
+
+--gj572EiMnwbLXET9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXqf6AAAoJECTWi3JdVIfQK/MH/0v5XN/TZNh0pMlbnveM6sWZ
+uy1ZBAR64pgqYFHLtLsM7VCniWccX3qwEbNI1MFZHzDjyMRcGZkaLwIquT/VDLKX
+mYae6sgotAjjaNNvnStwQUf5ksfw2tfJV+0z1Zr9yVnT6stZDASEGVY3J20k7iB4
+TOyR2+nRAu3GEEXoy8jERNkfX77nEFYv4EDeOzITORAK2FmfqFdTAZGO1Qf+ba3s
+djUWeKZEvkmDp5Ob83778N+n3uMPNYQ+Ln8Cpg1yRgMu4mxMQwdPcz2BYsU9BgaM
+4WY0J+Lir64CkL7xemErF0jIF+1foK/hf0aUQNuO5rznnkZb5IdEmxj0vHm4hEU=
+=aCgc
+-----END PGP SIGNATURE-----
+
+--gj572EiMnwbLXET9--
 --
-
-> 
-> Cheers,
-> 
-> Moritz
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
