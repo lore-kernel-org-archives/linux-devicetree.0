@@ -1,117 +1,473 @@
-From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] console: Don't prefer first registered if DT specifies stdout-path
-Date: Tue, 9 Aug 2016 13:50:10 +0100
-Message-ID: <20160809125010.14150-1-paul.burton@imgtec.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/4] mfd: lp873x: Add lp873x PMIC support
+Date: Tue, 9 Aug 2016 13:53:47 +0100
+Message-ID: <20160809125347.GF5243@dell>
+References: <1470635218-15951-1-git-send-email-j-keerthy@ti.com>
+ <1470635218-15951-3-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1470635218-15951-3-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ivan Delalande <colona-nzgTgzXrdUbQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geliang Tang <geliangtang-9Onoh4P/yGk@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mathias Krause <minipli-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-If a device tree specifies a preferred device for kernel console output
-via the stdout-path or linux,stdout-path chosen node properties or the
-stdout alias then the kernel ought to honor it & output the kernel
-console to that device. As it stands, this isn't the case. Whilst we
-parse the stdout-path properties & set an of_stdout variable from
-of_alias_scan(), and use that from of_console_check() to determine
-whether to add a console device as a preferred console whilst
-registering it, we also prefer the first registered console if no other
-has been selected at the time of its registration.
+On Mon, 08 Aug 2016, Keerthy wrote:
 
-This means that if a console other than the one the device tree selects
-via stdout-path is registered first, we will switch to using it & when
-the stdout-path console is later registered the call to
-add_preferred_console() via of_console_check() is too late to do
-anything useful. In practice this seems to mean that we switch to the
-dummy console device fairly early & see no further console output:
+> The LP873X chip is a power management IC for Portable Navigation Systems
+>     and Tablet Computing devices. It contains the following components:
+> 
+>      - Regulators.
+>      - Configurable General Purpose Output Signals(GPO).
+> 
+> PMIC interacts with the main processor through i2c. PMIC has
+> couple of LDOs(Linear Regulators), couple of BUCKs (Step-Down DC-DC
+> Converter Cores) and GPOs(General Purpose Output Signals).
+> 
+> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+> ---
+> Changes in v6:
+> 
+>   * Rebased on top of http://www.gossamer-threads.com/lists/linux/kernel/2457552.
+>   * Hence added probe_new instead of probe and removed unused i2c_device_id.
 
-    Console: colour dummy device 80x25
-    console [tty0] enabled
-    bootconsole [ns16550a0] disabled
+No, please don't do that.  This patch-set is blocked.
 
-Fix this by not automatically preferring the first registered console if
-one is specified by the device tree. This allows consoles to be
-registered but not enabled, and once the driver for the console selected
-by stdout-path calls of_console_check() the driver will be added to the
-list of preferred consoles before any other console has been enabled.
-When that console is then registered via register_console() it will be
-enabled as expected.
+Please rebase on top of a mainline release and re-send.
 
-Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+We still need the I2C table, for now.
 
----
+> Changes in v4:
+> 
+>   * Added Author.
+>   * Added the mfd_cell for gpio.
+> 
+> Changes in v3:
+> 
+>   * Reordered the probe code.
+>   * Fixed Typo in Kconfig description.
+>   * Removed unused member from struct lp873x.
+> 
+>  drivers/mfd/Kconfig        |  14 +++
+>  drivers/mfd/Makefile       |   2 +
+>  drivers/mfd/lp873x.c       |  89 +++++++++++++++
+>  include/linux/mfd/lp873x.h | 264 +++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 369 insertions(+)
+>  create mode 100644 drivers/mfd/lp873x.c
+>  create mode 100644 include/linux/mfd/lp873x.h
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 2d1fb64..45fe00a 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1224,6 +1224,20 @@ config MFD_TPS65217
+>  	  This driver can also be built as a module.  If so, the module
+>  	  will be called tps65217.
+>  
+> +config MFD_TI_LP873X
+> +	tristate "TI LP873X Power Management IC"
+> +	depends on I2C
+> +	select MFD_CORE
+> +	select REGMAP_I2C
+> +	help
+> +	  If you say yes here then you get support for the LP873X series of
+> +	  Power Management Integrated Circuits(PMIC).
+> +	  These include voltage regulators, Thermal protection, Configurable
+> +	  General Purpose Outputs(GPO) that are used in portable devices.
+> +
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called lp873x.
+> +
+>  config MFD_TPS65218
+>  	tristate "TI TPS65218 Power Management chips"
+>  	depends on I2C
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 2ba3ba3..42acbcd 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -22,6 +22,8 @@ obj-$(CONFIG_HTC_EGPIO)		+= htc-egpio.o
+>  obj-$(CONFIG_HTC_PASIC3)	+= htc-pasic3.o
+>  obj-$(CONFIG_HTC_I2CPLD)	+= htc-i2cpld.o
+>  
+> +obj-$(CONFIG_MFD_TI_LP873X)	+= lp873x.o
+> +
+>  obj-$(CONFIG_MFD_DAVINCI_VOICECODEC)	+= davinci_voicecodec.o
+>  obj-$(CONFIG_MFD_DM355EVM_MSP)	+= dm355evm_msp.o
+>  obj-$(CONFIG_MFD_TI_AM335X_TSCADC)	+= ti_am335x_tscadc.o
+> diff --git a/drivers/mfd/lp873x.c b/drivers/mfd/lp873x.c
+> new file mode 100644
+> index 0000000..3c8e8d0
+> --- /dev/null
+> +++ b/drivers/mfd/lp873x.c
+> @@ -0,0 +1,89 @@
+> +/*
+> + * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * Author: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation version 2.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether express or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <linux/mfd/lp873x.h>
+> +
+> +static const struct regmap_config lp873x_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = LP873X_REG_MAX,
+> +};
+> +
+> +static const struct mfd_cell lp873x_cells[] = {
+> +	{ .name = "lp873x-regulator", },
+> +	{ .name = "lp873x-gpio", },
+> +};
+> +
+> +static int lp873x_probe(struct i2c_client *client)
+> +{
+> +	struct lp873x *lp873;
+> +	int ret;
+> +	unsigned int otpid;
+> +
+> +	lp873 = devm_kzalloc(&client->dev, sizeof(*lp873), GFP_KERNEL);
+> +	if (!lp873)
+> +		return -ENOMEM;
+> +
+> +	lp873->dev = &client->dev;
+> +
+> +	lp873->regmap = devm_regmap_init_i2c(client, &lp873x_regmap_config);
+> +	if (IS_ERR(lp873->regmap)) {
+> +		ret = PTR_ERR(lp873->regmap);
+> +		dev_err(lp873->dev,
+> +			"Failed to initialize register map: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	mutex_init(&lp873->lock);
+> +
+> +	ret = regmap_read(lp873->regmap, LP873X_REG_OTP_REV, &otpid);
+> +	if (ret) {
+> +		dev_err(lp873->dev, "Failed to read OTP ID\n");
+> +		return ret;
+> +	}
+> +
+> +	lp873->rev = otpid & LP873X_OTP_REV_OTP_ID;
+> +	i2c_set_clientdata(client, lp873);
+> +	ret = mfd_add_devices(lp873->dev, PLATFORM_DEVID_AUTO, lp873x_cells,
+> +			      ARRAY_SIZE(lp873x_cells), NULL, 0, NULL);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id of_lp873x_match_table[] = {
+> +	{ .compatible = "ti,lp8733", },
+> +	{ .compatible = "ti,lp8732", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, of_lp873x_match_table);
+> +
+> +static struct i2c_driver lp873x_driver = {
+> +	.driver		= {
+> +		.name	= "lp873x",
+> +		.of_match_table = of_lp873x_match_table,
+> +	},
+> +	.probe_new		= lp873x_probe,
+> +};
+> +module_i2c_driver(lp873x_driver);
+> +
+> +MODULE_AUTHOR("J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>");
+> +MODULE_DESCRIPTION("LP873X chip family multi-function driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/mfd/lp873x.h b/include/linux/mfd/lp873x.h
+> new file mode 100644
+> index 0000000..42bebfa
+> --- /dev/null
+> +++ b/include/linux/mfd/lp873x.h
+> @@ -0,0 +1,264 @@
+> +/*
+> + * Functions to access LP873X power management chip.
+> + *
+> + * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation version 2.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether express or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#ifndef __LINUX_MFD_LP873X_H
+> +#define __LINUX_MFD_LP873X_H
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/machine.h>
+> +
+> +/* LP873x chip id list */
+> +#define LP873X			0x00
+> +
+> +/* All register addresses */
+> +#define LP873X_REG_DEV_REV		0X00
+> +#define LP873X_REG_OTP_REV		0X01
+> +#define LP873X_REG_BUCK0_CTRL_1		0X02
+> +#define LP873X_REG_BUCK0_CTRL_2		0X03
+> +#define LP873X_REG_BUCK1_CTRL_1		0X04
+> +#define LP873X_REG_BUCK1_CTRL_2		0X05
+> +#define LP873X_REG_BUCK0_VOUT		0X06
+> +#define LP873X_REG_BUCK1_VOUT		0X07
+> +#define LP873X_REG_LDO0_CTRL		0X08
+> +#define LP873X_REG_LDO1_CTRL            0X09
+> +#define LP873X_REG_LDO0_VOUT		0X0A
+> +#define LP873X_REG_LDO1_VOUT		0X0B
+> +#define LP873X_REG_BUCK0_DELAY		0X0C
+> +#define LP873X_REG_BUCK1_DELAY		0X0D
+> +#define LP873X_REG_LDO0_DELAY		0X0E
+> +#define LP873X_REG_LDO1_DELAY		0X0F
+> +#define LP873X_REG_GPO_DELAY		0X10
+> +#define LP873X_REG_GPO2_DELAY		0X11
+> +#define LP873X_REG_GPO_CTRL		0X12
+> +#define LP873X_REG_CONFIG		0X13
+> +#define LP873X_REG_PLL_CTRL		0X14
+> +#define LP873X_REG_PGOOD_CTRL1		0X15
+> +#define LP873X_REG_PGOOD_CTRL2		0X16
+> +#define LP873X_REG_PG_FAULT		0X17
+> +#define LP873X_REG_RESET		0X18
+> +#define LP873X_REG_INT_TOP_1		0X19
+> +#define LP873X_REG_INT_TOP_2		0X1A
+> +#define LP873X_REG_INT_BUCK		0X1B
+> +#define LP873X_REG_INT_LDO		0X1C
+> +#define LP873X_REG_TOP_STAT		0X1D
+> +#define LP873X_REG_BUCK_STAT		0X1E
+> +#define LP873X_REG_LDO_STAT		0x1F
+> +#define LP873X_REG_TOP_MASK_1		0x20
+> +#define LP873X_REG_TOP_MASK_2		0x21
+> +#define LP873X_REG_BUCK_MASK		0x22
+> +#define LP873X_REG_LDO_MASK		0x23
+> +#define LP873X_REG_SEL_I_LOAD		0x24
+> +#define LP873X_REG_I_LOAD_2		0x25
+> +#define LP873X_REG_I_LOAD_1		0x26
+> +
+> +#define LP873X_REG_MAX			LP873X_REG_I_LOAD_1
+> +
+> +/* Register field definitions */
+> +#define LP873X_DEV_REV_DEV_ID			0xC0
+> +#define LP873X_DEV_REV_ALL_LAYER		0x30
+> +#define LP873X_DEV_REV_METAL_LAYER		0x0F
+> +
+> +#define LP873X_OTP_REV_OTP_ID			0xFF
+> +
+> +#define LP873X_BUCK0_CTRL_1_BUCK0_FPWM		BIT(3)
+> +#define LP873X_BUCK0_CTRL_1_BUCK0_RDIS_EN	BIT(2)
+> +#define LP873X_BUCK0_CTRL_1_BUCK0_EN_PIN_CTRL	BIT(1)
+> +#define LP873X_BUCK0_CTRL_1_BUCK0_EN		BIT(0)
+> +
+> +#define LP873X_BUCK0_CTRL_2_BUCK0_ILIM		0x38
+> +#define LP873X_BUCK0_CTRL_2_BUCK0_SLEW_RATE	0x07
+> +
+> +#define LP873X_BUCK1_CTRL_1_BUCK1_FPWM		BIT(3)
+> +#define LP873X_BUCK1_CTRL_1_BUCK1_RDIS_EN	BIT(2)
+> +#define LP873X_BUCK1_CTRL_1_BUCK1_EN_PIN_CTRL	BIT(1)
+> +#define LP873X_BUCK1_CTRL_1_BUCK1_EN		BIT(0)
+> +
+> +#define LP873X_BUCK1_CTRL_2_BUCK1_ILIM		0x38
+> +#define LP873X_BUCK1_CTRL_2_BUCK1_SLEW_RATE	0x07
+> +
+> +#define LP873X_BUCK0_VOUT_BUCK0_VSET		0xFF
+> +
+> +#define LP873X_BUCK1_VOUT_BUCK1_VSET		0xFF
+> +
+> +#define LP873X_LDO0_CTRL_LDO0_RDIS_EN		BIT(2)
+> +#define LP873X_LDO0_CTRL_LDO0_EN_PIN_CTRL	BIT(1)
+> +#define LP873X_LDO0_CTRL_LDO0_EN		BIT(0)
+> +
+> +#define LP873X_LDO1_CTRL_LDO1_RDIS_EN		BIT(2)
+> +#define LP873X_LDO1_CTRL_LDO1_EN_PIN_CTRL	BIT(1)
+> +#define LP873X_LDO1_CTRL_LDO1_EN		BIT(0)
+> +
+> +#define LP873X_LDO0_VOUT_LDO0_VSET		0x1F
+> +
+> +#define LP873X_LDO1_VOUT_LDO1_VSET		0x1F
+> +
+> +#define LP873X_BUCK0_DELAY_BUCK0_SD_DELAY	0xF0
+> +#define LP873X_BUCK0_DELAY_BUCK0_SU_DELAY	0x0F
+> +
+> +#define LP873X_BUCK1_DELAY_BUCK1_SD_DELAY	0xF0
+> +#define LP873X_BUCK1_DELAY_BUCK1_SU_DELAY	0x0F
+> +
+> +#define LP873X_LDO0_DELAY_LDO0_SD_DELAY	0xF0
+> +#define LP873X_LDO0_DELAY_LDO0_SU_DELAY	0x0F
+> +
+> +#define LP873X_LDO1_DELAY_LDO1_SD_DELAY	0xF0
+> +#define LP873X_LDO1_DELAY_LDO1_SU_DELAY	0x0F
+> +
+> +#define LP873X_GPO_DELAY_GPO_SD_DELAY		0xF0
+> +#define LP873X_GPO_DELAY_GPO_SU_DELAY		0x0F
+> +
+> +#define LP873X_GPO2_DELAY_GPO2_SD_DELAY	0xF0
+> +#define LP873X_GPO2_DELAY_GPO2_SU_DELAY	0x0F
+> +
+> +#define LP873X_GPO_CTRL_GPO2_OD		BIT(6)
+> +#define LP873X_GPO_CTRL_GPO2_EN_PIN_CTRL	BIT(5)
+> +#define LP873X_GPO_CTRL_GPO2_EN		BIT(4)
+> +#define LP873X_GPO_CTRL_GPO_OD			BIT(2)
+> +#define LP873X_GPO_CTRL_GPO_EN_PIN_CTRL	BIT(1)
+> +#define LP873X_GPO_CTRL_GPO_EN			BIT(0)
+> +
+> +#define LP873X_CONFIG_SU_DELAY_SEL		BIT(6)
+> +#define LP873X_CONFIG_SD_DELAY_SEL		BIT(5)
+> +#define LP873X_CONFIG_CLKIN_PIN_SEL		BIT(4)
+> +#define LP873X_CONFIG_CLKIN_PD			BIT(3)
+> +#define LP873X_CONFIG_EN_PD			BIT(2)
+> +#define LP873X_CONFIG_TDIE_WARN_LEVEL		BIT(1)
+> +#define LP873X_EN_SPREAD_SPEC			BIT(0)
+> +
+> +#define LP873X_PLL_CTRL_EN_PLL			BIT(6)
+> +#define LP873X_EXT_CLK_FREQ			0x1F
+> +
+> +#define LP873X_PGOOD_CTRL1_PGOOD_POL		BIT(7)
+> +#define LP873X_PGOOD_CTRL1_PGOOD_OD		BIT(6)
+> +#define LP873X_PGOOD_CTRL1_PGOOD_WINDOW_LDO	BIT(5)
+> +#define LP873X_PGOOD_CTRL1_PGOOD_WINDOWN_BUCK	BIT(4)
+> +#define LP873X_PGOOD_CTRL1_PGOOD_EN_PGOOD_LDO1	BIT(3)
+> +#define LP873X_PGOOD_CTRL1_PGOOD_EN_PGOOD_LDO0	BIT(2)
+> +#define LP873X_PGOOD_CTRL1_PGOOD_EN_PGOOD_BUCK1	BIT(1)
+> +#define LP873X_PGOOD_CTRL1_PGOOD_EN_PGOOD_BUCK0	BIT(0)
+> +
+> +#define LP873X_PGOOD_CTRL2_EN_PGOOD_TWARN	BIT(2)
+> +#define LP873X_PGOOD_CTRL2_EN_PG_FAULT_GATE	BIT(1)
+> +#define LP873X_PGOOD_CTRL2_PGOOD_MODE		BIT(0)
+> +
+> +#define LP873X_PG_FAULT_PG_FAULT_LDO1		BIT(3)
+> +#define LP873X_PG_FAULT_PG_FAULT_LDO0		BIT(2)
+> +#define LP873X_PG_FAULT_PG_FAULT_BUCK1		BIT(1)
+> +#define LP873X_PG_FAULT_PG_FAULT_BUCK0		BIT(0)
+> +
+> +#define LP873X_RESET_SW_RESET			BIT(0)
+> +
+> +#define LP873X_INT_TOP_1_PGOOD_INT		BIT(7)
+> +#define LP873X_INT_TOP_1_LDO_INT		BIT(6)
+> +#define LP873X_INT_TOP_1_BUCK_INT		BIT(5)
+> +#define LP873X_INT_TOP_1_SYNC_CLK_INT		BIT(4)
+> +#define LP873X_INT_TOP_1_TDIE_SD_INT		BIT(3)
+> +#define LP873X_INT_TOP_1_TDIE_WARN_INT		BIT(2)
+> +#define LP873X_INT_TOP_1_OVP_INT		BIT(1)
+> +#define LP873X_INT_TOP_1_I_MEAS_INT		BIT(0)
+> +
+> +#define LP873X_INT_TOP_2_RESET_REG_INT		BIT(0)
+> +
+> +#define LP873X_INT_BUCK_BUCK1_PG_INT		BIT(6)
+> +#define LP873X_INT_BUCK_BUCK1_SC_INT		BIT(5)
+> +#define LP873X_INT_BUCK_BUCK1_ILIM_INT		BIT(4)
+> +#define LP873X_INT_BUCK_BUCK0_PG_INT		BIT(2)
+> +#define LP873X_INT_BUCK_BUCK0_SC_INT		BIT(1)
+> +#define LP873X_INT_BUCK_BUCK0_ILIM_INT		BIT(0)
+> +
+> +#define LP873X_INT_LDO_LDO1_PG_INT		BIT(6)
+> +#define LP873X_INT_LDO_LDO1_SC_INT		BIT(5)
+> +#define LP873X_INT_LDO_LDO1_ILIM_INT		BIT(4)
+> +#define LP873X_INT_LDO_LDO0_PG_INT		BIT(2)
+> +#define LP873X_INT_LDO_LDO0_SC_INT		BIT(1)
+> +#define LP873X_INT_LDO_LDO0_ILIM_INT		BIT(0)
+> +
+> +#define LP873X_TOP_STAT_PGOOD_STAT		BIT(7)
+> +#define LP873X_TOP_STAT_SYNC_CLK_STAT		BIT(4)
+> +#define LP873X_TOP_STAT_TDIE_SD_STAT		BIT(3)
+> +#define LP873X_TOP_STAT_TDIE_WARN_STAT		BIT(2)
+> +#define LP873X_TOP_STAT_OVP_STAT		BIT(1)
+> +
+> +#define LP873X_BUCK_STAT_BUCK1_STAT		BIT(7)
+> +#define LP873X_BUCK_STAT_BUCK1_PG_STAT		BIT(6)
+> +#define LP873X_BUCK_STAT_BUCK1_ILIM_STAT	BIT(4)
+> +#define LP873X_BUCK_STAT_BUCK0_STAT		BIT(3)
+> +#define LP873X_BUCK_STAT_BUCK0_PG_STAT		BIT(2)
+> +#define LP873X_BUCK_STAT_BUCK0_ILIM_STAT	BIT(0)
+> +
+> +#define LP873X_LDO_STAT_LDO1_STAT		BIT(7)
+> +#define LP873X_LDO_STAT_LDO1_PG_STAT		BIT(6)
+> +#define LP873X_LDO_STAT_LDO1_ILIM_STAT		BIT(4)
+> +#define LP873X_LDO_STAT_LDO0_STAT		BIT(3)
+> +#define LP873X_LDO_STAT_LDO0_PG_STAT		BIT(2)
+> +#define LP873X_LDO_STAT_LDO0_ILIM_STAT		BIT(0)
+> +
+> +#define LP873X_TOP_MASK_1_PGOOD_INT_MASK	BIT(7)
+> +#define LP873X_TOP_MASK_1_SYNC_CLK_MASK	BIT(4)
+> +#define LP873X_TOP_MASK_1_TDIE_WARN_MASK	BIT(2)
+> +#define LP873X_TOP_MASK_1_I_MEAS_MASK		BIT(0)
+> +
+> +#define LP873X_TOP_MASK_2_RESET_REG_MASK	BIT(0)
+> +
+> +#define LP873X_BUCK_MASK_BUCK1_PGF_MASK	BIT(7)
+> +#define LP873X_BUCK_MASK_BUCK1_PGR_MASK	BIT(6)
+> +#define LP873X_BUCK_MASK_BUCK1_ILIM_MASK	BIT(4)
+> +#define LP873X_BUCK_MASK_BUCK0_PGF_MASK	BIT(3)
+> +#define LP873X_BUCK_MASK_BUCK0_PGR_MASK	BIT(2)
+> +#define LP873X_BUCK_MASK_BUCK0_ILIM_MASK	BIT(0)
+> +
+> +#define LP873X_LDO_MASK_LDO1_PGF_MASK		BIT(7)
+> +#define LP873X_LDO_MASK_LDO1_PGR_MASK		BIT(6)
+> +#define LP873X_LDO_MASK_LDO1_ILIM_MASK		BIT(4)
+> +#define LP873X_LDO_MASK_LDO0_PGF_MASK		BIT(3)
+> +#define LP873X_LDO_MASK_LDO0_PGR_MASK		BIT(2)
+> +#define LP873X_LDO_MASK_LDO0_ILIM_MASK		BIT(0)
+> +
+> +#define LP873X_SEL_I_LOAD_CURRENT_BUCK_SELECT	BIT(0)
+> +
+> +#define LP873X_I_LOAD_2_BUCK_LOAD_CURRENT	BIT(0)
+> +
+> +#define LP873X_I_LOAD_1_BUCK_LOAD_CURRENT	0xFF
+> +
+> +#define LP873X_MAX_REG_ID		LP873X_LDO_1
+> +
+> +/* Number of step-down converters available */
+> +#define LP873X_NUM_BUCK		2
+> +/* Number of LDO voltage regulators available */
+> +#define LP873X_NUM_LDO		2
+> +/* Number of total regulators available */
+> +#define LP873X_NUM_REGULATOR		(LP873X_NUM_BUCK + LP873X_NUM_LDO)
+> +
+> +enum lp873x_regulator_id {
+> +	/* BUCK's */
+> +	LP873X_BUCK_0,
+> +	LP873X_BUCK_1,
+> +	/* LDOs */
+> +	LP873X_LDO_0,
+> +	LP873X_LDO_1,
+> +};
+> +
+> +/**
+> + * struct lp873x - state holder for the lp873x driver
+> + * Device data may be used to access the LP873X chip
+> + */
+> +struct lp873x {
+> +	struct device *dev;
+> +	u8 rev;
+> +	struct mutex lock;	/* lock guarding the data structure */
+> +	struct regmap *regmap;
+> +};
+> +#endif /*  __LINUX_MFD_LP873X_H */
 
- drivers/of/base.c       |  2 ++
- include/linux/console.h |  6 ++++++
- kernel/printk/printk.c  | 13 ++++++++++++-
- 3 files changed, 20 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index ebf84e3..2ea6877 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1974,6 +1974,8 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
- 			name = of_get_property(of_aliases, "stdout", NULL);
- 		if (name)
- 			of_stdout = of_find_node_opts_by_path(name, &of_stdout_options);
-+		if (of_stdout)
-+			console_set_by_of();
- 	}
- 
- 	if (!of_aliases)
-diff --git a/include/linux/console.h b/include/linux/console.h
-index 98c8615..71cc04f 100644
---- a/include/linux/console.h
-+++ b/include/linux/console.h
-@@ -166,6 +166,12 @@ static inline void console_sysfs_notify(void)
- #endif
- extern bool console_suspend_enabled;
- 
-+#ifdef CONFIG_OF
-+extern void console_set_by_of(void);
-+#else
-+static inline void console_set_by_of(void);
-+#endif
-+
- /* Suspend and resume console messages over PM events */
- extern void suspend_console(void);
- extern void resume_console(void);
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 60cdf63..f1f03ca 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -149,6 +149,17 @@ static int preferred_console = -1;
- int console_set_on_cmdline;
- EXPORT_SYMBOL(console_set_on_cmdline);
- 
-+#ifdef CONFIG_OF
-+static bool of_specified_console;
-+
-+void console_set_by_of(void)
-+{
-+	of_specified_console = true;
-+}
-+#else
-+# define of_specified_console false
-+#endif
-+
- /* Flag: console code may call schedule() */
- static int console_may_schedule;
- 
-@@ -2509,7 +2520,7 @@ void register_console(struct console *newcon)
- 	 *	didn't select a console we take the first one
- 	 *	that registers here.
- 	 */
--	if (preferred_console < 0) {
-+	if (preferred_console < 0 && !of_specified_console) {
- 		if (newcon->index < 0)
- 			newcon->index = 0;
- 		if (newcon->setup == NULL ||
 -- 
-2.9.2
-
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
