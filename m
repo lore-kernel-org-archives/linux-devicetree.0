@@ -1,51 +1,37 @@
-From: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 0/8] CPUs capacity information for heterogeneous
- systems
-Date: Tue, 9 Aug 2016 11:08:57 +0100
-Message-ID: <20160809100857.GB23236@e106622-lin>
-References: <1468932048-31635-1-git-send-email-juri.lelli@arm.com>
- <20160808164937.GH6879@twins.programming.kicks-ass.net>
+From: Grzegorz Jaszczyk <jaz@semihalf.com>
+Subject: Re: [PATCH v2 00/17] ARM: mvebu: misc Armada 38x/39x DT and v7
+ defconfig improvements
+Date: Tue, 9 Aug 2016 12:08:37 +0200
+Message-ID: <CAH76GKOiiAnX2DkZxqM5vLbqGEUUBiQ0UreCW-+842hhJ_MDjQ@mail.gmail.com>
+References: <1470305660-6601-1-git-send-email-jaz@semihalf.com> <87popjuwu1.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160808164937.GH6879-ndre7Fmf5hadTX5a5knrm8zTDFooKrT+cvkQGrU6aU0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87popjuwu1.fsf@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Marcin Wojtas <mw@semihalf.com>, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Gregory
 
-On 08/08/16 18:49, Peter Zijlstra wrote:
-> On Tue, Jul 19, 2016 at 01:40:40PM +0100, Juri Lelli wrote:
-> > Patches high level description:
-> > 
-> >  o 01/08 introduces documentation for the new optional DT binding
-> >  o [02-06]/08 add cpu-capacity attribute to TC2, Juno and Juno r2 DTs and
-> >    provide parsing of such information at boot time
-> >  o [07-08]/08 introduce sysfs attribute
-> > 
-> 
-> So generally ok with me;
+2016-08-08 17:03 GMT+02:00 Gregory CLEMENT <gregory.clement@free-electrons.com>:
+> Hi Grzegorz,
+>
+>  On Thu, Aug 04 2016, Grzegorz Jaszczyk <jaz@semihalf.com> wrote:
+>
+>> Hello,
+>>
+>> This is the second version of patch-set which enables some commonly used
+>> features in mvebu_v7_defconfig and updates old or introduces new dts/dtsi
+>> related to Armada 38x and Armada 39x SoC family. All comments from
+>> v1 are included, more details in a changelog below.
+>>
+>> Any comments or remarks would be welcome.
+>
+> All the patches are applied on the mvbeu branches:
+> The first 2 on mvebu/defconfig and all the other on mvebu/dt
+>
 
-Thanks for reviewing.
-
-> there does seem to be an unfortunate
-> duplication of code between arm and arm64 but other than that it looks
-> fine.
-> 
-
-Yes, I know. I'm failing to see how we can cleanly remove that
-duplication, though (sysfs interface and callback functions being good
-candidates for a common place).
-
-Anyone any ideas?
-
-Best,
-
-- Juri
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Good news - thank you,
+Grzegorz
