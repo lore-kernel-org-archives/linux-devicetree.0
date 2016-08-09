@@ -1,64 +1,89 @@
-From: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH V5 0/4] Add driver for GE B850v3 LVDS/DP++ Bridge
-Date: Tue,  9 Aug 2016 18:41:38 +0200
-Message-ID: <cover.1470739193.git.peter.senna@collabora.com>
+From: Peter Senna Tschudin <peter.senna@collabora.com>
+Subject: [PATCH V5 2/4] Documentation/devicetree/bindings: b850v3_lvds_dp
+Date: Tue,  9 Aug 2016 18:41:40 +0200
+Message-ID: <2add7cb9193b96211f5e5938cbfc6181c76e2591.1470739193.git.peter.senna@collabora.com>
 References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1464626385-19253-1-git-send-email-peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: airlied-cv59FeDIM0c@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+ <cover.1470739193.git.peter.senna@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1470739193.git.peter.senna@collabora.com>
+In-Reply-To: <cover.1470739193.git.peter.senna@collabora.com>
+References: <cover.1470739193.git.peter.senna@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: airlied@linux.ie, akpm@linux-foundation.org, daniel.vetter@ffwll.ch, davem@davemloft.net, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, enric.balletbo@collabora.com, eballetbo@gmail.com, galak@codeaurora.org, gregkh@linuxfoundation.org, heiko@sntech.de, ijc+devicetree@hellion.org.uk, javier@dowhile0.org, jslaby@suse.cz, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux@roeck-us.net, mark.rutland@arm.com, martin.donnelly@ge.com, martyn.welch@collabora.co.uk, mchehab@osg.samsung.com, pawel.moll@arm.com, peter.senna@collabora.com, peter.senna@gmail.com, p.zabel@pengutronix.de, thierry.reding@gmail.com, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, shawnguo@kernel.org, tiwai@suse.com, treding@nvidia.com, ykk@rock-chips.com
+Cc: Rob Herring <robh@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The series adds a driver that creates a drm_bridge and a drm_connector for the
-LVDS to DP++ display bridge of the GE B850v3.
+Devicetree bindings documentation for the GE B850v3 LVDS/DP++
+display bridge.
 
-There are two physical bridges on the video signal pipeline: a STDP4028(LVDS to
-DP) and a STDP2690(DP to DP++).  The hardware and firmware made it complicated
-for this binding to comprise two device tree nodes, as the design goal is to
-configure both bridges based on the LVDS signal, which leave the driver
-powerless to control the video processing pipeline. The two bridges behaves as
-a single bridge, and the driver is only needed for telling the host about EDID /
-HPD, and for giving the host powers to ack interrupts. The video signal
-pipeline is as follows:
-
-  Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
-
-The patches from the series:
- [1/4] Change the imx-ldb driver to allow attaching a bridge and not only a LVDS
-       panel.
-
- [2/4] Devicetree documentation for the GE B850v3 LVDS/DP++ Bridge
-
- [3/4] Add the driver, make changes to MAINTAINERS, Kconfig and Makefile
-
- [4/4] Make the changes to the B850v3 dts file to enable the GE B850v3
-       LVDS/DP++ Bridge.
+Cc: Martyn Welch <martyn.welch@collabora.co.uk>
+Cc: Martin Donnelly <martin.donnelly@ge.com>
+Cc: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
+---
+Unchanged from V4
 
 Changes from V3:
- - Removed the patch that was configuring the mapping between IPUs and external
-   displays on the dts file
+ - 2/4 instead of 3/5
 
-Peter Senna Tschudin (4):
-  drm/imx-ldb: Add support to drm-bridge
-  Documentation/devicetree/bindings: b850v3_lvds_dp
-  drm/bridge: Add driver for GE B850v3 LVDS/DP++ Bridge
-  dts/imx6q-b850v3: Use GE B850v3 LVDS/DP++ Bridge
+Unchanged from V2
 
- .../devicetree/bindings/ge/b850v3-lvds-dp.txt      |  37 ++
- MAINTAINERS                                        |   8 +
- arch/arm/boot/dts/imx6q-b850v3.dts                 |  30 ++
- drivers/gpu/drm/bridge/Kconfig                     |  11 +
- drivers/gpu/drm/bridge/Makefile                    |   1 +
- drivers/gpu/drm/bridge/ge_b850v3_lvds_dp.c         | 405 +++++++++++++++++++++
- drivers/gpu/drm/imx/imx-ldb.c                      | 118 ++++--
- 7 files changed, 570 insertions(+), 40 deletions(-)
+Changes from V1:
+ - Replaced '_' by '-' in node names or compatible strings
+ - Added missing @73 to the example
+
+
+ .../devicetree/bindings/ge/b850v3-lvds-dp.txt      | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
- create mode 100644 drivers/gpu/drm/bridge/ge_b850v3_lvds_dp.c
 
+diff --git a/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+new file mode 100644
+index 0000000..f05c3e9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
+@@ -0,0 +1,37 @@
++Driver for GE B850v3 LVDS/DP++ display bridge
++
++Required properties:
++  - compatible : should be "ge,b850v3-lvds-dp".
++  - reg : should contain the address used to ack the interrupts.
++  - interrupt-parent : phandle of the interrupt controller that services
++    interrupts to the device
++  - interrupts : one interrupt should be described here, as in
++    <0 IRQ_TYPE_LEVEL_HIGH>.
++  - edid-reg : should contain the address used to read edid information
++  - port : should describe the video signal connection between the host
++    and the bridge.
++
++Example:
++
++&mux2_i2c2 {
++	status = "okay";
++	clock-frequency = <100000>;
++
++	b850v3-lvds-dp-bridge@73  {
++		compatible = "ge,b850v3-lvds-dp";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg = <0x73>;
++		interrupt-parent = <&gpio2>;
++		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++
++		edid-reg = <0x72>;
++
++		port {
++			b850v3_dp_bridge_in: endpoint {
++				remote-endpoint = <&lvds0_out>;
++			};
++		};
++	};
++};
 -- 
 2.5.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
