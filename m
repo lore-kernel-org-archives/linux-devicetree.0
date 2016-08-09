@@ -1,47 +1,49 @@
-From: Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: device tree verification tools
-Date: Tue, 09 Aug 2016 13:34:19 +1000
-Message-ID: <8737me62f8.fsf@linux.vnet.ibm.com>
-References: <alpine.DEB.2.10.1607262241240.3426@hadrien> <87vazh8ln8.fsf@linux.vnet.ibm.com> <alpine.DEB.2.10.1608040718110.3293@hadrien>
+From: <yuantian.tang@nxp.com>
+Subject: [PATCH 1/2] ahci: qoriq: adjust sata parameter
+Date: Tue, 9 Aug 2016 09:51:21 +0800
+Message-ID: <1470707482-13421-1-git-send-email-yuantian.tang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.10.1608040718110.3293@hadrien>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, behanw-k/hB3zQhLwledRVtV/plodBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: tj@kernel.org
+Cc: devicetree@vger.kernel.org, linux-ide@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, Tang Yuantian <Yuantian.Tang@nxp.com>, Tang Yuantian <yuantian.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org> writes:
-> On Thu, 4 Aug 2016, Stewart Smith wrote:
->
->> Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org> writes:
->> > I saw that there will be a microconference on device trees at Linux
->> > Plumbers.  Unfortunately, I won't be able to attend, due to another event
->> > at the same time, but I was wondering what is the status of verification
->> > tools for device tree specifications?
->>
->> For a few checks that we want to do for OpenPower systems, we've been
->> adding tests to the FirmWare Test Suite (FWTS)
->> https://wiki.ubuntu.com/FirmwareTestSuite - which does actually catch a
->> case where we messed it up and have something that's technically invalid
->> (i.e. we could have used this a couple of years ago when the mistake was
->> initially made).
->
-> Thanks for the information.  Is it easy to see in there what tests are
-> done?
+From: Tang Yuantian <Yuantian.Tang@nxp.com>
 
-You can have a look at the FWTS source, there's some specific DT tests
-there (we have one to ensure that when somebody creates a new machine,
-they change the model name in the device tree from the reference
-platform model name). Since FWTS uses the same device tree code as
-everywhere, it's not too hard to follow, and the test report from FWTS
-is pretty clear (and you can tell it to just run some tests).
+The default values for Port Phy2Cfg register and
+Port Phy3Cfg register are better, no need to overwrite them.
 
+Signed-off-by: Tang Yuantian <yuantian.tang@nxp.com>
+---
+ drivers/ata/ahci_qoriq.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/drivers/ata/ahci_qoriq.c b/drivers/ata/ahci_qoriq.c
+index 7bdee9b..ed357a1 100644
+--- a/drivers/ata/ahci_qoriq.c
++++ b/drivers/ata/ahci_qoriq.c
+@@ -44,10 +44,6 @@
+ 
+ #define SATA_ECC_DISABLE	0x00020000
+ 
+-/* for ls1043a */
+-#define LS1043A_PORT_PHY2	0x28184d1f
+-#define LS1043A_PORT_PHY3	0x0e081509
+-
+ enum ahci_qoriq_type {
+ 	AHCI_LS1021A,
+ 	AHCI_LS1043A,
+@@ -166,8 +162,6 @@ static int ahci_qoriq_phy_init(struct ahci_host_priv *hpriv)
+ 
+ 	case AHCI_LS1043A:
+ 		writel(AHCI_PORT_PHY_1_CFG, reg_base + PORT_PHY1);
+-		writel(LS1043A_PORT_PHY2, reg_base + PORT_PHY2);
+-		writel(LS1043A_PORT_PHY3, reg_base + PORT_PHY3);
+ 		writel(AHCI_PORT_TRANS_CFG, reg_base + PORT_TRANS);
+ 		break;
+ 
 -- 
-Stewart Smith
-OPAL Architect, IBM.
+2.1.0.27.g96db324
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
