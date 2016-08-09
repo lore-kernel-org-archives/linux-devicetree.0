@@ -1,234 +1,178 @@
-From: Mirza Krak <mirza.krak@gmail.com>
-Subject: Re: [PATCH 6/6] bus: Add support for Tegra Generic Memory Interface
-Date: Tue, 9 Aug 2016 09:21:54 +0200
-Message-ID: <CALw8SCWjs2TnwFcTY=iXv_eskpKaKpvUmoXnTgtpoL8w9neD=w@mail.gmail.com>
-References: <1470512452-8322-1-git-send-email-mirza.krak@gmail.com>
- <1470512452-8322-7-git-send-email-mirza.krak@gmail.com> <fae8dbaf-53e9-dcfe-f755-32f7b28f4c9f@nvidia.com>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [RFC PATCH v4 2/2] net: phy: Add gmiitorgmii converter support
+Date: Tue, 9 Aug 2016 08:07:35 +0000
+Message-ID: <03CA77BA8AF6F1469AEDFBDA1322A7B74A1C3E6C@XAP-PVEXMBX02.xlnx.xilinx.com>
+References: <1470640505-8279-1-git-send-email-appanad@xilinx.com>
+ <1470640505-8279-2-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <fae8dbaf-53e9-dcfe-f755-32f7b28f4c9f@nvidia.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, pdeschrijver@nvidia.com, Prashant Gaikwad <pgaikwad@nvidia.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, linux@armlinux.org.uk, robh+dt@kernel.org, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470640505-8279-2-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Appana Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>Appana Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2016-08-08 15:47 GMT+02:00 Jon Hunter <jonathanh@nvidia.com>:
->
-> On 06/08/16 20:40, Mirza Krak wrote:
->> From: Mirza Krak <mirza.krak@gmail.com>
->>
->> The Generic Memory Interface bus can be used to connect high-speed
->> devices such as NOR flash, FPGAs, DSPs...
->>
->> Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
->> ---
->>  drivers/bus/Kconfig     |   7 ++
->>  drivers/bus/Makefile    |   1 +
->>  drivers/bus/tegra-gmi.c | 224 ++++++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 232 insertions(+)
->>  create mode 100644 drivers/bus/tegra-gmi.c
->>
+Hi Kedar,
 
-<--snip-->
+> -----Original Message-----
+> From: Kedareswara rao Appana [mailto:appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org]
+> Sent: Monday, August 08, 2016 12:45 PM
+> To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; Michal Simek
+> <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Appana
+> Durga Kedareswara Rao <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
+> andrew-g2DYL2Zd6BY@public.gmane.org; Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>;
+> Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: [RFC PATCH v4 2/2] net: phy: Add gmiitorgmii converter support
+> 
+> This patch adds support for gmiitorgmii converter.
+> 
+> The GMII to RGMII IP core provides the Reduced Gigabit Media
+> Independent Interface (RGMII) between Ethernet physical media
+> Devices and the Gigabit Ethernet controller. This core can
+> Switch dynamically between the three different speed modes of
+> Operation by configuring the converter register through mdio write.
+> 
+> MDIO interface is used to set operating speed of Ethernet MAC.
+> 
+> Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+> Thanks a lot Andrew for your inputs.
+> Changes for v4:
+> --> Updated phydev speed for all 3 speeds as suggested by zhuyj.
+> Changes for v3:
+> --> Updated the driver as suggested by Andrew.
+> Changes for v2:
+> --> Passed struct xphy pointer directly to the fix_mac_speed
+> API as suggested by the Florian.
+> --> Added checks for the phy-node fail case as suggested
+> by the Florian
+> 
+> +
+> +#define XILINX_GMII2RGMII_REG	0x10
+> +#define BMCR_SPEED10		0x00
 
->> +
->> +static int tegra_gmi_parse_dt(struct device *dev, struct tegra_gmi_priv *priv)
->> +{
->> +     struct device_node *of_node = dev->of_node;
->> +     u32 property;
->> +
->> +     /* configuration */
->> +
->> +     if (of_property_read_bool(of_node, "nvidia,snor-data-width-32bit"))
->> +             priv->snor_config |= TEGRA_GMI_BUS_WIDTH_32BIT;
->> +
->> +     if (of_property_read_bool(of_node, "nvidia,snor-mux-mode"))
->> +             priv->snor_config |= TEGRA_GMI_MUX_MODE;
->> +
->> +     if (of_property_read_bool(of_node, "nvidia,snor-rdy-active-before-data"))
->
-> Line is over 80 characters.
+Move this macro to mii.h
 
-Yes, indeed it is.
+> +
+> +struct gmii2rgmii {
+> +	struct phy_device *phy_dev;
+> +	struct phy_driver *phy_drv;
+> +	struct phy_driver conv_phy_drv;
+> +	int addr;
+> +};
+> +
+> +static int xgmiitorgmii_read_status(struct phy_device *phydev)
+> +{
+> +	struct gmii2rgmii *priv = (struct gmii2rgmii *)phydev->priv;
+> +	u16 val = 0;
+> +
+> +	priv->phy_drv->read_status(phydev);
+> +
+> +	val = mdiobus_read(phydev->mdio.bus, priv->addr,
+> XILINX_GMII2RGMII_REG);
+> +
 
-I ran checkpatch on everything and did get warnings about it being over
-80 characters. But scratched my head a bit of why it complained because
-it was not over 80 characters in my editor.
+    Since its read and then modify, you should mask the speed field
+With zero and then write new value.
+           
 
-But now I know why. My tab size was set to 4, and then it is not over 80 :).
->
->> +             priv->snor_config |= TEGRA_GMI_RDY_BEFORE_DATA;
->> +
->> +     if (of_property_read_bool(of_node, "nvidia,snor-rdy-inv"))
->> +             priv->snor_config |= TEGRA_GMI_RDY_ACTIVE_HIGH;
->> +
->> +     if (of_property_read_bool(of_node, "nvidia,snor-adv-inv"))
->> +             priv->snor_config |= TEGRA_GMI_ADV_ACTIVE_HIGH;
->> +
->> +     if (of_property_read_bool(of_node, "nvidia,snor-oe-inv"))
->> +             priv->snor_config |= TEGRA_GMI_OE_ACTIVE_HIGH;
->> +
->> +     if (of_property_read_bool(of_node, "nvidia,snor-cs-inv"))
->> +             priv->snor_config |= TEGRA_GMI_CS_ACTIVE_HIGH;
->> +
->> +     if (!of_property_read_u32(of_node, "nvidia,snor-cs-select", &property))
->> +             priv->snor_config |= TEGRA_GMI_CS_SELECT(property);
->> +
->> +     /* Timing, the default values that are provided are reset values */
->> +
->> +     if (!of_property_read_u32(of_node, "nvidia,snor-muxed-width", &property))
->
-> Line is over 80 characters.
+> +	switch (phydev->speed) {
+> +	case SPEED_1000:
+> +		val |= BMCR_SPEED1000;
+> +	case SPEED_100:
+> +		val |= BMCR_SPEED100;
+> +	case SPEED_10:
+> +		val |= BMCR_SPEED10;
+> +	}
+> +
+> +	mdiobus_write(phydev->mdio.bus, priv->addr,
+> XILINX_GMII2RGMII_REG, val);
+> +
+> +	return 0;
+> +}
+> +
+> +int xgmiitorgmii_probe(struct mdio_device *mdiodev)
+> +{
+> +	struct device *dev = &mdiodev->dev;
+> +	struct device_node *np = dev->of_node, *phy_node;
+> +	struct gmii2rgmii *priv;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	phy_node = of_parse_phandle(np, "phy-handle", 0);
+> +	if (IS_ERR(phy_node)) {
+> +		dev_err(dev, "Couldn't parse phy-handle\n");
+> +		ret = -ENODEV;
+> +		goto out;
+> +	}
+> +
+> +	priv->phy_dev = of_phy_find_device(phy_node);
+> +	if (!priv->phy_dev) {
+> +		ret = -EPROBE_DEFER;
+> +		dev_info(dev, "Couldn't find phydev\n");
+> +		goto out;
+> +	}
+> +
+> +	priv->addr = mdiodev->addr;
+> +	priv->phy_drv = priv->phy_dev->drv;
+> +	memcpy(&priv->conv_phy_drv, priv->phy_dev->drv,
+> +	       sizeof(struct phy_driver));
+> +	priv->conv_phy_drv.read_status = xgmiitorgmii_read_status;
+> +	priv->phy_dev->priv = priv;
+> +	priv->phy_dev->drv = &priv->conv_phy_drv;
+> +
+> +	return 0;
+> +out:
+> +	return ret;
 
-ACK.
+Since there is no resource cleaning here, you could consider
+Return from this function in above conditions and avoid goto here.
 
->
->> +             priv->snor_timing0 |= TEGRA_GMI_MUXED_WIDTH(property);
->> +     else
->> +             priv->snor_timing0 |= TEGRA_GMI_MUXED_WIDTH(1);
->> +
->> +     if (!of_property_read_u32(of_node, "nvidia,snor-hold-width", &property))
->> +             priv->snor_timing0 |= TEGRA_GMI_HOLD_WIDTH(property);
->> +     else
->> +             priv->snor_timing0 |= TEGRA_GMI_HOLD_WIDTH(1);
->> +
->> +     if (!of_property_read_u32(of_node, "nvidia,snor-adv-width", &property))
->> +             priv->snor_timing0 |= TEGRA_GMI_ADV_WIDTH(property);
->> +     else
->> +             priv->snor_timing0 |= TEGRA_GMI_ADV_WIDTH(1);
->> +
->> +     if (!of_property_read_u32(of_node, "nvidia,snor-ce-width", &property))
->> +             priv->snor_timing0 |= TEGRA_GMI_CE_WIDTH(property);
->> +     else
->> +             priv->snor_timing0 |= TEGRA_GMI_CE_WIDTH(4);
->> +
->> +     if (!of_property_read_u32(of_node, "nvidia,snor-we-width", &property))
->> +             priv->snor_timing1 |= TEGRA_GMI_WE_WIDTH(property);
->> +     else
->> +             priv->snor_timing1 |= TEGRA_GMI_WE_WIDTH(1);
->> +
->> +     if (!of_property_read_u32(of_node, "nvidia,snor-oe-width", &property))
->> +             priv->snor_timing1 |= TEGRA_GMI_OE_WIDTH(property);
->> +     else
->> +             priv->snor_timing1 |= TEGRA_GMI_OE_WIDTH(1);
->> +
->> +     if (!of_property_read_u32(of_node, "nvidia,snor-wait-width", &property))
->> +             priv->snor_timing1 |= TEGRA_GMI_WAIT_WIDTH(property);
->> +     else
->> +             priv->snor_timing1 |= TEGRA_GMI_WAIT_WIDTH(3);
->> +
->> +     return of_platform_default_populate(of_node, NULL, dev);
->
-> Seems odd to do this here. Why not as the last thing in probe once the
-> GMI has been setup correctly?
+Regards,
+Punnaiah
 
-It is done here mostly to avoid clean up in probe. I could move it out
-of tegra_gmi_parse_dt and put it right after that call but still
-before clk enable? Is that less odd?
+> +}
+> +
+> +static const struct of_device_id xgmiitorgmii_of_match[] = {
+> +	{ .compatible = "xlnx,gmii-to-rgmii-1.0" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, xgmiitorgmii_of_match);
+> +
+> +static struct mdio_driver xgmiitorgmii_driver = {
+> +	.probe	= xgmiitorgmii_probe,
+> +	.mdiodrv.driver = {
+> +		.name = "xgmiitorgmii",
+> +		.of_match_table = xgmiitorgmii_of_match,
+> +	},
+> +};
+> +
+> +static int __init xgmiitorgmii_init(void)
+> +{
+> +	return mdio_driver_register(&xgmiitorgmii_driver);
+> +}
+> +module_init(xgmiitorgmii_init);
+> +
+> +static void __exit xgmiitorgmii_cleanup(void)
+> +{
+> +	mdio_driver_unregister(&xgmiitorgmii_driver);
+> +}
+> +module_exit(xgmiitorgmii_cleanup);
+> +
+> +MODULE_DESCRIPTION("Xilinx GMII2RGMII converter driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.1.2
 
->
->> +}
->> +
->> +static int tegra_gmi_probe(struct platform_device *pdev)
->> +{
->> +     struct resource *res;
->> +     struct clk *clk;
->> +     struct device *dev = &pdev->dev;
->> +     struct reset_control *rst;
->> +     struct tegra_gmi_priv *priv;
->> +     void __iomem *base;
->> +     int ret;
->> +
->> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +     base = devm_ioremap_resource(dev, res);
->> +     if (IS_ERR(base))
->> +             return PTR_ERR(base);
->> +
->> +     priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->> +     if (!priv)
->> +             return -ENOMEM;
->> +
->> +     priv->base = base;
->
-> If you allocate the memory first, you can get rid of this extra base
-> variable.
-
-ACK.
-
->
->> +     clk = devm_clk_get(dev, "gmi");
->> +     if (IS_ERR(clk)) {
->> +             dev_err(dev, "can not get clock\n");
->> +             return PTR_ERR(clk);
->> +     }
->> +
->> +     priv->clk = clk;
->
-> Why not set priv->clk directly from calling devm_clk_get? Then you don't
-> this extra clk variable.
-
-ACK.
->
->> +
->> +     rst = devm_reset_control_get(dev, "gmi");
->> +     if (IS_ERR(rst)) {
->> +             dev_err(dev, "can not get reset\n");
->> +             return PTR_ERR(rst);
->> +     }
->> +
->> +     ret = tegra_gmi_parse_dt(dev, priv);
->> +     if (ret) {
->> +             dev_err(dev, "fail to create devices.\n");
->> +             return ret;
->> +     }
->> +
->> +     ret = clk_prepare_enable(clk);
->> +     if (ret) {
->> +             dev_err(dev, "fail to enable clock.\n");
->> +             return ret;
->> +     }
->> +
->> +     reset_control_assert(rst);
->> +     udelay(2);
->> +     reset_control_deassert(rst);
->> +
->> +     tegra_gmi_init(dev, priv);
->> +
->> +     dev_set_drvdata(dev, priv);
->> +
->> +     return 0;
->> +}
->> +
->> +static int tegra_gmi_remove(struct platform_device *pdev)
->> +{
->> +     struct device *dev = &pdev->dev;
->
-> Do you really need this dev variable?
-
-Not really.
-
->
->> +     struct tegra_gmi_priv *priv = dev_get_drvdata(dev);
->> +     void __iomem *base = priv->base;
->
-> Do you really need this base variable?
-
-Not really,
->
->> +     u32 config;
->> +
->> +     of_platform_depopulate(dev);
->> +
->> +     config = readl(base + TEGRA_GMI_CONFIG);
->> +     config &= ~TEGRA_GMI_CONFIG_GO;
->> +     writel(config, base + TEGRA_GMI_CONFIG);
->> +
->> +     clk_disable_unprepare(priv->clk);
->
-> What about asserting the reset?
-
-ACK, will add that.
-
-Best Regards
-Mirza
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
