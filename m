@@ -1,43 +1,115 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 6/6] bus: Add support for Tegra Generic Memory Interface
-Date: Tue, 9 Aug 2016 14:37:05 +0100
-Message-ID: <c6c6d000-d0d4-ac9f-e19e-0d2a513cd3e8@nvidia.com>
-References: <1470512452-8322-1-git-send-email-mirza.krak@gmail.com>
- <1470512452-8322-7-git-send-email-mirza.krak@gmail.com>
- <fae8dbaf-53e9-dcfe-f755-32f7b28f4c9f@nvidia.com>
- <CALw8SCWjs2TnwFcTY=iXv_eskpKaKpvUmoXnTgtpoL8w9neD=w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALw8SCWjs2TnwFcTY=iXv_eskpKaKpvUmoXnTgtpoL8w9neD=w@mail.gmail.com>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v5 1/2] mfd: Add DT bindings documentation for Samsung Exynos
+ LPASS
+Date: Tue, 09 Aug 2016 15:37:54 +0200
+Message-ID: <1470749875-9006-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org
+Cc: broonie@kernel.org, alsa-devel@alsa-project.org, robh@kernel.org, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch adds documentation of the DT bindings for the Samsung
+Exynos SoC Low Power Audio Subsystem.
 
-On 09/08/16 08:21, Mirza Krak wrote:
-> 2016-08-08 15:47 GMT+02:00 Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>:
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
-...
+Changes since v4:
+ - text reformatting, added VIC to the list of sub-devices, relative
+   paths used for the reference DT binding documentation files, added
+   example dts.
 
->>> +     return of_platform_default_populate(of_node, NULL, dev);
->>
->> Seems odd to do this here. Why not as the last thing in probe once the
->> GMI has been setup correctly?
-> 
-> It is done here mostly to avoid clean up in probe. I could move it out
-> of tegra_gmi_parse_dt and put it right after that call but still
-> before clk enable? Is that less odd?
+Changes since v3:
+ - moved to Documentation/devicetree/bindings/mfd,
+ - added #address-cells, #size-cells, ranges as required
+   properties,
+ - added description of the IP block subnodes and links
+   to their binding's documentation.
 
-I would have thought that clocks should be enabled and resets
-de-asserted before we even attempt to populate any children. Hence, I
-would do this last. Yes that will require some clean-up in probe if this
-does fail but seems safest.
+Changes since v2:
+ - none.
+---
+ .../bindings/mfd/samsung,exynos5433-lpass.txt      | 70 ++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
 
-Cheers
-Jon
-
--- 
-nvpublic
+diff --git a/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt b/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
+new file mode 100644
+index 0000000..c110e11
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
+@@ -0,0 +1,70 @@
++Samsung Exynos SoC Low Power Audio Subsystem (LPASS)
++
++Required properties:
++
++ - compatible		: "samsung,exynos5433-lpass"
++ - reg			: should contain the LPASS top SFR region location
++			  and size
++ - samsung,pmu-syscon	: the phandle to the Power Management Unit node
++ - #address-cells	: should be 1
++ - #size-cells		: should be 1
++ - ranges		: must be present
++
++Each IP block of the Low Power Audio Subsystem should be specified as
++an optional sub-node. For "samsung,exynos5433-lpass" compatible this includes:
++UART, SLIMBUS, PCM, I2S, DMAC, Timers 0...4, VIC, WDT 0...1 devices.
++
++Bindings of the sub-nodes are described in:
++  ../serial/samsung_uart.txt
++  ../sound/samsung-i2s.txt
++  ../dma/arm-pl330.txt
++
++
++Example:
++
++audio-subsystem {
++	compatible = "samsung,exynos5433-lpass";
++	reg = <0x11400000 0x100>, <0x11500000 0x08>;
++	samsung,pmu-syscon = <&pmu_system_controller>;
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges;
++
++	adma: adma@11420000 {
++		compatible = "arm,pl330", "arm,primecell";
++		reg = <0x11420000 0x1000>;
++		interrupts = <0 73 0>;
++		clocks = <&cmu_aud CLK_ACLK_DMAC>;
++		clock-names = "apb_pclk";
++		#dma-cells = <1>;
++		#dma-channels = <8>;
++		#dma-requests = <32>;
++	};
++
++	i2s0: i2s0@11440000 {
++		compatible = "samsung,exynos7-i2s";
++		reg = <0x11440000 0x100>;
++		dmas = <&adma 0 &adma 2>;
++		dma-names = "tx", "rx";
++		interrupts = <0 70 0>;
++		clocks = <&cmu_aud CLK_PCLK_AUD_I2S>,
++			 <&cmu_aud CLK_SCLK_AUD_I2S>,
++			 <&cmu_aud CLK_SCLK_I2S_BCLK>;
++		clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2s0_bus>;
++		status = "disabled";
++	};
++
++	serial_3: serial@11460000 {
++		compatible = "samsung,exynos5433-uart";
++		reg = <0x11460000 0x100>;
++		interrupts = <0 67 0>;
++		clocks = <&cmu_aud CLK_PCLK_AUD_UART>,
++			 <&cmu_aud CLK_SCLK_AUD_UART>;
++		clock-names = "uart", "clk_uart_baud0";
++		pinctrl-names = "default";
++		pinctrl-0 = <&uart_aud_bus>;
++		status = "disabled";
++	};
++ };
+--
+1.9.1
