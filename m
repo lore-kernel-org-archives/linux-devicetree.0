@@ -1,102 +1,175 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v9 01/10] clk: fix initial state of critical clock's
- parents
-Date: Wed, 10 Aug 2016 14:09:22 -0700
-Message-ID: <20160810210922.GD2996@codeaurora.org>
-References: <1466581229-2342-1-git-send-email-erin.lo@mediatek.com>
- <1466581229-2342-2-git-send-email-erin.lo@mediatek.com>
- <20160702012140.GB17071@codeaurora.org>
- <1467604308.26485.4.camel@mtksdaap41>
- <146802073038.73491.6675612765998057903@resonance>
- <1468225452.31247.7.camel@mtksdaap41>
- <1470203182.17063.3.camel@mtksdaap41>
- <1470721183.8551.6.camel@mtksdaap41>
+From: Andrei Pistirica <andrei.pistirica@microchip.com>
+Subject: Re: [RFC PATCH 2/3] net: macb: Add support for 1588 for Zynq
+ Ultrascale+ MPSoC
+Date: Wed, 10 Aug 2016 12:12:48 +0200
+Message-ID: <b680d509-5a30-1960-8aea-485befc2d57b@microchip.com>
+References: <1441958258-35441-1-git-send-email-harinik@xilinx.com>
+ <1441958258-35441-3-git-send-email-harinik@xilinx.com>
+ <CAFcVECLfXL-=efbUhNeKhiFQgtfv6Z1+JJckg+js7DM-LfFeSw@mail.gmail.com>
+ <99d6c0ce-c3b9-a919-cedb-0af954bac388@atmel.com>
+ <03CA77BA8AF6F1469AEDFBDA1322A7B74A1C4205@XAP-PVEXMBX02.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470721183.8551.6.camel@mtksdaap41>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <03CA77BA8AF6F1469AEDFBDA1322A7B74A1C4205@XAP-PVEXMBX02.xlnx.xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Harini Katakam <harinikatakamlinux@gmail.com>, Harini Katakam <harinik@xilinx.com>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, Boris Brezillon <boris.brezillon@free-electrons.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <michals@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-(Including lists)
+Hi Punnaiah,
 
-On 08/09, James Liao wrote:
-> On Wed, 2016-08-03 at 13:46 +0800, James Liao wrote:
->>
->> Hi Mike,
->>
->> Do you have new patches to fix new clock parents? If not, I think we can
->> use my patch first. Is it okay?
->>
+cpts_match(...) has a way to parse frames, while ptp_classify_raw 
+identifies the underlying protocol (in case the frames are parsed on 
+data path), or tx/rxtstamp callbacks can be used with PTP events. But, 
+there is comment in ptp_classify.h which worries me.
+
+Unfortunately,  I cannot access https://gitenterprise.xilinx.com.
+
+Best regards,
+Andrei
+
+On 09.08.2016 18:56, Punnaiah Choudary Kalluri wrote:
+> Hi Nicolas,
 >
-> Hi Stephen,
+>  1588 implementation in cadence GEM IP we have in Zynq Ultascale+ MPSoC is
+> Different to the one in Zynq SOC.
 >
-> Do you have comments for the bug fixing? I prefer to use my patch (clk:
-> fix initial state of critical clock's parents). How do you think?
+> In earlier version, all timestamp values will be stored in registers and there is no specific
+> Mechanism to distinguish the received ethernet frame that contains time stamp information
+> Other than parsing the frame for PTP packet type.
 >
-
-How about we recalc accuracies and rates in addition to the patch
-from Mike? That will fix everything?
-
----8<----
-From: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] clk: migrate ref counts when orphans are reunited
-
-It's always nice to see families reunited, and this is equally true when
-talking about parent clocks and their children. However, if the orphan
-clk had a positive prepare_count or enable_count, then we would not
-migrate those counts up the parent chain correctly.
-
-This has manifested with the recent critical clocks feature, which often
-enables clocks very early, before their parents have been registered.
-
-Fixed by replacing the call to clk_core_reparent with calls to
-__clk_set_parent_{before,after}.
-
-Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-[sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org: Recalc accuracies and rates too]
-Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- drivers/clk/clk.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 820a939fb6bb..dc3fff2bf839 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2449,8 +2449,16 @@ static int __clk_core_init(struct clk_core *core)
- 	hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
- 		struct clk_core *parent = __clk_init_parent(orphan);
- 
--		if (parent)
--			clk_core_reparent(orphan, parent);
-+		/*
-+		 * we could call __clk_set_parent, but that would result in a
-+		 * reducant call to the .set_rate op, if it exists
-+		 */
-+		if (parent) {
-+			__clk_set_parent_before(orphan, parent);
-+			__clk_set_parent_after(orphan, parent, NULL);
-+			__clk_recalc_accuracies(orphan);
-+			__clk_recalc_rates(orphan, 0);
-+		}
- 	}
- 
- 	/*
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> We have basic implementation for earlier version in our out of tree driver, which is going to be deprecated
+> Soon. You could also check the below driver for 1588 support.
+> https://gitenterprise.xilinx.com/Linux/linux-xlnx/blob/master/drivers/net/ethernet/xilinx/xilinx_emacps.c
+>
+>
+> Regards,
+> Punnaiah
+>
+>> -----Original Message-----
+>> From: Nicolas Ferre [mailto:nicolas.ferre@atmel.com]
+>> Sent: Tuesday, August 09, 2016 10:10 PM
+>> To: Harini Katakam <harinikatakamlinux@gmail.com>; Harini Katakam
+>> <harinik@xilinx.com>; Andrei Pistirica <Andrei.Pistirica@microchip.com>
+>> Cc: davem@davemloft.net; Boris Brezillon <boris.brezillon@free-
+>> electrons.com>; alexandre.belloni@free-electrons.com;
+>> netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> devicetree@vger.kernel.org; Punnaiah Choudary Kalluri
+>> <punnaia@xilinx.com>; Michal Simek <michals@xilinx.com>; Anirudha
+>> Sarangi <anirudh@xilinx.com>
+>> Subject: Re: [RFC PATCH 2/3] net: macb: Add support for 1588 for Zynq
+>> Ultrascale+ MPSoC
+>>
+>> Le 21/09/2015 à 19:49, Harini Katakam a écrit :
+>>> On Fri, Sep 11, 2015 at 1:27 PM, Harini Katakam
+>>> <harini.katakam@xilinx.com> wrote:
+>>>> Cadence GEM in Zynq Ultrascale+ MPSoC supports 1588 and provides a
+>>>> 102 bit time counter with 48 bits for seconds, 30 bits for nsecs and
+>>>> 24 bits for sub-nsecs. The timestamp is made available to the SW through
+>>>> registers as well as (more precisely) through upper two words in
+>>>> an extended BD.
+>>>>
+>>>> This patch does the following:
+>>>> - Adds MACB_CAPS_TSU in zynqmp_config.
+>>>> - Registers to ptp clock framework (after checking for timestamp support
+>> in
+>>>>   IP and capability in config).
+>>>> - TX BD and RX BD control registers are written to populate timestamp in
+>>>>   extended BD words.
+>>>> - Timer initialization is done by writing time of day to the timer counter.
+>>>> - ns increment register is programmed as NS_PER_SEC/TSU_CLK.
+>>>>   For a 24 bit subns precision, the subns increment equals
+>>>>   remainder of (NS_PER_SEC/TSU_CLK) * (2^24).
+>>>>   TSU (Time stamp unit) clock is obtained by the  driver from devicetree.
+>>>> - HW time stamp capabilities are advertised via ethtool and macb ioctl is
+>>>>   updated accordingly.
+>>>> - For all PTP event frames, nanoseconds and the lower 5 bits of seconds
+>> are
+>>>>   obtained from the BD. This offers a precise timestamp. The upper bits
+>>>>   (which dont vary between consecutive packets) are obtained from the
+>>>>   TX/RX PTP event/PEER registers. The timestamp obtained thus is
+>> updated
+>>>>   in skb for upper layers to access.
+>>>> - The drivers register functions with ptp to perform time and frequency
+>>>>   adjustment.
+>>>> - Time adjustment is done by writing to the 1558_ADJUST register.
+>>>>   The controller will read the delta in this register and update the timer
+>>>>   counter register. Alternatively, for large time offset adjustments,
+>>>>   the driver reads the secs and nsecs counter values, adds/subtracts the
+>>>>   delta and updates the timer counter. In order to be as precise as
+>> possible,
+>>>>   nsecs counter is read again if secs has incremented during the counter
+>> read.
+>>>> - Frequency adjustment is not directly supported by this IP.
+>>>>   addend is the initial value ns increment and similarly addendesub.
+>>>>   The ppb (parts per billion) provided is used as
+>>>>   ns_incr = addend +/- (ppb/rate).
+>>>>   Similarly the remainder of the above is used to populate subns
+>> increment.
+>>>>   In case the ppb requested is negative AND subns adjustment greater
+>> than
+>>>>   the addendsub, ns_incr is reduced by 1 and subns_incr is adjusted in
+>>>>   positive accordingly.
+>>>>
+>>>> Signed-off-by: Harini Katakam <harinik@xilinx.com>:
+>>>> ---
+>>>>  drivers/net/ethernet/cadence/macb.c |  372
+>> ++++++++++++++++++++++++++++++++++-
+>>>>  drivers/net/ethernet/cadence/macb.h |   64 ++++++
+>>>>  2 files changed, 428 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/drivers/net/ethernet/cadence/macb.c
+>> b/drivers/net/ethernet/cadence/macb.c
+>>>> index bb2932c..b531008 100644
+>>>> --- a/drivers/net/ethernet/cadence/macb.c
+>>>> +++ b/drivers/net/ethernet/cadence/macb.c
+>>>> @@ -30,6 +30,8 @@
+>>>>  #include <linux/of_device.h>
+>>>>  #include <linux/of_mdio.h>
+>>
+>> [..]
+>>
+>>>> +       unsigned int            ns_incr;
+>>>> +       unsigned int            subns_incr;
+>>>>  };
+>>>>
+>>>>  static inline bool macb_is_gem(struct macb *bp)
+>>>> --
+>>>> 1.7.9.5
+>>>
+>>> Ping
+>>>
+>>> Thanks.
+>>
+>> Harini,
+>>
+>> I come back to this patch of last year and I'm sorry about being so late
+>> answering you.
+>>
+>> Andrei who is added to the discussion will have some time to deal with
+>> this feature and we would like to make some progress with it. He already
+>> had some work done on his side before I recall your email.
+>>
+>> So, could you please re-send your original 1588 patch with Andrei in
+>> copy so that we can all (re-)start the discussion and progress for
+>> adding this feature.
+>>
+>> We must also note that some hardware differences between our platforms
+>> may have an impact on the code and how we implement things (as
+>> highlighted on this forum:
+>> http://www.at91.com/discussions/viewtopic.php/f,12/t,25462.html).
+>> Anyway, we'll overcome this and have a widely tested solution at the end
+>> of the day!
+>>
+>> Thanks for your patience, bye!
+>>
+>> PS: for some reason, I only have this "ping" part of your email but not
+>> the original one
+>> --
+>> Nicolas Ferre
+>
+>
+> This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+>
