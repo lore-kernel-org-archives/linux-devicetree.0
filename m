@@ -1,84 +1,81 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [v10 PATCH 0/5] Rockchip Type-C and DisplayPort driver
-Date: Wed, 10 Aug 2016 09:37:00 +0900
-Message-ID: <57AA772C.1010303@samsung.com>
-References: <CGME20160809233518epcas1p3f9f022aa8f96317795c91479d6758a3a@epcas1p3.samsung.com>
- <1470785557-21974-1-git-send-email-zyw@rock-chips.com>
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
+Date: Tue, 9 Aug 2016 20:09:36 -0500
+Message-ID: <57AA7ED0.9000707@codeaurora.org>
+References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
+ <9ebb6cb7-c793-cd76-5283-c9a659d0398f@gmx.de>
+ <57AA2001.2010904@codeaurora.org>
+ <214dcbb7-0c3b-1e00-3e50-db513d77b10b@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1470785557-21974-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <214dcbb7-0c3b-1e00-3e50-db513d77b10b-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "cpgs (cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org)" <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lino Sanfilippo <LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+Florian Fainelli wrote:
 
-On 2016년 08월 10일 08:32, Chris Zhong wrote:
-> Hi all
-> 
-> This series patch is for rockchip Type-C phy and DisplayPort controller
-> driver.
-> 
-> The USB Type-C PHY is designed to support the USB3 and DP applications.
-> The PHY basically has two main components: USB3 and DisplyPort. USB3
-> operates in SuperSpeed mode and the DP can operate at RBR, HBR and HBR2
-> data rates. The Type-C cable orientation detection and Power Delivery
-> (PD) is accomplished using a PD PHY or a exernal PD chip.
-> 
-> The DP controller is compliant with DisplayPort Specification,
-> Version 1.3, This IP is compatible with the rockchip type-c PHY IP.
-> There is a uCPU in DP controller, it need a firmware to work, please
-> put the firmware file[0] to /lib/firmware/rockchip/dptx.bin. The uCPU
-> in charge of aux communication and link training, the host use mailbox
-> to communicate with the ucpu.
-> 
-> The DP contoller has register a notification with extcon API, to get the
-> alt mode from PD, the PD driver need call the devm_extcon_dev_allocate
-> to create a extcon device and use extcon_set_state to notify DP
-> controller. And call extcon_set_cable_property to set orientation.
-> 
-> About the DP audio, cdn-dp registered 2 DAIs: 0 is I2S, 1 is SPDIF.
-> We can reference them in simple-card.
-> 
-> This series is based on Mark Yao's branch[1] and Chanwoo Choi's
-> extcon-next branch[2], and the clk patch[3].
-> 
-> I test this patches on the rk3399-evb board, with a fusb302 driver,
-> this branch has no rk3399.dtsi, so the patch about dts is not included
-> in this series.
-> 
->>From V9, the Type-C PHY is split into two PHYs: DP and USB3. The PHY
-> will be init, no matter which PHY be power_on. The DP module will
-> enter A2 mode (standby mode) after phy_init, if DP PHY is powered on,
-> the DP module will enter to A0 mode(running mode). Then if DP PHY is
-> powered off, DP module will back to A2 mode. If everything is
-> un-plugged, phy will be deinit.
-> 
-> [0]
-> https://patchwork.kernel.org/patch/9249693/
-> [1]
-> https://github.com/markyzq/kernel-drm-rockchip/tree/drm-rockchip-next-2016-05-23
-> [2]
-> https://git.kernel.org/cgit/linux/kernel/git/chanwoo/extcon.git/log/?h=extcon-test
-> - extcon: Add the extcon_type to gather each connector into five category
-> - extcon: Add the support for extcon property according to extcon type
-> - extcon: Add the support for the capability of each property
-> - extcon: Rename the extcon_set/get_state() to maintain the function naming
-> pattern
-> - extcon: Add the synchronization extcon APIs to support the notification
-> - extcon: Add EXTCON_DISP_DP and the property for USB Type-C
+> nr_frags can't be bigger than MAX_SKB_FRAGS, hence these checks all
+> other drivers do against 1 + MAX_SKB_FRAGS.
 
-The extcon patches are merged on extcon-next branch.
-So, you can check them on both extcon git and linux-next git repo.
+Doh, I just realized something.  emac_mac_tx_buf_send() just needs to 
+make sure that there's enough room for ONE skb.  For some reason I 
+thought it had to make sure there's enough room for multiple SKBs.
 
-[snip]
+Now it makes a lot more sense.  Thank you.
 
-Regards,
-Chanwoo Choi
+So it looks like a given SKB can occupy 3 + nr_frags descriptors.  So I 
+need to change that line to:
 
+	if (emac_tpd_num_free_descs(tx_q) < (MAX_SKB_FRAGS + 3))
+		netif_stop_queue(adpt->netdev);
+
+Question, some  drivers do <= instead of just <, like this:
+
+	if (ring->free_bds <= (MAX_SKB_FRAGS + 1))
+		netif_tx_stop_queue(txq);
+
+Is it necessary to stop the queue if there exactly enough descriptors to 
+hold an SKB?  Shouldn't the above be this instead:
+
+	if (ring->free_bds < (MAX_SKB_FRAGS + 1))
+		netif_tx_stop_queue(txq);
+
+
+>> However, I'm confused about one thing.  Almost every other driver just
+>> sets "netdev->mtu = new_mtu" and does nothing else.  I can't find any
+>> other driver that actually stops the RX path, reprograms the hardware,
+>> and then restarts the RX path.  I know this is a stupid question, but
+>> why is my driver doing that?
+>
+> Most drivers allocate RX buffer sizes that are usually bigger than the
+> MTU, but would probably silently fail or expose transient behavior once
+> the MTU changes to greater than the size pre-defined.
+
+So it looks like the real problem is a race condition between
+
+	adpt->rxbuf_size = new_mtu > EMAC_DEF_RX_BUF_SIZE ?
+		ALIGN(max_frame, 8) : EMAC_DEF_RX_BUF_SIZE;
+
+and
+
+	if (netif_running(netdev))
+		return emac_reinit_locked(adpt);
+
+
+That is, if the interface is running, I set rxbuf_size.  If suddenly I 
+receive some packets, then the driver will use the wrong buffer size.
+
+Is there an easy way for me to stop the RX path before I set rxbuf_size? 
+  Some netif_xxx function I can call?
+
+
+-- 
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
