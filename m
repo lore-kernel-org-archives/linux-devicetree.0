@@ -1,27 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] PCI: Xilinx NWL PCIe: Updating device tree documentation
- with prefetchable memory space
-Date: Wed, 10 Aug 2016 17:22:51 -0500
-Message-ID: <20160810222251.GA31705@rob-hp-laptop>
-References: <1470751209-31203-1-git-send-email-bharatku@xilinx.com>
+Subject: Re: [Patch v4 6/9] driver/edac/fsl_ddr: Add support of little endian
+Date: Wed, 10 Aug 2016 17:26:19 -0500
+Message-ID: <20160810222619.GA1530@rob-hp-laptop>
+References: <1470779760-16483-1-git-send-email-york.sun@nxp.com>
+ <1470779760-16483-7-git-send-email-york.sun@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1470751209-31203-1-git-send-email-bharatku@xilinx.com>
+In-Reply-To: <1470779760-16483-7-git-send-email-york.sun@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, Bharat Kumar Gogada <bharatku@xilinx.com>, rgummal@xilinx.com, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, soren.brinkmann@xilinx.com
+To: York Sun <york.sun@nxp.com>
+Cc: linux-edac@vger.kernel.org, morbidrsa@gmail.com, oss@buserror.net, stuart.yoder@nxp.com, bp@alien8.de, Mark Rutland <mark.rutland@arm.com>, Doug Thompson <dougthompson@xmission.com>, mchehab@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 09, 2016 at 07:30:09PM +0530, Bharat Kumar Gogada wrote:
-> Updating device tree documentation with prefetchable memory
-> sapce.
-> Configuration space shifted to 64-bit address space.
+On Tue, Aug 09, 2016 at 02:55:43PM -0700, York Sun wrote:
+> Get endianness from device tree. Both big endian and little endian
+> are supported. Default to big endian for backward compatibility to
+> MPC85xx.
 > 
-> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> Signed-off-by: York Sun <york.sun@nxp.com>
+> 
 > ---
->  Documentation/devicetree/bindings/pci/xilinx-nwl-pcie.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> Change log
+>   v4: Absorb name changes by "Rename macros and names"
+>       Drop testing for big-endian as suggested
+>       Use of_property_read_bool() as suggested
+>   v3: no change
+>   v2: Separated from "Add support for ARM-based SoCs" patch
+> 
+>  .../fsl/ddr.txt}                                   |  2 +
+>  drivers/edac/fsl_ddr_edac.c                        | 96 +++++++++++++---------
+>  2 files changed, 58 insertions(+), 40 deletions(-)
+>  rename Documentation/devicetree/bindings/{powerpc/fsl/mem-ctrlr.txt => memory-controllers/fsl/ddr.txt} (86%)
 
 Acked-by: Rob Herring <robh@kernel.org>
