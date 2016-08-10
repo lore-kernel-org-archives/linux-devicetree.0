@@ -1,105 +1,45 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v2 4/5] arm64: dts: msm8916: Add thermal zones, tsens and qfprom nodes
-Date: Wed, 10 Aug 2016 12:13:58 +0530
-Message-ID: <1470811439-1992-5-git-send-email-rnayak@codeaurora.org>
-References: <1470811439-1992-1-git-send-email-rnayak@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470811439-1992-1-git-send-email-rnayak@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ARM: dts: da850: Add basic DTS for the L138/C6748
+ Dev Kit
+Date: Wed, 10 Aug 2016 13:35:12 -0500
+Message-ID: <20160810183512.GA10503@rob-hp-laptop>
+References: <20160804144332.4841-1-kbeldan@baylibre.com>
+ <20160805141229.20784-1-kbeldan@baylibre.com>
+ <20160805141229.20784-2-kbeldan@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160805141229.20784-2-kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add thermal zones, tsens and qfprom nodes
+On Fri, Aug 05, 2016 at 02:12:27PM +0000, Karl Beldan wrote:
+> The LCDK is the successor to the late Hawkboard.
+> Among the differences are the flash (16bits vs 8bits) and some pins
+> (MMC, LEDs, buttons, some external connectors), however the main
+> components remain the same (eth. phy, audio codec, video decoder and
+> DAC) except for the main PMIC, different and hard-wired on the LCDK (the
+> LDOs and DCDCs are always on).
+> A DT-only boot with this addition gives functional UART, reboot via
+> watchdog, RTC, ethernet and MMC (I added the CD GPIO for the MMC
+> although davinci_mmc doesn't call the OF facilities of mmc core).
+> 
+> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+> Tested-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/davinci.txt |  4 ++
+>  arch/arm/boot/dts/Makefile                        |  1 +
+>  arch/arm/boot/dts/da850-lcdk.dts                  | 70 +++++++++++++++++++++++
+>  arch/arm/mach-davinci/da8xx-dt.c                  |  1 +
+>  4 files changed, 76 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/da850-lcdk.dts
 
-Acked-by: Eduardo Valentin <edubezval@gmail.com>
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 64 +++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 11bdc24..4bc047b 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -155,6 +155,49 @@
- 		interrupts = <GIC_PPI 7 GIC_CPU_MASK_SIMPLE(4)>;
- 	};
- 
-+	thermal-zones {
-+		cpu-thermal0 {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens 4>;
-+
-+			trips {
-+				cpu_alert0: trip0 {
-+					temperature = <75000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				cpu_crit0: trip1 {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu-thermal1 {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+
-+			thermal-sensors = <&tsens 3>;
-+
-+			trips {
-+				cpu_alert1: trip0 {
-+					temperature = <75000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				cpu_crit1: trip1 {
-+					temperature = <110000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-@@ -609,6 +652,27 @@
- 			clocks = <&gcc GCC_PRNG_AHB_CLK>;
- 			clock-names = "core";
- 		};
-+
-+		qfprom: qfprom@5c000 {
-+			compatible = "qcom,qfprom";
-+			reg = <0x5c000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			tsens_caldata: caldata@d0 {
-+				reg = <0xd0 0x8>;
-+			};
-+			tsens_calsel: calsel@ec {
-+				reg = <0xec 0x4>;
-+			};
-+		};
-+
-+		tsens: thermal-sensor@4a8000 {
-+			compatible = "qcom,msm8916-tsens";
-+			reg = <0x4a8000 0x2000>;
-+			nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
-+			nvmem-cell-names = "calib", "calib_sel";
-+			#thermal-sensor-cells = <1>;
-+		};
- 	};
- 
- 	smd {
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
