@@ -1,62 +1,132 @@
-From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC][PATCH 3/4] arm64: dts: hikey: Add hikey support for syscon-reboot-mode
-Date: Tue, 9 Aug 2016 21:58:20 -0700
-Message-ID: <CALAqxLVQrL52Z_A5yO+UfBWcva7gUvawq=gv+WWyV51rz2iuyw@mail.gmail.com>
-References: <1470697426-16426-1-git-send-email-john.stultz@linaro.org>
- <1470697426-16426-3-git-send-email-john.stultz@linaro.org> <20160810043424.GH26240@tuxbot>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [RFC PATCH v5 3/3] net: phy: Add gmiitorgmii converter support
+Date: Wed, 10 Aug 2016 05:27:45 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5E0D49@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1470735283-23611-1-git-send-email-appanad@xilinx.com>
+ <1470735283-23611-4-git-send-email-appanad@xilinx.com>
+ <8919e4fe-69c5-9b16-cc37-e423b757609c@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160810043424.GH26240@tuxbot>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8919e4fe-69c5-9b16-cc37-e423b757609c@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal
+ Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "andrew@lunn.ch" <andrew@lunn.ch>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 9, 2016 at 9:34 PM, Bjorn Andersson
-<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon 08 Aug 16:03 PDT 2016, John Stultz wrote:
->
-> [..]
->> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> [..]
->>       memory@0 {
->>               device_type = "memory";
->>               reg = <0x00000000 0x00000000 0x00000000 0x05e00000>,
->> -                   <0x00000000 0x05f00000 0x00000000 0x00eff000>,
->> +                   <0x00000000 0x05f00000 0x00000000 0x00001000>,
->> +                   <0x00000000 0x05f02000 0x00000000 0x00efd000>,
->>                     <0x00000000 0x06e00000 0x00000000 0x0060f000>,
->>                     <0x00000000 0x07410000 0x00000000 0x36bf0000>;
->>       };
->
-> As I said when talked about this, I don't think you should punch holes
-> in the /memory node, but rather add these regions as no-map in a
-> /reserved-memory node. But that's a unrelated matter.
+Hi Florian,
 
-Yea. I need to sync w/ Wei and Guodong to see about reworking all of
-those to use /reserved-memory, but for now I'd like to stay in sync w/
-how they have it setup.
+	Thanks for the review...
 
->>
->> +     reboot-mode-syscon@5f01000 {
->> +             compatible = "syscon", "simple-mfd";
->> +             reg = <0x0 0x05f01000 0x0 0x00001000>;
->> +
->> +             reboot-mode@0 {
->
-> Drop the @0
+> >
+> > This converter sits between the MAC and the external phy MAC <==>
+> > GMII2RGMII <==> RGMII_PHY
+> 
+> This looks good, just a few things, see below:
 
-Will do.
+Thanks...
 
+> > +config XILINX_GMII2RGMII
+> > +       tristate "Xilinx GMII2RGMII converter driver"
+> > +       default y
+> 
+> Don't force that, or at least make the default based on the potential
+> users/drivers here.
 
->
-> Other than that:
-> Acked-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Ok sure will fix in the next version...
 
-Thanks!
--john
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> > +       ---help---
+> > +         This driver support xilinx GMII to RGMII IP core it provides
+> > +         the Reduced Gigabit Media Independent Interface(RGMII) between
+> > +         Ethernet physical media devices and the Gigabit Ethernet controller.
+> > +
+> >  endif # PHYLIB
+
+<snip>
+
+> > +#define XILINX_GMII2RGMII_REG		0x10
+> > +#define XILINX_GMII2RGMII_SPEED_MASK	0x2040
+> 
+> BMCR_SPEED1000 | BMCR_SPEED100 would be clearer here.
+
+Sure will fix...
+
+> 
+> > +
+> > +struct gmii2rgmii {
+> > +	struct phy_device *phy_dev;
+> > +	struct phy_driver *phy_drv;
+> > +	struct phy_driver conv_phy_drv;
+> > +	int addr;
+> > +};
+> > +
+> > +static int xgmiitorgmii_read_status(struct phy_device *phydev) {
+> > +	struct gmii2rgmii *priv = (struct gmii2rgmii *)phydev->priv;
+> 
+> Casting is not required here, priv is void *.
+
+Ok will remove...
+
+> 
+> > +	u16 val = 0;
+> > +
+> > +	priv->phy_drv->read_status(phydev);
+> > +
+> > +	val = mdiobus_read(phydev->mdio.bus, priv->addr,
+> XILINX_GMII2RGMII_REG);
+> > +	val &= XILINX_GMII2RGMII_SPEED_MASK;
+> > +
+> > +	switch (phydev->speed) {
+> > +	case SPEED_1000:
+> > +		val |= BMCR_SPEED1000;
+> 
+> Is the fall through really intentional here? See genphy_setup_forced() for
+> instance.
+
+Ok will fix...
+
+> 
+> > +	case SPEED_100:
+> > +		val |= BMCR_SPEED100;
+> > +	case SPEED_10:
+> > +		val |= BMCR_SPEED10;
+> > +	}
+> > +
+> > +	mdiobus_write(phydev->mdio.bus, priv->addr,
+> XILINX_GMII2RGMII_REG,
+> > +val);
+> > +
+> > +	return 0;
+> > +}
+> [snip]
+> 
+> > +static int __init xgmiitorgmii_init(void) {
+> > +	return mdio_driver_register(&xgmiitorgmii_driver);
+> > +}
+> > +module_init(xgmiitorgmii_init);
+> > +
+> > +static void __exit xgmiitorgmii_cleanup(void) {
+> > +	mdio_driver_unregister(&xgmiitorgmii_driver);
+> > +}
+> > +module_exit(xgmiitorgmii_cleanup);
+> 
+> mdio_module_driver() does eliminate a bit of this boilerplate code.
+
+Sure will fix in the next version...
+
+Regards,
+Kedar.
+> --
+> Florian
