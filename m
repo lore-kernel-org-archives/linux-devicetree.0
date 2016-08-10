@@ -1,39 +1,151 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [alsa-devel] [PATCH] ASoC: rt5659: Add mclk controls
-Date: Wed, 10 Aug 2016 16:59:03 -0500
-Message-ID: <ff13c01a-a3f5-b11f-c342-926e98f64be3@linux.intel.com>
-References: <1469660568-3511-1-git-send-email-nicoleotsuka@gmail.com>
- <20160728155732.GG11806@sirena.org.uk> <20160728181419.GA4742@Asurada-Nvidia>
- <20160728185510.GK11806@sirena.org.uk> <20160729161521.GL9681@localhost>
- <20160729163933.GJ10376@sirena.org.uk>
- <c649c3fe-b111-56a8-275e-d967a961dd41@linux.intel.com>
- <20160810170632.GL9347@sirena.org.uk>
- <c794d543-a57a-aad6-1b62-4d101a79cdd3@linux.intel.com>
- <20160810175243.GN9347@sirena.org.uk>
+From: Guenter Roeck <groeck@google.com>
+Subject: Re: [v10 PATCH 1/5] Documentation: bindings: add dt doc for Rockchip
+ USB Type-C PHY
+Date: Wed, 10 Aug 2016 15:10:12 -0700
+Message-ID: <CABXOdTcgLHkxhk+LbBxe9wfmMBHVxt0NgStvG4MCcZKi_J2zLw@mail.gmail.com>
+References: <1470785557-21974-1-git-send-email-zyw@rock-chips.com> <1470785557-21974-2-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160810175243.GN9347@sirena.org.uk>
+In-Reply-To: <1470785557-21974-2-git-send-email-zyw@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Vinod Koul <vinod.koul@intel.com>, mark.rutland@arm.com, oder_chiou@realtek.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Darren Hart <dvhart@linux.intel.com>, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>, robh+dt@kernel.org, bardliao@realtek.com
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: Douglas Anderson <dianders@chromium.org>, Tomasz Figa <tfiga@chromium.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, =?UTF-8?B?5aea5pm65oOF?= <yzq@rock-chips.com>, Guenter Roeck <groeck@chromium.org>, myungjoo.ham@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, wulf <wulf@rock-chips.com>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, devicetree@vger.kernel.org, Kever Yang <kever.yang@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel <linux-kernel@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/10/16 12:52 PM, Mark Brown wrote:
-> On Wed, Aug 10, 2016 at 12:31:28PM -0500, Pierre-Louis Bossart wrote:
+On Tue, Aug 9, 2016 at 4:32 PM, Chris Zhong <zyw@rock-chips.com> wrote:
+> This patch adds a binding that describes the Rockchip USB Type-C PHY
+> for rk3399
 >
->> If we want to be consistent then we need to have a framework that handles
->> both the SOC clock sources and the codec internal clock tree (including
->> dividers and switches)
->> I wonder if what you are hinting at is the codec driver modeling its
->> internal PLL/clock tree with the clock API?
->
-> I'm not just hinting at that, I've openly stated it quite a few times
-> now!  :P  For the simpler CODECs it's kind of marginal if you need to
-> bother but for anything more complex (even things with PLLs) it seems
-> like the way forwards.
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+> Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-interesting, thanks for the precision. I must admit I missed this 
-concept completely and I didn't see any codec vendors work in this 
-direction so far. Ironically the x86 part may be the most straightforward...
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+>
+> ---
+>
+> Changes in v10:
+> - remove rockchip,uphy-dp-sel property
+>
+> Changes in v9:
+> - change #phy-cells to 1
+>
+> Changes in v8: None
+> Changes in v7: None
+> Changes in v6:
+> - add assigned-clocks and assigned-clock-rates
+>
+> Changes in v5: None
+> Changes in v4:
+> - add a #phy-cells node
+>
+> Changes in v3:
+> - use compatible: rockchip,rk3399-typec-phy
+> - use dashes instead of underscores.
+>
+> Changes in v2:
+> - add some registers description
+>
+> Changes in v1:
+> - add extcon node description
+> - move the registers in phy driver
+> - remove the suffix of reset
+>
+>  .../devicetree/bindings/phy/phy-rockchip-typec.txt | 82 ++++++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>
+> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> new file mode 100644
+> index 0000000..bf372e6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> @@ -0,0 +1,82 @@
+> +* ROCKCHIP type-c PHY
+> +---------------------
+> +
+> +Required properties:
+> + - compatible : must be "rockchip,rk3399-typec-phy"
+> + - reg: Address and length of the usb phy control register set
+> + - rockchip,grf : phandle to the syscon managing the "general
+> +   register files"
+> + - clocks : phandle + clock specifier for the phy clocks
+> + - clock-names : string, clock name, must be "tcpdcore", "tcpdphy-ref";
+> + - assigned-clocks: main clock, should be <&cru SCLK_UPHY0_TCPDCORE> or
+> +                   <&cru SCLK_UPHY1_TCPDCORE>;
+> + - assigned-clock-rates : the phy core clk frequency, shall be: 50000000
+> + - resets : a list of phandle + reset specifier pairs
+> + - reset-names : string reset name, must be:
+> +                "uphy", "uphy-pipe", "uphy-tcphy"
+> + - extcon : extcon specifier for the Power Delivery
+> + - #phy-cells: must be 1. create 2 PHY node:
+> +               <&tcphy0 0> and <&tcphy1 0> for DP PHY.
+> +               <&tcphy0 1> and <&tcphy1 1> for USB3 PHY.
+> +   See ./phy-bindings.txt for details.
+> +
+> +Note, there are 2 type-c phys for RK3399, and they are almost identical, except
+> +these registers(description below), every register node contains 3 sections:
+> +offset, enable bit, write mask bit.
+> + - rockchip,typec-conn-dir : the register of type-c connector direction,
+> +   for type-c phy0, it must be <0xe580 0 16>;
+> +   for type-c phy1, it must be <0xe58c 0 16>;
+> + - rockchip,usb3tousb2-en : the register of type-c force usb3 to usb2 enable
+> +   control.
+> +   for type-c phy0, it must be <0xe580 3 19>;
+> +   for type-c phy1, it must be <0xe58c 3 19>;
+> + - rockchip,external-psm : the register of type-c phy external psm clock
+> +   selection.
+> +   for type-c phy0, it must be <0xe588 14 30>;
+> +   for type-c phy1, it must be <0xe594 14 30>;
+> + - rockchip,pipe-status : the register of type-c phy pipe status.
+> +   for type-c phy0, it must be <0xe5c0 0 0>;
+> +   for type-c phy1, it must be <0xe5c0 16 16>;
+> +
+> +Example:
+> +       tcphy0: phy@ff7c0000 {
+> +               compatible = "rockchip,rk3399-typec-phy";
+> +               reg = <0x0 0xff7c0000 0x0 0x40000>;
+> +               rockchip,grf = <&grf>;
+> +               #phy-cells = <1>;
+> +               extcon = <&fusb0>;
+> +               clocks = <&cru SCLK_UPHY0_TCPDCORE>,
+> +                        <&cru SCLK_UPHY0_TCPDPHY_REF>;
+> +               clock-names = "tcpdcore", "tcpdphy-ref";
+> +               assigned-clocks = <&cru SCLK_UPHY0_TCPDCORE>;
+> +               assigned-clock-rates = <50000000>;
+> +               resets = <&cru SRST_UPHY0>,
+> +                        <&cru SRST_UPHY0_PIPE_L00>,
+> +                        <&cru SRST_P_UPHY0_TCPHY>;
+> +               reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
+> +               rockchip,typec-conn-dir = <0xe580 0 16>;
+> +               rockchip,usb3tousb2-en = <0xe580 3 19>;
+> +               rockchip,external-psm = <0xe588 14 30>;
+> +               rockchip,pipe-status = <0xe5c0 0 0>;
+> +       };
+> +
+> +       tcphy1: phy@ff800000 {
+> +               compatible = "rockchip,rk3399-typec-phy";
+> +               reg = <0x0 0xff800000 0x0 0x40000>;
+> +               rockchip,grf = <&grf>;
+> +               #phy-cells = <1>;
+> +               extcon = <&fusb1>;
+> +               clocks = <&cru SCLK_UPHY1_TCPDCORE>,
+> +                        <&cru SCLK_UPHY1_TCPDPHY_REF>;
+> +               clock-names = "tcpdcore", "tcpdphy-ref";
+> +               assigned-clocks = <&cru SCLK_UPHY1_TCPDCORE>;
+> +               assigned-clock-rates = <50000000>;
+> +               resets = <&cru SRST_UPHY1>,
+> +                        <&cru SRST_UPHY1_PIPE_L00>,
+> +                        <&cru SRST_P_UPHY1_TCPHY>;
+> +               reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
+> +               rockchip,typec-conn-dir = <0xe58c 0 16>;
+> +               rockchip,usb3tousb2-en = <0xe58c 3 19>;
+> +               rockchip,external-psm = <0xe594 14 30>;
+> +               rockchip,pipe-status = <0xe5c0 16 16>;
+> +       };
+> --
+> 1.9.1
+>
