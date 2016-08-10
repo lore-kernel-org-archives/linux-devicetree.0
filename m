@@ -1,110 +1,54 @@
-From: YT Shen <yt.shen@mediatek.com>
-Subject: Re: [PATCH v6 06/10] drm/mediatek: add dsi interrupt control
-Date: Wed, 10 Aug 2016 14:59:33 +0800
-Message-ID: <1470812373.27526.1.camel@mtksdaap41>
-References: <1470308844-20895-1-git-send-email-yt.shen@mediatek.com>
- <1470308844-20895-7-git-send-email-yt.shen@mediatek.com>
- <1470392666.16554.61.camel@mtksdaap41>
+From: Karl Beldan <kbeldan@baylibre.com>
+Subject: Re: [PATCH 1/4] memory: ti-aemif: Get a named clock rather than an
+ unnamed one
+Date: Wed, 10 Aug 2016 07:00:20 +0000
+Message-ID: <20160810070019.GA14114@gobelin>
+References: <20160809171518.22690-1-kbeldan@baylibre.com>
+ <20160809171518.22690-2-kbeldan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1470392666.16554.61.camel@mtksdaap41>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, Russell King <linux@arm.linux.org.uk>, Mao Huang <littlecvr@chromium.org>, yingjoe.chen@mediatek.com, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, shaoming chen <shaoming.chen@mediatek.com>, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20160809171518.22690-2-kbeldan@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Karl Beldan <karl.beldan+oss@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ0ssCgpPbiBGcmksIDIwMTYtMDgtMDUgYXQgMTg6MjQgKzA4MDAsIENLIEh1IHdyb3RlOgo+
-IEhpLCBZVDoKPiAKPiBPbiBUaHUsIDIwMTYtMDgtMDQgYXQgMTk6MDcgKzA4MDAsIFlUIFNoZW4g
-d3JvdGU6Cj4gPiBGcm9tOiBzaGFvbWluZyBjaGVuIDxzaGFvbWluZy5jaGVuQG1lZGlhdGVrLmNv
-bT4KPiA+IAo+ID4gYWRkIGRzaSBpbnRlcnJ1cHQgY29udHJvbAo+ID4gCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBzaGFvbWluZyBjaGVuIDxzaGFvbWluZy5jaGVuQG1lZGlhdGVrLmNvbT4KPiA+IC0tLQo+
-ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMgfCAgIDc2ICsrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA3NiBpbnNlcnRp
-b25zKCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
-X2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYwo+ID4gaW5kZXggYTlj
-ZjVhMS4uZWVhNjE5MiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
-dGtfZHNpLmMKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMKPiA+
-IEBAIC0xOCw2ICsxOCw3IEBACj4gPiAgI2luY2x1ZGUgPGRybS9kcm1fcGFuZWwuaD4KPiA+ICAj
-aW5jbHVkZSA8bGludXgvY2xrLmg+Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L2NvbXBvbmVudC5oPgo+
-ID4gKyNpbmNsdWRlIDxsaW51eC9pcnEuaD4KPiA+ICAjaW5jbHVkZSA8bGludXgvb2YuaD4KPiA+
-ICAjaW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4KPiA+ICAjaW5jbHVkZSA8bGludXgvb2Zf
-Z3JhcGguaD4KPiA+IEBAIC0yOSw2ICszMCwxNyBAQAo+ID4gIAo+ID4gICNkZWZpbmUgRFNJX1NU
-QVJUCQkweDAwCj4gPiAgCj4gPiArI2RlZmluZSBEU0lfSU5URU4JCTB4MDgKPiA+ICsKPiA+ICsj
-ZGVmaW5lIERTSV9JTlRTVEEJCTB4MGMKPiA+ICsjZGVmaW5lIExQUlhfUkRfUkRZX0lOVF9GTEFH
-CQlCSVQoMCkKPiA+ICsjZGVmaW5lIENNRF9ET05FX0lOVF9GTEFHCQlCSVQoMSkKPiA+ICsjZGVm
-aW5lIFRFX1JEWV9JTlRfRkxBRwkJCUJJVCgyKQo+ID4gKyNkZWZpbmUgVk1fRE9ORV9JTlRfRkxB
-RwkJQklUKDMpCj4gPiArI2RlZmluZSBFWFRfVEVfUkRZX0lOVF9GTEFHCQlCSVQoNCkKPiA+ICsj
-ZGVmaW5lIERTSV9JTlRfQUxMX0JJVFMJCTB4MWYKPiA+ICsjZGVmaW5lIERTSV9CVVNZCQkJQklU
-KDMxKQo+ID4gKwo+ID4gICNkZWZpbmUgRFNJX0NPTl9DVFJMCQkweDEwCj4gPiAgI2RlZmluZSBE
-U0lfUkVTRVQJCQlCSVQoMCkKPiA+ICAjZGVmaW5lIERTSV9FTgkJCQlCSVQoMSkKPiA+IEBAIC03
-MSw2ICs4Myw5IEBACj4gPiAgCj4gPiAgI2RlZmluZSBEU0lfSFNUWF9DS0xfV0MJCTB4NjQKPiA+
-ICAKPiA+ICsjZGVmaW5lIERTSV9SQUNLCQkweDg0Cj4gPiArI2RlZmluZSBSQUNLCQkJCUJJVCgw
-KQo+ID4gKwo+ID4gICNkZWZpbmUgRFNJX1BIWV9MQ0NPTgkJMHgxMDQKPiA+ICAjZGVmaW5lIExD
-X0hTX1RYX0VOCQkJQklUKDApCj4gPiAgI2RlZmluZSBMQ19VTFBNX0VOCQkJQklUKDEpCj4gPiBA
-QCAtMTMxLDggKzE0NiwxMSBAQCBzdHJ1Y3QgbXRrX2RzaSB7Cj4gPiAgCXN0cnVjdCB2aWRlb21v
-ZGUgdm07Cj4gPiAgCWludCByZWZjb3VudDsKPiA+ICAJYm9vbCBlbmFibGVkOwo+ID4gKwlpbnQg
-aXJxX2RhdGE7Cj4gCj4gdTMyIGlycV9kYXRhOwpXaWxsIGRvLgoKUmVnYXJkcywKeXQuc2hlbgo+
-IAo+ID4gIH07Cj4gPiAgCj4gPiArc3RhdGljIHdhaXRfcXVldWVfaGVhZF90IF9kc2lfaXJxX3dh
-aXRfcXVldWU7Cj4gPiArCj4gPiAgc3RhdGljIGlubGluZSBzdHJ1Y3QgbXRrX2RzaSAqZW5jb2Rl
-cl90b19kc2koc3RydWN0IGRybV9lbmNvZGVyICplKQo+ID4gIHsKPiA+ICAJcmV0dXJuIGNvbnRh
-aW5lcl9vZihlLCBzdHJ1Y3QgbXRrX2RzaSwgZW5jb2Rlcik7Cj4gPiBAQCAtNDM3LDYgKzQ1NSw0
-MyBAQCBzdGF0aWMgdm9pZCBtdGtfZHNpX3N0YXJ0KHN0cnVjdCBtdGtfZHNpICpkc2kpCj4gPiAg
-CXdyaXRlbCgxLCBkc2ktPnJlZ3MgKyBEU0lfU1RBUlQpOwo+ID4gIH0KPiA+ICAKPiA+ICtzdGF0
-aWMgdm9pZCBtdGtfZHNpX3NldF9pbnRlcnJ1cHRfZW5hYmxlKHN0cnVjdCBtdGtfZHNpICpkc2kp
-Cj4gPiArewo+ID4gKwl1MzIgaW50ZW4gPSBEU0lfSU5UX0FMTF9CSVRTOwo+ID4gKwo+ID4gKwlp
-ZiAoZHNpLT5tb2RlX2ZsYWdzICYgTUlQSV9EU0lfTU9ERV9WSURFTykKPiA+ICsJCWludGVuICY9
-IH4oVEVfUkRZX0lOVF9GTEFHIHwgRVhUX1RFX1JEWV9JTlRfRkxBRyk7Cj4gPiArCj4gPiArCXdy
-aXRlbChpbnRlbiwgZHNpLT5yZWdzICsgRFNJX0lOVEVOKTsKPiA+ICt9Cj4gPiArCj4gPiArc3Rh
-dGljIHZvaWQgbXRrX2RzaV9pcnFfd2FrZXVwKHN0cnVjdCBtdGtfZHNpICpkc2ksIHUzMiBpcnFf
-Yml0KQo+ID4gK3sKPiA+ICsJZHNpLT5pcnFfZGF0YSB8PSBpcnFfYml0Owo+ID4gK30KPiA+ICsK
-PiA+ICtzdGF0aWMgaXJxcmV0dXJuX3QgbXRrX2RzaV9pcnEoaW50IGlycSwgdm9pZCAqZGV2X2lk
-KQo+ID4gK3sKPiA+ICsJc3RydWN0IG10a19kc2kgKmRzaSA9IGRldl9pZDsKPiA+ICsJdTMyIHN0
-YXR1cywgdG1wOwo+ID4gKwl1MzIgZmxhZyA9IExQUlhfUkRfUkRZX0lOVF9GTEFHIHwgQ01EX0RP
-TkVfSU5UX0ZMQUcgfCBWTV9ET05FX0lOVF9GTEFHOwo+ID4gKwo+ID4gKwlzdGF0dXMgPSByZWFk
-bChkc2ktPnJlZ3MgKyBEU0lfSU5UU1RBKTsKPiA+ICsKPiA+ICsJaWYgKHN0YXR1cyAmIGZsYWcp
-IHsKPiA+ICsJCWRvIHsKPiA+ICsJCQltdGtfZHNpX21hc2soZHNpLCBEU0lfUkFDSywgUkFDSywg
-UkFDSyk7Cj4gPiArCQkJdG1wID0gcmVhZGwoZHNpLT5yZWdzICsgRFNJX0lOVFNUQSk7Cj4gPiAr
-CQl9IHdoaWxlICh0bXAgJiBEU0lfQlVTWSk7Cj4gPiArCj4gPiArCQltdGtfZHNpX21hc2soZHNp
-LCBEU0lfSU5UU1RBLCBzdGF0dXMgJiBmbGFnLCAwKTsKPiA+ICsJCW10a19kc2lfaXJxX3dha2V1
-cChkc2ksIHN0YXR1cyAmIGZsYWcpOwo+ID4gKwkJd2FrZV91cF9pbnRlcnJ1cHRpYmxlKCZfZHNp
-X2lycV93YWl0X3F1ZXVlKTsKPiA+ICsJfQo+ID4gKwo+ID4gKwlyZXR1cm4gSVJRX0hBTkRMRUQ7
-Cj4gPiArfQo+ID4gKwo+ID4gIHN0YXRpYyB2b2lkIG10a19kc2lfcG93ZXJvZmYoc3RydWN0IG10
-a19kc2kgKmRzaSkKPiA+ICB7Cj4gPiAgCWlmIChXQVJOX09OKGRzaS0+cmVmY291bnQgPT0gMCkp
-Cj4gPiBAQCAtNDg1LDYgKzU0MCw3IEBAIHN0YXRpYyB2b2lkIG10a19vdXRwdXRfZHNpX2VuYWJs
-ZShzdHJ1Y3QgbXRrX2RzaSAqZHNpKQo+ID4gIAo+ID4gIAltdGtfZHNpX3BzX2NvbnRyb2xfdmFj
-dChkc2kpOwo+ID4gIAltdGtfZHNpX2NvbmZpZ192ZG9fdGltaW5nKGRzaSk7Cj4gPiArCW10a19k
-c2lfc2V0X2ludGVycnVwdF9lbmFibGUoZHNpKTsKPiA+ICAKPiA+ICAJbXRrX2RzaV9zZXRfbW9k
-ZShkc2kpOwo+ID4gIAltdGtfZHNpX2Nsa19oc19tb2RlKGRzaSwgMSk7Cj4gPiBAQCAtODA0LDYg
-Kzg2MCw3IEBAIHN0YXRpYyBpbnQgbXRrX2RzaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2KQo+ID4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Owo+ID4gIAlzdHJ1
-Y3QgZGV2aWNlX25vZGUgKnJlbW90ZV9ub2RlLCAqZW5kcG9pbnQ7Cj4gPiAgCXN0cnVjdCByZXNv
-dXJjZSAqcmVnczsKPiA+ICsJaW50IGlycV9udW07Cj4gPiAgCWludCBjb21wX2lkOwo+ID4gIAlp
-bnQgcmV0Owo+ID4gIAo+ID4gQEAgLTg4MCw4ICs5MzcsMjcgQEAgc3RhdGljIGludCBtdGtfZHNp
-X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gPiAgCQlyZXR1cm4gcmV0Owo+
-ID4gIAl9Cj4gPiAgCj4gPiArCWlycV9udW0gPSBwbGF0Zm9ybV9nZXRfaXJxKHBkZXYsIDApOwo+
-ID4gKwlpZiAoaXJxX251bSA8IDApIHsKPiA+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxl
-ZCB0byByZXF1ZXN0IGRzaSBpcnEgcmVzb3VyY2VcbiIpOwo+ID4gKwkJcmV0dXJuIC1FUFJPQkVf
-REVGRVI7Cj4gPiArCX0KPiA+ICsKPiA+ICsJaXJxX3NldF9zdGF0dXNfZmxhZ3MoaXJxX251bSwg
-SVJRX1RZUEVfTEVWRUxfTE9XKTsKPiA+ICsJcmV0ID0gZGV2bV9yZXF1ZXN0X2lycSgmcGRldi0+
-ZGV2LCBpcnFfbnVtLCBtdGtfZHNpX2lycSwKPiA+ICsJCQkgICAgICAgSVJRRl9UUklHR0VSX0xP
-VywgZGV2X25hbWUoJnBkZXYtPmRldiksIGRzaSk7Cj4gPiArCWlmIChyZXQpIHsKPiA+ICsJCWRl
-dl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byByZXF1ZXN0IG1lZGlhdGVrIGRzaSBpcnFcbiIp
-Owo+ID4gKwkJcmV0dXJuIC1FUFJPQkVfREVGRVI7Cj4gPiArCX0KPiA+ICsKPiA+ICsJZHNpLT5p
-cnFfZGF0YSA9IDA7Cj4gPiArCWRldl9pbmZvKGRldiwgImRzaSBpcnEgbnVtIGlzIDB4JXhcbiIs
-IGlycV9udW0pOwo+ID4gKwo+ID4gIAlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBkc2kpOwo+
-ID4gIAo+ID4gKwlpbml0X3dhaXRxdWV1ZV9oZWFkKCZfZHNpX2lycV93YWl0X3F1ZXVlKTsKPiA+
-ICsKPiA+ICAJcmV0dXJuIGNvbXBvbmVudF9hZGQoJnBkZXYtPmRldiwgJm10a19kc2lfY29tcG9u
-ZW50X29wcyk7Cj4gPiAgfQo+ID4gIAo+IAo+IFJlZ2FyZHMsCj4gQ0sKPiAKCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, Aug 09, 2016 at 05:15:15PM +0000, Karl Beldan wrote:
+> Many davinci boards (da830 and da850 families) don't have their clocks
+> in DT yet and won't be successful in getting an unnamed aemif clock.
+> Also the sole current users of ti-aemif (keystone boards) use 'aemif' as
+> their aemif device clock clock-name and should remain unaffected.
+> 
+> Signed-off-by: Karl Beldan <kbeldan@baylibre.com>
+> ---
+>  drivers/memory/ti-aemif.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/memory/ti-aemif.c b/drivers/memory/ti-aemif.c
+> index a579a0f..c251fc8 100644
+> --- a/drivers/memory/ti-aemif.c
+> +++ b/drivers/memory/ti-aemif.c
+> @@ -345,7 +345,7 @@ static int aemif_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, aemif);
+>  
+> -	aemif->clk = devm_clk_get(dev, NULL);
+> +	aemif->clk = devm_clk_get(dev, "aemif");
+
+Looking further it seems to me that the struct clk_lookup da850_clks
+registered by davinci_clk_init() should be enough to clk_get() unnamed
+clocks using only the dev name. I look into what's going on but it
+would make this patch unnecessary.
+ 
+Karl
