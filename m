@@ -1,79 +1,95 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 5/7] arm64: dts: add Allwinner A64 SoC .dtsi
-Date: Wed, 10 Aug 2016 15:00:34 -0500
-Message-ID: <20160810200034.GA14244@rob-hp-laptop>
-References: <20160808172149.30861-1-andre.przywara@arm.com>
- <20160808172149.30861-6-andre.przywara@arm.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBZEPV26QKGQEKDFCD3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160808172149.30861-6-andre.przywara-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: tps65218: do not disable DCDC3 during poweroff on broken PMICs" to the regulator tree
+Date: Wed, 10 Aug 2016 21:04:14 +0100
+Message-ID: <E1bXZja-0000XE-A6@debutante>
+References: <1466412218-5906-9-git-send-email-j-keerthy@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1466412218-5906-9-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, tony@atomide.combroonie@kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, russ.dill@ti.com, robh+dt@kernel.org, mark.rutland@arm.comj-keerthy@ti.com, linux@armlinux.org.ukDave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 08, 2016 at 06:21:47PM +0100, Andre Przywara wrote:
-> The Allwinner A64 SoC is a low-cost chip with 4 ARM Cortex-A53 cores
-> and the typical tablet / TV box peripherals.
-> The SoC is based on the (32-bit) Allwinner H3 chip, sharing most of
-> the peripherals and the memory map.
-> Although the cores are proper 64-bit ones, the whole SoC is actually
-> limited to 4GB (including all the supported DRAM), so we use 32-bit
-> address and size cells. This has the nice feature of us being able to
-> reuse the DT for 32-bit kernels as well.
-> This .dtsi lists the hardware that we support so far.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-> ---
-> Hi,
-> 
-> I dropped Rob's previous ACK, as there were quite some changes.
-> 
-> Cheers,
-> Andre.
-> 
->  Documentation/devicetree/bindings/arm/sunxi.txt    |   1 +
->  .../boot/dts/allwinner/sun50i-a64-clocks.dtsi      | 140 ++++++++
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      | 398 +++++++++++++++++++++
->  3 files changed, 539 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-clocks.dtsi
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-> index 7e79fcc..7e59d8b 100644
-> --- a/Documentation/devicetree/bindings/arm/sunxi.txt
-> +++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-> @@ -14,3 +14,4 @@ using one of the following compatible strings:
->    allwinner,sun8i-a83t
->    allwinner,sun8i-h3
->    allwinner,sun9i-a80
-> +  allwinner,sun50i-a64
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-clocks.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-clocks.dtsi
-> new file mode 100644
-> index 0000000..9bfcd41
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-clocks.dtsi
-> @@ -0,0 +1,140 @@
-> +/*
-> + * Allwinner A64 clocks
-> + *
-> + * Copyright (c) 2016 ARM Ltd
-> + *
-> + * This file is licensed under a dual GPLv2 or BSD license.
-> + *
-> + */
-> +
-> +	osc24M: osc24M_clk {
+The patch
 
-Drop the '_' in the node names here and throughout.
+   regulator: tps65218: do not disable DCDC3 during poweroff on broken PMICs
 
-Rob
+has been applied to the regulator tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 23a34f9d03a5d40a6234855bc069da370708cc9e Mon Sep 17 00:00:00 2001
+From: Tero Kristo <t-kristo@ti.com>
+Date: Wed, 10 Aug 2016 17:53:55 +0530
+Subject: [PATCH] regulator: tps65218: do not disable DCDC3 during poweroff on
+ broken PMICs
+
+Some versions of tps65218 do not seem to support poweroff modes properly
+if DCDC3 regulator is shut-down. Thus, keep it enabled even during
+poweroff if the version info matches the broken silicon revision.
+
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/tps65218-regulator.c | 8 ++++++++
+ include/linux/mfd/tps65218.h           | 5 +++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/drivers/regulator/tps65218-regulator.c b/drivers/regulator/tps65218-regulator.c
+index d1e631d64a20..eb0f5b13841a 100644
+--- a/drivers/regulator/tps65218-regulator.c
++++ b/drivers/regulator/tps65218-regulator.c
+@@ -180,6 +180,14 @@ static int tps65218_pmic_set_suspend_disable(struct regulator_dev *dev)
+ 	if (rid < TPS65218_DCDC_1 || rid > TPS65218_LDO_1)
+ 		return -EINVAL;
+ 
++	/*
++	 * Certain revisions of TPS65218 will need to have DCDC3 regulator
++	 * enabled always, otherwise an immediate system reboot will occur
++	 * during poweroff.
++	 */
++	if (rid == TPS65218_DCDC_3 && tps->rev == TPS65218_REV_2_1)
++		return 0;
++
+ 	if (!tps->info[rid]->strobe) {
+ 		if (rid == TPS65218_DCDC_3)
+ 			tps->info[rid]->strobe = 3;
+diff --git a/include/linux/mfd/tps65218.h b/include/linux/mfd/tps65218.h
+index 85e464e32c43..d1db9527fab5 100644
+--- a/include/linux/mfd/tps65218.h
++++ b/include/linux/mfd/tps65218.h
+@@ -63,6 +63,11 @@
+ #define TPS65218_CHIPID_CHIP_MASK	0xF8
+ #define TPS65218_CHIPID_REV_MASK	0x07
+ 
++#define TPS65218_REV_1_0		0x0
++#define TPS65218_REV_1_1		0x1
++#define TPS65218_REV_2_0		0x2
++#define TPS65218_REV_2_1		0x3
++
+ #define TPS65218_INT1_VPRG		BIT(5)
+ #define TPS65218_INT1_AC		BIT(4)
+ #define TPS65218_INT1_PB		BIT(3)
+-- 
+2.8.1
