@@ -1,38 +1,149 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH 2/2] device-tree: nexus7: Add IMEM syscon and reboot
- reason support
-Date: Tue, 9 Aug 2016 22:04:00 -0700
-Message-ID: <CALAqxLWWDQVyMVEP5kB2h0ig0WuX8Vq8TmO_Gd+Yaesa1k3qwA@mail.gmail.com>
-References: <1470695643-32169-1-git-send-email-john.stultz@linaro.org>
- <1470695643-32169-2-git-send-email-john.stultz@linaro.org> <20160810042834.GG26240@tuxbot>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160810042834.GG26240@tuxbot>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@codeaurora.org>, Stephen Boyd <stephen.boyd@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org
+From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v2 1/5] arm: dts: msm8974: Add thermal zones, tsens and qfprom nodes
+Date: Wed, 10 Aug 2016 12:13:55 +0530
+Message-ID: <1470811439-1992-2-git-send-email-rnayak@codeaurora.org>
+References: <1470811439-1992-1-git-send-email-rnayak@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470811439-1992-1-git-send-email-rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 9, 2016 at 9:28 PM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> On Mon 08 Aug 15:34 PDT 2016, John Stultz wrote:
->
->> This patch add the IMEM syscon memory region to the DT,
->> as well as addds support for the magic reboot reason
->> values that are written to the address for each mode.
->>
->
-> This looks good, double checked the addresses and magics. But I think
-> you should move the entire thing to qcom-apq8064.dtsi, as this is common
-> to the base platform.
+Add thermal zones, tsens and qfprom nodes
 
-Interesting, so do all 8064's use the same bootloader?
+Acked-by: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 103 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 103 insertions(+)
 
-> And I would prefer if you updated the subject prefix...
->
-> With the move and subject update:
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 561d4d1..255c61a 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -131,6 +131,88 @@
+ 		};
+ 	};
+ 
++	thermal-zones {
++		cpu-thermal0 {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 5>;
++
++			trips {
++				cpu_alert0: trip0 {
++					temperature = <75000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu_crit0: trip1 {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu-thermal1 {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 6>;
++
++			trips {
++				cpu_alert1: trip0 {
++					temperature = <75000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu_crit1: trip1 {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu-thermal2 {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 7>;
++
++			trips {
++				cpu_alert2: trip0 {
++					temperature = <75000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu_crit2: trip1 {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu-thermal3 {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 8>;
++
++			trips {
++				cpu_alert3: trip0 {
++					temperature = <75000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu_crit3: trip1 {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++	};
++
+ 	cpu-pmu {
+ 		compatible = "qcom,krait-pmu";
+ 		interrupts = <1 7 0xf04>;
+@@ -287,6 +369,27 @@
+ 			reg = <0xf9011000 0x1000>;
+ 		};
+ 
++		qfprom: qfprom@fc4bc000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "qcom,qfprom";
++			reg = <0xfc4bc000 0x1000>;
++			tsens_calib: calib@d0 {
++				reg = <0xd0 0x18>;
++			};
++			tsens_backup: backup@440 {
++				reg = <0x440 0x10>;
++			};
++		};
++
++		tsens: thermal-sensor@fc4a8000 {
++			compatible = "qcom,msm8974-tsens";
++			reg = <0xfc4a8000 0x2000>;
++			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
++			nvmem-cell-names = "calib", "calib_backup";
++			#thermal-sensor-cells = <1>;
++		};
++
+ 		timer@f9020000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-thanks!
--john
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
