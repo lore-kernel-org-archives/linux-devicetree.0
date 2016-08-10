@@ -1,307 +1,251 @@
-Return-Path: <moinejf@free.fr>
-Message-Id: <57b2b4a6.0411620a.62e8c.9e93SMTPIN_ADDED_MISSING@mx.google.com>
-From: Jean-Francois Moine <moinejf@free.fr>
-Date: Tue, 16 Aug 2016 08:05:02 +0200
-Subject: [PATCH v2] regulator: axp20x: support AXP803/AXP813 variants
-To: Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Return-Path: <j-keerthy@ti.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH v7 2/3] gpio: lp873x: Add support for General Purpose Outputs
+Date: Wed, 10 Aug 2016 15:48:10 +0530
+Message-ID: <1470824291-14902-3-git-send-email-j-keerthy@ti.com>
+In-Reply-To: <1470824291-14902-1-git-send-email-j-keerthy@ti.com>
+References: <1470824291-14902-1-git-send-email-j-keerthy@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
+Cc: linux-omap@vger.kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, j-keerthy@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-The X-Powers AXP803 and AXP813 PMICs are close to the AXP809 with some
-more outputs.
+Add driver for lp873x PMIC family GPOs. Two GPOs are supported
+and can be configured in Open-drain output or Push-pull output.
 
-Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-The AXP813 has been tested in a Banana PI M3 board (needed for WiFi/BT).
-v2:
-- fix lack of support of dcdc frequency
-- notice that the AXP803 is also handled
-- send the patch to the DT maintainers
----
- Documentation/devicetree/bindings/mfd/axp20x.txt | 32 ++++++++-
- drivers/mfd/axp20x-rsb.c                         |  1 +
- drivers/mfd/axp20x.c                             |  3 +
- drivers/regulator/axp20x-regulator.c             | 83 +++++++++++++++++++++++-
- include/linux/mfd/axp20x.h                       | 38 +++++++++++
- 5 files changed, 154 insertions(+), 3 deletions(-)
+ drivers/gpio/Kconfig       |  10 +++
+ drivers/gpio/Makefile      |   1 +
+ drivers/gpio/gpio-lp873x.c | 185 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 196 insertions(+)
+ create mode 100644 drivers/gpio/gpio-lp873x.c
 
-diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-index 585a955..856a9ff 100644
---- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-+++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-@@ -7,10 +7,12 @@ axp209 (X-Powers)
- axp221 (X-Powers)
- axp223 (X-Powers)
- axp809 (X-Powers)
-+axp813 (X-Powers)
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 6de9062..ff68a80 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -853,6 +853,16 @@ config GPIO_LP3943
+ 	  LP3943 can be used as a GPIO expander which provides up to 16 GPIOs.
+ 	  Open drain outputs are required for this usage.
  
- Required properties:
- - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
--	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp809"
-+	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp809",
-+	      "x-powers,axp813"
- - reg: The I2C slave address or RSB hardware address for the AXP chip
- - interrupt-parent: The parent interrupt controller
- - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
-@@ -110,6 +112,34 @@ LDO_IO1		: LDO		: ips-supply		: GPIO 1
- RTC_LDO		: LDO		: ips-supply		: always on
- SW		: On/Off Switch : swin-supply
- 
-+AXP803/AXP813 regulators, type, and corresponding input supply names:
++config GPIO_LP873X
++	tristate "TI LP873X GPO"
++	depends on MFD_TI_LP873X
++	help
++	  This driver supports the GPO on TI Lp873x PMICs. 2 GPOs are present
++	  on LP873X PMICs.
 +
-+Regulator	  Type		  Supply Name		  Notes
-+---------	  ----		  -----------		  -----
-+DCDC1		: DC-DC buck	: vin1-supply
-+DCDC2		: DC-DC buck	: vin2-supply
-+DCDC3		: DC-DC	buck	: vin3-supply
-+DCDC4		: DC-DC	buck	: vin4-supply
-+DCDC5		: DC-DC	buck	: vin5-supply
-+DCDC6		: DC-DC	buck	: vin6-supply
-+DCDC7		: DC-DC	buck	: vin7-supply		: AXP813 only
-+RTC_LDO		: LDO		: ips-supply		: always on
-+ALDO1		: LDO		: aldoin-supply		: shared supply
-+ALDO2		: LDO		: aldoin-supply		: shared supply
-+ALDO3		: LDO		: aldoin-supply		: shared supply
-+DLDO1		: LDO		: dldoin-supply		: shared supply
-+DLDO2		: LDO		: dldoin-supply		: shared supply
-+DLDO3		: LDO		: dldoin-supply		: shared supply
-+DLDO4		: LDO		: dldoin-supply		: shared supply
-+ELDO1		: LDO		: eldoin-supply		: shared supply
-+ELDO2		: LDO		: eldoin-supply		: shared supply
-+ELDO3		: LDO		: eldoin-supply		: shared supply
-+FLDO1		: LDO		: fldoin-supply		: shared supply
-+FLDO2		: LDO		: fldoin-supply		: shared supply
-+LDO_IO0		: LDO		: ips-supply		: GPIO 0
-+LDO_IO1		: LDO		: ips-supply		: GPIO 1
-+DC1SW		: On/Off Switch	:			: DCDC1 secondary output
++	  This driver can also be built as a module. If so, the module will be
++          called gpio-lp873x.
 +
- Example:
- 
- axp209: pmic@34 {
-diff --git a/drivers/mfd/axp20x-rsb.c b/drivers/mfd/axp20x-rsb.c
-index a407527..e34643b 100644
---- a/drivers/mfd/axp20x-rsb.c
-+++ b/drivers/mfd/axp20x-rsb.c
-@@ -62,6 +62,7 @@ static int axp20x_rsb_remove(struct sunxi_rsb_device *rdev)
- static const struct of_device_id axp20x_rsb_of_match[] = {
- 	{ .compatible = "x-powers,axp223", .data = (void *)AXP223_ID },
- 	{ .compatible = "x-powers,axp809", .data = (void *)AXP809_ID },
-+	{ .compatible = "x-powers,axp813", .data = (void *)AXP813_ID },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, axp20x_rsb_of_match);
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index fd80b09..e62d56f 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -39,6 +39,7 @@ static const char * const axp20x_model_names[] = {
- 	"AXP223",
- 	"AXP288",
- 	"AXP809",
-+	"AXP813",
- };
- 
- static const struct regmap_range axp152_writeable_ranges[] = {
-@@ -494,6 +495,7 @@ static const struct regmap_irq_chip axp288_regmap_irq_chip = {
- 
- };
- 
-+/* common 803/809/813 */
- static const struct regmap_irq_chip axp809_regmap_irq_chip = {
- 	.name			= "axp809",
- 	.status_base		= AXP20X_IRQ1_STATE,
-@@ -733,6 +735,7 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
- 		axp20x->regmap_irq_chip = &axp288_regmap_irq_chip;
- 		break;
- 	case AXP809_ID:
-+	case AXP813_ID:
- 		axp20x->nr_cells = ARRAY_SIZE(axp809_cells);
- 		axp20x->cells = axp809_cells;
- 		axp20x->regmap_cfg = &axp22x_regmap_config;
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 6d9ac76..3fbe2c1 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -299,6 +299,78 @@ static const struct regulator_desc axp809_regulators[] = {
- 	AXP_DESC_SW(AXP809, SW, "sw", "swin", AXP22X_PWR_OUT_CTRL2, BIT(6)),
- };
- 
-+static const struct regulator_linear_range axp813_dcdc2_4_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(500000, 0, 70, 10000),
-+	REGULATOR_LINEAR_RANGE(1220000, 71, 75, 20000),
+ config GPIO_MAX77620
+ 	tristate "GPIO support for PMIC MAX77620 and MAX20024"
+ 	depends on MFD_MAX77620
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 2a035ed..d60432f 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -56,6 +56,7 @@ obj-$(CONFIG_GPIO_LOONGSON)	+= gpio-loongson.o
+ obj-$(CONFIG_GPIO_LP3943)	+= gpio-lp3943.o
+ obj-$(CONFIG_GPIO_LPC18XX)	+= gpio-lpc18xx.o
+ obj-$(CONFIG_ARCH_LPC32XX)	+= gpio-lpc32xx.o
++obj-$(CONFIG_GPIO_LP873X)	+= gpio-lp873x.o
+ obj-$(CONFIG_GPIO_LYNXPOINT)	+= gpio-lynxpoint.o
+ obj-$(CONFIG_GPIO_MAX730X)	+= gpio-max730x.o
+ obj-$(CONFIG_GPIO_MAX7300)	+= gpio-max7300.o
+diff --git a/drivers/gpio/gpio-lp873x.c b/drivers/gpio/gpio-lp873x.c
+new file mode 100644
+index 0000000..77deaa4
+--- /dev/null
++++ b/drivers/gpio/gpio-lp873x.c
+@@ -0,0 +1,185 @@
++/*
++ * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
++ *	Keerthy <j-keerthy@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether expressed or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License version 2 for more details.
++ *
++ * Based on the TPS65218 driver
++ */
++
++#include <linux/gpio.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#include <linux/mfd/lp873x.h>
++
++struct lp873x_gpio {
++	struct gpio_chip chip;
++	struct lp873x *lp873;
 +};
 +
-+static const struct regulator_linear_range axp813_dcdc5_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(800000, 0, 32, 10000),
-+	REGULATOR_LINEAR_RANGE(1140000, 33, 68, 20000),
-+};
++static int lp873x_gpio_get_direction(struct gpio_chip *chip,
++				     unsigned int offset)
++{
++	/* This device is output only */
++	return 0;
++}
 +
-+static const struct regulator_linear_range axp813_dcdc6_7_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(600000, 0, 50, 10000),
-+	REGULATOR_LINEAR_RANGE(1120000, 51, 71, 20000),
-+};
++static int lp873x_gpio_direction_input(struct gpio_chip *chip,
++				       unsigned int offset)
++{
++	/* This device is output only */
++	return -EINVAL;
++}
 +
-+static const struct regulator_desc axp813_regulators[] = {
-+	AXP_DESC(AXP813, DLDO1, "dldo1", "dldoin", 700, 3300, 100,
-+		 AXP22X_DLDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(3)),
-+	AXP_DESC(AXP813, DLDO2, "dldo2", "dldoin", 700, 4200, 100,
-+		 AXP22X_DLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(4)),
-+	AXP_DESC(AXP813, DLDO3, "dldo3", "dldoin", 700, 3300, 100,
-+		 AXP22X_DLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(5)),
-+	AXP_DESC(AXP813, DLDO4, "dldo4", "dldoin", 700, 3300, 100,
-+		 AXP22X_DLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(6)),
-+	AXP_DESC(AXP813, ELDO1, "eldo1", "eldoin", 700, 1900, 50,
-+		 AXP22X_ELDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(0)),
-+	AXP_DESC(AXP813, ELDO2, "eldo2", "eldoin", 700, 1900, 50,
-+		 AXP22X_ELDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(1)),
-+	AXP_DESC(AXP813, ELDO3, "eldo3", "eldoin", 700, 1900, 50,
-+		 AXP22X_ELDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(2)),
-+	AXP_DESC(AXP813, FLDO1, "fldo1", "fldoin", 700, 1450, 50,
-+		 AXP813_FLDO1_V_OUT, 0x0f, AXP22X_PWR_OUT_CTRL3, BIT(2)),
-+	AXP_DESC(AXP813, FLDO2, "fldo2", "fldoin", 700, 1450, 50,
-+		 AXP813_FLDO2_V_OUT, 0x0f, AXP22X_PWR_OUT_CTRL3, BIT(3)),
-+	AXP_DESC(AXP813, DCDC1, "dcdc1", "vin1", 1600, 3400, 100,
-+		 AXP813_DCDC1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL1, BIT(0)),
-+	AXP_DESC_RANGES(AXP813, DCDC2, "dcdc2", "vin2", axp813_dcdc2_4_ranges,
-+			76, AXP813_DCDC2_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
-+			BIT(1)),
-+	AXP_DESC_RANGES(AXP813, DCDC3, "dcdc3", "vin3", axp813_dcdc2_4_ranges,
-+			76, AXP813_DCDC3_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
-+			BIT(2)),
-+	AXP_DESC_RANGES(AXP813, DCDC4, "dcdc4", "vin4", axp813_dcdc2_4_ranges,
-+			76, AXP813_DCDC4_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
-+			BIT(3)),
-+	AXP_DESC_RANGES(AXP813, DCDC5, "dcdc5", "vin5", axp813_dcdc5_ranges,
-+			69, AXP813_DCDC5_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
-+			BIT(4)),
-+	AXP_DESC_RANGES(AXP813, DCDC6, "dcdc6", "vin6", axp813_dcdc6_7_ranges,
-+			72, AXP813_DCDC6_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
-+			BIT(5)),
-+	AXP_DESC_RANGES(AXP813, DCDC7, "dcdc7", "vin7", axp813_dcdc6_7_ranges,
-+			72, AXP813_DCDC7_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
-+			BIT(6)),
-+	AXP_DESC_FIXED(AXP813, RTC_LDO, "rtc_ldo", "ips", 3000),
-+	AXP_DESC(AXP813, ALDO1, "aldo1", "aldoin", 700, 3300, 100,
-+		 AXP22X_ALDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(5)),
-+	AXP_DESC(AXP813, ALDO2, "aldo2", "aldoin", 700, 3300, 100,
-+		 AXP22X_ALDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(6)),
-+	AXP_DESC(AXP813, ALDO3, "aldo3", "aldoin", 700, 3300, 100,
-+		 AXP22X_ALDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(7)),
-+	AXP_DESC_IO(AXP813, LDO_IO0, "ldo_io0", "ips", 700, 3300, 100,
-+		    AXP22X_LDO_IO0_V_OUT, 0x1f, AXP20X_GPIO0_CTRL, 0x07,
-+		    AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
-+	AXP_DESC_IO(AXP813, LDO_IO1, "ldo_io1", "ips", 700, 3300, 100,
-+		    AXP22X_LDO_IO1_V_OUT, 0x1f, AXP20X_GPIO1_CTRL, 0x07,
-+		    AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
-+	/* secondary switchable output of DCDC1 */
-+	AXP_DESC_SW(AXP813, DC1SW, "dc1sw", NULL, AXP22X_PWR_OUT_CTRL2,
-+		    BIT(7)),
-+};
++static int lp873x_gpio_direction_output(struct gpio_chip *chip,
++					unsigned int offset, int value)
++{
++	struct lp873x_gpio *gpio = gpiochip_get_data(chip);
 +
- static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
- {
- 	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
-@@ -315,6 +387,7 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
- 	case AXP221_ID:
- 	case AXP223_ID:
- 	case AXP809_ID:
-+	case AXP813_ID:
- 		min = 1800;
- 		max = 4050;
- 		def = 3000;
-@@ -444,6 +517,10 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		regulators = axp809_regulators;
- 		nregulators = AXP809_REG_ID_MAX;
- 		break;
-+	case AXP813_ID:
-+		regulators = axp813_regulators;
-+		nregulators = AXP813_REG_ID_MAX;
++	/* Set the initial value */
++	return regmap_update_bits(gpio->lp873->regmap, LP873X_REG_GPO_CTRL,
++				  BIT(offset * 4), value ? BIT(offset * 4) : 0);
++}
++
++static int lp873x_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	struct lp873x_gpio *gpio = gpiochip_get_data(chip);
++	int ret, val;
++
++	ret = regmap_read(gpio->lp873->regmap, LP873X_REG_GPO_CTRL, &val);
++	if (ret < 0)
++		return ret;
++
++	return val & BIT(offset * 4);
++}
++
++static void lp873x_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			    int value)
++{
++	struct lp873x_gpio *gpio = gpiochip_get_data(chip);
++
++	regmap_update_bits(gpio->lp873->regmap, LP873X_REG_GPO_CTRL,
++			   BIT(offset * 4), value ? BIT(offset * 4) : 0);
++}
++
++static int lp873x_gpio_request(struct gpio_chip *gc, unsigned int offset)
++{
++	struct lp873x_gpio *gpio = gpiochip_get_data(gc);
++	int ret;
++
++	switch (offset) {
++	case 0:
++		/* No MUX Set up Needed for GPO */
 +		break;
- 	default:
- 		dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
- 			axp20x->variant);
-@@ -467,7 +544,8 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		 * name.
- 		 */
- 		if ((regulators == axp22x_regulators && i == AXP22X_DC1SW) ||
--		    (regulators == axp809_regulators && i == AXP809_DC1SW)) {
-+		    (regulators == axp809_regulators && i == AXP809_DC1SW) ||
-+		    (regulators == axp813_regulators && i == AXP813_DC1SW)) {
- 			new_desc = devm_kzalloc(&pdev->dev, sizeof(*desc),
- 						GFP_KERNEL);
- 			*new_desc = regulators[i];
-@@ -505,7 +583,8 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 		 * Save AXP22X DCDC1 / DCDC5 regulator names for later.
- 		 */
- 		if ((regulators == axp22x_regulators && i == AXP22X_DCDC1) ||
--		    (regulators == axp809_regulators && i == AXP809_DCDC1))
-+		    (regulators == axp809_regulators && i == AXP809_DCDC1) ||
-+		    (regulators == axp813_regulators && i == AXP813_DCDC1))
- 			of_property_read_string(rdev->dev.of_node,
- 						"regulator-name",
- 						&dcdc1_name);
-diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
-index 0be4982..637fb7c 100644
---- a/include/linux/mfd/axp20x.h
-+++ b/include/linux/mfd/axp20x.h
-@@ -21,6 +21,7 @@ enum {
- 	AXP223_ID,
- 	AXP288_ID,
- 	AXP809_ID,
-+	AXP813_ID,
- 	NR_AXP20X_VARIANTS,
- };
- 
-@@ -91,6 +92,16 @@ enum {
- #define AXP22X_ALDO3_V_OUT		0x2a
- #define AXP22X_CHRG_CTRL3		0x35
- 
-+#define AXP813_FLDO1_V_OUT		0x1c
-+#define AXP813_FLDO2_V_OUT		0x1d
-+#define AXP813_DCDC1_V_OUT		0x20
-+#define AXP813_DCDC2_V_OUT		0x21
-+#define AXP813_DCDC3_V_OUT		0x22
-+#define AXP813_DCDC4_V_OUT		0x23
-+#define AXP813_DCDC5_V_OUT		0x24
-+#define AXP813_DCDC6_V_OUT		0x25
-+#define AXP813_DCDC7_V_OUT		0x26
++	case 1:
++		/* Setup the CLKIN_PIN_SEL MUX to GPO2 */
++		ret = regmap_update_bits(gpio->lp873->regmap, LP873X_REG_CONFIG,
++					 LP873X_CONFIG_CLKIN_PIN_SEL, 0);
++		if (ret)
++			return ret;
 +
- /* Interrupt */
- #define AXP152_IRQ1_EN			0x40
- #define AXP152_IRQ2_EN			0x41
-@@ -288,6 +299,33 @@ enum {
- 	AXP809_REG_ID_MAX,
- };
- 
-+enum {
-+	AXP813_DCDC1 = 0,
-+	AXP813_DCDC2,
-+	AXP813_DCDC3,
-+	AXP813_DCDC4,
-+	AXP813_DCDC5,
-+	AXP813_DCDC6,
-+	AXP813_DCDC7,
-+	AXP813_RTC_LDO,
-+	AXP813_ALDO1,
-+	AXP813_ALDO2,
-+	AXP813_ALDO3,
-+	AXP813_DLDO1,
-+	AXP813_DLDO2,
-+	AXP813_DLDO3,
-+	AXP813_DLDO4,
-+	AXP813_ELDO1,
-+	AXP813_ELDO2,
-+	AXP813_ELDO3,
-+	AXP813_FLDO1,
-+	AXP813_FLDO2,
-+	AXP813_LDO_IO0,
-+	AXP813_LDO_IO1,
-+	AXP813_DC1SW,
-+	AXP813_REG_ID_MAX,
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int lp873x_gpio_set_single_ended(struct gpio_chip *gc,
++					unsigned int offset,
++					enum single_ended_mode mode)
++{
++	struct lp873x_gpio *gpio = gpiochip_get_data(gc);
++
++	switch (mode) {
++	case LINE_MODE_OPEN_DRAIN:
++		return regmap_update_bits(gpio->lp873->regmap,
++					  LP873X_REG_GPO_CTRL,
++					  BIT(offset * 4 + 2),
++					  BIT(offset * 4 + 2));
++	case LINE_MODE_PUSH_PULL:
++		return regmap_update_bits(gpio->lp873->regmap,
++					  LP873X_REG_GPO_CTRL,
++					  BIT(offset * 4 + 2), 0);
++	default:
++		return -ENOTSUPP;
++	}
++}
++
++static struct gpio_chip template_chip = {
++	.label			= "lp873x-gpio",
++	.owner			= THIS_MODULE,
++	.request		= lp873x_gpio_request,
++	.get_direction		= lp873x_gpio_get_direction,
++	.direction_input	= lp873x_gpio_direction_input,
++	.direction_output	= lp873x_gpio_direction_output,
++	.get			= lp873x_gpio_get,
++	.set			= lp873x_gpio_set,
++	.set_single_ended	= lp873x_gpio_set_single_ended,
++	.base			= -1,
++	.ngpio			= 2,
++	.can_sleep		= true,
 +};
 +
- /* IRQs */
- enum {
- 	AXP152_IRQ_LDO0IN_CONNECT = 1,
++static int lp873x_gpio_probe(struct platform_device *pdev)
++{
++	struct lp873x_gpio *gpio;
++	int ret;
++
++	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
++	if (!gpio)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, gpio);
++
++	gpio->lp873 = dev_get_drvdata(pdev->dev.parent);
++	gpio->chip = template_chip;
++	gpio->chip.parent = gpio->lp873->dev;
++
++	ret = gpiochip_add_data(&gpio->chip, gpio);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int lp873x_gpio_remove(struct platform_device *pdev)
++{
++	struct lp873x_gpio *gpio = platform_get_drvdata(pdev);
++
++	gpiochip_remove(&gpio->chip);
++
++	return 0;
++}
++
++static const struct platform_device_id lp873x_gpio_id_table[] = {
++	{ "lp873x-gpio", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(platform, lp873x_gpio_id_table);
++
++static struct platform_driver lp873x_gpio_driver = {
++	.driver = {
++		.name = "lp873x-gpio",
++	},
++	.probe = lp873x_gpio_probe,
++	.remove = lp873x_gpio_remove,
++	.id_table = lp873x_gpio_id_table,
++};
++module_platform_driver(lp873x_gpio_driver);
++
++MODULE_AUTHOR("Keerthy <j-keerthy@ti.com>");
++MODULE_DESCRIPTION("LP873X GPIO driver");
++MODULE_LICENSE("GPL v2");
 -- 
-2.9.3
+1.9.1
