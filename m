@@ -1,253 +1,218 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V3] clk: bcm: Add driver for Northstar ILP clock
-Date: Wed, 10 Aug 2016 14:05:40 +0200
-Message-ID: <1470830763-29189-1-git-send-email-zajec5@gmail.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 02/15] dt/bindings: Update binding for PM domain idle
+ states
+Date: Wed, 10 Aug 2016 19:09:21 +0100
+Message-ID: <5e59874c-bbb7-270a-199c-da1ff5932554@arm.com>
+References: <1470351902-43103-1-git-send-email-lina.iyer@linaro.org>
+ <1470351902-43103-3-git-send-email-lina.iyer@linaro.org>
+ <99e35b6c-6698-6d27-f4d7-fa032796869e@arm.com>
+ <20160810164034.GA1401@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160810164034.GA1401-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Haslam <ahaslam+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Brendan Jackman <Brendan.Jackman-5wv7dgnIgG8@public.gmane.org>, Juri Lelli <Juri.Lelli-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
 
-This clock is present on cheaper Northstar devices like BCM53573 or
-BCM47189 using Corex-A7. ILP is a part of PMU (Power Management Unit)
-and so it should be defined as one of its subnodes (subdevices). For
-more details see Documentation entry.
 
-Unfortunately there isn't a set of registers related to ILP clock only.
-We use registers 0x66c, 0x674 and 0x6dc and between them there are e.g.
-"retention*" and "control_ext" regs. This is why this driver maps all
-0x1000 B of space.
+On 10/08/16 17:40, Lina Iyer wrote:
+> Hi Sudeep,
+>
+> On Wed, Aug 10 2016 at 09:15 -0600, Sudeep Holla wrote:
+>> Hi Lina,
+>>
+>> I have few concerns mainly due to the lack of description and not the
+>> binding per say.
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
-V2: Rebase on top of clk-next
-    Use ALP as parent clock
-    Improve comments
-    Switch from ioremap_nocache to ioremap
-    Check of_clk_add_provide result for error
-V3: Drop #include <linux/moduleh>
-    Make ILP DT entry part of PMU
-    Describe ILP as subdevice of PMU in Documentation
----
- .../devicetree/bindings/clock/brcm,ns-ilp.txt      |  40 ++++++
- drivers/clk/bcm/Makefile                           |   1 +
- drivers/clk/bcm/clk-ns-ilp.c                       | 146 +++++++++++++++++++++
- 3 files changed, 187 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
- create mode 100644 drivers/clk/bcm/clk-ns-ilp.c
+[...]
 
-diff --git a/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt b/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
-new file mode 100644
-index 0000000..a18c73f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
-@@ -0,0 +1,40 @@
-+Broadcom Northstar ILP clock
-+============================
-+
-+This binding uses the common clock binding:
-+    Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+This binding is used for ILP clock (sometimes referred as "slow clock")
-+on Broadcom Northstar devices using Corex-A7 CPU.
-+
-+This clock is part of PMU (Power Management Unit), a Broadcom's device
-+handing power-related aspects. Please note PMU contains more subdevices,
-+ILP is only one of them.
-+
-+ILP's rate has to be calculated on runtime and it depends on ALP clock
-+which has to be referenced.
-+
-+Required properties:
-+- compatible: "brcm,ns-ilp"
-+- reg: iomem address range of PMU (Power Management Unit)
-+- reg-names: "pmu", the only needed & supported reg right now
-+- clocks: has to reference an ALP clock
-+- #clock-cells: should be <0>
-+
-+Example:
-+
-+pmu@18012000 {
-+	compatible = "simple-bus";
-+	ranges = <0x00000000 0x18012000 0x00001000>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	ilp: ilp@0 {
-+		compatible = "brcm,ns-ilp";
-+		reg = <0 0x1000>;
-+		reg-names = "pmu";
-+		clocks = <&alp>;
-+		#clock-cells = <0>;
-+		clock-output-names = "ilp";
-+	};
-+};
-diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-index 1d79bd2..1389379 100644
---- a/drivers/clk/bcm/Makefile
-+++ b/drivers/clk/bcm/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-ns2.o
- obj-$(CONFIG_ARCH_BCM_CYGNUS)	+= clk-cygnus.o
- obj-$(CONFIG_ARCH_BCM_NSP)	+= clk-nsp.o
- obj-$(CONFIG_ARCH_BCM_5301X)	+= clk-nsp.o
-+obj-$(CONFIG_ARCH_BCM_5301X)	+= clk-ns-ilp.o
-diff --git a/drivers/clk/bcm/clk-ns-ilp.c b/drivers/clk/bcm/clk-ns-ilp.c
-new file mode 100644
-index 0000000..53b4a23
---- /dev/null
-+++ b/drivers/clk/bcm/clk-ns-ilp.c
-@@ -0,0 +1,146 @@
-+/*
-+ * Copyright (C) 2016 Rafał Miłecki <rafal@milecki.pl>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/slab.h>
-+
-+#define PMU_XTAL_FREQ_RATIO			0x66c
-+#define  XTAL_ALP_PER_4ILP			0x00001fff
-+#define  XTAL_CTL_EN				0x80000000
-+#define PMU_SLOW_CLK_PERIOD			0x6dc
-+
-+struct ns_ilp {
-+	struct clk *clk;
-+	struct clk_hw hw;
-+	void __iomem *pmu;
-+};
-+
-+static int ns_ilp_enable(struct clk_hw *hw)
-+{
-+	struct ns_ilp *ilp = container_of(hw, struct ns_ilp, hw);
-+
-+	writel(0x10199, ilp->pmu + PMU_SLOW_CLK_PERIOD);
-+	writel(0x10000, ilp->pmu + 0x674);
-+
-+	return 0;
-+}
-+
-+static unsigned long ns_ilp_recalc_rate(struct clk_hw *hw,
-+					unsigned long parent_rate)
-+{
-+	struct ns_ilp *ilp = container_of(hw, struct ns_ilp, hw);
-+	void __iomem *pmu = ilp->pmu;
-+	u32 last_val, cur_val;
-+	u32 sum = 0, num = 0, loop_num = 0;
-+	u32 avg;
-+
-+	/* Enable measurement */
-+	writel(XTAL_CTL_EN, pmu + PMU_XTAL_FREQ_RATIO);
-+
-+	/* Read initial value */
-+	last_val = readl(pmu + PMU_XTAL_FREQ_RATIO) & XTAL_ALP_PER_4ILP;
-+
-+	/*
-+	 * At minimum we should loop for a bit to let hardware do the
-+	 * measurement. This isn't very accurate however, so for a better
-+	 * precision lets try getting 20 different values for and use average.
-+	 */
-+	while (num < 20) {
-+		cur_val = readl(pmu + PMU_XTAL_FREQ_RATIO) & XTAL_ALP_PER_4ILP;
-+
-+		if (cur_val != last_val) {
-+			/* Got different value, use it */
-+			sum += cur_val;
-+			num++;
-+			loop_num = 0;
-+			last_val = cur_val;
-+		} else if (++loop_num > 5000) {
-+			/* Same value over and over, give up */
-+			sum += cur_val;
-+			num++;
-+			break;
-+		}
-+	}
-+
-+	/* Disable measurement to save power */
-+	writel(0x0, pmu + PMU_XTAL_FREQ_RATIO);
-+
-+	avg = sum / num;
-+
-+	return parent_rate * 4 / avg;
-+}
-+
-+static const struct clk_ops ns_ilp_clk_ops = {
-+	.enable = ns_ilp_enable,
-+	.recalc_rate = ns_ilp_recalc_rate,
-+};
-+
-+static void ns_ilp_init(struct device_node *np)
-+{
-+	struct ns_ilp *ilp;
-+	struct resource res;
-+	struct clk_init_data init = { 0 };
-+	const char *parent_name;
-+	int index;
-+	int err;
-+
-+	ilp = kzalloc(sizeof(*ilp), GFP_KERNEL);
-+	if (!ilp)
-+		return;
-+
-+	parent_name = of_clk_get_parent_name(np, 0);
-+	if (!parent_name) {
-+		err = -ENOENT;
-+		goto err_free_ilp;
-+	}
-+
-+	/* TODO: This looks generic, try making it OF helper. */
-+	index = of_property_match_string(np, "reg-names", "pmu");
-+	if (index < 0) {
-+		err = index;
-+		goto err_free_ilp;
-+	}
-+	err = of_address_to_resource(np, index, &res);
-+	if (err)
-+		goto err_free_ilp;
-+	ilp->pmu = ioremap(res.start, resource_size(&res));
-+	if (IS_ERR(ilp->pmu)) {
-+		err = PTR_ERR(ilp->pmu);
-+		goto err_free_ilp;
-+	}
-+
-+	init.name = np->name;
-+	init.ops = &ns_ilp_clk_ops;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+
-+	ilp->hw.init = &init;
-+	ilp->clk = clk_register(NULL, &ilp->hw);
-+	if (WARN_ON(IS_ERR(ilp->clk)))
-+		goto err_unmap_pmu;
-+
-+	err = of_clk_add_provider(np, of_clk_src_simple_get, ilp->clk);
-+	if (err)
-+		goto err_clk_unregister;
-+
-+	return;
-+
-+err_clk_unregister:
-+	clk_unregister(ilp->clk);
-+err_unmap_pmu:
-+	iounmap(ilp->pmu);
-+err_free_ilp:
-+	kfree(ilp);
-+	pr_err("Failed to init ILP clock: %d\n", err);
-+}
-+CLK_OF_DECLARE(ns_ilp_clk, "brcm,ns-ilp", ns_ilp_init);
+>>> +- domain-idle-states : A phandle of an idle-state that shall be
+>>> soaked into a
+>>> +                generic domain power state. The idle state
+>>> definitions are
+>>> +                compatible with arm,idle-state specified in [1].
+>>> +
+>>
+>> So I assume these can be used for the genpd states. Either we rename
+>> it domain-power-states or make it clear that these domain-idle-states
+>> can also represent the power-states for normal devices.
+>>
+> These are the domains' idle states. These states are only used when the
+> domain goes into idle, not when the domain is active. These are not
+> power states that the domain can operate on either. Hence the idle-state
+> moniker.
+
+I am not sure if we can tell that the device is running in all it's
+power states. E.g. in ACPI IIUC, only D0 state represent running state,
+while D{1,2,3} are power states which consume less power than D0/running
+state. I think genpd is designed on those lines.
+
+So I was thinking if these idle-states can also if use from non-CPU
+devices w.r.t binding, it will serve as D-state equivalent in ACPI
+
+> Also, the bindings to describe the state are the same as arm,idle-state.
+> It made sense to call these domain idle states instead of
+> domain-power-states.
+>
+
+I am fine with that, but we have idle states compatible to distinguish 
+it from normal device idle/power states.
+
+>>> Example:
+>>>
+>>>     power: power-controller@12340000 {
+>>> @@ -59,6 +63,57 @@ The nodes above define two power controllers:
+>>> 'parent' and 'child'.
+>>> Domains created by the 'child' power controller are subdomains of '0'
+>>> power
+>>> domain provided by the 'parent' power controller.
+>>>
+>>> +Example 3: ARM v7 style CPU PM domains (Linux domain controller)
+>>> +
+>>> +    cpus {
+>>> +        #address-cells = <1>;
+>>> +        #size-cells = <0>;
+>>> +
+>>> +        CPU0: cpu@0 {
+>>> +            device_type = "cpu";
+>>> +            compatible = "arm,cortex-a7", "arm,armv7";
+>>> +            reg = <0x0>;
+>>> +            power-domains = <&a7_pd>;
+>>
+>> This example doesn't consider how do we deal with the presence off
+>> cpu-idle-states property in CPU nodes.
+>>
+> I can amend the example. But to answer your underlying question, they
+> will exist as separate properties.
+>
+
+Which is asking for trouble IMO. One should take precedence over other
+if both are present. Ideally new DTs can just have PD, we will continue
+to support cpu-idle-states for old DT.
+
+>> IMO we need move even the cpu/core level idle states into its own power
+>> domain. It also helps to solve other usecases like PMU, debug/coresight
+>> devices attached to the core power domain(in most of the cases) while
+>> they may be in separate PD like PMUs on OMAP. That will help OS whether
+>> to save/restore the states on idle-entry.
+>>
+> This idea was brought up by Kevin earlier in the discussions, but we
+> shelved it for a later date.
+>
+
+Any particular reasons ? I will try to dig up. I would do in one shot
+especially with respect to bindings. Implementation wise, it's fine we
+can take up in stages. I don't see any issue adding it in first go. This
+binding is good, you just make it hierarchical and add more description.
+
+>> In [PATCH v3 15/15] ARM64: dts: Define CPU power domain for MSM8916, the
+>> idle-states are split across the cpu cpu-idle-states and pd
+>> domain-idle-states property. That looks like a really mess to me.
+>>
+> It is pretty clear that CPUs cannot not define the domain idle states.
+> Domains define their own idle states. Just as you mention above. CPU is
+> just a single component in its domain. There may be other devices like
+> PMUs, Coresights etc that also may have a say in the idle state the
+> domain may be put in, when the devices are idle. As such, adding domain
+> idle states to the CPU's idle state property is not appropriate.
+>
+
+No I am not saying we need to add domain idle states to the CPU's idle
+state property. I am saying we need to remove cpu-idle-states or ignore
+it when PD is present. And get all the idle state information for PD.
+
+I am objecting the split we are creating across CPU and higher level
+power domains. And this binding document is incomplete as it skips all
+those details. We just need PD handle in CPU and no idle state
+information there. Create PD hierarchy and have all idle state
+information at one place.
+
+> Our kernel has runtime PM for devices and then there is CPUidle, both
+> are diverging without one knowing about the other. We have to start
+> unifying them inorder to have better holistic power management in the
+> SoC. To that regard, we have to start imagining CPUs as just another
+> device, albeit a special device. But for our purposes in determining
+> domain idle state, it will just be a device attached to the domain.
+>
+
+Absolutely agree on that. No arguments. I am asking to go a step ahead
+to include even cpu/core level power domains not just cluster/higher
+level domains.
+
+>> We need to have all the idle state information at one place and in this
+>> case PD seems more appropriate instead of splitting them across.
+>>
+> That approach isn't correct. Where will we put the idle states of other
+> devices that are also part of the domain? We are thinking about a model,
+> where every device defines its own idle states and we define
+> relationships between those idle states and their parents' idle states.
+
+Yes I understand. You confused me here. Won't that be one-to-one 
+relationship ? If not, how is that dealt in the current bindings ?
+
+> Ofcourse, devices don't have idle states today, but that is something we
+> have been pondering over.
+>
+
+Yes we these binding should be easily extensible, I don't see any issue.
+
+>> We can also keep the code clean and not break compatibility. Whenever
+>> both PD and CPU contains idle-states, PD must take precedence.
+>>
+> Why?
+> The CPU and PD states are orthogonal. While the PD state is dependent on
+> the CPU state, the latter is not true. Devices determine their own
+> states. Based on the individual device states, we then determine the
+> state of the parent and bubble up on the hierarchy.
+>
+
+I may be missing something. Now with your example in the binding, if
+another device shares the cluster PD, can it have different idle states?
+If so how does it map ?
+
+
+In general whatever binding we come up must not just address OS 
+coordinated mode. Also I was thinking to have better coverage in the 
+description by having a bit more complex system like:
+
+cluster0
+	CLUSTER_RET(Retention)
+	CLUSTER_PG(Power Gate)
+	core0
+		CORE_RET
+		CORE_PG
+	core1
+		CORE_RET
+		CORE_PG
+
+cluster1
+	CLUSTER_RET
+	CLUSTER_PG
+	core0
+		CORE_RET
+		CORE_PG
+	core1
+		CORE_RET
+		CORE_PG
+
+Platform Co-ordinate supports the following states and we should be able 
+to determine that from the binding:
+
+CORE_RET
+CORE_PG
+CORE_RET + CLUSTER_RET
+CORE_PG + CLUSTER_RET
+CORE_PG + CLUSTER_PG
+
+
 -- 
-1.8.4.5
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
