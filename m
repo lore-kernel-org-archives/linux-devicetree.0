@@ -1,31 +1,65 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/5] arm64: dts: r8a7795: Add HSUSB device node and
- enable channel 0 of USB2.0
-Date: Wed, 10 Aug 2016 10:45:39 +0200
-Message-ID: <20160810084539.GD6276@verge.net.au>
-References: <1469098021-7692-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
+Date: Wed, 10 Aug 2016 10:49:24 -0700
+Message-ID: <0da01875-b55a-c0fd-bd5f-05bb41fbd7fc@gmail.com>
+References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
+ <9ebb6cb7-c793-cd76-5283-c9a659d0398f@gmx.de>
+ <57AA2001.2010904@codeaurora.org>
+ <214dcbb7-0c3b-1e00-3e50-db513d77b10b@gmail.com>
+ <57AA7ED0.9000707@codeaurora.org>
+ <85b76eca-5473-6724-0c9d-7b6fa7677f50@gmail.com>
+ <57AB589D.3010509@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1469098021-7692-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <57AB589D.3010509@codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
-
-On Thu, Jul 21, 2016 at 07:46:56PM +0900, Yoshihiro Shimoda wrote:
-> This patch is based on the renesas.git / renesas-devel-20160718-v4.7-rc7 tag.
+On 08/10/2016 09:38 AM, Timur Tabi wrote:
+> Florian Fainelli wrote:
+>>> >Is there an easy way for me to stop the RX path before I set
+>>> rxbuf_size?
+>>> >  Some netif_xxx function I can call?
+>> napi_disable() should take care of that.
 > 
-> Changes from v2:
->  - rebase on renesas.git / renesas-devel-20160718-v4.7-rc7.
->   - maybe the panic issue disappears on the tree. but, if still happens,
->     please try the following patch:
->     https://git.kernel.org/cgit/linux/kernel/git/gregkh/usb.git/commit/?h=usb-next&id=c14f8a4032efa73d9c4e155add47c19252b3bdf4
->  - remove the redundant instruction in patch 4.
->  - add a new patch that enables HSUSB driver as kernel module on the defconfig.
+> It appears that if I call netif_stop_queue() *afer* calling
+> napi_disable(), I get a hang and/or TX timeout.  Since emac_mac_down()
+> does this:
+> 
+>     netif_stop_queue(netdev);
+>     napi_disable(&adpt->rx_q.napi);
+> 
+> I cannot call just napi_disable() in emac_change_mtu(), because when I
+> then call emac_mac_down(), the first thing it does is call
+> netif_stop_queue(), and that's when I timeout/hang.
 
-Sorry for not attending to this earlier.
-In your opinion are these patches ready to merge?
+Whatever emac_mac_down() does you can unroll it in the change_mtu
+callback anyway, so if this a problematic sequence you can work around it.
+
+> 
+> Unfortunately, I cannot even do this:
+> 
+>     netif_stop_queue(netdev);
+>     napi_disable(&adpt->rx_q.napi);
+>     netif_stop_queue(netdev);
+>     napi_disable(&adpt->rx_q.napi);
+> 
+> Even though I've already called netif_stop_queue(), calling it again
+> causes the timeout/hang.
+
+Buf if this is really what you copy/pasted here, why do this twice anyway?
+
+> 
+> Is this expected?  I never understood why I needed to call
+> netif_stop_queue() before napi_disable().  I do see some drivers do not
+> call netif_stop_queue().  I even saw a driver that calls them in reverse
+> order, so I don't understand why that sequence breaks for me but not him.
+> 
+
+Not clear how the two relate with each other here, must be specific to
+your driver implementation somehow.
+-- 
+Florian
