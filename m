@@ -1,121 +1,169 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/2 v3] leds: pm8058: add device tree bindings
-Date: Tue, 9 Aug 2016 21:39:40 -0700
-Message-ID: <20160810043940.GI26240@tuxbot>
-References: <1470679911-13669-1-git-send-email-linus.walleij@linaro.org>
+From: Harini Katakam <harinikatakamlinux@gmail.com>
+Subject: Re: [RFC PATCH 2/3] net: macb: Add support for 1588 for Zynq
+ Ultrascale+ MPSoC
+Date: Wed, 10 Aug 2016 10:26:22 +0530
+Message-ID: <CAFcVEC+Fz5oWqjmmjv7F8WYwcX7L9vi-FQJR+MOrrwLCHpA45A@mail.gmail.com>
+References: <1441958258-35441-1-git-send-email-harinik@xilinx.com>
+ <1441958258-35441-3-git-send-email-harinik@xilinx.com> <CAFcVECLfXL-=efbUhNeKhiFQgtfv6Z1+JJckg+js7DM-LfFeSw@mail.gmail.com>
+ <99d6c0ce-c3b9-a919-cedb-0af954bac388@atmel.com> <03CA77BA8AF6F1469AEDFBDA1322A7B74A1C4205@XAP-PVEXMBX02.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1470679911-13669-1-git-send-email-linus.walleij@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <03CA77BA8AF6F1469AEDFBDA1322A7B74A1C4205@XAP-PVEXMBX02.xlnx.xilinx.com>
+Sender: netdev-owner@vger.kernel.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Andrei Pistirica <Andrei.Pistirica@microchip.com>, "davem@davemloft.net" <davem@davemloft.net>, Boris Brezillon <boris.brezillon@free-electrons.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <michals@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 08 Aug 11:11 PDT 2016, Linus Walleij wrote:
+Hi Nicolas,
 
-> This adds the device tree bindings for the PM8058 LEDs.
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: Andy Gross <andy.gross@linaro.org>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Thanks for your reply
 
-Looks reasonable
+On Tue, Aug 9, 2016 at 10:26 PM, Punnaiah Choudary Kalluri
+<punnaiah.choudary.kalluri@xilinx.com> wrote:
+> Hi Nicolas,
+>
+>  1588 implementation in cadence GEM IP we have in Zynq Ultascale+ MPSoC is
+> Different to the one in Zynq SOC.
+>
+> In earlier version, all timestamp values will be stored in registers and there is no specific
+> Mechanism to distinguish the received ethernet frame that contains time stamp information
+> Other than parsing the frame for PTP packet type.
+>
+> We have basic implementation for earlier version in our out of tree driver, which is going to be deprecated
+> Soon. You could also check the below driver for 1588 support.
+> https://gitenterprise.xilinx.com/Linux/linux-xlnx/blob/master/drivers/net/ethernet/xilinx/xilinx_emacps.c
+>
+>
+> Regards,
+> Punnaiah
+>
+>> -----Original Message-----
+>> From: Nicolas Ferre [mailto:nicolas.ferre@atmel.com]
+>> Sent: Tuesday, August 09, 2016 10:10 PM
+>> To: Harini Katakam <harinikatakamlinux@gmail.com>; Harini Katakam
+>> <harinik@xilinx.com>; Andrei Pistirica <Andrei.Pistirica@microchip.com>
+>> Cc: davem@davemloft.net; Boris Brezillon <boris.brezillon@free-
+>> electrons.com>; alexandre.belloni@free-electrons.com;
+>> netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> devicetree@vger.kernel.org; Punnaiah Choudary Kalluri
+>> <punnaia@xilinx.com>; Michal Simek <michals@xilinx.com>; Anirudha
+>> Sarangi <anirudh@xilinx.com>
+>> Subject: Re: [RFC PATCH 2/3] net: macb: Add support for 1588 for Zynq
+>> Ultrascale+ MPSoC
+>>
+>> Le 21/09/2015 à 19:49, Harini Katakam a écrit :
+>> > On Fri, Sep 11, 2015 at 1:27 PM, Harini Katakam
+>> > <harini.katakam@xilinx.com> wrote:
+>> >> Cadence GEM in Zynq Ultrascale+ MPSoC supports 1588 and provides a
+>> >> 102 bit time counter with 48 bits for seconds, 30 bits for nsecs and
+>> >> 24 bits for sub-nsecs. The timestamp is made available to the SW through
+>> >> registers as well as (more precisely) through upper two words in
+>> >> an extended BD.
+>> >>
+>> >> This patch does the following:
+>> >> - Adds MACB_CAPS_TSU in zynqmp_config.
+>> >> - Registers to ptp clock framework (after checking for timestamp support
+>> in
+>> >>   IP and capability in config).
+>> >> - TX BD and RX BD control registers are written to populate timestamp in
+>> >>   extended BD words.
+>> >> - Timer initialization is done by writing time of day to the timer counter.
+>> >> - ns increment register is programmed as NS_PER_SEC/TSU_CLK.
+>> >>   For a 24 bit subns precision, the subns increment equals
+>> >>   remainder of (NS_PER_SEC/TSU_CLK) * (2^24).
+>> >>   TSU (Time stamp unit) clock is obtained by the  driver from devicetree.
+>> >> - HW time stamp capabilities are advertised via ethtool and macb ioctl is
+>> >>   updated accordingly.
+>> >> - For all PTP event frames, nanoseconds and the lower 5 bits of seconds
+>> are
+>> >>   obtained from the BD. This offers a precise timestamp. The upper bits
+>> >>   (which dont vary between consecutive packets) are obtained from the
+>> >>   TX/RX PTP event/PEER registers. The timestamp obtained thus is
+>> updated
+>> >>   in skb for upper layers to access.
+>> >> - The drivers register functions with ptp to perform time and frequency
+>> >>   adjustment.
+>> >> - Time adjustment is done by writing to the 1558_ADJUST register.
+>> >>   The controller will read the delta in this register and update the timer
+>> >>   counter register. Alternatively, for large time offset adjustments,
+>> >>   the driver reads the secs and nsecs counter values, adds/subtracts the
+>> >>   delta and updates the timer counter. In order to be as precise as
+>> possible,
+>> >>   nsecs counter is read again if secs has incremented during the counter
+>> read.
+>> >> - Frequency adjustment is not directly supported by this IP.
+>> >>   addend is the initial value ns increment and similarly addendesub.
+>> >>   The ppb (parts per billion) provided is used as
+>> >>   ns_incr = addend +/- (ppb/rate).
+>> >>   Similarly the remainder of the above is used to populate subns
+>> increment.
+>> >>   In case the ppb requested is negative AND subns adjustment greater
+>> than
+>> >>   the addendsub, ns_incr is reduced by 1 and subns_incr is adjusted in
+>> >>   positive accordingly.
+>> >>
+>> >> Signed-off-by: Harini Katakam <harinik@xilinx.com>:
+>> >> ---
+>> >>  drivers/net/ethernet/cadence/macb.c |  372
+>> ++++++++++++++++++++++++++++++++++-
+>> >>  drivers/net/ethernet/cadence/macb.h |   64 ++++++
+>> >>  2 files changed, 428 insertions(+), 8 deletions(-)
+>> >>
+>> >> diff --git a/drivers/net/ethernet/cadence/macb.c
+>> b/drivers/net/ethernet/cadence/macb.c
+>> >> index bb2932c..b531008 100644
+>> >> --- a/drivers/net/ethernet/cadence/macb.c
+>> >> +++ b/drivers/net/ethernet/cadence/macb.c
+>> >> @@ -30,6 +30,8 @@
+>> >>  #include <linux/of_device.h>
+>> >>  #include <linux/of_mdio.h>
+>>
+>> [..]
+>>
+>> >> +       unsigned int            ns_incr;
+>> >> +       unsigned int            subns_incr;
+>> >>  };
+>> >>
+>> >>  static inline bool macb_is_gem(struct macb *bp)
+>> >> --
+>> >> 1.7.9.5
+>> >
+>> > Ping
+>> >
+>> > Thanks.
+>>
+>> Harini,
+>>
+>> I come back to this patch of last year and I'm sorry about being so late
+>> answering you.
+>>
+>> Andrei who is added to the discussion will have some time to deal with
+>> this feature and we would like to make some progress with it. He already
+>> had some work done on his side before I recall your email.
+>>
+>> So, could you please re-send your original 1588 patch with Andrei in
+>> copy so that we can all (re-)start the discussion and progress for
+>> adding this feature.
+>>
+>> We must also note that some hardware differences between our platforms
+>> may have an impact on the code and how we implement things (as
+>> highlighted on this forum:
+>> http://www.at91.com/discussions/viewtopic.php/f,12/t,25462.html).
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Sure, I'm looking into the differences pointed out here.
+Of those, I'm going to fix the clk source issue by using the clock framework.
+But there are wide differences related to extended BD and indication for
+presence of timestamp between different versions of this IP.
+As Punnaiah pointed out above, Zynq had a completely different solution.
+
+>> Anyway, we'll overcome this and have a widely tested solution at the end
+>> of the day!
+>>
+
+Thanks. Yes, I'll send out a patch for the Zynq MPSoC version I'm using
+and it can be extended.
 
 Regards,
-Bjorn
-
-> ---
-> ChangeLog v2->v3:
-> - Rename the keypad LED in the example from "keypad" to
->   "pm8050:white:keypad"
-> ChangeLog v1->v2:
-> - Fix some spelling mistakes
-> - Reference common bindings directly without any local descriptions
-> ---
->  .../devicetree/bindings/leds/leds-pm8058.txt       | 67 ++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-pm8058.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-pm8058.txt b/Documentation/devicetree/bindings/leds/leds-pm8058.txt
-> new file mode 100644
-> index 000000000000..89584c49aab2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-pm8058.txt
-> @@ -0,0 +1,67 @@
-> +Qualcomm PM8058 LED driver
-> +
-> +The Qualcomm PM8058 is a multi-functional device which contains
-> +an LED driver block for up to six LEDs: three normal LEDs, two
-> +"flash" LEDs and one "keypad backlight" LED. The names are
-> +quoted because sometimes these LED drivers are used for wildly
-> +different things than flash or keypad backlight: their names
-> +are more of a suggestion than a hard-wired usecase.
-> +
-> +Hardware-wise the different LEDs support slightly different
-> +output currents. The "flash" LEDs do not need to charge nor
-> +do they support external triggers. They are just powerful LED
-> +drivers.
-> +
-> +The LEDs appear as children to the PM8058 device, with the
-> +proper compatible string. For the PM8058 bindings see:
-> +mfd/qcom-pm8xxx.txt.
-> +
-> +Each LED is represented as a sub-node of the syscon device. Each
-> +node's name represents the name of the corresponding LED.
-> +
-> +LED sub-node properties:
-> +
-> +Required properties:
-> +- compatible: one of
-> +  "qcom,pm8058-led" (for the normal LEDs at 0x131, 0x132 and 0x133)
-> +  "qcom,pm8058-keypad-led" (for the "keypad" LED at 0x48)
-> +  "qcom,pm8058-flash-led" (for the "flash" LEDs at 0x49 and 0xFB)
-> +
-> +Optional properties:
-> +- label: see Documentation/devicetree/bindings/leds/common.txt
-> +- default-state: see Documentation/devicetree/bindings/leds/common.txt
-> +- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Example:
-> +
-> +qcom,ssbi@500000 {
-> +	pmicintc: pmic@0 {
-> +		compatible = "qcom,pm8058";
-> +		led@48 {
-> +			compatible = "qcom,pm8058-keypad-led";
-> +			reg = <0x48>;
-> +			label = "pm8050:white:keypad";
-> +			default-state = "off";
-> +		};
-> +		led@131 {
-> +			compatible = "qcom,pm8058-led";
-> +			reg = <0x131>;
-> +			label = "pm8058:red";
-> +			default-state = "off";
-> +		};
-> +		led@132 {
-> +			compatible = "qcom,pm8058-led";
-> +			reg = <0x132>;
-> +			label = "pm8058:yellow";
-> +			default-state = "off";
-> +			linux,default-trigger = "mmc0";
-> +		};
-> +		led@133 {
-> +			compatible = "qcom,pm8058-led";
-> +			reg = <0x133>;
-> +			label = "pm8058:green";
-> +			default-state = "on";
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
+Harini
