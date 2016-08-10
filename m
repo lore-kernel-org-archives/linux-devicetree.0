@@ -1,195 +1,466 @@
-Return-Path: <caesar.upstream@gmail.com>
-Message-ID: <57C676FA.6060700@gmail.com>
-Date: Wed, 31 Aug 2016 14:19:38 +0800
-From: Caesar Wang <caesar.upstream@gmail.com>
+Return-Path: <j-keerthy@ti.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH v7 1/3] mfd: lp873x: Add lp873x PMIC support
+Date: Wed, 10 Aug 2016 15:48:09 +0530
+Message-ID: <1470824291-14902-2-git-send-email-j-keerthy@ti.com>
+In-Reply-To: <1470824291-14902-1-git-send-email-j-keerthy@ti.com>
+References: <1470824291-14902-1-git-send-email-j-keerthy@ti.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 3/4] arm64: dts: rockchip: support gmac for rk3399
-References: <1472589008-7713-1-git-send-email-wxt@rock-chips.com> <1472589008-7713-4-git-send-email-wxt@rock-chips.com> <1912883.KWCSTxJEHB@diego>
-In-Reply-To: <1912883.KWCSTxJEHB@diego>
-Content-Type: multipart/alternative;
- boundary="------------090005010303030200060107"
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
-Cc: Caesar Wang <wxt@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Xing Zheng <zhengxing@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, netdev@vger.kernel.org, dbasehore@chromium.org, Will Deacon <will.deacon@arm.com>, Douglas Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Roger Chen <roger.chen@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Shunqian Zheng <zhengsq@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, linux-arm-kernel@lists.infradead.org, David Wu <david.wu@rock-chips.com>
+Content-Type: text/plain
+To: broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
+Cc: linux-omap@vger.kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, j-keerthy@ti.com
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
---------------090005010303030200060107
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 8bit
+The LP873X chip is a power management IC for Portable Navigation Systems
+    and Tablet Computing devices. It contains the following components:
 
-Hi Heiko,
+     - Regulators.
+     - Configurable General Purpose Output Signals(GPO).
 
-Thanks the response quickly.
+PMIC interacts with the main processor through i2c. PMIC has
+couple of LDOs(Linear Regulators), couple of BUCKs (Step-Down DC-DC
+Converter Cores) and GPOs(General Purpose Output Signals).
 
-On 2016?08?31? 06:07, Heiko St�bner wrote:
-> Am Mittwoch, 31. August 2016, 04:30:06 schrieb Caesar Wang:
->> This patch adds needed gamc information for rk3399,
->> also support the gmac pd.
->>
->> Signed-off-by: Roger Chen <roger.chen@rock-chips.com>
->> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
->> ---
->>
->>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 90
->> ++++++++++++++++++++++++++++++++ 1 file changed, 90 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index 32aebc8..53ac651 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> @@ -200,6 +200,26 @@
->>   		};
->>   	};
->>
->> +	gmac: eth@fe300000 {
->> +		compatible = "rockchip,rk3399-gmac";
->> +		reg = <0x0 0xfe300000 0x0 0x10000>;
->> +		rockchip,grf = <&grf>;
-> should move below the reset-names .
-
-Done.
-
->
->> +		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
->> +		interrupt-names = "macirq";
->> +		clocks = <&cru SCLK_MAC>, <&cru SCLK_MAC_RX>,
->> +			 <&cru SCLK_MAC_TX>, <&cru SCLK_MACREF>,
->> +			 <&cru SCLK_MACREF_OUT>, <&cru ACLK_GMAC>,
->> +			 <&cru PCLK_GMAC>;
->> +		clock-names = "stmmaceth", "mac_clk_rx",
->> +			      "mac_clk_tx", "clk_mac_ref",
->> +			      "clk_mac_refout", "aclk_mac",
->> +			      "pclk_mac";
->> +		resets = <&cru SRST_A_GMAC>;
->> +		reset-names = "stmmaceth";
->> +		power-domains = <&power RK3399_PD_GMAC>;
-> The driver core should handle regular power-domain handling on device creation
-> already, right? So I should be able to apply patches 3 and 4 even without the
-> dwmac patches, right?
-
-Yup,  the patches 3 and 4 needn't depand on the dwmac driver.
-
->
-> Also if resending please move power-domains above resets
-
-Done.
-
--
-Caesar
->
->
-> Heiko
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
-
---------------090005010303030200060107
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-
-<html>
-  <head>
-    <meta content="text/html; charset=ISO-8859-1"
-      http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    Hi Heiko,<br>
-    <br>
-    Thanks the response quickly.<br>
-    <br>
-    <div class="moz-cite-prefix">On 2016&#24180;08&#26376;31&#26085; 06:07, Heiko St&uuml;bner
-      wrote:<br>
-    </div>
-    <blockquote cite="mid:1912883.KWCSTxJEHB@diego" type="cite">
-      <pre wrap="">Am Mittwoch, 31. August 2016, 04:30:06 schrieb Caesar Wang:
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">This patch adds needed gamc information for rk3399,
-also support the gmac pd.
-
-Signed-off-by: Roger Chen <a class="moz-txt-link-rfc2396E" href="mailto:roger.chen@rock-chips.com">&lt;roger.chen@rock-chips.com&gt;</a>
-Signed-off-by: Caesar Wang <a class="moz-txt-link-rfc2396E" href="mailto:wxt@rock-chips.com">&lt;wxt@rock-chips.com&gt;</a>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
+Changes in v7:
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 90
-++++++++++++++++++++++++++++++++ 1 file changed, 90 insertions(+)
+  * Reverted the rebase on http://www.gossamer-threads.com/lists/linux/kernel/2457552.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index 32aebc8..53ac651 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -200,6 +200,26 @@
- 		};
- 	};
+Changes in v6:
 
-+	gmac: eth@fe300000 {
-+		compatible = "rockchip,rk3399-gmac";
-+		reg = &lt;0x0 0xfe300000 0x0 0x10000&gt;;
-+		rockchip,grf = &lt;&amp;grf&gt;;
-</pre>
-      </blockquote>
-      <pre wrap="">
-should move below the reset-names .</pre>
-    </blockquote>
-    <small><br>
-      Done.</small><br>
-    <br>
-    <blockquote cite="mid:1912883.KWCSTxJEHB@diego" type="cite">
-      <pre wrap="">
+  * Rebased on top of http://www.gossamer-threads.com/lists/linux/kernel/2457552.
+  * Hence added probe_new instead of probe and removed unused i2c_device_id.
 
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+		interrupts = &lt;GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH&gt;;
-+		interrupt-names = "macirq";
-+		clocks = &lt;&amp;cru SCLK_MAC&gt;, &lt;&amp;cru SCLK_MAC_RX&gt;,
-+			 &lt;&amp;cru SCLK_MAC_TX&gt;, &lt;&amp;cru SCLK_MACREF&gt;,
-+			 &lt;&amp;cru SCLK_MACREF_OUT&gt;, &lt;&amp;cru ACLK_GMAC&gt;,
-+			 &lt;&amp;cru PCLK_GMAC&gt;;
-+		clock-names = "stmmaceth", "mac_clk_rx",
-+			      "mac_clk_tx", "clk_mac_ref",
-+			      "clk_mac_refout", "aclk_mac",
-+			      "pclk_mac";
-+		resets = &lt;&amp;cru SRST_A_GMAC&gt;;
-+		reset-names = "stmmaceth";
-+		power-domains = &lt;&amp;power RK3399_PD_GMAC&gt;;
-</pre>
-      </blockquote>
-      <pre wrap="">
-The driver core should handle regular power-domain handling on device creation 
-already, right? So I should be able to apply patches 3 and 4 even without the 
-dwmac patches, right?</pre>
-    </blockquote>
-    <br>
-    <small>Yup,&nbsp; the patches 3 and 4 needn't depand on the dwmac driver.
-    </small><br>
-    <br>
-    <blockquote cite="mid:1912883.KWCSTxJEHB@diego" type="cite">
-      <pre wrap="">
+Changes in v4:
 
-Also if resending please move power-domains above resets</pre>
-    </blockquote>
-    <br>
-    <small>Done.</small><br>
-    <br>
-    -<br>
-    <small>Caesar</small><br>
-    <blockquote cite="mid:1912883.KWCSTxJEHB@diego" type="cite">
-      <pre wrap="">
+  * Added Author.
+  * Added the mfd_cell for gpio.
 
+Changes in v3:
 
-Heiko
+  * Reordered the probe code.
+  * Fixed Typo in Kconfig description.
+  * Removed unused member from struct lp873x.
 
-_______________________________________________
-Linux-rockchip mailing list
-<a class="moz-txt-link-abbreviated" href="mailto:Linux-rockchip@lists.infradead.org">Linux-rockchip@lists.infradead.org</a>
-<a class="moz-txt-link-freetext" href="http://lists.infradead.org/mailman/listinfo/linux-rockchip">http://lists.infradead.org/mailman/listinfo/linux-rockchip</a>
-</pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
+ drivers/mfd/Kconfig        |  14 +++
+ drivers/mfd/Makefile       |   2 +
+ drivers/mfd/lp873x.c       |  97 +++++++++++++++++
+ include/linux/mfd/lp873x.h | 264 +++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 377 insertions(+)
+ create mode 100644 drivers/mfd/lp873x.c
+ create mode 100644 include/linux/mfd/lp873x.h
 
---------------090005010303030200060107--
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 2d1fb64..45fe00a 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1224,6 +1224,20 @@ config MFD_TPS65217
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called tps65217.
+ 
++config MFD_TI_LP873X
++	tristate "TI LP873X Power Management IC"
++	depends on I2C
++	select MFD_CORE
++	select REGMAP_I2C
++	help
++	  If you say yes here then you get support for the LP873X series of
++	  Power Management Integrated Circuits(PMIC).
++	  These include voltage regulators, Thermal protection, Configurable
++	  General Purpose Outputs(GPO) that are used in portable devices.
++
++	  This driver can also be built as a module.  If so, the module
++	  will be called lp873x.
++
+ config MFD_TPS65218
+ 	tristate "TI TPS65218 Power Management chips"
+ 	depends on I2C
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 2ba3ba3..42acbcd 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -22,6 +22,8 @@ obj-$(CONFIG_HTC_EGPIO)		+= htc-egpio.o
+ obj-$(CONFIG_HTC_PASIC3)	+= htc-pasic3.o
+ obj-$(CONFIG_HTC_I2CPLD)	+= htc-i2cpld.o
+ 
++obj-$(CONFIG_MFD_TI_LP873X)	+= lp873x.o
++
+ obj-$(CONFIG_MFD_DAVINCI_VOICECODEC)	+= davinci_voicecodec.o
+ obj-$(CONFIG_MFD_DM355EVM_MSP)	+= dm355evm_msp.o
+ obj-$(CONFIG_MFD_TI_AM335X_TSCADC)	+= ti_am335x_tscadc.o
+diff --git a/drivers/mfd/lp873x.c b/drivers/mfd/lp873x.c
+new file mode 100644
+index 0000000..3ca0462
+--- /dev/null
++++ b/drivers/mfd/lp873x.c
+@@ -0,0 +1,97 @@
++/*
++ * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * Author: Keerthy <j-keerthy@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/interrupt.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/regmap.h>
++
++#include <linux/mfd/lp873x.h>
++
++static const struct regmap_config lp873x_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = LP873X_REG_MAX,
++};
++
++static const struct mfd_cell lp873x_cells[] = {
++	{ .name = "lp873x-regulator", },
++	{ .name = "lp873x-gpio", },
++};
++
++static int lp873x_probe(struct i2c_client *client,
++			const struct i2c_device_id *ids)
++{
++	struct lp873x *lp873;
++	int ret;
++	unsigned int otpid;
++
++	lp873 = devm_kzalloc(&client->dev, sizeof(*lp873), GFP_KERNEL);
++	if (!lp873)
++		return -ENOMEM;
++
++	lp873->dev = &client->dev;
++
++	lp873->regmap = devm_regmap_init_i2c(client, &lp873x_regmap_config);
++	if (IS_ERR(lp873->regmap)) {
++		ret = PTR_ERR(lp873->regmap);
++		dev_err(lp873->dev,
++			"Failed to initialize register map: %d\n", ret);
++		return ret;
++	}
++
++	mutex_init(&lp873->lock);
++
++	ret = regmap_read(lp873->regmap, LP873X_REG_OTP_REV, &otpid);
++	if (ret) {
++		dev_err(lp873->dev, "Failed to read OTP ID\n");
++		return ret;
++	}
++
++	lp873->rev = otpid & LP873X_OTP_REV_OTP_ID;
++	i2c_set_clientdata(client, lp873);
++	ret = mfd_add_devices(lp873->dev, PLATFORM_DEVID_AUTO, lp873x_cells,
++			      ARRAY_SIZE(lp873x_cells), NULL, 0, NULL);
++
++	return ret;
++}
++
++static const struct of_device_id of_lp873x_match_table[] = {
++	{ .compatible = "ti,lp8733", },
++	{ .compatible = "ti,lp8732", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, of_lp873x_match_table);
++
++static const struct i2c_device_id lp873x_id_table[] = {
++	{ "lp873x", LP873X },
++	{ },
++};
++MODULE_DEVICE_TABLE(i2c, lp873x_id_table);
++
++static struct i2c_driver lp873x_driver = {
++	.driver		= {
++		.name	= "lp873x",
++		.of_match_table = of_lp873x_match_table,
++	},
++	.probe		= lp873x_probe,
++	.id_table	= lp873x_id_table,
++};
++module_i2c_driver(lp873x_driver);
++
++MODULE_AUTHOR("J Keerthy <j-keerthy@ti.com>");
++MODULE_DESCRIPTION("LP873X chip family multi-function driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/mfd/lp873x.h b/include/linux/mfd/lp873x.h
+new file mode 100644
+index 0000000..42bebfa
+--- /dev/null
++++ b/include/linux/mfd/lp873x.h
+@@ -0,0 +1,264 @@
++/*
++ * Functions to access LP873X power management chip.
++ *
++ * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef __LINUX_MFD_LP873X_H
++#define __LINUX_MFD_LP873X_H
++
++#include <linux/i2c.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++
++/* LP873x chip id list */
++#define LP873X			0x00
++
++/* All register addresses */
++#define LP873X_REG_DEV_REV		0X00
++#define LP873X_REG_OTP_REV		0X01
++#define LP873X_REG_BUCK0_CTRL_1		0X02
++#define LP873X_REG_BUCK0_CTRL_2		0X03
++#define LP873X_REG_BUCK1_CTRL_1		0X04
++#define LP873X_REG_BUCK1_CTRL_2		0X05
++#define LP873X_REG_BUCK0_VOUT		0X06
++#define LP873X_REG_BUCK1_VOUT		0X07
++#define LP873X_REG_LDO0_CTRL		0X08
++#define LP873X_REG_LDO1_CTRL            0X09
++#define LP873X_REG_LDO0_VOUT		0X0A
++#define LP873X_REG_LDO1_VOUT		0X0B
++#define LP873X_REG_BUCK0_DELAY		0X0C
++#define LP873X_REG_BUCK1_DELAY		0X0D
++#define LP873X_REG_LDO0_DELAY		0X0E
++#define LP873X_REG_LDO1_DELAY		0X0F
++#define LP873X_REG_GPO_DELAY		0X10
++#define LP873X_REG_GPO2_DELAY		0X11
++#define LP873X_REG_GPO_CTRL		0X12
++#define LP873X_REG_CONFIG		0X13
++#define LP873X_REG_PLL_CTRL		0X14
++#define LP873X_REG_PGOOD_CTRL1		0X15
++#define LP873X_REG_PGOOD_CTRL2		0X16
++#define LP873X_REG_PG_FAULT		0X17
++#define LP873X_REG_RESET		0X18
++#define LP873X_REG_INT_TOP_1		0X19
++#define LP873X_REG_INT_TOP_2		0X1A
++#define LP873X_REG_INT_BUCK		0X1B
++#define LP873X_REG_INT_LDO		0X1C
++#define LP873X_REG_TOP_STAT		0X1D
++#define LP873X_REG_BUCK_STAT		0X1E
++#define LP873X_REG_LDO_STAT		0x1F
++#define LP873X_REG_TOP_MASK_1		0x20
++#define LP873X_REG_TOP_MASK_2		0x21
++#define LP873X_REG_BUCK_MASK		0x22
++#define LP873X_REG_LDO_MASK		0x23
++#define LP873X_REG_SEL_I_LOAD		0x24
++#define LP873X_REG_I_LOAD_2		0x25
++#define LP873X_REG_I_LOAD_1		0x26
++
++#define LP873X_REG_MAX			LP873X_REG_I_LOAD_1
++
++/* Register field definitions */
++#define LP873X_DEV_REV_DEV_ID			0xC0
++#define LP873X_DEV_REV_ALL_LAYER		0x30
++#define LP873X_DEV_REV_METAL_LAYER		0x0F
++
++#define LP873X_OTP_REV_OTP_ID			0xFF
++
++#define LP873X_BUCK0_CTRL_1_BUCK0_FPWM		BIT(3)
++#define LP873X_BUCK0_CTRL_1_BUCK0_RDIS_EN	BIT(2)
++#define LP873X_BUCK0_CTRL_1_BUCK0_EN_PIN_CTRL	BIT(1)
++#define LP873X_BUCK0_CTRL_1_BUCK0_EN		BIT(0)
++
++#define LP873X_BUCK0_CTRL_2_BUCK0_ILIM		0x38
++#define LP873X_BUCK0_CTRL_2_BUCK0_SLEW_RATE	0x07
++
++#define LP873X_BUCK1_CTRL_1_BUCK1_FPWM		BIT(3)
++#define LP873X_BUCK1_CTRL_1_BUCK1_RDIS_EN	BIT(2)
++#define LP873X_BUCK1_CTRL_1_BUCK1_EN_PIN_CTRL	BIT(1)
++#define LP873X_BUCK1_CTRL_1_BUCK1_EN		BIT(0)
++
++#define LP873X_BUCK1_CTRL_2_BUCK1_ILIM		0x38
++#define LP873X_BUCK1_CTRL_2_BUCK1_SLEW_RATE	0x07
++
++#define LP873X_BUCK0_VOUT_BUCK0_VSET		0xFF
++
++#define LP873X_BUCK1_VOUT_BUCK1_VSET		0xFF
++
++#define LP873X_LDO0_CTRL_LDO0_RDIS_EN		BIT(2)
++#define LP873X_LDO0_CTRL_LDO0_EN_PIN_CTRL	BIT(1)
++#define LP873X_LDO0_CTRL_LDO0_EN		BIT(0)
++
++#define LP873X_LDO1_CTRL_LDO1_RDIS_EN		BIT(2)
++#define LP873X_LDO1_CTRL_LDO1_EN_PIN_CTRL	BIT(1)
++#define LP873X_LDO1_CTRL_LDO1_EN		BIT(0)
++
++#define LP873X_LDO0_VOUT_LDO0_VSET		0x1F
++
++#define LP873X_LDO1_VOUT_LDO1_VSET		0x1F
++
++#define LP873X_BUCK0_DELAY_BUCK0_SD_DELAY	0xF0
++#define LP873X_BUCK0_DELAY_BUCK0_SU_DELAY	0x0F
++
++#define LP873X_BUCK1_DELAY_BUCK1_SD_DELAY	0xF0
++#define LP873X_BUCK1_DELAY_BUCK1_SU_DELAY	0x0F
++
++#define LP873X_LDO0_DELAY_LDO0_SD_DELAY	0xF0
++#define LP873X_LDO0_DELAY_LDO0_SU_DELAY	0x0F
++
++#define LP873X_LDO1_DELAY_LDO1_SD_DELAY	0xF0
++#define LP873X_LDO1_DELAY_LDO1_SU_DELAY	0x0F
++
++#define LP873X_GPO_DELAY_GPO_SD_DELAY		0xF0
++#define LP873X_GPO_DELAY_GPO_SU_DELAY		0x0F
++
++#define LP873X_GPO2_DELAY_GPO2_SD_DELAY	0xF0
++#define LP873X_GPO2_DELAY_GPO2_SU_DELAY	0x0F
++
++#define LP873X_GPO_CTRL_GPO2_OD		BIT(6)
++#define LP873X_GPO_CTRL_GPO2_EN_PIN_CTRL	BIT(5)
++#define LP873X_GPO_CTRL_GPO2_EN		BIT(4)
++#define LP873X_GPO_CTRL_GPO_OD			BIT(2)
++#define LP873X_GPO_CTRL_GPO_EN_PIN_CTRL	BIT(1)
++#define LP873X_GPO_CTRL_GPO_EN			BIT(0)
++
++#define LP873X_CONFIG_SU_DELAY_SEL		BIT(6)
++#define LP873X_CONFIG_SD_DELAY_SEL		BIT(5)
++#define LP873X_CONFIG_CLKIN_PIN_SEL		BIT(4)
++#define LP873X_CONFIG_CLKIN_PD			BIT(3)
++#define LP873X_CONFIG_EN_PD			BIT(2)
++#define LP873X_CONFIG_TDIE_WARN_LEVEL		BIT(1)
++#define LP873X_EN_SPREAD_SPEC			BIT(0)
++
++#define LP873X_PLL_CTRL_EN_PLL			BIT(6)
++#define LP873X_EXT_CLK_FREQ			0x1F
++
++#define LP873X_PGOOD_CTRL1_PGOOD_POL		BIT(7)
++#define LP873X_PGOOD_CTRL1_PGOOD_OD		BIT(6)
++#define LP873X_PGOOD_CTRL1_PGOOD_WINDOW_LDO	BIT(5)
++#define LP873X_PGOOD_CTRL1_PGOOD_WINDOWN_BUCK	BIT(4)
++#define LP873X_PGOOD_CTRL1_PGOOD_EN_PGOOD_LDO1	BIT(3)
++#define LP873X_PGOOD_CTRL1_PGOOD_EN_PGOOD_LDO0	BIT(2)
++#define LP873X_PGOOD_CTRL1_PGOOD_EN_PGOOD_BUCK1	BIT(1)
++#define LP873X_PGOOD_CTRL1_PGOOD_EN_PGOOD_BUCK0	BIT(0)
++
++#define LP873X_PGOOD_CTRL2_EN_PGOOD_TWARN	BIT(2)
++#define LP873X_PGOOD_CTRL2_EN_PG_FAULT_GATE	BIT(1)
++#define LP873X_PGOOD_CTRL2_PGOOD_MODE		BIT(0)
++
++#define LP873X_PG_FAULT_PG_FAULT_LDO1		BIT(3)
++#define LP873X_PG_FAULT_PG_FAULT_LDO0		BIT(2)
++#define LP873X_PG_FAULT_PG_FAULT_BUCK1		BIT(1)
++#define LP873X_PG_FAULT_PG_FAULT_BUCK0		BIT(0)
++
++#define LP873X_RESET_SW_RESET			BIT(0)
++
++#define LP873X_INT_TOP_1_PGOOD_INT		BIT(7)
++#define LP873X_INT_TOP_1_LDO_INT		BIT(6)
++#define LP873X_INT_TOP_1_BUCK_INT		BIT(5)
++#define LP873X_INT_TOP_1_SYNC_CLK_INT		BIT(4)
++#define LP873X_INT_TOP_1_TDIE_SD_INT		BIT(3)
++#define LP873X_INT_TOP_1_TDIE_WARN_INT		BIT(2)
++#define LP873X_INT_TOP_1_OVP_INT		BIT(1)
++#define LP873X_INT_TOP_1_I_MEAS_INT		BIT(0)
++
++#define LP873X_INT_TOP_2_RESET_REG_INT		BIT(0)
++
++#define LP873X_INT_BUCK_BUCK1_PG_INT		BIT(6)
++#define LP873X_INT_BUCK_BUCK1_SC_INT		BIT(5)
++#define LP873X_INT_BUCK_BUCK1_ILIM_INT		BIT(4)
++#define LP873X_INT_BUCK_BUCK0_PG_INT		BIT(2)
++#define LP873X_INT_BUCK_BUCK0_SC_INT		BIT(1)
++#define LP873X_INT_BUCK_BUCK0_ILIM_INT		BIT(0)
++
++#define LP873X_INT_LDO_LDO1_PG_INT		BIT(6)
++#define LP873X_INT_LDO_LDO1_SC_INT		BIT(5)
++#define LP873X_INT_LDO_LDO1_ILIM_INT		BIT(4)
++#define LP873X_INT_LDO_LDO0_PG_INT		BIT(2)
++#define LP873X_INT_LDO_LDO0_SC_INT		BIT(1)
++#define LP873X_INT_LDO_LDO0_ILIM_INT		BIT(0)
++
++#define LP873X_TOP_STAT_PGOOD_STAT		BIT(7)
++#define LP873X_TOP_STAT_SYNC_CLK_STAT		BIT(4)
++#define LP873X_TOP_STAT_TDIE_SD_STAT		BIT(3)
++#define LP873X_TOP_STAT_TDIE_WARN_STAT		BIT(2)
++#define LP873X_TOP_STAT_OVP_STAT		BIT(1)
++
++#define LP873X_BUCK_STAT_BUCK1_STAT		BIT(7)
++#define LP873X_BUCK_STAT_BUCK1_PG_STAT		BIT(6)
++#define LP873X_BUCK_STAT_BUCK1_ILIM_STAT	BIT(4)
++#define LP873X_BUCK_STAT_BUCK0_STAT		BIT(3)
++#define LP873X_BUCK_STAT_BUCK0_PG_STAT		BIT(2)
++#define LP873X_BUCK_STAT_BUCK0_ILIM_STAT	BIT(0)
++
++#define LP873X_LDO_STAT_LDO1_STAT		BIT(7)
++#define LP873X_LDO_STAT_LDO1_PG_STAT		BIT(6)
++#define LP873X_LDO_STAT_LDO1_ILIM_STAT		BIT(4)
++#define LP873X_LDO_STAT_LDO0_STAT		BIT(3)
++#define LP873X_LDO_STAT_LDO0_PG_STAT		BIT(2)
++#define LP873X_LDO_STAT_LDO0_ILIM_STAT		BIT(0)
++
++#define LP873X_TOP_MASK_1_PGOOD_INT_MASK	BIT(7)
++#define LP873X_TOP_MASK_1_SYNC_CLK_MASK	BIT(4)
++#define LP873X_TOP_MASK_1_TDIE_WARN_MASK	BIT(2)
++#define LP873X_TOP_MASK_1_I_MEAS_MASK		BIT(0)
++
++#define LP873X_TOP_MASK_2_RESET_REG_MASK	BIT(0)
++
++#define LP873X_BUCK_MASK_BUCK1_PGF_MASK	BIT(7)
++#define LP873X_BUCK_MASK_BUCK1_PGR_MASK	BIT(6)
++#define LP873X_BUCK_MASK_BUCK1_ILIM_MASK	BIT(4)
++#define LP873X_BUCK_MASK_BUCK0_PGF_MASK	BIT(3)
++#define LP873X_BUCK_MASK_BUCK0_PGR_MASK	BIT(2)
++#define LP873X_BUCK_MASK_BUCK0_ILIM_MASK	BIT(0)
++
++#define LP873X_LDO_MASK_LDO1_PGF_MASK		BIT(7)
++#define LP873X_LDO_MASK_LDO1_PGR_MASK		BIT(6)
++#define LP873X_LDO_MASK_LDO1_ILIM_MASK		BIT(4)
++#define LP873X_LDO_MASK_LDO0_PGF_MASK		BIT(3)
++#define LP873X_LDO_MASK_LDO0_PGR_MASK		BIT(2)
++#define LP873X_LDO_MASK_LDO0_ILIM_MASK		BIT(0)
++
++#define LP873X_SEL_I_LOAD_CURRENT_BUCK_SELECT	BIT(0)
++
++#define LP873X_I_LOAD_2_BUCK_LOAD_CURRENT	BIT(0)
++
++#define LP873X_I_LOAD_1_BUCK_LOAD_CURRENT	0xFF
++
++#define LP873X_MAX_REG_ID		LP873X_LDO_1
++
++/* Number of step-down converters available */
++#define LP873X_NUM_BUCK		2
++/* Number of LDO voltage regulators available */
++#define LP873X_NUM_LDO		2
++/* Number of total regulators available */
++#define LP873X_NUM_REGULATOR		(LP873X_NUM_BUCK + LP873X_NUM_LDO)
++
++enum lp873x_regulator_id {
++	/* BUCK's */
++	LP873X_BUCK_0,
++	LP873X_BUCK_1,
++	/* LDOs */
++	LP873X_LDO_0,
++	LP873X_LDO_1,
++};
++
++/**
++ * struct lp873x - state holder for the lp873x driver
++ * Device data may be used to access the LP873X chip
++ */
++struct lp873x {
++	struct device *dev;
++	u8 rev;
++	struct mutex lock;	/* lock guarding the data structure */
++	struct regmap *regmap;
++};
++#endif /*  __LINUX_MFD_LP873X_H */
+-- 
+1.9.1
