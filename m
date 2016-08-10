@@ -1,14 +1,11 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 2/4] ARM: dts: da850: Add an aemif node
-Date: Wed, 10 Aug 2016 13:32:03 +0530
-Message-ID: <57AADF7B.1070102@ti.com>
-References: <20160809171518.22690-1-kbeldan@baylibre.com>
- <20160809171518.22690-3-kbeldan@baylibre.com> <57AADC63.90405@ti.com>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: [PATCH v4 0/2] mmc: dw_mmc: host controller reset support
+Date: Wed, 10 Aug 2016 16:03:46 +0800
+Message-ID: <1470816228-8874-1-git-send-email-guodong.xu@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <57AADC63.90405@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,59 +15,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Karl Beldan <kbeldan@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Karl Beldan <karl.beldan+oss@gmail.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
+To: heiko@sntech.de, shawn.lin@rock-chips.com, jh80.chung@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, ulf.hansson@linaro.org, guodong.xu@linaro.org
+Cc: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 August 2016 01:18 PM, Sekhar Nori wrote:
-> On Tuesday 09 August 2016 10:45 PM, Karl Beldan wrote:
->> Currently the davinci da8xx boards use the mach-davinci aemif code.
->> Instantiating an aemif node into the DT allows to use the ti-aemif
->> memory driver and is another step to better DT support.
->> Also it will allow to properly pass the emif timings via DT.
->>
->> Signed-off-by: Karl Beldan <kbeldan@baylibre.com>
->> ---
->>  arch/arm/boot/dts/da850.dtsi | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
->> index bc10e7e..f62928c 100644
->> --- a/arch/arm/boot/dts/da850.dtsi
->> +++ b/arch/arm/boot/dts/da850.dtsi
->> @@ -411,6 +411,16 @@
->>  			dma-names = "tx", "rx";
->>  		};
->>  	};
->> +	aemif: aemif@68000000 {
->> +		compatible = "ti,da850-aemif";
->> +		#address-cells = <2>;
->> +		#size-cells = <1>;
->> +
->> +		reg = <0x68000000 0x00008000>;
->> +		ranges = <0 0 0x60000000 0x08000000
->> +			  1 0 0x68000000 0x00008000>;
->> +		status = "disabled";
->> +	};
->>  	nand_cs3@62000000 {
->>  		compatible = "ti,davinci-nand";
->>  		reg = <0x62000000 0x807ff
-> 
-> The nand node should be part of aemif node like it is done for keystone
-> boards.
+mmc host controller registers may in abnormal state if mmc is used in
+bootloader, eg. to load kernel from eMMC. Some controllers cann't
+clear their registers when clk is set. They use dedicated reset
+logics to do this.
 
-Actually, can you move the nand node out of da850.dtsi completely. Its
-much better to keep da850.dtsi restricted to soc-internal devices and
-keep the board level devices like NAND flash in <board>.dts file.
+In this patch, a 'resets' property is added into dw_mmc dts
+node. When driver does parse_dt and probe, it calls reset API to
+triiger 'reset' of dwmmc host controller. When probe error or
+remove, it calls reset API to assert it.
 
-Similarly, can you move the NAND pinmux definitions too to the
-da850-evm.dts file?
+Chip vendor's actual reset logics is implemented in reset driver, not
+in dw_mmc code.
 
-There is advantage in keeping common pinmux definitions in da850.dtsi so
-each board doe not have to repeat them. But AEMIF is an exception as its
-usage can really be varied (NAND, NOR, SRAM, other). Plus, different
-boards are likely to use different chip selects so coming up with some
-pinmux definitions which will be reused widely is really unlikely.
+Please also refer to Documentation/devicetree/bindings/reset/reset.txt
 
-Thanks,
-Sekhar
+Changelog:
+v4:
+ * add reset_control_assert() and usleep() before calling _deassert().
+
+Guodong Xu (2):
+  Documentation: synopsys-dw-mshc: add binding for resets
+  mmc: dw_mmc: add reset support to dwmmc host controller
+
+ .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |  4 ++++
+ drivers/mmc/host/dw_mmc.c                          | 23 +++++++++++++++++++++-
+ include/linux/mmc/dw_mmc.h                         |  2 ++
+ 3 files changed, 28 insertions(+), 1 deletion(-)
+
+-- 
+1.9.1
