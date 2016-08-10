@@ -1,59 +1,88 @@
-From: Randy Li <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: add rk3288-firefly-reload
-Date: Wed, 10 Aug 2016 09:12:35 +0800
-Message-ID: <522097f6-8b5c-ee6d-c1b1-a63840228a0e@rock-chips.com>
-References: <1549971.ctkvOGm2xW@diego>
- <CAFLEztTROearSEcgzV3EVHFcRcMQpLhAQ6BXP-dDyRDAWybaxg@mail.gmail.com>
- <C2BE77CA-A59B-4128-8802-E3E36FACDABA@rock-chips.com>
- <13761657.UM4fvlJBBq@diego>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
+Date: Tue, 9 Aug 2016 18:25:26 -0700
+Message-ID: <85b76eca-5473-6724-0c9d-7b6fa7677f50@gmail.com>
+References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
+ <9ebb6cb7-c793-cd76-5283-c9a659d0398f@gmx.de>
+ <57AA2001.2010904@codeaurora.org>
+ <214dcbb7-0c3b-1e00-3e50-db513d77b10b@gmail.com>
+ <57AA7ED0.9000707@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <13761657.UM4fvlJBBq@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: =?UTF-8?B?6ZmI6LGq?= <jacobchen110-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <57AA7ED0.9000707@codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
+On 08/09/2016 06:09 PM, Timur Tabi wrote:
+> Florian Fainelli wrote:
+> 
+>> nr_frags can't be bigger than MAX_SKB_FRAGS, hence these checks all
+>> other drivers do against 1 + MAX_SKB_FRAGS.
+> 
+> Doh, I just realized something.  emac_mac_tx_buf_send() just needs to
+> make sure that there's enough room for ONE skb.  For some reason I
+> thought it had to make sure there's enough room for multiple SKBs.
+> 
+> Now it makes a lot more sense.  Thank you.
+> 
+> So it looks like a given SKB can occupy 3 + nr_frags descriptors.  So I
+> need to change that line to:
+> 
+>     if (emac_tpd_num_free_descs(tx_q) < (MAX_SKB_FRAGS + 3))
+>         netif_stop_queue(adpt->netdev);
+> 
+> Question, some  drivers do <= instead of just <, like this:
+> 
+>     if (ring->free_bds <= (MAX_SKB_FRAGS + 1))
+>         netif_tx_stop_queue(txq);
+> 
+> Is it necessary to stop the queue if there exactly enough descriptors to
+> hold an SKB?  Shouldn't the above be this instead:
+> 
+>     if (ring->free_bds < (MAX_SKB_FRAGS + 1))
+>         netif_tx_stop_queue(txq);
 
+Humm, it kind of depends, but I would err on the side of strictly lesser
+than as a better behavior where you may still allow a full fragmented
+SKB to make it through on the next xmit call (I know the code you quote
+is exactly not doing that).
 
-On 08/09/2016 06:58 PM, Heiko Stübner wrote:
-> Am Dienstag, 9. August 2016, 18:06:33 schrieb Randy Li:
->> 從我的 iPad 傳送
+> 
+> 
+>>> However, I'm confused about one thing.  Almost every other driver just
+>>> sets "netdev->mtu = new_mtu" and does nothing else.  I can't find any
+>>> other driver that actually stops the RX path, reprograms the hardware,
+>>> and then restarts the RX path.  I know this is a stupid question, but
+>>> why is my driver doing that?
 >>
->>> 陈豪 <jacobchen110-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> 於 2016年8月9日 下午6:02 寫道：
->>>
->>> well，it has already been added....
->>>
->>> The root cause is not act8846. Firefly have a bug with sdmmc and it
->>> seems they didn't fix it in firefly-reload.
->>>
->>> http://bbs.t-firefly.com/forum.php?mod=viewthread&tid=256
-> Thanks Jacob for pointing out this issue - I was always wondering why it
-> wasn't working :-) .
->
->
->> Yes, Jacob is right. Those high speed options need the voltage down to 1.8v.
->> They should be removed.
-> Randy, can you provide a follow-up patch that removes these excess properties
-> please?
-I will send a patch in weekend. I need some time to confirm whether
-the sdio wifi would meet the same problem in firefly reload.
-I found those patches are not been merged yet, should I just send
-a new version or just a patch remove those incorrect excess properties?
->
->
-> Thanks
-> Heiko
->
+>> Most drivers allocate RX buffer sizes that are usually bigger than the
+>> MTU, but would probably silently fail or expose transient behavior once
+>> the MTU changes to greater than the size pre-defined.
+> 
+> So it looks like the real problem is a race condition between
+> 
+>     adpt->rxbuf_size = new_mtu > EMAC_DEF_RX_BUF_SIZE ?
+>         ALIGN(max_frame, 8) : EMAC_DEF_RX_BUF_SIZE;
+> 
+> and
+> 
+>     if (netif_running(netdev))
+>         return emac_reinit_locked(adpt);
+> 
+> 
+> That is, if the interface is running, I set rxbuf_size.  If suddenly I
+> receive some packets, then the driver will use the wrong buffer size.
 
+Correct, and possibly other HW settings that you have may have to
+program to tell the MAC what the maximum packet length should be.
+
+> 
+> Is there an easy way for me to stop the RX path before I set rxbuf_size?
+>  Some netif_xxx function I can call?
+
+napi_disable() should take care of that.
 -- 
-Randy Li
-The third produce department
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
