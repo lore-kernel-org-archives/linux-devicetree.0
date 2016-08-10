@@ -1,33 +1,36 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: clock: reset: Add GXBB AO Clock and
- Reset Bindings
-Date: Wed, 10 Aug 2016 16:40:54 -0500
-Message-ID: <20160810214054.GA14766@rob-hp-laptop>
-References: <1470734008-18849-1-git-send-email-narmstrong@baylibre.com>
- <1470734008-18849-3-git-send-email-narmstrong@baylibre.com>
+Subject: Re: [PATCH v4 7/7] doc: bindings: act8945a-charger: Update properties
+Date: Wed, 10 Aug 2016 16:49:56 -0500
+Message-ID: <20160810214956.GA14844@rob-hp-laptop>
+References: <1470636529-16387-1-git-send-email-wenyou.yang@atmel.com>
+ <1470636529-16387-8-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1470734008-18849-3-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1470636529-16387-8-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 09, 2016 at 11:13:27AM +0200, Neil Armstrong wrote:
-> Add documentations and dt-bindings headers for the AO clock and reset
-> controller.
+On Mon, Aug 08, 2016 at 02:08:49PM +0800, Wenyou Yang wrote:
+> Due the driver improvements, update the properties,
+>  - Remove "active-semi,check-battery-temperature" property.
+>  - Add the properties, "active-semi,irq_gpio"
+>    and "active-semi,lbo-gpios".
 > 
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 > ---
->  .../bindings/clock/amlogic,gxbb-aoclkc.txt         | 45 +++++++++++++++
->  include/dt-bindings/clock/gxbb-aoclkc.h            | 66 ++++++++++++++++++++++
->  include/dt-bindings/reset/gxbb-aoclkc.h            | 66 ++++++++++++++++++++++
->  3 files changed, 177 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
->  create mode 100644 include/dt-bindings/clock/gxbb-aoclkc.h
->  create mode 100644 include/dt-bindings/reset/gxbb-aoclkc.h
+> 
+> Changes in v4:
+>  - Update the doc/binding for using "interrupts" property.
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  .../devicetree/bindings/power/act8945a-charger.txt       | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
