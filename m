@@ -1,66 +1,60 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v5 5/6] usb: chipidea: let chipidea core device of_node
- equal's glue layer device of_node
-Date: Wed, 10 Aug 2016 11:11:46 +0800
-Message-ID: <20160810031146.GE1879@shlinux2>
-References: <1470646331-23227-1-git-send-email-peter.chen@nxp.com>
- <1470646331-23227-6-git-send-email-peter.chen@nxp.com>
- <147078813636.20133.1120685098868481913@sboyd-linaro>
+From: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 03/14] arm64/numa: add nid check for memory block
+Date: Wed, 10 Aug 2016 11:42:19 +0800
+Message-ID: <57AAA29B.9060608@huawei.com>
+References: <1470647899-6324-1-git-send-email-thunder.leizhen@huawei.com>
+ <1470647899-6324-4-git-send-email-thunder.leizhen@huawei.com>
+ <57AA8D9B.7010102@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <147078813636.20133.1120685098868481913@sboyd-linaro>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, dbaryshkov@gmail.com, dwmw3@infradead.org, k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, linux-pm@vger.kernel.org, stillcompiling@gmail.com, linux-kernel@vger.kernel.org, mka@chromium.org, Peter Chen <peter.chen@freescale.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57AA8D9B.7010102-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 09, 2016 at 05:15:36PM -0700, Stephen Boyd wrote:
-> Quoting Peter Chen (2016-08-08 01:52:10)
-> > From: Peter Chen <peter.chen@freescale.com>
-> > 
-> > At device tree, we have no device node for chipidea core,
-> > the glue layer's node is the parent node for host and udc
-> > device. But in related driver, the parent device is chipidea
-> > core. So, in order to let the common driver get parent's node,
-> > we let the core's device node equals glue layer device node.
-> > 
-> > Signed-off-by: Peter Chen <peter.chen@freescale.com>
-> > Tested-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-> > Tested-by Joshua Clayton <stillcompiling@gmail.com>
-> > ---
-> >  drivers/usb/chipidea/core.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-> > index 69426e6..b189dc7 100644
-> > --- a/drivers/usb/chipidea/core.c
-> > +++ b/drivers/usb/chipidea/core.c
-> > @@ -954,6 +954,15 @@ static int ci_hdrc_probe(struct platform_device *pdev)
-> >                 dev_err(dev, "unable to init phy: %d\n", ret);
-> >                 return ret;
-> >         }
-> > +       /*
-> > +        * At device tree, we have no device node for chipidea core,
-> > +        * the glue layer's node is the parent node for host and udc
-> > +        * device. But in related driver, the parent device is chipidea
-> > +        * core. So, in order to let the common driver get parent's node,
-> > +        * we let the core's device node equals glue layer's node.
-> > +        */
-> > +       if (dev->parent && dev->parent->of_node)
-> > +               dev->of_node = dev->parent->of_node;
+
+
+On 2016/8/10 10:12, Hanjun Guo wrote:
+> On 2016/8/8 17:18, Zhen Lei wrote:
+>> Use the same tactic to cpu and numa-distance nodes.
+>>
+>> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm64/mm/numa.c | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+>> index c7fe3ec..2601660 100644
+>> --- a/arch/arm64/mm/numa.c
+>> +++ b/arch/arm64/mm/numa.c
+>> @@ -141,6 +141,11 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+>>  {
+>>  	int ret;
+>>
+>> +	if (nid >= MAX_NUMNODES) {
+>> +		pr_warn("NUMA: Node id %u exceeds maximum value\n", nid);
+>> +		return -EINVAL;
+>> +	}
 > 
-> Can this be done earlier? Perhaps after hw_device_init() in this probe
-> routine? That would allow me to remove the awkward parent searching in
-> my ULPI DT awareness patch.
+> I think this check should be added to of_numa_parse_memory_nodes(), which before
+> the numa_add_memblk() called, it's the same logic in of_numa_parse_cpu_nodes() and
+> the node id is checked before calling numa_add_memblk() in ACPI.
 
-The reason why I locate it there is to avoid "goto label" for error
-path during PHY's get and initialization operation.
+Yes, you are right. This check is arch independent.
 
-Ok, to simplify your work, I will change it at next version.
+> 
+> Thanks
+> Hanjun
+> 
+> 
+> 
+> .
+> 
 
--- 
-
-Best Regards,
-Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
