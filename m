@@ -1,86 +1,73 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 2/4] ARM: dts: da850: Add an aemif node
-Date: Wed, 10 Aug 2016 13:42:01 +0530
-Message-ID: <57AAE1D1.5080000@ti.com>
-References: <20160809171518.22690-1-kbeldan@baylibre.com>
- <20160809171518.22690-3-kbeldan@baylibre.com> <57AADC63.90405@ti.com>
- <57AADF7B.1070102@ti.com> <20160810080713.GB16481@gobelin>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v1 1/4] nvmem: rockchip-efuse: update compatible strings
+ for Rockchip efuse
+Date: Wed, 10 Aug 2016 10:21:46 +0200
+Message-ID: <18634361.lkZvz8cT7b@diego>
+References: <1470811843-42668-1-git-send-email-finley.xiao@rock-chips.com>
+ <1470811843-42668-2-git-send-email-finley.xiao@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160810080713.GB16481@gobelin>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Karl Beldan <kbeldan@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Karl Beldan <karl.beldan+oss@gmail.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1470811843-42668-2-git-send-email-finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Finlye Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wbriannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 August 2016 01:37 PM, Karl Beldan wrote:
-> On Wed, Aug 10, 2016 at 01:32:03PM +0530, Sekhar Nori wrote:
->> On Wednesday 10 August 2016 01:18 PM, Sekhar Nori wrote:
->>> On Tuesday 09 August 2016 10:45 PM, Karl Beldan wrote:
->>>> Currently the davinci da8xx boards use the mach-davinci aemif code.
->>>> Instantiating an aemif node into the DT allows to use the ti-aemif
->>>> memory driver and is another step to better DT support.
->>>> Also it will allow to properly pass the emif timings via DT.
->>>>
->>>> Signed-off-by: Karl Beldan <kbeldan@baylibre.com>
->>>> ---
->>>>  arch/arm/boot/dts/da850.dtsi | 10 ++++++++++
->>>>  1 file changed, 10 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
->>>> index bc10e7e..f62928c 100644
->>>> --- a/arch/arm/boot/dts/da850.dtsi
->>>> +++ b/arch/arm/boot/dts/da850.dtsi
->>>> @@ -411,6 +411,16 @@
->>>>  			dma-names = "tx", "rx";
->>>>  		};
->>>>  	};
->>>> +	aemif: aemif@68000000 {
->>>> +		compatible = "ti,da850-aemif";
->>>> +		#address-cells = <2>;
->>>> +		#size-cells = <1>;
->>>> +
->>>> +		reg = <0x68000000 0x00008000>;
->>>> +		ranges = <0 0 0x60000000 0x08000000
->>>> +			  1 0 0x68000000 0x00008000>;
->>>> +		status = "disabled";
->>>> +	};
->>>>  	nand_cs3@62000000 {
->>>>  		compatible = "ti,davinci-nand";
->>>>  		reg = <0x62000000 0x807ff
->>>
->>> The nand node should be part of aemif node like it is done for keystone
->>> boards.
->>
->> Actually, can you move the nand node out of da850.dtsi completely. Its
->> much better to keep da850.dtsi restricted to soc-internal devices and
->> keep the board level devices like NAND flash in <board>.dts file.
->>
->> Similarly, can you move the NAND pinmux definitions too to the
->> da850-evm.dts file?
->>
->> There is advantage in keeping common pinmux definitions in da850.dtsi so
->> each board doe not have to repeat them. But AEMIF is an exception as its
->> usage can really be varied (NAND, NOR, SRAM, other). Plus, different
->> boards are likely to use different chip selects so coming up with some
->> pinmux definitions which will be reused widely is really unlikely.
->>
-> This is exactly what I just did for the LCDK.
-> If everybody is happy with it I will do the same for the evm as I put it
-> in the cover letter.
+Hi Finley,
 
-Yes please. We dont want duplication of data between da850.dtsi and
-da850-lcdk.dts files.
+Am Mittwoch, 10. August 2016, 14:50:40 schrieb Finlye Xiao:
+> From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> Rk3399-efuse is organized as 32bits by 32 one-time programmable
+> electrical fuses. The efuse of earlier SoCs are organized as
+> 32bits by 8 one-time programmable electrical fuses with random
+> access interface.
+> 
+> Add different device tree compatible string for different SoCs
+> to be able to differentiate between the two.
+> 
+> Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
+> b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt index
+> 8f86ab3..8ec1b80 100644
+> --- a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
+> +++ b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
+> @@ -1,7 +1,11 @@
+>  = Rockchip eFuse device tree bindings =
+> 
+>  Required properties:
+> -- compatible: Should be "rockchip,rockchip-efuse"
+> +- compatible: Should be one of the following.
+> +	"rockchip,rk3066a-efuse" - for RK3066a SoCs.
+> +	"rockchip,rk3188-efuse" - for RK3188 SoCs.
+> +	"rockchip,rk3288-efuse" - for RK3288 SoCs.
+> +	"rockchip,rk3399-efuse" - for RK3399 SoCs.
+>  - reg: Should contain the registers location and exact eFuse size
+>  - clocks: Should be the clock id of eFuse
+>  - clock-names: Should be "pclk_efuse"
 
-Thanks,
-Sekhar
+you cannot drop the old compatible that way. Please add a new section
+
+Deprecated properties:
+- compatible: "rockchip,rockchip-efuse"
+  Old efuse compatible value compatible to rk3066a, rk3188 and rk3288 efuses
+
+and move the old compatible there.
+
+
+Thanks
+Heiko
