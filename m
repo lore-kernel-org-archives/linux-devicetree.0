@@ -1,67 +1,121 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC][PATCH 3/4] arm64: dts: hikey: Add hikey support for
- syscon-reboot-mode
-Date: Tue, 9 Aug 2016 21:34:24 -0700
-Message-ID: <20160810043424.GH26240@tuxbot>
-References: <1470697426-16426-1-git-send-email-john.stultz@linaro.org>
- <1470697426-16426-3-git-send-email-john.stultz@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/2 v3] leds: pm8058: add device tree bindings
+Date: Tue, 9 Aug 2016 21:39:40 -0700
+Message-ID: <20160810043940.GI26240@tuxbot>
+References: <1470679911-13669-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1470697426-16426-3-git-send-email-john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1470679911-13669-1-git-send-email-linus.walleij@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 08 Aug 16:03 PDT 2016, John Stultz wrote:
+On Mon 08 Aug 11:11 PDT 2016, Linus Walleij wrote:
 
-[..]
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-[..]
->  	memory@0 {
->  		device_type = "memory";
->  		reg = <0x00000000 0x00000000 0x00000000 0x05e00000>,
-> -		      <0x00000000 0x05f00000 0x00000000 0x00eff000>,
-> +		      <0x00000000 0x05f00000 0x00000000 0x00001000>,
-> +		      <0x00000000 0x05f02000 0x00000000 0x00efd000>,
->  		      <0x00000000 0x06e00000 0x00000000 0x0060f000>,
->  		      <0x00000000 0x07410000 0x00000000 0x36bf0000>;
->  	};
+> This adds the device tree bindings for the PM8058 LEDs.
+> 
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: Andy Gross <andy.gross@linaro.org>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-As I said when talked about this, I don't think you should punch holes
-in the /memory node, but rather add these regions as no-map in a
-/reserved-memory node. But that's a unrelated matter.
+Looks reasonable
 
->  
-> +	reboot-mode-syscon@5f01000 {
-> +		compatible = "syscon", "simple-mfd";
-> +		reg = <0x0 0x05f01000 0x0 0x00001000>;
-> +
-> +		reboot-mode@0 {
-
-Drop the @0
-
-Other than that:
-Acked-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-> +			compatible = "syscon-reboot-mode";
-> +			offset = <0x0>;
-> +
-> +			mode-normal	= <0x77665501>;
-> +			mode-bootloader	= <0x77665500>;
-> +			mode-recovery	= <0x77665502>;
-> +		};
-> +	};
-> +
->  	soc {
->  		spi0: spi@f7106000 {
->  			status = "ok";
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> ---
+> ChangeLog v2->v3:
+> - Rename the keypad LED in the example from "keypad" to
+>   "pm8050:white:keypad"
+> ChangeLog v1->v2:
+> - Fix some spelling mistakes
+> - Reference common bindings directly without any local descriptions
+> ---
+>  .../devicetree/bindings/leds/leds-pm8058.txt       | 67 ++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-pm8058.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-pm8058.txt b/Documentation/devicetree/bindings/leds/leds-pm8058.txt
+> new file mode 100644
+> index 000000000000..89584c49aab2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-pm8058.txt
+> @@ -0,0 +1,67 @@
+> +Qualcomm PM8058 LED driver
+> +
+> +The Qualcomm PM8058 is a multi-functional device which contains
+> +an LED driver block for up to six LEDs: three normal LEDs, two
+> +"flash" LEDs and one "keypad backlight" LED. The names are
+> +quoted because sometimes these LED drivers are used for wildly
+> +different things than flash or keypad backlight: their names
+> +are more of a suggestion than a hard-wired usecase.
+> +
+> +Hardware-wise the different LEDs support slightly different
+> +output currents. The "flash" LEDs do not need to charge nor
+> +do they support external triggers. They are just powerful LED
+> +drivers.
+> +
+> +The LEDs appear as children to the PM8058 device, with the
+> +proper compatible string. For the PM8058 bindings see:
+> +mfd/qcom-pm8xxx.txt.
+> +
+> +Each LED is represented as a sub-node of the syscon device. Each
+> +node's name represents the name of the corresponding LED.
+> +
+> +LED sub-node properties:
+> +
+> +Required properties:
+> +- compatible: one of
+> +  "qcom,pm8058-led" (for the normal LEDs at 0x131, 0x132 and 0x133)
+> +  "qcom,pm8058-keypad-led" (for the "keypad" LED at 0x48)
+> +  "qcom,pm8058-flash-led" (for the "flash" LEDs at 0x49 and 0xFB)
+> +
+> +Optional properties:
+> +- label: see Documentation/devicetree/bindings/leds/common.txt
+> +- default-state: see Documentation/devicetree/bindings/leds/common.txt
+> +- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Example:
+> +
+> +qcom,ssbi@500000 {
+> +	pmicintc: pmic@0 {
+> +		compatible = "qcom,pm8058";
+> +		led@48 {
+> +			compatible = "qcom,pm8058-keypad-led";
+> +			reg = <0x48>;
+> +			label = "pm8050:white:keypad";
+> +			default-state = "off";
+> +		};
+> +		led@131 {
+> +			compatible = "qcom,pm8058-led";
+> +			reg = <0x131>;
+> +			label = "pm8058:red";
+> +			default-state = "off";
+> +		};
+> +		led@132 {
+> +			compatible = "qcom,pm8058-led";
+> +			reg = <0x132>;
+> +			label = "pm8058:yellow";
+> +			default-state = "off";
+> +			linux,default-trigger = "mmc0";
+> +		};
+> +		led@133 {
+> +			compatible = "qcom,pm8058-led";
+> +			reg = <0x133>;
+> +			label = "pm8058:green";
+> +			default-state = "on";
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
