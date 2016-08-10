@@ -1,106 +1,153 @@
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: Re: [PATCH] ASoC: rt5659: Add mclk controls
-Date: Wed, 10 Aug 2016 08:57:28 -0500
-Message-ID: <c649c3fe-b111-56a8-275e-d967a961dd41@linux.intel.com>
-References: <1469660568-3511-1-git-send-email-nicoleotsuka@gmail.com>
- <20160728155732.GG11806@sirena.org.uk> <20160728181419.GA4742@Asurada-Nvidia>
- <20160728185510.GK11806@sirena.org.uk> <20160729161521.GL9681@localhost>
- <20160729163933.GJ10376@sirena.org.uk>
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH v3] hwmon/max6650.c: Add devicetree support
+Date: Wed, 10 Aug 2016 16:19:47 +0200
+Message-ID: <1470838787-8273-1-git-send-email-mike.looijmans@topic.nl>
+References: <1470727827-15907-1-git-send-email-mike.looijmans@topic.nl>
+	<20160809163727.GC9105@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160729163933.GJ10376@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Vinod Koul <vinod.koul@intel.com>
-Cc: mark.rutland@arm.com, oder_chiou@realtek.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Darren Hart <dvhart@linux.intel.com>, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>, robh+dt@kernel.org, bardliao@realtek.com
+Return-path: <lm-sensors-bounces@lm-sensors.org>
+In-Reply-To: <20160809163727.GC9105@roeck-us.net>
+List-Unsubscribe: <http://lists.lm-sensors.org/mailman/options/lm-sensors>,
+	<mailto:lm-sensors-request@lm-sensors.org?subject=unsubscribe>
+List-Archive: <http://lists.lm-sensors.org/pipermail/lm-sensors/>
+List-Post: <mailto:lm-sensors@lm-sensors.org>
+List-Help: <mailto:lm-sensors-request@lm-sensors.org?subject=help>
+List-Subscribe: <http://lists.lm-sensors.org/mailman/listinfo/lm-sensors>,
+	<mailto:lm-sensors-request@lm-sensors.org?subject=subscribe>
+Sender: lm-sensors-bounces@lm-sensors.org
+Errors-To: lm-sensors-bounces@lm-sensors.org
+To: lm-sensors@lm-sensors.org, devicetree@vger.kernel.org
+Cc: Mike Looijmans <mike.looijmans@topic.nl>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/29/16 11:39 AM, Mark Brown wrote:
-> On Fri, Jul 29, 2016 at 09:45:21PM +0530, Vinod Koul wrote:
->
->> Yeah I am not aware of any plan to have clks on x86. For audio we are not
->> going to use much. ACPI and controller w/ firmware does the job.
->
->> I have added Darren, he oversee platform things so might know if clocks
->> would be there in future..
->
-> Not having controllable clocks is fine but as we've discussed before
-> you're going to need to represent the clocks that are there with fixed
-> clocks instantiated through whatever you use to enumerate boards.  We
-> don't want to have to special case x86 all the time in CODEC drivers.
+Parse devicetree parameters for voltage and prescaler setting. This allows
+using multiple max6550 devices with varying settings, and also makes it
+possible to instantiate and configure the device using devicetree.
 
-Without going into a debate on x86 v. the clock API or the merits of a 
-patch that has already been applied, I am pretty confused on who's 
-supposed to manage the mclk between the machine and codec driver.
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+v3: Resubmit because mailing lists bounced
+    Fix style errors as reported by checkpatch.pl
+    Fix bug in DT parsing of fan-prescale
+v2: Add devicetree binding documentation
+    Code changes as suggested by Guenter
+    Reduce log info, output only a single line
 
-If you go back to this specific patch for the rt5659 audio codec, the 
-simplified code reads as:
+ .../devicetree/bindings/hwmon/max6650.txt          | 20 ++++++++++++++++
+ drivers/hwmon/max6650.c                            | 28 +++++++++++++---------
+ 2 files changed, 37 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/max6650.txt
 
-static int rt5659_set_bias_level()
-[snip]
-	case SND_SOC_BIAS_STANDBY:
-		if (dapm->bias_level == SND_SOC_BIAS_OFF) {
-			ret = clk_prepare_enable(rt5659->mclk);
+diff --git a/Documentation/devicetree/bindings/hwmon/max6650.txt b/Documentation/devicetree/bindings/hwmon/max6650.txt
+new file mode 100644
+index 0000000..89d87c6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/max6650.txt
+@@ -0,0 +1,20 @@
++Bindings for MAX6651 and MAX6650 I2C fan controllers
++
++Required properties:
++- compatible : One of "max6650" or "max6651"
++- reg        : I2C address
++
++Optional properties:
++- fan-voltage    : The supply voltage of the fan. Valid values are 5 and 12.
++                   Default is to use the chip's current setting.
++- fan-prescale   : Pre-scaling value as per datasheet. Valid are 1, 2, 4, 8, 16.
++                   Default is to use the chip's current setting.
++ 
++
++Example:
++	fan-max6650: max6650@1b {
++		reg = <0x1b>;
++		compatible = "max6650";
++		fan-voltage = <12>;
++		fan-prescale = <4>;
++	};
+diff --git a/drivers/hwmon/max6650.c b/drivers/hwmon/max6650.c
+index 162a520..56a6c87 100644
+--- a/drivers/hwmon/max6650.c
++++ b/drivers/hwmon/max6650.c
+@@ -41,14 +41,14 @@
+ #include <linux/err.h>
+ 
+ /*
+- * Insmod parameters
++ * Insmod parameters (for backward compatibility)
+  */
+ 
+ /* fan_voltage: 5=5V fan, 12=12V fan, 0=don't change */
+ static int fan_voltage;
+ /* prescaler: Possible values are 1, 2, 4, 8, 16 or 0 for don't change */
+ static int prescaler;
+-/* clock: The clock frequency of the chip the driver should assume */
++/* clock: The clock frequency of the chip (max6651 can be clocked externally) */
+ static int clock = 254000;
+ 
+ module_param(fan_voltage, int, S_IRUGO);
+@@ -566,6 +566,15 @@ static int max6650_init_client(struct max6650_data *data,
+ 	struct device *dev = &client->dev;
+ 	int config;
+ 	int err = -EIO;
++	u32 voltage;
++	u32 prescale;
++
++	if (of_property_read_u32(client->dev.of_node, "fan-voltage",
++				 &voltage))
++		voltage = fan_voltage;
++	if (of_property_read_u32(client->dev.of_node, "fan-prescale",
++				 &prescale))
++		prescale = prescaler;
+ 
+ 	config = i2c_smbus_read_byte_data(client, MAX6650_REG_CONFIG);
+ 
+@@ -574,7 +583,7 @@ static int max6650_init_client(struct max6650_data *data,
+ 		return err;
+ 	}
+ 
+-	switch (fan_voltage) {
++	switch (voltage) {
+ 	case 0:
+ 		break;
+ 	case 5:
+@@ -584,14 +593,10 @@ static int max6650_init_client(struct max6650_data *data,
+ 		config |= MAX6650_CFG_V12;
+ 		break;
+ 	default:
+-		dev_err(dev, "illegal value for fan_voltage (%d)\n",
+-			fan_voltage);
++		dev_err(dev, "illegal value for fan_voltage (%d)\n", voltage);
+ 	}
+ 
+-	dev_info(dev, "Fan voltage is set to %dV.\n",
+-		 (config & MAX6650_CFG_V12) ? 12 : 5);
+-
+-	switch (prescaler) {
++	switch (prescale) {
+ 	case 0:
+ 		break;
+ 	case 1:
+@@ -614,10 +619,11 @@ static int max6650_init_client(struct max6650_data *data,
+ 			 | MAX6650_CFG_PRESCALER_16;
+ 		break;
+ 	default:
+-		dev_err(dev, "illegal value for prescaler (%d)\n", prescaler);
++		dev_err(dev, "illegal value for prescaler (%d)\n", prescale);
+ 	}
+ 
+-	dev_info(dev, "Prescaler is set to %d.\n",
++	dev_info(dev, "Fan voltage: %dV, prescaler: %d.\n",
++		 (config & MAX6650_CFG_V12) ? 12 : 5,
+ 		 1 << (config & MAX6650_CFG_PRESCALER_MASK));
+ 
+ 	/*
+-- 
+1.9.1
 
-So on a DAPM transition the clock is enabled. Fine.
-What's not clear here is that the codec driver doesn't know what rates 
-are supported by the SOC/chipset. The machine driver is typically the 
-one doing calls such as
 
-ret = snd_soc_dai_set_pll(codec_dai, 0,
-			RT5640_PLL1_S_MCLK,
-			19200000,
-			params_rate(params) * 512);
-
-it's as if this patch assumes the mclk is a single rate? if this was a 
-generic solution then the codec driver would need to set the rates as 
-well and its internal PLL/divider settings.
-
-In addition, the machine driver can implement a platform clock control 
-with things like
-
-static const struct snd_soc_dapm_route byt_rt5640_audio_map[] = {
-	{"Headphone", NULL, "Platform Clock"},
-	{"Headset Mic", NULL, "Platform Clock"},
-	{"Internal Mic", NULL, "Platform Clock"},
-	{"Speaker", NULL, "Platform Clock"},
-
-
-static int platform_clock_control(struct snd_soc_dapm_widget *w,
-				  struct snd_kcontrol *k, int  event)
-
-	if (SND_SOC_DAPM_EVENT_ON(event)) {
-		ret = clk_prepare_enable(priv->mclk);
-		ret = snd_soc_dai_set_sysclk(codec_dai,
-					RT5640_SCLK_S_PLL1,
-					48000 * 512,
-					SND_SOC_CLOCK_IN);
-	} else {
-		/*
-		 * Set codec clock source to internal clock before
-		 * turning off the platform clock. Codec needs clock
-		 * for Jack detection and button press
-		 */
-		ret = snd_soc_dai_set_sysclk(codec_dai,
-					RT5640_SCLK_S_RCCLK,
-				         0,
-					SND_SOC_CLOCK_IN);
-		clk_disable_unprepare(priv->mclk);
-
-
-so the summary is that we have two ways of doing the same thing - 
-turning the mclk on when it's needed - and I wonder if doing this in the 
-codec is really the right solution? Again this is not a question on the 
-merits of the clk API/framework but whether we can have a single point 
-of control instead of two pieces of code doing the same thing in two 
-drivers.
-If I am missing something I am all ears.
+_______________________________________________
+lm-sensors mailing list
+lm-sensors@lm-sensors.org
+http://lists.lm-sensors.org/mailman/listinfo/lm-sensors
