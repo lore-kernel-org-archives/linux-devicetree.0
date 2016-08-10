@@ -1,41 +1,37 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt: bindings: Remove focaltech,ft6236 binding
-Date: Wed, 10 Aug 2016 15:17:07 -0500
-Message-ID: <20160810201707.GA23642@rob-hp-laptop>
-References: <1470677879-5907-1-git-send-email-hdegoede@redhat.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2 v3] leds: pm8058: add device tree bindings
+Date: Wed, 10 Aug 2016 15:23:04 -0500
+Message-ID: <20160810202304.GA32491@rob-hp-laptop>
+References: <1470679911-13669-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1470677879-5907-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+In-Reply-To: <1470679911-13669-1-git-send-email-linus.walleij@linaro.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 08, 2016 at 07:37:59PM +0200, Hans de Goede wrote:
-> The focaltech ft6236 are i2c protocol compatible with other chips supported
-> by the edt,ft5x06 driver. The duplicate ft6236 driver has already been
-> removed from the kernel.
+On Mon, Aug 08, 2016 at 08:11:50PM +0200, Linus Walleij wrote:
+> This adds the device tree bindings for the PM8058 LEDs.
 > 
-> This commit removes the duplicate binding to match, adding its compatible
-> string to the edt,ft5x06 binding.
-> 
-> This commit also adds the standard touchscreen properties as optional
-> properties to the edt,ft5x06 binding, these were documented in the
-> focaltech,ft6236 binding but missing from the edt,ft5x06 doc.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: Andy Gross <andy.gross@linaro.org>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  .../bindings/input/touchscreen/edt-ft5x06.txt      |  8 +++++
->  .../input/touchscreen/focaltech-ft6236.txt         | 35 ----------------------
->  2 files changed, 8 insertions(+), 35 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/focaltech-ft6236.txt
+> ChangeLog v2->v3:
+> - Rename the keypad LED in the example from "keypad" to
+>   "pm8050:white:keypad"
+> ChangeLog v1->v2:
+> - Fix some spelling mistakes
+> - Reference common bindings directly without any local descriptions
+> ---
+>  .../devicetree/bindings/leds/leds-pm8058.txt       | 67 ++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-pm8058.txt
 
-The subject is a bit misleading, but:
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
