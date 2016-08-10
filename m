@@ -1,34 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt: bindings: Add vendor prefix for Espressif System
-Date: Wed, 10 Aug 2016 13:48:46 -0500
-Message-ID: <20160810184845.GA17829@rob-hp-laptop>
-References: <1470596269-20572-1-git-send-email-hdegoede@redhat.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v7 3/3] regulator: lp873x: Change the MFD config option
+ as per latest naming
+Date: Wed, 10 Aug 2016 12:42:05 +0100
+Message-ID: <20160810114205.GK9347@sirena.org.uk>
+References: <1470824291-14902-1-git-send-email-j-keerthy@ti.com>
+ <1470824291-14902-4-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="AYsPlKobQGgtCvjI"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1470596269-20572-1-git-send-email-hdegoede@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1470824291-14902-4-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: lee.jones@linaro.org, linus.walleij@linaro.org, linux-omap@vger.kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 07, 2016 at 08:57:48PM +0200, Hans de Goede wrote:
-> Espressif is a manufacturer of various wifi and bt chips, add a vendor
-> prefix for use with bindings for these chips.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
+--AYsPlKobQGgtCvjI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Aug 10, 2016 at 03:48:11PM +0530, Keerthy wrote:
+> Change the MFD config option as per latest naming
+
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--AYsPlKobQGgtCvjI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXqxMMAAoJECTWi3JdVIfQp1MH/33w6L5QTFGMCDLSczXb924y
+X3JNXZRhbIMNEexLYYZAC/fvvkNA5VG87cydyihZKX9CIGj/p0eEvB6Lkn7ij7na
+MWsx9ZairnLx5HSvrdCM2T7HzRECcvPPK1QCbsPFMY8PUCzQPxMxRjIV8fIUrS+b
+zv96uPVzumU0IWmjkDqpLu1B0MW2d+PjKeyMheHv9D/4TWoqWULCvhW0szYKEX/y
+zVaZFBgAaDdrKPGBoUViQXI3PKDVFyzZ+x+utC6Hb/CEYPKksZ2WThllwc31EQ54
+n3jcVIjOtSuyrC6XNqpPZNq5mTT+y/4OlBhUTIVXrcebgZXd4UgWvXNzTn5xf7c=
+=8Hf8
+-----END PGP SIGNATURE-----
+
+--AYsPlKobQGgtCvjI--
