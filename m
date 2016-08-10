@@ -1,47 +1,52 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RESEND PATCH] ARM: tegra: fix erroneous address in dts
-Date: Wed, 10 Aug 2016 22:46:04 +0200
-Message-ID: <3087941.oHflrW9cm7@wuerfel>
-References: <1468835208-13426-1-git-send-email-ralf@ramses-pyramidenbau.de> <20160718095802.GA422@ulmo.ba.sec>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH V3 2/4] clk: Combine DT binding doc for max77686 and max77802
+Date: Wed, 10 Aug 2016 15:10:29 +0530
+Message-ID: <57AAF68D.7090707@nvidia.com>
+References: <1466160667-28451-1-git-send-email-ldewangan@nvidia.com> <1466160667-28451-3-git-send-email-ldewangan@nvidia.com> <20160620163947.GA27492@rob-hp-laptop> <5768E2AD.8070004@nvidia.com> <57725F64.4030903@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160718095802.GA422@ulmo.ba.sec>
+In-Reply-To: <57725F64.4030903@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: arm@kernel.org, Ralf Ramsauer <ralf@ramses-pyramidenbau.de>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, July 18, 2016 11:58:02 AM CEST Thierry Reding wrote:
-> On Mon, Jul 18, 2016 at 11:46:48AM +0200, Ralf Ramsauer wrote:
-> > c90bb7b enabled the high speed UARTs of the Jetson TK1. Due to a merge
-> > quirk, wrong addresses were introduced. Fix it and use the correct
-> > addresses.
-> > 
-> > Thierry let me know, that there is another patch (b5896f67ab3c in
-> > linux-next) in preparation which removes all the '0,' prefixes of unit
-> > addresses on Tegra124 and is planned to go upstream in 4.8, so
-> > this patch will get reverted then.
-> > 
-> > But for the moment, this patch is necessary to fix current misbehaviour.
-> > 
-> > Fixes: c90bb7b9b9 ("ARM: tegra: Add high speed UARTs to Jetson TK1 device tree")
-> > Signed-off-by: Ralf Ramsauer <ralf@ramses-pyramidenbau.de>
-> > Acked-by: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: linux-tegra@vger.kernel.org
-> > ---
-> >  arch/arm/boot/dts/tegra124-jetson-tk1.dts | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> ARM-SoC maintainers,
-> 
-> Just to clarify, this is targetted at v4.7 because the offending patch
-> was merged in v4.7-rc1. If at all possible it'd be great to get this in,
-> even if this is terribly last minute.
-> 
+Hi,
 
-I just notice this was still missing in v4.8-rc1, so I added it to
-the fixes branch now, with a stable tag for v4.7
+On Tuesday 28 June 2016 04:58 PM, Laxman Dewangan wrote:
+> Hi Rob,
+>
+> On Tuesday 21 June 2016 12:16 PM, Laxman Dewangan wrote:
+>>
+>> On Monday 20 June 2016 10:09 PM, Rob Herring wrote:
+>>> On Fri, Jun 17, 2016 at 04:21:05PM +0530, Laxman Dewangan wrote:
+>>>>
+>>>>
+>>>> +
+>>>>   Following properties should be presend in main device node of the 
+>>>> MFD chip.
+>>>>     Required properties:
+>>> I'd expect to see compatible strings updated...
+>>>
+>>
+>> There is no separate compatible string for clock. The clock nodes is 
+>> the parent node only and the compatible described in the parent DT 
+>> binding doc.
+>>
+>>
+>> Do we also need to add same thing here?
+>
+> Are you fine with the above? As there is no compatible string for 
+> clock (clock does not have separate node), do I still need to add 
+> explicitly here?
+>
 
-	Arnd
+
+Can you please help here to review? If required, I can rebase and 
+re-send the patches.
+
+
+Thanks,
+Laxman
