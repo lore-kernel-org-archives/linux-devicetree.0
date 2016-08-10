@@ -1,159 +1,70 @@
-From: Karl Beldan <kbeldan@baylibre.com>
-Subject: [PATCH v2 4/4] ARM: dts: da850-lcdk: Add NAND to DT
-Date: Wed, 10 Aug 2016 11:00:32 +0000
-Message-ID: <20160810110032.29295-5-kbeldan@baylibre.com>
-References: <20160810110032.29295-1-kbeldan@baylibre.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 2/4] mfd: Add Samsung Exynos Low Power
+ Audio Subsystem driver
+Date: Wed, 10 Aug 2016 12:19:18 +0100
+Message-ID: <20160810111918.GS1581@dell>
+References: <1467738804-31460-1-git-send-email-s.nawrocki@samsung.com>
+ <20160809150502.GQ5243@dell>
+ <61d700f7-ef66-8278-54ea-8e6e2f1a029e@samsung.com>
+ <20160809205031.GD1581@dell>
+ <a66ab86f-d5da-0462-81c9-48469721d229@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160810110032.29295-1-kbeldan@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Karl Beldan <karl.beldan+oss@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Karl Beldan <kbeldan@baylibre.com>, Santosh Shilimkar <ssantosh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <a66ab86f-d5da-0462-81c9-48469721d229@samsung.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: robh@kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, linux-kernel@vger.kernel.org, inki.dae@samsung.com, broonie@kernel.org, Beomho Seo <beomho.seo@samsung.com>, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This adds DT support for the NAND connected to the SoC AEMIF.
-The parameters (timings, ecc) are the same as what the board ships with
-(default AEMIF timings, 1bit ECC) and improvements will be handled in
-due course.
-This passed elementary tests hashing a 20MB file on top of ubifs on my
-LCDK.
-
-Signed-off-by: Karl Beldan <kbeldan@baylibre.com>
----
- arch/arm/boot/dts/da850-lcdk.dts | 107 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 107 insertions(+)
-
-diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-index dbcca0b..a3f9845 100644
---- a/arch/arm/boot/dts/da850-lcdk.dts
-+++ b/arch/arm/boot/dts/da850-lcdk.dts
-@@ -27,6 +27,27 @@
- 
- &pmx_core {
- 	status = "okay";
-+
-+	nand_pins: nand_pins {
-+		pinctrl-single,bits = <
-+			/* EMA_WAIT[0], EMA_OE, EMA_WE, EMA_CS[3] */
-+			0x1c 0x10110010  0xf0ff00f0
-+			/*
-+			 * EMA_D[0], EMA_D[1], EMA_D[2],
-+			 * EMA_D[3], EMA_D[4], EMA_D[5],
-+			 * EMA_D[6], EMA_D[7]
-+			 */
-+			0x24 0x11111111  0xffffffff
-+			/*
-+			 * EMA_D[8],  EMA_D[9],  EMA_D[10],
-+			 * EMA_D[11], EMA_D[12], EMA_D[13],
-+			 * EMA_D[14], EMA_D[15]
-+			 */
-+			0x20 0x11111111  0xffffffff
-+			/* EMA_A[1], EMA_A[2] */
-+			0x30 0x01100000  0x0ff00000
-+		>;
-+	};
- };
- 
- &serial2 {
-@@ -68,3 +89,89 @@
- 	cd-gpios = <&gpio 64 GPIO_ACTIVE_HIGH>;
- 	status = "okay";
- };
-+
-+&aemif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&nand_pins>;
-+	status = "ok";
-+	cs3 {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		clock-ranges;
-+		ranges;
-+
-+		ti,cs-chipselect = <3>;
-+
-+		nand@2000000,0 {
-+			compatible = "ti,davinci-nand";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0 0x02000000 0x02000000
-+			       1 0x00000000 0x00008000>;
-+
-+			ti,davinci-chipselect = <1>;
-+			ti,davinci-mask-ale = <0>;
-+			ti,davinci-mask-cle = <0>;
-+			ti,davinci-mask-chipsel = <0>;
-+
-+			/*
-+			 * nand_ecc_strength_good will emit a warning
-+			 * but the LCDK ships with these settings [1].
-+			 * Also HW 4bits ECC with 16bits NAND seems to
-+			 * require some attention.
-+			 *
-+			 * ATM nand_davinci_probe handling of nand-ecc-*
-+			 * is broken, e.g.
-+			 * chip.ecc.strength = pdata->ecc_bits occurs after
-+			 * scan_ident(), otherwise I would have used:
-+			 * 	nand-ecc-mode = "hw";
-+			 * 	nand-ecc-strength = <1>;
-+			 * 	nand-ecc-step-size = <512>;
-+			 */
-+			ti,davinci-nand-buswidth = <16>;
-+			ti,davinci-ecc-mode = "hw";
-+			ti,davinci-ecc-bits = <1>;
-+			ti,davinci-nand-use-bbt;
-+
-+			/*
-+			 * LCDK original partitions:
-+			 * 0x000000000000-0x000000020000 : "u-boot env"
-+			 * 0x000000020000-0x0000000a0000 : "u-boot"
-+			 * 0x0000000a0000-0x0000002a0000 : "kernel"
-+			 * 0x0000002a0000-0x000020000000 : "filesystem"
-+			 *
-+			 * The 1st NAND block being guaranted to be valid w/o ECC (> 1k cycles),
-+			 * it makes a perfect candidate as an SPL for the BootROM to jump to.
-+			 * However the OMAP-L132/L138 Bootloader doc SPRAB41E reads:
-+			 * "To boot from NAND Flash, the AIS should be written to NAND block 1
-+			 * (NAND block 0 is not used by default)", which matches the LCDK
-+			 * original partitioning.
-+			 * Also, the LCDK ships with only the u-boot partition provisioned and
-+			 * boots on it in its default configuration while using the MMC for the
-+			 * kernel and rootfs, so preserve that one as is for now.
-+			 * [1]: Ensuring for example that U-Boot LCDK SPL can handle it properly
-+			 * and a proper boot chain ROM->SPL->U-Boot->Linux wrt ECC, would allow
-+			 * for a better partitioning.
-+			 */
-+			partitions {
-+				compatible = "fixed-partitions";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+
-+				partition@0 {
-+					label = "u-boot env";
-+					reg = <0 0x020000>;
-+				};
-+				partition@0x020000 {
-+					/* The LCDK defaults to booting from this partition */
-+					label = "u-boot";
-+					reg = <0x020000 0x080000>;
-+				};
-+				partition@0x0a0000 {
-+					label = "space";
-+					reg = <0x0a0000 0>;
-+				};
-+			};
-+		};
-+	};
-+};
--- 
-2.9.2
+T24gV2VkLCAxMCBBdWcgMjAxNiwgU3lsd2VzdGVyIE5hd3JvY2tpIHdyb3RlOgoKPiBPbiAwOC8w
+OS8yMDE2IDEwOjUwIFBNLCBMZWUgSm9uZXMgd3JvdGU6Cj4gPiBPbiBUdWUsIDA5IEF1ZyAyMDE2
+LCBTeWx3ZXN0ZXIgTmF3cm9ja2kgd3JvdGU6Cj4gPiAKPiA+PiA+IE9uIDA4LzA5LzIwMTYgMDU6
+MDUgUE0sIExlZSBKb25lcyB3cm90ZToKPiA+Pj4+ID4gPj4gK3N0YXRpYyBTSU1QTEVfREVWX1BN
+X09QUyhscGFzc19wbV9vcHMsIGV4eW5vc19scGFzc19zdXNwZW5kLAo+ID4+Pj4+ID4gPj4gPiAr
+CQkJCQlleHlub3NfbHBhc3NfcmVzdW1lKTsKPiA+Pj4gPiA+IFB1dCB0aGlzIHVwIGJ5IHRoZSBQ
+TSBmdW5jdGlvbnMuCj4gPj4gPiAKPiA+PiA+IFNvcnJ5LCBJIGRvbid0IHVuZGVyc3RhbmQgdGhp
+cyBjb21tZW50LCB3aGljaCBQTSBmdW5jdGlvbnMgZG8geW91Cj4gPj4gPiBtZWFuIGV4YWN0bHk/
+Cj4gPiAqX3N1c3BlbmQgYW5kICpfcmVzdW1lLiAgUE0gPT0gUG93ZXIgTWFuYWdlbWVudC4KPiA+
+IAo+ID4gWW91IGFsc28gbmVlZCB0byBwbGFjZSB0aGUgZnVuY3Rpb25zIGluIHNpZGUgc29tZSBD
+T05GSUdfUE1fU0xFRVAKPiA+IGd1YXJkcy4gIEdyZXAgYXJvdW5kLCB5b3UnbGwgc2VlIHdoYXQg
+SSBtZWFuLgo+IAo+IE9LLCBidXQgY291bGRuJ3Qgd2UganVzdCBsZWF2ZSBpdCB3aXRoIHRoYXQg
+U0lNUExFX0RFVl9QTV9PUFMoKQo+IG1hY3JvPyAgSXQgc2F2ZXMgdXMgYW4gI2lmZGVmIHVnbGlu
+ZXNzIGFuZCBpZiBJIGFjdHVhbGx5IGdyZXAKPiBkcml2ZXJzL21mZCBtb3N0IG9mIHRoZSBkcml2
+ZXJzIHVzZSBlaXRoZXIgU0lNUExFX0RFVl9QTV9PUFMoKSBvcgo+IFNFVF9TWVNURU1fU0xFRVBf
+UE1fT1BTLiBBcmUgeW91IGFza2luZyBtZSB0byBjaGFuZ2UgdGhlIGFib3ZlIHRvOgo+IAo+IHN0
+YXRpYyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBleHlub3NfbHBhc3NfcG1fb3BzID0gewo+ICNp
+ZmRlZiBDT05GSUdfUE1fU0xFRVAKPiAJLnN1c3BlbmQgPSBleHlub3NfbHBhc3Nfc3VzcGVuZCwK
+PiAJLnJlc3VtZSA9IGV4eW5vc19scGFzc19yZXN1bWUsCj4gCS5mcmVlemUgPSBleHlub3NfbHBh
+c3Nfc3VzcGVuZCwKPiAJLnRoYXcgPSBleHlub3NfbHBhc3NfcmVzdW1lLAo+IAkucG93ZXJvZmYg
+PSBleHlub3NfbHBhc3Nfc3VzcGVuZCwKPiAJLnJlc3RvcmUgPSBleHlub3NfbHBhc3NfcmVzdW1l
+LAo+ICNlbmRpZgo+IH0KPiAKPiBvciBwZXJoYXBzCj4gCj4gc3RhdGljIGNvbnN0IHN0cnVjdCBk
+ZXZfcG1fb3BzIGV4eW5vc19scGFzc19wbV9vcHMgPSB7Cj4gCVNFVF9TWVNURU1fU0xFRVBfUE1f
+T1BTKGV4eW5vc19scGFzc19zdXNwZW5kLCBleHlub3NfbHBhc3NfcmVzdW1lKQo+IH0KPiAKPiA/
+CgpOb3QgbGlrZSB0aGF0LiAgR3JlcCAnZHJpdmVycy9tZmQnIGZvciAiQ09ORklHX1BNX1NMRUVQ
+IiBhcwpzdWdnZXN0ZWQuICBZb3Ugd2lsbCBmaW5kIHRoYXQgdGhlIGFjdHVhbCAqX3N1c3BlbmQg
+YW5kICpfcmVzdW1lCmZ1bmN0aW9ucyBhcmUgZ3VhcmRlZCBpbiBvcmRlciB0byBzYXZlIHNwYWNl
+LgoKPiBJIGFncmVlIGFib3V0IHRoZSBDT05GSUdfUE1fU0xFRVAgZ3VhcmRzLiAgVGhlcmUgaXMg
+dmVyeSBsaXR0bGUKPiBjaGFuY2UgdGhvdWdoIHRoZSBMUEFTUyBkcml2ZXIgd2lsbCBldmVyIGJl
+IHVzZWQgd2l0aAo+IENPTkZJR19QTV9TTEVFUCBkaXNhYmxlZC4gSG93IGFib3V0IGFkZGluZyBf
+X21heWJlX3VudXNlZCBhdHRyaWJ1dGUKPiB0byB0aGUgKl9zdXNwZW5kLypfcmVzdW1lIGZ1bmN0
+aW9ucyB0aGVuPyAgSSBjYW4gc2VlIHRoaXMgcGF0dGVybgo+IHVzZWQgYWxyZWFkeSBpbiBkcml2
+ZXJzL21mZC4KCkl0J3MgbW9yZSBjb21tb24gcHJhY3RpY2UgdG8gdXNlIENPTkZJR19QTV9TTEVF
+UDoKCiQgZ2l0IGdyZXAgX19tYXliZV91bnVzZWQgLS0gZHJpdmVycy9tZmQvIHwgd2MgLWwKNwok
+IGdpdCBncmVwIENPTkZJR19QTV9TTEVFUCAtLSBkcml2ZXJzL21mZC8gfCB3YyAtbAozMQoKLS0g
+CkxlZSBKb25lcwpMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkCkxp
+bmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGlu
+YXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxA
+YWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4v
+bGlzdGluZm8vYWxzYS1kZXZlbAo=
