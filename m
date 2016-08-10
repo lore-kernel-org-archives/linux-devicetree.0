@@ -1,400 +1,173 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v7 01/16] remoteproc: st_slim_rproc: add a slimcore rproc
- driver
-Date: Wed, 10 Aug 2016 12:29:22 -0700
-Message-ID: <20160810192922.GR26240@tuxbot>
-References: <1470071453-10730-1-git-send-email-peter.griffin@linaro.org>
- <1470071453-10730-2-git-send-email-peter.griffin@linaro.org>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC PATCH 2/3] net: macb: Add support for 1588 for Zynq
+ Ultrascale+ MPSoC
+Date: Wed, 10 Aug 2016 08:11:27 +0200
+Message-ID: <49580e8c-35cc-99b3-e77e-1c58107e6ffb@xilinx.com>
+References: <1441958258-35441-1-git-send-email-harinik@xilinx.com>
+ <1441958258-35441-3-git-send-email-harinik@xilinx.com>
+ <CAFcVECLfXL-=efbUhNeKhiFQgtfv6Z1+JJckg+js7DM-LfFeSw@mail.gmail.com>
+ <99d6c0ce-c3b9-a919-cedb-0af954bac388@atmel.com>
+ <03CA77BA8AF6F1469AEDFBDA1322A7B74A1C4205@XAP-PVEXMBX02.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1470071453-10730-2-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, patrice.chotard@st.com, ohad@wizery.com, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <03CA77BA8AF6F1469AEDFBDA1322A7B74A1C4205-4lKfpRxZ5ekkx2a1wsGfbYg+Gb3gawCHQz34XiSyOiE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Andrei Pistirica <Andrei.Pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 01 Aug 10:10 PDT 2016, Peter Griffin wrote:
+Hi Nicolas,
 
-Sorry for the slow response, but I have a few more (small) concerns.
+just a note: Here is the link to public Linux repo
+https://github.com/Xilinx/linux-xlnx
 
-[..]
-> diff --git a/drivers/remoteproc/st_slim_rproc.c b/drivers/remoteproc/st_slim_rproc.c
-[..]
-> +static int slim_rproc_start(struct rproc *rproc)
-> +{
-> +	struct device *dev = &rproc->dev;
-> +	struct st_slim_rproc *slim_rproc = rproc->priv;
-> +	unsigned long hw_id, hw_ver, fw_rev;
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = slim_clk_enable(slim_rproc);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable clocks\n");
-> +		goto err_clk;
+Thanks,
+Michal
 
-Nit. just return ret here and have a static "return 0" at the bottom.
 
-> +	}
-> +
-> +	/* disable CPU pipeline clock & reset cpu pipeline */
-> +	val = SLIM_CLK_GATE_DIS | SLIM_CLK_GATE_RESET;
-> +	writel(val, slim_rproc->slimcore + SLIM_CLK_GATE_OFST);
-> +
-> +	/* disable SLIM core STBus sync */
-> +	writel(SLIM_STBUS_SYNC_DIS, slim_rproc->peri + SLIM_STBUS_SYNC_OFST);
-> +
-> +	/* enable cpu pipeline clock */
-> +	writel(!SLIM_CLK_GATE_DIS,
-> +		slim_rproc->slimcore + SLIM_CLK_GATE_OFST);
-> +
-> +	/* clear int & cmd mailbox */
-> +	writel(~0U, slim_rproc->peri + SLIM_INT_CLR_OFST);
-> +	writel(~0U, slim_rproc->peri + SLIM_CMD_CLR_OFST);
-> +
-> +	/* enable all channels cmd & int */
-> +	writel(~0U, slim_rproc->peri + SLIM_INT_MASK_OFST);
-> +	writel(~0U, slim_rproc->peri + SLIM_CMD_MASK_OFST);
-> +
-> +	/* enable cpu */
-> +	writel(SLIM_EN_RUN, slim_rproc->slimcore + SLIM_EN_OFST);
-> +
-> +	hw_id = readl_relaxed(slim_rproc->slimcore + SLIM_ID_OFST);
-> +	hw_ver = readl_relaxed(slim_rproc->slimcore + SLIM_VER_OFST);
-> +
-> +	fw_rev = readl(slim_rproc->mem[SLIM_DMEM].cpu_addr +
-> +			SLIM_REV_ID_OFST);
-> +
-> +	dev_info(dev, "fw rev:%ld.%ld on SLIM %ld.%ld\n",
-> +		 SLIM_REV_ID_MAJ(fw_rev), SLIM_REV_ID_MIN(fw_rev),
-> +		 hw_id, hw_ver);
-> +
-> +err_clk:
-> +	return ret;
-> +}
-> +
-> +static int slim_rproc_stop(struct rproc *rproc)
-> +{
-> +	struct st_slim_rproc *slim_rproc = rproc->priv;
-> +	u32 val;
-> +
-> +	/* mask all (cmd & int) channels */
-> +	writel(0UL, slim_rproc->peri + SLIM_INT_MASK_OFST);
-> +	writel(0UL, slim_rproc->peri + SLIM_CMD_MASK_OFST);
-> +
-> +	/* disable cpu pipeline clock */
-> +	writel(SLIM_CLK_GATE_DIS
-> +		, slim_rproc->slimcore + SLIM_CLK_GATE_OFST);
+On 9.8.2016 18:56, Punnaiah Choudary Kalluri wrote:
+> Hi Nicolas,
+> 
+>  1588 implementation in cadence GEM IP we have in Zynq Ultascale+ MPSoC is
+> Different to the one in Zynq SOC.
+> 
+> In earlier version, all timestamp values will be stored in registers and there is no specific
+> Mechanism to distinguish the received ethernet frame that contains time stamp information
+> Other than parsing the frame for PTP packet type.
+> 
+> We have basic implementation for earlier version in our out of tree driver, which is going to be deprecated
+> Soon. You could also check the below driver for 1588 support.
+> https://gitenterprise.xilinx.com/Linux/linux-xlnx/blob/master/drivers/net/ethernet/xilinx/xilinx_emacps.c
+> 
+> 
+> Regards,
+> Punnaiah
+> 
+>> -----Original Message-----
+>> From: Nicolas Ferre [mailto:nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org]
+>> Sent: Tuesday, August 09, 2016 10:10 PM
+>> To: Harini Katakam <harinikatakamlinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>; Harini Katakam
+>> <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Andrei Pistirica <Andrei.Pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+>> Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org; Boris Brezillon <boris.brezillon@free-
+>> electrons.com>; alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org;
+>> netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+>> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Punnaiah Choudary Kalluri
+>> <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Anirudha
+>> Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>> Subject: Re: [RFC PATCH 2/3] net: macb: Add support for 1588 for Zynq
+>> Ultrascale+ MPSoC
+>>
+>> Le 21/09/2015 à 19:49, Harini Katakam a écrit :
+>>> On Fri, Sep 11, 2015 at 1:27 PM, Harini Katakam
+>>> <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+>>>> Cadence GEM in Zynq Ultrascale+ MPSoC supports 1588 and provides a
+>>>> 102 bit time counter with 48 bits for seconds, 30 bits for nsecs and
+>>>> 24 bits for sub-nsecs. The timestamp is made available to the SW through
+>>>> registers as well as (more precisely) through upper two words in
+>>>> an extended BD.
+>>>>
+>>>> This patch does the following:
+>>>> - Adds MACB_CAPS_TSU in zynqmp_config.
+>>>> - Registers to ptp clock framework (after checking for timestamp support
+>> in
+>>>>   IP and capability in config).
+>>>> - TX BD and RX BD control registers are written to populate timestamp in
+>>>>   extended BD words.
+>>>> - Timer initialization is done by writing time of day to the timer counter.
+>>>> - ns increment register is programmed as NS_PER_SEC/TSU_CLK.
+>>>>   For a 24 bit subns precision, the subns increment equals
+>>>>   remainder of (NS_PER_SEC/TSU_CLK) * (2^24).
+>>>>   TSU (Time stamp unit) clock is obtained by the  driver from devicetree.
+>>>> - HW time stamp capabilities are advertised via ethtool and macb ioctl is
+>>>>   updated accordingly.
+>>>> - For all PTP event frames, nanoseconds and the lower 5 bits of seconds
+>> are
+>>>>   obtained from the BD. This offers a precise timestamp. The upper bits
+>>>>   (which dont vary between consecutive packets) are obtained from the
+>>>>   TX/RX PTP event/PEER registers. The timestamp obtained thus is
+>> updated
+>>>>   in skb for upper layers to access.
+>>>> - The drivers register functions with ptp to perform time and frequency
+>>>>   adjustment.
+>>>> - Time adjustment is done by writing to the 1558_ADJUST register.
+>>>>   The controller will read the delta in this register and update the timer
+>>>>   counter register. Alternatively, for large time offset adjustments,
+>>>>   the driver reads the secs and nsecs counter values, adds/subtracts the
+>>>>   delta and updates the timer counter. In order to be as precise as
+>> possible,
+>>>>   nsecs counter is read again if secs has incremented during the counter
+>> read.
+>>>> - Frequency adjustment is not directly supported by this IP.
+>>>>   addend is the initial value ns increment and similarly addendesub.
+>>>>   The ppb (parts per billion) provided is used as
+>>>>   ns_incr = addend +/- (ppb/rate).
+>>>>   Similarly the remainder of the above is used to populate subns
+>> increment.
+>>>>   In case the ppb requested is negative AND subns adjustment greater
+>> than
+>>>>   the addendsub, ns_incr is reduced by 1 and subns_incr is adjusted in
+>>>>   positive accordingly.
+>>>>
+>>>> Signed-off-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>:
+>>>> ---
+>>>>  drivers/net/ethernet/cadence/macb.c |  372
+>> ++++++++++++++++++++++++++++++++++-
+>>>>  drivers/net/ethernet/cadence/macb.h |   64 ++++++
+>>>>  2 files changed, 428 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/drivers/net/ethernet/cadence/macb.c
+>> b/drivers/net/ethernet/cadence/macb.c
+>>>> index bb2932c..b531008 100644
+>>>> --- a/drivers/net/ethernet/cadence/macb.c
+>>>> +++ b/drivers/net/ethernet/cadence/macb.c
+>>>> @@ -30,6 +30,8 @@
+>>>>  #include <linux/of_device.h>
+>>>>  #include <linux/of_mdio.h>
+>>
+>> [..]
+>>
+>>>> +       unsigned int            ns_incr;
+>>>> +       unsigned int            subns_incr;
+>>>>  };
+>>>>
+>>>>  static inline bool macb_is_gem(struct macb *bp)
+>>>> --
+>>>> 1.7.9.5
+>>>
+>>> Ping
+>>>
+>>> Thanks.
+>>
+>> Harini,
+>>
+>> I come back to this patch of last year and I'm sorry about being so late
+>> answering you.
+>>
+>> Andrei who is added to the discussion will have some time to deal with
+>> this feature and we would like to make some progress with it. He already
+>> had some work done on his side before I recall your email.
+>>
+>> So, could you please re-send your original 1588 patch with Andrei in
+>> copy so that we can all (re-)start the discussion and progress for
+>> adding this feature.
+>>
+>> We must also note that some hardware differences between our platforms
+>> may have an impact on the code and how we implement things (as
+>> highlighted on this forum:
+>> http://www.at91.com/discussions/viewtopic.php/f,12/t,25462.html).
+>> Anyway, we'll overcome this and have a widely tested solution at the end
+>> of the day!
+>>
+>> Thanks for your patience, bye!
+>>
+>> PS: for some reason, I only have this "ping" part of your email but not
+>> the original one
+>> --
+>> Nicolas Ferre
 
-Odd placement of ','
-
-> +
-> +	writel(!SLIM_EN_RUN, slim_rproc->slimcore + SLIM_EN_OFST);
-> +
-> +	val = readl(slim_rproc->slimcore + SLIM_EN_OFST);
-> +	if (val & SLIM_EN_RUN)
-> +		dev_warn(&rproc->dev, "Failed to disable SLIM");
-> +
-> +	slim_clk_disable(slim_rproc);
-> +
-> +	dev_dbg(&rproc->dev, "slim stopped\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-> +{
-> +	struct st_slim_rproc *slim_rproc = rproc->priv;
-> +	void *va = NULL;
-> +	int i;
-> +
-> +	for (i = 0; i < SLIM_MEM_MAX; i++) {
-> +		if (da != slim_rproc->mem[i].bus_addr)
-> +			continue;
-
-Are you sure you want to enforce this being called with da == base? (I'm
-not totally against it).
-
-But you should probably double check that len is <= mem[i].size.
-
-> +		/* __force to make sparse happy with type conversion */
-> +		va = (__force void *)slim_rproc->mem[i].cpu_addr;
-> +		break;
-> +	}
-> +
-> +	dev_dbg(&rproc->dev, "%s: da = 0x%llx len = 0x%x va = 0x%p\n",
-> +		__func__, da, len, va);
-> +
-> +	return va;
-> +}
-> +
-> +static struct rproc_ops slim_rproc_ops = {
-> +	.start		= slim_rproc_start,
-> +	.stop		= slim_rproc_stop,
-> +	.da_to_va       = slim_rproc_da_to_va,
-> +};
-> +
-> +/**
-> + * Firmware handler operations: sanity, boot address, load ...
-> + */
-> +
-> +static struct resource_table empty_rsc_tbl = {
-> +	.ver = 1,
-> +	.num = 0,
-> +};
-> +
-> +static struct resource_table *slim_rproc_find_rsc_table(struct rproc *rproc,
-> +					       const struct firmware *fw,
-> +					       int *tablesz)
-> +{
-> +	if (!fw)
-> +		return NULL;
-
-I consider it a BUG in the core to get here with fw == NULL, so please
-drop this.
-
-> +
-> +	*tablesz = sizeof(empty_rsc_tbl);
-> +	return &empty_rsc_tbl;
-> +}
-> +
-> +static struct resource_table *slim_rproc_find_loaded_rsc_table(struct rproc *rproc,
-> +						      const struct firmware *fw)
-> +{
-> +	if (!fw)
-> +		return NULL;
-> +
-
-fw can't be NULL, so please drop this check.
-
-> +	return &empty_rsc_tbl;
-
-This function is supposed to return a pointer to the resource table as
-it appears in the space of the running firmware, so that any vring
-updates etc are visible to the remote.
-
-As your firmware doesn't do this you should return NULL here, rather
-than a pointer back to the fake resource table.
-
-But rproc_find_loaded_rsc_table() will do the same if you omit the
-reference in the fw_ops struct, so just make that NULL instead.
-
-> +}
-> +
-> +static struct rproc_fw_ops slim_rproc_fw_ops = {
-> +	.find_rsc_table = slim_rproc_find_rsc_table,
-> +	.find_loaded_rsc_table = slim_rproc_find_loaded_rsc_table,
-> +};
-> +
-> +
-> +/**
-> + * slim_rproc_alloc() - allocate and initialise slim rproc
-> + * @pdev: Pointer to the platform_device struct
-> + * @fw_name: Name of firmware for rproc to use
-> + *
-> + * Function for allocating and initialising a slim rproc for use by
-> + * device drivers whose IP is based around the slim slim core. It
-> + * obtains and enables any clocks required by the slim core and also
-> + * ioremaps the various IO.
-> + *
-> + * Returns st_slim_rproc pointer or PTR_ERR() on error.
-> + */
-> +
-> +struct st_slim_rproc *slim_rproc_alloc(struct platform_device *pdev,
-> +				char *fw_name)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct st_slim_rproc *slim_rproc;
-> +	struct device_node *np = dev->of_node;
-> +	struct rproc *rproc;
-> +	struct resource *res;
-> +	int err, i;
-> +	const struct rproc_fw_ops *elf_ops;
-> +
-> +	if (WARN_ON(!np || !fw_name))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	if (!of_device_is_compatible(np, "st,slim-rproc"))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	rproc = rproc_alloc(dev, np->name, &slim_rproc_ops,
-> +			fw_name, sizeof(*slim_rproc));
-> +	if (!rproc)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	rproc->has_iommu = false;
-> +
-> +	slim_rproc = rproc->priv;
-> +	slim_rproc->rproc = rproc;
-> +
-> +	elf_ops = rproc->fw_ops;
-> +	/* Use some generic elf ops */
-> +	slim_rproc_fw_ops.load = elf_ops->load;
-> +	slim_rproc_fw_ops.sanity_check = elf_ops->sanity_check;
-> +
-> +	rproc->fw_ops = &slim_rproc_fw_ops;
-> +
-> +	/* get imem and dmem */
-> +	for (i = 0; i < ARRAY_SIZE(mem_names); i++) {
-> +
-> +		res = platform_get_resource_byname
-> +			(pdev, IORESOURCE_MEM, mem_names[i]);
-
-This is an odd line breakage.
-
-> +
-> +		slim_rproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(slim_rproc->mem[i].cpu_addr)) {
-> +			dev_err(&pdev->dev, "devm_ioremap_resource failed\n");
-> +			err = PTR_ERR(slim_rproc->mem[i].cpu_addr);
-> +			goto err;
-> +		}
-> +		slim_rproc->mem[i].bus_addr = res->start;
-> +		slim_rproc->mem[i].size = resource_size(res);
-> +	}
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "slimcore");
-> +
-> +	slim_rproc->slimcore = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(slim_rproc->slimcore)) {
-> +		dev_err(&pdev->dev,
-> +			"devm_ioremap_resource failed for slimcore\n");
-> +		err = PTR_ERR(slim_rproc->slimcore);
-> +		goto err;
-> +	}
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "peripherals");
-> +
-> +	slim_rproc->peri = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(slim_rproc->peri)) {
-> +		dev_err(&pdev->dev, "devm_ioremap_resource failed for peri\n");
-> +		err = PTR_ERR(slim_rproc->peri);
-> +		goto err;
-> +	}
-> +
-> +	err = slim_clk_get(slim_rproc, dev);
-> +	if (err)
-> +		goto err;
-> +
-> +	/* Register as a remoteproc device */
-> +	err = rproc_add(rproc);
-> +	if (err) {
-> +		dev_err(dev, "registration of slim remoteproc failed\n");
-> +		goto err_clk;
-> +	}
-> +
-> +	return slim_rproc;
-> +
-> +err_clk:
-> +	for (i = 0; i < SLIM_MAX_CLK && slim_rproc->clks[i]; i++)
-> +		clk_put(slim_rproc->clks[i]);
-
-Is there any chance to could acquire these clocks by name instead of
-just picking up 4 "random" clocks from the DT node?
-
-You are generally supposed to use clock-names and could then use
-devm_clk_get() instead...
-
-> +err:
-> +	rproc_put(rproc);
-> +	return ERR_PTR(err);
-> +}
-> +EXPORT_SYMBOL(slim_rproc_alloc);
-> +
-> +/**
-> +  * slim_rproc_put() - put slim rproc resources
-> +  * @slim_rproc: Pointer to the st_slim_rproc struct
-> +  *
-> +  * Function for calling respective _put() functions on
-> +  * slim_rproc resources.
-> +  *
-> +  */
-> +void slim_rproc_put(struct st_slim_rproc *slim_rproc)
-> +{
-> +	int clk;
-> +
-> +	if (!slim_rproc)
-> +		return;
-> +
-> +	for (clk = 0; clk < SLIM_MAX_CLK && slim_rproc->clks[clk]; clk++)
-> +		clk_put(slim_rproc->clks[clk]);
-> +
-
-You need to rproc_del() here before calling rproc_put().
-
-> +	rproc_put(slim_rproc->rproc);
-> +}
-> +EXPORT_SYMBOL(slim_rproc_put);
-> +
-> +MODULE_AUTHOR("Peter Griffin");
-> +MODULE_DESCRIPTION("STMicroelectronics SLIM rproc driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/remoteproc/st_slim_rproc.h b/include/linux/remoteproc/st_slim_rproc.h
-> new file mode 100644
-> index 0000000..c300b3e
-> --- /dev/null
-> +++ b/include/linux/remoteproc/st_slim_rproc.h
-> @@ -0,0 +1,53 @@
-> +/*
-> + * st_slim_rproc.h
-> + *
-> + * Copyright (C) 2016 STMicroelectronics
-> + * Author: Peter Griffin <peter.griffin@linaro.org>
-> + * License terms:  GNU General Public License (GPL), version 2
-> + */
-> +#ifndef _ST_SLIM_H
-> +#define _ST_SLIM_H
-> +
-> +#define SLIM_MEM_MAX 2
-> +#define SLIM_MAX_CLK 4
-> +
-> +enum {
-> +	SLIM_DMEM,
-> +	SLIM_IMEM,
-> +};
-> +
-> +/**
-> + * struct slim_mem - slim internal memory structure
-> + * @cpu_addr: MPU virtual address of the memory region
-> + * @bus_addr: Bus address used to access the memory region
-> + * @size: Size of the memory region
-> + */
-> +struct slim_mem {
-> +	void __iomem *cpu_addr;
-> +	phys_addr_t bus_addr;
-> +	size_t size;
-> +};
-> +
-
-With things like slimbus being worked on I don't think it's appropriate
-to introduce public constants named SLIM_* or slim_*. Please rename
-these ST_SLIM_* and st_slim_*
-
-> +/**
-> + * struct st_slim_rproc - SLIM slim core
-> + * @rproc: rproc handle
-> + * @mem: slim memory information
-> + * @slimcore: slim slimcore regs
-> + * @peri: slim peripheral regs
-> + * @clks: slim clocks
-> + */
-> +struct st_slim_rproc {
-> +	struct rproc *rproc;
-> +	struct slim_mem mem[SLIM_MEM_MAX];
-> +	void __iomem *slimcore;
-> +	void __iomem *peri;
-> +
-> +	/* st_slim_rproc private */
-> +	struct clk *clks[SLIM_MAX_CLK];
-> +};
-> +
-> +struct st_slim_rproc *slim_rproc_alloc(struct platform_device *pdev,
-> +					char *fw_name);
-> +void slim_rproc_put(struct st_slim_rproc *slim_rproc);
-> +
-> +#endif
-
-Regards,
-Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
