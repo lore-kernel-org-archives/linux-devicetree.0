@@ -1,152 +1,68 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [RFC PATCH 4/5] arm64: dts: sunxi: add SCPI driven
- clocks and nodes for A64 MMC
-Date: Wed, 10 Aug 2016 23:01:48 +0800
-Message-ID: <1241311470841308@web22g.yandex.ru>
-References: <20160809115303.17032-1-andre.przywara@arm.com> <20160809115303.17032-5-andre.przywara@arm.com>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: =?UTF-8?q?Stefan=20M=C3=BCller-Klieser?= <s.mueller-klieser@phytec.de>
+Subject: [PATCH] ARM: dts: am335x-wega: Add audio support
+Date: Wed, 10 Aug 2016 17:12:15 +0200
+Message-ID: <1470841935-14190-1-git-send-email-s.mueller-klieser@phytec.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBX4DVW6QKGQESXNAYBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160809115303.17032-5-andre.przywara-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, tony@atomide.com, peter.ujfalusi@ti.com, robh+dt@kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-09.08.2016, 19:58, "Andre Przywara" <andre.przywara-5wv7dgnIgG8@public.gmane.org>:
-> =C2=A0The MMC controllers in the Allwinner A64 SoC are somewhat compatibl=
-e
-> =C2=A0with the versions used in other Allwinner SoCs.
-> =C2=A0Tell Linux about the three MMC clocks that the firmware implements =
-and
-> =C2=A0add nodes to represent the MMC controllers.
-> =C2=A0The actual hardware is capable of new transfer modes, which the dri=
-ver
-> =C2=A0does not fully support yet, also the clock part has changed, but it
-> =C2=A0works like this at least for SD card accesses.
->
-> =C2=A0Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-> =C2=A0---
-> =C2=A0=C2=A0arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 61 ++++++++++=
-+++++++++++++++++
-> =C2=A0=C2=A01 file changed, 61 insertions(+)
->
-> =C2=A0diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/a=
-rm64/boot/dts/allwinner/sun50i-a64.dtsi
-> =C2=A0index 9fc540e..0f6044b 100644
-> =C2=A0--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> =C2=A0+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> =C2=A0@@ -157,6 +157,19 @@
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0compatible =3D "arm,scpi";
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mboxes =3D <&mailbox 0>;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0shmem =3D <&cpu_scp_mem>;
-> =C2=A0+
-> =C2=A0+ clocks {
-> =C2=A0+ compatible =3D "arm,scpi-clocks";
-> =C2=A0+
-> =C2=A0+ scpi_clk: scpi_clocks {
-> =C2=A0+ compatible =3D "arm,scpi-variable-clocks";
-> =C2=A0+ #clock-cells =3D <1>;
-> =C2=A0+ clock-indices =3D <0>, <1>,
-
-
-I found a problem of the "standardize" process.
-There cannot be an authority to keep the clock ID standardized, in both=20
-
-> =C2=A0+ <2>;
-> =C2=A0+ clock-output-names =3D "mmc0_clk", "mmc1_clk",
-> =C2=A0+ "mmc2_clk";
-> =C2=A0+ };
-> =C2=A0+ };
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
->
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0soc {
-> =C2=A0@@ -165,6 +178,54 @@
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0#size-cells =3D <1>;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ranges;
->
-> =C2=A0+ mmc0: mmc@1c0f000 {
-> =C2=A0+ compatible =3D "allwinner,sun50i-a64-mmc",
-> =C2=A0+ "allwinner,sun5i-a13-mmc";
-> =C2=A0+ reg =3D <0x01c0f000 0x1000>;
-> =C2=A0+ clocks =3D <&bus_gates 8>, <&scpi_clk 0>,
-> =C2=A0+ <&scpi_clk 0>, <&scpi_clk 0>;
-> =C2=A0+ clock-names =3D "ahb", "mmc",
-> =C2=A0+ "output", "sample";
-> =C2=A0+ resets =3D <&ahb_rst 8>;
-> =C2=A0+ reset-names =3D "ahb";
-> =C2=A0+ interrupts =3D <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-> =C2=A0+ status =3D "disabled";
-> =C2=A0+ #address-cells =3D <1>;
-> =C2=A0+ #size-cells =3D <0>;
-> =C2=A0+ };
-> =C2=A0+
-> =C2=A0+ mmc1: mmc@1c10000 {
-> =C2=A0+ compatible =3D "allwinner,sun50i-a64-mmc",
-> =C2=A0+ "allwinner,sun5i-a13-mmc";
-> =C2=A0+ reg =3D <0x01c10000 0x1000>;
-> =C2=A0+ clocks =3D <&bus_gates 9>, <&scpi_clk 1>,
-> =C2=A0+ <&scpi_clk 1>, <&scpi_clk 1>;
-> =C2=A0+ clock-names =3D "ahb", "mmc",
-> =C2=A0+ "output", "sample";
-> =C2=A0+ resets =3D <&ahb_rst 9>;
-> =C2=A0+ reset-names =3D "ahb";
-> =C2=A0+ interrupts =3D <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-> =C2=A0+ status =3D "disabled";
-> =C2=A0+ #address-cells =3D <1>;
-> =C2=A0+ #size-cells =3D <0>;
-> =C2=A0+ };
-> =C2=A0+
-> =C2=A0+ mmc2: mmc@1c11000 {
-> =C2=A0+ compatible =3D "allwinner,sun50i-a64-mmc",
-> =C2=A0+ "allwinner,sun5i-a13-mmc";
-> =C2=A0+ reg =3D <0x01c11000 0x1000>;
-> =C2=A0+ clocks =3D <&bus_gates 10>, <&scpi_clk 2>,
-> =C2=A0+ <&scpi_clk 2>, <&scpi_clk 2>;
-> =C2=A0+ clock-names =3D "ahb", "mmc",
-> =C2=A0+ "output", "sample";
-> =C2=A0+ resets =3D <&ahb_rst 10>;
-> =C2=A0+ reset-names =3D "ahb";
-> =C2=A0+ interrupts =3D <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-> =C2=A0+ status =3D "disabled";
-> =C2=A0+ #address-cells =3D <1>;
-> =C2=A0+ #size-cells =3D <0>;
-> =C2=A0+ };
-> =C2=A0+
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pio: pinctrl@1c20800 {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0compatible =3D "allwinner,sun50i-a64-pinctrl";
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0reg =3D <0x01c20800 0x400>;
-> =C2=A0--
-> =C2=A02.9.0
->
-> =C2=A0_______________________________________________
-> =C2=A0linux-arm-kernel mailing list
-> =C2=A0linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> =C2=A0http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+VGhlIHdlZ2EgYm9hcmQgaGFzIGEgVExWMzIwQUlDMzAwNyBjb25uZWN0ZWQgdmlhIE1jQVNQMC4g
+SW4gdGhlIGRlZmF1bHQKY29uZmlndXJhdGlvbiwgbm8gZXh0ZXJuYWwgY3J5c3RhbCBpcyBtb3Vu
+dGVkLiBXZSBydW4gYSBzeXN0ZW0gY2xvY2sgb2YKMjUgTUh6LCBzbyB3ZSB1c2UgdGhlIGF1ZGlv
+IGNvZGVjIFBMTCBmb3IgYXVkaW8gY2xvY2sgZ2VuZXJhdGlvbi4KClNpZ25lZC1vZmYtYnk6IFN0
+ZWZhbiBNw7xsbGVyLUtsaWVzZXIgPHMubXVlbGxlci1rbGllc2VyQHBoeXRlYy5kZT4KLS0tCiBh
+cmNoL2FybS9ib290L2R0cy9hbTMzNXgtd2VnYS5kdHNpIHwgNjIgKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA2MiBpbnNlcnRpb25zKCspCgpk
+aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYW0zMzV4LXdlZ2EuZHRzaSBiL2FyY2gvYXJt
+L2Jvb3QvZHRzL2FtMzM1eC13ZWdhLmR0c2kKaW5kZXggMjgyZjZkNC4uN2Y1ZjhlZCAxMDA2NDQK
+LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYW0zMzV4LXdlZ2EuZHRzaQorKysgYi9hcmNoL2FybS9i
+b290L2R0cy9hbTMzNXgtd2VnYS5kdHNpCkBAIC0xMSw2ICsxMSwxMCBAQAogCW1vZGVsID0gIlBo
+eXRlYyBBTTMzNXggcGh5Qk9BUkQtV0VHQSI7CiAJY29tcGF0aWJsZSA9ICJwaHl0ZWMsYW0zMzV4
+LXdlZ2EiLCAicGh5dGVjLGFtMzM1eC1waHljb3JlLXNvbSIsICJ0aSxhbTMzeHgiOwogCisJc291
+bmQ6IHNvdW5kX2lmYWNlIHsKKwkJY29tcGF0aWJsZSA9ICJ0aSxkYTgzMC1ldm0tYXVkaW8iOwor
+CX07CisKIAlyZWd1bGF0b3JzIHsKIAkJY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsKIApAQCAt
+MjQsNiArMjgsNTggQEAKIAl9OwogfTsKIAorLyogQXVkaW8gKi8KKyZhbTMzeHhfcGlubXV4IHsK
+KwltY2FzcDBfcGluczogcGlubXV4X21jYXNwMCB7CisJCXBpbmN0cmwtc2luZ2xlLHBpbnMgPSA8
+CisJCQlBTTMzWFhfSU9QQUQoMHg5QUMsIFBJTl9PVVRQVVRfUFVMTERPV04gfCBNVVhfTU9ERTAp
+IC8qIG1jYXNwMF9haGNsa3gubWNhc3AwX2FoY2xreCAqLworCQkJQU0zM1hYX0lPUEFEKDB4OTkw
+LCBQSU5fSU5QVVRfUFVMTERPV04gfCBNVVhfTU9ERTApICAvKiBtY2FzcDBfYWNsa3gubWNhc3Aw
+X2FjbGt4ICovCisJCQlBTTMzWFhfSU9QQUQoMHg5OTQsIFBJTl9JTlBVVF9QVUxMRE9XTiB8IE1V
+WF9NT0RFMCkgIC8qIG1jYXNwMF9mc3gubWNhc3AwX2ZzeCAqLworCQkJQU0zM1hYX0lPUEFEKDB4
+OTk4LCBQSU5fSU5QVVRfUFVMTERPV04gfCBNVVhfTU9ERTApICAvKiBtY2FzcDBfYXhyMC5tY2Fz
+cDBfYXhyMCAqLworCQkJQU0zM1hYX0lPUEFEKDB4OUE4LCBQSU5fT1VUUFVUX1BVTExET1dOIHwg
+TVVYX01PREUwKSAvKiBtY2FzcDBfYXhyMS5tY2FzcDBfYXhyMSAqLworCQk+OworCX07Cit9Owor
+CismaTJjMCB7CisJdGx2MzIwYWljMzAwNzogdGx2MzIwYWljMzAwN0AxOCB7CisJCWNvbXBhdGli
+bGUgPSAidGksdGx2MzIwYWljMzAwNyI7CisJCXJlZyA9IDwweDE4PjsKKwkJQVZERC1zdXBwbHkg
+PSA8JnZjYzN2Mz47CisJCUlPVkRELXN1cHBseSA9IDwmdmNjM3YzPjsKKwkJRFJWREQtc3VwcGx5
+ID0gPCZ2Y2MzdjM+OworCQlEVkRELXN1cHBseSA9IDwmdmRpZzFfcmVnPjsKKwkJc3RhdHVzID0g
+Im9rYXkiOworCX07Cit9OworCismbWNhc3AwIHsKKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQi
+OworCXBpbmN0cmwtMCA9IDwmbWNhc3AwX3BpbnM+OworCW9wLW1vZGUgPSA8MD47IC8qIERBVklO
+Q0lfTUNBU1BfSUlTX01PREUgKi8KKwl0ZG0tc2xvdHMgPSA8Mj47CisJc2VyaWFsLWRpciA9IDwK
+KwkJMiAxIDAgMCAvKiAjIDA6IElOQUNUSVZFLCAxOiBUWCwgMjogUlggKi8KKwk+OworCXR4LW51
+bS1ldnQgPSA8MTY+OworCXJ0LW51bS1ldnQgPSA8MTY+OworCXN0YXR1cyA9ICJva2F5IjsKK307
+CisKKyZzb3VuZCB7CisJdGksbW9kZWwgPSAiQU0zMzV4LVdlZ2EiOworCXRpLGF1ZGlvLWNvZGVj
+ID0gPCZ0bHYzMjBhaWMzMDA3PjsKKwl0aSxtY2FzcC1jb250cm9sbGVyID0gPCZtY2FzcDA+Owor
+CXRpLGF1ZGlvLXJvdXRpbmcgPQorCQkiTGluZSBPdXQiLAkJIkxMT1VUIiwKKwkJIkxpbmUgT3V0
+IiwJCSJSTE9VVCIsCisJCSJMSU5FMUwiLAkJIkxpbmUgSW4iLAorCQkiTElORTFSIiwJCSJMaW5l
+IEluIjsKKwljbG9ja3MgPSA8Jm1jYXNwMF9mY2s+OworCWNsb2NrLW5hbWVzID0gIm1jbGsiOwor
+CXN0YXR1cyA9ICJva2F5IjsKK307CisKIC8qIENBTiBCdXNzZXMgKi8KICZhbTMzeHhfcGlubXV4
+IHsKIAlkY2FuMV9waW5zOiBwaW5tdXhfZGNhbjEgewpAQCAtOTksNiArMTU1LDEyIEBACiAJc3Rh
+dHVzID0gIm9rYXkiOwogfTsKIAorLyogUG93ZXIgKi8KKyZ2ZGlnMV9yZWcgeworCXJlZ3VsYXRv
+ci1ib290LW9uOworCXJlZ3VsYXRvci1hbHdheXMtb247Cit9OworCiAvKiBVQVJUcyAqLwogJmFt
+MzN4eF9waW5tdXggewogCXVhcnQwX3BpbnM6IHBpbm11eF91YXJ0MCB7Ci0tIAoxLjkuMQoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBt
+YWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFs
+c2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
