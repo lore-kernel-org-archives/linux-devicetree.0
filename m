@@ -1,88 +1,45 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
-Date: Tue, 9 Aug 2016 18:25:26 -0700
-Message-ID: <85b76eca-5473-6724-0c9d-7b6fa7677f50@gmail.com>
-References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
- <9ebb6cb7-c793-cd76-5283-c9a659d0398f@gmx.de>
- <57AA2001.2010904@codeaurora.org>
- <214dcbb7-0c3b-1e00-3e50-db513d77b10b@gmail.com>
- <57AA7ED0.9000707@codeaurora.org>
+From: Hanjun Guo <guohanjun@huawei.com>
+Subject: Re: [PATCH v5 00/14] fix some type infos and bugs for arm64/of numa
+Date: Wed, 10 Aug 2016 09:56:49 +0800
+Message-ID: <57AA89E1.6050103@huawei.com>
+References: <1470647899-6324-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <57AA7ED0.9000707@codeaurora.org>
-Sender: netdev-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1470647899-6324-1-git-send-email-thunder.leizhen@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zhen Lei <thunder.leizhen@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank
+ Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>
+Cc: Xinwei Hu <huxinwei@huawei.com>, Zefan Li <lizefan@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/2016 06:09 PM, Timur Tabi wrote:
-> Florian Fainelli wrote:
-> 
->> nr_frags can't be bigger than MAX_SKB_FRAGS, hence these checks all
->> other drivers do against 1 + MAX_SKB_FRAGS.
-> 
-> Doh, I just realized something.  emac_mac_tx_buf_send() just needs to
-> make sure that there's enough room for ONE skb.  For some reason I
-> thought it had to make sure there's enough room for multiple SKBs.
-> 
-> Now it makes a lot more sense.  Thank you.
-> 
-> So it looks like a given SKB can occupy 3 + nr_frags descriptors.  So I
-> need to change that line to:
-> 
->     if (emac_tpd_num_free_descs(tx_q) < (MAX_SKB_FRAGS + 3))
->         netif_stop_queue(adpt->netdev);
-> 
-> Question, some  drivers do <= instead of just <, like this:
-> 
->     if (ring->free_bds <= (MAX_SKB_FRAGS + 1))
->         netif_tx_stop_queue(txq);
-> 
-> Is it necessary to stop the queue if there exactly enough descriptors to
-> hold an SKB?  Shouldn't the above be this instead:
-> 
->     if (ring->free_bds < (MAX_SKB_FRAGS + 1))
->         netif_tx_stop_queue(txq);
+Hi Zhen,
 
-Humm, it kind of depends, but I would err on the side of strictly lesser
-than as a better behavior where you may still allow a full fragmented
-SKB to make it through on the next xmit call (I know the code you quote
-is exactly not doing that).
+On 2016/8/8 17:18, Zhen Lei wrote:
+> v4 -> v5:
+> This version has no code changes, just add "Acked-by: Rob Herring <robh@kernel.org>"
+> into patches 1, 2, 4, 6, 7, 13, 14. Because these patches rely on some acpi numa
+> patches, and the latter had not been upstreamed in 4.7, but upstreamed in 4.8-rc1,
+> so I resend my patches again.
 
-> 
-> 
->>> However, I'm confused about one thing.  Almost every other driver just
->>> sets "netdev->mtu = new_mtu" and does nothing else.  I can't find any
->>> other driver that actually stops the RX path, reprograms the hardware,
->>> and then restarts the RX path.  I know this is a stupid question, but
->>> why is my driver doing that?
->>
->> Most drivers allocate RX buffer sizes that are usually bigger than the
->> MTU, but would probably silently fail or expose transient behavior once
->> the MTU changes to greater than the size pre-defined.
-> 
-> So it looks like the real problem is a race condition between
-> 
->     adpt->rxbuf_size = new_mtu > EMAC_DEF_RX_BUF_SIZE ?
->         ALIGN(max_frame, 8) : EMAC_DEF_RX_BUF_SIZE;
-> 
-> and
-> 
->     if (netif_running(netdev))
->         return emac_reinit_locked(adpt);
-> 
-> 
-> That is, if the interface is running, I set rxbuf_size.  If suddenly I
-> receive some packets, then the driver will use the wrong buffer size.
+I think we need to mention this patch set is rebased on top of 4,8-rc1, and
 
-Correct, and possibly other HW settings that you have may have to
-program to tell the MAC what the maximum packet length should be.
+ - patch 1~5 are fixes which are targeting for 4.8.
 
-> 
-> Is there an easy way for me to stop the RX path before I set rxbuf_size?
->  Some netif_xxx function I can call?
+ - patch 6~14 are cleanups and new features, which are targeting for 4.9, in detail,
+   - patch 6~8 are cleanups
+   - patch 9~14 are new features adding per cpu area and memory less node support.
 
-napi_disable() should take care of that.
--- 
-Florian
+Catalin, do you think Zhen needs to separate this patch set into two and then resend?
+
+Thanks
+Hanjun
