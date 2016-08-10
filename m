@@ -1,58 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 2/4] clk: Combine DT binding doc for max77686 and max77802
-Date: Wed, 10 Aug 2016 07:43:04 -0500
-Message-ID: <CAL_JsqL+sZ1tX_Wnj=N+ku4Gs0dNRhKDe4vDkEitAu+M4HEBmA@mail.gmail.com>
-References: <1466160667-28451-1-git-send-email-ldewangan@nvidia.com>
- <1466160667-28451-3-git-send-email-ldewangan@nvidia.com> <20160620163947.GA27492@rob-hp-laptop>
- <5768E2AD.8070004@nvidia.com> <57725F64.4030903@nvidia.com> <57AAF68D.7090707@nvidia.com>
+From: Reza Arbab <arbab@linux.vnet.ibm.com>
+Subject: Re: [PATCH 0/4] powerpc/mm: movable hotplug memory nodes
+Date: Wed, 10 Aug 2016 13:43:58 -0500
+Message-ID: <20160810184357.GB12039@arbab-laptop.austin.ibm.com>
+References: <1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <87shucsypn.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57AAF68D.7090707@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <owner-linux-mm@kvack.org>
+Content-Disposition: inline
+In-Reply-To: <87shucsypn.fsf@concordia.ellerman.id.au>
+Sender: owner-linux-mm@kvack.org
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Jonathan Corbet <corbet@lwn.net>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 10, 2016 at 4:40 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
-> Hi,
+On Wed, Aug 10, 2016 at 08:30:28PM +1000, Michael Ellerman wrote:
+>Reza Arbab <arbab@linux.vnet.ibm.com> writes:
+>> Node hotplug is not supported on power [1].
 >
-> On Tuesday 28 June 2016 04:58 PM, Laxman Dewangan wrote:
->>
->> Hi Rob,
->>
->> On Tuesday 21 June 2016 12:16 PM, Laxman Dewangan wrote:
->>>
->>>
->>> On Monday 20 June 2016 10:09 PM, Rob Herring wrote:
->>>>
->>>> On Fri, Jun 17, 2016 at 04:21:05PM +0530, Laxman Dewangan wrote:
->>>>>
->>>>>
->>>>>
->>>>> +
->>>>>   Following properties should be presend in main device node of the MFD
->>>>> chip.
->>>>>     Required properties:
->>>>
->>>> I'd expect to see compatible strings updated...
->>>>
->>>
->>> There is no separate compatible string for clock. The clock nodes is the
->>> parent node only and the compatible described in the parent DT binding doc.
->>>
->>>
->>> Do we also need to add same thing here?
->>
->>
->> Are you fine with the above? As there is no compatible string for clock
->> (clock does not have separate node), do I still need to add explicitly here?
->>
->
->
-> Can you please help here to review? If required, I can rebase and re-send
-> the patches.
+>But maybe it should be?
 
-It is fine.
+Doing so will involve, at the very least, reverting the commit I cited, 
+3af229f2071f ("powerpc/numa: Reset node_possible_map to only 
+node_online_map"), and fixing that issue in a different way.
 
-Acked-by: Rob Herring <robh@kernel.org>
+I'll look into it and see what I can do.
+
+-- 
+Reza Arbab
+
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
