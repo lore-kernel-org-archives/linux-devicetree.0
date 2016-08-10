@@ -1,240 +1,110 @@
-From: Finlye Xiao <finley.xiao@rock-chips.com>
-Subject: [PATCH v1 4/4] nvmem: rockchip-efuse: add rk3399-efuse support
-Date: Wed, 10 Aug 2016 14:50:43 +0800
-Message-ID: <1470811843-42668-5-git-send-email-finley.xiao@rock-chips.com>
-References: <1470811843-42668-1-git-send-email-finley.xiao@rock-chips.com>
+From: YT Shen <yt.shen@mediatek.com>
+Subject: Re: [PATCH v6 06/10] drm/mediatek: add dsi interrupt control
+Date: Wed, 10 Aug 2016 14:59:33 +0800
+Message-ID: <1470812373.27526.1.camel@mtksdaap41>
+References: <1470308844-20895-1-git-send-email-yt.shen@mediatek.com>
+ <1470308844-20895-7-git-send-email-yt.shen@mediatek.com>
+ <1470392666.16554.61.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1470811843-42668-1-git-send-email-finley.xiao@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: srinivas.kandagatla@linaro.org, maxime.ripard@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, dianders@chromium.org, wbriannorris@chromium.org
-Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, tony.xie@rock-chips.com, Finley Xiao <finley.xiao@rock-chips.com>, linux-arm-kernel@lists.infradead.org, jay.xu@rock-chips.com, cl@rock-chips.com, wxt@rock-chips.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1470392666.16554.61.camel@mtksdaap41>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, Russell King <linux@arm.linux.org.uk>, Mao Huang <littlecvr@chromium.org>, yingjoe.chen@mediatek.com, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, shaoming chen <shaoming.chen@mediatek.com>, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Finley Xiao <finley.xiao@rock-chips.com>
-
-1) the efuse timing of rk3399 is different from earlier SoCs.
-2) rk3399-efuse is organized as 32bits by 32 one-time programmable
-electrical fuses, the efuse of earlier SoCs is organized as 32bits
-by 8 one-time programmable electrical fuses with random access interface.
-
-This patch adds a new read function for rk3399-efuse.
-
-Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
----
- drivers/nvmem/rockchip-efuse.c | 132 ++++++++++++++++++++++++++++++++++-------
- 1 file changed, 112 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/nvmem/rockchip-efuse.c b/drivers/nvmem/rockchip-efuse.c
-index 4d3f391..58fee00b 100644
---- a/drivers/nvmem/rockchip-efuse.c
-+++ b/drivers/nvmem/rockchip-efuse.c
-@@ -22,17 +22,28 @@
- #include <linux/nvmem-provider.h>
- #include <linux/slab.h>
- #include <linux/of.h>
-+#include <linux/of_platform.h>
- #include <linux/platform_device.h>
- 
--#define EFUSE_A_SHIFT			6
--#define EFUSE_A_MASK			0x3ff
--#define EFUSE_PGENB			BIT(3)
--#define EFUSE_LOAD			BIT(2)
--#define EFUSE_STROBE			BIT(1)
--#define EFUSE_CSB			BIT(0)
--
--#define REG_EFUSE_CTRL			0x0000
--#define REG_EFUSE_DOUT			0x0004
-+#define RK3288_A_SHIFT		6
-+#define RK3288_A_MASK		0x3ff
-+#define RK3288_PGENB		BIT(3)
-+#define RK3288_LOAD			BIT(2)
-+#define RK3288_STROBE		BIT(1)
-+#define RK3288_CSB			BIT(0)
-+
-+#define RK3399_A_SHIFT		16
-+#define RK3399_A_MASK		0x3ff
-+#define RK3399_NBYTES		4
-+#define RK3399_STROBSFTSEL	BIT(9)
-+#define RK3399_PD			BIT(5)
-+#define RK3399_PGENB		BIT(3)
-+#define RK3399_LOAD			BIT(2)
-+#define RK3399_STROBE		BIT(1)
-+#define RK3399_CSB			BIT(0)
-+
-+#define REG_EFUSE_CTRL		0x0000
-+#define REG_EFUSE_DOUT		0x0004
- 
- struct rockchip_efuse_chip {
- 	struct device *dev;
-@@ -40,8 +51,8 @@ struct rockchip_efuse_chip {
- 	struct clk *clk;
- };
- 
--static int rockchip_efuse_read(void *context, unsigned int offset,
--			       void *val, size_t bytes)
-+static int rockchip_rk3288_efuse_read(void *context, unsigned int offset,
-+				      void *val, size_t bytes)
- {
- 	struct rockchip_efuse_chip *efuse = context;
- 	u8 *buf = val;
-@@ -53,27 +64,78 @@ static int rockchip_efuse_read(void *context, unsigned int offset,
- 		return ret;
- 	}
- 
--	writel(EFUSE_LOAD | EFUSE_PGENB, efuse->base + REG_EFUSE_CTRL);
-+	writel(RK3288_LOAD | RK3288_PGENB, efuse->base + REG_EFUSE_CTRL);
- 	udelay(1);
- 	while (bytes--) {
- 		writel(readl(efuse->base + REG_EFUSE_CTRL) &
--			     (~(EFUSE_A_MASK << EFUSE_A_SHIFT)),
-+			     (~(RK3288_A_MASK << RK3288_A_SHIFT)),
- 			     efuse->base + REG_EFUSE_CTRL);
- 		writel(readl(efuse->base + REG_EFUSE_CTRL) |
--			     ((offset++ & EFUSE_A_MASK) << EFUSE_A_SHIFT),
-+			     ((offset++ & RK3288_A_MASK) << RK3288_A_SHIFT),
- 			     efuse->base + REG_EFUSE_CTRL);
- 		udelay(1);
- 		writel(readl(efuse->base + REG_EFUSE_CTRL) |
--			     EFUSE_STROBE, efuse->base + REG_EFUSE_CTRL);
-+			     RK3288_STROBE, efuse->base + REG_EFUSE_CTRL);
- 		udelay(1);
- 		*buf++ = readb(efuse->base + REG_EFUSE_DOUT);
- 		writel(readl(efuse->base + REG_EFUSE_CTRL) &
--		     (~EFUSE_STROBE), efuse->base + REG_EFUSE_CTRL);
-+		     (~RK3288_STROBE), efuse->base + REG_EFUSE_CTRL);
- 		udelay(1);
- 	}
- 
- 	/* Switch to standby mode */
--	writel(EFUSE_PGENB | EFUSE_CSB, efuse->base + REG_EFUSE_CTRL);
-+	writel(RK3288_PGENB | RK3288_CSB, efuse->base + REG_EFUSE_CTRL);
-+
-+	clk_disable_unprepare(efuse->clk);
-+
-+	return 0;
-+}
-+
-+static int rockchip_rk3399_efuse_read(void *context, unsigned int offset,
-+				      void *val, size_t bytes)
-+{
-+	struct rockchip_efuse_chip *efuse = context;
-+	unsigned int addr_start, addr_end, addr_offset, addr_len;
-+	unsigned int out_value;
-+	unsigned char *buf;
-+	int ret, i = 0;
-+
-+	ret = clk_prepare_enable(efuse->clk);
-+	if (ret < 0) {
-+		dev_err(efuse->dev, "failed to prepare/enable efuse clk\n");
-+		return ret;
-+	}
-+
-+	addr_start = rounddown(offset, RK3399_NBYTES) / RK3399_NBYTES;
-+	addr_end = roundup(offset + bytes, RK3399_NBYTES) / RK3399_NBYTES;
-+	addr_offset = offset % RK3399_NBYTES;
-+	addr_len = addr_end - addr_start;
-+
-+	buf = kzalloc(sizeof(*buf) * addr_len * RK3399_NBYTES, GFP_KERNEL);
-+
-+	writel(RK3399_LOAD | RK3399_PGENB | RK3399_STROBSFTSEL,
-+	       efuse->base + REG_EFUSE_CTRL);
-+	udelay(1);
-+	while (addr_len--) {
-+		writel(readl(efuse->base + REG_EFUSE_CTRL) | RK3399_STROBE |
-+			((addr_start++ & RK3399_A_MASK) << RK3399_A_SHIFT),
-+			efuse->base + REG_EFUSE_CTRL);
-+		udelay(1);
-+		out_value = readl(efuse->base + REG_EFUSE_DOUT);
-+		writel(readl(efuse->base + REG_EFUSE_CTRL) & (~RK3399_STROBE),
-+		       efuse->base + REG_EFUSE_CTRL);
-+		udelay(1);
-+
-+		memcpy(&buf[i], &out_value, RK3399_NBYTES);
-+		i += RK3399_NBYTES;
-+	}
-+
-+	/* Switch to standby mode */
-+	writel(RK3399_PD | RK3399_CSB, efuse->base + REG_EFUSE_CTRL);
-+
-+	memcpy(val, buf + addr_offset, bytes);
-+
-+	kfree(buf);
- 
- 	clk_disable_unprepare(efuse->clk);
- 
-@@ -89,7 +151,22 @@ static struct nvmem_config econfig = {
- };
- 
- static const struct of_device_id rockchip_efuse_match[] = {
--	{ .compatible = "rockchip,rockchip-efuse", },
-+	{
-+		.compatible = "rockchip,rk3066a-efuse",
-+		.data = (void *)&rockchip_rk3288_efuse_read,
-+	},
-+	{
-+		.compatible = "rockchip,rk3188-efuse",
-+		.data = (void *)&rockchip_rk3288_efuse_read,
-+	},
-+	{
-+		.compatible = "rockchip,rk3288-efuse",
-+		.data = (void *)&rockchip_rk3288_efuse_read,
-+	},
-+	{
-+		.compatible = "rockchip,rk3399-efuse",
-+		.data = (void *)&rockchip_rk3399_efuse_read,
-+	},
- 	{ /* sentinel */},
- };
- MODULE_DEVICE_TABLE(of, rockchip_efuse_match);
-@@ -99,6 +176,14 @@ static int rockchip_efuse_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	struct nvmem_device *nvmem;
- 	struct rockchip_efuse_chip *efuse;
-+	const struct of_device_id *match;
-+	struct device *dev = &pdev->dev;
-+
-+	match = of_match_device(dev->driver->of_match_table, dev);
-+	if (!match || !match->data) {
-+		dev_err(dev, "failed to get match data\n");
-+		return -EINVAL;
-+	}
- 
- 	efuse = devm_kzalloc(&pdev->dev, sizeof(struct rockchip_efuse_chip),
- 			     GFP_KERNEL);
-@@ -116,7 +201,7 @@ static int rockchip_efuse_probe(struct platform_device *pdev)
- 
- 	efuse->dev = &pdev->dev;
- 	econfig.size = resource_size(res);
--	econfig.reg_read = rockchip_efuse_read;
-+	econfig.reg_read = match->data;
- 	econfig.priv = efuse;
- 	econfig.dev = efuse->dev;
- 	nvmem = nvmem_register(&econfig);
-@@ -144,6 +229,13 @@ static struct platform_driver rockchip_efuse_driver = {
- 	},
- };
- 
--module_platform_driver(rockchip_efuse_driver);
-+static int __init rockchip_efuse_module_init(void)
-+{
-+	return platform_driver_probe(&rockchip_efuse_driver,
-+				     rockchip_efuse_probe);
-+}
-+
-+subsys_initcall(rockchip_efuse_module_init);
-+
- MODULE_DESCRIPTION("rockchip_efuse driver");
- MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+SGkgQ0ssCgpPbiBGcmksIDIwMTYtMDgtMDUgYXQgMTg6MjQgKzA4MDAsIENLIEh1IHdyb3RlOgo+
+IEhpLCBZVDoKPiAKPiBPbiBUaHUsIDIwMTYtMDgtMDQgYXQgMTk6MDcgKzA4MDAsIFlUIFNoZW4g
+d3JvdGU6Cj4gPiBGcm9tOiBzaGFvbWluZyBjaGVuIDxzaGFvbWluZy5jaGVuQG1lZGlhdGVrLmNv
+bT4KPiA+IAo+ID4gYWRkIGRzaSBpbnRlcnJ1cHQgY29udHJvbAo+ID4gCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBzaGFvbWluZyBjaGVuIDxzaGFvbWluZy5jaGVuQG1lZGlhdGVrLmNvbT4KPiA+IC0tLQo+
+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMgfCAgIDc2ICsrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA3NiBpbnNlcnRp
+b25zKCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
+X2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYwo+ID4gaW5kZXggYTlj
+ZjVhMS4uZWVhNjE5MiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHNpLmMKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMKPiA+
+IEBAIC0xOCw2ICsxOCw3IEBACj4gPiAgI2luY2x1ZGUgPGRybS9kcm1fcGFuZWwuaD4KPiA+ICAj
+aW5jbHVkZSA8bGludXgvY2xrLmg+Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L2NvbXBvbmVudC5oPgo+
+ID4gKyNpbmNsdWRlIDxsaW51eC9pcnEuaD4KPiA+ICAjaW5jbHVkZSA8bGludXgvb2YuaD4KPiA+
+ICAjaW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4KPiA+ICAjaW5jbHVkZSA8bGludXgvb2Zf
+Z3JhcGguaD4KPiA+IEBAIC0yOSw2ICszMCwxNyBAQAo+ID4gIAo+ID4gICNkZWZpbmUgRFNJX1NU
+QVJUCQkweDAwCj4gPiAgCj4gPiArI2RlZmluZSBEU0lfSU5URU4JCTB4MDgKPiA+ICsKPiA+ICsj
+ZGVmaW5lIERTSV9JTlRTVEEJCTB4MGMKPiA+ICsjZGVmaW5lIExQUlhfUkRfUkRZX0lOVF9GTEFH
+CQlCSVQoMCkKPiA+ICsjZGVmaW5lIENNRF9ET05FX0lOVF9GTEFHCQlCSVQoMSkKPiA+ICsjZGVm
+aW5lIFRFX1JEWV9JTlRfRkxBRwkJCUJJVCgyKQo+ID4gKyNkZWZpbmUgVk1fRE9ORV9JTlRfRkxB
+RwkJQklUKDMpCj4gPiArI2RlZmluZSBFWFRfVEVfUkRZX0lOVF9GTEFHCQlCSVQoNCkKPiA+ICsj
+ZGVmaW5lIERTSV9JTlRfQUxMX0JJVFMJCTB4MWYKPiA+ICsjZGVmaW5lIERTSV9CVVNZCQkJQklU
+KDMxKQo+ID4gKwo+ID4gICNkZWZpbmUgRFNJX0NPTl9DVFJMCQkweDEwCj4gPiAgI2RlZmluZSBE
+U0lfUkVTRVQJCQlCSVQoMCkKPiA+ICAjZGVmaW5lIERTSV9FTgkJCQlCSVQoMSkKPiA+IEBAIC03
+MSw2ICs4Myw5IEBACj4gPiAgCj4gPiAgI2RlZmluZSBEU0lfSFNUWF9DS0xfV0MJCTB4NjQKPiA+
+ICAKPiA+ICsjZGVmaW5lIERTSV9SQUNLCQkweDg0Cj4gPiArI2RlZmluZSBSQUNLCQkJCUJJVCgw
+KQo+ID4gKwo+ID4gICNkZWZpbmUgRFNJX1BIWV9MQ0NPTgkJMHgxMDQKPiA+ICAjZGVmaW5lIExD
+X0hTX1RYX0VOCQkJQklUKDApCj4gPiAgI2RlZmluZSBMQ19VTFBNX0VOCQkJQklUKDEpCj4gPiBA
+QCAtMTMxLDggKzE0NiwxMSBAQCBzdHJ1Y3QgbXRrX2RzaSB7Cj4gPiAgCXN0cnVjdCB2aWRlb21v
+ZGUgdm07Cj4gPiAgCWludCByZWZjb3VudDsKPiA+ICAJYm9vbCBlbmFibGVkOwo+ID4gKwlpbnQg
+aXJxX2RhdGE7Cj4gCj4gdTMyIGlycV9kYXRhOwpXaWxsIGRvLgoKUmVnYXJkcywKeXQuc2hlbgo+
+IAo+ID4gIH07Cj4gPiAgCj4gPiArc3RhdGljIHdhaXRfcXVldWVfaGVhZF90IF9kc2lfaXJxX3dh
+aXRfcXVldWU7Cj4gPiArCj4gPiAgc3RhdGljIGlubGluZSBzdHJ1Y3QgbXRrX2RzaSAqZW5jb2Rl
+cl90b19kc2koc3RydWN0IGRybV9lbmNvZGVyICplKQo+ID4gIHsKPiA+ICAJcmV0dXJuIGNvbnRh
+aW5lcl9vZihlLCBzdHJ1Y3QgbXRrX2RzaSwgZW5jb2Rlcik7Cj4gPiBAQCAtNDM3LDYgKzQ1NSw0
+MyBAQCBzdGF0aWMgdm9pZCBtdGtfZHNpX3N0YXJ0KHN0cnVjdCBtdGtfZHNpICpkc2kpCj4gPiAg
+CXdyaXRlbCgxLCBkc2ktPnJlZ3MgKyBEU0lfU1RBUlQpOwo+ID4gIH0KPiA+ICAKPiA+ICtzdGF0
+aWMgdm9pZCBtdGtfZHNpX3NldF9pbnRlcnJ1cHRfZW5hYmxlKHN0cnVjdCBtdGtfZHNpICpkc2kp
+Cj4gPiArewo+ID4gKwl1MzIgaW50ZW4gPSBEU0lfSU5UX0FMTF9CSVRTOwo+ID4gKwo+ID4gKwlp
+ZiAoZHNpLT5tb2RlX2ZsYWdzICYgTUlQSV9EU0lfTU9ERV9WSURFTykKPiA+ICsJCWludGVuICY9
+IH4oVEVfUkRZX0lOVF9GTEFHIHwgRVhUX1RFX1JEWV9JTlRfRkxBRyk7Cj4gPiArCj4gPiArCXdy
+aXRlbChpbnRlbiwgZHNpLT5yZWdzICsgRFNJX0lOVEVOKTsKPiA+ICt9Cj4gPiArCj4gPiArc3Rh
+dGljIHZvaWQgbXRrX2RzaV9pcnFfd2FrZXVwKHN0cnVjdCBtdGtfZHNpICpkc2ksIHUzMiBpcnFf
+Yml0KQo+ID4gK3sKPiA+ICsJZHNpLT5pcnFfZGF0YSB8PSBpcnFfYml0Owo+ID4gK30KPiA+ICsK
+PiA+ICtzdGF0aWMgaXJxcmV0dXJuX3QgbXRrX2RzaV9pcnEoaW50IGlycSwgdm9pZCAqZGV2X2lk
+KQo+ID4gK3sKPiA+ICsJc3RydWN0IG10a19kc2kgKmRzaSA9IGRldl9pZDsKPiA+ICsJdTMyIHN0
+YXR1cywgdG1wOwo+ID4gKwl1MzIgZmxhZyA9IExQUlhfUkRfUkRZX0lOVF9GTEFHIHwgQ01EX0RP
+TkVfSU5UX0ZMQUcgfCBWTV9ET05FX0lOVF9GTEFHOwo+ID4gKwo+ID4gKwlzdGF0dXMgPSByZWFk
+bChkc2ktPnJlZ3MgKyBEU0lfSU5UU1RBKTsKPiA+ICsKPiA+ICsJaWYgKHN0YXR1cyAmIGZsYWcp
+IHsKPiA+ICsJCWRvIHsKPiA+ICsJCQltdGtfZHNpX21hc2soZHNpLCBEU0lfUkFDSywgUkFDSywg
+UkFDSyk7Cj4gPiArCQkJdG1wID0gcmVhZGwoZHNpLT5yZWdzICsgRFNJX0lOVFNUQSk7Cj4gPiAr
+CQl9IHdoaWxlICh0bXAgJiBEU0lfQlVTWSk7Cj4gPiArCj4gPiArCQltdGtfZHNpX21hc2soZHNp
+LCBEU0lfSU5UU1RBLCBzdGF0dXMgJiBmbGFnLCAwKTsKPiA+ICsJCW10a19kc2lfaXJxX3dha2V1
+cChkc2ksIHN0YXR1cyAmIGZsYWcpOwo+ID4gKwkJd2FrZV91cF9pbnRlcnJ1cHRpYmxlKCZfZHNp
+X2lycV93YWl0X3F1ZXVlKTsKPiA+ICsJfQo+ID4gKwo+ID4gKwlyZXR1cm4gSVJRX0hBTkRMRUQ7
+Cj4gPiArfQo+ID4gKwo+ID4gIHN0YXRpYyB2b2lkIG10a19kc2lfcG93ZXJvZmYoc3RydWN0IG10
+a19kc2kgKmRzaSkKPiA+ICB7Cj4gPiAgCWlmIChXQVJOX09OKGRzaS0+cmVmY291bnQgPT0gMCkp
+Cj4gPiBAQCAtNDg1LDYgKzU0MCw3IEBAIHN0YXRpYyB2b2lkIG10a19vdXRwdXRfZHNpX2VuYWJs
+ZShzdHJ1Y3QgbXRrX2RzaSAqZHNpKQo+ID4gIAo+ID4gIAltdGtfZHNpX3BzX2NvbnRyb2xfdmFj
+dChkc2kpOwo+ID4gIAltdGtfZHNpX2NvbmZpZ192ZG9fdGltaW5nKGRzaSk7Cj4gPiArCW10a19k
+c2lfc2V0X2ludGVycnVwdF9lbmFibGUoZHNpKTsKPiA+ICAKPiA+ICAJbXRrX2RzaV9zZXRfbW9k
+ZShkc2kpOwo+ID4gIAltdGtfZHNpX2Nsa19oc19tb2RlKGRzaSwgMSk7Cj4gPiBAQCAtODA0LDYg
+Kzg2MCw3IEBAIHN0YXRpYyBpbnQgbXRrX2RzaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
+ICpwZGV2KQo+ID4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Owo+ID4gIAlzdHJ1
+Y3QgZGV2aWNlX25vZGUgKnJlbW90ZV9ub2RlLCAqZW5kcG9pbnQ7Cj4gPiAgCXN0cnVjdCByZXNv
+dXJjZSAqcmVnczsKPiA+ICsJaW50IGlycV9udW07Cj4gPiAgCWludCBjb21wX2lkOwo+ID4gIAlp
+bnQgcmV0Owo+ID4gIAo+ID4gQEAgLTg4MCw4ICs5MzcsMjcgQEAgc3RhdGljIGludCBtdGtfZHNp
+X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gPiAgCQlyZXR1cm4gcmV0Owo+
+ID4gIAl9Cj4gPiAgCj4gPiArCWlycV9udW0gPSBwbGF0Zm9ybV9nZXRfaXJxKHBkZXYsIDApOwo+
+ID4gKwlpZiAoaXJxX251bSA8IDApIHsKPiA+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxl
+ZCB0byByZXF1ZXN0IGRzaSBpcnEgcmVzb3VyY2VcbiIpOwo+ID4gKwkJcmV0dXJuIC1FUFJPQkVf
+REVGRVI7Cj4gPiArCX0KPiA+ICsKPiA+ICsJaXJxX3NldF9zdGF0dXNfZmxhZ3MoaXJxX251bSwg
+SVJRX1RZUEVfTEVWRUxfTE9XKTsKPiA+ICsJcmV0ID0gZGV2bV9yZXF1ZXN0X2lycSgmcGRldi0+
+ZGV2LCBpcnFfbnVtLCBtdGtfZHNpX2lycSwKPiA+ICsJCQkgICAgICAgSVJRRl9UUklHR0VSX0xP
+VywgZGV2X25hbWUoJnBkZXYtPmRldiksIGRzaSk7Cj4gPiArCWlmIChyZXQpIHsKPiA+ICsJCWRl
+dl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byByZXF1ZXN0IG1lZGlhdGVrIGRzaSBpcnFcbiIp
+Owo+ID4gKwkJcmV0dXJuIC1FUFJPQkVfREVGRVI7Cj4gPiArCX0KPiA+ICsKPiA+ICsJZHNpLT5p
+cnFfZGF0YSA9IDA7Cj4gPiArCWRldl9pbmZvKGRldiwgImRzaSBpcnEgbnVtIGlzIDB4JXhcbiIs
+IGlycV9udW0pOwo+ID4gKwo+ID4gIAlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBkc2kpOwo+
+ID4gIAo+ID4gKwlpbml0X3dhaXRxdWV1ZV9oZWFkKCZfZHNpX2lycV93YWl0X3F1ZXVlKTsKPiA+
+ICsKPiA+ICAJcmV0dXJuIGNvbXBvbmVudF9hZGQoJnBkZXYtPmRldiwgJm10a19kc2lfY29tcG9u
+ZW50X29wcyk7Cj4gPiAgfQo+ID4gIAo+IAo+IFJlZ2FyZHMsCj4gQ0sKPiAKCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
