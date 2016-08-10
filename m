@@ -1,18 +1,18 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 3/6] dt/bindings: Add bindings for Tegra GMI controller
-Date: Wed, 10 Aug 2016 09:45:06 +0100
-Message-ID: <d72d3f8f-6987-3623-077f-14485679e321@nvidia.com>
-References: <1470512452-8322-1-git-send-email-mirza.krak@gmail.com>
- <1470512452-8322-4-git-send-email-mirza.krak@gmail.com>
- <901be576-a810-c630-9b83-de922e945df0@nvidia.com>
- <CALw8SCV61w6BgtBb8pY4czeB4yFmbtLmB2MuyrvGcvepmRpeBQ@mail.gmail.com>
- <5e0402db-10ce-75eb-cf95-d9e2d26e3efe@nvidia.com>
- <CALw8SCVrQeZLQjkapLjk9Me=AVU4kbtOskem8jeEeYDK5tznGg@mail.gmail.com>
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v5 5/6] usb: chipidea: let chipidea core device of_node
+ equal's glue layer device of_node
+Date: Wed, 10 Aug 2016 09:00:15 +0000
+Message-ID: <AM4PR04MB2130F9E9E9E304D47C44AC46891D0@AM4PR04MB2130.eurprd04.prod.outlook.com>
+References: <1470646331-23227-1-git-send-email-peter.chen@nxp.com>
+ <1470646331-23227-6-git-send-email-peter.chen@nxp.com>
+ <147078813636.20133.1120685098868481913@sboyd-linaro>
+ <20160810031146.GE1879@shlinux2>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CALw8SCVrQeZLQjkapLjk9Me=AVU4kbtOskem8jeEeYDK5tznGg@mail.gmail.com>
+In-Reply-To: <20160810031146.GE1879@shlinux2>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,100 +22,88 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mirza Krak <mirza.krak@gmail.com>
-Cc: mark.rutland@arm.com, Alexandre Courbot <gnurou@gmail.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, pawel.moll@arm.com, Stephen Warren <swarren@wwwdotorg.org>, pdeschrijver@nvidia.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-arm-kernel@lists.infradead.org
+To: Peter Chen <hzpeterchen@gmail.com>, Stephen Boyd <stephen.boyd@linaro.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Peter Chen <peter.chen@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "k.kozlowski@samsung.com" <k.kozlowski@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "stillcompiling@gmail.com" <stillcompiling@gmail.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "mka@chromium.org" <mka@chromium.org>, "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>, Peter Chen <peter.chen@freescale.com>, "dwmw3@infradead.org" <dwmw3@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mail@maciej.szmigiero.name" <mail@maciej.szmigiero.name>, "arnd@arndb.de" <arnd@arndb.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, troy.
 List-Id: devicetree@vger.kernel.org
 
+Hi, Peter
 
-On 09/08/16 21:48, Mirza Krak wrote:
-> 2016-08-09 15:34 GMT+02:00 Jon Hunter <jonathanh@nvidia.com>:
->>
->> On 09/08/16 09:40, Mirza Krak wrote:
->>> 2016-08-08 16:44 GMT+02:00 Jon Hunter <jonathanh@nvidia.com>:
->>>>
->>>> On 06/08/16 20:40, Mirza Krak wrote:
->>>>> From: Mirza Krak <mirza.krak@gmail.com>
->>>>>
+> -----Original Message-----
+> From: linux-usb-owner@vger.kernel.org [mailto:linux-usb-
+> owner@vger.kernel.org] On Behalf Of Peter Chen
+> Sent: Wednesday, August 10, 2016 11:12 AM
+> To: Stephen Boyd <stephen.boyd@linaro.org>
+> Cc: Peter Chen <peter.chen@nxp.com>; gregkh@linuxfoundation.org;
+> stern@rowland.harvard.edu; ulf.hansson@linaro.org; broonie@kernel.org;
+> sre@kernel.org; robh+dt@kernel.org; shawnguo@kernel.org;
+> dbaryshkov@gmail.com; dwmw3@infradead.org; k.kozlowski@samsung.com; linux-
+> arm-kernel@lists.infradead.org; p.zabel@pengutronix.de;
+> devicetree@vger.kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+> linux-usb@vger.kernel.org; arnd@arndb.de; s.hauer@pengutronix.de;
+> mail@maciej.szmigiero.name; troy.kisky@boundarydevices.com;
+> festevam@gmail.com; oscar@naiandei.net; linux-pm@vger.kernel.org;
+> stillcompiling@gmail.com; linux-kernel@vger.kernel.org; mka@chromium.org;
+> Peter Chen <peter.chen@freescale.com>
+> Subject: Re: [PATCH v5 5/6] usb: chipidea: let chipidea core device
+> of_node equal's glue layer device of_node
 > 
-> <--snip-->
+> On Tue, Aug 09, 2016 at 05:15:36PM -0700, Stephen Boyd wrote:
+> > Quoting Peter Chen (2016-08-08 01:52:10)
+> > > From: Peter Chen <peter.chen@freescale.com>
+> > >
+> > > At device tree, we have no device node for chipidea core, the glue
+> > > layer's node is the parent node for host and udc device. But in
+> > > related driver, the parent device is chipidea core. So, in order to
+> > > let the common driver get parent's node, we let the core's device
+> > > node equals glue layer device node.
+> > >
+> > > Signed-off-by: Peter Chen <peter.chen@freescale.com>
+> > > Tested-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+> > > Tested-by Joshua Clayton <stillcompiling@gmail.com>
+> > > ---
+> > >  drivers/usb/chipidea/core.c | 11 +++++++++++
+> > >  1 file changed, 11 insertions(+)
+> > >
+> > > diff --git a/drivers/usb/chipidea/core.c
+> > > b/drivers/usb/chipidea/core.c index 69426e6..b189dc7 100644
+> > > --- a/drivers/usb/chipidea/core.c
+> > > +++ b/drivers/usb/chipidea/core.c
+> > > @@ -954,6 +954,15 @@ static int ci_hdrc_probe(struct platform_device
+> *pdev)
+> > >                 dev_err(dev, "unable to init phy: %d\n", ret);
+> > >                 return ret;
+> > >         }
+> > > +       /*
+> > > +        * At device tree, we have no device node for chipidea core,
+> > > +        * the glue layer's node is the parent node for host and udc
+> > > +        * device. But in related driver, the parent device is
+> chipidea
+> > > +        * core. So, in order to let the common driver get parent's
+> node,
+> > > +        * we let the core's device node equals glue layer's node.
+> > > +        */
+> > > +       if (dev->parent && dev->parent->of_node)
+> > > +               dev->of_node = dev->parent->of_node;
+> >
+> > Can this be done earlier? Perhaps after hw_device_init() in this probe
+> > routine? That would allow me to remove the awkward parent searching in
+> > my ULPI DT awareness patch.
 > 
->>>>> + - nvidia,snor-we-width: Number of cycles during which WE stays asserted.
->>>>> +   Valid values are 0-15, default is 1
->>>>> + - nvidia,snor-oe-width: Number of cycles during which OE stays asserted.
->>>>> +   Valid values are 0-255, default is 1
->>>>> + - nvidia,snor-wait-width: Number of cycles before READY is asserted.
->>>>> +   Valid values are 0-255, default is 3
->>>>> +
->>>>> +Example with two SJA1000 CAN controllers connected to the GMI bus:
->>>>> +
->>>>> +  gmi@70090000 {
->>>>> +    #address-cells = <1>;
->>>>> +    #size-cells = <1>;
->>>>
->>>> I think 0 for size makes sense. I know that caused you problems before,
->>>> but I am wondering if ...
->>>>
->>>>> +    ranges;
->>>>
->>>> ... ranges is needed here? If we do have it, I am wondering if it should
->>>> be a single entry for the chip-select that is being used. For now we
->>>> could only support a ranges with one entry.
->>>>
->>>>         #address-cells = <1>;
->>>>         #size-cells = <1>;
->>>>         ranges = <4 0x48000000 0x00040000>;
->>>
->>> I prefer if we have "ranges" with one single entry, and warn if user enters
->>> multiple for now, like we discussed earlier. Should have really done it in
->>> this series.
->>
->> I think I do as well.
->>
->>>>
->>>>> +    nvidia,snor-mux-mode;
->>>>> +    nvidia,snor-adv-inv;
->>>>> +    nvidia,snor-cs-select = <4>;
->>>>
->>>> I would have expected these under bus@X node as they are specific to the
->>>> GMI CS.
->>>
->>> Yes, that is true.
->>>
->>>>
->>>> I would also expect that the actual chip-select number is encoded in the
->>>> reg property.
->>>>
->>>>> +
->>>>> +    bus@0,0 {
->>>>
->>>> bus@4
->>>
->>> ACK.
->>>
->>>>
->>>> No mention of this bus node in the above documentation.
->>>
->>> I was hesitant documenting it since I am not sure if we really need it
->>> in a generic case? It does make sense in my
->>> specific case. But what would it look like if we could maintain CS in software.
->>>
->>> Do you then have a bus node per CS? I am guessing not. Is it enough to
->>> document it in my "example brief"?
->>
->> I see what you mean. May be it is fine to document with the examples
->> below how child devices should be populated. You should also state that
->> currently the GMI only supports one child device currently for the
->> chip-select that is being used.
+> The reason why I locate it there is to avoid "goto label" for error path
+> during PHY's get and initialization operation.
 > 
-> Should I really need to state that? Is it not always the case, that
-> you have one child device per chip-select?
+> Ok, to simplify your work, I will change it at next version.
 
-I think so. Remember it is one child device for the GMI, however, that
-child device could still have one than one child device (per you example
-with two CANs). The GMI child represents the active chip-select and we
-only currently support one with this driver.
+As iommu need this to be done even more earlier, will you consider to
+put it before adding the core's platform device?
 
-Jon
-
--- 
-nvpublic
+Li Jun 
+> 
+> --
+> 
+> Best Regards,
+> Peter Chen
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org More majordomo info at
+> http://vger.kernel.org/majordomo-info.html
