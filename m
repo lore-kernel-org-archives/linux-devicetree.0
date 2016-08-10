@@ -1,153 +1,37 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH v3] hwmon/max6650.c: Add devicetree support
-Date: Wed, 10 Aug 2016 16:19:47 +0200
-Message-ID: <1470838787-8273-1-git-send-email-mike.looijmans@topic.nl>
-References: <1470727827-15907-1-git-send-email-mike.looijmans@topic.nl>
-	<20160809163727.GC9105@roeck-us.net>
+From: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Subject: Re: [PATCH 0/4] powerpc/mm: movable hotplug memory nodes
+Date: Wed, 10 Aug 2016 09:39:05 -0500
+Message-ID: <76b4ef23-be57-8138-8117-77531750539e@linux.vnet.ibm.com>
+References: <1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <87shucsypn.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <lm-sensors-bounces@lm-sensors.org>
-In-Reply-To: <20160809163727.GC9105@roeck-us.net>
-List-Unsubscribe: <http://lists.lm-sensors.org/mailman/options/lm-sensors>,
-	<mailto:lm-sensors-request@lm-sensors.org?subject=unsubscribe>
-List-Archive: <http://lists.lm-sensors.org/pipermail/lm-sensors/>
-List-Post: <mailto:lm-sensors@lm-sensors.org>
-List-Help: <mailto:lm-sensors-request@lm-sensors.org?subject=help>
-List-Subscribe: <http://lists.lm-sensors.org/mailman/listinfo/lm-sensors>,
-	<mailto:lm-sensors-request@lm-sensors.org?subject=subscribe>
-Sender: lm-sensors-bounces@lm-sensors.org
-Errors-To: lm-sensors-bounces@lm-sensors.org
-To: lm-sensors@lm-sensors.org, devicetree@vger.kernel.org
-Cc: Mike Looijmans <mike.looijmans@topic.nl>, linux-kernel@vger.kernel.org
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <87shucsypn.fsf@concordia.ellerman.id.au>
+Sender: owner-linux-mm@kvack.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Reza Arbab <arbab@linux.vnet.ibm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Jonathan Corbet <corbet@lwn.net>, Bharata B Rao <bharata@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Parse devicetree parameters for voltage and prescaler setting. This allows
-using multiple max6550 devices with varying settings, and also makes it
-possible to instantiate and configure the device using devicetree.
+On 08/10/2016 05:30 AM, Michael Ellerman wrote:
+> Reza Arbab <arbab@linux.vnet.ibm.com> writes:
+> 
+>> These changes enable onlining memory into ZONE_MOVABLE on power, and the
+>> creation of discrete nodes of movable memory.
+>>
+>> Node hotplug is not supported on power [1].
+> 
+> But maybe it should be?
+> 
+Yes, it should be supported.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
-v3: Resubmit because mailing lists bounced
-    Fix style errors as reported by checkpatch.pl
-    Fix bug in DT parsing of fan-prescale
-v2: Add devicetree binding documentation
-    Code changes as suggested by Guenter
-    Reduce log info, output only a single line
+I have briefly looked into this recently only to find
+this will not be a simple update.
 
- .../devicetree/bindings/hwmon/max6650.txt          | 20 ++++++++++++++++
- drivers/hwmon/max6650.c                            | 28 +++++++++++++---------
- 2 files changed, 37 insertions(+), 11 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/hwmon/max6650.txt
+-Nathan 
 
-diff --git a/Documentation/devicetree/bindings/hwmon/max6650.txt b/Documentation/devicetree/bindings/hwmon/max6650.txt
-new file mode 100644
-index 0000000..89d87c6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/max6650.txt
-@@ -0,0 +1,20 @@
-+Bindings for MAX6651 and MAX6650 I2C fan controllers
-+
-+Required properties:
-+- compatible : One of "max6650" or "max6651"
-+- reg        : I2C address
-+
-+Optional properties:
-+- fan-voltage    : The supply voltage of the fan. Valid values are 5 and 12.
-+                   Default is to use the chip's current setting.
-+- fan-prescale   : Pre-scaling value as per datasheet. Valid are 1, 2, 4, 8, 16.
-+                   Default is to use the chip's current setting.
-+ 
-+
-+Example:
-+	fan-max6650: max6650@1b {
-+		reg = <0x1b>;
-+		compatible = "max6650";
-+		fan-voltage = <12>;
-+		fan-prescale = <4>;
-+	};
-diff --git a/drivers/hwmon/max6650.c b/drivers/hwmon/max6650.c
-index 162a520..56a6c87 100644
---- a/drivers/hwmon/max6650.c
-+++ b/drivers/hwmon/max6650.c
-@@ -41,14 +41,14 @@
- #include <linux/err.h>
- 
- /*
-- * Insmod parameters
-+ * Insmod parameters (for backward compatibility)
-  */
- 
- /* fan_voltage: 5=5V fan, 12=12V fan, 0=don't change */
- static int fan_voltage;
- /* prescaler: Possible values are 1, 2, 4, 8, 16 or 0 for don't change */
- static int prescaler;
--/* clock: The clock frequency of the chip the driver should assume */
-+/* clock: The clock frequency of the chip (max6651 can be clocked externally) */
- static int clock = 254000;
- 
- module_param(fan_voltage, int, S_IRUGO);
-@@ -566,6 +566,15 @@ static int max6650_init_client(struct max6650_data *data,
- 	struct device *dev = &client->dev;
- 	int config;
- 	int err = -EIO;
-+	u32 voltage;
-+	u32 prescale;
-+
-+	if (of_property_read_u32(client->dev.of_node, "fan-voltage",
-+				 &voltage))
-+		voltage = fan_voltage;
-+	if (of_property_read_u32(client->dev.of_node, "fan-prescale",
-+				 &prescale))
-+		prescale = prescaler;
- 
- 	config = i2c_smbus_read_byte_data(client, MAX6650_REG_CONFIG);
- 
-@@ -574,7 +583,7 @@ static int max6650_init_client(struct max6650_data *data,
- 		return err;
- 	}
- 
--	switch (fan_voltage) {
-+	switch (voltage) {
- 	case 0:
- 		break;
- 	case 5:
-@@ -584,14 +593,10 @@ static int max6650_init_client(struct max6650_data *data,
- 		config |= MAX6650_CFG_V12;
- 		break;
- 	default:
--		dev_err(dev, "illegal value for fan_voltage (%d)\n",
--			fan_voltage);
-+		dev_err(dev, "illegal value for fan_voltage (%d)\n", voltage);
- 	}
- 
--	dev_info(dev, "Fan voltage is set to %dV.\n",
--		 (config & MAX6650_CFG_V12) ? 12 : 5);
--
--	switch (prescaler) {
-+	switch (prescale) {
- 	case 0:
- 		break;
- 	case 1:
-@@ -614,10 +619,11 @@ static int max6650_init_client(struct max6650_data *data,
- 			 | MAX6650_CFG_PRESCALER_16;
- 		break;
- 	default:
--		dev_err(dev, "illegal value for prescaler (%d)\n", prescaler);
-+		dev_err(dev, "illegal value for prescaler (%d)\n", prescale);
- 	}
- 
--	dev_info(dev, "Prescaler is set to %d.\n",
-+	dev_info(dev, "Fan voltage: %dV, prescaler: %d.\n",
-+		 (config & MAX6650_CFG_V12) ? 12 : 5,
- 		 1 << (config & MAX6650_CFG_PRESCALER_MASK));
- 
- 	/*
--- 
-1.9.1
-
-
-_______________________________________________
-lm-sensors mailing list
-lm-sensors@lm-sensors.org
-http://lists.lm-sensors.org/mailman/listinfo/lm-sensors
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
