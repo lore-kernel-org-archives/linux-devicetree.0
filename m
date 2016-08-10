@@ -1,70 +1,70 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 2/4] mfd: Add Samsung Exynos Low Power
- Audio Subsystem driver
-Date: Wed, 10 Aug 2016 12:19:18 +0100
-Message-ID: <20160810111918.GS1581@dell>
-References: <1467738804-31460-1-git-send-email-s.nawrocki@samsung.com>
- <20160809150502.GQ5243@dell>
- <61d700f7-ef66-8278-54ea-8e6e2f1a029e@samsung.com>
- <20160809205031.GD1581@dell>
- <a66ab86f-d5da-0462-81c9-48469721d229@samsung.com>
+From: Karl Beldan <kbeldan@baylibre.com>
+Subject: Re: [PATCH 3/4] ARM: dts: da850-lcdk: Add NAND to DT
+Date: Wed, 10 Aug 2016 11:19:44 +0000
+Message-ID: <20160810111944.GA31616@gobelin>
+References: <20160809171518.22690-1-kbeldan@baylibre.com>
+ <20160809171518.22690-4-kbeldan@baylibre.com>
+ <57AAE67D.4000404@ti.com> <20160810090417.GE16481@gobelin>
+ <57AAF472.7000804@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <a66ab86f-d5da-0462-81c9-48469721d229@samsung.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: robh@kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, linux-kernel@vger.kernel.org, inki.dae@samsung.com, broonie@kernel.org, Beomho Seo <beomho.seo@samsung.com>, ideal.song@samsung.com
+In-Reply-To: <57AAF472.7000804@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Karl Beldan <karl.beldan+oss@gmail.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAxMCBBdWcgMjAxNiwgU3lsd2VzdGVyIE5hd3JvY2tpIHdyb3RlOgoKPiBPbiAwOC8w
-OS8yMDE2IDEwOjUwIFBNLCBMZWUgSm9uZXMgd3JvdGU6Cj4gPiBPbiBUdWUsIDA5IEF1ZyAyMDE2
-LCBTeWx3ZXN0ZXIgTmF3cm9ja2kgd3JvdGU6Cj4gPiAKPiA+PiA+IE9uIDA4LzA5LzIwMTYgMDU6
-MDUgUE0sIExlZSBKb25lcyB3cm90ZToKPiA+Pj4+ID4gPj4gK3N0YXRpYyBTSU1QTEVfREVWX1BN
-X09QUyhscGFzc19wbV9vcHMsIGV4eW5vc19scGFzc19zdXNwZW5kLAo+ID4+Pj4+ID4gPj4gPiAr
-CQkJCQlleHlub3NfbHBhc3NfcmVzdW1lKTsKPiA+Pj4gPiA+IFB1dCB0aGlzIHVwIGJ5IHRoZSBQ
-TSBmdW5jdGlvbnMuCj4gPj4gPiAKPiA+PiA+IFNvcnJ5LCBJIGRvbid0IHVuZGVyc3RhbmQgdGhp
-cyBjb21tZW50LCB3aGljaCBQTSBmdW5jdGlvbnMgZG8geW91Cj4gPj4gPiBtZWFuIGV4YWN0bHk/
-Cj4gPiAqX3N1c3BlbmQgYW5kICpfcmVzdW1lLiAgUE0gPT0gUG93ZXIgTWFuYWdlbWVudC4KPiA+
-IAo+ID4gWW91IGFsc28gbmVlZCB0byBwbGFjZSB0aGUgZnVuY3Rpb25zIGluIHNpZGUgc29tZSBD
-T05GSUdfUE1fU0xFRVAKPiA+IGd1YXJkcy4gIEdyZXAgYXJvdW5kLCB5b3UnbGwgc2VlIHdoYXQg
-SSBtZWFuLgo+IAo+IE9LLCBidXQgY291bGRuJ3Qgd2UganVzdCBsZWF2ZSBpdCB3aXRoIHRoYXQg
-U0lNUExFX0RFVl9QTV9PUFMoKQo+IG1hY3JvPyAgSXQgc2F2ZXMgdXMgYW4gI2lmZGVmIHVnbGlu
-ZXNzIGFuZCBpZiBJIGFjdHVhbGx5IGdyZXAKPiBkcml2ZXJzL21mZCBtb3N0IG9mIHRoZSBkcml2
-ZXJzIHVzZSBlaXRoZXIgU0lNUExFX0RFVl9QTV9PUFMoKSBvcgo+IFNFVF9TWVNURU1fU0xFRVBf
-UE1fT1BTLiBBcmUgeW91IGFza2luZyBtZSB0byBjaGFuZ2UgdGhlIGFib3ZlIHRvOgo+IAo+IHN0
-YXRpYyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBleHlub3NfbHBhc3NfcG1fb3BzID0gewo+ICNp
-ZmRlZiBDT05GSUdfUE1fU0xFRVAKPiAJLnN1c3BlbmQgPSBleHlub3NfbHBhc3Nfc3VzcGVuZCwK
-PiAJLnJlc3VtZSA9IGV4eW5vc19scGFzc19yZXN1bWUsCj4gCS5mcmVlemUgPSBleHlub3NfbHBh
-c3Nfc3VzcGVuZCwKPiAJLnRoYXcgPSBleHlub3NfbHBhc3NfcmVzdW1lLAo+IAkucG93ZXJvZmYg
-PSBleHlub3NfbHBhc3Nfc3VzcGVuZCwKPiAJLnJlc3RvcmUgPSBleHlub3NfbHBhc3NfcmVzdW1l
-LAo+ICNlbmRpZgo+IH0KPiAKPiBvciBwZXJoYXBzCj4gCj4gc3RhdGljIGNvbnN0IHN0cnVjdCBk
-ZXZfcG1fb3BzIGV4eW5vc19scGFzc19wbV9vcHMgPSB7Cj4gCVNFVF9TWVNURU1fU0xFRVBfUE1f
-T1BTKGV4eW5vc19scGFzc19zdXNwZW5kLCBleHlub3NfbHBhc3NfcmVzdW1lKQo+IH0KPiAKPiA/
-CgpOb3QgbGlrZSB0aGF0LiAgR3JlcCAnZHJpdmVycy9tZmQnIGZvciAiQ09ORklHX1BNX1NMRUVQ
-IiBhcwpzdWdnZXN0ZWQuICBZb3Ugd2lsbCBmaW5kIHRoYXQgdGhlIGFjdHVhbCAqX3N1c3BlbmQg
-YW5kICpfcmVzdW1lCmZ1bmN0aW9ucyBhcmUgZ3VhcmRlZCBpbiBvcmRlciB0byBzYXZlIHNwYWNl
-LgoKPiBJIGFncmVlIGFib3V0IHRoZSBDT05GSUdfUE1fU0xFRVAgZ3VhcmRzLiAgVGhlcmUgaXMg
-dmVyeSBsaXR0bGUKPiBjaGFuY2UgdGhvdWdoIHRoZSBMUEFTUyBkcml2ZXIgd2lsbCBldmVyIGJl
-IHVzZWQgd2l0aAo+IENPTkZJR19QTV9TTEVFUCBkaXNhYmxlZC4gSG93IGFib3V0IGFkZGluZyBf
-X21heWJlX3VudXNlZCBhdHRyaWJ1dGUKPiB0byB0aGUgKl9zdXNwZW5kLypfcmVzdW1lIGZ1bmN0
-aW9ucyB0aGVuPyAgSSBjYW4gc2VlIHRoaXMgcGF0dGVybgo+IHVzZWQgYWxyZWFkeSBpbiBkcml2
-ZXJzL21mZC4KCkl0J3MgbW9yZSBjb21tb24gcHJhY3RpY2UgdG8gdXNlIENPTkZJR19QTV9TTEVF
-UDoKCiQgZ2l0IGdyZXAgX19tYXliZV91bnVzZWQgLS0gZHJpdmVycy9tZmQvIHwgd2MgLWwKNwok
-IGdpdCBncmVwIENPTkZJR19QTV9TTEVFUCAtLSBkcml2ZXJzL21mZC8gfCB3YyAtbAozMQoKLS0g
-CkxlZSBKb25lcwpMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkCkxp
-bmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGlu
-YXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxA
-YWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4v
-bGlzdGluZm8vYWxzYS1kZXZlbAo=
+On Wed, Aug 10, 2016 at 03:01:30PM +0530, Sekhar Nori wrote:
+> On Wednesday 10 August 2016 02:34 PM, Karl Beldan wrote:
+> > On Wed, Aug 10, 2016 at 02:01:57PM +0530, Sekhar Nori wrote:
+> >> On Tuesday 09 August 2016 10:45 PM, Karl Beldan wrote:
+> >>> This adds DT support for the NAND connected to the SoC AEMIF.
+> >>> The parameters (timings, ecc) are the same as what the board ships with
+> >>> (default AEMIF timings, 1bit ECC) and improvements will be handled in
+> >>> due course.
+> >>
+> >> I disagree that we need to be compatible to the software that ships with
+> >> the board. Thats software was last updated 3 years ago. Instead I would
+> >> concern with what the hardware supports. So, if the hardware can support
+> >> 4-bit ECC, I would use that.
+> >>
+> > I am not saying we _need_ to be compatible.
+> 
+> Alright then, please drop references to what software the board ships
+> with in the commit message and in the patch itself.
+> 
+
+I hadn't seen this comment before sending v2.
+
+> > 
+> >> If driver is broken for 4-bit ECC, please fix that up first.
+> >>
+> > Since this issue is completely separate from my DT improvements
+> > I'll stick to resubmitting the series, applying my LCDK changes to the
+> > EVM too, besides you'll be able to compare the behavior without ECC
+> > discrepancies.
+> > I took note that you are likely to not apply without the ECC fix.
+> 
+> Yeah, I would not like to apply with 1-bit ECC now and then change to
+> 4-bit ECC soon after.
+> 
+
+Both mityomapl138 from mainline and hawkboard from TI's BSP release
+include the comment:
+- "4 bit mode is not supported with 16 bit NAND"
+It is not clear whether they imply that the HW has issues or if it's SW
+only, but 4-bits ECC is a different matter and I hope you'll integrate
+the current changes prior to tackling it.
+ 
+Karl
