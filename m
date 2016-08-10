@@ -1,160 +1,111 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v3 15/15] ARM64: dts: Define CPU power domain for MSM8916
-Date: Wed, 10 Aug 2016 11:35:43 -0600
-Message-ID: <20160810173543.GB1401@linaro.org>
-References: <1470351902-43103-1-git-send-email-lina.iyer@linaro.org>
- <1470351902-43103-16-git-send-email-lina.iyer@linaro.org>
- <aae203cd-35ee-958f-bc59-b9d53c32aeb2@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: rt5659: Add mclk controls
+Date: Wed, 10 Aug 2016 18:52:43 +0100
+Message-ID: <20160810175243.GN9347@sirena.org.uk>
+References: <1469660568-3511-1-git-send-email-nicoleotsuka@gmail.com>
+ <20160728155732.GG11806@sirena.org.uk>
+ <20160728181419.GA4742@Asurada-Nvidia>
+ <20160728185510.GK11806@sirena.org.uk>
+ <20160729161521.GL9681@localhost>
+ <20160729163933.GJ10376@sirena.org.uk>
+ <c649c3fe-b111-56a8-275e-d967a961dd41@linux.intel.com>
+ <20160810170632.GL9347@sirena.org.uk>
+ <c794d543-a57a-aad6-1b62-4d101a79cdd3@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <aae203cd-35ee-958f-bc59-b9d53c32aeb2@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Juri Lelli <Juri.Lelli@arm.com>, khilman@kernel.org, sboyd@codeaurora.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, Brendan Jackman <Brendan.Jackman@arm.com>, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============2632061453710435474=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <c794d543-a57a-aad6-1b62-4d101a79cdd3@linux.intel.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: mark.rutland@arm.com, oder_chiou@realtek.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Darren Hart <dvhart@linux.intel.com>, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>, robh+dt@kernel.org, bardliao@realtek.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 10 2016 at 09:27 -0600, Sudeep Holla wrote:
->
->
->On 05/08/16 00:05, Lina Iyer wrote:
->>Define power domain and the power states for the domain as defined by
->>the PSCI firmware.
->
->>The 8916 firmware supports OS initiated method of
->>powering off the CPU clusters.
->
->How is that related to the this DTS change, more details below ?
->
->>
->>Cc: <devicetree@vger.kernel.org>
->>Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
->>---
->> arch/arm64/boot/dts/qcom/msm8916.dtsi | 27 +++++++++++++++++++++++++++
->> 1 file changed, 27 insertions(+)
->>
->>diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
->>index 3029773..eb0aaed 100644
->>--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
->>+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
->>@@ -64,6 +64,7 @@
->> 			next-level-cache = <&L2_0>;
->> 			enable-method = "psci";
->> 			cpu-idle-states = <&CPU_SPC>;
->>+			power-domains = <&CPU_PD>;
->
->This is really messy. We need to have idle state information at one 
->place. I prefer to have a hierarchal representation of power-domains
->for CPU with idle-states at each level.
->
->> 		};
-I see where are going with that. We need to then isolate idle states
-from all devices (including CPU) and put them under the umberella of the
-domain/parent idle states.
 
-We also need to remember that domain idle states are not just for CPU
-domains. There are generic PM domains that also define their idle
-states. For some, that hierarchy may not make sense. So forcing it on
-all domains is not correct as well.
+--===============2632061453710435474==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="UExESr5xZTMxdOWv"
+Content-Disposition: inline
 
->>
->> 		CPU1: cpu@1 {
->>@@ -73,6 +74,7 @@
->> 			next-level-cache = <&L2_0>;
->> 			enable-method = "psci";
->> 			cpu-idle-states = <&CPU_SPC>;
->>+			power-domains = <&CPU_PD>;
->> 		};
->>
->> 		CPU2: cpu@2 {
->>@@ -82,6 +84,7 @@
->> 			next-level-cache = <&L2_0>;
->> 			enable-method = "psci";
->> 			cpu-idle-states = <&CPU_SPC>;
->>+			power-domains = <&CPU_PD>;
->> 		};
->>
->> 		CPU3: cpu@3 {
->>@@ -91,6 +94,7 @@
->> 			next-level-cache = <&L2_0>;
->> 			enable-method = "psci";
->> 			cpu-idle-states = <&CPU_SPC>;
->>+			power-domains = <&CPU_PD>;
->> 		};
->>
->> 		L2_0: l2-cache {
->>@@ -113,6 +117,29 @@
->> 	psci {
->> 		compatible = "arm,psci-1.0";
->> 		method = "smc";
->
->Why is it inside PSCI node ? I don't see a need for that.
->If it needs to be here, then amend the binding document.
->
-It is described in patch 13/15.
 
-It is inside PSCI node, because PSCI has the domain controller.
+--UExESr5xZTMxdOWv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>+
->>+		CPU_PD: cpu-pd@0 {
->>+			#power-domain-cells = <0>;
->>+			domain-idle-states = <&CLUSTER_RET>, <&CLUSTER_PWR_DWN>;
->>+		};
->>+
->>+		domain-states {
->>+			CLUSTER_RET: domain_ret {
->>+				compatible = "arm,idle-state";
->>+				arm,psci-suspend-param = <0x1000010>;
->>+				entry-latency-us = <500>;
->>+				exit-latency-us = <500>;
->>+				min-residency-us = <2000>;
->>+			};
->>+
->>+			CLUSTER_PWR_DWN: domain_gdhs {
->>+				compatible = "arm,idle-state";
->>+				arm,psci-suspend-param = <0x1000030>;
->>+				entry-latency-us = <2000>;
->>+				exit-latency-us = <2000>;
->>+				min-residency-us = <6000>;
->>+			};
->>+		};
->
->So how do you collapse these states into the cpu level states ?
-Why do you have to collapse?
+On Wed, Aug 10, 2016 at 12:31:28PM -0500, Pierre-Louis Bossart wrote:
 
->We should be able to cope up with platform co-ordinated mode of idle.
->For me, this binding and the representation here is designed only to
->address OS co-ordinated mode of idle support but it should be other way
->around. Design the bindings that can cater any mode (platform and OS
->co-ordinated)
-As explained to Brendan on the version2 of the series, OSI and PC are
-orthagonal to each other. The idle state definition in the devicetree
-exactly matches the unique approaches of these 2 modes.
+> If we want to be consistent then we need to have a framework that handles
+> both the SOC clock sources and the codec internal clock tree (including
+> dividers and switches)
+> I wonder if what you are hinting at is the codec driver modeling its
+> internal PLL/clock tree with the clock API?
 
-In platform coordinated, the CPU determines the idle state of the domain
-and selects the state, hence it makes sense to extend the
-cpu-idle-states to cover those domain states.
+I'm not just hinting at that, I've openly stated it quite a few times
+now!  :P  For the simpler CODECs it's kind of marginal if you need to
+bother but for anything more complex (even things with PLLs) it seems
+like the way forwards.
 
-In OSI, the CPUs only determine their idle states. When they are done
-with their idle state, they bubble up and let the domain choose its idle
-state and therefore the domain-idle-states is part of the domain
-controller.
+> If we have the clock API requesting the mclk only, and the rest of the co=
+dec
+> configuration is done by the machine driver there is no real progress I c=
+an
+> see.
 
-With this addition platform coordinated representation is not broken. If
-your SoC supports both platform and os modes, then you can specify the
-idle states of both of them in the DT. The clause in firmware/psci.c
-will however, choose OSI if its available. I am not sure we want to
-dynamically switch betweeen OSI and PC at runtime.
+It's still useful in that we can consistently manage the clocks external
+to the CODEC that way, especially when looking at systems where it is
+useful to dynamically start and stop the clocks.
 
-Thanks,
-Lina
+> > The CODEC clearly has *some* idea of what's going on here, and
+> > especially for simpler CODECs the code to drive the clocking should be
+> > fairly easy to generalize as there's few options.  From a clock API
+> > point of view the CODEC really ought to be the one requesting the clocks
+> > that go into it, though there's nothing that says it has to only use its
+> > own information to do that.
+
+> I don't get the last part, how would the codec use information it doesn't
+> own or have access to?
+
+I'd expect that a clock consumer should (like a regulator consumer can)
+be able to figure out what constraints there are on the rates it has
+set.  Those could be fixed restrictions but it'd be good to also have
+ways for other actors in the system to change things at runtime.
+
+> At any rate, I am only trying to define the problem statement, probably
+> something to talk about at the Audio Miniconference.
+
+Yup.  I really should chase to see if that actually got accepted or
+not...=20
+
+--UExESr5xZTMxdOWv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXq2npAAoJECTWi3JdVIfQoiMH/AkShQBYhz7E8L/yUBN+QHon
+KkPYGoOr3B76nAfA0fOC57aqasNhAsnus7FMuQeZd+CLxJd3RuPH46QTRtDVt22z
+DSNXkNExYi/1uWNBsnY7DXWKy0CXPMGoqx8eqKircAa4cCmuBFlC3jpZooswuUlx
+wIU3TvCPxFkL/T7hZ2vgNp5I5svTEhyiHKmHqogc4mb9UMIOdJYgeqhvWBBdFdzy
+GjbaklIdLKbP8R4oDDNeeIaBI+b+eFahD5Ur2d1tCujAhFK4E9Aubm2W1j/u6ZTo
+l0Ib1RmxyN0VtreDjR0MfPyPIfYW0x3zlWfciy3IMcVk+bHRkIoyxCTFcF3anXc=
+=JFUj
+-----END PGP SIGNATURE-----
+
+--UExESr5xZTMxdOWv--
+
+--===============2632061453710435474==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2632061453710435474==--
