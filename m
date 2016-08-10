@@ -1,52 +1,37 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V3 2/4] clk: Combine DT binding doc for max77686 and max77802
-Date: Wed, 10 Aug 2016 15:10:29 +0530
-Message-ID: <57AAF68D.7090707@nvidia.com>
-References: <1466160667-28451-1-git-send-email-ldewangan@nvidia.com> <1466160667-28451-3-git-send-email-ldewangan@nvidia.com> <20160620163947.GA27492@rob-hp-laptop> <5768E2AD.8070004@nvidia.com> <57725F64.4030903@nvidia.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [Urgent PATCH] arm64: dts: uniphier: fix IRQ trigger type of ARMv8 timer
+Date: Wed, 10 Aug 2016 22:52:13 +0200
+Message-ID: <1769666.3m3onKVFl3@wuerfel>
+References: <1470039140-3801-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57725F64.4030903@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470039140-3801-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Monday, August 1, 2016 5:12:20 PM CEST Masahiro Yamada wrote:
+> Since commit 1e2a7d78499e ("irqdomain: Don't set type when mapping
+> an IRQ"), the interrupt type is strictly checked.  Without this
+> patch, this board would not boot any more.
+> 
+> Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> says that the 3rd cell should be either 1 (edge) or 4 (level)
+> depending on the trigger type.  As the CA72 Generic Timer provides
+> active-low interrupts, the value of the 3rd cell should be 4.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> Suggested-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> 
 
-On Tuesday 28 June 2016 04:58 PM, Laxman Dewangan wrote:
-> Hi Rob,
->
-> On Tuesday 21 June 2016 12:16 PM, Laxman Dewangan wrote:
->>
->> On Monday 20 June 2016 10:09 PM, Rob Herring wrote:
->>> On Fri, Jun 17, 2016 at 04:21:05PM +0530, Laxman Dewangan wrote:
->>>>
->>>>
->>>> +
->>>>   Following properties should be presend in main device node of the 
->>>> MFD chip.
->>>>     Required properties:
->>> I'd expect to see compatible strings updated...
->>>
->>
->> There is no separate compatible string for clock. The clock nodes is 
->> the parent node only and the compatible described in the parent DT 
->> binding doc.
->>
->>
->> Do we also need to add same thing here?
->
-> Are you fine with the above? As there is no compatible string for 
-> clock (clock does not have separate node), do I still need to add 
-> explicitly here?
->
+I've added it to the fixes branch now, sorry for the delay.
 
+	Arnd
 
-Can you please help here to review? If required, I can rebase and 
-re-send the patches.
-
-
-Thanks,
-Laxman
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
