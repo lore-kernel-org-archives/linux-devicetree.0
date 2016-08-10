@@ -1,29 +1,47 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH 0/4] powerpc/mm: movable hotplug memory nodes
-Date: Wed, 10 Aug 2016 20:30:28 +1000
-Message-ID: <87shucsypn.fsf@concordia.ellerman.id.au>
-References: <1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com>
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: Re: [PATCH v6 0/8] CPUs capacity information for heterogeneous systems
+Date: Wed, 10 Aug 2016 11:53:42 +0100
+Message-ID: <20160810105342.GF3540@e106622-lin>
+References: <1468932048-31635-1-git-send-email-juri.lelli@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: owner-linux-mm@kvack.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Jonathan Corbet <corbet@lwn.net>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1468932048-31635-1-git-send-email-juri.lelli@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, vincent.guittot@linaro.org, linux-pm@vger.kernel.org, peterz@infradead.org, catalin.marinas@arm.com, broonie@kernel.org, will.deacon@arm.com, dietmar.eggemann@arm.com, robh+dt@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, morten.rasmussen@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Reza Arbab <arbab@linux.vnet.ibm.com> writes:
+Hi,
 
-> These changes enable onlining memory into ZONE_MOVABLE on power, and the
-> creation of discrete nodes of movable memory.
->
-> Node hotplug is not supported on power [1].
+On 19/07/16 13:40, Juri Lelli wrote:
+> Hi all,
+> 
+> version 6 of "CPUs capacity information for heterogeneous systems" patchset [1]
+> (please refer to previous postings to get some context).
+> 
 
-But maybe it should be?
+gentle ping to everybody participating in this discussion.
 
-cheers
+Rob acked the bindings and Peter seems fine with this set as well. Given
+that no major problems with the current implementation where pointed out
+in v5 (and the minor ones I should have addressed in v6), do people
+think it might be time to merge this set? If you think the set is fine
+it would be good to collect more ACKs, I guess; if not please provide
+feedback so that I can address it before the next cycle.
 
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+Thanks!
+
+Best,
+
+- Juri
