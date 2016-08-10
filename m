@@ -1,52 +1,106 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RFT RESEND PATCH v3 3/3] ARM: select PCI_DOMAINS config from
- ARCH_MULTIPLATFORM
-Date: Wed, 10 Aug 2016 15:23:43 +0200
-Message-ID: <cf4a7376-1cd4-aeb4-cbf0-7dbbc3575137@samsung.com>
-References: <1470832400-11929-1-git-send-email-kishon@ti.com>
- <1470832400-11929-4-git-send-email-kishon@ti.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [PATCH] ASoC: rt5659: Add mclk controls
+Date: Wed, 10 Aug 2016 08:57:28 -0500
+Message-ID: <c649c3fe-b111-56a8-275e-d967a961dd41@linux.intel.com>
+References: <1469660568-3511-1-git-send-email-nicoleotsuka@gmail.com>
+ <20160728155732.GG11806@sirena.org.uk> <20160728181419.GA4742@Asurada-Nvidia>
+ <20160728185510.GK11806@sirena.org.uk> <20160729161521.GL9681@localhost>
+ <20160729163933.GJ10376@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1470832400-11929-4-git-send-email-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Shawn Guo <shawnguo@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, nsekhar@ti.com, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kukjin Kim <kgene@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Santosh Shilimkar <ssantosh@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Krzysztof Halasa <khalasa@piap.pl>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, Viresh Kumar <vireshk@kernel.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20160729163933.GJ10376@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Vinod Koul <vinod.koul@intel.com>
+Cc: mark.rutland@arm.com, oder_chiou@realtek.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Darren Hart <dvhart@linux.intel.com>, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>, robh+dt@kernel.org, bardliao@realtek.com
 List-Id: devicetree@vger.kernel.org
 
-On 08/10/2016 02:33 PM, Kishon Vijay Abraham I wrote:
-> PCI_DOMAINS config should be selected for any SoCs
-> having more than a single PCIe controller. Without PCI_DOMAINS
-> config, only one PCIe controller gets registered.
-> 
-> Select PCI_DOMAINS in ARCH_MULTIPLATFORM if PCI is selected, since
-> it doesn't harm even if a platform has a single PCIe port.
-> Also remove PCI_DOMAINS being selected from other platform
-> specific configs.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  arch/arm/Kconfig               |    1 +
->  arch/arm/mach-axxia/Kconfig    |    1 -
->  arch/arm/mach-cns3xxx/Kconfig  |    1 -
->  arch/arm/mach-exynos/Kconfig   |    1 -
->  arch/arm/mach-imx/Kconfig      |    2 --
->  arch/arm/mach-keystone/Kconfig |    1 -
->  arch/arm/mach-shmobile/Kconfig |    1 -
->  7 files changed, 1 insertion(+), 7 deletions(-)
+On 7/29/16 11:39 AM, Mark Brown wrote:
+> On Fri, Jul 29, 2016 at 09:45:21PM +0530, Vinod Koul wrote:
+>
+>> Yeah I am not aware of any plan to have clks on x86. For audio we are not
+>> going to use much. ACPI and controller w/ firmware does the job.
+>
+>> I have added Darren, he oversee platform things so might know if clocks
+>> would be there in future..
+>
+> Not having controllable clocks is fine but as we've discussed before
+> you're going to need to represent the clocks that are there with fixed
+> clocks instantiated through whatever you use to enumerate boards.  We
+> don't want to have to special case x86 all the time in CODEC drivers.
 
-For Exynos5440 output is equal and we do not use PCI on other SoCs, so:
+Without going into a debate on x86 v. the clock API or the merits of a 
+patch that has already been applied, I am pretty confused on who's 
+supposed to manage the mclk between the machine and codec driver.
 
-Acked-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+If you go back to this specific patch for the rt5659 audio codec, the 
+simplified code reads as:
 
-Best regards,
-Krzysztof
+static int rt5659_set_bias_level()
+[snip]
+	case SND_SOC_BIAS_STANDBY:
+		if (dapm->bias_level == SND_SOC_BIAS_OFF) {
+			ret = clk_prepare_enable(rt5659->mclk);
+
+So on a DAPM transition the clock is enabled. Fine.
+What's not clear here is that the codec driver doesn't know what rates 
+are supported by the SOC/chipset. The machine driver is typically the 
+one doing calls such as
+
+ret = snd_soc_dai_set_pll(codec_dai, 0,
+			RT5640_PLL1_S_MCLK,
+			19200000,
+			params_rate(params) * 512);
+
+it's as if this patch assumes the mclk is a single rate? if this was a 
+generic solution then the codec driver would need to set the rates as 
+well and its internal PLL/divider settings.
+
+In addition, the machine driver can implement a platform clock control 
+with things like
+
+static const struct snd_soc_dapm_route byt_rt5640_audio_map[] = {
+	{"Headphone", NULL, "Platform Clock"},
+	{"Headset Mic", NULL, "Platform Clock"},
+	{"Internal Mic", NULL, "Platform Clock"},
+	{"Speaker", NULL, "Platform Clock"},
+
+
+static int platform_clock_control(struct snd_soc_dapm_widget *w,
+				  struct snd_kcontrol *k, int  event)
+
+	if (SND_SOC_DAPM_EVENT_ON(event)) {
+		ret = clk_prepare_enable(priv->mclk);
+		ret = snd_soc_dai_set_sysclk(codec_dai,
+					RT5640_SCLK_S_PLL1,
+					48000 * 512,
+					SND_SOC_CLOCK_IN);
+	} else {
+		/*
+		 * Set codec clock source to internal clock before
+		 * turning off the platform clock. Codec needs clock
+		 * for Jack detection and button press
+		 */
+		ret = snd_soc_dai_set_sysclk(codec_dai,
+					RT5640_SCLK_S_RCCLK,
+				         0,
+					SND_SOC_CLOCK_IN);
+		clk_disable_unprepare(priv->mclk);
+
+
+so the summary is that we have two ways of doing the same thing - 
+turning the mclk on when it's needed - and I wonder if doing this in the 
+codec is really the right solution? Again this is not a question on the 
+merits of the clk API/framework but whether we can have a single point 
+of control instead of two pieces of code doing the same thing in two 
+drivers.
+If I am missing something I am all ears.
