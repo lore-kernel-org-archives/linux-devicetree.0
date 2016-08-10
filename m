@@ -1,7 +1,7 @@
 From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v2 5/5] arm64: dts: msm8996: Add thermal zones, tsens and qfprom nodes
-Date: Wed, 10 Aug 2016 12:13:59 +0530
-Message-ID: <1470811439-1992-6-git-send-email-rnayak@codeaurora.org>
+Subject: [PATCH v2 3/5] arm: dts: apq8084: Add thermal zones, tsens and qfprom nodes
+Date: Wed, 10 Aug 2016 12:13:57 +0530
+Message-ID: <1470811439-1992-4-git-send-email-rnayak@codeaurora.org>
 References: <1470811439-1992-1-git-send-email-rnayak@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1470811439-1992-1-git-send-email-rnayak@codeaurora.org>
@@ -15,14 +15,14 @@ Add thermal zones, tsens and qfprom nodes
 Acked-by: Eduardo Valentin <edubezval@gmail.com>
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 92 +++++++++++++++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
+ arch/arm/boot/dts/qcom-apq8084.dtsi | 103 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 103 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 55ec3e8..f52cba3 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -97,6 +97,92 @@
+diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
+index 7c2df06..39eb7a4 100644
+--- a/arch/arm/boot/dts/qcom-apq8084.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
+@@ -94,6 +94,88 @@
  		};
  	};
  
@@ -31,7 +31,7 @@ index 55ec3e8..f52cba3 100644
 +			polling-delay-passive = <250>;
 +			polling-delay = <1000>;
 +
-+			thermal-sensors = <&tsens0 3>;
++			thermal-sensors = <&tsens 5>;
 +
 +			trips {
 +				cpu_alert0: trip0 {
@@ -39,7 +39,6 @@ index 55ec3e8..f52cba3 100644
 +					hysteresis = <2000>;
 +					type = "passive";
 +				};
-+
 +				cpu_crit0: trip1 {
 +					temperature = <110000>;
 +					hysteresis = <2000>;
@@ -52,7 +51,7 @@ index 55ec3e8..f52cba3 100644
 +			polling-delay-passive = <250>;
 +			polling-delay = <1000>;
 +
-+			thermal-sensors = <&tsens0 5>;
++			thermal-sensors = <&tsens 6>;
 +
 +			trips {
 +				cpu_alert1: trip0 {
@@ -60,7 +59,6 @@ index 55ec3e8..f52cba3 100644
 +					hysteresis = <2000>;
 +					type = "passive";
 +				};
-+
 +				cpu_crit1: trip1 {
 +					temperature = <110000>;
 +					hysteresis = <2000>;
@@ -73,7 +71,7 @@ index 55ec3e8..f52cba3 100644
 +			polling-delay-passive = <250>;
 +			polling-delay = <1000>;
 +
-+			thermal-sensors = <&tsens0 8>;
++			thermal-sensors = <&tsens 7>;
 +
 +			trips {
 +				cpu_alert2: trip0 {
@@ -81,7 +79,6 @@ index 55ec3e8..f52cba3 100644
 +					hysteresis = <2000>;
 +					type = "passive";
 +				};
-+
 +				cpu_crit2: trip1 {
 +					temperature = <110000>;
 +					hysteresis = <2000>;
@@ -94,7 +91,7 @@ index 55ec3e8..f52cba3 100644
 +			polling-delay-passive = <250>;
 +			polling-delay = <1000>;
 +
-+			thermal-sensors = <&tsens0 10>;
++			thermal-sensors = <&tsens 8>;
 +
 +			trips {
 +				cpu_alert3: trip0 {
@@ -102,7 +99,6 @@ index 55ec3e8..f52cba3 100644
 +					hysteresis = <2000>;
 +					type = "passive";
 +				};
-+
 +				cpu_crit3: trip1 {
 +					temperature = <110000>;
 +					hysteresis = <2000>;
@@ -112,22 +108,37 @@ index 55ec3e8..f52cba3 100644
 +		};
 +	};
 +
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-@@ -181,6 +267,12 @@
- 			status = "disabled";
+ 	cpu-pmu {
+ 		compatible = "qcom,krait-pmu";
+ 		interrupts = <1 7 0xf04>;
+@@ -150,6 +232,27 @@
+ 			reg = <0xf9011000 0x1000>;
  		};
  
-+		tsens0: thermal-sensor@4a8000 {
-+			compatible = "qcom,msm8996-tsens";
-+			reg = <0x4a8000 0x2000>;
++		qfprom: qfprom@fc4bc000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "qcom,qfprom";
++			reg = <0xfc4bc000 0x1000>;
++			tsens_calib: calib@d0 {
++				reg = <0xd0 0x18>;
++			};
++			tsens_backup: backup@440 {
++				reg = <0x440 0x10>;
++			};
++		};
++
++		tsens: thermal-sensor@fc4a8000 {
++			compatible = "qcom,msm8974-tsens";
++			reg = <0xfc4a8000 0x2000>;
++			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
++			nvmem-cell-names = "calib", "calib_backup";
 +			#thermal-sensor-cells = <1>;
 +		};
 +
- 		blsp2_uart1: serial@75b0000 {
- 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
- 			reg = <0x75b0000 0x1000>;
+ 		timer@f9020000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
