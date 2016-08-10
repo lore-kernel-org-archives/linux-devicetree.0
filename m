@@ -1,82 +1,53 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [v10 PATCH 0/5] Rockchip Type-C and DisplayPort driver
-Date: Thu, 11 Aug 2016 02:00:02 +0800
-Message-ID: <57AB6BA2.8010402@rock-chips.com>
-References: <CGME20160809233518epcas1p3f9f022aa8f96317795c91479d6758a3a@epcas1p3.samsung.com>
- <1470785557-21974-1-git-send-email-zyw@rock-chips.com>
- <57AA772C.1010303@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <57AA772C.1010303-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "cpgs (cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org)" <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] dt-binding: remoteproc: Document generic properties
+Date: Wed, 10 Aug 2016 10:37:02 -0700
+Message-ID: <1470850622-29816-1-git-send-email-bjorn.andersson@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2hhbndvbwoKT24gMDgvMTAvMjAxNiAwODozNyBBTSwgQ2hhbndvbyBDaG9pIHdyb3RlOgo+
-IEhpIENocmlzLAo+Cj4gT24gMjAxNuuFhCAwOOyblCAxMOydvCAwODozMiwgQ2hyaXMgWmhvbmcg
-d3JvdGU6Cj4+IEhpIGFsbAo+Pgo+PiBUaGlzIHNlcmllcyBwYXRjaCBpcyBmb3Igcm9ja2NoaXAg
-VHlwZS1DIHBoeSBhbmQgRGlzcGxheVBvcnQgY29udHJvbGxlcgo+PiBkcml2ZXIuCj4+Cj4+IFRo
-ZSBVU0IgVHlwZS1DIFBIWSBpcyBkZXNpZ25lZCB0byBzdXBwb3J0IHRoZSBVU0IzIGFuZCBEUCBh
-cHBsaWNhdGlvbnMuCj4+IFRoZSBQSFkgYmFzaWNhbGx5IGhhcyB0d28gbWFpbiBjb21wb25lbnRz
-OiBVU0IzIGFuZCBEaXNwbHlQb3J0LiBVU0IzCj4+IG9wZXJhdGVzIGluIFN1cGVyU3BlZWQgbW9k
-ZSBhbmQgdGhlIERQIGNhbiBvcGVyYXRlIGF0IFJCUiwgSEJSIGFuZCBIQlIyCj4+IGRhdGEgcmF0
-ZXMuIFRoZSBUeXBlLUMgY2FibGUgb3JpZW50YXRpb24gZGV0ZWN0aW9uIGFuZCBQb3dlciBEZWxp
-dmVyeQo+PiAoUEQpIGlzIGFjY29tcGxpc2hlZCB1c2luZyBhIFBEIFBIWSBvciBhIGV4ZXJuYWwg
-UEQgY2hpcC4KPj4KPj4gVGhlIERQIGNvbnRyb2xsZXIgaXMgY29tcGxpYW50IHdpdGggRGlzcGxh
-eVBvcnQgU3BlY2lmaWNhdGlvbiwKPj4gVmVyc2lvbiAxLjMsIFRoaXMgSVAgaXMgY29tcGF0aWJs
-ZSB3aXRoIHRoZSByb2NrY2hpcCB0eXBlLWMgUEhZIElQLgo+PiBUaGVyZSBpcyBhIHVDUFUgaW4g
-RFAgY29udHJvbGxlciwgaXQgbmVlZCBhIGZpcm13YXJlIHRvIHdvcmssIHBsZWFzZQo+PiBwdXQg
-dGhlIGZpcm13YXJlIGZpbGVbMF0gdG8gL2xpYi9maXJtd2FyZS9yb2NrY2hpcC9kcHR4LmJpbi4g
-VGhlIHVDUFUKPj4gaW4gY2hhcmdlIG9mIGF1eCBjb21tdW5pY2F0aW9uIGFuZCBsaW5rIHRyYWlu
-aW5nLCB0aGUgaG9zdCB1c2UgbWFpbGJveAo+PiB0byBjb21tdW5pY2F0ZSB3aXRoIHRoZSB1Y3B1
-Lgo+Pgo+PiBUaGUgRFAgY29udG9sbGVyIGhhcyByZWdpc3RlciBhIG5vdGlmaWNhdGlvbiB3aXRo
-IGV4dGNvbiBBUEksIHRvIGdldCB0aGUKPj4gYWx0IG1vZGUgZnJvbSBQRCwgdGhlIFBEIGRyaXZl
-ciBuZWVkIGNhbGwgdGhlIGRldm1fZXh0Y29uX2Rldl9hbGxvY2F0ZQo+PiB0byBjcmVhdGUgYSBl
-eHRjb24gZGV2aWNlIGFuZCB1c2UgZXh0Y29uX3NldF9zdGF0ZSB0byBub3RpZnkgRFAKPj4gY29u
-dHJvbGxlci4gQW5kIGNhbGwgZXh0Y29uX3NldF9jYWJsZV9wcm9wZXJ0eSB0byBzZXQgb3JpZW50
-YXRpb24uCj4+Cj4+IEFib3V0IHRoZSBEUCBhdWRpbywgY2RuLWRwIHJlZ2lzdGVyZWQgMiBEQUlz
-OiAwIGlzIEkyUywgMSBpcyBTUERJRi4KPj4gV2UgY2FuIHJlZmVyZW5jZSB0aGVtIGluIHNpbXBs
-ZS1jYXJkLgo+Pgo+PiBUaGlzIHNlcmllcyBpcyBiYXNlZCBvbiBNYXJrIFlhbydzIGJyYW5jaFsx
-XSBhbmQgQ2hhbndvbyBDaG9pJ3MKPj4gZXh0Y29uLW5leHQgYnJhbmNoWzJdLCBhbmQgdGhlIGNs
-ayBwYXRjaFszXS4KPj4KPj4gSSB0ZXN0IHRoaXMgcGF0Y2hlcyBvbiB0aGUgcmszMzk5LWV2YiBi
-b2FyZCwgd2l0aCBhIGZ1c2IzMDIgZHJpdmVyLAo+PiB0aGlzIGJyYW5jaCBoYXMgbm8gcmszMzk5
-LmR0c2ksIHNvIHRoZSBwYXRjaCBhYm91dCBkdHMgaXMgbm90IGluY2x1ZGVkCj4+IGluIHRoaXMg
-c2VyaWVzLgo+Pgo+PiA+RnJvbSBWOSwgdGhlIFR5cGUtQyBQSFkgaXMgc3BsaXQgaW50byB0d28g
-UEhZczogRFAgYW5kIFVTQjMuIFRoZSBQSFkKPj4gd2lsbCBiZSBpbml0LCBubyBtYXR0ZXIgd2hp
-Y2ggUEhZIGJlIHBvd2VyX29uLiBUaGUgRFAgbW9kdWxlIHdpbGwKPj4gZW50ZXIgQTIgbW9kZSAo
-c3RhbmRieSBtb2RlKSBhZnRlciBwaHlfaW5pdCwgaWYgRFAgUEhZIGlzIHBvd2VyZWQgb24sCj4+
-IHRoZSBEUCBtb2R1bGUgd2lsbCBlbnRlciB0byBBMCBtb2RlKHJ1bm5pbmcgbW9kZSkuIFRoZW4g
-aWYgRFAgUEhZIGlzCj4+IHBvd2VyZWQgb2ZmLCBEUCBtb2R1bGUgd2lsbCBiYWNrIHRvIEEyIG1v
-ZGUuIElmIGV2ZXJ5dGhpbmcgaXMKPj4gdW4tcGx1Z2dlZCwgcGh5IHdpbGwgYmUgZGVpbml0Lgo+
-Pgo+PiBbMF0KPj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85MjQ5NjkzLwo+
-PiBbMV0KPj4gaHR0cHM6Ly9naXRodWIuY29tL21hcmt5enEva2VybmVsLWRybS1yb2NrY2hpcC90
-cmVlL2RybS1yb2NrY2hpcC1uZXh0LTIwMTYtMDUtMjMKPj4gWzJdCj4+IGh0dHBzOi8vZ2l0Lmtl
-cm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwvZ2l0L2NoYW53b28vZXh0Y29uLmdpdC9sb2cvP2g9
-ZXh0Y29uLXRlc3QKPj4gLSBleHRjb246IEFkZCB0aGUgZXh0Y29uX3R5cGUgdG8gZ2F0aGVyIGVh
-Y2ggY29ubmVjdG9yIGludG8gZml2ZSBjYXRlZ29yeQo+PiAtIGV4dGNvbjogQWRkIHRoZSBzdXBw
-b3J0IGZvciBleHRjb24gcHJvcGVydHkgYWNjb3JkaW5nIHRvIGV4dGNvbiB0eXBlCj4+IC0gZXh0
-Y29uOiBBZGQgdGhlIHN1cHBvcnQgZm9yIHRoZSBjYXBhYmlsaXR5IG9mIGVhY2ggcHJvcGVydHkK
-Pj4gLSBleHRjb246IFJlbmFtZSB0aGUgZXh0Y29uX3NldC9nZXRfc3RhdGUoKSB0byBtYWludGFp
-biB0aGUgZnVuY3Rpb24gbmFtaW5nCj4+IHBhdHRlcm4KPj4gLSBleHRjb246IEFkZCB0aGUgc3lu
-Y2hyb25pemF0aW9uIGV4dGNvbiBBUElzIHRvIHN1cHBvcnQgdGhlIG5vdGlmaWNhdGlvbgo+PiAt
-IGV4dGNvbjogQWRkIEVYVENPTl9ESVNQX0RQIGFuZCB0aGUgcHJvcGVydHkgZm9yIFVTQiBUeXBl
-LUMKPiBUaGUgZXh0Y29uIHBhdGNoZXMgYXJlIG1lcmdlZCBvbiBleHRjb24tbmV4dCBicmFuY2gu
-Cj4gU28sIHlvdSBjYW4gY2hlY2sgdGhlbSBvbiBib3RoIGV4dGNvbiBnaXQgYW5kIGxpbnV4LW5l
-eHQgZ2l0IHJlcG8uCk9oLCBkaWQgbm90IG5vdGljZSB0aGVzZSBleHRjb24gcGF0Y2hlcyBoYXMg
-bGFuZGVkLgpJIHdpbGwgcmVtb3ZlIHRoaXMgc2VjdGlvbiwgaWYgbmV4dCB2ZXJzaW9uIERQIGlz
-IHJlcXVpcmVkLgo+IFtzbmlwXQo+Cj4gUmVnYXJkcywKPiBDaGFud29vIENob2kKPgo+Cj4KPgoK
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eC1y
-b2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlw
-Cg==
+This documents the generic properties "rprocs" and "rproc-names", used
+for consumer drivers to reference a remoteproc node.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/remoteproc/remoteproc.txt   | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/remoteproc.txt
+
+diff --git a/Documentation/devicetree/bindings/remoteproc/remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/remoteproc.txt
+new file mode 100644
+index 000000000000..0b1d8183be87
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/remoteproc.txt
+@@ -0,0 +1,21 @@
++Common remoteproc properties
++
++A remoteproc node represents the mechanism and resources needed for controlling
++a co-processor's life cycle; including loading firmware, booting, shutting down
++and handling exceptions.
++
++
++= Consumer properties
++A consumer node referencing a remoteproc node, so that it can requests life
++cycle transitions can use the following properties:
++
++- rprocs:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: a list of phandle references to remoteproc nodes
++
++- rproc-names:
++	Usage: optional
++	Value type: <stringlist>
++	Definition: a list of strings naming each entry in "rprocs", allowing
++		    consumer drivers to look up remoteprocs by name
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
