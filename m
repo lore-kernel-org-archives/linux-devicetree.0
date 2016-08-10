@@ -1,34 +1,54 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] Add nvd9128 as a simple panel
-Date: Tue, 9 Aug 2016 18:58:29 -0500
-Message-ID: <20160809235829.GA30321@rob-hp-laptop>
-References: <20160804171525.GA15647@rob-hp-laptop>
- <1470390477-24892-1-git-send-email-fabien.lahoudere@collabora.co.uk>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH v5 5/6] usb: chipidea: let chipidea core device of_node equal's
+ glue layer device of_node
+Date: Tue, 09 Aug 2016 17:15:36 -0700
+Message-ID: <147078813636.20133.1120685098868481913@sboyd-linaro>
+References: <1470646331-23227-1-git-send-email-peter.chen@nxp.com>
+ <1470646331-23227-6-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470390477-24892-1-git-send-email-fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1470646331-23227-6-git-send-email-peter.chen@nxp.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, dbaryshkov@gmail.com, dwmw3@infradead.org
+Cc: k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, linux-pm@vger.kernel.org, stillcompiling@gmail.com, linux-kernel@vger.kernel.org, mka@chromium.org, Peter Chen <peter.chen@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 05, 2016 at 11:47:54AM +0200, Fabien Lahoudere wrote:
-> Add New Vision Display 7.0" 800 RGB x 480 TFT LCD panel
+Quoting Peter Chen (2016-08-08 01:52:10)
+> From: Peter Chen <peter.chen@freescale.com>
 > 
-> Signed-off-by: Fabien Lahoudere <fabien.lahoudere-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> At device tree, we have no device node for chipidea core,
+> the glue layer's node is the parent node for host and udc
+> device. But in related driver, the parent device is chipidea
+> core. So, in order to let the common driver get parent's node,
+> we let the core's device node equals glue layer device node.
+> 
+> Signed-off-by: Peter Chen <peter.chen@freescale.com>
+> Tested-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+> Tested-by Joshua Clayton <stillcompiling@gmail.com>
 > ---
->  .../devicetree/bindings/display/panel/nvd,9128.txt |  7 ++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++++++++++
->  3 files changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/nvd,9128.txt
- 
-Please add acks from previous version when posting new versions.
+>  drivers/usb/chipidea/core.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+> index 69426e6..b189dc7 100644
+> --- a/drivers/usb/chipidea/core.c
+> +++ b/drivers/usb/chipidea/core.c
+> @@ -954,6 +954,15 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+>                 dev_err(dev, "unable to init phy: %d\n", ret);
+>                 return ret;
+>         }
+> +       /*
+> +        * At device tree, we have no device node for chipidea core,
+> +        * the glue layer's node is the parent node for host and udc
+> +        * device. But in related driver, the parent device is chipidea
+> +        * core. So, in order to let the common driver get parent's node,
+> +        * we let the core's device node equals glue layer's node.
+> +        */
+> +       if (dev->parent && dev->parent->of_node)
+> +               dev->of_node = dev->parent->of_node;
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can this be done earlier? Perhaps after hw_device_init() in this probe
+routine? That would allow me to remove the awkward parent searching in
+my ULPI DT awareness patch.
