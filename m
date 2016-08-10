@@ -1,32 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt-bindings: interrupt-controller: add DT binding
- for Marvell 7K/8K PIC
-Date: Wed, 10 Aug 2016 13:36:28 -0500
-Message-ID: <20160810183628.GA11887@rob-hp-laptop>
-References: <1470408921-447-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1470408921-447-2-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3 2/4] clk: Combine DT binding doc for max77686 and max77802
+Date: Wed, 10 Aug 2016 07:43:04 -0500
+Message-ID: <CAL_JsqL+sZ1tX_Wnj=N+ku4Gs0dNRhKDe4vDkEitAu+M4HEBmA@mail.gmail.com>
+References: <1466160667-28451-1-git-send-email-ldewangan@nvidia.com>
+ <1466160667-28451-3-git-send-email-ldewangan@nvidia.com> <20160620163947.GA27492@rob-hp-laptop>
+ <5768E2AD.8070004@nvidia.com> <57725F64.4030903@nvidia.com> <57AAF68D.7090707@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470408921-447-2-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <57AAF68D.7090707@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@dowhile0.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 05, 2016 at 04:55:18PM +0200, Thomas Petazzoni wrote:
-> This commit adds the Device Tree binding description for the PIC
-> interrupt controller available in the ARM64 Marvell Armada 7K/8K SoCs.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../interrupt-controller/marvell,armada-8k-pic.txt | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,armada-8k-pic.txt
+On Wed, Aug 10, 2016 at 4:40 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+> Hi,
+>
+> On Tuesday 28 June 2016 04:58 PM, Laxman Dewangan wrote:
+>>
+>> Hi Rob,
+>>
+>> On Tuesday 21 June 2016 12:16 PM, Laxman Dewangan wrote:
+>>>
+>>>
+>>> On Monday 20 June 2016 10:09 PM, Rob Herring wrote:
+>>>>
+>>>> On Fri, Jun 17, 2016 at 04:21:05PM +0530, Laxman Dewangan wrote:
+>>>>>
+>>>>>
+>>>>>
+>>>>> +
+>>>>>   Following properties should be presend in main device node of the MFD
+>>>>> chip.
+>>>>>     Required properties:
+>>>>
+>>>> I'd expect to see compatible strings updated...
+>>>>
+>>>
+>>> There is no separate compatible string for clock. The clock nodes is the
+>>> parent node only and the compatible described in the parent DT binding doc.
+>>>
+>>>
+>>> Do we also need to add same thing here?
+>>
+>>
+>> Are you fine with the above? As there is no compatible string for clock
+>> (clock does not have separate node), do I still need to add explicitly here?
+>>
+>
+>
+> Can you please help here to review? If required, I can rebase and re-send
+> the patches.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It is fine.
+
+Acked-by: Rob Herring <robh@kernel.org>
