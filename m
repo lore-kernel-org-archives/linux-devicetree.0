@@ -1,16 +1,11 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 3/4] ARM: dts: da850-lcdk: Add NAND to DT
-Date: Wed, 10 Aug 2016 17:23:23 +0530
-Message-ID: <57AB15B3.1050907@ti.com>
-References: <20160809171518.22690-1-kbeldan@baylibre.com>
- <20160809171518.22690-4-kbeldan@baylibre.com> <57AAE67D.4000404@ti.com>
- <20160810090417.GE16481@gobelin> <57AAF472.7000804@ti.com>
- <20160810111944.GA31616@gobelin>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v3 0/3] ARM: cleanup PCI specific configs
+Date: Wed, 10 Aug 2016 17:59:54 +0530
+Message-ID: <1470832197-11767-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160810111944.GA31616@gobelin>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,64 +15,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Karl Beldan <kbeldan@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Karl Beldan <karl.beldan+oss@gmail.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Russell King <linux@armlinux.org.uk>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Shawn Guo <shawnguo@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, nsekhar@ti.com, kishon@ti.com, Rob Herring <robh+dt@kernel.org>, Krzysztof Halasa <khalasa@piap.pl>, Kukjin Kim <kgene@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Santosh Shilimkar <ssantosh@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, Viresh Kumar <vireshk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 August 2016 04:49 PM, Karl Beldan wrote:
-> On Wed, Aug 10, 2016 at 03:01:30PM +0530, Sekhar Nori wrote:
->> On Wednesday 10 August 2016 02:34 PM, Karl Beldan wrote:
->>> On Wed, Aug 10, 2016 at 02:01:57PM +0530, Sekhar Nori wrote:
->>>> On Tuesday 09 August 2016 10:45 PM, Karl Beldan wrote:
->>>>> This adds DT support for the NAND connected to the SoC AEMIF.
->>>>> The parameters (timings, ecc) are the same as what the board ships with
->>>>> (default AEMIF timings, 1bit ECC) and improvements will be handled in
->>>>> due course.
->>>>
->>>> I disagree that we need to be compatible to the software that ships with
->>>> the board. Thats software was last updated 3 years ago. Instead I would
->>>> concern with what the hardware supports. So, if the hardware can support
->>>> 4-bit ECC, I would use that.
->>>>
->>> I am not saying we _need_ to be compatible.
->>
->> Alright then, please drop references to what software the board ships
->> with in the commit message and in the patch itself.
->>
-> 
-> I hadn't seen this comment before sending v2.
-> 
->>>
->>>> If driver is broken for 4-bit ECC, please fix that up first.
->>>>
->>> Since this issue is completely separate from my DT improvements
->>> I'll stick to resubmitting the series, applying my LCDK changes to the
->>> EVM too, besides you'll be able to compare the behavior without ECC
->>> discrepancies.
->>> I took note that you are likely to not apply without the ECC fix.
->>
->> Yeah, I would not like to apply with 1-bit ECC now and then change to
->> 4-bit ECC soon after.
->>
-> 
-> Both mityomapl138 from mainline and hawkboard from TI's BSP release
-> include the comment:
-> - "4 bit mode is not supported with 16 bit NAND"
-> It is not clear whether they imply that the HW has issues or if it's SW
+This series was initially sent to add support for two PCIe
+ports in dra7. This included selecting PCI_DOMAINS config
+in SOC_DRA7XX.
 
-At least the TRM says "The EMIFA supports 4-bit ECC on 8-bit/16-bit NAND
-Flash.". And then the TRM goes on to describe how 4-bit ECC is supposed
-to work for 16-bit NAND. I could not find any errata related to this in
-the errata document.
+However from the review, PCI_DOMAINS can instead be selected
+from ARCH_MULTIPLATFORM. This is fixed in this series along
+with removing PCI_DOMAINS from other configs.
 
-> only, but 4-bits ECC is a different matter and I hope you'll integrate
-> the current changes prior to tackling it.
+Since this series was initially sent to add support for
+two PCIe ports in dra7, it has been tested to see if there
+are regressions with 1 PCIe port. Though testing of 2 PCIe ports
+is not done while sending this patch series, it has been verified
+before in few of the customer boards.
 
-Lets apply everything together. This is a new feature, not a bug fix.
-There is no need to rush it. Also, for the NAND part on LCDK, per the
-micron datasheet, minimum of 4-bit ECC is needed.
+Changes from v2:
+*) v2 removed MIGHT_HAVE_PCI from platforms that are not
+   ARCH_MULTIPLATFORM. Fixed it in this version
 
-I will take a look at other patches in this series.
+Changes from v1:
+*) select PCI_DOMAINS config from ARCH_MULTIPLATFORM
+*) Fix *MIGHT_HAVE_PCI* config from being selected redundantly
 
-Regards,
-Sekhar
+Kishon Vijay Abraham I (3):
+  ARM: dts: DRA7: Add "linux,pci-domain" property for pci dt nodes
+  ARM: Fix *MIGHT_HAVE_PCI* config from being selected redundantly
+  ARM: select PCI_DOMAINS config from ARCH_MULTIPLATFORM
+
+ arch/arm/Kconfig                 |    1 +
+ arch/arm/boot/dts/dra7.dtsi      |    2 ++
+ arch/arm/mach-at91/Kconfig       |    1 -
+ arch/arm/mach-axxia/Kconfig      |    2 --
+ arch/arm/mach-cns3xxx/Kconfig    |    1 -
+ arch/arm/mach-exynos/Kconfig     |    2 --
+ arch/arm/mach-imx/Kconfig        |    2 --
+ arch/arm/mach-integrator/Kconfig |    1 -
+ arch/arm/mach-keystone/Kconfig   |    2 --
+ arch/arm/mach-shmobile/Kconfig   |    1 -
+ arch/arm/mach-spear/Kconfig      |    1 -
+ arch/arm/mach-versatile/Kconfig  |    1 -
+ 12 files changed, 3 insertions(+), 14 deletions(-)
+
+-- 
+1.7.9.5
