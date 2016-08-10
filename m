@@ -1,97 +1,186 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "mfd: tps65218: add version check to the PMIC probe" to the regulator tree
-Date: Wed, 10 Aug 2016 21:04:17 +0100
-Message-ID: <E1bXZjd-0000YR-7n@debutante>
-References: <1466412218-5906-8-git-send-email-j-keerthy@ti.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v2 2/5] arm: dts: apq8064: Add thermal zones, tsens and qfprom nodes
+Date: Wed, 10 Aug 2016 12:13:56 +0530
+Message-ID: <1470811439-1992-3-git-send-email-rnayak@codeaurora.org>
+References: <1470811439-1992-1-git-send-email-rnayak@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1466412218-5906-8-git-send-email-j-keerthy@ti.com>
+In-Reply-To: <1470811439-1992-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, tony@atomide.combroonie@kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, russ.dill@ti.com, robh+dt@kernel.org, mark.rutland@arm.comj-keerthy@ti.com, linux@armlinux.org.ukDave Gerlach <d-gerlach@ti.com>
+To: andy.gross@linaro.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+TSENS is part of GCC, hence add TSENS properties as part of GCC node.
+Also add thermal zones and qfprom nodes.
+Update GCC bindings doc to mention the possibility of optional TSENS
+properties that can be part of GCC node.
 
-   mfd: tps65218: add version check to the PMIC probe
-
-has been applied to the regulator tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From f11fa1796a4b4f8c6d4ced37e8824276ec57057d Mon Sep 17 00:00:00 2001
-From: Tero Kristo <t-kristo@ti.com>
-Date: Wed, 10 Aug 2016 17:53:54 +0530
-Subject: [PATCH] mfd: tps65218: add version check to the PMIC probe
-
-Version information will be needed to handle some error cases under the
-regulator driver, so store the information once during MFD probe.
-
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Acked-by: Eduardo Valentin <edubezval@gmail.com>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 ---
- drivers/mfd/tps65218.c       | 9 +++++++++
- include/linux/mfd/tps65218.h | 1 +
- 2 files changed, 10 insertions(+)
+ .../devicetree/bindings/clock/qcom,gcc.txt         |  18 ++++
+ arch/arm/boot/dts/qcom-apq8064.dtsi                | 103 +++++++++++++++++++++
+ 2 files changed, 121 insertions(+)
 
-diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
-index 80b9dc363cd8..ba610adbdbff 100644
---- a/drivers/mfd/tps65218.c
-+++ b/drivers/mfd/tps65218.c
-@@ -219,6 +219,7 @@ static int tps65218_probe(struct i2c_client *client,
- 	struct tps65218 *tps;
- 	const struct of_device_id *match;
- 	int ret;
-+	unsigned int chipid;
+diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+index 9a60fde..16e2f84 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+@@ -23,6 +23,13 @@ Required properties :
+ Optional properties :
+ - #power-domain-cells : shall contain 1
  
- 	match = of_match_device(of_tps65218_match_table, &client->dev);
- 	if (!match) {
-@@ -250,6 +251,14 @@ static int tps65218_probe(struct i2c_client *client,
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = tps65218_reg_read(tps, TPS65218_REG_CHIPID, &chipid);
-+	if (ret) {
-+		dev_err(tps->dev, "Failed to read chipid: %d\n", ret);
-+		return ret;
-+	}
++Optional properties:
++- Qualcomm TSENS (thermal sensor device) on some devices can
++be part of GCC and hence the TSENS properties can also be
++part of the GCC/clock-controller node.
++For more details on the TSENS properties please refer
++Documentation/devicetree/bindings/thermal/qcom-tsens.txt
 +
-+	tps->rev = chipid & TPS65218_CHIPID_REV_MASK;
+ Example:
+ 	clock-controller@900000 {
+ 		compatible = "qcom,gcc-msm8960";
+@@ -31,3 +38,14 @@ Example:
+ 		#reset-cells = <1>;
+ 		#power-domain-cells = <1>;
+ 	};
 +
- 	ret = of_platform_populate(client->dev.of_node, NULL, NULL,
- 				   &client->dev);
- 	if (ret < 0)
-diff --git a/include/linux/mfd/tps65218.h b/include/linux/mfd/tps65218.h
-index 7fdf5326f34e..85e464e32c43 100644
---- a/include/linux/mfd/tps65218.h
-+++ b/include/linux/mfd/tps65218.h
-@@ -267,6 +267,7 @@ struct tps_info {
- struct tps65218 {
- 	struct device *dev;
- 	unsigned int id;
-+	u8 rev;
++Example of GCC with TSENS properties:
++	clock-controller@900000 {
++		compatible = "qcom,gcc-apq8064";
++		reg = <0x00900000 0x4000>;
++		nvmem-cells = <&tsens_calib>, <&tsens_backup>;
++		nvmem-cell-names = "calib", "calib_backup";
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++		#thermal-sensor-cells = <1>;
++	};
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 74a9b6c..9cd13ab 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -86,6 +86,92 @@
+ 		};
+ 	};
  
- 	struct mutex tps_lock;		/* lock guarding the data structure */
- 	/* IRQ Data */
++	thermal-zones {
++		cpu-thermal0 {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&gcc 7>;
++			coefficients = <1199 0>;
++
++			trips {
++				cpu_alert0: trip0 {
++					temperature = <75000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu_crit0: trip1 {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu-thermal1 {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&gcc 8>;
++			coefficients = <1132 0>;
++
++			trips {
++				cpu_alert1: trip0 {
++					temperature = <75000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu_crit1: trip1 {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu-thermal2 {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&gcc 9>;
++			coefficients = <1199 0>;
++
++			trips {
++				cpu_alert2: trip0 {
++					temperature = <75000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu_crit2: trip1 {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu-thermal3 {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&gcc 10>;
++			coefficients = <1132 0>;
++
++			trips {
++				cpu_alert3: trip0 {
++					temperature = <75000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				cpu_crit3: trip1 {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++	};
++
+ 	cpu-pmu {
+ 		compatible = "qcom,krait-pmu";
+ 		interrupts = <1 10 0x304>;
+@@ -611,11 +697,28 @@
+ 			};
+ 		};
+ 
++		qfprom: qfprom@00700000 {
++			compatible	= "qcom,qfprom";
++			reg		= <0x00700000 0x1000>;
++			#address-cells	= <1>;
++			#size-cells	= <1>;
++			ranges;
++			tsens_calib: calib {
++				reg = <0x404 0x10>;
++			};
++			tsens_backup: backup_calib {
++				reg = <0x414 0x10>;
++			};
++		};
++
+ 		gcc: clock-controller@900000 {
+ 			compatible = "qcom,gcc-apq8064";
+ 			reg = <0x00900000 0x4000>;
++			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
++			nvmem-cell-names = "calib", "calib_backup";
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
++			#thermal-sensor-cells = <1>;
+ 		};
+ 
+ 		lcc: clock-controller@28000000 {
 -- 
-2.8.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
