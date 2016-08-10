@@ -1,111 +1,62 @@
-From: YT Shen <yt.shen@mediatek.com>
-Subject: Re: [PATCH v6 10/10] arm: dts: mt2701: Add display subsystem
- related nodes for MT2701
-Date: Wed, 10 Aug 2016 15:32:37 +0800
-Message-ID: <1470814357.27526.20.camel@mtksdaap41>
-References: <1470308844-20895-1-git-send-email-yt.shen@mediatek.com>
- <1470308844-20895-11-git-send-email-yt.shen@mediatek.com>
- <1470377906.16554.23.camel@mtksdaap41>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 2/4] ARM: dts: da850: Add an aemif node
+Date: Wed, 10 Aug 2016 13:18:51 +0530
+Message-ID: <57AADC63.90405@ti.com>
+References: <20160809171518.22690-1-kbeldan@baylibre.com>
+ <20160809171518.22690-3-kbeldan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1470377906.16554.23.camel@mtksdaap41>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Mao Huang <littlecvr@chromium.org>, srv_heupstream@mediatek.com, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160809171518.22690-3-kbeldan@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Karl Beldan <kbeldan@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Karl Beldan <karl.beldan+oss@gmail.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ0ssCgpPbiBGcmksIDIwMTYtMDgtMDUgYXQgMTQ6MTggKzA4MDAsIENLIEh1IHdyb3RlOgo+
-IEhpLCBZVDoKPiAKPiBPbiBUaHUsIDIwMTYtMDgtMDQgYXQgMTk6MDcgKzA4MDAsIFlUIFNoZW4g
-d3JvdGU6Cj4gPiBUaGlzIHBhdGNoIGFkZHMgdGhlIGRldmljZSBub2RlcyBmb3IgdGhlIERJU1Ag
-ZnVuY3Rpb24gYmxvY2tzIGZvciBNVDI3MDEKPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogWVQgU2hl
-biA8eXQuc2hlbkBtZWRpYXRlay5jb20+Cj4gPiAtLS0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9t
-dDI3MDEuZHRzaSB8ICAgODYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysKPiA+ICAxIGZpbGUgY2hhbmdlZCwgODYgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0t
-Z2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvbXQyNzAxLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9t
-dDI3MDEuZHRzaQo+ID4gaW5kZXggZjMxMzZiZC4uOGYzNWEwZCAxMDA2NDQKPiA+IC0tLSBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL210MjcwMS5kdHNpCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9t
-dDI3MDEuZHRzaQo+ID4gQEAgLTI0LDYgKzI0LDExIEBACj4gPiAgCWNvbXBhdGlibGUgPSAibWVk
-aWF0ZWssbXQyNzAxIjsKPiA+ICAJaW50ZXJydXB0LXBhcmVudCA9IDwmc3lzaXJxPjsKPiA+ICAK
-PiA+ICsJYWxpYXNlcyB7Cj4gPiArCQlyZG1hMCA9ICZyZG1hMDsKPiA+ICsJCXJkbWExID0gJnJk
-bWExOwo+ID4gKwl9Owo+ID4gKwo+ID4gIAljcHVzIHsKPiA+ICAJCSNhZGRyZXNzLWNlbGxzID0g
-PDE+Owo+ID4gIAkJI3NpemUtY2VsbHMgPSA8MD47Cj4gPiBAQCAtMTcxLDYgKzE3NiwxNiBAQAo+
-ID4gIAkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UMjcwMV9QT1dFUl9ET01BSU5fRElTUD47
-Cj4gPiAgCX07Cj4gPiAgCj4gPiArCW1pcGlfdHgwOiBtaXBpLWRwaHlAMTAwMTAwMDAgewo+ID4g
-KwkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtbWlwaS10eCI7Cj4gPiArCQlyZWcgPSA8
-MCAweDEwMDEwMDAwIDAgMHg5MD47Cj4gPiArCQljbG9ja3MgPSA8JmNsazI2bT47Cj4gPiArCQlj
-bG9jay1vdXRwdXQtbmFtZXMgPSAibWlwaV90eDBfcGxsIjsKPiA+ICsJCSNjbG9jay1jZWxscyA9
-IDwwPjsKPiA+ICsJCSNwaHktY2VsbHMgPSA8MD47Cj4gPiArCQlzdGF0dXMgPSAiZGlzYWJsZWQi
-Owo+ID4gKwl9Owo+ID4gKwo+ID4gIAlzeXNpcnE6IGludGVycnVwdC1jb250cm9sbGVyQDEwMjAw
-MTAwIHsKPiA+ICAJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQyNzAxLXN5c2lycSIsCj4gPiAg
-CQkJICAgICAibWVkaWF0ZWssbXQ2NTc3LXN5c2lycSI7Cj4gPiBAQCAtMjU1LDYgKzI3MCw2OCBA
-QAo+ID4gIAkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+ICAJfTsKPiA+ICAKPiA+ICsJb3ZsQDE0
-MDA3MDAwIHsKPiA+ICsJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQyNzAxLWRpc3Atb3ZsIjsK
-PiA+ICsJCXJlZyA9IDwwIDB4MTQwMDcwMDAgMCAweDEwMDA+Owo+ID4gKwkJaW50ZXJydXB0cyA9
-IDxHSUNfU1BJIDE1MyBJUlFfVFlQRV9MRVZFTF9MT1c+Owo+ID4gKwkJY2xvY2tzID0gPCZtbXN5
-cyBDTEtfTU1fRElTUF9PVkw+Owo+ID4gKwkJaW9tbXVzID0gPCZpb21tdSBNVDI3MDFfTTRVX1BP
-UlRfRElTUF9PVkxfMD47Cj4gPiArCQltZWRpYXRlayxsYXJiID0gPCZsYXJiMD47Cj4gPiArCX07
-Cj4gPiArCj4gPiArCXJkbWEwOiByZG1hQDE0MDA4MDAwIHsKPiA+ICsJCWNvbXBhdGlibGUgPSAi
-bWVkaWF0ZWssbXQyNzAxLWRpc3AtcmRtYSI7Cj4gPiArCQlyZWcgPSA8MCAweDE0MDA4MDAwIDAg
-MHgxMDAwPjsKPiA+ICsJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxNTIgSVJRX1RZUEVfTEVWRUxf
-TE9XPjsKPiA+ICsJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfUkRNQT47Cj4gPiArCQlp
-b21tdXMgPSA8JmlvbW11IE1UMjcwMV9NNFVfUE9SVF9ESVNQX1JETUE+Owo+ID4gKwkJbWVkaWF0
-ZWssbGFyYiA9IDwmbGFyYjA+Owo+ID4gKwl9Owo+ID4gKwo+ID4gKwl3ZG1hQDE0MDA5MDAwIHsK
-PiA+ICsJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQyNzAxLWRpc3Atd2RtYSI7Cj4gPiArCQly
-ZWcgPSA8MCAweDE0MDA5MDAwIDAgMHgxMDAwPjsKPiA+ICsJCWludGVycnVwdHMgPSA8R0lDX1NQ
-SSAxNTQgSVJRX1RZUEVfTEVWRUxfTE9XPjsKPiA+ICsJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01N
-X0RJU1BfV0RNQT47Cj4gPiArCQlpb21tdXMgPSA8JmlvbW11IE1UMjcwMV9NNFVfUE9SVF9ESVNQ
-X1dETUE+Owo+ID4gKwkJbWVkaWF0ZWssbGFyYiA9IDwmbGFyYjA+Owo+ID4gKwl9Owo+ID4gKwo+
-ID4gKwlibHNAMTQwMGEwMDAgewo+ID4gKwkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEt
-ZGlzcC1wd20iOwo+ID4gKwkJcmVnID0gPDAgMHgxNDAwYTAwMCAwIDB4MTAwMD47Cj4gPiArCQlp
-bnRlcnJ1cHRzID0gPEdJQ19TUEkgMTU1IElSUV9UWVBFX0xFVkVMX0xPVz47Cj4gPiArCQljbG9j
-a3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX0JMUz47Cj4gPiArCX07Cj4gCj4gWW91IGRlcGVuZHMg
-b24gWzFdLCBidXQgdGhhdCBzZXJpZXMgaW5jbHVkZSBbMl0gd2hpY2ggYWxzbyBhZGQgYQo+IGRp
-c3BfYmxzIG5vZGUgd2hpY2ggaGFzIHRoZSBzYW1lIGNvbXBhdGlibGUgc3RyaW5nCj4gIm1lZGlh
-dGVrLG10MjcwMS1kaXNwLXB3bSIuIElmIHRoZXNlIHR3byBub2RlIGFyZSB0aGUgc2FtZSwganVz
-dCBhZGQgaXQKPiBpbiBvbmUgcGF0Y2guIElmIHRoZXkgYXJlIGRpZmZlcmVudCwgZG8gbm90IHVz
-ZSB0aGUgc2FtZSBjb21wYXRpYmxlCj4gc3RyaW5nLgpXZSB3aWxsIHJlbW92ZSBpdCBpbiB0aGlz
-IHBhdGNoIHNlcmllcy4KClJlZ2FyZHMsCnl0LHNoZW4KCj4gCj4gWzFdIGh0dHBzOi8vcGF0Y2h3
-b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTIyMjk5Ny8gKCJkdC1iaW5kaW5nczogcHdtOiBBZGQKPiBN
-ZWRpYVRlayBkaXNwbGF5IFBXTSBiaW5kaW5ncyIpCj4gWzJdIGh0dHBzOi8vcGF0Y2h3b3JrLmtl
-cm5lbC5vcmcvcGF0Y2gvOTIyMzAwNS8KPiA+ICsKPiA+ICsJY29sb3JAMTQwMGIwMDAgewo+ID4g
-KwkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtZGlzcC1jb2xvciI7Cj4gPiArCQlyZWcg
-PSA8MCAweDE0MDBiMDAwIDAgMHgxMDAwPjsKPiA+ICsJCWludGVycnVwdHMgPSA8R0lDX1NQSSAx
-NTYgSVJRX1RZUEVfTEVWRUxfTE9XPjsKPiA+ICsJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJ
-U1BfQ09MT1I+Owo+ID4gKwl9Owo+ID4gKwo+ID4gKwlkc2kwOiBkc2lAMTQwMGMwMDAgewo+ID4g
-KwkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEtZHNpIjsKPiA+ICsJCXJlZyA9IDwwIDB4
-MTQwMGMwMDAgMCAweDEwMDA+Owo+ID4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE1NyBJUlFf
-VFlQRV9MRVZFTF9MT1c+Owo+ID4gKwkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRFNJX0VOR0lO
-RT4sIDwmbW1zeXMgQ0xLX01NX0RTSV9ESUc+LAo+ID4gKwkJCSA8Jm1pcGlfdHgwPjsKPiA+ICsJ
-CWNsb2NrLW5hbWVzID0gImVuZ2luZSIsICJkaWdpdGFsIiwgImhzIjsKPiA+ICsJCW1lZGlhdGVr
-LHN5c2Nvbi1kc2kgPSA8Jm1tc3lzIDB4MTM4PjsKPiA+ICsJCW1lZGlhdGVrLHNzYy1yYW5nZSA9
-IDw1PjsKPiA+ICsJCXBoeXMgPSA8Jm1pcGlfdHgwPjsKPiA+ICsJCXBoeS1uYW1lcyA9ICJkcGh5
-IjsKPiA+ICsJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gPiArCX07Cj4gPiArCj4gPiArCW11dGV4
-OiBtdXRleEAxNDAwZTAwMCB7Cj4gPiArCQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcwMS1k
-aXNwLW11dGV4IjsKPiA+ICsJCXJlZyA9IDwwIDB4MTQwMGUwMDAgMCAweDEwMDA+Owo+ID4gKwkJ
-aW50ZXJydXB0cyA9IDxHSUNfU1BJIDE2MSBJUlFfVFlQRV9MRVZFTF9MT1c+Owo+ID4gKwkJY2xv
-Y2tzID0gPCZtbXN5cyBDTEtfTU1fTVVURVhfMzJLPjsKPiA+ICsJfTsKPiA+ICsKPiA+ICAJbGFy
-YjA6IGxhcmJAMTQwMTAwMDAgewo+ID4gIAkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDI3MDEt
-c21pLWxhcmIiOwo+ID4gIAkJcmVnID0gPDAgMHgxNDAxMDAwMCAwIDB4MTAwMD47Cj4gPiBAQCAt
-MjY2LDYgKzM0MywxNSBAQAo+ID4gIAkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UMjcwMV9Q
-T1dFUl9ET01BSU5fRElTUD47Cj4gPiAgCX07Cj4gPiAgCj4gPiArCXJkbWExOiByZG1hQDE0MDEy
-MDAwIHsKPiA+ICsJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQyNzAxLWRpc3AtcmRtYSI7Cj4g
-PiArCQlyZWcgPSA8MCAweDE0MDEyMDAwIDAgMHgxMDAwPjsKPiA+ICsJCWludGVycnVwdHMgPSA8
-R0lDX1NQSSAxNjQgSVJRX1RZUEVfTEVWRUxfTE9XPjsKPiA+ICsJCWNsb2NrcyA9IDwmbW1zeXMg
-Q0xLX01NX0RJU1BfUkRNQTE+Owo+ID4gKwkJaW9tbXVzID0gPCZpb21tdSBNVDI3MDFfTTRVX1BP
-UlRfRElTUF9SRE1BMT47Cj4gPiArCQltZWRpYXRlayxsYXJiID0gPCZsYXJiMD47Cj4gPiArCX07
-Cj4gPiArCj4gPiAgCWltZ3N5czogc3lzY29uQDE1MDAwMDAwIHsKPiA+ICAJCWNvbXBhdGlibGUg
-PSAibWVkaWF0ZWssbXQyNzAxLWltZ3N5cyIsICJzeXNjb24iOwo+ID4gIAkJcmVnID0gPDAgMHgx
-NTAwMDAwMCAwIDB4MTAwMD47Cj4gCj4gUmVnYXJkcywKPiBDSwo+IAoKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tuesday 09 August 2016 10:45 PM, Karl Beldan wrote:
+> Currently the davinci da8xx boards use the mach-davinci aemif code.
+> Instantiating an aemif node into the DT allows to use the ti-aemif
+> memory driver and is another step to better DT support.
+> Also it will allow to properly pass the emif timings via DT.
+> 
+> Signed-off-by: Karl Beldan <kbeldan@baylibre.com>
+> ---
+>  arch/arm/boot/dts/da850.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+> index bc10e7e..f62928c 100644
+> --- a/arch/arm/boot/dts/da850.dtsi
+> +++ b/arch/arm/boot/dts/da850.dtsi
+> @@ -411,6 +411,16 @@
+>  			dma-names = "tx", "rx";
+>  		};
+>  	};
+> +	aemif: aemif@68000000 {
+> +		compatible = "ti,da850-aemif";
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +
+> +		reg = <0x68000000 0x00008000>;
+> +		ranges = <0 0 0x60000000 0x08000000
+> +			  1 0 0x68000000 0x00008000>;
+> +		status = "disabled";
+> +	};
+>  	nand_cs3@62000000 {
+>  		compatible = "ti,davinci-nand";
+>  		reg = <0x62000000 0x807ff
+
+The nand node should be part of aemif node like it is done for keystone
+boards.
+
+Regards,
+Sekhar
