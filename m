@@ -1,53 +1,34 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] net: stmmac: dwmac-rk: add rk3366 & rk3399 specific data
-Date: Thu, 11 Aug 2016 10:12:44 +0200
-Message-ID: <1799606.7CVTQCi7m5@diego>
-References: <1470900288-10109-1-git-send-email-roger.chen@rock-chips.com> <1470900288-10109-2-git-send-email-roger.chen@rock-chips.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] pinctrl: qcom: Add generic ssbi and spmi GPIO/MPP bindings
+Date: Thu, 11 Aug 2016 10:19:32 +0200
+Message-ID: <CACRpkdazPheA1s2FX2ugEyCFmrKiq36QEmEuCGJRt-vQTFWFVw@mail.gmail.com>
+References: <20160711190109.16758-1-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470900288-10109-2-git-send-email-roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160711190109.16758-1-sboyd@codeaurora.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+On Mon, Jul 11, 2016 at 9:01 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
 
-Am Donnerstag, 11. August 2016, 15:24:46 schrieb Roger Chen:
-> Add constants and callback functions for the dwmac on rk3228/rk3229 socs.
-> As can be seen, the base structure is the same, only registers and the
-> bits in them moved slightly.
-> 
-> Signed-off-by: Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  .../devicetree/bindings/net/rockchip-dwmac.txt     |   4 +-
->  drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     | 226
-> +++++++++++++++++++++ 2 files changed, 228 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
-> b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt index
-> cccd945..8c066e6 100644
-> --- a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
-> +++ b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
-> @@ -3,8 +3,8 @@ Rockchip SoC RK3288 10/100/1000 Ethernet driver(GMAC)
->  The device node has following properties.
-> 
->  Required properties:
-> - - compatible: Can be one of "rockchip,rk3228-gmac",
-> "rockchip,rk3288-gmac", -                            
-> "rockchip,rk3368-gmac"
-> + - compatible: Can be one of "rockchip,rk3288-gmac",
+> The drivers don't really need to know which PMIC they're for, so
+> make a generic binding for them. This alleviates us from updating
+> the drivers every time a new PMIC comes out. It's still
+> recommended that we update the binding with new PMIC models and
+> always specify the specific model for the MPPs and gpios before
+> the generic compatible string in devicetree, but this at least
+> cuts down on adding more and more compatible strings to the
+> drivers until we actually need them.
+>
+> Cc: <devicetree@vger.kernel.org>
+> Acked-by: "Ivan T. Ivanov" <iivanov.xz@gmail.com>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 
-you're dropping the rk3228 here.
+Patch applied with Rob's ACK.
 
-Otherwise looks fine, so with the compatible list fixed you can add my
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-
-
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
