@@ -1,198 +1,72 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v3 15/15] ARM64: dts: Define CPU power domain for MSM8916
-Date: Thu, 11 Aug 2016 10:30:57 +0100
-Message-ID: <3307b0e2-5ad3-8e56-05e6-ed0297a0b8ce@arm.com>
-References: <1470351902-43103-1-git-send-email-lina.iyer@linaro.org>
- <1470351902-43103-16-git-send-email-lina.iyer@linaro.org>
- <aae203cd-35ee-958f-bc59-b9d53c32aeb2@arm.com>
- <20160810173543.GB1401@linaro.org>
+From: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6 00/14] fix some type infos and bugs for arm64/of numa
+Date: Thu, 11 Aug 2016 17:33:34 +0800
+Message-ID: <1470908028-8596-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160810173543.GB1401@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Juri Lelli <Juri.Lelli@arm.com>, khilman@kernel.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, Brendan Jackman <Brendan.Jackman@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, andy.gross@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+v5 -> v6:
+Move memblk nid check from arch/arm64/mm/numa.c into drivers/of/of_numa.c,
+because this check is arch independent.
+
+This modification only related to patch 3, but impacted the contents of patch 7 and 8,
+other patches have no change.
+
+v4 -> v5:
+This version has no code changes, just add "Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>"
+into patches 1, 2, 4, 6, 7, 13, 14. Because these patches rely on some acpi numa
+patches, and the latter had not been upstreamed in 4.7, but upstreamed in 4.8-rc1,
+so I resend my patches again.
+
+v3 -> v4:
+1. Packed three patches of Kefeng Wang, patch6-8.
+2. Add 6 new patches(9-15) to enhance the numa on arm64.
+
+v2 -> v3:
+1. Adjust patch2 and patch5 according to Matthias Brugger's advice, to make the
+   patches looks more well. The final code have no change. 
+
+v1 -> v2:
+1. Base on https://lkml.org/lkml/2016/5/24/679
+2. Rewrote of_numa_parse_memory_nodes according to Rob Herring's advice. So that it looks more clear.
+3. Rewrote patch 5 because some scenes were not considered before.
+
+Kefeng Wang (3):
+  of_numa: Use of_get_next_parent to simplify code
+  of_numa: Use pr_fmt()
+  arm64: numa: Use pr_fmt()
+
+Zhen Lei (11):
+  of/numa: remove a duplicated pr_debug information
+  of/numa: fix a memory@ node can only contains one memory block
+  arm64/numa: add nid check for memory block
+  of/numa: remove a duplicated warning
+  arm64/numa: avoid inconsistent information to be printed
+  arm64/numa: support HAVE_SETUP_PER_CPU_AREA
+  arm64/numa: define numa_distance as array to simplify code
+  arm64/numa: support HAVE_MEMORYLESS_NODES
+  arm64/numa: remove some useless code
+  of/numa: remove the constraint on the distances of node pairs
+  Documentation: remove the constraint on the distances of node pairs
+
+ Documentation/devicetree/bindings/numa.txt |   1 -
+ arch/arm64/Kconfig                         |  12 ++
+ arch/arm64/include/asm/numa.h              |   1 -
+ arch/arm64/kernel/smp.c                    |   1 +
+ arch/arm64/mm/numa.c                       | 223 ++++++++++++++++-------------
+ drivers/of/of_numa.c                       |  88 ++++++------
+ 6 files changed, 178 insertions(+), 148 deletions(-)
+
+--
+2.5.0
 
 
-On 10/08/16 18:35, Lina Iyer wrote:
-> On Wed, Aug 10 2016 at 09:27 -0600, Sudeep Holla wrote:
->>
->>
->> On 05/08/16 00:05, Lina Iyer wrote:
->>> Define power domain and the power states for the domain as defined by
->>> the PSCI firmware.
->>
->>> The 8916 firmware supports OS initiated method of
->>> powering off the CPU clusters.
->>
->> How is that related to the this DTS change, more details below ?
->>
->>>
->>> Cc: <devicetree@vger.kernel.org>
->>> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
->>> ---
->>> arch/arm64/boot/dts/qcom/msm8916.dtsi | 27 +++++++++++++++++++++++++++
->>> 1 file changed, 27 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi
->>> b/arch/arm64/boot/dts/qcom/msm8916.dtsi
->>> index 3029773..eb0aaed 100644
->>> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
->>> @@ -64,6 +64,7 @@
->>>             next-level-cache = <&L2_0>;
->>>             enable-method = "psci";
->>>             cpu-idle-states = <&CPU_SPC>;
->>> +            power-domains = <&CPU_PD>;
->>
->> This is really messy. We need to have idle state information at one
->> place. I prefer to have a hierarchal representation of power-domains
->> for CPU with idle-states at each level.
->>
->>>         };
-> I see where are going with that. We need to then isolate idle states
-> from all devices (including CPU) and put them under the umberella of the
-> domain/parent idle states.
->
-> We also need to remember that domain idle states are not just for CPU
-> domains. There are generic PM domains that also define their idle
-> states. For some, that hierarchy may not make sense. So forcing it on
-> all domains is not correct as well.
->
-
-Yes again I absolutely agree with that. But just represent the hierarchy
-present in the hardware in the DT. If it doesn't exist in the hardware
-for some device, then it won't be represented.
-
->>>
->>>         CPU1: cpu@1 {
->>> @@ -73,6 +74,7 @@
->>>             next-level-cache = <&L2_0>;
->>>             enable-method = "psci";
->>>             cpu-idle-states = <&CPU_SPC>;
->>> +            power-domains = <&CPU_PD>;
->>>         };
->>>
->>>         CPU2: cpu@2 {
->>> @@ -82,6 +84,7 @@
->>>             next-level-cache = <&L2_0>;
->>>             enable-method = "psci";
->>>             cpu-idle-states = <&CPU_SPC>;
->>> +            power-domains = <&CPU_PD>;
->>>         };
->>>
->>>         CPU3: cpu@3 {
->>> @@ -91,6 +94,7 @@
->>>             next-level-cache = <&L2_0>;
->>>             enable-method = "psci";
->>>             cpu-idle-states = <&CPU_SPC>;
->>> +            power-domains = <&CPU_PD>;
->>>         };
->>>
->>>         L2_0: l2-cache {
->>> @@ -113,6 +117,29 @@
->>>     psci {
->>>         compatible = "arm,psci-1.0";
->>>         method = "smc";
->>
->> Why is it inside PSCI node ? I don't see a need for that.
->> If it needs to be here, then amend the binding document.
->>
-> It is described in patch 13/15.
->
-> It is inside PSCI node, because PSCI has the domain controller.
->
-
-OK, I haven't gone through all the patches, I was just interested in
-the binding. Sorry for that.
-
->>> +
->>> +        CPU_PD: cpu-pd@0 {
->>> +            #power-domain-cells = <0>;
->>> +            domain-idle-states = <&CLUSTER_RET>, <&CLUSTER_PWR_DWN>;
->>> +        };
->>> +
->>> +        domain-states {
->>> +            CLUSTER_RET: domain_ret {
->>> +                compatible = "arm,idle-state";
->>> +                arm,psci-suspend-param = <0x1000010>;
->>> +                entry-latency-us = <500>;
->>> +                exit-latency-us = <500>;
->>> +                min-residency-us = <2000>;
->>> +            };
->>> +
->>> +            CLUSTER_PWR_DWN: domain_gdhs {
->>> +                compatible = "arm,idle-state";
->>> +                arm,psci-suspend-param = <0x1000030>;
->>> +                entry-latency-us = <2000>;
->>> +                exit-latency-us = <2000>;
->>> +                min-residency-us = <6000>;
->>> +            };
->>> +        };
->>
->> So how do you collapse these states into the cpu level states ?
-> Why do you have to collapse?
->
-
-To deal with platform co-ordinated mode of cpu idle support. I think I
-gave an example in the other email.
-
->> We should be able to cope up with platform co-ordinated mode of idle.
->> For me, this binding and the representation here is designed only to
->> address OS co-ordinated mode of idle support but it should be other way
->> around. Design the bindings that can cater any mode (platform and OS
->> co-ordinated)
-> As explained to Brendan on the version2 of the series, OSI and PC are
-> orthagonal to each other. The idle state definition in the devicetree
-> exactly matches the unique approaches of these 2 modes.
->
-
-We don't design bindings that depend on the software approaches or
-configurations. It should represent the hardware.
-
-> In platform coordinated, the CPU determines the idle state of the domain
-> and selects the state, hence it makes sense to extend the
-> cpu-idle-states to cover those domain states.
->
-
-So, are you saying that old bindings are for platform co-ordinated mode
-and these new ones are for OS co-ordinated mode. Make it clear in the
-binding document and get explicit approval from the DT maintainers for
-that. I really don't like that approach.
-
-> In OSI, the CPUs only determine their idle states. When they are done
-> with their idle state, they bubble up and let the domain choose its idle
-> state and therefore the domain-idle-states is part of the domain
-> controller.
->
-
-I understand that, but I don't like the approach taken to define the DT
-bindings. DT should have one or the other form and any mode can be used
-as long as firmware is queried and put into appropriate mode of operation.
-
-> With this addition platform coordinated representation is not broken. If
-> your SoC supports both platform and os modes, then you can specify the
-> idle states of both of them in the DT. The clause in firmware/psci.c
-> will however, choose OSI if its available. I am not sure we want to
-> dynamically switch betweeen OSI and PC at runtime.
->
-
-How ? cpu-idle-states in CPU node can't have both:
-1. just it's idles states, and
-2. complete list of flattened idle states as it' is present today.
-
--- 
-Regards,
-Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
