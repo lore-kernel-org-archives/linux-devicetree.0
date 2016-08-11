@@ -1,91 +1,31 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH RFC 2/3] mmc: core: add new cap for 3.3V only DDR MMCs
-Date: Thu, 11 Aug 2016 13:57:50 +0200
-Message-ID: <d61bd21c-4c93-13ed-7e60-68a42453f591@i2se.com>
-References: <1470488140-10104-1-git-send-email-stefan.wahren@i2se.com>
- <1470488140-10104-3-git-send-email-stefan.wahren@i2se.com>
- <0e38d62a-b3d0-30ca-fca9-bb740ae54d0a@denx.de>
- <16443443.114784.752d0f22-93a7-46e8-bb14-c884787aaea3.open-xchange@email.1und1.de>
- <CGME20160807020731epcas1p1ba77eafc6a099ac660a4bf5fe3789fef@epcas1p1.samsung.com>
- <7284d9a4-164d-dd2d-b9a0-dd1de6c76274@rock-chips.com>
- <cf38cffa-558e-a5fc-9ecb-b8f46f07153f@samsung.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v7 1/5] mfd: tps65218: Remove redundant read wrapper
+Date: Thu, 11 Aug 2016 14:10:24 +0200
+Message-ID: <CACRpkdbLXDknZpVbofFC7dBb_4hLaurScXBDzL_xGtD+8AcBLA@mail.gmail.com>
+References: <1470833545-29462-1-git-send-email-j-keerthy@ti.com> <1470833545-29462-2-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cf38cffa-558e-a5fc-9ecb-b8f46f07153f@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jaehoon Chung <jh80.chung@samsung.com>, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Marek Vasut <marex@denx.de>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, Otavio Salvador <otavio@ossystems.com.br>, Holger Schurig <holgerschurig@gmail.com>, linux-mmc@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1470833545-29462-2-git-send-email-j-keerthy@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux Input <linux-input@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tero Kristo <t-kristo@ti.com>, Russ Dill <russ.dill@ti.com>, Dave Gerlach <d-gerlach@ti.com>, Linux-OMAP <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gMTEuMDguMjAxNiB1bSAxMzoxMiBzY2hyaWViIEphZWhvb24gQ2h1bmc6Cj4gT24gMDgvMDcv
-MjAxNiAxMTowNyBBTSwgU2hhd24gTGluIHdyb3RlOgo+PiDlnKggMjAxNi84LzYgMjI6MTgsIFN0
-ZWZhbiBXYWhyZW4g5YaZ6YGTOgo+Pj4gSGkgTWFyZWssCj4+Pgo+Pj4+IE1hcmVrIFZhc3V0IDxt
-YXJleEBkZW54LmRlPiBoYXQgYW0gNi4gQXVndXN0IDIwMTYgdW0gMTU6MTQgZ2VzY2hyaWViZW46
-Cj4+Pj4KPj4+Pgo+Pj4+IE9uIDA4LzA2LzIwMTYgMDI6NTUgUE0sIFN0ZWZhbiBXYWhyZW4gd3Jv
-dGU6Cj4+Pj4+IFRoaXMgcGF0Y2ggYmFzZWQgb24gdGhlIHdvcmsgb2YgRmFiaW8gRXN0ZXZhbToK
-Pj4+Pj4gIltQQVRDSCB2Ml0gbW1jOiBjb3JlOiBEbyBub3Qgc2V0IG1tYyB2b2x0YWdlIHRvIDEu
-OFYgd2hlbgo+Pj4+PiAnbm8tMS04LXYnIGlzIHByZXNlbnQiCj4+Pj4+Cj4+Pj4+IEl0IGFkZHMg
-dGhlIHN1cHBvcnQgZm9yIDMuM1Ygb25seSBERFIgTU1DIGhvc3RzLgo+Pj4+Cj4+Pj4gRG8gc3Vj
-aCBjYXJkcyBldmVuIGV4aXN0ID8gRG8geW91IGhhdmUgYSBsaW5rIHdoZXJlIEkgY2FuIGZpbmQg
-c29tZSA/Cj4+Pgo+Pj4gaSBuZXZlciBzYWlkIGFueXRoaW5nIGFib3V0IFNEIGNhcmRzLiBJIG1l
-YW4gZU1NQyBtb2R1bGVzIHdoaWNoIHVzdWFsbHkgaGF2ZSA4Cj4+PiBkYXRhIHBpbnMgbGlrZSB0
-aGlzIG9uZSBbMV0uCj4+Pgo+Pj4gUGxlYXNlIGRvbid0IGJsYW1lIG1lIGlmIGl0J3Mgbm90IGNv
-bXBhdGlibGUgdG8gaS5NWDI4LiBJdCdzIG9ubHkgYW4gZXhhbXBsZS4KPj4+Cj4+PiBbMV0gLQo+
-Pj4gaHR0cDovL2RhdGFzaGVldC5vY3RvcGFydC5jb20vVEhHQk0zRzREMUZCQUlHSDJILVRvc2hp
-YmEtZGF0YXNoZWV0LTIwNzQ4ODgwLnBkZgo+Pgo+Pgo+PiBJIGRvd25sb2FkIHRoZSBkYXRhc2hl
-ZXQgeW91IG1lbnRpb25lZCwgYW5kIEkgZXhwbGljaXRseSBzZWUgaXQKPj4gZGVzY3JpYmUgMVY4
-IGV2ZXJ5d2hlcmUsIGVzcGVjaWFsbHkgZm9yIHRoZSBzZWN0aW9uIG9mICJFTEVDVFJJQ0FMCj4+
-IENIQVJBQ1RFUklTVElDUyIuCj4+Cj4+IEkgbmV2ZXIgc2VlIG9uZSBlTU1DIGNsYWltaW5nIERE
-UjUyIGNhcGFiaWxpdHkgYnV0IGRvZXNuJ3Qgc3VwcG9ydCAxVjgKPj4gc28gZmFyLiBDb3VsZCB5
-b3Uga2luZGx5IHNoYXJlIG1lIHRoZSBwYXJ0IG51bWJlciBvZiB0aGUgZU1NQyB5b3UgYXJlCj4+
-IHVzaW5nPyA6KQo+Pgo+Pj4KPj4+Pgo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBTdGVmYW4gV2FocmVu
-IDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPgo+Pj4+PiAtLS0KPj4+Pj4gIGRyaXZlcnMvbW1jL2Nv
-cmUvaG9zdC5jICB8ICAgIDIgKysKPj4+Pj4gIGRyaXZlcnMvbW1jL2NvcmUvbW1jLmMgICB8ICAg
-IDYgKysrKysrCj4+Pj4+ICBpbmNsdWRlL2xpbnV4L21tYy9ob3N0LmggfCAgICAxICsKPj4+Pj4g
-IDMgZmlsZXMgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspCj4+Pj4+Cj4+Pj4+IENoYW5nZXMgdG8g
-RmFiaW8ncyBwYXRjaDoKPj4+Pj4gLSByZWJhc2UgdG8gY3VycmVudCBsaW51eC1uZXh0Cj4+Pj4+
-IC0gcmVuYW1lIERUIHByb3BlcnR5IHRvIG1tYy1kZHItM18zdgo+Pj4+PiAtIHVzZSBFWFRfQ1NE
-X0NBUkRfVFlQRV9ERFJfNTIgaW5zdGVhZCBvZiBuZXcgZGVmaW5lCj4+Pj4+Cj4+Pj4+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL21tYy9jb3JlL2hvc3QuYyBiL2RyaXZlcnMvbW1jL2NvcmUvaG9zdC5j
-Cj4+Pj4+IGluZGV4IDk4ZjI1ZmYuLjRjOTcxZGUgMTAwNjQ0Cj4+Pj4+IC0tLSBhL2RyaXZlcnMv
-bW1jL2NvcmUvaG9zdC5jCj4+Pj4+ICsrKyBiL2RyaXZlcnMvbW1jL2NvcmUvaG9zdC5jCj4+Pj4+
-IEBAIC0zMDEsNiArMzAxLDggQEAgaW50IG1tY19vZl9wYXJzZShzdHJ1Y3QgbW1jX2hvc3QgKmhv
-c3QpCj4+Pj4+ICAgICAgaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwgIndha2V1cC1zb3Vy
-Y2UiKSB8fAo+Pj4+PiAgICAgICAgICBvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJlbmFibGUt
-c2Rpby13YWtldXAiKSkgLyogbGVnYWN5ICovCj4+Pj4+ICAgICAgICAgIGhvc3QtPnBtX2NhcHMg
-fD0gTU1DX1BNX1dBS0VfU0RJT19JUlE7Cj4+Pj4+ICsgICAgaWYgKG9mX3Byb3BlcnR5X3JlYWRf
-Ym9vbChucCwgIm1tYy1kZHItM18zdiIpKQo+Pj4+PiArICAgICAgICBob3N0LT5jYXBzMiB8PSBN
-TUNfQ0FQMl8zXzNWX09OTFlfRERSOwo+Pj4+PiAgICAgIGlmIChvZl9wcm9wZXJ0eV9yZWFkX2Jv
-b2wobnAsICJtbWMtZGRyLTFfOHYiKSkKPj4+Pj4gICAgICAgICAgaG9zdC0+Y2FwcyB8PSBNTUNf
-Q0FQXzFfOFZfRERSOwo+Pj4+PiAgICAgIGlmIChvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJt
-bWMtZGRyLTFfMnYiKSkKPj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2NvcmUvbW1jLmMg
-Yi9kcml2ZXJzL21tYy9jb3JlL21tYy5jCj4+Pj4+IGluZGV4IGYyZDE4NWMuLjhhOTMzZDUgMTAw
-NjQ0Cj4+Pj4+IC0tLSBhL2RyaXZlcnMvbW1jL2NvcmUvbW1jLmMKPj4+Pj4gKysrIGIvZHJpdmVy
-cy9tbWMvY29yZS9tbWMuYwo+Pj4+PiBAQCAtMjEwLDYgKzIxMCwxMiBAQCBzdGF0aWMgdm9pZCBt
-bWNfc2VsZWN0X2NhcmRfdHlwZShzdHJ1Y3QgbW1jX2NhcmQgKmNhcmQpCj4+Pj4+ICAgICAgICAg
-IGF2YWlsX3R5cGUgfD0gRVhUX0NTRF9DQVJEX1RZUEVfSFNfNTI7Cj4+Pj4+ICAgICAgfQo+Pj4+
-Pgo+Pj4+PiArICAgIGlmIChjYXBzMiAmIE1NQ19DQVAyXzNfM1ZfT05MWV9ERFIgJiYKPj4+Pj4g
-KyAgICAgICAgY2FyZF90eXBlICYgRVhUX0NTRF9DQVJEX1RZUEVfRERSXzFfOFYpIHsKPj4+Pj4g
-KyAgICAgICAgaHNfbWF4X2R0ciA9IE1NQ19ISUdIX0REUl9NQVhfRFRSOwo+Pj4+PiArICAgICAg
-ICBhdmFpbF90eXBlIHw9IEVYVF9DU0RfQ0FSRF9UWVBFX0REUl81MjsKPj4+Pj4gKyAgICB9Cj4K
-PiBkaWQgeW91IGtub3cgRVhUX0NTRF9DQVJEX1RZUEVfRERSXzUyIC0+IFRZUEVfRERSXzFfOFYg
-YW5kIFRZUEVfRERSXzFfMlY/CgpUaGFua3MgZm9yIHBvaW50aW5nIG91dC4gRmFiaW8ncyBwYXRj
-aCB3YXMgYmV0dGVyIGhlcmUuCgpBcyBpIHdyb3RlIHRvIFNoYXduIHRoZSBzdWJqZWN0IGxpbmUg
-aXMgaW5jb3JyZWN0LiBJIHdhbnQgdG8gYWRkIDMuM1YgCm9ubHkgc3VwcG9ydCBmb3IgaG9zdHMg
-bm90IGZvciAiY2FyZCIuCgpBY2NvcmRpbmcgdG8gdGhlIGNvbW1lbnRzIEVYVF9DU0RfQ0FSRF9U
-WVBFX0REUl8xXzhWIHN0YW5kcyBmb3IgMS44ViBvciAKMy4zVi4gU28gaSBiZXR0ZXIgYWRkIEVY
-VF9DU0RfQ0FSRF9UWVBFX0REUl8zXzNWX09OTFkgZXZlbiB0aGUgImNhcmQiIApzdXBwb3J0cyAx
-LjhWLgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+On Wed, Aug 10, 2016 at 2:52 PM, Keerthy <j-keerthy@ti.com> wrote:
+
+> Currently read directly calls the repmap read function. Hence
+> remove the redundant wrapper and use regmap read wherever
+> needed.
+>
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+I assume an immutable branch will not be needed for this,
+this small changed "should not" collide with anything in
+my tree (famous last words)...
+
+Yours,
+Linus Walleij
