@@ -1,53 +1,38 @@
-From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2 1/1] ARM: dts: imx6q-evi: Use GPIO_6 for fec irq
-Date: Thu, 11 Aug 2016 10:35:16 -0700
-Message-ID: <1470936916-20913-1-git-send-email-stillcompiling@gmail.com>
-References: <57ACB493.4040809@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57ACB493.4040809-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Reza Arbab <arbab@linux.vnet.ibm.com>
+Subject: Re: [PATCH 1/4] dt-bindings: add doc for ibm,hotplug-aperture
+Date: Thu, 11 Aug 2016 12:53:11 -0500
+Message-ID: <20160811175311.GD12039@arbab-laptop.austin.ibm.com>
+References: <1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com>
+ <1470680843-28702-2-git-send-email-arbab@linux.vnet.ibm.com>
+ <92e34173-b2e2-bac0-3bbb-fc5407cbb8a5@gmail.com>
+ <874m6r2a2s.fsf@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <owner-linux-mm@kvack.org>
+Content-Disposition: inline
+In-Reply-To: <874m6r2a2s.fsf@linux.vnet.ibm.com>
+Sender: owner-linux-mm@kvack.org
+To: Stewart Smith <stewart@linux.vnet.ibm.com>
+Cc: Balbir Singh <bsingharora@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Jonathan Corbet <corbet@lwn.net>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, Alistair Popple <apopple@au1.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Apply hardware workaround for ethernet problem
-See nxp erratum err006687
+On Thu, Aug 11, 2016 at 02:39:23PM +1000, Stewart Smith wrote:
+>Forgive me for being absent on the whole discussion here, but is this 
+>an OPAL specific binding? If so, shouldn't the docs also appear in the
+>skiboot tree?
 
-Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
+Good question. I guess it's not necessarily OPAL-specific, even though 
+OPAL may initially be the only implementor of the binding.
 
-Changed since V1:
-- added fsl,err006687-workaround-present; so that it will continue to work
+Would it be more appropriate to move the file up a directory, directly 
+under Documentation/devicetree/bindings/powerpc? I hesitated at that 
+because the binding is tied to "ibm,associativity".
 
- arch/arm/boot/dts/imx6q-evi.dts | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
-index 49c6f61..33bd04b 100644
---- a/arch/arm/boot/dts/imx6q-evi.dts
-+++ b/arch/arm/boot/dts/imx6q-evi.dts
-@@ -127,6 +127,8 @@
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii";
- 	phy-reset-gpios = <&gpio1 25 0>;
-+	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
-+			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
-+	fsl,err006687-workaround-present;
- 	status = "okay";
- };
- 
-@@ -312,6 +314,7 @@
- 			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL 0x1b0b0
- 			MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN 0x4001b0a8
- 			MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25 0x1b0b0
-+			MX6QDL_PAD_GPIO_6__ENET_IRQ 0x000b1
- 		>;
- 	};
- 
 -- 
-2.7.4
+Reza Arbab
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
