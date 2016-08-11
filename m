@@ -1,95 +1,56 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: imx6q-evi: Fix onboard hub reset line
-Date: Fri, 12 Aug 2016 11:11:58 +0800
-Message-ID: <20160812031158.GH18967@shlinux2>
-References: <20160810030254.GD1879@shlinux2>
- <1470933632-22133-1-git-send-email-stillcompiling@gmail.com>
- <1470933632-22133-4-git-send-email-stillcompiling@gmail.com>
+From: "Shougang Group Co. Ltd" <jmm-BFOZC58soLkGXtTpemXPTA@public.gmane.org>
+Subject: Company Payment Agent Needed
+Date: Thu, 11 Aug 2016 02:16:24 -0500
+Message-ID: <20160811071611.M63881@xanum.uam.mx>
+Reply-To: zhujimin20-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1470933632-22133-4-git-send-email-stillcompiling@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joshua Clayton <stillcompiling@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, dbaryshkov@gmail.com, dwmw3@infradead.org, k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, mka@chromium.org
+Content-Type: text/plain;
+	charset=iso-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 11, 2016 at 09:40:32AM -0700, Joshua Clayton wrote:
-> Previously the onboard hub was made to work by treating its
-> reset gpio as a regulator enable.
-> Get rid of that kludge now that pwseq has added reset gpio support
-> Move pin muxing the hub reset pin into the usbh1 group
-> 
-> Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
-> ---
->  arch/arm/boot/dts/imx6q-evi.dts | 25 +++++++------------------
->  1 file changed, 7 insertions(+), 18 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
-> index 4fa5601..49c6f61 100644
-> --- a/arch/arm/boot/dts/imx6q-evi.dts
-> +++ b/arch/arm/boot/dts/imx6q-evi.dts
-> @@ -54,18 +54,6 @@
->  		reg = <0x10000000 0x40000000>;
->  	};
->  
-> -	reg_usbh1_vbus: regulator-usbhubreset {
-> -		compatible = "regulator-fixed";
-> -		regulator-name = "usbh1_vbus";
-> -		regulator-min-microvolt = <5000000>;
-> -		regulator-max-microvolt = <5000000>;
-> -		enable-active-high;
-> -		startup-delay-us = <2>;
-> -		pinctrl-names = "default";
-> -		pinctrl-0 = <&pinctrl_usbh1_hubreset>;
-> -		gpio = <&gpio7 12 GPIO_ACTIVE_HIGH>;
-> -	};
-> -
->  	reg_usb_otg_vbus: regulator-usbotgvbus {
->  		compatible = "regulator-fixed";
->  		regulator-name = "usb_otg_vbus";
-> @@ -204,12 +192,18 @@
->  };
->  
->  &usbh1 {
-> -	vbus-supply = <&reg_usbh1_vbus>;
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_usbh1>;
->  	dr_mode = "host";
->  	disable-over-current;
->  	status = "okay";
-> +
-> +	usb2415host: hub@1 {
-> +		compatible = "usb424,2513";
-> +		reg = <1>;
-> +		reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
-> +		reset-duration-us = <3000>;
-> +	};
->  };
->  
->  &usbotg {
-> @@ -467,11 +461,6 @@
->  			MX6QDL_PAD_GPIO_3__USB_H1_OC 0x1b0b0
->  			/* usbh1_b OC */
+Shougang Group
+45 Huagong Road Xinji City,
+Hebei Province China.
+webpage: www.shougang.com.cn
 
-This comment should be for above pin, do you mind I change it in
-this patch?
 
->  			MX6QDL_PAD_GPIO_0__GPIO1_IO00 0x1b0b0
-> -		>;
-> -	};
-> -
-> -	pinctrl_usbh1_hubreset: usbh1hubresetgrp {
-> -		fsl,pins = <
->  			MX6QDL_PAD_GPIO_17__GPIO7_IO12 0x1b0b0
->  		>;
->  	};
+This is an official request for Professional/consultants who will stand as
+our regional representative to run logistics on behalf of Shougang Group.
+We are only looking for individual or company from USA and Canada. You
+will be entitle to ten percent (10%) of every payment you receive from our
+customers in your region on behalf of the company.
 
-This changes remind me that I need to change the same thing for udoo
-board.
+NOTE: You are not require to travel, all communications with our customers
+will be through email or phone. All fees, including taxes will be handled
+by us.
 
--- 
+You can apply for this position by filling the information below and send
+back to us;
 
-Best Regards,
-Peter Chen
+Full Name:
+Residencial or office address:
+Town:
+State:
+Zipcode:
+Country:
+Current Job:
+If you own a company, please state the company name:
+Prefered Email:
+Gender:
+Age:
+Telephone:
+
+If you have a current job, you can still be part of our business, as
+services for us will not bother with your hours of work.
+
+Respectfully,
+Mr. Zhu Jimin (Chief Executive Officer)
+Shougang Group
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
