@@ -1,38 +1,89 @@
-From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: imx6q-evi: Use GPIO_6 for fec irq
-Date: Thu, 11 Aug 2016 10:23:31 -0700
-Message-ID: <57ACB493.4040809@gmail.com>
-References: <1470934446-22536-1-git-send-email-stillcompiling@gmail.com>
- <745430359.250170.752d0f22-93a7-46e8-bb14-c884787aaea3.open-xchange@email.1und1.de>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v2] dt: bindings: Add binding for ESP8089 wifi chips
+Date: Thu, 11 Aug 2016 19:26:25 +0200
+Message-ID: <1470936385-4621-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <745430359.250170.752d0f22-93a7-46e8-bb14-c884787aaea3.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-mmc@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Stefan,
+The ESP8089 chips can mostly be enumerated via their sdio interface,
+but they are clocked by an external crystal which may differ from one
+board to the other.
 
-On 08/11/2016 10:09 AM, Stefan Wahren wrote:
-> Hi Joshua,
->
->> Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> hat am 11. August 2016 um 18:54
->> geschrieben:
->>
->>
->> Apply hardware workaround for ethernet problem
->> See nxp erratum err006687
-> do you know this commit?
->
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=a28eeb43ee57e0524c59e64760ed28088dd159cb
->
-> Maybe you want to add this property, too.
-I missed that this change requiring (more) explicit enablement was merge to linux-next.
-I'll add that.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This commit adds a binding for the sdio child node for these chips,
+allowing to specify the external crystal type (for now, this binding
+could be be extended with e.g. OOB irq support later).
+
+The Android driver for this chip uses a text file with key,value pairs
+which gets loaded as firmware to pass this info to the firmware.
+The "esp,crystal_26M_en" name is chosen to match the crystal_26M_en
+key-name in that text file.
+
+Note that at this point there only is an out of tree driver for this
+hardware, there is no clear timeline / path for merging this. Still
+I believe it would be good to specify the binding for this in tree
+now, so that any future migration to an in tree driver will not cause
+compatiblity issues.
+
+Cc: Icenowy Zheng <icenowy@aosc.xyz>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+-Use esp,crystal-26M-en instead of esp,crystal_26M_en
+---
+ .../bindings/net/wireless/esp,esp8089.txt          | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/esp,esp8089.txt
+
+diff --git a/Documentation/devicetree/bindings/net/wireless/esp,esp8089.txt b/Documentation/devicetree/bindings/net/wireless/esp,esp8089.txt
+new file mode 100644
+index 0000000..19331bb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wireless/esp,esp8089.txt
+@@ -0,0 +1,31 @@
++Espressif ESP8089 wireless SDIO devices
++
++This node provides properties for controlling the ESP8089 wireless device.
++The node is expected to be specified as a child node to the SDIO controller
++that connects the device to the system.
++
++Required properties:
++
++ - compatible : Should be "esp,esp8089".
++
++Optional properties:
++ - esp,crystal-26M-en: Integer value for the crystal_26M_en firmware parameter
++
++Example:
++
++&mmc1 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	vmmc-supply = <&reg_dldo1>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
++
++	esp8089: sdio_wifi@1 {
++		compatible = "esp,esp8089";
++		reg = <1>;
++		esp,crystal-26M-en = <2>;
++	};
++};
+-- 
+2.7.4
