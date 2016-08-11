@@ -1,58 +1,99 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [Urgent PATCH] arm64: dts: uniphier: fix IRQ trigger type of
- ARMv8 timer
-Date: Thu, 11 Aug 2016 08:44:48 +0200
-Message-ID: <4943063.JrVaCOJD4r@wuerfel>
-References: <1470039140-3801-1-git-send-email-yamada.masahiro@socionext.com>
- <CAK7LNAQo6Si9q0FQw=3i67yGO1JYuDxHBB=xsLZOj8S-TBG_Rg@mail.gmail.com>
- <CAK7LNAT5D0HmvpVPnX1oFw=KJSOavVjXT6ECHBuTOhNaKpdQLg@mail.gmail.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v6 07/10] drm/mediatek: add dsi transfer function
+Date: Thu, 11 Aug 2016 15:10:12 +0800
+Message-ID: <1470899412.16554.72.camel@mtksdaap41>
+References: <1470308844-20895-1-git-send-email-yt.shen@mediatek.com>
+ <1470308844-20895-8-git-send-email-yt.shen@mediatek.com>
+ <1470391697.16554.60.camel@mtksdaap41>
+ <1470813866.27526.14.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK7LNAT5D0HmvpVPnX1oFw=KJSOavVjXT6ECHBuTOhNaKpdQLg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1470813866.27526.14.camel@mtksdaap41>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: YT Shen <yt.shen@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, Russell King <linux@arm.linux.org.uk>, Mao Huang <littlecvr@chromium.org>, yingjoe.chen@mediatek.com, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, shaoming chen <shaoming.chen@mediatek.com>, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, August 11, 2016 11:25:30 AM CEST Masahiro Yamada wrote:
-> 2016-08-01 17:26 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
-
-> >>> I could do this after -rc1 is out because it is apparently a
-> >>> bug fix, but in that case the for-next branch in ASOC will be
-> >>> broken for me, which would make bisect-ability difficult for me.
-> >>
-> >> I have a patch that addresses all platforms in one go (there is really
-> >> no point in fixing one at a time for a bug that is so widespread).
-> >>
-> >> I'll repost it later today.
-> >>
-> >
-> > That'll be fine.
-> > Thank you!
-> >
-> >
-> > Arnd, Olof:
-> > Please disregard this one.
-> >
-> 
-> Oh Dear.
-> Did you apply this one?
-> 
-> This was replaced with Marc'one:
-> https://patchwork.kernel.org/patch/9254183/
-
-Thanks for letting me know so quickly of my mistake, I was able
-to back out the commit from the fixes branch as it was right at
-the top.
-
-	Arnd
+SGksIFlUOgoKT24gV2VkLCAyMDE2LTA4LTEwIGF0IDE1OjI0ICswODAwLCBZVCBTaGVuIHdyb3Rl
+Ogo+IEhpIENLLAo+IAo+IE9uIEZyaSwgMjAxNi0wOC0wNSBhdCAxODowOCArMDgwMCwgQ0sgSHUg
+d3JvdGU6Cj4gPiBIaSwgWVQ6Cj4gPiAKPiA+IE9uIFRodSwgMjAxNi0wOC0wNCBhdCAxOTowNyAr
+MDgwMCwgWVQgU2hlbiB3cm90ZToKPiA+ID4gRnJvbTogc2hhb21pbmcgY2hlbiA8c2hhb21pbmcu
+Y2hlbkBtZWRpYXRlay5jb20+Cj4gPiA+IAo+ID4gPiBhZGQgZHNpIHJlYWQvd3JpdGUgY29tbWFu
+ZHMgZm9yIHRyYW5zZmVyIGZ1bmN0aW9uCj4gPiA+IAo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBzaGFv
+bWluZyBjaGVuIDxzaGFvbWluZy5jaGVuQG1lZGlhdGVrLmNvbT4KPiA+ID4gLS0tCj4gPiA+ICBk
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jIHwgIDI2MSArKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysKPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyNjEgaW5zZXJ0aW9u
+cygrKQo+ID4gPiAKCltzbmlwLi4uXQoKPiA+ID4gKwo+ID4gPiArc3RhdGljIHZvaWQgbXRrX2Rz
+aV9jbWRxKHN0cnVjdCBtdGtfZHNpICpkc2ksIGNvbnN0IHN0cnVjdCBtaXBpX2RzaV9tc2cgKm1z
+ZykKPiA+ID4gK3sKPiA+ID4gKwljb25zdCBjaGFyICp0eF9idWYgPSBtc2ctPnR4X2J1ZjsKPiA+
+ID4gKwl1MzIgcmVnX3ZhbCwgaTsKPiA+ID4gKwl1MTYgd2MxNjsKPiA+ID4gKwl1OCBjb25maWcs
+IGRhdGEwLCBkYXRhMSwgdHlwZTsKPiA+ID4gKwo+ID4gPiArCWlmIChNVEtfRFNJX0hPU1RfSVNf
+UkVBRCh0eXBlKSkgewo+ID4gCj4gPiAndHlwZScgaXMgdXNlZCBiZWZvcmUgYXNzaWduZWQuCj4g
+V2lsbCBmaXguCj4gCj4gPiAKPiA+ID4gKwkJY29uZmlnID0gNDsKPiA+ID4gKwkJZGF0YTAgPSB0
+eF9idWZbMF07Cj4gPiA+ICsKPiA+ID4gKwkJaWYgKG1zZy0+cnhfbGVuIDwgMykKPiA+ID4gKwkJ
+CXR5cGUgPSBNSVBJX0RTSV9EQ1NfUkVBRDsKPiA+ID4gKwkJZWxzZQo+ID4gPiArCQkJdHlwZSA9
+IE1JUElfRFNJX0dFTkVSSUNfUkVBRF9SRVFVRVNUXzFfUEFSQU07Cj4gPiA+ICsKPiA+ID4gKwkJ
+ZGF0YTEgPSAwOwo+ID4gPiArCQlyZWdfdmFsID0gKGRhdGExIDw8IDI0KSB8IChkYXRhMCA8PCAx
+NikgfCAodHlwZSA8PCA4KSB8IGNvbmZpZzsKPiA+ID4gKwo+ID4gPiArCQl3cml0ZWwocmVnX3Zh
+bCwgZHNpLT5yZWdzICsgRFNJX0NNRFEwKTsKPiA+ID4gKwkJbXRrX2RzaV9tYXNrKGRzaSwgRFNJ
+X0NNRFFfU0laRSwgQ01EUV9TSVpFLCAxKTsKPiA+IAo+ID4gSSB0aGluayB0aGlzIHBhcnQgbG9v
+a3MgbGlrZSAnZWxzZScgcGFydC4gVGhlIGRpZmZlcmVuY2UgaXMgdHlwZSBhbmQKPiA+IGNvbmZp
+Zy4gSSB0aGluayB0eXBlIHNob3VsZCBiZSBtc2ctPnR5cGUgYW5kIHlvdSBjYW4gaW5kZXBlbmRl
+bnRseSBzZXQKPiA+IEJJVCgyKSBvZiBjb25maWcuCj4gbXNnLT50eXBlIG9ubHkgdGVsbHMgYWJv
+dXQgcmVhZCBvciB3cml0ZSwgZm9yIHRoZSBkZXRhaWxzIHdlIG5lZWQgdG8KPiBjaGVjayBvdGhl
+ciBwYXJhbWV0ZXJzLiAgVGhpcyBwYXJ0IGlzIGZvciByZWFkLCB0aGUgZWxzZSBwYXJ0IGlzIGZv
+cgo+IHdyaXRlIHNob3J0IHBhY2tldC4gIE5vdCBvbmx5IEJJVCgyKSBvZiBjb25maWcgaXMgZGlm
+ZmVyZW50LCBidXQgYWxzbwo+IHR5cGUgYW5kIGRhdGExIGlzIGNoYW5nZWQuICBTdWNoIGEgY2hh
+bmdlIHdvdWxkIGxlYWQgdG8gZGlmZmljdWx0IHRvCj4gdW5kZXJzdGFuZC4KPiAKPiA+IAo+ID4g
+PiArCX0gZWxzZSBpZiAobXNnLT50eF9sZW4gPiAyKSB7CS8qIHNlbmQgbG9uZyBwYWNrZXQgKi8K
+PiA+ID4gKwkJY29uZmlnID0gMjsKPiA+ID4gKwkJdHlwZSA9IG1zZy0+dHlwZTsKPiA+ID4gKwkJ
+d2MxNiA9IG1zZy0+dHhfbGVuOwo+ID4gPiArCj4gPiA+ICsJCXJlZ192YWwgPSAod2MxNiA8PCAx
+NikgfCAodHlwZSA8PCA4KSB8IGNvbmZpZzsKPiA+ID4gKwo+ID4gPiArCQl3cml0ZWwocmVnX3Zh
+bCwgZHNpLT5yZWdzICsgRFNJX0NNRFEwKTsKPiA+ID4gKwo+ID4gPiArCQlmb3IgKGkgPSAwOyBp
+IDwgbXNnLT50eF9sZW47IGkrKykKPiA+ID4gKwkJCXdyaXRlYih0eF9idWZbaV0sIGRzaS0+cmVn
+cyArIERTSV9DTURRMCArIDQgKyBpKTsKPiA+ID4gKwo+ID4gPiArCQltdGtfZHNpX21hc2soZHNp
+LCBEU0lfQ01EUV9TSVpFLCBDTURRX1NJWkUsCj4gPiA+ICsJCQkgICAgIDEgKyAobXNnLT50eF9s
+ZW4gKyAzKSAvIDQpOwo+ID4gPiArCX0gZWxzZSB7CS8qIHNlbmQgc2hvcnQgcGFja2V0ICovCj4g
+PiA+ICsJCWNvbmZpZyA9IDA7Cj4gPiA+ICsJCWRhdGEwID0gdHhfYnVmWzBdOwo+ID4gPiArCj4g
+PiA+ICsJCWlmIChtc2ctPnR4X2xlbiA9PSAyKSB7Cj4gPiA+ICsJCQl0eXBlID0gTUlQSV9EU0lf
+RENTX1NIT1JUX1dSSVRFX1BBUkFNOwo+ID4gCj4gPiBXaHkgZG8geW91IG5vdCBzZXQgdHlwZSBh
+cyBtc2ctPnR5cGU/IFRoaXMgYmVoYXZpb3IgbG9va3MgbGlrZSB5b3UKPiA+IG1vZGlmeSB0cmFu
+c2ZlciB0eXBlLCBidXQgaXMgdGhpcyBhY2NlcHRhYmxlPwo+IG1zZy0+dHlwZSBvbmx5IHRlbGxz
+IGFib3V0IHJlYWQgb3Igd3JpdGUsIGZvciB0aGUgZGV0YWlscyB3ZSBuZWVkIHRvCj4gY2hlY2sg
+b3RoZXIgcGFyYW1ldGVycy4KCkkgdGhpbmsgeW91IGNvdWxkIHJld3JpdGUgbXRrX2RzaV9jbWRx
+KCkgYXMgZm9sbG93OgoKc3RhdGljIHZvaWQgbXRrX2RzaV9jbWRxKHN0cnVjdCBtdGtfZHNpICpk
+c2ksIGNvbnN0IHN0cnVjdCBtaXBpX2RzaV9tc2cKKm1zZykKewoJdTMyIGk7Cgl1MzIgc3JjX29m
+ZiA9IChtc2ctPnR4X2xlbiA+IDIpID8gNCA6IDI7Cgl1MzIgY21kcV9zaXplID0gKG1zZy0+dHhf
+bGVuID4gMikgPyAxICsgKG1zZy0+dHhfbGVuICsgMykgLyA0IDogMTsKCXUzMiBjb25maWcgPSAo
+bXNnLT50eF9sZW4gPiAyKSA/IEJJVCgxKSA6IDA7Cgl1MzIgdHlwZSA9IG1zZy0+dHlwZTsKCglp
+ZiAoTVRLX0RTSV9IT1NUX0lTX1JFQUQodHlwZSkpCgkJY29uZmlnIHw9IEJJVCgyKTsKCgl3cml0
+ZWwoKHR5cGUgPDwgOCkgfHwgY29uZmlnLCBkc2ktPnJlZ3MgKyBEU0lfQ01EUTApOwoJZm9yIChp
+ID0gMDsgaSA8IG1zZy0+dHhfbGVuOyBpKyspCgkJd3JpdGViKG1zZy0+dHhfYnVmW2ldLCBkc2kt
+PnJlZ3MgKyBEU0lfQ01EUTAgKyBzcmNfb2ZmICsgaSk7CgltdGtfZHNpX21hc2soZHNpLCBEU0lf
+Q01EUV9TSVpFLCBDTURRX1NJWkUsIGNtZHFfc2l6ZSk7Cn0KCklmIERTSSBIVyBkb2VzIG5vdCBz
+dXBwb3J0IHNvbWUgdHlwZSBhbmQgaXQgY2FuIGJlIHRyYW5zZmVycmVkIHRvIG90aGVyCnR5cGUs
+IHlvdSBjb3VsZCBhZGQgYSB0cmFuc2ZlciBmdW5jdGlvbiBsaWtlIHRoaXMKCnN0YXRpYyB1OCBt
+dGtfZHNpX21hcF90b19zdXBwb3J0ZWRfdHlwZSh1OCB0eXBlKQp7Cglzd2l0Y2godHlwZSkgewoJ
+Y2FzZSBNSVBJX0RTSV9EQ1NfU0hPUlRfV1JJVEU6CgkJcmV0dXJuIE1JUElfRFNJX0RDU19TSE9S
+VF9XUklURV9QQVJBTTsKCX0KCglyZXR1cm4gdHlwZTsKfQoKYW5kIHRoZW4KCnUzMiB0eXBlID0g
+bXRrX2RzaV9tYXBfdG9fc3VwcG9ydGVkX3R5cGUobXNnLT50eXBlKTsKCj4gCj4gPiAKPiA+ID4g
+KwkJCWRhdGExID0gdHhfYnVmWzFdOwo+ID4gPiArCQl9IGVsc2Ugewo+ID4gPiArCQkJdHlwZSA9
+IE1JUElfRFNJX0RDU19TSE9SVF9XUklURTsKPiA+ID4gKwkJCWRhdGExID0gMDsKPiA+ID4gKwkJ
+fQo+ID4gPiArCj4gPiA+ICsJCXJlZ192YWwgPSAoZGF0YTEgPDwgMjQpIHwgKGRhdGEwIDw8IDE2
+KSB8ICh0eXBlIDw8IDgpIHwgY29uZmlnOwo+ID4gPiArCj4gPiA+ICsJCXdyaXRlbChyZWdfdmFs
+LCBkc2ktPnJlZ3MgKyBEU0lfQ01EUTApOwo+ID4gPiArCQltdGtfZHNpX21hc2soZHNpLCBEU0lf
+Q01EUV9TSVpFLCBDTURRX1NJWkUsIDEpOwo+ID4gPiArCX0KPiA+ID4gK30KPiA+ID4gKwoKW3Nu
+aXAuLi5dCgo+ID4gCj4gPiBSZWdhcmRzLAo+ID4gQ0sKPiA+IAo+IAo+IAoKUmVnYXJkcywKQ0sK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
