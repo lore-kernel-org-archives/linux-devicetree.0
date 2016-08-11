@@ -1,75 +1,119 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] regulator: Add LTC3676 support
-Date: Thu, 11 Aug 2016 10:45:09 +0100
-Message-ID: <20160811094509.GP9347@sirena.org.uk>
-References: <1470785767-4426-1-git-send-email-tharvey@gateworks.com>
- <20160810114140.GJ9347@sirena.org.uk>
- <CAJ+vNU3s=qxJr8x=ScnyEV0UKkD_gTOnMyY8oGuzVs14hTW0Ng@mail.gmail.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v2 0/6] Add support of inverting power control and some
+ minor cleanup
+Date: Thu, 11 Aug 2016 19:08:38 +0900
+Message-ID: <9227304b-4d2e-66e1-743a-8d06f2a10ce1@samsung.com>
+References: <CGME20160807013720epcas1p235628058a90efa6f0062b03a4b2e4284@epcas1p2.samsung.com>
+ <1470533618-16312-1-git-send-email-shawn.lin@rock-chips.com>
+ <ee997311-3964-8623-a431-c9a5add7f991@samsung.com>
+ <cc785e09-6b33-d451-3d11-728bee3668a5@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="aC33ObtQAkNdOZ6b"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU3s=qxJr8x=ScnyEV0UKkD_gTOnMyY8oGuzVs14hTW0Ng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jaffer Kapasi <jkapasi-td5IlybW20HQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <cc785e09-6b33-d451-3d11-728bee3668a5@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Shawn,
 
---aC33ObtQAkNdOZ6b
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 08/09/2016 10:49 AM, Shawn Lin wrote:
+> Hi,
+> 
+> On 2016/8/8 18:24, Jaehoon Chung wrote:
+>> Hi Shawn,
+>>
+>> On 08/07/2016 10:33 AM, Shawn Lin wrote:
+>>> By default, dw_mmc outputs high level voltage to indicate powering
+>>> up the card and outputs low level vcltage to indicate powering
+>>> off the card. But that is not always correct. The power io should
+>>> be able to control different kind of hw components to supply or
+>>> cutoff power to the card. We have boards that need this patchset
+>>> to make the power control correct. Meanwhile let's expose it to
+>>> DT for board-specific usage.
+>>
+>> I have a question for this patch-set. Does DWMMC IP support to invert ON/OFF at Power Enable register?
+> 
+> No.
+> 
+>> Hmm..Well, if use the DW_MMC_CARD_PWR_INVERT, it should also be the similar behavior with Quirks.
+> 
+> yup, it makes the power control more complicated than before. :(
+> 
+>>
+>> Other flags are related with dwmmc IP. But this flag (DW_MMC_CARD_PWR_INVERT) is not related with IP side.
+>> I understood why you needs to add this flag..Is rockchip designed to invert the power controlling?
+> 
+> We don't invert the power controlling but our customers do.
+> The HW componet looks like some discrete LDOs which enable the related
+> power supply when outputing low voltage from pwren..
 
-On Wed, Aug 10, 2016 at 05:44:55PM -0700, Tim Harvey wrote:
-> On Wed, Aug 10, 2016 at 4:41 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+Is it related with PWREN register?
+I'm checking the TRM for PWREN register..
 
-> >> +/* LDO1 always on fixed 0.8V-3.3V via scalar via R1/R2 feeback res */
-> >> +static struct regulator_ops ltc3676_fixed_standby_regulator_ops = {
-> >> +};
+"Optional feature; ports can be used as general-purpose outputs."
 
-> > Remove this, it's pointless.
+Does it use the ports as GPIO?
 
-> as I'm using macro's to define the ops, removing this ends up breaking
-> compilation:
+> 
+>>
+>> But it's not general case. We can discuss about this.
+> 
+> I have a solution which is to add gpio power control for slot-gpio of
+> mmc core. once finished, we could add pwr_cap_invert just like what we
+> did for cd/wp invert control..
 
-> do you know of some macro foo to best handle this? Part of me wants to
-> ditch the macro's and just simply declare the array of regulators
-> directly as its much easier to read/follow.
+I'm not sure that it's right that add the gpio power control into mmc core.
+slot-gpio? i think it can use the regulator framework with gpio.
+I don't have a lot knowledge of power, but it might be controlled whether active is low or high.
+So i think it doesn't need to add for entire mmc controller.
 
-Just don't use the macro for that regulator?
+Best Regards,
+Jaehoon Chung
 
-> >> +     if (!rdesc->r1 || !rdesc->r2)
-> >> +             return;
+> 
+> Then we could remove PWREN from the default state of
+> pinctrl inside the sdmmc dt node, and let dwmmc request gpio power
+> control stuff after paring the property for pwr_cap_invert..
+> 
+> More over, it well fit for all mmc host's requirement of gpio
+> power control and inverted control if they want it. :)
+> 
+> 
+> That should be legit for us?
+> If it sounds ok to you and Ulf, I will come up with a RFC one for
+> community to comment it.:)
+> 
+>>
+>> Best Regards,
+>> Jaehoon Chung
+>>
+>>>
+>>>
+>>> Changes in v2:
+>>> - fix copy-paste err and typo
+>>>
+>>> Shawn Lin (6):
+>>>   dt-bindings: rockchip-dw-mshc: add description of
+>>>     rockchip,power-invert
+>>>   mmc: dw_mmc: cleanup power setting of set_ios callback
+>>>   mmc: dw_mmc: split out dw_mci_set_power
+>>>   mmc: dw_mmc: split out dw_mci_set_power_reg
+>>>   mmc: dw_mmc: support inverted power control
+>>>   mmc: dw_mmc-rockchip: add parsing of power control from DT
+>>>
+>>>  .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |   6 +
+>>>  drivers/mmc/host/dw_mmc-rockchip.c                 |   8 ++
+>>>  drivers/mmc/host/dw_mmc.c                          | 134 ++++++++++++---------
+>>>  drivers/mmc/host/dw_mmc.h                          |   1 +
+>>>  4 files changed, 90 insertions(+), 59 deletions(-)
+>>>
+>>
+>>
+>>
+>>
+> 
+> 
 
-> > This is a bug if we ever get here, we should be complaining loudly.
-
-> This is now refactored due to using the core code for of parsing, but
-> is it ok/standard to allow unused regulators to be not-defined in the
-> dt and if so how do I handle that? Currently my test board uses 7 of
-> the 8 regulators but the unused one is still registered with linux.
-
-Substitute in versions of the ops that don't have any of the voltage
-operations since without the dividers you can't support them, or make
-the voltage operations return -EINVAL.
-
---aC33ObtQAkNdOZ6b
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXrEkkAAoJECTWi3JdVIfQCB4H/R/5mBB2Ti+WQNWZYTXb93OU
-hUvheHgalEn03t/Pyu6LsK88v3xWfokdb2/zoXRjAHrJDXRDIqoM/VQ/NLm7R/Cd
-Bs3APY8+ChitCemt0071tQLq5tbipv8/ntCp+8s9kdkG+2m18qJ2nbD8OY3X+stD
-lH3+dd0FwnVbdG6yF6vGhGl/l9QtB8+ay+0I56/4VgsHE5ZDmo/a5vqjyXjPsn8K
-Eu5QMZ8P59UE3HBW9+EfHk3drPy51x4Afq+oJcmOil2lh57pxGlZ11zKj4yziapu
-L9Anq2Bz6uD01/OD+Rzbzl5Ah4TEHlOndhchzkcpldyRHZujprrQPH+qCO3NyZI=
-=3Twg
------END PGP SIGNATURE-----
-
---aC33ObtQAkNdOZ6b--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
