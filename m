@@ -1,34 +1,34 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] pinctrl: qcom: Add generic ssbi and spmi GPIO/MPP bindings
-Date: Thu, 11 Aug 2016 10:19:32 +0200
-Message-ID: <CACRpkdazPheA1s2FX2ugEyCFmrKiq36QEmEuCGJRt-vQTFWFVw@mail.gmail.com>
-References: <20160711190109.16758-1-sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 1/4] gpio: Add AXP209 GPIO driver
+Date: Thu, 11 Aug 2016 10:28:34 +0200
+Message-ID: <CACRpkdaHbE1ZZ-f_1xqTwReyLbUZuS+VyLgGSp4hE8CrX3tu=g@mail.gmail.com>
+References: <20160720141139.25098-1-maxime.ripard@free-electrons.com> <20160720141139.25098-2-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160711190109.16758-1-sboyd@codeaurora.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160720141139.25098-2-maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Lee Jones <lee.jones@linaro.org>, Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 11, 2016 at 9:01 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+On Wed, Jul 20, 2016 at 4:11 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
 
-> The drivers don't really need to know which PMIC they're for, so
-> make a generic binding for them. This alleviates us from updating
-> the drivers every time a new PMIC comes out. It's still
-> recommended that we update the binding with new PMIC models and
-> always specify the specific model for the MPPs and gpios before
-> the generic compatible string in devicetree, but this at least
-> cuts down on adding more and more compatible strings to the
-> drivers until we actually need them.
+> The AXP209 PMIC has a bunch of GPIOs accessible, that are usually used to
+> control LEDs or backlight.
 >
-> Cc: <devicetree@vger.kernel.org>
-> Acked-by: "Ivan T. Ivanov" <iivanov.xz@gmail.com>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> Add a driver for them
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Patch applied with Rob's ACK.
+Patch applied, it's clean and simple. I would suggest the
+following immediate improvement (send separate patch):
+
+Add a .get_direction() callback, I have started to push this
+for new driver as it gives better userspace experience
+and overall better control of stuff.
 
 Yours,
 Linus Walleij
