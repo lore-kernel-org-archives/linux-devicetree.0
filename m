@@ -1,64 +1,62 @@
-From: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v6 12/14] arm64/numa: remove some useless code
-Date: Thu, 11 Aug 2016 17:33:46 +0800
-Message-ID: <1470908028-8596-13-git-send-email-thunder.leizhen@huawei.com>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v6 05/14] arm64/numa: avoid inconsistent information to be
+ printed
+Date: Thu, 11 Aug 2016 17:33:39 +0800
+Message-ID: <1470908028-8596-6-git-send-email-thunder.leizhen@huawei.com>
 References: <1470908028-8596-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470908028-8596-1-git-send-email-thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1470908028-8596-1-git-send-email-thunder.leizhen@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank
+ Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>
+Cc: Xinwei Hu <huxinwei@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>, Zefan Li <lizefan@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-1. Currently only cpu0 set on cpu_possible_mask and percpu areas have not
-   been initialized.
-2. No reason to limit cpu0 must belongs to node0.
+numa_init(of_numa_init) may returned error because of numa configuration
+error. So "No NUMA configuration found" is inaccurate. In fact, specific
+configuration error information should be immediately printed by the
+testing branch.
 
-Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- arch/arm64/mm/numa.c | 8 --------
- 1 file changed, 8 deletions(-)
+ arch/arm64/mm/numa.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 30d3279..1796789 100644
+index c7fe3ec..fe26ed9 100644
 --- a/arch/arm64/mm/numa.c
 +++ b/arch/arm64/mm/numa.c
-@@ -93,7 +93,6 @@ void numa_clear_node(unsigned int cpu)
-  */
- static void __init setup_node_to_cpumask_map(void)
- {
--	unsigned int cpu;
- 	int node;
+@@ -333,8 +333,10 @@ static int __init numa_init(int (*init_func)(void))
+ 	if (ret < 0)
+ 		return ret;
 
- 	/* setup nr_node_ids if not done yet */
-@@ -106,9 +105,6 @@ static void __init setup_node_to_cpumask_map(void)
- 		cpumask_clear(node_to_cpumask_map[node]);
- 	}
+-	if (nodes_empty(numa_nodes_parsed))
++	if (nodes_empty(numa_nodes_parsed)) {
++		pr_info("No NUMA configuration found\n");
+ 		return -EINVAL;
++	}
 
--	for_each_possible_cpu(cpu)
--		set_cpu_numa_node(cpu, NUMA_NO_NODE);
--
- 	/* cpumask_of_node() will now work */
- 	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
- }
-@@ -374,10 +370,6 @@ static int __init numa_init(int (*init_func)(void))
+ 	ret = numa_register_nodes();
+ 	if (ret < 0)
+@@ -365,8 +367,6 @@ static int __init dummy_numa_init(void)
 
- 	setup_node_to_cpumask_map();
-
--	/* init boot processor */
--	cpu_to_node_map[0] = 0;
--	map_cpu_to_node(0, 0);
--
- 	return 0;
- }
+ 	if (numa_off)
+ 		pr_info("NUMA disabled\n"); /* Forced off on command line. */
+-	else
+-		pr_info("No NUMA configuration found\n");
+ 	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
+ 	       0LLU, PFN_PHYS(max_pfn) - 1);
 
 --
 2.5.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
