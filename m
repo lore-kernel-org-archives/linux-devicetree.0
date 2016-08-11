@@ -1,99 +1,205 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v6 07/10] drm/mediatek: add dsi transfer function
-Date: Thu, 11 Aug 2016 15:10:12 +0800
-Message-ID: <1470899412.16554.72.camel@mtksdaap41>
-References: <1470308844-20895-1-git-send-email-yt.shen@mediatek.com>
- <1470308844-20895-8-git-send-email-yt.shen@mediatek.com>
- <1470391697.16554.60.camel@mtksdaap41>
- <1470813866.27526.14.camel@mtksdaap41>
+From: Songjun Wu <songjun.wu@microchip.com>
+Subject: [PATCH v9 0/2] [media] atmel-isc: add driver for Atmel ISC
+Date: Thu, 11 Aug 2016 15:06:40 +0800
+Message-ID: <1470899202-13933-1-git-send-email-songjun.wu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1470813866.27526.14.camel@mtksdaap41>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YT Shen <yt.shen@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, Russell King <linux@arm.linux.org.uk>, Mao Huang <littlecvr@chromium.org>, yingjoe.chen@mediatek.com, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, shaoming chen <shaoming.chen@mediatek.com>, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nicolas.ferre@atmel.com, robh@kernel.org
+Cc: laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, Songjun Wu <songjun.wu@microchip.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?q?Niklas=20S=C3=83=C2=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Benoit Parrot <bparrot@ti.com>, linux-kernel@vger.kernel.org, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kamil Debski <kamil@wypas.org>, Tiffany Lin <tiffany.lin@mediatek.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, =?UTF-8?q?Richard=20R=C3=B6jfors?= <richard@puffinpack.se>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ide>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlUOgoKT24gV2VkLCAyMDE2LTA4LTEwIGF0IDE1OjI0ICswODAwLCBZVCBTaGVuIHdyb3Rl
-Ogo+IEhpIENLLAo+IAo+IE9uIEZyaSwgMjAxNi0wOC0wNSBhdCAxODowOCArMDgwMCwgQ0sgSHUg
-d3JvdGU6Cj4gPiBIaSwgWVQ6Cj4gPiAKPiA+IE9uIFRodSwgMjAxNi0wOC0wNCBhdCAxOTowNyAr
-MDgwMCwgWVQgU2hlbiB3cm90ZToKPiA+ID4gRnJvbTogc2hhb21pbmcgY2hlbiA8c2hhb21pbmcu
-Y2hlbkBtZWRpYXRlay5jb20+Cj4gPiA+IAo+ID4gPiBhZGQgZHNpIHJlYWQvd3JpdGUgY29tbWFu
-ZHMgZm9yIHRyYW5zZmVyIGZ1bmN0aW9uCj4gPiA+IAo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBzaGFv
-bWluZyBjaGVuIDxzaGFvbWluZy5jaGVuQG1lZGlhdGVrLmNvbT4KPiA+ID4gLS0tCj4gPiA+ICBk
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jIHwgIDI2MSArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysKPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyNjEgaW5zZXJ0aW9u
-cygrKQo+ID4gPiAKCltzbmlwLi4uXQoKPiA+ID4gKwo+ID4gPiArc3RhdGljIHZvaWQgbXRrX2Rz
-aV9jbWRxKHN0cnVjdCBtdGtfZHNpICpkc2ksIGNvbnN0IHN0cnVjdCBtaXBpX2RzaV9tc2cgKm1z
-ZykKPiA+ID4gK3sKPiA+ID4gKwljb25zdCBjaGFyICp0eF9idWYgPSBtc2ctPnR4X2J1ZjsKPiA+
-ID4gKwl1MzIgcmVnX3ZhbCwgaTsKPiA+ID4gKwl1MTYgd2MxNjsKPiA+ID4gKwl1OCBjb25maWcs
-IGRhdGEwLCBkYXRhMSwgdHlwZTsKPiA+ID4gKwo+ID4gPiArCWlmIChNVEtfRFNJX0hPU1RfSVNf
-UkVBRCh0eXBlKSkgewo+ID4gCj4gPiAndHlwZScgaXMgdXNlZCBiZWZvcmUgYXNzaWduZWQuCj4g
-V2lsbCBmaXguCj4gCj4gPiAKPiA+ID4gKwkJY29uZmlnID0gNDsKPiA+ID4gKwkJZGF0YTAgPSB0
-eF9idWZbMF07Cj4gPiA+ICsKPiA+ID4gKwkJaWYgKG1zZy0+cnhfbGVuIDwgMykKPiA+ID4gKwkJ
-CXR5cGUgPSBNSVBJX0RTSV9EQ1NfUkVBRDsKPiA+ID4gKwkJZWxzZQo+ID4gPiArCQkJdHlwZSA9
-IE1JUElfRFNJX0dFTkVSSUNfUkVBRF9SRVFVRVNUXzFfUEFSQU07Cj4gPiA+ICsKPiA+ID4gKwkJ
-ZGF0YTEgPSAwOwo+ID4gPiArCQlyZWdfdmFsID0gKGRhdGExIDw8IDI0KSB8IChkYXRhMCA8PCAx
-NikgfCAodHlwZSA8PCA4KSB8IGNvbmZpZzsKPiA+ID4gKwo+ID4gPiArCQl3cml0ZWwocmVnX3Zh
-bCwgZHNpLT5yZWdzICsgRFNJX0NNRFEwKTsKPiA+ID4gKwkJbXRrX2RzaV9tYXNrKGRzaSwgRFNJ
-X0NNRFFfU0laRSwgQ01EUV9TSVpFLCAxKTsKPiA+IAo+ID4gSSB0aGluayB0aGlzIHBhcnQgbG9v
-a3MgbGlrZSAnZWxzZScgcGFydC4gVGhlIGRpZmZlcmVuY2UgaXMgdHlwZSBhbmQKPiA+IGNvbmZp
-Zy4gSSB0aGluayB0eXBlIHNob3VsZCBiZSBtc2ctPnR5cGUgYW5kIHlvdSBjYW4gaW5kZXBlbmRl
-bnRseSBzZXQKPiA+IEJJVCgyKSBvZiBjb25maWcuCj4gbXNnLT50eXBlIG9ubHkgdGVsbHMgYWJv
-dXQgcmVhZCBvciB3cml0ZSwgZm9yIHRoZSBkZXRhaWxzIHdlIG5lZWQgdG8KPiBjaGVjayBvdGhl
-ciBwYXJhbWV0ZXJzLiAgVGhpcyBwYXJ0IGlzIGZvciByZWFkLCB0aGUgZWxzZSBwYXJ0IGlzIGZv
-cgo+IHdyaXRlIHNob3J0IHBhY2tldC4gIE5vdCBvbmx5IEJJVCgyKSBvZiBjb25maWcgaXMgZGlm
-ZmVyZW50LCBidXQgYWxzbwo+IHR5cGUgYW5kIGRhdGExIGlzIGNoYW5nZWQuICBTdWNoIGEgY2hh
-bmdlIHdvdWxkIGxlYWQgdG8gZGlmZmljdWx0IHRvCj4gdW5kZXJzdGFuZC4KPiAKPiA+IAo+ID4g
-PiArCX0gZWxzZSBpZiAobXNnLT50eF9sZW4gPiAyKSB7CS8qIHNlbmQgbG9uZyBwYWNrZXQgKi8K
-PiA+ID4gKwkJY29uZmlnID0gMjsKPiA+ID4gKwkJdHlwZSA9IG1zZy0+dHlwZTsKPiA+ID4gKwkJ
-d2MxNiA9IG1zZy0+dHhfbGVuOwo+ID4gPiArCj4gPiA+ICsJCXJlZ192YWwgPSAod2MxNiA8PCAx
-NikgfCAodHlwZSA8PCA4KSB8IGNvbmZpZzsKPiA+ID4gKwo+ID4gPiArCQl3cml0ZWwocmVnX3Zh
-bCwgZHNpLT5yZWdzICsgRFNJX0NNRFEwKTsKPiA+ID4gKwo+ID4gPiArCQlmb3IgKGkgPSAwOyBp
-IDwgbXNnLT50eF9sZW47IGkrKykKPiA+ID4gKwkJCXdyaXRlYih0eF9idWZbaV0sIGRzaS0+cmVn
-cyArIERTSV9DTURRMCArIDQgKyBpKTsKPiA+ID4gKwo+ID4gPiArCQltdGtfZHNpX21hc2soZHNp
-LCBEU0lfQ01EUV9TSVpFLCBDTURRX1NJWkUsCj4gPiA+ICsJCQkgICAgIDEgKyAobXNnLT50eF9s
-ZW4gKyAzKSAvIDQpOwo+ID4gPiArCX0gZWxzZSB7CS8qIHNlbmQgc2hvcnQgcGFja2V0ICovCj4g
-PiA+ICsJCWNvbmZpZyA9IDA7Cj4gPiA+ICsJCWRhdGEwID0gdHhfYnVmWzBdOwo+ID4gPiArCj4g
-PiA+ICsJCWlmIChtc2ctPnR4X2xlbiA9PSAyKSB7Cj4gPiA+ICsJCQl0eXBlID0gTUlQSV9EU0lf
-RENTX1NIT1JUX1dSSVRFX1BBUkFNOwo+ID4gCj4gPiBXaHkgZG8geW91IG5vdCBzZXQgdHlwZSBh
-cyBtc2ctPnR5cGU/IFRoaXMgYmVoYXZpb3IgbG9va3MgbGlrZSB5b3UKPiA+IG1vZGlmeSB0cmFu
-c2ZlciB0eXBlLCBidXQgaXMgdGhpcyBhY2NlcHRhYmxlPwo+IG1zZy0+dHlwZSBvbmx5IHRlbGxz
-IGFib3V0IHJlYWQgb3Igd3JpdGUsIGZvciB0aGUgZGV0YWlscyB3ZSBuZWVkIHRvCj4gY2hlY2sg
-b3RoZXIgcGFyYW1ldGVycy4KCkkgdGhpbmsgeW91IGNvdWxkIHJld3JpdGUgbXRrX2RzaV9jbWRx
-KCkgYXMgZm9sbG93OgoKc3RhdGljIHZvaWQgbXRrX2RzaV9jbWRxKHN0cnVjdCBtdGtfZHNpICpk
-c2ksIGNvbnN0IHN0cnVjdCBtaXBpX2RzaV9tc2cKKm1zZykKewoJdTMyIGk7Cgl1MzIgc3JjX29m
-ZiA9IChtc2ctPnR4X2xlbiA+IDIpID8gNCA6IDI7Cgl1MzIgY21kcV9zaXplID0gKG1zZy0+dHhf
-bGVuID4gMikgPyAxICsgKG1zZy0+dHhfbGVuICsgMykgLyA0IDogMTsKCXUzMiBjb25maWcgPSAo
-bXNnLT50eF9sZW4gPiAyKSA/IEJJVCgxKSA6IDA7Cgl1MzIgdHlwZSA9IG1zZy0+dHlwZTsKCglp
-ZiAoTVRLX0RTSV9IT1NUX0lTX1JFQUQodHlwZSkpCgkJY29uZmlnIHw9IEJJVCgyKTsKCgl3cml0
-ZWwoKHR5cGUgPDwgOCkgfHwgY29uZmlnLCBkc2ktPnJlZ3MgKyBEU0lfQ01EUTApOwoJZm9yIChp
-ID0gMDsgaSA8IG1zZy0+dHhfbGVuOyBpKyspCgkJd3JpdGViKG1zZy0+dHhfYnVmW2ldLCBkc2kt
-PnJlZ3MgKyBEU0lfQ01EUTAgKyBzcmNfb2ZmICsgaSk7CgltdGtfZHNpX21hc2soZHNpLCBEU0lf
-Q01EUV9TSVpFLCBDTURRX1NJWkUsIGNtZHFfc2l6ZSk7Cn0KCklmIERTSSBIVyBkb2VzIG5vdCBz
-dXBwb3J0IHNvbWUgdHlwZSBhbmQgaXQgY2FuIGJlIHRyYW5zZmVycmVkIHRvIG90aGVyCnR5cGUs
-IHlvdSBjb3VsZCBhZGQgYSB0cmFuc2ZlciBmdW5jdGlvbiBsaWtlIHRoaXMKCnN0YXRpYyB1OCBt
-dGtfZHNpX21hcF90b19zdXBwb3J0ZWRfdHlwZSh1OCB0eXBlKQp7Cglzd2l0Y2godHlwZSkgewoJ
-Y2FzZSBNSVBJX0RTSV9EQ1NfU0hPUlRfV1JJVEU6CgkJcmV0dXJuIE1JUElfRFNJX0RDU19TSE9S
-VF9XUklURV9QQVJBTTsKCX0KCglyZXR1cm4gdHlwZTsKfQoKYW5kIHRoZW4KCnUzMiB0eXBlID0g
-bXRrX2RzaV9tYXBfdG9fc3VwcG9ydGVkX3R5cGUobXNnLT50eXBlKTsKCj4gCj4gPiAKPiA+ID4g
-KwkJCWRhdGExID0gdHhfYnVmWzFdOwo+ID4gPiArCQl9IGVsc2Ugewo+ID4gPiArCQkJdHlwZSA9
-IE1JUElfRFNJX0RDU19TSE9SVF9XUklURTsKPiA+ID4gKwkJCWRhdGExID0gMDsKPiA+ID4gKwkJ
-fQo+ID4gPiArCj4gPiA+ICsJCXJlZ192YWwgPSAoZGF0YTEgPDwgMjQpIHwgKGRhdGEwIDw8IDE2
-KSB8ICh0eXBlIDw8IDgpIHwgY29uZmlnOwo+ID4gPiArCj4gPiA+ICsJCXdyaXRlbChyZWdfdmFs
-LCBkc2ktPnJlZ3MgKyBEU0lfQ01EUTApOwo+ID4gPiArCQltdGtfZHNpX21hc2soZHNpLCBEU0lf
-Q01EUV9TSVpFLCBDTURRX1NJWkUsIDEpOwo+ID4gPiArCX0KPiA+ID4gK30KPiA+ID4gKwoKW3Nu
-aXAuLi5dCgo+ID4gCj4gPiBSZWdhcmRzLAo+ID4gQ0sKPiA+IAo+IAo+IAoKUmVnYXJkcywKQ0sK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+The Image Sensor Controller driver includes two parts.
+1) Driver code to implement the ISC function.
+2) Device tree binding documentation, it describes how
+   to add the ISC in device tree.
+
+Test result with v4l-utils.
+# v4l2-compliance -f
+v4l2-compliance SHA   : not available
+
+Driver Info:
+        Driver name   : atmel_isc
+        Card type     : Atmel Image Sensor Controller
+        Bus info      : platform:atmel_isc f0008000.isc
+        Driver version: 4.7.0
+        Capabilities  : 0x84200001
+                Video Capture
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps   : 0x04200001
+                Video Capture
+                Streaming
+                Extended Pix Format
+
+Compliance test for device /dev/video0 (not using libv4l2):
+
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+        test second video open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Test input 0:
+
+        Control ioctls:
+                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+                test VIDIOC_QUERYCTRL: OK (Not Supported)
+                test VIDIOC_G/S_CTRL: OK (Not Supported)
+                test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+                Standard Controls: 0 Private Controls: 0
+
+        Format ioctls:
+                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+                test VIDIOC_G/S_PARM: OK
+                test VIDIOC_G_FBUF: OK (Not Supported)
+                test VIDIOC_G_FMT: OK
+                test VIDIOC_TRY_FMT: OK
+                test VIDIOC_S_FMT: OK
+                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+                test Cropping: OK (Not Supported)
+                test Composing: OK (Not Supported)
+                test Scaling: OK (Not Supported)
+
+        Codec ioctls:
+                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+        Buffer ioctls:
+                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+                test VIDIOC_EXPBUF: OK
+
+Test input 0:
+
+Stream using all formats:
+        test MMAP for Format BA81, Frame Size 640x480@60.00 Hz:
+                Stride 640, Field None: OK
+        test MMAP for Format YUYV, Frame Size 640x480@60.00 Hz:
+                Stride 1280, Field None: OK
+
+Total: 45, Succeeded: 45, Failed: 0, Warnings: 0
+
+Changes in v9:
+- Set the default format in fuction 'isc_async_complete'.
+- Register the video device after everything is configured.
+
+Changes in v8:
+- Power on the sensor on the first open in function
+  'isc_open'.
+- Power off the sensor on the last release in function
+  'isc_release'.
+- Remove the switch of the pipeline.
+
+Changes in v7:
+- Add enum_framesizes and enum_frameintervals.
+- Call s_stream(0) when stream start fail.
+- Fill the device_caps field of struct video_device
+  with V4L2_CAP_STREAMING and V4L2_CAP_VIDEO_CAPTURE.
+- Initialize the dev of struct vb2_queue.
+- Set field to FIELD_NONE if the pix field is not supported.
+- Return the result directly when call g/s_parm of subdev.
+
+Changes in v6:
+- Add "iscck" and "gck" to clock-names.
+
+Changes in v5:
+- Modify the macro definition and the related code.
+- Add clock-output-names.
+
+Changes in v4:
+- Modify the isc clock code since the dt is changed.
+- Remove the isc clock nodes.
+
+Changes in v3:
+- Add pm runtime feature.
+- Modify the isc clock code since the dt is changed.
+- Remove the 'atmel,sensor-preferred'.
+- Modify the isc clock node according to the Rob's remarks.
+
+Changes in v2:
+- Add "depends on COMMON_CLK" and "VIDEO_V4L2_SUBDEV_API"
+  in Kconfig file.
+- Correct typos and coding style according to Laurent's remarks
+- Delete the loop while in 'isc_clk_enable' function.
+- Replace 'hsync_active', 'vsync_active' and 'pclk_sample'
+  with 'pfe_cfg0' in struct isc_subdev_entity.
+- Add the code to support VIDIOC_CREATE_BUFS in
+  'isc_queue_setup' function.
+- Invoke isc_config to configure register in
+  'isc_start_streaming' function.
+- Add the struct completion 'comp' to synchronize with
+  the frame end interrupt in 'isc_stop_streaming' function.
+- Check the return value of the clk_prepare_enable
+  in 'isc_open' function.
+- Set the default format in 'isc_open' function.
+- Add an exit condition in the loop while in 'isc_config'.
+- Delete the hardware setup operation in 'isc_set_format'.
+- Refuse format modification during streaming
+  in 'isc_s_fmt_vid_cap' function.
+- Invoke v4l2_subdev_alloc_pad_config to allocate and
+  initialize the pad config in 'isc_async_complete' function.
+- Remove the '.owner  = THIS_MODULE,' in atmel_isc_driver.
+- Replace the module_platform_driver_probe() with
+  module_platform_driver().
+- Remove the unit address of the endpoint.
+- Add the unit address to the clock node.
+- Avoid using underscores in node names.
+- Drop the "0x" in the unit address of the i2c node.
+- Modify the description of 'atmel,sensor-preferred'.
+- Add the description for the ISC internal clock.
+
+Songjun Wu (2):
+  [media] atmel-isc: add the Image Sensor Controller code
+  [media] atmel-isc: DT binding for Image Sensor Controller driver
+
+ .../devicetree/bindings/media/atmel-isc.txt        |   65 +
+ drivers/media/platform/Kconfig                     |    1 +
+ drivers/media/platform/Makefile                    |    2 +
+ drivers/media/platform/atmel/Kconfig               |    9 +
+ drivers/media/platform/atmel/Makefile              |    1 +
+ drivers/media/platform/atmel/atmel-isc-regs.h      |  165 +++
+ drivers/media/platform/atmel/atmel-isc.c           | 1512 ++++++++++++++++++++
+ 7 files changed, 1755 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
+ create mode 100644 drivers/media/platform/atmel/Kconfig
+ create mode 100644 drivers/media/platform/atmel/Makefile
+ create mode 100644 drivers/media/platform/atmel/atmel-isc-regs.h
+ create mode 100644 drivers/media/platform/atmel/atmel-isc.c
+
+-- 
+2.7.4
