@@ -1,59 +1,46 @@
-From: Roger Chen <roger.chen@rock-chips.com>
-Subject: [PATCH 3/3] arm64: dts: rockchip: add GMAC dt nodes for RK3399 evb
-Date: Thu, 11 Aug 2016 15:24:48 +0800
-Message-ID: <1470900288-10109-4-git-send-email-roger.chen@rock-chips.com>
-References: <1470900288-10109-1-git-send-email-roger.chen@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470900288-10109-1-git-send-email-roger.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, zhengxing@rock-chips.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, peppe.cavallaro@st.com, alexandre.torgue@st.com, davem@davemloft.net, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, roger.chen@rock-chips.com
+From: <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] dt-binding: correct the larb port offset defines for mt2701
+Date: Thu, 11 Aug 2016 16:07:08 +0800
+Message-ID: <1470902828-32496-1-git-send-email-honghui.zhang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add ethernet GMAC dt nodes for RK3399 evaluation board.
+From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Signed-off-by: Roger Chen <roger.chen@rock-chips.com>
+larb2 have 23 ports, the LARB3_PORT_OFFSET should be LARB2_PORT_OFFSET
+plus larb2's port number, it should be 44 instead of 43.
+
+Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-evb.dts | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ include/dt-bindings/memory/mt2701-larb-port.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-index d33aa06..5a076e0 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
-@@ -69,6 +69,13 @@
- 		regulator-max-microvolt = <3300000>;
- 	};
+diff --git a/include/dt-bindings/memory/mt2701-larb-port.h b/include/dt-bindings/memory/mt2701-larb-port.h
+index 78f6678..6764d74 100644
+--- a/include/dt-bindings/memory/mt2701-larb-port.h
++++ b/include/dt-bindings/memory/mt2701-larb-port.h
+@@ -26,7 +26,7 @@
+ #define LARB0_PORT_OFFSET		0
+ #define LARB1_PORT_OFFSET		11
+ #define LARB2_PORT_OFFSET		21
+-#define LARB3_PORT_OFFSET		43
++#define LARB3_PORT_OFFSET		44
  
-+	clkin_gmac: external-gmac-clock {
-+		compatible = "fixed-clock";
-+		clock-frequency = <125000000>;
-+		clock-output-names = "clkin_gmac";
-+		#clock-cells = <0>;
-+	};
-+
- 	vcc_phy: vcc-phy-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc_phy";
-@@ -134,3 +141,19 @@
- 		};
- 	};
- };
-+
-+&gmac {
-+	phy-supply = <&vcc_phy>;
-+	phy-mode = "rgmii";
-+	clock_in_out = "input";
-+	snps,reset-gpio = <&gpio3 15 GPIO_ACTIVE_LOW>;
-+	snps,reset-active-low;
-+	snps,reset-delays-us = <0 10000 50000>;
-+	assigned-clocks = <&cru SCLK_RMII_SRC>;
-+	assigned-clock-parents = <&clkin_gmac>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins>;
-+	tx_delay = <0x28>;
-+	rx_delay = <0x11>;
-+	status = "okay";
-+};
+ #define MT2701_M4U_ID_LARB0(port)	((port) + LARB0_PORT_OFFSET)
+ #define MT2701_M4U_ID_LARB1(port)	((port) + LARB1_PORT_OFFSET)
 -- 
-1.9.1
+1.8.1.1.dirty
