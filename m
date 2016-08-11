@@ -1,104 +1,35 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH RFC 2/3] mmc: core: add new cap for 3.3V only DDR MMCs
-Date: Thu, 11 Aug 2016 20:12:59 +0900
-Message-ID: <cf38cffa-558e-a5fc-9ecb-b8f46f07153f@samsung.com>
-References: <1470488140-10104-1-git-send-email-stefan.wahren@i2se.com>
- <1470488140-10104-3-git-send-email-stefan.wahren@i2se.com>
- <0e38d62a-b3d0-30ca-fca9-bb740ae54d0a@denx.de>
- <16443443.114784.752d0f22-93a7-46e8-bb14-c884787aaea3.open-xchange@email.1und1.de>
- <CGME20160807020731epcas1p1ba77eafc6a099ac660a4bf5fe3789fef@epcas1p1.samsung.com>
- <7284d9a4-164d-dd2d-b9a0-dd1de6c76274@rock-chips.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2 v5] iio: magn: DT bindings for AK8974
+Date: Thu, 11 Aug 2016 13:32:06 +0200
+Message-ID: <CACRpkdaKaBVoRDqtoTtUPgLDZsHtMNUmdLhEktb2iaGoL=46xA@mail.gmail.com>
+References: <1469454895-13659-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <7284d9a4-164d-dd2d-b9a0-dd1de6c76274@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Lin <shawn.lin@rock-chips.com>, Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Marek Vasut <marex@denx.de>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, Otavio Salvador <otavio@ossystems.com.br>, Holger Schurig <holgerschurig@gmail.com>, linux-mmc@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1469454895-13659-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMDcvMjAxNiAxMTowNyBBTSwgU2hhd24gTGluIHdyb3RlOgo+IOWcqCAyMDE2LzgvNiAy
-MjoxOCwgU3RlZmFuIFdhaHJlbiDlhpnpgZM6Cj4+IEhpIE1hcmVrLAo+Pgo+Pj4gTWFyZWsgVmFz
-dXQgPG1hcmV4QGRlbnguZGU+IGhhdCBhbSA2LiBBdWd1c3QgMjAxNiB1bSAxNToxNCBnZXNjaHJp
-ZWJlbjoKPj4+Cj4+Pgo+Pj4gT24gMDgvMDYvMjAxNiAwMjo1NSBQTSwgU3RlZmFuIFdhaHJlbiB3
-cm90ZToKPj4+PiBUaGlzIHBhdGNoIGJhc2VkIG9uIHRoZSB3b3JrIG9mIEZhYmlvIEVzdGV2YW06
-Cj4+Pj4gIltQQVRDSCB2Ml0gbW1jOiBjb3JlOiBEbyBub3Qgc2V0IG1tYyB2b2x0YWdlIHRvIDEu
-OFYgd2hlbgo+Pj4+ICduby0xLTgtdicgaXMgcHJlc2VudCIKPj4+Pgo+Pj4+IEl0IGFkZHMgdGhl
-IHN1cHBvcnQgZm9yIDMuM1Ygb25seSBERFIgTU1DIGhvc3RzLgo+Pj4KPj4+IERvIHN1Y2ggY2Fy
-ZHMgZXZlbiBleGlzdCA/IERvIHlvdSBoYXZlIGEgbGluayB3aGVyZSBJIGNhbiBmaW5kIHNvbWUg
-Pwo+Pgo+PiBpIG5ldmVyIHNhaWQgYW55dGhpbmcgYWJvdXQgU0QgY2FyZHMuIEkgbWVhbiBlTU1D
-IG1vZHVsZXMgd2hpY2ggdXN1YWxseSBoYXZlIDgKPj4gZGF0YSBwaW5zIGxpa2UgdGhpcyBvbmUg
-WzFdLgo+Pgo+PiBQbGVhc2UgZG9uJ3QgYmxhbWUgbWUgaWYgaXQncyBub3QgY29tcGF0aWJsZSB0
-byBpLk1YMjguIEl0J3Mgb25seSBhbiBleGFtcGxlLgo+Pgo+PiBbMV0gLQo+PiBodHRwOi8vZGF0
-YXNoZWV0Lm9jdG9wYXJ0LmNvbS9USEdCTTNHNEQxRkJBSUdIMkgtVG9zaGliYS1kYXRhc2hlZXQt
-MjA3NDg4ODAucGRmCj4gCj4gCj4gSSBkb3dubG9hZCB0aGUgZGF0YXNoZWV0IHlvdSBtZW50aW9u
-ZWQsIGFuZCBJIGV4cGxpY2l0bHkgc2VlIGl0Cj4gZGVzY3JpYmUgMVY4IGV2ZXJ5d2hlcmUsIGVz
-cGVjaWFsbHkgZm9yIHRoZSBzZWN0aW9uIG9mICJFTEVDVFJJQ0FMCj4gQ0hBUkFDVEVSSVNUSUNT
-Ii4KPiAKPiBJIG5ldmVyIHNlZSBvbmUgZU1NQyBjbGFpbWluZyBERFI1MiBjYXBhYmlsaXR5IGJ1
-dCBkb2Vzbid0IHN1cHBvcnQgMVY4Cj4gc28gZmFyLiBDb3VsZCB5b3Uga2luZGx5IHNoYXJlIG1l
-IHRoZSBwYXJ0IG51bWJlciBvZiB0aGUgZU1NQyB5b3UgYXJlCj4gdXNpbmc/IDopCj4gCj4+Cj4+
-Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBXYWhyZW4gPHN0ZWZhbi53YWhyZW5AaTJzZS5j
-b20+Cj4+Pj4gLS0tCj4+Pj4gIGRyaXZlcnMvbW1jL2NvcmUvaG9zdC5jICB8ICAgIDIgKysKPj4+
-PiAgZHJpdmVycy9tbWMvY29yZS9tbWMuYyAgIHwgICAgNiArKysrKysKPj4+PiAgaW5jbHVkZS9s
-aW51eC9tbWMvaG9zdC5oIHwgICAgMSArCj4+Pj4gIDMgZmlsZXMgY2hhbmdlZCwgOSBpbnNlcnRp
-b25zKCspCj4+Pj4KPj4+PiBDaGFuZ2VzIHRvIEZhYmlvJ3MgcGF0Y2g6Cj4+Pj4gLSByZWJhc2Ug
-dG8gY3VycmVudCBsaW51eC1uZXh0Cj4+Pj4gLSByZW5hbWUgRFQgcHJvcGVydHkgdG8gbW1jLWRk
-ci0zXzN2Cj4+Pj4gLSB1c2UgRVhUX0NTRF9DQVJEX1RZUEVfRERSXzUyIGluc3RlYWQgb2YgbmV3
-IGRlZmluZQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2NvcmUvaG9zdC5jIGIv
-ZHJpdmVycy9tbWMvY29yZS9ob3N0LmMKPj4+PiBpbmRleCA5OGYyNWZmLi40Yzk3MWRlIDEwMDY0
-NAo+Pj4+IC0tLSBhL2RyaXZlcnMvbW1jL2NvcmUvaG9zdC5jCj4+Pj4gKysrIGIvZHJpdmVycy9t
-bWMvY29yZS9ob3N0LmMKPj4+PiBAQCAtMzAxLDYgKzMwMSw4IEBAIGludCBtbWNfb2ZfcGFyc2Uo
-c3RydWN0IG1tY19ob3N0ICpob3N0KQo+Pj4+ICAgICAgaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9v
-bChucCwgIndha2V1cC1zb3VyY2UiKSB8fAo+Pj4+ICAgICAgICAgIG9mX3Byb3BlcnR5X3JlYWRf
-Ym9vbChucCwgImVuYWJsZS1zZGlvLXdha2V1cCIpKSAvKiBsZWdhY3kgKi8KPj4+PiAgICAgICAg
-ICBob3N0LT5wbV9jYXBzIHw9IE1NQ19QTV9XQUtFX1NESU9fSVJROwo+Pj4+ICsgICAgaWYgKG9m
-X3Byb3BlcnR5X3JlYWRfYm9vbChucCwgIm1tYy1kZHItM18zdiIpKQo+Pj4+ICsgICAgICAgIGhv
-c3QtPmNhcHMyIHw9IE1NQ19DQVAyXzNfM1ZfT05MWV9ERFI7Cj4+Pj4gICAgICBpZiAob2ZfcHJv
-cGVydHlfcmVhZF9ib29sKG5wLCAibW1jLWRkci0xXzh2IikpCj4+Pj4gICAgICAgICAgaG9zdC0+
-Y2FwcyB8PSBNTUNfQ0FQXzFfOFZfRERSOwo+Pj4+ICAgICAgaWYgKG9mX3Byb3BlcnR5X3JlYWRf
-Ym9vbChucCwgIm1tYy1kZHItMV8ydiIpKQo+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21tYy9j
-b3JlL21tYy5jIGIvZHJpdmVycy9tbWMvY29yZS9tbWMuYwo+Pj4+IGluZGV4IGYyZDE4NWMuLjhh
-OTMzZDUgMTAwNjQ0Cj4+Pj4gLS0tIGEvZHJpdmVycy9tbWMvY29yZS9tbWMuYwo+Pj4+ICsrKyBi
-L2RyaXZlcnMvbW1jL2NvcmUvbW1jLmMKPj4+PiBAQCAtMjEwLDYgKzIxMCwxMiBAQCBzdGF0aWMg
-dm9pZCBtbWNfc2VsZWN0X2NhcmRfdHlwZShzdHJ1Y3QgbW1jX2NhcmQgKmNhcmQpCj4+Pj4gICAg
-ICAgICAgYXZhaWxfdHlwZSB8PSBFWFRfQ1NEX0NBUkRfVFlQRV9IU181MjsKPj4+PiAgICAgIH0K
-Pj4+Pgo+Pj4+ICsgICAgaWYgKGNhcHMyICYgTU1DX0NBUDJfM18zVl9PTkxZX0REUiAmJgo+Pj4+
-ICsgICAgICAgIGNhcmRfdHlwZSAmIEVYVF9DU0RfQ0FSRF9UWVBFX0REUl8xXzhWKSB7Cj4+Pj4g
-KyAgICAgICAgaHNfbWF4X2R0ciA9IE1NQ19ISUdIX0REUl9NQVhfRFRSOwo+Pj4+ICsgICAgICAg
-IGF2YWlsX3R5cGUgfD0gRVhUX0NTRF9DQVJEX1RZUEVfRERSXzUyOwo+Pj4+ICsgICAgfQoKZGlk
-IHlvdSBrbm93IEVYVF9DU0RfQ0FSRF9UWVBFX0REUl81MiAtPiBUWVBFX0REUl8xXzhWIGFuZCBU
-WVBFX0REUl8xXzJWPwpJdCBtZWFucyBjYXJkIGNhbiB1c2UgdG8gdGhlIDEuOHYgYW5kIDEuMnYg
-ZGRyIG1vZGUuClNvIHRoaXMgcGF0Y2ggaXMgc3RyYW5nZS4uWW91IGFkZGVkIGNhcGFiaWxpdHkg
-Zm9yIG9ubHkgc3VwcG9ydGluZyAzXzN2LgoKQ29uZnVzaW5nLi4uCgpCZXN0IFJlZ2FyZHMsCkph
-ZWhvb24gQ2h1bmcKCj4+Pj4gKwo+Pj4+ICAgICAgaWYgKGNhcHMgJiBNTUNfQ0FQXzFfOFZfRERS
-ICYmCj4+Pj4gICAgICAgICAgY2FyZF90eXBlICYgRVhUX0NTRF9DQVJEX1RZUEVfRERSXzFfOFYp
-IHsKPj4+PiAgICAgICAgICBoc19tYXhfZHRyID0gTU1DX0hJR0hfRERSX01BWF9EVFI7Cj4+Pj4g
-ZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbW1jL2hvc3QuaCBiL2luY2x1ZGUvbGludXgvbW1j
-L2hvc3QuaAo+Pj4+IGluZGV4IGFhNGJmYmYuLmRiMDc3NWQgMTAwNjQ0Cj4+Pj4gLS0tIGEvaW5j
-bHVkZS9saW51eC9tbWMvaG9zdC5oCj4+Pj4gKysrIGIvaW5jbHVkZS9saW51eC9tbWMvaG9zdC5o
-Cj4+Pj4gQEAgLTMxMSw2ICszMTEsNyBAQCBzdHJ1Y3QgbW1jX2hvc3Qgewo+Pj4+ICAjZGVmaW5l
-IE1NQ19DQVAyX0hTNDAwX0VTICAgICgxIDw8IDIwKSAgICAvKiBIb3N0IHN1cHBvcnRzIGVuaGFu
-Y2VkIHN0cm9iZSAqLwo+Pj4+ICAjZGVmaW5lIE1NQ19DQVAyX05PX1NEICAgICAgICAoMSA8PCAy
-MSkgICAgLyogRG8gbm90IHNlbmQgU0QgY29tbWFuZHMgZHVyaW5nCj4+Pj4gaW5pdGlhbGl6YXRp
-b24gKi8KPj4+PiAgI2RlZmluZSBNTUNfQ0FQMl9OT19NTUMgICAgICAgICgxIDw8IDIyKSAgICAv
-KiBEbyBub3Qgc2VuZCAoZSlNTUMgY29tbWFuZHMgZHVyaW5nCj4+Pj4gaW5pdGlhbGl6YXRpb24g
-Ki8KPj4+PiArI2RlZmluZSBNTUNfQ0FQMl8zXzNWX09OTFlfRERSICAgICgxIDw8IDIzKSAgICAv
-KiBPbmx5IHN1cHBvcnRzIDMuM1YgRERSICovCj4+Pj4KPj4+PiAgICAgIG1tY19wbV9mbGFnX3Qg
-ICAgICAgIHBtX2NhcHM7ICAgIC8qIHN1cHBvcnRlZCBwbSBmZWF0dXJlcyAqLwo+Pj4+Cj4+Pj4K
-Pj4+Cj4+Pgo+Pj4gLS0gCj4+PiBCZXN0IHJlZ2FyZHMsCj4+PiBNYXJlayBWYXN1dAo+PiAtLSAK
-Pj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2Ny
-aWJlIGxpbnV4LW1tYyIgaW4KPj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2
-Z2VyLmtlcm5lbC5vcmcKPj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2Vy
-bmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1sCj4+Cj4gCj4gCgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Mon, Jul 25, 2016 at 3:54 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+
+> This adds device tree bindings for the AK8974 magnetometer, similar
+> to those for the AK8975.
+>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> ChangeLog v4->v5:
+> - No changes, just resend.
+
+Jonathan can we merge this? People seem happy with it.
+
+Dito for the actual driver patch 2/2.
+
+Yours,
+Linus Walleij
