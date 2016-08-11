@@ -1,98 +1,99 @@
-From: Aleksey Makarov <aleksey.makarov@linaro.org>
-Subject: [PATCH v9 1/4] of/serial: move earlycon early_param handling to serial
-Date: Thu, 11 Aug 2016 18:31:38 +0300
-Message-ID: <20160811153152.755-2-aleksey.makarov@linaro.org>
-References: <20160811153152.755-1-aleksey.makarov@linaro.org>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20160811153152.755-1-aleksey.makarov@linaro.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Aleksey Makarov <aleksey.makarov@linaro.org>, Russell King <linux@arm.linux.org.uk>, Len Brown <lenb@kernel.org>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <ahs3@redhat.com>, Christopher Covington <cov@codeaurora.org>, Yury Norov <ynorov@caviumnetworks.com>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Zheng, Lv" <lv.zheng@intel.com>, Mark Salter <msalter@redhat.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 9/9] arm64: dts: mediatek: Add Video Decoder for MT8173
+Date: Thu, 11 Aug 2016 17:44:27 +0200
+Message-ID: <de51caf8-6db5-4754-0683-d3390dd2ac09@gmail.com>
+References: <1470840534-4788-1-git-send-email-tiffany.lin@mediatek.com>
+ <1470840534-4788-2-git-send-email-tiffany.lin@mediatek.com>
+ <1470840534-4788-3-git-send-email-tiffany.lin@mediatek.com>
+ <1470840534-4788-4-git-send-email-tiffany.lin@mediatek.com>
+ <1470840534-4788-5-git-send-email-tiffany.lin@mediatek.com>
+ <1470840534-4788-6-git-send-email-tiffany.lin@mediatek.com>
+ <1470840534-4788-7-git-send-email-tiffany.lin@mediatek.com>
+ <1470840534-4788-8-git-send-email-tiffany.lin@mediatek.com>
+ <1470840534-4788-9-git-send-email-tiffany.lin@mediatek.com>
+ <1470840534-4788-10-git-send-email-tiffany.lin@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1470840534-4788-10-git-send-email-tiffany.lin@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tiffany Lin <tiffany.lin@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
+Cc: Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-From: Leif Lindholm <leif.lindholm@linaro.org>
 
-We have multiple "earlycon" early_param handlers - merge the DT one into
-the main earlycon one.  It's a cleanup that also will be useful
-to defer setting up DT console until ACPI/DT decision is made.
 
-Rename the exported function to avoid clashing with the function from
-arch/microblaze/kernel/prom.c
+On 10/08/16 16:48, Tiffany Lin wrote:
+> Add video decoder node for MT8173
+>
+> Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi |   44 ++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 10f638f..2872cd7 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -974,6 +974,50 @@
+>  			#clock-cells = <1>;
+>  		};
+>
+> +		vcodec_dec: vcodec@16000000 {
+> +			compatible = "mediatek,mt8173-vcodec-dec";
+> +			reg = <0 0x16000000 0 0x100>,	/* VDEC_SYS */
+> +			      <0 0x16020000 0 0x1000>,	/* VDEC_MISC */
+> +			      <0 0x16021000 0 0x800>,	/* VDEC_LD */
+> +			      <0 0x16021800 0 0x800>,	/* VDEC_TOP */
+> +			      <0 0x16022000 0 0x1000>,	/* VDEC_CM */
+> +			      <0 0x16023000 0 0x1000>,	/* VDEC_AD */
+> +			      <0 0x16024000 0 0x1000>,	/* VDEC_AV */
+> +			      <0 0x16025000 0 0x1000>,	/* VDEC_PP */
+> +			      <0 0x16026800 0 0x800>,	/* VDEC_HWD */
+> +			      <0 0x16027000 0 0x800>,	/* VDEC_HWQ */
+> +			      <0 0x16027800 0 0x800>,	/* VDEC_HWB */
+> +			      <0 0x16028400 0 0x400>;	/* VDEC_HWG */
+> +			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_LOW>;
+> +			mediatek,larb = <&larb1>;
+> +			iommus = <&iommu M4U_PORT_HW_VDEC_MC_EXT>,
+> +				 <&iommu M4U_PORT_HW_VDEC_PP_EXT>,
+> +				 <&iommu M4U_PORT_HW_VDEC_AVC_MV_EXT>,
+> +				 <&iommu M4U_PORT_HW_VDEC_PRED_RD_EXT>,
+> +				 <&iommu M4U_PORT_HW_VDEC_PRED_WR_EXT>,
+> +				 <&iommu M4U_PORT_HW_VDEC_UFO_EXT>,
+> +				 <&iommu M4U_PORT_HW_VDEC_VLD_EXT>,
+> +				 <&iommu M4U_PORT_HW_VDEC_VLD2_EXT>;
+> +			mediatek,vpu = <&vpu>;
+> +			power-domains = <&scpsys MT8173_POWER_DOMAIN_VDEC>;
+> +			clocks = <&apmixedsys CLK_APMIXED_VCODECPLL>,
+> +				 <&topckgen CLK_TOP_UNIVPLL_D2>,
+> +				 <&topckgen CLK_TOP_CCI400_SEL>,
+> +				 <&topckgen CLK_TOP_VDEC_SEL>,
+> +				 <&topckgen CLK_TOP_VCODECPLL>,
+> +				 <&apmixedsys CLK_APMIXED_VENCPLL>,
+> +				 <&topckgen CLK_TOP_VENC_LT_SEL>,
+> +				 <&topckgen CLK_TOP_VCODECPLL_370P5>;
+> +			clock-names = "vcodecpll",
+> +				      "univpll_d2",
+> +				      "clk_cci400_sel",
+> +				      "vdec_sel",
+> +				      "vdecpll",
+> +				      "vencpll",
+> +				      "venc_lt_sel",
+> +				      "vdec_bus_clk_src";
+> +		};
+> +
 
-Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-Signed-off-by: Aleksey Makarov <aleksey.makarov@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Peter Hurley <peter@hurleysoftware.com>
-Tested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- drivers/of/fdt.c              | 11 +----------
- drivers/tty/serial/earlycon.c |  2 +-
- include/linux/of_fdt.h        |  2 ++
- 3 files changed, 4 insertions(+), 11 deletions(-)
+Shouldn't we set here:
+status = "disabled";
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 55f1b83..741cac53 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -924,7 +924,7 @@ static inline void early_init_dt_check_for_initrd(unsigned long node)
- 
- #ifdef CONFIG_SERIAL_EARLYCON
- 
--static int __init early_init_dt_scan_chosen_serial(void)
-+int __init early_init_dt_scan_chosen_stdout(void)
- {
- 	int offset;
- 	const char *p, *q, *options = NULL;
-@@ -968,15 +968,6 @@ static int __init early_init_dt_scan_chosen_serial(void)
- 	}
- 	return -ENODEV;
- }
--
--static int __init setup_of_earlycon(char *buf)
--{
--	if (buf)
--		return 0;
--
--	return early_init_dt_scan_chosen_serial();
--}
--early_param("earlycon", setup_of_earlycon);
- #endif
- 
- /**
-diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
-index 067783f..7aae655 100644
---- a/drivers/tty/serial/earlycon.c
-+++ b/drivers/tty/serial/earlycon.c
-@@ -209,7 +209,7 @@ static int __init param_setup_earlycon(char *buf)
- 	 * don't generate a warning from parse_early_params() in that case
- 	 */
- 	if (!buf || !buf[0])
--		return 0;
-+		return early_init_dt_scan_chosen_stdout();
- 
- 	err = setup_earlycon(buf);
- 	if (err == -ENOENT || err == -EALREADY)
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 26c3302..2f69d4c 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -66,6 +66,7 @@ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 				     int depth, void *data);
- extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
- 				     int depth, void *data);
-+extern int early_init_dt_scan_chosen_stdout(void);
- extern void early_init_fdt_scan_reserved_mem(void);
- extern void early_init_fdt_reserve_self(void);
- extern void early_init_dt_add_memory_arch(u64 base, u64 size);
-@@ -94,6 +95,7 @@ extern void early_get_first_memblock_info(void *, phys_addr_t *);
- extern u64 of_flat_dt_translate_address(unsigned long node);
- extern void of_fdt_limit_memory(int limit);
- #else /* CONFIG_OF_FLATTREE */
-+static inline int early_init_dt_scan_chosen_stdout(void) { return -ENODEV; }
- static inline void early_init_fdt_scan_reserved_mem(void) {}
- static inline void early_init_fdt_reserve_self(void) {}
- static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
--- 
-2.9.2
+To save power on headless systems?
 
+Regards,
+Matthias
+
+>  		larb1: larb@16010000 {
+>  			compatible = "mediatek,mt8173-smi-larb";
+>  			reg = <0 0x16010000 0 0x1000>;
+>
