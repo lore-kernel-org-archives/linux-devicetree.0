@@ -1,93 +1,45 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 3/3] arm: dts: thermal: add thermal/auxadc node.
-Date: Thu, 11 Aug 2016 17:51:24 +0200
-Message-ID: <fd3f0c2f-f0ad-dd0f-cf2b-eb658f72d735@gmail.com>
-References: <1467882386-40544-1-git-send-email-dawei.chien@mediatek.com>
- <1467882386-40544-4-git-send-email-dawei.chien@mediatek.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
+Date: Thu, 11 Aug 2016 11:03:17 -0500
+Message-ID: <57ACA1C5.9040004@codeaurora.org>
+References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
+ <9ebb6cb7-c793-cd76-5283-c9a659d0398f@gmx.de>
+ <57AA2001.2010904@codeaurora.org>
+ <214dcbb7-0c3b-1e00-3e50-db513d77b10b@gmail.com>
+ <57AA7ED0.9000707@codeaurora.org>
+ <85b76eca-5473-6724-0c9d-7b6fa7677f50@gmail.com>
+ <57AB589D.3010509@codeaurora.org>
+ <0da01875-b55a-c0fd-bd5f-05bb41fbd7fc@gmail.com>
+ <57AC8A3D.3010208@codeaurora.org> <57AC9575.3040204@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1467882386-40544-4-git-send-email-dawei.chien@mediatek.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dawei Chien <dawei.chien@mediatek.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Fan Chen <fan.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <57AC9575.3040204@codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
+Timur Tabi wrote:
+>
+>>
+>> The hang occurs with this loop in napi_disable():
+>>
+>>      while (test_and_set_bit(NAPI_STATE_SCHED, &n->state))
+>>          msleep(1);
+>>
+>> This loop never exits.  Can you give me a clue as to what could be the
+>> reason?
+>
+> I figured it out.  I cannot call napi_disable() twice in a row.  It's
+> not smart enough to know that NAPI is already disabled.
 
+I realized that I was going about this the wrong way.  Rather than try 
+to protect the setting of adpt->rxbuf_size, I instead just calculate 
+that value when RX path is configured, which is much cleaner.  This 
+ensures that adpt->rxbuf_size is changed only when the interface is down.
 
-On 07/07/16 11:06, Dawei Chien wrote:
-> This adds the thermal controller and auxadc nodes
-> to the Mediatek MT2701 dtsi file.
->
-> Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
-> ---
-> This patch depned on:
-> https://patchwork.kernel.org/patch/9213545/
-> ---
->  arch/arm/boot/dts/mt2701.dtsi |   43 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> index 2ac8b50..0834a23 100644
-> --- a/arch/arm/boot/dts/mt2701.dtsi
-> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> @@ -77,6 +77,36 @@
->  		#clock-cells = <0>;
->  	};
->
-> +	thermal-zones {
-> +		cpu_thermal: cpu_thermal {
-> +			polling-delay-passive = <1000>; /* milliseconds */
-> +			polling-delay = <1000>; /* milliseconds */
-> +
-> +			thermal-sensors = <&thermal 0>;
-> +			sustainable-power = <1000>;
-> +
-> +			trips {
-> +				threshold: trip-point@0 {
-> +					temperature = <68000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				target: trip-point@1 {
-> +					temperature = <85000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				cpu_crit: cpu_crit@0 {
-> +					temperature = <115000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +	};
-> +
->  	timer {
->  		compatible = "arm,armv7-timer";
->  		interrupt-parent = <&gic>;
-> @@ -183,4 +213,17 @@
->  		clocks = <&uart_clk>;
->  		status = "disabled";
->  	};
-> +
-> +	thermal: thermal@1100b000 {
-> +		#thermal-sensor-cells = <0>;
-> +		compatible = "mediatek,mt2701-thermal";
-> +		reg = <0 0x1100b000 0 0x1000>;
-> +		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg CLK_PERI_AUXADC>;
-> +		clock-names = "therm", "auxadc";
-> +		resets = <&pericfg 0x10>;
-> +		reset-names = "therm";
-> +		mediatek,auxadc = <&auxadc>;
-> +		mediatek,apmixedsys = <&apmixedsys>;
-> +	};
->  };
->
-
-what about:
-status = "disabled"; ?
+-- 
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
