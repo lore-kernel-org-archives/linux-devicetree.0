@@ -1,35 +1,56 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: Question about dma-ranges property for PCI host controllers
-Date: Thu, 11 Aug 2016 15:00:42 +0000
-Message-ID: <HK2PR0601MB1393CA771AB65556D4E2F0B9F51E0@HK2PR0601MB1393.apcprd06.prod.outlook.com>
+From: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH] ARM: dts: ls1021a: Add of_graph dt nodes to describe the panel
+Date: Thu, 11 Aug 2016 17:15:20 +0800
+Message-ID: <1470906920-2845-1-git-send-email-meng.yi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+add of_graph dt nodes to describe the panel, and removed
+"fsl,panel" property
 
-A few PCI host controllers use the "dma-ranges" property to specify the
-mapping from PCI bus addresses to physical addresses.
+Signed-off-by: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/arm/boot/dts/ls1021a-twr.dts | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-In the case of R-Car PCIe Host controllers, the intention was to set this
-property as a 1 to 1 mapping for all DDR that could be addressed by the
-device. However, there are some limitations for the R-Car controller which
-meant that we could only map a subset of the DDR range - this limitation
-has prompted us to work on enabling the IOMMU behind the PCI controller.
+diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+index 75ecaed..a8b148a 100644
+--- a/arch/arm/boot/dts/ls1021a-twr.dts
++++ b/arch/arm/boot/dts/ls1021a-twr.dts
+@@ -108,12 +108,23 @@
+ 
+ 	panel: panel {
+ 		compatible = "nec,nl4827hc19-05b";
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&dcu_out>;
++			};
++		};
+ 	};
+ };
+ 
+ &dcu {
+-	fsl,panel = <&panel>;
+ 	status = "okay";
++
++	port {
++		dcu_out: endpoint {
++			remote-endpoint = <&panel_in>;
++		};
++	};
+ };
+ 
+ &dspi1 {
+-- 
+2.1.0.27.g96db324
 
-When there is an IOMMU behind the PCI controller, the "dma-ranges"
-property specifies the mapping from PCI bus addresses to an IOVA address.
-So should the property map all address space?
-
-Note that this is not actually possible with the R-Car hardware, but I
-found that the IOVA address space is outside of the DDR address space
-that we were using so had change it.
-
-Thanks
-Phil
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
