@@ -1,43 +1,51 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/2] arm64: renesas: add H3ULCB board
-Date: Thu, 11 Aug 2016 11:10:58 +0200
-Message-ID: <20160811091058.GI30475@verge.net.au>
-References: <1469382353-14847-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 1/2] dt: bindings: Add vendor prefix for Espressif System
+Date: Thu, 11 Aug 2016 11:15:52 +0200
+Message-ID: <2b43330e-369d-7473-8b73-429f0f0b73ce@redhat.com>
+References: <1470596269-20572-1-git-send-email-hdegoede@redhat.com>
+ <20160810184845.GA17829@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1469382353-14847-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160810184845.GA17829@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
+Hi Rob,
 
-On Sun, Jul 24, 2016 at 08:45:53PM +0300, Vladimir Barinov wrote:
-> Hello,
-> 
-> This adds the folowing:
-> - R8A7795 SoC based H3ULCB low cost board initial device tree
-> - Document DT bindings
+On 10-08-16 20:48, Rob Herring wrote:
+> On Sun, Aug 07, 2016 at 08:57:48PM +0200, Hans de Goede wrote:
+>> Espressif is a manufacturer of various wifi and bt chips, add a vendor
+>> prefix for use with bindings for these chips.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-In principle I am happy to with adding the H3ULCB to mainline but I am wondering
-if you could make some adjustments to your patches so they fit the scheme
-we usually use when adding new boards (and SoCs) to mainline.
+Thank you for all the reviews.
 
-Please split up the first patch as follows:
+What about: "[PATCH 2/2] dt: bindings: Add binding for ESP8089 wifi chips" ?
+there were some remarks, but I believe that those have been addressed
+(by answering the remarks, not with a new version), so a review of that
+one would be appreciated too.
 
-* A first patch which enables a very small subset of features:
-  - One CPU, some memory, a serial port, and anything else required
-    to boot to a rudimentary user-space.
-  - I am happy for you to post this by itself
+Also who should merge this series, Ulf because it is mmc related,
+or the dt-maintainers since it contains only bindings patches ?
 
-* Then follow-up patches which one-by one enable SoC features such
-  as more CPUs, more memory, and of course more IP blocks (more serial
-  ports, SDHI, etc...)
+Regards,
 
-Furthermore, if any of the SoC features you wish to enable are not already
-enabled in mainline for the H3/Salvator-x then please arrange so they
-appear at the end of the patchset or provided as a follow-up patchset
-(possibly later).
+Hans
