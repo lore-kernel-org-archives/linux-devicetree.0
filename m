@@ -1,106 +1,58 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [RESEND PATCH 1/3] ARM: dts: AM437X-GP-EVM: AM437X-SK-EVM: Make dcdc3 dcdc5 and dcdc6 enable during suspend
-Date: Thu, 11 Aug 2016 10:57:48 +0530
-Message-ID: <1470893270-5042-2-git-send-email-j-keerthy@ti.com>
-References: <1470893270-5042-1-git-send-email-j-keerthy@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [Urgent PATCH] arm64: dts: uniphier: fix IRQ trigger type of
+ ARMv8 timer
+Date: Thu, 11 Aug 2016 08:44:48 +0200
+Message-ID: <4943063.JrVaCOJD4r@wuerfel>
+References: <1470039140-3801-1-git-send-email-yamada.masahiro@socionext.com>
+ <CAK7LNAQo6Si9q0FQw=3i67yGO1JYuDxHBB=xsLZOj8S-TBG_Rg@mail.gmail.com>
+ <CAK7LNAT5D0HmvpVPnX1oFw=KJSOavVjXT6ECHBuTOhNaKpdQLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470893270-5042-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, broonie@kernel.org, lee.jones@linaro.org, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, j-keerthy@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK7LNAT5D0HmvpVPnX1oFw=KJSOavVjXT6ECHBuTOhNaKpdQLg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-dcdc3, dcdc5, dcdc6 supply ddr and rtc respectively. These
-are required to be on during suspend. Hence set the state accordingly.
+On Thursday, August 11, 2016 11:25:30 AM CEST Masahiro Yamada wrote:
+> 2016-08-01 17:26 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- arch/arm/boot/dts/am437x-gp-evm.dts | 10 ++++++++++
- arch/arm/boot/dts/am437x-sk-evm.dts | 27 +++++++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
+> >>> I could do this after -rc1 is out because it is apparently a
+> >>> bug fix, but in that case the for-next branch in ASOC will be
+> >>> broken for me, which would make bisect-ability difficult for me.
+> >>
+> >> I have a patch that addresses all platforms in one go (there is really
+> >> no point in fixing one at a time for a bug that is so widespread).
+> >>
+> >> I'll repost it later today.
+> >>
+> >
+> > That'll be fine.
+> > Thank you!
+> >
+> >
+> > Arnd, Olof:
+> > Please disregard this one.
+> >
+> 
+> Oh Dear.
+> Did you apply this one?
+> 
+> This was replaced with Marc'one:
+> https://patchwork.kernel.org/patch/9254183/
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index 14677d5..fba26c9 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -537,7 +537,11 @@
- 			regulator-max-microvolt = <1500000>;
- 			regulator-boot-on;
- 			regulator-always-on;
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+			};
- 		};
-+
- 		dcdc5: regulator-dcdc5 {
- 			compatible = "ti,tps65218-dcdc5";
- 			regulator-name = "v1_0bat";
-@@ -545,6 +549,9 @@
- 			regulator-max-microvolt = <1000000>;
- 			regulator-boot-on;
- 			regulator-always-on;
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+			};
- 		};
- 
- 		dcdc6: regulator-dcdc6 {
-@@ -554,6 +561,9 @@
- 			regulator-max-microvolt = <1800000>;
- 			regulator-boot-on;
- 			regulator-always-on;
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+			};
- 		};
- 
- 		ldo1: regulator-ldo1 {
-diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-index 5687d6b..b5e84e6 100644
---- a/arch/arm/boot/dts/am437x-sk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-@@ -454,6 +454,9 @@
- 			regulator-max-microvolt = <1500000>;
- 			regulator-boot-on;
- 			regulator-always-on;
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+			};
- 		};
- 
- 		dcdc4: regulator-dcdc4 {
-@@ -465,6 +468,30 @@
- 			regulator-always-on;
- 		};
- 
-+		dcdc5: regulator-dcdc5 {
-+			compatible = "ti,tps65218-dcdc5";
-+			regulator-name = "v1_0bat";
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1000000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+			};
-+		};
-+
-+		dcdc6: regulator-dcdc6 {
-+			compatible = "ti,tps65218-dcdc6";
-+			regulator-name = "v1_8bat";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+			regulator-state-mem {
-+				regulator-on-in-suspend;
-+			};
-+		};
-+
- 		ldo1: regulator-ldo1 {
- 			compatible = "ti,tps65218-ldo1";
- 			regulator-name = "v1_8d";
--- 
-1.9.1
+Thanks for letting me know so quickly of my mistake, I was able
+to back out the commit from the fixes branch as it was right at
+the top.
+
+	Arnd
