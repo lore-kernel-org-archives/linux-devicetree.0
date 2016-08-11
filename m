@@ -1,141 +1,160 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCHv3] watchdog: xilinx: Add clock support
-Date: Thu, 11 Aug 2016 07:27:08 -0700
-Message-ID: <5e2450f8-3732-d5f9-35bd-b3e48249e956@roeck-us.net>
-References: <1470921627-32060-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3] hwmon/max6650.c: Add devicetree support
+Date: Thu, 11 Aug 2016 07:43:58 -0700
+Message-ID: <5f79a68a-92fa-f7ef-c71f-7a7701609250@roeck-us.net>
+References: <1470727827-15907-1-git-send-email-mike.looijmans@topic.nl>
+ <20160809163727.GC9105@roeck-us.net>
+ <1470838787-8273-1-git-send-email-mike.looijmans@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470921627-32060-1-git-send-email-shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <1470838787-8273-1-git-send-email-mike.looijmans@topic.nl>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Mike Looijmans <mike.looijmans@topic.nl>, lm-sensors@lm-sensors.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/11/2016 06:20 AM, Shubhrajyoti Datta wrote:
-> Add support for the clock. Currently we enable
-> at probe and relinquish at remove.
+On 08/10/2016 07:19 AM, Mike Looijmans wrote:
+> Parse devicetree parameters for voltage and prescaler setting. This allows
+> using multiple max6550 devices with varying settings, and also makes it
+> possible to instantiate and configure the device using devicetree.
 >
-> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Acked-by: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+
+For the subject: Please use "hwmon: (max6650) Add devicetree support"
+
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
 > ---
-> v2:
-> fix spaces and error path.
-> v3:
-> do not fail existing dts
+> v3: Resubmit because mailing lists bounced
+
+It bounced because you sent to the old hwmon mailing list which is at best
+unreliable. Please send future versions to linux-hwmon@vger.kernel.org.
+
+>     Fix style errors as reported by checkpatch.pl
+>     Fix bug in DT parsing of fan-prescale
+> v2: Add devicetree binding documentation
+>     Code changes as suggested by Guenter
+>     Reduce log info, output only a single line
 >
->  .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  3 +++
->  drivers/watchdog/of_xilinx_wdt.c                   | 29 ++++++++++++++++++++--
->  2 files changed, 30 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/hwmon/max6650.txt          | 20 ++++++++++++++++
+
+Please submit the devicetree properties as separate patch.
+
+>  drivers/hwmon/max6650.c                            | 28 +++++++++++++---------
+>  2 files changed, 37 insertions(+), 11 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/max6650.txt
 >
-> diff --git a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
-> index 6d63782..c6ae9c9 100644
-> --- a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
-> @@ -7,6 +7,8 @@ Required properties:
->  - reg			: Physical base address and size
+> diff --git a/Documentation/devicetree/bindings/hwmon/max6650.txt b/Documentation/devicetree/bindings/hwmon/max6650.txt
+> new file mode 100644
+> index 0000000..89d87c6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/max6650.txt
+> @@ -0,0 +1,20 @@
+> +Bindings for MAX6651 and MAX6650 I2C fan controllers
+> +
+> +Required properties:
+> +- compatible : One of "max6650" or "max6651"
+> +- reg        : I2C address
+> +
+> +Optional properties:
+> +- fan-voltage    : The supply voltage of the fan. Valid values are 5 and 12.
+> +                   Default is to use the chip's current setting.
+> +- fan-prescale   : Pre-scaling value as per datasheet. Valid are 1, 2, 4, 8, 16.
+> +                   Default is to use the chip's current setting.
+> +
+> +
+One empty line is sufficient.
+
+> +Example:
+> +	fan-max6650: max6650@1b {
+> +		reg = <0x1b>;
+> +		compatible = "max6650";
+> +		fan-voltage = <12>;
+> +		fan-prescale = <4>;
+> +	};
+> diff --git a/drivers/hwmon/max6650.c b/drivers/hwmon/max6650.c
+> index 162a520..56a6c87 100644
+> --- a/drivers/hwmon/max6650.c
+> +++ b/drivers/hwmon/max6650.c
+> @@ -41,14 +41,14 @@
+>  #include <linux/err.h>
 >
->  Optional properties:
-> +- clocks		: Input clock specifier. Refer to common clock
-> +			  bindings.
->  - clock-frequency	: Frequency of clock in Hz
->  - xlnx,wdt-enable-once	: 0 - Watchdog can be restarted
->  			  1 - Watchdog can be enabled just once
-> @@ -17,6 +19,7 @@ Example:
->  axi-timebase-wdt@40100000 {
->  	clock-frequency = <50000000>;
->  	compatible = "xlnx,xps-timebase-wdt-1.00.a";
-> +	clocks = <&clkc 15>;
->  	reg = <0x40100000 0x10000>;
->  	xlnx,wdt-enable-once = <0x0>;
->  	xlnx,wdt-interval = <0x1b>;
-> diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
-> index b2e1b4c..120840a 100644
-> --- a/drivers/watchdog/of_xilinx_wdt.c
-> +++ b/drivers/watchdog/of_xilinx_wdt.c
-> @@ -10,6 +10,7 @@
->   * 2 of the License, or (at your option) any later version.
+>  /*
+> - * Insmod parameters
+> + * Insmod parameters (for backward compatibility)
+
+That doesn't add any value.
+
 >   */
 >
-> +#include <linux/clk.h>
->  #include <linux/err.h>
->  #include <linux/module.h>
->  #include <linux/types.h>
-> @@ -45,6 +46,7 @@ struct xwdt_device {
->  	u32 wdt_interval;
->  	spinlock_t spinlock;
->  	struct watchdog_device xilinx_wdt_wdd;
-> +	struct clk		*clk;
->  };
+>  /* fan_voltage: 5=5V fan, 12=12V fan, 0=don't change */
+>  static int fan_voltage;
+>  /* prescaler: Possible values are 1, 2, 4, 8, 16 or 0 for don't change */
+>  static int prescaler;
+> -/* clock: The clock frequency of the chip the driver should assume */
+> +/* clock: The clock frequency of the chip (max6651 can be clocked externally) */
+>  static int clock = 254000;
 >
->  static int xilinx_wdt_start(struct watchdog_device *wdd)
-> @@ -195,16 +197,34 @@ static int xwdt_probe(struct platform_device *pdev)
->  	spin_lock_init(&xdev->spinlock);
->  	watchdog_set_drvdata(xilinx_wdt_wdd, xdev);
+>  module_param(fan_voltage, int, S_IRUGO);
+> @@ -566,6 +566,15 @@ static int max6650_init_client(struct max6650_data *data,
+>  	struct device *dev = &client->dev;
+>  	int config;
+>  	int err = -EIO;
+> +	u32 voltage;
+> +	u32 prescale;
+> +
+> +	if (of_property_read_u32(client->dev.of_node, "fan-voltage",
+> +				 &voltage))
+> +		voltage = fan_voltage;
+> +	if (of_property_read_u32(client->dev.of_node, "fan-prescale",
+> +				 &prescale))
+> +		prescale = prescaler;
 >
-> +	xdev->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(xdev->clk)) {
-> +		if (PTR_ERR(xdev->clk) == -ENOENT) {
-> +			dev_err(&pdev->dev, "input clock not found\n");
-
-No, this is not an error. The clock is optional.
-
-> +			xdev->clk = NULL;
-> +		} else {
-> +			rc = PTR_ERR(xdev->clk);
-> +			dev_err(&pdev->dev, "axi clock error %d\n", rc);
-
-This could be -EPROBE_DEFER, which would not warrant an error message.
-
-> +			return rc;
-> +		}
-> +	}
-> +
-> +	rc = clk_prepare_enable(xdev->clk);
-> +	if (rc) {
-> +		dev_err(&pdev->dev, "unable to enable clock\n");
-> +		return rc;
-> +	}
-> +
->  	rc = xwdt_selftest(xdev);
->  	if (rc == XWT_TIMER_FAILED) {
->  		dev_err(&pdev->dev, "SelfTest routine error\n");
-> -		return rc;
-> +		goto err_clk_disable;
+>  	config = i2c_smbus_read_byte_data(client, MAX6650_REG_CONFIG);
+>
+> @@ -574,7 +583,7 @@ static int max6650_init_client(struct max6650_data *data,
+>  		return err;
 >  	}
 >
->  	rc = watchdog_register_device(xilinx_wdt_wdd);
->  	if (rc) {
->  		dev_err(&pdev->dev, "Cannot register watchdog (err=%d)\n", rc);
-> -		return rc;
-> +		goto err_clk_disable;
+> -	switch (fan_voltage) {
+> +	switch (voltage) {
+>  	case 0:
+>  		break;
+>  	case 5:
+> @@ -584,14 +593,10 @@ static int max6650_init_client(struct max6650_data *data,
+>  		config |= MAX6650_CFG_V12;
+>  		break;
+>  	default:
+> -		dev_err(dev, "illegal value for fan_voltage (%d)\n",
+> -			fan_voltage);
+> +		dev_err(dev, "illegal value for fan_voltage (%d)\n", voltage);
 >  	}
 >
->  	dev_info(&pdev->dev, "Xilinx Watchdog Timer at %p with timeout %ds\n",
-> @@ -213,6 +233,10 @@ static int xwdt_probe(struct platform_device *pdev)
->  	platform_set_drvdata(pdev, xdev);
+> -	dev_info(dev, "Fan voltage is set to %dV.\n",
+> -		 (config & MAX6650_CFG_V12) ? 12 : 5);
+> -
+> -	switch (prescaler) {
+> +	switch (prescale) {
+>  	case 0:
+>  		break;
+>  	case 1:
+> @@ -614,10 +619,11 @@ static int max6650_init_client(struct max6650_data *data,
+>  			 | MAX6650_CFG_PRESCALER_16;
+>  		break;
+>  	default:
+> -		dev_err(dev, "illegal value for prescaler (%d)\n", prescaler);
+> +		dev_err(dev, "illegal value for prescaler (%d)\n", prescale);
+
+Side note: Those errors should really result in an -EINVAL return.
+Separate patch, though.
+
+>  	}
 >
->  	return 0;
-> +err_clk_disable:
-> +	clk_disable_unprepare(xdev->clk);
-> +
-> +	return rc;
->  }
+> -	dev_info(dev, "Prescaler is set to %d.\n",
+> +	dev_info(dev, "Fan voltage: %dV, prescaler: %d.\n",
+> +		 (config & MAX6650_CFG_V12) ? 12 : 5,
+>  		 1 << (config & MAX6650_CFG_PRESCALER_MASK));
 >
->  static int xwdt_remove(struct platform_device *pdev)
-> @@ -220,6 +244,7 @@ static int xwdt_remove(struct platform_device *pdev)
->  	struct xwdt_device *xdev = platform_get_drvdata(pdev);
->
->  	watchdog_unregister_device(&xdev->xilinx_wdt_wdd);
-> +	clk_disable_unprepare(xdev->clk);
->
->  	return 0;
->  }
+>  	/*
 >
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
