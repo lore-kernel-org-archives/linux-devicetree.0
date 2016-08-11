@@ -1,47 +1,74 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH V5 1/4] drm/imx-ldb: Add support to drm-bridge
-Date: Thu, 11 Aug 2016 11:38:10 +0200
-Message-ID: <1470908290.2493.37.camel@pengutronix.de>
-References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
-	 <cover.1470739193.git.peter.senna@collabora.com>
-	 <1d76685746a1524127aa6747994dd8fd84ad1c38.1470739193.git.peter.senna@collabora.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] regulator: Add LTC3676 support
+Date: Thu, 11 Aug 2016 10:45:09 +0100
+Message-ID: <20160811094509.GP9347@sirena.org.uk>
+References: <1470785767-4426-1-git-send-email-tharvey@gateworks.com>
+ <20160810114140.GJ9347@sirena.org.uk>
+ <CAJ+vNU3s=qxJr8x=ScnyEV0UKkD_gTOnMyY8oGuzVs14hTW0Ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="aC33ObtQAkNdOZ6b"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1d76685746a1524127aa6747994dd8fd84ad1c38.1470739193.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAJ+vNU3s=qxJr8x=ScnyEV0UKkD_gTOnMyY8oGuzVs14hTW0Ng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: airlied-cv59FeDIM0c@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jaffer Kapasi <jkapasi-td5IlybW20HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 09.08.2016, 18:41 +0200 schrieb Peter Senna Tschudin:
-> Add support to attach a drm_bridge to imx-ldb in addition to
-> existing support to attach a LVDS panel.
-> 
-> This patch does a simple code refactoring by moving code
-> from for_each_child_of_node iterator to a new function named
-> imx_ldb_panel_ddc(). This was necessary to allow the panel ddc
-> code to run only when the imx_ldb is not attached to a bridge.
-> 
-> Cc: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> Cc: Martin Donnelly <martin.donnelly-JJi787mZWgc@public.gmane.org>
-> Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-> Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
-> Unchanged from V4
 
-I've rebased and applied patch 1.
+--aC33ObtQAkNdOZ6b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-thanks
-Philipp
+On Wed, Aug 10, 2016 at 05:44:55PM -0700, Tim Harvey wrote:
+> On Wed, Aug 10, 2016 at 4:41 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
+> >> +/* LDO1 always on fixed 0.8V-3.3V via scalar via R1/R2 feeback res */
+> >> +static struct regulator_ops ltc3676_fixed_standby_regulator_ops = {
+> >> +};
+
+> > Remove this, it's pointless.
+
+> as I'm using macro's to define the ops, removing this ends up breaking
+> compilation:
+
+> do you know of some macro foo to best handle this? Part of me wants to
+> ditch the macro's and just simply declare the array of regulators
+> directly as its much easier to read/follow.
+
+Just don't use the macro for that regulator?
+
+> >> +     if (!rdesc->r1 || !rdesc->r2)
+> >> +             return;
+
+> > This is a bug if we ever get here, we should be complaining loudly.
+
+> This is now refactored due to using the core code for of parsing, but
+> is it ok/standard to allow unused regulators to be not-defined in the
+> dt and if so how do I handle that? Currently my test board uses 7 of
+> the 8 regulators but the unused one is still registered with linux.
+
+Substitute in versions of the ops that don't have any of the voltage
+operations since without the dividers you can't support them, or make
+the voltage operations return -EINVAL.
+
+--aC33ObtQAkNdOZ6b
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXrEkkAAoJECTWi3JdVIfQCB4H/R/5mBB2Ti+WQNWZYTXb93OU
+hUvheHgalEn03t/Pyu6LsK88v3xWfokdb2/zoXRjAHrJDXRDIqoM/VQ/NLm7R/Cd
+Bs3APY8+ChitCemt0071tQLq5tbipv8/ntCp+8s9kdkG+2m18qJ2nbD8OY3X+stD
+lH3+dd0FwnVbdG6yF6vGhGl/l9QtB8+ay+0I56/4VgsHE5ZDmo/a5vqjyXjPsn8K
+Eu5QMZ8P59UE3HBW9+EfHk3drPy51x4Afq+oJcmOil2lh57pxGlZ11zKj4yziapu
+L9Anq2Bz6uD01/OD+Rzbzl5Ah4TEHlOndhchzkcpldyRHZujprrQPH+qCO3NyZI=
+=3Twg
+-----END PGP SIGNATURE-----
+
+--aC33ObtQAkNdOZ6b--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
