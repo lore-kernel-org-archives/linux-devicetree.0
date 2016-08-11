@@ -1,133 +1,107 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv3] watchdog: xilinx: Add clock support
-Date: Thu, 11 Aug 2016 18:50:27 +0530
-Message-ID: <1470921627-32060-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+From: =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] gpio: dt-bindings: add brcm,bcm6345-gpio bindings
+Date: Thu, 11 Aug 2016 15:54:53 +0200
+Message-ID: <08a9662d-d021-335f-27b5-0e1968954289@gmail.com>
+References: <1470225957-5692-1-git-send-email-noltari@gmail.com>
+ <CACRpkdYfApcW6M1DV4tKiBuX18eAbjWAJB-1K_-dUYx=T1xT4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdYfApcW6M1DV4tKiBuX18eAbjWAJB-1K_-dUYx=T1xT4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the clock. Currently we enable
-at probe and relinquish at remove.
+Hi Linus,
 
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Acked-by: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
-v2:
-fix spaces and error path.
-v3:
-do not fail existing dts
+El 11/08/2016 a las 13:45, Linus Walleij escribió:
+> All devicetree binding patches must be sent to the devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> mailing list so include them on subsequent posts of this patch.
+> 
+> On Wed, Aug 3, 2016 at 2:05 PM, Álvaro Fernández Rojas
+> <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+>> This patch adds the device tree bindings for the Broadcom's BCM6345
+>> memory-mapped GPIO controllers.
+>>
+>> The gpios will be supported by gpio-mmio code of the
+>> GPIO generic library.
+>>
+>> Signed-off-by: Álvaro Fernández Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  v2: add improvements suggested by Jonas Gorski:
+>>   - use native-endian instead of big-endian.
+> 
+> What is this? Does it come from some other existing binding?
+> I was feeling native endian is the default unless LE or BE is
+> explicitly specified...
+Not really, even if the kernel is configured as big endian, either native-endian or big-endian are needed.
+The default is little-endian if nothing else is specified:
+https://github.com/torvalds/linux/blob/master/drivers/of/base.c#L598
 
- .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  3 +++
- drivers/watchdog/of_xilinx_wdt.c                   | 29 ++++++++++++++++++++--
- 2 files changed, 30 insertions(+), 2 deletions(-)
+> 
+>> +Required properties:
+>> +       - compatible: should be "brcm,bcm6345-gpio"
+>> +       - reg-names: must contain
+>> +               "dat" - data register
+>> +               "dirout" - direction (output) register
+> 
+> I don't like this and don't understand why you can't just cover
+> all GPIO registers with a single reg property.
+Because we want to add a simple gpio driver for these old SoCs with the newer ones having a different and more complex gpio/pinctrl driver.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
-index 6d63782..c6ae9c9 100644
---- a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
-@@ -7,6 +7,8 @@ Required properties:
- - reg			: Physical base address and size
- 
- Optional properties:
-+- clocks		: Input clock specifier. Refer to common clock
-+			  bindings.
- - clock-frequency	: Frequency of clock in Hz
- - xlnx,wdt-enable-once	: 0 - Watchdog can be restarted
- 			  1 - Watchdog can be enabled just once
-@@ -17,6 +19,7 @@ Example:
- axi-timebase-wdt@40100000 {
- 	clock-frequency = <50000000>;
- 	compatible = "xlnx,xps-timebase-wdt-1.00.a";
-+	clocks = <&clkc 15>;
- 	reg = <0x40100000 0x10000>;
- 	xlnx,wdt-enable-once = <0x0>;
- 	xlnx,wdt-interval = <0x1b>;
-diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
-index b2e1b4c..120840a 100644
---- a/drivers/watchdog/of_xilinx_wdt.c
-+++ b/drivers/watchdog/of_xilinx_wdt.c
-@@ -10,6 +10,7 @@
-  * 2 of the License, or (at your option) any later version.
-  */
- 
-+#include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/module.h>
- #include <linux/types.h>
-@@ -45,6 +46,7 @@ struct xwdt_device {
- 	u32 wdt_interval;
- 	spinlock_t spinlock;
- 	struct watchdog_device xilinx_wdt_wdd;
-+	struct clk		*clk;
- };
- 
- static int xilinx_wdt_start(struct watchdog_device *wdd)
-@@ -195,16 +197,34 @@ static int xwdt_probe(struct platform_device *pdev)
- 	spin_lock_init(&xdev->spinlock);
- 	watchdog_set_drvdata(xilinx_wdt_wdd, xdev);
- 
-+	xdev->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(xdev->clk)) {
-+		if (PTR_ERR(xdev->clk) == -ENOENT) {
-+			dev_err(&pdev->dev, "input clock not found\n");
-+			xdev->clk = NULL;
-+		} else {
-+			rc = PTR_ERR(xdev->clk);
-+			dev_err(&pdev->dev, "axi clock error %d\n", rc);
-+			return rc;
-+		}
-+	}
-+
-+	rc = clk_prepare_enable(xdev->clk);
-+	if (rc) {
-+		dev_err(&pdev->dev, "unable to enable clock\n");
-+		return rc;
-+	}
-+
- 	rc = xwdt_selftest(xdev);
- 	if (rc == XWT_TIMER_FAILED) {
- 		dev_err(&pdev->dev, "SelfTest routine error\n");
--		return rc;
-+		goto err_clk_disable;
- 	}
- 
- 	rc = watchdog_register_device(xilinx_wdt_wdd);
- 	if (rc) {
- 		dev_err(&pdev->dev, "Cannot register watchdog (err=%d)\n", rc);
--		return rc;
-+		goto err_clk_disable;
- 	}
- 
- 	dev_info(&pdev->dev, "Xilinx Watchdog Timer at %p with timeout %ds\n",
-@@ -213,6 +233,10 @@ static int xwdt_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, xdev);
- 
- 	return 0;
-+err_clk_disable:
-+	clk_disable_unprepare(xdev->clk);
-+
-+	return rc;
- }
- 
- static int xwdt_remove(struct platform_device *pdev)
-@@ -220,6 +244,7 @@ static int xwdt_remove(struct platform_device *pdev)
- 	struct xwdt_device *xdev = platform_get_drvdata(pdev);
- 
- 	watchdog_unregister_device(&xdev->xilinx_wdt_wdd);
-+	clk_disable_unprepare(xdev->clk);
- 
- 	return 0;
- }
--- 
-2.1.1
+> 
+>> +       - reg: address + size pairs describing the GPIO register sets;
+>> +               order must correspond with the order of entries in reg-names
+>> +       - #gpio-cells: must be set to 2. The first cell is the pin number and
+>> +                       the second cell is used to specify the gpio polarity:
+>> +                       0 = active high
+>> +                       1 = active low
+>> +       - gpio-controller: Marks the device node as a gpio controller.
+> 
+> Reference the standard bindings in gpio.txt for cells and controller.
+Sure, I just copy & pasted this from the other gpio mmio driver:
+https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/gpio/wd%2Cmbl-gpio.txt#L17
 
+> 
+>> +Optional properties:
+>> +       - native-endian: use native endian memory.
+> 
+> That is weird. Explain why this is needed.
+(explained above)
+
+> 
+>> +       - BCM6345:
+>> +       gpio: gpio-controller@fffe0406 {
+>> +               compatible = "brcm,bcm6345-gpio";
+>> +               reg-names = "dirout", "dat";
+>> +               reg = <0xfffe0406 2>, <0xfffe040a 2>;
+> 
+> Also I do not understand this at all. Why pick out two 16bit registers?
+> Surely the rest of the registers at 0xfffe0400 must be GPIO registers
+> as well? Are they not?
+This is the layout for BCM6345:
+https://gitlab.labs.nic.cz/turris/openwrt/blob/8bfda76892a39c033b5abf2c17035a444fffad08/target/linux/brcm63xx-2.6/files/include/asm-mips/mach-bcm963xx/6345_map_part.h#L141
+And this is the layout for BCM6338:
+https://gitlab.labs.nic.cz/turris/openwrt/blob/8bfda76892a39c033b5abf2c17035a444fffad08/target/linux/brcm63xx-2.6/files/include/asm-mips/mach-bcm963xx/6338_map_part.h#L202
+
+> 
+> If they are, cover them all with a single reg property.
+> 
+> If they are not all GPIO registers, use MFD syscon for this and access
+> the constituent parts through that.
+I don't think that's the case since we're using a generic mmio binding.
+
+> 
+> Yours,
+> Linus Walleij
+> 
+
+Regards,
+Álvaro.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
