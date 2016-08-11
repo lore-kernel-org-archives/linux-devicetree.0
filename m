@@ -1,80 +1,48 @@
-From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v6 02/14] of/numa: fix a memory@ node can only contains one memory block
-Date: Thu, 11 Aug 2016 17:33:36 +0800
-Message-ID: <1470908028-8596-3-git-send-email-thunder.leizhen@huawei.com>
-References: <1470908028-8596-1-git-send-email-thunder.leizhen@huawei.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH V5 1/4] drm/imx-ldb: Add support to drm-bridge
+Date: Thu, 11 Aug 2016 11:38:10 +0200
+Message-ID: <1470908290.2493.37.camel@pengutronix.de>
+References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
+	 <cover.1470739193.git.peter.senna@collabora.com>
+	 <1d76685746a1524127aa6747994dd8fd84ad1c38.1470739193.git.peter.senna@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470908028-8596-1-git-send-email-thunder.leizhen@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>
-Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1d76685746a1524127aa6747994dd8fd84ad1c38.1470739193.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: airlied-cv59FeDIM0c@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For a normal memory@ devicetree node, its reg property can contains more
-memory blocks.
+Am Dienstag, den 09.08.2016, 18:41 +0200 schrieb Peter Senna Tschudin:
+> Add support to attach a drm_bridge to imx-ldb in addition to
+> existing support to attach a LVDS panel.
+> 
+> This patch does a simple code refactoring by moving code
+> from for_each_child_of_node iterator to a new function named
+> imx_ldb_panel_ddc(). This was necessary to allow the panel ddc
+> code to run only when the imx_ldb is not attached to a bridge.
+> 
+> Cc: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> Cc: Martin Donnelly <martin.donnelly-JJi787mZWgc@public.gmane.org>
+> Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+> Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+> Unchanged from V4
 
-Because we don't known how many memory blocks maybe contained, so we try
-from index=0, increase 1 until error returned(the end).
+I've rebased and applied patch 1.
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- drivers/of/of_numa.c | 29 ++++++++++-------------------
- 1 file changed, 10 insertions(+), 19 deletions(-)
+thanks
+Philipp
 
-diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-index fb71b4e..7b3fbdc 100644
---- a/drivers/of/of_numa.c
-+++ b/drivers/of/of_numa.c
-@@ -63,13 +63,9 @@ static int __init of_numa_parse_memory_nodes(void)
- 	struct device_node *np = NULL;
- 	struct resource rsrc;
- 	u32 nid;
--	int r = 0;
--
--	for (;;) {
--		np = of_find_node_by_type(np, "memory");
--		if (!np)
--			break;
-+	int i, r;
-
-+	for_each_node_by_type(np, "memory") {
- 		r = of_property_read_u32(np, "numa-node-id", &nid);
- 		if (r == -EINVAL)
- 			/*
-@@ -78,23 +74,18 @@ static int __init of_numa_parse_memory_nodes(void)
- 			 * "numa-node-id" property
- 			 */
- 			continue;
--		else if (r)
--			/* some other error */
--			break;
-
--		r = of_address_to_resource(np, 0, &rsrc);
--		if (r) {
--			pr_err("NUMA: bad reg property in memory node\n");
--			break;
--		}
-+		for (i = 0; !r && !of_address_to_resource(np, i, &rsrc); i++)
-+			r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
-
--		r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
--		if (r)
--			break;
-+		if (!i || r) {
-+			of_node_put(np);
-+			pr_err("NUMA: bad property in memory node\n");
-+			return r ? : -EINVAL;
-+		}
- 	}
--	of_node_put(np);
-
--	return r;
-+	return 0;
- }
-
- static int __init of_numa_parse_distance_map_v1(struct device_node *map)
 --
-2.5.0
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
