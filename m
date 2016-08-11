@@ -1,160 +1,35 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3] hwmon/max6650.c: Add devicetree support
-Date: Thu, 11 Aug 2016 07:43:58 -0700
-Message-ID: <5f79a68a-92fa-f7ef-c71f-7a7701609250@roeck-us.net>
-References: <1470727827-15907-1-git-send-email-mike.looijmans@topic.nl>
- <20160809163727.GC9105@roeck-us.net>
- <1470838787-8273-1-git-send-email-mike.looijmans@topic.nl>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: Question about dma-ranges property for PCI host controllers
+Date: Thu, 11 Aug 2016 15:00:42 +0000
+Message-ID: <HK2PR0601MB1393CA771AB65556D4E2F0B9F51E0@HK2PR0601MB1393.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <1470838787-8273-1-git-send-email-mike.looijmans@topic.nl>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Mike Looijmans <mike.looijmans@topic.nl>, lm-sensors@lm-sensors.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/10/2016 07:19 AM, Mike Looijmans wrote:
-> Parse devicetree parameters for voltage and prescaler setting. This allows
-> using multiple max6550 devices with varying settings, and also makes it
-> possible to instantiate and configure the device using devicetree.
->
+Hi,
 
-For the subject: Please use "hwmon: (max6650) Add devicetree support"
+A few PCI host controllers use the "dma-ranges" property to specify the
+mapping from PCI bus addresses to physical addresses.
 
-> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
-> ---
-> v3: Resubmit because mailing lists bounced
+In the case of R-Car PCIe Host controllers, the intention was to set this
+property as a 1 to 1 mapping for all DDR that could be addressed by the
+device. However, there are some limitations for the R-Car controller which
+meant that we could only map a subset of the DDR range - this limitation
+has prompted us to work on enabling the IOMMU behind the PCI controller.
 
-It bounced because you sent to the old hwmon mailing list which is at best
-unreliable. Please send future versions to linux-hwmon@vger.kernel.org.
+When there is an IOMMU behind the PCI controller, the "dma-ranges"
+property specifies the mapping from PCI bus addresses to an IOVA address.
+So should the property map all address space?
 
->     Fix style errors as reported by checkpatch.pl
->     Fix bug in DT parsing of fan-prescale
-> v2: Add devicetree binding documentation
->     Code changes as suggested by Guenter
->     Reduce log info, output only a single line
->
->  .../devicetree/bindings/hwmon/max6650.txt          | 20 ++++++++++++++++
+Note that this is not actually possible with the R-Car hardware, but I
+found that the IOVA address space is outside of the DDR address space
+that we were using so had change it.
 
-Please submit the devicetree properties as separate patch.
-
->  drivers/hwmon/max6650.c                            | 28 +++++++++++++---------
->  2 files changed, 37 insertions(+), 11 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/max6650.txt
->
-> diff --git a/Documentation/devicetree/bindings/hwmon/max6650.txt b/Documentation/devicetree/bindings/hwmon/max6650.txt
-> new file mode 100644
-> index 0000000..89d87c6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/max6650.txt
-> @@ -0,0 +1,20 @@
-> +Bindings for MAX6651 and MAX6650 I2C fan controllers
-> +
-> +Required properties:
-> +- compatible : One of "max6650" or "max6651"
-> +- reg        : I2C address
-> +
-> +Optional properties:
-> +- fan-voltage    : The supply voltage of the fan. Valid values are 5 and 12.
-> +                   Default is to use the chip's current setting.
-> +- fan-prescale   : Pre-scaling value as per datasheet. Valid are 1, 2, 4, 8, 16.
-> +                   Default is to use the chip's current setting.
-> +
-> +
-One empty line is sufficient.
-
-> +Example:
-> +	fan-max6650: max6650@1b {
-> +		reg = <0x1b>;
-> +		compatible = "max6650";
-> +		fan-voltage = <12>;
-> +		fan-prescale = <4>;
-> +	};
-> diff --git a/drivers/hwmon/max6650.c b/drivers/hwmon/max6650.c
-> index 162a520..56a6c87 100644
-> --- a/drivers/hwmon/max6650.c
-> +++ b/drivers/hwmon/max6650.c
-> @@ -41,14 +41,14 @@
->  #include <linux/err.h>
->
->  /*
-> - * Insmod parameters
-> + * Insmod parameters (for backward compatibility)
-
-That doesn't add any value.
-
->   */
->
->  /* fan_voltage: 5=5V fan, 12=12V fan, 0=don't change */
->  static int fan_voltage;
->  /* prescaler: Possible values are 1, 2, 4, 8, 16 or 0 for don't change */
->  static int prescaler;
-> -/* clock: The clock frequency of the chip the driver should assume */
-> +/* clock: The clock frequency of the chip (max6651 can be clocked externally) */
->  static int clock = 254000;
->
->  module_param(fan_voltage, int, S_IRUGO);
-> @@ -566,6 +566,15 @@ static int max6650_init_client(struct max6650_data *data,
->  	struct device *dev = &client->dev;
->  	int config;
->  	int err = -EIO;
-> +	u32 voltage;
-> +	u32 prescale;
-> +
-> +	if (of_property_read_u32(client->dev.of_node, "fan-voltage",
-> +				 &voltage))
-> +		voltage = fan_voltage;
-> +	if (of_property_read_u32(client->dev.of_node, "fan-prescale",
-> +				 &prescale))
-> +		prescale = prescaler;
->
->  	config = i2c_smbus_read_byte_data(client, MAX6650_REG_CONFIG);
->
-> @@ -574,7 +583,7 @@ static int max6650_init_client(struct max6650_data *data,
->  		return err;
->  	}
->
-> -	switch (fan_voltage) {
-> +	switch (voltage) {
->  	case 0:
->  		break;
->  	case 5:
-> @@ -584,14 +593,10 @@ static int max6650_init_client(struct max6650_data *data,
->  		config |= MAX6650_CFG_V12;
->  		break;
->  	default:
-> -		dev_err(dev, "illegal value for fan_voltage (%d)\n",
-> -			fan_voltage);
-> +		dev_err(dev, "illegal value for fan_voltage (%d)\n", voltage);
->  	}
->
-> -	dev_info(dev, "Fan voltage is set to %dV.\n",
-> -		 (config & MAX6650_CFG_V12) ? 12 : 5);
-> -
-> -	switch (prescaler) {
-> +	switch (prescale) {
->  	case 0:
->  		break;
->  	case 1:
-> @@ -614,10 +619,11 @@ static int max6650_init_client(struct max6650_data *data,
->  			 | MAX6650_CFG_PRESCALER_16;
->  		break;
->  	default:
-> -		dev_err(dev, "illegal value for prescaler (%d)\n", prescaler);
-> +		dev_err(dev, "illegal value for prescaler (%d)\n", prescale);
-
-Side note: Those errors should really result in an -EINVAL return.
-Separate patch, though.
-
->  	}
->
-> -	dev_info(dev, "Prescaler is set to %d.\n",
-> +	dev_info(dev, "Fan voltage: %dV, prescaler: %d.\n",
-> +		 (config & MAX6650_CFG_V12) ? 12 : 5,
->  		 1 << (config & MAX6650_CFG_PRESCALER_MASK));
->
->  	/*
->
-
+Thanks
+Phil
