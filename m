@@ -1,62 +1,98 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: Question about dma-ranges property for PCI host controllers
-Date: Thu, 11 Aug 2016 17:09:23 +0200
-Message-ID: <2867793.PfGZpZFyEJ@wuerfel>
-References: <HK2PR0601MB1393CA771AB65556D4E2F0B9F51E0@HK2PR0601MB1393.apcprd06.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <HK2PR0601MB1393CA771AB65556D4E2F0B9F51E0@HK2PR0601MB1393.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Aleksey Makarov <aleksey.makarov@linaro.org>
+Subject: [PATCH v9 1/4] of/serial: move earlycon early_param handling to serial
+Date: Thu, 11 Aug 2016 18:31:38 +0300
+Message-ID: <20160811153152.755-2-aleksey.makarov@linaro.org>
+References: <20160811153152.755-1-aleksey.makarov@linaro.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20160811153152.755-1-aleksey.makarov@linaro.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Aleksey Makarov <aleksey.makarov@linaro.org>, Russell King <linux@arm.linux.org.uk>, Len Brown <lenb@kernel.org>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <ahs3@redhat.com>, Christopher Covington <cov@codeaurora.org>, Yury Norov <ynorov@caviumnetworks.com>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Zheng, Lv" <lv.zheng@intel.com>, Mark Salter <msalter@redhat.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, August 11, 2016 3:00:42 PM CEST Phil Edworthy wrote:
-> Hi,
-> 
-> A few PCI host controllers use the "dma-ranges" property to specify the
-> mapping from PCI bus addresses to physical addresses.
-> 
-> In the case of R-Car PCIe Host controllers, the intention was to set this
-> property as a 1 to 1 mapping for all DDR that could be addressed by the
-> device. However, there are some limitations for the R-Car controller which
-> meant that we could only map a subset of the DDR range - this limitation
-> has prompted us to work on enabling the IOMMU behind the PCI controller.
-> 
-> When there is an IOMMU behind the PCI controller, the "dma-ranges"
-> property specifies the mapping from PCI bus addresses to an IOVA address.
-> So should the property map all address space?
-> 
-> Note that this is not actually possible with the R-Car hardware, but I
-> found that the IOVA address space is outside of the DDR address space
-> that we were using so had change it.
+From: Leif Lindholm <leif.lindholm@linaro.org>
 
-It's a bit tricky: the dma-ranges properties are walked recursively,
-and a PCI bus may be behind a few other bridges that each have a
-nontrivial mapping, and the IOMMU may not be on the address space that
-the PCI host sees.
+We have multiple "earlycon" early_param handlers - merge the DT one into
+the main earlycon one.  It's a cleanup that also will be useful
+to defer setting up DT console until ACPI/DT decision is made.
 
-In the past, we have said that the dma-ranges property should reflect
-the address space that is used when programming the bridge registers
-in the PCI host bridge itself.
+Rename the exported function to avoid clashing with the function from
+arch/microblaze/kernel/prom.c
 
-I think we have also made the assumption that a PCI host bridge
-with an IOMMU uses a flat 32-bit DMA address space that goes through
-the IOMMU (possibly a separate address space per PCI function,
-depending on the type of IOMMU).
+Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
+Signed-off-by: Aleksey Makarov <aleksey.makarov@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Peter Hurley <peter@hurleysoftware.com>
+Tested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+ drivers/of/fdt.c              | 11 +----------
+ drivers/tty/serial/earlycon.c |  2 +-
+ include/linux/of_fdt.h        |  2 ++
+ 3 files changed, 4 insertions(+), 11 deletions(-)
 
-One corner case that doesn't really fit in that model is a PCI host
-bridge that requires the bridge register to be programmed in a special
-way for the IOMMU to work (e.g. away from the RAM to the address that
-is routed to the IOMMU).
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 55f1b83..741cac53 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -924,7 +924,7 @@ static inline void early_init_dt_check_for_initrd(unsigned long node)
+ 
+ #ifdef CONFIG_SERIAL_EARLYCON
+ 
+-static int __init early_init_dt_scan_chosen_serial(void)
++int __init early_init_dt_scan_chosen_stdout(void)
+ {
+ 	int offset;
+ 	const char *p, *q, *options = NULL;
+@@ -968,15 +968,6 @@ static int __init early_init_dt_scan_chosen_serial(void)
+ 	}
+ 	return -ENODEV;
+ }
+-
+-static int __init setup_of_earlycon(char *buf)
+-{
+-	if (buf)
+-		return 0;
+-
+-	return early_init_dt_scan_chosen_serial();
+-}
+-early_param("earlycon", setup_of_earlycon);
+ #endif
+ 
+ /**
+diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
+index 067783f..7aae655 100644
+--- a/drivers/tty/serial/earlycon.c
++++ b/drivers/tty/serial/earlycon.c
+@@ -209,7 +209,7 @@ static int __init param_setup_earlycon(char *buf)
+ 	 * don't generate a warning from parse_early_params() in that case
+ 	 */
+ 	if (!buf || !buf[0])
+-		return 0;
++		return early_init_dt_scan_chosen_stdout();
+ 
+ 	err = setup_earlycon(buf);
+ 	if (err == -ENOENT || err == -EALREADY)
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 26c3302..2f69d4c 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -66,6 +66,7 @@ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 				     int depth, void *data);
+ extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 				     int depth, void *data);
++extern int early_init_dt_scan_chosen_stdout(void);
+ extern void early_init_fdt_scan_reserved_mem(void);
+ extern void early_init_fdt_reserve_self(void);
+ extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+@@ -94,6 +95,7 @@ extern void early_get_first_memblock_info(void *, phys_addr_t *);
+ extern u64 of_flat_dt_translate_address(unsigned long node);
+ extern void of_fdt_limit_memory(int limit);
+ #else /* CONFIG_OF_FLATTREE */
++static inline int early_init_dt_scan_chosen_stdout(void) { return -ENODEV; }
+ static inline void early_init_fdt_scan_reserved_mem(void) {}
+ static inline void early_init_fdt_reserve_self(void) {}
+ static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
+-- 
+2.9.2
 
-Another tricky case is a PCI host that uses the IOMMU only for 32-bit
-DMA masters but that does have a dma-ranges property that can be
-used for direct mapping of all RAM through a nonzero offset that
-gets set up according to dma-ranges.
-
-Can you be more specific which of those cases you actually have here?
-
-	Arnd
