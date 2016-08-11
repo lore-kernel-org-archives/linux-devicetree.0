@@ -1,35 +1,45 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [Query] of_{update/remove/add}_property exported?
-Date: Thu, 11 Aug 2016 11:52:58 -0500
-Message-ID: <ed2e0333-9528-c462-41ea-31e0ec56fe26@ti.com>
-References: <e3ec4289-94ee-2305-2ac3-3913d8ac2728@ti.com>
- <CAL_JsqKavbxUj68D=hL-Qsi9Q=RC+fg=Wr++=n4gQmmrjEnG8A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/1] ARM: dts: imx6q-evi: Use GPIO_6 for fec irq
+Date: Thu, 11 Aug 2016 09:54:06 -0700
+Message-ID: <1470934446-22536-1-git-send-email-stillcompiling@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKavbxUj68D=hL-Qsi9Q=RC+fg=Wr++=n4gQmmrjEnG8A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org" <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/11/2016 11:37 AM, Rob Herring wrote:
-> On Thu, Aug 11, 2016 at 11:20 AM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
->> Hi Rob,
->>
->> Is there any specific reason as to why the of_update_property(),
->> of_remove_property() or of_add_property() are not exported? I have seen
->> one or two RFC patches submitted for some of these, but can't seem to
->> find a concrete reason.
-> 
-> Probably because there is no in tree user.
+Apply hardware workaround for ethernet problem
+See nxp erratum err006687
 
-Thanks, I have a need for these in a module, so will go ahead and submit
-a patch.
+Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6q-evi.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-regards
-Suman
+diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
+index 49c6f61..33bd04b 100644
+--- a/arch/arm/boot/dts/imx6q-evi.dts
++++ b/arch/arm/boot/dts/imx6q-evi.dts
+@@ -127,6 +127,8 @@
+ 	pinctrl-0 = <&pinctrl_enet>;
+ 	phy-mode = "rgmii";
+ 	phy-reset-gpios = <&gpio1 25 0>;
++	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
++			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
+ 	status = "okay";
+ };
+ 
+@@ -312,6 +314,7 @@
+ 			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL 0x1b0b0
+ 			MX6QDL_PAD_ENET_TX_EN__ENET_TX_EN 0x4001b0a8
+ 			MX6QDL_PAD_ENET_CRS_DV__GPIO1_IO25 0x1b0b0
++			MX6QDL_PAD_GPIO_6__ENET_IRQ 0x000b1
+ 		>;
+ 	};
+ 
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
