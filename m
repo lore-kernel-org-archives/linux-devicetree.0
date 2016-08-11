@@ -1,82 +1,48 @@
-From: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/4] MIPS: BMIPS: Add support GPIO device nodes
-Date: Thu, 11 Aug 2016 11:00:00 +0900
-Message-ID: <2D0C8F56-B6B7-4079-B0D1-7277781C27E4@gmail.com>
-References: <20160808021719.4680-1-jaedon.shin@gmail.com> <20160808021719.4680-3-jaedon.shin@gmail.com> <CAOiHx=kxjXiYm_4S3rLOjB0wM-UpQsqfXn+EVq6+FGOH4whuuQ@mail.gmail.com> <D5F26D94-8312-4CAC-8577-205A1AAFB0E5@gmail.com> <CAOiHx=n19Sb3B1_FGkdzqxWqi5Vpy5PQbYWdaVvNaUTW+Njcog@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v3 0/5] arm64: dts: r8a7795: Add HSUSB device node and
+ enable channel 0 of USB2.0
+Date: Thu, 11 Aug 2016 02:15:40 +0000
+Message-ID: <HK2PR06MB0548D84529D548FF8DD7C6C2D81E0@HK2PR06MB0548.apcprd06.prod.outlook.com>
+References: <1469098021-7692-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20160810084539.GD6276@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOiHx=n19Sb3B1_FGkdzqxWqi5Vpy5PQbYWdaVvNaUTW+Njcog-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160810084539.GD6276@verge.net.au>
+Content-Language: ja-JP
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonas,
+Hi Simon-san,
 
-On Aug 9, 2016, at 11:14 PM, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Simon Horman [mailto:horms@verge.net.au]
+> Sent: Wednesday, August 10, 2016 5:46 PM
 > 
-> Hi,
+> Hi Shimoda-san,
 > 
-> On 9 August 2016 at 03:44, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Hi Jonas,
->> 
->> On Aug 8, 2016, at 11:06 PM, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> 
->>> Hi,
->>> 
->>> please always include devicetree for any dts(i) related changes.
->>> 
->>> On 8 August 2016 at 04:17, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> (snip)
->>>> diff --git a/arch/mips/boot/dts/brcm/bcm97435svmb.dts b/arch/mips/boot/dts/brcm/bcm97435svmb.dts
->>>> index 9db84f2a6664..dd8b8fb97053 100644
->>>> --- a/arch/mips/boot/dts/brcm/bcm97435svmb.dts
->>>> +++ b/arch/mips/boot/dts/brcm/bcm97435svmb.dts
->>>> @@ -59,6 +59,14 @@
->>>>       status = "okay";
->>>> };
->>>> 
->>>> +&upg_gio {
->>>> +       status = "okay";
->>>> +};
->>>> +
->>>> +&upg_gio_aon {
->>>> +       status = "okay";
->>>> +};
->>>> +
->>> 
->>> You don't set their status in the dtsi, they will be enabled by
->>> default, and you can drop this change.
->>> 
->>>> &enet0 {
->>>>       status = "okay";
->>>> };
->>> 
->>> 
->>> Regards
->>> Jonas
->> 
->> The status="disabled" has been missing. It will be added in v2.
->> The interrupt-controller@ will also be changed.
+> On Thu, Jul 21, 2016 at 07:46:56PM +0900, Yoshihiro Shimoda wrote:
+> > This patch is based on the renesas.git / renesas-devel-20160718-v4.7-rc7 tag.
+> >
+> > Changes from v2:
+> >  - rebase on renesas.git / renesas-devel-20160718-v4.7-rc7.
+> >   - maybe the panic issue disappears on the tree. but, if still happens,
+> >     please try the following patch:
+> >
+> https://git.kernel.org/cgit/linux/kernel/git/gregkh/usb.git/commit/?h=usb-next&id=c14f8a4032efa73d9c4e155add47c19252
+> b3bdf4
+> >  - remove the redundant instruction in patch 4.
+> >  - add a new patch that enables HSUSB driver as kernel module on the defconfig.
 > 
-> I thought that was indented, since GPIO controllers usually are always
-> present (you don't disable the irq controllers by default either).
-> 
-> Not that I want to tell you how you do your dts(i) files, but I would
-> expect things that you usually always need (irq, clocks, gpios) are
-> present by default.
-> 
-> 
-> Regards
-> Jonas
+> Sorry for not attending to this earlier.
+> In your opinion are these patches ready to merge?
 
-I checked the BCM7445 ARM based SoC device tree and other BRCM boards, and
-I agree with your point. The status="okay" nodes will be removed in v2.
+Yes. Since the following patch had been merged in v4.8-rc1, the panic issue disappears.
 
-Thanks,
-Jaedon--
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> https://git.kernel.org/cgit/linux/kernel/git/gregkh/usb.git/commit/?h=usb-next&id=c14f8a4032efa73d9c4e155add47c19252
+> b3bdf4
+
+Best regards,
+Yoshihiro Shimoda
