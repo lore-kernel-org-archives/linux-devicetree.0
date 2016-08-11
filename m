@@ -1,60 +1,133 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt: bindings: Add vendor prefix for Espressif System
-Date: Thu, 11 Aug 2016 08:31:20 -0500
-Message-ID: <CAL_Jsq+uy-P54enk5Zho=nRab4PMEbqyBTEWiE0yhWWVoFTmwQ@mail.gmail.com>
-References: <1470596269-20572-1-git-send-email-hdegoede@redhat.com>
- <20160810184845.GA17829@rob-hp-laptop>
- <2b43330e-369d-7473-8b73-429f0f0b73ce@redhat.com>
+From: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv3] watchdog: xilinx: Add clock support
+Date: Thu, 11 Aug 2016 18:50:27 +0530
+Message-ID: <1470921627-32060-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2b43330e-369d-7473-8b73-429f0f0b73ce@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 11, 2016 at 4:15 AM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Hi Rob,
->
->
-> On 10-08-16 20:48, Rob Herring wrote:
->>
->> On Sun, Aug 07, 2016 at 08:57:48PM +0200, Hans de Goede wrote:
->>>
->>> Espressif is a manufacturer of various wifi and bt chips, add a vendor
->>> prefix for use with bindings for these chips.
->>>
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>> ---
->>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>>  1 file changed, 1 insertion(+)
->>
->>
->> Acked-by: Rob Herring <robh@kernel.org>
->
->
-> Thank you for all the reviews.
->
-> What about: "[PATCH 2/2] dt: bindings: Add binding for ESP8089 wifi chips" ?
-> there were some remarks, but I believe that those have been addressed
-> (by answering the remarks, not with a new version), so a review of that
-> one would be appreciated too.
+Add support for the clock. Currently we enable
+at probe and relinquish at remove.
 
-What about Arnd's comment "better use '-' instead of '_' for property names."
+Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Acked-by: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+v2:
+fix spaces and error path.
+v3:
+do not fail existing dts
 
-> Also who should merge this series, Ulf because it is mmc related,
-> or the dt-maintainers since it contains only bindings patches ?
+ .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  3 +++
+ drivers/watchdog/of_xilinx_wdt.c                   | 29 ++++++++++++++++++++--
+ 2 files changed, 30 insertions(+), 2 deletions(-)
 
-I can take it.
+diff --git a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+index 6d63782..c6ae9c9 100644
+--- a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+@@ -7,6 +7,8 @@ Required properties:
+ - reg			: Physical base address and size
+ 
+ Optional properties:
++- clocks		: Input clock specifier. Refer to common clock
++			  bindings.
+ - clock-frequency	: Frequency of clock in Hz
+ - xlnx,wdt-enable-once	: 0 - Watchdog can be restarted
+ 			  1 - Watchdog can be enabled just once
+@@ -17,6 +19,7 @@ Example:
+ axi-timebase-wdt@40100000 {
+ 	clock-frequency = <50000000>;
+ 	compatible = "xlnx,xps-timebase-wdt-1.00.a";
++	clocks = <&clkc 15>;
+ 	reg = <0x40100000 0x10000>;
+ 	xlnx,wdt-enable-once = <0x0>;
+ 	xlnx,wdt-interval = <0x1b>;
+diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
+index b2e1b4c..120840a 100644
+--- a/drivers/watchdog/of_xilinx_wdt.c
++++ b/drivers/watchdog/of_xilinx_wdt.c
+@@ -10,6 +10,7 @@
+  * 2 of the License, or (at your option) any later version.
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+@@ -45,6 +46,7 @@ struct xwdt_device {
+ 	u32 wdt_interval;
+ 	spinlock_t spinlock;
+ 	struct watchdog_device xilinx_wdt_wdd;
++	struct clk		*clk;
+ };
+ 
+ static int xilinx_wdt_start(struct watchdog_device *wdd)
+@@ -195,16 +197,34 @@ static int xwdt_probe(struct platform_device *pdev)
+ 	spin_lock_init(&xdev->spinlock);
+ 	watchdog_set_drvdata(xilinx_wdt_wdd, xdev);
+ 
++	xdev->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(xdev->clk)) {
++		if (PTR_ERR(xdev->clk) == -ENOENT) {
++			dev_err(&pdev->dev, "input clock not found\n");
++			xdev->clk = NULL;
++		} else {
++			rc = PTR_ERR(xdev->clk);
++			dev_err(&pdev->dev, "axi clock error %d\n", rc);
++			return rc;
++		}
++	}
++
++	rc = clk_prepare_enable(xdev->clk);
++	if (rc) {
++		dev_err(&pdev->dev, "unable to enable clock\n");
++		return rc;
++	}
++
+ 	rc = xwdt_selftest(xdev);
+ 	if (rc == XWT_TIMER_FAILED) {
+ 		dev_err(&pdev->dev, "SelfTest routine error\n");
+-		return rc;
++		goto err_clk_disable;
+ 	}
+ 
+ 	rc = watchdog_register_device(xilinx_wdt_wdd);
+ 	if (rc) {
+ 		dev_err(&pdev->dev, "Cannot register watchdog (err=%d)\n", rc);
+-		return rc;
++		goto err_clk_disable;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "Xilinx Watchdog Timer at %p with timeout %ds\n",
+@@ -213,6 +233,10 @@ static int xwdt_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, xdev);
+ 
+ 	return 0;
++err_clk_disable:
++	clk_disable_unprepare(xdev->clk);
++
++	return rc;
+ }
+ 
+ static int xwdt_remove(struct platform_device *pdev)
+@@ -220,6 +244,7 @@ static int xwdt_remove(struct platform_device *pdev)
+ 	struct xwdt_device *xdev = platform_get_drvdata(pdev);
+ 
+ 	watchdog_unregister_device(&xdev->xilinx_wdt_wdd);
++	clk_disable_unprepare(xdev->clk);
+ 
+ 	return 0;
+ }
+-- 
+2.1.1
 
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
