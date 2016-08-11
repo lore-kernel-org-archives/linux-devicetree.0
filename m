@@ -1,139 +1,109 @@
-From: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v6 11/14] arm64/numa: support HAVE_MEMORYLESS_NODES
-Date: Thu, 11 Aug 2016 17:33:45 +0800
-Message-ID: <1470908028-8596-12-git-send-email-thunder.leizhen@huawei.com>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v6 07/14] of_numa: Use pr_fmt()
+Date: Thu, 11 Aug 2016 17:33:41 +0800
+Message-ID: <1470908028-8596-8-git-send-email-thunder.leizhen@huawei.com>
 References: <1470908028-8596-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470908028-8596-1-git-send-email-thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1470908028-8596-1-git-send-email-thunder.leizhen@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>
+Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Some numa nodes may have no memory. For example:
-1. cpu0 on node0
-2. cpu1 on node1
-3. device0 access the momory from node0 and node1 take the same time.
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-So, we can not simply classify device0 to node0 or node1, but we can
-define a node2 which distances to node0 and node1 are the same.
+Use pr_fmt to prefix kernel output.
 
-Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/Kconfig      |  4 ++++
- arch/arm64/kernel/smp.c |  1 +
- arch/arm64/mm/numa.c    | 43 +++++++++++++++++++++++++++++++++++++++++--
- 3 files changed, 46 insertions(+), 2 deletions(-)
+ drivers/of/of_numa.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 2815af6..3a2b6ed 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -611,6 +611,10 @@ config NEED_PER_CPU_EMBED_FIRST_CHUNK
- 	def_bool y
- 	depends on NUMA
-
-+config HAVE_MEMORYLESS_NODES
-+	def_bool y
-+	depends on NUMA
-+
- source kernel/Kconfig.preempt
- source kernel/Kconfig.hz
-
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 76a6d92..aa677f4 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -619,6 +619,7 @@ static void __init of_parse_and_init_cpus(void)
- 			}
-
- 			bootcpu_valid = true;
-+			early_map_cpu_to_node(0, of_node_to_nid(dn));
-
- 			/*
- 			 * cpu_logical_map has already been
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index bd4d26a9..30d3279 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -128,6 +128,14 @@ void __init early_map_cpu_to_node(unsigned int cpu, int nid)
- 		nid = 0;
-
- 	cpu_to_node_map[cpu] = nid;
-+
-+	/*
-+	 * We should set the numa node of cpu0 as soon as possible, because it
-+	 * has already been set up online before. cpu_to_node(0) will soon be
-+	 * called.
-+	 */
-+	if (!cpu)
-+		set_cpu_numa_node(cpu, nid);
- }
-
- #ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
-@@ -210,6 +218,35 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
- 	return ret;
- }
-
-+static u64 __init alloc_node_data_from_nearest_node(int nid, const size_t size)
-+{
-+	int i, best_nid, distance;
-+	u64 pa;
-+	DECLARE_BITMAP(nodes_map, MAX_NUMNODES);
-+
-+	bitmap_zero(nodes_map, MAX_NUMNODES);
-+	bitmap_set(nodes_map, nid, 1);
-+
-+find_nearest_node:
-+	best_nid = NUMA_NO_NODE;
-+	distance = INT_MAX;
-+
-+	for_each_clear_bit(i, nodes_map, MAX_NUMNODES)
-+		if (numa_distance[nid][i] < distance) {
-+			best_nid = i;
-+			distance = numa_distance[nid][i];
-+		}
-+
-+	pa = memblock_alloc_nid(size, SMP_CACHE_BYTES, best_nid);
-+	if (!pa) {
-+		BUG_ON(best_nid == NUMA_NO_NODE);
-+		bitmap_set(nodes_map, best_nid, 1);
-+		goto find_nearest_node;
-+	}
-+
-+	return pa;
-+}
-+
- /**
-  * Initialize NODE_DATA for a node on the local memory
+diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+index ed103e6..1234b4a 100644
+--- a/drivers/of/of_numa.c
++++ b/drivers/of/of_numa.c
+@@ -16,6 +16,8 @@
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
   */
-@@ -223,7 +260,9 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
- 	pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
- 		nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
 
--	nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
-+	nd_pa = memblock_alloc_nid(nd_size, SMP_CACHE_BYTES, nid);
-+	if (!nd_pa)
-+		nd_pa = alloc_node_data_from_nearest_node(nid, nd_size);
- 	nd = __va(nd_pa);
++#define pr_fmt(fmt) "OF: NUMA: " fmt
++
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/nodemask.h>
+@@ -49,10 +51,9 @@ static void __init of_numa_parse_cpu_nodes(void)
+ 		if (r)
+ 			continue;
 
- 	/* report and initialize */
-@@ -233,7 +272,7 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
- 	if (tnid != nid)
- 		pr_info("    NODE_DATA(%d) on node %d\n", nid, tnid);
+-		pr_debug("NUMA: CPU on %u\n", nid);
++		pr_debug("CPU on %u\n", nid);
+ 		if (nid >= MAX_NUMNODES)
+-			pr_warn("NUMA: Node id %u exceeds maximum value\n",
+-				nid);
++			pr_warn("Node id %u exceeds maximum value\n", nid);
+ 		else
+ 			node_set(nid, numa_nodes_parsed);
+ 	}
+@@ -76,7 +77,7 @@ static int __init of_numa_parse_memory_nodes(void)
+ 			continue;
 
--	node_data[nid] = nd;
-+	NODE_DATA(nid) = nd;
- 	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
- 	NODE_DATA(nid)->node_id = nid;
- 	NODE_DATA(nid)->node_start_pfn = start_pfn;
+ 		if (nid >= MAX_NUMNODES) {
+-			pr_warn("NUMA: Node id %u exceeds maximum value\n", nid);
++			pr_warn("Node id %u exceeds maximum value\n", nid);
+ 			return -EINVAL;
+ 		}
+
+@@ -85,7 +86,7 @@ static int __init of_numa_parse_memory_nodes(void)
+
+ 		if (!i || r) {
+ 			of_node_put(np);
+-			pr_err("NUMA: bad property in memory node\n");
++			pr_err("bad property in memory node\n");
+ 			return r ? : -EINVAL;
+ 		}
+ 	}
+@@ -99,17 +100,17 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
+ 	int entry_count;
+ 	int i;
+
+-	pr_info("NUMA: parsing numa-distance-map-v1\n");
++	pr_info("parsing numa-distance-map-v1\n");
+
+ 	matrix = of_get_property(map, "distance-matrix", NULL);
+ 	if (!matrix) {
+-		pr_err("NUMA: No distance-matrix property in distance-map\n");
++		pr_err("No distance-matrix property in distance-map\n");
+ 		return -EINVAL;
+ 	}
+
+ 	entry_count = of_property_count_u32_elems(map, "distance-matrix");
+ 	if (entry_count <= 0) {
+-		pr_err("NUMA: Invalid distance-matrix\n");
++		pr_err("Invalid distance-matrix\n");
+ 		return -EINVAL;
+ 	}
+
+@@ -124,7 +125,7 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
+ 		matrix++;
+
+ 		numa_set_distance(nodea, nodeb, distance);
+-		pr_debug("NUMA:  distance[node%d -> node%d] = %d\n",
++		pr_debug("distance[node%d -> node%d] = %d\n",
+ 			 nodea, nodeb, distance);
+
+ 		/* Set default distance of node B->A same as A->B */
+@@ -171,7 +172,7 @@ int of_node_to_nid(struct device_node *device)
+ 		np = of_get_next_parent(np);
+ 	}
+ 	if (np && r)
+-		pr_warn("NUMA: Invalid \"numa-node-id\" property in node %s\n",
++		pr_warn("Invalid \"numa-node-id\" property in node %s\n",
+ 			np->name);
+ 	of_node_put(np);
+
 --
 2.5.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
