@@ -1,109 +1,38 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 1/2] dt: bindings: Add vendor prefix for Espressif System
-Date: Thu, 11 Aug 2016 19:13:44 +0200
-Message-ID: <52ebfa9e-79cc-2fca-505d-6c42aec35041@redhat.com>
-References: <1470596269-20572-1-git-send-email-hdegoede@redhat.com>
- <20160810184845.GA17829@rob-hp-laptop>
- <2b43330e-369d-7473-8b73-429f0f0b73ce@redhat.com>
- <CAL_Jsq+uy-P54enk5Zho=nRab4PMEbqyBTEWiE0yhWWVoFTmwQ@mail.gmail.com>
- <3516eadd-e987-1747-5813-de51b77fd73e@redhat.com>
- <CAL_JsqKLLotHErrfMs-oPvt7GgG1txQtAayjmp4zpCHEMktE_Q@mail.gmail.com>
+From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: imx6q-evi: Use GPIO_6 for fec irq
+Date: Thu, 11 Aug 2016 10:23:31 -0700
+Message-ID: <57ACB493.4040809@gmail.com>
+References: <1470934446-22536-1-git-send-email-stillcompiling@gmail.com>
+ <745430359.250170.752d0f22-93a7-46e8-bb14-c884787aaea3.open-xchange@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqKLLotHErrfMs-oPvt7GgG1txQtAayjmp4zpCHEMktE_Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <745430359.250170.752d0f22-93a7-46e8-bb14-c884787aaea3.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Stefan,
 
-On 11-08-16 18:35, Rob Herring wrote:
-> On Thu, Aug 11, 2016 at 10:08 AM, Hans de Goede <hdegoede@redhat.com> wrote:
->> Hi,
->>
->> On 11-08-16 15:31, Rob Herring wrote:
->>>
->>> On Thu, Aug 11, 2016 at 4:15 AM, Hans de Goede <hdegoede@redhat.com>
->>> wrote:
->>>>
->>>> Hi Rob,
->>>>
->>>>
->>>> On 10-08-16 20:48, Rob Herring wrote:
->>>>>
->>>>>
->>>>> On Sun, Aug 07, 2016 at 08:57:48PM +0200, Hans de Goede wrote:
->>>>>>
->>>>>>
->>>>>> Espressif is a manufacturer of various wifi and bt chips, add a vendor
->>>>>> prefix for use with bindings for these chips.
->>>>>>
->>>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>>>>>  1 file changed, 1 insertion(+)
->>>>>
->>>>>
->>>>>
->>>>> Acked-by: Rob Herring <robh@kernel.org>
->>>>
->>>>
->>>>
->>>> Thank you for all the reviews.
->>>>
->>>> What about: "[PATCH 2/2] dt: bindings: Add binding for ESP8089 wifi
->>>> chips" ?
->>>> there were some remarks, but I believe that those have been addressed
->>>> (by answering the remarks, not with a new version), so a review of that
->>>> one would be appreciated too.
->>>
->>>
->>> What about Arnd's comment "better use '-' instead of '_' for property
->>> names."
->>
->>
->> Ah yes, I forgot about that comment. As explained in the commit msg
->> I named the dt property to be the same as the keyword used in the
->> ini-like config file android uses for this (the android driver loads a
->> file with board specific esp8089 config like the crystal-type from
->> /lib/firmware).
->>
->> And that file does use '_'. I want to keep the names the same as that
->> seems the sensible thing to do, but if there is a great preference for
->> '-' in dt I can do a v2 with that changed.
+On 08/11/2016 10:09 AM, Stefan Wahren wrote:
+> Hi Joshua,
 >
-> I could see wanting to use the same string in the driver for a small
-> size savings, but I'd assume a mainline driver would do away with the
-> firmware text file and only use DT?
-
-Yes.
-
-> Also, do you expect lots more
-> properties?
-
-No, it seems that most settings from the text-file android use always
-are at a fixed value.
-
-> Maintaining the exact string would be more worthwhile if
-> there are lots of properties.
+>> Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> hat am 11. August 2016 um 18:54
+>> geschrieben:
+>>
+>>
+>> Apply hardware workaround for ethernet problem
+>> See nxp erratum err006687
+> do you know this commit?
 >
-> I plan to make '_' cause warnings with dtc which is why we don't want
-> to add more.
-
-Ah, ok that is a good reason to change to '-' I'll do a v2 with that
-change.
-
-Regards,
-
-Hans
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=a28eeb43ee57e0524c59e64760ed28088dd159cb
+>
+> Maybe you want to add this property, too.
+I missed that this change requiring (more) explicit enablement was merge to linux-next.
+I'll add that.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
