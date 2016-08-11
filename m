@@ -1,39 +1,164 @@
-From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v6 03/14] arm64/numa: add nid check for memory block
-Date: Thu, 11 Aug 2016 17:33:37 +0800
-Message-ID: <1470908028-8596-4-git-send-email-thunder.leizhen@huawei.com>
+From: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6 08/14] arm64: numa: Use pr_fmt()
+Date: Thu, 11 Aug 2016 17:33:42 +0800
+Message-ID: <1470908028-8596-9-git-send-email-thunder.leizhen@huawei.com>
 References: <1470908028-8596-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470908028-8596-1-git-send-email-thunder.leizhen@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>
-Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470908028-8596-1-git-send-email-thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use the same tactic to cpu and numa-distance nodes.
+From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Use pr_fmt to prefix kernel output, and remove duplicated msg
+of NUMA turned off.
+
+Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/of/of_numa.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/mm/numa.c | 40 ++++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-index 7b3fbdc..afaeb9c 100644
---- a/drivers/of/of_numa.c
-+++ b/drivers/of/of_numa.c
-@@ -75,6 +75,11 @@ static int __init of_numa_parse_memory_nodes(void)
- 			 */
- 			continue;
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index fe26ed9..0a159d3 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -17,6 +17,8 @@
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
 
-+		if (nid >= MAX_NUMNODES) {
-+			pr_warn("NUMA: Node id %u exceeds maximum value\n", nid);
-+			return -EINVAL;
-+		}
++#define pr_fmt(fmt) "numa: " fmt
 +
- 		for (i = 0; !r && !of_address_to_resource(np, i, &rsrc); i++)
- 			r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
+ #include <linux/acpi.h>
+ #include <linux/bootmem.h>
+ #include <linux/memblock.h>
+@@ -36,10 +38,9 @@ static __init int numa_parse_early_param(char *opt)
+ {
+ 	if (!opt)
+ 		return -EINVAL;
+-	if (!strncmp(opt, "off", 3)) {
+-		pr_info("%s\n", "NUMA turned off");
++	if (!strncmp(opt, "off", 3))
+ 		numa_off = true;
+-	}
++
+ 	return 0;
+ }
+ early_param("numa", numa_parse_early_param);
+@@ -108,7 +109,7 @@ static void __init setup_node_to_cpumask_map(void)
+ 		set_cpu_numa_node(cpu, NUMA_NO_NODE);
 
+ 	/* cpumask_of_node() will now work */
+-	pr_debug("NUMA: Node to cpumask map for %d nodes\n", nr_node_ids);
++	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
+ }
+
+ /*
+@@ -143,13 +144,13 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+
+ 	ret = memblock_set_node(start, (end - start), &memblock.memory, nid);
+ 	if (ret < 0) {
+-		pr_err("NUMA: memblock [0x%llx - 0x%llx] failed to add on node %d\n",
++		pr_err("memblock [0x%llx - 0x%llx] failed to add on node %d\n",
+ 			start, (end - 1), nid);
+ 		return ret;
+ 	}
+
+ 	node_set(nid, numa_nodes_parsed);
+-	pr_info("NUMA: Adding memblock [0x%llx - 0x%llx] on node %d\n",
++	pr_info("Adding memblock [0x%llx - 0x%llx] on node %d\n",
+ 			start, (end - 1), nid);
+ 	return ret;
+ }
+@@ -164,19 +165,18 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+ 	void *nd;
+ 	int tnid;
+
+-	pr_info("NUMA: Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
+-			nid, start_pfn << PAGE_SHIFT,
+-			(end_pfn << PAGE_SHIFT) - 1);
++	pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
++		nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
+
+ 	nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
+ 	nd = __va(nd_pa);
+
+ 	/* report and initialize */
+-	pr_info("NUMA: NODE_DATA [mem %#010Lx-%#010Lx]\n",
++	pr_info("  NODE_DATA [mem %#010Lx-%#010Lx]\n",
+ 		nd_pa, nd_pa + nd_size - 1);
+ 	tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
+ 	if (tnid != nid)
+-		pr_info("NUMA: NODE_DATA(%d) on node %d\n", nid, tnid);
++		pr_info("    NODE_DATA(%d) on node %d\n", nid, tnid);
+
+ 	node_data[nid] = nd;
+ 	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
+@@ -233,8 +233,7 @@ static int __init numa_alloc_distance(void)
+ 			numa_distance[i * numa_distance_cnt + j] = i == j ?
+ 				LOCAL_DISTANCE : REMOTE_DISTANCE;
+
+-	pr_debug("NUMA: Initialized distance table, cnt=%d\n",
+-			numa_distance_cnt);
++	pr_debug("Initialized distance table, cnt=%d\n", numa_distance_cnt);
+
+ 	return 0;
+ }
+@@ -255,20 +254,20 @@ static int __init numa_alloc_distance(void)
+ void __init numa_set_distance(int from, int to, int distance)
+ {
+ 	if (!numa_distance) {
+-		pr_warn_once("NUMA: Warning: distance table not allocated yet\n");
++		pr_warn_once("Warning: distance table not allocated yet\n");
+ 		return;
+ 	}
+
+ 	if (from >= numa_distance_cnt || to >= numa_distance_cnt ||
+ 			from < 0 || to < 0) {
+-		pr_warn_once("NUMA: Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
++		pr_warn_once("Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
+ 			    from, to, distance);
+ 		return;
+ 	}
+
+ 	if ((u8)distance != distance ||
+ 	    (from == to && distance != LOCAL_DISTANCE)) {
+-		pr_warn_once("NUMA: Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
++		pr_warn_once("Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
+ 			     from, to, distance);
+ 		return;
+ 	}
+@@ -295,7 +294,7 @@ static int __init numa_register_nodes(void)
+ 	/* Check that valid nid is set to memblks */
+ 	for_each_memblock(memory, mblk)
+ 		if (mblk->nid == NUMA_NO_NODE || mblk->nid >= MAX_NUMNODES) {
+-			pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
++			pr_warn("Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
+ 				mblk->nid, mblk->base,
+ 				mblk->base + mblk->size - 1);
+ 			return -EINVAL;
+@@ -366,9 +365,10 @@ static int __init dummy_numa_init(void)
+ 	struct memblock_region *mblk;
+
+ 	if (numa_off)
+-		pr_info("NUMA disabled\n"); /* Forced off on command line. */
+-	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
+-	       0LLU, PFN_PHYS(max_pfn) - 1);
++		pr_warn("NUMA turned off by user\n"); /* Forced off on command line. */
++
++	pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
++		0LLU, PFN_PHYS(max_pfn) - 1);
+
+ 	for_each_memblock(memory, mblk) {
+ 		ret = numa_add_memblk(0, mblk->base, mblk->base + mblk->size);
 --
 2.5.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
