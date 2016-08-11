@@ -1,107 +1,67 @@
-From: =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] gpio: dt-bindings: add brcm,bcm6345-gpio bindings
-Date: Thu, 11 Aug 2016 15:54:53 +0200
-Message-ID: <08a9662d-d021-335f-27b5-0e1968954289@gmail.com>
-References: <1470225957-5692-1-git-send-email-noltari@gmail.com>
- <CACRpkdYfApcW6M1DV4tKiBuX18eAbjWAJB-1K_-dUYx=T1xT4A@mail.gmail.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
+Date: Thu, 11 Aug 2016 09:22:53 -0500
+Message-ID: <57AC8A3D.3010208@codeaurora.org>
+References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
+ <9ebb6cb7-c793-cd76-5283-c9a659d0398f@gmx.de>
+ <57AA2001.2010904@codeaurora.org>
+ <214dcbb7-0c3b-1e00-3e50-db513d77b10b@gmail.com>
+ <57AA7ED0.9000707@codeaurora.org>
+ <85b76eca-5473-6724-0c9d-7b6fa7677f50@gmail.com>
+ <57AB589D.3010509@codeaurora.org>
+ <0da01875-b55a-c0fd-bd5f-05bb41fbd7fc@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdYfApcW6M1DV4tKiBuX18eAbjWAJB-1K_-dUYx=T1xT4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <0da01875-b55a-c0fd-bd5f-05bb41fbd7fc@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Florian Fainelli wrote:
+>>      netif_stop_queue(netdev);
+>> >     napi_disable(&adpt->rx_q.napi);
+>> >
+>> >I cannot call just napi_disable() in emac_change_mtu(), because when I
+>> >then call emac_mac_down(), the first thing it does is call
+>> >netif_stop_queue(), and that's when I timeout/hang.
+> Whatever emac_mac_down() does you can unroll it in the change_mtu
+> callback anyway, so if this a problematic sequence you can work around it.
 
-El 11/08/2016 a las 13:45, Linus Walleij escribió:
-> All devicetree binding patches must be sent to the devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> mailing list so include them on subsequent posts of this patch.
-> 
-> On Wed, Aug 3, 2016 at 2:05 PM, Álvaro Fernández Rojas
-> <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> 
->> This patch adds the device tree bindings for the Broadcom's BCM6345
->> memory-mapped GPIO controllers.
->>
->> The gpios will be supported by gpio-mmio code of the
->> GPIO generic library.
->>
->> Signed-off-by: Álvaro Fernández Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  v2: add improvements suggested by Jonas Gorski:
->>   - use native-endian instead of big-endian.
-> 
-> What is this? Does it come from some other existing binding?
-> I was feeling native endian is the default unless LE or BE is
-> explicitly specified...
-Not really, even if the kernel is configured as big endian, either native-endian or big-endian are needed.
-The default is little-endian if nothing else is specified:
-https://github.com/torvalds/linux/blob/master/drivers/of/base.c#L598
+I'm having difficulty coming up with an actual sequence that works. This 
+odd interaction between netif_stop_queue() and napi_disable() is giving 
+me inconsistent results.
 
-> 
->> +Required properties:
->> +       - compatible: should be "brcm,bcm6345-gpio"
->> +       - reg-names: must contain
->> +               "dat" - data register
->> +               "dirout" - direction (output) register
-> 
-> I don't like this and don't understand why you can't just cover
-> all GPIO registers with a single reg property.
-Because we want to add a simple gpio driver for these old SoCs with the newer ones having a different and more complex gpio/pinctrl driver.
+The hang occurs with this loop in napi_disable():
 
-> 
->> +       - reg: address + size pairs describing the GPIO register sets;
->> +               order must correspond with the order of entries in reg-names
->> +       - #gpio-cells: must be set to 2. The first cell is the pin number and
->> +                       the second cell is used to specify the gpio polarity:
->> +                       0 = active high
->> +                       1 = active low
->> +       - gpio-controller: Marks the device node as a gpio controller.
-> 
-> Reference the standard bindings in gpio.txt for cells and controller.
-Sure, I just copy & pasted this from the other gpio mmio driver:
-https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/gpio/wd%2Cmbl-gpio.txt#L17
+	while (test_and_set_bit(NAPI_STATE_SCHED, &n->state))
+		msleep(1);
 
-> 
->> +Optional properties:
->> +       - native-endian: use native endian memory.
-> 
-> That is weird. Explain why this is needed.
-(explained above)
+This loop never exits.  Can you give me a clue as to what could be the 
+reason?
 
-> 
->> +       - BCM6345:
->> +       gpio: gpio-controller@fffe0406 {
->> +               compatible = "brcm,bcm6345-gpio";
->> +               reg-names = "dirout", "dat";
->> +               reg = <0xfffe0406 2>, <0xfffe040a 2>;
-> 
-> Also I do not understand this at all. Why pick out two 16bit registers?
-> Surely the rest of the registers at 0xfffe0400 must be GPIO registers
-> as well? Are they not?
-This is the layout for BCM6345:
-https://gitlab.labs.nic.cz/turris/openwrt/blob/8bfda76892a39c033b5abf2c17035a444fffad08/target/linux/brcm63xx-2.6/files/include/asm-mips/mach-bcm963xx/6345_map_part.h#L141
-And this is the layout for BCM6338:
-https://gitlab.labs.nic.cz/turris/openwrt/blob/8bfda76892a39c033b5abf2c17035a444fffad08/target/linux/brcm63xx-2.6/files/include/asm-mips/mach-bcm963xx/6338_map_part.h#L202
+>> >Unfortunately, I cannot even do this:
+>> >
+>> >     netif_stop_queue(netdev);
+>> >     napi_disable(&adpt->rx_q.napi);
+>> >     netif_stop_queue(netdev);
+>> >     napi_disable(&adpt->rx_q.napi);
+>> >
+>> >Even though I've already called netif_stop_queue(), calling it again
+>> >causes the timeout/hang.
 
-> 
-> If they are, cover them all with a single reg property.
-> 
-> If they are not all GPIO registers, use MFD syscon for this and access
-> the constituent parts through that.
-I don't think that's the case since we're using a generic mmio binding.
+> Buf if this is really what you copy/pasted here, why do this twice anyway?
 
-> 
-> Yours,
-> Linus Walleij
-> 
+Sorry, what I meant was that I was hoping that *both* emac_change_mtu() 
+and emac_mac_down() could do
 
-Regards,
-Álvaro.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	netif_stop_queue(netdev);
+	napi_disable(&adpt->rx_q.napi);
+
+Which would have the effect of what I wrote above.
+
+-- 
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
