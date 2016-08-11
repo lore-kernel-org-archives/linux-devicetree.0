@@ -1,36 +1,39 @@
-From: Stewart Smith <stewart@linux.vnet.ibm.com>
-Subject: Re: [PATCH 1/4] dt-bindings: add doc for ibm,hotplug-aperture
-Date: Thu, 11 Aug 2016 14:39:23 +1000
-Message-ID: <874m6r2a2s.fsf@linux.vnet.ibm.com>
-References: <1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com> <1470680843-28702-2-git-send-email-arbab@linux.vnet.ibm.com> <92e34173-b2e2-bac0-3bbb-fc5407cbb8a5@gmail.com>
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: [RESEND PATCH 0/3] ARM: dts: Enable suspend configuration
+Date: Thu, 11 Aug 2016 10:57:47 +0530
+Message-ID: <1470893270-5042-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <92e34173-b2e2-bac0-3bbb-fc5407cbb8a5@gmail.com>
-Sender: owner-linux-mm@kvack.org
-To: Balbir Singh <bsingharora@gmail.com>, Reza Arbab <arbab@linux.vnet.ibm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Jonathan Corbet <corbet@lwn.net>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc: Alistair Popple <apopple@au1.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Balbir Singh <bsingharora@gmail.com> writes:
-> On 09/08/16 04:27, Reza Arbab wrote:
->> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
->> ---
->>  .../bindings/powerpc/opal/hotplug-aperture.txt     | 26 ++++++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>  create mode 100644
->> Documentation/devicetree/bindings/powerpc/opal/hotplug-aperture.txt
+Now that https://lkml.org/lkml/2016/8/10/243 series is in. 
+Here is the set of Device Tree patches which were dependent on
+the driver patches.
 
-Forgive me for being absent on the whole discussion here, but is this an
-OPAL specific binding? If so, shouldn't the docs also appear in the
-skiboot tree?
+These are boot tested on am437x-gp-evm.
+
+Keerthy (1):
+  ARM: dts: AM437X-GP-EVM: AM437X-SK-EVM: Make dcdc3 dcdc5 and dcdc6
+    enable during suspend
+
+Tero Kristo (2):
+  ARM: dts: am437x-gp-evm: disable DDR regulator in rtc-only/poweroff
+    mode
+  ARM: dts: am437x-sk-evm: disable DDR regulator in rtc-only/poweroff
+    mode
+
+ arch/arm/boot/dts/am437x-gp-evm.dts | 13 +++++++++++++
+ arch/arm/boot/dts/am437x-sk-evm.dts | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 43 insertions(+)
 
 -- 
-Stewart Smith
-OPAL Architect, IBM.
+1.9.1
 
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
