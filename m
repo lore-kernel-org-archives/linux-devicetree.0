@@ -1,56 +1,78 @@
-From: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH] ARM: dts: ls1021a: Add of_graph dt nodes to describe the panel
-Date: Thu, 11 Aug 2016 17:15:20 +0800
-Message-ID: <1470906920-2845-1-git-send-email-meng.yi@nxp.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 1/2] dt: bindings: Add vendor prefix for Espressif System
+Date: Thu, 11 Aug 2016 17:08:44 +0200
+Message-ID: <3516eadd-e987-1747-5813-de51b77fd73e@redhat.com>
+References: <1470596269-20572-1-git-send-email-hdegoede@redhat.com>
+ <20160810184845.GA17829@rob-hp-laptop>
+ <2b43330e-369d-7473-8b73-429f0f0b73ce@redhat.com>
+ <CAL_Jsq+uy-P54enk5Zho=nRab4PMEbqyBTEWiE0yhWWVoFTmwQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_Jsq+uy-P54enk5Zho=nRab4PMEbqyBTEWiE0yhWWVoFTmwQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-add of_graph dt nodes to describe the panel, and removed
-"fsl,panel" property
+Hi,
 
-Signed-off-by: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
----
- arch/arm/boot/dts/ls1021a-twr.dts | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+On 11-08-16 15:31, Rob Herring wrote:
+> On Thu, Aug 11, 2016 at 4:15 AM, Hans de Goede <hdegoede@redhat.com> wrote:
+>> Hi Rob,
+>>
+>>
+>> On 10-08-16 20:48, Rob Herring wrote:
+>>>
+>>> On Sun, Aug 07, 2016 at 08:57:48PM +0200, Hans de Goede wrote:
+>>>>
+>>>> Espressif is a manufacturer of various wifi and bt chips, add a vendor
+>>>> prefix for use with bindings for these chips.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>
+>>>
+>>> Acked-by: Rob Herring <robh@kernel.org>
+>>
+>>
+>> Thank you for all the reviews.
+>>
+>> What about: "[PATCH 2/2] dt: bindings: Add binding for ESP8089 wifi chips" ?
+>> there were some remarks, but I believe that those have been addressed
+>> (by answering the remarks, not with a new version), so a review of that
+>> one would be appreciated too.
+>
+> What about Arnd's comment "better use '-' instead of '_' for property names."
 
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-index 75ecaed..a8b148a 100644
---- a/arch/arm/boot/dts/ls1021a-twr.dts
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -108,12 +108,23 @@
- 
- 	panel: panel {
- 		compatible = "nec,nl4827hc19-05b";
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&dcu_out>;
-+			};
-+		};
- 	};
- };
- 
- &dcu {
--	fsl,panel = <&panel>;
- 	status = "okay";
-+
-+	port {
-+		dcu_out: endpoint {
-+			remote-endpoint = <&panel_in>;
-+		};
-+	};
- };
- 
- &dspi1 {
--- 
-2.1.0.27.g96db324
+Ah yes, I forgot about that comment. As explained in the commit msg
+I named the dt property to be the same as the keyword used in the
+ini-like config file android uses for this (the android driver loads a
+file with board specific esp8089 config like the crystal-type from
+/lib/firmware).
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And that file does use '_'. I want to keep the names the same as that
+seems the sensible thing to do, but if there is a great preference for
+'-' in dt I can do a v2 with that changed.
+
+>> Also who should merge this series, Ulf because it is mmc related,
+>> or the dt-maintainers since it contains only bindings patches ?
+>
+> I can take it.
+
+Great, thanks.
+
+Regards,
+
+Hans
