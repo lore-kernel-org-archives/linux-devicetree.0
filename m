@@ -1,7 +1,7 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v6 06/14] of_numa: Use of_get_next_parent to simplify code
-Date: Thu, 11 Aug 2016 17:33:40 +0800
-Message-ID: <1470908028-8596-7-git-send-email-thunder.leizhen@huawei.com>
+Subject: [PATCH v6 03/14] arm64/numa: add nid check for memory block
+Date: Thu, 11 Aug 2016 17:33:37 +0800
+Message-ID: <1470908028-8596-4-git-send-email-thunder.leizhen@huawei.com>
 References: <1470908028-8596-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,39 +12,28 @@ To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+Use the same tactic to cpu and numa-distance nodes.
 
-Use of_get_next_parent() instead of open-code.
-
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- drivers/of/of_numa.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/of/of_numa.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-index 8723f64..ed103e6 100644
+index 7b3fbdc..afaeb9c 100644
 --- a/drivers/of/of_numa.c
 +++ b/drivers/of/of_numa.c
-@@ -158,8 +158,6 @@ int of_node_to_nid(struct device_node *device)
- 	np = of_node_get(device);
+@@ -75,6 +75,11 @@ static int __init of_numa_parse_memory_nodes(void)
+ 			 */
+ 			continue;
 
- 	while (np) {
--		struct device_node *parent;
--
- 		r = of_property_read_u32(np, "numa-node-id", &nid);
- 		/*
- 		 * -EINVAL indicates the property was not found, and
-@@ -170,9 +168,7 @@ int of_node_to_nid(struct device_node *device)
- 		if (r != -EINVAL)
- 			break;
++		if (nid >= MAX_NUMNODES) {
++			pr_warn("NUMA: Node id %u exceeds maximum value\n", nid);
++			return -EINVAL;
++		}
++
+ 		for (i = 0; !r && !of_address_to_resource(np, i, &rsrc); i++)
+ 			r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
 
--		parent = of_get_parent(np);
--		of_node_put(np);
--		np = parent;
-+		np = of_get_next_parent(np);
- 	}
- 	if (np && r)
- 		pr_warn("NUMA: Invalid \"numa-node-id\" property in node %s\n",
 --
 2.5.0
