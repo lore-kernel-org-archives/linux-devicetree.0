@@ -1,39 +1,62 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
-Date: Thu, 11 Aug 2016 10:10:45 -0500
-Message-ID: <57AC9575.3040204@codeaurora.org>
-References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
- <9ebb6cb7-c793-cd76-5283-c9a659d0398f@gmx.de>
- <57AA2001.2010904@codeaurora.org>
- <214dcbb7-0c3b-1e00-3e50-db513d77b10b@gmail.com>
- <57AA7ED0.9000707@codeaurora.org>
- <85b76eca-5473-6724-0c9d-7b6fa7677f50@gmail.com>
- <57AB589D.3010509@codeaurora.org>
- <0da01875-b55a-c0fd-bd5f-05bb41fbd7fc@gmail.com>
- <57AC8A3D.3010208@codeaurora.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: Question about dma-ranges property for PCI host controllers
+Date: Thu, 11 Aug 2016 17:09:23 +0200
+Message-ID: <2867793.PfGZpZFyEJ@wuerfel>
+References: <HK2PR0601MB1393CA771AB65556D4E2F0B9F51E0@HK2PR0601MB1393.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <57AC8A3D.3010208@codeaurora.org>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <HK2PR0601MB1393CA771AB65556D4E2F0B9F51E0@HK2PR0601MB1393.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Timur Tabi wrote:
->
-> The hang occurs with this loop in napi_disable():
->
->      while (test_and_set_bit(NAPI_STATE_SCHED, &n->state))
->          msleep(1);
->
-> This loop never exits.  Can you give me a clue as to what could be the
-> reason?
+On Thursday, August 11, 2016 3:00:42 PM CEST Phil Edworthy wrote:
+> Hi,
+> 
+> A few PCI host controllers use the "dma-ranges" property to specify the
+> mapping from PCI bus addresses to physical addresses.
+> 
+> In the case of R-Car PCIe Host controllers, the intention was to set this
+> property as a 1 to 1 mapping for all DDR that could be addressed by the
+> device. However, there are some limitations for the R-Car controller which
+> meant that we could only map a subset of the DDR range - this limitation
+> has prompted us to work on enabling the IOMMU behind the PCI controller.
+> 
+> When there is an IOMMU behind the PCI controller, the "dma-ranges"
+> property specifies the mapping from PCI bus addresses to an IOVA address.
+> So should the property map all address space?
+> 
+> Note that this is not actually possible with the R-Car hardware, but I
+> found that the IOVA address space is outside of the DDR address space
+> that we were using so had change it.
 
-I figured it out.  I cannot call napi_disable() twice in a row.  It's 
-not smart enough to know that NAPI is already disabled.
+It's a bit tricky: the dma-ranges properties are walked recursively,
+and a PCI bus may be behind a few other bridges that each have a
+nontrivial mapping, and the IOMMU may not be on the address space that
+the PCI host sees.
 
--- 
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
-Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+In the past, we have said that the dma-ranges property should reflect
+the address space that is used when programming the bridge registers
+in the PCI host bridge itself.
+
+I think we have also made the assumption that a PCI host bridge
+with an IOMMU uses a flat 32-bit DMA address space that goes through
+the IOMMU (possibly a separate address space per PCI function,
+depending on the type of IOMMU).
+
+One corner case that doesn't really fit in that model is a PCI host
+bridge that requires the bridge register to be programmed in a special
+way for the IOMMU to work (e.g. away from the RAM to the address that
+is routed to the IOMMU).
+
+Another tricky case is a PCI host that uses the IOMMU only for 32-bit
+DMA masters but that does have a dma-ranges property that can be
+used for direct mapping of all RAM through a nonzero offset that
+gets set up according to dma-ranges.
+
+Can you be more specific which of those cases you actually have here?
+
+	Arnd
