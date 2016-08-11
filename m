@@ -1,70 +1,93 @@
-From: Balbir Singh <bsingharora@gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: add doc for ibm,hotplug-aperture
-Date: Thu, 11 Aug 2016 14:12:31 +1000
-Message-ID: <92e34173-b2e2-bac0-3bbb-fc5407cbb8a5@gmail.com>
-References: <1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1470680843-28702-2-git-send-email-arbab@linux.vnet.ibm.com>
+From: Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH RESEND v2 0/8] Cache-coherent DMA access using UIO
+Date: Wed, 10 Aug 2016 22:16:01 -0600
+Message-ID: <20160810221601.0005c017@t450s.home>
+References: <1470635557-13416-1-git-send-email-anup.patel@broadcom.com>
+	<1983237.mRdWv2BGBr@wuerfel>
+	<CAALAos9eT4N-RM6-gswKcSTJK7tirFeVAxrzGsNbYOyuL4M83Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <1470680843-28702-2-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: owner-linux-mm@kvack.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Jonathan Corbet <corbet@lwn.net>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc: Alistair Popple <apopple@au1.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAALAos9eT4N-RM6-gswKcSTJK7tirFeVAxrzGsNbYOyuL4M83Q@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Device Tree <devicetree@vger.kernel.org>, Scott Branden <sbranden@broadcom.com>, linux-doc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Ankit Jindal <thatsjindal@gmail.com>, Jan Viktorin <viktorin@rehivetech.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 11 Aug 2016 09:30:19 +0530
+Anup Patel <anup.patel@broadcom.com> wrote:
 
-
-On 09/08/16 04:27, Reza Arbab wrote:
-> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
-> ---
->  .../bindings/powerpc/opal/hotplug-aperture.txt     | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/powerpc/opal/hotplug-aperture.txt
+> Hi Arnd,
 > 
-> diff --git a/Documentation/devicetree/bindings/powerpc/opal/hotplug-aperture.txt b/Documentation/devicetree/bindings/powerpc/opal/hotplug-aperture.txt
-> new file mode 100644
-> index 0000000..b8dffaa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/powerpc/opal/hotplug-aperture.txt
-> @@ -0,0 +1,26 @@
-> +Designated hotplug memory
-> +-------------------------
-> +
-> +This binding describes a region of hotplug memory which is not present at boot,
-> +allowing its eventual NUMA associativity to be prespecified.
-> +
-> +Required properties:
-> +
-> +- compatible
-> +	"ibm,hotplug-aperture"
-> +
-> +- reg
-> +	base address and size of the region (standard definition)
-> +
-> +- ibm,associativity
-> +	NUMA associativity (standard definition)
-> +
-> +Example:
-> +
-> +A 2 GiB aperture at 0x100000000, to be part of nid 3 when hotplugged:
-> +
-> +	hotplug-memory@100000000 {
-> +		compatible = "ibm,hotplug-aperture";
-> +		reg = <0x0 0x100000000 0x0 0x80000000>;
-> +		ibm,associativity = <0x4 0x0 0x0 0x0 0x3>;
-> +	};
+> On Wed, Aug 10, 2016 at 9:25 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Monday, August 8, 2016 11:22:29 AM CEST Anup Patel wrote:  
+> >> The goal of this patchset is to improve UIO framework and UIO dmem
+> >> driver to allow cache-coherent DMA accesses from user-space.
+> >>
+> >> This patchset is based on two previous patchsets:
+> >> 1) [PATCH v5 0/6] UIO driver for APM X-Gene QMTM
+> >> (Refer, http://www.spinics.net/lists/devicetree/msg58244.html)
+> >> 2) [PATCH 0/4] Fix and extend uio_dmem_genirq
+> >> (Refer, https://lkml.org/lkml/2016/5/17/141)
+> >>
+> >> We have adopted only patch0-3 of patchset1 which was abandoned
+> >> long time back. We have taken care of last few unaddressed comments
+> >> on these patches.
+> >>
+> >> The patchset2 is quite recent has been adopted entirely. We have
+> >> taken care review comments on these patches too.
+> >>
+> >> This patchset is based on v4.7-rc7 tag and it is available in uio-v2
+> >> branch of https://github.com/Broadcom/arm64-linux.git  
+> >
+> >
+> > UIO devices are generally meant to be things that do not
+> > perform DMA and that don't screw up the rest of the system
+> > when misused. A device that is able to access any physical
+> > memory doesn't belong into this category. The way that
+> > uio_dmem_genirq.c gets around this is by requiring the device
+> > to be created by some code that sets up a separate IOMMU
+> > domain first, but the DT probing here doesn't do that.
+> > Note that IOMMU domains typically use 32-bit addressing,
+> > so the entire "dma_mask from property" dance isn't even
+> > required.  
 > 
+> IMHO, UIO devices are meant for things that are not behind
+> any IOMMU hardware.
+> 
+> Yes, any mis-programming in user space using UIO can
+> potentially screw-up the rest of the system but this is
+> generally a known/assumed fact for people who are using UIO.
+> 
+> >
+> > Also, this seems to duplicate a lot of the work that
+> > went into "vfio". Can you explain why we need another way
+> > of doing the same thing here?  
+> 
+> We can only use "vfio" for devices that are behind some
+> kind of IOMMU (Right??). For devices not having IOMMU
+> support will have to use UIO for user space access.
+> 
+> Particularly, there are lot of FPGA-based solutions and legacy
+> hardware which do not have IOMMU support (devices on
+> FPGA or specific devices).
+> 
+> In our use case, we have some FPGA-based device which
+> does not have IOMMU support and we are accessing this
+> FPGA-based device from user-space.
+> 
+> This patchset only tries to extend "uio" and "uio_dmem_genirq".
+> There is no intention of duplicating what has been already
+> done for "vfio".
+> 
+> I do agree that "vfio" should eventually become defacto method
+> of accessing devices in user space but that requires devices to
+> always have IOMMU support.
 
-+Stewart and Alistair
+A vfio no-iommu mode exists since v4.5:
 
-Looks good to me!
+http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=03a76b60f8ba27974e2d252bc555d2c103420e15
 
-Acked-by: Balbir Singh <bsingharora@gmail.com>
-
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+Thanks,
+Alex
