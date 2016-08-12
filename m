@@ -1,42 +1,55 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [Patch v4 9/9] arm64: Update device tree for Layerscape SoCs
-Date: Fri, 12 Aug 2016 11:13:54 +0200
-Message-ID: <20160812091354.GB333@nazgul.tnic>
-References: <1470780000-16750-1-git-send-email-york.sun@nxp.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v5 0/2] mmc: dw_mmc: host controller reset support
+Date: Fri, 12 Aug 2016 18:19:39 +0900
+Message-ID: <724bc267-1f6b-0211-4645-10cc49eedd48@samsung.com>
+References: <CGME20160812085218epcas1p34d84a42a931dcc09fe7a77be59065499@epcas1p3.samsung.com>
+ <1470991886-22412-1-git-send-email-guodong.xu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470780000-16750-1-git-send-email-york.sun-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: York Sun <york.sun-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, morbidrsa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Liu Gang <Gang.Liu-3arQi8VN3Tc@public.gmane.org>, Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rajesh Bhagat <rajesh.bhagat-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, yangbo lu <yangbo.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1470991886-22412-1-git-send-email-guodong.xu@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guodong Xu <guodong.xu@linaro.org>, heiko@sntech.de, shawn.lin@rock-chips.com, robh+dt@kernel.org, mark.rutland@arm.com, ulf.hansson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 09, 2016 at 02:59:39PM -0700, York Sun wrote:
-> Add DDR memory controller nodes to enable EDAC driver.
-> 
-> Signed-off-by: York Sun <york.sun-3arQi8VN3Tc@public.gmane.org>
-> 
-> ---
-> Change log
->   v4: no change
->   v3: no change
->   v2: no change
-> 
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |  7 +++++++
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 14 ++++++++++++++
->  2 files changed, 21 insertions(+)
+Hi Guodong,
 
-This needs an ACK from DT people.
+On 08/12/2016 05:51 PM, Guodong Xu wrote:
+> mmc host controller registers may in abnormal state if mmc is used in
+> bootloader, eg. to load kernel from eMMC. Some controllers cann't
+> clear their registers when clk is set. They use dedicated reset
+> logics to do this.
+> 
+> In this patch, a 'resets' property is added into dw_mmc dts
+> node. When driver does parse_dt and probe, it calls reset API to
+> triiger 'reset' of dwmmc host controller. When probe error or
+> remove, it calls reset API to assert it.
+> 
+> Chip vendor's actual reset logics is implemented in reset driver, not
+> in dw_mmc code.
+> 
+> Please also refer to Documentation/devicetree/bindings/reset/reset.txt
+> 
+> Changelog:
+> v5:
+>  * rebase onto https://github.com/jh80chung/dw-mmc
+> v4:
+>  * add reset_control_assert() and usleep() before calling _deassert().
+> 
+> Guodong Xu (2):
+>   Documentation: synopsys-dw-mshc: add binding for resets
+>   mmc: dw_mmc: add reset support to dwmmc host controller
 
--- 
-Regards/Gruss,
-    Boris.
+Applied on my dw-mmc tree. Thanks!
 
-ECO tip #101: Trim your mails when you reply.
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Jaehoon Chung
+
+> 
+>  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |  4 ++++
+>  drivers/mmc/host/dw_mmc.c                          | 23 +++++++++++++++++++++-
+>  include/linux/mmc/dw_mmc.h                         |  2 ++
+>  3 files changed, 28 insertions(+), 1 deletion(-)
+> 
