@@ -1,68 +1,55 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [Patch v4 6/9] driver/edac/fsl_ddr: Add support of little endian
-Date: Fri, 12 Aug 2016 09:41:58 +0200
-Message-ID: <20160812074158.GD12013@nazgul.tnic>
-References: <1470779760-16483-1-git-send-email-york.sun@nxp.com>
- <1470779760-16483-7-git-send-email-york.sun@nxp.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH RESEND v2 1/3] dt: bindings: add bindings for Allwinner
+ A64 usb phy
+Date: Fri, 12 Aug 2016 10:15:27 +0200
+Message-ID: <03c1154e-5d40-f0d9-0990-8b3aa8f47ba0@redhat.com>
+References: <20160812030622.4492-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470779760-16483-7-git-send-email-york.sun-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: York Sun <york.sun-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, morbidrsa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160812030622.4492-1-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Alan Stern <stern@rowland.harvard.edu>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Reinder de Haan <patchesrdh@mveas.com>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Tony Prisk <linux@prisktech.co.nz>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 09, 2016 at 02:55:43PM -0700, York Sun wrote:
-> Get endianness from device tree. Both big endian and little endian
-> are supported. Default to big endian for backward compatibility to
-> MPC85xx.
-> 
-> Signed-off-by: York Sun <york.sun-3arQi8VN3Tc@public.gmane.org>
-> 
+Hi,
+
+On 12-08-16 05:06, Icenowy Zheng wrote:
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+
+Series is still:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
 > ---
-> Change log
->   v4: Absorb name changes by "Rename macros and names"
->       Drop testing for big-endian as suggested
->       Use of_property_read_bool() as suggested
->   v3: no change
->   v2: Separated from "Add support for ARM-based SoCs" patch
-> 
->  .../fsl/ddr.txt}                                   |  2 +
->  drivers/edac/fsl_ddr_edac.c                        | 96 +++++++++++++---------
->  2 files changed, 58 insertions(+), 40 deletions(-)
->  rename Documentation/devicetree/bindings/{powerpc/fsl/mem-ctrlr.txt => memory-controllers/fsl/ddr.txt} (86%)
-
-...
-
-> @@ -95,8 +106,8 @@ static ssize_t fsl_mc_inject_data_lo_store(struct device *dev,
->  	struct mem_ctl_info *mci = to_mci(dev);
->  	struct fsl_mc_pdata *pdata = mci->pvt_info;
->  	if (isdigit(*data)) {
-> -		out_be32(pdata->mc_vbase + FSL_MC_DATA_ERR_INJECT_LO,
-> -			 simple_strtoul(data, NULL, 0));
-> +		ddr_out32(pdata->mc_vbase + FSL_MC_DATA_ERR_INJECT_LO,
-> +			  simple_strtoul(data, NULL, 0));
->  		return count;
->  	}
->  	return 0;
-
-WARNING: simple_strtoul is obsolete, use kstrtoul instead
-#122: FILE: drivers/edac/fsl_ddr_edac.c:96:
-+                         simple_strtoul(data, NULL, 0));
-
-Please send a fix ontop.
-
-Thanks.
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> index 95736d7..287150d 100644
+> --- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> @@ -10,6 +10,7 @@ Required properties:
+>    * allwinner,sun8i-a23-usb-phy
+>    * allwinner,sun8i-a33-usb-phy
+>    * allwinner,sun8i-h3-usb-phy
+> +  * allwinner,sun50i-a64-usb-phy
+>  - reg : a list of offset + length pairs
+>  - reg-names :
+>    * "phy_ctrl"
+>
