@@ -1,55 +1,102 @@
-From: "Sricharan" <sricharan@codeaurora.org>
-Subject: RE: [PATCH V6 0/6] iommu/msm: Add DT adaptation and generic bindings support
-Date: Fri, 12 Aug 2016 12:30:03 +0530
-Message-ID: <003a01d1f467$2b180ba0$814822e0$@codeaurora.org>
-References: <1465817767-9856-1-git-send-email-sricharan@codeaurora.org> <CAF6AEGsF5M1sfwaXKW0x=Mu=nQJR-9+xqrtXd=7Vz_+6G_u25A@mail.gmail.com> <CAF6AEGsLGDqRuB97+qN1g7X60A49Wv1HGbAiaeZoxogMmHY9HA@mail.gmail.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v9 0/2] [media] atmel-isc: add driver for Atmel ISC
+Date: Fri, 12 Aug 2016 09:32:42 +0200
+Message-ID: <c6593866-db70-b2a6-ee5a-32b6fecc3775@xs4all.nl>
+References: <1470899202-13933-1-git-send-email-songjun.wu@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAF6AEGsLGDqRuB97+qN1g7X60A49Wv1HGbAiaeZoxogMmHY9HA@mail.gmail.com>
-Content-Language: en-us
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: 'Rob Clark' <robdclark@gmail.com>
-Cc: devicetree@vger.kernel.org, 'linux-arm-msm' <linux-arm-msm@vger.kernel.org>, 'Joerg Roedel' <joro@8bytes.org>, iommu@lists.linux-foundation.org, 'Srinivas Kandagatla' <srinivas.kandagatla@linaro.org>, 'Laurent Pinchart' <laurent.pinchart@ideasonboard.com>, 'Thierry Reding' <treding@nvidia.com>, 'Robin Murphy' <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, stepanm@codeaurora.org, 'Archit Taneja' <architt@codeaurora.org>, 'Arnd Bergmann' <arnd@arndb.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470899202-13933-1-git-send-email-songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, =?UTF-8?Q?Niklas_S=c3=83=c2=b6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kamil Debski <kamil-MZ2JYD8fkKLYtjvyW6yDsg@public.gmane.org>, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mikhail Ulyanov <mikhail.ulyanov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?Richard_R=c3=b6jfors?= <richard-hy+oXTTr619xRVliYXHCzg@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpECS10DBIrLA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+One quick question:
 
->> btw, the current state, at least on linaro integration branch, fault
->> handling doesn't work so well (ie. device never gets resumed).. which
->> is a bit unfortunate for a gpu (and results in a *lot* of rebooting on
->> my part when debugging userspace).  I haven't had time yet to compare
->> to the ancient downstream driver, but not sure if you have any ideas?
->>
->> I guess probably disabling stall on fault would help.  But I'm not
->> even getting the "Fault occurred in context.." prints.  Seeing the
->> fault iova is pretty useful since that plus gpu cmdstream trace helps
->> me figure out which texture/etc is being accessed out of bounds.
->
->fyi, it looks like it is not getting any fault irq..  it's *possible*
->that I screwed up the irq #'s when translating from downstream, so you
->might want to double check that.  I thought I had it right, I assume I
->would have noticed during piglit runs if fault recovery wasn't working
->(since the result is that *everything* after the faulting test would
->have failed since gpu is wedged with no access to memory), but it was
->long enough ago that I can't claim that definitively.
->
->If you need an easy way to trigger a gpu fault, msmtest is a good way,
->change this line:
->
->  https://github.com/freedreno/msmtest/blob/master/msmtest.c#L247
->
->from OUT_RELOC() to OUT_RING(ring, 0x00000000) will trigger a fault.
->
-   So for the irq to be triggered, 'non-secure' irq line has to be
-  populated in DT. There is a 'secure'and 'non-secure' irq lines for these iommus
-  and  non-secure irq number is secure + 1. I tested this by having a 'return 0'
- from the msm_iommu_map (no mapping), and the faults were getting triggered.
+On 08/11/2016 09:06 AM, Songjun Wu wrote:
+> The Image Sensor Controller driver includes two parts.
+> 1) Driver code to implement the ISC function.
+> 2) Device tree binding documentation, it describes how
+>    to add the ISC in device tree.
+> 
+> Test result with v4l-utils.
+> # v4l2-compliance -f
+> v4l2-compliance SHA   : not available
+> 
+> Driver Info:
+>         Driver name   : atmel_isc
+>         Card type     : Atmel Image Sensor Controller
+>         Bus info      : platform:atmel_isc f0008000.isc
+>         Driver version: 4.7.0
+>         Capabilities  : 0x84200001
+>                 Video Capture
+>                 Streaming
+>                 Extended Pix Format
+>                 Device Capabilities
+>         Device Caps   : 0x04200001
+>                 Video Capture
+>                 Streaming
+>                 Extended Pix Format
+> 
+> Compliance test for device /dev/video0 (not using libv4l2):
+> 
+> Required ioctls:
+>         test VIDIOC_QUERYCAP: OK
+> 
+> Allow for multiple opens:
+>         test second video open: OK
+>         test VIDIOC_QUERYCAP: OK
+>         test VIDIOC_G/S_PRIORITY: OK
+>         test for unlimited opens: OK
+> 
+> Debug ioctls:
+>         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+>         test VIDIOC_LOG_STATUS: OK (Not Supported)
+> 
+> Input ioctls:
+>         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+>         test VIDIOC_ENUMAUDIO: OK (Not Supported)
+>         test VIDIOC_G/S/ENUMINPUT: OK
+>         test VIDIOC_G/S_AUDIO: OK (Not Supported)
+>         Inputs: 1 Audio Inputs: 0 Tuners: 0
+> 
+> Output ioctls:
+>         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+>         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+>         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+>         Outputs: 0 Audio Outputs: 0 Modulators: 0
+> 
+> Input/Output configuration ioctls:
+>         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+>         test VIDIOC_G/S_EDID: OK (Not Supported)
+> 
+> Test input 0:
+> 
+>         Control ioctls:
+>                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+>                 test VIDIOC_QUERYCTRL: OK (Not Supported)
+>                 test VIDIOC_G/S_CTRL: OK (Not Supported)
+>                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+>                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+>                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+>                 Standard Controls: 0 Private Controls: 0
 
-  Can you share me your dts data ?
-
+Can you confirm that the sensor subdevice you are using does not have any controls?
+I ask since that is fairly unusual, so I want to make sure that controls are really
+not supported in this setup.
 
 Regards,
- Sricharan
+
+	Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
