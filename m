@@ -1,43 +1,137 @@
-From: Balbir Singh <bsingharora@gmail.com>
-Subject: Re: [PATCH 3/4] powerpc/mm: allow memory hotplug into a memoryless
- node
-Date: Fri, 12 Aug 2016 11:50:43 +1000
-Message-ID: <7d943111-d243-ffb3-ff5f-6d712c268e67@gmail.com>
-References: <1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1470680843-28702-4-git-send-email-arbab@linux.vnet.ibm.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v2 0/6] Add support of inverting power control and some
+ minor cleanup
+Date: Fri, 12 Aug 2016 10:57:58 +0800
+Message-ID: <8f20c3d2-2c73-18f2-0104-f7bc715c7b15@rock-chips.com>
+References: <CGME20160807013720epcas1p235628058a90efa6f0062b03a4b2e4284@epcas1p2.samsung.com>
+ <1470533618-16312-1-git-send-email-shawn.lin@rock-chips.com>
+ <ee997311-3964-8623-a431-c9a5add7f991@samsung.com>
+ <cc785e09-6b33-d451-3d11-728bee3668a5@rock-chips.com>
+ <9227304b-4d2e-66e1-743a-8d06f2a10ce1@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1470680843-28702-4-git-send-email-arbab@linux.vnet.ibm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Reza Arbab <arbab@linux.vnet.ibm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Jonathan Corbet <corbet@lwn.net>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9227304b-4d2e-66e1-743a-8d06f2a10ce1@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: shawn.lin@rock-chips.com, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2016/8/11 18:08, Jaehoon Chung wrote:
+> Hi Shawn,
+>
+> On 08/09/2016 10:49 AM, Shawn Lin wrote:
+>> Hi,
+>>
+>> On 2016/8/8 18:24, Jaehoon Chung wrote:
+>>> Hi Shawn,
+>>>
+>>> On 08/07/2016 10:33 AM, Shawn Lin wrote:
+>>>> By default, dw_mmc outputs high level voltage to indicate powering
+>>>> up the card and outputs low level vcltage to indicate powering
+>>>> off the card. But that is not always correct. The power io should
+>>>> be able to control different kind of hw components to supply or
+>>>> cutoff power to the card. We have boards that need this patchset
+>>>> to make the power control correct. Meanwhile let's expose it to
+>>>> DT for board-specific usage.
+>>>
+>>> I have a question for this patch-set. Does DWMMC IP support to invert ON/OFF at Power Enable register?
+>>
+>> No.
+>>
+>>> Hmm..Well, if use the DW_MMC_CARD_PWR_INVERT, it should also be the similar behavior with Quirks.
+>>
+>> yup, it makes the power control more complicated than before. :(
+>>
+>>>
+>>> Other flags are related with dwmmc IP. But this flag (DW_MMC_CARD_PWR_INVERT) is not related with IP side.
+>>> I understood why you needs to add this flag..Is rockchip designed to invert the power controlling?
+>>
+>> We don't invert the power controlling but our customers do.
+>> The HW componet looks like some discrete LDOs which enable the related
+>> power supply when outputing low voltage from pwren..
+>
+> Is it related with PWREN register?
+> I'm checking the TRM for PWREN register..
+>
+> "Optional feature; ports can be used as general-purpose outputs."
+>
+> Does it use the ports as GPIO?
+>
+>>
+>>>
+>>> But it's not general case. We can discuss about this.
+>>
+>> I have a solution which is to add gpio power control for slot-gpio of
+>> mmc core. once finished, we could add pwr_cap_invert just like what we
+>> did for cd/wp invert control..
+>
+> I'm not sure that it's right that add the gpio power control into mmc core.
+> slot-gpio? i think it can use the regulator framework with gpio.
+
+yup, I'm looking this and seems it's fine to register a regulator-gpio
+and stuff it for vmmc-supply of sdmmc. I will test it, really helpful.
+
+thanks!
+
+> I don't have a lot knowledge of power, but it might be controlled whether active is low or high.
+> So i think it doesn't need to add for entire mmc controller.
+>
+> Best Regards,
+> Jaehoon Chung
+>
+>>
+>> Then we could remove PWREN from the default state of
+>> pinctrl inside the sdmmc dt node, and let dwmmc request gpio power
+>> control stuff after paring the property for pwr_cap_invert..
+>>
+>> More over, it well fit for all mmc host's requirement of gpio
+>> power control and inverted control if they want it. :)
+>>
+>>
+>> That should be legit for us?
+>> If it sounds ok to you and Ulf, I will come up with a RFC one for
+>> community to comment it.:)
+>>
+>>>
+>>> Best Regards,
+>>> Jaehoon Chung
+>>>
+>>>>
+>>>>
+>>>> Changes in v2:
+>>>> - fix copy-paste err and typo
+>>>>
+>>>> Shawn Lin (6):
+>>>>   dt-bindings: rockchip-dw-mshc: add description of
+>>>>     rockchip,power-invert
+>>>>   mmc: dw_mmc: cleanup power setting of set_ios callback
+>>>>   mmc: dw_mmc: split out dw_mci_set_power
+>>>>   mmc: dw_mmc: split out dw_mci_set_power_reg
+>>>>   mmc: dw_mmc: support inverted power control
+>>>>   mmc: dw_mmc-rockchip: add parsing of power control from DT
+>>>>
+>>>>  .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |   6 +
+>>>>  drivers/mmc/host/dw_mmc-rockchip.c                 |   8 ++
+>>>>  drivers/mmc/host/dw_mmc.c                          | 134 ++++++++++++---------
+>>>>  drivers/mmc/host/dw_mmc.h                          |   1 +
+>>>>  4 files changed, 90 insertions(+), 59 deletions(-)
+>>>>
+>>>
+>>>
+>>>
+>>>
+>>
+>>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
 
 
-On 09/08/16 04:27, Reza Arbab wrote:
-> Remove the check which prevents us from hotplugging into an empty node.
-> 
-> Signed-off-by: Reza Arbab <arbab@linux.vnet.ibm.com>
-> ---
->  arch/powerpc/mm/numa.c | 13 +------------
->  1 file changed, 1 insertion(+), 12 deletions(-)
-> 
-> diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-> index 80d067d..bc70c4f 100644
-> --- a/arch/powerpc/mm/numa.c
-> +++ b/arch/powerpc/mm/numa.c
-> @@ -1127,7 +1127,7 @@ static int hot_add_node_scn_to_nid(unsigned long scn_addr)
->  int hot_add_scn_to_nid(unsigned long scn_addr)
->  {
->  	struct device_node *memory = NULL;
-> -	int nid, found = 0;
-> +	int nid;
->  
-
-Do we want to do this only for ibm,hotplug-aperture compatible ranges?
-
-I'm OK either ways
-
-Acked-by: Balbir Singh <bsingharora@gmail.com>
+-- 
+Best Regards
+Shawn Lin
