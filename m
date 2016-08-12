@@ -1,54 +1,97 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 2/2] ARM: dts: imx7d: add clock-frequency to CPU nodes
-Date: Thu, 11 Aug 2016 17:11:07 -0700
-Message-ID: <20160812001107.17016-2-stefan@agner.ch>
-References: <20160812001107.17016-1-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160812001107.17016-1-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] of: Export of_{add/remove/update}_property() API
+Date: Thu, 11 Aug 2016 19:18:08 -0500
+Message-ID: <20160812001808.65199-1-s-anna@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add clock-frequency property to CPU nodes. Avoids warnings like
-"/cpus/cpu@0 missing clock-frequency property".
+The of_add_property(), of_remove_property() and of_update_property()
+API are not exported and are limited to only built-in modules at the
+moment. Export these so they can be used within modules. Also added
+the stubs for the !CONFIG_OF case for these functions.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/imx7d.dtsi | 2 ++
- arch/arm/boot/dts/imx7s.dtsi | 1 +
- 2 files changed, 3 insertions(+)
+Hi Rob,
 
-diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
-index d0b199c..f6dee41 100644
---- a/arch/arm/boot/dts/imx7d.dtsi
-+++ b/arch/arm/boot/dts/imx7d.dtsi
-@@ -51,12 +51,14 @@
- 				996000	1075000
- 				792000	975000
- 			>;
-+			clock-frequency = <996000000>;
- 		};
+We came across a need for this during some remoteproc enhancements
+for providing a standard OF API. Please see the discussion in [1].
+
+I am not sure which EXPORT_SYMBOL variant (_GPL or plain) to use as
+I see some mixed usage in this base, I have followed the convention
+used on of_find_property.
+
+[1] https://patchwork.kernel.org/patch/9237767/
+
+ drivers/of/base.c  |  3 +++
+ include/linux/of.h | 17 +++++++++++++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 7792266db259..e6baf940db1b 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1826,6 +1826,7 @@ int of_add_property(struct device_node *np, struct property *prop)
  
- 		cpu1: cpu@1 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <1>;
-+			clock-frequency = <996000000>;
- 		};
- 	};
+ 	return rc;
+ }
++EXPORT_SYMBOL(of_add_property);
  
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 5132e2f..81da211 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -85,6 +85,7 @@
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
- 			reg = <0>;
-+			clock-frequency = <792000000>;
- 			clock-latency = <61036>; /* two CLK32 periods */
- 			clocks = <&clks IMX7D_CLK_ARM>;
- 		};
+ int __of_remove_property(struct device_node *np, struct property *prop)
+ {
+@@ -1894,6 +1895,7 @@ int of_remove_property(struct device_node *np, struct property *prop)
+ 
+ 	return rc;
+ }
++EXPORT_SYMBOL(of_remove_property);
+ 
+ int __of_update_property(struct device_node *np, struct property *newprop,
+ 		struct property **oldpropp)
+@@ -1970,6 +1972,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
+ 
+ 	return rc;
+ }
++EXPORT_SYMBOL(of_update_property);
+ 
+ static void of_alias_add(struct alias_prop *ap, struct device_node *np,
+ 			 int id, const char *stem, int stem_len)
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 3d9ff8e9d803..b6f17d8f4b13 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -668,6 +668,23 @@ static inline int of_machine_is_compatible(const char *compat)
+ 	return 0;
+ }
+ 
++static inline int of_add_property(struct device_node *np, struct property *prop)
++{
++	return -ENOTSUPP;
++}
++
++static inline int of_remove_property(struct device_node *np,
++				     struct property *prop)
++{
++	return -ENOTSUPP;
++}
++
++static inline int of_update_property(struct device_node *np,
++				     struct property *newprop)
++{
++	return -ENOTSUPP;
++}
++
+ static inline bool of_console_check(const struct device_node *dn, const char *name, int index)
+ {
+ 	return false;
 -- 
 2.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
