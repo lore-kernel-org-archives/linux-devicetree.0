@@ -1,54 +1,49 @@
-From: "Shougang Group Co. Ltd" <jmm-BFOZC58soLkGXtTpemXPTA@public.gmane.org>
-Subject: Company Payment Agent Needed
-Date: Thu, 11 Aug 2016 02:16:24 -0500
-Message-ID: <20160811071611.M63881@xanum.uam.mx>
-Reply-To: zhujimin20-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 2/2] ARM: dts: am335x-icev2: Add nodes for gpio-decoder
+Date: Fri, 12 Aug 2016 10:22:29 +0530
+Message-ID: <20160812045229.29241-3-vigneshr@ti.com>
+References: <20160812045229.29241-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset=iso-8859-1
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160812045229.29241-1-vigneshr-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Daniel Hung-yu Wu <hywu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Shougang Group
-45 Huagong Road Xinji City,
-Hebei Province China.
-webpage: www.shougang.com.cn
+AM335x ICE board has a rotary-switch connected to PCA9536 I2C GPIO
+expander. The position of the rotary-switch is reflected by status of
+GPIO lines. Add gpio-decoder node to read these GPIO line status via
+gpio-decoder driver and report it as an input event to the system.
 
+Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/am335x-icev2.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-This is an official request for Professional/consultants who will stand as
-our regional representative to run logistics on behalf of Shougang Group.
-We are only looking for individual or company from USA and Canada. You
-will be entitle to ten percent (10%) of every payment you receive from our
-customers in your region on behalf of the company.
-
-NOTE: You are not require to travel, all communications with our customers
-will be through email or phone. All fees, including taxes will be handled
-by us.
-
-You can apply for this position by filling the information below and send
-back to us;
-
-Full Name:
-Residencial or office address:
-Town:
-State:
-Zipcode:
-Country:
-Current Job:
-If you own a company, please state the company name:
-Prefered Email:
-Gender:
-Age:
-Telephone:
-
-If you have a current job, you can still be part of our business, as
-services for us will not bother with your hours of work.
-
-Respectfully,
-Mr. Zhu Jimin (Chief Executive Officer)
-Shougang Group
-
+diff --git a/arch/arm/boot/dts/am335x-icev2.dts b/arch/arm/boot/dts/am335x-icev2.dts
+index 7d8b8fefdf08..f2de594343f2 100644
+--- a/arch/arm/boot/dts/am335x-icev2.dts
++++ b/arch/arm/boot/dts/am335x-icev2.dts
+@@ -139,6 +139,15 @@
+ 			default-state = "off";
+ 		};
+ 	};
++	gpio-decoder0 {
++		compatible = "gpio-decoder";
++		gpios = <&pca9536 3 GPIO_ACTIVE_HIGH>,
++			<&pca9536 2 GPIO_ACTIVE_HIGH>,
++			<&pca9536 1 GPIO_ACTIVE_HIGH>,
++			<&pca9536 0 GPIO_ACTIVE_HIGH>;
++		linux,axis = <0>; /* ABS_X */
++		gpio-decoder,max-value = <9>;
++	};
+ };
+ 
+ &am33xx_pinmux {
+-- 
+2.9.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
