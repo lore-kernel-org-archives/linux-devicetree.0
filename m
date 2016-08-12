@@ -1,57 +1,43 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: am335x-icev2: Add nodes for gpio-decoder
-Date: Fri, 12 Aug 2016 14:00:31 -0500
-Message-ID: <20160812190031.GA16954@rob-hp-laptop>
-References: <20160812045229.29241-1-vigneshr@ti.com>
- <20160812045229.29241-3-vigneshr@ti.com>
+Subject: Re: [PATCHv5] watchdog: xilinx: Add clock support
+Date: Fri, 12 Aug 2016 14:01:23 -0500
+Message-ID: <20160812190123.GB16954@rob-hp-laptop>
+References: <1470984421-3494-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160812045229.29241-3-vigneshr-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Daniel Hung-yu Wu <hywu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1470984421-3494-1-git-send-email-shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 12, 2016 at 10:22:29AM +0530, Vignesh R wrote:
-> AM335x ICE board has a rotary-switch connected to PCA9536 I2C GPIO
-> expander. The position of the rotary-switch is reflected by status of
-> GPIO lines. Add gpio-decoder node to read these GPIO line status via
-> gpio-decoder driver and report it as an input event to the system.
+On Fri, Aug 12, 2016 at 12:17:01PM +0530, Shubhrajyoti Datta wrote:
+> Add support for the clock. Currently we enable
+> at probe and relinquish at remove.
 > 
-> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> Acked-by: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
->  arch/arm/boot/dts/am335x-icev2.dts | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> v2:
+> fix spaces and error path.
+> v3
+> do not fail existing dts
+> v4:
+> fix the error prints as the clock is optional
+> v5:
+> remove some more prints
 > 
-> diff --git a/arch/arm/boot/dts/am335x-icev2.dts b/arch/arm/boot/dts/am335x-icev2.dts
-> index 7d8b8fefdf08..f2de594343f2 100644
-> --- a/arch/arm/boot/dts/am335x-icev2.dts
-> +++ b/arch/arm/boot/dts/am335x-icev2.dts
-> @@ -139,6 +139,15 @@
->  			default-state = "off";
->  		};
->  	};
-> +	gpio-decoder0 {
+>  .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  3 +++
 
-Drop the 0 here.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> +		compatible = "gpio-decoder";
-> +		gpios = <&pca9536 3 GPIO_ACTIVE_HIGH>,
-> +			<&pca9536 2 GPIO_ACTIVE_HIGH>,
-> +			<&pca9536 1 GPIO_ACTIVE_HIGH>,
-> +			<&pca9536 0 GPIO_ACTIVE_HIGH>;
-> +		linux,axis = <0>; /* ABS_X */
-> +		gpio-decoder,max-value = <9>;
-> +	};
->  };
->  
->  &am33xx_pinmux {
-> -- 
-> 2.9.2
-> 
+>  drivers/watchdog/of_xilinx_wdt.c                   | 25 ++++++++++++++++++++--
+>  2 files changed, 26 insertions(+), 2 deletions(-)
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
