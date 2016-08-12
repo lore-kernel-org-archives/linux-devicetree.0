@@ -1,154 +1,143 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH V3] clk: bcm: Add driver for Northstar ILP clock
-Date: Fri, 12 Aug 2016 08:26:40 +0200
-Message-ID: <CACna6ry31F1htnr84=_18GG9fpN-3LTog3Do+L=RELmoounwKQ@mail.gmail.com>
-References: <1470830763-29189-1-git-send-email-zajec5@gmail.com>
- <CAC3K-4pvDjziC08fzRjHoi9Tb=smnmNMzfxgG60hqAy1yC13gA@mail.gmail.com>
- <CACna6rw8X_25m2s8in-OEL-Ve4-_K9b7fGSBsv6ccS9sOLa0oA@mail.gmail.com>
- <442a71de-7153-2204-2c05-cae6373fdd23@broadcom.com> <CAC3K-4pWS2SgdzHxJ6rcMmbYHYNwoCx9th0cp+wWeW=CQc+ySA@mail.gmail.com>
- <CACna6rz7ZxCyfg69093wjo1z-Q3UA9HQjx2QCiE=PFDBR5n3OQ@mail.gmail.com> <CAC3K-4poMM=w-aFris55YK1OpMPF7zBrAkbUQO4+ubTgiWbSVQ@mail.gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCHv4] watchdog: xilinx: Add clock support
+Date: Thu, 11 Aug 2016 23:34:32 -0700
+Message-ID: <1a86f6d6-fc92-81ec-eb07-669c2bda8b38@roeck-us.net>
+References: <1470982664-13228-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAC3K-4poMM=w-aFris55YK1OpMPF7zBrAkbUQO4+ubTgiWbSVQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Mason <jon.mason@broadcom.com>
-Cc: Ray Jui <ray.jui@broadcom.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470982664-13228-1-git-send-email-shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11 August 2016 at 16:25, Jon Mason <jon.mason@broadcom.com> wrote:
-> On Thu, Aug 11, 2016 at 4:49 AM, Rafał Miłecki <zajec5@gmail.com> wrote:
->> On 10 August 2016 at 20:21, Jon Mason <jon.mason@broadcom.com> wrote:
->>> On Wed, Aug 10, 2016 at 1:44 PM, Ray Jui <ray.jui@broadcom.com> wrote:
->>>> On 8/10/2016 10:28 AM, Rafał Miłecki wrote:
->>>>>
->>>>> On 10 August 2016 at 19:22, Jon Mason <jon.mason@broadcom.com> wrote:
->>>>>>
->>>>>> On Wed, Aug 10, 2016 at 8:05 AM, Rafał Miłecki <zajec5@gmail.com> wrote:
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
->>>>>>> b/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
->>>>>>> new file mode 100644
->>>>>>> index 0000000..a18c73f
->>>>>>> --- /dev/null
->>>>>>> +++ b/Documentation/devicetree/bindings/clock/brcm,ns-ilp.txt
->>>>>>> @@ -0,0 +1,40 @@
->>>>>>> +Broadcom Northstar ILP clock
->>>>>>> +============================
->>>>>>> +
->>>>>>> +This binding uses the common clock binding:
->>>>>>> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
->>>>>>> +
->>>>>>> +This binding is used for ILP clock (sometimes referred as "slow clock")
->>>>>>> +on Broadcom Northstar devices using Corex-A7 CPU.
->>>>>>> +
->>>>>>> +This clock is part of PMU (Power Management Unit), a Broadcom's device
->>>>>>> +handing power-related aspects. Please note PMU contains more
->>>>>>> subdevices,
->>>>>>> +ILP is only one of them.
->>>>>>> +
->>>>>>> +ILP's rate has to be calculated on runtime and it depends on ALP clock
->>>>>>> +which has to be referenced.
->>>>>>> +
->>>>>>> +Required properties:
->>>>>>> +- compatible: "brcm,ns-ilp"
->>>>>>> +- reg: iomem address range of PMU (Power Management Unit)
->>>>>>> +- reg-names: "pmu", the only needed & supported reg right now
->>>>>>> +- clocks: has to reference an ALP clock
->>>>>>> +- #clock-cells: should be <0>
->>>>>>> +
->>>>>>> +Example:
->>>>>>> +
->>>>>>> +pmu@18012000 {
->>>>>>> +       compatible = "simple-bus";
->>>>>>> +       ranges = <0x00000000 0x18012000 0x00001000>;
->>>>>>
->>>>>>
->>>>>> I don't see a corresponding DT entry in this patch, but 18012000 is
->>>>>> the PCI block.  So, I am concerned this will collide if used there.
->>>>>>
->>>>>> I looked at the NS register reference guide, and I cannot find the
->>>>>> registers you are trying to reference.  Is this supposed to be
->>>>>> referencing the LCPLL clock registers in DMU?  If so, there is already
->>>>>> a driver in there for this (see drivers/clk/bcm/clk-nsp.c).
->>>>>
->>>>>
->>>>> This patch is for BCM53573 family, not BCM4708 family you are looking at.
->>>>>
->>>>> Found chip with id 53573, rev 0x02 and package 0x01
->>>>> Core 0 found: ChipCommon (manuf 0x4BF, id 0x800, rev 0x36, class 0x0)
->>>>> Core 1 found: IEEE 802.11 (manuf 0x4BF, id 0x812, rev 0x38, class 0x0)
->>>>> Core 2 found: PCIe Gen 2 (manuf 0x4BF, id 0x501, rev 0x05, class 0x0)
->>>>> Core 3 found: ARM CA7 (manuf 0x4BF, id 0x847, rev 0x00, class 0x0)
->>>>> Core 4 found: USB 2.0 Host (manuf 0x4BF, id 0x819, rev 0x05, class 0x0)
->>>>> Core 5 found: GBit MAC (manuf 0x4BF, id 0x82D, rev 0x08, class 0x0)
->>>>> Core 6 found: I2S (manuf 0x4BF, id 0x834, rev 0x06, class 0x0)
->>>>> Core 7 found: CNDS DDR2/3 memory controller (manuf 0x4BF, id 0x846,
->>>>> rev 0x00, class 0x0)
->>>>> Core 8 found: NAND flash controller (manuf 0x4BF, id 0x509, rev 0x01,
->>>>> class 0x0)
->>>>> Core 9 found: IEEE 802.11 (manuf 0x4BF, id 0x812, rev 0x38, class 0x0)
->>>>> Core 10 found: GBit MAC (manuf 0x4BF, id 0x82D, rev 0x08, class 0x0)
->>>>> Core 11 found: I2S (manuf 0x4BF, id 0x834, rev 0x06, class 0x0)
->>>>> Core 12 found: GCI (manuf 0x4BF, id 0x840, rev 0x08, class 0x0)
->>>>> Core 13 found: PMU (manuf 0x4BF, id 0x827, rev 0x1C, class 0x0)
->>>>>
->>>>
->>>> Out of curiosity, I searched the datasheet and found this is a wireless
->>>> router SoC done by the WLAN team. It happens to share some peripherals with
->>>> other iProc based SoCs.
->>>>
->>>> I cannot find a code name for this SoC from our internal documents. I guess
->>>> that name "Northstar" used here has confused both Jon and me.
->>>
->>> Ray is right.  I just spoke to one of the people here with knowledge
->>> of the HW, and this is not related at all to the 4708/9/5301X.  It MAY
->>> have some of the same peripherals, but the core is different (Cortex
->>> A7 instead of A9).
->>>
->>> I think we are best off to change the name and turn this into a
->>> separate device tree, driver base, etc.  I wasn't able to get a code
->>> name, so perhaps simply call it "BCM53573".
->>
->> Yes, I said clearly it uses Corex-A7 in the commit message and
->> Documentation entry.
->>
->> Florian already shared his doubts about BCM53573 belonging to the
->> Northstar, but I found out [1] that your (Broadcom's) SDK treats it as
->> Northstar device:
->>
->> Asus RT-AC1200G+
->>
->> # cat /proc/cpuinfo
->> Processor : ARMv7 Processor rev 5 (v7l)
->> BogoMIPS : 1795.68
->> Features : swp half thumb fastmult edsp
->> CPU implementer : 0x41
->> CPU architecture: 7
->> CPU variant : 0x0
->> CPU part : 0xc07
->> CPU revision : 5
->>
->> Hardware : Northstar Prototype
->> Revision : 0000
->> Serial : 0000000000000000
->>
->>
->> It seems Broadcom's WLAN team claims it's a Northstar and you claim
->> it's not. Could you discuss this internally and let us know, please?
+On 08/11/2016 11:17 PM, Shubhrajyoti Datta wrote:
+> Add support for the clock. Currently we enable
+> at probe and relinquish at remove.
 >
-> I discussed it with a member of the WLAN team prior to my previous
-> email, which is why I made the previous statement.  It is a completely
-> different SoC than the 5301x family.  It appears that someone in
-> Marketing decided to reuse the name without discussing it with anyone
-> in WLAN SW.  It is a completely different family of products than the
-> iProc Northstar.  If we want to use the Northstar name, then perhaps
-> we could call it something like "WLAN Northstar".  Either way, it
-> needs to have a different mach-bcm entry.
+> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> Acked-by: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+> v2:
+> fix spaces and error path.
+> v3
+> do not fail existing dts
+> v4:
+> fix the error prints as the clock is optional
+>
+>  .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  3 +++
+>  drivers/watchdog/of_xilinx_wdt.c                   | 27 ++++++++++++++++++++--
+>  2 files changed, 28 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+> index 6d63782..c6ae9c9 100644
+> --- a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+> @@ -7,6 +7,8 @@ Required properties:
+>  - reg			: Physical base address and size
+>
+>  Optional properties:
+> +- clocks		: Input clock specifier. Refer to common clock
+> +			  bindings.
+>  - clock-frequency	: Frequency of clock in Hz
+>  - xlnx,wdt-enable-once	: 0 - Watchdog can be restarted
+>  			  1 - Watchdog can be enabled just once
+> @@ -17,6 +19,7 @@ Example:
+>  axi-timebase-wdt@40100000 {
+>  	clock-frequency = <50000000>;
+>  	compatible = "xlnx,xps-timebase-wdt-1.00.a";
+> +	clocks = <&clkc 15>;
+>  	reg = <0x40100000 0x10000>;
+>  	xlnx,wdt-enable-once = <0x0>;
+>  	xlnx,wdt-interval = <0x1b>;
+> diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
+> index b2e1b4c..f757e6d 100644
+> --- a/drivers/watchdog/of_xilinx_wdt.c
+> +++ b/drivers/watchdog/of_xilinx_wdt.c
+> @@ -10,6 +10,7 @@
+>   * 2 of the License, or (at your option) any later version.
+>   */
+>
+> +#include <linux/clk.h>
+>  #include <linux/err.h>
+>  #include <linux/module.h>
+>  #include <linux/types.h>
+> @@ -45,6 +46,7 @@ struct xwdt_device {
+>  	u32 wdt_interval;
+>  	spinlock_t spinlock;
+>  	struct watchdog_device xilinx_wdt_wdd;
+> +	struct clk		*clk;
+>  };
+>
+>  static int xilinx_wdt_start(struct watchdog_device *wdd)
+> @@ -195,16 +197,32 @@ static int xwdt_probe(struct platform_device *pdev)
+>  	spin_lock_init(&xdev->spinlock);
+>  	watchdog_set_drvdata(xilinx_wdt_wdd, xdev);
+>
+> +	xdev->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(xdev->clk)) {
+> +		if (PTR_ERR(xdev->clk) == -ENOENT) {
+> +			dev_info(&pdev->dev, "input clock not provided\n");
 
-Sorry, it wasn't clear to me initially, thanks for clarification. I'll
-resend using different prefix.
+The clock is optional. Why print anything ?
 
--- 
-Rafał
+I am not a friend of logging noise, and I think this is just noise.
+Would you want such a message printed for each optional property ?
+
+Guenter
+
+> +			xdev->clk = NULL;
+> +		} else {
+> +			return PTR_ERR(xdev->clk);
+> +		}
+> +	}
+> +
+> +	rc = clk_prepare_enable(xdev->clk);
+> +	if (rc) {
+> +		dev_err(&pdev->dev, "unable to enable clock\n");
+> +		return rc;
+> +	}
+> +
+>  	rc = xwdt_selftest(xdev);
+>  	if (rc == XWT_TIMER_FAILED) {
+>  		dev_err(&pdev->dev, "SelfTest routine error\n");
+> -		return rc;
+> +		goto err_clk_disable;
+>  	}
+>
+>  	rc = watchdog_register_device(xilinx_wdt_wdd);
+>  	if (rc) {
+>  		dev_err(&pdev->dev, "Cannot register watchdog (err=%d)\n", rc);
+> -		return rc;
+> +		goto err_clk_disable;
+>  	}
+>
+>  	dev_info(&pdev->dev, "Xilinx Watchdog Timer at %p with timeout %ds\n",
+> @@ -213,6 +231,10 @@ static int xwdt_probe(struct platform_device *pdev)
+>  	platform_set_drvdata(pdev, xdev);
+>
+>  	return 0;
+> +err_clk_disable:
+> +	clk_disable_unprepare(xdev->clk);
+> +
+> +	return rc;
+>  }
+>
+>  static int xwdt_remove(struct platform_device *pdev)
+> @@ -220,6 +242,7 @@ static int xwdt_remove(struct platform_device *pdev)
+>  	struct xwdt_device *xdev = platform_get_drvdata(pdev);
+>
+>  	watchdog_unregister_device(&xdev->xilinx_wdt_wdd);
+> +	clk_disable_unprepare(xdev->clk);
+>
+>  	return 0;
+>  }
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
