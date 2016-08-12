@@ -1,49 +1,41 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-binding: remoteproc: Document generic properties
-Date: Fri, 12 Aug 2016 15:42:23 -0700
-Message-ID: <20160812224223.GJ26240@tuxbot>
-References: <1470850622-29816-1-git-send-email-bjorn.andersson@linaro.org>
- <20160812183448.GA32059@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160812183448.GA32059@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Markus Mayer <mmayer@broadcom.com>
+Subject: [PATCH 0/3] Broadcom AVS CPUfreq driver
+Date: Fri, 12 Aug 2016 16:25:28 -0700
+Message-ID: <1471044331-2480-1-git-send-email-mmayer@broadcom.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Markus Mayer <mmayer@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 12 Aug 11:34 PDT 2016, Rob Herring wrote:
+This series contains the CPUfreq driver for Broadcom SoCs that use "AVS
+Firmware" for voltage and frequency scaling. All voltage and frequency
+transitions are performed by the firmware and are therefore hidden from
+Linux.
 
-> On Wed, Aug 10, 2016 at 10:37:02AM -0700, Bjorn Andersson wrote:
-> > This documents the generic properties "rprocs" and "rproc-names", used
-> > for consumer drivers to reference a remoteproc node.
-> 
-> How do you intend to use this? I wonder if it would not be better to 
-> expose a remote proc with existing bindings for a particular purpose 
-> (e.g. clocks, resets, etc.) rather than a generic connection. The client 
-> side would have to have specific knowledge as to what functions the 
-> remote proc provides.
-> 
+The driver provides a standard CPUfreq interface to other kernel
+components and to userland on the one hand and communicates with the
+AVS co-processor on the other.
 
-The remoteproc node represents the mechanism and resources needed to
-control the life cycle a co-processor, e.g. loading, booting, shutting
-gown a video encoder/decoder.
+Communication between the two processors is via shared mailbox
+registers and interrupts (ARM -> AVS to tell the firmware that there is
+a command to process and AVS -> ARM to tell the driver that a command
+finished executing).
 
-The proposed reference allows a separate thingie to assert control of
-the life cycle of that co-processor.
+Markus Mayer (3):
+  dt: cpufreq: brcm: New binding document for brcm-avs-cpufreq
+  cpufreq: brcm-avs-cpufreq: AVS CPUfreq driver for Broadcom SoCs
+  cpufreq: brcm-avs-cpufreq: add debugfs support
 
+ .../bindings/cpufreq/brcm-avs-cpufreq.txt          |   84 ++
+ MAINTAINERS                                        |    8 +
+ drivers/cpufreq/Kconfig.arm                        |   10 +
+ drivers/cpufreq/Makefile                           |    1 +
+ drivers/cpufreq/brcm-avs-cpufreq.c                 | 1000 ++++++++++++++++++++
+ 5 files changed, 1103 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/brcm-avs-cpufreq.txt
+ create mode 100644 drivers/cpufreq/brcm-avs-cpufreq.c
 
-I acknowledge that in some cases there is a fine line between what is
-the life cycle management and what is the actual functionality
-implemented by that remote processor. But as the remoteproc mechanism is
-reusable between various use cases I think it makes sense to not describe
-them as one unit.
+-- 
+2.7.4
 
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
