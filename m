@@ -1,49 +1,173 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] regulator: Add LTC3676 support
-Date: Fri, 12 Aug 2016 10:21:20 +0100
-Message-ID: <20160812092120.GY9347@sirena.org.uk>
-References: <1470785767-4426-1-git-send-email-tharvey@gateworks.com>
- <20160810114140.GJ9347@sirena.org.uk>
- <CAJ+vNU3s=qxJr8x=ScnyEV0UKkD_gTOnMyY8oGuzVs14hTW0Ng@mail.gmail.com>
- <20160811094509.GP9347@sirena.org.uk>
- <CAJ+vNU3k5mg37WxsZFOMRjH-JXU_aEwwYf8ewOu7ROCVYueqbg@mail.gmail.com>
+From: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH RFC] net: ethernet: macb: Add support for rx_clk
+Date: Fri, 12 Aug 2016 14:41:45 +0530
+Message-ID: <1470993105-17051-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7WMexqIhC8AwFtpM"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU3k5mg37WxsZFOMRjH-JXU_aEwwYf8ewOu7ROCVYueqbg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jaffer Kapasi <jkapasi@linear.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Some of the platforms like zynqmp ultrascale+ has a
+separate clock gate for the rx clock. Add an optional
+rx_clk so that the clock can be enabled.
 
---7WMexqIhC8AwFtpM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/macb.txt |  2 +-
+ drivers/net/ethernet/cadence/macb.c            | 27 ++++++++++++++++++++++----
+ drivers/net/ethernet/cadence/macb.h            |  4 +++-
+ 3 files changed, 27 insertions(+), 6 deletions(-)
 
-On Thu, Aug 11, 2016 at 01:48:21PM -0700, Tim Harvey wrote:
+diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+index b5a42df..315beda 100644
+--- a/Documentation/devicetree/bindings/net/macb.txt
++++ b/Documentation/devicetree/bindings/net/macb.txt
+@@ -20,7 +20,7 @@ Required properties:
+ - phy-mode: See ethernet.txt file in the same directory.
+ - clock-names: Tuple listing input clock names.
+ 	Required elements: 'pclk', 'hclk'
+-	Optional elements: 'tx_clk'
++	Optional elements: 'tx_clk', 'rx_clk'
+ - clocks: Phandles to input clocks.
+ 
+ Optional properties for PHY child node:
+diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+index 89c0cfa..1e9fd5c 100644
+--- a/drivers/net/ethernet/cadence/macb.c
++++ b/drivers/net/ethernet/cadence/macb.c
+@@ -2303,7 +2303,8 @@ static void macb_probe_queues(void __iomem *mem,
+ }
+ 
+ static int macb_clk_init(struct platform_device *pdev, struct clk **pclk,
+-			 struct clk **hclk, struct clk **tx_clk)
++			 struct clk **hclk, struct clk **tx_clk,
++			 struct clk **rx_clk)
+ {
+ 	int err;
+ 
+@@ -2325,6 +2326,10 @@ static int macb_clk_init(struct platform_device *pdev, struct clk **pclk,
+ 	if (IS_ERR(*tx_clk))
+ 		*tx_clk = NULL;
+ 
++	*rx_clk = devm_clk_get(&pdev->dev, "rx_clk");
++	if (IS_ERR(*rx_clk))
++		*rx_clk = NULL;
++
+ 	err = clk_prepare_enable(*pclk);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "failed to enable pclk (%u)\n", err);
+@@ -2343,8 +2348,17 @@ static int macb_clk_init(struct platform_device *pdev, struct clk **pclk,
+ 		goto err_disable_hclk;
+ 	}
+ 
++	err = clk_prepare_enable(*rx_clk);
++	if (err) {
++		dev_err(&pdev->dev, "failed to enable rx_clk (%u)\n", err);
++		goto err_disable_txclk;
++	}
++
+ 	return 0;
+ 
++err_disable_txclk:
++	clk_disable_unprepare(*tx_clk);
++
+ err_disable_hclk:
+ 	clk_disable_unprepare(*hclk);
+ 
+@@ -2857,13 +2871,13 @@ MODULE_DEVICE_TABLE(of, macb_dt_ids);
+ static int macb_probe(struct platform_device *pdev)
+ {
+ 	int (*clk_init)(struct platform_device *, struct clk **,
+-			struct clk **, struct clk **)
++			struct clk **, struct clk **,  struct clk **)
+ 					      = macb_clk_init;
+ 	int (*init)(struct platform_device *) = macb_init;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct device_node *phy_node;
+ 	const struct macb_config *macb_config = NULL;
+-	struct clk *pclk, *hclk = NULL, *tx_clk = NULL;
++	struct clk *pclk, *hclk = NULL, *tx_clk = NULL, *rx_clk = NULL;
+ 	unsigned int queue_mask, num_queues;
+ 	struct macb_platform_data *pdata;
+ 	bool native_io;
+@@ -2891,7 +2905,7 @@ static int macb_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	err = clk_init(pdev, &pclk, &hclk, &tx_clk);
++	err = clk_init(pdev, &pclk, &hclk, &tx_clk, &rx_clk);
+ 	if (err)
+ 		return err;
+ 
+@@ -2927,6 +2941,7 @@ static int macb_probe(struct platform_device *pdev)
+ 	bp->pclk = pclk;
+ 	bp->hclk = hclk;
+ 	bp->tx_clk = tx_clk;
++	bp->rx_clk = rx_clk;
+ 	if (macb_config)
+ 		bp->jumbo_max_len = macb_config->jumbo_max_len;
+ 
+@@ -3020,6 +3035,7 @@ err_disable_clocks:
+ 	clk_disable_unprepare(tx_clk);
+ 	clk_disable_unprepare(hclk);
+ 	clk_disable_unprepare(pclk);
++	clk_disable_unprepare(rx_clk);
+ 
+ 	return err;
+ }
+@@ -3046,6 +3062,7 @@ static int macb_remove(struct platform_device *pdev)
+ 		clk_disable_unprepare(bp->tx_clk);
+ 		clk_disable_unprepare(bp->hclk);
+ 		clk_disable_unprepare(bp->pclk);
++		clk_disable_unprepare(bp->rx_clk);
+ 		free_netdev(dev);
+ 	}
+ 
+@@ -3069,6 +3086,7 @@ static int __maybe_unused macb_suspend(struct device *dev)
+ 		clk_disable_unprepare(bp->tx_clk);
+ 		clk_disable_unprepare(bp->hclk);
+ 		clk_disable_unprepare(bp->pclk);
++		clk_disable_unprepare(bp->rx_clk);
+ 	}
+ 
+ 	return 0;
+@@ -3088,6 +3106,7 @@ static int __maybe_unused macb_resume(struct device *dev)
+ 		clk_prepare_enable(bp->pclk);
+ 		clk_prepare_enable(bp->hclk);
+ 		clk_prepare_enable(bp->tx_clk);
++		clk_prepare_enable(bp->rx_clk);
+ 	}
+ 
+ 	netif_device_attach(netdev);
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+index 36893d8..10485b6 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -763,7 +763,8 @@ struct macb_config {
+ 	u32			caps;
+ 	unsigned int		dma_burst_length;
+ 	int	(*clk_init)(struct platform_device *pdev, struct clk **pclk,
+-			    struct clk **hclk, struct clk **tx_clk);
++			    struct clk **hclk, struct clk **tx_clk,
++			    struct clk **rx_clk);
+ 	int	(*init)(struct platform_device *pdev);
+ 	int	jumbo_max_len;
+ };
+@@ -809,6 +810,7 @@ struct macb {
+ 	struct clk		*pclk;
+ 	struct clk		*hclk;
+ 	struct clk		*tx_clk;
++	struct clk		*rx_clk;
+ 	struct net_device	*dev;
+ 	struct napi_struct	napi;
+ 	struct net_device_stats	stats;
+-- 
+2.1.1
 
-> regulators must have a non-null ops field or they will fail
-> registration so I can't just not assign it. What would be an
-> appropriate ops structure for a always-on fixed regulator?
-
-OK, empty is fine there.
-
---7WMexqIhC8AwFtpM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXrZUPAAoJECTWi3JdVIfQmHsH/2hP5o5iINkXum957k/sTBI6
-OmweWvDRs5zoyZt0Otc1gWj9sP4rLQbGMDZlq9bAK0TRC4XVdcWWU1OT4RR+Eo7l
-6vN1d5j0iKSp7MG1ifrlOPWm2CROeJ4xwpd8vdTtIAXVptXugG0nLmmlPq9Jf1jA
-vXKIh0TLcHCu8oEaia40Lt4O6g00qTezoFteAilXB+eHb/u6Suf2tu9yBPpqJUKK
-vJXGWJ5+j+BXx9w9pLvyBav/ZV80YAuc4COX0jvqNeYe7LinRyUewfvk4s6m+jAY
-B4zHfLeK0faJOT8qwiXChk1g+dA8sQwNyjaFxaZ8oLiC4Iq7UGTNqoVegBlhiDA=
-=Qyyt
------END PGP SIGNATURE-----
-
---7WMexqIhC8AwFtpM--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
