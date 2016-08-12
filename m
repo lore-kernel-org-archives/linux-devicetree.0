@@ -1,101 +1,154 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] net: hix5hd2_gmac: add reset control and clock
- signals
-Date: Fri, 12 Aug 2016 13:48:24 -0500
-Message-ID: <20160812184824.GA8959@rob-hp-laptop>
-References: <1470906115-155569-1-git-send-email-lidongpo@hisilicon.com>
- <1470906115-155569-3-git-send-email-lidongpo@hisilicon.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] [v8] net: emac: emac gigabit ethernet controller driver
+Date: Fri, 12 Aug 2016 13:55:09 -0500
+Message-ID: <20160812185509.GA12862@rob-hp-laptop>
+References: <1470951245-13665-1-git-send-email-timur@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1470906115-155569-3-git-send-email-lidongpo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dongpo Li <lidongpo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, salil.mehta-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, benjamin.chenhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1470951245-13665-1-git-send-email-timur@codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, LinoSanfilippo@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 11, 2016 at 05:01:53PM +0800, Dongpo Li wrote:
-> From: Li Dongpo <lidongpo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+On Thu, Aug 11, 2016 at 04:34:05PM -0500, Timur Tabi wrote:
+> Add supports for ethernet controller HW on Qualcomm Technologies, Inc. SoC.
+> This driver supports the following features:
+> 1) Checksum offload.
+> 2) Interrupt coalescing support.
+> 3) SGMII phy.
+> 4) phylib interface for external phy
 > 
-> Add three reset control signals, "mac_core_rst", "mac_ifc_rst" and
-> "phy_rst".
-> The following diagram explained how the reset signals work.
+> Based on original work by
+> 	Niranjana Vishwanathapura <nvishwan@codeaurora.org>
+> 	Gilad Avidov <gavidov@codeaurora.org>
 > 
->                         SoC
-> |-----------------------------------------------------
-> |                               ------                |
-> |                               | cpu |               |
-> |                               ------                |
-> |                                  |                  |
-> |                              ------------ AMBA bus  |
-> |                         GMAC     |                  |
-> |                            ----------------------   |
-> | ------------- mac_core_rst | --------------      |  |
-> | |clock and   |-------------->|   mac core  |     |  |
-> | |reset       |             | --------------      |  |
-> | |generator   |----         |       |             |  |
-> | -------------     |        | ----------------    |  |
-> |          |        ---------->| mac interface |   |  |
-> |          |     mac_ifc_rst | ----------------    |  |
-> |          |                 |       |             |  |
-> |          |                 | ------------------  |  |
-> |          |phy_rst          | | RGMII interface | |  |
-> |          |                 | ------------------  |  |
-> |          |                 ----------------------   |
-> |----------|------------------------------------------|
->            |                          |
->            |                      ----------
->            |--------------------- |PHY chip |
->                                   ----------
-> 
-> The "mac_core_rst" represents "mac core reset signal", it resets
-> the mac core including packet processing unit, descriptor processing unit,
-> tx engine, rx engine, control unit.
-> The "mac_ifc_rst" represents "mac interface reset signal", it resets
-> the mac interface. The mac interface unit connects mac core and
-> data interface like MII/RMII/RGMII. After we set a new value of
-> interface mode, we must reset mac interface to reload the new mode value.
-> The "phy_rst" represents "phy reset signal", it does a hardware reset
-> on the PHY chip. This reset signal is optinal if the PHY can work well
-> without the hardware reset.
-> 
-> Add one more clock signal, the existing is MAC core clock,
-> and the new one is MAC interface clock.
-> 
-> Signed-off-by: Dongpo Li <lidongpo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> Signed-off-by: Timur Tabi <timur@codeaurora.org>
 > ---
->  .../bindings/net/hisilicon-hix5hd2-gmac.txt        |  16 ++-
->  drivers/net/ethernet/hisilicon/hix5hd2_gmac.c      | 140 +++++++++++++++++++--
->  2 files changed, 143 insertions(+), 13 deletions(-)
-
-
 > 
-> @@ -807,16 +829,26 @@ static int hix5hd2_net_open(struct net_device *dev)
->  	struct phy_device *phy;
->  	int ret;
->  
-> -	ret = clk_prepare_enable(priv->clk);
-> +	ret = clk_prepare_enable(priv->mac_core_clk);
-> +	if (ret < 0) {
-> +		netdev_err(dev, "failed to enable mac core clk %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(priv->mac_ifc_clk);
->  	if (ret < 0) {
-> -		netdev_err(dev, "failed to enable clk %d\n", ret);
-> +		clk_disable_unprepare(priv->mac_core_clk);
-> +		netdev_err(dev, "failed to enable mac ifc clk %d\n", ret);
+> v8:
+>  - Remove "phy-version" property, use different compatible strings to
+>    differentiate EMAC versions instead.
+>  - fully unmap all DMA mappings upon any single DMA mapping error
+>  - add support for 32-bit DMA masks
+>  - Make reads/writes to hardware data structures endian-safe
+>  - emac_mac_stop already disables interrupts, so don't do it in emac_mac_reset
+>  - Set adpt->rxbuf_size only when initializing the MAC, not when changing MTU
+>  - Fix the calculation of the # of free descriptors required
+>  - Always stop the PHY before disconnecting it
+>  - Miscellaneous cleanups (removing unused definitions, fix typos and spacing,
+>    use unsized ints, etc).
+> 
+> v7:
+>  - add "phy-version" to DT docs
+>  - remove emac_status_bits, use mutexes instead of polling a status bit
+>  - test return code from dma_map_single() calls
+>  - use __netdev_alloc_skb_ip_align instead of dev_alloc_skb
+>  - add a missing free_irq on an error path
+>  - return an error code from emac_reinit_locked
+>  - support setting the MTU even when the interface is down
+>  - use a spinlock not a mutex in emac_get_stats64
+>  - don't redundantly set the ethernet device name
+>  - remove all hardware timestamp code, since it's incomplete
+>  - remove redundant 'reset' param to emac_mac_down()
+>  - handle queue throttling properly
+> 
+> v6:
+>  - Properly ordered local variables
+>  - use built-in GEN_MASK instead of BITS_MASK
+>  - remove redundant call to emac_rx_mode_set from emac_mac_up
+>  - removed emac_rfd structure, use dma_addr_t directly instead
+>  - removed emac_mac_speed enun, replaced with macros
+>  - removed superfluous phy_stop from emac_mac_down(), which prevented reloading module
+>  - add missing netif_napi_del
+>  - set the DMA mask
+> 
+> v5:
+>  - changed author to Timur, added MAINTAINERS entry
+>  - use phylib, replacing internal phy code
+>  - added support for EMAC internal SGMII v2
+>  - fix ~DIS_INT warning
+>  - update DT bindings, including removing unused properties
+>  - removed interrupt handler for internal sgmii
+>  - removed link status check handler/state (replaced with phylib)
+>  - removed periodic timer handler (replaced with phylib)
+>  - removed power management code (will be rewritten later)
+>  - external phy is now required, not optional
+>  - removed redundant EMAC_STATUS_DOWN status flag
+>  - removed redundant link status and speed variables
+>  - removed redundant status bits (vlan strip, promiscuous, loopback, etc)
+>  - removed useless watchdog status
+>  - removed command-line parameters
+>  - cleaned up probe messages
+>  - removed redundant params from emac_sgmii_link_init()
+>  - always call netdev_completed_queue() (per review comment)
+>  - fix emac_napi_rtx() (per review comment)
+>  - removed max_ints loop in interrupt handler
+>  - removed redundant mutex around phy read/write calls
+>  - added lock for reading emac status (per review comment)
+>  - generate random MAC address if it can't be read from firmware
+>  - replace EMAC_DMA_ADDR_HI/LO with upper/lower_32_bits
+>  - don't test return value from platform_get_resource (per review comment)
+>  - use net_warn_ratelimited (per review comment)
+>  - don't set the dma masks (will be set by DT or IORT code)
+>  - remove unused emac_tx_tpd_ts_save()
+>  - removed redundant local MTU variable
+> 
+> v4:
+>  - add missing ipv6 header file
+>  - correct compatible string
+>  - fix spacing in emac_reg_write arrays
+>  - drop unnecessary cell-index property
+>  - remove unsupported DT properties from docs
+>  - remove GPIO initialization and update docs
+> 
+> v3:
+>  - remove most of the memory barriers by using the non xxx_relaxed() api.
+>  - remove RSS and WOL support.
+>  - correct comments from physical address to dma address.
+>  - rearrange structs to make them packed.
+>  - replace polling loops with readl_poll_timeout().
+>  - remove unnecessary wrapper functions from phy layer.
+>  - add blank line before return statements.
+>  - set to null clocks after clk_put().
+>  - use module_platform_driver() and dma_set_mask_and_coherent()
+>  - replace long hex bitmasks with BIT() macro.
+> 
+> v2:
+>  - replace hw bit fields to macros with bitwise operations.
+>  - change all iterators to unsized types (int)
+>  - some minor code flow improvements.
+>  - change return type to void for functions which return value is never
+>    used.
+>  - replace instance of xxxxl_relaxed() io followed by mb() with a
+>    readl()/writel().
+> 
+>  .../devicetree/bindings/net/qcom-emac.txt          |   64 +
 
-This change will break with existing DTs. The mac_ifc_clk should be 
-optional.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Rob
-
->  		return ret;
->  	}
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  MAINTAINERS                                        |    6 +
+>  drivers/net/ethernet/qualcomm/Kconfig              |   11 +
+>  drivers/net/ethernet/qualcomm/Makefile             |    2 +
+>  drivers/net/ethernet/qualcomm/emac/Makefile        |    7 +
+>  drivers/net/ethernet/qualcomm/emac/emac-mac.c      | 1532 ++++++++++++++++++++
+>  drivers/net/ethernet/qualcomm/emac/emac-mac.h      |  250 ++++
+>  drivers/net/ethernet/qualcomm/emac/emac-phy.c      |  201 +++
+>  drivers/net/ethernet/qualcomm/emac/emac-phy.h      |   32 +
+>  drivers/net/ethernet/qualcomm/emac/emac-sgmii.c    |  693 +++++++++
+>  drivers/net/ethernet/qualcomm/emac/emac-sgmii.h    |   24 +
+>  drivers/net/ethernet/qualcomm/emac/emac.c          |  796 ++++++++++
+>  drivers/net/ethernet/qualcomm/emac/emac.h          |  335 +++++
+>  13 files changed, 3953 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/qcom-emac.txt
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/Makefile
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac-mac.c
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac-mac.h
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac-phy.c
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac-phy.h
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac-sgmii.c
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac-sgmii.h
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac.c
+>  create mode 100644 drivers/net/ethernet/qualcomm/emac/emac.h
