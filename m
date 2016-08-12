@@ -1,105 +1,78 @@
-From: Aleksey Makarov <aleksey.makarov@linaro.org>
-Subject: [PATCH v9 1/4] of/serial: move earlycon early_param handling to serial
-Date: Fri, 12 Aug 2016 14:07:14 +0300
-Message-ID: <20160812110717.12351-1-aleksey.makarov@linaro.org>
-References: <201608120110.sf8xniKf%fengguang.wu@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201608120110.sf8xniKf%fengguang.wu@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Aleksey Makarov <aleksey.makarov@linaro.org>, Russell King <linux@arm.linux.org.uk>, Len Brown <lenb@kernel.org>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <ahs3@redhat.com>, Christopher Covington <cov@codeaurora.org>, Yury Norov <ynorov@caviumnetworks.com>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Zheng, Lv" <lv.zheng@intel.com>, Mark Salter <msalter@redhat.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V6 0/6] iommu/msm: Add DT adaptation and generic bindings
+	support
+Date: Fri, 12 Aug 2016 08:13:16 -0400
+Message-ID: <CAF6AEGsRVULNpSe_s460biNhV0dRaKLv6tf2Y244HEjGVOV3bw@mail.gmail.com>
+References: <1465817767-9856-1-git-send-email-sricharan@codeaurora.org>
+	<CAF6AEGsF5M1sfwaXKW0x=Mu=nQJR-9+xqrtXd=7Vz_+6G_u25A@mail.gmail.com>
+	<CAF6AEGsLGDqRuB97+qN1g7X60A49Wv1HGbAiaeZoxogMmHY9HA@mail.gmail.com>
+	<003a01d1f467$2b180ba0$814822e0$@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <003a01d1f467$2b180ba0$814822e0$@codeaurora.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Sricharan <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, stepanm-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Leif Lindholm <leif.lindholm@linaro.org>
+On Fri, Aug 12, 2016 at 3:00 AM, Sricharan <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> Hi Rob,
+>
+>>> btw, the current state, at least on linaro integration branch, fault
+>>> handling doesn't work so well (ie. device never gets resumed).. which
+>>> is a bit unfortunate for a gpu (and results in a *lot* of rebooting on
+>>> my part when debugging userspace).  I haven't had time yet to compare
+>>> to the ancient downstream driver, but not sure if you have any ideas?
+>>>
+>>> I guess probably disabling stall on fault would help.  But I'm not
+>>> even getting the "Fault occurred in context.." prints.  Seeing the
+>>> fault iova is pretty useful since that plus gpu cmdstream trace helps
+>>> me figure out which texture/etc is being accessed out of bounds.
+>>
+>>fyi, it looks like it is not getting any fault irq..  it's *possible*
+>>that I screwed up the irq #'s when translating from downstream, so you
+>>might want to double check that.  I thought I had it right, I assume I
+>>would have noticed during piglit runs if fault recovery wasn't working
+>>(since the result is that *everything* after the faulting test would
+>>have failed since gpu is wedged with no access to memory), but it was
+>>long enough ago that I can't claim that definitively.
+>>
+>>If you need an easy way to trigger a gpu fault, msmtest is a good way,
+>>change this line:
+>>
+>>  https://github.com/freedreno/msmtest/blob/master/msmtest.c#L247
+>>
+>>from OUT_RELOC() to OUT_RING(ring, 0x00000000) will trigger a fault.
+>>
+>    So for the irq to be triggered, 'non-secure' irq line has to be
+>   populated in DT. There is a 'secure'and 'non-secure' irq lines for these iommus
+>   and  non-secure irq number is secure + 1. I tested this by having a 'return 0'
+>  from the msm_iommu_map (no mapping), and the faults were getting triggered.
+>
+>   Can you share me your dts data ?
+>
 
-We have multiple "earlycon" early_param handlers - merge the DT one into
-the main earlycon one.  It's a cleanup that also will be useful
-to defer setting up DT console until ACPI/DT decision is made.
+I think this is what you want:
 
-Rename the exported function to avoid clashing with the function from
-arch/microblaze/kernel/prom.c
+https://github.com/freedreno/kernel-msm/blob/integration-linux-qcomlt/arch/arm/boot/dts/qcom-apq8064.dtsi#L2008
 
-Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-Signed-off-by: Aleksey Makarov <aleksey.makarov@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Peter Hurley <peter@hurleysoftware.com>
-Tested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- drivers/of/fdt.c              | 11 +----------
- drivers/tty/serial/earlycon.c |  2 +-
- include/linux/of_fdt.h        |  3 +++
- 3 files changed, 5 insertions(+), 11 deletions(-)
+I haven't tested a display fault, so I suppose it is possible that
+irq's are working for some iommu instances but not others?
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 55f1b83..741cac53 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -924,7 +924,7 @@ static inline void early_init_dt_check_for_initrd(unsigned long node)
- 
- #ifdef CONFIG_SERIAL_EARLYCON
- 
--static int __init early_init_dt_scan_chosen_serial(void)
-+int __init early_init_dt_scan_chosen_stdout(void)
- {
- 	int offset;
- 	const char *p, *q, *options = NULL;
-@@ -968,15 +968,6 @@ static int __init early_init_dt_scan_chosen_serial(void)
- 	}
- 	return -ENODEV;
- }
--
--static int __init setup_of_earlycon(char *buf)
--{
--	if (buf)
--		return 0;
--
--	return early_init_dt_scan_chosen_serial();
--}
--early_param("earlycon", setup_of_earlycon);
- #endif
- 
- /**
-diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
-index 067783f..7aae655 100644
---- a/drivers/tty/serial/earlycon.c
-+++ b/drivers/tty/serial/earlycon.c
-@@ -209,7 +209,7 @@ static int __init param_setup_earlycon(char *buf)
- 	 * don't generate a warning from parse_early_params() in that case
- 	 */
- 	if (!buf || !buf[0])
--		return 0;
-+		return early_init_dt_scan_chosen_stdout();
- 
- 	err = setup_earlycon(buf);
- 	if (err == -ENOENT || err == -EALREADY)
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 26c3302..4341f32 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -14,6 +14,7 @@
- 
- #include <linux/types.h>
- #include <linux/init.h>
-+#include <linux/errno.h>
- 
- /* Definitions used by the flattened device tree */
- #define OF_DT_HEADER		0xd00dfeed	/* marker */
-@@ -66,6 +67,7 @@ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 				     int depth, void *data);
- extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
- 				     int depth, void *data);
-+extern int early_init_dt_scan_chosen_stdout(void);
- extern void early_init_fdt_scan_reserved_mem(void);
- extern void early_init_fdt_reserve_self(void);
- extern void early_init_dt_add_memory_arch(u64 base, u64 size);
-@@ -94,6 +96,7 @@ extern void early_get_first_memblock_info(void *, phys_addr_t *);
- extern u64 of_flat_dt_translate_address(unsigned long node);
- extern void of_fdt_limit_memory(int limit);
- #else /* CONFIG_OF_FLATTREE */
-+static inline int early_init_dt_scan_chosen_stdout(void) { return -ENODEV; }
- static inline void early_init_fdt_scan_reserved_mem(void) {}
- static inline void early_init_fdt_reserve_self(void) {}
- static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
--- 
-2.9.2
+BR,
+-R
+
+>
+> Regards,
+>  Sricharan
+>
