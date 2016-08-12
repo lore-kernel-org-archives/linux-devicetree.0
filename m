@@ -1,45 +1,34 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: [PATCH RESEND v2 3/3] ehci-platform: add the max clock number to 4
-Date: Fri, 12 Aug 2016 11:06:22 +0800
-Message-ID: <20160812030622.4492-3-icenowy@aosc.xyz>
-References: <20160812030622.4492-1-icenowy@aosc.xyz>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCHES] ARM: dts: update udoo and evi hubs to use pwrseq
+Date: Fri, 12 Aug 2016 11:09:54 +0800
+Message-ID: <20160812030954.GG18967@shlinux2>
+References: <20160810030254.GD1879@shlinux2>
+ <1470933632-22133-1-git-send-email-stillcompiling@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160812030622.4492-1-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Alan Stern <stern@rowland.harvard.edu>, Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Reinder de Haan <patchesrdh@mveas.com>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Tony Prisk <linux@prisktech.co.nz>, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1470933632-22133-1-git-send-email-stillcompiling@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joshua Clayton <stillcompiling@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, dbaryshkov@gmail.com, dwmw3@infradead.org, k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Allwinner A64 EHCI requires 4 clocks to be enabled.
+On Thu, Aug 11, 2016 at 09:40:29AM -0700, Joshua Clayton wrote:
+> 
+> Hi Peter,
+> 
+> Consider this my attempt to squeeze my own dts into your patch series.
+> These patches repalce patch 6 in V5. of the usb pwrseq series
+> I adding a #address and #size to imx6qdl.dtsi in patch 1
+> and remove those lines from imx6qdl-udoo.dtsi in patch 2 (formerly patch 6)
+> Finally I make the change in imx6q-evi.dts and hope is can be slipped into
+> the series with the others.
+> 
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
----
- drivers/usb/host/ehci-platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks, I will send them at next revision
 
-diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-index 6816b8c..876dca4 100644
---- a/drivers/usb/host/ehci-platform.c
-+++ b/drivers/usb/host/ehci-platform.c
-@@ -38,7 +38,7 @@
- #include "ehci.h"
- 
- #define DRIVER_DESC "EHCI generic platform driver"
--#define EHCI_MAX_CLKS 3
-+#define EHCI_MAX_CLKS 4
- #define EHCI_MAX_RSTS 3
- #define hcd_to_ehci_priv(h) ((struct ehci_platform_priv *)hcd_to_ehci(h)->priv)
- 
 -- 
-2.9.2
+
+Best Regards,
+Peter Chen
