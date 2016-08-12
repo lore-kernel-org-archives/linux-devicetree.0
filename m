@@ -1,42 +1,70 @@
-From: Reza Arbab <arbab@linux.vnet.ibm.com>
-Subject: Re: [PATCH 3/4] powerpc/mm: allow memory hotplug into a memoryless
- node
-Date: Fri, 12 Aug 2016 12:24:03 -0500
-Message-ID: <20160812172402.GA31526@arbab-vm.austin.ibm.com>
-References: <1470680843-28702-1-git-send-email-arbab@linux.vnet.ibm.com>
- <1470680843-28702-4-git-send-email-arbab@linux.vnet.ibm.com>
- <7d943111-d243-ffb3-ff5f-6d712c268e67@gmail.com>
+From: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
+Subject: Re: [RESEND PATCH] ARM: tegra: fix erroneous address in dts
+Date: Fri, 12 Aug 2016 19:26:27 +0200
+Message-ID: <d2469177-0eae-cd11-aa43-74baa374cc6c@ramses-pyramidenbau.de>
+References: <1468835208-13426-1-git-send-email-ralf@ramses-pyramidenbau.de>
+ <20160718095802.GA422@ulmo.ba.sec> <3087941.oHflrW9cm7@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <owner-linux-mm@kvack.org>
-Content-Disposition: inline
-In-Reply-To: <7d943111-d243-ffb3-ff5f-6d712c268e67@gmail.com>
-Sender: owner-linux-mm@kvack.org
-To: Balbir Singh <bsingharora@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Jonathan Corbet <corbet@lwn.net>, Bharata B Rao <bharata@linux.vnet.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3087941.oHflrW9cm7@wuerfel>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 12, 2016 at 11:50:43AM +1000, Balbir Singh wrote:
->On 09/08/16 04:27, Reza Arbab wrote:
->> Remove the check which prevents us from hotplugging into an empty node.
->
->Do we want to do this only for ibm,hotplug-aperture compatible ranges?
+On 08/10/2016 10:46 PM, Arnd Bergmann wrote:
+> On Monday, July 18, 2016 11:58:02 AM CEST Thierry Reding wrote:
+>> On Mon, Jul 18, 2016 at 11:46:48AM +0200, Ralf Ramsauer wrote:
+>>> c90bb7b enabled the high speed UARTs of the Jetson TK1. Due to a merge
+>>> quirk, wrong addresses were introduced. Fix it and use the correct
+>>> addresses.
+>>>
+>>> Thierry let me know, that there is another patch (b5896f67ab3c in
+>>> linux-next) in preparation which removes all the '0,' prefixes of unit
+>>> addresses on Tegra124 and is planned to go upstream in 4.8, so
+>>> this patch will get reverted then.
+>>>
+>>> But for the moment, this patch is necessary to fix current misbehaviour.
+>>>
+>>> Fixes: c90bb7b9b9 ("ARM: tegra: Add high speed UARTs to Jetson TK1 device tree")
+>>> Signed-off-by: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
+>>> Acked-by: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> ---
+>>>  arch/arm/boot/dts/tegra124-jetson-tk1.dts | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> ARM-SoC maintainers,
+>>
+>> Just to clarify, this is targetted at v4.7 because the offending patch
+>> was merged in v4.7-rc1. If at all possible it'd be great to get this in,
+>> even if this is terribly last minute.
+>>
+> 
+> I just notice this was still missing in v4.8-rc1, so I added it to
+> the fixes branch now, with a stable tag for v4.7
+Hi Arnd,
 
-We could, but since past discussions and current testing have been 
-unable to justify preventing hotplug to a memoryless node in the first 
-place, I'm inclined to keep things simple.
+Ahm - this patch should have only be applied if it would have been
+possible to commit it before the release of v4.7.
 
-If some edge case is discovered, making it conditional as you describe 
-will be a good solution.
+Mainline Patch b5896f6 ("ARM: tegra: Remove commas from unit addresses
+on Tegra124") which was introduced during the merge window of v4.8 makes
+this patch superfluous and introduces the same error again that we
+initially wanted to fix :-)
 
-Thanks for your review! A v2 of this set is pending my investigation of 
-Michael's suggestion to get node hotadd working.
+This patch is only required for stable v4.7.x.
+
+I think the best is to revert it on mainline, as long as stabilization
+window is still open.
+
+  Ralf
+> 
+> 	Arnd
+> 
 
 -- 
-Reza Arbab
-
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+Ralf Ramsauer
+PGP: 0x8F10049B
