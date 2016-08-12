@@ -1,39 +1,165 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH v5 0/5] da8xx USB PHY platform devices and clocks (was
- "da8xx UBS clocks")
-Date: Fri, 12 Aug 2016 16:24:27 -0500
-Message-ID: <CAOi56cWCZioi=qU-iaLvCfh-EmbPh4pwwTJ5tDK+9qfv5+8WuQ@mail.gmail.com>
-References: <1462837612-7803-1-git-send-email-david@lechnology.com>
- <57431E73.5030304@lechnology.com> <57458A0A.5010100@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v11 PATCH 1/5] Documentation: bindings: add dt doc for Rockchip USB Type-C PHY
+Date: Fri, 12 Aug 2016 14:54:48 -0700
+Message-ID: <1471038892-28099-2-git-send-email-zyw@rock-chips.com>
+References: <1471038892-28099-1-git-send-email-zyw@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57458A0A.5010100@ti.com>
+In-Reply-To: <1471038892-28099-1-git-send-email-zyw@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, petr@barix.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, devicetree <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org
+To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, groeck@chromium.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, wulf@rock-chips.com, marcheu@chromium.org
+Cc: linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org, Kever Yang <kever.yang@rock-chips.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 25, 2016 at 6:18 AM, Sekhar Nori <nsekhar@ti.com> wrote:
-> On Monday 23 May 2016 08:44 PM, David Lechner wrote:
->> On 05/09/2016 06:46 PM, David Lechner wrote:
->>> v5 changes: renamed "usbphy" to "usb_phy" or "usb-phy" as appropriate
->>>
+This patch adds a binding that describes the Rockchip USB Type-C PHY
+for rk3399
 
-[...]
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
+Acked-by: Rob Herring <robh@kernel.org>
 
->>
->> What should I be doing to keep this moving along?
->
-> We need the related driver changes to be applied first. I could then use
-> an immutable branch to push the platform changes against.
->
-> I did take a look at the patches and they look good to me. Except the
-> one comment from Sergei which I just now indicated that I agree with.
+---
 
-Just checking on the status of this.  I'm not seeing the driver
-changes in mainline yet.
+Changes in v11:
+- make a clearer emarcation between usb phy and dp phy
 
-Any update?
+Changes in v10:
+- remove rockchip,uphy-dp-sel property
 
-Kevin
+Changes in v9:
+- change #phy-cells to 1
+
+Changes in v8: None
+Changes in v7: None
+Changes in v6:
+- add assigned-clocks and assigned-clock-rates
+
+Changes in v5: None
+Changes in v4:
+- add a #phy-cells node
+
+Changes in v3:
+- use compatible: rockchip,rk3399-typec-phy
+- use dashes instead of underscores.
+
+Changes in v2:
+- add some registers description
+
+Changes in v1:
+- add extcon node description
+- move the registers in phy driver
+- remove the suffix of reset
+
+ .../devicetree/bindings/phy/phy-rockchip-typec.txt | 101 +++++++++++++++++++++
+ 1 file changed, 101 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+new file mode 100644
+index 0000000..6ea867e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+@@ -0,0 +1,101 @@
++* ROCKCHIP type-c PHY
++---------------------
++
++Required properties:
++ - compatible : must be "rockchip,rk3399-typec-phy"
++ - reg: Address and length of the usb phy control register set
++ - rockchip,grf : phandle to the syscon managing the "general
++   register files"
++ - clocks : phandle + clock specifier for the phy clocks
++ - clock-names : string, clock name, must be "tcpdcore", "tcpdphy-ref";
++ - assigned-clocks: main clock, should be <&cru SCLK_UPHY0_TCPDCORE> or
++		    <&cru SCLK_UPHY1_TCPDCORE>;
++ - assigned-clock-rates : the phy core clk frequency, shall be: 50000000
++ - resets : a list of phandle + reset specifier pairs
++ - reset-names : string reset name, must be:
++		 "uphy", "uphy-pipe", "uphy-tcphy"
++ - extcon : extcon specifier for the Power Delivery
++
++Note, there are 2 type-c phys for RK3399, and they are almost identical, except
++these registers(description below), every register node contains 3 sections:
++offset, enable bit, write mask bit.
++ - rockchip,typec-conn-dir : the register of type-c connector direction,
++   for type-c phy0, it must be <0xe580 0 16>;
++   for type-c phy1, it must be <0xe58c 0 16>;
++ - rockchip,usb3tousb2-en : the register of type-c force usb3 to usb2 enable
++   control.
++   for type-c phy0, it must be <0xe580 3 19>;
++   for type-c phy1, it must be <0xe58c 3 19>;
++ - rockchip,external-psm : the register of type-c phy external psm clock
++   selection.
++   for type-c phy0, it must be <0xe588 14 30>;
++   for type-c phy1, it must be <0xe594 14 30>;
++ - rockchip,pipe-status : the register of type-c phy pipe status.
++   for type-c phy0, it must be <0xe5c0 0 0>;
++   for type-c phy1, it must be <0xe5c0 16 16>;
++
++Required nodes : a sub-node is required for each port the phy provides.
++		 The sub-node name is used to identify dp or usb3 port,
++		 and shall be the following entries:
++	* "dp-port" : the name of DP port.
++	* "usb3-port" : the name of USB3 port.
++
++Required properties (port (child) node):
++- #phy-cells : must be 0, See ./phy-bindings.txt for details.
++
++Example:
++	tcphy0: phy@ff7c0000 {
++		compatible = "rockchip,rk3399-typec-phy";
++		reg = <0x0 0xff7c0000 0x0 0x40000>;
++		rockchip,grf = <&grf>;
++		extcon = <&fusb0>;
++		clocks = <&cru SCLK_UPHY0_TCPDCORE>,
++			 <&cru SCLK_UPHY0_TCPDPHY_REF>;
++		clock-names = "tcpdcore", "tcpdphy-ref";
++		assigned-clocks = <&cru SCLK_UPHY0_TCPDCORE>;
++		assigned-clock-rates = <50000000>;
++		resets = <&cru SRST_UPHY0>,
++			 <&cru SRST_UPHY0_PIPE_L00>,
++			 <&cru SRST_P_UPHY0_TCPHY>;
++		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
++		rockchip,typec-conn-dir = <0xe580 0 16>;
++		rockchip,usb3tousb2-en = <0xe580 3 19>;
++		rockchip,external-psm = <0xe588 14 30>;
++		rockchip,pipe-status = <0xe5c0 0 0>;
++
++		tcphy0_dp: dp-port {
++			#phy-cells = <0>;
++		};
++
++		tcphy0_usb3: usb3-port {
++			#phy-cells = <0>;
++		};
++	};
++
++	tcphy1: phy@ff800000 {
++		compatible = "rockchip,rk3399-typec-phy";
++		reg = <0x0 0xff800000 0x0 0x40000>;
++		rockchip,grf = <&grf>;
++		extcon = <&fusb1>;
++		clocks = <&cru SCLK_UPHY1_TCPDCORE>,
++			 <&cru SCLK_UPHY1_TCPDPHY_REF>;
++		clock-names = "tcpdcore", "tcpdphy-ref";
++		assigned-clocks = <&cru SCLK_UPHY1_TCPDCORE>;
++		assigned-clock-rates = <50000000>;
++		resets = <&cru SRST_UPHY1>,
++			 <&cru SRST_UPHY1_PIPE_L00>,
++			 <&cru SRST_P_UPHY1_TCPHY>;
++		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
++		rockchip,typec-conn-dir = <0xe58c 0 16>;
++		rockchip,usb3tousb2-en = <0xe58c 3 19>;
++		rockchip,external-psm = <0xe594 14 30>;
++		rockchip,pipe-status = <0xe5c0 16 16>;
++
++		tcphy1_dp: dp-port {
++			#phy-cells = <0>;
++		};
++
++		tcphy1_usb3: usb3-port {
++			#phy-cells = <0>;
++		};
++	};
+-- 
+1.9.1
