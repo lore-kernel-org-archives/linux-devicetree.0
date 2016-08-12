@@ -1,180 +1,95 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH RESEND v2 2/3] phy: sun4i: add support for A64 usb phy
-Date: Fri, 12 Aug 2016 15:10:21 +0530
-Message-ID: <57AD9985.7020809@ti.com>
-References: <20160812030622.4492-1-icenowy@aosc.xyz>
- <20160812030622.4492-2-icenowy@aosc.xyz>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: RE: Question about dma-ranges property for PCI host controllers
+Date: Fri, 12 Aug 2016 09:43:44 +0000
+Message-ID: <HK2PR0601MB1393EA9F8117F8EC5A1E6520F51F0@HK2PR0601MB1393.apcprd06.prod.outlook.com>
+References: <HK2PR0601MB1393CA771AB65556D4E2F0B9F51E0@HK2PR0601MB1393.apcprd06.prod.outlook.com>
+ <2867793.PfGZpZFyEJ@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160812030622.4492-2-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Alan Stern <stern@rowland.harvard.edu>, Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Reinder de Haan <patchesrdh@mveas.com>, linux-kernel@vger.kernel.org, Tony Prisk <linux@prisktech.co.nz>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <2867793.PfGZpZFyEJ@wuerfel>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Arnd,
 
-
-On Friday 12 August 2016 08:36 AM, Icenowy Zheng wrote:
-> There's something unknown in the pmu part that shared with H3.
-> It's renamed as PMU_UNK1 from PMU_UNK_H3.
+On 11 August 2016 16:09 Arnd Bergmann wrote:
+> On Thursday, August 11, 2016 3:00:42 PM CEST Phil Edworthy wrote:
+> > Hi,
+> >
+> > A few PCI host controllers use the "dma-ranges" property to specify the
+> > mapping from PCI bus addresses to physical addresses.
+> >
+> > In the case of R-Car PCIe Host controllers, the intention was to set this
+> > property as a 1 to 1 mapping for all DDR that could be addressed by the
+> > device. However, there are some limitations for the R-Car controller which
+> > meant that we could only map a subset of the DDR range - this limitation
+> > has prompted us to work on enabling the IOMMU behind the PCI controller.
+> >
+> > When there is an IOMMU behind the PCI controller, the "dma-ranges"
+> > property specifies the mapping from PCI bus addresses to an IOVA address.
+> > So should the property map all address space?
+> >
+> > Note that this is not actually possible with the R-Car hardware, but I
+> > found that the IOVA address space is outside of the DDR address space
+> > that we were using so had change it.
 > 
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> It's a bit tricky: the dma-ranges properties are walked recursively,
+> and a PCI bus may be behind a few other bridges that each have a
+> nontrivial mapping, and the IOMMU may not be on the address space that
+> the PCI host sees.
+Luckily the mapping for R-Car is pretty simple, I can imagine it can get very
+tricky!
 
-Fixed the following checkpatch warning and merged this to linux-phy tree.
-
-WARNING: line over 80 characters
-#311: FILE: drivers/phy/phy-sun4i-usb.c:794:
-+	{ .compatible = "allwinner,sun50i-a64-usb-phy", .data = &sun50i_a64_cfg},
-
-Thanks
-Kishon
-
-> ---
->  drivers/phy/phy-sun4i-usb.c | 34 ++++++++++++++++++++++++++++------
->  1 file changed, 28 insertions(+), 6 deletions(-)
+> In the past, we have said that the dma-ranges property should reflect
+> the address space that is used when programming the bridge registers
+> in the PCI host bridge itself.
 > 
-> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-> index 0a45bc6..a4db658 100644
-> --- a/drivers/phy/phy-sun4i-usb.c
-> +++ b/drivers/phy/phy-sun4i-usb.c
-> @@ -49,7 +49,7 @@
->  #define REG_PHYCTL_A33			0x10
->  #define REG_PHY_UNK_H3			0x20
->  
-> -#define REG_PMU_UNK_H3			0x10
-> +#define REG_PMU_UNK1			0x10
->  
->  #define PHYCTL_DATA			BIT(7)
->  
-> @@ -97,6 +97,7 @@ enum sun4i_usb_phy_type {
->  	sun6i_a31_phy,
->  	sun8i_a33_phy,
->  	sun8i_h3_phy,
-> +	sun50i_a64_phy,
->  };
->  
->  struct sun4i_usb_phy_cfg {
-> @@ -105,6 +106,7 @@ struct sun4i_usb_phy_cfg {
->  	u32 disc_thresh;
->  	u8 phyctl_offset;
->  	bool dedicated_clocks;
-> +	bool enable_pmu_unk1;
->  };
->  
->  struct sun4i_usb_phy_data {
-> @@ -180,8 +182,9 @@ static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
->  
->  	mutex_lock(&phy_data->mutex);
->  
-> -	if (phy_data->cfg->type == sun8i_a33_phy) {
-> -		/* A33 needs us to set phyctl to 0 explicitly */
-> +	if (phy_data->cfg->type == sun8i_a33_phy ||
-> +	    phy_data->cfg->type == sun50i_a64_phy) {
-> +		/* A33 or A64 needs us to set phyctl to 0 explicitly */
->  		writel(0, phyctl);
->  	}
->  
-> @@ -255,14 +258,16 @@ static int sun4i_usb_phy_init(struct phy *_phy)
->  		return ret;
->  	}
->  
-> +	if (data->cfg->enable_pmu_unk1) {
-> +		val = readl(phy->pmu + REG_PMU_UNK1);
-> +		writel(val & ~2, phy->pmu + REG_PMU_UNK1);
-> +	}
-> +
->  	if (data->cfg->type == sun8i_h3_phy) {
->  		if (phy->index == 0) {
->  			val = readl(data->base + REG_PHY_UNK_H3);
->  			writel(val & ~1, data->base + REG_PHY_UNK_H3);
->  		}
-> -
-> -		val = readl(phy->pmu + REG_PMU_UNK_H3);
-> -		writel(val & ~2, phy->pmu + REG_PMU_UNK_H3);
->  	} else {
->  		/* Enable USB 45 Ohm resistor calibration */
->  		if (phy->index == 0)
-> @@ -713,6 +718,7 @@ static const struct sun4i_usb_phy_cfg sun4i_a10_cfg = {
->  	.disc_thresh = 3,
->  	.phyctl_offset = REG_PHYCTL_A10,
->  	.dedicated_clocks = false,
-> +	.enable_pmu_unk1 = false,
->  };
->  
->  static const struct sun4i_usb_phy_cfg sun5i_a13_cfg = {
-> @@ -721,6 +727,7 @@ static const struct sun4i_usb_phy_cfg sun5i_a13_cfg = {
->  	.disc_thresh = 2,
->  	.phyctl_offset = REG_PHYCTL_A10,
->  	.dedicated_clocks = false,
-> +	.enable_pmu_unk1 = false,
->  };
->  
->  static const struct sun4i_usb_phy_cfg sun6i_a31_cfg = {
-> @@ -729,6 +736,7 @@ static const struct sun4i_usb_phy_cfg sun6i_a31_cfg = {
->  	.disc_thresh = 3,
->  	.phyctl_offset = REG_PHYCTL_A10,
->  	.dedicated_clocks = true,
-> +	.enable_pmu_unk1 = false,
->  };
->  
->  static const struct sun4i_usb_phy_cfg sun7i_a20_cfg = {
-> @@ -737,6 +745,7 @@ static const struct sun4i_usb_phy_cfg sun7i_a20_cfg = {
->  	.disc_thresh = 2,
->  	.phyctl_offset = REG_PHYCTL_A10,
->  	.dedicated_clocks = false,
-> +	.enable_pmu_unk1 = false,
->  };
->  
->  static const struct sun4i_usb_phy_cfg sun8i_a23_cfg = {
-> @@ -745,6 +754,7 @@ static const struct sun4i_usb_phy_cfg sun8i_a23_cfg = {
->  	.disc_thresh = 3,
->  	.phyctl_offset = REG_PHYCTL_A10,
->  	.dedicated_clocks = true,
-> +	.enable_pmu_unk1 = false,
->  };
->  
->  static const struct sun4i_usb_phy_cfg sun8i_a33_cfg = {
-> @@ -753,6 +763,7 @@ static const struct sun4i_usb_phy_cfg sun8i_a33_cfg = {
->  	.disc_thresh = 3,
->  	.phyctl_offset = REG_PHYCTL_A33,
->  	.dedicated_clocks = true,
-> +	.enable_pmu_unk1 = false,
->  };
->  
->  static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
-> @@ -760,6 +771,16 @@ static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
->  	.type = sun8i_h3_phy,
->  	.disc_thresh = 3,
->  	.dedicated_clocks = true,
-> +	.enable_pmu_unk1 = true,
-> +};
-> +
-> +static const struct sun4i_usb_phy_cfg sun50i_a64_cfg = {
-> +	.num_phys = 2,
-> +	.type = sun50i_a64_phy,
-> +	.disc_thresh = 3,
-> +	.phyctl_offset = REG_PHYCTL_A33,
-> +	.dedicated_clocks = true,
-> +	.enable_pmu_unk1 = true,
->  };
->  
->  static const struct of_device_id sun4i_usb_phy_of_match[] = {
-> @@ -770,6 +791,7 @@ static const struct of_device_id sun4i_usb_phy_of_match[] = {
->  	{ .compatible = "allwinner,sun8i-a23-usb-phy", .data = &sun8i_a23_cfg },
->  	{ .compatible = "allwinner,sun8i-a33-usb-phy", .data = &sun8i_a33_cfg },
->  	{ .compatible = "allwinner,sun8i-h3-usb-phy", .data = &sun8i_h3_cfg },
-> +	{ .compatible = "allwinner,sun50i-a64-usb-phy", .data = &sun50i_a64_cfg},
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, sun4i_usb_phy_of_match);
-> 
+> I think we have also made the assumption that a PCI host bridge
+> with an IOMMU uses a flat 32-bit DMA address space that goes through
+> the IOMMU (possibly a separate address space per PCI function,
+> depending on the type of IOMMU).
+I saw Robin Murphy's patches for PCI IOMMU map bindings, though at the
+moment to get things going I'm ignoring it because it will require quite a lot
+of changes to the iommu/ipmmu-vmsa driver. Other IOMMU drivers will
+also have to change a fair bit to support this new binding.
+
+> One corner case that doesn't really fit in that model is a PCI host
+> bridge that requires the bridge register to be programmed in a special
+> way for the IOMMU to work (e.g. away from the RAM to the address that
+> is routed to the IOMMU).
+In our case, there is nothing special in programming the bridge registers
+for use with an IOMMU other than the range of addresses that is exposed.
+The PCI host has a HW limitation that the AXI bus addresses must be
+32-bit. The HW will allow you to set up the bridge registers so that PCI
+bus addresses above 32-bits are mapped into the 32-bit AXI space. This
+isn't used though at the moment, the PCI:AXI mapping is simply 1:1.
+
+Simply changing the dma-ranges prop to specify all of the 32-bit range is
+enough to get it to work with the IOMMU.
+
+Without IOMMU, the dma-ranges prop was:
+dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000>;
+Note that this does not cover all of DDR, as there is 3GiB above the 32-bit
+address space. Other restrictions in the way the bridge registers are
+programmed mean we cannot even map all DDR in the 32-bit space.
+
+With the IOMMU, the dma-ranges prop is simply:
+dma-ranges = <0x42000000 0 0x00000000 0 0x00000000 1 0x00000000>;
+
+> Another tricky case is a PCI host that uses the IOMMU only for 32-bit
+> DMA masters but that does have a dma-ranges property that can be
+> used for direct mapping of all RAM through a nonzero offset that
+> gets set up according to dma-ranges.
+I don't think that applies, though I'm struggling a bit to understand your
+comment.
+
+> Can you be more specific which of those cases you actually have here?
+Hopefully I have explained it above.
+
+Many thanks
+Phil
