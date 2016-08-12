@@ -1,158 +1,133 @@
-From: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] powerpc: populate the default bus with
- machine_arch_initcall
-Date: Fri, 12 Aug 2016 13:49:34 +0800
-Message-ID: <20160812054934.GJ17275@pek-khao-d1>
-References: <1470913781-9204-1-git-send-email-haokexin@gmail.com>
- <87k2fmtxbv.fsf@concordia.ellerman.id.au>
+From: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv4] watchdog: xilinx: Add clock support
+Date: Fri, 12 Aug 2016 11:47:44 +0530
+Message-ID: <1470982664-13228-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="8tZVdKiiYitVG083"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87k2fmtxbv.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add support for the clock. Currently we enable
+at probe and relinquish at remove.
 
---8tZVdKiiYitVG083
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Aug 12, 2016 at 02:39:32PM +1000, Michael Ellerman wrote:
-> Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->=20
-> > With the commit 44a7185c2ae6 ("of/platform: Add common method to
-> > populate default bus"), a default function is introduced to populate
-> > the default bus and this function is invoked at the arch_initcall_sync
-> > level. This will override the arch specific population of default bus
-> > which run at a lower level than arch_initcall_sync. Since not all
-> > powerpc specific buses are added to the of_default_bus_match_table[],
-> > this causes some powerpc specific bus are not probed. Fix this by
-> > using a more preceding initcall.
-> >
-> > Signed-off-by: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> > Of course we can adjust the powerpc arch codes to use the
-> > of_platform_default_populate_init(), but it has high risk to break
-> > other boards given the complicated powerpc specific buses. So I would
-> > like just to fix the broken boards in the current release, and cook=20
-> > a patch to change to of_platform_default_populate_init() for linux-next.
-> >
-> > Only boot test on a mpc8315erdb board.
-> >
-> >  arch/powerpc/platforms/40x/ep405.c               | 2 +-
-> >  arch/powerpc/platforms/40x/ppc40x_simple.c       | 2 +-
-> >  arch/powerpc/platforms/40x/virtex.c              | 2 +-
-> >  arch/powerpc/platforms/40x/walnut.c              | 2 +-
-> >  arch/powerpc/platforms/44x/canyonlands.c         | 2 +-
-> >  arch/powerpc/platforms/44x/ebony.c               | 2 +-
-> >  arch/powerpc/platforms/44x/iss4xx.c              | 2 +-
-> >  arch/powerpc/platforms/44x/ppc44x_simple.c       | 2 +-
-> >  arch/powerpc/platforms/44x/ppc476.c              | 2 +-
-> >  arch/powerpc/platforms/44x/sam440ep.c            | 2 +-
-> >  arch/powerpc/platforms/44x/virtex.c              | 2 +-
-> >  arch/powerpc/platforms/44x/warp.c                | 2 +-
-> >  arch/powerpc/platforms/82xx/ep8248e.c            | 2 +-
-> >  arch/powerpc/platforms/82xx/km82xx.c             | 2 +-
-> >  arch/powerpc/platforms/82xx/mpc8272_ads.c        | 2 +-
-> >  arch/powerpc/platforms/82xx/pq2fads.c            | 2 +-
-> >  arch/powerpc/platforms/83xx/mpc831x_rdb.c        | 2 +-
-> >  arch/powerpc/platforms/83xx/mpc834x_itx.c        | 2 +-
-> >  arch/powerpc/platforms/85xx/ppa8548.c            | 2 +-
-> >  arch/powerpc/platforms/8xx/adder875.c            | 2 +-
-> >  arch/powerpc/platforms/8xx/ep88xc.c              | 2 +-
-> >  arch/powerpc/platforms/8xx/mpc86xads_setup.c     | 2 +-
-> >  arch/powerpc/platforms/8xx/mpc885ads_setup.c     | 2 +-
-> >  arch/powerpc/platforms/8xx/tqm8xx_setup.c        | 2 +-
-> >  arch/powerpc/platforms/cell/setup.c              | 2 +-
-> >  arch/powerpc/platforms/embedded6xx/gamecube.c    | 2 +-
-> >  arch/powerpc/platforms/embedded6xx/linkstation.c | 2 +-
-> >  arch/powerpc/platforms/embedded6xx/mvme5100.c    | 2 +-
-> >  arch/powerpc/platforms/embedded6xx/storcenter.c  | 2 +-
-> >  arch/powerpc/platforms/embedded6xx/wii.c         | 2 +-
-> >  arch/powerpc/platforms/pasemi/setup.c            | 2 +-
->=20
-> That's not a very minimal fix.
->=20
-> Every one of those initcall changes could be introducing a bug, by
-> changing the order vs other init calls.
->=20
-> Can we just go back to the old behaviour on ppc?
-
-Sure. How about this one?
-
-=46rom 4362b4cdd8a6198df4cc46c628473f0d44e03fa8 Mon Sep 17 00:00:00 2001
-=46rom: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Fri, 12 Aug 2016 13:30:03 +0800
-Subject: [PATCH v2] of/platform: disable the
- of_platform_default_populate_init() for all the ppc boards
-
-With the commit 44a7185c2ae6 ("of/platform: Add common method to
-populate default bus"), a default function is introduced to populate
-the default bus and this function is invoked at the arch_initcall_sync
-level. But a lot of ppc boards use machine_device_initcall() to
-populate the default bus. This means that the default populate function
-has higher priority and would override the arch specific population of
-the bus. The side effect is that some arch specific bus are not probed,
-then cause various malfunction due to the miss of some devices. Since
-it is very possible to introduce bugs if we simply change the initcall
-level for all these boards(about 30+). This just disable this default
-function for all the ppc boards.
-
-Signed-off-by: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Acked-by: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/of/platform.c | 2 ++
- 1 file changed, 2 insertions(+)
+v2:
+fix spaces and error path.
+v3
+do not fail existing dts
+v4:
+fix the error prints as the clock is optional
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 8aa197691074..f39ccd5aa701 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -497,6 +497,7 @@ int of_platform_default_populate(struct device_node *ro=
-ot,
+ .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  3 +++
+ drivers/watchdog/of_xilinx_wdt.c                   | 27 ++++++++++++++++++++--
+ 2 files changed, 28 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+index 6d63782..c6ae9c9 100644
+--- a/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/of-xilinx-wdt.txt
+@@ -7,6 +7,8 @@ Required properties:
+ - reg			: Physical base address and size
+ 
+ Optional properties:
++- clocks		: Input clock specifier. Refer to common clock
++			  bindings.
+ - clock-frequency	: Frequency of clock in Hz
+ - xlnx,wdt-enable-once	: 0 - Watchdog can be restarted
+ 			  1 - Watchdog can be enabled just once
+@@ -17,6 +19,7 @@ Example:
+ axi-timebase-wdt@40100000 {
+ 	clock-frequency = <50000000>;
+ 	compatible = "xlnx,xps-timebase-wdt-1.00.a";
++	clocks = <&clkc 15>;
+ 	reg = <0x40100000 0x10000>;
+ 	xlnx,wdt-enable-once = <0x0>;
+ 	xlnx,wdt-interval = <0x1b>;
+diff --git a/drivers/watchdog/of_xilinx_wdt.c b/drivers/watchdog/of_xilinx_wdt.c
+index b2e1b4c..f757e6d 100644
+--- a/drivers/watchdog/of_xilinx_wdt.c
++++ b/drivers/watchdog/of_xilinx_wdt.c
+@@ -10,6 +10,7 @@
+  * 2 of the License, or (at your option) any later version.
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+@@ -45,6 +46,7 @@ struct xwdt_device {
+ 	u32 wdt_interval;
+ 	spinlock_t spinlock;
+ 	struct watchdog_device xilinx_wdt_wdd;
++	struct clk		*clk;
+ };
+ 
+ static int xilinx_wdt_start(struct watchdog_device *wdd)
+@@ -195,16 +197,32 @@ static int xwdt_probe(struct platform_device *pdev)
+ 	spin_lock_init(&xdev->spinlock);
+ 	watchdog_set_drvdata(xilinx_wdt_wdd, xdev);
+ 
++	xdev->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(xdev->clk)) {
++		if (PTR_ERR(xdev->clk) == -ENOENT) {
++			dev_info(&pdev->dev, "input clock not provided\n");
++			xdev->clk = NULL;
++		} else {
++			return PTR_ERR(xdev->clk);
++		}
++	}
++
++	rc = clk_prepare_enable(xdev->clk);
++	if (rc) {
++		dev_err(&pdev->dev, "unable to enable clock\n");
++		return rc;
++	}
++
+ 	rc = xwdt_selftest(xdev);
+ 	if (rc == XWT_TIMER_FAILED) {
+ 		dev_err(&pdev->dev, "SelfTest routine error\n");
+-		return rc;
++		goto err_clk_disable;
+ 	}
+ 
+ 	rc = watchdog_register_device(xilinx_wdt_wdd);
+ 	if (rc) {
+ 		dev_err(&pdev->dev, "Cannot register watchdog (err=%d)\n", rc);
+-		return rc;
++		goto err_clk_disable;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "Xilinx Watchdog Timer at %p with timeout %ds\n",
+@@ -213,6 +231,10 @@ static int xwdt_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, xdev);
+ 
+ 	return 0;
++err_clk_disable:
++	clk_disable_unprepare(xdev->clk);
++
++	return rc;
  }
- EXPORT_SYMBOL_GPL(of_platform_default_populate);
-=20
-+#ifndef CONFIG_PPC
- static int __init of_platform_default_populate_init(void)
- {
- 	struct device_node *node;
-@@ -521,6 +522,7 @@ static int __init of_platform_default_populate_init(voi=
-d)
+ 
+ static int xwdt_remove(struct platform_device *pdev)
+@@ -220,6 +242,7 @@ static int xwdt_remove(struct platform_device *pdev)
+ 	struct xwdt_device *xdev = platform_get_drvdata(pdev);
+ 
+ 	watchdog_unregister_device(&xdev->xilinx_wdt_wdd);
++	clk_disable_unprepare(xdev->clk);
+ 
  	return 0;
  }
- arch_initcall_sync(of_platform_default_populate_init);
-+#endif
-=20
- static int of_platform_device_destroy(struct device *dev, void *data)
- {
---=20
-2.8.1
+-- 
+2.1.1
 
-Thanks,
-Kevin
-
---8tZVdKiiYitVG083
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXrWNuAAoJEJNY7TDerrFxxi0H/0QnPXbbSy2IXvKpZrQjqap4
-pjXA3GIVljY3mhNJ11sINdeEHCmK+GQJrA2lTt/q2HCCUL6h01JkGPnloDe3otOh
-9yhrKjqErbTn4w7CBVWlWSAsZzq1kTK9p+OYyJTSiuvEdbvSux9QlTWowvsZoR18
-yPymWaNA+xj0iGfdwidPcS5+d16Qhdne5jyHCz9E5jc092bBTt1iVPF2cHPgCaDO
-kCo7Fm1G53T4YmRKBqjXvLRogsHk8DBw6Fhh5oE6uDDqyJJbuJ9MJDV0IJgWNy0o
-CLobBUrYaegfJ+awcoGOIGq6AurXpb+RxZse0f5r/ZkPLUNzz5elubVtW+4/cTw=
-=Xvfo
------END PGP SIGNATURE-----
-
---8tZVdKiiYitVG083--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
