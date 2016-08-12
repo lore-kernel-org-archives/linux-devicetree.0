@@ -1,34 +1,55 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv4] watchdog: xilinx: Add clock support
-Date: Fri, 12 Aug 2016 12:18:19 +0530
-Message-ID: <CAKfKVtHaYSiHuU6WPsQtMrjASQPAwn6jeqw1oEAnZGcgaiLyuw@mail.gmail.com>
-References: <1470982664-13228-1-git-send-email-shubhrajyoti.datta@xilinx.com>
- <1a86f6d6-fc92-81ec-eb07-669c2bda8b38@roeck-us.net> <CAKfKVtHubRMwdYUfFx1YaiwKjYR_uUBBgouCTaTahmK9DGq6gQ@mail.gmail.com>
+From: "Sricharan" <sricharan@codeaurora.org>
+Subject: RE: [PATCH V6 0/6] iommu/msm: Add DT adaptation and generic bindings support
+Date: Fri, 12 Aug 2016 12:30:03 +0530
+Message-ID: <003a01d1f467$2b180ba0$814822e0$@codeaurora.org>
+References: <1465817767-9856-1-git-send-email-sricharan@codeaurora.org> <CAF6AEGsF5M1sfwaXKW0x=Mu=nQJR-9+xqrtXd=7Vz_+6G_u25A@mail.gmail.com> <CAF6AEGsLGDqRuB97+qN1g7X60A49Wv1HGbAiaeZoxogMmHY9HA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKfKVtHubRMwdYUfFx1YaiwKjYR_uUBBgouCTaTahmK9DGq6gQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAF6AEGsLGDqRuB97+qN1g7X60A49Wv1HGbAiaeZoxogMmHY9HA@mail.gmail.com>
+Content-Language: en-us
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: 'Rob Clark' <robdclark@gmail.com>
+Cc: devicetree@vger.kernel.org, 'linux-arm-msm' <linux-arm-msm@vger.kernel.org>, 'Joerg Roedel' <joro@8bytes.org>, iommu@lists.linux-foundation.org, 'Srinivas Kandagatla' <srinivas.kandagatla@linaro.org>, 'Laurent Pinchart' <laurent.pinchart@ideasonboard.com>, 'Thierry Reding' <treding@nvidia.com>, 'Robin Murphy' <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, stepanm@codeaurora.org, 'Archit Taneja' <architt@codeaurora.org>, 'Arnd Bergmann' <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 12, 2016 at 12:12 PM, Shubhrajyoti Datta
-<shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> [...]
+Hi Rob,
+
+>> btw, the current state, at least on linaro integration branch, fault
+>> handling doesn't work so well (ie. device never gets resumed).. which
+>> is a bit unfortunate for a gpu (and results in a *lot* of rebooting on
+>> my part when debugging userspace).  I haven't had time yet to compare
+>> to the ancient downstream driver, but not sure if you have any ideas?
 >>
->>
->> The clock is optional. Why print anything ?
->>
->> I am not a friend of logging noise, and I think this is just noise.
->> Would you want such a message printed for each optional property ?
->>
->> Guenter
->>
-> sure patch below
-noticed some issue so sent by git
-thanks,
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> I guess probably disabling stall on fault would help.  But I'm not
+>> even getting the "Fault occurred in context.." prints.  Seeing the
+>> fault iova is pretty useful since that plus gpu cmdstream trace helps
+>> me figure out which texture/etc is being accessed out of bounds.
+>
+>fyi, it looks like it is not getting any fault irq..  it's *possible*
+>that I screwed up the irq #'s when translating from downstream, so you
+>might want to double check that.  I thought I had it right, I assume I
+>would have noticed during piglit runs if fault recovery wasn't working
+>(since the result is that *everything* after the faulting test would
+>have failed since gpu is wedged with no access to memory), but it was
+>long enough ago that I can't claim that definitively.
+>
+>If you need an easy way to trigger a gpu fault, msmtest is a good way,
+>change this line:
+>
+>  https://github.com/freedreno/msmtest/blob/master/msmtest.c#L247
+>
+>from OUT_RELOC() to OUT_RING(ring, 0x00000000) will trigger a fault.
+>
+   So for the irq to be triggered, 'non-secure' irq line has to be
+  populated in DT. There is a 'secure'and 'non-secure' irq lines for these iommus
+  and  non-secure irq number is secure + 1. I tested this by having a 'return 0'
+ from the msm_iommu_map (no mapping), and the faults were getting triggered.
+
+  Can you share me your dts data ?
+
+
+Regards,
+ Sricharan
