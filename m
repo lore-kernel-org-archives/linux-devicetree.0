@@ -1,43 +1,46 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv5] watchdog: xilinx: Add clock support
-Date: Fri, 12 Aug 2016 14:01:23 -0500
-Message-ID: <20160812190123.GB16954@rob-hp-laptop>
-References: <1470984421-3494-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RFCv2] net: ethernet: macb: Add support for rx_clk
+Date: Fri, 12 Aug 2016 14:03:18 -0500
+Message-ID: <20160812190318.GA17752@rob-hp-laptop>
+References: <1470996979-33015-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1470984421-3494-1-git-send-email-shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
+In-Reply-To: <1470996979-33015-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+Sender: netdev-owner@vger.kernel.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, soren.brinkmann@xilinx.com, shubhrajyoti.datta@gmail.com, michal.simek@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 12, 2016 at 12:17:01PM +0530, Shubhrajyoti Datta wrote:
-> Add support for the clock. Currently we enable
-> at probe and relinquish at remove.
+On Fri, Aug 12, 2016 at 03:46:19PM +0530, Shubhrajyoti Datta wrote:
+> Some of the platforms like zynqmp ultrascale+ has a
+> separate clock gate for the rx clock. Add an optional
+> rx_clk so that the clock can be enabled.
 > 
-> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Acked-by: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 > ---
 > v2:
-> fix spaces and error path.
-> v3
-> do not fail existing dts
-> v4:
-> fix the error prints as the clock is optional
-> v5:
-> remove some more prints
+> fix warning
 > 
->  .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  3 +++
+>  Documentation/devicetree/bindings/net/macb.txt |  2 +-
+>  drivers/net/ethernet/cadence/macb.c            | 31 +++++++++++++++++++++-----
+>  drivers/net/ethernet/cadence/macb.h            |  4 +++-
+>  3 files changed, 30 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+> index b5a42df..315beda 100644
+> --- a/Documentation/devicetree/bindings/net/macb.txt
+> +++ b/Documentation/devicetree/bindings/net/macb.txt
+> @@ -20,7 +20,7 @@ Required properties:
+>  - phy-mode: See ethernet.txt file in the same directory.
+>  - clock-names: Tuple listing input clock names.
+>  	Required elements: 'pclk', 'hclk'
+> -	Optional elements: 'tx_clk'
+> +	Optional elements: 'tx_clk', 'rx_clk'
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Please state which compatibles this applies to.
 
->  drivers/watchdog/of_xilinx_wdt.c                   | 25 ++++++++++++++++++++--
->  2 files changed, 26 insertions(+), 2 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  - clocks: Phandles to input clocks.
+>  
+>  Optional properties for PHY child node:
