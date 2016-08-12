@@ -1,70 +1,212 @@
-From: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
-Subject: Re: [RESEND PATCH] ARM: tegra: fix erroneous address in dts
-Date: Fri, 12 Aug 2016 19:26:27 +0200
-Message-ID: <d2469177-0eae-cd11-aa43-74baa374cc6c@ramses-pyramidenbau.de>
-References: <1468835208-13426-1-git-send-email-ralf@ramses-pyramidenbau.de>
- <20160718095802.GA422@ulmo.ba.sec> <3087941.oHflrW9cm7@wuerfel>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] arm: dts: apq8064: Add thermal zones, tsens and
+ qfprom nodes
+Date: Fri, 12 Aug 2016 13:13:04 -0500
+Message-ID: <20160812181304.GA24114@rob-hp-laptop>
+References: <1470811439-1992-1-git-send-email-rnayak@codeaurora.org>
+ <1470811439-1992-3-git-send-email-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3087941.oHflrW9cm7@wuerfel>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1470811439-1992-3-git-send-email-rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/10/2016 10:46 PM, Arnd Bergmann wrote:
-> On Monday, July 18, 2016 11:58:02 AM CEST Thierry Reding wrote:
->> On Mon, Jul 18, 2016 at 11:46:48AM +0200, Ralf Ramsauer wrote:
->>> c90bb7b enabled the high speed UARTs of the Jetson TK1. Due to a merge
->>> quirk, wrong addresses were introduced. Fix it and use the correct
->>> addresses.
->>>
->>> Thierry let me know, that there is another patch (b5896f67ab3c in
->>> linux-next) in preparation which removes all the '0,' prefixes of unit
->>> addresses on Tegra124 and is planned to go upstream in 4.8, so
->>> this patch will get reverted then.
->>>
->>> But for the moment, this patch is necessary to fix current misbehaviour.
->>>
->>> Fixes: c90bb7b9b9 ("ARM: tegra: Add high speed UARTs to Jetson TK1 device tree")
->>> Signed-off-by: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
->>> Acked-by: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> ---
->>>  arch/arm/boot/dts/tegra124-jetson-tk1.dts | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> ARM-SoC maintainers,
->>
->> Just to clarify, this is targetted at v4.7 because the offending patch
->> was merged in v4.7-rc1. If at all possible it'd be great to get this in,
->> even if this is terribly last minute.
->>
+On Wed, Aug 10, 2016 at 12:13:56PM +0530, Rajendra Nayak wrote:
+> TSENS is part of GCC, hence add TSENS properties as part of GCC node.
+> Also add thermal zones and qfprom nodes.
+> Update GCC bindings doc to mention the possibility of optional TSENS
+> properties that can be part of GCC node.
 > 
-> I just notice this was still missing in v4.8-rc1, so I added it to
-> the fixes branch now, with a stable tag for v4.7
-Hi Arnd,
+> Acked-by: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,gcc.txt         |  18 ++++
+>  arch/arm/boot/dts/qcom-apq8064.dtsi                | 103 +++++++++++++++++++++
+>  2 files changed, 121 insertions(+)
 
-Ahm - this patch should have only be applied if it would have been
-possible to commit it before the release of v4.7.
+A couple of nits, otherwise:
 
-Mainline Patch b5896f6 ("ARM: tegra: Remove commas from unit addresses
-on Tegra124") which was introduced during the merge window of v4.8 makes
-this patch superfluous and introduces the same error again that we
-initially wanted to fix :-)
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-This patch is only required for stable v4.7.x.
-
-I think the best is to revert it on mainline, as long as stabilization
-window is still open.
-
-  Ralf
 > 
-> 	Arnd
-> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+> index 9a60fde..16e2f84 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+> @@ -23,6 +23,13 @@ Required properties :
+>  Optional properties :
+>  - #power-domain-cells : shall contain 1
+>  
+> +Optional properties:
 
--- 
-Ralf Ramsauer
-PGP: 0x8F10049B
+It already has this section above.
+
+> +- Qualcomm TSENS (thermal sensor device) on some devices can
+> +be part of GCC and hence the TSENS properties can also be
+> +part of the GCC/clock-controller node.
+> +For more details on the TSENS properties please refer
+> +Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> +
+>  Example:
+>  	clock-controller@900000 {
+>  		compatible = "qcom,gcc-msm8960";
+> @@ -31,3 +38,14 @@ Example:
+>  		#reset-cells = <1>;
+>  		#power-domain-cells = <1>;
+>  	};
+> +
+> +Example of GCC with TSENS properties:
+> +	clock-controller@900000 {
+> +		compatible = "qcom,gcc-apq8064";
+> +		reg = <0x00900000 0x4000>;
+> +		nvmem-cells = <&tsens_calib>, <&tsens_backup>;
+> +		nvmem-cell-names = "calib", "calib_backup";
+> +		#clock-cells = <1>;
+> +		#reset-cells = <1>;
+> +		#thermal-sensor-cells = <1>;
+> +	};
+> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> index 74a9b6c..9cd13ab 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> @@ -86,6 +86,92 @@
+>  		};
+>  	};
+>  
+> +	thermal-zones {
+> +		cpu-thermal0 {
+> +			polling-delay-passive = <250>;
+> +			polling-delay = <1000>;
+> +
+> +			thermal-sensors = <&gcc 7>;
+> +			coefficients = <1199 0>;
+> +
+> +			trips {
+> +				cpu_alert0: trip0 {
+> +					temperature = <75000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +				cpu_crit0: trip1 {
+> +					temperature = <110000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +
+> +		cpu-thermal1 {
+> +			polling-delay-passive = <250>;
+> +			polling-delay = <1000>;
+> +
+> +			thermal-sensors = <&gcc 8>;
+> +			coefficients = <1132 0>;
+> +
+> +			trips {
+> +				cpu_alert1: trip0 {
+> +					temperature = <75000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +				cpu_crit1: trip1 {
+> +					temperature = <110000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +
+> +		cpu-thermal2 {
+> +			polling-delay-passive = <250>;
+> +			polling-delay = <1000>;
+> +
+> +			thermal-sensors = <&gcc 9>;
+> +			coefficients = <1199 0>;
+> +
+> +			trips {
+> +				cpu_alert2: trip0 {
+> +					temperature = <75000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +				cpu_crit2: trip1 {
+> +					temperature = <110000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +
+> +		cpu-thermal3 {
+> +			polling-delay-passive = <250>;
+> +			polling-delay = <1000>;
+> +
+> +			thermal-sensors = <&gcc 10>;
+> +			coefficients = <1132 0>;
+> +
+> +			trips {
+> +				cpu_alert3: trip0 {
+> +					temperature = <75000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +				cpu_crit3: trip1 {
+> +					temperature = <110000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+>  	cpu-pmu {
+>  		compatible = "qcom,krait-pmu";
+>  		interrupts = <1 10 0x304>;
+> @@ -611,11 +697,28 @@
+>  			};
+>  		};
+>  
+> +		qfprom: qfprom@00700000 {
+
+Drop leading 0s.
+
+> +			compatible	= "qcom,qfprom";
+> +			reg		= <0x00700000 0x1000>;
+> +			#address-cells	= <1>;
+> +			#size-cells	= <1>;
+> +			ranges;
+> +			tsens_calib: calib {
+> +				reg = <0x404 0x10>;
+> +			};
+> +			tsens_backup: backup_calib {
+> +				reg = <0x414 0x10>;
+> +			};
+> +		};
+> +
+>  		gcc: clock-controller@900000 {
+>  			compatible = "qcom,gcc-apq8064";
+>  			reg = <0x00900000 0x4000>;
+> +			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
+> +			nvmem-cell-names = "calib", "calib_backup";
+>  			#clock-cells = <1>;
+>  			#reset-cells = <1>;
+> +			#thermal-sensor-cells = <1>;
+>  		};
+>  
+>  		lcc: clock-controller@28000000 {
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
