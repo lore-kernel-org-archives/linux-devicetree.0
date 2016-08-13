@@ -1,92 +1,72 @@
-From: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] net: macb: add phy-handle support for the macb
-Date: Sat, 13 Aug 2016 15:31:49 +0530
-Message-ID: <1471082509-11764-1-git-send-email-appanad@xilinx.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC 2/7] tty: add support for "tty slave" devices
+Date: Sat, 13 Aug 2016 12:03:45 +0200
+Message-ID: <20160813100345.GA14665@kroah.com>
+References: <1471058078-5579-1-git-send-email-sre@kernel.org>
+ <1471058078-5579-3-git-send-email-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1471058078-5579-3-git-send-email-sre@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Jiri Slaby <jslaby@suse.com>, Ville Tervo <ville.tervo@iki.fi>, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Pavel Machek <pavel@ucw.cz>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, ivo.g.dimitrov.75@gmail.com, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, NeilBrown <neilb@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the 'phy-handle' binding which allows for a
-system to specifically select a phy which can be attached via any MDIO
-bus available in the system.
+On Sat, Aug 13, 2016 at 05:14:33AM +0200, Sebastian Reichel wrote:
+> From: NeilBrown <neilb@suse.de>
+> 
+> A "tty slave" is a device connected via UART.  It may need a driver to,
+> for example, power the device on when the tty is opened, and power it
+> off when the tty is released.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/serial/8250.txt | 4 ++++
+>  drivers/tty/tty_io.c                              | 6 ++++++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
+> index f5561ac7e17e..ecb74730f71b 100644
+> --- a/Documentation/devicetree/bindings/serial/8250.txt
+> +++ b/Documentation/devicetree/bindings/serial/8250.txt
+> @@ -46,6 +46,10 @@ Optional properties:
+>    line respectively. It will use specified GPIO instead of the peripheral
+>    function pin for the UART feature. If unsure, don't specify this property.
+>  
+> +Optional child node:
+> +- a device connected to the uart can be specified as child node with
+> +  compatible value.
+> +
+>  Note:
+>  * fsl,ns16550:
+>    ------------
+> diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+> index 734a635e7363..39ff5dcdfd50 100644
+> --- a/drivers/tty/tty_io.c
+> +++ b/drivers/tty/tty_io.c
+> @@ -95,6 +95,7 @@
+>  #include <linux/seq_file.h>
+>  #include <linux/serial.h>
+>  #include <linux/ratelimit.h>
+> +#include <linux/of_platform.h>
+>  
+>  #include <linux/uaccess.h>
+>  
+> @@ -3317,6 +3318,11 @@ struct device *tty_register_device_attr(struct tty_driver *driver,
+>  	retval = device_register(dev);
+>  	if (retval)
+>  		goto error;
+> +	if (device && device->of_node)
+> +		/* Children are platform devices and will be
+> +		 * runtime_pm managed by this tty.
+> +		 */
+> +		of_platform_populate(device->of_node, NULL, NULL, dev);
 
-Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/net/macb.txt |  3 +++
- drivers/net/ethernet/cadence/macb.c            | 11 +++++++++--
- drivers/net/ethernet/cadence/macb.h            |  1 +
- 3 files changed, 13 insertions(+), 2 deletions(-)
+Why are these platform devices?  And why only OF?
 
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index b5a42df..3cfff7c 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -23,6 +23,9 @@ Required properties:
- 	Optional elements: 'tx_clk'
- - clocks: Phandles to input clocks.
- 
-+Optional properties:
-+- phy-handle	: See ethernet.txt file in the same directory.
-+
- Optional properties for PHY child node:
- - reset-gpios : Should specify the gpio for phy reset
- - magic-packet : If present, indicates that the hardware supports waking
-diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
-index 6b797e3..4ddd45d 100644
---- a/drivers/net/ethernet/cadence/macb.c
-+++ b/drivers/net/ethernet/cadence/macb.c
-@@ -421,7 +421,7 @@ static int macb_mii_probe(struct net_device *dev)
- static int macb_mii_init(struct macb *bp)
- {
- 	struct macb_platform_data *pdata;
--	struct device_node *np;
-+	struct device_node *np, *np1;
- 	int err = -ENXIO, i;
- 
- 	/* Enable management port */
-@@ -445,7 +445,13 @@ static int macb_mii_init(struct macb *bp)
- 	dev_set_drvdata(&bp->dev->dev, bp->mii_bus);
- 
- 	np = bp->pdev->dev.of_node;
--	if (np) {
-+	np1 = of_get_parent(bp->phy_node);
-+	if (np1) {
-+		of_node_put(np1);
-+		err = of_mdiobus_register(bp->mii_bus, np1);
-+		if (err)
-+			goto err_out_unregister_bus;
-+	} else if (np) {
- 		/* try dt phy registration */
- 		err = of_mdiobus_register(bp->mii_bus, np);
- 
-@@ -3016,6 +3022,7 @@ static int macb_probe(struct platform_device *pdev)
- 	} else {
- 		bp->phy_interface = err;
- 	}
-+	bp->phy_node = of_parse_phandle(np, "phy-handle", 0);
- 
- 	/* IP specific init */
- 	err = init(pdev);
-diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index aa3aeec..83d1617 100644
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -855,6 +855,7 @@ struct macb {
- 	unsigned int		jumbo_max_len;
- 
- 	u32			wol;
-+	struct device_node	*phy_node;
- };
- 
- static inline bool macb_is_gem(struct macb *bp)
--- 
-2.1.2
+thanks,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
