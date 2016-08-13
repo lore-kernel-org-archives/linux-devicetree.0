@@ -1,69 +1,92 @@
-From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH RFC] Revert "of/irq: Mark initialised interrupt controllers as
- populated"
-Date: Sat, 13 Aug 2016 10:45:45 +0100
-Message-ID: <E1bYVVh-0001eq-BI@rmk-PC.armlinux.org.uk>
+From: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] net: macb: add phy-handle support for the macb
+Date: Sat, 13 Aug 2016 15:31:49 +0530
+Message-ID: <1471082509-11764-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Frank Rowand <frowand.list@gmail.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This reverts commit 15cc2ed6dcf91a8658e084be4e140147161819d7, which
-causes a regression with iMX6 power domains.  iMX6 GPC contains both an
-interrupt controller and power domains.  The iMX6 GPC code is setup to
-register an interrupt controller using IRQCHIP_DECLARE(), but then to
-register the power domains using the platform device.
+This patch adds support for the 'phy-handle' binding which allows for a
+system to specifically select a phy which can be attached via any MDIO
+bus available in the system.
 
-This commit prevents the platform device being created, thereby breaking
-iMX6 power domain support.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 ---
-Please argue amongst yourselves about how to fix this regression caused
-by this commit...
+ Documentation/devicetree/bindings/net/macb.txt |  3 +++
+ drivers/net/ethernet/cadence/macb.c            | 11 +++++++++--
+ drivers/net/ethernet/cadence/macb.h            |  1 +
+ 3 files changed, 13 insertions(+), 2 deletions(-)
 
-Marc introduced the code which used OF_DECLARE_2()/IRQCHIP_DECLARE() in
-
-	commit b923ff6af0d5a806a3996dac6d4393cd9792d0f4
-	Author: Marc Zyngier <marc.zyngier@arm.com>
-	Date:   Mon Feb 23 17:45:18 2015 +0000
-
-while the PM domain code was introduced at around the same time by:
-
-	commit 00eb60a8b4f7a4aa00fd8abd68c2dc7aec55df19
-	Author: Philipp Zabel <p.zabel@pengutronix.de>
-	Date:   Mon Feb 23 18:40:12 2015 +0100
-
-I guess distributed development is fun!
-
- drivers/of/irq.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 89a71c6074fc..7d3f93fdc4ad 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -559,8 +559,6 @@ void __init of_irq_init(const struct of_device_id *matches)
- 			 * its children can get processed in a subsequent pass.
- 			 */
- 			list_add_tail(&desc->list, &intc_parent_list);
--
--			of_node_set_flag(desc->dev, OF_POPULATED);
- 		}
+diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
+index b5a42df..3cfff7c 100644
+--- a/Documentation/devicetree/bindings/net/macb.txt
++++ b/Documentation/devicetree/bindings/net/macb.txt
+@@ -23,6 +23,9 @@ Required properties:
+ 	Optional elements: 'tx_clk'
+ - clocks: Phandles to input clocks.
  
- 		/* Get the next pending parent that might have children */
++Optional properties:
++- phy-handle	: See ethernet.txt file in the same directory.
++
+ Optional properties for PHY child node:
+ - reset-gpios : Should specify the gpio for phy reset
+ - magic-packet : If present, indicates that the hardware supports waking
+diff --git a/drivers/net/ethernet/cadence/macb.c b/drivers/net/ethernet/cadence/macb.c
+index 6b797e3..4ddd45d 100644
+--- a/drivers/net/ethernet/cadence/macb.c
++++ b/drivers/net/ethernet/cadence/macb.c
+@@ -421,7 +421,7 @@ static int macb_mii_probe(struct net_device *dev)
+ static int macb_mii_init(struct macb *bp)
+ {
+ 	struct macb_platform_data *pdata;
+-	struct device_node *np;
++	struct device_node *np, *np1;
+ 	int err = -ENXIO, i;
+ 
+ 	/* Enable management port */
+@@ -445,7 +445,13 @@ static int macb_mii_init(struct macb *bp)
+ 	dev_set_drvdata(&bp->dev->dev, bp->mii_bus);
+ 
+ 	np = bp->pdev->dev.of_node;
+-	if (np) {
++	np1 = of_get_parent(bp->phy_node);
++	if (np1) {
++		of_node_put(np1);
++		err = of_mdiobus_register(bp->mii_bus, np1);
++		if (err)
++			goto err_out_unregister_bus;
++	} else if (np) {
+ 		/* try dt phy registration */
+ 		err = of_mdiobus_register(bp->mii_bus, np);
+ 
+@@ -3016,6 +3022,7 @@ static int macb_probe(struct platform_device *pdev)
+ 	} else {
+ 		bp->phy_interface = err;
+ 	}
++	bp->phy_node = of_parse_phandle(np, "phy-handle", 0);
+ 
+ 	/* IP specific init */
+ 	err = init(pdev);
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+index aa3aeec..83d1617 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -855,6 +855,7 @@ struct macb {
+ 	unsigned int		jumbo_max_len;
+ 
+ 	u32			wol;
++	struct device_node	*phy_node;
+ };
+ 
+ static inline bool macb_is_gem(struct macb *bp)
 -- 
-2.1.0
+2.1.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
