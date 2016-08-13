@@ -1,85 +1,69 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH net-next v2 04/12] drivers: net: xgene: Fix error deconstruction path
-Date: Fri, 12 Aug 2016 22:05:40 -0700
-Message-ID: <1471064748-28033-5-git-send-email-isubramanian@apm.com>
-References: <1471064748-28033-1-git-send-email-isubramanian@apm.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1471064748-28033-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, patches@apm.com, linux@armlinux.org.uk, Iyappan Subramanian <isubramanian@apm.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH RFC] Revert "of/irq: Mark initialised interrupt controllers as
+ populated"
+Date: Sat, 13 Aug 2016 10:45:45 +0100
+Message-ID: <E1bYVVh-0001eq-BI@rmk-PC.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Frank Rowand <frowand.list@gmail.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Since register_netdev() call in xgene_enet_probe() was moved down to
-the end, it doesn't properly handle errors that may occur, by
-deconstructing everything that was setup before the error occurred.
+This reverts commit 15cc2ed6dcf91a8658e084be4e140147161819d7, which
+causes a regression with iMX6 power domains.  iMX6 GPC contains both an
+interrupt controller and power domains.  The iMX6 GPC code is setup to
+register an interrupt controller using IRQCHIP_DECLARE(), but then to
+register the power domains using the platform device.
 
-Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+This commit prevents the platform device being created, thereby breaking
+iMX6 power domain support.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 ---
- drivers/net/ethernet/apm/xgene/xgene_enet_main.c | 27 +++++++++++++++++-------
- 1 file changed, 19 insertions(+), 8 deletions(-)
+Please argue amongst yourselves about how to fix this regression caused
+by this commit...
 
-diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-index 6b36e0f..a727da8 100644
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-@@ -1641,8 +1641,8 @@ static int xgene_enet_probe(struct platform_device *pdev)
- 	}
- #endif
- 	if (!pdata->enet_id) {
--		free_netdev(ndev);
--		return -ENODEV;
-+		ret = -ENODEV;
-+		goto err;
- 	}
+Marc introduced the code which used OF_DECLARE_2()/IRQCHIP_DECLARE() in
+
+	commit b923ff6af0d5a806a3996dac6d4393cd9792d0f4
+	Author: Marc Zyngier <marc.zyngier@arm.com>
+	Date:   Mon Feb 23 17:45:18 2015 +0000
+
+while the PM domain code was introduced at around the same time by:
+
+	commit 00eb60a8b4f7a4aa00fd8abd68c2dc7aec55df19
+	Author: Philipp Zabel <p.zabel@pengutronix.de>
+	Date:   Mon Feb 23 18:40:12 2015 +0100
+
+I guess distributed development is fun!
+
+ drivers/of/irq.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 89a71c6074fc..7d3f93fdc4ad 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -559,8 +559,6 @@ void __init of_irq_init(const struct of_device_id *matches)
+ 			 * its children can get processed in a subsequent pass.
+ 			 */
+ 			list_add_tail(&desc->list, &intc_parent_list);
+-
+-			of_node_set_flag(desc->dev, OF_POPULATED);
+ 		}
  
- 	ret = xgene_enet_get_resources(pdata);
-@@ -1665,7 +1665,7 @@ static int xgene_enet_probe(struct platform_device *pdev)
- 
- 	ret = xgene_enet_init_hw(pdata);
- 	if (ret)
--		goto err_netdev;
-+		goto err;
- 
- 	link_state = pdata->mac_ops->link_state;
- 	if (pdata->phy_mode == PHY_INTERFACE_MODE_XGMII) {
-@@ -1675,21 +1675,32 @@ static int xgene_enet_probe(struct platform_device *pdev)
- 			ret = xgene_enet_mdio_config(pdata);
- 		else
- 			INIT_DELAYED_WORK(&pdata->link_work, link_state);
-+
-+		if (ret)
-+			goto err1;
- 	}
--	if (ret)
--		goto err;
- 
- 	xgene_enet_napi_add(pdata);
- 	ret = register_netdev(ndev);
- 	if (ret) {
- 		netdev_err(ndev, "Failed to register netdev\n");
--		goto err;
-+		goto err2;
- 	}
- 
- 	return 0;
- 
--err_netdev:
--	unregister_netdev(ndev);
-+err2:
-+	/*
-+	 * If necessary, free_netdev() will call netif_napi_del() and undo
-+	 * the effects of xgene_enet_napi_add()'s calls to netif_napi_add().
-+	 */
-+
-+	if (pdata->mdio_driver)
-+		xgene_enet_phy_disconnect(pdata);
-+	else if (pdata->phy_mode == PHY_INTERFACE_MODE_RGMII)
-+		xgene_enet_mdio_remove(pdata);
-+err1:
-+	xgene_enet_delete_desc_rings(pdata);
- err:
- 	free_netdev(ndev);
- 	return ret;
+ 		/* Get the next pending parent that might have children */
 -- 
-1.9.1
+2.1.0
