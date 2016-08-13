@@ -1,69 +1,43 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v9 06/10] clk: mediatek: Add MT2701 clock support
-Date: Fri, 12 Aug 2016 17:44:38 -0700
-Message-ID: <20160813004438.GC361@codeaurora.org>
-References: <1466581229-2342-1-git-send-email-erin.lo@mediatek.com>
- <1466581229-2342-7-git-send-email-erin.lo@mediatek.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 02/12] pinctrl: Add core pinctrl support for Aspeed SoCs
+Date: Sat, 13 Aug 2016 10:58:14 +1000
+Message-ID: <1471049894.12231.41.camel@kernel.crashing.org>
+References: <1468994313-13538-1-git-send-email-andrew@aj.id.au>
+ <1468994313-13538-3-git-send-email-andrew@aj.id.au>
+ <CACRpkdZ0p+jNHBV1AqhVWQ2Q8RRrHVfsAz3XU3_+f6My22=Zxg@mail.gmail.com>
+ <1470962022.27272.68.camel@aj.id.au>
+ <CACRpkdaN=wR4amskqMapTJzaTTMJZe2EQWRnyLMQkq_zuhr2eA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1466581229-2342-7-git-send-email-erin.lo@mediatek.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Erin Lo <erin.lo@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, Shunli Wang <shunli.wang@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdaN=wR4amskqMapTJzaTTMJZe2EQWRnyLMQkq_zuhr2eA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Andrew Jeffery <andrew@aj.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jeremy Kerr <jk@ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/22, Erin Lo wrote:
-> diff --git a/drivers/clk/mediatek/clk-mt2701-bdp.c b/drivers/clk/mediatek/clk-mt2701-bdp.c
-> new file mode 100644
-> index 0000000..81f628c
-> --- /dev/null
-> +++ b/drivers/clk/mediatek/clk-mt2701-bdp.c
-> @@ -0,0 +1,140 @@
-> +/*
-> + * Copyright (c) 2014 MediaTek Inc.
-> + * Author: Shunli Wang <shunli.wang@mediatek.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
+On Fri, 2016-08-12 at 15:18 +0200, Linus Walleij wrote:
+> I would probably prefer that option (introduce another field)
+> but you should make the overall decision, it's no strong opinion
+> from my side.
+> 
+> > Would it be acceptable to document that requirement?
 
-Is this include used? I would expect clk-provider.h instead.
+It might make it a bit less nasty (and easier to change later on
+if necessary) to use some kind of:
 
-> +#include <linux/platform_device.h>
-> +
-> +#include "clk-mtk.h"
-> +#include "clk-gate.h"
-> +
-> +#include <dt-bindings/clock/mt2701-clk.h>
-> +
-[..]
-> +
-> +static void mtk_bdpsys_init(struct device_node *node)
-> +{
-> +	struct clk_onecell_data *clk_data;
-> +	int r;
-> +
-> +	clk_data = mtk_alloc_clk_data(CLK_BDP_NR);
-> +
-> +	mtk_clk_register_gates(node, bdp_clks, ARRAY_SIZE(bdp_clks),
-> +						clk_data);
-> +
-> +	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+	bool ast_signal_is_gpio(...)
 
-Is it possible to move to of_clk_add_hw_provider()? It can be
-done later if that would mean changing all
-mtk_clk_register_gates() users.
+And stick the strcmp in there.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Cheers,
+Ben.
