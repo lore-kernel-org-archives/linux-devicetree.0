@@ -1,93 +1,52 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC 2/7] tty: add support for "tty slave" devices
-Date: Sun, 14 Aug 2016 13:36:12 +0200
-Message-ID: <20160814113612.GC21529@kroah.com>
-References: <1471058078-5579-1-git-send-email-sre@kernel.org>
- <1471058078-5579-3-git-send-email-sre@kernel.org>
- <20160813100345.GA14665@kroah.com>
- <20160813203124.GA647@earth>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 1/2] ARM: dts: rockchip: remove excess sd properties for firefly reload
+Date: Sun, 14 Aug 2016 14:30:51 +0200
+Message-ID: <35898684.O6p1GdTFI2@phil>
+References: <522097f6-8b5c-ee6d-c1b1-a63840228a0e@rock-chips.com> <1471174044-26003-1-git-send-email-ayaka@soulik.info> <1471174044-26003-2-git-send-email-ayaka@soulik.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160813203124.GA647@earth>
+In-Reply-To: <1471174044-26003-2-git-send-email-ayaka@soulik.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Jiri Slaby <jslaby@suse.com>, Ville Tervo <ville.tervo@iki.fi>, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Pavel Machek <pavel@ucw.cz>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, ivo.g.dimitrov.75@gmail.com, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, NeilBrown <neilb@suse.de>
+To: Randy Li <ayaka@soulik.info>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 13, 2016 at 10:31:24PM +0200, Sebastian Reichel wrote:
-> Hi,
+Am Sonntag, 14. August 2016, 19:27:23 CEST schrieb Randy Li:
+> Because of a bug in hardware design, the sdcard at firefly
+> rk3288 reload board can't switch the io voltage level to 1.8v.
 > 
-> On Sat, Aug 13, 2016 at 12:03:45PM +0200, Greg Kroah-Hartman wrote:
-> > On Sat, Aug 13, 2016 at 05:14:33AM +0200, Sebastian Reichel wrote:
-> > > From: NeilBrown <neilb@suse.de>
-> > > 
-> > > A "tty slave" is a device connected via UART.  It may need a driver to,
-> > > for example, power the device on when the tty is opened, and power it
-> > > off when the tty is released.
-> > > 
-> > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/serial/8250.txt | 4 ++++
-> > >  drivers/tty/tty_io.c                              | 6 ++++++
-> > >  2 files changed, 10 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
-> > > index f5561ac7e17e..ecb74730f71b 100644
-> > > --- a/Documentation/devicetree/bindings/serial/8250.txt
-> > > +++ b/Documentation/devicetree/bindings/serial/8250.txt
-> > > @@ -46,6 +46,10 @@ Optional properties:
-> > >    line respectively. It will use specified GPIO instead of the peripheral
-> > >    function pin for the UART feature. If unsure, don't specify this property.
-> > >  
-> > > +Optional child node:
-> > > +- a device connected to the uart can be specified as child node with
-> > > +  compatible value.
-> > > +
-> > >  Note:
-> > >  * fsl,ns16550:
-> > >    ------------
-> > > diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-> > > index 734a635e7363..39ff5dcdfd50 100644
-> > > --- a/drivers/tty/tty_io.c
-> > > +++ b/drivers/tty/tty_io.c
-> > > @@ -95,6 +95,7 @@
-> > >  #include <linux/seq_file.h>
-> > >  #include <linux/serial.h>
-> > >  #include <linux/ratelimit.h>
-> > > +#include <linux/of_platform.h>
-> > >  
-> > >  #include <linux/uaccess.h>
-> > >  
-> > > @@ -3317,6 +3318,11 @@ struct device *tty_register_device_attr(struct tty_driver *driver,
-> > >  	retval = device_register(dev);
-> > >  	if (retval)
-> > >  		goto error;
-> > > +	if (device && device->of_node)
-> > > +		/* Children are platform devices and will be
-> > > +		 * runtime_pm managed by this tty.
-> > > +		 */
-> > > +		of_platform_populate(device->of_node, NULL, NULL, dev);
-> >
-> > Why are these platform devices?
-> > And why only OF?
+> Signed-off-by: Randy Li <ayaka@soulik.info>
+> ---
+>  arch/arm/boot/dts/rk3288-firefly-reload.dts | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
 > 
-> I just took this patch over from Neil to get bluetooth working
-> on N900/N950. Both of them are DT only (well N900 still has
-> boardcode, but that will be removed shortly), so it was enough
-> for me.
-> 
-> I guess you have something in mind, that's similar to e.g. i2c
-> and spi with a serial_client device and support to instanciate
-> it from DT, ACPI and boardcode?
+> diff --git a/arch/arm/boot/dts/rk3288-firefly-reload.dts
+> b/arch/arm/boot/dts/rk3288-firefly-reload.dts index 43145d1..a2b1f14 100644
+> --- a/arch/arm/boot/dts/rk3288-firefly-reload.dts
+> +++ b/arch/arm/boot/dts/rk3288-firefly-reload.dts
+> @@ -202,18 +202,13 @@
+>  	bus-width = <4>;
+>  	cap-mmc-highspeed;
+>  	cap-sd-highspeed;
+> -	sd-uhs-sdr12;
+> -	sd-uhs-sdr25;
+> -	sd-uhs-sdr50;
+> -	sd-uhs-sdr104;
+> -	sd-uhs-ddr50;
+>  	card-detect-delay = <200>;
+>  	disable-wp;
+>  	num-slots = <1>;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&sdmmc_clk>, <&sdmmc_cmd>, <&sdmmc_cd>, <&sdmmc_bus4>;
+>  	vmmc-supply = <&vcc_sd>;
+> -	vqmmc-supply = <&vccio_sd>;
+> +	vqmmc-supply = <&vcc_sd>;
 
-I'm not going to accept a OF-only patch to the tty layer like this,
-especially one that abuses platform drivers.
+that looks wrong. vccio_sd is still the vqmmc supply in the schematics even 
+though we don't want to switch to 1.8V . But that regulator should still be 
+controllable without needing a regulator-always-on in the future.
 
-See my response to Pavel for what this "should" look like.
 
-thanks,
-
-greg k-h
+Heiko
