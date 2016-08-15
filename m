@@ -1,46 +1,52 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] devicetree: bindings: Add vendor prefix for
- Domintech Co., Ltd.
-Date: Mon, 15 Aug 2016 18:55:21 +0100
-Message-ID: <f1bbdbb4-914d-b15b-c08c-76af8fa4d555@kernel.org>
+Subject: Re: [PATCH v2 2/2] iio: accel: Add support for Domintech DMARD06
+ accelerometer
+Date: Mon, 15 Aug 2016 18:56:00 +0100
+Message-ID: <856a6531-9a19-6382-838a-f3c6b83259f6@kernel.org>
 References: <1469460078-6460-1-git-send-email-mamlinav@gmail.com>
- <1469460078-6460-2-git-send-email-mamlinav@gmail.com>
+ <1469460078-6460-3-git-send-email-mamlinav@gmail.com>
+ <20160727145740.GA23467@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469460078-6460-2-git-send-email-mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20160727145740.GA23467@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/07/16 16:21, Aleksei Mamlin wrote:
-> Add vendor-prefix for Domintech Co., Ltd.
+On 27/07/16 15:57, Rob Herring wrote:
+> On Mon, Jul 25, 2016 at 06:21:18PM +0300, Aleksei Mamlin wrote:
+>> This patch add support for Domintech DMARD05, DMARD06 and DMARD07
+>> accelerometers.
+>>
+>> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/iio/accel/dmard06.txt      |  19 ++
 > 
-> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> This could go into trivial-devices.txt, but this is fine too:
+> 
 > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Applied to the togreg branch of iio.git
+Applied to the togreg branch of iio.git - initially pushed out as
+test for the autobuilders to play with it.
 
-Thanks
+Nice compact little driver.
+
+Thanks,
 
 Jonathan
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 2c2500d..7363916 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -75,6 +75,7 @@ digilent	Diglent, Inc.
->  dlg	Dialog Semiconductor
->  dlink	D-Link Corporation
->  dmo	Data Modul AG
-> +domintech	Domintech Co., Ltd.
->  dptechnics	DPTechnics
->  dragino	Dragino Technology Co., Limited
->  ea	Embedded Artists AB
+>>  drivers/iio/accel/Kconfig                          |  11 +
+>>  drivers/iio/accel/Makefile                         |   1 +
+>>  drivers/iio/accel/dmard06.c                        | 241 +++++++++++++++++++++
+>>  4 files changed, 272 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/accel/dmard06.txt
+>>  create mode 100644 drivers/iio/accel/dmard06.c
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
 
 --
