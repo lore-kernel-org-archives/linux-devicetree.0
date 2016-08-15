@@ -1,59 +1,592 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] power_supply: tps65217-charger: Add support for
- IRQs
-Date: Mon, 15 Aug 2016 21:26:03 +0200
-Message-ID: <20160815192602.cpibysrzshm5tr7q@earth>
-References: <20160620105056.25843-1-m.niestroj@grinn-global.com>
- <20160620105056.25843-4-m.niestroj@grinn-global.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mj3hw3cm4t2vfm45"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160620105056.25843-4-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v2] regulator: Add LTC3676 support
+Date: Mon, 15 Aug 2016 12:40:23 -0700
+Message-ID: <1471290023-12444-1-git-send-email-tharvey@gateworks.com>
+References: <1470785767-4426-1-git-send-email-tharvey@gateworks.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1470785767-4426-1-git-send-email-tharvey@gateworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jaffer Kapasi <jkapasi@linear.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch adds support for the Linear Technology LTC3676
+8-output I2C voltage regulator IC.
 
---mj3hw3cm4t2vfm45
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Cc: Jaffer Kapasi <jkapasi@linear.com>
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+v2:
+ - use kernel coding style for switch statements
+ - change over-temp warning to dev_warn
+ - explicitly handle all modes for suspend_mode
+ - use the core support for parsing regulators and subnodes from OF
+ - remove the need for private struct with r1/r2
+---
+ .../devicetree/bindings/regulator/ltc3676.txt      |  94 +++++
+ drivers/regulator/Kconfig                          |   8 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/ltc3676.c                        | 420 +++++++++++++++++++++
+ 4 files changed, 523 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/ltc3676.txt
+ create mode 100644 drivers/regulator/ltc3676.c
 
-Hi,
-
-On Mon, Jun 20, 2016 at 12:50:54PM +0200, Marcin Niestroj wrote:
-> Make use of IRQ resources defined in tps65217 mfd code. If they are valid
-> we use them instead separate poll task, in order to define AC power state.
-
-Thanks, queued into power-supply's -next branch.
-
--- Sebastian
-
---mj3hw3cm4t2vfm45
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXshdHAAoJENju1/PIO/qaRLsQAJLqeAiiZGgAiWGL/kn0lZlM
-FwHfBwcXDIYFOtnJexiTkIgzseDau2/xr1MrSkQ/6Qusgx1Kb7EgBHc6qhDkcyHT
-Q7mr8atoX05hM9R2XyNIOjdyhVIpVnbYpAF9DHaTftcwTntnfpkzIcxB5YIoEGo7
-vKvejtZ+lxEwdONoDSj7REQppfk1dKVLQlLhxbbVmxc+od5DM0T1EDg7nEqu1D76
-e+XEftu9bCMLIJGfDOOK+2G1v5Owh9NkW4vdp8Fh75b3I5w/sqU5cK3gPg+6CjSu
-rU8knmJ4/bL94fXlRDAV2wUiVZGOx22/QkIgOdZmd8ZcbkDkLZDdczYuXKhB/gBO
-apk+jD9zwmYrGI11cfTh5PsK+JIiaLG1FwlC1kqewi7PeH8ZOSDvtHu8tc4p5AH4
-mms3sfYl4s7KZbXDRbZlhiALPoZbxLNP97dRTGslcLzAhYKjAs0bC/AZE9tv1Jhb
-jxgP4IM6P2UhrRuSmQ6I5zividazNK6t/rybyymNs9MPnFQg2zMpGhh68by1GDTp
-fR0cuMomcvcCTdp08poOl90iM/Xwtj/i/Z0HA4P0KEJrgFylKMdpcRuIH0oj86JE
-WvD4iMcXdnae+SXAv948Ytw4pjKoImFPf6V5P+TVfqT1tjQnQOztnw0hGmUSl6Ga
-b3iLBjB9BPIRocO0unHu
-=bZw1
------END PGP SIGNATURE-----
-
---mj3hw3cm4t2vfm45--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/regulator/ltc3676.txt b/Documentation/devicetree/bindings/regulator/ltc3676.txt
+new file mode 100644
+index 0000000..d4eb366
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/ltc3676.txt
+@@ -0,0 +1,94 @@
++Linear Technology LTC3676 8-output regulators
++
++Required properties:
++- compatible: "lltc,ltc3676"
++- reg: I2C slave address
++
++Required child node:
++- regulators: Contains eight regulator child nodes sw1, sw2, sw3, sw4,
++  ldo1, ldo2, ldo3, and ldo4, specifying the initialization data as
++  documented in Documentation/devicetree/bindings/regulator/regulator.txt.
++
++Each regulator is defined using the standard binding for regulators. The
++nodes for sw1, sw2, sw3, sw4, ldo1, ldo2 and ldo4 additionally need to specify
++the resistor values of their external feedback voltage dividers:
++
++Required properties (not on ldo3):
++- lltc,fb-voltage-divider: An array of two integers containing the resistor
++  values R1 and R2 of the feedback voltage divider in ohms.
++
++Regulators sw1, sw2, sw3, sw4 can regulate the feedback reference from:
++412.5mV to 800mV in 12.5 mV steps. The output voltage thus ranges between
++0.4125 * (1 + R1/R2) V and 0.8 * (1 + R1/R2) V.
++
++Regulators ldo1, ldo2, and ldo4 have a fixed 0.725 V reference and thus output
++0.725 * (1 + R1/R2) V. The ldo3 regulator is fixed to 1.8 V.  The ldo1 standby
++regulator can not be disabled and thus should have the regulator-always-on
++property set.
++
++Example:
++
++	ltc3676: pmic@3c {
++		compatible = "lltc,ltc3676";
++		reg = <0x3c>;
++
++		regulators {
++			sw1_reg: sw1 {
++				regulator-min-microvolt = <674400>;
++				regulator-max-microvolt = <1308000>;
++				lltc,fb-voltage-divider = <127000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <1033310>;
++				regulator-max-microvolt = <200400>;
++				lltc,fb-voltage-divider = <301000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3_reg: sw3 {
++				regulator-min-microvolt = <674400>;
++				regulator-max-microvolt = <130800>;
++				lltc,fb-voltage-divider = <127000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw4_reg: sw4 {
++				regulator-min-microvolt = <868310>;
++				regulator-max-microvolt = <168400>;
++				lltc,fb-voltage-divider = <221000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo2_reg: ldo2 {
++				regulator-min-microvolt = <2490375>;
++				regulator-max-microvolt = <2490375>;
++				lltc,fb-voltage-divider = <487000 200000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo3_reg: ldo3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++			};
++
++			ldo4_reg: ldo4 {
++				regulator-min-microvolt = <3023250>;
++				regulator-max-microvolt = <3023250>;
++				lltc,fb-voltage-divider = <634000 200000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 6c88e31..527bd6a 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -353,6 +353,14 @@ config REGULATOR_LTC3589
+ 	  This enables support for the LTC3589, LTC3589-1, and LTC3589-2
+ 	  8-output regulators controlled via I2C.
+ 
++config REGULATOR_LTC3676
++	tristate "LTC3676 8-output voltage regulator"
++	depends on I2C
++	select REGMAP_I2C
++	help
++	  This enables support for the LTC3676
++	  8-output regulators controlled via I2C.
++
+ config REGULATOR_MAX14577
+ 	tristate "Maxim 14577/77836 regulator"
+ 	depends on MFD_MAX14577
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index f3da9ee..2142a5d 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -47,6 +47,7 @@ obj-$(CONFIG_REGULATOR_LP8788) += lp8788-buck.o
+ obj-$(CONFIG_REGULATOR_LP8788) += lp8788-ldo.o
+ obj-$(CONFIG_REGULATOR_LP8755) += lp8755.o
+ obj-$(CONFIG_REGULATOR_LTC3589) += ltc3589.o
++obj-$(CONFIG_REGULATOR_LTC3676) += ltc3676.o
+ obj-$(CONFIG_REGULATOR_MAX14577) += max14577-regulator.o
+ obj-$(CONFIG_REGULATOR_MAX1586) += max1586.o
+ obj-$(CONFIG_REGULATOR_MAX77620) += max77620-regulator.o
+diff --git a/drivers/regulator/ltc3676.c b/drivers/regulator/ltc3676.c
+new file mode 100644
+index 0000000..e2b476c
+--- /dev/null
++++ b/drivers/regulator/ltc3676.c
+@@ -0,0 +1,420 @@
++/*
++ * Copyright (C) 2016 Gateworks Corporation, Inc. All Rights Reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2
++ * as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/of.h>
++#include <linux/regmap.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
++
++#define DRIVER_NAME		"ltc3676"
++
++/* LTC3676 Registers */
++#define LTC3676_BUCK1     0x01
++#define LTC3676_BUCK2     0x02
++#define LTC3676_BUCK3     0x03
++#define LTC3676_BUCK4     0x04
++#define LTC3676_LDOA      0x05
++#define LTC3676_LDOB      0x06
++#define LTC3676_SQD1      0x07
++#define LTC3676_SQD2      0x08
++#define LTC3676_CNTRL     0x09
++#define LTC3676_DVB1A     0x0A
++#define LTC3676_DVB1B     0x0B
++#define LTC3676_DVB2A     0x0C
++#define LTC3676_DVB2B     0x0D
++#define LTC3676_DVB3A     0x0E
++#define LTC3676_DVB3B     0x0F
++#define LTC3676_DVB4A     0x10
++#define LTC3676_DVB4B     0x11
++#define LTC3676_MSKIRQ    0x12
++#define LTC3676_MSKPG     0x13
++#define LTC3676_USER      0x14
++#define LTC3676_IRQSTAT   0x15
++#define LTC3676_PGSTATL   0x16
++#define LTC3676_PGSTATRT  0x17
++#define LTC3676_HRST      0x1E
++#define LTC3676_CLIRQ     0x1F
++
++#define LTC3676_DVBxA_REF_SELECT	BIT(5)
++
++#define LTC3676_IRQSTAT_PGOOD_TIMEOUT	BIT(3)
++#define LTC3676_IRQSTAT_UNDERVOLT_WARN	BIT(4)
++#define LTC3676_IRQSTAT_UNDERVOLT_FAULT	BIT(5)
++#define LTC3676_IRQSTAT_THERMAL_WARN	BIT(6)
++#define LTC3676_IRQSTAT_THERMAL_FAULT	BIT(7)
++
++enum ltc3676_reg {
++	LTC3676_SW1,
++	LTC3676_SW2,
++	LTC3676_SW3,
++	LTC3676_SW4,
++	LTC3676_LDO1,
++	LTC3676_LDO2,
++	LTC3676_LDO3,
++	LTC3676_LDO4,
++	LTC3676_NUM_REGULATORS,
++};
++
++struct ltc3676 {
++	struct regmap *regmap;
++	struct device *dev;
++	struct regulator_desc regulator_descs[LTC3676_NUM_REGULATORS];
++	struct regulator_dev *regulators[LTC3676_NUM_REGULATORS];
++};
++
++static int ltc3676_set_suspend_voltage(struct regulator_dev *rdev, int uV)
++{
++	struct ltc3676 *ltc3676 = rdev_get_drvdata(rdev);
++	struct device *dev = ltc3676->dev;
++	int dcdc = rdev_get_id(rdev);
++	int sel;
++
++	dev_dbg(dev, "%s id=%d uV=%d\n", __func__, dcdc, uV);
++	sel = regulator_map_voltage_linear(rdev, uV, uV);
++	if (sel < 0)
++		return sel;
++
++	/* DVBB register follows right after the corresponding DVBA register */
++	return regmap_update_bits(ltc3676->regmap, rdev->desc->vsel_reg + 1,
++				  rdev->desc->vsel_mask, sel);
++}
++
++static int ltc3676_set_suspend_mode(struct regulator_dev *rdev,
++				    unsigned int mode)
++{
++	struct ltc3676 *ltc3676= rdev_get_drvdata(rdev);
++	struct device *dev = ltc3676->dev;
++	int mask, val;
++	int dcdc = rdev_get_id(rdev);
++
++	dev_dbg(dev, "%s id=%d mode=%d\n", __func__, dcdc, mode);
++
++	mask = LTC3676_DVBxA_REF_SELECT;
++	switch (mode) {
++	case REGULATOR_MODE_STANDBY:
++		val = 0; /* select DVBxA */
++		break;
++	case REGULATOR_MODE_NORMAL:
++		val = LTC3676_DVBxA_REF_SELECT; /* select DVBxB */
++		break;
++	default:
++		dev_warn(&rdev->dev, "%s: regulator mode: 0x%x not supported\n",
++			 rdev->desc->name, mode);
++		return -EINVAL;
++	}
++
++	return regmap_update_bits(ltc3676->regmap, rdev->desc->vsel_reg,
++				  mask, val);
++}
++
++static inline unsigned int ltc3676_scale(unsigned int uV, u32 r1, u32 r2)
++{
++	uint64_t tmp;
++	if (uV == 0)
++		return 0;
++	tmp = (uint64_t)uV * r1;
++	do_div(tmp, r2);
++	return uV + (unsigned int)tmp;
++}
++
++static int ltc3676_of_parse_cb(struct device_node *np,
++			       const struct regulator_desc *desc,
++			       struct regulator_config *config)
++{
++	struct ltc3676 *ltc3676 = config->driver_data;
++	struct regulator_desc *rdesc = &ltc3676->regulator_descs[desc->id];
++	u32 r[2];
++	int ret;
++
++	/* LDO3 has a fixed output */
++	if (desc->id == LTC3676_LDO3)
++		return 0;
++
++	ret = of_property_read_u32_array(np, "lltc,fb-voltage-divider", r, 2);
++	if (ret) {
++		dev_err(ltc3676->dev, "Failed to parse voltage divider: %d\n",
++			ret);
++		return ret;
++	}
++
++	rdesc->min_uV = ltc3676_scale(desc->min_uV, r[0], r[1]);
++	rdesc->uV_step = ltc3676_scale(desc->uV_step, r[0], r[1]);
++	rdesc->fixed_uV = ltc3676_scale(desc->fixed_uV, r[0], r[1]);
++
++	return 0;
++}
++
++/* SW1, SW2, SW3, SW4 linear 0.8V-3.3V with scalar via R1/R2 feeback res */
++static struct regulator_ops ltc3676_linear_regulator_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++	.list_voltage = regulator_list_voltage_linear,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_suspend_voltage = ltc3676_set_suspend_voltage,
++	.set_suspend_mode = ltc3676_set_suspend_mode,
++};
++
++/* LDO1 always on fixed 0.8V-3.3V via scalar via R1/R2 feeback res */
++static struct regulator_ops ltc3676_fixed_standby_regulator_ops = {
++};
++
++/* LDO2, LDO3 fixed (LDO2 has external scalar via R1/R2 feedback res) */
++static struct regulator_ops ltc3676_fixed_regulator_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++};
++
++#define LTC3676_REG(_id, _name, _ops, en_reg, en_bit, dvba_reg, dvb_mask)   \
++	[LTC3676_ ## _id] = {                                        \
++		.name = #_name,                                \
++		.of_match = of_match_ptr(#_name),              \
++		.regulators_node = of_match_ptr("regulators"), \
++		.of_parse_cb = ltc3676_of_parse_cb,            \
++		.n_voltages = (dvb_mask) + 1,                  \
++		.min_uV = (dvba_reg) ? 412500 : 0,             \
++		.uV_step = (dvba_reg) ? 12500 : 0,             \
++		.ramp_delay = (dvba_reg) ? 800 : 0,            \
++		.fixed_uV = (dvb_mask) ? 0 : 725000,           \
++		.ops = &ltc3676_ ## _ops ## _regulator_ops,    \
++		.type = REGULATOR_VOLTAGE,                     \
++		.id = LTC3676_ ## _id,                         \
++		.owner = THIS_MODULE,                          \
++		.vsel_reg = (dvba_reg),                        \
++		.vsel_mask = (dvb_mask),                       \
++		.enable_reg = (en_reg),                        \
++		.enable_mask = (1 << en_bit),                  \
++	}
++
++#define LTC3676_LINEAR_REG(_id, _name, _en, _dvba)                     \
++	LTC3676_REG(_id, _name, linear,                                \
++		    LTC3676_ ## _en, 7,                                \
++		    LTC3676_ ## _dvba, 0x1f)
++
++#define LTC3676_FIXED_REG(_id, _name, _en_reg, _en_bit)                \
++	LTC3676_REG(_id, _name, fixed, LTC3676_ ## _en_reg, _en_bit, 0, 0)
++
++static struct regulator_desc ltc3676_regulators[LTC3676_NUM_REGULATORS] = {
++	LTC3676_LINEAR_REG(SW1, sw1, BUCK1, DVB1A),
++	LTC3676_LINEAR_REG(SW2, sw2, BUCK2, DVB2A),
++	LTC3676_LINEAR_REG(SW3, sw3, BUCK3, DVB3A),
++	LTC3676_LINEAR_REG(SW4, sw4, BUCK4, DVB4A),
++	LTC3676_REG(LDO1, ldo1, fixed_standby, 0, 0, 0, 0),
++	LTC3676_FIXED_REG(LDO2, ldo2, LDOA, 2),
++	LTC3676_FIXED_REG(LDO3, ldo3, LDOA, 5),
++	LTC3676_FIXED_REG(LDO4, ldo4, LDOB, 2),
++};
++
++static bool ltc3676_writeable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case LTC3676_IRQSTAT:
++	case LTC3676_BUCK1:
++	case LTC3676_BUCK2:
++	case LTC3676_BUCK3:
++	case LTC3676_BUCK4:
++	case LTC3676_LDOA:
++	case LTC3676_LDOB:
++	case LTC3676_SQD1:
++	case LTC3676_SQD2:
++	case LTC3676_CNTRL:
++	case LTC3676_DVB1A:
++	case LTC3676_DVB1B:
++	case LTC3676_DVB2A:
++	case LTC3676_DVB2B:
++	case LTC3676_DVB3A:
++	case LTC3676_DVB3B:
++	case LTC3676_DVB4A:
++	case LTC3676_DVB4B:
++	case LTC3676_MSKIRQ:
++	case LTC3676_MSKPG:
++	case LTC3676_USER:
++	case LTC3676_HRST:
++	case LTC3676_CLIRQ:
++		return true;
++	}
++	return false;
++}
++
++static bool ltc3676_readable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case LTC3676_IRQSTAT:
++	case LTC3676_BUCK1:
++	case LTC3676_BUCK2:
++	case LTC3676_BUCK3:
++	case LTC3676_BUCK4:
++	case LTC3676_LDOA:
++	case LTC3676_LDOB:
++	case LTC3676_SQD1:
++	case LTC3676_SQD2:
++	case LTC3676_CNTRL:
++	case LTC3676_DVB1A:
++	case LTC3676_DVB1B:
++	case LTC3676_DVB2A:
++	case LTC3676_DVB2B:
++	case LTC3676_DVB3A:
++	case LTC3676_DVB3B:
++	case LTC3676_DVB4A:
++	case LTC3676_DVB4B:
++	case LTC3676_MSKIRQ:
++	case LTC3676_MSKPG:
++	case LTC3676_USER:
++	case LTC3676_HRST:
++	case LTC3676_CLIRQ:
++		return true;
++	}
++	return false;
++}
++
++static bool ltc3676_volatile_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case LTC3676_IRQSTAT:
++	case LTC3676_PGSTATL:
++	case LTC3676_PGSTATRT:
++		return true;
++	}
++	return false;
++}
++
++static const struct regmap_config ltc3676_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.writeable_reg = ltc3676_writeable_reg,
++	.readable_reg = ltc3676_readable_reg,
++	.volatile_reg = ltc3676_volatile_reg,
++	.max_register = LTC3676_CLIRQ,
++	.use_single_rw = true,
++	.cache_type = REGCACHE_RBTREE,
++};
++
++static irqreturn_t ltc3676_isr(int irq, void *dev_id)
++{
++	struct ltc3676 *ltc3676 = dev_id;
++	struct device *dev = ltc3676->dev;
++	unsigned int i, irqstat, event;
++
++	regmap_read(ltc3676->regmap, LTC3676_IRQSTAT, &irqstat);
++
++	dev_dbg(dev, "irq%d irqstat=0x%02x\n", irq, irqstat);
++	if (irqstat & LTC3676_IRQSTAT_THERMAL_WARN) {
++		dev_warn(dev, "Over-temperature Warning\n");
++		event = REGULATOR_EVENT_OVER_TEMP;
++		for (i = 0; i < LTC3676_NUM_REGULATORS; i++)
++			regulator_notifier_call_chain(ltc3676->regulators[i],
++						      event, NULL);
++	}
++
++	if (irqstat & LTC3676_IRQSTAT_UNDERVOLT_WARN) {
++		dev_info(dev, "Undervoltage Warning\n");
++		event = REGULATOR_EVENT_UNDER_VOLTAGE;
++		for (i = 0; i < LTC3676_NUM_REGULATORS; i++)
++			regulator_notifier_call_chain(ltc3676->regulators[i],
++						      event, NULL);
++	}
++
++	/* Clear warning condition */
++	regmap_write(ltc3676->regmap, LTC3676_CLIRQ, 0);
++
++	return IRQ_HANDLED;
++}
++
++static int ltc3676_regulator_probe(struct i2c_client *client,
++				    const struct i2c_device_id *id)
++{
++	struct device *dev = &client->dev;
++	struct regulator_init_data *init_data = dev_get_platdata(dev);
++	struct regulator_desc *descs;
++	struct ltc3676 *ltc3676;
++	int i, ret;
++
++	ltc3676 = devm_kzalloc(dev, sizeof(*ltc3676), GFP_KERNEL);
++	if (!ltc3676)
++		return -ENOMEM;
++
++	i2c_set_clientdata(client, ltc3676);
++	ltc3676->dev = dev;
++
++	descs = ltc3676->regulator_descs;
++	memcpy(descs, ltc3676_regulators, sizeof(ltc3676_regulators));
++	descs[LTC3676_LDO3].fixed_uV = 1800000; /* LDO3 is fixed 1.8V */
++
++	ltc3676->regmap = devm_regmap_init_i2c(client, &ltc3676_regmap_config);
++	if (IS_ERR(ltc3676->regmap)) {
++		ret = PTR_ERR(ltc3676->regmap);
++		dev_err(dev, "failed to initialize regmap: %d\n", ret);
++		return ret;
++	}
++
++	for (i = 0; i < LTC3676_NUM_REGULATORS; i++) {
++		struct regulator_desc *desc = &ltc3676->regulator_descs[i];
++		struct regulator_config config = { };
++
++		if (init_data)
++			config.init_data = &init_data[i];
++
++		config.dev = dev;
++		config.driver_data = ltc3676;
++
++		ltc3676->regulators[i] = devm_regulator_register(dev, desc,
++								 &config);
++		if (IS_ERR(ltc3676->regulators[i])) {
++			ret = PTR_ERR(ltc3676->regulators[i]);
++			dev_err(dev, "failed to register regulator %s: %d\n",
++				desc->name, ret);
++			return ret;
++		}
++	}
++
++	regmap_write(ltc3676->regmap, LTC3676_CLIRQ, 0);
++	if (client->irq) {
++		ret = devm_request_threaded_irq(dev, client->irq, NULL,
++						ltc3676_isr,
++						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
++						client->name, ltc3676);
++		if (ret) {
++			dev_err(dev, "Failed to request IRQ: %d\n", ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static const struct i2c_device_id ltc3676_i2c_id[] = {
++	{ "ltc3676" },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, ltc3676_i2c_id);
++
++static struct i2c_driver ltc3676_driver = {
++	.driver = {
++		.name = DRIVER_NAME,
++	},
++	.probe = ltc3676_regulator_probe,
++	.id_table = ltc3676_i2c_id,
++};
++module_i2c_driver(ltc3676_driver);
++
++MODULE_AUTHOR("Tim Harvey <tharvey@gateworks.com>");
++MODULE_DESCRIPTION("Regulator driver for Linear Technology LTC1376");
++MODULE_LICENSE("GPL v2");
+-- 
+1.9.1
