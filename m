@@ -1,129 +1,77 @@
-From: William Wu <william.wu@rock-chips.com>
-Subject: [PATCH v9 4/5] usb: dwc3: rockchip: add devicetree bindings documentation
-Date: Mon, 15 Aug 2016 14:59:58 +0800
-Message-ID: <1471244399-1356-5-git-send-email-william.wu@rock-chips.com>
-References: <1471244399-1356-1-git-send-email-william.wu@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1471244399-1356-1-git-send-email-william.wu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, balbi@kernel.org, heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, briannorris@google.com, dianders@google.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, frank.wang@rock-chips.com, eddie.cai@rock-chips.com, John.Youn@synopsys.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, zhengsq@rock-chips.com, zyw@rock-chips.com, William Wu <william.wu@rock-chips.com>
+From: dawei chien <dawei.chien@mediatek.com>
+Subject: Re: [PATCH 1/3] dt-bindings: thermal: Add binding document for
+ Mediatek thermal controller
+Date: Mon, 15 Aug 2016 15:07:01 +0800
+Message-ID: <1471244821.14287.8.camel@mtksdaap41>
+References: <1467882386-40544-1-git-send-email-dawei.chien@mediatek.com>
+	 <1467882386-40544-2-git-send-email-dawei.chien@mediatek.com>
+	 <577E385C.9080501@ti.com> <1468227124.15776.29.camel@mtksdaap41>
+	 <8886eba0-7f3d-edf8-c6fb-a6535b3717da@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <8886eba0-7f3d-edf8-c6fb-a6535b3717da@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Keerthy <a0393675@ti.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Fan Chen <fan.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the devicetree documentation required for Rockchip
-USB3.0 core wrapper consisting of USB3.0 IP from Synopsys.
+Hi Matthias,
 
-It supports DRD mode, and could operate in device mode (SS, HS, FS)
-and host mode (SS, HS, FS, LS).
+On Thu, 2016-08-11 at 17:48 +0200, Matthias Brugger wrote:
+> 
+> On 11/07/16 10:52, dawei chien wrote:
+> > Dear Keerthy,
+> >
+> > On Thu, 2016-07-07 at 16:39 +0530, Keerthy wrote:
+> >>
+> >> On Thursday 07 July 2016 02:36 PM, Dawei Chien wrote:
+> >>> This adds the device tree binding documentation for the mediatek thermal
+> >>> controller found on Mediatek MT2701.
+> >>>
+> >>> Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+> >>> ---
+> >>>   .../bindings/thermal/mediatek-thermal.txt          |    2 +-
+> >>>   1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+> >>> index 81f9a51..bb55e79 100644
+> >>> --- a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+> >>> +++ b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+> >>> @@ -8,7 +8,7 @@ apmixedsys register space via AHB bus accesses, so a phandle to the APMIXEDSYS
+> >>>   is also needed.
+> >>>
+> >>>   Required properties:
+> >>> -- compatible: "mediatek,mt8173-thermal"
+> >>> +- compatible: "mediatek,mt8173-thermal" or "mediatek,mt2701-thermal"
+> >>
+> >> - compatible :
+> >>   - "mediatek,mt8173-thermal" : For MT8173 family of SoCs
+> >>   - "mediatek,mt2701-thermal" : For MT2701 family of SoCs
+> >
+> > Thank you, I will update it on next version.
+> >
+> 
+> Do you know about the compability to older SoCs (e.g. mt6589)?
+> It might make sense to add mediatek,mtk-thermal if they are compatible 
+> or nearly compatible.
 
-Signed-off-by: William Wu <william.wu@rock-chips.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Changes in v9:
-- add required properties "resets" and "reset-names"
-- add optional property "extcon"
+I agree with you that we should add mediatek,mtk-thermal for compatible
+or nearly compatible SoC.
+However, there is no more compatible SoC so far. Once we have such new
+nearly compatible SoC, we would update it on this binding document soon,
+thank you.
 
-Changes in v8:
-- None
+BR,
+Dawei
 
-Changes in v7:
-- add Acked-by (Rob Herring)
+> >>
+> >>>   - reg: Address range of the thermal controller
+> >>>   - interrupts: IRQ for the thermal controller
+> >>>   - clocks, clock-names: Clocks needed for the thermal controller. required
+> >>>
+> >
+> >
 
-Changes in v6:
-- rename bus_clk, and add usbdrd3_1 node as an example (Heiko)
 
-Changes in v5:
-- rename clock-names, and remove unnecessary clocks (Heiko)
-
-Changes in v4:
-- modify commit log, and add phy documentation location (Sergei)
-
-Changes in v3:
-- add dwc3 address (balbi)
-
-Changes in v2:
-- add rockchip,dwc3.txt to Documentation/devicetree/bindings/ (balbi, Brian)
-
- .../devicetree/bindings/usb/rockchip,dwc3.txt      | 71 ++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
-new file mode 100644
-index 0000000..3a79be8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
-@@ -0,0 +1,71 @@
-+Rockchip SuperSpeed DWC3 USB SoC controller
-+
-+Required properties:
-+- compatible:	should contain "rockchip,rk3399-dwc3" for rk3399 SoC
-+- clocks:	A list of phandle + clock-specifier pairs for the
-+		clocks listed in clock-names
-+- clock-names:	Should contain the following:
-+  "ref_clk"	Controller reference clk, have to be 24 MHz
-+  "suspend_clk"	Controller suspend clk, have to be 24 MHz or 32 KHz
-+  "bus_clk"	Master/Core clock, have to be >= 62.5 MHz for SS
-+		operation and >= 30MHz for HS operation
-+  "grf_clk"	Controller grf clk
-+- resets:	List of phandle and reset specifier pairs. Should contain
-+		softreset line of the DWC3 controller
-+- reset-names:	List of reset signal names. Names should contain "usb3-otg"
-+		for DWC3 controller reset.
-+
-+Optional properties:
-+- extcon:	Phandles to external connector devices, which provide
-+		"EXTCON_USB" and "EXTCON_USB_HOST" cable events.
-+
-+Required child node:
-+A child node must exist to represent the core DWC3 IP block. The name of
-+the node is not important. The content of the node is defined in dwc3.txt.
-+
-+Phy documentation is provided in the following places:
-+Documentation/devicetree/bindings/phy/rockchip,dwc3-usb-phy.txt
-+
-+Example device nodes:
-+
-+	usbdrd3_0: usb@fe800000 {
-+		compatible = "rockchip,rk3399-dwc3";
-+		clocks = <&cru SCLK_USB3OTG0_REF>, <&cru SCLK_USB3OTG0_SUSPEND>,
-+			 <&cru ACLK_USB3OTG0>, <&cru ACLK_USB3_GRF>;
-+		clock-names = "ref_clk", "suspend_clk",
-+			      "bus_clk", "grf_clk";
-+		resets = <&cru SRST_A_USB3_OTG0>;
-+		reset-names = "usb3-otg";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		status = "disabled";
-+		usbdrd_dwc3_0: dwc3@fe800000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x0 0xfe800000 0x0 0x100000>;
-+			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-+			dr_mode = "otg";
-+			status = "disabled";
-+		};
-+	};
-+
-+	usbdrd3_1: usb@fe900000 {
-+		compatible = "rockchip,rk3399-dwc3";
-+		clocks = <&cru SCLK_USB3OTG1_REF>, <&cru SCLK_USB3OTG1_SUSPEND>,
-+			 <&cru ACLK_USB3OTG1>, <&cru ACLK_USB3_GRF>;
-+		clock-names = "ref_clk", "suspend_clk",
-+			      "bus_clk", "grf_clk";
-+		resets = <&cru SRST_A_USB3_OTG1>;
-+		reset-names = "usb3-otg";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		status = "disabled";
-+		usbdrd_dwc3_1: dwc3@fe900000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x0 0xfe900000 0x0 0x100000>;
-+			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+			dr_mode = "otg";
-+			status = "disabled";
-+		};
-+	};
--- 
-1.9.1
