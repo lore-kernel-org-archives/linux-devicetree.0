@@ -1,42 +1,121 @@
 From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v10 0/5] support rockchip dwc3 driver
-Date: Mon, 15 Aug 2016 16:50:26 +0800
-Message-ID: <1471251031-17084-1-git-send-email-william.wu@rock-chips.com>
+Subject: [PATCH v10 1/5] usb: dwc3: add dis_u2_freeclk_exists_quirk
+Date: Mon, 15 Aug 2016 16:50:27 +0800
+Message-ID: <1471251031-17084-2-git-send-email-william.wu@rock-chips.com>
+References: <1471251031-17084-1-git-send-email-william.wu@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471251031-17084-1-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
 Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series add support for rockchip DWC3 driver,
-and add additional optional properties for specific
-platforms (e.g., rockchip rk3399 platform).
+Add a quirk to clear the GUSB2PHYCFG.U2_FREECLK_EXISTS bit,
+which specifies whether the USB2.0 PHY provides a free-running
+PHY clock, which is active when the clock control input is active.
 
-And because rockchip DWC3 need additional handling of
-cable events and mode switch to support DRD mode, so
-we add a new dwc3-rockchip driver, rather than use the
-generic of glue layer which merely enable some clocks
-and populate its children.
+Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Changes in v10:
+- None
 
-William Wu (5):
-  usb: dwc3: add dis_u2_freeclk_exists_quirk
-  usb: dwc3: make usb2 phy utmi interface configurable
-  usb: dwc3: add dis_del_phy_power_chg_quirk
-  usb: dwc3: rockchip: add devicetree bindings documentation
-  usb: dwc3: add rockchip specific glue layer
+Changes in v9:
+- None
 
- Documentation/devicetree/bindings/usb/dwc3.txt     |   5 +
- Documentation/devicetree/bindings/usb/generic.txt  |   6 +
- .../devicetree/bindings/usb/rockchip,dwc3.txt      |  71 ++++
- drivers/usb/dwc3/Kconfig                           |   9 +
- drivers/usb/dwc3/Makefile                          |   1 +
- drivers/usb/dwc3/core.c                            |  30 +-
- drivers/usb/dwc3/core.h                            |  21 +
- drivers/usb/dwc3/dwc3-rockchip.c                   | 441 +++++++++++++++++++++
- 8 files changed, 583 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
- create mode 100644 drivers/usb/dwc3/dwc3-rockchip.c
+Changes in v8:
+- add Acked-by (Rob Herring)
 
+Changes in v7:
+- None
+
+Changes in v6:
+- use '-' instead of '_' in dts (Rob Herring)
+
+Changes in v5:
+- None
+
+Changes in v4:
+- rebase on top of balbi testing/next, remove pdata (balbi)
+
+Changes in v3:
+- None
+
+Changes in v2:
+- None
+
+ Documentation/devicetree/bindings/usb/dwc3.txt | 3 +++
+ drivers/usb/dwc3/core.c                        | 5 +++++
+ drivers/usb/dwc3/core.h                        | 5 +++++
+ 3 files changed, 13 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 7d7ce08..020b0e9 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -39,6 +39,9 @@ Optional properties:
+ 			disabling the suspend signal to the PHY.
+  - snps,dis_rxdet_inp3_quirk: when set core will disable receiver detection
+ 			in PHY P3 power state.
++ - snps,dis-u2-freeclk-exists-quirk: when set, clear the u2_freeclk_exists
++			in GUSB2PHYCFG, specify that USB2 PHY doesn't provide
++			a free-running PHY clock.
+  - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
+ 			utmi_l1_suspend_n, false when asserts utmi_sleep_n
+  - snps,hird-threshold: HIRD threshold
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 35d0924..14316e5 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -500,6 +500,9 @@ static int dwc3_phy_setup(struct dwc3 *dwc)
+ 	if (dwc->dis_enblslpm_quirk)
+ 		reg &= ~DWC3_GUSB2PHYCFG_ENBLSLPM;
+ 
++	if (dwc->dis_u2_freeclk_exists_quirk)
++		reg &= ~DWC3_GUSB2PHYCFG_U2_FREECLK_EXISTS;
++
+ 	dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
+ 
+ 	return 0;
+@@ -924,6 +927,8 @@ static int dwc3_probe(struct platform_device *pdev)
+ 				"snps,dis_enblslpm_quirk");
+ 	dwc->dis_rxdet_inp3_quirk = device_property_read_bool(dev,
+ 				"snps,dis_rxdet_inp3_quirk");
++	dwc->dis_u2_freeclk_exists_quirk = device_property_read_bool(dev,
++				"snps,dis-u2-freeclk-exists-quirk");
+ 
+ 	dwc->tx_de_emphasis_quirk = device_property_read_bool(dev,
+ 				"snps,tx_de_emphasis_quirk");
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 1a6cc48..08ed9e0 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -199,6 +199,7 @@
+ 
+ /* Global USB2 PHY Configuration Register */
+ #define DWC3_GUSB2PHYCFG_PHYSOFTRST	(1 << 31)
++#define DWC3_GUSB2PHYCFG_U2_FREECLK_EXISTS	(1 << 30)
+ #define DWC3_GUSB2PHYCFG_SUSPHY		(1 << 6)
+ #define DWC3_GUSB2PHYCFG_ULPI_UTMI	(1 << 4)
+ #define DWC3_GUSB2PHYCFG_ENBLSLPM	(1 << 8)
+@@ -803,6 +804,9 @@ struct dwc3_scratchpad_array {
+  * @dis_u2_susphy_quirk: set if we disable usb2 suspend phy
+  * @dis_enblslpm_quirk: set if we clear enblslpm in GUSB2PHYCFG,
+  *                      disabling the suspend signal to the PHY.
++ * @dis_u2_freeclk_exists_quirk : set if we clear u2_freeclk_exists
++ *			in GUSB2PHYCFG, specify that USB2 PHY doesn't
++ *			provide a free-running PHY clock.
+  * @tx_de_emphasis_quirk: set if we enable Tx de-emphasis quirk
+  * @tx_de_emphasis: Tx de-emphasis value
+  * 	0	- -6dB de-emphasis
+@@ -946,6 +950,7 @@ struct dwc3 {
+ 	unsigned		dis_u2_susphy_quirk:1;
+ 	unsigned		dis_enblslpm_quirk:1;
+ 	unsigned		dis_rxdet_inp3_quirk:1;
++	unsigned		dis_u2_freeclk_exists_quirk:1;
+ 
+ 	unsigned		tx_de_emphasis_quirk:1;
+ 	unsigned		tx_de_emphasis:2;
 -- 
 1.9.1
 
