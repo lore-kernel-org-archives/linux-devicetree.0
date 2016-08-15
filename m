@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 3/5] clk: sunxi-ng: mux: Add clk notifier functions
-Date: Mon, 15 Aug 2016 16:13:13 +0800
-Message-ID: <1471248795-17951-4-git-send-email-wens@csie.org>
+Subject: [PATCH v2 2/5] clk: sunxi-ng: mux: support fixed pre-dividers on multiple parents
+Date: Mon, 15 Aug 2016 16:13:12 +0800
+Message-ID: <1471248795-17951-3-git-send-email-wens@csie.org>
 References: <1471248795-17951-1-git-send-email-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1471248795-17951-1-git-send-email-wens@csie.org>
@@ -10,99 +10,95 @@ To: Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Turquette <mturque
 Cc: Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On sunxi we support cpufreq by changing the clock rate of PLL-CPU.
-It's possible the clock output of the PLL goes out of the CPU's
-operational limits when the PLL's multipliers / dividers are changed
-and it hasn't stabilized yet. This would result in the CPU hanging.
-
-To circumvent this, we temporarily switch the CPU mux clock to another
-stable clock before the rate change, and switch it back after the PLL
-stabilizes. This is done with clk notifiers registered on the PLL.
-
-This patch adds common functions for notifiers to reparent mux clocks.
+Some clocks on the A31 have fixed pre-dividers on multiple parents.
+Add support for them.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
-Changes since v1: none
----
- drivers/clk/sunxi-ng/ccu_mux.c | 36 ++++++++++++++++++++++++++++++++++++
- drivers/clk/sunxi-ng/ccu_mux.h | 14 ++++++++++++++
- 2 files changed, 50 insertions(+)
+Changes since v1:
 
+  - Add field for number of fixed pre-dividers.
+---
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c |  9 +++++----
+ drivers/clk/sunxi-ng/ccu_mux.c      |  6 ++++--
+ drivers/clk/sunxi-ng/ccu_mux.h      | 11 +++++++----
+ 3 files changed, 16 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+index 9af359544110..a01298881991 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+@@ -184,15 +184,16 @@ static SUNXI_CCU_MP_WITH_MUX(apb2_clk, "apb2", apb2_parents, 0x058,
+ 			     0);
+ 
+ static const char * const ahb2_parents[] = { "ahb1" , "pll-periph0" };
++static const struct ccu_mux_fixed_prediv ahb2_fixed_predivs[] = {
++	{ .index = 1, .div = 2 },
++	{ },
++};
+ static struct ccu_mux ahb2_clk = {
+ 	.mux		= {
+ 		.shift	= 0,
+ 		.width	= 1,
+ 
+-		.fixed_prediv	= {
+-			.index	= 1,
+-			.div	= 2,
+-		},
++		.fixed_predivs	= ahb2_fixed_predivs,
+ 	},
+ 
+ 	.common		= {
 diff --git a/drivers/clk/sunxi-ng/ccu_mux.c b/drivers/clk/sunxi-ng/ccu_mux.c
-index 7b17e0c26b01..a43ad52a957d 100644
+index 68b32f168a74..7b17e0c26b01 100644
 --- a/drivers/clk/sunxi-ng/ccu_mux.c
 +++ b/drivers/clk/sunxi-ng/ccu_mux.c
-@@ -8,7 +8,9 @@
-  * the License, or (at your option) any later version.
-  */
+@@ -20,6 +20,7 @@ void ccu_mux_helper_adjust_parent_for_prediv(struct ccu_common *common,
+ {
+ 	u16 prediv = 1;
+ 	u32 reg;
++	int i;
  
-+#include <linux/clk.h>
- #include <linux/clk-provider.h>
-+#include <linux/delay.h>
+ 	if (!((common->features & CCU_FEATURE_FIXED_PREDIV) ||
+ 	      (common->features & CCU_FEATURE_VARIABLE_PREDIV)))
+@@ -32,8 +33,9 @@ void ccu_mux_helper_adjust_parent_for_prediv(struct ccu_common *common,
+ 	}
  
- #include "ccu_gate.h"
- #include "ccu_mux.h"
-@@ -199,3 +201,37 @@ const struct clk_ops ccu_mux_ops = {
- 	.determine_rate	= __clk_mux_determine_rate,
- 	.recalc_rate	= ccu_mux_recalc_rate,
- };
-+
-+/*
-+ * This clock notifier is called when the frequency of the of the parent
-+ * PLL clock is to be changed. The idea is to switch the parent to a
-+ * stable clock, such as the main oscillator, while the PLL frequency
-+ * stabilizes.
-+ */
-+static int ccu_mux_notifier_cb(struct notifier_block *nb,
-+			       unsigned long event, void *data)
-+{
-+	struct ccu_mux_nb *mux = to_ccu_mux_nb(nb);
-+	int ret = 0;
-+
-+	if (event == PRE_RATE_CHANGE) {
-+		mux->original_index = ccu_mux_helper_get_parent(mux->common,
-+								mux->cm);
-+		ret = ccu_mux_helper_set_parent(mux->common, mux->cm,
-+						mux->bypass_index);
-+	} else if (event == POST_RATE_CHANGE) {
-+		ret = ccu_mux_helper_set_parent(mux->common, mux->cm,
-+						mux->original_index);
-+	}
-+
-+	udelay(mux->delay_us);
-+
-+	return notifier_from_errno(ret);
-+}
-+
-+int ccu_mux_notifier_register(struct clk *clk, struct ccu_mux_nb *mux_nb)
-+{
-+	mux_nb->clk_nb.notifier_call = ccu_mux_notifier_cb;
-+
-+	return clk_notifier_register(clk, &mux_nb->clk_nb);
-+}
+ 	if (common->features & CCU_FEATURE_FIXED_PREDIV)
+-		if (parent_index == cm->fixed_prediv.index)
+-			prediv = cm->fixed_prediv.div;
++		for (i = 0; i < cm->n_predivs; i++)
++			if (parent_index == cm->fixed_predivs[i].index)
++				prediv = cm->fixed_predivs[i].div;
+ 
+ 	if (common->features & CCU_FEATURE_VARIABLE_PREDIV)
+ 		if (parent_index == cm->variable_prediv.index) {
 diff --git a/drivers/clk/sunxi-ng/ccu_mux.h b/drivers/clk/sunxi-ng/ccu_mux.h
-index 5308b41da22a..81a5af92fd4e 100644
+index f0078de78712..5308b41da22a 100644
 --- a/drivers/clk/sunxi-ng/ccu_mux.h
 +++ b/drivers/clk/sunxi-ng/ccu_mux.h
-@@ -99,4 +99,18 @@ int ccu_mux_helper_set_parent(struct ccu_common *common,
- 			      struct ccu_mux_internal *cm,
- 			      u8 index);
+@@ -5,15 +5,18 @@
  
-+struct ccu_mux_nb {
-+	struct notifier_block	clk_nb;
-+	struct ccu_common	*common;
-+	struct ccu_mux_internal	*cm;
-+
-+	u32	delay_us;	/* How many us to wait after reparenting */
-+	u8	bypass_index;	/* Which parent to temporarily use */
-+	u8	original_index;	/* This is set by the notifier callback */
+ #include "ccu_common.h"
+ 
++struct ccu_mux_fixed_prediv {
++	u8	index;
++	u16	div;
 +};
 +
-+#define to_ccu_mux_nb(_nb) container_of(_nb, struct ccu_mux_nb, clk_nb)
-+
-+int ccu_mux_notifier_register(struct clk *clk, struct ccu_mux_nb *mux_nb);
-+
- #endif /* _CCU_MUX_H_ */
+ struct ccu_mux_internal {
+ 	u8		shift;
+ 	u8		width;
+ 	const u8	*table;
+ 
+-	struct {
+-		u8	index;
+-		u16	div;
+-	} fixed_prediv;
++	const struct ccu_mux_fixed_prediv	*fixed_predivs;
++	u8		n_predivs;
+ 
+ 	struct {
+ 		u8	index;
 -- 
 2.8.1
