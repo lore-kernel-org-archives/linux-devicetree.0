@@ -1,64 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] net: hix5hd2_gmac: add tx scatter-gather feature
-Date: Mon, 15 Aug 2016 11:18:19 -0500
-Message-ID: <CAL_JsqLgzaPECHdX8yHC3DAUq0jXhgUFE+xVFbeV0OLQXopqxg@mail.gmail.com>
-References: <1470906115-155569-1-git-send-email-lidongpo@hisilicon.com>
- <1470906115-155569-2-git-send-email-lidongpo@hisilicon.com>
- <20160812184336.GA5706@rob-hp-laptop> <57B1664F.1090708@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57B1664F.1090708@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dongpo Li <lidongpo@hisilicon.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, Yisen Zhuang <yisen.zhuang@huawei.com>, salil.mehta@huawei.com, David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, xuejiancheng@hisilicon.com, benjamin.chenhao@hisilicon.com, howell.yang@hisilicon.com, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/3] ARM64: meson: Meson8b and GXBB DWMAC glue driver
+Date: Mon, 15 Aug 2016 18:40:57 +0200
+Message-ID: <20160815164100.27766-1-martin.blumenstingl@googlemail.com>
+References: <20160625165013.15917-1-martin.blumenstingl@googlemail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20160625165013.15917-1-martin.blumenstingl@googlemail.com>
+Sender: netdev-owner@vger.kernel.org
+To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org, mturquette@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 15, 2016 at 1:50 AM, Dongpo Li <lidongpo@hisilicon.com> wrote:
-> Hi Rob,
-> Many thanks for your review.
->
-> On 2016/8/13 2:43, Rob Herring wrote:
->> On Thu, Aug 11, 2016 at 05:01:52PM +0800, Dongpo Li wrote:
->>> From: Li Dongpo <lidongpo@hisilicon.com>
->>>
->>> The "hix5hd2" is SoC name, add the generic ethernet driver name.
->>> The "hisi-gemac-v1" is the basic version and "hisi-gemac-v2" adds
->>> the SG/TXCSUM/TSO/UFO features.
->>> This patch only adds the SG(scatter-gather) driver for transmitting,
->>> the drivers of other features will be submitted later.
->>
->> The compatible string changes should probably be a separate patch.
->>
-> ok, I will split this patch into two patches, one for compatible string changes,
-> and one for driver feature implementation.
->
->>> Signed-off-by: Dongpo Li <lidongpo@hisilicon.com>
->>> ---
->>>  .../bindings/net/hisilicon-hix5hd2-gmac.txt        |   9 +-
->>>  drivers/net/ethernet/hisilicon/hix5hd2_gmac.c      | 213 +++++++++++++++++++--
->>>  2 files changed, 205 insertions(+), 17 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->>> index 75d398b..3c02fac 100644
->>> --- a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->>> +++ b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->>> @@ -1,7 +1,12 @@
->>>  Hisilicon hix5hd2 gmac controller
->>>
->>>  Required properties:
->>> -- compatible: should be "hisilicon,hix5hd2-gmac".
->>> +- compatible: should contain one of the following version strings:
->>> +    * "hisilicon,hisi-gemac-v1"
->>> +    * "hisilicon,hisi-gemac-v2"
->>> +    and one of the following SoC string:
->>> +    * "hisilicon,hix5hd2-gemac"
->>> +    * "hisilicon,hi3798cv200-gemac"
->>
->> Make it clear what the order should be.
->>
-> ok, I will put the SoC strings in alphabetical order.
+This adds a DWMAC glue driver for the PRG_ETHERNET registers found in
+Meson8b and GXBB SoCs. Based on the "old" meson6b-dwmac glue driver
+the register layout is completely different.
+Thus I introduced a separate driver.
 
-No, I mean the most specific string comes first.
+Changes compared to the RFC version:
+- switch from syscon / regmap to assigning the corresponding register
+  region directly to the driver (like meson6-dwmac does it)
+- dropped "fix_mac_speed" callback since the reference driver does not
+  implement it (I could not test if it is required due to lack of
+  hardware)
+- switch to common clock framework now that we know what bits 5:4
+  (mux clock), 6:5 (250MHz divider) and 10 (configurable 5 or 10
+  divider) are used for
+- Removed dts property "amlogic,mp2-clock" because it is now part of
+  the clocks which are registered by the glue driver
+- Removed dts properties "amlogic,enable-tx-phy-ref-clk" and
+  "amlogic,tx-delay" because it seems we can guess them based on the
+  phy-mode (the original Amlogic dts files only supply two different
+  values: one value for the internal RMII PHY and another one for the
+  external RGMII Gbit PHY).
+  If required we can extend the code in the future to make these
+  configurable.
+- This means that the only Meson8b / GXBB specific part of the binding
+  is the clkin0 (FCLK_DIV2) clock, as it's needed for the mux clock.
+  Everything else is auto-detected based on the phy-mode (which is
+  already mandatory in stmmac).
 
-Rob
+I have successfully tested this on a Vega S95 Meta clone which comes
+with a "broken" bootloader (which programs the ethernet registers to
+"Fast Ethernet / RGMII" mode, while the board has a Realtek Gbit PHY).
+Before this series stmmac was detected, I got a network interface but
+no traffic was flowing.
+
+Due to lack of hardware I could not test this on a device which uses
+the internal RMII (Fast Ethernet) PHY.
+
+
+Martin Blumenstingl (3):
+  net: dt-bindings: Document the new Meson8b and GXBB DWMAC bindings
+  net: stmmac: add a glue driver for the Amlogic Meson 8b / GXBB DWMAC
+  ARM64: dts: meson-gxbb: use the new GXBB DWMAC glue driver
+
+ .../devicetree/bindings/net/meson-dwmac.txt        |  43 ++-
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |   7 +-
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   2 +-
+ .../net/ethernet/stmicro/stmmac/dwmac-meson8b.c    | 327 +++++++++++++++++++++
+ 4 files changed, 367 insertions(+), 12 deletions(-)
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
+
+-- 
+2.9.3
