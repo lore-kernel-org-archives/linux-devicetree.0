@@ -1,111 +1,53 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v3 02/15] dt/bindings: Update binding for PM domain idle
- states
-Date: Mon, 15 Aug 2016 16:40:14 -0600
-Message-ID: <20160815224014.GF1401@linaro.org>
-References: <1470351902-43103-1-git-send-email-lina.iyer@linaro.org>
- <1470351902-43103-3-git-send-email-lina.iyer@linaro.org>
- <99e35b6c-6698-6d27-f4d7-fa032796869e@arm.com>
- <20160810164034.GA1401@linaro.org>
- <5e59874c-bbb7-270a-199c-da1ff5932554@arm.com>
- <20160811211023.GC1401@linaro.org>
- <697d8ac2-34ee-db3e-940b-5ce3365c5aa1@arm.com>
- <20160815160857.GE1401@linaro.org>
- <2033f384-7ea3-6713-4def-80bf4251fd67@arm.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V3 1/4] clk: max77686: Combine Maxim max77686 and
+ max77802 driver
+Date: Mon, 15 Aug 2016 15:40:18 -0700
+Message-ID: <20160815224018.GO361@codeaurora.org>
+References: <1466160667-28451-1-git-send-email-ldewangan@nvidia.com>
+ <1466160667-28451-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2033f384-7ea3-6713-4def-80bf4251fd67@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, Axel Haslam <ahaslam+renesas@baylibre.com>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Brendan Jackman <Brendan.Jackman@arm.com>, Juri Lelli <Juri.Lelli@arm.com>
+In-Reply-To: <1466160667-28451-2-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 15 2016 at 10:14 -0600, Sudeep Holla wrote:
->
->
->On 15/08/16 17:08, Lina Iyer wrote:
->>On Fri, Aug 12 2016 at 04:08 -0600, Sudeep Holla wrote:
->>>
->>>
->>>On 11/08/16 22:10, Lina Iyer wrote:
->>>>On Wed, Aug 10 2016 at 12:09 -0600, Sudeep Holla wrote:
->>>>>
->>>
->>>[...]
->>>
->>>>>cluster0
->>>>>   CLUSTER_RET(Retention)
->>>>>   CLUSTER_PG(Power Gate)
->>>>>   core0
->>>>>       CORE_RET
->>>>>       CORE_PG
->>>>>   core1
->>>>>       CORE_RET
->>>>>       CORE_PG
->>>>>
->>>>>cluster1
->>>>>   CLUSTER_RET
->>>>>   CLUSTER_PG
->>>>>   core0
->>>>>       CORE_RET
->>>>>       CORE_PG
->>>>>   core1
->>>>>       CORE_RET
->>>>>       CORE_PG
->>>>>
->>>>>Platform Co-ordinate supports the following states and we should be
->>>>>able to determine that from the binding:
->>>>>
->>>>>CORE_RET
->>>>>CORE_PG
->>>>>CORE_RET + CLUSTER_RET
->>>>
->>>>The problem that we have to sove here is knowing that CORE_RET +
->>>>CLUSTER_PG (hypothetically) an invalid combination. Kevin and
->>>>I debated it in the earlier RFC and we dont have a good way to solve
->>>>this generically for all devices.
->>>>
->>>
->>>Yes, I agree it's complex. But that needs to be solved IMO.
->>>
->>>I can think of 2 possible solutions:
->>>
->>>1. Index the states(which people have not liked, but as along as we
->>>  don't use it in the code as it for any other purpose, it should be
->>>  fine) and then have each state mentioning what parent state can be
->>>  entered at this child state(i.e. starting index and all states below
->>>  it)
->>>
->>This is how QCOM solved it downstream.
->>
->
->Yes even ACPI has indices to solve this.
->
->>>2. Something similar to (1) but without index instead phandles.
->>>
->>
->>The problem is when you have non-CPU devices in the device tree and
->>since they do not have a way to represent states like CPU, we did not
->>have a clear path to that. Hence we punted that to later. Whatever we
->>do, we should solve it for a generic PM domain, not just CPU domains.
->>
->
->Yes bindings defined here should be applicable for devices to, but only
->CPU's will have this hierarchy while the devices need not bother about
->hierarchy. However the parent power domain can ever the state which is
->least common denominator of all it's children power domain. That's my
->understanding. No ?
->
-That is correct. But say if all the CPUs choose CORE_RET + CLUSTER_PG,
-which is invalid and the firmware has to ignore it and does CORE_RET +
-CLUSTER_RET instead, then Linux may have an inconsistent view of the
-state selection.
+On 06/17, Laxman Dewangan wrote:
+> The clock IP used on the Maxim PMICs max77686 and max77802 are
+> same. The configuration of clock register is also same except
+> the number of clocks.
+> 
+> Part of common code utilisation, there is 3 files for these chips
+> clock driver, one for common and two files for driver registration.
+> 
+> Combine both drivers into single file and move common code into
+> same common file reduces the 2 files and make max77686 and max77802
+> clock driver in single fine. This driver does not depends on the
+> parent driver structure. The regmap handle is acquired through
+> regmap APIs for the register access.
+> 
+> This combination of driver helps on adding clock driver for different
+> Maxim PMICs which has similar clock IP like MAX77620 and MAX20024.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> CC: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> CC: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> Tested-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Tested-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> 
+> ---
 
-Thanks,
-Lina
+Applied to clk-next
 
->-- 
->Regards,
->Sudeep
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
