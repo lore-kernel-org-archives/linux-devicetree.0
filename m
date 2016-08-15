@@ -1,74 +1,73 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: Re: [PATCH 02/12] pinctrl: Add core pinctrl support for Aspeed SoCs
-Date: Mon, 15 Aug 2016 10:06:52 +0930
-Message-ID: <1471221412.27272.76.camel@aj.id.au>
-References: <1468994313-13538-1-git-send-email-andrew@aj.id.au>
-	 <1468994313-13538-3-git-send-email-andrew@aj.id.au>
-	 <CACRpkdZ0p+jNHBV1AqhVWQ2Q8RRrHVfsAz3XU3_+f6My22=Zxg@mail.gmail.com>
-	 <1470962022.27272.68.camel@aj.id.au>
-	 <CACRpkdaN=wR4amskqMapTJzaTTMJZe2EQWRnyLMQkq_zuhr2eA@mail.gmail.com>
-	 <1471049894.12231.41.camel@kernel.crashing.org>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 5/7] Bluetooth: hci_nokia: Introduce new driver
+Date: Mon, 15 Aug 2016 03:12:10 +0200
+Message-ID: <20160815011210.vnqwdpapzx2q6gzg@earth>
+References: <1471058078-5579-1-git-send-email-sre@kernel.org>
+ <1471058078-5579-6-git-send-email-sre@kernel.org>
+ <CAP=VYLo4ptVzhPjKoiiakbCgBSmpQndNzf0LHWxCZs7LiZ7PYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-Kkmm5pzJ9XyCVSXgcQ3s"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="iwkwabbleb7dt4qo"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471049894.12231.41.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAP=VYLo4ptVzhPjKoiiakbCgBSmpQndNzf0LHWxCZs7LiZ7PYw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Ville Tervo <ville.tervo-X3B1VOXEql0@public.gmane.org>, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---=-Kkmm5pzJ9XyCVSXgcQ3s
-Content-Type: text/plain; charset="UTF-8"
+--iwkwabbleb7dt4qo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, 2016-08-13 at 10:58 +1000, Benjamin Herrenschmidt wrote:
-> On Fri, 2016-08-12 at 15:18 +0200, Linus Walleij wrote:
-> >=20
-> > I would probably prefer that option (introduce another field)
-> > but you should make the overall decision, it's no strong opinion
-> > from my side.
-> >=20
-> > >=20
-> > > Would it be acceptable to document that requirement?
-> It might make it a bit less nasty (and easier to change later on
-> if necessary) to use some kind of:
+Hi Paul,
+
+On Sun, Aug 14, 2016 at 07:54:28PM -0400, Paul Gortmaker wrote:
+> On Fri, Aug 12, 2016 at 11:14 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrot=
+e:
+> > This driver adds support for Nokia H4+ procotol used
+> > for example by Nokia's internet tablets (N770 - N950).
+> >
+> > [...]
+> >
+> > +config BT_HCIUART_NOKIA
+> > +       bool "UART Nokia H4+ protocol support"
 >=20
-> 	bool ast_signal_is_gpio(...)
+> If the option is a bool, then you don't need module.h or any MODULE
+> macros, nor do you need any __exit or unregister related code.
 >=20
-> And stick the strcmp in there.
+> Alternatively, if there is a use case for it to be modular, then maybe you
+> want to change the above to a tristate.
 
-Yep, I'll do so for v2.
+Actually it is bool and modular: It becomes part of the module
+configured by the tristate CONFIG_BT_HCIUART option.
 
-Cheers,
+-- Sebastian
 
-Andrew
---=-Kkmm5pzJ9XyCVSXgcQ3s
+--iwkwabbleb7dt4qo
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1
 
-iQIcBAABCgAGBQJXsQ6kAAoJEJ0dnzgO5LT5aNgP/3haTd+82bDoeVfUYU6v9yNk
-FRY+AdbZDoZcD0szs62isNzp6OxmmUpzgKoP32WVZ1ly6YnUjqNFXGytiQYdjoeN
-qxexicf56ICRC+KIevpQPFOk72Jyifj2e0YWFDAc3OLrEfd9wan/1kfvr06cb9PE
-GL+TraBA9YWQ3yo7S0KirAYbY4uvaM63vJ7YcrxeoazU6l2A5wh+k+a1cXp7LXdD
-llfdnc+2/v8RAfon+nSm0MYBEa6AQJoUAEdE3z+9+k/VfLNzMpqTDFesvEMXfIAd
-UOLWXaYEg76wrH39gj2QDPCg112PgxjVGmbz4lRtrddzXU7/umtVbYWudNOOQtUV
-r28Lky6RlmQsZZ7we9hlbI8oqr8whJTmVXUVzADklzYLxdXSNYY8gFbZ7QyTti4y
-NNPvmHGhMVI5MtJ5zU+7kGc66qn4H3GIBfWjsRITPr14GCaz3DDi5Sq10Ui9PMki
-bU87q+3326woIH4IKZB+T4RyppmHRoRqvlDwVawukyIKgGP3f4uPbJ1H5YrMYNdV
-1kb0Z3o+1+NRgSPIWJeVrHK0S9kCw+fBtjm79Q/emxvP4v45R5313UdRP+cqCkUT
-PcqUbXWzcOmBFdaHVADEpxVm7HhSdEkle7/5mBthdC8Vba2+PgmpXZwq6kK35SfW
-lhU5QWdrdkJ/W89kUV+k
-=5CeO
+iQIcBAEBCgAGBQJXsRbnAAoJENju1/PIO/qao90P/1T1PQHcpiCCBVTbEOqsV+dU
+DnaWi3DoEz6h4LSvS2CST4wv2BYKdczrdTeuyoakUnQ0676mC4lzS/lwYJzz6Xy1
+hQAhfkZIjp3Erlz0j1ExezZAcgfjQwvoq7Z1jaJSEI1vvVLTrS9TIF/wpX0lIWeB
+U9zwB9bp6gPucP10OCYCAEHHqnKWEV8WmyKgaUd1qqJROuXOhPmLCKc0+joLwCKF
+67/GqWsSkBdYz/2/l0Y+RQx1wOzyOWrBq518mJVW36MIvqGnDA74nx8uF3FqP6sV
+hdoZpfEeUjmIgUbXbJSsHBw8l76WdOsSCsHkwcGV6tpdMucOmMG7Iz8NRm+B5BeR
+FhSYVbiwz8gkF2MQ5F1f4sfnXTaZtRB1NKRcuC7kFPR9Kw54OPJweVYY+aW2yWlf
+VLpKRrvBga1iFC6ZtOcfTcNlEEJNAQbkPf5ak9JQvsy/vnIvVnIs6kr2juskVv87
+2zcBExscF/RYTNJRP7gTwEeTGXdcYxYIrU4lB9nC9LHvdP6uNWVOXaw6TkowEZLI
+xIXtl2rbKy56JCBnZkjPkhGuWkV2FpYV6ZYrBR9sm0R/UI82g095WgKOiSxfY1AJ
+PWsPJiWa//9UAOSVk17ViRWzZLJn9Zw7JMJzAtWVa2oRjO80hBuogYiQIzllpfR9
+f2hwJYn3Fd661eeUMjN0
+=U6z1
 -----END PGP SIGNATURE-----
 
---=-Kkmm5pzJ9XyCVSXgcQ3s--
-
+--iwkwabbleb7dt4qo--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
