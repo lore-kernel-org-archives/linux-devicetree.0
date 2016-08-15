@@ -1,53 +1,47 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [RFC PATCH v5 3/3] net: phy: Add gmiitorgmii converter support
-Date: Mon, 15 Aug 2016 23:30:59 +0200
-Message-ID: <20160815213059.GK24664@lunn.ch>
-References: <1470735283-23611-1-git-send-email-appanad@xilinx.com>
- <1470735283-23611-4-git-send-email-appanad@xilinx.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM64: dts: meson-gxbb: add MMC support
+Date: Mon, 15 Aug 2016 16:33:02 -0500
+Message-ID: <m2fuq5afap.fsf@baylibre.com>
+References: <201608141319.AeQlvjsy%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470735283-23611-4-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <201608141319.AeQlvjsy%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> (kbuild test
+	robot's message of "Sun, 14 Aug 2016 13:25:40 +0800")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Xing Wu <xing.xu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
-> Thanks a lot Andrew for your inputs.
-> Changes for v5:
-> --> Fixed return values in the probe as suggested by punnaiah.
-> --> Added a mask for the converter speed as suggested by punnaiah.
-> +/* Xilinx GMII2RGMII Converter driver
-> + *
-> + * Copyright (C) 2016 Xilinx, Inc.
-> + *
-> + * Author: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> writes:
 
-Not cool
+> Hi Kevin,
+>
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v4.8-rc1 next-20160812]
+> [cannot apply to ulf.hansson-mmc/next robh/for-next]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>
+> url:    https://github.com/0day-ci/linux/commits/Kevin-Hilman/ARM64-dts-meson-gxbb-add-MMC-support/20160804-072056
+> config: arm64-defconfig (attached as .config)
+> compiler: aarch64-linux-gnu-gcc (Debian 5.4.0-6) 5.4.0 20160609
+> reproduce:
+>         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=arm64 
+>
+> All errors (new ones prefixed by >>):
+>
+>>> Error: arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi:338.21-22 syntax error
+>>> FATAL ERROR: Unable to parse input tree
 
-https://github.com/lunn/linux/commit/03d375489ceb56e171056f44d0fe9c34ca5a098e
+This is due to a clock dependency[1] which is in the process of being
+queued in the clock tree.
 
-Notice the
+Kevin
 
-Not-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-
-and the Copyright i added?
-
-In various emails i gave you the basic idea how this should be done, a
-framework of code, and then took your code which did not even compile
-and made the core of it work. This is as much my code as your code, so
-i expect my Copyright to be kept on this code. And since this is my
-code, i need to give a Signed-off-by, which i was not yet ready to
-give since the code was not complete or working.
-
-Please put both my Copyright back and Not-Signed-Off-by back and post
-the next version as RFC. Once i'm happy this code is O.K, i will give
-you a Signed-off-by.
-
-    Andrew
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/446650.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
