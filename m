@@ -1,49 +1,94 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2 v5] iio: magn: DT bindings for AK8974
-Date: Mon, 15 Aug 2016 16:06:40 +0100
-Message-ID: <6a9c9739-781d-506e-62f4-913251d2916d@kernel.org>
-References: <1469454895-13659-1-git-send-email-linus.walleij@linaro.org>
- <CACRpkdaKaBVoRDqtoTtUPgLDZsHtMNUmdLhEktb2iaGoL=46xA@mail.gmail.com>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH v3 02/15] dt/bindings: Update binding for PM domain idle
+ states
+Date: Mon, 15 Aug 2016 10:06:13 -0600
+Message-ID: <20160815160613.GD1401@linaro.org>
+References: <1470351902-43103-1-git-send-email-lina.iyer@linaro.org>
+ <1470351902-43103-3-git-send-email-lina.iyer@linaro.org>
+ <99e35b6c-6698-6d27-f4d7-fa032796869e@arm.com>
+ <20160810164034.GA1401@linaro.org>
+ <5e59874c-bbb7-270a-199c-da1ff5932554@arm.com>
+ <20160811211023.GC1401@linaro.org>
+ <20160812123516.GA24194@brendan-thinkstation>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdaKaBVoRDqtoTtUPgLDZsHtMNUmdLhEktb2iaGoL=46xA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160812123516.GA24194@brendan-thinkstation>
+Sender: linux-pm-owner@vger.kernel.org
+To: Brendan Jackman <brendan.jackman@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, Axel Haslam <ahaslam+renesas@baylibre.com>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Juri Lelli <Juri.Lelli@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/16 12:32, Linus Walleij wrote:
-> On Mon, Jul 25, 2016 at 3:54 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> 
->> This adds device tree bindings for the AK8974 magnetometer, similar
->> to those for the AK8975.
+On Fri, Aug 12 2016 at 06:35 -0600, Brendan Jackman wrote:
+>> >In general whatever binding we come up must not just address OS
+>> >coordinated mode. Also I was thinking to have better coverage in
+>> >the description by having a bit more complex system like:
+>> >
+>> >cluster0
+>> >	CLUSTER_RET(Retention)
+>> >	CLUSTER_PG(Power Gate)
+>> >	core0
+>> >		CORE_RET
+>> >		CORE_PG
+>> >	core1
+>> >		CORE_RET
+>> >		CORE_PG
+>> >
+>> >cluster1
+>> >	CLUSTER_RET
+>> >	CLUSTER_PG
+>> >	core0
+>> >		CORE_RET
+>> >		CORE_PG
+>> >	core1
+>> >		CORE_RET
+>> >		CORE_PG
+>> >
+>> >Platform Co-ordinate supports the following states and we should
+>> >be able to determine that from the binding:
+>> >
+>> >CORE_RET
+>> >CORE_PG
+>> >CORE_RET + CLUSTER_RET
 >>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->> ChangeLog v4->v5:
->> - No changes, just resend.
-> 
-> Jonathan can we merge this? People seem happy with it.
-Hit the beginning of my holiday rather than anything else...
+>> The problem that we have to sove here is knowing that CORE_RET +
+>> CLUSTER_PG (hypothetically) an invalid combination. Kevin and
+>> I debated it in the earlier RFC and we dont have a good way to solve
+>> this generically for all devices.
+>>
+>
+>
+>This is interesting. I had been working on the assumption that a parent
+>power domain cannot enter any idle state until its children were all in
+>their deepest idle state. I now realise that it's easy to imagine
+>platforms where this isn't the case.
+>
+>However, I don't understand how your current bindings solve this issue
+>and why using domain-power-states for all states (i.e. ignoring
+>cpu-idle-states and putting CPU idle states in the domain-idle-states of
+>a per-CPU power domain - I believe this is what Sudeep is suggesting)
+>makes it any more difficult.
+>
+You are right, my current bindings don't solve it. I imagined one would
+solve it by writing their own CPU PM Domain governor. In the context of
+platform coordinated, we dont have a choice in Linux. May be the
+firmware can assert that intelligence in not choosing those states. So,
+we may have states added to cpuidle that are invalid and never get
+chosen by the firmware. I am not sure, but may be that is acceptable.
 
-Applied to the togreg branch of iio.git - initially pushed out
-as testing etc.
+>Could you link to this previous discussion you mentioned? I'm having
+>trouble finding it (R.I.P Gmane).
+>
+Sigh. So hard to search. Let me see where it is, if it in mail or IRC
+communication.
 
-Jonathan
-> 
-> Dito for the actual driver patch 2/2.
-> 
-> Yours,
-> Linus Walleij
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Thanks,
+Lina
+
+>> >CORE_PG + CLUSTER_RET
+>> >CORE_PG + CLUSTER_PG
+>> >
+>
+>Cheers,
+>Brendan
