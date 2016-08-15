@@ -1,38 +1,64 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] of: fix reference counting in of_graph_get_endpoint_by_regs
-Date: Mon, 15 Aug 2016 11:16:46 -0500
-Message-ID: <CAL_JsqKCyRsf29_MCQpKHf954=4YUrWXA3otZ6Aki8dKxYbGUg@mail.gmail.com>
-References: <1471265923-6424-1-git-send-email-l.stach@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] net: hix5hd2_gmac: add tx scatter-gather feature
+Date: Mon, 15 Aug 2016 11:18:19 -0500
+Message-ID: <CAL_JsqLgzaPECHdX8yHC3DAUq0jXhgUFE+xVFbeV0OLQXopqxg@mail.gmail.com>
+References: <1470906115-155569-1-git-send-email-lidongpo@hisilicon.com>
+ <1470906115-155569-2-git-send-email-lidongpo@hisilicon.com>
+ <20160812184336.GA5706@rob-hp-laptop> <57B1664F.1090708@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471265923-6424-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <57B1664F.1090708@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dongpo Li <lidongpo@hisilicon.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Zhangfei Gao <zhangfei.gao@linaro.org>, Yisen Zhuang <yisen.zhuang@huawei.com>, salil.mehta@huawei.com, David Miller <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, xuejiancheng@hisilicon.com, benjamin.chenhao@hisilicon.com, howell.yang@hisilicon.com, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 15, 2016 at 7:58 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> The called of_graph_get_next_endpoint() already decrements the refcount
-> of the prev node, so it is wrong to do it again in the calling function.
+On Mon, Aug 15, 2016 at 1:50 AM, Dongpo Li <lidongpo@hisilicon.com> wrote:
+> Hi Rob,
+> Many thanks for your review.
 >
-> Use the for_each_endpoint_of_node() helper to interate through the
-> endpoint OF nodes, which already does the right thing and simplifies
-> the code a bit.
+> On 2016/8/13 2:43, Rob Herring wrote:
+>> On Thu, Aug 11, 2016 at 05:01:52PM +0800, Dongpo Li wrote:
+>>> From: Li Dongpo <lidongpo@hisilicon.com>
+>>>
+>>> The "hix5hd2" is SoC name, add the generic ethernet driver name.
+>>> The "hisi-gemac-v1" is the basic version and "hisi-gemac-v2" adds
+>>> the SG/TXCSUM/TSO/UFO features.
+>>> This patch only adds the SG(scatter-gather) driver for transmitting,
+>>> the drivers of other features will be submitted later.
+>>
+>> The compatible string changes should probably be a separate patch.
+>>
+> ok, I will split this patch into two patches, one for compatible string changes,
+> and one for driver feature implementation.
 >
-> Fixes: 8ccd0d0ca041
-> (of: add helper for getting endpoint node of specific identifiers)
-> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Reported-by: David Jander <david-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>> Signed-off-by: Dongpo Li <lidongpo@hisilicon.com>
+>>> ---
+>>>  .../bindings/net/hisilicon-hix5hd2-gmac.txt        |   9 +-
+>>>  drivers/net/ethernet/hisilicon/hix5hd2_gmac.c      | 213 +++++++++++++++++++--
+>>>  2 files changed, 205 insertions(+), 17 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+>>> index 75d398b..3c02fac 100644
+>>> --- a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+>>> +++ b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+>>> @@ -1,7 +1,12 @@
+>>>  Hisilicon hix5hd2 gmac controller
+>>>
+>>>  Required properties:
+>>> -- compatible: should be "hisilicon,hix5hd2-gmac".
+>>> +- compatible: should contain one of the following version strings:
+>>> +    * "hisilicon,hisi-gemac-v1"
+>>> +    * "hisilicon,hisi-gemac-v2"
+>>> +    and one of the following SoC string:
+>>> +    * "hisilicon,hix5hd2-gemac"
+>>> +    * "hisilicon,hi3798cv200-gemac"
+>>
+>> Make it clear what the order should be.
+>>
+> ok, I will put the SoC strings in alphabetical order.
 
-I assume this was an ack?
-
-I've applied, thanks.
+No, I mean the most specific string comes first.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
