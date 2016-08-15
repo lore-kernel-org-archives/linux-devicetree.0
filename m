@@ -1,79 +1,499 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: imx6sx-udoo-neo: Add SD
-Date: Mon, 15 Aug 2016 20:38:23 +0800
-Message-ID: <20160815123823.GC500@tiger>
-References: <1467691450-22975-1-git-send-email-afaerber@suse.de>
- <1467691450-22975-4-git-send-email-afaerber@suse.de>
- <20160808141248.GI4678@tiger>
- <16912a4e-88c8-b11a-16bb-927ee6bf1775@suse.de>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v3 3/4] media: Add Mediatek MDP Driver
+Date: Mon, 15 Aug 2016 14:55:08 +0200
+Message-ID: <861e5c51-1333-fdc7-2793-d4741a48c72f@xs4all.nl>
+References: <1470751137-12403-1-git-send-email-minghsiu.tsai@mediatek.com>
+ <1470751137-12403-4-git-send-email-minghsiu.tsai@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <16912a4e-88c8-b11a-16bb-927ee6bf1775-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ettore Chimenti <ettore.chimenti-GcR40IO4/Fc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1470751137-12403-4-git-send-email-minghsiu.tsai@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
+Cc: srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 08, 2016 at 05:00:41PM +0200, Andreas Färber wrote:
-> Am 08.08.2016 um 16:12 schrieb Shawn Guo:
-> > On Tue, Jul 05, 2016 at 06:04:10AM +0200, Andreas Färber wrote:
-> >> Enable the SDHC node and model the SDIO_PWR GPIO as a regulator.
-> >> Use the SD card as default trigger for the red LED.
-> >>
-> >> Cc: Ettore Chimenti <ettore.chimenti-GcR40IO4/Fc@public.gmane.org>
-> >> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> >> ---
-> >>  
-> >>
-> >>  arch/arm/boot/dts/imx6sx-udoo-neo.dtsi | 34 ++++++++++++++++++++++++++++++++++
-> >>  1 file changed, 34 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-> >> index e074409644d8..85f5e8606dab 100644
-> >> --- a/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-> >> +++ b/arch/arm/boot/dts/imx6sx-udoo-neo.dtsi
-> >> @@ -56,6 +56,7 @@
-> >>  			label = "udoo-neo:red:mmc";
-> >>  			gpios = <&gpio6 0 GPIO_ACTIVE_HIGH>;
-> >>  			default-state = "off";
-> >> +			linux,default-trigger = "mmc0";
-> >>  		};
-> >>  
-> >>  		orange {
-> >> @@ -64,6 +65,17 @@
-> >>  			default-state = "keep";
-> >>  		};
-> >>  	};
-> >> +
-> >> +	sdio_pwr_reg: sd-gpio-regulator {
-> >> +		compatible = "regulator-fixed";
-> >> +		gpio = <&gpio6 1 GPIO_ACTIVE_HIGH>;
-> >> +		enable-active-high;
-> >> +		regulator-name = "SDIO_PWR";
-> >> +		regulator-min-microvolt = <3300000>;
-> >> +		regulator-max-microvolt = <3300000>;
-> >> +		regulator-boot-on;
-> >> +		regulator-always-on;
-> >> +	};
-> > 
-> > Is it correct to model SDIO power control GPIO as a boot-on and
-> > always-on fixed regulator?  It will be powered-on even when SDIO driver
-> > is not enabled or loaded.
+On 08/09/2016 03:58 PM, Minghsiu Tsai wrote:
+> Add MDP driver for MT8173
 > 
-> AFAIR the issue was that the driver does not use any -supply properties
-> where we could hook this regulator up for enabling. So modeling it as an
-> always-on regulator seemed like the only way to ensure it gets enabled
-> without relying on the bootloader?
+> Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+> ---
+>  drivers/media/platform/Kconfig                |   16 +
+>  drivers/media/platform/Makefile               |    2 +
+>  drivers/media/platform/mtk-mdp/Makefile       |    9 +
+>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c |  159 ++++
+>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.h |   72 ++
+>  drivers/media/platform/mtk-mdp/mtk_mdp_core.c |  294 ++++++
+>  drivers/media/platform/mtk-mdp/mtk_mdp_core.h |  240 +++++
+>  drivers/media/platform/mtk-mdp/mtk_mdp_ipi.h  |  126 +++
+>  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c  | 1263 +++++++++++++++++++++++++
+>  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.h  |   22 +
+>  drivers/media/platform/mtk-mdp/mtk_mdp_regs.c |  153 +++
+>  drivers/media/platform/mtk-mdp/mtk_mdp_regs.h |   31 +
+>  drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c  |  145 +++
+>  drivers/media/platform/mtk-mdp/mtk_mdp_vpu.h  |   41 +
+>  14 files changed, 2573 insertions(+)
+>  create mode 100644 drivers/media/platform/mtk-mdp/Makefile
+>  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
+>  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
+>  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+>  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_core.h
+>  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_ipi.h
+>  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+>  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_m2m.h
+>  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_regs.c
+>  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_regs.h
+>  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c
+>  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_vpu.h
+> 
+> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> index f25344b..4bb874b 100644
+> --- a/drivers/media/platform/Kconfig
+> +++ b/drivers/media/platform/Kconfig
+> @@ -166,6 +166,22 @@ config VIDEO_MEDIATEK_VPU
+>  	    To compile this driver as a module, choose M here: the
+>  	    module will be called mtk-vpu.
+>  
+> +config VIDEO_MEDIATEK_MDP
+> +	tristate "Mediatek MDP driver"
+> +	depends on MTK_IOMMU || COMPILE_TEST
+> +	depends on VIDEO_DEV && VIDEO_V4L2
+> +	depends on ARCH_MEDIATEK || COMPILE_TEST
 
-If I understand it correctly, SDHCI driver calls
-mmc_regulator_get_supply() to handle vmmc and vqmmc supply.  Can
-vmmc-supply be used here?
+This needs a 'depends on HAS_DMA' as well.
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	select VIDEOBUF2_DMA_CONTIG
+> +	select V4L2_MEM2MEM_DEV
+> +	select VIDEO_MEDIATEK_VPU
+> +	default n
+> +	---help---
+> +	    It is a v4l2 driver and present in Mediatek MT8173 SoCs.
+> +	    The driver supports for scaling and color space conversion.
+> +
+> +	    To compile this driver as a module, choose M here: the
+> +	    module will be called mtk-mdp.
+> +
+>  config VIDEO_MEDIATEK_VCODEC
+>  	tristate "Mediatek Video Codec driver"
+>  	depends on MTK_IOMMU || COMPILE_TEST
+
+<snip>
+
+> +
+> +/*
+> + * Return true if rectangle a is enclosed in rectangle b, or false otherwise.
+> + */
+> +static bool mtk_mdp_m2m_is_rectangle_enclosed(struct v4l2_rect *a,
+> +					     struct v4l2_rect *b)
+> +{
+> +	if (a->left < b->left || a->top < b->top)
+> +		return false;
+> +
+> +	if (a->left + a->width > b->left + b->width)
+> +		return false;
+> +
+> +	if (a->top + a->height > b->top + b->height)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +static int mtk_mdp_m2m_g_selection(struct file *file, void *fh,
+> +				   struct v4l2_selection *s)
+> +{
+> +	struct mtk_mdp_frame *frame;
+> +	struct mtk_mdp_ctx *ctx = fh_to_ctx(fh);
+> +
+> +	if ((s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE) &&
+> +	    (s->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)) {
+> +		mtk_mdp_dbg(1, "[%d] invalid type:%d", ctx->id, s->type);
+> +		return -EINVAL;
+> +	}
+> +
+> +	frame = mtk_mdp_ctx_get_frame(ctx, s->type);
+> +
+> +	switch (s->target) {
+> +	case V4L2_SEL_TGT_COMPOSE_DEFAULT:
+> +	case V4L2_SEL_TGT_COMPOSE_BOUNDS:
+> +	case V4L2_SEL_TGT_CROP_BOUNDS:
+> +	case V4L2_SEL_TGT_CROP_DEFAULT:
+> +		s->r.left = 0;
+> +		s->r.top = 0;
+> +		s->r.width = frame->width;
+> +		s->r.height = frame->height;
+> +		return 0;
+> +
+> +	case V4L2_SEL_TGT_COMPOSE:
+> +	case V4L2_SEL_TGT_CROP:
+> +		s->r.left = frame->crop.left;
+> +		s->r.top = frame->crop.top;
+> +		s->r.width = frame->crop.width;
+> +		s->r.height = frame->crop.height;
+> +		return 0;
+> +	}
+
+This isn't right. For VIDEO_CAPTURE you support the COMPOSE targets, and for
+the VIDEO_OUTPUT you support the CROP targets. Right now I can use e.g. TGT_CROP
+with VIDEO_CAPTURE, which isn't correct.
+
+s_selection has the same problem.
+
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int mtk_mdp_check_scaler_ratio(struct mtk_mdp_variant *var, int src_w,
+> +				      int src_h, int dst_w, int dst_h, int rot)
+> +{
+> +	int tmp_w, tmp_h;
+> +
+> +	if (rot == 90 || rot == 270) {
+> +		tmp_w = dst_h;
+> +		tmp_h = dst_w;
+> +	} else {
+> +		tmp_w = dst_w;
+> +		tmp_h = dst_h;
+> +	}
+> +
+> +	if ((src_w / tmp_w) > var->h_scale_down_max ||
+> +	    (src_h / tmp_h) > var->v_scale_down_max ||
+> +	    (tmp_w / src_w) > var->h_scale_up_max ||
+> +	    (tmp_h / src_h) > var->v_scale_up_max)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mtk_mdp_m2m_s_selection(struct file *file, void *fh,
+> +				   struct v4l2_selection *s)
+> +{
+> +	struct mtk_mdp_frame *frame;
+> +	struct mtk_mdp_ctx *ctx = fh_to_ctx(fh);
+> +	struct v4l2_crop cr;
+> +	struct mtk_mdp_variant *variant = ctx->mdp_dev->variant;
+> +	int ret;
+> +
+> +	cr.type = s->type;
+> +	cr.c = s->r;
+> +
+> +	if ((s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE) &&
+> +	    (s->type != V4L2_BUF_TYPE_VIDEO_OUTPUT)) {
+> +		mtk_mdp_dbg(1, "[%d] invalid type:%d", ctx->id, s->type);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = mtk_mdp_try_crop(ctx, &cr);
+
+Please don't copy to a v4l2_crop. Just stick to v4l2_selection.
+I would prefer not to see struct v4l2_crop in drivers.
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (s->flags & V4L2_SEL_FLAG_LE &&
+> +	    !mtk_mdp_m2m_is_rectangle_enclosed(&cr.c, &s->r))
+> +		return -ERANGE;
+> +
+> +	if (s->flags & V4L2_SEL_FLAG_GE &&
+> +	    !mtk_mdp_m2m_is_rectangle_enclosed(&s->r, &cr.c))
+> +		return -ERANGE;
+
+As has been discussed for the encoder driver: just adjust the rectangle and
+don't return ERANGE. Consider the flags as hints.
+
+The V4L2 documentation is confusing, this will be addressed soon.
+
+> +
+> +	s->r = cr.c;
+> +
+> +	switch (s->target) {
+> +	case V4L2_SEL_TGT_COMPOSE_BOUNDS:
+> +	case V4L2_SEL_TGT_COMPOSE_DEFAULT:
+> +	case V4L2_SEL_TGT_COMPOSE:
+> +		frame = &ctx->s_frame;
+> +		break;
+> +
+> +	case V4L2_SEL_TGT_CROP_BOUNDS:
+> +	case V4L2_SEL_TGT_CROP:
+> +	case V4L2_SEL_TGT_CROP_DEFAULT:
+> +		frame = &ctx->d_frame;
+> +		break;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Check to see if scaling ratio is within supported range */
+> +	if (mtk_mdp_ctx_state_is_set(ctx, MTK_MDP_DST_FMT | MTK_MDP_SRC_FMT)) {
+> +		if (V4L2_TYPE_IS_OUTPUT(s->type)) {
+> +			ret = mtk_mdp_check_scaler_ratio(variant, cr.c.width,
+> +				cr.c.height, ctx->d_frame.crop.width,
+> +				ctx->d_frame.crop.height,
+> +				ctx->ctrls.rotate->val);
+> +		} else {
+> +			ret = mtk_mdp_check_scaler_ratio(variant,
+> +				ctx->s_frame.crop.width,
+> +				ctx->s_frame.crop.height, cr.c.width,
+> +				cr.c.height, ctx->ctrls.rotate->val);
+> +		}
+> +
+> +		if (ret) {
+> +			dev_info(&ctx->mdp_dev->pdev->dev,
+> +				"Out of scaler range");
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	frame->crop = cr.c;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_ioctl_ops mtk_mdp_m2m_ioctl_ops = {
+> +	.vidioc_querycap		= mtk_mdp_m2m_querycap,
+> +	.vidioc_enum_fmt_vid_cap_mplane	= mtk_mdp_m2m_enum_fmt_mplane_vid_cap,
+> +	.vidioc_enum_fmt_vid_out_mplane	= mtk_mdp_m2m_enum_fmt_mplane_vid_out,
+> +	.vidioc_g_fmt_vid_cap_mplane	= mtk_mdp_m2m_g_fmt_mplane,
+> +	.vidioc_g_fmt_vid_out_mplane	= mtk_mdp_m2m_g_fmt_mplane,
+> +	.vidioc_try_fmt_vid_cap_mplane	= mtk_mdp_m2m_try_fmt_mplane,
+> +	.vidioc_try_fmt_vid_out_mplane	= mtk_mdp_m2m_try_fmt_mplane,
+> +	.vidioc_s_fmt_vid_cap_mplane	= mtk_mdp_m2m_s_fmt_mplane,
+> +	.vidioc_s_fmt_vid_out_mplane	= mtk_mdp_m2m_s_fmt_mplane,
+> +	.vidioc_reqbufs			= mtk_mdp_m2m_reqbufs,
+> +	.vidioc_create_bufs		= v4l2_m2m_ioctl_create_bufs,
+> +	.vidioc_expbuf			= v4l2_m2m_ioctl_expbuf,
+> +	.vidioc_subscribe_event		= v4l2_ctrl_subscribe_event,
+> +	.vidioc_unsubscribe_event	= v4l2_event_unsubscribe,
+> +	.vidioc_querybuf		= v4l2_m2m_ioctl_querybuf,
+> +	.vidioc_qbuf			= v4l2_m2m_ioctl_qbuf,
+> +	.vidioc_dqbuf			= v4l2_m2m_ioctl_dqbuf,
+> +	.vidioc_streamon		= mtk_mdp_m2m_streamon,
+> +	.vidioc_streamoff		= v4l2_m2m_ioctl_streamoff,
+> +	.vidioc_g_selection		= mtk_mdp_m2m_g_selection,
+> +	.vidioc_s_selection		= mtk_mdp_m2m_s_selection
+> +};
+> +
+> +static int mtk_mdp_m2m_queue_init(void *priv, struct vb2_queue *src_vq,
+> +				  struct vb2_queue *dst_vq)
+> +{
+> +	struct mtk_mdp_ctx *ctx = priv;
+> +	int ret;
+> +
+> +	memset(src_vq, 0, sizeof(*src_vq));
+> +	src_vq->type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
+> +	src_vq->io_modes = VB2_MMAP | VB2_USERPTR | VB2_DMABUF;
+> +	src_vq->drv_priv = ctx;
+> +	src_vq->ops = &mtk_mdp_m2m_qops;
+> +	src_vq->mem_ops = &vb2_dma_contig_memops;
+> +	src_vq->buf_struct_size = sizeof(struct v4l2_m2m_buffer);
+> +	src_vq->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_COPY;
+> +	src_vq->dev = &ctx->mdp_dev->pdev->dev;
+> +
+> +	ret = vb2_queue_init(src_vq);
+> +	if (ret)
+> +		return ret;
+> +
+> +	memset(dst_vq, 0, sizeof(*dst_vq));
+> +	dst_vq->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
+> +	dst_vq->io_modes = VB2_MMAP | VB2_USERPTR | VB2_DMABUF;
+
+I wouldn't recommend setting VB2_USERPTR in combination with dma_contig.
+
+That only works if the userptr points to physically contiguous memory,
+unless there is an iommu that can fix things up.
+
+> +	dst_vq->drv_priv = ctx;
+> +	dst_vq->ops = &mtk_mdp_m2m_qops;
+> +	dst_vq->mem_ops = &vb2_dma_contig_memops;
+> +	dst_vq->buf_struct_size = sizeof(struct v4l2_m2m_buffer);
+> +	dst_vq->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_COPY;
+> +	dst_vq->dev = &ctx->mdp_dev->pdev->dev;
+> +
+> +	return vb2_queue_init(dst_vq);
+> +}
+> +
+> +static int mtk_mdp_s_ctrl(struct v4l2_ctrl *ctrl)
+> +{
+> +	struct mtk_mdp_ctx *ctx = ctrl_to_ctx(ctrl);
+> +	struct mtk_mdp_dev *mdp = ctx->mdp_dev;
+> +	struct mtk_mdp_variant *variant = mdp->variant;
+> +	u32 state = MTK_MDP_DST_FMT | MTK_MDP_SRC_FMT;
+> +	int ret = 0;
+> +
+> +	if (ctrl->flags & V4L2_CTRL_FLAG_INACTIVE)
+> +		return 0;
+> +
+> +	switch (ctrl->id) {
+> +	case V4L2_CID_HFLIP:
+> +		ctx->hflip = ctrl->val;
+> +		break;
+> +	case V4L2_CID_VFLIP:
+> +		ctx->vflip = ctrl->val;
+> +		break;
+> +	case V4L2_CID_ROTATE:
+> +		if (mtk_mdp_ctx_state_is_set(ctx, state)) {
+> +			ret = mtk_mdp_check_scaler_ratio(variant,
+> +					ctx->s_frame.crop.width,
+> +					ctx->s_frame.crop.height,
+> +					ctx->d_frame.crop.width,
+> +					ctx->d_frame.crop.height,
+> +					ctx->ctrls.rotate->val);
+> +
+> +			if (ret)
+> +				return -EINVAL;
+> +		}
+> +
+> +		ctx->rotation = ctrl->val;
+> +		break;
+> +	case V4L2_CID_ALPHA_COMPONENT:
+> +		ctx->d_frame.alpha = ctrl->val;
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_ctrl_ops mtk_mdp_ctrl_ops = {
+> +	.s_ctrl = mtk_mdp_s_ctrl,
+> +};
+> +
+> +static int mtk_mdp_ctrls_create(struct mtk_mdp_ctx *ctx)
+> +{
+> +	v4l2_ctrl_handler_init(&ctx->ctrl_handler, MTK_MDP_MAX_CTRL_NUM);
+> +
+> +	ctx->ctrls.rotate = v4l2_ctrl_new_std(&ctx->ctrl_handler,
+> +			&mtk_mdp_ctrl_ops, V4L2_CID_ROTATE, 0, 270, 90, 0);
+> +	ctx->ctrls.hflip = v4l2_ctrl_new_std(&ctx->ctrl_handler,
+> +					     &mtk_mdp_ctrl_ops,
+> +					     V4L2_CID_HFLIP,
+> +					     0, 1, 1, 0);
+> +	ctx->ctrls.vflip = v4l2_ctrl_new_std(&ctx->ctrl_handler,
+> +					     &mtk_mdp_ctrl_ops,
+> +					     V4L2_CID_VFLIP,
+> +					     0, 1, 1, 0);
+> +	ctx->ctrls.global_alpha = v4l2_ctrl_new_std(&ctx->ctrl_handler,
+> +						    &mtk_mdp_ctrl_ops,
+> +						    V4L2_CID_ALPHA_COMPONENT,
+> +						    0, 255, 1, 0);
+> +	ctx->ctrls_rdy = ctx->ctrl_handler.error == 0;
+> +
+> +	if (ctx->ctrl_handler.error) {
+> +		int err = ctx->ctrl_handler.error;
+> +
+> +		v4l2_ctrl_handler_free(&ctx->ctrl_handler);
+> +		dev_err(&ctx->mdp_dev->pdev->dev,
+> +			"Failed to create control handlers\n");
+> +		return err;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void mtk_mdp_set_default_params(struct mtk_mdp_ctx *ctx)
+> +{
+> +	struct mtk_mdp_dev *mdp = ctx->mdp_dev;
+> +	struct mtk_mdp_frame *frame;
+> +
+> +	frame = mtk_mdp_ctx_get_frame(ctx, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+> +	frame->fmt = mtk_mdp_find_fmt_by_index(0,
+> +					V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+> +	frame->width = mdp->variant->pix_min->org_w;
+> +	frame->height = mdp->variant->pix_min->org_h;
+> +	frame->payload[0] = frame->width * frame->height;
+> +	frame->payload[1] = frame->payload[0] / 2;
+> +
+> +	frame = mtk_mdp_ctx_get_frame(ctx, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+> +	frame->fmt = mtk_mdp_find_fmt_by_index(0,
+> +					V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+> +	frame->width = mdp->variant->pix_min->target_rot_dis_w;
+> +	frame->height = mdp->variant->pix_min->target_rot_dis_h;
+> +	frame->payload[0] = frame->width * frame->height;
+> +	frame->payload[1] = frame->payload[0] / 2;
+> +
+> +}
+> +
+> +static int mtk_mdp_m2m_open(struct file *file)
+> +{
+> +	struct mtk_mdp_dev *mdp = video_drvdata(file);
+> +	struct video_device *vfd = video_devdata(file);
+> +	struct mtk_mdp_ctx *ctx = NULL;
+> +	int ret;
+> +
+> +	if (mutex_lock_interruptible(&mdp->lock))
+> +		return -ERESTARTSYS;
+
+This lock is taken very early. Move it down to where you really need the lock,
+it can certainly be moved to after the kzalloc.
+
+> +
+> +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx) {
+> +		ret = -ENOMEM;
+> +		goto err_ctx_alloc;
+> +	}
+> +
+> +	mutex_init(&ctx->slock);
+> +	ctx->id = mdp->id_counter++;
+> +	v4l2_fh_init(&ctx->fh, vfd);
+> +	file->private_data = &ctx->fh;
+> +	ret = mtk_mdp_ctrls_create(ctx);
+> +	if (ret)
+> +		goto error_ctrls;
+> +
+> +	/* Use separate control handler per file handle */
+> +	ctx->fh.ctrl_handler = &ctx->ctrl_handler;
+> +	v4l2_fh_add(&ctx->fh);
+> +	INIT_LIST_HEAD(&ctx->list);
+> +
+> +	ctx->mdp_dev = mdp;
+> +	mtk_mdp_set_default_params(ctx);
+> +
+> +	INIT_WORK(&ctx->work, mtk_mdp_m2m_worker);
+> +	ctx->m2m_ctx = v4l2_m2m_ctx_init(mdp->m2m_dev, ctx,
+> +					 mtk_mdp_m2m_queue_init);
+> +	if (IS_ERR(ctx->m2m_ctx)) {
+> +		dev_err(&mdp->pdev->dev, "Failed to initialize m2m context");
+> +		ret = PTR_ERR(ctx->m2m_ctx);
+> +		goto error_m2m_ctx;
+> +	}
+> +	ctx->fh.m2m_ctx = ctx->m2m_ctx;
+> +	if (mdp->ctx_num++ == 0) {
+> +		ret = vpu_load_firmware(mdp->vpu_dev);
+> +		if (ret < 0) {
+> +			dev_err(&mdp->pdev->dev,
+> +				"vpu_load_firmware failed %d\n", ret);
+> +			goto err_load_vpu;
+> +		}
+> +
+> +		ret = mtk_mdp_vpu_register(mdp->pdev);
+> +		if (ret < 0) {
+> +			dev_err(&mdp->pdev->dev,
+> +				"mdp_vpu register failed %d\n", ret);
+> +			goto err_load_vpu;
+> +		}
+> +	}
+> +
+> +	list_add(&ctx->list, &mdp->ctx_list);
+> +	mutex_unlock(&mdp->lock);
+> +
+> +	mtk_mdp_dbg(0, "%s [%d]", dev_name(&mdp->pdev->dev), ctx->id);
+> +
+> +	return 0;
+> +
+> +err_load_vpu:
+> +	mdp->ctx_num--;
+> +	v4l2_m2m_ctx_release(ctx->m2m_ctx);
+> +error_m2m_ctx:
+> +	v4l2_ctrl_handler_free(&ctx->ctrl_handler);
+> +error_ctrls:
+> +	v4l2_fh_del(&ctx->fh);
+> +	v4l2_fh_exit(&ctx->fh);
+> +err_ctx_alloc:
+> +	kfree(ctx);
+> +	mutex_unlock(&mdp->lock);
+> +
+> +	return ret;
+> +}
+
+<snip>
