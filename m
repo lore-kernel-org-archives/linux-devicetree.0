@@ -1,79 +1,116 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 2/3] ARM64: dts: amlogic: eMMC support for all Tronsmart Vega S95 devices
-Date: Mon, 15 Aug 2016 15:38:10 +0200
-Message-ID: <20160815133811.19646-3-martin.blumenstingl@googlemail.com>
-References: <20160625163446.7245-1-martin.blumenstingl@googlemail.com>
- <20160815133811.19646-1-martin.blumenstingl@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160815133811.19646-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v2 3/8] dt-bindings: i2c: add support for 'i2c-gate' subnode
+Date: Mon, 15 Aug 2016 15:40:26 +0200
+Message-ID: <1471268431-5148-4-git-send-email-peda@axentia.se>
+References: <1471268431-5148-1-git-send-email-peda@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1471268431-5148-1-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Crestez Dan Leonard <leonard.crestez@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds eMMC support for all Tronsmart Vega S95 devices using
-sd_emmc_c. This is implemented similar to the p20x boards (meaning it
-uses fixed regulators).
+Handle i2c gates similarly to how i2c arbitrators are handled.
+This gets rid of a pointless 'reg' property for i2c gates.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+I.e. this new and more compact style
+
+        some-gate {
+                i2c-gate {
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+
+                        some-i2c-device@50 {
+                                reg = <0x50>;
+                        };
+                };
+        };
+
+instead of the old
+
+        some-gate {
+                #address-cells = <1>;
+                #size-cells = <0>;
+
+                i2c@0 {
+                        reg = <0>;
+
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+
+                        some-i2c-device@50 {
+                                reg = <0x50>;
+                        };
+                };
+        };
+
+Signed-off-by: Peter Rosin <peda@axentia.se>
 ---
- .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ Documentation/devicetree/bindings/i2c/i2c-gate.txt | 41 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-gate.txt
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 4572ce2..af2e38e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -62,6 +62,21 @@
- 
- 		regulator-always-on;
- 	};
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-gate.txt b/Documentation/devicetree/bindings/i2c/i2c-gate.txt
+new file mode 100644
+index 000000000000..0b057fb2a15a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-gate.txt
+@@ -0,0 +1,41 @@
++An i2c gate is useful to e.g. reduce the digital noise for RF tuners connected
++to the i2c bus. Gates are similar to arbitrators in that you need to perform
++some kind of operation to access the i2c bus past the arbitrator/gate, but
++there are no competing masters to consider for gates and therefore there is
++no arbitration happening for gates.
 +
-+	vcc_1v8: regulator@1 {
-+		compatible = "regulator-fixed";
++Common i2c gate properties.
 +
-+		regulator-name = "VCC1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
++- i2c-gate child node
 +
-+		regulator-always-on;
++Required properties for the i2c-gate child node:
++- #address-cells = <1>;
++- #size-cells = <0>;
++
++Optional properties for i2c-gate child node:
++- Child nodes conforming to i2c bus binding
++
++
++Example :
++
++	/*
++	   An Invensense mpu9150 at address 0x68 featuring an on-chip Asahi
++	   Kasei ak8975 compass behind a gate.
++	 */
++
++	mpu9150@68 {
++		compatible = "invensense,mpu9150";
++		reg = <0x68>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <18 1>;
++
++		i2c-gate {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			ax8975@0c {
++				compatible = "ak,ak8975";
++				reg = <0x0c>;
++			};
++		};
 +	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
- };
- 
- &uart_AO {
-@@ -86,3 +101,23 @@
- 	vmmc-supply = <&vcc_3v3>;
- 	voltage-ranges = <3300 3300>;
- };
-+
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-names = "default";
-+
-+	bus-width = <8>;
-+	cap-sd-highspeed;
-+	cap-mmc-highspeed;
-+	max-frequency = <200000000>;
-+	non-removable;
-+	disable-wp;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	voltage-ranges = <1800 3300>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vmmcq-sumpply = <&vcc_1v8>;
-+};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1a61e2f5a0a9..7444b03a4c28 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5661,6 +5661,7 @@ F:	Documentation/i2c/i2c-topology
+ F:	Documentation/i2c/muxes/
+ F:	Documentation/devicetree/bindings/i2c/i2c-mux*
+ F:	Documentation/devicetree/bindings/i2c/i2c-arb*
++F:	Documentation/devicetree/bindings/i2c/i2c-gate*
+ F:	drivers/i2c/i2c-mux.c
+ F:	drivers/i2c/muxes/
+ F:	include/linux/i2c-mux.h
 -- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
