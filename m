@@ -1,54 +1,48 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] iio: accel: Add support for Domintech DMARD06
- accelerometer
-Date: Mon, 15 Aug 2016 18:56:00 +0100
-Message-ID: <856a6531-9a19-6382-838a-f3c6b83259f6@kernel.org>
-References: <1469460078-6460-1-git-send-email-mamlinav@gmail.com>
- <1469460078-6460-3-git-send-email-mamlinav@gmail.com>
- <20160727145740.GA23467@rob-hp-laptop>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] clk: sunxi-ng: Add A31/A31s clocks
+Date: Mon, 15 Aug 2016 20:07:44 +0200
+Message-ID: <20160815200744.fc1ad630f927692eec1e5694@free.fr>
+References: <1471248795-17951-1-git-send-email-wens@csie.org>
+	<1471248795-17951-5-git-send-email-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160727145740.GA23467@rob-hp-laptop>
+In-Reply-To: <1471248795-17951-5-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/07/16 15:57, Rob Herring wrote:
-> On Mon, Jul 25, 2016 at 06:21:18PM +0300, Aleksei Mamlin wrote:
->> This patch add support for Domintech DMARD05, DMARD06 and DMARD07
->> accelerometers.
->>
->> Signed-off-by: Aleksei Mamlin <mamlinav-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/iio/accel/dmard06.txt      |  19 ++
-> 
-> This could go into trivial-devices.txt, but this is fine too:
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Applied to the togreg branch of iio.git - initially pushed out as
-test for the autobuilders to play with it.
+On Mon, 15 Aug 2016 16:13:14 +0800
+Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
 
-Nice compact little driver.
+> +/*
+> + * The Audio PLL is supposed to have 4 outputs: 3 fixed factors from
+> + * the base (2x, 4x and 8x), and one variable divider (the one true
+> + * pll audio).
+> + *
+> + * We don't have any need for the variable divider for now, so we just
+> + * hardcode it to match with the clock names
+> + */
+> +#define SUN6I_A31_PLL_AUDIO_REG	0x008
+> +
+> +static SUNXI_CCU_NM_WITH_GATE_LOCK(pll_audio_base_clk, "pll-audio-base",
+> +				   "osc24M", 0x008,
+> +				   8, 7,	/* N */
+> +				   0, 5,	/* M */
+> +				   BIT(31),	/* gate */
+> +				   BIT(28),	/* lock */
+> +				   0);
+> +
 
-Thanks,
+FYI, as in many other SoCs (A83T/H3/..), the multipliers/dividers from
+the base clock (24MHz) do not give an exact rate for standard audio
+(44.1kHz and 48kHz). Sigma-Delta Modulation must be used.
 
-Jonathan
-> 
->>  drivers/iio/accel/Kconfig                          |  11 +
->>  drivers/iio/accel/Makefile                         |   1 +
->>  drivers/iio/accel/dmard06.c                        | 241 +++++++++++++++++++++
->>  4 files changed, 272 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/accel/dmard06.txt
->>  create mode 100644 drivers/iio/accel/dmard06.c
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
+-- 
+Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
