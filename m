@@ -1,94 +1,56 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v3 02/15] dt/bindings: Update binding for PM domain idle
- states
-Date: Mon, 15 Aug 2016 10:06:13 -0600
-Message-ID: <20160815160613.GD1401@linaro.org>
-References: <1470351902-43103-1-git-send-email-lina.iyer@linaro.org>
- <1470351902-43103-3-git-send-email-lina.iyer@linaro.org>
- <99e35b6c-6698-6d27-f4d7-fa032796869e@arm.com>
- <20160810164034.GA1401@linaro.org>
- <5e59874c-bbb7-270a-199c-da1ff5932554@arm.com>
- <20160811211023.GC1401@linaro.org>
- <20160812123516.GA24194@brendan-thinkstation>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: omap: fix 4.7 gpmc networking regression
+Date: Mon, 15 Aug 2016 09:07:22 -0700
+Message-ID: <20160815160722.GQ28140@atomide.com>
+References: <1469362260-20066-1-git-send-email-johan@kernel.org>
+ <20160802103505.GD28140@atomide.com>
+ <9cf04231-091c-4ac3-bfb8-8d8be3d591eb@ti.com>
+ <20160803080149.GB15860@localhost>
+ <2fde63f3-62b1-75a0-524a-f858ff1de459@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160812123516.GA24194@brendan-thinkstation>
-Sender: linux-pm-owner@vger.kernel.org
-To: Brendan Jackman <brendan.jackman@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, Axel Haslam <ahaslam+renesas@baylibre.com>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Juri Lelli <Juri.Lelli@arm.com>
+In-Reply-To: <2fde63f3-62b1-75a0-524a-f858ff1de459-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 12 2016 at 06:35 -0600, Brendan Jackman wrote:
->> >In general whatever binding we come up must not just address OS
->> >coordinated mode. Also I was thinking to have better coverage in
->> >the description by having a bit more complex system like:
->> >
->> >cluster0
->> >	CLUSTER_RET(Retention)
->> >	CLUSTER_PG(Power Gate)
->> >	core0
->> >		CORE_RET
->> >		CORE_PG
->> >	core1
->> >		CORE_RET
->> >		CORE_PG
->> >
->> >cluster1
->> >	CLUSTER_RET
->> >	CLUSTER_PG
->> >	core0
->> >		CORE_RET
->> >		CORE_PG
->> >	core1
->> >		CORE_RET
->> >		CORE_PG
->> >
->> >Platform Co-ordinate supports the following states and we should
->> >be able to determine that from the binding:
->> >
->> >CORE_RET
->> >CORE_PG
->> >CORE_RET + CLUSTER_RET
->>
->> The problem that we have to sove here is knowing that CORE_RET +
->> CLUSTER_PG (hypothetically) an invalid combination. Kevin and
->> I debated it in the earlier RFC and we dont have a good way to solve
->> this generically for all devices.
->>
->
->
->This is interesting. I had been working on the assumption that a parent
->power domain cannot enter any idle state until its children were all in
->their deepest idle state. I now realise that it's easy to imagine
->platforms where this isn't the case.
->
->However, I don't understand how your current bindings solve this issue
->and why using domain-power-states for all states (i.e. ignoring
->cpu-idle-states and putting CPU idle states in the domain-idle-states of
->a per-CPU power domain - I believe this is what Sudeep is suggesting)
->makes it any more difficult.
->
-You are right, my current bindings don't solve it. I imagined one would
-solve it by writing their own CPU PM Domain governor. In the context of
-platform coordinated, we dont have a choice in Linux. May be the
-firmware can assert that intelligence in not choosing those states. So,
-we may have states added to cpuidle that are invalid and never get
-chosen by the firmware. I am not sure, but may be that is acceptable.
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160803 02:56]:
+> On 03/08/16 11:01, Johan Hovold wrote:
+> > On Wed, Aug 03, 2016 at 10:46:24AM +0300, Roger Quadros wrote:
+> >> On 02/08/16 13:35, Tony Lindgren wrote:
+> >>> * Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [160724 05:11]:
+> >>>> Networking is currently broken for Overo boards due to a regression in
+> >>>> 4.7. I bisected it down to
+> >>>>
+> >>>> 	d2d00862dfbb ("memory: omap-gpmc: Support general purpose input
+> >>>> 	for WAITPINs")
+> >>> ...
+> >>>
+> >>>> Note that simply fixing the Overo NAND issue would fix the Overo
+> >>>> networking regression, but by restoring the 4.6 gpmc-probe behaviour
+> >>>> similar regressions on other OMAP systems are also avoided.
+> >>>
+> >>> Roger, got a better fix in mind?
+> >>>
+> >>
+> >> Nope. I'll take patch 1 in my omap-gpmc queue for v4.8.
+> >> Thanks for the fixes Johan.
+> > 
+> > Now that 4.7 has been released, you may want to consider adding a stable
+> > tag also for the first patch to avoid similar issues on other systems
+> > when they get updated to 4.7-stable.
+> > 
+> 
+> Yes, that was my plan as well.
 
->Could you link to this previous discussion you mentioned? I'm having
->trouble finding it (R.I.P Gmane).
->
-Sigh. So hard to search. Let me see where it is, if it in mail or IRC
-communication.
+OK and I'm now finally applying the dts fixes into omap-for-v4.8/fixes.
+Sorry for the delay.
 
-Thanks,
-Lina
-
->> >CORE_PG + CLUSTER_RET
->> >CORE_PG + CLUSTER_PG
->> >
->
->Cheers,
->Brendan
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
