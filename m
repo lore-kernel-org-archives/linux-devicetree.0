@@ -1,48 +1,54 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM64: dts: meson-gxbb: add MMC support
-Date: Mon, 15 Aug 2016 16:33:02 -0500
-Message-ID: <m2fuq5afap.fsf@baylibre.com>
-References: <201608141319.AeQlvjsy%fengguang.wu@intel.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] ARM: dts: r8a7794: add VSP1 support
+Date: Tue, 16 Aug 2016 00:52:58 +0300
+Message-ID: <2191193.axSzE4vSGB@wasted.cogentembedded.com>
+References: <1618499.8bcj8adpVO@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201608141319.AeQlvjsy%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> (kbuild test
-	robot's message of "Sun, 14 Aug 2016 13:25:40 +0800")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Victor Wan <victor.wan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Jerry Cao <jerry.cao-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>, Xing Wu <xing.xu-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1618499.8bcj8adpVO@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> writes:
+Describe two instances (VSPS and VSPD0) of the VSP1 in the R8A7794 device
+tree.
 
-> Hi Kevin,
->
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v4.8-rc1 next-20160812]
-> [cannot apply to ulf.hansson-mmc/next robh/for-next]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->
-> url:    https://github.com/0day-ci/linux/commits/Kevin-Hilman/ARM64-dts-meson-gxbb-add-MMC-support/20160804-072056
-> config: arm64-defconfig (attached as .config)
-> compiler: aarch64-linux-gnu-gcc (Debian 5.4.0-6) 5.4.0 20160609
-> reproduce:
->         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=arm64 
->
-> All errors (new ones prefixed by >>):
->
->>> Error: arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi:338.21-22 syntax error
->>> FATAL ERROR: Unable to parse input tree
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-This is due to a clock dependency[1] which is in the process of being
-queued in the clock tree.
+---
+This patch is against the 'renesas-devel-20160815-v4.8-rc2' of Simon Horman's
+'renesas.git' repo.
 
-Kevin
+ arch/arm/boot/dts/r8a7794.dtsi |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2016-August/446650.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
++++ renesas/arch/arm/boot/dts/r8a7794.dtsi
+@@ -894,6 +894,22 @@
+ 		};
+ 	};
+ 
++	vsp1@fe928000 {
++		compatible = "renesas,vsp1";
++		reg = <0 0xfe928000 0 0x8000>;
++		interrupts = <GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp1_clks R8A7794_CLK_VSP1_S>;
++		power-domains = <&sysc R8A7794_PD_ALWAYS_ON>;
++	};
++
++	vsp1@fe930000 {
++		compatible = "renesas,vsp1";
++		reg = <0 0xfe930000 0 0x8000>;
++		interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp1_clks R8A7794_CLK_VSP1_DU0>;
++		power-domains = <&sysc R8A7794_PD_ALWAYS_ON>;
++	};
++
+ 	du: display@feb00000 {
+ 		compatible = "renesas,du-r8a7794";
+ 		reg = <0 0xfeb00000 0 0x40000>;
