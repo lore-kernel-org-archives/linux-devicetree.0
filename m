@@ -1,88 +1,41 @@
-From: Dongpo Li <lidongpo@hisilicon.com>
-Subject: Re: [PATCH 1/4] net: hix5hd2_gmac: add tx scatter-gather feature
-Date: Mon, 15 Aug 2016 14:50:55 +0800
-Message-ID: <57B1664F.1090708@hisilicon.com>
-References: <1470906115-155569-1-git-send-email-lidongpo@hisilicon.com>
- <1470906115-155569-2-git-send-email-lidongpo@hisilicon.com>
- <20160812184336.GA5706@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: William Wu <william.wu@rock-chips.com>
+Subject: [PATCH v9 0/5] support rockchip dwc3 driver
+Date: Mon, 15 Aug 2016 14:59:54 +0800
+Message-ID: <1471244399-1356-1-git-send-email-william.wu@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160812184336.GA5706@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, zhangfei.gao@linaro.org, yisen.zhuang@huawei.com, salil.mehta@huawei.com, davem@davemloft.net, arnd@arndb.de, andrew@lunn.ch, xuejiancheng@hisilicon.com, benjamin.chenhao@hisilicon.com, howell.yang@hisilicon.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+To: gregkh@linuxfoundation.org, balbi@kernel.org, heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org, briannorris@google.com, dianders@google.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, frank.wang@rock-chips.com, eddie.cai@rock-chips.com, John.Youn@synopsys.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, zhengsq@rock-chips.com, zyw@rock-chips.com, William Wu <william.wu@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-Many thanks for your review.
+This series add support for rockchip DWC3 driver,
+and add additional optional properties for specific
+platforms (e.g., rockchip rk3399 platform).
 
-On 2016/8/13 2:43, Rob Herring wrote:
-> On Thu, Aug 11, 2016 at 05:01:52PM +0800, Dongpo Li wrote:
->> From: Li Dongpo <lidongpo@hisilicon.com>
->>
->> The "hix5hd2" is SoC name, add the generic ethernet driver name.
->> The "hisi-gemac-v1" is the basic version and "hisi-gemac-v2" adds
->> the SG/TXCSUM/TSO/UFO features.
->> This patch only adds the SG(scatter-gather) driver for transmitting,
->> the drivers of other features will be submitted later.
-> 
-> The compatible string changes should probably be a separate patch.
-> 
-ok, I will split this patch into two patches, one for compatible string changes,
-and one for driver feature implementation.
+And because rockchip DWC3 need additional handling of
+cable events and mode switch to support DRD mode, so
+we add a new dwc3-rockchip driver, but not use the
+generic of glue layer which merely enable some clocks
+and populate its children.
 
->> Signed-off-by: Dongpo Li <lidongpo@hisilicon.com>
->> ---
->>  .../bindings/net/hisilicon-hix5hd2-gmac.txt        |   9 +-
->>  drivers/net/ethernet/hisilicon/hix5hd2_gmac.c      | 213 +++++++++++++++++++--
->>  2 files changed, 205 insertions(+), 17 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->> index 75d398b..3c02fac 100644
->> --- a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->> +++ b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->> @@ -1,7 +1,12 @@
->>  Hisilicon hix5hd2 gmac controller
->>  
->>  Required properties:
->> -- compatible: should be "hisilicon,hix5hd2-gmac".
->> +- compatible: should contain one of the following version strings:
->> +	* "hisilicon,hisi-gemac-v1"
->> +	* "hisilicon,hisi-gemac-v2"
->> +	and one of the following SoC string:
->> +	* "hisilicon,hix5hd2-gemac"
->> +	* "hisilicon,hi3798cv200-gemac"
-> 
-> Make it clear what the order should be.
-> 
-ok, I will put the SoC strings in alphabetical order.
+William Wu (5):
+  usb: dwc3: add dis_u2_freeclk_exists_quirk
+  usb: dwc3: make usb2 phy utmi interface configurable
+  usb: dwc3: add dis_del_phy_power_chg_quirk
+  usb: dwc3: rockchip: add devicetree bindings documentation
+  usb: dwc3: add rockchip specific glue layer
 
-> 2 SOC versions so far and 2 generic versions. I'm not really convinced 
-> that the generic string is needed.
-> 
-Actually, there are more SoC versions not listed here. We aim to support hi3798cv200
-this time, but may support more SoCs in future.
+ Documentation/devicetree/bindings/usb/dwc3.txt     |   5 +
+ Documentation/devicetree/bindings/usb/generic.txt  |   6 +
+ .../devicetree/bindings/usb/rockchip,dwc3.txt      |  71 ++++
+ drivers/usb/dwc3/Kconfig                           |   9 +
+ drivers/usb/dwc3/Makefile                          |   1 +
+ drivers/usb/dwc3/core.c                            |  30 +-
+ drivers/usb/dwc3/core.h                            |  21 +
+ drivers/usb/dwc3/dwc3-rockchip.c                   | 441 +++++++++++++++++++++
+ 8 files changed, 583 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+ create mode 100644 drivers/usb/dwc3/dwc3-rockchip.c
 
->>  - reg: specifies base physical address(s) and size of the device registers.
->>    The first region is the MAC register base and size.
->>    The second region is external interface control register.
->> @@ -20,7 +25,7 @@ Required properties:
->>  
->>  Example:
->>  	gmac0: ethernet@f9840000 {
->> -		compatible = "hisilicon,hix5hd2-gmac";
->> +		compatible = "hisilicon,hix5hd2-gemac", "hisilicon,hisi-gemac-v1";
->>  		reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
->>  		interrupts = <0 71 4>;
->>  		#address-cells = <1>;
-> 
-> .
-> 
-
-
-    Regards,
-    Dongpo
-
-.
+-- 
+1.9.1
