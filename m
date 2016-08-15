@@ -1,55 +1,91 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] ARM64: dts: amlogic: meson-gxbb: Add watchdog node
-Date: Mon, 15 Aug 2016 13:40:21 -0700
-Message-ID: <7hinv1ahqi.fsf@baylibre.com>
-References: <1468141867-4172-1-git-send-email-narmstrong@baylibre.com>
-	<1468141867-4172-4-git-send-email-narmstrong@baylibre.com>
-	<578271D3.4080704@roeck-us.net> <7hbn237aw7.fsf@baylibre.com>
-	<m2bn19qsy3.fsf@baylibre.com>
-	<CAOi56cUQaFKYu2jNP0AuLOSNnNramu+DNPc+PH7K0gHDZMf+zA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOi56cUQaFKYu2jNP0AuLOSNnNramu+DNPc+PH7K0gHDZMf+zA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Kevin Hilman's message of "Wed, 3 Aug 2016 17:29:13 -0700")
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Randy Li <ayaka@soulik.info>
+Subject: [PATCH] ARM: dts: rockchip: add analog audio support for firefly reload
+Date: Tue, 16 Aug 2016 04:42:07 +0800
+Message-ID: <1471293727-26258-2-git-send-email-ayaka@soulik.info>
+References: <1471293727-26258-1-git-send-email-ayaka@soulik.info>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1471293727-26258-1-git-send-email-ayaka@soulik.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, mark.rutland@arm.com, heiko@sntech.de, alsa-devel@alsa-project.org, Randy Li <ayaka@soulik.info>
 List-Id: devicetree@vger.kernel.org
 
-Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+The ES8323 found on firefly reload board is used to output
+analog audio to headphone and capture the sound from micphone
+on board and the one may attach to headphone. It would be also
+used to capture the sound from HDMI IN.
 
-> On Wed, Aug 3, 2016 at 5:27 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->> Hi Guenter,
->>
->> Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
->>
->>> Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> writes:
->>>
->>>> On 07/10/2016 02:11 AM, Neil Armstrong wrote:
->>>>> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>>
->>>> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->>>>
->>>> Would this go in through one of the arm trees ?
->>>
->>> You can take the driver through the watchdog tree, but I'll take the DT
->>> stuff through the amlogic tree (and submit via arm-soc).
->>>
->>> However, with your ack, and since this is a brand new driver, I could
->>> take the driver as well.  Just let me know your preference.
->>
->> ping... do you have a prefernce here?
->>
->
-> Oops, just noticed Wim already picked these up.
->
+Signed-off-by: Randy Li <ayaka@soulik.info>
+---
+ arch/arm/boot/dts/rk3288-firefly-reload.dts | 36 +++++++++++++++++++++++++----
+ 1 file changed, 31 insertions(+), 5 deletions(-)
 
-Strange, seems that Wim picked up patches 1 & 3, but this one was missed.  I'll
-queue this for the arm-soc tree.
-
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/rk3288-firefly-reload.dts b/arch/arm/boot/dts/rk3288-firefly-reload.dts
+index 0f5a7c1..ae46231 100644
+--- a/arch/arm/boot/dts/rk3288-firefly-reload.dts
++++ b/arch/arm/boot/dts/rk3288-firefly-reload.dts
+@@ -200,8 +200,34 @@
+ 
+ 	sound {
+ 		compatible = "simple-audio-card";
+-		simple-audio-card,name = "SPDIF";
+-		simple-audio-card,dai-link@1 {  /* S/PDIF - S/PDIF */
++		simple-audio-card,name = "rockchip-audio";
++		/*simple-audio-card,hp-det-gpio = <&gpio7 15 GPIO_ACTIVE_HIGH>;*/
++		simple-audio-card,widgets =
++			"Microphone", "Mic Jack",
++			"Headphone", "Headphone Jack";
++                simple-audio-card,routing =
++                        "Headphone Jack", "LOUT2",
++                        "Headphone Jack", "ROUT2",
++                        "LINPUT2", "Mic Jack",
++                        "LINPUT1", "Mic Jack",
++                        "RINPUT1", "Mic Jack";
++
++                simple-audio-card,dai-link@0 {
++                        format = "i2s";
++			bitclock-master = <&link0_codec>;
++			frame-master = <&link0_codec>;
++
++                        cpu {
++				sound-dai = <&i2s>; 
++			};
++
++                        link0_codec: codec {
++				sound-dai = <&codec>;
++				system-clock-frequency = <11289600>;
++			};
++                };
++
++		simple-audio-card,dai-link@1 {
+ 			cpu { sound-dai = <&spdif>; };
+ 			codec { sound-dai = <&spdif_out>; };
+ 		};
+@@ -236,14 +262,15 @@
+ 		AVDD-supply = <&vcca_33>;
+ 		PVDD-supply = <&vcca_33>;
+ 		HPVDD-supply = <&vcca_33>;
+-		clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
+-		clock-names = "i2s_hclk", "i2s_clk";
++		clocks = <&cru SCLK_I2S0_OUT>;
+ 		reg = <0x10>;
++		#sound-dai-cells = <0>;
+ 	};
+ };
+ 
+ &i2s {
+ 	status = "okay";
++	#sound-dai-cells = <0>;
+ };
+ 
+ &sdmmc {
+@@ -256,7 +283,6 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdmmc_clk>, <&sdmmc_cmd>, <&sdmmc_cd>, <&sdmmc_bus4>;
+ 	vmmc-supply = <&vcc_sd>;
+-	vqmmc-supply = <&vcc_sd>;
+ 	status = "okay";
+ };
+ 
+-- 
+2.7.4
