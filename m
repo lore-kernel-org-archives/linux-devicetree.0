@@ -1,149 +1,58 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH v2 2/8] dt-bindings: i2c: add support for 'i2c-arb' subnode
-Date: Mon, 15 Aug 2016 15:40:25 +0200
-Message-ID: <1471268431-5148-3-git-send-email-peda@axentia.se>
-References: <1471268431-5148-1-git-send-email-peda@axentia.se>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] power_supply: tps65217-charger: Add support for
+ IRQs
+Date: Mon, 15 Aug 2016 21:26:03 +0200
+Message-ID: <20160815192602.cpibysrzshm5tr7q@earth>
+References: <20160620105056.25843-1-m.niestroj@grinn-global.com>
+ <20160620105056.25843-4-m.niestroj@grinn-global.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mj3hw3cm4t2vfm45"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471268431-5148-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160620105056.25843-4-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Crestez Dan Leonard <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This gets rid of the need for a pointless 'reg' property for i2c
-arbitrators.
 
-I.e. this new and more compact style
+--mj3hw3cm4t2vfm45
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-	some-arbitrator {
-		i2c-arb {
-			#address-cells = <1>;
-			#size-cells = <0>;
+Hi,
 
-			some-i2c-device@50 {
-				reg = <0x50>;
-			};
-		};
-	};
+On Mon, Jun 20, 2016 at 12:50:54PM +0200, Marcin Niestroj wrote:
+> Make use of IRQ resources defined in tps65217 mfd code. If they are valid
+> we use them instead separate poll task, in order to define AC power state.
 
-instead of the old
+Thanks, queued into power-supply's -next branch.
 
-	some-arbitrator {
-		#address-cells = <1>;
-		#size-cells = <0>;
+-- Sebastian
 
-		i2c@0 {
-			reg = <0>;
+--mj3hw3cm4t2vfm45
+Content-Type: application/pgp-signature; name="signature.asc"
 
-			#address-cells = <1>;
-			#size-cells = <0>;
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-			some-i2c-device@50 {
-				reg = <0x50>;
-			};
-		};
-	};
+iQIcBAEBCgAGBQJXshdHAAoJENju1/PIO/qaRLsQAJLqeAiiZGgAiWGL/kn0lZlM
+FwHfBwcXDIYFOtnJexiTkIgzseDau2/xr1MrSkQ/6Qusgx1Kb7EgBHc6qhDkcyHT
+Q7mr8atoX05hM9R2XyNIOjdyhVIpVnbYpAF9DHaTftcwTntnfpkzIcxB5YIoEGo7
+vKvejtZ+lxEwdONoDSj7REQppfk1dKVLQlLhxbbVmxc+od5DM0T1EDg7nEqu1D76
+e+XEftu9bCMLIJGfDOOK+2G1v5Owh9NkW4vdp8Fh75b3I5w/sqU5cK3gPg+6CjSu
+rU8knmJ4/bL94fXlRDAV2wUiVZGOx22/QkIgOdZmd8ZcbkDkLZDdczYuXKhB/gBO
+apk+jD9zwmYrGI11cfTh5PsK+JIiaLG1FwlC1kqewi7PeH8ZOSDvtHu8tc4p5AH4
+mms3sfYl4s7KZbXDRbZlhiALPoZbxLNP97dRTGslcLzAhYKjAs0bC/AZE9tv1Jhb
+jxgP4IM6P2UhrRuSmQ6I5zividazNK6t/rybyymNs9MPnFQg2zMpGhh68by1GDTp
+fR0cuMomcvcCTdp08poOl90iM/Xwtj/i/Z0HA4P0KEJrgFylKMdpcRuIH0oj86JE
+WvD4iMcXdnae+SXAv948Ytw4pjKoImFPf6V5P+TVfqT1tjQnQOztnw0hGmUSl6Ga
+b3iLBjB9BPIRocO0unHu
+=bZw1
+-----END PGP SIGNATURE-----
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
----
- .../bindings/i2c/i2c-arb-gpio-challenge.txt        |  8 ++---
- Documentation/devicetree/bindings/i2c/i2c-arb.txt  | 35 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 3 files changed, 38 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-arb.txt
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-arb-gpio-challenge.txt b/Documentation/devicetree/bindings/i2c/i2c-arb-gpio-challenge.txt
-index 71191ff0e781..248a155414c2 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-arb-gpio-challenge.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-arb-gpio-challenge.txt
-@@ -44,8 +44,7 @@ Required properties:
- - our-claim-gpio: The GPIO that we use to claim the bus.
- - their-claim-gpios: The GPIOs that the other sides use to claim the bus.
-   Note that some implementations may only support a single other master.
--- Standard I2C mux properties. See i2c-mux.txt in this directory.
--- Single I2C child bus node at reg 0. See i2c-mux.txt in this directory.
-+- I2C arbitration bus node. See i2c-arb.txt in this directory.
- 
- Optional properties:
- - slew-delay-us: microseconds to wait for a GPIO to go high. Default is 10 us.
-@@ -63,8 +62,6 @@ Example:
- 
- 	i2c-arbitrator {
- 		compatible = "i2c-arb-gpio-challenge";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 
- 		i2c-parent = <&{/i2c@12CA0000}>;
- 
-@@ -74,8 +71,7 @@ Example:
- 		wait-retry-us = <3000>;
- 		wait-free-us = <50000>;
- 
--		i2c@0 {
--			reg = <0>;
-+		i2c-arb {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-arb.txt b/Documentation/devicetree/bindings/i2c/i2c-arb.txt
-new file mode 100644
-index 000000000000..59abf9277bdc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-arb.txt
-@@ -0,0 +1,35 @@
-+Common i2c arbitration bus properties.
-+
-+- i2c-arb child node
-+
-+Required properties for the i2c-arb child node:
-+- #address-cells = <1>;
-+- #size-cells = <0>;
-+
-+Optional properties for i2c-arb child node:
-+- Child nodes conforming to i2c bus binding
-+
-+
-+Example :
-+
-+	/*
-+	   An NXP pca9541 I2C bus master selector at address 0x74
-+	   with a NXP pca8574 GPIO expander attached.
-+	 */
-+
-+	arb@74 {
-+		compatible = "nxp,pca9541";
-+		reg = <0x74>;
-+
-+		i2c-arb {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			gpio@38 {
-+				compatible = "nxp,pca8574";
-+				reg = <0x38>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+			};
-+		};
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 20bb1d00098c..1a61e2f5a0a9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5660,6 +5660,7 @@ S:	Maintained
- F:	Documentation/i2c/i2c-topology
- F:	Documentation/i2c/muxes/
- F:	Documentation/devicetree/bindings/i2c/i2c-mux*
-+F:	Documentation/devicetree/bindings/i2c/i2c-arb*
- F:	drivers/i2c/i2c-mux.c
- F:	drivers/i2c/muxes/
- F:	include/linux/i2c-mux.h
--- 
-2.1.4
-
+--mj3hw3cm4t2vfm45--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
