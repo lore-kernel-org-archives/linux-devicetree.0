@@ -1,38 +1,89 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
-Date: Mon, 15 Aug 2016 11:07:06 +0200
-Message-ID: <74aa2d31-97dd-d274-e07d-b4532c0f4fa5@xs4all.nl>
-References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
- <bdac7fe1-6425-2a3d-777f-86cfd1ee26e0@xs4all.nl>
- <1471251821.28498.7.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1471251821.28498.7.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tiffany Lin <tiffany.lin@mediatek.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v2 1/5] clk: sunxi-ng: mux: Add support for mux tables
+Date: Mon, 15 Aug 2016 16:13:11 +0800
+Message-ID: <1471248795-17951-2-git-send-email-wens@csie.org>
+References: <1471248795-17951-1-git-send-email-wens@csie.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1471248795-17951-1-git-send-email-wens@csie.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/15/2016 11:03 AM, Tiffany Lin wrote:
-> Hi Hans,
-> 
-> I upstream v4 on 8/10, I don't know why this version is not shown in
-> https://patchwork.kernel.org.
-> But I could see it in other link.
-> http://www.spinics.net/lists/arm-kernel/msg523095.html
-> I refine DocBook and vb2 queue_setup function in v4.
-> 
-> For the MT21 format, if I put MT21 into separate patch, this patch
-> series will build fail, I was confused how to fix this issue?
+Some clock muxes have holes, i.e. invalid or unconnected inputs,
+between parent mux values.
 
-Just don't implement that pixelformat yet. I.e. everything else can be
-implemented, just don't add MT21 to the list of pixelformats. Do that in
-a separate patch at the end.
+Add support for specifying a mux table to map clock parents to
+mux values.
 
-If that pixelformat isn't exposed, then nobody will use it either :-)
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+Changes since v1: none
+---
+ drivers/clk/sunxi-ng/ccu_mux.c | 12 ++++++++++++
+ drivers/clk/sunxi-ng/ccu_mux.h | 12 ++++++++++--
+ 2 files changed, 22 insertions(+), 2 deletions(-)
 
-Regards,
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.c b/drivers/clk/sunxi-ng/ccu_mux.c
+index 1329b9ab481e..68b32f168a74 100644
+--- a/drivers/clk/sunxi-ng/ccu_mux.c
++++ b/drivers/clk/sunxi-ng/ccu_mux.c
+@@ -107,6 +107,15 @@ u8 ccu_mux_helper_get_parent(struct ccu_common *common,
+ 	parent = reg >> cm->shift;
+ 	parent &= (1 << cm->width) - 1;
+ 
++	if (cm->table) {
++		int num_parents = clk_hw_get_num_parents(&common->hw);
++		int i;
++
++		for (i = 0; i < num_parents; i++)
++			if (cm->table[i] == parent)
++				return i;
++	}
++
+ 	return parent;
+ }
+ 
+@@ -117,6 +126,9 @@ int ccu_mux_helper_set_parent(struct ccu_common *common,
+ 	unsigned long flags;
+ 	u32 reg;
+ 
++	if (cm->table)
++		index = cm->table[index];
++
+ 	spin_lock_irqsave(common->lock, flags);
+ 
+ 	reg = readl(common->base + common->reg);
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.h b/drivers/clk/sunxi-ng/ccu_mux.h
+index d35ce5e93840..f0078de78712 100644
+--- a/drivers/clk/sunxi-ng/ccu_mux.h
++++ b/drivers/clk/sunxi-ng/ccu_mux.h
+@@ -6,8 +6,9 @@
+ #include "ccu_common.h"
+ 
+ struct ccu_mux_internal {
+-	u8	shift;
+-	u8	width;
++	u8		shift;
++	u8		width;
++	const u8	*table;
+ 
+ 	struct {
+ 		u8	index;
+@@ -21,6 +22,13 @@ struct ccu_mux_internal {
+ 	} variable_prediv;
+ };
+ 
++#define SUNXI_CLK_MUX_TABLE(_shift, _width, _table)	\
++	{						\
++		.shift	= _shift,			\
++		.width	= _width,			\
++		.table	= _table,			\
++	}
++
+ #define SUNXI_CLK_MUX(_shift, _width)	\
+ 	{					\
+ 		.shift	= _shift,		\
+-- 
+2.8.1
 
-	Hans
