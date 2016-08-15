@@ -1,142 +1,247 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 5/8] i2c: mux: add support for 'i2c-mux', 'i2c-arb' and
- 'i2c-gate' DT subnodes
-Date: Mon, 15 Aug 2016 16:55:13 +0300
-Message-ID: <53bd470f-4243-c7fe-485a-3d8ec7cc034d@mentor.com>
-References: <1471268431-5148-1-git-send-email-peda@axentia.se>
- <1471268431-5148-6-git-send-email-peda@axentia.se>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 2/2] pinctrl: sunxi: Add A64 R_PIO controller support
+Date: Mon, 15 Aug 2016 21:55:39 +0800
+Message-ID: <CAGb2v64nzOOwZFGzukXehv6Bx6nikHdnuGUkRMJWS8bjfMkeXQ@mail.gmail.com>
+References: <20160801145939.50583-1-icenowy@aosc.xyz>
+ <20160801145939.50583-2-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471268431-5148-6-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Crestez Dan Leonard <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160801145939.50583-2-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Jens Kuske <jenskuske@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Krzysztof Adamski <k@japko.eu>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+Hi,
 
-On 08/15/2016 04:40 PM, Peter Rosin wrote:
-> Backwards compatibility is preserved; the subnodes are in practice
-> optional.
+On Mon, Aug 1, 2016 at 10:59 PM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
+> The A64 has a R_PIO pin controller, similar to the one found on the H3 SoCs.
+> Add support for the pins controlled by the R_PIO controller.
 >
-> However, the mux core needs to know what subnode it should examine, so add
-> a couple of new flags for i2c_mux_alloc for this purpose.
->
-> The rule is that if the mux core finds a 'reg' property in the appropriate
-> subnode, e.g. if 'reg' exists in the 'i2c-mux' subnode, then the mux core
-> will assume that this is an old style entry and not an i2c-mux subnode
-> (correspondingly for arbitrators and gates with 'i2c-arb' and 'i2c-gate').
->
-> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 > ---
->  drivers/i2c/i2c-mux.c   | 44 ++++++++++++++++++++++++++++++++++++--------
->  include/linux/i2c-mux.h |  8 ++++++--
->  2 files changed, 42 insertions(+), 10 deletions(-)
+>  drivers/pinctrl/sunxi/Kconfig                |   5 +
+>  drivers/pinctrl/sunxi/Makefile               |   1 +
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c | 148 +++++++++++++++++++++++++++
+>  3 files changed, 154 insertions(+)
+>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
 >
-> diff --git a/drivers/i2c/i2c-mux.c b/drivers/i2c/i2c-mux.c
-> index 8eee98634cda..c1ae719d1a7a 100644
-> --- a/drivers/i2c/i2c-mux.c
-> +++ b/drivers/i2c/i2c-mux.c
-> @@ -255,6 +255,10 @@ struct i2c_mux_core *i2c_mux_alloc(struct i2c_adapter *parent,
->  	muxc->dev = dev;
->  	if (flags & I2C_MUX_LOCKED)
->  		muxc->mux_locked = true;
-> +	if (flags & I2C_MUX_ARBITRATOR)
-> +		muxc->arbitrator = true;
-> +	if (flags & I2C_MUX_GATE)
-> +		muxc->gate = true;
->  	muxc->select = select;
->  	muxc->deselect = deselect;
->  	muxc->max_adapters = max_adapters;
-> @@ -335,18 +339,42 @@ int i2c_mux_add_adapter(struct i2c_mux_core *muxc,
->  	 * nothing if !CONFIG_OF.
->  	 */
->  	if (muxc->dev->of_node) {
-> -		struct device_node *child;
-> +		struct device_node *dev_node = muxc->dev->of_node;
-> +		struct device_node *mux_node, *child = NULL;
->  		u32 reg;
+> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
+> index aaf075b..c4b476f 100644
+> --- a/drivers/pinctrl/sunxi/Kconfig
+> +++ b/drivers/pinctrl/sunxi/Kconfig
+> @@ -72,4 +72,9 @@ config PINCTRL_SUN50I_A64
+>         bool
+>         select PINCTRL_SUNXI
 >
-> -		for_each_child_of_node(muxc->dev->of_node, child) {
-> -			ret = of_property_read_u32(child, "reg", &reg);
-> -			if (ret)
-> -				continue;
-> -			if (chan_id == reg) {
-> -				priv->adap.dev.of_node = child;
-> -				break;
-
-missing of_node_put(child);
-
-Also adding an empty line would be perfect.
-
-> +		if (muxc->arbitrator)
-> +			mux_node = of_get_child_by_name(dev_node, "i2c-arb");
-> +		else if (muxc->gate)
-> +			mux_node = of_get_child_by_name(dev_node, "i2c-gate");
-> +		else
-> +			mux_node = of_get_child_by_name(dev_node, "i2c-mux");
+> +config PINCTRL_SUN50I_A64_R
+> +       bool
+> +       depends on RESET_CONTROLLER
+> +       select PINCTRL_SUNXI
 > +
-> +		if (mux_node) {
-> +			/* A "reg" property indicates an old-style DT entry */
-> +			if (!of_property_read_u32(mux_node, "reg", &reg)) {
-> +				of_node_put(mux_node);
-> +				mux_node = NULL;
-> +			}
-> +		}
+>  endif
+> diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
+> index 2d8b64e..d6eabdd 100644
+> --- a/drivers/pinctrl/sunxi/Makefile
+> +++ b/drivers/pinctrl/sunxi/Makefile
+> @@ -13,6 +13,7 @@ obj-$(CONFIG_PINCTRL_SUN8I_A23)               += pinctrl-sun8i-a23.o
+>  obj-$(CONFIG_PINCTRL_SUN8I_A23_R)      += pinctrl-sun8i-a23-r.o
+>  obj-$(CONFIG_PINCTRL_SUN8I_A33)                += pinctrl-sun8i-a33.o
+>  obj-$(CONFIG_PINCTRL_SUN50I_A64)       += pinctrl-sun50i-a64.o
+> +obj-$(CONFIG_PINCTRL_SUN50I_A64_R)     += pinctrl-sun50i-a64-r.o
+>  obj-$(CONFIG_PINCTRL_SUN8I_A83T)       += pinctrl-sun8i-a83t.o
+>  obj-$(CONFIG_PINCTRL_SUN8I_H3)         += pinctrl-sun8i-h3.o
+>  obj-$(CONFIG_PINCTRL_SUN8I_H3_R)       += pinctrl-sun8i-h3-r.o
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
+> new file mode 100644
+> index 0000000..b836264
+> --- /dev/null
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
+> @@ -0,0 +1,148 @@
+> +/*
+> + * Allwinner A64 SoCs special pins pinctrl driver.
+> + *
+> + * Based on pinctrl-sun8i-a23-r.c
+> + *
+> + * Copyright (C) 2016 Icenowy Zheng
+> + * Icenowy Zheng <icenowy@aosc.xyz>
+> + *
+> + * Copyright (C) 2014 Chen-Yu Tsai
+> + * Chen-Yu Tsai <wens@csie.org>
+> + *
+> + * Copyright (C) 2014 Boris Brezillon
+> + * Boris Brezillon <boris.brezillon@free-electrons.com>
+> + *
+> + * Copyright (C) 2014 Maxime Ripard
+> + * Maxime Ripard <maxime.ripard@free-electrons.com>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
 > +
-> +		if (!mux_node)
-> +			mux_node = of_node_get(dev_node);
-> +		else if (muxc->arbitrator || muxc->gate)
-> +			child = of_node_get(mux_node);
-> +
-> +		if (!child) {
-> +			for_each_child_of_node(mux_node, child) {
-> +				ret = of_property_read_u32(child, "reg", &reg);
-> +				if (ret)
-> +					continue;
-> +				if (chan_id == reg)
-> +					break;
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
 
-missing of_node_put(child);
+Please sort the headers.
 
->  			}
->  		}
+> +#include <linux/pinctrl/pinctrl.h>
+> +#include <linux/reset.h>
 > +
-> +		priv->adap.dev.of_node = child;
-> +		of_node_put(mux_node);
->  	}
+> +#include "pinctrl-sunxi.h"
+> +
+> +static const struct sunxi_desc_pin sun50i_a64_r_pins[] = {
+> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 0),
+> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
+> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
+> +                 SUNXI_FUNCTION(0x2, "s_rsb"),         /* SCK */
+> +                 SUNXI_FUNCTION(0x3, "s_twi"),         /* SCK */
+
+We use "i2c" instead of "twi".
+
+> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),  /* PL_EINT0 */
+> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 1),
+> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
+> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
+> +                 SUNXI_FUNCTION(0x2, "s_rsb"),         /* SDA */
+> +                 SUNXI_FUNCTION(0x3, "s_twi"),         /* SDA */
+
+Same here.
+
+> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 1)),  /* PL_EINT1 */
+> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 2),
+> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
+> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
+> +                 SUNXI_FUNCTION(0x2, "s_uart"),        /* TX */
+> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 2)),  /* PL_EINT2 */
+> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 3),
+> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
+> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
+> +                 SUNXI_FUNCTION(0x2, "s_uart"),        /* RX */
+> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 3)),  /* PL_EINT3 */
+> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 4),
+> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
+> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
+> +                 SUNXI_FUNCTION(0x3, "s_jtag"),        /* MS */
+> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 4)),  /* PL_EINT4 */
+> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 5),
+> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
+> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
+> +                 SUNXI_FUNCTION(0x3, "s_jtag"),        /* CK */
+> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 5)),  /* PL_EINT5 */
+> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 6),
+> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
+> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
+> +                 SUNXI_FUNCTION(0x3, "s_jtag"),        /* DO */
+> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 6)),  /* PL_EINT6 */
+> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 7),
+> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
+> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
+> +                 SUNXI_FUNCTION(0x3, "s_jtag"),        /* DI */
+> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 7)),  /* PL_EINT7 */
+> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 8),
+> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
+> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
+> +                 SUNXI_FUNCTION(0x2, "s_twi"),         /* SCK */
+
+Ditto.
+
+> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 8)),  /* PL_EINT8 */
+> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 9),
+> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
+> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
+> +                 SUNXI_FUNCTION(0x2, "s_twi"),         /* SDA */
+
+Ditto.
+
+> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 9)),  /* PL_EINT9 */
+> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 10),
+> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
+> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
+> +                 SUNXI_FUNCTION(0x2, "s_pwm"),
+> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 10)), /* PL_EINT10 */
+> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 11),
+> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
+> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
+> +                 SUNXI_FUNCTION(0x2, "s_cir_rx"),
+> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 11)), /* PL_EINT11 */
+
+You missed PL12.
+
+> +};
+> +
+> +static const struct sunxi_pinctrl_desc sun50i_a64_r_pinctrl_data = {
+> +       .pins = sun50i_a64_r_pins,
+> +       .npins = ARRAY_SIZE(sun50i_a64_r_pins),
+> +       .pin_base = PL_BASE,
+> +       .irq_banks = 1,
+> +};
+> +
+> +static int sun50i_a64_r_pinctrl_probe(struct platform_device *pdev)
+> +{
+> +       struct reset_control *rstc;
+> +       int ret;
+> +
+> +       rstc = devm_reset_control_get(&pdev->dev, NULL);
+> +       if (IS_ERR(rstc)) {
+> +               dev_err(&pdev->dev, "Reset controller missing\n");
+> +               return PTR_ERR(rstc);
+> +       }
+> +
+> +       ret = reset_control_deassert(rstc);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = sunxi_pinctrl_init(pdev,
+> +                                &sun50i_a64_r_pinctrl_data);
+> +
+> +       if (ret)
+> +               reset_control_assert(rstc);
+> +
+> +       return ret;
+> +}
+> +
+> +static const struct of_device_id sun50i_a64_r_pinctrl_match[] = {
+> +       { .compatible = "allwinner,sun50i-a64-r-pinctrl", },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(of, sun50i_a64_r_pinctrl_match);
+> +
+> +static struct platform_driver sun50i_a64_r_pinctrl_driver = {
+> +       .probe  = sun50i_a64_r_pinctrl_probe,
+> +       .driver = {
+> +               .name           = "sun50i-a64-r-pinctrl",
+> +               .of_match_table = sun50i_a64_r_pinctrl_match,
+> +       },
+> +};
+> +module_platform_driver(sun50i_a64_r_pinctrl_driver);
+> +
+> +MODULE_AUTHOR("Icenowy Zheng <icenowy@aosc.xyz>");
+> +MODULE_AUTHOR("Chen-Yu Tsai <wens@csie.org>");
+> +MODULE_AUTHOR("Boris Brezillon <boris.brezillon@free-electrons.com");
+> +MODULE_AUTHOR("Maxime Ripard <maxime.ripard@free-electrons.com");
+> +MODULE_DESCRIPTION("Allwinner A64 R_PIO pinctrl driver");
+> +MODULE_LICENSE("GPL");
+
+Since you have a bool Kconfig symbol, you can drop all the module related
+stuff. Just use builtin_platform_driver like the A64 main pinctrl driver
+does.
+
+Regards
+ChenYu
+
+> --
+> 2.9.0
 >
->  	/*
-> diff --git a/include/linux/i2c-mux.h b/include/linux/i2c-mux.h
-> index d4c1d12f900d..bd74d5706f3b 100644
-> --- a/include/linux/i2c-mux.h
-> +++ b/include/linux/i2c-mux.h
-> @@ -32,7 +32,9 @@
->  struct i2c_mux_core {
->  	struct i2c_adapter *parent;
->  	struct device *dev;
-> -	bool mux_locked;
-> +	unsigned int mux_locked:1;
-> +	unsigned int arbitrator:1;
-> +	unsigned int gate:1;
->
->  	void *priv;
->
-> @@ -51,7 +53,9 @@ struct i2c_mux_core *i2c_mux_alloc(struct i2c_adapter *parent,
->  				   int (*deselect)(struct i2c_mux_core *, u32));
->
->  /* flags for i2c_mux_alloc */
-> -#define I2C_MUX_LOCKED BIT(0)
-> +#define I2C_MUX_LOCKED     BIT(0)
-> +#define I2C_MUX_ARBITRATOR BIT(1)
-> +#define I2C_MUX_GATE       BIT(2)
->
->  static inline void *i2c_mux_priv(struct i2c_mux_core *muxc)
->  {
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
