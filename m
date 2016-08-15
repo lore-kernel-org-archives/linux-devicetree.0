@@ -1,113 +1,50 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v12 PATCH 3/5] arm64: dts: rockchip: add Type-C phy for RK3399
-Date: Mon, 15 Aug 2016 12:55:36 -0700
-Message-ID: <1471290938-22569-4-git-send-email-zyw@rock-chips.com>
-References: <1471290938-22569-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1471290938-22569-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, groeck@chromium.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, wulf@rock-chips.com, marcheu@chromium.org
-Cc: linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, David Wu <david.wu@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, devicetree@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Kumar Gala <galak@codeaurora.org>, Mark Yao <mark.yao@rock-chips.com>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Shunqian Zheng <zhengsq@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Caesar Wang <wxt@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
+Date: Mon, 15 Aug 2016 15:06:24 -0500
+Message-ID: <57B220C0.3060608@codeaurora.org>
+References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
+ <20160804175541.GA2832@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20160804175541.GA2832@rob-hp-laptop>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, LinoSanfilippo@gmx.de, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Al Stone <al.stone@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-There are 2 Type-C phy on RK3399, they are almost same, except the
-address of register. They support USB3.0 Type-C and DisplayPort1.3
-Alt Mode on USB Type-C. Register a phy, supply it to USB3 controller
-and DP controller.
++ Rafael and Al, for ACPI help.
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Rob Herring wrote:
+>> >+Optional properties:
+>> >+- phy-version : the version of the integrated emac phy, either 1 or 2.
 
----
+> Sounds like 2 different h/w. The compatible property should distinguish
+> this.
 
-Changes in v12: None
-Changes in v11:
-- split the dp-phy and usb3-phy to 2 child-node
+So I implemented this in v8 of my driver, but it is causing problems for 
+ACPI.
 
-Changes in v10:
-- remove rockchip,uphy-dp-sel property
+In ACPI, the equivalent to a compatible string is the HID, which is 
+QCOM8070 for the EMAC.  The problem is that it's very difficult, if not 
+impossible, to create new HIDs for different versions of the same device.
 
-Changes in v9:
-- change #phy-cells to 1
+The driver will primarily (if not exclusively) be used on ACPI 
+platforms, not DT.  In Qualcomm, DT is for mobile chips, and ACPI is for 
+server.  To my knowledge, there are no plans to use this driver on an 
+actual DT-enabled platform, but I want to support DT anyway.
 
-Changes in v8: None
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
-Changes in v1: None
+The other problem is that the "internal PHY" of the EMAC is technically 
+a separate device, and it's interchangeable.  Future versions of our 
+chips will use different internal PHYs, but the EMAC will stay the same.
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 56 ++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+So I would like a solution that works on DT and ACPI.  I suppose I could 
+use compatible strings on DT, and a "phy-version" DSD (property) on 
+ACPI.  If that's acceptable to everyone, then I can do that.  It seems 
+clunky to me.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 269fe75..6749240 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1060,6 +1060,62 @@
- 		};
- 	};
- 
-+	tcphy0: phy@ff7c0000 {
-+		compatible = "rockchip,rk3399-typec-phy";
-+		reg = <0x0 0xff7c0000 0x0 0x40000>;
-+		rockchip,grf = <&grf>;
-+		clocks = <&cru SCLK_UPHY0_TCPDCORE>,
-+			 <&cru SCLK_UPHY0_TCPDPHY_REF>;
-+		clock-names = "tcpdcore", "tcpdphy-ref";
-+		assigned-clocks = <&cru SCLK_UPHY0_TCPDCORE>;
-+		assigned-clock-rates = <50000000>;
-+		resets = <&cru SRST_UPHY0>,
-+			 <&cru SRST_UPHY0_PIPE_L00>,
-+			 <&cru SRST_P_UPHY0_TCPHY>;
-+		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
-+		rockchip,typec-conn-dir = <0xe580 0 16>;
-+		rockchip,usb3tousb2-en = <0xe580 3 19>;
-+		rockchip,external-psm = <0xe588 14 30>;
-+		rockchip,pipe-status = <0xe5c0 0 0>;
-+		status = "disabled";
-+
-+		tcphy0_dp: dp-port {
-+			#phy-cells = <0>;
-+		};
-+
-+		tcphy0_usb3: usb3-port {
-+			#phy-cells = <0>;
-+		};
-+	};
-+
-+	tcphy1: phy@ff800000 {
-+		compatible = "rockchip,rk3399-typec-phy";
-+		reg = <0x0 0xff800000 0x0 0x40000>;
-+		rockchip,grf = <&grf>;
-+		clocks = <&cru SCLK_UPHY1_TCPDCORE>,
-+			 <&cru SCLK_UPHY1_TCPDPHY_REF>;
-+		clock-names = "tcpdcore", "tcpdphy-ref";
-+		assigned-clocks = <&cru SCLK_UPHY1_TCPDCORE>;
-+		assigned-clock-rates = <50000000>;
-+		resets = <&cru SRST_UPHY1>,
-+			 <&cru SRST_UPHY1_PIPE_L00>,
-+			 <&cru SRST_P_UPHY1_TCPHY>;
-+		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
-+		rockchip,typec-conn-dir = <0xe58c 0 16>;
-+		rockchip,usb3tousb2-en = <0xe58c 3 19>;
-+		rockchip,external-psm = <0xe594 14 30>;
-+		rockchip,pipe-status = <0xe5c0 16 16>;
-+		status = "disabled";
-+
-+		tcphy1_dp: dp-port {
-+			#phy-cells = <0>;
-+		};
-+
-+		tcphy1_usb3: usb3-port {
-+			#phy-cells = <0>;
-+		};
-+	};
-+
- 	watchdog@ff840000 {
- 		compatible = "snps,dw-wdt";
- 		reg = <0x0 0xff840000 0x0 0x100>;
 -- 
-1.9.1
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
