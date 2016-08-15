@@ -1,108 +1,119 @@
-From: dawei chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm: dts: thermal: add thermal/auxadc node.
-Date: Mon, 15 Aug 2016 15:14:28 +0800
-Message-ID: <1471245268.14287.14.camel@mtksdaap41>
-References: <1467882386-40544-1-git-send-email-dawei.chien@mediatek.com>
-	 <1467882386-40544-4-git-send-email-dawei.chien@mediatek.com>
-	 <fd3f0c2f-f0ad-dd0f-cf2b-eb658f72d735@gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v9 0/2] [media] atmel-isc: add driver for Atmel ISC
+Date: Mon, 15 Aug 2016 09:15:23 +0200
+Message-ID: <89ed4a10-30d7-87ca-8d9d-22ea2634e4af@xs4all.nl>
+References: <1470899202-13933-1-git-send-email-songjun.wu@microchip.com>
+ <c6593866-db70-b2a6-ee5a-32b6fecc3775@xs4all.nl>
+ <c422fc89-8184-5416-4574-77d6234aa4be@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fd3f0c2f-f0ad-dd0f-cf2b-eb658f72d735-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <c422fc89-8184-5416-4574-77d6234aa4be@microchip.com>
+Sender: linux-media-owner@vger.kernel.org
+To: "Wu, Songjun" <Songjun.Wu@microchip.com>, nicolas.ferre@atmel.com, robh@kernel.org
+Cc: laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Niklas_S=c3=83=c2=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Benoit Parrot <bparrot@ti.com>, linux-kernel@vger.kernel.org, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kamil Debski <kamil@wypas.org>, Tiffany Lin <tiffany.lin@mediatek.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, =?UTF-8?Q?Richard_R=c3=b6jfors?= <richard@puffinpack.se>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-On Thu, 2016-08-11 at 17:51 +0200, Matthias Brugger wrote:
+On 08/15/2016 08:09 AM, Wu, Songjun wrote:
 > 
-> On 07/07/16 11:06, Dawei Chien wrote:
-> > This adds the thermal controller and auxadc nodes
-> > to the Mediatek MT2701 dtsi file.
-> >
-> > Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> > This patch depned on:
-> > https://patchwork.kernel.org/patch/9213545/
-> > ---
-> >  arch/arm/boot/dts/mt2701.dtsi |   43 +++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 43 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> > index 2ac8b50..0834a23 100644
-> > --- a/arch/arm/boot/dts/mt2701.dtsi
-> > +++ b/arch/arm/boot/dts/mt2701.dtsi
-> > @@ -77,6 +77,36 @@
-> >  		#clock-cells = <0>;
-> >  	};
-> >
-> > +	thermal-zones {
-> > +		cpu_thermal: cpu_thermal {
-> > +			polling-delay-passive = <1000>; /* milliseconds */
-> > +			polling-delay = <1000>; /* milliseconds */
-> > +
-> > +			thermal-sensors = <&thermal 0>;
-> > +			sustainable-power = <1000>;
-> > +
-> > +			trips {
-> > +				threshold: trip-point@0 {
-> > +					temperature = <68000>;
-> > +					hysteresis = <2000>;
-> > +					type = "passive";
-> > +				};
-> > +
-> > +				target: trip-point@1 {
-> > +					temperature = <85000>;
-> > +					hysteresis = <2000>;
-> > +					type = "passive";
-> > +				};
-> > +
-> > +				cpu_crit: cpu_crit@0 {
-> > +					temperature = <115000>;
-> > +					hysteresis = <2000>;
-> > +					type = "critical";
-> > +				};
-> > +			};
-> > +		};
-> > +	};
-> > +
-> >  	timer {
-> >  		compatible = "arm,armv7-timer";
-> >  		interrupt-parent = <&gic>;
-> > @@ -183,4 +213,17 @@
-> >  		clocks = <&uart_clk>;
-> >  		status = "disabled";
-> >  	};
-> > +
-> > +	thermal: thermal@1100b000 {
-> > +		#thermal-sensor-cells = <0>;
-> > +		compatible = "mediatek,mt2701-thermal";
-> > +		reg = <0 0x1100b000 0 0x1000>;
-> > +		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
-> > +		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg CLK_PERI_AUXADC>;
-> > +		clock-names = "therm", "auxadc";
-> > +		resets = <&pericfg 0x10>;
-> > +		reset-names = "therm";
-> > +		mediatek,auxadc = <&auxadc>;
-> > +		mediatek,apmixedsys = <&apmixedsys>;
-> > +	};
-> >  };
-> >
 > 
-> what about:
-> status = "disabled"; ?
+> On 8/12/2016 15:32, Hans Verkuil wrote:
+>> One quick question:
+>>
+>> On 08/11/2016 09:06 AM, Songjun Wu wrote:
+>>> The Image Sensor Controller driver includes two parts.
+>>> 1) Driver code to implement the ISC function.
+>>> 2) Device tree binding documentation, it describes how
+>>>    to add the ISC in device tree.
+>>>
+>>> Test result with v4l-utils.
+>>> # v4l2-compliance -f
+>>> v4l2-compliance SHA   : not available
+>>>
+>>> Driver Info:
+>>>         Driver name   : atmel_isc
+>>>         Card type     : Atmel Image Sensor Controller
+>>>         Bus info      : platform:atmel_isc f0008000.isc
+>>>         Driver version: 4.7.0
+>>>         Capabilities  : 0x84200001
+>>>                 Video Capture
+>>>                 Streaming
+>>>                 Extended Pix Format
+>>>                 Device Capabilities
+>>>         Device Caps   : 0x04200001
+>>>                 Video Capture
+>>>                 Streaming
+>>>                 Extended Pix Format
+>>>
+>>> Compliance test for device /dev/video0 (not using libv4l2):
+>>>
+>>> Required ioctls:
+>>>         test VIDIOC_QUERYCAP: OK
+>>>
+>>> Allow for multiple opens:
+>>>         test second video open: OK
+>>>         test VIDIOC_QUERYCAP: OK
+>>>         test VIDIOC_G/S_PRIORITY: OK
+>>>         test for unlimited opens: OK
+>>>
+>>> Debug ioctls:
+>>>         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+>>>         test VIDIOC_LOG_STATUS: OK (Not Supported)
+>>>
+>>> Input ioctls:
+>>>         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+>>>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>>>         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+>>>         test VIDIOC_ENUMAUDIO: OK (Not Supported)
+>>>         test VIDIOC_G/S/ENUMINPUT: OK
+>>>         test VIDIOC_G/S_AUDIO: OK (Not Supported)
+>>>         Inputs: 1 Audio Inputs: 0 Tuners: 0
+>>>
+>>> Output ioctls:
+>>>         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+>>>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>>>         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+>>>         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+>>>         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+>>>         Outputs: 0 Audio Outputs: 0 Modulators: 0
+>>>
+>>> Input/Output configuration ioctls:
+>>>         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+>>>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+>>>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+>>>         test VIDIOC_G/S_EDID: OK (Not Supported)
+>>>
+>>> Test input 0:
+>>>
+>>>         Control ioctls:
+>>>                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+>>>                 test VIDIOC_QUERYCTRL: OK (Not Supported)
+>>>                 test VIDIOC_G/S_CTRL: OK (Not Supported)
+>>>                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+>>>                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+>>>                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+>>>                 Standard Controls: 0 Private Controls: 0
+>>
+>> Can you confirm that the sensor subdevice you are using does not have any controls?
+>> I ask since that is fairly unusual, so I want to make sure that controls are really
+>> not supported in this setup.
+>>
+> Sorry for the late reply.
+> The subdevice I use supports controls, but I did not develop the v4l2 
+> controls in the sensor driver.
 
-Since thermal driver would protect our platform by shutdown method once
-SoC temperature over critical point, I prefer keep this rather than
-disabling, how do you think, thank you.
+So you mean the sensor hardware has controls, but the sensor driver doesn't implement
+them? Do I understand you correctly?
 
-BR,
-Dawei
+> Should I add the v4l2 controls and test again?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If the sensor driver does not implement controls (i.e. has a struct v4l2_ctrl_handler),
+then everything is fine and the v4l2-compliance output is correct.
+
+Please confirm this. I just want to be 100% certain about this before I make the pull
+request.
+
+Thanks,
+
+	Hans
