@@ -1,49 +1,84 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] clk: sunxi-ng: Add A31/A31s clocks
-Date: Mon, 15 Aug 2016 20:07:44 +0200
-Message-ID: <20160815200744.fc1ad630f927692eec1e5694@free.fr>
-References: <1471248795-17951-1-git-send-email-wens@csie.org>
-	<1471248795-17951-5-git-send-email-wens@csie.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v2 0/8] devicetree cleanup for i2c muxes/arbs/gates
+Date: Mon, 15 Aug 2016 15:40:23 +0200
+Message-ID: <1471268431-5148-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471248795-17951-5-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Crestez Dan Leonard <leonard.crestez@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 15 Aug 2016 16:13:14 +0800
-Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+Hi!
 
-> +/*
-> + * The Audio PLL is supposed to have 4 outputs: 3 fixed factors from
-> + * the base (2x, 4x and 8x), and one variable divider (the one true
-> + * pll audio).
-> + *
-> + * We don't have any need for the variable divider for now, so we just
-> + * hardcode it to match with the clock names
-> + */
-> +#define SUN6I_A31_PLL_AUDIO_REG	0x008
-> +
-> +static SUNXI_CCU_NM_WITH_GATE_LOCK(pll_audio_base_clk, "pll-audio-base",
-> +				   "osc24M", 0x008,
-> +				   8, 7,	/* N */
-> +				   0, 5,	/* M */
-> +				   BIT(31),	/* gate */
-> +				   BIT(28),	/* lock */
-> +				   0);
-> +
+The nxp pca9541 chip does not have any devicetree bindings.
+When trying to write such bindings matching the implementation,
+I stumbled upon something which I did not like. I had to
+give the node holding the i2c child bus a 'reg' property that
+is left unused and is really odd to explain from a devicetree
+point of view. It really is a leftover from the fact that linux
+implements i2c arbitrators (and i2c gates) using the i2c mux
+code. See this thread for history [1].
 
-FYI, as in many other SoCs (A83T/H3/..), the multipliers/dividers from
-the base clock (24MHz) do not give an exact rate for standard audio
-(44.1kHz and 48kHz). Sigma-Delta Modulation must be used.
+This series resolves the issues, and maintains backwards compat
+with old device trees (well, one could, in theory, create a
+device tree that would break with these changes, but my guess
+is that the odds for that happening inadvertedly are high...)
+
+This should also help Crestez Dan Leonard with the mpu6050
+series containing the changes for its auxiliary i2c master [2],
+especially if you also consider the recent (very similar) changes
+from Jon Hunter that adds an optional 'i2c-bus' subnode [3].
+
+If this is ok, I will follow up with patches for other drivers
+so that they inform the i2c mux core if they are muxes, arbs or
+gates. As stated, they will continue to work with these changes,
+so there is no huge rush.
+
+The mux core does not really need to differentiate between
+arbitrators and gates. Should they be folded? What to call them
+in that case?
+
+Changes since v1:
+
+- Fixes and additions suggested by Rob Herring (3/8 still needs an ack).
+- Inserted patch 6/8 so that the two arb drivers support the new more
+  compact dt syntax.
+
+Cheers,
+Peter
+
+[1] https://lkml.org/lkml/2016/6/27/203
+[2] https://lkml.org/lkml/2016/5/18/355
+[3] https://patchwork.ozlabs.org/patch/641934/
+
+Peter Rosin (8):
+  dt-bindings: i2c: add support for 'i2c-mux' subnode
+  dt-bindings: i2c: add support for 'i2c-arb' subnode
+  dt-bindings: i2c: add support for 'i2c-gate' subnode
+  dt-bindings: i2c: add bindings for nxp,pca9541
+  i2c: mux: add support for 'i2c-mux', 'i2c-arb' and 'i2c-gate' DT
+    subnodes
+  i2c: mux: inform the i2c mux core about how it is used
+  i2c: pca9541: add device tree binding
+  i2c: pca954x: add device tree binding
+
+ .../bindings/i2c/i2c-arb-gpio-challenge.txt        |  8 +---
+ Documentation/devicetree/bindings/i2c/i2c-arb.txt  | 35 ++++++++++++++++
+ Documentation/devicetree/bindings/i2c/i2c-gate.txt | 41 +++++++++++++++++++
+ Documentation/devicetree/bindings/i2c/i2c-mux.txt  | 23 ++++++++---
+ .../devicetree/bindings/i2c/nxp,pca9541.txt        | 29 ++++++++++++++
+ MAINTAINERS                                        |  2 +
+ drivers/i2c/i2c-mux.c                              | 44 +++++++++++++++++----
+ drivers/i2c/muxes/i2c-arb-gpio-challenge.c         |  2 +-
+ drivers/i2c/muxes/i2c-mux-pca9541.c                | 11 +++++-
+ drivers/i2c/muxes/i2c-mux-pca954x.c                | 46 ++++++++++++++++------
+ include/linux/i2c-mux.h                            |  8 +++-
+ 11 files changed, 214 insertions(+), 35 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-arb.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-gate.txt
+ create mode 100644 Documentation/devicetree/bindings/i2c/nxp,pca9541.txt
 
 -- 
-Ken ar c'hentañ	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
