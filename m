@@ -1,552 +1,249 @@
-From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v10 5/5] usb: dwc3: add rockchip specific glue layer
-Date: Mon, 15 Aug 2016 16:54:44 +0800
-Message-ID: <1471251284-1804-1-git-send-email-william.wu@rock-chips.com>
-References: <1471251031-17084-1-git-send-email-william.wu@rock-chips.com>
+From: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] Add MT8173 Video Decoder Driver
+Date: Mon, 15 Aug 2016 17:03:41 +0800
+Message-ID: <1471251821.28498.7.camel@mtksdaap41>
+References: <1464611363-14936-1-git-send-email-tiffany.lin@mediatek.com>
+	 <bdac7fe1-6425-2a3d-777f-86cfd1ee26e0@xs4all.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471251031-17084-1-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <bdac7fe1-6425-2a3d-777f-86cfd1ee26e0-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add rockchip specific glue layer to support USB3 Peripheral mode
-and Host mode on rockchip platforms (e.g. rk3399).
+Hi Hans,
 
-The DesignWare USB3 integrated in rockchip SoCs is a configurable
-IP Core which can be instantiated as Dual-Role Device (DRD), Host
-Only (XHCI) and Peripheral Only configurations.
+I upstream v4 on 8/10, I don't know why this version is not shown in
+https://patchwork.kernel.org.
+But I could see it in other link.
+http://www.spinics.net/lists/arm-kernel/msg523095.html
+I refine DocBook and vb2 queue_setup function in v4.
 
-We use extcon notifier to manage usb cable detection and mode switch.
-Enable DWC3 PM runtime auto suspend to allow core enter runtime_suspend
-if USB cable is dettached. For host mode, it requires to keep whole
-DWC3 controller in reset state to hold pipe power state in P2 before
-initializing PHY. And it need to reconfigure USB PHY interface of DWC3
-core after deassert DWC3 controller reset.
+For the MT21 format, if I put MT21 into separate patch, this patch
+series will build fail, I was confused how to fix this issue?
 
-The current driver supports Host only and Peripheral Only well, for
-now, we will add support for OTG after we have it all stabilized.
 
-Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
-Changes in v10:
-- fix building error
+For VP9, I will merge this three patchs to V4L2 Decoder patch series.
+ * linux-media: [v1,1/3] videodev2.h: add V4L2_PIX_FMT_VP9 format.
+     - http://patchwork.linuxtv.org/patch/34392/
+ * linux-media: [v1,3/3] V4L: add VP9 format documentation
+     - http://patchwork.linuxtv.org/patch/34393/
+ * linux-media: [v1,2/3] v4l2-ioctl: add VP9 format description.
+     - http://patchwork.linuxtv.org/patch/34394/
 
-Changes in v9:
-- Add a new dwc3-rockchip.c driver for rk3399, rather than use dwc3-of-simple.c
 
- drivers/usb/dwc3/Kconfig         |   9 +
- drivers/usb/dwc3/Makefile        |   1 +
- drivers/usb/dwc3/core.c          |   2 +-
- drivers/usb/dwc3/core.h          |   1 +
- drivers/usb/dwc3/dwc3-rockchip.c | 441 +++++++++++++++++++++++++++++++++++++++
- 5 files changed, 453 insertions(+), 1 deletion(-)
- create mode 100644 drivers/usb/dwc3/dwc3-rockchip.c
+best regards,
+Tiffany
 
-diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-index a64ce1c..3d5ec30 100644
---- a/drivers/usb/dwc3/Kconfig
-+++ b/drivers/usb/dwc3/Kconfig
-@@ -96,6 +96,15 @@ config USB_DWC3_OF_SIMPLE
- 	 Currently supports Xilinx and Qualcomm DWC USB3 IP.
- 	 Say 'Y' or 'M' if you have one such device.
- 
-+config USB_DWC3_ROCKCHIP
-+	tristate "Rockchip Platforms"
-+	depends on EXTCON && (ARCH_ROCKCHIP || COMPILE_TEST)
-+	depends on OF
-+	default USB_DWC3
-+	help
-+	  Support of USB2/3 functionality in Rockchip platforms.
-+	  say 'Y' or 'M' if you have one such device.
-+
- config USB_DWC3_ST
- 	tristate "STMicroelectronics Platforms"
- 	depends on ARCH_STI && OF
-diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
-index 22420e1..86fc4fd 100644
---- a/drivers/usb/dwc3/Makefile
-+++ b/drivers/usb/dwc3/Makefile
-@@ -38,4 +38,5 @@ obj-$(CONFIG_USB_DWC3_EXYNOS)		+= dwc3-exynos.o
- obj-$(CONFIG_USB_DWC3_PCI)		+= dwc3-pci.o
- obj-$(CONFIG_USB_DWC3_KEYSTONE)		+= dwc3-keystone.o
- obj-$(CONFIG_USB_DWC3_OF_SIMPLE)	+= dwc3-of-simple.o
-+obj-$(CONFIG_USB_DWC3_ROCKCHIP)		+= dwc3-rockchip.o
- obj-$(CONFIG_USB_DWC3_ST)		+= dwc3-st.o
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index e887b38..3da6215 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -405,7 +405,7 @@ static void dwc3_cache_hwparams(struct dwc3 *dwc)
-  * initialized. The PHY interfaces and the PHYs get initialized together with
-  * the core in dwc3_core_init.
-  */
--static int dwc3_phy_setup(struct dwc3 *dwc)
-+int dwc3_phy_setup(struct dwc3 *dwc)
- {
- 	u32 reg;
- 	int ret;
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 3d94acd..79403ff 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -1123,6 +1123,7 @@ struct dwc3_gadget_ep_cmd_params {
- /* prototypes */
- void dwc3_set_mode(struct dwc3 *dwc, u32 mode);
- u32 dwc3_core_fifo_space(struct dwc3_ep *dep, u8 type);
-+int dwc3_phy_setup(struct dwc3 *dwc);
- 
- /* check whether we are on the DWC_usb31 core */
- static inline bool dwc3_is_usb31(struct dwc3 *dwc)
-diff --git a/drivers/usb/dwc3/dwc3-rockchip.c b/drivers/usb/dwc3/dwc3-rockchip.c
-new file mode 100644
-index 0000000..eeae1a9
---- /dev/null
-+++ b/drivers/usb/dwc3/dwc3-rockchip.c
-@@ -0,0 +1,441 @@
-+/**
-+ * dwc3-rockchip.c - Rockchip Specific Glue layer
-+ *
-+ * Copyright (C) Fuzhou Rockchip Electronics Co.Ltd
-+ *
-+ * Authors: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-+ *
-+ * This program is free software: you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2  of
-+ * the License as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/platform_device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/extcon.h>
-+#include <linux/reset.h>
-+#include <linux/usb.h>
-+#include <linux/usb/hcd.h>
-+
-+#include "core.h"
-+#include "io.h"
-+
-+#define DWC3_ROCKCHIP_AUTOSUSPEND_DELAY  500 /* ms */
-+
-+struct dwc3_rockchip {
-+	int			num_clocks;
-+	struct device		*dev;
-+	struct clk		**clks;
-+	struct dwc3		*dwc;
-+	struct reset_control	*otg_rst;
-+	struct extcon_dev	*edev;
-+	struct notifier_block	device_nb;
-+	struct notifier_block	host_nb;
-+	struct work_struct	otg_work;
-+};
-+
-+static int dwc3_rockchip_device_notifier(struct notifier_block *nb,
-+					 unsigned long event, void *ptr)
-+{
-+	struct dwc3_rockchip *rockchip =
-+		container_of(nb, struct dwc3_rockchip, device_nb);
-+
-+	schedule_work(&rockchip->otg_work);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int dwc3_rockchip_host_notifier(struct notifier_block *nb,
-+				       unsigned long event, void *ptr)
-+{
-+	struct dwc3_rockchip *rockchip =
-+		container_of(nb, struct dwc3_rockchip, host_nb);
-+
-+	schedule_work(&rockchip->otg_work);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static void dwc3_rockchip_otg_extcon_evt_work(struct work_struct *work)
-+{
-+	struct dwc3_rockchip	*rockchip =
-+		container_of(work, struct dwc3_rockchip, otg_work);
-+	struct dwc3		*dwc = rockchip->dwc;
-+	struct extcon_dev	*edev = rockchip->edev;
-+	struct usb_hcd		*hcd;
-+	unsigned long		flags;
-+	int			ret;
-+	u32			reg;
-+
-+	if (extcon_get_cable_state_(edev, EXTCON_USB) > 0) {
-+		if (dwc->connected)
-+			return;
-+
-+		/*
-+		 * If dr_mode is host only, never to set
-+		 * the mode to the peripheral mode.
-+		 */
-+		if (WARN_ON(dwc->dr_mode == USB_DR_MODE_HOST))
-+			return;
-+
-+		pm_runtime_get_sync(dwc->dev);
-+
-+		spin_lock_irqsave(&dwc->lock, flags);
-+		dwc->connected = true;
-+		dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_DEVICE);
-+		spin_unlock_irqrestore(&dwc->lock, flags);
-+
-+		pm_runtime_put_sync(dwc->dev);
-+
-+		dev_info(rockchip->dev, "USB peripheral connected\n");
-+	} else if (extcon_get_cable_state_(edev, EXTCON_USB_HOST) > 0) {
-+		if (dwc->connected)
-+			return;
-+
-+		/*
-+		 * If dr_mode is device only, never to
-+		 * set the mode to the host mode.
-+		 */
-+		if (WARN_ON(dwc->dr_mode == USB_DR_MODE_PERIPHERAL))
-+			return;
-+
-+		reset_control_assert(rockchip->otg_rst);
-+
-+		ret = phy_power_on(dwc->usb2_generic_phy);
-+		if (ret < 0)
-+			return;
-+
-+		ret = phy_power_on(dwc->usb3_generic_phy);
-+		if (ret < 0)
-+			return;
-+
-+		reset_control_deassert(rockchip->otg_rst);
-+
-+		dwc3_phy_setup(dwc);
-+
-+		hcd = dev_get_drvdata(&dwc->xhci->dev);
-+
-+		spin_lock_irqsave(&dwc->lock, flags);
-+		dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_HOST);
-+		dwc->connected = true;
-+		spin_unlock_irqrestore(&dwc->lock, flags);
-+
-+		if (hcd->state == HC_STATE_HALT) {
-+			usb_add_hcd(hcd, hcd->irq, IRQF_SHARED);
-+			usb_add_hcd(hcd->shared_hcd, hcd->irq, IRQF_SHARED);
-+		}
-+
-+		dev_info(rockchip->dev, "USB HOST connected\n");
-+	} else {
-+		if (!dwc->connected)
-+			return;
-+
-+		reg = dwc3_readl(dwc->regs, DWC3_GCTL);
-+
-+		if (DWC3_GCTL_PRTCAP(reg) == DWC3_GCTL_PRTCAP_HOST ||
-+		    DWC3_GCTL_PRTCAP(reg) == DWC3_GCTL_PRTCAP_OTG) {
-+			hcd = dev_get_drvdata(&dwc->xhci->dev);
-+
-+			if (hcd->state != HC_STATE_HALT) {
-+				usb_remove_hcd(hcd->shared_hcd);
-+				usb_remove_hcd(hcd);
-+			}
-+
-+			phy_power_off(dwc->usb2_generic_phy);
-+			phy_power_off(dwc->usb3_generic_phy);
-+		}
-+
-+		spin_lock_irqsave(&dwc->lock, flags);
-+		dwc->connected = false;
-+		spin_unlock_irqrestore(&dwc->lock, flags);
-+
-+		dev_info(rockchip->dev, "USB unconnected\n");
-+	}
-+}
-+
-+static int dwc3_rockchip_extcon_register(struct dwc3_rockchip *rockchip)
-+{
-+	int			ret;
-+	struct device		*dev = rockchip->dev;
-+	struct extcon_dev	*edev;
-+
-+	if (device_property_read_bool(dev, "extcon")) {
-+		edev = extcon_get_edev_by_phandle(dev, 0);
-+		if (IS_ERR(edev)) {
-+			if (PTR_ERR(edev) != -EPROBE_DEFER)
-+				dev_err(dev, "couldn't get extcon device\n");
-+			return PTR_ERR(edev);
-+		}
-+
-+		INIT_WORK(&rockchip->otg_work,
-+			  dwc3_rockchip_otg_extcon_evt_work);
-+
-+		rockchip->device_nb.notifier_call =
-+				dwc3_rockchip_device_notifier;
-+		ret = extcon_register_notifier(edev, EXTCON_USB,
-+					       &rockchip->device_nb);
-+		if (ret < 0) {
-+			dev_err(dev, "failed to register notifier for USB\n");
-+			return ret;
-+		}
-+
-+		rockchip->host_nb.notifier_call =
-+				dwc3_rockchip_host_notifier;
-+		ret = extcon_register_notifier(edev, EXTCON_USB_HOST,
-+					       &rockchip->host_nb);
-+		if (ret < 0) {
-+			dev_err(dev, "failed to register notifier for USB HOST\n");
-+			extcon_unregister_notifier(edev, EXTCON_USB,
-+						   &rockchip->device_nb);
-+			return ret;
-+		}
-+
-+		rockchip->edev = edev;
-+	}
-+
-+	return 0;
-+}
-+
-+static void dwc3_rockchip_extcon_unregister(struct dwc3_rockchip *rockchip)
-+{
-+	if (!rockchip->edev)
-+		return;
-+
-+	extcon_unregister_notifier(rockchip->edev, EXTCON_USB,
-+				   &rockchip->device_nb);
-+	extcon_unregister_notifier(rockchip->edev, EXTCON_USB_HOST,
-+				   &rockchip->host_nb);
-+}
-+
-+static int dwc3_rockchip_probe(struct platform_device *pdev)
-+{
-+	struct dwc3_rockchip	*rockchip;
-+	struct device		*dev = &pdev->dev;
-+	struct device_node	*np = dev->of_node, *child;
-+	struct platform_device	*child_pdev;
-+
-+	unsigned int		count;
-+	int			ret;
-+	int			i;
-+
-+	rockchip = devm_kzalloc(dev, sizeof(*rockchip), GFP_KERNEL);
-+
-+	if (!rockchip)
-+		return -ENOMEM;
-+
-+	count = of_clk_get_parent_count(np);
-+	if (!count)
-+		return -ENOENT;
-+
-+	rockchip->num_clocks = count;
-+
-+	rockchip->clks = devm_kcalloc(dev, rockchip->num_clocks,
-+				      sizeof(struct clk *), GFP_KERNEL);
-+	if (!rockchip->clks)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, rockchip);
-+
-+	rockchip->dev = dev;
-+	rockchip->edev = NULL;
-+
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "get_sync failed with err %d\n", ret);
-+		goto err1;
-+	}
-+
-+	for (i = 0; i < rockchip->num_clocks; i++) {
-+		struct clk	*clk;
-+
-+		clk = of_clk_get(np, i);
-+		if (IS_ERR(clk)) {
-+			while (--i >= 0)
-+				clk_put(rockchip->clks[i]);
-+			ret = PTR_ERR(clk);
-+
-+			goto err1;
-+		}
-+
-+		ret = clk_prepare_enable(clk);
-+		if (ret < 0) {
-+			while (--i >= 0) {
-+				clk_disable_unprepare(rockchip->clks[i]);
-+				clk_put(rockchip->clks[i]);
-+			}
-+			clk_put(clk);
-+
-+			goto err1;
-+		}
-+
-+		rockchip->clks[i] = clk;
-+	}
-+
-+	rockchip->otg_rst = devm_reset_control_get(dev, "usb3-otg");
-+	if (IS_ERR(rockchip->otg_rst)) {
-+		dev_err(dev, "could not get reset controller\n");
-+		ret = PTR_ERR(rockchip->otg_rst);
-+		goto err2;
-+	}
-+
-+	ret = dwc3_rockchip_extcon_register(rockchip);
-+	if (ret < 0)
-+		goto err2;
-+
-+	child = of_get_child_by_name(np, "dwc3");
-+	if (!child) {
-+		dev_err(dev, "failed to find dwc3 core node\n");
-+		ret = -ENODEV;
-+		goto err3;
-+	}
-+
-+	/* Allocate and initialize the core */
-+	ret = of_platform_populate(np, NULL, NULL, dev);
-+	if (ret) {
-+		dev_err(dev, "failed to create dwc3 core\n");
-+		goto err3;
-+	}
-+
-+	child_pdev = of_find_device_by_node(child);
-+	if (!child_pdev) {
-+		dev_err(dev, "failed to find dwc3 core device\n");
-+		ret = -ENODEV;
-+		goto err4;
-+	}
-+
-+	rockchip->dwc = platform_get_drvdata(child_pdev);
-+
-+	if (rockchip->edev) {
-+		pm_runtime_set_autosuspend_delay(&child_pdev->dev,
-+						 DWC3_ROCKCHIP_AUTOSUSPEND_DELAY);
-+		pm_runtime_allow(&child_pdev->dev);
-+
-+		if (rockchip->dwc->dr_mode == USB_DR_MODE_HOST ||
-+		    rockchip->dwc->dr_mode == USB_DR_MODE_OTG) {
-+			struct usb_hcd *hcd =
-+				dev_get_drvdata(&rockchip->dwc->xhci->dev);
-+
-+			if (hcd->state != HC_STATE_HALT) {
-+				usb_remove_hcd(hcd->shared_hcd);
-+				usb_remove_hcd(hcd);
-+			}
-+		}
-+	}
-+
-+	return ret;
-+
-+err4:
-+	of_platform_depopulate(dev);
-+
-+err3:
-+	dwc3_rockchip_extcon_unregister(rockchip);
-+
-+err2:
-+	for (i = 0; i < rockchip->num_clocks; i++) {
-+		clk_disable_unprepare(rockchip->clks[i]);
-+		clk_put(rockchip->clks[i]);
-+	}
-+
-+err1:
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
-+
-+	return ret;
-+}
-+
-+static int dwc3_rockchip_remove(struct platform_device *pdev)
-+{
-+	struct dwc3_rockchip	*rockchip = platform_get_drvdata(pdev);
-+	struct device		*dev = &pdev->dev;
-+	int			i;
-+
-+	for (i = 0; i < rockchip->num_clocks; i++) {
-+		clk_disable_unprepare(rockchip->clks[i]);
-+		clk_put(rockchip->clks[i]);
-+	}
-+
-+	dwc3_rockchip_extcon_unregister(rockchip);
-+
-+	of_platform_depopulate(dev);
-+
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int dwc3_rockchip_suspend(struct device *dev)
-+{
-+	struct dwc3_rockchip	*rockchip = dev_get_drvdata(dev);
-+	int			i;
-+
-+	for (i = 0; i < rockchip->num_clocks; i++)
-+		clk_disable(rockchip->clks[i]);
-+
-+	return 0;
-+}
-+
-+static int dwc3_rockchip_resume(struct device *dev)
-+{
-+	struct dwc3_rockchip	*rockchip = dev_get_drvdata(dev);
-+	int			i;
-+
-+	for (i = 0; i < rockchip->num_clocks; i++)
-+		clk_enable(rockchip->clks[i]);
-+
-+	/* runtime set active to reflect active state. */
-+	pm_runtime_disable(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops dwc3_rockchip_dev_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(dwc3_rockchip_suspend, dwc3_rockchip_resume)
-+};
-+
-+#define DEV_PM_OPS	(&dwc3_rockchip_dev_pm_ops)
-+#else
-+#define DEV_PM_OPS	NULL
-+#endif /* CONFIG_PM_SLEEP */
-+
-+static const struct of_device_id rockchip_dwc3_match[] = {
-+	{ .compatible = "rockchip,rk3399-dwc3" },
-+	{ /* Sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, rockchip_dwc3_match);
-+
-+static struct platform_driver dwc3_rockchip_driver = {
-+	.probe		= dwc3_rockchip_probe,
-+	.remove		= dwc3_rockchip_remove,
-+	.driver		= {
-+		.name	= "rockchip-dwc3",
-+		.of_match_table = rockchip_dwc3_match,
-+		.pm	= DEV_PM_OPS,
-+	},
-+};
-+
-+module_platform_driver(dwc3_rockchip_driver);
-+
-+MODULE_ALIAS("platform:rockchip-dwc3");
-+MODULE_AUTHOR("William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("DesignWare USB3 ROCKCHIP Glue Layer");
--- 
-1.9.1
+
+On Mon, 2016-08-15 at 10:30 +0200, Hans Verkuil wrote:
+> Hi Tiffany,
+> 
+> This needs a v4: the DocBook format has been replaced by sphinx, and I also see that
+> the vb2 queue_setup function is out-of-date (the allocation contexts no longer exist).
+> 
+> There were also a lot of comments about the MT21 format. I recommend splitting off the
+> code adding MT21 into separate patches at the end of the patch series. That way if there
+> are more comments it is easy to merge everything but those patches relating to MT21.
+> 
+> Can you also add the patches for the new V4L2_PIX_FMT_VP9 to this patch series? Those
+> needs to be updated as well due to the move to sphinx.
+> 
+> Thanks!
+> 
+> 	Hans
+> 
+> On 05/30/2016 02:29 PM, Tiffany Lin wrote:
+> > ==============
+> >  Introduction
+> > ==============
+> > 
+> > The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
+> > Mediatek Video Codec is able to handle video decoding of in a range of formats.
+> > 
+> > This patch series add Mediatek block format V4L2_PIX_FMT_MT21, the decoder driver will decoded bitstream to
+> > V4L2_PIX_FMT_MT21 format.
+> > 
+> > This patch series rely on MTK VPU driver in patch series "Add MT8173 Video Encoder Driver and VPU Driver"[1]
+> > and patch "CHROMIUM: v4l: Add V4L2_PIX_FMT_VP9 definition"[2] for VP9 support.
+> > Mediatek Video Decoder driver rely on VPU driver to load, communicate with VPU.
+> > 
+> > Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
+> > 
+> > [1]https://patchwork.linuxtv.org/patch/33734/
+> > [2]https://chromium-review.googlesource.com/#/c/245241/
+> > 
+> > ==================
+> >  Device interface
+> > ==================
+> > 
+> > In principle the driver bases on v4l2 memory-to-memory framework:
+> > it provides a single video node and each opened file handle gets its own private context with separate
+> > buffer queues. Each context consist of 2 buffer queues: OUTPUT (for source buffers, i.e. bitstream)
+> > and CAPTURE (for destination buffers, i.e. decoded video frames).
+> > OUTPUT and CAPTURE buffer could be MMAP or DMABUF memory type.
+> > VIDIOC_G_CTRL and VIDIOC_G_EXT_CTRLS return V4L2_CID_MIN_BUFFERS_FOR_CAPTURE only when dirver in MTK_STATE_HEADER
+> > state, or it will return EAGAIN.
+> > Driver do not support subscribe event for control 'User Controls' for now.
+> > And it default support export DMABUF for other display drivers.
+> > 
+> > Change in v3:
+> > 1. Refine vdec hw clock setting
+> > 2. Refine vp9 codec driver
+> > 3. Refine v4l2 codec driver
+> > 
+> > Change in v2:
+> > 1. Add documentation for V4L2_PIX_FMT_MT21
+> > 2. Remove DRM_FORMAT_MT21
+> > 2. Refine code according to review comments
+> > 
+> > v4l2-compliance test output:
+> > localhost Encode # ./v4l2-compliance -d /dev/video0
+> > Driver Info:
+> >         Driver name   : mtk-vcodec-dec
+> >         Card type     : platform:mt8173
+> >         Bus info      : platform:mt8173
+> >         Driver version: 4.4.0
+> >         Capabilities  : 0x84204000
+> >                 Video Memory-to-Memory Multiplanar
+> >                 Streaming
+> >                 Extended Pix Format
+> >                 Device Capabilities
+> >         Device Caps   : 0x04204000
+> >                 Video Memory-to-Memory Multiplanar
+> >                 Streaming
+> >                 Extended Pix Format
+> > 
+> > Compliance test for device /dev/video0 (not using libv4l2):
+> > 
+> > Required ioctls:
+> >         test VIDIOC_QUERYCAP: OK
+> > 
+> > Allow for multiple opens:
+> >         test second video open: OK
+> >         test VIDIOC_QUERYCAP: OK
+> >         test VIDIOC_G/S_PRIORITY: OK
+> > 
+> > Debug ioctls:
+> >         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+> >         test VIDIOC_LOG_STATUS: OK (Not Supported)
+> > 
+> > Input ioctls:
+> >         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+> >         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> >         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+> >         test VIDIOC_ENUMAUDIO: OK (Not Supported)
+> >         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+> >         test VIDIOC_G/S_AUDIO: OK (Not Supported)
+> >         Inputs: 0 Audio Inputs: 0 Tuners: 0
+> > 
+> > Output ioctls:
+> >         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+> >         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> >         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+> >         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+> >         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+> >         Outputs: 0 Audio Outputs: 0 Modulators: 0
+> > 
+> > Input/Output configuration ioctls:
+> >         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+> >         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+> >         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+> >         test VIDIOC_G/S_EDID: OK (Not Supported)
+> > 
+> >         Control ioctls:
+> >                 test VIDIOC_QUERYCTRL/MENU: OK
+> >                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(357): g_ctrl returned an error (11)
+> >                 test VIDIOC_G/S_CTRL: FAIL
+> >                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(579): g_ext_ctrls returned an error (11)
+> >                 test VIDIOC_G/S/TRY_EXT_CTRLS: FAIL
+> >                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-controls.cpp(721): subscribe event for control 'User Controls' failed
+> >                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
+> >                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+> >                 Standard Controls: 2 Private Controls: 0
+> > 
+> >         Format ioctls:
+> >                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+> >                 test VIDIOC_G/S_PARM: OK (Not Supported)
+> >                 test VIDIOC_G_FBUF: OK (Not Supported)
+> >                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-formats.cpp(405): expected EINVAL, but got 11 when getting format for buftype 9
+> >                 test VIDIOC_G_FMT: FAIL
+> >                 test VIDIOC_TRY_FMT: OK (Not Supported)
+> >                 test VIDIOC_S_FMT: OK (Not Supported)
+> >                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+> > 
+> >         Codec ioctls:
+> >                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+> >                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+> >                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+> > 
+> >         Buffer ioctls:
+> >                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+> >                 fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-buffers.cpp(500): q.has_expbuf(node)
+> >                 test VIDIOC_EXPBUF: FAIL
+> > 
+> > 
+> > Total: 38, Succeeded: 33, Failed: 5, Warnings: 0
+> > 
+> > 
+> > Andrew-CT Chen (1):
+> >   VPU: mediatek: Add decode support
+> > 
+> > Tiffany Lin (8):
+> >   v4l: add Mediatek compressed video block format
+> >   DocBook/v4l: Add compressed video formats used on MT8173 codec driver
+> >   dt-bindings: Add a binding for Mediatek Video Decoder
+> >   vcodec: mediatek: Add Mediatek V4L2 Video Decoder Driver
+> >   vcodec: mediatek: Add Mediatek H264 Video Decoder Driver
+> >   vcodec: mediatek: Add Mediatek VP8 Video Decoder Driver
+> >   vcodec: mediatek: Add Mediatek VP9 Video Decoder Driver
+> >   arm64: dts: mediatek: Add Video Decoder for MT8173
+> > 
+> >  Documentation/DocBook/media/v4l/pixfmt.xml         |    6 +
+> >  .../devicetree/bindings/media/mediatek-vcodec.txt  |   57 +-
+> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   44 +
+> >  drivers/media/platform/mtk-vcodec/Makefile         |   15 +-
+> >  drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c | 1348 ++++++++++++++++++++
+> >  drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h |   88 ++
+> >  .../media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c |  408 ++++++
+> >  .../media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c  |  206 +++
+> >  .../media/platform/mtk-vcodec/mtk_vcodec_dec_pm.h  |   28 +
+> >  drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h |   88 +-
+> >  .../media/platform/mtk-vcodec/mtk_vcodec_intr.c    |    4 +-
+> >  .../media/platform/mtk-vcodec/mtk_vcodec_intr.h    |    2 +-
+> >  .../media/platform/mtk-vcodec/mtk_vcodec_util.c    |   31 +-
+> >  .../media/platform/mtk-vcodec/mtk_vcodec_util.h    |    7 +-
+> >  .../media/platform/mtk-vcodec/vdec/vdec_h264_if.c  |  503 ++++++++
+> >  .../media/platform/mtk-vcodec/vdec/vdec_vp8_if.c   |  630 +++++++++
+> >  .../media/platform/mtk-vcodec/vdec/vdec_vp9_if.c   |  967 ++++++++++++++
+> >  drivers/media/platform/mtk-vcodec/vdec_drv_base.h  |   56 +
+> >  drivers/media/platform/mtk-vcodec/vdec_drv_if.c    |  117 ++
+> >  drivers/media/platform/mtk-vcodec/vdec_drv_if.h    |  101 ++
+> >  drivers/media/platform/mtk-vcodec/vdec_ipi_msg.h   |  103 ++
+> >  drivers/media/platform/mtk-vcodec/vdec_vpu_if.c    |  168 +++
+> >  drivers/media/platform/mtk-vcodec/vdec_vpu_if.h    |   96 ++
+> >  drivers/media/platform/mtk-vpu/mtk_vpu.c           |   12 +
+> >  drivers/media/platform/mtk-vpu/mtk_vpu.h           |   27 +
+> >  include/uapi/linux/videodev2.h                     |    1 +
+> >  26 files changed, 5090 insertions(+), 23 deletions(-)
+> >  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+> >  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h
+> >  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
+> >  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
+> >  create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.h
+> >  create mode 100644 drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+> >  create mode 100644 drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
+> >  create mode 100644 drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+> >  create mode 100644 drivers/media/platform/mtk-vcodec/vdec_drv_base.h
+> >  create mode 100644 drivers/media/platform/mtk-vcodec/vdec_drv_if.c
+> >  create mode 100644 drivers/media/platform/mtk-vcodec/vdec_drv_if.h
+> >  create mode 100644 drivers/media/platform/mtk-vcodec/vdec_ipi_msg.h
+> >  create mode 100644 drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
+> >  create mode 100644 drivers/media/platform/mtk-vcodec/vdec_vpu_if.h
+> > 
 
 
 --
