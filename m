@@ -1,177 +1,537 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: dwc2: optionally assert phy "full reset" when
- waking up
-Date: Mon, 15 Aug 2016 15:19:13 -0700
-Message-ID: <38019f37-8d68-b7c1-a5b1-b34ffbadf461@synopsys.com>
-References: <1446236275-12698-2-git-send-email-dianders@chromium.org>
- <1468929933-6971-1-git-send-email-randy.li@rock-chips.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 1/5] clk: qcom: ipq4019: Added the clock nodes and
+ operations for pll
+Date: Mon, 15 Aug 2016 15:19:56 -0700
+Message-ID: <20160815221956.GJ361@codeaurora.org>
+References: <1466516962-18087-1-git-send-email-absahu@codeaurora.org>
+ <1466516962-18087-2-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1468929933-6971-1-git-send-email-randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Randy Li <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org" <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, "eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1466516962-18087-2-git-send-email-absahu@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Abhishek Sahu <absahu@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, mturquette@baylibre.com, galak@codeaurora.org, pradeepb@codeaurora.org, mmcclint@codeaurora.org, varada@codeaurora.org, sricharan@codeaurora.org, architt@codeaurora.org, ntelkar@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/19/2016 5:06 AM, Randy Li wrote:
-> From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+On 06/21, Abhishek Sahu wrote:
+> The current ipq4019 clock driver registered the PLL clocks and
+> dividers as fixed clock. These fixed clock needs to be removed
+> from driver probe function and same need to be registered with
+> clock framework. These PLL clocks should be programmed only
+> once and the same are being programmed already by the boot
+> loader so the set rate operation is not required for these
+> clocks. Only the rate can be calculated by clock operations
+> in clock driver file so this patch adds the same.
 > 
-> On the rk3288 USB host-only port (the one that's not the OTG-enabled
-> port) the PHY can get into a bad state when a wakeup is asserted (not
-> just a wakeup from full system suspend but also a wakeup from
-> autosuspend). The problem is caused by a design fault in IC, Rockchip
-> have confirmed it and fix this problem in the future IC model.
+> The PLL takes the reference clock from XO and generates the
+> intermediate VCO frequency. This VCO frequency will be divided
+> down by different PLL internal dividers. Some of the PLL
+> internal dividers are fixed while other are programmable.
 > 
-> We can get the PHY out of its bad state by asserting its "port reset",
-> but unfortunately that seems to assert a reset onto the USB bus so it
-> could confuse things if we don't actually deenumerate / reenumerate the
-> device.
+> This patch does the following changes.
+> 1. Operation for calculating PLL intermediate VCO frequency by
+>    reading the reference clock divider and feedback divider from
+>    register. Since VCO frequency falls outside the limit of
+>    unsigned long for IPQ4019, so this operation will return the
+>    VCO frequency in KHz.
 > 
-> We can also get the PHY out of its bad state by fully resetting it using
-> the reset from the CRU (clock reset unit), which does a more full
-> reset.  The CRU-based reset appears to actually cause devices on the bus
-> to be removed and reinserted, which fixes the problem (albeit in a hacky
-> way).
+> 2. Operation for calculating the internal PLL divider clock
+>    frequency. Clock Divider node should give either fixed
+>    divider value or divider table(maps the register divider
+>    value to actual divider value).
 > 
-> It's unfortunate that we need to do a full re-enumeration of devices at
-> wakeup time, but this is better than alternative of letting the bus get
-> wedged.
+> 3. Adds and registers clock nodes for VCO(APPS DDR PLL and FE
+>    PLL) and PLL internal dividers(SDCC, FEPLL 500 Mhz, FEPLL
+>    200 Mhz, FEPLL 125 Mhz, FEPLL 125 Mhz with delay,
+>    programmable WCSS 2G and 5G).
 > 
-> Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Reviewed-by: Randy Li <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc2.txt |  7 +++++++
->  drivers/usb/dwc2/core.h                        |  5 +++++
->  drivers/usb/dwc2/core_intr.c                   | 14 ++++++++++++++
->  drivers/usb/dwc2/platform.c                    | 13 +++++++++++++
->  4 files changed, 39 insertions(+)
+> 4. Changes the regmap limit from 0x2DFFF to 0x2FFFF for
+>    supporting the PLL registers read.
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> index 20a68bf..40c63ae 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> @@ -20,6 +20,13 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
->  Optional properties:
->  - phys: phy provider specifier
->  - phy-names: shall be "usb2-phy"
-> +- snps,need-phy-full-reset-on-wake: if present indicates that we need to reset
-> +  the PHY when we detect a wakeup due to a hardware errata.  If present you
-> +  must specify a "phy-full-reset" reset.
-> +
-> +Resets:
-> +- phy-full-reset (optional): Fully resets the PHY (Only used by rk3288 Soc).
-> +
->  Refer to phy/phy-bindings.txt for generic phy consumer properties
->  - dr_mode: shall be one of "host", "peripheral" and "otg"
->    Refer to usb/generic.txt
-> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-> index dec0b21..951abe0 100644
-> --- a/drivers/usb/dwc2/core.h
-> +++ b/drivers/usb/dwc2/core.h
-> @@ -719,8 +719,11 @@ struct dwc2_hregs_backup {
->   * @hcd_enabled		Host mode sub-driver initialization indicator.
->   * @gadget_enabled	Peripheral mode sub-driver initialization indicator.
->   * @ll_hw_enabled	Status of low-level hardware resources.
-> + * @need_phy_full_reset_on_wake: Quirk saying that we should assert
-> + *                               phy_full_reset on a remote wakeup.
->   * @phy:                The otg phy transceiver structure for phy control.
->   * @uphy:               The otg phy transceiver structure for old USB phy control.
-> + * @phy_full_reset:     Reset control for the PHY's "full reset".
->   * @plat:               The platform specific configuration data. This can be removed once
->   *                      all SoCs support usb transceiver.
->   * @supplies:           Definition of USB power supplies
-> @@ -853,9 +856,11 @@ struct dwc2_hsotg {
->  	unsigned int hcd_enabled:1;
->  	unsigned int gadget_enabled:1;
->  	unsigned int ll_hw_enabled:1;
-> +	unsigned int need_phy_full_reset_on_wake:1;
->  
->  	struct phy *phy;
->  	struct usb_phy *uphy;
-> +	struct reset_control *phy_full_reset;
->  	struct dwc2_hsotg_plat *plat;
->  	struct regulator_bulk_data supplies[ARRAY_SIZE(dwc2_hsotg_supply_names)];
->  	u32 phyif;
-> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
-> index d85c5c9..53d8327 100644
-> --- a/drivers/usb/dwc2/core_intr.c
-> +++ b/drivers/usb/dwc2/core_intr.c
-> @@ -45,6 +45,7 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/io.h>
->  #include <linux/slab.h>
-> +#include <linux/reset.h>
->  #include <linux/usb.h>
->  
->  #include <linux/usb/hcd.h>
-> @@ -379,6 +380,19 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->  			/* Restart the Phy Clock */
->  			pcgcctl &= ~PCGCTL_STOPPCLK;
->  			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
-> +
-> +			/*
-> +			 * If we've got this quirk then the PHY is stuck upon
-> +			 * wakeup.  Assert reset.  This will propagate out and
-> +			 * eventually we'll re-enumerate the device.  Not great
-> +			 * but the best we can do.
-> +			 */
-> +			if (hsotg->need_phy_full_reset_on_wake) {
-> +				reset_control_assert(hsotg->phy_full_reset);
-> +				udelay(50);
-> +				reset_control_deassert(hsotg->phy_full_reset);
-> +			}
-> +
->  			mod_timer(&hsotg->wkp_timer,
->  				  jiffies + msecs_to_jiffies(71));
->  		} else {
-> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-> index fc6f525..d8894a1 100644
-> --- a/drivers/usb/dwc2/platform.c
-> +++ b/drivers/usb/dwc2/platform.c
-> @@ -45,6 +45,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_data/s3c-hsotg.h>
-> +#include <linux/reset.h>
->  
->  #include <linux/usb/of.h>
->  
-> @@ -529,6 +530,18 @@ static int dwc2_driver_probe(struct platform_device *dev)
->  	dev_dbg(&dev->dev, "mapped PA %08lx to VA %p\n",
->  		(unsigned long)res->start, hsotg->regs);
->  
-> +	hsotg->need_phy_full_reset_on_wake =
-> +		of_property_read_bool(dev->dev.of_node,
-> +				"snps,need-phy-full-reset-on-wake");
-> +	hsotg->phy_full_reset = devm_reset_control_get(hsotg->dev,
-> +				"phy-full-reset");
-> +	if (IS_ERR(hsotg->phy_full_reset) &&
-> +			hsotg->need_phy_full_reset_on_wake) {
+> 5. Changes the fixed clock name to have consistency in all
+>    clock names
+> 
+> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 
-Should use the devm_reset_control_get_optional() variant so that we
-can check whether it is a legitimate error, or the PHY is not
-specified or !CONFIG_OF.
+Thanks for fixing this up, just some minor things to fix.
 
-> +		dev_warn(hsotg->dev, "Missing phy full reset (%ld); skipping\n",
-> +				PTR_ERR(hsotg->phy_full_reset));
-> +		hsotg->need_phy_full_reset_on_wake = false;
+> diff --git a/drivers/clk/qcom/gcc-ipq4019.c b/drivers/clk/qcom/gcc-ipq4019.c
+> index 3cd1af0..17ca6d3 100644
+> --- a/drivers/clk/qcom/gcc-ipq4019.c
+> +++ b/drivers/clk/qcom/gcc-ipq4019.c
+> @@ -20,6 +20,11 @@
+>  #include <linux/clk-provider.h>
+>  #include <linux/regmap.h>
+>  #include <linux/reset-controller.h>
+> +#include <linux/clk.h>
+
+Is this include used?
+
+> +#include <linux/delay.h>
+
+Is this include used?
+
+> +#include <linux/bitops.h>
+> +#include <linux/math64.h>
+> +#include <asm/div64.h>
+
+Are both includes needed?
+
+> @@ -40,6 +55,20 @@ enum {
+>  	P_DDRPLLAPSS,
+>  };
+>  
+> +struct clk_pll_vco {
+> +	u32 fdbkdiv_shift;
+> +	u32 fdbkdiv_width;
+> +	struct clk_regmap_div cdiv;
+> +};
+> +
+> +struct clk_pll_div {
+> +	u32 fixed_div;
+> +	const u8 *parent_map;
+> +	struct clk_regmap_div cdiv;
+> +	const struct clk_div_table *div_table;
+> +	const struct freq_tbl *freq_tbl;
+> +};
+> +
+>  static struct parent_map gcc_xo_200_500_map[] = {
+>  	{ P_XO, 0 },
+>  	{ P_FEPLL200, 1 },
+> @@ -48,8 +77,8 @@ static struct parent_map gcc_xo_200_500_map[] = {
+>  
+>  static const char * const gcc_xo_200_500[] = {
+>  	"xo",
+> -	"fepll200",
+> -	"fepll500",
+> +	"gcc_fepll200_clk",
+> +	"gcc_fepll500_clk",
+>  };
+>  
+>  static struct parent_map gcc_xo_200_map[] = {
+> @@ -59,7 +88,7 @@ static struct parent_map gcc_xo_200_map[] = {
+>  
+>  static const char * const gcc_xo_200[] = {
+>  	"xo",
+> -	"fepll200",
+> +	"gcc_fepll200_clk",
+>  };
+>  
+>  static struct parent_map gcc_xo_200_spi_map[] = {
+> @@ -69,7 +98,7 @@ static struct parent_map gcc_xo_200_spi_map[] = {
+>  
+>  static const char * const gcc_xo_200_spi[] = {
+>  	"xo",
+> -	"fepll200",
+> +	"gcc_fepll200_clk",
+>  };
+>  
+>  static struct parent_map gcc_xo_sdcc1_500_map[] = {
+> @@ -80,8 +109,8 @@ static struct parent_map gcc_xo_sdcc1_500_map[] = {
+>  
+>  static const char * const gcc_xo_sdcc1_500[] = {
+>  	"xo",
+> -	"ddrpll",
+> -	"fepll500",
+> +	"gcc_apps_sdcc_clk",
+> +	"gcc_fepll500_clk",
+>  };
+>  
+>  static struct parent_map gcc_xo_wcss2g_map[] = {
+> @@ -91,7 +120,7 @@ static struct parent_map gcc_xo_wcss2g_map[] = {
+>  
+>  static const char * const gcc_xo_wcss2g[] = {
+>  	"xo",
+> -	"fepllwcss2g",
+> +	"gcc_fepllwcss2g_clk",
+>  };
+>  
+>  static struct parent_map gcc_xo_wcss5g_map[] = {
+> @@ -101,7 +130,7 @@ static struct parent_map gcc_xo_wcss5g_map[] = {
+>  
+>  static const char * const gcc_xo_wcss5g[] = {
+>  	"xo",
+> -	"fepllwcss5g",
+> +	"gcc_fepllwcss5g_clk",
+>  };
+>  
+>  static struct parent_map gcc_xo_125_dly_map[] = {
+> @@ -111,7 +140,7 @@ static struct parent_map gcc_xo_125_dly_map[] = {
+>  
+>  static const char * const gcc_xo_125_dly[] = {
+>  	"xo",
+> -	"fepll125dly",
+> +	"gcc_fepll125dly_clk",
+>  };
+>  
+>  static struct parent_map gcc_xo_ddr_500_200_map[] = {
+> @@ -123,8 +152,8 @@ static struct parent_map gcc_xo_ddr_500_200_map[] = {
+>  
+>  static const char * const gcc_xo_ddr_500_200[] = {
+>  	"xo",
+> -	"fepll200",
+> -	"fepll500",
+> +	"gcc_fepll200_clk",
+> +	"gcc_fepll500_clk",
+>  	"ddrpllapss",
+>  };
+
+Was it necessary to change all these names? The gcc_ prefix
+doesn't seem to be adding much besides noise to this patch.
+
+>  
+> @@ -506,7 +535,7 @@ static const struct freq_tbl ftbl_gcc_sdcc1_apps_clk[] = {
+>  	F(25000000,  P_FEPLL500,		1,  1, 20),
+>  	F(50000000,  P_FEPLL500,		1,  1, 10),
+>  	F(100000000, P_FEPLL500,		1,  1, 5),
+> -	F(193000000, P_DDRPLL,		1,  0, 0),
+> +	F(190000000, P_DDRPLL,		1,  0, 0),
+
+This looks like an unrelated bug fix.
+
+>  	{ }
+>  };
+>  
+> @@ -658,7 +687,7 @@ static struct clk_branch gcc_crypto_axi_clk = {
+>  		.hw.init = &(struct clk_init_data){
+>  			.name = "gcc_crypto_axi_clk",
+>  			.parent_names = (const char *[]){
+> -				"fepll125",
+> +				"gcc_fepll125_clk",
+>  			},
+>  			.num_parents = 1,
+>  			.ops = &clk_branch2_ops,
+> @@ -675,7 +704,7 @@ static struct clk_branch gcc_crypto_clk = {
+>  		.hw.init = &(struct clk_init_data){
+>  			.name = "gcc_crypto_clk",
+>  			.parent_names = (const char *[]){
+> -				"fepll125",
+> +				"gcc_fepll125_clk",
+>  			},
+>  			.num_parents = 1,
+>  			.ops = &clk_branch2_ops,
+> @@ -709,7 +738,7 @@ static struct clk_branch gcc_imem_axi_clk = {
+>  		.hw.init = &(struct clk_init_data){
+>  			.name = "gcc_imem_axi_clk",
+>  			.parent_names = (const char *[]){
+> -				"fepll200",
+> +				"gcc_fepll200_clk",
+>  			},
+>  			.num_parents = 1,
+>  			.ops = &clk_branch2_ops,
+> @@ -773,7 +802,7 @@ static struct clk_branch gcc_pcie_axi_s_clk = {
+>  		.hw.init = &(struct clk_init_data){
+>  			.name = "gcc_pcie_axi_s_clk",
+>  			.parent_names = (const char *[]){
+> -				"fepll200",
+> +				"gcc_fepll200_clk",
+>  			},
+>  			.num_parents = 1,
+>  			.ops = &clk_branch2_ops,
+> @@ -955,7 +984,7 @@ static struct clk_branch gcc_usb3_master_clk = {
+>  		.hw.init = &(struct clk_init_data){
+>  			.name = "gcc_usb3_master_clk",
+>  			.parent_names = (const char *[]){
+> -				"fepll125",
+> +				"gcc_fepll125_clk",
+>  			},
+>  			.num_parents = 1,
+>  			.ops = &clk_branch2_ops,
+> @@ -1155,6 +1184,238 @@ static struct clk_branch gcc_wcss5g_rtc_clk = {
+>  	},
+>  };
+>  
+> +/*
+> + * Calculates the rate from parent rate and divider and round the rate
+> + * in Mhz. This function takes the parent rate in Khz and returns the
+> + * rate in Hz.
+> + */
+> +static unsigned long clk_calc_divider_rate(unsigned long parent_rate,
+> +				unsigned int div)
+> +{
+> +	u64 rate = parent_rate;
+> +
+> +	do_div(rate, div);
+> +
+> +	/*
+> +	 * This rate is in KHz so divide with 1000 and multiply with 1000000
+
+s/KHz/kHz/
+
+> +	 * to get the rate in Hz.
+> +	 */
+> +	do_div(rate, 1000);
+> +	rate *= 1000000;
+> +
+> +	return (unsigned long)rate;
+
+Unnecessary cast, please remove.
+
+> +}
+> +
+> +/*
+> + * Calculates the VCO rate for PLL.
+> + * VCO rate value is greater than unsigned long limit. Since this is an
+> + * intermediate clock node for actual PLL dividers, so it returns the
+> + * rate in Khz. The child nodes will return the value in Hz after its
+> + * divide operation.
+> + */
+> +static unsigned long clk_regmap_vco_recalc_rate(struct clk_hw *hw,
+> +						unsigned long parent_rate)
+> +{
+> +	struct clk_pll_vco *rcg = to_clk_pll_vco(hw);
+> +	u32 fdbkdiv, refclkdiv, cdiv;
+> +	u64 vco;
+> +
+> +	regmap_read(rcg->cdiv.clkr.regmap, rcg->cdiv.reg, &cdiv);
+> +	refclkdiv = (cdiv >> rcg->cdiv.shift) & (BIT(rcg->cdiv.width) - 1);
+> +	fdbkdiv = (cdiv >> rcg->fdbkdiv_shift) & (BIT(rcg->fdbkdiv_width) - 1);
+> +
+> +	vco = parent_rate;
+> +	do_div(vco, refclkdiv);
+> +	do_div(vco, 1000);
+> +	vco *= 2;
+> +	vco *= fdbkdiv;
+> +
+> +	return (unsigned long)vco;
+
+unnecessary cast.
+
+> +}
+> +
+> +const struct clk_ops clk_regmap_vco_ops = {
+
+static?
+
+> +	.recalc_rate = clk_regmap_vco_recalc_rate,
+> +};
+> +
+> +static struct clk_pll_vco gcc_apps_ddrpll_vco = {
+> +	.fdbkdiv_shift = 16,
+> +	.fdbkdiv_width = 8,
+> +	.cdiv.reg = 0x2E020,
+
+lowercase hex please.
+
+> +	.cdiv.shift = 24,
+> +	.cdiv.width = 5,
+> +	.cdiv.clkr = {
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_apps_ddrpll_vco",
+> +			.parent_names = (const char *[]){
+> +				"xo",
+> +			},
+> +			.num_parents = 1,
+> +			.ops = &clk_regmap_vco_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_pll_vco gcc_fepll_vco = {
+> +	.fdbkdiv_shift = 16,
+> +	.fdbkdiv_width = 8,
+> +	.cdiv.reg = 0x2F020,
+> +	.cdiv.shift = 24,
+> +	.cdiv.width = 5,
+> +	.cdiv.clkr = {
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_fepll_vco",
+> +			.parent_names = (const char *[]){
+> +				"xo",
+> +			},
+> +			.num_parents = 1,
+> +			.ops = &clk_regmap_vco_ops,
+> +		},
+> +	},
+> +};
+> +
+> +/* Calculates the rate for PLL divider.
+
+Style nit, /* goes on its own line
+
+> + * If the divider value is not fixed then it gets the actual divider value
+> + * from divider table. Then, it calculate the clock rate by dividing the
+> + * parent rate with actual divider value.
+> + */
+> +static unsigned long clk_regmap_clk_div_recalc_rate(struct clk_hw *hw,
+> +					   unsigned long parent_rate)
+> +{
+> +	struct clk_pll_div *rcg = to_clk_pll_div(hw);
+> +	u32 cdiv, pre_div = 1;
+> +	const struct clk_div_table *clkt;
+> +
+> +	if (rcg->fixed_div) {
+> +		pre_div = rcg->fixed_div;
+> +	} else {
+> +		regmap_read(rcg->cdiv.clkr.regmap, rcg->cdiv.reg, &cdiv);
+> +		cdiv = (cdiv >> rcg->cdiv.shift) & (BIT(rcg->cdiv.width) - 1);
+> +
+> +		for (clkt = rcg->div_table; clkt->div; clkt++) {
+> +			if (clkt->val == cdiv)
+> +				pre_div = clkt->div;
+> +		}
 > +	}
 > +
+> +	return clk_calc_divider_rate(parent_rate, pre_div);
+> +};
+> +
+> +const struct clk_ops clk_regmap_clk_div_ops = {
 
-Also this code can go into the dwc2_lowlevel_hw_init() function so as
-not to clutter up the probe() function futher.
+static?
 
-A similar patch adding a reset was submitted by Dinh which you can use
-as a reference:
+> +	.recalc_rate = clk_regmap_clk_div_recalc_rate,
+> +};
+> +
+> +static struct clk_pll_div gcc_apps_sdcc_clk = {
+> +	.fixed_div = 28,
+> +	.cdiv.clkr = {
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_apps_sdcc_clk",
+> +			.parent_names = (const char *[]){
+> +				"gcc_apps_ddrpll_vco",
+> +			},
+> +			.num_parents = 1,
+> +			.ops = &clk_regmap_clk_div_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_pll_div gcc_fepll125_clk = {
+> +	.fixed_div = 32,
+> +	.cdiv.clkr = {
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_fepll125_clk",
+> +			.parent_names = (const char *[]){
+> +				"gcc_fepll_vco",
+> +			},
+> +			.num_parents = 1,
+> +			.ops = &clk_regmap_clk_div_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_pll_div gcc_fepll125dly_clk = {
+> +	.fixed_div = 32,
+> +	.cdiv.clkr = {
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_fepll125dly_clk",
+> +			.parent_names = (const char *[]){
+> +				"gcc_fepll_vco",
+> +			},
+> +			.num_parents = 1,
+> +			.ops = &clk_regmap_clk_div_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_pll_div gcc_fepll200_clk = {
+> +	.fixed_div = 20,
+> +	.cdiv.clkr = {
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_fepll200_clk",
+> +			.parent_names = (const char *[]){
+> +				"gcc_fepll_vco",
+> +			},
+> +			.num_parents = 1,
+> +			.ops = &clk_regmap_clk_div_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static struct clk_pll_div gcc_fepll500_clk = {
+> +	.fixed_div = 8,
+> +	.cdiv.clkr = {
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_fepll500_clk",
+> +			.parent_names = (const char *[]){
+> +				"gcc_fepll_vco",
+> +			},
+> +			.num_parents = 1,
+> +			.ops = &clk_regmap_clk_div_ops,
+> +		},
+> +	},
+> +};
+> +
+> +static const struct clk_div_table fepllwcss_clk_div_table[] = {
+> +	{0, 15},
+> +	{1, 16},
+> +	{2, 18},
+> +	{3, 20},
 
-http://marc.info/?l=linux-usb&m=147085447403019&w=2
+Nitpick: Please add some spaces here
 
-Regards,
-John
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	{ 0, 15 },
+
+> +	{},
+> +};
+> +
+> +static struct clk_pll_div gcc_fepllwcss2g_clk = {
+> +	.cdiv.reg = 0x2F020,
+> +	.cdiv.shift = 8,
+> +	.cdiv.width = 2,
+> +	.cdiv.clkr = {
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_fepllwcss2g_clk",
+> +			.parent_names = (const char *[]){
+> +				"gcc_fepll_vco",
+> +			},
+> +			.num_parents = 1,
+> +			.ops = &clk_regmap_clk_div_ops,
+> +		},
+> +	},
+> +	.div_table = fepllwcss_clk_div_table
+> +};
+> +
+> +static struct clk_pll_div gcc_fepllwcss5g_clk = {
+> +	.cdiv.reg = 0x2F020,
+> +	.cdiv.shift = 12,
+> +	.cdiv.width = 2,
+> +	.cdiv.clkr = {
+> +		.hw.init = &(struct clk_init_data){
+> +			.name = "gcc_fepllwcss5g_clk",
+> +			.parent_names = (const char *[]){
+> +				"gcc_fepll_vco",
+> +			},
+> +			.num_parents = 1,
+> +			.ops = &clk_regmap_clk_div_ops,
+> +		},
+> +	},
+> +	.div_table = fepllwcss_clk_div_table
+> +};
+> +
+>  static struct clk_regmap *gcc_ipq4019_clocks[] = {
+>  	[AUDIO_CLK_SRC] = &audio_clk_src.clkr,
+>  	[BLSP1_QUP1_I2C_APPS_CLK_SRC] = &blsp1_qup1_i2c_apps_clk_src.clkr,
+> @@ -1215,6 +1476,15 @@ static struct clk_regmap *gcc_ipq4019_clocks[] = {
+>  	[GCC_WCSS5G_CLK] = &gcc_wcss5g_clk.clkr,
+>  	[GCC_WCSS5G_REF_CLK] = &gcc_wcss5g_ref_clk.clkr,
+>  	[GCC_WCSS5G_RTC_CLK] = &gcc_wcss5g_rtc_clk.clkr,
+> +	[GCC_APPS_DDRPLL_VCO] = &gcc_apps_ddrpll_vco.cdiv.clkr,
+> +	[GCC_FEPLL_VCO] = &gcc_fepll_vco.cdiv.clkr,
+> +	[GCC_SDCC_PLLDIV_CLK] = &gcc_apps_sdcc_clk.cdiv.clkr,
+> +	[GCC_FEPLL125_CLK] = &gcc_fepll125_clk.cdiv.clkr,
+> +	[GCC_FEPLL125DLY_CLK] = &gcc_fepll125dly_clk.cdiv.clkr,
+> +	[GCC_FEPLL200_CLK] = &gcc_fepll200_clk.cdiv.clkr,
+> +	[GCC_FEPLL500_CLK] = &gcc_fepll500_clk.cdiv.clkr,
+> +	[GCC_FEPLL_WCSS2G_CLK] = &gcc_fepllwcss2g_clk.cdiv.clkr,
+> +	[GCC_FEPLL_WCSS5G_CLK] = &gcc_fepllwcss5g_clk.cdiv.clkr,
+>  };
+>  
+>  static const struct qcom_reset_map gcc_ipq4019_resets[] = {
+> @@ -1295,7 +1565,7 @@ static const struct regmap_config gcc_ipq4019_regmap_config = {
+>  	.reg_bits	= 32,
+>  	.reg_stride	= 4,
+>  	.val_bits	= 32,
+> -	.max_register	= 0x2dfff,
+> +	.max_register	= 0x2FFFF,
+
+Lowercase.
+
+>  	.fast_io	= true,
+>  };
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
