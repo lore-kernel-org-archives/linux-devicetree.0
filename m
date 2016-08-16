@@ -1,98 +1,47 @@
-From: Martyn Welch <martyn.welch@collabora.co.uk>
-Subject: Re: [PATCH V4 2/4] Documentation/devicetree/bindings: b850v3_lvds_dp
-Date: Tue, 16 Aug 2016 16:59:14 +0100
-Message-ID: <c9a5da63-5e48-b3d7-c740-086c776da8f2@collabora.co.uk>
-References: <1464626385-19253-1-git-send-email-peter.senna@collabora.com>
- <cover.1470346720.git.peter.senna@collabora.com>
- <2faeaded0bc299ffbd01c408b813f9a730a6e6db.1470346720.git.peter.senna@collabora.com>
+From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v2] regulator: axp20x: support AXP803/AXP813 variants
+Date: Tue, 16 Aug 2016 18:07:40 +0200
+Message-ID: <20160816180740.739c382a63434d5c7f706b58@free.fr>
+References: <E1bZY0w-0004lM-0a@bombadil.infradead.org>
+	<248521471347017@web1g.yandex.ru>
+	<20160816150104.16a7bcf774135c8275828eda@free.fr>
+	<395001471359887@web15h.yandex.ru>
+Reply-To: moinejf-GANU6spQydw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2faeaded0bc299ffbd01c408b813f9a730a6e6db.1470346720.git.peter.senna@collabora.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Senna Tschudin <peter.senna@collabora.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, airlied@linux.ie, p.zabel@pengutronix.de, martin.donnelly@ge.com, peter.senna@gmail.com, treding@nvidia.com, architt@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Javier Martinez Canillas <javier@dowhile0.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCV6DL6LYMNBBYPUZS6QKGQEUFJSMKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <395001471359887-pkmkBaL7+f1xpj1cXAZ9Bg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 16 Aug 2016 23:04:47 +0800
+Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
 
+> > Also, please, may you give me a pointer to the AXP813 documentation?
+> I got it on BaiduPan.
+> https://pan.baidu.com/share/link?shareid=3D120641733&uk=3D2121502978&fid=
+=3D169295081716431
+> Here's a link, you can download it if you can read Chinese...
+> Or at least you can read it online.
 
-On 04/08/16 23:36, Peter Senna Tschudin wrote:
-> Devicetree bindings documentation for the GE B850v3 LVDS/DP++
-> display bridge.
->
-> Cc: Javier Martinez Canillas <javier@dowhile0.org>
-> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
+I got it. Thanks.
 
-Acked-by: Martyn Welch <martyn.welch@collabora.co.uk>
+--=20
+Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
+Jef		|		http://moinejf.free.fr/
 
-> ---
-> Changes from V3:
->  - 2/4 instead of 3/5
->
-> Unchanged from V2
->
-> Changes from V1:
->  - Replaced '_' by '-' in node names or compatible strings
->  - Added missing @73 to the example
->
->  .../devicetree/bindings/ge/b850v3-lvds-dp.txt      | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
->
-> diff --git a/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
-> new file mode 100644
-> index 0000000..f05c3e9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ge/b850v3-lvds-dp.txt
-> @@ -0,0 +1,37 @@
-> +Driver for GE B850v3 LVDS/DP++ display bridge
-> +
-> +Required properties:
-> +  - compatible : should be "ge,b850v3-lvds-dp".
-> +  - reg : should contain the address used to ack the interrupts.
-> +  - interrupt-parent : phandle of the interrupt controller that services
-> +    interrupts to the device
-> +  - interrupts : one interrupt should be described here, as in
-> +    <0 IRQ_TYPE_LEVEL_HIGH>.
-> +  - edid-reg : should contain the address used to read edid information
-> +  - port : should describe the video signal connection between the host
-> +    and the bridge.
-> +
-> +Example:
-> +
-> +&mux2_i2c2 {
-> +	status = "okay";
-> +	clock-frequency = <100000>;
-> +
-> +	b850v3-lvds-dp-bridge@73  {
-> +		compatible = "ge,b850v3-lvds-dp";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		reg = <0x73>;
-> +		interrupt-parent = <&gpio2>;
-> +		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +		edid-reg = <0x72>;
-> +
-> +		port {
-> +			b850v3_dp_bridge_in: endpoint {
-> +				remote-endpoint = <&lvds0_out>;
-> +			};
-> +		};
-> +	};
-> +};
->
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
