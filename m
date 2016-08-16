@@ -1,166 +1,406 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH v2 2/2] pinctrl: sunxi: Add A64 R_PIO controller support
-Date: Tue, 16 Aug 2016 18:57:21 +0800
-Message-ID: <68331471345041@web16m.yandex.ru>
-References: <20160816050709.7412-1-icenowy@aosc.xyz>
- <20160816050709.7412-2-icenowy@aosc.xyz>
- <CAGb2v64dP+0WKBdX+mNxjgb1PPH9N0rA+DCia+VM2eNdTZbiog@mail.gmail.com>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [PATCH v2] regulator: axp20x: support AXP803/AXP813 variants
+Date: Tue, 16 Aug 2016 19:30:17 +0800
+Message-ID: <248521471347017@web1g.yandex.ru>
+References: <E1bZY0w-0004lM-0a@bombadil.infradead.org>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGb2v64dP+0WKBdX+mNxjgb1PPH9N0rA+DCia+VM2eNdTZbiog@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Jens Kuske <jenskuske@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Krzysztof Adamski <k@japko.eu>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBTHSZO6QKGQEZMEKWNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <E1bZY0w-0004lM-0a-PfSpb0PWhxZc2C7mugBRk2EX/6BAtgUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgoxNi4wOC4yMDE2LCAxNzoxMywgIkNoZW4tWXUgVHNhaSIgPHdlbnNAY3NpZS5vcmc+Ogo+
-IE9uIFR1ZSwgQXVnIDE2LCAyMDE2IGF0IDE6MDcgUE0sIEljZW5vd3kgWmhlbmcgPGljZW5vd3lA
-YW9zYy54eXo+IHdyb3RlOgo+PiDCoFRoZSBBNjQgaGFzIGEgUl9QSU8gcGluIGNvbnRyb2xsZXIs
-IHNpbWlsYXIgdG8gdGhlIG9uZSBmb3VuZCBvbiB0aGUgSDMgU29DLgo+PiDCoEFkZCBzdXBwb3J0
-IGZvciB0aGUgcGlucyBjb250cm9sbGVkIGJ5IHRoZSBSX1BJTyBjb250cm9sbGVyLgo+Pgo+PiDC
-oFNpZ25lZC1vZmYtYnk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy54eXo+Cj4+IMKgLS0t
-Cj4+IMKgQ2hhbmdlcyBpbiB2MjoKPj4gwqAtIENoYW5nZWQgdGhlIG5hbWUgb2YgSTJDIGZ1bmN0
-aW9ucyBmcm9tICJzX3R3aSIgdG8gInNfaTJjIgo+PiDCoC0gUmVhcnJhbmdlZCB0aGUgc2VxdWVu
-Y2Ugb2YgI2luY2x1ZGUKPj4gwqAtIENoYW5nZWQgdGhlIGRyaXZlciBpbmZvIHBhcnQgZnJvbSBt
-b2R1bGUgdG8gYSBidWlsdGluIGRyaXZlcgo+Pgo+PiDCoMKgZHJpdmVycy9waW5jdHJsL3N1bnhp
-L0tjb25maWcgfCA1ICsKPj4gwqDCoGRyaXZlcnMvcGluY3RybC9zdW54aS9NYWtlZmlsZSB8IDEg
-Kwo+PiDCoMKgZHJpdmVycy9waW5jdHJsL3N1bnhpL3BpbmN0cmwtc3VuNTBpLWE2NC1yLmMgfCAx
-NDUgKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+IMKgwqAzIGZpbGVzIGNoYW5nZWQsIDE1
-MSBpbnNlcnRpb25zKCspCj4+IMKgwqBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9waW5jdHJs
-L3N1bnhpL3BpbmN0cmwtc3VuNTBpLWE2NC1yLmMKPj4KPj4gwqBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9waW5jdHJsL3N1bnhpL0tjb25maWcgYi9kcml2ZXJzL3BpbmN0cmwvc3VueGkvS2NvbmZpZwo+
-PiDCoGluZGV4IGFhZjA3NWIuLmM0YjQ3NmYgMTAwNjQ0Cj4+IMKgLS0tIGEvZHJpdmVycy9waW5j
-dHJsL3N1bnhpL0tjb25maWcKPj4gwqArKysgYi9kcml2ZXJzL3BpbmN0cmwvc3VueGkvS2NvbmZp
-Zwo+PiDCoEBAIC03Miw0ICs3Miw5IEBAIGNvbmZpZyBQSU5DVFJMX1NVTjUwSV9BNjQKPj4gwqDC
-oMKgwqDCoMKgwqDCoMKgYm9vbAo+PiDCoMKgwqDCoMKgwqDCoMKgwqBzZWxlY3QgUElOQ1RSTF9T
-VU5YSQo+Pgo+PiDCoCtjb25maWcgUElOQ1RSTF9TVU41MElfQTY0X1IKPj4gwqArIGJvb2wKPj4g
-wqArIGRlcGVuZHMgb24gUkVTRVRfQ09OVFJPTExFUgo+PiDCoCsgc2VsZWN0IFBJTkNUUkxfU1VO
-WEkKPj4gwqArCj4+IMKgwqBlbmRpZgo+PiDCoGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwv
-c3VueGkvTWFrZWZpbGUgYi9kcml2ZXJzL3BpbmN0cmwvc3VueGkvTWFrZWZpbGUKPj4gwqBpbmRl
-eCAyZDhiNjRlLi5kNmVhYmRkIDEwMDY0NAo+PiDCoC0tLSBhL2RyaXZlcnMvcGluY3RybC9zdW54
-aS9NYWtlZmlsZQo+PiDCoCsrKyBiL2RyaXZlcnMvcGluY3RybC9zdW54aS9NYWtlZmlsZQo+PiDC
-oEBAIC0xMyw2ICsxMyw3IEBAIG9iai0kKENPTkZJR19QSU5DVFJMX1NVTjhJX0EyMykgKz0gcGlu
-Y3RybC1zdW44aS1hMjMubwo+PiDCoMKgb2JqLSQoQ09ORklHX1BJTkNUUkxfU1VOOElfQTIzX1Ip
-ICs9IHBpbmN0cmwtc3VuOGktYTIzLXIubwo+PiDCoMKgb2JqLSQoQ09ORklHX1BJTkNUUkxfU1VO
-OElfQTMzKSArPSBwaW5jdHJsLXN1bjhpLWEzMy5vCj4+IMKgwqBvYmotJChDT05GSUdfUElOQ1RS
-TF9TVU41MElfQTY0KSArPSBwaW5jdHJsLXN1bjUwaS1hNjQubwo+PiDCoCtvYmotJChDT05GSUdf
-UElOQ1RSTF9TVU41MElfQTY0X1IpICs9IHBpbmN0cmwtc3VuNTBpLWE2NC1yLm8KPj4gwqDCoG9i
-ai0kKENPTkZJR19QSU5DVFJMX1NVTjhJX0E4M1QpICs9IHBpbmN0cmwtc3VuOGktYTgzdC5vCj4+
-IMKgwqBvYmotJChDT05GSUdfUElOQ1RSTF9TVU44SV9IMykgKz0gcGluY3RybC1zdW44aS1oMy5v
-Cj4+IMKgwqBvYmotJChDT05GSUdfUElOQ1RSTF9TVU44SV9IM19SKSArPSBwaW5jdHJsLXN1bjhp
-LWgzLXIubwo+PiDCoGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvc3VueGkvcGluY3RybC1z
-dW41MGktYTY0LXIuYyBiL2RyaXZlcnMvcGluY3RybC9zdW54aS9waW5jdHJsLXN1bjUwaS1hNjQt
-ci5jCj4+IMKgbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gwqBpbmRleCAwMDAwMDAwLi40NDBjZmU5
-Cj4+IMKgLS0tIC9kZXYvbnVsbAo+PiDCoCsrKyBiL2RyaXZlcnMvcGluY3RybC9zdW54aS9waW5j
-dHJsLXN1bjUwaS1hNjQtci5jCj4+IMKgQEAgLTAsMCArMSwxNDUgQEAKPj4gwqArLyoKPj4gwqAr
-ICogQWxsd2lubmVyIEE2NCBTb0NzIHNwZWNpYWwgcGlucyBwaW5jdHJsIGRyaXZlci4KPj4gwqAr
-ICoKPj4gwqArICogQmFzZWQgb24gcGluY3RybC1zdW44aS1hMjMtci5jCj4+IMKgKyAqCj4+IMKg
-KyAqIENvcHlyaWdodCAoQykgMjAxNiBJY2Vub3d5IFpoZW5nCj4+IMKgKyAqIEljZW5vd3kgWmhl
-bmcgPGljZW5vd3lAYW9zYy54eXo+Cj4+IMKgKyAqCj4+IMKgKyAqIENvcHlyaWdodCAoQykgMjAx
-NCBDaGVuLVl1IFRzYWkKPj4gwqArICogQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPgo+PiDC
-oCsgKgo+PiDCoCsgKiBDb3B5cmlnaHQgKEMpIDIwMTQgQm9yaXMgQnJlemlsbG9uCj4+IMKgKyAq
-IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGZyZWUtZWxlY3Ryb25zLmNvbT4KPj4g
-wqArICoKPj4gwqArICogQ29weXJpZ2h0IChDKSAyMDE0IE1heGltZSBSaXBhcmQKPj4gwqArICog
-TWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+Cj4+IMKgKyAq
-Cj4+IMKgKyAqIFRoaXMgZmlsZSBpcyBsaWNlbnNlZCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdO
-VSBHZW5lcmFsIFB1YmxpYwo+PiDCoCsgKiBMaWNlbnNlIHZlcnNpb24gMi4gVGhpcyBwcm9ncmFt
-IGlzIGxpY2Vuc2VkICJhcyBpcyIgd2l0aG91dCBhbnkKPj4gwqArICogd2FycmFudHkgb2YgYW55
-IGtpbmQsIHdoZXRoZXIgZXhwcmVzcyBvciBpbXBsaWVkLgo+PiDCoCsgKi8KPj4gwqArCj4+IMKg
-KyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPgo+IFlvdSBjYW4gZHJvcCB0aGlzIG9uZS4KPgo+
-PiDCoCsjaW5jbHVkZSA8bGludXgvb2YuaD4KPj4gwqArI2luY2x1ZGUgPGxpbnV4L29mX2Rldmlj
-ZS5oPgo+PiDCoCsjaW5jbHVkZSA8bGludXgvcGluY3RybC9waW5jdHJsLmg+Cj4+IMKgKyNpbmNs
-dWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KPj4gwqArI2luY2x1ZGUgPGxpbnV4L3Jlc2V0
-Lmg+Cj4+IMKgKwo+PiDCoCsjaW5jbHVkZSAicGluY3RybC1zdW54aS5oIgo+PiDCoCsKPj4gwqAr
-c3RhdGljIGNvbnN0IHN0cnVjdCBzdW54aV9kZXNjX3BpbiBzdW41MGlfYTY0X3JfcGluc1tdID0g
-ewo+PiDCoCsgU1VOWElfUElOKFNVTlhJX1BJTkNUUkxfUElOKEwsIDApLAo+PiDCoCsgU1VOWElf
-RlVOQ1RJT04oMHgwLCAiZ3Bpb19pbiIpLAo+PiDCoCsgU1VOWElfRlVOQ1RJT04oMHgxLCAiZ3Bp
-b19vdXQiKSwKPj4gwqArIFNVTlhJX0ZVTkNUSU9OKDB4MiwgInNfcnNiIiksIC8qIFNDSyAqLwo+
-PiDCoCsgU1VOWElfRlVOQ1RJT04oMHgzLCAic19pMmMiKSwgLyogU0NLICovCj4+IMKgKyBTVU5Y
-SV9GVU5DVElPTl9JUlFfQkFOSygweDYsIDAsIDApKSwgLyogUExfRUlOVDAgKi8KPj4gwqArIFNV
-TlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihMLCAxKSwKPj4gwqArIFNVTlhJX0ZVTkNUSU9OKDB4
-MCwgImdwaW9faW4iKSwKPj4gwqArIFNVTlhJX0ZVTkNUSU9OKDB4MSwgImdwaW9fb3V0IiksCj4+
-IMKgKyBTVU5YSV9GVU5DVElPTigweDIsICJzX3JzYiIpLCAvKiBTREEgKi8KPj4gwqArIFNVTlhJ
-X0ZVTkNUSU9OKDB4MywgInNfaTJjIiksIC8qIFNEQSAqLwo+PiDCoCsgU1VOWElfRlVOQ1RJT05f
-SVJRX0JBTksoMHg2LCAwLCAxKSksIC8qIFBMX0VJTlQxICovCj4+IMKgKyBTVU5YSV9QSU4oU1VO
-WElfUElOQ1RSTF9QSU4oTCwgMiksCj4+IMKgKyBTVU5YSV9GVU5DVElPTigweDAsICJncGlvX2lu
-IiksCj4+IMKgKyBTVU5YSV9GVU5DVElPTigweDEsICJncGlvX291dCIpLAo+PiDCoCsgU1VOWElf
-RlVOQ1RJT04oMHgyLCAic191YXJ0IiksIC8qIFRYICovCj4+IMKgKyBTVU5YSV9GVU5DVElPTl9J
-UlFfQkFOSygweDYsIDAsIDIpKSwgLyogUExfRUlOVDIgKi8KPj4gwqArIFNVTlhJX1BJTihTVU5Y
-SV9QSU5DVFJMX1BJTihMLCAzKSwKPj4gwqArIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9faW4i
-KSwKPj4gwqArIFNVTlhJX0ZVTkNUSU9OKDB4MSwgImdwaW9fb3V0IiksCj4+IMKgKyBTVU5YSV9G
-VU5DVElPTigweDIsICJzX3VhcnQiKSwgLyogUlggKi8KPj4gwqArIFNVTlhJX0ZVTkNUSU9OX0lS
-UV9CQU5LKDB4NiwgMCwgMykpLCAvKiBQTF9FSU5UMyAqLwo+PiDCoCsgU1VOWElfUElOKFNVTlhJ
-X1BJTkNUUkxfUElOKEwsIDQpLAo+PiDCoCsgU1VOWElfRlVOQ1RJT04oMHgwLCAiZ3Bpb19pbiIp
-LAo+PiDCoCsgU1VOWElfRlVOQ1RJT04oMHgxLCAiZ3Bpb19vdXQiKSwKPj4gwqArIFNVTlhJX0ZV
-TkNUSU9OKDB4MywgInNfanRhZyIpLCAvKiBNUyAqLwo+PiDCoCsgU1VOWElfRlVOQ1RJT05fSVJR
-X0JBTksoMHg2LCAwLCA0KSksIC8qIFBMX0VJTlQ0ICovCj4+IMKgKyBTVU5YSV9QSU4oU1VOWElf
-UElOQ1RSTF9QSU4oTCwgNSksCj4+IMKgKyBTVU5YSV9GVU5DVElPTigweDAsICJncGlvX2luIiks
-Cj4+IMKgKyBTVU5YSV9GVU5DVElPTigweDEsICJncGlvX291dCIpLAo+PiDCoCsgU1VOWElfRlVO
-Q1RJT04oMHgzLCAic19qdGFnIiksIC8qIENLICovCj4+IMKgKyBTVU5YSV9GVU5DVElPTl9JUlFf
-QkFOSygweDYsIDAsIDUpKSwgLyogUExfRUlOVDUgKi8KPj4gwqArIFNVTlhJX1BJTihTVU5YSV9Q
-SU5DVFJMX1BJTihMLCA2KSwKPj4gwqArIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9faW4iKSwK
-Pj4gwqArIFNVTlhJX0ZVTkNUSU9OKDB4MSwgImdwaW9fb3V0IiksCj4+IMKgKyBTVU5YSV9GVU5D
-VElPTigweDMsICJzX2p0YWciKSwgLyogRE8gKi8KPj4gwqArIFNVTlhJX0ZVTkNUSU9OX0lSUV9C
-QU5LKDB4NiwgMCwgNikpLCAvKiBQTF9FSU5UNiAqLwo+PiDCoCsgU1VOWElfUElOKFNVTlhJX1BJ
-TkNUUkxfUElOKEwsIDcpLAo+PiDCoCsgU1VOWElfRlVOQ1RJT04oMHgwLCAiZ3Bpb19pbiIpLAo+
-PiDCoCsgU1VOWElfRlVOQ1RJT04oMHgxLCAiZ3Bpb19vdXQiKSwKPj4gwqArIFNVTlhJX0ZVTkNU
-SU9OKDB4MywgInNfanRhZyIpLCAvKiBESSAqLwo+PiDCoCsgU1VOWElfRlVOQ1RJT05fSVJRX0JB
-TksoMHg2LCAwLCA3KSksIC8qIFBMX0VJTlQ3ICovCj4+IMKgKyBTVU5YSV9QSU4oU1VOWElfUElO
-Q1RSTF9QSU4oTCwgOCksCj4+IMKgKyBTVU5YSV9GVU5DVElPTigweDAsICJncGlvX2luIiksCj4+
-IMKgKyBTVU5YSV9GVU5DVElPTigweDEsICJncGlvX291dCIpLAo+PiDCoCsgU1VOWElfRlVOQ1RJ
-T04oMHgyLCAic19pMmMiKSwgLyogU0NLICovCj4+IMKgKyBTVU5YSV9GVU5DVElPTl9JUlFfQkFO
-SygweDYsIDAsIDgpKSwgLyogUExfRUlOVDggKi8KPj4gwqArIFNVTlhJX1BJTihTVU5YSV9QSU5D
-VFJMX1BJTihMLCA5KSwKPj4gwqArIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9faW4iKSwKPj4g
-wqArIFNVTlhJX0ZVTkNUSU9OKDB4MSwgImdwaW9fb3V0IiksCj4+IMKgKyBTVU5YSV9GVU5DVElP
-TigweDIsICJzX2kyYyIpLCAvKiBTREEgKi8KPj4gwqArIFNVTlhJX0ZVTkNUSU9OX0lSUV9CQU5L
-KDB4NiwgMCwgOSkpLCAvKiBQTF9FSU5UOSAqLwo+PiDCoCsgU1VOWElfUElOKFNVTlhJX1BJTkNU
-UkxfUElOKEwsIDEwKSwKPj4gwqArIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9faW4iKSwKPj4g
-wqArIFNVTlhJX0ZVTkNUSU9OKDB4MSwgImdwaW9fb3V0IiksCj4+IMKgKyBTVU5YSV9GVU5DVElP
-TigweDIsICJzX3B3bSIpLAo+PiDCoCsgU1VOWElfRlVOQ1RJT05fSVJRX0JBTksoMHg2LCAwLCAx
-MCkpLCAvKiBQTF9FSU5UMTAgKi8KPj4gwqArIFNVTlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihM
-LCAxMSksCj4+IMKgKyBTVU5YSV9GVU5DVElPTigweDAsICJncGlvX2luIiksCj4+IMKgKyBTVU5Y
-SV9GVU5DVElPTigweDEsICJncGlvX291dCIpLAo+PiDCoCsgU1VOWElfRlVOQ1RJT04oMHgyLCAi
-c19jaXJfcngiKSwKPj4gwqArIFNVTlhJX0ZVTkNUSU9OX0lSUV9CQU5LKDB4NiwgMCwgMTEpKSwg
-LyogUExfRUlOVDExICovCj4+IMKgKyBTVU5YSV9QSU4oU1VOWElfUElOQ1RSTF9QSU4oTCwgMTIp
-LAo+PiDCoCsgU1VOWElfRlVOQ1RJT04oMHgwLCAiZ3Bpb19pbiIpLAo+PiDCoCsgU1VOWElfRlVO
-Q1RJT04oMHgxLCAiZ3Bpb19vdXQiKSwKPj4gwqArIFNVTlhJX0ZVTkNUSU9OX0lSUV9CQU5LKDB4
-NiwgMCwgMTIpKSwgLyogUExfRUlOVDEyICovCj4+IMKgK307Cj4+IMKgKwo+PiDCoCtzdGF0aWMg
-Y29uc3Qgc3RydWN0IHN1bnhpX3BpbmN0cmxfZGVzYyBzdW41MGlfYTY0X3JfcGluY3RybF9kYXRh
-ID0gewo+PiDCoCsgLnBpbnMgPSBzdW41MGlfYTY0X3JfcGlucywKPj4gwqArIC5ucGlucyA9IEFS
-UkFZX1NJWkUoc3VuNTBpX2E2NF9yX3BpbnMpLAo+PiDCoCsgLnBpbl9iYXNlID0gUExfQkFTRSwK
-Pj4gwqArIC5pcnFfYmFua3MgPSAxLAo+PiDCoCt9Owo+PiDCoCsKPj4gwqArc3RhdGljIGludCBz
-dW41MGlfYTY0X3JfcGluY3RybF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+
-PiDCoCt7Cj4+IMKgKyBzdHJ1Y3QgcmVzZXRfY29udHJvbCAqcnN0YzsKPj4gwqArIGludCByZXQ7
-Cj4+IMKgKwo+PiDCoCsgcnN0YyA9IGRldm1fcmVzZXRfY29udHJvbF9nZXQoJnBkZXYtPmRldiwg
-TlVMTCk7Cj4+IMKgKyBpZiAoSVNfRVJSKHJzdGMpKSB7Cj4+IMKgKyBkZXZfZXJyKCZwZGV2LT5k
-ZXYsICJSZXNldCBjb250cm9sbGVyIG1pc3NpbmdcbiIpOwo+PiDCoCsgcmV0dXJuIFBUUl9FUlIo
-cnN0Yyk7Cj4+IMKgKyB9Cj4+IMKgKwo+PiDCoCsgcmV0ID0gcmVzZXRfY29udHJvbF9kZWFzc2Vy
-dChyc3RjKTsKPj4gwqArIGlmIChyZXQpCj4+IMKgKyByZXR1cm4gcmV0Owo+PiDCoCsKPj4gwqAr
-IHJldCA9IHN1bnhpX3BpbmN0cmxfaW5pdChwZGV2LAo+PiDCoCsgJnN1bjUwaV9hNjRfcl9waW5j
-dHJsX2RhdGEpOwo+PiDCoCsKPj4gwqArIGlmIChyZXQpCj4+IMKgKyByZXNldF9jb250cm9sX2Fz
-c2VydChyc3RjKTsKPj4gwqArCj4+IMKgKyByZXR1cm4gcmV0Owo+PiDCoCt9Cj4+IMKgKwo+PiDC
-oCtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBzdW41MGlfYTY0X3JfcGluY3RybF9t
-YXRjaFtdID0gewo+PiDCoCsgeyAuY29tcGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuNTBpLWE2NC1y
-LXBpbmN0cmwiLCB9LAo+PiDCoCsge30KPj4gwqArfTsKPj4gwqArTU9EVUxFX0RFVklDRV9UQUJM
-RShvZiwgc3VuNTBpX2E2NF9yX3BpbmN0cmxfbWF0Y2gpOwo+Cj4gTm9yIGRvIHlvdSBuZWVkIE1P
-RFVMRV9ERVZJQ0VfVEFCTEUuCk9oIEkgZm9yZ290IGl0Li4uCj4KPiBPdGhlcndpc2UgdGhpcyBs
-b29rcyBnb29kLgo+Cj4gQ2hlbll1Cj4KPj4gwqArCj4+IMKgK3N0YXRpYyBzdHJ1Y3QgcGxhdGZv
-cm1fZHJpdmVyIHN1bjUwaV9hNjRfcl9waW5jdHJsX2RyaXZlciA9IHsKPj4gwqArIC5wcm9iZSA9
-IHN1bjUwaV9hNjRfcl9waW5jdHJsX3Byb2JlLAo+PiDCoCsgLmRyaXZlciA9IHsKPj4gwqArIC5u
-YW1lID0gInN1bjUwaS1hNjQtci1waW5jdHJsIiwKPj4gwqArIC5vZl9tYXRjaF90YWJsZSA9IHN1
-bjUwaV9hNjRfcl9waW5jdHJsX21hdGNoLAo+PiDCoCsgfSwKPj4gwqArfTsKPj4gwqArYnVpbHRp
-bl9wbGF0Zm9ybV9kcml2ZXIoc3VuNTBpX2E2NF9yX3BpbmN0cmxfZHJpdmVyKTsKPj4gwqAtLQo+
-PiDCoDIuOS4yCgpUaGFua3MsCkljZW5vd3kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+
+16.08.2016, 14:44, "Jean-Francois Moine" <moinejf-GANU6spQydw@public.gmane.org>:
+> The X-Powers AXP803 and AXP813 PMICs are close to the AXP809 with some
+> more outputs.
+AXP803 and AXP813 is quite different.
+AXP803 have 6 DCDCs and 16 LDOs&Switch.
+AXP813 have 7 DCDCs and 15 LDOs&Switch.
+and AXP813 have an audio codec.
+
+AXP803 cannot be handled without extra code.
+
+(I'm trying to get RSB working in my semi-mainline A64 kernel)
+>
+> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+> ---
+> The AXP813 has been tested in a Banana PI M3 board (needed for WiFi/BT).
+> v2:
+> - fix lack of support of dcdc frequency
+> - notice that the AXP803 is also handled
+> - send the patch to the DT maintainers
+> ---
+> =C2=A0Documentation/devicetree/bindings/mfd/axp20x.txt | 32 ++++++++-
+> =C2=A0drivers/mfd/axp20x-rsb.c | 1 +
+> =C2=A0drivers/mfd/axp20x.c | 3 +
+> =C2=A0drivers/regulator/axp20x-regulator.c | 83 +++++++++++++++++++++++-
+> =C2=A0include/linux/mfd/axp20x.h | 38 +++++++++++
+> =C2=A05 files changed, 154 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documenta=
+tion/devicetree/bindings/mfd/axp20x.txt
+> index 585a955..856a9ff 100644
+> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> @@ -7,10 +7,12 @@ axp209 (X-Powers)
+> =C2=A0axp221 (X-Powers)
+> =C2=A0axp223 (X-Powers)
+> =C2=A0axp809 (X-Powers)
+> +axp813 (X-Powers)
+>
+> =C2=A0Required properties:
+> =C2=A0- compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp20=
+9",
+> - "x-powers,axp221", "x-powers,axp223", "x-powers,axp809"
+> + "x-powers,axp221", "x-powers,axp223", "x-powers,axp809",
+> + "x-powers,axp813"
+> =C2=A0- reg: The I2C slave address or RSB hardware address for the AXP ch=
+ip
+> =C2=A0- interrupt-parent: The parent interrupt controller
+> =C2=A0- interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ =
+pin
+> @@ -110,6 +112,34 @@ LDO_IO1 : LDO : ips-supply : GPIO 1
+> =C2=A0RTC_LDO : LDO : ips-supply : always on
+> =C2=A0SW : On/Off Switch : swin-supply
+>
+> +AXP803/AXP813 regulators, type, and corresponding input supply names:
+> +
+> +Regulator Type Supply Name Notes
+> +--------- ---- ----------- -----
+> +DCDC1 : DC-DC buck : vin1-supply
+> +DCDC2 : DC-DC buck : vin2-supply
+> +DCDC3 : DC-DC buck : vin3-supply
+> +DCDC4 : DC-DC buck : vin4-supply
+> +DCDC5 : DC-DC buck : vin5-supply
+> +DCDC6 : DC-DC buck : vin6-supply
+> +DCDC7 : DC-DC buck : vin7-supply : AXP813 only
+> +RTC_LDO : LDO : ips-supply : always on
+> +ALDO1 : LDO : aldoin-supply : shared supply
+> +ALDO2 : LDO : aldoin-supply : shared supply
+> +ALDO3 : LDO : aldoin-supply : shared supply
+> +DLDO1 : LDO : dldoin-supply : shared supply
+> +DLDO2 : LDO : dldoin-supply : shared supply
+> +DLDO3 : LDO : dldoin-supply : shared supply
+> +DLDO4 : LDO : dldoin-supply : shared supply
+> +ELDO1 : LDO : eldoin-supply : shared supply
+> +ELDO2 : LDO : eldoin-supply : shared supply
+> +ELDO3 : LDO : eldoin-supply : shared supply
+> +FLDO1 : LDO : fldoin-supply : shared supply
+> +FLDO2 : LDO : fldoin-supply : shared supply
+> +LDO_IO0 : LDO : ips-supply : GPIO 0
+> +LDO_IO1 : LDO : ips-supply : GPIO 1
+> +DC1SW : On/Off Switch : : DCDC1 secondary output
+> +
+> =C2=A0Example:
+>
+> =C2=A0axp209: pmic@34 {
+> diff --git a/drivers/mfd/axp20x-rsb.c b/drivers/mfd/axp20x-rsb.c
+> index a407527..e34643b 100644
+> --- a/drivers/mfd/axp20x-rsb.c
+> +++ b/drivers/mfd/axp20x-rsb.c
+> @@ -62,6 +62,7 @@ static int axp20x_rsb_remove(struct sunxi_rsb_device *r=
+dev)
+> =C2=A0static const struct of_device_id axp20x_rsb_of_match[] =3D {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "=
+x-powers,axp223", .data =3D (void *)AXP223_ID },
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "=
+x-powers,axp809", .data =3D (void *)AXP809_ID },
+> + { .compatible =3D "x-powers,axp813", .data =3D (void *)AXP813_ID },
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0{ },
+> =C2=A0};
+> =C2=A0MODULE_DEVICE_TABLE(of, axp20x_rsb_of_match);
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index fd80b09..e62d56f 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -39,6 +39,7 @@ static const char * const axp20x_model_names[] =3D {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"AXP223",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"AXP288",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"AXP809",
+> + "AXP813",
+> =C2=A0};
+>
+> =C2=A0static const struct regmap_range axp152_writeable_ranges[] =3D {
+> @@ -494,6 +495,7 @@ static const struct regmap_irq_chip axp288_regmap_irq=
+_chip =3D {
+>
+> =C2=A0};
+>
+> +/* common 803/809/813 */
+> =C2=A0static const struct regmap_irq_chip axp809_regmap_irq_chip =3D {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.name =3D "axp809",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.status_base =3D AX=
+P20X_IRQ1_STATE,
+> @@ -733,6 +735,7 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0axp20x->regmap_irq_chip =3D &axp288_regmap_ir=
+q_chip;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0break;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case AXP809_ID:
+> + case AXP813_ID:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0axp20x->nr_cells =3D ARRAY_SIZE(axp809_cells)=
+;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0axp20x->cells =3D axp809_cells;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0axp20x->regmap_cfg =3D &axp22x_regmap_config;
+> diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp=
+20x-regulator.c
+> index 6d9ac76..3fbe2c1 100644
+> --- a/drivers/regulator/axp20x-regulator.c
+> +++ b/drivers/regulator/axp20x-regulator.c
+> @@ -299,6 +299,78 @@ static const struct regulator_desc axp809_regulators=
+[] =3D {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0AXP_DESC_SW(AXP809,=
+ SW, "sw", "swin", AXP22X_PWR_OUT_CTRL2, BIT(6)),
+> =C2=A0};
+>
+> +static const struct regulator_linear_range axp813_dcdc2_4_ranges[] =3D {
+> + REGULATOR_LINEAR_RANGE(500000, 0, 70, 10000),
+> + REGULATOR_LINEAR_RANGE(1220000, 71, 75, 20000),
+> +};
+> +
+> +static const struct regulator_linear_range axp813_dcdc5_ranges[] =3D {
+> + REGULATOR_LINEAR_RANGE(800000, 0, 32, 10000),
+> + REGULATOR_LINEAR_RANGE(1140000, 33, 68, 20000),
+> +};
+> +
+> +static const struct regulator_linear_range axp813_dcdc6_7_ranges[] =3D {
+> + REGULATOR_LINEAR_RANGE(600000, 0, 50, 10000),
+> + REGULATOR_LINEAR_RANGE(1120000, 51, 71, 20000),
+> +};
+> +
+> +static const struct regulator_desc axp813_regulators[] =3D {
+> + AXP_DESC(AXP813, DLDO1, "dldo1", "dldoin", 700, 3300, 100,
+> + AXP22X_DLDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(3)),
+> + AXP_DESC(AXP813, DLDO2, "dldo2", "dldoin", 700, 4200, 100,
+> + AXP22X_DLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(4)),
+> + AXP_DESC(AXP813, DLDO3, "dldo3", "dldoin", 700, 3300, 100,
+> + AXP22X_DLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(5)),
+> + AXP_DESC(AXP813, DLDO4, "dldo4", "dldoin", 700, 3300, 100,
+> + AXP22X_DLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(6)),
+> + AXP_DESC(AXP813, ELDO1, "eldo1", "eldoin", 700, 1900, 50,
+> + AXP22X_ELDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(0)),
+> + AXP_DESC(AXP813, ELDO2, "eldo2", "eldoin", 700, 1900, 50,
+> + AXP22X_ELDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(1)),
+> + AXP_DESC(AXP813, ELDO3, "eldo3", "eldoin", 700, 1900, 50,
+> + AXP22X_ELDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(2)),
+> + AXP_DESC(AXP813, FLDO1, "fldo1", "fldoin", 700, 1450, 50,
+> + AXP813_FLDO1_V_OUT, 0x0f, AXP22X_PWR_OUT_CTRL3, BIT(2)),
+> + AXP_DESC(AXP813, FLDO2, "fldo2", "fldoin", 700, 1450, 50,
+> + AXP813_FLDO2_V_OUT, 0x0f, AXP22X_PWR_OUT_CTRL3, BIT(3)),
+> + AXP_DESC(AXP813, DCDC1, "dcdc1", "vin1", 1600, 3400, 100,
+> + AXP813_DCDC1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL1, BIT(0)),
+> + AXP_DESC_RANGES(AXP813, DCDC2, "dcdc2", "vin2", axp813_dcdc2_4_ranges,
+> + 76, AXP813_DCDC2_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
+> + BIT(1)),
+> + AXP_DESC_RANGES(AXP813, DCDC3, "dcdc3", "vin3", axp813_dcdc2_4_ranges,
+> + 76, AXP813_DCDC3_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
+> + BIT(2)),
+> + AXP_DESC_RANGES(AXP813, DCDC4, "dcdc4", "vin4", axp813_dcdc2_4_ranges,
+> + 76, AXP813_DCDC4_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
+> + BIT(3)),
+> + AXP_DESC_RANGES(AXP813, DCDC5, "dcdc5", "vin5", axp813_dcdc5_ranges,
+> + 69, AXP813_DCDC5_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
+> + BIT(4)),
+> + AXP_DESC_RANGES(AXP813, DCDC6, "dcdc6", "vin6", axp813_dcdc6_7_ranges,
+> + 72, AXP813_DCDC6_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
+> + BIT(5)),
+> + AXP_DESC_RANGES(AXP813, DCDC7, "dcdc7", "vin7", axp813_dcdc6_7_ranges,
+> + 72, AXP813_DCDC7_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
+> + BIT(6)),
+> + AXP_DESC_FIXED(AXP813, RTC_LDO, "rtc_ldo", "ips", 3000),
+> + AXP_DESC(AXP813, ALDO1, "aldo1", "aldoin", 700, 3300, 100,
+> + AXP22X_ALDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(5)),
+> + AXP_DESC(AXP813, ALDO2, "aldo2", "aldoin", 700, 3300, 100,
+> + AXP22X_ALDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(6)),
+> + AXP_DESC(AXP813, ALDO3, "aldo3", "aldoin", 700, 3300, 100,
+> + AXP22X_ALDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(7)),
+> + AXP_DESC_IO(AXP813, LDO_IO0, "ldo_io0", "ips", 700, 3300, 100,
+> + AXP22X_LDO_IO0_V_OUT, 0x1f, AXP20X_GPIO0_CTRL, 0x07,
+> + AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
+> + AXP_DESC_IO(AXP813, LDO_IO1, "ldo_io1", "ips", 700, 3300, 100,
+> + AXP22X_LDO_IO1_V_OUT, 0x1f, AXP20X_GPIO1_CTRL, 0x07,
+> + AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
+> + /* secondary switchable output of DCDC1 */
+> + AXP_DESC_SW(AXP813, DC1SW, "dc1sw", NULL, AXP22X_PWR_OUT_CTRL2,
+> + BIT(7)),
+> +};
+> +
+> =C2=A0static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 d=
+cdcfreq)
+> =C2=A0{
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct axp20x_dev *=
+axp20x =3D dev_get_drvdata(pdev->dev.parent);
+> @@ -315,6 +387,7 @@ static int axp20x_set_dcdc_freq(struct platform_devic=
+e *pdev, u32 dcdcfreq)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case AXP221_ID:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case AXP223_ID:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case AXP809_ID:
+> + case AXP813_ID:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0min =3D 1800;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0max =3D 4050;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0def =3D 3000;
+> @@ -444,6 +517,10 @@ static int axp20x_regulator_probe(struct platform_de=
+vice *pdev)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0regulators =3D axp809_regulators;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0nregulators =3D AXP809_REG_ID_MAX;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0break;
+> + case AXP813_ID:
+> + regulators =3D axp813_regulators;
+> + nregulators =3D AXP813_REG_ID_MAX;
+> + break;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0default:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_err(&pdev->dev, "Unsupported AXP variant:=
+ %ld\n",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0axp20x->variant);
+> @@ -467,7 +544,8 @@ static int axp20x_regulator_probe(struct platform_dev=
+ice *pdev)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0* name.
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*/
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if ((regulators =3D=3D axp22x_regulators && i=
+ =3D=3D AXP22X_DC1SW) ||
+> - (regulators =3D=3D axp809_regulators && i =3D=3D AXP809_DC1SW)) {
+> + (regulators =3D=3D axp809_regulators && i =3D=3D AXP809_DC1SW) ||
+> + (regulators =3D=3D axp813_regulators && i =3D=3D AXP813_DC1SW)) {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0new_desc =3D devm_kzalloc(&pdev->dev, sizeof(*desc),
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0GFP=
+_KERNEL);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0*new_desc =3D regulators[i];
+> @@ -505,7 +583,8 @@ static int axp20x_regulator_probe(struct platform_dev=
+ice *pdev)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0* Save AXP22X DCDC1 / DCDC5 regulator n=
+ames for later.
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*/
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if ((regulators =3D=3D axp22x_regulators && i=
+ =3D=3D AXP22X_DCDC1) ||
+> - (regulators =3D=3D axp809_regulators && i =3D=3D AXP809_DCDC1))
+> + (regulators =3D=3D axp809_regulators && i =3D=3D AXP809_DCDC1) ||
+> + (regulators =3D=3D axp813_regulators && i =3D=3D AXP813_DCDC1))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0of_property_read_string(rdev->dev.of_node,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"re=
+gulator-name",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0&dc=
+dc1_name);
+> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+> index 0be4982..637fb7c 100644
+> --- a/include/linux/mfd/axp20x.h
+> +++ b/include/linux/mfd/axp20x.h
+> @@ -21,6 +21,7 @@ enum {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0AXP223_ID,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0AXP288_ID,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0AXP809_ID,
+> + AXP813_ID,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0NR_AXP20X_VARIANTS,
+> =C2=A0};
+>
+> @@ -91,6 +92,16 @@ enum {
+> =C2=A0#define AXP22X_ALDO3_V_OUT 0x2a
+> =C2=A0#define AXP22X_CHRG_CTRL3 0x35
+>
+> +#define AXP813_FLDO1_V_OUT 0x1c
+> +#define AXP813_FLDO2_V_OUT 0x1d
+> +#define AXP813_DCDC1_V_OUT 0x20
+> +#define AXP813_DCDC2_V_OUT 0x21
+> +#define AXP813_DCDC3_V_OUT 0x22
+> +#define AXP813_DCDC4_V_OUT 0x23
+> +#define AXP813_DCDC5_V_OUT 0x24
+> +#define AXP813_DCDC6_V_OUT 0x25
+> +#define AXP813_DCDC7_V_OUT 0x26
+> +
+> =C2=A0/* Interrupt */
+> =C2=A0#define AXP152_IRQ1_EN 0x40
+> =C2=A0#define AXP152_IRQ2_EN 0x41
+> @@ -288,6 +299,33 @@ enum {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0AXP809_REG_ID_MAX,
+> =C2=A0};
+>
+> +enum {
+> + AXP813_DCDC1 =3D 0,
+> + AXP813_DCDC2,
+> + AXP813_DCDC3,
+> + AXP813_DCDC4,
+> + AXP813_DCDC5,
+> + AXP813_DCDC6,
+> + AXP813_DCDC7,
+> + AXP813_RTC_LDO,
+> + AXP813_ALDO1,
+> + AXP813_ALDO2,
+> + AXP813_ALDO3,
+> + AXP813_DLDO1,
+> + AXP813_DLDO2,
+> + AXP813_DLDO3,
+> + AXP813_DLDO4,
+> + AXP813_ELDO1,
+> + AXP813_ELDO2,
+> + AXP813_ELDO3,
+> + AXP813_FLDO1,
+> + AXP813_FLDO2,
+> + AXP813_LDO_IO0,
+> + AXP813_LDO_IO1,
+> + AXP813_DC1SW,
+> + AXP813_REG_ID_MAX,
+> +};
+> +
+> =C2=A0/* IRQs */
+> =C2=A0enum {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0AXP152_IRQ_LDO0IN_C=
+ONNECT =3D 1,
+> --
+> 2.9.3
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
