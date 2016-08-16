@@ -1,60 +1,61 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt: cpufreq: brcm: New binding document for
- brcm-avs-cpufreq
-Date: Tue, 16 Aug 2016 08:16:39 -0500
-Message-ID: <20160816131639.GA938@rob-hp-laptop>
-References: <1471044331-2480-1-git-send-email-mmayer@broadcom.com>
- <1471044331-2480-2-git-send-email-mmayer@broadcom.com>
+Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
+Date: Tue, 16 Aug 2016 08:29:51 -0500
+Message-ID: <CAL_JsqL5xk3mH=h-m8nU8xTYbRjgMWt3p7BzYWj6vBUq4OpqMg@mail.gmail.com>
+References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
+ <20160804175541.GA2832@rob-hp-laptop> <57B220C0.3060608@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1471044331-2480-2-git-send-email-mmayer@broadcom.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Markus Mayer <mmayer@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Device Tree List <devicetree@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <57B220C0.3060608@codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, Shanker Donthineni <shankerd@codeaurora.org>, Vikram Sethi <vikrams@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Al Stone <al.stone@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 12, 2016 at 04:25:29PM -0700, Markus Mayer wrote:
-> Add the binding document for the new brcm-avs-cpufreq driver.
-> 
-> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
-> ---
->  .../bindings/cpufreq/brcm-avs-cpufreq.txt          | 84 ++++++++++++++++++++++
->  MAINTAINERS                                        |  7 ++
->  2 files changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/brcm-avs-cpufreq.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/brcm-avs-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/brcm-avs-cpufreq.txt
-> new file mode 100644
-> index 0000000..707ebe5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/brcm-avs-cpufreq.txt
-> @@ -0,0 +1,84 @@
-> +Broadcom AVS CPUfreq driver
-> +===========================
-> +
-> +This driver provides voltage and frequency scaling on Broadcom SoCs using
+On Mon, Aug 15, 2016 at 3:06 PM, Timur Tabi <timur@codeaurora.org> wrote:
+> + Rafael and Al, for ACPI help.
+>
+> Rob Herring wrote:
+>>>
+>>> >+Optional properties:
+>>> >+- phy-version : the version of the integrated emac phy, either 1 or 2.
+>
+>
+>> Sounds like 2 different h/w. The compatible property should distinguish
+>> this.
+>
+>
+> So I implemented this in v8 of my driver, but it is causing problems for
+> ACPI.
+>
+> In ACPI, the equivalent to a compatible string is the HID, which is QCOM8070
+> for the EMAC.  The problem is that it's very difficult, if not impossible,
+> to create new HIDs for different versions of the same device.
 
-Bindings describe h/w (or firmware interfaces) not drivers. CPUFreq is a 
-Linux term. Please re-word.
+Different versions are different devices IMO.
 
-> +the AVS firmware with DVFS support. The AVS firmware is running on its own
-> +co-processor. The driver supports both uniprocessor (UP) and symmetric
-> +multiprocessor (SMP) systems which share clock and voltage across all CPUs.
-> +
-> +Actual voltage and frequency scaling is done solely by the AVS firmware.
-> +This driver does not change frequency or voltage itself. It provides a
-> +standard CPUfreq interface to the rest of the kernel and to userland. It
-> +interfaces with the AVS firmware to effect the requested changes and to
-> +report back the current system status in a way that is expected by existing
-> +tools.
-> +
-> +This driver requires two DT nodes. One node (brcm,avs-cpu-data-mem)
-> +references the mailbox register used to communicate with the AVS CPU. The
-> +second node (brcm,avs-cpu-l2-intr) is required to trigger an interrupt on
-> +the AVS CPU. The interrupt tells the AVS CPU that it needs to process a
-> +command sent to it by this driver. Interrupting the AVS CPU is mandatory for
-> +commands to be processed.
+> The driver will primarily (if not exclusively) be used on ACPI platforms,
+> not DT.  In Qualcomm, DT is for mobile chips, and ACPI is for server.  To my
+> knowledge, there are no plans to use this driver on an actual DT-enabled
+> platform, but I want to support DT anyway.
+>
+> The other problem is that the "internal PHY" of the EMAC is technically a
+> separate device, and it's interchangeable.  Future versions of our chips
+> will use different internal PHYs, but the EMAC will stay the same.
 
-The mailbox and interrupt to the AVS CPU are only for DVFS? 
+How do you know? EMAC could just as easily change. It's Gigabit today,
+10G tomorrow.
+
+But if it is separate, then maybe you should model it as a separate
+device using the phy binding.
+
+> So I would like a solution that works on DT and ACPI.  I suppose I could use
+> compatible strings on DT, and a "phy-version" DSD (property) on ACPI.  If
+> that's acceptable to everyone, then I can do that.  It seems clunky to me.
+
+On one hand, why should I care about ACPI for defining DT bindings?
+OTOH, having a phy-version property alone would not be a big deal, but
+you still need distinct compatible strings regardless.
+
+Rob
