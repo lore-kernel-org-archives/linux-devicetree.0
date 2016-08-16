@@ -1,466 +1,307 @@
-Return-Path: <j-keerthy@ti.com>
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH v7 1/3] mfd: lp873x: Add lp873x PMIC support
-Date: Wed, 10 Aug 2016 15:48:09 +0530
-Message-ID: <1470824291-14902-2-git-send-email-j-keerthy@ti.com>
-In-Reply-To: <1470824291-14902-1-git-send-email-j-keerthy@ti.com>
-References: <1470824291-14902-1-git-send-email-j-keerthy@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org
-Cc: linux-omap@vger.kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, j-keerthy@ti.com
+Return-Path: <moinejf@free.fr>
+Message-Id: <57b2b4a6.0411620a.62e8c.9e93SMTPIN_ADDED_MISSING@mx.google.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Date: Tue, 16 Aug 2016 08:05:02 +0200
+Subject: [PATCH v2] regulator: axp20x: support AXP803/AXP813 variants
+To: Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-ID: <devicetree@vger.kernel.org>
 
-The LP873X chip is a power management IC for Portable Navigation Systems
-    and Tablet Computing devices. It contains the following components:
+The X-Powers AXP803 and AXP813 PMICs are close to the AXP809 with some
+more outputs.
 
-     - Regulators.
-     - Configurable General Purpose Output Signals(GPO).
-
-PMIC interacts with the main processor through i2c. PMIC has
-couple of LDOs(Linear Regulators), couple of BUCKs (Step-Down DC-DC
-Converter Cores) and GPOs(General Purpose Output Signals).
-
-Signed-off-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
 ---
-Changes in v7:
+The AXP813 has been tested in a Banana PI M3 board (needed for WiFi/BT).
+v2:
+- fix lack of support of dcdc frequency
+- notice that the AXP803 is also handled
+- send the patch to the DT maintainers
+---
+ Documentation/devicetree/bindings/mfd/axp20x.txt | 32 ++++++++-
+ drivers/mfd/axp20x-rsb.c                         |  1 +
+ drivers/mfd/axp20x.c                             |  3 +
+ drivers/regulator/axp20x-regulator.c             | 83 +++++++++++++++++++++++-
+ include/linux/mfd/axp20x.h                       | 38 +++++++++++
+ 5 files changed, 154 insertions(+), 3 deletions(-)
 
-  * Reverted the rebase on http://www.gossamer-threads.com/lists/linux/kernel/2457552.
-
-Changes in v6:
-
-  * Rebased on top of http://www.gossamer-threads.com/lists/linux/kernel/2457552.
-  * Hence added probe_new instead of probe and removed unused i2c_device_id.
-
-Changes in v4:
-
-  * Added Author.
-  * Added the mfd_cell for gpio.
-
-Changes in v3:
-
-  * Reordered the probe code.
-  * Fixed Typo in Kconfig description.
-  * Removed unused member from struct lp873x.
-
- drivers/mfd/Kconfig        |  14 +++
- drivers/mfd/Makefile       |   2 +
- drivers/mfd/lp873x.c       |  97 +++++++++++++++++
- include/linux/mfd/lp873x.h | 264 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 377 insertions(+)
- create mode 100644 drivers/mfd/lp873x.c
- create mode 100644 include/linux/mfd/lp873x.h
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 2d1fb64..45fe00a 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1224,6 +1224,20 @@ config MFD_TPS65217
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called tps65217.
+diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+index 585a955..856a9ff 100644
+--- a/Documentation/devicetree/bindings/mfd/axp20x.txt
++++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+@@ -7,10 +7,12 @@ axp209 (X-Powers)
+ axp221 (X-Powers)
+ axp223 (X-Powers)
+ axp809 (X-Powers)
++axp813 (X-Powers)
  
-+config MFD_TI_LP873X
-+	tristate "TI LP873X Power Management IC"
-+	depends on I2C
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	help
-+	  If you say yes here then you get support for the LP873X series of
-+	  Power Management Integrated Circuits(PMIC).
-+	  These include voltage regulators, Thermal protection, Configurable
-+	  General Purpose Outputs(GPO) that are used in portable devices.
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called lp873x.
-+
- config MFD_TPS65218
- 	tristate "TI TPS65218 Power Management chips"
- 	depends on I2C
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 2ba3ba3..42acbcd 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -22,6 +22,8 @@ obj-$(CONFIG_HTC_EGPIO)		+= htc-egpio.o
- obj-$(CONFIG_HTC_PASIC3)	+= htc-pasic3.o
- obj-$(CONFIG_HTC_I2CPLD)	+= htc-i2cpld.o
+ Required properties:
+ - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
+-	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp809"
++	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp809",
++	      "x-powers,axp813"
+ - reg: The I2C slave address or RSB hardware address for the AXP chip
+ - interrupt-parent: The parent interrupt controller
+ - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
+@@ -110,6 +112,34 @@ LDO_IO1		: LDO		: ips-supply		: GPIO 1
+ RTC_LDO		: LDO		: ips-supply		: always on
+ SW		: On/Off Switch : swin-supply
  
-+obj-$(CONFIG_MFD_TI_LP873X)	+= lp873x.o
++AXP803/AXP813 regulators, type, and corresponding input supply names:
 +
- obj-$(CONFIG_MFD_DAVINCI_VOICECODEC)	+= davinci_voicecodec.o
- obj-$(CONFIG_MFD_DM355EVM_MSP)	+= dm355evm_msp.o
- obj-$(CONFIG_MFD_TI_AM335X_TSCADC)	+= ti_am335x_tscadc.o
-diff --git a/drivers/mfd/lp873x.c b/drivers/mfd/lp873x.c
-new file mode 100644
-index 0000000..3ca0462
---- /dev/null
-+++ b/drivers/mfd/lp873x.c
-@@ -0,0 +1,97 @@
-+/*
-+ * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * Author: Keerthy <j-keerthy@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++Regulator	  Type		  Supply Name		  Notes
++---------	  ----		  -----------		  -----
++DCDC1		: DC-DC buck	: vin1-supply
++DCDC2		: DC-DC buck	: vin2-supply
++DCDC3		: DC-DC	buck	: vin3-supply
++DCDC4		: DC-DC	buck	: vin4-supply
++DCDC5		: DC-DC	buck	: vin5-supply
++DCDC6		: DC-DC	buck	: vin6-supply
++DCDC7		: DC-DC	buck	: vin7-supply		: AXP813 only
++RTC_LDO		: LDO		: ips-supply		: always on
++ALDO1		: LDO		: aldoin-supply		: shared supply
++ALDO2		: LDO		: aldoin-supply		: shared supply
++ALDO3		: LDO		: aldoin-supply		: shared supply
++DLDO1		: LDO		: dldoin-supply		: shared supply
++DLDO2		: LDO		: dldoin-supply		: shared supply
++DLDO3		: LDO		: dldoin-supply		: shared supply
++DLDO4		: LDO		: dldoin-supply		: shared supply
++ELDO1		: LDO		: eldoin-supply		: shared supply
++ELDO2		: LDO		: eldoin-supply		: shared supply
++ELDO3		: LDO		: eldoin-supply		: shared supply
++FLDO1		: LDO		: fldoin-supply		: shared supply
++FLDO2		: LDO		: fldoin-supply		: shared supply
++LDO_IO0		: LDO		: ips-supply		: GPIO 0
++LDO_IO1		: LDO		: ips-supply		: GPIO 1
++DC1SW		: On/Off Switch	:			: DCDC1 secondary output
 +
-+#include <linux/interrupt.h>
-+#include <linux/mfd/core.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/mfd/lp873x.h>
-+
-+static const struct regmap_config lp873x_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = LP873X_REG_MAX,
+ Example:
+ 
+ axp209: pmic@34 {
+diff --git a/drivers/mfd/axp20x-rsb.c b/drivers/mfd/axp20x-rsb.c
+index a407527..e34643b 100644
+--- a/drivers/mfd/axp20x-rsb.c
++++ b/drivers/mfd/axp20x-rsb.c
+@@ -62,6 +62,7 @@ static int axp20x_rsb_remove(struct sunxi_rsb_device *rdev)
+ static const struct of_device_id axp20x_rsb_of_match[] = {
+ 	{ .compatible = "x-powers,axp223", .data = (void *)AXP223_ID },
+ 	{ .compatible = "x-powers,axp809", .data = (void *)AXP809_ID },
++	{ .compatible = "x-powers,axp813", .data = (void *)AXP813_ID },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, axp20x_rsb_of_match);
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index fd80b09..e62d56f 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -39,6 +39,7 @@ static const char * const axp20x_model_names[] = {
+ 	"AXP223",
+ 	"AXP288",
+ 	"AXP809",
++	"AXP813",
+ };
+ 
+ static const struct regmap_range axp152_writeable_ranges[] = {
+@@ -494,6 +495,7 @@ static const struct regmap_irq_chip axp288_regmap_irq_chip = {
+ 
+ };
+ 
++/* common 803/809/813 */
+ static const struct regmap_irq_chip axp809_regmap_irq_chip = {
+ 	.name			= "axp809",
+ 	.status_base		= AXP20X_IRQ1_STATE,
+@@ -733,6 +735,7 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
+ 		axp20x->regmap_irq_chip = &axp288_regmap_irq_chip;
+ 		break;
+ 	case AXP809_ID:
++	case AXP813_ID:
+ 		axp20x->nr_cells = ARRAY_SIZE(axp809_cells);
+ 		axp20x->cells = axp809_cells;
+ 		axp20x->regmap_cfg = &axp22x_regmap_config;
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index 6d9ac76..3fbe2c1 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -299,6 +299,78 @@ static const struct regulator_desc axp809_regulators[] = {
+ 	AXP_DESC_SW(AXP809, SW, "sw", "swin", AXP22X_PWR_OUT_CTRL2, BIT(6)),
+ };
+ 
++static const struct regulator_linear_range axp813_dcdc2_4_ranges[] = {
++	REGULATOR_LINEAR_RANGE(500000, 0, 70, 10000),
++	REGULATOR_LINEAR_RANGE(1220000, 71, 75, 20000),
 +};
 +
-+static const struct mfd_cell lp873x_cells[] = {
-+	{ .name = "lp873x-regulator", },
-+	{ .name = "lp873x-gpio", },
++static const struct regulator_linear_range axp813_dcdc5_ranges[] = {
++	REGULATOR_LINEAR_RANGE(800000, 0, 32, 10000),
++	REGULATOR_LINEAR_RANGE(1140000, 33, 68, 20000),
 +};
 +
-+static int lp873x_probe(struct i2c_client *client,
-+			const struct i2c_device_id *ids)
-+{
-+	struct lp873x *lp873;
-+	int ret;
-+	unsigned int otpid;
-+
-+	lp873 = devm_kzalloc(&client->dev, sizeof(*lp873), GFP_KERNEL);
-+	if (!lp873)
-+		return -ENOMEM;
-+
-+	lp873->dev = &client->dev;
-+
-+	lp873->regmap = devm_regmap_init_i2c(client, &lp873x_regmap_config);
-+	if (IS_ERR(lp873->regmap)) {
-+		ret = PTR_ERR(lp873->regmap);
-+		dev_err(lp873->dev,
-+			"Failed to initialize register map: %d\n", ret);
-+		return ret;
-+	}
-+
-+	mutex_init(&lp873->lock);
-+
-+	ret = regmap_read(lp873->regmap, LP873X_REG_OTP_REV, &otpid);
-+	if (ret) {
-+		dev_err(lp873->dev, "Failed to read OTP ID\n");
-+		return ret;
-+	}
-+
-+	lp873->rev = otpid & LP873X_OTP_REV_OTP_ID;
-+	i2c_set_clientdata(client, lp873);
-+	ret = mfd_add_devices(lp873->dev, PLATFORM_DEVID_AUTO, lp873x_cells,
-+			      ARRAY_SIZE(lp873x_cells), NULL, 0, NULL);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id of_lp873x_match_table[] = {
-+	{ .compatible = "ti,lp8733", },
-+	{ .compatible = "ti,lp8732", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, of_lp873x_match_table);
-+
-+static const struct i2c_device_id lp873x_id_table[] = {
-+	{ "lp873x", LP873X },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(i2c, lp873x_id_table);
-+
-+static struct i2c_driver lp873x_driver = {
-+	.driver		= {
-+		.name	= "lp873x",
-+		.of_match_table = of_lp873x_match_table,
-+	},
-+	.probe		= lp873x_probe,
-+	.id_table	= lp873x_id_table,
-+};
-+module_i2c_driver(lp873x_driver);
-+
-+MODULE_AUTHOR("J Keerthy <j-keerthy@ti.com>");
-+MODULE_DESCRIPTION("LP873X chip family multi-function driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/lp873x.h b/include/linux/mfd/lp873x.h
-new file mode 100644
-index 0000000..42bebfa
---- /dev/null
-+++ b/include/linux/mfd/lp873x.h
-@@ -0,0 +1,264 @@
-+/*
-+ * Functions to access LP873X power management chip.
-+ *
-+ * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __LINUX_MFD_LP873X_H
-+#define __LINUX_MFD_LP873X_H
-+
-+#include <linux/i2c.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+
-+/* LP873x chip id list */
-+#define LP873X			0x00
-+
-+/* All register addresses */
-+#define LP873X_REG_DEV_REV		0X00
-+#define LP873X_REG_OTP_REV		0X01
-+#define LP873X_REG_BUCK0_CTRL_1		0X02
-+#define LP873X_REG_BUCK0_CTRL_2		0X03
-+#define LP873X_REG_BUCK1_CTRL_1		0X04
-+#define LP873X_REG_BUCK1_CTRL_2		0X05
-+#define LP873X_REG_BUCK0_VOUT		0X06
-+#define LP873X_REG_BUCK1_VOUT		0X07
-+#define LP873X_REG_LDO0_CTRL		0X08
-+#define LP873X_REG_LDO1_CTRL            0X09
-+#define LP873X_REG_LDO0_VOUT		0X0A
-+#define LP873X_REG_LDO1_VOUT		0X0B
-+#define LP873X_REG_BUCK0_DELAY		0X0C
-+#define LP873X_REG_BUCK1_DELAY		0X0D
-+#define LP873X_REG_LDO0_DELAY		0X0E
-+#define LP873X_REG_LDO1_DELAY		0X0F
-+#define LP873X_REG_GPO_DELAY		0X10
-+#define LP873X_REG_GPO2_DELAY		0X11
-+#define LP873X_REG_GPO_CTRL		0X12
-+#define LP873X_REG_CONFIG		0X13
-+#define LP873X_REG_PLL_CTRL		0X14
-+#define LP873X_REG_PGOOD_CTRL1		0X15
-+#define LP873X_REG_PGOOD_CTRL2		0X16
-+#define LP873X_REG_PG_FAULT		0X17
-+#define LP873X_REG_RESET		0X18
-+#define LP873X_REG_INT_TOP_1		0X19
-+#define LP873X_REG_INT_TOP_2		0X1A
-+#define LP873X_REG_INT_BUCK		0X1B
-+#define LP873X_REG_INT_LDO		0X1C
-+#define LP873X_REG_TOP_STAT		0X1D
-+#define LP873X_REG_BUCK_STAT		0X1E
-+#define LP873X_REG_LDO_STAT		0x1F
-+#define LP873X_REG_TOP_MASK_1		0x20
-+#define LP873X_REG_TOP_MASK_2		0x21
-+#define LP873X_REG_BUCK_MASK		0x22
-+#define LP873X_REG_LDO_MASK		0x23
-+#define LP873X_REG_SEL_I_LOAD		0x24
-+#define LP873X_REG_I_LOAD_2		0x25
-+#define LP873X_REG_I_LOAD_1		0x26
-+
-+#define LP873X_REG_MAX			LP873X_REG_I_LOAD_1
-+
-+/* Register field definitions */
-+#define LP873X_DEV_REV_DEV_ID			0xC0
-+#define LP873X_DEV_REV_ALL_LAYER		0x30
-+#define LP873X_DEV_REV_METAL_LAYER		0x0F
-+
-+#define LP873X_OTP_REV_OTP_ID			0xFF
-+
-+#define LP873X_BUCK0_CTRL_1_BUCK0_FPWM		BIT(3)
-+#define LP873X_BUCK0_CTRL_1_BUCK0_RDIS_EN	BIT(2)
-+#define LP873X_BUCK0_CTRL_1_BUCK0_EN_PIN_CTRL	BIT(1)
-+#define LP873X_BUCK0_CTRL_1_BUCK0_EN		BIT(0)
-+
-+#define LP873X_BUCK0_CTRL_2_BUCK0_ILIM		0x38
-+#define LP873X_BUCK0_CTRL_2_BUCK0_SLEW_RATE	0x07
-+
-+#define LP873X_BUCK1_CTRL_1_BUCK1_FPWM		BIT(3)
-+#define LP873X_BUCK1_CTRL_1_BUCK1_RDIS_EN	BIT(2)
-+#define LP873X_BUCK1_CTRL_1_BUCK1_EN_PIN_CTRL	BIT(1)
-+#define LP873X_BUCK1_CTRL_1_BUCK1_EN		BIT(0)
-+
-+#define LP873X_BUCK1_CTRL_2_BUCK1_ILIM		0x38
-+#define LP873X_BUCK1_CTRL_2_BUCK1_SLEW_RATE	0x07
-+
-+#define LP873X_BUCK0_VOUT_BUCK0_VSET		0xFF
-+
-+#define LP873X_BUCK1_VOUT_BUCK1_VSET		0xFF
-+
-+#define LP873X_LDO0_CTRL_LDO0_RDIS_EN		BIT(2)
-+#define LP873X_LDO0_CTRL_LDO0_EN_PIN_CTRL	BIT(1)
-+#define LP873X_LDO0_CTRL_LDO0_EN		BIT(0)
-+
-+#define LP873X_LDO1_CTRL_LDO1_RDIS_EN		BIT(2)
-+#define LP873X_LDO1_CTRL_LDO1_EN_PIN_CTRL	BIT(1)
-+#define LP873X_LDO1_CTRL_LDO1_EN		BIT(0)
-+
-+#define LP873X_LDO0_VOUT_LDO0_VSET		0x1F
-+
-+#define LP873X_LDO1_VOUT_LDO1_VSET		0x1F
-+
-+#define LP873X_BUCK0_DELAY_BUCK0_SD_DELAY	0xF0
-+#define LP873X_BUCK0_DELAY_BUCK0_SU_DELAY	0x0F
-+
-+#define LP873X_BUCK1_DELAY_BUCK1_SD_DELAY	0xF0
-+#define LP873X_BUCK1_DELAY_BUCK1_SU_DELAY	0x0F
-+
-+#define LP873X_LDO0_DELAY_LDO0_SD_DELAY	0xF0
-+#define LP873X_LDO0_DELAY_LDO0_SU_DELAY	0x0F
-+
-+#define LP873X_LDO1_DELAY_LDO1_SD_DELAY	0xF0
-+#define LP873X_LDO1_DELAY_LDO1_SU_DELAY	0x0F
-+
-+#define LP873X_GPO_DELAY_GPO_SD_DELAY		0xF0
-+#define LP873X_GPO_DELAY_GPO_SU_DELAY		0x0F
-+
-+#define LP873X_GPO2_DELAY_GPO2_SD_DELAY	0xF0
-+#define LP873X_GPO2_DELAY_GPO2_SU_DELAY	0x0F
-+
-+#define LP873X_GPO_CTRL_GPO2_OD		BIT(6)
-+#define LP873X_GPO_CTRL_GPO2_EN_PIN_CTRL	BIT(5)
-+#define LP873X_GPO_CTRL_GPO2_EN		BIT(4)
-+#define LP873X_GPO_CTRL_GPO_OD			BIT(2)
-+#define LP873X_GPO_CTRL_GPO_EN_PIN_CTRL	BIT(1)
-+#define LP873X_GPO_CTRL_GPO_EN			BIT(0)
-+
-+#define LP873X_CONFIG_SU_DELAY_SEL		BIT(6)
-+#define LP873X_CONFIG_SD_DELAY_SEL		BIT(5)
-+#define LP873X_CONFIG_CLKIN_PIN_SEL		BIT(4)
-+#define LP873X_CONFIG_CLKIN_PD			BIT(3)
-+#define LP873X_CONFIG_EN_PD			BIT(2)
-+#define LP873X_CONFIG_TDIE_WARN_LEVEL		BIT(1)
-+#define LP873X_EN_SPREAD_SPEC			BIT(0)
-+
-+#define LP873X_PLL_CTRL_EN_PLL			BIT(6)
-+#define LP873X_EXT_CLK_FREQ			0x1F
-+
-+#define LP873X_PGOOD_CTRL1_PGOOD_POL		BIT(7)
-+#define LP873X_PGOOD_CTRL1_PGOOD_OD		BIT(6)
-+#define LP873X_PGOOD_CTRL1_PGOOD_WINDOW_LDO	BIT(5)
-+#define LP873X_PGOOD_CTRL1_PGOOD_WINDOWN_BUCK	BIT(4)
-+#define LP873X_PGOOD_CTRL1_PGOOD_EN_PGOOD_LDO1	BIT(3)
-+#define LP873X_PGOOD_CTRL1_PGOOD_EN_PGOOD_LDO0	BIT(2)
-+#define LP873X_PGOOD_CTRL1_PGOOD_EN_PGOOD_BUCK1	BIT(1)
-+#define LP873X_PGOOD_CTRL1_PGOOD_EN_PGOOD_BUCK0	BIT(0)
-+
-+#define LP873X_PGOOD_CTRL2_EN_PGOOD_TWARN	BIT(2)
-+#define LP873X_PGOOD_CTRL2_EN_PG_FAULT_GATE	BIT(1)
-+#define LP873X_PGOOD_CTRL2_PGOOD_MODE		BIT(0)
-+
-+#define LP873X_PG_FAULT_PG_FAULT_LDO1		BIT(3)
-+#define LP873X_PG_FAULT_PG_FAULT_LDO0		BIT(2)
-+#define LP873X_PG_FAULT_PG_FAULT_BUCK1		BIT(1)
-+#define LP873X_PG_FAULT_PG_FAULT_BUCK0		BIT(0)
-+
-+#define LP873X_RESET_SW_RESET			BIT(0)
-+
-+#define LP873X_INT_TOP_1_PGOOD_INT		BIT(7)
-+#define LP873X_INT_TOP_1_LDO_INT		BIT(6)
-+#define LP873X_INT_TOP_1_BUCK_INT		BIT(5)
-+#define LP873X_INT_TOP_1_SYNC_CLK_INT		BIT(4)
-+#define LP873X_INT_TOP_1_TDIE_SD_INT		BIT(3)
-+#define LP873X_INT_TOP_1_TDIE_WARN_INT		BIT(2)
-+#define LP873X_INT_TOP_1_OVP_INT		BIT(1)
-+#define LP873X_INT_TOP_1_I_MEAS_INT		BIT(0)
-+
-+#define LP873X_INT_TOP_2_RESET_REG_INT		BIT(0)
-+
-+#define LP873X_INT_BUCK_BUCK1_PG_INT		BIT(6)
-+#define LP873X_INT_BUCK_BUCK1_SC_INT		BIT(5)
-+#define LP873X_INT_BUCK_BUCK1_ILIM_INT		BIT(4)
-+#define LP873X_INT_BUCK_BUCK0_PG_INT		BIT(2)
-+#define LP873X_INT_BUCK_BUCK0_SC_INT		BIT(1)
-+#define LP873X_INT_BUCK_BUCK0_ILIM_INT		BIT(0)
-+
-+#define LP873X_INT_LDO_LDO1_PG_INT		BIT(6)
-+#define LP873X_INT_LDO_LDO1_SC_INT		BIT(5)
-+#define LP873X_INT_LDO_LDO1_ILIM_INT		BIT(4)
-+#define LP873X_INT_LDO_LDO0_PG_INT		BIT(2)
-+#define LP873X_INT_LDO_LDO0_SC_INT		BIT(1)
-+#define LP873X_INT_LDO_LDO0_ILIM_INT		BIT(0)
-+
-+#define LP873X_TOP_STAT_PGOOD_STAT		BIT(7)
-+#define LP873X_TOP_STAT_SYNC_CLK_STAT		BIT(4)
-+#define LP873X_TOP_STAT_TDIE_SD_STAT		BIT(3)
-+#define LP873X_TOP_STAT_TDIE_WARN_STAT		BIT(2)
-+#define LP873X_TOP_STAT_OVP_STAT		BIT(1)
-+
-+#define LP873X_BUCK_STAT_BUCK1_STAT		BIT(7)
-+#define LP873X_BUCK_STAT_BUCK1_PG_STAT		BIT(6)
-+#define LP873X_BUCK_STAT_BUCK1_ILIM_STAT	BIT(4)
-+#define LP873X_BUCK_STAT_BUCK0_STAT		BIT(3)
-+#define LP873X_BUCK_STAT_BUCK0_PG_STAT		BIT(2)
-+#define LP873X_BUCK_STAT_BUCK0_ILIM_STAT	BIT(0)
-+
-+#define LP873X_LDO_STAT_LDO1_STAT		BIT(7)
-+#define LP873X_LDO_STAT_LDO1_PG_STAT		BIT(6)
-+#define LP873X_LDO_STAT_LDO1_ILIM_STAT		BIT(4)
-+#define LP873X_LDO_STAT_LDO0_STAT		BIT(3)
-+#define LP873X_LDO_STAT_LDO0_PG_STAT		BIT(2)
-+#define LP873X_LDO_STAT_LDO0_ILIM_STAT		BIT(0)
-+
-+#define LP873X_TOP_MASK_1_PGOOD_INT_MASK	BIT(7)
-+#define LP873X_TOP_MASK_1_SYNC_CLK_MASK	BIT(4)
-+#define LP873X_TOP_MASK_1_TDIE_WARN_MASK	BIT(2)
-+#define LP873X_TOP_MASK_1_I_MEAS_MASK		BIT(0)
-+
-+#define LP873X_TOP_MASK_2_RESET_REG_MASK	BIT(0)
-+
-+#define LP873X_BUCK_MASK_BUCK1_PGF_MASK	BIT(7)
-+#define LP873X_BUCK_MASK_BUCK1_PGR_MASK	BIT(6)
-+#define LP873X_BUCK_MASK_BUCK1_ILIM_MASK	BIT(4)
-+#define LP873X_BUCK_MASK_BUCK0_PGF_MASK	BIT(3)
-+#define LP873X_BUCK_MASK_BUCK0_PGR_MASK	BIT(2)
-+#define LP873X_BUCK_MASK_BUCK0_ILIM_MASK	BIT(0)
-+
-+#define LP873X_LDO_MASK_LDO1_PGF_MASK		BIT(7)
-+#define LP873X_LDO_MASK_LDO1_PGR_MASK		BIT(6)
-+#define LP873X_LDO_MASK_LDO1_ILIM_MASK		BIT(4)
-+#define LP873X_LDO_MASK_LDO0_PGF_MASK		BIT(3)
-+#define LP873X_LDO_MASK_LDO0_PGR_MASK		BIT(2)
-+#define LP873X_LDO_MASK_LDO0_ILIM_MASK		BIT(0)
-+
-+#define LP873X_SEL_I_LOAD_CURRENT_BUCK_SELECT	BIT(0)
-+
-+#define LP873X_I_LOAD_2_BUCK_LOAD_CURRENT	BIT(0)
-+
-+#define LP873X_I_LOAD_1_BUCK_LOAD_CURRENT	0xFF
-+
-+#define LP873X_MAX_REG_ID		LP873X_LDO_1
-+
-+/* Number of step-down converters available */
-+#define LP873X_NUM_BUCK		2
-+/* Number of LDO voltage regulators available */
-+#define LP873X_NUM_LDO		2
-+/* Number of total regulators available */
-+#define LP873X_NUM_REGULATOR		(LP873X_NUM_BUCK + LP873X_NUM_LDO)
-+
-+enum lp873x_regulator_id {
-+	/* BUCK's */
-+	LP873X_BUCK_0,
-+	LP873X_BUCK_1,
-+	/* LDOs */
-+	LP873X_LDO_0,
-+	LP873X_LDO_1,
++static const struct regulator_linear_range axp813_dcdc6_7_ranges[] = {
++	REGULATOR_LINEAR_RANGE(600000, 0, 50, 10000),
++	REGULATOR_LINEAR_RANGE(1120000, 51, 71, 20000),
 +};
 +
-+/**
-+ * struct lp873x - state holder for the lp873x driver
-+ * Device data may be used to access the LP873X chip
-+ */
-+struct lp873x {
-+	struct device *dev;
-+	u8 rev;
-+	struct mutex lock;	/* lock guarding the data structure */
-+	struct regmap *regmap;
++static const struct regulator_desc axp813_regulators[] = {
++	AXP_DESC(AXP813, DLDO1, "dldo1", "dldoin", 700, 3300, 100,
++		 AXP22X_DLDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(3)),
++	AXP_DESC(AXP813, DLDO2, "dldo2", "dldoin", 700, 4200, 100,
++		 AXP22X_DLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(4)),
++	AXP_DESC(AXP813, DLDO3, "dldo3", "dldoin", 700, 3300, 100,
++		 AXP22X_DLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(5)),
++	AXP_DESC(AXP813, DLDO4, "dldo4", "dldoin", 700, 3300, 100,
++		 AXP22X_DLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(6)),
++	AXP_DESC(AXP813, ELDO1, "eldo1", "eldoin", 700, 1900, 50,
++		 AXP22X_ELDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(0)),
++	AXP_DESC(AXP813, ELDO2, "eldo2", "eldoin", 700, 1900, 50,
++		 AXP22X_ELDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(1)),
++	AXP_DESC(AXP813, ELDO3, "eldo3", "eldoin", 700, 1900, 50,
++		 AXP22X_ELDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(2)),
++	AXP_DESC(AXP813, FLDO1, "fldo1", "fldoin", 700, 1450, 50,
++		 AXP813_FLDO1_V_OUT, 0x0f, AXP22X_PWR_OUT_CTRL3, BIT(2)),
++	AXP_DESC(AXP813, FLDO2, "fldo2", "fldoin", 700, 1450, 50,
++		 AXP813_FLDO2_V_OUT, 0x0f, AXP22X_PWR_OUT_CTRL3, BIT(3)),
++	AXP_DESC(AXP813, DCDC1, "dcdc1", "vin1", 1600, 3400, 100,
++		 AXP813_DCDC1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL1, BIT(0)),
++	AXP_DESC_RANGES(AXP813, DCDC2, "dcdc2", "vin2", axp813_dcdc2_4_ranges,
++			76, AXP813_DCDC2_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
++			BIT(1)),
++	AXP_DESC_RANGES(AXP813, DCDC3, "dcdc3", "vin3", axp813_dcdc2_4_ranges,
++			76, AXP813_DCDC3_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
++			BIT(2)),
++	AXP_DESC_RANGES(AXP813, DCDC4, "dcdc4", "vin4", axp813_dcdc2_4_ranges,
++			76, AXP813_DCDC4_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
++			BIT(3)),
++	AXP_DESC_RANGES(AXP813, DCDC5, "dcdc5", "vin5", axp813_dcdc5_ranges,
++			69, AXP813_DCDC5_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
++			BIT(4)),
++	AXP_DESC_RANGES(AXP813, DCDC6, "dcdc6", "vin6", axp813_dcdc6_7_ranges,
++			72, AXP813_DCDC6_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
++			BIT(5)),
++	AXP_DESC_RANGES(AXP813, DCDC7, "dcdc7", "vin7", axp813_dcdc6_7_ranges,
++			72, AXP813_DCDC7_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
++			BIT(6)),
++	AXP_DESC_FIXED(AXP813, RTC_LDO, "rtc_ldo", "ips", 3000),
++	AXP_DESC(AXP813, ALDO1, "aldo1", "aldoin", 700, 3300, 100,
++		 AXP22X_ALDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(5)),
++	AXP_DESC(AXP813, ALDO2, "aldo2", "aldoin", 700, 3300, 100,
++		 AXP22X_ALDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(6)),
++	AXP_DESC(AXP813, ALDO3, "aldo3", "aldoin", 700, 3300, 100,
++		 AXP22X_ALDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(7)),
++	AXP_DESC_IO(AXP813, LDO_IO0, "ldo_io0", "ips", 700, 3300, 100,
++		    AXP22X_LDO_IO0_V_OUT, 0x1f, AXP20X_GPIO0_CTRL, 0x07,
++		    AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
++	AXP_DESC_IO(AXP813, LDO_IO1, "ldo_io1", "ips", 700, 3300, 100,
++		    AXP22X_LDO_IO1_V_OUT, 0x1f, AXP20X_GPIO1_CTRL, 0x07,
++		    AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
++	/* secondary switchable output of DCDC1 */
++	AXP_DESC_SW(AXP813, DC1SW, "dc1sw", NULL, AXP22X_PWR_OUT_CTRL2,
++		    BIT(7)),
 +};
-+#endif /*  __LINUX_MFD_LP873X_H */
++
+ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
+ {
+ 	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
+@@ -315,6 +387,7 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
+ 	case AXP221_ID:
+ 	case AXP223_ID:
+ 	case AXP809_ID:
++	case AXP813_ID:
+ 		min = 1800;
+ 		max = 4050;
+ 		def = 3000;
+@@ -444,6 +517,10 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+ 		regulators = axp809_regulators;
+ 		nregulators = AXP809_REG_ID_MAX;
+ 		break;
++	case AXP813_ID:
++		regulators = axp813_regulators;
++		nregulators = AXP813_REG_ID_MAX;
++		break;
+ 	default:
+ 		dev_err(&pdev->dev, "Unsupported AXP variant: %ld\n",
+ 			axp20x->variant);
+@@ -467,7 +544,8 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+ 		 * name.
+ 		 */
+ 		if ((regulators == axp22x_regulators && i == AXP22X_DC1SW) ||
+-		    (regulators == axp809_regulators && i == AXP809_DC1SW)) {
++		    (regulators == axp809_regulators && i == AXP809_DC1SW) ||
++		    (regulators == axp813_regulators && i == AXP813_DC1SW)) {
+ 			new_desc = devm_kzalloc(&pdev->dev, sizeof(*desc),
+ 						GFP_KERNEL);
+ 			*new_desc = regulators[i];
+@@ -505,7 +583,8 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+ 		 * Save AXP22X DCDC1 / DCDC5 regulator names for later.
+ 		 */
+ 		if ((regulators == axp22x_regulators && i == AXP22X_DCDC1) ||
+-		    (regulators == axp809_regulators && i == AXP809_DCDC1))
++		    (regulators == axp809_regulators && i == AXP809_DCDC1) ||
++		    (regulators == axp813_regulators && i == AXP813_DCDC1))
+ 			of_property_read_string(rdev->dev.of_node,
+ 						"regulator-name",
+ 						&dcdc1_name);
+diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+index 0be4982..637fb7c 100644
+--- a/include/linux/mfd/axp20x.h
++++ b/include/linux/mfd/axp20x.h
+@@ -21,6 +21,7 @@ enum {
+ 	AXP223_ID,
+ 	AXP288_ID,
+ 	AXP809_ID,
++	AXP813_ID,
+ 	NR_AXP20X_VARIANTS,
+ };
+ 
+@@ -91,6 +92,16 @@ enum {
+ #define AXP22X_ALDO3_V_OUT		0x2a
+ #define AXP22X_CHRG_CTRL3		0x35
+ 
++#define AXP813_FLDO1_V_OUT		0x1c
++#define AXP813_FLDO2_V_OUT		0x1d
++#define AXP813_DCDC1_V_OUT		0x20
++#define AXP813_DCDC2_V_OUT		0x21
++#define AXP813_DCDC3_V_OUT		0x22
++#define AXP813_DCDC4_V_OUT		0x23
++#define AXP813_DCDC5_V_OUT		0x24
++#define AXP813_DCDC6_V_OUT		0x25
++#define AXP813_DCDC7_V_OUT		0x26
++
+ /* Interrupt */
+ #define AXP152_IRQ1_EN			0x40
+ #define AXP152_IRQ2_EN			0x41
+@@ -288,6 +299,33 @@ enum {
+ 	AXP809_REG_ID_MAX,
+ };
+ 
++enum {
++	AXP813_DCDC1 = 0,
++	AXP813_DCDC2,
++	AXP813_DCDC3,
++	AXP813_DCDC4,
++	AXP813_DCDC5,
++	AXP813_DCDC6,
++	AXP813_DCDC7,
++	AXP813_RTC_LDO,
++	AXP813_ALDO1,
++	AXP813_ALDO2,
++	AXP813_ALDO3,
++	AXP813_DLDO1,
++	AXP813_DLDO2,
++	AXP813_DLDO3,
++	AXP813_DLDO4,
++	AXP813_ELDO1,
++	AXP813_ELDO2,
++	AXP813_ELDO3,
++	AXP813_FLDO1,
++	AXP813_FLDO2,
++	AXP813_LDO_IO0,
++	AXP813_LDO_IO1,
++	AXP813_DC1SW,
++	AXP813_REG_ID_MAX,
++};
++
+ /* IRQs */
+ enum {
+ 	AXP152_IRQ_LDO0IN_CONNECT = 1,
 -- 
-1.9.1
+2.9.3
