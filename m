@@ -1,39 +1,44 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2 v4] leds: pm8058: add device tree bindings
-Date: Tue, 16 Aug 2016 21:38:17 +0200
-Message-ID: <CACRpkdZoi1_xUzfA-AUB3uV-UvhC+51qrMPYd+01-ROyUg9v4w@mail.gmail.com>
-References: <1471339502-26123-1-git-send-email-linus.walleij@linaro.org> <20160816161452.GM26240@tuxbot>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH V2 RFC 6/6] ARM: dts: bcm2835: Add Raspberry Pi Zero
+Date: Tue, 16 Aug 2016 21:58:43 +0200 (CEST)
+Message-ID: <263309088.290419.51598113-17aa-4db0-9dc0-6e58e3fafe07.open-xchange@email.1und1.de>
+References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
+ <1469559213-16160-7-git-send-email-stefan.wahren@i2se.com>
+ <722dafcb-2f67-88c7-69df-d442c56c058f@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160816161452.GM26240@tuxbot>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <722dafcb-2f67-88c7-69df-d442c56c058f-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 16, 2016 at 6:14 PM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> On Tue 16 Aug 02:25 PDT 2016, Linus Walleij wrote:
->
->> This adds the device tree bindings for the PM8058 LEDs.
->>
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-arm-msm@vger.kernel.org
->> Cc: Andy Gross <andy.gross@linaro.org>
->> Cc: Stephen Boyd <sboyd@codeaurora.org>
->> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
->> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->> ---
->> ChangeLog v3->v4:
->> - No changes, just reposting with the series.
->
-> You forgot to carry these:
->
-> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Acked-by: Rob Herring <robh@kernel.org>
+Hi John,
 
-Sorry! I bet Jacek can add them when applying.
+> John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> hat am 16. August 2016 um 21:30
+> geschrieben:
+> 
+> 
+> On 7/26/2016 11:54 AM, Stefan Wahren wrote:
+> ...
+> > +/*
+> > + * Settings for otg
+> > + *
+> > +	dr_mode = "otg";
+> > +	h-rx-fifo-size = <774>;
+> > +	h-np-tx-fifo-size = <32>;
+> > +	h-tx-fifo-size = <0>;
+> 
+> This seems odd. It should be non-zero for use when operating as host.
+> 
 
-Yours,
-Linus Walleij
+like in host mode i took the default values in otg mode for the last two here
+(please refer to the logs). The BCM2835 datasheet isn't very helpful.
+
+Do you have any suggestions for valid values or how to get them?
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
