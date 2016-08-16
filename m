@@ -1,59 +1,40 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
-Date: Tue, 16 Aug 2016 16:37:17 -0500
-Message-ID: <57B3878D.1000805@codeaurora.org>
-References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
- <20160804175541.GA2832@rob-hp-laptop> <57B220C0.3060608@codeaurora.org>
- <CAL_JsqL5xk3mH=h-m8nU8xTYbRjgMWt3p7BzYWj6vBUq4OpqMg@mail.gmail.com>
- <57B31780.5030106@codeaurora.org>
- <f3a49762-aa66-1949-bd6b-77bd6a74acc1@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <f3a49762-aa66-1949-bd6b-77bd6a74acc1@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Al Stone <al.stone@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, Shanker Donthineni <shankerd@codeaurora.org>, Vikram Sethi <vikrams@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] input: touchscreen: silead: Use devm_gpiod_get
+Date: Tue, 16 Aug 2016 23:47:23 +0200
+Message-ID: <1471384043-11717-1-git-send-email-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Al Stone wrote:
-> Does the ACPI portion of the driver*have*  to know about the PHY?  In general,
-> the ACPI assumption on ARM [**] is that those have all been set up before we
-> get to the kernel.  So, does it need to be visible to the ACPI part of the
-> driver at all?
+The silead code is using devm_foo for everything (and does not free
+any resources). Except that it is using gpiod_get instead of
+devm_gpiod_get (but is not freeing the gpio_desc), change this
+to use devm_gpiod_get so that the gpio will be properly released.
 
-Yes, the driver supports both "v1" and "v2" of the PHY, and it has code 
-like this:
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/input/touchscreen/silead.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	if (adpt->phy.version == 2)
-		emac_sgmii_init_v2(adpt);
-	else
-		emac_sgmii_init_v1(adpt);
-
-The question, how should adpt->phy.version be initialized on device tree 
-and ACPI platforms?
-
-The reason why this is confusing is because there are conflicting 
-perspectives of this "internal PHY".  It both is and is not part of the 
-EMAC.  It is a separate block in the chip, and can be replaced with 
-other SGMII blocks, and in the future there will be a "v3" and maybe a 
-"v4" or who knows what.  In fact, maybe using version numbers is 
-inappropriate and we'll need to use vendor names or something.
-
-The problem is that the internal PHY has mechanism for 
-self-identification.  There is no ACPI or device tree node for it. 
-There is no register you can query to see if it's there or what version 
-it is.  The MAC part of the EMAC has no knowledge of the PHY part.  The 
-driver just has to know it's there.
-
-This is why I'm advocating a separate property (DT and ACPI) to identify 
-the internal PHY.
-
-The truth is that I don't really care HOW it's done, and as long as we 
-come to a consensus soon.  I want my driver to be merged into 4.9.
-
+diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
+index 04992c5..3b80f14 100644
+--- a/drivers/input/touchscreen/silead.c
++++ b/drivers/input/touchscreen/silead.c
+@@ -497,7 +497,7 @@ static int silead_ts_probe(struct i2c_client *client,
+ 	}
+ 
+ 	/* Power GPIO pin */
+-	data->gpio_power = gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
++	data->gpio_power = devm_gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
+ 	if (IS_ERR(data->gpio_power)) {
+ 		if (PTR_ERR(data->gpio_power) != -EPROBE_DEFER)
+ 			dev_err(dev, "Shutdown GPIO request failed\n");
 -- 
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
-Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
