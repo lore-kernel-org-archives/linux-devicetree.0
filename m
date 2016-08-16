@@ -1,176 +1,280 @@
-From: "William.wu" <William.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Felipe Balbi <balbi@kernel.org>
 Subject: Re: [PATCH v10 5/5] usb: dwc3: add rockchip specific glue layer
-Date: Tue, 16 Aug 2016 19:47:54 +0800
-Message-ID: <d57edc7a-ee0a-49eb-93ac-cab14416086e@rock-chips.com>
-References: <1471251031-17084-1-git-send-email-william.wu@rock-chips.com>
- <1471251284-1804-1-git-send-email-william.wu@rock-chips.com>
- <87y43x89l3.fsf@linux.intel.com>
- <de9ede71-82a5-0aec-4bcc-8cb1dca15a6d@rock-chips.com>
- <8737m5804l.fsf@linux.intel.com>
+Date: Tue, 16 Aug 2016 14:56:50 +0300
+Message-ID: <87mvkd6i65.fsf@linux.intel.com>
+References: <1471251031-17084-1-git-send-email-william.wu@rock-chips.com> <1471251284-1804-1-git-send-email-william.wu@rock-chips.com> <87y43x89l3.fsf@linux.intel.com> <de9ede71-82a5-0aec-4bcc-8cb1dca15a6d@rock-chips.com> <8737m5804l.fsf@linux.intel.com> <d57edc7a-ee0a-49eb-93ac-cab14416086e@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <8737m5804l.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha256; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d57edc7a-ee0a-49eb-93ac-cab14416086e@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "William.wu" <William.wu@rock-chips.com>, gregkh@linuxfoundation.org, heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org, briannorris@google.com, dianders@google.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, frank.wang@rock-chips.com, eddie.cai@rock-chips.com, John.Youn@synopsys.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, zhengsq@rock-chips.com, zyw@rock-chips.com, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-RGVhciBCYWxiaSwKCgpPbiAyMDE2LzgvMTYgMTg6NDMsIEZlbGlwZSBCYWxiaSB3cm90ZToKPiBI
-aSwKPgo+ICJXaWxsaWFtLnd1IiA8V2lsbGlhbS53dUByb2NrLWNoaXBzLmNvbT4gd3JpdGVzOgo+
-Pj4gV2lsbGlhbSBXdSA8d2lsbGlhbS53dUByb2NrLWNoaXBzLmNvbT4gd3JpdGVzOgo+Pj4+IEFk
-ZCByb2NrY2hpcCBzcGVjaWZpYyBnbHVlIGxheWVyIHRvIHN1cHBvcnQgVVNCMyBQZXJpcGhlcmFs
-IG1vZGUKPj4+PiBhbmQgSG9zdCBtb2RlIG9uIHJvY2tjaGlwIHBsYXRmb3JtcyAoZS5nLiByazMz
-OTkpLgo+Pj4+Cj4+Pj4gVGhlIERlc2lnbldhcmUgVVNCMyBpbnRlZ3JhdGVkIGluIHJvY2tjaGlw
-IFNvQ3MgaXMgYSBjb25maWd1cmFibGUKPj4+PiBJUCBDb3JlIHdoaWNoIGNhbiBiZSBpbnN0YW50
-aWF0ZWQgYXMgRHVhbC1Sb2xlIERldmljZSAoRFJEKSwgSG9zdAo+Pj4+IE9ubHkgKFhIQ0kpIGFu
-ZCBQZXJpcGhlcmFsIE9ubHkgY29uZmlndXJhdGlvbnMuCj4+Pj4KPj4+PiBXZSB1c2UgZXh0Y29u
-IG5vdGlmaWVyIHRvIG1hbmFnZSB1c2IgY2FibGUgZGV0ZWN0aW9uIGFuZCBtb2RlIHN3aXRjaC4K
-Pj4+PiBFbmFibGUgRFdDMyBQTSBydW50aW1lIGF1dG8gc3VzcGVuZCB0byBhbGxvdyBjb3JlIGVu
-dGVyIHJ1bnRpbWVfc3VzcGVuZAo+Pj4+IGlmIFVTQiBjYWJsZSBpcyBkZXR0YWNoZWQuIEZvciBo
-b3N0IG1vZGUsIGl0IHJlcXVpcmVzIHRvIGtlZXAgd2hvbGUKPj4+PiBEV0MzIGNvbnRyb2xsZXIg
-aW4gcmVzZXQgc3RhdGUgdG8gaG9sZCBwaXBlIHBvd2VyIHN0YXRlIGluIFAyIGJlZm9yZQo+Pj4+
-IGluaXRpYWxpemluZyBQSFkuIEFuZCBpdCBuZWVkIHRvIHJlY29uZmlndXJlIFVTQiBQSFkgaW50
-ZXJmYWNlIG9mIERXQzMKPj4+PiBjb3JlIGFmdGVyIGRlYXNzZXJ0IERXQzMgY29udHJvbGxlciBy
-ZXNldC4KPj4+Pgo+Pj4+IFRoZSBjdXJyZW50IGRyaXZlciBzdXBwb3J0cyBIb3N0IG9ubHkgYW5k
-IFBlcmlwaGVyYWwgT25seSB3ZWxsLCBmb3IKPj4+PiBub3csIHdlIHdpbGwgYWRkIHN1cHBvcnQg
-Zm9yIE9URyBhZnRlciB3ZSBoYXZlIGl0IGFsbCBzdGFiaWxpemVkLgo+Pj4+Cj4+Pj4gU2lnbmVk
-LW9mZi1ieTogV2lsbGlhbSBXdSA8d2lsbGlhbS53dUByb2NrLWNoaXBzLmNvbT4KPj4+PiAtLS0K
-Pj4+PiBDaGFuZ2VzIGluIHYxMDoKPj4+PiAtIGZpeCBidWlsZGluZyBlcnJvcgo+Pj4+Cj4+Pj4g
-Q2hhbmdlcyBpbiB2OToKPj4+PiAtIEFkZCBhIG5ldyBkd2MzLXJvY2tjaGlwLmMgZHJpdmVyIGZv
-ciByazMzOTksIHJhdGhlciB0aGFuIHVzZSBkd2MzLW9mLXNpbXBsZS5jCj4+Pj4KPj4+PiAgICBk
-cml2ZXJzL3VzYi9kd2MzL0tjb25maWcgICAgICAgICB8ICAgOSArCj4+Pj4gICAgZHJpdmVycy91
-c2IvZHdjMy9NYWtlZmlsZSAgICAgICAgfCAgIDEgKwo+Pj4+ICAgIGRyaXZlcnMvdXNiL2R3YzMv
-Y29yZS5jICAgICAgICAgIHwgICAyICstCj4+Pj4gICAgZHJpdmVycy91c2IvZHdjMy9jb3JlLmgg
-ICAgICAgICAgfCAgIDEgKwo+Pj4+ICAgIGRyaXZlcnMvdXNiL2R3YzMvZHdjMy1yb2NrY2hpcC5j
-IHwgNDQxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+Pj4gV2lsbGlh
-bSwgaWYgeW91IG5lZWQgdG8gdG91Y2ggY29yZSBkd2MzIHRvIGludHJvZHVjZSBhIGdsdWUgbGF5
-ZXIsCj4+PiB5b3UncmUgZG9pbmcgaXQgd3JvbmcuCj4+IFNvcnJ577yMIEkgcmVhbGl6ZWQgdGhh
-dCBpdCdzIG5vdCBiZXR0ZXIgdG8gdG91Y2ggY29yZSBkd2MzIGluIGEgc3BlY2lmaWMKPj4gZ2x1
-ZSBsYXllci4KPj4gSSB0b3VjaGVkIGR3YzMgaW4gZ2x1ZSBsYXllciwgYmVjYXVzZSBJIHdhbnQg
-dG8gc3VwcG9ydCBkdWFsLXJvbGUgbW9kZe+8jCBhbmQKPj4gYWNjb3JkaW5nIHRvIG91ciBkd2Mz
-IElQIGFuZCB1c2IzIFBIWSBJUCBkZXNpZ27vvIwgaXQgbmVlZCB0byByZWluaXQgZHdjMwo+PiBj
-b3JlCj4+IHdoZW5ldmVyICB1c2IgY2FibGUgYXR0YWNoZWQuCj4+Cj4+IEFueXdheSwgaXQncyB3
-cm9uZyB0byBkbyB0aGF0LjotWwo+Pgo+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9kd2Mz
-L2NvcmUuYyBiL2RyaXZlcnMvdXNiL2R3YzMvY29yZS5jCj4+Pj4gaW5kZXggZTg4N2IzOC4uM2Rh
-NjIxNSAxMDA2NDQKPj4+PiAtLS0gYS9kcml2ZXJzL3VzYi9kd2MzL2NvcmUuYwo+Pj4+ICsrKyBi
-L2RyaXZlcnMvdXNiL2R3YzMvY29yZS5jCj4+Pj4gQEAgLTQwNSw3ICs0MDUsNyBAQCBzdGF0aWMg
-dm9pZCBkd2MzX2NhY2hlX2h3cGFyYW1zKHN0cnVjdCBkd2MzICpkd2MpCj4+Pj4gICAgICogaW5p
-dGlhbGl6ZWQuIFRoZSBQSFkgaW50ZXJmYWNlcyBhbmQgdGhlIFBIWXMgZ2V0IGluaXRpYWxpemVk
-IHRvZ2V0aGVyIHdpdGgKPj4+PiAgICAgKiB0aGUgY29yZSBpbiBkd2MzX2NvcmVfaW5pdC4KPj4+
-PiAgICAgKi8KPj4+PiAtc3RhdGljIGludCBkd2MzX3BoeV9zZXR1cChzdHJ1Y3QgZHdjMyAqZHdj
-KQo+Pj4+ICtpbnQgZHdjM19waHlfc2V0dXAoc3RydWN0IGR3YzMgKmR3YykKPj4+IHRoZXJlJ3Mg
-bm8gd2F5IEknbGwgbGV0IHRoaXMgc2xpcCB0aHJvdWdoIHRoZSBjcmFja3MgOi0pCj4+IFdoeSBJ
-IG5lZWQgIGR3YzNfcGh5X3NldHVwIGluICBnbHVlIGxheWVyIGlzIGJlY2F1c2UgdXNiMyBJUCBk
-ZXNpZ24KPj4gaW4gcm9ja2NoaXAgcGxhdGZvcm0uIElmIGR3YzMgd29ya3Mgb24gaG9zdCBtb2Rl
-LCBpdCByZXF1aXJlcyB0byBwdXQKPj4gZHdjMyBjb250cm9sbGVyIGluIHJlc2V0IHN0YXRlIGJl
-Zm9yZSB1c2IzIHBoeSBpbml0aWFsaXppbmfvvIxhbmQgYWZ0ZXIKPj4gZGVhc3NlcnQgcmVzZXQs
-ICB3ZSBuZWVkIHRvIHJlY29uZmlndXJlIFVUTUkrIFBIWSBpbnRlcmZhY2UgYmVjYXVzZQo+PiBv
-dXIgZHdjMyBjb3JlIGNhbid0IGNvbmZpZ3VyZSBQSFkgaW50ZXJmYWNlIGNvcnJlY3RseS4KPj4K
-Pj4gVGhhbmsgeW91IGZvciBnaXZlIG1lIGEgY2hhbmNlIHRvIGV4cGxhaW4gaXQuOi0pCj4+Cj4+
-Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2R3YzMvZHdjMy1yb2NrY2hpcC5jIGIvZHJpdmVy
-cy91c2IvZHdjMy9kd2MzLXJvY2tjaGlwLmMKPj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+Pj4+
-IGluZGV4IDAwMDAwMDAuLmVlYWUxYTkKPj4+PiAtLS0gL2Rldi9udWxsCj4+Pj4gKysrIGIvZHJp
-dmVycy91c2IvZHdjMy9kd2MzLXJvY2tjaGlwLmMKPj4+PiBAQCAtMCwwICsxLDQ0MSBAQAo+Pj4g
-Wy4uLl0KPj4+Cj4+Pj4gK3N0YXRpYyBpbnQgZHdjM19yb2NrY2hpcF9wcm9iZShzdHJ1Y3QgcGxh
-dGZvcm1fZGV2aWNlICpwZGV2KQo+Pj4+ICt7Cj4+Pj4gKwlzdHJ1Y3QgZHdjM19yb2NrY2hpcAkq
-cm9ja2NoaXA7Cj4+Pj4gKwlzdHJ1Y3QgZGV2aWNlCQkqZGV2ID0gJnBkZXYtPmRldjsKPj4+PiAr
-CXN0cnVjdCBkZXZpY2Vfbm9kZQkqbnAgPSBkZXYtPm9mX25vZGUsICpjaGlsZDsKPj4+PiArCXN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UJKmNoaWxkX3BkZXY7Cj4+Pj4gKwo+Pj4+ICsJdW5zaWduZWQg
-aW50CQljb3VudDsKPj4+PiArCWludAkJCXJldDsKPj4+PiArCWludAkJCWk7Cj4+Pj4gKwo+Pj4+
-ICsJcm9ja2NoaXAgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKnJvY2tjaGlwKSwgR0ZQX0tF
-Uk5FTCk7Cj4+Pj4gKwo+Pj4+ICsJaWYgKCFyb2NrY2hpcCkKPj4+PiArCQlyZXR1cm4gLUVOT01F
-TTsKPj4+PiArCj4+Pj4gKwljb3VudCA9IG9mX2Nsa19nZXRfcGFyZW50X2NvdW50KG5wKTsKPj4+
-PiArCWlmICghY291bnQpCj4+Pj4gKwkJcmV0dXJuIC1FTk9FTlQ7Cj4+Pj4gKwo+Pj4+ICsJcm9j
-a2NoaXAtPm51bV9jbG9ja3MgPSBjb3VudDsKPj4+PiArCj4+Pj4gKwlyb2NrY2hpcC0+Y2xrcyA9
-IGRldm1fa2NhbGxvYyhkZXYsIHJvY2tjaGlwLT5udW1fY2xvY2tzLAo+Pj4+ICsJCQkJICAgICAg
-c2l6ZW9mKHN0cnVjdCBjbGsgKiksIEdGUF9LRVJORUwpOwo+Pj4+ICsJaWYgKCFyb2NrY2hpcC0+
-Y2xrcykKPj4+PiArCQlyZXR1cm4gLUVOT01FTTsKPj4+PiArCj4+Pj4gKwlwbGF0Zm9ybV9zZXRf
-ZHJ2ZGF0YShwZGV2LCByb2NrY2hpcCk7Cj4+Pj4gKwo+Pj4+ICsJcm9ja2NoaXAtPmRldiA9IGRl
-djsKPj4+PiArCXJvY2tjaGlwLT5lZGV2ID0gTlVMTDsKPj4+PiArCj4+Pj4gKwlwbV9ydW50aW1l
-X3NldF9hY3RpdmUoZGV2KTsKPj4+PiArCXBtX3J1bnRpbWVfZW5hYmxlKGRldik7Cj4+Pj4gKwly
-ZXQgPSBwbV9ydW50aW1lX2dldF9zeW5jKGRldik7Cj4+Pj4gKwlpZiAocmV0IDwgMCkgewo+Pj4+
-ICsJCWRldl9lcnIoZGV2LCAiZ2V0X3N5bmMgZmFpbGVkIHdpdGggZXJyICVkXG4iLCByZXQpOwo+
-Pj4+ICsJCWdvdG8gZXJyMTsKPj4+PiArCX0KPj4+PiArCj4+Pj4gKwlmb3IgKGkgPSAwOyBpIDwg
-cm9ja2NoaXAtPm51bV9jbG9ja3M7IGkrKykgewo+Pj4+ICsJCXN0cnVjdCBjbGsJKmNsazsKPj4+
-PiArCj4+Pj4gKwkJY2xrID0gb2ZfY2xrX2dldChucCwgaSk7Cj4+Pj4gKwkJaWYgKElTX0VSUihj
-bGspKSB7Cj4+Pj4gKwkJCXdoaWxlICgtLWkgPj0gMCkKPj4+PiArCQkJCWNsa19wdXQocm9ja2No
-aXAtPmNsa3NbaV0pOwo+Pj4+ICsJCQlyZXQgPSBQVFJfRVJSKGNsayk7Cj4+Pj4gKwo+Pj4+ICsJ
-CQlnb3RvIGVycjE7Cj4+Pj4gKwkJfQo+Pj4+ICsKPj4+PiArCQlyZXQgPSBjbGtfcHJlcGFyZV9l
-bmFibGUoY2xrKTsKPj4+PiArCQlpZiAocmV0IDwgMCkgewo+Pj4+ICsJCQl3aGlsZSAoLS1pID49
-IDApIHsKPj4+PiArCQkJCWNsa19kaXNhYmxlX3VucHJlcGFyZShyb2NrY2hpcC0+Y2xrc1tpXSk7
-Cj4+Pj4gKwkJCQljbGtfcHV0KHJvY2tjaGlwLT5jbGtzW2ldKTsKPj4+PiArCQkJfQo+Pj4+ICsJ
-CQljbGtfcHV0KGNsayk7Cj4+Pj4gKwo+Pj4+ICsJCQlnb3RvIGVycjE7Cj4+Pj4gKwkJfQo+Pj4+
-ICsKPj4+PiArCQlyb2NrY2hpcC0+Y2xrc1tpXSA9IGNsazsKPj4+PiArCX0KPj4+PiArCj4+Pj4g
-Kwlyb2NrY2hpcC0+b3RnX3JzdCA9IGRldm1fcmVzZXRfY29udHJvbF9nZXQoZGV2LCAidXNiMy1v
-dGciKTsKPj4+PiArCWlmIChJU19FUlIocm9ja2NoaXAtPm90Z19yc3QpKSB7Cj4+Pj4gKwkJZGV2
-X2VycihkZXYsICJjb3VsZCBub3QgZ2V0IHJlc2V0IGNvbnRyb2xsZXJcbiIpOwo+Pj4+ICsJCXJl
-dCA9IFBUUl9FUlIocm9ja2NoaXAtPm90Z19yc3QpOwo+Pj4+ICsJCWdvdG8gZXJyMjsKPj4+PiAr
-CX0KPj4+PiArCj4+Pj4gKwlyZXQgPSBkd2MzX3JvY2tjaGlwX2V4dGNvbl9yZWdpc3Rlcihyb2Nr
-Y2hpcCk7Cj4+Pj4gKwlpZiAocmV0IDwgMCkKPj4+PiArCQlnb3RvIGVycjI7Cj4+Pj4gKwo+Pj4+
-ICsJY2hpbGQgPSBvZl9nZXRfY2hpbGRfYnlfbmFtZShucCwgImR3YzMiKTsKPj4+PiArCWlmICgh
-Y2hpbGQpIHsKPj4+PiArCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0byBmaW5kIGR3YzMgY29yZSBu
-b2RlXG4iKTsKPj4+PiArCQlyZXQgPSAtRU5PREVWOwo+Pj4+ICsJCWdvdG8gZXJyMzsKPj4+PiAr
-CX0KPj4+PiArCj4+Pj4gKwkvKiBBbGxvY2F0ZSBhbmQgaW5pdGlhbGl6ZSB0aGUgY29yZSAqLwo+
-Pj4+ICsJcmV0ID0gb2ZfcGxhdGZvcm1fcG9wdWxhdGUobnAsIE5VTEwsIE5VTEwsIGRldik7Cj4+
-Pj4gKwlpZiAocmV0KSB7Cj4+Pj4gKwkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gY3JlYXRlIGR3
-YzMgY29yZVxuIik7Cj4+Pj4gKwkJZ290byBlcnIzOwo+Pj4+ICsJfQo+Pj4+ICsKPj4+PiArCWNo
-aWxkX3BkZXYgPSBvZl9maW5kX2RldmljZV9ieV9ub2RlKGNoaWxkKTsKPj4+PiArCWlmICghY2hp
-bGRfcGRldikgewo+Pj4+ICsJCWRldl9lcnIoZGV2LCAiZmFpbGVkIHRvIGZpbmQgZHdjMyBjb3Jl
-IGRldmljZVxuIik7Cj4+Pj4gKwkJcmV0ID0gLUVOT0RFVjsKPj4+PiArCQlnb3RvIGVycjQ7Cj4+
-Pj4gKwl9Cj4+Pj4gKwo+Pj4+ICsJcm9ja2NoaXAtPmR3YyA9IHBsYXRmb3JtX2dldF9kcnZkYXRh
-KGNoaWxkX3BkZXYpOwo+Pj4gTm8hIFlvdSB3aWxsICpOT1QqIHRoZSBjb3JlIHN0cnVjdCBkZXZp
-Y2UuIERvbid0IGV2ZW4gdHJ5IHRvIGNvbWUgdXAKPj4+IHdpdGggdHJpY2tzIGxpa2UgdGhpcy4K
-Pj4+Cj4+PiBMZXQncyBkbyB0aGlzOiBpbnRyb2R1Y2UgYSBnbHVlIGxheWVyIHRoYXQgZ2V0cyBw
-ZXJpcGhlcmFsLW9ubHkKPj4+IHdvcmtpbmcuIFJlbW92ZSBQTSBmb3Igbm93LCB0b28uIFN0YXJ0
-IHdpdGggc29tZXRoaW5nIHNpbXBsZSwgZ2V0IHRoZQo+Pj4gYmFyZSBtaW5pbXVtIHdvcmtpbmcg
-dXBzdHJlYW0gYW5kIGFkZCBtb3JlIHN0dWZmIGFzIHlvdSBnby4KPj4+Cj4+PiBUcnlpbmcgdG8g
-ZG8gZXZlcnl0aGluZyBpbiBvbmUgcGF0Y2gganVzdCBtYWtlcyBpdCBtdWNoIG1vcmUgbGlrZWx5
-IGZvcgo+Pj4geW91ciBwYXRjaCB0byBiZSBOQUtlZC4gV2hhdCB5b3UncmUgZG9pbmcgaGVyZSBp
-cyBieXBhc3NpbmcgYWxsIHRoZQo+Pj4gbGF5ZXJpbmcgd2UndmUgYnVpbHQuIFRoYXQgd29uJ3Qg
-d29yayB2ZXJ5IHdlbGwuIFRoZSBvbmx5IHRoaW5nIHlvdSdsbAo+Pj4gZ2V0IGlzIGZvciB5b3Vy
-IHBhdGNoZXMgdG8gY29udGludWUgdG8gYmUgTkFLZWQuCj4+Pgo+Pj4gQXZvaWQgdGhlIHRyaWNr
-cyBhbmQgYWJ1c2VzLiBKdXN0IGJlY2F1c2UgeW91IF9jYW5fIGRvIGl0IHNvbWVob3csIGl0Cj4+
-PiBkb2Vzbid0IG1lYW4geW91IF9zaG91bGRfIGRvIGl0IDotKQo+Pj4KPj4+IFlvdXIgYmVzdCBv
-cHRpb24gcmlnaHQgbm93LCBpcyB0byByZW1vdmUgUE0gYW5kIGR1YWwtcm9sZSBzdXBwb3J0IGFu
-ZCBhCj4+PiBtaW5pbWFsIGdsdWUgbGF5ZXIgc3VwcG9ydGVkLgo+Pj4KPj4+IEluIGZhY3QsIGFs
-bCB5b3UgKnJlYWxseSogbmVlZCBpcyB0byBhZGQgYSBjb21wYXRpYmxlIHRvCj4+PiBkd2MzLW9m
-LXNpbXBsZS5jLiBUaGF0IHNob3VsZCBiZSBlbm91Z2ggdG8gZ2V0IHlvdXIgZHdjMyB3b3JraW5n
-LiBEb24ndAo+Pj4gZG8gYW55dGhpbmcgbW9yZSB0aGFuIHRoYXQuIEZvciBkdWFsLXJvbGUgYW5k
-IFBNLCB3ZSBjYW4gYWRkIGl0Cj4+PiBnZW5lcmljYWxseSB0byBkd2MzLW9mLXNpbXBsZS5jIHdo
-ZW4gYWxsIHBpZWNlcyBmYWxsIGludG8gcGxhY2UuCj4+Pgo+PiBBaCwgdGhhbmtzIHZlcnkgbXVj
-aCBmb3IgeW91ciBraW5kIGV4cGxhbmF0aW9uLiBJIHRoaW5rIEkganVzdCBvbmx5IG5lZWQKPj4g
-dG8gYWRkIGEgY29tcGF0aWJsZSB0byBkd2MzLW9mLXNpbXBsZS5j77yMZm9yIG5vd++8jCBhbmQg
-SSBoYXZlIHRlc3RlZAo+PiBteSBkd2Mz77yMIGl0IHdvcmtlZCB3ZWxsIG9uIHBlcmlwaGVyYWwg
-b25seSBtb2RlIGFuZCBob3N0IG9ubHkgbW9kZQo+PiB3aXRob3V0IFBNLiBGdXJ0aGVyLCBpZiBk
-d2MzLW9mLXNpbXBsZS5jIGFkZHMgZ2VuZXJpYyBoYW5kbGluZyBvZiBkdWFsLXJvbGUKPj4gYW5k
-IFBNLCBJIGNhbiBpbXByb3ZlIG91ciBkd2MzIGZlYXR1cmUuOi0pCj4gdGhhdCdzIG15IHBvaW50
-IGV4YWN0bHkuIFdlIGNhbiBhZGQgbW9yZSBzdXBwb3J0IGdlbmVyaWNhbGx5IHNvIHRoYXQKPiBv
-dGhlciBwbGF0Zm9ybXMgY2FuIGJlbmVmaXQgZnJvbSB0aGUgd29yay4gUE0gc2hvdWxkIGJlIHNp
-bXBsZSBmb3IKPiBkd2MzLW9mLXNpbXBsZS5jLiBEdWFsLXJvbGUgd2lsbCB0YWtlIGEgbGl0dGxl
-IG1vcmUgZWZmb3J0LiBJbiBhbG1vc3QKPiB0aGVyZSBhY3R1YWxseS4gVGhlcmUgYXJlIGEgZmV3
-IG1pc3NpbmcgcGllY2VzIGJ1dCBpdCBzaG91bGQgYmUgZG9hYmxlCj4gKGhvcGVmdWxseSkgd2l0
-aGluIHRoZSBuZXh0IHR3byBtYWpvciByZWxlYXNlcy4KPgo+IFlvdXIgaW50ZWdyYXRpb24gaXMg
-bm8gZGlmZmVyZW50IHRoYW4gb3RoZXIgY29tcGFuaWVzJyB1c2luZyBEV0MzIGluCj4gZHVhbC1y
-b2xlIHNldHVwLiBGb3IgZXhhbXBsZSBUSSdzIERXQzMgaGF2ZSB0aGUgc2FtZSByZXF1aXJlbWVu
-dHMgYXMgeW91Cj4gZG8sIHNvIGl0IG1ha2VzIHNlbnNlIHRvIGFkZCBpdCBzdHJhaWdodCB0byBk
-d2MzLWNvcmUuIFJvZ2VyIFF1YWRyb3MKPiAobm93IGluIENjKSBoYXMgYmVlbiB3b3JraW5nIG9u
-IGR1YWwtcm9sZSBmb3IgVEkncyBwbGF0Zm9ybXMgYW5kIHdlJ3ZlCj4gYmVlbiBkaXNjdXNzaW5n
-IGFib3V0IGhvdyB0byBhZGQgbWlzc2luZyBwaWVjZXMgZ2VuZXJpY2FsbHkuIFBlcmhhcHMKPiB5
-b3UnZCB3YW50IHRvIGpvaW4gdGhlIGRpc2N1c3Npb24uClRoYW5rc++8gSBJJ2xsIHVwbG9hZCBh
-IG5ldyBwYXRjaCBsYXRlci4gQW5kIEkgaGF2ZSBzZWVuIHRoZSBkdWFsLXJvbGUgcGF0Y2gKdXBs
-b2FkZWQgYnkgUm9nZXIgUXVhZHJvcywgaXQncyBoZWxwZnVsIGZvciBtZS4gSSdtIGludGVyZXN0
-ZWQgaW4gdGhlIApwYXRjaO+8jApidXQgSSBuZWVkIHRvIHVuZGVyc3RhbmQgdGhlIHBhdGNoIGZp
-cnN077yMIGhvcGUgdG8gYmUgYWJsZSB0byBqb2luIHRoZSAKZGlzY3Vzc2lvbi46LSkKCgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2No
-aXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi,
+
+"William.wu" <William.wu@rock-chips.com> writes:
+>> "William.wu" <William.wu@rock-chips.com> writes:
+>>>> William Wu <william.wu@rock-chips.com> writes:
+>>>>> Add rockchip specific glue layer to support USB3 Peripheral mode
+>>>>> and Host mode on rockchip platforms (e.g. rk3399).
+>>>>>
+>>>>> The DesignWare USB3 integrated in rockchip SoCs is a configurable
+>>>>> IP Core which can be instantiated as Dual-Role Device (DRD), Host
+>>>>> Only (XHCI) and Peripheral Only configurations.
+>>>>>
+>>>>> We use extcon notifier to manage usb cable detection and mode switch.
+>>>>> Enable DWC3 PM runtime auto suspend to allow core enter runtime_suspe=
+nd
+>>>>> if USB cable is dettached. For host mode, it requires to keep whole
+>>>>> DWC3 controller in reset state to hold pipe power state in P2 before
+>>>>> initializing PHY. And it need to reconfigure USB PHY interface of DWC3
+>>>>> core after deassert DWC3 controller reset.
+>>>>>
+>>>>> The current driver supports Host only and Peripheral Only well, for
+>>>>> now, we will add support for OTG after we have it all stabilized.
+>>>>>
+>>>>> Signed-off-by: William Wu <william.wu@rock-chips.com>
+>>>>> ---
+>>>>> Changes in v10:
+>>>>> - fix building error
+>>>>>
+>>>>> Changes in v9:
+>>>>> - Add a new dwc3-rockchip.c driver for rk3399, rather than use dwc3-o=
+f-simple.c
+>>>>>
+>>>>>    drivers/usb/dwc3/Kconfig         |   9 +
+>>>>>    drivers/usb/dwc3/Makefile        |   1 +
+>>>>>    drivers/usb/dwc3/core.c          |   2 +-
+>>>>>    drivers/usb/dwc3/core.h          |   1 +
+>>>>>    drivers/usb/dwc3/dwc3-rockchip.c | 441 +++++++++++++++++++++++++++=
+++++++++++++
+>>>> William, if you need to touch core dwc3 to introduce a glue layer,
+>>>> you're doing it wrong.
+>>> Sorry=EF=BC=8C I realized that it's not better to touch core dwc3 in a =
+specific
+>>> glue layer.
+>>> I touched dwc3 in glue layer, because I want to support dual-role mode=
+=EF=BC=8C and
+>>> according to our dwc3 IP and usb3 PHY IP design=EF=BC=8C it need to rei=
+nit dwc3
+>>> core
+>>> whenever  usb cable attached.
+>>>
+>>> Anyway, it's wrong to do that.:-[
+>>>
+>>>>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>>>>> index e887b38..3da6215 100644
+>>>>> --- a/drivers/usb/dwc3/core.c
+>>>>> +++ b/drivers/usb/dwc3/core.c
+>>>>> @@ -405,7 +405,7 @@ static void dwc3_cache_hwparams(struct dwc3 *dwc)
+>>>>>     * initialized. The PHY interfaces and the PHYs get initialized to=
+gether with
+>>>>>     * the core in dwc3_core_init.
+>>>>>     */
+>>>>> -static int dwc3_phy_setup(struct dwc3 *dwc)
+>>>>> +int dwc3_phy_setup(struct dwc3 *dwc)
+>>>> there's no way I'll let this slip through the cracks :-)
+>>> Why I need  dwc3_phy_setup in  glue layer is because usb3 IP design
+>>> in rockchip platform. If dwc3 works on host mode, it requires to put
+>>> dwc3 controller in reset state before usb3 phy initializing=EF=BC=8Cand=
+ after
+>>> deassert reset,  we need to reconfigure UTMI+ PHY interface because
+>>> our dwc3 core can't configure PHY interface correctly.
+>>>
+>>> Thank you for give me a chance to explain it.:-)
+>>>
+>>>>> diff --git a/drivers/usb/dwc3/dwc3-rockchip.c b/drivers/usb/dwc3/dwc3=
+-rockchip.c
+>>>>> new file mode 100644
+>>>>> index 0000000..eeae1a9
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/usb/dwc3/dwc3-rockchip.c
+>>>>> @@ -0,0 +1,441 @@
+>>>> [...]
+>>>>
+>>>>> +static int dwc3_rockchip_probe(struct platform_device *pdev)
+>>>>> +{
+>>>>> +	struct dwc3_rockchip	*rockchip;
+>>>>> +	struct device		*dev =3D &pdev->dev;
+>>>>> +	struct device_node	*np =3D dev->of_node, *child;
+>>>>> +	struct platform_device	*child_pdev;
+>>>>> +
+>>>>> +	unsigned int		count;
+>>>>> +	int			ret;
+>>>>> +	int			i;
+>>>>> +
+>>>>> +	rockchip =3D devm_kzalloc(dev, sizeof(*rockchip), GFP_KERNEL);
+>>>>> +
+>>>>> +	if (!rockchip)
+>>>>> +		return -ENOMEM;
+>>>>> +
+>>>>> +	count =3D of_clk_get_parent_count(np);
+>>>>> +	if (!count)
+>>>>> +		return -ENOENT;
+>>>>> +
+>>>>> +	rockchip->num_clocks =3D count;
+>>>>> +
+>>>>> +	rockchip->clks =3D devm_kcalloc(dev, rockchip->num_clocks,
+>>>>> +				      sizeof(struct clk *), GFP_KERNEL);
+>>>>> +	if (!rockchip->clks)
+>>>>> +		return -ENOMEM;
+>>>>> +
+>>>>> +	platform_set_drvdata(pdev, rockchip);
+>>>>> +
+>>>>> +	rockchip->dev =3D dev;
+>>>>> +	rockchip->edev =3D NULL;
+>>>>> +
+>>>>> +	pm_runtime_set_active(dev);
+>>>>> +	pm_runtime_enable(dev);
+>>>>> +	ret =3D pm_runtime_get_sync(dev);
+>>>>> +	if (ret < 0) {
+>>>>> +		dev_err(dev, "get_sync failed with err %d\n", ret);
+>>>>> +		goto err1;
+>>>>> +	}
+>>>>> +
+>>>>> +	for (i =3D 0; i < rockchip->num_clocks; i++) {
+>>>>> +		struct clk	*clk;
+>>>>> +
+>>>>> +		clk =3D of_clk_get(np, i);
+>>>>> +		if (IS_ERR(clk)) {
+>>>>> +			while (--i >=3D 0)
+>>>>> +				clk_put(rockchip->clks[i]);
+>>>>> +			ret =3D PTR_ERR(clk);
+>>>>> +
+>>>>> +			goto err1;
+>>>>> +		}
+>>>>> +
+>>>>> +		ret =3D clk_prepare_enable(clk);
+>>>>> +		if (ret < 0) {
+>>>>> +			while (--i >=3D 0) {
+>>>>> +				clk_disable_unprepare(rockchip->clks[i]);
+>>>>> +				clk_put(rockchip->clks[i]);
+>>>>> +			}
+>>>>> +			clk_put(clk);
+>>>>> +
+>>>>> +			goto err1;
+>>>>> +		}
+>>>>> +
+>>>>> +		rockchip->clks[i] =3D clk;
+>>>>> +	}
+>>>>> +
+>>>>> +	rockchip->otg_rst =3D devm_reset_control_get(dev, "usb3-otg");
+>>>>> +	if (IS_ERR(rockchip->otg_rst)) {
+>>>>> +		dev_err(dev, "could not get reset controller\n");
+>>>>> +		ret =3D PTR_ERR(rockchip->otg_rst);
+>>>>> +		goto err2;
+>>>>> +	}
+>>>>> +
+>>>>> +	ret =3D dwc3_rockchip_extcon_register(rockchip);
+>>>>> +	if (ret < 0)
+>>>>> +		goto err2;
+>>>>> +
+>>>>> +	child =3D of_get_child_by_name(np, "dwc3");
+>>>>> +	if (!child) {
+>>>>> +		dev_err(dev, "failed to find dwc3 core node\n");
+>>>>> +		ret =3D -ENODEV;
+>>>>> +		goto err3;
+>>>>> +	}
+>>>>> +
+>>>>> +	/* Allocate and initialize the core */
+>>>>> +	ret =3D of_platform_populate(np, NULL, NULL, dev);
+>>>>> +	if (ret) {
+>>>>> +		dev_err(dev, "failed to create dwc3 core\n");
+>>>>> +		goto err3;
+>>>>> +	}
+>>>>> +
+>>>>> +	child_pdev =3D of_find_device_by_node(child);
+>>>>> +	if (!child_pdev) {
+>>>>> +		dev_err(dev, "failed to find dwc3 core device\n");
+>>>>> +		ret =3D -ENODEV;
+>>>>> +		goto err4;
+>>>>> +	}
+>>>>> +
+>>>>> +	rockchip->dwc =3D platform_get_drvdata(child_pdev);
+>>>> No! You will *NOT* the core struct device. Don't even try to come up
+>>>> with tricks like this.
+>>>>
+>>>> Let's do this: introduce a glue layer that gets peripheral-only
+>>>> working. Remove PM for now, too. Start with something simple, get the
+>>>> bare minimum working upstream and add more stuff as you go.
+>>>>
+>>>> Trying to do everything in one patch just makes it much more likely for
+>>>> your patch to be NAKed. What you're doing here is bypassing all the
+>>>> layering we've built. That won't work very well. The only thing you'll
+>>>> get is for your patches to continue to be NAKed.
+>>>>
+>>>> Avoid the tricks and abuses. Just because you _can_ do it somehow, it
+>>>> doesn't mean you _should_ do it :-)
+>>>>
+>>>> Your best option right now, is to remove PM and dual-role support and a
+>>>> minimal glue layer supported.
+>>>>
+>>>> In fact, all you *really* need is to add a compatible to
+>>>> dwc3-of-simple.c. That should be enough to get your dwc3 working. Don't
+>>>> do anything more than that. For dual-role and PM, we can add it
+>>>> generically to dwc3-of-simple.c when all pieces fall into place.
+>>>>
+>>> Ah, thanks very much for your kind explanation. I think I just only need
+>>> to add a compatible to dwc3-of-simple.c=EF=BC=8Cfor now=EF=BC=8C and I =
+have tested
+>>> my dwc3=EF=BC=8C it worked well on peripheral only mode and host only m=
+ode
+>>> without PM. Further, if dwc3-of-simple.c adds generic handling of dual-=
+role
+>>> and PM, I can improve our dwc3 feature.:-)
+>> that's my point exactly. We can add more support generically so that
+>> other platforms can benefit from the work. PM should be simple for
+>> dwc3-of-simple.c. Dual-role will take a little more effort. In almost
+>> there actually. There are a few missing pieces but it should be doable
+>> (hopefully) within the next two major releases.
+>>
+>> Your integration is no different than other companies' using DWC3 in
+>> dual-role setup. For example TI's DWC3 have the same requirements as you
+>> do, so it makes sense to add it straight to dwc3-core. Roger Quadros
+>> (now in Cc) has been working on dual-role for TI's platforms and we've
+>> been discussing about how to add missing pieces generically. Perhaps
+>> you'd want to join the discussion.
+> Thanks=EF=BC=81 I'll upload a new patch later. And I have seen the dual-r=
+ole patch
+> uploaded by Roger Quadros, it's helpful for me. I'm interested in the=20
+> patch=EF=BC=8C
+> but I need to understand the patch first=EF=BC=8C hope to be able to join=
+ the=20
+> discussion.:-)
+
+cool, thanks. More users means we're more likely to make a trully
+generic layer. We're discussing some simplification of that layer,
+however, so that it doesn't take as much code to get DRD working.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJXsv+CAAoJEIaOsuA1yqREEP0QAJtekB8nw2KMNhz8iWlRNjdl
+PeRoJRqoF6O9FzNNvHSf6JdUNGYtu3kVq102SDF4OKjBZNcDW7bFjTr0ZFcmXZSr
+hHww92FLpyL0Nxmq3ZXFtsgGLrjVm1eoOxzyiPXzqOT3KzjQR0loPD42TaR/AuP4
+j8UXOvoTV7uvylugWi5QjPlyTySGCPGKLJ6hkrnlC4JtERIlV1mirIWW7pKFlGH7
+i/V8xeYjQmsgqQfkLKK24UD+k9aw72bqQBPX8qvgFiaCxiMeomJGFC4l3uEzGZWG
+YXV4PNUndSz9PvlQMVlDu30dmCp4xRRGIpIb+deLgK8169J4Ja1GBp7nCSHcN2Je
+K1KAfeCYmNMimD5qZYLivLj7UyqnotN2qxwTZEiviv0777bq7Od/U8NJMPmW1Brp
+q8tXL6rpUQwsH8k1XpEHFQfS30Ix5Kf5CG7HthnGUAoO2zQJtBK33D+5J0UMFQko
+uTfz17McQMMQO+//9fR604lobfy7CgoHE8pXjHl1Aqk7JC5Oix21wwF0xkS5FvDr
+6Ty+Lo/9lAlUzphwMUeXFRkEQiUp75kXsuE+APxiPA8G6aNXvQEjOl+fdkcObZQA
+T5E6XvyKFEQO8olQve61A1zrSmsxgzLVCHIxgUMhjHt3y9b+sD9fayTm/8KOr2kB
+y5nfTy60/t+o8YiWAK7J
+=GIQp
+-----END PGP SIGNATURE-----
+--=-=-=--
