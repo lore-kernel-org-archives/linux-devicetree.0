@@ -1,111 +1,57 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 5/7] arm64: dts: exynos: Add dts files for Samsung
- Exynos5433 64bit SoC
-Date: Tue, 16 Aug 2016 12:50:58 +0200
-Message-ID: <d4ebd29f-98b7-6e56-42ee-923d55ca85ff@samsung.com>
-References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
- <1471329328-26842-1-git-send-email-cw00.choi@samsung.com>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v10 3/4] ARM: dts: rockchip: add syscon-reboot-mode DT
+ node
+Date: Tue, 16 Aug 2016 18:51:46 +0800
+Message-ID: <2b270880-62ee-0dc0-15e7-4e0b4bc76653@rock-chips.com>
+References: <1467811081-20700-1-git-send-email-andy.yan@rock-chips.com>
+ <3833029.abRAq4Ccmc@diego>
+ <5a7f6e2f-c7f5-6402-c0ed-364eda7da40e@rock-chips.com>
+ <1904400.cBk6EHq0Yx@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1471329328-26842-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: k.kozlowski@samsung.com, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, krzk@kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, chanwoo@kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1904400.cBk6EHq0Yx@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: sre@kernel.org, robh+dt@kernel.org, john.stultz@linaro.org, k.kozlowski@samsung.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jun.nie@linaro.org, matthias.bgg@gmail.com, moritz.fischer@ettus.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+Hi Heiko:
 
-On 08/16/2016 08:35 AM, Chanwoo Choi wrote:
-> This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC based on
-> Octa-core CPUs (quad Cortex-A57 and quad Cortex-A53). And Exynos5433 supports
-> PSCI (Power State Coordination Interface) v0.1.
 
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 1580 ++++++++++++++++++++
+On 2016年08月12日 02:23, Heiko Stuebner wrote:
+> Hi Andy,
+>
+> Am Donnerstag, 21. Juli 2016, 16:28:40 CEST schrieb Andy Yan:
+>> On 2016年07月21日 06:01, Heiko Stübner wrote:
+>>> Am Mittwoch, 6. Juli 2016, 21:28:34 schrieb Andy Yan:
+>>>> Rockchip platform use a SYSCON mapped register store
+>>>> the reboot mode magic value for bootloader to use when
+>>>> system reboot. So add syscon-reboot-mode driver DT node
+>>>> for rk3xxx/rk3036/rk3288 based platform
+>>>>
+>>>> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+>>>> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>>> just as a heads up, with the driver part applied, this part looks good as
+>>> well. we're of course very close to the 4.7 release, so this will need to
+>>> wait until after 4.8-rc1 as I'll need to do a shared branch for the
+>>> rockchip_boot- mode.h . I can do the separation myself then , so there is
+>>> no need to resend anything.
+>>       Got it, thanks!
+> I've split the first patch and applied the 3 resulting dts patches now:
+>
+> https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.git/commit/?h=v4.9-shared/soc-hdr&id=18a21e2c079a01805607bb474b3536a99620d162
+> https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.git/commit/?h=v4.9-armsoc/dts32&id=b60ab70bbeced9a780ba297ffc555bc3a8ae6045
+> https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.git/commit/?h=v4.9-armsoc/dts64&id=2e9e2863c7bee8ef828924cb0cad900776cb6d08
+>
+> with some minor fixes, please double-check that I didn't mess up
 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi 
-> b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> new file mode 100644
-> index 000000000000..2a5b05744533
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> @@ -0,0 +1,1580 @@
-
-> +
-> +/ {
-> +	compatible = "samsung,exynos5433";
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-
-> +	soc: soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x0 0x0 0x18000000>;
-
-> +		lpass: lpass@11400000 {
-> +			compatible = "samsung,exynos5433-lpass";
-> +			reg = <0x11400000 0x100>;
-> +			samsung,pmu-syscon = <&pmu_system_controller>;
-> +			status = "disabled";
-> +		};
-> +
-> +		i2s0: i2s0@11440000 {
-> +			compatible = "samsung,exynos7-i2s";
-> +			reg = <0x11440000 0x100>;
-> +			dmas = <&adma 0 &adma 2>;
-> +			dma-names = "tx", "rx";
-> +			interrupts = <0 70 0>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			clocks = <&cmu_aud CLK_PCLK_AUD_I2S>,
-> +				 <&cmu_aud CLK_SCLK_AUD_I2S>,
-> +				 <&cmu_aud CLK_SCLK_I2S_BCLK>;
-> +			clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&i2s0_bus>;
-> +			status = "disabled";
-> +		};
-
-> +		serial_3: serial@11460000 {
-> +			compatible = "samsung,exynos5433-uart";
-> +			reg = <0x11460000 0x100>;
-> +			interrupts = <0 67 0>;
-> +			clocks = <&cmu_aud CLK_PCLK_AUD_UART>,
-> +				<&cmu_aud CLK_SCLK_AUD_UART>;
-> +			clock-names = "uart", "clk_uart_baud0";
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&uart_aud_bus>;
-> +			status = "disabled";
-> +		};
-> +
-
-> +		amba {
-> +			compatible = "arm,amba-bus";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-
-> +			adma: adma@11420000 {
-> +				compatible = "arm,pl330", "arm,primecell";
-> +				reg = <0x11420000 0x1000>;
-> +				interrupts = <0 73 0>;
-> +				clocks = <&cmu_aud CLK_ACLK_DMAC>;
-> +				clock-names = "apb_pclk";
-> +				#dma-cells = <1>;
-> +				#dma-channels = <8>;
-> +				#dma-requests = <32>;
-> +			};
-> +		};
-> +	};
-
-The latest Exynos5433 Audio Subsystem bindings look like this
-https://git.linuxtv.org/snawrocki/samsung.git/commit/?h=for-v4.9/mfd/exynos-lpass-v5&id=104cc6ad3ecc7c4c8ecf73663b93eb48b78f35aa
-i.e. adma@11420000, i2s0@11440000, serial@11460000 should be subnodes of
-the lpass@11400000 node.
-
--- 
-Thanks,
-Sylwester
+     I've checked it, and tested it. All looks okay. Thanks.
+>
+>
+> Thanks
+> Heiko
+>
+>
+>
