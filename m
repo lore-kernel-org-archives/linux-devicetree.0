@@ -1,52 +1,233 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [RFC 0/7] Nokia N9xx bluetooth driver
-Date: Tue, 16 Aug 2016 09:10:54 +0200
-Message-ID: <A9EA833E-DDDE-46FB-917C-30CF00A70A6C@holtmann.org>
-References: <1471058078-5579-1-git-send-email-sre@kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v10 5/5] usb: dwc3: add rockchip specific glue layer
+Date: Tue, 16 Aug 2016 10:19:20 +0300
+Message-ID: <87y43x89l3.fsf@linux.intel.com>
+References: <1471251031-17084-1-git-send-email-william.wu@rock-chips.com> <1471251284-1804-1-git-send-email-william.wu@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha256; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471058078-5579-1-git-send-email-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1471251284-1804-1-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Ville Tervo <ville.tervo-X3B1VOXEql0@public.gmane.org>, =?utf-8?Q?Filip_Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, =?utf-8?Q?Pali_Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> This series (based von 4.8-rc1) adds support for bluetooth on the Nokia
-> N9xx devices. It has been tested on the Nokia N950, where it works
-> correctly. On Nokia N900 it currently fails during negotiation
-> (probably related to slightly incorrect serial settings/timings).
-> The N900's bcm2048 correctly answeres to alive check even before
-> negotiation (on N950 it does not work before negotiation), but replies
-> with an Hardware error event to the negotiation packet.
-> 
-> Apart from N900 support there are still two "features" missing in the
-> driver:
-> 
-> 1. To save energy the bluetooth module can be put into sleep mode via a
->   GPIO. This gpio should be enabled before sending data via UART and
->   disabled once the transmission is done. I currently just keep the
->   GPIO always enabled.
-> 2. It would be nice to have a bluetooth device exposed by the kernel
->   automatically without having to setup the tty disector first for
->   proper configurationless out of the box support. I could not find
->   a nice way to do this from the kernel, though.
 
-currently using the HCI line discipline is the only way to attach a Bluetooth device to a serial line / UART.
+Hi,
 
-However I have been advocating for a serial bus or UART bus for a long time now. It is needed especially for Bluetooth devices which have no business in being exposed as TTYs in the first place.
+William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> writes:
+> Add rockchip specific glue layer to support USB3 Peripheral mode
+> and Host mode on rockchip platforms (e.g. rk3399).
+>
+> The DesignWare USB3 integrated in rockchip SoCs is a configurable
+> IP Core which can be instantiated as Dual-Role Device (DRD), Host
+> Only (XHCI) and Peripheral Only configurations.
+>
+> We use extcon notifier to manage usb cable detection and mode switch.
+> Enable DWC3 PM runtime auto suspend to allow core enter runtime_suspend
+> if USB cable is dettached. For host mode, it requires to keep whole
+> DWC3 controller in reset state to hold pipe power state in P2 before
+> initializing PHY. And it need to reconfigure USB PHY interface of DWC3
+> core after deassert DWC3 controller reset.
+>
+> The current driver supports Host only and Peripheral Only well, for
+> now, we will add support for OTG after we have it all stabilized.
+>
+> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> Changes in v10:
+> - fix building error
+>
+> Changes in v9:
+> - Add a new dwc3-rockchip.c driver for rk3399, rather than use dwc3-of-si=
+mple.c
+>
+>  drivers/usb/dwc3/Kconfig         |   9 +
+>  drivers/usb/dwc3/Makefile        |   1 +
+>  drivers/usb/dwc3/core.c          |   2 +-
+>  drivers/usb/dwc3/core.h          |   1 +
+>  drivers/usb/dwc3/dwc3-rockchip.c | 441 +++++++++++++++++++++++++++++++++=
+++++++
 
-This is true for the ACPI and DT world actually. Some UARTs should not be exposed as TTY and just be stuck on a bus that can be enumerated and matched by a driver that knows how to handle it.
+William, if you need to touch core dwc3 to introduce a glue layer,
+you're doing it wrong.
 
-This goes along with the weird fetish to expose certain Bluetooth GPIOs as RFKILL switches. They are not that either since they just power the UART. They have nothing to do with a radio RFKILL switch. We fixed the Intel and Broadcom ones to be mapped into the driver. Having a proper bus would make this one also a lot easier.
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> index e887b38..3da6215 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -405,7 +405,7 @@ static void dwc3_cache_hwparams(struct dwc3 *dwc)
+>   * initialized. The PHY interfaces and the PHYs get initialized together=
+ with
+>   * the core in dwc3_core_init.
+>   */
+> -static int dwc3_phy_setup(struct dwc3 *dwc)
+> +int dwc3_phy_setup(struct dwc3 *dwc)
 
-Regards
+there's no way I'll let this slip through the cracks :-)
 
-Marcel
+> diff --git a/drivers/usb/dwc3/dwc3-rockchip.c b/drivers/usb/dwc3/dwc3-roc=
+kchip.c
+> new file mode 100644
+> index 0000000..eeae1a9
+> --- /dev/null
+> +++ b/drivers/usb/dwc3/dwc3-rockchip.c
+> @@ -0,0 +1,441 @@
 
+[...]
+
+> +static int dwc3_rockchip_probe(struct platform_device *pdev)
+> +{
+> +	struct dwc3_rockchip	*rockchip;
+> +	struct device		*dev =3D &pdev->dev;
+> +	struct device_node	*np =3D dev->of_node, *child;
+> +	struct platform_device	*child_pdev;
+> +
+> +	unsigned int		count;
+> +	int			ret;
+> +	int			i;
+> +
+> +	rockchip =3D devm_kzalloc(dev, sizeof(*rockchip), GFP_KERNEL);
+> +
+> +	if (!rockchip)
+> +		return -ENOMEM;
+> +
+> +	count =3D of_clk_get_parent_count(np);
+> +	if (!count)
+> +		return -ENOENT;
+> +
+> +	rockchip->num_clocks =3D count;
+> +
+> +	rockchip->clks =3D devm_kcalloc(dev, rockchip->num_clocks,
+> +				      sizeof(struct clk *), GFP_KERNEL);
+> +	if (!rockchip->clks)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, rockchip);
+> +
+> +	rockchip->dev =3D dev;
+> +	rockchip->edev =3D NULL;
+> +
+> +	pm_runtime_set_active(dev);
+> +	pm_runtime_enable(dev);
+> +	ret =3D pm_runtime_get_sync(dev);
+> +	if (ret < 0) {
+> +		dev_err(dev, "get_sync failed with err %d\n", ret);
+> +		goto err1;
+> +	}
+> +
+> +	for (i =3D 0; i < rockchip->num_clocks; i++) {
+> +		struct clk	*clk;
+> +
+> +		clk =3D of_clk_get(np, i);
+> +		if (IS_ERR(clk)) {
+> +			while (--i >=3D 0)
+> +				clk_put(rockchip->clks[i]);
+> +			ret =3D PTR_ERR(clk);
+> +
+> +			goto err1;
+> +		}
+> +
+> +		ret =3D clk_prepare_enable(clk);
+> +		if (ret < 0) {
+> +			while (--i >=3D 0) {
+> +				clk_disable_unprepare(rockchip->clks[i]);
+> +				clk_put(rockchip->clks[i]);
+> +			}
+> +			clk_put(clk);
+> +
+> +			goto err1;
+> +		}
+> +
+> +		rockchip->clks[i] =3D clk;
+> +	}
+> +
+> +	rockchip->otg_rst =3D devm_reset_control_get(dev, "usb3-otg");
+> +	if (IS_ERR(rockchip->otg_rst)) {
+> +		dev_err(dev, "could not get reset controller\n");
+> +		ret =3D PTR_ERR(rockchip->otg_rst);
+> +		goto err2;
+> +	}
+> +
+> +	ret =3D dwc3_rockchip_extcon_register(rockchip);
+> +	if (ret < 0)
+> +		goto err2;
+> +
+> +	child =3D of_get_child_by_name(np, "dwc3");
+> +	if (!child) {
+> +		dev_err(dev, "failed to find dwc3 core node\n");
+> +		ret =3D -ENODEV;
+> +		goto err3;
+> +	}
+> +
+> +	/* Allocate and initialize the core */
+> +	ret =3D of_platform_populate(np, NULL, NULL, dev);
+> +	if (ret) {
+> +		dev_err(dev, "failed to create dwc3 core\n");
+> +		goto err3;
+> +	}
+> +
+> +	child_pdev =3D of_find_device_by_node(child);
+> +	if (!child_pdev) {
+> +		dev_err(dev, "failed to find dwc3 core device\n");
+> +		ret =3D -ENODEV;
+> +		goto err4;
+> +	}
+> +
+> +	rockchip->dwc =3D platform_get_drvdata(child_pdev);
+
+No! You will *NOT* the core struct device. Don't even try to come up
+with tricks like this.
+
+Let's do this: introduce a glue layer that gets peripheral-only
+working. Remove PM for now, too. Start with something simple, get the
+bare minimum working upstream and add more stuff as you go.
+
+Trying to do everything in one patch just makes it much more likely for
+your patch to be NAKed. What you're doing here is bypassing all the
+layering we've built. That won't work very well. The only thing you'll
+get is for your patches to continue to be NAKed.
+
+Avoid the tricks and abuses. Just because you _can_ do it somehow, it
+doesn't mean you _should_ do it :-)
+
+Your best option right now, is to remove PM and dual-role support and a
+minimal glue layer supported.
+
+In fact, all you *really* need is to add a compatible to
+dwc3-of-simple.c. That should be enough to get your dwc3 working. Don't
+do anything more than that. For dual-role and PM, we can add it
+generically to dwc3-of-simple.c when all pieces fall into place.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJXsr54AAoJEIaOsuA1yqREN0QQAKlPytsAUbZyb/y1MxLgHkpG
+/4a2RRBRzMZGl+sIX68xC172MBeICaG2oC0WtWevidcEn+iJMWb9JfQcYN+GBrqu
+kls/cgdY04FLn0hjoIuP5NYviX515SjoxzZNtB+vef3SGWu+5WVTKYr/DlqRM7wb
+jFxF2jESQ7dED0zP2R77kdaXj3ykZ21zV72uYuI1zanx2KB12wzPW+HLKsPKHbYO
+lAp81Xw5E4pwGPc1TghwrJ0hPlvok4WZ+ApiKD3VNLcbwPGxa0FQFXcL08Gi+Bqt
+jzEk0O64J+4mHAU/srtcBddLzMaqYHgNlrm/RSvsW4CQ7CDjq8vVh3lcp9VR/6c8
+e3NZJF5MQtCm6bnvJ2sOYSaKtkLKneR6On34z69yo3tJuxG4WsBCRZJVuBBJ5PhS
+UqW1DQenDWe4jys5LUPoKHiWAErP2CKDDxqAsIZe1xxl55LsilCSpAIqFgdU7u1O
+tXx2NJHrZKHTSfUW/7fq8pGwOF4C1uRiE9L6cD1s8U5S/To9j9C/c3LZWCgFrq56
+2CGwj+O7gl+KD1ZC75hbT2Ah3I5LifLBuEs7s6jyrRZUl46IKFEn7c7s94g2PxcT
+wNMQjMvSzIpe0yho8VbLJ/DF9hd7ESzx9uQoVYgSFsD1elw/9syZlY/dCAZOWg2D
+ykD7CVp4NPfTCKUPBJer
+=W/u7
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
