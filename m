@@ -1,47 +1,60 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v2] regulator: axp20x: support AXP803/AXP813 variants
-Date: Tue, 16 Aug 2016 18:07:40 +0200
-Message-ID: <20160816180740.739c382a63434d5c7f706b58@free.fr>
-References: <E1bZY0w-0004lM-0a@bombadil.infradead.org>
-	<248521471347017@web1g.yandex.ru>
-	<20160816150104.16a7bcf774135c8275828eda@free.fr>
-	<395001471359887@web15h.yandex.ru>
-Reply-To: moinejf-GANU6spQydw@public.gmane.org
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [RFC PATCH v5 3/3] net: phy: Add gmiitorgmii converter support
+Date: Tue, 16 Aug 2016 18:09:59 +0200
+Message-ID: <20160816160959.GO14446@lunn.ch>
+References: <1470735283-23611-1-git-send-email-appanad@xilinx.com>
+ <1470735283-23611-4-git-send-email-appanad@xilinx.com>
+ <20160815213059.GK24664@lunn.ch>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5E2756@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCV6DL6LYMNBBYPUZS6QKGQEUFJSMKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <395001471359887-pkmkBaL7+f1xpj1cXAZ9Bg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A5E2756@XAP-PVEXMBX01.xlnx.xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>, David Miller <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 16 Aug 2016 23:04:47 +0800
-Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+> > https://github.com/lunn/linux/commit/03d375489ceb56e171056f44d0fe9c34ca
+> > 5a098e
+> > 
+> > Notice the
+> > 
+> > Not-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+> > 
+> > and the Copyright i added?
+> > 
+> > In various emails i gave you the basic idea how this should be done, a framework
+> > of code, and then took your code which did not even compile and made the core
+> > of it work. This is as much my code as your code, so i expect my Copyright to be
+> > kept on this code. And since this is my code, i need to give a Signed-off-by,
+> > which i was not yet ready to give since the code was not complete or working.
+> > 
+> > Please put both my Copyright back and Not-Signed-Off-by back and post the
+> > next version as RFC. Once i'm happy this code is O.K, i will give you a Signed-off-
+> > by.
+> 
+> Sorry I should have been included your copyright.
+> 
+> I missed it...
+> I didn't included your SOF because.
+> AFAIK without explicit permission of the other person we shouldn't include SOF.
+> That's why I didn't included your SOF and thanked for your efforts after SOF.
+> Sorry if my understanding is wrong.
 
-> > Also, please, may you give me a pointer to the AXP813 documentation?
-> I got it on BaiduPan.
-> https://pan.baidu.com/share/link?shareid=3D120641733&uk=3D2121502978&fid=
-=3D169295081716431
-> Here's a link, you can download it if you can read Chinese...
-> Or at least you can read it online.
+Without a SOB you cannot submit the patch for inclusion at all. You
+should however reproduce tags which have been given, i.e. you should
+of kept my Not-Signed-Off-by: making it clear i have not yet given
+permission for this code to go into mainline.
 
-I got it. Thanks.
-
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+	   Andrew
