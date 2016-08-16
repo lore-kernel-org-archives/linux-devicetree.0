@@ -1,159 +1,51 @@
-From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH v5 6/7] power: act8945a_charger: Add max current property
-Date: Tue, 16 Aug 2016 16:59:57 +0800
-Message-ID: <1471337998-6467-7-git-send-email-wenyou.yang@atmel.com>
-References: <1471337998-6467-1-git-send-email-wenyou.yang@atmel.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH 0/4] drm/tilcdc: Address LCDC rev 2 color errata
+Date: Tue, 16 Aug 2016 12:24:26 +0300
+Message-ID: <cover.1471334845.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1471337998-6467-1-git-send-email-wenyou.yang@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
- Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com
+Cc: Jyri Sarha <jsarha@ti.com>, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-Add the power supply's current max property,
-POWER_SUPPLY_PROP_CURRENT_MAX.
-
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
----
-
-Changes in v5: None
-Changes in v4:
- - Fix wrong gpio assignment for chglev_pin.
-
-Changes in v3: None
-Changes in v2: None
-
- drivers/power/supply/act8945a_charger.c | 79 ++++++++++++++++++++++++++++++++-
- 1 file changed, 77 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/power/supply/act8945a_charger.c b/drivers/power/supply/act8945a_charger.c
-index 2321796..9bfbc87 100644
---- a/drivers/power/supply/act8945a_charger.c
-+++ b/drivers/power/supply/act8945a_charger.c
-@@ -84,6 +84,7 @@ struct act8945a_charger {
- 
- 	bool init_done;
- 	int lbo_pin;
-+	int chgin_level;
- };
- 
- static int act8945a_get_charger_state(struct regmap *regmap, int *val)
-@@ -267,12 +268,79 @@ static int act8945a_get_capacity_level(struct act8945a_charger *charger,
- 	return 0;
- }
- 
-+#define MAX_CURRENT_USB_HIGH	450000
-+#define MAX_CURRENT_USB_LOW	90000
-+#define MAX_CURRENT_USB_PRE	45000
-+/*
-+ * Riset(K) = 2336 * (1V/Ichg(mA)) - 0.205
-+ * Riset = 2.43K
-+ */
-+#define MAX_CURRENT_AC_HIGH		886527
-+#define MAX_CURRENT_AC_LOW		117305
-+#define MAX_CURRENT_AC_HIGH_PRE		88653
-+#define MAX_CURRENT_AC_LOW_PRE		11731
-+
-+static int act8945a_get_current_max(struct act8945a_charger *charger,
-+				    struct regmap *regmap, int *val)
-+{
-+	int ret;
-+	unsigned int status, state;
-+	unsigned int acin_state;
-+
-+	ret = regmap_read(regmap, ACT8945A_APCH_STATUS, &status);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regmap_read(regmap, ACT8945A_APCH_STATE, &state);
-+	if (ret < 0)
-+		return ret;
-+
-+	acin_state = (state & APCH_STATE_ACINSTAT) >> 1;
-+
-+	state &= APCH_STATE_CSTATE;
-+	state >>= APCH_STATE_CSTATE_SHIFT;
-+
-+	switch (state) {
-+	case APCH_STATE_CSTATE_PRE:
-+		if (acin_state) {
-+			if (charger->chgin_level)
-+				*val = MAX_CURRENT_AC_HIGH_PRE;
-+			else
-+				*val = MAX_CURRENT_AC_LOW_PRE;
-+		} else {
-+			*val = MAX_CURRENT_USB_PRE;
-+		}
-+		break;
-+	case APCH_STATE_CSTATE_FAST:
-+		if (acin_state) {
-+			if (charger->chgin_level)
-+				*val = MAX_CURRENT_AC_HIGH;
-+			else
-+				*val = MAX_CURRENT_AC_LOW;
-+		} else {
-+			if (charger->chgin_level)
-+				*val = MAX_CURRENT_USB_HIGH;
-+			else
-+				*val = MAX_CURRENT_USB_LOW;
-+		}
-+		break;
-+	case APCH_STATE_CSTATE_EOC:
-+	case APCH_STATE_CSTATE_DISABLED:
-+	default:
-+		*val = 0;
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
- static enum power_supply_property act8945a_charger_props[] = {
- 	POWER_SUPPLY_PROP_STATUS,
- 	POWER_SUPPLY_PROP_CHARGE_TYPE,
- 	POWER_SUPPLY_PROP_TECHNOLOGY,
- 	POWER_SUPPLY_PROP_HEALTH,
- 	POWER_SUPPLY_PROP_CAPACITY_LEVEL,
-+	POWER_SUPPLY_PROP_CURRENT_MAX,
- 	POWER_SUPPLY_PROP_MODEL_NAME,
- 	POWER_SUPPLY_PROP_MANUFACTURER
- };
-@@ -302,6 +370,10 @@ static int act8945a_charger_get_property(struct power_supply *psy,
- 		ret = act8945a_get_capacity_level(charger,
- 						  regmap, &val->intval);
- 		break;
-+	case POWER_SUPPLY_PROP_CURRENT_MAX:
-+		ret = act8945a_get_current_max(charger,
-+					       regmap, &val->intval);
-+		break;
- 	case POWER_SUPPLY_PROP_MODEL_NAME:
- 		val->strval = act8945a_charger_model;
- 		break;
-@@ -434,8 +506,11 @@ static int act8945a_charger_config(struct device *dev,
- 				"active-semi,chglev-gpios", 0, &flags);
- 
- 	if (gpio_is_valid(chglev_pin)) {
--		gpio_set_value(chglev_pin,
--			       ((flags == OF_GPIO_ACTIVE_LOW) ? 0 : 1));
-+		if (!devm_gpio_request(dev, chglev_pin, "chglev-pin")) {
-+			charger->chgin_level =
-+					(flags == OF_GPIO_ACTIVE_LOW) ? 0 : 1;
-+			gpio_set_value(chglev_pin, charger->chgin_level);
-+		}
- 	}
- 
- 	if (of_property_read_u32(np,
--- 
-2.7.4
+VGhlIGZpcnN0IHBhdGNoICgiZHJtL3RpbGNkYzogUmVtb3ZlIGRybV9oZWxwZXJfZGlzYWJsZV91
+bnVzZWRfZnVuY3Rpb25zKCkKY2FsbCIpIGlzIGNvbXBsZXRlbHkgaW5kZXBlbmRlbnQgZml4LgoK
+VGhlIHJlZCBhbmQgYmx1ZSBjb21wb25lbnRzIGFyZSByZXZlcnNlZCBiZXR3ZWVuIDI0IGFuZCAx
+NiBiaXQgbW9kZXMKb24gYW0zMzV4IExDREMgb3V0cHV0IHBpbnMuIFRvIGdldCAyNCBSR0IgZm9y
+bWF0IHRoZSB3aXJlcyByZWQgYW5kCmJsdWUgd2lyZXMgaGFzIHRvIGJlIGNyb3NzZWQgYW5kIHRo
+aXMgaW4gdHVybiBjYXVzZXMgMTYgY29sb3JzIG91dHB1dAp0byBiZSBpbiBCR1IgZm9ybWF0LiBX
+aXRoIHN0cmFpZ2h0IHdpcmluZyB0aGUgMTYgY29sb3IgaXMgUkdCIGFuZCAyNApiaXQgaXMgQkdS
+LiBUaGVzZSBwYXRjaGVzIHRyeSB0byBkZWFsIHdpdGggdGhlIGlzc3VlIGluIHJlYXNvbmFibGUK
+bWFubmVyLgoKRm9yIG1vcmUgZGV0YWlscyBzZWUgc2VjdGlvbiAzLjEuMSBpbiBBTTMzNXggU2ls
+aWNvbiBFcnJhdGE6Cmh0dHA6Ly93d3cudGkuY29tL2dlbmVyYWwvZG9jcy9saXQvZ2V0bGl0ZXJh
+dHVyZS50c3A/YmFzZUxpdGVyYXR1cmVOdW1iZXI9c3ByejM2MAoKSnlyaSBTYXJoYSAoNCk6CiAg
+ZHJtL3RpbGNkYzogUmVtb3ZlIGRybV9oZWxwZXJfZGlzYWJsZV91bnVzZWRfZnVuY3Rpb25zKCkg
+Y2FsbAogIGRybS90aWxjZGM6IEFkZCBibHVlLWFuZC1yZWQtd2lyaW5nIC1kZXZpY2UgdHJlZSBw
+cm9wZXJ0eQogIGRybS90aWxjZGM6IENob29zZSBjb25zb2xlIEJQUCB0aGF0IHN1cHBvcnRzIFJH
+QgogIEFSTTogZHRzOiBhbTMzNXgtYm9uZWJsYWNrOiBDb252ZXJ0IEJHUiBmcm9tIExDREMgdG8g
+UkdCIGluIHRkYTE5OTg4CgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aWxjZGMv
+dGlsY2RjLnR4dCAgfCAxMiArKysrKwogYXJjaC9hcm0vYm9vdC9kdHMvYW0zMzV4LWJvbmVibGFj
+ay5kdHMgICAgICAgICAgICAgfCAxMSArKysrCiBkcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNk
+Y19kcnYuYyAgICAgICAgICAgICAgICB8IDU5ICsrKysrKysrKysrKysrKysrKy0tLS0KIGRyaXZl
+cnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Rydi5oICAgICAgICAgICAgICAgIHwgIDUgKy0KIGRy
+aXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2V4dGVybmFsLmMgICAgICAgICAgIHwgIDcgKyst
+CiBkcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19leHRlcm5hbC5oICAgICAgICAgICB8ICAy
+ICstCiBkcml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19wYW5lbC5jICAgICAgICAgICAgICB8
+ICAyIC0KIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX3BsYW5lLmMgICAgICAgICAgICAg
+IHwgIDkgKystLQogZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfdGZwNDEwLmMgICAgICAg
+ICAgICAgfCAgMiAtCiA5IGZpbGVzIGNoYW5nZWQsIDgyIGluc2VydGlvbnMoKyksIDI3IGRlbGV0
+aW9ucygtKQoKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
