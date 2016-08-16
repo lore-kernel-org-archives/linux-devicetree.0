@@ -1,80 +1,64 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v1 2/3] of: Add support for reading a s32 from a multi-value property.
-Date: Tue, 16 Aug 2016 14:09:52 +0200
-Message-ID: <23748508.K8gp1eOYRv@diego>
-References: <1471315139-28285-1-git-send-email-finley.xiao@rock-chips.com> <1471315139-28285-3-git-send-email-finley.xiao@rock-chips.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: tegra: fix Tegra114 USB compatible values
+Date: Tue, 16 Aug 2016 14:38:48 +0200
+Message-ID: <20160816123848.GC4564@ulmo.ba.sec>
+References: <20160815173132.12270-1-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471315139-28285-3-git-send-email-finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Finlye Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tim.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ulysses.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lin.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="R+My9LyyhiUvIEro"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160815173132.12270-1-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Finley,
 
-Am Dienstag, 16. August 2016, 10:38:58 schrieb Finlye Xiao:
-> From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> This patch adds an of_property_read_s32_index() function to allow
-> reading a single indexed s32 value from a property containing multiple
-> s32 values.
->
-> Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+--R+My9LyyhiUvIEro
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-for people reading along, this simply duplicates what of_property_read_s32 
-already does, only for indexed properties.
-
-But I do have one issue below.
-
+On Mon, Aug 15, 2016 at 11:31:31AM -0600, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>=20
+> DT compatible values should always include an entry for the specific
+> chip in addition to any earlier generations that the HW is backwards-
+> compatible with.
+>=20
+> This doesn't affect the kernel at all given current driver code, but
+> U-Boot needs to distinguish between Tegra114 and Tegra30 for this HW,
+> and I'd like to synchronize the DT content.
+>=20
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/of/base.c  | 23 +++++++++++++++++++++++
->  include/linux/of.h | 10 ++++++++++
->  2 files changed, 33 insertions(+)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 7792266..346457d 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1200,6 +1200,29 @@ int of_property_read_u32_index(const struct
-> device_node *np, EXPORT_SYMBOL_GPL(of_property_read_u32_index);
-> 
->  /**
-> + * of_property_read_s32_index - Find and read a s32 from a multi-value
-> property. + *
-> + * @np:		device node from which the property value is to be read.
-> + * @propname:	name of the property to be searched.
-> + * @index:	index of the u32 in the list of values
-> + * @out_value:	pointer to return value, modified only if no error.
-> + *
-> + * Search for a property in a device node and read nth 32-bit value from
-> + * it. Returns 0 on success, -EINVAL if the property does not exist,
-> + * -ENODATA if property does not have a value, and -EOVERFLOW if the
-> + * property data isn't large enough.
-> + *
-> + * The out_value is modified only if a valid s32 value can be decoded.
-> + */
-> +int of_property_read_s32_index(const struct device_node *np,
-> +			       const char *propname, u32 index, s32 *out_value)
-> +{
-> +	return of_property_read_u32_index(np, propname, index,
-> +		(u32 *)out_value);
-> +}
-> +EXPORT_SYMBOL_GPL(of_property_read_s32_index);
+>  arch/arm/boot/dts/tegra114.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 
-I think this could very well live directly in the of.h header below 
-of_property_read_s32 or so.
+Both patches applied, thanks.
 
-As this also only calls the more generic u32 variant, it can be just a static 
-inline there and does not need to duplicate the whole stub voodoo, as the 
-of_property_read_u32_index will also generate the -ENOSYS error in the !OF 
-case.
+Thierry
 
+--R+My9LyyhiUvIEro
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXswlVAAoJEN0jrNd/PrOhoJwP/2Uk/1SDFHj+1IdM1bJwRee4
+xwmTNLXr5NZej7+70m7Y7R8b9X4ZhhDYZq8EcFIEwxK8c0x1Yg19bmqbTd0cwefN
+NPajE5mVIQorBICfjeRve98qCXcYst7g5pCCM0aF/YHx+THvajX/4aNshKMcDSBn
+I41W+9rhv1cSj0YPqx8+ht6ygAwv6V8/Zcs/MqyiO2+nWSlVzTfT70pCwrspby0R
+/rsUVYMBAaxXii/pWLpH78O7+QXuRHGMrd8qkZh9XxaVod/6sC3GTLBoeOC+AIM3
+7SPGvWaLp3uKmQIfdTq3keyM6zQvddvMT4iGMRJL76+RXmF7Y+/epM3IDK+GqYGD
+5oJsroRQkryQy8UilTgjBPporwrwD59fhj8+au6R/jPgSM9w8/DJ3orSUONPsiBD
+6ISKth5iDBZwjsrrFzDvLVbJmOJx8h5kX7FtAMhduIyrkSXELZSitNdKcDSrHyXe
+KlJbYOpo7cA10ifZ+QwBnvTNLDNi7xEa3S95vxKanJKo3P0uyd6myCBs6Y2QzfJW
+PvARrDLFgL985HigG37fecMKQLK+n6ugm1M4tkx9Mgt2oLb4gJpe5bb25uFrlUwS
+lrDeP8Vvn2BcCiiznpd65IG86zsqcQJJLa9XzIw5QnUj9GBIS94u/rBP4/8vx4Mv
+6fzRgkpobw+0AD8p0x0e
+=nVOP
+-----END PGP SIGNATURE-----
+
+--R+My9LyyhiUvIEro--
