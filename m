@@ -1,109 +1,65 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/8] dt-bindings: i2c: add support for 'i2c-gate'
- subnode
-Date: Tue, 16 Aug 2016 08:57:51 -0500
-Message-ID: <20160816135751.GA32704@rob-hp-laptop>
-References: <1471268431-5148-1-git-send-email-peda@axentia.se>
- <1471268431-5148-4-git-send-email-peda@axentia.se>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 0/4] arm64: marvell: add support for the PIC and PMU
+Date: Tue, 16 Aug 2016 14:14:47 +0000
+Message-ID: <20160816141447.GQ3353@io.lakedaemon.net>
+References: <1470408921-447-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1471268431-5148-4-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Crestez Dan Leonard <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1470408921-447-1-git-send-email-thomas.petazzoni@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Hanna Hawa <hannah@marvell.com>, Omri Itach <omrii@marvell.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Neta Zur Hershkovits <neta@marvell.com>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Shadi Ammouri <shadi@marvell.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 15, 2016 at 03:40:26PM +0200, Peter Rosin wrote:
-> Handle i2c gates similarly to how i2c arbitrators are handled.
-> This gets rid of a pointless 'reg' property for i2c gates.
-> 
-> I.e. this new and more compact style
-> 
->         some-gate {
->                 i2c-gate {
->                         #address-cells = <1>;
->                         #size-cells = <0>;
-> 
->                         some-i2c-device@50 {
->                                 reg = <0x50>;
->                         };
->                 };
->         };
-> 
-> instead of the old
-> 
->         some-gate {
->                 #address-cells = <1>;
->                 #size-cells = <0>;
-> 
->                 i2c@0 {
->                         reg = <0>;
-> 
->                         #address-cells = <1>;
->                         #size-cells = <0>;
-> 
->                         some-i2c-device@50 {
->                                 reg = <0x50>;
->                         };
->                 };
->         };
-> 
-> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-gate.txt | 41 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-gate.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-gate.txt b/Documentation/devicetree/bindings/i2c/i2c-gate.txt
-> new file mode 100644
-> index 000000000000..0b057fb2a15a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-gate.txt
-> @@ -0,0 +1,41 @@
-> +An i2c gate is useful to e.g. reduce the digital noise for RF tuners connected
-> +to the i2c bus. Gates are similar to arbitrators in that you need to perform
-> +some kind of operation to access the i2c bus past the arbitrator/gate, but
-> +there are no competing masters to consider for gates and therefore there is
-> +no arbitration happening for gates.
-> +
-> +Common i2c gate properties.
-> +
-> +- i2c-gate child node
-> +
-> +Required properties for the i2c-gate child node:
-> +- #address-cells = <1>;
-> +- #size-cells = <0>;
-> +
-> +Optional properties for i2c-gate child node:
-> +- Child nodes conforming to i2c bus binding
-> +
-> +
-> +Example :
-> +
-> +	/*
-> +	   An Invensense mpu9150 at address 0x68 featuring an on-chip Asahi
-> +	   Kasei ak8975 compass behind a gate.
-> +	 */
-> +
-> +	mpu9150@68 {
-> +		compatible = "invensense,mpu9150";
-> +		reg = <0x68>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <18 1>;
-> +
-> +		i2c-gate {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			ax8975@0c {
+Hi Thomas,
 
-Drop the leading 0. With that,
+On Fri, Aug 05, 2016 at 04:55:17PM +0200, Thomas Petazzoni wrote:
+> Hello,
+> 
+> This small patch series intends to add support for the PMU of the
+> Cortex-A72 cores found in the Marvell Armada 7K/8K SoCs.
+> 
+> However, the interrupt of the PMU is not directly connected to the
+> GIC, but goes through a secondary interrupt controller called the
+> PIC. Therefore, this series starts by adding a small driver for this
+> interrupt controller, before enabling the PIC and the PMU in the
+> Device Tree.
+> 
+> Thanks!
+> 
+> Thomas
+> 
+> Thomas Petazzoni (4):
+>   dt-bindings: interrupt-controller: add DT binding for Marvell 7K/8K
+>     PIC
+>   irqchip: irq-mvebu-pic: new driver for Marvell Armada 7K/8K PIC
+>   arm64: marvell: enable the Marvell PIC driver
+>   arm64: dts: marvell: describe the PIC and PMU on Armada 7K/8K
+> 
+>  .../interrupt-controller/marvell,armada-8k-pic.txt |  25 +++
+>  arch/arm64/Kconfig.platforms                       |   1 +
+>  arch/arm64/boot/dts/marvell/armada-ap806.dtsi      |  14 ++
+>  drivers/irqchip/Kconfig                            |   3 +
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-mvebu-pic.c                    | 195 +++++++++++++++++++++
+>  6 files changed, 239 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,armada-8k-pic.txt
+>  create mode 100644 drivers/irqchip/irq-mvebu-pic.c
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patches 1-3 applied to irqchip/mvebu64.  Patch 1 has Rob's Ack.  I
+assume you'll route the dtsi change through a separate branch.
+
+thx,
+
+Jason.
