@@ -1,78 +1,43 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/2] ARM: dts: r8a7790: Remove obsolete vsp1 properties
-Date: Tue, 16 Aug 2016 16:56:31 +0200
-Message-ID: <1471359392-12584-2-git-send-email-geert+renesas@glider.be>
-References: <1471359392-12584-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1471359392-12584-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
+Subject: [BISECTED REGRESSION] v4.8-rc: DT/OCTEON driver probing broken
+Date: Tue, 16 Aug 2016 18:00:57 +0300
+Message-ID: <20160816150056.GD18731@ak-desktop.emea.nsn-net.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-mips-bounce@linux-mips.org>
+Content-Disposition: inline
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Kefeng Wang <wangkefeng.wang@huawei.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>
+Cc: linux-kernel@vger.kernel.org, Thorsten Leemhuis <regressions@leemhuis.info>
 List-Id: devicetree@vger.kernel.org
 
-As of commit 5aa2eb3c86d4fd16 ("[media] v4l: vsp1: Configure device
-based on IP version"), the DT properties to identify the exact VSP
-device instance features are no longer used. Hence remove them.
+Hi,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/boot/dts/r8a7790.dtsi | 23 -----------------------
- 1 file changed, 23 deletions(-)
+Commit 44a7185c2ae6 ("of/platform: Add common method to populate default
+bus") added new arch_initcall of_platform_default_populate_init() that
+will be called before device_initcall octeon_publish_devices(). Now the
+of_platform_bus_probe() called in octeon_publish_devices() is apparently
+doing nothing:
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index d18558f211022826..351fcc2f87df6b28 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -944,11 +944,6 @@
- 		interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp1_clks R8A7790_CLK_VSP1_R>;
- 		power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
--
--		renesas,has-sru;
--		renesas,#rpf = <5>;
--		renesas,#uds = <1>;
--		renesas,#wpf = <4>;
- 	};
- 
- 	vsp1@fe928000 {
-@@ -957,12 +952,6 @@
- 		interrupts = <GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp1_clks R8A7790_CLK_VSP1_S>;
- 		power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
--
--		renesas,has-lut;
--		renesas,has-sru;
--		renesas,#rpf = <5>;
--		renesas,#uds = <3>;
--		renesas,#wpf = <4>;
- 	};
- 
- 	vsp1@fe930000 {
-@@ -971,12 +960,6 @@
- 		interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp1_clks R8A7790_CLK_VSP1_DU0>;
- 		power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
--
--		renesas,has-lif;
--		renesas,has-lut;
--		renesas,#rpf = <4>;
--		renesas,#uds = <1>;
--		renesas,#wpf = <4>;
- 	};
- 
- 	vsp1@fe938000 {
-@@ -985,12 +968,6 @@
- 		interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp1_clks R8A7790_CLK_VSP1_DU1>;
- 		power-domains = <&sysc R8A7790_PD_ALWAYS_ON>;
--
--		renesas,has-lif;
--		renesas,has-lut;
--		renesas,#rpf = <4>;
--		renesas,#uds = <1>;
--		renesas,#wpf = <4>;
- 	};
- 
- 	du: display@feb00000 {
--- 
-1.9.1
+[   52.331353] calling  octeon_publish_devices+0x0/0x14 @ 1
+[   52.331358] OF: of_platform_bus_probe()
+[   52.331362] OF:  starting at: /
+[   52.331378] OF: of_platform_bus_create() - skipping /soc@0, already populated
+[   52.331394] initcall octeon_publish_devices+0x0/0x14 returned 0 after 29 usecs
+
+This also means that USB etc. won't get probed.
+
+Any ideas what would be the proper fix for this? Changing
+octeon_publish_devices() to arch_initcall seems to work but that may be
+a bit hackish... Also, there might be also other MIPS boards affected
+(arch/mips/netlogic/xlp/dt.c, arch/mips/mti-malta/malta-dt.c).
+
+A.
