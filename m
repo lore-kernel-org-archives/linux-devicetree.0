@@ -1,58 +1,82 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v2] regulator: axp20x: support AXP803/AXP813 variants
-Date: Tue, 16 Aug 2016 15:01:04 +0200
-Message-ID: <20160816150104.16a7bcf774135c8275828eda@free.fr>
-References: <E1bZY0w-0004lM-0a@bombadil.infradead.org>
-	<248521471347017@web1g.yandex.ru>
-Reply-To: moinejf-GANU6spQydw@public.gmane.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 5/7] arm64: dts: exynos: Add dts files for Samsung
+ Exynos5433 64bit SoC
+Date: Tue, 16 Aug 2016 22:02:27 +0900
+Message-ID: <57B30EE3.1070606@samsung.com>
+References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
+ <1471329328-26842-1-git-send-email-cw00.choi@samsung.com>
+ <CGME20160816105140epcas1p22a27f424dd102a096a24df05640cefa3@epcas1p2.samsung.com>
+ <d4ebd29f-98b7-6e56-42ee-923d55ca85ff@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCV6DL6LYMNBBE45ZS6QKGQEAFFGUGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <248521471347017-/w1NKm4lK9luio3avFS2gg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <d4ebd29f-98b7-6e56-42ee-923d55ca85ff@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: mark.rutland@arm.com, k.kozlowski@samsung.com, catalin.marinas@arm.com, will.deacon@arm.com, a.hajda@samsung.com, chanwoo@kernel.org, beomho.seo@samsung.com, m.szyprowski@samsung.com, jonghwa3.lee@samsung.com, linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, krzk@kernel.org, jh80.chung@samsung.com, kgene@kernel.org, devicetree@vger.kernel.org, inki.dae@samsung.com, robh+dt@kernel.org, ingi2.kim@samsung.com, linux-arm-kernel@lists.infradead.org, jaewon02.kim@samsung.com, sw0312.kim@samsung.com, linux-kernel@vger.kernel.org, human.hwang@samsung.com, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 16 Aug 2016 19:30:17 +0800
-Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
-
-> > The X-Powers AXP803 and AXP813 PMICs are close to the AXP809 with some
-> > more outputs.
-> AXP803 and AXP813 is quite different.
-> AXP803 have 6 DCDCs and 16 LDOs&Switch.
-> AXP813 have 7 DCDCs and 15 LDOs&Switch.
-> and AXP813 have an audio codec.
->=20
-> AXP803 cannot be handled without extra code.
->=20
-> (I'm trying to get RSB working in my semi-mainline A64 kernel)
-
-Hi Icenowy,
-
-Interesting.
-I did not find the documentation about the AXP813, but looking at the
-Banana PI M3 driver (which seems a bit buggy), I found it was very
-close to the AXP803.
-
-Which more code do you think is needed for the AXP803?
-
-Also, please, may you give me a pointer to the AXP813 documentation?
-
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+SGkgU3lsd2VzdGVyLAoKT24gMjAxNuuFhCAwOOyblCAxNuydvCAxOTo1MCwgU3lsd2VzdGVyIE5h
+d3JvY2tpIHdyb3RlOgo+IEhpIENoYW53b28sCj4gCj4gT24gMDgvMTYvMjAxNiAwODozNSBBTSwg
+Q2hhbndvbyBDaG9pIHdyb3RlOgo+PiBUaGlzIHBhdGNoIGFkZHMgbmV3IEV4eW5vczU0MzMgZHRz
+aSB0byBzdXBwb3J0IDY0LWJpdCBFeHlub3M1NDMzIFNvQyBiYXNlZCBvbgo+PiBPY3RhLWNvcmUg
+Q1BVcyAocXVhZCBDb3J0ZXgtQTU3IGFuZCBxdWFkIENvcnRleC1BNTMpLiBBbmQgRXh5bm9zNTQz
+MyBzdXBwb3J0cwo+PiBQU0NJIChQb3dlciBTdGF0ZSBDb29yZGluYXRpb24gSW50ZXJmYWNlKSB2
+MC4xLgo+IAo+PiAtLS0KPj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5vczU0MzMu
+ZHRzaSAgICAgICAgIHwgMTU4MCArKysrKysrKysrKysrKysrKysrKwo+IAo+PiBkaWZmIC0tZ2l0
+IGEvYXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy5kdHNpIAo+PiBiL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5vczU0MzMuZHRzaQo+PiBuZXcgZmlsZSBtb2RlIDEw
+MDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjJhNWIwNTc0NDUzMwo+PiAtLS0gL2Rldi9udWxs
+Cj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5vczU0MzMuZHRzaQo+PiBA
+QCAtMCwwICsxLDE1ODAgQEAKPiAKPj4gKwo+PiArLyB7Cj4+ICsJY29tcGF0aWJsZSA9ICJzYW1z
+dW5nLGV4eW5vczU0MzMiOwo+PiArCSNhZGRyZXNzLWNlbGxzID0gPDI+Owo+PiArCSNzaXplLWNl
+bGxzID0gPDI+Owo+IAo+PiArCXNvYzogc29jIHsKPj4gKwkJY29tcGF0aWJsZSA9ICJzaW1wbGUt
+YnVzIjsKPj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4+ICsJCSNzaXplLWNlbGxzID0gPDE+
+Owo+PiArCQlyYW5nZXMgPSA8MHgwIDB4MCAweDAgMHgxODAwMDAwMD47Cj4gCj4+ICsJCWxwYXNz
+OiBscGFzc0AxMTQwMDAwMCB7Cj4+ICsJCQljb21wYXRpYmxlID0gInNhbXN1bmcsZXh5bm9zNTQz
+My1scGFzcyI7Cj4+ICsJCQlyZWcgPSA8MHgxMTQwMDAwMCAweDEwMD47Cj4+ICsJCQlzYW1zdW5n
+LHBtdS1zeXNjb24gPSA8JnBtdV9zeXN0ZW1fY29udHJvbGxlcj47Cj4+ICsJCQlzdGF0dXMgPSAi
+ZGlzYWJsZWQiOwo+PiArCQl9Owo+PiArCj4+ICsJCWkyczA6IGkyczBAMTE0NDAwMDAgewo+PiAr
+CQkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLGV4eW5vczctaTJzIjsKPj4gKwkJCXJlZyA9IDwweDEx
+NDQwMDAwIDB4MTAwPjsKPj4gKwkJCWRtYXMgPSA8JmFkbWEgMCAmYWRtYSAyPjsKPj4gKwkJCWRt
+YS1uYW1lcyA9ICJ0eCIsICJyeCI7Cj4+ICsJCQlpbnRlcnJ1cHRzID0gPDAgNzAgMD47Cj4+ICsJ
+CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+PiArCQkJ
+Y2xvY2tzID0gPCZjbXVfYXVkIENMS19QQ0xLX0FVRF9JMlM+LAo+PiArCQkJCSA8JmNtdV9hdWQg
+Q0xLX1NDTEtfQVVEX0kyUz4sCj4+ICsJCQkJIDwmY211X2F1ZCBDTEtfU0NMS19JMlNfQkNMSz47
+Cj4+ICsJCQljbG9jay1uYW1lcyA9ICJpaXMiLCAiaTJzX29wY2xrMCIsICJpMnNfb3BjbGsxIjsK
+Pj4gKwkJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4+ICsJCQlwaW5jdHJsLTAgPSA8Jmky
+czBfYnVzPjsKPj4gKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+ICsJCX07Cj4gCj4+ICsJCXNl
+cmlhbF8zOiBzZXJpYWxAMTE0NjAwMDAgewo+PiArCQkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLGV4
+eW5vczU0MzMtdWFydCI7Cj4+ICsJCQlyZWcgPSA8MHgxMTQ2MDAwMCAweDEwMD47Cj4+ICsJCQlp
+bnRlcnJ1cHRzID0gPDAgNjcgMD47Cj4+ICsJCQljbG9ja3MgPSA8JmNtdV9hdWQgQ0xLX1BDTEtf
+QVVEX1VBUlQ+LAo+PiArCQkJCTwmY211X2F1ZCBDTEtfU0NMS19BVURfVUFSVD47Cj4+ICsJCQlj
+bG9jay1uYW1lcyA9ICJ1YXJ0IiwgImNsa191YXJ0X2JhdWQwIjsKPj4gKwkJCXBpbmN0cmwtbmFt
+ZXMgPSAiZGVmYXVsdCI7Cj4+ICsJCQlwaW5jdHJsLTAgPSA8JnVhcnRfYXVkX2J1cz47Cj4+ICsJ
+CQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+PiArCQl9Owo+PiArCj4gCj4+ICsJCWFtYmEgewo+PiAr
+CQkJY29tcGF0aWJsZSA9ICJhcm0sYW1iYS1idXMiOwo+PiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8
+MT47Cj4+ICsJCQkjc2l6ZS1jZWxscyA9IDwxPjsKPj4gKwkJCXJhbmdlczsKPiAKPj4gKwkJCWFk
+bWE6IGFkbWFAMTE0MjAwMDAgewo+PiArCQkJCWNvbXBhdGlibGUgPSAiYXJtLHBsMzMwIiwgImFy
+bSxwcmltZWNlbGwiOwo+PiArCQkJCXJlZyA9IDwweDExNDIwMDAwIDB4MTAwMD47Cj4+ICsJCQkJ
+aW50ZXJydXB0cyA9IDwwIDczIDA+Owo+PiArCQkJCWNsb2NrcyA9IDwmY211X2F1ZCBDTEtfQUNM
+S19ETUFDPjsKPj4gKwkJCQljbG9jay1uYW1lcyA9ICJhcGJfcGNsayI7Cj4+ICsJCQkJI2RtYS1j
+ZWxscyA9IDwxPjsKPj4gKwkJCQkjZG1hLWNoYW5uZWxzID0gPDg+Owo+PiArCQkJCSNkbWEtcmVx
+dWVzdHMgPSA8MzI+Owo+PiArCQkJfTsKPj4gKwkJfTsKPj4gKwl9Owo+IAo+IFRoZSBsYXRlc3Qg
+RXh5bm9zNTQzMyBBdWRpbyBTdWJzeXN0ZW0gYmluZGluZ3MgbG9vayBsaWtlIHRoaXMKPiBodHRw
+czovL2dpdC5saW51eHR2Lm9yZy9zbmF3cm9ja2kvc2Ftc3VuZy5naXQvY29tbWl0Lz9oPWZvci12
+NC45L21mZC9leHlub3MtbHBhc3MtdjUmaWQ9MTA0Y2M2YWQzZWNjN2M0YzhlY2Y3MzY2M2I5M2Vi
+NDhiNzhmMzVhYQo+IGkuZS4gYWRtYUAxMTQyMDAwMCwgaTJzMEAxMTQ0MDAwMCwgc2VyaWFsQDEx
+NDYwMDAwIHNob3VsZCBiZSBzdWJub2RlcyBvZgo+IHRoZSBscGFzc0AxMTQwMDAwMCBub2RlLgoK
+T0suIEknbGwgdXNlIHlvdXIgbGF0ZXN0IHBhdGNoZXMgZm9yIHNvdW5kIGFuZCB0aGVuIHRlc3Qg
+aXQgYWdhaW4uCgpSZWdhcmRzLApDaGFud29vIENob2kKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
