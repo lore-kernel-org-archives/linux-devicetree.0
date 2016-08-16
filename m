@@ -1,270 +1,98 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH V2 RFC 1/6] usb: dwc2: core: Avoid nonsense error in
- gadget mode
-Date: Tue, 16 Aug 2016 18:44:11 +0200 (CEST)
-Message-ID: <2008594325.331112.5842a41f-9d6d-4b55-baac-1529d6cae164.open-xchange@email.1und1.de>
-References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
- <1469559213-16160-2-git-send-email-stefan.wahren@i2se.com>
- <92280b0f-4dd3-bcf5-57ed-277a9f91653d@synopsys.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v6 3/3] net: phy: Add gmiitorgmii converter support
+Date: Tue, 16 Aug 2016 18:53:20 +0200
+Message-ID: <20160816165320.GP14446@lunn.ch>
+References: <1470808208-32133-1-git-send-email-appanad@xilinx.com>
+ <1470808208-32133-4-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <92280b0f-4dd3-bcf5-57ed-277a9f91653d@synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: John Youn <John.Youn@synopsys.com>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Felipe Balbi <balbi@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1470808208-32133-4-git-send-email-appanad@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, appanad@xilinx.com, f.fainelli@gmail.com, punnaia@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi John,
+> +static int xgmiitorgmii_read_status(struct phy_device *phydev)
+> +{
+> +	struct gmii2rgmii *priv = phydev->priv;
+> +	u16 val = 0;
+> +
+> +	priv->phy_drv->read_status(phydev);
 
-> John Youn <John.Youn@synopsys.com> hat am 16. August 2016 um 03:30
-> geschrieben:
-> 
-> 
-> On 7/26/2016 11:54 AM, Stefan Wahren wrote:
-> > In gadget mode On bcm2835 platform the host tx fifo size could be zero.
-> > So add zero to range and avoid such nonsense errors:
-> > 
-> > dwc2 20980000.usb: 0 invalid for host_nperio_tx_fifo_size.
-> > dwc2 20980000.usb: Setting host_nperio_tx_fifo_size to 0
-> > dwc2 20980000.usb: 0 invalid for host_perio_tx_fifo_size.
-> > dwc2 20980000.usb: Setting host_perio_tx_fifo_size to 0
-> 
-> Hi Stefan,
-> 
-> Are those the power on reset values of GNPTXFSIZ and HPTXFSIZ?
-> 
-> If these values can be 0, I think the patch is ok. But I'm not sure
-> about that. I can check with some hardware engineers to see under what
-> conditions this is possible.
+This can return an error, in which case phydev->speed should not be
+trusted.
 
-i'm not sure that i can answer your question correctly. Let me send you some
-logs and i hope these answer your question.
+I've not thought locking all the way through yet. I don't think you
+need a lock here, but i need to think about it.
 
-Since the Raspberry Pi Zero with bcm2835 could handle all three dr_mode set in
-DT ( otg, host, peripherial ), i made 3 logs before this patch is applied:
+> +
+> +	val = mdiobus_read(phydev->mdio.bus, priv->addr, XILINX_GMII2RGMII_REG);
 
-Raspberry Pi Zero
-dr_mode = "host"
+You should check for an error here.
 
-Linux raspberrypi 4.7.0-rc7-next-20160719+ #3 Thu Jul 21 17:12:23 UTC 2016
-armv6l GNU/Linux
+> +	val &= XILINX_GMII2RGMII_SPEED_MASK;
+> +
+> +	if (phydev->speed == SPEED_1000)
+> +		val |= BMCR_SPEED1000;
+> +	else if (phydev->speed == SPEED_100)
+> +		val |= BMCR_SPEED100;
+> +	else
+> +		val |= BMCR_SPEED10;
 
-[    2.300866] dwc2_lowlevel_hw_init()
-[    2.317961] dwc2 20980000.usb: dwc2: cannot get otg clock
-[    2.327328] dwc2_lowlevel_hw_enable()
-[    2.334868] dwc2_get_dr_mode()
-[    2.341742] dwc2 20980000.usb: Forcing mode to host
-[    2.459227] dwc2_get_hwparams()
-[    2.466013] dwc2 20980000.usb: Core Release: 2.80a (snpsid=4f54280a)
-[    2.466028] dwc2 20980000.usb: hwcfg1=00000000
-[    2.466040] dwc2 20980000.usb: hwcfg2=228ddd50
-[    2.466051] dwc2 20980000.usb: hwcfg3=0ff000e8
-[    2.466061] dwc2 20980000.usb: hwcfg4=1ff00020
-[    2.466071] dwc2 20980000.usb: grxfsiz=00001000
-[    2.466083] dwc2 20980000.usb: gnptxfsiz=01001000
-[    2.466093] dwc2 20980000.usb: hptxfsiz=02002000
-[    2.466106] dwc2 20980000.usb: Detected values from hardware:
-[    2.466116] dwc2 20980000.usb:   op_mode=0
-[    2.466126] dwc2 20980000.usb:   arch=2
-[    2.466136] dwc2 20980000.usb:   dma_desc_enable=0
-[    2.466146] dwc2 20980000.usb:   power_optimized=0
-[    2.466156] dwc2 20980000.usb:   i2c_enable=0
-[    2.466165] dwc2 20980000.usb:   hs_phy_type=1
-[    2.466175] dwc2 20980000.usb:   fs_phy_type=1
-[    2.466185] dwc2 20980000.usb:   utmi_phy_data_width=0
-[    2.466194] dwc2 20980000.usb:   num_dev_ep=7
-[    2.466204] dwc2 20980000.usb:   num_dev_perio_in_ep=0
-[    2.466213] dwc2 20980000.usb:   host_channels=8
-[    2.466223] dwc2 20980000.usb:   max_transfer_size=524287
-[    2.466233] dwc2 20980000.usb:   max_packet_count=1023
-[    2.466243] dwc2 20980000.usb:   nperio_tx_q_depth=0x4
-[    2.466253] dwc2 20980000.usb:   host_perio_tx_q_depth=0x4
-[    2.466263] dwc2 20980000.usb:   dev_token_q_depth=0x8
-[    2.466273] dwc2 20980000.usb:   enable_dynamic_fifo=1
-[    2.466283] dwc2 20980000.usb:   en_multiple_tx_fifo=1
-[    2.466293] dwc2 20980000.usb:   total_fifo_size=4080
-[    2.466303] dwc2 20980000.usb:   host_rx_fifo_size=4096
-[    2.466314] dwc2 20980000.usb:   host_nperio_tx_fifo_size=256
-[    2.466324] dwc2 20980000.usb:   host_perio_tx_fifo_size=512
-[    2.466332] dwc2 20980000.usb:
-[    2.466342] dwc2 20980000.usb: dwc2_set_parameters()
-[    2.466356] dwc2 20980000.usb: Setting dma_desc_fs_enable to 0
-[    2.466384] dwc2 20980000.usb: Setting external_id_pin_ctl to 0
-[    2.466395] dwc2 20980000.usb: Setting hibernation to 0
-[    2.466399] dwc2_force_dr_mode()
-[    2.473127] dwc2 20980000.usb: Forcing mode to host
-[    2.589175] dwc2_hcd_init()
-[    2.595685] dwc2 20980000.usb: DWC OTG Controller
-[    2.604051] dwc2 20980000.usb: new USB bus registered, assigned bus number 1
-[    2.614688] dwc2 20980000.usb: irq 33, io mem 0x00000000
---------------------------------------------------------------------------------
+What happens if for example the PHY is an aquantia and has negotiated
+SPEED_2500? Some Marvell PHYs can also do odd speeds, like 200Mbps.
+You probably want to return an error, rather than silently have things
+go wrong.
 
-Raspberry Pi Zero
-dr_mode = "otg"
+> +
+> +	mdiobus_write(phydev->mdio.bus, priv->addr, XILINX_GMII2RGMII_REG, val);
 
-Linux raspberrypi 4.7.0-rc7-next-20160719+ #3 Thu Jul 21 17:12:23 UTC 2016
-armv6l GNU/Linux
+This can also return an error.
 
-[    2.310924] dwc2_lowlevel_hw_init()
-[    2.328029] dwc2 20980000.usb: dwc2: cannot get otg clock
-[    2.337385] dwc2_lowlevel_hw_enable()
-[    2.344917] dwc2_get_dr_mode()
-[    2.469263] dwc2_get_hwparams()
-[    2.476042] dwc2 20980000.usb: Core Release: 2.80a (snpsid=4f54280a)
-[    2.476059] dwc2 20980000.usb: hwcfg1=00000000
-[    2.476072] dwc2 20980000.usb: hwcfg2=228ddd50
-[    2.476082] dwc2 20980000.usb: hwcfg3=0ff000e8
-[    2.476093] dwc2 20980000.usb: hwcfg4=1ff00020
-[    2.476104] dwc2 20980000.usb: grxfsiz=00001000
-[    2.476115] dwc2 20980000.usb: Forcing mode to host
-[    2.519251] dwc2 20980000.usb: gnptxfsiz=00201000
-[    2.519267] dwc2 20980000.usb: hptxfsiz=00000000
-[    2.569237] dwc2 20980000.usb: gnptxfsiz=00201000
-[    2.569255] dwc2 20980000.usb: Detected values from hardware:
-[    2.569266] dwc2 20980000.usb:   op_mode=0
-[    2.569276] dwc2 20980000.usb:   arch=2
-[    2.569286] dwc2 20980000.usb:   dma_desc_enable=0
-[    2.569296] dwc2 20980000.usb:   power_optimized=0
-[    2.569306] dwc2 20980000.usb:   i2c_enable=0
-[    2.569315] dwc2 20980000.usb:   hs_phy_type=1
-[    2.569325] dwc2 20980000.usb:   fs_phy_type=1
-[    2.569335] dwc2 20980000.usb:   utmi_phy_data_width=0
-[    2.569345] dwc2 20980000.usb:   num_dev_ep=7
-[    2.569354] dwc2 20980000.usb:   num_dev_perio_in_ep=0
-[    2.569364] dwc2 20980000.usb:   host_channels=8
-[    2.569375] dwc2 20980000.usb:   max_transfer_size=524287
-[    2.569386] dwc2 20980000.usb:   max_packet_count=1023
-[    2.569397] dwc2 20980000.usb:   nperio_tx_q_depth=0x4
-[    2.569407] dwc2 20980000.usb:   host_perio_tx_q_depth=0x4
-[    2.569417] dwc2 20980000.usb:   dev_token_q_depth=0x8
-[    2.569427] dwc2 20980000.usb:   enable_dynamic_fifo=1
-[    2.569437] dwc2 20980000.usb:   en_multiple_tx_fifo=1
-[    2.569447] dwc2 20980000.usb:   total_fifo_size=4080
-[    2.569458] dwc2 20980000.usb:   host_rx_fifo_size=4096
-[    2.569468] dwc2 20980000.usb:   host_nperio_tx_fifo_size=32
-[    2.569478] dwc2 20980000.usb:   host_perio_tx_fifo_size=0
-[    2.569487] dwc2 20980000.usb:
-[    2.569497] dwc2 20980000.usb: dwc2_set_parameters()
-[    2.569511] dwc2 20980000.usb: Setting dma_desc_fs_enable to 0
-[    2.569535] dwc2 20980000.usb: Setting external_id_pin_ctl to 0
-[    2.569547] dwc2 20980000.usb: Setting hibernation to 0
-[    2.569573] dwc2 20980000.usb: 0 invalid for host_perio_tx_fifo_size. Check
-HW configuration.
-[    2.585354] dwc2 20980000.usb: Setting host_perio_tx_fifo_size to 0
-[    2.585361] dwc2_force_dr_mode()
-[    2.709215] dwc2_gadget_init()
-[    2.715815] dwc2 20980000.usb: NonPeriodic TXFIFO size: 16
-[    2.724903] dwc2 20980000.usb: RXFIFO size: 256
-[    2.733024] dwc2 20980000.usb: Periodic TXFIFO 0 size: 0
-[    2.741929] dwc2 20980000.usb: Periodic TXFIFO 1 size: 256
-[    2.750902] dwc2 20980000.usb: Periodic TXFIFO 2 size: 128
-[    2.759776] dwc2 20980000.usb: Periodic TXFIFO 3 size: 128
-[    2.768438] dwc2 20980000.usb: Periodic TXFIFO 4 size: 64
-[    2.776888] dwc2 20980000.usb: Periodic TXFIFO 5 size: 64
-[    2.785266] dwc2 20980000.usb: Periodic TXFIFO 6 size: 64
-[    2.793496] dwc2 20980000.usb: Periodic TXFIFO 7 size: 32
-[    2.801570] dwc2 20980000.usb: Periodic TXFIFO 8 size: 0
-[    2.809443] dwc2 20980000.usb: Periodic TXFIFO 9 size: 0
-[    2.817055] dwc2 20980000.usb: Periodic TXFIFO10 size: 0
-[    2.824633] dwc2 20980000.usb: Periodic TXFIFO11 size: 0
-[    2.832100] dwc2 20980000.usb: Periodic TXFIFO12 size: 0
-[    2.839457] dwc2 20980000.usb: Periodic TXFIFO13 size: 0
-[    2.846659] dwc2 20980000.usb: Periodic TXFIFO14 size: 0
-[    2.853852] dwc2 20980000.usb: Periodic TXFIFO15 size: 0
-[    2.861043] dwc2 20980000.usb: EPs: 8, dedicated fifos, 4080 entries in SPRAM
-[    2.887000] dwc2 20980000.usb: bound driver zero
-[    2.893565] dwc2_hcd_init()
-[    2.898407] dwc2 20980000.usb: DWC OTG Controller
-[    2.905079] dwc2 20980000.usb: new USB bus registered, assigned bus number 1
-[    2.914160] dwc2 20980000.usb: irq 33, io mem 0x00000000
-------------------------------------------------------------------------------
+> +	return 0;
+> +}
+> +
+> +int xgmiitorgmii_probe(struct mdio_device *mdiodev)
+> +{
+> +	struct device *dev = &mdiodev->dev;
+> +	struct device_node *np = dev->of_node, *phy_node;
+> +	struct gmii2rgmii *priv;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	phy_node = of_parse_phandle(np, "phy-handle", 0);
+> +	if (IS_ERR(phy_node)) {
+> +		dev_err(dev, "Couldn't parse phy-handle\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	priv->phy_dev = of_phy_find_device(phy_node);
+> +	if (!priv->phy_dev) {
+> +		dev_info(dev, "Couldn't find phydev\n");
+> +		return -EPROBE_DEFER;
+> +	}
+> +
+> +	priv->addr = mdiodev->addr;
+> +	priv->phy_drv = priv->phy_dev->drv;
+> +	memcpy(&priv->conv_phy_drv, priv->phy_dev->drv,
+> +	       sizeof(struct phy_driver));
+> +	priv->conv_phy_drv.read_status = xgmiitorgmii_read_status;
+> +	priv->phy_dev->priv = priv;
+> +	priv->phy_dev->drv = &priv->conv_phy_drv;
 
-Raspberry Pi Zero
-dr_mode = "peripheral"
+So from this point onward, the phy driver depends on the memory
+allocated by this driver. If this driver goes away, freeing its
+memory, the next call to read_status() is going to have a problem.
 
-Linux raspberrypi 4.7.0-rc7-next-20160719+ #3 Thu Jul 21 17:12:23 UTC 2016
-armv6l GNU/Linux
+Also, i think this assignment should take the phy lock, just to be
+safe.
 
-[    2.310942] dwc2_lowlevel_hw_init()
-[    2.328044] dwc2 20980000.usb: dwc2: cannot get otg clock
-[    2.337405] dwc2_lowlevel_hw_enable()
-[    2.344937] dwc2_get_dr_mode()
-[    2.351820] dwc2 20980000.usb: Forcing mode to device
-[    2.469267] dwc2_get_hwparams()
-[    2.476052] dwc2 20980000.usb: Core Release: 2.80a (snpsid=4f54280a)
-[    2.476067] dwc2 20980000.usb: hwcfg1=00000000
-[    2.476078] dwc2 20980000.usb: hwcfg2=228ddd50
-[    2.476089] dwc2 20980000.usb: hwcfg3=0ff000e8
-[    2.476100] dwc2 20980000.usb: hwcfg4=1ff00020
-[    2.476110] dwc2 20980000.usb: grxfsiz=00001000
-[    2.476123] dwc2 20980000.usb: gnptxfsiz=00201000
-[    2.476135] dwc2 20980000.usb: Detected values from hardware:
-[    2.476146] dwc2 20980000.usb:   op_mode=0
-[    2.476156] dwc2 20980000.usb:   arch=2
-[    2.476166] dwc2 20980000.usb:   dma_desc_enable=0
-[    2.476176] dwc2 20980000.usb:   power_optimized=0
-[    2.476186] dwc2 20980000.usb:   i2c_enable=0
-[    2.476196] dwc2 20980000.usb:   hs_phy_type=1
-[    2.476206] dwc2 20980000.usb:   fs_phy_type=1
-[    2.476216] dwc2 20980000.usb:   utmi_phy_data_width=0
-[    2.476225] dwc2 20980000.usb:   num_dev_ep=7
-[    2.476235] dwc2 20980000.usb:   num_dev_perio_in_ep=0
-[    2.476245] dwc2 20980000.usb:   host_channels=8
-[    2.476256] dwc2 20980000.usb:   max_transfer_size=524287
-[    2.476266] dwc2 20980000.usb:   max_packet_count=1023
-[    2.476277] dwc2 20980000.usb:   nperio_tx_q_depth=0x4
-[    2.476288] dwc2 20980000.usb:   host_perio_tx_q_depth=0x4
-[    2.476297] dwc2 20980000.usb:   dev_token_q_depth=0x8
-[    2.476308] dwc2 20980000.usb:   enable_dynamic_fifo=1
-[    2.476318] dwc2 20980000.usb:   en_multiple_tx_fifo=1
-[    2.476328] dwc2 20980000.usb:   total_fifo_size=4080
-[    2.476338] dwc2 20980000.usb:   host_rx_fifo_size=4096
-[    2.476349] dwc2 20980000.usb:   host_nperio_tx_fifo_size=0
-[    2.476359] dwc2 20980000.usb:   host_perio_tx_fifo_size=0
-[    2.476368] dwc2 20980000.usb:
-[    2.476378] dwc2 20980000.usb: dwc2_set_parameters()
-[    2.476391] dwc2 20980000.usb: Setting dma_desc_fs_enable to 0
-[    2.476418] dwc2 20980000.usb: Setting external_id_pin_ctl to 0
-[    2.476429] dwc2 20980000.usb: Setting hibernation to 0
-[    2.476449] dwc2 20980000.usb: 0 invalid for host_rx_fifo_size. Check HW
-configuration.
-[    2.491704] dwc2 20980000.usb: Setting host_rx_fifo_size to 4096
-[    2.491727] dwc2 20980000.usb: 0 invalid for host_nperio_tx_fifo_size. Check
-HW configuration.
-[    2.507853] dwc2 20980000.usb: Setting host_nperio_tx_fifo_size to 0
-[    2.507875] dwc2 20980000.usb: 0 invalid for host_perio_tx_fifo_size. Check
-HW configuration.
-[    2.524246] dwc2 20980000.usb: Setting host_perio_tx_fifo_size to 0
-[    2.524252] dwc2_force_dr_mode()
-[    2.531473] dwc2 20980000.usb: Forcing mode to device
-[    2.649220] dwc2_gadget_init()
-[    2.656183] dwc2 20980000.usb: NonPeriodic TXFIFO size: 16
-[    2.665634] dwc2 20980000.usb: RXFIFO size: 256
-[    2.674009] dwc2 20980000.usb: Periodic TXFIFO 0 size: 0
-[    2.683076] dwc2 20980000.usb: Periodic TXFIFO 1 size: 256
-[    2.692256] dwc2 20980000.usb: Periodic TXFIFO 2 size: 128
-[    2.701280] dwc2 20980000.usb: Periodic TXFIFO 3 size: 128
-[    2.710152] dwc2 20980000.usb: Periodic TXFIFO 4 size: 64
-[    2.718734] dwc2 20980000.usb: Periodic TXFIFO 5 size: 64
-[    2.727175] dwc2 20980000.usb: Periodic TXFIFO 6 size: 64
-[    2.735545] dwc2 20980000.usb: Periodic TXFIFO 7 size: 32
-[    2.743812] dwc2 20980000.usb: Periodic TXFIFO 8 size: 0
-[    2.751878] dwc2 20980000.usb: Periodic TXFIFO 9 size: 0
-[    2.759850] dwc2 20980000.usb: Periodic TXFIFO10 size: 0
-[    2.767724] dwc2 20980000.usb: Periodic TXFIFO11 size: 0
-[    2.775557] dwc2 20980000.usb: Periodic TXFIFO12 size: 0
-[    2.783321] dwc2 20980000.usb: Periodic TXFIFO13 size: 0
-[    2.791008] dwc2 20980000.usb: Periodic TXFIFO14 size: 0
-[    2.798604] dwc2 20980000.usb: Periodic TXFIFO15 size: 0
-[    2.806106] dwc2 20980000.usb: EPs: 8, dedicated fifos, 4080 entries in SPRAM
-[    2.832686] dwc2 20980000.usb: bound driver zero
+There also needs to be some thought into what happens if the phy
+driver is unloaded. Should this driver take a reference on the phy
+driver to prevent that?
+
+       Andrew
