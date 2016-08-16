@@ -1,406 +1,618 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH v2] regulator: axp20x: support AXP803/AXP813 variants
-Date: Tue, 16 Aug 2016 19:30:17 +0800
-Message-ID: <248521471347017@web1g.yandex.ru>
-References: <E1bZY0w-0004lM-0a@bombadil.infradead.org>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBTHSZO6QKGQEZMEKWNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <E1bZY0w-0004lM-0a-PfSpb0PWhxZc2C7mugBRk2EX/6BAtgUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: Add LTC3676 support" to the regulator tree
+Date: Tue, 16 Aug 2016 12:30:24 +0100
+Message-ID: <E1bZcZc-0004la-BU@debutante>
+References: <1471290023-12444-1-git-send-email-tharvey@gateworks.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1471290023-12444-1-git-send-email-tharvey@gateworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tim Harvey <tharvey@gateworks.com>
+Cc: Jaffer Kapasi <jkapasi@linear.com>, Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.orgJaffer Kapasi <jkapasi@linear.com>
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
+   regulator: Add LTC3676 support
 
-16.08.2016, 14:44, "Jean-Francois Moine" <moinejf-GANU6spQydw@public.gmane.org>:
-> The X-Powers AXP803 and AXP813 PMICs are close to the AXP809 with some
-> more outputs.
-AXP803 and AXP813 is quite different.
-AXP803 have 6 DCDCs and 16 LDOs&Switch.
-AXP813 have 7 DCDCs and 15 LDOs&Switch.
-and AXP813 have an audio codec.
+has been applied to the regulator tree at
 
-AXP803 cannot be handled without extra code.
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
-(I'm trying to get RSB working in my semi-mainline A64 kernel)
->
-> Signed-off-by: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-> ---
-> The AXP813 has been tested in a Banana PI M3 board (needed for WiFi/BT).
-> v2:
-> - fix lack of support of dcdc frequency
-> - notice that the AXP803 is also handled
-> - send the patch to the DT maintainers
-> ---
-> =C2=A0Documentation/devicetree/bindings/mfd/axp20x.txt | 32 ++++++++-
-> =C2=A0drivers/mfd/axp20x-rsb.c | 1 +
-> =C2=A0drivers/mfd/axp20x.c | 3 +
-> =C2=A0drivers/regulator/axp20x-regulator.c | 83 +++++++++++++++++++++++-
-> =C2=A0include/linux/mfd/axp20x.h | 38 +++++++++++
-> =C2=A05 files changed, 154 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documenta=
-tion/devicetree/bindings/mfd/axp20x.txt
-> index 585a955..856a9ff 100644
-> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-> @@ -7,10 +7,12 @@ axp209 (X-Powers)
-> =C2=A0axp221 (X-Powers)
-> =C2=A0axp223 (X-Powers)
-> =C2=A0axp809 (X-Powers)
-> +axp813 (X-Powers)
->
-> =C2=A0Required properties:
-> =C2=A0- compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp20=
-9",
-> - "x-powers,axp221", "x-powers,axp223", "x-powers,axp809"
-> + "x-powers,axp221", "x-powers,axp223", "x-powers,axp809",
-> + "x-powers,axp813"
-> =C2=A0- reg: The I2C slave address or RSB hardware address for the AXP ch=
-ip
-> =C2=A0- interrupt-parent: The parent interrupt controller
-> =C2=A0- interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ =
-pin
-> @@ -110,6 +112,34 @@ LDO_IO1 : LDO : ips-supply : GPIO 1
-> =C2=A0RTC_LDO : LDO : ips-supply : always on
-> =C2=A0SW : On/Off Switch : swin-supply
->
-> +AXP803/AXP813 regulators, type, and corresponding input supply names:
-> +
-> +Regulator Type Supply Name Notes
-> +--------- ---- ----------- -----
-> +DCDC1 : DC-DC buck : vin1-supply
-> +DCDC2 : DC-DC buck : vin2-supply
-> +DCDC3 : DC-DC buck : vin3-supply
-> +DCDC4 : DC-DC buck : vin4-supply
-> +DCDC5 : DC-DC buck : vin5-supply
-> +DCDC6 : DC-DC buck : vin6-supply
-> +DCDC7 : DC-DC buck : vin7-supply : AXP813 only
-> +RTC_LDO : LDO : ips-supply : always on
-> +ALDO1 : LDO : aldoin-supply : shared supply
-> +ALDO2 : LDO : aldoin-supply : shared supply
-> +ALDO3 : LDO : aldoin-supply : shared supply
-> +DLDO1 : LDO : dldoin-supply : shared supply
-> +DLDO2 : LDO : dldoin-supply : shared supply
-> +DLDO3 : LDO : dldoin-supply : shared supply
-> +DLDO4 : LDO : dldoin-supply : shared supply
-> +ELDO1 : LDO : eldoin-supply : shared supply
-> +ELDO2 : LDO : eldoin-supply : shared supply
-> +ELDO3 : LDO : eldoin-supply : shared supply
-> +FLDO1 : LDO : fldoin-supply : shared supply
-> +FLDO2 : LDO : fldoin-supply : shared supply
-> +LDO_IO0 : LDO : ips-supply : GPIO 0
-> +LDO_IO1 : LDO : ips-supply : GPIO 1
-> +DC1SW : On/Off Switch : : DCDC1 secondary output
-> +
-> =C2=A0Example:
->
-> =C2=A0axp209: pmic@34 {
-> diff --git a/drivers/mfd/axp20x-rsb.c b/drivers/mfd/axp20x-rsb.c
-> index a407527..e34643b 100644
-> --- a/drivers/mfd/axp20x-rsb.c
-> +++ b/drivers/mfd/axp20x-rsb.c
-> @@ -62,6 +62,7 @@ static int axp20x_rsb_remove(struct sunxi_rsb_device *r=
-dev)
-> =C2=A0static const struct of_device_id axp20x_rsb_of_match[] =3D {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "=
-x-powers,axp223", .data =3D (void *)AXP223_ID },
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0{ .compatible =3D "=
-x-powers,axp809", .data =3D (void *)AXP809_ID },
-> + { .compatible =3D "x-powers,axp813", .data =3D (void *)AXP813_ID },
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0{ },
-> =C2=A0};
-> =C2=A0MODULE_DEVICE_TABLE(of, axp20x_rsb_of_match);
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> index fd80b09..e62d56f 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp20x.c
-> @@ -39,6 +39,7 @@ static const char * const axp20x_model_names[] =3D {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"AXP223",
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"AXP288",
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"AXP809",
-> + "AXP813",
-> =C2=A0};
->
-> =C2=A0static const struct regmap_range axp152_writeable_ranges[] =3D {
-> @@ -494,6 +495,7 @@ static const struct regmap_irq_chip axp288_regmap_irq=
-_chip =3D {
->
-> =C2=A0};
->
-> +/* common 803/809/813 */
-> =C2=A0static const struct regmap_irq_chip axp809_regmap_irq_chip =3D {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.name =3D "axp809",
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.status_base =3D AX=
-P20X_IRQ1_STATE,
-> @@ -733,6 +735,7 @@ int axp20x_match_device(struct axp20x_dev *axp20x)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0axp20x->regmap_irq_chip =3D &axp288_regmap_ir=
-q_chip;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0break;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case AXP809_ID:
-> + case AXP813_ID:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0axp20x->nr_cells =3D ARRAY_SIZE(axp809_cells)=
-;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0axp20x->cells =3D axp809_cells;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0axp20x->regmap_cfg =3D &axp22x_regmap_config;
-> diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp=
-20x-regulator.c
-> index 6d9ac76..3fbe2c1 100644
-> --- a/drivers/regulator/axp20x-regulator.c
-> +++ b/drivers/regulator/axp20x-regulator.c
-> @@ -299,6 +299,78 @@ static const struct regulator_desc axp809_regulators=
-[] =3D {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0AXP_DESC_SW(AXP809,=
- SW, "sw", "swin", AXP22X_PWR_OUT_CTRL2, BIT(6)),
-> =C2=A0};
->
-> +static const struct regulator_linear_range axp813_dcdc2_4_ranges[] =3D {
-> + REGULATOR_LINEAR_RANGE(500000, 0, 70, 10000),
-> + REGULATOR_LINEAR_RANGE(1220000, 71, 75, 20000),
-> +};
-> +
-> +static const struct regulator_linear_range axp813_dcdc5_ranges[] =3D {
-> + REGULATOR_LINEAR_RANGE(800000, 0, 32, 10000),
-> + REGULATOR_LINEAR_RANGE(1140000, 33, 68, 20000),
-> +};
-> +
-> +static const struct regulator_linear_range axp813_dcdc6_7_ranges[] =3D {
-> + REGULATOR_LINEAR_RANGE(600000, 0, 50, 10000),
-> + REGULATOR_LINEAR_RANGE(1120000, 51, 71, 20000),
-> +};
-> +
-> +static const struct regulator_desc axp813_regulators[] =3D {
-> + AXP_DESC(AXP813, DLDO1, "dldo1", "dldoin", 700, 3300, 100,
-> + AXP22X_DLDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(3)),
-> + AXP_DESC(AXP813, DLDO2, "dldo2", "dldoin", 700, 4200, 100,
-> + AXP22X_DLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(4)),
-> + AXP_DESC(AXP813, DLDO3, "dldo3", "dldoin", 700, 3300, 100,
-> + AXP22X_DLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(5)),
-> + AXP_DESC(AXP813, DLDO4, "dldo4", "dldoin", 700, 3300, 100,
-> + AXP22X_DLDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(6)),
-> + AXP_DESC(AXP813, ELDO1, "eldo1", "eldoin", 700, 1900, 50,
-> + AXP22X_ELDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(0)),
-> + AXP_DESC(AXP813, ELDO2, "eldo2", "eldoin", 700, 1900, 50,
-> + AXP22X_ELDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(1)),
-> + AXP_DESC(AXP813, ELDO3, "eldo3", "eldoin", 700, 1900, 50,
-> + AXP22X_ELDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(2)),
-> + AXP_DESC(AXP813, FLDO1, "fldo1", "fldoin", 700, 1450, 50,
-> + AXP813_FLDO1_V_OUT, 0x0f, AXP22X_PWR_OUT_CTRL3, BIT(2)),
-> + AXP_DESC(AXP813, FLDO2, "fldo2", "fldoin", 700, 1450, 50,
-> + AXP813_FLDO2_V_OUT, 0x0f, AXP22X_PWR_OUT_CTRL3, BIT(3)),
-> + AXP_DESC(AXP813, DCDC1, "dcdc1", "vin1", 1600, 3400, 100,
-> + AXP813_DCDC1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL1, BIT(0)),
-> + AXP_DESC_RANGES(AXP813, DCDC2, "dcdc2", "vin2", axp813_dcdc2_4_ranges,
-> + 76, AXP813_DCDC2_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
-> + BIT(1)),
-> + AXP_DESC_RANGES(AXP813, DCDC3, "dcdc3", "vin3", axp813_dcdc2_4_ranges,
-> + 76, AXP813_DCDC3_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
-> + BIT(2)),
-> + AXP_DESC_RANGES(AXP813, DCDC4, "dcdc4", "vin4", axp813_dcdc2_4_ranges,
-> + 76, AXP813_DCDC4_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
-> + BIT(3)),
-> + AXP_DESC_RANGES(AXP813, DCDC5, "dcdc5", "vin5", axp813_dcdc5_ranges,
-> + 69, AXP813_DCDC5_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
-> + BIT(4)),
-> + AXP_DESC_RANGES(AXP813, DCDC6, "dcdc6", "vin6", axp813_dcdc6_7_ranges,
-> + 72, AXP813_DCDC6_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
-> + BIT(5)),
-> + AXP_DESC_RANGES(AXP813, DCDC7, "dcdc7", "vin7", axp813_dcdc6_7_ranges,
-> + 72, AXP813_DCDC7_V_OUT, 0x7f, AXP22X_PWR_OUT_CTRL1,
-> + BIT(6)),
-> + AXP_DESC_FIXED(AXP813, RTC_LDO, "rtc_ldo", "ips", 3000),
-> + AXP_DESC(AXP813, ALDO1, "aldo1", "aldoin", 700, 3300, 100,
-> + AXP22X_ALDO1_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(5)),
-> + AXP_DESC(AXP813, ALDO2, "aldo2", "aldoin", 700, 3300, 100,
-> + AXP22X_ALDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(6)),
-> + AXP_DESC(AXP813, ALDO3, "aldo3", "aldoin", 700, 3300, 100,
-> + AXP22X_ALDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL3, BIT(7)),
-> + AXP_DESC_IO(AXP813, LDO_IO0, "ldo_io0", "ips", 700, 3300, 100,
-> + AXP22X_LDO_IO0_V_OUT, 0x1f, AXP20X_GPIO0_CTRL, 0x07,
-> + AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
-> + AXP_DESC_IO(AXP813, LDO_IO1, "ldo_io1", "ips", 700, 3300, 100,
-> + AXP22X_LDO_IO1_V_OUT, 0x1f, AXP20X_GPIO1_CTRL, 0x07,
-> + AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
-> + /* secondary switchable output of DCDC1 */
-> + AXP_DESC_SW(AXP813, DC1SW, "dc1sw", NULL, AXP22X_PWR_OUT_CTRL2,
-> + BIT(7)),
-> +};
-> +
-> =C2=A0static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 d=
-cdcfreq)
-> =C2=A0{
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct axp20x_dev *=
-axp20x =3D dev_get_drvdata(pdev->dev.parent);
-> @@ -315,6 +387,7 @@ static int axp20x_set_dcdc_freq(struct platform_devic=
-e *pdev, u32 dcdcfreq)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case AXP221_ID:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case AXP223_ID:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case AXP809_ID:
-> + case AXP813_ID:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0min =3D 1800;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0max =3D 4050;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0def =3D 3000;
-> @@ -444,6 +517,10 @@ static int axp20x_regulator_probe(struct platform_de=
-vice *pdev)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0regulators =3D axp809_regulators;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0nregulators =3D AXP809_REG_ID_MAX;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0break;
-> + case AXP813_ID:
-> + regulators =3D axp813_regulators;
-> + nregulators =3D AXP813_REG_ID_MAX;
-> + break;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0default:
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_err(&pdev->dev, "Unsupported AXP variant:=
- %ld\n",
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0axp20x->variant);
-> @@ -467,7 +544,8 @@ static int axp20x_regulator_probe(struct platform_dev=
-ice *pdev)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0* name.
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*/
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if ((regulators =3D=3D axp22x_regulators && i=
- =3D=3D AXP22X_DC1SW) ||
-> - (regulators =3D=3D axp809_regulators && i =3D=3D AXP809_DC1SW)) {
-> + (regulators =3D=3D axp809_regulators && i =3D=3D AXP809_DC1SW) ||
-> + (regulators =3D=3D axp813_regulators && i =3D=3D AXP813_DC1SW)) {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0new_desc =3D devm_kzalloc(&pdev->dev, sizeof(*desc),
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0GFP=
-_KERNEL);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0*new_desc =3D regulators[i];
-> @@ -505,7 +583,8 @@ static int axp20x_regulator_probe(struct platform_dev=
-ice *pdev)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0* Save AXP22X DCDC1 / DCDC5 regulator n=
-ames for later.
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*/
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if ((regulators =3D=3D axp22x_regulators && i=
- =3D=3D AXP22X_DCDC1) ||
-> - (regulators =3D=3D axp809_regulators && i =3D=3D AXP809_DCDC1))
-> + (regulators =3D=3D axp809_regulators && i =3D=3D AXP809_DCDC1) ||
-> + (regulators =3D=3D axp813_regulators && i =3D=3D AXP813_DCDC1))
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0of_property_read_string(rdev->dev.of_node,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"re=
-gulator-name",
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0&dc=
-dc1_name);
-> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
-> index 0be4982..637fb7c 100644
-> --- a/include/linux/mfd/axp20x.h
-> +++ b/include/linux/mfd/axp20x.h
-> @@ -21,6 +21,7 @@ enum {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0AXP223_ID,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0AXP288_ID,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0AXP809_ID,
-> + AXP813_ID,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0NR_AXP20X_VARIANTS,
-> =C2=A0};
->
-> @@ -91,6 +92,16 @@ enum {
-> =C2=A0#define AXP22X_ALDO3_V_OUT 0x2a
-> =C2=A0#define AXP22X_CHRG_CTRL3 0x35
->
-> +#define AXP813_FLDO1_V_OUT 0x1c
-> +#define AXP813_FLDO2_V_OUT 0x1d
-> +#define AXP813_DCDC1_V_OUT 0x20
-> +#define AXP813_DCDC2_V_OUT 0x21
-> +#define AXP813_DCDC3_V_OUT 0x22
-> +#define AXP813_DCDC4_V_OUT 0x23
-> +#define AXP813_DCDC5_V_OUT 0x24
-> +#define AXP813_DCDC6_V_OUT 0x25
-> +#define AXP813_DCDC7_V_OUT 0x26
-> +
-> =C2=A0/* Interrupt */
-> =C2=A0#define AXP152_IRQ1_EN 0x40
-> =C2=A0#define AXP152_IRQ2_EN 0x41
-> @@ -288,6 +299,33 @@ enum {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0AXP809_REG_ID_MAX,
-> =C2=A0};
->
-> +enum {
-> + AXP813_DCDC1 =3D 0,
-> + AXP813_DCDC2,
-> + AXP813_DCDC3,
-> + AXP813_DCDC4,
-> + AXP813_DCDC5,
-> + AXP813_DCDC6,
-> + AXP813_DCDC7,
-> + AXP813_RTC_LDO,
-> + AXP813_ALDO1,
-> + AXP813_ALDO2,
-> + AXP813_ALDO3,
-> + AXP813_DLDO1,
-> + AXP813_DLDO2,
-> + AXP813_DLDO3,
-> + AXP813_DLDO4,
-> + AXP813_ELDO1,
-> + AXP813_ELDO2,
-> + AXP813_ELDO3,
-> + AXP813_FLDO1,
-> + AXP813_FLDO2,
-> + AXP813_LDO_IO0,
-> + AXP813_LDO_IO1,
-> + AXP813_DC1SW,
-> + AXP813_REG_ID_MAX,
-> +};
-> +
-> =C2=A0/* IRQs */
-> =C2=A0enum {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0AXP152_IRQ_LDO0IN_C=
-ONNECT =3D 1,
-> --
-> 2.9.3
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 37b918a034feda1b1ef404acf003812f37ab8da2 Mon Sep 17 00:00:00 2001
+From: Tim Harvey <tharvey@gateworks.com>
+Date: Mon, 15 Aug 2016 12:40:23 -0700
+Subject: [PATCH] regulator: Add LTC3676 support
+
+This patch adds support for the Linear Technology LTC3676
+8-output I2C voltage regulator IC.
+
+Cc: Jaffer Kapasi <jkapasi@linear.com>
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../devicetree/bindings/regulator/ltc3676.txt      |  94 +++++
+ drivers/regulator/Kconfig                          |   8 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/ltc3676.c                        | 420 +++++++++++++++++++++
+ 4 files changed, 523 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/ltc3676.txt
+ create mode 100644 drivers/regulator/ltc3676.c
+
+diff --git a/Documentation/devicetree/bindings/regulator/ltc3676.txt b/Documentation/devicetree/bindings/regulator/ltc3676.txt
+new file mode 100644
+index 000000000000..d4eb366ce18c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/ltc3676.txt
+@@ -0,0 +1,94 @@
++Linear Technology LTC3676 8-output regulators
++
++Required properties:
++- compatible: "lltc,ltc3676"
++- reg: I2C slave address
++
++Required child node:
++- regulators: Contains eight regulator child nodes sw1, sw2, sw3, sw4,
++  ldo1, ldo2, ldo3, and ldo4, specifying the initialization data as
++  documented in Documentation/devicetree/bindings/regulator/regulator.txt.
++
++Each regulator is defined using the standard binding for regulators. The
++nodes for sw1, sw2, sw3, sw4, ldo1, ldo2 and ldo4 additionally need to specify
++the resistor values of their external feedback voltage dividers:
++
++Required properties (not on ldo3):
++- lltc,fb-voltage-divider: An array of two integers containing the resistor
++  values R1 and R2 of the feedback voltage divider in ohms.
++
++Regulators sw1, sw2, sw3, sw4 can regulate the feedback reference from:
++412.5mV to 800mV in 12.5 mV steps. The output voltage thus ranges between
++0.4125 * (1 + R1/R2) V and 0.8 * (1 + R1/R2) V.
++
++Regulators ldo1, ldo2, and ldo4 have a fixed 0.725 V reference and thus output
++0.725 * (1 + R1/R2) V. The ldo3 regulator is fixed to 1.8 V.  The ldo1 standby
++regulator can not be disabled and thus should have the regulator-always-on
++property set.
++
++Example:
++
++	ltc3676: pmic@3c {
++		compatible = "lltc,ltc3676";
++		reg = <0x3c>;
++
++		regulators {
++			sw1_reg: sw1 {
++				regulator-min-microvolt = <674400>;
++				regulator-max-microvolt = <1308000>;
++				lltc,fb-voltage-divider = <127000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <1033310>;
++				regulator-max-microvolt = <200400>;
++				lltc,fb-voltage-divider = <301000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3_reg: sw3 {
++				regulator-min-microvolt = <674400>;
++				regulator-max-microvolt = <130800>;
++				lltc,fb-voltage-divider = <127000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw4_reg: sw4 {
++				regulator-min-microvolt = <868310>;
++				regulator-max-microvolt = <168400>;
++				lltc,fb-voltage-divider = <221000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo2_reg: ldo2 {
++				regulator-min-microvolt = <2490375>;
++				regulator-max-microvolt = <2490375>;
++				lltc,fb-voltage-divider = <487000 200000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo3_reg: ldo3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++			};
++
++			ldo4_reg: ldo4 {
++				regulator-min-microvolt = <3023250>;
++				regulator-max-microvolt = <3023250>;
++				lltc,fb-voltage-divider = <634000 200000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 6c88e31c01f7..527bd6a51ef8 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -353,6 +353,14 @@ config REGULATOR_LTC3589
+ 	  This enables support for the LTC3589, LTC3589-1, and LTC3589-2
+ 	  8-output regulators controlled via I2C.
+ 
++config REGULATOR_LTC3676
++	tristate "LTC3676 8-output voltage regulator"
++	depends on I2C
++	select REGMAP_I2C
++	help
++	  This enables support for the LTC3676
++	  8-output regulators controlled via I2C.
++
+ config REGULATOR_MAX14577
+ 	tristate "Maxim 14577/77836 regulator"
+ 	depends on MFD_MAX14577
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index f3da9eea9ab6..2142a5d3fc08 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -47,6 +47,7 @@ obj-$(CONFIG_REGULATOR_LP8788) += lp8788-buck.o
+ obj-$(CONFIG_REGULATOR_LP8788) += lp8788-ldo.o
+ obj-$(CONFIG_REGULATOR_LP8755) += lp8755.o
+ obj-$(CONFIG_REGULATOR_LTC3589) += ltc3589.o
++obj-$(CONFIG_REGULATOR_LTC3676) += ltc3676.o
+ obj-$(CONFIG_REGULATOR_MAX14577) += max14577-regulator.o
+ obj-$(CONFIG_REGULATOR_MAX1586) += max1586.o
+ obj-$(CONFIG_REGULATOR_MAX77620) += max77620-regulator.o
+diff --git a/drivers/regulator/ltc3676.c b/drivers/regulator/ltc3676.c
+new file mode 100644
+index 000000000000..e2b476ca2b4d
+--- /dev/null
++++ b/drivers/regulator/ltc3676.c
+@@ -0,0 +1,420 @@
++/*
++ * Copyright (C) 2016 Gateworks Corporation, Inc. All Rights Reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2
++ * as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/of.h>
++#include <linux/regmap.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
++
++#define DRIVER_NAME		"ltc3676"
++
++/* LTC3676 Registers */
++#define LTC3676_BUCK1     0x01
++#define LTC3676_BUCK2     0x02
++#define LTC3676_BUCK3     0x03
++#define LTC3676_BUCK4     0x04
++#define LTC3676_LDOA      0x05
++#define LTC3676_LDOB      0x06
++#define LTC3676_SQD1      0x07
++#define LTC3676_SQD2      0x08
++#define LTC3676_CNTRL     0x09
++#define LTC3676_DVB1A     0x0A
++#define LTC3676_DVB1B     0x0B
++#define LTC3676_DVB2A     0x0C
++#define LTC3676_DVB2B     0x0D
++#define LTC3676_DVB3A     0x0E
++#define LTC3676_DVB3B     0x0F
++#define LTC3676_DVB4A     0x10
++#define LTC3676_DVB4B     0x11
++#define LTC3676_MSKIRQ    0x12
++#define LTC3676_MSKPG     0x13
++#define LTC3676_USER      0x14
++#define LTC3676_IRQSTAT   0x15
++#define LTC3676_PGSTATL   0x16
++#define LTC3676_PGSTATRT  0x17
++#define LTC3676_HRST      0x1E
++#define LTC3676_CLIRQ     0x1F
++
++#define LTC3676_DVBxA_REF_SELECT	BIT(5)
++
++#define LTC3676_IRQSTAT_PGOOD_TIMEOUT	BIT(3)
++#define LTC3676_IRQSTAT_UNDERVOLT_WARN	BIT(4)
++#define LTC3676_IRQSTAT_UNDERVOLT_FAULT	BIT(5)
++#define LTC3676_IRQSTAT_THERMAL_WARN	BIT(6)
++#define LTC3676_IRQSTAT_THERMAL_FAULT	BIT(7)
++
++enum ltc3676_reg {
++	LTC3676_SW1,
++	LTC3676_SW2,
++	LTC3676_SW3,
++	LTC3676_SW4,
++	LTC3676_LDO1,
++	LTC3676_LDO2,
++	LTC3676_LDO3,
++	LTC3676_LDO4,
++	LTC3676_NUM_REGULATORS,
++};
++
++struct ltc3676 {
++	struct regmap *regmap;
++	struct device *dev;
++	struct regulator_desc regulator_descs[LTC3676_NUM_REGULATORS];
++	struct regulator_dev *regulators[LTC3676_NUM_REGULATORS];
++};
++
++static int ltc3676_set_suspend_voltage(struct regulator_dev *rdev, int uV)
++{
++	struct ltc3676 *ltc3676 = rdev_get_drvdata(rdev);
++	struct device *dev = ltc3676->dev;
++	int dcdc = rdev_get_id(rdev);
++	int sel;
++
++	dev_dbg(dev, "%s id=%d uV=%d\n", __func__, dcdc, uV);
++	sel = regulator_map_voltage_linear(rdev, uV, uV);
++	if (sel < 0)
++		return sel;
++
++	/* DVBB register follows right after the corresponding DVBA register */
++	return regmap_update_bits(ltc3676->regmap, rdev->desc->vsel_reg + 1,
++				  rdev->desc->vsel_mask, sel);
++}
++
++static int ltc3676_set_suspend_mode(struct regulator_dev *rdev,
++				    unsigned int mode)
++{
++	struct ltc3676 *ltc3676= rdev_get_drvdata(rdev);
++	struct device *dev = ltc3676->dev;
++	int mask, val;
++	int dcdc = rdev_get_id(rdev);
++
++	dev_dbg(dev, "%s id=%d mode=%d\n", __func__, dcdc, mode);
++
++	mask = LTC3676_DVBxA_REF_SELECT;
++	switch (mode) {
++	case REGULATOR_MODE_STANDBY:
++		val = 0; /* select DVBxA */
++		break;
++	case REGULATOR_MODE_NORMAL:
++		val = LTC3676_DVBxA_REF_SELECT; /* select DVBxB */
++		break;
++	default:
++		dev_warn(&rdev->dev, "%s: regulator mode: 0x%x not supported\n",
++			 rdev->desc->name, mode);
++		return -EINVAL;
++	}
++
++	return regmap_update_bits(ltc3676->regmap, rdev->desc->vsel_reg,
++				  mask, val);
++}
++
++static inline unsigned int ltc3676_scale(unsigned int uV, u32 r1, u32 r2)
++{
++	uint64_t tmp;
++	if (uV == 0)
++		return 0;
++	tmp = (uint64_t)uV * r1;
++	do_div(tmp, r2);
++	return uV + (unsigned int)tmp;
++}
++
++static int ltc3676_of_parse_cb(struct device_node *np,
++			       const struct regulator_desc *desc,
++			       struct regulator_config *config)
++{
++	struct ltc3676 *ltc3676 = config->driver_data;
++	struct regulator_desc *rdesc = &ltc3676->regulator_descs[desc->id];
++	u32 r[2];
++	int ret;
++
++	/* LDO3 has a fixed output */
++	if (desc->id == LTC3676_LDO3)
++		return 0;
++
++	ret = of_property_read_u32_array(np, "lltc,fb-voltage-divider", r, 2);
++	if (ret) {
++		dev_err(ltc3676->dev, "Failed to parse voltage divider: %d\n",
++			ret);
++		return ret;
++	}
++
++	rdesc->min_uV = ltc3676_scale(desc->min_uV, r[0], r[1]);
++	rdesc->uV_step = ltc3676_scale(desc->uV_step, r[0], r[1]);
++	rdesc->fixed_uV = ltc3676_scale(desc->fixed_uV, r[0], r[1]);
++
++	return 0;
++}
++
++/* SW1, SW2, SW3, SW4 linear 0.8V-3.3V with scalar via R1/R2 feeback res */
++static struct regulator_ops ltc3676_linear_regulator_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++	.list_voltage = regulator_list_voltage_linear,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_suspend_voltage = ltc3676_set_suspend_voltage,
++	.set_suspend_mode = ltc3676_set_suspend_mode,
++};
++
++/* LDO1 always on fixed 0.8V-3.3V via scalar via R1/R2 feeback res */
++static struct regulator_ops ltc3676_fixed_standby_regulator_ops = {
++};
++
++/* LDO2, LDO3 fixed (LDO2 has external scalar via R1/R2 feedback res) */
++static struct regulator_ops ltc3676_fixed_regulator_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++};
++
++#define LTC3676_REG(_id, _name, _ops, en_reg, en_bit, dvba_reg, dvb_mask)   \
++	[LTC3676_ ## _id] = {                                        \
++		.name = #_name,                                \
++		.of_match = of_match_ptr(#_name),              \
++		.regulators_node = of_match_ptr("regulators"), \
++		.of_parse_cb = ltc3676_of_parse_cb,            \
++		.n_voltages = (dvb_mask) + 1,                  \
++		.min_uV = (dvba_reg) ? 412500 : 0,             \
++		.uV_step = (dvba_reg) ? 12500 : 0,             \
++		.ramp_delay = (dvba_reg) ? 800 : 0,            \
++		.fixed_uV = (dvb_mask) ? 0 : 725000,           \
++		.ops = &ltc3676_ ## _ops ## _regulator_ops,    \
++		.type = REGULATOR_VOLTAGE,                     \
++		.id = LTC3676_ ## _id,                         \
++		.owner = THIS_MODULE,                          \
++		.vsel_reg = (dvba_reg),                        \
++		.vsel_mask = (dvb_mask),                       \
++		.enable_reg = (en_reg),                        \
++		.enable_mask = (1 << en_bit),                  \
++	}
++
++#define LTC3676_LINEAR_REG(_id, _name, _en, _dvba)                     \
++	LTC3676_REG(_id, _name, linear,                                \
++		    LTC3676_ ## _en, 7,                                \
++		    LTC3676_ ## _dvba, 0x1f)
++
++#define LTC3676_FIXED_REG(_id, _name, _en_reg, _en_bit)                \
++	LTC3676_REG(_id, _name, fixed, LTC3676_ ## _en_reg, _en_bit, 0, 0)
++
++static struct regulator_desc ltc3676_regulators[LTC3676_NUM_REGULATORS] = {
++	LTC3676_LINEAR_REG(SW1, sw1, BUCK1, DVB1A),
++	LTC3676_LINEAR_REG(SW2, sw2, BUCK2, DVB2A),
++	LTC3676_LINEAR_REG(SW3, sw3, BUCK3, DVB3A),
++	LTC3676_LINEAR_REG(SW4, sw4, BUCK4, DVB4A),
++	LTC3676_REG(LDO1, ldo1, fixed_standby, 0, 0, 0, 0),
++	LTC3676_FIXED_REG(LDO2, ldo2, LDOA, 2),
++	LTC3676_FIXED_REG(LDO3, ldo3, LDOA, 5),
++	LTC3676_FIXED_REG(LDO4, ldo4, LDOB, 2),
++};
++
++static bool ltc3676_writeable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case LTC3676_IRQSTAT:
++	case LTC3676_BUCK1:
++	case LTC3676_BUCK2:
++	case LTC3676_BUCK3:
++	case LTC3676_BUCK4:
++	case LTC3676_LDOA:
++	case LTC3676_LDOB:
++	case LTC3676_SQD1:
++	case LTC3676_SQD2:
++	case LTC3676_CNTRL:
++	case LTC3676_DVB1A:
++	case LTC3676_DVB1B:
++	case LTC3676_DVB2A:
++	case LTC3676_DVB2B:
++	case LTC3676_DVB3A:
++	case LTC3676_DVB3B:
++	case LTC3676_DVB4A:
++	case LTC3676_DVB4B:
++	case LTC3676_MSKIRQ:
++	case LTC3676_MSKPG:
++	case LTC3676_USER:
++	case LTC3676_HRST:
++	case LTC3676_CLIRQ:
++		return true;
++	}
++	return false;
++}
++
++static bool ltc3676_readable_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case LTC3676_IRQSTAT:
++	case LTC3676_BUCK1:
++	case LTC3676_BUCK2:
++	case LTC3676_BUCK3:
++	case LTC3676_BUCK4:
++	case LTC3676_LDOA:
++	case LTC3676_LDOB:
++	case LTC3676_SQD1:
++	case LTC3676_SQD2:
++	case LTC3676_CNTRL:
++	case LTC3676_DVB1A:
++	case LTC3676_DVB1B:
++	case LTC3676_DVB2A:
++	case LTC3676_DVB2B:
++	case LTC3676_DVB3A:
++	case LTC3676_DVB3B:
++	case LTC3676_DVB4A:
++	case LTC3676_DVB4B:
++	case LTC3676_MSKIRQ:
++	case LTC3676_MSKPG:
++	case LTC3676_USER:
++	case LTC3676_HRST:
++	case LTC3676_CLIRQ:
++		return true;
++	}
++	return false;
++}
++
++static bool ltc3676_volatile_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case LTC3676_IRQSTAT:
++	case LTC3676_PGSTATL:
++	case LTC3676_PGSTATRT:
++		return true;
++	}
++	return false;
++}
++
++static const struct regmap_config ltc3676_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.writeable_reg = ltc3676_writeable_reg,
++	.readable_reg = ltc3676_readable_reg,
++	.volatile_reg = ltc3676_volatile_reg,
++	.max_register = LTC3676_CLIRQ,
++	.use_single_rw = true,
++	.cache_type = REGCACHE_RBTREE,
++};
++
++static irqreturn_t ltc3676_isr(int irq, void *dev_id)
++{
++	struct ltc3676 *ltc3676 = dev_id;
++	struct device *dev = ltc3676->dev;
++	unsigned int i, irqstat, event;
++
++	regmap_read(ltc3676->regmap, LTC3676_IRQSTAT, &irqstat);
++
++	dev_dbg(dev, "irq%d irqstat=0x%02x\n", irq, irqstat);
++	if (irqstat & LTC3676_IRQSTAT_THERMAL_WARN) {
++		dev_warn(dev, "Over-temperature Warning\n");
++		event = REGULATOR_EVENT_OVER_TEMP;
++		for (i = 0; i < LTC3676_NUM_REGULATORS; i++)
++			regulator_notifier_call_chain(ltc3676->regulators[i],
++						      event, NULL);
++	}
++
++	if (irqstat & LTC3676_IRQSTAT_UNDERVOLT_WARN) {
++		dev_info(dev, "Undervoltage Warning\n");
++		event = REGULATOR_EVENT_UNDER_VOLTAGE;
++		for (i = 0; i < LTC3676_NUM_REGULATORS; i++)
++			regulator_notifier_call_chain(ltc3676->regulators[i],
++						      event, NULL);
++	}
++
++	/* Clear warning condition */
++	regmap_write(ltc3676->regmap, LTC3676_CLIRQ, 0);
++
++	return IRQ_HANDLED;
++}
++
++static int ltc3676_regulator_probe(struct i2c_client *client,
++				    const struct i2c_device_id *id)
++{
++	struct device *dev = &client->dev;
++	struct regulator_init_data *init_data = dev_get_platdata(dev);
++	struct regulator_desc *descs;
++	struct ltc3676 *ltc3676;
++	int i, ret;
++
++	ltc3676 = devm_kzalloc(dev, sizeof(*ltc3676), GFP_KERNEL);
++	if (!ltc3676)
++		return -ENOMEM;
++
++	i2c_set_clientdata(client, ltc3676);
++	ltc3676->dev = dev;
++
++	descs = ltc3676->regulator_descs;
++	memcpy(descs, ltc3676_regulators, sizeof(ltc3676_regulators));
++	descs[LTC3676_LDO3].fixed_uV = 1800000; /* LDO3 is fixed 1.8V */
++
++	ltc3676->regmap = devm_regmap_init_i2c(client, &ltc3676_regmap_config);
++	if (IS_ERR(ltc3676->regmap)) {
++		ret = PTR_ERR(ltc3676->regmap);
++		dev_err(dev, "failed to initialize regmap: %d\n", ret);
++		return ret;
++	}
++
++	for (i = 0; i < LTC3676_NUM_REGULATORS; i++) {
++		struct regulator_desc *desc = &ltc3676->regulator_descs[i];
++		struct regulator_config config = { };
++
++		if (init_data)
++			config.init_data = &init_data[i];
++
++		config.dev = dev;
++		config.driver_data = ltc3676;
++
++		ltc3676->regulators[i] = devm_regulator_register(dev, desc,
++								 &config);
++		if (IS_ERR(ltc3676->regulators[i])) {
++			ret = PTR_ERR(ltc3676->regulators[i]);
++			dev_err(dev, "failed to register regulator %s: %d\n",
++				desc->name, ret);
++			return ret;
++		}
++	}
++
++	regmap_write(ltc3676->regmap, LTC3676_CLIRQ, 0);
++	if (client->irq) {
++		ret = devm_request_threaded_irq(dev, client->irq, NULL,
++						ltc3676_isr,
++						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
++						client->name, ltc3676);
++		if (ret) {
++			dev_err(dev, "Failed to request IRQ: %d\n", ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static const struct i2c_device_id ltc3676_i2c_id[] = {
++	{ "ltc3676" },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, ltc3676_i2c_id);
++
++static struct i2c_driver ltc3676_driver = {
++	.driver = {
++		.name = DRIVER_NAME,
++	},
++	.probe = ltc3676_regulator_probe,
++	.id_table = ltc3676_i2c_id,
++};
++module_i2c_driver(ltc3676_driver);
++
++MODULE_AUTHOR("Tim Harvey <tharvey@gateworks.com>");
++MODULE_DESCRIPTION("Regulator driver for Linear Technology LTC1376");
++MODULE_LICENSE("GPL v2");
+-- 
+2.8.1
