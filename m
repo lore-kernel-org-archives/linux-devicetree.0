@@ -1,111 +1,107 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [RFC 5/7] Bluetooth: hci_nokia: Introduce new driver
-Date: Tue, 16 Aug 2016 11:25:48 +0200
-Message-ID: <20160816092548.swayvx4zu3vlg7as@earth>
-References: <1471058078-5579-1-git-send-email-sre@kernel.org>
- <1471058078-5579-6-git-send-email-sre@kernel.org>
- <0528B894-39CB-4D18-971E-3209EEEA2583@holtmann.org>
- <20160816075217.GK30047@pali>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="o7bzbzsdqbdxhmu2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160816075217.GK30047@pali>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Ville Tervo <ville.tervo@iki.fi>, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Pavel Machek <pavel@ucw.cz>, ivo.g.dimitrov.75@gmail.com, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2 v4] leds: pm8058: add device tree bindings
+Date: Tue, 16 Aug 2016 11:25:02 +0200
+Message-ID: <1471339502-26123-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>, Richard Purdie <rpurdie@rpsys.net>
+Cc: linux-leds@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+This adds the device tree bindings for the PM8058 LEDs.
 
---o7bzbzsdqbdxhmu2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org
+Cc: Andy Gross <andy.gross@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v3->v4:
+- No changes, just reposting with the series.
+ChangeLog v2->v3:
+- Rename the keypad LED in the example from "keypad" to
+  "pm8050:white:keypad"
+ChangeLog v1->v2:
+- Fix some spelling mistakes
+- Reference common bindings directly without any local descriptions
+---
+ .../devicetree/bindings/leds/leds-pm8058.txt       | 67 ++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-pm8058.txt
 
-Hi,
-
-On Tue, Aug 16, 2016 at 09:52:17AM +0200, Pali Roh=E1r wrote:
-> > > +		case HCI_NOKIA_RADIO_PKT:
-> >=20
-> > Are you sure you can ignore the RADIO_PKT commands. They are
-> > used to set up the FM radio parts of the chip. They are standard
-> > HCI commands (in the case of Broadcom at least). At minimum it
-> > should be added a comment here that you are ignoring them on
-> > purpose.
-> >=20
-> > > +		case HCI_NOKIA_NEG_PKT:
-> > > +		case HCI_NOKIA_ALIVE_PKT:
-> >=20
-> > And here I would also a comment on why are we ignore these
-> > commands and driving this all by ourselves.
-> >=20
->=20
-> Good question... In Pavel's version of bluetooth driver, which is
-> working on Nokia N900, is sent whole firmware at one __hci_cmd_sync
-> step. It does not skip any packets, plus he added this comment:
->=20
-> /* Note that this is timing-critical. If sending packets takes
->  * too long, initialization will fail.
->  */
->=20
-> So really, can we skip those packets? And is not this reason why
-> this bluetooth driver does not work on Nokia N900?
-
-Let's have a look - here is Pavel's version:
-https://lwn.net/Articles/627201/
-
-In pseudocode:
-
-while(true) {
-    cmd =3D get_cmd_from_firmware();
-    if (!cmd) break;
-    __hci_cmd_sync(cmd);
-}
-
-This is not "whole firmware at one __hci_cmd_sync step", is it?
-And obviously that wouldn't work. Next let's have a look at
-"It does not skip any packets":
-
-/* Skip first two packets */
-if (++num <=3D 2)
-    continue;
-
-Which are HCI_NOKIA_NEG_PKT and HCI_NOKIA_ALIVE_PKT. Those are
-open-coded. By using the packets from the firmware we could drop the
-negotiation/alive functions from the driver and remove quite a few
-lines of code. I think it should only be done after finding the N900
-bug, though. I found it quite useful, that first communication does not
-happen through the firmware file.
-
-Surely the radio packet is not ignored, but that part is not used on
-N950 and N900 fails at first packet, so no way to test the radio
-packet handling. I probably should add a /* TODO: check how to
-handle radio packets */ for the radio packet entry. Or implement it
-the way Marcel suggested and hope that it just works once the other
-bug is found.
-
--- Sebastian
-
---o7bzbzsdqbdxhmu2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXstwXAAoJENju1/PIO/qaTZwP/1F4KCuwWEdThZPDApa6cW1A
-Dv54llsXV1A907qhn58CWAm2OTYny/Ygl9m3V4Ox0aJ3JlNc1nJcGY5Y6rKibf/9
-Hcq+VNXytc8NiZ0Q73NrtxbLqoJPBNs+qYy1GqO08q6+rxwv99dJLpN9DUPtgt/U
-pm9crgkn96QdLt/R+XV2qupHBsCZOzagLZiCJPRCJX2pb/P0nyzKR20I6FX5cMjo
-8IAXdhf+oJrV6RiGpcaVT7FPw/GG6DeoQ/7hBhsanAEgikl03DuHTjmgUx9wlwIp
-OFLTlEj01ZNf63wZa9Qr7fbzsPJrQdFfycT/RHTMX8ExNGOu4zokyIDg998rqU1M
-cdyAoOJ/ak1mygbF4Ae8d/RsAjhsL8JTmQgsgkkemDLlVZAuh54jZTJPFX97lZ2k
-pxl0K6iCobu6bxTDz3lnHwgxnkg3Z7cdhl0ZMZkVEZ7GhzmhdoeTA2oVDA3AVKot
-pxHfkcB/JNt7fd29arHFdz+m5x3Rb83yRjZVBuXz/+b0PDJQtLPRNkjElqA+uhYO
-z31QVyxpA+SPgP0qUrAFuVA9NNPMwPo756ysSkTDS8drabOKaJBUri7wmcn2kfdF
-TPVu3BZpX//5nOJDBSpn0notykZi0kh3SdnDUBljg1Og3GqIsOZ/poEA8lmbaGVU
-8Y8yB4g7wpH2RxMWUGBZ
-=C/Js
------END PGP SIGNATURE-----
-
---o7bzbzsdqbdxhmu2--
+diff --git a/Documentation/devicetree/bindings/leds/leds-pm8058.txt b/Documentation/devicetree/bindings/leds/leds-pm8058.txt
+new file mode 100644
+index 000000000000..89584c49aab2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-pm8058.txt
+@@ -0,0 +1,67 @@
++Qualcomm PM8058 LED driver
++
++The Qualcomm PM8058 is a multi-functional device which contains
++an LED driver block for up to six LEDs: three normal LEDs, two
++"flash" LEDs and one "keypad backlight" LED. The names are
++quoted because sometimes these LED drivers are used for wildly
++different things than flash or keypad backlight: their names
++are more of a suggestion than a hard-wired usecase.
++
++Hardware-wise the different LEDs support slightly different
++output currents. The "flash" LEDs do not need to charge nor
++do they support external triggers. They are just powerful LED
++drivers.
++
++The LEDs appear as children to the PM8058 device, with the
++proper compatible string. For the PM8058 bindings see:
++mfd/qcom-pm8xxx.txt.
++
++Each LED is represented as a sub-node of the syscon device. Each
++node's name represents the name of the corresponding LED.
++
++LED sub-node properties:
++
++Required properties:
++- compatible: one of
++  "qcom,pm8058-led" (for the normal LEDs at 0x131, 0x132 and 0x133)
++  "qcom,pm8058-keypad-led" (for the "keypad" LED at 0x48)
++  "qcom,pm8058-flash-led" (for the "flash" LEDs at 0x49 and 0xFB)
++
++Optional properties:
++- label: see Documentation/devicetree/bindings/leds/common.txt
++- default-state: see Documentation/devicetree/bindings/leds/common.txt
++- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
++
++Example:
++
++qcom,ssbi@500000 {
++	pmicintc: pmic@0 {
++		compatible = "qcom,pm8058";
++		led@48 {
++			compatible = "qcom,pm8058-keypad-led";
++			reg = <0x48>;
++			label = "pm8050:white:keypad";
++			default-state = "off";
++		};
++		led@131 {
++			compatible = "qcom,pm8058-led";
++			reg = <0x131>;
++			label = "pm8058:red";
++			default-state = "off";
++		};
++		led@132 {
++			compatible = "qcom,pm8058-led";
++			reg = <0x132>;
++			label = "pm8058:yellow";
++			default-state = "off";
++			linux,default-trigger = "mmc0";
++		};
++		led@133 {
++			compatible = "qcom,pm8058-led";
++			reg = <0x133>;
++			label = "pm8058:green";
++			default-state = "on";
++			linux,default-trigger = "heartbeat";
++		};
++	};
++};
+-- 
+2.7.4
