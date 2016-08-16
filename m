@@ -1,221 +1,74 @@
-From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] arm: dts: apq8064: Add thermal zones, tsens and
- qfprom nodes
-Date: Tue, 16 Aug 2016 12:14:41 +0530
-Message-ID: <57B2B659.504@codeaurora.org>
-References: <1470811439-1992-1-git-send-email-rnayak@codeaurora.org> <1470811439-1992-3-git-send-email-rnayak@codeaurora.org> <20160812181304.GA24114@rob-hp-laptop>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH] net: macb: add phy-handle support for the macb
+Date: Tue, 16 Aug 2016 07:01:49 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5E27C6@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1471082509-11764-1-git-send-email-appanad@xilinx.com>
+ <20160813.115222.443333178659469072.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160812181304.GA24114@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20160813.115222.443333178659469072.davem@davemloft.net>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, "sergio.prado@e-labworks.com" <sergio.prado@e-labworks.com>, "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, "narmstrong@baylibre.com" <narmstrong@baylibre.com>, Michal Simek <michals@xilinx.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi David Miller,
 
-
-On 08/12/2016 11:43 PM, Rob Herring wrote:
-> On Wed, Aug 10, 2016 at 12:13:56PM +0530, Rajendra Nayak wrote:
->> TSENS is part of GCC, hence add TSENS properties as part of GCC node.
->> Also add thermal zones and qfprom nodes.
->> Update GCC bindings doc to mention the possibility of optional TSENS
->> properties that can be part of GCC node.
->>
->> Acked-by: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Signed-off-by: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  .../devicetree/bindings/clock/qcom,gcc.txt         |  18 ++++
->>  arch/arm/boot/dts/qcom-apq8064.dtsi                | 103 +++++++++++++++++++++
->>  2 files changed, 121 insertions(+)
-> 
-> A couple of nits, otherwise:
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-Thanks Rob, I will fix the ones below and respin.
+	Thanks for the review...
 
 > 
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
->> index 9a60fde..16e2f84 100644
->> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
->> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
->> @@ -23,6 +23,13 @@ Required properties :
->>  Optional properties :
->>  - #power-domain-cells : shall contain 1
->>  
->> +Optional properties:
+> From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+> Date: Sat, 13 Aug 2016 15:31:49 +0530
 > 
-> It already has this section above.
+> > @@ -445,7 +445,13 @@ static int macb_mii_init(struct macb *bp)
+> >  	dev_set_drvdata(&bp->dev->dev, bp->mii_bus);
+> >
+> >  	np = bp->pdev->dev.of_node;
+> > -	if (np) {
+> > +	np1 = of_get_parent(bp->phy_node);
+> > +	if (np1) {
+> > +		of_node_put(np1);
+> > +		err = of_mdiobus_register(bp->mii_bus, np1);
+> > +		if (err)
+> > +			goto err_out_unregister_bus;
+> > +	} else if (np) {
 > 
->> +- Qualcomm TSENS (thermal sensor device) on some devices can
->> +be part of GCC and hence the TSENS properties can also be
->> +part of the GCC/clock-controller node.
->> +For more details on the TSENS properties please refer
->> +Documentation/devicetree/bindings/thermal/qcom-tsens.txt
->> +
->>  Example:
->>  	clock-controller@900000 {
->>  		compatible = "qcom,gcc-msm8960";
->> @@ -31,3 +38,14 @@ Example:
->>  		#reset-cells = <1>;
->>  		#power-domain-cells = <1>;
->>  	};
->> +
->> +Example of GCC with TSENS properties:
->> +	clock-controller@900000 {
->> +		compatible = "qcom,gcc-apq8064";
->> +		reg = <0x00900000 0x4000>;
->> +		nvmem-cells = <&tsens_calib>, <&tsens_backup>;
->> +		nvmem-cell-names = "calib", "calib_backup";
->> +		#clock-cells = <1>;
->> +		#reset-cells = <1>;
->> +		#thermal-sensor-cells = <1>;
->> +	};
->> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
->> index 74a9b6c..9cd13ab 100644
->> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
->> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
->> @@ -86,6 +86,92 @@
->>  		};
->>  	};
->>  
->> +	thermal-zones {
->> +		cpu-thermal0 {
->> +			polling-delay-passive = <250>;
->> +			polling-delay = <1000>;
->> +
->> +			thermal-sensors = <&gcc 7>;
->> +			coefficients = <1199 0>;
->> +
->> +			trips {
->> +				cpu_alert0: trip0 {
->> +					temperature = <75000>;
->> +					hysteresis = <2000>;
->> +					type = "passive";
->> +				};
->> +				cpu_crit0: trip1 {
->> +					temperature = <110000>;
->> +					hysteresis = <2000>;
->> +					type = "critical";
->> +				};
->> +			};
->> +		};
->> +
->> +		cpu-thermal1 {
->> +			polling-delay-passive = <250>;
->> +			polling-delay = <1000>;
->> +
->> +			thermal-sensors = <&gcc 8>;
->> +			coefficients = <1132 0>;
->> +
->> +			trips {
->> +				cpu_alert1: trip0 {
->> +					temperature = <75000>;
->> +					hysteresis = <2000>;
->> +					type = "passive";
->> +				};
->> +				cpu_crit1: trip1 {
->> +					temperature = <110000>;
->> +					hysteresis = <2000>;
->> +					type = "critical";
->> +				};
->> +			};
->> +		};
->> +
->> +		cpu-thermal2 {
->> +			polling-delay-passive = <250>;
->> +			polling-delay = <1000>;
->> +
->> +			thermal-sensors = <&gcc 9>;
->> +			coefficients = <1199 0>;
->> +
->> +			trips {
->> +				cpu_alert2: trip0 {
->> +					temperature = <75000>;
->> +					hysteresis = <2000>;
->> +					type = "passive";
->> +				};
->> +				cpu_crit2: trip1 {
->> +					temperature = <110000>;
->> +					hysteresis = <2000>;
->> +					type = "critical";
->> +				};
->> +			};
->> +		};
->> +
->> +		cpu-thermal3 {
->> +			polling-delay-passive = <250>;
->> +			polling-delay = <1000>;
->> +
->> +			thermal-sensors = <&gcc 10>;
->> +			coefficients = <1132 0>;
->> +
->> +			trips {
->> +				cpu_alert3: trip0 {
->> +					temperature = <75000>;
->> +					hysteresis = <2000>;
->> +					type = "passive";
->> +				};
->> +				cpu_crit3: trip1 {
->> +					temperature = <110000>;
->> +					hysteresis = <2000>;
->> +					type = "critical";
->> +				};
->> +			};
->> +		};
->> +	};
->> +
->>  	cpu-pmu {
->>  		compatible = "qcom,krait-pmu";
->>  		interrupts = <1 10 0x304>;
->> @@ -611,11 +697,28 @@
->>  			};
->>  		};
->>  
->> +		qfprom: qfprom@00700000 {
+> I don't know about this, all OF nodes other than the root have a parent node
+> which is non-NULL.  This parent node can be anything.
 > 
-> Drop leading 0s.
-> 
->> +			compatible	= "qcom,qfprom";
->> +			reg		= <0x00700000 0x1000>;
->> +			#address-cells	= <1>;
->> +			#size-cells	= <1>;
->> +			ranges;
->> +			tsens_calib: calib {
->> +				reg = <0x404 0x10>;
->> +			};
->> +			tsens_backup: backup_calib {
->> +				reg = <0x414 0x10>;
->> +			};
->> +		};
->> +
->>  		gcc: clock-controller@900000 {
->>  			compatible = "qcom,gcc-apq8064";
->>  			reg = <0x00900000 0x4000>;
->> +			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
->> +			nvmem-cell-names = "calib", "calib_backup";
->>  			#clock-cells = <1>;
->>  			#reset-cells = <1>;
->> +			#thermal-sensor-cells = <1>;
->>  		};
->>  
->>  		lcc: clock-controller@28000000 {
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Just blinding assuming that any parent node of the phy_node is what we are
+> looking for, without any other supplementary checks at all, seems to be asking
+> for trouble at the very least.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Agree with you my intention is if there is a MDIO bus on the device-tree
+The MAC driver should create PHY/MDIO devices using of_mdiobus_register().
+
+How about below code...
+
+-       struct device_node *np;
++       struct device_node *np, *np1;
+        int err = -ENXIO, i;
+ 
+        /* Enable management port */
+@@ -445,7 +445,14 @@ static int macb_mii_init(struct macb *bp)
+        dev_set_drvdata(&bp->dev->dev, bp->mii_bus);
+ 
+        np = bp->pdev->dev.of_node;
+-       if (np) {
++       np1 = of_get_child_by_name(np, "mdio");
++       if (np1) {
++               of_node_put(np1);
++               err = of_mdiobus_register(bp->mii_bus, np1);
++               if (err)
++                       goto err_out_unregister_bus;
++       } else if (np) {
+                /* try dt phy registration */
+                err = of_mdiobus_register(bp->mii_bus, np);
+
+If you are ok with the above code please let me know will post it as v2...
+
+Regards,
+Kedar.
