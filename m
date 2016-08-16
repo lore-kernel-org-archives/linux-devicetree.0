@@ -1,190 +1,264 @@
-From: Randy Li <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: dwc2: optionally assert phy "full reset" when
- waking up
-Date: Tue, 16 Aug 2016 09:10:27 +0800
-Message-ID: <39f96d60-09c0-c71f-b6e3-c84c8304e5f6@rock-chips.com>
-References: <1446236275-12698-2-git-send-email-dianders@chromium.org>
- <1468929933-6971-1-git-send-email-randy.li@rock-chips.com>
- <38019f37-8d68-b7c1-a5b1-b34ffbadf461@synopsys.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 2/2] pinctrl: sunxi: Add A64 R_PIO controller support
+Date: Tue, 16 Aug 2016 09:27:54 +0800
+Message-ID: <CAGb2v64jQT+EQ01ZGSJ=3_FMnG5kckz_AEd3ME2Osi+sYO1dmg@mail.gmail.com>
+References: <20160801145939.50583-1-icenowy@aosc.xyz>
+ <20160801145939.50583-2-icenowy@aosc.xyz>
+ <CAGb2v64nzOOwZFGzukXehv6Bx6nikHdnuGUkRMJWS8bjfMkeXQ@mail.gmail.com>
+ <363591471306006@web8j.yandex.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <38019f37-8d68-b7c1-a5b1-b34ffbadf461-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org" <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, "eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <363591471306006@web8j.yandex.ru>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Vishnu Patekar <vishnupatekar0510@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Jens Kuske <jenskuske@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Krzysztof Adamski <k@japko.eu>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Aug 16, 2016 at 8:06 AM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
+>
+>
+> 15.08.2016, 21:56, "Chen-Yu Tsai" <wens@csie.org>:
+>> Hi,
+>>
+>> On Mon, Aug 1, 2016 at 10:59 PM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
+>>>  The A64 has a R_PIO pin controller, similar to the one found on the H3 SoCs.
+>>>  Add support for the pins controlled by the R_PIO controller.
+>>>
+>>>  Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+>>>  ---
+>>>   drivers/pinctrl/sunxi/Kconfig | 5 +
+>>>   drivers/pinctrl/sunxi/Makefile | 1 +
+>>>   drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c | 148 +++++++++++++++++++++++++++
+>>>   3 files changed, 154 insertions(+)
+>>>   create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
+>>>
+>>>  diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
+>>>  index aaf075b..c4b476f 100644
+>>>  --- a/drivers/pinctrl/sunxi/Kconfig
+>>>  +++ b/drivers/pinctrl/sunxi/Kconfig
+>>>  @@ -72,4 +72,9 @@ config PINCTRL_SUN50I_A64
+>>>          bool
+>>>          select PINCTRL_SUNXI
+>>>
+>>>  +config PINCTRL_SUN50I_A64_R
+>>>  + bool
+>>>  + depends on RESET_CONTROLLER
+>>>  + select PINCTRL_SUNXI
+>>>  +
+>>>   endif
+>>>  diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
+>>>  index 2d8b64e..d6eabdd 100644
+>>>  --- a/drivers/pinctrl/sunxi/Makefile
+>>>  +++ b/drivers/pinctrl/sunxi/Makefile
+>>>  @@ -13,6 +13,7 @@ obj-$(CONFIG_PINCTRL_SUN8I_A23) += pinctrl-sun8i-a23.o
+>>>   obj-$(CONFIG_PINCTRL_SUN8I_A23_R) += pinctrl-sun8i-a23-r.o
+>>>   obj-$(CONFIG_PINCTRL_SUN8I_A33) += pinctrl-sun8i-a33.o
+>>>   obj-$(CONFIG_PINCTRL_SUN50I_A64) += pinctrl-sun50i-a64.o
+>>>  +obj-$(CONFIG_PINCTRL_SUN50I_A64_R) += pinctrl-sun50i-a64-r.o
+>>>   obj-$(CONFIG_PINCTRL_SUN8I_A83T) += pinctrl-sun8i-a83t.o
+>>>   obj-$(CONFIG_PINCTRL_SUN8I_H3) += pinctrl-sun8i-h3.o
+>>>   obj-$(CONFIG_PINCTRL_SUN8I_H3_R) += pinctrl-sun8i-h3-r.o
+>>>  diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
+>>>  new file mode 100644
+>>>  index 0000000..b836264
+>>>  --- /dev/null
+>>>  +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
+>>>  @@ -0,0 +1,148 @@
+>>>  +/*
+>>>  + * Allwinner A64 SoCs special pins pinctrl driver.
+>>>  + *
+>>>  + * Based on pinctrl-sun8i-a23-r.c
+>>>  + *
+>>>  + * Copyright (C) 2016 Icenowy Zheng
+>>>  + * Icenowy Zheng <icenowy@aosc.xyz>
+>>>  + *
+>>>  + * Copyright (C) 2014 Chen-Yu Tsai
+>>>  + * Chen-Yu Tsai <wens@csie.org>
+>>>  + *
+>>>  + * Copyright (C) 2014 Boris Brezillon
+>>>  + * Boris Brezillon <boris.brezillon@free-electrons.com>
+>>>  + *
+>>>  + * Copyright (C) 2014 Maxime Ripard
+>>>  + * Maxime Ripard <maxime.ripard@free-electrons.com>
+>>>  + *
+>>>  + * This file is licensed under the terms of the GNU General Public
+>>>  + * License version 2. This program is licensed "as is" without any
+>>>  + * warranty of any kind, whether express or implied.
+>>>  + */
+>>>  +
+>>>  +#include <linux/module.h>
+>>>  +#include <linux/platform_device.h>
+>>>  +#include <linux/of.h>
+>>>  +#include <linux/of_device.h>
+>>
+>> Please sort the headers.
+> This file is based on pinctrl-sun8i-a23-r.c and pinctrl-sun8i-h3-r.c, which
+> both have #include in this sequence.
 
+And we should probably fix them too.
 
-On 08/16/2016 06:19 AM, John Youn wrote:
-> On 7/19/2016 5:06 AM, Randy Li wrote:
->> From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 >>
->> On the rk3288 USB host-only port (the one that's not the OTG-enabled
->> port) the PHY can get into a bad state when a wakeup is asserted (not
->> just a wakeup from full system suspend but also a wakeup from
->> autosuspend). The problem is caused by a design fault in IC, Rockchip
->> have confirmed it and fix this problem in the future IC model.
+>>>  +#include <linux/pinctrl/pinctrl.h>
+>>>  +#include <linux/reset.h>
+>>>  +
+>>>  +#include "pinctrl-sunxi.h"
+>>>  +
+>>>  +static const struct sunxi_desc_pin sun50i_a64_r_pins[] = {
+>>>  + SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 0),
+>>>  + SUNXI_FUNCTION(0x0, "gpio_in"),
+>>>  + SUNXI_FUNCTION(0x1, "gpio_out"),
+>>>  + SUNXI_FUNCTION(0x2, "s_rsb"), /* SCK */
+>>>  + SUNXI_FUNCTION(0x3, "s_twi"), /* SCK */
 >>
->> We can get the PHY out of its bad state by asserting its "port reset",
->> but unfortunately that seems to assert a reset onto the USB bus so it
->> could confuse things if we don't actually deenumerate / reenumerate the
->> device.
->>
->> We can also get the PHY out of its bad state by fully resetting it using
->> the reset from the CRU (clock reset unit), which does a more full
->> reset.  The CRU-based reset appears to actually cause devices on the bus
->> to be removed and reinserted, which fixes the problem (albeit in a hacky
->> way).
->>
->> It's unfortunate that we need to do a full re-enumeration of devices at
->> wakeup time, but this is better than alternative of letting the bus get
->> wedged.
->>
->> Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> Signed-off-by: Yunzhi Li <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Reviewed-by: Randy Li <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/usb/dwc2.txt |  7 +++++++
->>  drivers/usb/dwc2/core.h                        |  5 +++++
->>  drivers/usb/dwc2/core_intr.c                   | 14 ++++++++++++++
->>  drivers/usb/dwc2/platform.c                    | 13 +++++++++++++
->>  4 files changed, 39 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
->> index 20a68bf..40c63ae 100644
->> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
->> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
->> @@ -20,6 +20,13 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
->>  Optional properties:
->>  - phys: phy provider specifier
->>  - phy-names: shall be "usb2-phy"
->> +- snps,need-phy-full-reset-on-wake: if present indicates that we need to reset
->> +  the PHY when we detect a wakeup due to a hardware errata.  If present you
->> +  must specify a "phy-full-reset" reset.
->> +
->> +Resets:
->> +- phy-full-reset (optional): Fully resets the PHY (Only used by rk3288 Soc).
->> +
->>  Refer to phy/phy-bindings.txt for generic phy consumer properties
->>  - dr_mode: shall be one of "host", "peripheral" and "otg"
->>    Refer to usb/generic.txt
->> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
->> index dec0b21..951abe0 100644
->> --- a/drivers/usb/dwc2/core.h
->> +++ b/drivers/usb/dwc2/core.h
->> @@ -719,8 +719,11 @@ struct dwc2_hregs_backup {
->>   * @hcd_enabled		Host mode sub-driver initialization indicator.
->>   * @gadget_enabled	Peripheral mode sub-driver initialization indicator.
->>   * @ll_hw_enabled	Status of low-level hardware resources.
->> + * @need_phy_full_reset_on_wake: Quirk saying that we should assert
->> + *                               phy_full_reset on a remote wakeup.
->>   * @phy:                The otg phy transceiver structure for phy control.
->>   * @uphy:               The otg phy transceiver structure for old USB phy control.
->> + * @phy_full_reset:     Reset control for the PHY's "full reset".
->>   * @plat:               The platform specific configuration data. This can be removed once
->>   *                      all SoCs support usb transceiver.
->>   * @supplies:           Definition of USB power supplies
->> @@ -853,9 +856,11 @@ struct dwc2_hsotg {
->>  	unsigned int hcd_enabled:1;
->>  	unsigned int gadget_enabled:1;
->>  	unsigned int ll_hw_enabled:1;
->> +	unsigned int need_phy_full_reset_on_wake:1;
->>
->>  	struct phy *phy;
->>  	struct usb_phy *uphy;
->> +	struct reset_control *phy_full_reset;
->>  	struct dwc2_hsotg_plat *plat;
->>  	struct regulator_bulk_data supplies[ARRAY_SIZE(dwc2_hsotg_supply_names)];
->>  	u32 phyif;
->> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
->> index d85c5c9..53d8327 100644
->> --- a/drivers/usb/dwc2/core_intr.c
->> +++ b/drivers/usb/dwc2/core_intr.c
->> @@ -45,6 +45,7 @@
->>  #include <linux/dma-mapping.h>
->>  #include <linux/io.h>
->>  #include <linux/slab.h>
->> +#include <linux/reset.h>
->>  #include <linux/usb.h>
->>
->>  #include <linux/usb/hcd.h>
->> @@ -379,6 +380,19 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->>  			/* Restart the Phy Clock */
->>  			pcgcctl &= ~PCGCTL_STOPPCLK;
->>  			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
->> +
->> +			/*
->> +			 * If we've got this quirk then the PHY is stuck upon
->> +			 * wakeup.  Assert reset.  This will propagate out and
->> +			 * eventually we'll re-enumerate the device.  Not great
->> +			 * but the best we can do.
->> +			 */
->> +			if (hsotg->need_phy_full_reset_on_wake) {
->> +				reset_control_assert(hsotg->phy_full_reset);
->> +				udelay(50);
->> +				reset_control_deassert(hsotg->phy_full_reset);
->> +			}
->> +
->>  			mod_timer(&hsotg->wkp_timer,
->>  				  jiffies + msecs_to_jiffies(71));
->>  		} else {
->> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
->> index fc6f525..d8894a1 100644
->> --- a/drivers/usb/dwc2/platform.c
->> +++ b/drivers/usb/dwc2/platform.c
->> @@ -45,6 +45,7 @@
->>  #include <linux/platform_device.h>
->>  #include <linux/phy/phy.h>
->>  #include <linux/platform_data/s3c-hsotg.h>
->> +#include <linux/reset.h>
->>
->>  #include <linux/usb/of.h>
->>
->> @@ -529,6 +530,18 @@ static int dwc2_driver_probe(struct platform_device *dev)
->>  	dev_dbg(&dev->dev, "mapped PA %08lx to VA %p\n",
->>  		(unsigned long)res->start, hsotg->regs);
->>
->> +	hsotg->need_phy_full_reset_on_wake =
->> +		of_property_read_bool(dev->dev.of_node,
->> +				"snps,need-phy-full-reset-on-wake");
->> +	hsotg->phy_full_reset = devm_reset_control_get(hsotg->dev,
->> +				"phy-full-reset");
->> +	if (IS_ERR(hsotg->phy_full_reset) &&
->> +			hsotg->need_phy_full_reset_on_wake) {
->
-> Should use the devm_reset_control_get_optional() variant so that we
-> can check whether it is a legitimate error, or the PHY is not
-> specified or !CONFIG_OF.
-I see.
->
->> +		dev_warn(hsotg->dev, "Missing phy full reset (%ld); skipping\n",
->> +				PTR_ERR(hsotg->phy_full_reset));
->> +		hsotg->need_phy_full_reset_on_wake = false;
->> +	}
->> +
->
-> Also this code can go into the dwc2_lowlevel_hw_init() function so as
-> not to clutter up the probe() function futher.
->
-> A similar patch adding a reset was submitted by Dinh which you can use
-> as a reference:
->
-> http://marc.info/?l=linux-usb&m=147085447403019&w=2
+>> We use "i2c" instead of "twi".
+> So as above, in A23 / H3 R_PIO driver, they're called as "s_twi" other than "s_i2c"
 
-I am a little busy recently, but I would submit a new version in this week.
->
-> Regards,
-> John
->
+These as well.
 
--- 
-Randy Li
-The third produce department
+ChenYu
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>>  + SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)), /* PL_EINT0 */
+>>>  + SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 1),
+>>>  + SUNXI_FUNCTION(0x0, "gpio_in"),
+>>>  + SUNXI_FUNCTION(0x1, "gpio_out"),
+>>>  + SUNXI_FUNCTION(0x2, "s_rsb"), /* SDA */
+>>>  + SUNXI_FUNCTION(0x3, "s_twi"), /* SDA */
+>>
+>> Same here.
+>>
+>>>  + SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 1)), /* PL_EINT1 */
+>>>  + SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 2),
+>>>  + SUNXI_FUNCTION(0x0, "gpio_in"),
+>>>  + SUNXI_FUNCTION(0x1, "gpio_out"),
+>>>  + SUNXI_FUNCTION(0x2, "s_uart"), /* TX */
+>>>  + SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 2)), /* PL_EINT2 */
+>>>  + SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 3),
+>>>  + SUNXI_FUNCTION(0x0, "gpio_in"),
+>>>  + SUNXI_FUNCTION(0x1, "gpio_out"),
+>>>  + SUNXI_FUNCTION(0x2, "s_uart"), /* RX */
+>>>  + SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 3)), /* PL_EINT3 */
+>>>  + SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 4),
+>>>  + SUNXI_FUNCTION(0x0, "gpio_in"),
+>>>  + SUNXI_FUNCTION(0x1, "gpio_out"),
+>>>  + SUNXI_FUNCTION(0x3, "s_jtag"), /* MS */
+>>>  + SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 4)), /* PL_EINT4 */
+>>>  + SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 5),
+>>>  + SUNXI_FUNCTION(0x0, "gpio_in"),
+>>>  + SUNXI_FUNCTION(0x1, "gpio_out"),
+>>>  + SUNXI_FUNCTION(0x3, "s_jtag"), /* CK */
+>>>  + SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 5)), /* PL_EINT5 */
+>>>  + SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 6),
+>>>  + SUNXI_FUNCTION(0x0, "gpio_in"),
+>>>  + SUNXI_FUNCTION(0x1, "gpio_out"),
+>>>  + SUNXI_FUNCTION(0x3, "s_jtag"), /* DO */
+>>>  + SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 6)), /* PL_EINT6 */
+>>>  + SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 7),
+>>>  + SUNXI_FUNCTION(0x0, "gpio_in"),
+>>>  + SUNXI_FUNCTION(0x1, "gpio_out"),
+>>>  + SUNXI_FUNCTION(0x3, "s_jtag"), /* DI */
+>>>  + SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 7)), /* PL_EINT7 */
+>>>  + SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 8),
+>>>  + SUNXI_FUNCTION(0x0, "gpio_in"),
+>>>  + SUNXI_FUNCTION(0x1, "gpio_out"),
+>>>  + SUNXI_FUNCTION(0x2, "s_twi"), /* SCK */
+>>
+>> Ditto.
+>>
+>>>  + SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 8)), /* PL_EINT8 */
+>>>  + SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 9),
+>>>  + SUNXI_FUNCTION(0x0, "gpio_in"),
+>>>  + SUNXI_FUNCTION(0x1, "gpio_out"),
+>>>  + SUNXI_FUNCTION(0x2, "s_twi"), /* SDA */
+>>
+>> Ditto.
+>>
+>>>  + SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 9)), /* PL_EINT9 */
+>>>  + SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 10),
+>>>  + SUNXI_FUNCTION(0x0, "gpio_in"),
+>>>  + SUNXI_FUNCTION(0x1, "gpio_out"),
+>>>  + SUNXI_FUNCTION(0x2, "s_pwm"),
+>>>  + SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 10)), /* PL_EINT10 */
+>>>  + SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 11),
+>>>  + SUNXI_FUNCTION(0x0, "gpio_in"),
+>>>  + SUNXI_FUNCTION(0x1, "gpio_out"),
+>>>  + SUNXI_FUNCTION(0x2, "s_cir_rx"),
+>>>  + SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 11)), /* PL_EINT11 */
+>>
+>> You missed PL12.
+> Sorry... I forgot to add it...
+>>
+>>>  +};
+>>>  +
+>>>  +static const struct sunxi_pinctrl_desc sun50i_a64_r_pinctrl_data = {
+>>>  + .pins = sun50i_a64_r_pins,
+>>>  + .npins = ARRAY_SIZE(sun50i_a64_r_pins),
+>>>  + .pin_base = PL_BASE,
+>>>  + .irq_banks = 1,
+>>>  +};
+>>>  +
+>>>  +static int sun50i_a64_r_pinctrl_probe(struct platform_device *pdev)
+>>>  +{
+>>>  + struct reset_control *rstc;
+>>>  + int ret;
+>>>  +
+>>>  + rstc = devm_reset_control_get(&pdev->dev, NULL);
+>>>  + if (IS_ERR(rstc)) {
+>>>  + dev_err(&pdev->dev, "Reset controller missing\n");
+>>>  + return PTR_ERR(rstc);
+>>>  + }
+>>>  +
+>>>  + ret = reset_control_deassert(rstc);
+>>>  + if (ret)
+>>>  + return ret;
+>>>  +
+>>>  + ret = sunxi_pinctrl_init(pdev,
+>>>  + &sun50i_a64_r_pinctrl_data);
+>>>  +
+>>>  + if (ret)
+>>>  + reset_control_assert(rstc);
+>>>  +
+>>>  + return ret;
+>>>  +}
+>>>  +
+>>>  +static const struct of_device_id sun50i_a64_r_pinctrl_match[] = {
+>>>  + { .compatible = "allwinner,sun50i-a64-r-pinctrl", },
+>>>  + {}
+>>>  +};
+>>>  +MODULE_DEVICE_TABLE(of, sun50i_a64_r_pinctrl_match);
+>>>  +
+>>>  +static struct platform_driver sun50i_a64_r_pinctrl_driver = {
+>>>  + .probe = sun50i_a64_r_pinctrl_probe,
+>>>  + .driver = {
+>>>  + .name = "sun50i-a64-r-pinctrl",
+>>>  + .of_match_table = sun50i_a64_r_pinctrl_match,
+>>>  + },
+>>>  +};
+>>>  +module_platform_driver(sun50i_a64_r_pinctrl_driver);
+>>>  +
+>>>  +MODULE_AUTHOR("Icenowy Zheng <icenowy@aosc.xyz>");
+>>>  +MODULE_AUTHOR("Chen-Yu Tsai <wens@csie.org>");
+>>>  +MODULE_AUTHOR("Boris Brezillon <boris.brezillon@free-electrons.com");
+>>>  +MODULE_AUTHOR("Maxime Ripard <maxime.ripard@free-electrons.com");
+>>>  +MODULE_DESCRIPTION("Allwinner A64 R_PIO pinctrl driver");
+>>>  +MODULE_LICENSE("GPL");
+>>
+>> Since you have a bool Kconfig symbol, you can drop all the module related
+>> stuff. Just use builtin_platform_driver like the A64 main pinctrl driver
+>> does.
+>>
+>> Regards
+>> ChenYu
+>>
+>>>  --
+>>>  2.9.0
