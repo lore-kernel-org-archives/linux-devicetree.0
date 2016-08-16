@@ -1,61 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
-Date: Tue, 16 Aug 2016 08:29:51 -0500
-Message-ID: <CAL_JsqL5xk3mH=h-m8nU8xTYbRjgMWt3p7BzYWj6vBUq4OpqMg@mail.gmail.com>
-References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
- <20160804175541.GA2832@rob-hp-laptop> <57B220C0.3060608@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <57B220C0.3060608@codeaurora.org>
-Sender: netdev-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, Shanker Donthineni <shankerd@codeaurora.org>, Vikram Sethi <vikrams@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Al Stone <al.stone@linaro.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 01/17] iio: accel: kxsd9: Add device tree bindings
+Date: Tue, 16 Aug 2016 15:33:27 +0200
+Message-ID: <1471354423-19186-2-git-send-email-linus.walleij@linaro.org>
+References: <1471354423-19186-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471354423-19186-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 15, 2016 at 3:06 PM, Timur Tabi <timur@codeaurora.org> wrote:
-> + Rafael and Al, for ACPI help.
->
-> Rob Herring wrote:
->>>
->>> >+Optional properties:
->>> >+- phy-version : the version of the integrated emac phy, either 1 or 2.
->
->
->> Sounds like 2 different h/w. The compatible property should distinguish
->> this.
->
->
-> So I implemented this in v8 of my driver, but it is causing problems for
-> ACPI.
->
-> In ACPI, the equivalent to a compatible string is the HID, which is QCOM8070
-> for the EMAC.  The problem is that it's very difficult, if not impossible,
-> to create new HIDs for different versions of the same device.
+This accelerometer can be probed from the device tree, so it needs
+to have proper documentation of it's device tree bindings.
 
-Different versions are different devices IMO.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/iio/accel/kionix,kxsd9.txt | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/accel/kionix,kxsd9.txt
 
-> The driver will primarily (if not exclusively) be used on ACPI platforms,
-> not DT.  In Qualcomm, DT is for mobile chips, and ACPI is for server.  To my
-> knowledge, there are no plans to use this driver on an actual DT-enabled
-> platform, but I want to support DT anyway.
->
-> The other problem is that the "internal PHY" of the EMAC is technically a
-> separate device, and it's interchangeable.  Future versions of our chips
-> will use different internal PHYs, but the EMAC will stay the same.
+diff --git a/Documentation/devicetree/bindings/iio/accel/kionix,kxsd9.txt b/Documentation/devicetree/bindings/iio/accel/kionix,kxsd9.txt
+new file mode 100644
+index 000000000000..b25bf3a77e0f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/accel/kionix,kxsd9.txt
+@@ -0,0 +1,22 @@
++Kionix KXSD9 Accelerometer device tree bindings
++
++Required properties:
++ - compatible: 		should be set to "kionix,kxsd9"
++ - reg:			i2c slave address
++
++Optional properties:
++ - vdd-supply:		The input supply for VDD
++ - iovdd-supply:	The input supply for IOVDD
++ - interrupts:		The movement detection interrupt
++ - mount-matrix:	See mount-matrix.txt
++
++Example:
++
++kxsd9@18 {
++	compatible = "kionix,kxsd9";
++	reg = <0x18>;
++	interrupt-parent = <&foo>;
++	interrupts = <57 IRQ_TYPE_EDGE_FALLING>;
++	iovdd-supply = <&bar>;
++	vdd-supply = <&baz>;
++};
+-- 
+2.7.4
 
-How do you know? EMAC could just as easily change. It's Gigabit today,
-10G tomorrow.
-
-But if it is separate, then maybe you should model it as a separate
-device using the phy binding.
-
-> So I would like a solution that works on DT and ACPI.  I suppose I could use
-> compatible strings on DT, and a "phy-version" DSD (property) on ACPI.  If
-> that's acceptable to everyone, then I can do that.  It seems clunky to me.
-
-On one hand, why should I care about ACPI for defining DT bindings?
-OTOH, having a phy-version property alone would not be a big deal, but
-you still need distinct compatible strings regardless.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
