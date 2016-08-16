@@ -1,52 +1,79 @@
-From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [RESEND PATCH 1/1] phy: rockchip-inno-usb2: add COMMON_CLK dependency
-Date: Tue, 16 Aug 2016 14:13:42 +0800
-Message-ID: <1471328022-93048-2-git-send-email-frank.wang@rock-chips.com>
-References: <1471328022-93048-1-git-send-email-frank.wang@rock-chips.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471328022-93048-1-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 0/7] arm64: dts: Add the dts file for Exynos5433 and TM/TM2E
+ board
+Date: Tue, 16 Aug 2016 15:27:16 +0900
+Message-ID: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: k.kozlowski@samsung.com, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: krzk@kernel.org, cw00.choi@samsung.com, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On kernel builds without COMMON_CLK, the newly added rockchip-inno-usb2
-driver fails to build:
+This patchset adds the Device Tree file for Samsung 64-bit Exynos5433 SoC
+and TM/TM2E board based on Exynos5433. The Exynos5433 has Octa-core CPUs
+(quad Cortex-A57 and quad Cortex-A53). The TM2 and TM2E are the Samsung board
+based on Exynos5433 SoC.
 
-drivers/phy/phy-rockchip-inno-usb2.c:124:16: error: field 'clk480m_hw'
-has incomplete type
-   struct clk_hw clk480m_hw;
+I sent the Exynos5433 patches[3]. But it was not merged because of sending
+the only SoC dtsi patch without board patches. So, I again send the Exynos5433
+SoC patches with TM2/TM2E board dts files.
 
-In file included from include/linux/clk.h:16:0
-                 from drivers/phy/phy-rockchip-inno-usb2.c:17:
-include/linux/kernel.h:831:48: error: initialization from incompatible
-pointer type [-Werror=incompatible-pointer-types]
-   const typeof( ((type *)0)->member ) *__mptr = (ptr); \
+When making the patches, I get the guide from Krzysztof (Exynos SoC maintainer).
+The maintainer requires that already developed and verified work should merge
+them as one patch. So, this patchset include only three patches for Exynos5433
+dtsi, TM2 dts and TM2E dts file.
 
-  ... ...
+I tested the display controller by using the modetest tool.
+But, Samsung s6e3ha2 panel driver has not yet posted. So, the TM2 dts file
+don't include the panel Device Tree node. I'll post the s6e3ha2 panel driver
+on separate patch with a dt patch.
 
-Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- drivers/phy/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+Depends on:
+This patchset are based on v4.8-rc1[1] and TM2 sound patches[2].
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index f9bf981..c6d57e5 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -370,6 +370,7 @@ config PHY_ROCKCHIP_USB
- config PHY_ROCKCHIP_INNO_USB2
- 	tristate "Rockchip INNO USB2PHY Driver"
- 	depends on (ARCH_ROCKCHIP || COMPILE_TEST) && OF
-+	depends on COMMON_CLK
- 	select GENERIC_PHY
- 	help
- 	  Support for Rockchip USB2.0 PHY with Innosilicon IP block.
+[1] v4.8-rc1
+[2] https://lkml.org/lkml/2016/7/5/470
+  : [PATCH v4 0/4] ASoC: samsung: Sound support for Exynos5433 TM2(E) boards
+[3] http://lkml.org/lkml/2015/3/17/843
+  : [PATCH v7 0/9] arm64: Add the support for new Exynos5433 SoC
+
+Chanwoo Choi (6):
+  clocksource: exynos_mct: Add the support for Exynos 64bit SoC
+  Documentation: bindings: Add Exynos5433 PMU compatible
+  cpufreq: dt: Add exynos5433 compatible to use generic cpufreq driver
+  arm64: dts: exynos: Add dts files for Samsung Exynos5433 64bit SoC
+  arm64: dts: exynos: Add dts file for Exynos5433-based TM2 board
+  arm64: dts: exynos: Add dts file for Exynos5433-based TM2E board
+
+Joonyoung Shim (1):
+  pinctrl: samsung: Add GPFx support of Exynos5433
+
+ .../devicetree/bindings/arm/samsung/pmu.txt        |    1 +
+ .../bindings/arm/samsung/samsung-boards.txt        |    2 +
+ .../bindings/pinctrl/samsung-pinctrl.txt           |    1 +
+ arch/arm64/boot/dts/exynos/Makefile                |    5 +-
+ arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi |  794 ++++++++++
+ arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      | 1003 +++++++++++++
+ arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts     |   41 +
+ .../dts/exynos/exynos5433-tmu-g3d-sensor-conf.dtsi |   23 +
+ .../dts/exynos/exynos5433-tmu-sensor-conf.dtsi     |   22 +
+ arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi     |  306 ++++
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 1580 ++++++++++++++++++++
+ drivers/clocksource/Kconfig                        |    2 +-
+ drivers/clocksource/exynos_mct.c                   |    4 +
+ drivers/cpufreq/cpufreq-dt-platdev.c               |    1 +
+ drivers/pinctrl/samsung/pinctrl-exynos.c           |    5 +
+ drivers/pinctrl/samsung/pinctrl-exynos.h           |   11 +
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |   43 +-
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |    5 +
+ 18 files changed, 3839 insertions(+), 10 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu-g3d-sensor-conf.dtsi
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu-sensor-conf.dtsi
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos5433.dtsi
+
 -- 
-1.7.9.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
