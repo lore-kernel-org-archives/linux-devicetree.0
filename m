@@ -1,44 +1,41 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 3/7] cpufreq: dt: Add exynos5433 compatible to use
- generic cpufreq driver
-Date: Tue, 16 Aug 2016 14:19:03 +0530
-Message-ID: <20160816084903.GC21099@ubuntu>
-References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
- <1471328843-26653-4-git-send-email-cw00.choi@samsung.com>
- <1476eab3-48e2-2894-cc2a-e5a201b107cf@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1476eab3-48e2-2894-cc2a-e5a201b107cf@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, krzk@kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] dt-bindings: touchscreen: silead gsl1680: Document all compatibles
+Date: Tue, 16 Aug 2016 11:01:31 +0200
+Message-ID: <1471338091-3259-1-git-send-email-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16-08-16, 09:47, Krzysztof Kozlowski wrote:
-> On 08/16/2016 08:27 AM, Chanwoo Choi wrote:
-> > This patch adds the exynos5433 compatible string for supporting
-> > the generic cpufreq driver on Exynos5433.
-> > 
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > Cc: linux-pm@vger.kernel.org
-> > Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> > ---
-> >  drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> 
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> 
-> I guess this does not depend on the rest and can go through PM/cpufreq tree?
-> 
-> Viresh, Rafael,
-> If you wish me to take it, let me know.
+The silead gsl1680 driver / binding supports a whole series of devices,
+list the compatibles for all of them in the binding.
 
-I will prefer it going through PM tree.
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/input/touchscreen/silead_gsl1680.txt         | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+index 1112e0d..37a9370 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+@@ -2,6 +2,11 @@
+ 
+ Required properties:
+ - compatible		  : "silead,gsl1680"
++			or: "silead,gsl1688"
++			or: "silead,gsl3670"
++			or: "silead,gsl3675"
++			or: "silead,gsl3692"
++			or: "silead,mssl1680"
+ - reg			  : I2C slave address of the chip (0x40)
+ - interrupt-parent	  : a phandle pointing to the interrupt controller
+ 			    serving the interrupt for this chip
 -- 
-viresh
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
