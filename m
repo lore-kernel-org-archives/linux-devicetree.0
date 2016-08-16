@@ -1,60 +1,46 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 2/7] Documentation: bindings: Add Exynos5433 PMU compatible
-Date: Tue, 16 Aug 2016 17:08:14 +0900
-Message-ID: <57B2C9EE.6000005@samsung.com>
-References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
- <1471328843-26653-3-git-send-email-cw00.choi@samsung.com>
- <CGME20160816074111epcas1p2ef832dad29a5b0a81fc5e783aed70ee4@epcas1p2.samsung.com>
- <488f925b-4c37-1759-04a8-11d992405527@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC 5/7] Bluetooth: hci_nokia: Introduce new driver
+Date: Tue, 16 Aug 2016 10:10:07 +0200
+Message-ID: <08EF658B-2BCB-46E2-B3DC-24FD12B4D5D8@holtmann.org>
+References: <1471058078-5579-1-git-send-email-sre@kernel.org> <1471058078-5579-6-git-send-email-sre@kernel.org>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <488f925b-4c37-1759-04a8-11d992405527@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: krzk@kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471058078-5579-6-git-send-email-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Ville Tervo <ville.tervo-X3B1VOXEql0@public.gmane.org>, =?utf-8?Q?Filip_Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, =?utf-8?Q?Pali_Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Hi Sebastien,
 
-On 2016년 08월 16일 16:40, Krzysztof Kozlowski wrote:
-> On 08/16/2016 08:27 AM, Chanwoo Choi wrote:
->> This patch adds the exynos5433 PMU compatible to support the access
->> of PMU (Power Management Unit) block.
->>
->> Cc: Kukjin Kim <kgene@kernel.org>
->> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->>  Documentation/devicetree/bindings/arm/samsung/pmu.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
->> index 2d6356d8daf4..bf5fc59a6938 100644
->> --- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
->> +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
->> @@ -10,6 +10,7 @@ Properties:
->>  		   - "samsung,exynos5260-pmu" - for Exynos5260 SoC.
->>  		   - "samsung,exynos5410-pmu" - for Exynos5410 SoC,
->>  		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
->> +		   - "samsung,exynos5433-pmu" - for Exynos5433 SoC.
->>  		   - "samsung,exynos7-pmu" - for Exynos7 SoC.
->>  		second value must be always "syscon".
+> diff --git a/drivers/bluetooth/hci_uart.h b/drivers/bluetooth/hci_uart.h
+> index a7d67aec3632..314b243df996 100644
+> --- a/drivers/bluetooth/hci_uart.h
+> +++ b/drivers/bluetooth/hci_uart.h
+> @@ -35,7 +35,7 @@
+> #define HCIUARTGETFLAGS		_IOR('U', 204, int)
 > 
-> Is there any plan to add Exynos5433 support to
-> drivers/soc/samsung/exynos-pmu.c? If no... then exynos7-pmu might be
-> reused. If yes, then this makes sense.
+> /* UART protocols */
+> -#define HCI_UART_MAX_PROTO	10
+> +#define HCI_UART_MAX_PROTO	11
+> 
+> #define HCI_UART_H4	0
+> #define HCI_UART_BCSP	1
+> @@ -47,6 +47,7 @@
+> #define HCI_UART_BCM	7
+> #define HCI_UART_QCA	8
+> #define HCI_UART_AG6XX	9
+> +#define HCI_UART_NOKIA	10
 
-Yes.
-I'll support the suspend-to-ram for Exynos5433. But it is not right now.
-because the current kernel support the suspend-to-ram for only 32-bit Exynos.
-and the pm/suspend code are included in in arch/arm/mach-exynos/.
+since it seems the driver is getting closer to be ready, lets merge this extra protocol identifier as a separate patch. Then we can adapt btattach as well for it.
 
-To support the suspend-to-ram for 64bit Exynos, I need a lot of time
-to support the 64-bit suspend.
+Regards
 
-Regards,
-Chanwoo Choi
+Marcel
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
