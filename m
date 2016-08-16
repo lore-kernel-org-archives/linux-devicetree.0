@@ -1,90 +1,63 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 6/7] arm64: tegra: Add the various audio devices for
- Tegra210 Smaug
-Date: Tue, 16 Aug 2016 14:38:45 +0100
-Message-ID: <e28601a4-901c-1e6e-7c52-67747f5222d7@nvidia.com>
-References: <1470756082-19099-1-git-send-email-jonathanh@nvidia.com>
- <1470756082-19099-7-git-send-email-jonathanh@nvidia.com>
- <20160816131537.GD4133@ulmo.ba.sec>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
+Date: Tue, 16 Aug 2016 08:39:12 -0500
+Message-ID: <57B31780.5030106@codeaurora.org>
+References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
+ <20160804175541.GA2832@rob-hp-laptop> <57B220C0.3060608@codeaurora.org>
+ <CAL_JsqL5xk3mH=h-m8nU8xTYbRjgMWt3p7BzYWj6vBUq4OpqMg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160816131537.GD4133-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqL5xk3mH=h-m8nU8xTYbRjgMWt3p7BzYWj6vBUq4OpqMg@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, Shanker Donthineni <shankerd@codeaurora.org>, Vikram Sethi <vikrams@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Al Stone <al.stone@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Rob Herring wrote:
 
-On 16/08/16 14:15, Thierry Reding wrote:
-> * PGP Signed by an unknown key
-> 
-> On Tue, Aug 09, 2016 at 04:21:21PM +0100, Jon Hunter wrote:
->> The Tegra210 Smaug includes the Realtek RT5677 audio codec, Nuvoton
->> NAU8825 headset codec and the Maxim MAX98357a audio amplifier. Add
->> the nodes for these devices for the Tegra210 Smaug.
->>
->> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 44 +++++++++++++++++++++++++++
->>  1 file changed, 44 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
->> index 2c4672527d75..8cdd71f4d9ba 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
->> +++ b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
->> @@ -1562,6 +1562,45 @@
->>  		};
->>  	};
->>  
->> +	i2c@7000d100 {
->> +		status = "okay";
->> +		clock-frequency = <400000>;
->> +
->> +		nau8825@1a {
->> +			compatible = "nuvoton,nau8825";
->> +			reg = <0x1a>;
->> +			interrupt-parent = <&gpio>;
->> +			interrupts = <TEGRA_GPIO(E, 6) IRQ_TYPE_LEVEL_LOW>;
-> 
-> Any reason why this uses the interrupt-parent and interrupts properties,
-> whereas...
-> 
->> +			clocks = <&tegra_car TEGRA210_CLK_CLK_OUT_2>;
->> +			clock-names = "mclk";
->> +
->> +			nuvoton,jkdet-enable;
->> +			nuvoton,jkdet-polarity = <GPIO_ACTIVE_LOW>;
->> +			nuvoton,vref-impedance = <2>;
->> +			nuvoton,micbias-voltage = <6>;
->> +			nuvoton,sar-threshold-num = <4>;
->> +			nuvoton,sar-threshold = <0xc 0x1e 0x38 0x60>;
->> +			nuvoton,sar-hysteresis = <1>;
->> +			nuvoton,sar-voltage = <0>;
->> +			nuvoton,sar-compare-time = <0>;
->> +			nuvoton,sar-sampling-time = <0>;
->> +			nuvoton,short-key-debounce = <2>;
->> +			nuvoton,jack-insert-debounce = <7>;
->> +			nuvoton,jack-eject-debounce = <7>;
->> +			status = "okay";
->> +		};
->> +
->> +		audio-codec@2d {
->> +			compatible = "realtek,rt5677";
->> +			reg = <0x2d>;
->> +			interrupts-extended = <&gpio TEGRA_GPIO(X, 0) IRQ_TYPE_LEVEL_HIGH>;
-> 
-> ... this uses interrupts-extended? I'd like these to be consistent, and
-> I'm slightly leaning towards the former. Any objections if I change that
-> while applying?
+>> In ACPI, the equivalent to a compatible string is the HID, which is QCOM8070
+>> for the EMAC.  The problem is that it's very difficult, if not impossible,
+>> to create new HIDs for different versions of the same device.
+>
+> Different versions are different devices IMO.
 
-Good catch. I must have inherited this from the chrome-os 3.18 kernel. I
-agree that it is best to be consistent here. So please update when
-applying.
+Not that I disagree, but this appears to be an inherent problem with 
+ACPI.  The namespace for ACPI HIDs is very limited.  We only really have 
+control over the last two digits.
 
-Thanks
-Jon
+>> The other problem is that the "internal PHY" of the EMAC is technically a
+>> separate device, and it's interchangeable.  Future versions of our chips
+>> will use different internal PHYs, but the EMAC will stay the same.
+>
+> How do you know? EMAC could just as easily change. It's Gigabit today,
+> 10G tomorrow.
+
+My point is that the EMAC part won't change for the foreseeable future, 
+but I know the internal PHY component will change.  The new "version" of 
+the EMAC/PHY combo on a future chip will have the same ACPI HID.  So I 
+need some other way to differentiate the two.  I can't query the 
+hardware, because the EMAC half will be identical.
+
+> But if it is separate, then maybe you should model it as a separate
+> device using the phy binding.
+
+It's only separate in hardware.  The driver controls both parts as a 
+unified whole.
+
+>> So I would like a solution that works on DT and ACPI.  I suppose I could use
+>> compatible strings on DT, and a "phy-version" DSD (property) on ACPI.  If
+>> that's acceptable to everyone, then I can do that.  It seems clunky to me.
+>
+> On one hand, why should I care about ACPI for defining DT bindings?
+> OTOH, having a phy-version property alone would not be a big deal, but
+> you still need distinct compatible strings regardless.
+
+So you're saying that it's okay to have separate compatible strings AND 
+a phy-version property?  That would solve the problem.
 
 -- 
-nvpublic
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
