@@ -1,75 +1,59 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH V2 RFC 1/6] usb: dwc2: core: Avoid nonsense error in
- gadget mode
-Date: Tue, 16 Aug 2016 22:09:40 +0200 (CEST)
-Message-ID: <167107178.290535.51598113-17aa-4db0-9dc0-6e58e3fafe07.open-xchange@email.1und1.de>
-References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
- <1469559213-16160-2-git-send-email-stefan.wahren@i2se.com>
- <92280b0f-4dd3-bcf5-57ed-277a9f91653d@synopsys.com>
- <2008594325.331112.5842a41f-9d6d-4b55-baac-1529d6cae164.open-xchange@email.1und1.de>
- <69b9522a-ca23-cc32-ec90-8d59f63e4e03@synopsys.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] net: macb: add phy-handle support for the macb
+Date: Tue, 16 Aug 2016 22:14:36 +0200
+Message-ID: <20160816201436.GB3751@lunn.ch>
+References: <1471082509-11764-1-git-send-email-appanad@xilinx.com>
+ <20160813.115222.443333178659469072.davem@davemloft.net>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5E27C6@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <69b9522a-ca23-cc32-ec90-8d59f63e4e03-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A5E27C6@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Cc: David Miller <davem@davemloft.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, "sergio.prado@e-labworks.com" <sergio.prado@e-labworks.com>, "gregory.clement@free-electrons.com" <gregory.clement@free-electrons.com>, "narmstrong@baylibre.com" <narmstrong@baylibre.com>, Michal Simek <michals@xilinx.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi John,
+> Agree with you my intention is if there is a MDIO bus on the device-tree
+> The MAC driver should create PHY/MDIO devices using of_mdiobus_register().
 
-> John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> hat am 16. August 2016 um 21:20
-> geschrieben:
-> 
-> 
-> On 8/16/2016 9:44 AM, Stefan Wahren wrote:
-> > Hi John,
-> > 
-> >> John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> hat am 16. August 2016 um 03:30
-> ...
-> > [    2.476378] dwc2 20980000.usb: dwc2_set_parameters()
-> > [    2.476391] dwc2 20980000.usb: Setting dma_desc_fs_enable to 0
-> > [    2.476418] dwc2 20980000.usb: Setting external_id_pin_ctl to 0
-> > [    2.476429] dwc2 20980000.usb: Setting hibernation to 0
-> > [    2.476449] dwc2 20980000.usb: 0 invalid for host_rx_fifo_size. Check HW
-> > configuration.
-> > [    2.491704] dwc2 20980000.usb: Setting host_rx_fifo_size to 4096
-> > [    2.491727] dwc2 20980000.usb: 0 invalid for host_nperio_tx_fifo_size.
-> > Check
-> > HW configuration.
-> > [    2.507853] dwc2 20980000.usb: Setting host_nperio_tx_fifo_size to 0
-> > [    2.507875] dwc2 20980000.usb: 0 invalid for host_perio_tx_fifo_size.
-> > Check
-> > HW configuration.
-> > [    2.524246] dwc2 20980000.usb: Setting host_perio_tx_fifo_size to 0
-> 
-> Thanks for the logs.
-> 
-> It looks like if dr_mode == peripheral, dwc2 doesn't populate the
-> following host-only values from the reset values of the registers.
-> 
-> * hw_params->host_nperio_tx_fifo_size
-> * hw_params->host_perio_tx_fifo_size
-> 
-> Thus when it goes to set the core_params based on the hw_params you
-> get the error. As peripheral-only, they are never used so it's fine.
-> 
-> To get rid of the error we can skip setting the host-only parameters
-> if dr_mode == peripheral.
+What you suggest is better, and is similar to what other drivers use.
 
-sorry the subject is imprecise. According to the logs if dr_mode == otg we also
-get
+In order to keep backwards compatibility with phy nodes in the MAC
+node, you have to do of_mdiobus_register() with the MAC node. However,
+please change the binding documentation to say this is deprecated, all
+phy nodes should be placed inside an mdio node.
 
-[    2.569573] dwc2 20980000.usb: 0 invalid for host_perio_tx_fifo_size. Check
-HW configuration.
-[    2.585354] dwc2 20980000.usb: Setting host_perio_tx_fifo_size to 0
+Using some better variable names would also help. mac_np and mdio_np
+for example.
 
-You already said in 6/6 that's faulty, but i only want to point it out.
+    Andrew
 
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> How about below code...
+> 
+> -       struct device_node *np;
+> +       struct device_node *np, *np1;
+>         int err = -ENXIO, i;
+>  
+>         /* Enable management port */
+> @@ -445,7 +445,14 @@ static int macb_mii_init(struct macb *bp)
+>         dev_set_drvdata(&bp->dev->dev, bp->mii_bus);
+>  
+>         np = bp->pdev->dev.of_node;
+> -       if (np) {
+> +       np1 = of_get_child_by_name(np, "mdio");
+> +       if (np1) {
+> +               of_node_put(np1);
+> +               err = of_mdiobus_register(bp->mii_bus, np1);
+> +               if (err)
+> +                       goto err_out_unregister_bus;
+> +       } else if (np) {
+>                 /* try dt phy registration */
+>                 err = of_mdiobus_register(bp->mii_bus, np);
+> 
+> If you are ok with the above code please let me know will post it as v2...
+> 
+> Regards,
+> Kedar.
