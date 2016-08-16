@@ -1,29 +1,41 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] iio: gyro: Add MPU-3050 device tree bindings
-Date: Tue, 16 Aug 2016 09:28:19 -0500
-Message-ID: <20160816142819.GA15545@rob-hp-laptop>
-References: <1471286275-25024-1-git-send-email-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1471286275-25024-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: William Wu <william.wu@rock-chips.com>
+Subject: [PATCH v11 0/5] support rockchip dwc3 driver
+Date: Tue, 16 Aug 2016 22:44:35 +0800
+Message-ID: <1471358680-30857-1-git-send-email-william.wu@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, balbi@kernel.org, heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org, briannorris@google.com, dianders@google.com, kever.yang@rock-chips.com, huangtao@rock-chips.com, frank.wang@rock-chips.com, eddie.cai@rock-chips.com, John.Youn@synopsys.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, sergei.shtylyov@cogentembedded.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, zhengsq@rock-chips.com, zyw@rock-chips.com, William Wu <william.wu@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 15, 2016 at 08:37:55PM +0200, Linus Walleij wrote:
-> This adds device tree bindings for the MPU-3050 gyroscope. Since it
-> is the first set of bindings for a gyroscope, the folder for it
-> is also created.
+This series add support for rockchip DWC3 driver,
+and add additional optional properties for specific
+platforms (e.g., rockchip rk3399 platform).
 
-Is this not similar to mpu-6050 and other Invsense devices:
+The DesignWare USB3 integrated in rockchip SoCs is
+a configurable IP Core which can be instantiated as
+Dual-Role Device (DRD), Host Only (XHCI) and Peripheral
+Only configurations.
 
-Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+The current driver supports Host only and Peripheral Only,
+for now, and we can add support for DRD after dwc3 driver
+adds generic handling of DRD.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+William Wu (5):
+  usb: dwc3: of-simple: add compatible for rockchip rk3399
+  usb: dwc3: add dis_u2_freeclk_exists_quirk
+  usb: dwc3: make usb2 phy utmi interface configurable
+  usb: dwc3: add dis_del_phy_power_chg_quirk
+  usb: dwc3: rockchip: add devicetree bindings documentation
+
+ Documentation/devicetree/bindings/usb/dwc3.txt     |  5 ++
+ Documentation/devicetree/bindings/usb/generic.txt  |  6 +++
+ .../devicetree/bindings/usb/rockchip,dwc3.txt      | 59 ++++++++++++++++++++++
+ drivers/usb/dwc3/core.c                            | 28 ++++++++++
+ drivers/usb/dwc3/core.h                            | 20 ++++++++
+ drivers/usb/dwc3/dwc3-of-simple.c                  |  1 +
+ 6 files changed, 119 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/rockchip,dwc3.txt
+
+-- 
+1.9.1
