@@ -1,64 +1,50 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: tegra: fix Tegra114 USB compatible values
-Date: Tue, 16 Aug 2016 14:38:48 +0200
-Message-ID: <20160816123848.GC4564@ulmo.ba.sec>
-References: <20160815173132.12270-1-swarren@wwwdotorg.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] devicetree: Add vendor prefix for Shenzhen
+ Sunchip Technology Co., Ltd
+Date: Tue, 16 Aug 2016 07:56:24 -0500
+Message-ID: <20160816125624.GA20716@rob-hp-laptop>
+References: <20160812235312.GB10557@vip.cybercity.dk>
+ <bae6ad6c04f7567b224e008ab27b32d2dac1d9c1.1471125083.git.ccc94453@vip.cybercity.dk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="R+My9LyyhiUvIEro"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160815173132.12270-1-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <bae6ad6c04f7567b224e008ab27b32d2dac1d9c1.1471125083.git.ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rask Ingemann Lambertsen <ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---R+My9LyyhiUvIEro
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Aug 15, 2016 at 11:31:31AM -0600, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->=20
-> DT compatible values should always include an entry for the specific
-> chip in addition to any earlier generations that the HW is backwards-
-> compatible with.
->=20
-> This doesn't affect the kernel at all given current driver code, but
-> U-Boot needs to distinguish between Tegra114 and Tegra30 for this HW,
-> and I'd like to synchronize the DT content.
->=20
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Thu, Aug 11, 2016 at 10:11:51PM +0200, Rask Ingemann Lambertsen wrote:
+> Shenzhen Sunchip Technology Co., Ltd produces TV boxes and TV dongles,
+> some of which are sold under other brands. Website:
+> <URL:http://www.sunchip-tech.com/>
+> 
+> Signed-off-by: Rask Ingemann Lambertsen <ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>
 > ---
->  arch/arm/boot/dts/tegra114.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> Changes in v2:
+> No patch changes, but added CC to the ARM kernel mailing list.
+> 
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 1992aa9..fbad2cea 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -256,6 +256,7 @@ ste	ST-Ericsson
+>  stericsson	ST-Ericsson
+>  syna	Synaptics Inc.
+>  synology	Synology, Inc.
+> +sunchip	Shenzhen Sunchip Technology Co., Ltd
+>  SUNW	Sun Microsystems, Inc
 
-Both patches applied, thanks.
+These are not in alphabetical order. Maybe someone thought uppercase 
+should be separate, but I don't. So please fix the ordering here moving 
+SUNW before syna.
 
-Thierry
-
---R+My9LyyhiUvIEro
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJXswlVAAoJEN0jrNd/PrOhoJwP/2Uk/1SDFHj+1IdM1bJwRee4
-xwmTNLXr5NZej7+70m7Y7R8b9X4ZhhDYZq8EcFIEwxK8c0x1Yg19bmqbTd0cwefN
-NPajE5mVIQorBICfjeRve98qCXcYst7g5pCCM0aF/YHx+THvajX/4aNshKMcDSBn
-I41W+9rhv1cSj0YPqx8+ht6ygAwv6V8/Zcs/MqyiO2+nWSlVzTfT70pCwrspby0R
-/rsUVYMBAaxXii/pWLpH78O7+QXuRHGMrd8qkZh9XxaVod/6sC3GTLBoeOC+AIM3
-7SPGvWaLp3uKmQIfdTq3keyM6zQvddvMT4iGMRJL76+RXmF7Y+/epM3IDK+GqYGD
-5oJsroRQkryQy8UilTgjBPporwrwD59fhj8+au6R/jPgSM9w8/DJ3orSUONPsiBD
-6ISKth5iDBZwjsrrFzDvLVbJmOJx8h5kX7FtAMhduIyrkSXELZSitNdKcDSrHyXe
-KlJbYOpo7cA10ifZ+QwBnvTNLDNi7xEa3S95vxKanJKo3P0uyd6myCBs6Y2QzfJW
-PvARrDLFgL985HigG37fecMKQLK+n6ugm1M4tkx9Mgt2oLb4gJpe5bb25uFrlUwS
-lrDeP8Vvn2BcCiiznpd65IG86zsqcQJJLa9XzIw5QnUj9GBIS94u/rBP4/8vx4Mv
-6fzRgkpobw+0AD8p0x0e
-=nVOP
------END PGP SIGNATURE-----
-
---R+My9LyyhiUvIEro--
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
