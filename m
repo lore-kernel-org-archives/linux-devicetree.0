@@ -1,42 +1,54 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 0/2] ARM: dts: r8a7790/r8a7791: Remove obsolete vsp1 properties
-Date: Tue, 16 Aug 2016 18:09:12 +0300
-Message-ID: <1731850.1TRV7u0XMF@avalon>
-References: <1471359392-12584-1-git-send-email-geert+renesas@glider.be>
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: RFC: board dts-file naming scheme
+Date: Tue, 16 Aug 2016 18:13:21 +0300
+Message-ID: <20160816181321.d90e979cae6c7b5d0959b381@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1471359392-12584-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, feedback-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi all!
 
-On Tuesday 16 Aug 2016 16:56:30 Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus, Laurent,
-> 
-> This patch series removes from the R-Car H2 and M2-W DT source files the
-> obsolete DT properties to identify the exact VSP device instance
-> features, which are no longer needed nor used since commit
-> 5aa2eb3c86d4fd16 ("[media] v4l: vsp1: Configure device based on IP
-> version").
+I have not found any recomendation on board dts-file naming scheme
+in linux.git/Documentation/devicetree/.
 
-I was about to submit the same patches :-)
+ARM/ARM64 Linux mostly uses <soc-name>-<board-name>.dts board dts-file
+naming scheme (also see slide "Adding the support for a new ARM board" from=
+ [1]).
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+   arch/arm/boot/dts/am335x-baltos-ir5221.dts
+   arch/arm/boot/dts/at91-ariag25.dts
+   arch/arm/boot/dts/exynos5250-arndale.dts
+   arch/arm/boot/dts/imx6dl-gw54xx.dts
+   arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+   arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
+   arm64/boot/dts/qcom/apq8016-sbc.dts
+   arm64/boot/dts/cavium/thunder-88xx.dts
+   arm64/boot/dts/broadcom/ns2-svk.dts
+   arm64/boot/dts/rockchip/rk3368-r88.dts
+   arm64/boot/dts/mediatek/mt8173-evb.dts
 
-> Geert Uytterhoeven (2):
->   ARM: dts: r8a7790: Remove obsolete vsp1 properties
->   ARM: dts: r8a7791: Remove obsolete vsp1 properties
-> 
->  arch/arm/boot/dts/r8a7790.dtsi | 23 -----------------------
->  arch/arm/boot/dts/r8a7791.dtsi | 18 ------------------
->  2 files changed, 41 deletions(-)
+MIPS Linux mostly uses <soc-name>_<board-name>.dts naming scheme:
 
--- 
-Regards,
+   arch/mips/boot/dts/netlogic/xlp_gvp.dts
+   arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+   arch/mips/boot/dts/ralink/mt7620a_eval.dts
 
-Laurent Pinchart
+Can we elaborate some common rule on board dts-file naming scheme
+and add it into linux.git/Documentation/devicetree/?
+
+[1] Linux Kernel and Driver Development Training by free electrons
+    http://free-electrons.com/doc/training/linux-kernel/linux-kernel-slides=
+.pdf
+
+--=A0
+Best regards,
+=A0 Antony Pavlov
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
