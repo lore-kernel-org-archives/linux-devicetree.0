@@ -1,109 +1,159 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] ARM: dts: msm8974: honami: Add touchscreen
-Date: Tue, 16 Aug 2016 10:46:30 -0700
-Message-ID: <1471369590-12978-1-git-send-email-bjorn.andersson@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 5/7] arm64: dts: exynos: Add dts files for Samsung
+ Exynos5433 64bit SoC
+Date: Tue, 16 Aug 2016 19:51:49 +0200
+Message-ID: <20160816175149.GA14206@kozik-lap>
+References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
+ <1471329328-26842-1-git-send-email-cw00.choi@samsung.com>
+ <CGME20160816102954epcas1p4480c2a31fc4bd51c396517a272c44b2c@epcas1p4.samsung.com>
+ <6afa2f9c-147a-89d1-1806-b465c5a18c95@samsung.com>
+ <57B30E2E.3090506@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <57B30E2E.3090506@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, krzk@kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the i2c2 and rmi4 nodes to enable the Synaptics touchscreen found in
-the Honami.
+On Tue, Aug 16, 2016 at 09:59:26PM +0900, Chanwoo Choi wrote:
+> >> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
+> >> new file mode 100644
+> >> index 000000000000..175121db367e
+> >> --- /dev/null
+> >> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
+> >> @@ -0,0 +1,306 @@
+> >> +/*
+> >> + * Device tree sources for Exynos5433 thermal zone
+> >> + *
+> >> + * Copyright (c) 2016 Chanwoo Choi <cw00.choi@samsung.com>
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or modify
+> >> + * it under the terms of the GNU General Public License version 2 as
+> >> + * published by the Free Software Foundation.
+> >> + */
+> >> +
+> >> +#include <dt-bindings/thermal/thermal.h>
+> >> +
+> >> +/ {
+> >> +thermal-zones {
+> >> +	atlas0_thermal: atlas0-thermal {
+> >> +		thermal-sensors = <&tmu_atlas0>;
+> >> +		polling-delay-passive = <0>;
+> >> +		polling-delay = <0>;
+> >> +		trips {
+> >> +			atlas0_alert_0: atlas0-alert-0 {
+> >> +				temperature = <50000>;	/* millicelsius */
+> >> +				hysteresis = <1000>;	/* millicelsius */
+> >> +				type = "active";
+> >> +			};
+> >> +			atlas0_alert_1: atlas0-alert-1 {
+> >> +				temperature = <55000>;	/* millicelsius */
+> >> +				hysteresis = <1000>;	/* millicelsius */
+> >> +				type = "active";
+> >> +			};
+> >> +			atlas0_alert_2: atlas0-alert-2 {
+> >> +				temperature = <60000>;	/* millicelsius */
+> >> +				hysteresis = <1000>;	/* millicelsius */
+> >> +				type = "active";
+> >> +			};
+> >> +			atlas0_alert_3: atlas0-alert-3 {
+> >> +				temperature = <70000>;	/* millicelsius */
+> >> +				hysteresis = <1000>;	/* millicelsius */
+> >> +				type = "active";
+> >> +			};
+> >> +			atlas0_alert_4: atlas0-alert-4 {
+> >> +				temperature = <80000>;	/* millicelsius */
+> >> +				hysteresis = <1000>;	/* millicelsius */
+> >> +				type = "active";
+> >> +			};
+> >> +			atlas0_alert_5: atlas0-alert-5 {
+> >> +				temperature = <90000>;	/* millicelsius */
+> >> +				hysteresis = <1000>;	/* millicelsius */
+> >> +				type = "active";
+> >> +			};
+> >> +			atlas0_alert_6: atlas0-alert-6 {
+> >> +				temperature = <95000>;	/* millicelsius */
+> >> +				hysteresis = <1000>;	/* millicelsius */
+> >> +				type = "active";
+> >> +			};
+> > 
+> > No critical trip? I think it might be useful to shutdown the system in a
+> > user-friendly way.
+> 
+> When I use the critical trip, the following event occur[1].
+> But, I guess that this temperature is not correct temperature
+> because after completing the kernel booting, the temperature of big.LITTLE/G3D
+> are normal when checking the /sys/class/thermal/thermal_zoneX/temp right after booting.
+> - Maintain a uniform temperature(38 ~ 45 millicelsius) right after kernel booting.
+> 
+> I guess that the critical interrupt may occur before initializing the exynos tmu.
+> But, I don't spend the many time to check the exynos-tmu.c driver.
+> 
+> [1]
+> [  445.122122] thermal thermal_zone0: critical temperature reached(108 C),shutting down
+> [  445.122399] exynos-tmu 10060000.tmu: Temperature sensor ID: 0xa
+> [  445.122588] exynos-tmu 10060000.tmu: Calibration type is 2-point calibration
+> [  445.127942] reboot: Failed to start orderly shutdown: forcing the issue
+> [  445.134586] Emergency Sync complete
+> [    1.097954] reboot: Power down
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../boot/dts/qcom-msm8974-sony-xperia-honami.dts   | 59 ++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+I understand. Apparently the exynos-tmu driver needs some fixes for
+this race. Skipping critical then makes sense.
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-index 3fb4dada6b0d..0d414ef9d3d0 100644
---- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-@@ -311,6 +311,45 @@
- 		pinctrl-0 = <&blsp1_uart2_pin_a>;
- 	};
- 
-+	i2c@f9924000 {
-+		status = "ok";
-+
-+		clock-frequency = <355000>;
-+		qcom,src-freq = <50000000>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c2_pins>;
-+
-+		synaptics@2c {
-+			compatible = "syna,rmi4-i2c";
-+			reg = <0x2c>;
-+
-+			interrupts-extended = <&msmgpio 61 IRQ_TYPE_EDGE_FALLING>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			vdd-supply = <&pm8941_l22>;
-+			vio-supply = <&pm8941_lvs3>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ts_int_pin>;
-+
-+			syna,startup-delay-ms = <10>;
-+
-+			rmi4-f01@1 {
-+				reg = <0x1>;
-+				syna,nosleep-mode = <1>;
-+			};
-+
-+			rmi4-f11@11 {
-+				reg = <0x11>;
-+				touchscreen-inverted-x;
-+				syna,sensor-type = <1>;
-+			};
-+		};
-+	};
-+
- 	pinctrl@fd510000 {
- 		blsp1_uart2_pin_a: blsp1-uart2-pin-active {
- 			rx {
-@@ -330,6 +369,16 @@
- 			};
- 		};
- 
-+		i2c2_pins: i2c2 {
-+			mux {
-+				pins = "gpio6", "gpio7";
-+				function = "blsp_i2c2";
-+
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+		};
-+
- 		sdhc1_pin_a: sdhc1-pin-active {
- 			clk {
- 				pins = "sdc1_clk";
-@@ -366,6 +415,16 @@
- 			};
- 		};
- 
-+		ts_int_pin: touch-int {
-+			pin {
-+				pins = "gpio61";
-+				function = "gpio";
-+
-+				drive-strength = <2>;
-+				bias-disable;
-+				input-enable;
-+			};
-+		};
- 	};
- 
- 	dma-controller@f9944000 {
--- 
-2.5.0
+> 
+> > 
+> >> +		};
+> >> +
+> >> +		cooling-maps {
+> >> +			map0 {
+> >> +				/* Set maximum frequency as 1800MHz  */
+> >> +				trip = <&atlas0_alert_0>;
+> >> +				cooling-device = <&cpu4 1 1>;
+> > 
+> > Out of curiosity: why choosing specific cooling level (so quite fast
+> > the device will slow down) instead of letting cooling framework to
+> > decide how much to cool? Any particular reason behind this?
+> 
+> This cooling level is just default value in cooling-maps.
+> This value is able to overwrite on dts file. 
+> 
+> And the thermal subsystem support the cpu cooling features
+> with 'cooling-maps'.
+> 
+> Also, when I tested the performance and stress test
+> with GLBenchmark, the temperature of big.LITTLE cores/G3D
+> reach easily the critical temperature with 8 online cores.
+> So, I add the cooling level aggressively to protect
+> the system fault of CPU and GPU and to maintain
+> the system state.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I was asking why you do not let cooling framework decide which cooling
+level to use but instead you force a specific cooling level. Maybe code
+will be a better example. Why not use:
+			map0 {
+				/* Set maximum frequency as 1800MHz  */
+				trip = <&atlas0_alert_0>;
+				cooling-device = <&cpu4 0 1>;
+			}
+			map1 {
+				/* Set maximum frequency as 1700MHz  */
+				trip = <&atlas0_alert_1>;
+				cooling-device = <&cpu4 1 2>;
+			};
+
+For higher frequencies it makes even more sense:
+			map6 {
+				/* Set maximum frequency as 800MHz  */
+				trip = <&atlas0_alert_6>;
+				cooling-device = <&cpu4 7 11>;
+			};
+
+which allows the system to use suitable cooling level to maintain the
+balance between performance and temperature dissipance, instead of some
+fixed cooling level which might not be accurate to the system load.
+
+Best regards,
+Krzysztof
