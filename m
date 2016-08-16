@@ -1,187 +1,94 @@
-From: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] usb: phy: mxs: Add DT bindings to configure TX settings
-Date: Tue, 16 Aug 2016 18:31:48 -0400
-Message-ID: <1471386708-26350-1-git-send-email-jaret.cantu@timesys.com>
-References: <0160614020657.GA25052@shlinux2>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0160614020657.GA25052@shlinux2>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Karl Beldan <kbeldan@baylibre.com>
+Subject: Re: [PATCH 3/4] ARM: dts: da850-lcdk: Add NAND to DT
+Date: Tue, 16 Aug 2016 23:20:29 +0000
+Message-ID: <20160816232029.GA31105@gobelin>
+References: <20160809171518.22690-1-kbeldan@baylibre.com>
+ <20160809171518.22690-4-kbeldan@baylibre.com>
+ <57AAE67D.4000404@ti.com>
+ <20160810090417.GE16481@gobelin>
+ <57AAF472.7000804@ti.com>
+ <20160810111944.GA31616@gobelin>
+ <57AB15B3.1050907@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <57AB15B3.1050907@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Santosh Shilimkar <ssantosh@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Karl Beldan <karl.beldan+oss@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The TX settings can be calibrated for particular hardware.  The
-phy is reset by Linux, so this cannot be handled by the bootloader.
+On Wed, Aug 10, 2016 at 05:23:23PM +0530, Sekhar Nori wrote:
+> On Wednesday 10 August 2016 04:49 PM, Karl Beldan wrote:
+> > On Wed, Aug 10, 2016 at 03:01:30PM +0530, Sekhar Nori wrote:
+> >> On Wednesday 10 August 2016 02:34 PM, Karl Beldan wrote:
+> >>> On Wed, Aug 10, 2016 at 02:01:57PM +0530, Sekhar Nori wrote:
+> >>>> On Tuesday 09 August 2016 10:45 PM, Karl Beldan wrote:
+> >>>>> This adds DT support for the NAND connected to the SoC AEMIF.
+> >>>>> The parameters (timings, ecc) are the same as what the board ships with
+> >>>>> (default AEMIF timings, 1bit ECC) and improvements will be handled in
+> >>>>> due course.
+> >>>>
+> >>>> I disagree that we need to be compatible to the software that ships with
+> >>>> the board. Thats software was last updated 3 years ago. Instead I would
+> >>>> concern with what the hardware supports. So, if the hardware can support
+> >>>> 4-bit ECC, I would use that.
+> >>>>
+> >>> I am not saying we _need_ to be compatible.
+> >>
+> >> Alright then, please drop references to what software the board ships
+> >> with in the commit message and in the patch itself.
+> >>
+> > 
+> > I hadn't seen this comment before sending v2.
+> > 
+> >>>
+> >>>> If driver is broken for 4-bit ECC, please fix that up first.
+> >>>>
+> >>> Since this issue is completely separate from my DT improvements
+> >>> I'll stick to resubmitting the series, applying my LCDK changes to the
+> >>> EVM too, besides you'll be able to compare the behavior without ECC
+> >>> discrepancies.
+> >>> I took note that you are likely to not apply without the ECC fix.
+> >>
+> >> Yeah, I would not like to apply with 1-bit ECC now and then change to
+> >> 4-bit ECC soon after.
+> >>
+> > 
+> > Both mityomapl138 from mainline and hawkboard from TI's BSP release
+> > include the comment:
+> > - "4 bit mode is not supported with 16 bit NAND"
+> > It is not clear whether they imply that the HW has issues or if it's SW
+> 
+> At least the TRM says "The EMIFA supports 4-bit ECC on 8-bit/16-bit NAND
+> Flash.". And then the TRM goes on to describe how 4-bit ECC is supposed
+> to work for 16-bit NAND. I could not find any errata related to this in
+> the errata document.
+> 
+> > only, but 4-bits ECC is a different matter and I hope you'll integrate
+> > the current changes prior to tackling it.
+> 
+> Lets apply everything together. This is a new feature, not a bug fix.
+> There is no need to rush it. Also, for the NAND part on LCDK, per the
+> micron datasheet, minimum of 4-bit ECC is needed.
+> 
 
-The TRM mentions that the maximum resistance should be used for the
-DN/DP calibration in order to pass USB certification.
+FYI my patches are related to a small contracting work spanning 20 days
+amounting to 15 real days (from scratch).  ATM my SoW not only doesn't
+include this 'new feature' but excludes it. So I cannot promise I'll
+look into it, though it shouldn't be too big a thing.
+It seemed clear that you wanted to squeeze it with the rest, but after
+setting things up for the EVM and observing mainline was broken with
+4bits ECC on an 8bits NAND I thought it was impossible nobody hadn't
+noticed it .. so I dug in the mail archive, only to find there had
+already been some alerts raised some months ago on the list, so I picked
+up my next item.
 
-The values for the TX registers are poorly described in the TRM.
-The meanings of the register values were taken from another
-NXP-provided document:
-https://community.nxp.com/message/566147#comment-566912
+> I will take a look at other patches in this series.
+> 
 
-Signed-off-by: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
----
-v4. Corrected tx-d-cal register value by rounding up.
-    Changed Freescale web site reference to NXP.
+Ok, thanks.
 
-v3. Added unit suffix (-ohms) to tx-cal-45-d*
-
-v2. Copying devicetree list
-    Removed prettifying extra whitespace
-    Removed unnecessary register rewrite on resume
-    Use min and max constants for clarity
-
- .../devicetree/bindings/phy/mxs-usb-phy.txt        |   10 ++++
- drivers/usb/phy/phy-mxs-usb.c                      |   61 ++++++++++++++++++++
- 2 files changed, 71 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-index 379b84a..1d25b04 100644
---- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-@@ -12,6 +12,16 @@ Required properties:
- - interrupts: Should contain phy interrupt
- - fsl,anatop: phandle for anatop register, it is only for imx6 SoC series
- 
-+Optional properties:
-+- fsl,tx-cal-45-dn-ohms: Integer [30-55]. Resistance (in ohms) of switchable
-+  high-speed trimming resistor connected in parallel with the 45 ohm resistor
-+  that terminates the DN output signal. Default: 45
-+- fsl,tx-cal-45-dp-ohms: Integer [30-55]. Resistance (in ohms) of switchable
-+  high-speed trimming resistor connected in parallel with the 45 ohm resistor
-+  that terminates the DP output signal. Default: 45
-+- fsl,tx-d-cal: Integer [79-119]. Current trimming value (as a percentage) of
-+  the 17.78mA TX reference current. Default: 100
-+
- Example:
- usbphy1: usbphy@020c9000 {
- 	compatible = "fsl,imx6q-usbphy", "fsl,imx23-usbphy";
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index 00bfea0..0e2f1a3 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -27,6 +27,7 @@
- #define DRIVER_NAME "mxs_phy"
- 
- #define HW_USBPHY_PWD				0x00
-+#define HW_USBPHY_TX				0x10
- #define HW_USBPHY_CTRL				0x30
- #define HW_USBPHY_CTRL_SET			0x34
- #define HW_USBPHY_CTRL_CLR			0x38
-@@ -38,6 +39,10 @@
- #define HW_USBPHY_IP_SET			0x94
- #define HW_USBPHY_IP_CLR			0x98
- 
-+#define GM_USBPHY_TX_TXCAL45DP(x)            (((x) & 0xf) << 16)
-+#define GM_USBPHY_TX_TXCAL45DN(x)            (((x) & 0xf) << 8)
-+#define GM_USBPHY_TX_D_CAL(x)                (((x) & 0xf) << 0)
-+
- #define BM_USBPHY_CTRL_SFTRST			BIT(31)
- #define BM_USBPHY_CTRL_CLKGATE			BIT(30)
- #define BM_USBPHY_CTRL_OTG_ID_VALUE		BIT(27)
-@@ -115,6 +120,12 @@
-  */
- #define MXS_PHY_NEED_IP_FIX			BIT(3)
- 
-+/* Minimum and maximum values for device tree entries */
-+#define MXS_PHY_TX_CAL45_MIN			30
-+#define MXS_PHY_TX_CAL45_MAX			55
-+#define MXS_PHY_TX_D_CAL_MIN			79
-+#define MXS_PHY_TX_D_CAL_MAX			119
-+
- struct mxs_phy_data {
- 	unsigned int flags;
- };
-@@ -164,6 +175,8 @@ struct mxs_phy {
- 	const struct mxs_phy_data *data;
- 	struct regmap *regmap_anatop;
- 	int port_id;
-+	u32 tx_reg_set;
-+	u32 tx_reg_mask;
- };
- 
- static inline bool is_imx6q_phy(struct mxs_phy *mxs_phy)
-@@ -185,6 +198,20 @@ static void mxs_phy_clock_switch_delay(void)
- 	usleep_range(300, 400);
- }
- 
-+static void mxs_phy_tx_init(struct mxs_phy *mxs_phy)
-+{
-+	void __iomem *base = mxs_phy->phy.io_priv;
-+	u32 phytx;
-+
-+	/* Update TX register if there is anything to write */
-+	if (mxs_phy->tx_reg_mask) {
-+		phytx = readl(base + HW_USBPHY_TX);
-+		phytx &= ~mxs_phy->tx_reg_mask;
-+		phytx |= mxs_phy->tx_reg_set;
-+		writel(phytx, base + HW_USBPHY_TX);
-+	}
-+}
-+
- static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
- {
- 	int ret;
-@@ -214,6 +241,8 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
- 	if (mxs_phy->data->flags & MXS_PHY_NEED_IP_FIX)
- 		writel(BM_USBPHY_IP_FIX, base + HW_USBPHY_IP_SET);
- 
-+	mxs_phy_tx_init(mxs_phy);
-+
- 	return 0;
- }
- 
-@@ -459,6 +488,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 	int ret;
- 	const struct of_device_id *of_id;
- 	struct device_node *np = pdev->dev.of_node;
-+	u32 val;
- 
- 	of_id = of_match_device(mxs_phy_dt_ids, &pdev->dev);
- 	if (!of_id)
-@@ -491,6 +521,37 @@ static int mxs_phy_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	/* Precompute which bits of the TX register are to be updated, if any */
-+	if (!of_property_read_u32(np, "fsl,tx-cal-45-dn-ohms", &val) &&
-+	    val >= MXS_PHY_TX_CAL45_MIN && val <= MXS_PHY_TX_CAL45_MAX) {
-+		/* Scale to a 4-bit value */
-+		val = (MXS_PHY_TX_CAL45_MAX - val) * 0xF
-+			/ (MXS_PHY_TX_CAL45_MAX - MXS_PHY_TX_CAL45_MIN);
-+		mxs_phy->tx_reg_mask |= GM_USBPHY_TX_TXCAL45DN(~0);
-+		mxs_phy->tx_reg_set  |= GM_USBPHY_TX_TXCAL45DN(val);
-+	}
-+
-+	if (!of_property_read_u32(np, "fsl,tx-cal-45-dp-ohms", &val) &&
-+	    val >= MXS_PHY_TX_CAL45_MIN && val <= MXS_PHY_TX_CAL45_MAX) {
-+		/* Scale to a 4-bit value. */
-+		val = (MXS_PHY_TX_CAL45_MAX - val) * 0xF
-+			/ (MXS_PHY_TX_CAL45_MAX - MXS_PHY_TX_CAL45_MIN);
-+		mxs_phy->tx_reg_mask |= GM_USBPHY_TX_TXCAL45DP(~0);
-+		mxs_phy->tx_reg_set  |= GM_USBPHY_TX_TXCAL45DP(val);
-+	}
-+
-+	if (!of_property_read_u32(np, "fsl,tx-d-cal", &val) &&
-+	    val >= MXS_PHY_TX_D_CAL_MIN && val <= MXS_PHY_TX_D_CAL_MAX) {
-+		/* Scale to a 4-bit value.  Round up the values and heavily
-+		 * weight the rounding by adding 2/3 of the denominator.
-+		 */
-+		val = ((MXS_PHY_TX_D_CAL_MAX - val) * 0xF
-+			+ (MXS_PHY_TX_D_CAL_MAX - MXS_PHY_TX_D_CAL_MIN) * 2/3)
-+			/ (MXS_PHY_TX_D_CAL_MAX - MXS_PHY_TX_D_CAL_MIN);
-+		mxs_phy->tx_reg_mask |= GM_USBPHY_TX_D_CAL(~0);
-+		mxs_phy->tx_reg_set  |= GM_USBPHY_TX_D_CAL(val);
-+	}
-+
- 	ret = of_alias_get_id(np, "usbphy");
- 	if (ret < 0)
- 		dev_dbg(&pdev->dev, "failed to get alias id, errno %d\n", ret);
--- 
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rgds, 
+Karl
