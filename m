@@ -1,81 +1,62 @@
-From: John Youn <John.Youn@synopsys.com>
-Subject: Re: [PATCH V2 RFC 1/6] usb: dwc2: core: Avoid nonsense error in
- gadget mode
-Date: Mon, 15 Aug 2016 18:30:46 -0700
-Message-ID: <92280b0f-4dd3-bcf5-57ed-277a9f91653d@synopsys.com>
-References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
- <1469559213-16160-2-git-send-email-stefan.wahren@i2se.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] ARM64: dts: amlogic: meson-gxbb: Add watchdog node
+Date: Mon, 15 Aug 2016 18:51:38 -0700
+Message-ID: <9cfa549e-1979-cb42-bfe1-1ef347dd3a9a@roeck-us.net>
+References: <1468141867-4172-1-git-send-email-narmstrong@baylibre.com>
+ <1468141867-4172-4-git-send-email-narmstrong@baylibre.com>
+ <578271D3.4080704@roeck-us.net> <7hbn237aw7.fsf@baylibre.com>
+ <m2bn19qsy3.fsf@baylibre.com>
+ <CAOi56cUQaFKYu2jNP0AuLOSNnNramu+DNPc+PH7K0gHDZMf+zA@mail.gmail.com>
+ <7hinv1ahqi.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1469559213-16160-2-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, John Youn <John.Youn@synopsys.com>
-Cc: Felipe Balbi <balbi@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7hinv1ahqi.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/26/2016 11:54 AM, Stefan Wahren wrote:
-> In gadget mode On bcm2835 platform the host tx fifo size could be zero.
-> So add zero to range and avoid such nonsense errors:
-> 
-> dwc2 20980000.usb: 0 invalid for host_nperio_tx_fifo_size.
-> dwc2 20980000.usb: Setting host_nperio_tx_fifo_size to 0
-> dwc2 20980000.usb: 0 invalid for host_perio_tx_fifo_size.
-> dwc2 20980000.usb: Setting host_perio_tx_fifo_size to 0
+On 08/15/2016 01:40 PM, Kevin Hilman wrote:
+> Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+>
+>> On Wed, Aug 3, 2016 at 5:27 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+>>> Hi Guenter,
+>>>
+>>> Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+>>>
+>>>> Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> writes:
+>>>>
+>>>>> On 07/10/2016 02:11 AM, Neil Armstrong wrote:
+>>>>>> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>>>>
+>>>>> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+>>>>>
+>>>>> Would this go in through one of the arm trees ?
+>>>>
+>>>> You can take the driver through the watchdog tree, but I'll take the DT
+>>>> stuff through the amlogic tree (and submit via arm-soc).
+>>>>
+>>>> However, with your ack, and since this is a brand new driver, I could
+>>>> take the driver as well.  Just let me know your preference.
+>>>
+>>> ping... do you have a prefernce here?
+>>>
+>>
+>> Oops, just noticed Wim already picked these up.
+>>
+>
+> Strange, seems that Wim picked up patches 1 & 3, but this one was missed.  I'll
+> queue this for the arm-soc tree.
+>
 
-Hi Stefan,
+I got a number of requests from arm maintainers to not pick up devicetree changes
+for arch/arm, so for my part I usually leave those alone.
 
-Are those the power on reset values of GNPTXFSIZ and HPTXFSIZ?
+Guenter
 
-If these values can be 0, I think the patch is ok. But I'm not sure
-about that. I can check with some hardware engineers to see under what
-conditions this is possible.
-
-Regards,
-John
-
-
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->  drivers/usb/dwc2/core.c |   10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/dwc2/core.c b/drivers/usb/dwc2/core.c
-> index 4135a5f..5645528 100644
-> --- a/drivers/usb/dwc2/core.c
-> +++ b/drivers/usb/dwc2/core.c
-> @@ -819,7 +819,10 @@ void dwc2_set_param_host_nperio_tx_fifo_size(struct dwc2_hsotg *hsotg, int val)
->  {
->  	int valid = 1;
->  
-> -	if (val < 16 || val > hsotg->hw_params.host_nperio_tx_fifo_size)
-> +	if (val && (val < 16))
-> +		valid = 0;
-> +
-> +	if (val > hsotg->hw_params.host_nperio_tx_fifo_size)
->  		valid = 0;
->  
->  	if (!valid) {
-> @@ -839,7 +842,10 @@ void dwc2_set_param_host_perio_tx_fifo_size(struct dwc2_hsotg *hsotg, int val)
->  {
->  	int valid = 1;
->  
-> -	if (val < 16 || val > hsotg->hw_params.host_perio_tx_fifo_size)
-> +	if (val && (val < 16))
-> +		valid = 0;
-> +
-> +	if (val > hsotg->hw_params.host_perio_tx_fifo_size)
->  		valid = 0;
->  
->  	if (!valid) {
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
