@@ -1,52 +1,41 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Subject: Re: [PATCH RFCv2] net: ethernet: macb: Add support for rx_clk
-Date: Tue, 16 Aug 2016 10:16:50 +0530
-Message-ID: <CAKfKVtHMB4mHJMOnfLaGiArCJJ9VQ9-gCbLPXj1COO9L8adi5g@mail.gmail.com>
-References: <1470996979-33015-1-git-send-email-shubhrajyoti.datta@xilinx.com> <20160812190318.GA17752@rob-hp-laptop>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: [PATCH v2 1/2] dt: bindings: add binding for Allwinner A64 R_PIO
+ pinctrl
+Date: Tue, 16 Aug 2016 13:07:08 +0800
+Message-ID: <20160816050709.7412-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160812190318.GA17752@rob-hp-laptop>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Jens Kuske <jenskuske@gmail.com>, Andre Przywara <andre.przywara@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vishnu Patekar <vishnupatekar0510@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org, Krzysztof Adamski <k@japko.eu>, Icenowy Zheng <icenowy@aosc.xyz>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-Thanks for the review.
+Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+---
+ Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Sat, Aug 13, 2016 at 12:33 AM, Rob Herring <robh@kernel.org> wrote:
-> On Fri, Aug 12, 2016 at 03:46:19PM +0530, Shubhrajyoti Datta wrote:
->> Some of the platforms like zynqmp ultrascale+ has a
->> separate clock gate for the rx clock. Add an optional
->> rx_clk so that the clock can be enabled.
->>
->> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
->> ---
->> v2:
->> fix warning
->>
->>  Documentation/devicetree/bindings/net/macb.txt |  2 +-
->>  drivers/net/ethernet/cadence/macb.c            | 31 +++++++++++++++++++++-----
->>  drivers/net/ethernet/cadence/macb.h            |  4 +++-
->>  3 files changed, 30 insertions(+), 7 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
->> index b5a42df..315beda 100644
->> --- a/Documentation/devicetree/bindings/net/macb.txt
->> +++ b/Documentation/devicetree/bindings/net/macb.txt
->> @@ -20,7 +20,7 @@ Required properties:
->>  - phy-mode: See ethernet.txt file in the same directory.
->>  - clock-names: Tuple listing input clock names.
->>       Required elements: 'pclk', 'hclk'
->> -     Optional elements: 'tx_clk'
->> +     Optional elements: 'tx_clk', 'rx_clk'
->
-> Please state which compatibles this applies to.
-
-will fix in the next version
-
->
->>  - clocks: Phandles to input clocks.
->>
->>  Optional properties for PHY child node:
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+index 6961722..ee73f9f 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+@@ -23,6 +23,7 @@ Required properties:
+   "allwinner,sun8i-h3-pinctrl"
+   "allwinner,sun8i-h3-r-pinctrl"
+   "allwinner,sun50i-a64-pinctrl"
++  "allwinner,sun50i-a64-r-pinctrl"
+ 
+ - reg: Should contain the register physical address and length for the
+   pin controller.
+-- 
+2.9.2
