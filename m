@@ -1,98 +1,26 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: imx7d: move CPU operating points to
- imx7d.dtsi
-Date: Tue, 16 Aug 2016 13:50:38 +0800
-Message-ID: <20160816055038.GL500@tiger>
-References: <20160812001107.17016-1-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH] add COMMON_CLK dependency for rockchip-inno-usb2
+Date: Tue, 16 Aug 2016 14:01:59 +0800
+Message-ID: <1471327320-92871-1-git-send-email-frank.wang@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160812001107.17016-1-stefan-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 11, 2016 at 05:11:06PM -0700, Stefan Agner wrote:
-> Only i.MX 7Dual SoC supports CPU frequencies of up to 1GHz. The i.MX
-> 7Solo can run with up to 800MHz and does so without making use of DVFS
-> usually. While the device tree clearly specified a too fast operating
-> point for i.MX 7Solo, the kernel did not used it in practise so far
-> because the CPUfreq driver does not get loaded on i.MX 7Solo devices
-> (since the fsl,imx7s compatible string is not in the list of devices
-> making use of the cpufreq-dt driver...).
-> 
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> ---
-> Hi Shawn,
-> 
-> This is based on my earlier patchset:
-> ARM: dts: imx7d: move ARM platform peripherals inside soc
-> 
-> This are kind of fixes too, so if possible I would like to see them
-> in v4.8, what do you think?
+On kernel builds without COMMON_CLK, the newly added rockchip-inno-usb2 driver
+fails to build, and this adds the required Kconfig dependency to fix it.
 
-Patch "ARM: dts: imx7d: move ARM platform peripherals inside soc node"
-is not really a fix, and the diffstat looks too dramatic to be a -rc
-material, so I queued it as a -next patch, and any patch based on it
-will have to go through -next as well.
+Frank Wang (1):
+  phy: rockchip-inno-usb2: add COMMON_CLK dependency
 
-Applied for -next, thanks.
+ drivers/phy/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
-Shawn
+-- 
+1.7.9.5
 
-> 
-> --
-> Stefan
-> 
->  arch/arm/boot/dts/imx7d.dtsi | 8 ++++++++
->  arch/arm/boot/dts/imx7s.dtsi | 5 -----
->  2 files changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
-> index 3d77d95..d0b199c 100644
-> --- a/arch/arm/boot/dts/imx7d.dtsi
-> +++ b/arch/arm/boot/dts/imx7d.dtsi
-> @@ -45,6 +45,14 @@
->  
->  / {
->  	cpus {
-> +		cpu0: cpu@0 {
-> +			operating-points = <
-> +				/* KHz	uV */
-> +				996000	1075000
-> +				792000	975000
-> +			>;
-> +		};
-> +
->  		cpu1: cpu@1 {
->  			compatible = "arm,cortex-a7";
->  			device_type = "cpu";
-> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-> index c63591c..5132e2f 100644
-> --- a/arch/arm/boot/dts/imx7s.dtsi
-> +++ b/arch/arm/boot/dts/imx7s.dtsi
-> @@ -85,11 +85,6 @@
->  			compatible = "arm,cortex-a7";
->  			device_type = "cpu";
->  			reg = <0>;
-> -			operating-points = <
-> -				/* KHz	uV */
-> -				996000	1075000
-> -				792000	975000
-> -			>;
->  			clock-latency = <61036>; /* two CLK32 periods */
->  			clocks = <&clks IMX7D_CLK_ARM>;
->  		};
-> -- 
-> 2.9.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
