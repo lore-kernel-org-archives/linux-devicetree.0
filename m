@@ -1,90 +1,71 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH V2 RFC 1/6] usb: dwc2: core: Avoid nonsense error in
- gadget mode
-Date: Tue, 16 Aug 2016 09:22:56 -0700
-Message-ID: <874m6kel9b.fsf@eliezer.anholt.net>
-References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
- <1469559213-16160-2-git-send-email-stefan.wahren@i2se.com>
- <92280b0f-4dd3-bcf5-57ed-277a9f91653d@synopsys.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH] phy: rockchip-inno-usb2: add COMMON_CLK dependency
+Date: Tue, 16 Aug 2016 09:31:50 -0700
+Message-ID: <20160816163150.GA28201@roeck-us.net>
+References: <1471327320-92871-1-git-send-email-frank.wang@rock-chips.com>
+ <1471327320-92871-2-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6807236721778493195=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <92280b0f-4dd3-bcf5-57ed-277a9f91653d@synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: John Youn <John.Youn@synopsys.com>, Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>John Youn <John.Youn@synopsys.com>
-Cc: Felipe Balbi <balbi@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1471327320-92871-2-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============6807236721778493195==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+On Tue, Aug 16, 2016 at 02:02:00PM +0800, Frank Wang wrote:
+> On kernel builds without COMMON_CLK, the newly added rockchip-inno-usb2
+> driver fails to build:
+> 
+> drivers/phy/phy-rockchip-inno-usb2.c:124:16: error: field 'clk480m_hw'
+> has incomplete type
+>    struct clk_hw clk480m_hw;
+> 
+> In file included from include/linux/clk.h:16:0
+>                  from drivers/phy/phy-rockchip-inno-usb2.c:17:
+> include/linux/kernel.h:831:48: error: initialization from incompatible
+> pointer type [-Werror=incompatible-pointer-types]
+>    const typeof( ((type *)0)->member ) *__mptr = (ptr); \
+> 
+>   ... ...
+> 
+> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  drivers/phy/Kconfig |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index f9bf981..c6d57e5 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -370,6 +370,7 @@ config PHY_ROCKCHIP_USB
+>  config PHY_ROCKCHIP_INNO_USB2
+>  	tristate "Rockchip INNO USB2PHY Driver"
+>  	depends on (ARCH_ROCKCHIP || COMPILE_TEST) && OF
+> +	depends on COMMON_CLK
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Wonder what is preferred here. I find 33 "select COMMON_CLK" and
+18 "depends on COMMON_CLK".
 
-John Youn <John.Youn@synopsys.com> writes:
+Either case
 
-> On 7/26/2016 11:54 AM, Stefan Wahren wrote:
->> In gadget mode On bcm2835 platform the host tx fifo size could be zero.
->> So add zero to range and avoid such nonsense errors:
->>=20
->> dwc2 20980000.usb: 0 invalid for host_nperio_tx_fifo_size.
->> dwc2 20980000.usb: Setting host_nperio_tx_fifo_size to 0
->> dwc2 20980000.usb: 0 invalid for host_perio_tx_fifo_size.
->> dwc2 20980000.usb: Setting host_perio_tx_fifo_size to 0
->
-> Hi Stefan,
->
-> Are those the power on reset values of GNPTXFSIZ and HPTXFSIZ?
->
-> If these values can be 0, I think the patch is ok. But I'm not sure
-> about that. I can check with some hardware engineers to see under what
-> conditions this is possible.
-
-FWIW, I don't see the firmware software doing any conditional setting of
-these registers.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXsz3hAAoJELXWKTbR/J7ot6kP+gMsFVj7Z/v2br83bRSCi8MJ
-97pV07P3b9T3aDr7AcnFWXGL9dFqFwWEfVzeu/V0y3u5mmoI56NvUXkuqer0JiC6
-BFZGF2Z73PI9PN0GiUOdfPDm/SeDUIbWILlcYtQXBiM9X6hkDXwW79TwvFDNXMV6
-QymbD5nYuVIz/4ti4FkRGuPcMeJatswyB1dAlACtcn4spQgysyHIlmMr08DwJ63X
-cV+1V35heCzcRmIHUaXMTxe/p3IxO43A+rexcy30DpTRb2XajuBBsEcufO7kYMbN
-VkR3vE7lCBkX2Bzpx4Xc7Kuts+F7LLUA531btEcYaNprjORSVECYKoukucD35Lq+
-8P4vC4VQH3/rhQhT67oFoW2h0JpMDmIGxJh4M7zLh888W7oRE5B/qnT10pqaS2Kh
-2wdxP2w7vtNRUiZ3h0uF7sx/wPXOqVFLBVL3SxbcIU/RBm2+rtAk9lX6v072dJLH
-KAi+QRgiNoE0F0AG1H/9+to3Q8+A4wMzkai4FFEDoMJINP/ncapFoVpm3OZYBxcf
-12w6cOXPVSdsEFLlAleCaeuZOcz78UsAiPw/eUEcXzstqaQbLCkFnVwFMUNakkxi
-zZyzBTbvPIr3tPrqlo4fv6yFPkd2t/yTr12t9ERCaNDxocqpRcxcOjL03jNScvN3
-hfBYmKQb0Brjt47kiJSr
-=ypMr
------END PGP SIGNATURE-----
---=-=-=--
+Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
 
---===============6807236721778493195==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6807236721778493195==--
+>  	select GENERIC_PHY
+>  	help
+>  	  Support for Rockchip USB2.0 PHY with Innosilicon IP block.
+> -- 
+> 1.7.9.5
+> 
+> 
