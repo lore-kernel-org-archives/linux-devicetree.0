@@ -1,165 +1,56 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 5/7] arm64: dts: exynos: Add dts files for Samsung
- Exynos5433 64bit SoC
-Date: Wed, 17 Aug 2016 09:46:28 +0900
-Message-ID: <57B3B3E4.4020500@samsung.com>
-References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
- <1471329328-26842-1-git-send-email-cw00.choi@samsung.com>
- <CGME20160816102954epcas1p4480c2a31fc4bd51c396517a272c44b2c@epcas1p4.samsung.com>
- <6afa2f9c-147a-89d1-1806-b465c5a18c95@samsung.com>
- <57B30E2E.3090506@samsung.com> <20160816175149.GA14206@kozik-lap>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH] dt-bindings: touchscreen: silead gsl1680: Document all
+ compatibles
+Date: Wed, 17 Aug 2016 10:59:26 +0800
+Message-ID: <46861471402766@web24j.yandex.ru>
+References: <1471338091-3259-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20160816175149.GA14206@kozik-lap>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, krzk@kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1471338091-3259-1-git-send-email-hdegoede@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
-
-On 2016년 08월 17일 02:51, Krzysztof Kozlowski wrote:
-> On Tue, Aug 16, 2016 at 09:59:26PM +0900, Chanwoo Choi wrote:
->>>> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
->>>> new file mode 100644
->>>> index 000000000000..175121db367e
->>>> --- /dev/null
->>>> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
->>>> @@ -0,0 +1,306 @@
->>>> +/*
->>>> + * Device tree sources for Exynos5433 thermal zone
->>>> + *
->>>> + * Copyright (c) 2016 Chanwoo Choi <cw00.choi@samsung.com>
->>>> + *
->>>> + * This program is free software; you can redistribute it and/or modify
->>>> + * it under the terms of the GNU General Public License version 2 as
->>>> + * published by the Free Software Foundation.
->>>> + */
->>>> +
->>>> +#include <dt-bindings/thermal/thermal.h>
->>>> +
->>>> +/ {
->>>> +thermal-zones {
->>>> +	atlas0_thermal: atlas0-thermal {
->>>> +		thermal-sensors = <&tmu_atlas0>;
->>>> +		polling-delay-passive = <0>;
->>>> +		polling-delay = <0>;
->>>> +		trips {
->>>> +			atlas0_alert_0: atlas0-alert-0 {
->>>> +				temperature = <50000>;	/* millicelsius */
->>>> +				hysteresis = <1000>;	/* millicelsius */
->>>> +				type = "active";
->>>> +			};
->>>> +			atlas0_alert_1: atlas0-alert-1 {
->>>> +				temperature = <55000>;	/* millicelsius */
->>>> +				hysteresis = <1000>;	/* millicelsius */
->>>> +				type = "active";
->>>> +			};
->>>> +			atlas0_alert_2: atlas0-alert-2 {
->>>> +				temperature = <60000>;	/* millicelsius */
->>>> +				hysteresis = <1000>;	/* millicelsius */
->>>> +				type = "active";
->>>> +			};
->>>> +			atlas0_alert_3: atlas0-alert-3 {
->>>> +				temperature = <70000>;	/* millicelsius */
->>>> +				hysteresis = <1000>;	/* millicelsius */
->>>> +				type = "active";
->>>> +			};
->>>> +			atlas0_alert_4: atlas0-alert-4 {
->>>> +				temperature = <80000>;	/* millicelsius */
->>>> +				hysteresis = <1000>;	/* millicelsius */
->>>> +				type = "active";
->>>> +			};
->>>> +			atlas0_alert_5: atlas0-alert-5 {
->>>> +				temperature = <90000>;	/* millicelsius */
->>>> +				hysteresis = <1000>;	/* millicelsius */
->>>> +				type = "active";
->>>> +			};
->>>> +			atlas0_alert_6: atlas0-alert-6 {
->>>> +				temperature = <95000>;	/* millicelsius */
->>>> +				hysteresis = <1000>;	/* millicelsius */
->>>> +				type = "active";
->>>> +			};
->>>
->>> No critical trip? I think it might be useful to shutdown the system in a
->>> user-friendly way.
->>
->> When I use the critical trip, the following event occur[1].
->> But, I guess that this temperature is not correct temperature
->> because after completing the kernel booting, the temperature of big.LITTLE/G3D
->> are normal when checking the /sys/class/thermal/thermal_zoneX/temp right after booting.
->> - Maintain a uniform temperature(38 ~ 45 millicelsius) right after kernel booting.
->>
->> I guess that the critical interrupt may occur before initializing the exynos tmu.
->> But, I don't spend the many time to check the exynos-tmu.c driver.
->>
->> [1]
->> [  445.122122] thermal thermal_zone0: critical temperature reached(108 C),shutting down
->> [  445.122399] exynos-tmu 10060000.tmu: Temperature sensor ID: 0xa
->> [  445.122588] exynos-tmu 10060000.tmu: Calibration type is 2-point calibration
->> [  445.127942] reboot: Failed to start orderly shutdown: forcing the issue
->> [  445.134586] Emergency Sync complete
->> [    1.097954] reboot: Power down
-> 
-> I understand. Apparently the exynos-tmu driver needs some fixes for
-> this race. Skipping critical then makes sense.
-> 
->>
->>>
->>>> +		};
->>>> +
->>>> +		cooling-maps {
->>>> +			map0 {
->>>> +				/* Set maximum frequency as 1800MHz  */
->>>> +				trip = <&atlas0_alert_0>;
->>>> +				cooling-device = <&cpu4 1 1>;
->>>
->>> Out of curiosity: why choosing specific cooling level (so quite fast
->>> the device will slow down) instead of letting cooling framework to
->>> decide how much to cool? Any particular reason behind this?
->>
->> This cooling level is just default value in cooling-maps.
->> This value is able to overwrite on dts file. 
->>
->> And the thermal subsystem support the cpu cooling features
->> with 'cooling-maps'.
->>
->> Also, when I tested the performance and stress test
->> with GLBenchmark, the temperature of big.LITTLE cores/G3D
->> reach easily the critical temperature with 8 online cores.
->> So, I add the cooling level aggressively to protect
->> the system fault of CPU and GPU and to maintain
->> the system state.
-> 
-> I was asking why you do not let cooling framework decide which cooling
-> level to use but instead you force a specific cooling level. Maybe code
-> will be a better example. Why not use:
-> 			map0 {
-> 				/* Set maximum frequency as 1800MHz  */
-> 				trip = <&atlas0_alert_0>;
-> 				cooling-device = <&cpu4 0 1>;
-> 			}
-> 			map1 {
-> 				/* Set maximum frequency as 1700MHz  */
-> 				trip = <&atlas0_alert_1>;
-> 				cooling-device = <&cpu4 1 2>;
-> 			};
-> 
-> For higher frequencies it makes even more sense:
-> 			map6 {
-> 				/* Set maximum frequency as 800MHz  */
-> 				trip = <&atlas0_alert_6>;
-> 				cooling-device = <&cpu4 7 11>;
-> 			};
-> 
-> which allows the system to use suitable cooling level to maintain the
-> balance between performance and temperature dissipance, instead of some
-> fixed cooling level which might not be accurate to the system load.
-
-Ah. I misunderstand of your question. OK. I'll expand the range of
-cooling level as you suggested.
-
-Best Regards,
-Chanwoo Choi
+CgoxNi4wOC4yMDE2LCAxNzowNiwgIkhhbnMgZGUgR29lZGUiIDxoZGVnb2VkZUByZWRoYXQuY29t
+PjoKPiBUaGUgc2lsZWFkIGdzbDE2ODAgZHJpdmVyIC8gYmluZGluZyBzdXBwb3J0cyBhIHdob2xl
+IHNlcmllcyBvZiBkZXZpY2VzLAo+IGxpc3QgdGhlIGNvbXBhdGlibGVzIGZvciBhbGwgb2YgdGhl
+bSBpbiB0aGUgYmluZGluZy4KPgo+IFNpZ25lZC1vZmYtYnk6IEhhbnMgZGUgR29lZGUgPGhkZWdv
+ZWRlQHJlZGhhdC5jb20+Cj4gLS0tCj4gwqAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90
+b3VjaHNjcmVlbi9zaWxlYWRfZ3NsMTY4MC50eHQgfCA1ICsrKysrCj4gwqAxIGZpbGUgY2hhbmdl
+ZCwgNSBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2lucHV0L3RvdWNoc2NyZWVuL3NpbGVhZF9nc2wxNjgwLnR4dCBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90b3VjaHNjcmVlbi9zaWxlYWRfZ3Ns
+MTY4MC50eHQKPiBpbmRleCAxMTEyZTBkLi4zN2E5MzcwIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90b3VjaHNjcmVlbi9zaWxlYWRfZ3NsMTY4
+MC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvdG91
+Y2hzY3JlZW4vc2lsZWFkX2dzbDE2ODAudHh0Cj4gQEAgLTIsNiArMiwxMSBAQAo+Cj4gwqBSZXF1
+aXJlZCBwcm9wZXJ0aWVzOgo+IMKgLSBjb21wYXRpYmxlIDogInNpbGVhZCxnc2wxNjgwIgo+ICsg
+b3I6ICJzaWxlYWQsZ3NsMTY4OCIKPiArIG9yOiAic2lsZWFkLGdzbDM2NzAiCj4gKyBvcjogInNp
+bGVhZCxnc2wzNjc1Igo+ICsgb3I6ICJzaWxlYWQsZ3NsMzY5MiIKPiArIG9yOiAic2lsZWFkLG1z
+c2wxNjgwIgpJIHRoaW5rIOKAnG1zc2wxNjgwIiBpcyBvbmx5IGEgc3RyaW5nIHdoaWNoIGV4aXN0
+cyBpbiBBQ1BJIHRhYmxlcy4KSSBoYXZlIGRpc2Fzc2VtYmxlZCBvbmUgb2YgbXkgdGFibGV0LCB3
+aGljaCBpcyBzYWlkIHRvIGhhdmUgIk1TU0wxNjgwIiBpbiBpdCBpbgpBQ1BJIHRhYmxlIChhIEJh
+eVRyYWlsIHRhYmxldCkuIFdoYXQgSSBnb3QgaXMgYSBwbGFpbiBHU0wxNjgwLgpTbyBpdCBzaG91
+bGRuJ3QgZXhpc3QgaW4gdGhlIGNvbXBhdGlibGUgbGlzdC4KPiDCoC0gcmVnIDogSTJDIHNsYXZl
+IGFkZHJlc3Mgb2YgdGhlIGNoaXAgKDB4NDApCj4gwqAtIGludGVycnVwdC1wYXJlbnQgOiBhIHBo
+YW5kbGUgcG9pbnRpbmcgdG8gdGhlIGludGVycnVwdCBjb250cm9sbGVyCj4gwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHNlcnZpbmcgdGhl
+IGludGVycnVwdCBmb3IgdGhpcyBjaGlwCj4gLS0KPiAyLjcuNAo+Cj4gX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
+cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
+bAo=
