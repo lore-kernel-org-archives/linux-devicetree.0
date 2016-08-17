@@ -1,76 +1,37 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 1/2] ARM: dts: da850-lcdk: Audio support via simple-card
-Date: Wed, 17 Aug 2016 17:02:13 +0530
-Message-ID: <8bc04130-0e0f-1c5d-43ad-3755b22295e5@ti.com>
-References: <20160810200853.24275-1-kbeldan@baylibre.com>
- <aeec6ee5-91e9-13fa-f7fa-09581ddb9b6a@ti.com> <20160817103346.GB8009@gobelin>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] net: ethernet: bgmac: convert to feature flags
+Date: Wed, 17 Aug 2016 13:34:15 +0200
+Message-ID: <CACna6rw1j3myPEkbn+YR71W7CF7Of_yahn9eDT7t3hKWGmWUmg@mail.gmail.com>
+References: <1467932938-21819-1-git-send-email-jon.mason@broadcom.com> <1467932938-21819-5-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160817103346.GB8009@gobelin>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Karl Beldan <kbeldan@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Karl Beldan <karl.beldan+oss@gmail.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1467932938-21819-5-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Network Development <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 17 August 2016 04:03 PM, Karl Beldan wrote:
-> On Wed, Aug 17, 2016 at 03:24:42PM +0530, Sekhar Nori wrote:
->> On Thursday 11 August 2016 01:38 AM, Karl Beldan wrote:
->>> The LCDK embeds a TLV320AIC3106 connected to the SoC McASP for analog
->>> audio. This relies on the 'dummy' regulator as the codec is always on.
->>> Quality is good with arecord -pipe- aplay on Line In/Line Out.
->>> The MIC path doesn't seem to work yet.
->>
->> I tested the patch and I could not get the MIC to work as well. I
->> suggest dropping the MIC path parts till that is debugged and root caused.
->>
-> 
-> Ok.
-> 
->>> Signed-off-by: Karl Beldan <kbeldan@baylibre.com>
->>> ---
->>>  arch/arm/boot/dts/da850-lcdk.dts | 75 ++++++++++++++++++++++++++++++++++++++++
->>>  1 file changed, 75 insertions(+)
->>
->>> +&i2c0 {
->>> +	pinctrl-names = "default";
->>> +	pinctrl-0 = <&i2c0_pins>;
->>> +	clock-frequency = <100000>;
->>> +	status = "okay";
->>> +
->>> +	tlv320aic3106: tlv320aic3106@18 {
->>> +		#sound-dai-cells = <0>;
->>> +		compatible = "ti,tlv320aic3106";
->>> +		reg = <0x18>;
->>> +		status = "okay";
->>> +
->>> +		ai3x-micbias-vg = <MICBIAS_2_5V>;
->>
->> It will be nice to add the codec regulators as well (and that in turn
->> needs the PMIC to be populated). Although I wont insist on that since
->> the regulators are optional properties.
->>
-> 
-> In the patch comment I stated it relied on the dummy regulator as the
-> codec is always on but maybe I should have been more precise: it is not
-> out of convenience to keep things on, it is by HW design: I mentioned
-> it in the comment of "ARM: dts: da850: Add basic DTS for the LCDK":
->  "the main PMIC, different and hard-wired on the LCDK (the LDOs and
->  DCDCs are always on)" after reviewing the schematics.
-> I could add that in the patch comment.
+On 8 July 2016 at 01:08, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>         mode = (bgmac_read(bgmac, BGMAC_DEV_STATUS) & BGMAC_DS_MM_MASK) >>
+>                 BGMAC_DS_MM_SHIFT;
+> -       if (ci->id != BCMA_CHIP_ID_BCM47162 || mode != 0)
+> +       if (bgmac->feature_flags & BGMAC_FEAT_CLKCTLST || mode != 0)
+>                 bgmac_set(bgmac, BCMA_CLKCTLST, BCMA_CLKCTLST_FORCEHT);
+> -       if (ci->id == BCMA_CHIP_ID_BCM47162 && mode == 2)
+> +       if (bgmac->feature_flags & BGMAC_FEAT_CLKCTLST && mode == 2)
+>                 bcma_chipco_chipctl_maskset(&bgmac->core->bus->drv_cc, 1, ~0,
+>                                             BGMAC_CHIPCTL_1_RXC_DLL_BYPASS);
 
-I see. PMIC on the LCDK is not software configurable at all. I think
-what you have in the patch comment is already okay. More explanation
-wont harm though :)
+Jon, it looks to me you translated two following conditions:
+ci->id != BCMA_CHIP_ID_BCM47162
+and
+ci->id == BCMA_CHIP_ID_BCM47162
+into the same flag check:
+bgmac->feature_flags & BGMAC_FEAT_CLKCTLST
 
-Regards,
-Sekhar
+I don't think it's intentional, is it? Do you have a moment to fix this?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
