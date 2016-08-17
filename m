@@ -1,128 +1,56 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH V2 RFC 6/6] ARM: dts: bcm2835: Add Raspberry Pi Zero
-Date: Wed, 17 Aug 2016 21:11:28 +0200 (CEST)
-Message-ID: <1270178266.398560.152fe5dd-527b-4ad6-b2fd-e4b0af6bc2a9.open-xchange@email.1und1.de>
-References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
- <1469559213-16160-7-git-send-email-stefan.wahren@i2se.com>
- <722dafcb-2f67-88c7-69df-d442c56c058f@synopsys.com>
- <263309088.290419.51598113-17aa-4db0-9dc0-6e58e3fafe07.open-xchange@email.1und1.de>
- <ac20c0e9-0cab-7e3f-4abf-75223538a816@synopsys.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
+Date: Wed, 17 Aug 2016 14:25:00 -0500
+Message-ID: <57B4BA0C.2080602@codeaurora.org>
+References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
+ <20160804175541.GA2832@rob-hp-laptop> <57B220C0.3060608@codeaurora.org>
+ <CAL_JsqL5xk3mH=h-m8nU8xTYbRjgMWt3p7BzYWj6vBUq4OpqMg@mail.gmail.com>
+ <57B31780.5030106@codeaurora.org>
+ <f3a49762-aa66-1949-bd6b-77bd6a74acc1@linaro.org>
+ <57B3878D.1000805@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ac20c0e9-0cab-7e3f-4abf-75223538a816-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <57B3878D.1000805@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Al Stone <al.stone@linaro.org>, Rob Herring <robh@kernel.org>
+Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, Shanker Donthineni <shankerd@codeaurora.org>, Vikram Sethi <vikrams@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "Abdulhamid, Harb" <harba@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Timur Tabi wrote:
+>
+> The question, how should adpt->phy.version be initialized on device tree
+> and ACPI platforms?
+>
+> The reason why this is confusing is because there are conflicting
+> perspectives of this "internal PHY".  It both is and is not part of the
+> EMAC.  It is a separate block in the chip, and can be replaced with
+> other SGMII blocks, and in the future there will be a "v3" and maybe a
+> "v4" or who knows what.  In fact, maybe using version numbers is
+> inappropriate and we'll need to use vendor names or something.
+>
+> The problem is that the internal PHY has mechanism for
+> self-identification.  There is no ACPI or device tree node for it. There
+> is no register you can query to see if it's there or what version it
+> is.  The MAC part of the EMAC has no knowledge of the PHY part.  The
+> driver just has to know it's there.
+>
+> This is why I'm advocating a separate property (DT and ACPI) to identify
+> the internal PHY.
 
-> John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> hat am 17. August 2016 um 00:07
-> geschrieben:
-> 
-> 
-> On 8/16/2016 12:58 PM, Stefan Wahren wrote:
-> > Hi John,
-> > ...
-> > 
-> > like in host mode i took the default values in otg mode for the last two
-> > here
-> > (please refer to the logs). The BCM2835 datasheet isn't very helpful.
-> > 
-> > Do you have any suggestions for valid values or how to get them?
-> > 
-> 
-> The same values used in host-only mode should work.
-> 
-> It seems that the reset values for host-mode aren't being read
-> correctly with dr_mode == otg. I suspect this is the core reset and
-> force-mode delay problem.
-> 
-> Can you try with this patch series to see if you get the proper
-> values?
-> 
-> http://marc.info/?l=linux-kernel&m=145921907525708
-> 
-> This series fixes known issues, but it also breaks at least one
-> platform and I haven't had time to look at it properly yet.
+So we had some internal discussion on this.  Different compatible 
+properties for DT are okay, and for ACPI we'll either create a 
+"phy-version" property (DT-like properties are called DSDs in ACPI) or 
+use an HRV (a specific property for the hardware version).
 
-thanks. Yes, that seems to fix host fifo sizes for bcm2835. Here the log after
-applying patch 2 - 4 and removing all DT FIFO parameters (patch 1 has already
-been merged):
+But this speaks to the greater problem of mapping DT compatible strings 
+to ACPI.  Like I said, the ACPI equivalent of a compatible string is the 
+HID.  But unlike DT, we cannot create new HIDs whenever we feel like it. 
+  The process for generating and assigning HIDs is much more involved, 
+and we do have a very limited namespace.
 
-Linux raspberrypi 4.7.0-rc7-next-20160719+ #23 Wed Aug 17 18:15:24 UTC 2016
-armv6l
-
-[    2.290723] dwc2_lowlevel_hw_init()
-[    2.298123] dwc2_lowlevel_hw_enable()
-[    2.305451] dwc2_get_dr_mode()
-[    2.365040] dwc2_get_hwparams()
-[    2.371785] dwc2 20980000.usb: Core Release: 2.80a (snpsid=4f54280a)
-[    2.371801] dwc2 20980000.usb: hwcfg1=00000000
-[    2.371813] dwc2 20980000.usb: hwcfg2=228ddd50
-[    2.371823] dwc2 20980000.usb: hwcfg3=0ff000e8
-[    2.371833] dwc2 20980000.usb: hwcfg4=1ff00020
-[    2.371843] dwc2 20980000.usb: grxfsiz=00001000
-[    2.371853] dwc2 20980000.usb: Forcing mode to host
-[    2.371869] dwc2 20980000.usb: gnptxfsiz=01001000
-[    2.371880] dwc2 20980000.usb: hptxfsiz=02002000
-[    2.371890] dwc2 20980000.usb: Forcing mode to device
-[    2.423450] dwc2 20980000.usb: gnptxfsiz=00201000
-[    2.423468] dwc2 20980000.usb: Detected values from hardware:
-[    2.423480] dwc2 20980000.usb:   op_mode=0
-[    2.423490] dwc2 20980000.usb:   arch=2
-[    2.423500] dwc2 20980000.usb:   dma_desc_enable=0
-[    2.423511] dwc2 20980000.usb:   power_optimized=0
-[    2.423520] dwc2 20980000.usb:   i2c_enable=0
-[    2.423530] dwc2 20980000.usb:   hs_phy_type=1
-[    2.423540] dwc2 20980000.usb:   fs_phy_type=1
-[    2.423550] dwc2 20980000.usb:   utmi_phy_data_width=0
-[    2.423559] dwc2 20980000.usb:   num_dev_ep=7
-[    2.423570] dwc2 20980000.usb:   num_dev_perio_in_ep=0
-[    2.423579] dwc2 20980000.usb:   host_channels=8
-[    2.423590] dwc2 20980000.usb:   max_transfer_size=524287
-[    2.423601] dwc2 20980000.usb:   max_packet_count=1023
-[    2.423611] dwc2 20980000.usb:   nperio_tx_q_depth=0x4
-[    2.423621] dwc2 20980000.usb:   host_perio_tx_q_depth=0x4
-[    2.423631] dwc2 20980000.usb:   dev_token_q_depth=0x8
-[    2.423641] dwc2 20980000.usb:   enable_dynamic_fifo=1
-[    2.423651] dwc2 20980000.usb:   en_multiple_tx_fifo=1
-[    2.423661] dwc2 20980000.usb:   total_fifo_size=4080
-[    2.423671] dwc2 20980000.usb:   host_rx_fifo_size=4096
-[    2.423681] dwc2 20980000.usb:   host_nperio_tx_fifo_size=256
-[    2.423691] dwc2 20980000.usb:   host_perio_tx_fifo_size=512
-[    2.423699] dwc2 20980000.usb:
-[    2.423709] dwc2 20980000.usb: dwc2_set_parameters()
-[    2.423723] dwc2 20980000.usb: Setting dma_desc_fs_enable to 0
-[    2.423748] dwc2 20980000.usb: Setting external_id_pin_ctl to 0
-[    2.423760] dwc2 20980000.usb: Setting hibernation to 0
-[    2.423777] dwc2_force_dr_mode()
-[    2.430509] dwc2 20980000.usb: Clearing force mode bits
-[    2.499028] dwc2_gadget_init()
-[    2.505422] dwc2 20980000.usb: Specified GNPTXFDEP=1024 > 32
-[    2.514502] dwc2 20980000.usb: EPs: 8, dedicated fifos, 4080 entries in SPRAM
-[    2.542143] dwc2 20980000.usb: bound driver zero
-[    2.550164] dwc2_hcd_init()
-[    2.556602] dwc2 20980000.usb: DWC OTG Controller
-[    2.564878] dwc2 20980000.usb: new USB bus registered, assigned bus number 1
-[    2.575467] dwc2 20980000.usb: irq 33, io mem 0x00000000
-
-# cat /sys/kernel/debug/20980000.usb/fifo
-Non-periodic FIFOs:
-RXFIFO: Size 4096
-NPTXFIFO: Size 32, Start 0x00200000
-
-Periodic TXFIFOs:
-        DPTXFIFO 1: Size 512, Start 0x00001020
-        DPTXFIFO 2: Size 512, Start 0x00001220
-        DPTXFIFO 3: Size 512, Start 0x00001420
-        DPTXFIFO 4: Size 512, Start 0x00001620
-        DPTXFIFO 5: Size 512, Start 0x00001820
-        DPTXFIFO 6: Size 768, Start 0x00001a20
-        DPTXFIFO 7: Size 768, Start 0x00001d20
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
