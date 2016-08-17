@@ -1,54 +1,61 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v5 6/7] power: act8945a_charger: Add max current property
-Date: Wed, 17 Aug 2016 13:51:37 +0200
-Message-ID: <20160817115137.sldoet7dfxeusoxm@earth>
-References: <1471337998-6467-1-git-send-email-wenyou.yang@atmel.com>
- <1471337998-6467-7-git-send-email-wenyou.yang@atmel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] devicetree: Add vendor prefix for Shenzhen Sunchip
+ Technology Co., Ltd
+Date: Wed, 17 Aug 2016 07:48:40 -0500
+Message-ID: <CAL_Jsq+a04Btup8m=HkJ4ccmoCiYLT1B1habm76W21b9cTtmJA@mail.gmail.com>
+References: <20160812235312.GB10557@vip.cybercity.dk>
+ <bae6ad6c04f7567b224e008ab27b32d2dac1d9c1.1471125083.git.ccc94453@vip.cybercity.dk>
+ <20160816125624.GA20716@rob-hp-laptop>
+ <20160816182855.2hdupen4dcmczxiw@vip.cybercity.dk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pvyxxmfpsqa35p34"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1471337998-6467-7-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@atmel.com>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160816182855.2hdupen4dcmczxiw@vip.cybercity.dk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rask Ingemann Lambertsen <ccc94453@vip.cybercity.dk>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Aug 16, 2016 at 1:28 PM, Rask Ingemann Lambertsen
+<ccc94453@vip.cybercity.dk> wrote:
+> On Tue, Aug 16, 2016 at 07:56:24AM -0500, Rob Herring wrote:
+>> On Thu, Aug 11, 2016 at 10:11:51PM +0200, Rask Ingemann Lambertsen wrote:
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> > index 1992aa9..fbad2cea 100644
+>> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> > @@ -256,6 +256,7 @@ ste     ST-Ericsson
+>> >  stericsson ST-Ericsson
+>> >  syna       Synaptics Inc.
+>> >  synology   Synology, Inc.
+>> > +sunchip    Shenzhen Sunchip Technology Co., Ltd
+>> >  SUNW       Sun Microsystems, Inc
+>>
+>> These are not in alphabetical order. Maybe someone thought uppercase
+>> should be separate, but I don't. So please fix the ordering here moving
+>> SUNW before syna.
+>
+> I'm new to this, so I could use a bit of guidance here. Is it OK if I
+> send a follow-up patch to fix the ordering or should I send a patch to
+> fix the ordering first, before the sunchip prefix is added?
 
---pvyxxmfpsqa35p34
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+For this, just doing it all in one patch is fine. If you want to do 2
+patches, then fix SUNW first then add sunchip.
 
-Hi,
+> I never considered the possibility that the list wouldn't be in
+> alphabetical order to begin with, so the brain power went into deciding
+> if uppercase should be sorted separately.
 
-On Tue, Aug 16, 2016 at 04:59:57PM +0800, Wenyou Yang wrote:
-> Add the power supply's current max property,
-> POWER_SUPPLY_PROP_CURRENT_MAX.
+Even if uppercase is sorted after lowercase, you've got it in the wrong place.
 
-Please also switch chgin_level to gpiod API.
-
--- Sebastian
-
---pvyxxmfpsqa35p34
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXtE/JAAoJENju1/PIO/qaLwgP/RLAzaLDgmQ2Q0Rzkr/aEpOg
-7BCKO3T8I2uniVAhnAiX8UiO6TUgV6nglRJqkj3cCOW28UNd01gvlvKrxDBp/zRF
-4aR/CMhjceJExgjekEXXtP5Ae2nX5O4PVZL57c1mZQVMUb2KK1/9Nm98USZQZfA5
-YSBKXi7thfJ/wpFNT5b+3IphBkJrtnBOboquhDkPv+/TXYIYyGDQLl+fFcO196qa
-nouJfqVbWF2uztaPgjSMmUQBfezKbOQIEn0fPIyvnkM9QnTAE1lGK3PorGakxejE
-1tCquIp4GequcBizI/vZlwpTNSikg1bGQDNjNrd3+ux2raVydGRP5xM8hu5tmyzG
-OUrU1/iR8SECdk8UhkHS8i+5KTaxEzWkiIyCzicP/1Gw1KwXnn8n1olcQECLJcLS
-04Dt9XXAv5X6ue5uckCRDVzDbgONHPXN9BI4ugZtu/8s4aLLmQlzZ34IMO+BoM7Q
-9iYUxL/7tQUZa5/0OIIgSPRjj/h/VjxuhtuSXBH14rr7pv1VonsZ8/8ZEhAMdicG
-U5WF0oeEW6rvTz7r5PjJh+8pJjBRkkdMaG40m61ROid8u4w8PQagx9e4lrOpNZAh
-yJRIy2mF6Xg9785KD4wOI6NnNoXB9JyQP2unUfaQ2yDZKUwzaF3KLXAmCps7wBme
-QarjXF3g+cz2FoEWowKp
-=LMRf
------END PGP SIGNATURE-----
-
---pvyxxmfpsqa35p34--
+Rob
