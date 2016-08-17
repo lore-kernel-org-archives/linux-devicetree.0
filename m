@@ -1,38 +1,158 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/2] ARM: dts: r8a7790/r8a7791: Remove obsolete vsp1
- properties
-Date: Wed, 17 Aug 2016 09:22:58 +0200
-Message-ID: <20160817072257.GI8673@verge.net.au>
-References: <1471359392-12584-1-git-send-email-geert+renesas@glider.be>
- <1731850.1TRV7u0XMF@avalon>
+From: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
+Subject: Re: [PATCH 1/1] Add PPD device tree
+Date: Wed, 17 Aug 2016 09:34:25 +0200
+Message-ID: <f01a11ec-c5fe-8bde-ef3a-bdf240c5cc5b@collabora.co.uk>
+References: <1470403887-15190-1-git-send-email-fabien.lahoudere@collabora.co.uk>
+ <20160805133954.GC25152@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1731850.1TRV7u0XMF@avalon>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160805133954.GC25152@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 16, 2016 at 06:09:12PM +0300, Laurent Pinchart wrote:
-> Hi Geert,
-> 
-> On Tuesday 16 Aug 2016 16:56:30 Geert Uytterhoeven wrote:
-> > 	Hi Simon, Magnus, Laurent,
-> > 
-> > This patch series removes from the R-Car H2 and M2-W DT source files the
-> > obsolete DT properties to identify the exact VSP device instance
-> > features, which are no longer needed nor used since commit
-> > 5aa2eb3c86d4fd16 ("[media] v4l: vsp1: Configure device based on IP
-> > version").
-> 
-> I was about to submit the same patches :-)
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> > Geert Uytterhoeven (2):
-> >   ARM: dts: r8a7790: Remove obsolete vsp1 properties
-> >   ARM: dts: r8a7791: Remove obsolete vsp1 properties
+Hello,
 
-Thanks, I have queued these up.
+Thanks for your comments
+
+On 05/08/2016 15:39, Mark Rutland wrote:
+> On Fri, Aug 05, 2016 at 03:31:25PM +0200, Fabien Lahoudere wrote:
+>> +/*
+>> + * Hardware uses CKO2 at 24MHz at several places. Set the parent clock of
+>> + * CKO2 to OSC.
+>> + */
+>> +#define CKO2_CONFIGURATION \
+>> +	clock-frequency = <24000000>; \
+>> +	clocks = <&clks IMX5_CLK_CKO2>; \
+>> +	assigned-clocks = <&clks IMX5_CLK_CKO2_SEL>, <&clks IMX5_CLK_OSC>; \
+>> +	assigned-clock-parents = <&clks IMX5_CLK_OSC>
+>
+> This makes the DT harder to read.
+>
+> Please place these explicitly where used.
+>
+>> +
+>> +/ {
+>> +	model = "Freescale i.MX53 CPUV0 PPD rev6";
+>> +	compatible = "fsl,imx53-ppd", "fsl,imx53";
+>> +
+>> +	aliases {
+>> +		spi0 = &cspi;
+>> +		spi1 = &ecspi1;
+>> +		spi2 = &ecspi2;
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path = &uart1;
+>> +	};
+>
+> It would be good if you could also define the rate, using an alias if
+> necessary.
+>
+>> +
+>> +	memory {
+>> +		reg = <0x70000000 0x20000000>,
+>> +		      <0xb0000000 0x20000000>;
+>> +	};
+>> +
+>> +	clocks {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		cko2_11M: sgtl_clock_cko2 {
+>> +			compatible = "fixed-clock";
+>> +			#clock-cells = <0>;
+>> +			clock-frequency = <11289600>;
+>> +		};
+>> +	};
+>
+> Get rid of the clocks node, and place the clock directly under the root
+> node.
+>
+>> +
+>> +	regulators {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		reg_sgtl5k: regulator@0 {
+>> +			compatible = "regulator-fixed";
+>> +			reg = <0>;
+>> +			regulator-name = "reg-sgtl5k";
+>> +			regulator-min-microvolt = <3300000>;
+>> +			regulator-max-microvolt = <3300000>;
+>> +			regulator-always-on;
+>> +		};
+>
+> Likewise for these. Get rid of the regulators container node and place
+> these directly under the root node.
+>
+> Please don't make fake up reg and unit-address values. Just suffix the
+> node name, e.g. regulator-sgtl5k.
+>
+
+Ok for all above.
+
+>> +&ecspi1 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_ecspi1>;
+>> +	fsl,spi-num-chipselects = <4>;
+>> +	/* Fake this GPIO, this has special handling in userspace. */
+>
+> NAK. The DT should reflect reality, and should not be specific to a
+> given userspace.
+>
+>> +	cs-gpios = <&gpio5 1 GPIO_ACTIVE_LOW
+>> +		    &gpio4 10 GPIO_ACTIVE_LOW
+>> +		    &gpio4 11 GPIO_ACTIVE_LOW
+>> +		    &gpio4 12 GPIO_ACTIVE_LOW>;
+>> +	status = "okay";
+>> +
+>> +	spidev0: spi@0 {
+>> +		compatible = "spidev";
+>> +		reg = <0>;
+>> +		spi-max-frequency = <1000000>;
+>> +		status = "okay";
+>> +	};
+>> +
+>> +	spidev1: spi@1 {
+>> +		compatible = "spidev";
+>> +		reg = <1>;
+>> +		spi-max-frequency = <1000000>;
+>> +		status = "okay";
+>> +	};
+>> +
+>> +	spidev2: spi@2 {
+>> +		compatible = "spidev";
+>> +		reg = <2>;
+>> +		spi-max-frequency = <1000000>;
+>> +		status = "okay";
+>> +	};
+>> +
+>> +	spidev3: spi@3 {
+>> +		compatible = "spidev";
+>> +		reg = <3>;
+>> +		spi-max-frequency = <1000000>;
+>> +		status = "okay";
+>> +	};
+>> +};
+>
+> What are these SPI devices?
+>
+> Please fully describe them, with a complete compatible list.
+>
+> Thanks,
+> Mark.
+>
+I understand what you mean and I agree but spidev0 and spidev1 
+communicate with another micro with an OS (cortex M4) so it is ok if I 
+add 'compatible = "fsl,mk20fn1m0vmd12"' in the dts and in spidev.c ?
+
+The 2 other devices are EXAR xra1403 (gpio controller).
+
+-- 
+Fabien Lahoudere
+Collabora Ltd.
