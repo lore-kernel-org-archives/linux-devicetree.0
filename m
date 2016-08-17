@@ -1,76 +1,89 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH 1/2] input: misc: Add generic input driver to read encoded
- GPIO lines
-Date: Wed, 17 Aug 2016 12:12:24 +0530
-Message-ID: <f069755c-8312-c58a-2a52-9c56648299d8@ti.com>
-References: <20160812045229.29241-1-vigneshr@ti.com>
- <20160812045229.29241-2-vigneshr@ti.com>
- <20160812185947.GA14685@rob-hp-laptop>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 7/7] arm64: dts: exynos: Add dts file for Exynos5433-based
+ TM2E board
+Date: Wed, 17 Aug 2016 08:43:17 +0200
+Message-ID: <66f412cc-edc6-29f9-bc50-3f3d8eb69bf4@samsung.com>
+References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
+ <1471329328-26842-3-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160812185947.GA14685@rob-hp-laptop>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, John Stultz <john.stultz@linaro.org>, S Twiss <stwiss.opensource@diasemi.com>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, Moritz Fischer <moritz.fischer@ettus.com>, Daniel Hung-yu Wu <hywu@google.com>, Grant Grundler <grundler@chromium.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1471329328-26842-3-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: krzk@kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 08/16/2016 08:35 AM, Chanwoo Choi wrote:
+> This patcha adds the Device Tree source for Exynos5433-based Samsung TM2E
 
+s/patcha/patch/
 
-On Saturday 13 August 2016 12:29 AM, Rob Herring wrote:
-> On Fri, Aug 12, 2016 at 10:22:28AM +0530, Vignesh R wrote:
->> Add a driver to read group of GPIO lines and provide its status as a
->> numerical value as input event to the system. This will help in
->> intefacing devices, that can be connected over GPIOs, that provide input
->> to the system by driving GPIO lines connected to them like a rotary dial
->> or a switch.
->>
->> For example, a rotary switch can be connected to four GPIO lines. The
->> status of the GPIO lines reflect the actual position of the rotary
->> switch dial. For example, if dial points to 9, then the four GPIO lines
->> connected to the switch will read HLLH(0b'1001 = 9). This value
->> can be reported as an ABS_* event to the input subsystem.
->>
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
->> ---
->>  .../devicetree/bindings/input/gpio-decoder.txt     |  23 ++++
->>  drivers/input/misc/Kconfig                         |  12 ++
->>  drivers/input/misc/Makefile                        |   1 +
->>  drivers/input/misc/gpio_decoder.c                  | 128 +++++++++++++++++++++
->>  4 files changed, 164 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/input/gpio-decoder.txt
->>  create mode 100644 drivers/input/misc/gpio_decoder.c
->>
->> diff --git a/Documentation/devicetree/bindings/input/gpio-decoder.txt b/Documentation/devicetree/bindings/input/gpio-decoder.txt
->> new file mode 100644
->> index 000000000000..efd947f52cb3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/input/gpio-decoder.txt
->> @@ -0,0 +1,23 @@
->> +* GPIO Decoder DT bindings
->> +
->> +Required Properties:
->> +- compatible: should be "gpio-decoder"
->> +- gpios: a spec of gpios (atleast two) to be decoded to a number with
->> +  first entry representing the MSB.
->> +
->> +Optional Properties:
->> +- gpio-decoder,max-value: Maximum possible value that can be reported by
+> board. TM2E board is the most similiar with TM2 board. The exynos5433-tm2e.dts
+
+s/similiar/similar/
+
+> include the difference between TM2 and TM2E.
 > 
-> Just "decoder-max-value".
-
-Agreed. I will wait for any comments for the driver part, before sending
-the next version.
-
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
+> Signed-off-by: Joonyoung Shim <jy0922.shim@samsung.com>
+> Signed-off-by: Inki Dae <inki.dae@samsung.com>
+> Signed-off-by: Jonghwa Lee <jonghwa3.lee@samsung.com>
+> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
+> Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
+> Signed-off-by: Inha Song <ideal.song@samsung.com>
+> Signed-off-by: Ingi kim <ingi2.kim@samsung.com>
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  .../bindings/arm/samsung/samsung-boards.txt        |  1 +
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts     | 41 ++++++++++++++++++++++
+>  2 files changed, 42 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
 > 
-> With that, the binding looks fine to me:
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+> index c704b4bf6137..c1bda8d3674c 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+> @@ -16,6 +16,7 @@ Required root node properties:
+>  	- "samsung,smdk5410"	- for Exynos5410-based Samsung SMDK5410 eval board.
+>  	- "samsung,smdk5420"	- for Exynos5420-based Samsung SMDK5420 eval board.
+>  	- "samsung,tm2"		- for Exynos5333-based Samsung TM2 board.
+> +	- "samsung,tm2e"	- for Exynos5333-based Samsung TM2E board.
+>  	- "samsung,sd5v1"	- for Exynos5440-based Samsung board.
+>  	- "samsung,ssdk5440"	- for Exynos5440-based Samsung board.
+>  
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
+> new file mode 100644
+> index 000000000000..283b4fd19d5a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
+> @@ -0,0 +1,41 @@
+> +/*
+> + * SAMSUNG Exynos5433 TM2E board device tree source
+> + *
+> + * Copyright (c) 2016 Samsung Electronics Co., Ltd.
+> + *
+> + * Device tree source file for Samsung's TM2E(TM2 EDGE) board which is based on
+> + * Samsung Exynos5433 SoC.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include "exynos5433-tm2.dts"
+> +
 
-Thanks!
+Cool!
 
--- 
-Regards
-Vignesh
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+
+Best regards,
+Krzysztof
