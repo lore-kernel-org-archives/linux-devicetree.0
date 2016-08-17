@@ -1,188 +1,41 @@
-From: Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: [PATCH v10 0/3] [media] atmel-isc: add driver for Atmel ISC
-Date: Wed, 17 Aug 2016 14:05:26 +0800
-Message-ID: <1471413929-26008-1-git-send-email-songjun.wu@microchip.com>
+From: Songjun Wu <songjun.wu@microchip.com>
+Subject: [PATCH v10 2/3] [media] atmel-isc: DT binding for Image Sensor Controller driver
+Date: Wed, 17 Aug 2016 14:05:28 +0800
+Message-ID: <1471413929-26008-3-git-send-email-songjun.wu@microchip.com>
+References: <1471413929-26008-1-git-send-email-songjun.wu@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, =?UTF-8?q?Niklas=20S=C3=83=C2=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, =?UTF-8?q?Richard=20R=C3=B6jfors?= <richard-hy+oXTTr619xRVliYXHCzg@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Simon
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1471413929-26008-1-git-send-email-songjun.wu@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nicolas.ferre@atmel.com, robh@kernel.org
+Cc: laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, Songjun Wu <songjun.wu@microchip.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Image Sensor Controller driver includes three parts.
-1) Driver code to implement the ISC function.
-2) Device tree binding documentation, it describes how
-   to add the ISC in device tree.
-3) Add an entry to MAINTAINERS for Atmel ISC
+DT binding documentation for ISC driver.
 
-Test result with v4l-utils.
-# v4l2-compliance -f
-v4l2-compliance SHA   : not available
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Songjun Wu <songjun.wu@microchip.com>
+---
 
-Driver Infoatmel_isc f0008000.isc: Format 0xffffffff not found
-atmel_isc f0008000.isc: Format 0xffffffff not found
-
-        Driver name   : atmel_isc
-        Card type     : Atmel Image Sensor Controller
-        Bus info      : platform:atmel_isc f0008000.isc
-        Driver version: 4.7.0
-        Capabilities  : 0x84200001
-                Video Capture
-                Streaming
-                Extended Pix Format
-                Device Capabilities
-        Device Caps   : 0x04200001
-                Video Capture
-                Streaming
-                Extended Pix Format
-
-Compliance test for device /dev/video0 (not using libv4l2):
-
-Required ioctls:
-        test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-        test second video open: OK
-        test VIDIOC_QUERYCAP: OK
-        test VIDIOC_G/S_PRIORITY: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-        test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 1 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Test input 0:
-
-        Control ioctls:
-                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-                test VIDIOC_QUERYCTRL: OK (Not Supported)
-                test VIDIOC_G/S_CTRL: OK (Not Supported)
-                test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-                Standard Controls: 0 Private Controls: 0
-
-        Format ioctls:
-                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-                test VIDIOC_G/S_PARM: OK
-                test VIDIOC_G_FBUF: OK (Not Supported)
-                test VIDIOC_G_FMT: OK
-                test VIDIOC_TRY_FMT: OK
-                test VIDIOC_S_FMT: OK
-                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-                test Cropping: OK (Not Supported)
-                test Composing: OK (Not Supported)
-                test Scaling: OK (Not Supported)
-
-        Codec ioctls:
-                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-        Buffer ioctls:
-                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-                test VIDIOC_EXPBUF: OK
-
-Test input 0:
-
-Stream using all formats:
-        test MMAP for Format BA81, Frame Size 640x480-A9UFjWEnGtU@public.gmane.org Hz:
-                Stride 640, Field None: OK
-        test MMAP for Format YUYV, Frame Size 640x480-A9UFjWEnGtU@public.gmane.org Hz:
-                Stride 1280, Field None: OK
-
-Total: 45, Succeeded: 45, Failed: 0, Warnings: 0
-
-Changes in v10:
-- If 's_power' api does not exist in the sensor driver,
-  the function 'isc_open' will return a value of 0.
-
-Changes in v9:
-- Set the default format in fuction 'isc_async_complete'.
-- Register the video device after everything is configured.
-
-Changes in v8:
-- Power on the sensor on the first open in function
-  'isc_open'.
-- Power off the sensor on the last release in function
-  'isc_release'.
-- Remove the switch of the pipeline.
-
-Changes in v7:
-- Add enum_framesizes and enum_frameintervals.
-- Call s_stream(0) when stream start fail.
-- Fill the device_caps field of struct video_device
-  with V4L2_CAP_STREAMING and V4L2_CAP_VIDEO_CAPTURE.
-- Initialize the dev of struct vb2_queue.
-- Set field to FIELD_NONE if the pix field is not supported.
-- Return the result directly when call g/s_parm of subdev.
-
+Changes in v10: None
+Changes in v9: None
+Changes in v8: None
+Changes in v7: None
 Changes in v6:
 - Add "iscck" and "gck" to clock-names.
 
 Changes in v5:
-- Modify the macro definition and the related code.
 - Add clock-output-names.
 
 Changes in v4:
-- Modify the isc clock code since the dt is changed.
 - Remove the isc clock nodes.
 
 Changes in v3:
-- Add pm runtime feature.
-- Modify the isc clock code since the dt is changed.
 - Remove the 'atmel,sensor-preferred'.
 - Modify the isc clock node according to the Rob's remarks.
 
 Changes in v2:
-- Add "depends on COMMON_CLK" and "VIDEO_V4L2_SUBDEV_API"
-  in Kconfig file.
-- Correct typos and coding style according to Laurent's remarks
-- Delete the loop while in 'isc_clk_enable' function.
-- Replace 'hsync_active', 'vsync_active' and 'pclk_sample'
-  with 'pfe_cfg0' in struct isc_subdev_entity.
-- Add the code to support VIDIOC_CREATE_BUFS in
-  'isc_queue_setup' function.
-- Invoke isc_config to configure register in
-  'isc_start_streaming' function.
-- Add the struct completion 'comp' to synchronize with
-  the frame end interrupt in 'isc_stop_streaming' function.
-- Check the return value of the clk_prepare_enable
-  in 'isc_open' function.
-- Set the default format in 'isc_open' function.
-- Add an exit condition in the loop while in 'isc_config'.
-- Delete the hardware setup operation in 'isc_set_format'.
-- Refuse format modification during streaming
-  in 'isc_s_fmt_vid_cap' function.
-- Invoke v4l2_subdev_alloc_pad_config to allocate and
-  initialize the pad config in 'isc_async_complete' function.
-- Remove the '.owner  = THIS_MODULE,' in atmel_isc_driver.
-- Replace the module_platform_driver_probe() with
-  module_platform_driver().
 - Remove the unit address of the endpoint.
 - Add the unit address to the clock node.
 - Avoid using underscores in node names.
@@ -190,30 +43,80 @@ Changes in v2:
 - Modify the description of 'atmel,sensor-preferred'.
 - Add the description for the ISC internal clock.
 
-Songjun Wu (3):
-  [media] atmel-isc: add the Image Sensor Controller code
-  [media] atmel-isc: DT binding for Image Sensor Controller driver
-  MAINTAINERS: atmel-isc: add entry for Atmel ISC
-
- .../devicetree/bindings/media/atmel-isc.txt        |   65 +
- MAINTAINERS                                        |    8 +
- drivers/media/platform/Kconfig                     |    1 +
- drivers/media/platform/Makefile                    |    2 +
- drivers/media/platform/atmel/Kconfig               |    9 +
- drivers/media/platform/atmel/Makefile              |    1 +
- drivers/media/platform/atmel/atmel-isc-regs.h      |  165 +++
- drivers/media/platform/atmel/atmel-isc.c           | 1514 ++++++++++++++++++++
- 8 files changed, 1765 insertions(+)
+ .../devicetree/bindings/media/atmel-isc.txt        | 65 ++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/atmel-isc.txt
- create mode 100644 drivers/media/platform/atmel/Kconfig
- create mode 100644 drivers/media/platform/atmel/Makefile
- create mode 100644 drivers/media/platform/atmel/atmel-isc-regs.h
- create mode 100644 drivers/media/platform/atmel/atmel-isc.c
 
+diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Documentation/devicetree/bindings/media/atmel-isc.txt
+new file mode 100644
+index 0000000..bbe0e87c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
+@@ -0,0 +1,65 @@
++Atmel Image Sensor Controller (ISC)
++----------------------------------------------
++
++Required properties for ISC:
++- compatible
++	Must be "atmel,sama5d2-isc".
++- reg
++	Physical base address and length of the registers set for the device.
++- interrupts
++	Should contain IRQ line for the ISC.
++- clocks
++	List of clock specifiers, corresponding to entries in
++	the clock-names property;
++	Please refer to clock-bindings.txt.
++- clock-names
++	Required elements: "hclock", "iscck", "gck".
++- #clock-cells
++	Should be 0.
++- clock-output-names
++	Should be "isc-mck".
++- pinctrl-names, pinctrl-0
++	Please refer to pinctrl-bindings.txt.
++
++ISC supports a single port node with parallel bus. It should contain one
++'port' child node with child 'endpoint' node. Please refer to the bindings
++defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++isc: isc@f0008000 {
++	compatible = "atmel,sama5d2-isc";
++	reg = <0xf0008000 0x4000>;
++	interrupts = <46 IRQ_TYPE_LEVEL_HIGH 5>;
++	clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
++	clock-names = "hclock", "iscck", "gck";
++	#clock-cells = <0>;
++	clock-output-names = "isc-mck";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_isc_base &pinctrl_isc_data_8bit &pinctrl_isc_data_9_10 &pinctrl_isc_data_11_12>;
++
++	port {
++		isc_0: endpoint {
++			remote-endpoint = <&ov7740_0>;
++			hsync-active = <1>;
++			vsync-active = <0>;
++			pclk-sample = <1>;
++		};
++	};
++};
++
++i2c1: i2c@fc028000 {
++	ov7740: camera@21 {
++		compatible = "ovti,ov7740";
++		reg = <0x21>;
++		clocks = <&isc>;
++		clock-names = "xvclk";
++		assigned-clocks = <&isc>;
++		assigned-clock-rates = <24000000>;
++
++		port {
++			ov7740_0: endpoint {
++				remote-endpoint = <&isc_0>;
++			};
++		};
++	};
++};
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
