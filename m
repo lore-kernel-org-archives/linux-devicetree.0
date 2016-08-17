@@ -1,7 +1,7 @@
 From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v3 3/5] arm: dts: apq8084: Add thermal zones, tsens and qfprom nodes
-Date: Wed, 17 Aug 2016 10:48:46 +0530
-Message-ID: <1471411128-4002-4-git-send-email-rnayak@codeaurora.org>
+Subject: [PATCH v3 1/5] arm: dts: msm8974: Add thermal zones, tsens and qfprom nodes
+Date: Wed, 17 Aug 2016 10:48:44 +0530
+Message-ID: <1471411128-4002-2-git-send-email-rnayak@codeaurora.org>
 References: <1471411128-4002-1-git-send-email-rnayak@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1471411128-4002-1-git-send-email-rnayak@codeaurora.org>
@@ -16,14 +16,14 @@ Acked-by: Eduardo Valentin <edubezval@gmail.com>
 Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 ---
- arch/arm/boot/dts/qcom-apq8084.dtsi | 103 ++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 103 ++++++++++++++++++++++++++++++++++++
  1 file changed, 103 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
-index 7c2df06..39eb7a4 100644
---- a/arch/arm/boot/dts/qcom-apq8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
-@@ -94,6 +94,88 @@
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 561d4d1..255c61a 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -131,6 +131,88 @@
  		};
  	};
  
@@ -112,7 +112,7 @@ index 7c2df06..39eb7a4 100644
  	cpu-pmu {
  		compatible = "qcom,krait-pmu";
  		interrupts = <1 7 0xf04>;
-@@ -150,6 +232,27 @@
+@@ -287,6 +369,27 @@
  			reg = <0xf9011000 0x1000>;
  		};
  
