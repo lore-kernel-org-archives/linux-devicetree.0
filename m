@@ -1,56 +1,198 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH] dt-bindings: touchscreen: silead gsl1680: Document all
- compatibles
-Date: Wed, 17 Aug 2016 10:59:26 +0800
-Message-ID: <46861471402766@web24j.yandex.ru>
-References: <1471338091-3259-1-git-send-email-hdegoede@redhat.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] usb: phy: mxs: Add DT bindings to configure TX settings
+Date: Wed, 17 Aug 2016 11:40:13 +0800
+Message-ID: <20160817034013.GD25819@shlinux2>
+References: <0160614020657.GA25052@shlinux2>
+ <1471386708-26350-1-git-send-email-jaret.cantu@timesys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1471338091-3259-1-git-send-email-hdegoede@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1471386708-26350-1-git-send-email-jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgoxNi4wOC4yMDE2LCAxNzowNiwgIkhhbnMgZGUgR29lZGUiIDxoZGVnb2VkZUByZWRoYXQuY29t
-PjoKPiBUaGUgc2lsZWFkIGdzbDE2ODAgZHJpdmVyIC8gYmluZGluZyBzdXBwb3J0cyBhIHdob2xl
-IHNlcmllcyBvZiBkZXZpY2VzLAo+IGxpc3QgdGhlIGNvbXBhdGlibGVzIGZvciBhbGwgb2YgdGhl
-bSBpbiB0aGUgYmluZGluZy4KPgo+IFNpZ25lZC1vZmYtYnk6IEhhbnMgZGUgR29lZGUgPGhkZWdv
-ZWRlQHJlZGhhdC5jb20+Cj4gLS0tCj4gwqAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90
-b3VjaHNjcmVlbi9zaWxlYWRfZ3NsMTY4MC50eHQgfCA1ICsrKysrCj4gwqAxIGZpbGUgY2hhbmdl
-ZCwgNSBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2lucHV0L3RvdWNoc2NyZWVuL3NpbGVhZF9nc2wxNjgwLnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90b3VjaHNjcmVlbi9zaWxlYWRfZ3Ns
-MTY4MC50eHQKPiBpbmRleCAxMTEyZTBkLi4zN2E5MzcwIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90b3VjaHNjcmVlbi9zaWxlYWRfZ3NsMTY4
-MC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvdG91
-Y2hzY3JlZW4vc2lsZWFkX2dzbDE2ODAudHh0Cj4gQEAgLTIsNiArMiwxMSBAQAo+Cj4gwqBSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgo+IMKgLSBjb21wYXRpYmxlIDogInNpbGVhZCxnc2wxNjgwIgo+ICsg
-b3I6ICJzaWxlYWQsZ3NsMTY4OCIKPiArIG9yOiAic2lsZWFkLGdzbDM2NzAiCj4gKyBvcjogInNp
-bGVhZCxnc2wzNjc1Igo+ICsgb3I6ICJzaWxlYWQsZ3NsMzY5MiIKPiArIG9yOiAic2lsZWFkLG1z
-c2wxNjgwIgpJIHRoaW5rIOKAnG1zc2wxNjgwIiBpcyBvbmx5IGEgc3RyaW5nIHdoaWNoIGV4aXN0
-cyBpbiBBQ1BJIHRhYmxlcy4KSSBoYXZlIGRpc2Fzc2VtYmxlZCBvbmUgb2YgbXkgdGFibGV0LCB3
-aGljaCBpcyBzYWlkIHRvIGhhdmUgIk1TU0wxNjgwIiBpbiBpdCBpbgpBQ1BJIHRhYmxlIChhIEJh
-eVRyYWlsIHRhYmxldCkuIFdoYXQgSSBnb3QgaXMgYSBwbGFpbiBHU0wxNjgwLgpTbyBpdCBzaG91
-bGRuJ3QgZXhpc3QgaW4gdGhlIGNvbXBhdGlibGUgbGlzdC4KPiDCoC0gcmVnIDogSTJDIHNsYXZl
-IGFkZHJlc3Mgb2YgdGhlIGNoaXAgKDB4NDApCj4gwqAtIGludGVycnVwdC1wYXJlbnQgOiBhIHBo
-YW5kbGUgcG9pbnRpbmcgdG8gdGhlIGludGVycnVwdCBjb250cm9sbGVyCj4gwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHNlcnZpbmcgdGhl
-IGludGVycnVwdCBmb3IgdGhpcyBjaGlwCj4gLS0KPiAyLjcuNAo+Cj4gX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
-bAo=
+On Tue, Aug 16, 2016 at 06:31:48PM -0400, Jaret Cantu wrote:
+> The TX settings can be calibrated for particular hardware.  The
+> phy is reset by Linux, so this cannot be handled by the bootloader.
+> 
+> The TRM mentions that the maximum resistance should be used for the
+> DN/DP calibration in order to pass USB certification.
+> 
+> The values for the TX registers are poorly described in the TRM.
+> The meanings of the register values were taken from another
+> NXP-provided document:
+> https://community.nxp.com/message/566147#comment-566912
+> 
+> Signed-off-by: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+> ---
+> v4. Corrected tx-d-cal register value by rounding up.
+>     Changed Freescale web site reference to NXP.
+> 
+> v3. Added unit suffix (-ohms) to tx-cal-45-d*
+> 
+> v2. Copying devicetree list
+>     Removed prettifying extra whitespace
+>     Removed unnecessary register rewrite on resume
+>     Use min and max constants for clarity
+> 
+>  .../devicetree/bindings/phy/mxs-usb-phy.txt        |   10 ++++
+>  drivers/usb/phy/phy-mxs-usb.c                      |   61 ++++++++++++++++++++
+>  2 files changed, 71 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> index 379b84a..1d25b04 100644
+> --- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> @@ -12,6 +12,16 @@ Required properties:
+>  - interrupts: Should contain phy interrupt
+>  - fsl,anatop: phandle for anatop register, it is only for imx6 SoC series
+>  
+> +Optional properties:
+> +- fsl,tx-cal-45-dn-ohms: Integer [30-55]. Resistance (in ohms) of switchable
+> +  high-speed trimming resistor connected in parallel with the 45 ohm resistor
+> +  that terminates the DN output signal. Default: 45
+> +- fsl,tx-cal-45-dp-ohms: Integer [30-55]. Resistance (in ohms) of switchable
+> +  high-speed trimming resistor connected in parallel with the 45 ohm resistor
+> +  that terminates the DP output signal. Default: 45
+> +- fsl,tx-d-cal: Integer [79-119]. Current trimming value (as a percentage) of
+> +  the 17.78mA TX reference current. Default: 100
+> +
+>  Example:
+>  usbphy1: usbphy@020c9000 {
+>  	compatible = "fsl,imx6q-usbphy", "fsl,imx23-usbphy";
+> diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+> index 00bfea0..0e2f1a3 100644
+> --- a/drivers/usb/phy/phy-mxs-usb.c
+> +++ b/drivers/usb/phy/phy-mxs-usb.c
+> @@ -27,6 +27,7 @@
+>  #define DRIVER_NAME "mxs_phy"
+>  
+>  #define HW_USBPHY_PWD				0x00
+> +#define HW_USBPHY_TX				0x10
+>  #define HW_USBPHY_CTRL				0x30
+>  #define HW_USBPHY_CTRL_SET			0x34
+>  #define HW_USBPHY_CTRL_CLR			0x38
+> @@ -38,6 +39,10 @@
+>  #define HW_USBPHY_IP_SET			0x94
+>  #define HW_USBPHY_IP_CLR			0x98
+>  
+> +#define GM_USBPHY_TX_TXCAL45DP(x)            (((x) & 0xf) << 16)
+> +#define GM_USBPHY_TX_TXCAL45DN(x)            (((x) & 0xf) << 8)
+> +#define GM_USBPHY_TX_D_CAL(x)                (((x) & 0xf) << 0)
+> +
+>  #define BM_USBPHY_CTRL_SFTRST			BIT(31)
+>  #define BM_USBPHY_CTRL_CLKGATE			BIT(30)
+>  #define BM_USBPHY_CTRL_OTG_ID_VALUE		BIT(27)
+> @@ -115,6 +120,12 @@
+>   */
+>  #define MXS_PHY_NEED_IP_FIX			BIT(3)
+>  
+> +/* Minimum and maximum values for device tree entries */
+> +#define MXS_PHY_TX_CAL45_MIN			30
+> +#define MXS_PHY_TX_CAL45_MAX			55
+> +#define MXS_PHY_TX_D_CAL_MIN			79
+> +#define MXS_PHY_TX_D_CAL_MAX			119
+> +
+>  struct mxs_phy_data {
+>  	unsigned int flags;
+>  };
+> @@ -164,6 +175,8 @@ struct mxs_phy {
+>  	const struct mxs_phy_data *data;
+>  	struct regmap *regmap_anatop;
+>  	int port_id;
+> +	u32 tx_reg_set;
+> +	u32 tx_reg_mask;
+>  };
+>  
+>  static inline bool is_imx6q_phy(struct mxs_phy *mxs_phy)
+> @@ -185,6 +198,20 @@ static void mxs_phy_clock_switch_delay(void)
+>  	usleep_range(300, 400);
+>  }
+>  
+> +static void mxs_phy_tx_init(struct mxs_phy *mxs_phy)
+> +{
+> +	void __iomem *base = mxs_phy->phy.io_priv;
+> +	u32 phytx;
+> +
+> +	/* Update TX register if there is anything to write */
+> +	if (mxs_phy->tx_reg_mask) {
+> +		phytx = readl(base + HW_USBPHY_TX);
+> +		phytx &= ~mxs_phy->tx_reg_mask;
+> +		phytx |= mxs_phy->tx_reg_set;
+> +		writel(phytx, base + HW_USBPHY_TX);
+> +	}
+> +}
+> +
+>  static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+>  {
+>  	int ret;
+> @@ -214,6 +241,8 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+>  	if (mxs_phy->data->flags & MXS_PHY_NEED_IP_FIX)
+>  		writel(BM_USBPHY_IP_FIX, base + HW_USBPHY_IP_SET);
+>  
+> +	mxs_phy_tx_init(mxs_phy);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -459,6 +488,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
+>  	int ret;
+>  	const struct of_device_id *of_id;
+>  	struct device_node *np = pdev->dev.of_node;
+> +	u32 val;
+>  
+>  	of_id = of_match_device(mxs_phy_dt_ids, &pdev->dev);
+>  	if (!of_id)
+> @@ -491,6 +521,37 @@ static int mxs_phy_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	/* Precompute which bits of the TX register are to be updated, if any */
+> +	if (!of_property_read_u32(np, "fsl,tx-cal-45-dn-ohms", &val) &&
+> +	    val >= MXS_PHY_TX_CAL45_MIN && val <= MXS_PHY_TX_CAL45_MAX) {
+> +		/* Scale to a 4-bit value */
+> +		val = (MXS_PHY_TX_CAL45_MAX - val) * 0xF
+> +			/ (MXS_PHY_TX_CAL45_MAX - MXS_PHY_TX_CAL45_MIN);
+> +		mxs_phy->tx_reg_mask |= GM_USBPHY_TX_TXCAL45DN(~0);
+> +		mxs_phy->tx_reg_set  |= GM_USBPHY_TX_TXCAL45DN(val);
+> +	}
+> +
+> +	if (!of_property_read_u32(np, "fsl,tx-cal-45-dp-ohms", &val) &&
+> +	    val >= MXS_PHY_TX_CAL45_MIN && val <= MXS_PHY_TX_CAL45_MAX) {
+> +		/* Scale to a 4-bit value. */
+> +		val = (MXS_PHY_TX_CAL45_MAX - val) * 0xF
+> +			/ (MXS_PHY_TX_CAL45_MAX - MXS_PHY_TX_CAL45_MIN);
+> +		mxs_phy->tx_reg_mask |= GM_USBPHY_TX_TXCAL45DP(~0);
+> +		mxs_phy->tx_reg_set  |= GM_USBPHY_TX_TXCAL45DP(val);
+> +	}
+> +
+> +	if (!of_property_read_u32(np, "fsl,tx-d-cal", &val) &&
+> +	    val >= MXS_PHY_TX_D_CAL_MIN && val <= MXS_PHY_TX_D_CAL_MAX) {
+> +		/* Scale to a 4-bit value.  Round up the values and heavily
+> +		 * weight the rounding by adding 2/3 of the denominator.
+> +		 */
+> +		val = ((MXS_PHY_TX_D_CAL_MAX - val) * 0xF
+> +			+ (MXS_PHY_TX_D_CAL_MAX - MXS_PHY_TX_D_CAL_MIN) * 2/3)
+> +			/ (MXS_PHY_TX_D_CAL_MAX - MXS_PHY_TX_D_CAL_MIN);
+> +		mxs_phy->tx_reg_mask |= GM_USBPHY_TX_D_CAL(~0);
+> +		mxs_phy->tx_reg_set  |= GM_USBPHY_TX_D_CAL(val);
+> +	}
+> +
+>  	ret = of_alias_get_id(np, "usbphy");
+>  	if (ret < 0)
+>  		dev_dbg(&pdev->dev, "failed to get alias id, errno %d\n", ret);
+> -- 
+
+Acked-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+
+-- 
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
