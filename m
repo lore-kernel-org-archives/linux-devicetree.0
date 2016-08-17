@@ -1,49 +1,54 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: [PATCH v3 2/5] dt-bindings: sort Rockchip vop compatible by chip's
- number
-Date: Thu, 18 Aug 2016 14:15:18 -0700
-Message-ID: <1471554918-22353-1-git-send-email-seanpaul@chromium.org>
-References: <loom.20160602T085439-162@post.gmane.org>
+From: Rask Ingemann Lambertsen <ccc94453@vip.cybercity.dk>
+Subject: [PATCH v3 2/3] devicetree: Add vendor prefix for Shenzhen Sunchip
+ Technology Co., Ltd
+Date: Wed, 17 Aug 2016 23:32:22 +0200
+Message-ID: <8657d95d89daa3836d30ca390c49fb92eb263b16.1471553094.git.ccc94453@vip.cybercity.dk>
+References: <54da74da3f60ede0bf8fb789ffee584703e81a29.1471553094.git.ccc94453@vip.cybercity.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <loom.20160602T085439-162@post.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: tfiga@chromium.org, dri-devel@lists.freedesktop.org, mark.yao@rock-chips.com, robh@kernel.org, devicetree@vger.kernel.org
-Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <54da74da3f60ede0bf8fb789ffee584703e81a29.1471553094.git.ccc94453@vip.cybercity.dk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogTWFyayBZYW8gPG1hcmsueWFvQHJvY2stY2hpcHMuY29tPgoKUmVvcmRlciB0aGUgY29t
-cGF0aWJsZSB2b3AgZGV2aWNlcyB0byBiZSBzb3J0ZWQgYnkgY2hpcCBudW1iZXIKaW4gYXNjZW5k
-aW5nIG9yZGVyLgoKUmV2aWV3ZWQtYnk6IFRvbWFzeiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5vcmc+
-ClNpZ25lZC1vZmYtYnk6IE1hcmsgWWFvIDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KW3NlYW5w
-YXVsIGFkZGVkIGNvbW1pdCBkZXNjcmlwdGlvbiBwZXIgdGZpZ2EncyByZXZpZXddClNpZ25lZC1v
-ZmYtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3JnPgotLS0KClJlc2VuZGluZyB0
-byBhZGQgZGV2aWNldHJlZSBsaXN0CgpDaGFuZ2VzIGluIHYzOgoJLSBVcGRhdGVkIGNvbW1pdCBt
-ZXNzYWdlIChUb21hc3ogRmlnYSkKCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC12b3AudHh0IHwgMiArLQogMSBmaWxlIGNoYW5nZWQs
-IDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtdm9wLnR4dCBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tj
-aGlwLXZvcC50eHQKaW5kZXggNTQ4OWI1OS4uMTk2MTIxZiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtdm9wLnR4
-dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hp
-cC9yb2NrY2hpcC12b3AudHh0CkBAIC02LDggKzYsOCBAQCBidWZmZXIgdG8gYW4gZXh0ZXJuYWwg
-TENEIGludGVyZmFjZS4KIAogUmVxdWlyZWQgcHJvcGVydGllczoKIC0gY29tcGF0aWJsZTogdmFs
-dWUgc2hvdWxkIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5nCi0JCSJyb2NrY2hpcCxyazMyODgtdm9w
-IjsKIAkJInJvY2tjaGlwLHJrMzAzNi12b3AiOworCQkicm9ja2NoaXAscmszMjg4LXZvcCI7CiAK
-IC0gaW50ZXJydXB0czogc2hvdWxkIGNvbnRhaW4gYSBsaXN0IG9mIGFsbCBWT1AgSVAgYmxvY2sg
-aW50ZXJydXB0cyBpbiB0aGUKIAkJIG9yZGVyOiBWU1lOQywgTENEX1NZU1RFTS4gVGhlIGludGVy
-cnVwdCBzcGVjaWZpZXIKLS0gCjIuOC4wLnJjMy4yMjYuZzM5ZDQwMjAKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Shenzhen Sunchip Technology Co., Ltd produces TV boxes and TV dongles,
+some of which are sold under other brands. Website:
+<URL:http://www.sunchip-tech.com/>
+
+Signed-off-by: Rask Ingemann Lambertsen <ccc94453@vip.cybercity.dk>
+---
+
+Changes in v3:
+None.
+
+Changes in v2:
+No patch changes, but added CC to the ARM kernel mailing list.
+
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 69398cf..2ec157c 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -254,6 +254,7 @@ starry	Starry Electronic Technology (ShenZhen) Co., LTD
+ startek	Startek
+ ste	ST-Ericsson
+ stericsson	ST-Ericsson
++sunchip	Shenzhen Sunchip Technology Co., Ltd
+ SUNW	Sun Microsystems, Inc
+ syna	Synaptics Inc.
+ synology	Synology, Inc.
+-- 
+2.8.1
