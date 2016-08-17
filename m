@@ -1,242 +1,45 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Subject: [PATCH] Add Ingenic JZ4780 hardware RNG driver
-Date: Wed, 17 Aug 2016 21:05:51 +0530
-Message-ID: <1471448151-20850-1-git-send-email-prasannatsmkumar@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: mpm@selenic.com, herbert@gondor.apana.org.au, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, davem@davemloft.net, geert@linux-m68k.org, akpm@linux-foundation.org, gregkh@linuxfoundation.org, mchehab@kernel.org, linux@roeck-us.net, boris.brezillon@free-electrons.com, harvey.hunt@imgtec.com, alex.smith@imgtec.com, daniel.thompson@linaro.org, lee.jones@linaro.org, f.fainelli@gmail.com, kieran@ksquared.org.uk, krzk@kernel.org, joshua.henderson@microchip.com, yendapally.reddy@broadcom.com, narmstrong@baylibre.com, wangkefeng.wang@huawei.com, chunkeey@googlemail.com, noltari@gmail.com, linus.walleij@linaro.org, pankaj.dev@st.com, mathieu.poirier@linaro.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
-Cc: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [RFC 3/7] dt: bindings: Add nokia-bluetooth
+Date: Wed, 17 Aug 2016 17:54:52 +0200
+Message-ID: <20160817155452.GA14957@amd>
+References: <1471058078-5579-1-git-send-email-sre@kernel.org>
+ <1471058078-5579-4-git-send-email-sre@kernel.org>
+ <20160816135155.GA20948@rob-hp-laptop>
+ <20160816232855.qgempm64zgp36ufd@earth>
+ <CAL_JsqLcDzTZ++h+e7D-n0xbt7LgryK6jfGJDNEcAaU=Dn4b0w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLcDzTZ++h+e7D-n0xbt7LgryK6jfGJDNEcAaU=Dn4b0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Ville Tervo <ville.tervo-X3B1VOXEql0@public.gmane.org>, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for hardware random number generator present in
-JZ4780 SoC.
+Hi!
 
-Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
----
- .../devicetree/bindings/rng/ingenic,jz4780-rng.txt |  12 +++
- MAINTAINERS                                        |   5 +
- arch/mips/boot/dts/ingenic/jz4780.dtsi             |   7 +-
- drivers/char/hw_random/Kconfig                     |  14 +++
- drivers/char/hw_random/Makefile                    |   1 +
- drivers/char/hw_random/jz4780-rng.c                | 105 +++++++++++++++++++++
- 6 files changed, 143 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/rng/ingenic,jz4780-rng.txt
- create mode 100644 drivers/char/hw_random/jz4780-rng.c
+> >> > +  - reset-gpios:           Should specify the gpio for bluetooth reset
+> >> > +  - host-wakeup-gpios:             Should specify the gpio for host wakeup
+> >>
+> >> Should be interrupt instead?
+> >
+> > Yes this is mostly an interrupt, but I need to read the current
+> > line state.
+> 
+> When? If the interrupt is level triggered, then you can get the line
+> state based on whether you get an interrupt or not. If this needs to
+> be a wakeup source (see the wakeup source binding), then it needs to
+> be an interrupt.
 
-diff --git a/Documentation/devicetree/bindings/rng/ingenic,jz4780-rng.txt b/Documentation/devicetree/bindings/rng/ingenic,jz4780-rng.txt
-new file mode 100644
-index 0000000..03abf56
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rng/ingenic,jz4780-rng.txt
-@@ -0,0 +1,12 @@
-+Ingenic jz4780 RNG driver
-+
-+Required properties:
-+- compatible : Should be "ingenic,jz4780-rng"
-+- reg : Specifies base physical address and size of the registers.
-+
-+Example:
-+
-+rng: rng@100000D8 {
-+	compatible = "ingenic,jz4780-rng";
-+	reg = <0x100000D8 0x8>;
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 08e9efe..c0c66eb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6002,6 +6002,11 @@ M:	Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
- S:	Maintained
- F:	drivers/dma/dma-jz4780.c
- 
-+INGENIC JZ4780 HW RNG Driver
-+M:	PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-+S:	Maintained
-+F:	drivers/char/hw_random/jz4780-rng.c
-+
- INTEGRITY MEASUREMENT ARCHITECTURE (IMA)
- M:	Mimi Zohar <zohar@linux.vnet.ibm.com>
- M:	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index b868b42..f11d139 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -36,7 +36,7 @@
- 
- 	cgu: jz4780-cgu@10000000 {
- 		compatible = "ingenic,jz4780-cgu";
--		reg = <0x10000000 0x100>;
-+		reg = <0x10000000 0xD8>;
- 
- 		clocks = <&ext>, <&rtc>;
- 		clock-names = "ext", "rtc";
-@@ -44,6 +44,11 @@
- 		#clock-cells = <1>;
- 	};
- 
-+	rng: jz4780-rng@100000D8 {
-+		compatible = "ingenic,jz4780-rng";
-+		reg = <0x100000D8 0x8>;
-+	};
-+
- 	uart0: serial@10030000 {
- 		compatible = "ingenic,jz4780-uart";
- 		reg = <0x10030000 0x100>;
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 56ad5a59..c336fe8 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -294,6 +294,20 @@ config HW_RANDOM_POWERNV
- 
- 	  If unsure, say Y.
- 
-+config HW_RANDOM_JZ4780
-+	tristate "JZ4780 HW random number generator support"
-+	depends on MACH_INGENIC
-+	depends on HAS_IOMEM
-+	default HW_RANDOM
-+	---help---
-+	  This driver provides kernel-side support for the Random Number
-+	  Generator hardware found on JZ4780 SOCs.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called jz4780-rng.
-+
-+	  If unsure, say Y.
-+
- config HW_RANDOM_EXYNOS
- 	tristate "EXYNOS HW random number generator support"
- 	depends on ARCH_EXYNOS || COMPILE_TEST
-diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-index 04bb0b0..a155066 100644
---- a/drivers/char/hw_random/Makefile
-+++ b/drivers/char/hw_random/Makefile
-@@ -26,6 +26,7 @@ obj-$(CONFIG_HW_RANDOM_PSERIES) += pseries-rng.o
- obj-$(CONFIG_HW_RANDOM_POWERNV) += powernv-rng.o
- obj-$(CONFIG_HW_RANDOM_EXYNOS)	+= exynos-rng.o
- obj-$(CONFIG_HW_RANDOM_HISI)	+= hisi-rng.o
-+obj-$(CONFIG_HW_RANDOM_JZ4780)	+= jz4780-rng.o
- obj-$(CONFIG_HW_RANDOM_TPM) += tpm-rng.o
- obj-$(CONFIG_HW_RANDOM_BCM2835) += bcm2835-rng.o
- obj-$(CONFIG_HW_RANDOM_IPROC_RNG200) += iproc-rng200.o
-diff --git a/drivers/char/hw_random/jz4780-rng.c b/drivers/char/hw_random/jz4780-rng.c
-new file mode 100644
-index 0000000..c9d2cde
---- /dev/null
-+++ b/drivers/char/hw_random/jz4780-rng.c
-@@ -0,0 +1,105 @@
-+/*
-+ * jz4780-rng.c - Random Number Generator driver for J4780
-+ *
-+ * Copyright 2016 (C) PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-+ *
-+ * This file is licensed under  the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/hw_random.h>
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/platform_device.h>
-+#include <linux/err.h>
-+
-+#define REG_RNG_CTRL	0x0
-+#define REG_RNG_DATA	0x4
-+
-+struct jz4780_rng {
-+	struct device *dev;
-+	struct hwrng rng;
-+	void __iomem *mem;
-+};
-+
-+static u32 jz4780_rng_readl(struct jz4780_rng *rng, u32 offset)
-+{
-+	return readl(rng->mem + offset);
-+}
-+
-+static void jz4780_rng_writel(struct jz4780_rng *rng, u32 val, u32 offset)
-+{
-+	writel(val, rng->mem + offset);
-+}
-+
-+static int jz4780_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-+{
-+	struct jz4780_rng *jz4780_rng = container_of(rng, struct jz4780_rng,
-+							rng);
-+	u32 *data = buf;
-+	*data = jz4780_rng_readl(jz4780_rng, REG_RNG_DATA);
-+	return 4;
-+}
-+
-+static int jz4780_rng_probe(struct platform_device *pdev)
-+{
-+	struct jz4780_rng *jz4780_rng;
-+	struct resource *res;
-+	resource_size_t size;
-+	int ret;
-+
-+	jz4780_rng = devm_kzalloc(&pdev->dev, sizeof(struct jz4780_rng),
-+					GFP_KERNEL);
-+	if (!jz4780_rng)
-+		return -ENOMEM;
-+
-+	jz4780_rng->dev = &pdev->dev;
-+	jz4780_rng->rng.name = "jz4780";
-+	jz4780_rng->rng.read = jz4780_rng_read;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	size = resource_size(res);
-+
-+	jz4780_rng->mem = devm_ioremap(&pdev->dev, res->start, size);
-+	if (IS_ERR(jz4780_rng->mem))
-+		return PTR_ERR(jz4780_rng->mem);
-+
-+	platform_set_drvdata(pdev, jz4780_rng);
-+	jz4780_rng_writel(jz4780_rng, 1, REG_RNG_CTRL);
-+	ret = hwrng_register(&jz4780_rng->rng);
-+
-+	return ret;
-+}
-+
-+static int jz4780_rng_remove(struct platform_device *pdev)
-+{
-+	struct jz4780_rng *jz4780_rng = platform_get_drvdata(pdev);
-+
-+	jz4780_rng_writel(jz4780_rng, 0, REG_RNG_CTRL);
-+	hwrng_unregister(&jz4780_rng->rng);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id jz4780_rng_dt_match[] = {
-+	{ .compatible = "ingenic,jz4780-rng", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, jz4780_rng_dt_match);
-+
-+static struct platform_driver jz4780_rng_driver = {
-+	.driver		= {
-+		.name	= "jz4780-rng",
-+		.of_match_table = jz4780_rng_dt_match,
-+	},
-+	.probe		= jz4780_rng_probe,
-+	.remove		= jz4780_rng_remove,
-+};
-+module_platform_driver(jz4780_rng_driver);
-+
-+MODULE_DESCRIPTION("Ingenic JZ4780 H/W Random Number Generator driver");
-+MODULE_AUTHOR("PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>");
-+MODULE_LICENSE("GPL");
+What is wrong with GPIO? It is simply a piece of wire. Yes, we'll
+configure it to generate an interrupt, or maybe not, but that's
+software detail, the device tree just should not care....
+								Pavel
 -- 
-2.5.0
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
