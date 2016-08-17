@@ -1,72 +1,41 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 1/2] ARM: dts: rockchip: remove excess sd properties for firefly reload
-Date: Wed, 17 Aug 2016 16:10:09 +0200
-Message-ID: <19126716.OZv44ZHtAK@diego>
-References: <522097f6-8b5c-ee6d-c1b1-a63840228a0e@rock-chips.com> <35898684.O6p1GdTFI2@phil> <af99cf05-dfc7-1ae6-8d23-f33298b5f683@soulik.info>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/4] arm64: marvell: add support for the PIC and PMU
+Date: Wed, 17 Aug 2016 16:26:48 +0200
+Message-ID: <20160817162648.50eeeb83@free-electrons.com>
+References: <1470408921-447-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20160816141447.GQ3353@io.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <af99cf05-dfc7-1ae6-8d23-f33298b5f683@soulik.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ayaka <ayaka@soulik.info>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, mark.rutland@arm.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160816141447.GQ3353-fahSIxCzskDQ+YiMSub0/l6hYfS7NtTn@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Sonntag, 14. August 2016, 20:38:59 schrieb ayaka:
-> On 08/14/2016 08:30 PM, Heiko Stuebner wrote:
-> > Am Sonntag, 14. August 2016, 19:27:23 CEST schrieb Randy Li:
-> >> Because of a bug in hardware design, the sdcard at firefly
-> >> rk3288 reload board can't switch the io voltage level to 1.8v.
-> >> 
-> >> Signed-off-by: Randy Li <ayaka@soulik.info>
-> >> ---
-> >> 
-> >>   arch/arm/boot/dts/rk3288-firefly-reload.dts | 7 +------
-> >>   1 file changed, 1 insertion(+), 6 deletions(-)
-> >> 
-> >> diff --git a/arch/arm/boot/dts/rk3288-firefly-reload.dts
-> >> b/arch/arm/boot/dts/rk3288-firefly-reload.dts index 43145d1..a2b1f14
-> >> 100644
-> >> --- a/arch/arm/boot/dts/rk3288-firefly-reload.dts
-> >> +++ b/arch/arm/boot/dts/rk3288-firefly-reload.dts
-> >> @@ -202,18 +202,13 @@
-> >> 
-> >>   	bus-width = <4>;
-> >>   	cap-mmc-highspeed;
-> >>   	cap-sd-highspeed;
-> >> 
-> >> -	sd-uhs-sdr12;
-> >> -	sd-uhs-sdr25;
-> >> -	sd-uhs-sdr50;
-> >> -	sd-uhs-sdr104;
-> >> -	sd-uhs-ddr50;
-> >> 
-> >>   	card-detect-delay = <200>;
-> >>   	disable-wp;
-> >>   	num-slots = <1>;
-> >>   	pinctrl-names = "default";
-> >>   	pinctrl-0 = <&sdmmc_clk>, <&sdmmc_cmd>, <&sdmmc_cd>, <&sdmmc_bus4>;
-> >>   	vmmc-supply = <&vcc_sd>;
-> >> 
-> >> -	vqmmc-supply = <&vccio_sd>;
-> >> +	vqmmc-supply = <&vcc_sd>;
-> > 
-> > that looks wrong. vccio_sd is still the vqmmc supply in the schematics
-> > even
-> > though we don't want to switch to 1.8V . But that regulator should still
-> > be
-> 
-> I think the vccio_sd is just the one connected to the io_domains, but
-> the voltage source for the
-> pull up register is not vccio_sd but vcc_io.
+Hello,
 
-vqmmc-supply is the so called io-voltage according to the code and also the 
-jedec spec (VCCQ). And the sdmmc0_vdd that vccio_sd is connected to is exactly 
-that ... according to the rk3288 datasheet the "SDMMC0 Digital IO Power 
-Supply", so that connection is not only meaningful for the iodomains, but _is_ 
-an actual supply and if you turn off vccio_sd, you probably won't get any 
-sdmmc transfers at all ;-) .
+On Tue, 16 Aug 2016 14:14:47 +0000, Jason Cooper wrote:
 
-So yes, due to the resistor misheap vccio_sd should stay limited to 3.3V, but 
-its connection as vqmmc should stay.
+> Patches 1-3 applied to irqchip/mvebu64.  Patch 1 has Rob's Ack.
+
+Great, thanks! Did you fix the driver for the minor nit that you
+pointed out, or do you want a follow-up to fix that?
+
+> I assume you'll route the dtsi change through a separate branch.
+
+Yes, Gregory will take care of the .dtsi change, and pass it through
+mvebu and arm-soc.
+
+Thanks!
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
