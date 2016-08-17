@@ -1,134 +1,31 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: da850-lcdk: Audio support via simple-card
-Date: Wed, 17 Aug 2016 12:19:03 +0530
-Message-ID: <ab8b65ad-37aa-eee5-aca8-0163c460dfb9@ti.com>
-References: <20160810200853.24275-1-kbeldan@baylibre.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: r8a7794: add VSP1 support
+Date: Wed, 17 Aug 2016 09:05:02 +0200
+Message-ID: <20160817070501.GE8673@verge.net.au>
+References: <1618499.8bcj8adpVO@wasted.cogentembedded.com>
+ <2191193.axSzE4vSGB@wasted.cogentembedded.com>
+ <CAMuHMdV6D069J5-Z+qbUxTDrV=7kD_+wsEN_SvsZYoy3ONaDEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160810200853.24275-1-kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV6D069J5-Z+qbUxTDrV=7kD_+wsEN_SvsZYoy3ONaDEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Karl Beldan <karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Peter
+On Tue, Aug 16, 2016 at 10:07:05AM +0200, Geert Uytterhoeven wrote:
+> On Mon, Aug 15, 2016 at 11:52 PM, Sergei Shtylyov
+> <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> > Describe two instances (VSPS and VSPD0) of the VSP1 in the R8A7794 device
+> > tree.
+> >
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-On Thursday 11 August 2016 01:38 AM, Karl Beldan wrote:
-> The LCDK embeds a TLV320AIC3106 connected to the SoC McASP for analog
-> audio. This relies on the 'dummy' regulator as the codec is always on.
-> Quality is good with arecord -pipe- aplay on Line In/Line Out.
-> The MIC path doesn't seem to work yet.
-> 
-> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/da850-lcdk.dts | 75 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 75 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-> index dbcca0b..35b31d9 100644
-> --- a/arch/arm/boot/dts/da850-lcdk.dts
-> +++ b/arch/arm/boot/dts/da850-lcdk.dts
-> @@ -6,6 +6,7 @@
->  /dts-v1/;
->  #include "da850.dtsi"
->  #include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/sound/tlv320aic31xx-micbias.h>
->  
->  / {
->  	model = "DA850/AM1808/OMAP-L138 LCDK";
-> @@ -23,10 +24,50 @@
->  		device_type = "memory";
->  		reg = <0xc0000000 0x08000000>;
->  	};
-> +
-> +	sound {
-> +		compatible = "simple-audio-card";
-> +		simple-audio-card,name = "DA850/OMAP-L138 LCDK";
-> +		simple-audio-card,widgets =
-> +			"Microphone", "Mic Jack",
-> +			"Line", "Line In",
-> +			"Line", "Line Out";
-> +		simple-audio-card,routing =
-> +			"MIC3L", "Mic Jack",
-> +			"MIC3R", "Mic Jack",
-> +			"Mic Jack", "Mic Bias",
-> +			"LINE1L", "Line In",
-> +			"LINE1R", "Line In",
-> +			"Line Out", "LLOUT",
-> +			"Line Out", "RLOUT";
-> +		simple-audio-card,format = "dsp_b";
-> +		simple-audio-card,bitclock-master = <&link0_codec>;
-> +		simple-audio-card,frame-master = <&link0_codec>;
-> +		simple-audio-card,bitclock-inversion;
-> +
-> +		simple-audio-card,cpu {
-> +			sound-dai = <&mcasp0>;
-> +			system-clock-frequency = <24576000>;
-> +		};
-> +
-> +		link0_codec: simple-audio-card,codec {
-> +			sound-dai = <&tlv320aic3106>;
-> +			system-clock-frequency = <24576000>;
-> +		};
-> +	};
->  };
->  
->  &pmx_core {
->  	status = "okay";
-> +
-> +	mcasp0_pins: pinmux_mcasp0_pins {
-> +		pinctrl-single,bits = <
-> +			/* AHCLKX AFSX ACLKX */
-> +			0x00 0x00101010 0x00f0f0f0
-> +			/* ARX13 ARX14 */
-> +			0x04 0x00000110 0x00000ff0
-> +		>;
-> +	};
->  };
->  
->  &serial2 {
-> @@ -68,3 +109,37 @@
->  	cd-gpios = <&gpio 64 GPIO_ACTIVE_HIGH>;
->  	status = "okay";
->  };
-> +
-> +&i2c0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c0_pins>;
-> +	clock-frequency = <100000>;
-> +	status = "okay";
-> +
-> +	tlv320aic3106: tlv320aic3106@18 {
-> +		#sound-dai-cells = <0>;
-> +		compatible = "ti,tlv320aic3106";
-> +		reg = <0x18>;
-> +		status = "okay";
-> +
-> +		ai3x-micbias-vg = <MICBIAS_2_5V>;
-> +	};
-> +};
-> +
-> +&mcasp0 {
-> +	#sound-dai-cells = <0>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mcasp0_pins>;
-> +	status = "okay";
-> +
-> +	op-mode = <0>;   /* DAVINCI_MCASP_IIS_MODE */
-> +	tdm-slots = <2>;
-> +	serial-dir = <   /* 0: INACTIVE, 1: TX, 2: RX */
-> +		0 0 0 0
-> +		0 0 0 0
-> +		0 0 0 0
-> +		0 1 2 0
-> +	>;
-> +	tx-num-evt = <32>;
-> +	rx-num-evt = <32>;
-> +};
-> 
-
+Thanks, I have queued this up.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
