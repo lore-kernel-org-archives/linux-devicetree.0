@@ -1,102 +1,90 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 7/7] arm64: dts: exynos: Add dts file for Exynos5433-based
- TM2E board
-Date: Wed, 17 Aug 2016 16:37:18 +0900
-Message-ID: <57B4142E.30000@samsung.com>
-References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
- <1471329328-26842-3-git-send-email-cw00.choi@samsung.com>
- <CGME20160817064349epcas1p1d0b6da0e0e87788868bfcd63bfa92cf6@epcas1p1.samsung.com>
- <66f412cc-edc6-29f9-bc50-3f3d8eb69bf4@samsung.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt/bindings: arm-pl330: add description of
+ arm,pl330-periph-burst
+Date: Wed, 17 Aug 2016 16:11:03 +0800
+Message-ID: <55e596a0-4176-4277-40cc-1d26763a8be0@rock-chips.com>
+References: <1470365602-32586-1-git-send-email-shawn.lin@rock-chips.com>
+ <1470365602-32586-2-git-send-email-shawn.lin@rock-chips.com>
+ <20160805033410.GJ9681@localhost>
+ <ea3572fa-4bff-87db-d5ad-f406809f8296@rock-chips.com>
+ <0df0ab4f-0032-6487-2c30-b1ccd7d9ae62@metafoo.de>
+ <1d42542f-c43c-5c4b-01b7-ba0ca085004a@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <66f412cc-edc6-29f9-bc50-3f3d8eb69bf4@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: krzk@kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1d42542f-c43c-5c4b-01b7-ba0ca085004a-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Hi, Vinod and Lars-Peter
 
-On 2016년 08월 17일 15:43, Krzysztof Kozlowski wrote:
-> On 08/16/2016 08:35 AM, Chanwoo Choi wrote:
->> This patcha adds the Device Tree source for Exynos5433-based Samsung TM2E
-> 
-> s/patcha/patch/
+Ping.. Any better idea to share :)
 
-OK.
-
-> 
->> board. TM2E board is the most similiar with TM2 board. The exynos5433-tm2e.dts
-> 
-> s/similiar/similar/
-
-OK.
-
-> 
->> include the difference between TM2 and TM2E.
+On 2016/8/9 17:12, Shawn Lin wrote:
+> Hi Lars-Peter,
+>
+> 在 2016/8/9 16:39, Lars-Peter Clausen 写道:
+>> On 08/05/2016 09:25 AM, Shawn Lin wrote:
+>>> Hi Vinod,
+>>>
+>>> 在 2016/8/5 11:34, Vinod Koul 写道:
+>>>> On Fri, Aug 05, 2016 at 10:53:20AM +0800, Shawn Lin wrote:
+>>>>> This patch adds the "arm,pl330-periph-burst" for arm-pl330 to
+>>>>> support busrt mode.
+>>>>
+>>>> why should this be DT property. Only reason I can think of if some hw
+>>>> versions support this and some won't.
+>>>
+>>> yes, if we want to support burst mode, both of the master(pl330) and
+>>> client(several peripherals) should implement it, otherwise it will
+>>> be broken when enabling.
 >>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->> Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
->> Signed-off-by: Joonyoung Shim <jy0922.shim@samsung.com>
->> Signed-off-by: Inki Dae <inki.dae@samsung.com>
->> Signed-off-by: Jonghwa Lee <jonghwa3.lee@samsung.com>
->> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
->> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
->> Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
->> Signed-off-by: Inha Song <ideal.song@samsung.com>
->> Signed-off-by: Ingi kim <ingi2.kim@samsung.com>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
->> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> ---
->>  .../bindings/arm/samsung/samsung-boards.txt        |  1 +
->>  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts     | 41 ++++++++++++++++++++++
->>  2 files changed, 42 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
+>> As you said, it is up to the consumer peripheral whether it supports
+>> BURST,
+>> SINGLE or both. So this is a per client property, but you specify this
+>> as a
+>> a global property on the producer side.
+>
+> Thanks for comment.
+>
+> yup, but what is the proper way to add it ? :)
+>
+>
+> a) If pl330 support BURST as well as all the peripherals, we could
+> enable it.
+>
+> b) If pl300 support BURST, but all the peripherals don't support it,
+> we could not enable it.
+>
+> c) If pl300 support BURST, but not all the peripherals support it,
+> we also could not enable it.
+>
+> the burst feature of peripheral IP may be vendor-specific, but the
+> common driver for this peripheral are used for many many vendors which
+> means we could not check all of this info. It's very likely to break
+> them... I couldn't figure out how many upstreamed peripheral drivers
+> who are using pl300 either.
+>
+> So this check should be done by all this vendors but we could make
+> sure we don't break them before they check a), b), c), right?
+>
+>
 >>
->> diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
->> index c704b4bf6137..c1bda8d3674c 100644
->> --- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
->> +++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
->> @@ -16,6 +16,7 @@ Required root node properties:
->>  	- "samsung,smdk5410"	- for Exynos5410-based Samsung SMDK5410 eval board.
->>  	- "samsung,smdk5420"	- for Exynos5420-based Samsung SMDK5420 eval board.
->>  	- "samsung,tm2"		- for Exynos5333-based Samsung TM2 board.
->> +	- "samsung,tm2e"	- for Exynos5333-based Samsung TM2E board.
->>  	- "samsung,sd5v1"	- for Exynos5440-based Samsung board.
->>  	- "samsung,ssdk5440"	- for Exynos5440-based Samsung board.
->>  
->> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
->> new file mode 100644
->> index 000000000000..283b4fd19d5a
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
->> @@ -0,0 +1,41 @@
->> +/*
->> + * SAMSUNG Exynos5433 TM2E board device tree source
->> + *
->> + * Copyright (c) 2016 Samsung Electronics Co., Ltd.
->> + *
->> + * Device tree source file for Samsung's TM2E(TM2 EDGE) board which is based on
->> + * Samsung Exynos5433 SoC.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include "exynos5433-tm2.dts"
->> +
-> 
-> Cool!
-> 
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>
+>>
+>>
+>
+>
 
-Thanks for the review.
 
-Best regards,
-Chanwoo Choi
+-- 
+Best Regards
+Shawn Lin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
