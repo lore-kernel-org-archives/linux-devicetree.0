@@ -1,151 +1,165 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [RFC 3/7] dt: bindings: Add nokia-bluetooth
-Date: Wed, 17 Aug 2016 01:28:55 +0200
-Message-ID: <20160816232855.qgempm64zgp36ufd@earth>
-References: <1471058078-5579-1-git-send-email-sre@kernel.org>
- <1471058078-5579-4-git-send-email-sre@kernel.org>
- <20160816135155.GA20948@rob-hp-laptop>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 5/7] arm64: dts: exynos: Add dts files for Samsung
+ Exynos5433 64bit SoC
+Date: Wed, 17 Aug 2016 09:46:28 +0900
+Message-ID: <57B3B3E4.4020500@samsung.com>
+References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
+ <1471329328-26842-1-git-send-email-cw00.choi@samsung.com>
+ <CGME20160816102954epcas1p4480c2a31fc4bd51c396517a272c44b2c@epcas1p4.samsung.com>
+ <6afa2f9c-147a-89d1-1806-b465c5a18c95@samsung.com>
+ <57B30E2E.3090506@samsung.com> <20160816175149.GA14206@kozik-lap>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gqolknfnakynch3i"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160816135155.GA20948@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Ville Tervo <ville.tervo@iki.fi>, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Pavel Machek <pavel@ucw.cz>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, ivo.g.dimitrov.75@gmail.com, linux-bluetooth@vger.kernel.org, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20160816175149.GA14206@kozik-lap>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, krzk@kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Krzysztof,
 
---gqolknfnakynch3i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2016년 08월 17일 02:51, Krzysztof Kozlowski wrote:
+> On Tue, Aug 16, 2016 at 09:59:26PM +0900, Chanwoo Choi wrote:
+>>>> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
+>>>> new file mode 100644
+>>>> index 000000000000..175121db367e
+>>>> --- /dev/null
+>>>> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
+>>>> @@ -0,0 +1,306 @@
+>>>> +/*
+>>>> + * Device tree sources for Exynos5433 thermal zone
+>>>> + *
+>>>> + * Copyright (c) 2016 Chanwoo Choi <cw00.choi@samsung.com>
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or modify
+>>>> + * it under the terms of the GNU General Public License version 2 as
+>>>> + * published by the Free Software Foundation.
+>>>> + */
+>>>> +
+>>>> +#include <dt-bindings/thermal/thermal.h>
+>>>> +
+>>>> +/ {
+>>>> +thermal-zones {
+>>>> +	atlas0_thermal: atlas0-thermal {
+>>>> +		thermal-sensors = <&tmu_atlas0>;
+>>>> +		polling-delay-passive = <0>;
+>>>> +		polling-delay = <0>;
+>>>> +		trips {
+>>>> +			atlas0_alert_0: atlas0-alert-0 {
+>>>> +				temperature = <50000>;	/* millicelsius */
+>>>> +				hysteresis = <1000>;	/* millicelsius */
+>>>> +				type = "active";
+>>>> +			};
+>>>> +			atlas0_alert_1: atlas0-alert-1 {
+>>>> +				temperature = <55000>;	/* millicelsius */
+>>>> +				hysteresis = <1000>;	/* millicelsius */
+>>>> +				type = "active";
+>>>> +			};
+>>>> +			atlas0_alert_2: atlas0-alert-2 {
+>>>> +				temperature = <60000>;	/* millicelsius */
+>>>> +				hysteresis = <1000>;	/* millicelsius */
+>>>> +				type = "active";
+>>>> +			};
+>>>> +			atlas0_alert_3: atlas0-alert-3 {
+>>>> +				temperature = <70000>;	/* millicelsius */
+>>>> +				hysteresis = <1000>;	/* millicelsius */
+>>>> +				type = "active";
+>>>> +			};
+>>>> +			atlas0_alert_4: atlas0-alert-4 {
+>>>> +				temperature = <80000>;	/* millicelsius */
+>>>> +				hysteresis = <1000>;	/* millicelsius */
+>>>> +				type = "active";
+>>>> +			};
+>>>> +			atlas0_alert_5: atlas0-alert-5 {
+>>>> +				temperature = <90000>;	/* millicelsius */
+>>>> +				hysteresis = <1000>;	/* millicelsius */
+>>>> +				type = "active";
+>>>> +			};
+>>>> +			atlas0_alert_6: atlas0-alert-6 {
+>>>> +				temperature = <95000>;	/* millicelsius */
+>>>> +				hysteresis = <1000>;	/* millicelsius */
+>>>> +				type = "active";
+>>>> +			};
+>>>
+>>> No critical trip? I think it might be useful to shutdown the system in a
+>>> user-friendly way.
+>>
+>> When I use the critical trip, the following event occur[1].
+>> But, I guess that this temperature is not correct temperature
+>> because after completing the kernel booting, the temperature of big.LITTLE/G3D
+>> are normal when checking the /sys/class/thermal/thermal_zoneX/temp right after booting.
+>> - Maintain a uniform temperature(38 ~ 45 millicelsius) right after kernel booting.
+>>
+>> I guess that the critical interrupt may occur before initializing the exynos tmu.
+>> But, I don't spend the many time to check the exynos-tmu.c driver.
+>>
+>> [1]
+>> [  445.122122] thermal thermal_zone0: critical temperature reached(108 C),shutting down
+>> [  445.122399] exynos-tmu 10060000.tmu: Temperature sensor ID: 0xa
+>> [  445.122588] exynos-tmu 10060000.tmu: Calibration type is 2-point calibration
+>> [  445.127942] reboot: Failed to start orderly shutdown: forcing the issue
+>> [  445.134586] Emergency Sync complete
+>> [    1.097954] reboot: Power down
+> 
+> I understand. Apparently the exynos-tmu driver needs some fixes for
+> this race. Skipping critical then makes sense.
+> 
+>>
+>>>
+>>>> +		};
+>>>> +
+>>>> +		cooling-maps {
+>>>> +			map0 {
+>>>> +				/* Set maximum frequency as 1800MHz  */
+>>>> +				trip = <&atlas0_alert_0>;
+>>>> +				cooling-device = <&cpu4 1 1>;
+>>>
+>>> Out of curiosity: why choosing specific cooling level (so quite fast
+>>> the device will slow down) instead of letting cooling framework to
+>>> decide how much to cool? Any particular reason behind this?
+>>
+>> This cooling level is just default value in cooling-maps.
+>> This value is able to overwrite on dts file. 
+>>
+>> And the thermal subsystem support the cpu cooling features
+>> with 'cooling-maps'.
+>>
+>> Also, when I tested the performance and stress test
+>> with GLBenchmark, the temperature of big.LITTLE cores/G3D
+>> reach easily the critical temperature with 8 online cores.
+>> So, I add the cooling level aggressively to protect
+>> the system fault of CPU and GPU and to maintain
+>> the system state.
+> 
+> I was asking why you do not let cooling framework decide which cooling
+> level to use but instead you force a specific cooling level. Maybe code
+> will be a better example. Why not use:
+> 			map0 {
+> 				/* Set maximum frequency as 1800MHz  */
+> 				trip = <&atlas0_alert_0>;
+> 				cooling-device = <&cpu4 0 1>;
+> 			}
+> 			map1 {
+> 				/* Set maximum frequency as 1700MHz  */
+> 				trip = <&atlas0_alert_1>;
+> 				cooling-device = <&cpu4 1 2>;
+> 			};
+> 
+> For higher frequencies it makes even more sense:
+> 			map6 {
+> 				/* Set maximum frequency as 800MHz  */
+> 				trip = <&atlas0_alert_6>;
+> 				cooling-device = <&cpu4 7 11>;
+> 			};
+> 
+> which allows the system to use suitable cooling level to maintain the
+> balance between performance and temperature dissipance, instead of some
+> fixed cooling level which might not be accurate to the system load.
 
-Hi Rob,
+Ah. I misunderstand of your question. OK. I'll expand the range of
+cooling level as you suggested.
 
-On Tue, Aug 16, 2016 at 08:51:55AM -0500, Rob Herring wrote:
-> On Sat, Aug 13, 2016 at 05:14:34AM +0200, Sebastian Reichel wrote:
-> > ---
-> >  .../devicetree/bindings/net/nokia-bluetooth.txt    | 43 ++++++++++++++=
-++++++++
-> >  1 file changed, 43 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/net/nokia-bluetoo=
-th.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/net/nokia-bluetooth.txt =
-b/Documentation/devicetree/bindings/net/nokia-bluetooth.txt
-> > new file mode 100644
-> > index 000000000000..a0fceabb4cce
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/nokia-bluetooth.txt
-> > @@ -0,0 +1,43 @@
-> > +Nokia bluetooth UART devices
-> > +------
-> > +
-> > +Some vendors have custom versions of their chips, that can be found in=
- Nokia
-> > +devices. These chips are controlled differently, than the non-Nokia ve=
-rsion,
-> > +so a different binding is required. All chips listed here implement th=
-e Nokia
-> > +H4+ protocol.
-> > +
-> > +Required properties:
-> > +
-> > +  - compatible: should be one of the following:
-> > +	* "nokia,brcm,bcm2048"
-> > +	* "nokia,ti,wl1271-bluetooth"
->=20
-> Perhaps these should be 2 separate strings. Something like=20
-> '"nokia,n900-bt", "brcm,bcm2048"'. However, if they are in no way=20
-> compatible with the default version from the vendors, then just a single=
-=20
-> string is fine, but it doesn't need to be aligned to the vendor=20
-> compatible string. So just "nokia,n900-bcm2048" or similar is fine.
-
-The default bcm2048 variant uses different initialization process
-and does not use word alignment as far as I know. I think having
-"brcm,bcm2048" in the compatible string is wrong.
-
-I guess "brcm,bcm2048-nokia" would also be an option, since the
-chip has been built buy broadcom, but it has a custom Nokia
-interface.
-
-> > +  - reset-gpios:		Should specify the gpio for bluetooth reset
-> > +  - host-wakeup-gpios:		Should specify the gpio for host wakeup
->=20
-> Should be interrupt instead?
-
-Yes this is mostly an interrupt, but I need to read the current
-line state.
-
-> > +  - bluetooth-wakeup-gpios:	Should specify the gpio for bluetooth wake=
-up
->=20
-> State direction and active state for gpios.
-
-ok.
-
-> > +  - clock-names:		Should be "sysclk"
-> > +  - clocks:			Should contain a clock phandle for system clock
-> > +
-> > +Example:
-> > +
-> > +/ {
-> > +	/* controlled (enabled/disabled) directly by wl1271 */
-> > +	vctcxo: vctcxo {
-> > +		compatible =3D "fixed-clock";
-> > +		#clock-cells =3D <0>;
-> > +		clock-frequency =3D <38400000>;
-> > +	};
-> > +};
-> > +
-> > +&uart2 {
->=20
-> I want to see a common serial device binding doc before accepting any=20
-> device bindings. It's not going to say much initially other than devices=
-=20
-> are child nodes of uarts. Perhaps something on baudrate settings.
-
-Neil added a short sentence about this in "[RFC 2/7] tty: add
-support for "tty slave" devices". I just took the unmodified patch
-=66rom Neil (*), so it's not in its own patch.
-
-> > +	bluetooth {
-> > +		compatible =3D "nokia,ti,wl1271-bluetooth";
-> > +
-> > +		reset-gpios =3D <&gpio1 26 GPIO_ACTIVE_HIGH>; /* 26 */
-> > +		host-wakeup-gpios =3D <&gpio4 5 GPIO_ACTIVE_HIGH>; /* 101 */
-> > +		bluetooth-wakeup-gpios =3D <&gpio2 5 GPIO_ACTIVE_HIGH>; /* 37 */
-> > +
-> > +		clocks =3D <&vctcxo>;
-> > +		clock-names =3D "sysclk";
-> > +	};
-> > +
-> > +};
-
--- Sebastian
-
---gqolknfnakynch3i
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXs6G0AAoJENju1/PIO/qaBjgP/3NyQR71NcKE8H7e5PalXd5P
-eC4y9TDx92CP3bQK5sHt1LBrt5v5R3oi7ddUB5tQNi6w431CZlaDUf22SlqhWap3
-sZUhHCMJS1ulTtaNMDY2egxtB9YDlYc5iudZaFIzidbiMno0go1E3YPlNVY/HSYC
-rmqcvQhEEx9CqntQEaVPb+cEQFaMPYYQ7AuQWg4kK8lYcZ0UesHDeu9Je1OO10wn
-OiHPho5zBcnc7Yut+1uDq0AUCGOAjIPsxQsdvZQy3K5VHZ+zE/lPGAT8wikq9tF1
-jc75ZnlIPrt+yd3kShCPXH0qfLBDvwJ9xWaimYeGOQWwRJl4BbQn5jzz1yIsZF7w
-Cyn0lwM4xN/OYGsHQz2aY0+f6cw6d9qgut3Ky7Z/0nbmw+TwDL/WuA9a0SB8aD4g
-RZnaYMczXwGCsWqE7rrQ9z5PLl+X2BVezOBravQf80m+Eh1KEFoyFX8X+GQyHVNh
-/cA3FZDSkdcnyoo8ASy9+M+gb0m/QeuMo60GbsTIe5f/CjfTAlcLMLzpKWTeZLhK
-6bGooSx7THMv7MRW3fbV6Wzj3AUYyZzqj64hes6mWmyNuUdqClKmBZFj1tr3kTc2
-76OXDXUluZXTQz5go1MmkyoQo0yNRDTMzvG2kObCWFzP9Zsv2RO9F5U4ug/wfQgi
-GayHKqcsj8A/Fbusa3ey
-=6SXu
------END PGP SIGNATURE-----
-
---gqolknfnakynch3i--
+Best Regards,
+Chanwoo Choi
