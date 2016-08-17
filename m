@@ -1,61 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] devicetree: Add vendor prefix for Shenzhen Sunchip
- Technology Co., Ltd
-Date: Wed, 17 Aug 2016 07:48:40 -0500
-Message-ID: <CAL_Jsq+a04Btup8m=HkJ4ccmoCiYLT1B1habm76W21b9cTtmJA@mail.gmail.com>
-References: <20160812235312.GB10557@vip.cybercity.dk>
- <bae6ad6c04f7567b224e008ab27b32d2dac1d9c1.1471125083.git.ccc94453@vip.cybercity.dk>
- <20160816125624.GA20716@rob-hp-laptop>
- <20160816182855.2hdupen4dcmczxiw@vip.cybercity.dk>
+From: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: davinci_all_defconfig: enable modules for sound
+ on LCDK
+Date: Wed, 17 Aug 2016 13:01:06 +0000
+Message-ID: <20160817130106.GA21333@gobelin>
+References: <20160810200853.24275-1-kbeldan@baylibre.com>
+ <20160810200853.24275-2-kbeldan@baylibre.com>
+ <52f428a2-7818-5f3a-bb66-70e2eaa63e7a@ti.com>
+ <20160817101331.GA8009@gobelin>
+ <388d5e63-ff82-ca88-c60a-24ad87700afd@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160816182855.2hdupen4dcmczxiw@vip.cybercity.dk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rask Ingemann Lambertsen <ccc94453@vip.cybercity.dk>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <388d5e63-ff82-ca88-c60a-24ad87700afd-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Karl Beldan <karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 16, 2016 at 1:28 PM, Rask Ingemann Lambertsen
-<ccc94453@vip.cybercity.dk> wrote:
-> On Tue, Aug 16, 2016 at 07:56:24AM -0500, Rob Herring wrote:
->> On Thu, Aug 11, 2016 at 10:11:51PM +0200, Rask Ingemann Lambertsen wrote:
->> >
->> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> > index 1992aa9..fbad2cea 100644
->> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> > @@ -256,6 +256,7 @@ ste     ST-Ericsson
->> >  stericsson ST-Ericsson
->> >  syna       Synaptics Inc.
->> >  synology   Synology, Inc.
->> > +sunchip    Shenzhen Sunchip Technology Co., Ltd
->> >  SUNW       Sun Microsystems, Inc
->>
->> These are not in alphabetical order. Maybe someone thought uppercase
->> should be separate, but I don't. So please fix the ordering here moving
->> SUNW before syna.
->
-> I'm new to this, so I could use a bit of guidance here. Is it OK if I
-> send a follow-up patch to fix the ordering or should I send a patch to
-> fix the ordering first, before the sunchip prefix is added?
+On Wed, Aug 17, 2016 at 04:08:03PM +0530, Sekhar Nori wrote:
+> On Wednesday 17 August 2016 03:43 PM, Karl Beldan wrote:
+> > On Wed, Aug 17, 2016 at 02:20:51PM +0530, Sekhar Nori wrote:
+> >> On Thursday 11 August 2016 01:38 AM, Karl Beldan wrote:
+> >>> This is the minimal set of additional modules required to support audio
+> >>> on the LCDK.
+> >>>
+> >>> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> >>
+> >> This patch does not apply because Kevin already added some missing audio
+> >> modules through commit "ARM: davinci_all_defconfig: enable DA850 audio
+> >> as modules"
+> >>
+> >> Can you please rebase on master branch of my tree[1] and resend?
+> >>
+> > 
+> > I checked out your tree.
+> > With Kevin's patch the needed modules get selected without needing 2/2.
+> > 
+> > However I don't know why he used:
+> >  CONFIG_SND_DA850_SOC_EVM=m
+> > instead of: 
+> >  CONFIG_SND_DAVINCI_SOC_MCASP=m
+> >  CONFIG_SND_SOC_TLV320AIC3X=m
+> > The former seems to me to be pre-DT style config. I used the latter in
+> > 2/2 and thought that's what we'd start switching to ? Unless it is for
+> > pre-DT compatibility ?
+> 
+> I don't think this is related to DT. As you said,
+> CONFIG_SND_DA850_SOC_EVM selects CONFIG_SND_DAVINCI_SOC_MCASP and
+> CONFIG_SND_SOC_TLV320AIC3X anyway.
+> 
+> To be honest, I am okay either way. Copying Peter to see if he has any
+> preference.
+> 
 
-For this, just doing it all in one patch is fine. If you want to do 2
-patches, then fix SUNW first then add sunchip.
+Ok, I dropped 2/2 in v2 which will rely on Kevin's change.
 
-> I never considered the possibility that the list wouldn't be in
-> alphabetical order to begin with, so the brain power went into deciding
-> if uppercase should be sorted separately.
-
-Even if uppercase is sorted after lowercase, you've got it in the wrong place.
-
-Rob
+Rgds, 
+Karl
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
