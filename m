@@ -1,124 +1,105 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Subject: Re: [PATCH V2 RFC 6/6] ARM: dts: bcm2835: Add Raspberry Pi Zero
-Date: Wed, 17 Aug 2016 14:21:30 -0700
-Message-ID: <badc3aa5-29ac-9b8c-2531-564c44b60030@synopsys.com>
+Date: Thu, 18 Aug 2016 00:17:18 +0200 (CEST)
+Message-ID: <85508461.401578.b150078c-11e6-4a32-b9b6-f40bf8417708.open-xchange@email.1und1.de>
 References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
  <1469559213-16160-7-git-send-email-stefan.wahren@i2se.com>
  <722dafcb-2f67-88c7-69df-d442c56c058f@synopsys.com>
  <263309088.290419.51598113-17aa-4db0-9dc0-6e58e3fafe07.open-xchange@email.1und1.de>
  <ac20c0e9-0cab-7e3f-4abf-75223538a816@synopsys.com>
  <1270178266.398560.152fe5dd-527b-4ad6-b2fd-e4b0af6bc2a9.open-xchange@email.1und1.de>
+ <badc3aa5-29ac-9b8c-2531-564c44b60030@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1270178266.398560.152fe5dd-527b-4ad6-b2fd-e4b0af6bc2a9.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
+In-Reply-To: <badc3aa5-29ac-9b8c-2531-564c44b60030-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/17/2016 12:11 PM, Stefan Wahren wrote:
-> Hi,
-> 
->> John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> hat am 17. August 2016 um 00:07
->> geschrieben:
->>
->>
->> On 8/16/2016 12:58 PM, Stefan Wahren wrote:
->>> Hi John,
->>> ...
->>>
->>> like in host mode i took the default values in otg mode for the last two
->>> here
->>> (please refer to the logs). The BCM2835 datasheet isn't very helpful.
->>>
->>> Do you have any suggestions for valid values or how to get them?
->>>
->>
->> The same values used in host-only mode should work.
->>
->> It seems that the reset values for host-mode aren't being read
->> correctly with dr_mode == otg. I suspect this is the core reset and
->> force-mode delay problem.
->>
->> Can you try with this patch series to see if you get the proper
->> values?
->>
->> http://marc.info/?l=linux-kernel&m=145921907525708
->>
->> This series fixes known issues, but it also breaks at least one
->> platform and I haven't had time to look at it properly yet.
-> 
-> thanks. Yes, that seems to fix host fifo sizes for bcm2835. Here the log after
-> applying patch 2 - 4 and removing all DT FIFO parameters (patch 1 has already
-> been merged):
-> 
-> Linux raspberrypi 4.7.0-rc7-next-20160719+ #23 Wed Aug 17 18:15:24 UTC 2016
-> armv6l
-> 
-> [    2.290723] dwc2_lowlevel_hw_init()
-> [    2.298123] dwc2_lowlevel_hw_enable()
-> [    2.305451] dwc2_get_dr_mode()
-> [    2.365040] dwc2_get_hwparams()
-> [    2.371785] dwc2 20980000.usb: Core Release: 2.80a (snpsid=4f54280a)
-> [    2.371801] dwc2 20980000.usb: hwcfg1=00000000
-> [    2.371813] dwc2 20980000.usb: hwcfg2=228ddd50
-> [    2.371823] dwc2 20980000.usb: hwcfg3=0ff000e8
-> [    2.371833] dwc2 20980000.usb: hwcfg4=1ff00020
-> [    2.371843] dwc2 20980000.usb: grxfsiz=00001000
-> [    2.371853] dwc2 20980000.usb: Forcing mode to host
-> [    2.371869] dwc2 20980000.usb: gnptxfsiz=01001000
-> [    2.371880] dwc2 20980000.usb: hptxfsiz=02002000
-> [    2.371890] dwc2 20980000.usb: Forcing mode to device
-> [    2.423450] dwc2 20980000.usb: gnptxfsiz=00201000
-> [    2.423468] dwc2 20980000.usb: Detected values from hardware:
-> [    2.423480] dwc2 20980000.usb:   op_mode=0
-> [    2.423490] dwc2 20980000.usb:   arch=2
-> [    2.423500] dwc2 20980000.usb:   dma_desc_enable=0
-> [    2.423511] dwc2 20980000.usb:   power_optimized=0
-> [    2.423520] dwc2 20980000.usb:   i2c_enable=0
-> [    2.423530] dwc2 20980000.usb:   hs_phy_type=1
-> [    2.423540] dwc2 20980000.usb:   fs_phy_type=1
-> [    2.423550] dwc2 20980000.usb:   utmi_phy_data_width=0
-> [    2.423559] dwc2 20980000.usb:   num_dev_ep=7
-> [    2.423570] dwc2 20980000.usb:   num_dev_perio_in_ep=0
-> [    2.423579] dwc2 20980000.usb:   host_channels=8
-> [    2.423590] dwc2 20980000.usb:   max_transfer_size=524287
-> [    2.423601] dwc2 20980000.usb:   max_packet_count=1023
-> [    2.423611] dwc2 20980000.usb:   nperio_tx_q_depth=0x4
-> [    2.423621] dwc2 20980000.usb:   host_perio_tx_q_depth=0x4
-> [    2.423631] dwc2 20980000.usb:   dev_token_q_depth=0x8
-> [    2.423641] dwc2 20980000.usb:   enable_dynamic_fifo=1
-> [    2.423651] dwc2 20980000.usb:   en_multiple_tx_fifo=1
-> [    2.423661] dwc2 20980000.usb:   total_fifo_size=4080
-> [    2.423671] dwc2 20980000.usb:   host_rx_fifo_size=4096
-> [    2.423681] dwc2 20980000.usb:   host_nperio_tx_fifo_size=256
-> [    2.423691] dwc2 20980000.usb:   host_perio_tx_fifo_size=512
-> [    2.423699] dwc2 20980000.usb:
-> [    2.423709] dwc2 20980000.usb: dwc2_set_parameters()
-> [    2.423723] dwc2 20980000.usb: Setting dma_desc_fs_enable to 0
-> [    2.423748] dwc2 20980000.usb: Setting external_id_pin_ctl to 0
-> [    2.423760] dwc2 20980000.usb: Setting hibernation to 0
-> [    2.423777] dwc2_force_dr_mode()
-> [    2.430509] dwc2 20980000.usb: Clearing force mode bits
-> [    2.499028] dwc2_gadget_init()
-> [    2.505422] dwc2 20980000.usb: Specified GNPTXFDEP=1024 > 32
-> [    2.514502] dwc2 20980000.usb: EPs: 8, dedicated fifos, 4080 entries in SPRAM
-> [    2.542143] dwc2 20980000.usb: bound driver zero
-> [    2.550164] dwc2_hcd_init()
-> [    2.556602] dwc2 20980000.usb: DWC OTG Controller
-> [    2.564878] dwc2 20980000.usb: new USB bus registered, assigned bus number 1
-> [    2.575467] dwc2 20980000.usb: irq 33, io mem 0x00000000
-> 
+Hi John,
 
-Ok, yeah, that seems better.
+> John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> hat am 17. August 2016 um 23:21
+> geschrieben:
+> 
+> 
+> ...
+> Ok, yeah, that seems better.
+> 
+> Can you check if applying just patch 2 and 3 solves the issue? If so I
+> think we can send those upstream.
 
-Can you check if applying just patch 2 and 3 solves the issue? If so I
-think we can send those upstream.
+unfortunately not:
 
-Regards,
-John
+[    2.280719] dwc2_lowlevel_hw_init()
+[    2.288028] dwc2_set_all_params()
+[    2.295162] dwc2_lowlevel_hw_enable()
+[    2.302439] dwc2_get_dr_mode()
+[    2.309043] dwc2_core_reset_and_force_dr_mode()
+[    2.489040] dwc2_get_hwparams()
+[    2.495629] dwc2 20980000.usb: Core Release: 2.80a (snpsid=4f54280a)
+[    2.495645] dwc2 20980000.usb: hwcfg1=00000000
+[    2.495657] dwc2 20980000.usb: hwcfg2=228ddd50
+[    2.495668] dwc2 20980000.usb: hwcfg3=0ff000e8
+[    2.495680] dwc2 20980000.usb: hwcfg4=1ff00020
+[    2.495691] dwc2 20980000.usb: grxfsiz=00001000
+[    2.495701] dwc2 20980000.usb: Forcing mode to host
+[    2.539076] dwc2 20980000.usb: gnptxfsiz=00201000
+[    2.539090] dwc2 20980000.usb: hptxfsiz=00000000
+[    2.589054] dwc2 20980000.usb: gnptxfsiz=00201000
+[    2.589071] dwc2 20980000.usb: Detected values from hardware:
+[    2.589082] dwc2 20980000.usb:   op_mode=0
+[    2.589093] dwc2 20980000.usb:   arch=2
+[    2.589104] dwc2 20980000.usb:   dma_desc_enable=0
+[    2.589115] dwc2 20980000.usb:   power_optimized=0
+[    2.589125] dwc2 20980000.usb:   i2c_enable=0
+[    2.589134] dwc2 20980000.usb:   hs_phy_type=1
+[    2.589144] dwc2 20980000.usb:   fs_phy_type=1
+[    2.589154] dwc2 20980000.usb:   utmi_phy_data_width=0
+[    2.589164] dwc2 20980000.usb:   num_dev_ep=7
+[    2.589174] dwc2 20980000.usb:   num_dev_perio_in_ep=0
+[    2.589183] dwc2 20980000.usb:   host_channels=8
+[    2.589195] dwc2 20980000.usb:   max_transfer_size=524287
+[    2.589206] dwc2 20980000.usb:   max_packet_count=1023
+[    2.589216] dwc2 20980000.usb:   nperio_tx_q_depth=0x4
+[    2.589226] dwc2 20980000.usb:   host_perio_tx_q_depth=0x4
+[    2.589236] dwc2 20980000.usb:   dev_token_q_depth=0x8
+[    2.589247] dwc2 20980000.usb:   enable_dynamic_fifo=1
+[    2.589257] dwc2 20980000.usb:   en_multiple_tx_fifo=1
+[    2.589267] dwc2 20980000.usb:   total_fifo_size=4080
+[    2.589277] dwc2 20980000.usb:   host_rx_fifo_size=4096
+[    2.589287] dwc2 20980000.usb:   host_nperio_tx_fifo_size=32
+[    2.589299] dwc2 20980000.usb:   host_perio_tx_fifo_size=0
+[    2.589307] dwc2 20980000.usb:
+[    2.589312] dwc2_set_parameters()
+[    2.595921] dwc2 20980000.usb: dwc2_set_parameters()
+[    2.595940] dwc2 20980000.usb: Setting dma_desc_fs_enable to 0
+[    2.595968] dwc2 20980000.usb: Setting external_id_pin_ctl to 0
+[    2.595980] dwc2 20980000.usb: Setting hibernation to 0
+[    2.596003] dwc2 20980000.usb: 256 invalid for host_nperio_tx_fifo_size.
+Check HW configuration.
+[    2.611528] dwc2 20980000.usb: Setting host_nperio_tx_fifo_size to 32
+[    2.611552] dwc2 20980000.usb: 512 invalid for host_perio_tx_fifo_size. Check
+HW configuration.
+[    2.627250] dwc2 20980000.usb: Setting host_perio_tx_fifo_size to 0
+[    2.627256] dwc2_force_dr_mode()
+[    2.749035] dwc2_gadget_init()
+[    2.755610] dwc2 20980000.usb: Specified GNPTXFDEP=1024 > 32
+[    2.764876] dwc2 20980000.usb: EPs: 8, dedicated fifos, 4080 entries in SPRAM
+[    2.792911] dwc2 20980000.usb: bound driver zero
+[    2.801042] dwc2_hcd_init()
+[    2.807485] dwc2 20980000.usb: DWC OTG Controller
+[    2.815716] dwc2 20980000.usb: new USB bus registered, assigned bus number 1
+[    2.826265] dwc2 20980000.usb: irq 33, io mem 0x00000000
+
+Regards
+Stefan
+
+> 
+> Regards,
+> John
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
