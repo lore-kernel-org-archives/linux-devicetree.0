@@ -1,51 +1,51 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2] dt-bindings: touchscreen: silead gsl1680: Document all
- compatibles
-Date: Wed, 17 Aug 2016 10:59:00 +0200
-Message-ID: <1471424340-4201-1-git-send-email-hdegoede@redhat.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v5 0/5] da8xx USB PHY platform devices and clocks (was
+ "da8xx UBS clocks")
+Date: Wed, 17 Aug 2016 15:05:15 +0530
+Message-ID: <57B42FD3.50004@ti.com>
+References: <1462837612-7803-1-git-send-email-david@lechnology.com>
+ <57431E73.5030304@lechnology.com> <57458A0A.5010100@ti.com>
+ <CAOi56cWCZioi=qU-iaLvCfh-EmbPh4pwwTJ5tDK+9qfv5+8WuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOi56cWCZioi=qU-iaLvCfh-EmbPh4pwwTJ5tDK+9qfv5+8WuQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>
+Cc: David Lechner <david@lechnology.com>, petr@barix.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, devicetree <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The silead gsl1680 driver / binding supports a whole series of devices,
-list the compatibles for all of them in the binding.
+Hi Kevin,
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
--Drop the "silead,mssl1680" compatible thing, the "mssl1680" name is an
- ACPI thing and does not belong in the dt bindings
----
- .../devicetree/bindings/input/touchscreen/silead_gsl1680.txt          | 4 ++++
- 1 file changed, 4 insertions(+)
+On Saturday 13 August 2016 02:54 AM, Kevin Hilman wrote:
+> On Wed, May 25, 2016 at 6:18 AM, Sekhar Nori <nsekhar@ti.com> wrote:
+>> On Monday 23 May 2016 08:44 PM, David Lechner wrote:
+>>> On 05/09/2016 06:46 PM, David Lechner wrote:
+>>>> v5 changes: renamed "usbphy" to "usb_phy" or "usb-phy" as appropriate
+>>>>
+> 
+> [...]
+> 
+>>>
+>>> What should I be doing to keep this moving along?
+>>
+>> We need the related driver changes to be applied first. I could then use
+>> an immutable branch to push the platform changes against.
+>>
+>> I did take a look at the patches and they look good to me. Except the
+>> one comment from Sergei which I just now indicated that I agree with.
+> 
+> Just checking on the status of this.  I'm not seeing the driver
+> changes in mainline yet.
+> 
+> Any update?
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-index b0eca54..ad7f41a 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-@@ -2,6 +2,10 @@
- 
- Required properties:
- - compatible		  : "silead,gsl1680"
-+			or: "silead,gsl1688"
-+			or: "silead,gsl3670"
-+			or: "silead,gsl3675"
-+			or: "silead,gsl3692"
- - reg			  : I2C slave address of the chip (0x40)
- - interrupt-parent	  : a phandle pointing to the interrupt controller
- 			    serving the interrupt for this chip
--- 
-2.7.4
+phy driver is already merged which actually introduced a compilation error. The
+fix for it is currently queued in linux-phy -fixes and it should be merged in
+this -rc cycle.
+I think it would be better if David Lechner re-spins the series re-based on top
+of latest mainline kernel and then merged by Bin/Alan.
+
+Thanks
+Kishon
