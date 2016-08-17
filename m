@@ -1,105 +1,74 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH V2 RFC 6/6] ARM: dts: bcm2835: Add Raspberry Pi Zero
-Date: Thu, 18 Aug 2016 00:17:18 +0200 (CEST)
-Message-ID: <85508461.401578.b150078c-11e6-4a32-b9b6-f40bf8417708.open-xchange@email.1und1.de>
-References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
- <1469559213-16160-7-git-send-email-stefan.wahren@i2se.com>
- <722dafcb-2f67-88c7-69df-d442c56c058f@synopsys.com>
- <263309088.290419.51598113-17aa-4db0-9dc0-6e58e3fafe07.open-xchange@email.1und1.de>
- <ac20c0e9-0cab-7e3f-4abf-75223538a816@synopsys.com>
- <1270178266.398560.152fe5dd-527b-4ad6-b2fd-e4b0af6bc2a9.open-xchange@email.1und1.de>
- <badc3aa5-29ac-9b8c-2531-564c44b60030@synopsys.com>
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
+Date: Wed, 17 Aug 2016 17:32:23 -0500
+Message-ID: <57B4E5F7.9040500@codeaurora.org>
+References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
+ <20160804175541.GA2832@rob-hp-laptop> <57B220C0.3060608@codeaurora.org>
+ <CAL_JsqL5xk3mH=h-m8nU8xTYbRjgMWt3p7BzYWj6vBUq4OpqMg@mail.gmail.com>
+ <57B31780.5030106@codeaurora.org>
+ <f3a49762-aa66-1949-bd6b-77bd6a74acc1@linaro.org>
+ <57B3878D.1000805@codeaurora.org>
+ <ff901f77-2177-52a7-2464-2f61495f91be@gmail.com>
+ <57B4C6EE.3080903@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <badc3aa5-29ac-9b8c-2531-564c44b60030-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <57B4C6EE.3080903-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shanker Donthineni <shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vikram Sethi <vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gilad Avidov <gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Lino Sanfilippo <LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "Abdulhamid, Harb" <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi John,
+Timur Tabi wrote:
+>>
+>> Nothing prevents you from detailing in ACPI or DT sub-components of a
+>> larger HW block, if there is such a desire, but just make it in a way
+>> that it looks like what would be done for e.g: separate discrete parts,
+>> only the parenting of nodes would change.
+>
+> So instead of just having a single property, instead create a child node
+> just for the SGMII phy, with its own compatible string and various other
+> properties (like interrupt and base register)?  That's not a bad idea.
 
-> John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> hat am 17. August 2016 um 23:21
-> geschrieben:
-> 
-> 
-> ...
-> Ok, yeah, that seems better.
-> 
-> Can you check if applying just patch 2 and 3 solves the issue? If so I
-> think we can send those upstream.
+I need help getting this to work.
 
-unfortunately not:
+	emac0: ethernet@38800000 {
+		compatible = "qcom,qdf2432-emac";
+		reg-names = "base", "csr";
+                 reg = <0x0 0x38800000 0x0 0x10000 >,
+                         <0x0 0x38816000 0x0 0x1000>,
+                         <0x0 0x3881C000 0x0 0x4000>;
+		interrupts = <0 0x100 0 0 0x104 0>;
+		interrupt-names = "core0", "sgmii";
 
-[    2.280719] dwc2_lowlevel_hw_init()
-[    2.288028] dwc2_set_all_params()
-[    2.295162] dwc2_lowlevel_hw_enable()
-[    2.302439] dwc2_get_dr_mode()
-[    2.309043] dwc2_core_reset_and_force_dr_mode()
-[    2.489040] dwc2_get_hwparams()
-[    2.495629] dwc2 20980000.usb: Core Release: 2.80a (snpsid=4f54280a)
-[    2.495645] dwc2 20980000.usb: hwcfg1=00000000
-[    2.495657] dwc2 20980000.usb: hwcfg2=228ddd50
-[    2.495668] dwc2 20980000.usb: hwcfg3=0ff000e8
-[    2.495680] dwc2 20980000.usb: hwcfg4=1ff00020
-[    2.495691] dwc2 20980000.usb: grxfsiz=00001000
-[    2.495701] dwc2 20980000.usb: Forcing mode to host
-[    2.539076] dwc2 20980000.usb: gnptxfsiz=00201000
-[    2.539090] dwc2 20980000.usb: hptxfsiz=00000000
-[    2.589054] dwc2 20980000.usb: gnptxfsiz=00201000
-[    2.589071] dwc2 20980000.usb: Detected values from hardware:
-[    2.589082] dwc2 20980000.usb:   op_mode=0
-[    2.589093] dwc2 20980000.usb:   arch=2
-[    2.589104] dwc2 20980000.usb:   dma_desc_enable=0
-[    2.589115] dwc2 20980000.usb:   power_optimized=0
-[    2.589125] dwc2 20980000.usb:   i2c_enable=0
-[    2.589134] dwc2 20980000.usb:   hs_phy_type=1
-[    2.589144] dwc2 20980000.usb:   fs_phy_type=1
-[    2.589154] dwc2 20980000.usb:   utmi_phy_data_width=0
-[    2.589164] dwc2 20980000.usb:   num_dev_ep=7
-[    2.589174] dwc2 20980000.usb:   num_dev_perio_in_ep=0
-[    2.589183] dwc2 20980000.usb:   host_channels=8
-[    2.589195] dwc2 20980000.usb:   max_transfer_size=524287
-[    2.589206] dwc2 20980000.usb:   max_packet_count=1023
-[    2.589216] dwc2 20980000.usb:   nperio_tx_q_depth=0x4
-[    2.589226] dwc2 20980000.usb:   host_perio_tx_q_depth=0x4
-[    2.589236] dwc2 20980000.usb:   dev_token_q_depth=0x8
-[    2.589247] dwc2 20980000.usb:   enable_dynamic_fifo=1
-[    2.589257] dwc2 20980000.usb:   en_multiple_tx_fifo=1
-[    2.589267] dwc2 20980000.usb:   total_fifo_size=4080
-[    2.589277] dwc2 20980000.usb:   host_rx_fifo_size=4096
-[    2.589287] dwc2 20980000.usb:   host_nperio_tx_fifo_size=32
-[    2.589299] dwc2 20980000.usb:   host_perio_tx_fifo_size=0
-[    2.589307] dwc2 20980000.usb:
-[    2.589312] dwc2_set_parameters()
-[    2.595921] dwc2 20980000.usb: dwc2_set_parameters()
-[    2.595940] dwc2 20980000.usb: Setting dma_desc_fs_enable to 0
-[    2.595968] dwc2 20980000.usb: Setting external_id_pin_ctl to 0
-[    2.595980] dwc2 20980000.usb: Setting hibernation to 0
-[    2.596003] dwc2 20980000.usb: 256 invalid for host_nperio_tx_fifo_size.
-Check HW configuration.
-[    2.611528] dwc2 20980000.usb: Setting host_nperio_tx_fifo_size to 32
-[    2.611552] dwc2 20980000.usb: 512 invalid for host_perio_tx_fifo_size. Check
-HW configuration.
-[    2.627250] dwc2 20980000.usb: Setting host_perio_tx_fifo_size to 0
-[    2.627256] dwc2_force_dr_mode()
-[    2.749035] dwc2_gadget_init()
-[    2.755610] dwc2 20980000.usb: Specified GNPTXFDEP=1024 > 32
-[    2.764876] dwc2 20980000.usb: EPs: 8, dedicated fifos, 4080 entries in SPRAM
-[    2.792911] dwc2 20980000.usb: bound driver zero
-[    2.801042] dwc2_hcd_init()
-[    2.807485] dwc2 20980000.usb: DWC OTG Controller
-[    2.815716] dwc2 20980000.usb: new USB bus registered, assigned bus number 1
-[    2.826265] dwc2 20980000.usb: irq 33, io mem 0x00000000
+		sgmii-handle = <&emac_sgmii>;
+		phy-handle = <&phy0>;
 
-Regards
-Stefan
+		#address-cells = <1>;
+		#size-cells = <0>;
+		phy0: ethernet-phy@4 {
+			reg = <4>;
+		};
+	};
 
-> 
-> Regards,
-> John
+	emac_sgmii: ethernet-phy@410400 {
+		compatible = "qcom,qdf2432-emac-phy";
+		reg = <0x0 0x00410400 0x0 0x100>;
+		interrupts = <0 0x104 0>;
+	};
+
+When my driver probes, the platform_device object points to the emac0 
+node, as always.
+
+How do I parse the emac_sgmii node?  How do I get functions like 
+platform_get_resource() to work?  How do I create a new platform_device 
+object that points to the emac_sgmii node?
+
+-- 
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
