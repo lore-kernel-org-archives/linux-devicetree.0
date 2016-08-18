@@ -1,91 +1,234 @@
-From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Subject: [PATCH v3 1/2] ARM: dts: Remove use of skeleton.dtsi from bcm283x.dtsi
-Date: Thu, 18 Aug 2016 11:42:05 +0100
-Message-ID: <1471516926-11466-1-git-send-email-ijc@hellion.org.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Raul Piper <raulpblooper@gmail.com>
+Subject: Right way to get the gpio values from the device tree in the device
+	driver
+Date: Thu, 18 Aug 2016 16:12:13 +0530
+Message-ID: <CAEwN+MDzLOcskDZhMVkSv7OEaq5_gbdE9ar+hM_DL1mjkKEWjA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============6899749386643893940=="
+Return-path: <kernelnewbies-bounces@kernelnewbies.org>
+List-Unsubscribe: <https://lists.kernelnewbies.org/mailman/listinfo/kernelnewbies>,
+	<mailto:kernelnewbies-request@kernelnewbies.org?subject=unsubscribe>
+List-Archive: <http://lists.kernelnewbies.org/pipermail/kernelnewbies>
+List-Post: <mailto:kernelnewbies@kernelnewbies.org>
+List-Help: <mailto:kernelnewbies-request@kernelnewbies.org?subject=help>
+List-Subscribe: <https://lists.kernelnewbies.org/mailman/listinfo/kernelnewbies>,
+	<mailto:kernelnewbies-request@kernelnewbies.org?subject=subscribe>
+Sender: kernelnewbies-bounces@kernelnewbies.org
+Errors-To: kernelnewbies-bounces@kernelnewbies.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, kernelnewbies <kernelnewbies@kernelnewbies.org>
 List-Id: devicetree@vger.kernel.org
 
-This file is included from DTS files under arch/arm64 too (via
-broadcom/bcm2837-rpi-3-b.dts and broadcom/bcm2837.dtsi). There is a desire
-not to have skeleton.dtsi for ARM64. See commit 3ebee5a2e141 ("arm64: dts:
-kill skeleton.dtsi") for rationale for its removal.
+--===============6899749386643893940==
+Content-Type: multipart/alternative; boundary=001a113ef2041bc7a2053a563c6c
 
-As well as the addition of #*-cells also requires adding the device_type to
-the rpi memory node explicitly.
+--001a113ef2041bc7a2053a563c6c
+Content-Type: text/plain; charset=UTF-8
 
-Note that this change results in the removal of an empty /aliases node from
-bcm2835-rpi-a.dtb and bcm2835-rpi-a-plus.dtb. I have no hardware to check
-if this is a problem or not.
+Hello,
 
-It also results in some reordering of the nodes in the DTBs (the /aliases
-and /memory nodes come later). This isn't supposed to matter but, again,
-I've no hardware to check if it is true in this particular case.
+With reference to the example below what is the correct way to get the gpio
+values from the device tree :
 
-Signed-off-by: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Tested-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
----
-v2: New patch to avoid needing to add skeleton.dtsi to arch/arm64
-v3: Collected tags
----
- arch/arm/boot/dts/bcm2835-rpi.dtsi | 1 +
- arch/arm/boot/dts/bcm283x.dtsi     | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+I modified the existing leds-ns2 device tree as below :
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index caf2707..e9b47b2 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -2,6 +2,7 @@
- 
- / {
- 	memory {
-+		device_type = "memory";
- 		reg = <0 0x10000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index b982522..445624a 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -2,7 +2,6 @@
- #include <dt-bindings/clock/bcm2835.h>
- #include <dt-bindings/clock/bcm2835-aux.h>
- #include <dt-bindings/gpio/gpio.h>
--#include "skeleton.dtsi"
- 
- /* This include file covers the common peripherals and configuration between
-  * bcm2835 and bcm2836 implementations, leaving the CPU configuration to
-@@ -13,6 +12,8 @@
- 	compatible = "brcm,bcm2835";
- 	model = "BCM2835";
- 	interrupt-parent = <&intc>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
- 
- 	chosen {
- 		bootargs = "earlyprintk console=ttyAMA0";
--- 
-2.8.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+          blue-sata {
+
+                   label = "ns2:blue:sata";
+
+                   slow-gpio = <&gpio0 29 0>;
+
+                   cmd-gpio = <&gpio0 30 0>;
+
++                 slow1-gpio=<&gpio 31 0>;
+
++                 cmd1-gpio=<&gpio 32 0>;
+
+                   modes-map = <NS_V2_LED_OFF  0 1
+
+                                NS_V2_LED_ON   1 0
+
+                                NS_V2_LED_ON   0 0
+
+                                NS_V2_LED_SATA 1 1>;
+
+           };
+
+
+
+
+
+And modified the driver by adding slow1 and cmd1 in all the structure (just
+like slow and cmd)
+
+But when I am trying to get the gpio number for slow1 and cmd1 I am getting
+the below error(number gpio #31 and 32 are random numbers of gpio for
+testing, does it matters?) :
+
+error : leds-ns2:probe of ns2-leds failed with error -2.What does error
+code -2 represents ?Is this a device tree parsing error?
+
+ret = of_get_named_gpio(child, "slow1-gpio", 0);
+
+                 if (ret < 0)
+
+                         return ret;
+
+same error if I try to get the cmd1-gpio
+
+
+Thanks in advance !
+
+Regards,
+
+Rp
+
+On Thu, Aug 4, 2016 at 9:23 AM, Raul Piper <raulpblooper@gmail.com> wrote:
+> make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- <name of the dtb file>.dtb
+>
+> This compiles fine.
+>
+> On Thu, Aug 4, 2016 at 1:06 AM, Frank Rowand <frowand.list@gmail.com>
+wrote:
+>> On 07/25/16 04:17, Raul Piper wrote:
+>>> Hi,
+>>> Where can I find the example for the  dynamic Loading of the device
+>>> tree and its corresponding device driver.
+>>> How can I build the dts with or without the kernel source.
+>>>
+>>> I am getting this error whenever I am trying to build the below sample
+>>> dts file using the dtc compiler.
+>>>
+>>> dtc -O dtb -o leds-ns2.dtb leds-ns2.dts
+>>>
+>>>
+>>> Error: leds-ns2.dts:1.1-2 syntax error
+>>
+>> That is an error at line 1, columns 1-2. dtc does not understand cpp
+>> directives, you need to process leds-ns2.dts with cpp. The Linux
+>> build infrastructure does this for .dtb targets in makefiles.
+>>
+>>> FATAL ERROR: Unable to parse input tree
+>>>
+>>> Below is the content  of the leds-ns2.dts
+>>>
+>>> #include <dt-bindings/leds/leds-ns2.h>
+>>>
+>>>  ns2-leds {
+>>>           compatible = "lacie,ns2-leds";
+>>>
+>>>           blue-sata {
+>>>                   label = "ns2:blue:sata";
+>>>                   slow-gpio = <&gpio0 29 0>;
+>>>                   cmd-gpio = <&gpio0 30 0>;
+>>>                   modes-map = <NS_V2_LED_OFF  0 1
+>>>                                NS_V2_LED_ON   1 0
+>>>                                NS_V2_LED_ON   0 0
+>>>                                NS_V2_LED_SATA 1 1>;
+>>>           };
+>>>   };
+>>>
+>>> Thanks,
+>>> R
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>
+>>
+
+--001a113ef2041bc7a2053a563c6c
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hello,<br><br>With reference to the example below what is =
+the correct way to get the gpio values from the device tree :<br><br>I modi=
+fied the existing leds-ns2 device tree as below :<br><br>=C2=A0<br><br>=C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 blue-sata {<br><br>=C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0label =3D &quot;ns2:blue:sata&=
+quot;;<br><br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0slow-gpio =3D &lt;&amp;gpio0 29 0&gt;;<br><br>=C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cmd-gpio =3D &lt;&amp;g=
+pio0 30 0&gt;;<br><br>+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 slow1-gpio=3D&lt;&amp;gpio 31 0&gt;;<br><br>+ =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 cmd1-gpio=3D&lt;&amp;gpio 32 0&gt;;<br><=
+br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0mod=
+es-map =3D &lt;NS_V2_LED_OFF =C2=A00 1<br><br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 NS_V2_LED_ON =C2=A0 1 0<br><br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 NS_V2_LED_ON =C2=A0 0 0<br><br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 NS_V2_LED_SATA 1 1&gt;;<br><br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0};<br><br>=C2=A0<br><br>=C2=A0<br><br>And modified the driver by adding =
+slow1 and cmd1 in all the structure (just like slow and cmd)<br><br>But whe=
+n I am trying to get the gpio number for slow1 and cmd1 I am getting the be=
+low error(number gpio #31 and 32 are random numbers of gpio for testing, do=
+es it matters?) :<br><br>error : leds-ns2:probe of ns2-leds failed with err=
+or -2.What does error code -2 represents ?Is this a device tree parsing err=
+or?<br><br>ret =3D of_get_named_gpio(child, &quot;slow1-gpio&quot;, 0);<br>=
+<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret &=
+lt; 0)<br><br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br><br>same error if I try to ge=
+t the cmd1-gpio<br>=C2=A0<br><br>Thanks in advance !<br><br>Regards,<br><br=
+>Rp<br><br>On Thu, Aug 4, 2016 at 9:23 AM, Raul Piper &lt;<a href=3D"mailto=
+:raulpblooper@gmail.com">raulpblooper@gmail.com</a>&gt; wrote:<br>&gt; make=
+ ARCH=3Darm CROSS_COMPILE=3Darm-linux-gnueabi- &lt;name of the dtb file&gt;=
+.dtb<br>&gt;<br>&gt; This compiles fine.<br>&gt;<br>&gt; On Thu, Aug 4, 201=
+6 at 1:06 AM, Frank Rowand &lt;<a href=3D"mailto:frowand.list@gmail.com">fr=
+owand.list@gmail.com</a>&gt; wrote:<br>&gt;&gt; On 07/25/16 04:17, Raul Pip=
+er wrote:<br>&gt;&gt;&gt; Hi,<br>&gt;&gt;&gt; Where can I find the example =
+for the =C2=A0dynamic Loading of the device<br>&gt;&gt;&gt; tree and its co=
+rresponding device driver.<br>&gt;&gt;&gt; How can I build the dts with or =
+without the kernel source.<br>&gt;&gt;&gt;<br>&gt;&gt;&gt; I am getting thi=
+s error whenever I am trying to build the below sample<br>&gt;&gt;&gt; dts =
+file using the dtc compiler.<br>&gt;&gt;&gt;<br>&gt;&gt;&gt; dtc -O dtb -o =
+leds-ns2.dtb leds-ns2.dts<br>&gt;&gt;&gt;<br>&gt;&gt;&gt;<br>&gt;&gt;&gt; E=
+rror: leds-ns2.dts:1.1-2 syntax error<br>&gt;&gt;<br>&gt;&gt; That is an er=
+ror at line 1, columns 1-2. dtc does not understand cpp<br>&gt;&gt; directi=
+ves, you need to process leds-ns2.dts with cpp. The Linux<br>&gt;&gt; build=
+ infrastructure does this for .dtb targets in makefiles.<br>&gt;&gt;<br>&gt=
+;&gt;&gt; FATAL ERROR: Unable to parse input tree<br>&gt;&gt;&gt;<br>&gt;&g=
+t;&gt; Below is the content =C2=A0of the leds-ns2.dts<br>&gt;&gt;&gt;<br>&g=
+t;&gt;&gt; #include &lt;dt-bindings/leds/leds-ns2.h&gt;<br>&gt;&gt;&gt;<br>=
+&gt;&gt;&gt; =C2=A0ns2-leds {<br>&gt;&gt;&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 compatible =3D &quot;lacie,ns2-leds&quot;;<br>&gt;&gt;&gt;<br>&gt;&g=
+t;&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 blue-sata {<br>&gt;&gt;&gt; =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 label =3D &quot=
+;ns2:blue:sata&quot;;<br>&gt;&gt;&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 slow-gpio =3D &lt;&amp;gpio0 29 0&gt;;<br>&gt;&=
+gt;&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 cmd-=
+gpio =3D &lt;&amp;gpio0 30 0&gt;;<br>&gt;&gt;&gt; =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 modes-map =3D &lt;NS_V2_LED_OFF =C2=
+=A00 1<br>&gt;&gt;&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0NS_V2_LED_ON =C2=
+=A0 1 0<br>&gt;&gt;&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0NS_V2_LED_ON =
+=C2=A0 0 0<br>&gt;&gt;&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0NS_V2_LED_SA=
+TA 1 1&gt;;<br>&gt;&gt;&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 };<br>&gt;&g=
+t;&gt; =C2=A0 };<br>&gt;&gt;&gt;<br>&gt;&gt;&gt; Thanks,<br>&gt;&gt;&gt; R<=
+br>&gt;&gt;&gt; --<br>&gt;&gt;&gt; To unsubscribe from this list: send the =
+line &quot;unsubscribe devicetree&quot; in<br>&gt;&gt;&gt; the body of a me=
+ssage to <a href=3D"mailto:majordomo@vger.kernel.org">majordomo@vger.kernel=
+.org</a><br>&gt;&gt;&gt; More majordomo info at =C2=A0<a href=3D"http://vge=
+r.kernel.org/majordomo-info.html">http://vger.kernel.org/majordomo-info.htm=
+l</a><br>&gt;&gt;&gt;<br>&gt;&gt;<br></div>
+
+--001a113ef2041bc7a2053a563c6c--
+
+
+--===============6899749386643893940==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Kernelnewbies mailing list
+Kernelnewbies@kernelnewbies.org
+https://lists.kernelnewbies.org/mailman/listinfo/kernelnewbies
+
+--===============6899749386643893940==--
