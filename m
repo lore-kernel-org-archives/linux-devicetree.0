@@ -1,39 +1,57 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 3/3] ARM64: dts: meson-gxbb: Add Meson MHU Node
-Date: Thu, 18 Aug 2016 12:10:27 +0200
-Message-ID: <1471515027-3543-4-git-send-email-narmstrong@baylibre.com>
-References: <1471515027-3543-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1471515027-3543-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, jassisinghbrar@gmail.com, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 11/13] dt-bindings: Add support for Amlogic GXBB SCPI Interface
+Date: Thu, 18 Aug 2016 12:11:04 +0200
+Message-ID: <1471515066-3626-12-git-send-email-narmstrong@baylibre.com>
+References: <1471515066-3626-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471515066-3626-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ Documentation/devicetree/bindings/arm/arm,scpi.txt | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index e502c24..bdbf6e7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -321,6 +321,15 @@
- 				#clock-cells = <1>;
- 				reg = <0x0 0x0 0x0 0x3db>;
- 			};
-+
-+			mailbox: mailbox@404 {
-+				compatible = "amlogic,meson-gxbb-mhu";
-+				reg = <0 0x404 0 0x4c>;
-+				interrupts = <0 208 IRQ_TYPE_EDGE_RISING>,
-+					     <0 209 IRQ_TYPE_EDGE_RISING>,
-+					     <0 210 IRQ_TYPE_EDGE_RISING>;
-+				#mbox-cells = <1>;
-+			};
- 		};
+diff --git a/Documentation/devicetree/bindings/arm/arm,scpi.txt b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+index faa4b44..04bc171 100644
+--- a/Documentation/devicetree/bindings/arm/arm,scpi.txt
++++ b/Documentation/devicetree/bindings/arm/arm,scpi.txt
+@@ -7,7 +7,7 @@ by Linux to initiate various system control and power operations.
  
- 		apb: apb@d0000000 {
+ Required properties:
+ 
+-- compatible : should be "arm,scpi"
++- compatible : should be "arm,scpi" or "amlogic,meson-gxbb-scpi"
+ - mboxes: List of phandle and mailbox channel specifiers
+ 	  All the channels reserved by remote SCP firmware for use by
+ 	  SCPI message protocol should be specified in any order
+@@ -60,7 +60,8 @@ A small area of SRAM is reserved for SCPI communication between application
+ processors and SCP.
+ 
+ Required properties:
+-- compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno
++- compatible : should be "arm,juno-sram-ns" for Non-secure SRAM on Juno,
++		or "amlogic,meson-gxbb-sram" for Amlogic GXBB SoC.
+ 
+ The rest of the properties should follow the generic mmio-sram description
+ found in ../../sram/sram.txt
+@@ -70,7 +71,8 @@ Each sub-node represents the reserved area for SCPI.
+ Required sub-node properties:
+ - reg : The base offset and size of the reserved area with the SRAM
+ - compatible : should be "arm,juno-scp-shmem" for Non-secure SRAM based
+-	       shared memory on Juno platforms
++	       shared memory on Juno platforms or
++	       "amlogic,meson-gxbb-scp-shmem" for Amlogic GXBB SoC.
+ 
+ Sensor bindings for the sensors based on SCPI Message Protocol
+ --------------------------------------------------------------
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
