@@ -1,33 +1,49 @@
-From: "sistema" <conve.cuhab-GhklP0f4u1PG66mcB53EVw@public.gmane.org>
-Subject: *Alerta*
-Date: Fri, 19 Aug 2016 07:13:10 +0100
-Message-ID: <20160819064201.6BF96B641BB4@bms3.mppre.gob.ve>
-Reply-To: emailx-QQk5GQysHIZGsCc+L4TfMdBPR1lH4CV8@public.gmane.org
+From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH] net: macb: add phy-handle support for the macb
+Date: Thu, 18 Aug 2016 15:53:55 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A5E4438@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1471082509-11764-1-git-send-email-appanad@xilinx.com>
+ <20160813.115222.443333178659469072.davem@davemloft.net>
+ <C246CAC1457055469EF09E3A7AC4E11A4A5E27C6@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20160816201436.GB3751@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Description: Mail message body
+In-Reply-To: <20160816201436.GB3751-g2DYL2Zd6BY@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Recipients <conve.cuhab-GhklP0f4u1PG66mcB53EVw@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org" <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>, "gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org" <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Estimado usuario de correo electrónico
+Hi Andrew,
 
-Su buzón ha superado el límite de almacenamiento, que establece el administrador, puede que no sea capaz de enviar o recibir correo nuevo hasta que vuelva a validar su buzón. Para volver a validar su buzón de correo por favor enviar los siguientes datos a continuación:
+	Thanks for the review...
 
-Nombre:
-Nombre de usuario:
-Contraseña:
-Vuelva a escribir la contraseña:
-Dirección de correo electrónico:
-Número de teléfono:
+>=20
+> > Agree with you my intention is if there is a MDIO bus on the
+> > device-tree The MAC driver should create PHY/MDIO devices using
+> of_mdiobus_register().
+>=20
+> What you suggest is better, and is similar to what other drivers use.
+>=20
+> In order to keep backwards compatibility with phy nodes in the MAC node, =
+you
+> have to do of_mdiobus_register() with the MAC node. However, please chang=
+e
+> the binding documentation to say this is deprecated, all phy nodes should=
+ be
+> placed inside an mdio node.
+>=20
+> Using some better variable names would also help. mac_np and mdio_np for
+> example.
 
+Ok sure will post v2 as you suggested...
 
-Si usted no puede volver a validar su buzón de correo, se desactivará su buzón !!!
+Regards,
+Kedar.
 
-Gracias
-Administrador de sistema 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
