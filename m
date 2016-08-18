@@ -1,63 +1,45 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] drm/tilcdc: Add blue-and-red-wiring -device tree
- property
-Date: Thu, 18 Aug 2016 14:17:39 -0500
-Message-ID: <20160818191739.GA23056@rob-hp-laptop>
-References: <cover.1471334845.git.jsarha@ti.com>
- <9c5bd87d77527aa7a88ab0c006387ed565606c8e.1471334845.git.jsarha@ti.com>
+Subject: Re: [PATCH v4 17/17] dt-bindings: pwm: sti: Update DT bindings with
+ recent changes
+Date: Thu, 18 Aug 2016 14:20:02 -0500
+Message-ID: <20160818192002.GA26225@rob-hp-laptop>
+References: <20160816093508.28307-1-lee.jones@linaro.org>
+ <20160816093508.28307-18-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <9c5bd87d77527aa7a88ab0c006387ed565606c8e.1471334845.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: devicetree@vger.kernel.org, tony@atomide.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, laurent.pinchart@ideasonboard.com, bcousson@baylibre.com
+In-Reply-To: <20160816093508.28307-18-lee.jones@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-pwm@vger.kernel.org, kernel@stlinux.com, devicetree@vger.kernel.org, patrice.chotard@st.com, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBdWcgMTYsIDIwMTYgYXQgMTI6MjQ6MjhQTSArMDMwMCwgSnlyaSBTYXJoYSB3cm90
-ZToKPiBBZGQgImJsdWUtYW5kLXJlZC13aXJpbmciLWRldmljZSB0cmVlIHByb3BlcnR5IGFuZCB1
-cGRhdGUgZGV2aWNldHJlZQo+IGJpbmRpbmcgZG9jdW1lbnQuIFRoZSByZWQgYW5kIGJsdWUgY29t
-cG9uZW50cyBhcmUgcmV2ZXJzZWQgYmV0d2VlbiAyNAo+IGFuZCAxNiBiaXQgbW9kZXMgb24gYW0z
-MzV4IExDREMgb3V0cHV0IHBpbnMuIFRvIGdldCAyNCBSR0IgZm9ybWF0IHRoZQo+IHJlZCBhbmQg
-Ymx1ZSB3aXJlcyBoYXMgdG8gYmUgY3Jvc3NlZCBhbmQgdGhpcyBpbiB0dXJuIGNhdXNlcyAxNiBj
-b2xvcnMKPiBvdXRwdXQgdG8gYmUgaW4gQkdSIGZvcm1hdC4gV2l0aCBzdHJhaWdodCB3aXJpbmcg
-dGhlIDE2IGNvbG9yIGlzIFJHQgo+IGFuZCAyNCBiaXQgaXMgQkdSLiBUaGUgbmV3IHByb3BlcnR5
-IGRlc2NyaWJlcyB3aGV0aGVyIHRoZSByZWQgYW5kIGJsdWUKPiB3aXJlcyBhcmUgY3Jvc3NlZCBv
-ciBub3QuIFRoZSBhbTMzNXgtZXZtIGhhcyB0aGUgd2lyZXMgZ29pbmcgdG8gTENECj4gY3Jvc3Nl
-ZCBhbmQgdGhhdCBpcyBjaG9zZW4gdG8gYmUgdGhlIGRlZmF1bHQgbW9kZSBpZgo+ICJibHVlLWFu
-ZC1yZWQtd2lyaW5nIi1wcm9wZXJ0eSBpcyBub3QgZm91bmQuCj4gCj4gRm9yIG1vcmUgZGV0YWls
-cyBzZWUgc2VjdGlvbiAzLjEuMSBpbiBBTTMzNXggU2lsaWNvbiBFcnJhdGE6Cj4gaHR0cDovL3d3
-dy50aS5jb20vZ2VuZXJhbC9kb2NzL2xpdC9nZXRsaXRlcmF0dXJlLnRzcD9iYXNlTGl0ZXJhdHVy
-ZU51bWJlcj1zcHJ6MzYwCj4gCj4gU2lnbmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRp
-LmNvbT4KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aWxjZGMvdGls
-Y2RjLnR4dCAgfCAxMiArKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfZHJ2
-LmMgICAgICAgICAgICAgICAgfCA0NCArKysrKysrKysrKysrKysrKysrKysrCj4gIGRyaXZlcnMv
-Z3B1L2RybS90aWxjZGMvdGlsY2RjX2Rydi5oICAgICAgICAgICAgICAgIHwgIDQgKysKPiAgZHJp
-dmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfcGxhbmUuYyAgICAgICAgICAgICAgfCAgOSArKy0t
-LQo+ICA0IGZpbGVzIGNoYW5nZWQsIDYzIGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4g
-Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3RpbGNkYy90aWxjZGMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvdGlsY2RjL3RpbGNkYy50eHQKPiBpbmRleCA2ZWZhNGM1Li45OTI4MDNiIDEwMDY0NAo+
-IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpbGNkYy90
-aWxjZGMudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvdGlsY2RjL3RpbGNkYy50eHQKPiBAQCAtMTcsNiArMTcsOCBAQCBPcHRpb25hbCBwcm9wZXJ0
-aWVzOgo+ICAgICB0aGUgbGNkIGNvbnRyb2xsZXIuCj4gICAtIG1heC1waXhlbGNsb2NrOiBUaGUg
-bWF4aW11bSBwaXhlbCBjbG9jayB0aGF0IGNhbiBiZSBzdXBwb3J0ZWQKPiAgICAgYnkgdGhlIGxj
-ZCBjb250cm9sbGVyIGluIEtIei4KPiArIC0gYmx1ZS1hbmQtcmVkLXdpcmluZzogRWl0aGVyICJj
-cm9zc2VkIiBvciAic3RyYWlnaHQiLCBpZiBub3QgcHJlc2VudAo+ICsgICBjcm9zc2VkIHdpcmlu
-ZyBpcyBhc3N1bWVkIGZvciBkdGIgYmFja3dhcmQgY29tcGF0aWJpbGl0eS4gWzFdCgpKdXN0IGRv
-IGEgYm9vbGVhbiBhbmQgcmVzdHJpY3QgaXQgdG8gYSBwYXJ0aWN1bGFyIGNvbXBhdGlibGUgc3Ry
-aW5nIHNvIAp3ZSBkb24ndCBoYXZlIHRvIGNhcnJ5IGl0IGZvcmV2ZXIgb24gbmV3IHBhcnRzLgoK
-Um9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, Aug 16, 2016 at 10:35:08AM +0100, Lee Jones wrote:
+> We're renaming the 'st,pwm-num-chan' binding to 'st,pwm-num-devs' to
+> be more inline with the naming conventions of the subsystem.  Where
+> we used to treat each line as a channel, the PWM convention is to
+> describe them as devices.
+
+This is out of date now. Otherwise, the binding looks fine.
+
+> The second documentation adaption entails adding support for PWM
+> capture devices.  A new clock is required as well as an IRQ line.
+> We're also adding a new property similar to the one described
+> above, but for capture channels.  Typically, there will be less
+> capture channels than PWM-out, since all channels have the latter
+> capability, but only some have capture support.
+> 
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-st.txt | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
