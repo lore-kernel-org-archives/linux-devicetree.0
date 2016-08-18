@@ -1,117 +1,60 @@
-From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v9 4/4] arm64: dts: rockchip: configure usb2-phy support
- for rk3399-evb
-Date: Thu, 18 Aug 2016 10:53:22 +0800
-Message-ID: <4752a1d7-9db9-bfe9-1544-f90f33d4f560@rock-chips.com>
-References: <1469170846-15617-1-git-send-email-frank.wang@rock-chips.com>
- <1469170846-15617-5-git-send-email-frank.wang@rock-chips.com>
- <2024472.51n7WpJreO@diego>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
+Date: Wed, 17 Aug 2016 22:27:19 -0500
+Message-ID: <57B52B17.1080809@codeaurora.org>
+References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
+ <20160804175541.GA2832@rob-hp-laptop> <57B220C0.3060608@codeaurora.org>
+ <CAL_JsqL5xk3mH=h-m8nU8xTYbRjgMWt3p7BzYWj6vBUq4OpqMg@mail.gmail.com>
+ <57B31780.5030106@codeaurora.org>
+ <f3a49762-aa66-1949-bd6b-77bd6a74acc1@linaro.org>
+ <57B3878D.1000805@codeaurora.org>
+ <ff901f77-2177-52a7-2464-2f61495f91be@gmail.com>
+ <57B4C6EE.3080903@codeaurora.org> <57B4E5F7.9040500@codeaurora.org>
+ <bec781c6-2db9-02c7-687d-b5d6ee50c129@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2024472.51n7WpJreO@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <bec781c6-2db9-02c7-687d-b5d6ee50c129@gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Al Stone <al.stone@linaro.org>, Rob Herring <robh@kernel.org>
+Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, Shanker Donthineni <shankerd@codeaurora.org>, Vikram Sethi <vikrams@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, David Miller <davem@davemloft.net>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "Abdulhamid, Harb" <harba@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016/8/17 18:02, Heiko Stübner wrote:
-> Am Freitag, 22. Juli 2016, 15:00:46 schrieb Frank Wang:
->> Add vcc5v0_host regulator for usb2-phy and enable host-port support.
->>
->> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> applied to ny dts64 branch [0] with some changes:
->
-> - the pin is named vcc5v0_host_en not host_vbus_drv in the schematics
->    please always try to use the names from the schematics
-> - separated the enablement of the subnodes
->
+Florian Fainelli wrote:
 
-Thanks for your valuable comments, I will try to improve the quality of 
-my patches in future.
-
-BR.
-Frank
-
-> Heiko
->
-> [0] https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.git/commit/?id=1d3bc1d6c9c4658d554bcf89a71b35a6783a5b4e
->
->
->> ---
->>   arch/arm64/boot/dts/rockchip/rk3399-evb.dts |   44
->> +++++++++++++++++++++++++++ 1 file changed, 44 insertions(+)
+>>      emac_sgmii: ethernet-phy@410400 {
+>>          compatible = "qcom,qdf2432-emac-phy";
+>>          reg = <0x0 0x00410400 0x0 0x100>;
+>>          interrupts = <0 0x104 0>;
+>>      };
 >>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
->> b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts index 1a3eb14..56aeedb 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
->> @@ -69,6 +69,25 @@
->>   		regulator-max-microvolt = <3300000>;
->>   	};
->>
->> +	vcc5v0_sys: vcc5v0-sys {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "vcc5v0_sys";
->> +		regulator-always-on;
->> +		regulator-boot-on;
->> +		regulator-min-microvolt = <5000000>;
->> +		regulator-max-microvolt = <5000000>;
->> +	};
->> +
->> +	vcc5v0_host: vcc5v0-host-regulator {
->> +		compatible = "regulator-fixed";
->> +		enable-active-high;
->> +		gpio = <&gpio4 25 GPIO_ACTIVE_HIGH>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&host_vbus_drv>;
->> +		regulator-name = "vcc5v0_host";
->> +		vin-supply = <&vcc5v0_sys>;
->> +	};
->> +
->>   	vcc_phy: vcc-phy-regulator {
->>   		compatible = "regulator-fixed";
->>   		regulator-name = "vcc_phy";
->> @@ -89,6 +108,24 @@
->>   	status = "okay";
->>   };
->>
->> +&u2phy0 {
->> +	status = "okay";
->> +
->> +	u2phy0_host: host-port {
->> +		phy-supply = <&vcc5v0_host>;
->> +		status = "okay";
->> +	};
->> +};
->> +
->> +&u2phy1 {
->> +	status = "okay";
->> +
->> +	u2phy1_host: host-port {
->> +		phy-supply = <&vcc5v0_host>;
->> +		status = "okay";
->> +	};
->> +};
->> +
->>   &uart2 {
->>   	status = "okay";
->>   };
->> @@ -121,4 +158,11 @@
->>   				<1 18 RK_FUNC_GPIO &pcfg_pull_down>;
->>   		};
->>   	};
->> +
->> +	usb2 {
->> +		host_vbus_drv: host-vbus-drv {
->> +			rockchip,pins =
->> +				<4 25 RK_FUNC_GPIO &pcfg_pull_none>;
->> +		};
->> +	};
->>   };
+>
+> Is this register range relative to the emac0 node here, or is this
+> really a separate node, within the same adress space as your emac0 node?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It's a separate node within the same address space.  We can't guarantee 
+that it's adjacent to any other EMAC register -- it could be anywhere in 
+memory. 0x00410400 is the real physical address of those registers.
+
+> Answer largely depends on whether your device is really located outside
+> of the emac, if it located outside, then a platform device matching the
+> compatible string would get you what you want. If the emac_sgmii block
+> is a sub-block within the EMAC, then a few things need fixing:
+>
+> - your emac_sgmii node should be a sub-node of the emac node, not a sibling
+> - the emac0 node should have a "ranges" property that indicates how to
+> translate the sub-nodes' "reg" property based on the base register
+> address of the emac0 block
+> - you would have to call of_platform_populate from the EMAC driver to
+> ensure that the emac_sgmii child node and therefore platform device gets
+> created
+
+Even if the emac_sgmii block were a sub-block, wouldn't it conflict with 
+the ethernet-phy@4 node?  The #address-cells and #size-cells properties 
+cannot be valid for both the emac_sgmii and ethernet-phy@4 nodes.
+
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
