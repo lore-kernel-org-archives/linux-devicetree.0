@@ -1,223 +1,61 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 2/3] dt-bindings: clock: reset: Add GXBB AO Clock and Reset Bindings
-Date: Thu, 18 Aug 2016 12:08:47 +0200
-Message-ID: <1471514928-3341-3-git-send-email-narmstrong@baylibre.com>
-References: <1471514928-3341-1-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH v2 2/3] dt-bindings: mailbox: Add Amlogic Meson MHU Bindings
+Date: Thu, 18 Aug 2016 12:10:26 +0200
+Message-ID: <1471515027-3543-3-git-send-email-narmstrong@baylibre.com>
+References: <1471515027-3543-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1471514928-3341-1-git-send-email-narmstrong@baylibre.com>
+In-Reply-To: <1471515027-3543-1-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org, mturquette@baylibre.com, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, jassisinghbrar@gmail.com, devicetree@vger.kernel.org
 Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
-
-Add documentations and dt-bindings headers for the AO clock and reset
-controller.
 
 Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../bindings/clock/amlogic,gxbb-aoclkc.txt         | 45 +++++++++++++++
- include/dt-bindings/clock/gxbb-aoclkc.h            | 66 ++++++++++++++++++++++
- include/dt-bindings/reset/gxbb-aoclkc.h            | 66 ++++++++++++++++++++++
- 3 files changed, 177 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
- create mode 100644 include/dt-bindings/clock/gxbb-aoclkc.h
- create mode 100644 include/dt-bindings/reset/gxbb-aoclkc.h
+ .../devicetree/bindings/mailbox/meson-mhu.txt      | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/meson-mhu.txt
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
+diff --git a/Documentation/devicetree/bindings/mailbox/meson-mhu.txt b/Documentation/devicetree/bindings/mailbox/meson-mhu.txt
 new file mode 100644
-index 0000000..a55d31b
+index 0000000..a530310
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
-@@ -0,0 +1,45 @@
-+* Amlogic GXBB AO Clock and Reset Unit
++++ b/Documentation/devicetree/bindings/mailbox/meson-mhu.txt
+@@ -0,0 +1,34 @@
++Amlogic Meson MHU Mailbox Driver
++================================
 +
-+The Amlogic GXBB AO clock controller generates and supplies clock to various
-+controllers within the Always-On part of the SoC.
++The Amlogic's Meson SoCs Message-Handling-Unit (MHU) is a mailbox controller
++that has 3 independent channels/links to communicate with remote processor(s).
++MHU links are hardwired on a platform. A link raises interrupt for any
++received data. However, there is no specified way of knowing if the sent
++data has been read by the remote. This driver assumes the sender polls
++STAT register and the remote clears it after having read the data.
 +
-+Required Properties:
++Mailbox Device Node:
++====================
 +
-+- compatible: should be "amlogic,gxbb-aoclkc"
-+- reg: physical base address of the clock controller and length of memory
-+       mapped region.
++Required properties:
++--------------------
++- compatible:		Shall be "amlogic,meson-gxbb-mhu"
++- reg:			Contains the mailbox register address range (base
++			address and length)
++- #mbox-cells		Shall be 1 - the index of the channel needed.
++- interrupts:		Contains the interrupt information corresponding to
++			each of the 2 links of MHU.
 +
-+- #clock-cells: should be 1.
++Example:
++--------
 +
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. All available clocks are defined as
-+preprocessor macros in the dt-bindings/clock/gxbb-aoclkc.h header and can be
-+used in device tree sources.
-+
-+- #reset-cells: should be 1.
-+
-+Each reset is assigned an identifier and client nodes can use this identifier
-+to specify the reset which they consume. All available resets are defined as
-+preprocessor macros in the dt-bindings/reset/gxbb-aoclkc.h header and can be
-+used in device tree sources.
-+
-+Example: AO Clock controller node:
-+
-+	clkc_AO: clock-controller@040 {
-+		compatible = "amlogic,gxbb-aoclkc";
-+		reg = <0x0 0x040 0x0 0x4>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
++	mailbox: mailbox@c883c404 {
++		#mbox-cells = <1>;
++		compatible = "amlogic,meson-gxbb-mhu";
++		reg = <0 0xc883c404 0 0x4c>;
++		interrupts = <0 208 IRQ_TYPE_EDGE_RISING>,
++			     <0 209 IRQ_TYPE_EDGE_RISING>,
++			     <0 210 IRQ_TYPE_EDGE_RISING>;
++		#mbox-cells = <1>;
 +	};
-+
-+Example: UART controller node that consumes the clock and reset generated
-+  by the clock controller:
-+
-+	uart_AO: serial@4c0 {
-+		compatible = "amlogic,meson-uart";
-+		reg = <0x4c0 0x14>;
-+		interrupts = <0 90 1>;
-+		clocks = <&clkc_AO CLKID_AO_UART1>;
-+		resets = <&clkc_AO RESET_AO_UART1>;
-+		status = "disabled";
-+	};
-diff --git a/include/dt-bindings/clock/gxbb-aoclkc.h b/include/dt-bindings/clock/gxbb-aoclkc.h
-new file mode 100644
-index 0000000..3175148
---- /dev/null
-+++ b/include/dt-bindings/clock/gxbb-aoclkc.h
-@@ -0,0 +1,66 @@
-+/*
-+ * This file is provided under a dual BSD/GPLv2 license.  When using or
-+ * redistributing this file, you may do so under either license.
-+ *
-+ * GPL LICENSE SUMMARY
-+ *
-+ * Copyright (c) 2016 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of version 2 of the GNU General Public License as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
-+ * The full GNU General Public License is included in this distribution
-+ * in the file called COPYING.
-+ *
-+ * BSD LICENSE
-+ *
-+ * Copyright (c) 2016 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions
-+ * are met:
-+ *
-+ *   * Redistributions of source code must retain the above copyright
-+ *     notice, this list of conditions and the following disclaimer.
-+ *   * Redistributions in binary form must reproduce the above copyright
-+ *     notice, this list of conditions and the following disclaimer in
-+ *     the documentation and/or other materials provided with the
-+ *     distribution.
-+ *   * Neither the name of Intel Corporation nor the names of its
-+ *     contributors may be used to endorse or promote products derived
-+ *     from this software without specific prior written permission.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+#ifndef DT_BINDINGS_CLOCK_AMLOGIC_MESON_GXBB_AOCLK
-+#define DT_BINDINGS_CLOCK_AMLOGIC_MESON_GXBB_AOCLK
-+
-+#define CLKID_AO_REMOTE		0
-+#define CLKID_AO_I2C_MASTER	1
-+#define CLKID_AO_I2C_SLAVE	2
-+#define CLKID_AO_UART1		3
-+#define CLKID_AO_UART2		4
-+#define CLKID_AO_IR_BLASTER	5
-+
-+#endif
-diff --git a/include/dt-bindings/reset/gxbb-aoclkc.h b/include/dt-bindings/reset/gxbb-aoclkc.h
-new file mode 100644
-index 0000000..9e3fd60
---- /dev/null
-+++ b/include/dt-bindings/reset/gxbb-aoclkc.h
-@@ -0,0 +1,66 @@
-+/*
-+ * This file is provided under a dual BSD/GPLv2 license.  When using or
-+ * redistributing this file, you may do so under either license.
-+ *
-+ * GPL LICENSE SUMMARY
-+ *
-+ * Copyright (c) 2016 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of version 2 of the GNU General Public License as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, see <http://www.gnu.org/licenses/>.
-+ * The full GNU General Public License is included in this distribution
-+ * in the file called COPYING.
-+ *
-+ * BSD LICENSE
-+ *
-+ * Copyright (c) 2016 BayLibre, SAS.
-+ * Author: Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions
-+ * are met:
-+ *
-+ *   * Redistributions of source code must retain the above copyright
-+ *     notice, this list of conditions and the following disclaimer.
-+ *   * Redistributions in binary form must reproduce the above copyright
-+ *     notice, this list of conditions and the following disclaimer in
-+ *     the documentation and/or other materials provided with the
-+ *     distribution.
-+ *   * Neither the name of Intel Corporation nor the names of its
-+ *     contributors may be used to endorse or promote products derived
-+ *     from this software without specific prior written permission.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+#ifndef DT_BINDINGS_RESET_AMLOGIC_MESON_GXBB_AOCLK
-+#define DT_BINDINGS_RESET_AMLOGIC_MESON_GXBB_AOCLK
-+
-+#define RESET_AO_REMOTE		0
-+#define RESET_AO_I2C_MASTER	1
-+#define RESET_AO_I2C_SLAVE	2
-+#define RESET_AO_UART1		3
-+#define RESET_AO_UART2		4
-+#define RESET_AO_IR_BLASTER	5
-+
-+#endif
 -- 
-2.7.0
+1.9.1
