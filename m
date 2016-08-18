@@ -1,142 +1,77 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] PM / AVS: rockchip-cpu-avs: add driver handling
- Rockchip cpu avs
-Date: Thu, 18 Aug 2016 14:02:51 -0500
-Message-ID: <m260qxrjc4.fsf@baylibre.com>
-References: <1471510341-63926-1-git-send-email-finley.xiao@rock-chips.com>
- <1471510341-63926-5-git-send-email-finley.xiao@rock-chips.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH V2 RFC 6/6] ARM: dts: bcm2835: Add Raspberry Pi Zero
+Date: Thu, 18 Aug 2016 21:04:49 +0200 (CEST)
+Message-ID: <1882785986.365355.5a20a815-9153-4587-9aeb-f2a7fc5a4ff5.open-xchange@email.1und1.de>
+References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
+ <1469559213-16160-7-git-send-email-stefan.wahren@i2se.com>
+ <722dafcb-2f67-88c7-69df-d442c56c058f@synopsys.com>
+ <263309088.290419.51598113-17aa-4db0-9dc0-6e58e3fafe07.open-xchange@email.1und1.de>
+ <ac20c0e9-0cab-7e3f-4abf-75223538a816@synopsys.com>
+ <1270178266.398560.152fe5dd-527b-4ad6-b2fd-e4b0af6bc2a9.open-xchange@email.1und1.de>
+ <badc3aa5-29ac-9b8c-2531-564c44b60030@synopsys.com>
+ <85508461.401578.b150078c-11e6-4a32-b9b6-f40bf8417708.open-xchange@email.1und1.de>
+ <400e11e7-8263-17d8-5c22-8b1c3a0878e7@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1471510341-63926-5-git-send-email-finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
- (Finlye Xiao's message of "Thu, 18 Aug 2016 16:52:21 +0800")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Finlye Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tim.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ulysses.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lin.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <400e11e7-8263-17d8-5c22-8b1c3a0878e7@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: John Youn <John.Youn@synopsys.com>, Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Finlye,
+Hi John,
 
-Finlye Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org> writes:
+> John Youn <John.Youn@synopsys.com> hat am 18. August 2016 um 20:03
+> geschrieben:
+> 
+> 
+> On 8/17/2016 3:17 PM, Stefan Wahren wrote:
+> > Hi John,
+> > 
+> >> John Youn <John.Youn@synopsys.com> hat am 17. August 2016 um 23:21
+> >> geschrieben:
+> >>
+> >>
+> >> ...
+> >> Ok, yeah, that seems better.
+> >>
+> >> Can you check if applying just patch 2 and 3 solves the issue? If so I
+> >> think we can send those upstream.
+> > 
+> > unfortunately not:
+> 
+> Ok. I'll see if I can come up with a more conservative version of
+> patch 4 until I can look at it properly. I'll try to get to this
+> sometime next week but I may not be able to get to it until later.
 
-> From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->
-> This patch supports adjusting opp's voltage according to leakage
->
-> Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Great
 
-[...]
+> 
+> In the meantime, specifying the fifo sizes as you've done can serve as
+> a workaround.
 
-> +static void rockchip_adjust_volt_by_leakage(struct device *cpu_dev,
-> +					    struct cpufreq_policy *policy,
-> +					    struct rockchip_cpu_avs *avs,
-> +					    int id)
-> +{
-> +	struct cluster_info *cluster = &avs->cluster[id];
-> +	int ret;
-> +
-> +	if (cluster->leakage)
-> +		goto next;
->
-> +	ret = rockchip_get_leakage(cpu_dev, &cluster->leakage);
-> +	if (ret) {
-> +		dev_err(avs->dev, "cpu%d leakage invalid\n", policy->cpu);
-> +		return;
-> +	}
-> +
-> +	ret = rockchip_get_offset_volt(cluster->leakage, cluster->table,
-> +				       &cluster->adjust_volt);
-> +	if (ret) {
-> +		dev_err(avs->dev, "cpu%d leakage volt table err\n",
-> +			policy->cpu);
-> +		return;
-> +	}
+Beside of this workaround, do you see any benefit of patch 2/6 from my series?
 
-Rather than do this for each notifier, since the table is static, why
-not fill out struct cluster_info during probe?
+I don't want to introduce DT properties which are only useful for workarounds?
 
-I see there is a check above to skip this if it's already filled out,
-but since the data is static, why not fill it out once at probe.
+Thanks
+Stefan
 
-> +next:
-> +	ret = rockchip_adjust_opp_table(cpu_dev, policy->freq_table,
-> +					cluster->adjust_volt);
-> +	if (ret)
-> +		dev_err(avs->dev, "cpu%d failed to adjust volt\n", policy->cpu);
-> +
-> +	dev_dbg(avs->dev, "cpu%d, leakage=%d, adjust_volt=%d\n", policy->cpu,
-> +		cluster->leakage, cluster->adjust_volt);
-> +}
-
-[...]
-
-> +static int rockchip_cpu_avs_probe(struct platform_device *pdev)
-> +{
-> +	struct rockchip_cpu_avs *avs;
-> +	char name[MAX_NAME_LEN];
-> +	int i, ret, cpu, id;
-> +	int last_id = -1;
-> +	int cluster_num = 0;
-> +
-> +	for_each_online_cpu(cpu) {
-> +		id = topology_physical_package_id(cpu);
-> +		if (id < 0)
-> +			return -EINVAL;
-> +		if (id != last_id) {
-> +			last_id = id;
-> +			cluster_num++;
-> +		}
-> +	}
-
-I don't think this counting is quite correct since physical and logial
-CPU numbering is not guaranteed.
-
-For example, I've seen big.LITTLE systems where the first little CPU is
-the boot CPU, but the big CPUs are the next ones booted, you end up with
-something like:
-
-little cluster: CPU0,5-7
-big cluster: CPU1-4
-
-So your counting mechansim above would count 3 clusters in that case.
-
-> +	avs = devm_kzalloc(&pdev->dev, sizeof(struct rockchip_cpu_avs),
-> +			   GFP_KERNEL);
-> +	if (!avs)
-> +		return -ENOMEM;
-> +
-> +	avs->dev = &pdev->dev;
-> +	avs->cpufreq_notify.notifier_call = rockchip_cpu_avs_notifier;
-> +	avs->cluster = devm_kzalloc(&pdev->dev,
-> +		sizeof(struct cluster_info) * cluster_num, GFP_KERNEL);
-> +	if (!avs->cluster)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < cluster_num; i++) {
-> +		snprintf(name, MAX_NAME_LEN, "leakage-volt-cluster%d", i);
-> +		ret = rockchip_get_leakage_volt_table(&pdev->dev,
-> +						      &avs->cluster[i].table,
-> +						      name);
-> +		if (ret)
-> +			continue;
-> +	}
-> +
-> +	return cpufreq_register_notifier(&avs->cpufreq_notify,
-> +		CPUFREQ_POLICY_NOTIFIER);
-> +}
-
-Other than those minor comments, I think the driver looks good to me.
-
-After those changes. We'll also need to see acks from the DT folks on
-the DT changes and bindings before merging.
-
-Kevin
+> 
+> Regards,
+> John
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
