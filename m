@@ -1,36 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] input: touchscreen: silead: Add regulator support
-Date: Thu, 18 Aug 2016 14:22:19 -0500
-Message-ID: <20160818192219.GA28941@rob-hp-laptop>
-References: <1471376124-31169-1-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH] hwmon: (max6650.c) Add devicetree support documentation
+Date: Thu, 18 Aug 2016 14:11:02 -0500
+Message-ID: <20160818191102.GA19498@rob-hp-laptop>
+References: <1471332190-14638-1-git-send-email-mike.looijmans@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1471376124-31169-1-git-send-email-hdegoede@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1471332190-14638-1-git-send-email-mike.looijmans@topic.nl>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: devicetree@vger.kernel.org, hjk@hansjkoch.de, linux@roeck-us.net, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 16, 2016 at 09:35:24PM +0200, Hans de Goede wrote:
-> On some tablets the touchscreen controller is powered by seperate
-> regulators, add support for this.
+On Tue, Aug 16, 2016 at 09:23:10AM +0200, Mike Looijmans wrote:
+> This adds the devicetree binding documentation for the max6650 fan
+> controller.
 > 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
 > ---
->  .../bindings/input/touchscreen/silead_gsl1680.txt  |  2 +
+> Associated code changes sent as a separate patch as requested.
+> 
+>  .../devicetree/bindings/hwmon/max6650.txt          | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/max6650.txt
 
 Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/input/touchscreen/silead.c                 | 51 ++++++++++++++++++++--
->  2 files changed, 49 insertions(+), 4 deletions(-)
