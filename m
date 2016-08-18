@@ -1,55 +1,121 @@
-From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: thermal: Add binding document for
- Mediatek thermal controller
-Date: Thu, 18 Aug 2016 10:28:57 +0530
-Message-ID: <1b5a218d-0f39-5bed-6881-2f8b74708897@ti.com>
-References: <1471492253-7185-1-git-send-email-dawei.chien@mediatek.com>
- <1471492253-7185-2-git-send-email-dawei.chien@mediatek.com>
+From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Subject: Re: [PATCH] Add Ingenic JZ4780 hardware RNG driver
+Date: Thu, 18 Aug 2016 10:44:18 +0530
+Message-ID: <CANc+2y55ZCkauwKNtuuCxLx-WOtm8z+A_EBKsYSjEUdc+ZbZTQ@mail.gmail.com>
+References: <1471448151-20850-1-git-send-email-prasannatsmkumar@gmail.com> <92a00062-9a87-0053-2c99-17bd1a304a4a@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1471492253-7185-2-git-send-email-dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <92a00062-9a87-0053-2c99-17bd1a304a4a@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Corentin LABBE <clabbe.montjoie@gmail.com>
+Cc: mpm@selenic.com, Herbert Xu <herbert@gondor.apana.org.au>, robh+dt@kernel.org, mark.rutland@arm.com, Ralf Baechle <ralf@linux-mips.org>, davem@davemloft.net, geert@linux-m68k.org, Andrew Morton <akpm@linux-foundation.org>, Greg KH <gregkh@linuxfoundation.org>, mchehab@kernel.org, Guenter Roeck <linux@roeck-us.net>, boris.brezillon@free-electrons.com, harvey.hunt@imgtec.com, alex.smith@imgtec.com, Daniel Thompson <daniel.thompson@linaro.org>, Lee Jones <lee.jones@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, kieran@ksquared.org.uk, Krzysztof Kozlowski <krzk@kernel.org>, joshua.henderson@microchip.com, yendapally.reddy@broadcom.com, narmstrong@baylibre.com, wangkefeng.wang@huawei.com, Christian Lamparter <chunkeey@googlemail.com>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, pankaj.dev@st.com, Mathi
 List-Id: devicetree@vger.kernel.org
 
+> I have just some minor comments below
 
+Appreciate your review.
 
-On Thursday 18 August 2016 09:20 AM, Dawei Chien wrote:
-> This adds the device tree binding documentation for the mediatek thermal
-> controller found on Mediatek MT2701.
+>> diff --git a/drivers/char/hw_random/jz4780-rng.c b/drivers/char/hw_random/jz4780-rng.c
+>> new file mode 100644
+>> index 0000000..c9d2cde
+>> --- /dev/null
+>> +++ b/drivers/char/hw_random/jz4780-rng.c
+>> @@ -0,0 +1,105 @@
+>> +/*
+>> + * jz4780-rng.c - Random Number Generator driver for J4780
+>> + *
+>> + * Copyright 2016 (C) PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>> + *
+>> + * This file is licensed under  the terms of the GNU General Public
+>> + * License version 2. This program is licensed "as is" without any
+>> + * warranty of any kind, whether express or implied.
+>> + */
+>> +
+>> +#include <linux/hw_random.h>
+>> +#include <linux/device.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/io.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/err.h>
+>
+> You could sort them by alphabetical order
 
-Reviewed-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Sure, will do.
 
+>> +
+>> +#define REG_RNG_CTRL 0x0
+>> +#define REG_RNG_DATA 0x4
+>> +
+>> +struct jz4780_rng {
+>> +     struct device *dev;
+>> +     struct hwrng rng;
+>> +     void __iomem *mem;
+>> +};
+>> +
+>> +static u32 jz4780_rng_readl(struct jz4780_rng *rng, u32 offset)
+>> +{
+>> +     return readl(rng->mem + offset);
+>> +}
+>> +
+>> +static void jz4780_rng_writel(struct jz4780_rng *rng, u32 val, u32 offset)
+>> +{
+>> +     writel(val, rng->mem + offset);
+>> +}
+>> +
+>> +static int jz4780_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+>> +{
+>> +     struct jz4780_rng *jz4780_rng = container_of(rng, struct jz4780_rng,
+>> +                                                     rng);
+>> +     u32 *data = buf;
+>> +     *data = jz4780_rng_readl(jz4780_rng, REG_RNG_DATA);
+>> +     return 4;
+>> +}
 >
-> Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../bindings/thermal/mediatek-thermal.txt          |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> If max is less than 4, its bad
+
+Data will be 4 bytes.
+
+>> +
+>> +static int jz4780_rng_probe(struct platform_device *pdev)
+>> +{
+>> +     struct jz4780_rng *jz4780_rng;
+>> +     struct resource *res;
+>> +     resource_size_t size;
+>> +     int ret;
+>> +
+>> +     jz4780_rng = devm_kzalloc(&pdev->dev, sizeof(struct jz4780_rng),
+>> +                                     GFP_KERNEL);
 >
-> diff --git a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
-> index 81f9a51..e2f494d 100644
-> --- a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
-> @@ -8,7 +8,9 @@ apmixedsys register space via AHB bus accesses, so a phandle to the APMIXEDSYS
->  is also needed.
->
->  Required properties:
-> -- compatible: "mediatek,mt8173-thermal"
-> +- compatible:
-> +  - "mediatek,mt8173-thermal" : For MT8173 family of SoCs
-> +  - "mediatek,mt2701-thermal" : For MT2701 family of SoCs
->  - reg: Address range of the thermal controller
->  - interrupts: IRQ for the thermal controller
->  - clocks, clock-names: Clocks needed for the thermal controller. required
->
+> You could write sizeof(*js480_rng)
+
+Will do.
+
+>> +     if (!jz4780_rng)
+>> +             return -ENOMEM;
+>> +
+>> +     jz4780_rng->dev = &pdev->dev;
+>> +     jz4780_rng->rng.name = "jz4780";
+>> +     jz4780_rng->rng.read = jz4780_rng_read;
+>> +
+>> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +     size = resource_size(res);
+>> +
+>> +     jz4780_rng->mem = devm_ioremap(&pdev->dev, res->start, size);
+> You could save code by using devm_ioremap_resource (don't need size)
+
+Will do.
+
+>> +     if (IS_ERR(jz4780_rng->mem))
+>> +             return PTR_ERR(jz4780_rng->mem);
+>> +
+>> +     platform_set_drvdata(pdev, jz4780_rng);
+>> +     jz4780_rng_writel(jz4780_rng, 1, REG_RNG_CTRL);
+>> +     ret = hwrng_register(&jz4780_rng->rng);
+>> +
+>> +     return ret;
+>> +}
+> You could write directly return hwrng_register(..)
+
+Will do.
