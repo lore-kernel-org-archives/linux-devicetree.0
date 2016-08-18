@@ -1,14 +1,15 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH V2 RFC 0/6] ARM: dts: bcm2835: Add Raspberry Pi Zero
-Date: Thu, 18 Aug 2016 20:57:37 +0200 (CEST)
-Message-ID: <1091535069.365254.5a20a815-9153-4587-9aeb-f2a7fc5a4ff5.open-xchange@email.1und1.de>
-References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
- <87lgzuj66o.fsf@eliezer.anholt.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/7] Documentation: bindings: Add Exynos5433 PMU compatible
+Date: Thu, 18 Aug 2016 13:59:57 -0500
+Message-ID: <20160818185957.GA10547@rob-hp-laptop>
+References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
+ <1471328843-26653-3-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87lgzuj66o.fsf@eliezer.anholt.net>
+Content-Disposition: inline
+In-Reply-To: <1471328843-26653-3-git-send-email-cw00.choi@samsung.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,41 +19,21 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, John Youn <johnyoun@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: mark.rutland@arm.com, k.kozlowski@samsung.com, chanwoo@kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, a.hajda@samsung.com, s.nawrocki@samsung.com, beomho.seo@samsung.com, m.szyprowski@samsung.com, jonghwa3.lee@samsung.com, linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, krzk@kernel.org, jh80.chung@samsung.com, kgene@kernel.org, devicetree@vger.kernel.org, inki.dae@samsung.com, ingi2.kim@samsung.com, linux-arm-kernel@lists.infradead.org, jaewon02.kim@samsung.com, sw0312.kim@samsung.com, linux-kernel@vger.kernel.org, human.hwang@samsung.com, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgRXJpYywKCj4gRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4gaGF0IGFtIDE4LiBBdWd1
-c3QgMjAxNiB1bSAyMDoxNCBnZXNjaHJpZWJlbjoKPiAKPiAKPiBTdGVmYW4gV2FocmVuIDxzdGVm
-YW4ud2FocmVuQGkyc2UuY29tPiB3cml0ZXM6Cj4gCj4gPiBUaGlzIHBhdGNoIHNlcmllcyBpcyBv
-bmx5IGEgZHJhZnQgYW5kIG5vdCBpbnRlbmRlZCB0byBiZSBtZXJnZWQuIFBhdGNoZXMgMQo+ID4g
-YW5kIDIKPiA+IGFyZW4ndCBiY20yODM1IHNwZWNpZmljIGFuZCBzaG91bGQgYmUgaGVscGZ1bCBm
-b3Igb3RoZXIgcGxhdGZvcm1zLiAKPiA+IFRoZSBwYXRjaGVzIDIgLSA0IGFyZSByZXF1aXJlZCBm
-b3Igb3RnIC8gZ2FkZ2V0IG1vZGUuIFRoZSBsYXN0IHBhdGNoCj4gPiBiYXNlZCBvbiB0aGUgd29y
-ayBvZiBMdWJvbWlyIFJpbnRlbCBbMV0gYW5kIE5vcmFsZiBUcsO4bm5lcyBbMl0uCj4gPgo+ID4g
-Q2hhbmdlcyBzaW5jZSBWMToKPiA+IC0gcmViYXNlIHRvIGN1cnJlbnQgbGludXgtbmV4dAo+ID4g
-LSBhZGQgcGF0Y2hlcyAxIC0gNCBmb3Igb3RnL2dhZGdldCBzdXBwb3J0Cj4gPiAtIGFkZCBwYXRj
-aCA1IHdpdGggbW9kZWwgY29tcGF0aWJsZQo+ID4gLSB1c2UgcG9sYXJpdHkgZGVmaW5lIGZvciBB
-Q1QgTEVECj4gPgo+ID4gWzFdIC0KPiA+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVy
-bWFpbC9saW51eC1ycGkta2VybmVsLzIwMTYtRmVicnVhcnkvMDAzMjIxLmh0bWwKPiA+IFsyXSAt
-IGh0dHBzOi8vZ2l0aHViLmNvbS9yYXNwYmVycnlwaS9saW51eC9wdWxsLzEyMzkvCj4gPgo+ID4g
-U3RlZmFuIFdhaHJlbiAoNik6Cj4gPiAgIHVzYjogZHdjMjogY29yZTogQXZvaWQgbm9uc2Vuc2Ug
-ZXJyb3IgaW4gZ2FkZ2V0IG1vZGUKPiA+ICAgdXNiOiBkd2MyOiBBZGQgRFQgcHJvcGVydGllcyB0
-byBzcGVjaWZ5IGZpZm8gc2l6ZSBpbiBob3N0L290ZyBtb2RlCj4gPiAgIEFSTTogZHRzOiBiY20y
-ODN4OiBBZGQgbWlzc2luZyB1c2IgY2xvY2sKPiA+ICAgQVJNOiBkdHM6IGJjbTI4M3g6IEFkZCBn
-ZW5lcmljIFVTQiBQSFkKPiA+ICAgRFQ6IGJpbmRpbmdzOiBiY206IEFkZCBSYXNwYmVycnkgUGkg
-WmVybwo+ID4gICBBUk06IGR0czogYmNtMjgzNTogQWRkIFJhc3BiZXJyeSBQaSBaZXJvCj4gCj4g
-V2hlcmUgYXJlIHdlIGF0IG9uIHRoZXNlPyAgCgpJIHdvdWxkIGxpa2UgdG8gc3BsaXQgdGhlIHNl
-cmllczoKcGFydCAxOiBSYXNwYmVycnkgUGkgWmVybyBzdXBwb3J0IChvbmx5IFVTQiBob3N0IG1v
-ZGUgc3VwcG9ydCkKcGFydCAyOiBPVEcgLyBQZXJpcGhlcmFsIHN1cHBvcnQgZm9yIEJDTTI4MzUg
-KGhvcGUgdGhhdCBpIHJlYWNoIHRoZSBwb2ludCkKCj4gSSd2ZSBiZWVuIGhvbGRpbmcgb2ZmIHdh
-aXRpbmcgZm9yIHRoZSBVU0IKPiBiaXRzIHRvIGdldCBzZXR0bGVkLiAgSSBjYW4gZ3JhYiB0aGUg
-YmluZGluZ3MgcGF0Y2gsIGJ1dCBpcyB0aGVyZQo+IGFueXRoaW5nIGVsc2Ugd2UgY291bGQgbWVy
-Z2Ugd2hpbGUgeW91J3JlIHdvcmtpbmcgb24gVVNCPwoKTWF5YmUgaSBtaXNzZWQgc29tZXRoaW5n
-LCBidXQgaSBkaWRuJ3QgcmVjZWl2ZWQgYW55IEFDSyBmcm9tIHlvdSBhYm91dCB0aGlzCnNlcmll
-cy4KCkluIGNhc2UgZXZlcnl0aGluZyBpcyBva2F5LCB5b3UgY291bGQgYWxzbyBtZXJnZSBwYXRj
-aCAzIHNpbmNlIGl0J3MgcmVsZXZhbnQgdG8KYmNtMjgzeCBhbmQgbm90IFJQaSBaZXJvIHNwZWNp
-ZmljLgoKU3RlZmFuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1hcm0ta2VybmVsCg==
+On Tue, Aug 16, 2016 at 03:27:18PM +0900, Chanwoo Choi wrote:
+> This patch adds the exynos5433 PMU compatible to support the access
+> of PMU (Power Management Unit) block.
+> 
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/arm/samsung/pmu.txt | 1 +
+>  1 file changed, 1 insertion(+)
+
+Acked-by: Rob Herring <robh@kernel.org>
