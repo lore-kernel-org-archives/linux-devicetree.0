@@ -1,128 +1,106 @@
-From: Shaohui Xie <shaohui.xie@nxp.com>
-Subject: RE: [PATCH 1/5] arm64: dts: add QorIQ LS1046A SoC support
-Date: Thu, 18 Aug 2016 10:27:36 +0000
-Message-ID: <DB5PR0401MB21834BD67F0EA86B3A22E9D6E8150@DB5PR0401MB2183.eurprd04.prod.outlook.com>
-References: <1467972944-12293-1-git-send-email-shh.xie@gmail.com>
- <1467972944-12293-2-git-send-email-shh.xie@gmail.com>
- <1984740.gmAYAJ1bIT@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1984740.gmAYAJ1bIT@wuerfel>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mihai Emilian Bantea <mihai.bantea@nxp.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Zhiqiang Hou <zhiqiang.hou@nxp.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Minghuan Lian <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "galak@codeaurora.org" <galak@codeaurora.org>, Qianyu Gong <qianyu.gong@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Subject: [PATCH v3 2/2] ARM64: dts: bcm: Use a symlink to R-Pi dtsi files from arch=arm
+Date: Thu, 18 Aug 2016 11:42:06 +0100
+Message-ID: <1471516926-11466-2-git-send-email-ijc@hellion.org.uk>
+References: <1471516926-11466-1-git-send-email-ijc@hellion.org.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471516926-11466-1-git-send-email-ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Arnd,
+The ../../../arm... style cross-references added by commit 9d56c22a7861
+("ARM: bcm2835: Add devicetree for the Raspberry Pi 3.") do not work in the
+context of the split device-tree repository[0] (where the directory
+structure differs). As with commit 8ee57b8182c4 ("ARM64: dts: vexpress: Use
+a symlink to vexpress-v2m-rs1.dtsi from arch=arm") use symlinks instead.
 
-Thank you for reviewing!
+[0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
 
-I'm seriously Sorry for the late response! I was on business travel on a project and had been very busy for a  long time.
+Signed-off-by: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+---
+v2: No more need for skeleton.dtsi since this was cleaned up in the previous
+    patch
+v3: Collected tags
+---
+ arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi          | 1 +
+ arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts       | 4 ++--
+ arch/arm64/boot/dts/broadcom/bcm2837.dtsi              | 2 +-
+ arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi | 1 +
+ arch/arm64/boot/dts/broadcom/bcm283x.dtsi              | 1 +
+ 5 files changed, 6 insertions(+), 3 deletions(-)
+ create mode 120000 arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
+ create mode 120000 arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
+ create mode 120000 arch/arm64/boot/dts/broadcom/bcm283x.dtsi
 
-Please see inline.
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi b/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
+new file mode 120000
+index 0000000..3937b77
+--- /dev/null
++++ b/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
+@@ -0,0 +1 @@
++../../../../arm/boot/dts/bcm2835-rpi.dtsi
+\ No newline at end of file
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+index 6f47dd2..7841b72 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
++++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+@@ -1,7 +1,7 @@
+ /dts-v1/;
+ #include "bcm2837.dtsi"
+-#include "../../../../arm/boot/dts/bcm2835-rpi.dtsi"
+-#include "../../../../arm/boot/dts/bcm283x-rpi-smsc9514.dtsi"
++#include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9514.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi b/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
+index f2a31d0..8216bbb 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
++++ b/arch/arm64/boot/dts/broadcom/bcm2837.dtsi
+@@ -1,4 +1,4 @@
+-#include "../../../../arm/boot/dts/bcm283x.dtsi"
++#include "bcm283x.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm2836";
+diff --git a/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
+new file mode 120000
+index 0000000..dca7c05
+--- /dev/null
++++ b/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
+@@ -0,0 +1 @@
++../../../../arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+\ No newline at end of file
+diff --git a/arch/arm64/boot/dts/broadcom/bcm283x.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x.dtsi
+new file mode 120000
+index 0000000..5f54e4c
+--- /dev/null
++++ b/arch/arm64/boot/dts/broadcom/bcm283x.dtsi
+@@ -0,0 +1 @@
++../../../../arm/boot/dts/bcm283x.dtsi
+\ No newline at end of file
+-- 
+2.8.1
 
-Regards,
-Shaohui
-> -----Original Message-----
-> From: Arnd Bergmann [mailto:arnd@arndb.de]
-> Sent: Friday, July 08, 2016 8:00 PM
-> To: shh.xie@gmail.com
-> Cc: devicetree@vger.kernel.org; robh+dt@kernel.org; mark.rutland@arm.com;
-> pawel.moll@arm.com; ijc+devicetree@hellion.org.uk; galak@codeaurora.org;
-> linux-arm-kernel@lists.infradead.org; catalin.marinas@arm.com;
-> will.deacon@arm.com; Mingkai Hu <mingkai.hu@nxp.com>; Mihai Emilian Bantea
-> <mihai.bantea@nxp.com>; Qianyu Gong <qianyu.gong@nxp.com>; Minghuan Lian
-> <minghuan.lian@nxp.com>; Zhiqiang Hou <zhiqiang.hou@nxp.com>; Shaohui Xie
-> <shaohui.xie@nxp.com>
-> Subject: Re: [PATCH 1/5] arm64: dts: add QorIQ LS1046A SoC support
-> 
-> On Friday, July 8, 2016 6:15:40 PM CEST shh.xie@gmail.com wrote:
-> > +
-> > +	memory@80000000 {
-> > +		device_type = "memory";
-> > +		reg = <0x0 0x80000000 0 0x80000000>;
-> > +		      /* DRAM space 1, size: 2GiB DRAM */
-> > +	};
-> 
-> The memory size is usually in the .dts file, unless this is on-chip eDRAM.
-[S.H] The memory size will be fixup by U-boot, if it's not proper to have it in .dtsti,
-How about remove it?
-
-> > +		clockgen: clocking@1ee1000 {
-> > +			compatible = "fsl,ls1046a-clockgen";
-> 
-> > +		scfg: scfg@1570000 {
-> > +			compatible = "fsl,ls1046a-scfg", "syscon";
-> 
-> > +		dcfg: dcfg@1ee0000 {
-> > +			compatible = "fsl,ls1046a-dcfg", "syscon";
-> 
-> None of the fsl,ls1046a-* devices seem to have any binding documentation.
-[S.H] Will update binding for fsl,ls1046-* devices in next version.
-
-> 
-> > +		wdog0: wdog@2ad0000 {
-> 
-> watchdog@2ad0000
-[S.H] Will fix it.
-
-> 
-> > +		usb0: usb3@2f00000 {
-> 
-> usb@2f00000
-[S.H] Will fix it.
-
-> 
-> > +		pcie@3400000 {
-> > +			compatible = "fsl,ls1046a-pcie", "snps,dw-pcie";
-> > +			reg = <0x00 0x03400000 0x0 0x00100000   /* controller
-> registers */
-> > +			       0x40 0x00000000 0x0 0x00002000>; /* configuration
-> space */
-> > +			reg-names = "regs", "config";
-> > +			interrupts = <0 118 0x4>, /* controller interrupt */
-> > +				     <0 117 0x4>; /* PME interrupt */
-> > +			interrupt-names = "intr", "pme";
-> > +			#address-cells = <3>;
-> > +			#size-cells = <2>;
-> > +			device_type = "pci";
-> > +			num-lanes = <4>;
-> > +			bus-range = <0x0 0xff>;
-> > +			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000
-> 0x0 0x00010000   /* downstream I/O */
-> > +				  0x82000000 0x0 0x40000000 0x40 0x40000000
-> 0x0 0x40000000>; /*
-> > +non-prefetchable memory */
-> 
-> No prefetchable memory area?
-> 
-> > +			msi-parent = <&msi>;
-> 
-> You seem to have a gic-400, could you use that as the MSI sink instead?
-> 
-> > +			#interrupt-cells = <1>;
-> > +			interrupt-map-mask = <0 0 0 7>;
-> > +			interrupt-map = <0000 0 0 1 &gic 0 110 0x4>,
-> > +					<0000 0 0 2 &gic 0 110 0x4>,
-> > +					<0000 0 0 3 &gic 0 110 0x4>,
-> > +					<0000 0 0 4 &gic 0 110 0x4>;
-> > +		};
-> >
-> 
-> If the four interrupts are all the same, why do you have separate entries?
-[S.H] We are working on refining the MSI driver and the MSI node will also be changed, 
-so the MSI and PCIe node will be added together with the MSI driver updates.
-In the next version, I will drop the MSI node and PCIe node.
-
-Thank you!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
