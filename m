@@ -1,60 +1,40 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
-Date: Wed, 17 Aug 2016 22:27:19 -0500
-Message-ID: <57B52B17.1080809@codeaurora.org>
-References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
- <20160804175541.GA2832@rob-hp-laptop> <57B220C0.3060608@codeaurora.org>
- <CAL_JsqL5xk3mH=h-m8nU8xTYbRjgMWt3p7BzYWj6vBUq4OpqMg@mail.gmail.com>
- <57B31780.5030106@codeaurora.org>
- <f3a49762-aa66-1949-bd6b-77bd6a74acc1@linaro.org>
- <57B3878D.1000805@codeaurora.org>
- <ff901f77-2177-52a7-2464-2f61495f91be@gmail.com>
- <57B4C6EE.3080903@codeaurora.org> <57B4E5F7.9040500@codeaurora.org>
- <bec781c6-2db9-02c7-687d-b5d6ee50c129@gmail.com>
+From: Dawei Chien <dawei.chien@mediatek.com>
+Subject: [PATCH v2 1/3] dt-bindings: thermal: Add binding document for Mediatek thermal controller
+Date: Thu, 18 Aug 2016 11:50:51 +0800
+Message-ID: <1471492253-7185-2-git-send-email-dawei.chien@mediatek.com>
+References: <1471492253-7185-1-git-send-email-dawei.chien@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <bec781c6-2db9-02c7-687d-b5d6ee50c129@gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Al Stone <al.stone@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, Shanker Donthineni <shankerd@codeaurora.org>, Vikram Sethi <vikrams@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, David Miller <davem@davemloft.net>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "Abdulhamid, Harb" <harba@codeaurora.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1471492253-7185-1-git-send-email-dawei.chien@mediatek.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Fan Chen <fan.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, Dawei Chien <dawei.chien@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Florian Fainelli wrote:
+This adds the device tree binding documentation for the mediatek thermal
+controller found on Mediatek MT2701.
 
->>      emac_sgmii: ethernet-phy@410400 {
->>          compatible = "qcom,qdf2432-emac-phy";
->>          reg = <0x0 0x00410400 0x0 0x100>;
->>          interrupts = <0 0x104 0>;
->>      };
->>
->
-> Is this register range relative to the emac0 node here, or is this
-> really a separate node, within the same adress space as your emac0 node?
+Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+---
+ .../bindings/thermal/mediatek-thermal.txt          |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-It's a separate node within the same address space.  We can't guarantee 
-that it's adjacent to any other EMAC register -- it could be anywhere in 
-memory. 0x00410400 is the real physical address of those registers.
-
-> Answer largely depends on whether your device is really located outside
-> of the emac, if it located outside, then a platform device matching the
-> compatible string would get you what you want. If the emac_sgmii block
-> is a sub-block within the EMAC, then a few things need fixing:
->
-> - your emac_sgmii node should be a sub-node of the emac node, not a sibling
-> - the emac0 node should have a "ranges" property that indicates how to
-> translate the sub-nodes' "reg" property based on the base register
-> address of the emac0 block
-> - you would have to call of_platform_populate from the EMAC driver to
-> ensure that the emac_sgmii child node and therefore platform device gets
-> created
-
-Even if the emac_sgmii block were a sub-block, wouldn't it conflict with 
-the ethernet-phy@4 node?  The #address-cells and #size-cells properties 
-cannot be valid for both the emac_sgmii and ethernet-phy@4 nodes.
-
+diff --git a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+index 81f9a51..e2f494d 100644
+--- a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+@@ -8,7 +8,9 @@ apmixedsys register space via AHB bus accesses, so a phandle to the APMIXEDSYS
+ is also needed.
+ 
+ Required properties:
+-- compatible: "mediatek,mt8173-thermal"
++- compatible:
++  - "mediatek,mt8173-thermal" : For MT8173 family of SoCs
++  - "mediatek,mt2701-thermal" : For MT2701 family of SoCs
+ - reg: Address range of the thermal controller
+ - interrupts: IRQ for the thermal controller
+ - clocks, clock-names: Clocks needed for the thermal controller. required
 -- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, hosted by The Linux Foundation.
+1.7.9.5
+
