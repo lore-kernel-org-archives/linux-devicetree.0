@@ -1,15 +1,12 @@
-From: John Youn <John.Youn@synopsys.com>
-Subject: Re: [PATCH V2 RFC 2/6] usb: dwc2: Add DT properties to specify fifo
- size in host/otg mode
-Date: Thu, 18 Aug 2016 11:12:42 -0700
-Message-ID: <4db23ecb-e35c-e70a-e6ed-f3bbb5f7f1a2@synopsys.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH V2 RFC 0/6] ARM: dts: bcm2835: Add Raspberry Pi Zero
+Date: Thu, 18 Aug 2016 11:14:07 -0700
+Message-ID: <87lgzuj66o.fsf@eliezer.anholt.net>
 References: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
- <1469559213-16160-3-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============5268706075119156597=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1469559213-16160-3-git-send-email-stefan.wahren@i2se.com>
+In-Reply-To: <1469559213-16160-1-git-send-email-stefan.wahren@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,104 +16,80 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, John Youn <John.Youn@synopsys.com>
-Cc: Felipe Balbi <balbi@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-rpi-kernel@lists.infradead.org" <linux-rpi-kernel@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, John Youn <johnyoun@synopsys.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, Felipe Balbi <balbi@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 7/26/2016 11:54 AM, Stefan Wahren wrote:
-> Currently the fifo sizes for host/otg mode are defined per platform
-> and doesn't take the mode into account. So we will get errors
-> like this:
-> 
-> dwc2 20980000.usb: 256 invalid for host_nperio_tx_fifo_size.
-> dwc2 20980000.usb: Setting host_nperio_tx_fifo_size to 32
-> 
-> So add DT properties for these mode specific fifo sizes in order
-> to define them in the devicetree and avoid these errors.
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->  Documentation/devicetree/bindings/usb/dwc2.txt |    3 +++
->  drivers/usb/dwc2/core.c                        |   25 ++++++++++++++++++------
->  2 files changed, 22 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> index 20a68bf..298bac1 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> @@ -27,6 +27,9 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
->  - g-rx-fifo-size: size of rx fifo size in gadget mode.
->  - g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
->  - g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
-> +- h-rx-fifo-size: size of rx fifo size in host / otg mode.
-> +- h-np-tx-fifo-size: size of non-periodic tx fifo size in host / otg mode.
-> +- h-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in host / otg mode.
->  
->  Example:
->  
-> diff --git a/drivers/usb/dwc2/core.c b/drivers/usb/dwc2/core.c
-> index 5645528..5dffc6e 100644
-> --- a/drivers/usb/dwc2/core.c
-> +++ b/drivers/usb/dwc2/core.c
-> @@ -47,6 +47,7 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/delay.h>
->  #include <linux/io.h>
-> +#include <linux/of.h>
->  #include <linux/slab.h>
->  #include <linux/usb.h>
->  
-> @@ -1289,6 +1290,9 @@ static void dwc2_set_param_hibernation(struct dwc2_hsotg *hsotg,
->  void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
->  			 const struct dwc2_core_params *params)
->  {
-> +	struct device_node *np = hsotg->dev->of_node;
-> +	u32 val = 0;
-> +
->  	dev_dbg(hsotg->dev, "%s()\n", __func__);
->  
->  	dwc2_set_param_otg_cap(hsotg, params->otg_cap);
-> @@ -1299,12 +1303,6 @@ void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
->  			params->host_support_fs_ls_low_power);
->  	dwc2_set_param_enable_dynamic_fifo(hsotg,
->  			params->enable_dynamic_fifo);
-> -	dwc2_set_param_host_rx_fifo_size(hsotg,
-> -			params->host_rx_fifo_size);
-> -	dwc2_set_param_host_nperio_tx_fifo_size(hsotg,
-> -			params->host_nperio_tx_fifo_size);
-> -	dwc2_set_param_host_perio_tx_fifo_size(hsotg,
-> -			params->host_perio_tx_fifo_size);
->  	dwc2_set_param_max_transfer_size(hsotg,
->  			params->max_transfer_size);
->  	dwc2_set_param_max_packet_count(hsotg,
-> @@ -1329,6 +1327,21 @@ void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
->  	dwc2_set_param_uframe_sched(hsotg, params->uframe_sched);
->  	dwc2_set_param_external_id_pin_ctl(hsotg, params->external_id_pin_ctl);
->  	dwc2_set_param_hibernation(hsotg, params->hibernation);
-> +
-> +	if (!IS_ENABLED(CONFIG_OF) ||
-> +	    of_property_read_u32(np, "h-rx-fifo-size", &val))
-> +		val = params->host_rx_fifo_size;
-> +	dwc2_set_param_host_rx_fifo_size(hsotg, val);
-> +
-> +	if (!IS_ENABLED(CONFIG_OF) ||
-> +	    of_property_read_u32(np, "h-np-tx-fifo-size", &val))
-> +		val = params->host_nperio_tx_fifo_size;
-> +	dwc2_set_param_host_nperio_tx_fifo_size(hsotg, val);
-> +
-> +	if (!IS_ENABLED(CONFIG_OF) ||
-> +	    of_property_read_u32(np, "h-tx-fifo-size", &val))
-> +		val = params->host_perio_tx_fifo_size;
-> +	dwc2_set_param_host_perio_tx_fifo_size(hsotg, val);
->  }
->  
->  /*
-> 
+--===============5268706075119156597==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-You should be able to use "device_property_read" as in the dwc3
-driver. I know gadget.c currently uses of_property_read but we have
-already made this change internally. This will allow us to set these
-for PCI based devices, and also you won't need the CONFIG_OF check.
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-John
+Stefan Wahren <stefan.wahren@i2se.com> writes:
+
+> This patch series is only a draft and not intended to be merged. Patches =
+1 and 2
+> aren't bcm2835 specific and should be helpful for other platforms.=20
+> The patches 2 - 4 are required for otg / gadget mode. The last patch
+> based on the work of Lubomir Rintel [1] and Noralf Tr=C3=B8nnes [2].
+>
+> Changes since V1:
+> - rebase to current linux-next
+> - add patches 1 - 4 for otg/gadget support
+> - add patch 5 with model compatible
+> - use polarity define for ACT LED
+>
+> [1] - http://lists.infradead.org/pipermail/linux-rpi-kernel/2016-February=
+/003221.html
+> [2] - https://github.com/raspberrypi/linux/pull/1239/
+>
+> Stefan Wahren (6):
+>   usb: dwc2: core: Avoid nonsense error in gadget mode
+>   usb: dwc2: Add DT properties to specify fifo size in host/otg mode
+>   ARM: dts: bcm283x: Add missing usb clock
+>   ARM: dts: bcm283x: Add generic USB PHY
+>   DT: bindings: bcm: Add Raspberry Pi Zero
+>   ARM: dts: bcm2835: Add Raspberry Pi Zero
+
+Where are we at on these?  I've been holding off waiting for the USB
+bits to get settled.  I can grab the bindings patch, but is there
+anything else we could merge while you're working on USB?
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJXtfrwAAoJELXWKTbR/J7oxOQQAKjNkgrtS89w6vgVURgre4CW
+VdzquwjlGtfZg68WOQVcuw0tIJDC+ADcvgrEWoyToOnBgdgQg49eloijdwcxxLlW
+zuj0lUobHt2wFPsKmfhWNATUTkBxKT6Ijh/A3DZZrRIG1VE4wEg5t6lw0stHKasI
+e12k9QkVcj/tzLP6A2chQQCV7UZqxWrOrfXE7QhWe2yYdek3eIdm5WVxbn5KFDFZ
+v/73I2sKv7i1w36+eqlQPF+VVxgQt24rfPwCP8+u/Oz3TJFHcVaqXEpO13bFXHvi
+nGWNaJm0ry9QpZcrnC6l0QnYPyqyrghid/9r/Oc6C829nDkKkHSl1i6OpIadqRAM
+CZLzeDvg4XdDmOUdA0MvjDhSrgOapqUHokbbFOnOlt3VblYIRLHBwsH3QQCNn7gy
+JBThUFelVtHnJGrUoL/iTuZRQgWYSzSJ0mWMuofehz8yxBWi9U4RRxadXdQhehTO
+KzbeWUpECVr4j6/rOQ4Uwm6T6FxfvD+6IZAVbXrMCWimDWZRZFbOITKGd4ycvBM+
+Xe1cwzCmL5GOOdnwT+7E8RkybL4py5fZBmRXC6f0YufuqBsmDW6VolsOwYBPLpKJ
+3FwWwhaiAIUScxdnSpp85b74eBRYT1HyMJAgCKneNe/FM4G6+VNjv3L3xzxyWNcF
+GacDHvKoowwkLfvOGbut
+=FcAn
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+--===============5268706075119156597==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5268706075119156597==--
