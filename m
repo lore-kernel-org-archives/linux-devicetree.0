@@ -1,31 +1,46 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv3] net: ethernet: macb: Add support for rx_clk
-Date: Thu, 18 Aug 2016 12:45:30 +0530
-Message-ID: <CAKfKVtHJuaRKQt2FzMODSKK8LqFEyRwz001sy7TSojuxKUENyg@mail.gmail.com>
-References: <1471322690-35923-1-git-send-email-shubhrajyoti.datta@xilinx.com> <d658e2d7-e550-b4f0-4aa1-ec7e95269724@atmel.com>
+From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: Remove use of skeleton.dtsi from
+ bcm283x.dtsi
+Date: Thu, 18 Aug 2016 08:21:56 +0100
+Message-ID: <1471504916.6295.32.camel@hellion.org.uk>
+References: <1470233565-30154-1-git-send-email-ijc@hellion.org.uk>
+	 <20160803144858.GA29054@leverpostej>
+	 <1470739709.4745.23.camel@hellion.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d658e2d7-e550-b4f0-4aa1-ec7e95269724-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1470739709.4745.23.camel-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 16, 2016 at 10:03 PM, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> w=
-rote:
-> Le 15/08/2016 =C3=A0 21:44, Shubhrajyoti Datta a =C3=A9crit :
->> Some of the platforms like zynqmp ultrascale+ has a
->> separate clock gate for the rx clock. Add an optional
->> rx_clk so that the clock can be enabled.
->>
->> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->
-> Fine with me:
-> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->
-Thanks Nicolas.
+On Tue, 2016-08-09 at 11:48 +0100, Ian Campbell wrote:
+> On Wed, 2016-08-03 at 15:48 +0100, Mark Rutland wrote:
+> > 
+> > > [...]Signed-off-by: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> > 
+> > I also don't have the relevant hardware to test with, but this
+> looks
+> > generally like the right thing. So FWIW:
+> > 
+> > Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> 
+> Thanks (and Stefan too).
+> 
+> I think these things generally go via the arm-soc tree? Arnd & Olaf,
+> would it be possible to get this fix in for rc2 please (or in any event
+> for 4.8). Although it's an external tree I believe build breakage in
+> the split-out DT git repo is worth addressing.
+
+This change doesn't appear to be in either v4.8-rc2, Linus' tree nor in
+the arm-soc tree that I can see. So, ping?
+
+Or am I barking up the wrong tree pointing this patch towards arm-soc
+(via arm@k.o)?
+
+Ian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
