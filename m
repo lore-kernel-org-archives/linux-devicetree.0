@@ -1,50 +1,39 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] usb: phy: mxs: Add DT bindings to configure TX settings
-Date: Thu, 18 Aug 2016 14:27:14 -0500
-Message-ID: <20160818192714.GA32621@rob-hp-laptop>
-References: <0160614020657.GA25052@shlinux2>
- <1471386708-26350-1-git-send-email-jaret.cantu@timesys.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: touchscreen: silead gsl1680: Document
+ all compatibles
+Date: Thu, 18 Aug 2016 14:27:40 -0500
+Message-ID: <20160818192740.GA1325@rob-hp-laptop>
+References: <1471424340-4201-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1471386708-26350-1-git-send-email-jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <1471424340-4201-1-git-send-email-hdegoede@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 16, 2016 at 06:31:48PM -0400, Jaret Cantu wrote:
-> The TX settings can be calibrated for particular hardware.  The
-> phy is reset by Linux, so this cannot be handled by the bootloader.
+On Wed, Aug 17, 2016 at 10:59:00AM +0200, Hans de Goede wrote:
+> The silead gsl1680 driver / binding supports a whole series of devices,
+> list the compatibles for all of them in the binding.
 > 
-> The TRM mentions that the maximum resistance should be used for the
-> DN/DP calibration in order to pass USB certification.
-> 
-> The values for the TX registers are poorly described in the TRM.
-> The meanings of the register values were taken from another
-> NXP-provided document:
-> https://community.nxp.com/message/566147#comment-566912
-> 
-> Signed-off-by: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
-> v4. Corrected tx-d-cal register value by rounding up.
->     Changed Freescale web site reference to NXP.
-> 
-> v3. Added unit suffix (-ohms) to tx-cal-45-d*
-> 
-> v2. Copying devicetree list
->     Removed prettifying extra whitespace
->     Removed unnecessary register rewrite on resume
->     Use min and max constants for clarity
-> 
->  .../devicetree/bindings/phy/mxs-usb-phy.txt        |   10 ++++
+> Changes in v2:
+> -Drop the "silead,mssl1680" compatible thing, the "mssl1680" name is an
+>  ACPI thing and does not belong in the dt bindings
+> ---
+>  .../devicetree/bindings/input/touchscreen/silead_gsl1680.txt          | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  drivers/usb/phy/phy-mxs-usb.c                      |   61 ++++++++++++++++++++
->  2 files changed, 71 insertions(+)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
