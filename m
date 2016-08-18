@@ -1,58 +1,106 @@
-From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Add Ingenic JZ4780 hardware RNG driver
-Date: Thu, 18 Aug 2016 13:19:59 +0100
-Message-ID: <291974d6-1398-716f-3c76-662a7616eb6b@linaro.org>
-References: <1471448151-20850-1-git-send-email-prasannatsmkumar@gmail.com>
- <92a00062-9a87-0053-2c99-17bd1a304a4a@gmail.com>
- <CANc+2y55ZCkauwKNtuuCxLx-WOtm8z+A_EBKsYSjEUdc+ZbZTQ@mail.gmail.com>
- <20160818115300.GA6621@Red>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH RFC 1/3] DT: bindings: mmc: Add property for 3.3V only
+ support
+Date: Thu, 18 Aug 2016 15:25:35 +0300
+Message-ID: <8f87c885-3c55-cac8-a9f5-e121ae031f90@intel.com>
+References: <1470488140-10104-1-git-send-email-stefan.wahren@i2se.com>
+ <1470488140-10104-2-git-send-email-stefan.wahren@i2se.com>
+ <20160810184451.GA13473@rob-hp-laptop>
+ <853617027.179290.63a6f478-ad48-40c8-82ca-760dd1afc040.open-xchange@email.1und1.de>
+ <CAL_JsqJ09hXYrp_pgAw9FXrBv+=grkm_zip6qB9XefujPECTxQ@mail.gmail.com>
+ <468a6704-a9f0-1715-ff64-9e331a6a80b1@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160818115300.GA6621@Red>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kieran-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, pankaj.dev-qxv4g6HH51o@public.gmane.org, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>linux-
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <468a6704-a9f0-1715-ff64-9e331a6a80b1@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh@kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Marek Vasut <marex@denx.de>, Otavio Salvador <otavio@ossystems.com.br>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Holger Schurig <holgerschurig@gmail.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/08/16 12:53, LABBE Corentin wrote:
-> On Thu, Aug 18, 2016 at 10:44:18AM +0530, PrasannaKumar Muralidharan wrote:
->>>> +static int jz4780_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
->>>> +{
->>>> +     struct jz4780_rng *jz4780_rng = container_of(rng, struct jz4780_rng,
->>>> +                                                     rng);
->>>> +     u32 *data = buf;
->>>> +     *data = jz4780_rng_readl(jz4780_rng, REG_RNG_DATA);
->>>> +     return 4;
->>>> +}
+On 11/08/16 03:48, Shawn Lin wrote:
+> + Adrian
+> 
+> Let's queue Adrian here who now maintains SDHCI stuff.
+
+SDHCI drivers may not implement no-1-8-v in a consistent manner, but as far
+as I can see, the meaning is still clear: 1.8V will not be used for either
+supply or signaling.
+
+SDHCI is complicated because the SDHCI specification does not cover eMMC.
+>From the perspective of SDHCI, the only 1.8V modes are the UHS-I modes, so
+support for 1.8V signaling is the same as support for one of those modes
+(the spec even says as much).  But what happens is that the host controller
+can support those modes but the board can't supply 1.8V so the drivers
+remove capability for the modes.  Support for 1.8V supply has a capability
+bit which drivers can override if necessary but removable SD cards don't
+support 1.8V supply anyway, so the issue doesn't arise if the host
+controller is only used for uSD cards.
+
+> 
+> On 2016/8/11 5:39, Rob Herring wrote:
+>> On Wed, Aug 10, 2016 at 3:27 PM, Stefan Wahren <stefan.wahren@i2se.com>
+>> wrote:
+>>> Hi,
 >>>
->>> If max is less than 4, its bad
+>>>> Rob Herring <robh@kernel.org> hat am 10. August 2016 um 20:44 geschrieben:
+>>>>
+>>>>
+>>>> On Sat, Aug 06, 2016 at 12:55:38PM +0000, Stefan Wahren wrote:
+>>>>> Currently there is no proper way to define that a MMC host supports
+>>>>> only 3.3V. The property no-1-8-v is broken and has different meanings
+>>>>> for different sdhci variants. So add a new property for 3.3V only
+>>>>> support and mark no-1-8-v as deprecated.
+>>>>
+>>>> Why is it broken?
+>>>
+>>> i want to quote Ulf Hansson here [1]:
+>>>
+>>>   The problem with the "no-1-8-v" binding is that it's describing what
+>>>   the hardware *can't* do. It thus becomes easy to abuse it.
 >>
->> Data will be 4 bytes.
+>> Sounds like a quirk which is perfectly normal for a property. I'd
+>> agree it should be what the h/w *can* do if h/w didn't have capability
+>> bit that does that.
 >>
->
-> No, according to comment in include/linux/hw_random.h "drivers can fill up to max bytes of data"
-> So you cannot write more than max bytes without risking buffer overflow.
->
-> And if max > 4, hwrng client need to recall your read function.
-> The better example I found is tpm_get_random() in drivers/char/tpm/tpm-interface.c for handling both problem.
-
-Right now the core code will never actually ask a RNG driver for <4 
-bytes so perhaps it would be better to update the comment in 
-include/linux/hw_random.h !
-
-For devices with 32-bit RNG registers the extra code to handle a special 
-case that doesn't actually exist is a waste.
-
-There are 14 drivers in drivers/char/hw_random that support the ->read() 
-interface but only three of these actually support max == 1 (existing 
-accepted behavior varies between return 0, return 2, return 4 and return 
--EIO).
-
-
-Daniel.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>   I suggest we stop using it, we should mark it deprecated.
+>>>
+>>> [1] - http://www.spinics.net/lists/linux-mmc/msg34604.html
+>>>
+>>>> How would I override a controller saying 1.8V is
+>>>> supported and it is not?
+>>>
+>>> Sorry, i'm not sure that i understand your question. In case a board or a
+>>> MMC
+>>> controller doesn't support 1.8V, it usually supports only 3.3V which is the
+>>> intension of this patch.
+>>
+>> Some controllers have capability bits saying what voltages they
+>> support, right? And those bits can be wrong (unless firmware sets them
+>> I'd expect that is the common case) which as I read it is what
+>> "no-1-8-v" was for. So with the "mmc-ddr-*v" properties, what does not
+>> present mean and how do they relate to controller capability bits? I
+>> assume they would override the controller bits, but you can only
+>> override the capability bit not set case. I would think the property
+>> not present means use the capability bit, not that that voltage is not
+>> supported. I think you probably need tri-state properties here where
+>> value 1 means supported, 0 means not supported, and not present means
+>> use capability bit (or other method).
+>>
+>> Rob
+>> -- 
+>> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+> 
+> 
