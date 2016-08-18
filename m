@@ -1,91 +1,116 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] [v7] net: emac: emac gigabit ethernet controller driver
-Date: Wed, 17 Aug 2016 15:48:22 -0700
-Message-ID: <bec781c6-2db9-02c7-687d-b5d6ee50c129@gmail.com>
-References: <1470255143-3979-1-git-send-email-timur@codeaurora.org>
- <20160804175541.GA2832@rob-hp-laptop> <57B220C0.3060608@codeaurora.org>
- <CAL_JsqL5xk3mH=h-m8nU8xTYbRjgMWt3p7BzYWj6vBUq4OpqMg@mail.gmail.com>
- <57B31780.5030106@codeaurora.org>
- <f3a49762-aa66-1949-bd6b-77bd6a74acc1@linaro.org>
- <57B3878D.1000805@codeaurora.org>
- <ff901f77-2177-52a7-2464-2f61495f91be@gmail.com>
- <57B4C6EE.3080903@codeaurora.org> <57B4E5F7.9040500@codeaurora.org>
+From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v9 4/4] arm64: dts: rockchip: configure usb2-phy support
+ for rk3399-evb
+Date: Thu, 18 Aug 2016 10:53:22 +0800
+Message-ID: <4752a1d7-9db9-bfe9-1544-f90f33d4f560@rock-chips.com>
+References: <1469170846-15617-1-git-send-email-frank.wang@rock-chips.com>
+ <1469170846-15617-5-git-send-email-frank.wang@rock-chips.com>
+ <2024472.51n7WpJreO@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57B4E5F7.9040500-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <2024472.51n7WpJreO@diego>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shanker Donthineni <shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vikram Sethi <vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gilad Avidov <gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Lino Sanfilippo <LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "Abdulhamid, Harb" <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/17/2016 03:32 PM, Timur Tabi wrote:
-> Timur Tabi wrote:
->>>
->>> Nothing prevents you from detailing in ACPI or DT sub-components of a
->>> larger HW block, if there is such a desire, but just make it in a way
->>> that it looks like what would be done for e.g: separate discrete parts,
->>> only the parenting of nodes would change.
+On 2016/8/17 18:02, Heiko Stübner wrote:
+> Am Freitag, 22. Juli 2016, 15:00:46 schrieb Frank Wang:
+>> Add vcc5v0_host regulator for usb2-phy and enable host-port support.
 >>
->> So instead of just having a single property, instead create a child node
->> just for the SGMII phy, with its own compatible string and various other
->> properties (like interrupt and base register)?  That's not a bad idea.
-> 
-> I need help getting this to work.
-> 
->     emac0: ethernet@38800000 {
->         compatible = "qcom,qdf2432-emac";
->         reg-names = "base", "csr";
->                 reg = <0x0 0x38800000 0x0 0x10000 >,
->                         <0x0 0x38816000 0x0 0x1000>,
->                         <0x0 0x3881C000 0x0 0x4000>;
->         interrupts = <0 0x100 0 0 0x104 0>;
->         interrupt-names = "core0", "sgmii";
-> 
->         sgmii-handle = <&emac_sgmii>;
->         phy-handle = <&phy0>;
-> 
->         #address-cells = <1>;
->         #size-cells = <0>;
->         phy0: ethernet-phy@4 {
->             reg = <4>;
->         };
->     };
-> 
->     emac_sgmii: ethernet-phy@410400 {
->         compatible = "qcom,qdf2432-emac-phy";
->         reg = <0x0 0x00410400 0x0 0x100>;
->         interrupts = <0 0x104 0>;
->     };
-> 
+>> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> applied to ny dts64 branch [0] with some changes:
+>
+> - the pin is named vcc5v0_host_en not host_vbus_drv in the schematics
+>    please always try to use the names from the schematics
+> - separated the enablement of the subnodes
+>
 
-Is this register range relative to the emac0 node here, or is this
-really a separate node, within the same adress space as your emac0 node?
+Thanks for your valuable comments, I will try to improve the quality of 
+my patches in future.
 
-> When my driver probes, the platform_device object points to the emac0
-> node, as always.
-> 
-> How do I parse the emac_sgmii node?  How do I get functions like
-> platform_get_resource() to work?  How do I create a new platform_device
-> object that points to the emac_sgmii node?
+BR.
+Frank
 
-Answer largely depends on whether your device is really located outside
-of the emac, if it located outside, then a platform device matching the
-compatible string would get you what you want. If the emac_sgmii block
-is a sub-block within the EMAC, then a few things need fixing:
+> Heiko
+>
+> [0] https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.git/commit/?id=1d3bc1d6c9c4658d554bcf89a71b35a6783a5b4e
+>
+>
+>> ---
+>>   arch/arm64/boot/dts/rockchip/rk3399-evb.dts |   44
+>> +++++++++++++++++++++++++++ 1 file changed, 44 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+>> b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts index 1a3eb14..56aeedb 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+>> @@ -69,6 +69,25 @@
+>>   		regulator-max-microvolt = <3300000>;
+>>   	};
+>>
+>> +	vcc5v0_sys: vcc5v0-sys {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vcc5v0_sys";
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +	};
+>> +
+>> +	vcc5v0_host: vcc5v0-host-regulator {
+>> +		compatible = "regulator-fixed";
+>> +		enable-active-high;
+>> +		gpio = <&gpio4 25 GPIO_ACTIVE_HIGH>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&host_vbus_drv>;
+>> +		regulator-name = "vcc5v0_host";
+>> +		vin-supply = <&vcc5v0_sys>;
+>> +	};
+>> +
+>>   	vcc_phy: vcc-phy-regulator {
+>>   		compatible = "regulator-fixed";
+>>   		regulator-name = "vcc_phy";
+>> @@ -89,6 +108,24 @@
+>>   	status = "okay";
+>>   };
+>>
+>> +&u2phy0 {
+>> +	status = "okay";
+>> +
+>> +	u2phy0_host: host-port {
+>> +		phy-supply = <&vcc5v0_host>;
+>> +		status = "okay";
+>> +	};
+>> +};
+>> +
+>> +&u2phy1 {
+>> +	status = "okay";
+>> +
+>> +	u2phy1_host: host-port {
+>> +		phy-supply = <&vcc5v0_host>;
+>> +		status = "okay";
+>> +	};
+>> +};
+>> +
+>>   &uart2 {
+>>   	status = "okay";
+>>   };
+>> @@ -121,4 +158,11 @@
+>>   				<1 18 RK_FUNC_GPIO &pcfg_pull_down>;
+>>   		};
+>>   	};
+>> +
+>> +	usb2 {
+>> +		host_vbus_drv: host-vbus-drv {
+>> +			rockchip,pins =
+>> +				<4 25 RK_FUNC_GPIO &pcfg_pull_none>;
+>> +		};
+>> +	};
+>>   };
 
-- your emac_sgmii node should be a sub-node of the emac node, not a sibling
-- the emac0 node should have a "ranges" property that indicates how to
-translate the sub-nodes' "reg" property based on the base register
-address of the emac0 block
-- you would have to call of_platform_populate from the EMAC driver to
-ensure that the emac_sgmii child node and therefore platform device gets
-created
-
-
--- 
-Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
