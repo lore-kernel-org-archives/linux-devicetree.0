@@ -1,178 +1,51 @@
-From: Rask Ingemann Lambertsen <ccc94453@vip.cybercity.dk>
-Subject: [PATCH v3 1/3] devicetree: Sort vendor prefixes in alphabetical order
-Date: Wed, 17 Aug 2016 23:13:34 +0200
-Message-ID: <54da74da3f60ede0bf8fb789ffee584703e81a29.1471553094.git.ccc94453@vip.cybercity.dk>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 2/2] PCI: Rockchip: Add Rockchip PCIe controller support
+Date: Thu, 18 Aug 2016 16:24:44 -0500
+Message-ID: <20160818212444.GQ27353@localhost>
+References: <1470297128-6213-1-git-send-email-shawn.lin@rock-chips.com>
+ <1470297128-6213-2-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1470297128-6213-2-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Vendor prefixes should be listed in alphabetical order, which some of
-them weren't, so this patch corrects that.
+Hi Shawn,
 
-Signed-off-by: Rask Ingemann Lambertsen <ccc94453@vip.cybercity.dk>
----
+On Thu, Aug 04, 2016 at 03:52:08PM +0800, Shawn Lin wrote:
+> This patch adds Rockchip PCIe controller support found
+> on RK3399 Soc platform.
 
-I used 'sort --ignore-case --key 1,1'.
+> --- a/drivers/pci/host/Kconfig
+> +++ b/drivers/pci/host/Kconfig
+> @@ -264,4 +264,15 @@ config PCIE_ARTPEC6
+>  	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
+>  	  SoCs.  This PCIe controller uses the DesignWare core.
+>  
+> +config PCIE_ROCKCHIP
+> +	bool "Rockchip PCIe controller"
+> +	depends on ARM64 && ARCH_ROCKCHIP
 
-Changes in v3:
-This patch is new in v3.
+I don't see any actual ARM64 dependencies in the code (which is a very
+good thing!).  Can we remove the "depends on ARM64" part?
 
- .../devicetree/bindings/vendor-prefixes.txt        | 30 +++++++++++-----------
- 1 file changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 1992aa9..69398cf 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -3,8 +3,8 @@ Device tree binding vendor prefix registry.  Keep list in alphabetical order.
- This isn't an exhaustive list, but you should add new prefixes to it before
- using them to avoid name-space collisions.
- 
--abilis	Abilis Systems
- abcn	Abracon Corporation
-+abilis	Abilis Systems
- active-semi	Active-Semi International Inc
- ad	Avionic Design GmbH
- adapteva	Adapteva, Inc.
-@@ -54,8 +54,8 @@ chipone		ChipOne
- chipspark	ChipSPARK
- chrp	Common Hardware Reference Platform
- chunghwa	Chunghwa Picture Tubes Ltd.
--ciaa	Computadora Industrial Abierta Argentina
- cirrus	Cirrus Logic, Inc.
-+ciaa	Computadora Industrial Abierta Argentina
- cloudengines	Cloud Engines, Inc.
- cnm	Chips&Media, Inc.
- cnxt	Conexant Systems, Inc.
-@@ -101,8 +101,8 @@ focaltech	FocalTech Systems Co.,Ltd
- fsl	Freescale Semiconductor
- ge	General Electric Company
- geekbuying	GeekBuying
--GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
- gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
-+GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
- geniatech	Geniatech, Inc.
- giantplus	Giantplus Technology Co., Ltd.
- globalscale	Globalscale Technologies, Inc.
-@@ -126,7 +126,6 @@ i2se	I2SE GmbH
- ibm	International Business Machines (IBM)
- idt	Integrated Device Technologies, Inc.
- ifi	Ingenieurburo Fur Ic-Technologie (I/F/I)
--iom	Iomega Corporation
- img	Imagination Technologies Ltd.
- infineon Infineon Technologies
- inforce	Inforce Computing
-@@ -135,6 +134,7 @@ innolux	Innolux Corporation
- intel	Intel Corporation
- intercontrol	Inter Control Group
- invensense	InvenSense Inc.
-+iom	Iomega Corporation
- isee	ISEE 2007 S.L.
- isil	Intersil
- issi	Integrated Silicon Solutions Inc.
-@@ -149,8 +149,8 @@ lantiq	Lantiq Semiconductor
- lenovo	Lenovo Group Ltd.
- lg	LG Corporation
- linux	Linux-specific binding
--lsi	LSI Corp. (LSI Logic)
- lltc	Linear Technology Corporation
-+lsi	LSI Corp. (LSI Logic)
- marvell	Marvell Technology Group Ltd.
- maxim	Maxim Integrated Products
- meas	Measurement Specialties
-@@ -190,20 +190,20 @@ onnn	ON Semiconductor Corp.
- ontat	On Tat Industrial Company
- opencores	OpenCores.org
- option	Option NV
-+ORCL	Oracle Corporation
- ortustech	Ortus Technology Co., Ltd.
- ovti	OmniVision Technologies
--ORCL	Oracle Corporation
- oxsemi	Oxford Semiconductor, Ltd.
- panasonic	Panasonic Corporation
- parade	Parade Technologies Inc.
- pericom	Pericom Technology Inc.
- phytec	PHYTEC Messtechnik GmbH
- picochip	Picochip Ltd
-+pixcir  PIXCIR MICROELECTRONICS Co., Ltd
- plathome	Plat'Home Co., Ltd.
- plda	PLDA
--pixcir  PIXCIR MICROELECTRONICS Co., Ltd
--pulsedlight	PulsedLight, Inc
- powervr	PowerVR (deprecated, use img)
-+pulsedlight	PulsedLight, Inc
- qca	Qualcomm Atheros, Inc.
- qcom	Qualcomm Technologies, Inc
- qemu	QEMU, a generic and open source machine emulator and virtualizer
-@@ -231,12 +231,12 @@ sgx	SGX Sensortech
- sharp	Sharp Corporation
- si-en	Si-En Technology Ltd.
- sigma	Sigma Designs, Inc.
-+sii	Seiko Instruments, Inc.
- sil	Silicon Image
- silabs	Silicon Laboratories
-+silergy	Silergy Corp.
- siliconmitus	Silicon Mitus, Inc.
- simtek
--sii	Seiko Instruments, Inc.
--silergy	Silergy Corp.
- sirf	SiRF Technology, Inc.
- sis	Silicon Integrated Systems Corp.
- sitronix	Sitronix Technology Corporation
-@@ -254,9 +254,9 @@ starry	Starry Electronic Technology (ShenZhen) Co., LTD
- startek	Startek
- ste	ST-Ericsson
- stericsson	ST-Ericsson
-+SUNW	Sun Microsystems, Inc
- syna	Synaptics Inc.
- synology	Synology, Inc.
--SUNW	Sun Microsystems, Inc
- tbs	TBS Technologies
- tcg	Trusted Computing Group
- tcl	Toby Churchill Ltd.
-@@ -268,14 +268,14 @@ tlm	Trusted Logic Mobility
- toradex	Toradex AG
- toshiba	Toshiba Corporation
- toumaz	Toumaz
--tplink	TP-LINK Technologies Co., Ltd.
- tpk	TPK U.S.A. LLC
-+tplink	TP-LINK Technologies Co., Ltd.
- tronfy	Tronfy
- tronsmart	Tronsmart
- truly	Truly Semiconductors Limited
- tyan	Tyan Computer Corporation
--upisemi	uPI Semiconductor Corp.
- uniwest	United Western Technologies Corp (UniWest)
-+upisemi	uPI Semiconductor Corp.
- urt	United Radiant Technology Corporation
- usi	Universal Scientific Industrial Co., Ltd.
- v3	V3 Semiconductor
-@@ -289,11 +289,11 @@ wexler	Wexler
- winbond Winbond Electronics corp.
- wlf	Wolfson Microelectronics
- wm	Wondermedia Technologies, Inc.
--x-powers	X-Powers
- xes	Extreme Engineering Solutions (X-ES)
- xillybus	Xillybus Ltd.
- xlnx	Xilinx
--zyxel	ZyXEL Communications Corp.
-+x-powers	X-Powers
- zarlink	Zarlink Semiconductor
- zii	Zodiac Inflight Innovations
- zte	ZTE Corp.
-+zyxel	ZyXEL Communications Corp.
--- 
-2.8.1
+> +	depends on OF
+> +	depends on PCI_MSI_IRQ_DOMAIN
+> +	select MFD_SYSCON
+> +	help
+> +	  Say Y here if you want internal PCI support on Rockchip SoC.
+> +	  There is 1 internal PCIe port available to support GEN2 with
+> +	  4 slots.
