@@ -1,16 +1,14 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 17/17] dt-bindings: pwm: sti: Update DT bindings with
- recent changes
-Date: Thu, 18 Aug 2016 14:20:02 -0500
-Message-ID: <20160818192002.GA26225@rob-hp-laptop>
-References: <20160816093508.28307-1-lee.jones@linaro.org>
- <20160816093508.28307-18-lee.jones@linaro.org>
+Subject: Re: [PATCH] input: touchscreen: silead: Add regulator support
+Date: Thu, 18 Aug 2016 14:22:19 -0500
+Message-ID: <20160818192219.GA28941@rob-hp-laptop>
+References: <1471376124-31169-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20160816093508.28307-18-lee.jones@linaro.org>
+In-Reply-To: <1471376124-31169-1-git-send-email-hdegoede@redhat.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,26 +18,19 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-pwm@vger.kernel.org, kernel@stlinux.com, devicetree@vger.kernel.org, patrice.chotard@st.com, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 16, 2016 at 10:35:08AM +0100, Lee Jones wrote:
-> We're renaming the 'st,pwm-num-chan' binding to 'st,pwm-num-devs' to
-> be more inline with the naming conventions of the subsystem.  Where
-> we used to treat each line as a channel, the PWM convention is to
-> describe them as devices.
-
-This is out of date now. Otherwise, the binding looks fine.
-
-> The second documentation adaption entails adding support for PWM
-> capture devices.  A new clock is required as well as an IRQ line.
-> We're also adding a new property similar to the one described
-> above, but for capture channels.  Typically, there will be less
-> capture channels than PWM-out, since all channels have the latter
-> capability, but only some have capture support.
+On Tue, Aug 16, 2016 at 09:35:24PM +0200, Hans de Goede wrote:
+> On some tablets the touchscreen controller is powered by seperate
+> regulators, add support for this.
 > 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  Documentation/devicetree/bindings/pwm/pwm-st.txt | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+>  .../bindings/input/touchscreen/silead_gsl1680.txt  |  2 +
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/input/touchscreen/silead.c                 | 51 ++++++++++++++++++++--
+>  2 files changed, 49 insertions(+), 4 deletions(-)
