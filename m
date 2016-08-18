@@ -1,39 +1,53 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 1/2] Documentation: bindings: add dt doc for Rockchip
- PCIe controller
-Date: Thu, 18 Aug 2016 16:02:37 -0500
-Message-ID: <20160818210237.GP27353@localhost>
-References: <1470297128-6213-1-git-send-email-shawn.lin@rock-chips.com>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: [PATCH v3 5/5] dt-bindings: add compatible strings for big/little
+ rockchip vops
+Date: Thu, 18 Aug 2016 14:12:43 -0700
+Message-ID: <1471554763-22202-1-git-send-email-seanpaul@chromium.org>
+References: <0001-<1471454202-1631-1-git-send-email-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470297128-6213-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <0001-<1471454202-1631-1-git-send-email-seanpaul@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: devicetree@vger.kernel.org, tfiga@chromium.org, dri-devel@lists.freedesktop.org, mark.yao@rock-chips.com, robh@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 04, 2016 at 03:52:07PM +0800, Shawn Lin wrote:
-> This patch adds a binding that describes the Rockchip PCIe controller
-> found on Rockchip SoCs PCIe interface.
-> ...
-
-> +- msi-map: Maps a Requester ID to an MSI controller and associated.
-
-And associated *what*?
-
-> +- vpcie3v3-supply: The phandle to the 3.3v regulator to use for pcie.
-> +- vpcie1v8-supply: The phandle to the 1.8v regulator to use for pcie.
-> +- vpcie0v9-supply: The phandle to the 0.9v regulator to use for pcie.
-
-s/pcie/PCIe/ (also elsewhere in this patch)
+RnJvbTogTWFyayBZYW8gPG1hcmsueWFvQHJvY2stY2hpcHMuY29tPgoKVGhpcyBwYXRjaCBkb2N1
+bWVudHMgdGhlIGNvbXBhdGlibGUgc3RyaW5ncyBmb3IgdGhlIGJpZyBhbmQgbGl0dGxlIHZvcApp
+biByb2NrY2hpcCdzIGRybSBkcml2ZXIuCgpDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVs
+Lm9yZz4KQ2M6IFBhd2VsIE1vbGwgPHBhd2VsLm1vbGxAYXJtLmNvbT4KQ2M6IE1hcmsgUnV0bGFu
+ZCA8bWFyay5ydXRsYW5kQGFybS5jb20+CkNjOiBJYW4gQ2FtcGJlbGwgPGlqYytkZXZpY2V0cmVl
+QGhlbGxpb24ub3JnLnVrPgpDYzogS3VtYXIgR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+CgpS
+ZXZpZXdlZC1ieTogVG9tYXN6IEZpZ2EgPHRmaWdhQGNocm9taXVtLm9yZz4KU2lnbmVkLW9mZi1i
+eTogTWFyayBZYW8gPG1hcmsueWFvQHJvY2stY2hpcHMuY29tPgpbc2VhbnBhdWwgcmVtb3ZlZCBz
+dXBlcmZsdW91cyBkZXNjcmlwdGlvbiBwZXIgdGZpZ2EncyByZXZpZXddClNpZ25lZC1vZmYtYnk6
+IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3JnPgotLS0KClJlc2VuZGluZyB0byBhZGQg
+ZGV2aWNldHJlZSBsaXN0CgpDaGFuZ2VzIGluIHYzOgoJLSBVcGRhdGVkIHN1YmplY3QgKFNlYW4g
+UGF1bCkKCS0gUmVtb3ZlZCB1bm5lY2Vzc2FyeSBkZXNjcmlwdGlvbiAoVG9tYXN6KQoKIERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLXZv
+cC50eHQgfCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9j
+a2NoaXAtdm9wLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L3JvY2tjaGlwL3JvY2tjaGlwLXZvcC50eHQKaW5kZXggMTk2MTIxZi4uOWViM2YwYSAxMDA2NDQK
+LS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAv
+cm9ja2NoaXAtdm9wLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC12b3AudHh0CkBAIC04LDYgKzgsOCBAQCBSZXF1aXJl
+ZCBwcm9wZXJ0aWVzOgogLSBjb21wYXRpYmxlOiB2YWx1ZSBzaG91bGQgYmUgb25lIG9mIHRoZSBm
+b2xsb3dpbmcKIAkJInJvY2tjaGlwLHJrMzAzNi12b3AiOwogCQkicm9ja2NoaXAscmszMjg4LXZv
+cCI7CisJCSJyb2NrY2hpcCxyazMzOTktdm9wLWJpZyI7CisJCSJyb2NrY2hpcCxyazMzOTktdm9w
+LWxpdCI7CiAKIC0gaW50ZXJydXB0czogc2hvdWxkIGNvbnRhaW4gYSBsaXN0IG9mIGFsbCBWT1Ag
+SVAgYmxvY2sgaW50ZXJydXB0cyBpbiB0aGUKIAkJIG9yZGVyOiBWU1lOQywgTENEX1NZU1RFTS4g
+VGhlIGludGVycnVwdCBzcGVjaWZpZXIKLS0gCjIuOC4wLnJjMy4yMjYuZzM5ZDQwMjAKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
