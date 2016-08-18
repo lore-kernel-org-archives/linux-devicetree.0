@@ -1,149 +1,283 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 1/4] mfd: RK808: Add RK818 support
-Date: Thu, 18 Aug 2016 15:34:40 +0100
-Message-ID: <20160818143440.GG4254@dell>
-References: <1470819907-11237-1-git-send-email-w.egorov@phytec.de>
- <1470819907-11237-2-git-send-email-w.egorov@phytec.de>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 1/2] ARM: dts: sun6i: Add
+ sun6i-a31-reference-design-tablet.dtsi
+Date: Thu, 18 Aug 2016 17:11:34 +0200
+Message-ID: <1471533095-13432-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <rtc-linux+bncBDA7X7F2WUEBBJUO266QKGQE5RSGNQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1470819907-11237-2-git-send-email-w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 10 Aug 2016, Wadim Egorov wrote:
+Just like with a13/a23/a33 most a31 tablets are derived from the same
+reference design. Add a .dtsi file with all the common bits to avoid
+endless copy and pasting of these.
 
-> The RK818 chip is a Power Management IC (PMIC) for multimedia and handhel=
-d
-> devices. It contains the following components:
->=20
-> - Regulators
-> - RTC
-> - Clocking
-> - Battery support
->=20
-> Both RK808 and RK818 chips are using a similar register map,
-> so we can reuse the RTC and Clocking functionality.
->=20
-> Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-> Tested-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> Changes since v6:
-> - Squashed in the patch
->   mfd: RK808: Fetch PMIC variant from chip id register
->=20
-> ---
->  drivers/mfd/Kconfig       |   4 +-
->  drivers/mfd/rk808.c       | 226 +++++++++++++++++++++++++++++++++++++++-=
-------
->  include/linux/mfd/rk808.h | 154 +++++++++++++++++++++++++++++--
->  3 files changed, 342 insertions(+), 42 deletions(-)
->=20
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 2d1fb64..a55be95 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -852,13 +852,13 @@ config MFD_RC5T583
->  	  different functionality of the device.
-> =20
->  config MFD_RK808
-> -	tristate "Rockchip RK808 Power Management chip"
-> +	tristate "Rockchip RK808/RK818 Power Management Chip"
->  	depends on I2C && OF
->  	select MFD_CORE
->  	select REGMAP_I2C
->  	select REGMAP_IRQ
->  	help
-> -	  If you say yes here you get support for the RK808
-> +	  If you say yes here you get support for the RK808 and RK818
->  	  Power Management chips.
->  	  This driver provides common support for accessing the device
->  	  through I2C interface. The device supports multiple sub-devices
-> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
-> index 49d7f62..fbec1d8 100644
-> --- a/drivers/mfd/rk808.c
-> +++ b/drivers/mfd/rk808.c
-> @@ -1,11 +1,15 @@
->  /*
-> - * MFD core driver for Rockchip RK808
-> + * MFD core driver for Rockchip RK808/RK818
->   *
->   * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
->   *
->   * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->   * Author: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->   *
-> + * Copyright (C) 2016 PHYTEC Messtechnik GmbH
-> + *
-> + * Author: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-> + *
->   * This program is free software; you can redistribute it and/or modify =
-it
->   * under the terms and conditions of the GNU General Public License,
->   * version 2, as published by the Free Software Foundation.
-> @@ -22,6 +26,7 @@
->  #include <linux/mfd/core.h>
->  #include <linux/module.h>
->  #include <linux/regmap.h>
-> +#include <linux/of_device.h>
+The sun6i-a31-reference-design-tablet.dtsi this commit adds is a copy
+of sun6i-a31s-colorfly-e708-q1.dts with a few tablet specific bits
+removed / left in sun6i-a31s-colorfly-e708-q1.dts.
 
-Alphabetical.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ ....dts => sun6i-a31-reference-design-tablet.dtsi} |  26 +---
+ arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts  | 147 +--------------------
+ 2 files changed, 2 insertions(+), 171 deletions(-)
+ copy arch/arm/boot/dts/{sun6i-a31s-colorfly-e708-q1.dts => sun6i-a31-reference-design-tablet.dtsi} (90%)
 
->  struct rk808_reg_data {
->  	int addr;
-> @@ -57,6 +62,14 @@ static bool rk808_is_volatile_reg(struct device *dev, =
-unsigned int reg)
->  	return false;
->  }
-> =20
-> +static const struct regmap_config rk818_regmap_config =3D {
-> +	.reg_bits =3D 8,
-> +	.val_bits =3D 8,
-> +	.max_register =3D RK818_USB_CTRL_REG,
-> +	.cache_type =3D REGCACHE_RBTREE,
-> +	.volatile_reg =3D rk808_is_volatile_reg,
-> +};
-> +
->  static const struct regmap_config rk808_regmap_config =3D {
->  	.reg_bits =3D 8,
->  	.val_bits =3D 8,
-> @@ -79,11 +92,21 @@ static const struct mfd_cell rk808s[] =3D {
->  	{
->  		.name =3D "rk808-rtc",
->  		.num_resources =3D ARRAY_SIZE(rtc_resources),
-> -		.resources =3D &rtc_resources[0],
-> +		.resources =3D rtc_resources,
-
-?
-
->  	},
->  };
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
----=20
-You received this message because you are subscribed to the Google Groups "=
-rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts b/arch/arm/boot/dts/sun6i-a31-reference-design-tablet.dtsi
+similarity index 90%
+copy from arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts
+copy to arch/arm/boot/dts/sun6i-a31-reference-design-tablet.dtsi
+index 34d8710..0c43430 100644
+--- a/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts
++++ b/arch/arm/boot/dts/sun6i-a31-reference-design-tablet.dtsi
+@@ -40,8 +40,6 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+-/dts-v1/;
+-#include "sun6i-a31s.dtsi"
+ #include "sunxi-common-regulators.dtsi"
+ 
+ #include <dt-bindings/gpio/gpio.h>
+@@ -49,9 +47,6 @@
+ #include <dt-bindings/pinctrl/sun4i-a10.h>
+ 
+ / {
+-	model = "Colorfly E708 Q1 tablet";
+-	compatible = "colorfly,e708-q1", "allwinner,sun6i-a31s";
+-
+ 	aliases {
+ 		serial0 = &uart0;
+ 	};
+@@ -66,20 +61,8 @@
+ };
+ 
+ &ehci0 {
+-	/* rtl8188etv wifi is connected here */
+-	status = "okay";
+-};
+-
+-&lradc {
+-	vref-supply = <&reg_aldo3>;
++	/* Wifi is connected here */
+ 	status = "okay";
+-
+-	button@1000 {
+-		label = "Home";
+-		linux,code = <KEY_HOMEPAGE>;
+-		channel = <0>;
+-		voltage = <1000000>;
+-	};
+ };
+ 
+ &mmc0 {
+@@ -181,12 +164,6 @@
+ 	regulator-name = "vcc-wifi";
+ };
+ 
+-&reg_dldo2 {
+-	regulator-min-microvolt = <1800000>;
+-	regulator-max-microvolt = <1800000>;
+-	regulator-name = "vcc-pg";
+-};
+-
+ &reg_drivevbus {
+ 	regulator-name = "usb0-vbus";
+ 	status = "okay";
+@@ -194,7 +171,6 @@
+ 
+ &simplefb_lcd {
+ 	vcc-lcd-supply = <&reg_dc1sw>;
+-	vcc-pg-supply = <&reg_dldo2>;
+ };
+ 
+ &usb_otg {
+diff --git a/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts b/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts
+index 34d8710..e26988a 100644
+--- a/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts
++++ b/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts
+@@ -42,32 +42,11 @@
+ 
+ /dts-v1/;
+ #include "sun6i-a31s.dtsi"
+-#include "sunxi-common-regulators.dtsi"
+-
+-#include <dt-bindings/gpio/gpio.h>
+-#include <dt-bindings/input/input.h>
+-#include <dt-bindings/pinctrl/sun4i-a10.h>
++#include "sun6i-a31-reference-design-tablet.dtsi"
+ 
+ / {
+ 	model = "Colorfly E708 Q1 tablet";
+ 	compatible = "colorfly,e708-q1", "allwinner,sun6i-a31s";
+-
+-	aliases {
+-		serial0 = &uart0;
+-	};
+-
+-	chosen {
+-		stdout-path = "serial0:115200n8";
+-	};
+-};
+-
+-&cpu0 {
+-	cpu-supply = <&reg_dcdc3>;
+-};
+-
+-&ehci0 {
+-	/* rtl8188etv wifi is connected here */
+-	status = "okay";
+ };
+ 
+ &lradc {
+@@ -82,136 +61,12 @@
+ 	};
+ };
+ 
+-&mmc0 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_e708_q1>;
+-	vmmc-supply = <&reg_dcdc1>;
+-	bus-width = <4>;
+-	cd-gpios = <&pio 0 8 GPIO_ACTIVE_HIGH>; /* PA8 */
+-	cd-inverted;
+-	status = "okay";
+-};
+-
+-&pio {
+-	mmc0_cd_pin_e708_q1: mmc0_cd_pin@0 {
+-		allwinner,pins = "PA8";
+-		allwinner,function = "gpio_in";
+-		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+-		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+-	};
+-
+-	usb0_id_detect_pin: usb0_id_detect_pin@0 {
+-		allwinner,pins = "PA15";
+-		allwinner,function = "gpio_in";
+-		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+-		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+-	};
+-};
+-
+-&p2wi {
+-	status = "okay";
+-
+-	axp22x: pmic@68 {
+-		compatible = "x-powers,axp221";
+-		reg = <0x68>;
+-		interrupt-parent = <&nmi_intc>;
+-		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+-		drivevbus-supply = <&reg_vcc5v0>;
+-		x-powers,drive-vbus-en;
+-	};
+-};
+-
+-#include "axp22x.dtsi"
+-
+-&reg_aldo3 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <2700000>;
+-	regulator-max-microvolt = <3300000>;
+-	regulator-name = "avcc";
+-};
+-
+-&reg_dc1sw {
+-	regulator-name = "vcc-lcd";
+-};
+-
+-&reg_dc5ldo {
+-	regulator-always-on;
+-	regulator-min-microvolt = <700000>;
+-	regulator-max-microvolt = <1320000>;
+-	regulator-name = "vdd-cpus"; /* This is an educated guess */
+-};
+-
+-&reg_dcdc1 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <3000000>;
+-	regulator-max-microvolt = <3000000>;
+-	regulator-name = "vcc-3v0";
+-};
+-
+-&reg_dcdc2 {
+-	regulator-min-microvolt = <700000>;
+-	regulator-max-microvolt = <1320000>;
+-	regulator-name = "vdd-gpu";
+-};
+-
+-&reg_dcdc3 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <700000>;
+-	regulator-max-microvolt = <1320000>;
+-	regulator-name = "vdd-cpu";
+-};
+-
+-&reg_dcdc4 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <700000>;
+-	regulator-max-microvolt = <1320000>;
+-	regulator-name = "vdd-sys-dll";
+-};
+-
+-&reg_dcdc5 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <1500000>;
+-	regulator-max-microvolt = <1500000>;
+-	regulator-name = "vcc-dram";
+-};
+-
+-&reg_dldo1 {
+-	regulator-min-microvolt = <3300000>;
+-	regulator-max-microvolt = <3300000>;
+-	regulator-name = "vcc-wifi";
+-};
+-
+ &reg_dldo2 {
+ 	regulator-min-microvolt = <1800000>;
+ 	regulator-max-microvolt = <1800000>;
+ 	regulator-name = "vcc-pg";
+ };
+ 
+-&reg_drivevbus {
+-	regulator-name = "usb0-vbus";
+-	status = "okay";
+-};
+-
+ &simplefb_lcd {
+-	vcc-lcd-supply = <&reg_dc1sw>;
+ 	vcc-pg-supply = <&reg_dldo2>;
+ };
+-
+-&usb_otg {
+-	dr_mode = "otg";
+-	status = "okay";
+-};
+-
+-&usb_power_supply {
+-	status = "okay";
+-};
+-
+-&usbphy {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&usb0_id_detect_pin>;
+-	usb0_id_det-gpio = <&pio 0 15 GPIO_ACTIVE_HIGH>; /* PA15 */
+-	usb0_vbus_power-supply = <&usb_power_supply>;
+-	usb0_vbus-supply = <&reg_drivevbus>;
+-	usb1_vbus-supply = <&reg_dldo1>;
+-	status = "okay";
+-};
+-- 
+2.7.4
