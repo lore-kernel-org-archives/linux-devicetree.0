@@ -1,57 +1,28 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v9 2/2] PCI: Rockchip: Add Rockchip PCIe controller
- support
-Date: Fri, 19 Aug 2016 09:20:42 +0800
-Message-ID: <4a09c742-053b-7a16-efd1-a3c972d7c9a8@rock-chips.com>
-References: <1470297128-6213-1-git-send-email-shawn.lin@rock-chips.com>
- <1470297128-6213-2-git-send-email-shawn.lin@rock-chips.com>
- <20160818212444.GQ27353@localhost>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/17] iio: accel: kxsd9: Add device tree bindings
+Date: Thu, 18 Aug 2016 14:21:06 -0500
+Message-ID: <20160818192106.GA28115@rob-hp-laptop>
+References: <1471354423-19186-1-git-send-email-linus.walleij@linaro.org>
+ <1471354423-19186-2-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160818212444.GQ27353@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1471354423-19186-2-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-在 2016/8/19 5:24, Bjorn Helgaas 写道:
-> Hi Shawn,
->
-> On Thu, Aug 04, 2016 at 03:52:08PM +0800, Shawn Lin wrote:
->> This patch adds Rockchip PCIe controller support found
->> on RK3399 Soc platform.
->
->> --- a/drivers/pci/host/Kconfig
->> +++ b/drivers/pci/host/Kconfig
->> @@ -264,4 +264,15 @@ config PCIE_ARTPEC6
->>  	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
->>  	  SoCs.  This PCIe controller uses the DesignWare core.
->>
->> +config PCIE_ROCKCHIP
->> +	bool "Rockchip PCIe controller"
->> +	depends on ARM64 && ARCH_ROCKCHIP
->
-> I don't see any actual ARM64 dependencies in the code (which is a very
-> good thing!).  Can we remove the "depends on ARM64" part?
+On Tue, Aug 16, 2016 at 03:33:27PM +0200, Linus Walleij wrote:
+> This accelerometer can be probed from the device tree, so it needs
+> to have proper documentation of it's device tree bindings.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/accel/kionix,kxsd9.txt | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/kionix,kxsd9.txt
 
-sure, we could. Actually we are going to use this controller for
-arm32 as well, so yes, I will remove it.
-
->
->> +	depends on OF
->> +	depends on PCI_MSI_IRQ_DOMAIN
->> +	select MFD_SYSCON
->> +	help
->> +	  Say Y here if you want internal PCI support on Rockchip SoC.
->> +	  There is 1 internal PCIe port available to support GEN2 with
->> +	  4 slots.
->
->
->
-
-
--- 
-Best Regards
-Shawn Lin
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
