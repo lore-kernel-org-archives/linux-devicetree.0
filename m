@@ -1,199 +1,163 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 3/4] ARM: dts: Add Sierra Wireless WP8548 dtsi
-Date: Thu, 18 Aug 2016 15:11:20 +0200
-Message-ID: <1471525881-2797-4-git-send-email-narmstrong@baylibre.com>
-References: <1471525881-2797-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1471525881-2797-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux@armlinux.org.uk, mark.rutland@arm.com
-Cc: Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] ARM: dts: da850-lcdk: Add NAND to DT
+Date: Thu, 18 Aug 2016 13:30:39 +0000
+Message-ID: <20160818133039.GA8546@gobelin>
+References: <20160810110032.29295-1-kbeldan@baylibre.com>
+ <20160810110032.29295-5-kbeldan@baylibre.com>
+ <6d3cb4b2-32d8-9304-a4a4-9e675e686bfb@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <6d3cb4b2-32d8-9304-a4a4-9e675e686bfb-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Karl Beldan <karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In order to support the Sierra Wireless WP8548 module based on the
-Qualcomm MDM9615 SoC, add a dtsi file.
+On Thu, Aug 18, 2016 at 03:27:52PM +0530, Sekhar Nori wrote:
+> On Wednesday 10 August 2016 04:30 PM, Karl Beldan wrote:
+> > This adds DT support for the NAND connected to the SoC AEMIF.
+> > The parameters (timings, ecc) are the same as what the board ships with
+> > (default AEMIF timings, 1bit ECC) and improvements will be handled in
+> > due course.
+> > This passed elementary tests hashing a 20MB file on top of ubifs on my
+> > LCDK.
+> > 
+> > Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/da850-lcdk.dts | 107 +++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 107 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+> > index dbcca0b..a3f9845 100644
+> > --- a/arch/arm/boot/dts/da850-lcdk.dts
+> > +++ b/arch/arm/boot/dts/da850-lcdk.dts
+> > @@ -27,6 +27,27 @@
+> 
+> > +&aemif {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&nand_pins>;
+> > +	status = "ok";
+> > +	cs3 {
+> > +		#address-cells = <2>;
+> > +		#size-cells = <1>;
+> > +		clock-ranges;
+> > +		ranges;
+> > +
+> > +		ti,cs-chipselect = <3>;
+> > +
+> > +		nand@2000000,0 {
+> > +			compatible = "ti,davinci-nand";
+> > +			#address-cells = <1>;
+> > +			#size-cells = <1>;
+> > +			reg = <0 0x02000000 0x02000000
+> > +			       1 0x00000000 0x00008000>;
+> > +
+> > +			ti,davinci-chipselect = <1>;
+> > +			ti,davinci-mask-ale = <0>;
+> > +			ti,davinci-mask-cle = <0>;
+> > +			ti,davinci-mask-chipsel = <0>;
+> > +
+> > +			/*
+> > +			 * nand_ecc_strength_good will emit a warning
+> > +			 * but the LCDK ships with these settings [1].
+> > +			 * Also HW 4bits ECC with 16bits NAND seems to
+> > +			 * require some attention.
+> > +			 *
+> > +			 * ATM nand_davinci_probe handling of nand-ecc-*
+> > +			 * is broken, e.g.
+> > +			 * chip.ecc.strength = pdata->ecc_bits occurs after
+> > +			 * scan_ident(), otherwise I would have used:
+> > +			 * 	nand-ecc-mode = "hw";
+> > +			 * 	nand-ecc-strength = <1>;
+> > +			 * 	nand-ecc-step-size = <512>;
+> > +			 */
+> > +			ti,davinci-nand-buswidth = <16>;
+> > +			ti,davinci-ecc-mode = "hw";
+> > +			ti,davinci-ecc-bits = <1>;
+> > +			ti,davinci-nand-use-bbt;
+> 
+> As discussed before, will apply this patch after 4-bit ECC support is
+> sorted out.
+> 
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm/boot/dts/swi-wp8548.dtsi | 170 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 170 insertions(+)
- create mode 100644 arch/arm/boot/dts/swi-wp8548.dtsi
+Ok. BTW it seems I might have the opportunity to look into this.
 
-diff --git a/arch/arm/boot/dts/swi-wp8548.dtsi b/arch/arm/boot/dts/swi-wp8548.dtsi
-new file mode 100644
-index 0000000..9f4d244
---- /dev/null
-+++ b/arch/arm/boot/dts/swi-wp8548.dtsi
-@@ -0,0 +1,170 @@
-+/*
-+ * Device Tree Source for Sierra Wireless WP8548 Module
-+ *
-+ * Copyright (C) 2016 BayLibre, SAS.
-+ * Author : Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include "qcom-mdm9615.dtsi"
-+
-+/ {
-+	model = "Sierra Wireless WP8548 Module";
-+	compatible = "swi,wp8548", "qcom,mdm9615";
-+
-+	memory {
-+		reg = <0x48000000 0x7F00000>;
-+	};
-+};
-+
-+&msmgpio {
-+	pinctrl-0 = <&reset_out_pins>;
-+	pinctrl-names = "default";
-+
-+	gsbi3_pins: gsbi3_pins {
-+		mux {
-+			pins = "gpio8", "gpio9", "gpio10", "gpio11";
-+			function = "gsbi3";
-+			drive-strength = <8>;
-+			bias-disable;
-+		};
-+	};
-+
-+	gsbi4_pins: gsbi4_pins {
-+		mux {
-+			pins = "gpio12", "gpio13", "gpio14", "gpio15";
-+			function = "gsbi4";
-+			drive-strength = <8>;
-+			bias-disable;
-+		};
-+	};
-+
-+	gsbi5_i2c_pins: gsbi5_i2c_pins {
-+		pin16 {
-+			pins = "gpio16";
-+			function = "gsbi5_i2c";
-+			drive-strength = <8>;
-+			bias-disable;
-+		};
-+
-+		pin17 {
-+			pins = "gpio17";
-+			function = "gsbi5_i2c";
-+			drive-strength = <2>;
-+			bias-disable;
-+		};
-+	};
-+
-+	gsbi5_uart_pins: gsbi5_uart_pins {
-+		mux {
-+			pins = "gpio18", "gpio19";
-+			function = "gsbi5_uart";
-+			drive-strength = <8>;
-+			bias-disable;
-+		};
-+	};
-+
-+	reset_out_pins: reset_out_pins {
-+		pins {
-+			pins = "gpio66";
-+			function = "gpio";
-+			drive-strength = <2>;
-+			bias-pull-up;
-+			output-high;
-+		};
-+	};
-+};
-+
-+&pmicgpio {
-+	usb_vbus_5v_pins: usb_vbus_5v_pins {
-+		pins = "gpio4";
-+		function = "normal";
-+		output-high;
-+		bias-disable;
-+		qcom,drive-strength = <1>;
-+		power-source = <2>;
-+	};
-+};
-+
-+&gsbi3 {
-+	status = "ok";
-+	qcom,mode = <GSBI_PROT_SPI>;
-+};
-+
-+&gsbi3_spi {
-+	status = "ok";
-+	pinctrl-0 = <&gsbi3_pins>;
-+	pinctrl-names = "default";
-+	assigned-clocks = <&gcc GSBI3_QUP_CLK>;
-+	assigned-clock-rates = <24000000>;
-+};
-+
-+&gsbi4 {
-+	status = "ok";
-+	qcom,mode = <GSBI_PROT_UART_W_FC>;
-+};
-+
-+&gsbi4_serial {
-+	status = "ok";
-+	pinctrl-0 = <&gsbi4_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&gsbi5 {
-+	status = "ok";
-+	qcom,mode = <GSBI_PROT_I2C_UART>;
-+};
-+
-+&gsbi5_i2c {
-+	status = "ok";
-+	clock-frequency = <200000>;
-+	pinctrl-0 = <&gsbi5_i2c_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&gsbi5_serial {
-+	status = "ok";
-+	pinctrl-0 = <&gsbi5_uart_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&sdcc1 {
-+	status = "ok";
-+};
--- 
-1.9.1
+> > +
+> > +			/*
+> > +			 * LCDK original partitions:
+> > +			 * 0x000000000000-0x000000020000 : "u-boot env"
+> > +			 * 0x000000020000-0x0000000a0000 : "u-boot"
+> > +			 * 0x0000000a0000-0x0000002a0000 : "kernel"
+> > +			 * 0x0000002a0000-0x000020000000 : "filesystem"
+> > +			 *
+> > +			 * The 1st NAND block being guaranted to be valid w/o ECC (> 1k cycles),
+> > +			 * it makes a perfect candidate as an SPL for the BootROM to jump to.
+> > +			 * However the OMAP-L132/L138 Bootloader doc SPRAB41E reads:
+> > +			 * "To boot from NAND Flash, the AIS should be written to NAND block 1
+> > +			 * (NAND block 0 is not used by default)", which matches the LCDK
+> > +			 * original partitioning.
+> 
+> FWIW, silicon version 2.1 supports booting from block 0, but needs new
+> boot pin settings not possible in stock LCDK.
+> 
+
+That's a convenient improvement.
+
+> > +			 * Also, the LCDK ships with only the u-boot partition provisioned and
+> > +			 * boots on it in its default configuration while using the MMC for the
+> > +			 * kernel and rootfs, so preserve that one as is for now.
+> > +			 * [1]: Ensuring for example that U-Boot LCDK SPL can handle it properly
+> > +			 * and a proper boot chain ROM->SPL->U-Boot->Linux wrt ECC, would allow
+> > +			 * for a better partitioning.
+> > +			 */
+> 
+> I would rather not refer to the software that LCDK ships with in the
+> comments at all. Because that can change without notice. At some point,
+> if mainline kernel works well enough on LCDK, TI might decide to ship
+> LCDKs with mainline kernel flashed.
+> 
+
+That'd be a very good thing to get mainline well enough that it ships
+with it. Given that information it would make sense to get rid of the
+comments, which I'll keep in mind for when the ECC issue is sorted out.
+
+Thanks for the review.
+
+Regards, 
+Karl
+
+> > +			partitions {
+> > +				compatible = "fixed-partitions";
+> > +				#address-cells = <1>;
+> > +				#size-cells = <1>;
+> > +
+> > +				partition@0 {
+> > +					label = "u-boot env";
+> > +					reg = <0 0x020000>;
+> > +				};
+> > +				partition@0x020000 {
+> > +					/* The LCDK defaults to booting from this partition */
+> > +					label = "u-boot";
+> > +					reg = <0x020000 0x080000>;
+> > +				};
+> > +				partition@0x0a0000 {
+> > +					label = "space";
+> > +					reg = <0x0a0000 0>;
+> > +				};
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> 
+> Rest of the patch looks good to me.
+> 
+> Regards,
+> Sekhar
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
