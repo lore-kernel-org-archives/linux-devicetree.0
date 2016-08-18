@@ -1,96 +1,44 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/1] BACKLIGHT: Add Driver for ARCXCNN Chip
-Date: Thu, 18 Aug 2016 12:07:48 +0100
-Message-ID: <20160818110748.GE27045@leverpostej>
-References: <1471460799-16015-1-git-send-email-olimpiu@arcticsand.com>
+From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Add Ingenic JZ4780 hardware RNG driver
+Date: Thu, 18 Aug 2016 13:53:00 +0200
+Message-ID: <20160818115300.GA6621@Red>
+References: <1471448151-20850-1-git-send-email-prasannatsmkumar@gmail.com>
+ <92a00062-9a87-0053-2c99-17bd1a304a4a@gmail.com>
+ <CANc+2y55ZCkauwKNtuuCxLx-WOtm8z+A_EBKsYSjEUdc+ZbZTQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1471460799-16015-1-git-send-email-olimpiu@arcticsand.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olimpiu Dejeu <olimpiu@arcticsand.com>
-Cc: jg1.han@samsung.com, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <CANc+2y55ZCkauwKNtuuCxLx-WOtm8z+A_EBKsYSjEUdc+ZbZTQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, alex.smith-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kieran-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, pankaj.dev-qxv4g6HH51o@public.gmane.org, Mathie
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 17, 2016 at 03:06:39PM -0400, Olimpiu Dejeu wrote:
-> This is the driver for the Arctic Sand Technologies Inc. ARCXCNN LED
-> backlight IC family.
+On Thu, Aug 18, 2016 at 10:44:18AM +0530, PrasannaKumar Muralidharan wrote:
+> >> +static int jz4780_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+> >> +{
+> >> +     struct jz4780_rng *jz4780_rng = container_of(rng, struct jz4780_rng,
+> >> +                                                     rng);
+> >> +     u32 *data = buf;
+> >> +     *data = jz4780_rng_readl(jz4780_rng, REG_RNG_DATA);
+> >> +     return 4;
+> >> +}
+> >
+> > If max is less than 4, its bad
 > 
-> Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
-> ---
->  drivers/video/backlight/Kconfig      |   7 +
->  drivers/video/backlight/Makefile     |   1 +
->  drivers/video/backlight/arcxcnn_bl.c | 499 +++++++++++++++++++++++++++++++++++
->  include/linux/i2c/arcxcnn.h          |  41 +++
->  4 files changed, 547 insertions(+)
->  create mode 100644 drivers/video/backlight/arcxcnn_bl.c
->  create mode 100644 include/linux/i2c/arcxcnn.h
+> Data will be 4 bytes.
+> 
 
-This is a one-patch series with no binding, yet the code below adds a new
-compatible string ("arc,arcxcnn"), and DT parsing code assuming
-uncommon, non-trivial properties.
+No, according to comment in include/linux/hw_random.h "drivers can fill up to max bytes of data"
+So you cannot write more than max bytes without risking buffer overflow.
 
-You must write a device tree binding document for this.
+And if max > 4, hwrng client need to recall your read function.
+The better example I found is tpm_get_random() in drivers/char/tpm/tpm-interface.c for handling both problem.
 
-Please see Documentation/devicetree/bindings/submitting-patches.txt.
+Regards
 
-> +static int arcxcnn_parse_dt(struct arcxcnn *lp)
-> +{
-> +	struct device *dev = lp->dev;
-> +	struct device_node *node = dev->of_node;
-> +	u32 prog_length;
-> +
-> +	if (!node) {
-> +		dev_err(dev, "no platform data\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	of_property_read_string(node, "bl-name", &lp->pdata->name);
-> +	of_property_read_u16(node, "init-brt", &lp->pdata->initial_brightness);
-> +	of_property_read_u32(node, "pwm-period", &lp->pdata->period_ns);
-> +
-> +	if (lp->pdata->initial_brightness > MAX_BRIGHTNESS)
-> +		lp->pdata->initial_brightness = MAX_BRIGHTNESS;
-> +
-> +	/* Fill program from platform data if defined
-> +	*/
-> +	lp->pdata->prog_entries = 0;
-> +	prog_length = of_get_child_count(node);
-> +	if (prog_length > 0) {
-> +		struct device_node *child;
-> +		u32 i = 0;
-> +
-> +		for_each_child_of_node(node, child) {
-> +		    	if (i >= ARCXCNN_MAX_PROGENTRIES)
-> +				break;
-> +			of_property_read_u8(child, "prg-addr", &lp->pdata->prog_addr[i]);
-> +			of_property_read_u8(child, "prg-data", &lp->pdata->prog_data[i]);
-
-Don't bother using u8. The DTB is padded to u32 boundaries anyway, so this
-just adds an additional burden on DT authors to use /bits/ 8
-consistently, which inevitably someone will get wrong.
-
-> +static int arcxcnn_probe(struct i2c_client *cl, const struct i2c_device_id *id)
-> +{
-> +	struct arcxcnn *lp;
-> +	int ret;
-> +	u32 i;
-> +	u8 regval;
-> +	u16 chipid;
-> +
-> +	if (!i2c_check_functionality(cl->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
-> +		return -EIO;
-> +
-> +	lp = devm_kzalloc(&cl->dev, sizeof(struct arcxcnn), GFP_KERNEL);
-
-Nit: sizeof(*lp) is the preferred style.
-
-> +static const struct of_device_id arcxcnn_dt_ids[] = {
-> +	{ .compatible = "arc,arcxcnn", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, arcxcnn_dt_ids);
-
-Thanks,
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
