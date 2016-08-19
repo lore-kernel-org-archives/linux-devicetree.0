@@ -1,195 +1,198 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 1/2] Documentation: bindings: add dt doc for Rockchip
- PCIe controller
-Date: Fri, 19 Aug 2016 14:33:02 -0500
-Message-ID: <20160819193302.GA6308@localhost>
-References: <1471570471-3239-1-git-send-email-shawn.lin@rock-chips.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v11 5/9] clk: mediatek: Add MT2701 clock support
+Date: Fri, 19 Aug 2016 12:46:08 -0700
+Message-ID: <20160819194608.GA6502@codeaurora.org>
+References: <1471584896-9986-1-git-send-email-erin.lo@mediatek.com>
+ <1471584896-9986-6-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1471570471-3239-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1471584896-9986-6-git-send-email-erin.lo@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Erin Lo <erin.lo@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, Shunli Wang <shunli.wang@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 19, 2016 at 09:34:31AM +0800, Shawn Lin wrote:
-> This patch adds a binding that describes the Rockchip PCIe controller
-> found on Rockchip SoCs PCIe interface.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
-I applied both of these to pci/host-rockchip for v4.9, thanks, Shawn!
-
-I made a few whitespace and typo fixes in pcie-rockchip.c, so take a
-look and make sure I didn't break anything.
-
-> ---
-> 
-> Changes in v10:
-> - fix broken description of msi-map
-> - s/pcie/PCIe for description
-> 
-> Changes in v9: None
-> Changes in v8:
-> - add Brian's review-tag
-> 
-> Changes in v7:
-> - move optional properties ahead of interrupt subnode
-> - use 0-base index for INTx
-> 
-> Changes in v6:
-> - add ack tag from Rob
-> 
-> Changes in v5:
-> - fix wrong example reported by Marc
-> - add seperate section to describe the interrupt controller child
->   node
-> 
-> Changes in v4:
-> - fix example of adding intermediate interrupt controller for pcie
->   legacy interrrupt
-> 
-> Changes in v3:
-> - fix example dts code suggested by Rob and Marc
-> - remove driver's behaviour of regulator
-> 
-> Changes in v2:
-> - fix lots clk/reset stuff suggested by Heiko
-> - remove msi-parent and add msi-map suggested by Marc
-> - drop phy related stuff
-> - some others minor fixes
-> 
->  .../devicetree/bindings/pci/rockchip-pcie.txt      | 106 +++++++++++++++++++++
->  1 file changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+On 08/19, Erin Lo wrote:
+> diff --git a/drivers/clk/mediatek/clk-mt2701-vdec.c b/drivers/clk/mediatek/clk-mt2701-vdec.c
 > new file mode 100644
-> index 0000000..ba67b39
+> index 0000000..45a102e
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> @@ -0,0 +1,106 @@
-> +* Rockchip AXI PCIe Root Port Bridge DT description
+> +++ b/drivers/clk/mediatek/clk-mt2701-vdec.c
 > +
-> +Required properties:
-> +- #address-cells: Address representation for root ports, set to <3>
-> +- #size-cells: Size representation for root ports, set to <2>
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +		interrupt source. The value must be 1.
-> +- compatible: Should contain "rockchip,rk3399-pcie"
-> +- reg: Two register ranges as listed in the reg-names property
-> +- reg-names: Must include the following names
-> +	- "axi-base"
-> +	- "apb-base"
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +		See ../clocks/clock-bindings.txt for details.
-> +- clock-names: Must include the following entries:
-> +	- "aclk"
-> +	- "aclk-perf"
-> +	- "hclk"
-> +	- "pm"
-> +- msi-map: Maps a Requester ID to an MSI controller and associated
-> +	msi-specifier data. See ./pci-msi.txt
-> +- phys: From PHY bindings: Phandle for the Generic PHY for PCIe.
-> +- phy-names:  MUST be "pcie-phy".
-> +- interrupts: Three interrupt entries must be specified.
-> +- interrupt-names: Must include the following names
-> +	- "sys"
-> +	- "legacy"
-> +	- "client"
-> +- resets: Must contain five entries for each entry in reset-names.
-> +	   See ../reset/reset.txt for details.
-> +- reset-names: Must include the following names
-> +	- "core"
-> +	- "mgmt"
-> +	- "mgmt-sticky"
-> +	- "pipe"
-> +- pinctrl-names : The pin control state names
-> +- pinctrl-0: The "default" pinctrl state
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +	interrupt source. The value must be 1.
-> +- interrupt-map-mask and interrupt-map: standard PCI properties
-> +
-> +Optional Property:
-> +- ep-gpios: contain the entry for pre-reset gpio
-> +- num-lanes: number of lanes to use
-> +- vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
-> +- vpcie1v8-supply: The phandle to the 1.8v regulator to use for PCIe.
-> +- vpcie0v9-supply: The phandle to the 0.9v regulator to use for PCIe.
-> +
-> +*Interrupt controller child node*
-> +The core controller provides a single interrupt for legacy INTx. The PCIe node
-> +should contain an interrupt controller node as a target for the PCI
-> +'interrupt-map' property. This node represents the domain at which the four
-> +INTx interrupts are decoded and routed.
-> +
-> +
-> +Required properties for Interrupt controller child node:
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +- #address-cells: specifies the number of cells needed to encode an
-> +	address. The value must be 0.
-> +- #interrupt-cells: specifies the number of cells needed to encode an
-> +	interrupt source. The value must be 1.
-> +
-> +Example:
-> +
-> +pcie0: pcie@f8000000 {
-> +	compatible = "rockchip,rk3399-pcie";
-> +	#address-cells = <3>;
-> +	#size-cells = <2>;
-> +	clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
-> +		 <&cru PCLK_PCIE>, <&cru SCLK_PCIE_PM>;
-> +	clock-names = "aclk", "aclk-perf",
-> +		      "hclk", "pm";
-> +	bus-range = <0x0 0x1>;
-> +	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH 0>,
-> +		     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH 0>,
-> +		     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH 0>;
-> +	interrupt-names = "sys", "legacy", "client";
-> +	assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
-> +	assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
-> +	assigned-clock-rates = <100000000>;
-> +	ep-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
-> +	ranges = <0x83000000 0x0 0xfa000000 0x0 0xfa000000 0x0 0x600000
-> +		  0x81000000 0x0 0xfa600000 0x0 0xfa600000 0x0 0x100000>;
-> +	num-lanes = <4>;
-> +	msi-map = <0x0 &its 0x0 0x1000>;
-> +	reg = <0x0 0xf8000000 0x0 0x2000000>, <0x0 0xfd000000 0x0 0x1000000>;
-> +	reg-names = "axi-base", "apb-base";
-> +	resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
-> +		 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>;
-> +	reset-names = "core", "mgmt", "mgmt-sticky", "pipe";
-> +	phys = <&pcie_phy>;
-> +	phy-names = "pcie-phy";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_clkreq>;
-> +	#interrupt-cells = <1>;
-> +	interrupt-map-mask = <0 0 0 7>;
-> +	interrupt-map = <0 0 0 1 &pcie0_intc 0>,
-> +			<0 0 0 2 &pcie0_intc 1>,
-> +			<0 0 0 3 &pcie0_intc 2>,
-> +			<0 0 0 4 &pcie0_intc 3>;
-> +	pcie0_intc: interrupt-controller {
-> +		interrupt-controller;
-> +		#address-cells = <0>;
-> +		#interrupt-cells = <1>;
-> +	};
+> +static const struct mtk_gate vdec_clks[] = {
+> +	GATE_VDEC0(CLK_VDEC_CKGEN, "vdec_cken", "vdec_sel", 0),
+> +	GATE_VDEC1(CLK_VDEC_LARB, "vdec_larb_cken", "mm_sel", 0),
 > +};
-> -- 
-> 2.3.7
-> 
-> 
+> +
+> +static void mtk_vdecsys_init(struct device_node *node)
+
+Please return errors to driver probe.
+
+> +{
+> +	struct clk_onecell_data *clk_data;
+> +	int r;
+> +
+> +	clk_data = mtk_alloc_clk_data(CLK_VDEC_NR);
+> +
+> +	mtk_clk_register_gates(node, vdec_clks, ARRAY_SIZE(vdec_clks),
+> +						clk_data);
+> +
+> +	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+> +	if (r)
+> +		pr_err("%s(): could not register clock provider: %d\n",
+> +			__func__, r);
+> +}
+> +
+> +static const struct of_device_id of_match_clk_mt2701_vdec[] = {
+> +	{ .compatible = "mediatek,mt2701-vdecsys", },
+> +	{}
+> +};
+> +
+> +static int clk_mt2701_vdec_probe(struct platform_device *pdev)
+> +{
+> +	mtk_vdecsys_init(pdev->dev.of_node);
+> +	return 0;
+
+	return mtk_vdecsys_init()?
+
+> +}
+> +
+> diff --git a/drivers/clk/mediatek/clk-mt2701.c b/drivers/clk/mediatek/clk-mt2701.c
+> new file mode 100644
+> index 0000000..f64dc4e
+> --- /dev/null
+> +++ b/drivers/clk/mediatek/clk-mt2701.c
+> @@ -0,0 +1,1033 @@
+> +/*
+> + * Copyright (c) 2014 MediaTek Inc.
+> + * Author: Shunli Wang <shunli.wang@mediatek.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "clk-mtk.h"
+> +#include "clk-gate.h"
+> +
+> +#include <dt-bindings/clock/mt2701-clk.h>
+> +
+> +/*
+> + * For some clocks, we don't care what their actual rates are. And these
+> + * clocks may change their rate on different products or different scenarios.
+> + * So we model these clocks' rate as 0, to denote it's not an actual rate.
+> + */
+> +#define DUMMY_RATE		0
+
+This doesn't sound great... Wouldn't we want to get those rates
+from the dts files then?
+
+> +
+> +static DEFINE_SPINLOCK(lock);
+
+Please use a better name than lock. mtk2701_clk_lock?
+
+> +
+> +static int clk_mt2701_probe(struct platform_device *pdev)
+> +{
+> +	void (*clk_init)(struct device_node *);
+
+Please return errors from clk_init() callbacks.
+
+> +	const struct of_device_id *of_id;
+> +
+> +	pr_warn("%s():%d: %s\n", __func__, __LINE__, pdev->name);
+> +
+
+This is noise, please remove.
+
+> +	of_id = of_match_node(of_match_clk_mt2701, pdev->dev.of_node);
+> +	if (!of_id || !of_id->data)
+> +		return -EINVAL;
+
+We can use of_device_get_match_data() here to simplify things.
+
+> +
+> +	clk_init = of_id->data;
+> +	clk_init(pdev->dev.of_node);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver clk_mt2701_drv = {
+> +	.probe = clk_mt2701_probe,
+> +	.driver = {
+> +		.name = "clk-mt2701",
+> +		.owner = THIS_MODULE,
+
+This isn't needed because of how platform_driver_register() works.
+
+> +		.of_match_table = of_match_clk_mt2701,
+> +	},
+> +};
+> +
+> +static int __init clk_mt2701_init(void)
+> +{
+> +	return platform_driver_register(&clk_mt2701_drv);
+> +}
+> +
+> +arch_initcall(clk_mt2701_init);
+> diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
+> index bb30f70..6a015a8 100644
+> --- a/drivers/clk/mediatek/clk-mtk.c
+> +++ b/drivers/clk/mediatek/clk-mtk.c
+> @@ -244,3 +256,31 @@ void mtk_clk_register_composites(const struct mtk_composite *mcs,
+>  			clk_data->clks[mc->id] = clk;
+>  	}
+>  }
+> +
+> +void mtk_clk_register_dividers(const struct mtk_clk_divider *mcds,
+> +			int num, void __iomem *base, spinlock_t *lock,
+> +				struct clk_onecell_data *clk_data)
+> +{
+> +	struct clk *clk;
+> +	int i;
+> +
+> +	for (i = 0; i <  num; i++) {
+> +		const struct mtk_clk_divider *mcd = &mcds[i];
+> +
+> +		if (!IS_ERR_OR_NULL(clk_data->clks[mcd->id]))
+> +			continue;
+
+We dereference clk_data here...
+
+> +
+> +		clk = clk_register_divider(NULL, mcd->name, mcd->parent_name,
+> +			mcd->flags, base +  mcd->div_reg, mcd->div_shift,
+> +			mcd->div_width, mcd->clk_divider_flags, lock);
+> +
+> +		if (IS_ERR(clk)) {
+> +			pr_err("Failed to register clk %s: %ld\n",
+> +				mcd->name, PTR_ERR(clk));
+> +			continue;
+> +		}
+> +
+> +		if (clk_data)
+
+But then we check it for NULL here? This happens quite often now
+after this patch.
+
+> +			clk_data->clks[mcd->id] = clk;
+> +	}
+> +}
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
