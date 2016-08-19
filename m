@@ -1,71 +1,70 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] clk: uniphier: add clock data for UniPhier SoCs
-Date: Sat, 20 Aug 2016 02:55:12 +0900
-Message-ID: <CAK7LNAROCdE4tomp6jg4p5Ep-koPjWSchNEXH01Qn0Wn3q-f2g@mail.gmail.com>
-References: <1470112223-24835-1-git-send-email-yamada.masahiro@socionext.com>
- <1470112223-24835-3-git-send-email-yamada.masahiro@socionext.com> <20160819002826.GT361@codeaurora.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v3 02/15] dt/bindings: Update binding for PM domain idle states
+Date: Fri, 19 Aug 2016 13:10:32 -0500
+Message-ID: <m2fuq0k4tj.fsf@baylibre.com>
+References: <1470351902-43103-1-git-send-email-lina.iyer@linaro.org>
+        <1470351902-43103-3-git-send-email-lina.iyer@linaro.org>
+        <99e35b6c-6698-6d27-f4d7-fa032796869e@arm.com>
+        <20160810164034.GA1401@linaro.org>
+        <5e59874c-bbb7-270a-199c-da1ff5932554@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160819002826.GT361-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <5e59874c-bbb7-270a-199c-da1ff5932554@arm.com> (Sudeep Holla's
+        message of "Wed, 10 Aug 2016 19:09:21 +0100")
+Sender: linux-pm-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Lina Iyer <lina.iyer@linaro.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ulf.hansson@linaro.org, rjw@rjwysocki.net, andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, Axel Haslam <ahaslam+renesas@baylibre.com>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Brendan Jackman <Brendan.Jackman@arm.com>, Juri Lelli <Juri.Lelli@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Sudeep Holla <sudeep.holla@arm.com> writes:
 
+[...]
 
-2016-08-19 9:28 GMT+09:00 Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>:
-
->> +
->> +
->> +System clock
->> +------------
->> +
->> +Required properties:
->> +- compatible: should be one of the following:
->> +    "socionext,uniphier-sld3-clock" - for PH1-sLD3 SoC.
->> +    "socionext,uniphier-ld4-clock"  - for PH1-LD4 SoC.
->> +    "socionext,uniphier-pro4-clock" - for PH1-Pro4 SoC.
->> +    "socionext,uniphier-sld8-clock" - for PH1-sLD8 SoC.
->> +    "socionext,uniphier-pro5-clock" - for PH1-Pro5 SoC.
->> +    "socionext,uniphier-pxs2-clock" - for ProXstream2/PH1-LD6b SoC.
->> +    "socionext,uniphier-ld11-clock" - for PH1-LD11 SoC.
->> +    "socionext,uniphier-ld20-clock" - for PH1-LD20 SoC.
->> +- #clock-cells: should be 1.
->> +
->> +Example:
->> +
->> +     sysctrl@61840000 {
->> +             compatible = "socionext,uniphier-ld20-sysctrl",
->> +                          "simple-mfd", "syscon";
->> +             reg = <0x61840000 0x4000>;
->> +
->> +             clock {
->> +                     compatible = "socionext,uniphier-ld20-clock";
->> +                     #clock-cells = <1>;
->> +             };
->> +
->> +             other nodes ...
+> In general whatever binding we come up must not just address OS
+> coordinated mode. Also I was thinking to have better coverage in the
+> description by having a bit more complex system like:
 >
-> What are the other nodes? Is there a document for the rest of the
-> MFD?
+> cluster0
+> 	CLUSTER_RET(Retention)
+> 	CLUSTER_PG(Power Gate)
+> 	core0
+> 		CORE_RET
+> 		CORE_PG
+> 	core1
+> 		CORE_RET
+> 		CORE_PG
 
-At lease there are "clock" and "reset" in this MFD at this point.
-Perhaps, I may want to add more in the future.
+Also, remember that a power domain may contain more than just CPUs, so
+this will also need to handle things like:
 
-That's why I do not want to list all of the sibling nodes.
+	device0..N
+        	DEV_CLK_GATE
+                DEV_RET
+                DEV_PG
 
-The reset node is documented in its binding document,
-added by the following patch:
-https://patchwork.kernel.org/patch/9255101/
+So, as (I think) Lina was trying to say, including CPU idle states
+inside domain idles states doesn't really scale well because it would
+also imply domain states would also include device idle states.
+
+IMO, the device-specific states belong in the device nodes, and that
+includes CPUs.
+
+It's up to the domain (genpd) governor to look at *all* devices in the
+domain, check their state and make a domain-wide decision.
+
+The tricky part remains, IMO, the mapping between device/CPU states and
+allowable domain states.
+
+As was suggested earlier, a good potential starting point would be that
+all devices/CPUs would need to be in their deepest state before the
+domain would make any decisions.  While that leaves soem power savings
+on the table, it maps well to how genpd works today with only on/off
+states and could be extended with more complicated governors down the
+road.
+
+Kevin
 
 
--- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
