@@ -1,42 +1,25 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] dt-bindings: sort Rockchip vop compatible by
- chip's number
-Date: Fri, 19 Aug 2016 08:51:30 -0500
-Message-ID: <20160819135130.GA5345@rob-hp-laptop>
-References: <loom.20160602T085439-162@post.gmane.org>
- <1471554918-22353-1-git-send-email-seanpaul@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] Documentation: dt: dwc3: note the supported phy-names
+Date: Fri, 19 Aug 2016 08:52:28 -0500
+Message-ID: <20160819135228.GA6077@rob-hp-laptop>
+References: <1471556236-3803-1-git-send-email-briannorris@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1471554918-22353-1-git-send-email-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+In-Reply-To: <1471556236-3803-1-git-send-email-briannorris@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 18, 2016 at 02:15:18PM -0700, Sean Paul wrote:
-> From: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On Thu, Aug 18, 2016 at 02:37:16PM -0700, Brian Norris wrote:
+> The dwc3 driver expicitly looks for "usb2-phy" or "usb3-phy", but we
+> never noted these names in the documentation.
 > 
-> Reorder the compatible vop devices to be sorted by chip number
-> in ascending order.
-> 
-> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> [seanpaul added commit description per tfiga's review]
-> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
 > ---
-> 
-> Resending to add devicetree list
-> 
-> Changes in v3:
-> 	- Updated commit message (Tomasz Figa)
-> 
->  Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
