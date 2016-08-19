@@ -1,63 +1,46 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v5 0/5] da8xx USB PHY platform devices and clocks (was
- "da8xx UBS clocks")
-Date: Fri, 19 Aug 2016 11:50:59 -0500
-Message-ID: <092cb48d-09a5-208a-ea05-c1e66e27f444@lechnology.com>
-References: <1462837612-7803-1-git-send-email-david@lechnology.com>
- <57431E73.5030304@lechnology.com> <57458A0A.5010100@ti.com>
- <CAOi56cWCZioi=qU-iaLvCfh-EmbPh4pwwTJ5tDK+9qfv5+8WuQ@mail.gmail.com>
- <57B42FD3.50004@ti.com>
- <CAOi56cU5zicwKmHh_QfNj8fg_7WXvmRC8SgGouzGiMSeFkkXNg@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 6/7] arm64: dts: exynos: Add dts file for Exynos5433-based
+ TM2 board
+Date: Fri, 19 Aug 2016 19:05:46 +0200
+Message-ID: <0aba7694-e5fc-47be-dce6-06f64fb3759d@samsung.com>
+References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
+ <1471329328-26842-2-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOi56cU5zicwKmHh_QfNj8fg_7WXvmRC8SgGouzGiMSeFkkXNg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: Sekhar Nori <nsekhar@ti.com>, petr@barix.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, devicetree <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <1471329328-26842-2-git-send-email-cw00.choi@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: devicetree@vger.kernel.org, k.kozlowski@samsung.com, linux-samsung-soc@vger.kernel.org, chanwoo@kernel.org, jy0922.shim@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, jh80.chung@samsung.com, a.hajda@samsung.com, kgene@kernel.org, krzk@kernel.org, jaewon02.kim@samsung.com, human.hwang@samsung.com, m.szyprowski@samsung.com, beomho.seo@samsung.com, ingi2.kim@samsung.com, ideal.song@samsung.com, linux-arm-kernel@lists.infradead.org, jonghwa3.lee@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 08/19/2016 11:40 AM, Kevin Hilman wrote:
-> David,
->
-> On Wed, Aug 17, 2016 at 4:35 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Hi Kevin,
->>
->> On Saturday 13 August 2016 02:54 AM, Kevin Hilman wrote:
->>> On Wed, May 25, 2016 at 6:18 AM, Sekhar Nori <nsekhar@ti.com> wrote:
->>>> On Monday 23 May 2016 08:44 PM, David Lechner wrote:
->>>>> On 05/09/2016 06:46 PM, David Lechner wrote:
->>>>>> v5 changes: renamed "usbphy" to "usb_phy" or "usb-phy" as appropriate
->>>>>>
->>>
->>> [...]
->>>
->>>>>
->>>>> What should I be doing to keep this moving along?
->>>>
->>>> We need the related driver changes to be applied first. I could then use
->>>> an immutable branch to push the platform changes against.
->>>>
->>>> I did take a look at the patches and they look good to me. Except the
->>>> one comment from Sergei which I just now indicated that I agree with.
->>>
->>> Just checking on the status of this.  I'm not seeing the driver
->>> changes in mainline yet.
->>>
->>> Any update?
->>
->> phy driver is already merged which actually introduced a compilation error. The
->> fix for it is currently queued in linux-phy -fixes and it should be merged in
->> this -rc cycle.
->> I think it would be better if David Lechner re-spins the series re-based on top
->> of latest mainline kernel and then merged by Bin/Alan.
->
-> Does this work for you?
->
-> Kevin
->
+On 08/16/2016 08:35 AM, Chanwoo Choi wrote:
+> &spi_1 {
+> +	cs-gpios = <&gpd6 3 GPIO_ACTIVE_HIGH>;
+> +	status = "okay";
+> +
+> +	wm5110: wm5110-codec@0 {
+> +		compatible = "wlf,wm5110";
+> +		reg = <0x0>;
+> +		spi-max-frequency = <20000000>;
+> +		interrupt-parent = <&gpa0>;
+> +		interrupts = <4 0 0>;
+> +		clocks = <&xxti>, <&s2mps13_osc 2>;
+
+The first clock needs to be CLKOUT, i.e.
+
+	clocks = <&pmu_system_controller 0>, <&s2mps13_osc 2>;
 
 
-Yes, I try to get this done in the next few days.
+-- 
+Thanks,
+Sylwester
