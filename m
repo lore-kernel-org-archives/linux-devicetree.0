@@ -1,38 +1,113 @@
-From: Rask Ingemann Lambertsen <ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] devicetree: Sort vendor prefixes in alphabetical
- order
-Date: Fri, 19 Aug 2016 07:16:46 +0200
-Message-ID: <20160819051645.2lcid73kdy2hwdwk@vip.cybercity.dk>
-References: <54da74da3f60ede0bf8fb789ffee584703e81a29.1471553094.git.ccc94453@vip.cybercity.dk>
- <20160818230237.GA22939@lunn.ch>
+From: Erin Lo <erin.lo@mediatek.com>
+Subject: [PATCH v11 1/9] clk: mediatek: remove __init from clk registration functions
+Date: Fri, 19 Aug 2016 13:34:48 +0800
+Message-ID: <1471584896-9986-2-git-send-email-erin.lo@mediatek.com>
+References: <1471584896-9986-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160818230237.GA22939-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1471584896-9986-1-git-send-email-erin.lo@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, James Liao <jamesjj.liao@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 19, 2016 at 01:02:37AM +0200, Andrew Lunn wrote:
-> > @@ -54,8 +54,8 @@ chipone		ChipOne
-> >  chipspark	ChipSPARK
-> >  chrp	Common Hardware Reference Platform
-> >  chunghwa	Chunghwa Picture Tubes Ltd.
-> > -ciaa	Computadora Industrial Abierta Argentina
-> >  cirrus	Cirrus Logic, Inc.
-> > +ciaa	Computadora Industrial Abierta Argentina
-> 
-> ciaa comes after cirrus?
+From: James Liao <jamesjj.liao@mediatek.com>
 
-It does with LC_COLLATE=da_DK :-(
-I'm sorry about that. I'll post v4 this afternoon.
+Remove __init from functions that will be used by init functions
+that support probe deferral.
 
+Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
+Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+---
+ drivers/clk/mediatek/clk-gate.c |  2 +-
+ drivers/clk/mediatek/clk-mtk.c  | 12 ++++++------
+ drivers/clk/mediatek/clk-pll.c  |  2 +-
+ 3 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/clk/mediatek/clk-gate.c b/drivers/clk/mediatek/clk-gate.c
+index 2a76901..d8787bf 100644
+--- a/drivers/clk/mediatek/clk-gate.c
++++ b/drivers/clk/mediatek/clk-gate.c
+@@ -97,7 +97,7 @@ const struct clk_ops mtk_clk_gate_ops_setclr_inv = {
+ 	.disable	= mtk_cg_disable_inv,
+ };
+ 
+-struct clk * __init mtk_clk_register_gate(
++struct clk *mtk_clk_register_gate(
+ 		const char *name,
+ 		const char *parent_name,
+ 		struct regmap *regmap,
+diff --git a/drivers/clk/mediatek/clk-mtk.c b/drivers/clk/mediatek/clk-mtk.c
+index 5ada644..bb30f70 100644
+--- a/drivers/clk/mediatek/clk-mtk.c
++++ b/drivers/clk/mediatek/clk-mtk.c
+@@ -24,7 +24,7 @@
+ #include "clk-mtk.h"
+ #include "clk-gate.h"
+ 
+-struct clk_onecell_data * __init mtk_alloc_clk_data(unsigned int clk_num)
++struct clk_onecell_data *mtk_alloc_clk_data(unsigned int clk_num)
+ {
+ 	int i;
+ 	struct clk_onecell_data *clk_data;
+@@ -49,7 +49,7 @@ err_out:
+ 	return NULL;
+ }
+ 
+-void __init mtk_clk_register_fixed_clks(const struct mtk_fixed_clk *clks,
++void mtk_clk_register_fixed_clks(const struct mtk_fixed_clk *clks,
+ 		int num, struct clk_onecell_data *clk_data)
+ {
+ 	int i;
+@@ -72,7 +72,7 @@ void __init mtk_clk_register_fixed_clks(const struct mtk_fixed_clk *clks,
+ 	}
+ }
+ 
+-void __init mtk_clk_register_factors(const struct mtk_fixed_factor *clks,
++void mtk_clk_register_factors(const struct mtk_fixed_factor *clks,
+ 		int num, struct clk_onecell_data *clk_data)
+ {
+ 	int i;
+@@ -95,7 +95,7 @@ void __init mtk_clk_register_factors(const struct mtk_fixed_factor *clks,
+ 	}
+ }
+ 
+-int __init mtk_clk_register_gates(struct device_node *node,
++int mtk_clk_register_gates(struct device_node *node,
+ 		const struct mtk_gate *clks,
+ 		int num, struct clk_onecell_data *clk_data)
+ {
+@@ -135,7 +135,7 @@ int __init mtk_clk_register_gates(struct device_node *node,
+ 	return 0;
+ }
+ 
+-struct clk * __init mtk_clk_register_composite(const struct mtk_composite *mc,
++struct clk *mtk_clk_register_composite(const struct mtk_composite *mc,
+ 		void __iomem *base, spinlock_t *lock)
+ {
+ 	struct clk *clk;
+@@ -222,7 +222,7 @@ err_out:
+ 	return ERR_PTR(ret);
+ }
+ 
+-void __init mtk_clk_register_composites(const struct mtk_composite *mcs,
++void mtk_clk_register_composites(const struct mtk_composite *mcs,
+ 		int num, void __iomem *base, spinlock_t *lock,
+ 		struct clk_onecell_data *clk_data)
+ {
+diff --git a/drivers/clk/mediatek/clk-pll.c b/drivers/clk/mediatek/clk-pll.c
+index 966cab1..0c2deac 100644
+--- a/drivers/clk/mediatek/clk-pll.c
++++ b/drivers/clk/mediatek/clk-pll.c
+@@ -313,7 +313,7 @@ static struct clk *mtk_clk_register_pll(const struct mtk_pll_data *data,
+ 	return clk;
+ }
+ 
+-void __init mtk_clk_register_plls(struct device_node *node,
++void mtk_clk_register_plls(struct device_node *node,
+ 		const struct mtk_pll_data *plls, int num_plls, struct clk_onecell_data *clk_data)
+ {
+ 	void __iomem *base;
 -- 
-Rask Ingemann Lambertsen
-Danish law requires addresses in e-mail to be logged and stored for a year
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
