@@ -1,43 +1,139 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] media: Add Mediatek MDP Driver
-Date: Fri, 19 Aug 2016 08:03:29 +0200
-Message-ID: <2d18a4ee-69e6-e400-22b6-b3867b91b5c0@xs4all.nl>
-References: <1470751137-12403-1-git-send-email-minghsiu.tsai@mediatek.com>
- <1470751137-12403-4-git-send-email-minghsiu.tsai@mediatek.com>
- <861e5c51-1333-fdc7-2793-d4741a48c72f@xs4all.nl>
- <1471586051.1540.11.camel@mtksdaap41>
+From: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v7 1/4] mfd: RK808: Add RK818 support
+Date: Fri, 19 Aug 2016 08:18:57 +0200
+Message-ID: <57B6A4D1.20108@phytec.de>
+References: <1470819907-11237-1-git-send-email-w.egorov@phytec.de>
+ <1470819907-11237-2-git-send-email-w.egorov@phytec.de>
+ <20160818143440.GG4254@dell>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471586051.1540.11.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBAABBV6J3K6QKGQEYZGKU6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160818143440.GG4254@dell>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/19/2016 07:54 AM, Minghsiu Tsai wrote:
-> On Mon, 2016-08-15 at 14:55 +0200, Hans Verkuil wrote:
->> On 08/09/2016 03:58 PM, Minghsiu Tsai wrote:
->> This isn't right. For VIDEO_CAPTURE you support the COMPOSE targets, and for
->> the VIDEO_OUTPUT you support the CROP targets. Right now I can use e.g. TGT_CROP
->> with VIDEO_CAPTURE, which isn't correct.
+
+
+On 18.08.2016 16:34, Lee Jones wrote:
+> On Wed, 10 Aug 2016, Wadim Egorov wrote:
+>
+>> The RK818 chip is a Power Management IC (PMIC) for multimedia and handheld
+>> devices. It contains the following components:
 >>
->> s_selection has the same problem.
+>> - Regulators
+>> - RTC
+>> - Clocking
+>> - Battery support
 >>
-> 
-> So my understanding is
-> VIDEO_OUTPUT -> only allow to use target XXX_CROP_XXX
-> VIDEO_CAPTURE -> only allow to use target XXX_COMPOSE_XXX
-> 
-> Am I right?
+>> Both RK808 and RK818 chips are using a similar register map,
+>> so we can reuse the RTC and Clocking functionality.
+>>
+>> Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+>> Tested-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>> Changes since v6:
+>> - Squashed in the patch
+>>   mfd: RK808: Fetch PMIC variant from chip id register
+>>
+>> ---
+>>  drivers/mfd/Kconfig       |   4 +-
+>>  drivers/mfd/rk808.c       | 226 +++++++++++++++++++++++++++++++++++++++-------
+>>  include/linux/mfd/rk808.h | 154 +++++++++++++++++++++++++++++--
+>>  3 files changed, 342 insertions(+), 42 deletions(-)
+>>
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index 2d1fb64..a55be95 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -852,13 +852,13 @@ config MFD_RC5T583
+>>  	  different functionality of the device.
+>>  
+>>  config MFD_RK808
+>> -	tristate "Rockchip RK808 Power Management chip"
+>> +	tristate "Rockchip RK808/RK818 Power Management Chip"
+>>  	depends on I2C && OF
+>>  	select MFD_CORE
+>>  	select REGMAP_I2C
+>>  	select REGMAP_IRQ
+>>  	help
+>> -	  If you say yes here you get support for the RK808
+>> +	  If you say yes here you get support for the RK808 and RK818
+>>  	  Power Management chips.
+>>  	  This driver provides common support for accessing the device
+>>  	  through I2C interface. The device supports multiple sub-devices
+>> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+>> index 49d7f62..fbec1d8 100644
+>> --- a/drivers/mfd/rk808.c
+>> +++ b/drivers/mfd/rk808.c
+>> @@ -1,11 +1,15 @@
+>>  /*
+>> - * MFD core driver for Rockchip RK808
+>> + * MFD core driver for Rockchip RK808/RK818
+>>   *
+>>   * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+>>   *
+>>   * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>   * Author: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>   *
+>> + * Copyright (C) 2016 PHYTEC Messtechnik GmbH
+>> + *
+>> + * Author: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+>> + *
+>>   * This program is free software; you can redistribute it and/or modify it
+>>   * under the terms and conditions of the GNU General Public License,
+>>   * version 2, as published by the Free Software Foundation.
+>> @@ -22,6 +26,7 @@
+>>  #include <linux/mfd/core.h>
+>>  #include <linux/module.h>
+>>  #include <linux/regmap.h>
+>> +#include <linux/of_device.h>
+> Alphabetical.
 
-Correct.
+ok
 
-Regards,
+>
+>>  struct rk808_reg_data {
+>>  	int addr;
+>> @@ -57,6 +62,14 @@ static bool rk808_is_volatile_reg(struct device *dev, unsigned int reg)
+>>  	return false;
+>>  }
+>>  
+>> +static const struct regmap_config rk818_regmap_config = {
+>> +	.reg_bits = 8,
+>> +	.val_bits = 8,
+>> +	.max_register = RK818_USB_CTRL_REG,
+>> +	.cache_type = REGCACHE_RBTREE,
+>> +	.volatile_reg = rk808_is_volatile_reg,
+>> +};
+>> +
+>>  static const struct regmap_config rk808_regmap_config = {
+>>  	.reg_bits = 8,
+>>  	.val_bits = 8,
+>> @@ -79,11 +92,21 @@ static const struct mfd_cell rk808s[] = {
+>>  	{
+>>  		.name = "rk808-rtc",
+>>  		.num_resources = ARRAY_SIZE(rtc_resources),
+>> -		.resources = &rtc_resources[0],
+>> +		.resources = rtc_resources,
+> ?
 
-	Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+you told me to change this
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
