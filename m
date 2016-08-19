@@ -1,34 +1,47 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: keystone-k2g: Add Message Manager node
-Date: Fri, 19 Aug 2016 18:03:14 -0500
-Message-ID: <CAGo_u6opv1nGTXeP0RKQVFDUNmQbRDTXsucDjyoN9bSbG1SGoQ@mail.gmail.com>
-References: <20160819204748.21529-1-nm@ti.com> <e39f772a-8a30-4c69-fdd9-8b8a639207a6@oracle.com>
+From: "MRS. LOUISA BESSON" <louisabesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: My Sincere Greetings
+Date: Fri, 19 Aug 2016 23:45:40 +0000
+Message-ID: <CAJE1ejFR_QpKLdF4fAWcwfwhvE++S1s8Kxe2+EP7XjiB2-y55w@mail.gmail.com>
+Reply-To: mlouisabesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e39f772a-8a30-4c69-fdd9-8b8a639207a6-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Cc: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Santosh,
+My Sincere Greetings,
 
-On Fri, Aug 19, 2016 at 3:55 PM, Santosh Shilimkar
-<santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> wrote:
->>
-> Patch looks good Nishant. Do you want to send a patch to update
-> the config to enable TI_MESSAGE_MANAGER and MAILBOX ? Are we missing
-> anything upstream yet to enable these ?
+I am MRS.LOUISA BESSON; I have decided to donate what I have to
+you/Churches/ Motherless babies/Less privileged/Widows' because I am
+dying and diagnosed for cancer for about 2 years ago. I have been
+touched by God Almighty to donate from what I have inherited from my
+late husband to you for good work of God Almighty. I have asked
+Almighty God to forgive me and believe he has because he is a Merciful
+God I will be going in for an operation soon.
 
-for message manager, nothing other than the dts(this patch) and
-defconfig changes. I just finished putting the stack together and
-re-testing things and they work good. will send the defconfig in a few
-mins.
+I decided to will/donate the sum of ($8.5 million Dollars) to you for
+the good work of God Almighty, and also to help the motherless and
+less privilege and also forth assistance of the widows. At the moment
+I cannot take any telephone calls right now due to the fact that my
+relatives (that have squandered the funds gave them for this purpose
+before) are around me and my health status also. I have adjusted my
+will and my lawyer is aware.
 
----
-Regards,
-Nishanth Menon
+I wish you all the best and May the good Lord bless you abundantly,
+and please use the funds judiciously and always extend the good work
+to others. As soon you get back to me, I shall give you info on what I
+need from you then you will contact the bank and tell them I have
+willed those properties to you by quoting my personal file routing and
+account information. And I have also notified the bank that I am
+willing that properties to you for a good, effective and prudent work.
+I know I don't know you but I have been directed to do this by God
+Almighty.
+
+If you are interested in carrying out this task, get back to me for
+more details on this noble project of mine.
+
+Yours Faithfully,
+Mrs. LOUISA BESSON.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
