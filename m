@@ -1,70 +1,74 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] phy: add a driver for the Rockchip SoC internal
- PCIe PHY
-Date: Fri, 19 Aug 2016 19:05:43 +0530
-Message-ID: <57B70B2F.5090302@ti.com>
-References: <1469755326-10263-1-git-send-email-shawn.lin@rock-chips.com>
- <1469755326-10263-2-git-send-email-shawn.lin@rock-chips.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 3/3] PM / AVS: rockchip-cpu-avs: add driver handling
+ Rockchip cpu avs
+Date: Fri, 19 Aug 2016 08:36:36 -0500
+Message-ID: <20160819133636.GA26913@rob-hp-laptop>
+References: <1471315139-28285-1-git-send-email-finley.xiao@rock-chips.com>
+ <1471315139-28285-4-git-send-email-finley.xiao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1469755326-10263-2-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1471315139-28285-4-git-send-email-finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Finlye Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tim.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ulysses.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lin.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Friday 29 July 2016 06:52 AM, Shawn Lin wrote:
-> This patch to add a generic PHY driver for rockchip PCIe PHY.
-> Access the PHY via registers provided by GRF (general register
-> files) module.
+On Tue, Aug 16, 2016 at 10:38:59AM +0800, Finlye Xiao wrote:
+> From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> This patch supports adjusting opp's voltage according to leakage
 > 
+> Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
+>  .../devicetree/bindings/power/rockchip-cpu-avs.txt |  37 +++
+>  drivers/power/avs/Kconfig                          |   8 +
+>  drivers/power/avs/Makefile                         |   1 +
+>  drivers/power/avs/rockchip-cpu-avs.c               | 314 +++++++++++++++++++++
+>  4 files changed, 360 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt
+>  create mode 100644 drivers/power/avs/rockchip-cpu-avs.c
 > 
-> Changes in v4:
-> - remove laneoff symbol as we still fail to get a workable solution
->   except for exporting symbol. But I will be back with some other possible
->   routine once finished.
-> 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  drivers/phy/Kconfig             |   7 +
->  drivers/phy/Makefile            |   1 +
->  drivers/phy/phy-rockchip-pcie.c | 357 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 365 insertions(+)
->  create mode 100644 drivers/phy/phy-rockchip-pcie.c
-> 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 02afc624..824b568 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -371,6 +371,13 @@ config PHY_ROCKCHIP_DP
->  	help
->  	  Enable this to support the Rockchip Display Port PHY.
->  
-> +config PHY_ROCKCHIP_PCIE
-> +	tristate "Rockchip PCIe PHY Driver"
-> +	depends on ARCH_ROCKCHIP && OF
+> diff --git a/Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt b/Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt
+> new file mode 100644
+> index 0000000..90f6b08
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt
+> @@ -0,0 +1,37 @@
+> +Rockchip cpu avs device tree bindings
+> +-------------------------------------
+> +
+> +Under the same frequency, the operating voltage tends to decrease with
+> +increasing leakage. so it is necessary to adjust opp's voltage according
+> +to leakage for power.
+> +
+> +
+> +Required properties:
+> +- compatible: Should be one of the following.
+> +  - "rockchip,rk3399-cpu-avs" - for RK3399 SoCs.
+> +- leakage-volt-<name>: Named leakage-volt property. At runtime, the
+> +  platform can find a cpu's cluster_id according to it's cpu_id and match
+> +  leakage-volt-<name> property. The property is an array of 3-tuples
+> +  items, and each item consists of leakage and voltage like
+> +  <min-leakage-mA max-leakage-mA vol-uV>.
+> +	min-leakage: minimum leakage in mA.
+> +	max-leakage: maximum leakage in mA.
+> +	vol: voltage in microvolt.
 
-add COMPILE_TEST here. I'm planning to fix this for other drivers as well in
-drivers/phy.
-> +	select GENERIC_PHY
+How do you determine these values? When do they vary?
 
-select MFD_SYSCON as well.
+> +
+> +Example:
+> +
+> +	cpu_avs: cpu-avs {
+> +		compatible = "rockchip,rk3399-cpu-avs";
 
-Thanks
-Kishon
+This isn't really a hardware block. For the same reasons we don't have 
+cpufreq nodes. So I don't think this belongs in DT.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
