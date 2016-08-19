@@ -1,107 +1,142 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM64: zynqmp: Correct the watchdog timer interrupt
- number
-Date: Fri, 19 Aug 2016 12:31:24 +0200
-Message-ID: <9a5d718d-3626-ec41-e508-6d9ac982a8f1@monstr.eu>
-References: <73e2ff39077d4593e92a1b484fbb586afcddb4bf.1470749892.git.michal.simek@xilinx.com>
- <1d73c4f687ebab2f5f2c48f9174055f08bdd40dd.1470749892.git.michal.simek@xilinx.com>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 5/7] arm64: dts: exynos: Add dts files for Samsung
+ Exynos5433 64bit SoC
+Date: Fri, 19 Aug 2016 12:48:22 +0200
+Message-ID: <b4bb1d48-ce1f-0ddf-9e96-3e2ad29bc3fa@samsung.com>
+References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
+ <1471329328-26842-1-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="KSWvHER09Bmfphr4Et2I43Usxo3BeO35i"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1d73c4f687ebab2f5f2c48f9174055f08bdd40dd.1470749892.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <1471329328-26842-1-git-send-email-cw00.choi@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, k.kozlowski@samsung.com, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: inki.dae@samsung.com, jonghwa3.lee@samsung.com, s.nawrocki@samsung.com, jy0922.shim@samsung.com, jaewon02.kim@samsung.com, sw0312.kim@samsung.com, krzk@kernel.org, jh80.chung@samsung.com, a.hajda@samsung.com, human.hwang@samsung.com, chanwoo@kernel.org, ingi2.kim@samsung.com, beomho.seo@samsung.com, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---KSWvHER09Bmfphr4Et2I43Usxo3BeO35i
-Content-Type: multipart/mixed; boundary="03EDaQfcuLNhXVcCX36i3PlhXgpOTA1gK"
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>,
- linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>,
- =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>,
- Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>,
- Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>,
- Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Message-ID: <9a5d718d-3626-ec41-e508-6d9ac982a8f1-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM64: zynqmp: Correct the watchdog timer interrupt
- number
-References: <73e2ff39077d4593e92a1b484fbb586afcddb4bf.1470749892.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
- <1d73c4f687ebab2f5f2c48f9174055f08bdd40dd.1470749892.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-In-Reply-To: <1d73c4f687ebab2f5f2c48f9174055f08bdd40dd.1470749892.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Hello,
 
---03EDaQfcuLNhXVcCX36i3PlhXgpOTA1gK
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
 
-On 9.8.2016 15:38, Michal Simek wrote:
-> From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->=20
-> Corrected the watchdog timer interrupt number.
-> Origin value was for CSUPMU watchdog.
->=20
-> Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+On 2016-08-16 08:35, Chanwoo Choi wrote:
+> This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC based on
+> Octa-core CPUs (quad Cortex-A57 and quad Cortex-A53). And Exynos5433 supports
+> PSCI (Power State Coordination Interface) v0.1.
+>
+> This patch includes following Device Tree node to support Exynos5433 SoC:
+> 1. Octa cores for big.LITTLE architecture
+> - Cortex-A53 LITTLE Quad-core
+> - Cortex-A57 big Quad-core
+> - Support PSCI v0.1
+>
+> 2. Clock controller node
+> - CMU_TOP   : clocks for IMEM/FSYS/G3D/GSCL/HEVC/MSCL/G2D/MFC/PERIC/PERIS
+> - CMU_CPIF  : clocks for LLI (Low Latency Interface)
+> - CMU_MIF   : clocks for DRAM Memory Controller
+> - CMU_PERIC : clocks for UART/I2C/SPI/I2S/PCM/SPDIF/PWM/SLIMBUS
+> - CMU_PERIS : clocks for PMU/TMU/MCT/WDT/RTC/SECKEY/TZPC
+> - CMU_FSYS  : clocks for USB/UFS/SDMMC/TSI/PDMA
+> - CMU_G2D   : clocks for G2D/MDMA
+> - CMU_DISP  : clocks for DECON/HDMI/DSIM/MIXER
+> - CMU_AUD   : clocks for Cortex-A5/BUS/AUDIO
+> - CMU_BUS{0|1|2} : clocks for global data buses and global peripheral buses
+> - CMU_G3D   : clocks for 3D Graphics Engine
+> - CMU_GSCL  : clocks for GSCALER
+> - CMU_APOLLO: clocks for Cortex-A53 Quad-core processor.
+> - CMU_ATLAS : clocks for Cortex-A57 Quad-core processor,
+>                CoreSight and L2 cache controller.
+> - CMU_MSCL  : clocks for M2M (Memory to Memory) scaler and JPEG IPs.
+> - CMU_MFC   : clocks for MFC (Multi-Format Codec) IP.
+> - CMU_HEVC  : clocks for HEVC(High Efficiency Video Codec) decoder IP.
+> - CMU_ISP   : clocks for FIMC-ISP/DRC/SCLC/DIS/3DNR IPs.
+> - CMU_CAM0  : clocks for MIPI_CSIS{0|1}/FIMC_LITE_{A|B|D}/FIMC_3AA{0|1} IPs.
+> - CMU_CAM1  : clocks for COrtex-A5/MIPI_CSIS2/FIMC_LITE_C/FIMC-FD IPs.
+>
+> 3. pinctrl node for GPIO
+> - alive/aud/cpif/ese/finger/fsys/imem/nfc/peric/touch pad
+>
+> 4. Timer
+> - ARM architecture timer (armv8-timer)
+> - MCT (Multi Core Timer) timer
+>
+> 5. Interrupt controller (GIC-400)
+>
+> 6. BUS devices
+> - HS-I2C (High-Speed I2C) device
+> - SPI (Serial Peripheral Interface) device
+>
+> 7. Sound devices
+> - I2S bus
+> - LPASS (Low Power Audio Subsystem)
+>
+> 8. Power management devices
+> - CPUFREQ for for Cortex-A53/A57
+> - TMU (Thermal Management Unit) for Cortex-A53/A57, G3D, ISP
+>
+> 9. Display controller devices
+> - DECON (Display and enhancement controller) for panel output
+> - DSI (Display Serial Interface)
+> - MIC (Mobile Image Compressor)
+> - IOMMU for GSCL/DECON/TV/MFC/JPEG/FLITE/3AA/FIMC
+
+I would prefer to instantiate only SYSMMU controllers for the devices that
+have been already added, so initially there will by only SYSMMUs for DECON.
+Other (GSCL, TV, MFC, JPEG, CAMERA ISP) can be added later together with
+respective master device nodes.
+
+> 10. USB
+> - USB 3.0 DRD (Dual Role Device) controller
+> - USB 3.0 Host controller
+>
+> 11. Storage devices
+> - MSHC (Mobile Stoarage Host Controller)
+>
+> 12. Misc devices
+> - UART device
+> - ADC (Analog Digital Converter)
+> - PWM (Pulse Width Modulation)
+> - ADMA (Advanced DMA) and PDMA (Peripheral DMA)
+>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
+> Signed-off-by: Joonyoung Shim <jy0922.shim@samsung.com>
+> Signed-off-by: Inki Dae <inki.dae@samsung.com>
+> Signed-off-by: Jonghwa Lee <jonghwa3.lee@samsung.com>
+> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
+> Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
+> Signed-off-by: Inha Song <ideal.song@samsung.com>
+> Signed-off-by: Ingi kim <ingi2.kim@samsung.com>
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 > ---
->=20
->  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/d=
-ts/xilinx/zynqmp.dtsi
-> index 8ed4f42e781b..3bae4b2675d9 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> @@ -369,7 +369,7 @@
->  			compatible =3D "cdns,wdt-r1p2";
->  			status =3D "disabled";
->  			interrupt-parent =3D <&gic>;
-> -			interrupts =3D <0 52 1>;
-> +			interrupts =3D <0 113 1>;
->  			reg =3D <0x0 0xfd4d0000 0x0 0x1000>;
->  			timeout-sec =3D <10>;
->  		};
->=20
+>   arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi |  794 ++++++++++
+>   .../dts/exynos/exynos5433-tmu-g3d-sensor-conf.dtsi |   23 +
+>   .../dts/exynos/exynos5433-tmu-sensor-conf.dtsi     |   22 +
+>   arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi     |  306 ++++
+>   arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 1580 ++++++++++++++++++++
+>   5 files changed, 2725 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
+>   create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu-g3d-sensor-conf.dtsi
+>   create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu-sensor-conf.dtsi
+>   create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
+>   create mode 100644 arch/arm64/boot/dts/exynos/exynos5433.dtsi
 
-Applied both.
-
-Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
+(snipped)
 
 
-
---03EDaQfcuLNhXVcCX36i3PlhXgpOTA1gK--
-
---KSWvHER09Bmfphr4Et2I43Usxo3BeO35i
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iEYEARECAAYFAle23/wACgkQykllyylKDCGXyACfcLXVrPFsMqDGHAiS/9Q5dsgo
-84YAmwYpKTdIbpybNT89y+pRJgBiggK8
-=Wc40
------END PGP SIGNATURE-----
-
---KSWvHER09Bmfphr4Et2I43Usxo3BeO35i--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
