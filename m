@@ -1,87 +1,70 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v24 9/9] Documentation: dt: chosen properties for arm64
- kdump
-Date: Fri, 19 Aug 2016 08:26:41 -0500
-Message-ID: <20160819132641.GA12709@rob-hp-laptop>
-References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
- <20160809015747.28591-1-takahiro.akashi@linaro.org>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] phy: add a driver for the Rockchip SoC internal
+ PCIe PHY
+Date: Fri, 19 Aug 2016 19:05:43 +0530
+Message-ID: <57B70B2F.5090302@ti.com>
+References: <1469755326-10263-1-git-send-email-shawn.lin@rock-chips.com>
+ <1469755326-10263-2-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160809015747.28591-1-takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1469755326-10263-2-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 09, 2016 at 10:57:47AM +0900, AKASHI Takahiro wrote:
-> From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+Hi,
+
+On Friday 29 July 2016 06:52 AM, Shawn Lin wrote:
+> This patch to add a generic PHY driver for rockchip PCIe PHY.
+> Access the PHY via registers provided by GRF (general register
+> files) module.
 > 
-> Add documentation for
-> 	linux,crashkernel-base and crashkernel-size,
-> 	linux,usable-memory-range, and
-> 	linux,elfcorehdr
-> used by arm64 kexec/kdump to decribe the kdump reserved area, and
-> the elfcorehdr's location within it.
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
-> Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-> [takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org:
->     renamed "usable-memory" to "usable-memory-range",
->     added "linux,crashkernel-base" and "-size" ]
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> index 6ae9d82..236188a 100644
-> --- a/Documentation/devicetree/bindings/chosen.txt
-> +++ b/Documentation/devicetree/bindings/chosen.txt
-> @@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
->  book3e) by some versions of kexec-tools to tell the new kernel that it
->  is being booted by kexec, as the booting environment may differ (e.g.
->  a different secondary CPU release mechanism)
-> +
-> +linux,crashkernel-base
-> +linux,crashkernel-size
-> +----------------------
-> +These properties (currently used on PowerPC and arm64) indicates
-> +the base address and the size, respectively, of the reserved memory
-> +range for crash dump kernel.
-> +e.g.
-> +
-> +/ {
-> +	chosen {
-> +		linux,crashkernel-base = <0x9 0xf0000000>;
-> +		linux,crashkernel-size = <0x0 0x10000000>;
-> +	};
-> +};
-> +
-> +linux,usable-memory-range
-> +-------------------------
-> +
-> +This property (currently used only on arm64) holds the memory range,
-> +the base address and the size, which can be used as system ram on
-> +the *current* kernel. Note that, if this property is present, any memory
-> +regions under "memory" nodes in DT blob or ones marked as "conventional
-> +memory" in EFI memory map should be ignored.
-> +e.g.
-> +
-> +/ {
-> +	chosen {
-> +		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-> +	};
-> +};
+> Changes in v4:
+> - remove laneoff symbol as we still fail to get a workable solution
+>   except for exporting symbol. But I will be back with some other possible
+>   routine once finished.
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  drivers/phy/Kconfig             |   7 +
+>  drivers/phy/Makefile            |   1 +
+>  drivers/phy/phy-rockchip-pcie.c | 357 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 365 insertions(+)
+>  create mode 100644 drivers/phy/phy-rockchip-pcie.c
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 02afc624..824b568 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -371,6 +371,13 @@ config PHY_ROCKCHIP_DP
+>  	help
+>  	  Enable this to support the Rockchip Display Port PHY.
+>  
+> +config PHY_ROCKCHIP_PCIE
+> +	tristate "Rockchip PCIe PHY Driver"
+> +	depends on ARCH_ROCKCHIP && OF
 
-I've read the discussion on this. I think you should use the existing 
-linux,usable-memory property in the memory nodes. If UEFI systems don't 
-have memory nodes, then you can find an UEFI way to describe this. DT is 
-not the dumping ground for what doesn't fit in UEFI. How do x86 systems 
-work?
+add COMPILE_TEST here. I'm planning to fix this for other drivers as well in
+drivers/phy.
+> +	select GENERIC_PHY
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+select MFD_SYSCON as well.
+
+Thanks
+Kishon
