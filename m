@@ -1,71 +1,44 @@
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Subject: Re: [PATCH 02/13] Documentation: add BCM6328 pincontroller binding documentation
-Date: Fri, 19 Aug 2016 16:30:49 +0200
-Message-ID: <CAOiHx=mLgZ6Q3tBY3zYkCpMX09Kv54OQQoAXAdP16D_xoXO3mg@mail.gmail.com>
-References: <1471604025-21575-1-git-send-email-jonas.gorski@gmail.com>
- <1471604025-21575-3-git-send-email-jonas.gorski@gmail.com> <20160819141436.GA6970@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/8] gpio: dt-bindings: Add documentation for Aspeed
+ GPIO controllers
+Date: Fri, 19 Aug 2016 09:36:42 -0500
+Message-ID: <20160819143641.GA19513@rob-hp-laptop>
+References: <20160819124414.24242-1-andrew@aj.id.au>
+ <20160819124414.24242-5-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160819141436.GA6970@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= <noltari@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160819124414.24242-5-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Fri, Aug 19, 2016 at 10:14:10PM +0930, Andrew Jeffery wrote:
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+> ---
+> 
+> Since v1:
+> 
+> Rob: I haven't added your Acked-by here as I've made the following changes and
+> wanted to get your input:
+> 
+> * Remove interrupt-controller as an optional property
+> * Defer to interrupt-controller bindings document for sub-node properties
+> 
+> I had a discussion with Joel about whether the interrupt-controller capability
+> should be optional and the conclusion was that it should always be configured
+> by the driver. This makes an optional interrupt-controller property feel
+> redundant (and possibly inaccurate if left out) so I've removed it.
 
-On 19 August 2016 at 16:14, Rob Herring <robh@kernel.org> wrote:
-> On Fri, Aug 19, 2016 at 12:53:34PM +0200, Jonas Gorski wrote:
->> Add binding documentation for the pincontrol core found in BCM6328 SoCs.
->>
->> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
->> ---
->>  .../bindings/pinctrl/brcm,bcm6328-pinctrl.txt      | 61 ++++++++++++++++++++++
->>  1 file changed, 61 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.txt
->> new file mode 100644
->> index 0000000..401224e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.txt
->> @@ -0,0 +1,61 @@
->> +* Broadcom BCM6328 pin controller
->> +
->> +Required properties:
->> +- compatible: Must be "brcm,bcm6328-pinctrl".
->> +- reg: Register specifies of dirout, dat, mode, mux registers.
->> +- reg-names: Must be "dirout", "dat", "mode", "mux".
->> +- gpio-controller: Identifies this node as a GPIO controller.
->> +- #gpio-cells: Must be <2>.
->> +
->> +Example:
->> +
->> +pinctrl: pin-controller@10000080 {
->> +     compatible = "brcm,bcm6328-pinctrl";
->> +     reg = <0x10000080 0x8>,
->> +           <0x10000088 0x8>,
->> +           <0x10000098 0x4>,
->> +           <0x1000009c 0xc>;
->> +     reg-names = "dirout", "dat", "mode", "mux";
->
-> What's in the holes? Just do one range or perhaps this should be part of
-> some larger block.
+I don't follow. What do you mean byt "configured by the driver". If the 
+block supports interrupts, then it should be marked as an 
+interrupt-controller. It never should have been optional. The OS can 
+ignore the interrupt properties if it chooses. 
 
-For this particular SoC it's SPI Slave Config; Registers found in the
-holes on other SoCs:
-
-* TestControl
-* OscControl (just the name, no other documentation what it does)
-* Switch LED control (for integrated switches)
-* Legacy LED controller
-* Reset Controller for the VDSL PHY
-
-And there are also usually quite a few other registers on this block.
-This seems to have been treated as a "GPIO and everything else that
-isn't large enough for its own block" by Broadcom - with BCM6328/6362
-they even introduced a "MISC" block then.
-
-
-Jonas
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
