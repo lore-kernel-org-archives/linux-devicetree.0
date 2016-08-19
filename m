@@ -1,38 +1,284 @@
-From: Ian Campbell <ijc@hellion.org.uk>
-Subject: Re: [PATCH v3 1/2] ARM: dts: Remove use of skeleton.dtsi from
- bcm283x.dtsi
-Date: Fri, 19 Aug 2016 08:52:34 +0100
-Message-ID: <1471593154.6295.36.camel@hellion.org.uk>
-References: <1471516926-11466-1-git-send-email-ijc@hellion.org.uk>
- <87zioaj6vq.fsf@eliezer.anholt.net>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH V4 2/2] thermal: max77620: Add thermal driver for
+ reporting junction temp
+Date: Fri, 19 Aug 2016 15:53:32 +0800
+Message-ID: <1471593212.2691.46.camel@intel.com>
+References: <1465296754-13186-1-git-send-email-ldewangan@nvidia.com>
+         <1465296754-13186-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87zioaj6vq.fsf@eliezer.anholt.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eric Anholt <eric@anholt.net>, linux-arm-kernel@lists.infradead.org, arm@kernel.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Catalin Marinas <catalin.marinas@arm.com>, Lee Jones <lee@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, Frank Rowand <frowand.list@gmail.com>, linux-rpi-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1465296754-13186-2-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, edubezval@gmail.com, robh+dt@kernel.org, Keerthy <a0393675@ti.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-08-18 at 10:59 -0700, Eric Anholt wrote:
-> I'd lost track of these patches, sorry.=A0=A0Both are:
-> =
+On 二, 2016-06-07 at 16:22 +0530, Laxman Dewangan wrote:
+> Maxim Semiconductor Max77620 supports alarm interrupts when
+> its die temperature crosses 120C and 140C. These threshold
+> temperatures are not configurable.
+> 
+> Add thermal driver to register PMIC die temperature as thermal
+> zone sensor and capture the die temperature warning interrupts
+> to notifying the client.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> 
+> ---
+> The patch was sent earlier but dependent mfd header file was not
+> available on tree and hence it was not applied.
+> The mfd patches are in rc-4.7 and hence resending again this patch.
+> 
+> Changes from V3:
+> - Added comment on the function get_temp() that absolute temp can not
+> be
+>   available.
+> 
+>  drivers/thermal/Kconfig            |  10 +++
+>  drivers/thermal/Makefile           |   1 +
+>  drivers/thermal/thermal-max77620.c | 165
+> +++++++++++++++++++++++++++++++++++++
 
-> Acked-by: Eric Anholt <eric@anholt.net>
+Just one comment,
+can you please rename it to max77620_thermal.c, just like the others?
 
-Thanks!
+thanks,
+rui
 
-> They're going through the -soc tree, right?
-
-I think so.
-
-Ian.
+>  3 files changed, 176 insertions(+)
+>  create mode 100644 drivers/thermal/thermal-max77620.c
+> 
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 2d702ca..a2b4433 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -195,6 +195,16 @@ config IMX_THERMAL
+>  	  cpufreq is used as the cooling device to throttle CPUs
+> when the
+>  	  passive trip is crossed.
+>  
+> +config MAX77620_THERMAL
+> +	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
+> +	depends on MFD_MAX77620
+> +	depends on OF
+> +	help
+> +	  Support for die junction temperature warning alarm for
+> Maxim
+> +	  Semiconductor PMIC MAX77620 device. Device generates two
+> alarm
+> +	  interrupts when PMIC die temperature cross the threshold
+> of
+> +	  120 degC and 140 degC.
+> +
+>  config SPEAR_THERMAL
+>  	tristate "SPEAr thermal sensor driver"
+>  	depends on PLAT_SPEAR || COMPILE_TEST
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 10b07c1..90e1d7e 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -37,6 +37,7 @@ obj-$(CONFIG_DB8500_THERMAL)	+=
+> db8500_thermal.o
+>  obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
+>  obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
+>  obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
+> +obj-$(CONFIG_MAX77620_THERMAL)	+= thermal-max77620.o
+>  obj-$(CONFIG_DB8500_CPUFREQ_COOLING)	+=
+> db8500_cpufreq_cooling.o
+>  obj-$(CONFIG_INTEL_POWERCLAMP)	+= intel_powerclamp.o
+>  obj-$(CONFIG_X86_PKG_TEMP_THERMAL)	+= x86_pkg_temp_thermal.o
+> diff --git a/drivers/thermal/thermal-max77620.c
+> b/drivers/thermal/thermal-max77620.c
+> new file mode 100644
+> index 0000000..32ae1be
+> --- /dev/null
+> +++ b/drivers/thermal/thermal-max77620.c
+> @@ -0,0 +1,165 @@
+> +/*
+> + * Junction temperature thermal driver for Maxim Max77620.
+> + *
+> + * Copyright (c) 2016, NVIDIA CORPORATION.  All rights reserved.
+> + *
+> + * Author: Laxman Dewangan <ldewangan@nvidia.com>
+> + *	   Mallikarjun Kasoju <mkasoju@nvidia.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/irq.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/max77620.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/thermal.h>
+> +
+> +#define MAX77620_NORMAL_OPERATING_TEMP	100000
+> +#define MAX77620_TJALARM1_TEMP		120000
+> +#define MAX77620_TJALARM2_TEMP		140000
+> +
+> +struct max77620_therm_info {
+> +	struct device			*dev;
+> +	struct regmap			*rmap;
+> +	struct thermal_zone_device	*tz_device;
+> +	int				irq_tjalarm1;
+> +	int				irq_tjalarm2;
+> +};
+> +
+> +/**
+> + * max77620_thermal_read_temp: Read PMIC die temperatue.
+> + * @data:	Device specific data.
+> + * temp:	Temperature in millidegrees Celsius
+> + *
+> + * The actual temperature of PMIC die is not available from PMIC.
+> + * PMIC only tells the status if it has crossed or not the threshold
+> level
+> + * of 120degC or 140degC.
+> + * If threshold has not been crossed then assume die temperature as
+> 100degC
+> + * else 120degC or 140deG based on the PMIC die temp threshold
+> status.
+> + *
+> + * Return 0 on success otherwise error number to show reason of
+> failure.
+> + */
+> +
+> +static int max77620_thermal_read_temp(void *data, int *temp)
+> +{
+> +	struct max77620_therm_info *mtherm = data;
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	ret = regmap_read(mtherm->rmap, MAX77620_REG_STATLBT, &val);
+> +	if (ret < 0) {
+> +		dev_err(mtherm->dev, "Failed to read STATLBT: %d\n",
+> ret);
+> +		return ret;
+> +	}
+> +
+> +	if (val & MAX77620_IRQ_TJALRM2_MASK)
+> +		*temp = MAX77620_TJALARM2_TEMP;
+> +	else if (val & MAX77620_IRQ_TJALRM1_MASK)
+> +		*temp = MAX77620_TJALARM1_TEMP;
+> +	else
+> +		*temp = MAX77620_NORMAL_OPERATING_TEMP;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct thermal_zone_of_device_ops max77620_thermal_ops
+> = {
+> +	.get_temp = max77620_thermal_read_temp,
+> +};
+> +
+> +static irqreturn_t max77620_thermal_irq(int irq, void *data)
+> +{
+> +	struct max77620_therm_info *mtherm = data;
+> +
+> +	if (irq == mtherm->irq_tjalarm1)
+> +		dev_warn(mtherm->dev, "Junction Temp Alarm1(120C)
+> occurred\n");
+> +	else if (irq == mtherm->irq_tjalarm2)
+> +		dev_crit(mtherm->dev, "Junction Temp Alarm2(140C)
+> occurred\n");
+> +
+> +	thermal_zone_device_update(mtherm->tz_device);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int max77620_thermal_probe(struct platform_device *pdev)
+> +{
+> +	struct max77620_therm_info *mtherm;
+> +	int ret;
+> +
+> +	pdev->dev.of_node = pdev->dev.parent->of_node;
+> +
+> +	mtherm = devm_kzalloc(&pdev->dev, sizeof(*mtherm),
+> GFP_KERNEL);
+> +	if (!mtherm)
+> +		return -ENOMEM;
+> +
+> +	mtherm->irq_tjalarm1 = platform_get_irq(pdev, 0);
+> +	mtherm->irq_tjalarm2 = platform_get_irq(pdev, 1);
+> +	if ((mtherm->irq_tjalarm1 < 0) || (mtherm->irq_tjalarm2 <
+> 0)) {
+> +		dev_err(&pdev->dev, "Alarm irq number not
+> available\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	mtherm->dev = &pdev->dev;
+> +	mtherm->rmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!mtherm->rmap) {
+> +		dev_err(&pdev->dev, "Failed to get parent
+> regmap\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	mtherm->tz_device =
+> devm_thermal_zone_of_sensor_register(&pdev->dev, 0,
+> +				mtherm, &max77620_thermal_ops);
+> +	if (IS_ERR(mtherm->tz_device)) {
+> +		ret = PTR_ERR(mtherm->tz_device);
+> +		dev_err(&pdev->dev, "Failed to register thermal
+> zone: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_request_threaded_irq(&pdev->dev, mtherm-
+> >irq_tjalarm1, NULL,
+> +					max77620_thermal_irq,
+> +					IRQF_ONESHOT | IRQF_SHARED,
+> +					dev_name(&pdev->dev),
+> mtherm);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to request irq1: %d\n",
+> ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_request_threaded_irq(&pdev->dev, mtherm-
+> >irq_tjalarm2, NULL,
+> +					max77620_thermal_irq,
+> +					IRQF_ONESHOT | IRQF_SHARED,
+> +					dev_name(&pdev->dev),
+> mtherm);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to request irq2: %d\n",
+> ret);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, mtherm);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_device_id max77620_thermal_devtype[] = {
+> +	{ .name = "max77620-thermal", },
+> +	{},
+> +};
+> +
+> +static struct platform_driver max77620_thermal_driver = {
+> +	.driver = {
+> +		.name = "max77620-thermal",
+> +	},
+> +	.probe = max77620_thermal_probe,
+> +	.id_table = max77620_thermal_devtype,
+> +};
+> +
+> +module_platform_driver(max77620_thermal_driver);
+> +
+> +MODULE_DESCRIPTION("Max77620 Junction temperature Thermal driver");
+> +MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
+> +MODULE_AUTHOR("Mallikarjun Kasoju <mkasoju@nvidia.com>");
+> +MODULE_LICENSE("GPL v2");
