@@ -1,192 +1,41 @@
-From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH v6 2/7] power: act8945a_charger: Improve
-Date: Fri, 19 Aug 2016 09:13:30 +0800
-Message-ID: <1471569215-6046-3-git-send-email-wenyou.yang@atmel.com>
-References: <1471569215-6046-1-git-send-email-wenyou.yang@atmel.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v9 1/2] Documentation: bindings: add dt doc for Rockchip
+ PCIe controller
+Date: Fri, 19 Aug 2016 09:15:14 +0800
+Message-ID: <57003143-d52e-154f-458a-5a3aacbf2684@rock-chips.com>
+References: <1470297128-6213-1-git-send-email-shawn.lin@rock-chips.com>
+ <20160818210237.GP27353@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1471569215-6046-1-git-send-email-wenyou.yang@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
- Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>, Fengguang Wu <fengguang.wu@intel.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20160818210237.GP27353@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-When get the property, first check the charger state machine,
-then check the status bit to decide what value is assigned to
-the corresponding property.
-
-Retain the SUSCHG bit of REG 0x71 when configure the timers to
-avoid losting the charger suspending info after boot.
-
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
----
-
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3:
- - Remove unneeded semicolon to fix semicolon.cocci warning.
-
-Changes in v2:
- - Add missing ret declaration.
-
- drivers/power/supply/act8945a_charger.c | 84 ++++++++++++++++++++++++++-------
- 1 file changed, 68 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/power/supply/act8945a_charger.c b/drivers/power/supply/act8945a_charger.c
-index 72d39ba..6ddfc1d 100644
---- a/drivers/power/supply/act8945a_charger.c
-+++ b/drivers/power/supply/act8945a_charger.c
-@@ -94,16 +94,24 @@ static int act8945a_get_charger_state(struct regmap *regmap, int *val)
- 	state &= APCH_STATE_CSTATE;
- 	state >>= APCH_STATE_CSTATE_SHIFT;
- 
--	if (state == APCH_STATE_CSTATE_EOC) {
-+	switch (state) {
-+	case APCH_STATE_CSTATE_PRE:
-+	case APCH_STATE_CSTATE_FAST:
-+		*val = POWER_SUPPLY_STATUS_CHARGING;
-+		break;
-+	case APCH_STATE_CSTATE_EOC:
- 		if (status & APCH_STATUS_CHGDAT)
- 			*val = POWER_SUPPLY_STATUS_FULL;
- 		else
-+			*val = POWER_SUPPLY_STATUS_CHARGING;
-+		break;
-+	case APCH_STATE_CSTATE_DISABLED:
-+	default:
-+		if (!(status & APCH_STATUS_INDAT))
-+			*val = POWER_SUPPLY_STATUS_DISCHARGING;
-+		else
- 			*val = POWER_SUPPLY_STATUS_NOT_CHARGING;
--	} else if ((state == APCH_STATE_CSTATE_FAST) ||
--		   (state == APCH_STATE_CSTATE_PRE)) {
--		*val = POWER_SUPPLY_STATUS_CHARGING;
--	} else {
--		*val = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+		break;
- 	}
- 
- 	return 0;
-@@ -112,7 +120,11 @@ static int act8945a_get_charger_state(struct regmap *regmap, int *val)
- static int act8945a_get_charge_type(struct regmap *regmap, int *val)
- {
- 	int ret;
--	unsigned int state;
-+	unsigned int status, state;
-+
-+	ret = regmap_read(regmap, ACT8945A_APCH_STATUS, &status);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = regmap_read(regmap, ACT8945A_APCH_STATE, &state);
- 	if (ret < 0)
-@@ -129,9 +141,15 @@ static int act8945a_get_charge_type(struct regmap *regmap, int *val)
- 		*val = POWER_SUPPLY_CHARGE_TYPE_FAST;
- 		break;
- 	case APCH_STATE_CSTATE_EOC:
-+		*val = POWER_SUPPLY_CHARGE_TYPE_NONE;
-+		break;
- 	case APCH_STATE_CSTATE_DISABLED:
- 	default:
--		*val = POWER_SUPPLY_CHARGE_TYPE_NONE;
-+		if (!(status & APCH_STATUS_INDAT))
-+			*val = POWER_SUPPLY_CHARGE_TYPE_NONE;
-+		else
-+			*val = POWER_SUPPLY_CHARGE_TYPE_UNKNOWN;
-+		break;
- 	}
- 
- 	return 0;
-@@ -140,20 +158,45 @@ static int act8945a_get_charge_type(struct regmap *regmap, int *val)
- static int act8945a_get_battery_health(struct regmap *regmap, int *val)
- {
- 	int ret;
--	unsigned int status;
-+	unsigned int status, state, config;
- 
- 	ret = regmap_read(regmap, ACT8945A_APCH_STATUS, &status);
- 	if (ret < 0)
- 		return ret;
- 
--	if (status & APCH_STATUS_TEMPDAT)
--		*val = POWER_SUPPLY_HEALTH_OVERHEAT;
--	else if (!(status & APCH_STATUS_INDAT))
--		*val = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
--	else if (status & APCH_STATUS_TIMRDAT)
--		*val = POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE;
--	else
-+	ret = regmap_read(regmap, ACT8945A_APCH_CFG, &config);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regmap_read(regmap, ACT8945A_APCH_STATE, &state);
-+	if (ret < 0)
-+		return ret;
-+
-+	state &= APCH_STATE_CSTATE;
-+	state >>= APCH_STATE_CSTATE_SHIFT;
-+
-+	switch (state) {
-+	case APCH_STATE_CSTATE_DISABLED:
-+		if (config & APCH_CFG_SUSCHG) {
-+			*val = POWER_SUPPLY_HEALTH_UNKNOWN;
-+		} else if (status & APCH_STATUS_INDAT) {
-+			if (!(status & APCH_STATUS_TEMPDAT))
-+				*val = POWER_SUPPLY_HEALTH_OVERHEAT;
-+			else if (status & APCH_STATUS_TIMRDAT)
-+				*val = POWER_SUPPLY_HEALTH_SAFETY_TIMER_EXPIRE;
-+			else
-+				*val = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
-+		} else {
-+			*val = POWER_SUPPLY_HEALTH_GOOD;
-+		}
-+		break;
-+	case APCH_STATE_CSTATE_PRE:
-+	case APCH_STATE_CSTATE_FAST:
-+	case APCH_STATE_CSTATE_EOC:
-+	default:
- 		*val = POWER_SUPPLY_HEALTH_GOOD;
-+		break;
-+	}
- 
- 	return 0;
- }
-@@ -224,7 +267,9 @@ static int act8945a_charger_config(struct device *dev,
- 	u32 pre_time_out;
- 	u32 input_voltage_threshold;
- 	int chglev_pin;
-+	int ret;
- 
-+	unsigned int tmp;
- 	unsigned int value = 0;
- 
- 	if (!np) {
-@@ -232,6 +277,13 @@ static int act8945a_charger_config(struct device *dev,
- 		return -EINVAL;
- 	}
- 
-+	ret = regmap_read(regmap, ACT8945A_APCH_CFG, &tmp);
-+	if (ret)
-+		return ret;
-+
-+	if (tmp & APCH_CFG_SUSCHG)
-+		value |= APCH_CFG_SUSCHG;
-+
- 	chglev_pin = of_get_named_gpio_flags(np,
- 				"active-semi,chglev-gpios", 0, &flags);
- 
--- 
-2.7.4
+5ZyoIDIwMTYvOC8xOSA1OjAyLCBCam9ybiBIZWxnYWFzIOWGmemBkzoKPiBPbiBUaHUsIEF1ZyAw
+NCwgMjAxNiBhdCAwMzo1MjowN1BNICswODAwLCBTaGF3biBMaW4gd3JvdGU6Cj4+IFRoaXMgcGF0
+Y2ggYWRkcyBhIGJpbmRpbmcgdGhhdCBkZXNjcmliZXMgdGhlIFJvY2tjaGlwIFBDSWUgY29udHJv
+bGxlcgo+PiBmb3VuZCBvbiBSb2NrY2hpcCBTb0NzIFBDSWUgaW50ZXJmYWNlLgo+PiAuLi4KPgo+
+PiArLSBtc2ktbWFwOiBNYXBzIGEgUmVxdWVzdGVyIElEIHRvIGFuIE1TSSBjb250cm9sbGVyIGFu
+ZCBhc3NvY2lhdGVkLgo+Cj4gQW5kIGFzc29jaWF0ZWQgKndoYXQqPwoKQWgsIHdpbGwgZml4IGl0
+LiA6KQoKPgo+PiArLSB2cGNpZTN2My1zdXBwbHk6IFRoZSBwaGFuZGxlIHRvIHRoZSAzLjN2IHJl
+Z3VsYXRvciB0byB1c2UgZm9yIHBjaWUuCj4+ICstIHZwY2llMXY4LXN1cHBseTogVGhlIHBoYW5k
+bGUgdG8gdGhlIDEuOHYgcmVndWxhdG9yIHRvIHVzZSBmb3IgcGNpZS4KPj4gKy0gdnBjaWUwdjkt
+c3VwcGx5OiBUaGUgcGhhbmRsZSB0byB0aGUgMC45diByZWd1bGF0b3IgdG8gdXNlIGZvciBwY2ll
+Lgo+Cj4gcy9wY2llL1BDSWUvIChhbHNvIGVsc2V3aGVyZSBpbiB0aGlzIHBhdGNoKQoKc3VyZSwg
+SSB3aWxsIHVzZSBQQ0llIGZvciB0aGUgZGVzY3JpcHRpb25zIGluIHRoaXMgcGF0Y2guCgo+Cj4K
+PgoKCi0tIApCZXN0IFJlZ2FyZHMKU2hhd24gTGluCgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4
+LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
