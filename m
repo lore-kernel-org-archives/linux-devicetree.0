@@ -1,92 +1,72 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v4 4/6] media: rc: meson-ir: Add support for newer versions of the IR decoder
-Date: Fri, 19 Aug 2016 23:55:45 +0200
-Message-ID: <20160819215547.20063-5-martin.blumenstingl@googlemail.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v4 6/6] ARM64: dts: meson-gxbb: Enable the the IR decoder on supported boards
+Date: Fri, 19 Aug 2016 23:55:47 +0200
+Message-ID: <20160819215547.20063-7-martin.blumenstingl@googlemail.com>
 References: <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
  <20160819215547.20063-1-martin.blumenstingl@googlemail.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20160819215547.20063-1-martin.blumenstingl@googlemail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, narmstrong@baylibre.com, khilman@baylibre.com, carlo@caione.org
-Cc: linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, mchehab@kernel.org, will.deacon@arm.com, catalin.marinas@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160819215547.20063-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+Enable the Infrared Remote Controller on boards which have an Infrared
+receiver.
 
-Newer SoCs (Meson 8b and GXBB) are using REG2 (offset 0x20) instead of
-REG1 to configure the decoder mode. This makes it necessary to
-introduce new bindings so the driver knows which register has to be
-used.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- drivers/media/rc/meson-ir.c | 29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 6 ++++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi     | 6 ++++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 6 ++++++
+ 3 files changed, 18 insertions(+)
 
-diff --git a/drivers/media/rc/meson-ir.c b/drivers/media/rc/meson-ir.c
-index fcc3b82..003fff0 100644
---- a/drivers/media/rc/meson-ir.c
-+++ b/drivers/media/rc/meson-ir.c
-@@ -24,6 +24,7 @@
- 
- #define DRIVER_NAME		"meson-ir"
- 
-+/* valid on all Meson platforms */
- #define IR_DEC_LDR_ACTIVE	0x00
- #define IR_DEC_LDR_IDLE		0x04
- #define IR_DEC_LDR_REPEAT	0x08
-@@ -32,12 +33,21 @@
- #define IR_DEC_FRAME		0x14
- #define IR_DEC_STATUS		0x18
- #define IR_DEC_REG1		0x1c
-+/* only available on Meson 8b and newer */
-+#define IR_DEC_REG2		0x20
- 
- #define REG0_RATE_MASK		(BIT(11) - 1)
- 
--#define REG1_MODE_MASK		(BIT(7) | BIT(8))
--#define REG1_MODE_NEC		(0 << 7)
--#define REG1_MODE_GENERAL	(2 << 7)
-+#define DECODE_MODE_NEC		0x0
-+#define DECODE_MODE_RAW		0x2
-+
-+/* Meson 6b uses REG1 to configure the mode */
-+#define REG1_MODE_MASK		GENMASK(8, 7)
-+#define REG1_MODE_SHIFT		7
-+
-+/* Meson 8b / GXBB use REG2 to configure the mode */
-+#define REG2_MODE_MASK		GENMASK(3, 0)
-+#define REG2_MODE_SHIFT		0
- 
- #define REG1_TIME_IV_SHIFT	16
- #define REG1_TIME_IV_MASK	((BIT(13) - 1) << REG1_TIME_IV_SHIFT)
-@@ -158,8 +168,15 @@ static int meson_ir_probe(struct platform_device *pdev)
- 	/* Reset the decoder */
- 	meson_ir_set_mask(ir, IR_DEC_REG1, REG1_RESET, REG1_RESET);
- 	meson_ir_set_mask(ir, IR_DEC_REG1, REG1_RESET, 0);
--	/* Set general operation mode */
--	meson_ir_set_mask(ir, IR_DEC_REG1, REG1_MODE_MASK, REG1_MODE_GENERAL);
-+
-+	/* Set general operation mode (= raw/software decoding) */
-+	if (of_device_is_compatible(node, "amlogic,meson6-ir"))
-+		meson_ir_set_mask(ir, IR_DEC_REG1, REG1_MODE_MASK,
-+				  DECODE_MODE_RAW << REG1_MODE_SHIFT);
-+	else
-+		meson_ir_set_mask(ir, IR_DEC_REG2, REG2_MODE_MASK,
-+				  DECODE_MODE_RAW << REG2_MODE_SHIFT);
-+
- 	/* Set rate */
- 	meson_ir_set_mask(ir, IR_DEC_REG0, REG0_RATE_MASK, MESON_TRATE - 1);
- 	/* IRQ on rising and falling edges */
-@@ -197,6 +214,8 @@ static int meson_ir_remove(struct platform_device *pdev)
- 
- static const struct of_device_id meson_ir_match[] = {
- 	{ .compatible = "amlogic,meson6-ir" },
-+	{ .compatible = "amlogic,meson8b-ir" },
-+	{ .compatible = "amlogic,meson-gxbb-ir" },
- 	{ },
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index cba3ea1..9900b87 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -161,3 +161,9 @@
+ 	vmmc-supply = <&vcc3v3>;
+ 	vmmcq-sumpply = <&vcc1v8>;
  };
++
++&ir {
++	status = "okay";
++	pinctrl-0 = <&ir_in_ao_pins>;
++	pinctrl-names = "default";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+index e118754..dc007fe 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+@@ -143,3 +143,9 @@
+ 	vmmc-supply = <&vcc_3v3>;
+ 	vmmcq-sumpply = <&vddio_boot>;
+ };
++
++&ir {
++	status = "okay";
++	pinctrl-0 = <&ir_in_ao_pins>;
++	pinctrl-names = "default";
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+index 54bb7c7..45cd3ae 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+@@ -60,3 +60,9 @@
+ 	pinctrl-names = "default";
  
+ };
++
++&ir {
++	status = "okay";
++	pinctrl-0 = <&ir_in_ao_pins>;
++	pinctrl-names = "default";
++};
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
