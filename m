@@ -1,118 +1,755 @@
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Subject: [PATCH 12/13] Documentation: add BCM63268 pincontroller binding documentation
-Date: Fri, 19 Aug 2016 12:53:44 +0200
-Message-ID: <1471604025-21575-13-git-send-email-jonas.gorski@gmail.com>
+From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 13/13] pinctrl: add a pincontrol driver for BCM63268
+Date: Fri, 19 Aug 2016 12:53:45 +0200
+Message-ID: <1471604025-21575-14-git-send-email-jonas.gorski@gmail.com>
 References: <1471604025-21575-1-git-send-email-jonas.gorski@gmail.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1471604025-21575-1-git-send-email-jonas.gorski@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471604025-21575-1-git-send-email-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for the pincontrol core found in the BCM63268
-family SoCs.
+Add a pincontrol driver for BCM63268. BCM63268 allows muxing GPIOs
+to different functions. Depending on the mux, these are either single
+pin configurations or whole pin groups.
 
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../bindings/pinctrl/brcm,bcm63268-pinctrl.txt     | 88 ++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.txt
+ drivers/pinctrl/bcm63xx/Makefile           |   1 +
+ drivers/pinctrl/bcm63xx/pinctrl-bcm63268.c | 710 +++++++++++++++++++++++++++++
+ 2 files changed, 711 insertions(+)
+ create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm63268.c
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.txt
+diff --git a/drivers/pinctrl/bcm63xx/Makefile b/drivers/pinctrl/bcm63xx/Makefile
+index 94f9c6b..78cd5af 100644
+--- a/drivers/pinctrl/bcm63xx/Makefile
++++ b/drivers/pinctrl/bcm63xx/Makefile
+@@ -4,3 +4,4 @@ obj-$(CONFIG_PINCTRL_BCM6348)	+= pinctrl-bcm6348.o
+ obj-$(CONFIG_PINCTRL_BCM6358)	+= pinctrl-bcm6358.o
+ obj-$(CONFIG_PINCTRL_BCM6362)	+= pinctrl-bcm6362.o
+ obj-$(CONFIG_PINCTRL_BCM6368)	+= pinctrl-bcm6368.o
++obj-$(CONFIG_PINCTRL_BCM63268)	+= pinctrl-bcm63268.o
+diff --git a/drivers/pinctrl/bcm63xx/pinctrl-bcm63268.c b/drivers/pinctrl/bcm63xx/pinctrl-bcm63268.c
 new file mode 100644
-index 0000000..781d5fe
+index 0000000..f9eee89
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.txt
-@@ -0,0 +1,88 @@
-+* Broadcom BCM63268 pin controller
++++ b/drivers/pinctrl/bcm63xx/pinctrl-bcm63268.c
+@@ -0,0 +1,710 @@
++/*
++ * This file is subject to the terms and conditions of the GNU General Public
++ * License.  See the file "COPYING" in the main directory of this archive
++ * for more details.
++ *
++ * Copyright (C) 2016 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ */
 +
-+Required properties:
-+- compatible: Must be "brcm,bcm6362-pinctrl".
-+- reg: Register specifiers of dirout, dat, led, mode, ctrl, basemode registers.
-+- reg-names: Must be "dirout", "dat", "led", "mode", "ctrl", "basemode".
-+- gpio-controller: Identifies this node as a GPIO controller.
-+- #gpio-cells: Must be <2>.
++#include <linux/kernel.h>
++#include <linux/spinlock.h>
++#include <linux/bitops.h>
++#include <linux/gpio.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/slab.h>
++#include <linux/platform_device.h>
 +
-+Example:
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/pinctrl/pinmux.h>
++#include <linux/pinctrl/machine.h>
 +
-+pinctrl: pin-controller@100000c0 {
-+	compatible = "brcm,bcm63268-pinctrl";
-+	reg = <0x100000c0 0x8>,
-+	      <0x100000c8 0x8>,
-+	      <0x100000d0 0x4>,
-+	      <0x100000d8 0x4>,
-+	      <0x100000dc 0x4>,
-+	      <0x100000f8 0x4>;
-+	reg-names = "dirout", "dat", "led", "mode",
-+		    "ctrl", "basemode";
++#include "../core.h"
++#include "../pinctrl-utils.h"
 +
-+	gpio-controller;
-+	#gpio-cells = <2>;
++#include "pinctrl-bcm63xx.h"
++
++#define BCM63268_NGPIO			52
++
++/* GPIO_BASEMODE register */
++#define BASEMODE_NAND			BIT(2) /* GPIOs 2-7, 24-31 */
++#define BASEMODE_GPIO35			BIT(4) /* GPIO 35 */
++#define BASEMODE_DECTPD			BIT(5) /* GPIOs 8/9 */
++#define BASEMODE_VDSL_PHY_0		BIT(6) /* GPIOs 10/11 */
++#define BASEMODE_VDSL_PHY_1		BIT(7) /* GPIOs 12/13 */
++#define BASEMODE_VDSL_PHY_2		BIT(8) /* GPIOs 24/25 */
++#define BASEMODE_VDSL_PHY_3		BIT(9) /* GPIOs 26/27 */
++
++enum bcm63268_pinctrl_reg {
++	BCM63268_LEDCTRL,
++	BCM63268_MODE,
++	BCM63268_CTRL,
++	BCM63268_BASEMODE,
 +};
 +
-+Available pins/groups and functions:
++struct bcm63268_pingroup {
++	const char *name;
++	const unsigned * const pins;
++	const unsigned num_pins;
++};
 +
-+name		pins		functions
-+-----------------------------------------------------------
-+gpio0		0		led, serial_led_clk
-+gpio1		1		led, serial_led_data
-+gpio2		2		led,
-+gpio3		3		led,
-+gpio4		4		led,
-+gpio5		5		led,
-+gpio6		6		led,
-+gpio7		7		led,
-+gpio8		8		led, hsspi_cs6
-+gpio9		9		led, hsspi_cs7
-+gpio10		10		led, uart1_scts
-+gpio11		11		led, uart1_srts
-+gpio12		12		led, uart1_sdin
-+gpio13		13		led, uart1_sdout
-+gpio14		14		led, ntr_pulse_in
-+gpio15		15		led, dsl_ntr_pulse_out
-+gpio16		16		led, hsspi_cs4
-+gpio17		17		led, hsspi_cs5
-+gpio18		18		led, adsl_spi_miso
-+gpio19		19		led, adsl_spi_mosi
-+gpio20		20		led,
-+gpio21		21		led,
-+gpio22		22		led, vreg_clk
-+gpio23		23		led, pcie_clkreq_b
-+gpio24		24		uart1_scts
-+gpio25		25		uart1_srts
-+gpio26		26		uart1_sdin
-+gpio27		27		uart1_sdout
-+gpio28		28		ntr_pulse_in
-+gpio29		29		dsl_ntr_pulse_out
-+gpio30		30		switch_led_clk
-+gpio31		31		switch_led_data
-+gpio32		32		wifi
-+gpio33		33		wifi
-+gpio34		34		wifi
-+gpio35		35		wifi
-+gpio36		36		wifi
-+gpio37		37		wifi
-+gpio38		38		wifi
-+gpio39		39		wifi
-+gpio40		40		wifi
-+gpio41		41		wifi
-+gpio42		42		wifi
-+gpio43		43		wifi
-+gpio44		44		wifi
-+gpio45		45		wifi
-+gpio46		46		wifi
-+gpio47		47		wifi
-+gpio48		48		wifi
-+gpio49		49		wifi
-+gpio50		50		wifi
-+gpio51		51		wifi
-+nand_grp	2-7,24-31	nand
-+dect_pd_grp	8-9		dect_pd
-+vdsl_phy0_grp	10-11		vdsl_phy0
-+vdsl_phy1_grp	12-13		vdsl_phy1
-+vdsl_phy2_grp	24-25		vdsl_phy2
-+vdsl_phy3_grp	26-27		vdsl_phy3
++struct bcm63268_function {
++	const char *name;
++	const char * const *groups;
++	const unsigned num_groups;
++
++	enum bcm63268_pinctrl_reg reg;
++	u32 mask;
++};
++
++struct bcm63268_pinctrl {
++	struct pinctrl_dev *pctldev;
++	struct pinctrl_desc desc;
++
++	void __iomem *led;
++	void __iomem *mode;
++	void __iomem *ctrl;
++	void __iomem *basemode;
++
++	/* register access lock */
++	spinlock_t lock;
++
++	struct gpio_chip gpio[2];
++};
++
++#define BCM63268_PIN(a, b, basemode)			\
++	{						\
++		.number = a,				\
++		.name = b,				\
++		.drv_data = (void *)(basemode)		\
++	}
++
++static const struct pinctrl_pin_desc bcm63268_pins[] = {
++	PINCTRL_PIN(0, "gpio0"),
++	PINCTRL_PIN(1, "gpio1"),
++	BCM63268_PIN(2, "gpio2", BASEMODE_NAND),
++	BCM63268_PIN(3, "gpio3", BASEMODE_NAND),
++	BCM63268_PIN(4, "gpio4", BASEMODE_NAND),
++	BCM63268_PIN(5, "gpio5", BASEMODE_NAND),
++	BCM63268_PIN(6, "gpio6", BASEMODE_NAND),
++	BCM63268_PIN(7, "gpio7", BASEMODE_NAND),
++	BCM63268_PIN(8, "gpio8", BASEMODE_DECTPD),
++	BCM63268_PIN(9, "gpio9", BASEMODE_DECTPD),
++	BCM63268_PIN(10, "gpio10", BASEMODE_VDSL_PHY_0),
++	BCM63268_PIN(11, "gpio11", BASEMODE_VDSL_PHY_0),
++	BCM63268_PIN(12, "gpio12", BASEMODE_VDSL_PHY_1),
++	BCM63268_PIN(13, "gpio13", BASEMODE_VDSL_PHY_1),
++	PINCTRL_PIN(14, "gpio14"),
++	PINCTRL_PIN(15, "gpio15"),
++	PINCTRL_PIN(16, "gpio16"),
++	PINCTRL_PIN(17, "gpio17"),
++	PINCTRL_PIN(18, "gpio18"),
++	PINCTRL_PIN(19, "gpio19"),
++	PINCTRL_PIN(20, "gpio20"),
++	PINCTRL_PIN(21, "gpio21"),
++	PINCTRL_PIN(22, "gpio22"),
++	PINCTRL_PIN(23, "gpio23"),
++	BCM63268_PIN(24, "gpio24", BASEMODE_NAND | BASEMODE_VDSL_PHY_2),
++	BCM63268_PIN(25, "gpio25", BASEMODE_NAND | BASEMODE_VDSL_PHY_2),
++	BCM63268_PIN(26, "gpio26", BASEMODE_NAND | BASEMODE_VDSL_PHY_3),
++	BCM63268_PIN(27, "gpio27", BASEMODE_NAND | BASEMODE_VDSL_PHY_3),
++	BCM63268_PIN(28, "gpio28", BASEMODE_NAND),
++	BCM63268_PIN(29, "gpio29", BASEMODE_NAND),
++	BCM63268_PIN(30, "gpio30", BASEMODE_NAND),
++	BCM63268_PIN(31, "gpio31", BASEMODE_NAND),
++	PINCTRL_PIN(32, "gpio32"),
++	PINCTRL_PIN(33, "gpio33"),
++	PINCTRL_PIN(34, "gpio34"),
++	PINCTRL_PIN(35, "gpio35"),
++	PINCTRL_PIN(36, "gpio36"),
++	PINCTRL_PIN(37, "gpio37"),
++	PINCTRL_PIN(38, "gpio38"),
++	PINCTRL_PIN(39, "gpio39"),
++	PINCTRL_PIN(40, "gpio40"),
++	PINCTRL_PIN(41, "gpio41"),
++	PINCTRL_PIN(42, "gpio42"),
++	PINCTRL_PIN(43, "gpio43"),
++	PINCTRL_PIN(44, "gpio44"),
++	PINCTRL_PIN(45, "gpio45"),
++	PINCTRL_PIN(46, "gpio46"),
++	PINCTRL_PIN(47, "gpio47"),
++	PINCTRL_PIN(48, "gpio48"),
++	PINCTRL_PIN(49, "gpio49"),
++	PINCTRL_PIN(50, "gpio50"),
++	PINCTRL_PIN(51, "gpio51"),
++};
++
++static unsigned gpio0_pins[] = { 0 };
++static unsigned gpio1_pins[] = { 1 };
++static unsigned gpio2_pins[] = { 2 };
++static unsigned gpio3_pins[] = { 3 };
++static unsigned gpio4_pins[] = { 4 };
++static unsigned gpio5_pins[] = { 5 };
++static unsigned gpio6_pins[] = { 6 };
++static unsigned gpio7_pins[] = { 7 };
++static unsigned gpio8_pins[] = { 8 };
++static unsigned gpio9_pins[] = { 9 };
++static unsigned gpio10_pins[] = { 10 };
++static unsigned gpio11_pins[] = { 11 };
++static unsigned gpio12_pins[] = { 12 };
++static unsigned gpio13_pins[] = { 13 };
++static unsigned gpio14_pins[] = { 14 };
++static unsigned gpio15_pins[] = { 15 };
++static unsigned gpio16_pins[] = { 16 };
++static unsigned gpio17_pins[] = { 17 };
++static unsigned gpio18_pins[] = { 18 };
++static unsigned gpio19_pins[] = { 19 };
++static unsigned gpio20_pins[] = { 20 };
++static unsigned gpio21_pins[] = { 21 };
++static unsigned gpio22_pins[] = { 22 };
++static unsigned gpio23_pins[] = { 23 };
++static unsigned gpio24_pins[] = { 24 };
++static unsigned gpio25_pins[] = { 25 };
++static unsigned gpio26_pins[] = { 26 };
++static unsigned gpio27_pins[] = { 27 };
++static unsigned gpio28_pins[] = { 28 };
++static unsigned gpio29_pins[] = { 29 };
++static unsigned gpio30_pins[] = { 30 };
++static unsigned gpio31_pins[] = { 31 };
++static unsigned gpio32_pins[] = { 32 };
++static unsigned gpio33_pins[] = { 33 };
++static unsigned gpio34_pins[] = { 34 };
++static unsigned gpio35_pins[] = { 35 };
++static unsigned gpio36_pins[] = { 36 };
++static unsigned gpio37_pins[] = { 37 };
++static unsigned gpio38_pins[] = { 38 };
++static unsigned gpio39_pins[] = { 39 };
++static unsigned gpio40_pins[] = { 40 };
++static unsigned gpio41_pins[] = { 41 };
++static unsigned gpio42_pins[] = { 42 };
++static unsigned gpio43_pins[] = { 43 };
++static unsigned gpio44_pins[] = { 44 };
++static unsigned gpio45_pins[] = { 45 };
++static unsigned gpio46_pins[] = { 46 };
++static unsigned gpio47_pins[] = { 47 };
++static unsigned gpio48_pins[] = { 48 };
++static unsigned gpio49_pins[] = { 49 };
++static unsigned gpio50_pins[] = { 50 };
++static unsigned gpio51_pins[] = { 51 };
++
++static unsigned nand_grp_pins[] = {
++	2, 3, 4, 5, 6, 7, 24,
++	25, 26, 27, 28, 29, 30, 31,
++};
++
++static unsigned dectpd_grp_pins[] = { 8, 9 };
++static unsigned vdsl_phy0_grp_pins[] = { 10, 11 };
++static unsigned vdsl_phy1_grp_pins[] = { 12, 13 };
++static unsigned vdsl_phy2_grp_pins[] = { 24, 25 };
++static unsigned vdsl_phy3_grp_pins[] = { 26, 27 };
++
++#define BCM63268_GROUP(n)					\
++	{							\
++		.name = #n,					\
++		.pins = n##_pins,				\
++		.num_pins = ARRAY_SIZE(n##_pins),		\
++	}
++
++static struct bcm63268_pingroup bcm63268_groups[] = {
++	BCM63268_GROUP(gpio0),
++	BCM63268_GROUP(gpio1),
++	BCM63268_GROUP(gpio2),
++	BCM63268_GROUP(gpio3),
++	BCM63268_GROUP(gpio4),
++	BCM63268_GROUP(gpio5),
++	BCM63268_GROUP(gpio6),
++	BCM63268_GROUP(gpio7),
++	BCM63268_GROUP(gpio8),
++	BCM63268_GROUP(gpio9),
++	BCM63268_GROUP(gpio10),
++	BCM63268_GROUP(gpio11),
++	BCM63268_GROUP(gpio12),
++	BCM63268_GROUP(gpio13),
++	BCM63268_GROUP(gpio14),
++	BCM63268_GROUP(gpio15),
++	BCM63268_GROUP(gpio16),
++	BCM63268_GROUP(gpio17),
++	BCM63268_GROUP(gpio18),
++	BCM63268_GROUP(gpio19),
++	BCM63268_GROUP(gpio20),
++	BCM63268_GROUP(gpio21),
++	BCM63268_GROUP(gpio22),
++	BCM63268_GROUP(gpio23),
++	BCM63268_GROUP(gpio24),
++	BCM63268_GROUP(gpio25),
++	BCM63268_GROUP(gpio26),
++	BCM63268_GROUP(gpio27),
++	BCM63268_GROUP(gpio28),
++	BCM63268_GROUP(gpio29),
++	BCM63268_GROUP(gpio30),
++	BCM63268_GROUP(gpio31),
++	BCM63268_GROUP(gpio32),
++	BCM63268_GROUP(gpio33),
++	BCM63268_GROUP(gpio34),
++	BCM63268_GROUP(gpio35),
++	BCM63268_GROUP(gpio36),
++	BCM63268_GROUP(gpio37),
++	BCM63268_GROUP(gpio38),
++	BCM63268_GROUP(gpio39),
++	BCM63268_GROUP(gpio40),
++	BCM63268_GROUP(gpio41),
++	BCM63268_GROUP(gpio42),
++	BCM63268_GROUP(gpio43),
++	BCM63268_GROUP(gpio44),
++	BCM63268_GROUP(gpio45),
++	BCM63268_GROUP(gpio46),
++	BCM63268_GROUP(gpio47),
++	BCM63268_GROUP(gpio48),
++	BCM63268_GROUP(gpio49),
++	BCM63268_GROUP(gpio50),
++	BCM63268_GROUP(gpio51),
++
++	/* multi pin groups */
++	BCM63268_GROUP(nand_grp),
++	BCM63268_GROUP(dectpd_grp),
++	BCM63268_GROUP(vdsl_phy0_grp),
++	BCM63268_GROUP(vdsl_phy1_grp),
++	BCM63268_GROUP(vdsl_phy2_grp),
++	BCM63268_GROUP(vdsl_phy3_grp),
++};
++
++static const char * const led_groups[] = {
++	"gpio0",
++	"gpio1",
++	"gpio2",
++	"gpio3",
++	"gpio4",
++	"gpio5",
++	"gpio6",
++	"gpio7",
++	"gpio8",
++	"gpio9",
++	"gpio10",
++	"gpio11",
++	"gpio12",
++	"gpio13",
++	"gpio14",
++	"gpio15",
++	"gpio16",
++	"gpio17",
++	"gpio18",
++	"gpio19",
++	"gpio20",
++	"gpio21",
++	"gpio22",
++	"gpio23",
++};
++
++static const char * const serial_led_clk_groups[] = {
++	"gpio0",
++};
++
++static const char * const serial_led_data_groups[] = {
++	"gpio1",
++};
++
++static const char * const hsspi_cs4_groups[] = {
++	"gpio16",
++};
++
++static const char * const hsspi_cs5_groups[] = {
++	"gpio17",
++};
++
++static const char * const hsspi_cs6_groups[] = {
++	"gpio8",
++};
++
++static const char * const hsspi_cs7_groups[] = {
++	"gpio9",
++};
++
++static const char * const uart1_scts_groups[] = {
++	"gpio10",
++	"gpio24",
++};
++
++static const char * const uart1_srts_groups[] = {
++	"gpio11",
++	"gpio25",
++};
++
++static const char * const uart1_sdin_groups[] = {
++	"gpio12",
++	"gpio26",
++};
++
++static const char * const uart1_sdout_groups[] = {
++	"gpio13",
++	"gpio27",
++};
++
++static const char * const ntr_pulse_in_groups[] = {
++	"gpio14",
++	"gpio28",
++};
++
++static const char * const dsl_ntr_pulse_out_groups[] = {
++	"gpio15",
++	"gpio29",
++};
++
++static const char * const adsl_spi_miso_groups[] = {
++	"gpio18",
++};
++
++static const char * const adsl_spi_mosi_groups[] = {
++	"gpio19",
++};
++
++static const char * const vreg_clk_groups[] = {
++	"gpio22",
++};
++
++static const char * const pcie_clkreq_b_groups[] = {
++	"gpio23",
++};
++
++static const char * const switch_led_clk_groups[] = {
++	"gpio30",
++};
++
++static const char * const switch_led_data_groups[] = {
++	"gpio31",
++};
++
++static const char * const wifi_groups[] = {
++	"gpio32",
++	"gpio33",
++	"gpio34",
++	"gpio35",
++	"gpio36",
++	"gpio37",
++	"gpio38",
++	"gpio39",
++	"gpio40",
++	"gpio41",
++	"gpio42",
++	"gpio43",
++	"gpio44",
++	"gpio45",
++	"gpio46",
++	"gpio47",
++	"gpio48",
++	"gpio49",
++	"gpio50",
++	"gpio51",
++};
++
++static const char * const nand_groups[] = {
++	"nand_grp",
++};
++
++static const char * const dectpd_groups[] = {
++	"dectpd_grp",
++};
++
++static const char * const vdsl_phy_override_0_groups[] = {
++	"vdsl_phy_override_0_grp",
++};
++
++static const char * const vdsl_phy_override_1_groups[] = {
++	"vdsl_phy_override_1_grp",
++};
++
++static const char * const vdsl_phy_override_2_groups[] = {
++	"vdsl_phy_override_2_grp",
++};
++
++static const char * const vdsl_phy_override_3_groups[] = {
++	"vdsl_phy_override_3_grp",
++};
++
++#define BCM63268_LED_FUN(n)				\
++	{						\
++		.name = #n,				\
++		.groups = n##_groups,			\
++		.num_groups = ARRAY_SIZE(n##_groups),	\
++		.reg = BCM63268_LEDCTRL,		\
++	}
++
++#define BCM63268_MODE_FUN(n)				\
++	{						\
++		.name = #n,				\
++		.groups = n##_groups,			\
++		.num_groups = ARRAY_SIZE(n##_groups),	\
++		.reg = BCM63268_MODE,			\
++	}
++
++#define BCM63268_CTRL_FUN(n)				\
++	{						\
++		.name = #n,				\
++		.groups = n##_groups,			\
++		.num_groups = ARRAY_SIZE(n##_groups),	\
++		.reg = BCM63268_CTRL,			\
++	}
++
++#define BCM63268_BASEMODE_FUN(n, val)			\
++	{						\
++		.name = #n,				\
++		.groups = n##_groups,			\
++		.num_groups = ARRAY_SIZE(n##_groups),	\
++		.reg = BCM63268_BASEMODE,		\
++		.mask = val,				\
++	}
++
++static const struct bcm63268_function bcm63268_funcs[] = {
++	BCM63268_LED_FUN(led),
++	BCM63268_MODE_FUN(serial_led_clk),
++	BCM63268_MODE_FUN(serial_led_data),
++	BCM63268_MODE_FUN(hsspi_cs6),
++	BCM63268_MODE_FUN(hsspi_cs7),
++	BCM63268_MODE_FUN(uart1_scts),
++	BCM63268_MODE_FUN(uart1_srts),
++	BCM63268_MODE_FUN(uart1_sdin),
++	BCM63268_MODE_FUN(uart1_sdout),
++	BCM63268_MODE_FUN(ntr_pulse_in),
++	BCM63268_MODE_FUN(dsl_ntr_pulse_out),
++	BCM63268_MODE_FUN(hsspi_cs4),
++	BCM63268_MODE_FUN(hsspi_cs5),
++	BCM63268_MODE_FUN(adsl_spi_miso),
++	BCM63268_MODE_FUN(adsl_spi_mosi),
++	BCM63268_MODE_FUN(vreg_clk),
++	BCM63268_MODE_FUN(pcie_clkreq_b),
++	BCM63268_MODE_FUN(switch_led_clk),
++	BCM63268_MODE_FUN(switch_led_data),
++	BCM63268_CTRL_FUN(wifi),
++	BCM63268_BASEMODE_FUN(nand, BASEMODE_NAND),
++	BCM63268_BASEMODE_FUN(dectpd, BASEMODE_DECTPD),
++	BCM63268_BASEMODE_FUN(vdsl_phy_override_0, BASEMODE_VDSL_PHY_0),
++	BCM63268_BASEMODE_FUN(vdsl_phy_override_1, BASEMODE_VDSL_PHY_1),
++	BCM63268_BASEMODE_FUN(vdsl_phy_override_2, BASEMODE_VDSL_PHY_2),
++	BCM63268_BASEMODE_FUN(vdsl_phy_override_3, BASEMODE_VDSL_PHY_3),
++};
++
++static int bcm63268_pinctrl_get_group_count(struct pinctrl_dev *pctldev)
++{
++	return ARRAY_SIZE(bcm63268_groups);
++}
++
++static const char *bcm63268_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
++						   unsigned group)
++{
++	return bcm63268_groups[group].name;
++}
++
++static int bcm63268_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
++					   unsigned group,
++					   const unsigned **pins,
++					   unsigned *num_pins)
++{
++	*pins = bcm63268_groups[group].pins;
++	*num_pins = bcm63268_groups[group].num_pins;
++
++	return 0;
++}
++
++static int bcm63268_pinctrl_get_func_count(struct pinctrl_dev *pctldev)
++{
++	return ARRAY_SIZE(bcm63268_funcs);
++}
++
++static const char *bcm63268_pinctrl_get_func_name(struct pinctrl_dev *pctldev,
++						  unsigned selector)
++{
++	return bcm63268_funcs[selector].name;
++}
++
++static int bcm63268_pinctrl_get_groups(struct pinctrl_dev *pctldev,
++				       unsigned selector,
++				       const char * const **groups,
++				       unsigned * const num_groups)
++{
++	*groups = bcm63268_funcs[selector].groups;
++	*num_groups = bcm63268_funcs[selector].num_groups;
++
++	return 0;
++}
++
++static void bcm63268_rmw_mux(struct bcm63268_pinctrl *pctl, void __iomem *reg,
++			     u32 mask, u32 val)
++{
++	unsigned long flags;
++	u32 tmp;
++
++	spin_lock_irqsave(&pctl->lock, flags);
++	tmp = __raw_readl(reg);
++	tmp &= ~mask;
++	tmp |= val;
++	__raw_writel(tmp, reg);
++
++	spin_unlock_irqrestore(&pctl->lock, flags);
++}
++
++static void bcm63268_set_gpio(struct bcm63268_pinctrl *pctl, unsigned pin)
++{
++	const struct pinctrl_pin_desc *desc = &bcm63268_pins[pin];
++	u32 basemode = (unsigned long)desc->drv_data;
++	u32 mask = BIT(pin % 32);
++
++	if (basemode)
++		bcm63268_rmw_mux(pctl, pctl->basemode, basemode, 0);
++
++	if (pin < 32) {
++		/* base mode: 0 => gpio, 1 => mux function */
++		bcm63268_rmw_mux(pctl, pctl->mode, mask, 0);
++
++		/* pins 0-23 might be muxed to led */
++		if (pin < 24)
++			bcm63268_rmw_mux(pctl, pctl->led, mask, 0);
++	} else if (pin < 52) {
++		/* ctrl reg: 0 => wifi function, 1 => gpio */
++		bcm63268_rmw_mux(pctl, pctl->ctrl, mask, mask);
++	}
++}
++
++static int bcm63268_pinctrl_set_mux(struct pinctrl_dev *pctldev,
++				    unsigned selector, unsigned group)
++{
++	struct bcm63268_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++	const struct bcm63268_pingroup *grp = &bcm63268_groups[group];
++	const struct bcm63268_function *f = &bcm63268_funcs[selector];
++	unsigned i;
++	void __iomem *reg;
++	u32 val, mask;
++
++	for (i = 0; i < grp->num_pins; i++)
++		bcm63268_set_gpio(pctl, grp->pins[i]);
++
++	switch (f->reg) {
++	case BCM63268_LEDCTRL:
++		reg = pctl->led;
++		mask = BIT(grp->pins[0]);
++		val = BIT(grp->pins[0]);
++		break;
++	case BCM63268_MODE:
++		reg = pctl->mode;
++		mask = BIT(grp->pins[0]);
++		val = BIT(grp->pins[0]);
++		break;
++	case BCM63268_CTRL:
++		reg = pctl->ctrl;
++		mask = BIT(grp->pins[0]);
++		val = 0;
++		break;
++	case BCM63268_BASEMODE:
++		reg = pctl->basemode;
++		mask = f->mask;
++		val = f->mask;
++		break;
++	default:
++		WARN_ON(1);
++		return -EINVAL;
++	}
++
++	bcm63268_rmw_mux(pctl, reg, mask, val);
++
++	return 0;
++}
++
++static int bcm63268_gpio_request_enable(struct pinctrl_dev *pctldev,
++					struct pinctrl_gpio_range *range,
++					unsigned offset)
++{
++	struct bcm63268_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++
++	/* disable all functions using this pin */
++	bcm63268_set_gpio(pctl, offset);
++
++	return 0;
++}
++
++static struct pinctrl_ops bcm63268_pctl_ops = {
++	.get_groups_count	= bcm63268_pinctrl_get_group_count,
++	.get_group_name		= bcm63268_pinctrl_get_group_name,
++	.get_group_pins		= bcm63268_pinctrl_get_group_pins,
++#ifdef CONFIG_OF
++	.dt_node_to_map		= pinconf_generic_dt_node_to_map_pin,
++	.dt_free_map		= pinctrl_utils_free_map,
++#endif
++};
++
++static struct pinmux_ops bcm63268_pmx_ops = {
++	.get_functions_count	= bcm63268_pinctrl_get_func_count,
++	.get_function_name	= bcm63268_pinctrl_get_func_name,
++	.get_function_groups	= bcm63268_pinctrl_get_groups,
++	.set_mux		= bcm63268_pinctrl_set_mux,
++	.gpio_request_enable	= bcm63268_gpio_request_enable,
++	.strict			= true,
++};
++
++static int bcm63268_pinctrl_probe(struct platform_device *pdev)
++{
++	struct bcm63268_pinctrl *pctl;
++	struct resource *res;
++	void __iomem *led, *mode, *ctrl, *basemode;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "led");
++	led = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(led))
++		return PTR_ERR(led);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mode");
++	mode = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(mode))
++		return PTR_ERR(mode);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ctrl");
++	ctrl = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(ctrl))
++		return PTR_ERR(ctrl);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "basemode");
++	basemode = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(basemode))
++		return PTR_ERR(basemode);
++
++	pctl = devm_kzalloc(&pdev->dev, sizeof(*pctl), GFP_KERNEL);
++	if (!pctl)
++		return -ENOMEM;
++
++	spin_lock_init(&pctl->lock);
++
++	pctl->led = led;
++	pctl->mode = mode;
++	pctl->ctrl = ctrl;
++	pctl->basemode = basemode;
++
++	pctl->desc.name = dev_name(&pdev->dev);
++	pctl->desc.owner = THIS_MODULE;
++	pctl->desc.pctlops = &bcm63268_pctl_ops;
++	pctl->desc.pmxops = &bcm63268_pmx_ops;
++
++	pctl->desc.npins = ARRAY_SIZE(bcm63268_pins);
++	pctl->desc.pins = bcm63268_pins;
++
++	platform_set_drvdata(pdev, pctl);
++
++	pctl->pctldev = bcm63xx_pinctrl_register(pdev, &pctl->desc, pctl,
++						 pctl->gpio, BCM63268_NGPIO);
++	if (IS_ERR(pctl->pctldev))
++		return PTR_ERR(pctl->pctldev);
++
++	return 0;
++}
++
++static const struct of_device_id bcm63268_pinctrl_match[] = {
++	{ .compatible = "brcm,bcm63268-pinctrl", },
++	{ },
++};
++
++static struct platform_driver bcm63268_pinctrl_driver = {
++	.probe = bcm63268_pinctrl_probe,
++	.driver = {
++		.name = "bcm63268-pinctrl",
++		.of_match_table = bcm63268_pinctrl_match,
++	},
++};
++
++builtin_platform_driver(bcm63268_pinctrl_driver);
 -- 
 2.1.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
