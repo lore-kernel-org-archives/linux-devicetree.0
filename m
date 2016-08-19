@@ -1,285 +1,144 @@
-From: Jeffrey Walton <noloader@gmail.com>
-Subject: Re: [PATCH] Add Ingenic JZ4780 hardware RNG driver
-Date: Fri, 19 Aug 2016 05:47:38 -0400
-Message-ID: <CAH8yC8kt-+6tnzAc2bsu6GX4uX1bqVoE8sZXvCS34DDhGhP2XQ@mail.gmail.com>
-References: <1471448151-20850-1-git-send-email-prasannatsmkumar@gmail.com>
-Reply-To: noloader@gmail.com
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ARM64: zynqmp: Add PCIe node
+Date: Fri, 19 Aug 2016 12:30:49 +0200
+Message-ID: <a0012b9a-4c4f-f292-bb94-982fc53525bd@monstr.eu>
+References: <c26e914e5a65f22c2dc19dc2f90b4eb59d51828b.1470750018.git.michal.simek@xilinx.com>
+ <5930f26f4b5dd129dce09f0a707817d5cf82fde9.1470750018.git.michal.simek@xilinx.com>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1471448151-20850-1-git-send-email-prasannatsmkumar@gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Cc: linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="xc6C6lCvWh2Fmb79muQc9ALRuik63FmUb"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5930f26f4b5dd129dce09f0a707817d5cf82fde9.1470750018.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 17, 2016 at 11:35 AM, PrasannaKumar Muralidharan
-<prasannatsmkumar@gmail.com> wrote:
-> This patch adds support for hardware random number generator present in
-> JZ4780 SoC.
->
-> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--xc6C6lCvWh2Fmb79muQc9ALRuik63FmUb
+Content-Type: multipart/mixed; boundary="nrLg82NCbj4VDbCFQGRpbnhvdDNuSf0cn"
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>,
+ linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>,
+ =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>,
+ devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>,
+ linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>,
+ Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>,
+ Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Message-ID: <a0012b9a-4c4f-f292-bb94-982fc53525bd-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ARM64: zynqmp: Add PCIe node
+References: <c26e914e5a65f22c2dc19dc2f90b4eb59d51828b.1470750018.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+ <5930f26f4b5dd129dce09f0a707817d5cf82fde9.1470750018.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <5930f26f4b5dd129dce09f0a707817d5cf82fde9.1470750018.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+
+--nrLg82NCbj4VDbCFQGRpbnhvdDNuSf0cn
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
+
+On 9.8.2016 15:40, Michal Simek wrote:
+> Add PCIe node with prefetchable memory which goes beyond 4GB.
+>=20
+> Signed-off-by: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
->  .../devicetree/bindings/rng/ingenic,jz4780-rng.txt |  12 +++
->  MAINTAINERS                                        |   5 +
->  arch/mips/boot/dts/ingenic/jz4780.dtsi             |   7 +-
->  drivers/char/hw_random/Kconfig                     |  14 +++
->  drivers/char/hw_random/Makefile                    |   1 +
->  drivers/char/hw_random/jz4780-rng.c                | 105 +++++++++++++++++++++
->  6 files changed, 143 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/rng/ingenic,jz4780-rng.txt
->  create mode 100644 drivers/char/hw_random/jz4780-rng.c
->
-> diff --git a/Documentation/devicetree/bindings/rng/ingenic,jz4780-rng.txt b/Documentation/devicetree/bindings/rng/ingenic,jz4780-rng.txt
-> new file mode 100644
-> index 0000000..03abf56
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rng/ingenic,jz4780-rng.txt
-> @@ -0,0 +1,12 @@
-> +Ingenic jz4780 RNG driver
+>=20
+> Changes in v3:
+> - New patch to show usage of 2/2 on main amba bus
+>=20
+> Changes in v2: None
+>=20
+>  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 39 ++++++++++++++++++++++++++=
+++++++++
+>  1 file changed, 39 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/d=
+ts/xilinx/zynqmp.dtsi
+> index d24014765111..fbdd6ab98988 100644
+> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+> @@ -193,6 +193,45 @@
+>  			#size-cells =3D <0>;
+>  		};
+> =20
+> +		pcie: pcie@fd0e0000 {
+> +			compatible =3D "xlnx,nwl-pcie-2.11";
+> +			status =3D "disabled";
+> +			#address-cells =3D <3>;
+> +			#size-cells =3D <2>;
+> +			#interrupt-cells =3D <1>;
+> +			msi-controller;
+> +			device_type =3D "pci";
+> +			interrupt-parent =3D <&gic>;
+> +			interrupts =3D <0 118 4>,
+> +				    <0 117 4>,
+> +				    <0 116 4>,
+> +				    <0 115 4>,	/* MSI_1 [63...32] */
+> +				    <0 114 4>;	/* MSI_0 [31...0] */
+> +			interrupt-names =3D "misc", "dummy", "intx",
+> +					  "msi1", "msi0";
+> +			msi-parent =3D <&pcie>;
+> +			reg =3D <0x0 0xfd0e0000 0x0 0x1000>,
+> +			      <0x0 0xfd480000 0x0 0x1000>,
+> +			      <0x80 0x00000000 0x0 0x1000000>;
+> +			reg-names =3D "breg", "pcireg", "cfg";
+> +			ranges =3D <0x02000000 0x00000000 0xe0000000 0x00000000
+> +				  0xe0000000 0x00000000 0x10000000
+> +				  /* non-prefetchable memory */
+> +				  0x43000000 0x00000006 0x00000000 0x00000006
+> +				  0x00000000 0x00000002 0x00000000>;
+> +				  /* prefetchable memory */
+> +			interrupt-map-mask =3D <0x0 0x0 0x0 0x7>;
+> +			interrupt-map =3D <0x0 0x0 0x0 0x1 &pcie_intc 0x1>,
+> +					<0x0 0x0 0x0 0x2 &pcie_intc 0x2>,
+> +					<0x0 0x0 0x0 0x3 &pcie_intc 0x3>,
+> +					<0x0 0x0 0x0 0x4 &pcie_intc 0x4>;
+> +			pcie_intc: legacy-interrupt-controller {
+> +				interrupt-controller;
+> +				#address-cells =3D <0>;
+> +				#interrupt-cells =3D <1>;
+> +			};
+> +		};
 > +
-> +Required properties:
-> +- compatible : Should be "ingenic,jz4780-rng"
-> +- reg : Specifies base physical address and size of the registers.
-> +
-> +Example:
-> +
-> +rng: rng@100000D8 {
-> +       compatible = "ingenic,jz4780-rng";
-> +       reg = <0x100000D8 0x8>;
-> +};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 08e9efe..c0c66eb 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6002,6 +6002,11 @@ M:       Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
->  S:     Maintained
->  F:     drivers/dma/dma-jz4780.c
->
-> +INGENIC JZ4780 HW RNG Driver
-> +M:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> +S:     Maintained
-> +F:     drivers/char/hw_random/jz4780-rng.c
-> +
->  INTEGRITY MEASUREMENT ARCHITECTURE (IMA)
->  M:     Mimi Zohar <zohar@linux.vnet.ibm.com>
->  M:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> index b868b42..f11d139 100644
-> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> @@ -36,7 +36,7 @@
->
->         cgu: jz4780-cgu@10000000 {
->                 compatible = "ingenic,jz4780-cgu";
-> -               reg = <0x10000000 0x100>;
-> +               reg = <0x10000000 0xD8>;
->
->                 clocks = <&ext>, <&rtc>;
->                 clock-names = "ext", "rtc";
-> @@ -44,6 +44,11 @@
->                 #clock-cells = <1>;
->         };
->
-> +       rng: jz4780-rng@100000D8 {
-> +               compatible = "ingenic,jz4780-rng";
-> +               reg = <0x100000D8 0x8>;
-> +       };
-> +
->         uart0: serial@10030000 {
->                 compatible = "ingenic,jz4780-uart";
->                 reg = <0x10030000 0x100>;
-> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-> index 56ad5a59..c336fe8 100644
-> --- a/drivers/char/hw_random/Kconfig
-> +++ b/drivers/char/hw_random/Kconfig
-> @@ -294,6 +294,20 @@ config HW_RANDOM_POWERNV
->
->           If unsure, say Y.
->
-> +config HW_RANDOM_JZ4780
-> +       tristate "JZ4780 HW random number generator support"
-> +       depends on MACH_INGENIC
-> +       depends on HAS_IOMEM
-> +       default HW_RANDOM
-> +       ---help---
-> +         This driver provides kernel-side support for the Random Number
-> +         Generator hardware found on JZ4780 SOCs.
-> +
-> +         To compile this driver as a module, choose M here: the
-> +         module will be called jz4780-rng.
-> +
-> +         If unsure, say Y.
-> +
->  config HW_RANDOM_EXYNOS
->         tristate "EXYNOS HW random number generator support"
->         depends on ARCH_EXYNOS || COMPILE_TEST
-> diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-> index 04bb0b0..a155066 100644
-> --- a/drivers/char/hw_random/Makefile
-> +++ b/drivers/char/hw_random/Makefile
-> @@ -26,6 +26,7 @@ obj-$(CONFIG_HW_RANDOM_PSERIES) += pseries-rng.o
->  obj-$(CONFIG_HW_RANDOM_POWERNV) += powernv-rng.o
->  obj-$(CONFIG_HW_RANDOM_EXYNOS) += exynos-rng.o
->  obj-$(CONFIG_HW_RANDOM_HISI)   += hisi-rng.o
-> +obj-$(CONFIG_HW_RANDOM_JZ4780) += jz4780-rng.o
->  obj-$(CONFIG_HW_RANDOM_TPM) += tpm-rng.o
->  obj-$(CONFIG_HW_RANDOM_BCM2835) += bcm2835-rng.o
->  obj-$(CONFIG_HW_RANDOM_IPROC_RNG200) += iproc-rng200.o
-> diff --git a/drivers/char/hw_random/jz4780-rng.c b/drivers/char/hw_random/jz4780-rng.c
-> new file mode 100644
-> index 0000000..c9d2cde
-> --- /dev/null
-> +++ b/drivers/char/hw_random/jz4780-rng.c
-> @@ -0,0 +1,105 @@
-> +/*
-> + * jz4780-rng.c - Random Number Generator driver for J4780
-> + *
-> + * Copyright 2016 (C) PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> + *
-> + * This file is licensed under  the terms of the GNU General Public
-> + * License version 2. This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <linux/hw_random.h>
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/io.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/err.h>
-> +
-> +#define REG_RNG_CTRL   0x0
-> +#define REG_RNG_DATA   0x4
-> +
-> +struct jz4780_rng {
-> +       struct device *dev;
-> +       struct hwrng rng;
-> +       void __iomem *mem;
-> +};
-> +
-> +static u32 jz4780_rng_readl(struct jz4780_rng *rng, u32 offset)
-> +{
-> +       return readl(rng->mem + offset);
-> +}
-> +
-> +static void jz4780_rng_writel(struct jz4780_rng *rng, u32 val, u32 offset)
-> +{
-> +       writel(val, rng->mem + offset);
-> +}
-> +
-> +static int jz4780_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-> +{
-> +       struct jz4780_rng *jz4780_rng = container_of(rng, struct jz4780_rng,
-> +                                                       rng);
-> +       u32 *data = buf;
-> +       *data = jz4780_rng_readl(jz4780_rng, REG_RNG_DATA);
-> +       return 4;
-> +}
-> +
-> +static int jz4780_rng_probe(struct platform_device *pdev)
-> +{
-> +       struct jz4780_rng *jz4780_rng;
-> +       struct resource *res;
-> +       resource_size_t size;
-> +       int ret;
-> +
-> +       jz4780_rng = devm_kzalloc(&pdev->dev, sizeof(struct jz4780_rng),
-> +                                       GFP_KERNEL);
-> +       if (!jz4780_rng)
-> +               return -ENOMEM;
-> +
-> +       jz4780_rng->dev = &pdev->dev;
-> +       jz4780_rng->rng.name = "jz4780";
-> +       jz4780_rng->rng.read = jz4780_rng_read;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       size = resource_size(res);
-> +
-> +       jz4780_rng->mem = devm_ioremap(&pdev->dev, res->start, size);
-> +       if (IS_ERR(jz4780_rng->mem))
-> +               return PTR_ERR(jz4780_rng->mem);
-> +
-> +       platform_set_drvdata(pdev, jz4780_rng);
-> +       jz4780_rng_writel(jz4780_rng, 1, REG_RNG_CTRL);
-> +       ret = hwrng_register(&jz4780_rng->rng);
-> +
-> +       return ret;
-> +}
-> +
-> +static int jz4780_rng_remove(struct platform_device *pdev)
-> +{
-> +       struct jz4780_rng *jz4780_rng = platform_get_drvdata(pdev);
-> +
-> +       jz4780_rng_writel(jz4780_rng, 0, REG_RNG_CTRL);
-> +       hwrng_unregister(&jz4780_rng->rng);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id jz4780_rng_dt_match[] = {
-> +       { .compatible = "ingenic,jz4780-rng", },
-> +       { },
-> +};
-> +MODULE_DEVICE_TABLE(of, jz4780_rng_dt_match);
-> +
-> +static struct platform_driver jz4780_rng_driver = {
-> +       .driver         = {
-> +               .name   = "jz4780-rng",
-> +               .of_match_table = jz4780_rng_dt_match,
-> +       },
-> +       .probe          = jz4780_rng_probe,
-> +       .remove         = jz4780_rng_remove,
-> +};
-> +module_platform_driver(jz4780_rng_driver);
-> +
-> +MODULE_DESCRIPTION("Ingenic JZ4780 H/W Random Number Generator driver");
-> +MODULE_AUTHOR("PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>");
-> +MODULE_LICENSE("GPL");
-> --
+>  		sata: ahci@fd0c0000 {
+>  			compatible =3D "ceva,ahci-1v84";
+>  			status =3D "disabled";
+>=20
 
-Please forgive my ignorance Prasanna...
+Applied both.
 
-For the JZ4780 I have, there are two registers in play. The first is
-the control register which enables/disables the RNG. The control
-register is named ERNG. The second register is the data register, and
-it produces the random stream. The data register is named RNG. ERNG is
-located at 0x100000D8 and RNG is located at 0x100000DC. This kind of
-confuses me because I don't see where 0x100000D8 is ever added to
-those values (maybe its in the descriptor?):
+Thanks,
+Michal
 
-+#define REG_RNG_CTRL   0x0
-+#define REG_RNG_DATA   0x4
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
 
 
-Also, testing with a userland PoC for the device, you have to throttle
-reads from RNG register. If reads occur with a 0 delay, then the
-random value appears fixed. If the delay is too small, then you can
-watch random values being shifted-in in a barrel like fashion.
-Unfortunately, the manual did not discuss how long to wait for a value
-to be ready. I found spinning in a loop for 5000 was too small and
-witnessed the shifting; while spinning in a loop for 10000 avoided the
-shift observation. I don't what number of JIFFIES that translates to.
 
+--nrLg82NCbj4VDbCFQGRpbnhvdDNuSf0cn--
 
-Finally, from looking at the native Ingenic driver (which was not very
-impressive), they enabled/disabled the RNG register on demand. There
-was also a [possible related] note in the manual about not applying
-VCC for over a second. I can only say "possibly related" because I was
-not sure if the register was part of the controller they were
-discussing. The userland PoC worked fine when enabling/disabling the
-RNG register. So I'm not sure about this (from jz4780_rng_probe):
+--xc6C6lCvWh2Fmb79muQc9ALRuik63FmUb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-+       platform_set_drvdata(pdev, jz4780_rng);
-+       jz4780_rng_writel(jz4780_rng, 1, REG_RNG_CTRL);
-+       ret = hwrng_register(&jz4780_rng->rng);
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-And this (from jz4780_rng_remove):
+iEYEARECAAYFAle239kACgkQykllyylKDCElPQCgikchCyhX5gvcS4+M/F3kDq/M
+O0cAni7ob9MmoXdDqsrtpfGdVLqNHm56
+=iipH
+-----END PGP SIGNATURE-----
 
-+       jz4780_rng_writel(jz4780_rng, 0, REG_RNG_CTRL);
-+       hwrng_unregister(&jz4780_rng->rng);
-
-Anyway, I hope that helps you avoid some land mines (if they are present).
-
-Jeff
+--xc6C6lCvWh2Fmb79muQc9ALRuik63FmUb--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
