@@ -1,76 +1,57 @@
-From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH v6 7/7] doc: bindings: act8945a-charger: Update properties
-Date: Fri, 19 Aug 2016 09:13:35 +0800
-Message-ID: <1471569215-6046-8-git-send-email-wenyou.yang@atmel.com>
-References: <1471569215-6046-1-git-send-email-wenyou.yang@atmel.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v9 2/2] PCI: Rockchip: Add Rockchip PCIe controller
+ support
+Date: Fri, 19 Aug 2016 09:20:42 +0800
+Message-ID: <4a09c742-053b-7a16-efd1-a3c972d7c9a8@rock-chips.com>
+References: <1470297128-6213-1-git-send-email-shawn.lin@rock-chips.com>
+ <1470297128-6213-2-git-send-email-shawn.lin@rock-chips.com>
+ <20160818212444.GQ27353@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1471569215-6046-1-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-pm@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20160818212444.GQ27353@localhost>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Due the driver improvements, update the properties,
- - Remove "active-semi,check-battery-temperature" property.
- - Add the properties, "active-semi,irq_gpio"
-   and "active-semi,lbo-gpios".
+在 2016/8/19 5:24, Bjorn Helgaas 写道:
+> Hi Shawn,
+>
+> On Thu, Aug 04, 2016 at 03:52:08PM +0800, Shawn Lin wrote:
+>> This patch adds Rockchip PCIe controller support found
+>> on RK3399 Soc platform.
+>
+>> --- a/drivers/pci/host/Kconfig
+>> +++ b/drivers/pci/host/Kconfig
+>> @@ -264,4 +264,15 @@ config PCIE_ARTPEC6
+>>  	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
+>>  	  SoCs.  This PCIe controller uses the DesignWare core.
+>>
+>> +config PCIE_ROCKCHIP
+>> +	bool "Rockchip PCIe controller"
+>> +	depends on ARM64 && ARCH_ROCKCHIP
+>
+> I don't see any actual ARM64 dependencies in the code (which is a very
+> good thing!).  Can we remove the "depends on ARM64" part?
 
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
+sure, we could. Actually we are going to use this controller for
+arm32 as well, so yes, I will remove it.
 
-Changes in v6: None
-Changes in v5:
- - Add Acked-by tag.
+>
+>> +	depends on OF
+>> +	depends on PCI_MSI_IRQ_DOMAIN
+>> +	select MFD_SYSCON
+>> +	help
+>> +	  Say Y here if you want internal PCI support on Rockchip SoC.
+>> +	  There is 1 internal PCIe port available to support GEN2 with
+>> +	  4 slots.
+>
+>
+>
 
-Changes in v4:
- - Update the doc/binding for using "interrupts" property.
 
-Changes in v3: None
-Changes in v2: None
-
- .../bindings/power/supply/act8945a-charger.txt           | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/power/supply/act8945a-charger.txt b/Documentation/devicetree/bindings/power/supply/act8945a-charger.txt
-index bea254c..f9866c4 100644
---- a/Documentation/devicetree/bindings/power/supply/act8945a-charger.txt
-+++ b/Documentation/devicetree/bindings/power/supply/act8945a-charger.txt
-@@ -4,10 +4,15 @@ Required properties:
-  - compatible: "active-semi,act8945a", please refer to ../mfd/act8945a.txt.
-  - active-semi,chglev-gpios: charge current level phandle with args
-    as described in ../gpio/gpio.txt.
-+ - active-semi,lbo-gpios: specify the low battery voltage detect phandle
-+   with args as as described in ../gpio/gpio.txt.
-+ - interrupts: <a b> where a is the interrupt number and b is a
-+   field that represents an encoding of the sense and level
-+   information for the interrupt.
-+ - interrupt-parent: the phandle for the interrupt controller that
-+   services interrupts for this device.
- 
- Optional properties:
-- - active-semi,check-battery-temperature: boolean to check the battery
--   temperature or not.
-  - active-semi,input-voltage-threshold-microvolt: unit: mV;
-    Specifies the charger's input over-voltage threshold value;
-    The value can be: 6600, 7000, 7500, 8000; default: 6600
-@@ -27,9 +32,14 @@ Example:
- 		status = "okay";
- 
- 		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_charger_chglev>;
-+		pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
-+
- 		active-semi,chglev-gpios = <&pioA 12 GPIO_ACTIVE_HIGH>;
-+		active-semi,lbo-gpios = <&pioA 72 GPIO_ACTIVE_LOW>;
- 		active-semi,input-voltage-threshold-microvolt = <6600>;
- 		active-semi,precondition-timeout = <40>;
- 		active-semi,total-timeout = <3>;
-+		interrupt-parent = <&pioA>;
-+		interrupts = <45 GPIO_ACTIVE_LOW>;
-+
- 	};
 -- 
-2.7.4
+Best Regards
+Shawn Lin
