@@ -1,38 +1,87 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Subject: Re: [PATCH] Add Ingenic JZ4780 hardware RNG driver
-Date: Fri, 19 Aug 2016 18:39:00 +0530
-Message-ID: <CANc+2y4-sVNbs9=uuESoWY8Db3i_GkxQ=hrAEF8oWFGBm6fiKw@mail.gmail.com>
-References: <1471448151-20850-1-git-send-email-prasannatsmkumar@gmail.com> <CAH8yC8ny62Vf63cjtL8bUgGoRr-0BVGvqazs20S4JreJq+OBcg@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v24 9/9] Documentation: dt: chosen properties for arm64
+ kdump
+Date: Fri, 19 Aug 2016 08:26:41 -0500
+Message-ID: <20160819132641.GA12709@rob-hp-laptop>
+References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
+ <20160809015747.28591-1-takahiro.akashi@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <CAH8yC8ny62Vf63cjtL8bUgGoRr-0BVGvqazs20S4JreJq+OBcg@mail.gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: noloader@gmail.com
-Cc: linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160809015747.28591-1-takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> __ARM_FEATURE_UNALIGNED (cf.,
-> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0774f/chr1383660321827.html)
-> . MIPSEL does not define such a macro.
->
->     # MIPS ci20 creator with GCC 4.6
->     $ gcc -march=native -dM -E - </dev/null | grep -i align
->     #define __BIGGEST_ALIGNMENT__ 8
->
-> If the MIPS CPU does not tolerate unaligned data access, then the
-> following could SIGBUS:
->
->> +       u32 *data = buf;
->> +       *data = jz4780_rng_readl(jz4780_rng, REG_RNG_DATA);
->
-> If GCC emits code that uses the MIPS unaligned load and store
-> instructions, then there's probably going to be a performance penalty.
->
-> Regardless of what the CPU tolerates, I believe unaligned data access
-> is undefined behavior in C/C++. I believe you should memcpy the value
-> into the buffer.
+On Tue, Aug 09, 2016 at 10:57:47AM +0900, AKASHI Takahiro wrote:
+> From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+> 
+> Add documentation for
+> 	linux,crashkernel-base and crashkernel-size,
+> 	linux,usable-memory-range, and
+> 	linux,elfcorehdr
+> used by arm64 kexec/kdump to decribe the kdump reserved area, and
+> the elfcorehdr's location within it.
+> 
+> Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+> [takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org:
+>     renamed "usable-memory" to "usable-memory-range",
+>     added "linux,crashkernel-base" and "-size" ]
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> index 6ae9d82..236188a 100644
+> --- a/Documentation/devicetree/bindings/chosen.txt
+> +++ b/Documentation/devicetree/bindings/chosen.txt
+> @@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
+>  book3e) by some versions of kexec-tools to tell the new kernel that it
+>  is being booted by kexec, as the booting environment may differ (e.g.
+>  a different secondary CPU release mechanism)
+> +
+> +linux,crashkernel-base
+> +linux,crashkernel-size
+> +----------------------
+> +These properties (currently used on PowerPC and arm64) indicates
+> +the base address and the size, respectively, of the reserved memory
+> +range for crash dump kernel.
+> +e.g.
+> +
+> +/ {
+> +	chosen {
+> +		linux,crashkernel-base = <0x9 0xf0000000>;
+> +		linux,crashkernel-size = <0x0 0x10000000>;
+> +	};
+> +};
+> +
+> +linux,usable-memory-range
+> +-------------------------
+> +
+> +This property (currently used only on arm64) holds the memory range,
+> +the base address and the size, which can be used as system ram on
+> +the *current* kernel. Note that, if this property is present, any memory
+> +regions under "memory" nodes in DT blob or ones marked as "conventional
+> +memory" in EFI memory map should be ignored.
+> +e.g.
+> +
+> +/ {
+> +	chosen {
+> +		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
+> +	};
+> +};
 
-I am not sure whether this is required. 'buf' is part of a structure
-so I guess it is properly aligned by padding. Not sure though, will
-look about this.
+I've read the discussion on this. I think you should use the existing 
+linux,usable-memory property in the memory nodes. If UEFI systems don't 
+have memory nodes, then you can find an UEFI way to describe this. DT is 
+not the dumping ground for what doesn't fit in UEFI. How do x86 systems 
+work?
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
