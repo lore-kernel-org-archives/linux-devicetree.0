@@ -1,31 +1,48 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] ARM64: dts: meson-gxbb: Add GXBB AO Clock and Reset node
-Date: Fri, 19 Aug 2016 15:03:06 -0700
-Message-ID: <7hk2fc76xx.fsf@baylibre.com>
-References: <1471514928-3341-1-git-send-email-narmstrong@baylibre.com>
-        <1471514928-3341-4-git-send-email-narmstrong@baylibre.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/7] ARM: dts: imx: add gpio-ranges properties to some iMX GPIO controllers
+Date: Sat, 20 Aug 2016 01:06:21 +0300
+Message-ID: <1471644388-10220-1-git-send-email-vladimir_zapolskiy@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471514928-3341-4-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
-        Armstrong's message of "Thu, 18 Aug 2016 12:08:48 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Deepak Das <deepak_das-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+To establish a connection between GPIO controllers and pin multiplexor
+controller(s) add gpio-ranges properties to all GPIO controllers found
+on a number of SoCs from Freescale/NXP series. The changes were done
+after human parsing of output from
 
-> Add the AO clock controller node for the AmLogic GXBB SoC.
->
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
+% gawk -n '{ sub(/.*__/, ""); if ($1 ~ "^GPIO") print $1, $2/4}' imxXX-pinfunc.h | sort -n
 
-Applying this to the amlogic tree, but will need to wait a cycle due to
-include dependencies on the bindings, which are going through the clock
-tree.
+Note that this means that potential errors in arch/arm/boot/dts/imx*-pinfunc.h
+descriptions may migrate to this change, please double check the values.
 
-Kevin
+If needed similar changes may be done for the rest of iMX SoCs.
+
+Vladimir Zapolskiy (7):
+  ARM: dts: add gpio-ranges property to iMX50 GPIO controllers
+  ARM: dts: add gpio-ranges property to iMX6Q/D GPIO controllers
+  ARM: dts: add gpio-ranges property to iMX6DL/S GPIO controllers
+  ARM: dts: add gpio-ranges property to iMX6SL GPIO controllers
+  ARM: dts: add gpio-ranges property to iMX6SX GPIO controllers
+  ARM: dts: add gpio-ranges property to iMX6UL GPIO controllers
+  ARM: dts: add gpio-ranges property to iMX7D/S GPIO controllers
+
+ arch/arm/boot/dts/imx50.dtsi  | 16 +++++++++++++
+ arch/arm/boot/dts/imx6dl.dtsi | 53 +++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q.dtsi  | 37 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6sl.dtsi | 52 ++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6sx.dtsi | 14 ++++++++++++
+ arch/arm/boot/dts/imx6ul.dtsi | 11 +++++++++
+ arch/arm/boot/dts/imx7s.dtsi  | 14 ++++++++++++
+ 7 files changed, 197 insertions(+)
+
+-- 
+2.8.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
