@@ -1,197 +1,183 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v6 2/2] mfd: Add Samsung Exynos Low Power
- Audio Subsystem driver
-Date: Fri, 19 Aug 2016 10:32:31 +0900
-Message-ID: <57B661AF.8010102@samsung.com>
-References: <1470840500-2428-1-git-send-email-s.nawrocki@samsung.com>
- <CGME20160810193850epcas1p247c6e76bb3a61a999e79a194097e7973@epcas1p2.samsung.com>
- <1470840500-2428-2-git-send-email-s.nawrocki@samsung.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v10 1/2] Documentation: bindings: add dt doc for Rockchip PCIe
+ controller
+Date: Fri, 19 Aug 2016 09:34:31 +0800
+Message-ID: <1471570471-3239-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-reply-to: <1470840500-2428-2-git-send-email-s.nawrocki@samsung.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>, lee.jones@linaro.org
-Cc: robh@kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, broonie@kernel.org, Beomho Seo <beomho.seo@samsung.com>, Inha Song <ideal.song@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RGVhciBhbGwsCgpJIHRlc3RlZCB0aGlzIHBhdGNoIHdpdGggVE0yIGR0IHBhdGNoZXNbMV0gYmFz
-ZWQgb24gdjQuOC1yYzIuClRvIHRlc3QgdGhlIHBsYXliYWNrLCBJIGFkanVzdCB0aGUgZHQgbm9k
-ZSBhY2NvcmRpbmcgdG8gTFBBU1MgZG9jdW1lbnRhdGlvbi4KWzFdIGh0dHBzOi8vbGttbC5vcmcv
-bGttbC8yMDE2LzgvMTYvNjEKICAgIFtQQVRDSCAwLzddIGFybTY0OiBkdHM6IEFkZCB0aGUgZHRz
-IGZpbGUgZm9yIEV4eW5vczU0MzMgYW5kIFRNL1RNMkUgYm9hcmQKClRlc3RlZC1ieTogQ2hhbndv
-byBDaG9pIDxjdzAwLmNob2lAc2Ftc3VuZy5jb20+CgpSZWdhcmRzLApDaGFud29vIENob2kKCk9u
-IDIwMTbrhYQgMDjsm5QgMTDsnbwgMjM6NDgsIFN5bHdlc3RlciBOYXdyb2NraSB3cm90ZToKPiBU
-aGlzIHBhdGNoIGFkZHMgY29tbW9uIGRyaXZlciBmb3IgdGhlIFRvcCBibG9jayBvZiB0aGUgU2Ft
-c3VuZyBFeHlub3MKPiBTb0MgTG93IFBvd2VyIEF1ZGlvIFN1YnN5c3RlbS4gIFRoaXMgaXMgYSBt
-aW5pbWFsIGRyaXZlciB3aGljaCBwcmVwYXJlcwo+IHJlc291cmNlcyBmb3IgSVAgYmxvY2tzIGxp
-a2UgSTJTLCBhdWRpbyBETUEgYW5kIFVBUlQgYW5kIGV4cG9zZXMKPiBhIHJlZ21hcCBmb3IgdGhl
-IFRvcCBibG9jayByZWdpc3RlcnMuICBBbHNvIHN5c3RlbSBwb3dlciBvcHMgYXJlIGFkZGVkCj4g
-dG8gZW5zdXJlIHRoZSBBdWRpbyBTdWJzeXN0ZW0gaXMgb3BlcmF0aW9uYWwgYWZ0ZXIgc3lzdGVt
-IHN1c3BlbmQvcmVzdW1lCj4gY3ljbGUuCj4gCj4gU2lnbmVkLW9mZi1ieTogSW5oYSBTb25nIDxp
-ZGVhbC5zb25nQHNhbXN1bmcuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEJlb21obyBTZW8gPGJlb21o
-by5zZW9Ac2Ftc3VuZy5jb20+Cj4gU2lnbmVkLW9mZi1ieTogU3lsd2VzdGVyIE5hd3JvY2tpIDxz
-Lm5hd3JvY2tpQHNhbXN1bmcuY29tPgo+IC0tLQo+IAo+IENoYW5nZXMgc2luY2UgdjU6Cj4gIC0g
-QklUKCkgdXNlZCBmb3IgdGhlIHJlZ2lzdGVyIGJpdCBtYWNybyBkZWZpbml0aW9ucywKPiAgLSBy
-ZW1vdmVkIHVubmVlZGVkIGRldi0+b2Zfbm9kZSB0ZXN0LAo+ICAtIGV4eW5vc19scGFzc197c3Vz
-cGVuZCxyZXN1bWV9IGZ1bmN0aW9ucyBjb21waWxlZC1pbiBjb25kaXRpb25hbGx5LAo+ICAtIGFk
-ZGVkIGNvbW1lbnRzIGZvciBzdHJ1Y3QgZXh5bm9zX2xwYXNzIGZpZWxkcy4KPiAKPiBDaGFuZ2Vz
-IHNpbmNlIHY0Ogo+ICAtIG5vbmUuCj4gCj4gQ2hhbmdlcyBzaW5jZSB2MzoKPiAgLSBtb3ZlZCBm
-cm9tIHNvdW5kL3NvYy9zYW1zdW5nIGFuZCByZXdyaXR0ZW4gYXMgYSBNRkQgZHJpdmVyLAo+ICAt
-IFBNVSByZWdpc3RlciBkZWZpbml0aW9ucyBtb3ZlZCB0byBpbmNsdWRlL2xpbnV4L21mZC9zeXNj
-b24vZXh5bm9zNS1wbXUuaCwKPiAgLSBhZGRlZCByZWdtYXAgZm9yIExQQVNTIFRvcCBTRlIgcmVn
-aW9uLAo+ICAtIGNsZWFuZWQgdXAgcmVnaXN0ZXIgYml0IGZpZWxkIGRlZmludGlvbnMuCj4gCj4g
-Q2hhbmdlcyBzaW5jZSB2MjoKPiAgLSBtb3ZlIG1pc3BsYWNlZCBTTkRfU0FNU1VOR19BVURTUyBL
-Y29uZmlnIHN5bWJvbCBhZGRpdGlvbgo+ICAgIHRvIHRoaXMgcGF0Y2guCj4gLS0tCj4gIGRyaXZl
-cnMvbWZkL0tjb25maWcgICAgICAgICAgICAgICAgICAgIHwgICA4ICsrCj4gIGRyaXZlcnMvbWZk
-L01ha2VmaWxlICAgICAgICAgICAgICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9tZmQvZXh5bm9z
-LWxwYXNzLmMgICAgICAgICAgICAgfCAxODcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrCj4gIGluY2x1ZGUvbGludXgvbWZkL3N5c2Nvbi9leHlub3M1LXBtdS5oIHwgICA0ICstCj4g
-IDQgZmlsZXMgY2hhbmdlZCwgMTk5IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWZkL2V4eW5vcy1scGFzcy5jCj4gCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvbWZkL0tjb25maWcgYi9kcml2ZXJzL21mZC9LY29uZmlnCj4gaW5kZXggMmQx
-ZmI2NC4uYTdlYzg5MCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL21mZC9LY29uZmlnCj4gKysrIGIv
-ZHJpdmVycy9tZmQvS2NvbmZpZwo+IEBAIC0yODEsNiArMjgxLDE0IEBAIGNvbmZpZyBNRkRfRExO
-Mgo+ICAJICBldGMuIG11c3QgYmUgZW5hYmxlZCBpbiBvcmRlciB0byB1c2UgdGhlIGZ1bmN0aW9u
-YWxpdHkgb2YKPiAgCSAgdGhlIGRldmljZS4KPiAgCj4gK2NvbmZpZyBNRkRfRVhZTk9TX0xQQVNT
-Cj4gKwl0cmlzdGF0ZSAiU2Ftc3VuZyBFeHlub3MgU29DIExvdyBQb3dlciBBdWRpbyBTdWJzeXN0
-ZW0iCj4gKwlzZWxlY3QgTUZEX0NPUkUKPiArCXNlbGVjdCBSRUdNQVBfTU1JTwo+ICsJaGVscAo+
-ICsJICBTZWxlY3QgdGhpcyBvcHRpb24gdG8gZW5hYmxlIHN1cHBvcnQgZm9yIFNhbXN1bmcgRXh5
-bm9zIExvdyBQb3dlcgo+ICsJICBBdWRpbyBTdWJzeXN0ZW0uCj4gKwo+ICBjb25maWcgTUZEX01D
-MTNYWFgKPiAgCXRyaXN0YXRlCj4gIAlkZXBlbmRzIG9uIChTUElfTUFTVEVSIHx8IEkyQykKPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvTWFrZWZpbGUgYi9kcml2ZXJzL21mZC9NYWtlZmlsZQo+
-IGluZGV4IDJiYTNiYTMuLjQxNTEwYmIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9tZmQvTWFrZWZp
-bGUKPiArKysgYi9kcml2ZXJzL21mZC9NYWtlZmlsZQo+IEBAIC0xMyw2ICsxMyw3IEBAIG9iai0k
-KENPTkZJR19NRkRfQkNNNTkwWFgpCSs9IGJjbTU5MHh4Lm8KPiAgb2JqLSQoQ09ORklHX01GRF9D
-Uk9TX0VDKQkrPSBjcm9zX2VjLm8KPiAgb2JqLSQoQ09ORklHX01GRF9DUk9TX0VDX0kyQykJKz0g
-Y3Jvc19lY19pMmMubwo+ICBvYmotJChDT05GSUdfTUZEX0NST1NfRUNfU1BJKQkrPSBjcm9zX2Vj
-X3NwaS5vCj4gK29iai0kKENPTkZJR19NRkRfRVhZTk9TX0xQQVNTKQkrPSBleHlub3MtbHBhc3Mu
-bwo+ICAKPiAgcnRzeF9wY2ktb2JqcwkJCTo9IHJ0c3hfcGNyLm8gcnRzNTIwOS5vIHJ0czUyMjku
-byBydGw4NDExLm8gcnRzNTIyNy5vIHJ0czUyNDkubwo+ICBvYmotJChDT05GSUdfTUZEX1JUU1hf
-UENJKQkrPSBydHN4X3BjaS5vCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL2V4eW5vcy1scGFz
-cy5jIGIvZHJpdmVycy9tZmQvZXh5bm9zLWxwYXNzLmMKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+
-IGluZGV4IDAwMDAwMDAuLjU3OGFjN2IKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvZHJpdmVycy9t
-ZmQvZXh5bm9zLWxwYXNzLmMKPiBAQCAtMCwwICsxLDE4NyBAQAo+ICsvKgo+ICsgKiBDb3B5cmln
-aHQgKEMpIDIwMTUgLSAyMDE2IFNhbXN1bmcgRWxlY3Ryb25pY3MgQ28uLCBMdGQuCj4gKyAqCj4g
-KyAqIEF1dGhvcnM6IEluaGEgU29uZyA8aWRlYWwuc29uZ0BzYW1zdW5nLmNvbT4KPiArICogICAg
-ICAgICAgU3lsd2VzdGVyIE5hd3JvY2tpIDxzLm5hd3JvY2tpQHNhbXN1bmcuY29tPgo+ICsgKgo+
-ICsgKiBTYW1zdW5nIEV4eW5vcyBTb0Mgc2VyaWVzIExvdyBQb3dlciBBdWRpbyBTdWJzeXN0ZW0g
-ZHJpdmVyLgo+ICsgKgo+ICsgKiBUaGlzIG1vZHVsZSBwcm92aWRlcyByZWdtYXAgZm9yIHRoZSBU
-b3AgU0ZSIHJlZ2lvbiBhbmQgaW5zdGFudGlhdGVzCj4gKyAqIGRldmljZXMgZm9yIElQIGJsb2Nr
-cyBsaWtlIERNQUMsIEkyUywgVUFSVC4KPiArICoKPiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUg
-c29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkKPiArICogaXQg
-dW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSB2ZXJzaW9u
-IDIgYW5kCj4gKyAqIG9ubHkgdmVyc2lvbiAyIGFzIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0
-d2FyZSBGb3VuZGF0aW9uLgo+ICsgKi8KPiArCj4gKyNpbmNsdWRlIDxsaW51eC9kZWxheS5oPgo+
-ICsjaW5jbHVkZSA8bGludXgvaW8uaD4KPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgo+ICsj
-aW5jbHVkZSA8bGludXgvbWZkL3N5c2Nvbi5oPgo+ICsjaW5jbHVkZSA8bGludXgvbWZkL3N5c2Nv
-bi9leHlub3M1LXBtdS5oPgo+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4KPiArI2luY2x1ZGUgPGxp
-bnV4L29mX3BsYXRmb3JtLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4K
-PiArI2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5oPgo+ICsjaW5jbHVkZSA8bGludXgvdHlwZXMuaD4K
-PiArCj4gKy8qIExQQVNTIFRvcCByZWdpc3RlciBkZWZpbml0aW9ucyAqLwo+ICsjZGVmaW5lIFNG
-Ul9MUEFTU19DT1JFX1NXX1JFU0VUCQkweDA4Cj4gKyNkZWZpbmUgIExQQVNTX1NCX1NXX1JFU0VU
-CQlCSVQoMTEpCj4gKyNkZWZpbmUgIExQQVNTX1VBUlRfU1dfUkVTRVQJCUJJVCgxMCkKPiArI2Rl
-ZmluZSAgTFBBU1NfUENNX1NXX1JFU0VUCQlCSVQoOSkKPiArI2RlZmluZSAgTFBBU1NfSTJTX1NX
-X1JFU0VUCQlCSVQoOCkKPiArI2RlZmluZSAgTFBBU1NfV0RUMV9TV19SRVNFVAkJQklUKDQpCj4g
-KyNkZWZpbmUgIExQQVNTX1dEVDBfU1dfUkVTRVQJCUJJVCgzKQo+ICsjZGVmaW5lICBMUEFTU19U
-SU1FUl9TV19SRVNFVAkJQklUKDIpCj4gKyNkZWZpbmUgIExQQVNTX01FTV9TV19SRVNFVAkJQklU
-KDEpCj4gKyNkZWZpbmUgIExQQVNTX0RNQV9TV19SRVNFVAkJQklUKDApCj4gKwo+ICsjZGVmaW5l
-IFNGUl9MUEFTU19JTlRSX0NBNV9NQVNLCQkweDQ4Cj4gKyNkZWZpbmUgU0ZSX0xQQVNTX0lOVFJf
-Q1BVX01BU0sJCTB4NTgKPiArI2RlZmluZSAgTFBBU1NfSU5UUl9BUE0JCQlCSVQoOSkKPiArI2Rl
-ZmluZSAgTFBBU1NfSU5UUl9NSUYJCQlCSVQoOCkKPiArI2RlZmluZSAgTFBBU1NfSU5UUl9USU1F
-UgkJQklUKDcpCj4gKyNkZWZpbmUgIExQQVNTX0lOVFJfRE1BCQkJQklUKDYpCj4gKyNkZWZpbmUg
-IExQQVNTX0lOVFJfR1BJTwkJQklUKDUpCj4gKyNkZWZpbmUgIExQQVNTX0lOVFJfSTJTCQkJQklU
-KDQpCj4gKyNkZWZpbmUgIExQQVNTX0lOVFJfUENNCQkJQklUKDMpCj4gKyNkZWZpbmUgIExQQVNT
-X0lOVFJfU0xJTUJVUwkJQklUKDIpCj4gKyNkZWZpbmUgIExQQVNTX0lOVFJfVUFSVAkJQklUKDEp
-Cj4gKyNkZWZpbmUgIExQQVNTX0lOVFJfU0ZSCQkJQklUKDApCj4gKwo+ICtzdHJ1Y3QgZXh5bm9z
-X2xwYXNzIHsKPiArCS8qIHBvaW50ZXIgdG8gdGhlIFBvd2VyIE1hbmFnZW1lbnQgVW5pdCByZWdt
-YXAgKi8KPiArCXN0cnVjdCByZWdtYXAgKnBtdTsKPiArCS8qIHBvaW50ZXIgdG8gdGhlIExQQVNT
-IFRPUCByZWdtYXAgKi8KPiArCXN0cnVjdCByZWdtYXAgKnRvcDsKPiArfTsKPiArCj4gK3N0YXRp
-YyB2b2lkIGV4eW5vc19scGFzc19jb3JlX3N3X3Jlc2V0KHN0cnVjdCBleHlub3NfbHBhc3MgKmxw
-YXNzLCBpbnQgbWFzaykKPiArewo+ICsJdW5zaWduZWQgaW50IHZhbCA9IDA7Cj4gKwo+ICsJcmVn
-bWFwX3JlYWQobHBhc3MtPnRvcCwgU0ZSX0xQQVNTX0NPUkVfU1dfUkVTRVQsICZ2YWwpOwo+ICsK
-PiArCXZhbCAmPSB+bWFzazsKPiArCXJlZ21hcF93cml0ZShscGFzcy0+dG9wLCBTRlJfTFBBU1Nf
-Q09SRV9TV19SRVNFVCwgdmFsKTsKPiArCj4gKwl1c2xlZXBfcmFuZ2UoMTAwLCAxNTApOwo+ICsK
-PiArCXZhbCB8PSBtYXNrOwo+ICsJcmVnbWFwX3dyaXRlKGxwYXNzLT50b3AsIFNGUl9MUEFTU19D
-T1JFX1NXX1JFU0VULCB2YWwpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZCBleHlub3NfbHBhc3Nf
-ZW5hYmxlKHN0cnVjdCBleHlub3NfbHBhc3MgKmxwYXNzKQo+ICt7Cj4gKwkvKiBVbm1hc2sgU0ZS
-LCBETUEgYW5kIEkyUyBpbnRlcnJ1cHQgKi8KPiArCXJlZ21hcF93cml0ZShscGFzcy0+dG9wLCBT
-RlJfTFBBU1NfSU5UUl9DQTVfTUFTSywKPiArCQkgICAgIExQQVNTX0lOVFJfU0ZSIHwgTFBBU1Nf
-SU5UUl9ETUEgfCBMUEFTU19JTlRSX0kyUyk7Cj4gKwo+ICsJcmVnbWFwX3dyaXRlKGxwYXNzLT50
-b3AsIFNGUl9MUEFTU19JTlRSX0NQVV9NQVNLLAo+ICsJCSAgICAgTFBBU1NfSU5UUl9TRlIgfCBM
-UEFTU19JTlRSX0RNQSB8IExQQVNTX0lOVFJfSTJTKTsKPiArCj4gKwkvKiBBY3RpdmF0ZSByZWxh
-dGVkIFBBRHMgZnJvbSByZXRlbnRpb24gc3RhdGUgKi8KPiArCXJlZ21hcF93cml0ZShscGFzcy0+
-cG11LCBFWFlOT1M1NDMzX1BBRF9SRVRFTlRJT05fQVVEX09QVElPTiwKPiArCQkgICAgIEVYWU5P
-UzU0MzNfUEFEX0lOSVRJQVRFX1dBS0VVUF9GUk9NX0xPV1BXUik7Cj4gKwo+ICsJZXh5bm9zX2xw
-YXNzX2NvcmVfc3dfcmVzZXQobHBhc3MsIExQQVNTX0kyU19TV19SRVNFVCk7Cj4gKwlleHlub3Nf
-bHBhc3NfY29yZV9zd19yZXNldChscGFzcywgTFBBU1NfRE1BX1NXX1JFU0VUKTsKPiArCWV4eW5v
-c19scGFzc19jb3JlX3N3X3Jlc2V0KGxwYXNzLCBMUEFTU19NRU1fU1dfUkVTRVQpOwo+ICt9Cj4g
-Kwo+ICtzdGF0aWMgdm9pZCBleHlub3NfbHBhc3NfZGlzYWJsZShzdHJ1Y3QgZXh5bm9zX2xwYXNz
-ICpscGFzcykKPiArewo+ICsJLyogTWFzayBhbnkgdW5tYXNrZWQgSVAgaW50ZXJydXB0IHNvdXJj
-ZXMgKi8KPiArCXJlZ21hcF93cml0ZShscGFzcy0+dG9wLCBTRlJfTFBBU1NfSU5UUl9DUFVfTUFT
-SywgMCk7Cj4gKwlyZWdtYXBfd3JpdGUobHBhc3MtPnRvcCwgU0ZSX0xQQVNTX0lOVFJfQ0E1X01B
-U0ssIDApOwo+ICsKPiArCS8qIERlYWN0aXZhdGUgcmVsYXRlZCBQQURzIGZyb20gcmV0ZW50aW9u
-IHN0YXRlICovCj4gKwlyZWdtYXBfd3JpdGUobHBhc3MtPnBtdSwgRVhZTk9TNTQzM19QQURfUkVU
-RU5USU9OX0FVRF9PUFRJT04sIDApOwo+ICt9Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHJl
-Z21hcF9jb25maWcgZXh5bm9zX2xwYXNzX3JlZ19jb25mID0gewo+ICsJLnJlZ19iaXRzCT0gMzIs
-Cj4gKwkucmVnX3N0cmlkZQk9IDQsCj4gKwkudmFsX2JpdHMJPSAzMiwKPiArCS5tYXhfcmVnaXN0
-ZXIJPSAweGZjLAo+ICsJLmZhc3RfaW8JPSB0cnVlLAo+ICt9Owo+ICsKPiArc3RhdGljIGludCBl
-eHlub3NfbHBhc3NfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiArewo+ICsJ
-c3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsKPiArCXN0cnVjdCBleHlub3NfbHBhc3Mg
-KmxwYXNzOwo+ICsJdm9pZCBfX2lvbWVtICpiYXNlX3RvcDsKPiArCXN0cnVjdCByZXNvdXJjZSAq
-cmVzOwo+ICsKPiArCWxwYXNzID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpscGFzcyksIEdG
-UF9LRVJORUwpOwo+ICsJaWYgKCFscGFzcykKPiArCQlyZXR1cm4gLUVOT01FTTsKPiArCj4gKwly
-ZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9NRU0sIDApOwo+ICsJ
-YmFzZV90b3AgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2LCByZXMpOwo+ICsJaWYgKElTX0VS
-UihiYXNlX3RvcCkpCj4gKwkJcmV0dXJuIFBUUl9FUlIoYmFzZV90b3ApOwo+ICsKPiArCWxwYXNz
-LT50b3AgPSByZWdtYXBfaW5pdF9tbWlvKGRldiwgYmFzZV90b3AsCj4gKwkJCQkJJmV4eW5vc19s
-cGFzc19yZWdfY29uZik7Cj4gKwlpZiAoSVNfRVJSKGxwYXNzLT50b3ApKSB7Cj4gKwkJZGV2X2Vy
-cihkZXYsICJMUEFTUyB0b3AgcmVnbWFwIGluaXRpYWxpemF0aW9uIGZhaWxlZFxuIik7Cj4gKwkJ
-cmV0dXJuIFBUUl9FUlIobHBhc3MtPnRvcCk7Cj4gKwl9Cj4gKwo+ICsJbHBhc3MtPnBtdSA9IHN5
-c2Nvbl9yZWdtYXBfbG9va3VwX2J5X3BoYW5kbGUoZGV2LT5vZl9ub2RlLAo+ICsJCQkJCQkic2Ft
-c3VuZyxwbXUtc3lzY29uIik7Cj4gKwlpZiAoSVNfRVJSKGxwYXNzLT5wbXUpKSB7Cj4gKwkJZGV2
-X2VycihkZXYsICJGYWlsZWQgdG8gbG9va3VwIFBNVSByZWdtYXBcbiIpOwo+ICsJCXJldHVybiBQ
-VFJfRVJSKGxwYXNzLT5wbXUpOwo+ICsJfQo+ICsKPiArCXBsYXRmb3JtX3NldF9kcnZkYXRhKHBk
-ZXYsIGxwYXNzKTsKPiArCWV4eW5vc19scGFzc19lbmFibGUobHBhc3MpOwo+ICsKPiArCXJldHVy
-biBvZl9wbGF0Zm9ybV9wb3B1bGF0ZShkZXYtPm9mX25vZGUsIE5VTEwsIE5VTEwsIGRldik7Cj4g
-K30KPiArCj4gKyNpZmRlZiBDT05GSUdfUE1fU0xFRVAKPiArc3RhdGljIGludCBleHlub3NfbHBh
-c3Nfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gK3sKPiArCXN0cnVjdCBleHlub3NfbHBh
-c3MgKmxwYXNzID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4gKwo+ICsJZXh5bm9zX2xwYXNzX2Rp
-c2FibGUobHBhc3MpOwo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGV4
-eW5vc19scGFzc19yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQo+ICt7Cj4gKwlzdHJ1Y3QgZXh5
-bm9zX2xwYXNzICpscGFzcyA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOwo+ICsKPiArCWV4eW5vc19s
-cGFzc19lbmFibGUobHBhc3MpOwo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKyNlbmRpZgo+ICsK
-PiArc3RhdGljIFNJTVBMRV9ERVZfUE1fT1BTKGxwYXNzX3BtX29wcywgZXh5bm9zX2xwYXNzX3N1
-c3BlbmQsCj4gKwkJCQkJZXh5bm9zX2xwYXNzX3Jlc3VtZSk7Cj4gKwo+ICtzdGF0aWMgY29uc3Qg
-c3RydWN0IG9mX2RldmljZV9pZCBleHlub3NfbHBhc3Nfb2ZfbWF0Y2hbXSA9IHsKPiArCXsgLmNv
-bXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3M1NDMzLWxwYXNzIiB9LAo+ICsJeyB9LAo+ICt9Owo+
-ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBleHlub3NfbHBhc3Nfb2ZfbWF0Y2gpOwo+ICsKPiAr
-c3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgZXh5bm9zX2xwYXNzX2RyaXZlciA9IHsKPiAr
-CS5kcml2ZXIgPSB7Cj4gKwkJLm5hbWUJCT0gImV4eW5vcy1scGFzcyIsCj4gKwkJLnBtCQk9ICZs
-cGFzc19wbV9vcHMsCj4gKwkJLm9mX21hdGNoX3RhYmxlCT0gZXh5bm9zX2xwYXNzX29mX21hdGNo
-LAo+ICsJfSwKPiArCS5wcm9iZQk9IGV4eW5vc19scGFzc19wcm9iZSwKPiArfTsKPiArbW9kdWxl
-X3BsYXRmb3JtX2RyaXZlcihleHlub3NfbHBhc3NfZHJpdmVyKTsKPiArCj4gK01PRFVMRV9ERVND
-UklQVElPTigiU2Ftc3VuZyBMb3cgUG93ZXIgQXVkaW8gU3Vic3lzdGVtIGRyaXZlciIpOwo+ICtN
-T0RVTEVfTElDRU5TRSgiR1BMIHYyIik7Cj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbWZk
-L3N5c2Nvbi9leHlub3M1LXBtdS5oIGIvaW5jbHVkZS9saW51eC9tZmQvc3lzY29uL2V4eW5vczUt
-cG11LmgKPiBpbmRleCA3NmYzMGY5Li5jMjhmZjIxIDEwMDY0NAo+IC0tLSBhL2luY2x1ZGUvbGlu
-dXgvbWZkL3N5c2Nvbi9leHlub3M1LXBtdS5oCj4gKysrIGIvaW5jbHVkZS9saW51eC9tZmQvc3lz
-Y29uL2V4eW5vczUtcG11LmgKPiBAQCAtNDMsOCArNDMsMTAgQEAKPiAgI2RlZmluZSBFWFlOT1M1
-NDMzX01JUElfUEhZMl9DT05UUk9MCQkoMHg3MTgpCj4gIAo+ICAjZGVmaW5lIEVYWU5PUzVfUEhZ
-X0VOQUJMRQkJCUJJVCgwKQo+IC0KPiAgI2RlZmluZSBFWFlOT1M1X01JUElfUEhZX1NfUkVTRVRO
-CQlCSVQoMSkKPiAgI2RlZmluZSBFWFlOT1M1X01JUElfUEhZX01fUkVTRVROCQlCSVQoMikKPiAg
-Cj4gKyNkZWZpbmUgRVhZTk9TNTQzM19QQURfUkVURU5USU9OX0FVRF9PUFRJT04JCSgweDMwMjgp
-Cj4gKyNkZWZpbmUgRVhZTk9TNTQzM19QQURfSU5JVElBVEVfV0FLRVVQX0ZST01fTE9XUFdSCUJJ
-VCgyOCkKPiArCj4gICNlbmRpZiAvKiBfTElOVVhfTUZEX1NZU0NPTl9QTVVfRVhZTk9TNV9IXyAq
-Lwo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxz
-YS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9t
-YWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
+This patch adds a binding that describes the Rockchip PCIe controller
+found on Rockchip SoCs PCIe interface.
+
+Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+
+Changes in v10:
+- fix broken description of msi-map
+- s/pcie/PCIe for description
+
+Changes in v9: None
+Changes in v8:
+- add Brian's review-tag
+
+Changes in v7:
+- move optional properties ahead of interrupt subnode
+- use 0-base index for INTx
+
+Changes in v6:
+- add ack tag from Rob
+
+Changes in v5:
+- fix wrong example reported by Marc
+- add seperate section to describe the interrupt controller child
+  node
+
+Changes in v4:
+- fix example of adding intermediate interrupt controller for pcie
+  legacy interrrupt
+
+Changes in v3:
+- fix example dts code suggested by Rob and Marc
+- remove driver's behaviour of regulator
+
+Changes in v2:
+- fix lots clk/reset stuff suggested by Heiko
+- remove msi-parent and add msi-map suggested by Marc
+- drop phy related stuff
+- some others minor fixes
+
+ .../devicetree/bindings/pci/rockchip-pcie.txt      | 106 +++++++++++++++++++++
+ 1 file changed, 106 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+new file mode 100644
+index 0000000..ba67b39
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+@@ -0,0 +1,106 @@
++* Rockchip AXI PCIe Root Port Bridge DT description
++
++Required properties:
++- #address-cells: Address representation for root ports, set to <3>
++- #size-cells: Size representation for root ports, set to <2>
++- #interrupt-cells: specifies the number of cells needed to encode an
++		interrupt source. The value must be 1.
++- compatible: Should contain "rockchip,rk3399-pcie"
++- reg: Two register ranges as listed in the reg-names property
++- reg-names: Must include the following names
++	- "axi-base"
++	- "apb-base"
++- clocks: Must contain an entry for each entry in clock-names.
++		See ../clocks/clock-bindings.txt for details.
++- clock-names: Must include the following entries:
++	- "aclk"
++	- "aclk-perf"
++	- "hclk"
++	- "pm"
++- msi-map: Maps a Requester ID to an MSI controller and associated
++	msi-specifier data. See ./pci-msi.txt
++- phys: From PHY bindings: Phandle for the Generic PHY for PCIe.
++- phy-names:  MUST be "pcie-phy".
++- interrupts: Three interrupt entries must be specified.
++- interrupt-names: Must include the following names
++	- "sys"
++	- "legacy"
++	- "client"
++- resets: Must contain five entries for each entry in reset-names.
++	   See ../reset/reset.txt for details.
++- reset-names: Must include the following names
++	- "core"
++	- "mgmt"
++	- "mgmt-sticky"
++	- "pipe"
++- pinctrl-names : The pin control state names
++- pinctrl-0: The "default" pinctrl state
++- #interrupt-cells: specifies the number of cells needed to encode an
++	interrupt source. The value must be 1.
++- interrupt-map-mask and interrupt-map: standard PCI properties
++
++Optional Property:
++- ep-gpios: contain the entry for pre-reset gpio
++- num-lanes: number of lanes to use
++- vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
++- vpcie1v8-supply: The phandle to the 1.8v regulator to use for PCIe.
++- vpcie0v9-supply: The phandle to the 0.9v regulator to use for PCIe.
++
++*Interrupt controller child node*
++The core controller provides a single interrupt for legacy INTx. The PCIe node
++should contain an interrupt controller node as a target for the PCI
++'interrupt-map' property. This node represents the domain at which the four
++INTx interrupts are decoded and routed.
++
++
++Required properties for Interrupt controller child node:
++- interrupt-controller: identifies the node as an interrupt controller
++- #address-cells: specifies the number of cells needed to encode an
++	address. The value must be 0.
++- #interrupt-cells: specifies the number of cells needed to encode an
++	interrupt source. The value must be 1.
++
++Example:
++
++pcie0: pcie@f8000000 {
++	compatible = "rockchip,rk3399-pcie";
++	#address-cells = <3>;
++	#size-cells = <2>;
++	clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
++		 <&cru PCLK_PCIE>, <&cru SCLK_PCIE_PM>;
++	clock-names = "aclk", "aclk-perf",
++		      "hclk", "pm";
++	bus-range = <0x0 0x1>;
++	interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH 0>,
++		     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH 0>,
++		     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH 0>;
++	interrupt-names = "sys", "legacy", "client";
++	assigned-clocks = <&cru SCLK_PCIEPHY_REF>;
++	assigned-clock-parents = <&cru SCLK_PCIEPHY_REF100M>;
++	assigned-clock-rates = <100000000>;
++	ep-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
++	ranges = <0x83000000 0x0 0xfa000000 0x0 0xfa000000 0x0 0x600000
++		  0x81000000 0x0 0xfa600000 0x0 0xfa600000 0x0 0x100000>;
++	num-lanes = <4>;
++	msi-map = <0x0 &its 0x0 0x1000>;
++	reg = <0x0 0xf8000000 0x0 0x2000000>, <0x0 0xfd000000 0x0 0x1000000>;
++	reg-names = "axi-base", "apb-base";
++	resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
++		 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>;
++	reset-names = "core", "mgmt", "mgmt-sticky", "pipe";
++	phys = <&pcie_phy>;
++	phy-names = "pcie-phy";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie_clkreq>;
++	#interrupt-cells = <1>;
++	interrupt-map-mask = <0 0 0 7>;
++	interrupt-map = <0 0 0 1 &pcie0_intc 0>,
++			<0 0 0 2 &pcie0_intc 1>,
++			<0 0 0 3 &pcie0_intc 2>,
++			<0 0 0 4 &pcie0_intc 3>;
++	pcie0_intc: interrupt-controller {
++		interrupt-controller;
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++	};
++};
+-- 
+2.3.7
