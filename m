@@ -1,15 +1,12 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v6 4/4] ARM: dts: sun9i: Switch to the AC100 RTC
- clock outputs for osc32k
-Date: Fri, 19 Aug 2016 15:42:26 +0800
-Message-ID: <20160819074226.16636-5-wens@csie.org>
-References: <20160819074226.16636-1-wens@csie.org>
+Subject: [PATCH v6 0/4] ARM: dts: sun9i: Enable X-Powers AC100 RTC
+Date: Fri, 19 Aug 2016 15:42:22 +0800
+Message-ID: <20160819074226.16636-1-wens@csie.org>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCMILY6JWQBBB7MK3O6QKGQE7DKP2NY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBCMILY6JWQBBB7EK3O6QKGQE5MVYQIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160819074226.16636-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/rtc-linux
@@ -20,86 +17,95 @@ To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandr
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The 32.768 kHz clock inside the A80 SoC is fed from an external source,
-typically the AC100 RTC module.
+Hi everyone,
 
-Make the osc32k placeholder a fixed-factor clock so board dts files can
-specify its source.
+This was "mfd: ac100: Add support for X-Powers AC100 audio codec / RTC
+combo IC". The driver bits have all been merged.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
 Changes since v5:
 
-  - Added "clk-div" and "clk-mult" fixed-factor-clock properties to osc32k
-    placeholder.
+  - Driver bits merged and dropped from series.
+  - Added fix to rtc-ac100 clock register code to honor the
+    "clock-output-names" DT property.
+  - Added "clk-div" and "clk-mult" to osc32k placeholder clock node
 
-Changes since v4: none
-Changes since v3: none
-Changes since v2: none
-Changes since v1: none
----
- arch/arm/boot/dts/sun9i-a80-cubieboard4.dts |  5 +++++
- arch/arm/boot/dts/sun9i-a80-optimus.dts     |  5 +++++
+Changes since v4:
+
+  - Style changes to DT bindings.
+  - Added commit message to DT bindings commit.
+
+Changes since v3:
+
+  - bulk write support for regmaps without raw formatting patch merged
+    and thus dropped from series.
+
+  - sun9i device node re-ordering patches merged and thus dropped from
+    series.
+
+  - Fixed device node name and added labels to device tree binding example.
+
+  - Moved 4M_adda clock to codec side, and added clock bindings to codec
+    node.
+
+  - Rename RTC clock output related prefixes from clk32k to clkout.
+
+  - Rename default clock output names to cko{1,2,3}-rtc.
+
+  - Move struct tm to/from RTC conversion offsets inline with reg[]
+    assignments
+
+  - Drop separate mutex and use rtc->ops_lock in interrupt handler.
+
+  - Use platform_get_irq instead of of_get_irq.
+
+  - Add struct of_device_id and .of_match_table to RTC driver.
+
+Changes since v2:
+
+  - Fix ac100_codec interrupt line in DT binding example.
+
+  - Fix copy-paste errors in RTC set_alarm. Alarm now works.
+
+  - Drop file name from MFD driver.
+
+  - Add / update copyright notices.
+
+  - Change license of RTC driver to GPL v2, matching MFD driver.
+
+  - Fix MFD driver MODULE_LICENSE to match license declaration in header.
+
+Changes since v1:
+
+  - Complete register definitions and regmap regions.
+
+
+Patch 1 adds a fix to rtc-ac100 clock register code to honor the
+"clock-output-names" DT property.
+
+Patch 2 adds the AC100 device nodes to the A80 Optimus board dts.
+
+Patch 3 adds the AC100 device nodes to the Cubieboard4 board dts.
+
+Patch 4 changes the fixed osc_32k clk to a fixed factor clk,
+representing the 32k clk input pin on the SoC, and also hooks up the
+ac100 rtc clk output to this clk in the board dts files.
+
+
+Regards
+ChenYu
+
+Chen-Yu Tsai (4):
+  rtc: ac100: support clock-output-names in device tree binding
+  ARM: dts: sun9i: a80-optimus: Add device node for AC100
+  ARM: dts: sun9i: cubieboard4: Add device node for AC100
+  ARM: dts: sun9i: Switch to the AC100 RTC clock outputs for osc32k
+
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 29 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/sun9i-a80-optimus.dts     | 29 +++++++++++++++++++++++++++++
  arch/arm/boot/dts/sun9i-a80.dtsi            | 11 +++++------
- 3 files changed, 15 insertions(+), 6 deletions(-)
+ drivers/rtc/rtc-ac100.c                     |  2 ++
+ 4 files changed, 65 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-index cf2f4b72a841..04b014603659 100644
---- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-+++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-@@ -103,6 +103,11 @@
- 	allwinner,drive = <SUN4I_PINCTRL_40_MA>;
- };
- 
-+&osc32k {
-+	/* osc32k input is from AC100 */
-+	clocks = <&ac100_rtc 0>;
-+};
-+
- &pio {
- 	led_pins_cubieboard4: led-pins@0 {
- 		allwinner,pins = "PH6", "PH17";
-diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-index e35c06c162a7..fd874ded890e 100644
---- a/arch/arm/boot/dts/sun9i-a80-optimus.dts
-+++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
-@@ -152,6 +152,11 @@
- 	status = "okay";
- };
- 
-+&osc32k {
-+	/* osc32k input is from AC100 */
-+	clocks = <&ac100_rtc 0>;
-+};
-+
- &pio {
- 	led_pins_optimus: led-pins@0 {
- 		allwinner,pins = "PH0", "PH1";
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index f68b3242b33a..24e3cac4f571 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -148,15 +148,14 @@
- 
- 		/*
- 		 * The 32k clock is from an external source, normally the
--		 * AC100 codec/RTC chip. This clock is by default enabled
--		 * and clocked at 32768 Hz, from the oscillator connected
--		 * to the AC100. It is configurable, but no such driver or
--		 * bindings exist yet.
-+		 * AC100 codec/RTC chip. This serves as a placeholder for
-+		 * board dts files to specify the source.
- 		 */
- 		osc32k: osc32k_clk {
- 			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <32768>;
-+			compatible = "fixed-factor-clock";
-+			clock-div = <1>;
-+			clock-mult = <1>;
- 			clock-output-names = "osc32k";
- 		};
- 
 -- 
 2.9.3
 
