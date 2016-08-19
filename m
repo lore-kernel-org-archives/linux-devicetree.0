@@ -1,64 +1,51 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: r8a7792: add VSP1V support
-Date: Sat, 20 Aug 2016 01:19:48 +0300
-Message-ID: <1764210.GiXQZXIJDz@wasted.cogentembedded.com>
-References: <1635089.v8k0jcJkvb@wasted.cogentembedded.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v4 1/6] pinctrl: amlogic: gxbb: add the IR remote pin
+Date: Fri, 19 Aug 2016 15:23:19 -0700
+Message-ID: <7h4m6g7608.fsf@baylibre.com>
+References: <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
+        <20160819215547.20063-1-martin.blumenstingl@googlemail.com>
+        <20160819215547.20063-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1635089.v8k0jcJkvb-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160819215547.20063-2-martin.blumenstingl@googlemail.com>
+        (Martin Blumenstingl's message of "Fri, 19 Aug 2016 23:55:42 +0200")
+Sender: linux-gpio-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, narmstrong@baylibre.com, carlo@caione.org, linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, mchehab@kernel.org, will.deacon@arm.com, catalin.marinas@arm.com, mark.rutland@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Describe  3 instances (VSPS, VSPD0, and VSPD1) of the VSP1V in the R8A7792
-device tree.
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> This adds the IR remote receiver to the AO domain devices.
 
----
- arch/arm/boot/dts/r8a7792.dtsi |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+nit Re: Subject: should specify IR remote *input* pin.
 
-Index: renesas/arch/arm/boot/dts/r8a7792.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7792.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7792.dtsi
-@@ -668,6 +668,30 @@
- 			status = "disabled";
- 		};
- 
-+		vsp1@fe928000 {
-+			compatible = "renesas,vsp1";
-+			reg = <0 0xfe928000 0 0x8000>;
-+			interrupts = <GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mstp1_clks R8A7792_CLK_VSP1_SY>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
-+		vsp1@fe930000 {
-+			compatible = "renesas,vsp1";
-+			reg = <0 0xfe930000 0 0x8000>;
-+			interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mstp1_clks R8A7792_CLK_VSP1DU0>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
-+		vsp1@fe938000 {
-+			compatible = "renesas,vsp1";
-+			reg = <0 0xfe938000 0 0x8000>;
-+			interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&mstp1_clks R8A7792_CLK_VSP1DU1>;
-+			power-domains = <&sysc R8A7792_PD_ALWAYS_ON>;
-+		};
-+
- 		/* Special CPG clocks */
- 		cpg_clocks: cpg_clocks@e6150000 {
- 			compatible = "renesas,r8a7792-cpg-clocks",
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+> index cb4d6ad..8fffb31 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+> @@ -225,6 +225,8 @@ static const unsigned int i2c_sda_ao_pins[] = {PIN(GPIOAO_5, 0) };
+>  static const unsigned int i2c_slave_sck_ao_pins[] = {PIN(GPIOAO_4, 0) };
+>  static const unsigned int i2c_slave_sda_ao_pins[] = {PIN(GPIOAO_5, 0) };
+>  
+> +static const unsigned int ir_in_ao_pins[] = {PIN(GPIOAO_7, 0) };
+> +
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm trying to keep the names here so they match the datasheet, which
+calls this remote_input_ao.  Please update throughout the patch.
+
+Otherwise looks good to me.  Feel free to add
+
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+
+and Linus W can queue it up.
+
+Thanks,
+
+Kevin
