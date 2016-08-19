@@ -1,44 +1,55 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/8] gpio: dt-bindings: Add documentation for Aspeed
- GPIO controllers
-Date: Fri, 19 Aug 2016 09:36:42 -0500
-Message-ID: <20160819143641.GA19513@rob-hp-laptop>
-References: <20160819124414.24242-1-andrew@aj.id.au>
- <20160819124414.24242-5-andrew@aj.id.au>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v6 1/7] power: act8945a_charger: Remove
+ "battery_temperature"
+Date: Fri, 19 Aug 2016 17:43:36 +0200
+Message-ID: <20160819154336.e6etmygoxnxnngd6@earth>
+References: <1471569215-6046-1-git-send-email-wenyou.yang@atmel.com>
+ <1471569215-6046-2-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dd5nxqelj5ii35pz"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160819124414.24242-5-andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1471569215-6046-2-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 19, 2016 at 10:14:10PM +0930, Andrew Jeffery wrote:
-> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-> ---
-> 
-> Since v1:
-> 
-> Rob: I haven't added your Acked-by here as I've made the following changes and
-> wanted to get your input:
-> 
-> * Remove interrupt-controller as an optional property
-> * Defer to interrupt-controller bindings document for sub-node properties
-> 
-> I had a discussion with Joel about whether the interrupt-controller capability
-> should be optional and the conclusion was that it should always be configured
-> by the driver. This makes an optional interrupt-controller property feel
-> redundant (and possibly inaccurate if left out) so I've removed it.
 
-I don't follow. What do you mean byt "configured by the driver". If the 
-block supports interrupts, then it should be marked as an 
-interrupt-controller. It never should have been optional. The OS can 
-ignore the interrupt properties if it chooses. 
+--dd5nxqelj5ii35pz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+On Fri, Aug 19, 2016 at 09:13:29AM +0800, Wenyou Yang wrote:
+> -	if (charger->battery_temperature && !(status & APCH_STATUS_TEMPDAT))
+> +	if (status & APCH_STATUS_TEMPDAT)
+
+This is still wrong. You removed the negation.
+
+-- Sebastian
+
+--dd5nxqelj5ii35pz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJXtykoAAoJENju1/PIO/qa9HgP/Aghb7YDvdH1I2+3ujzKlSIZ
+Aq4iDx/gJeVdaIiU5Z0jHx7NPbZBpWerRwGDmN2gcmKLBqM0DPn+OqqCT/5OBQW1
+ZxtlK1XlxfSyCG08xkpqpIJr7a09ZutqZQymmxmZrepxsvsM3kqcZ5YR6sk4tJ0y
+i6WI77kEzJMJhSJ56jesQRIsSmCi7GL7iwvNkVXbi2Rq+wsc8WcQCDIBOPUiYDBm
+KckqPuil0ExATKtxO8g/dmKQ9gkfHvu/Nw2blzmKdnpjZ2tduEitjPMT0VKt521O
+djV747UALJd9WFVjKLmHmU2Iirfkwl5B/etak8i0JPdyshkDg/H0V47K6ksT++zX
+/nHDuy9YhV0NtXT04+1gkoH5sAUAyR3S89jr2KbJBLp6H9rYOdVy2TV/kuEX7Yh4
+72zKkfIiJMjb2CNIBqIumHolkma2xWnQiUYJIh9Z3B13q8iMs3yN2VXCmi3MsFn4
+167Uc8z29QAp6xflED2sjJDn7qAQRIgGHHvDGg40+gWIUcsEdqWvdJv8gtUPMuE0
+7wt/egAWaDK9XtC5NNAEtK8Xza3FG9rV3+XuBNPqBliqe6CVkX2nksoqEjlVM3uF
+G6mKI9iwCfaymsoAdgHbznDgG0/TRIrX9g48MCS39ue4vp4cZELSoox0qTKnefrS
+Rjll7POZro4gB2yQiAke
+=O+ff
+-----END PGP SIGNATURE-----
+
+--dd5nxqelj5ii35pz--
