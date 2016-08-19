@@ -1,7 +1,7 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v2 7/7] aspeed-g5: Add gpio controller to devicetree
-Date: Fri, 19 Aug 2016 22:17:05 +0930
-Message-ID: <20160819124705.24633-8-andrew@aj.id.au>
+Subject: [PATCH v2 5/7] aspeed-g4: Add gpio controller to devicetree
+Date: Fri, 19 Aug 2016 22:17:03 +0930
+Message-ID: <20160819124705.24633-6-andrew@aj.id.au>
 References: <20160819124705.24633-1-andrew@aj.id.au>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160819124705.24633-1-andrew@aj.id.au>
@@ -12,26 +12,21 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
-
-Since v1:
-
-* Use aspeed,ast2500-gpio compatible string
-
- arch/arm/boot/dts/aspeed-g5.dtsi | 9 +++++++++
+ arch/arm/boot/dts/aspeed-g4.dtsi | 9 +++++++++
  1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index ae5871a11a70..318e1deafe30 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -280,6 +280,15 @@
- 				reg = <0x1e720000 0x9000>;	// 36K
+diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+index c2ab63c621c0..9a4a9e998e71 100644
+--- a/arch/arm/boot/dts/aspeed-g4.dtsi
++++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+@@ -492,6 +492,15 @@
+ 				reg = <0x1e720000 0x8000>;	// 32K
  			};
  
 +			gpio: gpio@1e780000 {
 +				#gpio-cells = <2>;
 +				gpio-controller;
-+				compatible = "aspeed,ast2500-gpio";
++				compatible = "aspeed,ast2400-gpio";
 +				reg = <0x1e780000 0x1000>;
 +				interrupts = <20>;
 +				gpio-ranges = <&pinctrl 0 0 220>;
