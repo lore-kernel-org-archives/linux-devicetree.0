@@ -1,7 +1,7 @@
 From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 6/7] ARM: dts: add gpio-ranges property to iMX6UL GPIO controllers
-Date: Sat, 20 Aug 2016 01:06:27 +0300
-Message-ID: <1471644388-10220-7-git-send-email-vladimir_zapolskiy@mentor.com>
+Subject: [PATCH 7/7] ARM: dts: add gpio-ranges property to iMX7D/S GPIO controllers
+Date: Sat, 20 Aug 2016 01:06:28 +0300
+Message-ID: <1471644388-10220-8-git-send-email-vladimir_zapolskiy@mentor.com>
 References: <1471644388-10220-1-git-send-email-vladimir_zapolskiy@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -16,63 +16,80 @@ To establish a connection between GPIO controllers and pin multiplexor
 controller add gpio-ranges properties to all GPIO controllers found
 on iMX50 SoC. The change was done after human parsing of output from
 
-% gawk -n '{ sub(/.*__/, ""); if ($1 ~ "^GPIO") print $1, $2/4}' imx6ul-pinfunc.h | sort -n
+% gawk -n '{ sub(/.*__/, ""); if ($1 ~ "^GPIO") print $1, $2/4}' imx7d-pinfunc.h | sort -n
 
 Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6ul.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/imx7s.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 33b95d78831a..1fd7f4be9d79 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -411,6 +411,9 @@
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 1e90bdbe3a6e..ed48ae44988e 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -325,6 +325,8 @@
  				#gpio-cells = <2>;
  				interrupt-controller;
  				#interrupt-cells = <2>;
 +
-+				gpio-ranges = <&iomuxc  0 23 10>, <&iomuxc 10 17 6>,
-+					      <&iomuxc 16 33 16>;
++				gpio-ranges = <&iomuxc_lpsr 0 0 8>, <&iomuxc 8 5 8>;
  			};
  
- 			gpio2: gpio@020a0000 {
-@@ -422,6 +425,8 @@
+ 			gpio2: gpio@30210000 {
+@@ -336,6 +338,8 @@
  				#gpio-cells = <2>;
  				interrupt-controller;
  				#interrupt-cells = <2>;
 +
-+				gpio-ranges = <&iomuxc 0 49 16>, <&iomuxc 16 111 6>;
++				gpio-ranges = <&iomuxc 0 13 32>;
  			};
  
- 			gpio3: gpio@020a4000 {
-@@ -433,6 +438,8 @@
+ 			gpio3: gpio@30220000 {
+@@ -347,6 +351,8 @@
  				#gpio-cells = <2>;
  				interrupt-controller;
  				#interrupt-cells = <2>;
 +
-+				gpio-ranges = <&iomuxc 0 65 29>;
++				gpio-ranges = <&iomuxc 0 45 29>;
  			};
  
- 			gpio4: gpio@020a8000 {
-@@ -444,6 +451,8 @@
+ 			gpio4: gpio@30230000 {
+@@ -358,6 +364,8 @@
  				#gpio-cells = <2>;
  				interrupt-controller;
  				#interrupt-cells = <2>;
 +
-+				gpio-ranges = <&iomuxc 0 94 17>, <&iomuxc 17 117 12>;
++				gpio-ranges = <&iomuxc 0 74 24>;
  			};
  
- 			gpio5: gpio@020ac000 {
-@@ -455,6 +464,8 @@
+ 			gpio5: gpio@30240000 {
+@@ -369,6 +377,8 @@
  				#gpio-cells = <2>;
  				interrupt-controller;
  				#interrupt-cells = <2>;
 +
-+				gpio-ranges = <&iomuxc 0 7 10>, <&iomuxc 10 5 2>;
++				gpio-ranges = <&iomuxc 0 98 18>;
  			};
  
- 			fec2: ethernet@020b4000 {
+ 			gpio6: gpio@30250000 {
+@@ -380,6 +390,8 @@
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
++
++				gpio-ranges = <&iomuxc 0 116 23>;
+ 			};
+ 
+ 			gpio7: gpio@30260000 {
+@@ -391,6 +403,8 @@
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
++
++				gpio-ranges = <&iomuxc 0 139 16>;
+ 			};
+ 
+ 			wdog1: wdog@30280000 {
 -- 
 2.8.1
 
