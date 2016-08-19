@@ -1,53 +1,84 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 17/17] dt-bindings: pwm: sti: Update DT bindings with
- recent changes
-Date: Fri, 19 Aug 2016 09:35:57 +0100
-Message-ID: <20160819083557.GK4254@dell>
-References: <20160816093508.28307-1-lee.jones@linaro.org>
- <20160816093508.28307-18-lee.jones@linaro.org>
- <20160818192002.GA26225@rob-hp-laptop>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v6 3/4] ARM: dts: sun9i: cubieboard4: Add device
+ node for AC100
+Date: Fri, 19 Aug 2016 15:42:25 +0800
+Message-ID: <20160819074226.16636-4-wens@csie.org>
+References: <20160819074226.16636-1-wens@csie.org>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160818192002.GA26225@rob-hp-laptop>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, patrice.chotard@st.com, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCMILY6JWQBBB7EK3O6QKGQE5MVYQIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160819074226.16636-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Aug 2016, Rob Herring wrote:
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+Changes since v5: none
+Changes since v4: none
 
-> On Tue, Aug 16, 2016 at 10:35:08AM +0100, Lee Jones wrote:
-> > We're renaming the 'st,pwm-num-chan' binding to 'st,pwm-num-devs' to
-> > be more inline with the naming conventions of the subsystem.  Where
-> > we used to treat each line as a channel, the PWM convention is to
-> > describe them as devices.
-> 
-> This is out of date now. Otherwise, the binding looks fine.
+Changes since v3:                           
 
-Yes, you are right.
+  - Moved 4M ADDA clk to codec side
 
-Perhaps if this is okay with Thierry, he can remove these few lines.
-If not, I don't mind re-sending on request.
+Changes since v2: none
+Changes since v1: none
+---
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-I'll leave it until I hear otherwise.
-
-> > The second documentation adaption entails adding support for PWM
-> > capture devices.  A new clock is required as well as an IRQ line.
-> > We're also adding a new property similar to the one described
-> > above, but for capture channels.  Typically, there will be less
-> > capture channels than PWM-out, since all channels have the latter
-> > capability, but only some have capture support.
-> > 
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/pwm/pwm-st.txt | 8 +++++---
-> >  1 file changed, 5 insertions(+), 3 deletions(-)
+diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+index 1526b41c70f1..cf2f4b72a841 100644
+--- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
++++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
+@@ -250,6 +250,30 @@
+ 			};
+ 		};
+ 	};
++
++	ac100: codec@e89 {
++		compatible = "x-powers,ac100";
++		reg = <0xe89>;
++
++		ac100_codec: codec {
++			compatible = "x-powers,ac100-codec";
++			interrupt-parent = <&r_pio>;
++			interrupts = <0 9 IRQ_TYPE_LEVEL_LOW>; /* PL9 */
++			#clock-cells = <0>;
++			clock-output-names = "4M_adda";
++		};
++
++		ac100_rtc: rtc {
++			compatible = "x-powers,ac100-rtc";
++			interrupt-parent = <&nmi_intc>;
++			interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&ac100_codec>;
++			#clock-cells = <1>;
++			clock-output-names = "cko1_rtc",
++					     "cko2_rtc",
++					     "cko3_rtc";
++		};
++	};
+ };
+ 
+ #include "axp809.dtsi"
+-- 
+2.9.3
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
