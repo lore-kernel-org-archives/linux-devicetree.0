@@ -1,53 +1,71 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 10/12] arm64: dts: tegra: Add NVIDIA P2771 board support
-Date: Fri, 19 Aug 2016 19:32:31 +0200
-Message-ID: <20160819173233.13260-11-thierry.reding@gmail.com>
-References: <20160819173233.13260-1-thierry.reding@gmail.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160819173233.13260-1-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] clk: uniphier: add clock data for UniPhier SoCs
+Date: Sat, 20 Aug 2016 02:55:12 +0900
+Message-ID: <CAK7LNAROCdE4tomp6jg4p5Ep-koPjWSchNEXH01Qn0Wn3q-f2g@mail.gmail.com>
+References: <1470112223-24835-1-git-send-email-yamada.masahiro@socionext.com>
+ <1470112223-24835-3-git-send-email-yamada.masahiro@socionext.com> <20160819002826.GT361@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160819002826.GT361-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Hi Stephen,
 
-Add NVIDIA P2771 is composed of a P3310 processor module that connects
-to the P2597 I/O board. It comes with a 1200x1920 MIPI DSI panel
-connected via the P2597's display connector and has several connectors
-such as HDMI, USB 3.0, PCIe and ethernet.
 
-Signed-off-by: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- arch/arm64/boot/dts/nvidia/Makefile                | 1 +
- arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts | 8 ++++++++
- 2 files changed, 9 insertions(+)
- create mode 100644 arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
+2016-08-19 9:28 GMT+09:00 Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>:
 
-diff --git a/arch/arm64/boot/dts/nvidia/Makefile b/arch/arm64/boot/dts/nvidia/Makefile
-index 0f7cdf3e05c1..67234f3dc795 100644
---- a/arch/arm64/boot/dts/nvidia/Makefile
-+++ b/arch/arm64/boot/dts/nvidia/Makefile
-@@ -1,4 +1,5 @@
- dtb-$(CONFIG_ARCH_TEGRA_132_SOC) += tegra132-norrin.dtb
-+dtb-$(CONFIG_ARCH_TEGRA_186_SOC) += tegra186-p2771-0000.dtb
- dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2371-0000.dtb
- dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2371-2180.dtb
- dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2571.dtb
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts b/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-new file mode 100644
-index 000000000000..66b936389fa7
---- /dev/null
-+++ b/arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts
-@@ -0,0 +1,8 @@
-+/dts-v1/;
-+
-+#include "tegra186-p3310.dtsi"
-+
-+/ {
-+	model = "NVIDIA Tegra186 P2771-0000 Board";
-+	compatible = "nvidia,p2771-0000", "nvidia,tegra186";
-+};
+>> +
+>> +
+>> +System clock
+>> +------------
+>> +
+>> +Required properties:
+>> +- compatible: should be one of the following:
+>> +    "socionext,uniphier-sld3-clock" - for PH1-sLD3 SoC.
+>> +    "socionext,uniphier-ld4-clock"  - for PH1-LD4 SoC.
+>> +    "socionext,uniphier-pro4-clock" - for PH1-Pro4 SoC.
+>> +    "socionext,uniphier-sld8-clock" - for PH1-sLD8 SoC.
+>> +    "socionext,uniphier-pro5-clock" - for PH1-Pro5 SoC.
+>> +    "socionext,uniphier-pxs2-clock" - for ProXstream2/PH1-LD6b SoC.
+>> +    "socionext,uniphier-ld11-clock" - for PH1-LD11 SoC.
+>> +    "socionext,uniphier-ld20-clock" - for PH1-LD20 SoC.
+>> +- #clock-cells: should be 1.
+>> +
+>> +Example:
+>> +
+>> +     sysctrl@61840000 {
+>> +             compatible = "socionext,uniphier-ld20-sysctrl",
+>> +                          "simple-mfd", "syscon";
+>> +             reg = <0x61840000 0x4000>;
+>> +
+>> +             clock {
+>> +                     compatible = "socionext,uniphier-ld20-clock";
+>> +                     #clock-cells = <1>;
+>> +             };
+>> +
+>> +             other nodes ...
+>
+> What are the other nodes? Is there a document for the rest of the
+> MFD?
+
+At lease there are "clock" and "reset" in this MFD at this point.
+Perhaps, I may want to add more in the future.
+
+That's why I do not want to list all of the sibling nodes.
+
+The reset node is documented in its binding document,
+added by the following patch:
+https://patchwork.kernel.org/patch/9255101/
+
+
 -- 
-2.9.0
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
