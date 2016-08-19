@@ -1,104 +1,251 @@
 From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 00/13] pinctrl: add BCM63XX pincontrol support
-Date: Fri, 19 Aug 2016 12:53:32 +0200
-Message-ID: <1471604025-21575-1-git-send-email-jonas.gorski@gmail.com>
+Subject: [PATCH 01/13] pinctrl: add bcm63xx base code
+Date: Fri, 19 Aug 2016 12:53:33 +0200
+Message-ID: <1471604025-21575-2-git-send-email-jonas.gorski@gmail.com>
+References: <1471604025-21575-1-git-send-email-jonas.gorski@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471604025-21575-1-git-send-email-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds appropriate binding documentation and drivers for
-pin controller cores found in the BCM63XX MIPS SoCs currently supported.
+Setup directory and add a helper for bcm63xx pinctrl support.
 
-While the GPIO part is always the same, the pinmux part varies quite a
-lot between different SoCs. Sometimes they have defined groups which
-can be muxed into different functions, sometimes each function has a
-different group. Sometimes you can mux individual pins. Often it is a
-combination of single pins and groups.
-
-Some core versions require the GPIO direction to be set according to the
-function, most do not. Sometimes the mux register(s) contain bits for
-unrelated other functions.
-
-I intentionally left out any MIPS patches so keep the patchset smaller
-and to make it clearer to which tree this belongs.
-
-Some implementation notes:
-
-BCM6348 has one mux function that enables two unrelated functions at the
-same time; additional SPI CS signals as well as extra UART pins. This
-means that in case both the uart as well as the spi driver needs it, it
-would need to be requested globally, as the same mux can't be requested
-by two different devices. Since this is a linux internal detail, I
-chose to not try to split this function and try to work around it in
-the driver (by refcounting etc).
-
-BCM6358 has two "invert-mii-clock" bits in its GPIO Mode register for
-the ethernet cores. This didn't seem to fit well into pinmux/conf; at
-best as two pins which you could apply exactly one property,
-"brcm,invert-clock". So I chose syscon so the ethernet driver can poke
-at the bits itself.
-
-BCM6368 has several additional bits in its GPIO BaseMode register for
-enabling RGMII pins, UTOPIA, or changing the PCI clock to 66 MHz. These
-seemed to fit even less.
-
-
-Based on the current HEAD of linux-pinctrl/for-next.
-
-Jonas Gorski (13):
-  pinctrl: add bcm63xx base code
-  Documentation: add BCM6328 pincontroller binding documentation
-  pinctrl: add a pincontrol driver for BCM6328
-  Documentation: add BCM6348 pincontroller binding documentation
-  pinctrl: add a pincontrol driver for BCM6348
-  Documentation: add BCM6358 pincontroller binding documentation
-  pinctrl: add a pincontrol driver for BCM6358
-  Documentation: add BCM6362 pincontroller binding documentation
-  pinctrl: add a pincontrol driver for BCM6362
-  Documentation: add BCM6368 pincontroller binding documentation
-  pinctrl: add a pincontrol driver for BCM6368
-  Documentation: add BCM63268 pincontroller binding documentation
-  pinctrl: add a pincontrol driver for BCM63268
-
- .../bindings/pinctrl/brcm,bcm63268-pinctrl.txt     |  88 +++
- .../bindings/pinctrl/brcm,bcm6328-pinctrl.txt      |  61 ++
- .../bindings/pinctrl/brcm,bcm6348-pinctrl.txt      |  32 +
- .../bindings/pinctrl/brcm,bcm6358-pinctrl.txt      |  44 ++
- .../bindings/pinctrl/brcm,bcm6362-pinctrl.txt      |  79 +++
- .../bindings/pinctrl/brcm,bcm6368-pinctrl.txt      |  67 ++
- MAINTAINERS                                        |   1 +
- drivers/pinctrl/Kconfig                            |   1 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/bcm63xx/Kconfig                    |  47 ++
- drivers/pinctrl/bcm63xx/Makefile                   |   7 +
- drivers/pinctrl/bcm63xx/pinctrl-bcm63268.c         | 710 +++++++++++++++++++++
- drivers/pinctrl/bcm63xx/pinctrl-bcm6328.c          | 456 +++++++++++++
- drivers/pinctrl/bcm63xx/pinctrl-bcm6348.c          | 392 ++++++++++++
- drivers/pinctrl/bcm63xx/pinctrl-bcm6358.c          | 393 ++++++++++++
- drivers/pinctrl/bcm63xx/pinctrl-bcm6362.c          | 692 ++++++++++++++++++++
- drivers/pinctrl/bcm63xx/pinctrl-bcm6368.c          | 573 +++++++++++++++++
- drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.c          | 141 ++++
- drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.h          |  14 +
- 19 files changed, 3799 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6348-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6362-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6368-pinctrl.txt
+Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ MAINTAINERS                               |   1 +
+ drivers/pinctrl/Kconfig                   |   1 +
+ drivers/pinctrl/Makefile                  |   1 +
+ drivers/pinctrl/bcm63xx/Kconfig           |   3 +
+ drivers/pinctrl/bcm63xx/Makefile          |   1 +
+ drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.c | 141 ++++++++++++++++++++++++++++++
+ drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.h |  14 +++
+ 7 files changed, 162 insertions(+)
  create mode 100644 drivers/pinctrl/bcm63xx/Kconfig
  create mode 100644 drivers/pinctrl/bcm63xx/Makefile
- create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm63268.c
- create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm6328.c
- create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm6348.c
- create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm6358.c
- create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm6362.c
- create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm6368.c
  create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.c
  create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.h
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 20bb1d0..33c3026 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2604,6 +2604,7 @@ F:	arch/mips/boot/dts/brcm/bcm*.dts*
+ F:	drivers/irqchip/irq-bcm63*
+ F:	drivers/irqchip/irq-bcm7*
+ F:	drivers/irqchip/irq-brcmstb*
++F:	drivers/pinctrl/bcm63xx/*
+ F:	include/linux/bcm963xx_nvram.h
+ F:	include/linux/bcm963xx_tag.h
+ 
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index b3fe1d3..13a2b29 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -255,6 +255,7 @@ config PINCTRL_ZYNQ
+ 	  This selects the pinctrl driver for Xilinx Zynq.
+ 
+ source "drivers/pinctrl/bcm/Kconfig"
++source "drivers/pinctrl/bcm63xx/Kconfig"
+ source "drivers/pinctrl/berlin/Kconfig"
+ source "drivers/pinctrl/freescale/Kconfig"
+ source "drivers/pinctrl/intel/Kconfig"
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index 8ebd7b8..366e574 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -38,6 +38,7 @@ obj-$(CONFIG_PINCTRL_ST) 	+= pinctrl-st.o
+ obj-$(CONFIG_PINCTRL_ZYNQ)	+= pinctrl-zynq.o
+ 
+ obj-y				+= bcm/
++obj-y				+= bcm63xx/
+ obj-$(CONFIG_PINCTRL_BERLIN)	+= berlin/
+ obj-y				+= freescale/
+ obj-$(CONFIG_X86)		+= intel/
+diff --git a/drivers/pinctrl/bcm63xx/Kconfig b/drivers/pinctrl/bcm63xx/Kconfig
+new file mode 100644
+index 0000000..dd58f95
+--- /dev/null
++++ b/drivers/pinctrl/bcm63xx/Kconfig
+@@ -0,0 +1,3 @@
++config PINCTRL_BCM63XX
++	bool
++	select GPIO_GENERIC
+diff --git a/drivers/pinctrl/bcm63xx/Makefile b/drivers/pinctrl/bcm63xx/Makefile
+new file mode 100644
+index 0000000..d16e74b
+--- /dev/null
++++ b/drivers/pinctrl/bcm63xx/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_PINCTRL_BCM63XX)	+= pinctrl-bcm63xx.o
+diff --git a/drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.c b/drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.c
+new file mode 100644
+index 0000000..e118171
+--- /dev/null
++++ b/drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.c
+@@ -0,0 +1,141 @@
++/*
++ * This file is subject to the terms and conditions of the GNU General Public
++ * License.  See the file "COPYING" in the main directory of this archive
++ * for more details.
++ *
++ * Copyright (C) 2016 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ */
++
++#include <linux/bitops.h>
++#include <linux/device.h>
++#include <linux/gpio/driver.h>
++
++#include "pinctrl-bcm63xx.h"
++#include "../core.h"
++
++#define BANK_SIZE	sizeof(u32)
++#define PINS_PER_BANK	(BANK_SIZE * BITS_PER_BYTE)
++
++#ifdef CONFIG_OF
++static int bcm63xx_gpio_of_xlate(struct gpio_chip *gc,
++				 const struct of_phandle_args *gpiospec,
++				 u32 *flags)
++{
++	struct gpio_chip *base = gpiochip_get_data(gc);
++	int pin = gpiospec->args[0];
++
++	if (gc != &base[pin / PINS_PER_BANK])
++		return -EINVAL;
++
++	pin = pin % PINS_PER_BANK;
++
++	if (pin >= gc->ngpio)
++		return -EINVAL;
++
++	if (flags)
++		*flags = gpiospec->args[1];
++
++	return pin;
++}
++#endif
++
++static int bcm63xx_setup_gpio(struct device *dev, struct gpio_chip *gc,
++			      void __iomem *dirout, void __iomem *data,
++			      size_t sz, int ngpio)
++
++{
++	int banks, chips, i, ret = -EINVAL;
++
++	chips = DIV_ROUND_UP(ngpio, PINS_PER_BANK);
++	banks = sz / BANK_SIZE;
++
++	for (i = 0; i < chips; i++) {
++		int offset, pins;
++		int reg_offset;
++		char *label;
++
++		label = devm_kasprintf(dev, GFP_KERNEL, "bcm63xx-gpio.%i", i);
++		if (!label)
++			return -ENOMEM;
++
++		offset = i * PINS_PER_BANK;
++		pins = min_t(int, ngpio - offset, PINS_PER_BANK);
++
++		/* the registers are treated like a huge big endian register */
++		reg_offset = (banks - i - 1) * BANK_SIZE;
++
++		ret = bgpio_init(&gc[i], dev, BANK_SIZE, data + reg_offset,
++				 NULL, NULL, dirout + reg_offset, NULL,
++				 BGPIOF_BIG_ENDIAN_BYTE_ORDER);
++		if (ret)
++			return ret;
++
++		gc[i].request = gpiochip_generic_request;
++		gc[i].free = gpiochip_generic_free;
++
++#ifdef CONFIG_OF
++		gc[i].of_gpio_n_cells = 2;
++		gc[i].of_xlate = bcm63xx_gpio_of_xlate;
++#endif
++
++		gc[i].label = label;
++		gc[i].ngpio = pins;
++
++		devm_gpiochip_add_data(dev, &gc[i], gc);
++	}
++
++	return 0;
++}
++
++static void bcm63xx_setup_pinranges(struct gpio_chip *gc, const char *name,
++				    int ngpio)
++{
++	int i, chips = DIV_ROUND_UP(ngpio, PINS_PER_BANK);
++
++	for (i = 0; i < chips; i++) {
++		int offset, pins;
++
++		offset = i * PINS_PER_BANK;
++		pins = min_t(int, ngpio - offset, PINS_PER_BANK);
++
++		gpiochip_add_pin_range(&gc[i], name, 0, offset, pins);
++	}
++}
++
++struct pinctrl_dev *bcm63xx_pinctrl_register(struct platform_device *pdev,
++					     struct pinctrl_desc *desc,
++					     void *priv, struct gpio_chip *gc,
++					     int ngpio)
++{
++	struct pinctrl_dev *pctldev;
++	struct resource *res;
++	void __iomem *dirout, *data;
++	size_t sz;
++	int ret;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dirout");
++	dirout = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(dirout))
++		return ERR_CAST(dirout);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dat");
++	data = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(data))
++		return ERR_CAST(data);
++
++	sz = resource_size(res);
++
++	ret = bcm63xx_setup_gpio(&pdev->dev, gc, dirout, data, sz, ngpio);
++	if (ret)
++		return ERR_PTR(ret);
++
++	pctldev = devm_pinctrl_register(&pdev->dev, desc, priv);
++	if (IS_ERR(pctldev))
++		return pctldev;
++
++	bcm63xx_setup_pinranges(gc, pinctrl_dev_get_devname(pctldev), ngpio);
++
++	dev_info(&pdev->dev, "registered at mmio %p\n", dirout);
++
++	return pctldev;
++}
+diff --git a/drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.h b/drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.h
+new file mode 100644
+index 0000000..9bfe1d0
+--- /dev/null
++++ b/drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.h
+@@ -0,0 +1,14 @@
++#ifndef __PINCTRL_BCM63XX
++#define __PINCTRL_BCM63XX
++
++#include <linux/kernel.h>
++#include <linux/gpio.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/platform_device.h>
++
++struct pinctrl_dev *bcm63xx_pinctrl_register(struct platform_device *pdev,
++					     struct pinctrl_desc *desc,
++					     void *priv, struct gpio_chip *gc,
++					     int ngpio);
++
++#endif
 -- 
 2.1.4
 
