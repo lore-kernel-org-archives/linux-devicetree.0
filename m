@@ -1,459 +1,69 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v2 3/7] aspeed-g4: Add syscon and pin controller nodes
-Date: Fri, 19 Aug 2016 22:17:01 +0930
-Message-ID: <20160819124705.24633-4-andrew@aj.id.au>
-References: <20160819124705.24633-1-andrew@aj.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160819124705.24633-1-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>
+From: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Add Ingenic JZ4780 hardware RNG driver
+Date: Fri, 19 Aug 2016 18:24:12 +0530
+Message-ID: <CANc+2y7YGGVVMHnbBVy7B6ZHyiUuLALvTeU6iVTP-9TYXjjHDA@mail.gmail.com>
+References: <1471448151-20850-1-git-send-email-prasannatsmkumar@gmail.com> <CAH8yC8kt-+6tnzAc2bsu6GX4uX1bqVoE8sZXvCS34DDhGhP2XQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAH8yC8kt-+6tnzAc2bsu6GX4uX1bqVoE8sZXvCS34DDhGhP2XQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: noloader-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The pin controller's child nodes expose the functions currently
-implemented in the the g4 pin controller driver.
+> Please forgive my ignorance Prasanna...
+>
+> For the JZ4780 I have, there are two registers in play. The first is
+> the control register which enables/disables the RNG. The control
+> register is named ERNG. The second register is the data register, and
+> it produces the random stream. The data register is named RNG. ERNG is
+> located at 0x100000D8 and RNG is located at 0x100000DC. This kind of
+> confuses me because I don't see where 0x100000D8 is ever added to
+> those values (maybe its in the descriptor?):
+>
+> +#define REG_RNG_CTRL   0x0
+> +#define REG_RNG_DATA   0x4
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
+The base address 0x100000D8 is defined in jz4780.dtsi file.
+REG_RNG_CTRL and REG_RNG_DATA are offsets. In jz4780_rng_readl and
+jz4780_rng_writel functions the ioremap'd base address is added with
+offset.
 
-Since v1:
+> Also, testing with a userland PoC for the device, you have to throttle
+> reads from RNG register. If reads occur with a 0 delay, then the
+> random value appears fixed. If the delay is too small, then you can
+> watch random values being shifted-in in a barrel like fashion.
+> Unfortunately, the manual did not discuss how long to wait for a value
+> to be ready. I found spinning in a loop for 5000 was too small and
+> witnessed the shifting; while spinning in a loop for 10000 avoided the
+> shift observation. I don't what number of JIFFIES that translates to.
 
-* Add nodes for new mux functions in the g4 driver
-* Sort nodes alphabetically for sanity
+I can calculate the speed and make sure the delay is met in the
+driver. Thanks a lot for providing this info.
 
- arch/arm/boot/dts/aspeed-g4.dtsi | 420 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 420 insertions(+)
+> Finally, from looking at the native Ingenic driver (which was not very
+> impressive), they enabled/disabled the RNG register on demand. There
+> was also a [possible related] note in the manual about not applying
+> VCC for over a second. I can only say "possibly related" because I was
+> not sure if the register was part of the controller they were
+> discussing. The userland PoC worked fine when enabling/disabling the
+> RNG register. So I'm not sure about this (from jz4780_rng_probe):
+>
+> +       platform_set_drvdata(pdev, jz4780_rng);
+> +       jz4780_rng_writel(jz4780_rng, 1, REG_RNG_CTRL);
+> +       ret = hwrng_register(&jz4780_rng->rng);
+>
+> And this (from jz4780_rng_remove):
+>
+> +       jz4780_rng_writel(jz4780_rng, 0, REG_RNG_CTRL);
+> +       hwrng_unregister(&jz4780_rng->rng);
+>
+> Anyway, I hope that helps you avoid some land mines (if they are present).
 
-diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index 22dee5937d5c..c2ab63c621c0 100644
---- a/arch/arm/boot/dts/aspeed-g4.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -54,6 +54,426 @@
- 				clocks = <&clk_clkin>;
- 			};
- 
-+			syscon: syscon@1e6e2000 {
-+				compatible = "aspeed,g4-scu", "syscon", "simple-mfd";
-+				reg = <0x1e6e2000 0x1a8>;
-+
-+				pinctrl: pinctrl@1e6e2000 {
-+					compatible = "aspeed,g4-pinctrl";
-+
-+					pinctrl_acpi_default: acpi_default {
-+						function = "ACPI";
-+						groups = "ACPI";
-+					};
-+
-+					pinctrl_bmcint_default: bmcint_default {
-+						function = "BMCINT";
-+						groups = "BMCINT";
-+					};
-+
-+					pinctrl_ddcclk_default: ddcclk_default {
-+						function = "DDCCLK";
-+						groups = "DDCCLK";
-+					};
-+
-+					pinctrl_ddcdat_default: ddcdat_default {
-+						function = "DDCDAT";
-+						groups = "DDCDAT";
-+					};
-+
-+					pinctrl_flack_default: flack_default {
-+						function = "FLACK";
-+						groups = "FLACK";
-+					};
-+
-+					pinctrl_flbusy_default: flbusy_default {
-+						function = "FLBUSY";
-+						groups = "FLBUSY";
-+					};
-+
-+					pinctrl_flwp_default: flwp_default {
-+						function = "FLWP";
-+						groups = "FLWP";
-+					};
-+
-+					pinctrl_gpid0_default: gpid0_default {
-+						function = "GPID0";
-+						groups = "GPID0";
-+					};
-+
-+					pinctrl_gpie0_default: gpie0_default {
-+						function = "GPIE0";
-+						groups = "GPIE0";
-+					};
-+
-+					pinctrl_gpie2_default: gpie2_default {
-+						function = "GPIE2";
-+						groups = "GPIE2";
-+					};
-+
-+					pinctrl_gpie4_default: gpie4_default {
-+						function = "GPIE4";
-+						groups = "GPIE4";
-+					};
-+
-+					pinctrl_gpie6_default: gpie6_default {
-+						function = "GPIE6";
-+						groups = "GPIE6";
-+					};
-+
-+					pinctrl_i2c10_default: i2c10_default {
-+						function = "I2C10";
-+						groups = "I2C10";
-+					};
-+
-+					pinctrl_i2c11_default: i2c11_default {
-+						function = "I2C11";
-+						groups = "I2C11";
-+					};
-+
-+					pinctrl_i2c12_default: i2c12_default {
-+						function = "I2C12";
-+						groups = "I2C12";
-+					};
-+
-+					pinctrl_i2c13_default: i2c13_default {
-+						function = "I2C13";
-+						groups = "I2C13";
-+					};
-+
-+					pinctrl_i2c3_default: i2c3_default {
-+						function = "I2C3";
-+						groups = "I2C3";
-+					};
-+
-+					pinctrl_i2c4_default: i2c4_default {
-+						function = "I2C4";
-+						groups = "I2C4";
-+					};
-+
-+					pinctrl_i2c5_default: i2c5_default {
-+						function = "I2C5";
-+						groups = "I2C5";
-+					};
-+
-+					pinctrl_i2c6_default: i2c6_default {
-+						function = "I2C6";
-+						groups = "I2C6";
-+					};
-+
-+					pinctrl_i2c7_default: i2c7_default {
-+						function = "I2C7";
-+						groups = "I2C7";
-+					};
-+
-+					pinctrl_i2c8_default: i2c8_default {
-+						function = "I2C8";
-+						groups = "I2C8";
-+					};
-+
-+					pinctrl_i2c9_default: i2c9_default {
-+						function = "I2C9";
-+						groups = "I2C9";
-+					};
-+
-+					pinctrl_lpcpd_default: lpcpd_default {
-+						function = "LPCPD";
-+						groups = "LPCPD";
-+					};
-+
-+					pinctrl_lpcpme_default: lpcpme_default {
-+						function = "LPCPME";
-+						groups = "LPCPME";
-+					};
-+
-+					pinctrl_lpcsmi_default: lpcsmi_default {
-+						function = "LPCSMI";
-+						groups = "LPCSMI";
-+					};
-+
-+					pinctrl_mdio1_default: mdio1_default {
-+						function = "MDIO1";
-+						groups = "MDIO1";
-+					};
-+
-+					pinctrl_mdio2_default: mdio2_default {
-+						function = "MDIO2";
-+						groups = "MDIO2";
-+					};
-+
-+					pinctrl_ncts1_default: ncts1_default {
-+						function = "NCTS1";
-+						groups = "NCTS1";
-+					};
-+
-+					pinctrl_ncts3_default: ncts3_default {
-+						function = "NCTS3";
-+						groups = "NCTS3";
-+					};
-+
-+					pinctrl_ncts4_default: ncts4_default {
-+						function = "NCTS4";
-+						groups = "NCTS4";
-+					};
-+
-+					pinctrl_ndcd1_default: ndcd1_default {
-+						function = "NDCD1";
-+						groups = "NDCD1";
-+					};
-+
-+					pinctrl_ndcd3_default: ndcd3_default {
-+						function = "NDCD3";
-+						groups = "NDCD3";
-+					};
-+
-+					pinctrl_ndcd4_default: ndcd4_default {
-+						function = "NDCD4";
-+						groups = "NDCD4";
-+					};
-+
-+					pinctrl_ndsr1_default: ndsr1_default {
-+						function = "NDSR1";
-+						groups = "NDSR1";
-+					};
-+
-+					pinctrl_ndsr3_default: ndsr3_default {
-+						function = "NDSR3";
-+						groups = "NDSR3";
-+					};
-+
-+					pinctrl_ndtr1_default: ndtr1_default {
-+						function = "NDTR1";
-+						groups = "NDTR1";
-+					};
-+
-+					pinctrl_ndtr3_default: ndtr3_default {
-+						function = "NDTR3";
-+						groups = "NDTR3";
-+					};
-+
-+					pinctrl_nri1_default: nri1_default {
-+						function = "NRI1";
-+						groups = "NRI1";
-+					};
-+
-+					pinctrl_nri3_default: nri3_default {
-+						function = "NRI3";
-+						groups = "NRI3";
-+					};
-+
-+					pinctrl_nri4_default: nri4_default {
-+						function = "NRI4";
-+						groups = "NRI4";
-+					};
-+
-+					pinctrl_nrts1_default: nrts1_default {
-+						function = "NRTS1";
-+						groups = "NRTS1";
-+					};
-+
-+					pinctrl_nrts3_default: nrts3_default {
-+						function = "NRTS3";
-+						groups = "NRTS3";
-+					};
-+
-+					pinctrl_pwm0_default: pwm0_default {
-+						function = "PWM0";
-+						groups = "PWM0";
-+					};
-+
-+					pinctrl_pwm1_default: pwm1_default {
-+						function = "PWM1";
-+						groups = "PWM1";
-+					};
-+
-+					pinctrl_pwm2_default: pwm2_default {
-+						function = "PWM2";
-+						groups = "PWM2";
-+					};
-+
-+					pinctrl_pwm3_default: pwm3_default {
-+						function = "PWM3";
-+						groups = "PWM3";
-+					};
-+
-+					pinctrl_pwm4_default: pwm4_default {
-+						function = "PWM4";
-+						groups = "PWM4";
-+					};
-+
-+					pinctrl_pwm5_default: pwm5_default {
-+						function = "PWM5";
-+						groups = "PWM5";
-+					};
-+
-+					pinctrl_pwm6_default: pwm6_default {
-+						function = "PWM6";
-+						groups = "PWM6";
-+					};
-+
-+					pinctrl_pwm7_default: pwm7_default {
-+						function = "PWM7";
-+						groups = "PWM7";
-+					};
-+
-+					pinctrl_rgmii1_default: rgmii1_default {
-+						function = "RGMII1";
-+						groups = "RGMII1";
-+					};
-+
-+					pinctrl_rmii1_default: rmii1_default {
-+						function = "RMII1";
-+						groups = "RMII1";
-+					};
-+
-+					pinctrl_rom16_default: rom16_default {
-+						function = "ROM16";
-+						groups = "ROM16";
-+					};
-+
-+					pinctrl_rom8_default: rom8_default {
-+						function = "ROM8";
-+						groups = "ROM8";
-+					};
-+
-+					pinctrl_romcs1_default: romcs1_default {
-+						function = "ROMCS1";
-+						groups = "ROMCS1";
-+					};
-+
-+					pinctrl_romcs2_default: romcs2_default {
-+						function = "ROMCS2";
-+						groups = "ROMCS2";
-+					};
-+
-+					pinctrl_romcs3_default: romcs3_default {
-+						function = "ROMCS3";
-+						groups = "ROMCS3";
-+					};
-+
-+					pinctrl_romcs4_default: romcs4_default {
-+						function = "ROMCS4";
-+						groups = "ROMCS4";
-+					};
-+
-+					pinctrl_rxd1_default: rxd1_default {
-+						function = "RXD1";
-+						groups = "RXD1";
-+					};
-+
-+					pinctrl_rxd3_default: rxd3_default {
-+						function = "RXD3";
-+						groups = "RXD3";
-+					};
-+
-+					pinctrl_rxd4_default: rxd4_default {
-+						function = "RXD4";
-+						groups = "RXD4";
-+					};
-+
-+					pinctrl_sd1_default: sd1_default {
-+						function = "SD1";
-+						groups = "SD1";
-+					};
-+
-+					pinctrl_sgpmi_default: sgpmi_default {
-+						function = "SGPMI";
-+						groups = "SGPMI";
-+					};
-+
-+					pinctrl_siopbi_default: siopbi_default {
-+						function = "SIOPBI";
-+						groups = "SIOPBI";
-+					};
-+
-+					pinctrl_siopbo_default: siopbo_default {
-+						function = "SIOPBO";
-+						groups = "SIOPBO";
-+					};
-+
-+					pinctrl_timer3_default: timer3_default {
-+						function = "TIMER3";
-+						groups = "TIMER3";
-+					};
-+
-+					pinctrl_timer5_default: timer5_default {
-+						function = "TIMER5";
-+						groups = "TIMER5";
-+					};
-+
-+					pinctrl_timer6_default: timer6_default {
-+						function = "TIMER6";
-+						groups = "TIMER6";
-+					};
-+
-+					pinctrl_timer7_default: timer7_default {
-+						function = "TIMER7";
-+						groups = "TIMER7";
-+					};
-+
-+					pinctrl_timer8_default: timer8_default {
-+						function = "TIMER8";
-+						groups = "TIMER8";
-+					};
-+
-+					pinctrl_txd1_default: txd1_default {
-+						function = "TXD1";
-+						groups = "TXD1";
-+					};
-+
-+					pinctrl_txd3_default: txd3_default {
-+						function = "TXD3";
-+						groups = "TXD3";
-+					};
-+
-+					pinctrl_txd4_default: txd4_default {
-+						function = "TXD4";
-+						groups = "TXD4";
-+					};
-+
-+					pinctrl_uart6_default: uart6_default {
-+						function = "UART6";
-+						groups = "UART6";
-+					};
-+
-+					pinctrl_vgahs_default: vgahs_default {
-+						function = "VGAHS";
-+						groups = "VGAHS";
-+					};
-+
-+					pinctrl_vgavs_default: vgavs_default {
-+						function = "VGAVS";
-+						groups = "VGAVS";
-+					};
-+
-+					pinctrl_vpi18_default: vpi18_default {
-+						function = "VPI18";
-+						groups = "VPI18";
-+					};
-+
-+					pinctrl_vpi24_default: vpi24_default {
-+						function = "VPI24";
-+						groups = "VPI24";
-+					};
-+
-+					pinctrl_vpi30_default: vpi30_default {
-+						function = "VPI30";
-+						groups = "VPI30";
-+					};
-+
-+					pinctrl_vpo12_default: vpo12_default {
-+						function = "VPO12";
-+						groups = "VPO12";
-+					};
-+
-+					pinctrl_vpo24_default: vpo24_default {
-+						function = "VPO24";
-+						groups = "VPO24";
-+					};
-+
-+				};
-+			};
-+
- 			clk_apb: clk_apb@1e6e2008 {
- 				#clock-cells = <0>;
- 				compatible = "aspeed,g4-apb-clock";
--- 
-2.9.3
+Looking at JZ4780 Programmers manual I could not find any info about
+VCC. Can you point me to it?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
