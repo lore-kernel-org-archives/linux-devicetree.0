@@ -1,37 +1,52 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: [PATCH v2 2/7] mach-aspeed: Select GPIO driver
-Date: Fri, 19 Aug 2016 22:17:00 +0930
-Message-ID: <20160819124705.24633-3-andrew@aj.id.au>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH v2 4/7] palmetto: Request relevant mux functions in devicetree
+Date: Fri, 19 Aug 2016 22:17:02 +0930
+Message-ID: <20160819124705.24633-5-andrew@aj.id.au>
 References: <20160819124705.24633-1-andrew@aj.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160819124705.24633-1-andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160819124705.24633-1-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
----
- arch/arm/mach-aspeed/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+The requested functions are parented by the pinctrl node to provide the
+Palmetto's static pin configuration.
 
-diff --git a/arch/arm/mach-aspeed/Kconfig b/arch/arm/mach-aspeed/Kconfig
-index 25a0ae01429e..8d2f8ed890ce 100644
---- a/arch/arm/mach-aspeed/Kconfig
-+++ b/arch/arm/mach-aspeed/Kconfig
-@@ -6,6 +6,8 @@ menuconfig ARCH_ASPEED
- 	select ASPEED_WATCHDOG
- 	select MOXART_TIMER
- 	select PINCTRL
-+	select GPIOLIB
-+	select GPIO_ASPEED
- 	help
- 	  Say Y here if you want to run your kernel on an ASpeed BMC SoC.
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+---
+
+Since v1:
+
+* Remove some unnecessary mux requests
+
+ arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+index cc5fcf2940bf..648fb6b9e427 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+@@ -20,6 +20,20 @@
+ 	};
+ };
  
++&pinctrl {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flbusy_default &pinctrl_flwp_default
++			&pinctrl_vgahs_default &pinctrl_vgavs_default
++			&pinctrl_ddcclk_default &pinctrl_ddcdat_default
++
++			&pinctrl_pwm1_default &pinctrl_pwm2_default
++			&pinctrl_pwm3_default &pinctrl_pwm4_default
++			&pinctrl_pwm5_default &pinctrl_pwm6_default
++			&pinctrl_pwm7_default
++
++			&pinctrl_bmcint_default &pinctrl_flack_default>;
++};
++
+ &uart5 {
+ 	status = "okay";
+ };
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
