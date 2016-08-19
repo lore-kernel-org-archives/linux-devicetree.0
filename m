@@ -1,11 +1,8 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v2 5/8] pinctrl: Add core support for Aspeed SoCs
-Date: Fri, 19 Aug 2016 22:14:11 +0930
-Message-ID: <20160819124414.24242-6-andrew@aj.id.au>
+Subject: [PATCH v2 7/8] pinctrl: Add pinctrl-aspeed-g5 driver
+Date: Fri, 19 Aug 2016 22:14:13 +0930
+Message-ID: <20160819124414.24242-8-andrew@aj.id.au>
 References: <20160819124414.24242-1-andrew@aj.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160819124414.24242-1-andrew@aj.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -13,121 +10,59 @@ To: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>
 Cc: Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>
 List-Id: devicetree@vger.kernel.org
 
-The Aspeed SoCs typically provide more than 200 pins for GPIO and other
-functions. The signal enabled on a pin is determined on a priority
-basis, where a given pin can provide a number of different signal types.
+A small subset of pins and functions are exposed. The selection of pins
+and functions is driven by the development of OpenBMC[1] on the
+AST2500 SoC, particularly around booting the IBM Witherspoon platform.
 
-In addition to the priority levels, the Aspeed pin controllers describe
-the signal active on a pin by compound logical expressions involving
-multiple operators, registers and bits. Some difficulty arises as a
-pin's function bit masks for each priority level are frequently not the
-same (i.e. we cannot just flip a bit to change from a high to low
-priority signal), or even in the same register(s). Some configuration
-bits affect multiple pins, while in other cases the signals for a bus
-must each be enabled individually.
-
-Together, these features give rise to some complexity in the
-implementation. A more complete description of the complexities is
-provided in the associated header file.
-
-The patch doesn't implement pinctrl/pinmux/pinconf for any particular
-Aspeed SoC, rather it adds the framework for defining pinmux
-configurations.
+[1] https://github.com/openbmc/docs
 
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
 
 Since v1:
 
-* Improve documentation
-* pr_warn() when an expected function or signal isn't defined on a pin
-* Add some abstraction to isolate string comparisons
-* Drop const qualifier in some cases to improve GCC warning output[1]
+* Fix the RMII1 signal descriptor bit
+* Add a number of new mux function and pin definitions
+* Sort the pin, group and function arrays for sanity
+* Add SoC-specific compatible string
 
-Joel: I haven't added your Reviewed-by as there's been a bit of churn. Can you
-please cast your eyes over it again?
+ drivers/pinctrl/aspeed/Kconfig             |   8 +
+ drivers/pinctrl/aspeed/Makefile            |   1 +
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 808 +++++++++++++++++++++++++++++
+ 3 files changed, 817 insertions(+)
+ create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
 
-[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=28901
-
- MAINTAINERS                             |   1 +
- drivers/pinctrl/Kconfig                 |   1 +
- drivers/pinctrl/Makefile                |   1 +
- drivers/pinctrl/aspeed/Kconfig          |   8 +
- drivers/pinctrl/aspeed/Makefile         |   4 +
- drivers/pinctrl/aspeed/pinctrl-aspeed.c | 501 ++++++++++++++++++++++++++++
- drivers/pinctrl/aspeed/pinctrl-aspeed.h | 569 ++++++++++++++++++++++++++++++++
- 7 files changed, 1085 insertions(+)
- create mode 100644 drivers/pinctrl/aspeed/Kconfig
- create mode 100644 drivers/pinctrl/aspeed/Makefile
- create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed.c
- create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed.h
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b9d5a9d4eee6..5d3dd6dacfda 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1027,6 +1027,7 @@ S:	Maintained
- F:	arch/arm/mach-aspeed/
- F:	arch/arm/boot/dts/aspeed-*
- F:	drivers/*/*aspeed*
-+F:	drivers/pinctrl/aspeed/
- F:	Documentation/devicetree/bindings/*/*aspeed*
- 
- ARM/ATMEL AT91RM9200, AT91SAM9 AND SAMA5 SOC SUPPORT
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index b3fe1d339632..0e75d94972ba 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -254,6 +254,7 @@ config PINCTRL_ZYNQ
- 	help
- 	  This selects the pinctrl driver for Xilinx Zynq.
- 
-+source "drivers/pinctrl/aspeed/Kconfig"
- source "drivers/pinctrl/bcm/Kconfig"
- source "drivers/pinctrl/berlin/Kconfig"
- source "drivers/pinctrl/freescale/Kconfig"
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index 8ebd7b8e1621..168409659e7e 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_PINCTRL_LPC18XX)	+= pinctrl-lpc18xx.o
- obj-$(CONFIG_PINCTRL_TB10X)	+= pinctrl-tb10x.o
- obj-$(CONFIG_PINCTRL_ST) 	+= pinctrl-st.o
- obj-$(CONFIG_PINCTRL_ZYNQ)	+= pinctrl-zynq.o
-+obj-$(CONFIG_ARCH_ASPEED)	+= aspeed/
- 
- obj-y				+= bcm/
- obj-$(CONFIG_PINCTRL_BERLIN)	+= berlin/
 diff --git a/drivers/pinctrl/aspeed/Kconfig b/drivers/pinctrl/aspeed/Kconfig
-new file mode 100644
-index 000000000000..34d9050f2761
---- /dev/null
+index 5d9b33939197..a84076af51f5 100644
+--- a/drivers/pinctrl/aspeed/Kconfig
 +++ b/drivers/pinctrl/aspeed/Kconfig
-@@ -0,0 +1,8 @@
-+config PINCTRL_ASPEED
-+	bool
-+	depends on (ARCH_ASPEED || COMPILE_TEST) && OF
-+	select PINMUX
-+	select PINCONF
-+	select GENERIC_PINCONF
-+	select MFD_SYSCON
-+	select REGMAP_MMIO
+@@ -14,3 +14,11 @@ config PINCTRL_ASPEED_G4
+ 	help
+ 	  Say Y here to enable pin controller support for Aspeed's 4th
+ 	  generation AST SoCs. GPIO is provided by a separate GPIO driver.
++
++config PINCTRL_ASPEED_G5
++	bool "Aspeed G5 SoC pin control"
++	depends on (MACH_ASPEED_G5 || COMPILE_TEST) && OF
++	select PINCTRL_ASPEED
++	help
++	  Say Y here to enable pin controller support for Aspeed's 5th
++	  generation AST SoCs. GPIO is provided by a separate GPIO driver.
 diff --git a/drivers/pinctrl/aspeed/Makefile b/drivers/pinctrl/aspeed/Makefile
-new file mode 100644
-index 000000000000..a0fc61d31ccf
---- /dev/null
+index 8675d6fd82df..191ed0fc1804 100644
+--- a/drivers/pinctrl/aspeed/Makefile
 +++ b/drivers/pinctrl/aspeed/Makefile
-@@ -0,0 +1,4 @@
-+# Aspeed pinctrl support
-+
-+ccflags-y += -Woverride-init
-+obj-$(CONFIG_PINCTRL_ASPEED)	+= pinctrl-aspeed.o
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.c b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
+@@ -3,3 +3,4 @@
+ ccflags-y += -Woverride-init
+ obj-$(CONFIG_PINCTRL_ASPEED)	+= pinctrl-aspeed.o
+ obj-$(CONFIG_PINCTRL_ASPEED_G4)	+= pinctrl-aspeed-g4.o
++obj-$(CONFIG_PINCTRL_ASPEED_G5)	+= pinctrl-aspeed-g5.o
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
 new file mode 100644
-index 000000000000..ded62c78d6f2
+index 000000000000..e1ab864e1a7f
 --- /dev/null
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.c
-@@ -0,0 +1,501 @@
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+@@ -0,0 +1,808 @@
 +/*
 + * Copyright (C) 2016 IBM Corp.
 + *
@@ -136,1073 +71,805 @@ index 000000000000..ded62c78d6f2
 + * the Free Software Foundation; either version 2 of the License, or
 + * (at your option) any later version.
 + */
-+
++#include <linux/bitops.h>
++#include <linux/init.h>
 +#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
++#include <linux/kernel.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
 +#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include "../core.h"
-+#include "pinctrl-aspeed.h"
-+
-+int aspeed_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
-+{
-+	struct aspeed_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pdata->ngroups;
-+}
-+
-+const char *aspeed_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
-+		unsigned int group)
-+{
-+	struct aspeed_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pdata->groups[group].name;
-+}
-+
-+int aspeed_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
-+				  unsigned int group, const unsigned int **pins,
-+				  unsigned int *npins)
-+{
-+	struct aspeed_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*pins = &pdata->groups[group].pins[0];
-+	*npins = pdata->groups[group].npins;
-+
-+	return 0;
-+}
-+
-+void aspeed_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
-+				 struct seq_file *s, unsigned int offset)
-+{
-+	seq_printf(s, " %s", dev_name(pctldev->dev));
-+}
-+
-+int aspeed_pinmux_get_fn_count(struct pinctrl_dev *pctldev)
-+{
-+	struct aspeed_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pdata->nfunctions;
-+}
-+
-+const char *aspeed_pinmux_get_fn_name(struct pinctrl_dev *pctldev,
-+				      unsigned int function)
-+{
-+	struct aspeed_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
-+
-+	return pdata->functions[function].name;
-+}
-+
-+int aspeed_pinmux_get_fn_groups(struct pinctrl_dev *pctldev,
-+				unsigned int function,
-+				const char * const **groups,
-+				unsigned int * const num_groups)
-+{
-+	struct aspeed_pinctrl_data *pdata = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*groups = pdata->functions[function].groups;
-+	*num_groups = pdata->functions[function].ngroups;
-+
-+	return 0;
-+}
-+
-+static inline void aspeed_sig_desc_print_val(
-+		const struct aspeed_sig_desc *desc, bool enable, u32 rv)
-+{
-+	pr_debug("SCU%x[0x%08x]=0x%x, got 0x%x from 0x%08x\n", desc->reg,
-+			desc->mask, enable ? desc->enable : desc->disable,
-+			(rv & desc->mask) >> __ffs(desc->mask), rv);
-+}
-+
-+/**
-+ * Query the enabled or disabled state of a signal descriptor
-+ *
-+ * @desc: The signal descriptor of interest
-+ * @enabled: True to query the enabled state, false to query disabled state
-+ * @regmap: The SCU regmap instance
-+ *
-+ * @return True if the descriptor's bitfield is configured to the state
-+ * selected by @enabled, false otherwise
-+ *
-+ * Evaluation of descriptor state is non-trivial in that it is not a binary
-+ * outcome: The bitfields can be greater than one bit in size and thus can take
-+ * a value that is neither the enabled nor disabled state recorded in the
-+ * descriptor (typically this means a different function to the one of interest
-+ * is enabled). Thus we must explicitly test for either condition as required.
-+ */
-+static bool aspeed_sig_desc_eval(const struct aspeed_sig_desc *desc,
-+				 bool enabled, struct regmap *map)
-+{
-+	unsigned int raw;
-+	u32 want;
-+
-+	if (regmap_read(map, desc->reg, &raw) < 0)
-+		return false;
-+
-+	aspeed_sig_desc_print_val(desc, enabled, raw);
-+	want = enabled ? desc->enable : desc->disable;
-+
-+	return ((raw & desc->mask) >> __ffs(desc->mask)) == want;
-+}
-+
-+/**
-+ * Query the enabled or disabled state for a mux function's signal on a pin
-+ *
-+ * @expr: An expression controlling the signal for a mux function on a pin
-+ * @enabled: True to query the enabled state, false to query disabled state
-+ * @regmap: The SCU regmap instance
-+ *
-+ * @return True if the expression composed by @enabled evaluates true, false
-+ * otherwise
-+ *
-+ * A mux function is enabled or disabled if the function's signal expression
-+ * for each pin in the function's pin group evaluates true for the desired
-+ * state. An signal expression evaluates true if all of its associated signal
-+ * descriptors evaluate true for the desired state.
-+ *
-+ * If an expression's state is described by more than one bit, either through
-+ * multi-bit bitfields in a single signal descriptor or through multiple signal
-+ * descriptors of a single bit then it is possible for the expression to be in
-+ * neither the enabled nor disabled state. Thus we must explicitly test for
-+ * either condition as required.
-+ */
-+static bool aspeed_sig_expr_eval(const struct aspeed_sig_expr *expr,
-+				 bool enabled, struct regmap *map)
-+{
-+	int i;
-+
-+	for (i = 0; i < expr->ndescs; i++) {
-+		const struct aspeed_sig_desc *desc = &expr->descs[i];
-+
-+		if (!aspeed_sig_desc_eval(desc, enabled, map))
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+/**
-+ * Configure a pin's signal by applying an expression's descriptor state for
-+ * all descriptors in the expression.
-+ *
-+ * @expr: The expression associated with the function whose signal is to be
-+ *        configured
-+ * @enable: true to enable an function's signal through a pin's signal
-+ *          expression, false to disable the function's signal
-+ * @map: The SCU's regmap instance for pinmux register access.
-+ *
-+ * @return true if the expression is configured as requested, false otherwise
-+ */
-+static bool aspeed_sig_expr_set(const struct aspeed_sig_expr *expr,
-+				bool enable, struct regmap *map)
-+{
-+	int i;
-+	bool ret;
-+
-+	ret = aspeed_sig_expr_eval(expr, enable, map);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < expr->ndescs; i++) {
-+		const struct aspeed_sig_desc *desc = &expr->descs[i];
-+		u32 pattern = enable ? desc->enable : desc->disable;
-+		unsigned int val;
-+
-+		/*
-+		 * Strap registers are configured in hardware or by early-boot
-+		 * firmware. Treat them as read-only despite that we can write
-+		 * them. This may mean that certain functions cannot be
-+		 * deconfigured and is the reason we re-evaluate after writing
-+		 * all descriptor bits.
-+		 */
-+		if (desc->reg == HW_STRAP1 || desc->reg == HW_STRAP2)
-+			continue;
-+
-+		if (regmap_read(map, desc->reg, &val) < 0)
-+			return false;
-+
-+		val &= ~desc->mask;
-+		val |= pattern << __ffs(desc->mask);
-+
-+		if (regmap_write(map, desc->reg, val) < 0)
-+			return false;
-+	}
-+
-+	return aspeed_sig_expr_eval(expr, enable, map);
-+}
-+
-+static bool aspeed_sig_expr_enable(const struct aspeed_sig_expr *expr,
-+				   struct regmap *map)
-+{
-+	return aspeed_sig_expr_set(expr, true, map);
-+}
-+
-+static bool aspeed_sig_expr_disable(const struct aspeed_sig_expr *expr,
-+				    struct regmap *map)
-+{
-+	return aspeed_sig_expr_set(expr, false, map);
-+}
-+
-+/**
-+ * Disable a signal on a pin by disabling all provided signal expressions.
-+ *
-+ * @exprs: The list of signal expressions (from a priority level on a pin)
-+ * @map: The SCU's regmap instance for pinmux register access.
-+ *
-+ * @return true if all expressions in the list are successfully disabled, false
-+ * otherwise
-+ */
-+static bool aspeed_disable_sig(const struct aspeed_sig_expr **exprs,
-+			       struct regmap *map)
-+{
-+	bool disabled = true;
-+
-+	if (!exprs)
-+		return true;
-+
-+	while (*exprs) {
-+		bool ret;
-+
-+		ret = aspeed_sig_expr_disable(*exprs, map);
-+		disabled = disabled && ret;
-+
-+		exprs++;
-+	}
-+
-+	return disabled;
-+}
-+
-+/**
-+ * Search for the signal expression needed to enable the pin's signal for the
-+ * requested function.
-+ *
-+ * @exprs: List of signal expressions (haystack)
-+ * @name: The name of the requested function (needle)
-+ *
-+ * @return A pointer to the signal expression whose function tag matches the
-+ *         provided name, otherwise NULL.
-+ *
-+ */
-+static const struct aspeed_sig_expr *aspeed_find_expr_by_name(
-+		const struct aspeed_sig_expr **exprs, const char *name)
-+{
-+	while (*exprs) {
-+		if (strcmp((*exprs)->function, name) == 0)
-+			return *exprs;
-+		exprs++;
-+	}
-+
-+	return NULL;
-+}
-+
-+static char *get_defined_attribute(const struct aspeed_pin_desc *pdesc,
-+				   const char *(*get)(
-+					   const struct aspeed_sig_expr *))
-+{
-+	char *found = NULL;
-+	size_t len = 0;
-+	const struct aspeed_sig_expr ***prios, **funcs, *expr;
-+
-+	prios = pdesc->prios;
-+
-+	while ((funcs = *prios)) {
-+		while ((expr = *funcs)) {
-+			const char *str = get(expr);
-+			size_t delta = strlen(str) + 2;
-+			char *expanded;
-+
-+			expanded = krealloc(found, len + delta + 1, GFP_KERNEL);
-+			if (!expanded) {
-+				kfree(found);
-+				return expanded;
-+			}
-+
-+			found = expanded;
-+			found[len] = '\0';
-+			len += delta;
-+
-+			strcat(found, str);
-+			strcat(found, ", ");
-+
-+			funcs++;
-+		}
-+		prios++;
-+	}
-+
-+	if (len < 2) {
-+		kfree(found);
-+		return NULL;
-+	}
-+
-+	found[len - 2] = '\0';
-+
-+	return found;
-+}
-+
-+static const char *aspeed_sig_expr_function(const struct aspeed_sig_expr *expr)
-+{
-+	return expr->function;
-+}
-+
-+static char *get_defined_functions(const struct aspeed_pin_desc *pdesc)
-+{
-+	return get_defined_attribute(pdesc, aspeed_sig_expr_function);
-+}
-+
-+static const char *aspeed_sig_expr_signal(const struct aspeed_sig_expr *expr)
-+{
-+	return expr->signal;
-+}
-+
-+static char *get_defined_signals(const struct aspeed_pin_desc *pdesc)
-+{
-+	return get_defined_attribute(pdesc, aspeed_sig_expr_signal);
-+}
-+
-+int aspeed_pinmux_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
-+			  unsigned int group)
-+{
-+	int i;
-+	const struct aspeed_pinctrl_data *pdata =
-+		pinctrl_dev_get_drvdata(pctldev);
-+	const struct aspeed_pin_group *pgroup = &pdata->groups[group];
-+	const struct aspeed_pin_function *pfunc =
-+		&pdata->functions[function];
-+
-+	for (i = 0; i < pgroup->npins; i++) {
-+		int pin = pgroup->pins[i];
-+		const struct aspeed_pin_desc *pdesc = pdata->pins[pin].drv_data;
-+		const struct aspeed_sig_expr *expr = NULL;
-+		const struct aspeed_sig_expr **funcs;
-+		const struct aspeed_sig_expr ***prios;
-+
-+		if (!pdesc)
-+			return -EINVAL;
-+
-+		prios = pdesc->prios;
-+
-+		if (!prios)
-+			continue;
-+
-+		/* Disable functions at a higher priority than that requested */
-+		while ((funcs = *prios)) {
-+			expr = aspeed_find_expr_by_name(funcs, pfunc->name);
-+
-+			if (expr)
-+				break;
-+
-+			if (!aspeed_disable_sig(funcs, pdata->map))
-+				return -EPERM;
-+
-+			prios++;
-+		}
-+
-+		if (!expr) {
-+			char *functions = get_defined_functions(pdesc);
-+			char *signals = get_defined_signals(pdesc);
-+
-+			pr_warn("No function %s found on pin %s (%d). Found signal(s) %s for function(s) %s\n",
-+				pfunc->name, pdesc->name, pin, signals,
-+				functions);
-+			kfree(signals);
-+			kfree(functions);
-+			return -ENXIO;
-+		}
-+
-+		if (!aspeed_sig_expr_enable(expr, pdata->map))
-+			return -EPERM;
-+	}
-+
-+	return 0;
-+}
-+
-+static bool aspeed_expr_is_gpio(const struct aspeed_sig_expr *expr)
-+{
-+	/*
-+	 * The signal type is GPIO if the signal name has "GPIO" as a prefix.
-+	 * strncmp (rather than strcmp) is used to implement the prefix
-+	 * requirement.
-+	 *
-+	 * expr->signal might look like "GPIOT3" in the GPIO case.
-+	 */
-+	return strncmp(expr->signal, "GPIO", 4) == 0;
-+}
-+
-+static bool aspeed_gpio_in_exprs(const struct aspeed_sig_expr **exprs)
-+{
-+	if (!exprs)
-+		return false;
-+
-+	while (*exprs) {
-+		if (aspeed_expr_is_gpio(*exprs))
-+			return true;
-+		exprs++;
-+	}
-+
-+	return false;
-+}
-+
-+int aspeed_gpio_request_enable(struct pinctrl_dev *pctldev,
-+			       struct pinctrl_gpio_range *range,
-+			       unsigned int offset)
-+{
-+	const struct aspeed_pinctrl_data *pdata =
-+		pinctrl_dev_get_drvdata(pctldev);
-+	const struct aspeed_pin_desc *pdesc = pdata->pins[offset].drv_data;
-+	const struct aspeed_sig_expr ***prios, **funcs, *expr;
-+
-+	if (!pdesc)
-+		return -EINVAL;
-+
-+	prios = pdesc->prios;
-+
-+	if (!prios)
-+		return -ENXIO;
-+
-+	/* Disable any functions of higher priority than GPIO */
-+	while ((funcs = *prios)) {
-+		if (aspeed_gpio_in_exprs(funcs))
-+			break;
-+
-+		if (!aspeed_disable_sig(funcs, pdata->map))
-+			return -EPERM;
-+
-+		prios++;
-+	}
-+
-+	if (!funcs) {
-+		char *signals = get_defined_signals(pdesc);
-+
-+		pr_warn("No GPIO signal type found on pin %s (%d). Found: %s\n",
-+			pdesc->name, offset, signals);
-+		kfree(signals);
-+		return -ENXIO;
-+	}
-+
-+	expr = *funcs;
-+
-+	/*
-+	 * Disabling all higher-priority expressions is enough to enable the
-+	 * lowest-priority signal type. As such it has no associated
-+	 * expression.
-+	 */
-+	if (!expr)
-+		return 0;
-+
-+	/*
-+	 * If GPIO is not the lowest priority signal type, assume there is only
-+	 * one expression defined to enable the GPIO function
-+	 */
-+	if (!aspeed_sig_expr_enable(expr, pdata->map))
-+		return -EPERM;
-+
-+	return 0;
-+}
-+
-+int aspeed_pinctrl_probe(struct platform_device *pdev,
-+			 struct pinctrl_desc *pdesc,
-+			 struct aspeed_pinctrl_data *pdata)
-+{
-+	struct device *parent;
-+	struct pinctrl_dev *pctl;
-+
-+	parent = pdev->dev.parent;
-+	if (!parent) {
-+		dev_err(&pdev->dev, "No parent for syscon pincontroller\n");
-+		return -ENODEV;
-+	}
-+
-+	pdata->map = syscon_node_to_regmap(parent->of_node);
-+	if (IS_ERR(pdata->map)) {
-+		dev_err(&pdev->dev, "No regmap for syscon pincontroller parent\n");
-+		return PTR_ERR(pdata->map);
-+	}
-+
-+	pctl = pinctrl_register(pdesc, &pdev->dev, pdata);
-+
-+	if (IS_ERR(pctl)) {
-+		dev_err(&pdev->dev, "Failed to register pinctrl\n");
-+		return PTR_ERR(pctl);
-+	}
-+
-+	platform_set_drvdata(pdev, pdata);
-+
-+	return 0;
-+}
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed.h b/drivers/pinctrl/aspeed/pinctrl-aspeed.h
-new file mode 100644
-index 000000000000..3e72ef8c54bf
---- /dev/null
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed.h
-@@ -0,0 +1,569 @@
-+/*
-+ * Copyright (C) 2016 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#ifndef PINCTRL_ASPEED
-+#define PINCTRL_ASPEED
-+
 +#include <linux/pinctrl/pinctrl.h>
 +#include <linux/pinctrl/pinmux.h>
 +#include <linux/pinctrl/pinconf.h>
 +#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/regmap.h>
++#include <linux/string.h>
++#include <linux/types.h>
 +
-+/*
-+ * The ASPEED SoCs provide typically more than 200 pins for GPIO and other
-+ * functions. The SoC function enabled on a pin is determined on a priority
-+ * basis where a given pin can provide a number of different signal types.
-+ *
-+ * The signal active on a pin is described by both a priority level and
-+ * compound logical expressions involving multiple operators, registers and
-+ * bits. Some difficulty arises as the pin's function bit masks for each
-+ * priority level are frequently not the same (i.e. cannot just flip a bit to
-+ * change from a high to low priority signal), or even in the same register.
-+ * Further, not all signals can be unmuxed, as some expressions depend on
-+ * values in the hardware strapping register (which is treated as read-only).
-+ *
-+ * SoC Multi-function Pin Expression Examples
-+ * ------------------------------------------
-+ *
-+ * Here are some sample mux configurations from the AST2400 and AST2500
-+ * datasheets to illustrate the corner cases, roughly in order of least to most
-+ * corner. The signal priorities are in decending order from P0 (highest).
-+ *
-+ * D6 is a pin with a single function (beside GPIO); a high priority signal
-+ * that participates in one function:
-+ *
-+ * Ball | Default | P0 Signal | P0 Expression               | P1 Signal | P1 Expression | Other
-+ * -----+---------+-----------+-----------------------------+-----------+---------------+----------
-+ *  D6    GPIOA0    MAC1LINK    SCU80[0]=1                                                GPIOA0
-+ * -----+---------+-----------+-----------------------------+-----------+---------------+----------
-+ *
-+ * C5 is a multi-signal pin (high and low priority signals). Here we touch
-+ * different registers for the different functions that enable each signal:
-+ *
-+ * -----+---------+-----------+-----------------------------+-----------+---------------+----------
-+ *  C5    GPIOA4    SCL9        SCU90[22]=1                   TIMER5      SCU80[4]=1      GPIOA4
-+ * -----+---------+-----------+-----------------------------+-----------+---------------+----------
-+ *
-+ * E19 is a single-signal pin with two functions that influence the active
-+ * signal. In this case both bits have the same meaning - enable a dedicated
-+ * LPC reset pin. However it's not always the case that the bits in the
-+ * OR-relationship have the same meaning.
-+ *
-+ * -----+---------+-----------+-----------------------------+-----------+---------------+----------
-+ *  E19   GPIOB4    LPCRST#     SCU80[12]=1 | Strap[14]=1                                 GPIOB4
-+ * -----+---------+-----------+-----------------------------+-----------+---------------+----------
-+ *
-+ * For example, pin B19 has a low-priority signal that's enabled by two
-+ * distinct SoC functions: A specific SIOPBI bit in register SCUA4, and an ACPI
-+ * bit in the STRAP register. The ACPI bit configures signals on pins in
-+ * addition to B19. Both of the low priority functions as well as the high
-+ * priority function must be disabled for GPIOF1 to be used.
-+ *
-+ * Ball | Default | P0 Signal | P0 Expression                           | P1 Signal | P1 Expression                          | Other
-+ * -----+---------+-----------+-----------------------------------------+-----------+----------------------------------------+----------
-+ *  B19   GPIOF1    NDCD4       SCU80[25]=1                               SIOPBI#     SCUA4[12]=1 | Strap[19]=0                GPIOF1
-+ * -----+---------+-----------+-----------------------------------------+-----------+----------------------------------------+----------
-+ *
-+ * For pin E18, the SoC ANDs the expected state of three bits to determine the
-+ * pin's active signal:
-+ *
-+ * * SCU3C[3]: Enable external SOC reset function
-+ * * SCU80[15]: Enable SPICS1# or EXTRST# function pin
-+ * * SCU90[31]: Select SPI interface CS# output
-+ *
-+ * -----+---------+-----------+-----------------------------------------+-----------+----------------------------------------+----------
-+ *  E18   GPIOB7    EXTRST#     SCU3C[3]=1 & SCU80[15]=1 & SCU90[31]=0    SPICS1#     SCU3C[3]=1 & SCU80[15]=1 & SCU90[31]=1   GPIOB7
-+ * -----+---------+-----------+-----------------------------------------+-----------+----------------------------------------+----------
-+ *
-+ * (Bits SCU3C[3] and SCU80[15] appear to only be used in the expressions for
-+ * selecting the signals on pin E18)
-+ *
-+ * Pin T5 is a multi-signal pin with a more complex configuration:
-+ *
-+ * Ball | Default | P0 Signal | P0 Expression                | P1 Signal | P1 Expression | Other
-+ * -----+---------+-----------+------------------------------+-----------+---------------+----------
-+ *  T5    GPIOL1    VPIDE       SCU90[5:4]!=0 & SCU84[17]=1    NDCD1       SCU84[17]=1     GPIOL1
-+ * -----+---------+-----------+------------------------------+-----------+---------------+----------
-+ *
-+ * The high priority signal configuration is best thought of in terms of its
-+ * exploded form, with reference to the SCU90[5:4] bits:
-+ *
-+ * * SCU90[5:4]=00: disable
-+ * * SCU90[5:4]=01: 18 bits (R6/G6/B6) video mode.
-+ * * SCU90[5:4]=10: 24 bits (R8/G8/B8) video mode.
-+ * * SCU90[5:4]=11: 30 bits (R10/G10/B10) video mode.
-+ *
-+ * Re-writing:
-+ *
-+ * -----+---------+-----------+------------------------------+-----------+---------------+----------
-+ *  T5    GPIOL1    VPIDE      (SCU90[5:4]=1 & SCU84[17]=1)    NDCD1       SCU84[17]=1     GPIOL1
-+ *                             | (SCU90[5:4]=2 & SCU84[17]=1)
-+ *                             | (SCU90[5:4]=3 & SCU84[17]=1)
-+ * -----+---------+-----------+------------------------------+-----------+---------------+----------
-+ *
-+ * For reference the SCU84[17] bit configure the "UART1 NDCD1 or Video VPIDE
-+ * function pin", where the signal itself is determined by whether SCU94[5:4]
-+ * is disabled or in one of the 18, 24 or 30bit video modes.
-+ *
-+ * Other video-input-related pins require an explicit state in SCU90[5:4], e.g.
-+ * W1 and U5:
-+ *
-+ * -----+---------+-----------+------------------------------+-----------+---------------+----------
-+ *  W1    GPIOL6    VPIB0       SCU90[5:4]=3 & SCU84[22]=1     TXD1        SCU84[22]=1     GPIOL6
-+ *  U5    GPIOL7    VPIB1       SCU90[5:4]=3 & SCU84[23]=1     RXD1        SCU84[23]=1     GPIOL7
-+ * -----+---------+-----------+------------------------------+-----------+---------------+----------
-+ *
-+ * The examples of T5 and W1 are particularly fertile, as they also demonstrate
-+ * that despite operating as part of the video input bus each signal needs to
-+ * be enabled individually via it's own SCU84 (in the cases of T5 and W1)
-+ * register bit. This is a little crazy if the bus doesn't have optional
-+ * signals, but is used to decent effect with some of the UARTs where not all
-+ * signals are required. However, this isn't done consistently - UART1 is
-+ * enabled on a per-pin basis, and by contrast, all signals for UART6 are
-+ * enabled by a single bit.
-+ *
-+ * Further, the high and low priority signals listed in the table above share
-+ * a configuration bit. The VPI signals should operate in concert in a single
-+ * function, but the UART signals should retain the ability to be configured
-+ * independently. This pushes the implementation down the path of tagging a
-+ * signal's expressions with the function they participate in, rather than
-+ * defining masks affecting multiple signals per function. The latter approach
-+ * fails in this instance where applying the configuration for the UART pin of
-+ * interest will stomp on the state of other UART signals when disabling the
-+ * VPI functions on the current pin.
-+ *
-+ * Ball |  Default   | P0 Signal | P0 Expression             | P1 Signal | P1 Expression | Other
-+ * -----+------------+-----------+---------------------------+-----------+---------------+------------
-+ *  A12   RGMII1TXCK   GPIOT0      SCUA0[0]=1                  RMII1TXEN   Strap[6]=0      RGMII1TXCK
-+ *  B12   RGMII1TXCTL  GPIOT1      SCUA0[1]=1                  –           Strap[6]=0      RGMII1TXCTL
-+ * -----+------------+-----------+---------------------------+-----------+---------------+------------
-+ *
-+ * A12 demonstrates that the "Other" signal isn't always GPIO - in this case
-+ * GPIOT0 is a high-priority signal and RGMII1TXCK is Other. Thus, GPIO
-+ * should be treated like any other signal type with full function expression
-+ * requirements, and not assumed to be the default case. Separately, GPIOT0 and
-+ * GPIOT1's signal descriptor bits are distinct, therefore we must iterate all
-+ * pins in the function's group to disable the higher-priority signals such
-+ * that the signal for the function of interest is correctly enabled.
-+ *
-+ * Finally, three priority levels aren't always enough; the AST2500 brings with
-+ * it 18 pins of five priority levels, however the 18 pins only use three of
-+ * the five priority levels.
-+ *
-+ * Ultimately the requirement to control pins in the examples above drive the
-+ * design:
-+ *
-+ * * Pins provide signals according to functions activated in the mux
-+ *   configuration
-+ *
-+ * * Pins provide up to five signal types in a priority order
-+ *
-+ * * For priorities levels defined on a pin, each priority provides one signal
-+ *
-+ * * Enabling lower priority signals requires higher priority signals be
-+ *   disabled
-+ *
-+ * * A function represents a set of signals; functions are distinct if their
-+ *   sets of signals are not equal
-+ *
-+ * * Signals participate in one or more functions
-+ *
-+ * * A function is described by an expression of one or more signal
-+ *   descriptors, which compare bit values in a register
-+ *
-+ * * A signal expression is the smallest set of signal descriptors whose
-+ *   comparisons must evaluate 'true' for a signal to be enabled on a pin.
-+ *
-+ * * A function's signal is active on a pin if evaluating all signal
-+ *   descriptors in the pin's signal expression for the function yields a 'true'
-+ *   result
-+ *
-+ * * A signal at a given priority on a given pin is active if any of the
-+ *   functions in which the signal participates are active, and no higher
-+ *   priority signal on the pin is active
-+ *
-+ * * GPIO is configured per-pin
-+ *
-+ * And so:
-+ *
-+ * * To disable a signal, any function(s) activating the signal must be
-+ *   disabled
-+ *
-+ * * Each pin must know the signal expressions of functions in which it
-+ *   participates, for the purpose of enabling the Other function. This is done
-+ *   by deactivating all functions that activate higher priority signals on the
-+ *   pin.
-+ *
-+ * As a concrete example:
-+ *
-+ * * T5 provides three signals types: VPIDE, NDCD1 and GPIO
-+ *
-+ * * The VPIDE signal participates in 3 functions: VPI18, VPI24 and VPI30
-+ *
-+ * * The NDCD1 signal participates in just its own NDCD1 function
-+ *
-+ * * VPIDE is high priority, NDCD1 is low priority, and GPIOL1 is the least
-+ *   prioritised
-+ *
-+ * * The prerequisit for activating the NDCD1 signal is that the VPI18, VPI24
-+ *   and VPI30 functions all be disabled
-+ *
-+ * * Similarly, all of VPI18, VPI24, VPI30 and NDCD1 functions must be disabled
-+ *   to provide GPIOL6
-+ *
-+ * Considerations
-+ * --------------
-+ *
-+ * If pinctrl allows us to allocate a pin we can configure a function without
-+ * concern for the function of already allocated pins, if pin groups are
-+ * created with respect to the SoC functions in which they participate. This is
-+ * intuitive, but it did not feel obvious from the bit/pin relationships.
-+ *
-+ * Conversely, failing to allocate all pins in a group indicates some bits (as
-+ * well as pins) required for the group's configuration will already be in use,
-+ * likely in a way that's inconsistent with the requirements of the failed
-+ * group.
-+ */
++#include "../core.h"
++#include "../pinctrl-utils.h"
++#include "pinctrl-aspeed.h"
 +
-+/*
-+ * The "Multi-function Pins Mapping and Control" table in the SoC datasheet
-+ * references registers by the device/offset mnemonic. The register macros
-+ * below are named the same way to ease transcription and verification (as
-+ * opposed to naming them e.g. PINMUX_CTRL_[0-9]). Further, signal expressions
-+ * reference registers beyond those dedicated to pinmux, such as the system
-+ * reset control and MAC clock configuration registers. The AST2500 goes a step
-+ * further and references registers in the graphics IP block, but that isn't
-+ * handled yet.
-+ */
-+#define SCU2C           0x2C /* Misc. Control Register */
-+#define SCU3C           0x3C /* System Reset Control/Status Register */
-+#define SCU48           0x48 /* MAC Interface Clock Delay Setting */
-+#define HW_STRAP1       0x70 /* AST2400 strapping is 33 bits, is split */
-+#define SCU80           0x80 /* Multi-function Pin Control #1 */
-+#define SCU84           0x84 /* Multi-function Pin Control #2 */
-+#define SCU88           0x88 /* Multi-function Pin Control #3 */
-+#define SCU8C           0x8C /* Multi-function Pin Control #4 */
-+#define SCU90           0x90 /* Multi-function Pin Control #5 */
-+#define SCU94           0x94 /* Multi-function Pin Control #6 */
-+#define SCUA0           0xA0 /* Multi-function Pin Control #7 */
-+#define SCUA4           0xA4 /* Multi-function Pin Control #8 */
-+#define SCUA8           0xA8 /* Multi-function Pin Control #9 */
-+#define HW_STRAP2       0xD0 /* Strapping */
++#define ASPEED_G5_NR_PINS 228
 +
-+ /**
-+  * A signal descriptor, which describes the register, bits and the
-+  * enable/disable values that should be compared or written.
-+  *
-+  * @reg: The register offset from base in bytes
-+  * @mask: The mask to apply to the register. The lowest set bit of the mask is
-+  *        used to derive the shift value.
-+  * @enable: The value that enables the function. Value should be in the LSBs,
-+  *          not at the position of the mask.
-+  * @disable: The value that disables the function. Value should be in the
-+  *           LSBs, not at the position of the mask.
-+  */
-+struct aspeed_sig_desc {
-+	unsigned int reg;
-+	u32 mask;
-+	u32 enable;
-+	u32 disable;
++#define COND1		SIG_DESC_BIT(SCU90, 6, 0)
++#define COND2		{ SCU94, GENMASK(1, 0), 0, 0 }
++
++#define B14 0
++SSSF_PIN_DECL(B14, GPIOA0, MAC1LINK, SIG_DESC_SET(SCU80, 0));
++
++#define E13 3
++SSSF_PIN_DECL(E13, GPIOA3, TIMER4, SIG_DESC_SET(SCU80, 3));
++
++#define I2C9_DESC	SIG_DESC_SET(SCU90, 22)
++
++#define C14 4
++SIG_EXPR_LIST_DECL_SINGLE(SCL9, I2C9, I2C9_DESC, COND1);
++SIG_EXPR_LIST_DECL_SINGLE(TIMER5, TIMER5, SIG_DESC_SET(SCU80, 4), COND1);
++MS_PIN_DECL(C14, GPIOA4, SCL9, TIMER5);
++
++FUNC_GROUP_DECL(TIMER5, C14);
++
++#define A13 5
++SIG_EXPR_LIST_DECL_SINGLE(SDA9, I2C9, I2C9_DESC, COND1);
++SIG_EXPR_LIST_DECL_SINGLE(TIMER6, TIMER6, SIG_DESC_SET(SCU80, 5), COND1);
++MS_PIN_DECL(A13, GPIOA5, SDA9, TIMER6);
++
++FUNC_GROUP_DECL(TIMER6, A13);
++
++FUNC_GROUP_DECL(I2C9, C14, A13);
++
++#define MDIO2_DESC	SIG_DESC_SET(SCU90, 2)
++
++#define C13 6
++SIG_EXPR_LIST_DECL_SINGLE(MDC2, MDIO2, MDIO2_DESC, COND1);
++SIG_EXPR_LIST_DECL_SINGLE(TIMER7, TIMER7, SIG_DESC_SET(SCU80, 6), COND1);
++MS_PIN_DECL(C13, GPIOA6, MDC2, TIMER7);
++
++FUNC_GROUP_DECL(TIMER7, C13);
++
++#define B13 7
++SIG_EXPR_LIST_DECL_SINGLE(MDIO2, MDIO2, MDIO2_DESC, COND1);
++SIG_EXPR_LIST_DECL_SINGLE(TIMER8, TIMER8, SIG_DESC_SET(SCU80, 7), COND1);
++MS_PIN_DECL(B13, GPIOA7, MDIO2, TIMER8);
++
++FUNC_GROUP_DECL(TIMER8, B13);
++
++FUNC_GROUP_DECL(MDIO2, C13, B13);
++
++#define H20 15
++GPIO_PIN_DECL(H20, GPIOB7);
++
++#define SD1_DESC	SIG_DESC_SET(SCU90, 0)
++
++#define C12 16
++#define I2C10_DESC	SIG_DESC_SET(SCU90, 23)
++SIG_EXPR_LIST_DECL_SINGLE(SD1CLK, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SCL10, I2C10, I2C10_DESC);
++MS_PIN_DECL(C12, GPIOC0, SD1CLK, SCL10);
++
++#define A12 17
++SIG_EXPR_LIST_DECL_SINGLE(SD1CMD, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SDA10, I2C10, I2C10_DESC);
++MS_PIN_DECL(A12, GPIOC1, SD1CMD, SDA10);
++
++FUNC_GROUP_DECL(I2C10, C12, A12);
++
++#define B12 18
++#define I2C11_DESC	SIG_DESC_SET(SCU90, 24)
++SIG_EXPR_LIST_DECL_SINGLE(SD1DAT0, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SCL11, I2C11, I2C11_DESC);
++MS_PIN_DECL(B12, GPIOC2, SD1DAT0, SCL11);
++
++#define D9  19
++SIG_EXPR_LIST_DECL_SINGLE(SD1DAT1, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SDA11, I2C11, I2C11_DESC);
++MS_PIN_DECL(D9, GPIOC3, SD1DAT1, SDA11);
++
++FUNC_GROUP_DECL(I2C11, B12, D9);
++
++#define D10 20
++#define I2C12_DESC	SIG_DESC_SET(SCU90, 25)
++SIG_EXPR_LIST_DECL_SINGLE(SD1DAT2, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SCL12, I2C12, I2C12_DESC);
++MS_PIN_DECL(D10, GPIOC4, SD1DAT2, SCL12);
++
++#define E12 21
++SIG_EXPR_LIST_DECL_SINGLE(SD1DAT3, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SDA12, I2C12, I2C12_DESC);
++MS_PIN_DECL(E12, GPIOC5, SD1DAT3, SDA12);
++
++FUNC_GROUP_DECL(I2C12, D10, E12);
++
++#define C11 22
++#define I2C13_DESC	SIG_DESC_SET(SCU90, 26)
++SIG_EXPR_LIST_DECL_SINGLE(SD1CD, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SCL13, I2C13, I2C13_DESC);
++MS_PIN_DECL(C11, GPIOC6, SD1CD, SCL13);
++
++#define B11 23
++SIG_EXPR_LIST_DECL_SINGLE(SD1WP, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SDA13, I2C13, I2C13_DESC);
++MS_PIN_DECL(B11, GPIOC7, SD1WP, SDA13);
++
++FUNC_GROUP_DECL(I2C13, C11, B11);
++FUNC_GROUP_DECL(SD1, C12, A12, B12, D9, D10, E12, C11, B11);
++
++#define SD2_DESC        SIG_DESC_SET(SCU90, 1)
++#define GPID0_DESC      SIG_DESC_SET(SCU8C, 8)
++#define GPID_DESC       SIG_DESC_SET(HW_STRAP1, 21)
++
++#define F19 24
++SIG_EXPR_LIST_DECL_SINGLE(SD2CLK, SD2, SD2_DESC);
++SIG_EXPR_DECL(GPID0IN, GPID0, GPID0_DESC);
++SIG_EXPR_DECL(GPID0IN, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(GPID0IN, GPID0, GPID);
++MS_PIN_DECL(F19, GPIOD0, SD2CLK, GPID0IN);
++
++#define E21 25
++SIG_EXPR_LIST_DECL_SINGLE(SD2CMD, SD2, SD2_DESC);
++SIG_EXPR_DECL(GPID0OUT, GPID0, GPID0_DESC);
++SIG_EXPR_DECL(GPID0OUT, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(GPID0OUT, GPID0, GPID);
++MS_PIN_DECL(E21, GPIOD1, SD2CMD, GPID0OUT);
++
++FUNC_GROUP_DECL(GPID0, F19, E21);
++
++#define GPID2_DESC      SIG_DESC_SET(SCU8C, 9)
++
++#define D20 26
++SIG_EXPR_LIST_DECL_SINGLE(SD2DAT0, SD2, SD2_DESC);
++SIG_EXPR_DECL(GPID2IN, GPID2, GPID2_DESC);
++SIG_EXPR_DECL(GPID2IN, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(GPID2IN, GPID2, GPID);
++MS_PIN_DECL(D20, GPIOD2, SD2DAT0, GPID2IN);
++
++#define D21 27
++SIG_EXPR_LIST_DECL_SINGLE(SD2DAT1, SD2, SD2_DESC);
++SIG_EXPR_DECL(GPID2OUT, GPID2, GPID2_DESC);
++SIG_EXPR_DECL(GPID2OUT, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(GPID2OUT, GPID2, GPID);
++MS_PIN_DECL(D21, GPIOD3, SD2DAT1, GPID2OUT);
++
++FUNC_GROUP_DECL(GPID2, D20, D21);
++
++#define GPIE_DESC	SIG_DESC_SET(HW_STRAP1, 21)
++#define GPIE0_DESC	SIG_DESC_SET(SCU8C, 12)
++
++#define B20 32
++SIG_EXPR_LIST_DECL_SINGLE(NCTS3, NCTS3, SIG_DESC_SET(SCU80, 16));
++SIG_EXPR_DECL(GPIE0IN, GPIE0, GPIE0_DESC);
++SIG_EXPR_DECL(GPIE0IN, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(GPIE0IN, GPIE0, GPIE);
++MS_PIN_DECL(B20, GPIOE0, NCTS3, GPIE0IN);
++
++#define C20 33
++SIG_EXPR_LIST_DECL_SINGLE(NDCD3, NDCD3, SIG_DESC_SET(SCU80, 17));
++SIG_EXPR_DECL(GPIE0OUT, GPIE0, GPIE0_DESC);
++SIG_EXPR_DECL(GPIE0OUT, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(GPIE0OUT, GPIE0, GPIE);
++MS_PIN_DECL(C20, GPIE0, NDCD3, GPIE0OUT);
++
++FUNC_GROUP_DECL(GPIE0, B20, C20);
++
++#define SPI1_DESC	SIG_DESC_SET(HW_STRAP1, 13)
++#define C18 64
++SIG_EXPR_LIST_DECL_SINGLE(SYSCS, SPI1, COND1, SPI1_DESC);
++SS_PIN_DECL(C18, GPIOI0, SYSCS);
++
++#define E15 65
++SIG_EXPR_LIST_DECL_SINGLE(SYSCK, SPI1, COND1, SPI1_DESC);
++SS_PIN_DECL(E15, GPIOI1, SYSCK);
++
++#define A14 66
++SIG_EXPR_LIST_DECL_SINGLE(SYSMOSI, SPI1, COND1, SPI1_DESC);
++SS_PIN_DECL(A14, GPIOI2, SYSMOSI);
++
++#define C16 67
++SIG_EXPR_LIST_DECL_SINGLE(SYSMISO, SPI1, COND1, SPI1_DESC);
++SS_PIN_DECL(C16, GPIOI3, SYSMISO);
++
++FUNC_GROUP_DECL(SPI1, C18, E15, A14, C16);
++
++#define L2 73
++SIG_EXPR_LIST_DECL_SINGLE(SGPMLD, SGPM, SIG_DESC_SET(SCU84, 9));
++SS_PIN_DECL(L2, GPIOJ1, SGPMLD);
++
++#define N3 74
++SIG_EXPR_LIST_DECL_SINGLE(SGPMO, SGPM, SIG_DESC_SET(SCU84, 10));
++SS_PIN_DECL(N3, GPIOJ2, SGPMO);
++
++#define N4 75
++SIG_EXPR_LIST_DECL_SINGLE(SGPMI, SGPM, SIG_DESC_SET(SCU84, 11));
++SS_PIN_DECL(N4, GPIOJ3, SGPMI);
++
++#define I2C5_DESC       SIG_DESC_SET(SCU90, 18)
++
++#define L3 80
++SIG_EXPR_LIST_DECL_SINGLE(SCL5, I2C5, I2C5_DESC);
++SS_PIN_DECL(L3, GPIOK0, SCL5);
++
++#define L4 81
++SIG_EXPR_LIST_DECL_SINGLE(SDA5, I2C5, I2C5_DESC);
++SS_PIN_DECL(L4, GPIOK1, SDA5);
++
++FUNC_GROUP_DECL(I2C5, L3, L4);
++
++#define I2C6_DESC       SIG_DESC_SET(SCU90, 19)
++
++#define L1 82
++SIG_EXPR_LIST_DECL_SINGLE(SCL6, I2C6, I2C6_DESC);
++SS_PIN_DECL(L1, GPIOK2, SCL6);
++
++#define N2 83
++SIG_EXPR_LIST_DECL_SINGLE(SDA6, I2C6, I2C6_DESC);
++SS_PIN_DECL(N2, GPIOK3, SDA6);
++
++FUNC_GROUP_DECL(I2C6, L1, N2);
++
++#define I2C7_DESC       SIG_DESC_SET(SCU90, 20)
++
++#define N1 84
++SIG_EXPR_LIST_DECL_SINGLE(SCL7, I2C7, I2C7_DESC);
++SS_PIN_DECL(N1, GPIOK4, SCL7);
++
++#define P1 85
++SIG_EXPR_LIST_DECL_SINGLE(SDA7, I2C7, I2C7_DESC);
++SS_PIN_DECL(P1, GPIOK5, SDA7);
++
++FUNC_GROUP_DECL(I2C7, N1, P1);
++
++#define I2C8_DESC       SIG_DESC_SET(SCU90, 21)
++
++#define P2 86
++SIG_EXPR_LIST_DECL_SINGLE(SCL8, I2C8, I2C8_DESC);
++SS_PIN_DECL(P2, GPIOK6, SCL8);
++
++#define R1 87
++SIG_EXPR_LIST_DECL_SINGLE(SDA8, I2C8, I2C8_DESC);
++SS_PIN_DECL(R1, GPIOK7, SDA8);
++
++FUNC_GROUP_DECL(I2C8, P2, R1);
++
++#define VPIOFF0_DESC    { SCU90, GENMASK(5, 4), 0, 0 }
++#define VPIOFF1_DESC    { SCU90, GENMASK(5, 4), 1, 0 }
++#define VPI24_DESC      { SCU90, GENMASK(5, 4), 2, 0 }
++#define VPIRSVD_DESC    { SCU90, GENMASK(5, 4), 3, 0 }
++
++#define V2 104
++#define V2_DESC         SIG_DESC_SET(SCU88, 0)
++SIG_EXPR_LIST_DECL_SINGLE(DASHN0, DASHN0, VPIRSVD_DESC, V2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(PWM0, PWM0, V2_DESC, COND2);
++MS_PIN_DECL(V2, GPION0, DASHN0, PWM0);
++FUNC_GROUP_DECL(PWM0, V2);
++
++#define W2 105
++#define W2_DESC         SIG_DESC_SET(SCU88, 1)
++SIG_EXPR_LIST_DECL_SINGLE(DASHN1, DASHN1, VPIRSVD_DESC, W2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(PWM1, PWM1, W2_DESC, COND2);
++MS_PIN_DECL(W2, GPION1, DASHN1, PWM1);
++FUNC_GROUP_DECL(PWM1, W2);
++
++#define V3 106
++#define V3_DESC         SIG_DESC_SET(SCU88, 2)
++SIG_EXPR_DECL(VPIG2, VPI24, VPI24_DESC, V3_DESC, COND2);
++SIG_EXPR_DECL(VPIG2, VPIRSVD, VPIRSVD_DESC, V3_DESC, COND2);
++SIG_EXPR_LIST_DECL_DUAL(VPIG2, VPI24, VPIRSVD);
++SIG_EXPR_LIST_DECL_SINGLE(PWM2, PWM2, V3_DESC, COND2);
++MS_PIN_DECL(V3, GPION2, VPIG2, PWM2);
++FUNC_GROUP_DECL(PWM2, V3);
++
++#define U3 107
++#define U3_DESC         SIG_DESC_SET(SCU88, 3)
++SIG_EXPR_DECL(VPIG3, VPI24, VPI24_DESC, U3_DESC, COND2);
++SIG_EXPR_DECL(VPIG3, VPIRSVD, VPIRSVD_DESC, U3_DESC, COND2);
++SIG_EXPR_LIST_DECL_DUAL(VPIG3, VPI24, VPIRSVD);
++SIG_EXPR_LIST_DECL_SINGLE(PWM3, PWM3, U3_DESC, COND2);
++MS_PIN_DECL(U3, GPION3, VPIG3, PWM3);
++FUNC_GROUP_DECL(PWM3, U3);
++
++#define W3 108
++#define W3_DESC         SIG_DESC_SET(SCU88, 4)
++SIG_EXPR_DECL(VPIG4, VPI24, VPI24_DESC, W3_DESC, COND2);
++SIG_EXPR_DECL(VPIG4, VPIRSVD, VPIRSVD_DESC, W3_DESC, COND2);
++SIG_EXPR_LIST_DECL_DUAL(VPIG4, VPI24, VPIRSVD);
++SIG_EXPR_LIST_DECL_SINGLE(PWM4, PWM4, W3_DESC, COND2);
++MS_PIN_DECL(W3, GPION4, VPIG4, PWM4);
++FUNC_GROUP_DECL(PWM4, W3);
++
++#define AA3 109
++#define AA3_DESC        SIG_DESC_SET(SCU88, 5)
++SIG_EXPR_DECL(VPIG5, VPI24, VPI24_DESC, AA3_DESC, COND2);
++SIG_EXPR_DECL(VPIG5, VPIRSVD, VPIRSVD_DESC, AA3_DESC, COND2);
++SIG_EXPR_LIST_DECL_DUAL(VPIG5, VPI24, VPIRSVD);
++SIG_EXPR_LIST_DECL_SINGLE(PWM5, PWM5, AA3_DESC, COND2);
++MS_PIN_DECL(AA3, GPION5, VPIG5, PWM5);
++FUNC_GROUP_DECL(PWM5, AA3);
++
++#define Y3 110
++#define Y3_DESC         SIG_DESC_SET(SCU88, 6)
++SIG_EXPR_LIST_DECL_SINGLE(VPIG6, VPI24, VPI24_DESC, Y3_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(PWM6, PWM6, Y3_DESC, COND2);
++MS_PIN_DECL(Y3, GPION6, VPIG6, PWM6);
++FUNC_GROUP_DECL(PWM6, Y3);
++
++#define T4 111
++#define T4_DESC         SIG_DESC_SET(SCU88, 7)
++SIG_EXPR_LIST_DECL_SINGLE(VPIG7, VPI24, VPI24_DESC, T4_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(PWM7, PWM7, T4_DESC, COND2);
++MS_PIN_DECL(T4, GPION7, VPIG7, PWM7);
++FUNC_GROUP_DECL(PWM7, T4);
++
++#define V6 127
++SIG_EXPR_LIST_DECL_SINGLE(DASHV6, DASHV6, SIG_DESC_SET(SCU90, 28),
++		SIG_DESC_SET(SCU88, 23));
++SS_PIN_DECL(V6, GPIOP7, DASHV6);
++
++#define I2C3_DESC	SIG_DESC_SET(SCU90, 16)
++
++#define A11 128
++SIG_EXPR_LIST_DECL_SINGLE(SCL3, I2C3, I2C3_DESC);
++SS_PIN_DECL(A11, GPIOQ0, SCL3);
++
++#define A10 129
++SIG_EXPR_LIST_DECL_SINGLE(SDA3, I2C3, I2C3_DESC);
++SS_PIN_DECL(A10, GPIOQ1, SDA3);
++
++FUNC_GROUP_DECL(I2C3, A11, A10);
++
++#define I2C4_DESC	SIG_DESC_SET(SCU90, 17)
++
++#define A9 130
++SIG_EXPR_LIST_DECL_SINGLE(SCL4, I2C4, I2C4_DESC);
++SS_PIN_DECL(A9, GPIOQ2, SCL4);
++
++#define B9 131
++SIG_EXPR_LIST_DECL_SINGLE(SDA4, I2C4, I2C4_DESC);
++SS_PIN_DECL(B9, GPIOQ3, SDA4);
++
++FUNC_GROUP_DECL(I2C4, A9, B9);
++
++#define I2C14_DESC	SIG_DESC_SET(SCU90, 27)
++
++#define N21 132
++SIG_EXPR_LIST_DECL_SINGLE(SCL14, I2C14, I2C14_DESC);
++SS_PIN_DECL(N21, GPIOQ4, SCL14);
++
++#define N22 133
++SIG_EXPR_LIST_DECL_SINGLE(SDA14, I2C14, I2C14_DESC);
++SS_PIN_DECL(N22, GPIOQ5, SDA14);
++
++FUNC_GROUP_DECL(I2C14, N21, N22);
++
++#define B10 134
++SSSF_PIN_DECL(B10, GPIOQ6, OSCCLK, SIG_DESC_SET(SCU2C, 1));
++
++#define N20 135
++SSSF_PIN_DECL(N20, GPIOQ7, PEWAKE, SIG_DESC_SET(SCU2C, 29));
++
++#define D8 142
++SIG_EXPR_LIST_DECL_SINGLE(MDC1, MDIO1, SIG_DESC_SET(SCU88, 30));
++SS_PIN_DECL(D8, GPIOR6, MDC1);
++
++#define E10 143
++SIG_EXPR_LIST_DECL_SINGLE(MDIO1, MDIO1, SIG_DESC_SET(SCU88, 31));
++SS_PIN_DECL(E10, GPIOR7, MDIO1);
++
++FUNC_GROUP_DECL(MDIO1, D8, E10);
++
++/* RGMII1/RMII1 */
++
++#define RMII1_DESC      SIG_DESC_BIT(HW_STRAP1, 6, 0)
++#define RMII2_DESC      SIG_DESC_BIT(HW_STRAP1, 7, 0)
++
++#define B5 152
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT0, GPIOT0, SIG_DESC_SET(SCUA0, 0));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1RCLKO, RMII1, RMII1_DESC,
++		SIG_DESC_SET(SCU48, 29));
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXCK, RGMII1);
++MS_PIN_DECL_(B5, SIG_EXPR_LIST_PTR(GPIOT0), SIG_EXPR_LIST_PTR(RMII1RCLKO),
++		SIG_EXPR_LIST_PTR(RGMII1TXCK));
++
++#define E9 153
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT1, GPIOT1, SIG_DESC_SET(SCUA0, 1));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1TXEN, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXCTL, RGMII1);
++MS_PIN_DECL_(E9, SIG_EXPR_LIST_PTR(GPIOT1), SIG_EXPR_LIST_PTR(RMII1TXEN),
++		SIG_EXPR_LIST_PTR(RGMII1TXCTL));
++
++#define F9 154
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT2, GPIOT2, SIG_DESC_SET(SCUA0, 2));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1TXD0, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD0, RGMII1);
++MS_PIN_DECL_(F9, SIG_EXPR_LIST_PTR(GPIOT2), SIG_EXPR_LIST_PTR(RMII1TXD0),
++		SIG_EXPR_LIST_PTR(RGMII1TXD0));
++
++#define A5 155
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT3, GPIOT3, SIG_DESC_SET(SCUA0, 3));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1TXD1, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD1, RGMII1);
++MS_PIN_DECL_(A5, SIG_EXPR_LIST_PTR(GPIOT3), SIG_EXPR_LIST_PTR(RMII1TXD1),
++		SIG_EXPR_LIST_PTR(RGMII1TXD1));
++
++#define E7 156
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT4, GPIOT4, SIG_DESC_SET(SCUA0, 4));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1DASH0, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD2, RGMII1);
++MS_PIN_DECL_(E7, SIG_EXPR_LIST_PTR(GPIOT4), SIG_EXPR_LIST_PTR(RMII1DASH0),
++		SIG_EXPR_LIST_PTR(RGMII1TXD2));
++
++#define D7 157
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT5, GPIOT5, SIG_DESC_SET(SCUA0, 5));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1DASH1, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD3, RGMII1);
++MS_PIN_DECL_(D7, SIG_EXPR_LIST_PTR(GPIOT5), SIG_EXPR_LIST_PTR(RMII1DASH1),
++		SIG_EXPR_LIST_PTR(RGMII1TXD3));
++
++#define B2 158
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT6, GPIOT6, SIG_DESC_SET(SCUA0, 6));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2RCLKO, RMII2, RMII2_DESC,
++		SIG_DESC_SET(SCU48, 30));
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXCK, RGMII2);
++MS_PIN_DECL_(B2, SIG_EXPR_LIST_PTR(GPIOT6), SIG_EXPR_LIST_PTR(RMII2RCLKO),
++		SIG_EXPR_LIST_PTR(RGMII2TXCK));
++
++#define B1 159
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT7, GPIOT7, SIG_DESC_SET(SCUA0, 7));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2TXEN, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXCTL, RGMII2);
++MS_PIN_DECL_(B1, SIG_EXPR_LIST_PTR(GPIOT7), SIG_EXPR_LIST_PTR(RMII2TXEN),
++		SIG_EXPR_LIST_PTR(RGMII2TXCTL));
++
++#define A2 160
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU0, GPIOU0, SIG_DESC_SET(SCUA0, 8));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2TXD0, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD0, RGMII2);
++MS_PIN_DECL_(A2, SIG_EXPR_LIST_PTR(GPIOU0), SIG_EXPR_LIST_PTR(RMII2TXD0),
++		SIG_EXPR_LIST_PTR(RGMII2TXD0));
++
++#define B3 161
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU1, GPIOU1, SIG_DESC_SET(SCUA0, 9));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2TXD1, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD1, RGMII2);
++MS_PIN_DECL_(B3, SIG_EXPR_LIST_PTR(GPIOU1), SIG_EXPR_LIST_PTR(RMII2TXD1),
++		SIG_EXPR_LIST_PTR(RGMII2TXD1));
++
++#define D5 162
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU2, GPIOU2, SIG_DESC_SET(SCUA0, 10));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2DASH0, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD2, RGMII2);
++MS_PIN_DECL_(D5, SIG_EXPR_LIST_PTR(GPIOU2), SIG_EXPR_LIST_PTR(RMII2DASH0),
++		SIG_EXPR_LIST_PTR(RGMII2TXD2));
++
++#define D4 163
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU3, GPIOU3, SIG_DESC_SET(SCUA0, 11));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2DASH1, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD3, RGMII2);
++MS_PIN_DECL_(D4, SIG_EXPR_LIST_PTR(GPIOU3), SIG_EXPR_LIST_PTR(RMII2DASH1),
++		SIG_EXPR_LIST_PTR(RGMII2TXD3));
++
++#define B4 164
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU4, GPIOU4, SIG_DESC_SET(SCUA0, 12));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1RCLKI, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXCK, RGMII1);
++MS_PIN_DECL_(B4, SIG_EXPR_LIST_PTR(GPIOU4), SIG_EXPR_LIST_PTR(RMII1RCLKI),
++		SIG_EXPR_LIST_PTR(RGMII1RXCK));
++
++#define A4 165
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU5, GPIOU5, SIG_DESC_SET(SCUA0, 13));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1DASH2, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXCTL, RGMII1);
++MS_PIN_DECL_(A4, SIG_EXPR_LIST_PTR(GPIOU5), SIG_EXPR_LIST_PTR(RMII1DASH2),
++		SIG_EXPR_LIST_PTR(RGMII1RXCTL));
++
++#define A3 166
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU6, GPIOU6, SIG_DESC_SET(SCUA0, 14));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1RXD0, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD0, RGMII1);
++MS_PIN_DECL_(A3, SIG_EXPR_LIST_PTR(GPIOU6), SIG_EXPR_LIST_PTR(RMII1RXD0),
++		SIG_EXPR_LIST_PTR(RGMII1RXD0));
++
++#define D6 167
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU7, GPIOU7, SIG_DESC_SET(SCUA0, 15));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1RXD1, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD1, RGMII1);
++MS_PIN_DECL_(D6, SIG_EXPR_LIST_PTR(GPIOU7), SIG_EXPR_LIST_PTR(RMII1RXD1),
++		SIG_EXPR_LIST_PTR(RGMII1RXD1));
++
++#define C5 168
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV0, GPIOV0, SIG_DESC_SET(SCUA0, 16));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1CRSDV, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD2, RGMII1);
++MS_PIN_DECL_(C5, SIG_EXPR_LIST_PTR(GPIOV0), SIG_EXPR_LIST_PTR(RMII1CRSDV),
++		SIG_EXPR_LIST_PTR(RGMII1RXD2));
++
++#define C4 169
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV1, GPIOV1, SIG_DESC_SET(SCUA0, 17));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1RXER, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD3, RGMII1);
++MS_PIN_DECL_(C4, SIG_EXPR_LIST_PTR(GPIOV1), SIG_EXPR_LIST_PTR(RMII1RXER),
++		SIG_EXPR_LIST_PTR(RGMII1RXD3));
++
++FUNC_GROUP_DECL(RGMII1, B4, A4, A3, D6, C5, C4, B5, E9, F9, A5, E7, D7);
++FUNC_GROUP_DECL(RMII1, B4, A3, D6, C5, C4, B5, E9, F9, A5);
++
++#define C2 170
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV2, GPIOV2, SIG_DESC_SET(SCUA0, 18));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2RCLKI, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXCK, RGMII2);
++MS_PIN_DECL_(C2, SIG_EXPR_LIST_PTR(GPIOV2), SIG_EXPR_LIST_PTR(RMII2RCLKI),
++		SIG_EXPR_LIST_PTR(RGMII2RXCK));
++
++#define C1 171
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV3, GPIOV3, SIG_DESC_SET(SCUA0, 19));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2DASH2, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXCTL, RGMII2);
++MS_PIN_DECL_(C1, SIG_EXPR_LIST_PTR(GPIOV3), SIG_EXPR_LIST_PTR(RMII2DASH2),
++		SIG_EXPR_LIST_PTR(RGMII2RXCTL));
++
++#define C3 172
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV4, GPIOV4, SIG_DESC_SET(SCUA0, 20));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2RXD0, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD0, RGMII2);
++MS_PIN_DECL_(C3, SIG_EXPR_LIST_PTR(GPIOV4), SIG_EXPR_LIST_PTR(RMII2RXD0),
++		SIG_EXPR_LIST_PTR(RGMII2RXD0));
++
++#define D1 173
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV5, GPIOV5, SIG_DESC_SET(SCUA0, 21));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2RXD1, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD1, RGMII2);
++MS_PIN_DECL_(D1, SIG_EXPR_LIST_PTR(GPIOV5), SIG_EXPR_LIST_PTR(RMII2RXD1),
++		SIG_EXPR_LIST_PTR(RGMII2RXD1));
++
++#define D2 174
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV6, GPIOV6, SIG_DESC_SET(SCUA0, 22));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2CRSDV, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD2, RGMII2);
++MS_PIN_DECL_(D2, SIG_EXPR_LIST_PTR(GPIOV6), SIG_EXPR_LIST_PTR(RMII2CRSDV),
++		SIG_EXPR_LIST_PTR(RGMII2RXD2));
++
++#define E6 175
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV7, GPIOV7, SIG_DESC_SET(SCUA0, 23));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2RXER, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD3, RGMII2);
++MS_PIN_DECL_(E6, SIG_EXPR_LIST_PTR(GPIOV7), SIG_EXPR_LIST_PTR(RMII2RXER),
++		SIG_EXPR_LIST_PTR(RGMII2RXD3));
++
++FUNC_GROUP_DECL(RGMII2, B2, B1, A2, B3, D5, D4, C2, C1, C3, D1, D2, E6);
++FUNC_GROUP_DECL(RMII2, B2, B1, A2, B3, C2, C3, D1, D2, E6);
++
++/* Pins, groups and functions are sort(1):ed alphabetically for sanity */
++
++static struct pinctrl_pin_desc aspeed_g5_pins[ASPEED_G5_NR_PINS] = {
++	ASPEED_PINCTRL_PIN(A10),
++	ASPEED_PINCTRL_PIN(A11),
++	ASPEED_PINCTRL_PIN(A12),
++	ASPEED_PINCTRL_PIN(A13),
++	ASPEED_PINCTRL_PIN(A14),
++	ASPEED_PINCTRL_PIN(A2),
++	ASPEED_PINCTRL_PIN(A3),
++	ASPEED_PINCTRL_PIN(A4),
++	ASPEED_PINCTRL_PIN(A5),
++	ASPEED_PINCTRL_PIN(A9),
++	ASPEED_PINCTRL_PIN(AA3),
++	ASPEED_PINCTRL_PIN(B1),
++	ASPEED_PINCTRL_PIN(B10),
++	ASPEED_PINCTRL_PIN(B11),
++	ASPEED_PINCTRL_PIN(B12),
++	ASPEED_PINCTRL_PIN(B13),
++	ASPEED_PINCTRL_PIN(B14),
++	ASPEED_PINCTRL_PIN(B2),
++	ASPEED_PINCTRL_PIN(B20),
++	ASPEED_PINCTRL_PIN(B3),
++	ASPEED_PINCTRL_PIN(B4),
++	ASPEED_PINCTRL_PIN(B5),
++	ASPEED_PINCTRL_PIN(B9),
++	ASPEED_PINCTRL_PIN(C1),
++	ASPEED_PINCTRL_PIN(C11),
++	ASPEED_PINCTRL_PIN(C12),
++	ASPEED_PINCTRL_PIN(C13),
++	ASPEED_PINCTRL_PIN(C14),
++	ASPEED_PINCTRL_PIN(C16),
++	ASPEED_PINCTRL_PIN(C18),
++	ASPEED_PINCTRL_PIN(C2),
++	ASPEED_PINCTRL_PIN(C20),
++	ASPEED_PINCTRL_PIN(C3),
++	ASPEED_PINCTRL_PIN(C4),
++	ASPEED_PINCTRL_PIN(C5),
++	ASPEED_PINCTRL_PIN(D1),
++	ASPEED_PINCTRL_PIN(D10),
++	ASPEED_PINCTRL_PIN(D2),
++	ASPEED_PINCTRL_PIN(D20),
++	ASPEED_PINCTRL_PIN(D21),
++	ASPEED_PINCTRL_PIN(D4),
++	ASPEED_PINCTRL_PIN(D5),
++	ASPEED_PINCTRL_PIN(D6),
++	ASPEED_PINCTRL_PIN(D7),
++	ASPEED_PINCTRL_PIN(D8),
++	ASPEED_PINCTRL_PIN(D9),
++	ASPEED_PINCTRL_PIN(E10),
++	ASPEED_PINCTRL_PIN(E12),
++	ASPEED_PINCTRL_PIN(E13),
++	ASPEED_PINCTRL_PIN(E15),
++	ASPEED_PINCTRL_PIN(E21),
++	ASPEED_PINCTRL_PIN(E6),
++	ASPEED_PINCTRL_PIN(E7),
++	ASPEED_PINCTRL_PIN(E9),
++	ASPEED_PINCTRL_PIN(F19),
++	ASPEED_PINCTRL_PIN(F9),
++	ASPEED_PINCTRL_PIN(H20),
++	ASPEED_PINCTRL_PIN(L1),
++	ASPEED_PINCTRL_PIN(L2),
++	ASPEED_PINCTRL_PIN(L3),
++	ASPEED_PINCTRL_PIN(L4),
++	ASPEED_PINCTRL_PIN(N1),
++	ASPEED_PINCTRL_PIN(N2),
++	ASPEED_PINCTRL_PIN(N20),
++	ASPEED_PINCTRL_PIN(N21),
++	ASPEED_PINCTRL_PIN(N22),
++	ASPEED_PINCTRL_PIN(N3),
++	ASPEED_PINCTRL_PIN(N4),
++	ASPEED_PINCTRL_PIN(P1),
++	ASPEED_PINCTRL_PIN(P2),
++	ASPEED_PINCTRL_PIN(R1),
++	ASPEED_PINCTRL_PIN(T4),
++	ASPEED_PINCTRL_PIN(U3),
++	ASPEED_PINCTRL_PIN(V2),
++	ASPEED_PINCTRL_PIN(V3),
++	ASPEED_PINCTRL_PIN(V6),
++	ASPEED_PINCTRL_PIN(W2),
++	ASPEED_PINCTRL_PIN(W3),
++	ASPEED_PINCTRL_PIN(Y3),
 +};
 +
-+/**
-+ * Describes a signal expression. The expression is evaluated by ANDing the
-+ * evaluation of the descriptors.
-+ *
-+ * @signal: The signal name for the priority level on the pin. If the signal
-+ *          type is GPIO, then the signal name must begin with the string
-+ *          "GPIO", e.g. GPIOA0, GPIOT4 etc.
-+ * @function: The name of the function the signal participates in for the
-+ *            associated expression
-+ * @ndescs: The number of signal descriptors in the expression
-+ * @descs: Pointer to an array of signal descriptors that comprise the
-+ *         function expression
-+ */
-+struct aspeed_sig_expr {
-+	const char *signal;
-+	const char *function;
-+	int ndescs;
-+	const struct aspeed_sig_desc *descs;
++static const struct aspeed_pin_group aspeed_g5_groups[] = {
++	ASPEED_PINCTRL_GROUP(GPID0),
++	ASPEED_PINCTRL_GROUP(GPID2),
++	ASPEED_PINCTRL_GROUP(GPIE0),
++	ASPEED_PINCTRL_GROUP(I2C10),
++	ASPEED_PINCTRL_GROUP(I2C11),
++	ASPEED_PINCTRL_GROUP(I2C12),
++	ASPEED_PINCTRL_GROUP(I2C13),
++	ASPEED_PINCTRL_GROUP(I2C14),
++	ASPEED_PINCTRL_GROUP(I2C3),
++	ASPEED_PINCTRL_GROUP(I2C4),
++	ASPEED_PINCTRL_GROUP(I2C5),
++	ASPEED_PINCTRL_GROUP(I2C6),
++	ASPEED_PINCTRL_GROUP(I2C7),
++	ASPEED_PINCTRL_GROUP(I2C8),
++	ASPEED_PINCTRL_GROUP(I2C9),
++	ASPEED_PINCTRL_GROUP(MAC1LINK),
++	ASPEED_PINCTRL_GROUP(MDIO1),
++	ASPEED_PINCTRL_GROUP(MDIO2),
++	ASPEED_PINCTRL_GROUP(OSCCLK),
++	ASPEED_PINCTRL_GROUP(PEWAKE),
++	ASPEED_PINCTRL_GROUP(PWM0),
++	ASPEED_PINCTRL_GROUP(PWM1),
++	ASPEED_PINCTRL_GROUP(PWM2),
++	ASPEED_PINCTRL_GROUP(PWM3),
++	ASPEED_PINCTRL_GROUP(PWM4),
++	ASPEED_PINCTRL_GROUP(PWM5),
++	ASPEED_PINCTRL_GROUP(PWM6),
++	ASPEED_PINCTRL_GROUP(PWM7),
++	ASPEED_PINCTRL_GROUP(RGMII1),
++	ASPEED_PINCTRL_GROUP(RGMII2),
++	ASPEED_PINCTRL_GROUP(RMII1),
++	ASPEED_PINCTRL_GROUP(RMII2),
++	ASPEED_PINCTRL_GROUP(SD1),
++	ASPEED_PINCTRL_GROUP(SPI1),
++	ASPEED_PINCTRL_GROUP(TIMER4),
++	ASPEED_PINCTRL_GROUP(TIMER5),
++	ASPEED_PINCTRL_GROUP(TIMER6),
++	ASPEED_PINCTRL_GROUP(TIMER7),
++	ASPEED_PINCTRL_GROUP(TIMER8),
 +};
 +
-+/**
-+ * A struct capturing the list of expressions enabling signals at each priority
-+ * for a given pin. The signal configuration for a priority level is evaluated
-+ * by ORing the evaluation of the signal expressions in the respective
-+ * priority's list.
-+ *
-+ * @name: A name for the pin
-+ * @prios: A pointer to an array of expression list pointers
-+ *
-+ */
-+struct aspeed_pin_desc {
-+	const char *name;
-+	const struct aspeed_sig_expr ***prios;
++static const struct aspeed_pin_function aspeed_g5_functions[] = {
++	ASPEED_PINCTRL_FUNC(GPID0),
++	ASPEED_PINCTRL_FUNC(GPID2),
++	ASPEED_PINCTRL_FUNC(GPIE0),
++	ASPEED_PINCTRL_FUNC(I2C10),
++	ASPEED_PINCTRL_FUNC(I2C11),
++	ASPEED_PINCTRL_FUNC(I2C12),
++	ASPEED_PINCTRL_FUNC(I2C13),
++	ASPEED_PINCTRL_FUNC(I2C14),
++	ASPEED_PINCTRL_FUNC(I2C3),
++	ASPEED_PINCTRL_FUNC(I2C4),
++	ASPEED_PINCTRL_FUNC(I2C5),
++	ASPEED_PINCTRL_FUNC(I2C6),
++	ASPEED_PINCTRL_FUNC(I2C7),
++	ASPEED_PINCTRL_FUNC(I2C8),
++	ASPEED_PINCTRL_FUNC(I2C9),
++	ASPEED_PINCTRL_FUNC(MAC1LINK),
++	ASPEED_PINCTRL_FUNC(MDIO1),
++	ASPEED_PINCTRL_FUNC(MDIO2),
++	ASPEED_PINCTRL_FUNC(OSCCLK),
++	ASPEED_PINCTRL_FUNC(PEWAKE),
++	ASPEED_PINCTRL_FUNC(PWM0),
++	ASPEED_PINCTRL_FUNC(PWM1),
++	ASPEED_PINCTRL_FUNC(PWM2),
++	ASPEED_PINCTRL_FUNC(PWM3),
++	ASPEED_PINCTRL_FUNC(PWM4),
++	ASPEED_PINCTRL_FUNC(PWM5),
++	ASPEED_PINCTRL_FUNC(PWM6),
++	ASPEED_PINCTRL_FUNC(PWM7),
++	ASPEED_PINCTRL_FUNC(RGMII1),
++	ASPEED_PINCTRL_FUNC(RGMII2),
++	ASPEED_PINCTRL_FUNC(RMII1),
++	ASPEED_PINCTRL_FUNC(RMII2),
++	ASPEED_PINCTRL_FUNC(SD1),
++	ASPEED_PINCTRL_FUNC(SPI1),
++	ASPEED_PINCTRL_FUNC(TIMER4),
++	ASPEED_PINCTRL_FUNC(TIMER5),
++	ASPEED_PINCTRL_FUNC(TIMER6),
++	ASPEED_PINCTRL_FUNC(TIMER7),
++	ASPEED_PINCTRL_FUNC(TIMER8),
 +};
 +
-+/* Macro hell */
-+
-+/**
-+ * Short-hand macro for describing a configuration enabled by the state of one
-+ * bit. The disable value is derived.
-+ *
-+ * @reg: The signal's associated register, offset from base
-+ * @idx: The signal's bit index in the register
-+ * @val: The value (0 or 1) that enables the function
-+ */
-+#define SIG_DESC_BIT(reg, idx, val) \
-+	{ reg, BIT_MASK(idx), val, (((val) + 1) & 1) }
-+
-+/**
-+ * A further short-hand macro describing a configuration enabled with a set bit.
-+ *
-+ * @reg: The configuration's associated register, offset from base
-+ * @idx: The configuration's bit index in the register
-+ */
-+#define SIG_DESC_SET(reg, idx) SIG_DESC_BIT(reg, idx, 1)
-+
-+#define SIG_DESC_LIST_SYM(sig, func) sig_descs_ ## sig ## _ ## func
-+#define SIG_DESC_LIST_DECL(sig, func, ...) \
-+	static const struct aspeed_sig_desc SIG_DESC_LIST_SYM(sig, func)[] = \
-+		{ __VA_ARGS__ }
-+
-+#define SIG_EXPR_SYM(sig, func) sig_expr_ ## sig ## _ ## func
-+#define SIG_EXPR_DECL_(sig, func) \
-+	static const struct aspeed_sig_expr SIG_EXPR_SYM(sig, func) = \
-+	{ \
-+		.signal = #sig, \
-+		.function = #func, \
-+		.ndescs = ARRAY_SIZE(SIG_DESC_LIST_SYM(sig, func)), \
-+		.descs = &(SIG_DESC_LIST_SYM(sig, func))[0], \
-+	}
-+
-+/**
-+ * Declare a signal expression.
-+ *
-+ * @sig: A macro symbol name for the signal (is subjected to stringification
-+ *        and token pasting)
-+ * @func: The function in which the signal is participating
-+ * @...: Signal descriptors that define the signal expression
-+ *
-+ * For example, the following declares the ROMD8 signal for the ROM16 function:
-+ *
-+ *     SIG_EXPR_DECL(ROMD8, ROM16, SIG_DESC_SET(SCU90, 6));
-+ *
-+ * And with multiple signal descriptors:
-+ *
-+ *     SIG_EXPR_DECL(ROMD8, ROM16S, SIG_DESC_SET(HW_STRAP1, 4),
-+ *              { HW_STRAP1, GENMASK(1, 0), 0, 0 });
-+ */
-+#define SIG_EXPR_DECL(sig, func, ...) \
-+	SIG_DESC_LIST_DECL(sig, func, __VA_ARGS__); \
-+	SIG_EXPR_DECL_(sig, func)
-+
-+/**
-+ * Declare a pointer to a signal expression
-+ *
-+ * @sig: The macro symbol name for the signal (subjected to token pasting)
-+ * @func: The macro symbol name for the function (subjected to token pasting)
-+ */
-+#define SIG_EXPR_PTR(sig, func) (&SIG_EXPR_SYM(sig, func))
-+
-+#define SIG_EXPR_LIST_SYM(sig) sig_exprs_ ## sig
-+
-+/**
-+ * Declare a signal expression list for reference in a struct aspeed_pin_prio.
-+ *
-+ * @sig: A macro symbol name for the signal (is subjected to token pasting)
-+ * @...: Signal expression structure pointers (use SIG_EXPR_PTR())
-+ *
-+ * For example, the 16-bit ROM bus can be enabled by one of two possible signal
-+ * expressions:
-+ *
-+ *     SIG_EXPR_DECL(ROMD8, ROM16, SIG_DESC_SET(SCU90, 6));
-+ *     SIG_EXPR_DECL(ROMD8, ROM16S, SIG_DESC_SET(HW_STRAP1, 4),
-+ *              { HW_STRAP1, GENMASK(1, 0), 0, 0 });
-+ *     SIG_EXPR_LIST_DECL(ROMD8, SIG_EXPR_PTR(ROMD8, ROM16),
-+ *              SIG_EXPR_PTR(ROMD8, ROM16S));
-+ */
-+#define SIG_EXPR_LIST_DECL(sig, ...) \
-+	static const struct aspeed_sig_expr *SIG_EXPR_LIST_SYM(sig)[] = \
-+		{ __VA_ARGS__, NULL }
-+
-+/**
-+ * A short-hand macro for declaring a function expression and an expression
-+ * list with a single function.
-+ *
-+ * @func: A macro symbol name for the function (is subjected to token pasting)
-+ * @...: Function descriptors that define the function expression
-+ *
-+ * For example, signal NCTS6 participates in its own function with one group:
-+ *
-+ *     SIG_EXPR_LIST_DECL_SINGLE(NCTS6, NCTS6, SIG_DESC_SET(SCU90, 7));
-+ */
-+#define SIG_EXPR_LIST_DECL_SINGLE(sig, func, ...) \
-+	SIG_DESC_LIST_DECL(sig, func, __VA_ARGS__); \
-+	SIG_EXPR_DECL_(sig, func); \
-+	SIG_EXPR_LIST_DECL(sig, SIG_EXPR_PTR(sig, func))
-+
-+#define SIG_EXPR_LIST_DECL_DUAL(sig, f0, f1) \
-+	SIG_EXPR_LIST_DECL(sig, SIG_EXPR_PTR(sig, f0), SIG_EXPR_PTR(sig, f1))
-+
-+#define SIG_EXPR_LIST_PTR(sig) (&SIG_EXPR_LIST_SYM(sig)[0])
-+
-+#define PIN_EXPRS_SYM(pin) pin_exprs_ ## pin
-+#define PIN_EXPRS_PTR(pin) (&PIN_EXPRS_SYM(pin)[0])
-+#define PIN_SYM(pin) pin_ ## pin
-+
-+#define MS_PIN_DECL_(pin, ...) \
-+	static const struct aspeed_sig_expr **PIN_EXPRS_SYM(pin)[] = \
-+		{ __VA_ARGS__, NULL }; \
-+	static const struct aspeed_pin_desc PIN_SYM(pin) = \
-+		{ #pin, PIN_EXPRS_PTR(pin) }
-+
-+/**
-+ * Declare a multi-signal pin
-+ *
-+ * @pin: The pin number
-+ * @other: Macro name for "other" functionality (subjected to stringification)
-+ * @high: Macro name for the highest priority signal functions
-+ * @low: Macro name for the low signal functions
-+ *
-+ * For example:
-+ *
-+ *     #define A8 56
-+ *     SIG_EXPR_DECL(ROMD8, ROM16, SIG_DESC_SET(SCU90, 6));
-+ *     SIG_EXPR_DECL(ROMD8, ROM16S, SIG_DESC_SET(HW_STRAP1, 4),
-+ *              { HW_STRAP1, GENMASK(1, 0), 0, 0 });
-+ *     SIG_EXPR_LIST_DECL(ROMD8, SIG_EXPR_PTR(ROMD8, ROM16),
-+ *              SIG_EXPR_PTR(ROMD8, ROM16S));
-+ *     SIG_EXPR_LIST_DECL_SINGLE(NCTS6, NCTS6, SIG_DESC_SET(SCU90, 7));
-+ *     MS_PIN_DECL(A8, GPIOH0, ROMD8, NCTS6);
-+ */
-+#define MS_PIN_DECL(pin, other, high, low) \
-+	SIG_EXPR_LIST_DECL_SINGLE(other, other); \
-+	MS_PIN_DECL_(pin, \
-+			SIG_EXPR_LIST_PTR(high), \
-+			SIG_EXPR_LIST_PTR(low), \
-+			SIG_EXPR_LIST_PTR(other))
-+
-+#define PIN_GROUP_SYM(func) pins_ ## func
-+#define FUNC_GROUP_SYM(func) groups_ ## func
-+#define FUNC_GROUP_DECL(func, ...) \
-+	static const int PIN_GROUP_SYM(func)[] = { __VA_ARGS__ }; \
-+	static const char *FUNC_GROUP_SYM(func)[] = { #func }
-+
-+/**
-+ * Declare a single signal pin
-+ *
-+ * @pin: The pin number
-+ * @other: Macro name for "other" functionality (subjected to stringification)
-+ * @sig: Macro name for the signal (subjected to stringification)
-+ *
-+ * For example:
-+ *
-+ *     #define E3 80
-+ *     SIG_EXPR_LIST_DECL_SINGLE(SCL5, I2C5, I2C5_DESC);
-+ *     SS_PIN_DECL(E3, GPIOK0, SCL5);
-+ */
-+#define SS_PIN_DECL(pin, other, sig) \
-+	SIG_EXPR_LIST_DECL_SINGLE(other, other); \
-+	MS_PIN_DECL_(pin, SIG_EXPR_LIST_PTR(sig), SIG_EXPR_LIST_PTR(other))
-+
-+/**
-+ * Single signal, single function pin declaration
-+ *
-+ * @pin: The pin number
-+ * @other: Macro name for "other" functionality (subjected to stringification)
-+ * @sig: Macro name for the signal (subjected to stringification)
-+ * @...: Signal descriptors that define the function expression
-+ *
-+ * For example:
-+ *
-+ *    SSSF_PIN_DECL(A4, GPIOA2, TIMER3, SIG_DESC_SET(SCU80, 2));
-+ */
-+#define SSSF_PIN_DECL(pin, other, sig, ...) \
-+	SIG_EXPR_LIST_DECL_SINGLE(sig, sig, __VA_ARGS__); \
-+	SIG_EXPR_LIST_DECL_SINGLE(other, other); \
-+	MS_PIN_DECL_(pin, SIG_EXPR_LIST_PTR(sig), SIG_EXPR_LIST_PTR(other)); \
-+	FUNC_GROUP_DECL(sig, pin)
-+
-+#define GPIO_PIN_DECL(pin, gpio) \
-+	SIG_EXPR_LIST_DECL_SINGLE(gpio, gpio); \
-+	MS_PIN_DECL_(pin, SIG_EXPR_LIST_PTR(gpio))
-+
-+struct aspeed_pinctrl_data {
-+	struct regmap *map;
-+
-+	const struct pinctrl_pin_desc *pins;
-+	const unsigned int npins;
-+
-+	const struct aspeed_pin_group *groups;
-+	const unsigned int ngroups;
-+
-+	const struct aspeed_pin_function *functions;
-+	const unsigned int nfunctions;
++static struct aspeed_pinctrl_data aspeed_g5_pinctrl_data = {
++	.pins = aspeed_g5_pins,
++	.npins = ARRAY_SIZE(aspeed_g5_pins),
++	.groups = aspeed_g5_groups,
++	.ngroups = ARRAY_SIZE(aspeed_g5_groups),
++	.functions = aspeed_g5_functions,
++	.nfunctions = ARRAY_SIZE(aspeed_g5_functions),
 +};
 +
-+#define ASPEED_PINCTRL_PIN(name_) \
-+	[name_] = { \
-+		.number = name_, \
-+		.name = #name_, \
-+		.drv_data = (void *) &(PIN_SYM(name_)) \
-+	}
-+
-+struct aspeed_pin_group {
-+	const char *name;
-+	const unsigned int *pins;
-+	const unsigned int npins;
++static struct pinmux_ops aspeed_g5_pinmux_ops = {
++	.get_functions_count = aspeed_pinmux_get_fn_count,
++	.get_function_name = aspeed_pinmux_get_fn_name,
++	.get_function_groups = aspeed_pinmux_get_fn_groups,
++	.set_mux = aspeed_pinmux_set_mux,
++	.gpio_request_enable = aspeed_gpio_request_enable,
++	.strict = true,
 +};
 +
-+#define ASPEED_PINCTRL_GROUP(name_) { \
-+	.name = #name_, \
-+	.pins = &(PIN_GROUP_SYM(name_))[0], \
-+	.npins = ARRAY_SIZE(PIN_GROUP_SYM(name_)), \
++static struct pinctrl_ops aspeed_g5_pinctrl_ops = {
++	.get_groups_count = aspeed_pinctrl_get_groups_count,
++	.get_group_name = aspeed_pinctrl_get_group_name,
++	.get_group_pins = aspeed_pinctrl_get_group_pins,
++	.pin_dbg_show = aspeed_pinctrl_pin_dbg_show,
++	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
++	.dt_free_map = pinctrl_utils_free_map,
++};
++
++static struct pinctrl_desc aspeed_g5_pinctrl_desc = {
++	.name = "aspeed-g5-pinctrl",
++	.pins = aspeed_g5_pins,
++	.npins = ARRAY_SIZE(aspeed_g5_pins),
++	.pctlops = &aspeed_g5_pinctrl_ops,
++	.pmxops = &aspeed_g5_pinmux_ops,
++};
++
++static int aspeed_g5_pinctrl_probe(struct platform_device *pdev)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(aspeed_g5_pins); i++)
++		aspeed_g5_pins[i].number = i;
++
++	return aspeed_pinctrl_probe(pdev, &aspeed_g5_pinctrl_desc,
++			&aspeed_g5_pinctrl_data);
 +}
 +
-+struct aspeed_pin_function {
-+	const char *name;
-+	const char *const *groups;
-+	unsigned int ngroups;
++static const struct of_device_id aspeed_g5_pinctrl_of_match[] = {
++	{ .compatible = "aspeed,ast2500-pinctrl", },
++	{ .compatible = "aspeed,g5-pinctrl", },
++	{ },
 +};
 +
-+#define ASPEED_PINCTRL_FUNC(name_, ...) { \
-+	.name = #name_, \
-+	.groups = &FUNC_GROUP_SYM(name_)[0], \
-+	.ngroups = ARRAY_SIZE(FUNC_GROUP_SYM(name_)), \
++static struct platform_driver aspeed_g5_pinctrl_driver = {
++	.probe = aspeed_g5_pinctrl_probe,
++	.driver = {
++		.name = "aspeed-g5-pinctrl",
++		.of_match_table = aspeed_g5_pinctrl_of_match,
++	},
++};
++
++static int aspeed_g5_pinctrl_init(void)
++{
++	return platform_driver_register(&aspeed_g5_pinctrl_driver);
 +}
 +
-+int aspeed_pinctrl_get_groups_count(struct pinctrl_dev *pctldev);
-+const char *aspeed_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
-+		unsigned int group);
-+int aspeed_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
-+		unsigned int group, const unsigned int **pins,
-+		unsigned int *npins);
-+void aspeed_pinctrl_pin_dbg_show(struct pinctrl_dev *pctldev,
-+		struct seq_file *s, unsigned int offset);
-+int aspeed_pinmux_get_fn_count(struct pinctrl_dev *pctldev);
-+const char *aspeed_pinmux_get_fn_name(struct pinctrl_dev *pctldev,
-+		unsigned int function);
-+int aspeed_pinmux_get_fn_groups(struct pinctrl_dev *pctldev,
-+		unsigned int function, const char * const **groups,
-+		unsigned int * const num_groups);
-+int aspeed_pinmux_set_mux(struct pinctrl_dev *pctldev, unsigned int function,
-+		unsigned int group);
-+int aspeed_gpio_request_enable(struct pinctrl_dev *pctldev,
-+		struct pinctrl_gpio_range *range,
-+		unsigned int offset);
-+int aspeed_pinctrl_probe(struct platform_device *pdev,
-+		struct pinctrl_desc *pdesc,
-+		struct aspeed_pinctrl_data *pdata);
-+
-+#endif /* PINCTRL_ASPEED */
++arch_initcall(aspeed_g5_pinctrl_init);
 -- 
 2.9.3
