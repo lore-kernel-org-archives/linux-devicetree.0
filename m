@@ -1,7 +1,7 @@
 From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/7] ARM: dts: add gpio-ranges property to iMX6Q/D GPIO controllers
-Date: Sat, 20 Aug 2016 01:06:23 +0300
-Message-ID: <1471644388-10220-3-git-send-email-vladimir_zapolskiy@mentor.com>
+Subject: [PATCH 5/7] ARM: dts: add gpio-ranges property to iMX6SX GPIO controllers
+Date: Sat, 20 Aug 2016 01:06:26 +0300
+Message-ID: <1471644388-10220-6-git-send-email-vladimir_zapolskiy@mentor.com>
 References: <1471644388-10220-1-git-send-email-vladimir_zapolskiy@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -16,61 +16,80 @@ To establish a connection between GPIO controllers and pin multiplexor
 controller add gpio-ranges properties to all GPIO controllers found
 on iMX50 SoC. The change was done after human parsing of output from
 
-% gawk -n '{ sub(/.*__/, ""); if ($1 ~ "^GPIO") print $1, $2/4}' imx6q-pinfunc.h | sort -n
+% gawk -n '{ sub(/.*__/, ""); if ($1 ~ "^GPIO") print $1, $2/4}' imx6sx-pinfunc.h | sort -n
 
 Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6q.dtsi | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ arch/arm/boot/dts/imx6sx.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index c30c8368cae0..e9a5d0b8c7b0 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -209,6 +209,43 @@
- 	};
- };
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 2863c52be6f5..5ad851a75587 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -438,6 +438,8 @@
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
++
++				gpio-ranges = <&iomuxc 0 5 26>;
+ 			};
  
-+&gpio1 {
-+	gpio-ranges = <&iomuxc  0 136  2>, <&iomuxc  2 141 1>, <&iomuxc  3 139 1>,
-+		      <&iomuxc  4 142  2>, <&iomuxc  6 140 1>, <&iomuxc  7 144 2>,
-+		      <&iomuxc  9 138  1>, <&iomuxc 10 213 3>, <&iomuxc 13  20 1>,
-+		      <&iomuxc 14  19  1>, <&iomuxc 15  21 1>, <&iomuxc 16 208 1>,
-+		      <&iomuxc 17 207  1>, <&iomuxc 18 210 3>, <&iomuxc 21 209 1>,
-+		      <&iomuxc 22 116 10>;
-+};
+ 			gpio2: gpio@020a0000 {
+@@ -449,6 +451,8 @@
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
 +
-+&gpio2 {
-+	gpio-ranges = <&iomuxc  0 191 16>, <&iomuxc 16 55 14>, <&iomuxc 30 35 1>,
-+		      <&iomuxc 31  44  1>;
-+};
-+
-+&gpio3 {
-+	gpio-ranges = <&iomuxc 0 69 16>, <&iomuxc 16 36 8>, <&iomuxc 24 45 8>;
-+};
-+
-+&gpio4 {
-+	gpio-ranges = <&iomuxc 5 149 1>, <&iomuxc 6 126 10>, <&iomuxc 16 87 16>;
-+};
-+
-+&gpio5 {
-+	gpio-ranges = <&iomuxc 0  85  1>, <&iomuxc  2  34  1>, <&iomuxc 4 53 1>,
-+		      <&iomuxc 5 103 13>, <&iomuxc 18 150 14>;
-+};
-+
-+&gpio6 {
-+	gpio-ranges = <&iomuxc  0 164 6>, <&iomuxc  6  54 1>, <&iomuxc  7 181  5>,
-+		      <&iomuxc 14 186 3>, <&iomuxc 17 170 2>, <&iomuxc 19  22 12>,
-+		      <&iomuxc 31  86 1>;
-+};
-+
-+&gpio7 {
-+	gpio-ranges = <&iomuxc 0 172 9>, <&iomuxc 9 189 2>, <&iomuxc 11 146 3>;
-+};
-+
- &hdmi {
- 	compatible = "fsl,imx6q-hdmi";
++				gpio-ranges = <&iomuxc 0 31 20>;
+ 			};
  
+ 			gpio3: gpio@020a4000 {
+@@ -460,6 +464,8 @@
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
++
++				gpio-ranges = <&iomuxc 0 51 29>;
+ 			};
+ 
+ 			gpio4: gpio@020a8000 {
+@@ -471,6 +477,8 @@
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
++
++				gpio-ranges = <&iomuxc 0 80 32>;
+ 			};
+ 
+ 			gpio5: gpio@020ac000 {
+@@ -482,6 +490,8 @@
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
++
++				gpio-ranges = <&iomuxc 0 112 24>;
+ 			};
+ 
+ 			gpio6: gpio@020b0000 {
+@@ -493,6 +503,8 @@
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
++
++				gpio-ranges = <&iomuxc 0 136 12>, <&iomuxc 12 158 11>;
+ 			};
+ 
+ 			gpio7: gpio@020b4000 {
+@@ -504,6 +516,8 @@
+ 				#gpio-cells = <2>;
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
++
++				gpio-ranges = <&iomuxc 0 148 10>, <&iomuxc 10 169 2>;
+ 			};
+ 
+ 			kpp: kpp@020b8000 {
 -- 
 2.8.1
 
