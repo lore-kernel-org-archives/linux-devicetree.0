@@ -1,142 +1,108 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 5/7] arm64: dts: exynos: Add dts files for Samsung
- Exynos5433 64bit SoC
-Date: Fri, 19 Aug 2016 12:48:22 +0200
-Message-ID: <b4bb1d48-ce1f-0ddf-9e96-3e2ad29bc3fa@samsung.com>
-References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
- <1471329328-26842-1-git-send-email-cw00.choi@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1471329328-26842-1-git-send-email-cw00.choi@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, k.kozlowski@samsung.com, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: inki.dae@samsung.com, jonghwa3.lee@samsung.com, s.nawrocki@samsung.com, jy0922.shim@samsung.com, jaewon02.kim@samsung.com, sw0312.kim@samsung.com, krzk@kernel.org, jh80.chung@samsung.com, a.hajda@samsung.com, human.hwang@samsung.com, chanwoo@kernel.org, ingi2.kim@samsung.com, beomho.seo@samsung.com, ideal.song@samsung.com
+From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 00/13] pinctrl: add BCM63XX pincontrol support
+Date: Fri, 19 Aug 2016 12:53:32 +0200
+Message-ID: <1471604025-21575-1-git-send-email-jonas.gorski@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This patchset adds appropriate binding documentation and drivers for
+pin controller cores found in the BCM63XX MIPS SoCs currently supported.
+
+While the GPIO part is always the same, the pinmux part varies quite a
+lot between different SoCs. Sometimes they have defined groups which
+can be muxed into different functions, sometimes each function has a
+different group. Sometimes you can mux individual pins. Often it is a
+combination of single pins and groups.
+
+Some core versions require the GPIO direction to be set according to the
+function, most do not. Sometimes the mux register(s) contain bits for
+unrelated other functions.
+
+I intentionally left out any MIPS patches so keep the patchset smaller
+and to make it clearer to which tree this belongs.
+
+Some implementation notes:
+
+BCM6348 has one mux function that enables two unrelated functions at the
+same time; additional SPI CS signals as well as extra UART pins. This
+means that in case both the uart as well as the spi driver needs it, it
+would need to be requested globally, as the same mux can't be requested
+by two different devices. Since this is a linux internal detail, I
+chose to not try to split this function and try to work around it in
+the driver (by refcounting etc).
+
+BCM6358 has two "invert-mii-clock" bits in its GPIO Mode register for
+the ethernet cores. This didn't seem to fit well into pinmux/conf; at
+best as two pins which you could apply exactly one property,
+"brcm,invert-clock". So I chose syscon so the ethernet driver can poke
+at the bits itself.
+
+BCM6368 has several additional bits in its GPIO BaseMode register for
+enabling RGMII pins, UTOPIA, or changing the PCI clock to 66 MHz. These
+seemed to fit even less.
 
 
-On 2016-08-16 08:35, Chanwoo Choi wrote:
-> This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC based on
-> Octa-core CPUs (quad Cortex-A57 and quad Cortex-A53). And Exynos5433 supports
-> PSCI (Power State Coordination Interface) v0.1.
->
-> This patch includes following Device Tree node to support Exynos5433 SoC:
-> 1. Octa cores for big.LITTLE architecture
-> - Cortex-A53 LITTLE Quad-core
-> - Cortex-A57 big Quad-core
-> - Support PSCI v0.1
->
-> 2. Clock controller node
-> - CMU_TOP   : clocks for IMEM/FSYS/G3D/GSCL/HEVC/MSCL/G2D/MFC/PERIC/PERIS
-> - CMU_CPIF  : clocks for LLI (Low Latency Interface)
-> - CMU_MIF   : clocks for DRAM Memory Controller
-> - CMU_PERIC : clocks for UART/I2C/SPI/I2S/PCM/SPDIF/PWM/SLIMBUS
-> - CMU_PERIS : clocks for PMU/TMU/MCT/WDT/RTC/SECKEY/TZPC
-> - CMU_FSYS  : clocks for USB/UFS/SDMMC/TSI/PDMA
-> - CMU_G2D   : clocks for G2D/MDMA
-> - CMU_DISP  : clocks for DECON/HDMI/DSIM/MIXER
-> - CMU_AUD   : clocks for Cortex-A5/BUS/AUDIO
-> - CMU_BUS{0|1|2} : clocks for global data buses and global peripheral buses
-> - CMU_G3D   : clocks for 3D Graphics Engine
-> - CMU_GSCL  : clocks for GSCALER
-> - CMU_APOLLO: clocks for Cortex-A53 Quad-core processor.
-> - CMU_ATLAS : clocks for Cortex-A57 Quad-core processor,
->                CoreSight and L2 cache controller.
-> - CMU_MSCL  : clocks for M2M (Memory to Memory) scaler and JPEG IPs.
-> - CMU_MFC   : clocks for MFC (Multi-Format Codec) IP.
-> - CMU_HEVC  : clocks for HEVC(High Efficiency Video Codec) decoder IP.
-> - CMU_ISP   : clocks for FIMC-ISP/DRC/SCLC/DIS/3DNR IPs.
-> - CMU_CAM0  : clocks for MIPI_CSIS{0|1}/FIMC_LITE_{A|B|D}/FIMC_3AA{0|1} IPs.
-> - CMU_CAM1  : clocks for COrtex-A5/MIPI_CSIS2/FIMC_LITE_C/FIMC-FD IPs.
->
-> 3. pinctrl node for GPIO
-> - alive/aud/cpif/ese/finger/fsys/imem/nfc/peric/touch pad
->
-> 4. Timer
-> - ARM architecture timer (armv8-timer)
-> - MCT (Multi Core Timer) timer
->
-> 5. Interrupt controller (GIC-400)
->
-> 6. BUS devices
-> - HS-I2C (High-Speed I2C) device
-> - SPI (Serial Peripheral Interface) device
->
-> 7. Sound devices
-> - I2S bus
-> - LPASS (Low Power Audio Subsystem)
->
-> 8. Power management devices
-> - CPUFREQ for for Cortex-A53/A57
-> - TMU (Thermal Management Unit) for Cortex-A53/A57, G3D, ISP
->
-> 9. Display controller devices
-> - DECON (Display and enhancement controller) for panel output
-> - DSI (Display Serial Interface)
-> - MIC (Mobile Image Compressor)
-> - IOMMU for GSCL/DECON/TV/MFC/JPEG/FLITE/3AA/FIMC
+Based on the current HEAD of linux-pinctrl/for-next.
 
-I would prefer to instantiate only SYSMMU controllers for the devices that
-have been already added, so initially there will by only SYSMMUs for DECON.
-Other (GSCL, TV, MFC, JPEG, CAMERA ISP) can be added later together with
-respective master device nodes.
+Jonas Gorski (13):
+  pinctrl: add bcm63xx base code
+  Documentation: add BCM6328 pincontroller binding documentation
+  pinctrl: add a pincontrol driver for BCM6328
+  Documentation: add BCM6348 pincontroller binding documentation
+  pinctrl: add a pincontrol driver for BCM6348
+  Documentation: add BCM6358 pincontroller binding documentation
+  pinctrl: add a pincontrol driver for BCM6358
+  Documentation: add BCM6362 pincontroller binding documentation
+  pinctrl: add a pincontrol driver for BCM6362
+  Documentation: add BCM6368 pincontroller binding documentation
+  pinctrl: add a pincontrol driver for BCM6368
+  Documentation: add BCM63268 pincontroller binding documentation
+  pinctrl: add a pincontrol driver for BCM63268
 
-> 10. USB
-> - USB 3.0 DRD (Dual Role Device) controller
-> - USB 3.0 Host controller
->
-> 11. Storage devices
-> - MSHC (Mobile Stoarage Host Controller)
->
-> 12. Misc devices
-> - UART device
-> - ADC (Analog Digital Converter)
-> - PWM (Pulse Width Modulation)
-> - ADMA (Advanced DMA) and PDMA (Peripheral DMA)
->
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
-> Signed-off-by: Joonyoung Shim <jy0922.shim@samsung.com>
-> Signed-off-by: Inki Dae <inki.dae@samsung.com>
-> Signed-off-by: Jonghwa Lee <jonghwa3.lee@samsung.com>
-> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
-> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
-> Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
-> Signed-off-by: Inha Song <ideal.song@samsung.com>
-> Signed-off-by: Ingi kim <ingi2.kim@samsung.com>
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
->   arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi |  794 ++++++++++
->   .../dts/exynos/exynos5433-tmu-g3d-sensor-conf.dtsi |   23 +
->   .../dts/exynos/exynos5433-tmu-sensor-conf.dtsi     |   22 +
->   arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi     |  306 ++++
->   arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 1580 ++++++++++++++++++++
->   5 files changed, 2725 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
->   create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu-g3d-sensor-conf.dtsi
->   create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu-sensor-conf.dtsi
->   create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
->   create mode 100644 arch/arm64/boot/dts/exynos/exynos5433.dtsi
+ .../bindings/pinctrl/brcm,bcm63268-pinctrl.txt     |  88 +++
+ .../bindings/pinctrl/brcm,bcm6328-pinctrl.txt      |  61 ++
+ .../bindings/pinctrl/brcm,bcm6348-pinctrl.txt      |  32 +
+ .../bindings/pinctrl/brcm,bcm6358-pinctrl.txt      |  44 ++
+ .../bindings/pinctrl/brcm,bcm6362-pinctrl.txt      |  79 +++
+ .../bindings/pinctrl/brcm,bcm6368-pinctrl.txt      |  67 ++
+ MAINTAINERS                                        |   1 +
+ drivers/pinctrl/Kconfig                            |   1 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/bcm63xx/Kconfig                    |  47 ++
+ drivers/pinctrl/bcm63xx/Makefile                   |   7 +
+ drivers/pinctrl/bcm63xx/pinctrl-bcm63268.c         | 710 +++++++++++++++++++++
+ drivers/pinctrl/bcm63xx/pinctrl-bcm6328.c          | 456 +++++++++++++
+ drivers/pinctrl/bcm63xx/pinctrl-bcm6348.c          | 392 ++++++++++++
+ drivers/pinctrl/bcm63xx/pinctrl-bcm6358.c          | 393 ++++++++++++
+ drivers/pinctrl/bcm63xx/pinctrl-bcm6362.c          | 692 ++++++++++++++++++++
+ drivers/pinctrl/bcm63xx/pinctrl-bcm6368.c          | 573 +++++++++++++++++
+ drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.c          | 141 ++++
+ drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.h          |  14 +
+ 19 files changed, 3799 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm63268-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6328-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6348-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6358-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6362-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm6368-pinctrl.txt
+ create mode 100644 drivers/pinctrl/bcm63xx/Kconfig
+ create mode 100644 drivers/pinctrl/bcm63xx/Makefile
+ create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm63268.c
+ create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm6328.c
+ create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm6348.c
+ create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm6358.c
+ create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm6362.c
+ create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm6368.c
+ create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.c
+ create mode 100644 drivers/pinctrl/bcm63xx/pinctrl-bcm63xx.h
 
-(snipped)
-
-
-Best regards
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
