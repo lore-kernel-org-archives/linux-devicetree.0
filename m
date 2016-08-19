@@ -1,243 +1,76 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 2/3] net: stmmac: add a glue driver for the Amlogic Meson 8b / GXBB DWMAC
-Date: Fri, 19 Aug 2016 14:40:00 -0700
-Message-ID: <7hshu0780f.fsf@baylibre.com>
-References: <20160625165013.15917-1-martin.blumenstingl@googlemail.com>
-        <20160815164100.27766-1-martin.blumenstingl@googlemail.com>
-        <20160815164100.27766-3-martin.blumenstingl@googlemail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v4 0/6] Add Meson 8b / GXBB support to the IR driver
+Date: Fri, 19 Aug 2016 23:55:41 +0200
+Message-ID: <20160819215547.20063-1-martin.blumenstingl@googlemail.com>
+References: <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160815164100.27766-3-martin.blumenstingl@googlemail.com>
-        (Martin Blumenstingl's message of "Mon, 15 Aug 2016 18:40:59 +0200")
-Sender: netdev-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, carlo@caione.org, mturquette@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, narmstrong@baylibre.com, khilman@baylibre.com, carlo@caione.org
+Cc: mark.rutland@arm.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, catalin.marinas@arm.com, linus.walleij@linaro.org, will.deacon@arm.com, robh+dt@kernel.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+Newer Amlogic platforms (Meson 8b and GXBB) use a slightly different
+register layout for their Infrared Remoete Controller. The decoder mode
+is now configured in another register. Without the changes to the
+meson-ir driver we are simply getting incorrect "durations" reported
+from the hardware (because the hardware is not in time measurement aka
+software decode mode).
 
-> The Ethernet controller available in Meson8b and GXBB SoCs is a Synopsys
-> DesignWare MAC IP core which is already supported by the stmmac driver.
->
-> In addition to the standard stmmac driver some Meson8b / GXBB specific
-> registers have to be configured for the PHY clocks. These SoC specific
-> registers are called PRG_ETHERNET_ADDR0 and PRG_ETHERNET_ADDR1 in the
-> datasheet.
-> These registers are not backwards compatible with those on Meson 6b,
-> which is why a new glue driver is introduced. This worked for many
-> boards because the bootloader programs the PRG_ETHERNET registers
-> correctly. Additionally the meson6-dwmac driver only sets bit 1 of
-> PRG_ETHERNET_ADDR0 which (according to the datasheet) is only used
-> during reset.
->
-> Currently all configuration values can be determined automatically,
-> based on the configured phy-mode (which is mandatory for the stmmac
-> driver). If required the tx-delay and the mux clock (so it supports
-> the MPLL2 clock as well) can be made configurable in the future.
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+This problem was also noticed by some people trying to use this on an
+ODROID-C1 and ODROID-C2 - the workaround there (probably because the
+datasheets were not publicy available yet at that time) was to switch
+to ir_raw_event_store_edge (which leaves it up to the kernel to measure
+the duration of a pulse). See [0] and [1] for the corresponding
+patches.
 
-[...]
+Changes in v4:
+- added support for pinctrl configuration which makes it possible to
+  use the IR decoder when doing a cold-boot. Without these pinctrl
+  changes the IR decoder was only working when booting into stock
+  Android, then rebooting and booting the mainline kernel (with the
+  other patches from this series). Thanks to Kevin Hilman for spotting
+  this issue.
+- rebased dts changes to Kevin's v4.8/integ branch
 
-> +static int meson8b_init_clk(struct meson8b_dwmac *dwmac)
-> +{
-> +	struct clk_init_data init;
-> +	int i, ret;
-> +	struct device *dev = &dwmac->pdev->dev;
-> +	char clk_name[32];
-> +	const char *clk_div_parents[1];
-> +	const char *mux_parent_names[MUX_CLK_NUM_PARENTS];
-> +	unsigned int mux_parent_count = 0;
-> +	static struct clk_div_table clk_25m_div_table[] = {
-> +		{ .val = 0, .div = 5 },
-> +		{ .val = 1, .div = 10 },
-> +		{ /* sentinel */ },
-> +	};
-> +
-> +	/* get the mux parents from DT */
-> +	for (i = 0; i < MUX_CLK_NUM_PARENTS; i++) {
-> +		char name[16];
-> +
-> +		snprintf(name, sizeof(name), "clkin%d", i);
-> +		dwmac->m250_mux_parent[i] = devm_clk_get(dev, name);
-> +		if (IS_ERR(dwmac->m250_mux_parent[i])) {
-> +			/* NOTE: the second clock (MP2) is unused on all known
+As discussed on IRC (thanks Neil):
 
-nit: multi-line comment style  (c.f. Documentation/CodingStyle search
-for "multi-line")
+Tested-by: Neil Armstrong <narmstrong@baylibre.com>
 
-> +			 * boards, thus we're making it optional here.
-> +			 */
-> +			if (i > 0)
-> +				continue;
 
-IMO, this is a bit confusing.  I think this should either be coded to
-deal with an optional "clkin1" (preferred), or it should be coded to
-without a mux and clkin0 is directly the parent of the divider.  The
-current way of always bailing out of this loop early is a bit confusing.
+[0] https://github.com/erdoukki/linux-amlogic-1/commit/969b2e2242fb14a13cb651f9a1cf771b599c958b
+[1] http://forum.odroid.com/viewtopic.php?f=135&t=20504
 
-> +			ret = PTR_ERR(dwmac->m250_mux_parent[i]);
-> +			if (ret != -EPROBE_DEFER)
-> +				dev_err(dev, "Missing clock %s\n", name);
-> +			dwmac->m250_mux_parent[i] = NULL;
-> +			return ret;
-> +		}
-> +
-> +		mux_parent_names[i] =
-> +			__clk_get_name(dwmac->m250_mux_parent[i]);
-> +		mux_parent_count++;
-> +	}
-> +
-> +	/* create the m250_mux */
-> +	snprintf(clk_name, sizeof(clk_name), "%s#m250_sel", dev_name(dev));
-> +	init.name = clk_name;
-> +	init.ops = &clk_mux_ops;
-> +	init.flags = CLK_IS_BASIC;
-> +	init.parent_names = mux_parent_names;
-> +	init.num_parents = mux_parent_count;
-> +
-> +	dwmac->m250_mux.reg = dwmac->regs + PRG_ETH0;
-> +	dwmac->m250_mux.shift = PRG_ETH0_CLK_M250_SEL_SHIFT;
-> +	dwmac->m250_mux.mask = PRG_ETH0_CLK_M250_SEL_MASK;
-> +	dwmac->m250_mux.flags = 0;
-> +	dwmac->m250_mux.table = NULL;
-> +	dwmac->m250_mux.hw.init = &init;
-> +
-> +	dwmac->m250_mux_clk = devm_clk_register(dev, &dwmac->m250_mux.hw);
-> +	if (WARN_ON(PTR_ERR_OR_ZERO(dwmac->m250_mux_clk)))
-> +		return PTR_ERR(dwmac->m250_mux_clk);
-> +
-> +	/* create the m250_div */
-> +	snprintf(clk_name, sizeof(clk_name), "%s#m250_div", dev_name(dev));
-> +	init.name = devm_kstrdup(dev, clk_name, GFP_KERNEL);
-> +	init.ops = &clk_divider_ops;
-> +	init.flags = CLK_IS_BASIC | CLK_SET_RATE_PARENT;
 
-hmm, with CLK_SET_RATE_PARENT that implies that it might switch the mux,
-but it's hard-coded above so the mux only ever has one parent, so that
-can never happen.
+Martin Blumenstingl (3):
+  pinctrl: amlogic: gxbb: add the IR remote pin
+  ARM64: dts: amlogic: add the pin for the IR remote
+  ARM64: dts: meson-gxbb: Enable the the IR decoder on supported boards
 
-> +	clk_div_parents[0] = __clk_get_name(dwmac->m250_mux_clk);
-> +	init.parent_names = clk_div_parents;
-> +	init.num_parents = ARRAY_SIZE(clk_div_parents);
-> +
-> +	dwmac->m250_div.reg = dwmac->regs + PRG_ETH0;
-> +	dwmac->m250_div.shift = PRG_ETH0_CLK_M250_DIV_SHIFT;
-> +	dwmac->m250_div.width = PRG_ETH0_CLK_M250_DIV_WIDTH;
-> +	dwmac->m250_div.hw.init = &init;
-> +	dwmac->m250_div.flags = CLK_DIVIDER_ONE_BASED | CLK_DIVIDER_ALLOW_ZERO;
-> +
-> +	dwmac->m250_div_clk = devm_clk_register(dev, &dwmac->m250_div.hw);
-> +	if (WARN_ON(PTR_ERR_OR_ZERO(dwmac->m250_div_clk)))
-> +		return PTR_ERR(dwmac->m250_div_clk);
-> +
-> +	/* create the m25_div */
-> +	snprintf(clk_name, sizeof(clk_name), "%s#m25_div", dev_name(dev));
-> +	init.name = devm_kstrdup(dev, clk_name, GFP_KERNEL);
-> +	init.ops = &clk_divider_ops;
-> +	init.flags = CLK_IS_BASIC | CLK_SET_RATE_PARENT;
-> +	clk_div_parents[0] = __clk_get_name(dwmac->m250_div_clk);
-> +	init.parent_names = clk_div_parents;
-> +	init.num_parents = ARRAY_SIZE(clk_div_parents);
-> +
-> +	dwmac->m25_div.reg = dwmac->regs + PRG_ETH0;
-> +	dwmac->m25_div.shift = PRG_ETH0_CLK_M25_DIV_SHIFT;
-> +	dwmac->m25_div.width = PRG_ETH0_CLK_M25_DIV_WIDTH;
-> +	dwmac->m25_div.table = clk_25m_div_table;
-> +	dwmac->m25_div.hw.init = &init;
-> +	dwmac->m25_div.flags = CLK_DIVIDER_ALLOW_ZERO;
-> +
-> +	dwmac->m25_div_clk = devm_clk_register(dev, &dwmac->m25_div.hw);
-> +	if (WARN_ON(PTR_ERR_OR_ZERO(dwmac->m25_div_clk)))
-> +		return PTR_ERR(dwmac->m25_div_clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static int meson8b_init_prg_eth(struct meson8b_dwmac *dwmac)
-> +{
-> +	int ret;
-> +	unsigned long clk_rate;
-> +
-> +	switch (dwmac->phy_mode) {
-> +	case PHY_INTERFACE_MODE_RGMII:
-> +	case PHY_INTERFACE_MODE_RGMII_ID:
-> +	case PHY_INTERFACE_MODE_RGMII_RXID:
-> +	case PHY_INTERFACE_MODE_RGMII_TXID:
-> +		/* Generate a 25MHz clock for the PHY */
-> +		clk_rate = 25 * 1000 * 1000;
-> +
-> +		/* enable RGMII mode */
-> +		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0, PRG_ETH0_RGMII_MODE,
-> +					PRG_ETH0_RGMII_MODE);
-> +
-> +		/* only relevant for RMII mode -> disable in RGMII mode */
-> +		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0,
-> +					PRG_ETH0_INVERTED_RMII_CLK, 0);
-> +
-> +		/* TX clock delay - all known boards use a 1/4 cycle delay */
-> +		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0, PRG_ETH0_TXDLY_MASK,
-> +					PRG_ETH0_TXDLY_QUARTER);
-> +		break;
-> +
-> +	case PHY_INTERFACE_MODE_RMII:
-> +		/* Use the rate of the mux clock for the internal RMII PHY */
-> +		clk_rate = clk_get_rate(dwmac->m250_mux_clk);
-> +
-> +		/* disable RGMII mode -> enables RMII mode */
-> +		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0, PRG_ETH0_RGMII_MODE,
-> +					0);
-> +
-> +		/* invert internal clk_rmii_i to generate 25/2.5 tx_rx_clk */
-> +		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0,
-> +					PRG_ETH0_INVERTED_RMII_CLK,
-> +					PRG_ETH0_INVERTED_RMII_CLK);
-> +
-> +		/* TX clock delay cannot be configured in RMII mode */
-> +		meson8b_dwmac_mask_bits(dwmac, PRG_ETH0, PRG_ETH0_TXDLY_MASK,
-> +					0);
-> +
-> +		break;
-> +
-> +	default:
-> +		dev_err(&dwmac->pdev->dev, "unsupported phy-mode %s\n",
-> +			phy_modes(dwmac->phy_mode));
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = clk_prepare_enable(dwmac->m25_div_clk);
-> +	if (ret) {
-> +		dev_err(&dwmac->pdev->dev, "failed to enable the PHY clock\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_set_rate(dwmac->m25_div_clk, clk_rate);
-> +	if (ret) {
-> +		clk_disable_unprepare(dwmac->m25_div_clk);
-> +
-> +		dev_err(&dwmac->pdev->dev, "failed to set PHY clock\n");
-> +		return ret;
-> +	}
+Neil Armstrong (3):
+  dt-bindings: media: meson-ir: Add Meson8b and GXBB compatible strings
+  media: rc: meson-ir: Add support for newer versions of the IR decoder
+  ARM64: dts: meson-gxbb: Add Infrared Remote Controller decoder
 
-In the case of success, the clock is never disabled/unprepared.   You
-probably need a .remove function which disables the clock and then calls
-stmmac_pltfr_remove.
+ .../devicetree/bindings/media/meson-ir.txt         |  5 +++-
+ .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  6 +++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  6 +++++
+ .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      |  6 +++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 14 +++++++++++
+ drivers/media/rc/meson-ir.c                        | 29 ++++++++++++++++++----
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c         |  8 ++++++
+ 7 files changed, 68 insertions(+), 6 deletions(-)
 
-> +	/* enable TX_CLK and PHY_REF_CLK generator */
-> +	meson8b_dwmac_mask_bits(dwmac, PRG_ETH0, PRG_ETH0_TX_AND_PHY_REF_CLK,
-> +				PRG_ETH0_TX_AND_PHY_REF_CLK);
-> +
-> +	return 0;
-> +}
-
-[...]
-
-Otherwise, this is looking good.
-
-Also, I tested on meson-gxbb-odroidc2 and meson-gxbb-p200 by booting a debian
-root filesystem over NFS and all was well.
-
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-
-Kevin
+-- 
+2.9.3
