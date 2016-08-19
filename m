@@ -1,99 +1,38 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH V3 2/5] thermal: bcm2835: add thermal driver for bcm2835
- soc
-Date: Fri, 19 Aug 2016 15:28:14 +0800
-Message-ID: <1471591694.2691.39.camel@intel.com>
-References: <1463495753-967-1-git-send-email-kernel@martin.sperl.org>
-         <1463495753-967-3-git-send-email-kernel@martin.sperl.org>
-         <87mvn6qa2x.fsf@eliezer.anholt.net> <87r39lvs4v.fsf@eliezer.anholt.net>
+From: Ian Campbell <ijc@hellion.org.uk>
+Subject: Re: [PATCH v3 1/2] ARM: dts: Remove use of skeleton.dtsi from
+ bcm283x.dtsi
+Date: Fri, 19 Aug 2016 08:52:34 +0100
+Message-ID: <1471593154.6295.36.camel@hellion.org.uk>
+References: <1471516926-11466-1-git-send-email-ijc@hellion.org.uk>
+ <87zioaj6vq.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <87r39lvs4v.fsf@eliezer.anholt.net>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>, kernel@martin.sperl.org, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Russell King <linux@arm.linux.org.uk>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87zioaj6vq.fsf@eliezer.anholt.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eric Anholt <eric@anholt.net>, linux-arm-kernel@lists.infradead.org, arm@kernel.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Catalin Marinas <catalin.marinas@arm.com>, Lee Jones <lee@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, Frank Rowand <frowand.list@gmail.com>, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 四, 2016-08-18 at 11:39 -0700, Eric Anholt wrote:
-> Eric Anholt <eric@anholt.net> writes:
-> 
-> > 
-> > kernel@martin.sperl.org writes:
-> > 
-> > > 
-> > > From: Martin Sperl <kernel@martin.sperl.org>
-> > > 
-> > > Add basic thermal driver for bcm2835 SOC.
-> > > 
-> > > This driver currently relies on the firmware setting up the
-> > > tsense HW block and does not set it up itself.
-> > > 
-> > > Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-> > > 
-> > > ChangeLog:
-> > >  V1 -> V2: added specific settings depending on compatiblity
-> > > 	   added trip point based on register
-> > > 	   setting up ctrl-register if HW is not enabled by firmware
-> > > 	     as per recommendation of Eric (untested)
-> > > 	   check that clock frequency is in range
-> > > 	     (1.9 - 5MHz - as per comment in clk-bcm2835.c)
-> > > ---
-> > > 
-> > > diff --git a/drivers/thermal/bcm/Makefile
-> > > b/drivers/thermal/bcm/Makefile
-> > > new file mode 100644
-> > > index 0000000..13456d2
-> > > --- /dev/null
-> > > +++ b/drivers/thermal/bcm/Makefile
-> > > @@ -0,0 +1 @@
-> > > +obj-$(CONFIG_BCM2835_THERMAL)		:=
-> > > bcm2835_thermal.o
-> > > diff --git a/drivers/thermal/bcm/bcm2835_thermal.c
-> > > b/drivers/thermal/bcm/bcm2835_thermal.c
-> > > new file mode 100644
-> > > index 0000000..73138cb
-> > > --- /dev/null
-> > > +++ b/drivers/thermal/bcm/bcm2835_thermal.c
-> > > 
-> > > +static const struct of_device_id
-> > > bcm2835_thermal_of_match_table[];
-> > > +static int bcm2835_thermal_probe(struct platform_device *pdev)
-> > > +{
-> > > 
-> > > +	/* enable clock and check rate */
-> > > +	clk_prepare_enable(data->clk);
-> > > +	rate = clk_get_rate(data->clk);
-> > > +	if ((rate < 1920000) || (rate > 5000000)) {
-> > > +		dev_warn(&pdev->dev,
-> > > +			 "Clock %pCn is running at %pCr Hz,
-> > > which is outside the recommended range of 1.9 to 5.0 MHz\n",
-> > > +			 data->clk, data->clk);
-> > > +	}
-> > > +
-> > > +	/* register it */
-> > > +	tz = thermal_zone_device_register("bcm2835_thermal",
-> > > +					  1, 0, data,
-> > > +					  &bcm2835_thermal_ops,
-> > > +					  NULL, 0, 0);
-> > I notice that the polling_delay is set to 0, but we're not using
-> > interrupts to trigger the trip.  Is it valid to expose a trip
-> > without a
-> > polling_delay or interrupts?  Should passive_delay be set as well?
-> > 
-> > This is up to the thermal maintainers.  As far as I'm concerned,
-> > it's:
-> > 
-> > Acked-by: Eric Anholt <eric@anholt.net>
-> > 
-> > One it lands I'll pull the defconfig and DT bits.
-> Ping on this question to thermal maintainers.  I'd still love to see
-> this driver land.
+On Thu, 2016-08-18 at 10:59 -0700, Eric Anholt wrote:
+> I'd lost track of these patches, sorry.=A0=A0Both are:
+> =
 
-hmmm, how is this driver supposed to work?
-With this patch set, I think the only benefit is that we can get the
-temperature and trip point information via thermal sysfs interface, but
-kernel thermal control is a no-op here, right?
+> Acked-by: Eric Anholt <eric@anholt.net>
 
-thanks,
-rui
+Thanks!
+
+> They're going through the -soc tree, right?
+
+I think so.
+
+Ian.
