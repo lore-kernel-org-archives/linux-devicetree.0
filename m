@@ -1,102 +1,79 @@
-From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] iio: adc: add ADC12130/ADC12132/ADC12138 ADC driver
-Date: Sat, 20 Aug 2016 11:54:42 +0900
-Message-ID: <CAC5umyg831=Q4iih+4rPpdNSyEEgBKqHk00cLCd6XJ5dTw92Jw@mail.gmail.com>
-References: <1470583330-6850-1-git-send-email-akinobu.mita@gmail.com> <b43674fb-6a68-de05-0f06-e1f92986705d@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b43674fb-6a68-de05-0f06-e1f92986705d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v5 1/2] Documentation: bindings: add dt documentation for Rockchip PCIe PHY
+Date: Sat, 20 Aug 2016 10:53:36 +0800
+Message-ID: <1471661617-26432-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This patch adds a binding that describes the Rockchip PCIe PHY
+found on Rockchip SoCs PCIe interface.
 
-2016-08-16 1:42 GMT+09:00 Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On 07/08/16 16:22, Akinobu Mita wrote:
->> This adds Texas Instruments' ADC12130/ADC12132/ADC12138 12-bit plus
->> sign ADC driver.  I have tested with the ADC12138.  The ADC12130 and
->> ADC12132 are not tested but these are similar to ADC12138 except that
->> the mode programming instruction is a bit different.
->>
->> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Hi,
->
-> Now had time for a closer look.  A few minor bits and bobs to fix
-> up highlighted inline.
->
-> Looks pretty good.
->
-> Jonathan
->> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
->> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
->> Cc: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
->> ---
->> * Changes from v2
->> - improve error label names
->>
->>  .../devicetree/bindings/iio/adc/ti-adc12138.txt    |  32 ++
->>  drivers/iio/adc/Kconfig                            |  12 +
->>  drivers/iio/adc/Makefile                           |   1 +
->>  drivers/iio/adc/ti-adc12138.c                      | 542 +++++++++++++++++++++
->>  4 files changed, 587 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
->>  create mode 100644 drivers/iio/adc/ti-adc12138.c
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
->> new file mode 100644
->> index 0000000..3a11d2a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
->> @@ -0,0 +1,32 @@
->> +* Texas Instruments' ADC12130/ADC12132/ADC12138
->> +
->> +Required properties:
->> + - compatible: Should be one of
->> +     * "ti,adc12130"
->> +     * "ti,adc12132"
->> +     * "ti,adc12138"
->> + - reg: SPI chip select number for the device
->> + - interrupts: Should contain interrupt for EOC (end of conversion)
->> + - clocks: phandle to conversion clock input
->> + - spi-max-frequency: Definision as per
->> +     Documentation/devicetree/bindings/spi/spi-bus.txt
->> + - vref-p-supply: The regulator supply for positive analog voltage reference
->> +
->> +Optional properties:
->> + - vref-n-supply: The regulator supply for negative analog voltage reference
->> +     If not specified, this is assumed to be analog ground.
-> This is novel. Documented in the datasheet as a negative reference which
-> must be positive (greater than 0) for it to work well.
->
-> Intersting question on whether this should be optional. Easy enough to
-> provided a fixed regulator at 0V afterall.
->
->
->> + - acquisition-time: The number of conversion clock periods for the S/H's
->> +     acquisition time.  Should be one of 6, 10, 18, 34.  If not specified,
->> +     default value of 10 is used.
-> Should this be a ti specific parameter.  Not sure.
+Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Is it better to change this parameter to "ti,acquisition-time" ?
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
 
-> I'd also add a note here about why one would set this to other than the
-> default (source impedance etc).
->
->
->> +
->> +Example:
->> +adc@0 {
->> +     compatible = "ti,adc12138";
->> +     reg = <0>;
->> +     interrupts = <28 IRQ_TYPE_EDGE_RISING>;
->> +     interrupt-parent = <&gpio1>;
->> +     clocks = <&cclk>;
->> +     vref-p-supply = <&ldo4_reg>;
->> +     spi-max-frequency = <5000000>;
->> +     acquisition-time = <6>;
->> +};
+Changes in v5:
+- add Rob's ack tag
+
+Changes in v4: None
+Changes in v3:
+- rename the node to pcie_phy: pcie-phy suggested by Doug
+
+Changes in v2:
+- add clk and reset description
+- remove unit-address
+
+ .../devicetree/bindings/phy/rockchip-pcie-phy.txt  | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
+new file mode 100644
+index 0000000..aedca29
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
+@@ -0,0 +1,32 @@
++Rockchip PCIE PHY
++-----------------------
++
++Required properties:
++ - compatible: rockchip,rk3399-pcie-phy
++ - #phy-cells: must be 0
++ - clocks: Must contain an entry in clock-names.
++	See ../clocks/clock-bindings.txt for details.
++ - clock-names: Must be "refclk"
++ - resets: Must contain an entry in reset-names.
++	See ../reset/reset.txt for details.
++ - reset-names: Must be "phy"
++
++Example:
++
++grf: syscon@ff770000 {
++	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	...
++
++	pcie_phy: pcie-phy {
++		compatible = "rockchip,rk3399-pcie-phy";
++		#phy-cells = <0>;
++		clocks = <&cru SCLK_PCIEPHY_REF>;
++		clock-names = "refclk";
++		resets = <&cru SRST_PCIEPHY>;
++		reset-names = "phy";
++	};
++};
++
+-- 
+2.3.7
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
