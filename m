@@ -1,7 +1,7 @@
 From: Randy Li <ayaka@soulik.info>
-Subject: [PATCH 3/4] usb: dwc2: assert phy reset when waking up in rk3288 platform
-Date: Sun, 21 Aug 2016 04:32:19 +0800
-Message-ID: <1471725140-3833-4-git-send-email-ayaka@soulik.info>
+Subject: [PATCH 4/4] ARM: dts: rockchip: Point rk3288 dwc2 usb at the full PHY reset
+Date: Sun, 21 Aug 2016 04:32:20 +0800
+Message-ID: <1471725140-3833-5-git-send-email-ayaka@soulik.info>
 References: <7ca3b54d-e9d8-a137-79b6-d24f0b7065c7@synopsys.com>
  <1471725140-3833-1-git-send-email-ayaka@soulik.info>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,59 +11,45 @@ To: linux-usb@vger.kernel.org
 Cc: johnyoun@synopsys.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, eddie.cai@rock-chips.com, randy.li@rock-chips.com, kishon@ti.com, linux-kernel@vger.kernel.org, heiko@sntech.de, Randy Li <ayaka@soulik.info>
 List-Id: devicetree@vger.kernel.org
 
-On the rk3288 USB host-only port (the one that's not the OTG-enabled
-port) the PHY can get into a bad state when a wakeup is asserted (not
-just a wakeup from full system suspend but also a wakeup from
-autosuspend).
+The "host1" port (AKA the dwc2 port that isn't the OTG port) on rk3288
+has a hardware errata that causes everything to get confused when we get
+a remote wakeup.  We'll use the reset that's in the CRU to reset the
+port when it's in a bad state.
 
-We can get the PHY out of its bad state by asserting its "port reset",
-but unfortunately that seems to assert a reset onto the USB bus so it
-could confuse things if we don't actually deenumerate / reenumerate the
-device.
+Note that we add the reset to both dwc2 controllers even though only one
+has the errata in case we find some other use for this reset that's
+unrelated to the current hardware errata.  Only the host port gets the
+quirk property, though.
 
-We can also get the PHY out of its bad state by fully resetting it using
-the reset from the CRU (clock reset unit) in chip, which does a more full
-reset.  The CRU-based reset appears to actually cause devices on the bus
-to be removed and reinserted, which fixes the problem (albeit in a hacky
-way).
-
-It's unfortunate that we need to do a full re-enumeration of devices at
-wakeup time, but this is better than alternative of letting the bus get
-wedged.
-
-The original patches came from Doug Anderson <dianders@chromium.org>.
+This patch came from Doug Anderson <dianders@chromium.org> originally.
 
 Signed-off-by: Randy Li <ayaka@soulik.info>
 ---
- drivers/usb/dwc2/core_intr.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/rk3288.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
-index d85c5c9..c31c3fe 100644
---- a/drivers/usb/dwc2/core_intr.c
-+++ b/drivers/usb/dwc2/core_intr.c
-@@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
- static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
- {
- 	int ret;
-+	struct device_node *np = hsotg->dev->of_node;
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 48ca4e4..646f49d 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -855,6 +855,8 @@
+ 				clocks = <&cru SCLK_OTGPHY0>;
+ 				clock-names = "phyclk";
+ 				#clock-cells = <0>;
++				resets = <&cru SRST_USBOTG_PHY>;
++				reset-names = "phy-reset";
+ 			};
  
- 	/* Clear interrupt */
- 	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
-@@ -379,6 +380,14 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
- 			/* Restart the Phy Clock */
- 			pcgcctl &= ~PCGCTL_STOPPCLK;
- 			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
+ 			usbphy1: usb-phy@334 {
+@@ -871,6 +873,9 @@
+ 				clocks = <&cru SCLK_OTGPHY2>;
+ 				clock-names = "phyclk";
+ 				#clock-cells = <0>;
++				resets = <&cru SRST_USBHOST1_PHY>;
++				reset-names = "phy-reset";
 +
-+			/* It is a quirk in Rockchip RK3288, causing by
-+			 * a hardware bug. This will propagate out and
-+			 * eventually we'll re-enumerate the device. 
-+			 * Not great but the best we can do */
-+			if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
-+				hsotg->phy->ops->reset(hsotg->phy);
-+
- 			mod_timer(&hsotg->wkp_timer,
- 				  jiffies + msecs_to_jiffies(71));
- 		} else {
+ 			};
+ 		};
+ 	};
 -- 
 2.7.4
