@@ -1,98 +1,87 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 3/7] ARM: dts: add gpio-ranges property to iMX6DL/S GPIO controllers
-Date: Sat, 20 Aug 2016 23:04:47 +0300
-Message-ID: <1471723491-15330-4-git-send-email-vladimir_zapolskiy@mentor.com>
-References: <1471723491-15330-1-git-send-email-vladimir_zapolskiy@mentor.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC] Revert "of/irq: Mark initialised interrupt
+ controllers as populated"
+Date: Sat, 20 Aug 2016 15:18:45 -0500
+Message-ID: <CAL_JsqKpLGscFaCT4x3NtQCOBgLK+-MQa_XDmpmkqyepdJVT4Q@mail.gmail.com>
+References: <E1bYVVh-0001eq-BI@rmk-PC.armlinux.org.uk> <CAL_JsqJNE7rGaL54HfmGEkaScZ7krf_iM55UrKw6mwWdLHv6Ow@mail.gmail.com>
+ <CABxcv=n9o7sU0zB3WZ2Sp8Aqd+fnv1KLp8UcAx2YSrKBVW+rhg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471723491-15330-1-git-send-email-vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CABxcv=n9o7sU0zB3WZ2Sp8Aqd+fnv1KLp8UcAx2YSrKBVW+rhg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Deepak Das <deepak_das-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-To establish a connection between GPIO controllers and pin multiplexor
-controller add gpio-ranges properties to all GPIO controllers found
-on iMX6DL/S SoC. The change was done after human parsing of output from
+On Sat, Aug 20, 2016 at 10:18 AM, Javier Martinez Canillas
+<javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
+> Hello Rob,
+>
+> On Sun, Aug 14, 2016 at 1:32 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Sat, Aug 13, 2016 at 4:45 AM, Russell King
+>> <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+>>> This reverts commit 15cc2ed6dcf91a8658e084be4e140147161819d7, which
+>>> causes a regression with iMX6 power domains.  iMX6 GPC contains both an
+>>> interrupt controller and power domains.  The iMX6 GPC code is setup to
+>>> register an interrupt controller using IRQCHIP_DECLARE(), but then to
+>>> register the power domains using the platform device.
+>>>
+>>> This commit prevents the platform device being created, thereby breaking
+>>> iMX6 power domain support.
+>>>
+>
+> That commit also broke Exynos platforms since several devices are not
+> created (GIC, Exynos combiner and PMU system controller for
+> Exynos5420/5422/5800).
+>
+>>> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+>>> ---
+>>> Please argue amongst yourselves about how to fix this regression caused
+>>> by this commit...
+>>
+>> There's already a fix for this in my tree and -next. I will be sending
+>> to Linus soon.
+>>
+>
+> I guess you mean patch "[1/2] of/irq: Mark interrupt controllers as
+> populated before initialisation" [0] ?
+>
+> Even with that patch on top of v4.8-rc2, things don't work for me. I
+> needed to revert setting the OF_POPULATED flag in of_irq_init for
+> things to work:
+>
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index a2e68f740eda..5f9adc6c06e7 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -544,7 +544,7 @@ void __init of_irq_init(const struct of_device_id *matches)
+>
+>                         list_del(&desc->list);
+>
+> -                       of_node_set_flag(desc->dev, OF_POPULATED);
+> +                       //of_node_set_flag(desc->dev, OF_POPULATED);
+>
+>                         pr_debug("of_irq_init: init %s (%p), parent %p\n",
+>                                  desc->dev->full_name,
+>
+> I noticed that Philipp also sent a patch to clear that flag in
+> arch/arm/mach-imx/gpc.c [1]. I guess the same is needed in the drivers
+> for the devices that are not created for Exynos?
 
-% gawk -n '{ sub(/.*__/, ""); if ($1 ~ "^GPIO") print $1, $2/4}' imx6dl-pinfunc.h | sort -n
+Yes, you need the same.
 
-Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
----
-Changes from v1 to v2:
-* in commit message body fixed SoC name to iMX6DL/S
+> If that's the case, then I think that's more safe to revert Jon's
+> commit for now since is too risky for the -rc cycle and more platforms
+> may be affected.
 
- arch/arm/boot/dts/imx6dl.dtsi | 53 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+I prefer not to and find the affected platforms. I've now grepped the
+tree to get all the IRQCHIP_DECLARE compatible strings and then
+grepped for other occurrences and didn't find any more. In theory, we
+could have matching happening with 2 different strings, but I'd guess
+that is unlikely.
 
-diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-index 9a4c22c2dade..1ade1951e620 100644
---- a/arch/arm/boot/dts/imx6dl.dtsi
-+++ b/arch/arm/boot/dts/imx6dl.dtsi
-@@ -111,6 +111,59 @@
- 	};
- };
- 
-+&gpio1 {
-+	gpio-ranges = <&iomuxc  0 131 2>, <&iomuxc  2 137 8>, <&iomuxc 10 189 2>,
-+		      <&iomuxc 12 194 1>, <&iomuxc 13 193 1>, <&iomuxc 14 192 1>,
-+		      <&iomuxc 15 191 1>, <&iomuxc 16 185 2>, <&iomuxc 18 184 1>,
-+		      <&iomuxc 19 187 1>, <&iomuxc 20 183 1>, <&iomuxc 21 188 1>,
-+		      <&iomuxc 22 123 3>, <&iomuxc 25 121 1>, <&iomuxc 26 127 1>,
-+		      <&iomuxc 27 126 1>, <&iomuxc 28 128 1>, <&iomuxc 29 130 1>,
-+		      <&iomuxc 30 129 1>, <&iomuxc 31 122 1>;
-+};
-+
-+&gpio2 {
-+	gpio-ranges = <&iomuxc  0 161 8>, <&iomuxc  8 208 8>, <&iomuxc 16  74 1>,
-+		      <&iomuxc 17  73 1>, <&iomuxc 18  72 1>, <&iomuxc 19  71 1>,
-+		      <&iomuxc 20  70 1>, <&iomuxc 21  69 1>, <&iomuxc 22  68 1>,
-+		      <&iomuxc 23  79 2>, <&iomuxc 25 118 2>, <&iomuxc 27 117 1>,
-+		      <&iomuxc 28 113 4>;
-+};
-+
-+&gpio3 {
-+	gpio-ranges = <&iomuxc  0 97  2>, <&iomuxc 2 105 8>, <&iomuxc 10 99 6>,
-+		      <&iomuxc 16 81 16>;
-+};
-+
-+&gpio4 {
-+	gpio-ranges = <&iomuxc  5 136 1>, <&iomuxc  6 145 1>, <&iomuxc  7 150 1>,
-+		      <&iomuxc  8 146 1>, <&iomuxc  9 151 1>, <&iomuxc 10 147 1>,
-+		      <&iomuxc 11 151 1>, <&iomuxc 12 148 1>, <&iomuxc 13 153 1>,
-+		      <&iomuxc 14 149 1>, <&iomuxc 15 154 1>, <&iomuxc 16  39 7>,
-+		      <&iomuxc 23  56 1>, <&iomuxc 24  61 7>, <&iomuxc 31  46 1>;
-+};
-+
-+&gpio5 {
-+	gpio-ranges = <&iomuxc  0 120 1>, <&iomuxc  2 77 1>, <&iomuxc  4 76 1>,
-+		      <&iomuxc  5  47 9>, <&iomuxc 14 57 4>, <&iomuxc 18 37 1>,
-+		      <&iomuxc 19  36 1>, <&iomuxc 20 35 1>, <&iomuxc 21 38 1>,
-+		      <&iomuxc 22  29 6>, <&iomuxc 28 19 4>;
-+};
-+
-+&gpio6 {
-+	gpio-ranges = <&iomuxc  0  23 6>, <&iomuxc  6  75 1>, <&iomuxc  7 156 1>,
-+		      <&iomuxc  8 155 1>, <&iomuxc  9 170 1>, <&iomuxc 10 169 1>,
-+		      <&iomuxc 11 157 1>, <&iomuxc 14 158 3>, <&iomuxc 17 204 1>,
-+		      <&iomuxc 18 203 1>, <&iomuxc 19 182 1>, <&iomuxc 20 177 4>,
-+		      <&iomuxc 24 175 1>, <&iomuxc 25 171 1>, <&iomuxc 26 181 1>,
-+		      <&iomuxc 27 172 3>, <&iomuxc 30 176 1>, <&iomuxc 31  78 1>;
-+};
-+
-+&gpio7 {
-+	gpio-ranges = <&iomuxc 0 202 1>, <&iomuxc  1 201 1>, <&iomuxc  2 196 1>,
-+		      <&iomuxc 3 195 1>, <&iomuxc  4 197 4>, <&iomuxc  8 205 1>,
-+		      <&iomuxc 9 207 1>, <&iomuxc 10 206 1>, <&iomuxc 11 133 3>;
-+};
-+
- &gpt {
- 	compatible = "fsl,imx6dl-gpt";
- };
--- 
-2.8.1
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
