@@ -1,74 +1,84 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v5 1/6] pinctrl: amlogic: gxbb: add the IR remote input pin
-Date: Sat, 20 Aug 2016 11:54:19 +0200
-Message-ID: <20160820095424.636-2-martin.blumenstingl@googlemail.com>
-References: <20160819215547.20063-1-martin.blumenstingl@googlemail.com>
- <20160820095424.636-1-martin.blumenstingl@googlemail.com>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH RFC] Revert "of/irq: Mark initialised interrupt
+ controllers as populated"
+Date: Sat, 20 Aug 2016 11:18:39 -0400
+Message-ID: <CABxcv=n9o7sU0zB3WZ2Sp8Aqd+fnv1KLp8UcAx2YSrKBVW+rhg@mail.gmail.com>
+References: <E1bYVVh-0001eq-BI@rmk-PC.armlinux.org.uk> <CAL_JsqJNE7rGaL54HfmGEkaScZ7krf_iM55UrKw6mwWdLHv6Ow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160820095424.636-1-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, narmstrong@baylibre.com, linus.walleij@linaro.org, khilman@baylibre.com, carlo@caione.org
-Cc: mark.rutland@arm.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, catalin.marinas@arm.com, will.deacon@arm.com, b.galvani@gmail.com, robh+dt@kernel.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJNE7rGaL54HfmGEkaScZ7krf_iM55UrKw6mwWdLHv6Ow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the IR remote receiver to the AO domain devices.
+Hello Rob,
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
----
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On Sun, Aug 14, 2016 at 1:32 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sat, Aug 13, 2016 at 4:45 AM, Russell King
+> <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+>> This reverts commit 15cc2ed6dcf91a8658e084be4e140147161819d7, which
+>> causes a regression with iMX6 power domains.  iMX6 GPC contains both an
+>> interrupt controller and power domains.  The iMX6 GPC code is setup to
+>> register an interrupt controller using IRQCHIP_DECLARE(), but then to
+>> register the power domains using the platform device.
+>>
+>> This commit prevents the platform device being created, thereby breaking
+>> iMX6 power domain support.
+>>
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-index cb4d6ad..ff900d1 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-@@ -225,6 +225,8 @@ static const unsigned int i2c_sda_ao_pins[] = {PIN(GPIOAO_5, 0) };
- static const unsigned int i2c_slave_sck_ao_pins[] = {PIN(GPIOAO_4, 0) };
- static const unsigned int i2c_slave_sda_ao_pins[] = {PIN(GPIOAO_5, 0) };
- 
-+static const unsigned int remote_input_ao_pins[] = {PIN(GPIOAO_7, 0) };
-+
- static struct meson_pmx_group meson_gxbb_periphs_groups[] = {
- 	GPIO_GROUP(GPIOZ_0, EE_OFF),
- 	GPIO_GROUP(GPIOZ_1, EE_OFF),
-@@ -432,6 +434,7 @@ static struct meson_pmx_group meson_gxbb_aobus_groups[] = {
- 	GROUP(i2c_sda_ao,	0,	5),
- 	GROUP(i2c_slave_sck_ao, 0,	2),
- 	GROUP(i2c_slave_sda_ao, 0,	1),
-+	GROUP(remote_input_ao,	0,	0),
- };
- 
- static const char * const gpio_periphs_groups[] = {
-@@ -521,6 +524,10 @@ static const char * const i2c_slave_ao_groups[] = {
- 	"i2c_slave_sdk_ao", "i2c_slave_sda_ao",
- };
- 
-+static const char * const remote_input_ao_groups[] = {
-+	"remote_input_ao",
-+};
-+
- static struct meson_pmx_func meson_gxbb_periphs_functions[] = {
- 	FUNCTION(gpio_periphs),
- 	FUNCTION(emmc),
-@@ -537,6 +544,7 @@ static struct meson_pmx_func meson_gxbb_aobus_functions[] = {
- 	FUNCTION(uart_ao_b),
- 	FUNCTION(i2c_ao),
- 	FUNCTION(i2c_slave_ao),
-+	FUNCTION(remote_input_ao),
- };
- 
- static struct meson_bank meson_gxbb_periphs_banks[] = {
--- 
-2.9.3
+That commit also broke Exynos platforms since several devices are not
+created (GIC, Exynos combiner and PMU system controller for
+Exynos5420/5422/5800).
+
+>> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+>> ---
+>> Please argue amongst yourselves about how to fix this regression caused
+>> by this commit...
+>
+> There's already a fix for this in my tree and -next. I will be sending
+> to Linus soon.
+>
+
+I guess you mean patch "[1/2] of/irq: Mark interrupt controllers as
+populated before initialisation" [0] ?
+
+Even with that patch on top of v4.8-rc2, things don't work for me. I
+needed to revert setting the OF_POPULATED flag in of_irq_init for
+things to work:
+
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index a2e68f740eda..5f9adc6c06e7 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -544,7 +544,7 @@ void __init of_irq_init(const struct of_device_id *matches)
+
+                        list_del(&desc->list);
+
+-                       of_node_set_flag(desc->dev, OF_POPULATED);
++                       //of_node_set_flag(desc->dev, OF_POPULATED);
+
+                        pr_debug("of_irq_init: init %s (%p), parent %p\n",
+                                 desc->dev->full_name,
+
+I noticed that Philipp also sent a patch to clear that flag in
+arch/arm/mach-imx/gpc.c [1]. I guess the same is needed in the drivers
+for the devices that are not created for Exynos?
+
+If that's the case, then I think that's more safe to revert Jon's
+commit for now since is too risky for the -rc cycle and more platforms
+may be affected.
+
+[0]: https://patchwork.kernel.org/patch/9271361/
+[1]: https://patchwork.kernel.org/patch/9271345/
+
+> Rob
+>
+
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
