@@ -1,7 +1,7 @@
 From: Randy Li <ayaka@soulik.info>
-Subject: [PATCH 4/4] ARM: dts: rockchip: Point rk3288 dwc2 usb at the full PHY reset
-Date: Sun, 21 Aug 2016 04:32:20 +0800
-Message-ID: <1471725140-3833-5-git-send-email-ayaka@soulik.info>
+Subject: [PATCH 1/4] phy: Add reset callback
+Date: Sun, 21 Aug 2016 04:32:17 +0800
+Message-ID: <1471725140-3833-2-git-send-email-ayaka@soulik.info>
 References: <7ca3b54d-e9d8-a137-79b6-d24f0b7065c7@synopsys.com>
  <1471725140-3833-1-git-send-email-ayaka@soulik.info>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,45 +11,33 @@ To: linux-usb@vger.kernel.org
 Cc: johnyoun@synopsys.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, eddie.cai@rock-chips.com, randy.li@rock-chips.com, kishon@ti.com, linux-kernel@vger.kernel.org, heiko@sntech.de, Randy Li <ayaka@soulik.info>
 List-Id: devicetree@vger.kernel.org
 
-The "host1" port (AKA the dwc2 port that isn't the OTG port) on rk3288
-has a hardware errata that causes everything to get confused when we get
-a remote wakeup.  We'll use the reset that's in the CRU to reset the
-port when it's in a bad state.
-
-Note that we add the reset to both dwc2 controllers even though only one
-has the errata in case we find some other use for this reset that's
-unrelated to the current hardware errata.  Only the host port gets the
-quirk property, though.
-
-This patch came from Doug Anderson <dianders@chromium.org> originally.
+The only use for this is for solving a hardware design problem in
+usb of Rockchip RK3288.
 
 Signed-off-by: Randy Li <ayaka@soulik.info>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ include/linux/phy/phy.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 48ca4e4..646f49d 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -855,6 +855,8 @@
- 				clocks = <&cru SCLK_OTGPHY0>;
- 				clock-names = "phyclk";
- 				#clock-cells = <0>;
-+				resets = <&cru SRST_USBOTG_PHY>;
-+				reset-names = "phy-reset";
- 			};
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index f08b672..4d34607 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -36,6 +36,7 @@ enum phy_mode {
+  * @power_on: powering on the phy
+  * @power_off: powering off the phy
+  * @set_mode: set the mode of the phy
++ * @reset: reseting the phy
+  * @owner: the module owner containing the ops
+  */
+ struct phy_ops {
+@@ -44,6 +45,7 @@ struct phy_ops {
+ 	int	(*power_on)(struct phy *phy);
+ 	int	(*power_off)(struct phy *phy);
+ 	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
++	int	(*reset)(struct phy *phy);
+ 	struct module *owner;
+ };
  
- 			usbphy1: usb-phy@334 {
-@@ -871,6 +873,9 @@
- 				clocks = <&cru SCLK_OTGPHY2>;
- 				clock-names = "phyclk";
- 				#clock-cells = <0>;
-+				resets = <&cru SRST_USBHOST1_PHY>;
-+				reset-names = "phy-reset";
-+
- 			};
- 		};
- 	};
 -- 
 2.7.4
