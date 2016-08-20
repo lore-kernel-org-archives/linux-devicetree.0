@@ -1,142 +1,102 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v10 1/2] Documentation: bindings: add dt doc for Rockchip
- PCIe controller
-Date: Sat, 20 Aug 2016 10:20:47 +0800
-Message-ID: <597c56a1-bd62-a374-f5ed-c4ebc28a8415@rock-chips.com>
-References: <1471570471-3239-1-git-send-email-shawn.lin@rock-chips.com>
- <20160819193302.GA6308@localhost>
+From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] iio: adc: add ADC12130/ADC12132/ADC12138 ADC driver
+Date: Sat, 20 Aug 2016 11:54:42 +0900
+Message-ID: <CAC5umyg831=Q4iih+4rPpdNSyEEgBKqHk00cLCd6XJ5dTw92Jw@mail.gmail.com>
+References: <1470583330-6850-1-git-send-email-akinobu.mita@gmail.com> <b43674fb-6a68-de05-0f06-e1f92986705d@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20160819193302.GA6308@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b43674fb-6a68-de05-0f06-e1f92986705d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-5ZyoIDIwMTYvOC8yMCAzOjMzLCBCam9ybiBIZWxnYWFzIOWGmemBkzoKPiBPbiBGcmksIEF1ZyAx
-OSwgMjAxNiBhdCAwOTozNDozMUFNICswODAwLCBTaGF3biBMaW4gd3JvdGU6Cj4+IFRoaXMgcGF0
-Y2ggYWRkcyBhIGJpbmRpbmcgdGhhdCBkZXNjcmliZXMgdGhlIFJvY2tjaGlwIFBDSWUgY29udHJv
-bGxlcgo+PiBmb3VuZCBvbiBSb2NrY2hpcCBTb0NzIFBDSWUgaW50ZXJmYWNlLgo+Pgo+PiBTaWdu
-ZWQtb2ZmLWJ5OiBTaGF3biBMaW4gPHNoYXduLmxpbkByb2NrLWNoaXBzLmNvbT4KPj4KPj4gQWNr
-ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4+IFJldmlld2VkLWJ5OiBCcmlh
-biBOb3JyaXMgPGJyaWFubm9ycmlzQGNocm9taXVtLm9yZz4KPgo+IEkgYXBwbGllZCBib3RoIG9m
-IHRoZXNlIHRvIHBjaS9ob3N0LXJvY2tjaGlwIGZvciB2NC45LCB0aGFua3MsIFNoYXduIQo+Cj4g
-SSBtYWRlIGEgZmV3IHdoaXRlc3BhY2UgYW5kIHR5cG8gZml4ZXMgaW4gcGNpZS1yb2NrY2hpcC5j
-LCBzbyB0YWtlIGEKPiBsb29rIGFuZCBtYWtlIHN1cmUgSSBkaWRuJ3QgYnJlYWsgYW55dGhpbmcu
-CgoKSSBjaGVja2VkIHlvdXIgYnJhbmNoLCBob3N0LXJvY2tjaGlwLCBhbmQgaXQncyBva2F5LgoK
-VGhhbmtzLCBCam9ybiEKCj4KPj4gLS0tCj4+Cj4+IENoYW5nZXMgaW4gdjEwOgo+PiAtIGZpeCBi
-cm9rZW4gZGVzY3JpcHRpb24gb2YgbXNpLW1hcAo+PiAtIHMvcGNpZS9QQ0llIGZvciBkZXNjcmlw
-dGlvbgo+Pgo+PiBDaGFuZ2VzIGluIHY5OiBOb25lCj4+IENoYW5nZXMgaW4gdjg6Cj4+IC0gYWRk
-IEJyaWFuJ3MgcmV2aWV3LXRhZwo+Pgo+PiBDaGFuZ2VzIGluIHY3Ogo+PiAtIG1vdmUgb3B0aW9u
-YWwgcHJvcGVydGllcyBhaGVhZCBvZiBpbnRlcnJ1cHQgc3Vibm9kZQo+PiAtIHVzZSAwLWJhc2Ug
-aW5kZXggZm9yIElOVHgKPj4KPj4gQ2hhbmdlcyBpbiB2NjoKPj4gLSBhZGQgYWNrIHRhZyBmcm9t
-IFJvYgo+Pgo+PiBDaGFuZ2VzIGluIHY1Ogo+PiAtIGZpeCB3cm9uZyBleGFtcGxlIHJlcG9ydGVk
-IGJ5IE1hcmMKPj4gLSBhZGQgc2VwZXJhdGUgc2VjdGlvbiB0byBkZXNjcmliZSB0aGUgaW50ZXJy
-dXB0IGNvbnRyb2xsZXIgY2hpbGQKPj4gICBub2RlCj4+Cj4+IENoYW5nZXMgaW4gdjQ6Cj4+IC0g
-Zml4IGV4YW1wbGUgb2YgYWRkaW5nIGludGVybWVkaWF0ZSBpbnRlcnJ1cHQgY29udHJvbGxlciBm
-b3IgcGNpZQo+PiAgIGxlZ2FjeSBpbnRlcnJydXB0Cj4+Cj4+IENoYW5nZXMgaW4gdjM6Cj4+IC0g
-Zml4IGV4YW1wbGUgZHRzIGNvZGUgc3VnZ2VzdGVkIGJ5IFJvYiBhbmQgTWFyYwo+PiAtIHJlbW92
-ZSBkcml2ZXIncyBiZWhhdmlvdXIgb2YgcmVndWxhdG9yCj4+Cj4+IENoYW5nZXMgaW4gdjI6Cj4+
-IC0gZml4IGxvdHMgY2xrL3Jlc2V0IHN0dWZmIHN1Z2dlc3RlZCBieSBIZWlrbwo+PiAtIHJlbW92
-ZSBtc2ktcGFyZW50IGFuZCBhZGQgbXNpLW1hcCBzdWdnZXN0ZWQgYnkgTWFyYwo+PiAtIGRyb3Ag
-cGh5IHJlbGF0ZWQgc3R1ZmYKPj4gLSBzb21lIG90aGVycyBtaW5vciBmaXhlcwo+Pgo+PiAgLi4u
-L2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3JvY2tjaGlwLXBjaWUudHh0ICAgICAgfCAxMDYgKysr
-KysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMTA2IGluc2VydGlvbnMoKykK
-Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cGNpL3JvY2tjaGlwLXBjaWUudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcGNpL3JvY2tjaGlwLXBjaWUudHh0IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9yb2NrY2hpcC1wY2llLnR4dAo+PiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi5iYTY3YjM5Cj4+IC0tLSAvZGV2L251bGwKPj4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9yb2NrY2hpcC1wY2llLnR4
-dAo+PiBAQCAtMCwwICsxLDEwNiBAQAo+PiArKiBSb2NrY2hpcCBBWEkgUENJZSBSb290IFBvcnQg
-QnJpZGdlIERUIGRlc2NyaXB0aW9uCj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICst
-ICNhZGRyZXNzLWNlbGxzOiBBZGRyZXNzIHJlcHJlc2VudGF0aW9uIGZvciByb290IHBvcnRzLCBz
-ZXQgdG8gPDM+Cj4+ICstICNzaXplLWNlbGxzOiBTaXplIHJlcHJlc2VudGF0aW9uIGZvciByb290
-IHBvcnRzLCBzZXQgdG8gPDI+Cj4+ICstICNpbnRlcnJ1cHQtY2VsbHM6IHNwZWNpZmllcyB0aGUg
-bnVtYmVyIG9mIGNlbGxzIG5lZWRlZCB0byBlbmNvZGUgYW4KPj4gKwkJaW50ZXJydXB0IHNvdXJj
-ZS4gVGhlIHZhbHVlIG11c3QgYmUgMS4KPj4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGNvbnRhaW4g
-InJvY2tjaGlwLHJrMzM5OS1wY2llIgo+PiArLSByZWc6IFR3byByZWdpc3RlciByYW5nZXMgYXMg
-bGlzdGVkIGluIHRoZSByZWctbmFtZXMgcHJvcGVydHkKPj4gKy0gcmVnLW5hbWVzOiBNdXN0IGlu
-Y2x1ZGUgdGhlIGZvbGxvd2luZyBuYW1lcwo+PiArCS0gImF4aS1iYXNlIgo+PiArCS0gImFwYi1i
-YXNlIgo+PiArLSBjbG9ja3M6IE11c3QgY29udGFpbiBhbiBlbnRyeSBmb3IgZWFjaCBlbnRyeSBp
-biBjbG9jay1uYW1lcy4KPj4gKwkJU2VlIC4uL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9y
-IGRldGFpbHMuCj4+ICstIGNsb2NrLW5hbWVzOiBNdXN0IGluY2x1ZGUgdGhlIGZvbGxvd2luZyBl
-bnRyaWVzOgo+PiArCS0gImFjbGsiCj4+ICsJLSAiYWNsay1wZXJmIgo+PiArCS0gImhjbGsiCj4+
-ICsJLSAicG0iCj4+ICstIG1zaS1tYXA6IE1hcHMgYSBSZXF1ZXN0ZXIgSUQgdG8gYW4gTVNJIGNv
-bnRyb2xsZXIgYW5kIGFzc29jaWF0ZWQKPj4gKwltc2ktc3BlY2lmaWVyIGRhdGEuIFNlZSAuL3Bj
-aS1tc2kudHh0Cj4+ICstIHBoeXM6IEZyb20gUEhZIGJpbmRpbmdzOiBQaGFuZGxlIGZvciB0aGUg
-R2VuZXJpYyBQSFkgZm9yIFBDSWUuCj4+ICstIHBoeS1uYW1lczogIE1VU1QgYmUgInBjaWUtcGh5
-Ii4KPj4gKy0gaW50ZXJydXB0czogVGhyZWUgaW50ZXJydXB0IGVudHJpZXMgbXVzdCBiZSBzcGVj
-aWZpZWQuCj4+ICstIGludGVycnVwdC1uYW1lczogTXVzdCBpbmNsdWRlIHRoZSBmb2xsb3dpbmcg
-bmFtZXMKPj4gKwktICJzeXMiCj4+ICsJLSAibGVnYWN5Igo+PiArCS0gImNsaWVudCIKPj4gKy0g
-cmVzZXRzOiBNdXN0IGNvbnRhaW4gZml2ZSBlbnRyaWVzIGZvciBlYWNoIGVudHJ5IGluIHJlc2V0
-LW5hbWVzLgo+PiArCSAgIFNlZSAuLi9yZXNldC9yZXNldC50eHQgZm9yIGRldGFpbHMuCj4+ICst
-IHJlc2V0LW5hbWVzOiBNdXN0IGluY2x1ZGUgdGhlIGZvbGxvd2luZyBuYW1lcwo+PiArCS0gImNv
-cmUiCj4+ICsJLSAibWdtdCIKPj4gKwktICJtZ210LXN0aWNreSIKPj4gKwktICJwaXBlIgo+PiAr
-LSBwaW5jdHJsLW5hbWVzIDogVGhlIHBpbiBjb250cm9sIHN0YXRlIG5hbWVzCj4+ICstIHBpbmN0
-cmwtMDogVGhlICJkZWZhdWx0IiBwaW5jdHJsIHN0YXRlCj4+ICstICNpbnRlcnJ1cHQtY2VsbHM6
-IHNwZWNpZmllcyB0aGUgbnVtYmVyIG9mIGNlbGxzIG5lZWRlZCB0byBlbmNvZGUgYW4KPj4gKwlp
-bnRlcnJ1cHQgc291cmNlLiBUaGUgdmFsdWUgbXVzdCBiZSAxLgo+PiArLSBpbnRlcnJ1cHQtbWFw
-LW1hc2sgYW5kIGludGVycnVwdC1tYXA6IHN0YW5kYXJkIFBDSSBwcm9wZXJ0aWVzCj4+ICsKPj4g
-K09wdGlvbmFsIFByb3BlcnR5Ogo+PiArLSBlcC1ncGlvczogY29udGFpbiB0aGUgZW50cnkgZm9y
-IHByZS1yZXNldCBncGlvCj4+ICstIG51bS1sYW5lczogbnVtYmVyIG9mIGxhbmVzIHRvIHVzZQo+
-PiArLSB2cGNpZTN2My1zdXBwbHk6IFRoZSBwaGFuZGxlIHRvIHRoZSAzLjN2IHJlZ3VsYXRvciB0
-byB1c2UgZm9yIFBDSWUuCj4+ICstIHZwY2llMXY4LXN1cHBseTogVGhlIHBoYW5kbGUgdG8gdGhl
-IDEuOHYgcmVndWxhdG9yIHRvIHVzZSBmb3IgUENJZS4KPj4gKy0gdnBjaWUwdjktc3VwcGx5OiBU
-aGUgcGhhbmRsZSB0byB0aGUgMC45diByZWd1bGF0b3IgdG8gdXNlIGZvciBQQ0llLgo+PiArCj4+
-ICsqSW50ZXJydXB0IGNvbnRyb2xsZXIgY2hpbGQgbm9kZSoKPj4gK1RoZSBjb3JlIGNvbnRyb2xs
-ZXIgcHJvdmlkZXMgYSBzaW5nbGUgaW50ZXJydXB0IGZvciBsZWdhY3kgSU5UeC4gVGhlIFBDSWUg
-bm9kZQo+PiArc2hvdWxkIGNvbnRhaW4gYW4gaW50ZXJydXB0IGNvbnRyb2xsZXIgbm9kZSBhcyBh
-IHRhcmdldCBmb3IgdGhlIFBDSQo+PiArJ2ludGVycnVwdC1tYXAnIHByb3BlcnR5LiBUaGlzIG5v
-ZGUgcmVwcmVzZW50cyB0aGUgZG9tYWluIGF0IHdoaWNoIHRoZSBmb3VyCj4+ICtJTlR4IGludGVy
-cnVwdHMgYXJlIGRlY29kZWQgYW5kIHJvdXRlZC4KPj4gKwo+PiArCj4+ICtSZXF1aXJlZCBwcm9w
-ZXJ0aWVzIGZvciBJbnRlcnJ1cHQgY29udHJvbGxlciBjaGlsZCBub2RlOgo+PiArLSBpbnRlcnJ1
-cHQtY29udHJvbGxlcjogaWRlbnRpZmllcyB0aGUgbm9kZSBhcyBhbiBpbnRlcnJ1cHQgY29udHJv
-bGxlcgo+PiArLSAjYWRkcmVzcy1jZWxsczogc3BlY2lmaWVzIHRoZSBudW1iZXIgb2YgY2VsbHMg
-bmVlZGVkIHRvIGVuY29kZSBhbgo+PiArCWFkZHJlc3MuIFRoZSB2YWx1ZSBtdXN0IGJlIDAuCj4+
-ICstICNpbnRlcnJ1cHQtY2VsbHM6IHNwZWNpZmllcyB0aGUgbnVtYmVyIG9mIGNlbGxzIG5lZWRl
-ZCB0byBlbmNvZGUgYW4KPj4gKwlpbnRlcnJ1cHQgc291cmNlLiBUaGUgdmFsdWUgbXVzdCBiZSAx
-Lgo+PiArCj4+ICtFeGFtcGxlOgo+PiArCj4+ICtwY2llMDogcGNpZUBmODAwMDAwMCB7Cj4+ICsJ
-Y29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMzOTktcGNpZSI7Cj4+ICsJI2FkZHJlc3MtY2VsbHMg
-PSA8Mz47Cj4+ICsJI3NpemUtY2VsbHMgPSA8Mj47Cj4+ICsJY2xvY2tzID0gPCZjcnUgQUNMS19Q
-Q0lFPiwgPCZjcnUgQUNMS19QRVJGX1BDSUU+LAo+PiArCQkgPCZjcnUgUENMS19QQ0lFPiwgPCZj
-cnUgU0NMS19QQ0lFX1BNPjsKPj4gKwljbG9jay1uYW1lcyA9ICJhY2xrIiwgImFjbGstcGVyZiIs
-Cj4+ICsJCSAgICAgICJoY2xrIiwgInBtIjsKPj4gKwlidXMtcmFuZ2UgPSA8MHgwIDB4MT47Cj4+
-ICsJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDQ5IElSUV9UWVBFX0xFVkVMX0hJR0ggMD4sCj4+ICsJ
-CSAgICAgPEdJQ19TUEkgNTAgSVJRX1RZUEVfTEVWRUxfSElHSCAwPiwKPj4gKwkJICAgICA8R0lD
-X1NQSSA1MSBJUlFfVFlQRV9MRVZFTF9ISUdIIDA+Owo+PiArCWludGVycnVwdC1uYW1lcyA9ICJz
-eXMiLCAibGVnYWN5IiwgImNsaWVudCI7Cj4+ICsJYXNzaWduZWQtY2xvY2tzID0gPCZjcnUgU0NM
-S19QQ0lFUEhZX1JFRj47Cj4+ICsJYXNzaWduZWQtY2xvY2stcGFyZW50cyA9IDwmY3J1IFNDTEtf
-UENJRVBIWV9SRUYxMDBNPjsKPj4gKwlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDwxMDAwMDAwMDA+
-Owo+PiArCWVwLWdwaW9zID0gPCZncGlvMyAxMyBHUElPX0FDVElWRV9ISUdIPjsKPj4gKwlyYW5n
-ZXMgPSA8MHg4MzAwMDAwMCAweDAgMHhmYTAwMDAwMCAweDAgMHhmYTAwMDAwMCAweDAgMHg2MDAw
-MDAKPj4gKwkJICAweDgxMDAwMDAwIDB4MCAweGZhNjAwMDAwIDB4MCAweGZhNjAwMDAwIDB4MCAw
-eDEwMDAwMD47Cj4+ICsJbnVtLWxhbmVzID0gPDQ+Owo+PiArCW1zaS1tYXAgPSA8MHgwICZpdHMg
-MHgwIDB4MTAwMD47Cj4+ICsJcmVnID0gPDB4MCAweGY4MDAwMDAwIDB4MCAweDIwMDAwMDA+LCA8
-MHgwIDB4ZmQwMDAwMDAgMHgwIDB4MTAwMDAwMD47Cj4+ICsJcmVnLW5hbWVzID0gImF4aS1iYXNl
-IiwgImFwYi1iYXNlIjsKPj4gKwlyZXNldHMgPSA8JmNydSBTUlNUX1BDSUVfQ09SRT4sIDwmY3J1
-IFNSU1RfUENJRV9NR01UPiwKPj4gKwkJIDwmY3J1IFNSU1RfUENJRV9NR01UX1NUSUNLWT4sIDwm
-Y3J1IFNSU1RfUENJRV9QSVBFPjsKPj4gKwlyZXNldC1uYW1lcyA9ICJjb3JlIiwgIm1nbXQiLCAi
-bWdtdC1zdGlja3kiLCAicGlwZSI7Cj4+ICsJcGh5cyA9IDwmcGNpZV9waHk+Owo+PiArCXBoeS1u
-YW1lcyA9ICJwY2llLXBoeSI7Cj4+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPj4gKwlw
-aW5jdHJsLTAgPSA8JnBjaWVfY2xrcmVxPjsKPj4gKwkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+
-PiArCWludGVycnVwdC1tYXAtbWFzayA9IDwwIDAgMCA3PjsKPj4gKwlpbnRlcnJ1cHQtbWFwID0g
-PDAgMCAwIDEgJnBjaWUwX2ludGMgMD4sCj4+ICsJCQk8MCAwIDAgMiAmcGNpZTBfaW50YyAxPiwK
-Pj4gKwkJCTwwIDAgMCAzICZwY2llMF9pbnRjIDI+LAo+PiArCQkJPDAgMCAwIDQgJnBjaWUwX2lu
-dGMgMz47Cj4+ICsJcGNpZTBfaW50YzogaW50ZXJydXB0LWNvbnRyb2xsZXIgewo+PiArCQlpbnRl
-cnJ1cHQtY29udHJvbGxlcjsKPj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MD47Cj4+ICsJCSNpbnRl
-cnJ1cHQtY2VsbHMgPSA8MT47Cj4+ICsJfTsKPj4gK307Cj4+IC0tCj4+IDIuMy43Cj4+Cj4+Cj4K
-Pgo+CgoKLS0gCkJlc3QgUmVnYXJkcwpTaGF3biBMaW4KCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGlu
-dXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCg==
+Hi Rob,
+
+2016-08-16 1:42 GMT+09:00 Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On 07/08/16 16:22, Akinobu Mita wrote:
+>> This adds Texas Instruments' ADC12130/ADC12132/ADC12138 12-bit plus
+>> sign ADC driver.  I have tested with the ADC12138.  The ADC12130 and
+>> ADC12132 are not tested but these are similar to ADC12138 except that
+>> the mode programming instruction is a bit different.
+>>
+>> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Hi,
+>
+> Now had time for a closer look.  A few minor bits and bobs to fix
+> up highlighted inline.
+>
+> Looks pretty good.
+>
+> Jonathan
+>> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+>> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+>> Cc: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+>> ---
+>> * Changes from v2
+>> - improve error label names
+>>
+>>  .../devicetree/bindings/iio/adc/ti-adc12138.txt    |  32 ++
+>>  drivers/iio/adc/Kconfig                            |  12 +
+>>  drivers/iio/adc/Makefile                           |   1 +
+>>  drivers/iio/adc/ti-adc12138.c                      | 542 +++++++++++++++++++++
+>>  4 files changed, 587 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
+>>  create mode 100644 drivers/iio/adc/ti-adc12138.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
+>> new file mode 100644
+>> index 0000000..3a11d2a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
+>> @@ -0,0 +1,32 @@
+>> +* Texas Instruments' ADC12130/ADC12132/ADC12138
+>> +
+>> +Required properties:
+>> + - compatible: Should be one of
+>> +     * "ti,adc12130"
+>> +     * "ti,adc12132"
+>> +     * "ti,adc12138"
+>> + - reg: SPI chip select number for the device
+>> + - interrupts: Should contain interrupt for EOC (end of conversion)
+>> + - clocks: phandle to conversion clock input
+>> + - spi-max-frequency: Definision as per
+>> +     Documentation/devicetree/bindings/spi/spi-bus.txt
+>> + - vref-p-supply: The regulator supply for positive analog voltage reference
+>> +
+>> +Optional properties:
+>> + - vref-n-supply: The regulator supply for negative analog voltage reference
+>> +     If not specified, this is assumed to be analog ground.
+> This is novel. Documented in the datasheet as a negative reference which
+> must be positive (greater than 0) for it to work well.
+>
+> Intersting question on whether this should be optional. Easy enough to
+> provided a fixed regulator at 0V afterall.
+>
+>
+>> + - acquisition-time: The number of conversion clock periods for the S/H's
+>> +     acquisition time.  Should be one of 6, 10, 18, 34.  If not specified,
+>> +     default value of 10 is used.
+> Should this be a ti specific parameter.  Not sure.
+
+Is it better to change this parameter to "ti,acquisition-time" ?
+
+> I'd also add a note here about why one would set this to other than the
+> default (source impedance etc).
+>
+>
+>> +
+>> +Example:
+>> +adc@0 {
+>> +     compatible = "ti,adc12138";
+>> +     reg = <0>;
+>> +     interrupts = <28 IRQ_TYPE_EDGE_RISING>;
+>> +     interrupt-parent = <&gpio1>;
+>> +     clocks = <&cclk>;
+>> +     vref-p-supply = <&ldo4_reg>;
+>> +     spi-max-frequency = <5000000>;
+>> +     acquisition-time = <6>;
+>> +};
