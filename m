@@ -1,433 +1,700 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v5 2/2] phy: add a driver for the Rockchip SoC internal PCIe PHY
-Date: Sat, 20 Aug 2016 10:53:37 +0800
-Message-ID: <1471661617-26432-2-git-send-email-shawn.lin@rock-chips.com>
-References: <1471661617-26432-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1471661617-26432-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] iio: adc: add ADC12130/ADC12132/ADC12138 ADC driver
+Date: Sat, 20 Aug 2016 11:50:05 +0900
+Message-ID: <CAC5umyghYe64yZcxsGzXdfBPMt3E4wskXO_KmkFk_sdPo0Kvrg@mail.gmail.com>
+References: <1470583330-6850-1-git-send-email-akinobu.mita@gmail.com> <b43674fb-6a68-de05-0f06-e1f92986705d@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b43674fb-6a68-de05-0f06-e1f92986705d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch to add a generic PHY driver for rockchip PCIe PHY.
-Access the PHY via registers provided by GRF (general register
-files) module.
+2016-08-16 1:42 GMT+09:00 Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On 07/08/16 16:22, Akinobu Mita wrote:
+>> This adds Texas Instruments' ADC12130/ADC12132/ADC12138 12-bit plus
+>> sign ADC driver.  I have tested with the ADC12138.  The ADC12130 and
+>> ADC12132 are not tested but these are similar to ADC12138 except that
+>> the mode programming instruction is a bit different.
+>>
+>> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Hi,
+>
+> Now had time for a closer look.  A few minor bits and bobs to fix
+> up highlighted inline.
+>
+> Looks pretty good.
+>
+> Jonathan
+>> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+>> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+>> Cc: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+>> ---
+>> * Changes from v2
+>> - improve error label names
+>>
+>>  .../devicetree/bindings/iio/adc/ti-adc12138.txt    |  32 ++
+>>  drivers/iio/adc/Kconfig                            |  12 +
+>>  drivers/iio/adc/Makefile                           |   1 +
+>>  drivers/iio/adc/ti-adc12138.c                      | 542 +++++++++++++++++++++
+>>  4 files changed, 587 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
+>>  create mode 100644 drivers/iio/adc/ti-adc12138.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
+>> new file mode 100644
+>> index 0000000..3a11d2a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
+>> @@ -0,0 +1,32 @@
+>> +* Texas Instruments' ADC12130/ADC12132/ADC12138
+>> +
+>> +Required properties:
+>> + - compatible: Should be one of
+>> +     * "ti,adc12130"
+>> +     * "ti,adc12132"
+>> +     * "ti,adc12138"
+>> + - reg: SPI chip select number for the device
+>> + - interrupts: Should contain interrupt for EOC (end of conversion)
+>> + - clocks: phandle to conversion clock input
+>> + - spi-max-frequency: Definision as per
+>> +     Documentation/devicetree/bindings/spi/spi-bus.txt
+>> + - vref-p-supply: The regulator supply for positive analog voltage reference
+>> +
+>> +Optional properties:
+>> + - vref-n-supply: The regulator supply for negative analog voltage reference
+>> +     If not specified, this is assumed to be analog ground.
+> This is novel. Documented in the datasheet as a negative reference which
+> must be positive (greater than 0) for it to work well.
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+OK.  I'll add a note to avoid a confusion.
 
----
+> Intersting question on whether this should be optional. Easy enough to
+> provided a fixed regulator at 0V afterall.
 
-Changes in v5:
-- add COMPILE_TEST and select MFD_SYSCON on Kconfig
+I'll keep this as optional in the next version unless someone requests.
 
-Changes in v4:
-- remove laneoff symbol as we still fail to get a workable solution
-  except for exporting symbol. But I will be back with some other possible
-  routine once finished.
+>> + - acquisition-time: The number of conversion clock periods for the S/H's
+>> +     acquisition time.  Should be one of 6, 10, 18, 34.  If not specified,
+>> +     default value of 10 is used.
+> Should this be a ti specific parameter.  Not sure.
+> I'd also add a note here about why one would set this to other than the
+> default (source impedance etc).
 
-Changes in v3: None
-Changes in v2: None
+OK.  I'll add a simple explanation and reference to the datasheet
+(section 6.0 INPUT SOURCE RESISTANCE) for the detail.
 
- drivers/phy/Kconfig             |   8 +
- drivers/phy/Makefile            |   1 +
- drivers/phy/phy-rockchip-pcie.c | 357 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 366 insertions(+)
- create mode 100644 drivers/phy/phy-rockchip-pcie.c
+>> +
+>> +Example:
+>> +adc@0 {
+>> +     compatible = "ti,adc12138";
+>> +     reg = <0>;
+>> +     interrupts = <28 IRQ_TYPE_EDGE_RISING>;
+>> +     interrupt-parent = <&gpio1>;
+>> +     clocks = <&cclk>;
+>> +     vref-p-supply = <&ldo4_reg>;
+>> +     spi-max-frequency = <5000000>;
+>> +     acquisition-time = <6>;
+>> +};
+>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>> index fa0ff29..87ed82d 100644
+>> --- a/drivers/iio/adc/Kconfig
+>> +++ b/drivers/iio/adc/Kconfig
+>> @@ -414,6 +414,18 @@ config TI_ADC0832
+>>         This driver can also be built as a module. If so, the module will be
+>>         called ti-adc0832.
+>>
+>> +config TI_ADC12138
+>> +     tristate "Texas Instruments ADC12130/ADC12132/ADC12138"
+>> +     depends on SPI
+>> +     select IIO_BUFFER
+>> +     select IIO_TRIGGERED_BUFFER
+>> +     help
+>> +       If you say yes here you get support for Texas Instruments ADC12130,
+>> +       ADC12132 and ADC12138 chips.
+>> +
+>> +       This driver can also be built as a module. If so, the module will be
+>> +       called ti-adc12138.
+>> +
+>>  config TI_ADC128S052
+>>       tristate "Texas Instruments ADC128S052/ADC122S021/ADC124S021"
+>>       depends on SPI
+>> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+>> index 599714b..3ae4ae3 100644
+>> --- a/drivers/iio/adc/Makefile
+>> +++ b/drivers/iio/adc/Makefile
+>> @@ -40,6 +40,7 @@ obj-$(CONFIG_QCOM_SPMI_VADC) += qcom-spmi-vadc.o
+>>  obj-$(CONFIG_ROCKCHIP_SARADC) += rockchip_saradc.o
+>>  obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
+>>  obj-$(CONFIG_TI_ADC0832) += ti-adc0832.o
+>> +obj-$(CONFIG_TI_ADC12138) += ti-adc12138.o
+>>  obj-$(CONFIG_TI_ADC128S052) += ti-adc128s052.o
+>>  obj-$(CONFIG_TI_ADS1015) += ti-ads1015.o
+>>  obj-$(CONFIG_TI_ADS8688) += ti-ads8688.o
+>> diff --git a/drivers/iio/adc/ti-adc12138.c b/drivers/iio/adc/ti-adc12138.c
+>> new file mode 100644
+>> index 0000000..33057fc
+>> --- /dev/null
+>> +++ b/drivers/iio/adc/ti-adc12138.c
+>> @@ -0,0 +1,542 @@
+>> +/*
+>> + * ADC12130/ADC12132/ADC12138 12-bit plus sign ADC driver
+>> + *
+>> + * Copyright (c) 2016 Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> + *
+>> + * This file is subject to the terms and conditions of version 2 of
+>> + * the GNU General Public License.  See the file COPYING in the main
+>> + * directory of this archive for more details.
+>> + *
+>> + * Datasheet: http://www.ti.com/lit/ds/symlink/adc12138.pdf
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/completion.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/spi/spi.h>
+>> +#include <linux/iio/iio.h>
+>> +#include <linux/iio/buffer.h>
+>> +#include <linux/iio/trigger.h>
+>> +#include <linux/iio/triggered_buffer.h>
+>> +#include <linux/iio/trigger_consumer.h>
+>> +#include <linux/regulator/consumer.h>
+>> +
+>> +#define ADC12138_MODE_AUTO_CAL                       0x08
+>> +#define ADC12138_MODE_READ_STATUS            0x0c
+>> +#define ADC12138_MODE_ACQUISITION_TIME_6     0x0e
+>> +#define ADC12138_MODE_ACQUISITION_TIME_10    0x4e
+>> +#define ADC12138_MODE_ACQUISITION_TIME_18    0x8e
+>> +#define ADC12138_MODE_ACQUISITION_TIME_34    0xce
+>> +
+>> +#define ADC12138_STATUS_CAL                  BIT(6)
+>> +
+>> +enum {
+>> +     adc12130,
+>> +     adc12132,
+>> +     adc12138,
+>> +};
+>> +
+>> +struct adc12138 {
+>> +     struct spi_device *spi;
+>> +     unsigned int id;
+>> +     /* conversion clock */
+>> +     struct clk *cclk;
+>> +     /* positive analog voltage reference */
+>> +     struct regulator *vref_p;
+>> +     /* negative analog voltage reference */
+>> +     struct regulator *vref_n;
+>> +     struct mutex lock;
+>> +     struct completion complete;
+>> +     /* The number of cclk periods for the S/H's acquisition time */
+>> +     unsigned int acquisition_time;
+>> +
+>> +     u8 tx_buf[2] ____cacheline_aligned;
+>> +     u8 rx_buf[2];
+>> +};
+>> +
+>> +#define ADC12138_VOLTAGE_CHANNEL(chan)                                       \
+>> +     {                                                               \
+>> +             .type = IIO_VOLTAGE,                                    \
+>> +             .indexed = 1,                                           \
+>> +             .channel = chan,                                        \
+>> +             .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),           \
+>> +             .info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE)    \
+>> +                                     | BIT(IIO_CHAN_INFO_OFFSET),    \
+>> +             .scan_index = chan,                                     \
+>> +             .scan_type = {                                          \
+>> +                     .sign = 's',                                    \
+>> +                     .realbits = 13,                                 \
+>> +                     .storagebits = 16,                              \
+>> +                     .shift = 3,                                     \
+>> +                     .endianness = IIO_BE,                           \
+>> +             },                                                      \
+>> +     }
+>> +
+>> +#define ADC12138_VOLTAGE_CHANNEL_DIFF(chan1, chan2, si_offset)               \
+>> +     {                                                               \
+>> +             .type = IIO_VOLTAGE,                                    \
+>> +             .indexed = 1,                                           \
+>> +             .channel = (chan1),                                     \
+>> +             .channel2 = (chan2),                                    \
+>> +             .differential = 1,                                      \
+>> +             .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),           \
+>> +             .info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE)    \
+>> +                                     | BIT(IIO_CHAN_INFO_OFFSET),    \
+>> +             .scan_index = (chan1) + (si_offset),                    \
+> Wouldn't it have been easier to just have an explicit scan_index
+> element in the macro parameters?
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index f9bf981..46e5536 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -388,6 +388,14 @@ config PHY_ROCKCHIP_DP
- 	help
- 	  Enable this to support the Rockchip Display Port PHY.
- 
-+config PHY_ROCKCHIP_PCIE
-+	tristate "Rockchip PCIe PHY Driver"
-+	depends on (ARCH_ROCKCHIP && OF) || COMPILE_TEST
-+	select GENERIC_PHY
-+	select MFD_SYSCON
-+	help
-+	  Enable this to support the Rockchip PCIe PHY.
-+
- config PHY_ST_SPEAR1310_MIPHY
- 	tristate "ST SPEAR1310-MIPHY driver"
- 	select GENERIC_PHY
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 74b44ef..ce0e526 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -42,6 +42,7 @@ obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
- obj-$(CONFIG_PHY_ROCKCHIP_USB) += phy-rockchip-usb.o
- obj-$(CONFIG_PHY_ROCKCHIP_INNO_USB2)	+= phy-rockchip-inno-usb2.o
- obj-$(CONFIG_PHY_ROCKCHIP_EMMC) += phy-rockchip-emmc.o
-+obj-$(CONFIG_PHY_ROCKCHIP_PCIE) += phy-rockchip-pcie.o
- obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
- obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
- obj-$(CONFIG_PHY_ST_SPEAR1310_MIPHY)	+= phy-spear1310-miphy.o
-diff --git a/drivers/phy/phy-rockchip-pcie.c b/drivers/phy/phy-rockchip-pcie.c
-new file mode 100644
-index 0000000..63cd200
---- /dev/null
-+++ b/drivers/phy/phy-rockchip-pcie.c
-@@ -0,0 +1,357 @@
-+/*
-+ * Rockchip PCIe PHY driver
-+ *
-+ * Copyright (C) 2016 Shawn Lin <shawn.lin@rock-chips.com>
-+ * Copyright (C) 2016 ROCKCHIP, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+/*
-+ * The higher 16-bit of this register is used for write protection
-+ * only if BIT(x + 16) set to 1 the BIT(x) can be written.
-+ */
-+#define HIWORD_UPDATE(val, mask, shift) \
-+		((val) << (shift) | (mask) << ((shift) + 16))
-+
-+#define PHY_MAX_LANE_NUM      4
-+#define PHY_CFG_DATA_SHIFT    7
-+#define PHY_CFG_ADDR_SHIFT    1
-+#define PHY_CFG_DATA_MASK     0xf
-+#define PHY_CFG_ADDR_MASK     0x3f
-+#define PHY_CFG_RD_MASK       0x3ff
-+#define PHY_CFG_WR_ENABLE     1
-+#define PHY_CFG_WR_DISABLE    1
-+#define PHY_CFG_WR_SHIFT      0
-+#define PHY_CFG_WR_MASK       1
-+#define PHY_CFG_PLL_LOCK      0x10
-+#define PHY_CFG_CLK_TEST      0x10
-+#define PHY_CFG_CLK_SCC       0x12
-+#define PHY_CFG_SEPE_RATE     BIT(3)
-+#define PHY_CFG_PLL_100M      BIT(3)
-+#define PHY_PLL_LOCKED        BIT(9)
-+#define PHY_PLL_OUTPUT        BIT(10)
-+#define PHY_LANE_A_STATUS     0x30
-+#define PHY_LANE_B_STATUS     0x31
-+#define PHY_LANE_C_STATUS     0x32
-+#define PHY_LANE_D_STATUS     0x33
-+#define PHY_LANE_RX_DET_SHIFT 11
-+#define PHY_LANE_RX_DET_TH    0x1
-+#define PHY_LANE_IDLE_OFF     0x1
-+#define PHY_LANE_IDLE_MASK    0x1
-+#define PHY_LANE_IDLE_A_SHIFT 3
-+#define PHY_LANE_IDLE_B_SHIFT 4
-+#define PHY_LANE_IDLE_C_SHIFT 5
-+#define PHY_LANE_IDLE_D_SHIFT 6
-+
-+struct rockchip_pcie_data {
-+	unsigned int pcie_conf;
-+	unsigned int pcie_status;
-+	unsigned int pcie_laneoff;
-+};
-+
-+struct rockchip_pcie_phy {
-+	struct rockchip_pcie_data *phy_data;
-+	struct regmap *reg_base;
-+	struct reset_control *phy_rst;
-+	struct clk *clk_pciephy_ref;
-+};
-+
-+static inline void phy_wr_cfg(struct rockchip_pcie_phy *rk_phy,
-+			      u32 addr, u32 data)
-+{
-+	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-+		     HIWORD_UPDATE(data,
-+				   PHY_CFG_DATA_MASK,
-+				   PHY_CFG_DATA_SHIFT) |
-+		     HIWORD_UPDATE(addr,
-+				   PHY_CFG_ADDR_MASK,
-+				   PHY_CFG_ADDR_SHIFT));
-+	udelay(1);
-+	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-+		     HIWORD_UPDATE(PHY_CFG_WR_ENABLE,
-+				   PHY_CFG_WR_MASK,
-+				   PHY_CFG_WR_SHIFT));
-+	udelay(1);
-+	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-+		     HIWORD_UPDATE(PHY_CFG_WR_DISABLE,
-+				   PHY_CFG_WR_MASK,
-+				   PHY_CFG_WR_SHIFT));
-+}
-+
-+static inline u32 phy_rd_cfg(struct rockchip_pcie_phy *rk_phy,
-+			     u32 addr)
-+{
-+	u32 val;
-+
-+	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-+		     HIWORD_UPDATE(addr,
-+				   PHY_CFG_RD_MASK,
-+				   PHY_CFG_ADDR_SHIFT));
-+	regmap_read(rk_phy->reg_base,
-+		    rk_phy->phy_data->pcie_status,
-+		    &val);
-+	return val;
-+}
-+
-+static int rockchip_pcie_phy_power_off(struct phy *phy)
-+{
-+	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-+	int err = 0;
-+
-+	err = reset_control_assert(rk_phy->phy_rst);
-+	if (err) {
-+		pr_err("assert phy_rst err %d\n", err);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rockchip_pcie_phy_power_on(struct phy *phy)
-+{
-+	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-+	int err = 0;
-+	u32 status;
-+	unsigned long timeout;
-+
-+	err = reset_control_deassert(rk_phy->phy_rst);
-+	if (err) {
-+		pr_err("deassert phy_rst err %d\n", err);
-+		return err;
-+	}
-+
-+	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-+		     HIWORD_UPDATE(PHY_CFG_PLL_LOCK,
-+				   PHY_CFG_ADDR_MASK,
-+				   PHY_CFG_ADDR_SHIFT));
-+
-+	/*
-+	 * No documented timeout value for phy operation below,
-+	 * so we make it large enough here. And we use loop-break
-+	 * method which should not be harmful.
-+	 */
-+	timeout = jiffies + msecs_to_jiffies(1000);
-+
-+	err = -EINVAL;
-+	while (time_before(jiffies, timeout)) {
-+		regmap_read(rk_phy->reg_base,
-+			    rk_phy->phy_data->pcie_status,
-+			    &status);
-+		if (status & PHY_PLL_LOCKED) {
-+			pr_debug("pll locked!\n");
-+			err = 0;
-+			break;
-+		}
-+		msleep(20);
-+	}
-+
-+	if (err) {
-+		pr_err("pll lock timeout!\n");
-+		goto err_pll_lock;
-+	}
-+
-+	phy_wr_cfg(rk_phy, PHY_CFG_CLK_TEST, PHY_CFG_SEPE_RATE);
-+	phy_wr_cfg(rk_phy, PHY_CFG_CLK_SCC, PHY_CFG_PLL_100M);
-+
-+	err = -ETIMEDOUT;
-+	while (time_before(jiffies, timeout)) {
-+		regmap_read(rk_phy->reg_base,
-+			    rk_phy->phy_data->pcie_status,
-+			    &status);
-+		if (!(status & PHY_PLL_OUTPUT)) {
-+			pr_debug("pll output enable done!\n");
-+			err = 0;
-+			break;
-+		}
-+		msleep(20);
-+	}
-+
-+	if (err) {
-+		pr_err("pll output enable timeout!\n");
-+		goto err_pll_lock;
-+	}
-+
-+	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-+		     HIWORD_UPDATE(PHY_CFG_PLL_LOCK,
-+				   PHY_CFG_ADDR_MASK,
-+				   PHY_CFG_ADDR_SHIFT));
-+	err = -EINVAL;
-+	while (time_before(jiffies, timeout)) {
-+		regmap_read(rk_phy->reg_base,
-+			    rk_phy->phy_data->pcie_status,
-+			    &status);
-+		if (status & PHY_PLL_LOCKED) {
-+			pr_debug("pll relocked!\n");
-+			err = 0;
-+			break;
-+		}
-+		msleep(20);
-+	}
-+
-+	if (err) {
-+		pr_err("pll relock timeout!\n");
-+		goto err_pll_lock;
-+	}
-+
-+	return 0;
-+
-+err_pll_lock:
-+	reset_control_assert(rk_phy->phy_rst);
-+	return err;
-+}
-+
-+static int rockchip_pcie_phy_init(struct phy *phy)
-+{
-+	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-+	int err = 0;
-+
-+	err = clk_prepare_enable(rk_phy->clk_pciephy_ref);
-+	if (err) {
-+		pr_err("Fail to enable pcie ref clock.\n");
-+		goto err_refclk;
-+	}
-+
-+	err = reset_control_assert(rk_phy->phy_rst);
-+	if (err) {
-+		pr_err("assert phy_rst err %d\n", err);
-+		goto err_reset;
-+	}
-+
-+	return err;
-+
-+err_reset:
-+	clk_disable_unprepare(rk_phy->clk_pciephy_ref);
-+err_refclk:
-+	return err;
-+}
-+
-+static int rockchip_pcie_phy_exit(struct phy *phy)
-+{
-+	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-+	int err = 0;
-+
-+	clk_disable_unprepare(rk_phy->clk_pciephy_ref);
-+
-+	err = reset_control_deassert(rk_phy->phy_rst);
-+	if (err) {
-+		pr_err("deassert phy_rst err %d\n", err);
-+		goto err_reset;
-+	}
-+
-+	return err;
-+
-+err_reset:
-+	clk_prepare_enable(rk_phy->clk_pciephy_ref);
-+	return err;
-+}
-+
-+static const struct phy_ops ops = {
-+	.init		= rockchip_pcie_phy_init,
-+	.exit		= rockchip_pcie_phy_exit,
-+	.power_on	= rockchip_pcie_phy_power_on,
-+	.power_off	= rockchip_pcie_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct rockchip_pcie_data rk3399_pcie_data = {
-+	.pcie_conf = 0xe220,
-+	.pcie_status = 0xe2a4,
-+	.pcie_laneoff = 0xe214,
-+};
-+
-+static const struct of_device_id rockchip_pcie_phy_dt_ids[] = {
-+	{
-+		.compatible = "rockchip,rk3399-pcie-phy",
-+		.data = &rk3399_pcie_data,
-+	},
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, rockchip_pcie_phy_dt_ids);
-+
-+static int rockchip_pcie_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct rockchip_pcie_phy *rk_phy;
-+	struct phy *generic_phy;
-+	struct phy_provider *phy_provider;
-+	struct regmap *grf;
-+	const struct of_device_id *of_id;
-+
-+	grf = syscon_node_to_regmap(dev->parent->of_node);
-+	if (IS_ERR(grf)) {
-+		dev_err(dev, "Missing rockchip,grf property\n");
-+		return PTR_ERR(grf);
-+	}
-+
-+	rk_phy = devm_kzalloc(dev, sizeof(*rk_phy), GFP_KERNEL);
-+	if (!rk_phy)
-+		return -ENOMEM;
-+
-+	of_id = of_match_device(rockchip_pcie_phy_dt_ids, &pdev->dev);
-+	if (!of_id)
-+		return -EINVAL;
-+
-+	rk_phy->phy_data = (struct rockchip_pcie_data *)of_id->data;
-+	rk_phy->reg_base = grf;
-+
-+	rk_phy->phy_rst = devm_reset_control_get(dev, "phy");
-+	if (IS_ERR(rk_phy->phy_rst)) {
-+		if (PTR_ERR(rk_phy->phy_rst) != -EPROBE_DEFER)
-+			dev_err(dev,
-+				"missing phy property for reset controller\n");
-+		return PTR_ERR(rk_phy->phy_rst);
-+	}
-+
-+	rk_phy->clk_pciephy_ref = devm_clk_get(dev, "refclk");
-+	if (IS_ERR(rk_phy->clk_pciephy_ref)) {
-+		dev_err(dev, "refclk not found.\n");
-+		return PTR_ERR(rk_phy->clk_pciephy_ref);
-+	}
-+
-+	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
-+	if (IS_ERR(generic_phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(generic_phy);
-+	}
-+
-+	phy_set_drvdata(generic_phy, rk_phy);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static struct platform_driver rockchip_pcie_driver = {
-+	.probe		= rockchip_pcie_phy_probe,
-+	.driver		= {
-+		.name	= "rockchip-pcie-phy",
-+		.of_match_table = rockchip_pcie_phy_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(rockchip_pcie_driver);
-+
-+MODULE_AUTHOR("Shawn Lin <shawn.lin@rock-chips.com>");
-+MODULE_DESCRIPTION("Rockchip PCIe PHY driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.3.7
+OK.  Sounds good.
+
+>> +             .scan_type = {                                          \
+>> +                     .sign = 's',                                    \
+>> +                     .realbits = 13,                                 \
+>> +                     .storagebits = 16,                              \
+>> +                     .shift = 3,                                     \
+>> +                     .endianness = IIO_BE,                           \
+>> +             },                                                      \
+>> +     }
+>> +
+>> +static const struct iio_chan_spec adc12132_channels[] = {
+>> +     ADC12138_VOLTAGE_CHANNEL(0),
+>> +     ADC12138_VOLTAGE_CHANNEL(1),
+>> +     ADC12138_VOLTAGE_CHANNEL_DIFF(0, 1, 2),
+>> +     ADC12138_VOLTAGE_CHANNEL_DIFF(1, 0, 2),
+>> +     IIO_CHAN_SOFT_TIMESTAMP(4),
+>> +};
+>> +
+>> +static const struct iio_chan_spec adc12138_channels[] = {
+>> +     ADC12138_VOLTAGE_CHANNEL(0),
+>> +     ADC12138_VOLTAGE_CHANNEL(1),
+>> +     ADC12138_VOLTAGE_CHANNEL(2),
+>> +     ADC12138_VOLTAGE_CHANNEL(3),
+>> +     ADC12138_VOLTAGE_CHANNEL(4),
+>> +     ADC12138_VOLTAGE_CHANNEL(5),
+>> +     ADC12138_VOLTAGE_CHANNEL(6),
+>> +     ADC12138_VOLTAGE_CHANNEL(7),
+>> +     ADC12138_VOLTAGE_CHANNEL_DIFF(0, 1, 8),
+>> +     ADC12138_VOLTAGE_CHANNEL_DIFF(1, 0, 8),
+>> +     ADC12138_VOLTAGE_CHANNEL_DIFF(2, 3, 8),
+>> +     ADC12138_VOLTAGE_CHANNEL_DIFF(3, 2, 8),
+>> +     ADC12138_VOLTAGE_CHANNEL_DIFF(4, 5, 8),
+>> +     ADC12138_VOLTAGE_CHANNEL_DIFF(5, 4, 8),
+>> +     ADC12138_VOLTAGE_CHANNEL_DIFF(6, 7, 8),
+>> +     ADC12138_VOLTAGE_CHANNEL_DIFF(7, 6, 8),
+>> +     IIO_CHAN_SOFT_TIMESTAMP(16),
+>> +};
+>> +
+>> +static int adc12138_mode_programming(struct adc12138 *adc, u8 mode,
+>> +                                  void *rx_buf, int len)
+>> +{
+>> +     struct spi_transfer xfer = {
+>> +             .tx_buf = adc->tx_buf,
+>> +             .rx_buf = adc->rx_buf,
+>> +             .len = len,
+>> +     };
+>> +     int ret;
+>> +
+>> +     /* Skip unused bits for ADC12130 and ADC12132 */
+>> +     if (adc->id != adc12138)
+>> +             mode = (mode & 0xc0) | ((mode & 0x0f) << 2);
+>> +
+>> +     adc->tx_buf[0] = mode;
+>> +
+>> +     ret = spi_sync_transfer(adc->spi, &xfer, 1);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     memcpy(rx_buf, adc->rx_buf, len);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int adc12138_read_status(struct adc12138 *adc)
+>> +{
+>> +     u8 rx_buf[2];
+>> +     int ret;
+>> +
+>> +     ret = adc12138_mode_programming(adc, ADC12138_MODE_READ_STATUS,
+>> +                                     rx_buf, 2);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     return (rx_buf[0] << 1) | (rx_buf[1] >> 7);
+>> +}
+>> +
+>> +static int __adc12138_start_conv(struct adc12138 *adc,
+>> +                              struct iio_chan_spec const *channel,
+>> +                              void *data, int len)
+>> +
+>> +{
+>> +     const u8 ch_to_mux[] = { 0, 4, 1, 5, 2, 6, 3, 7 };
+>> +     u8 mode = (ch_to_mux[channel->channel] << 4) |
+>> +               (channel->differential ? 0 : 0x80);
+>> +
+>> +     return adc12138_mode_programming(adc, mode, data, len);
+>> +}
+>> +
+>> +static int adc12138_start_conv(struct adc12138 *adc,
+>> +                            struct iio_chan_spec const *channel)
+>> +{
+>> +     u8 trash;
+>> +
+>> +     return __adc12138_start_conv(adc, channel, &trash, 1);
+>> +}
+>> +
+>> +static int adc12138_start_and_read_conv(struct adc12138 *adc,
+>> +                                     struct iio_chan_spec const *channel,
+>> +                                     __be16 *data)
+>> +{
+>> +     return __adc12138_start_conv(adc, channel, data, 2);
+>> +}
+>> +
+>> +static int adc12138_read_conv_data(struct adc12138 *adc, __be16 *value)
+>> +{
+>> +     /* Issue a read status instruction and read previous conversion data */
+>> +     return adc12138_mode_programming(adc, ADC12138_MODE_READ_STATUS,
+>> +                                      value, sizeof(*value));
+>> +}
+>> +
+>> +static int adc12138_wait_eoc(struct adc12138 *adc, unsigned long timeout)
+>> +{
+>> +     if (!wait_for_completion_timeout(&adc->complete, timeout))
+>> +             return -ETIMEDOUT;
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int adc12138_adc_conversion(struct adc12138 *adc,
+>> +                                struct iio_chan_spec const *channel,
+>> +                                __be16 *value)
+>> +{
+>> +     int ret;
+>> +
+>> +     reinit_completion(&adc->complete);
+>> +
+>> +     ret = adc12138_start_conv(adc, channel);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     ret = adc12138_wait_eoc(adc, msecs_to_jiffies(100));
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     return adc12138_read_conv_data(adc, value);
+>> +}
+>> +
+>> +static int adc12138_read_raw(struct iio_dev *iio,
+>> +                          struct iio_chan_spec const *channel, int *value,
+>> +                          int *shift, long mask)
+>> +{
+>> +     struct adc12138 *adc = iio_priv(iio);
+>> +     int ret;
+>> +     __be16 data;
+>> +
+>> +     switch (mask) {
+>> +     case IIO_CHAN_INFO_RAW:
+>> +             mutex_lock(&adc->lock);
+>> +             ret = adc12138_adc_conversion(adc, channel, &data);
+>> +             mutex_unlock(&adc->lock);
+>> +             if (ret)
+>> +                     return ret;
+>> +
+>> +             *value = sign_extend32(be16_to_cpu(data) >> 3, 12);
+>> +
+>> +             return IIO_VAL_INT;
+>> +     case IIO_CHAN_INFO_SCALE:
+>> +             ret = regulator_get_voltage(adc->vref_p);
+>> +             if (ret < 0)
+>> +                     return ret;
+>> +             *value = ret;
+>> +
+>> +             if (!IS_ERR(adc->vref_n)) {
+>> +                     ret = regulator_get_voltage(adc->vref_n);
+>> +                     if (ret < 0)
+>> +                             return ret;
+>> +                     *value -= ret;
+>> +             }
+>> +
+>> +             /* convert regulator output voltage to mV */
+>> +             *value /= 1000;
+>> +             *shift = channel->scan_type.realbits - 1;
+>> +
+>> +             return IIO_VAL_FRACTIONAL_LOG2;
+>> +     case IIO_CHAN_INFO_OFFSET:
+>> +             if (!IS_ERR(adc->vref_n)) {
+>> +                     *value = regulator_get_voltage(adc->vref_n);
+>> +                     if (*value < 0)
+>> +                             return *value;
+>> +             } else {
+>> +                     *value = 0;
+>> +             }
+>> +
+>> +             /* convert regulator output voltage to mV */
+>> +             *value /= 1000;
+>> +
+>> +             return IIO_VAL_INT;
+>> +     }
+>> +
+>> +     return -EINVAL;
+>> +}
+>> +
+>> +static const struct iio_info adc12138_info = {
+>> +     .read_raw = adc12138_read_raw,
+>> +     .driver_module = THIS_MODULE,
+>> +};
+>> +
+>> +static int adc12138_init(struct adc12138 *adc)
+>> +{
+>> +     int ret;
+>> +     int status;
+>> +     u8 mode;
+>> +     u8 trash;
+>> +
+>> +     reinit_completion(&adc->complete);
+>> +
+>> +     ret = adc12138_mode_programming(adc, ADC12138_MODE_AUTO_CAL, &trash, 1);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     /* data output at this time has no significance */
+>> +     status = adc12138_read_status(adc);
+>> +     if (status < 0)
+>> +             return status;
+>> +
+>> +     adc12138_wait_eoc(adc, msecs_to_jiffies(100));
+>> +
+>> +     status = adc12138_read_status(adc);
+>> +     if (status & ADC12138_STATUS_CAL) {
+>> +             dev_warn(&adc->spi->dev,
+>> +                     "Auto Cal sequence is still in progress: %#x\n",
+>> +                     status);
+>> +             return -EIO;
+>> +     }
+>> +
+>> +     switch (adc->acquisition_time) {
+>> +     case 6:
+>> +             mode = ADC12138_MODE_ACQUISITION_TIME_6;
+>> +             break;
+>> +     case 10:
+>> +             mode = ADC12138_MODE_ACQUISITION_TIME_10;
+>> +             break;
+>> +     case 18:
+>> +             mode = ADC12138_MODE_ACQUISITION_TIME_18;
+>> +             break;
+>> +     case 34:
+>> +             mode = ADC12138_MODE_ACQUISITION_TIME_34;
+>> +             break;
+>> +     default:
+>> +             return -EINVAL;
+>> +     }
+>> +
+>> +     return adc12138_mode_programming(adc, mode, &trash, 1);
+>> +}
+>> +
+>> +static irqreturn_t adc12138_trigger_handler(int irq, void *p)
+>> +{
+>> +     struct iio_poll_func *pf = p;
+>> +     struct iio_dev *indio_dev = pf->indio_dev;
+>> +     struct adc12138 *adc = iio_priv(indio_dev);
+>> +     __be16 data[20] = { }; /* 16x 2 bytes ADC data + 8 bytes timestamp */
+>> +     __be16 trash;
+>> +     int ret;
+>> +     int scan_index;
+>> +     int i = 0;
+>> +
+>> +     mutex_lock(&adc->lock);
+>> +
+>> +     for_each_set_bit(scan_index, indio_dev->active_scan_mask,
+>> +                      indio_dev->masklength) {
+>> +             const struct iio_chan_spec *scan_chan =
+>> +                             &indio_dev->channels[scan_index];
+>> +
+>> +             reinit_completion(&adc->complete);
+>> +
+>> +             ret = adc12138_start_and_read_conv(adc, scan_chan,
+>> +                                                i ? &data[i - 1] : &trash);
+>> +             if (ret) {
+>> +                     dev_warn(&adc->spi->dev,
+>> +                              "failed to start conversion\n");
+>> +                     goto out;
+>> +             }
+>> +
+>> +             ret = adc12138_wait_eoc(adc, msecs_to_jiffies(100));
+>> +             if (ret) {
+>> +                     dev_warn(&adc->spi->dev, "wait eoc timeout\n");
+>> +                     goto out;
+>> +             }
+>> +
+>> +             i++;
+>> +     }
+>> +
+>> +     if (i) {
+>> +             ret = adc12138_read_conv_data(adc, &data[i - 1]);
+>> +             if (ret) {
+>> +                     dev_warn(&adc->spi->dev,
+>> +                              "failed to get conversion data\n");
+>> +                     goto out;
+>> +             }
+>> +     }
+>> +
+>> +     iio_push_to_buffers_with_timestamp(indio_dev, data, iio_get_time_ns());
+>> +out:
+>> +     mutex_unlock(&adc->lock);
+>> +
+>> +     iio_trigger_notify_done(indio_dev->trig);
+>> +
+>> +     return IRQ_HANDLED;
+>> +}
+>> +
+>> +static irqreturn_t adc12138_eoc_handler(int irq, void *p)
+>> +{
+>> +     struct iio_dev *indio_dev = p;
+>> +     struct adc12138 *adc = iio_priv(indio_dev);
+>> +
+>> +     complete(&adc->complete);
+>> +
+>> +     return IRQ_HANDLED;
+>> +}
+>> +
+>> +static int adc12138_probe(struct spi_device *spi)
+>> +{
+>> +     struct iio_dev *indio_dev;
+>> +     struct adc12138 *adc;
+>> +     int ret;
+>> +
+>> +     indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
+>> +     if (!indio_dev)
+>> +             return -ENOMEM;
+>> +
+>> +     adc = iio_priv(indio_dev);
+>> +     adc->spi = spi;
+>> +     adc->id = spi_get_device_id(spi)->driver_data;
+>> +     mutex_init(&adc->lock);
+>> +     init_completion(&adc->complete);
+>> +
+>> +     indio_dev->name = spi_get_device_id(spi)->name;
+>> +     indio_dev->dev.parent = &spi->dev;
+>> +     indio_dev->info = &adc12138_info;
+>> +     indio_dev->modes = INDIO_DIRECT_MODE;
+>> +
+>> +     switch (adc->id) {
+>> +     case adc12130:
+>> +     case adc12132:
+>> +             indio_dev->channels = adc12132_channels;
+>> +             indio_dev->num_channels = ARRAY_SIZE(adc12132_channels);
+>> +             break;
+>> +     case adc12138:
+>> +             indio_dev->channels = adc12138_channels;
+>> +             indio_dev->num_channels = ARRAY_SIZE(adc12138_channels);
+>> +             break;
+>> +     default:
+>> +             return -EINVAL;
+>> +     }
+>> +
+>> +     ret = of_property_read_u32(spi->dev.of_node, "acquisition-time",
+>> +                                &adc->acquisition_time);
+>> +     if (ret)
+>> +             adc->acquisition_time = 10;
+>> +
+>> +     adc->cclk = devm_clk_get(&spi->dev, NULL);
+>> +     if (IS_ERR(adc->cclk))
+>> +             return PTR_ERR(adc->cclk);
+>> +
+>> +     adc->vref_p = devm_regulator_get(&spi->dev, "vref-p");
+>> +     if (IS_ERR(adc->vref_p))
+>> +             return PTR_ERR(adc->vref_p);
+>> +
+>> +     adc->vref_n = devm_regulator_get_optional(&spi->dev, "vref-n");
+> The issue here is if a regulator is specified but an attempt to get it fails.
+> So say a request to defer probing occurs.
+>
+> You need to check for ENODEV which is the value returned if an optional
+> regulator is not specified, otherwise you need to handle it as an error like
+> any other.
+
+OK.  Will fix and add a comment about it.
+
+>> +     ret = devm_request_irq(&spi->dev, spi->irq, adc12138_eoc_handler,
+>> +                            IRQF_TRIGGER_RISING, indio_dev->name, indio_dev);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     ret = clk_prepare_enable(adc->cclk);
+>> +     if (ret)
+>> +             return ret;
+>> +
+>> +     ret = regulator_enable(adc->vref_p);
+>> +     if (ret)
+>> +             goto err_clk_disable;
+>> +
+>> +     if (!IS_ERR(adc->vref_n)) {
+>> +             ret = regulator_enable(adc->vref_n);
+>> +             if (ret)
+>> +                     goto err_vref_p_disable;
+>> +     }
+>> +
+>> +     ret = adc12138_init(adc);
+>> +     if (ret)
+>> +             goto err_vref_n_disable;
+>> +
+>> +     spi_set_drvdata(spi, indio_dev);
+>> +
+>> +     ret = iio_triggered_buffer_setup(indio_dev, NULL,
+>> +                                      adc12138_trigger_handler, NULL);
+>> +     if (ret)
+>> +             goto err_vref_n_disable;
+>> +
+>> +     ret = iio_device_register(indio_dev);
+>> +     if (ret)
+>> +             goto err_buffer_cleanup;
+>> +
+>> +     return 0;
+>> +err_buffer_cleanup:
+>> +     iio_triggered_buffer_cleanup(indio_dev);
+>> +err_vref_n_disable:
+>> +     if (!IS_ERR(adc->vref_n))
+>> +             regulator_disable(adc->vref_n);
+>> +err_vref_p_disable:
+>> +     regulator_disable(adc->vref_p);
+>> +err_clk_disable:
+>> +     clk_disable_unprepare(adc->cclk);
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static int adc12138_remove(struct spi_device *spi)
+>> +{
+>> +     struct iio_dev *indio_dev = spi_get_drvdata(spi);
+>> +     struct adc12138 *adc = iio_priv(indio_dev);
+>> +
+>> +     iio_device_unregister(indio_dev);
+>> +     iio_triggered_buffer_cleanup(indio_dev);
+>> +     if (!IS_ERR(adc->vref_n))
+>> +             regulator_disable(adc->vref_n);
+>> +     regulator_disable(adc->vref_p);
+>> +     clk_disable_unprepare(adc->cclk);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_OF
+>> +
+>> +static const struct of_device_id adc12138_dt_ids[] = {
+>> +     { .compatible = "ti,adc12130", },
+>> +     { .compatible = "ti,adc12132", },
+>> +     { .compatible = "ti,adc12138", },
+>> +     {}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, adc12138_dt_ids);
+>> +
+>> +#endif
+>> +
+>> +static const struct spi_device_id adc12138_id[] = {
+>> +     { "adc12130", adc12130 },
+>> +     { "adc12132", adc12132 },
+>> +     { "adc12138", adc12138 },
+>> +     {}
+>> +};
+>> +MODULE_DEVICE_TABLE(spi, adc12138_id);
+>> +
+>> +static struct spi_driver adc12138_driver = {
+>> +     .driver = {
+>> +             .name = "adc12138",
+>> +             .of_match_table = of_match_ptr(adc12138_dt_ids),
+>> +     },
+>> +     .probe = adc12138_probe,
+>> +     .remove = adc12138_remove,
+>> +     .id_table = adc12138_id,
+>> +};
+>> +module_spi_driver(adc12138_driver);
+>> +
+>> +MODULE_AUTHOR("Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+>> +MODULE_DESCRIPTION("ADC12130/ADC12132/ADC12138 driver");
+>> +MODULE_LICENSE("GPL v2");
+>>
+>
