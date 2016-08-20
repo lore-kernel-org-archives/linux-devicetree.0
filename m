@@ -1,13 +1,13 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Subject: [PATCH v5 0/6] Add Meson 8b / GXBB support to the IR driver
-Date: Sat, 20 Aug 2016 11:53:23 +0200
-Message-ID: <20160820095329.549-1-martin.blumenstingl@googlemail.com>
-References: <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
+Date: Sat, 20 Aug 2016 11:54:18 +0200
+Message-ID: <20160820095424.636-1-martin.blumenstingl@googlemail.com>
+References: <20160819215547.20063-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20160819215547.20063-1-martin.blumenstingl@googlemail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
