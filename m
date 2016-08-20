@@ -1,146 +1,76 @@
-From: Joachim  Eastwood <manabian@gmail.com>
-Subject: Re: [PATCH v2 3/4] net: stmmac: add a glue driver for the Amlogic
- Meson 8b / GXBB DWMAC
-Date: Sat, 20 Aug 2016 23:29:08 +0200
-Message-ID: <CAGhQ9VyWs=sYg7PVrt5r-fM-2t--qAnHyvNXAZXwjkYn5P196g@mail.gmail.com>
-References: <20160815164100.27766-1-martin.blumenstingl@googlemail.com>
- <20160820093538.9707-1-martin.blumenstingl@googlemail.com>
- <20160820093538.9707-4-martin.blumenstingl@googlemail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 3/4] usb: dwc2: assert phy reset when waking up in rk3288
+ platform
+Date: Sun, 21 Aug 2016 00:30:27 +0300
+Message-ID: <4c931176-a09a-546c-d2b6-ea74028c78a2@cogentembedded.com>
+References: <7ca3b54d-e9d8-a137-79b6-d24f0b7065c7@synopsys.com>
+ <1471725140-3833-1-git-send-email-ayaka@soulik.info>
+ <1471725140-3833-4-git-send-email-ayaka@soulik.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160820093538.9707-4-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, alexandre.torgue@st.com, khilman@baylibre.com, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, "peppe.cavallaro" <peppe.cavallaro@st.com>, carlo@caione.org, linux-amlogic@lists.infradead.org, netdev <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1471725140-3833-4-git-send-email-ayaka@soulik.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Randy Li <ayaka@soulik.info>, linux-usb@vger.kernel.org
+Cc: johnyoun@synopsys.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, eddie.cai@rock-chips.com, randy.li@rock-chips.com, kishon@ti.com, linux-kernel@vger.kernel.org, heiko@sntech.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+Hello.
 
-On 20 August 2016 at 11:35, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
-> The Ethernet controller available in Meson8b and GXBB SoCs is a Synopsys
-> DesignWare MAC IP core which is already supported by the stmmac driver.
+On 08/20/2016 11:32 PM, Randy Li wrote:
+
+> On the rk3288 USB host-only port (the one that's not the OTG-enabled
+> port) the PHY can get into a bad state when a wakeup is asserted (not
+> just a wakeup from full system suspend but also a wakeup from
+> autosuspend).
 >
-> In addition to the standard stmmac driver some Meson8b / GXBB specific
-> registers have to be configured for the PHY clocks. These SoC specific
-> registers are called PRG_ETHERNET_ADDR0 and PRG_ETHERNET_ADDR1 in the
-> datasheet.
-> These registers are not backwards compatible with those on Meson 6b,
-> which is why a new glue driver is introduced. This worked for many
-> boards because the bootloader programs the PRG_ETHERNET registers
-> correctly. Additionally the meson6-dwmac driver only sets bit 1 of
-> PRG_ETHERNET_ADDR0 which (according to the datasheet) is only used
-> during reset.
+> We can get the PHY out of its bad state by asserting its "port reset",
+> but unfortunately that seems to assert a reset onto the USB bus so it
+> could confuse things if we don't actually deenumerate / reenumerate the
+> device.
 >
-> Currently all configuration values can be determined automatically,
-> based on the configured phy-mode (which is mandatory for the stmmac
-> driver). If required the tx-delay and the mux clock (so it supports
-> the MPLL2 clock as well) can be made configurable in the future.
+> We can also get the PHY out of its bad state by fully resetting it using
+> the reset from the CRU (clock reset unit) in chip, which does a more full
+> reset.  The CRU-based reset appears to actually cause devices on the bus
+> to be removed and reinserted, which fixes the problem (albeit in a hacky
+> way).
 >
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
+> It's unfortunate that we need to do a full re-enumeration of devices at
+> wakeup time, but this is better than alternative of letting the bus get
+> wedged.
+>
+> The original patches came from Doug Anderson <dianders@chromium.org>.
+>
+> Signed-off-by: Randy Li <ayaka@soulik.info>
 > ---
->  drivers/net/ethernet/stmicro/stmmac/Makefile       |   2 +-
->  .../net/ethernet/stmicro/stmmac/dwmac-meson8b.c    | 329 +++++++++++++++++++++
->  2 files changed, 330 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c
-
-<snip>
-
-> +static int meson8b_dwmac_probe(struct platform_device *pdev)
-> +{
-> +       struct plat_stmmacenet_data *plat_dat;
-> +       struct stmmac_resources stmmac_res;
-> +       struct resource *res;
-> +       struct meson8b_dwmac *dwmac;
-> +       int ret;
+>  drivers/usb/dwc2/core_intr.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
+> index d85c5c9..c31c3fe 100644
+> --- a/drivers/usb/dwc2/core_intr.c
+> +++ b/drivers/usb/dwc2/core_intr.c
+[...]
+> @@ -379,6 +380,14 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>  			/* Restart the Phy Clock */
+>  			pcgcctl &= ~PCGCTL_STOPPCLK;
+>  			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
 > +
-> +       ret = stmmac_get_platform_resources(pdev, &stmmac_res);
-> +       if (ret)
-> +               return ret;
-> +
-> +       plat_dat = stmmac_probe_config_dt(pdev, &stmmac_res.mac);
-> +       if (IS_ERR(plat_dat))
-> +               return PTR_ERR(plat_dat);
-> +
-> +       dwmac = devm_kzalloc(&pdev->dev, sizeof(*dwmac), GFP_KERNEL);
-> +       if (!dwmac)
-> +               return -ENOMEM;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +       if (!res)
-> +               return -ENODEV;
-> +
-> +       dwmac->regs = devm_ioremap_resource(&pdev->dev, res);
-> +       if (IS_ERR(dwmac->regs))
-> +               return PTR_ERR(dwmac->regs);
-> +
-> +       dwmac->pdev = pdev;
-> +       dwmac->phy_mode = of_get_phy_mode(pdev->dev.of_node);
-> +       if (dwmac->phy_mode < 0) {
-> +               dev_err(&pdev->dev, "missing phy-mode property\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       ret = meson8b_init_clk(dwmac);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = meson8b_init_prg_eth(dwmac);
-> +       if (ret)
-> +               return ret;
-> +
-> +       plat_dat->bsp_priv = dwmac;
-> +
-> +       platform_set_drvdata(pdev, dwmac);
+> +			/* It is a quirk in Rockchip RK3288, causing by
+> +			 * a hardware bug. This will propagate out and
+> +			 * eventually we'll re-enumerate the device.
+> +			 * Not great but the best we can do */
 
-This will not work. The main stmmac driver already uses the driver_data field.
-See: http://lxr.free-electrons.com/source/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c#L3218
+   The preferred multi-line comment style is this:
 
+/*
+  * bla
+  * bla
+  */
 
-> +       return stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
+    Yours is close. :-)
 
-So calling stmmac_dvr_probe here will overwrite the driver_data field.
+[...]
 
-
-> +}
-> +
-> +static int meson8b_dwmac_remove(struct platform_device *pdev)
-> +{
-> +       struct meson8b_dwmac *dwmac = platform_get_drvdata(pdev);
-> +
-> +       clk_disable_unprepare(dwmac->m25_div_clk);
-
-Did you test this code? I am pretty sure it will blow up given that
-driver_data is not set to what you expect.
-
-To get your meson8b_dwmac struct you must retrieve it from plat_dat->bsp_priv.
-
-
-I have some code for a helper to retrieve bsp_priv that I have meant
-to sent to the ML for a while now.
-See: https://github.com/manabian/linux-lpc/commit/c3e155a6e38b9634e4e61aa4eeb4602ede7e44a6
-
-Feel free to add it to your patch set if you want.
-
-Alternatively take a look at the remove function from dwmac-stm32 here:
-https://patchwork.ozlabs.org/patch/619816/
-
-
-> +
-> +       return stmmac_pltfr_remove(pdev);
-> +}
-
-
-regards,
-Joachim Eastwood
+MBR, Sergei
