@@ -1,100 +1,142 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH 1/3] Documentation: dt: Add TI SCI clock driver
-Date: Fri, 19 Aug 2016 19:33:40 -0500
-Message-ID: <20160820003342.13599-2-nm@ti.com>
-References: <20160820003342.13599-1-nm@ti.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v10 1/2] Documentation: bindings: add dt doc for Rockchip
+ PCIe controller
+Date: Sat, 20 Aug 2016 10:20:47 +0800
+Message-ID: <597c56a1-bd62-a374-f5ed-c4ebc28a8415@rock-chips.com>
+References: <1471570471-3239-1-git-send-email-shawn.lin@rock-chips.com>
+ <20160819193302.GA6308@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160820003342.13599-1-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Dave Gerlach <d-gerlach@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20160819193302.GA6308@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
-
-Add a clock implementation, TI SCI clock, that will hook to the common
-clock framework, and allow each clock to be controlled via TI SCI
-protocol.
-
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Tested-by: Dave Gerlach <d-gerlach@ti.com>
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
- .../devicetree/bindings/clock/ti,sci-clk.txt       | 51 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-
-diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-new file mode 100644
-index 000000000000..231cb80a058e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-@@ -0,0 +1,51 @@
-+Texas Instruments TI-SCI Clocks
-+===============================
-+
-+All clocks on Texas Instruments' SoCs that contain a System Controller,
-+are only controlled by this entity. Communication between a host processor
-+running an OS and the System Controller happens through a protocol known
-+as TI-SCI[1]. This clock implementation plugs into the common clock
-+framework and makes use of the TI-SCI protocol on clock API requests.
-+
-+[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-+
-+Required properties:
-+-------------------
-+- compatible: Must be "ti,sci-clk"
-+- #clock-cells: Shall be 2.
-+  In clock consumers, this cell represents the device ID and clock ID
-+  exposed by the PM firmware. The assignments can be found in the header
-+  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
-+  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where <soc>
-+  is the SoC involved, for example 'k2g'.
-+- ti,sci: Phandle to the TI SCI device to use for managing the clocks
-+
-+Optional properties:
-+-------------------
-+- ti,ssc-clocks: Array of phandle clocks that shall enable spread spectrum
-+		 clocking while enabled
-+- ti,allow-freq-change-clocks: Array of phandle clocks that shall allow
-+			       dynamic clock frequency changes by firmware
-+- ti,input-term-clocks: Array of phandle clocks that shall enable input
-+			termination
-+
-+Examples:
-+--------
-+
-+k2g_clks: k2g_clks {
-+	compatible = "ti,sci-clk";
-+	ti,sci = <&pmmc>;
-+	#clock-cells = <2>;
-+};
-+
-+dummy_node@1234 {
-+	clocks = <&k2g_clks K2G_DEV_DUMMY K2G_DEV_DUMMY_FCK>;
-+};
-+
-+dummy_node2@2345 {
-+	clocks = <&k2g_clks K2G_DEV_DUMMY2 K2G_DEV_DUMMY_X1_CLK>;
-+};
-+
-+&k2g_clks {
-+	ti,ssc-clocks = <&k2g_clks K2G_DEV_DUMMY K2G_DEV_DUMMY_FCK>;
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 448f6801bd78..1837b98d96a9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11576,6 +11576,7 @@ F:	include/linux/soc/ti/ti_sci_protocol.h
- F:	Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
- F:	include/dt-bindings/genpd/k2g.h
- F:	drivers/soc/ti/ti_sci_pm_domains.c
-+F:	Documentation/devicetree/bindings/clock/ti,sci-clk.txt
- 
- THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
- M:	Hans Verkuil <hverkuil@xs4all.nl>
--- 
-2.9.1.200.gb1ec08f
+5ZyoIDIwMTYvOC8yMCAzOjMzLCBCam9ybiBIZWxnYWFzIOWGmemBkzoKPiBPbiBGcmksIEF1ZyAx
+OSwgMjAxNiBhdCAwOTozNDozMUFNICswODAwLCBTaGF3biBMaW4gd3JvdGU6Cj4+IFRoaXMgcGF0
+Y2ggYWRkcyBhIGJpbmRpbmcgdGhhdCBkZXNjcmliZXMgdGhlIFJvY2tjaGlwIFBDSWUgY29udHJv
+bGxlcgo+PiBmb3VuZCBvbiBSb2NrY2hpcCBTb0NzIFBDSWUgaW50ZXJmYWNlLgo+Pgo+PiBTaWdu
+ZWQtb2ZmLWJ5OiBTaGF3biBMaW4gPHNoYXduLmxpbkByb2NrLWNoaXBzLmNvbT4KPj4KPj4gQWNr
+ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4+IFJldmlld2VkLWJ5OiBCcmlh
+biBOb3JyaXMgPGJyaWFubm9ycmlzQGNocm9taXVtLm9yZz4KPgo+IEkgYXBwbGllZCBib3RoIG9m
+IHRoZXNlIHRvIHBjaS9ob3N0LXJvY2tjaGlwIGZvciB2NC45LCB0aGFua3MsIFNoYXduIQo+Cj4g
+SSBtYWRlIGEgZmV3IHdoaXRlc3BhY2UgYW5kIHR5cG8gZml4ZXMgaW4gcGNpZS1yb2NrY2hpcC5j
+LCBzbyB0YWtlIGEKPiBsb29rIGFuZCBtYWtlIHN1cmUgSSBkaWRuJ3QgYnJlYWsgYW55dGhpbmcu
+CgoKSSBjaGVja2VkIHlvdXIgYnJhbmNoLCBob3N0LXJvY2tjaGlwLCBhbmQgaXQncyBva2F5LgoK
+VGhhbmtzLCBCam9ybiEKCj4KPj4gLS0tCj4+Cj4+IENoYW5nZXMgaW4gdjEwOgo+PiAtIGZpeCBi
+cm9rZW4gZGVzY3JpcHRpb24gb2YgbXNpLW1hcAo+PiAtIHMvcGNpZS9QQ0llIGZvciBkZXNjcmlw
+dGlvbgo+Pgo+PiBDaGFuZ2VzIGluIHY5OiBOb25lCj4+IENoYW5nZXMgaW4gdjg6Cj4+IC0gYWRk
+IEJyaWFuJ3MgcmV2aWV3LXRhZwo+Pgo+PiBDaGFuZ2VzIGluIHY3Ogo+PiAtIG1vdmUgb3B0aW9u
+YWwgcHJvcGVydGllcyBhaGVhZCBvZiBpbnRlcnJ1cHQgc3Vibm9kZQo+PiAtIHVzZSAwLWJhc2Ug
+aW5kZXggZm9yIElOVHgKPj4KPj4gQ2hhbmdlcyBpbiB2NjoKPj4gLSBhZGQgYWNrIHRhZyBmcm9t
+IFJvYgo+Pgo+PiBDaGFuZ2VzIGluIHY1Ogo+PiAtIGZpeCB3cm9uZyBleGFtcGxlIHJlcG9ydGVk
+IGJ5IE1hcmMKPj4gLSBhZGQgc2VwZXJhdGUgc2VjdGlvbiB0byBkZXNjcmliZSB0aGUgaW50ZXJy
+dXB0IGNvbnRyb2xsZXIgY2hpbGQKPj4gICBub2RlCj4+Cj4+IENoYW5nZXMgaW4gdjQ6Cj4+IC0g
+Zml4IGV4YW1wbGUgb2YgYWRkaW5nIGludGVybWVkaWF0ZSBpbnRlcnJ1cHQgY29udHJvbGxlciBm
+b3IgcGNpZQo+PiAgIGxlZ2FjeSBpbnRlcnJydXB0Cj4+Cj4+IENoYW5nZXMgaW4gdjM6Cj4+IC0g
+Zml4IGV4YW1wbGUgZHRzIGNvZGUgc3VnZ2VzdGVkIGJ5IFJvYiBhbmQgTWFyYwo+PiAtIHJlbW92
+ZSBkcml2ZXIncyBiZWhhdmlvdXIgb2YgcmVndWxhdG9yCj4+Cj4+IENoYW5nZXMgaW4gdjI6Cj4+
+IC0gZml4IGxvdHMgY2xrL3Jlc2V0IHN0dWZmIHN1Z2dlc3RlZCBieSBIZWlrbwo+PiAtIHJlbW92
+ZSBtc2ktcGFyZW50IGFuZCBhZGQgbXNpLW1hcCBzdWdnZXN0ZWQgYnkgTWFyYwo+PiAtIGRyb3Ag
+cGh5IHJlbGF0ZWQgc3R1ZmYKPj4gLSBzb21lIG90aGVycyBtaW5vciBmaXhlcwo+Pgo+PiAgLi4u
+L2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3JvY2tjaGlwLXBjaWUudHh0ICAgICAgfCAxMDYgKysr
+KysrKysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMTA2IGluc2VydGlvbnMoKykK
+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cGNpL3JvY2tjaGlwLXBjaWUudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcGNpL3JvY2tjaGlwLXBjaWUudHh0IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9yb2NrY2hpcC1wY2llLnR4dAo+PiBuZXcgZmlsZSBtb2Rl
+IDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi5iYTY3YjM5Cj4+IC0tLSAvZGV2L251bGwKPj4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9yb2NrY2hpcC1wY2llLnR4
+dAo+PiBAQCAtMCwwICsxLDEwNiBAQAo+PiArKiBSb2NrY2hpcCBBWEkgUENJZSBSb290IFBvcnQg
+QnJpZGdlIERUIGRlc2NyaXB0aW9uCj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICst
+ICNhZGRyZXNzLWNlbGxzOiBBZGRyZXNzIHJlcHJlc2VudGF0aW9uIGZvciByb290IHBvcnRzLCBz
+ZXQgdG8gPDM+Cj4+ICstICNzaXplLWNlbGxzOiBTaXplIHJlcHJlc2VudGF0aW9uIGZvciByb290
+IHBvcnRzLCBzZXQgdG8gPDI+Cj4+ICstICNpbnRlcnJ1cHQtY2VsbHM6IHNwZWNpZmllcyB0aGUg
+bnVtYmVyIG9mIGNlbGxzIG5lZWRlZCB0byBlbmNvZGUgYW4KPj4gKwkJaW50ZXJydXB0IHNvdXJj
+ZS4gVGhlIHZhbHVlIG11c3QgYmUgMS4KPj4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGNvbnRhaW4g
+InJvY2tjaGlwLHJrMzM5OS1wY2llIgo+PiArLSByZWc6IFR3byByZWdpc3RlciByYW5nZXMgYXMg
+bGlzdGVkIGluIHRoZSByZWctbmFtZXMgcHJvcGVydHkKPj4gKy0gcmVnLW5hbWVzOiBNdXN0IGlu
+Y2x1ZGUgdGhlIGZvbGxvd2luZyBuYW1lcwo+PiArCS0gImF4aS1iYXNlIgo+PiArCS0gImFwYi1i
+YXNlIgo+PiArLSBjbG9ja3M6IE11c3QgY29udGFpbiBhbiBlbnRyeSBmb3IgZWFjaCBlbnRyeSBp
+biBjbG9jay1uYW1lcy4KPj4gKwkJU2VlIC4uL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9y
+IGRldGFpbHMuCj4+ICstIGNsb2NrLW5hbWVzOiBNdXN0IGluY2x1ZGUgdGhlIGZvbGxvd2luZyBl
+bnRyaWVzOgo+PiArCS0gImFjbGsiCj4+ICsJLSAiYWNsay1wZXJmIgo+PiArCS0gImhjbGsiCj4+
+ICsJLSAicG0iCj4+ICstIG1zaS1tYXA6IE1hcHMgYSBSZXF1ZXN0ZXIgSUQgdG8gYW4gTVNJIGNv
+bnRyb2xsZXIgYW5kIGFzc29jaWF0ZWQKPj4gKwltc2ktc3BlY2lmaWVyIGRhdGEuIFNlZSAuL3Bj
+aS1tc2kudHh0Cj4+ICstIHBoeXM6IEZyb20gUEhZIGJpbmRpbmdzOiBQaGFuZGxlIGZvciB0aGUg
+R2VuZXJpYyBQSFkgZm9yIFBDSWUuCj4+ICstIHBoeS1uYW1lczogIE1VU1QgYmUgInBjaWUtcGh5
+Ii4KPj4gKy0gaW50ZXJydXB0czogVGhyZWUgaW50ZXJydXB0IGVudHJpZXMgbXVzdCBiZSBzcGVj
+aWZpZWQuCj4+ICstIGludGVycnVwdC1uYW1lczogTXVzdCBpbmNsdWRlIHRoZSBmb2xsb3dpbmcg
+bmFtZXMKPj4gKwktICJzeXMiCj4+ICsJLSAibGVnYWN5Igo+PiArCS0gImNsaWVudCIKPj4gKy0g
+cmVzZXRzOiBNdXN0IGNvbnRhaW4gZml2ZSBlbnRyaWVzIGZvciBlYWNoIGVudHJ5IGluIHJlc2V0
+LW5hbWVzLgo+PiArCSAgIFNlZSAuLi9yZXNldC9yZXNldC50eHQgZm9yIGRldGFpbHMuCj4+ICst
+IHJlc2V0LW5hbWVzOiBNdXN0IGluY2x1ZGUgdGhlIGZvbGxvd2luZyBuYW1lcwo+PiArCS0gImNv
+cmUiCj4+ICsJLSAibWdtdCIKPj4gKwktICJtZ210LXN0aWNreSIKPj4gKwktICJwaXBlIgo+PiAr
+LSBwaW5jdHJsLW5hbWVzIDogVGhlIHBpbiBjb250cm9sIHN0YXRlIG5hbWVzCj4+ICstIHBpbmN0
+cmwtMDogVGhlICJkZWZhdWx0IiBwaW5jdHJsIHN0YXRlCj4+ICstICNpbnRlcnJ1cHQtY2VsbHM6
+IHNwZWNpZmllcyB0aGUgbnVtYmVyIG9mIGNlbGxzIG5lZWRlZCB0byBlbmNvZGUgYW4KPj4gKwlp
+bnRlcnJ1cHQgc291cmNlLiBUaGUgdmFsdWUgbXVzdCBiZSAxLgo+PiArLSBpbnRlcnJ1cHQtbWFw
+LW1hc2sgYW5kIGludGVycnVwdC1tYXA6IHN0YW5kYXJkIFBDSSBwcm9wZXJ0aWVzCj4+ICsKPj4g
+K09wdGlvbmFsIFByb3BlcnR5Ogo+PiArLSBlcC1ncGlvczogY29udGFpbiB0aGUgZW50cnkgZm9y
+IHByZS1yZXNldCBncGlvCj4+ICstIG51bS1sYW5lczogbnVtYmVyIG9mIGxhbmVzIHRvIHVzZQo+
+PiArLSB2cGNpZTN2My1zdXBwbHk6IFRoZSBwaGFuZGxlIHRvIHRoZSAzLjN2IHJlZ3VsYXRvciB0
+byB1c2UgZm9yIFBDSWUuCj4+ICstIHZwY2llMXY4LXN1cHBseTogVGhlIHBoYW5kbGUgdG8gdGhl
+IDEuOHYgcmVndWxhdG9yIHRvIHVzZSBmb3IgUENJZS4KPj4gKy0gdnBjaWUwdjktc3VwcGx5OiBU
+aGUgcGhhbmRsZSB0byB0aGUgMC45diByZWd1bGF0b3IgdG8gdXNlIGZvciBQQ0llLgo+PiArCj4+
+ICsqSW50ZXJydXB0IGNvbnRyb2xsZXIgY2hpbGQgbm9kZSoKPj4gK1RoZSBjb3JlIGNvbnRyb2xs
+ZXIgcHJvdmlkZXMgYSBzaW5nbGUgaW50ZXJydXB0IGZvciBsZWdhY3kgSU5UeC4gVGhlIFBDSWUg
+bm9kZQo+PiArc2hvdWxkIGNvbnRhaW4gYW4gaW50ZXJydXB0IGNvbnRyb2xsZXIgbm9kZSBhcyBh
+IHRhcmdldCBmb3IgdGhlIFBDSQo+PiArJ2ludGVycnVwdC1tYXAnIHByb3BlcnR5LiBUaGlzIG5v
+ZGUgcmVwcmVzZW50cyB0aGUgZG9tYWluIGF0IHdoaWNoIHRoZSBmb3VyCj4+ICtJTlR4IGludGVy
+cnVwdHMgYXJlIGRlY29kZWQgYW5kIHJvdXRlZC4KPj4gKwo+PiArCj4+ICtSZXF1aXJlZCBwcm9w
+ZXJ0aWVzIGZvciBJbnRlcnJ1cHQgY29udHJvbGxlciBjaGlsZCBub2RlOgo+PiArLSBpbnRlcnJ1
+cHQtY29udHJvbGxlcjogaWRlbnRpZmllcyB0aGUgbm9kZSBhcyBhbiBpbnRlcnJ1cHQgY29udHJv
+bGxlcgo+PiArLSAjYWRkcmVzcy1jZWxsczogc3BlY2lmaWVzIHRoZSBudW1iZXIgb2YgY2VsbHMg
+bmVlZGVkIHRvIGVuY29kZSBhbgo+PiArCWFkZHJlc3MuIFRoZSB2YWx1ZSBtdXN0IGJlIDAuCj4+
+ICstICNpbnRlcnJ1cHQtY2VsbHM6IHNwZWNpZmllcyB0aGUgbnVtYmVyIG9mIGNlbGxzIG5lZWRl
+ZCB0byBlbmNvZGUgYW4KPj4gKwlpbnRlcnJ1cHQgc291cmNlLiBUaGUgdmFsdWUgbXVzdCBiZSAx
+Lgo+PiArCj4+ICtFeGFtcGxlOgo+PiArCj4+ICtwY2llMDogcGNpZUBmODAwMDAwMCB7Cj4+ICsJ
+Y29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMzOTktcGNpZSI7Cj4+ICsJI2FkZHJlc3MtY2VsbHMg
+PSA8Mz47Cj4+ICsJI3NpemUtY2VsbHMgPSA8Mj47Cj4+ICsJY2xvY2tzID0gPCZjcnUgQUNMS19Q
+Q0lFPiwgPCZjcnUgQUNMS19QRVJGX1BDSUU+LAo+PiArCQkgPCZjcnUgUENMS19QQ0lFPiwgPCZj
+cnUgU0NMS19QQ0lFX1BNPjsKPj4gKwljbG9jay1uYW1lcyA9ICJhY2xrIiwgImFjbGstcGVyZiIs
+Cj4+ICsJCSAgICAgICJoY2xrIiwgInBtIjsKPj4gKwlidXMtcmFuZ2UgPSA8MHgwIDB4MT47Cj4+
+ICsJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDQ5IElSUV9UWVBFX0xFVkVMX0hJR0ggMD4sCj4+ICsJ
+CSAgICAgPEdJQ19TUEkgNTAgSVJRX1RZUEVfTEVWRUxfSElHSCAwPiwKPj4gKwkJICAgICA8R0lD
+X1NQSSA1MSBJUlFfVFlQRV9MRVZFTF9ISUdIIDA+Owo+PiArCWludGVycnVwdC1uYW1lcyA9ICJz
+eXMiLCAibGVnYWN5IiwgImNsaWVudCI7Cj4+ICsJYXNzaWduZWQtY2xvY2tzID0gPCZjcnUgU0NM
+S19QQ0lFUEhZX1JFRj47Cj4+ICsJYXNzaWduZWQtY2xvY2stcGFyZW50cyA9IDwmY3J1IFNDTEtf
+UENJRVBIWV9SRUYxMDBNPjsKPj4gKwlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDwxMDAwMDAwMDA+
+Owo+PiArCWVwLWdwaW9zID0gPCZncGlvMyAxMyBHUElPX0FDVElWRV9ISUdIPjsKPj4gKwlyYW5n
+ZXMgPSA8MHg4MzAwMDAwMCAweDAgMHhmYTAwMDAwMCAweDAgMHhmYTAwMDAwMCAweDAgMHg2MDAw
+MDAKPj4gKwkJICAweDgxMDAwMDAwIDB4MCAweGZhNjAwMDAwIDB4MCAweGZhNjAwMDAwIDB4MCAw
+eDEwMDAwMD47Cj4+ICsJbnVtLWxhbmVzID0gPDQ+Owo+PiArCW1zaS1tYXAgPSA8MHgwICZpdHMg
+MHgwIDB4MTAwMD47Cj4+ICsJcmVnID0gPDB4MCAweGY4MDAwMDAwIDB4MCAweDIwMDAwMDA+LCA8
+MHgwIDB4ZmQwMDAwMDAgMHgwIDB4MTAwMDAwMD47Cj4+ICsJcmVnLW5hbWVzID0gImF4aS1iYXNl
+IiwgImFwYi1iYXNlIjsKPj4gKwlyZXNldHMgPSA8JmNydSBTUlNUX1BDSUVfQ09SRT4sIDwmY3J1
+IFNSU1RfUENJRV9NR01UPiwKPj4gKwkJIDwmY3J1IFNSU1RfUENJRV9NR01UX1NUSUNLWT4sIDwm
+Y3J1IFNSU1RfUENJRV9QSVBFPjsKPj4gKwlyZXNldC1uYW1lcyA9ICJjb3JlIiwgIm1nbXQiLCAi
+bWdtdC1zdGlja3kiLCAicGlwZSI7Cj4+ICsJcGh5cyA9IDwmcGNpZV9waHk+Owo+PiArCXBoeS1u
+YW1lcyA9ICJwY2llLXBoeSI7Cj4+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPj4gKwlw
+aW5jdHJsLTAgPSA8JnBjaWVfY2xrcmVxPjsKPj4gKwkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+
+PiArCWludGVycnVwdC1tYXAtbWFzayA9IDwwIDAgMCA3PjsKPj4gKwlpbnRlcnJ1cHQtbWFwID0g
+PDAgMCAwIDEgJnBjaWUwX2ludGMgMD4sCj4+ICsJCQk8MCAwIDAgMiAmcGNpZTBfaW50YyAxPiwK
+Pj4gKwkJCTwwIDAgMCAzICZwY2llMF9pbnRjIDI+LAo+PiArCQkJPDAgMCAwIDQgJnBjaWUwX2lu
+dGMgMz47Cj4+ICsJcGNpZTBfaW50YzogaW50ZXJydXB0LWNvbnRyb2xsZXIgewo+PiArCQlpbnRl
+cnJ1cHQtY29udHJvbGxlcjsKPj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MD47Cj4+ICsJCSNpbnRl
+cnJ1cHQtY2VsbHMgPSA8MT47Cj4+ICsJfTsKPj4gK307Cj4+IC0tCj4+IDIuMy43Cj4+Cj4+Cj4K
+Pgo+CgoKLS0gCkJlc3QgUmVnYXJkcwpTaGF3biBMaW4KCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGlu
+dXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LXJvY2tjaGlwCg==
