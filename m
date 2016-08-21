@@ -1,16 +1,22 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 1/7] phy-sun4i-usb: Use bool where appropriate
-Date: Sun, 21 Aug 2016 14:16:33 +0200
-Message-ID: <1471781799-10457-1-git-send-email-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH v3 2/7] phy-sun4i-usb: Refactor forced session ending
+Date: Sun, 21 Aug 2016 14:16:34 +0200
+Message-ID: <1471781799-10457-2-git-send-email-hdegoede@redhat.com>
+References: <1471781799-10457-1-git-send-email-hdegoede@redhat.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471781799-10457-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We're using bool as true/false type in most places in phy-sun4i-usb.c
-for consistency fixup the remaining uses of ints which are ever only
-0 or 1 to be bools too.
+The phy-sun4i-usb code supports forced ending a session on systems
+which lack Vbus detection, to allow switching between host and peripheral
+mode on such systems.
+
+Role switching via the musb driver "mode" sysfs attribute requires force
+ending the session too. This commit refactors the code to allow other
+parts of the phy-sun4i-usb code to request a forced session end.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
@@ -19,43 +25,74 @@ Changes in v2:
 Changes in v3:
 -No changes
 ---
- drivers/phy/phy-sun4i-usb.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/phy/phy-sun4i-usb.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index fcf4d95e..1cb84a8 100644
+index 1cb84a8..02cb65e 100644
 --- a/drivers/phy/phy-sun4i-usb.c
 +++ b/drivers/phy/phy-sun4i-usb.c
-@@ -445,7 +445,8 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+@@ -133,6 +133,7 @@ struct sun4i_usb_phy_data {
+ 	struct power_supply *vbus_power_supply;
+ 	struct notifier_block vbus_power_nb;
+ 	bool vbus_power_nb_registered;
++	bool force_session_end;
+ 	int id_det_irq;
+ 	int vbus_det_irq;
+ 	int id_det;
+@@ -445,7 +446,7 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
  	struct sun4i_usb_phy_data *data =
  		container_of(work, struct sun4i_usb_phy_data, detect.work);
  	struct phy *phy0 = data->phys[0].phy;
--	int id_det, vbus_det, id_notify = 0, vbus_notify = 0;
-+	bool id_notify = false, vbus_notify = false;
-+	int id_det, vbus_det;
+-	bool id_notify = false, vbus_notify = false;
++	bool force_session_end, id_notify = false, vbus_notify = false;
+ 	int id_det, vbus_det;
  
  	if (phy0 == NULL)
+@@ -461,14 +462,17 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
  		return;
-@@ -474,13 +475,13 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 		}
- 		sun4i_usb_phy0_set_id_detect(phy0, id_det);
- 		data->id_det = id_det;
--		id_notify = 1;
-+		id_notify = true;
  	}
  
- 	if (vbus_det != data->vbus_det) {
- 		sun4i_usb_phy0_set_vbus_detect(phy0, vbus_det);
- 		data->vbus_det = vbus_det;
--		vbus_notify = 1;
-+		vbus_notify = true;
- 	}
- 
- 	mutex_unlock(&phy0->mutex);
++	force_session_end = data->force_session_end;
++	data->force_session_end = false;
++
+ 	if (id_det != data->id_det) {
+-		/*
+-		 * When a host cable (id == 0) gets plugged in on systems
+-		 * without vbus detection report vbus low for long enough for
+-		 * the musb-ip to end the current device session.
+-		 */
++		/* id-change, force session end if we've no vbus detection */
+ 		if (data->dr_mode == USB_DR_MODE_OTG &&
+-		    !sun4i_usb_phy0_have_vbus_det(data) && id_det == 0) {
++		    !sun4i_usb_phy0_have_vbus_det(data))
++			force_session_end = true;
++
++		/* When entering host mode (id = 0) force end the session now */
++		if (force_session_end && id_det == 0) {
+ 			sun4i_usb_phy0_set_vbus_detect(phy0, 0);
+ 			msleep(200);
+ 			sun4i_usb_phy0_set_vbus_detect(phy0, 1);
+@@ -489,13 +493,8 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 	if (id_notify) {
+ 		extcon_set_cable_state_(data->extcon, EXTCON_USB_HOST,
+ 					!id_det);
+-		/*
+-		 * When a host cable gets unplugged (id == 1) on systems
+-		 * without vbus detection report vbus low for long enough to
+-		 * the musb-ip to end the current host session.
+-		 */
+-		if (data->dr_mode == USB_DR_MODE_OTG &&
+-		    !sun4i_usb_phy0_have_vbus_det(data) && id_det == 1) {
++		/* When leaving host mode force end the session here */
++		if (force_session_end && id_det == 1) {
+ 			mutex_lock(&phy0->mutex);
+ 			sun4i_usb_phy0_set_vbus_detect(phy0, 0);
+ 			msleep(1000);
 -- 
 2.7.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
