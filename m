@@ -1,105 +1,258 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] iio: gyro: Add MPU-3050 device tree bindings
-Date: Sun, 21 Aug 2016 17:08:47 +0100
-Message-ID: <ff9be804-8298-5214-1fdc-3b490a609ca3@kernel.org>
-References: <1471286275-25024-1-git-send-email-linus.walleij@linaro.org>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH 2/5] firmware: Add basic support for TI System Control
+ Interface (TI-SCI) protocol
+Date: Sun, 21 Aug 2016 21:50:04 +0530
+Message-ID: <5d03a04f-9184-10e4-43c9-8834e8a39545@ti.com>
+References: <20160819225159.10758-1-nm@ti.com>
+ <20160819225159.10758-3-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471286275-25024-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Crestez Dan Leonard <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160819225159.10758-3-nm@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Russ Dill <Russ.Dill@ti.com>, Dave Gerlach <d-gerlach@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, "Andrew F . Davis" <afd@ti.com>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 15/08/16 19:37, Linus Walleij wrote:
-> This adds device tree bindings for the MPU-3050 gyroscope. Since it
-> is the first set of bindings for a gyroscope, the folder for it
-> is also created.
+
+
+On 8/20/2016 4:21 AM, Nishanth Menon wrote:
+> Texas Instrument's System Control Interface (TI-SCI) Message Protocol
+> is used in Texas Instrument's System on Chip (SoC) such as those
+> in keystone family K2G SoC to communicate between various compute
+> processors with a central system controller entity.
 > 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Leonard, could you take a look at this series.
-
-Whilst the device is somewhat different in it's register map etc, the
-i2c master stuff looks at least superficially similar so we should end
-up with equivalent bindings...
-
-(any movement on a V3 for that patch set - I know some of the beagle gsoc
-guys were making fair use of those patches and would love to have mainlined
-version)
-
-Superficially looks like the bypass bindings are the same anyway which is
-good but I'd like a quick look from you as well.
-
-Not totally sure we ever convinced Rob on those bindings either, but
-perhaps that's waiting for V3.
-
-Jonathan
+> TI-SCI message protocol provides support for management of various
+> hardware entities within the SoC. Add support driver to allow
+> communication with system controller entity within the SoC using the
+> mailbox client.
+> 
+> We introduce the basic registration and query capability for the
+> driver protocol as part of this change. Subsequent patches add in
+> functionality specific to the TI-SCI features.
+> 
+> Signed-off-by: Nishanth Menon <nm@ti.com>
 > ---
->  .../bindings/iio/gyroscope/invensense,mpu3050.txt  | 54 ++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
-> new file mode 100644
-> index 000000000000..e17231a5f4b5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
-> @@ -0,0 +1,54 @@
-> +Invensense MPU-3050 Gyroscope device tree bindings
+
+[..snip..]
+
 > +
-> +Required properties:
-> +  - compatible : should be "invensense,mpu3050"
-> +  - reg : the I2C address of the sensor
-> +  - #address-cells : should be <1>, used to indicate the optional
-> +    I2C mux node
-> +  - #size-cells : should be <0>
+> +static int ti_sci_remove(struct platform_device *pdev)
+> +{
+> +	struct ti_sci_info *info;
+> +	int ret = 0;
 > +
-> +Optional properties:
-> +  - interrupt-parent : should be the phandle for the interrupt controller
-> +  - interrupts : interrupt mapping for the trigger interrupt from the
-> +    internal oscillator. The following IRQ modes are supported:
-> +    IRQ_TYPE_EDGE_RISING, IRQ_TYPE_EDGE_FALLING, IRQ_TYPE_LEVEL_HIGH and
-> +    IRQ_TYPE_LEVEL_LOW. The driver should detect and configure the hardware
-> +    for the desired interrupt type.
-> +  - vdd-supply : supply regulator for the main power voltage.
-> +  - vlogic-supply : supply regulator for the signal voltage.
-> +  - mount-matrix : see iio/mount-matrix.txt
+> +	info = platform_get_drvdata(pdev);
 > +
-> +Optional subnodes:
-> +  - The MPU-3050 will pass through and forward the I2C signals from the
-> +    incoming I2C bus, alternatively drive traffic to a slave device (usually
-> +    an accelerometer) on its own initiative. Therefore is supports a subnode
-> +    i2c master node. This node is like any I2C master and should contain:
-> +    #address-cells = <1>;
-> +    #size-cells = <0>;
-> +    reg = <0>;
+> +	mutex_lock(&ti_sci_list_mutex);
+> +	if (info->users)
+> +		ret = -EBUSY;
+> +	else
+> +		list_del(&info->node);
+> +	mutex_unlock(&ti_sci_list_mutex);
+
+shouldn't the mbox channels be freed in remove?
+
+mbox_free_channel(info->chan_tx);
+mbox_free_channel(info->chan_rx);
+
+Thanks and regards,
+Lokesh
+
 > +
-> +Example:
+> +	if (!ret)
+> +		ti_sci_debugfs_destroy(pdev, info);
 > +
-> +mpu3050@68 {
-> +	compatible = "invensense,mpu3050";
-> +	reg = <0x68>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	interrupt-parent = <&foo>;
-> +	interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
-> +	vdd-supply = <&bar>;
-> +	vlogic-supply = <&baz>;
+> +	return ret;
+> +}
 > +
-> +	/* External I2C interface */
-> +	i2c@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0>;
-> +		fnord@18 {
-> +			compatible = "fnord";
-> +			reg = <0x18>;
-> +			interrupt-parent = <&foo>;
-> +			interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
-> +		};
-> +	};
+> +static struct platform_driver ti_sci_driver = {
+> +	.probe = ti_sci_probe,
+> +	.remove = ti_sci_remove,
+> +	.driver = {
+> +		   .name = "ti-sci",
+> +		   .of_match_table = of_match_ptr(ti_sci_of_match),
+> +	},
 > +};
+> +module_platform_driver(ti_sci_driver);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("TI System Control Interface(SCI) driver");
+> +MODULE_AUTHOR("Nishanth Menon");
+> +MODULE_ALIAS("platform:ti-sci");
+> diff --git a/drivers/firmware/ti_sci.h b/drivers/firmware/ti_sci.h
+> new file mode 100644
+> index 000000000000..e9dc53f26e0e
+> --- /dev/null
+> +++ b/drivers/firmware/ti_sci.h
+> @@ -0,0 +1,93 @@
+> +/*
+> + * Texas Instruments System Control Interface (TISCI) Protocol
+> + *
+> + * Communication protocol with TI SCI hardware
+> + * The system works in a message response protocol
+> + * See: http://processors.wiki.ti.com/index.php/TISCI for details
+> + *
+> + * Copyright (C)  2015-2016 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * Redistribution and use in source and binary forms, with or without
+> + * modification, are permitted provided that the following conditions
+> + * are met:
+> + *
+> + *   Redistributions of source code must retain the above copyright
+> + *   notice, this list of conditions and the following disclaimer.
+> + *
+> + *   Redistributions in binary form must reproduce the above copyright
+> + *   notice, this list of conditions and the following disclaimer in the
+> + *   documentation and/or other materials provided with the
+> + *   distribution.
+> + *
+> + *   Neither the name of Texas Instruments Incorporated nor the names of
+> + *   its contributors may be used to endorse or promote products derived
+> + *   from this software without specific prior written permission.
+> + *
+> + * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> + * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> + * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+> + * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+> + * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> + * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+> + * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+> + * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> + * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> + * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + */
+> +
+> +#ifndef __TI_SCI_H
+> +#define __TI_SCI_H
+> +
+> +/* Generic Messages */
+> +#define TI_SCI_MSG_ENABLE_WDT	0x0000
+> +#define TI_SCI_MSG_WAKE_RESET	0x0001
+> +#define TI_SCI_MSG_VERSION	0x0002
+> +#define TI_SCI_MSG_WAKE_REASON	0x0003
+> +#define TI_SCI_MSG_GOODBYE	0x0004
+> +
+> +/**
+> + * struct ti_sci_msg_hdr - Generic Message Header for All messages and responses
+> + * @type:	Type of messages: One of TI_SCI_MSG* values
+> + * @host:	Host of the message
+> + * @seq:	Message identifier indicating a transfer sequence
+> + * @flags:	Flag for the message
+> + */
+> +struct ti_sci_msg_hdr {
+> +	u16 type;
+> +	u8 host;
+> +	u8 seq;
+> +#define TI_SCI_MSG_FLAG(val)			(1 << (val))
+> +#define TI_SCI_FLAG_REQ_GENERIC_NORESPONSE	0x0
+> +#define TI_SCI_FLAG_REQ_ACK_ON_RECEIVED		TI_SCI_MSG_FLAG(0)
+> +#define TI_SCI_FLAG_REQ_ACK_ON_PROCESSED	TI_SCI_MSG_FLAG(1)
+> +#define TI_SCI_FLAG_RESP_GENERIC_NACK		0x0
+> +#define TI_SCI_FLAG_RESP_GENERIC_ACK		TI_SCI_MSG_FLAG(1)
+> +	/* Additional Flags */
+> +	u32 flags;
+> +} __packed;
+> +
+> +/**
+> + * struct ti_sci_msg_resp_version - Response for a message
+> + * @hdr:		Generic header
+> + * @firmware_description: String describing the firmware
+> + * @firmware_revision:	Firmware revision
+> + * @abi_major:		Major version of the ABI that firmware supports
+> + * @abi_minor:		Minor version of the ABI that firmware supports
+> + *
+> + * In general, ABI version changes follow the rule that minor version increments
+> + * are backward compatible. Major revision changes in ABI may not be
+> + * backward compatible.
+> + *
+> + * Response to a generic message with message type TI_SCI_MSG_VERSION
+> + */
+> +struct ti_sci_msg_resp_version {
+> +	struct ti_sci_msg_hdr hdr;
+> +	char firmware_description[32];
+> +	u16 firmware_revision;
+> +	u8 abi_major;
+> +	u8 abi_minor;
+> +} __packed;
+> +
+> +#endif /* __TI_SCI_H */
+> diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+> new file mode 100644
+> index 000000000000..e73483fd5327
+> --- /dev/null
+> +++ b/include/linux/soc/ti/ti_sci_protocol.h
+> @@ -0,0 +1,69 @@
+> +/*
+> + * Texas Instruments System Control Interface Protocol
+> + *
+> + * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
+> + *	Nishanth Menon
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether express or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#ifndef __TISCI_PROTOCOL_H
+> +#define __TISCI_PROTOCOL_H
+> +
+> +/**
+> + * struct ti_sci_version_info - version information structure
+> + * @abi_major:	Major ABI version. Change here implies risk of backward
+> + *		compatibility break.
+> + * @abi_minor:	Minor ABI version. Change here implies new feature addition,
+> + *		or compatible change in ABI.
+> + * @firmware_revision:	Firmware revision (not usually used).
+> + * @firmware_description: Firmware description (not usually used).
+> + */
+> +struct ti_sci_version_info {
+> +	u8 abi_major;
+> +	u8 abi_minor;
+> +	u16 firmware_revision;
+> +	char firmware_description[32];
+> +};
+> +
+> +/**
+> + * struct ti_sci_handle - Handle returned to TI SCI clients for usage.
+> + * @version:	structure containing version information
+> + */
+> +struct ti_sci_handle {
+> +	struct ti_sci_version_info version;
+> +};
+> +
+> +#if IS_ENABLED(CONFIG_TI_SCI_PROTOCOL)
+> +const struct ti_sci_handle *ti_sci_get_handle(struct device *dev);
+> +int ti_sci_put_handle(const struct ti_sci_handle *handle);
+> +const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev);
+> +
+> +#else	/* CONFIG_TI_SCI_PROTOCOL */
+> +
+> +static inline const struct ti_sci_handle *ti_sci_get_handle(struct device *dev)
+> +{
+> +	return ERR_PTR(-EINVAL);
+> +}
+> +
+> +static inline int ti_sci_put_handle(const struct ti_sci_handle *handle)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static inline
+> +const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
+> +{
+> +	return ERR_PTR(-EINVAL);
+> +}
+> +
+> +#endif	/* CONFIG_TI_SCI_PROTOCOL */
+> +
+> +#endif	/* __TISCI_PROTOCOL_H */
 > 
