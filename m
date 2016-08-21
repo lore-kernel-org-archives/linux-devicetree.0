@@ -1,105 +1,115 @@
-From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Subject: [PATCH 2/4] phy: rockchip-usb: use rockchip_usb_phy_reset to reset
- phy during wakeup
-Date: Sun, 21 Aug 2016 15:56:43 +0800
-Message-ID: <1471766205-12940-3-git-send-email-ayaka@soulik.info>
-References: <4c931176-a09a-546c-d2b6-ea74028c78a2@cogentembedded.com>
- <1471766205-12940-1-git-send-email-ayaka@soulik.info>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] iio: adc: add ADC12130/ADC12132/ADC12138 ADC driver
+Date: Sun, 21 Aug 2016 10:45:31 +0100
+Message-ID: <e76a92c5-4de6-88e5-746f-337f82d196d2@kernel.org>
+References: <1470583330-6850-1-git-send-email-akinobu.mita@gmail.com>
+ <b43674fb-6a68-de05-0f06-e1f92986705d@kernel.org>
+ <CAC5umyg831=Q4iih+4rPpdNSyEEgBKqHk00cLCd6XJ5dTw92Jw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1471766205-12940-1-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAC5umyg831=Q4iih+4rPpdNSyEEgBKqHk00cLCd6XJ5dTw92Jw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It is a hardware bug in RK3288, the only way to solve it is to
-reset the phy.
-
-Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
----
- .../devicetree/bindings/phy/rockchip-usb-phy.txt     |  3 +++
- drivers/phy/phy-rockchip-usb.c                       | 20 ++++++++++++++++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
-index cc6be96..57dc388 100644
---- a/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
-@@ -27,6 +27,9 @@ Optional Properties:
- - clocks : phandle + clock specifier for the phy clocks
- - clock-names: string, clock name, must be "phyclk"
- - #clock-cells: for users of the phy-pll, should be 0
-+- reset-names: Only allow the following entries:
-+ - phy-reset
-+- resets: Must contain an entry for each entry in reset-names.
- 
- Example:
- 
-diff --git a/drivers/phy/phy-rockchip-usb.c b/drivers/phy/phy-rockchip-usb.c
-index 2a7381f..734987f 100644
---- a/drivers/phy/phy-rockchip-usb.c
-+++ b/drivers/phy/phy-rockchip-usb.c
-@@ -29,6 +29,7 @@
- #include <linux/reset.h>
- #include <linux/regmap.h>
- #include <linux/mfd/syscon.h>
-+#include <linux/delay.h>
- 
- static int enable_usb_uart;
- 
-@@ -64,6 +65,7 @@ struct rockchip_usb_phy {
- 	struct clk_hw	clk480m_hw;
- 	struct phy	*phy;
- 	bool		uart_enabled;
-+	struct reset_control *reset;
- };
- 
- static int rockchip_usb_phy_power(struct rockchip_usb_phy *phy,
-@@ -144,9 +146,23 @@ static int rockchip_usb_phy_power_on(struct phy *_phy)
- 	return clk_prepare_enable(phy->clk480m);
- }
- 
-+static int rockchip_usb_phy_reset(struct phy *_phy)
-+{
-+	struct rockchip_usb_phy *phy = phy_get_drvdata(_phy);
-+
-+	if (phy->reset) {
-+		reset_control_assert(phy->reset);
-+		udelay(10);
-+		reset_control_deassert(phy->reset);
-+	}
-+
-+	return 0;
-+}
-+
- static const struct phy_ops ops = {
- 	.power_on	= rockchip_usb_phy_power_on,
- 	.power_off	= rockchip_usb_phy_power_off,
-+	.reset		= rockchip_usb_phy_reset,
- 	.owner		= THIS_MODULE,
- };
- 
-@@ -185,6 +201,10 @@ static int rockchip_usb_phy_init(struct rockchip_usb_phy_base *base,
- 		return -EINVAL;
- 	}
- 
-+	rk_phy->reset = of_reset_control_get(child, "phy-reset");
-+	if (IS_ERR(rk_phy->reset))
-+		rk_phy->reset = NULL;
-+
- 	rk_phy->reg_offset = reg_offset;
- 
- 	rk_phy->clk = of_clk_get_by_name(child, "phyclk");
--- 
-2.7.4
+On 20/08/16 03:54, Akinobu Mita wrote:
+> Hi Rob,
+> 
+> 2016-08-16 1:42 GMT+09:00 Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>> On 07/08/16 16:22, Akinobu Mita wrote:
+>>> This adds Texas Instruments' ADC12130/ADC12132/ADC12138 12-bit plus
+>>> sign ADC driver.  I have tested with the ADC12138.  The ADC12130 and
+>>> ADC12132 are not tested but these are similar to ADC12138 except that
+>>> the mode programming instruction is a bit different.
+>>>
+>>> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Hi,
+>>
+>> Now had time for a closer look.  A few minor bits and bobs to fix
+>> up highlighted inline.
+>>
+>> Looks pretty good.
+>>
+>> Jonathan
+>>> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+>>> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+>>> Cc: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+>>> ---
+>>> * Changes from v2
+>>> - improve error label names
+>>>
+>>>  .../devicetree/bindings/iio/adc/ti-adc12138.txt    |  32 ++
+>>>  drivers/iio/adc/Kconfig                            |  12 +
+>>>  drivers/iio/adc/Makefile                           |   1 +
+>>>  drivers/iio/adc/ti-adc12138.c                      | 542 +++++++++++++++++++++
+>>>  4 files changed, 587 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
+>>>  create mode 100644 drivers/iio/adc/ti-adc12138.c
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
+>>> new file mode 100644
+>>> index 0000000..3a11d2a
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
+>>> @@ -0,0 +1,32 @@
+>>> +* Texas Instruments' ADC12130/ADC12132/ADC12138
+>>> +
+>>> +Required properties:
+>>> + - compatible: Should be one of
+>>> +     * "ti,adc12130"
+>>> +     * "ti,adc12132"
+>>> +     * "ti,adc12138"
+>>> + - reg: SPI chip select number for the device
+>>> + - interrupts: Should contain interrupt for EOC (end of conversion)
+>>> + - clocks: phandle to conversion clock input
+>>> + - spi-max-frequency: Definision as per
+>>> +     Documentation/devicetree/bindings/spi/spi-bus.txt
+>>> + - vref-p-supply: The regulator supply for positive analog voltage reference
+>>> +
+>>> +Optional properties:
+>>> + - vref-n-supply: The regulator supply for negative analog voltage reference
+>>> +     If not specified, this is assumed to be analog ground.
+>> This is novel. Documented in the datasheet as a negative reference which
+>> must be positive (greater than 0) for it to work well.
+>>
+>> Intersting question on whether this should be optional. Easy enough to
+>> provided a fixed regulator at 0V afterall.
+>>
+>>
+>>> + - acquisition-time: The number of conversion clock periods for the S/H's
+>>> +     acquisition time.  Should be one of 6, 10, 18, 34.  If not specified,
+>>> +     default value of 10 is used.
+>> Should this be a ti specific parameter.  Not sure.
+> 
+> Is it better to change this parameter to "ti,acquisition-time" ?
+I think so. If not it needs to go in generic docs rather than this file then
+be appropriately cross referenced from here. I'd keep it as ti specific for now.
+We can generalize later if it makes sense (though will have to support this
+as well which isn't too difficult).
+> 
+>> I'd also add a note here about why one would set this to other than the
+>> default (source impedance etc).
+>>
+>>
+>>> +
+>>> +Example:
+>>> +adc@0 {
+>>> +     compatible = "ti,adc12138";
+>>> +     reg = <0>;
+>>> +     interrupts = <28 IRQ_TYPE_EDGE_RISING>;
+>>> +     interrupt-parent = <&gpio1>;
+>>> +     clocks = <&cclk>;
+>>> +     vref-p-supply = <&ldo4_reg>;
+>>> +     spi-max-frequency = <5000000>;
+>>> +     acquisition-time = <6>;
+>>> +};
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
