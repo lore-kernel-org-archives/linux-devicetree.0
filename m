@@ -1,51 +1,65 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH v3 5/7] phy-sun4i-usb: Warn when external vbus is detected
-Date: Sun, 21 Aug 2016 22:32:09 +0800
-Message-ID: <27711471789929@web21g.yandex.ru>
-References: <1471781799-10457-1-git-send-email-hdegoede@redhat.com>
- <1471781799-10457-5-git-send-email-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1471781799-10457-5-git-send-email-hdegoede@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>, Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH 0/5] ath9k: EEPROM swapping improvements
+Date: Sun, 21 Aug 2016 16:49:01 +0200
+Message-ID: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgoyMS4wOC4yMDE2LCAyMDoyMiwgIkhhbnMgZGUgR29lZGUiIDxoZGVnb2VkZUByZWRoYXQuY29t
-PjoKPiBXYXJuIHdoZW4gZXh0ZXJuYWwgdmJ1cyBpcyBkZXRlY3RlZCB3aGVuIHdlJ3JlIHRyeWlu
-ZyB0byBlbmFibGUgb3VyCj4gb3duIHZidXMuCgpXaWxsIGl0IGxlYWQgdG8gYSBkbWVzZyBmbG9v
-ZCBpZiBhIG5vdC13ZWxsLWNvbm5lY3RlZCBVU0IgT1RHIENoYXJnaW5nIEh1YgppcyBwcmVzZW50
-PwoKPgo+IFNpZ25lZC1vZmYtYnk6IEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJlZGhhdC5jb20+
-Cj4gLS0tCj4gQ2hhbmdlcyBpbiB2MjoKPiAtTm8gY2hhbmdlcwo+IENoYW5nZXMgaW4gdjM6Cj4g
-LU5vIGNoYW5nZXMKPiAtLS0KPiDCoGRyaXZlcnMvcGh5L3BoeS1zdW40aS11c2IuYyB8IDQgKysr
-LQo+IMKgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+Cj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L3BoeS1zdW40aS11c2IuYyBiL2RyaXZlcnMvcGh5L3Bo
-eS1zdW40aS11c2IuYwo+IGluZGV4IGFmNDJmOGQuLjAzZjAzMGIgMTAwNjQ0Cj4gLS0tIGEvZHJp
-dmVycy9waHkvcGh5LXN1bjRpLXVzYi5jCj4gKysrIGIvZHJpdmVycy9waHkvcGh5LXN1bjRpLXVz
-Yi5jCj4gQEAgLTM5MCw4ICszOTAsMTAgQEAgc3RhdGljIGludCBzdW40aV91c2JfcGh5X3Bvd2Vy
-X29uKHN0cnVjdCBwaHkgKl9waHkpCj4KPiDCoMKgwqDCoMKgwqDCoMKgwqAvKiBGb3IgcGh5MCBv
-bmx5IHR1cm4gb24gVmJ1cyBpZiB3ZSBkb24ndCBoYXZlIGFuIGV4dC4gVmJ1cyAqLwo+IMKgwqDC
-oMKgwqDCoMKgwqDCoGlmIChwaHktPmluZGV4ID09IDAgJiYgc3VuNGlfdXNiX3BoeTBfaGF2ZV92
-YnVzX2RldChkYXRhKSAmJgo+IC0gZGF0YS0+dmJ1c19kZXQpCj4gKyBkYXRhLT52YnVzX2RldCkg
-ewo+ICsgZGV2X3dhcm4oJl9waHktPmRldiwgIkV4dGVybmFsIHZidXMgZGV0ZWN0ZWQsIG5vdCBl
-bmFibGluZyBvdXIgb3duIHZidXNcbiIpOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqByZXR1cm4gMDsKPiArIH0KPgo+IMKgwqDCoMKgwqDCoMKgwqDCoHJldCA9IHJlZ3VsYXRv
-cl9lbmFibGUocGh5LT52YnVzKTsKPiDCoMKgwqDCoMKgwqDCoMKgwqBpZiAocmV0KQo+IC0tCj4g
-Mi43LjQKPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-Cj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKPiBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2xpbnV4LWFybS1rZXJuZWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+There are two types of swapping the EEPROM data in the ath9k driver.
+Before this series one type of swapping could not be used without the
+other.
+
+The first type of swapping looks at the "magic bytes" at the start of
+the EEPROM data and performs swab16 on the EEPROM contents if needed.
+The second type of swapping is EEPROM format specific and swaps
+specific fields within the EEPROM itself (swab16, swab32 - depends on
+the EEPROM format).
+
+With this series the second part now looks at the EEPMISC register
+inside the EEPROM, which uses a bit to indicate if the EEPROM data
+is Big Endian (this is also done by the FreeBSD kernel).
+This has a nice advantage: currently there are some out-of-tree hacks
+(in OpenWrt and LEDE) where the EEPROM has a Big Endian header on a
+Big Endian system (= no swab16 is performed) but the EEPROM itself
+indicates that it's data is Little Endian. Until now the out-of-tree
+code simply did a swab16 before passing the data to ath9k, so ath9k
+first did the swab16 - this also enabled the format specific swapping.
+These out-of-tree hacks are still working with the new logic, but it
+is recommended to remove them.
+
+The last patch in this series allows enabling the EEPROM endianness
+swapping via devicetree. This should be fine now since it addresses
+the concerns raised by Arnd Bergmann in in the original OF support
+patches: [0].
+
+This series depends on my other series (V5):
+"add devicetree support to ath9k" - see [1]
+
+
+[0] http://www.spinics.net/lists/linux-wireless/msg152634.html
+[1] https://marc.info/?l=linux-wireless&m=147178988827847&w=2
+
+
+Martin Blumenstingl (5):
+  ath9k: Add a #define for the EEPROM "eepmisc" endianness bit
+  ath9k: Set the "big endian" bit of the AR9003 EEPROM templates
+  ath9k: Add an eeprom_ops callback for retrieving the eepmisc value
+  ath9k: Make the EEPROM swapping check use the eepmisc register
+  ath9k: Make EEPROM endianness swapping configurable via devicetree
+
+ .../devicetree/bindings/net/wireless/qca,ath9k.txt | 16 ++++++
+ drivers/net/wireless/ath/ath9k/ar9003_eeprom.c     | 21 +++++---
+ drivers/net/wireless/ath/ath9k/ar9003_eeprom.h     |  7 ++-
+ drivers/net/wireless/ath/ath9k/eeprom.c            | 57 ++++++++++++++++------
+ drivers/net/wireless/ath/ath9k/eeprom.h            |  5 +-
+ drivers/net/wireless/ath/ath9k/eeprom_4k.c         | 10 +++-
+ drivers/net/wireless/ath/ath9k/eeprom_9287.c       | 10 +++-
+ drivers/net/wireless/ath/ath9k/eeprom_def.c        | 10 +++-
+ drivers/net/wireless/ath/ath9k/init.c              |  6 ++-
+ 9 files changed, 110 insertions(+), 32 deletions(-)
+
+-- 
+2.9.3
