@@ -1,12 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 0/9] mfd: axp20x: Add support for AXP809 PMIC
-Date: Sun, 21 Aug 2016 10:11:16 +0800
-Message-ID: <20160821021125.1521-1-wens@csie.org>
+Subject: [PATCH 7/9] ARM: dts: sun9i: a80-optimus: Add AXP806
+ PMIC device node and regulators
+Date: Sun, 21 Aug 2016 10:11:23 +0800
+Message-ID: <20160821021125.1521-8-wens@csie.org>
+References: <20160821021125.1521-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZ5V4S6QKGQEZLKFQ3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB2FV4S6QKGQEAP63NRA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160821021125.1521-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,62 +20,145 @@ To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+The AXP806 PMIC is the secondary PMIC. It provides various supply
+voltages for the SoC and other peripherals. The PMIC's interrupt
+line is connected to NMI pin of the SoC.
 
-This series adds support for X-Powers' AXP806 PMIC. This is the secondary
-PMIC accompanying Allwinner's A80 SoC. For now, only the regulators are
-supported. While the AXP806 supports standalone operation, no hardware
-exists, so this will not be supported.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun9i-a80-optimus.dts | 113 ++++++++++++++++++++++++++++++++
+ 1 file changed, 113 insertions(+)
 
-Patch 1 adds AXP806 to the axp20x bindings.
-
-Patch 2 adds AXP806 support to the axp20x mfd driver.
-
-Patch 3 fixes regulator output adjustment during regulator registration
-so it doesn't fail if the higher or lower bounds of its voltage constraints
-don't match up with the regulator's voltage granularity.
-
-Patch 4 adds AXP806 support to the axp20x regulator driver.
-
-Patch 5 adds the unused SW switch output of the AXP809 PMIC on the A80
-Optimus board. This was accidentally left out of the AXP809 series.
-
-Patch 6 adds the unused SW switch output of the AXP809 PMIC on the
-Cubieboard 4. This was accidentally left out of the AXP809 series.
-
-Patch 7 enables AXP809 support on the A80 Optimus board.
-
-Patch 8 enables AXP809 support on the Cubieboard 4.
-
-Patch 9 disables EHCI1 on the A80 Optimus board.
-
-
-Regards
-ChenYu
-
-Chen-Yu Tsai (9):
-  mfd: axp20x: Add bindings for AXP806 PMIC
-  mfd: axp20x: Add support for AXP806 PMIC
-  regulator: core: Try full range when adjusting regulators to
-    constraints
-  regulator: axp20x: support AXP806 variant
-  ARM: dts: sun9i: a80-optimus: Declare AXP809 SW regulator as unused
-  ARM: dts: sun9i: cubieboard4: Declare AXP809 SW regulator as unused
-  ARM: dts: sun9i: a80-optimus: Add AXP806 PMIC device node and
-    regulators
-  ARM: dts: sun9i: cubieboard4: Add AXP806 PMIC device node and
-    regulators
-  ARM: dts: sun9i: a80-optimus: Disable EHCI1
-
- Documentation/devicetree/bindings/mfd/axp20x.txt |  28 +++++-
- arch/arm/boot/dts/sun9i-a80-cubieboard4.dts      | 116 +++++++++++++++++++++
- arch/arm/boot/dts/sun9i-a80-optimus.dts          | 123 ++++++++++++++++++++++-
- drivers/mfd/axp20x-rsb.c                         |   1 +
- drivers/mfd/axp20x.c                             |  72 +++++++++++++
- drivers/regulator/axp20x-regulator.c             | 117 +++++++++++++++++++--
- drivers/regulator/core.c                         |   8 +-
- include/linux/mfd/axp20x.h                       |  60 +++++++++++
- 8 files changed, 508 insertions(+), 17 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sun9i-a80-optimus.dts b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+index caf0091e71ba..aeb4037c8768 100644
+--- a/arch/arm/boot/dts/sun9i-a80-optimus.dts
++++ b/arch/arm/boot/dts/sun9i-a80-optimus.dts
+@@ -332,6 +332,118 @@
+ 		};
+ 	};
+ 
++	axp806: pmic@745 {
++		compatible = "x-powers,axp806";
++		reg = <0x745>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		bldoin-supply = <&reg_dcdce>;
++
++		regulators {
++			reg_s_aldo1: aldo1 {
++				regulator-always-on;
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-name = "avcc";
++			};
++
++			aldo2 {
++				/*
++				 * unused, but use a different name to
++				 * avoid name clash with axp809's aldo's
++				 */
++				regulator-name = "s_aldo2";
++			};
++
++			aldo3 {
++				/*
++				 * unused, but use a different name to
++				 * avoid name clash with axp809's aldo's
++				 */
++				regulator-name = "s_aldo3";
++			};
++
++			reg_bldo1: bldo1 {
++				regulator-always-on;
++				regulator-min-microvolt = <1620000>;
++				regulator-max-microvolt = <1980000>;
++				regulator-name = "vcc18-efuse-adc-display-csi";
++			};
++
++			reg_bldo2: bldo2 {
++				regulator-always-on;
++				regulator-min-microvolt = <1620000>;
++				regulator-max-microvolt = <1980000>;
++				regulator-name =
++					"vdd18-drampll-vcc18-pll-cpvdd";
++			};
++
++			bldo3 {
++				/* unused */
++			};
++
++			reg_bldo4: bldo4 {
++				regulator-min-microvolt = <1080000>;
++				regulator-max-microvolt = <1320000>;
++				regulator-name = "vcc12-hsic";
++			};
++
++			reg_cldo1: cldo1 {
++				/*
++				 * This was 3V in the original design, but
++				 * 3.3V is the recommended supply voltage
++				 * for the Ethernet PHY.
++				 */
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcc-gmac-phy";
++			};
++
++			reg_cldo2: cldo2 {
++				regulator-min-microvolt = <2800000>;
++				regulator-max-microvolt = <2800000>;
++				regulator-name = "afvcc-cam";
++			};
++
++			reg_cldo3: cldo3 {
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-name = "vcc-io-wifi-codec-io2";
++			};
++
++			reg_dcdca: dcdca {
++				regulator-always-on;
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1100000>;
++				regulator-name = "vdd-cpub";
++			};
++
++			reg_dcdcd: dcdcd {
++				regulator-always-on;
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1100000>;
++				regulator-name = "vdd-vpu";
++			};
++
++			reg_dcdce: dcdce {
++				regulator-always-on;
++				regulator-min-microvolt = <2100000>;
++				regulator-max-microvolt = <2100000>;
++				regulator-name = "vcc-bldo-codec-ldoin";
++			};
++
++			sw {
++				/*
++				 * unused, but use a different name to
++				 * avoid name clash with axp809's sw
++				 */
++				regulator-name = "s_sw";
++			};
++		};
++	};
++
+ 	ac100: codec@e89 {
+ 		compatible = "x-powers,ac100";
+ 		reg = <0xe89>;
+@@ -371,6 +483,7 @@
+ };
+ 
+ &usbphy2 {
++	phy-supply = <&reg_bldo4>;
+ 	status = "okay";
+ };
+ 
 -- 
 2.9.3
