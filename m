@@ -1,58 +1,41 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH RFC] Revert "of/irq: Mark initialised interrupt
- controllers as populated"
-Date: Sun, 21 Aug 2016 03:21:47 -0400
-Message-ID: <CABxcv=nU4P-XfR6PcY_wrXTe09GyLADP5h==86G2v8GQmHLW4g@mail.gmail.com>
-References: <E1bYVVh-0001eq-BI@rmk-PC.armlinux.org.uk> <CAL_JsqJNE7rGaL54HfmGEkaScZ7krf_iM55UrKw6mwWdLHv6Ow@mail.gmail.com>
- <CABxcv=n9o7sU0zB3WZ2Sp8Aqd+fnv1KLp8UcAx2YSrKBVW+rhg@mail.gmail.com> <CAL_JsqKpLGscFaCT4x3NtQCOBgLK+-MQa_XDmpmkqyepdJVT4Q@mail.gmail.com>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH 6/7] arm64: dts: exynos: Add dts file for Exynos5433-based
+ TM2 board
+Date: Sun, 21 Aug 2016 16:46:42 +0900
+Message-ID: <CAGTfZH0kqwJhZBh_trnK4JstpkVdyHSr6frvdVq4Z=Pxzzp0Ww@mail.gmail.com>
+References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
+ <1471329328-26842-2-git-send-email-cw00.choi@samsung.com> <0aba7694-e5fc-47be-dce6-06f64fb3759d@samsung.com>
+Reply-To: chanwoo@kernel.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKpLGscFaCT4x3NtQCOBgLK+-MQa_XDmpmkqyepdJVT4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0aba7694-e5fc-47be-dce6-06f64fb3759d@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, krzk@kernel.org, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, jy0922.shim@samsung.com, "inki.dae@samsung.com" <inki.dae@samsung.com>, Jonghwa Lee <jonghwa3.lee@samsung.com>, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, "ideal.song@samsung.com" <ideal.song@samsung.com>, ingi2.kim@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
-
-On Sat, Aug 20, 2016 at 4:18 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Sat, Aug 20, 2016 at 10:18 AM, Javier Martinez Canillas
-> <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
-
-[snip]
-
->>
->> I noticed that Philipp also sent a patch to clear that flag in
->> arch/arm/mach-imx/gpc.c [1]. I guess the same is needed in the drivers
->> for the devices that are not created for Exynos?
+2016-08-20 2:05 GMT+09:00 Sylwester Nawrocki <s.nawrocki@samsung.com>:
+> On 08/16/2016 08:35 AM, Chanwoo Choi wrote:
+>> &spi_1 {
+>> +     cs-gpios = <&gpd6 3 GPIO_ACTIVE_HIGH>;
+>> +     status = "okay";
+>> +
+>> +     wm5110: wm5110-codec@0 {
+>> +             compatible = "wlf,wm5110";
+>> +             reg = <0x0>;
+>> +             spi-max-frequency = <20000000>;
+>> +             interrupt-parent = <&gpa0>;
+>> +             interrupts = <4 0 0>;
+>> +             clocks = <&xxti>, <&s2mps13_osc 2>;
 >
-> Yes, you need the same.
+> The first clock needs to be CLKOUT, i.e.
+>
+>         clocks = <&pmu_system_controller 0>, <&s2mps13_osc 2>;
 >
 
-Great, thanks a lot for the confirmation.
+OK.
 
->> If that's the case, then I think that's more safe to revert Jon's
->> commit for now since is too risky for the -rc cycle and more platforms
->> may be affected.
->
-> I prefer not to and find the affected platforms. I've now grepped the
-
-Ok, at the end I found that the only problem was with the Exynos PMU
-driver since both IRQCHIP_DECLARE() and a platform driver is used for
-the interrupt and PMU (Power Management Unit) controller
-functionalities respectively. I'll post a patch for that.
-
-> tree to get all the IRQCHIP_DECLARE compatible strings and then
-> grepped for other occurrences and didn't find any more. In theory, we
-> could have matching happening with 2 different strings, but I'd guess
-> that is unlikely.
->
-> Rob
-
-Best regards,
-Javier
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best Regards,
+Chanwoo Choi
