@@ -1,65 +1,118 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 0/5] ath9k: EEPROM swapping improvements
-Date: Sun, 21 Aug 2016 16:49:01 +0200
-Message-ID: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH 1/5] ath9k: Add a #define for the EEPROM "eepmisc" endianness bit
+Date: Sun, 21 Aug 2016 16:49:02 +0200
+Message-ID: <20160821144906.30984-2-martin.blumenstingl@googlemail.com>
+References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160821144906.30984-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There are two types of swapping the EEPROM data in the ath9k driver.
-Before this series one type of swapping could not be used without the
-other.
+This replaces a magic number with a named #define. Additionally it
+removes two "eeprom format" specific #defines for the "big endianness"
+bit which are the same on all eeprom formats.
+---
+ drivers/net/wireless/ath/ath9k/ar9003_eeprom.c | 3 ++-
+ drivers/net/wireless/ath/ath9k/ar9003_eeprom.h | 1 -
+ drivers/net/wireless/ath/ath9k/eeprom.h        | 4 +++-
+ drivers/net/wireless/ath/ath9k/eeprom_4k.c     | 2 +-
+ drivers/net/wireless/ath/ath9k/eeprom_9287.c   | 2 +-
+ drivers/net/wireless/ath/ath9k/eeprom_def.c    | 2 +-
+ 6 files changed, 8 insertions(+), 6 deletions(-)
 
-The first type of swapping looks at the "magic bytes" at the start of
-the EEPROM data and performs swab16 on the EEPROM contents if needed.
-The second type of swapping is EEPROM format specific and swaps
-specific fields within the EEPROM itself (swab16, swab32 - depends on
-the EEPROM format).
-
-With this series the second part now looks at the EEPMISC register
-inside the EEPROM, which uses a bit to indicate if the EEPROM data
-is Big Endian (this is also done by the FreeBSD kernel).
-This has a nice advantage: currently there are some out-of-tree hacks
-(in OpenWrt and LEDE) where the EEPROM has a Big Endian header on a
-Big Endian system (= no swab16 is performed) but the EEPROM itself
-indicates that it's data is Little Endian. Until now the out-of-tree
-code simply did a swab16 before passing the data to ath9k, so ath9k
-first did the swab16 - this also enabled the format specific swapping.
-These out-of-tree hacks are still working with the new logic, but it
-is recommended to remove them.
-
-The last patch in this series allows enabling the EEPROM endianness
-swapping via devicetree. This should be fine now since it addresses
-the concerns raised by Arnd Bergmann in in the original OF support
-patches: [0].
-
-This series depends on my other series (V5):
-"add devicetree support to ath9k" - see [1]
-
-
-[0] http://www.spinics.net/lists/linux-wireless/msg152634.html
-[1] https://marc.info/?l=linux-wireless&m=147178988827847&w=2
-
-
-Martin Blumenstingl (5):
-  ath9k: Add a #define for the EEPROM "eepmisc" endianness bit
-  ath9k: Set the "big endian" bit of the AR9003 EEPROM templates
-  ath9k: Add an eeprom_ops callback for retrieving the eepmisc value
-  ath9k: Make the EEPROM swapping check use the eepmisc register
-  ath9k: Make EEPROM endianness swapping configurable via devicetree
-
- .../devicetree/bindings/net/wireless/qca,ath9k.txt | 16 ++++++
- drivers/net/wireless/ath/ath9k/ar9003_eeprom.c     | 21 +++++---
- drivers/net/wireless/ath/ath9k/ar9003_eeprom.h     |  7 ++-
- drivers/net/wireless/ath/ath9k/eeprom.c            | 57 ++++++++++++++++------
- drivers/net/wireless/ath/ath9k/eeprom.h            |  5 +-
- drivers/net/wireless/ath/ath9k/eeprom_4k.c         | 10 +++-
- drivers/net/wireless/ath/ath9k/eeprom_9287.c       | 10 +++-
- drivers/net/wireless/ath/ath9k/eeprom_def.c        | 10 +++-
- drivers/net/wireless/ath/ath9k/init.c              |  6 ++-
- 9 files changed, 110 insertions(+), 32 deletions(-)
-
+diff --git a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
+index 08607d7..ea7b819 100644
+--- a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
++++ b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.c
+@@ -3468,7 +3468,8 @@ static u32 ath9k_hw_ar9003_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
+ 					AR5416_OPFLAGS_N_5G_HT20));
+ 	PR_EEP("Disable 5Ghz HT40", !!(pBase->opCapFlags.opFlags &
+ 					AR5416_OPFLAGS_N_5G_HT40));
+-	PR_EEP("Big Endian", !!(pBase->opCapFlags.eepMisc & 0x01));
++	PR_EEP("Big Endian", !!(pBase->opCapFlags.eepMisc &
++				AR5416_EEPMISC_BIG_ENDIAN));
+ 	PR_EEP("RF Silent", pBase->rfSilent);
+ 	PR_EEP("BT option", pBase->blueToothOptions);
+ 	PR_EEP("Device Cap", pBase->deviceCap);
+diff --git a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.h b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.h
+index 107bcfb..0a4c736 100644
+--- a/drivers/net/wireless/ath/ath9k/ar9003_eeprom.h
++++ b/drivers/net/wireless/ath/ath9k/ar9003_eeprom.h
+@@ -38,7 +38,6 @@
+ #define AR9300_NUM_CTLS_2G           12
+ #define AR9300_NUM_BAND_EDGES_5G     8
+ #define AR9300_NUM_BAND_EDGES_2G     4
+-#define AR9300_EEPMISC_BIG_ENDIAN    0x01
+ #define AR9300_EEPMISC_WOW           0x02
+ #define AR9300_CUSTOMER_DATA_SIZE    20
+ 
+diff --git a/drivers/net/wireless/ath/ath9k/eeprom.h b/drivers/net/wireless/ath/ath9k/eeprom.h
+index 4465c65..c466ada 100644
+--- a/drivers/net/wireless/ath/ath9k/eeprom.h
++++ b/drivers/net/wireless/ath/ath9k/eeprom.h
+@@ -161,6 +161,9 @@
+ #define AR5416_EEP_TXGAIN_ORIGINAL         0
+ #define AR5416_EEP_TXGAIN_HIGH_POWER       1
+ 
++/* Endianness of EEPROM content */
++#define AR5416_EEPMISC_BIG_ENDIAN          0x01
++
+ #define AR5416_EEP4K_START_LOC                64
+ #define AR5416_EEP4K_NUM_2G_CAL_PIERS         3
+ #define AR5416_EEP4K_NUM_2G_CCK_TARGET_POWERS 3
+@@ -191,7 +194,6 @@
+ #define AR9287_NUM_CTLS              	12
+ #define AR9287_NUM_BAND_EDGES        	4
+ #define AR9287_PD_GAIN_ICEPTS           1
+-#define AR9287_EEPMISC_BIG_ENDIAN       0x01
+ #define AR9287_EEPMISC_WOW              0x02
+ #define AR9287_MAX_CHAINS               2
+ #define AR9287_ANT_16S                  32
+diff --git a/drivers/net/wireless/ath/ath9k/eeprom_4k.c b/drivers/net/wireless/ath/ath9k/eeprom_4k.c
+index 5da0826..780cb49 100644
+--- a/drivers/net/wireless/ath/ath9k/eeprom_4k.c
++++ b/drivers/net/wireless/ath/ath9k/eeprom_4k.c
+@@ -154,7 +154,7 @@ static u32 ath9k_hw_4k_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
+ 					AR5416_OPFLAGS_N_5G_HT20));
+ 	PR_EEP("Disable 5Ghz HT40", !!(pBase->opCapFlags &
+ 					AR5416_OPFLAGS_N_5G_HT40));
+-	PR_EEP("Big Endian", !!(pBase->eepMisc & 0x01));
++	PR_EEP("Big Endian", !!(pBase->eepMisc & AR5416_EEPMISC_BIG_ENDIAN));
+ 	PR_EEP("Cal Bin Major Ver", (pBase->binBuildNumber >> 24) & 0xFF);
+ 	PR_EEP("Cal Bin Minor Ver", (pBase->binBuildNumber >> 16) & 0xFF);
+ 	PR_EEP("Cal Bin Build", (pBase->binBuildNumber >> 8) & 0xFF);
+diff --git a/drivers/net/wireless/ath/ath9k/eeprom_9287.c b/drivers/net/wireless/ath/ath9k/eeprom_9287.c
+index 1a019a3..f483ba2 100644
+--- a/drivers/net/wireless/ath/ath9k/eeprom_9287.c
++++ b/drivers/net/wireless/ath/ath9k/eeprom_9287.c
+@@ -150,7 +150,7 @@ static u32 ath9k_hw_ar9287_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
+ 					AR5416_OPFLAGS_N_5G_HT20));
+ 	PR_EEP("Disable 5Ghz HT40", !!(pBase->opCapFlags &
+ 					AR5416_OPFLAGS_N_5G_HT40));
+-	PR_EEP("Big Endian", !!(pBase->eepMisc & 0x01));
++	PR_EEP("Big Endian", !!(pBase->eepMisc & AR5416_EEPMISC_BIG_ENDIAN));
+ 	PR_EEP("Cal Bin Major Ver", (pBase->binBuildNumber >> 24) & 0xFF);
+ 	PR_EEP("Cal Bin Minor Ver", (pBase->binBuildNumber >> 16) & 0xFF);
+ 	PR_EEP("Cal Bin Build", (pBase->binBuildNumber >> 8) & 0xFF);
+diff --git a/drivers/net/wireless/ath/ath9k/eeprom_def.c b/drivers/net/wireless/ath/ath9k/eeprom_def.c
+index 959682f..39b1b27 100644
+--- a/drivers/net/wireless/ath/ath9k/eeprom_def.c
++++ b/drivers/net/wireless/ath/ath9k/eeprom_def.c
+@@ -232,7 +232,7 @@ static u32 ath9k_hw_def_dump_eeprom(struct ath_hw *ah, bool dump_base_hdr,
+ 					AR5416_OPFLAGS_N_5G_HT20));
+ 	PR_EEP("Disable 5Ghz HT40", !!(pBase->opCapFlags &
+ 					AR5416_OPFLAGS_N_5G_HT40));
+-	PR_EEP("Big Endian", !!(pBase->eepMisc & 0x01));
++	PR_EEP("Big Endian", !!(pBase->eepMisc & AR5416_EEPMISC_BIG_ENDIAN));
+ 	PR_EEP("Cal Bin Major Ver", (pBase->binBuildNumber >> 24) & 0xFF);
+ 	PR_EEP("Cal Bin Minor Ver", (pBase->binBuildNumber >> 16) & 0xFF);
+ 	PR_EEP("Cal Bin Build", (pBase->binBuildNumber >> 8) & 0xFF);
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
