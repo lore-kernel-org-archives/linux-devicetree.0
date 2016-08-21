@@ -1,96 +1,221 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v3 5/7] phy-sun4i-usb: Warn when external vbus is detected
-Date: Sun, 21 Aug 2016 17:20:14 +0200
-Message-ID: <fabf206f-7f7a-4f00-dbdf-c3ad24211fef@redhat.com>
-References: <1471781799-10457-1-git-send-email-hdegoede@redhat.com>
- <1471781799-10457-5-git-send-email-hdegoede@redhat.com>
- <27711471789929@web21g.yandex.ru>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: document bindings for mounting matrixes
+Date: Sun, 21 Aug 2016 16:56:51 +0100
+Message-ID: <ab89a386-dfca-bbc3-3dec-613d32d374a5@kernel.org>
+References: <1469355434-17043-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <27711471789929@web21g.yandex.ru>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>, Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1469355434-17043-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 24/07/16 11:17, Linus Walleij wrote:
+> The mounting matrix for sensors was introduced in
+> commit dfc57732ad38 ("iio:core: mounting matrix support")
+> 
+> However the device tree bindings are very terse and since this is
+> a widely applicable property, we need a proper binding for it
+> that the other bindings can reference. This will also be useful
+> for other operating systems and sensor engineering at large.
+> 
+> I think all 3D sensors should support it, the current situation
+> is probably that the mounting information is confined in magic
+> userspace components rather than using the mounting matrix, which
+> is not good for portability and reuse.
+> 
+> Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Linus,
 
-On 21-08-16 16:32, Icenowy Zheng wrote:
->
->
-> 21.08.2016, 20:22, "Hans de Goede" <hdegoede@redhat.com>:
->> Warn when external vbus is detected when we're trying to enable our
->> own vbus.
->
-> Will it lead to a dmesg flood if a not-well-connected USB OTG Charging Hub
-> is present?
+Sorry I took so long to get to this...
+(out of curiosity are you running a fifo queue of patches? Every time
+I review and merge one, another one turns up in my inbox :)
+> ---
+> Please help out to get this right, I think this could be confusing
+> to users unless documented properly. I think the doc has some rough
+> edges since I'm not the smartest in physics nor english at all times.
+> ---
+I think we have quite a bit of confusion of measurement frames here.
+(it always confused me when I was doing day to day work with these - now
+I'm decidedly rusty!)
+>  .../devicetree/bindings/iio/mount-matrix.txt       | 104 +++++++++++++++++++++
+>  1 file changed, 104 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/mount-matrix.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/mount-matrix.txt b/Documentation/devicetree/bindings/iio/mount-matrix.txt
+> new file mode 100644
+> index 000000000000..3e72c92c5689
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/mount-matrix.txt
+> @@ -0,0 +1,104 @@
+> +Mounting matrix
+> +
+> +The mounting matrix is a device tree property used to orient any IIO device
+> +that produce three-dimensional data.
+> +
+> +The typical usecase is that where a component has an internal representation
+> +of the (x,y,z) triplets, such as different registers to read these coordinates,
+> +and thus implying that the component should be mounted in a certain orientation
+> +relative to some specific point of reference.
+point of reference -> device frame of reference.
+> +
+> +For example a device with some kind of screen, where the user is supposed to
+> +interact with the environment using a accelerometer, gyroscope or magnetometer
+> +mounted on the same chassis as this screen, will likely take the screen as
+> +reference to (x,y,z) orientation, with (x,y) corresponding to these axes on the
+> +screen and (z) being depth, the axis perpendicular to the screen.
+Good description.
+> +
+> +The axes may also be flipped: for a screen you probably want (x) coordinates to
+> +go from negative on the left to positive on the right and (z) depth to be
+> +negative under the screen and positive in front of it, toward the face of the
+> +user.
+I'm not sure we don't want to define that it can't be flipped and enforce the
+correct coordinate system on the underlying drivers (fingers crossed they are
+currently all left or all right handed? - oops should have been keeping an eye on
+this).
+> +
+> +Apart from flipping, a sensor can of course also be mounted in any angle along
+> +the axes relative to the point of reference. This means that the axes may be
+> +not only flipped, but tilted.
+Just define it as a frame of reference, rather than a point and axis.  Frame hides
+all evils ;)
 
-No, we only try to turn on Vbus once when switching to host-mode.
+For now we are being a bit simplistic as for accelerometers at least, it can be 
+of interest to know the translation as well as the rotation.  You can use a couple
+of them to do fairly precise rotation estimate if they are located in different
+places on a device.
 
-When using a device which is actually providing power and has an
-id pin claiming it wants the port in host mode then this message
-will trigger once. I'm actually adding it exactly because of the
-USB OTG Charging Hub case. In this case you want to see this
-messages once, if you're not seeing it and the hub is sending
-power to the micro-usb port then something is wrong.
+> +
+> +Examples for some three-dimensional sensor types:
+> +
+> +- Accelerometers have their frame of reference 
+Not quite right.  Their frame of reference is in the frame of the device - it has
+nothing to do with the world frame which you are describing here (except when
+the device is deliberate oriented to match.
 
-Note in many cases these hubs will only send power when in
-charging mode and in this case the the id-pin is such
-that the micro-usb port will be in device mode and will
-never try to provide power. In this scenario you will not
-get the warning, not will Linux see the hub.
+So we have 3 frames - that of the sensor, that of the device and that of the world.
 
-Regards,
+Sensor --<mounting matrix transform>--> Device frame --<Device to world transform> -->
+world frame.
+For the static no motion cases - when moving the acceleration needs to take into account
+what the motion is etc (magnetometer doesn't).
 
-Hans
+All the below kind of merge the mounting matrix transform with the device to world
+transform and leave me at least somewhat confused :)
 
+ is toward the center of gravity,
+> +  usually to the core of the planet, and users would likely expect a value of
+> +  9.81N upwards along the (z) axis when the device is held with its screen
+> +  perpendicular to the planets surface and 0 on the other axes.
+I'd have thought screen parallel  - i.e. z is out of the screen?
+Might be the same thing I suppose, but I'd define it simply as into the screen
+then y towards top of screen and x from left to right of the screen.
+ A reading of
+> +  the (x,y,z) values will give the orientation of the device relative to the
+> +  center of the planet, i.e. relative to its surface at this point. Up and down
+> +  relative to the point of reference can thus be determined.
+Will give a project of the gravity vector onto the axis of the sensor. There
+is I think a world to local frame transform missing here...
 
+> +
+> +- Magnetometers (compasses) have their frame of reference relative to the
+> +  geomagnetic field. In a mounting matrix for a magnetometer sensor the main
+> +  hardware orientation is defined with respect to the local earth geomagnetic
+> +  reference frame where (y) is in the ground plane and positive towards
+> +  magnetic North, (x) is in the ground plane, perpendicular to the North axis
+> +  and positive towards the East and (z) is perpendicular to the ground plane
+> +  and positive upwards.
+Same issue, world to frame transform is not included...
+> +
+> +- Gyroscopes detects the movement relative the device itself, and has no other
+> +  frame of reference than the mounting chassis itself.
+This is true for all of them as far as we are concerned here...
+> The angular momentum is
+Hang on, where did momentum come into it from?  Mems gyros are detecting rate
+of change of rotation about an axis (lets ignore the significant cross talk and
+effects of linear acceleration and pretend it's all easy here ;)
 
+Rest of this description is fine.
+> +  defined as orthogonal to the plane of rotation, so if you put the device on a
+> +  flat surface and spin it around the z axis (such as rotating a device lying
+> +  flat on a table), you should get a negative value along the (z) axis if
+> +  rotated clockwise, and a positive value if rotated counter-clockwise
+> +  according to the right-hand rule.
+> +
+> +So unless the sensor is ideally mounted, we need a means to indicate the
+> +relative orientation of any given sensor of this type.
+> +
+> +To achieve this, use the device tree property "mount-matrix" for the sensor.
+> +This supplies a 3x3 transformation matrix in the strict linear algebraic sense,
+> +to orient the senor axes relative to a desired point of reference. This means
+> +the resulting values from the sensor, after scaling to proper units, should be
+> +multiplied by this matrix to give the proper coordinates in three-dimensional
+vector values as opposed to coordinates...
+> +space, relative to some relevant point of reference.
+Within the frame of the device.
+> +
+> +The mounting matrix has the layout:
+> +
+> + (x0, y0, z0)
+> + (x1, y1, z1)
+> + (x2, y2, z3)
+> +
+> +And it is represented as an array of strings containing the real values for
+> +producing the transformation matrix. The real values use a decimal point and
+> +a minus (-) to indicate a negative value.
+> +
+> +Examples:
+> +
+> +Identity matrix (nothing happens to the coordinates, which means the device was
+> +mechanically mounted in an ideal way and we need no transformation):
+> +
+> +mount-matrix = "1", "0", "0",
+> +               "0", "1", "0",
+> +               "0", "0", "1";
+> +
+> +Flipped X axis (negative values means positive):
+> +
+> +mount-matrix = "-1", "0", "0",
+> +               "0", "1", "0",
+> +               "0", "0", "1";
+Hmm. This is an odd one as it basically means the device had a right hand
+coordinate system in the first place... If that happens I think we should
+by default report the negative of the scale for that axis.
 
+We've never strictly defined a coordinate system but I think left handed
+is a good start!
+> +
+> +X and Y flipped (X values are for Y and Y values are for X):
+> +
+> +mount-matrix = "0", "1", "0",
+> +               "1", "0", "0",
+> +               "0", "0", "1";
+Same with this one, we are flipping coordinate systems.  I'd expect only
+rotation matrices to be valid mount matrices.
+> +
+> +Complex angular mounting with X and Z in a certain tilted orienation and
+orientation
+> +Y flipped:
+> +
+> +mount-matrix = "-0.984807753012208",  /* x0 */
+> +               "0",                   /* y0 */
+> +               "-0.173648177666930",  /* z0 */
+> +               "0",                   /* x1 */
+> +               "-1",                  /* y1 */
+> +               "0",                   /* z1 */
+> +               "-0.173648177666930",  /* x2 */
+> +               "0",                   /* y2 */
+> +               "0.984807753012208";   /* z2 */
+> 
 
+Anyhow, now my head hurts.
 
->
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Changes in v2:
->> -No changes
->> Changes in v3:
->> -No changes
->> ---
->>  drivers/phy/phy-sun4i-usb.c | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
->> index af42f8d..03f030b 100644
->> --- a/drivers/phy/phy-sun4i-usb.c
->> +++ b/drivers/phy/phy-sun4i-usb.c
->> @@ -390,8 +390,10 @@ static int sun4i_usb_phy_power_on(struct phy *_phy)
->>
->>          /* For phy0 only turn on Vbus if we don't have an ext. Vbus */
->>          if (phy->index == 0 && sun4i_usb_phy0_have_vbus_det(data) &&
->> - data->vbus_det)
->> + data->vbus_det) {
->> + dev_warn(&_phy->dev, "External vbus detected, not enabling our own vbus\n");
->>                  return 0;
->> + }
->>
->>          ret = regulator_enable(phy->vbus);
->>          if (ret)
->> --
->> 2.7.4
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Jonathan
