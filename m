@@ -1,71 +1,47 @@
 From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: =?UTF-8?q?=5BPATCH=20V3=200/5=5D=20ARM=3A=20dts=3A=20bcm2835=3A=20Add=20Raspberry=20Pi=20Zero?=
-Date: Sun, 21 Aug 2016 15:09:58 +0000
-Message-ID: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH V3 RFT 3/5] ARM64: dts: bcm283x: Use dtsi for USB host mode
+Date: Sun, 21 Aug 2016 15:10:01 +0000
+Message-ID: <1471792204-21908-4-git-send-email-stefan.wahren@i2se.com>
+References: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471792204-21908-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series add support for Raspberry Pi Zero with USB host mode. It's
-based on the patch "ARM64: dts: bcm: Use a symlink to R-Pi dtsi files
-from arch=arm" from Ian Campbell. Currently there is a bug [1] which needs
-to fixed before because after applying these patch series the bug isn't
-reproducible anymore but not fixed.
+In case dr_mode isn't passed via DT, the dwc2 driver defaults
+to OTG mode. But the Raspberry Pi 3 is designed only for host mode.
+So fix this issue by linking to the dtsi file which set the dr_mode
+to host.
 
-The patches 1-3 fixes the USB DT settings for bcm283x. Patch 3 is only compile
-tested, so it would be nice if someone with a RPi 3 could test it.
-The last patch based on the work of Lubomir Rintel [2] and Noralf Trønnes [3].
-
-Note: Patch 3 can't be cherry-picked because it depends on Patch 2.
-
-Changes since V2:
-- rebase on "ARM64: dts: bcm: Use a symlink to R-Pi dtsi files from arch=arm"
-- add dtsi file to easily specify host mode for bcm283x boards
-- drop all dwc2 changes (incl. USB otg/gadget support) because of known
-  issues [4]
-- add copyright and license to new dts file
-
-Changes since V1:
-- rebase to current linux-next
-- add patches 1 - 4 for otg/gadget support
-- add patch 5 with model compatible
-- use polarity define for ACT LED
-
-[1] - http://lists.infradead.org/pipermail/linux-rpi-kernel/2016-August/004216.html
-[2] - http://lists.infradead.org/pipermail/linux-rpi-kernel/2016-February/003221.html
-[3] - https://github.com/raspberrypi/linux/pull/1239/
-[4] - http://lists.infradead.org/pipermail/linux-rpi-kernel/2016-August/004197.html
-
-Stefan Wahren (5):
-  ARM: dts: bcm283x: Add missing USB clock
-  ARM: dts: bcm283x: Add dtsi for USB host mode
-  ARM64: dts: bcm283x: Use dtsi for USB host mode
-  DT: bindings: bcm: Add Raspberry Pi Zero
-  ARM: dts: bcm2835: Add Raspberry Pi Zero
-
- .../devicetree/bindings/arm/bcm/brcm,bcm2835.txt   |    4 ++
- arch/arm/boot/dts/Makefile                         |    3 +-
- arch/arm/boot/dts/bcm2835-rpi-a-plus.dts           |    1 +
- arch/arm/boot/dts/bcm2835-rpi-a.dts                |    1 +
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts           |    1 +
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts           |    1 +
- arch/arm/boot/dts/bcm2835-rpi-b.dts                |    1 +
- arch/arm/boot/dts/bcm2835-rpi-zero.dts             |   40 ++++++++++++++++++++
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts              |    1 +
- arch/arm/boot/dts/bcm283x-rpi-usb-host.dtsi        |    3 ++
- arch/arm/boot/dts/bcm283x.dtsi                     |    9 +++++
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+---
  arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts   |    1 +
  .../boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi    |    1 +
- 13 files changed, 66 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/bcm2835-rpi-zero.dts
- create mode 100644 arch/arm/boot/dts/bcm283x-rpi-usb-host.dtsi
+ 2 files changed, 2 insertions(+)
  create mode 120000 arch/arm64/boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi
 
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+index 7841b72..7625e57 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
++++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+@@ -2,6 +2,7 @@
+ #include "bcm2837.dtsi"
+ #include "bcm2835-rpi.dtsi"
+ #include "bcm283x-rpi-smsc9514.dtsi"
++#include "bcm283x-rpi-usb-host.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+diff --git a/arch/arm64/boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi
+new file mode 120000
+index 0000000..cbeebe3
+--- /dev/null
++++ b/arch/arm64/boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi
+@@ -0,0 +1 @@
++../../../../arm/boot/dts/bcm283x-rpi-usb-host.dtsi
+\ No newline at end of file
 -- 
 1.7.9.5
 
