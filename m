@@ -1,59 +1,51 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v5 2/3] ath9k: add a helper to get the string representation of ath_bus_type
-Date: Sun, 21 Aug 2016 16:31:04 +0200
-Message-ID: <20160821143105.27487-3-martin.blumenstingl@googlemail.com>
-References: <20160709232834.31654-1-martin.blumenstingl@googlemail.com>
- <20160821143105.27487-1-martin.blumenstingl@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160821143105.27487-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org
-Cc: mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn-yOkvZcmFvRU@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH v3 5/7] phy-sun4i-usb: Warn when external vbus is detected
+Date: Sun, 21 Aug 2016 22:32:09 +0800
+Message-ID: <27711471789929@web21g.yandex.ru>
+References: <1471781799-10457-1-git-send-email-hdegoede@redhat.com>
+ <1471781799-10457-5-git-send-email-hdegoede@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1471781799-10457-5-git-send-email-hdegoede@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>, Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This can be used when the ath_bus_type has to be presented in a log
-message or firmware filename.
-
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- drivers/net/wireless/ath/ath.h  | 6 ++++++
- drivers/net/wireless/ath/main.c | 7 +++++++
- 2 files changed, 13 insertions(+)
-
-diff --git a/drivers/net/wireless/ath/ath.h b/drivers/net/wireless/ath/ath.h
-index da7a7c8..f3f2784 100644
---- a/drivers/net/wireless/ath/ath.h
-+++ b/drivers/net/wireless/ath/ath.h
-@@ -327,4 +327,10 @@ static inline const char *ath_opmode_to_string(enum nl80211_iftype opmode)
- }
- #endif
- 
-+extern const char *ath_bus_type_strings[];
-+static inline const char *ath_bus_type_to_string(enum ath_bus_type bustype)
-+{
-+	return ath_bus_type_strings[bustype];
-+}
-+
- #endif /* ATH_H */
-diff --git a/drivers/net/wireless/ath/main.c b/drivers/net/wireless/ath/main.c
-index 338d723..89f4b05 100644
---- a/drivers/net/wireless/ath/main.c
-+++ b/drivers/net/wireless/ath/main.c
-@@ -90,3 +90,10 @@ void ath_printk(const char *level, const struct ath_common* common,
- 	va_end(args);
- }
- EXPORT_SYMBOL(ath_printk);
-+
-+const char *ath_bus_type_strings[] = {
-+	[ATH_PCI] = "pci",
-+	[ATH_AHB] = "ahb",
-+	[ATH_USB] = "usb",
-+};
-+EXPORT_SYMBOL(ath_bus_type_strings);
--- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgoyMS4wOC4yMDE2LCAyMDoyMiwgIkhhbnMgZGUgR29lZGUiIDxoZGVnb2VkZUByZWRoYXQuY29t
+PjoKPiBXYXJuIHdoZW4gZXh0ZXJuYWwgdmJ1cyBpcyBkZXRlY3RlZCB3aGVuIHdlJ3JlIHRyeWlu
+ZyB0byBlbmFibGUgb3VyCj4gb3duIHZidXMuCgpXaWxsIGl0IGxlYWQgdG8gYSBkbWVzZyBmbG9v
+ZCBpZiBhIG5vdC13ZWxsLWNvbm5lY3RlZCBVU0IgT1RHIENoYXJnaW5nIEh1YgppcyBwcmVzZW50
+PwoKPgo+IFNpZ25lZC1vZmYtYnk6IEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJlZGhhdC5jb20+
+Cj4gLS0tCj4gQ2hhbmdlcyBpbiB2MjoKPiAtTm8gY2hhbmdlcwo+IENoYW5nZXMgaW4gdjM6Cj4g
+LU5vIGNoYW5nZXMKPiAtLS0KPiDCoGRyaXZlcnMvcGh5L3BoeS1zdW40aS11c2IuYyB8IDQgKysr
+LQo+IMKgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+Cj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L3BoeS1zdW40aS11c2IuYyBiL2RyaXZlcnMvcGh5L3Bo
+eS1zdW40aS11c2IuYwo+IGluZGV4IGFmNDJmOGQuLjAzZjAzMGIgMTAwNjQ0Cj4gLS0tIGEvZHJp
+dmVycy9waHkvcGh5LXN1bjRpLXVzYi5jCj4gKysrIGIvZHJpdmVycy9waHkvcGh5LXN1bjRpLXVz
+Yi5jCj4gQEAgLTM5MCw4ICszOTAsMTAgQEAgc3RhdGljIGludCBzdW40aV91c2JfcGh5X3Bvd2Vy
+X29uKHN0cnVjdCBwaHkgKl9waHkpCj4KPiDCoMKgwqDCoMKgwqDCoMKgwqAvKiBGb3IgcGh5MCBv
+bmx5IHR1cm4gb24gVmJ1cyBpZiB3ZSBkb24ndCBoYXZlIGFuIGV4dC4gVmJ1cyAqLwo+IMKgwqDC
+oMKgwqDCoMKgwqDCoGlmIChwaHktPmluZGV4ID09IDAgJiYgc3VuNGlfdXNiX3BoeTBfaGF2ZV92
+YnVzX2RldChkYXRhKSAmJgo+IC0gZGF0YS0+dmJ1c19kZXQpCj4gKyBkYXRhLT52YnVzX2RldCkg
+ewo+ICsgZGV2X3dhcm4oJl9waHktPmRldiwgIkV4dGVybmFsIHZidXMgZGV0ZWN0ZWQsIG5vdCBl
+bmFibGluZyBvdXIgb3duIHZidXNcbiIpOwo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqByZXR1cm4gMDsKPiArIH0KPgo+IMKgwqDCoMKgwqDCoMKgwqDCoHJldCA9IHJlZ3VsYXRv
+cl9lbmFibGUocGh5LT52YnVzKTsKPiDCoMKgwqDCoMKgwqDCoMKgwqBpZiAocmV0KQo+IC0tCj4g
+Mi43LjQKPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+Cj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKPiBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2xpbnV4LWFybS1rZXJuZWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
