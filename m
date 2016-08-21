@@ -1,210 +1,91 @@
-From: Randy Li <ayaka@soulik.info>
-Subject: [PATCH 2/2 v2] ARM: dts: add TOPEET itop elite based board
-Date: Mon, 22 Aug 2016 04:12:39 +0800
-Message-ID: <1471810359-6154-1-git-send-email-ayaka@soulik.info>
-References: <1471809893-31147-3-git-send-email-ayaka@soulik.info>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1471809893-31147-3-git-send-email-ayaka@soulik.info>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, krzk@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Randy Li <ayaka@soulik.info>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: touchscreen: silead gsl1680: Document all compatibles
+Date: Sun, 21 Aug 2016 15:11:52 -0700
+Message-ID: <5BB13372-9C05-4FEB-85BC-E16BAE98EB77@gmail.com>
+References: <1471424340-4201-1-git-send-email-hdegoede@redhat.com> <20160818193028.GA39271@dtor-ws> <CAL_JsqK2Lgic+-P-NvvnVO9COCy3k_yO3seOipYDd4d10QK2UA@mail.gmail.com> <20160818203959.GB39271@dtor-ws> <CAL_Jsq+juNdPXf8m7Nffb49uGc8uzpei9YA--8yP0oxrVhKPnw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+juNdPXf8m7Nffb49uGc8uzpei9YA--8yP0oxrVhKPnw@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The TOPEET itop exynos 4412 have three versions base board. The
-Elite version is the cheap one without too much peripheral devices
-on it.
+On August 20, 2016 1:25:48 PM PDT, Rob Herring <robh+dt@kernel.org> wrote:
+>On Thu, Aug 18, 2016 at 3:39 PM, Dmitry Torokhov
+><dmitry.torokhov@gmail.com> wrote:
+>> On Thu, Aug 18, 2016 at 02:48:52PM -0500, Rob Herring wrote:
+>>> On Thu, Aug 18, 2016 at 2:30 PM, Dmitry Torokhov
+>>> <dmitry.torokhov@gmail.com> wrote:
+>>> > On Wed, Aug 17, 2016 at 10:59:00AM +0200, Hans de Goede wrote:
+>>> >> The silead gsl1680 driver / binding supports a whole series of
+>devices,
+>>> >> list the compatibles for all of them in the binding.
+>>> >>
+>>> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>> >> ---
+>>> >> Changes in v2:
+>>> >> -Drop the "silead,mssl1680" compatible thing, the "mssl1680" name
+>is an
+>>> >>  ACPI thing and does not belong in the dt bindings
+>>> >> ---
+>>> >>  .../devicetree/bindings/input/touchscreen/silead_gsl1680.txt    
+>     | 4 ++++
+>>> >>  1 file changed, 4 insertions(+)
+>>> >>
+>>> >> diff --git
+>a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+>b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+>>> >> index b0eca54..ad7f41a 100644
+>>> >> ---
+>a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+>>> >> +++
+>b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+>>> >> @@ -2,6 +2,10 @@
+>>> >>
+>>> >>  Required properties:
+>>> >>  - compatible           : "silead,gsl1680"
+>>> >> +                     or: "silead,gsl1688"
+>>> >> +                     or: "silead,gsl3670"
+>>> >> +                     or: "silead,gsl3675"
+>>> >> +                     or: "silead,gsl3692"
+>>> >
+>>> > Hmm, why do we need to document all compatible strings? We usually
+>have
+>>> > only least common denominator in drievr, and device tree uses
+>form:
+>>> >
+>>> >         compatible = "silead,<exact model>", "silead,gsl1680";
+>>> >
+>>> > Rob?
+>>>
+>>> Because we require them in dts files even if the OS only uses the
+>fallback.
+>>
+>> So how exactly should it be documented? I mean if there were more
+>than 1
+>> OS they might have been using different fallbacks. How do we decide
+>> which entry should be "true" fallback?
+>
+>It shouldn't matter which one an OS uses. There's typically only the
+>specific one and then a generic or 1st compatible chip one.
 
-Currently supported are serial console, wired networking(USB),
-USB OTG in peripheral mode, USB host, SD storage, GPIO buttons,
-PWM beeper, ADC and LEDs.
+When you are saying "first compatible chip" do you mean first as it was created by the vendor or first that was added to a given os? Because we quite often have no idea what the first compatible chip in a series was and start with whatever the first submitter of a driver used in their product.
 
-Signed-off-by: Randy Li <ayaka@soulik.info>
----
- .../bindings/arm/samsung/samsung-boards.txt        |   3 +
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/exynos4412-itop-elite.dts        | 148 +++++++++++++++++++++
- 3 files changed, 152 insertions(+)
- create mode 100644 arch/arm/boot/dts/exynos4412-itop-elite.dts
+>
+>This is exactly why they need to be documented (and in a single place,
+>looking at you u-boot), so there is no confusion as to what
+>compatibles are allowed/valid for each platform.
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-index 0ea7f14..c5913ba 100644
---- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-+++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-@@ -22,6 +22,9 @@ Required root node properties:
-   * FriendlyARM
- 	- "friendlyarm,tiny4412"  - for Exynos4412-based FriendlyARM
- 				    TINY4412 board.
-+  * Topee
-+	- "topeet,itop4412-elite" - for Exynos4412-based Topeet
-+                                    Elite base board.                             
- 
-   * Google
- 	- "google,pi"		- for Exynos5800-based Google Peach Pi
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 48e1d4e..8f47aa0 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -135,6 +135,7 @@ dtb-$(CONFIG_ARCH_EXYNOS4) += \
- 	exynos4412-origen.dtb \
- 	exynos4412-smdk4412.dtb \
- 	exynos4412-tiny4412.dtb \
-+	exynos4412-itop-elite.dtb \
- 	exynos4412-trats2.dtb
- dtb-$(CONFIG_ARCH_EXYNOS5) += \
- 	exynos5250-arndale.dtb \
-diff --git a/arch/arm/boot/dts/exynos4412-itop-elite.dts b/arch/arm/boot/dts/exynos4412-itop-elite.dts
-new file mode 100644
-index 0000000..363908e
---- /dev/null
-+++ b/arch/arm/boot/dts/exynos4412-itop-elite.dts
-@@ -0,0 +1,148 @@
-+/*
-+ * TOPEET's Exynos4412 based itop board device tree source
-+ *
-+ * Copyright (c) 2016 SUMOMO Computer Association
-+ *			https://www.sumomo.mobi
-+ *			Randy Li <ayaka@soulik.info>
-+ *			
-+ * Device tree source file for TOPEET iTop Exynos 4412 core board 
-+ * which is based on Samsung's Exynos4412 SoC.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+*/
-+
-+/dts-v1/;
-+#include "exynos4412-itop-scp-core.dtsi"
-+
-+/ {
-+	model = "TOPEET iTop 4412 Elite board based on Exynos4412";
-+	compatible = "topeet,itop4412-elite", "samsung,exynos4412", "samsung,exynos4";
-+
-+	chosen {
-+		bootargs ="console=ttySAC2,115200";
-+		stdout-path = &serial_2;
-+	};
-+	
-+	leds {
-+		compatible = "gpio-leds";
-+		
-+		led2 {
-+			label = "red:system";
-+			gpios = <&gpx1 0 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		led3 {
-+			label = "red:user";
-+			gpios = <&gpk1 1 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		
-+		home {
-+			lable = "GPIO Key Home";
-+			linux,code = <KEY_HOME>;
-+			gpios = <&gpx1 1 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		back {
-+			lable = "GPIO Key Back";
-+			linux,code = <KEY_BACK>;
-+			gpios = <&gpx1 2 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		sleep {
-+			lable = "GPIO Key Sleep";
-+			linux,code = <KEY_POWER>;
-+			gpios = <&gpx3 3 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		vol_up {
-+			lable = "GPIO Key Vol+";
-+			linux,code = <KEY_UP>;
-+			gpios = <&gpx2 1 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		vol_down {
-+			lable = "GPIO Key Vol-";
-+			linux,code = <KEY_DOWN>;
-+			gpios = <&gpx2 0 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+	
-+	beep {
-+		compatible = "pwm-beeper";
-+		pwms = <&pwm>;
-+		pinctrl-0 = <&pwm0_out>;
-+		pinctrl-names = "default";
-+	};
-+
-+};
-+
-+&pinctrl_1 {
-+	ether-reset {
-+		samsung,pins = "gpc0-1";
-+		samsung,pin-function = <1>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+};
-+
-+&sdhci_2 {
-+	bus-width = <4>;
-+	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus4>;
-+	pinctrl-names = "default";
-+	broken-cd;
-+	cap-sd-highspeed;
-+	vmmc-supply = <&ldo23_reg>;
-+	vqmmc-supply = <&ldo17_reg>;
-+	status = "okay";
-+};
-+
-+&ehci {
-+	status = "okay";
-+	/* In order to reset USB ethernet */
-+	samsung,vbus-gpio = <&gpc0 1 GPIO_ACTIVE_HIGH>;
-+
-+	port@0 {
-+		status = "okay";
-+	};
-+
-+	port@2 {
-+		status = "okay";
-+	};
-+};
-+
-+&exynos_usbphy {
-+	status = "okay";
-+};
-+
-+&hsotg {
-+	dr_mode = "peripheral";
-+	status = "okay";
-+};
-+
-+&serial_1 {
-+	status = "okay";
-+};
-+
-+&serial_2 {
-+	status = "okay";
-+};
-+
-+&pwm {
-+	pinctrl-0 = <&pwm1_out>;
-+	pinctrl-names = "default";
-+	samsung,pwm-outputs = <1>;
-+	status = "okay";
-+};
-+
-+&adc {
-+	status = "okay";
-+};
+What do you mean when you say platform?
+
+We have uboot, core boot, Linux, free BSD, in whatever combinations. How do we make sure we all use the same fallback?
+
+
+Thanks.
+
 -- 
-2.7.4
+Dmitry
