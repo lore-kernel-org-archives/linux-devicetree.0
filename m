@@ -1,8 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 8/9] ARM: dts: sun9i: cubieboard4: Add AXP806
- PMIC device node and regulators
-Date: Sun, 21 Aug 2016 10:11:24 +0800
-Message-ID: <20160821021125.1521-9-wens@csie.org>
+Subject: [PATCH 6/9] ARM: dts: sun9i: cubieboard4: Declare
+ AXP809 SW regulator as unused
+Date: Sun, 21 Aug 2016 10:11:22 +0800
+Message-ID: <20160821021125.1521-7-wens@csie.org>
 References: <20160821021125.1521-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
@@ -20,137 +20,28 @@ To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The AXP806 PMIC is the secondary PMIC. It provides various supply
-voltages for the SoC and other peripherals. The PMIC's interrupt
-line is connected to NMI pin of the SoC.
+The AXP809's SW (switch) regulator is unused on the Cubieboard 4.
+Add an empty node for it so that the OS can generate constraints.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 112 ++++++++++++++++++++++++++++
- 1 file changed, 112 insertions(+)
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-index 910b29f0f0b5..e38ac4fec10c 100644
+index 04b014603659..910b29f0f0b5 100644
 --- a/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
 +++ b/arch/arm/boot/dts/sun9i-a80-cubieboard4.dts
-@@ -260,6 +260,118 @@
+@@ -253,6 +253,10 @@
+ 			reg_rtc_ldo: rtc_ldo {
+ 				regulator-name = "vcc-rtc-vdd1v8-io";
+ 			};
++
++			sw {
++				/* unused */
++			};
  		};
  	};
  
-+	axp806: pmic@745 {
-+		compatible = "x-powers,axp806";
-+		reg = <0x745>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		bldoin-supply = <&reg_dcdce>;
-+
-+		regulators {
-+			reg_s_aldo1: aldo1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-name = "avcc";
-+			};
-+
-+			aldo2 {
-+				/*
-+				 * unused, but use a different name to
-+				 * avoid name clash with axp809's aldo's
-+				 */
-+				regulator-name = "s_aldo2";
-+			};
-+
-+			aldo3 {
-+				/*
-+				 * unused, but use a different name to
-+				 * avoid name clash with axp809's aldo's
-+				 */
-+				regulator-name = "s_aldo3";
-+			};
-+
-+			reg_bldo1: bldo1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1620000>;
-+				regulator-max-microvolt = <1980000>;
-+				regulator-name = "vcc18-efuse-adc-display-csi";
-+			};
-+
-+			reg_bldo2: bldo2 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1620000>;
-+				regulator-max-microvolt = <1980000>;
-+				regulator-name =
-+					"vdd18-drampll-vcc18-pll-cpvdd";
-+			};
-+
-+			bldo3 {
-+				/* unused */
-+			};
-+
-+			reg_bldo4: bldo4 {
-+				regulator-min-microvolt = <1080000>;
-+				regulator-max-microvolt = <1320000>;
-+				regulator-name = "vcc12-hsic";
-+			};
-+
-+			reg_cldo1: cldo1 {
-+				/*
-+				 * This was 3V in the original design, but
-+				 * 3.3V is the recommended supply voltage
-+				 * for the Ethernet PHY.
-+				 */
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-gmac-phy";
-+			};
-+
-+			reg_cldo2: cldo2 {
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-name = "afvcc-cam";
-+			};
-+
-+			reg_cldo3: cldo3 {
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-name = "vcc-io-wifi-codec-io2";
-+			};
-+
-+			reg_dcdca: dcdca {
-+				regulator-always-on;
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-name = "vdd-cpub";
-+			};
-+
-+			reg_dcdcd: dcdcd {
-+				regulator-always-on;
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-name = "vdd-vpu";
-+			};
-+
-+			reg_dcdce: dcdce {
-+				regulator-always-on;
-+				regulator-min-microvolt = <2100000>;
-+				regulator-max-microvolt = <2100000>;
-+				regulator-name = "vcc-bldo-codec-ldoin";
-+			};
-+
-+			sw {
-+				/*
-+				 * unused, but use a different name to
-+				 * avoid name clash with axp809's sw
-+				 */
-+				regulator-name = "s_sw";
-+			};
-+		};
-+	};
-+
- 	ac100: codec@e89 {
- 		compatible = "x-powers,ac100";
- 		reg = <0xe89>;
 -- 
 2.9.3
