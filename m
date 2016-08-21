@@ -1,115 +1,62 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] iio: adc: add ADC12130/ADC12132/ADC12138 ADC driver
-Date: Sun, 21 Aug 2016 10:45:31 +0100
-Message-ID: <e76a92c5-4de6-88e5-746f-337f82d196d2@kernel.org>
-References: <1470583330-6850-1-git-send-email-akinobu.mita@gmail.com>
- <b43674fb-6a68-de05-0f06-e1f92986705d@kernel.org>
- <CAC5umyg831=Q4iih+4rPpdNSyEEgBKqHk00cLCd6XJ5dTw92Jw@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 4/4] ARM: dts: rockchip: Point rk3288 dwc2 usb at the full
+ PHY reset
+Date: Sun, 21 Aug 2016 14:06:18 +0300
+Message-ID: <95d6e178-b9c5-ed40-2adc-5ffd1d78db07@cogentembedded.com>
+References: <4c931176-a09a-546c-d2b6-ea74028c78a2@cogentembedded.com>
+ <1471766205-12940-1-git-send-email-ayaka@soulik.info>
+ <1471766205-12940-5-git-send-email-ayaka@soulik.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAC5umyg831=Q4iih+4rPpdNSyEEgBKqHk00cLCd6XJ5dTw92Jw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1471766205-12940-5-git-send-email-ayaka@soulik.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Randy Li <ayaka@soulik.info>, linux-usb@vger.kernel.org
+Cc: johnyoun@synopsys.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, eddie.cai@rock-chips.com, randy.li@rock-chips.com, kishon@ti.com, linux-kernel@vger.kernel.org, heiko@sntech.de, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/08/16 03:54, Akinobu Mita wrote:
-> Hi Rob,
-> 
-> 2016-08-16 1:42 GMT+09:00 Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
->> On 07/08/16 16:22, Akinobu Mita wrote:
->>> This adds Texas Instruments' ADC12130/ADC12132/ADC12138 12-bit plus
->>> sign ADC driver.  I have tested with the ADC12138.  The ADC12130 and
->>> ADC12132 are not tested but these are similar to ADC12138 except that
->>> the mode programming instruction is a bit different.
->>>
->>> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Hi,
->>
->> Now had time for a closer look.  A few minor bits and bobs to fix
->> up highlighted inline.
->>
->> Looks pretty good.
->>
->> Jonathan
->>> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
->>> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
->>> Cc: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
->>> ---
->>> * Changes from v2
->>> - improve error label names
->>>
->>>  .../devicetree/bindings/iio/adc/ti-adc12138.txt    |  32 ++
->>>  drivers/iio/adc/Kconfig                            |  12 +
->>>  drivers/iio/adc/Makefile                           |   1 +
->>>  drivers/iio/adc/ti-adc12138.c                      | 542 +++++++++++++++++++++
->>>  4 files changed, 587 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
->>>  create mode 100644 drivers/iio/adc/ti-adc12138.c
->>>
->>> diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
->>> new file mode 100644
->>> index 0000000..3a11d2a
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
->>> @@ -0,0 +1,32 @@
->>> +* Texas Instruments' ADC12130/ADC12132/ADC12138
->>> +
->>> +Required properties:
->>> + - compatible: Should be one of
->>> +     * "ti,adc12130"
->>> +     * "ti,adc12132"
->>> +     * "ti,adc12138"
->>> + - reg: SPI chip select number for the device
->>> + - interrupts: Should contain interrupt for EOC (end of conversion)
->>> + - clocks: phandle to conversion clock input
->>> + - spi-max-frequency: Definision as per
->>> +     Documentation/devicetree/bindings/spi/spi-bus.txt
->>> + - vref-p-supply: The regulator supply for positive analog voltage reference
->>> +
->>> +Optional properties:
->>> + - vref-n-supply: The regulator supply for negative analog voltage reference
->>> +     If not specified, this is assumed to be analog ground.
->> This is novel. Documented in the datasheet as a negative reference which
->> must be positive (greater than 0) for it to work well.
->>
->> Intersting question on whether this should be optional. Easy enough to
->> provided a fixed regulator at 0V afterall.
->>
->>
->>> + - acquisition-time: The number of conversion clock periods for the S/H's
->>> +     acquisition time.  Should be one of 6, 10, 18, 34.  If not specified,
->>> +     default value of 10 is used.
->> Should this be a ti specific parameter.  Not sure.
-> 
-> Is it better to change this parameter to "ti,acquisition-time" ?
-I think so. If not it needs to go in generic docs rather than this file then
-be appropriately cross referenced from here. I'd keep it as ti specific for now.
-We can generalize later if it makes sense (though will have to support this
-as well which isn't too difficult).
-> 
->> I'd also add a note here about why one would set this to other than the
->> default (source impedance etc).
->>
->>
->>> +
->>> +Example:
->>> +adc@0 {
->>> +     compatible = "ti,adc12138";
->>> +     reg = <0>;
->>> +     interrupts = <28 IRQ_TYPE_EDGE_RISING>;
->>> +     interrupt-parent = <&gpio1>;
->>> +     clocks = <&cclk>;
->>> +     vref-p-supply = <&ldo4_reg>;
->>> +     spi-max-frequency = <5000000>;
->>> +     acquisition-time = <6>;
->>> +};
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Hello.
+
+On 8/21/2016 10:56 AM, Randy Li wrote:
+
+> The "host1" port (AKA the dwc2 port that isn't the OTG port) on rk3288
+> has a hardware errata that causes everything to get confused when we get
+> a remote wakeup.  We'll use the reset that's in the CRU to reset the
+> port when it's in a bad state.
+>
+> Note that we add the reset to both dwc2 controllers even though only one
+> has the errata in case we find some other use for this reset that's
+> unrelated to the current hardware errata.  Only the host port gets the
+> quirk property, though.
+>
+> This patch came from Doug Anderson <dianders@chromium.org> originally.
+
+    Was it signed off by him? Don't you need to keep his authorship via th 
+"From:" tag?
+
+> Signed-off-by: Randy Li <ayaka@soulik.info>
+> ---
+>  arch/arm/boot/dts/rk3288.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 48ca4e4..646f49d 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+[...]
+> @@ -871,6 +873,9 @@
+>  				clocks = <&cru SCLK_OTGPHY2>;
+>  				clock-names = "phyclk";
+>  				#clock-cells = <0>;
+> +				resets = <&cru SRST_USBHOST1_PHY>;
+> +				reset-names = "phy-reset";
+> +
+
+    Don't need empty line here.
+
+>  			};
+>  		};
+>  	};
+
+MBR , Sergei
