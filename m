@@ -1,101 +1,80 @@
-From: Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH V3 2/5] thermal: bcm2835: add thermal driver for bcm2835
- soc
-Date: Sun, 21 Aug 2016 19:21:42 +0200
-Message-ID: <46FE06A3-5A7D-41D7-827B-C7B35E42E2C5@martin.sperl.org>
-References: <1463495753-967-1-git-send-email-kernel@martin.sperl.org>
- <1463495753-967-3-git-send-email-kernel@martin.sperl.org>
- <87mvn6qa2x.fsf@eliezer.anholt.net> <87r39lvs4v.fsf@eliezer.anholt.net>
- <1471591694.2691.39.camel@intel.com> <87inuwd1p4.fsf@eliezer.anholt.net>
- <1471786649.2188.4.camel@intel.com>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1471786649.2188.4.camel@intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-pm@vger.kernel.org, Lee Jones <lee@kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 1/3] dt-bindings: auxadc: Add binding document for
+ Mediatek auxadc.
+Date: Sun, 21 Aug 2016 19:54:00 +0100
+Message-ID: <eb2d9448-5b6e-9ff7-5287-de35fb73d338@kernel.org>
+References: <1471504297-26947-1-git-send-email-zhiyong.tao@mediatek.com>
+ <1471504297-26947-2-git-send-email-zhiyong.tao@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471504297-26947-2-git-send-email-zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
+Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cj4gT24gMjEuMDguMjAxNiwgYXQgMTU6MzcsIFpoYW5nIFJ1aSA8cnVpLnpoYW5nQGludGVsLmNv
-bT4gd3JvdGU6Cj4gCj4+IE9uIOS6lCwgMjAxNi0wOC0xOSBhdCAxMTo1OSAtMDcwMCwgRXJpYyBB
-bmhvbHQgd3JvdGU6Cj4+IFpoYW5nIFJ1aSA8cnVpLnpoYW5nQGludGVsLmNvbT4gd3JpdGVzOgo+
-PiAKPj4+IAo+Pj4+IE9uIOWbmywgMjAxNi0wOC0xOCBhdCAxMTozOSAtMDcwMCwgRXJpYyBBbmhv
-bHQgd3JvdGU6Cj4+Pj4gCj4+Pj4gRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4gd3JpdGVz
-Ogo+Pj4+IAo+Pj4+PiAKPj4+Pj4gCj4+Pj4+IGtlcm5lbEBtYXJ0aW4uc3Blcmwub3JnIHdyaXRl
-czoKPj4+Pj4gCj4+Pj4+PiAKPj4+Pj4+IAo+Pj4+Pj4gRnJvbTogTWFydGluIFNwZXJsIDxrZXJu
-ZWxAbWFydGluLnNwZXJsLm9yZz4KPj4+Pj4+IAo+Pj4+Pj4gQWRkIGJhc2ljIHRoZXJtYWwgZHJp
-dmVyIGZvciBiY20yODM1IFNPQy4KPj4+Pj4+IAo+Pj4+Pj4gVGhpcyBkcml2ZXIgY3VycmVudGx5
-IHJlbGllcyBvbiB0aGUgZmlybXdhcmUgc2V0dGluZyB1cCB0aGUKPj4+Pj4+IHRzZW5zZSBIVyBi
-bG9jayBhbmQgZG9lcyBub3Qgc2V0IGl0IHVwIGl0c2VsZi4KPj4+Pj4+IAo+Pj4+Pj4gU2lnbmVk
-LW9mZi1ieTogTWFydGluIFNwZXJsIDxrZXJuZWxAbWFydGluLnNwZXJsLm9yZz4KPj4+Pj4+IAo+
-Pj4+Pj4gQ2hhbmdlTG9nOgo+Pj4+Pj4gIFYxIC0+IFYyOiBhZGRlZCBzcGVjaWZpYyBzZXR0aW5n
-cyBkZXBlbmRpbmcgb24gY29tcGF0aWJsaXR5Cj4+Pj4+PiAgICAgICBhZGRlZCB0cmlwIHBvaW50
-IGJhc2VkIG9uIHJlZ2lzdGVyCj4+Pj4+PiAgICAgICBzZXR0aW5nIHVwIGN0cmwtcmVnaXN0ZXIg
-aWYgSFcgaXMgbm90IGVuYWJsZWQgYnkKPj4+Pj4+IGZpcm13YXJlCj4+Pj4+PiAgICAgICAgIGFz
-IHBlciByZWNvbW1lbmRhdGlvbiBvZiBFcmljICh1bnRlc3RlZCkKPj4+Pj4+ICAgICAgIGNoZWNr
-IHRoYXQgY2xvY2sgZnJlcXVlbmN5IGlzIGluIHJhbmdlCj4+Pj4+PiAgICAgICAgICgxLjkgLSA1
-TUh6IC0gYXMgcGVyIGNvbW1lbnQgaW4gY2xrLWJjbTI4MzUuYykKPj4+Pj4+IC0tLQo+Pj4+Pj4g
-Cj4+Pj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy90aGVybWFsL2JjbS9NYWtlZmlsZQo+Pj4+Pj4g
-Yi9kcml2ZXJzL3RoZXJtYWwvYmNtL01ha2VmaWxlCj4+Pj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0
-NAo+Pj4+Pj4gaW5kZXggMDAwMDAwMC4uMTM0NTZkMgo+Pj4+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4+
-Pj4gKysrIGIvZHJpdmVycy90aGVybWFsL2JjbS9NYWtlZmlsZQo+Pj4+Pj4gQEAgLTAsMCArMSBA
-QAo+Pj4+Pj4gK29iai0kKENPTkZJR19CQ00yODM1X1RIRVJNQUwpICAgICAgICA6PQo+Pj4+Pj4g
-YmNtMjgzNV90aGVybWFsLm8KPj4+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3RoZXJtYWwvYmNt
-L2JjbTI4MzVfdGhlcm1hbC5jCj4+Pj4+PiBiL2RyaXZlcnMvdGhlcm1hbC9iY20vYmNtMjgzNV90
-aGVybWFsLmMKPj4+Pj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+Pj4+PiBpbmRleCAwMDAwMDAw
-Li43MzEzOGNiCj4+Pj4+PiAtLS0gL2Rldi9udWxsCj4+Pj4+PiArKysgYi9kcml2ZXJzL3RoZXJt
-YWwvYmNtL2JjbTI4MzVfdGhlcm1hbC5jCj4+Pj4+PiAKPj4+Pj4+ICtzdGF0aWMgY29uc3Qgc3Ry
-dWN0IG9mX2RldmljZV9pZAo+Pj4+Pj4gYmNtMjgzNV90aGVybWFsX29mX21hdGNoX3RhYmxlW107
-Cj4+Pj4+PiArc3RhdGljIGludCBiY20yODM1X3RoZXJtYWxfcHJvYmUoc3RydWN0IHBsYXRmb3Jt
-X2RldmljZQo+Pj4+Pj4gKnBkZXYpCj4+Pj4+PiArewo+Pj4+Pj4gCj4+Pj4+PiArICAgIC8qIGVu
-YWJsZSBjbG9jayBhbmQgY2hlY2sgcmF0ZSAqLwo+Pj4+Pj4gKyAgICBjbGtfcHJlcGFyZV9lbmFi
-bGUoZGF0YS0+Y2xrKTsKPj4+Pj4+ICsgICAgcmF0ZSA9IGNsa19nZXRfcmF0ZShkYXRhLT5jbGsp
-Owo+Pj4+Pj4gKyAgICBpZiAoKHJhdGUgPCAxOTIwMDAwKSB8fCAocmF0ZSA+IDUwMDAwMDApKSB7
-Cj4+Pj4+PiArICAgICAgICBkZXZfd2FybigmcGRldi0+ZGV2LAo+Pj4+Pj4gKyAgICAgICAgICAg
-ICAiQ2xvY2sgJXBDbiBpcyBydW5uaW5nIGF0ICVwQ3IgSHosCj4+Pj4+PiB3aGljaCBpcyBvdXRz
-aWRlIHRoZSByZWNvbW1lbmRlZCByYW5nZSBvZiAxLjkgdG8gNS4wIE1IelxuIiwKPj4+Pj4+ICsg
-ICAgICAgICAgICAgZGF0YS0+Y2xrLCBkYXRhLT5jbGspOwo+Pj4+Pj4gKyAgICB9Cj4+Pj4+PiAr
-Cj4+Pj4+PiArICAgIC8qIHJlZ2lzdGVyIGl0ICovCj4+Pj4+PiArICAgIHR6ID0gdGhlcm1hbF96
-b25lX2RldmljZV9yZWdpc3RlcigiYmNtMjgzNV90aGVybWFsIiwKPj4+Pj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgMSwgMCwgZGF0YSwKPj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgJmJj
-bTI4MzVfdGhlcm1hbF9vCj4+Pj4+PiBwcywKPj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-TlVMTCwgMCwgMCk7Cj4+Pj4+IEkgbm90aWNlIHRoYXQgdGhlIHBvbGxpbmdfZGVsYXkgaXMgc2V0
-IHRvIDAsIGJ1dCB3ZSdyZSBub3QKPj4+Pj4gdXNpbmcKPj4+Pj4gaW50ZXJydXB0cyB0byB0cmln
-Z2VyIHRoZSB0cmlwLiAgSXMgaXQgdmFsaWQgdG8gZXhwb3NlIGEgdHJpcAo+Pj4+PiB3aXRob3V0
-IGEKPj4+Pj4gcG9sbGluZ19kZWxheSBvciBpbnRlcnJ1cHRzPyAgU2hvdWxkIHBhc3NpdmVfZGVs
-YXkgYmUgc2V0IGFzCj4+Pj4+IHdlbGw/Cj4+Pj4+IAo+Pj4+PiBUaGlzIGlzIHVwIHRvIHRoZSB0
-aGVybWFsIG1haW50YWluZXJzLiAgQXMgZmFyIGFzIEknbQo+Pj4+PiBjb25jZXJuZWQsCj4+Pj4+
-IGl0J3M6Cj4+Pj4+IAo+Pj4+PiBBY2tlZC1ieTogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5l
-dD4KPj4+Pj4gCj4+Pj4+IE9uZSBpdCBsYW5kcyBJJ2xsIHB1bGwgdGhlIGRlZmNvbmZpZyBhbmQg
-RFQgYml0cy4KPj4+PiBQaW5nIG9uIHRoaXMgcXVlc3Rpb24gdG8gdGhlcm1hbCBtYWludGFpbmVy
-cy4gIEknZCBzdGlsbCBsb3ZlIHRvCj4+Pj4gc2VlCj4+Pj4gdGhpcyBkcml2ZXIgbGFuZC4KPj4+
-IGhtbW0sIGhvdyBpcyB0aGlzIGRyaXZlciBzdXBwb3NlZCB0byB3b3JrPwo+Pj4gV2l0aCB0aGlz
-IHBhdGNoIHNldCwgSSB0aGluayB0aGUgb25seSBiZW5lZml0IGlzIHRoYXQgd2UgY2FuIGdldAo+
-Pj4gdGhlCj4+PiB0ZW1wZXJhdHVyZSBhbmQgdHJpcCBwb2ludCBpbmZvcm1hdGlvbiB2aWEgdGhl
-cm1hbCBzeXNmcyBpbnRlcmZhY2UsCj4+PiBidXQKPj4+IGtlcm5lbCB0aGVybWFsIGNvbnRyb2wg
-aXMgYSBuby1vcCBoZXJlLCByaWdodD8KPj4gWWVhaC4gIEl0IHNlZW1zIHVzZWZ1bCB0byBiZSBh
-YmxlIHRvIGdldCB0aGUgaW5mb3JtYXRpb24uICBPbmNlIHdlCj4+IGxhbmQKPj4gdGhpcywgSSBo
-b3BlIHNvbWVvbmUgY2FuIGFkZCBpbnRlcnJ1cHQgc3VwcG9ydCBzbyB0aGF0IHRoZXJlIGFyZQo+
-PiBhY3R1YWwKPj4gdHJpcCBwb2ludHMuCj4gCj4gc291bmRzIHJlYXNvbmFibGUgdG8gbWUuCj4g
-QW5vdGhlciBxdWVzdGlvbiwgd2h5IHlvdSBuZWVkIGEgc2VwYXJhdGUgZGlyZWN0b3J5IGZvciBh
-IHNpbmdsZQo+IGZpbGUsIGJjbTI4MzVfdGhlcm1hbC5jPwoKTG90cyBvZiBvdGhlciBzdWJzeXN0
-ZW1zIChjbGssIHNvdW5kL3NvYywgLi4uKSBhcmUgdXNpbmcgdmVuZG9yIHNwZWNpZmljCnN1YiBk
-aXJlY3Rvcmllcy4KSW4gdGhlcm1hbCB0aGVyZSBhcmUgYWxyZWFkeSBzdWJkaXJlY3RvcmllcyBm
-b3IgU2Ftc3VuZyBvciBzdC4KU28gdGhpcyB3YXMgZG9uZSBpbiB0aGlzIGNhc2UgYXMgd2VsbCB0
-byBzdXBwb3J0IEJyb2FkY29tIGltbWVkaWF0ZWx5CmZvbGxvd2luZyB0aGlzIHBhdHRlcm4uCgpZ
-b3Ugd2FudCBhIG5ldyB2ZXJzaW9uIHRvIGtlZXAgaXQgaW4gdGhlcm1hbCBkaXJlY3RseSBJIGNh
-biBjcmVhdGUgYQpuZXcgdmVyc2lvbiBvZiB0aGUgcGF0Y2guCgpUaGFua3MsIE1hcnRpbgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
-bAo=
+On 18/08/16 08:11, Zhiyong Tao wrote:
+> The commit adds the device tree binding documentation for the mediatek
+> auxadc found on Mediatek MT2701.
+> Thermal gets auxadc sample data by iio device.
+> So the commit changes auxadc device tree binding documentation from
+> /soc/mediatek/auxadc.txt to /iio/adc/mt6577_auxadc.txt.
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Applied to the togreg branch of iio.git.
+
+Thanks,
+
+Jonathan
+> ---
+>  .../auxadc.txt => iio/adc/mt6577_auxadc.txt}       |   18 +++++++++++++-----
+>  1 file changed, 13 insertions(+), 5 deletions(-)
+>  rename Documentation/devicetree/bindings/{soc/mediatek/auxadc.txt => iio/adc/mt6577_auxadc.txt} (46%)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/mediatek/auxadc.txt b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
+> similarity index 46%
+> rename from Documentation/devicetree/bindings/soc/mediatek/auxadc.txt
+> rename to Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
+> index bdb7829..68c45cb 100644
+> --- a/Documentation/devicetree/bindings/soc/mediatek/auxadc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
+> @@ -1,4 +1,4 @@
+> -MediaTek AUXADC
+> +* Mediatek AUXADC - Analog to Digital Converter on Mediatek mobile soc (mt65xx/mt81xx/mt27xx)
+>  ===============
+>  
+>  The Auxiliary Analog/Digital Converter (AUXADC) is an ADC found
+> @@ -10,12 +10,20 @@ Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+>  for the Thermal Controller which holds a phandle to the AUXADC.
+>  
+>  Required properties:
+> -- compatible: Must be "mediatek,mt8173-auxadc"
+> -- reg: Address range of the AUXADC unit
+> +  - compatible: Should be one of:
+> +    - "mediatek,mt2701-auxadc": For MT2701 family of SoCs
+> +    - "mediatek,mt8173-auxadc": For MT8173 family of SoCs
+> +  - reg: Address range of the AUXADC unit.
+> +  - clocks: Should contain a clock specifier for each entry in clock-names
+> +  - clock-names: Should contain "main".
+> +  - #io-channel-cells: Should be 1, see ../iio-bindings.txt
+>  
+>  Example:
+>  
+> -auxadc: auxadc@11001000 {
+> -	compatible = "mediatek,mt8173-auxadc";
+> +auxadc: adc@11001000 {
+> +	compatible = "mediatek,mt2701-auxadc";
+>  	reg = <0 0x11001000 0 0x1000>;
+> +	clocks = <&pericfg CLK_PERI_AUXADC>;
+> +	clock-names = "main";
+> +	#io-channel-cells = <1>;
+>  };
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
