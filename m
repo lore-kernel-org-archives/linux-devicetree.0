@@ -1,55 +1,105 @@
-From: Randy Li <ayaka@soulik.info>
-Subject: [PATCH 4/4] ARM: dts: rockchip: Point rk3288 dwc2 usb at the full PHY reset
-Date: Sun, 21 Aug 2016 15:56:45 +0800
-Message-ID: <1471766205-12940-5-git-send-email-ayaka@soulik.info>
+From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Subject: [PATCH 2/4] phy: rockchip-usb: use rockchip_usb_phy_reset to reset
+ phy during wakeup
+Date: Sun, 21 Aug 2016 15:56:43 +0800
+Message-ID: <1471766205-12940-3-git-send-email-ayaka@soulik.info>
 References: <4c931176-a09a-546c-d2b6-ea74028c78a2@cogentembedded.com>
  <1471766205-12940-1-git-send-email-ayaka@soulik.info>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1471766205-12940-1-git-send-email-ayaka@soulik.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org
-Cc: johnyoun@synopsys.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, eddie.cai@rock-chips.com, randy.li@rock-chips.com, kishon@ti.com, linux-kernel@vger.kernel.org, heiko@sntech.de, linux-rockchip@lists.infradead.org, Randy Li <ayaka@soulik.info>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1471766205-12940-1-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The "host1" port (AKA the dwc2 port that isn't the OTG port) on rk3288
-has a hardware errata that causes everything to get confused when we get
-a remote wakeup.  We'll use the reset that's in the CRU to reset the
-port when it's in a bad state.
+It is a hardware bug in RK3288, the only way to solve it is to
+reset the phy.
 
-Note that we add the reset to both dwc2 controllers even though only one
-has the errata in case we find some other use for this reset that's
-unrelated to the current hardware errata.  Only the host port gets the
-quirk property, though.
-
-This patch came from Doug Anderson <dianders@chromium.org> originally.
-
-Signed-off-by: Randy Li <ayaka@soulik.info>
+Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../devicetree/bindings/phy/rockchip-usb-phy.txt     |  3 +++
+ drivers/phy/phy-rockchip-usb.c                       | 20 ++++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 48ca4e4..646f49d 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -855,6 +855,8 @@
- 				clocks = <&cru SCLK_OTGPHY0>;
- 				clock-names = "phyclk";
- 				#clock-cells = <0>;
-+				resets = <&cru SRST_USBOTG_PHY>;
-+				reset-names = "phy-reset";
- 			};
+diff --git a/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
+index cc6be96..57dc388 100644
+--- a/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
++++ b/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
+@@ -27,6 +27,9 @@ Optional Properties:
+ - clocks : phandle + clock specifier for the phy clocks
+ - clock-names: string, clock name, must be "phyclk"
+ - #clock-cells: for users of the phy-pll, should be 0
++- reset-names: Only allow the following entries:
++ - phy-reset
++- resets: Must contain an entry for each entry in reset-names.
  
- 			usbphy1: usb-phy@334 {
-@@ -871,6 +873,9 @@
- 				clocks = <&cru SCLK_OTGPHY2>;
- 				clock-names = "phyclk";
- 				#clock-cells = <0>;
-+				resets = <&cru SRST_USBHOST1_PHY>;
-+				reset-names = "phy-reset";
+ Example:
+ 
+diff --git a/drivers/phy/phy-rockchip-usb.c b/drivers/phy/phy-rockchip-usb.c
+index 2a7381f..734987f 100644
+--- a/drivers/phy/phy-rockchip-usb.c
++++ b/drivers/phy/phy-rockchip-usb.c
+@@ -29,6 +29,7 @@
+ #include <linux/reset.h>
+ #include <linux/regmap.h>
+ #include <linux/mfd/syscon.h>
++#include <linux/delay.h>
+ 
+ static int enable_usb_uart;
+ 
+@@ -64,6 +65,7 @@ struct rockchip_usb_phy {
+ 	struct clk_hw	clk480m_hw;
+ 	struct phy	*phy;
+ 	bool		uart_enabled;
++	struct reset_control *reset;
+ };
+ 
+ static int rockchip_usb_phy_power(struct rockchip_usb_phy *phy,
+@@ -144,9 +146,23 @@ static int rockchip_usb_phy_power_on(struct phy *_phy)
+ 	return clk_prepare_enable(phy->clk480m);
+ }
+ 
++static int rockchip_usb_phy_reset(struct phy *_phy)
++{
++	struct rockchip_usb_phy *phy = phy_get_drvdata(_phy);
 +
- 			};
- 		};
- 	};
++	if (phy->reset) {
++		reset_control_assert(phy->reset);
++		udelay(10);
++		reset_control_deassert(phy->reset);
++	}
++
++	return 0;
++}
++
+ static const struct phy_ops ops = {
+ 	.power_on	= rockchip_usb_phy_power_on,
+ 	.power_off	= rockchip_usb_phy_power_off,
++	.reset		= rockchip_usb_phy_reset,
+ 	.owner		= THIS_MODULE,
+ };
+ 
+@@ -185,6 +201,10 @@ static int rockchip_usb_phy_init(struct rockchip_usb_phy_base *base,
+ 		return -EINVAL;
+ 	}
+ 
++	rk_phy->reset = of_reset_control_get(child, "phy-reset");
++	if (IS_ERR(rk_phy->reset))
++		rk_phy->reset = NULL;
++
+ 	rk_phy->reg_offset = reg_offset;
+ 
+ 	rk_phy->clk = of_clk_get_by_name(child, "phyclk");
 -- 
 2.7.4
