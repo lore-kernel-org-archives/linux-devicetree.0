@@ -1,136 +1,40 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 4/5] ath9k: Make the EEPROM swapping check use the eepmisc register
-Date: Sun, 21 Aug 2016 16:49:05 +0200
-Message-ID: <20160821144906.30984-5-martin.blumenstingl@googlemail.com>
-References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160821144906.30984-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH V3 4/5] DT: bindings: bcm: Add Raspberry Pi Zero
+Date: Sun, 21 Aug 2016 15:10:02 +0000
+Message-ID: <1471792204-21908-5-git-send-email-stefan.wahren@i2se.com>
+References: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471792204-21908-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There are two ways of swapping the EEPROM data in the ath9k driver:
-1) swab16 based on the first two EEPROM "magic" bytes (same for all
-   EEPROM formats)
-2) field and EEPROM format specific swab16/swab32 (different for
-   eeprom_def, eeprom_4k and eeprom_9287)
-
-The result of the first check was used to also enable the second swap.
-This behavior seems incorrect, since the data may only be byte-swapped
-(afterwards the data could be in the correct endianness).
-Thus we introduce a separate check based on the "eepmisc" register
-(which is part of the EEPROM data). When bit 0 is set, then the EEPROM
-format specific values are in "big endian". This is also done by the
-FreeBSD kernel, see [0] for example.
-
-This allows us to parse EEPROMs with the "correct" magic bytes but
-swapped EEPROM format specific values. These EEPROMs (mostly found in
-lantiq and broadcom based big endian MIPS based devices) only worked
-due to platform specific "hacks" which swapped the EEPROM so the
-magic was inverted, which also enabled the format specific swapping.
-With this patch the old behavior is still supported, but neither
-recommended nor needed anymore.
-
-[0]
-https://github.com/freebsd/freebsd/blob/50719b56d9ce8d7d4beb53b16e9edb2e9a4a7a18/sys/dev/ath/ath_hal/ah_eeprom_9287.c#L351
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/net/wireless/ath/ath9k/eeprom.c | 57 ++++++++++++++++++++++++---------
- 1 file changed, 41 insertions(+), 16 deletions(-)
+ .../devicetree/bindings/arm/bcm/brcm,bcm2835.txt   |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath9k/eeprom.c b/drivers/net/wireless/ath/ath9k/eeprom.c
-index a449588..8138a1d 100644
---- a/drivers/net/wireless/ath/ath9k/eeprom.c
-+++ b/drivers/net/wireless/ath/ath9k/eeprom.c
-@@ -155,11 +155,19 @@ bool ath9k_hw_nvram_read(struct ath_hw *ah, u32 off, u16 *data)
- 	return ret;
- }
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+index 6ffe087..9c97de2 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+@@ -38,6 +38,10 @@ Raspberry Pi Compute Module
+ Required root node properties:
+ compatible = "raspberrypi,compute-module", "brcm,bcm2835";
  
-+#ifdef __BIG_ENDIAN
-+#define EXPECTED_EEPMISC_VAL AR5416_EEPMISC_BIG_ENDIAN
-+#else
-+#define EXPECTED_EEPMISC_VAL 0
-+#endif
++Raspberry Pi Zero
++Required root node properties:
++compatible = "raspberrypi,model-zero", "brcm,bcm2835";
 +
- int ath9k_hw_nvram_swap_data(struct ath_hw *ah, bool *swap_needed, int size)
- {
- 	u16 magic;
- 	u16 *eepdata;
-+	u8 eepmisc;
- 	int i;
-+	bool needs_byteswap = false;
- 	struct ath_common *common = ath9k_hw_common(ah);
- 
- 	if (!ath9k_hw_nvram_read(ah, AR5416_EEPROM_MAGIC_OFFSET, &magic)) {
-@@ -167,36 +175,53 @@ int ath9k_hw_nvram_swap_data(struct ath_hw *ah, bool *swap_needed, int size)
- 		return -EIO;
- 	}
- 
--	*swap_needed = false;
- 	if (swab16(magic) == AR5416_EEPROM_MAGIC) {
-+		needs_byteswap = true;
-+		ath_dbg(common, EEPROM,
-+			"EEPROM needs byte-swapping to correct endianness.\n");
-+	} else if (magic != AR5416_EEPROM_MAGIC) {
-+		if (ath9k_hw_use_flash(ah)) {
-+			ath_dbg(common, EEPROM,
-+				"Ignoring invalid EEPROM magic (0x%04x).\n",
-+				magic);
-+		} else {
-+			ath_err(common,
-+				"Invalid EEPROM magic (0x%04x).\n", magic);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (needs_byteswap) {
- 		if (ah->ah_flags & AH_NO_EEP_SWAP) {
- 			ath_info(common,
- 				 "Ignoring endianness difference in EEPROM magic bytes.\n");
- 		} else {
--			*swap_needed = true;
--		}
--	} else if (magic != AR5416_EEPROM_MAGIC) {
--		if (ath9k_hw_use_flash(ah))
--			return 0;
-+			eepdata = (u16 *)(&ah->eeprom);
- 
--		ath_err(common,
--			"Invalid EEPROM Magic (0x%04x).\n", magic);
--		return -EINVAL;
-+			for (i = 0; i < size; i++)
-+				eepdata[i] = swab16(eepdata[i]);
-+		}
- 	}
- 
--	eepdata = (u16 *)(&ah->eeprom);
--
--	if (*swap_needed) {
--		ath_dbg(common, EEPROM,
--			"EEPROM Endianness is not native.. Changing.\n");
-+	*swap_needed = false;
- 
--		for (i = 0; i < size; i++)
--			eepdata[i] = swab16(eepdata[i]);
-+	eepmisc = ah->eep_ops->get_eepmisc(ah);
-+	if ((eepmisc & AR5416_EEPMISC_BIG_ENDIAN) != EXPECTED_EEPMISC_VAL) {
-+		if (ah->ah_flags & AH_NO_EEP_SWAP) {
-+			ath_info(common,
-+				 "Ignoring endianness difference in eepmisc register.\n");
-+		} else {
-+			*swap_needed = true;
-+			ath_dbg(common, EEPROM,
-+				"EEPROM needs swapping according to the eepmisc register.\n");
-+		}
- 	}
- 
- 	return 0;
- }
- 
-+#undef EXPECTED_EEPMISC_VAL
-+
- bool ath9k_hw_nvram_validate_checksum(struct ath_hw *ah, int size)
- {
- 	u32 i, sum = 0;
+ Generic BCM2835 board
+ Required root node properties:
+ compatible = "brcm,bcm2835";
 -- 
-2.9.3
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
