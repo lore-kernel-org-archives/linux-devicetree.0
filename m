@@ -1,90 +1,96 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH V3 5/5] ARM: dts: bcm2835: Add Raspberry Pi Zero
-Date: Sun, 21 Aug 2016 15:10:03 +0000
-Message-ID: <1471792204-21908-6-git-send-email-stefan.wahren@i2se.com>
-References: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471792204-21908-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v3 5/7] phy-sun4i-usb: Warn when external vbus is detected
+Date: Sun, 21 Aug 2016 17:20:14 +0200
+Message-ID: <fabf206f-7f7a-4f00-dbdf-c3ad24211fef@redhat.com>
+References: <1471781799-10457-1-git-send-email-hdegoede@redhat.com>
+ <1471781799-10457-5-git-send-email-hdegoede@redhat.com>
+ <27711471789929@web21g.yandex.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <27711471789929@web21g.yandex.ru>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>, Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The Raspberry Pi Zero is a minified version of model A+. It's
-notable there is no PWR LED and the ACT LED is inverted.
-Additionally the Pi Zero is capable of the USB peripheral mode.
+Hi,
 
-Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
----
- arch/arm/boot/dts/Makefile             |    3 ++-
- arch/arm/boot/dts/bcm2835-rpi-zero.dts |   40 ++++++++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/bcm2835-rpi-zero.dts
+On 21-08-16 16:32, Icenowy Zheng wrote:
+>
+>
+> 21.08.2016, 20:22, "Hans de Goede" <hdegoede@redhat.com>:
+>> Warn when external vbus is detected when we're trying to enable our
+>> own vbus.
+>
+> Will it lead to a dmesg flood if a not-well-connected USB OTG Charging Hub
+> is present?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e38e7c9..cafa3b1 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -69,7 +69,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
- 	bcm2835-rpi-b-rev2.dtb \
- 	bcm2835-rpi-b-plus.dtb \
- 	bcm2835-rpi-a-plus.dtb \
--	bcm2836-rpi-2-b.dtb
-+	bcm2836-rpi-2-b.dtb \
-+	bcm2835-rpi-zero.dtb
- dtb-$(CONFIG_ARCH_BCM_5301X) += \
- 	bcm4708-asus-rt-ac56u.dtb \
- 	bcm4708-asus-rt-ac68u.dtb \
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero.dts b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
-new file mode 100644
-index 0000000..60e359f
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
-@@ -0,0 +1,40 @@
-+/*
-+ * Copyright (C) 2016 Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+#include "bcm2835.dtsi"
-+#include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-usb-host.dtsi"
-+
-+/ {
-+	compatible = "raspberrypi,model-zero", "brcm,bcm2835";
-+	model = "Raspberry Pi Zero";
-+
-+	leds {
-+		act {
-+			gpios = <&gpio 47 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
-+
-+&gpio {
-+	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
-+
-+	/* I2S interface */
-+	i2s_alt0: i2s_alt0 {
-+		brcm,pins = <18 19 20 21>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
-+	};
-+};
-+
-+&hdmi {
-+	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
-+};
--- 
-1.7.9.5
+No, we only try to turn on Vbus once when switching to host-mode.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+When using a device which is actually providing power and has an
+id pin claiming it wants the port in host mode then this message
+will trigger once. I'm actually adding it exactly because of the
+USB OTG Charging Hub case. In this case you want to see this
+messages once, if you're not seeing it and the hub is sending
+power to the micro-usb port then something is wrong.
+
+Note in many cases these hubs will only send power when in
+charging mode and in this case the the id-pin is such
+that the micro-usb port will be in device mode and will
+never try to provide power. In this scenario you will not
+get the warning, not will Linux see the hub.
+
+Regards,
+
+Hans
+
+
+
+
+
+
+>
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>> Changes in v2:
+>> -No changes
+>> Changes in v3:
+>> -No changes
+>> ---
+>>  drivers/phy/phy-sun4i-usb.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+>> index af42f8d..03f030b 100644
+>> --- a/drivers/phy/phy-sun4i-usb.c
+>> +++ b/drivers/phy/phy-sun4i-usb.c
+>> @@ -390,8 +390,10 @@ static int sun4i_usb_phy_power_on(struct phy *_phy)
+>>
+>>          /* For phy0 only turn on Vbus if we don't have an ext. Vbus */
+>>          if (phy->index == 0 && sun4i_usb_phy0_have_vbus_det(data) &&
+>> - data->vbus_det)
+>> + data->vbus_det) {
+>> + dev_warn(&_phy->dev, "External vbus detected, not enabling our own vbus\n");
+>>                  return 0;
+>> + }
+>>
+>>          ret = regulator_enable(phy->vbus);
+>>          if (ret)
+>> --
+>> 2.7.4
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
