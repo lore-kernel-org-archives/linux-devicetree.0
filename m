@@ -1,51 +1,143 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] input: touchscreen: silead: Use devm_gpiod_get
-Date: Mon, 22 Aug 2016 14:12:00 -0700
-Message-ID: <20160822211200.GD12277@dtor-ws>
-References: <1471384043-11717-1-git-send-email-hdegoede@redhat.com>
+From: Rask Ingemann Lambertsen <ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] ARM: dts: sun9i: Initial support for the Sunchip
+ CX-A99 board
+Date: Mon, 22 Aug 2016 23:29:59 +0200
+Message-ID: <20160822212959.yvr7abaclynxm5ta@vip.cybercity.dk>
+References: <9f39145aa6a46a1e130c4b91bd120eabeb7c8929.1471637309.git.ccc94453@vip.cybercity.dk>
+ <ce704da79c6263a4a5048af8f8e90f22e0849188.1471637309.git.ccc94453@vip.cybercity.dk>
+ <20160822185745.GC7104@lukather>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1471384043-11717-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20160822185745.GC7104@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 16, 2016 at 11:47:23PM +0200, Hans de Goede wrote:
-> The silead code is using devm_foo for everything (and does not free
-> any resources). Except that it is using gpiod_get instead of
-> devm_gpiod_get (but is not freeing the gpio_desc), change this
-> to use devm_gpiod_get so that the gpio will be properly released.
+On Mon, Aug 22, 2016 at 08:57:45PM +0200, Maxime Ripard wrote:
+> Hi,
 > 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> On Sat, Aug 13, 2016 at 12:03:57AM +0200, Rask Ingemann Lambertsen wrote:
+> > The Suncip CX-A99 board is found in at least four brands of TV boxes.
+> > It features an Allwinner A80 SOC, with either 2 GiB DDR3 DRAM and
+> > 16 GB eMMC or 4 GiB DDR3 DRAM and 32 GB eMMC, as well as several support
+> > chips for Ethernet, wireless networking, video output, SATA and power
+> > management. For details, see the linux-sunxi page about the board
+> > <URL:https://linux-sunxi.org/Sunchip_CX-A99>.
+> > 
+> > This patch only adds support for the SD and eMMC storage, real-time clock,
+> > USB 2.0 ports (and by extension the SATA port), the UART port and the LEDs.
+> > All of this relies on the boot loader to leave those parts powered up, as
+> > I'm still working on a driver for the AXP808 PMIC.
+> > 
+> > Signed-off-by: Rask Ingemann Lambertsen <ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>
+> 
+> It looks mostly good, but I have a couple of comments though, see below.
+> 
+> > ---
+> > 
+> > Although the vendor U-Boot lets you boot the kernel on one of the
+> > Cortex-A15 cores, the kernel gpio-regulator driver currently glitches
+> > the GPIO lines to the OZ80120 regulator such that the system crashes
+> > during startup. This part needs further work to be useful.
+> 
+> So it doesn't power the CPU through one of the AXP regulators?
+> Interesting design.
 
-Applied, thank you.
+The Cortex-A7 cores are powered by the dcdca regulator on the AXP 808 PMIC.
+Right now, I'm using the AXP 806 driver that Chen-Yu Tsai posted to drive
+the AXP 808 and so far, it looks good.
 
-> ---
->  drivers/input/touchscreen/silead.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+[snip]
+> > +	leds {
+> > +		compatible = "gpio-leds";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&led_pins_cx_a99>;
+> > +
+> > +		blue {
+> > +			gpios = <&pio 6 10 GPIO_ACTIVE_HIGH>;	/* PG10 */
+> > +			label = "cx-a99:blue:normal";
+> > +			default-state = "on";
+> > +		};
+> > +
+> > +		red {
+> > +			gpios = <&pio 6 11 GPIO_ACTIVE_HIGH>;	/* PG11 */
+> > +			label = "cx-a99:red:standby";
 > 
-> diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-> index 04992c5..3b80f14 100644
-> --- a/drivers/input/touchscreen/silead.c
-> +++ b/drivers/input/touchscreen/silead.c
-> @@ -497,7 +497,7 @@ static int silead_ts_probe(struct i2c_client *client,
->  	}
->  
->  	/* Power GPIO pin */
-> -	data->gpio_power = gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
-> +	data->gpio_power = devm_gpiod_get_optional(dev, "power", GPIOD_OUT_LOW);
->  	if (IS_ERR(data->gpio_power)) {
->  		if (PTR_ERR(data->gpio_power) != -EPROBE_DEFER)
->  			dev_err(dev, "Shutdown GPIO request failed\n");
-> -- 
-> 2.7.4
+> The last part of the label should be the function.
+
+I'm not sure what else to label them. They form a bi-colour LED emitting
+through the front of the device. The stock OS lights the blue LED when
+the device is powered on and lights the red LED when the device is
+suspended. There is no label on the front of the device telling what the
+colours mean. Documentation/devicetree/bindings/leds/common.txt and
+Documentation/devicetree/bindings/leds/leds-gpio.txt don't provide much in
+the way of examples. Suggestions are welcome.
+
+[snip]
+> > +
+> > +/* Each GPIO controls VBUS for a port on the GL850G hub connected to ehci0;
+> > + * PL7 for port 1, the USB connector closest to the 12 V power connector, and
+> > + * PL8 for port 2, the USB connector next to the (micro)SD card slot.
+> > + * Note: The regulators are not chained like this in reality, but
+> > + * regulator-fixed doesn't support a gpio list, and allwinner,sun9i-a80-usb-phy
+> > + * doesn't support more than one supply, so this will have to do (for now).
+> > + */
+> > +&reg_usb1_vbus {
+> > +	pinctrl-0 = <&usb1_vbus_r_pin_cx_a99>;
+> > +	gpio = <&r_pio 0 7 GPIO_ACTIVE_HIGH>;	/* PL7 */
+> > +	status = "okay";
+> > +};
+> > +
+> > +&reg_usb2_vbus {
+> > +	pinctrl-0 = <&usb2_vbus_r_pin_cx_a99>;
+> > +	gpio = <&r_pio 0 8 GPIO_ACTIVE_HIGH>;	/* PL8 */
 > 
+> I'd really prefer it to be modelled properly, and not attached to the
+> wrong device.
+> 
+> I have some work pending to allow multiple regulators in the same
+> property, but that won't be ready soon.
+> 
+> For the time being, I would suggest having two usb1 regulators
+> defined, each with their respective GPIOs, and one set to always on
+> (and keep that great comment).
+
+Will do if I don't come up with something better. I gave it a shot to
+describe the hub as a child of ehci0 with a child node for each of the
+two ports, but it didn't work.
+
+Also, using the phy-supply property for the vbus-supply is an ugly hack,
+in the first place, isn't it? Shouldn't it be more like this?
+
+&usbphy1 {
+	phy-supply = <&reg_vcc33_usbh>;
+};
+
+&ehci0 {
+	vcc-supply = <&reg_vdd09_usbh>;
+	phy = <&usbphy1>;
+
+	hub@1 {
+		port@1 {
+			vbus-supply = <&reg_usb1_vbus>;
+		}
+
+		port@2 {
+			vbus-supply = <&reg_usb2_vbus>;
+		}
+	};
+};
+
+It would generally be great to be able to describe regulators that should
+be kept in sync, because the Wifi+BT module's Vbat pin is supplied by two
+regulators in parallel. IIRC, Hans de Goede ran into that as well on one
+of his boards.
 
 -- 
-Dmitry
+Rask Ingemann Lambertsen
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
