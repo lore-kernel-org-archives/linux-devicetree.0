@@ -1,68 +1,52 @@
-From: zhiyong tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7 3/3] arm: dts: mt2701: Add auxadc node.
-Date: Mon, 22 Aug 2016 14:22:08 +0800
-Message-ID: <1471846928.16635.3.camel@mhfsdcap03>
-References: <1471504297-26947-1-git-send-email-zhiyong.tao@mediatek.com>
-         <1471504297-26947-4-git-send-email-zhiyong.tao@mediatek.com>
-         <c238236c-2445-7802-6f2e-2f4776778c36@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c238236c-2445-7802-6f2e-2f4776778c36-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH] hwmon: (max6650.c) Add devicetree support documentation
+Date: Mon, 22 Aug 2016 08:44:32 +0200
+Message-ID: <1471848272-3032-1-git-send-email-mike.looijmans@topic.nl>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: robh@kernel.org, linux@roeck-us.net, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2016-08-21 at 19:58 +0100, Jonathan Cameron wrote:
-> On 18/08/16 08:11, Zhiyong Tao wrote:
-> > The commit adds auxadc nodes to the Mediatek MT2701 dtsi file.
-> > 
-> > Signed-off-by: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> > This patch dependents on "Add clock support for Mediatek MT2701"[1].
-> > Please accept this patch together with [1].
-> > [1]http://lists.infradead.org/pipermail/linux-mediatek/2016-August/006620.html
+This adds the devicetree binding documentation for the max6650 fan
+controller.
 
-Dear Jonathan,
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+v2: Allow only 12V or 5V supply voltage
+ .../devicetree/bindings/hwmon/max6650.txt          | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/max6650.txt
 
-This patch dependents on "Add clock support for Mediatek MT2701"[1]. 
-We will refresh it again to Matthias when [1] is merged. 
-[1]http://lists.infradead.org/pipermail/linux-mediatek/2016-August/006620.html
+diff --git a/Documentation/devicetree/bindings/hwmon/max6650.txt b/Documentation/devicetree/bindings/hwmon/max6650.txt
+new file mode 100644
+index 0000000..d6c10e3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/max6650.txt
+@@ -0,0 +1,23 @@
++Bindings for MAX6651 and MAX6650 I2C fan controllers
++
++Reference:
++[1]	https://datasheets.maximintegrated.com/en/ds/MAX6650-MAX6651.pdf
++
++Required properties:
++- compatible : One of "maxim,max6650" or "maxim,max6651"
++- reg        : I2C address, one of 0x1b, 0x1f, 0x4b, 0x48.
++
++Optional properties, default is to retain the chip's current setting:
++- maxim,fan-microvolt : The supply voltage of the fan, either 5000000 uV or
++			12000000 uV.
++- maxim,fan-prescale  : Pre-scaling value, as per datasheet [1]. Lower values
++			allow more fine-grained control of slower fans.
++			Valid: 1, 2, 4, 8, 16.
++
++Example:
++	fan-max6650: max6650@1b {
++		reg = <0x1b>;
++		compatible = "maxim,max6650";
++		maxim,fan-microvolt = <12000000>;
++		maxim,fan-prescale = <4>;
++	};
+-- 
+1.9.1
 
-Thanks.
-
-> Guessing this is working it's way ultimately through arm-soc.  Patches
-> 1 and 2 are now heading through the iio / staging-iio route and should be
-> merging in the next merge window if nothing odd happens.
-> 
-> Thanks,
-> 
-> Jonathan
-> > ---
-> >  arch/arm/boot/dts/mt2701.dtsi |    9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> > index 7eab6f4..8e6a18c 100644
-> > --- a/arch/arm/boot/dts/mt2701.dtsi
-> > +++ b/arch/arm/boot/dts/mt2701.dtsi
-> > @@ -175,6 +175,15 @@
-> >  		      <0 0x10216000 0 0x2000>;
-> >  	};
-> >  
-> > +	auxadc: adc@11001000 {
-> > +		compatible = "mediatek,mt2701-auxadc";
-> > +		reg = <0 0x11001000 0 0x1000>;
-> > +		clocks = <&pericfg CLK_PERI_AUXADC>;
-> > +		clock-names = "main";
-> > +		#io-channel-cells = <1>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> >  	uart0: serial@11002000 {
-> >  		compatible = "mediatek,mt2701-uart",
-> >  			     "mediatek,mt6577-uart";
-> > 
-> 
