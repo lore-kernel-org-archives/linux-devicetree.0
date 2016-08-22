@@ -1,71 +1,76 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: sun6i: Add
- sun6i-a31-reference-design-tablet.dtsi
-Date: Mon, 22 Aug 2016 20:39:15 +0200
-Message-ID: <20160822183915.GA7104@lukather>
-References: <1471533095-13432-1-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH v6 0/4] ARM: dts: sun9i: Enable X-Powers AC100 RTC
+Date: Mon, 22 Aug 2016 20:40:06 +0200
+Message-ID: <20160822184006.GB7104@lukather>
+References: <20160819074226.16636-1-wens@csie.org>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="6TME3aayZmn2Ikqb"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="fQa200R4EO7jAQ6Z"
+Return-path: <rtc-linux+bncBDSJBYGBRIMBBG4O5W6QKGQENG7F4RA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1471533095-13432-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160819074226.16636-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---6TME3aayZmn2Ikqb
-Content-Type: text/plain; charset=us-ascii
+--fQa200R4EO7jAQ6Z
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Thu, Aug 18, 2016 at 05:11:34PM +0200, Hans de Goede wrote:
-> Just like with a13/a23/a33 most a31 tablets are derived from the same
-> reference design. Add a .dtsi file with all the common bits to avoid
-> endless copy and pasting of these.
->=20
-> The sun6i-a31-reference-design-tablet.dtsi this commit adds is a copy
-> of sun6i-a31s-colorfly-e708-q1.dts with a few tablet specific bits
-> removed / left in sun6i-a31s-colorfly-e708-q1.dts.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+On Fri, Aug 19, 2016 at 03:42:22PM +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
+> 
+> This was "mfd: ac100: Add support for X-Powers AC100 audio codec / RTC
+> combo IC". The driver bits have all been merged.
 
-The patch looks ok, but doesn't apply.
-
+Applied the DT patches. Thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---6TME3aayZmn2Ikqb
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--fQa200R4EO7jAQ6Z
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXu0bTAAoJEBx+YmzsjxAgu6MQAJUkz1f37yabUgR5MglbrQ58
-5NkCvB3ctxk05Fy1+vm21J/ZxtaiR6x5yjr2NMmxKr20Ubs+fpJ5eIZq6goEF+6c
-1isLLEm1ylUxC2/nOTUgszoNZlljvsT7x+Qph8M0Fkn8iojNvQeQAUyG0IG4tbgZ
-0pSSzDeGLRxKe6RiTwBzhq8LIEvULDtLZHH11z6rR05ho9yE7I+LdPLanyix93mG
-qwahkwxAsNm/6cY5Ug2q15JeoZmBt06L3MWpl9i1BD1LDNAF+oyPjhOWb6+PXuFG
-yOJWOHQtUwnjVanoek+2Y5EotyTlnPsCM58b31LqInlhQ7epCVY70RlXAp+ZtI3K
-/iZX5FF8N5o9KolP6qWhYo2Agz8RB8CXa2HOjCsIL2Fn/6Jb7PjFFUVaLnxKz0Zg
-OdTiCgIq3X6BkVg4nYBSqvJuhNzudSDq2y2zb2uOQtOfpEZs/1gR87mdDYJJTlL3
-qFVuOttlu4Ca90XpgWwJB8+csQBprPsLcTqUSpAXt5hr+t0tM1nG4v5iSJ3xtpMh
-d5Q/KyewXmqwBNC5FqpKBgnyVSS4T89Am02UWPT1Vnu88/tEd7NtFmzROkPR4Xzp
-wDfr9ZeqHbSKNyzW9sUIa/8HYTdEEXIG4eTNk65ZWwHCaddNOvXgbXe9LAUf1Kbb
-o3NzNVWi8aVEJYWhiGkx
-=OLps
+iQIcBAEBAgAGBQJXu0cGAAoJEBx+YmzsjxAguo4QALqoIl5RlUGWTR38ZUFyAtYn
+UfMtYz/uq4u+JvlHkyz4Upa4MmQoxyCu7pmJHyEllKy4eHwOpOihpElZuy5GRmKg
+1XmK00P2FDHeb9FxpgmzusK1t6LZ111EZ9tu8kaKvDMdpqm8b/p+SamlCmp3vG41
+U0zVGHbQ0VRFiPKLxeAmk7FdScP7egUVWPkTanqrTOUw9AZpy9ikP6e9ChX+i0gk
+4pTEK1opeTxezxdFWPW0FsdOu6Wt1+mUYTfQIbQNDJ/zEXVN7AK1gQqv7cLuRV0P
+8WXum1RJA/QHD4Jx8K/CRLW3rk3fyOatgRp+XpV834jcKvpEYbjXRKEkTdHacmJL
+PZyId7jMfj+syJalqJGAk5CXV3+RvONYabGy9Bm38Vr1vEockCHNOTuNcSxo2l1A
+FO147ShMjF0jzlM5fMhM9RcpvChKUDSv+S9i6e3iFvGruMDAFKYYPG7OLU0/dx6p
+bc2MDOuj96UnFtnbNuzra+jXFb59aV3UkAS2Gi+DZYmmEvqLJO/7vqG9xz+G71Hs
+dPq5l0SR1SveCDlTsn24gA6mkRuJcOc7s6R2++r7yNBws1b7HtJPEVaeYO+7iBJf
+0SazIBwvqNqKH6XwaN2AyH4g54KKGRfS097svZnbvocNQddqLuicTVjSj9B6NwLl
+pnfgBeLQbEu1VsdQI4Zp
+=p206
 -----END PGP SIGNATURE-----
 
---6TME3aayZmn2Ikqb--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--fQa200R4EO7jAQ6Z--
