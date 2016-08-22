@@ -1,43 +1,49 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/9] regulator: axp20x: support AXP806 variant
-Date: Mon, 22 Aug 2016 17:52:59 +0100
-Message-ID: <20160822165259.GS22076@sirena.org.uk>
-References: <20160821021125.1521-1-wens@csie.org>
- <20160821021125.1521-5-wens@csie.org>
-Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 02/12] mailbox: Add Tegra HSP driver
+Date: Mon, 22 Aug 2016 10:53:15 -0600
+Message-ID: <c4e096fe-3f3c-b22a-75c0-9c8665ce896f@wwwdotorg.org>
+References: <20160819173233.13260-1-thierry.reding@gmail.com>
+ <20160819173233.13260-3-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="o/5eNASeIIpuMggS"
-Return-path: <linux-sunxi+bncBDQ2L75W5QGBBAG45S6QKGQEE2PWRPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160821021125.1521-5-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160819173233.13260-3-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 08/19/2016 11:32 AM, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>
+> This driver exposes a mailbox interface for interprocessor communication
+> using the Hardware Synchronization Primitives (HSP) module's doorbell
+> mechanism. There are multiple HSP instances and they provide additional
+> features such as shared mailboxes, shared and arbitrated semaphores.
+>
+> A driver for a remote processor can use the mailbox client provided by
+> the HSP driver and build an IPC protocol on top of this synchronization
+> mechanism.
 
---o/5eNASeIIpuMggS
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+> +static int tegra_hsp_doorbell_startup(struct tegra_hsp_channel *channel)
+...
+> +	spin_lock_irqsave(&hsp->lock, flags);
+> +
+> +	value = tegra_hsp_channel_readl(&ccplex->channel, HSP_DB_ENABLE);
+> +	value |= BIT(db->master);
+> +	tegra_hsp_channel_writel(&ccplex->channel, value, HSP_DB_ENABLE);
+> +
+> +	spin_unlock_irqrestore(&hsp->lock, flags);
+> +
+> +	if (!tegra_hsp_doorbell_can_ring(db))
+> +		return -ENODEV;
 
-On Sun, Aug 21, 2016 at 10:11:20AM +0800, Chen-Yu Tsai wrote:
+Should the error-check happen before enabling the RX path? Otherwise, 
+presumably that HSP_DB_ENABLE bit should be cleared on failure.
 
-> +	if (id == AXP806_DCDCB) {
-> +		return (((reg & GENMASK(7, 6)) == BIT(6)) ||
-> +			((reg & GENMASK(7, 6)) == BIT(7)));
-> +	} else if (id == AXP806_DCDCC) {
-> +		return ((reg & GENMASK(7, 6)) == BIT(7));
-> +	} else if (id == AXP806_DCDCE) {
-> +		return !!(reg & BIT(5));
-> +	}
+> +static int tegra_hsp_probe(struct platform_device *pdev)
 
-This looks like you're trying to write a switch statement, please do
-that.
---o/5eNASeIIpuMggS--
+> +	dev_dbg(&pdev->dev, "regs: %pR (%p-%p)\n", res, hsp->regs, hsp->regs + resource_size(res) - 1);
+
+Line width?
