@@ -1,59 +1,61 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: dts: blanche: add SDHI0 support
-Date: Mon, 22 Aug 2016 17:04:10 +0300
-Message-ID: <220d0d62-8562-8d8a-54b2-fc6e1d616e02@cogentembedded.com>
-References: <5383928.8UnDsUpmkz@wasted.cogentembedded.com>
- <3029697.f9plKzFKet@wasted.cogentembedded.com>
- <20160822073305.GD28034@verge.net.au>
+From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v1 2/3] of: Add support for reading a s32 from a
+ multi-value property.
+Date: Mon, 22 Aug 2016 22:07:40 +0800
+Message-ID: <5e7a7b9f-44c2-82c2-eb17-ee54efd15503@rock-chips.com>
+References: <1471315139-28285-1-git-send-email-finley.xiao@rock-chips.com>
+ <1471315139-28285-3-git-send-email-finley.xiao@rock-chips.com>
+ <1471616119.61594.465.camel@infradead.org> <4975010.IL95Y3Sj1J@phil>
+ <1471639654.4611.2.camel@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160822073305.GD28034@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1471639654.4611.2.camel-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tim.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ulysses.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lin.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/22/2016 10:33 AM, Simon Horman wrote:
-
->> Define the Blanche board dependent part of the SDHI0 (connected to the
->> micro-SD slot) device node along with  the necessary voltage regulator.
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>
->> ---
->> This patch is against the 'renesas-devel-20160817-v4.8-rc2' of Simon Horman's
->> 'renesas.git' repo plus the general purpose switches patch  posted yesterday.
->>
->>  arch/arm/boot/dts/r8a7792-blanche.dts |   25 +++++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->>
->> Index: renesas/arch/arm/boot/dts/r8a7792-blanche.dts
->> ===================================================================
->> --- renesas.orig/arch/arm/boot/dts/r8a7792-blanche.dts
->> +++ renesas/arch/arm/boot/dts/r8a7792-blanche.dts
->> @@ -103,6 +103,17 @@
->>  			gpios = <&gpio11 2 GPIO_ACTIVE_LOW>;
->>  		};
->>  	};
->> +
->> +	vcc_sdhi0: regulator-vcc-sdhi0 {
->> +		compatible = "regulator-fixed";
->> +
->> +		regulator-name = "SDHI0 Vcc";
->> +		regulator-min-microvolt = <3300000>;
->> +		regulator-max-microvolt = <3300000>;
->> +
->> +		gpio = <&gpio11 12 GPIO_ACTIVE_HIGH>;
->> +		enable-active-high;
->> +	};
->>  };
->
-> Is it intentional that there is no vccq_sdhi0 ?
-
-    Yes, it's fixed at 3.3V.
-
-[...]
-
-MBR, Sergei
+CgrlnKggMjAxNi84LzIwIDQ6NDcsIERhdmlkIFdvb2Rob3VzZSDlhpnpgZM6Cj4gT24gRnJpLCAy
+MDE2LTA4LTE5IGF0IDIyOjQxICswMjAwLCBIZWlrbyBTdHVlYm5lciB3cm90ZToKPj4+IFNvIG5v
+LCBkb24ndCAqYWRkKiBhbnkgbW9yZSBvZiB0aGVzZSBmdW5jdGlvbnMuIE9ubHkgYWRkIHRoZSBn
+ZW5lcmljCj4+PiB2ZXJzaW9uLiBBbmQgaWYgeW91ciBkcml2ZXIgaXNuJ3QgdXNpbmcgdGhlIGdl
+bmVyaWMgcHJvcGVydHkKPj4+IGZ1bmN0aW9ucy4uLiBmaXggaXQuCj4+IEFzIGZhciBhcyBJIGNh
+biBzZWUsIGFsbCB0aGUgZGV2aWNlX3Byb3BlcnR5XyogZnVuY3Rpb25zIGFyZSBncm91bmRlZCBv
+biB0aGVpcgo+PiBvZl9wcm9wZXJ0eV8qLCBhY3BpX3Byb3BlcnR5XyogZXRjIGNvdW50ZXJwYXJ0
+cyBhbmQgZnVuY3Rpb25zIHJlYWRpbmcgc3BlY2lmaWMKPj4gZWxlbWVudHMgKHRoZSBfaW5kZXgg
+dmFyaWFudHMpIGFyZSBjdXJyZW50bHkgbm90IGF2YWlsYWJsZSBhdCBhbGwuCj4+Cj4+IGRyaXZl
+cnMvYmFzZS9wcm9wZXJ0eS5jOgo+PiAjZGVmaW5lIE9GX0RFVl9QUk9QX1JFQURfQVJSQVkobm9k
+ZSwgcHJvcG5hbWUsIHR5cGUsIHZhbCwgbnZhbCkgICAgICAgICAgICAgICAgICAgICAgICAgXAo+
+PiAgICAgICAgICAodmFsKSA/IG9mX3Byb3BlcnR5X3JlYWRfIyN0eXBlIyNfYXJyYXkoKG5vZGUp
+LCAocHJvcG5hbWUpLCAodmFsKSwgKG52YWwpKSAgICAgIFwKPj4gICAgICAgICAgICAgICAgOiBv
+Zl9wcm9wZXJ0eV9jb3VudF9lbGVtc19vZl9zaXplKChub2RlKSwgKHByb3BuYW1lKSwgc2l6ZW9m
+KHR5cGUpKQo+Pgo+PiBTbyBldmVuIGlmIHlvdSdyZSB1c2luZyB0aGUgZGV2aWNlX3Byb3BlcnR5
+XyogZnVuY3Rpb25zIHlvdSdkIHN0aWxsIG5lZWQKPj4gYSBtYXRjaCBpbiB0aGUgdW5kZXJseWlu
+ZyBmdW5jdGlvbnMgb3IgYW0gSSBtaXNzaW5nIHNvbWV0aGluZz8KPiBZZXMsIGJ1dCB0aGUgdW5k
+ZXJseWluZyBmdW5jdGlvbiBzaG91bGQgbmV2ZXIgYmUgdXNlZCBkaXJlY3RseSBieQo+IGRyaXZl
+cnMuIEFuZCBzaG91bGQgcHJvYmFibHkgYmUgcHJlZml4ZWQgd2l0aCBfXyBvciBtYXJrZWQgZGVw
+cmVjYXRlZAo+ICh3aXRoIGFuIG92ZXJyaWRlIGluIGl0cyBvbmUgZ2VudWluZSBjYWxsIHNpdGUp
+Lgo+CgpTbyBjYW4gSSBhZGQgYSBkZXZpY2VfcHJvcGVydHlfcmVhZF9zMzJfYXJyYXkgZnVuY3Rp
+b24gaW4gcHJvcGVydHkuaD8KCi0tLSBhL2luY2x1ZGUvbGludXgvcHJvcGVydHkuaAorKysgYi9p
+bmNsdWRlL2xpbnV4L3Byb3BlcnR5LmgKQEAgLTEwOCw2ICsxMDgsMTMgQEAgc3RhdGljIGlubGlu
+ZSBpbnQgZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMyKHN0cnVjdCAKZGV2aWNlICpkZXYsCiAgICAg
+ICAgIHJldHVybiBkZXZpY2VfcHJvcGVydHlfcmVhZF91MzJfYXJyYXkoZGV2LCBwcm9wbmFtZSwg
+dmFsLCAxKTsKICB9Cgorc3RhdGljIGlubGluZSBpbnQgZGV2aWNlX3Byb3BlcnR5X3JlYWRfczMy
+X2FycmF5KHN0cnVjdCBkZXZpY2UgKmRldiwgCmNvbnN0IGNoYXIgKnByb3BuYW1lLAorICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHMzMiAqdmFsLCBzaXplX3QgbnZhbCkKK3sKKyAg
+ICAgICByZXR1cm4gZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMyX2FycmF5KHN0cnVjdCBkZXZpY2Ug
+KmRldiwgY29uc3QgCmNoYXIgKnByb3BuYW1lLAorICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICh1MzIgKil2YWwsIHNpemVfdCBudmFsKTsKK30KCi0tIApGaW5sZXkKCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAg
+bWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
