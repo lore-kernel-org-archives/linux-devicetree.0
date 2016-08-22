@@ -1,54 +1,43 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 02/12] mailbox: Add Tegra HSP driver
-Date: Mon, 22 Aug 2016 10:42:33 -0600
-Message-ID: <0a70a07d-9cc6-cd35-98a8-d55c2ffdb49d@wwwdotorg.org>
-References: <20160819173233.13260-1-thierry.reding@gmail.com>
- <20160819173233.13260-3-thierry.reding@gmail.com>
- <13954058.6YHDe1jCOJ@wuerfel> <20160822141728.GF17367@ulmo.ba.sec>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/9] regulator: axp20x: support AXP806 variant
+Date: Mon, 22 Aug 2016 17:52:59 +0100
+Message-ID: <20160822165259.GS22076@sirena.org.uk>
+References: <20160821021125.1521-1-wens@csie.org>
+ <20160821021125.1521-5-wens@csie.org>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160822141728.GF17367-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="o/5eNASeIIpuMggS"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBAG45S6QKGQEE2PWRPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20160821021125.1521-5-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/22/2016 08:17 AM, Thierry Reding wrote:
-> On Mon, Aug 22, 2016 at 03:43:23PM +0200, Arnd Bergmann wrote:
->> On Friday, August 19, 2016 7:32:23 PM CEST Thierry Reding wrote:
->>> +static int tegra_hsp_doorbell_send_data(struct tegra_hsp_channel *channel,
->>> +                                       void *data)
->>> +{
->>> +       tegra_hsp_channel_writel(channel, 1, HSP_DB_TRIGGER);
->>> +
->>> +       return 0;
->>> +}
->>>
->>
->> It seems very odd that you don't write the data at all but just trigger
->> the communication here. My interpretation is that you bypass
->> the mailbox infrastructure for the actual message, and instead reimplement
->> it on top of the mailbox infrastructure as part of the bpmp driver.
->>
->> Why not expose the bpmp itself as the mailbox here?
->
-> My understanding is that doorbell doesn't provide any means to transfer
-> data. It merely signals the availability of data. It is up to a use-case
-> specific implementation to arrange for the transport of data.
 
-Yes, the doorbell doesn't transfer any data.
+--o/5eNASeIIpuMggS
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-> BPMP implements a shmem-based protocol and uses the doorbell merely as a
-> mechanism for the BPMP and CPU to signal each other when data is ready.
->
-> Exposing the BPMP as the mailbox could possibly be done, but it would
-> implement a fairly large software layer in the mailbox system which is
-> targetted primarily at simple mailbox hardware that exchanges small
-> amounts of data (usually fitting into 32 bits). mailbox-sti is another
-> driver that uses the framework only to signal, so this doesn't seem to
-> be a mechanism exclusive to Tegra.
+On Sun, Aug 21, 2016 at 10:11:20AM +0800, Chen-Yu Tsai wrote:
 
-I also don't think that in-memory IPC mechanisms are what the mailbox 
-subsystem is all about; it's about pure HW mechanisms that transfer data.
+> +	if (id == AXP806_DCDCB) {
+> +		return (((reg & GENMASK(7, 6)) == BIT(6)) ||
+> +			((reg & GENMASK(7, 6)) == BIT(7)));
+> +	} else if (id == AXP806_DCDCC) {
+> +		return ((reg & GENMASK(7, 6)) == BIT(7));
+> +	} else if (id == AXP806_DCDCE) {
+> +		return !!(reg & BIT(5));
+> +	}
+
+This looks like you're trying to write a switch statement, please do
+that.
+--o/5eNASeIIpuMggS--
