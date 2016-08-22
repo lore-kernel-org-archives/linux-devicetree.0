@@ -1,192 +1,79 @@
-From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 01/13] pinctrl: add bcm63xx base code
-Date: Mon, 22 Aug 2016 15:44:52 +0200
-Message-ID: <CAOiHx=ndEkqQjRS5Hu5LovLmXiqFsPhx0X4k+1CFmGzhD11LRA@mail.gmail.com>
-References: <1471604025-21575-1-git-send-email-jonas.gorski@gmail.com>
- <1471604025-21575-2-git-send-email-jonas.gorski@gmail.com> <CACRpkdbAWJruB=4rv_SoPZ5D5XgWjebK_Qmv2GLgOOrSyqXcDA@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 5/8] pinctrl: Add core support for Aspeed SoCs
+Date: Mon, 22 Aug 2016 15:45:48 +0200
+Message-ID: <CACRpkdaBuwqGPbfLK8bR5A4NSefifw8VqPyUbgtAtweqoEnD7g@mail.gmail.com>
+References: <20160819124414.24242-1-andrew@aj.id.au> <20160819124414.24242-6-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdbAWJruB=4rv_SoPZ5D5XgWjebK_Qmv2GLgOOrSyqXcDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20160819124414.24242-6-andrew-zrmu5oMJ5Fs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Aug 19, 2016 at 2:44 PM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
 
-On 22 August 2016 at 14:46, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Aug 19, 2016 at 12:53 PM, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->> Setup directory and add a helper for bcm63xx pinctrl support.
->>
->> Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
->>  drivers/pinctrl/bcm63xx/Kconfig           |   3 +
->>  drivers/pinctrl/bcm63xx/Makefile          |   1 +
->
-> Why not just put it in the existing pinctrl/bcm directory?
+> +++ b/drivers/pinctrl/aspeed/Kconfig
+> @@ -0,0 +1,8 @@
+> +config PINCTRL_ASPEED
+> +       bool
+> +       depends on (ARCH_ASPEED || COMPILE_TEST) && OF
+> +       select PINMUX
+> +       select PINCONF
+> +       select GENERIC_PINCONF
+> +       select MFD_SYSCON
+> +       select REGMAP_MMIO
 
-Because at the time I started writing these drivers it was still
-exclusive for ARCH_BCM, will move them there.
+Since this device is spawn from the syscon, should it not be
+"depends on MFD_SYSCON"?
 
-> The drivers in there share nothing but being Broadcom
-> anyways. And when you're at it, do take a look at the
-> other Broadcom drivers to check if they would
-> happen to share something with your hardware, I find
-> it dazzling that hardware engineers repeatedly reinvents
-> pin controllers but what can I do.
->
->> +config PINCTRL_BCM63XX
->> +       bool
->> +       select GPIO_GENERIC
->
-> depends on ARCH_****?
+(No big deal, if you think this is right then go with it.)
 
-This isn't a user selectable symbol so I don't see the need for that.
+> +#include <linux/io.h>
 
->
-> depends on OF_GPIO?
->
-> Will it really be used on non-DT systems?
+What is this include for?
 
-I plan to use it on both mips/bcm63xx (no dts support) and bmips (dts
-support), so yes.
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/string.h>
+> +#include "../core.h"
+> +#include "pinctrl-aspeed.h"
 
->
->> +#define BANK_SIZE      sizeof(u32)
->> +#define PINS_PER_BANK  (BANK_SIZE * BITS_PER_BYTE)
->> +
->> +#ifdef CONFIG_OF
->> +static int bcm63xx_gpio_of_xlate(struct gpio_chip *gc,
->> +                                const struct of_phandle_args *gpiospec,
->> +                                u32 *flags)
->> +{
->> +       struct gpio_chip *base = gpiochip_get_data(gc);
->> +       int pin = gpiospec->args[0];
->> +
->> +       if (gc != &base[pin / PINS_PER_BANK])
->> +               return -EINVAL;
->> +
->> +       pin = pin % PINS_PER_BANK;
->> +
->> +       if (pin >= gc->ngpio)
->> +               return -EINVAL;
->> +
->> +       if (flags)
->> +               *flags = gpiospec->args[1];
->> +
->> +       return pin;
->> +}
->> +#endif
->
-> - Do you really have to support the !OF_GPIO case? (depend in Kconfig,
->   get rid of #ifdef)
+No #include <linux/regmap.h>?
 
-See above.
+Maybe some #includes are centralized to pinctrl-aspeed.h
+I don't know, just make sure you don't have implicit includes.
 
->
-> - The only reason for not using of_gpio_simple_xlate() seems to be that
->   you have several GPIO banks. So why not model every bank as a
->   separate device? Or did you consider this already?
+> +               if (regmap_read(map, desc->reg, &val) < 0)
+> +                       return false;
+> +
+> +               val &= ~desc->mask;
+> +               val |= pattern << __ffs(desc->mask);
+> +
+> +               if (regmap_write(map, desc->reg, val) < 0)
+> +                       return false;
 
-I did consider it, but it makes the !OF case more complicated, and the
-current of_gpio base code requires changing for it.
+Use:
 
-That's because some of the pinctrl chips need to set the
-gpio-direction for muxes, and for that need to have a reference to the
-gpio-controller(s). Since any muxes directly tied to the controller
-node will get applied as soon as the controller is registered, it
-needs to aquire the gpio-controller references first.
+regmap_update_bits(map,
+                              desc->reg,
+                              desc->mask,
+                              pattern << __ffs->desc->mask);
 
-On the gpio-controller side, to flag these a requiring pinctrl those
-would then have a gpio-range property, which will cause the probe
-being deferred until the reference to the controller can be resolved.
-Which waits for the gpio-controller to be registered, so it can
-resolve its references to it. A true catch 22 ;-)
+Or something like that instead of reimplementing
+mask-and-set. Regmap already knows how to do the
+business.
 
-This could probably resolved by deferring resolving node-to-pincontrol
-devices to gpio request time. Not sure if this then would conflict
-which gpio-hogs on such a gpio-controller node?
+(Applied everywhere in the driver where you have a
+mask-and-set like this).
 
-I haven't really thought how much work it would be for the !OF case,
-but would probably mean I need to acquire references based on their
-pdev names.
+The expression core engine is still a complete mystery
+for me, I will just trust you that it works as intended.
 
->> +               gc[i].request = gpiochip_generic_request;
->> +               gc[i].free = gpiochip_generic_free;
->> +
->> +#ifdef CONFIG_OF
->> +               gc[i].of_gpio_n_cells = 2;
->> +               gc[i].of_xlate = bcm63xx_gpio_of_xlate;
->> +#endif
->> +
->> +               gc[i].label = label;
->> +               gc[i].ngpio = pins;
->> +
->> +               devm_gpiochip_add_data(dev, &gc[i], gc);
->
-> Because this also gets pretty hairy... since you don't have one device
-> per gpiochip.
->
->> +static void bcm63xx_setup_pinranges(struct gpio_chip *gc, const char *name,
->> +                                   int ngpio)
->> +{
->> +       int i, chips = DIV_ROUND_UP(ngpio, PINS_PER_BANK);
->> +
->> +       for (i = 0; i < chips; i++) {
->> +               int offset, pins;
->> +
->> +               offset = i * PINS_PER_BANK;
->> +               pins = min_t(int, ngpio - offset, PINS_PER_BANK);
->> +
->> +               gpiochip_add_pin_range(&gc[i], name, 0, offset, pins);
->> +       }
->> +}
->
-> And this, same thing. Could be so much easier if it was just the same
-> driver instantiated twice for two banks.
->
->> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dirout");
->> +       dirout = devm_ioremap_resource(&pdev->dev, res);
->> +       if (IS_ERR(dirout))
->> +               return ERR_CAST(dirout);
->> +
->> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dat");
->> +       data = devm_ioremap_resource(&pdev->dev, res);
->> +       if (IS_ERR(data))
->> +               return ERR_CAST(data);
->> +
->> +       sz = resource_size(res);
->> +
->> +       ret = bcm63xx_setup_gpio(&pdev->dev, gc, dirout, data, sz, ngpio);
->> +       if (ret)
->> +               return ERR_PTR(ret);
->> +
->> +       pctldev = devm_pinctrl_register(&pdev->dev, desc, priv);
->> +       if (IS_ERR(pctldev))
->> +               return pctldev;
->> +
->> +       bcm63xx_setup_pinranges(gc, pinctrl_dev_get_devname(pctldev), ngpio);
->> +
->> +       dev_info(&pdev->dev, "registered at mmio %p\n", dirout);
->> +
->> +       return pctldev;
->
-> A current trend in simple MMIO devices is to simply add themselves as a
-> compatible string in drivers/gpio/gpio-mmio.c. Example:
->
-> https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-gpio.git/commit/drivers/gpio/gpio-mmio.c?h=devel&id=05cc995f4d44c2b14a1f15f3271cc9715cb81099
->
-> This could be a viable approach if you find a way to flag that such a GPIO
-> has a pin control backend.
-
-The most obvious would be having a gpio-ranges property, but this
-leads to issues mentioned above. And only works for OF.
-
-
-Regards
-Jonas
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
