@@ -1,64 +1,73 @@
-From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] mfd: tps65217: Add support for IRQs
-Date: Mon, 22 Aug 2016 12:02:40 +0200
-Message-ID: <534cdc5b-42b8-14e4-e957-a0695c301056@grinn-global.com>
-References: <20160620105056.25843-1-m.niestroj@grinn-global.com>
- <20160620105056.25843-2-m.niestroj@grinn-global.com>
- <576D0437.1020800@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 5/8] libfdt: Add fdt_setprop_inplace_namelen_partial
+Date: Mon, 22 Aug 2016 12:07:21 +0200
+Message-ID: <20160822100721.GI7104@lukather>
+References: <20160729095551.13592-1-maxime.ripard@free-electrons.com>
+ <20160729095551.13592-6-maxime.ripard@free-electrons.com>
+ <20160801033642.GV2588@voom.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <576D0437.1020800-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="mXDO3udm/xYWQeMQ"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160801033642.GV2588-RXTfZT5YzpxwFLYp8hBm2A@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ping
 
-On 24.06.2016 11:58, Grygorii Strashko wrote:
-> On 06/20/2016 01:50 PM, Marcin Niestroj wrote:
->> Add support for handling IRQs: power button, AC and USB power state
->> changes. Mask and interrupt bits are shared within one register, which
->> prevents us to use regmap_irq implementation. New irq_domain is
->> created in
->> order to add interrupt handling for each tps65217's subsystem. IRQ
->> resources have been added for charger subsystem to be able to notify
->> about
->> AC and USB state changes.
->>
->> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
->> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->> Changes v3 -> v4 (suggested by Grygorii):
->>   * Add irq_set_parent() during irq init
->>   * Remove hardcoded IRQ trigger type, rely on DT bindings instead
->>
->> Changes v2 -> v3 (suggested by Lee):
->>   * Alphabetical reorder of includes
->>   * Rename enum tps65217_irqs -> tps65217_irq_type, so we won't confuse
->>     it with structure object with the same name.
->>   * Fix inconsistent order of irq_enable and irq_disable
->>   * Remove redundant 'else' when returning from tps65217_irq_thread
->>
->> Changes v1 -> v2: none
->>
->>   drivers/mfd/Kconfig          |   1 +
->>   drivers/mfd/tps65217.c       | 195
->> +++++++++++++++++++++++++++++++++++++++++--
->>   include/linux/mfd/tps65217.h |  12 +++
->>   3 files changed, 200 insertions(+), 8 deletions(-)
->>
->
-> Reviewed-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
->
->
->
+--mXDO3udm/xYWQeMQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Marcin Niestroj
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi David,
+
+On Mon, Aug 01, 2016 at 01:36:42PM +1000, David Gibson wrote:
+> On Fri, Jul 29, 2016 at 11:55:48AM +0200, Maxime Ripard wrote:
+> > Add a function to modify inplace only a portion of a property..
+> >=20
+> > This is especially useful when the property is an array of values, and =
+you
+> > want to update one of them without changing the DT size.
+> >=20
+> > Acked-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > Reviewed-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>=20
+> Applied, though I made a couple of tiny tweaks, see below.
+
+Awesome, thanks!
+
+Do you still have comments on the last 3 patches?
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--mXDO3udm/xYWQeMQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXus7ZAAoJEBx+YmzsjxAgY5AP/3LcpwHu5/G/iSSULwzwlxeE
+/9ZmUNWnrMM8NAL3WdrksAgt3OXryzr1U/exPfBdfkSk88UOpIhTox7WgV8GKdXj
+QL0kUBpHtm+x9bQLrDHny45Cl9iPzy/2HBBxR5gjs0QxNLYZ18HR1x2oEsuAsx8P
++719xqEyM4dCxFwWBEjOqhzwJnR+dqkU/zKiO31FcOrTu2RiLeymov6yyS0eMAtq
+OGtv8aVIcL1DgtTt/lHt2VMcCqO9f5LS7MfXp+ps30K3dR3vLf1w4oSFABVJazAu
+RQ/NRIClis0nIrYlRY9mcR/Hcc++ZDY0Ooxkuf4NiCJsfPaO1NJTM8+iTUzOOzjX
+h9YUPJTWMtXjAOmGj50WiJrCqyes9nink2XLFHFZeVsRk2NaKjYTOhLGhvYTFC99
+eB2YFsdqXnnwq8iP4bSiQKUXDOZ3H0PVd+KjcpVWKTnadY+0CjWFN6FFBkhY3SAE
+CU7OsueR1EGTncwQyxDKFfN+1lTF0zoX2cqP+U+DKfkQrK8IJ0tDEw9Ja9MGdys/
+BPS5PmsUi/L5X7rW6B4sRe2bL790kHEF0SrgoCtim9jUlYRfbiOYOt/ipTAQpBHb
+uifO0QM/ytx6wdpJNtLorvBYaqgC0/7/tR6Wutv1c0rvthIeKsEt2t6TruhhqVWL
+NTnhZPv5vOJwT3Cr/M31
+=3HQR
+-----END PGP SIGNATURE-----
+
+--mXDO3udm/xYWQeMQ--
