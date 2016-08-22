@@ -1,356 +1,188 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 2/3] ARM: dts: sun6i: Add
- sun6i-reference-design-tablet.dtsi
-Date: Mon, 22 Aug 2016 14:28:29 +0200
-Message-ID: <315e3576-6462-9a03-f817-d484f0815f0f@redhat.com>
-References: <1471543337-6938-1-git-send-email-hdegoede@redhat.com>
- <1471543337-6938-3-git-send-email-hdegoede@redhat.com>
- <CAGb2v65DbNghtC_TuTLCx=z-mqGVU4_YPR_VCrUEpUdjz3QkOA@mail.gmail.com>
- <f14df799-ff7b-b3cf-eb85-99407fde73f4@redhat.com>
- <26541471867672@web22j.yandex.ru>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 04/12] firmware: tegra: Add IVC library
+Date: Mon, 22 Aug 2016 14:40:34 +0200
+Message-ID: <20160822124034.GA17367@ulmo.ba.sec>
+References: <20160819173233.13260-1-thierry.reding@gmail.com>
+ <20160819173233.13260-5-thierry.reding@gmail.com>
+ <90222c3a-7c69-6fa3-d161-4ed0c5759f34@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <26541471867672@web22j.yandex.ru>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <90222c3a-7c69-6fa3-d161-4ed0c5759f34-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-HI,
 
-On 22-08-16 14:07, Icenowy Zheng wrote:
->
->
-> 22.08.2016, 17:01, "Hans de Goede" <hdegoede@redhat.com>:
->> Hi,
->>
->> On 22-08-16 10:50, Chen-Yu Tsai wrote:
->>>  Hi,
->>>
->>>  On Fri, Aug 19, 2016 at 2:02 AM, Hans de Goede <hdegoede@redhat.com> wrote:
->>>>  Just like with a13/a23/a33 most a31 tablets are derived from the same
->>>>  reference design. Add a .dtsi file with all the common bits to avoid
->>>>  endless copy and pasting of these.
->>>>
->>>>  The sun6i-reference-design-tablet.dtsi this commit adds is a copy
->>>>  of sun6i-a31s-colorfly-e708-q1.dts with a few tablet specific bits
->>>>  removed / left in sun6i-a31s-colorfly-e708-q1.dts.
->>>>
->>>>  Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>>>  ---
->>>>   arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts | 147 +--------------------
->>>>   ...8-q1.dts => sun6i-reference-design-tablet.dtsi} | 26 +---
->>>>   2 files changed, 2 insertions(+), 171 deletions(-)
->>>>   copy arch/arm/boot/dts/{sun6i-a31s-colorfly-e708-q1.dts => sun6i-reference-design-tablet.dtsi} (90%)
->>>>
->>>>  diff --git a/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts b/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts
->>>>  index 34d8710..882a4d8 100644
->>>>  --- a/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts
->>>>  +++ b/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts
->>>>  @@ -42,32 +42,11 @@
->>>>
->>>>   /dts-v1/;
->>>>   #include "sun6i-a31s.dtsi"
->>>>  -#include "sunxi-common-regulators.dtsi"
->>>>  -
->>>>  -#include <dt-bindings/gpio/gpio.h>
->>>>  -#include <dt-bindings/input/input.h>
->>>>  -#include <dt-bindings/pinctrl/sun4i-a10.h>
->>>>  +#include "sun6i-reference-design-tablet.dtsi"
->>>>
->>>>   / {
->>>>          model = "Colorfly E708 Q1 tablet";
->>>>          compatible = "colorfly,e708-q1", "allwinner,sun6i-a31s";
->>>>  -
->>>>  - aliases {
->>>>  - serial0 = &uart0;
->>>>  - };
->>>>  -
->>>>  - chosen {
->>>>  - stdout-path = "serial0:115200n8";
->>>>  - };
->>>>  -};
->>>>  -
->>>>  -&cpu0 {
->>>>  - cpu-supply = <&reg_dcdc3>;
->>>>  -};
->>>>  -
->>>>  -&ehci0 {
->>>>  - /* rtl8188etv wifi is connected here */
->>>>  - status = "okay";
->>>>   };
->>>>
->>>>   &lradc {
->>>>  @@ -82,136 +61,12 @@
->>>>          };
->>>>   };
->>>>
->>>>  -&mmc0 {
->>>>  - pinctrl-names = "default";
->>>>  - pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_e708_q1>;
->>>>  - vmmc-supply = <&reg_dcdc1>;
->>>>  - bus-width = <4>;
->>>>  - cd-gpios = <&pio 0 8 GPIO_ACTIVE_HIGH>; /* PA8 */
->>>>  - cd-inverted;
->>>>  - status = "okay";
->>>>  -};
->>>>  -
->>>>  -&pio {
->>>>  - mmc0_cd_pin_e708_q1: mmc0_cd_pin@0 {
->>>>  - allwinner,pins = "PA8";
->>>>  - allwinner,function = "gpio_in";
->>>>  - allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>>>  - allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->>>>  - };
->>>>  -
->>>>  - usb0_id_detect_pin: usb0_id_detect_pin@0 {
->>>>  - allwinner,pins = "PA15";
->>>>  - allwinner,function = "gpio_in";
->>>>  - allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->>>>  - allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
->>>>  - };
->>>>  -};
->>>>  -
->>>>  -&p2wi {
->>>>  - status = "okay";
->>>>  -
->>>>  - axp22x: pmic@68 {
->>>>  - compatible = "x-powers,axp221";
->>>>  - reg = <0x68>;
->>>>  - interrupt-parent = <&nmi_intc>;
->>>>  - interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
->>>>  - drivevbus-supply = <&reg_vcc5v0>;
->>>>  - x-powers,drive-vbus-en;
->>>>  - };
->>>>  -};
->>>>  -
->>>>  -#include "axp22x.dtsi"
->>>>  -
->>>>  -&reg_aldo3 {
->>>>  - regulator-always-on;
->>>>  - regulator-min-microvolt = <2700000>;
->>>>  - regulator-max-microvolt = <3300000>;
->>>>  - regulator-name = "avcc";
->>>>  -};
->>>>  -
->>>>  -&reg_dc1sw {
->>>>  - regulator-name = "vcc-lcd";
->>>>  -};
->>>>  -
->>>>  -&reg_dc5ldo {
->>>>  - regulator-always-on;
->>>>  - regulator-min-microvolt = <700000>;
->>>>  - regulator-max-microvolt = <1320000>;
->>>>  - regulator-name = "vdd-cpus"; /* This is an educated guess */
->>>>  -};
->>>>  -
->>>>  -&reg_dcdc1 {
->>>>  - regulator-always-on;
->>>>  - regulator-min-microvolt = <3000000>;
->>>>  - regulator-max-microvolt = <3000000>;
->>>>  - regulator-name = "vcc-3v0";
->>>>  -};
->>>>  -
->>>>  -&reg_dcdc2 {
->>>>  - regulator-min-microvolt = <700000>;
->>>>  - regulator-max-microvolt = <1320000>;
->>>>  - regulator-name = "vdd-gpu";
->>>>  -};
->>>>  -
->>>>  -&reg_dcdc3 {
->>>>  - regulator-always-on;
->>>>  - regulator-min-microvolt = <700000>;
->>>>  - regulator-max-microvolt = <1320000>;
->>>>  - regulator-name = "vdd-cpu";
->>>>  -};
->>>>  -
->>>>  -&reg_dcdc4 {
->>>>  - regulator-always-on;
->>>>  - regulator-min-microvolt = <700000>;
->>>>  - regulator-max-microvolt = <1320000>;
->>>>  - regulator-name = "vdd-sys-dll";
->>>>  -};
->>>>  -
->>>>  -&reg_dcdc5 {
->>>>  - regulator-always-on;
->>>>  - regulator-min-microvolt = <1500000>;
->>>>  - regulator-max-microvolt = <1500000>;
->>>>  - regulator-name = "vcc-dram";
->>>>  -};
->>>>  -
->>>>  -&reg_dldo1 {
->>>>  - regulator-min-microvolt = <3300000>;
->>>>  - regulator-max-microvolt = <3300000>;
->>>>  - regulator-name = "vcc-wifi";
->>>>  -};
->>>>  -
->>>>   &reg_dldo2 {
->>>>          regulator-min-microvolt = <1800000>;
->>>>          regulator-max-microvolt = <1800000>;
->>>>          regulator-name = "vcc-pg";
->>>>   };
->>>>
->>>>  -&reg_drivevbus {
->>>>  - regulator-name = "usb0-vbus";
->>>>  - status = "okay";
->>>>  -};
->>>>  -
->>>>   &simplefb_lcd {
->>>>  - vcc-lcd-supply = <&reg_dc1sw>;
->>>>          vcc-pg-supply = <&reg_dldo2>;
->>>>   };
->>>>  -
->>>>  -&usb_otg {
->>>>  - dr_mode = "otg";
->>>>  - status = "okay";
->>>>  -};
->>>>  -
->>>>  -&usb_power_supply {
->>>>  - status = "okay";
->>>>  -};
->>>>  -
->>>>  -&usbphy {
->>>>  - pinctrl-names = "default";
->>>>  - pinctrl-0 = <&usb0_id_detect_pin>;
->>>>  - usb0_id_det-gpio = <&pio 0 15 GPIO_ACTIVE_HIGH>; /* PA15 */
->>>>  - usb0_vbus_power-supply = <&usb_power_supply>;
->>>>  - usb0_vbus-supply = <&reg_drivevbus>;
->>>>  - usb1_vbus-supply = <&reg_dldo1>;
->>>>  - status = "okay";
->>>>  -};
->>>>  diff --git a/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts b/arch/arm/boot/dts/sun6i-reference-design-tablet.dtsi
->>>>  similarity index 90%
->>>>  copy from arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts
->>>>  copy to arch/arm/boot/dts/sun6i-reference-design-tablet.dtsi
->>>>  index 34d8710..0c43430 100644
->>>>  --- a/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts
->>>>  +++ b/arch/arm/boot/dts/sun6i-reference-design-tablet.dtsi
->>>>  @@ -40,8 +40,6 @@
->>>>    * OTHER DEALINGS IN THE SOFTWARE.
->>>>    */
->>>>
->>>>  -/dts-v1/;
->>>>  -#include "sun6i-a31s.dtsi"
->>>>   #include "sunxi-common-regulators.dtsi"
->>>>
->>>>   #include <dt-bindings/gpio/gpio.h>
->>>>  @@ -49,9 +47,6 @@
->>>>   #include <dt-bindings/pinctrl/sun4i-a10.h>
->>>>
->>>>   / {
->>>>  - model = "Colorfly E708 Q1 tablet";
->>>>  - compatible = "colorfly,e708-q1", "allwinner,sun6i-a31s";
->>>>  -
->>>>          aliases {
->>>>                  serial0 = &uart0;
->>>>          };
->>>>  @@ -66,20 +61,8 @@
->>>>   };
->>>>
->>>>   &ehci0 {
->>>>  - /* rtl8188etv wifi is connected here */
->>>>  - status = "okay";
->>>>  -};
->>>>  -
->>>>  -&lradc {
->>>
->>>  Shouldn't LRADC be standard for tablets?
->>>  Or are we looking at tablets with "soft" buttons?
->>
->> All A31 tablets I have do use the LRADC, but they do
->> not use standard button <-> voltage mappings as
->> A13 / A23 / A33 tablets do. Which buttons they
->> have varies quie a bit, and they tend to not use
->> the same voltages for e.g. volume-up / volume-down
->> across tablets AFAICT.
->
-> Yes... I also found it...
-> And how to check the right values?
-> I cannot find them for my friend's Viewsonic ViewPad 133Q.
+--GvXjxJ+pjyke8COw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I usually build the driver with a debug printk added like
-this:
+On Mon, Aug 22, 2016 at 11:46:49AM +0100, Jon Hunter wrote:
+>=20
+> On 19/08/16 18:32, Thierry Reding wrote:
+> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >=20
+> > The Inter-VM communication (IVC) is a communication protocol which is
+> > designed for interprocessor communication (IPC) or the communication
+> > between the hypervisor and the virtual machine with a guest OS.
+> >=20
+> > Message channels are used to communicate between processors. They are
+> > backed by DRAM or SRAM, so care must be taken to maintain coherence of
+> > data.
+> >=20
+> > The IVC library maintains memory-based descriptors for the transmission
+> > and reception channels as well as the data coherence of the counter and
+> > payload. Clients, such as the driver for the BPMP firmware, can use the
+> > library to exchange messages with remote processors.
+> >=20
+> > Based on work by Peter Newman <pnewman-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> and Joseph Lo
+> > <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>.
+> >=20
+> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> > Changes in v3:
+> > - use a more object oriented design
+> >=20
+> >  drivers/firmware/Kconfig        |   1 +
+> >  drivers/firmware/Makefile       |   1 +
+> >  drivers/firmware/tegra/Kconfig  |  13 +
+> >  drivers/firmware/tegra/Makefile |   1 +
+> >  drivers/firmware/tegra/ivc.c    | 683 ++++++++++++++++++++++++++++++++=
+++++++++
+> >  include/soc/tegra/ivc.h         | 109 +++++++
+> >  6 files changed, 808 insertions(+)
+> >  create mode 100644 drivers/firmware/tegra/Kconfig
+> >  create mode 100644 drivers/firmware/tegra/Makefile
+> >  create mode 100644 drivers/firmware/tegra/ivc.c
+> >  create mode 100644 include/soc/tegra/ivc.h
+>=20
+> [snip]
+>=20
+> > +static void *tegra_ivc_frame_virt(struct tegra_ivc *ivc,
+> > +				  struct tegra_ivc_header *header,
+> > +				  unsigned int frame)
+> > +{
+> > +	BUG_ON(frame >=3D ivc->num_frames);
+>=20
+> WARN_ON and return an error pointer?
 
---- a/drivers/input/keyboard/sun4i-lradc-keys.c
-+++ b/drivers/input/keyboard/sun4i-lradc-keys.c
-@@ -99,6 +99,7 @@ static irqreturn_t sun4i_lradc_irq(int irq, void *dev_id)
-         if ((ints & CHAN0_KEYDOWN_IRQ) && lradc->chan0_keycode == 0) {
-                 val = readl(lradc->base + LRADC_DATA0) & 0x3f;
-                 voltage = val * lradc->vref / 63;
-+         pr_err("sun4i-lradc voltage %d\n", voltage);
+I think I'll actually drop these. Or move them one layer up. The only
+parameters passed into as frame are ivc->{rx,tx}.position, and all the
+code that modifies these will properly wrap them at ivc->num_frames. I
+think the only way that this condition could become true is if someone
+were to directly access the structure and modify the position. That's
+technically possible, so I guess the checks could stay in for extra
+paranoia.
 
-                 for (i = 0; i < lradc->chan0_map_count; i++) {
-                         diff = abs(lradc->chan0_map[i].voltage - voltage);
+> > +
+> > +	return (void *)(header + 1) + ivc->frame_size * frame;
+> > +}
+> > +
+> > +static inline dma_addr_t tegra_ivc_frame_phys(struct tegra_ivc *ivc,
+> > +					      dma_addr_t phys,
+> > +					      unsigned int frame)
+> > +{
+> > +	unsigned long offset;
+> > +
+> > +	BUG_ON(!ivc->peer);
+> > +	BUG_ON(frame >=3D ivc->num_frames);
+>=20
+> WARN_ON?
 
-When I need to figure out the values.
+I've moved this up one layer since it's a little cumbersome to return an
+error via dma_addr_t and the !ivc->peer check is present in all callers
+of this function anyway.
 
-I hope that helps.
+> > +	offset =3D sizeof(struct tegra_ivc_header) + ivc->frame_size * frame;
+> > +
+> > +	return phys + offset;
+> > +}
+>=20
+> [snip]
+>=20
+> > +static int check_ivc_params(unsigned long base1, unsigned long base2,
+> > +			    unsigned int num_frames, size_t frame_size)
+> > +{
+> > +	BUG_ON(offsetof(struct tegra_ivc_header, tx.count) & (TEGRA_IVC_ALIGN=
+ - 1));
+> > +	BUG_ON(offsetof(struct tegra_ivc_header, rx.count) & (TEGRA_IVC_ALIGN=
+ - 1));
+> > +	BUG_ON(sizeof(struct tegra_ivc_header) & (TEGRA_IVC_ALIGN - 1));
+>=20
+> WARN_ON?
 
-Regards,
+I've turned all of these into BUILD_BUG_ON() because the parameters are
+all statically known at build time. I've also switched to the IS_ALIGNED
+macro here and the checks below because it's easier to read.
 
-Hans
+> > +int tegra_ivc_init(struct tegra_ivc *ivc, struct device *peer,
+> > +		   void __iomem *rx_virt, dma_addr_t rx_phys,
+> > +		   void __iomem *tx_virt, dma_addr_t tx_phys,
+> > +		   unsigned int num_frames, size_t frame_size,
+> > +		   void (*notify)(struct tegra_ivc *ivc, void *data),
+> > +		   void *data)
+> > +{
+> > +	size_t queue_size;
+> > +	int err;
+> > +
+> > +	err =3D check_ivc_params((unsigned long)rx_virt, (unsigned long)tx_vi=
+rt,
+> > +			       num_frames, frame_size);
+> > +	if (err < 0)
+> > +		return err;
+> > +
+> > +	BUG_ON(!ivc);
+> > +	BUG_ON(!notify);
+>=20
+> We should check this first and just return -EINVAL.
 
+Yes, done. I've wrapped these in a single WARN_ON() with a -EINVAL
+return.
 
+> > +/**
+> > + * tegra_ivc_read_get_next_frame - Peek at the next frame to receive
+> > + * @ivc		pointer of the IVC channel
+> > + *
+> > + * Peek at the next frame to be received, without removing it from
+> > + * the queue.
+> > + *
+> > + * Returns a pointer to the frame, or an error encoded pointer.
+> > + */
+> > +void *tegra_ivc_read_get_next_frame(struct tegra_ivc *ivc);
+>=20
+> Is it odd to return a void * pointer here and not a pointer to a
+> specific structure type?
 
+I think that's by design. IVC is a generic library to implement an IPC
+mechanism on top. There is no specific structure to return a pointer to
+here. The caller determines what type it wants to put into frames.
 
->
->>
->> Regards,
->>
->> Hans
->>
->>>  Otherwise,
->>>
->>>  Acked-by: Chen-Yu Tsai <wens@csie.org>
->>>
->>>>  - vref-supply = <&reg_aldo3>;
->>>>  + /* Wifi is connected here */
->>>>          status = "okay";
->>>>  -
->>>>  - button@1000 {
->>>>  - label = "Home";
->>>>  - linux,code = <KEY_HOMEPAGE>;
->>>>  - channel = <0>;
->>>>  - voltage = <1000000>;
->>>>  - };
->>>>   };
->>>>
->>>>   &mmc0 {
->>>>  @@ -181,12 +164,6 @@
->>>>          regulator-name = "vcc-wifi";
->>>>   };
->>>>
->>>>  -&reg_dldo2 {
->>>>  - regulator-min-microvolt = <1800000>;
->>>>  - regulator-max-microvolt = <1800000>;
->>>>  - regulator-name = "vcc-pg";
->>>>  -};
->>>>  -
->>>>   &reg_drivevbus {
->>>>          regulator-name = "usb0-vbus";
->>>>          status = "okay";
->>>>  @@ -194,7 +171,6 @@
->>>>
->>>>   &simplefb_lcd {
->>>>          vcc-lcd-supply = <&reg_dc1sw>;
->>>>  - vcc-pg-supply = <&reg_dldo2>;
->>>>   };
->>>>
->>>>   &usb_otg {
->>>>  --
->>>>  2.7.4
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Thierry
+
+--GvXjxJ+pjyke8COw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXuvK/AAoJEN0jrNd/PrOh5V4QAIyNBewPF0CHdhPCmkBrtYXD
+FUFT5tShR0aFhneEGZKnmtHU4yjOn/w66yBewsvIpod9Sq3WupnDzN1jEFkc83LT
+E1v/pXAJcqt7KXU3MN6YVaqnzzkcGbZQUTGW2XhBP65vbCyQSb1E+/TZESfxWzyp
+GFSz1PppGvtqRtm79B6i9N0hqbSSdEJQsmnEB15aeUM3n+Ywxl1p+e55o9+HyxeG
+c+P9SjZRbBKbAzWsM+Yyk7EG1Y+Qm9pwOhtAPI0gLkvmerVw1z2ZE6hPI4FrJWjr
+wdm6xVnGY+6VhtT+7r/Lp1eQToh661+2nfauowqz5U2bqNjrNhtWJ8UtLpRzS7vz
+zgYfMz9QUyelG9KZeSv8Ao0IXV2w25C+P0hI7rtj2HyScksC5TZC//0htXONDYrX
+yrVQm5DWDe4mJTBXdR+YLkHLiQ0SNnLMFplTCoW1BipYRVzW3BprKG4WQBz594Ck
+btCld/lNOaD1xqsQ41rsowSukOwBhyvwYsbucL74iWBGGnDv1BaQ1dMoSHhUk5pB
+cX5nkKTWvxhjKGmn9vMC9gW+cCS2jaLENAgjEwV2vMAf1AaPM2FiviFco3pkrPQG
+Yt02daZ4Y5lUBiT+xjpTkRE4LDhayBlzyD7vjTscpRIjDm44qq+At1cTi9Xxiia6
+JJ7omltVaCCcDYTP0BiP
+=H/xa
+-----END PGP SIGNATURE-----
+
+--GvXjxJ+pjyke8COw--
