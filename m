@@ -1,51 +1,64 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 12/12] reset: Add Tegra BPMP reset driver
-Date: Mon, 22 Aug 2016 13:56:05 -0600
-Message-ID: <a4fff648-fc4a-af2e-1a17-6aac757b4435@wwwdotorg.org>
-References: <20160819173233.13260-1-thierry.reding@gmail.com>
- <20160819173233.13260-13-thierry.reding@gmail.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH V3 2/5] ARM: dts: bcm283x: Add dtsi for USB host mode
+Date: Mon, 22 Aug 2016 22:18:15 +0200 (CEST)
+Message-ID: <533983163.19485.709cd5b7-97dd-4dda-9392-7c46ec5e192c.open-xchange@email.1und1.de>
+References: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com>
+ <1471792204-21908-3-git-send-email-stefan.wahren@i2se.com>
+ <87fupw4rgm.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160819173233.13260-13-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87fupw4rgm.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/19/2016 11:32 AM, Thierry Reding wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->
-> This driver uses the services provided by the BPMP firmware driver to
-> implement a reset driver based on the MRQ_RESET request.
+Hi Eric,
 
-> diff --git a/drivers/reset/tegra/reset-bpmp.c b/drivers/reset/tegra/reset-bpmp.c
+> Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> hat am 22. August 2016 um 19:57 geschrieben:
+> 
+> 
+> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
+> 
+> > In case dr_mode isn't passed via DT, the dwc2 defaults to OTG mode.
+> > But all Raspberry Pi boards here are designed only for host mode.
+> > So fix this issue by providing a dtsi file which set the dr_mode
+> > to host.
+> 
+> Can you explain what change this should cause for these boards?  Is it
+> just going to drop this message from dmesg:
+> 
+> dwc2 3f980000.usb: Configuration mismatch. dr_mode forced to host
 
-> +static struct tegra_bpmp *to_tegra_bpmp(struct reset_controller_dev *rstc)
-> +{
-> +	return container_of(rstc, struct tegra_bpmp, rstc);
-> +}
+IMO it isn't a message which could be ignored. The dwc2 tries to detected the
+USB role from compile configuration and hardware capabilities, but according to
+the decision table [1] we should provide the correct dr_mode which is import for
+FIFO configuration and so on.
 
-It seems rather odd for the BPMP to include a struct 
-reset_controller_dev inside it. Rather, I'd expect a separate reset 
-controller struct to be defined here, which contains a pointer to the 
-BPMP. Otherwise, the BPMP structure is going to get all kinds of stuff 
-added to it.
+Another problem that i see is that the USB behavior is influenced by compile
+settings in a unexpected way. With arm/configs/bcm2835_defconfig the driver is
+forced to host, but in a multiplatform config like arm64/configs/defconfig not.
+I would expect a more stable dr_mode.
 
-Put another way, I'd expect the BPMP driver to be nothing more than an 
-IPC provider, with all the clock/reset/power-domain/I2C/... logic 
-contained in drivers that simply use that IPC service and nothing more, 
-rather than clock/reset/power-domain/I2C/... being entirely in-bed with 
-the core BPMP driver.
+At the end the dwc2 can't reliable detect the dr_mode because it depends on the
+board design.
 
-(I haven't reviewed patch 5/12, the BPMP driver yet BTW).
+Any concerns?
 
-> +int tegra_bpmp_init_resets(struct tegra_bpmp *bpmp)
-...
-> +	bpmp->rstc.nr_resets = bpmp->soc->num_resets;
+Stefan
 
-Presumably the BPMP already validates reset IDs. Can we leave all the 
-validation to the BPMP? That way, we wouldn't need the SoC data to 
-include a num_resets field, and hence wouldn't need to update the Linux 
-driver in order to support a FW that supported more resets.
+[1] -
+https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=5268ed9d2e3b52f703f3661eef14cecbb2b572d4
+
+> 
+> or something else?
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
