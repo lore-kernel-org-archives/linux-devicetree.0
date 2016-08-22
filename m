@@ -1,49 +1,48 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 02/12] mailbox: Add Tegra HSP driver
-Date: Mon, 22 Aug 2016 10:53:15 -0600
-Message-ID: <c4e096fe-3f3c-b22a-75c0-9c8665ce896f@wwwdotorg.org>
-References: <20160819173233.13260-1-thierry.reding@gmail.com>
- <20160819173233.13260-3-thierry.reding@gmail.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] dt-bindings: Add a binding for Mediatek MDP
+Date: Mon, 22 Aug 2016 19:03:49 +0200
+Message-ID: <bc8dda62-8169-c2b4-bc05-7e23d5329c28@gmail.com>
+References: <1471606767-3218-1-git-send-email-minghsiu.tsai@mediatek.com>
+ <1471606767-3218-3-git-send-email-minghsiu.tsai@mediatek.com>
+ <20160819141655.GA18486@rob-hp-laptop> <1471828082.30956.1.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160819173233.13260-3-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471828082.30956.1.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/19/2016 11:32 AM, Thierry Reding wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+
+On 22/08/16 03:08, Minghsiu Tsai wrote:
+> On Fri, 2016-08-19 at 09:16 -0500, Rob Herring wrote:
+>> On Fri, Aug 19, 2016 at 07:39:25PM +0800, Minghsiu Tsai wrote:
+>>> Add a DT binding documentation of MDP for the MT8173 SoC
+>>> from Mediatek
+>>>
+>>> Signed-off-by: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/media/mediatek-mdp.txt     |  109 ++++++++++++++++++++
+>>>  1 file changed, 109 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mdp.txt
+>>
+>> Please add acks when posting new versions.
+>>
+>> Rob
 >
-> This driver exposes a mailbox interface for interprocessor communication
-> using the Hardware Synchronization Primitives (HSP) module's doorbell
-> mechanism. There are multiple HSP instances and they provide additional
-> features such as shared mailboxes, shared and arbitrated semaphores.
+> Sorry for my mistake. I will add it in next version.
 >
-> A driver for a remote processor can use the mailbox client provided by
-> the HSP driver and build an IPC protocol on top of this synchronization
-> mechanism.
 
-> +static int tegra_hsp_doorbell_startup(struct tegra_hsp_channel *channel)
-...
-> +	spin_lock_irqsave(&hsp->lock, flags);
-> +
-> +	value = tegra_hsp_channel_readl(&ccplex->channel, HSP_DB_ENABLE);
-> +	value |= BIT(db->master);
-> +	tegra_hsp_channel_writel(&ccplex->channel, value, HSP_DB_ENABLE);
-> +
-> +	spin_unlock_irqrestore(&hsp->lock, flags);
-> +
-> +	if (!tegra_hsp_doorbell_can_ring(db))
-> +		return -ENODEV;
 
-Should the error-check happen before enabling the RX path? Otherwise, 
-presumably that HSP_DB_ENABLE bit should be cleared on failure.
+No need to provide a new version just because of this. If the driver 
+will be taken as is, I can fix up the ack when applying.
 
-> +static int tegra_hsp_probe(struct platform_device *pdev)
-
-> +	dev_dbg(&pdev->dev, "regs: %pR (%p-%p)\n", res, hsp->regs, hsp->regs + resource_size(res) - 1);
-
-Line width?
+Thanks,
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
