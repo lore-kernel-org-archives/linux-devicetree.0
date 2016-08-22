@@ -1,37 +1,41 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/8] ARM: dts: sun8i: reference-design-tablet: Add
- gsl1680 touchscreen node
-Date: Mon, 22 Aug 2016 20:31:42 +0200
-Message-ID: <20160822183142.GY7104@lukather>
-References: <1470685398-14568-1-git-send-email-hdegoede@redhat.com>
- <1470685398-14568-3-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH 1/2] ARM: dts: sun6i: Add
+ sun6i-a31-reference-design-tablet.dtsi
+Date: Mon, 22 Aug 2016 20:39:15 +0200
+Message-ID: <20160822183915.GA7104@lukather>
+References: <1471533095-13432-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="3C3ZMpwu25Mtx3MN"
+        protocol="application/pgp-signature"; boundary="6TME3aayZmn2Ikqb"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1470685398-14568-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1471533095-13432-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---3C3ZMpwu25Mtx3MN
+--6TME3aayZmn2Ikqb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 08, 2016 at 09:43:13PM +0200, Hans de Goede wrote:
-> Almost all sun8i tablets use a gsl1680 touchscreen controller, so add
-> a node describing it to reference-design-tablet.dtsi.
+Hi,
+
+On Thu, Aug 18, 2016 at 05:11:34PM +0200, Hans de Goede wrote:
+> Just like with a13/a23/a33 most a31 tablets are derived from the same
+> reference design. Add a .dtsi file with all the common bits to avoid
+> endless copy and pasting of these.
 >=20
-> Almost all, but not all, so mark it as disabled by default (dts files
-> will also need to supply a firmware-name and resolution info).
+> The sun6i-a31-reference-design-tablet.dtsi this commit adds is a copy
+> of sun6i-a31s-colorfly-e708-q1.dts with a few tablet specific bits
+> removed / left in sun6i-a31s-colorfly-e708-q1.dts.
 >=20
 > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Applied the first three patches, thanks!
+The patch looks ok, but doesn't apply.
+
 Maxime
 
 --=20
@@ -39,28 +43,28 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---3C3ZMpwu25Mtx3MN
+--6TME3aayZmn2Ikqb
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXu0UOAAoJEBx+YmzsjxAgHroQAIQxjW96vOyki5fIJuNcMOce
-IGzZ71FkqTiwGF2BQxAoXCP4H6PGxJnrU3dXMC13DReyZ0nOdram4IgEbMfMf6ys
-uWc4iK+Mn1IY7x6z3HEYA4VAqRueCe5p5tX/C+ORtT7vhPHU0H/0Dr4khRpaBiJm
-slDIlBREJPkPvR4+eiDsStkuc4kpY3Qr3L8W87TDA4oaoGVHcpHYinG2FkgGtn9i
-dih0jMTKISLqwG4APHhwNcdLxmWu/yWaLzhwZ6oL0cwoEjCZwdGl8bTCVKq47xTH
-hRRAh+U9ArHG7zf3uR8UX5dCAy0ucWfNPj9Br0QoVxDDXBnPer57JOMX7tsFrZAB
-eSnLZTikSFJH7gXcCP10kLI4mPhJGoISvDOJ3b/Uy/Iw7sXcm9f2eVMdncsMxnrd
-7ozNiKk4N0xS9axuDYzB91/KN6rMZ95do4kjCbeUbQUiW73aaD6+woz0mS5gRKI0
-tw90tUJpD4pcJeARERs9HSYzudF6Go5Gdgz8qeYoxlVEHtAJqIrV9urABSC4RNhU
-cbNZagX4Bg/4JQcuqff8ScufIlvo7bFhhI/mRSZY8QqLnt1HaTIHfNlzjU77PfKC
-FOzIfsdRTZsz9voXqKMcbt7FZj7bPBWQIq5rM+5tt+ETn9dD6Kzo3h9kFDJSJ/+e
-KCc8DwMA5P4GafXS55ci
-=h2R1
+iQIcBAEBAgAGBQJXu0bTAAoJEBx+YmzsjxAgu6MQAJUkz1f37yabUgR5MglbrQ58
+5NkCvB3ctxk05Fy1+vm21J/ZxtaiR6x5yjr2NMmxKr20Ubs+fpJ5eIZq6goEF+6c
+1isLLEm1ylUxC2/nOTUgszoNZlljvsT7x+Qph8M0Fkn8iojNvQeQAUyG0IG4tbgZ
+0pSSzDeGLRxKe6RiTwBzhq8LIEvULDtLZHH11z6rR05ho9yE7I+LdPLanyix93mG
+qwahkwxAsNm/6cY5Ug2q15JeoZmBt06L3MWpl9i1BD1LDNAF+oyPjhOWb6+PXuFG
+yOJWOHQtUwnjVanoek+2Y5EotyTlnPsCM58b31LqInlhQ7epCVY70RlXAp+ZtI3K
+/iZX5FF8N5o9KolP6qWhYo2Agz8RB8CXa2HOjCsIL2Fn/6Jb7PjFFUVaLnxKz0Zg
+OdTiCgIq3X6BkVg4nYBSqvJuhNzudSDq2y2zb2uOQtOfpEZs/1gR87mdDYJJTlL3
+qFVuOttlu4Ca90XpgWwJB8+csQBprPsLcTqUSpAXt5hr+t0tM1nG4v5iSJ3xtpMh
+d5Q/KyewXmqwBNC5FqpKBgnyVSS4T89Am02UWPT1Vnu88/tEd7NtFmzROkPR4Xzp
+wDfr9ZeqHbSKNyzW9sUIa/8HYTdEEXIG4eTNk65ZWwHCaddNOvXgbXe9LAUf1Kbb
+o3NzNVWi8aVEJYWhiGkx
+=OLps
 -----END PGP SIGNATURE-----
 
---3C3ZMpwu25Mtx3MN--
+--6TME3aayZmn2Ikqb--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
