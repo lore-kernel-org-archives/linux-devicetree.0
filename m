@@ -1,48 +1,115 @@
 From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] dt-bindings: Add a binding for Mediatek MDP
-Date: Mon, 22 Aug 2016 19:03:49 +0200
-Message-ID: <bc8dda62-8169-c2b4-bc05-7e23d5329c28@gmail.com>
-References: <1471606767-3218-1-git-send-email-minghsiu.tsai@mediatek.com>
- <1471606767-3218-3-git-send-email-minghsiu.tsai@mediatek.com>
- <20160819141655.GA18486@rob-hp-laptop> <1471828082.30956.1.camel@mtksdaap41>
+Subject: Re: [PATCH 3/3] arm: dts: thermal: add thermal/auxadc node.
+Date: Mon, 22 Aug 2016 19:09:56 +0200
+Message-ID: <7a7684dc-aea5-15f8-04fb-494b2085a3fe@gmail.com>
+References: <1467882386-40544-1-git-send-email-dawei.chien@mediatek.com>
+ <1467882386-40544-4-git-send-email-dawei.chien@mediatek.com>
+ <fd3f0c2f-f0ad-dd0f-cf2b-eb658f72d735@gmail.com>
+ <1471245268.14287.14.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471828082.30956.1.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1471245268.14287.14.camel@mtksdaap41>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: dawei chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 22/08/16 03:08, Minghsiu Tsai wrote:
-> On Fri, 2016-08-19 at 09:16 -0500, Rob Herring wrote:
->> On Fri, Aug 19, 2016 at 07:39:25PM +0800, Minghsiu Tsai wrote:
->>> Add a DT binding documentation of MDP for the MT8173 SoC
->>> from Mediatek
+On 15/08/16 09:14, dawei chien wrote:
+> Hi Matthias,
+>
+> On Thu, 2016-08-11 at 17:51 +0200, Matthias Brugger wrote:
+>>
+>> On 07/07/16 11:06, Dawei Chien wrote:
+>>> This adds the thermal controller and auxadc nodes
+>>> to the Mediatek MT2701 dtsi file.
 >>>
->>> Signed-off-by: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>> Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 >>> ---
->>>  .../devicetree/bindings/media/mediatek-mdp.txt     |  109 ++++++++++++++++++++
->>>  1 file changed, 109 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mdp.txt
+>>> This patch depned on:
+>>> https://patchwork.kernel.org/patch/9213545/
+>>> ---
+>>>  arch/arm/boot/dts/mt2701.dtsi |   43 +++++++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 43 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+>>> index 2ac8b50..0834a23 100644
+>>> --- a/arch/arm/boot/dts/mt2701.dtsi
+>>> +++ b/arch/arm/boot/dts/mt2701.dtsi
+>>> @@ -77,6 +77,36 @@
+>>>  		#clock-cells = <0>;
+>>>  	};
+>>>
+>>> +	thermal-zones {
+>>> +		cpu_thermal: cpu_thermal {
+>>> +			polling-delay-passive = <1000>; /* milliseconds */
+>>> +			polling-delay = <1000>; /* milliseconds */
+>>> +
+>>> +			thermal-sensors = <&thermal 0>;
+>>> +			sustainable-power = <1000>;
+>>> +
+>>> +			trips {
+>>> +				threshold: trip-point@0 {
+>>> +					temperature = <68000>;
+>>> +					hysteresis = <2000>;
+>>> +					type = "passive";
+>>> +				};
+>>> +
+>>> +				target: trip-point@1 {
+>>> +					temperature = <85000>;
+>>> +					hysteresis = <2000>;
+>>> +					type = "passive";
+>>> +				};
+>>> +
+>>> +				cpu_crit: cpu_crit@0 {
+>>> +					temperature = <115000>;
+>>> +					hysteresis = <2000>;
+>>> +					type = "critical";
+>>> +				};
+>>> +			};
+>>> +		};
+>>> +	};
+>>> +
+>>>  	timer {
+>>>  		compatible = "arm,armv7-timer";
+>>>  		interrupt-parent = <&gic>;
+>>> @@ -183,4 +213,17 @@
+>>>  		clocks = <&uart_clk>;
+>>>  		status = "disabled";
+>>>  	};
+>>> +
+>>> +	thermal: thermal@1100b000 {
+>>> +		#thermal-sensor-cells = <0>;
+>>> +		compatible = "mediatek,mt2701-thermal";
+>>> +		reg = <0 0x1100b000 0 0x1000>;
+>>> +		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
+>>> +		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg CLK_PERI_AUXADC>;
+>>> +		clock-names = "therm", "auxadc";
+>>> +		resets = <&pericfg 0x10>;
+>>> +		reset-names = "therm";
+>>> +		mediatek,auxadc = <&auxadc>;
+>>> +		mediatek,apmixedsys = <&apmixedsys>;
+>>> +	};
+>>>  };
+>>>
 >>
->> Please add acks when posting new versions.
->>
->> Rob
+>> what about:
+>> status = "disabled"; ?
 >
-> Sorry for my mistake. I will add it in next version.
+> Since thermal driver would protect our platform by shutdown method once
+> SoC temperature over critical point, I prefer keep this rather than
+> disabling, how do you think, thank you.
 >
 
-
-No need to provide a new version just because of this. If the driver 
-will be taken as is, I can fix up the ack when applying.
-
-Thanks,
-Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sounds reasonable. Thanks
