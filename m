@@ -1,69 +1,67 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/9] regulator: core: Try full range when adjusting
- regulators to constraints
-Date: Mon, 22 Aug 2016 19:09:32 +0100
-Message-ID: <20160822180932.GW22076@sirena.org.uk>
-References: <20160821021125.1521-1-wens@csie.org>
- <20160821021125.1521-4-wens@csie.org>
- <20160822162907.GO22076@sirena.org.uk>
- <20160822175205.h76hurjaopnosymc@vip.cybercity.dk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sun8i: Add dts file for the Orange Pi Lite
+ SBC
+Date: Mon, 22 Aug 2016 20:18:10 +0200
+Message-ID: <20160822181810.GV7104@lukather>
+References: <1470579404-28081-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="NO4xtVTk6ycZDAf4"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="gPQW1Pk7T/0rhUBV"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160822175205.h76hurjaopnosymc-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>
+In-Reply-To: <1470579404-28081-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rask Ingemann Lambertsen <ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---NO4xtVTk6ycZDAf4
+--gPQW1Pk7T/0rhUBV
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 22, 2016 at 07:52:05PM +0200, Rask Ingemann Lambertsen wrote:
-> On Mon, Aug 22, 2016 at 05:29:07PM +0100, Mark Brown wrote:
+On Sun, Aug 07, 2016 at 04:16:44PM +0200, Hans de Goede wrote:
+> The Orange Pi Lite SBC is a small H3 based SBC, with 512MB RAM,
+> micro-sd slot, HDMI out, 2 USB-A connectors, 1 micro-USB connector,
+> sdio attached rtl8189ftv wifi and an ir receiver.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v2:
+> -Fix the wifi ethernet alias to be ethernet0 as the comment says, rather
+>  then ethernet1 (copy and paste error).
 
-> > This seems like you have buggy constraints, constraints which allow
-> > voltages that can't physically be satisfied don't make obvious sense.
+Applied, thanks!
+Maxime
 
-> No, it's for cases like this (see the cubietruck4 or a80-optimus dts
-> patches):
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-> 			reg_bldo4: bldo4 {
-> 				regulator-min-microvolt = <1080000>;
-> 				regulator-max-microvolt = <1320000>;
-> 				regulator-name = "vcc12-hsic";
-> 			};
-
-> The regulator can do 1100000 uV, 1200000 uV and 1300000 uV, all of which
-> are within the constraints, so obviously the constraints can be satisfied,
-> yet the regulator core fails do so with a message like this:
-
-Sure, but the constraints also say that you can do 1.32V which the
-system is not physically capable of delivering.  That's not a good sign
-for the constraints, it suggests that at least the capabilities of the
-regulator have not been taken into consideration when setting up the
-constraints.
-
---NO4xtVTk6ycZDAf4
+--gPQW1Pk7T/0rhUBV
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1
 
-iQEcBAEBCAAGBQJXuz/bAAoJECTWi3JdVIfQDzcH/0nx+52RhyCVL9xr//FY5iDh
-mSyxk+FVH2LJiTh1TpUFCIvTJlU/AaLJ1L+gHgNNu2qj4t929b2HTLwU1W0T8fSG
-GDEIIg8R0Ra5H7U3MdyVidmUKkl2l8xcW4OR2pBhwRLf0FdQJPqAZ1xCyWaXzI5c
-zLIaUtMapnPCswR8PwmbqylJrDOojdNCltEknGnP2CU17lYvKzrybLSMCeBMid5n
-lF3tr6i3MeEdvWiDY957CIn4+slRaIdqPv61FZRdBlgT+LHEJ7+SQ6MIT79SHPAF
-kDl5N0EMr5m+dwiUa0A7tm2tCgGCJuxbiKeD0llsGq+W8958gosIH7kd+bkxv1Q=
-=Pm1W
+iQIcBAEBAgAGBQJXu0HiAAoJEBx+YmzsjxAgbQUP/1jBZ8f+Rs9yQKSDzu8IhPzq
+3gbagnJ1KONBO9yXi0HZPUe1oS2tTJ3zaAkjfxRbxX2Vs/kKwr+euhqweTKU1ht6
+dZdY/qGySZ4K4bQkE5iykmkJgM6DBnmqanLBkmDMMRSyLBB+uBUmpadgltaoj7P3
+VYVNhJM39Vnh3HsDj0nVEkn6u5YCb2HfcIlf+i/apJ8MFmTXLAyzmz9KbG5BnXfv
+aYEoVDZYASZzyngmOXOubVVR9f0BrPZH3fTOHzQqiLOWysXMHj0D8CZIpoi2Z3a5
+rR93865ISWAWVxN/O3NF4x1j1KRj48FnNQn0PwipoYNv5JefkHCx/EVZLjEZrao4
+lL107fHgRx1j2KEJk5C9rjChNUjybebLi0KY36ovToUSelfMZqoSo7lnj5YrVBxu
+RjjrgYVp0ybUV1HM7tt4CXoY8tg6Txw4pwOBLvnQgmYATEQN1R3qEjklrmyGe70E
+/jwN+OUQXzzF3Aq0462PTsEFUNHb/Qi2T33vHSZNxwfOdy9g6AiPInEuUntB8Eu7
+u2tuHD94RrwkUBWwVvAHty6KhFima08wf9jsGBdK9IUF4B+UFkfx7qJhFDSsrFl6
+O2n3y1h4LBRFbnpyW7v2odeJho0WjM+XvX1hRmqwz5C1jIQhQiMb6y5XF2qCpn2g
+xHkVlKcal6uKo8nohyWr
+=+ee5
 -----END PGP SIGNATURE-----
 
---NO4xtVTk6ycZDAf4--
+--gPQW1Pk7T/0rhUBV--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
