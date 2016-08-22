@@ -1,80 +1,42 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/8] pinctrl: Add core support for Aspeed SoCs
-Date: Mon, 22 Aug 2016 15:45:48 +0200
-Message-ID: <CACRpkdaBuwqGPbfLK8bR5A4NSefifw8VqPyUbgtAtweqoEnD7g@mail.gmail.com>
-References: <20160819124414.24242-1-andrew@aj.id.au> <20160819124414.24242-6-andrew@aj.id.au>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 02/12] mailbox: Add Tegra HSP driver
+Date: Mon, 22 Aug 2016 15:43:23 +0200
+Message-ID: <13954058.6YHDe1jCOJ@wuerfel>
+References: <20160819173233.13260-1-thierry.reding@gmail.com>
+ <20160819173233.13260-3-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160819124414.24242-6-andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160819173233.13260-3-thierry.reding@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Sivaram Nair <sivaramn@nvidia.com>, devicetree@vger.kernel.org, Peter De Schrijver <pdeschrijver@nvidia.com>, Timo Alho <talho@nvidia.com>, Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 19, 2016 at 2:44 PM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
-
-> +++ b/drivers/pinctrl/aspeed/Kconfig
-> @@ -0,0 +1,8 @@
-> +config PINCTRL_ASPEED
-> +       bool
-> +       depends on (ARCH_ASPEED || COMPILE_TEST) && OF
-> +       select PINMUX
-> +       select PINCONF
-> +       select GENERIC_PINCONF
-> +       select MFD_SYSCON
-> +       select REGMAP_MMIO
-
-Since this device is spawn from the syscon, should it not be
-"depends on MFD_SYSCON"?
-
-(No big deal, if you think this is right then go with it.)
-
-> +#include <linux/io.h>
-
-What is this include for?
-
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/string.h>
-> +#include "../core.h"
-> +#include "pinctrl-aspeed.h"
-
-No #include <linux/regmap.h>?
-
-Maybe some #includes are centralized to pinctrl-aspeed.h
-I don't know, just make sure you don't have implicit includes.
-
-> +               if (regmap_read(map, desc->reg, &val) < 0)
-> +                       return false;
+On Friday, August 19, 2016 7:32:23 PM CEST Thierry Reding wrote:
+> +static int tegra_hsp_doorbell_send_data(struct tegra_hsp_channel *channel,
+> +                                       void *data)
+> +{
+> +       tegra_hsp_channel_writel(channel, 1, HSP_DB_TRIGGER);
 > +
-> +               val &= ~desc->mask;
-> +               val |= pattern << __ffs(desc->mask);
-> +
-> +               if (regmap_write(map, desc->reg, val) < 0)
-> +                       return false;
+> +       return 0;
+> +}
+> 
 
-Use:
+It seems very odd that you don't write the data at all but just trigger
+the communication here. My interpretation is that you bypass
+the mailbox infrastructure for the actual message, and instead reimplement
+it on top of the mailbox infrastructure as part of the bpmp driver.
 
-regmap_update_bits(map,
-                              desc->reg,
-                              desc->mask,
-                              pattern << __ffs->desc->mask);
+Why not expose the bpmp itself as the mailbox here?
 
-Or something like that instead of reimplementing
-mask-and-set. Regmap already knows how to do the
-business.
-
-(Applied everywhere in the driver where you have a
-mask-and-set like this).
-
-The expression core engine is still a complete mystery
-for me, I will just trust you that it works as intended.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
