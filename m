@@ -1,41 +1,59 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V3 0/5] ARM: dts: bcm2835: Add Raspberry Pi Zero
-Date: Mon, 22 Aug 2016 10:21:03 -0600
-Message-ID: <47b64ef5-c75b-e60a-81b4-63f91464333b@wwwdotorg.org>
-References: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/9] regulator: core: Try full range when
+ adjusting regulators to constraints
+Date: Mon, 22 Aug 2016 17:29:07 +0100
+Message-ID: <20160822162907.GO22076@sirena.org.uk>
+References: <20160821021125.1521-1-wens@csie.org>
+ <20160821021125.1521-4-wens@csie.org>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Ian Campbell <ijc@hellion.org.uk>, Will Deacon <will.deacon@arm.com>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="IpgPcFyQO6wM49Um"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBBGR5S6QKGQEDLO5DTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20160821021125.1521-4-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMjEvMjAxNiAwOTowOSBBTSwgU3RlZmFuIFdhaHJlbiB3cm90ZToKPiBUaGlzIHBhdGNo
-IHNlcmllcyBhZGQgc3VwcG9ydCBmb3IgUmFzcGJlcnJ5IFBpIFplcm8gd2l0aCBVU0IgaG9zdCBt
-b2RlLiBJdCdzCj4gYmFzZWQgb24gdGhlIHBhdGNoICJBUk02NDogZHRzOiBiY206IFVzZSBhIHN5
-bWxpbmsgdG8gUi1QaSBkdHNpIGZpbGVzCj4gZnJvbSBhcmNoPWFybSIgZnJvbSBJYW4gQ2FtcGJl
-bGwuIEN1cnJlbnRseSB0aGVyZSBpcyBhIGJ1ZyBbMV0gd2hpY2ggbmVlZHMKPiB0byBmaXhlZCBi
-ZWZvcmUgYmVjYXVzZSBhZnRlciBhcHBseWluZyB0aGVzZSBwYXRjaCBzZXJpZXMgdGhlIGJ1ZyBp
-c24ndAo+IHJlcHJvZHVjaWJsZSBhbnltb3JlIGJ1dCBub3QgZml4ZWQuCj4KPiBUaGUgcGF0Y2hl
-cyAxLTMgZml4ZXMgdGhlIFVTQiBEVCBzZXR0aW5ncyBmb3IgYmNtMjgzeC4gUGF0Y2ggMyBpcyBv
-bmx5IGNvbXBpbGUKPiB0ZXN0ZWQsIHNvIGl0IHdvdWxkIGJlIG5pY2UgaWYgc29tZW9uZSB3aXRo
-IGEgUlBpIDMgY291bGQgdGVzdCBpdC4KPiBUaGUgbGFzdCBwYXRjaCBiYXNlZCBvbiB0aGUgd29y
-ayBvZiBMdWJvbWlyIFJpbnRlbCBbMl0gYW5kIE5vcmFsZiBUcsO4bm5lcyBbM10uCj4KPiBOb3Rl
-OiBQYXRjaCAzIGNhbid0IGJlIGNoZXJyeS1waWNrZWQgYmVjYXVzZSBpdCBkZXBlbmRzIG9uIFBh
-dGNoIDIuCgpBbGwgbG9va3MgcmVhc29uYWJsZSB0byBtZSBhdCBhIHF1aWNrIGdsYW5jZS4gSSBk
-aWRuJ3QgdmFsaWRhdGUgYW55IG9mIAp0aGUgR1BJTyB2YWx1ZXMgZXRjLgoKVGhlIHNlcmllcywK
-QWNrZWQtYnk6IFN0ZXBoZW4gV2FycmVuIDxzd2FycmVuQG52aWRpYS5jb20+CgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+--IpgPcFyQO6wM49Um
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Sun, Aug 21, 2016 at 10:11:19AM +0800, Chen-Yu Tsai wrote:
+
+> Currently when we try to bring regulator in bounds of its constraints,
+> we pick either the minimum or maximum voltage as the target. This fails
+> if the regulator range is not continuous, and the target voltage is not
+> an exact value the regulator can achieve, i.e. the target is not aligned
+> to the step of the regulator.
+
+This seems like you have buggy constraints, constraints which allow
+voltages that can't physically be satisfied don't make obvious sense.
+
+> -		if (current_uV < rdev->constraints->min_uV) {
+> +		if (current_uV < rdev->constraints->min_uV ||
+> +		    current_uV > rdev->constraints->max_uV) {
+>  			target_min = rdev->constraints->min_uV;
+> -			target_max = rdev->constraints->min_uV;
+> -		}
+> -
+> -		if (current_uV > rdev->constraints->max_uV) {
+> -			target_min = rdev->constraints->max_uV;
+>  			target_max = rdev->constraints->max_uV;
+>  		}
+
+This is most likely going to cause disruption to systems where the
+voltage is over the constraint voltage - it will result in the voltage
+being lowered to the minimum allowed which will have a much higher
+chance of upsetting things.  This is why we don't just do a constraints
+run.
+--IpgPcFyQO6wM49Um--
