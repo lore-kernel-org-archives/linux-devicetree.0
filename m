@@ -1,64 +1,38 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH V3 2/5] ARM: dts: bcm283x: Add dtsi for USB host mode
-Date: Mon, 22 Aug 2016 22:18:15 +0200 (CEST)
-Message-ID: <533983163.19485.709cd5b7-97dd-4dda-9392-7c46ec5e192c.open-xchange@email.1und1.de>
-References: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com>
- <1471792204-21908-3-git-send-email-stefan.wahren@i2se.com>
- <87fupw4rgm.fsf@eliezer.anholt.net>
+From: =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>
+Subject: [PATCH v4 1/5] of: Add EXPORT_SYMBOL for of_chosen
+Date: Mon, 22 Aug 2016 22:25:21 +0200
+Message-ID: <1471897525-31118-2-git-send-email-noralf@tronnes.org>
+References: <1471897525-31118-1-git-send-email-noralf@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87fupw4rgm.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1471897525-31118-1-git-send-email-noralf@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric,
-
-> Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> hat am 22. August 2016 um 19:57 geschrieben:
-> 
-> 
-> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
-> 
-> > In case dr_mode isn't passed via DT, the dwc2 defaults to OTG mode.
-> > But all Raspberry Pi boards here are designed only for host mode.
-> > So fix this issue by providing a dtsi file which set the dr_mode
-> > to host.
-> 
-> Can you explain what change this should cause for these boards?  Is it
-> just going to drop this message from dmesg:
-> 
-> dwc2 3f980000.usb: Configuration mismatch. dr_mode forced to host
-
-IMO it isn't a message which could be ignored. The dwc2 tries to detected the
-USB role from compile configuration and hardware capabilities, but according to
-the decision table [1] we should provide the correct dr_mode which is import for
-FIFO configuration and so on.
-
-Another problem that i see is that the USB behavior is influenced by compile
-settings in a unexpected way. With arm/configs/bcm2835_defconfig the driver is
-forced to host, but in a multiplatform config like arm64/configs/defconfig not.
-I would expect a more stable dr_mode.
-
-At the end the dwc2 can't reliable detect the dr_mode because it depends on the
-board design.
-
-Any concerns?
-
-Stefan
-
-[1] -
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?id=5268ed9d2e3b52f703f3661eef14cecbb2b572d4
-
-> 
-> or something else?
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RXhwb3J0IG9mX2Nob3NlbiBzbyBkcml2ZXJzIGJ1aWx0IGFzIG1vZHVsZXMgY2FuIGdldCBhY2Nl
+c3MgdG8gaXQuClRoZSBzaW1wbGVkcm0gZHJpdmVyIHdpbGwgdXNlIHRoaXMgYW5kIGlzIGNvbXBh
+dGlibGUgd2l0aApzaW1wbGUtZnJhbWVidWZmZXIgd2hpY2ggaXMgYSBzdWJub2RlIG9mIC9jaG9z
+ZW4uCgpTaWduZWQtb2ZmLWJ5OiBOb3JhbGYgVHLDuG5uZXMgPG5vcmFsZkB0cm9ubmVzLm9yZz4K
+LS0tCiBkcml2ZXJzL29mL2Jhc2UuYyB8IDEgKwogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
+KCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9iYXNlLmMgYi9kcml2ZXJzL29mL2Jhc2UuYwpp
+bmRleCA3NzkyMjY2Li40ODliZTAxIDEwMDY0NAotLS0gYS9kcml2ZXJzL29mL2Jhc2UuYworKysg
+Yi9kcml2ZXJzL29mL2Jhc2UuYwpAQCAtMzgsNiArMzgsNyBAQCBMSVNUX0hFQUQoYWxpYXNlc19s
+b29rdXApOwogc3RydWN0IGRldmljZV9ub2RlICpvZl9yb290OwogRVhQT1JUX1NZTUJPTChvZl9y
+b290KTsKIHN0cnVjdCBkZXZpY2Vfbm9kZSAqb2ZfY2hvc2VuOworRVhQT1JUX1NZTUJPTChvZl9j
+aG9zZW4pOwogc3RydWN0IGRldmljZV9ub2RlICpvZl9hbGlhc2VzOwogc3RydWN0IGRldmljZV9u
+b2RlICpvZl9zdGRvdXQ7CiBzdGF0aWMgY29uc3QgY2hhciAqb2Zfc3Rkb3V0X29wdGlvbnM7Ci0t
+IAoyLjguMgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
