@@ -1,54 +1,117 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 05/12] firmware: tegra: Add BPMP support
-Date: Mon, 22 Aug 2016 15:24:28 +0100
-Message-ID: <6bb4d32f-4f13-285e-430e-672f375a9a46@nvidia.com>
-References: <20160819173233.13260-1-thierry.reding@gmail.com>
- <20160819173233.13260-6-thierry.reding@gmail.com>
- <94227d94-1d60-fda7-731b-26656633d585@nvidia.com>
- <20160822125458.GC17367@ulmo.ba.sec>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160822125458.GC17367-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RESEND PATCH 2/2] ARM64: dts: meson-gxbb: Add PWM pinctrl nodes
+Date: Mon, 22 Aug 2016 16:41:00 +0200
+Message-ID: <1471876860-5620-3-git-send-email-narmstrong@baylibre.com>
+References: <1471876860-5620-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1471876860-5620-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, khilman@baylibre.com, carlo@caione.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add DT nodes for PWMs in EE and AO domains.
 
-On 22/08/16 13:54, Thierry Reding wrote:
-> * PGP Signed by an unknown key
-> 
-> On Mon, Aug 22, 2016 at 10:26:50AM +0100, Jon Hunter wrote:
->>
->> On 19/08/16 18:32, Thierry Reding wrote:
->>> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>
->>> The Boot and Power Management Processor (BPMP) is a co-processor found
->>> on Tegra SoCs. It is designed to handle the early stages of the boot
->>> process and offload power management tasks (such as clocks, resets,
->>> powergates, ...) as well as system control services.
->>>
->>> Compared to the ARM SCPI, the services provided by BPMP are message-
->>> based rather than method-based. The BPMP firmware driver provides the
->>> services to transmit data to and receive data from the BPMP. Users can
->>> also register an MRQ, for which a service routine will be run when a
->>> corresponding event is received from the firmware.
->>
->> MRQ?
-> 
-> I think that means "Message ReQuest", which is sort of like an IRQ but
-> the user will receive a message (with potentially payload) instead. Do
-> you want me to spell that out in the commit message, or what would you
-> suggest?
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 77 +++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
 
-I think that if we simply say 'Message ReQuest (MRQ)" it becomes clearer
-what this is. Otherwise, google returns everything from 'most recent
-quarter' to canadian rock bands :-)
-
-Cheers
-Jon
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index e502c24..9aeb88a 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -203,6 +203,34 @@
+ 						function = "uart_ao";
+ 					};
+ 				};
++
++				pwm_ao_a_3_pins: pwm_ao_a_3 {
++					mux {
++						groups = "pwm_ao_a_3";
++						function = "pwm_ao_a_3";
++					};
++				};
++
++				pwm_ao_a_6_pins: pwm_ao_a_6 {
++					mux {
++						groups = "pwm_ao_a_6";
++						function = "pwm_ao_a_6";
++					};
++				};
++
++				pwm_ao_a_12_pins: pwm_ao_a_12 {
++					mux {
++						groups = "pwm_ao_a_12";
++						function = "pwm_ao_a_12";
++					};
++				};
++
++				pwm_ao_b_pins: pwm_ao_b {
++					mux {
++						groups = "pwm_ao_b";
++						function = "pwm_ao_b";
++					};
++				};
+ 			};
+ 
+ 			uart_AO: serial@4c0 {
+@@ -306,6 +334,55 @@
+ 						function = "eth";
+ 					};
+ 				};
++
++				pwm_a_x_pins: pwm_a_x {
++					mux {
++						groups = "pwm_a_x";
++						function = "pwm_a_x";
++					};
++				};
++
++				pwm_a_y_pins: pwm_a_y {
++					mux {
++						groups = "pwm_a_y";
++						function = "pwm_a_y";
++					};
++				};
++
++				pwm_b_pins: pwm_b {
++					mux {
++						groups = "pwm_b";
++						function = "pwm_b";
++					};
++				};
++
++				pwm_d_pins: pwm_d {
++					mux {
++						groups = "pwm_d";
++						function = "pwm_d";
++					};
++				};
++
++				pwm_e_pins: pwm_e {
++					mux {
++						groups = "pwm_e";
++						function = "pwm_e";
++					};
++				};
++
++				pwm_f_x_pins: pwm_f_x {
++					mux {
++						groups = "pwm_f_x";
++						function = "pwm_f_x";
++					};
++				};
++
++				pwm_f_y_pins: pwm_f_y {
++					mux {
++						groups = "pwm_f_y";
++						function = "pwm_f_y";
++					};
++				};
+ 			};
+ 		};
+ 
 -- 
-nvpublic
+1.9.1
