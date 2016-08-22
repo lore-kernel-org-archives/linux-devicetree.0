@@ -1,63 +1,84 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] Documentation: devicetree: changesets do locking on
- their own meanwhile
-Date: Mon, 22 Aug 2016 16:57:56 +0200
-Message-ID: <20160822145755.GA29072@katana>
-References: <20160822144259.3767-1-wsa+renesas@sang-engineering.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 05/12] firmware: tegra: Add BPMP support
+Date: Mon, 22 Aug 2016 17:00:58 +0200
+Message-ID: <20160822150058.GA21012@ulmo.ba.sec>
+References: <20160819173233.13260-1-thierry.reding@gmail.com>
+ <20160819173233.13260-6-thierry.reding@gmail.com>
+ <94227d94-1d60-fda7-731b-26656633d585@nvidia.com>
+ <20160822125458.GC17367@ulmo.ba.sec>
+ <6bb4d32f-4f13-285e-430e-672f375a9a46@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160822144259.3767-1-wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <6bb4d32f-4f13-285e-430e-672f375a9a46-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---zhXaljGHf11kAtnf
+--XsQoSWH+UP9D9v3l
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 22, 2016 at 04:42:58PM +0200, Wolfram Sang wrote:
-> Since commit 183223770ae862 ("drivers/of: Export OF changeset functions"),
-> the mentioned functions do all necessary locking.
+On Mon, Aug 22, 2016 at 03:24:28PM +0100, Jon Hunter wrote:
 >=20
-> Signed-off-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-> Fixes: 201c910bd6898d ("of: Transactional DT support.")
+> On 22/08/16 13:54, Thierry Reding wrote:
+> > * PGP Signed by an unknown key
+> >=20
+> > On Mon, Aug 22, 2016 at 10:26:50AM +0100, Jon Hunter wrote:
+> >>
+> >> On 19/08/16 18:32, Thierry Reding wrote:
+> >>> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >>>
+> >>> The Boot and Power Management Processor (BPMP) is a co-processor found
+> >>> on Tegra SoCs. It is designed to handle the early stages of the boot
+> >>> process and offload power management tasks (such as clocks, resets,
+> >>> powergates, ...) as well as system control services.
+> >>>
+> >>> Compared to the ARM SCPI, the services provided by BPMP are message-
+> >>> based rather than method-based. The BPMP firmware driver provides the
+> >>> services to transmit data to and receive data from the BPMP. Users can
+> >>> also register an MRQ, for which a service routine will be run when a
+> >>> corresponding event is received from the firmware.
+> >>
+> >> MRQ?
+> >=20
+> > I think that means "Message ReQuest", which is sort of like an IRQ but
+> > the user will receive a message (with potentially payload) instead. Do
+> > you want me to spell that out in the commit message, or what would you
+> > suggest?
+>=20
+> I think that if we simply say 'Message ReQuest (MRQ)" it becomes clearer
+> what this is. Otherwise, google returns everything from 'most recent
+> quarter' to canadian rock bands :-)
 
-Ooops, that should have been:
+Okay, done.
 
-Fixes: 183223770ae862 ("drivers/of: Export OF changeset functions")
+Thierry
 
-Sorry!
-
-
---zhXaljGHf11kAtnf
+--XsQoSWH+UP9D9v3l
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBAgAGBQJXuxLzAAoJEBQN5MwUoCm2blkP/0hbOovIlPkh/Fwj1VDtnFt3
-T4WL8pcaI/acgChICL1+07BiuF08K0D/pePhL0td8pM4vvLyBUitslski2AkRv2H
-//Hk98vZQqHPEYg3Tz5eMc+6tYoX897vQcT1hUxMTduALJMSxM63tvue4h4MFPFE
-SXlW14+K38b/Zr/SnTUkHp7+zUP7RxFFbyG9HNZqwdw+4Iz/5VEQ/rnj+uN4V6To
-bl3RNu0VO0dbB8IYTkDt8iJK70gN+5+f0yRL7lKYMcXE7QVTLMb5YasvhVO4GI2/
-LaMPtI5QCNLi9OEExzY97V63K5pQqOojc3lgHYKyqgOyLDuOYjUVIVQIJ4X6aiRT
-cN5x8HlMT9OAI98u+350WCvAqtt7ESlzcGXLuxyLSMo7ijh4I4olG5hkIz+X0S0o
-XiIdsJhnoG3Fb4BA2zDx4TVcRCnXz1gq/pmEIhAKerUVDpv5jr4JUbqGAKw3uh+2
-ui8nD401iF1lLo2p67ahtneSxW4f+y8wx0XSSvwaZRJnvBJfCco1GUibkaqo2Fpg
-3DNaQf7/wcumxXwz7U6gccB40YOtsTp1Ve8rDjStqDFtY8ziHo2XZGoFpix/aHtX
-O3tMSkwJ0i+jwkBIN/Yi+Z/oiOAMmYf5SEHLWAQ4VOVnUHi8F2XPLsAlY7McKtcf
-rbTJkYlbvuqBBDU9eLnx
-=d4nE
+iQIcBAABCAAGBQJXuxOoAAoJEN0jrNd/PrOhaXsP+gJV0HIl5S4rKrbm20XXYtt7
+SwLPOY1Z1iPESRvm70wMw5c+U4QwCAycFP7lvZQJu1Cb25N38ytElYE/rNkXeYf6
+wLrLGxInd26x3X+TDLE+3f4mcT9R5mVGrDJXS4l0ZxhWiSOXrXm7zGlMFzLbDfMr
+t5GD90/ryn2dwHkJtuPNdecl3kQqB4qGnEhIIT5wZIs0HpqJ2AE4Ass9npXgygZu
+sjpzLCe9okTBsyaAb4PUeCMdeV7lZraBQj9eD0Fw+g2h5CUaeh+mbNHlrdJ1mett
+hYQ/iMzmK7vjX4EhqPPdWo15BFOwUA4JxU2VB8U2UpcDJKdF026tUrGHDefkAkrd
+X5BA26rLwDbVOxAOomdcUarl2BSzZUPHfFZWwqGFyqyx7R6tWgzbXCDnzYM20XIB
+/hsq0q1Zaj4V5xEJlqMWB4en5rZsImxOkRQM4OugEO60rQ0GSEwkTgb20wpkyNQH
+TxfUTkDjqwTAEO6wEvuAKQFiI+I4HO2/AvnA+reeORobMD4ADonQmNRThVA2ebmw
+DDpmz9LfX1LKCS1WcHYyw1owP8doMKtsH1x4Oe+h9kCOzelyvv52okA0kSuf51+g
+/2bN6jq3F1LY+wmdseQptLh7ULgMD4L1rNaDHzCZGXCx2m4iTMHF9EqpghJoX9aS
++UdBBuEkCqsrJai1QuD9
+=sOmz
 -----END PGP SIGNATURE-----
 
---zhXaljGHf11kAtnf--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--XsQoSWH+UP9D9v3l--
