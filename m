@@ -1,30 +1,59 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM64: dts: meson-gxbb: Add PWM pinctrl nodes
-Date: Mon, 22 Aug 2016 16:03:28 +0200
-Message-ID: <CACRpkdZkttbwj7+80SQXxTMb2ETapRUH4irsCOu9P5VEkUeR6A@mail.gmail.com>
-References: <1471870450-11109-1-git-send-email-narmstrong@baylibre.com> <1471870450-11109-3-git-send-email-narmstrong@baylibre.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: dts: blanche: add SDHI0 support
+Date: Mon, 22 Aug 2016 17:04:10 +0300
+Message-ID: <220d0d62-8562-8d8a-54b2-fc6e1d616e02@cogentembedded.com>
+References: <5383928.8UnDsUpmkz@wasted.cogentembedded.com>
+ <3029697.f9plKzFKet@wasted.cogentembedded.com>
+ <20160822073305.GD28034@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471870450-11109-3-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160822073305.GD28034@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 22, 2016 at 2:54 PM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+On 08/22/2016 10:33 AM, Simon Horman wrote:
 
-> Add DT nodes for PWMs in EE and AO domains.
+>> Define the Blanche board dependent part of the SDHI0 (connected to the
+>> micro-SD slot) device node along with  the necessary voltage regulator.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>
+>> ---
+>> This patch is against the 'renesas-devel-20160817-v4.8-rc2' of Simon Horman's
+>> 'renesas.git' repo plus the general purpose switches patch  posted yesterday.
+>>
+>>  arch/arm/boot/dts/r8a7792-blanche.dts |   25 +++++++++++++++++++++++++
+>>  1 file changed, 25 insertions(+)
+>>
+>> Index: renesas/arch/arm/boot/dts/r8a7792-blanche.dts
+>> ===================================================================
+>> --- renesas.orig/arch/arm/boot/dts/r8a7792-blanche.dts
+>> +++ renesas/arch/arm/boot/dts/r8a7792-blanche.dts
+>> @@ -103,6 +103,17 @@
+>>  			gpios = <&gpio11 2 GPIO_ACTIVE_LOW>;
+>>  		};
+>>  	};
+>> +
+>> +	vcc_sdhi0: regulator-vcc-sdhi0 {
+>> +		compatible = "regulator-fixed";
+>> +
+>> +		regulator-name = "SDHI0 Vcc";
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +
+>> +		gpio = <&gpio11 12 GPIO_ACTIVE_HIGH>;
+>> +		enable-active-high;
+>> +	};
+>>  };
 >
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Is it intentional that there is no vccq_sdhi0 ?
 
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+    Yes, it's fixed at 3.3V.
 
-Please merge this through the ARM SoC tree.
+[...]
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MBR, Sergei
