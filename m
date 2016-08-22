@@ -1,71 +1,149 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 05/12] firmware: tegra: Add BPMP support
-Date: Mon, 22 Aug 2016 17:43:38 +0200
-Message-ID: <9945785.T0mojj3S7F@wuerfel>
-References: <20160819173233.13260-1-thierry.reding@gmail.com> <5669893.Rd6yQObxH6@wuerfel> <20160822153258.GB21012@ulmo.ba.sec>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Subject: Re: [RESEND PATCH v2 02/13] drivers: clk: st: Simplify clock binding
+ of STiH4xx platforms
+Date: Mon, 22 Aug 2016 18:06:20 +0200
+Message-ID: <7b3f45bf-2fba-7563-f2a2-c74e759f6316@st.com>
+References: <1466068833-5055-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1466068833-5055-3-git-send-email-gabriel.fernandez@linaro.org>
+ <20160619150458.GA26824@rob-hp-laptop>
+ <146794221378.73491.2803164814485320331@resonance> <577F6E83.3080006@st.com>
+ <146799410307.73491.9408637761157902031@resonance> <578343A2.6090801@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160822153258.GB21012-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <578343A2.6090801@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, Geert Uytterhoeven <geert+renesas@glider.be>, arnaud.pouliquen@st.com, linux-kernel@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, benjamin.gaignard@st.com, Olivier Bideau <olivier.bideau@st.com>, Russell King <linux@armlinux.org.uk>, Peter Griffin <peter.griffin@linaro.org>, Thierry Reding <treding@nvidia.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, vincent.abriou@st.com, linux-arm-kernel@lists.infradead.org, Maxime Coquelin <maxime.coquelin@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Patrice Chotard <patrice.chotard@st.com>, Pankaj Dev <pankaj.dev@st.com>, Kumar Gala <gal>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, August 22, 2016 5:32:58 PM CEST Thierry Reding wrote:
-> On Mon, Aug 22, 2016 at 04:42:32PM +0200, Arnd Bergmann wrote:
-> > On Monday, August 22, 2016 4:02:11 PM CEST Thierry Reding wrote:
-> > > > > +struct mrq_request {
-> > > > > +	/** @brief MRQ number of the request */
-> > > > > +	uint32_t mrq;
-> > > > > +	/** @brief flags for the request */
-> > > > > +	uint32_t flags;
-> > > > > +} __ABI_PACKED;
-> > > > 
-> > > > Marking the structure as packed may result in byte-wise access, depending
-> > > > on compiler flags. Is that what you intended? The structure is fully
-> > > > packed already, so you won't avoid any padding here.
-> > > 
-> > > Agreed, the packing seems unnecessary in many places. However this is
-> > > defining an ABI that's used across multiple operating systems, so the
-> > > packing may still be required on some systems or toolchains to ensure
-> > > the exact same format in the transport.
-> > 
-> > However, if __ABI_PACKED is defined to an empty string, it is different
-> > in some cases.
-> > 
-> > Also, setting 'NO_GCC_EXTENSIONS' changes the structure layout of
-> > some of the structures, by adding an extra member. If the firmware
-> > has a compiler that is less than 10 years old, I'd suggest using C99
-> > syntax instead, which should avoid those differences and eliminate
-> > all gcc extensions.
-> 
-> I think this isn't only about the firmware (which, as far as I can tell,
-> is always built with a non-ancient version of GCC). The same header file
-> is used in other operating systems and I have no idea about the
-> toolchain situation there.
-> 
-> As for the NO_GCC_EXTENSIONS I think that's only used to avoid empty
-> structures and zero-sized arrays, which I assume not all supported
-> toolchains can deal with.
+Hi Mike,
+
+you forgot me ?
+
+Best Regards
+
+Gabriel
+
+
+On 07/11/2016 08:58 AM, Gabriel Fernandez wrote:
 >
-> Sivaram, Timo: can you shed any light on the scope of operating systems
-> and toolchains that we need to support? Any ideas, short of manual
-> editing, that we can try to eliminate some of Arnd's concerns?
-
-Ok. To clarify, C99 supports this syntax:
-
-struct variable_length_struct {
-	int length;
-	char data[];
-};
-
-struct empty_struct {
-	char nothing[];
-};
-
-which could be used in place of the gcc specific syntax in
-portable code.
-
-	Arnd
+>
+> On 07/08/2016 06:08 PM, Michael Turquette wrote:
+>> Quoting Gabriel Fernandez (2016-07-08 02:12:35)
+>>> Hi Mike,
+>>>
+>>> On 07/08/2016 03:43 AM, Michael Turquette wrote:
+>>>> Quoting Rob Herring (2016-06-19 08:04:58)
+>>>>> On Thu, Jun 16, 2016 at 11:20:22AM +0200, Gabriel Fernandez wrote:
+>>>>>> This patch reworks the clock binding to avoid too much detail in DT.
+>>>>>> Now we have only compatible string per type of clock
+>>>>>> (remark from Rob https://lkml.org/lkml/2016/5/25/492)
+>>>>>>
+>>>>> I have no idea what the clock trees and clock controller in these 
+>>>>> chips
+>>>>> look like, so it's hard to say if the changes here are good. It still
+>>>>> looks like things are somewhat fine grained clocks in DT. I'll leave
+>>>>> it up to the platform maintainers to decide...
+>>>> Is this series breaking ABI? If yes, why not do what Maxime did for 
+>>>> the
+>>>> Allwinner/sunxi clocks and just fully convert over to a
+>>>> one-node-per-clock-controller binding? This one-node-per-clock 
+>>>> stuff is
+>>>> pretty unfortunate, and if we're deprecating platforms (patch #1) then
+>>>> now might be a good time to re-evaluate the whole thing.
+>>> The goal of my patchset was to be aligned with DRM / KMS development 
+>>> and
+>>> to offer
+>>> the possibility to make a correct video playback on STiH407/STiH410
+>>> platform.
+>>> Our milestone is the 4.8 for that.
+>>>
+>>> Currently people need these patches to work.
+>>> I'm not sure it's a good time to re-evaluate the whole thing.
+>>>
+>>> Is it possible to re-evaluate later ?
+>> Are you OK to break ABI later? Or at a minimum, deprecate the current
+>> binding (maintain it forever for legacy platforms) and create a new
+>> clock controller binding description that supersedes the legacy binding
+>> for all new platforms?
+>>
+>> If the answer to either question is "yes", then I'm OK to put it aside
+>> for now. But if the answer to both is "no", and this patch series is
+>> breaking ABI, then we really should fix it now.
+>
+> Hi Mike,
+> i m ok to break ABI later.
+>
+> Many Thanks !
+>
+> Best Regards
+>
+> Gabriel.
+>
+>> Regards,
+>> Mike
+>>
+>>> Best regards,
+>>> Gabriel
+>>>
+>>>> Regards,
+>>>> Mike
+>>>>
+>>>>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+>>>>>> ---
+>>>>>>    .../devicetree/bindings/clock/st/st,clkgen-mux.txt | 2 +-
+>>>>>>    .../devicetree/bindings/clock/st/st,clkgen-pll.txt | 11 ++--
+>>>>>>    .../devicetree/bindings/clock/st/st,clkgen.txt     | 2 +-
+>>>>>>    .../devicetree/bindings/clock/st/st,quadfs.txt     | 6 +--
+>>>>>>    drivers/clk/st/clkgen-fsyn.c                       | 41 
+>>>>>> ++++++--------
+>>>>>>    drivers/clk/st/clkgen-mux.c                        | 28 
+>>>>>> ++++------
+>>>>>>    drivers/clk/st/clkgen-pll.c                        | 62 
+>>>>>> ++++++++++------------
+>>>>>>    7 files changed, 65 insertions(+), 87 deletions(-)
+>>>>>>
+>>>>>> diff --git 
+>>>>>> a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt 
+>>>>>> b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>>>>>> index 4d277d6..9a46cb1d7 100644
+>>>>>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>>>>>> @@ -10,7 +10,7 @@ This binding uses the common clock binding[1].
+>>>>>>    Required properties:
+>>>>>>       - compatible : shall be:
+>>>>>> -     "st,stih407-clkgen-a9-mux",     "st,clkgen-mux"
+>>>>>> +     "st,stih407-clkgen-a9-mux"
+>>>>>>       - #clock-cells : from common clock binding; shall be set to 0.
+>>>>>>    diff --git 
+>>>>>> a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt 
+>>>>>> b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>>>>>> index c9fd674..be0b043 100644
+>>>>>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>>>>>> @@ -9,11 +9,10 @@ Base address is located to the parent node. See 
+>>>>>> clock binding[2]
+>>>>>>    Required properties:
+>>>>>>       - compatible : shall be:
+>>>>>> -     "st,stih407-plls-c32-a0", "st,clkgen-plls-c32"
+>>>>>> -     "st,stih407-plls-c32-a9", "st,clkgen-plls-c32"
+>>>>>> -     "sst,plls-c32-cx_0", "st,clkgen-plls-c32"
+>>>>>> -     "sst,plls-c32-cx_1", "st,clkgen-plls-c32"
+>>>>>> -     "st,stih418-plls-c28-a9", "st,clkgen-plls-c32"
+>>>>>> +     "st,clkgen-pll0"
+>>>>>> +     "st,clkgen-pll0"
+>>>>> Repeated. Supposed to be 0 and 1? This seems a bit generic, too.
+>>>>>
+>>>>>> +     "st,stih407-clkgen-plla9"
+>>>>>> +     "st,stih418-clkgen-plla9"
+>
