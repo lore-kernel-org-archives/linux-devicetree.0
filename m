@@ -1,36 +1,23 @@
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH resend] mmc: pwrseq-simple: Add an optional
- post-power-on-delay
-Date: Mon, 22 Aug 2016 15:38:29 +0200
-Message-ID: <CAPDyKFqg_kCOPht+UvndLznihxap2xGg6-KwA3JbuSnD4vPoYQ@mail.gmail.com>
-References: <1470596558-23195-1-git-send-email-hdegoede@redhat.com>
- <1470596558-23195-2-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH 1/1] mmc: core: Add the vmmc/vmmcq regulator info
+Date: Mon, 22 Aug 2016 15:39:21 +0200
+Message-ID: <CAPDyKFpiariD2+fMUmVH+nMff2hDpxY6eE0zN50nadw1pHA7ag@mail.gmail.com>
+References: <1470043331-5123-1-git-send-email-ben.dooks@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1470596558-23195-2-git-send-email-hdegoede@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1470043331-5123-1-git-send-email-ben.dooks@codethink.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-kernel@lists.codethink.co.uk, linux-mmc <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7 August 2016 at 21:02, Hans de Goede <hdegoede@redhat.com> wrote:
-> Some devices need a while to boot their firmware after providing clks /
-> de-asserting resets before they are ready to receive sdio commands.
+On 1 August 2016 at 11:22, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+> The core MMC code adds two (optional) regulator properites that drivers
+> should use to get their supplies. This is not documented anywhere so add
+> information on it.
 >
-> This commits adds a post-power-on-delay-ms devicetree property to
-> mmc-pwrseq-simple for use with such devices.
->
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 
 Thanks, applied for next!
 
@@ -38,64 +25,35 @@ Kind regards
 Uffe
 
 > ---
->  Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt | 2 ++
->  drivers/mmc/core/pwrseq_simple.c                            | 9 +++++++++
->  2 files changed, 11 insertions(+)
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-> index ce0e767..e254368 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
-> @@ -16,6 +16,8 @@ Optional properties:
->    See ../clocks/clock-bindings.txt for details.
->  - clock-names : Must include the following entry:
->    "ext_clock" (External clock provided to the card).
-> +- post-power-on-delay-ms : Delay in ms after powering the card and
-> +       de-asserting the reset-gpios (if any)
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index ed23b9b..8cbcbce 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -71,6 +71,17 @@ Optional SDIO properties:
+>  - wakeup-source: Enables wake up of host system on SDIO IRQ assertion
+>                  (Legacy property supported: "enable-sdio-wakeup")
 >
->  Example:
->
-> diff --git a/drivers/mmc/core/pwrseq_simple.c b/drivers/mmc/core/pwrseq_simple.c
-> index 450d907..1304160 100644
-> --- a/drivers/mmc/core/pwrseq_simple.c
-> +++ b/drivers/mmc/core/pwrseq_simple.c
-> @@ -16,6 +16,8 @@
->  #include <linux/device.h>
->  #include <linux/err.h>
->  #include <linux/gpio/consumer.h>
-> +#include <linux/delay.h>
-> +#include <linux/property.h>
->
->  #include <linux/mmc/host.h>
->
-> @@ -24,6 +26,7 @@
->  struct mmc_pwrseq_simple {
->         struct mmc_pwrseq pwrseq;
->         bool clk_enabled;
-> +       u32 post_power_on_delay_ms;
->         struct clk *ext_clk;
->         struct gpio_descs *reset_gpios;
->  };
-> @@ -64,6 +67,9 @@ static void mmc_pwrseq_simple_post_power_on(struct mmc_host *host)
->         struct mmc_pwrseq_simple *pwrseq = to_pwrseq_simple(host->pwrseq);
->
->         mmc_pwrseq_simple_set_gpios_value(pwrseq, 0);
+> +MMC power
+> +---------
 > +
-> +       if (pwrseq->post_power_on_delay_ms)
-> +               msleep(pwrseq->post_power_on_delay_ms);
->  }
->
->  static void mmc_pwrseq_simple_power_off(struct mmc_host *host)
-> @@ -111,6 +117,9 @@ static int mmc_pwrseq_simple_probe(struct platform_device *pdev)
->                 return PTR_ERR(pwrseq->reset_gpios);
->         }
->
-> +       device_property_read_u32(dev, "post-power-on-delay-ms",
-> +                                &pwrseq->post_power_on_delay_ms);
+> +Controllers may implement power control from both the connected cards and
+> +the IO signaling (for example to change to high-speed 1.8V signalling). If
+> +the system supports this, then the following two properties should point
+> +to valid regulator nodes:
 > +
->         pwrseq->pwrseq.dev = dev;
->         pwrseq->pwrseq.ops = &mmc_pwrseq_simple_ops;
->         pwrseq->pwrseq.owner = THIS_MODULE;
+> +- vqmmc-supply: supply node for IO line power
+> +- vmmc-supply: supply node for card's power
+> +
+>
+>  MMC power sequences:
+>  --------------------
 > --
-> 2.7.4
+> 2.8.1
 >
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
