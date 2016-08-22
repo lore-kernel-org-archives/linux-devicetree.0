@@ -1,125 +1,152 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [v13 PATCH 3/5] arm64: dts: rockchip: add Type-C phy for RK3399
-Date: Sun, 21 Aug 2016 21:23:16 -0700
-Message-ID: <1471839798-14729-4-git-send-email-zyw@rock-chips.com>
-References: <1471839798-14729-1-git-send-email-zyw@rock-chips.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt/bindings: arm-pl330: add description of
+ arm,pl330-periph-burst
+Date: Mon, 22 Aug 2016 11:34:09 +0530
+Message-ID: <20160822060409.GG2890@localhost>
+References: <1470365602-32586-1-git-send-email-shawn.lin@rock-chips.com>
+ <1470365602-32586-2-git-send-email-shawn.lin@rock-chips.com>
+ <20160805033410.GJ9681@localhost>
+ <ea3572fa-4bff-87db-d5ad-f406809f8296@rock-chips.com>
+ <0df0ab4f-0032-6487-2c30-b1ccd7d9ae62@metafoo.de>
+ <1d42542f-c43c-5c4b-01b7-ba0ca085004a@rock-chips.com>
+ <55e596a0-4176-4277-40cc-1d26763a8be0@rock-chips.com>
+ <20160819024540.GQ9681@localhost>
+ <d4574737-f7b7-2726-373c-31cc81274a32@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1471839798-14729-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <d4574737-f7b7-2726-373c-31cc81274a32-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There are 2 Type-C phy on RK3399, they are almost same, except the
-address of register. They support USB3.0 Type-C and DisplayPort1.3
-Alt Mode on USB Type-C. Register a phy, supply it to USB3 controller
-and DP controller.
+On Sun, Aug 21, 2016 at 09:00:58AM +0800, Shawn Lin wrote:
+> Hi Vinod,
+> 
+> 在 2016/8/19 10:45, Vinod Koul 写道:
+> >On Wed, Aug 17, 2016 at 04:11:03PM +0800, Shawn Lin wrote:
+> >>Hi, Vinod and Lars-Peter
+> >>
+> >>Ping.. Any better idea to share :)
+> >>
+> >>On 2016/8/9 17:12, Shawn Lin wrote:
+> >>>Hi Lars-Peter,
+> >>>
+> >>>在 2016/8/9 16:39, Lars-Peter Clausen 写道:
+> >>>>On 08/05/2016 09:25 AM, Shawn Lin wrote:
+> >>>>>Hi Vinod,
+> >>>>>
+> >>>>>在 2016/8/5 11:34, Vinod Koul 写道:
+> >>>>>>On Fri, Aug 05, 2016 at 10:53:20AM +0800, Shawn Lin wrote:
+> >>>>>>>This patch adds the "arm,pl330-periph-burst" for arm-pl330 to
+> >>>>>>>support busrt mode.
+> >>>>>>
+> >>>>>>why should this be DT property. Only reason I can think of if some hw
+> >>>>>>versions support this and some won't.
+> >>>>>
+> >>>>>yes, if we want to support burst mode, both of the master(pl330) and
+> >>>>>client(several peripherals) should implement it, otherwise it will
+> >>>>>be broken when enabling.
+> >>>>
+> >>>>As you said, it is up to the consumer peripheral whether it supports
+> >>>>BURST,
+> >>>>SINGLE or both. So this is a per client property, but you specify this
+> >>>>as a
+> >>>>a global property on the producer side.
+> >>>
+> >>>Thanks for comment.
+> >>>
+> >>>yup, but what is the proper way to add it ? :)
+> >>>
+> >>>
+> >>>a) If pl330 support BURST as well as all the peripherals, we could
+> >>>enable it.
+> >>>
+> >>>b) If pl300 support BURST, but all the peripherals don't support it,
+> >>>we could not enable it.
+> >>>
+> >>>c) If pl300 support BURST, but not all the peripherals support it,
+> >>>we also could not enable it.
+> >>>
+> >>>the burst feature of peripheral IP may be vendor-specific, but the
+> >>>common driver for this peripheral are used for many many vendors which
+> >>>means we could not check all of this info. It's very likely to break
+> >>>them... I couldn't figure out how many upstreamed peripheral drivers
+> >>>who are using pl300 either.
+> >>>
+> >>>So this check should be done by all this vendors but we could make
+> >>>sure we don't break them before they check a), b), c), right?
+> >
+> >Since support for BURST needs to be from peripheral too, we should have
+> >that as a property for peripheral not for controller.
+> >
+> >The peripheral drivers can communicate the burst to be used to pl330
+> >using src_maxburst/dst_maxburst in dma_slave_config. We can use this
+> >value to indicate the DMA should be single (a value of 0) or burst with
+> >"burst" value.
+> 
+> Thanks for sharing this.
+> 
+> But this is really a difficult trade-off decision to add this new
+> property for pl330 only.
+> 
+> Burst mode was supported by Boojin Kim's patch by default(commit
+> 848e9776fee42 ("dmaengine: pl330: support burst mode for dev-to-mem and
+> mem-to-dev transmit")).  But we found it will break SoCFPGA or
+> Exynos4412 reported by Dinh Nguyen and Bartlomiej Zolnierkiewicz[0].
+> So finally Caesar Wang contributed a patch, commit 0a18f9b268 ("
+> dmaengine: pl330: fix to support the burst mode") to fix it, but what
+> it actually did is to use single burst for any case, namely some kind
+> of regression for Boojin Kim's improvement.
+> 
+> So we can see these drivers which was broken by enabling burst mode
+> had already set src_maxburst/dst_maxburst. It looks to me so unfortunate
+> that the driver like 8250_dw.c was using so widely that we couldn't
+> set scr/dst_maxburst as this is really vendor specific for whether it
+> supports burst for 8250_dw or not..
+> 
+> So it is quite painful that we probably will get dozens of regression
+> reports when enabling burst mode by default. But without this, we have
+> been suffering from low performance quite a long time due to this
+> roadblock.
 
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+well in that case I would suggest fixing client first. Make all users of
+pl330 not to use burst mode and then enable them one by one after testing
 
----
+> 
+> Two possible paths to land this patch are:
+> (1) Keep this property for pl330 only, so we have no chance to
+> break others and we could make the platforms enjoy it if adding this
+> property for their own dts.
+> 
+> (2) Figuer out all the broken platfroms if enabling burst and fix them
+> one by one for the src/dst_maxburst(maybe by enabling burst mode and
+> get regression reports). If we could not solve any one of them, then we
+> have to give up all the effort we do, and let this pain keep on
+> stalling people's expectation of better performance.
+> 
+> 
+> I would appreciate it if you could share your thought more, as I
+> really want more platforms benefit from it(at least don't break
+> them)  :)
+> 
+> 
+> [0] http://www.gossamer-threads.com/lists/linux/kernel/2374171
+> 
+> >
+> 
+> 
+> -- 
+> Best Regards
+> Shawn Lin
+> 
 
-Changes in v13: None
-Changes in v12: None
-Changes in v11:
-- split the dp-phy and usb3-phy to 2 child-node
-
-Changes in v10:
-- remove rockchip,uphy-dp-sel property
-
-Changes in v9:
-- change #phy-cells to 1
-
-Changes in v8: None
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
-Changes in v1: None
-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 56 ++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index a44eb67..23f7ae1 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1060,6 +1060,62 @@
- 		};
- 	};
- 
-+	tcphy0: phy@ff7c0000 {
-+		compatible = "rockchip,rk3399-typec-phy";
-+		reg = <0x0 0xff7c0000 0x0 0x40000>;
-+		rockchip,grf = <&grf>;
-+		clocks = <&cru SCLK_UPHY0_TCPDCORE>,
-+			 <&cru SCLK_UPHY0_TCPDPHY_REF>;
-+		clock-names = "tcpdcore", "tcpdphy-ref";
-+		assigned-clocks = <&cru SCLK_UPHY0_TCPDCORE>;
-+		assigned-clock-rates = <50000000>;
-+		resets = <&cru SRST_UPHY0>,
-+			 <&cru SRST_UPHY0_PIPE_L00>,
-+			 <&cru SRST_P_UPHY0_TCPHY>;
-+		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
-+		rockchip,typec-conn-dir = <0xe580 0 16>;
-+		rockchip,usb3tousb2-en = <0xe580 3 19>;
-+		rockchip,external-psm = <0xe588 14 30>;
-+		rockchip,pipe-status = <0xe5c0 0 0>;
-+		status = "disabled";
-+
-+		tcphy0_dp: dp-port {
-+			#phy-cells = <0>;
-+		};
-+
-+		tcphy0_usb3: usb3-port {
-+			#phy-cells = <0>;
-+		};
-+	};
-+
-+	tcphy1: phy@ff800000 {
-+		compatible = "rockchip,rk3399-typec-phy";
-+		reg = <0x0 0xff800000 0x0 0x40000>;
-+		rockchip,grf = <&grf>;
-+		clocks = <&cru SCLK_UPHY1_TCPDCORE>,
-+			 <&cru SCLK_UPHY1_TCPDPHY_REF>;
-+		clock-names = "tcpdcore", "tcpdphy-ref";
-+		assigned-clocks = <&cru SCLK_UPHY1_TCPDCORE>;
-+		assigned-clock-rates = <50000000>;
-+		resets = <&cru SRST_UPHY1>,
-+			 <&cru SRST_UPHY1_PIPE_L00>,
-+			 <&cru SRST_P_UPHY1_TCPHY>;
-+		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
-+		rockchip,typec-conn-dir = <0xe58c 0 16>;
-+		rockchip,usb3tousb2-en = <0xe58c 3 19>;
-+		rockchip,external-psm = <0xe594 14 30>;
-+		rockchip,pipe-status = <0xe5c0 16 16>;
-+		status = "disabled";
-+
-+		tcphy1_dp: dp-port {
-+			#phy-cells = <0>;
-+		};
-+
-+		tcphy1_usb3: usb3-port {
-+			#phy-cells = <0>;
-+		};
-+	};
-+
- 	watchdog@ff840000 {
- 		compatible = "snps,dw-wdt";
- 		reg = <0x0 0xff840000 0x0 0x100>;
 -- 
-1.9.1
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
