@@ -1,92 +1,240 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 2/4] phy: rockchip-usb: use rockchip_usb_phy_reset to reset phy during wakeup
-Date: Mon, 22 Aug 2016 15:00:42 +0200
-Message-ID: <2546474.rLYzuqPxCa@diego>
-References: <7ca3b54d-e9d8-a137-79b6-d24f0b7065c7@synopsys.com> <1471725140-3833-3-git-send-email-ayaka@soulik.info> <57BAE65D.2090303@ti.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Subject: [PATCH v11 0/4] generic TEE subsystem
+Date: Mon, 22 Aug 2016 15:00:52 +0200
+Message-ID: <1471870856-18684-1-git-send-email-jens.wiklander@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57BAE65D.2090303@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Randy Li <ayaka@soulik.info>, linux-usb@vger.kernel.org, johnyoun@synopsys.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, eddie.cai@rock-chips.com, randy.li@rock-chips.com, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Al Viro <viro@ZenIV.linux.org.uk>, Andreas Dannenberg <dannenberg@ti.com>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Nishanth Menon <nm@ti.com>, Jens Wiklander <jens.wiklander@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 22. August 2016, 17:17:41 schrieb Kishon Vijay Abraham I:
-> Hi,
-> 
-> On Sunday 21 August 2016 02:02 AM, Randy Li wrote:
-> > It is a hardware bug in RK3288, the only way to solve it is to
-> > reset the phy.
-> > 
-> > Signed-off-by: Randy Li <ayaka@soulik.info>
-> > ---
-> > 
-> >  drivers/phy/phy-rockchip-usb.c | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> > 
-> > diff --git a/drivers/phy/phy-rockchip-usb.c
-> > b/drivers/phy/phy-rockchip-usb.c index 2a7381f..734987f 100644
-> > --- a/drivers/phy/phy-rockchip-usb.c
-> > +++ b/drivers/phy/phy-rockchip-usb.c
-> > @@ -29,6 +29,7 @@
-> > 
-> >  #include <linux/reset.h>
-> >  #include <linux/regmap.h>
-> >  #include <linux/mfd/syscon.h>
-> > 
-> > +#include <linux/delay.h>
-> > 
-> >  static int enable_usb_uart;
-> > 
-> > @@ -64,6 +65,7 @@ struct rockchip_usb_phy {
-> > 
-> >  	struct clk_hw	clk480m_hw;
-> >  	struct phy	*phy;
-> >  	bool		uart_enabled;
-> > 
-> > +	struct reset_control *reset;
-> > 
-> >  };
-> >  
-> >  static int rockchip_usb_phy_power(struct rockchip_usb_phy *phy,
-> > 
-> > @@ -144,9 +146,23 @@ static int rockchip_usb_phy_power_on(struct phy
-> > *_phy)
-> > 
-> >  	return clk_prepare_enable(phy->clk480m);
-> >  
-> >  }
-> > 
-> > +static int rockchip_usb_phy_reset(struct phy *_phy)
-> > +{
-> > +	struct rockchip_usb_phy *phy = phy_get_drvdata(_phy);
-> > +
-> > +	if (phy->reset) {
-> > +		reset_control_assert(phy->reset);
-> > +		udelay(10);
-> > +		reset_control_deassert(phy->reset);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > 
-> >  static const struct phy_ops ops = {
-> >  
-> >  	.power_on	= rockchip_usb_phy_power_on,
-> >  	.power_off	= rockchip_usb_phy_power_off,
-> > 
-> > +	.reset		= rockchip_usb_phy_reset,
-> 
-> why not just reuse the .init ops? reset can be done during initialization
-> right?
+Hi,
 
-The naming of power_on + power_off and init + exit probably suggests that they 
-are supposed to be used in pairs. (aka module_init + module_exit and probably 
-more)
+[TL;DR; This patch set needs more review, if you're using OP-TEE please
+help reviewing.]
 
-But in fact I've seen different combinations so far (phy_init + phy_power_on 
-... phy_power_off + phy_exit but also phy_power_on + phy_init ... phy_exit + 
-phy_power_off), so I guess the semantics are not that strictly defined.
+This patch set introduces a generic TEE subsystem. The TEE subsystem will
+contain drivers for various TEE implementations. A TEE (Trusted Execution
+Environment) is a trusted OS running in some secure environment, for
+example, TrustZone on ARM CPUs, or a separate secure co-processor etc.
+
+Regarding use cases, TrustZone has traditionally been used for
+offloading secure tasks to the secure world. Examples include: 
+- Secure key handling where the OS may or may not have direct access to key
+  material.
+- E-commerce and payment technologies. Credentials, credit card numbers etc
+  could be stored in a more secure environment.
+- Trusted User Interface (TUI) to ensure that no-one can snoop PIN-codes
+  etc.
+- Secure boot to ensure that loaded binaries haven’t been tampered with.
+  It’s not strictly needed for secure boot, but you could enhance security
+  by leveraging a TEE during boot.
+- Digital Rights Management (DRM), the studios provides content with
+  different resolution depending on the security of the device. Higher
+  security means higher resolution.
+
+A TEE could also be used in existing and new technologies. For example IMA
+(Integrity Measurement Architecture) which has been in the kernel for quite
+a while. Today you can enhance security by using a TPM-chip to sign the IMA
+measurement list. This is something that you also could do by leveraging a
+TEE.
+
+Another example could be in 2-factor authentication which is becoming
+increasingly more important. FIDO (https://fidoalliance.org) for example
+are using public key cryptography in their 2-factor authentication standard
+(U2F). With FIDO, a private and public key pair will be generated for every
+site you visit and the private key should never leave the local device.
+This is an example where you could use secure storage in a TEE for the
+private key.
+
+Today you will find a quite a few different out of tree implementations of
+TEE drivers which tends to fragment the TEE ecosystem and development. We
+think it would be a good idea to have a generic TEE driver integrated in
+the kernel which would serve as a base for several different TEE solutions,
+no matter if they are on-chip like TrustZone or if they are on a separate
+crypto co-processor.
+
+To develop this TEE subsystem we have been using the open source TEE called
+OP-TEE (https://github.com/OP-TEE/optee_os) and therefore this would be the
+first TEE solution supported by this new subsystem. OP-TEE is a
+GlobalPlatform compliant TEE, however this TEE subsystem is not limited to
+only GlobalPlatform TEEs, instead we have tried to design it so that it
+should work with other TEE solutions also.
+
+"tee: generic TEE subsystem" brings in the generic TEE subsystem which
+helps when writing a driver for a specific TEE, for example, OP-TEE.
+
+"tee: add OP-TEE driver" is an OP-TEE driver which uses the subsystem to do
+its work.
+
+This patch set has been prepared in cooperation with Javier González who
+proposed "Generic TrustZone Driver in Linux Kernel" patches 28 Nov 2014,
+https://lwn.net/Articles/623380/ . We've since then changed the scope to
+TEE instead of TrustZone.
+
+We have discussed the design on tee-dev@lists.linaro.org (archive at
+https://lists.linaro.org/pipermail/tee-dev/) with people from other
+companies, including Valentin Manea <valentin.manea@huawei.com>,
+Emmanuel MICHEL <emmanuel.michel@st.com>,
+Jean-michel DELORME <jean-michel.delorme@st.com>,
+and Joakim Bech <joakim.bech@linaro.org>. Our main concern has been to
+agree on something that is generic enough to support many different
+TEEs while still keeping the interface together.
+
+v11:
+* Rebased on v4.8-rc3
+* Addressed review comments from Nishanth Menon
+* Made the TEE framework available as a loadable module.
+* Reviewed-by: Javier González <javier@javigon.com>
+* Zeroes shared memory on allocation to avoid information leakage
+* Links shared memory objects to context to avoid stealing of shared memory
+  object from an unrelated process
+* Allow RPC interruption if supplicant is unavailable
+
+v10:
+* Rebased on v4.7-rc1
+* Addressed private review comments from Nishanth Menon
+* Optee driver only accepts one supplicant process on the privileged device
+* Optee driver avoids long delayed releases of shm objects
+* Added more comments on functions and structs
+
+v9:
+* Rebased on v4.6-rc1
+* Acked-by: Andreas Dannenberg <dannenberg@ti.com>
+* Addressed comments from Al Viro how file descriptors are passed to
+  user space
+* Addressed comments from Randy Dunlap on documentation
+* Changed license for include/uapi/linux/tee.h
+
+v8:
+* Rebased on v4.5-rc3
+* dt/bindings: add bindings for optee
+  Acked-by: Rob Herring <robh@kernel.org>
+* Fixes build error for X86
+* Fixes spell error in "dt/bindings: add bindings for optee"
+
+v7:
+* Rebased on v4.5-rc2
+* Moved the ARM SMC Calling Convention support into a separate patch
+  set, which is now merged
+
+v6:
+* Rebased on v4.3-rc7
+* Changed smccc interface to let the compiler marshal most of the
+  parameters
+* Added ARCH64 capability for smccc interface
+* Changed the PSCI firmware calls (both arm and arm64) to use the new
+  generic smccc interface instead instead of own assembly functions.
+* Move optee DT bindings to below arm/firmware
+* Defines method for OP-TEE driver to call secure world in DT, smc or hvc
+* Exposes implementation id of a TEE driver in sysfs
+  to easily spawn corresponding tee-supplicant when device is ready
+* Update OP-TEE Message Protocol to better cope with fragmented physical
+  memory
+* Read time directly from OP-TEE driver instead of forwarding the RPC
+  request to tee-supplicant
+
+v5:
+* Replaced kref reference counting for the device with a size_t instead as
+  the counter is always protected by a mutex
+
+v4:
+* Rebased on 4.1
+* Redesigned the synchronization around entry exit of normal SMC
+* Replaced rwsem on the driver instance with kref and completion since
+  rwsem wasn't intended to be used in this way
+* Expanded the TEE_IOCTL_PARAM_ATTR_TYPE_MASK to make room for
+  future additional parameter types
+* Documents TEE subsystem and OP-TEE driver
+* Replaced TEE_IOC_CMD with TEE_IOC_OPEN_SESSION, TEE_IOC_INVOKE,
+  TEE_IOC_CANCEL and TEE_IOC_CLOSE_SESSION
+* DT bindings in a separate patch
+* Assembly parts moved to arch/arm and arch/arm64 respectively, in a
+  separate patch
+* Redefined/clarified the meaning of OPTEE_SMC_SHM_CACHED
+* Removed CMA usage to limit the scope of the patch set
+
+v3:
+* Rebased on 4.1-rc3 (dma_buf_export() API change)
+* A couple of small sparse fixes
+* Documents bindings for OP-TEE driver
+* Updated MAINTAINERS
+
+v2:
+* Replaced the stubbed OP-TEE driver with a real OP-TEE driver
+* Removed most APIs not needed by OP-TEE in current state
+* Update Documentation/ioctl/ioctl-number.txt with correct path to tee.h
+* Rename tee_shm_pool_alloc_cma() to tee_shm_pool_alloc()
+* Moved tee.h into include/uapi/linux/
+* Redefined tee.h IOCTL macros to be directly based on _IOR and friends
+* Removed version info on the API to user space, a data blob which
+  can contain an UUID is left for user space to be able to tell which
+  protocol to use in TEE_IOC_CMD
+* Changed user space exposed structures to only have types with __ prefix
+* Dropped THIS_MODULE from tee_fops
+* Reworked how the driver is registered and ref counted:
+  - moved from using an embedded struct miscdevice to an embedded struct
+    device.
+  - uses an struct rw_semaphore as synchronization for driver detachment
+  - uses alloc/register pattern from TPM
+
+Thanks,
+Jens
+
+Jens Wiklander (4):
+  dt/bindings: add bindings for optee
+  tee: generic TEE subsystem
+  tee: add OP-TEE driver
+  Documentation: tee subsystem and op-tee driver
+
+ Documentation/00-INDEX                             |   2 +
+ .../bindings/arm/firmware/linaro,optee-tz.txt      |  31 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ Documentation/ioctl/ioctl-number.txt               |   1 +
+ Documentation/tee.txt                              | 118 +++
+ MAINTAINERS                                        |  13 +
+ drivers/Kconfig                                    |   2 +
+ drivers/Makefile                                   |   1 +
+ drivers/tee/Kconfig                                |  18 +
+ drivers/tee/Makefile                               |   5 +
+ drivers/tee/optee/Kconfig                          |   7 +
+ drivers/tee/optee/Makefile                         |   5 +
+ drivers/tee/optee/call.c                           | 422 ++++++++++
+ drivers/tee/optee/core.c                           | 563 +++++++++++++
+ drivers/tee/optee/optee_msg.h                      | 435 ++++++++++
+ drivers/tee/optee/optee_private.h                  | 185 +++++
+ drivers/tee/optee/optee_smc.h                      | 418 ++++++++++
+ drivers/tee/optee/rpc.c                            | 404 +++++++++
+ drivers/tee/optee/supp.c                           | 273 +++++++
+ drivers/tee/tee_core.c                             | 901 +++++++++++++++++++++
+ drivers/tee/tee_private.h                          | 129 +++
+ drivers/tee/tee_shm.c                              | 359 ++++++++
+ drivers/tee/tee_shm_pool.c                         | 158 ++++
+ include/linux/tee_drv.h                            | 278 +++++++
+ include/uapi/linux/tee.h                           | 401 +++++++++
+ 25 files changed, 5130 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
+ create mode 100644 Documentation/tee.txt
+ create mode 100644 drivers/tee/Kconfig
+ create mode 100644 drivers/tee/Makefile
+ create mode 100644 drivers/tee/optee/Kconfig
+ create mode 100644 drivers/tee/optee/Makefile
+ create mode 100644 drivers/tee/optee/call.c
+ create mode 100644 drivers/tee/optee/core.c
+ create mode 100644 drivers/tee/optee/optee_msg.h
+ create mode 100644 drivers/tee/optee/optee_private.h
+ create mode 100644 drivers/tee/optee/optee_smc.h
+ create mode 100644 drivers/tee/optee/rpc.c
+ create mode 100644 drivers/tee/optee/supp.c
+ create mode 100644 drivers/tee/tee_core.c
+ create mode 100644 drivers/tee/tee_private.h
+ create mode 100644 drivers/tee/tee_shm.c
+ create mode 100644 drivers/tee/tee_shm_pool.c
+ create mode 100644 include/linux/tee_drv.h
+ create mode 100644 include/uapi/linux/tee.h
+
+-- 
+1.9.1
