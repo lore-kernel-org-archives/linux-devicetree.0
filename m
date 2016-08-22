@@ -1,14 +1,12 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v3 05/12] firmware: tegra: Add BPMP support
-Date: Mon, 22 Aug 2016 16:23:29 -0600
-Message-ID: <4d43ba58-9571-8038-b0e2-2a9f6ebccdb2@wwwdotorg.org>
-References: <20160819173233.13260-1-thierry.reding@gmail.com>
- <20160819173233.13260-6-thierry.reding@gmail.com>
+From: John Stultz <john.stultz@linaro.org>
+Subject: [PATCH 1/4] arm64: dts: Add display subsystem DT nodes for
+ hi6220-hikey
+Date: Mon, 22 Aug 2016 15:48:02 -0700
+Message-ID: <1471906085-16682-1-git-send-email-john.stultz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160819173233.13260-6-thierry.reding@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,240 +16,116 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Sivaram Nair <sivaramn@nvidia.com>, devicetree@vger.kernel.org, Peter De Schrijver <pdeschrijver@nvidia.com>, Timo Alho <talho@nvidia.com>, Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Xinliang Liu <xinliang.liu@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/19/2016 11:32 AM, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
->
-> The Boot and Power Management Processor (BPMP) is a co-processor found
-> on Tegra SoCs. It is designed to handle the early stages of the boot
-> process and offload power management tasks (such as clocks, resets,
-> powergates, ...) as well as system control services.
->
-> Compared to the ARM SCPI, the services provided by BPMP are message-
-> based rather than method-based. The BPMP firmware driver provides the
-> services to transmit data to and receive data from the BPMP. Users can
-> also register an MRQ, for which a service routine will be run when a
-> corresponding event is received from the firmware.
->
-> A set of messages, called the BPMP ABI, are specified for a number of
-> different services provided by the BPMP (such as clocks or resets).
->
-> Based on work by Sivaram Nair <sivaramn@nvidia.com> and Joseph Lo
-> <josephl@nvidia.com>.
+From: Xinliang Liu <xinliang.liu@linaro.org>
 
-Overall, this driver could use comments describing how it works. Even a 
-few or a few tens of lines describing the general structure of how 
-messages pass from the initial client's function call into the IPC 
-memory and back up to the return to the original caller would be useful. 
-There seem to be many varied paths for this, and it's a bit difficult to 
-reverse engineer which are used when and why.
+Add ade and dsi DT nodes for hikey board.
 
-> diff --git a/include/soc/tegra/bpmp.h b/include/soc/tegra/bpmp.h
+Cc: Guodong Xu <guodong.xu@linaro.org>
+Cc: Wei Xu <xuwei5@hisilicon.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts |  8 ++++
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi      | 55 ++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+)
 
-> +struct tegra_bpmp_soc {
-> +	struct {
-> +		struct {
-> +			unsigned int offset;
-> +			unsigned int count;
-> +			unsigned int timeout;
-> +		} cpu_tx, thread, cpu_rx;
-> +	} channels;
-> +	unsigned int num_resets;
-> +};
-
-This deserves a comment to describe what the offset/count/timeout 
-represent. It took me a while to realize that each CPU had its own 
-channel in IVC memory, and there was a pool of channels for threads to 
-use. At least, that's what I reversed engineered is going on... (Having 
-only used BPMP from U-Boot, where there's only a single CPU/thread 
-active ever and no IRQs, hence we always use channel 0).
-
-> +struct tegra_bpmp_mb_data {
-> +	u32 code;
-> +	u32 flags;
-> +	u8 data[TEGRA_BPMP_MSG_DATA_SIZE];
-> +} __packed;
-
-Shouldn't struct mrq_request from bpmp_abi.h be used instead of 
-redefining this?
-
-> +struct tegra_bpmp {
-...
-> +	unsigned int num_clocks;
-> +	struct clk_hw **clocks;
-> +
-> +	struct reset_controller_dev rstc;
-> +};
-
-As I mentioned elsewhere, I'm not totally convinced that the BPMP driver 
-should be anything more than a fairly transparent IPC channel; all the 
-clock/reset/... stuff could be shuffled entirely into child devices.
-
-(out-of-order quote)
-> +int tegra_bpmp_init_clocks(struct tegra_bpmp *bpmp);
-> +int tegra_bpmp_init_resets(struct tegra_bpmp *bpmp);
-
-Oh I see; the clock/reset code isn't actually separate drivers (like 
-MFD), but just a set of functions that run "in the context of" the main 
-BPMP driver. Maybe that's OK, but I was expected more MFD style, hence 
-various other comments related to this topic, like just above.
-
-(FWIW, I've been mostly in U-Boot-land recently, and the driver model 
-there requires each device to be of a separate class like clock, reset, 
-... so the only option is separate MFD style sub-devices. However, the 
-Linux subsystems allow a single device to implement various subsystems 
-at once. No doubt U-Boot's model has warped my thinking a bit.)
-
-> +struct tegra_bpmp *tegra_bpmp_get(struct device *dev);
-> +void tegra_bpmp_put(struct tegra_bpmp *bpmp);
-
-Those don't seem to be used; can they be dropped?
-
-> +int tegra_bpmp_request_mrq(struct tegra_bpmp *bpmp, unsigned int mrq,
-> +			   tegra_bpmp_mrq_handler_t handler, void *data);
-> +void tegra_bpmp_free_mrq(struct tegra_bpmp *bpmp, unsigned int mrq,
-> +			 void *data);
-
-Those are only used inside the BPMP driver itself right now at least 
-(i.e. not in the clock/reset drivers in this series). Can they be static 
-rather than public?
-
-> diff --git a/drivers/firmware/tegra/bpmp.c b/drivers/firmware/tegra/bpmp.c
-
-> +#define MSG_ACK		BIT(0)
-> +#define MSG_RING	BIT(1)
-
-It'd be nice if bpmp_abi.h defined those, but I know it doesn't:-(
-
-> +struct tegra_bpmp *tegra_bpmp_get(struct device *dev)
-> +{
-> +	struct platform_device *pdev;
-> +	struct tegra_bpmp *bpmp;
-> +	struct device_node *np;
-> +
-> +	np = of_parse_phandle(dev->of_node, "nvidia,bpmp", 0);
-> +	if (!np)
-> +		return ERR_PTR(-ENOENT);
-
-That property name isn't defined by any DT binding. I think it's 
-left-over from an old I2C sub-node binding.
-
-> +static bool tegra_bpmp_master_free(struct tegra_bpmp_channel *channel)
-> +{
-> +	void *frame;
-> +
-> +	frame = tegra_ivc_write_get_next_frame(channel->ivc);
-> +	if (IS_ERR_OR_NULL(frame)) {
-> +		channel->ob = NULL;
-> +		return false;
-> +	}
-> +
-> +	channel->ob = frame;
-> +
-> +	return true;
-> +}
-
-I'm confused by the function name; this doesn't seem to be freeing 
-anything. Is it really tegra_bpmp_get_next_free_tx_frame() or something 
-like that? Same for tegra_bpmp_wait_master_free() below.
-
-> +static struct tegra_bpmp_mrq *tegra_bpmp_find_mrq(struct tegra_bpmp *bpmp,
-> +						  unsigned int mrq)
-> +{
-> +	struct tegra_bpmp_mrq *entry;
-> +
-> +	list_for_each_entry(entry, &bpmp->mrqs, list)
-> +		if (entry->mrq == mrq)
-> +			return entry;
-> +
-> +	return NULL;
-> +}
-
-I believe an MRQ is a type of message, not the identity of an individual 
-message. As such, there can be multiple instances (message) of a 
-particular type/MRQ. Is there code somewhere to ensure that only a 
-single request of any given type is outstanding at a time? I'm not sure 
-why anything would ever be looked up by MRQ...
-
-> +static int tegra_bpmp_get_firmware_tag(struct tegra_bpmp *bpmp, char *tag,
-> +				       size_t size)
-...
-> +	virt = dma_alloc_coherent(bpmp->dev, TEGRA_BPMP_MSG_DATA_SIZE, &phys,
-> +				  GFP_KERNEL | GFP_DMA32);
-> +	if (!virt)
-> +		return -ENOMEM;
-> +
-> +	memset(&request, 0, sizeof(request));
-> +	request.addr = phys;
-> +
-> +	memset(&msg, 0, sizeof(msg));
-> +	msg.mrq = MRQ_QUERY_TAG;
-> +	msg.tx.data = &request;
-> +	msg.tx.size = sizeof(request);
-> +
-> +	local_irq_save(flags);
-> +	err = tegra_bpmp_transfer_atomic(bpmp, &msg);
-> +	local_irq_restore(flags);
-> +
-> +	if (err == 0)
-> +		strlcpy(tag, virt, size);
-
-virt seems to be allocated and copied from, but never used in the IPC 
-transaction.
-
-> +static void tegra_bpmp_channel_signal(struct tegra_bpmp_channel *channel)
-> +{
-> +	unsigned long flags = channel->ob->flags;
-> +
-> +	if ((flags & MSG_RING) == 0)
-> +		return;
-> +
-> +	complete(&channel->completion);
-> +}
-
-Shouldn't that always call complete()? tegra_bpmp_transfer() always call 
-wait_for_completion_timeout(), irrespective of the flags value.
-
-> +static int tegra_bpmp_channel_init(struct tegra_bpmp_channel *channel,
-> +				   struct tegra_bpmp *bpmp,
-> +				   unsigned int index)
-> +{
-> +	size_t message, queue;
-...
-> +	message = tegra_ivc_align(TEGRA_BPMP_MSG_SIZE);
-> +	queue = tegra_ivc_total_queue_size(message);
-
-I suspect those should be message_size and message_queue, otherwise the 
-variable names sound like they should be pointers to objects, not 
-properties of the objects.
-
-...
-> +	/* reset the channel state */
-> +	tegra_ivc_reset(channel->ivc);
-> +
-> +	/* sync the channel state with BPMP */
-> +	while (tegra_ivc_notified(channel->ivc))
-> +		;
-
-I think this synchronously waits for the single channel in question to 
-reset, one-by-one. Won't that take rather a long time; wouldn't it be 
-better to initialize an start-the-reset-of all channels, then wait for 
-the reset to complete across all channels in parallel?
-
-> +static int tegra_bpmp_init_powergates(struct tegra_bpmp *bpmp)
-
-Is this function necessary? It doesn't seem to do anything with the 
-response data except pass it to dev_dbg() which probably doesn't do 
-anything.
-
-> +static int __init tegra_bpmp_init(void)
-> +{
-> +	return platform_driver_register(&tegra_bpmp_driver);
-> +}
-> +core_initcall(tegra_bpmp_init);
-
-Can that boiler-plat be replaced with module_init_driver(); IIRC that's 
-appropriate and often used even for non-modular drivers?
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index 593c7e4..c2f014e 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -372,3 +372,11 @@
+ &uart3 {
+ 	label = "LS-UART1";
+ };
++
++&ade {
++	status = "ok";
++};
++
++&dsi {
++	status = "ok";
++};
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 4f27041..d0b887a 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -262,6 +262,11 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		medianoc_ade: medianoc_ade@f4520000 {
++			compatible = "syscon";
++			reg = <0x0 0xf4520000 0x0 0x4000>;
++		};
++
+ 		stub_clock: stub_clock {
+ 			compatible = "hisilicon,hi6220-stub-clk";
+ 			hisilicon,hi6220-clk-sram = <&sram>;
+@@ -850,5 +855,55 @@
+ 				};
+ 			};
+ 		};
++
++		ade: ade@f4100000 {
++			compatible = "hisilicon,hi6220-ade";
++			reg = <0x0 0xf4100000 0x0 0x7800>;
++			reg-names = "ade_base";
++			hisilicon,noc-syscon = <&medianoc_ade>;
++			resets = <&media_ctrl MEDIA_ADE>;
++			interrupts = <0 115 4>; /* ldi interrupt */
++
++			clocks = <&media_ctrl HI6220_ADE_CORE>,
++				 <&media_ctrl HI6220_CODEC_JPEG>,
++				 <&media_ctrl HI6220_ADE_PIX_SRC>;
++			/*clock name*/
++			clock-names  = "clk_ade_core",
++				       "clk_codec_jpeg",
++				       "clk_ade_pix";
++
++			assigned-clocks = <&media_ctrl HI6220_ADE_CORE>,
++				<&media_ctrl HI6220_CODEC_JPEG>;
++			assigned-clock-rates = <360000000>, <288000000>;
++			dma-coherent;
++			status = "disabled";
++
++			port {
++				ade_out: endpoint {
++					remote-endpoint = <&dsi_in>;
++				};
++			};
++		};
++
++		dsi: dsi@f4107800 {
++			compatible = "hisilicon,hi6220-dsi";
++			reg = <0x0 0xf4107800 0x0 0x100>;
++			clocks = <&media_ctrl  HI6220_DSI_PCLK>;
++			clock-names = "pclk";
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				/* 0 for input port */
++				port@0 {
++					reg = <0>;
++					dsi_in: endpoint {
++						remote-endpoint = <&ade_out>;
++					};
++				};
++			};
++		};
+ 	};
+ };
+-- 
+1.9.1
