@@ -1,33 +1,60 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] arm: dts: rockchip: add reset node for the exist
- saradc SoCs
-Date: Mon, 22 Aug 2016 19:20:20 +0200
-Message-ID: <2485357.yNPXRzbCnj@phil>
-References: <1469629447-544-1-git-send-email-wxt@rock-chips.com>
- <1469629447-544-4-git-send-email-wxt@rock-chips.com>
+From: Rask Ingemann Lambertsen <ccc94453@vip.cybercity.dk>
+Subject: Re: [PATCH 3/9] regulator: core: Try full range when adjusting
+ regulators to constraints
+Date: Mon, 22 Aug 2016 19:52:05 +0200
+Message-ID: <20160822175205.h76hurjaopnosymc@vip.cybercity.dk>
+References: <20160821021125.1521-1-wens@csie.org>
+ <20160821021125.1521-4-wens@csie.org>
+ <20160822162907.GO22076@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1469629447-544-4-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160822162907.GO22076@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 27. Juli 2016, 22:24:07 CEST schrieb Caesar Wang:
-> SARADC controller needs to be reset before programming it, otherwise
-> it will not function properly.
+On Mon, Aug 22, 2016 at 05:29:07PM +0100, Mark Brown wrote:
+> On Sun, Aug 21, 2016 at 10:11:19AM +0800, Chen-Yu Tsai wrote:
 > 
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > Currently when we try to bring regulator in bounds of its constraints,
+> > we pick either the minimum or maximum voltage as the target. This fails
+> > if the regulator range is not continuous, and the target voltage is not
+> > an exact value the regulator can achieve, i.e. the target is not aligned
+> > to the step of the regulator.
+> 
+> This seems like you have buggy constraints, constraints which allow
+> voltages that can't physically be satisfied don't make obvious sense.
 
-Acked-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: <Stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+No, it's for cases like this (see the cubietruck4 or a80-optimus dts
+patches):
+
+			reg_bldo4: bldo4 {
+				regulator-min-microvolt = <1080000>;
+				regulator-max-microvolt = <1320000>;
+				regulator-name = "vcc12-hsic";
+			};
+
+The regulator can do 1100000 uV, 1200000 uV and 1300000 uV, all of which
+are within the constraints, so obviously the constraints can be satisfied,
+yet the regulator core fails do so with a message like this:
+
+vcc12-hsic: Bringing 700000uV into 1080000-1080000uV
+vcc12-hsic: failed to apply 1080000-1080000uV constraint(-22).
+
+I've run into the same bug trying to support the CX-A99 board, which uses an
+AXP808 PMIC [1], which seems to be very similar to the AXP 806. The patch
+fixes the bug by rounding the constraints to voltages which are supported by
+the regulator. Output from dmesg on my CX-A99 board looks like this:
+
+[    2.577202] vcc12-hsic: Bringing 700000uV into 1080000-1320000uV
+[    2.583335] vcc12-hsic: override min_uV, 1080000 -> 1100000
+[    2.589003] vcc12-hsic: override max_uV, 1320000 -> 1300000
+[    2.594673] vcc12-hsic: 1100 <--> 1300 mV at 1100 mV 
+
+[1] Details on which will be happily accepted, btw.
+
+-- 
+Rask Ingemann Lambertsen
