@@ -1,45 +1,64 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: sun6i: Add
- sun6i-a31-reference-design-tablet.dtsi
-Date: Mon, 22 Aug 2016 20:55:52 +0200
-Message-ID: <c7d7dab8-ee30-8e71-c3b4-16ff1edfe134@redhat.com>
-References: <1471533095-13432-1-git-send-email-hdegoede@redhat.com>
- <20160822183915.GA7104@lukather>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 05/12] firmware: tegra: Add BPMP support
+Date: Mon, 22 Aug 2016 12:56:52 -0600
+Message-ID: <866add72-703b-86e1-6e3e-04dbfb872970@wwwdotorg.org>
+References: <20160819173233.13260-1-thierry.reding@gmail.com>
+ <2059006.oN1pE0IkCo@wuerfel> <20160822140211.GE17367@ulmo.ba.sec>
+ <5669893.Rd6yQObxH6@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160822183915.GA7104@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5669893.Rd6yQObxH6@wuerfel>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 22-08-16 20:39, Maxime Ripard wrote:
-> Hi,
->
-> On Thu, Aug 18, 2016 at 05:11:34PM +0200, Hans de Goede wrote:
->> Just like with a13/a23/a33 most a31 tablets are derived from the same
->> reference design. Add a .dtsi file with all the common bits to avoid
->> endless copy and pasting of these.
+On 08/22/2016 08:42 AM, Arnd Bergmann wrote:
+> On Monday, August 22, 2016 4:02:11 PM CEST Thierry Reding wrote:
+>> On Mon, Aug 22, 2016 at 03:34:15PM +0200, Arnd Bergmann wrote:
+>>> On Friday, August 19, 2016 7:32:26 PM CEST Thierry Reding wrote:
+>>>> diff --git a/include/soc/tegra/bpmp-abi.h b/include/soc/tegra/bpmp-abi.h
+>>>> new file mode 100644
+>>>> index 000000000000..0aaef5960e29
+>>>> --- /dev/null
+>>>> +++ b/include/soc/tegra/bpmp-abi.h
+>>>> +#ifndef _ABI_BPMP_ABI_H_
+>>>> +#define _ABI_BPMP_ABI_H_
+>>>> +
+>>>> +#ifdef LK
+>>>> +#include <stdint.h>
+>>>> +#endif
+>>>> +
+>>>> +#ifndef __ABI_PACKED
+>>>> +#define __ABI_PACKED __attribute__((packed))
+>>>> +#endif
+>>>> +
+>>>> +#ifdef NO_GCC_EXTENSIONS
+>>>> +#define EMPTY char empty;
+>>>> +#define EMPTY_ARRAY 1
+>>>> +#else
+>>>> +#define EMPTY
+>>>> +#define EMPTY_ARRAY 0
+>>>> +#endif
+>>>> +
+>>>> +#ifndef __UNION_ANON
+>>>> +#define __UNION_ANON
+>>>> +#endif
+>>>
+>>> Maybe keep these all out of the kernel?
 >>
->> The sun6i-a31-reference-design-tablet.dtsi this commit adds is a copy
->> of sun6i-a31s-colorfly-e708-q1.dts with a few tablet specific bits
->> removed / left in sun6i-a31s-colorfly-e708-q1.dts.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> This was discussed a little in an earlier posting. This header file is
+>> maintained by the BPMP firmware team and using it verbatim means little
+>> to no effort required to update it.
 >
-> The patch looks ok, but doesn't apply.
+> The usual recommendation is to just use Linux coding style in shared
+> files, and possibly add another header that provides the required
+> definitions. Otherwise you end up with people randomly cleaning up
+> the file later ;-)
 
-Right, I forgot an earlier patch in the series, which is why I send a v2.
-
-Regards,
-
-Hans
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That's just going to push the problem into all other operating systems; 
+what happens when BSD, Windows, QNX, FreeRTOS, ... import this file and 
+attempt to apply the same argument, but want the FW team to use their 
+coding style?
