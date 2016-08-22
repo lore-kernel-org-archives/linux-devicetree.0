@@ -1,67 +1,63 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] ARM: dts: sun6i: tablet dts changes
-Date: Mon, 22 Aug 2016 21:01:18 +0200
-Message-ID: <20160822190118.GD7104@lukather>
-References: <1471543337-6938-1-git-send-email-hdegoede@redhat.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 4/8] ARM: dts: sun8i: Add touchscreen node for
+ sun8i-a23-gt90h
+Date: Mon, 22 Aug 2016 21:03:57 +0200
+Message-ID: <cf0186a0-f4ea-173c-4f93-df8798941199@redhat.com>
+References: <1470685398-14568-1-git-send-email-hdegoede@redhat.com>
+ <1470685398-14568-4-git-send-email-hdegoede@redhat.com>
+ <20160822183009.GX7104@lukather>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="vr1sEM+RgL05fCrX"
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1471543337-6938-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20160822183009.GX7104@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---vr1sEM+RgL05fCrX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 22-08-16 20:30, Maxime Ripard wrote:
+> On Mon, Aug 08, 2016 at 09:43:14PM +0200, Hans de Goede wrote:
+>> The gt90h tablet has a gsl3675 touchscreen, add a dt node describing it.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts b/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
+>> index f27ebbb..da55b5a 100644
+>> --- a/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
+>> +++ b/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
+>> @@ -53,6 +53,14 @@
+>>  	status = "okay";
+>>  };
+>>
+>> +&gsl1680 {
+>> +	compatible = "silead,gsl3675";
+>> +	touchscreen-fw-name = "silead/gsl3675-gt90h.fw";
+>
+> That's not documented anywhere, and looks really suspicious.
 
-On Thu, Aug 18, 2016 at 08:02:14PM +0200, Hans de Goede wrote:
-> Hi Maxime and Chen-Yu,
->=20
-> Here is a v2 of the series I sent earlier today, changes:
->=20
-> -Add a 3th patch (patch 1/3) which I forgot in v1, the other
->  2 patches actually depend on this one to apply without conflicts
-> -Name the added dtsi file sun6i-reference-design-tablet.dtsi instead
->  of sun6i-a31-reference-design-tablet.dtsi, to be consistent with
->  what we've done for sun5i / sun8i (and because it is valid for
->  both A31 and A31s based tablets).
+Ugh, that should have been in:
 
-Applied all three, thanks!
-Maxime
+Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+But somehow it is not (I believe it was there in earlier revisions of
+the patch), I'll send a patch to fix this.
 
---vr1sEM+RgL05fCrX
-Content-Type: application/pgp-signature; name="signature.asc"
+About it being suspicious, this is not really firmware it is a bunch
+of configuration data / lookup tables for the controller which tell
+it in which order the touchscreen horizontal / vertical sensor
+lines are connected to its sense pins, and what values to send
+for finger x% between line z and line z+1, which differs per
+tablet model, since not all tablets use the same digitizer.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Regards,
 
-iQIcBAEBAgAGBQJXu0v+AAoJEBx+YmzsjxAgWnUP/2S0uj/at+m/ZW9hChyJ0PKi
-c761WIgA8udeElNBCb4WmWmsm6xopO9vxgg8ybPRg+xkbjKje2SQquG+cmpamacf
-8rG33b/rBEvs5um8WgSwkOC2KWMOXpcYr06DqR8fldlYDRLgSiamluUSJlgEhfka
-kDjb0o1btF8k98zUKs9bgoi6Cix6506yf8LClJkQFOfd+QtEVkPDmHhGvL1v9OoG
-dJBz3WqVbKkIPZTLLxuG8+EiXEV46biymYr7hv4Mw8DPjU7k+ryOC9MGOa990Eb4
-o0twvz90fOaBQzX6FCvzyCHLqCDsa4Xt43g09fumKpWDh8LoqKAy7LLfz6h3e3kc
-21bkgpDuRMwh3sUB+8foKFBGOLeNeFEgz9q0TEtp8tngmf0eQgjMCPSnIUmAXoCS
-/u7k3s854JNekQUdM+IJX9a4dNy3u8X8qOz+JJmFvVq3WDfIVRLxgPQfEXGhAEFY
-VhnTpuYw3U248QeDeiSEQI/EY5M6soZ3uD0lHMMXBiVZ2LKAK6rr1zT6T+GlZHLq
-27oEyKp7XU9yLr9tC0q2S2brAAG7JQKQYihJqw5islF6wFYmRKi15BCBoczp0jpp
-kghDlLKzl7o8vsXj6DHBKKfUnQVdmBrvrV4wGN7l8flyfcaM0/Bt0b+M31s+L6ND
-A9CYPXJ3nmg6YsMWXlfu
-=eOuK
------END PGP SIGNATURE-----
-
---vr1sEM+RgL05fCrX--
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
