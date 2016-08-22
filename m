@@ -1,105 +1,104 @@
-From: Erin Lo <erin.lo@mediatek.com>
-Subject: [PATCH v12 3/4] arm: dts: mt2701: Add clock controller device nodes
-Date: Mon, 22 Aug 2016 16:29:24 +0800
-Message-ID: <1471854565-19810-4-git-send-email-erin.lo@mediatek.com>
+From: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v12 2/4] reset: mediatek: Add MT2701 reset driver
+Date: Mon, 22 Aug 2016 16:29:23 +0800
+Message-ID: <1471854565-19810-3-git-send-email-erin.lo@mediatek.com>
 References: <1471854565-19810-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1471854565-19810-1-git-send-email-erin.lo@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, James Liao <jamesjj.liao@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1471854565-19810-1-git-send-email-erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: James Liao <jamesjj.liao@mediatek.com>
+From: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Add clock controller nodes for MT2701, include topckgen, infracfg,
-pericfg, apmixedsys, mmsys, imgsys, vdecsys, hifsys, ethsys and
-bdpsys. This patch also add two oscillators that provide clocks for
-MT2701.
+In infrasys and perifsys, there are many reset
+control bits for kinds of modules. These bits are
+used as actual reset controllers to be registered
+into kernel's generic reset controller framework.
 
-Signed-off-by: James Liao <jamesjj.liao@mediatek.com>
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+Signed-off-by: Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Tested-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/boot/dts/mt2701.dtsi | 42 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ drivers/clk/mediatek/clk-mt2701-hif.c |  8 ++++++--
+ drivers/clk/mediatek/clk-mt2701.c     | 16 ++++++++++++----
+ 2 files changed, 18 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 18596a2..c9a8dbf 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -12,8 +12,10 @@
-  * GNU General Public License for more details.
-  */
+diff --git a/drivers/clk/mediatek/clk-mt2701-hif.c b/drivers/clk/mediatek/clk-mt2701-hif.c
+index 18b4ab5..702fd74 100644
+--- a/drivers/clk/mediatek/clk-mt2701-hif.c
++++ b/drivers/clk/mediatek/clk-mt2701-hif.c
+@@ -52,11 +52,15 @@ static int mtk_hifsys_init(struct device_node *node)
+ 						clk_data);
  
-+#include <dt-bindings/clock/mt2701-clk.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/reset/mt2701-resets.h>
- #include "skeleton64.dtsi"
- #include "mt2701-pinfunc.h"
+ 	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+-	if (r)
++	if (r) {
+ 		pr_err("%s(): could not register clock provider: %d\n",
+ 			__func__, r);
++		return r;
++	}
++
++	mtk_register_reset_controller(node, 1, 0x34);
  
-@@ -77,6 +79,20 @@
- 		#clock-cells = <0>;
- 	};
+-	return r;
++	return 0;
+ }
  
-+	clk26m: oscillator@0 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <26000000>;
-+		clock-output-names = "clk26m";
-+	};
-+
-+	rtc32k: oscillator@1 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32000>;
-+		clock-output-names = "rtc32k";
-+	};
-+
- 	timer {
- 		compatible = "arm,armv7-timer";
- 		interrupt-parent = <&gic>;
-@@ -104,6 +120,26 @@
- 		reg = <0 0x10005000 0 0x1000>;
- 	};
+ static const struct of_device_id of_match_clk_mt2701_hif[] = {
+diff --git a/drivers/clk/mediatek/clk-mt2701.c b/drivers/clk/mediatek/clk-mt2701.c
+index f6df578..c8cc583 100644
+--- a/drivers/clk/mediatek/clk-mt2701.c
++++ b/drivers/clk/mediatek/clk-mt2701.c
+@@ -790,11 +790,15 @@ static int mtk_infrasys_init(struct device_node *node)
+ 						infra_clk_data);
  
-+	topckgen: syscon@10000000 {
-+		compatible = "mediatek,mt2701-topckgen", "syscon";
-+		reg = <0 0x10000000 0 0x1000>;
-+		#clock-cells = <1>;
-+	};
-+
-+	infracfg: syscon@10001000 {
-+		compatible = "mediatek,mt2701-infracfg", "syscon";
-+		reg = <0 0x10001000 0 0x1000>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+	pericfg: syscon@10003000 {
-+		compatible = "mediatek,mt2701-pericfg", "syscon";
-+		reg = <0 0x10003000 0 0x1000>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
- 	watchdog: watchdog@10007000 {
- 		compatible = "mediatek,mt2701-wdt",
- 			     "mediatek,mt6589-wdt";
-@@ -128,6 +164,12 @@
- 		reg = <0 0x10200100 0 0x1c>;
- 	};
+ 	r = of_clk_add_provider(node, of_clk_src_onecell_get, infra_clk_data);
+-	if (r)
++	if (r) {
+ 		pr_err("%s(): could not register clock provider: %d\n",
+ 			__func__, r);
++		return r;
++	}
  
-+	apmixedsys: syscon@10209000 {
-+		compatible = "mediatek,mt2701-apmixedsys", "syscon";
-+		reg = <0 0x10209000 0 0x1000>;
-+		#clock-cells = <1>;
-+	};
+-	return r;
++	mtk_register_reset_controller(node, 2, 0x30);
 +
- 	gic: interrupt-controller@10211000 {
- 		compatible = "arm,cortex-a7-gic";
- 		interrupt-controller;
++	return 0;
+ }
+ 
+ static const struct mtk_gate_regs peri0_cg_regs = {
+@@ -912,11 +916,15 @@ static int mtk_pericfg_init(struct device_node *node)
+ 			&lock, clk_data);
+ 
+ 	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
+-	if (r)
++	if (r) {
+ 		pr_err("%s(): could not register clock provider: %d\n",
+ 			__func__, r);
++		return r;
++	}
+ 
+-	return r;
++	mtk_register_reset_controller(node, 2, 0x0);
++
++	return 0;
+ }
+ 
+ #define MT8590_PLL_FMAX		(2000 * MHZ)
 -- 
 1.9.1
