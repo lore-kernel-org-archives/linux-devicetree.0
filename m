@@ -1,38 +1,66 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/3] clk: versatile add DT bindings for the ICST CM variants
-Date: Mon, 22 Aug 2016 11:05:54 +0200
-Message-ID: <CACRpkdbtdTqmTu1A_BZy9zmcSxnasOkCFWRBmAk1jE_kGZxGOg@mail.gmail.com>
-References: <1470820172-12840-1-git-send-email-linus.walleij@linaro.org> <20160812182036.GA26431@rob-hp-laptop>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 1/3] Documentation: dt: net: add ath9k
+	wireless device binding
+Date: Mon, 22 Aug 2016 11:08:56 +0200
+Message-ID: <2913835.hr5kg63Vcv@wuerfel>
+References: <20160709232834.31654-1-martin.blumenstingl@googlemail.com>
+	<20160821143105.27487-1-martin.blumenstingl@googlemail.com>
+	<20160821143105.27487-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160812182036.GA26431@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ath9k-devel-bounces@lists.ath9k.org>
+In-Reply-To: <20160821143105.27487-2-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
+	<mailto:ath9k-devel-request@lists.ath9k.org?subject=unsubscribe>
+List-Archive: <http://lists.ath9k.org/pipermail/ath9k-devel>
+List-Post: <mailto:ath9k-devel@lists.ath9k.org>
+List-Help: <mailto:ath9k-devel-request@lists.ath9k.org?subject=help>
+List-Subscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
+	<mailto:ath9k-devel-request@lists.ath9k.org?subject=subscribe>
+Sender: ath9k-devel-bounces@lists.ath9k.org
+Errors-To: ath9k-devel-bounces@lists.ath9k.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, arend.vanspriel@broadcom.com, mcgrof@do-not-panic.com, julian.calaby@gmail.com, linux-wireless@vger.kernel.org, ath9k-devel@qca.qualcomm.com, robh+dt@kernel.org, ath9k-devel@lists.ath9k.org, bjorn@mork.no, chunkeey@googlemail.com, kvalo@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 12, 2016 at 8:20 PM, Rob Herring <robh@kernel.org> wrote:
+On Sunday, August 21, 2016 4:31:03 PM CEST Martin Blumenstingl wrote:
+> +pci {
+> +       pcie@0 {
+> +               reg = <0 0 0 0 0>;
 
-[Fixed spelling mistakes]
+It's not clear what these two nodes refer to in the example. Is the top-level
+node the PCI host bridge, and the second node the first PCIe port?
 
->> +The ARM Integrator/AP and Integrator/CP core modules and baseboard contain
->> +special versions of the serial interface that only connects the low 8 bits
->> +of the VDW (missing one bit), hardwires RDW to different values and sometimes
->> +als hardwire the output divider. They therefore have special compatible
->
-> s/als/also/
->
-> I don't see what is special here. Different h/w is supposed to have
-> different compatible strings. I'd word this more, so that you don't have
-> to change it again if another compatible string is added.
+Maybe add the properties from a real system here to make this a little
+clearer.
 
-OK I'll try to come up with something to that effect, the reason it was
-not like that from the beginning is my universe is expanding and step
-by step gaining knowledge of how this thing has been used by ARM.
+The unit address for the slot should be "00,0", not "0" here.
 
-I'll try to write something generic about hardwired divisor lines and
-compatible strings telling how they are wired.
+> +               #interrupt-cells = <1>;
+> +               #size-cells = <2>;
+> +               #address-cells = <3>;
+> +               device_type = "pci";
+> +
 
-Yours,
-Linus Walleij
+I think this needs an empty "ranges" property to be a valid bridge node.
+
+> +               ath9k@0,0 {
+
+According to the PCI binding, the name should be the same as the
+compatible string here, or match the class code in the table.
+
+> +                       compatible = "pci168c,0030";
+> +                       reg = <0 0 0 0 0>;
+
+Are the device/fn numbers all zero on your system? This is a bit
+confusing, as it's not immediately clear what the reg properties
+refers to. Also, I think the length should reflect the actual length
+of the config space, either 0x100 or 0x1000.
+
+> +                       qca,disable-5ghz;
+> +               };
+> +       };
+> +};
+
+	Arnd
