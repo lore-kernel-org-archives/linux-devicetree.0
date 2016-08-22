@@ -1,52 +1,73 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH] hwmon: (max6650.c) Add devicetree support documentation
-Date: Mon, 22 Aug 2016 08:44:32 +0200
-Message-ID: <1471848272-3032-1-git-send-email-mike.looijmans@topic.nl>
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: robh@kernel.org, linux@roeck-us.net, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH v7 0/7] power: act8945a_charger: Improvements
+Date: Mon, 22 Aug 2016 14:49:10 +0800
+Message-ID: <1471848557-27278-1-git-send-email-wenyou.yang@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-pm@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the devicetree binding documentation for the max6650 fan
-controller.
+This patch series is to improve the implementation of act8945a-charger
+driver, such as improve the way to check the status, fix the power
+supply type property, add the status change update, and add more
+properties: capacity level property and max current property.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
-v2: Allow only 12V or 5V supply voltage
- .../devicetree/bindings/hwmon/max6650.txt          | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/max6650.txt
+Changes in v7:
+ - Fix the missing negation sign.
+ - Add a prompt information if the charger suspended.
+ - Fix the wrong using devm_request_irq() with with parent
+   device as *dev.
+ - For "lbo-gpios", use gpiod_get() to fix devm_gpiod_get() wrong use
+   with parent device as *dev argument.
+ - Add the handle -EPROBE_DEFER returned from gpiod_get "lbo-gpios".
+ - Use dev_info() to print log if the lbo irq request failed.
+ - Remove unneeded semicolon.
+ - Add depends on GPIOLIB for use gpiod.
+ - For "chglev-gpios", use gpiod_get() to fix devm_gpiod_get() wrong use
+   with parent device as *dev argument.
+ - Add the handle -EPROBE_DEFER returned from gpiod_get "chglev_gpio".
+ - Remove unneeded semicolon.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/max6650.txt b/Documentation/devicetree/bindings/hwmon/max6650.txt
-new file mode 100644
-index 0000000..d6c10e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/max6650.txt
-@@ -0,0 +1,23 @@
-+Bindings for MAX6651 and MAX6650 I2C fan controllers
-+
-+Reference:
-+[1]	https://datasheets.maximintegrated.com/en/ds/MAX6650-MAX6651.pdf
-+
-+Required properties:
-+- compatible : One of "maxim,max6650" or "maxim,max6651"
-+- reg        : I2C address, one of 0x1b, 0x1f, 0x4b, 0x48.
-+
-+Optional properties, default is to retain the chip's current setting:
-+- maxim,fan-microvolt : The supply voltage of the fan, either 5000000 uV or
-+			12000000 uV.
-+- maxim,fan-prescale  : Pre-scaling value, as per datasheet [1]. Lower values
-+			allow more fine-grained control of slower fans.
-+			Valid: 1, 2, 4, 8, 16.
-+
-+Example:
-+	fan-max6650: max6650@1b {
-+		reg = <0x1b>;
-+		compatible = "maxim,max6650";
-+		maxim,fan-microvolt = <12000000>;
-+		maxim,fan-prescale = <4>;
-+	};
+Changes in v6:
+ - Add .remove callback function.
+ - Fix the 'dev' argument of devm_request_irq() to pdev->dev.parent.
+ - For "lbo-gpios", use gpiod API instead of old gpio API to handle.
+ - For "chglev-gpios", use gpiod API instead of old gpio API to handle.
+
+Changes in v5:
+ - Add Acked-by tag.
+
+Changes in v4:
+ - Use "interrupts" property, instead of "active-semi,irq-gpios"
+   for irq.
+ - Change devname of devm_request_irq() from "lbo-detect" to
+   "act8945a, lbo-detect".
+ - Fix wrong gpio assignment for chglev_pin.
+ - Update the doc/binding for using "interrupts" property.
+
+Changes in v3:
+ - Remove unneeded semicolon to fix semicolon.cocci warning.
+
+Changes in v2:
+ - Add missing ret declaration.
+
+Wenyou Yang (7):
+  power: act8945a_charger: Remove "battery_temperature"
+  power: act8945a_charger: Improve
+  power: act8945a_charger: Add status change update support
+  power: act8945a_charger: Fix the power supply type
+  power: act8945a_charger: Add capacity level property
+  power: act8945a_charger: Add max current property
+  doc: bindings: act8945a-charger: Update properties
+
+ .../bindings/power/supply/act8945a-charger.txt     |  16 +-
+ drivers/power/supply/Kconfig                       |   2 +-
+ drivers/power/supply/act8945a_charger.c            | 418 ++++++++++++++++++---
+ 3 files changed, 386 insertions(+), 50 deletions(-)
+
 -- 
-1.9.1
+2.7.4
 
