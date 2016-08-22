@@ -1,223 +1,193 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] mmc: Add mmc_force_detect_change_begin / _end functions
-Date: Mon, 22 Aug 2016 15:39:34 +0200
-Message-ID: <CAPDyKFoTj9=esqaUPiwxLkhCsO98cSDgzdD1phgbXLa7rf6jiw@mail.gmail.com>
-References: <1470488736-11083-1-git-send-email-hdegoede@redhat.com>
+From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 01/13] pinctrl: add bcm63xx base code
+Date: Mon, 22 Aug 2016 15:44:52 +0200
+Message-ID: <CAOiHx=ndEkqQjRS5Hu5LovLmXiqFsPhx0X4k+1CFmGzhD11LRA@mail.gmail.com>
+References: <1471604025-21575-1-git-send-email-jonas.gorski@gmail.com>
+ <1471604025-21575-2-git-send-email-jonas.gorski@gmail.com> <CACRpkdbAWJruB=4rv_SoPZ5D5XgWjebK_Qmv2GLgOOrSyqXcDA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1470488736-11083-1-git-send-email-hdegoede@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdbAWJruB=4rv_SoPZ5D5XgWjebK_Qmv2GLgOOrSyqXcDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6 August 2016 at 15:05, Hans de Goede <hdegoede@redhat.com> wrote:
-> Some sdio devices have a multiple stage bring-up process. Specifically
-> the esp8089 (for which an out of tree driver is available) loads firmware
-> on the first call to its sdio-drivers' probe function and then resets
-> the device causing it to reboot from its RAM with the new firmware.
->
-> When this sdio device reboots it comes back up in 1 bit 400 KHz mode
-> again, and we need to walk through the whole ios negatiation and sdio setup
-> again.
->
-> There are 2 problems with this:
->
-> 1) Typically these devices are soldered onto some (ARM) tablet / SBC
-> PCB and as such are described in devicetree as "non-removable", which
-> causes the mmc-core to scan them only once and not poll for the device
-> dropping of the bus. Normally this is the right thing todo but in the
-> eso8089 example we need the mmc-core to notice the module has disconnected
-> (since it is now in 1 bit mode again it will not talk to the host in 4 bit
-> mode). This can be worked around by using "broken-cd" in devicetree
-> instead of "non-removable", but that is not a proper fix since the device
-> really is non-removable.
->
-> 2) When the mmc-core detects the device has disconnected it will poweroff
-> the device, causing the RAM loaded firmware to be lost. This can be worked
-> around in devicetree by using regulator-always-on (and avoiding the use of
-> mmc-pwrseq), but again that is more of a hack then a proper fix.
+Hi,
 
-Agree, and thanks for the detailed description of the problem!
-
+On 22 August 2016 at 14:46, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Aug 19, 2016 at 12:53 PM, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 >
-> This commmit fixes 1) by adding a mmc_force_detect_change function which
-> will cause scanning for device removal / insertion until a new device is
-> detected. 2) Is fixed by a keep_power flag to the mmc_force_detect_change
-> function which when set causes the mmc-core to keep the power to the device
-> on during the rescan.
+>> Setup directory and add a helper for bcm63xx pinctrl support.
+>>
+>> Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+>>  drivers/pinctrl/bcm63xx/Kconfig           |   3 +
+>>  drivers/pinctrl/bcm63xx/Makefile          |   1 +
+>
+> Why not just put it in the existing pinctrl/bcm directory?
 
-Hmm, in the first scan-attempt there will be an SDIO card properly
-detected, right!?
-The problem occurs when the SDIO func driver gets probed and when it
-loads the new firmware, which may happen later or even not at all as
-it also depends if the SDIO func driver has been registered.
+Because at the time I started writing these drivers it was still
+exclusive for ARCH_BCM, will move them there.
 
-I am also thinking about the system PM suspend/resume case. In cases
-where the SDIO card actually becomes powered off/on in suspend/resume.
-In this case, I assume the SDIO card will be re-detected through
-mmc_sdio_resume(), although the same sequence as during the SDIO func
-driver ->probe() must be repeated (loading firmware etc).
+> The drivers in there share nothing but being Broadcom
+> anyways. And when you're at it, do take a look at the
+> other Broadcom drivers to check if they would
+> happen to share something with your hardware, I find
+> it dazzling that hardware engineers repeatedly reinvents
+> pin controllers but what can I do.
+>
+>> +config PINCTRL_BCM63XX
+>> +       bool
+>> +       select GPIO_GENERIC
+>
+> depends on ARCH_****?
 
-To me it seems like we need a new SDIO func API, to re-initialize the
-SDIO card without powering off it first. I guess in the end it will be
-quite similar to what you propose, but my point is that I rather make
-this a specific SDIO API instead of trying to hook it into the rescan
-sequence.
+This isn't a user selectable symbol so I don't see the need for that.
 
 >
-> Cc: Icenowy Zheng <icenowy@aosc.xyz>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/mmc/core/core.c  | 47 ++++++++++++++++++++++++++++++++++++++++++-----
->  include/linux/mmc/host.h |  4 ++++
->  2 files changed, 46 insertions(+), 5 deletions(-)
+> depends on OF_GPIO?
 >
-> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> index 8b4dfd4..d850cde 100644
-> --- a/drivers/mmc/core/core.c
-> +++ b/drivers/mmc/core/core.c
-> @@ -1716,8 +1716,11 @@ int mmc_select_drive_strength(struct mmc_card *card, unsigned int max_dtr,
->   */
->  void mmc_power_up(struct mmc_host *host, u32 ocr)
->  {
-> -       if (host->ios.power_mode == MMC_POWER_ON)
-> +       if (host->ios.power_mode == MMC_POWER_ON) {
-> +               if (host->ios.clock == 0)
-> +                       goto set_clock;
->                 return;
-> +       }
->
->         mmc_pwrseq_pre_power_on(host);
->
-> @@ -1742,6 +1745,7 @@ void mmc_power_up(struct mmc_host *host, u32 ocr)
->
->         mmc_pwrseq_post_power_on(host);
->
-> +set_clock:
->         host->ios.clock = host->f_init;
->
->         host->ios.power_mode = MMC_POWER_ON;
-> @@ -1759,6 +1763,11 @@ void mmc_power_off(struct mmc_host *host)
->         if (host->ios.power_mode == MMC_POWER_OFF)
->                 return;
->
-> +       if (host->rescan_keep_power) {
-> +               mmc_set_clock(host, 0);
-> +               return;
-> +       }
-> +
->         mmc_pwrseq_power_off(host);
->
->         host->ios.clock = 0;
-> @@ -1907,6 +1916,27 @@ void mmc_detect_change(struct mmc_host *host, unsigned long delay)
->  }
->  EXPORT_SYMBOL(mmc_detect_change);
->
-> +/**
-> + *     mmc_force_detect_change - force rescanning of a MMC socket even if
-> + *                               it is non-removable
-> + *     @host: host to rescan
-> + *     @delay: optional delay to wait before detection (jiffies)
-> + *     @keep_power: if set do not turn of vdd / call pwrseq_off during rescan
-> + *
-> + *     MMC drivers which need non-removable sdio devices to be rescanned
-> + *     (e.g. because the device reboots its fw after a firmware upload),
-> + *     can call this to force scanning the MMC socket for changes, even
-> + *     if it is non-removable.
-> + */
-> +void mmc_force_detect_change(struct mmc_host *host, unsigned long delay,
-> +                            bool keep_power)
-> +{
-> +       host->rescan_force = 1;
-> +       host->rescan_keep_power = keep_power;
-> +       _mmc_detect_change(host, delay, false);
-> +}
-> +EXPORT_SYMBOL(mmc_force_detect_change);
-> +
->  void mmc_init_erase(struct mmc_card *card)
->  {
->         unsigned int sz;
-> @@ -2584,7 +2614,8 @@ void mmc_rescan(struct work_struct *work)
->                 return;
->
->         /* If there is a non-removable card registered, only scan once */
-> -       if (!mmc_card_is_removable(host) && host->rescan_entered)
-> +       if (!mmc_card_is_removable(host) && host->rescan_entered &&
-> +           !host->rescan_force)
->                 return;
->         host->rescan_entered = 1;
->
-> @@ -2601,7 +2632,8 @@ void mmc_rescan(struct work_struct *work)
->          * if there is a _removable_ card registered, check whether it is
->          * still present
->          */
-> -       if (host->bus_ops && !host->bus_dead && mmc_card_is_removable(host))
-> +       if (host->bus_ops && !host->bus_dead &&
-> +           (mmc_card_is_removable(host) || host->rescan_force))
->                 host->bus_ops->detect(host);
->
->         host->detect_change = 0;
-> @@ -2634,15 +2666,20 @@ void mmc_rescan(struct work_struct *work)
->         }
->
->         for (i = 0; i < ARRAY_SIZE(freqs); i++) {
-> -               if (!mmc_rescan_try_freq(host, max(freqs[i], host->f_min)))
-> +               if (!mmc_rescan_try_freq(host, max(freqs[i], host->f_min))) {
-> +                       if (host->rescan_force) {
-> +                               host->rescan_force = 0;
-> +                               host->rescan_keep_power = 0;
-> +                       }
->                         break;
-> +               }
->                 if (freqs[i] <= host->f_min)
->                         break;
->         }
->         mmc_release_host(host);
->
->   out:
-> -       if (host->caps & MMC_CAP_NEEDS_POLL)
-> +       if ((host->caps & MMC_CAP_NEEDS_POLL) || host->rescan_force)
->                 mmc_schedule_delayed_work(&host->detect, HZ);
->  }
->
-> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-> index 45cde8c..e9b3115 100644
-> --- a/include/linux/mmc/host.h
-> +++ b/include/linux/mmc/host.h
-> @@ -333,6 +333,8 @@ struct mmc_host {
->
->         int                     rescan_disable; /* disable card detection */
->         int                     rescan_entered; /* used with nonremovable devices */
-> +       int                     rescan_force;   /* force rescan of (nonremovable) devices */
-> +       int                     rescan_keep_power; /* Do not power off card */
->
->         int                     need_retune;    /* re-tuning is needed */
->         int                     hold_retune;    /* hold off re-tuning */
-> @@ -408,6 +410,8 @@ int mmc_power_save_host(struct mmc_host *host);
->  int mmc_power_restore_host(struct mmc_host *host);
->
->  void mmc_detect_change(struct mmc_host *, unsigned long delay);
-> +void mmc_force_detect_change(struct mmc_host *host, unsigned long delay,
-> +                            bool keep_power);
->  void mmc_request_done(struct mmc_host *, struct mmc_request *);
->
->  static inline void mmc_signal_sdio_irq(struct mmc_host *host)
-> --
-> 2.7.4
->
+> Will it really be used on non-DT systems?
 
-Kind regards
-Uffe
+I plan to use it on both mips/bcm63xx (no dts support) and bmips (dts
+support), so yes.
+
+>
+>> +#define BANK_SIZE      sizeof(u32)
+>> +#define PINS_PER_BANK  (BANK_SIZE * BITS_PER_BYTE)
+>> +
+>> +#ifdef CONFIG_OF
+>> +static int bcm63xx_gpio_of_xlate(struct gpio_chip *gc,
+>> +                                const struct of_phandle_args *gpiospec,
+>> +                                u32 *flags)
+>> +{
+>> +       struct gpio_chip *base = gpiochip_get_data(gc);
+>> +       int pin = gpiospec->args[0];
+>> +
+>> +       if (gc != &base[pin / PINS_PER_BANK])
+>> +               return -EINVAL;
+>> +
+>> +       pin = pin % PINS_PER_BANK;
+>> +
+>> +       if (pin >= gc->ngpio)
+>> +               return -EINVAL;
+>> +
+>> +       if (flags)
+>> +               *flags = gpiospec->args[1];
+>> +
+>> +       return pin;
+>> +}
+>> +#endif
+>
+> - Do you really have to support the !OF_GPIO case? (depend in Kconfig,
+>   get rid of #ifdef)
+
+See above.
+
+>
+> - The only reason for not using of_gpio_simple_xlate() seems to be that
+>   you have several GPIO banks. So why not model every bank as a
+>   separate device? Or did you consider this already?
+
+I did consider it, but it makes the !OF case more complicated, and the
+current of_gpio base code requires changing for it.
+
+That's because some of the pinctrl chips need to set the
+gpio-direction for muxes, and for that need to have a reference to the
+gpio-controller(s). Since any muxes directly tied to the controller
+node will get applied as soon as the controller is registered, it
+needs to aquire the gpio-controller references first.
+
+On the gpio-controller side, to flag these a requiring pinctrl those
+would then have a gpio-range property, which will cause the probe
+being deferred until the reference to the controller can be resolved.
+Which waits for the gpio-controller to be registered, so it can
+resolve its references to it. A true catch 22 ;-)
+
+This could probably resolved by deferring resolving node-to-pincontrol
+devices to gpio request time. Not sure if this then would conflict
+which gpio-hogs on such a gpio-controller node?
+
+I haven't really thought how much work it would be for the !OF case,
+but would probably mean I need to acquire references based on their
+pdev names.
+
+>> +               gc[i].request = gpiochip_generic_request;
+>> +               gc[i].free = gpiochip_generic_free;
+>> +
+>> +#ifdef CONFIG_OF
+>> +               gc[i].of_gpio_n_cells = 2;
+>> +               gc[i].of_xlate = bcm63xx_gpio_of_xlate;
+>> +#endif
+>> +
+>> +               gc[i].label = label;
+>> +               gc[i].ngpio = pins;
+>> +
+>> +               devm_gpiochip_add_data(dev, &gc[i], gc);
+>
+> Because this also gets pretty hairy... since you don't have one device
+> per gpiochip.
+>
+>> +static void bcm63xx_setup_pinranges(struct gpio_chip *gc, const char *name,
+>> +                                   int ngpio)
+>> +{
+>> +       int i, chips = DIV_ROUND_UP(ngpio, PINS_PER_BANK);
+>> +
+>> +       for (i = 0; i < chips; i++) {
+>> +               int offset, pins;
+>> +
+>> +               offset = i * PINS_PER_BANK;
+>> +               pins = min_t(int, ngpio - offset, PINS_PER_BANK);
+>> +
+>> +               gpiochip_add_pin_range(&gc[i], name, 0, offset, pins);
+>> +       }
+>> +}
+>
+> And this, same thing. Could be so much easier if it was just the same
+> driver instantiated twice for two banks.
+>
+>> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dirout");
+>> +       dirout = devm_ioremap_resource(&pdev->dev, res);
+>> +       if (IS_ERR(dirout))
+>> +               return ERR_CAST(dirout);
+>> +
+>> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dat");
+>> +       data = devm_ioremap_resource(&pdev->dev, res);
+>> +       if (IS_ERR(data))
+>> +               return ERR_CAST(data);
+>> +
+>> +       sz = resource_size(res);
+>> +
+>> +       ret = bcm63xx_setup_gpio(&pdev->dev, gc, dirout, data, sz, ngpio);
+>> +       if (ret)
+>> +               return ERR_PTR(ret);
+>> +
+>> +       pctldev = devm_pinctrl_register(&pdev->dev, desc, priv);
+>> +       if (IS_ERR(pctldev))
+>> +               return pctldev;
+>> +
+>> +       bcm63xx_setup_pinranges(gc, pinctrl_dev_get_devname(pctldev), ngpio);
+>> +
+>> +       dev_info(&pdev->dev, "registered at mmio %p\n", dirout);
+>> +
+>> +       return pctldev;
+>
+> A current trend in simple MMIO devices is to simply add themselves as a
+> compatible string in drivers/gpio/gpio-mmio.c. Example:
+>
+> https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-gpio.git/commit/drivers/gpio/gpio-mmio.c?h=devel&id=05cc995f4d44c2b14a1f15f3271cc9715cb81099
+>
+> This could be a viable approach if you find a way to flag that such a GPIO
+> has a pin control backend.
+
+The most obvious would be having a gpio-ranges property, but this
+leads to issues mentioned above. And only works for OF.
+
+
+Regards
+Jonas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
