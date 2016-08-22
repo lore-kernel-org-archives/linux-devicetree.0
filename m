@@ -1,39 +1,42 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] net: dt-bindings: Document the new Meson8b and GXBB DWMAC bindings
-Date: Mon, 22 Aug 2016 13:55:22 +0200
-Message-ID: <7308700.atIMKyMFZU@wuerfel>
-References: <20160815164100.27766-1-martin.blumenstingl@googlemail.com> <20160820093538.9707-1-martin.blumenstingl@googlemail.com> <20160820093538.9707-2-martin.blumenstingl@googlemail.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH 2/5] ath9k: Set the "big endian" bit of the AR9003 EEPROM templates
+Date: Mon, 22 Aug 2016 13:56:46 +0200
+Message-ID: <CAFBinCBdv9poKwjsDeGue30x0B9aUjxdkb5BHZcBgouOMAGWMQ@mail.gmail.com>
+References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
+ <20160821144906.30984-3-martin.blumenstingl@googlemail.com> <3744898.ltfZjZgAjj@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160820093538.9707-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <3744898.ltfZjZgAjj@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday, August 20, 2016 11:35:35 AM CEST Martin Blumenstingl wrote:
-> +- reg: The first register range should be the one of the DWMAC
-> +       controller. The second range is is for the Amlogic specific
-> +       configuration (for example the PRG_ETHERNET register range
-> +       on Meson8b and newer)
->  
-...
+On Mon, Aug 22, 2016 at 1:47 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Sunday, August 21, 2016 4:49:03 PM CEST Martin Blumenstingl wrote:
+>> We will default to the system's native endianness for the eepmisc value.
+>> This may be overwritten by the actual calibration data. If it is not
+>> overwritten we interpret the template data in it's native endianness,
+>> meaning that no swapping is required.
+>
+> I'm still skeptical about this one. What is the significance of "native
+> endianess" here? You are keying the endianess of the eeprom tables off the
+> way the CPU operates, but for a PCI device there is no correlation between
+> those two.
+(the ar9003 eeprom format and handling is different compared to 9287,
+def and 4k)
+ar9003_eeprom.c contains EEPROM templates -> these are compiled into
+the ath9k kernel module. Values from these templates can be
+overwritten by the EEPROM found on the actual hardware.
+This change tries to handle the case where the values in the hardware
+EEPROM do not override any of the template values (means final EEPROM
+data = template data). In this case the we can simply rely on the
+endianness which was used to compile ath9k.ko.
 
-> +Example for GXBB:
-> +       ethmac: ethernet@c9410000 {
-> +               compatible = "amlogic,meson-gxbb-dwmac", "snps,dwmac";
-> +               reg = <0x0 0xc9410000 0x0 0x10000>,
-> +                       <0x0 0xc8834540 0x0 0x8>;
-> 
-
-The address "0xc8834540" suggests that this is part of a larger register
-range that is used for various things, i.e. a "syscon" type of device.
-
-How about making this a syscon reference rather than a "reg" address?
-
-	Arnd
+I also noted that this is missing a signed-off-by tag as well (sorry
+for that, I will re-send it together with the other patch next
+weekend)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
