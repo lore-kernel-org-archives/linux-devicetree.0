@@ -1,61 +1,81 @@
-From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v1 2/3] of: Add support for reading a s32 from a
- multi-value property.
-Date: Mon, 22 Aug 2016 22:07:40 +0800
-Message-ID: <5e7a7b9f-44c2-82c2-eb17-ee54efd15503@rock-chips.com>
-References: <1471315139-28285-1-git-send-email-finley.xiao@rock-chips.com>
- <1471315139-28285-3-git-send-email-finley.xiao@rock-chips.com>
- <1471616119.61594.465.camel@infradead.org> <4975010.IL95Y3Sj1J@phil>
- <1471639654.4611.2.camel@infradead.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 02/12] mailbox: Add Tegra HSP driver
+Date: Mon, 22 Aug 2016 16:17:28 +0200
+Message-ID: <20160822141728.GF17367@ulmo.ba.sec>
+References: <20160819173233.13260-1-thierry.reding@gmail.com>
+ <20160819173233.13260-3-thierry.reding@gmail.com>
+ <13954058.6YHDe1jCOJ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1471639654.4611.2.camel-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tim.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ulysses.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lin.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="GV0iVqYguTV4Q9ER"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <13954058.6YHDe1jCOJ@wuerfel>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgrlnKggMjAxNi84LzIwIDQ6NDcsIERhdmlkIFdvb2Rob3VzZSDlhpnpgZM6Cj4gT24gRnJpLCAy
-MDE2LTA4LTE5IGF0IDIyOjQxICswMjAwLCBIZWlrbyBTdHVlYm5lciB3cm90ZToKPj4+IFNvIG5v
-LCBkb24ndCAqYWRkKiBhbnkgbW9yZSBvZiB0aGVzZSBmdW5jdGlvbnMuIE9ubHkgYWRkIHRoZSBn
-ZW5lcmljCj4+PiB2ZXJzaW9uLiBBbmQgaWYgeW91ciBkcml2ZXIgaXNuJ3QgdXNpbmcgdGhlIGdl
-bmVyaWMgcHJvcGVydHkKPj4+IGZ1bmN0aW9ucy4uLiBmaXggaXQuCj4+IEFzIGZhciBhcyBJIGNh
-biBzZWUsIGFsbCB0aGUgZGV2aWNlX3Byb3BlcnR5XyogZnVuY3Rpb25zIGFyZSBncm91bmRlZCBv
-biB0aGVpcgo+PiBvZl9wcm9wZXJ0eV8qLCBhY3BpX3Byb3BlcnR5XyogZXRjIGNvdW50ZXJwYXJ0
-cyBhbmQgZnVuY3Rpb25zIHJlYWRpbmcgc3BlY2lmaWMKPj4gZWxlbWVudHMgKHRoZSBfaW5kZXgg
-dmFyaWFudHMpIGFyZSBjdXJyZW50bHkgbm90IGF2YWlsYWJsZSBhdCBhbGwuCj4+Cj4+IGRyaXZl
-cnMvYmFzZS9wcm9wZXJ0eS5jOgo+PiAjZGVmaW5lIE9GX0RFVl9QUk9QX1JFQURfQVJSQVkobm9k
-ZSwgcHJvcG5hbWUsIHR5cGUsIHZhbCwgbnZhbCkgICAgICAgICAgICAgICAgICAgICAgICAgXAo+
-PiAgICAgICAgICAodmFsKSA/IG9mX3Byb3BlcnR5X3JlYWRfIyN0eXBlIyNfYXJyYXkoKG5vZGUp
-LCAocHJvcG5hbWUpLCAodmFsKSwgKG52YWwpKSAgICAgIFwKPj4gICAgICAgICAgICAgICAgOiBv
-Zl9wcm9wZXJ0eV9jb3VudF9lbGVtc19vZl9zaXplKChub2RlKSwgKHByb3BuYW1lKSwgc2l6ZW9m
-KHR5cGUpKQo+Pgo+PiBTbyBldmVuIGlmIHlvdSdyZSB1c2luZyB0aGUgZGV2aWNlX3Byb3BlcnR5
-XyogZnVuY3Rpb25zIHlvdSdkIHN0aWxsIG5lZWQKPj4gYSBtYXRjaCBpbiB0aGUgdW5kZXJseWlu
-ZyBmdW5jdGlvbnMgb3IgYW0gSSBtaXNzaW5nIHNvbWV0aGluZz8KPiBZZXMsIGJ1dCB0aGUgdW5k
-ZXJseWluZyBmdW5jdGlvbiBzaG91bGQgbmV2ZXIgYmUgdXNlZCBkaXJlY3RseSBieQo+IGRyaXZl
-cnMuIEFuZCBzaG91bGQgcHJvYmFibHkgYmUgcHJlZml4ZWQgd2l0aCBfXyBvciBtYXJrZWQgZGVw
-cmVjYXRlZAo+ICh3aXRoIGFuIG92ZXJyaWRlIGluIGl0cyBvbmUgZ2VudWluZSBjYWxsIHNpdGUp
-Lgo+CgpTbyBjYW4gSSBhZGQgYSBkZXZpY2VfcHJvcGVydHlfcmVhZF9zMzJfYXJyYXkgZnVuY3Rp
-b24gaW4gcHJvcGVydHkuaD8KCi0tLSBhL2luY2x1ZGUvbGludXgvcHJvcGVydHkuaAorKysgYi9p
-bmNsdWRlL2xpbnV4L3Byb3BlcnR5LmgKQEAgLTEwOCw2ICsxMDgsMTMgQEAgc3RhdGljIGlubGlu
-ZSBpbnQgZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMyKHN0cnVjdCAKZGV2aWNlICpkZXYsCiAgICAg
-ICAgIHJldHVybiBkZXZpY2VfcHJvcGVydHlfcmVhZF91MzJfYXJyYXkoZGV2LCBwcm9wbmFtZSwg
-dmFsLCAxKTsKICB9Cgorc3RhdGljIGlubGluZSBpbnQgZGV2aWNlX3Byb3BlcnR5X3JlYWRfczMy
-X2FycmF5KHN0cnVjdCBkZXZpY2UgKmRldiwgCmNvbnN0IGNoYXIgKnByb3BuYW1lLAorICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHMzMiAqdmFsLCBzaXplX3QgbnZhbCkKK3sKKyAg
-ICAgICByZXR1cm4gZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMyX2FycmF5KHN0cnVjdCBkZXZpY2Ug
-KmRldiwgY29uc3QgCmNoYXIgKnByb3BuYW1lLAorICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICh1MzIgKil2YWwsIHNpemVfdCBudmFsKTsKK30KCi0tIApGaW5sZXkKCgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgtcm9ja2NoaXAg
-bWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2NrY2hpcAo=
+
+--GV0iVqYguTV4Q9ER
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Aug 22, 2016 at 03:43:23PM +0200, Arnd Bergmann wrote:
+> On Friday, August 19, 2016 7:32:23 PM CEST Thierry Reding wrote:
+> > +static int tegra_hsp_doorbell_send_data(struct tegra_hsp_channel *chan=
+nel,
+> > +                                       void *data)
+> > +{
+> > +       tegra_hsp_channel_writel(channel, 1, HSP_DB_TRIGGER);
+> > +
+> > +       return 0;
+> > +}
+> >=20
+>=20
+> It seems very odd that you don't write the data at all but just trigger
+> the communication here. My interpretation is that you bypass
+> the mailbox infrastructure for the actual message, and instead reimplement
+> it on top of the mailbox infrastructure as part of the bpmp driver.
+>=20
+> Why not expose the bpmp itself as the mailbox here?
+
+My understanding is that doorbell doesn't provide any means to transfer
+data. It merely signals the availability of data. It is up to a use-case
+specific implementation to arrange for the transport of data.
+
+BPMP implements a shmem-based protocol and uses the doorbell merely as a
+mechanism for the BPMP and CPU to signal each other when data is ready.
+
+Exposing the BPMP as the mailbox could possibly be done, but it would
+implement a fairly large software layer in the mailbox system which is
+targetted primarily at simple mailbox hardware that exchanges small
+amounts of data (usually fitting into 32 bits). mailbox-sti is another
+driver that uses the framework only to signal, so this doesn't seem to
+be a mechanism exclusive to Tegra.
+
+Thierry
+
+--GV0iVqYguTV4Q9ER
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXuwl2AAoJEN0jrNd/PrOhg4QP/iVS/bv0evzHoyRg4O2I103i
+yZSbp/Gje05xg98m/At8IFrkkjuIbDJpkxnew95QNi4RF552d+flN0jdF0PZla7O
+yq+PJKAG4Tym5ACyP6ALIzXZefIY6OUfQmRl+pG90Ur+09TLulpUv/i4Hn23hygt
+E06eYvEmaqsyFivNxmYFpr+e4IOSAHisiQPHUxxBc5uRCi4RaL8oU5XeKaKmZTT6
+ERNFdRDoueD17oUKu/Gg6jqnj6O7b5/Jzyx3MdZmKhBWIzuN8vw7quOn9eghsnBB
+IipeUKzjYneqIRNAFNGkD6zjG9S9gtkJ9UNCLo1kbryLPgPp6iyzAzVYgF40T2vL
+6xb6YVX1F+irqOO7NtUpJ6S/gGJD5tG+ylUwfigbJ4nEVUhSneBkQdFP6Jiy176E
+q9837lxftzt/D72ZRXQKytn3XIAoKxU7MvtOy8cefFl2LyNv8IlCFhWtg03lbh+H
+UCRjWnXZAomOK24iZ30jxnenBFoZ4iA0L3ovCO3HcJFuQw9TTG53sLuvh9S/p8kS
+pWU3o/y6bT9sQjcWIPuifXG7No34h3MTcwGJ4MJ8PIM3aW4R4hoEL+8FesjOKw/Z
+YqC64+tsQqovKxDVjjzn4Vsn1Dc+DkcAg1/Wok07lxSt8cgjLLKu99KiVr3Y3yvJ
+aE5yd5RlXJ2zb+3+Ubhb
+=G79S
+-----END PGP SIGNATURE-----
+
+--GV0iVqYguTV4Q9ER--
