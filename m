@@ -1,68 +1,45 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sun8i: Add dts file for the Orange Pi Lite
- SBC
-Date: Mon, 22 Aug 2016 20:18:10 +0200
-Message-ID: <20160822181810.GV7104@lukather>
-References: <1470579404-28081-1-git-send-email-hdegoede@redhat.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] mmc: Add mmc_force_detect_change_begin / _end functions
+Date: Mon, 22 Aug 2016 20:21:52 +0200
+Message-ID: <CAPDyKFptVEjy8EQeL0t3xoxLvttHEJdvmmcS4k=8cuJbZEKTxA@mail.gmail.com>
+References: <1470488736-11083-1-git-send-email-hdegoede@redhat.com>
+ <CAPDyKFoTj9=esqaUPiwxLkhCsO98cSDgzdD1phgbXLa7rf6jiw@mail.gmail.com>
+ <831381a3-7cca-1264-29e2-bd40802a815f@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="gPQW1Pk7T/0rhUBV"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470579404-28081-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <831381a3-7cca-1264-29e2-bd40802a815f@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+[...]
 
---gPQW1Pk7T/0rhUBV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>
+> This would also mean the driver's probe function does not end up
+> getting called twice which certainly is better :)
+>
+> I'm not sure I'm familiar enough with the mmc subsys to come
+> up with a good implementation of this though, nor when I'll have
+> the time to look into this.
+>
+> Any chance you could make a RFC patch ? I can then test it on
+> hardware which actually needs this and bug-fix the code until
+> it actually works :)
 
-On Sun, Aug 07, 2016 at 04:16:44PM +0200, Hans de Goede wrote:
-> The Orange Pi Lite SBC is a small H3 based SBC, with 512MB RAM,
-> micro-sd slot, HDMI out, 2 USB-A connectors, 1 micro-USB connector,
-> sdio attached rtl8189ftv wifi and an ir receiver.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes in v2:
-> -Fix the wifi ethernet alias to be ethernet0 as the comment says, rather
->  then ethernet1 (copy and paste error).
+Sure, I can do that! I keep you in the loop when I post it.
 
-Applied, thanks!
-Maxime
+[...]
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---gPQW1Pk7T/0rhUBV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXu0HiAAoJEBx+YmzsjxAgbQUP/1jBZ8f+Rs9yQKSDzu8IhPzq
-3gbagnJ1KONBO9yXi0HZPUe1oS2tTJ3zaAkjfxRbxX2Vs/kKwr+euhqweTKU1ht6
-dZdY/qGySZ4K4bQkE5iykmkJgM6DBnmqanLBkmDMMRSyLBB+uBUmpadgltaoj7P3
-VYVNhJM39Vnh3HsDj0nVEkn6u5YCb2HfcIlf+i/apJ8MFmTXLAyzmz9KbG5BnXfv
-aYEoVDZYASZzyngmOXOubVVR9f0BrPZH3fTOHzQqiLOWysXMHj0D8CZIpoi2Z3a5
-rR93865ISWAWVxN/O3NF4x1j1KRj48FnNQn0PwipoYNv5JefkHCx/EVZLjEZrao4
-lL107fHgRx1j2KEJk5C9rjChNUjybebLi0KY36ovToUSelfMZqoSo7lnj5YrVBxu
-RjjrgYVp0ybUV1HM7tt4CXoY8tg6Txw4pwOBLvnQgmYATEQN1R3qEjklrmyGe70E
-/jwN+OUQXzzF3Aq0462PTsEFUNHb/Qi2T33vHSZNxwfOdy9g6AiPInEuUntB8Eu7
-u2tuHD94RrwkUBWwVvAHty6KhFima08wf9jsGBdK9IUF4B+UFkfx7qJhFDSsrFl6
-O2n3y1h4LBRFbnpyW7v2odeJho0WjM+XvX1hRmqwz5C1jIQhQiMb6y5XF2qCpn2g
-xHkVlKcal6uKo8nohyWr
-=+ee5
------END PGP SIGNATURE-----
-
---gPQW1Pk7T/0rhUBV--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
