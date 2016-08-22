@@ -1,53 +1,37 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/8] ARM: dts: sun8i: Add touchscreen node for
- sun8i-a23-gt90h
-Date: Mon, 22 Aug 2016 20:30:09 +0200
-Message-ID: <20160822183009.GX7104@lukather>
+Subject: Re: [PATCH 3/8] ARM: dts: sun8i: reference-design-tablet: Add
+ gsl1680 touchscreen node
+Date: Mon, 22 Aug 2016 20:31:42 +0200
+Message-ID: <20160822183142.GY7104@lukather>
 References: <1470685398-14568-1-git-send-email-hdegoede@redhat.com>
- <1470685398-14568-4-git-send-email-hdegoede@redhat.com>
+ <1470685398-14568-3-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="rG8Oha4Ryswg1dZ8"
+        protocol="application/pgp-signature"; boundary="3C3ZMpwu25Mtx3MN"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1470685398-14568-4-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1470685398-14568-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---rG8Oha4Ryswg1dZ8
+--3C3ZMpwu25Mtx3MN
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 08, 2016 at 09:43:14PM +0200, Hans de Goede wrote:
-> The gt90h tablet has a gsl3675 touchscreen, add a dt node describing it.
+On Mon, Aug 08, 2016 at 09:43:13PM +0200, Hans de Goede wrote:
+> Almost all sun8i tablets use a gsl1680 touchscreen controller, so add
+> a node describing it to reference-design-tablet.dtsi.
+>=20
+> Almost all, but not all, so mark it as disabled by default (dts files
+> will also need to supply a firmware-name and resolution info).
 >=20
 > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts b/arch/arm/boot/dts=
-/sun8i-a23-gt90h-v4.dts
-> index f27ebbb..da55b5a 100644
-> --- a/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
-> +++ b/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
-> @@ -53,6 +53,14 @@
->  	status =3D "okay";
->  };
-> =20
-> +&gsl1680 {
-> +	compatible =3D "silead,gsl3675";
-> +	touchscreen-fw-name =3D "silead/gsl3675-gt90h.fw";
 
-That's not documented anywhere, and looks really suspicious.
-
-Rob, is that even allowed?
-
-Thanks,
+Applied the first three patches, thanks!
 Maxime
 
 --=20
@@ -55,28 +39,28 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---rG8Oha4Ryswg1dZ8
+--3C3ZMpwu25Mtx3MN
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXu0SxAAoJEBx+YmzsjxAg7U0P/R8MxDDGgJbaDFaWK/Y+VUqw
-bUyJ1i7d56ENpzPfX9zV/+bIUKDgUpr94k8QuP5vU6TEqUmdWebDTBBc+jls9cs+
-N07rggYTfVPflWhxr1/hBtFhV0K3cDhM9kd5nWjERsiPkxkoTpx+HlMfThxWjZvZ
-wWZaHjmsPp7Pp9/asXswQK0WBrOiOG/aMCU0uiel+29VRlXfGOikNCKcFPsRLzVs
-rT1GN3480uDdR7hJuAOu6mZuQhqmEUPhJm2eFIm3zluZsdQYm5sCVJMRPsPMH1G8
-SO68kQey2dJYnlV+m7G0t9Lhw7E6kkyslgPrAbe89Uet1U68kcOrkZgE7SqhL+ld
-MfnYMlaQNog58LANpkJrciVzmBIONtEpLGrwihIOBYf7spHSlj7DqV+IwJeIWAK1
-J1VGxPXSkYQdnnIZBeDrQ4Z/QTlsZaB5WduND9BAiLYFwkZ/h9n/5KrgVuvoFH8S
-5mc3HWQf3Ts0hSKJOaWjVYsaZfjgn9oeGynAOlbJk+ByOSsEuSHPudTbh5XcPf7S
-NUBgwZe7vrLY4nQHMX+OgLOE2B0R6N8zY42YrMI2/g2FpbkD2oUFS0uvvUTUhniQ
-7+qrZO6ky0uuqXFJbqb1f8NTYYx38eQIACbTrVrIsxGv40ByBbJjMWDz5dmRuz8y
-oSuA3B+GjgCf01eQNxxg
-=lkNx
+iQIcBAEBAgAGBQJXu0UOAAoJEBx+YmzsjxAgHroQAIQxjW96vOyki5fIJuNcMOce
+IGzZ71FkqTiwGF2BQxAoXCP4H6PGxJnrU3dXMC13DReyZ0nOdram4IgEbMfMf6ys
+uWc4iK+Mn1IY7x6z3HEYA4VAqRueCe5p5tX/C+ORtT7vhPHU0H/0Dr4khRpaBiJm
+slDIlBREJPkPvR4+eiDsStkuc4kpY3Qr3L8W87TDA4oaoGVHcpHYinG2FkgGtn9i
+dih0jMTKISLqwG4APHhwNcdLxmWu/yWaLzhwZ6oL0cwoEjCZwdGl8bTCVKq47xTH
+hRRAh+U9ArHG7zf3uR8UX5dCAy0ucWfNPj9Br0QoVxDDXBnPer57JOMX7tsFrZAB
+eSnLZTikSFJH7gXcCP10kLI4mPhJGoISvDOJ3b/Uy/Iw7sXcm9f2eVMdncsMxnrd
+7ozNiKk4N0xS9axuDYzB91/KN6rMZ95do4kjCbeUbQUiW73aaD6+woz0mS5gRKI0
+tw90tUJpD4pcJeARERs9HSYzudF6Go5Gdgz8qeYoxlVEHtAJqIrV9urABSC4RNhU
+cbNZagX4Bg/4JQcuqff8ScufIlvo7bFhhI/mRSZY8QqLnt1HaTIHfNlzjU77PfKC
+FOzIfsdRTZsz9voXqKMcbt7FZj7bPBWQIq5rM+5tt+ETn9dD6Kzo3h9kFDJSJ/+e
+KCc8DwMA5P4GafXS55ci
+=h2R1
 -----END PGP SIGNATURE-----
 
---rG8Oha4Ryswg1dZ8--
+--3C3ZMpwu25Mtx3MN--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
