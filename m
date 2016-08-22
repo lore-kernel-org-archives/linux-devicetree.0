@@ -1,42 +1,42 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 02/12] mailbox: Add Tegra HSP driver
-Date: Mon, 22 Aug 2016 15:43:23 +0200
-Message-ID: <13954058.6YHDe1jCOJ@wuerfel>
-References: <20160819173233.13260-1-thierry.reding@gmail.com>
- <20160819173233.13260-3-thierry.reding@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 8/8] gpio: Add Aspeed driver
+Date: Mon, 22 Aug 2016 15:48:35 +0200
+Message-ID: <CACRpkdYv1+DmipZthL3FyOdwsmWNygOW6=quuS6zstjtFMxv1A@mail.gmail.com>
+References: <20160819124414.24242-1-andrew@aj.id.au> <20160819124414.24242-9-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160819173233.13260-3-thierry.reding@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Sivaram Nair <sivaramn@nvidia.com>, devicetree@vger.kernel.org, Peter De Schrijver <pdeschrijver@nvidia.com>, Timo Alho <talho@nvidia.com>, Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160819124414.24242-9-andrew@aj.id.au>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Joel Stanley <joel@jms.id.au>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alistair Popple <alistair@popple.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, August 19, 2016 7:32:23 PM CEST Thierry Reding wrote:
-> +static int tegra_hsp_doorbell_send_data(struct tegra_hsp_channel *channel,
-> +                                       void *data)
-> +{
-> +       tegra_hsp_channel_writel(channel, 1, HSP_DB_TRIGGER);
-> +
-> +       return 0;
-> +}
-> 
+On Fri, Aug 19, 2016 at 2:44 PM, Andrew Jeffery <andrew@aj.id.au> wrote:
 
-It seems very odd that you don't write the data at all but just trigger
-the communication here. My interpretation is that you bypass
-the mailbox infrastructure for the actual message, and instead reimplement
-it on top of the mailbox infrastructure as part of the bpmp driver.
+> From: Joel Stanley <joel@jms.id.au>
+>
+> The Aspeed SoCs contain GPIOs banked by letter, where each bank contains
+> 8 pins. The GPIO banks are then grouped in sets of four in the register
+> layout.
+>
+> The implementation exposes multiple banks through the one driver and
+> requests and releases pins via the pinctrl subsystem. The hardware
+> supports generation of interrupts from all GPIO-capable pins.
+>
+> A number of hardware features are not yet supported: Configuration of
+> interrupt direction (ARM or LPC), debouncing, and WDT reset tolerance
+> for output ports.
+>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> Signed-off-by: Alistair Popple <alistair@popple.id.au>
+> Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-Why not expose the bpmp itself as the mailbox here?
+This driver looks good now.
 
-	Arnd
+I guess I will have to wait for the rest to be fixed up
+before applying.
+
+Yours,
+Linus Walleij
