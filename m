@@ -1,73 +1,120 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 02/13] Documentation: add BCM6328 pincontroller binding documentation
-Date: Mon, 22 Aug 2016 14:51:37 +0200
-Message-ID: <CACRpkdYd8k2WDs7Zkn3O1W9roHeFVTHyzEkLgpgrVBm_gijmQA@mail.gmail.com>
-References: <1471604025-21575-1-git-send-email-jonas.gorski@gmail.com>
- <1471604025-21575-3-git-send-email-jonas.gorski@gmail.com>
- <20160819141436.GA6970@rob-hp-laptop> <CAOiHx=mLgZ6Q3tBY3zYkCpMX09Kv54OQQoAXAdP16D_xoXO3mg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/2] ARM64: dts: meson-gxbb: Add PWM pinctrl nodes
+Date: Mon, 22 Aug 2016 14:54:10 +0200
+Message-ID: <1471870450-11109-3-git-send-email-narmstrong@baylibre.com>
+References: <1471870450-11109-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOiHx=mLgZ6Q3tBY3zYkCpMX09Kv54OQQoAXAdP16D_xoXO3mg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1471870450-11109-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 19, 2016 at 4:30 PM, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 19 August 2016 at 16:14, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+Add DT nodes for PWMs in EE and AO domains.
 
->>> +pinctrl: pin-controller@10000080 {
->>> +     compatible = "brcm,bcm6328-pinctrl";
->>> +     reg = <0x10000080 0x8>,
->>> +           <0x10000088 0x8>,
->>> +           <0x10000098 0x4>,
->>> +           <0x1000009c 0xc>;
->>> +     reg-names = "dirout", "dat", "mode", "mux";
->>
->> What's in the holes? Just do one range or perhaps this should be part of
->> some larger block.
->
-> For this particular SoC it's SPI Slave Config; Registers found in the
-> holes on other SoCs:
->
-> * TestControl
-> * OscControl (just the name, no other documentation what it does)
-> * Switch LED control (for integrated switches)
-> * Legacy LED controller
-> * Reset Controller for the VDSL PHY
->
-> And there are also usually quite a few other registers on this block.
-> This seems to have been treated as a "GPIO and everything else that
-> isn't large enough for its own block" by Broadcom - with BCM6328/6362
-> they even introduced a "MISC" block then.
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 77 +++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
 
-What I would do myself is to put a syscon over this node.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index e3f4d36..0677eca 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -224,6 +224,34 @@
+ 						function = "uart_ao";
+ 					};
+ 				};
++
++				pwm_ao_a_3_pins: pwm_ao_a_3 {
++					mux {
++						groups = "pwm_ao_a_3";
++						function = "pwm_ao_a_3";
++					};
++				};
++
++				pwm_ao_a_6_pins: pwm_ao_a_6 {
++					mux {
++						groups = "pwm_ao_a_6";
++						function = "pwm_ao_a_6";
++					};
++				};
++
++				pwm_ao_a_12_pins: pwm_ao_a_12 {
++					mux {
++						groups = "pwm_ao_a_12";
++						function = "pwm_ao_a_12";
++					};
++				};
++
++				pwm_ao_b_pins: pwm_ao_b {
++					mux {
++						groups = "pwm_ao_b";
++						function = "pwm_ao_b";
++					};
++				};
+ 			};
+ 
+ 			uart_AO: serial@4c0 {
+@@ -334,6 +362,55 @@
+ 						function = "eth";
+ 					};
+ 				};
++
++				pwm_a_x_pins: pwm_a_x {
++					mux {
++						groups = "pwm_a_x";
++						function = "pwm_a_x";
++					};
++				};
++
++				pwm_a_y_pins: pwm_a_y {
++					mux {
++						groups = "pwm_a_y";
++						function = "pwm_a_y";
++					};
++				};
++
++				pwm_b_pins: pwm_b {
++					mux {
++						groups = "pwm_b";
++						function = "pwm_b";
++					};
++				};
++
++				pwm_d_pins: pwm_d {
++					mux {
++						groups = "pwm_d";
++						function = "pwm_d";
++					};
++				};
++
++				pwm_e_pins: pwm_e {
++					mux {
++						groups = "pwm_e";
++						function = "pwm_e";
++					};
++				};
++
++				pwm_f_x_pins: pwm_f_x {
++					mux {
++						groups = "pwm_f_x";
++						function = "pwm_f_x";
++					};
++				};
++
++				pwm_f_y_pins: pwm_f_y {
++					mux {
++						groups = "pwm_f_y";
++						function = "pwm_f_y";
++					};
++				};
+ 			};
+ 		};
+ 
+-- 
+1.9.1
 
-syscon: syscon@10000080 {
-    compatible = "broadcom,foo", "syscon";
-    reg = <0x10000000 0x100>;
-(...)
-
-Or however that looks.
-
-Then use the generic GPIO syscon driver on top of this,
-see drivers/gpio/gpio-syscon.c
-
-That driver does not support any pincontrol/muxing but
-is a good candidate to handle the GPIO portions.
-
-Syscons are there to handle these composite "misc sys
-regs" devices.
-
-You can even spawn subdevices to it by adding the
-compatible-string "mfd-simple".
-
-The rest of the subdevices would also have to be syscon
-children.
-
-Yours,
-Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
