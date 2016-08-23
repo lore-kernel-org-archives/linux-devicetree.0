@@ -1,81 +1,45 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 11/12] clk: tegra: Add BPMP clock driver
-Date: Tue, 23 Aug 2016 14:49:00 +0100
-Message-ID: <d4caf8c4-f733-5a63-fa03-f6160963fadb@nvidia.com>
-References: <20160819173233.13260-1-thierry.reding@gmail.com>
- <20160819173233.13260-12-thierry.reding@gmail.com>
- <0d7080bc-9e82-75dd-7169-0a5b7429801e@nvidia.com>
- <20160822132833.GD17367@ulmo.ba.sec>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH 2/2] ARM: dts: sun8i: Add extra UART pinmux settings for
+ A23/33
+Date: Tue, 23 Aug 2016 21:51:05 +0800
+Message-ID: <69271471960265@web26h.yandex.ru>
+References: <20160823055826.20591-1-icenowy@aosc.xyz>
+ <20160823055826.20591-2-icenowy@aosc.xyz> <20160823114251.GL2598@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160822132833.GD17367-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160823114251.GL2598@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 22/08/16 14:28, Thierry Reding wrote:
-> On Mon, Aug 22, 2016 at 11:11:57AM +0100, Jon Hunter wrote:
->>
->> On 19/08/16 18:32, Thierry Reding wrote:
->>> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>
->>> This driver uses the services provided by the BPMP firmware driver to
->>> implement a clock driver based on the MRQ_CLK request. This part of the
->>> BPMP ABI provides a means to enumerate and control clocks and should
->>> allow the driver to work on any chip that supports this ABI.
->>>
->>> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>  drivers/clk/tegra/Makefile   |   1 +
->>>  drivers/clk/tegra/clk-bpmp.c | 565 +++++++++++++++++++++++++++++++++++++++++++
->>>  2 files changed, 566 insertions(+)
->>>  create mode 100644 drivers/clk/tegra/clk-bpmp.c
-
-[snip]
-
->>> +int tegra_bpmp_init_clocks(struct tegra_bpmp *bpmp)
->>> +{
->>> +	struct tegra_bpmp_clk_info *clocks;
->>> +	unsigned int count;
->>> +	int err;
->>> +
->>> +	dev_dbg(bpmp->dev, "> %s(bpmp=%p)\n", __func__, bpmp);
->>> +
->>> +	err = tegra_bpmp_probe_clocks(bpmp, &clocks);
->>> +	if (err < 0)
->>> +		return err;
->>> +
->>> +	count = err;
->>> +
->>> +	dev_dbg(bpmp->dev, "%u clocks probed\n", count);
->>> +
->>> +	err = tegra_bpmp_register_clocks(bpmp, clocks, count);
->>> +	if (err < 0) {
->>> +		kfree(clocks);
->>> +		return err;
->>> +	}
->>> +
->>> +	kfree(clocks);
->>> +
->>> +	of_clk_add_hw_provider(bpmp->dev->of_node, tegra_bpmp_clk_of_xlate,
->>> +			       bpmp);
->>
->> We should check the return code.
-> 
-> Yes, I suppose we should also make sure to remove all clocks if this
-> ever fails. I'll see how difficult it is to implement that.
-
-In the unlikely event it fails, not much is going to work and so may be
-warning or printing an error is enough. It seems that we don't clean-up
-in the bpmp firmware driver (that calls this) and so not cleaning up
-here will not make much difference.
-
-Cheers
-Jon
-
--- 
-nvpublic
+CgoyMy4wOC4yMDE2LCAxOTo0MiwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
+ZWxlY3Ryb25zLmNvbT46Cj4gSGksCj4KPiBPbiBUdWUsIEF1ZyAyMywgMjAxNiBhdCAwMTo1ODoy
+NlBNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+PiDCoEEyMy8zMyBoYXZlIDQgVUFSVCBj
+b250cm9sbGVycyBvdXRzaWRlIFBSQ00uIEhvd2V2ZXIsIHRoZSBkZXZpY2V0cmVlIHVzZWQKPj4g
+wqB0byBtZW50aW9uZWQgb25seSBVQVJUMCdzIHBpbm11eCBzZXR0aW5ncy4gU29tZSBleHRyYSBV
+QVJUIGNvbnRyb2xsZXJzIGhhdmUKPj4gwqBSVFMvQ1RTLCBhbmQgaXMgc3VpdGFibGUgZm9yIHVz
+aW5nIGFzIGJsdWV0b290aCBVQVJUIGNvbnRyb2xsZXIuCj4+Cj4+IMKgQWRkIHRoZSBwaW5tdXgg
+c2V0dGluZ3MgZm9yIHRoZSBVQVJUIGNvbnRyb2xsZXIsIHRvIG1ha2UgdXNlIG9mIHRoZQo+PiDC
+oGJsdWV0b290aCBmdW5jdGlvbiBvZiBzb21lIHRhYmxldHMuCj4+Cj4+IMKgU2lnbmVkLW9mZi1i
+eTogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLnh5ej4KPgo+IE91ciBwb2xpY3kgaXMgdGhh
+dCB3ZSBhdm9pZCBhZGRpbmcgdW51c2VkIHBpbmN0cmwgbm9kZXMgdG8gbm90IGNyaXBwbGUKPiB0
+aGUgRFQgZm9yIG5vIHBhcnRpY3VsYXIgcmVhc29uLgo+Cj4gU28gcGxlYXNlIGFkZCBvbmx5IHRo
+ZSBub2RlcyB5b3UnbGwgbmVlZCBpbiB5b3VyIHRhYmxldC4KClRoZW4uLi4gaWYgd2hhdCBJIG5l
+ZWRzIGlzIHRoZSBQRyBncm91cCBvZiB1YXJ0MSwgc2hvdWxkIEkgbmFtZSBpdCBhcwp1YXJ0MV9w
+aW5zX2Egb3IgdWFydDFfcGluc19iPwoKPgo+IFRoYW5rcyEKPiBNYXhpbWUKPgo+IC0tCj4gTWF4
+aW1lIFJpcGFyZCwgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVu
+Z2luZWVyaW5nCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
