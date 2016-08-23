@@ -1,83 +1,65 @@
-From: york sun <york.sun@nxp.com>
-Subject: Re: [Patch v4 9/9] arm64: Update device tree for Layerscape SoCs
-Date: Tue, 23 Aug 2016 21:37:35 +0000
-Message-ID: <AM4PR0401MB173218BE03AEF9AB7D0F5FE79AEB0@AM4PR0401MB1732.eurprd04.prod.outlook.com>
-References: <1470780000-16750-1-git-send-email-york.sun@nxp.com>
-Reply-To: york sun <york.sun@nxp.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: dts: blanche: add support for general purpose LEDs
+Date: Wed, 24 Aug 2016 01:23:00 +0300
+Message-ID: <72751b42-8385-6138-548a-744c39567cf8@cogentembedded.com>
+References: <5383928.8UnDsUpmkz@wasted.cogentembedded.com>
+ <1529754.UBcqZ7GKj7@wasted.cogentembedded.com>
+ <20160823073920.GI14998@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, yangbo lu <yangbo.lu@freescale.com>, Gang Liu <gang.liu@nxp.com>, "morbidrsa@gmail.com" <morbidrsa@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "oss@buserror.net" <oss@buserror.net>, Rob Herring <robh+dt@kernel.org>, "bp@alien8.de" <bp@alien8.de>, Rajesh Bhagat <rajesh.bhagat@freescale.com>, Olof Johansson <olof@lixom.net>, Mingkai Hu <Mingkai.Hu@freescale.com>, Li Yang <leoli@freescale.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Yao Yuan <yao.yuan@nxp.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160823073920.GI14998@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-+Shawn Guo
+On 08/23/2016 10:39 AM, Simon Horman wrote:
 
-On 08/09/2016 03:00 PM, York Sun wrote:
-> Add DDR memory controller nodes to enable EDAC driver.
+>> Add support for the general purpose LEDs on the Blanche board.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>
+>> ---
+>> This patch is against the 'renesas-devel-20160822-v4.8-rc3' of Simon Horman's
+>> 'renesas.git' repo plus the SDHI0/DU patches posted earlier.
+>>
+>>  arch/arm/boot/dts/r8a7792-blanche.dts |   21 +++++++++++++++++++++
+>>  1 file changed, 21 insertions(+)
+>>
+>> Index: renesas/arch/arm/boot/dts/r8a7792-blanche.dts
+>> ===================================================================
+>> --- renesas.orig/arch/arm/boot/dts/r8a7792-blanche.dts
+>> +++ renesas/arch/arm/boot/dts/r8a7792-blanche.dts
+>> @@ -159,6 +159,27 @@
+>>  		};
+>>  	};
+>>
+>> +	leds {
+>> +		compatible = "gpio-leds";
+>> +
+>> +		led17 {
+>> +			gpios = <&gpio10 10 GPIO_ACTIVE_HIGH>;
+>> +			label = "LED17";
 >
-> Signed-off-by: York Sun <york.sun@nxp.com>
+> I am unclear of the motivation for using the label property when
+> its value is so similar to the name of the node.
 >
-> ---
-> Change log
->   v4: no change
->   v3: no change
->   v2: no change
->
->  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |  7 +++++++
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 14 ++++++++++++++
->  2 files changed, 21 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> index de0323b..cb33f23 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> @@ -196,6 +196,13 @@
->  			bus-width = <4>;
->  		};
->
-> +		ddr: memory-controller@1080000 {
-> +			compatible = "fsl,qoriq-memory-controller";
-> +			reg = <0x0 0x1080000 0x0 0x1000>;
-> +			interrupts = <0 144 0x4>;
-> +			big-endian;
-> +		};
-> +
->  		dspi0: dspi@2100000 {
->  			compatible = "fsl,ls1043a-dspi", "fsl,ls1021a-v1.0-dspi";
->  			#address-cells = <1>;
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> index 3187c82..3221e5c 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> @@ -689,4 +689,18 @@
->  			interrupts = <0 12 4>;
->  		};
->  	};
-> +
-> +	ddr1: memory-controller@1080000 {
-> +		compatible = "fsl,qoriq-memory-controller";
-> +		reg = <0x0 0x1080000 0x0 0x1000>;
-> +		interrupts = <0 17 0x4>;
-> +		little-endian;
-> +	};
-> +
-> +	ddr2: memory-controller@1090000 {
-> +		compatible = "fsl,qoriq-memory-controller";
-> +		reg = <0x0 0x1090000 0x0 0x1000>;
-> +		interrupts = <0 18 0x4>;
-> +		little-endian;
-> +	};
->  };
->
+> The reason I noticed this is that it appears to differ from led nodes
+> for other Renesas ARM SoCs.
+
+     I was looking at the Koelsch's DT as an example (and Gose's DT also had 
+labels).
+
+> I'm not opposed to using the label property
+> if there is some value to it. But I would prefer to use it consistently.
+> And I'd prefer not to add it to all the other SoCs unless there is a reason
+> to.
+
+    Looks like the driver can infer the LED names from the device node names. 
+I'll recast.
+
+[...]
+
+MBR, Sergei
