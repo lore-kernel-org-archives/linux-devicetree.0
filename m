@@ -1,64 +1,57 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 4/8] ARM: dts: sun8i: Add touchscreen node for
- sun8i-a23-gt90h
-Date: Tue, 23 Aug 2016 10:05:26 +0800
-Message-ID: <106521471917926@web29g.yandex.ru>
-References: <1470685398-14568-1-git-send-email-hdegoede@redhat.com>
- <1470685398-14568-4-git-send-email-hdegoede@redhat.com>
- <20160822183009.GX7104@lukather>
- <cf0186a0-f4ea-173c-4f93-df8798941199@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cf0186a0-f4ea-173c-4f93-df8798941199@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/5] ppc32: use the default of_platform_default_populate_init() for 83xx boards
+Date: Tue, 23 Aug 2016 10:06:54 +0800
+Message-ID: <1471918019-19472-1-git-send-email-haokexin@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgoyMy4wOC4yMDE2LCAwMzowOCwgIkhhbnMgZGUgR29lZGUiIDxoZGVnb2VkZUByZWRoYXQuY29t
-PjoKPiBIaSwKPgo+IE9uIDIyLTA4LTE2IDIwOjMwLCBNYXhpbWUgUmlwYXJkIHdyb3RlOgo+PiDC
-oE9uIE1vbiwgQXVnIDA4LCAyMDE2IGF0IDA5OjQzOjE0UE0gKzAyMDAsIEhhbnMgZGUgR29lZGUg
-d3JvdGU6Cj4+PiDCoFRoZSBndDkwaCB0YWJsZXQgaGFzIGEgZ3NsMzY3NSB0b3VjaHNjcmVlbiwg
-YWRkIGEgZHQgbm9kZSBkZXNjcmliaW5nIGl0Lgo+Pj4KPj4+IMKgU2lnbmVkLW9mZi1ieTogSGFu
-cyBkZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4KPj4+IMKgLS0tCj4+PiDCoMKgYXJjaC9h
-cm0vYm9vdC9kdHMvc3VuOGktYTIzLWd0OTBoLXY0LmR0cyB8IDggKysrKysrKysKPj4+IMKgwqAx
-IGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspCj4+Pgo+Pj4gwqBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvc3VuOGktYTIzLWd0OTBoLXY0LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L3N1bjhpLWEyMy1ndDkwaC12NC5kdHMKPj4+IMKgaW5kZXggZjI3ZWJiYi4uZGE1NWI1YSAxMDA2
-NDQKPj4+IMKgLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTIzLWd0OTBoLXY0LmR0cwo+
-Pj4gwqArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1hMjMtZ3Q5MGgtdjQuZHRzCj4+PiDC
-oEBAIC01Myw2ICs1MywxNCBAQAo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqBzdGF0dXMgPSAib2th
-eSI7Cj4+PiDCoMKgfTsKPj4+Cj4+PiDCoCsmZ3NsMTY4MCB7Cj4+PiDCoCsgY29tcGF0aWJsZSA9
-ICJzaWxlYWQsZ3NsMzY3NSI7Cj4+PiDCoCsgdG91Y2hzY3JlZW4tZnctbmFtZSA9ICJzaWxlYWQv
-Z3NsMzY3NS1ndDkwaC5mdyI7Cj4+Cj4+IMKgVGhhdCdzIG5vdCBkb2N1bWVudGVkIGFueXdoZXJl
-LCBhbmQgbG9va3MgcmVhbGx5IHN1c3BpY2lvdXMuCj4KPiBVZ2gsIHRoYXQgc2hvdWxkIGhhdmUg
-YmVlbiBpbjoKPgo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90b3Vj
-aHNjcmVlbi9zaWxlYWRfZ3NsMTY4MC50eHQKPgo+IEJ1dCBzb21laG93IGl0IGlzIG5vdCAoSSBi
-ZWxpZXZlIGl0IHdhcyB0aGVyZSBpbiBlYXJsaWVyIHJldmlzaW9ucyBvZgo+IHRoZSBwYXRjaCks
-IEknbGwgc2VuZCBhIHBhdGNoIHRvIGZpeCB0aGlzLgo+Cj4gQWJvdXQgaXQgYmVpbmcgc3VzcGlj
-aW91cywgdGhpcyBpcyBub3QgcmVhbGx5IGZpcm13YXJlIGl0IGlzIGEgYnVuY2gKPiBvZiBjb25m
-aWd1cmF0aW9uIGRhdGEgLyBsb29rdXAgdGFibGVzIGZvciB0aGUgY29udHJvbGxlciB3aGljaCB0
-ZWxsCj4gaXQgaW4gd2hpY2ggb3JkZXIgdGhlIHRvdWNoc2NyZWVuIGhvcml6b250YWwgLyB2ZXJ0
-aWNhbCBzZW5zb3IKPiBsaW5lcyBhcmUgY29ubmVjdGVkIHRvIGl0cyBzZW5zZSBwaW5zLCBhbmQg
-d2hhdCB2YWx1ZXMgdG8gc2VuZAo+IGZvciBmaW5nZXIgeCUgYmV0d2VlbiBsaW5lIHogYW5kIGxp
-bmUgeisxLCB3aGljaCBkaWZmZXJzIHBlcgo+IHRhYmxldCBtb2RlbCwgc2luY2Ugbm90IGFsbCB0
-YWJsZXRzIHVzZSB0aGUgc2FtZSBkaWdpdGl6ZXIuCgpJIGRvIHRoaW5rIGl0J3MgYSBtaXh0dXJl
-IG9mIGV4ZWN1dGFibGUgTUNVIGNvZGVzIGFuZCBkYXRhLgpUaGUgR1NMMTY4MCBkYXRhc2hlZXQg
-aW5kaWNhdGVzIHRoYXQgdGhlcmUncyBhIDMyLWJpdCBNQ1UgaW4gaXQuCgo+Cj4gUmVnYXJkcywK
-Pgo+IEhhbnMKPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKPiBsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi,
+
+This is a follow on patch series of [1]. This tries to drop the arch specific
+codes of bus probe by using the common of_platform_default_populate_init()
+function. I just took the 83xx boards as an example. If you guys think that
+this is doable, I can change the remaining ppc boards to use this method for
+the of probe.
+
+[1] https://patchwork.ozlabs.org/patch/658531/
+
+Kevin Hao (5):
+  of/platform: introduce arch_want_default_of_probe()
+  powerpc: introduce arch_enable_default_of_probe()
+  of/platform: introduce a generic way to declare a platform bus
+  powerpc/83xx: factor out the common codes of setup arch functions
+  powerpc/83xx: enable the default of probe
+
+ arch/powerpc/include/asm/setup.h          |  1 +
+ arch/powerpc/kernel/of_platform.c         | 12 +++++++++++
+ arch/powerpc/platforms/83xx/asp834x.c     |  6 +-----
+ arch/powerpc/platforms/83xx/km83xx.c      |  7 +------
+ arch/powerpc/platforms/83xx/misc.c        | 33 +++++++++++++++----------------
+ arch/powerpc/platforms/83xx/mpc830x_rdb.c |  7 +------
+ arch/powerpc/platforms/83xx/mpc831x_rdb.c |  7 +------
+ arch/powerpc/platforms/83xx/mpc832x_mds.c |  7 +------
+ arch/powerpc/platforms/83xx/mpc832x_rdb.c |  7 +------
+ arch/powerpc/platforms/83xx/mpc834x_itx.c | 17 +---------------
+ arch/powerpc/platforms/83xx/mpc834x_mds.c |  7 +------
+ arch/powerpc/platforms/83xx/mpc836x_mds.c |  7 +------
+ arch/powerpc/platforms/83xx/mpc836x_rdk.c |  7 +------
+ arch/powerpc/platforms/83xx/mpc837x_mds.c |  7 +------
+ arch/powerpc/platforms/83xx/mpc837x_rdb.c |  7 +------
+ arch/powerpc/platforms/83xx/mpc83xx.h     |  2 +-
+ arch/powerpc/platforms/83xx/sbc834x.c     |  7 +------
+ drivers/of/platform.c                     | 21 ++++++++++++++++----
+ include/asm-generic/vmlinux.lds.h         |  2 ++
+ include/linux/of.h                        | 22 +++++++++++++++++++++
+ include/linux/of_platform.h               |  6 ++++++
+ 21 files changed, 90 insertions(+), 109 deletions(-)
+
+-- 
+2.5.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
