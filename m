@@ -1,15 +1,12 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 05/12] firmware: tegra: Add BPMP support
-Date: Tue, 23 Aug 2016 16:58:58 +0200
-Message-ID: <1969548.JuvmAu2Kz7@wuerfel>
-References: <20160819173233.13260-1-thierry.reding@gmail.com>
- <5669893.Rd6yQObxH6@wuerfel>
- <866add72-703b-86e1-6e3e-04dbfb872970@wwwdotorg.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH] dt-bindings: touchscreen: silead_gsl1680: Document
+ touchscreen-fw-name
+Date: Tue, 23 Aug 2016 17:04:48 +0200
+Message-ID: <1471964688-12188-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <866add72-703b-86e1-6e3e-04dbfb872970@wwwdotorg.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,63 +16,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree@vger.kernel.org, Peter De Schrijver <pdeschrijver@nvidia.com>, Sivaram Nair <sivaramn@nvidia.com>, Timo Alho <talho@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Hans de Goede <hdegoede@redhat.com>, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, August 22, 2016 12:56:52 PM CEST Stephen Warren wrote:
-> On 08/22/2016 08:42 AM, Arnd Bergmann wrote:
-> > On Monday, August 22, 2016 4:02:11 PM CEST Thierry Reding wrote:
-> >> On Mon, Aug 22, 2016 at 03:34:15PM +0200, Arnd Bergmann wrote:
-> >>> On Friday, August 19, 2016 7:32:26 PM CEST Thierry Reding wrote:
-> >>>> diff --git a/include/soc/tegra/bpmp-abi.h b/include/soc/tegra/bpmp-abi.h
-> >>>> new file mode 100644
-> >>>> index 000000000000..0aaef5960e29
-> >>>> --- /dev/null
-> >>>> +++ b/include/soc/tegra/bpmp-abi.h
-> >>>> +#ifndef _ABI_BPMP_ABI_H_
-> >>>> +#define _ABI_BPMP_ABI_H_
-> >>>> +
-> >>>> +#ifdef LK
-> >>>> +#include <stdint.h>
-> >>>> +#endif
-> >>>> +
-> >>>> +#ifndef __ABI_PACKED
-> >>>> +#define __ABI_PACKED __attribute__((packed))
-> >>>> +#endif
-> >>>> +
-> >>>> +#ifdef NO_GCC_EXTENSIONS
-> >>>> +#define EMPTY char empty;
-> >>>> +#define EMPTY_ARRAY 1
-> >>>> +#else
-> >>>> +#define EMPTY
-> >>>> +#define EMPTY_ARRAY 0
-> >>>> +#endif
-> >>>> +
-> >>>> +#ifndef __UNION_ANON
-> >>>> +#define __UNION_ANON
-> >>>> +#endif
-> >>>
-> >>> Maybe keep these all out of the kernel?
-> >>
-> >> This was discussed a little in an earlier posting. This header file is
-> >> maintained by the BPMP firmware team and using it verbatim means little
-> >> to no effort required to update it.
-> >
-> > The usual recommendation is to just use Linux coding style in shared
-> > files, and possibly add another header that provides the required
-> > definitions. Otherwise you end up with people randomly cleaning up
-> > the file later 
-> 
-> That's just going to push the problem into all other operating systems; 
-> what happens when BSD, Windows, QNX, FreeRTOS, ... import this file and 
-> attempt to apply the same argument, but want the FW team to use their 
-> coding style?
+The driver has supported touchscreen-fw-name to specify the firmware to
+load since day 0, but this was omitted from the binding, document this.
 
-That's not how the world works, fortunately. In practice, Linux is going
-to be the only OS that cares enough about the coding style of an interface
-header for a random device driver. The others either don't include
-vendor drivers, or they don't have specific coding style requirements,
-or they use a sane style already.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-	Arnd
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+index ad7f41a..c9c1ddd 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
+@@ -17,6 +17,7 @@ Required properties:
+ - touchscreen-size-y	  : See touchscreen.txt
+ 
+ Optional properties:
++- touchscreen-fw-name	  : Filename (string) for device specific firmware
+ - touchscreen-inverted-x  : See touchscreen.txt
+ - touchscreen-inverted-y  : See touchscreen.txt
+ - touchscreen-swapped-x-y : See touchscreen.txt
+-- 
+2.7.4
