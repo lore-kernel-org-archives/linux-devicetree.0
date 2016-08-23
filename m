@@ -1,231 +1,97 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: add TOPEET itop elite based board
-Date: Tue, 23 Aug 2016 13:14:02 -0500
-Message-ID: <20160823181402.GA6302@rob-hp-laptop>
-References: <4767fc2a-95b7-ee0d-f51a-7a5d6ca89d8f@samsung.com>
- <1471875489-11428-1-git-send-email-ayaka@soulik.info>
- <1471875489-11428-3-git-send-email-ayaka@soulik.info>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 3/4] dt-binding: remoteproc: venus rproc dt binding
+ document
+Date: Tue, 23 Aug 2016 11:21:57 -0700
+Message-ID: <20160823182157.GC15161@tuxbot>
+References: <1471622000-1906-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1471622000-1906-4-git-send-email-stanimir.varbanov@linaro.org>
+ <20160823173259.GA13327@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1471875489-11428-3-git-send-email-ayaka@soulik.info>
+In-Reply-To: <20160823173259.GA13327@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Li <ayaka@soulik.info>
-Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, krzk@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Andy Gross <andy.gross@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Clark <robdclark@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 22, 2016 at 10:18:09PM +0800, Randy Li wrote:
-> The TOPEET itop exynos 4412 have three versions base board. The
-> Elite version is the cheap one without too much peripheral devices
-> on it.
+On Tue 23 Aug 10:32 PDT 2016, Rob Herring wrote:
+
+> On Fri, Aug 19, 2016 at 06:53:19PM +0300, Stanimir Varbanov wrote:
+> > Add devicetree binding document for Venus remote processor.
+> > 
+> > Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> > ---
+> >  .../devicetree/bindings/remoteproc/qcom,venus.txt  | 33 ++++++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
+> > new file mode 100644
+> > index 000000000000..06a2db60fa38
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
+> > @@ -0,0 +1,33 @@
+> > +Qualcomm Venus Peripheral Image Loader
+> > +
+> > +This document defines the binding for a component that loads and boots firmware
+> > +on the Qualcomm Venus remote processor core.
 > 
-> Currently supported are serial console, wired networking(USB),
-> USB OTG in peripheral mode, USB host, SD storage, GPIO buttons,
-> PWM beeper, ADC and LEDs.
+> This does not make sense to me. Venus is the video encoder/decoder h/w, 
+> right?
+
+Yes, Venus is an ARM based thing doing video encoding and decoding.
+
+> Why is the firmware loader separate from the codec block?
+> Why rproc is used?
+
+Implementation wise it shares structure and almost all the logic with
+other remoteprocs in the Qualcomm platform; you load firmware into a
+memory region, you grab a few resources (clocks, regulators,
+power-domains), you jump into TrustZone for signature checks and you
+release the resources as the remote is booted and have voted for these
+with the RPM.
+
+But there is also a second operation mode, where one of the Hexagon DSPs
+"imitates" a Venus core; with slightly different transport mechanism for
+transferring the command stream - so the Venus node might operate on a
+non-Venus hardware.
+
+
+That said, the Venus node (in Venus-hw mode) has a 1:1 life cycle with
+the power-on-state of the remoteproc. So perhaps we should describe the
+two parts in one DT node and have the rproc-venus implementation spawn
+the v4l driver when the remote is running...
+
+But that would mean that on a 8064 we would have 5-6 nodes describing
+standalone remoteprocs and one describing the exact same thing but in a
+completely different way.
+
+
+If we keep it as two nodes, I think it would be better to describe the
+video-part as a child of the venus-rproc; to show the link between the
+two parts.
+
+> Are there multiple clients?
+> Naming it rproc_venus implies there aren't.
+
+I'm still investigating this, but it looks like rproc part of the
+8060/8960/8064 "vidc" is very similar.
+
+> And why does the firmware loading need 8MB of memory at a fixed address?
 > 
-> Signed-off-by: Randy Li <ayaka@soulik.info>
-> ---
->  .../bindings/arm/samsung/samsung-boards.txt        |   3 +
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/exynos4412-itop-elite.dts        | 147 +++++++++++++++++++++
->  3 files changed, 151 insertions(+)
->  create mode 100644 arch/arm/boot/dts/exynos4412-itop-elite.dts
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-> index 0ea7f14..c5913ba 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-> +++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-> @@ -22,6 +22,9 @@ Required root node properties:
->    * FriendlyARM
->  	- "friendlyarm,tiny4412"  - for Exynos4412-based FriendlyARM
->  				    TINY4412 board.
-> +  * Topee
 
-Topeet?
+On msm8974 the Venus should be loaded into a 5MB region with a fixed
+address, perhaps just because of some memory budgeting document. On 8916
+it looks (downstream) like all we need is the size and it can be
+positioned wherever.
 
-> +	- "topeet,itop4412-elite" - for Exynos4412-based Topeet
-> +                                    Elite base board.                             
->  
->    * Google
->  	- "google,pi"		- for Exynos5800-based Google Peach Pi
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 48e1d4e..8f47aa0 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -135,6 +135,7 @@ dtb-$(CONFIG_ARCH_EXYNOS4) += \
->  	exynos4412-origen.dtb \
->  	exynos4412-smdk4412.dtb \
->  	exynos4412-tiny4412.dtb \
-> +	exynos4412-itop-elite.dtb \
->  	exynos4412-trats2.dtb
->  dtb-$(CONFIG_ARCH_EXYNOS5) += \
->  	exynos5250-arndale.dtb \
-> diff --git a/arch/arm/boot/dts/exynos4412-itop-elite.dts b/arch/arm/boot/dts/exynos4412-itop-elite.dts
-> new file mode 100644
-> index 0000000..3e0863b
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos4412-itop-elite.dts
-> @@ -0,0 +1,147 @@
-> +/*
-> + * TOPEET's Exynos4412 based itop board device tree source
-> + *
-> + * Copyright (c) 2016 SUMOMO Computer Association
-> + *			https://www.sumomo.mobi
-> + *			Randy Li <ayaka@soulik.info>
-> + *			
-> + * Device tree source file for TOPEET iTop Exynos 4412 core board 
-> + * which is based on Samsung's Exynos4412 SoC.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
-> +
-> +/dts-v1/;
-> +#include "exynos4412-itop-scp-core.dtsi"
-> +
-> +/ {
-> +	model = "TOPEET iTop 4412 Elite board based on Exynos4412";
-> +	compatible = "topeet,itop4412-elite", "samsung,exynos4412", "samsung,exynos4";
-> +
-> +	chosen {
-> +		bootargs ="console=ttySAC2,115200";
+But I would say this is not a property of the rproc-venus, but rather
+about system configuration and the firmware. As such I think we should
+omit the memory reserve from the example and make sure the
+implementation can deal with either a fixed or only-sized reserved
+memory region.
 
-Don't need console set with...
-
-> +		stdout-path = &serial_2;
-
-this set.
-
-> +	};
-> +	
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		
-> +		led2 {
-> +			label = "red:system";
-> +			gpios = <&gpx1 0 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +
-> +		led3 {
-> +			label = "red:user";
-> +			gpios = <&gpk1 1 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +		};
-> +	};
-> +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +		
-> +		home {
-> +			lable = "GPIO Key Home";
-
-s/lable/label/
-
-> +			linux,code = <KEY_HOME>;
-> +			gpios = <&gpx1 1 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		back {
-> +			lable = "GPIO Key Back";
-
-ditto...
-
-> +			linux,code = <KEY_BACK>;
-> +			gpios = <&gpx1 2 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		sleep {
-> +			lable = "GPIO Key Sleep";
-> +			linux,code = <KEY_POWER>;
-> +			gpios = <&gpx3 3 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		vol_up {
-> +			lable = "GPIO Key Vol+";
-> +			linux,code = <KEY_UP>;
-> +			gpios = <&gpx2 1 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		vol_down {
-> +			lable = "GPIO Key Vol-";
-> +			linux,code = <KEY_DOWN>;
-> +			gpios = <&gpx2 0 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +	
-> +	beep {
-> +		compatible = "pwm-beeper";
-> +		pwms = <&pwm>;
-> +		pinctrl-0 = <&pwm0_out>;
-> +		pinctrl-names = "default";
-> +	};
-> +};
-> +
-> +&pinctrl_1 {
-> +	ether-reset {
-> +		samsung,pins = "gpc0-1";
-> +		samsung,pin-function = <1>;
-> +		samsung,pin-pud = <0>;
-> +		samsung,pin-drv = <0>;
-> +	};
-> +};
-> +
-> +&sdhci_2 {
-> +	bus-width = <4>;
-> +	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus4>;
-> +	pinctrl-names = "default";
-> +	broken-cd;
-> +	cap-sd-highspeed;
-> +	vmmc-supply = <&ldo23_reg>;
-> +	vqmmc-supply = <&ldo17_reg>;
-> +	status = "okay";
-> +};
-> +
-> +&ehci {
-> +	status = "okay";
-> +	/* In order to reset USB ethernet */
-> +	samsung,vbus-gpio = <&gpc0 1 GPIO_ACTIVE_HIGH>;
-> +
-> +	port@0 {
-> +		status = "okay";
-> +	};
-> +
-> +	port@2 {
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +&exynos_usbphy {
-> +	status = "okay";
-> +};
-> +
-> +&hsotg {
-> +	dr_mode = "peripheral";
-> +	status = "okay";
-> +};
-> +
-> +&serial_1 {
-> +	status = "okay";
-> +};
-> +
-> +&serial_2 {
-> +	status = "okay";
-> +};
-> +
-> +&pwm {
-> +	pinctrl-0 = <&pwm1_out>;
-> +	pinctrl-names = "default";
-> +	samsung,pwm-outputs = <1>;
-> +	status = "okay";
-> +};
-> +
-> +&adc {
-> +	status = "okay";
-> +};
-> -- 
-> 2.7.4
-> 
+Regards,
+Bjorn
