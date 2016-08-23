@@ -1,83 +1,126 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 6/7] phy-sun4i-usb: Add
- "allwinner,usb0-usb-a-connector" dt property
-Date: Tue, 23 Aug 2016 20:26:00 +0200
-Message-ID: <4792e77e-e72e-10db-5469-4a1e6e64e75c@redhat.com>
-References: <1471781799-10457-1-git-send-email-hdegoede@redhat.com>
- <1471781799-10457-6-git-send-email-hdegoede@redhat.com>
- <20160823180016.GA28538@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-binding: remoteproc: Introduce ADSP loader
+ binding
+Date: Tue, 23 Aug 2016 13:31:21 -0500
+Message-ID: <20160823183121.GA13010@rob-hp-laptop>
+References: <1471931866-3107-1-git-send-email-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160823180016.GA28538@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1471931866-3107-1-git-send-email-bjorn.andersson@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Aug 22, 2016 at 10:57:43PM -0700, Bjorn Andersson wrote:
+> This document defines the binding for a component that loads firmware
+> and control the life cycle of the Qualcomm ADSP core.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v1:
+> - Added platform names to compatibility
+> 
+>  .../devicetree/bindings/remoteproc/qcom,adsp.txt   | 70 ++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> new file mode 100644
+> index 000000000000..3820151ce3e9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> @@ -0,0 +1,70 @@
+> +Qualcomm ADSP Peripheral Image Loader
+> +
+> +This document defines the binding for a component that loads and boots firmware
+> +on the Qualcomm ADSP core.
 
-On 08/23/2016 08:00 PM, Rob Herring wrote:
-> On Sun, Aug 21, 2016 at 02:16:38PM +0200, Hans de Goede wrote:
->> On some devices the musb otg controller can be used in both device and
->> host mode, but requires software mode switching since there is no id pin
->> connected. The usb0 phy code will default to device mode in this case.
->>
->> On some systems usb0 is connected to a female USB-A port. It can still
->> be used in device mode when using software mode switching and a USB
->> A to A cable. To configure the controller to support both modes we must
->> set its "dr_mode" dt property to "otg" (*). For these setups the device
->> mode default is wrong, for a female USB-A port the default should be
->> host mode.
->>
->> This commit adds support to the sun4i phy code for a new
->> "allwinner,usb0-usb-a-connector" dt property which can be used in dt
->> files to indicate this scenario and when present it changes the default
->> mode to host mode.
->>
->> *) dr_mode = "host" is used when device mode is _never_ used. E.g.
->> a wifi module soldered onto the PCB is connected to the musb controller.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->> Changes in v2:
->> -New patch in v2 of this patchset
->> Changes in v3:
->> -No changes
->> ---
->>  Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt | 2 ++
->>  drivers/phy/phy-sun4i-usb.c                             | 9 ++++++++-
->>  2 files changed, 10 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
->> index 287150d..8646b53 100644
->> --- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
->> +++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
->> @@ -35,6 +35,8 @@ Optional properties:
->>  - usb0_vbus-supply : regulator phandle for controller usb0 vbus
->>  - usb1_vbus-supply : regulator phandle for controller usb1 vbus
->>  - usb2_vbus-supply : regulator phandle for controller usb2 vbus
->> +- allwinner,usb0-usb-a-connector: usb0 is connected to an USB-A connector,
->> +                     rather then an USB-B connector as one would expect (bool)
->
-> This seems like a pretty generic problem: a board has an A connector
-> wired to an OTG controller.  So I think we should have a generic
-> property.
+ADSP is for Audio DSP? So there is another driver for the audio 
+functions? Why doesn't it do the firmware loading? I'm still confused 
+why this binding is separate? If you had one common interface (a rproc) 
+to load and boot various other blocks like ADSP and Venus, then this 
+would make sense. Or does every accel block have some separate control 
+uC associated with it?
 
-OK, any suggestions for a name ? And which bindings .txt file should
-this go in ?
-
-> The only part is here that is not is you have 3 USB buses for
-> the PHY. That probably should have been 3 child nodes for each PHY port.
-
-Only one is an otg phy / bus though, so we can just use the generic
-property and apply it to bus0 / the otg-bus if present.
-
-Regards,
-
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,msm8974-adsp-pil"
+> +		    "qcom,msm8996-adsp-pil"
+> +
+> +- interrupts-extended:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: must list the watchdog, fatal IRQs ready, handover and
+> +		    stop-ack IRQs
+> +
+> +- interrupt-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
+> +
+> +- cx-supply:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: reference to the regulator to be held on behalf of the
+> +		    booting of the Hexagon core
+> +
+> +- memory-region:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: reference to the reserved-memory for the ADSP
+> +
+> +- qcom,smem-states:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: reference to the smem state for requesting the ADSP to
+> +		    shut down
+> +
+> +- qcom,smem-state-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be "stop"
+> +
+> += EXAMPLE
+> +The following example describes the resources needed to boot control the
+> +ADSP, as it is found on MSM8974 boards.
+> +
+> +	adsp {
+> +		compatible = "qcom,adsp-pil";
+> +
+> +		interrupts-extended = <&intc 0 162 IRQ_TYPE_EDGE_RISING>,
+> +				      <&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> +				      <&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> +				      <&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> +				      <&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
+> +		interrupt-names = "wdog",
+> +				  "fatal",
+> +				  "ready",
+> +				  "handover",
+> +				  "stop-ack";
+> +
+> +		cx-supply = <&pm8841_s2>;
+> +
+> +		memory-region = <&adsp_region>;
+> +
+> +		qcom,smem-states = <&modem_smp2p_out 0>;
+> +		qcom,smem-state-names = "stop";
+> +	};
+> -- 
+> 2.5.0
+> 
