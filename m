@@ -1,101 +1,114 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RESEND PATCH 3/4] usb: dwc2: assert phy reset when waking up in
- rk3288 platform
-Date: Tue, 23 Aug 2016 13:46:14 -0700
-Message-ID: <49d2baf7-5f81-fc20-a805-f7a378d67a5e@synopsys.com>
-References: <4c931176-a09a-546c-d2b6-ea74028c78a2@cogentembedded.com>
- <1471807905-11323-1-git-send-email-ayaka@soulik.info>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1471807905-11323-1-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH] dt: net: enhance DWC EQoS binding to support Tegra186
+Date: Tue, 23 Aug 2016 14:47:57 -0600
+Message-ID: <20160823204757.17998-1-swarren@wwwdotorg.org>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Lars Persson <lars.persson@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8/21/2016 12:32 PM, Randy Li wrote:
-> On the rk3288 USB host-only port (the one that's not the OTG-enabled
-> port) the PHY can get into a bad state when a wakeup is asserted (not
-> just a wakeup from full system suspend but also a wakeup from
-> autosuspend).
-> 
-> We can get the PHY out of its bad state by asserting its "port reset",
-> but unfortunately that seems to assert a reset onto the USB bus so it
-> could confuse things if we don't actually deenumerate / reenumerate the
-> device.
-> 
-> We can also get the PHY out of its bad state by fully resetting it using
-> the reset from the CRU (clock reset unit) in chip, which does a more full
-> reset.  The CRU-based reset appears to actually cause devices on the bus
-> to be removed and reinserted, which fixes the problem (albeit in a hacky
-> way).
-> 
-> It's unfortunate that we need to do a full re-enumeration of devices at
-> wakeup time, but this is better than alternative of letting the bus get
-> wedged.
-> 
-> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-> ---
->  drivers/usb/dwc2/core_intr.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
-> index d85c5c9..f57c48a 100644
-> --- a/drivers/usb/dwc2/core_intr.c
-> +++ b/drivers/usb/dwc2/core_intr.c
-> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
->  static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->  {
->  	int ret;
-> +	struct device_node *np = hsotg->dev->of_node;
->  
->  	/* Clear interrupt */
->  	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
-> @@ -379,6 +380,16 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->  			/* Restart the Phy Clock */
->  			pcgcctl &= ~PCGCTL_STOPPCLK;
->  			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
-> +
-> +			/* 
-> +			 * It is a quirk in Rockchip RK3288, causing by
-> +			 * a hardware bug. This will propagate out and
-> +			 * eventually we'll re-enumerate the device. 
-> +			 * Not great but the best we can do 
+From: Stephen Warren <swarren@nvidia.com>
 
-Remove the trailing whitespaces in this comment.
+The Synopsys DWC EQoS is a configurable IP block which supports multiple
+options for bus type, clocking and reset structure, and feature list.
+Extend the DT binding to define a "compatible value" for the configuration
+contained in NVIDIA's Tegra186 SoC, and define some new properties and
+list property entries required by that configuration.
 
-Run scripts/checkpatch.pl to catch these.
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+ .../bindings/net/snps,dwc-qos-ethernet.txt         | 60 ++++++++++++++++++++--
+ 1 file changed, 56 insertions(+), 4 deletions(-)
 
-> +			 */
-> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
-> +				hsotg->phy->ops->reset(hsotg->phy);
-> +
-
-You should probably check for NULL before calling the reset()
-callback.
-
-Also, I'd rather see a generic quirk property that you set for your
-platform.
-
-Something like "phy_reset_on_wakeup_quirk".
-
-Also, try to preserve the version tag in your subject for all the
-patches so that we can easily identify the latest version of the
-series, like:
-
-[PATCH v5 3/4] ...
-
-And, typically "RESEND" means there are no code change.
-
-Regards,
-John
+diff --git a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
+index 51f8d2eba8d8..6cd4129364a9 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
++++ b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
+@@ -1,21 +1,72 @@
+ * Synopsys DWC Ethernet QoS IP version 4.10 driver (GMAC)
+ 
++This binding supports the Synopsys Designware Ethernet QoS (Quality Of Service)
++IP block. The IP supports multiple options for bus type, clocking and reset
++structure, and feature list. Consequently, a number of properties and list
++entries in properties are marked as optional, or only required in specific HW
++configurations.
+ 
+ Required properties:
+-- compatible: Should be "snps,dwc-qos-ethernet-4.10"
++- compatible: One of:
++  - "snps,dwc-qos-ethernet-4.10"
++  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10"
+ - reg: Address and length of the register set for the device
+-- clocks: Phandles to the reference clock and the bus clock
+-- clock-names: Should be "phy_ref_clk" for the reference clock and "apb_pclk"
+-  for the bus clock.
++- clocks: Phandle and clock specifiers for each entry in clock-names, in the
++  same order. See ../clock/clock-bindings.txt.
++- clock-names: May contain any/all of the following depending on the IP
++  configuration, in any order:
++  - "phy_ref_clk". The reference clock provided directly to the PHY.
++    Only required if under SW control, i.e. not provided by some fixed source
++    such as a crystal.
++  - "apb_pclk" (alternate name "slave_bus"; only one alternate must appear).
++    The CPU/slave-bus (CSR) interface clock. Despite the name, this applies to
++    any bus type; APB, AHB, AXI, etc. The HW signal name is hclk_i (AHB) or
++    clk_csr_i (other buses).
++  - "master_bus". The master bus interface clock. Only required in
++    configurations that use a separate clock for the master and slave bus
++    interfaces. The HW signal name is hclk_i (AHB) or aclk_i (AXI).
++  - "rx". The receive path clock. The HW signal name is clk_rx_i.
++  - "tx". The transmit path clock. The HW signal name is clk_tx_i.
++  - "ptp_ref". The PTP reference clock. The HW signal name is clk_ptp_ref_i.
++
++  Note: Support for additional HW configurations may require adding the
++  following clocks to this list in the future: clk_rx_125_i, clk_tx_125_i,
++  clk_pmarx_0_i, clk_pmarx1_i, clk_rmii_i.
++
++  The following compatible values require the following set of clocks:
++  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10":
++    - "slave_bus"
++    - "master_bus"
++    - "rx"
++    - "tx"
++    - "ptp_ref"
++  - "snps,dwc-qos-ethernet-4.10":
++    - "phy_ref_clk"
++    - "apb_clk"
+ - interrupt-parent: Should be the phandle for the interrupt controller
+   that services interrupts for this device
+ - interrupts: Should contain the core's combined interrupt signal
+ - phy-mode: See ethernet.txt file in the same directory
++- resets: Phandle and reset specifiers for each entry in reset-names, in the
++  same order. See ../reset/reset.txt.
++- reset-names: May contain any/all of the following depending on the IP
++  configuration, in any order:
++  - "eqos". The reset to the entire module. The HW signal name is hreset_n
++    (AHB) or aresetn_i (AXI).
++
++  The following compatible values require the following set of clocks:
++  (the reset properties may be omitted if empty)
++  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10":
++    - "eqos".
++  - "snps,dwc-qos-ethernet-4.10":
++    - None.
+ 
+ Optional properties:
+ - dma-coherent: Present if dma operations are coherent
+ - mac-address: See ethernet.txt in the same directory
+ - local-mac-address: See ethernet.txt in the same directory
++- phy-reset-gpios: Phandle and specifier for any GPIO used to reset the PHY.
++  See ../gpio/gpio.txt.
+ - snps,en-lpi: If present it enables use of the AXI low-power interface
+ - snps,write-requests: Number of write requests that the AXI port can issue.
+   It depends on the SoC configuration.
+@@ -52,6 +103,7 @@ ethernet2@40010000 {
+ 	reg = <0x40010000 0x4000>;
+ 	phy-handle = <&phy2>;
+ 	phy-mode = "gmii";
++	phy-reset-gpios = <&gpioctlr 43 GPIO_ACTIVE_LOW>;
+ 
+ 	snps,en-tx-lpi-clockgating;
+ 	snps,en-lpi;
+-- 
+2.9.3
