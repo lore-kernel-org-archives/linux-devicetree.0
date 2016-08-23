@@ -1,90 +1,180 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V5] clk: bcm: Add driver for BCM53573 ILP clock
-Date: Tue, 23 Aug 2016 14:55:28 -0500
-Message-ID: <20160823195528.GA17844@rob-hp-laptop>
-References: <20160823061745.8162-1-zajec5@gmail.com>
- <20160823062613.13865-1-zajec5@gmail.com>
+From: Karl-Heinz Schneider <karl-heinz-X5L7DgJ4l23oE99TX8zNy7NAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH 1/1] power: sbs-manager: Add interrupt support and
+ battery detect gpios
+Date: Tue, 23 Aug 2016 21:58:20 +0200
+Message-ID: <1471982300.5080.17.camel@schneider-inet.de>
+References: <1469433003-68564-1-git-send-email-preid@electromag.com.au>
+         <1469433003-68564-2-git-send-email-preid@electromag.com.au>
+         <20160727144609.GA12462@rob-hp-laptop> <1469653707.27666.22.camel@amnesix>
+         <4553a3f5-55cc-807d-7f34-11b4c7e11a0b@electromag.com.au>
+         <e2ca7188-03e4-978d-9c10-9498117acb8e@electromag.com.au>
+         <CAL_JsqL0+b5GRMMtK7PmECatR7aayiv-Of05HahGWSHHQ-vrYg@mail.gmail.com>
+         <1469973873.5299.9.camel@schneider-inet.de>
+         <ade6f7b9-dbaf-fd45-fd82-c3d69125ca8c@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160823062613.13865-1-zajec5@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ade6f7b9-dbaf-fd45-fd82-c3d69125ca8c-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 23, 2016 at 08:25:59AM +0200, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal@milecki.pl>
+Hi Phil, Hi Rob,
+
+Am Montag, den 01.08.2016, 14:52 +0800 schrieb Phil Reid:
+> On 31/07/2016 22:04, Karl-Heinz Schneider wrote:
+> > 
+> > Am Donnerstag, den 28.07.2016, 10:45 -0500 schrieb Rob Herring:
+> > > 
+> > > On Thu, Jul 28, 2016 at 4:01 AM, Phil Reid <preid-qgqNFa1JUf/iIABC8yteiw@public.gmane.org
+> > > au>
+> > > wrote:
+> > > > 
+> > > > On 28/07/2016 10:11, Phil Reid wrote:
+> > > > > 
+> > > > > G'day Karl / Rob,
+> > > > > On 28/07/2016 05:08, Karl-Heinz Schneider wrote:
+> > > > > > 
+> > > > > > Am Mittwoch, den 27.07.2016, 09:46 -0500 schrieb Rob
+> > > > > > Herring:
+> > > > > > > 
+> > > > > > > On Mon, Jul 25, 2016 at 03:50:03PM +0800, Phil Reid
+> > > > > > > wrote:
+> > > > > > > > 
+> > > > > > > > This patch added irq support for the SMBALERT pin and
+> > > > > > > > notification of
+> > > > > > > > the battery removal / insertion. The sbs manager would
+> > > > > > > > typically be
+> > > > > > > > used with the corresponding sbs-battery driver that
+> > > > > > > > currently uses a
+> > > > > > > > gpio input for battery presence and interrupt. To
+> > > > > > > > remain
+> > > > > > > > compatible
+> > > > > > > > with
+> > > > > > > > that existing driver this patch implements GPIO inputs
+> > > > > > > > with
+> > > > > > > > interrupt
+> > > > > > > > support. IRQ masking is performed in software as the
+> > > > > > > > hardware does not
+> > > > > > > > support masking of notifications from each battery.
+> > > > > > > > In addition a power_supply change notification is
+> > > > > > > > generated
+> > > > > > > > for the sbs
+> > > > > > > > manager device when the AC present flag is changed.
+> > > > > > > > Tested with LTC1760 and dual sbs compatible batteries.
+> > > > > > > Please don't submit a binding and immediately turn around
+> > > > > > > and
+> > > > > > > add to it.
+> > > > > > > While that is often preferred for drivers or kernel
+> > > > > > > features,
+> > > > > > > bindings
+> > > > > > > should be complete as possible and not evolve. Combine
+> > > > > > > this
+> > > > > > > with your
+> > > > > > > previous patch add sbs-mgr if that hasn't been accepted
+> > > > > > > yet.
+> > > > > That was from Karl. I'm happy to have this combined if he
+> > > > > is.Me
+> > > Indeed it was. Still, it should be combined. You can leave the
+> > > driver
+> > > implementation as multiple patches, just combine all the binding
+> > > to a
+> > > single patch by itself.
+> > Will do that.
+> > > 
+> > > > 
+> > > > > 
+> > > > > > 
+> > > > > > > 
+> > > > > > > IMO, the sbs-bat should just be a interrupt and making it
+> > > > > > > and
+> > > > > > > this
+> > > > > > > binding a GPIO is overkill. Since batteries nodes using
+> > > > > > > this
+> > > > > > > will be
+> > > > > > > new, there's no reason the driver can't be updated to
+> > > > > > > support
+> > > > > > > interrupts.
+> > > > I did consider this and didn't go that way as:
+> > > > 1) the current sbs-battery driver didn't support it.
+> > > > 2) Then there's also the problem of reporting  the presence of
+> > > > the
+> > > > battery
+> > > > to the battery driver.
+> > > > Without the GPIO support you resort to polling and looking for
+> > > > a
+> > > > NACK. Which
+> > > > didn't seem that nice.
+> > > The ability to read the current irq signal state with the irq api
+> > > would be nice. Of course you can't really count on being able to
+> > > on
+> > > all irqs. Anyway, we shouldn't really design the binding around
+> > > kernel
+> > > limitations.
+> > > 
+> > > As I understand how SMBALERT works, you have to poll the devices
+> > > anyway to determine which device is asserting the irq and to ack
+> > > the
+> > > irq. Of course, here you are doing point to point connections,
+> > > but
+> > > you
+> > > still need to know which batteries are present by reading the
+> > > sbs-mgr
+> > > registers.
+> > The more interesting point for me is, that SMBALERT seems to
+> > provide an
+> > easy to use driver side interface. The code Registering the IRQ
+> > would
+> > vanish...
+> > Anyways I'm not very familiar with Linux IRQ handling, so I will
+> > follow
+> > your advise.
+> Just had a look at driver/i2c/i2c-smbus.c
+> This appears to be a generic driver to handle smbalert. Currently
+> used by the i2c-parport driver.
+> Doesn't look to support device trees at the moment thou.
+> Patch series "RFC: I2C: i2c-smbus: add device tree support" from
+> Andrea Merello looked to be adding generic support for it.
+> https://lkml.org/lkml/2016/4/13/157
+> Not sure where that's got to thou.
+Did see this one.
 > 
-> This clock is present on BCM53573 devices (including BCM47189) that use
-> Cortex-A7. ILP is a part of PMU (Power Management Unit) and so it should
-> be defined as one of its subnodes (subdevices). For more details see
-> Documentation entry.
+> > 
+> > > 
+> > > 
+> > > Wouldn't switching the driver to level irq allow you to get the
+> > > state
+> > > immediately without a gpio read? After all, the gpio read and irq
+> > > handler are reading the same register.
+> If it's asserted continuously how do you stop the irq firing all the
+> time?
+> I guess you could register a high and low level irq and disable them
+> alternatively.
+> Unless I'm missing something.
 > 
-> Unfortunately there isn't a set of registers related to ILP clock only.
-> We use registers 0x66c, 0x674 and 0x6dc and between them there are e.g.
-> "retention*" and "control_ext" regs. This is why this driver maps all
-> 0x1000 B of space.
-
-Then describe the block as a syscon which has several functions of 
-which clocks are one.
-
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-> ---
-> V2: Rebase on top of clk-next
->     Use ALP as parent clock
->     Improve comments
->     Switch from ioremap_nocache to ioremap
->     Check of_clk_add_provide result for error
-> V3: Drop #include <linux/moduleh>
->     Make ILP DT entry part of PMU
->     Describe ILP as subdevice of PMU in Documentation
-> V4: Use BCM53573 name as suggested by Jon and Ray. It seems "Northstar"
->     (even if used in some resources) should be used in relation to
->     Cortex-A9 devices only.
-> V5: Rename remaining "ns" references to "bcm53573", sorry, I sent V4 too
->     early.
-> ---
->  .../bindings/clock/brcm,bcm53573-ilp.txt           |  40 ++++++
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/clk/bcm/Makefile                           |   1 +
->  drivers/clk/bcm/clk-bcm53573-ilp.c                 | 146 +++++++++++++++++++++
->  3 files changed, 187 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
->  create mode 100644 drivers/clk/bcm/clk-bcm53573-ilp.c
+> Keeping the gpio functionality also allows the battery detect to work
+> without the irq
+> connected to the sbsm thru polling.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt b/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
-> new file mode 100644
-> index 0000000..5ab3107
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
-> @@ -0,0 +1,40 @@
-> +Broadcom BCM53573 ILP clock
-> +===========================
-> +
-> +This binding uses the common clock binding:
-> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +This binding is used for ILP clock (sometimes referred as "slow clock")
-> +on Broadcom BCM53573 devices using Cortex-A7 CPU.
-> +
-> +This clock is part of PMU (Power Management Unit), a Broadcom's device
-> +handing power-related aspects. Please note PMU contains more subdevices,
-> +ILP is only one of them.
-> +
-> +ILP's rate has to be calculated on runtime and it depends on ALP clock
-> +which has to be referenced.
-> +
-> +Required properties:
-> +- compatible: "brcm,bcm53573-ilp"
-> +- reg: iomem address range of PMU (Power Management Unit)
-> +- reg-names: "pmu", the only needed & supported reg right now
+So what to do now? I can simply take Phil's patch to add IRQ and GPIO
+support to the sbsm driver. It needs some fixups though, at least
+Kconfig things.
 
-right now? Please describe all of the h/w. You don't get to change it 
-later.
+IMHO adding irq support adds complexity to the driver as well as to the
+device tree binding, which shouldn't be necessary. Could also be true
+for the GPIO part, though (sbsm could issue a call to .notify() for
+it's slaves).
 
-Rob
+So anyway. Will take Phils patch and resubmit the sbs-manager patch
+series if making the sbsm an IRQ and GPIO controller is really desired.
+-- 
+Karl-Heinz
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
