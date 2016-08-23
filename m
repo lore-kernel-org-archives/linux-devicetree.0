@@ -1,45 +1,78 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 2/2] ARM: dts: sun8i: Add extra UART pinmux settings for
- A23/33
-Date: Tue, 23 Aug 2016 21:51:05 +0800
-Message-ID: <69271471960265@web26h.yandex.ru>
-References: <20160823055826.20591-1-icenowy@aosc.xyz>
- <20160823055826.20591-2-icenowy@aosc.xyz> <20160823114251.GL2598@lukather>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun8i: add NAND controller node for A23/A33
+Date: Tue, 23 Aug 2016 21:55:46 +0800
+Message-ID: <20160823135546.60179-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160823114251.GL2598@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBA5M6G6QKGQETVDPKNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgoyMy4wOC4yMDE2LCAxOTo0MiwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT46Cj4gSGksCj4KPiBPbiBUdWUsIEF1ZyAyMywgMjAxNiBhdCAwMTo1ODoy
-NlBNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+PiDCoEEyMy8zMyBoYXZlIDQgVUFSVCBj
-b250cm9sbGVycyBvdXRzaWRlIFBSQ00uIEhvd2V2ZXIsIHRoZSBkZXZpY2V0cmVlIHVzZWQKPj4g
-wqB0byBtZW50aW9uZWQgb25seSBVQVJUMCdzIHBpbm11eCBzZXR0aW5ncy4gU29tZSBleHRyYSBV
-QVJUIGNvbnRyb2xsZXJzIGhhdmUKPj4gwqBSVFMvQ1RTLCBhbmQgaXMgc3VpdGFibGUgZm9yIHVz
-aW5nIGFzIGJsdWV0b290aCBVQVJUIGNvbnRyb2xsZXIuCj4+Cj4+IMKgQWRkIHRoZSBwaW5tdXgg
-c2V0dGluZ3MgZm9yIHRoZSBVQVJUIGNvbnRyb2xsZXIsIHRvIG1ha2UgdXNlIG9mIHRoZQo+PiDC
-oGJsdWV0b290aCBmdW5jdGlvbiBvZiBzb21lIHRhYmxldHMuCj4+Cj4+IMKgU2lnbmVkLW9mZi1i
-eTogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLnh5ej4KPgo+IE91ciBwb2xpY3kgaXMgdGhh
-dCB3ZSBhdm9pZCBhZGRpbmcgdW51c2VkIHBpbmN0cmwgbm9kZXMgdG8gbm90IGNyaXBwbGUKPiB0
-aGUgRFQgZm9yIG5vIHBhcnRpY3VsYXIgcmVhc29uLgo+Cj4gU28gcGxlYXNlIGFkZCBvbmx5IHRo
-ZSBub2RlcyB5b3UnbGwgbmVlZCBpbiB5b3VyIHRhYmxldC4KClRoZW4uLi4gaWYgd2hhdCBJIG5l
-ZWRzIGlzIHRoZSBQRyBncm91cCBvZiB1YXJ0MSwgc2hvdWxkIEkgbmFtZSBpdCBhcwp1YXJ0MV9w
-aW5zX2Egb3IgdWFydDFfcGluc19iPwoKPgo+IFRoYW5rcyEKPiBNYXhpbWUKPgo+IC0tCj4gTWF4
-aW1lIFJpcGFyZCwgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVu
-Z2luZWVyaW5nCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+A23/A33 has a NAND controller which can now be used properly.
+
+Add a device node for it.
+
+The DMA function cannot work because of changed DMA IP block, so it's
+temporarily removed in the device node. However, with PIO mode it can still
+work.
+
+Tested on an Aoson M751s tablet with Boris Brezillon's "mtd: nand: allow
+vendor specific detection/initialization" patchset, which is needed for the
+large-block MLC chip to be recognized correctly.
+( http://lists.infradead.org/pipermail/linux-mtd/2016-June/068198.html )
+
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+index 89ea479..17e3dec 100644
+--- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+@@ -239,6 +239,14 @@
+ 					     "mmc2_sample";
+ 		};
+ 
++		nand_clk: clk@01c20080 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-mod0-clk";
++			reg = <0x01c20080 0x4>;
++			clocks = <&osc24M>, <&pll6 1>;
++			clock-output-names = "nand";
++		};
++
+ 		usb_clk: clk@01c200cc {
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+@@ -322,6 +330,19 @@
+ 			#size-cells = <0>;
+ 		};
+ 
++		nfc: nand@01c03000 {
++			compatible = "allwinner,sun4i-a10-nand";
++			reg = <0x01c03000 0x1000>;
++			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ahb1_gates 13>, <&nand_clk>;
++			clock-names = "ahb", "mod";
++			resets = <&ahb1_rst 13>;
++			reset-names = "ahb";
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
+ 		ehci0: usb@01c1a000 {
+ 			compatible = "allwinner,sun8i-a23-ehci", "generic-ehci";
+ 			reg = <0x01c1a000 0x100>;
+-- 
+2.9.3
