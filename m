@@ -1,217 +1,166 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 00/13] arm64: Allwinner A64 support based on sunxi-ng
-Date: Tue, 23 Aug 2016 21:31:29 +0200
-Message-ID: <20160823193129.GO2598@lukather>
-References: <20160726203041.29366-1-maxime.ripard@free-electrons.com>
- <fb559224-561c-3476-1146-96f7aea427f0@arm.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V8 2/2] mmc: OCTEON: Add host driver for OCTEON MMC controller.
+Date: Tue, 23 Aug 2016 21:46:14 +0200
+Message-ID: <CAPDyKFp047jKEZngegTxk1grvwPivqj+tqAX1ekF82s1zDE53Q@mail.gmail.com>
+References: <57853474.9050108@cavium.com> <CAPDyKFqaGLWxkG+CqViqDfPqeffKE5rutgR0gduuGs9F0DX+zg@mail.gmail.com>
+ <57BC8ACA.1040506@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="UOYwgDhKKQYesrzQ"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <fb559224-561c-3476-1146-96f7aea427f0-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <57BC8ACA.1040506-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?Andr=E9?= Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 23 August 2016 at 19:41, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+> On 08/23/2016 07:53 AM, Ulf Hansson wrote:
+>>
+>> On 12 July 2016 at 20:18, Steven J. Hill <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> wrote:
+>
+> [...]
+>
+>>> +#include <asm/byteorder.h>
+>>> +#include <asm/octeon/octeon.h>
+>>
+>>
+>
+> OK, we will duplicate any needed definitions from octeon.h into the driver
+> source file.
 
---UOYwgDhKKQYesrzQ
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Why can't you share it via a platfrom data header at
+include/linux/platform_data/* ?
 
-Hi Andre,
+[...]
 
-On Mon, Aug 01, 2016 at 02:43:06AM +0100, Andr=E9 Przywara wrote:
-> Hi Maxime,
->=20
-> On 26/07/16 21:30, Maxime Ripard wrote:
-> > Hi,
-> >=20
-> > Here is the previous A64 patches made by Andre [1], reworked to use
-> > the new sunxi-ng clock framework.
-> >=20
-> > This uses the current H3 clock code, as both are really similar. The
-> > first patches are just meant to rework slightly the H3 code, before
-> > introducing the A64-related patches.
-> >=20
-> > Some WiP stuff have been removed, such as the MMC part, but this serie
-> > already has a decent amount of devices supported: uart, i2c, rsb, etc.
->=20
-> Thanks very much for looking into this and compiling this series!
->=20
-> In general this looks good to me - apart from the sunxi-ng clock usage.
-> I think I have some small fixes to the DT (have to compare against my
-> latest local branch), I will comment on this later.
->=20
-> As I think I never officially expressed my concerns about the new sunxi
-> clock system, so I use that opportunity here ;-)
->=20
-> As this became quite a long read, here a TL;DR:
-> - We consider using an SCPI based clock system for the A64, alongside
-> allwinner,simple-gates and fixed clocks. We try to avoid any Allwinner
-> specific clocks (apart from the simple-gates).
-> - ARM Trusted Firmware provides the SCPI implementation - for now, later
-> we may move this into a possible arisc firmware.
-> - We upstream some basic DT first, possibly omitting any controversial
-> clock parts at all.
->=20
-> Let me know what you think!
->=20
->=20
-> Now the long part ....
->=20
-> Basically I see those issues with the new clocks:
-> - sunxi-ng requires a complicated SoC specific source file in the
-> kernel. Although that makes the DT pretty easy (and avoids breaking it
-> the future), it ultimately requires an explicit code drop for every new
-> SoC, even if they share 95% of the clocks (as H3 and A64 do, for instance=
-).
-> - This code file does not actually contain any code, instead it's just
-> data and looks like it should really be presented in DT - which brings
-> us back to something like the old sunxi clock scheme, which is
-> apparently not considered good enough. I still wonder if we could create
-> a generic sunxi-ng user, which explains the needed clocks in the DT
-> instead of in code. I admit that looks like quite some work.
-> - It makes it quite hard for any other DT user (*BSD, U-Boot) to use the
-> clocks, since they would have to copy quite verbatim the Linux
-> implementation choice. This is admittedly also true for the old clock
-> framework, but still unfortunate.
+>>
+>
+> I guess we will put it in arch/mips/cavium-octeon/octeon-mmc-platform.c or
+> something.
 
-3 - You never get a complete clock support for any SoC, requirining
-    for pretty much every driver to create from scratch a new clock
-    driver.
+There is also drivers/soc/* to consider. I am not sure what suits you best.
 
-4 - You require for all these clocks drivers some Ack from both the DT
-    and clocks maintainers, who both said they were fed up with this.
+[...]
 
-5 - If you realise some day down the road that the parenting
-    relationship is not right, or that some clock is not doing what
-    you thought it was, you can't really fix it properly because of
-    the DT stability you wanted us to enforce.
+>>> +       emm_dma.u64 = 0;
+>>> +       emm_dma.s.bus_id = slot->bus_id;
+>>> +       emm_dma.s.dma_val = 1;
+>>> +       emm_dma.s.sector = mmc_card_blockaddr(mmc->card) ? 1 : 0;
+>>> +       emm_dma.s.rw = (data->flags & MMC_DATA_WRITE) ? 1 : 0;
+>>> +       if (mmc_card_mmc(mmc->card) ||
+>>> +           (mmc_card_sd(mmc->card) &&
+>>> +               (mmc->card->scr.cmds & SD_SCR_CMD23_SUPPORT)))
+>>> +               emm_dma.s.multi = 1;
+>>
+>>
+>> Could you elaborate on exactly what you are doing here. I don't
+>> understand why you need to check whether the card supports CMD23.
+>
+>
+>
+> The MMC host hardware doesn't issue single commands, because that would
+> require the driver and OS MMC core to do work to determine the proper
+> sequence of commands.  Instead, this hardware is superior to most other MMC
+> bus hosts, the sequence of MMC command required to execute a transfer are
+> issued automatically by the bus hardware.
 
-> So as mentioned several times before, I am looking into a more firmware
-> driven clock system using the SCPI[1] framework.
-> The idea is:
-> - The basic clocks (OSC24M, OSC32K, AHB1, APB1, APB2, PERIPH0) are
-> expressed as fixed clocks. If I am not mistaken, Allwinner recommends
-> certain frequencies for them anyway, so we just use that and set them up
-> before booting Linux, for instance in ATF.
-> - The gates clocks are expressed as before, but by defining a generic DT
-> compatible fallback name. I have no idea why every SoC enters its name
-> into the simple_gates.c source file, while just mentioning the
-> compatible string in the DT bindings and using the SoC specific name
-> together with a generic fallback like "allwinner,sunxi-simple-gates"
-> would suffice. This means that we don't need to touch simple-gates.c
-> anymore most of the time.
-> - Any clock that can (and has to) be programmed with a variable
-> frequency is expressed as an SCPI clock. This interface allows basically
-> querying and setting a frequency - not very powerful, but sufficient for
-> the clocks I checked. Firmware then takes the burden of programming the
-> respective clock register - which is not rocket science if we lock the
-> base clocks to a certain frequency.
->=20
-> The advantage of this approach would be:
-> - The impact to Linux code is minimized. Normally there would be no need
-> to touch the kernel at all when we introduce a new SoC.
+Oh, nice! Actually I have heard of similar HW, although I am not sure
+whether there is some mmc driver that has deployed support for this.
 
-But you duplicate the clock framework entirely, both the core code and
-the data you were complaining about, with all the issues that arise
-=66rom code duplication. You still have to create that big file you were
-complaining about, with exactly the same constraints.
+Anyway, perhaps we at a later point can think of if there is a clever
+way to optimize the request path for these kind of HWs.
 
-> - Any other DT user can quite easily make use of the clock system
-> without adding tons of complicated Allwinner specific clock code. The
-> simple-gates driver is almost trivial to implement, and chances are SCPI
-> is already around anyway.
-> - If there are any peculiarities with a certain clock (implementation),
-> we can solve this in firmware. Fixes to code would immediately benefit
-> all users - existing kernels (from distributions), newer kernels and
-> other OSes.
+>
+> Because the interface expected by the Linux MMC core is at a lower level
+> than what the OCTEON MMC host can accept we need to examine the the
+> mmc_request and card capabilities to determine which operations most closely
+> match what is being requested.
+>
+> In the case of emm_dma.s.multi above, the bus hardware will automatically
+> issue CMD23 when this bit is set, so we only set it if we think it is a
+> valid thing to do.
 
-But no-one would actually be able to use it, because no one upgrades
-its firmware, including all the major distributions (Debian, Ubuntu,
-Fedora, OpenWRT, Arch, Gento, you name it). So there's effectively no
-way to fix a bug that was there.
+I noticed that the similar check is done in the mmc block layer,
+perhaps we should add a helper function like mmc_card_cmd23() which
+tells whether the cards supports CMD23.
 
-> - Having SCPI gives us simple regulators and sensors (temperature,
-> power) for free (in terms of no Linux code required). It also allows for
-> DVFS support, though this may require more work on the firmware side.
+If you like to add a helper as part of this series, it would be nice -
+although we can also deal with that later if you prefer so.
 
-And ignoring all the other features that the PMIC support, and the
-board uses out there (GPIO, ADCs, Power supplies, battery charger, USB
-VBUS monitoring)
+>
+>
+>>
+>> Moreover you must not access mmc->card unless you make sure there is a
+>> valid pointer for it.
+>
+>
+> OK, it has never been found to be invalid in the wild.  When a transfer is
+> requested, it always targets some card, but we can add a check at the top to
+> return an error code if the card is somehow NULL.
 
-> - This approach matches many of the more serious ARM64 machines out
-> there, which refrain from exposing all of their clock framework to Linux.
+That's probably because you also requires a multi block transfer for
+dma jobs, which is when the card has been created...
 
-$ git grep -l scpi arch/arm64/boot/dts/**.dtsi
-arch/arm64/boot/dts/arm/juno-base.dtsi
+I would have verified that the card exists...
 
-Are you saying that only Juno is a serious ARM64 machine?
+[...]
 
-> Also this opens the door to much easier support for new SoCs - up to a
-> point where any new chip would actually run out of the box on existing
-> distributions (thinking of LTS releases here). The pinctrl driver is a
-> nasty guy around here - but let's not make it worse and try to fix that
-> guy later ;-)
+>>> +
+>>> +       /* Alternatively a GPIO may be specified to control slot power */
+>>> +       slot->pwr_gpiod = devm_gpiod_get_optional(dev, "power",
+>>> GPIOD_OUT_LOW);
+>>
+>>
+>> No, I am not happy with this as we discussed earlier. You need to
+>> parse the DTB from SoC specifc code and manage the power GPIO from
+>> there.
+>>
+>> Ideally you should register the power GPIO as a GPIO regulator for the
+>> cavium mmc slot device.
+>
+>
+> What do we do if the GPIO doensn't really control power to the card, but
+> rather is just a bus isolator on the data bus lines?  The device tree will
 
-That's not true and you know it.
+That more sounds like a pinctrl to me then.
 
-What you actually suggest is to implement a minimal set of clocks in
-ATF (the opposite being, the entire set of clocks, which would of
-course be untested, so it basically falls down in the exact same
-category).
+> still have a property called "power" (as that is a legacy binding that
+> cannot be changed), but no power control is done.
+>
+> In this case, is it still appropiate to use the  regulator framework?
 
-What this means is that, since we will obviously not support all the
-clocks client from day one, any user will be *required* for a new
-kernel release to operate as it's expected to upgrade the ATF.
+Probably not.
 
-Without any help from the distribution (s)he's running, because no one
-has that kind of scenario in mind. And let's be honest, I don't see
-Ubuntu changing the dependencies for the kernel for the Allwinner SoCs
-alone (let alone the fact that it's pretty much impossible in a
-generic way to know where and how the ATF is installed).
+>
+> I don't see what is gained.  This is an SoC specific MMC controller that is
+> connected in a manner that doesn't really match the Linux regulator
+> framework.  Is it really cleaner to put 100 lines of ugly hacks in the
+> platform code instead of a couple of lines here in the driver?  What is
+> achieved?  We arn't creating an elegant framework, but instead jumping
+> through hoops to make an archectual mismatch between various Linux driver
+> frameworks be bent to fit as a matter of principle.
+>
+> If that is what you require to merge the driver we will do it.
 
-Apart from being a major pain for any user, upgrading the bootloader
-is also a showstopper for most industries.
+We have cleaned up lots of mmc hacks that dealt with "regulators" in
+all kind of home-brewed manners. It was a mess.
 
-So, no, we won't do that. The A64 support is something we actually
-want to use in real-life products, and our users to be happy with the
-support they have.
+In this particular case it also seems a little bit unclear what the
+regulators (power GPIOs) is really used for. Very similar to the
+experience I had with the earlier hacks.
 
-NAK.
+So, please try to describe in detail about what the power GPIO are and
+how/if they connects to the card. if they are considered as to control
+I/O voltage level or power to the card, then those shall be modelled
+as regulators.
 
-Maxime
+Sorry if you find me being stubborn on this, although I hope the
+background described above makes you understand a bit better.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+[...]
 
---UOYwgDhKKQYesrzQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXvKSRAAoJEBx+YmzsjxAg2eIQAJ8Egs7Bv5u14FmWq0JrNJRW
-t8JN3REYGQd2hdj/2cv+nXPUeUXOpu6cdiI9rXgyzLoUcf/uXV8IZ52yDoIJhNVo
-3OU4WiajQCEhOOICBK67QsF+ofxpDAnXQCWVoLvqB2BzgT2Ck6ANPOx/Xi5hbXvL
-2RGeV9poFOgUXb05OOO+oC2Twdb2/vEuAudmMlrmYZrKRkDUmJmbZMkN/mhkFMvY
-gosr6GE3fjfCydUs/67DUXVugBtdNtBfwC6XaevKE6dwxPR84eNCK+a6wmZAN1uv
-PmdIJsK0O8DoM9pB5v4YiGX/z8OVwH3hBO+PptGt8eWJXLlxpWHFM1IlgA44AQ+n
-vjey8gu8FRKfTNF4RPNe5uFnPtAB2iMVDyD/17Y9Ub1cWqcW6+dl5SrRLZmAofhm
-z0eKLydhrXBD+GA9BwAxkVCH6h8fTh/7j4WC5ebx6JRynA+qPO4PM+rGO7AE38cc
-ap+3qV+6OmbBk7NUL+kk2hPO5+pgcJBw7mcWhR9hihSDk4r35RNe3PME7z/DfrLl
-7dIxAcIhHKdtw9cL4BJp2x8IdyKtC63hXphJdm0AUlMKIXV6dw91vIW0rwrhfU9k
-6eOfPoazxPVLkMcZKBvBEiBtwGXuKVmotGPqzoKNznR2QKALeMJtLLzWlnIFzf1Q
-eMnEaieXIIRpo/2To7Ve
-=EKui
------END PGP SIGNATURE-----
-
---UOYwgDhKKQYesrzQ--
+Kind regards
+Uffe
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
