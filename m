@@ -1,273 +1,89 @@
-From: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 5/5] powerpc/83xx: enable the default of probe
-Date: Tue, 23 Aug 2016 10:06:59 +0800
-Message-ID: <1471918019-19472-6-git-send-email-haokexin@gmail.com>
-References: <1471918019-19472-1-git-send-email-haokexin@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471918019-19472-1-git-send-email-haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [PATCH v2 5/8] pinctrl: Add core support for Aspeed SoCs
+Date: Tue, 23 Aug 2016 12:00:51 +0930
+Message-ID: <1471919451.5707.89.camel@aj.id.au>
+References: <20160819124414.24242-1-andrew@aj.id.au>
+         <20160819124414.24242-6-andrew@aj.id.au>
+         <CACRpkdaBuwqGPbfLK8bR5A4NSefifw8VqPyUbgtAtweqoEnD7g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-Lk+1qTMxgDNwQXnUB8Gy"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaBuwqGPbfLK8bR5A4NSefifw8VqPyUbgtAtweqoEnD7g@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Joel Stanley <joel@jms.id.au>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Use the default of probe function of_platform_default_populate_init()
-to kill the arch specific duplicated codes.
 
-Signed-off-by: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/powerpc/platforms/83xx/asp834x.c     |  2 --
- arch/powerpc/platforms/83xx/km83xx.c      |  2 --
- arch/powerpc/platforms/83xx/misc.c        | 25 ++++++++-----------------
- arch/powerpc/platforms/83xx/mpc830x_rdb.c |  2 --
- arch/powerpc/platforms/83xx/mpc831x_rdb.c |  2 --
- arch/powerpc/platforms/83xx/mpc832x_mds.c |  2 --
- arch/powerpc/platforms/83xx/mpc832x_rdb.c |  2 --
- arch/powerpc/platforms/83xx/mpc834x_itx.c | 12 ------------
- arch/powerpc/platforms/83xx/mpc834x_mds.c |  2 --
- arch/powerpc/platforms/83xx/mpc836x_mds.c |  2 --
- arch/powerpc/platforms/83xx/mpc836x_rdk.c |  2 --
- arch/powerpc/platforms/83xx/mpc837x_mds.c |  2 --
- arch/powerpc/platforms/83xx/mpc837x_rdb.c |  2 --
- arch/powerpc/platforms/83xx/mpc83xx.h     |  1 -
- arch/powerpc/platforms/83xx/sbc834x.c     |  2 --
- 15 files changed, 8 insertions(+), 54 deletions(-)
+--=-Lk+1qTMxgDNwQXnUB8Gy
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-diff --git a/arch/powerpc/platforms/83xx/asp834x.c b/arch/powerpc/platforms/83xx/asp834x.c
-index 575afd6eb36a..2219a1f8c535 100644
---- a/arch/powerpc/platforms/83xx/asp834x.c
-+++ b/arch/powerpc/platforms/83xx/asp834x.c
-@@ -34,8 +34,6 @@ static void __init asp834x_setup_arch(void)
- 	mpc834x_usb_cfg();
- }
- 
--machine_device_initcall(asp834x, mpc83xx_declare_of_platform_devices);
--
- /*
-  * Called very early, MMU is off, device-tree isn't unflattened
-  */
-diff --git a/arch/powerpc/platforms/83xx/km83xx.c b/arch/powerpc/platforms/83xx/km83xx.c
-index d8642a4afc74..e2276f12eafe 100644
---- a/arch/powerpc/platforms/83xx/km83xx.c
-+++ b/arch/powerpc/platforms/83xx/km83xx.c
-@@ -154,8 +154,6 @@ static void __init mpc83xx_km_setup_arch(void)
- #endif	/* CONFIG_QUICC_ENGINE */
- }
- 
--machine_device_initcall(mpc83xx_km, mpc83xx_declare_of_platform_devices);
--
- /* list of the supported boards */
- static char *board[] __initdata = {
- 	"Keymile,KMETER1",
-diff --git a/arch/powerpc/platforms/83xx/misc.c b/arch/powerpc/platforms/83xx/misc.c
-index d75c9816a5c9..4a88edd51d1a 100644
---- a/arch/powerpc/platforms/83xx/misc.c
-+++ b/arch/powerpc/platforms/83xx/misc.c
-@@ -114,23 +114,6 @@ void __init mpc83xx_ipic_and_qe_init_IRQ(void)
- }
- #endif /* CONFIG_QUICC_ENGINE */
- 
--static const struct of_device_id of_bus_ids[] __initconst = {
--	{ .type = "soc", },
--	{ .compatible = "soc", },
--	{ .compatible = "simple-bus" },
--	{ .compatible = "gianfar" },
--	{ .compatible = "gpio-leds", },
--	{ .type = "qe", },
--	{ .compatible = "fsl,qe", },
--	{},
--};
--
--int __init mpc83xx_declare_of_platform_devices(void)
--{
--	of_platform_bus_probe(NULL, of_bus_ids, NULL);
--	return 0;
--}
--
- #ifdef CONFIG_PCI
- void __init mpc83xx_setup_pci(void)
- {
-@@ -149,4 +132,12 @@ void __init mpc83xx_setup_arch(void)
- 		ppc_md.progress("mpc83xx_setup_arch()", 0);
- 
- 	mpc83xx_setup_pci();
-+	arch_enable_default_of_probe();
- }
-+
-+BUS_OF_DECLARE_TYPE(type_soc, "soc");
-+BUS_OF_DECLARE_TYPE(type_qe, "qe");
-+BUS_OF_DECLARE_COMPAT(simple_bus, "simple-bus");
-+BUS_OF_DECLARE_COMPAT(gianfar, "gianfar");
-+BUS_OF_DECLARE_COMPAT(gpio_leds, "gpio-leds");
-+BUS_OF_DECLARE_COMPAT(qe, "fsl,qe");
-diff --git a/arch/powerpc/platforms/83xx/mpc830x_rdb.c b/arch/powerpc/platforms/83xx/mpc830x_rdb.c
-index 272c41c387b9..0d073102cfbb 100644
---- a/arch/powerpc/platforms/83xx/mpc830x_rdb.c
-+++ b/arch/powerpc/platforms/83xx/mpc830x_rdb.c
-@@ -46,8 +46,6 @@ static int __init mpc830x_rdb_probe(void)
- 	return of_device_compatible_match(of_root, board);
- }
- 
--machine_device_initcall(mpc830x_rdb, mpc83xx_declare_of_platform_devices);
--
- define_machine(mpc830x_rdb) {
- 	.name			= "MPC830x RDB",
- 	.probe			= mpc830x_rdb_probe,
-diff --git a/arch/powerpc/platforms/83xx/mpc831x_rdb.c b/arch/powerpc/platforms/83xx/mpc831x_rdb.c
-index fd80fd570e67..16926fb95592 100644
---- a/arch/powerpc/platforms/83xx/mpc831x_rdb.c
-+++ b/arch/powerpc/platforms/83xx/mpc831x_rdb.c
-@@ -46,8 +46,6 @@ static int __init mpc831x_rdb_probe(void)
- 	return of_device_compatible_match(of_root, board);
- }
- 
--machine_device_initcall(mpc831x_rdb, mpc83xx_declare_of_platform_devices);
--
- define_machine(mpc831x_rdb) {
- 	.name			= "MPC831x RDB",
- 	.probe			= mpc831x_rdb_probe,
-diff --git a/arch/powerpc/platforms/83xx/mpc832x_mds.c b/arch/powerpc/platforms/83xx/mpc832x_mds.c
-index bb7b25acf26f..01c0602347a7 100644
---- a/arch/powerpc/platforms/83xx/mpc832x_mds.c
-+++ b/arch/powerpc/platforms/83xx/mpc832x_mds.c
-@@ -92,8 +92,6 @@ static void __init mpc832x_sys_setup_arch(void)
- #endif				/* CONFIG_QUICC_ENGINE */
- }
- 
--machine_device_initcall(mpc832x_mds, mpc83xx_declare_of_platform_devices);
--
- /*
-  * Called very early, MMU is off, device-tree isn't unflattened
-  */
-diff --git a/arch/powerpc/platforms/83xx/mpc832x_rdb.c b/arch/powerpc/platforms/83xx/mpc832x_rdb.c
-index 09d1bbf25b5d..4626d909e7fa 100644
---- a/arch/powerpc/platforms/83xx/mpc832x_rdb.c
-+++ b/arch/powerpc/platforms/83xx/mpc832x_rdb.c
-@@ -210,8 +210,6 @@ static void __init mpc832x_rdb_setup_arch(void)
- #endif				/* CONFIG_QUICC_ENGINE */
- }
- 
--machine_device_initcall(mpc832x_rdb, mpc83xx_declare_of_platform_devices);
--
- /*
-  * Called very early, MMU is off, device-tree isn't unflattened
-  */
-diff --git a/arch/powerpc/platforms/83xx/mpc834x_itx.c b/arch/powerpc/platforms/83xx/mpc834x_itx.c
-index 73a5267df497..60717eb6b029 100644
---- a/arch/powerpc/platforms/83xx/mpc834x_itx.c
-+++ b/arch/powerpc/platforms/83xx/mpc834x_itx.c
-@@ -38,18 +38,6 @@
- 
- #include "mpc83xx.h"
- 
--static const struct of_device_id mpc834x_itx_ids[] __initconst = {
--	{ .compatible = "fsl,pq2pro-localbus", },
--	{},
--};
--
--static int __init mpc834x_itx_declare_of_platform_devices(void)
--{
--	mpc83xx_declare_of_platform_devices();
--	return of_platform_bus_probe(NULL, mpc834x_itx_ids, NULL);
--}
--machine_device_initcall(mpc834x_itx, mpc834x_itx_declare_of_platform_devices);
--
- /* ************************************************************************
-  *
-  * Setup the architecture
-diff --git a/arch/powerpc/platforms/83xx/mpc834x_mds.c b/arch/powerpc/platforms/83xx/mpc834x_mds.c
-index 009cfc18a4ee..64ba2f8eab9f 100644
---- a/arch/powerpc/platforms/83xx/mpc834x_mds.c
-+++ b/arch/powerpc/platforms/83xx/mpc834x_mds.c
-@@ -81,8 +81,6 @@ static void __init mpc834x_mds_setup_arch(void)
- 	mpc834xemds_usb_cfg();
- }
- 
--machine_device_initcall(mpc834x_mds, mpc83xx_declare_of_platform_devices);
--
- /*
-  * Called very early, MMU is off, device-tree isn't unflattened
-  */
-diff --git a/arch/powerpc/platforms/83xx/mpc836x_mds.c b/arch/powerpc/platforms/83xx/mpc836x_mds.c
-index 4fc3051c2b2e..0cc26696ca06 100644
---- a/arch/powerpc/platforms/83xx/mpc836x_mds.c
-+++ b/arch/powerpc/platforms/83xx/mpc836x_mds.c
-@@ -135,8 +135,6 @@ static void __init mpc836x_mds_setup_arch(void)
- #endif				/* CONFIG_QUICC_ENGINE */
- }
- 
--machine_device_initcall(mpc836x_mds, mpc83xx_declare_of_platform_devices);
--
- #ifdef CONFIG_QE_USB
- static int __init mpc836x_usb_cfg(void)
- {
-diff --git a/arch/powerpc/platforms/83xx/mpc836x_rdk.c b/arch/powerpc/platforms/83xx/mpc836x_rdk.c
-index 93f024fd9b45..ac36ea02c0a2 100644
---- a/arch/powerpc/platforms/83xx/mpc836x_rdk.c
-+++ b/arch/powerpc/platforms/83xx/mpc836x_rdk.c
-@@ -27,8 +27,6 @@
- 
- #include "mpc83xx.h"
- 
--machine_device_initcall(mpc836x_rdk, mpc83xx_declare_of_platform_devices);
--
- static void __init mpc836x_rdk_setup_arch(void)
- {
- 	mpc83xx_setup_arch();
-diff --git a/arch/powerpc/platforms/83xx/mpc837x_mds.c b/arch/powerpc/platforms/83xx/mpc837x_mds.c
-index 3b34cc1f626c..2e4f29190844 100644
---- a/arch/powerpc/platforms/83xx/mpc837x_mds.c
-+++ b/arch/powerpc/platforms/83xx/mpc837x_mds.c
-@@ -83,8 +83,6 @@ static void __init mpc837x_mds_setup_arch(void)
- 	mpc837xmds_usb_cfg();
- }
- 
--machine_device_initcall(mpc837x_mds, mpc83xx_declare_of_platform_devices);
--
- /*
-  * Called very early, MMU is off, device-tree isn't unflattened
-  */
-diff --git a/arch/powerpc/platforms/83xx/mpc837x_rdb.c b/arch/powerpc/platforms/83xx/mpc837x_rdb.c
-index 0c55fa6af2d5..9d0c9c6af736 100644
---- a/arch/powerpc/platforms/83xx/mpc837x_rdb.c
-+++ b/arch/powerpc/platforms/83xx/mpc837x_rdb.c
-@@ -55,8 +55,6 @@ static void __init mpc837x_rdb_setup_arch(void)
- 	mpc837x_rdb_sd_cfg();
- }
- 
--machine_device_initcall(mpc837x_rdb, mpc83xx_declare_of_platform_devices);
--
- static const char * const board[] __initconst = {
- 	"fsl,mpc8377rdb",
- 	"fsl,mpc8378rdb",
-diff --git a/arch/powerpc/platforms/83xx/mpc83xx.h b/arch/powerpc/platforms/83xx/mpc83xx.h
-index 636eb9d0401a..77f9658aa22e 100644
---- a/arch/powerpc/platforms/83xx/mpc83xx.h
-+++ b/arch/powerpc/platforms/83xx/mpc83xx.h
-@@ -85,7 +85,6 @@ extern void mpc83xx_setup_pci(void);
- #define mpc83xx_setup_pci()	do {} while (0)
- #endif
- 
--extern int mpc83xx_declare_of_platform_devices(void);
- extern void mpc83xx_setup_arch(void);
- 
- #endif				/* __MPC83XX_H__ */
-diff --git a/arch/powerpc/platforms/83xx/sbc834x.c b/arch/powerpc/platforms/83xx/sbc834x.c
-index cb4bdabfdf1c..e750a0ed644a 100644
---- a/arch/powerpc/platforms/83xx/sbc834x.c
-+++ b/arch/powerpc/platforms/83xx/sbc834x.c
-@@ -50,8 +50,6 @@ static void __init sbc834x_setup_arch(void)
- 	mpc83xx_setup_arch();
- }
- 
--machine_device_initcall(sbc834x, mpc83xx_declare_of_platform_devices);
--
- /*
-  * Called very early, MMU is off, device-tree isn't unflattened
-  */
--- 
-2.5.5
+T24gTW9uLCAyMDE2LTA4LTIyIGF0IDE1OjQ1ICswMjAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOgo+
+IE9uIEZyaSwgQXVnIDE5LCAyMDE2IGF0IDI6NDQgUE0sIEFuZHJldyBKZWZmZXJ5IDxhbmRyZXdA
+YWouaWQuYXU+IHdyb3RlOgo+IAo+ID4gCj4gPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvYXNwZWVk
+L0tjb25maWcKPiA+IEBAIC0wLDAgKzEsOCBAQAo+ID4gK2NvbmZpZyBQSU5DVFJMX0FTUEVFRAo+
+ID4gK8KgwqDCoMKgwqDCoMKgYm9vbAo+ID4gK8KgwqDCoMKgwqDCoMKgZGVwZW5kcyBvbiAoQVJD
+SF9BU1BFRUQgfHwgQ09NUElMRV9URVNUKSAmJiBPRgo+ID4gK8KgwqDCoMKgwqDCoMKgc2VsZWN0
+IFBJTk1VWAo+ID4gK8KgwqDCoMKgwqDCoMKgc2VsZWN0IFBJTkNPTkYKPiA+ICvCoMKgwqDCoMKg
+wqDCoHNlbGVjdCBHRU5FUklDX1BJTkNPTkYKPiA+ICvCoMKgwqDCoMKgwqDCoHNlbGVjdCBNRkRf
+U1lTQ09OCj4gPiArwqDCoMKgwqDCoMKgwqBzZWxlY3QgUkVHTUFQX01NSU8KPiBTaW5jZSB0aGlz
+IGRldmljZSBpcyBzcGF3biBmcm9tIHRoZSBzeXNjb24sIHNob3VsZCBpdCBub3QgYmUKPiAiZGVw
+ZW5kcyBvbiBNRkRfU1lTQ09OIj8KPiAKPiAoTm8gYmlnIGRlYWwsIGlmIHlvdSB0aGluayB0aGlz
+IGlzIHJpZ2h0IHRoZW4gZ28gd2l0aCBpdC4pCgpJIHRoaW5rIHRoYXQncyBhIGZhaXIgcG9pbnQs
+IEkgd2lsbCBsb29rIGF0IHJlYXJyYW5naW5nIGl0LgoKPiAKPiA+IAo+ID4gKyNpbmNsdWRlIAo+
+IFdoYXQgaXMgdGhpcyBpbmNsdWRlIGZvcj8KCkNydWZ0IGZyb20gcGFzdCBpdGVyYXRpb25zLiBX
+aWxsIHJlbW92ZS4KCj4gCj4gPiAKPiA+ICsjaW5jbHVkZSAKPiA+ICsjaW5jbHVkZSAKPiA+ICsj
+aW5jbHVkZSAKPiA+ICsjaW5jbHVkZSAKPiA+ICsjaW5jbHVkZSAiLi4vY29yZS5oIgo+ID4gKyNp
+bmNsdWRlICJwaW5jdHJsLWFzcGVlZC5oIgo+IE5vICNpbmNsdWRlID8KPiAKPiBNYXliZSBzb21l
+ICNpbmNsdWRlcyBhcmUgY2VudHJhbGl6ZWQgdG8gcGluY3RybC1hc3BlZWQuaAo+IEkgZG9uJ3Qg
+a25vdywganVzdCBtYWtlIHN1cmUgeW91IGRvbid0IGhhdmUgaW1wbGljaXQgaW5jbHVkZXMuCgps
+aW51eC9yZWdtYXAuaCBpcyBpbmNsdWRlZCBpbiBwaW5jdHJsLWFzcGVlZC5oCgo+IAo+ID4gCj4g
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKHJlZ21hcF9yZWFkKG1hcCwgZGVz
+Yy0+cmVnLCAmdmFsKSA8IDApCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoHJldHVybiBmYWxzZTsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqB2YWwgJj0gfmRlc2MtPm1hc2s7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgdmFsIHw9IHBhdHRlcm4gPDwgX19mZnMoZGVzYy0+bWFzayk7Cj4gPiArCj4gPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKHJlZ21hcF93cml0ZShtYXAsIGRlc2Mt
+PnJlZywgdmFsKSA8IDApCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoHJldHVybiBmYWxzZTsKPiBVc2U6Cj4gCj4gcmVnbWFwX3VwZGF0ZV9iaXRzKG1h
+cCwKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqBkZXNjLT5yZWcsCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGVzYy0+bWFzaywKPiDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwYXR0ZXJuIDw8IF9fZmZz
+LT5kZXNjLT5tYXNrKTsKPiAKPiBPciBzb21ldGhpbmcgbGlrZSB0aGF0IGluc3RlYWQgb2YgcmVp
+bXBsZW1lbnRpbmcKPiBtYXNrLWFuZC1zZXQuIFJlZ21hcCBhbHJlYWR5IGtub3dzIGhvdyB0byBk
+byB0aGUKPiBidXNpbmVzcy4KPiAKPiAoQXBwbGllZCBldmVyeXdoZXJlIGluIHRoZSBkcml2ZXIg
+d2hlcmUgeW91IGhhdmUgYQo+IG1hc2stYW5kLXNldCBsaWtlIHRoaXMpLgoKUmlnaHQsIEkgd2ls
+bCBjbGVhbiB0aGF0IHVwLgoKPiAKPiBUaGUgZXhwcmVzc2lvbiBjb3JlIGVuZ2luZSBpcyBzdGls
+bCBhIGNvbXBsZXRlIG15c3RlcnkKPiBmb3IgbWUsIEkgd2lsbCBqdXN0IHRydXN0IHlvdSB0aGF0
+IGl0IHdvcmtzIGFzIGludGVuZGVkLgoKR2FoISBIb3dldmVyLCB0aGFua3MhCgpJIHdpbGwgY2xl
+YW4gdXAgdGhlIGlzc3VlcyBhYm92ZSBhbmQgcmUtc2VuZC4KCkNoZWVycywKCkFuZHJldw==
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--=-Lk+1qTMxgDNwQXnUB8Gy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCgAGBQJXu7VbAAoJEJ0dnzgO5LT5LicP/1Zt1lXQPYPlMbg65mg8Waox
+w7ovipWX2QvaurweIa50WcrHYpNtR5zZ8hsan663Nhzj61drEvOO76JW8bRr8he8
+7SIFf/dXeg+2cPmwr5vQnG/L72L54wnEfeS0NdgPu0BngQCzMXsrgepFbq1ZamWA
+t9Q4d3RxkHRPjXg0zDG4CltrjjQoa9GKXUgIRCHRo17J2Zw1eMyeNWCZhzf6oEdD
+ZSPPMRpov9OZDEdOKABtc5DhfZSpaTOfhiz8lQym9anhabzO3d5SRoP6miz1V75O
+fbL3smjZPQ21vETujLo/ycC0nZ0OK4GzdRHrweXFz3ZdvCqlXVo7oQ/e4DgwQKn6
+g4Kb+9vgWcvdN3Lqk+PokmiZ/nK2s5Sxwft1bFRmiDIbvk1iNLBoPe7bJwPUxhFA
+pFw1Cd6p1LnXUK0tHcbLeBSKzPy6T1Y/u1Hyby4CGd2iDgutZHKYmzaBsS0sMNId
+Ql+uk5fAweY1pFpzZSOWz/3dwN1D9PmFlggQiXjNIs/hA6jrZPaUvkM+auZM4Ber
+ExPxtThshMwznZcCgbB9ZzoWW08GWpQtfJjaDyXIHGToCRJCyhfhBcq+oFZbinj5
+E4XInuqMGED/PF6S0oBSmiwmgmd423AkjSGKs7Er5SNTZh89kTqvLMmyCxW2YiLg
+u/yq2mEjTKhyxa40Sq40
+=dKG6
+-----END PGP SIGNATURE-----
+
+--=-Lk+1qTMxgDNwQXnUB8Gy--
+
