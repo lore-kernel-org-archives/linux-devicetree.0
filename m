@@ -1,102 +1,149 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v7 7/7] doc: bindings: act8945a-charger: Update properties
-Date: Tue, 23 Aug 2016 05:03:29 +0200
-Message-ID: <20160823030329.zy6kgncj2ov5ypnj@earth>
-References: <1471848557-27278-1-git-send-email-wenyou.yang@atmel.com>
- <1471848557-27278-8-git-send-email-wenyou.yang@atmel.com>
+From: Haibo Chen <haibo.chen-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH] sdhci: Add quirk and device tree parameter to force SD
+ test mode
+Date: Tue, 23 Aug 2016 01:34:20 +0000
+Message-ID: <AM4PR0401MB2324D95AB7382C828BF8E5CE90EB0@AM4PR0401MB2324.eurprd04.prod.outlook.com>
+References: <1471906531-28668-1-git-send-email-zach.brown@ni.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6puhxbdy3pwi2vfy"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1471848557-27278-8-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@atmel.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471906531-28668-1-git-send-email-zach.brown-acOepvfBmUk@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>, "adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---6puhxbdy3pwi2vfy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Mon, Aug 22, 2016 at 02:49:17PM +0800, Wenyou Yang wrote:
-> Due the driver improvements, update the properties,
->  - Remove "active-semi,check-battery-temperature" property.
->  - Add the properties, "active-semi,irq_gpio"
->    and "active-semi,lbo-gpios".
+> -----Original Message-----
+> From: linux-mmc-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-mmc-
+> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Zach Brown
+> Sent: Tuesday, August 23, 2016 6:56 AM
+> To: adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+> Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
+> linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: [PATCH] sdhci: Add quirk and device tree parameter to force SD t=
+est
+> mode
 >=20
-> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+> From: Jaeden Amero <jaeden.amero-acOepvfBmUk@public.gmane.org>
+>=20
+> On some devices, CD is broken so that we must force the SDHCI into test m=
+ode
+> and set CD, so that it always detects an SD card as present.
+>=20
+> In order to get a device with broken CD working, we had previously always=
+ set
+> the SDHCI into test mode. Unfortunately, this had the side effect of maki=
+ng all
+> SD cards used with our Linux kernels undetectable and non-removable.
 
-I wonder if it's too late to slightly break the DT API by
-introducing a proper sub-device for the charger and having all those
-charger specific details described there. Not being able to use the
-devm_ functions because all properties are assigned to the parent
-device is not very nice.
+Why not use the poll mode? You can set the flag MMC_CAP_NEEDS_POLL, then=20
+the mmc core will detect the card every second.
 
-We could easily support reading timeouts and threshold information
-=66rom the both (parent and sub-device) and just mark the parent
-binding deprecated. The only real API break would be
-"active-semi,chglev-gpios", which is currently broken anyways in the
-driver as far as I can see (I should have reviewed this more
-carefully previously).
-
-In other words I suggest the following:
-
-pmic@5b {
-    compatible =3D "active-semi,act8945a";
-    reg =3D <0x5b>;
-    status =3D "okay";
-
-    /* the following 3 are deprecated, but still supported */
-    //active-semi,input-voltage-threshold-microvolt =3D <6600>;
-    //active-semi,precondition-timeout =3D <40>;
-    //active-semi,total-timeout =3D <3>;
-
-    /* no longer supported, never worked properly */
-    //active-semi,chglev-gpios =3D <&pioA 12 GPIO_ACTIVE_HIGH>;
-
-    /* this is new, mfd should register charger sub-dev independently
-     * of the subnode for backwards compatibility. Then optional
-     * gpios/irqs are not available. But those either never worked
-     * or did not exist before this update. */
-    charger {
-        active-semi,chglev-gpios =3D <&pioA 12 GPIO_ACTIVE_HIGH>;
-        active-semi,lbo-gpios =3D <&pioA 72 GPIO_ACTIVE_LOW>;
-		interrupt-parent =3D <&pioA>;
-        interrupts =3D <45 GPIO_ACTIVE_LOW>
-
-        active-semi,input-voltage-threshold-microvolt =3D <6600>;
-        active-semi,precondition-timeout =3D <40>;
-        active-semi,total-timeout =3D <3>;
-    };
-};
-
--- Sebastian
-
---6puhxbdy3pwi2vfy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXu7z4AAoJENju1/PIO/qaR1EP/js4kyC4ufhvqpScZkw6KcWU
-nwwqMYwm2Y28/9aMg4ELkV6txQZ48YiwHS2E9PSrdgDjsju5/Gr1aj9r6yXwBd25
-wbA4rKAYZmj23PGQFOttdeq6N+pJtxN00ZULcduT0UQZJ2RaxpYF+fQ0/l3eW+dq
-j1E4y8GiX4DtAduJFsGT4fCyBGt0JSxN/rw9W0wmTa6HSHhUWTUG694H6/4v1KC/
-Jpu2UHffOJM4e8RIw/1fBLJqJyddvDKBGCBig7SOq/NuHA05AKyIUvOD7usK31zq
-fccXxBbT8DIcUjtF28+IvrFCdvG4Eq7NlIrmqZFXvf2P8pUzC7rB/Wtk+oL1WSZq
-HisG4HB6g13P3pBIbZwlnupOS0Wg+F1BqU8ppQQb/ocA0pZZi6FLHpDN5QKm64ql
-Gml3mgN+mUWJi7YjrfSX+QofUko7zzi5dT+jvyYByaIpJDIkE6O8btZjQpVjLf8i
-X1YbHa9zD2upIHXWfQjYeRIbVq9jzTyVEwo75yX2CBKcOfvltIwazfolSpLL9lWI
-Ye7OBuRJM8xduY/nkD5hThirG40WpywD80yxtkpo7np1782jF1z6VDgniqwHA0MJ
-UpUVd+dDySWt1osoI4eELGfCZxzAHvPQozOxoPlvzdI1o63sZxZLJOc79yFNVorS
-heHpOFwJb7bCWkYqrfut
-=t8yW
------END PGP SIGNATURE-----
-
---6puhxbdy3pwi2vfy--
+>=20
+> By making this "SD test mode" setting optional via a quirk, we can avoid =
+this
+> side effect for devices other than the device with broken CD.
+> Additionally, we add a device parameter to sdhci-pltfm to allow all SDHCI
+> drivers to enable this quirk.
+>=20
+> Signed-off-by: Jaeden Amero <jaeden.amero-acOepvfBmUk@public.gmane.org>
+> Signed-off-by: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+>  drivers/mmc/host/sdhci-pltfm.c                | 4 ++++
+>  drivers/mmc/host/sdhci.c                      | 9 +++++++++
+>  drivers/mmc/host/sdhci.h                      | 4 ++++
+>  4 files changed, 19 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt
+> b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index 22d1e1f..3a9be41 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -52,6 +52,8 @@ Optional properties:
+>  - no-sdio: controller is limited to send sdio cmd during initialization
+>  - no-sd: controller is limited to send sd cmd during initialization
+>  - no-mmc: controller is limited to send mmc cmd during initialization
+> +- force-sd-cd-test-mode: card detection is broken on device, force cd
+> +test
+> +  enable and cd test inserted so host will always detect a card.
+>=20
+>  *NOTE* on CD and WP polarity. To use common for all SD/MMC host
+> controllers line  polarity properties, we have to fix the meaning of the =
+"normal"
+> and "inverted"
+> diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltf=
+m.c
+> index 1d17dcf..056d101 100644
+> --- a/drivers/mmc/host/sdhci-pltfm.c
+> +++ b/drivers/mmc/host/sdhci-pltfm.c
+> @@ -87,6 +87,10 @@ void sdhci_get_of_property(struct platform_device
+> *pdev)
+>  	if (of_get_property(np, "broken-cd", NULL))
+>  		host->quirks |=3D SDHCI_QUIRK_BROKEN_CARD_DETECTION;
+>=20
+> +	if (of_get_property(np, "force-sd-cd-test-mode", NULL))
+> +		host->quirks2 |=3D
+> +			SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE;
+> +
+>  	if (of_get_property(np, "no-1-8-v", NULL))
+>  		host->quirks2 |=3D SDHCI_QUIRK2_NO_1_8_V;
+>=20
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c index
+> cd65d47..2f4c6f9 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -117,6 +117,15 @@ static inline bool sdhci_data_line_cmd(struct
+> mmc_command *cmd)  static void sdhci_set_card_detection(struct sdhci_host
+> *host, bool enable)  {
+>  	u32 present;
+> +	u8  ctrl;
+> +
+> +	if (host->quirks2 & SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE)
+> {
+> +		/* Put the card in test mode, with card inserted */
+> +		ctrl =3D sdhci_readl(host, SDHCI_HOST_CONTROL);
+> +		ctrl |=3D SDHCI_CTRL_CD_TEST_INSERTED |
+> +			SDHCI_CTRL_CD_TEST_ENABLE;
+> +		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
+> +	}
+>=20
+>  	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) ||
+>  	    !mmc_card_is_removable(host->mmc))
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h index
+> 0411c9f..dd609b2 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -84,6 +84,8 @@
+>  #define   SDHCI_CTRL_ADMA32	0x10
+>  #define   SDHCI_CTRL_ADMA64	0x18
+>  #define   SDHCI_CTRL_8BITBUS	0x20
+> +#define  SDHCI_CTRL_CD_TEST_INSERTED	0x40
+> +#define  SDHCI_CTRL_CD_TEST_ENABLE	0x80
+>=20
+>  #define SDHCI_POWER_CONTROL	0x29
+>  #define  SDHCI_POWER_ON		0x01
+> @@ -422,6 +424,8 @@ struct sdhci_host {
+>  #define SDHCI_QUIRK2_ACMD23_BROKEN			(1<<14)
+>  /* Broken Clock divider zero in controller */
+>  #define SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN		(1<<15)
+> +/* Controller must support device with broken CD */
+> +#define SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE		(1<<16)
+>=20
+>  	int irq;		/* Device IRQ */
+>  	void __iomem *ioaddr;	/* Mapped address */
+> --
+> 2.7.4
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in t=
+he
+> body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo info at
+> http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
