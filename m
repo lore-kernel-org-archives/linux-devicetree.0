@@ -1,18 +1,15 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 4/8] ARM: dts: sun8i: Add touchscreen node for
- sun8i-a23-gt90h
-Date: Tue, 23 Aug 2016 17:17:38 +0200
-Message-ID: <20160823151738.GM2598@lukather>
-References: <1470685398-14568-1-git-send-email-hdegoede@redhat.com>
- <1470685398-14568-4-git-send-email-hdegoede@redhat.com>
- <20160822183009.GX7104@lukather>
- <cf0186a0-f4ea-173c-4f93-df8798941199@redhat.com>
- <20160823092614.GF2598@lukather>
- <a8de228d-2ba9-e23e-0c0c-e9a78dbe6e6a@redhat.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v2 1/2] input: misc: Add generic input driver to read
+ encoded GPIO lines
+Date: Tue, 23 Aug 2016 10:27:59 -0500
+Message-ID: <949d92f3-4510-ada5-d3d6-a29544465fd6@ti.com>
+References: <20160823061649.3394-1-vigneshr@ti.com>
+ <20160823061649.3394-2-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7461079702224835551=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <a8de228d-2ba9-e23e-0c0c-e9a78dbe6e6a@redhat.com>
+In-Reply-To: <20160823061649.3394-2-vigneshr@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,141 +19,249 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Vignesh R <vigneshr@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, John Stultz <john.stultz@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Daniel Hung-yu Wu <hywu@google.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Grant Grundler <grundler@chromium.org>, Rob Herring <robh+dt@kernel.org>, S Twiss <stwiss.opensource@diasemi.com>, linux-input@vger.kernel.org, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 08/23/2016 01:16 AM, Vignesh R wrote:
+> Add a driver to read group of GPIO lines and provide its status as a
+> numerical value as input event to the system. This will help in
+> intefacing devices, that can be connected over GPIOs, that provide input
+> to the system by driving GPIO lines connected to them like a rotary dial
+> or a switch.
+> 
+> For example, a rotary switch can be connected to four GPIO lines. The
+> status of the GPIO lines reflect the actual position of the rotary
+> switch dial. For example, if dial points to 9, then the four GPIO lines
+> connected to the switch will read HLLH(0b'1001 = 9). This value
+> can be reported as an ABS_* event to the input subsystem.
+> 
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> 
+> v2: Use decoder,max-value instead of gpio-decoder,max-value.
+> 
+>  .../devicetree/bindings/input/gpio-decoder.txt     |  23 ++++
+>  drivers/input/misc/Kconfig                         |  12 ++
+>  drivers/input/misc/Makefile                        |   1 +
+>  drivers/input/misc/gpio_decoder.c                  | 130 +++++++++++++++++++++
+>  4 files changed, 166 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/gpio-decoder.txt
+>  create mode 100644 drivers/input/misc/gpio_decoder.c
+> 
+> diff --git a/Documentation/devicetree/bindings/input/gpio-decoder.txt b/Documentation/devicetree/bindings/input/gpio-decoder.txt
+> new file mode 100644
+> index 000000000000..f27f083a9075
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/gpio-decoder.txt
+> @@ -0,0 +1,23 @@
+> +* GPIO Decoder DT bindings
+> +
+> +Required Properties:
+> +- compatible: should be "gpio-decoder"
+> +- gpios: a spec of gpios (atleast two) to be decoded to a number with
 
---===============7461079702224835551==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0+35XlDF45POFHfm"
-Content-Disposition: inline
+                              ^^ two words
 
+> +  first entry representing the MSB.
+> +
+> +Optional Properties:
+> +- decoder,max-value: Maximum possible value that can be reported by
+> +  the gpios.
+> +- linux,axis: the input subsystem axis to map to (ABS_X/ABS_Y).
+> +  Defaults to 0 (ABS_X).
+> +
+> +Example:
+> +	gpio-decoder0 {
+> +		compatible = "gpio-decoder";
+> +		gpios = <&pca9536 3 GPIO_ACTIVE_HIGH>,
+> +			<&pca9536 2 GPIO_ACTIVE_HIGH>,
+> +			<&pca9536 1 GPIO_ACTIVE_HIGH>,
+> +			<&pca9536 0 GPIO_ACTIVE_HIGH>;
+> +		linux,axis = <0>; /* ABS_X */
+> +		decoder,max-value = <9>;
+> +	};
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index efb0ca871327..c44513cac3b7 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -292,6 +292,18 @@ config INPUT_GPIO_TILT_POLLED
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called gpio_tilt_polled.
+>  
+> +config INPUT_GPIO_DECODER
+> +	tristate "Polled GPIO Decoder Input driver"
+> +	depends on GPIOLIB && OF
+> +	select INPUT_POLLDEV
+> +	help
+> +	 Say Y here if you want driver to read status of multiple GPIO
+> +	 lines and report the encoded value as an absolute integer to
+> +	 input subsystem.
+> +
+> +	 To compile this driver as a module, choose M here: the module
+> +	 will will be called gpio_decoder.
+> +
+>  config INPUT_IXP4XX_BEEPER
+>  	tristate "IXP4XX Beeper support"
+>  	depends on ARCH_IXP4XX
+> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> index 6a1e5e20fc1c..0b6d025f0487 100644
+> --- a/drivers/input/misc/Makefile
+> +++ b/drivers/input/misc/Makefile
+> @@ -35,6 +35,7 @@ obj-$(CONFIG_INPUT_DRV2667_HAPTICS)	+= drv2667.o
+>  obj-$(CONFIG_INPUT_GP2A)		+= gp2ap002a00f.o
+>  obj-$(CONFIG_INPUT_GPIO_BEEPER)		+= gpio-beeper.o
+>  obj-$(CONFIG_INPUT_GPIO_TILT_POLLED)	+= gpio_tilt_polled.o
+> +obj-$(CONFIG_INPUT_GPIO_DECODER)	+= gpio_decoder.o
+>  obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
+>  obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
+>  obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
+> diff --git a/drivers/input/misc/gpio_decoder.c b/drivers/input/misc/gpio_decoder.c
+> new file mode 100644
+> index 000000000000..eec0fda6f562
+> --- /dev/null
+> +++ b/drivers/input/misc/gpio_decoder.c
+> @@ -0,0 +1,130 @@
+> +/*
+> + * gpio-decoder.c
+> + *
 
---0+35XlDF45POFHfm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+^ the name of the file often changes without this being updated, it
+really doesn't add anything anyway, would recommend dropping it.
 
-On Tue, Aug 23, 2016 at 11:39:06AM +0200, Hans de Goede wrote:
-> Hi,
->=20
-> On 23-08-16 11:26, Maxime Ripard wrote:
-> >On Mon, Aug 22, 2016 at 09:03:57PM +0200, Hans de Goede wrote:
-> >>Hi,
-> >>
-> >>On 22-08-16 20:30, Maxime Ripard wrote:
-> >>>On Mon, Aug 08, 2016 at 09:43:14PM +0200, Hans de Goede wrote:
-> >>>>The gt90h tablet has a gsl3675 touchscreen, add a dt node describing =
-it.
-> >>>>
-> >>>>Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >>>>---
-> >>>>arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts | 8 ++++++++
-> >>>>1 file changed, 8 insertions(+)
-> >>>>
-> >>>>diff --git a/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts b/arch/arm/boot=
-/dts/sun8i-a23-gt90h-v4.dts
-> >>>>index f27ebbb..da55b5a 100644
-> >>>>--- a/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
-> >>>>+++ b/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
-> >>>>@@ -53,6 +53,14 @@
-> >>>>	status =3D "okay";
-> >>>>};
-> >>>>
-> >>>>+&gsl1680 {
-> >>>>+	compatible =3D "silead,gsl3675";
-> >>>>+	touchscreen-fw-name =3D "silead/gsl3675-gt90h.fw";
-> >>>
-> >>>That's not documented anywhere, and looks really suspicious.
-> >>
-> >>Ugh, that should have been in:
-> >>
-> >>Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
-> >>
-> >>But somehow it is not (I believe it was there in earlier revisions of
-> >>the patch), I'll send a patch to fix this.
-> >>
-> >>About it being suspicious, this is not really firmware it is a bunch
-> >>of configuration data / lookup tables for the controller which tell
-> >>it in which order the touchscreen horizontal / vertical sensor
-> >>lines are connected to its sense pins, and what values to send
-> >>for finger x% between line z and line z+1, which differs per
-> >>tablet model, since not all tablets use the same digitizer.
-> >
-> >It's not really the firmware itself that I find suspicious, but more
-> >the encoding of a path to a file in the DT,
->=20
-> It is not a path it is a filename. We could drop the "silead/" prefix
-> and put that in the driver instead to really make it a filename.
->=20
-> >especially when you can
-> >apparently derive it from other informations already found in the DT
-> >(<vendor>/<compatible>-<board>.fw)
->=20
-> That will not work, sometimes different boards use the same digitizer
-> and thus the same firmware. Also in case of the q8 tablets, we need
-> different firmware for different variants (this is to be dealt with
-> by the q8-hardware-manager I'm working on), since although they
-> all use the same digitizer they do not wire it up to the controllers
-> pins the same in all models, so we need different firmware files
-> corresponding to different wirings.
->=20
-> TL;DR: There is no 1:1 mapping between board and the firmware filename.
+> + * A generic driver to reads multiple gpio lines and translate the
+> + * encoded numeric value into an input event.
+> + *
+> + * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation version 2.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether express or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/input.h>
+> +#include <linux/input-polldev.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +
+> +struct gpio_decoder {
+> +	struct input_polled_dev *poll_dev;
+> +	struct gpio_descs *input_gpios;
+> +	struct device *dev;
+> +	u32 axis;
+> +	u32 last_stable;
+> +};
+> +
+> +static unsigned int gpio_decoder_get_gpios_state(struct gpio_decoder
+> +						 *decoder)
+> +{
+> +	struct gpio_descs *gpios = decoder->input_gpios;
+> +	unsigned int ret = 0;
+> +	int i, val;
+> +
+> +	for (i = 0; i < gpios->ndescs; i++) {
+> +		val = gpiod_get_value_cansleep(gpios->desc[i]);
+> +		ret = ret << 1 | val;
 
-The point still holds. It's exactly the same case than the broadcom
-nvram filename discussion, and it raised the same issues.
+Just to be safe, could you mask val with 0x1 here.
 
-> Also note that this is not the first driver to introduce a firmware
-> filename in a dts binding, a quick grep shows at least:
->=20
-> Documentation/devicetree/bindings/remoteproc/wkup_m3_rproc.txt
->=20
-> Also does this, as well as several dt-bindings where board specific
-> firmware gets embedded in the device tree itself.
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void gpio_decoder_poll_gpios(struct input_polled_dev *poll_dev)
+> +{
+> +	struct gpio_decoder *decoder = poll_dev->private;
+> +	unsigned int state = gpio_decoder_get_gpios_state(decoder);
+> +
+> +	if (state != decoder->last_stable) {
+> +		input_report_abs(poll_dev->input, decoder->axis, state);
+> +		input_sync(poll_dev->input);
+> +		decoder->last_stable = state;
+> +	}
+> +}
+> +
+> +static int gpio_decoder_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct gpio_decoder *decoder;
+> +	struct input_polled_dev *poll_dev;
+> +	u32  max;
+> +	int err;
+> +
+> +	decoder = devm_kzalloc(dev, sizeof(struct gpio_decoder), GFP_KERNEL);
+> +	if (!decoder)
+> +		return -ENOMEM;
+> +
+> +	device_property_read_u32(dev, "linux,axis", &decoder->axis);
+> +	decoder->input_gpios = devm_gpiod_get_array(dev, NULL, GPIOD_IN);
+> +	if (IS_ERR(decoder->input_gpios)) {
+> +		dev_err(dev, "unable to acquire input gpios\n");
+> +		return PTR_ERR(decoder->input_gpios);
+> +	}
+> +	if (decoder->input_gpios->ndescs < 2) {
+> +		dev_err(dev, "not enough gpios found\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (device_property_read_u32(dev, "decoder,max-value", &max))
+> +		max = BIT(decoder->input_gpios->ndescs);
+> +
+> +	decoder->dev = dev;
+> +	poll_dev = devm_input_allocate_polled_device(decoder->dev);
+> +	if (!poll_dev)
+> +		return -ENOMEM;
+> +
+> +	poll_dev->private = decoder;
+> +	poll_dev->poll = gpio_decoder_poll_gpios;
+> +	decoder->poll_dev = poll_dev;
+> +
+> +	poll_dev->input->name = pdev->name;
+> +	poll_dev->input->id.bustype = BUS_HOST;
+> +	poll_dev->input->dev.parent = dev;
+> +	input_set_abs_params(poll_dev->input, decoder->axis, 0, max, 0, 1);
+> +
+> +	err = input_register_polled_device(poll_dev);
+> +	if (err) {
+> +		dev_err(dev, "failed to register polled  device\n");
+> +		return err;
+> +	}
+> +	platform_set_drvdata(pdev, decoder);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id gpio_decoder_of_match[] = {
+> +	{ .compatible = "gpio-decoder", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, gpio_decoder_of_match);
+> +
+> +static struct platform_driver gpio_decoder_driver = {
+> +	.probe		= gpio_decoder_probe,
+> +	.driver		= {
+> +		.name	= "gpio-decoder",
+> +		.of_match_table = of_match_ptr(gpio_decoder_of_match),
 
-Which has never been acked by any of the DT maintainers.
+When the struct 'gpio_decoder_of_match' is always defined (not
+conditional on OF support), then 'of_match_ptr' does nothing and can be
+dropped here.
 
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---0+35XlDF45POFHfm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXvGkSAAoJEBx+YmzsjxAgtwEP/3Fpu3YvyaxIYVo4FDc5RTda
-8c/ZysQ2k0ML++4T50pNexv+90aONbi37rohzToX7N9tBjduwXeSyHCyqiOsc9Yr
-fiZWv4NbNgkpemx2RRiJZMrFxnYmQ/zHyG0mBt17pnfNNI0B1jj0Xlw4N1X3H6JS
-yF4VcpoTGL/5dbzb49YQ213DxZoaKO5V4S4lBZVP4ZfSgspN11mL8lzXbG6LfqaG
-EdujVW+IDT1lXEkcxny57EOgNklMTdH7CXIybbMoaScSJH1tt63+t4Y8b/Lrl/ki
-lo6zyownRSEy8vZH5+Gh7a+FftZOU0gXyZ2xd/w7s63hik0BnL56nJjhQpnolaK+
-Ok3zeZRVKH2ktYxTfFGpAcGs+dJw7gU4HSrQ8bAJWrtCu8g/T4V7V7FxhiTANjDG
-sNxMiWqg1JsuVtvULaoevDZpatyiy7/eyg3Ie3GAW6AnNDIS6gtKQlAA9YjS33rX
-ODon5f+qf8BCOq4WwaLJxmkfZS3qHGCigOaX3jkAbnsSFhcW1jhnoPQ1TeaVEZjz
-E6MEiFv9BzmzQjZmasK6q/1cp/stxUeLVs+fugt7nZiNomBEJ8iKTYZ3I5g6U3b4
-94n3FO+CxgJ89UW3yinoZsgcfOG4lVaKMBGwnbRVaZRUkFn2SjnvLhZa3x9BSf3X
-d2KXP+XjJ9lYesgalCO/
-=bQMa
------END PGP SIGNATURE-----
-
---0+35XlDF45POFHfm--
-
-
---===============7461079702224835551==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7461079702224835551==--
+> +	}
+> +};
+> +module_platform_driver(gpio_decoder_driver);
+> +
+> +MODULE_DESCRIPTION("GPIO decoder input driver");
+> +MODULE_AUTHOR("Vignesh R <vigneshr@ti.com>");
+> +MODULE_LICENSE("GPL v2");
