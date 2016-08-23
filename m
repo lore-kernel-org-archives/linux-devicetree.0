@@ -1,127 +1,58 @@
-From: Zach Brown <zach.brown@ni.com>
-Subject: Re: [PATCH] sdhci: Add quirk and device tree parameter to force SD
- test mode
-Date: Tue, 23 Aug 2016 17:19:22 -0500
-Message-ID: <20160823221922.GC20351@zach-desktop>
-References: <1471906531-28668-1-git-send-email-zach.brown@ni.com>
- <57BBB8F1.9070401@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] MIPS: OCTEON: fix platform bus probing
+Date: Tue, 23 Aug 2016 18:03:06 -0500
+Message-ID: <CAL_JsqK-jLR9A80=Th1GW5-X1i+RSoJMaKeiU4=zPkcWVhZx1w@mail.gmail.com>
+References: <20160823183943.20888-1-aaro.koskinen@iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57BBB8F1.9070401@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20160823183943.20888-1-aaro.koskinen@iki.fi>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Ralf Baechle <ralf@linux-mips.org>, David Daney <ddaney@caviumnetworks.com>, Linux-MIPS <linux-mips@linux-mips.org>, Kefeng Wang <wangkefeng.wang@huawei.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 22, 2016 at 07:46:09PM -0700, Frank Rowand wrote:
-> On 08/22/16 15:55, Zach Brown wrote:
-> > From: Jaeden Amero <jaeden.amero@ni.com>
-> > 
-> > On some devices, CD is broken so that we must force the SDHCI into test
-> > mode and set CD, so that it always detects an SD card as present.
-> > 
-> > In order to get a device with broken CD working, we had previously
-> > always set the SDHCI into test mode. Unfortunately, this had the side
-> > effect of making all SD cards used with our Linux kernels undetectable
-> > and non-removable.
-> > 
-> > By making this "SD test mode" setting optional via a quirk, we can avoid
-> > this side effect for devices other than the device with broken CD.
-> > Additionally, we add a device parameter to sdhci-pltfm to allow all
-> > SDHCI drivers to enable this quirk.
-> > 
-> > Signed-off-by: Jaeden Amero <jaeden.amero@ni.com>
-> > Signed-off-by: Zach Brown <zach.brown@ni.com>
-> > ---
-> >  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
-> >  drivers/mmc/host/sdhci-pltfm.c                | 4 ++++
-> >  drivers/mmc/host/sdhci.c                      | 9 +++++++++
-> >  drivers/mmc/host/sdhci.h                      | 4 ++++
-> >  4 files changed, 19 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-> > index 22d1e1f..3a9be41 100644
-> > --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> > +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> > @@ -52,6 +52,8 @@ Optional properties:
-> >  - no-sdio: controller is limited to send sdio cmd during initialization
-> >  - no-sd: controller is limited to send sd cmd during initialization
-> >  - no-mmc: controller is limited to send mmc cmd during initialization
-> > +- force-sd-cd-test-mode: card detection is broken on device, force cd test
-> > +  enable and cd test inserted so host will always detect a card.
-> 
-> Do not create a property that tells the driver what to do.
-> 
-> Instead create a property that says that the hardware is broken in a certain way.
-> The driver can then choose to take the appropriate action based on the way that
-> the hardware is broken.
-> 
-> 
+On Tue, Aug 23, 2016 at 1:39 PM, Aaro Koskinen <aaro.koskinen@iki.fi> wrote:
+> Commit 44a7185c2ae6 ("of/platform: Add common method to populate
+> default bus") added new arch_initcall of_platform_default_populate_init()
+> that will override device_initcall octeon_publish_devices(). This broke
+> many OCTEON boards as important devices are not getting probed anymore
+> (e.g. on EdgeRouter Lite the USB mass storage/rootfs is missing).
 
-I understand the point you have raised. In the next version I will change the 
-language of the property to reflect this. 
+They are getting probed, but the order probably changed causing probe to fail.
 
-> >  
-> >  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
-> >  polarity properties, we have to fix the meaning of the "normal" and "inverted"
-> > diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
-> > index 1d17dcf..056d101 100644
-> > --- a/drivers/mmc/host/sdhci-pltfm.c
-> > +++ b/drivers/mmc/host/sdhci-pltfm.c
-> > @@ -87,6 +87,10 @@ void sdhci_get_of_property(struct platform_device *pdev)
-> >  	if (of_get_property(np, "broken-cd", NULL))
-> >  		host->quirks |= SDHCI_QUIRK_BROKEN_CARD_DETECTION;
-> >  
-> > +	if (of_get_property(np, "force-sd-cd-test-mode", NULL))
-> > +		host->quirks2 |=
-> > +			SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE;
-> > +
-> >  	if (of_get_property(np, "no-1-8-v", NULL))
-> >  		host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
-> >  
-> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> > index cd65d47..2f4c6f9 100644
-> > --- a/drivers/mmc/host/sdhci.c
-> > +++ b/drivers/mmc/host/sdhci.c
-> > @@ -117,6 +117,15 @@ static inline bool sdhci_data_line_cmd(struct mmc_command *cmd)
-> >  static void sdhci_set_card_detection(struct sdhci_host *host, bool enable)
-> >  {
-> >  	u32 present;
-> > +	u8  ctrl;
-> > +
-> > +	if (host->quirks2 & SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE) {
-> > +		/* Put the card in test mode, with card inserted */
-> > +		ctrl = sdhci_readl(host, SDHCI_HOST_CONTROL);
-> > +		ctrl |= SDHCI_CTRL_CD_TEST_INSERTED |
-> > +			SDHCI_CTRL_CD_TEST_ENABLE;
-> > +		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> > +	}
-> >  
-> >  	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) ||
-> >  	    !mmc_card_is_removable(host->mmc))
-> > diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> > index 0411c9f..dd609b2 100644
-> > --- a/drivers/mmc/host/sdhci.h
-> > +++ b/drivers/mmc/host/sdhci.h
-> > @@ -84,6 +84,8 @@
-> >  #define   SDHCI_CTRL_ADMA32	0x10
-> >  #define   SDHCI_CTRL_ADMA64	0x18
-> >  #define   SDHCI_CTRL_8BITBUS	0x20
-> > +#define  SDHCI_CTRL_CD_TEST_INSERTED	0x40
-> > +#define  SDHCI_CTRL_CD_TEST_ENABLE	0x80
-> >  
-> >  #define SDHCI_POWER_CONTROL	0x29
-> >  #define  SDHCI_POWER_ON		0x01
-> > @@ -422,6 +424,8 @@ struct sdhci_host {
-> >  #define SDHCI_QUIRK2_ACMD23_BROKEN			(1<<14)
-> >  /* Broken Clock divider zero in controller */
-> >  #define SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN		(1<<15)
-> > +/* Controller must support device with broken CD */
-> > +#define SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE		(1<<16)
-> >  
-> >  	int irq;		/* Device IRQ */
-> >  	void __iomem *ioaddr;	/* Mapped address */
-> > 
-> 
+> Fix by changing octeon_publish_devices() to arch_initcall.
+>
+> Fixes: 44a7185c2ae6 ("of/platform: Add common method to populate default bus")
+> Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+>  arch/mips/cavium-octeon/octeon-platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/mips/cavium-octeon/octeon-platform.c b/arch/mips/cavium-octeon/octeon-platform.c
+> index b31fbc9..37a932d 100644
+> --- a/arch/mips/cavium-octeon/octeon-platform.c
+> +++ b/arch/mips/cavium-octeon/octeon-platform.c
+> @@ -1059,7 +1059,7 @@ static int __init octeon_publish_devices(void)
+>  {
+>         return of_platform_bus_probe(NULL, octeon_ids, NULL);
+>  }
+> -device_initcall(octeon_publish_devices);
+> +arch_initcall(octeon_publish_devices);
+>
+>  MODULE_AUTHOR("David Daney <ddaney@caviumnetworks.com>");
+>  MODULE_LICENSE("GPL");
+> --
+> 2.9.2
+>
