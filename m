@@ -1,110 +1,72 @@
-From: Lars Persson <lars.persson-VrBV9hrLPhE@public.gmane.org>
-Subject: [PATCH 1/3] ARM: dts: artpec: use clock binding header
-Date: Tue, 23 Aug 2016 16:00:50 +0200
-Message-ID: <a2b9724cc9324315c5cef65130a7a8ef0d6b20ce.1471959733.git.larper@axis.com>
-References: <cover.1471959733.git.larper@axis.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1471959733.git.larper-VrBV9hrLPhE@public.gmane.org>
-In-Reply-To: <cover.1471959733.git.larper-VrBV9hrLPhE@public.gmane.org>
-References: <cover.1471959733.git.larper-VrBV9hrLPhE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/6] dt/bindings: Add bindings for Tegra GMI controller
+Date: Tue, 23 Aug 2016 15:48:25 +0100
+Message-ID: <07157e79-a22c-2b49-24c8-3a2c266f899f@nvidia.com>
+References: <1470512452-8322-1-git-send-email-mirza.krak@gmail.com>
+ <1470512452-8322-4-git-send-email-mirza.krak@gmail.com>
+ <901be576-a810-c630-9b83-de922e945df0@nvidia.com>
+ <CALw8SCV9AyaAPKpRwRp72-dUz=cW2QZyywqjzS1noonTyGDYag@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALw8SCV9AyaAPKpRwRp72-dUz=cW2QZyywqjzS1noonTyGDYag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use defines from the clock binding header as clock indexes.
 
-Signed-off-by: Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>
----
- arch/arm/boot/dts/artpec6.dtsi | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+On 23/08/16 11:33, Mirza Krak wrote:
 
-diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
-index 3fac4c4..db41b52 100644
---- a/arch/arm/boot/dts/artpec6.dtsi
-+++ b/arch/arm/boot/dts/artpec6.dtsi
-@@ -41,6 +41,7 @@
-  */
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/axis,artpec6-clkctrl.h>
- #include "skeleton.dtsi"
- 
- / {
-@@ -109,14 +110,14 @@
- 		compatible = "arm,cortex-a9-global-timer";
- 		reg = <0xfaf00200 0x20>;
- 		interrupts = <GIC_PPI 11 0xf01>;
--		clocks = <&clkctrl 1>;
-+		clocks = <&clkctrl ARTPEC6_CLK_CPU_PERIPH>;
- 	};
- 
- 	timer@faf00600 {
- 		compatible = "arm,cortex-a9-twd-timer";
- 		reg = <0xfaf00600 0x20>;
- 		interrupts = <GIC_PPI 13 0xf04>;
--		clocks = <&clkctrl 1>;
-+		clocks = <&clkctrl ARTPEC6_CLK_CPU_PERIPH>;
- 		status = "disabled";
- 	};
- 
-@@ -157,7 +158,7 @@
- 		ethernet: ethernet@f8010000 {
- 			clock-names = "phy_ref_clk", "apb_pclk";
- 			clocks = <&eth_phy_ref_clk>,
--				<&clkctrl 4>;
-+				<&clkctrl ARTPEC6_CLK_ETH_ACLK>;
- 			compatible = "snps,dwc-qos-ethernet-4.10";
- 			interrupt-parent = <&intc>;
- 			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-@@ -175,8 +176,8 @@
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0xf8036000 0x1000>;
- 			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clkctrl 13>,
--				<&clkctrl 12>;
-+			clocks = <&clkctrl ARTPEC6_CLK_UART_REFCLK>,
-+				<&clkctrl ARTPEC6_CLK_UART_PCLK>;
- 			clock-names = "uart_clk", "apb_pclk";
- 			status = "disabled";
- 		};
-@@ -184,8 +185,8 @@
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0xf8037000 0x1000>;
- 			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clkctrl 13>,
--				<&clkctrl 12>;
-+			clocks = <&clkctrl ARTPEC6_CLK_UART_REFCLK>,
-+				<&clkctrl ARTPEC6_CLK_UART_PCLK>;
- 			clock-names = "uart_clk", "apb_pclk";
- 			status = "disabled";
- 		};
-@@ -193,8 +194,8 @@
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0xf8038000 0x1000>;
- 			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clkctrl 13>,
--				<&clkctrl 12>;
-+			clocks = <&clkctrl ARTPEC6_CLK_UART_REFCLK>,
-+				<&clkctrl ARTPEC6_CLK_UART_PCLK>;
- 			clock-names = "uart_clk", "apb_pclk";
- 			status = "disabled";
- 		};
-@@ -202,8 +203,8 @@
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0xf8039000 0x1000>;
- 			interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clkctrl 13>,
--				<&clkctrl 12>;
-+			clocks = <&clkctrl ARTPEC6_CLK_UART_REFCLK>,
-+				<&clkctrl ARTPEC6_CLK_UART_PCLK>;
- 			clock-names = "uart_clk", "apb_pclk";
- 			status = "disabled";
- 		};
+...
+
+> Like we discussed I am now trying to implement this but without
+> success and I am starting to think that it is not that simple unless I
+> am missing something.
+> 
+> Below tree
+> 
+> gmi@70009000 {
+>      status = "okay";
+>      #address-cells = <1>;
+>      #size-cells = <1>;
+>      ranges = <4 0x48000000 0x7ffffff>;
+> 
+>      bus@4 {
+>           compatible = "simple-bus";
+>           reg = <4 0>;
+
+I don't think you want reg here.
+
+>           #address-cells = <1>;
+>           #size-cells = <1>;
+
+May be ranges here?
+
+>          nvidia,snor-mux-mode;
+>          nvidia,snor-adv-inv;
+> 
+>         can@0 {
+>               compatible = "nxp,sja1000";
+>               reg = <0 0x100>;
+>               ....
+>      };
+> 
+>      can@40000 {
+>            compatible = "nxp,sja1000";
+>            reg = <0x40000 0x100>;
+>            ....
+>     };
+> };
+> };
+
+Have a look at some other drivers for example:
+
+Documentation/devicetree/bindings/memory-controllers/arm,pl172.txt
+
+Cheers
+Jon
+
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+nvpublic
