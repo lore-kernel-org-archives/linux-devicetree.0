@@ -1,106 +1,652 @@
-From: Zach Brown <zach.brown@ni.com>
-Subject: [PATCH] sdhci: Add quirk and device tree parameter to force SD test mode
-Date: Mon, 22 Aug 2016 17:55:31 -0500
-Message-ID: <1471906531-28668-1-git-send-email-zach.brown@ni.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: adrian.hunter@intel.com
-Cc: ulf.hansson@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 02/12] mailbox: Add Tegra HSP driver
+Date: Mon, 22 Aug 2016 17:06:11 -0700
+Message-ID: <20160823000611.GA4932@kickseed.nvidia.com>
+References: <20160819173233.13260-1-thierry.reding@gmail.com>
+ <20160819173233.13260-3-thierry.reding@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160819173233.13260-3-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jaeden Amero <jaeden.amero@ni.com>
+On Fri, Aug 19, 2016 at 07:32:23PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> This driver exposes a mailbox interface for interprocessor communication
+> using the Hardware Synchronization Primitives (HSP) module's doorbell
+> mechanism. There are multiple HSP instances and they provide additional
+> features such as shared mailboxes, shared and arbitrated semaphores.
+> 
+> A driver for a remote processor can use the mailbox client provided by
+> the HSP driver and build an IPC protocol on top of this synchronization
+> mechanism.
+> 
+> Based on work by Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>.
+> 
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v3:
+> - use a more object oriented design
+> - fix some locking issues
+> 
+>  drivers/mailbox/Kconfig     |   9 +
+>  drivers/mailbox/Makefile    |   2 +
+>  drivers/mailbox/tegra-hsp.c | 561 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 572 insertions(+)
+>  create mode 100644 drivers/mailbox/tegra-hsp.c
+> 
+> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> index 97c372908e78..90e7b94a1199 100644
+> --- a/drivers/mailbox/Kconfig
+> +++ b/drivers/mailbox/Kconfig
+> @@ -114,6 +114,15 @@ config MAILBOX_TEST
+>  	  Test client to help with testing new Controller driver
+>  	  implementations.
+>  
+> +config TEGRA_HSP_MBOX
+> +	bool "Tegra HSP(Hardware Synchronization Primitives) Driver"
+> +	depends on ARCH_TEGRA_186_SOC
+> +	help
+> +	  The Tegra HSP driver is used for the interprocessor communication
+> +	  between different remote processors and host processors on Tegra186
+> +	  and later SoCs. Say Y here if you want to have this support.
+> +	  If unsure say N.
+> +
+>  config XGENE_SLIMPRO_MBOX
+>  	tristate "APM SoC X-Gene SLIMpro Mailbox Controller"
+>  	depends on ARCH_XGENE
+> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> index 66c38e300dfc..3fa01673f288 100644
+> --- a/drivers/mailbox/Makefile
+> +++ b/drivers/mailbox/Makefile
+> @@ -27,3 +27,5 @@ obj-$(CONFIG_XGENE_SLIMPRO_MBOX) += mailbox-xgene-slimpro.o
+>  obj-$(CONFIG_HI6220_MBOX)	+= hi6220-mailbox.o
+>  
+>  obj-$(CONFIG_BCM_PDC_MBOX)	+= bcm-pdc-mailbox.o
+> +
+> +obj-$(CONFIG_TEGRA_HSP_MBOX)	+= tegra-hsp.o
+> diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
+> new file mode 100644
+> index 000000000000..8770ba9b58fe
+> --- /dev/null
+> +++ b/drivers/mailbox/tegra-hsp.c
+> @@ -0,0 +1,561 @@
+> +/*
+> + * Copyright (c) 2016, NVIDIA CORPORATION.  All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + */
+> +
+> +#define DEBUG
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/mailbox_controller.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#include <dt-bindings/mailbox/tegra186-hsp.h>
+> +
+> +#define HSP_INT_DIMENSIONING	0x380
+> +#define HSP_nSM_SHIFT		0
+> +#define HSP_nSS_SHIFT		4
+> +#define HSP_nAS_SHIFT		8
+> +#define HSP_nDB_SHIFT		12
+> +#define HSP_nSI_SHIFT		16
+> +#define HSP_nINT_MASK		0xf
+> +
+> +#define HSP_DB_TRIGGER	0x0
+> +#define HSP_DB_ENABLE	0x4
+> +#define HSP_DB_RAW	0x8
+> +#define HSP_DB_PENDING	0xc
+> +
+> +#define HSP_DB_CCPLEX		1
+> +#define HSP_DB_BPMP		3
+> +#define HSP_DB_MAX		7
+> +
+> +struct tegra_hsp_channel;
+> +struct tegra_hsp;
+> +
+> +struct tegra_hsp_channel_ops {
+> +	int (*send_data)(struct tegra_hsp_channel *channel, void *data);
+> +	int (*startup)(struct tegra_hsp_channel *channel);
+> +	void (*shutdown)(struct tegra_hsp_channel *channel);
+> +	bool (*last_tx_done)(struct tegra_hsp_channel *channel);
+> +};
+> +
+> +struct tegra_hsp_channel {
+> +	struct tegra_hsp *hsp;
+> +	const struct tegra_hsp_channel_ops *ops;
+> +	struct mbox_chan *chan;
+> +	void __iomem *regs;
+> +};
+> +
+> +static struct tegra_hsp_channel *to_tegra_hsp_channel(struct mbox_chan *chan)
+> +{
+> +	return chan->con_priv;
+> +}
+> +
+> +struct tegra_hsp_doorbell {
+> +	struct tegra_hsp_channel channel;
+> +	struct list_head list;
+> +	const char *name;
+> +	unsigned int master;
+> +	unsigned int index;
+> +};
+> +
+> +static struct tegra_hsp_doorbell *
+> +to_tegra_hsp_doorbell(struct tegra_hsp_channel *channel)
+> +{
+> +	if (!channel)
+> +		return NULL;
+> +
+> +	return container_of(channel, struct tegra_hsp_doorbell, channel);
+> +}
+> +
+> +struct tegra_hsp_db_map {
+> +	const char *name;
+> +	unsigned int master;
+> +	unsigned int index;
+> +};
+> +
+> +struct tegra_hsp_soc {
+> +	const struct tegra_hsp_db_map *map;
+> +};
+> +
+> +struct tegra_hsp {
+> +	const struct tegra_hsp_soc *soc;
+> +	struct mbox_controller mbox;
+> +	void __iomem *regs;
+> +	unsigned int irq;
+> +	unsigned int num_sm;
+> +	unsigned int num_as;
+> +	unsigned int num_ss;
+> +	unsigned int num_db;
+> +	unsigned int num_si;
+> +	spinlock_t lock;
+> +
+> +	struct list_head doorbells;
+> +};
+> +
+> +static inline struct tegra_hsp *
+> +to_tegra_hsp(struct mbox_controller *mbox)
+> +{
+> +	return container_of(mbox, struct tegra_hsp, mbox);
+> +}
+> +
+> +static inline u32 tegra_hsp_readl(struct tegra_hsp *hsp, unsigned int offset)
+> +{
+> +	return readl(hsp->regs + offset);
+> +}
+> +
+> +static inline void tegra_hsp_writel(struct tegra_hsp *hsp, u32 value,
+> +				    unsigned int offset)
+> +{
+> +	writel(value, hsp->regs + offset);
+> +	(void)readl(hsp->regs + offset);
 
-On some devices, CD is broken so that we must force the SDHCI into test
-mode and set CD, so that it always detects an SD card as present.
+I am not aware of a need for such barriers (even if the downstream code
+has them).
 
-In order to get a device with broken CD working, we had previously
-always set the SDHCI into test mode. Unfortunately, this had the side
-effect of making all SD cards used with our Linux kernels undetectable
-and non-removable.
+> +}
+> +
+> +static inline u32 tegra_hsp_channel_readl(struct tegra_hsp_channel *channel,
+> +					  unsigned int offset)
+> +{
+> +	return readl(channel->regs + offset);
+> +}
+> +
+> +static inline void tegra_hsp_channel_writel(struct tegra_hsp_channel *channel,
+> +					    u32 value, unsigned int offset)
+> +{
+> +	writel(value, channel->regs + offset);
+> +	(void)readl(channel->regs + offset);
 
-By making this "SD test mode" setting optional via a quirk, we can avoid
-this side effect for devices other than the device with broken CD.
-Additionally, we add a device parameter to sdhci-pltfm to allow all
-SDHCI drivers to enable this quirk.
+same here.
 
-Signed-off-by: Jaeden Amero <jaeden.amero@ni.com>
-Signed-off-by: Zach Brown <zach.brown@ni.com>
----
- Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
- drivers/mmc/host/sdhci-pltfm.c                | 4 ++++
- drivers/mmc/host/sdhci.c                      | 9 +++++++++
- drivers/mmc/host/sdhci.h                      | 4 ++++
- 4 files changed, 19 insertions(+)
+> +}
+> +
+> +static int tegra_hsp_doorbell_can_ring(struct tegra_hsp_doorbell *db)
+> +{
+> +	u32 value;
+> +
+> +	value = tegra_hsp_channel_readl(&db->channel, HSP_DB_ENABLE);
+> +
+> +	return !!(value & BIT(TEGRA_HSP_DB_MASTER_CCPLEX));
+> +}
+> +
+> +static struct tegra_hsp_doorbell *
+> +__tegra_hsp_doorbell_get(struct tegra_hsp *hsp, unsigned int master)
+> +{
+> +	struct tegra_hsp_doorbell *db = NULL, *entry;
+> +
+> +	list_for_each_entry(entry, &hsp->doorbells, list)
+> +		if (entry->master == master) {
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-index 22d1e1f..3a9be41 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -52,6 +52,8 @@ Optional properties:
- - no-sdio: controller is limited to send sdio cmd during initialization
- - no-sd: controller is limited to send sd cmd during initialization
- - no-mmc: controller is limited to send mmc cmd during initialization
-+- force-sd-cd-test-mode: card detection is broken on device, force cd test
-+  enable and cd test inserted so host will always detect a card.
- 
- *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
- polarity properties, we have to fix the meaning of the "normal" and "inverted"
-diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
-index 1d17dcf..056d101 100644
---- a/drivers/mmc/host/sdhci-pltfm.c
-+++ b/drivers/mmc/host/sdhci-pltfm.c
-@@ -87,6 +87,10 @@ void sdhci_get_of_property(struct platform_device *pdev)
- 	if (of_get_property(np, "broken-cd", NULL))
- 		host->quirks |= SDHCI_QUIRK_BROKEN_CARD_DETECTION;
- 
-+	if (of_get_property(np, "force-sd-cd-test-mode", NULL))
-+		host->quirks2 |=
-+			SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE;
-+
- 	if (of_get_property(np, "no-1-8-v", NULL))
- 		host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
- 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index cd65d47..2f4c6f9 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -117,6 +117,15 @@ static inline bool sdhci_data_line_cmd(struct mmc_command *cmd)
- static void sdhci_set_card_detection(struct sdhci_host *host, bool enable)
- {
- 	u32 present;
-+	u8  ctrl;
-+
-+	if (host->quirks2 & SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE) {
-+		/* Put the card in test mode, with card inserted */
-+		ctrl = sdhci_readl(host, SDHCI_HOST_CONTROL);
-+		ctrl |= SDHCI_CTRL_CD_TEST_INSERTED |
-+			SDHCI_CTRL_CD_TEST_ENABLE;
-+		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-+	}
- 
- 	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) ||
- 	    !mmc_card_is_removable(host->mmc))
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 0411c9f..dd609b2 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -84,6 +84,8 @@
- #define   SDHCI_CTRL_ADMA32	0x10
- #define   SDHCI_CTRL_ADMA64	0x18
- #define   SDHCI_CTRL_8BITBUS	0x20
-+#define  SDHCI_CTRL_CD_TEST_INSERTED	0x40
-+#define  SDHCI_CTRL_CD_TEST_ENABLE	0x80
- 
- #define SDHCI_POWER_CONTROL	0x29
- #define  SDHCI_POWER_ON		0x01
-@@ -422,6 +424,8 @@ struct sdhci_host {
- #define SDHCI_QUIRK2_ACMD23_BROKEN			(1<<14)
- /* Broken Clock divider zero in controller */
- #define SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN		(1<<15)
-+/* Controller must support device with broken CD */
-+#define SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE		(1<<16)
- 
- 	int irq;		/* Device IRQ */
- 	void __iomem *ioaddr;	/* Mapped address */
--- 
-2.7.4
+you might as well say: 'return entry;' and remove 'db' ?
+
+> +			db = entry;
+> +			break;
+> +		}
+> +
+> +	return db;
+> +}
+> +
+> +static struct tegra_hsp_doorbell *
+> +tegra_hsp_doorbell_get(struct tegra_hsp *hsp, unsigned int master)
+> +{
+> +	struct tegra_hsp_doorbell *db;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&hsp->lock, flags);
+> +	db = __tegra_hsp_doorbell_get(hsp, master);
+> +	spin_unlock_irqrestore(&hsp->lock, flags);
+> +
+> +	return db;
+> +}
+> +
+> +static irqreturn_t tegra_hsp_doorbell_irq(int irq, void *data)
+> +{
+> +	struct tegra_hsp *hsp = data;
+> +	struct tegra_hsp_doorbell *db;
+> +	unsigned long master, value;
+> +
+> +	db = tegra_hsp_doorbell_get(hsp, TEGRA_HSP_DB_MASTER_CCPLEX);
+> +	if (!db)
+> +		return IRQ_NONE;
+> +
+> +	value = tegra_hsp_channel_readl(&db->channel, HSP_DB_PENDING);
+> +	tegra_hsp_channel_writel(&db->channel, value, HSP_DB_PENDING);
+> +
+> +	spin_lock(&hsp->lock);
+> +
+> +	for_each_set_bit(master, &value, hsp->mbox.num_chans) {
+> +		struct tegra_hsp_doorbell *db;
+> +
+> +		db = __tegra_hsp_doorbell_get(hsp, master);
+> +		if (db)
+> +			mbox_chan_received_data(db->channel.chan, NULL);
+> +	}
+> +
+> +	spin_unlock(&hsp->lock);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int tegra_hsp_doorbell_send_data(struct tegra_hsp_channel *channel,
+> +					void *data)
+> +{
+> +	tegra_hsp_channel_writel(channel, 1, HSP_DB_TRIGGER);
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_hsp_doorbell_startup(struct tegra_hsp_channel *channel)
+> +{
+> +	struct tegra_hsp_doorbell *db = to_tegra_hsp_doorbell(channel);
+> +	struct tegra_hsp *hsp = channel->hsp;
+> +	struct tegra_hsp_doorbell *ccplex;
+> +	unsigned long flags;
+> +	u32 value;
+> +
+> +	dev_dbg(hsp->mbox.dev, "> %s(channel=%p)\n", __func__, channel);
+> +	dev_dbg(hsp->mbox.dev, "  regs: %p\n", channel->regs);
+> +
+> +	if (db->master >= hsp->mbox.num_chans) {
+> +		dev_err(hsp->mbox.dev,
+> +			"invalid master ID %u for HSP channel\n",
+> +			db->master);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ccplex = tegra_hsp_doorbell_get(hsp, TEGRA_HSP_DB_MASTER_CCPLEX);
+> +	if (!ccplex)
+> +		return -ENODEV;
+> +
+> +	spin_lock_irqsave(&hsp->lock, flags);
+> +
+> +	value = tegra_hsp_channel_readl(&ccplex->channel, HSP_DB_ENABLE);
+> +	value |= BIT(db->master);
+> +	tegra_hsp_channel_writel(&ccplex->channel, value, HSP_DB_ENABLE);
+> +
+> +	spin_unlock_irqrestore(&hsp->lock, flags);
+> +
+> +	if (!tegra_hsp_doorbell_can_ring(db))
+> +		return -ENODEV;
+> +
+> +	dev_dbg(hsp->mbox.dev, "< %s()\n", __func__);
+> +	return 0;
+> +}
+> +
+> +static void tegra_hsp_doorbell_shutdown(struct tegra_hsp_channel *channel)
+> +{
+> +	struct tegra_hsp_doorbell *db = to_tegra_hsp_doorbell(channel);
+> +	struct tegra_hsp *hsp = channel->hsp;
+> +	struct tegra_hsp_doorbell *ccplex;
+> +	unsigned long flags;
+> +	u32 value;
+> +
+> +	ccplex = tegra_hsp_doorbell_get(hsp, TEGRA_HSP_DB_MASTER_CCPLEX);
+> +	if (!ccplex)
+> +		return;
+> +
+> +	spin_lock_irqsave(&hsp->lock, flags);
+> +
+> +	value = tegra_hsp_channel_readl(&ccplex->channel, HSP_DB_ENABLE);
+> +	value &= ~BIT(db->master);
+> +	tegra_hsp_channel_writel(&ccplex->channel, value, HSP_DB_ENABLE);
+> +
+> +	spin_unlock_irqrestore(&hsp->lock, flags);
+> +}
+> +
+> +static bool tegra_hsp_doorbell_last_tx_done(struct tegra_hsp_channel *channel)
+> +{
+> +	return true;
+> +}
+> +
+> +static const struct tegra_hsp_channel_ops tegra_hsp_doorbell_ops = {
+> +	.send_data = tegra_hsp_doorbell_send_data,
+> +	.startup = tegra_hsp_doorbell_startup,
+> +	.shutdown = tegra_hsp_doorbell_shutdown,
+> +	.last_tx_done = tegra_hsp_doorbell_last_tx_done,
+> +};
+> +
+> +static struct tegra_hsp_channel *
+> +tegra_hsp_doorbell_create(struct tegra_hsp *hsp, const char *name,
+> +			  unsigned int master, unsigned int index)
+> +{
+> +	struct tegra_hsp_doorbell *db;
+> +	unsigned int offset;
+> +	unsigned long flags;
+> +
+> +	db = kzalloc(sizeof(*db), GFP_KERNEL);
+> +	if (!db)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	offset = (1 + (hsp->num_sm / 2) + hsp->num_ss + hsp->num_as) << 16;
+> +	offset += index * 0x100;
+> +
+> +	db->channel.ops = &tegra_hsp_doorbell_ops;
+> +	db->channel.regs = hsp->regs + offset;
+> +	db->channel.hsp = hsp;
+> +
+> +	db->name = kstrdup_const(name, GFP_KERNEL);
+> +	db->master = master;
+> +	db->index = index;
+> +
+> +	spin_lock_irqsave(&hsp->lock, flags);
+> +	list_add_tail(&db->list, &hsp->doorbells);
+> +	spin_unlock_irqrestore(&hsp->lock, flags);
+> +
+> +	return &db->channel;
+> +}
+> +
+> +static void __tegra_hsp_doorbell_destroy(struct tegra_hsp_doorbell *db)
+> +{
+> +	list_del(&db->list);
+> +	kfree_const(db->name);
+> +	kfree(db);
+> +}
+> +
+> +static int tegra_hsp_send_data(struct mbox_chan *chan, void *data)
+> +{
+> +	struct tegra_hsp_channel *channel = to_tegra_hsp_channel(chan);
+> +
+> +	return channel->ops->send_data(channel, data);
+> +}
+> +
+> +static int tegra_hsp_startup(struct mbox_chan *chan)
+> +{
+> +	struct tegra_hsp_channel *channel = to_tegra_hsp_channel(chan);
+> +
+> +	return channel->ops->startup(channel);
+> +}
+> +
+> +static void tegra_hsp_shutdown(struct mbox_chan *chan)
+> +{
+> +	struct tegra_hsp_channel *channel = to_tegra_hsp_channel(chan);
+> +
+> +	return channel->ops->shutdown(channel);
+> +}
+> +
+> +static bool tegra_hsp_last_tx_done(struct mbox_chan *chan)
+> +{
+> +	struct tegra_hsp_channel *channel = to_tegra_hsp_channel(chan);
+> +
+> +	return channel->ops->last_tx_done(channel);
+> +}
+> +
+> +static const struct mbox_chan_ops tegra_hsp_ops = {
+> +	.send_data = tegra_hsp_send_data,
+> +	.startup = tegra_hsp_startup,
+> +	.shutdown = tegra_hsp_shutdown,
+> +	.last_tx_done = tegra_hsp_last_tx_done,
+> +};
+> +
+> +static struct mbox_chan *of_tegra_hsp_xlate(struct mbox_controller *mbox,
+> +					    const struct of_phandle_args *args)
+> +{
+> +	struct tegra_hsp *hsp = to_tegra_hsp(mbox);
+> +	struct tegra_hsp_channel *channel = ERR_PTR(-ENODEV);
+> +	unsigned int type = args->args[0];
+> +	unsigned int master = args->args[1];
+> +	struct tegra_hsp_doorbell *db;
+> +	struct mbox_chan *chan;
+> +	unsigned long flags;
+> +	unsigned int i;
+> +
+> +	dev_dbg(mbox->dev, "> %s(mbox=%p, args=%p)\n", __func__, mbox, args);
+> +	dev_dbg(mbox->dev, "  type: %x, master: %x\n", type, master);
+> +
+> +	switch (type) {
+> +	case TEGRA_HSP_MBOX_TYPE_DB:
+> +		db = tegra_hsp_doorbell_get(hsp, master);
+> +		dev_dbg(mbox->dev, "  doorbell: %p\n", db);
+> +		if (db)
+> +			channel = &db->channel;
+> +
+> +		break;
+> +
+> +	default:
+> +		break;
+> +	}
+> +
+> +	if (IS_ERR(channel))
+> +		return ERR_CAST(channel);
+> +
+> +	spin_lock_irqsave(&hsp->lock, flags);
+> +
+> +	for (i = 0; i < hsp->mbox.num_chans; i++) {
+> +		chan = &hsp->mbox.chans[i];
+> +		if (!chan->con_priv) {
+> +			chan->con_priv = channel;
+> +			channel->chan = chan;
+> +			break;
+> +		}
+> +
+> +		chan = NULL;
+> +	}
+> +
+> +	spin_unlock_irqrestore(&hsp->lock, flags);
+> +
+> +	dev_dbg(mbox->dev, "< %s() = %p\n", __func__, chan);
+> +	return chan ?: ERR_PTR(-EBUSY);
+> +}
+> +
+> +static void tegra_hsp_remove_doorbells(struct tegra_hsp *hsp)
+> +{
+> +	struct tegra_hsp_doorbell *db;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&hsp->lock, flags);
+> +
+> +	list_for_each_entry(db, &hsp->doorbells, list)
+> +		__tegra_hsp_doorbell_destroy(db);
+> +
+> +	spin_unlock_irqrestore(&hsp->lock, flags);
+> +}
+> +
+> +static int tegra_hsp_add_doorbells(struct tegra_hsp *hsp)
+> +{
+> +	const struct tegra_hsp_db_map *map = hsp->soc->map;
+> +	struct tegra_hsp_channel *channel;
+> +
+> +	dev_dbg(hsp->mbox.dev, "> %s(hsp=%p)\n", __func__, hsp);
+> +
+> +	while (map->name) {
+> +		dev_dbg(hsp->mbox.dev, "  adding doorbell for master %u (%s), index %u\n", map->master, map->name, map->index);
+> +
+> +		channel = tegra_hsp_doorbell_create(hsp, map->name,
+> +						    map->master, map->index);
+> +		if (IS_ERR(channel)) {
+> +			tegra_hsp_remove_doorbells(hsp);
+> +			return PTR_ERR(channel);
+> +		}
+> +
+> +		map++;
+> +	}
+> +
+> +	dev_dbg(hsp->mbox.dev, "< %s()\n", __func__);
+> +	return 0;
+> +}
+> +
+> +static int tegra_hsp_probe(struct platform_device *pdev)
+> +{
+> +	struct tegra_hsp *hsp;
+> +	struct resource *res;
+> +	u32 value;
+> +	int err;
+> +
+> +	dev_dbg(&pdev->dev, "> %s(pdev=%p)\n", __func__, pdev);
+> +
+> +	hsp = devm_kzalloc(&pdev->dev, sizeof(*hsp), GFP_KERNEL);
+> +	if (!hsp)
+> +		return -ENOMEM;
+> +
+> +	dev_dbg(&pdev->dev, "  hsp: %p\n", hsp);
+> +
+> +	hsp->soc = of_device_get_match_data(&pdev->dev);
+> +	INIT_LIST_HEAD(&hsp->doorbells);
+> +	spin_lock_init(&hsp->lock);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	hsp->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(hsp->regs))
+> +		return PTR_ERR(hsp->regs);
+> +
+> +	value = tegra_hsp_readl(hsp, HSP_INT_DIMENSIONING);
+> +	hsp->num_sm = (value >> HSP_nSM_SHIFT) & HSP_nINT_MASK;
+> +	hsp->num_ss = (value >> HSP_nSS_SHIFT) & HSP_nINT_MASK;
+> +	hsp->num_as = (value >> HSP_nAS_SHIFT) & HSP_nINT_MASK;
+> +	hsp->num_db = (value >> HSP_nDB_SHIFT) & HSP_nINT_MASK;
+> +	hsp->num_si = (value >> HSP_nSI_SHIFT) & HSP_nINT_MASK;
+> +
+> +	dev_dbg(&pdev->dev, "regs: %pR (%p-%p)\n", res, hsp->regs, hsp->regs + resource_size(res) - 1);
+> +	dev_dbg(&pdev->dev, "sm: %u ss:%u as: %u db: %u, si: %u\n",
+> +		hsp->num_sm, hsp->num_ss, hsp->num_as, hsp->num_db,
+> +		hsp->num_si);
+> +
+> +	err = platform_get_irq_byname(pdev, "doorbell");
+> +	if (err < 0) {
+> +		dev_err(&pdev->dev, "failed to get doorbell IRQ: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	hsp->irq = err;
+> +
+> +	err = devm_request_irq(&pdev->dev, hsp->irq, tegra_hsp_doorbell_irq,
+> +			       IRQF_NO_SUSPEND, dev_name(&pdev->dev), hsp);
+> +	if (err < 0) {
+> +		dev_err(&pdev->dev, "failed to request IRQ#%u: %d\n",
+> +			hsp->irq, err);
+> +		return err;
+> +	}
+> +
+> +	hsp->mbox.of_xlate = of_tegra_hsp_xlate;
+> +	hsp->mbox.num_chans = 32;
+> +	hsp->mbox.dev = &pdev->dev;
+> +	hsp->mbox.txdone_irq = false;
+> +	hsp->mbox.txdone_poll = false;
+> +	hsp->mbox.ops = &tegra_hsp_ops;
+> +
+> +	hsp->mbox.chans = devm_kcalloc(&pdev->dev, hsp->mbox.num_chans,
+> +					sizeof(*hsp->mbox.chans),
+> +					GFP_KERNEL);
+> +	if (!hsp->mbox.chans)
+> +		return -ENOMEM;
+> +
+> +	err = tegra_hsp_add_doorbells(hsp);
+> +	if (err < 0) {
+> +		dev_err(&pdev->dev, "failed to add doorbells: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, hsp);
+> +
+> +	err = mbox_controller_register(&hsp->mbox);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "failed to register mailbox: %d\n", err);
+> +		tegra_hsp_remove_doorbells(hsp);
+> +		return err;
+> +	}
+> +
+> +	dev_dbg(&pdev->dev, "< %s()\n", __func__);
+> +	return 0;
+> +}
+> +
+> +static int tegra_hsp_remove(struct platform_device *pdev)
+> +{
+> +	struct tegra_hsp *hsp = platform_get_drvdata(pdev);
+> +
+> +	mbox_controller_unregister(&hsp->mbox);
+> +	tegra_hsp_remove_doorbells(hsp);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct tegra_hsp_db_map tegra186_hsp_db_map[] = {
+> +	{ "ccplex", TEGRA_HSP_DB_MASTER_CCPLEX, HSP_DB_CCPLEX },
+> +	{ "bpmp",   TEGRA_HSP_DB_MASTER_BPMP,   HSP_DB_BPMP   },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static const struct tegra_hsp_soc tegra186_hsp_soc = {
+> +	.map = tegra186_hsp_db_map,
+> +};
+> +
+> +static const struct of_device_id tegra_hsp_match[] = {
+> +	{ .compatible = "nvidia,tegra186-hsp", .data = &tegra186_hsp_soc },
+> +	{ }
+> +};
+> +
+> +static struct platform_driver tegra_hsp_driver = {
+> +	.driver = {
+> +		.name = "tegra-hsp",
+> +		.of_match_table = tegra_hsp_match,
+> +	},
+> +	.probe = tegra_hsp_probe,
+> +	.remove = tegra_hsp_remove,
+> +};
+> +
+> +static int __init tegra_hsp_init(void)
+> +{
+> +	return platform_driver_register(&tegra_hsp_driver);
+> +}
+> +core_initcall(tegra_hsp_init);
+> -- 
+> 2.9.0
+> 
