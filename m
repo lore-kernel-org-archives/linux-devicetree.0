@@ -1,73 +1,287 @@
-From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 0/3] mfd: lp873x: Add lp873x PMIC support
-Date: Tue, 23 Aug 2016 10:12:04 +0530
-Message-ID: <5c7c9cba-36db-6912-2520-cc64140f9175@ti.com>
-References: <1470824291-14902-1-git-send-email-j-keerthy@ti.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V2] ARM: BCM5301X: Add basic dts for BCM53573 based Tenda AC9
+Date: Tue, 23 Aug 2016 07:37:43 +0200
+Message-ID: <20160823053746.14521-1-zajec5@gmail.com>
+References: <1469654305-1700-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470824291-14902-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1469654305-1700-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Lee Jones,
+BCM53573 seems to be low priced alternative for Northstar chipsts. It
+uses single core Cortex-A7 and doesn't have SDU or local (TWD) timer. It
+was also stripped out of independent SPI controller and 2 GMACs.
 
-On Wednesday 10 August 2016 03:48 PM, Keerthy wrote:
-> The LP873X chip is a power management IC for Portable Navigation Systems
->     and Tablet Computing devices. It contains the following components:
->
->      - Regulators.
->      - Configurable General Purpose Output Signals(GPO).
->
-> PMIC interacts with the main processor through i2c. PMIC has
-> couple of LDOs(Linear Regulators), couple of BUCKs (Step-Down DC-DC
-> Converter Cores) and GPOs(General Purpose Output Signals).
->
+DTS for Tenda AC9 isn't completed yet. It misses e.g. switch entry (we
+still need some b53 fixes) and probably some clocks. It adds support for
+basic features however and can be improved later.
 
-Kindly pull this set if there are no further comments.
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+V2: Use ARCH_BCM_53573 instead of ARCH_BCM_5301X.
+---
+ arch/arm/boot/dts/Makefile               |   2 +
+ arch/arm/boot/dts/bcm47189-tenda-ac9.dts |  74 ++++++++++++++++
+ arch/arm/boot/dts/bcm53573.dtsi          | 147 +++++++++++++++++++++++++++++++
+ 3 files changed, 223 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm47189-tenda-ac9.dts
+ create mode 100644 arch/arm/boot/dts/bcm53573.dtsi
 
-> The regulator patch is already queued:
-> http://marc.info/?l=linux-kernel&m=146298767110771&w=2
->
-> DT patch also queued:
->
-> Hence posting the remaining patches of the series with
-> the comments fixed on mfd driver.
->
-> Chages in v7:
->
-> Reverted the dependency on http://www.gossamer-threads.com/lists/linux/kernel/2457552.
->
-> Changes in v6:
->
-> Series depends on: http://www.gossamer-threads.com/lists/linux/kernel/2457552
-> probe_new used.
->
-> Chnages in v4:
->
-> Added GPO driver support.
->
-> Keerthy (3):
->   mfd: lp873x: Add lp873x PMIC support
->   gpio: lp873x: Add support for General Purpose Outputs
->   regulator: lp873x: Change the MFD config option as per latest naming
->
->  drivers/gpio/Kconfig       |  10 ++
->  drivers/gpio/Makefile      |   1 +
->  drivers/gpio/gpio-lp873x.c | 185 +++++++++++++++++++++++++++++++
->  drivers/mfd/Kconfig        |  14 +++
->  drivers/mfd/Makefile       |   2 +
->  drivers/mfd/lp873x.c       |  96 +++++++++++++++++
->  drivers/regulator/Kconfig  |   2 +-
->  include/linux/mfd/lp873x.h | 264 +++++++++++++++++++++++++++++++++++++++++++++
->  8 files changed, 573 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpio/gpio-lp873x.c
->  create mode 100644 drivers/mfd/lp873x.c
->  create mode 100644 include/linux/mfd/lp873x.h
->
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 8e11aae..dd2c49e 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -90,6 +90,8 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm94709.dtb \
+ 	bcm953012er.dtb \
+ 	bcm953012k.dtb
++dtb-$(CONFIG_ARCH_BCM_53573) += \
++	bcm47189-tenda-ac9.dtb
+ dtb-$(CONFIG_ARCH_BCM_63XX) += \
+ 	bcm963138dvt.dtb
+ dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
+diff --git a/arch/arm/boot/dts/bcm47189-tenda-ac9.dts b/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
+new file mode 100644
+index 0000000..4403ae8
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
+@@ -0,0 +1,74 @@
++/*
++ * Copyright (C) 2016 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
++ *
++ * Licensed under the ISC license.
++ */
++
++/dts-v1/;
++
++#include "bcm53573.dtsi"
++
++/ {
++	compatible = "tenda,ac9", "brcm,bcm47189", "brcm,bcm53573";
++	model = "Tenda AC9";
++
++	chosen {
++		bootargs = "console=ttyS0,115200 earlycon";
++	};
++
++	memory {
++		reg = <0x00000000 0x08000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		usb {
++			label = "bcm53xx:blue:usb";
++			gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-off";
++		};
++
++		wps {
++			label = "bcm53xx:blue:wps";
++			gpios = <&chipcommon 10 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-off";
++		};
++
++		5ghz {
++			label = "bcm53xx:blue:5ghz";
++			gpios = <&chipcommon 11 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-off";
++		};
++
++		system {
++			label = "bcm53xx:blue:system";
++			gpios = <&chipcommon 15 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "timer";
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		rfkill {
++			label = "WiFi";
++			linux,code = <KEY_RFKILL>;
++			gpios = <&chipcommon 3 GPIO_ACTIVE_LOW>;
++		};
++
++		restart {
++			label = "Reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&chipcommon 7 GPIO_ACTIVE_LOW>;
++		};
++
++		wps {
++			label = "WPS";
++			linux,code = <KEY_WPS_BUTTON>;
++			gpios = <&chipcommon 9 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm53573.dtsi b/arch/arm/boot/dts/bcm53573.dtsi
+new file mode 100644
+index 0000000..efa07de
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm53573.dtsi
+@@ -0,0 +1,147 @@
++/*
++ * Copyright (C) 2016 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
++ *
++ * Licensed under the ISC license.
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include "skeleton.dtsi"
++
++/ {
++	interrupt-parent = <&gic>;
++
++	chosen {
++		stdout-path = &uart0;
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x0>;
++		};
++	};
++
++	mpcore {
++		compatible = "simple-bus";
++		ranges = <0x00000000 0x18310000 0x00008000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		gic: interrupt-controller@1000 {
++			compatible = "arm,cortex-a7-gic";
++			#interrupt-cells = <3>;
++			#address-cells = <0>;
++			interrupt-controller;
++			reg = <0x1000 0x1000>,
++			      <0x2000 0x0100>;
++		};
++	};
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		alp: oscillator {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <40000000>;
++		};
++	};
++
++	axi@18000000 {
++		compatible = "brcm,bus-axi";
++		reg = <0x18000000 0x1000>;
++		ranges = <0x00000000 0x18000000 0x00100000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0x000fffff 0xffff>;
++		interrupt-map =
++			/* ChipCommon */
++			<0x00000000 0 &gic GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++
++			/* IEEE 802.11 0 */
++			<0x00001000 0 &gic GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
++
++			/* PCIe Controller 0 */
++			<0x00002000 0 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++			<0x00002000 1 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++			<0x00002000 2 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++			<0x00002000 3 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++			<0x00002000 4 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++			<0x00002000 5 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++
++			/* USB 2.0 Controller */
++			<0x00004000 0 &gic GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++
++			/* Ethernet Controller 0 */
++			<0x00005000 0 &gic GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
++
++			/* IEEE 802.11 1 */
++			<0x0000a000 0 &gic GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++
++			/* Ethernet Controller 1 */
++			<0x0000b000 0 &gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
++
++		chipcommon: chipcommon@0 {
++			compatible = "simple-bus";
++			reg = <0x00000000 0x1000>;
++			ranges;
++
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++
++			uart0: serial@0300 {
++				compatible = "ns16550a";
++				reg = <0x0300 0x100>;
++				interrupt-parent = <&gic>;
++				interrupts = <GIC_PPI 16 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&alp>;
++				status = "okay";
++			};
++		};
++
++		usb2: usb2@4000 {
++			reg = <0x4000 0x1000>;
++			ranges;
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			ehci: ehci@4000 {
++				compatible = "generic-ehci";
++				reg = <0x4000 0x1000>;
++				interrupt-parent = <&gic>;
++				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			ohci: ohci@d000 {
++				#usb-cells = <0>;
++
++				compatible = "generic-ohci";
++				reg = <0xd000 0x1000>;
++				interrupt-parent = <&gic>;
++				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
++
++		gmac0: ethernet@5000 {
++			reg = <0x5000 0x1000>;
++		};
++
++		gmac1: ethernet@b000 {
++			reg = <0xb000 0x1000>;
++		};
++	};
++};
+-- 
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
