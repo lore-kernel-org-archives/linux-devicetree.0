@@ -1,52 +1,91 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH V8 2/2] mmc: OCTEON: Add host driver for OCTEON MMC controller.
-Date: Tue, 23 Aug 2016 12:59:35 -0700
-Message-ID: <57BCAB27.8060502@caviumnetworks.com>
-References: <57853474.9050108@cavium.com> <CAPDyKFqaGLWxkG+CqViqDfPqeffKE5rutgR0gduuGs9F0DX+zg@mail.gmail.com> <57BC8ACA.1040506@caviumnetworks.com> <CAPDyKFp047jKEZngegTxk1grvwPivqj+tqAX1ekF82s1zDE53Q@mail.gmail.com>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH v2 03/22] usb: ulpi: Support device discovery via device
+ properties
+Date: Tue, 23 Aug 2016 13:00:00 -0700
+Message-ID: <CAJOFmgwTPDwdL_cc7f5N09enZNhKwSkWAxdpF39vOBQLfEdVSg@mail.gmail.com>
+References: <20160707222114.1673-1-stephen.boyd@linaro.org>
+ <20160707222114.1673-4-stephen.boyd@linaro.org>
+ <20160718022355.GA8568@rob-hp-laptop>
+ <147043320014.26915.7483025835695600714@sboyd-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <CAPDyKFp047jKEZngegTxk1grvwPivqj+tqAX1ekF82s1zDE53Q@mail.gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Steven J. Hill" <steven.hill@cavium.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <147043320014.26915.7483025835695600714@sboyd-linaro>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Felipe Balbi <balbi@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/23/2016 12:46 PM, Ulf Hansson wrote:
-> On 23 August 2016 at 19:41, David Daney <ddaney@caviumnetworks.com> wrote:
->> On 08/23/2016 07:53 AM, Ulf Hansson wrote:
->>>
->>> On 12 July 2016 at 20:18, Steven J. Hill <steven.hill@cavium.com> wrote:
+On Fri, Aug 5, 2016 at 2:40 PM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
+> Quoting Rob Herring (2016-07-17 19:23:55)
+>> On Thu, Jul 07, 2016 at 03:20:54PM -0700, Stephen Boyd wrote:
+>> > +-------
+>> > +
+>> > +usb {
+>> > +     compatible = "vendor,usb-controller";
+>> > +
+>> > +     ulpi {
+>> > +             phy {
+>> > +                     compatible = "vendor,phy";
+>> > +                     ulpi-vendor = /bits/ 16 <0x1d6b>;
+>> > +                     ulpi-product = /bits/ 16 <0x0002>;
+>> > +             };
+>> > +     };
 >>
->> [...]
+>> I'm still having concerns about describing both phys and devices. If I
+>> have a controller with 2 ports and 2 devices attached, I'd have
+>> something like this under the USB controller:
 >>
->>>> +#include <asm/byteorder.h>
->>>> +#include <asm/octeon/octeon.h>
->>>
->>>
->>
->> OK, we will duplicate any needed definitions from octeon.h into the driver
->> source file.
+>> ulpi {
+>>         phy@1 {
+>>         };
+>>         phy@2 {
+>>         };
+>> };
 >
-> Why can't you share it via a platfrom data header at
-> include/linux/platform_data/* ?
+> My understanding is there would only be one status="ok" node on the ULPI
+> bus for the single phy that a usb controller would have. At the least,
+> the kernel's ULPI layer only seems to support one ULPI phy for a
+> controller right now. So even if there are two ports, it doesn't mean
+> there are two phys.
 >
+>>
+>> dev@1 {
+>> ...
+>> };
+>>
+>> dev@2 {
+>> ...
+>> };
+>>
+>>
+>> That doesn't seem the best, but I don't have a better suggestion. Maybe
+>> the device nodes need to go under the phy nodes?
+>>
+>
+> What if we moved the dev@1 and dev@2 to another sub node like "ports" or
+> "usb-devices"? Legacy code can support having those devices directly
+> underneath the usb controller, but future users would always need to put
+> them in a different sub-node so that we can easily differentiate the
+> different busses that a usb controller node may support?
+>
+> I'm not sure I see any need to relate the phy to the ports that are on
+> the controller, but if that is needed then perhaps you're right and we
+> should move the ports underneath the phy. USB core could be modified to
+> go through the legacy path or through the phy, if it even exists, to
+> find ports.
+>
+> Do we typically do this for other phy designs like sata or pci? The phy
+> always seemed like a parallel thing to the logical bus that the phy is
+> used for.
 
-It isn't "platform_data", it is register layout definitions (thousands 
-of lines of them), so I don't think it it appropriate to place in 
-include/linux.
-
-I think the cleanest approach is to put the register definitions in the 
-driver file, which is the only user, and delete the definition header 
-files in arch/mips/include/...
-
-David.
+Rob does this sound ok to you?
