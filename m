@@ -1,15 +1,15 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v2 1/5] clk: sunxi-ng: mux: Add support for mux tables
-Date: Tue, 23 Aug 2016 17:57:41 +0800
-Message-ID: <CAGb2v66SDxjubqyyVGHFVQUYnQdB_F-RwY6MgALDJquMWgKJZw@mail.gmail.com>
-References: <1471248795-17951-1-git-send-email-wens@csie.org>
- <1471248795-17951-2-git-send-email-wens@csie.org>
- <20160823085305.GB2598@lukather>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/5] arm64: dts: add QorIQ LS1046A SoC support
+Date: Tue, 23 Aug 2016 12:04:00 +0200
+Message-ID: <2061455.WN6nWWqTiZ@wuerfel>
+References: <1467972944-12293-1-git-send-email-shh.xie@gmail.com>
+ <1984740.gmAYAJ1bIT@wuerfel>
+ <DB5PR0401MB21834BD67F0EA86B3A22E9D6E8150@DB5PR0401MB2183.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160823085305.GB2598@lukather>
+In-Reply-To: <DB5PR0401MB21834BD67F0EA86B3A22E9D6E8150@DB5PR0401MB2183.eurprd04.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,98 +19,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Shaohui Xie <shaohui.xie@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mihai Emilian Bantea <mihai.bantea@nxp.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Zhiqiang Hou <zhiqiang.hou@nxp.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Minghuan Lian <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "galak@codeaurora.org" <galak@codeaurora.org>, Qianyu Gong <qianyu.gong@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 23, 2016 at 4:53 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> On Mon, Aug 15, 2016 at 04:13:11PM +0800, Chen-Yu Tsai wrote:
->> Some clock muxes have holes, i.e. invalid or unconnected inputs,
->> between parent mux values.
->>
->> Add support for specifying a mux table to map clock parents to
->> mux values.
->>
->> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->> ---
->> Changes since v1: none
->> ---
->>  drivers/clk/sunxi-ng/ccu_mux.c | 12 ++++++++++++
->>  drivers/clk/sunxi-ng/ccu_mux.h | 12 ++++++++++--
->>  2 files changed, 22 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/clk/sunxi-ng/ccu_mux.c b/drivers/clk/sunxi-ng/ccu_mux.c
->> index 1329b9ab481e..68b32f168a74 100644
->> --- a/drivers/clk/sunxi-ng/ccu_mux.c
->> +++ b/drivers/clk/sunxi-ng/ccu_mux.c
->> @@ -107,6 +107,15 @@ u8 ccu_mux_helper_get_parent(struct ccu_common *common,
->>       parent = reg >> cm->shift;
->>       parent &= (1 << cm->width) - 1;
->>
->> +     if (cm->table) {
->> +             int num_parents = clk_hw_get_num_parents(&common->hw);
->> +             int i;
->> +
->> +             for (i = 0; i < num_parents; i++)
->> +                     if (cm->table[i] == parent)
->> +                             return i;
->> +     }
->> +
->>       return parent;
->>  }
->>
->> @@ -117,6 +126,9 @@ int ccu_mux_helper_set_parent(struct ccu_common *common,
->>       unsigned long flags;
->>       u32 reg;
->>
->> +     if (cm->table)
->> +             index = cm->table[index];
->> +
->>       spin_lock_irqsave(common->lock, flags);
->>
->>       reg = readl(common->base + common->reg);
->> diff --git a/drivers/clk/sunxi-ng/ccu_mux.h b/drivers/clk/sunxi-ng/ccu_mux.h
->> index d35ce5e93840..f0078de78712 100644
->> --- a/drivers/clk/sunxi-ng/ccu_mux.h
->> +++ b/drivers/clk/sunxi-ng/ccu_mux.h
->> @@ -6,8 +6,9 @@
->>  #include "ccu_common.h"
->>
->>  struct ccu_mux_internal {
->> -     u8      shift;
->> -     u8      width;
->> +     u8              shift;
->> +     u8              width;
->> +     const u8        *table;
->>
->>       struct {
->>               u8      index;
->> @@ -21,6 +22,13 @@ struct ccu_mux_internal {
->>       } variable_prediv;
->>  };
->>
->> +#define SUNXI_CLK_MUX_TABLE(_shift, _width, _table)  \
->> +     {                                               \
->> +             .shift  = _shift,                       \
->> +             .width  = _width,                       \
->> +             .table  = _table,                       \
->> +     }
->> +
->>  #define SUNXI_CLK_MUX(_shift, _width)        \
->>       {                                       \
->>               .shift  = _shift,               \
->
-> I'd prefer if you also converted the SUNXI_CLK_MUX to use the MUX
-> table version.
+On Thursday, August 18, 2016 10:27:36 AM CEST Shaohui Xie wrote:
+> Hello Arnd,
+> 
+> Thank you for reviewing!
+> 
+> I'm seriously Sorry for the late response! I was on business travel on a project and had been very busy for a  long time.
 
-You mean expanding SUNXI_CLK_MUX to SUNXI_CLK_MUX_TABLE right?
-Sure.
+No worries.
 
-> I've just merged the renaming patch for those macros to be consistent
-> with the other internal structures macro, so that name will have to be
-> adjusted..
+> > -----Original Message-----
+> > From: Arnd Bergmann [mailto:arnd@arndb.de]
+> > Sent: Friday, July 08, 2016 8:00 PM
+> > On Friday, July 8, 2016 6:15:40 PM CEST shh.xie@gmail.com wrote:
+> > > +
+> > > +   memory@80000000 {
+> > > +           device_type = "memory";
+> > > +           reg = <0x0 0x80000000 0 0x80000000>;
+> > > +                 /* DRAM space 1, size: 2GiB DRAM */
+> > > +   };
+> > 
+> > The memory size is usually in the .dts file, unless this is on-chip eDRAM.
+> [S.H] The memory size will be fixup by U-boot, if it's not proper to have it in .dtsti,
+> How about remove it?
+> 
 
-Please push and I'll do a follow up.
+Sounds fine to me. A lot of board specific files have a memory node
+regardless of the override, but I don't see a reason to require it.
 
-ChenYu
+	Arnd
