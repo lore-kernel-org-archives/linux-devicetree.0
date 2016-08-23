@@ -1,47 +1,81 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V8 2/2] mmc: OCTEON: Add host driver for OCTEON MMC controller.
-Date: Tue, 23 Aug 2016 16:56:42 +0200
-Message-ID: <CAPDyKFq5N9HGVhhDEhi+YvshcgHZO7NB+hwa1LzOKYMhL2B02A@mail.gmail.com>
-References: <57853474.9050108@cavium.com> <578E71E6.2020700@caviumnetworks.com>
- <CAPDyKFqb-7LLM0XPtVWj1qHib991E2dHt+6W0UPgbXnukGkmXA@mail.gmail.com> <20160721134603.GA25689@linux-mips.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 05/12] firmware: tegra: Add BPMP support
+Date: Tue, 23 Aug 2016 16:58:58 +0200
+Message-ID: <1969548.JuvmAu2Kz7@wuerfel>
+References: <20160819173233.13260-1-thierry.reding@gmail.com>
+ <5669893.Rd6yQObxH6@wuerfel>
+ <866add72-703b-86e1-6e3e-04dbfb872970@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20160721134603.GA25689@linux-mips.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: "Steven J. Hill" <Steven.Hill@caviumnetworks.com>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mips@linux-mips.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <866add72-703b-86e1-6e3e-04dbfb872970@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree@vger.kernel.org, Peter De Schrijver <pdeschrijver@nvidia.com>, Sivaram Nair <sivaramn@nvidia.com>, Timo Alho <talho@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 21 July 2016 at 15:46, Ralf Baechle <ralf@linux-mips.org> wrote:
-> On Tue, Jul 19, 2016 at 11:19:43PM +0200, Ulf Hansson wrote:
->
->> > Has anyone reviewed the driver or have any comments? Thanks.
->>
->> Sorry I need more time, been partly out of office lately.
->> I intend to review this prior rc1 is out, but no promises.
->>
->> Kind regards
->> Uffe
->
-> Ulf,
->
-> if you decide to accept this patch, could you also push the bindings
-> patch ("[V8,1/2] mmc: OCTEON: Add DT bindings for OCTEON MMC controller.")
-> upstream?  I think they should be merged together.
+On Monday, August 22, 2016 12:56:52 PM CEST Stephen Warren wrote:
+> On 08/22/2016 08:42 AM, Arnd Bergmann wrote:
+> > On Monday, August 22, 2016 4:02:11 PM CEST Thierry Reding wrote:
+> >> On Mon, Aug 22, 2016 at 03:34:15PM +0200, Arnd Bergmann wrote:
+> >>> On Friday, August 19, 2016 7:32:26 PM CEST Thierry Reding wrote:
+> >>>> diff --git a/include/soc/tegra/bpmp-abi.h b/include/soc/tegra/bpmp-abi.h
+> >>>> new file mode 100644
+> >>>> index 000000000000..0aaef5960e29
+> >>>> --- /dev/null
+> >>>> +++ b/include/soc/tegra/bpmp-abi.h
+> >>>> +#ifndef _ABI_BPMP_ABI_H_
+> >>>> +#define _ABI_BPMP_ABI_H_
+> >>>> +
+> >>>> +#ifdef LK
+> >>>> +#include <stdint.h>
+> >>>> +#endif
+> >>>> +
+> >>>> +#ifndef __ABI_PACKED
+> >>>> +#define __ABI_PACKED __attribute__((packed))
+> >>>> +#endif
+> >>>> +
+> >>>> +#ifdef NO_GCC_EXTENSIONS
+> >>>> +#define EMPTY char empty;
+> >>>> +#define EMPTY_ARRAY 1
+> >>>> +#else
+> >>>> +#define EMPTY
+> >>>> +#define EMPTY_ARRAY 0
+> >>>> +#endif
+> >>>> +
+> >>>> +#ifndef __UNION_ANON
+> >>>> +#define __UNION_ANON
+> >>>> +#endif
+> >>>
+> >>> Maybe keep these all out of the kernel?
+> >>
+> >> This was discussed a little in an earlier posting. This header file is
+> >> maintained by the BPMP firmware team and using it verbatim means little
+> >> to no effort required to update it.
+> >
+> > The usual recommendation is to just use Linux coding style in shared
+> > files, and possibly add another header that provides the required
+> > definitions. Otherwise you end up with people randomly cleaning up
+> > the file later 
+> 
+> That's just going to push the problem into all other operating systems; 
+> what happens when BSD, Windows, QNX, FreeRTOS, ... import this file and 
+> attempt to apply the same argument, but want the FW team to use their 
+> coding style?
 
-Ralf, sorry for the delay.
+That's not how the world works, fortunately. In practice, Linux is going
+to be the only OS that cares enough about the coding style of an interface
+header for a random device driver. The others either don't include
+vendor drivers, or they don't have specific coding style requirements,
+or they use a sane style already.
 
-No worries, I will pick the bindings as once I am happy with the
-driver (patch 2/2).
-
-Kind regards
-Uffe
+	Arnd
