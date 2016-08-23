@@ -1,79 +1,121 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] Documentation: devicetree: Fix max77693 spelling errors
-Date: Tue, 23 Aug 2016 11:46:28 +0900
-Message-ID: <57BBB904.4010700@samsung.com>
-References: <CGME20160822202711epcas1p411080be5c1b82c5110d6343cc3aa31f7@epcas1p4.samsung.com>
- <20160822202701.GA5578@clue-VirtualBox>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] sdhci: Add quirk and device tree parameter to force SD
+ test mode
+Date: Mon, 22 Aug 2016 19:46:09 -0700
+Message-ID: <57BBB8F1.9070401@gmail.com>
+References: <1471906531-28668-1-git-send-email-zach.brown@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20160822202701.GA5578@clue-VirtualBox>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastiaan Schalbroeck <schalbroeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1471906531-28668-1-git-send-email-zach.brown@ni.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Zach Brown <zach.brown@ni.com>, adrian.hunter@intel.com
+Cc: ulf.hansson@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2016년 08월 23일 05:27, Sebastiaan Schalbroeck wrote:
-> This patch corrects spelling errors in the max77693 devicetree doc,
-> in particular example code containing typos.
+On 08/22/16 15:55, Zach Brown wrote:
+> From: Jaeden Amero <jaeden.amero@ni.com>
 > 
-> Signed-off-by: Sebastiaan Schalbroeck <schalbroeck-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> On some devices, CD is broken so that we must force the SDHCI into test
+> mode and set CD, so that it always detects an SD card as present.
+> 
+> In order to get a device with broken CD working, we had previously
+> always set the SDHCI into test mode. Unfortunately, this had the side
+> effect of making all SD cards used with our Linux kernels undetectable
+> and non-removable.
+> 
+> By making this "SD test mode" setting optional via a quirk, we can avoid
+> this side effect for devices other than the device with broken CD.
+> Additionally, we add a device parameter to sdhci-pltfm to allow all
+> SDHCI drivers to enable this quirk.
+> 
+> Signed-off-by: Jaeden Amero <jaeden.amero@ni.com>
+> Signed-off-by: Zach Brown <zach.brown@ni.com>
 > ---
->  Documentation/devicetree/bindings/mfd/max77693.txt | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+>  drivers/mmc/host/sdhci-pltfm.c                | 4 ++++
+>  drivers/mmc/host/sdhci.c                      | 9 +++++++++
+>  drivers/mmc/host/sdhci.h                      | 4 ++++
+>  4 files changed, 19 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
-> index d342584..6a1ae3a 100644
-> --- a/Documentation/devicetree/bindings/mfd/max77693.txt
-> +++ b/Documentation/devicetree/bindings/mfd/max77693.txt
-> @@ -17,28 +17,28 @@ Required properties:
->  - interrupt-parent :  The parent interrupt controller.
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index 22d1e1f..3a9be41 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -52,6 +52,8 @@ Optional properties:
+>  - no-sdio: controller is limited to send sdio cmd during initialization
+>  - no-sd: controller is limited to send sd cmd during initialization
+>  - no-mmc: controller is limited to send mmc cmd during initialization
+> +- force-sd-cd-test-mode: card detection is broken on device, force cd test
+> +  enable and cd test inserted so host will always detect a card.
+
+Do not create a property that tells the driver what to do.
+
+Instead create a property that says that the hardware is broken in a certain way.
+The driver can then choose to take the appropriate action based on the way that
+the hardware is broken.
+
+
 >  
->  Optional properties:
-> -- regulators : The regulators of max77693 have to be instantiated under subnod
-> +- regulators : The regulators of max77693 have to be instantiated under subnode
->    named "regulators" using the following format.
+>  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+>  polarity properties, we have to fix the meaning of the "normal" and "inverted"
+> diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
+> index 1d17dcf..056d101 100644
+> --- a/drivers/mmc/host/sdhci-pltfm.c
+> +++ b/drivers/mmc/host/sdhci-pltfm.c
+> @@ -87,6 +87,10 @@ void sdhci_get_of_property(struct platform_device *pdev)
+>  	if (of_get_property(np, "broken-cd", NULL))
+>  		host->quirks |= SDHCI_QUIRK_BROKEN_CARD_DETECTION;
 >  
->  	regulators {
-> -		regualtor-compatible = ESAFEOUT1/ESAFEOUT2/CHARGER
-> -		standard regulator constratints[*].
-> +		regulator-compatible = ESAFEOUT1/ESAFEOUT2/CHARGER
-> +		standard regulator constraints[*].
->  	};
+> +	if (of_get_property(np, "force-sd-cd-test-mode", NULL))
+> +		host->quirks2 |=
+> +			SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE;
+> +
+>  	if (of_get_property(np, "no-1-8-v", NULL))
+>  		host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
 >  
->  	[*] refer Documentation/devicetree/bindings/regulator/regulator.txt
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index cd65d47..2f4c6f9 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -117,6 +117,15 @@ static inline bool sdhci_data_line_cmd(struct mmc_command *cmd)
+>  static void sdhci_set_card_detection(struct sdhci_host *host, bool enable)
+>  {
+>  	u32 present;
+> +	u8  ctrl;
+> +
+> +	if (host->quirks2 & SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE) {
+> +		/* Put the card in test mode, with card inserted */
+> +		ctrl = sdhci_readl(host, SDHCI_HOST_CONTROL);
+> +		ctrl |= SDHCI_CTRL_CD_TEST_INSERTED |
+> +			SDHCI_CTRL_CD_TEST_ENABLE;
+> +		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
+> +	}
 >  
->  - haptic : The MAX77693 haptic device utilises a PWM controlled motor to provide
->    users with tactile feedback. PWM period and duty-cycle are varied in
-> -  order to provide the approprite level of feedback.
-> +  order to provide the appropriate level of feedback.
+>  	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) ||
+>  	    !mmc_card_is_removable(host->mmc))
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 0411c9f..dd609b2 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -84,6 +84,8 @@
+>  #define   SDHCI_CTRL_ADMA32	0x10
+>  #define   SDHCI_CTRL_ADMA64	0x18
+>  #define   SDHCI_CTRL_8BITBUS	0x20
+> +#define  SDHCI_CTRL_CD_TEST_INSERTED	0x40
+> +#define  SDHCI_CTRL_CD_TEST_ENABLE	0x80
 >  
->   Required properties:
-> -	- compatible : Must be "maxim,max77693-hpatic"
-> +	- compatible : Must be "maxim,max77693-haptic"
->  	- haptic-supply : power supply for the haptic motor
->  	[*] refer Documentation/devicetree/bindings/regulator/regulator.txt
->  	- pwms : phandle to the physical PWM(Pulse Width Modulation) device.
->  	 PWM properties should be named "pwms". And number of cell is different
->  	 for each pwm device.
-> -	 To get more informations, please refer to documentaion.
-> +	 To get more information, please refer to documentation.
->  	[*] refer Documentation/devicetree/bindings/pwm/pwm.txt
+>  #define SDHCI_POWER_CONTROL	0x29
+>  #define  SDHCI_POWER_ON		0x01
+> @@ -422,6 +424,8 @@ struct sdhci_host {
+>  #define SDHCI_QUIRK2_ACMD23_BROKEN			(1<<14)
+>  /* Broken Clock divider zero in controller */
+>  #define SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN		(1<<15)
+> +/* Controller must support device with broken CD */
+> +#define SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE		(1<<16)
 >  
->  - charger : Node configuring the charger driver.
+>  	int irq;		/* Device IRQ */
+>  	void __iomem *ioaddr;	/* Mapped address */
 > 
 
-Thanks for your fixup.
-
-Reviewed-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-
-Regards,
-Chanwoo Choi
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
