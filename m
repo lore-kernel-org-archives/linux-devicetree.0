@@ -1,90 +1,82 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] backlight: arcxcnn: devicetree bindings for ArticSand
- devices
-Date: Tue, 23 Aug 2016 13:20:57 -0500
-Message-ID: <20160823182057.GA8472@rob-hp-laptop>
-References: <1471893084-4551-1-git-send-email-olimpiu@arcticsand.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 6/7] phy-sun4i-usb: Add
+ "allwinner,usb0-usb-a-connector" dt property
+Date: Tue, 23 Aug 2016 20:26:00 +0200
+Message-ID: <4792e77e-e72e-10db-5469-4a1e6e64e75c@redhat.com>
+References: <1471781799-10457-1-git-send-email-hdegoede@redhat.com>
+ <1471781799-10457-6-git-send-email-hdegoede@redhat.com>
+ <20160823180016.GA28538@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1471893084-4551-1-git-send-email-olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+In-Reply-To: <20160823180016.GA28538@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 22, 2016 at 03:11:24PM -0400, Olimpiu Dejeu wrote:
-> This is the device tree bindings documentation file
-> 
-> Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-> 
-> ---
->  .../bindings/video/backlight/arcxcnn.txt           | 29 ++++++++++++++++++++++
+Hi,
 
-Check your directory location. Things have moved.
+On 08/23/2016 08:00 PM, Rob Herring wrote:
+> On Sun, Aug 21, 2016 at 02:16:38PM +0200, Hans de Goede wrote:
+>> On some devices the musb otg controller can be used in both device and
+>> host mode, but requires software mode switching since there is no id pin
+>> connected. The usb0 phy code will default to device mode in this case.
+>>
+>> On some systems usb0 is connected to a female USB-A port. It can still
+>> be used in device mode when using software mode switching and a USB
+>> A to A cable. To configure the controller to support both modes we must
+>> set its "dr_mode" dt property to "otg" (*). For these setups the device
+>> mode default is wrong, for a female USB-A port the default should be
+>> host mode.
+>>
+>> This commit adds support to the sun4i phy code for a new
+>> "allwinner,usb0-usb-a-connector" dt property which can be used in dt
+>> files to indicate this scenario and when present it changes the default
+>> mode to host mode.
+>>
+>> *) dr_mode = "host" is used when device mode is _never_ used. E.g.
+>> a wifi module soldered onto the PCB is connected to the musb controller.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> Changes in v2:
+>> -New patch in v2 of this patchset
+>> Changes in v3:
+>> -No changes
+>> ---
+>>  Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt | 2 ++
+>>  drivers/phy/phy-sun4i-usb.c                             | 9 ++++++++-
+>>  2 files changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+>> index 287150d..8646b53 100644
+>> --- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+>> +++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+>> @@ -35,6 +35,8 @@ Optional properties:
+>>  - usb0_vbus-supply : regulator phandle for controller usb0 vbus
+>>  - usb1_vbus-supply : regulator phandle for controller usb1 vbus
+>>  - usb2_vbus-supply : regulator phandle for controller usb2 vbus
+>> +- allwinner,usb0-usb-a-connector: usb0 is connected to an USB-A connector,
+>> +                     rather then an USB-B connector as one would expect (bool)
+>
+> This seems like a pretty generic problem: a board has an A connector
+> wired to an OTG controller.  So I think we should have a generic
+> property.
 
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/backlight/arcxcnn.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/video/backlight/arcxcnn.txt b/Documentation/devicetree/bindings/video/backlight/arcxcnn.txt
-> new file mode 100644
-> index 0000000..9cd7315
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/backlight/arcxcnn.txt
-> @@ -0,0 +1,29 @@
-> +arcxcnn bindings
-> +
-> +Required properties:
-> +  - compatible: "arc,arcxcnn", "arc,arc2c0608"
+OK, any suggestions for a name ? And which bindings .txt file should
+this go in ?
 
-One per line please.
+> The only part is here that is not is you have 3 USB buses for
+> the PHY. That probably should have been 3 child nodes for each PHY port.
 
-Is arcxcnn a specific chip? If not drop it. No wildcards in compatible 
-strings.
+Only one is an otg phy / bus though, so we can just use the generic
+property and apply it to bus0 / the otg-bus if present.
 
-> +  - reg: I2C slave address (u8)
-> +
-> +Optional properties:
-> +  - bl-name: Backlight device name (string)
+Regards,
 
-Use the common bindings. label?
-
-> +  - init-brt: Initial value of backlight brightness (u32) low 16 bits used
-
-Use common bindings.
-
-> +  - pwm-period: PWM period value. Set only PWM input mode used (u32)
-> +  - prg-addr: Register address of ROM area to be updated (u32) low 8 bits used
-> +  - prg-val: Register value to be updated (u32) low 8 bits used
-
-What is this for? This should be a specific property or properties to do 
-explicit things, not a generic fill registers/rom with magic values.
-
-> +
-> +Example:
-> +
-> +	/* ARC2C0608 */
-> +	backlight@30 {
-> +		compatible = "arc,arc2c0608";
-> +		reg = <0x30>;
-> +
-> +		init-brt = <123>;
-> +
-> +		/* LED0+1 string enabled */
-> +		prg_06h {
-> +			prg-addr = <0x06>;
-> +			prg-val = <0x83>;
-> +		};
-> +
-> +	};
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
