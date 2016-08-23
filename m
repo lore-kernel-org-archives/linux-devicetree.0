@@ -1,89 +1,75 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: Re: [PATCH v2 5/8] pinctrl: Add core support for Aspeed SoCs
-Date: Tue, 23 Aug 2016 12:00:51 +0930
-Message-ID: <1471919451.5707.89.camel@aj.id.au>
-References: <20160819124414.24242-1-andrew@aj.id.au>
-         <20160819124414.24242-6-andrew@aj.id.au>
-         <CACRpkdaBuwqGPbfLK8bR5A4NSefifw8VqPyUbgtAtweqoEnD7g@mail.gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v7 5/7] power: act8945a_charger: Add capacity level
+ property
+Date: Tue, 23 Aug 2016 04:40:59 +0200
+Message-ID: <20160823024059.i7mvsef4t7flskcv@earth>
+References: <1471848557-27278-1-git-send-email-wenyou.yang@atmel.com>
+ <1471848557-27278-6-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-Lk+1qTMxgDNwQXnUB8Gy"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaBuwqGPbfLK8bR5A4NSefifw8VqPyUbgtAtweqoEnD7g@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Joel Stanley <joel@jms.id.au>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3uxmj6q6l4ms5ysd"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1471848557-27278-6-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---=-Lk+1qTMxgDNwQXnUB8Gy
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+--3uxmj6q6l4ms5ysd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-T24gTW9uLCAyMDE2LTA4LTIyIGF0IDE1OjQ1ICswMjAwLCBMaW51cyBXYWxsZWlqIHdyb3RlOgo+
-IE9uIEZyaSwgQXVnIDE5LCAyMDE2IGF0IDI6NDQgUE0sIEFuZHJldyBKZWZmZXJ5IDxhbmRyZXdA
-YWouaWQuYXU+IHdyb3RlOgo+IAo+ID4gCj4gPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvYXNwZWVk
-L0tjb25maWcKPiA+IEBAIC0wLDAgKzEsOCBAQAo+ID4gK2NvbmZpZyBQSU5DVFJMX0FTUEVFRAo+
-ID4gK8KgwqDCoMKgwqDCoMKgYm9vbAo+ID4gK8KgwqDCoMKgwqDCoMKgZGVwZW5kcyBvbiAoQVJD
-SF9BU1BFRUQgfHwgQ09NUElMRV9URVNUKSAmJiBPRgo+ID4gK8KgwqDCoMKgwqDCoMKgc2VsZWN0
-IFBJTk1VWAo+ID4gK8KgwqDCoMKgwqDCoMKgc2VsZWN0IFBJTkNPTkYKPiA+ICvCoMKgwqDCoMKg
-wqDCoHNlbGVjdCBHRU5FUklDX1BJTkNPTkYKPiA+ICvCoMKgwqDCoMKgwqDCoHNlbGVjdCBNRkRf
-U1lTQ09OCj4gPiArwqDCoMKgwqDCoMKgwqBzZWxlY3QgUkVHTUFQX01NSU8KPiBTaW5jZSB0aGlz
-IGRldmljZSBpcyBzcGF3biBmcm9tIHRoZSBzeXNjb24sIHNob3VsZCBpdCBub3QgYmUKPiAiZGVw
-ZW5kcyBvbiBNRkRfU1lTQ09OIj8KPiAKPiAoTm8gYmlnIGRlYWwsIGlmIHlvdSB0aGluayB0aGlz
-IGlzIHJpZ2h0IHRoZW4gZ28gd2l0aCBpdC4pCgpJIHRoaW5rIHRoYXQncyBhIGZhaXIgcG9pbnQs
-IEkgd2lsbCBsb29rIGF0IHJlYXJyYW5naW5nIGl0LgoKPiAKPiA+IAo+ID4gKyNpbmNsdWRlIAo+
-IFdoYXQgaXMgdGhpcyBpbmNsdWRlIGZvcj8KCkNydWZ0IGZyb20gcGFzdCBpdGVyYXRpb25zLiBX
-aWxsIHJlbW92ZS4KCj4gCj4gPiAKPiA+ICsjaW5jbHVkZSAKPiA+ICsjaW5jbHVkZSAKPiA+ICsj
-aW5jbHVkZSAKPiA+ICsjaW5jbHVkZSAKPiA+ICsjaW5jbHVkZSAiLi4vY29yZS5oIgo+ID4gKyNp
-bmNsdWRlICJwaW5jdHJsLWFzcGVlZC5oIgo+IE5vICNpbmNsdWRlID8KPiAKPiBNYXliZSBzb21l
-ICNpbmNsdWRlcyBhcmUgY2VudHJhbGl6ZWQgdG8gcGluY3RybC1hc3BlZWQuaAo+IEkgZG9uJ3Qg
-a25vdywganVzdCBtYWtlIHN1cmUgeW91IGRvbid0IGhhdmUgaW1wbGljaXQgaW5jbHVkZXMuCgps
-aW51eC9yZWdtYXAuaCBpcyBpbmNsdWRlZCBpbiBwaW5jdHJsLWFzcGVlZC5oCgo+IAo+ID4gCj4g
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKHJlZ21hcF9yZWFkKG1hcCwgZGVz
-Yy0+cmVnLCAmdmFsKSA8IDApCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoHJldHVybiBmYWxzZTsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqB2YWwgJj0gfmRlc2MtPm1hc2s7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgdmFsIHw9IHBhdHRlcm4gPDwgX19mZnMoZGVzYy0+bWFzayk7Cj4gPiArCj4gPiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKHJlZ21hcF93cml0ZShtYXAsIGRlc2Mt
-PnJlZywgdmFsKSA8IDApCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoHJldHVybiBmYWxzZTsKPiBVc2U6Cj4gCj4gcmVnbWFwX3VwZGF0ZV9iaXRzKG1h
-cCwKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqBkZXNjLT5yZWcsCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGVzYy0+bWFzaywKPiDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwYXR0ZXJuIDw8IF9fZmZz
-LT5kZXNjLT5tYXNrKTsKPiAKPiBPciBzb21ldGhpbmcgbGlrZSB0aGF0IGluc3RlYWQgb2YgcmVp
-bXBsZW1lbnRpbmcKPiBtYXNrLWFuZC1zZXQuIFJlZ21hcCBhbHJlYWR5IGtub3dzIGhvdyB0byBk
-byB0aGUKPiBidXNpbmVzcy4KPiAKPiAoQXBwbGllZCBldmVyeXdoZXJlIGluIHRoZSBkcml2ZXIg
-d2hlcmUgeW91IGhhdmUgYQo+IG1hc2stYW5kLXNldCBsaWtlIHRoaXMpLgoKUmlnaHQsIEkgd2ls
-bCBjbGVhbiB0aGF0IHVwLgoKPiAKPiBUaGUgZXhwcmVzc2lvbiBjb3JlIGVuZ2luZSBpcyBzdGls
-bCBhIGNvbXBsZXRlIG15c3RlcnkKPiBmb3IgbWUsIEkgd2lsbCBqdXN0IHRydXN0IHlvdSB0aGF0
-IGl0IHdvcmtzIGFzIGludGVuZGVkLgoKR2FoISBIb3dldmVyLCB0aGFua3MhCgpJIHdpbGwgY2xl
-YW4gdXAgdGhlIGlzc3VlcyBhYm92ZSBhbmQgcmUtc2VuZC4KCkNoZWVycywKCkFuZHJldw==
+Hi,
 
+On Mon, Aug 22, 2016 at 02:49:15PM +0800, Wenyou Yang wrote:
+> [...]
+>
+> +	charger->lbo_gpio = gpiod_get(dev->parent, "active-semi,lbo", GPIOD_IN);
+> +	if (PTR_ERR(charger->lbo_gpio) == -EPROBE_DEFER) {
+> +		dev_info(dev, "probe retry requested for gpio \"lbo\"\n");
+> +	} else if (IS_ERR(charger->lbo_gpio)) {
+> +		dev_err(dev, "unable to claim gpio \"lbo\"\n");
+> +		charger->lbo_gpio = NULL;
+> +	}
+> +
+> +	ret = devm_request_irq(dev, gpiod_to_irq(charger->lbo_gpio),
+> +			       act8945a_status_changed,
+> +			       (IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING),
+> +			       "act8945a_lbo_detect", charger);
+> +	if (ret)
+> +		dev_info(dev, "failed to request gpio \"lbo\" IRQ\n");
 
---=-Lk+1qTMxgDNwQXnUB8Gy
+that does not work, since you need to release the irq before
+releasing the gpio. So if the gpio is not requested via devm_
+than you can't request the irq via devm_ (actually you can by
+using devm_free_irq in remove(), but then you can also drop
+the devm_ alltogether).
+
+> [...]
+
+-- Sebastian
+
+--3uxmj6q6l4ms5ysd
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Version: GnuPG v1
 
-iQIcBAABCgAGBQJXu7VbAAoJEJ0dnzgO5LT5LicP/1Zt1lXQPYPlMbg65mg8Waox
-w7ovipWX2QvaurweIa50WcrHYpNtR5zZ8hsan663Nhzj61drEvOO76JW8bRr8he8
-7SIFf/dXeg+2cPmwr5vQnG/L72L54wnEfeS0NdgPu0BngQCzMXsrgepFbq1ZamWA
-t9Q4d3RxkHRPjXg0zDG4CltrjjQoa9GKXUgIRCHRo17J2Zw1eMyeNWCZhzf6oEdD
-ZSPPMRpov9OZDEdOKABtc5DhfZSpaTOfhiz8lQym9anhabzO3d5SRoP6miz1V75O
-fbL3smjZPQ21vETujLo/ycC0nZ0OK4GzdRHrweXFz3ZdvCqlXVo7oQ/e4DgwQKn6
-g4Kb+9vgWcvdN3Lqk+PokmiZ/nK2s5Sxwft1bFRmiDIbvk1iNLBoPe7bJwPUxhFA
-pFw1Cd6p1LnXUK0tHcbLeBSKzPy6T1Y/u1Hyby4CGd2iDgutZHKYmzaBsS0sMNId
-Ql+uk5fAweY1pFpzZSOWz/3dwN1D9PmFlggQiXjNIs/hA6jrZPaUvkM+auZM4Ber
-ExPxtThshMwznZcCgbB9ZzoWW08GWpQtfJjaDyXIHGToCRJCyhfhBcq+oFZbinj5
-E4XInuqMGED/PF6S0oBSmiwmgmd423AkjSGKs7Er5SNTZh89kTqvLMmyCxW2YiLg
-u/yq2mEjTKhyxa40Sq40
-=dKG6
+iQIcBAEBCgAGBQJXu7e5AAoJENju1/PIO/qaYhUQAID/SVnEw6uRXPeV6Cb4+evU
+x1RZrga2tU7lOXrW2oVT94wBkXQwO4MLIuxfXRbU2OJF9cUlBdYa5+ZGCKLzssbO
+stzO3EwIch5JfMA4nLPTzW1PD2qM1MBIkySo5x+zxKgw+YCiqJO3S9ZOSu+/H5mk
+COs2CxHEAJFaRb2F+HMYgnDwq7BNMCBFISyB8cjyvTlqeNi3XT2jAPwAyySswV1M
+uNjh6Ecuk/xXmsDfMWWDrNKiVoZ+014AC2xXJBqUjKw365qmVCgKQyqd/wtXdiop
+WUIm6nEsFesQNu5H9gSI1FS9ayi5+RFu073FF0XRtYqz3iQ/q86l8K97wu3Q3BTX
+q+NoXF4joVqIa/3Oqi28cXPS5vm5nneOCz/OFJbKN+PSqTyQb85510GFZNUgkRfs
+UqgpW56FBorghoJz3JQXs+ivKldGXg39ttrpz2Oejyx68QnQ0JkyimBJlK74Y2u2
+SI1uu5f5pe5W94uqTp8S01CHGBbTH2nw54qJQpm7CU1FbRf+UmyiaPZMI9ycefLm
+qD8IEaiVyAz9Nu+WJxkrZ5Jp6rjpiVReoDaMDc1cO6gbvBGvIeembthI1g6HDf0Z
+ZJFiuxh8gQtRoXMzRpHb4KvCpq09/D5CCWcRyXc7DlgflGHfseOICycuACi3uQgm
+oe0Cs1QApT1WOYWjOn9Y
+=BT+b
 -----END PGP SIGNATURE-----
 
---=-Lk+1qTMxgDNwQXnUB8Gy--
-
+--3uxmj6q6l4ms5ysd--
