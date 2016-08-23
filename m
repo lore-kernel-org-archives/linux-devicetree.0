@@ -1,59 +1,94 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] pwm: add pwm driver for HiSilicon BVT SOCs
-Date: Tue, 23 Aug 2016 13:08:12 -0500
-Message-ID: <20160823180812.GA2793@rob-hp-laptop>
-References: <1471852213-86777-1-git-send-email-yuanjian12@hisilicon.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 1/4] iio: adc: rockchip_saradc: reset saradc controller
+ before programming it
+Date: Tue, 23 Aug 2016 19:08:11 +0100
+Message-ID: <d1fe2625-cd8c-30ac-0f50-d52d7e8c6c05@kernel.org>
+References: <1469629447-544-1-git-send-email-wxt@rock-chips.com>
+ <7e84e59d-48ee-3e17-feff-8e57ae7c2b4b@kernel.org>
+ <b25cda21-0e24-de46-fb23-2142135eca03@kernel.org> <2324843.WCcsUObKgk@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1471852213-86777-1-git-send-email-yuanjian12@hisilicon.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Jian Yuan <yuanjian12@hisilicon.com>
-Cc: thierry.reding@gmail.com, mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xuejiancheng@hisilicon.com, kevin.lixu@hisilicon.com, jalen.hsu@hisilicon.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2324843.WCcsUObKgk@phil>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, john@metanate.com, linux-arm-kernel@lists.infradead.org, linux@roeck-us.net
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 22, 2016 at 03:50:13PM +0800, Jian Yuan wrote:
-> From: yuanjian <yuanjian12@hisilicon.com>
+On 22/08/16 18:19, Heiko Stuebner wrote:
+> Am Sonntag, 21. August 2016, 21:01:19 CEST schrieb Jonathan Cameron:
+>> Something in here got it blocked by the lists. I'm guessing it
+>> was the characters my email client didn't like so trying again
+>> with them dropped.
+>>
+>> Jonathan
+>>
+>> On 21/08/16 20:11, Jonathan Cameron wrote:
+>>> On 15/08/16 19:10, Caesar Wang wrote:
+>>>>> On 27/07/16 15:24, Caesar Wang wrote:
+>>>>>> SARADC controller needs to be reset before programming it, otherwise
+>>>>>> it will not function properly.
+>>>>>>
+>>>>>> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+>>>>>> Cc: Jonathan Cameron <jic23@kernel.org>
+>>>>>> Cc: Heiko Stuebner <heiko@sntech.de>
+>>>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>>>> Cc: linux-iio@vger.kernel.org
+>>>>>> Cc: linux-rockchip@lists.infradead.org
+>>>>>> Tested-by: Guenter Roeck <linux@roeck-us.net>
+>>>>>
+>>>>> Hi
+>>>>>
+>>>>> Patch is fine (I'll fix up the wording issue) however...
+>>>>>
+>>>>> I'm not clear on the severity of the issue. Is this something
+>>>>> we should be pushing for stable?
+>>>>
+>>>> I think that should be pushing for stable, since the common isssue for
+>>>> the ADC is initially enabled on loader, and only disabled after the
+>>>> first read.
+>>>>
+>>>> cat /sys/class/hwmon/hwmon1/device/temp1_input
+>>>> cat: /sys/class/hwmon/hwmon1/device/temp1_input: Connection timed out
+>>>>
+>>>> The kernel log shows:
+>>>>
+>>>> [ 32.209451] read channel() error: -110
+>>>> ..
+>>>>
+>>>> Also, for my experience. Some other reasons caused the adc (controller)
+>>>> glitch for the kernel side.> 
+>>> Fine.  So now the only question is who is handling it. The
+>>> fix is useless (I think) without the dts changes to support it.
+>>> Normally we'd route the dts and driver changes separately as it
+>>> should not matter, but here I think I'd prefer it if the whole
+>>> thing went via rockchip -> arm-soc tree so it goes in together.
+>>>
+>>> Hence (with wording fixed)
+>>>
+>>> Acked-by: Jonathan Cameron <jic23@kernel.org>
+>>> Cc: <Stable@vger.kernel.org>
+>>> (for the driver patch).
+>>>
+>>> If people want me to take it via IIO then I'll need acks for
+>>> the dts changes with explicit agreement that they can be marked
+>>> for stable. Would image Heiko, these would come from you.
 > 
-> Add pwm driver for HiSilicon BVT SOCs
+> I don't know how the armsoc people feel about routing other subsystem changes 
+> through armsoc, but I think small dts changes coming through driver trees is 
+> the more common case, so personally I'd think patches 1,3 and 4 could go 
+> through the iio tree.
 > 
-> Reviewed-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-> Signed-off-by: Jian Yuan <yuanjian12@hisilicon.com>
-> ---
-> Change Log:
-> v2:
-> The number of PWMs is change to be probeable based on the compatible string.
+> Patch 2 of course isn't material for stable, as it adds new functionality, so 
+> I'd pick that up directly, especially as we see numerous rk3399 changes, so 
+> that would be prone to conflict.
+Absolutely.  This one applied to the fixes-togreg branch of iio.git
+
+Thanks,
+
+Jonathan
 > 
->  .../devicetree/bindings/pwm/pwm-hibvt.txt          |  18 ++
-
-For the binding:
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-One comment though...
-
->  drivers/pwm/Kconfig                                |  10 +
->  drivers/pwm/Makefile                               |   1 +
->  drivers/pwm/pwm-hibvt.c                            | 274 +++++++++++++++++++++
->  4 files changed, 303 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-hibvt.txt
->  create mode 100644 drivers/pwm/pwm-hibvt.c
-
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index c182efc..3c48768 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -158,6 +158,15 @@ config PWM_FSL_FTM
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-fsl-ftm.
->  
-> +config PWM_HIBVT
-> +	tristate "HiSilicon BVT PWM support"
-> +	depends on ARCH_HISI
-
-Add "|| COMPILE_TEST" so it can build test on other configs
-
-> +	help
-> +	  Generic PWM framework driver for hisilicon BVT SOCs.
-> +
+> 
+> Heiko
+> 
