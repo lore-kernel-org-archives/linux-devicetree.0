@@ -1,59 +1,46 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 3/9] regulator: core: Try full range when
- adjusting regulators to constraints
-Date: Tue, 23 Aug 2016 12:17:23 +0800
-Message-ID: <CAGb2v67ZST-E++z5oobLRwCfHMZZR6HTss=MSqJLJArnQz3qMw@mail.gmail.com>
-References: <20160821021125.1521-1-wens@csie.org> <20160821021125.1521-4-wens@csie.org>
- <20160822162907.GO22076@sirena.org.uk> <20160822175205.h76hurjaopnosymc@vip.cybercity.dk>
- <20160822180932.GW22076@sirena.org.uk>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RESEND PATCH 0/3] ARM: dts: Enable suspend configuration
+Date: Tue, 23 Aug 2016 10:08:57 +0530
+Message-ID: <a22b1bd6-b8a2-6512-6c0e-a4cdd0c1d787@ti.com>
+References: <1470893270-5042-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB3E4566QKGQEZFOSXMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160822180932.GW22076-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rask Ingemann Lambertsen <ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470893270-5042-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 23, 2016 at 2:09 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Aug 22, 2016 at 07:52:05PM +0200, Rask Ingemann Lambertsen wrote:
->> On Mon, Aug 22, 2016 at 05:29:07PM +0100, Mark Brown wrote:
->
->> > This seems like you have buggy constraints, constraints which allow
->> > voltages that can't physically be satisfied don't make obvious sense.
->
->> No, it's for cases like this (see the cubietruck4 or a80-optimus dts
->> patches):
->
->>                       reg_bldo4: bldo4 {
->>                               regulator-min-microvolt = <1080000>;
->>                               regulator-max-microvolt = <1320000>;
->>                               regulator-name = "vcc12-hsic";
->>                       };
->
->> The regulator can do 1100000 uV, 1200000 uV and 1300000 uV, all of which
->> are within the constraints, so obviously the constraints can be satisfied,
->> yet the regulator core fails do so with a message like this:
->
-> Sure, but the constraints also say that you can do 1.32V which the
-> system is not physically capable of delivering.  That's not a good sign
-> for the constraints, it suggests that at least the capabilities of the
-> regulator have not been taken into consideration when setting up the
-> constraints.
+Tony,
 
-So to be clear, the constraints should be the intersection of the
-recommended operating parameters of the consumer and the regulator's
-output, with the voltage/current steps taken in to consideration.
+On Thursday 11 August 2016 10:57 AM, Keerthy wrote:
+> Now that https://lkml.org/lkml/2016/8/10/243 series is in.
+> Here is the set of Device Tree patches which were dependent on
+> the driver patches.
+>
 
-In that case I'll drop this patch and fix up the constraints.
-And maybe send a patch to clarify the regulator bindings.
+Could you please pull this set if there are no further comments. All the 
+driver dependencies are picked by Mark already.
 
-Thanks
-ChenYu
+> These are boot tested on am437x-gp-evm.
+>
+> Keerthy (1):
+>   ARM: dts: AM437X-GP-EVM: AM437X-SK-EVM: Make dcdc3 dcdc5 and dcdc6
+>     enable during suspend
+>
+> Tero Kristo (2):
+>   ARM: dts: am437x-gp-evm: disable DDR regulator in rtc-only/poweroff
+>     mode
+>   ARM: dts: am437x-sk-evm: disable DDR regulator in rtc-only/poweroff
+>     mode
+>
+>  arch/arm/boot/dts/am437x-gp-evm.dts | 13 +++++++++++++
+>  arch/arm/boot/dts/am437x-sk-evm.dts | 30 ++++++++++++++++++++++++++++++
+>  2 files changed, 43 insertions(+)
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
