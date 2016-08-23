@@ -1,138 +1,59 @@
-From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v1 3/3] PM / AVS: rockchip-cpu-avs: add driver handling
- Rockchip cpu avs
-Date: Tue, 23 Aug 2016 12:10:27 +0800
-Message-ID: <c853c8fd-285a-603d-b294-750cdbf7f200@rock-chips.com>
-References: <1471315139-28285-1-git-send-email-finley.xiao@rock-chips.com>
- <1471315139-28285-4-git-send-email-finley.xiao@rock-chips.com>
- <20160819133636.GA26913@rob-hp-laptop>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 3/9] regulator: core: Try full range when
+ adjusting regulators to constraints
+Date: Tue, 23 Aug 2016 12:17:23 +0800
+Message-ID: <CAGb2v67ZST-E++z5oobLRwCfHMZZR6HTss=MSqJLJArnQz3qMw@mail.gmail.com>
+References: <20160821021125.1521-1-wens@csie.org> <20160821021125.1521-4-wens@csie.org>
+ <20160822162907.GO22076@sirena.org.uk> <20160822175205.h76hurjaopnosymc@vip.cybercity.dk>
+ <20160822180932.GW22076@sirena.org.uk>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160819133636.GA26913@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tim.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ulysses.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lin.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB3E4566QKGQEZFOSXMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160822180932.GW22076-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rask Ingemann Lambertsen <ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-在 2016/8/19 21:36, Rob Herring 写道:
-> On Tue, Aug 16, 2016 at 10:38:59AM +0800, Finlye Xiao wrote:
->> From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> This patch supports adjusting opp's voltage according to leakage
->>
->> Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>   .../devicetree/bindings/power/rockchip-cpu-avs.txt |  37 +++
->>   drivers/power/avs/Kconfig                          |   8 +
->>   drivers/power/avs/Makefile                         |   1 +
->>   drivers/power/avs/rockchip-cpu-avs.c               | 314 +++++++++++++++++++++
->>   4 files changed, 360 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt
->>   create mode 100644 drivers/power/avs/rockchip-cpu-avs.c
->>
->> diff --git a/Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt b/Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt
->> new file mode 100644
->> index 0000000..90f6b08
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt
->> @@ -0,0 +1,37 @@
->> +Rockchip cpu avs device tree bindings
->> +-------------------------------------
->> +
->> +Under the same frequency, the operating voltage tends to decrease with
->> +increasing leakage. so it is necessary to adjust opp's voltage according
->> +to leakage for power.
->> +
->> +
->> +Required properties:
->> +- compatible: Should be one of the following.
->> +  - "rockchip,rk3399-cpu-avs" - for RK3399 SoCs.
->> +- leakage-volt-<name>: Named leakage-volt property. At runtime, the
->> +  platform can find a cpu's cluster_id according to it's cpu_id and match
->> +  leakage-volt-<name> property. The property is an array of 3-tuples
->> +  items, and each item consists of leakage and voltage like
->> +  <min-leakage-mA max-leakage-mA vol-uV>.
->> +	min-leakage: minimum leakage in mA.
->> +	max-leakage: maximum leakage in mA.
->> +	vol: voltage in microvolt.
-> How do you determine these values? When do they vary?
-
-How do you determine these values?
-
-run antutu-benchmark
-leakage     freq 	min_volt
-30mA 	    1608MHz 	1025mV
-40mA 	    1608MHz 	1000mV
-50mA 	    1608MHz 	975mV
-
- From the table, we see the min_volt decrease with increasing leakage.
-So we can set the default opp-microvolt 1025mV for 1608MHz,
-and add an leakage_volt_cluster0 property as follows.
-leakage_volt_cluster0 = <
-		/*  min(mA)   max(mA)    volt(uV)*/
-		    0         40        0
-		    41        50        (-25000)
-		    51        254       (-50000)
->;
-If the leakage is between 41mA and 50mA，the opp-microvolt will subtract 25mV。
-If the leakage is between 41mA and 50mA，the opp-microvolt will subtract 50mV。
-  
-When do they vary?
-
- From the code,
-cpufreq_online
---cpufreq_driver->init(policy);  /* add new opp table */
---blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
-CPUFREQ_START, policy);
---cpufreq_init_policy
-----cpufreq_set_policy
---------__cpufreq_governor(policy, CPUFREQ_GOV_START);
-
-The cpu's opp table is added in the init function(cpufreq_init)，and I will
-register a cpufreq notifier, once the first cpu of cluster is onlined,
-my notifer will be called, and if the event is CPUFREQ_START，it will modify
-the opp-microvolt according to leakage_volt_cluster0.
-
->> +
->> +Example:
->> +
->> +	cpu_avs: cpu-avs {
->> +		compatible = "rockchip,rk3399-cpu-avs";
-> This isn't really a hardware block. For the same reasons we don't have
-> cpufreq nodes. So I don't think this belongs in DT.
-
-if I delete the compatible property like the thermal-zones node, is it allowed?
-cpu_avs: cpu-avs {
-	leakage_volt_cluster0 = <
-		/*  min(mA)   max(mA)    volt(uV)*/
-		    0         40        0
-		    41        50        (-25000)
-		    51        254       (-50000)
-	>;
-	leakage_volt_cluster1 = <
-		/*  min(mA)   max(mA)    volt(uV)*/
-		    0         40        0
-		    41        50        (-25000)
-		    51        254       (-50000)
-	>;
-}
-
-
+On Tue, Aug 23, 2016 at 2:09 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Aug 22, 2016 at 07:52:05PM +0200, Rask Ingemann Lambertsen wrote:
+>> On Mon, Aug 22, 2016 at 05:29:07PM +0100, Mark Brown wrote:
 >
-> Rob
+>> > This seems like you have buggy constraints, constraints which allow
+>> > voltages that can't physically be satisfied don't make obvious sense.
 >
+>> No, it's for cases like this (see the cubietruck4 or a80-optimus dts
+>> patches):
 >
+>>                       reg_bldo4: bldo4 {
+>>                               regulator-min-microvolt = <1080000>;
+>>                               regulator-max-microvolt = <1320000>;
+>>                               regulator-name = "vcc12-hsic";
+>>                       };
 >
+>> The regulator can do 1100000 uV, 1200000 uV and 1300000 uV, all of which
+>> are within the constraints, so obviously the constraints can be satisfied,
+>> yet the regulator core fails do so with a message like this:
+>
+> Sure, but the constraints also say that you can do 1.32V which the
+> system is not physically capable of delivering.  That's not a good sign
+> for the constraints, it suggests that at least the capabilities of the
+> regulator have not been taken into consideration when setting up the
+> constraints.
 
--- 
-Finley
+So to be clear, the constraints should be the intersection of the
+recommended operating parameters of the consumer and the regulator's
+output, with the voltage/current steps taken in to consideration.
 
+In that case I'll drop this patch and fix up the constraints.
+And maybe send a patch to clarify the regulator bindings.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+ChenYu
