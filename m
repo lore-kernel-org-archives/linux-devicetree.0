@@ -1,121 +1,103 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] sdhci: Add quirk and device tree parameter to force SD
- test mode
-Date: Mon, 22 Aug 2016 19:46:09 -0700
-Message-ID: <57BBB8F1.9070401@gmail.com>
-References: <1471906531-28668-1-git-send-email-zach.brown@ni.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 5/7] arm64: dts: exynos: Add dts files for Samsung
+ Exynos5433 64bit SoC
+Date: Tue, 23 Aug 2016 11:58:47 +0900
+Message-ID: <57BBBBE7.8080601@samsung.com>
+References: <1471328843-26653-1-git-send-email-cw00.choi@samsung.com>
+ <1471329328-26842-1-git-send-email-cw00.choi@samsung.com>
+ <CGME20160819105049epcas1p424a9e752b59645c675d44d9802f9d775@epcas1p4.samsung.com>
+ <b4bb1d48-ce1f-0ddf-9e96-3e2ad29bc3fa@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1471906531-28668-1-git-send-email-zach.brown@ni.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Zach Brown <zach.brown@ni.com>, adrian.hunter@intel.com
-Cc: ulf.hansson@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <b4bb1d48-ce1f-0ddf-9e96-3e2ad29bc3fa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chanwoo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/22/16 15:55, Zach Brown wrote:
-> From: Jaeden Amero <jaeden.amero@ni.com>
-> 
-> On some devices, CD is broken so that we must force the SDHCI into test
-> mode and set CD, so that it always detects an SD card as present.
-> 
-> In order to get a device with broken CD working, we had previously
-> always set the SDHCI into test mode. Unfortunately, this had the side
-> effect of making all SD cards used with our Linux kernels undetectable
-> and non-removable.
-> 
-> By making this "SD test mode" setting optional via a quirk, we can avoid
-> this side effect for devices other than the device with broken CD.
-> Additionally, we add a device parameter to sdhci-pltfm to allow all
-> SDHCI drivers to enable this quirk.
-> 
-> Signed-off-by: Jaeden Amero <jaeden.amero@ni.com>
-> Signed-off-by: Zach Brown <zach.brown@ni.com>
-> ---
->  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
->  drivers/mmc/host/sdhci-pltfm.c                | 4 ++++
->  drivers/mmc/host/sdhci.c                      | 9 +++++++++
->  drivers/mmc/host/sdhci.h                      | 4 ++++
->  4 files changed, 19 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-> index 22d1e1f..3a9be41 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> @@ -52,6 +52,8 @@ Optional properties:
->  - no-sdio: controller is limited to send sdio cmd during initialization
->  - no-sd: controller is limited to send sd cmd during initialization
->  - no-mmc: controller is limited to send mmc cmd during initialization
-> +- force-sd-cd-test-mode: card detection is broken on device, force cd test
-> +  enable and cd test inserted so host will always detect a card.
+Hi Marek,
 
-Do not create a property that tells the driver what to do.
-
-Instead create a property that says that the hardware is broken in a certain way.
-The driver can then choose to take the appropriate action based on the way that
-the hardware is broken.
-
-
->  
->  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
->  polarity properties, we have to fix the meaning of the "normal" and "inverted"
-> diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
-> index 1d17dcf..056d101 100644
-> --- a/drivers/mmc/host/sdhci-pltfm.c
-> +++ b/drivers/mmc/host/sdhci-pltfm.c
-> @@ -87,6 +87,10 @@ void sdhci_get_of_property(struct platform_device *pdev)
->  	if (of_get_property(np, "broken-cd", NULL))
->  		host->quirks |= SDHCI_QUIRK_BROKEN_CARD_DETECTION;
->  
-> +	if (of_get_property(np, "force-sd-cd-test-mode", NULL))
-> +		host->quirks2 |=
-> +			SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE;
-> +
->  	if (of_get_property(np, "no-1-8-v", NULL))
->  		host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
->  
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index cd65d47..2f4c6f9 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -117,6 +117,15 @@ static inline bool sdhci_data_line_cmd(struct mmc_command *cmd)
->  static void sdhci_set_card_detection(struct sdhci_host *host, bool enable)
->  {
->  	u32 present;
-> +	u8  ctrl;
-> +
-> +	if (host->quirks2 & SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE) {
-> +		/* Put the card in test mode, with card inserted */
-> +		ctrl = sdhci_readl(host, SDHCI_HOST_CONTROL);
-> +		ctrl |= SDHCI_CTRL_CD_TEST_INSERTED |
-> +			SDHCI_CTRL_CD_TEST_ENABLE;
-> +		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> +	}
->  
->  	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) ||
->  	    !mmc_card_is_removable(host->mmc))
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 0411c9f..dd609b2 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -84,6 +84,8 @@
->  #define   SDHCI_CTRL_ADMA32	0x10
->  #define   SDHCI_CTRL_ADMA64	0x18
->  #define   SDHCI_CTRL_8BITBUS	0x20
-> +#define  SDHCI_CTRL_CD_TEST_INSERTED	0x40
-> +#define  SDHCI_CTRL_CD_TEST_ENABLE	0x80
->  
->  #define SDHCI_POWER_CONTROL	0x29
->  #define  SDHCI_POWER_ON		0x01
-> @@ -422,6 +424,8 @@ struct sdhci_host {
->  #define SDHCI_QUIRK2_ACMD23_BROKEN			(1<<14)
->  /* Broken Clock divider zero in controller */
->  #define SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN		(1<<15)
-> +/* Controller must support device with broken CD */
-> +#define SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE		(1<<16)
->  
->  	int irq;		/* Device IRQ */
->  	void __iomem *ioaddr;	/* Mapped address */
+On 2016년 08월 19일 19:48, Marek Szyprowski wrote:
+> Hello,
 > 
+> 
+> On 2016-08-16 08:35, Chanwoo Choi wrote:
+>> This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC based on
+>> Octa-core CPUs (quad Cortex-A57 and quad Cortex-A53). And Exynos5433 supports
+>> PSCI (Power State Coordination Interface) v0.1.
+>>
+>> This patch includes following Device Tree node to support Exynos5433 SoC:
+>> 1. Octa cores for big.LITTLE architecture
+>> - Cortex-A53 LITTLE Quad-core
+>> - Cortex-A57 big Quad-core
+>> - Support PSCI v0.1
+>>
+>> 2. Clock controller node
+>> - CMU_TOP   : clocks for IMEM/FSYS/G3D/GSCL/HEVC/MSCL/G2D/MFC/PERIC/PERIS
+>> - CMU_CPIF  : clocks for LLI (Low Latency Interface)
+>> - CMU_MIF   : clocks for DRAM Memory Controller
+>> - CMU_PERIC : clocks for UART/I2C/SPI/I2S/PCM/SPDIF/PWM/SLIMBUS
+>> - CMU_PERIS : clocks for PMU/TMU/MCT/WDT/RTC/SECKEY/TZPC
+>> - CMU_FSYS  : clocks for USB/UFS/SDMMC/TSI/PDMA
+>> - CMU_G2D   : clocks for G2D/MDMA
+>> - CMU_DISP  : clocks for DECON/HDMI/DSIM/MIXER
+>> - CMU_AUD   : clocks for Cortex-A5/BUS/AUDIO
+>> - CMU_BUS{0|1|2} : clocks for global data buses and global peripheral buses
+>> - CMU_G3D   : clocks for 3D Graphics Engine
+>> - CMU_GSCL  : clocks for GSCALER
+>> - CMU_APOLLO: clocks for Cortex-A53 Quad-core processor.
+>> - CMU_ATLAS : clocks for Cortex-A57 Quad-core processor,
+>>                CoreSight and L2 cache controller.
+>> - CMU_MSCL  : clocks for M2M (Memory to Memory) scaler and JPEG IPs.
+>> - CMU_MFC   : clocks for MFC (Multi-Format Codec) IP.
+>> - CMU_HEVC  : clocks for HEVC(High Efficiency Video Codec) decoder IP.
+>> - CMU_ISP   : clocks for FIMC-ISP/DRC/SCLC/DIS/3DNR IPs.
+>> - CMU_CAM0  : clocks for MIPI_CSIS{0|1}/FIMC_LITE_{A|B|D}/FIMC_3AA{0|1} IPs.
+>> - CMU_CAM1  : clocks for COrtex-A5/MIPI_CSIS2/FIMC_LITE_C/FIMC-FD IPs.
+>>
+>> 3. pinctrl node for GPIO
+>> - alive/aud/cpif/ese/finger/fsys/imem/nfc/peric/touch pad
+>>
+>> 4. Timer
+>> - ARM architecture timer (armv8-timer)
+>> - MCT (Multi Core Timer) timer
+>>
+>> 5. Interrupt controller (GIC-400)
+>>
+>> 6. BUS devices
+>> - HS-I2C (High-Speed I2C) device
+>> - SPI (Serial Peripheral Interface) device
+>>
+>> 7. Sound devices
+>> - I2S bus
+>> - LPASS (Low Power Audio Subsystem)
+>>
+>> 8. Power management devices
+>> - CPUFREQ for for Cortex-A53/A57
+>> - TMU (Thermal Management Unit) for Cortex-A53/A57, G3D, ISP
+>>
+>> 9. Display controller devices
+>> - DECON (Display and enhancement controller) for panel output
+>> - DSI (Display Serial Interface)
+>> - MIC (Mobile Image Compressor)
+>> - IOMMU for GSCL/DECON/TV/MFC/JPEG/FLITE/3AA/FIMC
+> 
+> I would prefer to instantiate only SYSMMU controllers for the devices that
+> have been already added, so initially there will by only SYSMMUs for DECON.
+> Other (GSCL, TV, MFC, JPEG, CAMERA ISP) can be added later together with
+> respective master device nodes.
 
+OK. I'll remove all SYSMMU dt nodes from exynos5433.dtsi
+on next version.
+
+[snip]
+
+-- 
+Best Regards,
+Chanwoo Choi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
