@@ -1,117 +1,40 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 2/4] remoteproc: Introduce Qualcomm ADSP PIL
-Date: Tue, 23 Aug 2016 09:38:12 -0700
-Message-ID: <20160823163812.GB15161@tuxbot>
-References: <1471931866-3107-1-git-send-email-bjorn.andersson@linaro.org>
- <1471931866-3107-2-git-send-email-bjorn.andersson@linaro.org>
- <ae9f06c0-6e5e-8c33-f239-2fd60e2e6682@linaro.org>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmVbMl06IFtQQVRDSCAwNy8xM10gcGluY3RybDogYWRkIGEgcGluY29udHJv?=
+ =?UTF-8?B?bCBkcml2ZXIgZm9yIEJDTTYzNTg=?=
+Date: Tue, 23 Aug 2016 18:43:42 +0300
+Message-ID: <1471967022.3197919@f302.i.mail.ru>
+References: <1471604025-21575-1-git-send-email-jonas.gorski@gmail.com>
+ <CAOiHx==PWHx7-JEjVObLnrDOa4fSrs1sPPU7TAO7jGsnkAJLMQ@mail.gmail.com>
+ <CACRpkdYDZhA4_fvzFh5heE=Hvh9157rWRHdm+1k28hROSwk=7g@mail.gmail.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <ae9f06c0-6e5e-8c33-f239-2fd60e2e6682@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYDZhA4_fvzFh5heE=Hvh9157rWRHdm+1k28hROSwk=7g@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?B?TGludXMgV2FsbGVpag==?= <linus.walleij@linaro.org>
+Cc: =?UTF-8?B?bGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc=?= <linux-gpio@vger.kernel.org>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree@vger.kernel.org>, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, =?UTF-8?B?S2V2aW4gQ2VybmVrZWU=?= <cernekee@gmail.com>, =?UTF-8?B?RmxvcmlhbiBGYWluZWxsaQ==?= <f.fainelli@gmail.com>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>, =?UTF-8?B?Sm9uYXMgR29yc2tp?= <jonas.gorski@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 23 Aug 08:14 PDT 2016, Stanimir Varbanov wrote:
-
-> Hi Bjorn,
-> 
-> On 08/23/2016 08:57 AM, Bjorn Andersson wrote:
-> > From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> > 
-> > The Qualcomm ADSP Peripheral Image Loader is used on a variety of
-> > different Qualcomm platforms for loading firmware into and controlling
-> > the Hexagon based ADSP.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> > 
-> > Changes since v1:
-> > - Added platform names to compatibility
-> > - Removed some incorrect quirks that tried to handle older platforms
-> > 
-> 
-> <cut>
-> 
-> > +
-> > +static int adsp_alloc_memory_region(struct qcom_adsp *adsp)
-> > +{
-> > +	struct device_node *node;
-> > +	struct resource r;
-> > +	int ret;
-> > +
-> > +	node = of_parse_phandle(adsp->dev->of_node, "memory-region", 0);
-> > +	if (!node) {
-> > +		dev_err(adsp->dev, "no memory-region specified\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	ret = of_address_to_resource(node, 0, &r);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> 
-> I think that the parsing of memory-region and subsequent
-> address_to_resource is not so good. I had the same issue with Venus
-> remoteproc driver and come to the more standard way by using
-> of_reserved_mem_device_init() and dma_alloc_coherent.
-> 
-
-I tried this in an earlier version. But on 8974 the adsp is supposed to
-be loaded at 0xdc00000, where we have a chunk that's 0x1900000 (25.6MB).
-
-The problem is that dma_alloc_coherent(25.6MB) will fail, because there
-is not 32MB free in that 25.6MB region. This stems from how
-dma_alloc_coherent() is implemented, so some work would need to be done
-there.
-
-
-Further more, in remoteproc you are expected to provide a resource table
-detailing carveout regions like this - a table that's supposed to come
-from the ELF. We are currently looking into ways of injecting individual
-resource requests from a remoteproc driver, so I hope to replace this
-with a "rproc_add_carveout()".
-
-But then this shows another issue with using dma_alloc_coherent(), it
-suddenly requires us to create dummy devices for each memory region; to
-be able to control which dma_mem should be used for each operation.
-
-
-So, I intend to move most of this handling into the remoteproc core, but
-I'm still uncertain if I we will not just have the same logic, but
-shared in the core...
-
-> Could you review "[PATCH 0/4] Venus remoteproc driver" patchset in this
-> regard?
-> 
-
-I will, sorry for the delays.
-
-> > +	adsp->mem_phys = adsp->mem_reloc = r.start;
-> > +	adsp->mem_size = resource_size(&r);
-> > +	adsp->mem_region = devm_ioremap_wc(adsp->dev, adsp->mem_phys, adsp->mem_size);
-> > +	if (!adsp->mem_region) {
-> > +		dev_err(adsp->dev, "unable to map memory region: %pa+%zx\n",
-> > +			&r.start, adsp->mem_size);
-> > +		return -EBUSY;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-
-Regards,
-Bjorn
+PtCS0YLQvtGA0L3QuNC6LCAyMyDQsNCy0LPRg9GB0YLQsCAyMDE2LCAxMjoxOCArMDM6MDAg0L7R
+giBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Ogo+Cj5PbiBNb24sIEF1
+ZyAyMiwgMjAxNiBhdCAzOjU3IFBNLCBKb25hcyBHb3Jza2kgPCBqb25hcy5nb3Jza2lAZ21haWwu
+Y29tID4gd3JvdGU6Cj4+IE9uIDIyIEF1Z3VzdCAyMDE2IGF0IDE1OjIxLCBMaW51cyBXYWxsZWlq
+IDwgbGludXMud2FsbGVpakBsaW5hcm8ub3JnID4gd3JvdGU6Cj4KPj4+PiArICAgICAgIGVsc2UK
+Pj4+PiArICAgICAgICAgICAgICAgbW9kZSA9IHN5c2Nvbl9yZWdtYXBfbG9va3VwX2J5X3BkZXZu
+YW1lKCJzeXNjb24uZmZmZTAwOTgiKTsKPj4+Cj4+PiBUaGF0IGxvb2tzIHZlcnkgdmVyeSBmcmFn
+aWxlLgo+Pgo+PiBGb3IgIU9GIEkgbmVlZCB0byB1c2UgdGhlIHBkZXZuYW1lLCBzbyBJIG5lZWQg
+dG8gImd1ZXNzIiB0aGUgcmlnaHQKPj4gb25lLCBhbmQgdXNpbmcgdGhlIHNjaGVtZSBvZiAic3lz
+Y29uLjxhZGRyZXNzPiIgc2VlbWVkIHRvIGJlIHRoZSBvbmUKPj4gbW9zdCBsaWtlbHkgbm90IGNv
+bmZsaWN0aW5nIHdpdGggYW55dGhpbmcgZWxzZS4KPgo+T0sgZnJvbSBteSBzaWRlLCBJIGNhbiBs
+aXZlIHdpdGggdGhhdC4KPgo+Q0M6aW5nIHRoZSBzeXNjb24gcGRldiBzdXBwb3J0IGF1dGhvcjog
+QWxleGFuZGVyIHdoYXQgaXMgeW91cgo+dGhvdWdodHMgYWJvdXQgdGhpcz8gSXMgdGhlcmUgYSBn
+b29kIGNvbnZlbnRpb24gdG8gZm9sbG93IGZvcgo+cGRldiBsb29rdXBzPwoKQmVjYXVzZSB0aGUg
+cGxhdGZvcm0gb24gd2hpY2ggdGhpcyBmZWF0dXJlIHdhcyB1c2VkIGlzIGZ1bGx5IGNvbnZlcnRl
+ZCAgdG8gRFQsCkkgd2FzIHBsYW5uaW5nIHRvIHNlbmQgYSBwYXRjaCB0byByZW1vdmUgdGhpcyBm
+dW5jdGlvbiA6KQoKU3VjaCB1c2FnZSBpcyBpbiBteSB2aWV3IHBlcmZlY3RseSBhY2NlcHRhYmxl
+IGZvciB0aGUgcGVyaW9kIHVudGlsIHRoZQpwbGF0Zm9ybSBpcyBncmFkdWFsbHkgYmVpbmcgY29u
+dmVydGVkIHRvIERULCBidXQgdGhlIGJlc3Qgd2F5LCBvZiBjb3Vyc2UsCmlzIHVzaW5nIHN5c2Nv
+bl9yZWdtYXBfbG9va3VwX2J5X2NvbXBhdGlibGUoKSBvciBzeXNjb25fcmVnbWFwX2xvb2t1cF9i
+eV9waGFuZGxlKCkuCgotLS0KCg==
