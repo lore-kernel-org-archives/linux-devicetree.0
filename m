@@ -1,108 +1,218 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH v4 5/5] drm: simpledrm: honour
- remove_conflicting_framebuffers()
-Date: Tue, 23 Aug 2016 21:22:57 +0200
-Message-ID: <b046e69c-490c-4ddc-b922-46a18f232c5f@tronnes.org>
-References: <1471897525-31118-1-git-send-email-noralf@tronnes.org>
- <1471897525-31118-6-git-send-email-noralf@tronnes.org>
- <20160823124116.GG10980@phenom.ffwll.local>
- <1f55fd4b-3db1-439d-4076-8ef0ccc790f8@tronnes.org>
- <CAKMK7uE5QGin_PLVschTrPoV5fkmp5GK70=2OzKH+HCvoO0kPg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 00/13] arm64: Allwinner A64 support based on sunxi-ng
+Date: Tue, 23 Aug 2016 21:31:29 +0200
+Message-ID: <20160823193129.GO2598@lukather>
+References: <20160726203041.29366-1-maxime.ripard@free-electrons.com>
+ <fb559224-561c-3476-1146-96f7aea427f0@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAKMK7uE5QGin_PLVschTrPoV5fkmp5GK70=2OzKH+HCvoO0kPg@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="UOYwgDhKKQYesrzQ"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <fb559224-561c-3476-1146-96f7aea427f0-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-8859-1?Q?Andr=E9?= Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CkRlbiAyMy4wOC4yMDE2IDIwOjAxLCBza3JldiBEYW5pZWwgVmV0dGVyOgo+IE9uIFR1ZSwgQXVn
-IDIzLCAyMDE2IGF0IDc6NTIgUE0sIE5vcmFsZiBUcsO4bm5lcyA8bm9yYWxmQHRyb25uZXMub3Jn
-PiB3cm90ZToKPj4+PiArc3RhdGljIGludCBzZHJtX2ZiZGV2X2V2ZW50X25vdGlmeShzdHJ1Y3Qg
-bm90aWZpZXJfYmxvY2sgKnNlbGYsCj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICB1bnNpZ25lZCBsb25nIGFjdGlvbiwgdm9pZCAqZGF0YSkKPj4+PiArewo+Pj4+ICsgICAg
-ICAgc3RydWN0IHNkcm1fZGV2aWNlICpzZHJtOwo+Pj4+ICsgICAgICAgc3RydWN0IGZiX2V2ZW50
-ICpldmVudCA9IGRhdGE7Cj4+Pj4gKyAgICAgICBzdHJ1Y3QgZmJfaW5mbyAqaW5mbyA9IGV2ZW50
-LT5pbmZvOwo+Pj4+ICsgICAgICAgc3RydWN0IGRybV9mYl9oZWxwZXIgKmZiX2hlbHBlciA9IGlu
-Zm8tPnBhcjsKPj4+PiArCj4+Pj4gKyAgICAgICBpZiAoYWN0aW9uICE9IEZCX0VWRU5UX0ZCX1VO
-UkVHSVNURVJFRCkKPj4+PiArICAgICAgICAgICAgICAgcmV0dXJuIE5PVElGWV9ET05FOwo+Pj4+
-ICsKPj4+PiArICAgICAgIGlmICghZmJfaGVscGVyIHx8ICFmYl9oZWxwZXItPmRldiB8fCBmYl9o
-ZWxwZXItPmZiZGV2ICE9IGluZm8pCj4+Pj4gKyAgICAgICAgICAgICAgIHJldHVybiBOT1RJRllf
-RE9ORTsKPj4+PiArCj4+Pj4gKyAgICAgICBzZHJtID0gZmJfaGVscGVyLT5kZXYtPmRldl9wcml2
-YXRlOwo+Pj4+ICsKPj4+PiArICAgICAgIGlmIChzZHJtICYmIHNkcm0tPmZiX2hlbHBlciA9PSBm
-Yl9oZWxwZXIpCj4+Pj4gKwo+Pj4+IHBsYXRmb3JtX2RldmljZV9kZWwodG9fcGxhdGZvcm1fZGV2
-aWNlKGZiX2hlbHBlci0+ZGV2LT5kZXYpKTsKPj4+PiArCj4+Pj4gKyAgICAgICByZXR1cm4gTk9U
-SUZZX0RPTkU7Cj4+Pj4gK30KPj4+IE9uZSBwcm9ibGVtIHRoaXMgbGVhdmVzIGJlaGluZCBpcyB0
-aGF0IHJlZ2lzdGVyaW5nIG9mIHRoZSBuZXcgZmJkZXYgZHJpdmVyCj4+PiBpcyB0b28gbGF0ZSAt
-IGJ5IHRoYXQgcG9pbnQgd2UndmUgYWxyZWFkeSBzZXQgdXAgdGhlIGVudGlyZSBkcml2ZXIsCj4+
-PiBpbmNsdWRpbmcgbW9kZXNldC4gSWYgZmJkZXYgbWVhbndoaWxlIGRvZXMgYSBkcG1zIG9mZiBv
-ciBzb21ldGhpbmcgbGlrZQo+Pj4gdGhhdCBhbGwgaGVsbCB3aWxsIGJyZWFrIGxvb3NlLgo+Pgo+
-PiBJIGRvbid0IHVuZGVyc3RhbmQgaG93IGZiZGV2IHJlZ2lzdHJhdGlvbiBjb21lcyBpbnRvIHBs
-YXkgaGVyZS4gRHJpdmVycyBjYWxsCj4+IHJlbW92ZV9jb25mbGljdGluZ19mcmFtZWJ1ZmZlcnMg
-dmVyeSBlYXJseSBzbyBzaW1wbGVkcm0gaXMgZ29uZSBieSB0aGUgdGltZQo+PiB0aGV5IHJlZ2lz
-dGVyIGFueXRoaW5nLgo+Pgo+PiBGb3Igc2ltcGxlZHJtLCBmYmRldiBkb2luZyBibGFuay91bmJs
-YW5rIGlzIGEgbm8tb3Agc2luY2UgZmJfb3BzLmZiX2JsYW5rCj4+IGlzIG5vdCBpbXBsZW1lbnRl
-ZC4gU28gYSBmYl9ibGFuaygpIGp1c3QgcmVzdWx0cyBpbiBmYmNvbiBkb2luZyBhCj4+IHNvZnR3
-YXJlIGJsYW5rLgo+IE1heWJlIG15IHNjZW5hcmlvIHdhc24ndCBlbnRpcmVseSBjbGVhcjoKPiAt
-IHByZXJlcTogZmJkZXYgZW11bGF0aW9uIGluIGRybSBpcyBkaXNhYmxlZAo+IDEuIHNpbXBsZWRy
-bSBsb2FkcyBhbmQgc2V0cyB1cCB0aGUgZmlybXdhcmUgZmIKPiAyLiByZWFsIGRyaXZlciBsb2Fk
-cywgZmlyc3QgY2FsbHMKPiBkcm1fZmJfaGVscGVyX3JlbW92ZV9jb25mbGljdGluZ19mcmFtZWJ1
-ZmZlci4gTm90aGluZyBoYXBwZW5zIGJlY2F1c2UKPiBDT05GSUdfRkI9bi4KPiAzLiByZWFsIGRy
-aXZlciBzdGFydCBsb2FkaW5nLCByZW1hcHBpbmcgdGhlIGdhcnQgYW5kIHdoYXQgbm90IGVsc2UK
-PiA0LiBzb21ldGhpbmcgaXMgZHJhd24gdXNpbmcgZmJjb24sIHNpbXBsZXJkcm0gd3JpdGVzIHRo
-cm91Z2ggdGhlIG5vdwo+IGludmFsaWQgbWFwcGluZwo+IC0+IEJPT00KClllcyBDT05GSUdfRkI9
-biBpcyBub3QgY292ZXJlZCwgdGhhdCdzIHRoZSBkcmF3YmFjayBtZW50aW9uZWQgaW4gdGhlIApL
-Y29uZmlnLgpIb3dldmVyLCB3aG8gdXNlcyBzaW1wbGVkcm0gd2l0aG91dCBmYmRldi9mYmNvbiB3
-aGVuIGl0IHNoYWxsIGJlIGhhbmRlZCBvdmVyCnRvIGEgcmVhbCBody1kcml2ZXI/CkJ1dCB5ZXMs
-IGl0J3Mgbm90IGEgZ29vZCBzdG9wIGdhcCBzb2x1dGlvbiwgSSBsaWtlIG15IG90aGVyIGlkZWEg
-bXVjaCAKYmV0dGVyLgoKPiBZb3UgaGF2ZSBjb2RlIHRvIGxpc3RlbiB0byB0aGUgZnJhbWVidWZm
-ZXIgcmVnaXN0cmF0aW9uIG5vdGlmaWVyLCBidXQKPiBJIHRoaW5rIGV2ZW4gdGhhdCBoYXBwZW5z
-IHdheSB0b28gbGF0ZS4gT3IgYXQgbGVhc3QgSSBkaWRuJ3Qgc3BvdCBhbnkKPiBjb2RlIGluIHJl
-bW92ZV9jb25mbGljdGluZ19mcmFtZWJ1ZmZlcnMgd2hpY2ggd291bGQgY2FsbCBkb3duIGludG8K
-PiB0aGF0IG5vdGlmaWVyLiBPciBtYXliZSBJIGVudGlyZWx5IG1pc3VuZGVyc3RhbmQgeW91ciBj
-b2RlIC4uLgoKcmVtb3ZlX2NvbmZsaWN0aW5nX2ZyYW1lYnVmZmVycyB1bnJlZ2lzdGVycyB0aGUg
-ZmJkZXYgZnJhbWVidWZmZXIuCnNkcm1fZmJkZXZfZXZlbnRfbm90aWZ5IGRldGVjdHMgdGhhdCB0
-aGUgZnJhbWVidWZmZXIgaXMgYmVpbmcgdW5yZWdpc3RlcmVkLAphbmQgZGVsZXRlcyB0aGUgcGxh
-dGZvcm0gZGV2aWNlLgoKU29tZSBkZXRhaWxzOgoKZG9fcmVtb3ZlX2NvbmZsaWN0aW5nX2ZyYW1l
-YnVmZmVycygpOgogICAgICAgICBmb3IgKGkgPSAwIDsgaSA8IEZCX01BWDsgaSsrKSB7ClsuLi5d
-CiAgICAgICAgICAgICAgICAgICAgICAgICBwcmludGsoS0VSTl9JTkZPICJmYjogc3dpdGNoaW5n
-IHRvICVzIGZyb20gJXNcbiIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbmFtZSwg
-cmVnaXN0ZXJlZF9mYltpXS0+Zml4LmlkKTsKICAgICAgICAgICAgICAgICAgICAgICAgIHJldCA9
-IGRvX3VucmVnaXN0ZXJfZnJhbWVidWZmZXIocmVnaXN0ZXJlZF9mYltpXSk7Cgpkb191bnJlZ2lz
-dGVyX2ZyYW1lYnVmZmVyKCk6IHNob3J0IHZlcnNpb24KewogICAgIGNvbnNvbGVfbG9jaygpOwoK
-ICAgICAgICAgZXZlbnQuaW5mbyA9IGZiX2luZm87CiAgICAgICAgIHJldCA9IGZiX25vdGlmaWVy
-X2NhbGxfY2hhaW4oRkJfRVZFTlRfRkJfVU5CSU5ELCAmZXZlbnQpOwogICAgICAgICB1bmxvY2tf
-ZmJfaW5mbyhmYl9pbmZvKTsKICAgICAgICAgY29uc29sZV91bmxvY2soKTsKCiAgICAgICAgIHBt
-X3Z0X3N3aXRjaF91bnJlZ2lzdGVyKGZiX2luZm8tPmRldik7CgogICAgICAgICB1bmxpbmtfZnJh
-bWVidWZmZXIoZmJfaW5mbyk7CgogICAgICAgICByZWdpc3RlcmVkX2ZiW2ldID0gTlVMTDsKICAg
-ICAgICAgbnVtX3JlZ2lzdGVyZWRfZmItLTsKCiAgICAgICAgIGV2ZW50LmluZm8gPSBmYl9pbmZv
-OwogICAgICAgICBjb25zb2xlX2xvY2soKTsKICAgICAgICAgZmJfbm90aWZpZXJfY2FsbF9jaGFp
-bihGQl9FVkVOVF9GQl9VTlJFR0lTVEVSRUQsICZldmVudCk7Ci8qIGF0IHRoaXMgcG9pbnQgc2lt
-cGxlZHJtIGhhcyBiZWVuIGRlbGV0ZWQgKi8KICAgICAgICAgY29uc29sZV91bmxvY2soKTsKCiAg
-ICAgICAgIC8qIHRoaXMgbWF5IGZyZWUgZmIgaW5mbyAqLwogICAgICAgICBwdXRfZmJfaW5mbyhm
-Yl9pbmZvKTsKICAgICAgICAgcmV0dXJuIDA7Cn0KCj4gV3J0IGZpeGluZzogSnVzdCBhZGRpbmcg
-aXQgdG8gdGhlIHJlY2VudGx5IGFkZGVkIHN0dWIgaXMgb2YgY291cnNlCj4gYWxzbyBhIHdvcmtp
-bmcgc29sdXRpb24uCgpJIGFjdHVhbGx5IGxpa2UgdGhpcyBiZXR0ZXIsIGJlY2F1c2UgaXQncyBz
-byBzdHJhaWdodGZvcndhcmQgYW5kIGVhc3kKdG8gdW5kZXJzdGFuZC4gVGhlIG5vdGlmaWVyIHNv
-bHV0aW9uIGlzIHZlcnkgY29udm9sdXRlZCBhbmQgZWFzeSB0bwptZXNzIHVwLiBBbmQgaXQgcnVu
-cyB3aXRoIHRoZSBjb25zb2xlIGxvY2sgaGVsZC4uLgoKPiAtRGFuaWVsCj4KPiBQUzogQ2FuIHlv
-dSBwbHMgcmV2aWV3IHRoZSAyIHBhdGNoZXMgSSBzdWJtaXR0ZWQgd2l0aCB5b3Ugb24gY2M/IEkK
-PiB3b24ndCBtZXJnZSBteSBvd24gcGF0Y2hlcyB3aXRob3V0IHByb3BlciByZXZpZXcsIHNvIHdp
-dGhvdXQgdGhhdCBkb25lCj4gdGhleSdyZSBzdHVjay4KCk9rLgoKSSdsbCB0ZXN0IHRoZSBzaW1w
-bGUtaGVscGVyIHBsYW5lIHBhdGNoIHRvbW9ycm93LgpJbiBzaW1wbGVkcm0gSSBmaXJzdCB0cmll
-ZCB0byBzZW5kIHRoZSB2YmxhbmsgZXZlbnQgb25seSBpbiBwaXBlLnVwZGF0ZSgpLApidXQgSSBo
-YWQgdG8gZG8gaXQgaW4gZW5hYmxlKCkgYW5kIGRpc2FibGUoKSBhcyB3ZWxsIHRvIG1ha2UgdGhh
-dCB2YmxhbmsKdGltZW91dCBnbyBhd2F5LgoKCk5vcmFsZi4KCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--UOYwgDhKKQYesrzQ
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Andre,
+
+On Mon, Aug 01, 2016 at 02:43:06AM +0100, Andr=E9 Przywara wrote:
+> Hi Maxime,
+>=20
+> On 26/07/16 21:30, Maxime Ripard wrote:
+> > Hi,
+> >=20
+> > Here is the previous A64 patches made by Andre [1], reworked to use
+> > the new sunxi-ng clock framework.
+> >=20
+> > This uses the current H3 clock code, as both are really similar. The
+> > first patches are just meant to rework slightly the H3 code, before
+> > introducing the A64-related patches.
+> >=20
+> > Some WiP stuff have been removed, such as the MMC part, but this serie
+> > already has a decent amount of devices supported: uart, i2c, rsb, etc.
+>=20
+> Thanks very much for looking into this and compiling this series!
+>=20
+> In general this looks good to me - apart from the sunxi-ng clock usage.
+> I think I have some small fixes to the DT (have to compare against my
+> latest local branch), I will comment on this later.
+>=20
+> As I think I never officially expressed my concerns about the new sunxi
+> clock system, so I use that opportunity here ;-)
+>=20
+> As this became quite a long read, here a TL;DR:
+> - We consider using an SCPI based clock system for the A64, alongside
+> allwinner,simple-gates and fixed clocks. We try to avoid any Allwinner
+> specific clocks (apart from the simple-gates).
+> - ARM Trusted Firmware provides the SCPI implementation - for now, later
+> we may move this into a possible arisc firmware.
+> - We upstream some basic DT first, possibly omitting any controversial
+> clock parts at all.
+>=20
+> Let me know what you think!
+>=20
+>=20
+> Now the long part ....
+>=20
+> Basically I see those issues with the new clocks:
+> - sunxi-ng requires a complicated SoC specific source file in the
+> kernel. Although that makes the DT pretty easy (and avoids breaking it
+> the future), it ultimately requires an explicit code drop for every new
+> SoC, even if they share 95% of the clocks (as H3 and A64 do, for instance=
+).
+> - This code file does not actually contain any code, instead it's just
+> data and looks like it should really be presented in DT - which brings
+> us back to something like the old sunxi clock scheme, which is
+> apparently not considered good enough. I still wonder if we could create
+> a generic sunxi-ng user, which explains the needed clocks in the DT
+> instead of in code. I admit that looks like quite some work.
+> - It makes it quite hard for any other DT user (*BSD, U-Boot) to use the
+> clocks, since they would have to copy quite verbatim the Linux
+> implementation choice. This is admittedly also true for the old clock
+> framework, but still unfortunate.
+
+3 - You never get a complete clock support for any SoC, requirining
+    for pretty much every driver to create from scratch a new clock
+    driver.
+
+4 - You require for all these clocks drivers some Ack from both the DT
+    and clocks maintainers, who both said they were fed up with this.
+
+5 - If you realise some day down the road that the parenting
+    relationship is not right, or that some clock is not doing what
+    you thought it was, you can't really fix it properly because of
+    the DT stability you wanted us to enforce.
+
+> So as mentioned several times before, I am looking into a more firmware
+> driven clock system using the SCPI[1] framework.
+> The idea is:
+> - The basic clocks (OSC24M, OSC32K, AHB1, APB1, APB2, PERIPH0) are
+> expressed as fixed clocks. If I am not mistaken, Allwinner recommends
+> certain frequencies for them anyway, so we just use that and set them up
+> before booting Linux, for instance in ATF.
+> - The gates clocks are expressed as before, but by defining a generic DT
+> compatible fallback name. I have no idea why every SoC enters its name
+> into the simple_gates.c source file, while just mentioning the
+> compatible string in the DT bindings and using the SoC specific name
+> together with a generic fallback like "allwinner,sunxi-simple-gates"
+> would suffice. This means that we don't need to touch simple-gates.c
+> anymore most of the time.
+> - Any clock that can (and has to) be programmed with a variable
+> frequency is expressed as an SCPI clock. This interface allows basically
+> querying and setting a frequency - not very powerful, but sufficient for
+> the clocks I checked. Firmware then takes the burden of programming the
+> respective clock register - which is not rocket science if we lock the
+> base clocks to a certain frequency.
+>=20
+> The advantage of this approach would be:
+> - The impact to Linux code is minimized. Normally there would be no need
+> to touch the kernel at all when we introduce a new SoC.
+
+But you duplicate the clock framework entirely, both the core code and
+the data you were complaining about, with all the issues that arise
+=66rom code duplication. You still have to create that big file you were
+complaining about, with exactly the same constraints.
+
+> - Any other DT user can quite easily make use of the clock system
+> without adding tons of complicated Allwinner specific clock code. The
+> simple-gates driver is almost trivial to implement, and chances are SCPI
+> is already around anyway.
+> - If there are any peculiarities with a certain clock (implementation),
+> we can solve this in firmware. Fixes to code would immediately benefit
+> all users - existing kernels (from distributions), newer kernels and
+> other OSes.
+
+But no-one would actually be able to use it, because no one upgrades
+its firmware, including all the major distributions (Debian, Ubuntu,
+Fedora, OpenWRT, Arch, Gento, you name it). So there's effectively no
+way to fix a bug that was there.
+
+> - Having SCPI gives us simple regulators and sensors (temperature,
+> power) for free (in terms of no Linux code required). It also allows for
+> DVFS support, though this may require more work on the firmware side.
+
+And ignoring all the other features that the PMIC support, and the
+board uses out there (GPIO, ADCs, Power supplies, battery charger, USB
+VBUS monitoring)
+
+> - This approach matches many of the more serious ARM64 machines out
+> there, which refrain from exposing all of their clock framework to Linux.
+
+$ git grep -l scpi arch/arm64/boot/dts/**.dtsi
+arch/arm64/boot/dts/arm/juno-base.dtsi
+
+Are you saying that only Juno is a serious ARM64 machine?
+
+> Also this opens the door to much easier support for new SoCs - up to a
+> point where any new chip would actually run out of the box on existing
+> distributions (thinking of LTS releases here). The pinctrl driver is a
+> nasty guy around here - but let's not make it worse and try to fix that
+> guy later ;-)
+
+That's not true and you know it.
+
+What you actually suggest is to implement a minimal set of clocks in
+ATF (the opposite being, the entire set of clocks, which would of
+course be untested, so it basically falls down in the exact same
+category).
+
+What this means is that, since we will obviously not support all the
+clocks client from day one, any user will be *required* for a new
+kernel release to operate as it's expected to upgrade the ATF.
+
+Without any help from the distribution (s)he's running, because no one
+has that kind of scenario in mind. And let's be honest, I don't see
+Ubuntu changing the dependencies for the kernel for the Allwinner SoCs
+alone (let alone the fact that it's pretty much impossible in a
+generic way to know where and how the ATF is installed).
+
+Apart from being a major pain for any user, upgrading the bootloader
+is also a showstopper for most industries.
+
+So, no, we won't do that. The A64 support is something we actually
+want to use in real-life products, and our users to be happy with the
+support they have.
+
+NAK.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--UOYwgDhKKQYesrzQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXvKSRAAoJEBx+YmzsjxAg2eIQAJ8Egs7Bv5u14FmWq0JrNJRW
+t8JN3REYGQd2hdj/2cv+nXPUeUXOpu6cdiI9rXgyzLoUcf/uXV8IZ52yDoIJhNVo
+3OU4WiajQCEhOOICBK67QsF+ofxpDAnXQCWVoLvqB2BzgT2Ck6ANPOx/Xi5hbXvL
+2RGeV9poFOgUXb05OOO+oC2Twdb2/vEuAudmMlrmYZrKRkDUmJmbZMkN/mhkFMvY
+gosr6GE3fjfCydUs/67DUXVugBtdNtBfwC6XaevKE6dwxPR84eNCK+a6wmZAN1uv
+PmdIJsK0O8DoM9pB5v4YiGX/z8OVwH3hBO+PptGt8eWJXLlxpWHFM1IlgA44AQ+n
+vjey8gu8FRKfTNF4RPNe5uFnPtAB2iMVDyD/17Y9Ub1cWqcW6+dl5SrRLZmAofhm
+z0eKLydhrXBD+GA9BwAxkVCH6h8fTh/7j4WC5ebx6JRynA+qPO4PM+rGO7AE38cc
+ap+3qV+6OmbBk7NUL+kk2hPO5+pgcJBw7mcWhR9hihSDk4r35RNe3PME7z/DfrLl
+7dIxAcIhHKdtw9cL4BJp2x8IdyKtC63hXphJdm0AUlMKIXV6dw91vIW0rwrhfU9k
+6eOfPoazxPVLkMcZKBvBEiBtwGXuKVmotGPqzoKNznR2QKALeMJtLLzWlnIFzf1Q
+eMnEaieXIIRpo/2To7Ve
+=EKui
+-----END PGP SIGNATURE-----
+
+--UOYwgDhKKQYesrzQ--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
