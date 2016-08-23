@@ -1,74 +1,27 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v4 5/5] drm: simpledrm: honour
- remove_conflicting_framebuffers()
-Date: Tue, 23 Aug 2016 20:01:17 +0200
-Message-ID: <CAKMK7uE5QGin_PLVschTrPoV5fkmp5GK70=2OzKH+HCvoO0kPg@mail.gmail.com>
-References: <1471897525-31118-1-git-send-email-noralf@tronnes.org>
- <1471897525-31118-6-git-send-email-noralf@tronnes.org>
- <20160823124116.GG10980@phenom.ffwll.local>
- <1f55fd4b-3db1-439d-4076-8ef0ccc790f8@tronnes.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] hwmon: (max6650.c) Add devicetree support documentation
+Date: Tue, 23 Aug 2016 13:05:25 -0500
+Message-ID: <20160823180524.GA2280@rob-hp-laptop>
+References: <1471848272-3032-1-git-send-email-mike.looijmans@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1f55fd4b-3db1-439d-4076-8ef0ccc790f8@tronnes.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1471848272-3032-1-git-send-email-mike.looijmans@topic.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: devicetree@vger.kernel.org, linux@roeck-us.net, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBdWcgMjMsIDIwMTYgYXQgNzo1MiBQTSwgTm9yYWxmIFRyw7hubmVzIDxub3JhbGZA
-dHJvbm5lcy5vcmc+IHdyb3RlOgo+Pj4gK3N0YXRpYyBpbnQgc2RybV9mYmRldl9ldmVudF9ub3Rp
-Znkoc3RydWN0IG5vdGlmaWVyX2Jsb2NrICpzZWxmLAo+Pj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB1bnNpZ25lZCBsb25nIGFjdGlvbiwgdm9pZCAqZGF0YSkKPj4+ICt7Cj4+
-PiArICAgICAgIHN0cnVjdCBzZHJtX2RldmljZSAqc2RybTsKPj4+ICsgICAgICAgc3RydWN0IGZi
-X2V2ZW50ICpldmVudCA9IGRhdGE7Cj4+PiArICAgICAgIHN0cnVjdCBmYl9pbmZvICppbmZvID0g
-ZXZlbnQtPmluZm87Cj4+PiArICAgICAgIHN0cnVjdCBkcm1fZmJfaGVscGVyICpmYl9oZWxwZXIg
-PSBpbmZvLT5wYXI7Cj4+PiArCj4+PiArICAgICAgIGlmIChhY3Rpb24gIT0gRkJfRVZFTlRfRkJf
-VU5SRUdJU1RFUkVEKQo+Pj4gKyAgICAgICAgICAgICAgIHJldHVybiBOT1RJRllfRE9ORTsKPj4+
-ICsKPj4+ICsgICAgICAgaWYgKCFmYl9oZWxwZXIgfHwgIWZiX2hlbHBlci0+ZGV2IHx8IGZiX2hl
-bHBlci0+ZmJkZXYgIT0gaW5mbykKPj4+ICsgICAgICAgICAgICAgICByZXR1cm4gTk9USUZZX0RP
-TkU7Cj4+PiArCj4+PiArICAgICAgIHNkcm0gPSBmYl9oZWxwZXItPmRldi0+ZGV2X3ByaXZhdGU7
-Cj4+PiArCj4+PiArICAgICAgIGlmIChzZHJtICYmIHNkcm0tPmZiX2hlbHBlciA9PSBmYl9oZWxw
-ZXIpCj4+PiArCj4+PiBwbGF0Zm9ybV9kZXZpY2VfZGVsKHRvX3BsYXRmb3JtX2RldmljZShmYl9o
-ZWxwZXItPmRldi0+ZGV2KSk7Cj4+PiArCj4+PiArICAgICAgIHJldHVybiBOT1RJRllfRE9ORTsK
-Pj4+ICt9Cj4+Cj4+IE9uZSBwcm9ibGVtIHRoaXMgbGVhdmVzIGJlaGluZCBpcyB0aGF0IHJlZ2lz
-dGVyaW5nIG9mIHRoZSBuZXcgZmJkZXYgZHJpdmVyCj4+IGlzIHRvbyBsYXRlIC0gYnkgdGhhdCBw
-b2ludCB3ZSd2ZSBhbHJlYWR5IHNldCB1cCB0aGUgZW50aXJlIGRyaXZlciwKPj4gaW5jbHVkaW5n
-IG1vZGVzZXQuIElmIGZiZGV2IG1lYW53aGlsZSBkb2VzIGEgZHBtcyBvZmYgb3Igc29tZXRoaW5n
-IGxpa2UKPj4gdGhhdCBhbGwgaGVsbCB3aWxsIGJyZWFrIGxvb3NlLgo+Cj4KPiBJIGRvbid0IHVu
-ZGVyc3RhbmQgaG93IGZiZGV2IHJlZ2lzdHJhdGlvbiBjb21lcyBpbnRvIHBsYXkgaGVyZS4gRHJp
-dmVycyBjYWxsCj4gcmVtb3ZlX2NvbmZsaWN0aW5nX2ZyYW1lYnVmZmVycyB2ZXJ5IGVhcmx5IHNv
-IHNpbXBsZWRybSBpcyBnb25lIGJ5IHRoZSB0aW1lCj4gdGhleSByZWdpc3RlciBhbnl0aGluZy4K
-Pgo+IEZvciBzaW1wbGVkcm0sIGZiZGV2IGRvaW5nIGJsYW5rL3VuYmxhbmsgaXMgYSBuby1vcCBz
-aW5jZSBmYl9vcHMuZmJfYmxhbmsKPiBpcyBub3QgaW1wbGVtZW50ZWQuIFNvIGEgZmJfYmxhbmso
-KSBqdXN0IHJlc3VsdHMgaW4gZmJjb24gZG9pbmcgYQo+IHNvZnR3YXJlIGJsYW5rLgoKTWF5YmUg
-bXkgc2NlbmFyaW8gd2Fzbid0IGVudGlyZWx5IGNsZWFyOgotIHByZXJlcTogZmJkZXYgZW11bGF0
-aW9uIGluIGRybSBpcyBkaXNhYmxlZAoxLiBzaW1wbGVkcm0gbG9hZHMgYW5kIHNldHMgdXAgdGhl
-IGZpcm13YXJlIGZiCjIuIHJlYWwgZHJpdmVyIGxvYWRzLCBmaXJzdCBjYWxscwpkcm1fZmJfaGVs
-cGVyX3JlbW92ZV9jb25mbGljdGluZ19mcmFtZWJ1ZmZlci4gTm90aGluZyBoYXBwZW5zIGJlY2F1
-c2UKQ09ORklHX0ZCPW4uCjMuIHJlYWwgZHJpdmVyIHN0YXJ0IGxvYWRpbmcsIHJlbWFwcGluZyB0
-aGUgZ2FydCBhbmQgd2hhdCBub3QgZWxzZQo0LiBzb21ldGhpbmcgaXMgZHJhd24gdXNpbmcgZmJj
-b24sIHNpbXBsZXJkcm0gd3JpdGVzIHRocm91Z2ggdGhlIG5vdwppbnZhbGlkIG1hcHBpbmcKLT4g
-Qk9PTQoKWW91IGhhdmUgY29kZSB0byBsaXN0ZW4gdG8gdGhlIGZyYW1lYnVmZmVyIHJlZ2lzdHJh
-dGlvbiBub3RpZmllciwgYnV0CkkgdGhpbmsgZXZlbiB0aGF0IGhhcHBlbnMgd2F5IHRvbyBsYXRl
-LiBPciBhdCBsZWFzdCBJIGRpZG4ndCBzcG90IGFueQpjb2RlIGluIHJlbW92ZV9jb25mbGljdGlu
-Z19mcmFtZWJ1ZmZlcnMgd2hpY2ggd291bGQgY2FsbCBkb3duIGludG8KdGhhdCBub3RpZmllci4g
-T3IgbWF5YmUgSSBlbnRpcmVseSBtaXN1bmRlcnN0YW5kIHlvdXIgY29kZSAuLi4KCldydCBmaXhp
-bmc6IEp1c3QgYWRkaW5nIGl0IHRvIHRoZSByZWNlbnRseSBhZGRlZCBzdHViIGlzIG9mIGNvdXJz
-ZQphbHNvIGEgd29ya2luZyBzb2x1dGlvbi4KLURhbmllbAoKUFM6IENhbiB5b3UgcGxzIHJldmll
-dyB0aGUgMiBwYXRjaGVzIEkgc3VibWl0dGVkIHdpdGggeW91IG9uIGNjPyBJCndvbid0IG1lcmdl
-IG15IG93biBwYXRjaGVzIHdpdGhvdXQgcHJvcGVyIHJldmlldywgc28gd2l0aG91dCB0aGF0IGRv
-bmUKdGhleSdyZSBzdHVjay4KLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIElu
-dGVsIENvcnBvcmF0aW9uCis0MSAoMCkgNzkgMzY1IDU3IDQ4IC0gaHR0cDovL2Jsb2cuZmZ3bGwu
-Y2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Mon, Aug 22, 2016 at 08:44:32AM +0200, Mike Looijmans wrote:
+> This adds the devicetree binding documentation for the max6650 fan
+> controller.
+> 
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> ---
+> v2: Allow only 12V or 5V supply voltage
+>  .../devicetree/bindings/hwmon/max6650.txt          | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/max6650.txt
+
+Acked-by: Rob Herring <robh@kernel.org>
