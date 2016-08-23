@@ -1,100 +1,108 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 00/19] Generic DT bindings for PCI IOMMUs and ARM SMMU
-Date: Tue, 23 Aug 2016 20:15:17 +0100
-Message-ID: <3a9a9369-d8cd-66f4-9344-965c80894bb6@arm.com>
-References: <cover.1471975357.git.robin.murphy@arm.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH v4 5/5] drm: simpledrm: honour
+ remove_conflicting_framebuffers()
+Date: Tue, 23 Aug 2016 21:22:57 +0200
+Message-ID: <b046e69c-490c-4ddc-b922-46a18f232c5f@tronnes.org>
+References: <1471897525-31118-1-git-send-email-noralf@tronnes.org>
+ <1471897525-31118-6-git-send-email-noralf@tronnes.org>
+ <20160823124116.GG10980@phenom.ffwll.local>
+ <1f55fd4b-3db1-439d-4076-8ef0ccc790f8@tronnes.org>
+ <CAKMK7uE5QGin_PLVschTrPoV5fkmp5GK70=2OzKH+HCvoO0kPg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1471975357.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAKMK7uE5QGin_PLVschTrPoV5fkmp5GK70=2OzKH+HCvoO0kPg@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23/08/16 20:05, Robin Murphy wrote:
-> Hi all,
-
-Oh bums, looks like I managed to miss LAKML off the CC list. If anyone
-there is interested, it's over here:
-
-https://lists.linuxfoundation.org/pipermail/iommu/2016-August/018230.html
-
-Robin.
-
-> 
-> At long last I've finished the big SMMUv2 rework, so here's everything
-> all together for a v5. As a quick breakdown:
-> 
-> Patches 1-3 are the core PCI part, all acked and ready to go. No code
-> changes from v4.
-> 
-> Patch 4 is merely bugfixed from v4 for simplicity, as I've not yet
-> managed to take as close a look at Lorenzo's follow-on work as I'd like.
-> 
-> Patches 5-7 (SMMUv3) are mostly unchanged beyond a slight tweak to #5.
-> 
-> Patches 8-17 are the all-new SMMUv2 rework.
-> 
-> Patch 18 goes along with the fix already in 4.8-rc3 to help avoid 64-bit
-> DMA masks going wrong now that DMA ops will be enabled.
-> 
-> Finally, patch 19 addresses the previous problem of having to choose
-> between DMA ops or working MSIs. This is currently at the end as
-> moving it before #17 would require a further interim SMMUv2 patch, and
-> a 19-patch series is already quite enough...
-> 
-> I've pushed out a branch based on iommu/next to the usual place:
-> 
-> git://linux-arm.org/linux-rm iommu/generic-v5
-> 
-> Thanks,
-> Robin.
-> ---
-> 
-> Mark Rutland (1):
->   Docs: dt: add PCI IOMMU map bindings
-> 
-> Robin Murphy (18):
->   of/irq: Break out msi-map lookup (again)
->   iommu/of: Handle iommu-map property for PCI
->   iommu/of: Introduce iommu_fwspec
->   iommu/arm-smmu: Implement of_xlate() for SMMUv3
->   iommu/arm-smmu: Support non-PCI devices with SMMUv3
->   iommu/arm-smmu: Set PRIVCFG in stage 1 STEs
->   iommu/arm-smmu: Handle stream IDs more dynamically
->   iommu/arm-smmu: Consolidate stream map entry state
->   iommu/arm-smmu: Keep track of S2CR state
->   iommu/arm-smmu: Refactor mmu-masters handling
->   iommu/arm-smmu: Streamline SMMU data lookups
->   iommu/arm-smmu: Add a stream map entry iterator
->   iommu/arm-smmu: Intelligent SMR allocation
->   iommu/arm-smmu: Convert to iommu_fwspec
->   Docs: dt: document ARM SMMU generic binding usage
->   iommu/arm-smmu: Wire up generic configuration support
->   iommu/arm-smmu: Set domain geometry
->   iommu/dma: Add support for mapping MSIs
-> 
->  .../devicetree/bindings/iommu/arm,smmu.txt         |  63 +-
->  .../devicetree/bindings/pci/pci-iommu.txt          | 171 ++++
->  drivers/iommu/Kconfig                              |   2 +-
->  drivers/iommu/arm-smmu-v3.c                        | 347 ++++----
->  drivers/iommu/arm-smmu.c                           | 952 ++++++++++-----------
->  drivers/iommu/dma-iommu.c                          | 141 ++-
->  drivers/iommu/of_iommu.c                           |  95 +-
->  drivers/irqchip/irq-gic-v2m.c                      |   3 +
->  drivers/irqchip/irq-gic-v3-its.c                   |   3 +
->  drivers/of/irq.c                                   |  78 +-
->  drivers/of/of_pci.c                                | 102 +++
->  include/linux/dma-iommu.h                          |   9 +
->  include/linux/of_iommu.h                           |  15 +
->  include/linux/of_pci.h                             |  10 +
->  14 files changed, 1208 insertions(+), 783 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.txt
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CkRlbiAyMy4wOC4yMDE2IDIwOjAxLCBza3JldiBEYW5pZWwgVmV0dGVyOgo+IE9uIFR1ZSwgQXVn
+IDIzLCAyMDE2IGF0IDc6NTIgUE0sIE5vcmFsZiBUcsO4bm5lcyA8bm9yYWxmQHRyb25uZXMub3Jn
+PiB3cm90ZToKPj4+PiArc3RhdGljIGludCBzZHJtX2ZiZGV2X2V2ZW50X25vdGlmeShzdHJ1Y3Qg
+bm90aWZpZXJfYmxvY2sgKnNlbGYsCj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB1bnNpZ25lZCBsb25nIGFjdGlvbiwgdm9pZCAqZGF0YSkKPj4+PiArewo+Pj4+ICsgICAg
+ICAgc3RydWN0IHNkcm1fZGV2aWNlICpzZHJtOwo+Pj4+ICsgICAgICAgc3RydWN0IGZiX2V2ZW50
+ICpldmVudCA9IGRhdGE7Cj4+Pj4gKyAgICAgICBzdHJ1Y3QgZmJfaW5mbyAqaW5mbyA9IGV2ZW50
+LT5pbmZvOwo+Pj4+ICsgICAgICAgc3RydWN0IGRybV9mYl9oZWxwZXIgKmZiX2hlbHBlciA9IGlu
+Zm8tPnBhcjsKPj4+PiArCj4+Pj4gKyAgICAgICBpZiAoYWN0aW9uICE9IEZCX0VWRU5UX0ZCX1VO
+UkVHSVNURVJFRCkKPj4+PiArICAgICAgICAgICAgICAgcmV0dXJuIE5PVElGWV9ET05FOwo+Pj4+
+ICsKPj4+PiArICAgICAgIGlmICghZmJfaGVscGVyIHx8ICFmYl9oZWxwZXItPmRldiB8fCBmYl9o
+ZWxwZXItPmZiZGV2ICE9IGluZm8pCj4+Pj4gKyAgICAgICAgICAgICAgIHJldHVybiBOT1RJRllf
+RE9ORTsKPj4+PiArCj4+Pj4gKyAgICAgICBzZHJtID0gZmJfaGVscGVyLT5kZXYtPmRldl9wcml2
+YXRlOwo+Pj4+ICsKPj4+PiArICAgICAgIGlmIChzZHJtICYmIHNkcm0tPmZiX2hlbHBlciA9PSBm
+Yl9oZWxwZXIpCj4+Pj4gKwo+Pj4+IHBsYXRmb3JtX2RldmljZV9kZWwodG9fcGxhdGZvcm1fZGV2
+aWNlKGZiX2hlbHBlci0+ZGV2LT5kZXYpKTsKPj4+PiArCj4+Pj4gKyAgICAgICByZXR1cm4gTk9U
+SUZZX0RPTkU7Cj4+Pj4gK30KPj4+IE9uZSBwcm9ibGVtIHRoaXMgbGVhdmVzIGJlaGluZCBpcyB0
+aGF0IHJlZ2lzdGVyaW5nIG9mIHRoZSBuZXcgZmJkZXYgZHJpdmVyCj4+PiBpcyB0b28gbGF0ZSAt
+IGJ5IHRoYXQgcG9pbnQgd2UndmUgYWxyZWFkeSBzZXQgdXAgdGhlIGVudGlyZSBkcml2ZXIsCj4+
+PiBpbmNsdWRpbmcgbW9kZXNldC4gSWYgZmJkZXYgbWVhbndoaWxlIGRvZXMgYSBkcG1zIG9mZiBv
+ciBzb21ldGhpbmcgbGlrZQo+Pj4gdGhhdCBhbGwgaGVsbCB3aWxsIGJyZWFrIGxvb3NlLgo+Pgo+
+PiBJIGRvbid0IHVuZGVyc3RhbmQgaG93IGZiZGV2IHJlZ2lzdHJhdGlvbiBjb21lcyBpbnRvIHBs
+YXkgaGVyZS4gRHJpdmVycyBjYWxsCj4+IHJlbW92ZV9jb25mbGljdGluZ19mcmFtZWJ1ZmZlcnMg
+dmVyeSBlYXJseSBzbyBzaW1wbGVkcm0gaXMgZ29uZSBieSB0aGUgdGltZQo+PiB0aGV5IHJlZ2lz
+dGVyIGFueXRoaW5nLgo+Pgo+PiBGb3Igc2ltcGxlZHJtLCBmYmRldiBkb2luZyBibGFuay91bmJs
+YW5rIGlzIGEgbm8tb3Agc2luY2UgZmJfb3BzLmZiX2JsYW5rCj4+IGlzIG5vdCBpbXBsZW1lbnRl
+ZC4gU28gYSBmYl9ibGFuaygpIGp1c3QgcmVzdWx0cyBpbiBmYmNvbiBkb2luZyBhCj4+IHNvZnR3
+YXJlIGJsYW5rLgo+IE1heWJlIG15IHNjZW5hcmlvIHdhc24ndCBlbnRpcmVseSBjbGVhcjoKPiAt
+IHByZXJlcTogZmJkZXYgZW11bGF0aW9uIGluIGRybSBpcyBkaXNhYmxlZAo+IDEuIHNpbXBsZWRy
+bSBsb2FkcyBhbmQgc2V0cyB1cCB0aGUgZmlybXdhcmUgZmIKPiAyLiByZWFsIGRyaXZlciBsb2Fk
+cywgZmlyc3QgY2FsbHMKPiBkcm1fZmJfaGVscGVyX3JlbW92ZV9jb25mbGljdGluZ19mcmFtZWJ1
+ZmZlci4gTm90aGluZyBoYXBwZW5zIGJlY2F1c2UKPiBDT05GSUdfRkI9bi4KPiAzLiByZWFsIGRy
+aXZlciBzdGFydCBsb2FkaW5nLCByZW1hcHBpbmcgdGhlIGdhcnQgYW5kIHdoYXQgbm90IGVsc2UK
+PiA0LiBzb21ldGhpbmcgaXMgZHJhd24gdXNpbmcgZmJjb24sIHNpbXBsZXJkcm0gd3JpdGVzIHRo
+cm91Z2ggdGhlIG5vdwo+IGludmFsaWQgbWFwcGluZwo+IC0+IEJPT00KClllcyBDT05GSUdfRkI9
+biBpcyBub3QgY292ZXJlZCwgdGhhdCdzIHRoZSBkcmF3YmFjayBtZW50aW9uZWQgaW4gdGhlIApL
+Y29uZmlnLgpIb3dldmVyLCB3aG8gdXNlcyBzaW1wbGVkcm0gd2l0aG91dCBmYmRldi9mYmNvbiB3
+aGVuIGl0IHNoYWxsIGJlIGhhbmRlZCBvdmVyCnRvIGEgcmVhbCBody1kcml2ZXI/CkJ1dCB5ZXMs
+IGl0J3Mgbm90IGEgZ29vZCBzdG9wIGdhcCBzb2x1dGlvbiwgSSBsaWtlIG15IG90aGVyIGlkZWEg
+bXVjaCAKYmV0dGVyLgoKPiBZb3UgaGF2ZSBjb2RlIHRvIGxpc3RlbiB0byB0aGUgZnJhbWVidWZm
+ZXIgcmVnaXN0cmF0aW9uIG5vdGlmaWVyLCBidXQKPiBJIHRoaW5rIGV2ZW4gdGhhdCBoYXBwZW5z
+IHdheSB0b28gbGF0ZS4gT3IgYXQgbGVhc3QgSSBkaWRuJ3Qgc3BvdCBhbnkKPiBjb2RlIGluIHJl
+bW92ZV9jb25mbGljdGluZ19mcmFtZWJ1ZmZlcnMgd2hpY2ggd291bGQgY2FsbCBkb3duIGludG8K
+PiB0aGF0IG5vdGlmaWVyLiBPciBtYXliZSBJIGVudGlyZWx5IG1pc3VuZGVyc3RhbmQgeW91ciBj
+b2RlIC4uLgoKcmVtb3ZlX2NvbmZsaWN0aW5nX2ZyYW1lYnVmZmVycyB1bnJlZ2lzdGVycyB0aGUg
+ZmJkZXYgZnJhbWVidWZmZXIuCnNkcm1fZmJkZXZfZXZlbnRfbm90aWZ5IGRldGVjdHMgdGhhdCB0
+aGUgZnJhbWVidWZmZXIgaXMgYmVpbmcgdW5yZWdpc3RlcmVkLAphbmQgZGVsZXRlcyB0aGUgcGxh
+dGZvcm0gZGV2aWNlLgoKU29tZSBkZXRhaWxzOgoKZG9fcmVtb3ZlX2NvbmZsaWN0aW5nX2ZyYW1l
+YnVmZmVycygpOgogICAgICAgICBmb3IgKGkgPSAwIDsgaSA8IEZCX01BWDsgaSsrKSB7ClsuLi5d
+CiAgICAgICAgICAgICAgICAgICAgICAgICBwcmludGsoS0VSTl9JTkZPICJmYjogc3dpdGNoaW5n
+IHRvICVzIGZyb20gJXNcbiIsCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbmFtZSwg
+cmVnaXN0ZXJlZF9mYltpXS0+Zml4LmlkKTsKICAgICAgICAgICAgICAgICAgICAgICAgIHJldCA9
+IGRvX3VucmVnaXN0ZXJfZnJhbWVidWZmZXIocmVnaXN0ZXJlZF9mYltpXSk7Cgpkb191bnJlZ2lz
+dGVyX2ZyYW1lYnVmZmVyKCk6IHNob3J0IHZlcnNpb24KewogICAgIGNvbnNvbGVfbG9jaygpOwoK
+ICAgICAgICAgZXZlbnQuaW5mbyA9IGZiX2luZm87CiAgICAgICAgIHJldCA9IGZiX25vdGlmaWVy
+X2NhbGxfY2hhaW4oRkJfRVZFTlRfRkJfVU5CSU5ELCAmZXZlbnQpOwogICAgICAgICB1bmxvY2tf
+ZmJfaW5mbyhmYl9pbmZvKTsKICAgICAgICAgY29uc29sZV91bmxvY2soKTsKCiAgICAgICAgIHBt
+X3Z0X3N3aXRjaF91bnJlZ2lzdGVyKGZiX2luZm8tPmRldik7CgogICAgICAgICB1bmxpbmtfZnJh
+bWVidWZmZXIoZmJfaW5mbyk7CgogICAgICAgICByZWdpc3RlcmVkX2ZiW2ldID0gTlVMTDsKICAg
+ICAgICAgbnVtX3JlZ2lzdGVyZWRfZmItLTsKCiAgICAgICAgIGV2ZW50LmluZm8gPSBmYl9pbmZv
+OwogICAgICAgICBjb25zb2xlX2xvY2soKTsKICAgICAgICAgZmJfbm90aWZpZXJfY2FsbF9jaGFp
+bihGQl9FVkVOVF9GQl9VTlJFR0lTVEVSRUQsICZldmVudCk7Ci8qIGF0IHRoaXMgcG9pbnQgc2lt
+cGxlZHJtIGhhcyBiZWVuIGRlbGV0ZWQgKi8KICAgICAgICAgY29uc29sZV91bmxvY2soKTsKCiAg
+ICAgICAgIC8qIHRoaXMgbWF5IGZyZWUgZmIgaW5mbyAqLwogICAgICAgICBwdXRfZmJfaW5mbyhm
+Yl9pbmZvKTsKICAgICAgICAgcmV0dXJuIDA7Cn0KCj4gV3J0IGZpeGluZzogSnVzdCBhZGRpbmcg
+aXQgdG8gdGhlIHJlY2VudGx5IGFkZGVkIHN0dWIgaXMgb2YgY291cnNlCj4gYWxzbyBhIHdvcmtp
+bmcgc29sdXRpb24uCgpJIGFjdHVhbGx5IGxpa2UgdGhpcyBiZXR0ZXIsIGJlY2F1c2UgaXQncyBz
+byBzdHJhaWdodGZvcndhcmQgYW5kIGVhc3kKdG8gdW5kZXJzdGFuZC4gVGhlIG5vdGlmaWVyIHNv
+bHV0aW9uIGlzIHZlcnkgY29udm9sdXRlZCBhbmQgZWFzeSB0bwptZXNzIHVwLiBBbmQgaXQgcnVu
+cyB3aXRoIHRoZSBjb25zb2xlIGxvY2sgaGVsZC4uLgoKPiAtRGFuaWVsCj4KPiBQUzogQ2FuIHlv
+dSBwbHMgcmV2aWV3IHRoZSAyIHBhdGNoZXMgSSBzdWJtaXR0ZWQgd2l0aCB5b3Ugb24gY2M/IEkK
+PiB3b24ndCBtZXJnZSBteSBvd24gcGF0Y2hlcyB3aXRob3V0IHByb3BlciByZXZpZXcsIHNvIHdp
+dGhvdXQgdGhhdCBkb25lCj4gdGhleSdyZSBzdHVjay4KCk9rLgoKSSdsbCB0ZXN0IHRoZSBzaW1w
+bGUtaGVscGVyIHBsYW5lIHBhdGNoIHRvbW9ycm93LgpJbiBzaW1wbGVkcm0gSSBmaXJzdCB0cmll
+ZCB0byBzZW5kIHRoZSB2YmxhbmsgZXZlbnQgb25seSBpbiBwaXBlLnVwZGF0ZSgpLApidXQgSSBo
+YWQgdG8gZG8gaXQgaW4gZW5hYmxlKCkgYW5kIGRpc2FibGUoKSBhcyB3ZWxsIHRvIG1ha2UgdGhh
+dCB2YmxhbmsKdGltZW91dCBnbyBhd2F5LgoKCk5vcmFsZi4KCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
