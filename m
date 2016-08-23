@@ -1,53 +1,56 @@
 From: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/5] ppc32: use the default of_platform_default_populate_init() for 83xx boards
-Date: Tue, 23 Aug 2016 10:06:54 +0800
-Message-ID: <1471918019-19472-1-git-send-email-haokexin@gmail.com>
+Subject: [PATCH 2/5] powerpc: introduce arch_enable_default_of_probe()
+Date: Tue, 23 Aug 2016 10:06:56 +0800
+Message-ID: <1471918019-19472-3-git-send-email-haokexin@gmail.com>
+References: <1471918019-19472-1-git-send-email-haokexin@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471918019-19472-1-git-send-email-haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+We can use this function to enable the default of probe for one
+board.
 
-This is a follow on patch series of [1]. This tries to drop the arch specific
-codes of bus probe by using the common of_platform_default_populate_init()
-function. I just took the 83xx boards as an example. If you guys think that
-this is doable, I can change the remaining ppc boards to use this method for
-the of probe.
+Signed-off-by: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/powerpc/include/asm/setup.h  | 1 +
+ arch/powerpc/kernel/of_platform.c | 9 ++++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-[1] https://patchwork.ozlabs.org/patch/658531/
-
-Kevin Hao (5):
-  of/platform: introduce arch_want_default_of_probe()
-  powerpc: introduce arch_enable_default_of_probe()
-  of/platform: introduce a generic way to declare a platform bus
-  powerpc/83xx: factor out the common codes of setup arch functions
-  powerpc/83xx: enable the default of probe
-
- arch/powerpc/include/asm/setup.h          |  1 +
- arch/powerpc/kernel/of_platform.c         | 12 +++++++++++
- arch/powerpc/platforms/83xx/asp834x.c     |  6 +-----
- arch/powerpc/platforms/83xx/km83xx.c      |  7 +------
- arch/powerpc/platforms/83xx/misc.c        | 33 +++++++++++++++----------------
- arch/powerpc/platforms/83xx/mpc830x_rdb.c |  7 +------
- arch/powerpc/platforms/83xx/mpc831x_rdb.c |  7 +------
- arch/powerpc/platforms/83xx/mpc832x_mds.c |  7 +------
- arch/powerpc/platforms/83xx/mpc832x_rdb.c |  7 +------
- arch/powerpc/platforms/83xx/mpc834x_itx.c | 17 +---------------
- arch/powerpc/platforms/83xx/mpc834x_mds.c |  7 +------
- arch/powerpc/platforms/83xx/mpc836x_mds.c |  7 +------
- arch/powerpc/platforms/83xx/mpc836x_rdk.c |  7 +------
- arch/powerpc/platforms/83xx/mpc837x_mds.c |  7 +------
- arch/powerpc/platforms/83xx/mpc837x_rdb.c |  7 +------
- arch/powerpc/platforms/83xx/mpc83xx.h     |  2 +-
- arch/powerpc/platforms/83xx/sbc834x.c     |  7 +------
- drivers/of/platform.c                     | 21 ++++++++++++++++----
- include/asm-generic/vmlinux.lds.h         |  2 ++
- include/linux/of.h                        | 22 +++++++++++++++++++++
- include/linux/of_platform.h               |  6 ++++++
- 21 files changed, 90 insertions(+), 109 deletions(-)
-
+diff --git a/arch/powerpc/include/asm/setup.h b/arch/powerpc/include/asm/setup.h
+index 654d64c9f3ac..213719882fe4 100644
+--- a/arch/powerpc/include/asm/setup.h
++++ b/arch/powerpc/include/asm/setup.h
+@@ -24,6 +24,7 @@ extern void reloc_got2(unsigned long);
+ void check_for_initrd(void);
+ void initmem_init(void);
+ void setup_panic(void);
++extern void arch_enable_default_of_probe(void);
+ #define ARCH_PANIC_TIMEOUT 180
+ 
+ #ifdef CONFIG_PPC_PSERIES
+diff --git a/arch/powerpc/kernel/of_platform.c b/arch/powerpc/kernel/of_platform.c
+index ace7fe132b6f..77402a14e928 100644
+--- a/arch/powerpc/kernel/of_platform.c
++++ b/arch/powerpc/kernel/of_platform.c
+@@ -123,7 +123,14 @@ device_initcall(of_pci_phb_init);
+ 
+ #endif /* CONFIG_PPC_OF_PLATFORM_PCI */
+ 
++static bool default_of_probe_enabled;
++
+ bool __init arch_want_default_of_probe(void)
+ {
+-	return false;
++	return default_of_probe_enabled;
++}
++
++void __init arch_enable_default_of_probe(void)
++{
++	default_of_probe_enabled = true;
+ }
 -- 
 2.5.5
 
