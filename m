@@ -1,119 +1,122 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH] ARM: dts: meson-gxbb: Add support for the Nexbox A95X Board
-Date: Tue, 23 Aug 2016 13:22:50 +0200
-Message-ID: <1471951370-29269-1-git-send-email-narmstrong@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: carlo@caione.org, khilman@baylibre.com, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 2/2] ARM64: dts: meson-gxbb: Add PWM pinctrl nodes
+Date: Tue, 23 Aug 2016 13:25:08 +0200
+Message-ID: <1471951508-29620-3-git-send-email-narmstrong@baylibre.com>
+References: <1471951508-29620-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471951508-29620-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/Makefile               |  1 +
- .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 79 ++++++++++++++++++++++
- 2 files changed, 80 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+Add DT nodes for PWMs in EE and AO domains.
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 47ec703..2c50439 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-p201.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-pro.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-meta.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-telos.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 77 +++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index e502c24..9aeb88a 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -203,6 +203,34 @@
+ 						function = "uart_ao";
+ 					};
+ 				};
++
++				pwm_ao_a_3_pins: pwm_ao_a_3 {
++					mux {
++						groups = "pwm_ao_a_3";
++						function = "pwm_ao_a_3";
++					};
++				};
++
++				pwm_ao_a_6_pins: pwm_ao_a_6 {
++					mux {
++						groups = "pwm_ao_a_6";
++						function = "pwm_ao_a_6";
++					};
++				};
++
++				pwm_ao_a_12_pins: pwm_ao_a_12 {
++					mux {
++						groups = "pwm_ao_a_12";
++						function = "pwm_ao_a_12";
++					};
++				};
++
++				pwm_ao_b_pins: pwm_ao_b {
++					mux {
++						groups = "pwm_ao_b";
++						function = "pwm_ao_b";
++					};
++				};
+ 			};
  
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-new file mode 100644
-index 0000000..c418bd7
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -0,0 +1,79 @@
-+/*
-+ * Copyright (c) 2016 Andreas Färber
-+ * Copyright (c) 2016 BayLibre, Inc.
-+ * Author: Neil Armstrong <narmstrong@kernel.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
+ 			uart_AO: serial@4c0 {
+@@ -306,6 +334,55 @@
+ 						function = "eth";
+ 					};
+ 				};
 +
-+/dts-v1/;
++				pwm_a_x_pins: pwm_a_x {
++					mux {
++						groups = "pwm_a_x";
++						function = "pwm_a_x";
++					};
++				};
 +
-+#include "meson-gxbb.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
++				pwm_a_y_pins: pwm_a_y {
++					mux {
++						groups = "pwm_a_y";
++						function = "pwm_a_y";
++					};
++				};
 +
-+/ {
-+	compatible = "nexbox,a95x", "amlogic,meson-gxbb";
-+	model = "NEXBOX A95X";
-+	
-+	aliases {
-+		serial0 = &uart_AO;
-+	};
++				pwm_b_pins: pwm_b {
++					mux {
++						groups = "pwm_b";
++						function = "pwm_b";
++					};
++				};
 +
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
++				pwm_d_pins: pwm_d {
++					mux {
++						groups = "pwm_d";
++						function = "pwm_d";
++					};
++				};
 +
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x40000000>;
-+	};
-+};
++				pwm_e_pins: pwm_e {
++					mux {
++						groups = "pwm_e";
++						function = "pwm_e";
++					};
++				};
 +
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
++				pwm_f_x_pins: pwm_f_x {
++					mux {
++						groups = "pwm_f_x";
++						function = "pwm_f_x";
++					};
++				};
 +
-+&ethmac {
-+	status = "okay";
-+	pinctrl-0 = <&eth_pins>;
-+	pinctrl-names = "default";
-+};
-+
++				pwm_f_y_pins: pwm_f_y {
++					mux {
++						groups = "pwm_f_y";
++						function = "pwm_f_y";
++					};
++				};
+ 			};
+ 		};
+ 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
