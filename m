@@ -1,76 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] dt-binding: remoteproc: venus rproc dt binding
- document
-Date: Tue, 23 Aug 2016 12:32:59 -0500
-Message-ID: <20160823173259.GA13327@rob-hp-laptop>
-References: <1471622000-1906-1-git-send-email-stanimir.varbanov@linaro.org>
- <1471622000-1906-4-git-send-email-stanimir.varbanov@linaro.org>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 09/12] arm64: dts: tegra: Add NVIDIA P3310 main board
+ support
+Date: Tue, 23 Aug 2016 18:35:30 +0100
+Message-ID: <9c123f91-d7ae-7cf1-f669-412aa350a0ca@nvidia.com>
+References: <20160819173233.13260-1-thierry.reding@gmail.com>
+ <20160819173233.13260-10-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1471622000-1906-4-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Clark <robdclark@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160819173233.13260-10-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Timo Alho <talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sivaram Nair <sivaramn-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 19, 2016 at 06:53:19PM +0300, Stanimir Varbanov wrote:
-> Add devicetree binding document for Venus remote processor.
+
+On 19/08/16 18:32, Thierry Reding wrote:
+> From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > 
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> The NVIDIA P3310 is a processor module used in several reference designs
+> that features a Tegra186 SoC, 8 GiB of LPDDR4 RAM, 32 GiB eMMC and other
+> essentials such as ethernet, WiFi and a PMIC. It is typically connected
+> to an I/O board (such as the P2597) that provides the connecters needed
+> to hook it up to the outside world.
+> 
+> Signed-off-by: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
->  .../devicetree/bindings/remoteproc/qcom,venus.txt  | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
+> Changes in v3:
+> - fix compatible string
 > 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
+>  arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi | 34 ++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi b/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
 > new file mode 100644
-> index 000000000000..06a2db60fa38
+> index 000000000000..dc07ea618378
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
-> @@ -0,0 +1,33 @@
-> +Qualcomm Venus Peripheral Image Loader
+> +++ b/arch/arm64/boot/dts/nvidia/tegra186-p3310.dtsi
+> @@ -0,0 +1,34 @@
+> +#include "tegra186.dtsi"
 > +
-> +This document defines the binding for a component that loads and boots firmware
-> +on the Qualcomm Venus remote processor core.
-
-This does not make sense to me. Venus is the video encoder/decoder h/w, 
-right? Why is the firmware loader separate from the codec block? Why 
-rproc is used? Are there multiple clients? Naming it rproc_venus implies 
-there aren't. And why does the firmware loading need 8MB of memory at a 
-fixed address?
-
+> +/ {
+> +	model = "NVIDIA Tegra186 P3310 main Board";
+> +	compatible = "nvidia,p3310", "nvidia,tegra186";
 > +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must contain "qcom,venus-pil"
-> +
-> +- memory-region:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: a phandle to a node describing reserved memory
-> +
-> +* An example
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		venus_mem: venus@89900000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x0 0x89900000 0x0 0x800000>;
-> +			alignment = <0x1000>;
-> +			no-map;
-> +		};
+> +	aliases {
+> +		serial0 = &uarta;
 > +	};
 > +
-> +	rproc_venus@0 {
-> +		compatible = "qcom,venus-pil";
-> +		memory-region = <&venus_mem>;
-> +	};
-> \ No newline at end of file
-> -- 
-> 2.7.4
-> 
+> +	chosen {
+> +		bootargs = "earlycon console=ttyS0,115200n8";
+
+I don't think we need 'console' in the bootargs anymore because
+stdout-path is enough (even for early console).
+
+Cheers
+Jon
+
+-- 
+nvpublic
