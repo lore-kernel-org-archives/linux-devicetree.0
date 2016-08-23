@@ -1,288 +1,101 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2] ARM: BCM5301X: Add basic dts for BCM53573 based Tenda AC9
-Date: Tue, 23 Aug 2016 07:37:43 +0200
-Message-ID: <20160823053746.14521-1-zajec5@gmail.com>
-References: <1469654305-1700-1-git-send-email-zajec5@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469654305-1700-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v2 1/4] dt-binding: remoteproc: Introduce ADSP loader binding
+Date: Mon, 22 Aug 2016 22:57:43 -0700
+Message-ID: <1471931866-3107-1-git-send-email-bjorn.andersson@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>
+Cc: Andy Gross <andy.gross@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-BCM53573 seems to be low priced alternative for Northstar chipsts. It
-uses single core Cortex-A7 and doesn't have SDU or local (TWD) timer. It
-was also stripped out of independent SPI controller and 2 GMACs.
+This document defines the binding for a component that loads firmware
+and control the life cycle of the Qualcomm ADSP core.
 
-DTS for Tenda AC9 isn't completed yet. It misses e.g. switch entry (we
-still need some b53 fixes) and probably some clocks. It adds support for
-basic features however and can be improved later.
-
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
-V2: Use ARCH_BCM_53573 instead of ARCH_BCM_5301X.
----
- arch/arm/boot/dts/Makefile               |   2 +
- arch/arm/boot/dts/bcm47189-tenda-ac9.dts |  74 ++++++++++++++++
- arch/arm/boot/dts/bcm53573.dtsi          | 147 +++++++++++++++++++++++++++++++
- 3 files changed, 223 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm47189-tenda-ac9.dts
- create mode 100644 arch/arm/boot/dts/bcm53573.dtsi
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 8e11aae..dd2c49e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -90,6 +90,8 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
- 	bcm94709.dtb \
- 	bcm953012er.dtb \
- 	bcm953012k.dtb
-+dtb-$(CONFIG_ARCH_BCM_53573) += \
-+	bcm47189-tenda-ac9.dtb
- dtb-$(CONFIG_ARCH_BCM_63XX) += \
- 	bcm963138dvt.dtb
- dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
-diff --git a/arch/arm/boot/dts/bcm47189-tenda-ac9.dts b/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
+Changes since v1:
+- Added platform names to compatibility
+
+ .../devicetree/bindings/remoteproc/qcom,adsp.txt   | 70 ++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
 new file mode 100644
-index 0000000..4403ae8
+index 000000000000..3820151ce3e9
 --- /dev/null
-+++ b/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
-@@ -0,0 +1,74 @@
-+/*
-+ * Copyright (C) 2016 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-+ *
-+ * Licensed under the ISC license.
-+ */
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+@@ -0,0 +1,70 @@
++Qualcomm ADSP Peripheral Image Loader
 +
-+/dts-v1/;
++This document defines the binding for a component that loads and boots firmware
++on the Qualcomm ADSP core.
 +
-+#include "bcm53573.dtsi"
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,msm8974-adsp-pil"
++		    "qcom,msm8996-adsp-pil"
 +
-+/ {
-+	compatible = "tenda,ac9", "brcm,bcm47189", "brcm,bcm53573";
-+	model = "Tenda AC9";
++- interrupts-extended:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: must list the watchdog, fatal IRQs ready, handover and
++		    stop-ack IRQs
 +
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlycon";
++- interrupt-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
++
++- cx-supply:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the regulator to be held on behalf of the
++		    booting of the Hexagon core
++
++- memory-region:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the reserved-memory for the ADSP
++
++- qcom,smem-states:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the smem state for requesting the ADSP to
++		    shut down
++
++- qcom,smem-state-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "stop"
++
++= EXAMPLE
++The following example describes the resources needed to boot control the
++ADSP, as it is found on MSM8974 boards.
++
++	adsp {
++		compatible = "qcom,adsp-pil";
++
++		interrupts-extended = <&intc 0 162 IRQ_TYPE_EDGE_RISING>,
++				      <&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++				      <&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
++				      <&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
++				      <&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
++		interrupt-names = "wdog",
++				  "fatal",
++				  "ready",
++				  "handover",
++				  "stop-ack";
++
++		cx-supply = <&pm8841_s2>;
++
++		memory-region = <&adsp_region>;
++
++		qcom,smem-states = <&modem_smp2p_out 0>;
++		qcom,smem-state-names = "stop";
 +	};
-+
-+	memory {
-+		reg = <0x00000000 0x08000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		usb {
-+			label = "bcm53xx:blue:usb";
-+			gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-off";
-+		};
-+
-+		wps {
-+			label = "bcm53xx:blue:wps";
-+			gpios = <&chipcommon 10 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-off";
-+		};
-+
-+		5ghz {
-+			label = "bcm53xx:blue:5ghz";
-+			gpios = <&chipcommon 11 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-off";
-+		};
-+
-+		system {
-+			label = "bcm53xx:blue:system";
-+			gpios = <&chipcommon 15 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "timer";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		rfkill {
-+			label = "WiFi";
-+			linux,code = <KEY_RFKILL>;
-+			gpios = <&chipcommon 3 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		restart {
-+			label = "Reset";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&chipcommon 7 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		wps {
-+			label = "WPS";
-+			linux,code = <KEY_WPS_BUTTON>;
-+			gpios = <&chipcommon 9 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/bcm53573.dtsi b/arch/arm/boot/dts/bcm53573.dtsi
-new file mode 100644
-index 0000000..efa07de
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm53573.dtsi
-@@ -0,0 +1,147 @@
-+/*
-+ * Copyright (C) 2016 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-+ *
-+ * Licensed under the ISC license.
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include "skeleton.dtsi"
-+
-+/ {
-+	interrupt-parent = <&gic>;
-+
-+	chosen {
-+		stdout-path = &uart0;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x0>;
-+		};
-+	};
-+
-+	mpcore {
-+		compatible = "simple-bus";
-+		ranges = <0x00000000 0x18310000 0x00008000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		gic: interrupt-controller@1000 {
-+			compatible = "arm,cortex-a7-gic";
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0x1000 0x1000>,
-+			      <0x2000 0x0100>;
-+		};
-+	};
-+
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		alp: oscillator {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <40000000>;
-+		};
-+	};
-+
-+	axi@18000000 {
-+		compatible = "brcm,bus-axi";
-+		reg = <0x18000000 0x1000>;
-+		ranges = <0x00000000 0x18000000 0x00100000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0x000fffff 0xffff>;
-+		interrupt-map =
-+			/* ChipCommon */
-+			<0x00000000 0 &gic GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* IEEE 802.11 0 */
-+			<0x00001000 0 &gic GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* PCIe Controller 0 */
-+			<0x00002000 0 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00002000 1 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00002000 2 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00002000 3 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00002000 4 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+			<0x00002000 5 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* USB 2.0 Controller */
-+			<0x00004000 0 &gic GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* Ethernet Controller 0 */
-+			<0x00005000 0 &gic GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* IEEE 802.11 1 */
-+			<0x0000a000 0 &gic GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+
-+			/* Ethernet Controller 1 */
-+			<0x0000b000 0 &gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		chipcommon: chipcommon@0 {
-+			compatible = "simple-bus";
-+			reg = <0x00000000 0x1000>;
-+			ranges;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+
-+			uart0: serial@0300 {
-+				compatible = "ns16550a";
-+				reg = <0x0300 0x100>;
-+				interrupt-parent = <&gic>;
-+				interrupts = <GIC_PPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&alp>;
-+				status = "okay";
-+			};
-+		};
-+
-+		usb2: usb2@4000 {
-+			reg = <0x4000 0x1000>;
-+			ranges;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			ehci: ehci@4000 {
-+				compatible = "generic-ehci";
-+				reg = <0x4000 0x1000>;
-+				interrupt-parent = <&gic>;
-+				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			ohci: ohci@d000 {
-+				#usb-cells = <0>;
-+
-+				compatible = "generic-ohci";
-+				reg = <0xd000 0x1000>;
-+				interrupt-parent = <&gic>;
-+				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
-+		gmac0: ethernet@5000 {
-+			reg = <0x5000 0x1000>;
-+		};
-+
-+		gmac1: ethernet@b000 {
-+			reg = <0xb000 0x1000>;
-+		};
-+	};
-+};
 -- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.5.0
