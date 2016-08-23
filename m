@@ -1,149 +1,107 @@
-From: Haibo Chen <haibo.chen-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH] sdhci: Add quirk and device tree parameter to force SD
- test mode
-Date: Tue, 23 Aug 2016 01:34:20 +0000
-Message-ID: <AM4PR0401MB2324D95AB7382C828BF8E5CE90EB0@AM4PR0401MB2324.eurprd04.prod.outlook.com>
-References: <1471906531-28668-1-git-send-email-zach.brown@ni.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v6 4/8] usb: core: add power sequence handling for USB
+ devices
+Date: Tue, 23 Aug 2016 11:10:21 +0800
+Message-ID: <20160823031021.GB13986@shlinux2>
+References: <20160822065335.GC4362@shlinux2>
+ <Pine.LNX.4.44L0.1608221156210.1543-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471906531-28668-1-git-send-email-zach.brown-acOepvfBmUk@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>, "adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: "ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1608221156210.1543-100000@iolanthe.rowland.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, dbaryshkov@gmail.com, dwmw3@infradead.org, k.kozlowski@samsung.com, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-usb@vger.kernel.org, arnd@arndb.de, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundarydevices.com, festevam@gmail.com, oscar@naiandei.net, stephen.boyd@linaro.org, linux-pm@vger.kernel.org, stillcompiling@gmail.com, linux-kernel@vger.kernel.org, mka@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: linux-mmc-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-mmc-
-> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Zach Brown
-> Sent: Tuesday, August 23, 2016 6:56 AM
-> To: adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-> Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
-> linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: [PATCH] sdhci: Add quirk and device tree parameter to force SD t=
-est
-> mode
->=20
-> From: Jaeden Amero <jaeden.amero-acOepvfBmUk@public.gmane.org>
->=20
-> On some devices, CD is broken so that we must force the SDHCI into test m=
-ode
-> and set CD, so that it always detects an SD card as present.
->=20
-> In order to get a device with broken CD working, we had previously always=
- set
-> the SDHCI into test mode. Unfortunately, this had the side effect of maki=
-ng all
-> SD cards used with our Linux kernels undetectable and non-removable.
+On Mon, Aug 22, 2016 at 12:09:54PM -0400, Alan Stern wrote:
+> > > +
+> > > +static int hub_of_pwrseq_on(struct device_node *np, struct usb_hub *hub)
+> > > +{
+> > > +	struct pwrseq *pwrseq;
+> > > +	struct usb_pwrseq_node *pwrseq_node;
+> > > +	int ret;
+> > > +
+> > > +	pwrseq = pwrseq_alloc_generic();
+> > > +	if (IS_ERR(pwrseq))
+> > > +		return PTR_ERR(pwrseq);
+> > > +
+> > > +	ret = pwrseq_get(np, pwrseq);
+> > > +	if (ret)
+> > > +		goto pwr_free;
+> > > +
+> > > +	ret = pwrseq_on(np, pwrseq);
+> > > +	if (ret)
+> > > +		goto pwr_put;
+> > > +
+> > > +	pwrseq_node = kzalloc(sizeof(*pwrseq_node), GFP_KERNEL);
+> 
+> You need to check that the kzalloc succeeded.
 
-Why not use the poll mode? You can set the flag MMC_CAP_NEEDS_POLL, then=20
-the mmc core will detect the card every second.
+Ok.
 
->=20
-> By making this "SD test mode" setting optional via a quirk, we can avoid =
-this
-> side effect for devices other than the device with broken CD.
-> Additionally, we add a device parameter to sdhci-pltfm to allow all SDHCI
-> drivers to enable this quirk.
->=20
-> Signed-off-by: Jaeden Amero <jaeden.amero-acOepvfBmUk@public.gmane.org>
-> Signed-off-by: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
->  drivers/mmc/host/sdhci-pltfm.c                | 4 ++++
->  drivers/mmc/host/sdhci.c                      | 9 +++++++++
->  drivers/mmc/host/sdhci.h                      | 4 ++++
->  4 files changed, 19 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt
-> b/Documentation/devicetree/bindings/mmc/mmc.txt
-> index 22d1e1f..3a9be41 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> @@ -52,6 +52,8 @@ Optional properties:
->  - no-sdio: controller is limited to send sdio cmd during initialization
->  - no-sd: controller is limited to send sd cmd during initialization
->  - no-mmc: controller is limited to send mmc cmd during initialization
-> +- force-sd-cd-test-mode: card detection is broken on device, force cd
-> +test
-> +  enable and cd test inserted so host will always detect a card.
->=20
->  *NOTE* on CD and WP polarity. To use common for all SD/MMC host
-> controllers line  polarity properties, we have to fix the meaning of the =
-"normal"
-> and "inverted"
-> diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltf=
-m.c
-> index 1d17dcf..056d101 100644
-> --- a/drivers/mmc/host/sdhci-pltfm.c
-> +++ b/drivers/mmc/host/sdhci-pltfm.c
-> @@ -87,6 +87,10 @@ void sdhci_get_of_property(struct platform_device
-> *pdev)
->  	if (of_get_property(np, "broken-cd", NULL))
->  		host->quirks |=3D SDHCI_QUIRK_BROKEN_CARD_DETECTION;
->=20
-> +	if (of_get_property(np, "force-sd-cd-test-mode", NULL))
-> +		host->quirks2 |=3D
-> +			SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE;
-> +
->  	if (of_get_property(np, "no-1-8-v", NULL))
->  		host->quirks2 |=3D SDHCI_QUIRK2_NO_1_8_V;
->=20
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c index
-> cd65d47..2f4c6f9 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -117,6 +117,15 @@ static inline bool sdhci_data_line_cmd(struct
-> mmc_command *cmd)  static void sdhci_set_card_detection(struct sdhci_host
-> *host, bool enable)  {
->  	u32 present;
-> +	u8  ctrl;
-> +
-> +	if (host->quirks2 & SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE)
-> {
-> +		/* Put the card in test mode, with card inserted */
-> +		ctrl =3D sdhci_readl(host, SDHCI_HOST_CONTROL);
-> +		ctrl |=3D SDHCI_CTRL_CD_TEST_INSERTED |
-> +			SDHCI_CTRL_CD_TEST_ENABLE;
-> +		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> +	}
->=20
->  	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) ||
->  	    !mmc_card_is_removable(host->mmc))
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h index
-> 0411c9f..dd609b2 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -84,6 +84,8 @@
->  #define   SDHCI_CTRL_ADMA32	0x10
->  #define   SDHCI_CTRL_ADMA64	0x18
->  #define   SDHCI_CTRL_8BITBUS	0x20
-> +#define  SDHCI_CTRL_CD_TEST_INSERTED	0x40
-> +#define  SDHCI_CTRL_CD_TEST_ENABLE	0x80
->=20
->  #define SDHCI_POWER_CONTROL	0x29
->  #define  SDHCI_POWER_ON		0x01
-> @@ -422,6 +424,8 @@ struct sdhci_host {
->  #define SDHCI_QUIRK2_ACMD23_BROKEN			(1<<14)
->  /* Broken Clock divider zero in controller */
->  #define SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN		(1<<15)
-> +/* Controller must support device with broken CD */
-> +#define SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE		(1<<16)
->=20
->  	int irq;		/* Device IRQ */
->  	void __iomem *ioaddr;	/* Mapped address */
-> --
-> 2.7.4
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in t=
-he
-> body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo info at
-> http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> > > +	pwrseq_node->pwrseq = pwrseq;
+> > > +	list_add(&pwrseq_node->list, &hub->pwrseq_on_list);
+> > > +
+> > > +	return 0;
+> > > +
+> > > +pwr_put:
+> > > +	pwrseq_put(pwrseq);
+> > > +pwr_free:
+> > > +	pwrseq_free(pwrseq);
+> > > +	return ret;
+> > > +}
+> 
+> This subroutine looks very generic.  The only place where it cares that
+> it was called for a USB hub is the list_add(), and that could easily
+> become generic also (make this function take &hub->pwrseq_on_list as
+> its second argument, instead of hub).
+> 
+> It looks like this routine really belongs in the power sequence 
+> library.
+> 
+
+I will export below two generic functions at pwrseq library:
+
+int generic_pwrseq_on(struct device_node *np, struct list_head *head)
+void generic_pwrseq_off(struct list_head *head)
+
+delete this file, and call above APIs at hub.c.
+
+> > > +
+> > > +int hub_pwrseq_on(struct usb_hub *hub)
+> > > +{
+> 
+> The names of this routine and the subroutine above are too similar.  
+> After all, both functions require OF support.
+> 
+
+I will add #ifdef CONFIG_OF for related code. And put the content at
+hub_pwrseq_on at hub_probe directly, how about below?
+
+hub_probe() {
+
+	...
+
+	if (hub_configure(hub, endpoint) >= 0) {
+#ifdef CONFIG_OF
+		for_each_child_of_node(parent->of_node, np) {
+			ret = generic_pwrseq_on(np, hub);
+			if (ret)
+				return ret;
+		}
+#else
+		return 0;
+#endif
+	}
+
+	hub_disconnect(intf);
+	return ret;
+}
+
+-- 
+
+Best Regards,
+Peter Chen
