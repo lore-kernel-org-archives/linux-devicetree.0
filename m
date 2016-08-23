@@ -1,75 +1,64 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 2/8] power: add power sequence library
-Date: Tue, 23 Aug 2016 09:25:25 +0800
-Message-ID: <20160823012525.GA13986@shlinux2>
-References: <1471252398-957-1-git-send-email-peter.chen@nxp.com>
- <1471252398-957-3-git-send-email-peter.chen@nxp.com>
- <20160822065158.GB4362@shlinux2>
- <20160822102331.bimz22w6z2v65jd7@earth>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH 4/8] ARM: dts: sun8i: Add touchscreen node for
+ sun8i-a23-gt90h
+Date: Tue, 23 Aug 2016 10:05:26 +0800
+Message-ID: <106521471917926@web29g.yandex.ru>
+References: <1470685398-14568-1-git-send-email-hdegoede@redhat.com>
+ <1470685398-14568-4-git-send-email-hdegoede@redhat.com>
+ <20160822183009.GX7104@lukather>
+ <cf0186a0-f4ea-173c-4f93-df8798941199@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160822102331.bimz22w6z2v65jd7@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw3-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cf0186a0-f4ea-173c-4f93-df8798941199@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 22, 2016 at 12:23:31PM +0200, Sebastian Reichel wrote:
-> Hi Peter,
-> 
-> On Mon, Aug 22, 2016 at 02:51:58PM +0800, Peter Chen wrote:
-> > On Mon, Aug 15, 2016 at 05:13:12PM +0800, Peter Chen wrote:
-> > > We have an well-known problem that the device needs to do some power
-> > > sequence before it can be recognized by related host, the typical
-> > > example like hard-wired mmc devices and usb devices.
-> > > 
-> > > This power sequence is hard to be described at device tree and handled by
-> > > related host driver, so we have created a common power sequence
-> > > library to cover this requirement. The core code has supplied
-> > > some common helpers for host driver, and individual power sequence
-> > > libraries handle kinds of power sequence for devices.
-> > > 
-> > > pwrseq_generic is intended for general purpose of power sequence, which
-> > > handles gpios and clocks currently, and can cover regulator and pinctrl
-> > > in future. The host driver calls pwrseq_alloc_generic to create
-> > > an generic pwrseq instance.
-> > > 
-> > > Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-> > > Tested-by Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > Reviewed-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > > Tested-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > 
-> > Hi Greg, Sebastian, Dmitry, and David
-> > 
-> > I find the code under drivers/power have several subsystems.
-> > Does this power sequence patch set can go git://git.infradead.org/battery-2.6.git?
-> > Or can go the Greg's tree?
-> 
-> I think this does not really fit into the power-supply tree.
-> I would expect this to go through Rafael's linux-pm tree.
-
-Ok, thanks. Rafael, would you agree with that? If you agree, I will
-update MAINTAINER file.
-
-> 
-> Note: I moved all the power-supply code into drivers/power/supply/
-> in linux-next, among other things because of this patchset. To avoid
-> merge conflicts in drivers/power/Makefile and drivers/power/Kconfig
-> the tree pulling this patchset should also pull a (yet to be
-> created) immutable branch containing
-> https://git.kernel.org/cgit/linux/kernel/git/sre/linux-power-supply.git/commit/drivers/power?h=for-next&id=8c0984e5a75337df513047ec92a6c09d78e3e5cd
-> 
-
-Yes, I found the rebase conflict with it, I will fix it at next
-revision.
-
--- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgoyMy4wOC4yMDE2LCAwMzowOCwgIkhhbnMgZGUgR29lZGUiIDxoZGVnb2VkZUByZWRoYXQuY29t
+PjoKPiBIaSwKPgo+IE9uIDIyLTA4LTE2IDIwOjMwLCBNYXhpbWUgUmlwYXJkIHdyb3RlOgo+PiDC
+oE9uIE1vbiwgQXVnIDA4LCAyMDE2IGF0IDA5OjQzOjE0UE0gKzAyMDAsIEhhbnMgZGUgR29lZGUg
+d3JvdGU6Cj4+PiDCoFRoZSBndDkwaCB0YWJsZXQgaGFzIGEgZ3NsMzY3NSB0b3VjaHNjcmVlbiwg
+YWRkIGEgZHQgbm9kZSBkZXNjcmliaW5nIGl0Lgo+Pj4KPj4+IMKgU2lnbmVkLW9mZi1ieTogSGFu
+cyBkZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4KPj4+IMKgLS0tCj4+PiDCoMKgYXJjaC9h
+cm0vYm9vdC9kdHMvc3VuOGktYTIzLWd0OTBoLXY0LmR0cyB8IDggKysrKysrKysKPj4+IMKgwqAx
+IGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspCj4+Pgo+Pj4gwqBkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vYm9vdC9kdHMvc3VuOGktYTIzLWd0OTBoLXY0LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRz
+L3N1bjhpLWEyMy1ndDkwaC12NC5kdHMKPj4+IMKgaW5kZXggZjI3ZWJiYi4uZGE1NWI1YSAxMDA2
+NDQKPj4+IMKgLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTIzLWd0OTBoLXY0LmR0cwo+
+Pj4gwqArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1hMjMtZ3Q5MGgtdjQuZHRzCj4+PiDC
+oEBAIC01Myw2ICs1MywxNCBAQAo+Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqBzdGF0dXMgPSAib2th
+eSI7Cj4+PiDCoMKgfTsKPj4+Cj4+PiDCoCsmZ3NsMTY4MCB7Cj4+PiDCoCsgY29tcGF0aWJsZSA9
+ICJzaWxlYWQsZ3NsMzY3NSI7Cj4+PiDCoCsgdG91Y2hzY3JlZW4tZnctbmFtZSA9ICJzaWxlYWQv
+Z3NsMzY3NS1ndDkwaC5mdyI7Cj4+Cj4+IMKgVGhhdCdzIG5vdCBkb2N1bWVudGVkIGFueXdoZXJl
+LCBhbmQgbG9va3MgcmVhbGx5IHN1c3BpY2lvdXMuCj4KPiBVZ2gsIHRoYXQgc2hvdWxkIGhhdmUg
+YmVlbiBpbjoKPgo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC90b3Vj
+aHNjcmVlbi9zaWxlYWRfZ3NsMTY4MC50eHQKPgo+IEJ1dCBzb21laG93IGl0IGlzIG5vdCAoSSBi
+ZWxpZXZlIGl0IHdhcyB0aGVyZSBpbiBlYXJsaWVyIHJldmlzaW9ucyBvZgo+IHRoZSBwYXRjaCks
+IEknbGwgc2VuZCBhIHBhdGNoIHRvIGZpeCB0aGlzLgo+Cj4gQWJvdXQgaXQgYmVpbmcgc3VzcGlj
+aW91cywgdGhpcyBpcyBub3QgcmVhbGx5IGZpcm13YXJlIGl0IGlzIGEgYnVuY2gKPiBvZiBjb25m
+aWd1cmF0aW9uIGRhdGEgLyBsb29rdXAgdGFibGVzIGZvciB0aGUgY29udHJvbGxlciB3aGljaCB0
+ZWxsCj4gaXQgaW4gd2hpY2ggb3JkZXIgdGhlIHRvdWNoc2NyZWVuIGhvcml6b250YWwgLyB2ZXJ0
+aWNhbCBzZW5zb3IKPiBsaW5lcyBhcmUgY29ubmVjdGVkIHRvIGl0cyBzZW5zZSBwaW5zLCBhbmQg
+d2hhdCB2YWx1ZXMgdG8gc2VuZAo+IGZvciBmaW5nZXIgeCUgYmV0d2VlbiBsaW5lIHogYW5kIGxp
+bmUgeisxLCB3aGljaCBkaWZmZXJzIHBlcgo+IHRhYmxldCBtb2RlbCwgc2luY2Ugbm90IGFsbCB0
+YWJsZXRzIHVzZSB0aGUgc2FtZSBkaWdpdGl6ZXIuCgpJIGRvIHRoaW5rIGl0J3MgYSBtaXh0dXJl
+IG9mIGV4ZWN1dGFibGUgTUNVIGNvZGVzIGFuZCBkYXRhLgpUaGUgR1NMMTY4MCBkYXRhc2hlZXQg
+aW5kaWNhdGVzIHRoYXQgdGhlcmUncyBhIDMyLWJpdCBNQ1UgaW4gaXQuCgo+Cj4gUmVnYXJkcywK
+Pgo+IEhhbnMKPgo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKPiBsaW51eC1hcm0ta2VybmVsQGxp
+c3RzLmluZnJhZGVhZC5vcmcKPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
