@@ -1,129 +1,102 @@
-From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v1 3/3] PM / AVS: rockchip-cpu-avs: add driver handling
- Rockchip cpu avs
-Date: Tue, 23 Aug 2016 17:29:16 +0800
-Message-ID: <4eab5b34-58f8-30bb-1a2c-0b0d6b3e2b2c@rock-chips.com>
-References: <1471315139-28285-1-git-send-email-finley.xiao@rock-chips.com>
- <20160819133636.GA26913@rob-hp-laptop>
- <c853c8fd-285a-603d-b294-750cdbf7f200@rock-chips.com>
- <3008348.gWNc8j0KGA@diego>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 4/8] ARM: dts: sun8i: Add touchscreen node for
+ sun8i-a23-gt90h
+Date: Tue, 23 Aug 2016 11:39:06 +0200
+Message-ID: <a8de228d-2ba9-e23e-0c0c-e9a78dbe6e6a@redhat.com>
+References: <1470685398-14568-1-git-send-email-hdegoede@redhat.com>
+ <1470685398-14568-4-git-send-email-hdegoede@redhat.com>
+ <20160822183009.GX7104@lukather>
+ <cf0186a0-f4ea-173c-4f93-df8798941199@redhat.com>
+ <20160823092614.GF2598@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3008348.gWNc8j0KGA@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tim.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ulysses.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lin.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160823092614.GF2598@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-
-在 2016/8/23 17:03, Heiko Stübner 写道:
-> Hi Finley,
->
-> Am Dienstag, 23. August 2016, 12:10:27 schrieb Finley Xiao:
->> 在 2016/8/19 21:36, Rob Herring 写道:
->>> On Tue, Aug 16, 2016 at 10:38:59AM +0800, Finlye Xiao wrote:
->>>> From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On 23-08-16 11:26, Maxime Ripard wrote:
+> On Mon, Aug 22, 2016 at 09:03:57PM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 22-08-16 20:30, Maxime Ripard wrote:
+>>> On Mon, Aug 08, 2016 at 09:43:14PM +0200, Hans de Goede wrote:
+>>>> The gt90h tablet has a gsl3675 touchscreen, add a dt node describing it.
 >>>>
->>>> This patch supports adjusting opp's voltage according to leakage
->>>>
->>>> Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 >>>> ---
+>>>> arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts | 8 ++++++++
+>>>> 1 file changed, 8 insertions(+)
 >>>>
->>>>    .../devicetree/bindings/power/rockchip-cpu-avs.txt |  37 +++
->>>>    drivers/power/avs/Kconfig                          |   8 +
->>>>    drivers/power/avs/Makefile                         |   1 +
->>>>    drivers/power/avs/rockchip-cpu-avs.c               | 314
->>>>    +++++++++++++++++++++ 4 files changed, 360 insertions(+)
->>>>    create mode 100644
->>>>    Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt create
->>>>    mode 100644 drivers/power/avs/rockchip-cpu-avs.c
+>>>> diff --git a/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts b/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
+>>>> index f27ebbb..da55b5a 100644
+>>>> --- a/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
+>>>> +++ b/arch/arm/boot/dts/sun8i-a23-gt90h-v4.dts
+>>>> @@ -53,6 +53,14 @@
+>>>> 	status = "okay";
+>>>> };
 >>>>
->>>> diff --git a/Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt
->>>> b/Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt new file
->>>> mode 100644
->>>> index 0000000..90f6b08
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt
->>>> @@ -0,0 +1,37 @@
->>>> +Rockchip cpu avs device tree bindings
->>>> +-------------------------------------
->>>> +
->>>> +Under the same frequency, the operating voltage tends to decrease with
->>>> +increasing leakage. so it is necessary to adjust opp's voltage according
->>>> +to leakage for power.
->>>> +
->>>> +
->>>> +Required properties:
->>>> +- compatible: Should be one of the following.
->>>> +  - "rockchip,rk3399-cpu-avs" - for RK3399 SoCs.
->>>> +- leakage-volt-<name>: Named leakage-volt property. At runtime, the
->>>> +  platform can find a cpu's cluster_id according to it's cpu_id and
->>>> match
->>>> +  leakage-volt-<name> property. The property is an array of 3-tuples
->>>> +  items, and each item consists of leakage and voltage like
->>>> +  <min-leakage-mA max-leakage-mA vol-uV>.
->>>> +	min-leakage: minimum leakage in mA.
->>>> +	max-leakage: maximum leakage in mA.
->>>> +	vol: voltage in microvolt.
->>> How do you determine these values? When do they vary?
->> How do you determine these values?
+>>>> +&gsl1680 {
+>>>> +	compatible = "silead,gsl3675";
+>>>> +	touchscreen-fw-name = "silead/gsl3675-gt90h.fw";
+>>>
+>>> That's not documented anywhere, and looks really suspicious.
 >>
->> run antutu-benchmark
->> leakage     freq 	min_volt
->> 30mA 	    1608MHz 	1025mV
->> 40mA 	    1608MHz 	1000mV
->> 50mA 	    1608MHz 	975mV
+>> Ugh, that should have been in:
 >>
->>   From the table, we see the min_volt decrease with increasing leakage.
->> So we can set the default opp-microvolt 1025mV for 1608MHz,
->> and add an leakage_volt_cluster0 property as follows.
->> leakage_volt_cluster0 = <
->> 		/*  min(mA)   max(mA)    volt(uV)*/
->> 		    0         40        0
->> 		    41        50        (-25000)
->> 		    51        254       (-50000)
+>> Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
 >>
->>> ;
->> If the leakage is between 41mA and 50mA，the opp-microvolt will subtract
->> 25mV。 If the leakage is between 41mA and 50mA，the opp-microvolt will
->> subtract 50mV。
+>> But somehow it is not (I believe it was there in earlier revisions of
+>> the patch), I'll send a patch to fix this.
 >>
->> When do they vary?
->>
->>   From the code,
->> cpufreq_online
->> --cpufreq_driver->init(policy);  /* add new opp table */
->> --blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
->> CPUFREQ_START, policy);
->> --cpufreq_init_policy
->> ----cpufreq_set_policy
->> --------__cpufreq_governor(policy, CPUFREQ_GOV_START);
->>
->> The cpu's opp table is added in the init function(cpufreq_init)，and I will
->> register a cpufreq notifier, once the first cpu of cluster is onlined,
->> my notifer will be called, and if the event is CPUFREQ_START，it will modify
->> the opp-microvolt according to leakage_volt_cluster0.
-> I think what Rob was asking with "when do they vary" is, are these leakage
-> values the same for each and every rk3399 soc or are they determined
-> separately for each board-type using the rk3399.
-
-Oh, sorry, I misunderstood.
-They are the same for every rk3399 soc.
-
+>> About it being suspicious, this is not really firmware it is a bunch
+>> of configuration data / lookup tables for the controller which tell
+>> it in which order the touchscreen horizontal / vertical sensor
+>> lines are connected to its sense pins, and what values to send
+>> for finger x% between line z and line z+1, which differs per
+>> tablet model, since not all tablets use the same digitizer.
 >
->
->
->
->
+> It's not really the firmware itself that I find suspicious, but more
+> the encoding of a path to a file in the DT,
 
--- 
-Finley
+It is not a path it is a filename. We could drop the "silead/" prefix
+and put that in the driver instead to really make it a filename.
 
+> especially when you can
+> apparently derive it from other informations already found in the DT
+> (<vendor>/<compatible>-<board>.fw)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That will not work, sometimes different boards use the same digitizer
+and thus the same firmware. Also in case of the q8 tablets, we need
+different firmware for different variants (this is to be dealt with
+by the q8-hardware-manager I'm working on), since although they
+all use the same digitizer they do not wire it up to the controllers
+pins the same in all models, so we need different firmware files
+corresponding to different wirings.
+
+TL;DR: There is no 1:1 mapping between board and the firmware filename.
+
+Also note that this is not the first driver to introduce a firmware
+filename in a dts binding, a quick grep shows at least:
+
+Documentation/devicetree/bindings/remoteproc/wkup_m3_rproc.txt
+
+Also does this, as well as several dt-bindings where board specific
+firmware gets embedded in the device tree itself.
+
+Regards,
+
+Hans
