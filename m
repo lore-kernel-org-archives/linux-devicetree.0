@@ -1,39 +1,47 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 6/7] ARM64: dts: meson-gxbb: Add SRAM node
-Date: Tue, 23 Aug 2016 13:46:55 +0200
-Message-ID: <1471952816-30877-7-git-send-email-narmstrong@baylibre.com>
-References: <1471952816-30877-1-git-send-email-narmstrong@baylibre.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH] dt-bindings: GPIO: Add TPIC2810 binding
+Date: Tue, 23 Aug 2016 14:45:15 +0300
+Message-ID: <1471952715-20749-1-git-send-email-rogerq@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1471952816-30877-1-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, khilman@baylibre.com, heiko@sntech.de, wxt@rock-chips.com, frank.wang@rock-chips.com
+To: linus.walleij@linaro.org
+Cc: linux-gpio@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+From: "Andrew F. Davis" <afd@ti.com>
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index bdbf6e7..2748007 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -124,6 +124,15 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		sram: sram@c8000000 {
-+			compatible = "amlogic,meson-gxbb-sram", "mmio-sram";
-+			reg = <0x0 0xc8000000 0x0 0x14000>;
+Add binding for TPIC2810 GPO device.
+
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt b/Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
+new file mode 100644
+index 0000000..1afc2de
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
+@@ -0,0 +1,16 @@
++TPIC2810 GPIO controller bindings
 +
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x0 0xc8000000 0x14000>;
-+		};
++Required properties:
++ - compatible		: Should be "ti,tpic2810".
++ - reg			: The I2C address of the device
++ - gpio-controller	: Marks the device node as a GPIO controller.
++ - #gpio-cells		: Should be two. For consumer use see gpio.txt.
 +
- 		cbus: cbus@c1100000 {
- 			compatible = "simple-bus";
- 			reg = <0x0 0xc1100000 0x0 0x100000>;
++Example:
++
++	gpio@60 {
++		compatible = "ti,tpic2810";
++		reg = <0x60>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
 -- 
-1.9.1
+2.7.4
