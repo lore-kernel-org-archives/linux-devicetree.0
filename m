@@ -1,16 +1,16 @@
 From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V4] clk: bcm: Add driver for BCM53573 ILP clock
-Date: Tue, 23 Aug 2016 08:17:20 +0200
-Message-ID: <20160823061745.8162-1-zajec5@gmail.com>
-References: <1470830763-29189-1-git-send-email-zajec5@gmail.com>
+Subject: [PATCH V5] clk: bcm: Add driver for BCM53573 ILP clock
+Date: Tue, 23 Aug 2016 08:25:59 +0200
+Message-ID: <20160823062613.13865-1-zajec5@gmail.com>
+References: <20160823061745.8162-1-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1470830763-29189-1-git-send-email-zajec5@gmail.com>
+In-Reply-To: <20160823061745.8162-1-zajec5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Eric Anholt <eric@anholt.net>, Stephen Warren <swarren@wwwdotorg.org>, "open list:OPEN FIRMWARE AND FLATTENED
+Cc: linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, "open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
@@ -39,6 +39,8 @@ V3: Drop #include <linux/moduleh>
 V4: Use BCM53573 name as suggested by Jon and Ray. It seems "Northstar"
     (even if used in some resources) should be used in relation to
     Cortex-A9 devices only.
+V5: Rename remaining "ns" references to "bcm53573", sorry, I sent V4 too
+    early.
 ---
  .../bindings/clock/brcm,bcm53573-ilp.txt           |  40 ++++++
  drivers/clk/bcm/Makefile                           |   1 +
@@ -49,7 +51,7 @@ V4: Use BCM53573 name as suggested by Jon and Ray. It seems "Northstar"
 
 diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt b/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
 new file mode 100644
-index 0000000..73f7d2b
+index 0000000..5ab3107
 --- /dev/null
 +++ b/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
 @@ -0,0 +1,40 @@
@@ -70,7 +72,7 @@ index 0000000..73f7d2b
 +which has to be referenced.
 +
 +Required properties:
-+- compatible: "brcm,ns-ilp"
++- compatible: "brcm,bcm53573-ilp"
 +- reg: iomem address range of PMU (Power Management Unit)
 +- reg-names: "pmu", the only needed & supported reg right now
 +- clocks: has to reference an ALP clock
@@ -85,7 +87,7 @@ index 0000000..73f7d2b
 +	#size-cells = <1>;
 +
 +	ilp: ilp@0 {
-+		compatible = "brcm,ns-ilp";
++		compatible = "brcm,bcm53573-ilp";
 +		reg = <0 0x1000>;
 +		reg-names = "pmu";
 +		clocks = <&alp>;
@@ -104,7 +106,7 @@ index 1d79bd2..4b8c56d 100644
 +obj-$(CONFIG_ARCH_BCM_53573)	+= clk-bcm53573-ilp.o
 diff --git a/drivers/clk/bcm/clk-bcm53573-ilp.c b/drivers/clk/bcm/clk-bcm53573-ilp.c
 new file mode 100644
-index 0000000..53b4a23
+index 0000000..b7ac0eb
 --- /dev/null
 +++ b/drivers/clk/bcm/clk-bcm53573-ilp.c
 @@ -0,0 +1,146 @@
@@ -129,15 +131,15 @@ index 0000000..53b4a23
 +#define  XTAL_CTL_EN				0x80000000
 +#define PMU_SLOW_CLK_PERIOD			0x6dc
 +
-+struct ns_ilp {
++struct bcm53573_ilp {
 +	struct clk *clk;
 +	struct clk_hw hw;
 +	void __iomem *pmu;
 +};
 +
-+static int ns_ilp_enable(struct clk_hw *hw)
++static int bcm53573_ilp_enable(struct clk_hw *hw)
 +{
-+	struct ns_ilp *ilp = container_of(hw, struct ns_ilp, hw);
++	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
 +
 +	writel(0x10199, ilp->pmu + PMU_SLOW_CLK_PERIOD);
 +	writel(0x10000, ilp->pmu + 0x674);
@@ -145,10 +147,10 @@ index 0000000..53b4a23
 +	return 0;
 +}
 +
-+static unsigned long ns_ilp_recalc_rate(struct clk_hw *hw,
-+					unsigned long parent_rate)
++static unsigned long bcm53573_ilp_recalc_rate(struct clk_hw *hw,
++					      unsigned long parent_rate)
 +{
-+	struct ns_ilp *ilp = container_of(hw, struct ns_ilp, hw);
++	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
 +	void __iomem *pmu = ilp->pmu;
 +	u32 last_val, cur_val;
 +	u32 sum = 0, num = 0, loop_num = 0;
@@ -190,14 +192,14 @@ index 0000000..53b4a23
 +	return parent_rate * 4 / avg;
 +}
 +
-+static const struct clk_ops ns_ilp_clk_ops = {
-+	.enable = ns_ilp_enable,
-+	.recalc_rate = ns_ilp_recalc_rate,
++static const struct clk_ops bcm53573_ilp_clk_ops = {
++	.enable = bcm53573_ilp_enable,
++	.recalc_rate = bcm53573_ilp_recalc_rate,
 +};
 +
-+static void ns_ilp_init(struct device_node *np)
++static void bcm53573_ilp_init(struct device_node *np)
 +{
-+	struct ns_ilp *ilp;
++	struct bcm53573_ilp *ilp;
 +	struct resource res;
 +	struct clk_init_data init = { 0 };
 +	const char *parent_name;
@@ -230,7 +232,7 @@ index 0000000..53b4a23
 +	}
 +
 +	init.name = np->name;
-+	init.ops = &ns_ilp_clk_ops;
++	init.ops = &bcm53573_ilp_clk_ops;
 +	init.parent_names = &parent_name;
 +	init.num_parents = 1;
 +
@@ -253,6 +255,6 @@ index 0000000..53b4a23
 +	kfree(ilp);
 +	pr_err("Failed to init ILP clock: %d\n", err);
 +}
-+CLK_OF_DECLARE(ns_ilp_clk, "brcm,ns-ilp", ns_ilp_init);
++CLK_OF_DECLARE(bcm53573_ilp_clk, "brcm,bcm53573-ilp", bcm53573_ilp_init);
 -- 
 2.9.3
