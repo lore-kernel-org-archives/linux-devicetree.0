@@ -1,79 +1,128 @@
-From: Milo Kim <woogyom.kim@gmail.com>
-Subject: [PATCH 3/4] gpu: drm: exynos_hdmi: Use consolidated function on binding DDC DT property
-Date: Tue, 23 Aug 2016 18:13:38 +0900
-Message-ID: <1471943619-6102-4-git-send-email-woogyom.kim@gmail.com>
-References: <1471943619-6102-1-git-send-email-woogyom.kim@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1471943619-6102-1-git-send-email-woogyom.kim@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Milo Kim <woogyom.kim@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 01/13] pinctrl: add bcm63xx base code
+Date: Tue, 23 Aug 2016 11:15:48 +0200
+Message-ID: <CACRpkdYO2Fj90etLaua86bnqNfk73F8wDgWU_e4W3HG3=VZM5A@mail.gmail.com>
+References: <1471604025-21575-1-git-send-email-jonas.gorski@gmail.com>
+ <1471604025-21575-2-git-send-email-jonas.gorski@gmail.com>
+ <CACRpkdbAWJruB=4rv_SoPZ5D5XgWjebK_Qmv2GLgOOrSyqXcDA@mail.gmail.com> <CAOiHx=ndEkqQjRS5Hu5LovLmXiqFsPhx0X4k+1CFmGzhD11LRA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAOiHx=ndEkqQjRS5Hu5LovLmXiqFsPhx0X4k+1CFmGzhD11LRA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6IFJvamFz?= <noltari@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Handle legacy and raw 'ddc' parsing in single function.
-And it also removes goto condition.
+On Mon, Aug 22, 2016 at 3:44 PM, Jonas Gorski <jonas.gorski@gmail.com> wrote:
+> On 22 August 2016 at 14:46, Linus Walleij <linus.walleij@linaro.org> wrote:
 
-Cc: Inki Dae <inki.dae@samsung.com>
-Cc: Joonyoung Shim <jy0922.shim@samsung.com>
-Cc: Seung-Woo Kim <sw0312.kim@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
----
- drivers/gpu/drm/exynos/exynos_hdmi.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+>> Why not just put it in the existing pinctrl/bcm directory?
+>
+> Because at the time I started writing these drivers it was still
+> exclusive for ARCH_BCM, will move them there.
 
-diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
-index 2275efe..6a636f2 100644
---- a/drivers/gpu/drm/exynos/exynos_hdmi.c
-+++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
-@@ -1760,7 +1760,7 @@ static const struct component_ops hdmi_component_ops = {
- 	.unbind = hdmi_unbind,
- };
- 
--static struct device_node *hdmi_legacy_ddc_dt_binding(struct device *dev)
-+static struct device_node *hdmi_ddc_dt_binding(struct device *dev)
- {
- 	const char *compatible_str = "samsung,exynos4210-hdmiddc";
- 	struct device_node *np;
-@@ -1769,7 +1769,13 @@ static struct device_node *hdmi_legacy_ddc_dt_binding(struct device *dev)
- 	if (np)
- 		return of_get_next_parent(np);
- 
--	return NULL;
-+	np = of_parse_phandle(dev->of_node, "ddc", 0);
-+	if (!np)
-+		return NULL;
-+
-+	of_node_put(dev->of_node);
-+
-+	return np;
- }
- 
- static struct device_node *hdmi_legacy_phy_dt_binding(struct device *dev)
-@@ -1811,18 +1817,12 @@ static int hdmi_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ddc_node = hdmi_legacy_ddc_dt_binding(dev);
--	if (ddc_node)
--		goto out_get_ddc_adpt;
--
--	ddc_node = of_parse_phandle(dev->of_node, "ddc", 0);
-+	ddc_node = hdmi_ddc_dt_binding(dev);
- 	if (!ddc_node) {
- 		DRM_ERROR("Failed to find ddc node in device tree\n");
- 		return -ENODEV;
- 	}
--	of_node_put(dev->of_node);
- 
--out_get_ddc_adpt:
- 	hdata->ddc_adpt = of_find_i2c_adapter_by_node(ddc_node);
- 	if (!hdata->ddc_adpt) {
- 		DRM_ERROR("Failed to get ddc i2c adapter by node\n");
--- 
-1.9.1
+OK thanks.
+
+>> The drivers in there share nothing but being Broadcom
+>> anyways. And when you're at it, do take a look at the
+>> other Broadcom drivers to check if they would
+>> happen to share something with your hardware, I find
+>> it dazzling that hardware engineers repeatedly reinvents
+>> pin controllers but what can I do.
+>>
+>>> +config PINCTRL_BCM63XX
+>>> +       bool
+>>> +       select GPIO_GENERIC
+>>
+>> depends on ARCH_****?
+>
+> This isn't a user selectable symbol so I don't see the need for that.
+
+This is usually used to narrow the compile coverage to an arch so
+that the autobuilders do not explode on the driver when they try
+to enable and compile it for every arch in the world using randconfig.
+
+>> depends on OF_GPIO?
+>>
+>> Will it really be used on non-DT systems?
+>
+> I plan to use it on both mips/bcm63xx (no dts support) and bmips (dts
+> support), so yes.
+
+Tentatively OK. If you are sure it will actually happen, generally
+I don't like "design for the future" I prefer "design for here and now".
+
+>> - The only reason for not using of_gpio_simple_xlate() seems to be that
+>>   you have several GPIO banks. So why not model every bank as a
+>>   separate device? Or did you consider this already?
+>
+> I did consider it, but it makes the !OF case more complicated, and the
+> current of_gpio base code requires changing for it.
+>
+> That's because some of the pinctrl chips need to set the
+> gpio-direction for muxes, and for that need to have a reference to the
+> gpio-controller(s). Since any muxes directly tied to the controller
+> node will get applied as soon as the controller is registered, it
+> needs to aquire the gpio-controller references first.
+
+If you were using syscon to access the register instead of remapping
+then this problem would go away, because then the pin control
+and the GPIO driver can simply just write into the same registers
+to change the direction, because regmap provides marshalling
+(serialization) and locking of register access so you don't even
+need a spinlock or anything to share: you're already sharing the
+regmap abstraction.
+
+This is part of the beauty of doing this with syscon+regmap and
+makes me even more convinced that it is the right solution for these
+drivers.
+
+If you're worried about the pin controller changing the direction of
+the GPIOs behind the back of the GPIO driver: that is what the
+.get_direction() callback in the gpio_chip is for, i.e. it is not a
+problem.
+
+> On the gpio-controller side, to flag these a requiring pinctrl those
+> would then have a gpio-range property, which will cause the probe
+> being deferred until the reference to the controller can be resolved.
+> Which waits for the gpio-controller to be registered, so it can
+> resolve its references to it. A true catch 22 ;-)
+
+So avoid that entire dilemma by removing the entire
+cross-dependency. Use syscon+regmap and just write into
+the direction registers from the pin controller driver.
+
+>>> +#ifdef CONFIG_OF
+>>> +               gc[i].of_gpio_n_cells = 2;
+>>> +               gc[i].of_xlate = bcm63xx_gpio_of_xlate;
+>>> +#endif
+>>> +
+>>> +               gc[i].label = label;
+>>> +               gc[i].ngpio = pins;
+>>> +
+>>> +               devm_gpiochip_add_data(dev, &gc[i], gc);
+>>
+>> Because this also gets pretty hairy... since you don't have one device
+>> per gpiochip.
+
+And I'm not convinced that having several gpiochips spawn from one
+device is a good idea.
+
+
+>> A current trend in simple MMIO devices is to simply add themselves as a
+>> compatible string in drivers/gpio/gpio-mmio.c. Example:
+>>
+>> https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-gpio.git/commit/drivers/gpio/gpio-mmio.c?h=devel&id=05cc995f4d44c2b14a1f15f3271cc9715cb81099
+>>
+>> This could be a viable approach if you find a way to flag that such a GPIO
+>> has a pin control backend.
+>
+> The most obvious would be having a gpio-ranges property, but this
+> leads to issues mentioned above. And only works for OF.
+
+Ranges can be registered from boardfiles. In fact that was how
+it was devised from the beginning, OF ranges were added later.
+
+Yours,
+Linus Walleij
