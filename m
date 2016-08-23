@@ -1,114 +1,83 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH] dt: net: enhance DWC EQoS binding to support Tegra186
-Date: Tue, 23 Aug 2016 14:47:57 -0600
-Message-ID: <20160823204757.17998-1-swarren@wwwdotorg.org>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Lars Persson <lars.persson@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+From: york sun <york.sun@nxp.com>
+Subject: Re: [Patch v4 9/9] arm64: Update device tree for Layerscape SoCs
+Date: Tue, 23 Aug 2016 21:37:35 +0000
+Message-ID: <AM4PR0401MB173218BE03AEF9AB7D0F5FE79AEB0@AM4PR0401MB1732.eurprd04.prod.outlook.com>
+References: <1470780000-16750-1-git-send-email-york.sun@nxp.com>
+Reply-To: york sun <york.sun@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, yangbo lu <yangbo.lu@freescale.com>, Gang Liu <gang.liu@nxp.com>, "morbidrsa@gmail.com" <morbidrsa@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "oss@buserror.net" <oss@buserror.net>, Rob Herring <robh+dt@kernel.org>, "bp@alien8.de" <bp@alien8.de>, Rajesh Bhagat <rajesh.bhagat@freescale.com>, Olof Johansson <olof@lixom.net>, Mingkai Hu <Mingkai.Hu@freescale.com>, Li Yang <leoli@freescale.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Yao Yuan <yao.yuan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
++Shawn Guo
 
-The Synopsys DWC EQoS is a configurable IP block which supports multiple
-options for bus type, clocking and reset structure, and feature list.
-Extend the DT binding to define a "compatible value" for the configuration
-contained in NVIDIA's Tegra186 SoC, and define some new properties and
-list property entries required by that configuration.
-
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
----
- .../bindings/net/snps,dwc-qos-ethernet.txt         | 60 ++++++++++++++++++++--
- 1 file changed, 56 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
-index 51f8d2eba8d8..6cd4129364a9 100644
---- a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
-+++ b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
-@@ -1,21 +1,72 @@
- * Synopsys DWC Ethernet QoS IP version 4.10 driver (GMAC)
- 
-+This binding supports the Synopsys Designware Ethernet QoS (Quality Of Service)
-+IP block. The IP supports multiple options for bus type, clocking and reset
-+structure, and feature list. Consequently, a number of properties and list
-+entries in properties are marked as optional, or only required in specific HW
-+configurations.
- 
- Required properties:
--- compatible: Should be "snps,dwc-qos-ethernet-4.10"
-+- compatible: One of:
-+  - "snps,dwc-qos-ethernet-4.10"
-+  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10"
- - reg: Address and length of the register set for the device
--- clocks: Phandles to the reference clock and the bus clock
--- clock-names: Should be "phy_ref_clk" for the reference clock and "apb_pclk"
--  for the bus clock.
-+- clocks: Phandle and clock specifiers for each entry in clock-names, in the
-+  same order. See ../clock/clock-bindings.txt.
-+- clock-names: May contain any/all of the following depending on the IP
-+  configuration, in any order:
-+  - "phy_ref_clk". The reference clock provided directly to the PHY.
-+    Only required if under SW control, i.e. not provided by some fixed source
-+    such as a crystal.
-+  - "apb_pclk" (alternate name "slave_bus"; only one alternate must appear).
-+    The CPU/slave-bus (CSR) interface clock. Despite the name, this applies to
-+    any bus type; APB, AHB, AXI, etc. The HW signal name is hclk_i (AHB) or
-+    clk_csr_i (other buses).
-+  - "master_bus". The master bus interface clock. Only required in
-+    configurations that use a separate clock for the master and slave bus
-+    interfaces. The HW signal name is hclk_i (AHB) or aclk_i (AXI).
-+  - "rx". The receive path clock. The HW signal name is clk_rx_i.
-+  - "tx". The transmit path clock. The HW signal name is clk_tx_i.
-+  - "ptp_ref". The PTP reference clock. The HW signal name is clk_ptp_ref_i.
-+
-+  Note: Support for additional HW configurations may require adding the
-+  following clocks to this list in the future: clk_rx_125_i, clk_tx_125_i,
-+  clk_pmarx_0_i, clk_pmarx1_i, clk_rmii_i.
-+
-+  The following compatible values require the following set of clocks:
-+  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10":
-+    - "slave_bus"
-+    - "master_bus"
-+    - "rx"
-+    - "tx"
-+    - "ptp_ref"
-+  - "snps,dwc-qos-ethernet-4.10":
-+    - "phy_ref_clk"
-+    - "apb_clk"
- - interrupt-parent: Should be the phandle for the interrupt controller
-   that services interrupts for this device
- - interrupts: Should contain the core's combined interrupt signal
- - phy-mode: See ethernet.txt file in the same directory
-+- resets: Phandle and reset specifiers for each entry in reset-names, in the
-+  same order. See ../reset/reset.txt.
-+- reset-names: May contain any/all of the following depending on the IP
-+  configuration, in any order:
-+  - "eqos". The reset to the entire module. The HW signal name is hreset_n
-+    (AHB) or aresetn_i (AXI).
-+
-+  The following compatible values require the following set of clocks:
-+  (the reset properties may be omitted if empty)
-+  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10":
-+    - "eqos".
-+  - "snps,dwc-qos-ethernet-4.10":
-+    - None.
- 
- Optional properties:
- - dma-coherent: Present if dma operations are coherent
- - mac-address: See ethernet.txt in the same directory
- - local-mac-address: See ethernet.txt in the same directory
-+- phy-reset-gpios: Phandle and specifier for any GPIO used to reset the PHY.
-+  See ../gpio/gpio.txt.
- - snps,en-lpi: If present it enables use of the AXI low-power interface
- - snps,write-requests: Number of write requests that the AXI port can issue.
-   It depends on the SoC configuration.
-@@ -52,6 +103,7 @@ ethernet2@40010000 {
- 	reg = <0x40010000 0x4000>;
- 	phy-handle = <&phy2>;
- 	phy-mode = "gmii";
-+	phy-reset-gpios = <&gpioctlr 43 GPIO_ACTIVE_LOW>;
- 
- 	snps,en-tx-lpi-clockgating;
- 	snps,en-lpi;
--- 
-2.9.3
+On 08/09/2016 03:00 PM, York Sun wrote:
+> Add DDR memory controller nodes to enable EDAC driver.
+>
+> Signed-off-by: York Sun <york.sun@nxp.com>
+>
+> ---
+> Change log
+>   v4: no change
+>   v3: no change
+>   v2: no change
+>
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |  7 +++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 14 ++++++++++++++
+>  2 files changed, 21 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> index de0323b..cb33f23 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> @@ -196,6 +196,13 @@
+>  			bus-width = <4>;
+>  		};
+>
+> +		ddr: memory-controller@1080000 {
+> +			compatible = "fsl,qoriq-memory-controller";
+> +			reg = <0x0 0x1080000 0x0 0x1000>;
+> +			interrupts = <0 144 0x4>;
+> +			big-endian;
+> +		};
+> +
+>  		dspi0: dspi@2100000 {
+>  			compatible = "fsl,ls1043a-dspi", "fsl,ls1021a-v1.0-dspi";
+>  			#address-cells = <1>;
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> index 3187c82..3221e5c 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> @@ -689,4 +689,18 @@
+>  			interrupts = <0 12 4>;
+>  		};
+>  	};
+> +
+> +	ddr1: memory-controller@1080000 {
+> +		compatible = "fsl,qoriq-memory-controller";
+> +		reg = <0x0 0x1080000 0x0 0x1000>;
+> +		interrupts = <0 17 0x4>;
+> +		little-endian;
+> +	};
+> +
+> +	ddr2: memory-controller@1090000 {
+> +		compatible = "fsl,qoriq-memory-controller";
+> +		reg = <0x0 0x1090000 0x0 0x1000>;
+> +		interrupts = <0 18 0x4>;
+> +		little-endian;
+> +	};
+>  };
+>
