@@ -1,94 +1,149 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/9] mfd: axp20x: Add bindings for AXP806 PMIC
-Date: Tue, 23 Aug 2016 12:51:20 -0500
-Message-ID: <20160823175120.GA26572@rob-hp-laptop>
-References: <20160821021125.1521-1-wens@csie.org>
- <20160821021125.1521-2-wens@csie.org>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH v4 5/5] drm: simpledrm: honour
+ remove_conflicting_framebuffers()
+Date: Tue, 23 Aug 2016 19:52:59 +0200
+Message-ID: <1f55fd4b-3db1-439d-4076-8ef0ccc790f8@tronnes.org>
+References: <1471897525-31118-1-git-send-email-noralf@tronnes.org>
+ <1471897525-31118-6-git-send-email-noralf@tronnes.org>
+ <20160823124116.GG10980@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBGM26K6QKGQEGLSSWCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160821021125.1521-2-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160823124116.GG10980@phenom.ffwll.local>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 21, 2016 at 10:11:17AM +0800, Chen-Yu Tsai wrote:
-> This patch adds the basic and regulator bindings for the X-Powers AXP809
-> PMIC.
-
-Looks like you're adding the AXP806 to me.
-
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/axp20x.txt | 28 ++++++++++++++++++++++--
->  1 file changed, 26 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-> index 585a95546288..8f3ad9ab4637 100644
-> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-> @@ -10,7 +10,8 @@ axp809 (X-Powers)
->  
->  Required properties:
->  - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
-> -	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp809"
-> +	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp806",
-> +	      "x-powers,axp809"
-
-Reformat this to one valid combination per line.
-
->  - reg: The I2C slave address or RSB hardware address for the AXP chip
->  - interrupt-parent: The parent interrupt controller
->  - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
-> @@ -47,7 +48,6 @@ Optional properties for DCDC regulators:
->  			  probably makes sense for HiFi audio related
->  			  applications that aren't battery constrained.
->  
-> -
->  AXP202/AXP209 regulators, type, and corresponding input supply names:
->  
->  Regulator	  Type		  Supply Name		  Notes
-> @@ -86,6 +86,30 @@ LDO_IO1		: LDO		: ips-supply		: GPIO 1
->  RTC_LDO		: LDO		: ips-supply		: always on
->  DRIVEVBUS	: Enable output	: drivevbus-supply	: external regulator
->  
-> +AXP806 regulators, type, and corresponding input supply names:
-> +
-> +Regulator	  Type		  Supply Name		  Notes
-> +---------	  ----		  -----------		  -----
-> +DCDCA		: DC-DC buck	: vina-supply		: poly-phase capable
-> +DCDCB		: DC-DC buck	: vinb-supply		: poly-phase capable
-> +DCDCC		: DC-DC	buck	: vinc-supply		: poly-phase capable
-> +DCDCD		: DC-DC	buck	: vind-supply		: poly-phase capable
-> +DCDCE		: DC-DC	buck	: vine-supply		: poly-phase capable
-> +ALDO1		: LDO		: aldoin-supply		: shared supply
-> +ALDO2		: LDO		: aldoin-supply		: shared supply
-> +ALDO3		: LDO		: aldoin-supply		: shared supply
-> +BLDO1		: LDO		: bldoin-supply		: shared supply
-> +BLDO2		: LDO		: bldoin-supply		: shared supply
-> +BLDO3		: LDO		: bldoin-supply		: shared supply
-> +BLDO4		: LDO		: bldoin-supply		: shared supply
-> +CLDO1		: LDO		: cldoin-supply		: shared supply
-> +CLDO2		: LDO		: cldoin-supply		: shared supply
-> +CLDO3		: LDO		: cldoin-supply		: shared supply
-> +SW		: On/Off Switch : swin-supply
-> +
-> +Additionally, the AXP806 DC-DC regulators support poly-phase arrangements
-> +for higher output current. The possible groupings are: A+B, A+B+C, D+E.
-> +
->  AXP809 regulators, type, and corresponding input supply names:
->  
->  Regulator	  Type		  Supply Name		  Notes
-> -- 
-> 2.9.3
-> 
+CkRlbiAyMy4wOC4yMDE2IDE0OjQxLCBza3JldiBEYW5pZWwgVmV0dGVyOgo+IE9uIE1vbiwgQXVn
+IDIyLCAyMDE2IGF0IDEwOjI1OjI1UE0gKzAyMDAsIE5vcmFsZiBUcsO4bm5lcyB3cm90ZToKPj4g
+VGhlcmUgaXMgY3VycmVudGx5IG5vIG5vbi1mYmRldiBtZWNoYW5pc20gaW4gcGxhY2UgdG8ga2lj
+ayBvdXQKPj4gc2ltcGxlZHJtIHdoZW4gdGhlIHJlYWwgaHctZHJpdmVyIGlzIHByb2JlZC4gQXMg
+YSBzdG9wIGdhcCB1bnRpbAo+PiB0aGF0IGlzIGluIHBsYWNlLCBob25vdXIgcmVtb3ZlX2NvbmZs
+aWN0aW5nX2ZyYW1lYnVmZmVycygpIGFuZAo+PiBkZWxldGUgdGhlIHNpbXBsZS1mcmFtZWJ1ZmZl
+ciBwbGF0Zm9ybSBkZXZpY2Ugd2hlbiBpdCdzIGNhbGxlZC4KPj4KPj4gU2lnbmVkLW9mZi1ieTog
+Tm9yYWxmIFRyw7hubmVzIDxub3JhbGZAdHJvbm5lcy5vcmc+Cj4+IC0tLQoKPHNuaXA+Cgo+PiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3NpbXBsZWRybS9zaW1wbGVkcm1fZmJkZXYuYyBi
+L2RyaXZlcnMvZ3B1L2RybS9zaW1wbGVkcm0vc2ltcGxlZHJtX2ZiZGV2LmMKPj4gaW5kZXggYzY1
+OTZhZC4uN2M2ZGIyYyAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3NpbXBsZWRybS9z
+aW1wbGVkcm1fZmJkZXYuYwo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc2ltcGxlZHJtL3NpbXBs
+ZWRybV9mYmRldi5jCj4+IEBAIC00NCw2ICs0NCwyMCBAQCBzdGF0aWMgaW50IHNkcm1fZmJfbW1h
+cChzdHJ1Y3QgZmJfaW5mbyAqaW5mbywgc3RydWN0IHZtX2FyZWFfc3RydWN0ICp2bWEpCj4+ICAg
+CXJldHVybiAtRU5PREVWOwo+PiAgIH0KPj4KPj4gKy8qCj4+ICsgKiBSZWxlYXNpbmcgaGFzIHRv
+IGJlIGRvbmUgb3V0c2lkZSB0aGUgbm90aWZpZXIgY2FsbGNoYWluIHdoZW4gd2UncmUKPj4gKyAq
+IGtpY2tlZCBvdXQsIHNpbmNlIGRvX3VucmVnaXN0ZXJfZnJhbWVidWZmZXIoKSBjYWxscyBwdXRf
+ZmJfaW5mbygpCj4+ICsgKiBhZnRlciB0aGUgbm90aWZpZXIgaGFzIHJ1bi4KPj4gKyAqIE9wZW4g
+Y29kZSBkcm1fZmJfaGVscGVyX3JlbGVhc2VfZmJpKCkgc2luY2UgZmJfaGVscGVyIGlzIGZyZWVk
+IGF0Cj4+ICsgKiB0aGlzIHBvaW50IHdoZW4ga2lja2VkIG91dC4KPj4gKyAqLwo+PiArc3RhdGlj
+IHZvaWQgc2RybV9mYmRldl9mYl9kZXN0cm95KHN0cnVjdCBmYl9pbmZvICppbmZvKQo+PiArewo+
+PiArCWlmIChpbmZvLT5jbWFwLmxlbikKPj4gKwkJZmJfZGVhbGxvY19jbWFwKCZpbmZvLT5jbWFw
+KTsKPj4gKwlmcmFtZWJ1ZmZlcl9yZWxlYXNlKGluZm8pOwo+PiArfQo+PiArCj4+ICAgc3RhdGlj
+IHN0cnVjdCBmYl9vcHMgc2RybV9mYmRldl9vcHMgPSB7Cj4+ICAgCS5vd25lcgkJPSBUSElTX01P
+RFVMRSwKPj4gICAJLmZiX2ZpbGxyZWN0CT0gZHJtX2ZiX2hlbHBlcl9zeXNfZmlsbHJlY3QsCj4+
+IEBAIC01Myw2ICs2Nyw3IEBAIHN0YXRpYyBzdHJ1Y3QgZmJfb3BzIHNkcm1fZmJkZXZfb3BzID0g
+ewo+PiAgIAkuZmJfc2V0X3Bhcgk9IGRybV9mYl9oZWxwZXJfc2V0X3BhciwKPj4gICAJLmZiX3Nl
+dGNtYXAJPSBkcm1fZmJfaGVscGVyX3NldGNtYXAsCj4+ICAgCS5mYl9tbWFwCT0gc2RybV9mYl9t
+bWFwLAo+PiArCS5mYl9kZXN0cm95CT0gc2RybV9mYmRldl9mYl9kZXN0cm95LAo+PiAgIH07Cj4+
+Cj4+ICAgc3RhdGljIGludCBzZHJtX2ZiZGV2X2NyZWF0ZShzdHJ1Y3QgZHJtX2ZiX2hlbHBlciAq
+aGVscGVyLAo+PiBAQCAtMTEwLDYgKzEyNSw5IEBAIHN0YXRpYyBpbnQgc2RybV9mYmRldl9jcmVh
+dGUoc3RydWN0IGRybV9mYl9oZWxwZXIgKmhlbHBlciwKPj4gICAJZmJpLT5zY3JlZW5fYmFzZSA9
+IG9iai0+dm1hcHBpbmc7Cj4+ICAgCWZiaS0+Zml4LnNtZW1fbGVuID0gc2RybS0+ZmJfc2l6ZTsK
+Pj4KPj4gKwlmYmktPmFwZXJ0dXJlcy0+cmFuZ2VzWzBdLmJhc2UgPSBzZHJtLT5mYl9iYXNlOwo+
+PiArCWZiaS0+YXBlcnR1cmVzLT5yYW5nZXNbMF0uc2l6ZSA9IHNkcm0tPmZiX3NpemU7Cj4+ICsK
+Pj4gICAJcmV0dXJuIDA7Cj4+Cj4+ICAgZXJyX2ZiaV9yZWxlYXNlOgo+PiBAQCAtMTg4LDkgKzIw
+NiwxMyBAQCB2b2lkIHNkcm1fZmJkZXZfY2xlYW51cChzdHJ1Y3Qgc2RybV9kZXZpY2UgKnNkcm0p
+Cj4+ICAgCXNkcm0tPmZiX2hlbHBlciA9IE5VTEw7Cj4+ICAgCWZiZGV2ID0gdG9fc2RybV9mYmRl
+dihmYl9oZWxwZXIpOwo+Pgo+PiAtCWRybV9mYl9oZWxwZXJfdW5yZWdpc3Rlcl9mYmkoZmJfaGVs
+cGVyKTsKPj4gKwkvKiBpdCBtaWdodCBoYXZlIGJlZW4ga2lja2VkIG91dCAqLwo+PiArCWlmIChy
+ZWdpc3RlcmVkX2ZiW2ZiZGV2LT5mYl9oZWxwZXIuZmJkZXYtPm5vZGVdKQo+PiArCQlkcm1fZmJf
+aGVscGVyX3VucmVnaXN0ZXJfZmJpKGZiX2hlbHBlcik7Cj4+ICsKPj4gKwkvKiBmcmVlaW5nIGZi
+X2luZm8gaXMgZG9uZSBpbiBmYl9vcHMuZmJfZGVzdHJveSgpICovCj4+ICsKPj4gICAJY2FuY2Vs
+X3dvcmtfc3luYygmZmJfaGVscGVyLT5kaXJ0eV93b3JrKTsKPj4gLQlkcm1fZmJfaGVscGVyX3Jl
+bGVhc2VfZmJpKGZiX2hlbHBlcik7Cj4+Cj4+ICAgCWRybV9mcmFtZWJ1ZmZlcl91bnJlZ2lzdGVy
+X3ByaXZhdGUoZmJfaGVscGVyLT5mYik7Cj4+ICAgCWRybV9mcmFtZWJ1ZmZlcl9jbGVhbnVwKGZi
+X2hlbHBlci0+ZmIpOwo+PiBAQCAtMTk5LDMgKzIyMSwzOSBAQCB2b2lkIHNkcm1fZmJkZXZfY2xl
+YW51cChzdHJ1Y3Qgc2RybV9kZXZpY2UgKnNkcm0pCj4+ICAgCWRybV9mYl9oZWxwZXJfZmluaShm
+Yl9oZWxwZXIpOwo+PiAgIAlrZnJlZShmYmRldik7Cj4+ICAgfQo+PiArCj4+ICtzdGF0aWMgaW50
+IHNkcm1fZmJkZXZfZXZlbnRfbm90aWZ5KHN0cnVjdCBub3RpZmllcl9ibG9jayAqc2VsZiwKPj4g
+KwkJCQkgICB1bnNpZ25lZCBsb25nIGFjdGlvbiwgdm9pZCAqZGF0YSkKPj4gK3sKPj4gKwlzdHJ1
+Y3Qgc2RybV9kZXZpY2UgKnNkcm07Cj4+ICsJc3RydWN0IGZiX2V2ZW50ICpldmVudCA9IGRhdGE7
+Cj4+ICsJc3RydWN0IGZiX2luZm8gKmluZm8gPSBldmVudC0+aW5mbzsKPj4gKwlzdHJ1Y3QgZHJt
+X2ZiX2hlbHBlciAqZmJfaGVscGVyID0gaW5mby0+cGFyOwo+PiArCj4+ICsJaWYgKGFjdGlvbiAh
+PSBGQl9FVkVOVF9GQl9VTlJFR0lTVEVSRUQpCj4+ICsJCXJldHVybiBOT1RJRllfRE9ORTsKPj4g
+Kwo+PiArCWlmICghZmJfaGVscGVyIHx8ICFmYl9oZWxwZXItPmRldiB8fCBmYl9oZWxwZXItPmZi
+ZGV2ICE9IGluZm8pCj4+ICsJCXJldHVybiBOT1RJRllfRE9ORTsKPj4gKwo+PiArCXNkcm0gPSBm
+Yl9oZWxwZXItPmRldi0+ZGV2X3ByaXZhdGU7Cj4+ICsKPj4gKwlpZiAoc2RybSAmJiBzZHJtLT5m
+Yl9oZWxwZXIgPT0gZmJfaGVscGVyKQo+PiArCQlwbGF0Zm9ybV9kZXZpY2VfZGVsKHRvX3BsYXRm
+b3JtX2RldmljZShmYl9oZWxwZXItPmRldi0+ZGV2KSk7Cj4+ICsKPj4gKwlyZXR1cm4gTk9USUZZ
+X0RPTkU7Cj4+ICt9Cj4gT25lIHByb2JsZW0gdGhpcyBsZWF2ZXMgYmVoaW5kIGlzIHRoYXQgcmVn
+aXN0ZXJpbmcgb2YgdGhlIG5ldyBmYmRldiBkcml2ZXIKPiBpcyB0b28gbGF0ZSAtIGJ5IHRoYXQg
+cG9pbnQgd2UndmUgYWxyZWFkeSBzZXQgdXAgdGhlIGVudGlyZSBkcml2ZXIsCj4gaW5jbHVkaW5n
+IG1vZGVzZXQuIElmIGZiZGV2IG1lYW53aGlsZSBkb2VzIGEgZHBtcyBvZmYgb3Igc29tZXRoaW5n
+IGxpa2UKPiB0aGF0IGFsbCBoZWxsIHdpbGwgYnJlYWsgbG9vc2UuCgpJIGRvbid0IHVuZGVyc3Rh
+bmQgaG93IGZiZGV2IHJlZ2lzdHJhdGlvbiBjb21lcyBpbnRvIHBsYXkgaGVyZS4gRHJpdmVycyBj
+YWxsCnJlbW92ZV9jb25mbGljdGluZ19mcmFtZWJ1ZmZlcnMgdmVyeSBlYXJseSBzbyBzaW1wbGVk
+cm0gaXMgZ29uZSBieSB0aGUgdGltZQp0aGV5IHJlZ2lzdGVyIGFueXRoaW5nLgoKRm9yIHNpbXBs
+ZWRybSwgZmJkZXYgZG9pbmcgYmxhbmsvdW5ibGFuayBpcyBhIG5vLW9wIHNpbmNlIGZiX29wcy5m
+Yl9ibGFuawppcyBub3QgaW1wbGVtZW50ZWQuIFNvIGEgZmJfYmxhbmsoKSBqdXN0IHJlc3VsdHMg
+aW4gZmJjb24gZG9pbmcgYQpzb2Z0d2FyZSBibGFuay4KCj4gSSB0aGluayB0aGUgb25seSBvcHRp
+b24gaXMgdG8gYWRkIGEgbmV3IG5vdGlmaWVyIGNoYWluIGZvciBmYmRldiByZW1vdmFsLAo+IGNh
+bGxlZCBmcm9tIHJlbW92ZV9jb25mbGljdGluZ19mcmFtZWJ1ZmZlcnMgKGV2ZW4gZm9yIENPTkZJ
+R19GQj1uLCBzbyBuZWVkCj4gYSBmYWxsYmFjayBpbiBjb3JlL2ZiX25vdGlmeS5jIGxpa2Ugd2l0
+aCB0aGUgb3RoZXIgbm90aWZpZXIgSSB0aGluaykuIFRoYXQKPiB3b3VsZCBhdCBsZWFzdCBrZWVw
+IHRoaW5ncyB3b3JraW5nIGlmIGZiZGV2IGlzIGVudGlyZWx5IGRpc2FibGVkLiBPciBoYXZlCj4g
+SSBlbnRpcmVseSBtaXN1bmRlcnN0b29kIGhvdyB0aGlzIHdvcmtzPwoKSG93IGFib3V0IGV4dGVu
+ZGluZyB0aGUgbmV3IHdyYXBwZXIgeW91IGp1c3QgYWRkZWQuIFNvbWV0aGluZyBsaWtlIHRoaXM6
+CgpzdGF0aWMgaW50IGZpbmRfc2ltcGxlZHJtX2NiKHN0cnVjdCBkZXZpY2UgKmRldiwgdm9pZCAq
+ZGF0YSkKewogICAgIHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYgPSB0b19wbGF0Zm9ybV9k
+ZXZpY2UoZGV2KTsKICAgICBjaGFyICpuYW1lID0gZGF0YTsKCiAgICAgRFJNX0lORk8oIlN3aXRj
+aGluZyB0byAlcyBmcm9tIHNpbXBsZWRybVxuIiwgbmFtZSk7CiAgICAgcGxhdGZvcm1fZGV2aWNl
+X2RlbChwZGV2KTsKCiAgICAgcmV0dXJuIDA7Cn0KCi8qIG5vdCBzdXJlIHdoZXJlIHRoaXMgZnVu
+Y3Rpb24gc2hvdWxkIGdvICovCnZvaWQgZHJtX3JlbW92ZV9zaW1wbGVkcm0oY29uc3QgY2hhciAq
+bmFtZSkKewogICAgIHN0cnVjdCBkZXZpY2VfZHJpdmVyICpkcnY7CgogICAgIGRydiA9IGRyaXZl
+cl9maW5kKCJzaW1wbGVkcm0iLCAmcGxhdGZvcm1fYnVzX3R5cGUpOwogICAgIGlmIChkcnYpCiAg
+ICAgICAgIGRyaXZlcl9mb3JfZWFjaF9kZXZpY2UoZHJ2LCBOVUxMLCBuYW1lLCBmaW5kX3NpbXBs
+ZWRybV9jYik7CgogICAgIC8qIG9yIHdlIGNhbiBqdXN0IHVucmVnaXN0ZXIgdGhlIGRyaXZlciBp
+bnN0ZWFkICovCiAgICAgaWYgKGRydikgewogICAgICAgICBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVy
+ICpwZHJ2ID0gdG9fcGxhdGZvcm1fZHJpdmVyKGRydik7CgogICAgICAgICBEUk1fSU5GTygic2lt
+cGxlZHJtIGlzIGJlaW5nIHJlbW92ZWQgYnkgJXNcbiIsIG5hbWUpOwogICAgICAgICBwbGF0Zm9y
+bV9kcml2ZXJfdW5yZWdpc3RlcihwZHJ2KTsKICAgICB9Cn0KCnN0YXRpYyBpbmxpbmUgaW50CmRy
+bV9mYl9oZWxwZXJfcmVtb3ZlX2NvbmZsaWN0aW5nX2ZyYW1lYnVmZmVycyhzdHJ1Y3QgYXBlcnR1
+cmVzX3N0cnVjdCAqYSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgY29uc3QgY2hhciAqbmFt
+ZSwgYm9vbCBwcmltYXJ5KQp7CiAgICAgaW50IHJldDsKCiAgICAgcmV0ID0gcmVtb3ZlX2NvbmZs
+aWN0aW5nX2ZyYW1lYnVmZmVycyhhLCBuYW1lLCBwcmltYXJ5KTsKICAgICBkcm1fcmVtb3ZlX3Np
+bXBsZWRybShuYW1lKTsKCiAgICAgcmV0dXJuIHJldDsKfQojZWxzZQpzdGF0aWMgaW5saW5lIGlu
+dApkcm1fZmJfaGVscGVyX3JlbW92ZV9jb25mbGljdGluZ19mcmFtZWJ1ZmZlcnMoc3RydWN0IGFw
+ZXJ0dXJlc19zdHJ1Y3QgKmEsCiAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IGNoYXIg
+Km5hbWUsIGJvb2wgcHJpbWFyeSkKewogICAgIGRybV9yZW1vdmVfc2ltcGxlZHJtKG5hbWUpOwoK
+ICAgICByZXR1cm4gMDsKfQoKVGhpcyByZW1vdmVzIHNpbXBsZWRybSB1bmNvbmRpdGlvbmFsbHkg
+d2l0aG91dCBsb29raW5nIGF0IGFwZXJ0dXJlc19zdHJ1Y3QKdGhvdWdoLiBOb3Qgc3VyZSBpZiB0
+aGF0IGlzIG5lZWRlZD8KCgpOb3JhbGYuCgo+IE9oIGFuZCBhbm90aGVyIG9uZSwgd2hpY2ggd2Ug
+bGVhcm5lZCB0aGUgaGFyZCB3YXkgd2l0aCBpOTE1OiBXZSBwcm9iYWJseQo+IG5lZWQgdG8gZ2V0
+IHJpZCBvZiB2Z2Fjb24gdG9vLiBBbmQgYWdhaW4gd2UgbmVlZCB0byBkbyB0aGF0IF9iZWZvcmVf
+IHdlCj4gc3RhcnQgdG91Y2hpbmcgdGhlIGhhcmR3YXJlLiBJIHRoaW5rIHNpbXBsZWRybSBwcm9i
+YWJseSBuZWVkcyB0aGF0IHRvby4KPiBCdXQgc2luY2Ugc2ltcGxlZHJtIGRvZXNuJ3Qga25vdyBv
+biB3aGljaCBwY2kgZGV2aWNlIGl0IHNpdHMgaXQgcHJvYmFibHkKPiB3b24ndCBrbm93IGlmIHRo
+ZSBzYW1lIGRldmljZSBpcyBkZWNvZGluZyB2Z2Egc2lnbmFscywgc28gbm8gb25lIGtub3dzIGhv
+dwo+IHRoYXQgaXMgc3VwcG9zZWQgdG8gd29yayA6KCBPbmUgdGhpbmcgYXQgdGhlIHRpbWUgcHJv
+YmFibHkuCj4gLURhbmllbAo+Cj4+ICsKPj4gK3N0YXRpYyBzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sg
+c2RybV9mYmRldl9ldmVudF9ub3RpZmllciA9IHsKPj4gKwkubm90aWZpZXJfY2FsbCAgPSBzZHJt
+X2ZiZGV2X2V2ZW50X25vdGlmeSwKPj4gK307Cj4+ICsKPj4gK3ZvaWQgc2RybV9mYmRldl9raWNr
+b3V0X2luaXQodm9pZCkKPj4gK3sKPj4gKwlmYl9yZWdpc3Rlcl9jbGllbnQoJnNkcm1fZmJkZXZf
+ZXZlbnRfbm90aWZpZXIpOwo+PiArfQo+PiArCj4+ICt2b2lkIHNkcm1fZmJkZXZfa2lja291dF9l
+eGl0KHZvaWQpCj4+ICt7Cj4+ICsJZmJfdW5yZWdpc3Rlcl9jbGllbnQoJnNkcm1fZmJkZXZfZXZl
+bnRfbm90aWZpZXIpOwo+PiArfQo+PiAtLQo+PiAyLjguMgo+Pgo+PiBfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+PiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+Cj4+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPj4gaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
