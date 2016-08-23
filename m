@@ -1,194 +1,54 @@
-From: Mirza Krak <mirza.krak@gmail.com>
-Subject: Re: [PATCH 3/6] dt/bindings: Add bindings for Tegra GMI controller
-Date: Tue, 23 Aug 2016 12:33:09 +0200
-Message-ID: <CALw8SCV9AyaAPKpRwRp72-dUz=cW2QZyywqjzS1noonTyGDYag@mail.gmail.com>
-References: <1470512452-8322-1-git-send-email-mirza.krak@gmail.com>
- <1470512452-8322-4-git-send-email-mirza.krak@gmail.com>
- <901be576-a810-c630-9b83-de922e945df0@nvidia.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/9] regulator: core: Try full range when
+ adjusting regulators to constraints
+Date: Tue, 23 Aug 2016 11:40:02 +0100
+Message-ID: <20160823104002.GX22076@sirena.org.uk>
+References: <20160821021125.1521-1-wens@csie.org>
+ <20160821021125.1521-4-wens@csie.org>
+ <20160822162907.GO22076@sirena.org.uk>
+ <20160822175205.h76hurjaopnosymc@vip.cybercity.dk>
+ <20160822180932.GW22076@sirena.org.uk>
+ <CAGb2v67ZST-E++z5oobLRwCfHMZZR6HTss=MSqJLJArnQz3qMw@mail.gmail.com>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <901be576-a810-c630-9b83-de922e945df0@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: mark.rutland@arm.com, Alexandre Courbot <gnurou@gmail.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, pawel.moll@arm.com, Stephen Warren <swarren@wwwdotorg.org>, pdeschrijver@nvidia.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="oIMVlEQ///Q2JYC7"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBFWQ6C6QKGQERIGMUVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v67ZST-E++z5oobLRwCfHMZZR6HTss=MSqJLJArnQz3qMw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rask Ingemann Lambertsen <ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2016-08-08 16:44 GMT+02:00 Jon Hunter <jonathanh@nvidia.com>:
->> +
->> +  gmi@70090000 {
->> +    #address-cells = <1>;
->> +    #size-cells = <1>;
->
-> I think 0 for size makes sense. I know that caused you problems before,
-> but I am wondering if ...
->
->> +    ranges;
->
-> ... ranges is needed here? If we do have it, I am wondering if it should
-> be a single entry for the chip-select that is being used. For now we
-> could only support a ranges with one entry.
->
->         #address-cells = <1>;
->         #size-cells = <1>;
->         ranges = <4 0x48000000 0x00040000>;
->
->> +    nvidia,snor-mux-mode;
->> +    nvidia,snor-adv-inv;
->> +    nvidia,snor-cs-select = <4>;
->
-> I would have expected these under bus@X node as they are specific to the
-> GMI CS.
->
-> I would also expect that the actual chip-select number is encoded in the
-> reg property.
->
->> +
->> +    bus@0,0 {
->
-> bus@4
->
-> No mention of this bus node in the above documentation.
->
->> +      compatible = "simple-bus";
->> +      reg = <0 0>;
->
-> reg = <4>;
->
-> We should look up the chip-select from the reg property.
->
->> +      ranges;
->> +
->> +      #address-cells = <1>;
->> +      #size-cells = <1>;
->> +
->> +      can@48000000 {
->> +        reg = <0x48000000 0x100>;
->> +        ...
->> +      };
->> +
->> +      can@48040000 {
->> +        reg = <0x48040000 0x100>;
->> +        ...
->> +      };
->
-> If we use ranges we could have ...
->
->         can@0 {
->                 reg = <0x0 0x100>;
->                 ...
->         };
->
->         can@40000 {
->                 reg = <0x40000 0x100>;
->                 ...
->         };
->
 
-Hi.
+--oIMVlEQ///Q2JYC7
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Like we discussed I am now trying to implement this but without
-success and I am starting to think that it is not that simple unless I
-am missing something.
+On Tue, Aug 23, 2016 at 12:17:23PM +0800, Chen-Yu Tsai wrote:
+> On Tue, Aug 23, 2016 at 2:09 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-Below tree
+> > Sure, but the constraints also say that you can do 1.32V which the
+> > system is not physically capable of delivering.  That's not a good sign
+> > for the constraints, it suggests that at least the capabilities of the
+> > regulator have not been taken into consideration when setting up the
+> > constraints.
 
-gmi@70009000 {
-     status = "okay";
-     #address-cells = <1>;
-     #size-cells = <1>;
-     ranges = <4 0x48000000 0x7ffffff>;
+> So to be clear, the constraints should be the intersection of the
+> recommended operating parameters of the consumer and the regulator's
+> output, with the voltage/current steps taken in to consideration.
 
-     bus@4 {
-          compatible = "simple-bus";
-          reg = <4 0>;
-          #address-cells = <1>;
-          #size-cells = <1>;
-         nvidia,snor-mux-mode;
-         nvidia,snor-adv-inv;
-
-        can@0 {
-              compatible = "nxp,sja1000";
-              reg = <0 0x100>;
-              ....
-     };
-
-     can@40000 {
-           compatible = "nxp,sja1000";
-           reg = <0x40000 0x100>;
-           ....
-    };
-};
-};
-
-results in:
-
-[    8.472509]    create child: /gmi@70009000/bus@4/can@0
-[    8.472561] OF: ** translation for device /gmi@70009000/bus@4/can@0 **
-[    8.472577] OF: bus is default (na=1, ns=1) on /gmi@70009000/bus@4
-[    8.472589] OF: translating address: 00000000
-[    8.472624] OF: parent bus is default (na=1, ns=1) on /gmi@70009000
-[    8.472641] OF: no ranges; cannot translate
-[    8.472668] of_irq_parse_one: dev=/gmi@70009000/bus@4/can@0, index=0
-[    8.472687]  intspec=13 intlen=2
-[    8.472726]  intsize=2 intlen=2
-[    8.472740] of_irq_parse_raw:  /gpio@6000d000:0000000d,00000001
-[    8.493718] of_irq_parse_raw: ipar=/gpio@6000d000, size=2
-[    8.493737]  -> addrsize=1
-[    8.493743]  -> got it !
-[    8.493755] of_irq_parse_one: dev=/gmi@70009000/bus@4/can@0, index=1
-[    8.493771]  intspec=13 intlen=2
-[    8.493790]  intsize=2 intlen=2
-[    8.493800] of_irq_parse_one: dev=/gmi@70009000/bus@4/can@0, index=0
-[    8.493805]  intspec=13 intlen=2
-[    8.493812]  intsize=2 intlen=2
-[    8.493824] of_irq_parse_raw:  /gpio@6000d000:0000000d,00000001
-[    8.493829] of_irq_parse_raw: ipar=/gpio@6000d000, size=2
-[    8.493834]  -> addrsize=1
-[    8.493837]  -> got it !
-[    8.493869] OF: ** translation for device /gmi@70009000/bus@4/can@0 **
-[    8.493885] OF: bus is default (na=1, ns=1) on /gmi@70009000/bus@4
-[    8.493892] OF: translating address: 00000000
-[    8.493902] OF: parent bus is default (na=1, ns=1) on /gmi@70009000
-[    8.493906] OF: no ranges; cannot translate
-[    8.493918] OF: ** translation for device /gmi@70009000/bus@4 **
-[    8.493924] OF: bus is default (na=1, ns=1) on /gmi@70009000
-[    8.493930] OF: translating address: 00000004
-[    8.493938] OF: parent bus is default (na=1, ns=1) on /
-[    8.493944] OF: walking ranges...
-[    8.493952] OF: default map, cp=4, s=7ffffff, da=4
-[    8.493973] OF: parent translation for: 48000000
-[    8.493978] OF: with offset: 0
-[    8.493986] OF: one level translation: 48000000
-[    8.493989] OF: reached root node
-[    8.494011] of_dma_get_range: no dma-ranges found for
-node(/gmi@70009000/bus@4/can@0)
-[    8.494037] platform 48000000.bus:can@0: device is not dma coherent
-[    8.494048] platform 48000000.bus:can@0: device is not behind an iommu
-[    8.495209] sja1000 probe entered
-[    8.495212] sja1000 probe entered1
-
-sja1000 probe fails because resource address is NULL.
-
-The result is the same for the second child device.
-
-I also attempted to add "ranges;" property to the bus child node,
-which results in the same error on can@0, and can@4000 is actually
-translated but it is not what I expect it to be (0x4803fff8).
-
-And I am not quite sure how to get around this in a simple way. I can
-not wrap my head around how the ranges property actually works really.
-
-Any suggestions would be really helpful.
-
-Best Regards
-Mirza
+The constraints are there to say what the *system* can deliver.  That
+includes the limitations of the consumers, the regulators and the
+physical design of the board.  Just as one shouldn't just throw in the
+maximum voltage range that the regulator can deliver one also shouldn't
+just use the maximum voltage range a consumer can support for similar
+reasons.
+--oIMVlEQ///Q2JYC7--
