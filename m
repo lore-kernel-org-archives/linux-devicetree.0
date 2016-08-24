@@ -1,74 +1,54 @@
-From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v7 12/14] arm64/numa: remove the limitation that cpu0 must bind to node0
-Date: Wed, 24 Aug 2016 15:44:51 +0800
-Message-ID: <1472024693-12912-13-git-send-email-thunder.leizhen@huawei.com>
-References: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] usb: renesas_usbhs: add a compatible string for r8a7796
+Date: Wed, 24 Aug 2016 16:39:53 +0900
+Message-ID: <1472024393-20956-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>
-Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-1. Currently only cpu0 set on cpu_possible_mask and percpu areas have not
-   been initialized.
-2. No reason to limit cpu0 must belongs to node0.
+This patch adds support for r8a7796 (R-Car M3-W).
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm64/mm/numa.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
+ drivers/usb/renesas_usbhs/common.c                      | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 114180f..07a1978 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -94,7 +94,6 @@ void numa_clear_node(unsigned int cpu)
-  */
- static void __init setup_node_to_cpumask_map(void)
- {
--	unsigned int cpu;
- 	int node;
-
- 	/* setup nr_node_ids if not done yet */
-@@ -107,9 +106,6 @@ static void __init setup_node_to_cpumask_map(void)
- 		cpumask_clear(node_to_cpumask_map[node]);
- 	}
-
--	for_each_possible_cpu(cpu)
--		set_cpu_numa_node(cpu, NUMA_NO_NODE);
--
- 	/* cpumask_of_node() will now work */
- 	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
- }
-@@ -119,13 +115,13 @@ static void __init setup_node_to_cpumask_map(void)
-  */
- void numa_store_cpu_info(unsigned int cpu)
- {
--	map_cpu_to_node(cpu, numa_off ? 0 : cpu_to_node_map[cpu]);
-+	map_cpu_to_node(cpu, cpu_to_node_map[cpu]);
- }
-
- void __init early_map_cpu_to_node(unsigned int cpu, int nid)
- {
- 	/* fallback to node 0 */
--	if (nid < 0 || nid >= MAX_NUMNODES)
-+	if (nid < 0 || nid >= MAX_NUMNODES || numa_off)
- 		nid = 0;
-
- 	cpu_to_node_map[cpu] = nid;
-@@ -375,10 +371,6 @@ static int __init numa_init(int (*init_func)(void))
-
- 	setup_node_to_cpumask_map();
-
--	/* init boot processor */
--	cpu_to_node_map[0] = 0;
--	map_cpu_to_node(0, 0);
--
- 	return 0;
- }
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+index b604056..9e18e00 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+@@ -9,6 +9,7 @@ Required properties:
+ 	- "renesas,usbhs-r8a7793" for r8a7793 (R-Car M2-N) compatible device
+ 	- "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
+ 	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
++	- "renesas,usbhs-r8a7796" for r8a7796 (R-Car M3-W) compatible device
+ 	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 compatible device
+ 	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 compatible device
+ 
+diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
+index ac67bab..012a37a 100644
+--- a/drivers/usb/renesas_usbhs/common.c
++++ b/drivers/usb/renesas_usbhs/common.c
+@@ -482,6 +482,10 @@ static const struct of_device_id usbhs_of_match[] = {
+ 		.data = (void *)USBHS_TYPE_RCAR_GEN3,
+ 	},
+ 	{
++		.compatible = "renesas,usbhs-r8a7796",
++		.data = (void *)USBHS_TYPE_RCAR_GEN3,
++	},
++	{
+ 		.compatible = "renesas,rcar-gen2-usbhs",
+ 		.data = (void *)USBHS_TYPE_RCAR_GEN2,
+ 	},
+-- 
+1.9.1
 
 --
-2.5.0
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
