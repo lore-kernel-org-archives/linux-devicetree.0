@@ -1,140 +1,129 @@
-From: Mirza Krak <mirza.krak@gmail.com>
-Subject: Re: [PATCH v2 3/6] dt/bindings: Add bindings for Tegra GMI controller
-Date: Wed, 24 Aug 2016 21:54:47 +0200
-Message-ID: <CALw8SCVcPymDZ8NyUbeanRF0TCT1TZzL6iRDticYA42FWrEWqw@mail.gmail.com>
-References: <1472045838-22628-1-git-send-email-mirza.krak@gmail.com>
- <1472045838-22628-4-git-send-email-mirza.krak@gmail.com>
- <de2fb909-829e-6c04-4f6a-442cbb9171c9@nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Wed, 24 Aug 2016 22:01:08 +0200
+Message-ID: <1909939.rYmWMrdImI@wuerfel>
+References: <cover.147018b3518.git.dalias@libc.org> <57BDCE5D.2050609@linaro.org> <20160824174001.GW15995@brightrain.aerifal.cx>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <de2fb909-829e-6c04-4f6a-442cbb9171c9@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: mark.rutland@arm.com, Alexandre Courbot <gnurou@gmail.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, linux-clk@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, pdeschrijver@nvidia.com, sboyd@codeaurora.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160824174001.GW15995@brightrain.aerifal.cx>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-2016-08-24 17:56 GMT+02:00 Jon Hunter <jonathanh@nvidia.com>:
-+
->> +Example with two SJA1000 CAN controllers connected to the GMI bus. We wrap the
->> +controllers with a simple-bus node since they are all connected to the same
->> +chip-select (CS4), in this example external address decoding is provided:
->> +
->> +gmi@70090000 {
->> +     compatible = "nvidia,tegra20-gmi";
->> +     reg = <0x70009000 0x1000>;
->> +     #address-cells = <1>;
->> +     #size-cells = <1>;
->> +     clocks = <&tegra_car TEGRA20_CLK_NOR>;
->> +     clock-names = "gmi";
->> +     resets = <&tegra_car 42>;
->> +     reset-names = "gmi";
->> +     ranges = <4 0x48000000 0x7ffffff>;
->> +
->> +     status = "disabled";
->> +
->> +     bus@4 {
->> +             compatible = "simple-bus";
->> +             reg = <4>;
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +             ranges = <0 4 0x40100>;
->
-> Does this work? I tried to add an example like this and I got ...
->
-> Warning (reg_format): "reg" property in /gmi@70009000/bus@4 has invalid
-> length (4 bytes) (#address-cells == 1, #size-cells == 1)
+On Wednesday, August 24, 2016 1:40:01 PM CEST Rich Felker wrote:
+> On Wed, Aug 24, 2016 at 06:42:05PM +0200, Daniel Lezcano wrote:
+> > > diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> > > index 5677886..3210ca5 100644
+> > > --- a/drivers/clocksource/Kconfig
+> > > +++ b/drivers/clocksource/Kconfig
+> > > @@ -407,6 +407,15 @@ config SYS_SUPPORTS_SH_TMU
+> > >  config SYS_SUPPORTS_EM_STI
+> > >          bool
+> > >  
+> > > +config CLKSRC_JCORE_PIT
+> > > +   bool "J-Core PIT timer driver"
+> > > +   depends on OF && (SUPERH || COMPILE_TEST)
+> > 
+> > Even if this is correct, for the sake of consistency, it is preferable
+> > to change it to:
+> > 
+> >       bool "J-Core PIT timer driver" if COMPILE_TEST
+> >       depends on SUPERH
+> >       select CLKSRC_OF
+> 
+> Is this functionally equivalent? If so that's non-obvious to me. What
+> about the dropped OF dependency? The intent is that the option should
+> always be available for SUPERH targets using OF, otherwise only
+> available with COMPILE_TEST.
 
-Shoot, to get rid of the warning it should be
+I think your version is correct here, Daniel made a mistake with the
+SUPERH dependency. Another way to write it would be
 
-reg = <4 0 >;
+config CLKSRC_JCORE_PIT
+   bool "J-Core PIT timer driver" if COMPILE_TEST && !JCORE
+   depends on OF
+	default JCORE
 
-But it works either way.
+to make it impossible to disable when JCORE is set, but
+user-visible on all other architectures, SUPERH or otherwise.
 
->
-> I am wondering if we should just following the arm,pl172 example and
-> have ...
->
->         cs4 {
->                 compatible = "simple-bus";
->                 #address-cells = <1>;
->                 #size-cells = <1>;
->                 ranges;
->
->                 nvidia,snor-cs = <4>;
->                 nvidia,snor-mux-mode;
->                 nvidia,snor-adv-inv;
->
->                 can@0 {
->                         reg = <0 0x100>;
->                         ...
->                 };
->
->                 ...
->         };
->
+> > > +static int jcore_pit_set(unsigned long delta, struct jcore_pit *pit)
+> > > +{
+> > > +   jcore_pit_disable(pit);
+> > > +   __raw_writel(delta, pit->base + REG_THROT);
+> > > +   __raw_writel(pit->enable_val, pit->base + REG_PITEN);
+> > > +   return 0;
+> > 
+> > Why do you need to use __raw_writel ?
+> > 
+> > s/__raw_writel/writel/
+> 
+> I actually tried multiple times to find good resources on policy for
+> which form to prefer, but didn't have much luck. My understanding is
+> that __raw_writel/__raw_readl always performs a native-endian
+> load/store, whereas writel/readl behavior depends on cpu endianness
+> and whether the arch declares that "pci bus" (that was the term I
+> found in the source, not relevant here) io is endian-swapped or not.
+> Can you give me a better explanation of why we might prefer one form
+> or the other?
 
-That means to go back to V1 really (almost :)). Which I do not mind.
-Will give it a test run.
+In general, a portable driver should use readl/writel because they
+are defined to have the behavior that x86 provides, which is what
+most developers understand best. Compared to __raw_readl/__raw_writel,
+it guarantees
 
-But I am a little hesitant if will be any better/cleaner. In your example above:
+- correct endianess (in most cases, exceptions see below)
+- does not leak out of spinlocks
+- accesses are word-sized, the compiler cannot split them into
+  byte accesses, or merge subsequent accesses into larger words
+- ordering against dma_map_*/dma_unmap_*/dma_sync_* is maintained
 
-can@0 {
-         reg = <0 0x100>;
-         ...
-};
+The __raw_* accessors are used as building blocks for
+readl/outl/ioread32/ioread32_be/readl_relaxed/... and they can
+usually be used safely on device RAM such as framebuffers but
+not much else in portable code. Some architectures also use the
+__raw_* accessors for MMIO registers, but that code is generally
+not portable.
 
-Would this really translate correctly? In the pl172 example they have
-multiple ranges and address with "flash@0,0" which a range defined in
-parent node. "can@0" does not have valid match in parent node in our
-example. So I probably need add some more logic for it to properly
-translate.
+Endianess is always more complicated than one thinks, and it's
+handled differently across architectures, sometimes because of
+hardware differences, sometimes for historic reasons that differ
+only in the Linux implementation.
 
-I have an idea which is following:
+A large majority of devices are fixed to little-endian MMIO
+registers (as recommended by PCI), so that is a good default.
 
-gmi@70090000 {
-         status = "okay";
-         #address-cells = <2>;
-         #size-cells = <1>;
-         ranges = <4 0 0x48000000 0x00040000>;
+Exceptions to this are:
 
-         cs4 {
-                 compatible = "simple-bus";
-                 #address-cells = <2>;
-                 #size-cells = <1>;
-                 ranges;
+* Some architectures (e.g. PowerPC) typically run big-endian code,
+  and hardware designers decided to make the MMIO registers the
+  same. In this case, you can generally use ioread32_be/iowrite32_be.
 
-                 nvidia,snor-cs = <4>;
-                 nvidia,snor-mux-mode;
-                 nvidia,snor-adv-inv;
+* Some devices have configurable endianess with a device specific
+  register. 
+  Sometimes those registers are set to match the CPU endianess,
+  but for Linux it tends to be better to just set them to
+  little-endian and use readl/writel
 
-                 can@0 {
-                         compatible = "nxp,sja1000";
-                         reg = <4 0 0x100>;
-                         ...
-                 };
+* Some drivers are configurable at HW synthesis time, and we have
+  a mix of devices. If you have this, you usually need to support
+  both ways in the driver with a helper function that uses ioread32
+  or ioread32_be depending on the configuration. This can be done
+  using either compile-time or runtime configuration.
 
+* Some SoCs have boot-time configurable endianess and enforce that
+  MMIO registers and the CPU always use the same way. We are
+  inconsistent in handling those, I'd recommend creating a header
+  file for that SoC that defines vendor specific helper functions.
 
-                 can@40000 {
-                         compatible = "nxp,sja1000";
-                         reg = <4 0x40000 0x100>;
-                         ...
-                 };
-         };
-};
+* Some (usually very old) SoCs have configurable endianess, but
+  don't actually change the behavior of the SoC or the MMIO devices,
+  but only flip the address lines on the memory interface.
+  This is similar to the previous one, but has additional problems
+  with FIFO registers. You generally cannot use portable drivers
+  here.
 
-Do not know if above will work at all (not able to test at current
-location), anyway I will play around with it some more and get back to
-you.
-
-Best Regards
-Mirza
+	Arnd
