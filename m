@@ -1,159 +1,187 @@
-From: Vinay Simha <simhavcs@gmail.com>
-Subject: Re: [RESEND] [PATCH v2 2/4] dt-bindings: Add jdi lt070me05000 panel bindings
-Date: Wed, 24 Aug 2016 22:54:36 +0530
-Message-ID: <CAGWqDJ7sOYW0E5-dUyRZu5A30bjaB3PiMbzVTuB+se76ehvzsQ@mail.gmail.com>
-References: <1469978126-925-1-git-send-email-simhavcs@gmail.com>
- <1469978126-925-2-git-send-email-simhavcs@gmail.com> <20160824114534.GA3169@ulmo.ba.sec>
- <CAGWqDJ7L3DPKo9iHT4+FZvksO8hbwQ4Zfb5qVrTEwmYcXb_U2A@mail.gmail.com> <20160824123246.GA3714@ulmo.ba.sec>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Wed, 24 Aug 2016 13:40:01 -0400
+Message-ID: <20160824174001.GW15995@brightrain.aerifal.cx>
+References: <cover.147018b3518.git.dalias@libc.org>
+ <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
+ <57BDCE5D.2050609@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160824123246.GA3714@ulmo.ba.sec>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Archit Taneja <archit.taneja@gmail.com>, John Stultz <john.stultz@linaro.org>, Sumit Semwal <sumit.semwal@linaro.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <57BDCE5D.2050609@linaro.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
- - dcdc-en-gpios: power IC supply enable
+On Wed, Aug 24, 2016 at 06:42:05PM +0200, Daniel Lezcano wrote:
+> > diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> > index 5677886..3210ca5 100644
+> > --- a/drivers/clocksource/Kconfig
+> > +++ b/drivers/clocksource/Kconfig
+> > @@ -407,6 +407,15 @@ config SYS_SUPPORTS_SH_TMU
+> >  config SYS_SUPPORTS_EM_STI
+> >          bool
+> >  
+> > +config CLKSRC_JCORE_PIT
+> > +	bool "J-Core PIT timer driver"
+> > +	depends on OF && (SUPERH || COMPILE_TEST)
+> 
+> Even if this is correct, for the sake of consistency, it is preferable
+> to change it to:
+> 
+> 	bool "J-Core PIT timer driver" if COMPILE_TEST
+> 	depends on SUPERH
+> 	select CLKSRC_OF
 
-i cannot make this as gpios, since pm8921_lvs7 is a regulator.
-We can make gpio as regulator, but not regulator as gpio.
+Is this functionally equivalent? If so that's non-obvious to me. What
+about the dropped OF dependency? The intent is that the option should
+always be available for SUPERH targets using OF, otherwise only
+available with COMPILE_TEST.
 
-other option i have to map pm8921_lvs7 to iovcc-supply and pm8921_gpio
-23 to dcdc-en-gpios.
+> > +static int jcore_pit_set(unsigned long delta, struct jcore_pit *pit)
+> > +{
+> > +	jcore_pit_disable(pit);
+> > +	__raw_writel(delta, pit->base + REG_THROT);
+> > +	__raw_writel(pit->enable_val, pit->base + REG_PITEN);
+> > +	return 0;
+> 
+> Why do you need to use __raw_writel ?
+> 
+> s/__raw_writel/writel/
 
-Since we do not have nx7 schematic not sure which pins are mapped in
-hardware, other than the src code reference. Even in the 3.4 source
-code gpio/pin/regulator mappings and naming are not proper in
-board-flo-display.c
+I actually tried multiple times to find good resources on policy for
+which form to prefer, but didn't have much luck. My understanding is
+that __raw_writel/__raw_readl always performs a native-endian
+load/store, whereas writel/readl behavior depends on cpu endianness
+and whether the arch declares that "pci bus" (that was the term I
+found in the source, not relevant here) io is endian-swapped or not.
+Can you give me a better explanation of why we might prefer one form
+or the other?
 
-What is your suggestion?
+> > +	freq = DIV_ROUND_CLOSEST(NSEC_PER_SEC, buspd);
+> > +	pit->periodic_delta = DIV_ROUND_CLOSEST(NSEC_PER_SEC, HZ*buspd);
+> 
+> --->					HZ * buspd
 
-On Wed, Aug 24, 2016 at 6:02 PM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Wed, Aug 24, 2016 at 05:34:55PM +0530, Vinay Simha wrote:
->> thierry,
->>
->> this is the reference pinouts of the panel
->> http://www.tonylabs.com/wp-content/uploads/LT070ME05000-pinouts.jpg
->
-> I can't open that file.
->
->> as you suggest , i will change the vcc-supply,
->>
->>  - iovcc-supply: phandle of the regulator that supplies power to
->>           the IOVCC voltage input (1.8 V)
->>
->> will keep the other two(vddp-supply, dcdc_en-supply) remaining same.
->
-> "dcdc_en" sounds to me like it should be a GPIO rather than a regulator.
->
-> According to this datasheet:
->
->         http://kb.52solution.com/data/uploads/2016/04/07/3172846545705cc22d050e.pdf
->
-> the input voltages are indeed VDD, VDDp and IOVCC, though with slightly
-> larger tolerances than the previous datasheet. VDD and VDDp can both go
-> from 3.0 V to 5.0 V. DCDC_EN is indeed an additional GPIO to enable the
-> VDDp supply.
->
-> I think you'd need something along these lines:
->
->         - vdd-supply: LED power supply (3.0-5.0 V)
->         - vddp-supply: power IC supply (3.0-5.0 V)
->         - iovcc-supply: LCM power supply (1.8 V)
->         - dcdc-en-gpios: power IC supply enable
->         - led-en-gpios: LED backlight enable
->
-> Or perhaps your vddp-supply should be a regulator that's controlled by
-> the GPIO that you'd put in dcdc-en-gpios. That might work better. That
-> would leave only led-en-gpios as the only enable GPIOs property, so it
-> would be okay to keep the name "enable-gpios", I guess.
->
-> Thierry
->
->> On Wed, Aug 24, 2016 at 5:15 PM, Thierry Reding
->> <thierry.reding@gmail.com> wrote:
->> > On Sun, Jul 31, 2016 at 08:45:21PM +0530, Vinay Simha BN wrote:
->> >> Add documentation for lt070me05000 panel
->> >>
->> >> Cc: Archit Taneja <archit.taneja@gmail.com>
->> >> Cc: John Stultz <john.stultz@linaro.org>
->> >> Cc: Thierry Reding <thierry.reding@gmail.com>
->> >> Cc: Sumit Semwal <sumit.semwal@linaro.org>
->> >> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
->> >> Acked-by: Rob Herring <robh@kernel.org>
->> >>
->> >> ---
->> >> v2:
->> >>  * incorporated rob herring and thierry reviews
->> >>    gpio to gpios, gpio to regulator using fixed regulators
->> >>    and pwm backlight is removed, since it is controlled by
->> >>    dcs commands
->> >> ---
->> >>  .../bindings/display/panel/jdi,lt070me05000.txt    | 57 ++++++++++++++++++++++
->> >>  1 file changed, 57 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
->> >> new file mode 100644
->> >> index 0000000..613b76f
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
->> >> @@ -0,0 +1,57 @@
->> >> +JDI model LT070ME05000 1200x1920 7" DSI Panel
->> >> +
->> >> +Required properties:
->> >> +- compatible: should be "jdi,lt070me05000"
->> >> +- vddp-supply: phandle of the regulator that provides the supply voltage
->> >> +  Power IC supply (3-5V)
->> >> +- dcdc_en-supply: phandle of the regulator that provides the supply voltage
->> >> +  Power IC supply enable, High active
->> >> +- vcc-supply: phandle of the regulator that provides the supply voltage
->> >> +  IOVCC , power supply for LCM (1.8V)
->> >
->> > I was just going to apply this and wanted to add some information about
->> > how many lanes the panel uses, so I looked at the datasheet linked to in
->> > patch 4/4:
->> >
->> >         http://panelone.net/en/7-0-inch/JDI_LT070ME05000_7.0_inch-datasheet
->> >
->> > and noticed that the power supplies in the binding here don't match the
->> > ones listed in the datasheet. Granted, the datasheet is somewhat meager,
->> > but it lists the following three input voltages:
->> >
->> >         - IOVCC at 1.8 V
->> >         - VDD at 3.0 V
->> >         - VDDP at 3.0 V
->> >
->> > This matches in part what the above binding describes, but it's not
->> > quite right, so I'm wondering if the name for dcdc_en-supply came from
->> > the board schematics and reflects the name of the rail on the board
->> > design that provides this rather than the input voltage on the panel.
->> >
->> > I think we should follow the names in the panel datasheet so that people
->> > can more easily reference the correct regulators when using this panel
->> > on a different board. I'd suggest:
->> >
->> >         - iovcc-supply: phandle of the regulator that supplies power to
->> >           the IOVCC voltage input (1.8 V)
->> >         - vdd-supply: phandle of the regulator that supplies power to
->> >           the VDD voltage input (3.0 V)
->> >         - vddp-supply: phandle of the regulator that supplies power to
->> >           the VDDP voltage input (3.0 V)
->> >
->> > Any objections?
->> >
->> > Thierry
->>
->>
->>
->> --
->> regards,
->> vinaysimha
+OK.
 
+> > +	clockevents_config_and_register(&pit->ced, freq, 1, ULONG_MAX);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int jcore_pit_local_shutdown(unsigned cpu)
+> > +{
+> > +	return 0;
+> > +}
+> 
+> This function is useless I think. AFAIU, cpuhp_setup_state can have a
+> NULL function for the cpu teardown.
 
+OK, I wasn't sure if that was permitted.
 
--- 
-regards,
-vinaysimha
+> > +	jcore_cs.name = "jcore_pit_cs";
+> > +	jcore_cs.rating = 400;
+> > +	jcore_cs.read = jcore_clocksource_read;
+> > +	jcore_cs.mult = 1;
+> > +	jcore_cs.shift = 0;
+> > +	jcore_cs.mask = CLOCKSOURCE_MASK(32);
+> > +	jcore_cs.flags = CLOCK_SOURCE_IS_CONTINUOUS;
+> > +
+> > +	err = clocksource_register_hz(&jcore_cs, NSEC_PER_SEC);
+> > +	if (err) {
+> > +		pr_err("Error registering clocksource device: %d\n", err);
+> > +		return err;
+> > +	}
+> 
+> May be you can consider by replacing the above by:
+> 
+> 	clocksource_mmio_init(jcore_pit_base, "jcore_pit_cs",
+> 				NSEC_PER_SEC, 32,
+> 				jcore_clocksource_read);
+
+I think you're missing the rating argument. Otherwise it should work,
+but is there a good reason to prefer it? The code is slightly simpler;
+I'm not sure if using kzalloc vs static storage is better or worse.
+
+> > +	sched_clock_register(jcore_sched_clock_read, 32, NSEC_PER_SEC);
+> > +
+> > +	jcore_pit_percpu = alloc_percpu(struct jcore_pit);
+> > +	if (!jcore_pit_percpu) {
+> > +		pr_err("Failed to allocate memory for clock event device\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	err = request_irq(pit_irq, jcore_timer_interrupt,
+> > +			  IRQF_TIMER | IRQF_PERCPU,
+> > +			  "jcore_pit", jcore_pit_percpu);
+> > +	if (err) {
+> > +		pr_err("pit irq request failed: %d\n", err);
+> > +		return err;
+> > +	}
+> 
+> That is my major concern. Regarding the description of this timer, it
+> appears there is one timer per cpu but we use request_irq instead of
+> request_percpu_irq.
+> 
+> IIUC, there is a problem with the interrupt controller where the per irq
+> line are not working correctly. Is that correct ?
+
+I don't think that's a correct characterization. Rather the percpu
+infrastructure just means something completely different from what you
+would expect it to mean. It has nothing to do with the hardware but
+rather with kernel-internal choice of whether to do percpu devid
+mapping inside the irq infrastructure, and the choice at the
+irq-requester side of whether to do this is required to match the
+irqchip driver's choice. I explained this better in another email
+which I could dig up if necessary, but the essence is that
+request_percpu_irq is a misnamed and unusably broken API.
+
+> Regarding Marc Zyngier comments about the irq controller driver being
+> almost empty, I'm wondering if something in the irq controller driver
+> which shouldn't be added before submitting this timer driver with SMP
+> support (eg. irq domain ?).
+
+I don't think so. At most I could make the driver hard-code the percpu
+devid model for certain irqs, but that _does not reflect_ anything
+about the hardware. Rather it just reflects bad kernel internals. It
+would also require writing a new percpu devid version of
+handle_simple_irq.
+
+In the other thread where I discussed this, I suggested irq framework
+changes that would clean this all up and make the percpu devid stuff
+work the way someone trying to use the API would expect, but such
+changes are not necessary for the J-Core drivers (or other existing
+drivers) to work.
+
+> > +	/*
+> > +	 * The J-Core PIT is not hard-wired to a particular IRQ, but
+> > +	 * integrated with the interrupt controller such that the IRQ it
+> > +	 * generates is programmable. The programming interface has a
+> > +	 * legacy field which was an interrupt priority for AIC1, but
+> > +	 * which is OR'd onto bits 2-5 of the generated IRQ number when
+> > +	 * used with J-Core AIC2, so set it to match these bits.
+> > +	 */
+> > +	hwirq = irq_get_irq_data(pit_irq)->hwirq;
+> 
+> 	irq_hw_number_t hwirq;
+> 	hwirq = irqd_to_hwirq(irq_get_irq_data(pit_irq));
+
+OK.
+
+> > +	irqprio = (hwirq >> 2) & PIT_PRIO_MASK;
+> > +	enable_val = (1U << PIT_ENABLE_SHIFT)
+> > +		   | (hwirq << PIT_IRQ_SHIFT)
+> > +		   | (irqprio << PIT_PRIO_SHIFT);
+> 
+> 
+> I'm missing the connection between the description above and the enable
+> value computed here. Can you elaborate ?
+
+The irqprio field is filled in using a value that matches bits 2 and
+up of hwirq; this is what the comment says and what the code does. Can
+you elaborate on what you don't understand?
+
+Rich
