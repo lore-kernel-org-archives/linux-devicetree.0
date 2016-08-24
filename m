@@ -1,54 +1,109 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] usb: renesas_usbhs: add a compatible string for r8a7796
-Date: Wed, 24 Aug 2016 16:39:53 +0900
-Message-ID: <1472024393-20956-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v7 07/14] of_numa: Use pr_fmt()
+Date: Wed, 24 Aug 2016 15:44:46 +0800
+Message-ID: <1472024693-12912-8-git-send-email-thunder.leizhen@huawei.com>
+References: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>
+Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for r8a7796 (R-Car M3-W).
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Use pr_fmt to prefix kernel output.
+
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
- drivers/usb/renesas_usbhs/common.c                      | 4 ++++
- 2 files changed, 5 insertions(+)
+ drivers/of/of_numa.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index b604056..9e18e00 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -9,6 +9,7 @@ Required properties:
- 	- "renesas,usbhs-r8a7793" for r8a7793 (R-Car M2-N) compatible device
- 	- "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
- 	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
-+	- "renesas,usbhs-r8a7796" for r8a7796 (R-Car M3-W) compatible device
- 	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 compatible device
- 	- "renesas,rcar-gen3-usbhs" for R-Car Gen3 compatible device
- 
-diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index ac67bab..012a37a 100644
---- a/drivers/usb/renesas_usbhs/common.c
-+++ b/drivers/usb/renesas_usbhs/common.c
-@@ -482,6 +482,10 @@ static const struct of_device_id usbhs_of_match[] = {
- 		.data = (void *)USBHS_TYPE_RCAR_GEN3,
- 	},
- 	{
-+		.compatible = "renesas,usbhs-r8a7796",
-+		.data = (void *)USBHS_TYPE_RCAR_GEN3,
-+	},
-+	{
- 		.compatible = "renesas,rcar-gen2-usbhs",
- 		.data = (void *)USBHS_TYPE_RCAR_GEN2,
- 	},
--- 
-1.9.1
+diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+index ed103e6..1234b4a 100644
+--- a/drivers/of/of_numa.c
++++ b/drivers/of/of_numa.c
+@@ -16,6 +16,8 @@
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+
++#define pr_fmt(fmt) "OF: NUMA: " fmt
++
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/nodemask.h>
+@@ -49,10 +51,9 @@ static void __init of_numa_parse_cpu_nodes(void)
+ 		if (r)
+ 			continue;
+
+-		pr_debug("NUMA: CPU on %u\n", nid);
++		pr_debug("CPU on %u\n", nid);
+ 		if (nid >= MAX_NUMNODES)
+-			pr_warn("NUMA: Node id %u exceeds maximum value\n",
+-				nid);
++			pr_warn("Node id %u exceeds maximum value\n", nid);
+ 		else
+ 			node_set(nid, numa_nodes_parsed);
+ 	}
+@@ -76,7 +77,7 @@ static int __init of_numa_parse_memory_nodes(void)
+ 			continue;
+
+ 		if (nid >= MAX_NUMNODES) {
+-			pr_warn("NUMA: Node id %u exceeds maximum value\n", nid);
++			pr_warn("Node id %u exceeds maximum value\n", nid);
+ 			return -EINVAL;
+ 		}
+
+@@ -85,7 +86,7 @@ static int __init of_numa_parse_memory_nodes(void)
+
+ 		if (!i || r) {
+ 			of_node_put(np);
+-			pr_err("NUMA: bad property in memory node\n");
++			pr_err("bad property in memory node\n");
+ 			return r ? : -EINVAL;
+ 		}
+ 	}
+@@ -99,17 +100,17 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
+ 	int entry_count;
+ 	int i;
+
+-	pr_info("NUMA: parsing numa-distance-map-v1\n");
++	pr_info("parsing numa-distance-map-v1\n");
+
+ 	matrix = of_get_property(map, "distance-matrix", NULL);
+ 	if (!matrix) {
+-		pr_err("NUMA: No distance-matrix property in distance-map\n");
++		pr_err("No distance-matrix property in distance-map\n");
+ 		return -EINVAL;
+ 	}
+
+ 	entry_count = of_property_count_u32_elems(map, "distance-matrix");
+ 	if (entry_count <= 0) {
+-		pr_err("NUMA: Invalid distance-matrix\n");
++		pr_err("Invalid distance-matrix\n");
+ 		return -EINVAL;
+ 	}
+
+@@ -124,7 +125,7 @@ static int __init of_numa_parse_distance_map_v1(struct device_node *map)
+ 		matrix++;
+
+ 		numa_set_distance(nodea, nodeb, distance);
+-		pr_debug("NUMA:  distance[node%d -> node%d] = %d\n",
++		pr_debug("distance[node%d -> node%d] = %d\n",
+ 			 nodea, nodeb, distance);
+
+ 		/* Set default distance of node B->A same as A->B */
+@@ -171,7 +172,7 @@ int of_node_to_nid(struct device_node *device)
+ 		np = of_get_next_parent(np);
+ 	}
+ 	if (np && r)
+-		pr_warn("NUMA: Invalid \"numa-node-id\" property in node %s\n",
++		pr_warn("Invalid \"numa-node-id\" property in node %s\n",
+ 			np->name);
+ 	of_node_put(np);
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.5.0
