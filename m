@@ -1,146 +1,50 @@
-From: Zach Brown <zach.brown@ni.com>
-Subject: Re: [PATCH] sdhci: Add quirk and device tree parameter to force SD
- test mode
-Date: Tue, 23 Aug 2016 17:04:43 -0500
-Message-ID: <20160823220442.GA20351@zach-desktop>
-References: <1471906531-28668-1-git-send-email-zach.brown@ni.com>
- <AM4PR0401MB2324D95AB7382C828BF8E5CE90EB0@AM4PR0401MB2324.eurprd04.prod.outlook.com>
+From: Milo Kim <woogyom.kim@gmail.com>
+Subject: [PATCH v2 0/4] ARM: dts: exynos: Enable HDMI in Arndale Octa board
+Date: Wed, 24 Aug 2016 11:25:20 +0900
+Message-ID: <1472005524-3489-1-git-send-email-woogyom.kim@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AM4PR0401MB2324D95AB7382C828BF8E5CE90EB0@AM4PR0401MB2324.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Haibo Chen <haibo.chen@nxp.com>
-Cc: "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, David Airlie <airlied@linux.ie>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Milo Kim <woogyom.kim@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 23, 2016 at 01:34:20AM +0000, Haibo Chen wrote:
-> > -----Original Message-----
-> > From: linux-mmc-owner@vger.kernel.org [mailto:linux-mmc-
-> > owner@vger.kernel.org] On Behalf Of Zach Brown
-> > Sent: Tuesday, August 23, 2016 6:56 AM
-> > To: adrian.hunter@intel.com
-> > Cc: ulf.hansson@linaro.org; mark.rutland@arm.com; robh+dt@kernel.org;
-> > linux-mmc@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> > kernel@vger.kernel.org
-> > Subject: [PATCH] sdhci: Add quirk and device tree parameter to force SD test
-> > mode
-> > 
-> > From: Jaeden Amero <jaeden.amero@ni.com>
-> > 
-> > On some devices, CD is broken so that we must force the SDHCI into test mode
-> > and set CD, so that it always detects an SD card as present.
-> > 
-> > In order to get a device with broken CD working, we had previously always set
-> > the SDHCI into test mode. Unfortunately, this had the side effect of making all
-> > SD cards used with our Linux kernels undetectable and non-removable.
-> 
-> Why not use the poll mode? You can set the flag MMC_CAP_NEEDS_POLL, then 
-> the mmc core will detect the card every second.
-> 
-
-We're using a Xilinx Zynq device. In an AR they state:
-"Signals card detect (CDn) and write protect (WPn) are required for the Zynq SD
-card interface to work." http://www.xilinx.com/support/answers/61064.html
-So polling won't work, since the interface itself won't work unless CDn is on.
-Test mode allows us to get the interface working with no CDn signal.
-
-
-> > 
-> > By making this "SD test mode" setting optional via a quirk, we can avoid this
-> > side effect for devices other than the device with broken CD.
-> > Additionally, we add a device parameter to sdhci-pltfm to allow all SDHCI
-> > drivers to enable this quirk.
-> > 
-> > Signed-off-by: Jaeden Amero <jaeden.amero@ni.com>
-> > Signed-off-by: Zach Brown <zach.brown@ni.com>
-> > ---
-> >  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
-> >  drivers/mmc/host/sdhci-pltfm.c                | 4 ++++
-> >  drivers/mmc/host/sdhci.c                      | 9 +++++++++
-> >  drivers/mmc/host/sdhci.h                      | 4 ++++
-> >  4 files changed, 19 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt
-> > b/Documentation/devicetree/bindings/mmc/mmc.txt
-> > index 22d1e1f..3a9be41 100644
-> > --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> > +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> > @@ -52,6 +52,8 @@ Optional properties:
-> >  - no-sdio: controller is limited to send sdio cmd during initialization
-> >  - no-sd: controller is limited to send sd cmd during initialization
-> >  - no-mmc: controller is limited to send mmc cmd during initialization
-> > +- force-sd-cd-test-mode: card detection is broken on device, force cd
-> > +test
-> > +  enable and cd test inserted so host will always detect a card.
-> > 
-> >  *NOTE* on CD and WP polarity. To use common for all SD/MMC host
-> > controllers line  polarity properties, we have to fix the meaning of the "normal"
-> > and "inverted"
-> > diff --git a/drivers/mmc/host/sdhci-pltfm.c b/drivers/mmc/host/sdhci-pltfm.c
-> > index 1d17dcf..056d101 100644
-> > --- a/drivers/mmc/host/sdhci-pltfm.c
-> > +++ b/drivers/mmc/host/sdhci-pltfm.c
-> > @@ -87,6 +87,10 @@ void sdhci_get_of_property(struct platform_device
-> > *pdev)
-> >  	if (of_get_property(np, "broken-cd", NULL))
-> >  		host->quirks |= SDHCI_QUIRK_BROKEN_CARD_DETECTION;
-> > 
-> > +	if (of_get_property(np, "force-sd-cd-test-mode", NULL))
-> > +		host->quirks2 |=
-> > +			SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE;
-> > +
-> >  	if (of_get_property(np, "no-1-8-v", NULL))
-> >  		host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
-> > 
-> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c index
-> > cd65d47..2f4c6f9 100644
-> > --- a/drivers/mmc/host/sdhci.c
-> > +++ b/drivers/mmc/host/sdhci.c
-> > @@ -117,6 +117,15 @@ static inline bool sdhci_data_line_cmd(struct
-> > mmc_command *cmd)  static void sdhci_set_card_detection(struct sdhci_host
-> > *host, bool enable)  {
-> >  	u32 present;
-> > +	u8  ctrl;
-> > +
-> > +	if (host->quirks2 & SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE)
-> > {
-> > +		/* Put the card in test mode, with card inserted */
-> > +		ctrl = sdhci_readl(host, SDHCI_HOST_CONTROL);
-> > +		ctrl |= SDHCI_CTRL_CD_TEST_INSERTED |
-> > +			SDHCI_CTRL_CD_TEST_ENABLE;
-> > +		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> > +	}
-> > 
-> >  	if ((host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) ||
-> >  	    !mmc_card_is_removable(host->mmc))
-> > diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h index
-> > 0411c9f..dd609b2 100644
-> > --- a/drivers/mmc/host/sdhci.h
-> > +++ b/drivers/mmc/host/sdhci.h
-> > @@ -84,6 +84,8 @@
-> >  #define   SDHCI_CTRL_ADMA32	0x10
-> >  #define   SDHCI_CTRL_ADMA64	0x18
-> >  #define   SDHCI_CTRL_8BITBUS	0x20
-> > +#define  SDHCI_CTRL_CD_TEST_INSERTED	0x40
-> > +#define  SDHCI_CTRL_CD_TEST_ENABLE	0x80
-> > 
-> >  #define SDHCI_POWER_CONTROL	0x29
-> >  #define  SDHCI_POWER_ON		0x01
-> > @@ -422,6 +424,8 @@ struct sdhci_host {
-> >  #define SDHCI_QUIRK2_ACMD23_BROKEN			(1<<14)
-> >  /* Broken Clock divider zero in controller */
-> >  #define SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN		(1<<15)
-> > +/* Controller must support device with broken CD */
-> > +#define SDHCI_QUIRK2_MUST_FORCE_SD_CD_TEST_MODE		(1<<16)
-> > 
-> >  	int irq;		/* Device IRQ */
-> >  	void __iomem *ioaddr;	/* Mapped address */
-> > --
-> > 2.7.4
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-mmc" in the
-> > body of a message to majordomo@vger.kernel.org More majordomo info at
-> > http://vger.kernel.org/majordomo-info.html
+VGhpcyBwYXRjaC1zZXQgZW5hYmxlcyBIRE1JIGluIEFybmRhbGUgT2N0YSBib2FyZCBhbmQgZml4
+ZXMgSFBEIERUIHByb3BlcnR5LgpJdCBhbHNvIGluY2x1ZGVzIGNvZGUgcmVmYWN0b3Jpbmcgb24g
+ZGRjIGFuZCBwaHkuCgp2MjoKICBJbmNsdWRlIERSTSBhbmQgRXh5bm9zIG1haW50YWluZXJzIGFu
+ZCByZXNlbmQgdGhlIHBhdGNoLXNldC4KICBBZGQgUm9iJ3MgYWNrIGZvciB0aGUgcGF0Y2gsCglb
+UEFUQ0ggMi80XSBBUk06IGR0czogZXh5bm9zOiBVc2UgJ2hwZC1ncGlvcycgaW5zdGVhZCBvZiAn
+aHBkLWdwaW8nCgpNaWxvIEtpbSAoNCk6CiAgQVJNOiBkdHM6IGV4eW5vczogRW5hYmxlIEhETUkg
+Zm9yIEFybmRhbGUgT2N0YSBib2FyZAogIEFSTTogZHRzOiBleHlub3M6IFVzZSAnaHBkLWdwaW9z
+JyBpbnN0ZWFkIG9mICdocGQtZ3BpbycKICBncHU6IGRybTogZXh5bm9zX2hkbWk6IFVzZSBjb25z
+b2xpZGF0ZWQgZnVuY3Rpb24gb24gYmluZGluZyBEREMgRFQKICAgIHByb3BlcnR5CiAgZ3B1OiBk
+cm06IGV4eW5vc19oZG1pOiBVc2UgY29uc29saWRhdGVkIGZ1bmN0aW9uIG9uIGJpbmRpbmcgUEhZ
+IERUCiAgICBwcm9wZXJ0eQoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2V4eW5vcy9leHlub3NfaGRt
+aS50eHQgICAgICAgIHwgIDQgKy0tCiBhcmNoL2FybS9ib290L2R0cy9leHlub3M0MjEwLXVuaXZl
+cnNhbF9jMjEwLmR0cyAgICB8ICAyICstCiBhcmNoL2FybS9ib290L2R0cy9leHlub3M0NDEyLW9k
+cm9pZC1jb21tb24uZHRzaSAgICB8ICAyICstCiBhcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUw
+LWFybmRhbGUuZHRzICAgICAgICAgICB8ICAyICstCiBhcmNoL2FybS9ib290L2R0cy9leHlub3M1
+MjUwLXNtZGs1MjUwLmR0cyAgICAgICAgICB8ICAyICstCiBhcmNoL2FybS9ib290L2R0cy9leHlu
+b3M1MjUwLXNub3ctY29tbW9uLmR0c2kgICAgICB8ICAyICstCiBhcmNoL2FybS9ib290L2R0cy9l
+eHlub3M1MjUwLXNwcmluZy5kdHMgICAgICAgICAgICB8ICAyICstCiBhcmNoL2FybS9ib290L2R0
+cy9leHlub3M1NDIwLWFybmRhbGUtb2N0YS5kdHMgICAgICB8IDE3ICsrKysrKysrKwogYXJjaC9h
+cm0vYm9vdC9kdHMvZXh5bm9zNTQyMC1wZWFjaC1waXQuZHRzICAgICAgICAgfCAgMiArLQogYXJj
+aC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMC1zbWRrNTQyMC5kdHMgICAgICAgICAgfCAgMiArLQog
+YXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMi1vZHJvaWR4dTMtY29tbW9uLmR0c2kgfCAgMiAr
+LQogYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTgwMC1wZWFjaC1waS5kdHMgICAgICAgICAgfCAg
+MiArLQogZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfaGRtaS5jICAgICAgICAgICAgICAg
+fCA0MSArKysrKysrKysrKystLS0tLS0tLS0tCiAxMyBmaWxlcyBjaGFuZ2VkLCA1MiBpbnNlcnRp
+b25zKCspLCAzMCBkZWxldGlvbnMoLSkKCi0tIAoxLjkuMQoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
