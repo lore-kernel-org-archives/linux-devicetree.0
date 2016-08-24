@@ -1,138 +1,79 @@
-From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Wed, 24 Aug 2016 17:44:44 -0400
-Message-ID: <20160824214444.GZ15995@brightrain.aerifal.cx>
-References: <cover.147018b3518.git.dalias@libc.org>
- <57BDCE5D.2050609@linaro.org>
- <20160824174001.GW15995@brightrain.aerifal.cx>
- <1909939.rYmWMrdImI@wuerfel>
- <20160824205225.GY15995@brightrain.aerifal.cx>
- <20160824212212.GB1775@remoulade>
+From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] dts patches for qcom tsens support
+Date: Wed, 24 Aug 2016 17:03:03 -0500
+Message-ID: <CAPBZ5QcY_0GjeEFBOOT5v5eZkdw0ij1rhFFHS_64W6hW4fS22A@mail.gmail.com>
+References: <1471411128-4002-1-git-send-email-rnayak@codeaurora.org>
+ <20160817193340.GA18215@hector.attlocal.net> <20160824102256.GA14048@harukaze>
+ <57BD90A3.3000106@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160824212212.GB1775@remoulade>
+In-Reply-To: <57BD90A3.3000106-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
+To: "Nayak, Rajendra" <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Paolo Pisati <p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 24, 2016 at 10:22:13PM +0100, Mark Rutland wrote:
-> On Wed, Aug 24, 2016 at 04:52:26PM -0400, Rich Felker wrote:
-> > On Wed, Aug 24, 2016 at 10:01:08PM +0200, Arnd Bergmann wrote:
-> > > On Wednesday, August 24, 2016 1:40:01 PM CEST Rich Felker wrote:
-> > > > I actually tried multiple times to find good resources on policy for
-> > > > which form to prefer, but didn't have much luck. My understanding is
-> > > > that __raw_writel/__raw_readl always performs a native-endian
-> > > > load/store, whereas writel/readl behavior depends on cpu endianness
-> > > > and whether the arch declares that "pci bus" (that was the term I
-> > > > found in the source, not relevant here) io is endian-swapped or not.
-> > > > Can you give me a better explanation of why we might prefer one form
-> > > > or the other?
-> > > 
-> > > In general, a portable driver should use readl/writel because they
-> > > are defined to have the behavior that x86 provides, which is what
-> > > most developers understand best. Compared to __raw_readl/__raw_writel,
-> > > it guarantees
-> > > 
-> > > - correct endianess (in most cases, exceptions see below)
-> > > - does not leak out of spinlocks
-> > 
-> > Not even normal non-volatile accesses can leak across spinlocks;
-> > they're memory+compiler barriers.
-> 
-> Note that Arnd was talking in general, about cross-architectural guarantees.
-> 
-> Across architectures, not all barriers are equivalent. On some architectures,
-> the barriers used by spinlocks don't necessarily order accesses across
-> disparate memory types (i.e. DRAM and IO), or might not guarantee that the
-> ordering is consistent to observers other than (coherent) CPUs. Hence a
-> portable driver should care about this distinction.
-> 
-> If they're equivalent for you, you may as well use the portably stronger form,
-> as it's less likely to surprise others.
+On 24 August 2016 at 07:18, Nayak, Rajendra <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>
+> On 8/24/2016 3:52 PM, Paolo Pisati wrote:
+>>
+>> On Wed, Aug 17, 2016 at 02:33:40PM -0500, Andy Gross wrote:
+>>>
+>>> On Wed, Aug 17, 2016 at 10:48:43AM +0530, Rajendra Nayak wrote:
+>>>>
+>>>> Hey Andy,
+>>>>
+>>>> This is a respin of v2 with some minor fixes pointed out by Rob.
+>>>> Please pull these in for 4.9
+>>>>
+>>>> Thanks,
+>>>> Rajendra
+>>>
+>>>
+>>> I pulled these in.
+>>
+>>
+>> Did you try to read the content of the qfprom from userspace?
+>
+>
+> Hi, no I haven't tried it, I can give it a try tomorrow when I
+> have access to my board and see whats going wrong, but I did
+> look at Andys for-next and the defconfig still does not have
+> either nvmem or qcom-qfprom drivers enabled.
+> Did you manually enable them? or are you seeing this with the drivers still
+> disabled?
 
-*nod* Understood.
+I merged my for-next with the current next and enabled the options.  I
+reproduced Paolo's problem.  It feels like either an access issue,
+alignment issue (i tried ioread32 which didnt work).  It fails
+regardless of the TSENS being enabled.
 
-> > > - accesses are word-sized, the compiler cannot split them into
-> > >   byte accesses, or merge subsequent accesses into larger words
-> > 
-> > Based on my reading of the code that's also true for the raw ones. At
-> > least GCC interprets volatile as disallowing split/combined
-> > loads/stores when the hardware supports the nominal load/store size,
-> > and this seems to agree with the intent of the C standard that
-> > volatile be usable for memory-mapped devices..
-> > 
-> > > - ordering against dma_map_*/dma_unmap_*/dma_sync_* is maintained
-> > 
-> > Aren't they barriers too?
-> 
-> As above, not all barriers are equivalent. Your architecture may provide
-> stronger (or weaker) guarantees than others.
-
-OK.
-
-> > > The __raw_* accessors are used as building blocks for
-> > > readl/outl/ioread32/ioread32_be/readl_relaxed/... and they can
-> > > usually be used safely on device RAM such as framebuffers but
-> > > not much else in portable code. Some architectures also use the
-> > > __raw_* accessors for MMIO registers, but that code is generally
-> > > not portable.
-> > 
-> > My concern is that, depending on some arcane defines, readl/writel
-> > could start doing byte-reversal of values since the CPU is big-endian.
-> > arch/sh seems to have them defined in such a way that this doesn't
-> > happen, but I was hoping to avoid depending on that. If you think it's
-> > safe to assume they do the right thing, though, I'm okay with it. If
-> > anything breaks when we try a little-endian version of the CPU/SoC
-> > later I can go back and fix it.
-> 
-> I guess this really depends on the expectations you have w.r.t. the endianness
-> of devices vs the endianness of CPUs. If you expect the two to always be
-> matched, please add a comment in the driver to that effect.
-> 
-> As Arnd and others mentioned, the vastly common case is that the endianness of
-> CPUs and devices is not fixed to each other, and devices are typically
-> little-endian.
-
-Since it's not used in other designs, I can't say anything meaningful
-about how it hypothetically might be, but the intent on all current
-and currently-planned systems is that 32-bit loads/stores be performed
-using values that are meaningful as values on the cpu, i.e. with no
-byte swapping regardless of cpu endianness. The current hardware is
-designed as big-endian, and the proposed patches for supporting little
-endian just involve flipping the low bits of the address for 16- and
-8-bit accesses (not relevant to mmio registers that are only
-accessible in 32-bit units).
-
-> > > Endianess is always more complicated than one thinks, and it's
-> > > handled differently across architectures, sometimes because of
-> > > hardware differences, sometimes for historic reasons that differ
-> > > only in the Linux implementation.
-> > > 
-> > > A large majority of devices are fixed to little-endian MMIO
-> > > registers (as recommended by PCI), so that is a good default.
-> > > 
-> > > Exceptions to this are:
-> > > 
-> > > * Some architectures (e.g. PowerPC) typically run big-endian code,
-> > >   and hardware designers decided to make the MMIO registers the
-> > >   same. In this case, you can generally use ioread32_be/iowrite32_be.
-> > 
-> > This is something like our case, but the mmio registers are accessed
-> > as 32-bit values and the endianness does not come into play. 
-> 
-> This really depends on you endianness model, bus, etc. The above sounds like
-> BE32 rather than BE8, assuming I've understood correctly, which is an unusual
-> case nowadays.
-
-I'm not familiar with those classifications, but from what I can tell,
-BE32 describes it correctly. I'll see if I can get someone to verify
-this. Is there a reason it's not widely used anymore? Perhaps
-something related to supporting misaligned word-sized loads/stores?
-
-Rich
+>
+>
+>>
+>> $ uname -a
+>> Linux dragon410c 4.8.0-rc1+ #6 SMP PREEMPT Wed Aug 24 11:11:02 CEST 2016
+>> aarch64
+>> aarch64 aarch64 GNU/Linux
+>> $ lsmod
+>> Module                  Size  Used by
+>> nvmem_qfprom           16384  0
+>> nvmem_core             24576  1 nvmem_qfprom
+>> $ ls -la /sys/bus/nvmem/devices/
+>> total 0
+>> drwxr-xr-x 2 root root 0 Aug 24 10:17 .
+>> drwxr-xr-x 4 root root 0 Aug 24 10:15 ..
+>> lrwxrwxrwx 1 root root 0 Aug 24 10:17 qfprom0 ->
+>> ../../../devices/platform/soc/5c000.qfprom/qfprom0
+>> $ cat /sys/bus/nvmem/devices/qfprom0/nvmem
+>>
+>> [spontaneous reboot]
+>>
+>> This using agross's for-next tree as of today ("54ba896 Merge branch
+>> 'arm64-defconfig-for-4.9' into all-for-4.8") and defconfig.
+>>
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
