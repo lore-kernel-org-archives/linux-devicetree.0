@@ -1,36 +1,77 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH v2 2/7] Documentation: bindings: Add Exynos5433 PMU compatible
-Date: Wed, 24 Aug 2016 22:49:06 +0900
-Message-ID: <1472046551-703-3-git-send-email-cw00.choi@samsung.com>
-References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: k.kozlowski@samsung.com, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: krzk@kernel.org, cw00.choi@samsung.com, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org
+From: Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>
+Subject: [RFC 6/6] arm64: dts: Add domain-idle-states for Juno r0 power domains
+Date: Wed, 24 Aug 2016 14:48:22 +0100
+Message-ID: <20160824134822.3591-7-brendan.jackman@arm.com>
+References: <1470351902-43103-3-git-send-email-lina.iyer@linaro.org>
+ <20160824134822.3591-1-brendan.jackman@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160824134822.3591-1-brendan.jackman-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Haslam <ahaslam+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the exynos5433 PMU compatible to support the access
-of PMU (Power Management Unit) block.
-
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/arm/samsung/pmu.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/arm/juno.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-index 2d6356d8daf4..bf5fc59a6938 100644
---- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-+++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-@@ -10,6 +10,7 @@ Properties:
- 		   - "samsung,exynos5260-pmu" - for Exynos5260 SoC.
- 		   - "samsung,exynos5410-pmu" - for Exynos5410 SoC,
- 		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
-+		   - "samsung,exynos5433-pmu" - for Exynos5433 SoC.
- 		   - "samsung,exynos7-pmu" - for Exynos7 SoC.
- 		second value must be always "syscon".
+diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+index 4e086ec..d2bc4e3 100644
+--- a/arch/arm64/boot/dts/arm/juno.dts
++++ b/arch/arm64/boot/dts/arm/juno.dts
+@@ -160,40 +160,48 @@
+ 	power-domains {
+ 		CLUSTER_A57_PD: cluster-a57-pd {
+ 			#power-domain-cells = <0>;
++			domain-idle-states = <&CLUSTER_SLEEP_0>;
+ 		};
  
+ 		A57_0_PD: a57-pd@0 {
+ 			#power-domain-cells = <0>;
++			domain-idle-states = <&CPU_SLEEP_0>;
+ 			power-domains = <&CLUSTER_A57_PD>;
+ 		};
+ 
+ 		A57_1_PD: a57-pd@1 {
+ 			#power-domain-cells = <0>;
++			domain-idle-states = <&CPU_SLEEP_0>;
+ 			power-domains = <&CLUSTER_A57_PD>;
+ 		};
+ 
+ 
+ 		CLUSTER_A53_PD: cluster-a53-pd {
+ 			#power-domain-cells = <0>;
++			domain-idle-states = <&CLUSTER_SLEEP_0>;
+ 		};
+ 
+ 		A53_0_PD: a53-pd@0 {
+ 			#power-domain-cells = <0>;
++			domain-idle-states = <&CPU_SLEEP_0>;
+ 			power-domains = <&CLUSTER_A53_PD>;
+ 		};
+ 
+ 		A53_1_PD: a53-pd@1 {
+ 			#power-domain-cells = <0>;
++			domain-idle-states = <&CPU_SLEEP_0>;
+ 			power-domains = <&CLUSTER_A53_PD>;
+ 		};
+ 
+ 		A53_2_PD: a53-pd@2 {
+ 			#power-domain-cells = <0>;
++			domain-idle-states = <&CPU_SLEEP_0>;
+ 			power-domains = <&CLUSTER_A53_PD>;
+ 		};
+ 
+ 		A53_3_PD: a53-pd@3 {
+ 			#power-domain-cells = <0>;
++			domain-idle-states = <&CPU_SLEEP_0>;
+ 			power-domains = <&CLUSTER_A53_PD>;
+ 		};
+ 	};
 -- 
-1.9.1
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
