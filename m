@@ -1,71 +1,50 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 4/4] gpu: drm: exynos_hdmi: Use consolidated function on
- binding PHY DT property
-Date: Wed, 24 Aug 2016 07:58:51 +0200
-Message-ID: <ce59db15-d128-ae4e-fce2-6d18b36ce878@samsung.com>
-References: <1472005524-3489-1-git-send-email-woogyom.kim@gmail.com>
- <1472005524-3489-5-git-send-email-woogyom.kim@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i: add NAND controller node
+ for A23/A33
+Date: Wed, 24 Aug 2016 08:02:22 +0200
+Message-ID: <20160824060222.GT2598@lukather>
+References: <20160823135546.60179-1-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1472005524-3489-5-git-send-email-woogyom.kim@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Milo Kim <woogyom.kim@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, David Airlie <airlied@linux.ie>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="skzcsJvRJWOW8YcK"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB37Q6S6QKGQE4OSI7IQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20160823135546.60179-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMjQvMjAxNiAwNDoyNSBBTSwgTWlsbyBLaW0gd3JvdGU6Cj4gSGFuZGxlIGxlZ2FjeSBh
-bmQgcmF3ICdwaHknIHBhcnNpbmcgaW4gc2luZ2xlIGZ1bmN0aW9uLgo+IEFuZCBpdCBhbHNvIHJl
-bW92ZXMgZ290byBjb25kaXRpb24uCj4KPiBDYzogS3VramluIEtpbSA8a2dlbmVAa2VybmVsLm9y
-Zz4KPiBDYzogS3J6eXN6dG9mIEtvemxvd3NraSA8ay5rb3psb3dza2lAc2Ftc3VuZy5jb20+Cj4g
-Q2M6IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KPiBDYzogSW5raSBEYWUgPGlua2ku
-ZGFlQHNhbXN1bmcuY29tPgo+IENjOiBKb29ueW91bmcgU2hpbSA8ankwOTIyLnNoaW1Ac2Ftc3Vu
-Zy5jb20+Cj4gQ2M6IFNldW5nLVdvbyBLaW0gPHN3MDMxMi5raW1Ac2Ftc3VuZy5jb20+Cj4gQ2M6
-IEt5dW5nbWluIFBhcmsgPGt5dW5nbWluLnBhcmtAc2Ftc3VuZy5jb20+Cj4gQ2M6IFJvYiBIZXJy
-aW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Cj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-Cj4gQ2M6IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IENjOiBsaW51eC1z
-YW1zdW5nLXNvY0B2Z2VyLmtlcm5lbC5vcmcKPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZwo+IENjOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4gU2lnbmVkLW9mZi1i
-eTogTWlsbyBLaW0gPHdvb2d5b20ua2ltQGdtYWlsLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUv
-ZHJtL2V4eW5vcy9leHlub3NfaGRtaS5jIHwgMjMgKysrKysrKysrKysrKystLS0tLS0tLS0KPiAg
-MSBmaWxlIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pCj4KPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfaGRtaS5jIGIvZHJpdmVycy9n
-cHUvZHJtL2V4eW5vcy9leHlub3NfaGRtaS5jCj4gaW5kZXggNmE2MzZmMi4uYmIyZDZkNCAxMDA2
-NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19oZG1pLmMKPiArKysgYi9k
-cml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19oZG1pLmMKPiBAQCAtMTc3OCwxMSArMTc3OCwy
-MiBAQCBzdGF0aWMgc3RydWN0IGRldmljZV9ub2RlICpoZG1pX2RkY19kdF9iaW5kaW5nKHN0cnVj
-dCBkZXZpY2UgKmRldikKPiAgCXJldHVybiBucDsKPiAgfQo+ICAKPiAtc3RhdGljIHN0cnVjdCBk
-ZXZpY2Vfbm9kZSAqaGRtaV9sZWdhY3lfcGh5X2R0X2JpbmRpbmcoc3RydWN0IGRldmljZSAqZGV2
-KQo+ICtzdGF0aWMgc3RydWN0IGRldmljZV9ub2RlICpoZG1pX3BoeV9kdF9iaW5kaW5nKHN0cnVj
-dCBkZXZpY2UgKmRldikKPiAgewo+ICAJY29uc3QgY2hhciAqY29tcGF0aWJsZV9zdHIgPSAic2Ft
-c3VuZyxleHlub3M0MjEyLWhkbWlwaHkiOwo+ICsJc3RydWN0IGRldmljZV9ub2RlICpucDsKPiAr
-Cj4gKwlucCA9IG9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKE5VTEwsIE5VTEwsIGNvbXBhdGlibGVf
-c3RyKTsKPiArCWlmIChucCkKPiArCQlyZXR1cm4gbnA7Cj4gKwo+ICsJbnAgPSBvZl9wYXJzZV9w
-aGFuZGxlKGRldi0+b2Zfbm9kZSwgInBoeSIsIDApOwo+ICsJaWYgKCFucCkKPiArCQlyZXR1cm4g
-TlVMTDsKPiArCj4gKwlvZl9ub2RlX3B1dChkZXYtPm9mX25vZGUpOwoKSWRlbnRpY2FsIGlzc3Vl
-IGFzIGluIHByZXZpb3VzIHBhdGNoLgoKUmVnYXJkcwpBbmRyemVqCgo+ICAKPiAtCXJldHVybiBv
-Zl9maW5kX2NvbXBhdGlibGVfbm9kZShOVUxMLCBOVUxMLCBjb21wYXRpYmxlX3N0cik7Cj4gKwly
-ZXR1cm4gbnA7Cj4gIH0KPiAgCj4gIHN0YXRpYyBpbnQgaGRtaV9wcm9iZShzdHJ1Y3QgcGxhdGZv
-cm1fZGV2aWNlICpwZGV2KQo+IEBAIC0xODI5LDE5ICsxODQwLDEzIEBAIHN0YXRpYyBpbnQgaGRt
-aV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAJCXJldHVybiAtRVBST0JF
-X0RFRkVSOwo+ICAJfQo+ICAKPiAtCXBoeV9ub2RlID0gaGRtaV9sZWdhY3lfcGh5X2R0X2JpbmRp
-bmcoZGV2KTsKPiAtCWlmIChwaHlfbm9kZSkKPiAtCQlnb3RvIG91dF9nZXRfcGh5X3BvcnQ7Cj4g
-LQo+IC0JcGh5X25vZGUgPSBvZl9wYXJzZV9waGFuZGxlKGRldi0+b2Zfbm9kZSwgInBoeSIsIDAp
-Owo+ICsJcGh5X25vZGUgPSBoZG1pX3BoeV9kdF9iaW5kaW5nKGRldik7Cj4gIAlpZiAoIXBoeV9u
-b2RlKSB7Cj4gIAkJRFJNX0VSUk9SKCJGYWlsZWQgdG8gZmluZCBoZG1pcGh5IG5vZGUgaW4gZGV2
-aWNlIHRyZWVcbiIpOwo+ICAJCXJldCA9IC1FTk9ERVY7Cj4gIAkJZ290byBlcnJfZGRjOwo+ICAJ
-fQo+IC0Jb2Zfbm9kZV9wdXQoZGV2LT5vZl9ub2RlKTsKPiAgCj4gLW91dF9nZXRfcGh5X3BvcnQ6
-Cj4gIAlpZiAoaGRhdGEtPmRydl9kYXRhLT5pc19hcGJfcGh5KSB7Cj4gIAkJaGRhdGEtPnJlZ3Nf
-aGRtaXBoeSA9IG9mX2lvbWFwKHBoeV9ub2RlLCAwKTsKPiAgCQlpZiAoIWhkYXRhLT5yZWdzX2hk
-bWlwaHkpIHsKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--skzcsJvRJWOW8YcK
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi,
+
+On Tue, Aug 23, 2016 at 09:55:46PM +0800, Icenowy Zheng wrote:
+> A23/A33 has a NAND controller which can now be used properly.
+> 
+> Add a device node for it.
+> 
+> The DMA function cannot work because of changed DMA IP block, so it's
+> temporarily removed in the device node. However, with PIO mode it can still
+> work.
+
+What is preventing the NAND driver to work with DMA with the sun6i driver?
+
+Thanks,
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--skzcsJvRJWOW8YcK--
