@@ -1,52 +1,142 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] dt: net: enhance DWC EQoS binding to support Tegra186
-Date: Wed, 24 Aug 2016 14:43:29 -0600
-Message-ID: <80149ae2-2b4a-9b8a-b261-e37ebdcafb57@wwwdotorg.org>
-References: <20160823204757.17998-1-swarren@wwwdotorg.org>
- <259bfaa8-6dcb-eafc-da9c-c16ec7d39d24@axis.com>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Wed, 24 Aug 2016 16:52:26 -0400
+Message-ID: <20160824205225.GY15995@brightrain.aerifal.cx>
+References: <cover.147018b3518.git.dalias@libc.org>
+ <57BDCE5D.2050609@linaro.org>
+ <20160824174001.GW15995@brightrain.aerifal.cx>
+ <1909939.rYmWMrdImI@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <259bfaa8-6dcb-eafc-da9c-c16ec7d39d24@axis.com>
-Sender: netdev-owner@vger.kernel.org
-To: Lars Persson <lars.persson@axis.com>
-Cc: Lars Persson <larper@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1909939.rYmWMrdImI@wuerfel>
+Sender: linux-sh-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/24/2016 02:10 AM, Lars Persson wrote:
-> On 08/23/2016 10:47 PM, Stephen Warren wrote:
->> The Synopsys DWC EQoS is a configurable IP block which supports multiple
->> options for bus type, clocking and reset structure, and feature list.
->> Extend the DT binding to define a "compatible value" for the
->> configuration
->> contained in NVIDIA's Tegra186 SoC, and define some new properties and
->> list property entries required by that configuration.
+On Wed, Aug 24, 2016 at 10:01:08PM +0200, Arnd Bergmann wrote:
+> On Wednesday, August 24, 2016 1:40:01 PM CEST Rich Felker wrote:
+> > On Wed, Aug 24, 2016 at 06:42:05PM +0200, Daniel Lezcano wrote:
+> > > > diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> > > > index 5677886..3210ca5 100644
+> > > > --- a/drivers/clocksource/Kconfig
+> > > > +++ b/drivers/clocksource/Kconfig
+> > > > @@ -407,6 +407,15 @@ config SYS_SUPPORTS_SH_TMU
+> > > >  config SYS_SUPPORTS_EM_STI
+> > > >          bool
+> > > >  
+> > > > +config CLKSRC_JCORE_PIT
+> > > > +   bool "J-Core PIT timer driver"
+> > > > +   depends on OF && (SUPERH || COMPILE_TEST)
+> > > 
+> > > Even if this is correct, for the sake of consistency, it is preferable
+> > > to change it to:
+> > > 
+> > >       bool "J-Core PIT timer driver" if COMPILE_TEST
+> > >       depends on SUPERH
+> > >       select CLKSRC_OF
+> > 
+> > Is this functionally equivalent? If so that's non-obvious to me. What
+> > about the dropped OF dependency? The intent is that the option should
+> > always be available for SUPERH targets using OF, otherwise only
+> > available with COMPILE_TEST.
+> 
+> I think your version is correct here, Daniel made a mistake with the
+> SUPERH dependency. Another way to write it would be
+> 
+> config CLKSRC_JCORE_PIT
+>    bool "J-Core PIT timer driver" if COMPILE_TEST && !JCORE
+>    depends on OF
+> 	default JCORE
+> 
+> to make it impossible to disable when JCORE is set, but
+> user-visible on all other architectures, SUPERH or otherwise.
 
->> diff --git
->> a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
->> b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
+There's no JCORE config item and in theory you don't even need to pick
+CPU_J2 if you don't want SMP; CPU_SH2 should work. In practice the
+legacy hw support needs to be converted over to device tree still, but
+the goal has been to _avoid_ introducing soc/board/model specific
+config stuff and move the arch to completely DT-based.
 
->>  Optional properties:
+> > > > +static int jcore_pit_set(unsigned long delta, struct jcore_pit *pit)
+> > > > +{
+> > > > +   jcore_pit_disable(pit);
+> > > > +   __raw_writel(delta, pit->base + REG_THROT);
+> > > > +   __raw_writel(pit->enable_val, pit->base + REG_PITEN);
+> > > > +   return 0;
+> > > 
+> > > Why do you need to use __raw_writel ?
+> > > 
+> > > s/__raw_writel/writel/
+> > 
+> > I actually tried multiple times to find good resources on policy for
+> > which form to prefer, but didn't have much luck. My understanding is
+> > that __raw_writel/__raw_readl always performs a native-endian
+> > load/store, whereas writel/readl behavior depends on cpu endianness
+> > and whether the arch declares that "pci bus" (that was the term I
+> > found in the source, not relevant here) io is endian-swapped or not.
+> > Can you give me a better explanation of why we might prefer one form
+> > or the other?
+> 
+> In general, a portable driver should use readl/writel because they
+> are defined to have the behavior that x86 provides, which is what
+> most developers understand best. Compared to __raw_readl/__raw_writel,
+> it guarantees
+> 
+> - correct endianess (in most cases, exceptions see below)
+> - does not leak out of spinlocks
 
->> +- phy-reset-gpios: Phandle and specifier for any GPIO used to reset
->> the PHY.
->> +  See ../gpio/gpio.txt.
->
-> IMHO the phy reset gpio belongs in the binding for the PHY. I notice
-> some other ethernet drivers have this, but the PHY should be managed
-> entirely through the phylib and any special handling for reset can be
-> hidden in phy specific drivers.
+Not even normal non-volatile accesses can leak across spinlocks;
+they're memory+compiler barriers.
 
-I can see that argument; this GPIO certainly does control the PHY so 
-seems part of it. However, presumably this GPIO must be manipulated 
-before being able to communicate with the PHY at all, and hence 
-instantiate any driver that might control the PHY. As such, this seems 
-more like a property of the MDIO bus than the PHY itself, even if it 
-electrically is part of the PHY. Also, 
-Documentation/devicetree/bindings/net/phy.txt doesn't contain any 
-phy-reset-gpios property or similar, so we'd have to add that if we 
-wanted to rely upon it.
+> - accesses are word-sized, the compiler cannot split them into
+>   byte accesses, or merge subsequent accesses into larger words
 
-For now I'll post V2 without changing this, but I can always post V3 if 
-needed.
+Based on my reading of the code that's also true for the raw ones. At
+least GCC interprets volatile as disallowing split/combined
+loads/stores when the hardware supports the nominal load/store size,
+and this seems to agree with the intent of the C standard that
+volatile be usable for memory-mapped devices..
+
+> - ordering against dma_map_*/dma_unmap_*/dma_sync_* is maintained
+
+Aren't they barriers too?
+
+> The __raw_* accessors are used as building blocks for
+> readl/outl/ioread32/ioread32_be/readl_relaxed/... and they can
+> usually be used safely on device RAM such as framebuffers but
+> not much else in portable code. Some architectures also use the
+> __raw_* accessors for MMIO registers, but that code is generally
+> not portable.
+
+My concern is that, depending on some arcane defines, readl/writel
+could start doing byte-reversal of values since the CPU is big-endian.
+arch/sh seems to have them defined in such a way that this doesn't
+happen, but I was hoping to avoid depending on that. If you think it's
+safe to assume they do the right thing, though, I'm okay with it. If
+anything breaks when we try a little-endian version of the CPU/SoC
+later I can go back and fix it.
+
+> Endianess is always more complicated than one thinks, and it's
+> handled differently across architectures, sometimes because of
+> hardware differences, sometimes for historic reasons that differ
+> only in the Linux implementation.
+> 
+> A large majority of devices are fixed to little-endian MMIO
+> registers (as recommended by PCI), so that is a good default.
+> 
+> Exceptions to this are:
+> 
+> * Some architectures (e.g. PowerPC) typically run big-endian code,
+>   and hardware designers decided to make the MMIO registers the
+>   same. In this case, you can generally use ioread32_be/iowrite32_be.
+
+This is something like our case, but the mmio registers are accessed
+as 32-bit values and the endianness does not come into play. Sub-word
+accesses just don't work at all for most of the mmio devices. This
+will remain the same if/when we add little endian builds (there's work
+on this on the jcore list).
+
+Rich
