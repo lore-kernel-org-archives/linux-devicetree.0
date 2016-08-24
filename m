@@ -1,55 +1,68 @@
-From: Paolo Pisati <p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] dts patches for qcom tsens support
-Date: Wed, 24 Aug 2016 12:22:56 +0200
-Message-ID: <20160824102256.GA14048@harukaze>
-References: <1471411128-4002-1-git-send-email-rnayak@codeaurora.org>
- <20160817193340.GA18215@hector.attlocal.net>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v13 0/4] Mediatek MT8173 CMDQ support
+Date: Wed, 24 Aug 2016 13:00:34 +0200
+Message-ID: <20b10079-3ae2-9da9-1149-0bceabac9837@gmail.com>
+References: <1472009252-1074-1-git-send-email-hs.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160817193340.GA18215-3KkwrOJo9xYlRp7syxWybdHuzzzSOjJt@public.gmane.org>
+In-Reply-To: <1472009252-1074-1-git-send-email-hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Monica
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 17, 2016 at 02:33:40PM -0500, Andy Gross wrote:
-> On Wed, Aug 17, 2016 at 10:48:43AM +0530, Rajendra Nayak wrote:
-> > Hey Andy,
-> > 
-> > This is a respin of v2 with some minor fixes pointed out by Rob.
-> > Please pull these in for 4.9
-> > 
-> > Thanks,
-> > Rajendra
-> 
-> I pulled these in.
 
-Did you try to read the content of the qfprom from userspace?
 
-$ uname -a
-Linux dragon410c 4.8.0-rc1+ #6 SMP PREEMPT Wed Aug 24 11:11:02 CEST 2016 aarch64
-aarch64 aarch64 GNU/Linux
-$ lsmod 
-Module                  Size  Used by
-nvmem_qfprom           16384  0
-nvmem_core             24576  1 nvmem_qfprom
-$ ls -la /sys/bus/nvmem/devices/                                                                             
-total 0
-drwxr-xr-x 2 root root 0 Aug 24 10:17 .
-drwxr-xr-x 4 root root 0 Aug 24 10:15 ..
-lrwxrwxrwx 1 root root 0 Aug 24 10:17 qfprom0 ->
-../../../devices/platform/soc/5c000.qfprom/qfprom0
-$ cat /sys/bus/nvmem/devices/qfprom0/nvmem 
+On 24/08/16 05:27, HS Liao wrote:
+>
+> Hi,
+>
+> This is Mediatek MT8173 Command Queue(CMDQ) driver. The CMDQ is used
+> to help write registers with critical time limitation, such as
+> updating display configuration during the vblank. It controls Global
+> Command Engine (GCE) hardware to achieve this requirement.
+>
+> These patches have a build dependency on top of v4.8-rc1.
+>
+> Changes since v12:
+>  - remove mediatek,gce from device tree
 
-[spontaneous reboot]
+Why? The binding got accepted by Rob.
 
-This using agross's for-next tree as of today ("54ba896 Merge branch
-'arm64-defconfig-for-4.9' into all-for-4.8") and defconfig.
--- 
-bye,
-p.
+>
+> Best regards,
+> HS Liao
+>
+> HS Liao (4):
+>   dt-bindings: soc: Add documentation for the MediaTek GCE unit
+>   CMDQ: Mediatek CMDQ driver
+>   arm64: dts: mt8173: Add GCE node
+>   CMDQ: save more energy in idle
+>
+>  .../devicetree/bindings/soc/mediatek/gce.txt       |  44 +
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  10 +
+>  drivers/soc/mediatek/Kconfig                       |  11 +
+>  drivers/soc/mediatek/Makefile                      |   1 +
+>  drivers/soc/mediatek/mtk-cmdq.c                    | 983 +++++++++++++++++++++
+
+The driver uses the mailbox framework, so it should live in the 
+drivers/mailbox folder.
+
+Please don't forget to add Jassi to the loop, as he is the maintainer of 
+this subsystem and the last instance to decide if/when the driver will 
+get accepted.
+
+Thanks,
+Matthias
+
+>  include/soc/mediatek/cmdq.h                        | 180 ++++
+>  6 files changed, 1229 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/gce.txt
+>  create mode 100644 drivers/soc/mediatek/mtk-cmdq.c
+>  create mode 100644 include/soc/mediatek/cmdq.h
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
