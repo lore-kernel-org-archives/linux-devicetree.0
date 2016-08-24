@@ -1,14 +1,13 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 1/2] ARM: dts: sun8i: Add dts file for inet-d978_rev2
- tablets
-Date: Wed, 24 Aug 2016 21:32:35 +0200
-Message-ID: <20160824193235.GR8103@lukather>
+Subject: Re: [PATCH 2/2] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
+Date: Wed, 24 Aug 2016 21:36:00 +0200
+Message-ID: <20160824193600.GS8103@lukather>
 References: <20160823064451.25997-1-icenowy@aosc.xyz>
- <20160823064451.25997-2-icenowy@aosc.xyz>
+ <20160823064451.25997-3-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1112758581321400460=="
+Content-Type: multipart/mixed; boundary="===============8328559119004443516=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160823064451.25997-2-icenowy@aosc.xyz>
+In-Reply-To: <20160823064451.25997-3-icenowy@aosc.xyz>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,146 +22,55 @@ Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell Kin
 List-Id: devicetree@vger.kernel.org
 
 
---===============1112758581321400460==
+--===============8328559119004443516==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Hnpg0BSo5EvPlUVi"
+	protocol="application/pgp-signature"; boundary="Pa4xkLBhPDIhDLv1"
 Content-Disposition: inline
 
 
---Hnpg0BSo5EvPlUVi
+--Pa4xkLBhPDIhDLv1
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Tue, Aug 23, 2016 at 02:44:50PM +0800, Icenowy Zheng wrote:
-> The inet-d978_rev2 is a pcb used in generic A33 based tablets. It features
-> volume buttons, micro-usb otg, headphone connector and a power button.
+On Tue, Aug 23, 2016 at 02:44:51PM +0800, Icenowy Zheng wrote:
+> UART1 is connected to the bluetooth part of RTL8723BS WiFi/BT combo card
+> on iNet D978 Rev2 board.
 >=20
-> On the board a Realtek RTL8723BS SDIO Wi-Fi module are soldered, and there
-> is also a accompanied board which has a Goodix GT9271 soldered.
->=20
-> As this board is desired to create tablets with a Home key dealed by
-> GT9271, a LED is present at the front panel at the position of the
-> Home key.
+> Enable the UART1 to make it possible to use the modified hciattach by
+> Realtek to drive the BT part of RTL8723BS.
 >=20
 > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+
+I guess you could fold that patch into the previous one.
+
 > ---
->  arch/arm/boot/dts/Makefile                     |  1 +
->  arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts | 87 ++++++++++++++++++++=
-++++++
->  2 files changed, 88 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
+>  arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 >=20
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index faacd52..d1812a0 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -782,6 +782,7 @@ dtb-$(CONFIG_MACH_SUN8I) +=3D \
->  	sun8i-a23-q8-tablet.dtb \
->  	sun8i-a33-et-q8-v1.6.dtb \
->  	sun8i-a33-ga10h-v1.1.dtb \
-> +	sun8i-a33-inet-d978-rev2.dtb \
->  	sun8i-a33-ippo-q8h-v1.2.dtb \
->  	sun8i-a33-q8-tablet.dtb \
->  	sun8i-a33-sinlinx-sina33.dtb \
 > diff --git a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts b/arch/arm/bo=
 ot/dts/sun8i-a33-inet-d978-rev2.dts
-> new file mode 100644
-> index 0000000..78823d8
-> --- /dev/null
+> index 78823d8..3ac22d4 100644
+> --- a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
 > +++ b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
-> @@ -0,0 +1,87 @@
-> +/*
-> + * Copyright 2015 Hans de Goede <hdegoede@redhat.com>
-
-I guess you are the author too :)
-
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun8i-a33.dtsi"
-> +#include "sun8i-reference-design-tablet.dtsi"
-> +
-> +/ {
-> +	model =3D "INet-D978 Rev 02";
-> +	compatible =3D "primux,inet-d978-rev2", "allwinner,sun8i-a33";
-> +
-> +	leds {
-> +		compatible =3D "gpio-leds";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&led_pin_d978>;
-> +
-> +		home {
-> +			label =3D "d978:home";
-
-This is not the proper format for the led labels.
-
-It's supposed to be <board>:<color>:<function>
-
-> +			gpios =3D <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
-> +		};
+> @@ -48,6 +48,10 @@
+>  	model =3D "INet-D978 Rev 02";
+>  	compatible =3D "primux,inet-d978-rev2", "allwinner,sun8i-a33";
+> =20
+> +	aliases {
+> +		serial1 =3D &uart1;
 > +	};
-> +};
 > +
-> +&mmc1_pins_a {
-> +	allwinner,pull =3D <SUN4I_PINCTRL_PULL_UP>;
-> +};
-> +
-> +&mmc1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&mmc1_pins_a>;
-> +	vmmc-supply =3D <&reg_dldo1>;
-> +	bus-width =3D <4>;
-> +	non-removable;
-> +	status =3D "okay";
-> +
-> +	rtl8723bs: sdio_wifi@1 {
-> +		reg =3D <1>;
-> +	};
 
-Don't you need an alias to this node to have the MAC address set?
+Is there any other UART in the system?
 
-Thanks,
+The alias is not supposed to be about the controller index, but the
+index in the board, meaning that if you only have a single UART, that
+would be serial0.
+
+Thanks!
 Maxime
 
 --=20
@@ -170,31 +78,31 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---Hnpg0BSo5EvPlUVi
+--Pa4xkLBhPDIhDLv1
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXvfZTAAoJEBx+YmzsjxAgArEP/3aJIhlhbT7rMOc5aENL/8j/
-mO7O4Y7/Ndr1cSg+3KUQpmsUJWbur8M1mbj1OYJL9AkdCYnycCigM+RA3ztGmc9/
-UKMTptIJYtPMOM3KRd3sEnYmKAYadg0xXwX8Hu6nDA/revn7fPfIOsLUyL7B/Ny8
-0vSxnSOgJBZXCWn+XZxYiribEzuF36/qQbqcsccEIyFqcPqFpeE5CWO52gj3ennY
-tlvS/OExt9nV5+e/XU0730xsxZ0iHQJ2LkgF/TdGYfIhSWAZkwmZ/iV12xCPopXd
-kUy1VX0RuMh6ehFgIv+f/L23FL7Fp//qbXk/qlMwkyB7zlO9sz4OUJKEVDpja6SJ
-6XGGHxS6wntezOLFJ/QXy3YgK+L2gDq/RhdyuWZY7Wr+9bjoyj440Tq7plC5qzpI
-3NsTSkGE3Eq23xxsU3HwGSpk3PP7pdayEGShUN6+TpKcDJ3OY+tXalnPPqFvSJiU
-4+RYdqGY9OQaden5fBRjhIp65ivYSPxKfaLKSc4iiDAGuq+geGnyR4w6YQzVPQhS
-TE0ygkCihX0BJFQTD4HBAe68FwDpk/BKw69mb0UJUk2z2kR5cDMFAZkKuxocTJU0
-fVsP+d6IpIbpIDmtSEPpoNOlt6blpbgeyfhKrwCxSI0uf6T4bEYNy8YelbJuoRwX
-ObikKUxw1LxhaysLApzk
-=xEq4
+iQIcBAEBAgAGBQJXvfcgAAoJEBx+YmzsjxAgGQ0P/2/AbbM6QYL2xW+HiVx9jth/
+b+zpGe76ov3FfI0zl9hkwuxaEOfQXse7sb96v49veloi0Qxft7GTPZY7W3co1Oza
+x+zShHNLnAQrEFl7yaCuRpH+jTPJzyP01mcWGknbl/QK2wOal++30XgoWhtqHpZI
+Wqfv4ULB4dpyQZHxErc189WbLQ2T6dzQj3h2es8l9yp+cjMpod3MjGyiDo1FsMPy
+lPz18KWkUUQBG0HBC7dIKCISu638e5Rmb5cdi3hFJjCh/Y4mljoiZkzX0eRmCjc7
+dXbXwBJlEvLijnDffnjkKDd5mnzPDK6sCDYGEWX78bMO9Vz0Q75IvvVgc8BhGlZA
++3fWvDnX5wBHvWLvK6dpDbZFUL1MtRSKkj7xcqSp37LNYWt1L0z/hHL5VoaMpwVN
+bEuFdxuL92Lkqqlw1fPd0DkbJb+iuifZb337Y0womoovkKeX5PPPNhG2WkO3Njk1
+zz3kf0kvFrjr11rj55j5PWI4UWqWEAZ/clt/VoIqTLBzG13ARYhaMvyLUu04sUy7
+qbWmFsQILdb6oPvBS3d8ZiIzKHxXAYPKofqgWrvQHFekBd8RR73syKIEFFoLoDL9
+angiTZ02I75ZjtN4k99JSykqaWhVvxgcL4TL82MrdxOdSTM0IZRDcc6kyO7a8nQh
+tm7Jhcx7eVuiTOJ3EmcR
+=mNJv
 -----END PGP SIGNATURE-----
 
---Hnpg0BSo5EvPlUVi--
+--Pa4xkLBhPDIhDLv1--
 
 
---===============1112758581321400460==
+--===============8328559119004443516==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -205,4 +113,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============1112758581321400460==--
+--===============8328559119004443516==--
