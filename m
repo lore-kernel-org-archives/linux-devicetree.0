@@ -1,202 +1,118 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V5] clk: bcm: Add driver for BCM53573 ILP clock
-Date: Wed, 24 Aug 2016 01:47:38 -0700
-Message-ID: <20160824084738.GB6502@codeaurora.org>
-References: <20160823061745.8162-1-zajec5@gmail.com>
- <20160823062613.13865-1-zajec5@gmail.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 0/8] power: add power sequence library
+Date: Wed, 24 Aug 2016 16:53:35 +0800
+Message-ID: <20160824085335.GB27233@shlinux2>
+References: <1471252398-957-1-git-send-email-peter.chen@nxp.com>
+ <b1848eb2-9298-9089-ee4d-5356998c6c08@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160823062613.13865-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <b1848eb2-9298-9089-ee4d-5356998c6c08-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw3-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/23, Rafał Miłecki wrote:
-> diff --git a/drivers/clk/bcm/clk-bcm53573-ilp.c b/drivers/clk/bcm/clk-bcm53573-ilp.c
-> new file mode 100644
-> index 0000000..b7ac0eb
-> --- /dev/null
-> +++ b/drivers/clk/bcm/clk-bcm53573-ilp.c
-> @@ -0,0 +1,146 @@
-> +/*
-> + * Copyright (C) 2016 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/clk.h>
+On Tue, Aug 23, 2016 at 04:02:48PM +0530, Vaibhav Hiremath wrote:
+> 
+> 
+> On Monday 15 August 2016 02:43 PM, Peter Chen wrote:
+> >Hi all,
+> >
+> >This is a follow-up for my last power sequence framework patch set [1].
+> >According to Rob Herring and Ulf Hansson's comments[2], I use a generic
+> >power sequence library for parsing the power sequence elements on DT,
+> >and implement generic power sequence on library. The host driver
+> >can allocate power sequence instance, and calls pwrseq APIs accordingly.
+> >
+> >In future, if there are special power sequence requirements, the special
+> >power sequence library can be created.
+> >
+> >This patch set is tested on i.mx6 sabresx evk using a dts change, I use
+> >two hot-plug devices to simulate this use case, the related binding
+> >change is updated at patch [1/6], The udoo board changes were tested
+> >using my last power sequence patch set.[3]
+> >
+> >Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
+> >need to power on itself before it can be found by ULPI bus.
+> >
+> >[1] http://www.spinics.net/lists/linux-usb/msg142755.html
+> >[2] http://www.spinics.net/lists/linux-usb/msg143106.html
+> >[3] http://www.spinics.net/lists/linux-usb/msg142815.html
+> (Please ignore my response on V2)
+> 
+> Sorry being so late in the discussion...
+> 
+> If I am not missing anything, then I am afraid to say that the
+> generic library
+> implementation in this patch series is not going to solve many of
+> the custom
+> requirement of power on, off, etc...
+> I know you mentioned about adding another library when we come
+> across such platforms, but should we not keep provision (or easy
+> hooks/path)
+> to enable that ?
+> 
+> Let me bring in the use case I am dealing with,
+> 
+> 
+>                               Host
+>                                |
+>                                V
+>                            USB port
+> ------------------------------------------------------------
+>                                |
+>                                V
+>                       USB HUB device (May need custom on/off seq)
+>                                |
+>                                V
+>               =============================
+>              |                             |
+>              V                             V
+>          Device-1                       Device-2
+> (Needs special power               (Needs special power
+>  on/off sequence.                   on/off sequence.
+>  Also may need custom               Also, may need custom
+>  sequence for                       sequence for
+>  suspend/resume)                    suspend/resume)
+> 
+> 
+> Note: Both Devices are connected to HUB via HSIC and may differ
+>           in terms of functionality, features they support.
+> 
+> In the above case, both Device-1 and Device-2, need separate
+> power on/off sequence. So generic library currently we have in this
+> patch series is not going to satisfy the need here.
+> 
+> I looked at all 6 revisions of this patch-series, went through the
+> review comments, and looked at MMC power sequence code;
+> what I can say here is, we need something similar to
+> MMC power sequence here, where every device can have its own
+> power sequence (if needed).
+> 
+> I know Rob is not in favor of creating platform device for
+> this, and I understand his comment.
+> If not platform device, but atleast we need mechanism to
+> connect each device back to its of_node and its respective
+> driver/library fns. For example, the Devices may support different
+> boot modes, and platform driver needs to make sure that
+> the right sequence is followed for booting.
+> 
+> Peter, My apologies for taking you back again on this series.
+> I am OK, if you wish to address this in incremental addition,
+> but my point is, we know that the current generic way is not
+> enough for us, so I think we should try to fix it in initial phase only.
+> 
 
-Is this include used?
-
-> +#include <linux/clk-provider.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/slab.h>
-> +
-> +#define PMU_XTAL_FREQ_RATIO			0x66c
-> +#define  XTAL_ALP_PER_4ILP			0x00001fff
-> +#define  XTAL_CTL_EN				0x80000000
-> +#define PMU_SLOW_CLK_PERIOD			0x6dc
-> +
-> +struct bcm53573_ilp {
-> +	struct clk *clk;
-> +	struct clk_hw hw;
-> +	void __iomem *pmu;
-> +};
-> +
-> +static int bcm53573_ilp_enable(struct clk_hw *hw)
-> +{
-> +	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
-> +
-> +	writel(0x10199, ilp->pmu + PMU_SLOW_CLK_PERIOD);
-> +	writel(0x10000, ilp->pmu + 0x674);
-
-Is there a name for 0x674?
-> +
-> +	return 0;
-> +}
-> +
-> +static unsigned long bcm53573_ilp_recalc_rate(struct clk_hw *hw,
-> +					      unsigned long parent_rate)
-> +{
-> +	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
-> +	void __iomem *pmu = ilp->pmu;
-> +	u32 last_val, cur_val;
-> +	u32 sum = 0, num = 0, loop_num = 0;
-
-Should these just be plain ints? Do we care about sizes for these
-variables?
-
-> +	u32 avg;
-
-This one too.
-
-> +
-> +	/* Enable measurement */
-> +	writel(XTAL_CTL_EN, pmu + PMU_XTAL_FREQ_RATIO);
-> +
-> +	/* Read initial value */
-> +	last_val = readl(pmu + PMU_XTAL_FREQ_RATIO) & XTAL_ALP_PER_4ILP;
-> +
-> +	/*
-> +	 * At minimum we should loop for a bit to let hardware do the
-> +	 * measurement. This isn't very accurate however, so for a better
-> +	 * precision lets try getting 20 different values for and use average.
-> +	 */
-> +	while (num < 20) {
-> +		cur_val = readl(pmu + PMU_XTAL_FREQ_RATIO) & XTAL_ALP_PER_4ILP;
-> +
-> +		if (cur_val != last_val) {
-> +			/* Got different value, use it */
-> +			sum += cur_val;
-> +			num++;
-> +			loop_num = 0;
-> +			last_val = cur_val;
-> +		} else if (++loop_num > 5000) {
-> +			/* Same value over and over, give up */
-> +			sum += cur_val;
-> +			num++;
-> +			break;
-> +		}
-
-Should there be a udelay() here? Or we're expected to tight loop
-read the hardware? If so we should throw in a cpu_relax() here to
-indicate tight loop.
-
-> +	}
-> +
-> +	/* Disable measurement to save power */
-> +	writel(0x0, pmu + PMU_XTAL_FREQ_RATIO);
-> +
-> +	avg = sum / num;
-> +
-> +	return parent_rate * 4 / avg;
-> +}
-> +
-> +static const struct clk_ops bcm53573_ilp_clk_ops = {
-> +	.enable = bcm53573_ilp_enable,
-
-No disable? Or .is_enabled?
-
-> +	.recalc_rate = bcm53573_ilp_recalc_rate,
-> +};
-> +
-> +static void bcm53573_ilp_init(struct device_node *np)
-> +{
-> +	struct bcm53573_ilp *ilp;
-> +	struct resource res;
-> +	struct clk_init_data init = { 0 };
-> +	const char *parent_name;
-> +	int index;
-> +	int err;
-> +
-> +	ilp = kzalloc(sizeof(*ilp), GFP_KERNEL);
-> +	if (!ilp)
-> +		return;
-> +
-> +	parent_name = of_clk_get_parent_name(np, 0);
-> +	if (!parent_name) {
-> +		err = -ENOENT;
-> +		goto err_free_ilp;
-> +	}
-> +
-> +	/* TODO: This looks generic, try making it OF helper. */
-> +	index = of_property_match_string(np, "reg-names", "pmu");
-> +	if (index < 0) {
-> +		err = index;
-> +		goto err_free_ilp;
-> +	}
-> +	err = of_address_to_resource(np, index, &res);
-> +	if (err)
-> +		goto err_free_ilp;
-> +	ilp->pmu = ioremap(res.start, resource_size(&res));
-> +	if (IS_ERR(ilp->pmu)) {
-> +		err = PTR_ERR(ilp->pmu);
-> +		goto err_free_ilp;
-> +	}
-> +
-> +	init.name = np->name;
-> +	init.ops = &bcm53573_ilp_clk_ops;
-> +	init.parent_names = &parent_name;
-> +	init.num_parents = 1;
-> +
-> +	ilp->hw.init = &init;
-> +	ilp->clk = clk_register(NULL, &ilp->hw);
-
-please use clk_hw_register() and of_clk_add_hw_provider().
-
-> +	if (WARN_ON(IS_ERR(ilp->clk)))
-> +		goto err_unmap_pmu;
-> +
-> +	err = of_clk_add_provider(np, of_clk_src_simple_get, ilp->clk);
-> +	if (err)
-> +		goto err_clk_unregister;
-> +
-> +	return;
-> +
-> +err_clk_unregister:
-> +	clk_unregister(ilp->clk);
-> +err_unmap_pmu:
-> +	iounmap(ilp->pmu);
-> +err_free_ilp:
-> +	kfree(ilp);
-> +	pr_err("Failed to init ILP clock: %d\n", err);
-> +}
-> +CLK_OF_DECLARE(bcm53573_ilp_clk, "brcm,bcm53573-ilp", bcm53573_ilp_init);
-
-Can this be a platform driver instead?
+Rob, it seems generic power sequence can't cover all cases.
+Without information from DT, we can't know which power sequence
+for which device.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+
+Best Regards,
+Peter Chen
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
