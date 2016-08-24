@@ -1,148 +1,65 @@
-From: "Gupta, Puja" <pujag@codeaurora.org>
-Subject: Re: [PATCH 2/4] firmware: qcom: scm: add iommu scm calls for pg table
-Date: Wed, 24 Aug 2016 11:35:29 -0700
-Message-ID: <14e4872a-7775-4221-140a-e08d28ae9098@codeaurora.org>
-References: <1471622000-1906-1-git-send-email-stanimir.varbanov@linaro.org>
- <1471622000-1906-3-git-send-email-stanimir.varbanov@linaro.org>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Wed, 24 Aug 2016 20:01:52 +0100
+Message-ID: <20160824200152.33be0707@arm.com>
+References: <cover.147018b3518.git.dalias@libc.org>
+        <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
+        <57BDCE5D.2050609@linaro.org>
+        <20160824174001.GW15995@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1471622000-1906-3-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Andy Gross <andy.gross@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Clark <robdclark@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160824174001.GW15995-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/19/2016 8:53 AM, Stanimir Varbanov wrote:
-> Those two scm calls are used to get the size of secure iommu
-> page table and to pass physical memory address for this page
-> table. The calls are used by remoteproc venus driver to load
-> the firmware.
-Do we really need these additional scm calls for venus? why can't we 
-just reuse existing __qcom_scm_pas_mem_setup() call?
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> ---
->   drivers/firmware/qcom_scm-64.c | 42 ++++++++++++++++++++++++++++++++++++++++++
->   drivers/firmware/qcom_scm.c    | 12 ++++++++++++
->   drivers/firmware/qcom_scm.h    | 11 +++++++++++
->   include/linux/qcom_scm.h       |  3 +++
->   4 files changed, 68 insertions(+)
->
-> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-> index 68484ea2aa51..ffcfbb31ae7a 100644
-> --- a/drivers/firmware/qcom_scm-64.c
-> +++ b/drivers/firmware/qcom_scm-64.c
-> @@ -374,3 +374,45 @@ int __qcom_scm_video_set_state(struct device *dev, u32 state, u32 spare)
->   
->   	return ret ? : res.a1;
->   }
-> +
-> +int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
-> +				      size_t *size)
-> +{
-> +	struct qcom_scm_desc desc = {0};
-> +	struct arm_smccc_res res;
-> +	int ret;
-> +
-> +	desc.args[0] = spare;
-> +	desc.arginfo = QCOM_SCM_ARGS(1);
-> +
-> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP,
-> +			    QCOM_SCM_IOMMU_SECURE_PTBL_SIZE, &desc, &res);
-> +
-> +	if (size)
-> +		*size = res.a1;
-> +
-> +	return ret ? : res.a2;
-> +}
-> +
-> +int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr, u32 size,
-> +				      u32 spare)
-> +{
-> +	struct qcom_scm_desc desc = {0};
-> +	struct arm_smccc_res res;
-> +	int ret;
-> +
-> +	desc.args[0] = addr;
-> +	desc.args[1] = size;
-> +	desc.args[2] = spare;
-> +	desc.arginfo = QCOM_SCM_ARGS(3, QCOM_SCM_RW, QCOM_SCM_VAL,
-> +				     QCOM_SCM_VAL);
-> +
-> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP,
-> +			    QCOM_SCM_IOMMU_SECURE_PTBL_INIT, &desc, &res);
-> +
-> +	/* the pg table has been initialized already, ignore the error */
-> +	if (ret == -EPERM)
-> +		ret = 0;
-> +
-> +	return ret;
-> +}
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index 3b0e31c48639..aa77d31b885c 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -333,6 +333,18 @@ int qcom_scm_video_set_state(u32 state, u32 spare)
->   }
->   EXPORT_SYMBOL(qcom_scm_video_set_state);
->   
-> +int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size)
-> +{
-> +	return __qcom_scm_iommu_secure_ptbl_size(__scm->dev, spare, size);
-> +}
-> +EXPORT_SYMBOL(qcom_scm_iommu_secure_ptbl_size);
-> +
-> +int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare)
-> +{
-> +	return __qcom_scm_iommu_secure_ptbl_init(__scm->dev, addr, size, spare);
-> +}
-> +EXPORT_SYMBOL(qcom_scm_iommu_secure_ptbl_init);
-> +
->   static int qcom_scm_probe(struct platform_device *pdev)
->   {
->   	struct qcom_scm *scm;
-> diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
-> index 4830559b2639..edeb0038e5fc 100644
-> --- a/drivers/firmware/qcom_scm.h
-> +++ b/drivers/firmware/qcom_scm.h
-> @@ -58,8 +58,17 @@ extern int  __qcom_scm_pas_auth_and_reset(struct device *dev, u32 peripheral);
->   extern int  __qcom_scm_pas_shutdown(struct device *dev, u32 peripheral);
->   extern int  __qcom_scm_pas_mss_reset(struct device *dev, bool reset);
->   
-> +#define QCOM_SCM_SVC_MP			0xc
-> +#define QCOM_SCM_IOMMU_SECURE_PTBL_SIZE	3
-> +#define QCOM_SCM_IOMMU_SECURE_PTBL_INIT	4
-> +extern int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
-> +					     size_t *size);
-> +extern int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr,
-> +					     u32 size, u32 spare);
-> +
->   /* common error codes */
->   #define QCOM_SCM_V2_EBUSY	-12
-> +#define QCOM_SCM_NOT_PERMITTED	-8
->   #define QCOM_SCM_ENOMEM		-5
->   #define QCOM_SCM_EOPNOTSUPP	-4
->   #define QCOM_SCM_EINVAL_ADDR	-3
-> @@ -81,6 +90,8 @@ static inline int qcom_scm_remap_error(int err)
->   		return -ENOMEM;
->   	case QCOM_SCM_V2_EBUSY:
->   		return -EBUSY;
-> +	case QCOM_SCM_NOT_PERMITTED:
-> +		return -EPERM;
->   	}
->   	return -EINVAL;
->   }
-> diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
-> index 2ece81a6b078..a8fb98c36cce 100644
-> --- a/include/linux/qcom_scm.h
-> +++ b/include/linux/qcom_scm.h
-> @@ -48,4 +48,7 @@ extern u32 qcom_scm_get_version(void);
->   
->   extern int qcom_scm_video_set_state(u32 state, u32 spare);
->   
-> +extern int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size);
-> +extern int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare);
-> +
->   #endif
-Puja
+On Wed, 24 Aug 2016 13:40:01 -0400
+Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org> wrote:
+
+[...]
+
+> > IIUC, there is a problem with the interrupt controller where
+the per irq
+> > line are not working correctly. Is that correct ?  
+> 
+> I don't think that's a correct characterization. Rather the percpu
+> infrastructure just means something completely different from what you
+> would expect it to mean. It has nothing to do with the hardware but
+> rather with kernel-internal choice of whether to do percpu devid
+> mapping inside the irq infrastructure, and the choice at the
+> irq-requester side of whether to do this is required to match the
+> irqchip driver's choice. I explained this better in another email
+> which I could dig up if necessary, but the essence is that
+> request_percpu_irq is a misnamed and unusably broken API.
+
+Or just one that simply doesn't fit your needs, because other
+architectures have different semantics than the ones you take for
+granted?
+
+> 
+> > Regarding Marc Zyngier comments about the irq controller driver being
+> > almost empty, I'm wondering if something in the irq controller driver
+> > which shouldn't be added before submitting this timer driver with SMP
+> > support (eg. irq domain ?).  
+> 
+> I don't think so. At most I could make the driver hard-code the percpu
+> devid model for certain irqs, but that _does not reflect_ anything
+> about the hardware. Rather it just reflects bad kernel internals. It
+
+I'd appreciate it if instead of ranting about how broken the kernel is,
+you'd submit a patch fixing it, since you seem to have spotted
+something that we haven't in several years of using that code on a
+couple of ARM-related platforms.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
