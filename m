@@ -1,184 +1,124 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/4 v2] soc: qcom: add EBI2 device tree bindings
-Date: Wed, 24 Aug 2016 10:52:35 +0200
-Message-ID: <1472028758-29272-2-git-send-email-linus.walleij@linaro.org>
-References: <1472028758-29272-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472028758-29272-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Randy Li <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [RESEND PATCH 3/4] usb: dwc2: assert phy reset when waking up in
+ rk3288 platform
+Date: Wed, 24 Aug 2016 16:54:16 +0800
+Message-ID: <76f0ffdb-a3c6-f1e6-8177-b254ff5badaa@rock-chips.com>
+References: <4c931176-a09a-546c-d2b6-ea74028c78a2@cogentembedded.com>
+ <1471807905-11323-1-git-send-email-ayaka@soulik.info>
+ <49d2baf7-5f81-fc20-a805-f7a378d67a5e@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <49d2baf7-5f81-fc20-a805-f7a378d67a5e-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the External Bus Interface 2, EBI2
-to the Qualcomm SoC drivers.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v1->v2:
-- Introduce per-SoC compatible strings for apq8060 and msm8660
-- Move the binding to bus/qcom,ebi2.txt
-- Add a vendor prefix for each chipselect XMEM configuration option
-  "qcom,xmem-foo"
-- Move all CS XMEM settings to the EBI2 node, encode the six
-  different chipselects into an array of settings.
-- Use ranges to specify the address windows for the six different
-  chipselects.
-- Alter #address-cells to <2> using the first as chipselect and the
-  second as offset into the range.
-- Augment the example accordingly.
----
- .../devicetree/bindings/bus/qcom,ebi2.txt          | 136 +++++++++++++++++++++
- 1 file changed, 136 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/qcom,ebi2.txt
 
-diff --git a/Documentation/devicetree/bindings/bus/qcom,ebi2.txt b/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
-new file mode 100644
-index 000000000000..4adadb65bea6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
-@@ -0,0 +1,136 @@
-+Qualcomm External Bus Interface 2 (EBI2)
-+
-+The EBI2 contains two peripheral blocks: XMEM and LCDC. The XMEM handles any
-+external memory (such as NAND or other memory-mapped peripherals) whereas
-+LCDC handles LCD displays.
-+
-+As it says it connects devices to an external bus interface, meaning address
-+lines (up to 9 address lines so can only address 1KiB external memory space),
-+data lines (16 bits), OE (output enable), ADV (address valid, used on some
-+NOR flash memories), WE (write enable). This on top of 6 different chip selects
-+(CS0 thru CS5) so that in theory 6 different devices can be connected.
-+
-+Apparently this bus is clocked at 64MHz. It has dedicated pins on the package
-+and the bus can only come out on these pins, however if some of the pins are
-+unused they can be left unconnected or remuxed to be used as GPIO or in some
-+cases other orthogonal functions as well.
-+
-+Also CS1 and CS2 has -A and -B signals. Why they have that is unclear to me.
-+
-+The chip selects have the following memory range assignments. This region of
-+memory is referred to as "Chip Peripheral SS FPB0" and is 168MB big.
-+
-+Chip Select                     Physical address base
-+CS0 GPIO134                     0x1a800000-0x1b000000 (8MB)
-+CS1 GPIO39 (A) / GPIO123 (B)    0x1b000000-0x1b800000 (8MB)
-+CS2 GPIO40 (A) / GPIO124 (B)    0x1b800000-0x1c000000 (8MB)
-+CS3 GPIO133                     0x1d000000-0x25000000 (128 MB)
-+CS4 GPIO132                     0x1c800000-0x1d000000 (8MB)
-+CS5 GPIO131                     0x1c000000-0x1c800000 (8MB)
-+
-+The APQ8060 Qualcomm Application Processor User Guide, 80-N7150-14 Rev. A,
-+August 6, 2012 contains some incomplete documentation of the EBI2.
-+
-+FIXME: the manual mentions "write precharge cycles" and "precharge cycles".
-+We have not been able to figure out which bit fields these correspond to
-+in the hardware, or what valid values exist. The current hypothesis is that
-+this is something just used on the FAST chip selects and that the SLOW
-+chip selects are understood fully. There is also a "byte device enable"
-+flag somewhere for 8bit memories.
-+
-+FIXME: The chipselects have SLOW and FAST configuration registers. It's a bit
-+unclear what this means, if they are mutually exclusive or can be used
-+together, or if some chip selects are hardwired to be FAST and others are SLOW
-+by design.
-+
-+The XMEM registers are totally undocumented but could be partially decoded
-+because the Cypress AN49576 Antioch Westbridge apparently has suspiciously
-+similar register layout, see: http://www.cypress.com/file/105771/download
-+
-+Required properties:
-+- compatible: should be one of:
-+  "qcom,msm8660-ebi2"
-+  "qcom,apq8060-ebi2"
-+- #address-cells: shoule be <2>: the first cell is the chipselect,
-+  the second cell is the offset inside the memory range
-+- #size-cells: should be <1>
-+- ranges: should be set to:
-+  ranges = <0 0x0 0x1a800000 0x00800000>,
-+           <1 0x0 0x1b000000 0x00800000>,
-+           <2 0x0 0x1b800000 0x00800000>,
-+           <3 0x0 0x1d000000 0x00800000>,
-+           <4 0x0 0x1c800000 0x00800000>,
-+           <5 0x0 0x1c000000 0x00800000>;
-+- reg: two ranges of registers: EBI2 config and XMEM config areas
-+- reg-names: should be "ebi2", "xmem"
-+- clocks: two clocks, EBI_2X and EBI
-+- clock-names: shoule be "ebi2x", "ebi2"
-+
-+The following optional properties are all arrays indexed to the target
-+chipselect, usually an array of six elements representing the six chipselects:
-+
-+Optional properties arrays for SLOW chip selects:
-+- qcom,xmem-recovery-cycles: recovery cycles is the time the memory continues to
-+  drive the data bus after OE is de-asserted, in order to avoid contention on
-+  the data bus. They are inserted when reading one CS and switching to another
-+  CS or read followed by write on the same CS. Valid values 0 thru 15. Minimum
-+  value is actually 1, so a value of 0 will still yield 1 recovery cycle.
-+- qcom,xmem-write-hold-cycles: write hold cycles, these are extra cycles
-+  inserted after every write minimum 1. The data out is driven from the time
-+  WE is asserted until CS is asserted. With a hold of 1 (value = 0), the CS
-+  stays active for 1 extra cycle etc. Valid values 0 thru 15.
-+- qcom,xmem-write-delta-cycles: initial latency for write cycles inserted for
-+  the first write to a page or burst memory. Valid values 0 thru 255.
-+- qcom,xmem-read-delta-cycles: initial latency for read cycles inserted for the
-+  first read to a page or burst memory. Valid values 0 thru 255.
-+- qcom,xmem-write-wait-cycles: number of wait cycles for every write access, 0=1
-+  cycle. Valid values 0 thru 15.
-+- qcom,xmem-read-wait-cycles: number of wait cycles for every read access, 0=1
-+  cycle. Valid values 0 thru 15.
-+
-+Optional properties arrays for FAST chip selects:
-+- qcom,xmem-address-hold-enable: this is a boolean property stating that we
-+  shall hold the address for an extra cycle to meet hold time requirements
-+  with ADV assertion.
-+- qcom,xmem-adv-to-oe-recovery-cycles: the number of cycles elapsed before an OE
-+  assertion, with respect to the cycle where ADV (address valid) is asserted.
-+  2 means 2 cycles between ADV and OE. Valid values 0, 1, 2 or 3.
-+- qcom,xmem-read-hold-cycles: the length in cycles of the first segment of a
-+  read transfer. For a single read trandfer this will be the time from CS
-+  assertion to OE assertion. Valid values 0 thru 15.
-+
-+Optional subnodes:
-+- Nodes inside the EBI2 will be considered device nodes.
-+
-+Example:
-+
-+ebi2@1a100000 {
-+	compatible = "qcom,apq8060-ebi2";
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	ranges = <0 0x0 0x1a800000 0x00800000>,
-+		 <1 0x0 0x1b000000 0x00800000>,
-+		 <2 0x0 0x1b800000 0x00800000>,
-+		 <3 0x0 0x1d000000 0x00800000>,
-+		 <4 0x0 0x1c800000 0x00800000>,
-+		 <5 0x0 0x1c000000 0x00800000>;
-+	reg = <0x1a100000 0x1000>, <0x1a110000 0x1000>;
-+	reg-names = "ebi2", "xmem";
-+	clocks = <&gcc EBI2_2X_CLK>, <&gcc EBI2_CLK>;
-+	clock-names = "ebi2x", "ebi2";
-+	/* Make sure to set up the pin control for the EBI2 */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&foo_ebi2_pins>;
-+	qcom,xmem-recovery-cycles = <0>, <0>, <0>, <0>, <0>, <0>;
-+	qcom,xmem-write-hold-cycles = <0>, <0>, <3>, <0>, <0>, <0>;
-+	qcom,xmem-write-delta-cycles = <0>, <0>, <31>, <0>, <0>, <0>;
-+	qcom,xmem-read-delta-cycles = <0>, <0>, <28>, <0>, <0>, <0>;
-+	qcom,xmem-write-wait-cycles = <0>, <0>, <9>, <0>, <0>, <0>;
-+	qcom,xmem-read-wait-cycles = <0>, <0>, <9>, <0>, <0>, <0>;
-+
-+ 	foo-ebi2@1b800000 {
-+		compatible = "foo";
-+		reg = <2 0x1b800000 0x100>;
-+		(...)
-+	};
-+};
+On 08/24/2016 04:46 AM, John Youn wrote:
+> On 8/21/2016 12:32 PM, Randy Li wrote:
+>> On the rk3288 USB host-only port (the one that's not the OTG-enabled
+>> port) the PHY can get into a bad state when a wakeup is asserted (not
+>> just a wakeup from full system suspend but also a wakeup from
+>> autosuspend).
+>>
+>> We can get the PHY out of its bad state by asserting its "port reset",
+>> but unfortunately that seems to assert a reset onto the USB bus so it
+>> could confuse things if we don't actually deenumerate / reenumerate the
+>> device.
+>>
+>> We can also get the PHY out of its bad state by fully resetting it using
+>> the reset from the CRU (clock reset unit) in chip, which does a more full
+>> reset.  The CRU-based reset appears to actually cause devices on the bus
+>> to be removed and reinserted, which fixes the problem (albeit in a hacky
+>> way).
+>>
+>> It's unfortunate that we need to do a full re-enumeration of devices at
+>> wakeup time, but this is better than alternative of letting the bus get
+>> wedged.
+>>
+>> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+>> ---
+>>  drivers/usb/dwc2/core_intr.c | 11 +++++++++++
+>>  1 file changed, 11 insertions(+)
+>>
+>> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
+>> index d85c5c9..f57c48a 100644
+>> --- a/drivers/usb/dwc2/core_intr.c
+>> +++ b/drivers/usb/dwc2/core_intr.c
+>> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
+>>  static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>>  {
+>>  	int ret;
+>> +	struct device_node *np = hsotg->dev->of_node;
+>>
+>>  	/* Clear interrupt */
+>>  	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
+>> @@ -379,6 +380,16 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>>  			/* Restart the Phy Clock */
+>>  			pcgcctl &= ~PCGCTL_STOPPCLK;
+>>  			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
+>> +
+>> +			/*
+>> +			 * It is a quirk in Rockchip RK3288, causing by
+>> +			 * a hardware bug. This will propagate out and
+>> +			 * eventually we'll re-enumerate the device.
+>> +			 * Not great but the best we can do
+>
+> Remove the trailing whitespaces in this comment.
+>
+> Run scripts/checkpatch.pl to catch these.
+I see.
+>
+>> +			 */
+>> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
+>> +				hsotg->phy->ops->reset(hsotg->phy);
+>> +
+>
+> You should probably check for NULL before calling the reset()
+> callback.
+Sure.
+>
+> Also, I'd rather see a generic quirk property that you set for your
+> platform.
+>
+> Something like "phy_reset_on_wakeup_quirk".
+But Rob Herring want me to implied by the SoC specific compatible 
+string. I agree with him. It is certainly bug in RK3288 platform.
+It is no found no the other platform.
+>
+> Also, try to preserve the version tag in your subject for all the
+> patches so that we can easily identify the latest version of the
+> series, like:
+>
+> [PATCH v5 3/4] ...
+>
+> And, typically "RESEND" means there are no code change.
+I see, I just make up my mind whether code style is new version
+before. I won't again.
+
+Thank you very much.
+>
+> Regards,
+> John
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>
+
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Randy Li
+The third produce department
