@@ -1,119 +1,54 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 0/8] power: add power sequence library
-Date: Wed, 24 Aug 2016 16:53:35 +0800
-Message-ID: <20160824085335.GB27233@shlinux2>
-References: <1471252398-957-1-git-send-email-peter.chen@nxp.com>
- <b1848eb2-9298-9089-ee4d-5356998c6c08@linaro.org>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v3 0/2] AM335x-ICE: Add support for rotary switch
+Date: Wed, 24 Aug 2016 14:45:17 +0530
+Message-ID: <5294e820-4946-a196-549f-76a349b6606d@ti.com>
+References: <20160824075859.30979-1-vigneshr@ti.com>
+ <c5385d42-14e4-d5ca-370e-5b04e37d873d@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <b1848eb2-9298-9089-ee4d-5356998c6c08-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw3-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c5385d42-14e4-d5ca-370e-5b04e37d873d@zonque.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Mack <daniel@zonque.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Hung-yu Wu <hywu@google.com>, Grant Grundler <grundler@chromium.org>, S Twiss <stwiss.opensource@diasemi.com>, Moritz Fischer <moritz.fischer@ettus.com>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, John Stultz <john.stultz@linaro.org>, "Andrew F . Davis" <afd@ti.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 23, 2016 at 04:02:48PM +0530, Vaibhav Hiremath wrote:
+Hi,
+
+On Wednesday 24 August 2016 02:05 PM, Daniel Mack wrote:
+> Hi,
 > 
+> On 08/24/2016 09:58 AM, Vignesh R wrote:
+>> This series adds support for rotary-switch on AM335x-ICE that is
+>> connected to TI PCA9536 I2C GPIO expander.
+>> First patch adds new generic driver to read status of group of GPIO
+>> lines and report the value as an input event. The second patch adds DT
+>> entries for the same.
+>>
+>> v2: https://lkml.org/lkml/2016/8/23/111
+>> v1: https://lkml.org/lkml/2016/8/12/7
 > 
-> On Monday 15 August 2016 02:43 PM, Peter Chen wrote:
-> >Hi all,
-> >
-> >This is a follow-up for my last power sequence framework patch set [1].
-> >According to Rob Herring and Ulf Hansson's comments[2], I use a generic
-> >power sequence library for parsing the power sequence elements on DT,
-> >and implement generic power sequence on library. The host driver
-> >can allocate power sequence instance, and calls pwrseq APIs accordingly.
-> >
-> >In future, if there are special power sequence requirements, the special
-> >power sequence library can be created.
-> >
-> >This patch set is tested on i.mx6 sabresx evk using a dts change, I use
-> >two hot-plug devices to simulate this use case, the related binding
-> >change is updated at patch [1/6], The udoo board changes were tested
-> >using my last power sequence patch set.[3]
-> >
-> >Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
-> >need to power on itself before it can be found by ULPI bus.
-> >
-> >[1] http://www.spinics.net/lists/linux-usb/msg142755.html
-> >[2] http://www.spinics.net/lists/linux-usb/msg143106.html
-> >[3] http://www.spinics.net/lists/linux-usb/msg142815.html
-> (Please ignore my response on V2)
-> 
-> Sorry being so late in the discussion...
-> 
-> If I am not missing anything, then I am afraid to say that the
-> generic library
-> implementation in this patch series is not going to solve many of
-> the custom
-> requirement of power on, off, etc...
-> I know you mentioned about adding another library when we come
-> across such platforms, but should we not keep provision (or easy
-> hooks/path)
-> to enable that ?
-> 
-> Let me bring in the use case I am dealing with,
-> 
-> 
->                               Host
->                                |
->                                V
->                            USB port
-> ------------------------------------------------------------
->                                |
->                                V
->                       USB HUB device (May need custom on/off seq)
->                                |
->                                V
->               =============================
->              |                             |
->              V                             V
->          Device-1                       Device-2
-> (Needs special power               (Needs special power
->  on/off sequence.                   on/off sequence.
->  Also may need custom               Also, may need custom
->  sequence for                       sequence for
->  suspend/resume)                    suspend/resume)
-> 
-> 
-> Note: Both Devices are connected to HUB via HSIC and may differ
->           in terms of functionality, features they support.
-> 
-> In the above case, both Device-1 and Device-2, need separate
-> power on/off sequence. So generic library currently we have in this
-> patch series is not going to satisfy the need here.
-> 
-> I looked at all 6 revisions of this patch-series, went through the
-> review comments, and looked at MMC power sequence code;
-> what I can say here is, we need something similar to
-> MMC power sequence here, where every device can have its own
-> power sequence (if needed).
-> 
-> I know Rob is not in favor of creating platform device for
-> this, and I understand his comment.
-> If not platform device, but atleast we need mechanism to
-> connect each device back to its of_node and its respective
-> driver/library fns. For example, the Devices may support different
-> boot modes, and platform driver needs to make sure that
-> the right sequence is followed for booting.
-> 
-> Peter, My apologies for taking you back again on this series.
-> I am OK, if you wish to address this in incremental addition,
-> but my point is, we know that the current generic way is not
-> enough for us, so I think we should try to fix it in initial phase only.
+> Is there a reason why the rotary-encoder driver cannot handle this?
+> Commit 7dde4e74744 ("Input: rotary-encoder - support more than 2 gpios
+> as input") added support for that mode AFAIU.
 > 
 
-Rob, it seems generic power sequence can't cover all cases.
-Without information from DT, we can't know which power sequence
-for which device.
+Rotary encoder driver handles incremental encoders only and does not
+support absolute encoders. The rotary switch on am335x-ice is different
+from the incremental encoders in the
+sense that GPIO line status directly reflect the position(number)
+pointed by the dial of the encoder. So, there is no need to count steps
+or know the direction of rotation as it does not matter.
+
+I did try to enhance rotary-encoder driver to support absolute
+encoder[1] but the comment there was to write new driver that simply
+translates gpio-encoded value into ABS* event. Indeed, the new driver
+looks more simple and can handle more such hardwares.
+
+[1] https://lkml.org/lkml/2016/5/19/98
+
 
 -- 
-
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Vignesh
