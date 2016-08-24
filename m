@@ -1,71 +1,63 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] arm64: dts: hikey: extend default cma size to 128MB
-Date: Wed, 24 Aug 2016 10:10:04 -0500
-Message-ID: <CAL_JsqJxE+fAbSsp=N7dvzvQiKwh3nM8-oSJH1OzV+KfW3w4jw@mail.gmail.com>
-References: <1472045710-15832-1-git-send-email-guodong.xu@linaro.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 6/7] arm64: tegra: Add the various audio devices for
+ Tegra210 Smaug
+Date: Wed, 24 Aug 2016 16:56:30 +0200
+Message-ID: <20160824145630.GG6887@ulmo.ba.sec>
+References: <1470756082-19099-1-git-send-email-jonathanh@nvidia.com>
+ <1470756082-19099-7-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1472045710-15832-1-git-send-email-guodong.xu@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guodong Xu <guodong.xu@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xinliang Liu <xinliang.liu@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wei Xu <xuwei5@hisilicon.com>, John Stultz <john.stultz@linaro.org>, fathi.boudra@linaro.org, Thierry Reding <treding@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vJguvTgX93MxBIIe"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1470756082-19099-7-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 24, 2016 at 8:35 AM, Guodong Xu <guodong.xu@linaro.org> wrote:
-> To support display in Debian on HiKey, cma heap is used to allocate
-> graphic buffers. The default size of CMA is 16 MB which is not enought.
 
-s/enought/enough/
+--vJguvTgX93MxBIIe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
-> Increase the default CMA size to 128 MB.
->
-> cc: Rob Herring <rob.herring@linaro.org>
-> cc: Fathi Boudra <fathi.boudra@linaro.org>
-> cc: John Stultz <john.stultz@linaro.org>
-> cc: Xinliang Liu <xinliang.liu@linaro.org>
-> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+On Tue, Aug 09, 2016 at 04:21:21PM +0100, Jon Hunter wrote:
+> The Tegra210 Smaug includes the Realtek RT5677 audio codec, Nuvoton
+> NAU8825 headset codec and the Maxim MAX98357a audio amplifier. Add
+> the nodes for these devices for the Tegra210 Smaug.
+>=20
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
->  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> index 4a51058..abb3434 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> @@ -45,6 +45,20 @@
->                       <0x00000000 0x22000000 0x00000000 0x1c000000>;
->         };
->
-> +       reserved-memory {
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               ranges;
-> +
-> +               /* global autoconfigured region for contiguous allocations */
-> +               linux,cma {
-> +                       compatible = "shared-dma-pool";
-> +                       reusable;
-> +                       size = <0x00000000 0x08000000>;
-> +                       linux,cma-default;
-> +               };
-> +       };
-> +
->         pstore: pstore@0x21f00000 {
+>  arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 44 +++++++++++++++++++++=
+++++++
+>  1 file changed, 44 insertions(+)
 
-So what is upstream (as of 4.8) for ramoops also uses reserved-memory,
-so you should separately fix this.
+Applied with the interrupts-extended property turned into a pair of
+interrupt-parent and interrupts properties.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Thanks,
+Thierry
 
-Rob
+--vJguvTgX93MxBIIe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXvbWeAAoJEN0jrNd/PrOhy7UP/3yg0hvUqPXZT8TTlYUv9or+
+uZPFqyFamMJUHOjx8TRrABkl/8M/gjG64D2ttj79j7pIm2LZjqAUFUOxBAbMOfXJ
+y0LcGTztu2Pdja+0I+W5+nBEFIYbcjPrAX9ecezcNsdqFroGgJXxv6a1xbo94unE
+NMcsgaTerL+uupc5qCZTp+Yjw7xTLVvecn7aU/pCx24kJhrqd6iZlND3L4EuO8MG
+M2JDpcnpjg2LqnpUAshALZVy5CQywlpxMXL+mcic1AtOjgdgxa6x35AiMvb4FDVr
+NP46crLCs4qHIsECzfFXR1AkLJ7sD03i+2EMzuro3i8Bm3OXGlrkUstYDRJg2YAl
+hxQUNQLVLfOy8lBpQs3GiiIuD2cTskaEJOjL3Ddhl6eaZPY6jjAF5nszAxUtRMxd
+5ActwFxAk8S/6OIYW7jGr9w98r4KJN97Dl2LxqLqXV6Db/o8pxlZhdqX0or80cx2
+vhTXOLjIA/miPQ8pL8gp+aHc4rnNkZ234Ut8baAhqbRY4EVjrKXSyU2mw5q0/R7u
+MYQKeNX/5QEOY/VzgYF3r3/LJbjgxWpE3s3rCDGx0FJ1pf9c4PxSE00wMAKkND5O
+eoXZrH5Mw53g6DwW/F5nXzHB4ivlSb5GTeBxQ2KypSV0T6C5s+wJ6CHE+CsqWSzs
+hCVh1hWNfRljGbbWpOZW
+=z6+8
+-----END PGP SIGNATURE-----
+
+--vJguvTgX93MxBIIe--
