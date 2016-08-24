@@ -1,64 +1,109 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 7/7] arm64: tegra: Enable XUSB controller on Tegra210
- Smaug
-Date: Wed, 24 Aug 2016 16:57:23 +0200
-Message-ID: <20160824145723.GH6887@ulmo.ba.sec>
-References: <1470756082-19099-1-git-send-email-jonathanh@nvidia.com>
- <1470756082-19099-8-git-send-email-jonathanh@nvidia.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 6/8] iommu/arm-smmu: Implement of_xlate() for SMMUv3
+Date: Wed, 24 Aug 2016 16:08:18 +0100
+Message-ID: <09911a58-1566-9a32-c911-f61e690d354a@arm.com>
+References: <cover.1467388950.git.robin.murphy@arm.com>
+ <925b054b1e96dc83c0b1dc9607785d0346187366.1467388950.git.robin.murphy@arm.com>
+ <20160729144655.GA3359@e106794-lin.localdomain>
+ <1d570682-d815-657e-2119-b706e0034e2c@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xHbokkKX1kTiQeDC"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1470756082-19099-8-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1d570682-d815-657e-2119-b706e0034e2c-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Philippe Brucker <Jean-Philippe.Brucker-5wv7dgnIgG8@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 29/07/16 19:55, Robin Murphy wrote:
+> On 29/07/16 15:46, Jean-Philippe Brucker wrote:
+>> Hi Robin,
+>>
+>> Very sorry about the delay, I forgot about this minor comment, below
+>>
+>> On Fri, Jul 01, 2016 at 05:50:15PM +0100, Robin Murphy wrote:
+[...]
+>>> +		smmu = arm_smmu_get_by_node(fwspec->iommu_np);
+>>> +		if (!smmu)
+>>> +			return -ENODEV;
+>>> +		master = kzalloc(sizeof(*master), GFP_KERNEL);
+>>> +		if (!master)
+>>> +			return -ENOMEM;
+>>> +
+>>> +		master->smmu = smmu;
+>>> +		fwspec->iommu_priv = master;
+>>
+>> It's probably best to initialise master->ste.bypass = true here, to
+>> reflect the initial state of STEs. Otherwise attach_dev always calls
+>> detach_dev first for nothing.
+> 
+> I'm actually now thinking that that check in attach_dev() should be for
+> ste->valid, rather than ste->bypass. That matches the similar check in
+> remove_device(), and looking at old local branches I apparently did have
+> it that way at some point, and I now can't quite remember why it ended
+> up differently. I'll have a proper dig into it next week.
 
---xHbokkKX1kTiQeDC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[for a value of "next week" relative to "last week", at least...]
 
-On Tue, Aug 09, 2016 at 04:21:22PM +0100, Jon Hunter wrote:
-> Enable the XUSB controller on Tegra210 Smaug. The Smaug has a USB Type-C
-> connector with one of the USB2.0 lanes and one of the USB3.0 lanes
-> populated.
->=20
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 57 +++++++++++++++++++++=
-++++++
->  1 file changed, 57 insertions(+)
+Having now remembered, the reason it is this way is a subtle concession
+to the nasty PCI RID alias case. When you come to probe the second
+device behind a non-transparent bridge, the first device is already
+attached to the default domain so the underlying STE is no longer a
+bypass entry, but we've got no way of knowing that - we can't tell we're
+going to be in an alias group until we call iommu_group_get_for_dev(),
+and by the time that returns it's already too late, since the attach to
+the default domain (and thus the attempt to write a now-valid STE with
+the same data again) will have happened.
 
-Applied, thanks.
+The least complicated ways around that that I can think of are 1)
+inspect the stream table itself on attach, 2) maintain a semi-redundant
+list within the group of exactly which ID is attached to which domain at
+any point in time, 3) treat the initial per-device state as undefined
+(!valid, !bypass) so that the initial domain attach is always a safe
+break-before-make on the stream table, or 4) disallow aliasing IDs
+entirely and just let the BUG() in write_strtab_ent() fire if a
+non-transparent bridge ever comes along.
 
-Thierry
+Discounting #4 as unreasonable, #3 is by far the least complicated, so
+I've kept this as it is for now. #2 might seem reasonable at a glance,
+but it wouldn't be useful for anything _except_ this specific situation,
+which in practice we'd expect to encounter rarely if ever.
 
---xHbokkKX1kTiQeDC
-Content-Type: application/pgp-signature; name="signature.asc"
+Robin.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+>> Apart from that, this version works fine with my twisted setup. Note
+>> that we might have to add a master->fwspec reference in the future, to
+>> access those SIDs from various places. If I understood correctly, it
+>> should be fine as those objects have the same lifetime after the
+>> add_device call.
+> 
+> That sounds reasonable, although I can't think offhand where we might
+> have a master_data without having got it via the containing device
+> (unless we also add some other means of keeping track of them). Since
+> this series doesn't need any kind of reverse-lookup capabilities I'm
+> just keeping things as simple as possible for the time being.
+> 
+> Robin.
+> 
+>>
+>> Thanks,
+>> Jean-Philippe
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-iQIcBAABCAAGBQJXvbXTAAoJEN0jrNd/PrOhhtAP/0C9pO/BNu9ueGkzsKi5J/9L
-ruOf980DcAnL5IhBCtDkYYjzH9VV5gW6efWTzkAitwEDJlrtN9IMH4yoCoP3iHl/
-EXHEGbmPJJExk9uq1NuoxjYfCtPvUc0e3Ii4T3j9B41S9rARrhRMGg3R74REp070
-58qPHkM0BRoyzi4v0p37XIfWURmBL8HNJAxldTvTs2IiIhrxiIgQ6YJHlZsDPa3Y
-hcI3DFL63GYzjvxTpfbiJbjOQrFtNBJ9CJ8WkK9nqso9y1WcRfQOQWuufulmVYBt
-2qCu0B6Ynrsqy7odqUhXMWmf4pWF4PYzTblc0agIULA0pLr9hVJGDxSk8jzPbWO1
-izn2RV1YLRd4x1X6kMYKbsgJ0ZbJpjoTmznJuEUljN/LVafq3vXvw5p+xS9kTF/s
-InFax5PnV8uiBlJ6YMw7pwMlbqJWJRNMy1Ha/fJioxxkM1VA2UVuHgTFwP0j6ERo
-qc3toj4iklgVgApcCOowcaRThQm5Sd4BGoNpnF9XX8FPoGAeN7+HNNKPcw/e3hXJ
-uxpOum/yC/6l6fH+erW+m9sf4LFYXmGRsG6PpTI800eOWk19BkVO0sj2UZ7mO4h+
-dbs8Vohnuqbs/8tjGwXvr/TAyEBqN7swh0J2+DFGOlRj5f2b0dG5tw6uTrWWYs8p
-rv+ByzGz+JYNanBAhmz4
-=Sb3T
------END PGP SIGNATURE-----
-
---xHbokkKX1kTiQeDC--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
