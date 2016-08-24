@@ -1,59 +1,39 @@
-From: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v2] Documentation: devicetree: changesets do locking on their own meanwhile
-Date: Wed, 24 Aug 2016 15:38:56 +0200
-Message-ID: <20160824133900.7282-1-wsa+renesas@sang-engineering.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 2/6] clk: tegra: add TEGRA30_CLK_NOR to init table
+Date: Wed, 24 Aug 2016 15:37:14 +0200
+Message-ID: <1472045838-22628-3-git-send-email-mirza.krak@gmail.com>
+References: <1472045838-22628-1-git-send-email-mirza.krak@gmail.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472045838-22628-1-git-send-email-mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Since commit 183223770ae862 ("drivers/of: Export OF changeset functions"),
-the mentioned functions do all necessary locking.
+From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Signed-off-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-Fixes: 183223770ae862 ("drivers/of: Export OF changeset functions")
+Add TEGRA30_CLK_NOR to init table and set default rate to 127 MHz which
+is max rate.
+
+Signed-off-by: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
+Changes in v2:
+- no changes
 
-V2: corrected the "Fixes" tag
+ drivers/clk/tegra/clk-tegra30.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- Documentation/devicetree/changesets.txt | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
-
-diff --git a/Documentation/devicetree/changesets.txt b/Documentation/devicetree/changesets.txt
-index 935ba5acc34e6c..cb488eeb635372 100644
---- a/Documentation/devicetree/changesets.txt
-+++ b/Documentation/devicetree/changesets.txt
-@@ -21,20 +21,11 @@ a set of changes. No changes to the active tree are made at this point.
- All the change operations are recorded in the of_changeset 'entries'
- list.
- 
--3. mutex_lock(of_mutex) - starts a changeset; The global of_mutex
--ensures there can only be one editor at a time.
--
--4. of_changeset_apply() - Apply the changes to the tree. Either the
-+3. of_changeset_apply() - Apply the changes to the tree. Either the
- entire changeset will get applied, or if there is an error the tree will
--be restored to the previous state
--
--5. mutex_unlock(of_mutex) - All operations complete, release the mutex
-+be restored to the previous state. The core ensures proper serialization
-+through locking. An unlocked version __of_changeset_apply is available,
-+if needed.
- 
- If a successfully applied changeset needs to be removed, it can be done
--with the following sequence.
--
--1. mutex_lock(of_mutex)
--
--2. of_changeset_revert()
--
--3. mutex_unlock(of_mutex)
-+with of_changeset_revert().
--- 
-2.9.3
-
+diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+index 8e2db5e..67f1677 100644
+--- a/drivers/clk/tegra/clk-tegra30.c
++++ b/drivers/clk/tegra/clk-tegra30.c
+@@ -1252,6 +1252,7 @@ static struct tegra_clk_init_table init_table[] __initdata = {
+ 	{ TEGRA30_CLK_SDMMC1, TEGRA30_CLK_PLL_P, 48000000, 0 },
+ 	{ TEGRA30_CLK_SDMMC2, TEGRA30_CLK_PLL_P, 48000000, 0 },
+ 	{ TEGRA30_CLK_SDMMC3, TEGRA30_CLK_PLL_P, 48000000, 0 },
++	{ TEGRA30_CLK_NOR, TEGRA30_CLK_PLL_P, 127000000, 0 },
+ 	{ TEGRA30_CLK_PLL_M, TEGRA30_CLK_CLK_MAX, 0, 1 },
+ 	{ TEGRA30_CLK_PCLK, TEGRA30_CLK_CLK_MAX, 0, 1 },
+ 	{ TEGRA30_CLK_CSITE, TEGRA30_CLK_CLK_MAX, 0, 1 },
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
