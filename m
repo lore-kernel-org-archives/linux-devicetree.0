@@ -1,275 +1,138 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio: document bindings for mounting matrixes
-Date: Wed, 24 Aug 2016 22:29:57 +0100
-Message-ID: <067a4882-c6f2-5994-e3ce-100e317ed121@kernel.org>
-References: <1469355434-17043-1-git-send-email-linus.walleij@linaro.org>
- <CACRpkdY0gCLKD3rmiYuFgWSYOe6dtUaBeRi1ns-UFF=AspntFg@mail.gmail.com>
- <c8e83cf2-f9dc-0bc9-fcde-326b05ee290b@kernel.org>
- <57BD9EB6.1090504@parrot.com>
+From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Wed, 24 Aug 2016 17:44:44 -0400
+Message-ID: <20160824214444.GZ15995@brightrain.aerifal.cx>
+References: <cover.147018b3518.git.dalias@libc.org>
+ <57BDCE5D.2050609@linaro.org>
+ <20160824174001.GW15995@brightrain.aerifal.cx>
+ <1909939.rYmWMrdImI@wuerfel>
+ <20160824205225.GY15995@brightrain.aerifal.cx>
+ <20160824212212.GB1775@remoulade>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57BD9EB6.1090504-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160824212212.GB1775@remoulade>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24/08/16 14:18, Gregor Boirie wrote:
-> Linus, Jonathan,
+On Wed, Aug 24, 2016 at 10:22:13PM +0100, Mark Rutland wrote:
+> On Wed, Aug 24, 2016 at 04:52:26PM -0400, Rich Felker wrote:
+> > On Wed, Aug 24, 2016 at 10:01:08PM +0200, Arnd Bergmann wrote:
+> > > On Wednesday, August 24, 2016 1:40:01 PM CEST Rich Felker wrote:
+> > > > I actually tried multiple times to find good resources on policy for
+> > > > which form to prefer, but didn't have much luck. My understanding is
+> > > > that __raw_writel/__raw_readl always performs a native-endian
+> > > > load/store, whereas writel/readl behavior depends on cpu endianness
+> > > > and whether the arch declares that "pci bus" (that was the term I
+> > > > found in the source, not relevant here) io is endian-swapped or not.
+> > > > Can you give me a better explanation of why we might prefer one form
+> > > > or the other?
+> > > 
+> > > In general, a portable driver should use readl/writel because they
+> > > are defined to have the behavior that x86 provides, which is what
+> > > most developers understand best. Compared to __raw_readl/__raw_writel,
+> > > it guarantees
+> > > 
+> > > - correct endianess (in most cases, exceptions see below)
+> > > - does not leak out of spinlocks
+> > 
+> > Not even normal non-volatile accesses can leak across spinlocks;
+> > they're memory+compiler barriers.
 > 
-> my little bit there... at last. comments in line.
+> Note that Arnd was talking in general, about cross-architectural guarantees.
 > 
+> Across architectures, not all barriers are equivalent. On some architectures,
+> the barriers used by spinlocks don't necessarily order accesses across
+> disparate memory types (i.e. DRAM and IO), or might not guarantee that the
+> ordering is consistent to observers other than (coherent) CPUs. Hence a
+> portable driver should care about this distinction.
 > 
-> On 08/21/2016 05:56 PM, Jonathan Cameron wrote:
->> On 24/07/16 11:17, Linus Walleij wrote:
->>> The mounting matrix for sensors was introduced in
->>> commit dfc57732ad38 ("iio:core: mounting matrix support")
->>>
->>> However the device tree bindings are very terse and since this is
->>> a widely applicable property, we need a proper binding for it
->>> that the other bindings can reference. This will also be useful
->>> for other operating systems and sensor engineering at large.
->>>
->>> I think all 3D sensors should support it, the current situation
->>> is probably that the mounting information is confined in magic
->>> userspace components rather than using the mounting matrix, which
->>> is not good for portability and reuse.
->>>
->>> Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
->>> Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Hi Linus,
->>
->> Sorry I took so long to get to this...
->> (out of curiosity are you running a fifo queue of patches? Every time
->> I review and merge one, another one turns up in my inbox :)
->>> ---
->>> Please help out to get this right, I think this could be confusing
->>> to users unless documented properly. I think the doc has some rough
->>> edges since I'm not the smartest in physics nor english at all times.
->>> ---
->> I think we have quite a bit of confusion of measurement frames here.
->> (it always confused me when I was doing day to day work with these - now
->> I'm decidedly rusty!)
->>>   .../devicetree/bindings/iio/mount-matrix.txt       | 104 +++++++++++++++++++++
->>>   1 file changed, 104 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/iio/mount-matrix.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/iio/mount-matrix.txt b/Documentation/devicetree/bindings/iio/mount-matrix.txt
->>> new file mode 100644
->>> index 000000000000..3e72c92c5689
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iio/mount-matrix.txt
->>> @@ -0,0 +1,104 @@
->>> +Mounting matrix
->>> +
->>> +The mounting matrix is a device tree property used to orient any IIO device
->>> +that produce three-dimensional data.
->>> +
->>> +The typical usecase is that where a component has an internal representation
->>> +of the (x,y,z) triplets, such as different registers to read these coordinates,
->>> +and thus implying that the component should be mounted in a certain orientation
->>> +relative to some specific point of reference.
->> point of reference -> device frame of reference.
-> +1.
-> Makes me think we should probably use the same terminology in DT bindings and
-> IIO ABI docs.
-> What Jonathan calls "device frame of reference" was named as "main hardware
-> reference frame" in IIO docs. For fixed wings UAVs the most common term would
-> be "body frame".
-> I think we should pick one and stick with it.
-Agreed. Don't actually care which, though body frame of reference seems a bit
-odd for a mobile phone ;)
-> 
-> Moreover as, told below, we have to make a clear distinction between "world",
-> "device/main hardware" and "sensor" reference frames.
->>> +
->>> +For example a device with some kind of screen, where the user is supposed to
->>> +interact with the environment using a accelerometer, gyroscope or magnetometer
->>> +mounted on the same chassis as this screen, will likely take the screen as
->>> +reference to (x,y,z) orientation, with (x,y) corresponding to these axes on the
->>> +screen and (z) being depth, the axis perpendicular to the screen.
->> Good description.
->>> +
->>> +The axes may also be flipped: for a screen you probably want (x) coordinates to
->>> +go from negative on the left to positive on the right and (z) depth to be
->>> +negative under the screen and positive in front of it, toward the face of the
->>> +user.
->> I'm not sure we don't want to define that it can't be flipped and enforce the
->> correct coordinate system on the underlying drivers (fingers crossed they are
->> currently all left or all right handed? - oops should have been keeping an eye on
->> this).
-> As to coordinate system definition, multiple conventions seem to exist across
-> industries. For UAV, we use the one described here:
-> https://en.wikipedia.org/wiki/Flight_dynamics_(fixed-wing_aircraft)
-> 
-> So I feel like we should keep away from any temptation to define the coordinates
-> system too strictly.
-> I also think of systems composed of multiple hardware parts with sensors
-> scattered all over them. What would be the right "device/main hardware" reference
-> frame definition in these cases ?
-> As this is product specific, I feel like "device/main hardware" reference frame
-> definition should be left to the "board/main hardware/device..." implementor's
-> choice.
-Flexible is good, but I think we should define a base rule for the chips frame
-of reference and fix up any that disagree (which is nasty ABI breakage :(
-Trivial choice of either right handed or left handed frame might be all we
-define in general.  Useful to define consistent frames for device types that
-are common perhaps as well.  (such as the screen ones Linus has here).
->>> +
->>> +Apart from flipping, a sensor can of course also be mounted in any angle along
->>> +the axes relative to the point of reference. This means that the axes may be
->>> +not only flipped, but tilted.
->> Just define it as a frame of reference, rather than a point and axis.  Frame hides
->> all evils ;)
-> +1
->> For now we are being a bit simplistic as for accelerometers at least, it can be
->> of interest to know the translation as well as the rotation.  You can use a couple
->> of them to do fairly precise rotation estimate if they are located in different
->> places on a device.
->>
->>> +
->>> +Examples for some three-dimensional sensor types:
->>> +
->>> +- Accelerometers have their frame of reference
->> Not quite right.  Their frame of reference is in the frame of the device - it has
->> nothing to do with the world frame which you are describing here (except when
->> the device is deliberate oriented to match.
->>
->> So we have 3 frames - that of the sensor, that of the device and that of the world.
->>
->> Sensor --<mounting matrix transform>--> Device frame --<Device to world transform> -->
->> world frame.
->> For the static no motion cases - when moving the acceleration needs to take into account
->> what the motion is etc (magnetometer doesn't).
-> +1
-> 
-> [snip....]
-> 
-> Except for the above mentioned points, I'm happy with the rest of the
-> description.
-> 
-> best regards,
-> Grég.
-Thanks,
+> If they're equivalent for you, you may as well use the portably stronger form,
+> as it's less likely to surprise others.
 
-Jonathan
-> 
->> All the below kind of merge the mounting matrix transform with the device to world
->> transform and leave me at least somewhat confused :)
->>
->>   is toward the center of gravity,
->>> +  usually to the core of the planet, and users would likely expect a value of
->>> +  9.81N upwards along the (z) axis when the device is held with its screen
->>> +  perpendicular to the planets surface and 0 on the other axes.
->> I'd have thought screen parallel  - i.e. z is out of the screen?
->> Might be the same thing I suppose, but I'd define it simply as into the screen
->> then y towards top of screen and x from left to right of the screen.
->>   A reading of
->>> +  the (x,y,z) values will give the orientation of the device relative to the
->>> +  center of the planet, i.e. relative to its surface at this point. Up and down
->>> +  relative to the point of reference can thus be determined.
->> Will give a project of the gravity vector onto the axis of the sensor. There
->> is I think a world to local frame transform missing here...
->>
->>> +
->>> +- Magnetometers (compasses) have their frame of reference relative to the
->>> +  geomagnetic field. In a mounting matrix for a magnetometer sensor the main
->>> +  hardware orientation is defined with respect to the local earth geomagnetic
->>> +  reference frame where (y) is in the ground plane and positive towards
->>> +  magnetic North, (x) is in the ground plane, perpendicular to the North axis
->>> +  and positive towards the East and (z) is perpendicular to the ground plane
->>> +  and positive upwards.
->> Same issue, world to frame transform is not included...
->>> +
->>> +- Gyroscopes detects the movement relative the device itself, and has no other
->>> +  frame of reference than the mounting chassis itself.
->> This is true for all of them as far as we are concerned here...
->>> The angular momentum is
->> Hang on, where did momentum come into it from?  Mems gyros are detecting rate
->> of change of rotation about an axis (lets ignore the significant cross talk and
->> effects of linear acceleration and pretend it's all easy here ;)
->>
->> Rest of this description is fine.
->>> +  defined as orthogonal to the plane of rotation, so if you put the device on a
->>> +  flat surface and spin it around the z axis (such as rotating a device lying
->>> +  flat on a table), you should get a negative value along the (z) axis if
->>> +  rotated clockwise, and a positive value if rotated counter-clockwise
->>> +  according to the right-hand rule.
->>> +
->>> +So unless the sensor is ideally mounted, we need a means to indicate the
->>> +relative orientation of any given sensor of this type.
->>> +
->>> +To achieve this, use the device tree property "mount-matrix" for the sensor.
->>> +This supplies a 3x3 transformation matrix in the strict linear algebraic sense,
->>> +to orient the senor axes relative to a desired point of reference. This means
->>> +the resulting values from the sensor, after scaling to proper units, should be
->>> +multiplied by this matrix to give the proper coordinates in three-dimensional
->> vector values as opposed to coordinates...
->>> +space, relative to some relevant point of reference.
->> Within the frame of the device.
->>> +
->>> +The mounting matrix has the layout:
->>> +
->>> + (x0, y0, z0)
->>> + (x1, y1, z1)
->>> + (x2, y2, z3)
->>> +
->>> +And it is represented as an array of strings containing the real values for
->>> +producing the transformation matrix. The real values use a decimal point and
->>> +a minus (-) to indicate a negative value.
->>> +
->>> +Examples:
->>> +
->>> +Identity matrix (nothing happens to the coordinates, which means the device was
->>> +mechanically mounted in an ideal way and we need no transformation):
->>> +
->>> +mount-matrix = "1", "0", "0",
->>> +               "0", "1", "0",
->>> +               "0", "0", "1";
->>> +
->>> +Flipped X axis (negative values means positive):
->>> +
->>> +mount-matrix = "-1", "0", "0",
->>> +               "0", "1", "0",
->>> +               "0", "0", "1";
->> Hmm. This is an odd one as it basically means the device had a right hand
->> coordinate system in the first place... If that happens I think we should
->> by default report the negative of the scale for that axis.
->>
->> We've never strictly defined a coordinate system but I think left handed
->> is a good start!
->>> +
->>> +X and Y flipped (X values are for Y and Y values are for X):
->>> +
->>> +mount-matrix = "0", "1", "0",
->>> +               "1", "0", "0",
->>> +               "0", "0", "1";
->> Same with this one, we are flipping coordinate systems.  I'd expect only
->> rotation matrices to be valid mount matrices.
->>> +
->>> +Complex angular mounting with X and Z in a certain tilted orienation and
->> orientation
->>> +Y flipped:
->>> +
->>> +mount-matrix = "-0.984807753012208",  /* x0 */
->>> +               "0",                   /* y0 */
->>> +               "-0.173648177666930",  /* z0 */
->>> +               "0",                   /* x1 */
->>> +               "-1",                  /* y1 */
->>> +               "0",                   /* z1 */
->>> +               "-0.173648177666930",  /* x2 */
->>> +               "0",                   /* y2 */
->>> +               "0.984807753012208";   /* z2 */
->>>
->> Anyhow, now my head hurts.
->>
->> Jonathan
+*nod* Understood.
 
+> > > - accesses are word-sized, the compiler cannot split them into
+> > >   byte accesses, or merge subsequent accesses into larger words
+> > 
+> > Based on my reading of the code that's also true for the raw ones. At
+> > least GCC interprets volatile as disallowing split/combined
+> > loads/stores when the hardware supports the nominal load/store size,
+> > and this seems to agree with the intent of the C standard that
+> > volatile be usable for memory-mapped devices..
+> > 
+> > > - ordering against dma_map_*/dma_unmap_*/dma_sync_* is maintained
+> > 
+> > Aren't they barriers too?
+> 
+> As above, not all barriers are equivalent. Your architecture may provide
+> stronger (or weaker) guarantees than others.
+
+OK.
+
+> > > The __raw_* accessors are used as building blocks for
+> > > readl/outl/ioread32/ioread32_be/readl_relaxed/... and they can
+> > > usually be used safely on device RAM such as framebuffers but
+> > > not much else in portable code. Some architectures also use the
+> > > __raw_* accessors for MMIO registers, but that code is generally
+> > > not portable.
+> > 
+> > My concern is that, depending on some arcane defines, readl/writel
+> > could start doing byte-reversal of values since the CPU is big-endian.
+> > arch/sh seems to have them defined in such a way that this doesn't
+> > happen, but I was hoping to avoid depending on that. If you think it's
+> > safe to assume they do the right thing, though, I'm okay with it. If
+> > anything breaks when we try a little-endian version of the CPU/SoC
+> > later I can go back and fix it.
+> 
+> I guess this really depends on the expectations you have w.r.t. the endianness
+> of devices vs the endianness of CPUs. If you expect the two to always be
+> matched, please add a comment in the driver to that effect.
+> 
+> As Arnd and others mentioned, the vastly common case is that the endianness of
+> CPUs and devices is not fixed to each other, and devices are typically
+> little-endian.
+
+Since it's not used in other designs, I can't say anything meaningful
+about how it hypothetically might be, but the intent on all current
+and currently-planned systems is that 32-bit loads/stores be performed
+using values that are meaningful as values on the cpu, i.e. with no
+byte swapping regardless of cpu endianness. The current hardware is
+designed as big-endian, and the proposed patches for supporting little
+endian just involve flipping the low bits of the address for 16- and
+8-bit accesses (not relevant to mmio registers that are only
+accessible in 32-bit units).
+
+> > > Endianess is always more complicated than one thinks, and it's
+> > > handled differently across architectures, sometimes because of
+> > > hardware differences, sometimes for historic reasons that differ
+> > > only in the Linux implementation.
+> > > 
+> > > A large majority of devices are fixed to little-endian MMIO
+> > > registers (as recommended by PCI), so that is a good default.
+> > > 
+> > > Exceptions to this are:
+> > > 
+> > > * Some architectures (e.g. PowerPC) typically run big-endian code,
+> > >   and hardware designers decided to make the MMIO registers the
+> > >   same. In this case, you can generally use ioread32_be/iowrite32_be.
+> > 
+> > This is something like our case, but the mmio registers are accessed
+> > as 32-bit values and the endianness does not come into play. 
+> 
+> This really depends on you endianness model, bus, etc. The above sounds like
+> BE32 rather than BE8, assuming I've understood correctly, which is an unusual
+> case nowadays.
+
+I'm not familiar with those classifications, but from what I can tell,
+BE32 describes it correctly. I'll see if I can get someone to verify
+this. Is there a reason it's not widely used anymore? Perhaps
+something related to supporting misaligned word-sized loads/stores?
+
+Rich
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
