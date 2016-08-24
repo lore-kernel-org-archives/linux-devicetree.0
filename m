@@ -1,52 +1,50 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 2/4] arm64: dts: qcom: msm8916: Add Hexagon SMD edge
-Date: Tue, 23 Aug 2016 18:33:11 -0700
-Message-ID: <1472002393-1875-2-git-send-email-bjorn.andersson@linaro.org>
-References: <1472002393-1875-1-git-send-email-bjorn.andersson@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1472002393-1875-1-git-send-email-bjorn.andersson@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH 1/4] arm64: dts: qcom: msm8916: Fixup smp2p nodes
+Date: Tue, 23 Aug 2016 18:33:10 -0700
+Message-ID: <1472002393-1875-1-git-send-email-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the Hexagon SMD edge, so that QRTR is probed when the Hexagon is
-booted.
+The correct property is #qcom,smem-state-cells = <1>;
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 4a268e714db5..3f3ef20865cd 100644
+index 8b10a918b826..4a268e714db5 100644
 --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
 +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -692,6 +692,14 @@
- 			};
+@@ -738,7 +738,7 @@
+ 		hexagon_smp2p_out: master-kernel {
+ 			qcom,entry-name = "master-kernel";
+ 
+-			#qcom,state-cells = <1>;
++			#qcom,smem-state-cells = <1>;
  		};
  
-+		hexagon {
-+			interrupts = <0 25 IRQ_TYPE_EDGE_RISING>;
-+
-+			qcom,smd-edge = <0>;
-+			qcom,ipc = <&apcs 8 12>;
-+			qcom,remote-pid = <1>;
-+		};
-+
- 		pronto {
- 			interrupts = <0 142 1>;
+ 		hexagon_smp2p_in: slave-kernel {
+@@ -763,7 +763,7 @@
+ 		wcnss_smp2p_out: master-kernel {
+ 			qcom,entry-name = "master-kernel";
  
+-			#qcom,state-cells = <1>;
++			#qcom,smem-state-cells = <1>;
+ 		};
+ 
+ 		wcnss_smp2p_in: slave-kernel {
+@@ -786,7 +786,7 @@
+ 		apps_smsm: apps@0 {
+ 			reg = <0>;
+ 
+-			#qcom,state-cells = <1>;
++			#qcom,smem-state-cells = <1>;
+ 		};
+ 
+ 		hexagon_smsm: hexagon@1 {
 -- 
 2.5.0
