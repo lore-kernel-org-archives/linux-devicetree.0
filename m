@@ -1,163 +1,404 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v2 3/6] dt/bindings: Add bindings for Tegra GMI controller
-Date: Wed, 24 Aug 2016 16:56:45 +0100
-Message-ID: <de2fb909-829e-6c04-4f6a-442cbb9171c9@nvidia.com>
-References: <1472045838-22628-1-git-send-email-mirza.krak@gmail.com>
- <1472045838-22628-4-git-send-email-mirza.krak@gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Wed, 24 Aug 2016 18:42:05 +0200
+Message-ID: <57BDCE5D.2050609@linaro.org>
+References: <cover.147018b3518.git.dalias@libc.org>
+ <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1472045838-22628-4-git-send-email-mirza.krak@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Mirza Krak <mirza.krak@gmail.com>, swarren@wwwdotorg.org, thierry.reding@gmail.com
-Cc: gnurou@gmail.com, linux@armlinux.org.uk, pdeschrijver@nvidia.com, pgaikwad@nvidia.com, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 24/08/16 14:37, Mirza Krak wrote:
-> From: Mirza Krak <mirza.krak@gmail.com>
+On 08/04/2016 06:30 AM, Rich Felker wrote:
+> At the hardware level, the J-Core PIT is integrated with the interrupt
+> controller, but it is represented as its own device and has an
+> independent programming interface. It provides a 12-bit countdown
+> timer, which is not presently used, and a periodic timer. The interval
+> length for the latter is programmable via a 32-bit throttle register
+> whose units are determined by a bus-period register. The periodic
+> timer is used to implement both periodic and oneshot clock event
+> modes; in oneshot mode the interrupt handler simply disables the timer
+> as soon as it fires.
 > 
-> Document the devicetree bindings for the Generic Memory Interface (GMI)
-> bus driver found on Tegra SOCs.
+> Despite its device tree node representing an interrupt for the PIT,
+> the actual irq generated is programmable, not hard-wired. The driver
+> is responsible for programming the PIT to generate the hardware irq
+> number that the DT assigns to it.
 > 
-> Signed-off-by: Mirza Krak <mirza.krak@gmail.com>
+> On SMP configurations, J-Core provides cpu-local instances of the PIT;
+> no broadcast timer is needed. This driver supports the creation of the
+> necessary per-cpu clock_event_device instances. The code has been
+> tested and works on SMP, but will not be usable without additional
+> J-Core SMP-support patches and appropriate hardware capable of running
+> SMP.
+> 
+> A nanosecond-resolution clocksource is provided using the J-Core "RTC"
+> registers, which give a 64-bit seconds count and 32-bit nanoseconds.
+> The driver converts these to a 64-bit nanoseconds count.
+> 
+> Signed-off-by: Rich Felker <dalias@libc.org>
 > ---
-> Changes in v2:
-> - Updated examples and some information based on comments from Jon Hunter.
+>  drivers/clocksource/Kconfig     |   9 ++
+>  drivers/clocksource/Makefile    |   1 +
+>  drivers/clocksource/jcore-pit.c | 242 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/cpuhotplug.h      |   1 +
+>  4 files changed, 253 insertions(+)
+>  create mode 100644 drivers/clocksource/jcore-pit.c
 > 
->  .../devicetree/bindings/bus/nvidia,tegra20-gmi.txt | 132 +++++++++++++++++++++
->  1 file changed, 132 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/nvidia,tegra20-gmi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/bus/nvidia,tegra20-gmi.txt b/Documentation/devicetree/bindings/bus/nvidia,tegra20-gmi.txt
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 5677886..3210ca5 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -407,6 +407,15 @@ config SYS_SUPPORTS_SH_TMU
+>  config SYS_SUPPORTS_EM_STI
+>          bool
+>  
+> +config CLKSRC_JCORE_PIT
+> +	bool "J-Core PIT timer driver"
+> +	depends on OF && (SUPERH || COMPILE_TEST)
+
+Even if this is correct, for the sake of consistency, it is preferable
+to change it to:
+
+	bool "J-Core PIT timer driver" if COMPILE_TEST
+	depends on SUPERH
+	select CLKSRC_OF
+
+> +	depends on GENERIC_CLOCKEVENTS
+> +	depends on HAS_IOMEM
+> +	help
+> +	  This enables build of clocksource and clockevent driver for
+> +	  the integrated PIT in the J-Core synthesizable, open source SoC.
+> +
+>  config SH_TIMER_CMT
+>  	bool "Renesas CMT timer driver" if COMPILE_TEST
+>  	depends on GENERIC_CLOCKEVENTS
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index fd9d6df..cf87f40 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -5,6 +5,7 @@ obj-$(CONFIG_ATMEL_TCB_CLKSRC)	+= tcb_clksrc.o
+>  obj-$(CONFIG_X86_PM_TIMER)	+= acpi_pm.o
+>  obj-$(CONFIG_SCx200HR_TIMER)	+= scx200_hrt.o
+>  obj-$(CONFIG_CS5535_CLOCK_EVENT_SRC)	+= cs5535-clockevt.o
+> +obj-$(CONFIG_CLKSRC_JCORE_PIT)		+= jcore-pit.o
+>  obj-$(CONFIG_SH_TIMER_CMT)	+= sh_cmt.o
+>  obj-$(CONFIG_SH_TIMER_MTU2)	+= sh_mtu2.o
+>  obj-$(CONFIG_SH_TIMER_TMU)	+= sh_tmu.o
+> diff --git a/drivers/clocksource/jcore-pit.c b/drivers/clocksource/jcore-pit.c
 > new file mode 100644
-> index 0000000..8c1e15f
+> index 0000000..23dee50
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/nvidia,tegra20-gmi.txt
-> @@ -0,0 +1,132 @@
-> +Device tree bindings for NVIDIA Tegra Generic Memory Interface bus
+> +++ b/drivers/clocksource/jcore-pit.c
+> @@ -0,0 +1,242 @@
+> +/*
+> + * J-Core SoC PIT/clocksource driver
+> + *
+> + * Copyright (C) 2015-2016 Smart Energy Instruments, Inc.
+> + *
+> + * This file is subject to the terms and conditions of the GNU General Public
+> + * License.  See the file "COPYING" in the main directory of this archive
+> + * for more details.
+> + */
 > +
-> +The Generic Memory Interface bus enables memory transfers between internal and
-> +external memory. Can be used to attach various high speed devices such as
-> +synchronous/asynchronous NOR, FPGA, UARTS and more.
+> +#include <linux/kernel.h>
+> +#include <linux/slab.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/clocksource.h>
+> +#include <linux/sched_clock.h>
+> +#include <linux/cpu.h>
+> +#include <linux/cpuhotplug.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
 > +
-> +The actual devices are instantiated from the child nodes of a GMI node.
+> +#define PIT_IRQ_SHIFT		12
+> +#define PIT_PRIO_SHIFT		20
+> +#define PIT_ENABLE_SHIFT	26
+> +#define PIT_IRQ_MASK		0x3f
+> +#define PIT_PRIO_MASK		0xf
 > +
-> +Required properties:
-> + - compatible : Should contain one of the following:
-> +        For Tegra20 must contain "nvidia,tegra20-gmi".
-> +        For Tegra30 must contain "nvidia,tegra30-gmi".
-> + - reg: Should contain GMI controller registers location and length.
-> + - clocks: Must contain an entry for each entry in clock-names.
-> + - clock-names: Must include the following entries: "gmi"
-> + - resets : Must contain an entry for each entry in reset-names.
-> + - reset-names : Must include the following entries: "gmi"
-> + - #address-cells: The number of cells used to represent physical base
-> +   addresses in the GMI address space. Should be 1.
-> + - #size-cells: The number of cells used to represent the size of an address
-> +   range in the GMI address space. Should be 1.
-> + - ranges: Must be set up to reflect the memory layout with three integer values
-> +   for each chip-select line in use (only one entry is supported, see below
-> +   comments):
-> +   <cs-number> <physical address of mapping> <size>
+> +#define REG_PITEN		0x00
+> +#define REG_THROT		0x10
+> +#define REG_COUNT		0x14
+> +#define REG_BUSPD		0x18
+> +#define REG_SECHI		0x20
+> +#define REG_SECLO		0x24
+> +#define REG_NSEC		0x28
 > +
-> +Note that the GMI controller does not have any internal chip-select address
-> +decoding, because of that chip-selects either need to be managed via software
-> +or by employing external chip-select decoding logic.
+> +struct jcore_pit {
+> +	struct clock_event_device	ced;
+> +	__iomem void			*base;
+> +	unsigned long			periodic_delta;
+> +	unsigned			cpu;
+> +	u32				enable_val;
+> +};
 > +
-> +If external chip-select logic is used to support multiple devices it is assumed
-> +that the devices use the same timing and so are probably the same type. It also
-> +assumes that they can fit in the 256MB address range. In this case only one
-> +child device is supported which represents the active chip-select line, see
-> +examples for more insight.
+> +static __iomem void		*jcore_pit_base;
+> +static struct clocksource	jcore_cs;
+> +struct jcore_pit __percpu	*jcore_pit_percpu;
 > +
-> +Required child cs node properties:
-> + - reg: First entry should contain the active chip-select number
+> +static notrace u64 jcore_sched_clock_read(void)
+> +{
+> +	u32 seclo, nsec, seclo0;
+> +	__iomem void *base = jcore_pit_base;
 > +
-> +Optional child cs node properties:
+> +	seclo = __raw_readl(base + REG_SECLO);
+> +	do {
+> +		seclo0 = seclo;
+> +		nsec  = __raw_readl(base + REG_NSEC);
+> +		seclo = __raw_readl(base + REG_SECLO);
+> +	} while (seclo0 != seclo);
 > +
-> + - nvidia,snor-data-width-32bit: Use 32bit data-bus, default is 16bit.
-> + - nvidia,snor-mux-mode: Enable address/data MUX mode.
-> + - nvidia,snor-rdy-active-before-data: Assert RDY signal one cycle before data.
-> +   If omitted it will be asserted with data.
-> + - nvidia,snor-rdy-inv: RDY signal is active high
-> + - nvidia,snor-adv-inv: ADV signal is active high
-> + - nvidia,snor-oe-inv: WE/OE signal is active high
-> + - nvidia,snor-cs-inv: CS signal is active high
+> +	return seclo * NSEC_PER_SEC + nsec;
+> +}
 > +
-> +  Note that there is some special handling for the timing values.
-> +  From Tegra TRM:
-> +  Programming 0 means 1 clock cycle: actual cycle = programmed cycle + 1
+> +static cycle_t jcore_clocksource_read(struct clocksource *cs)
+> +{
+> +	return jcore_sched_clock_read();
+> +}
 > +
-> + - nvidia,snor-muxed-width: Number of cycles MUX address/data asserted on the
-> +   bus. Valid values are 0-15, default is 1
-> + - nvidia,snor-hold-width: Number of cycles CE stays asserted after the
-> +   de-assertion of WR_N (in case of SLAVE/MASTER Request) or OE_N
-> +   (in case of MASTER Request). Valid values are 0-15, default is 1
-> + - nvidia,snor-adv-width: Number of cycles during which ADV stays asserted.
-> +   Valid values are 0-15, default is 1.
-> + - nvidia,snor-ce-width: Number of cycles before CE is asserted.
-> +   Valid values are 0-15, default is 4
-> + - nvidia,snor-we-width: Number of cycles during which WE stays asserted.
-> +   Valid values are 0-15, default is 1
-> + - nvidia,snor-oe-width: Number of cycles during which OE stays asserted.
-> +   Valid values are 0-255, default is 1
-> + - nvidia,snor-wait-width: Number of cycles before READY is asserted.
-> +   Valid values are 0-255, default is 3
+> +static int jcore_pit_disable(struct jcore_pit *pit)
+> +{
+> +	__raw_writel(0, pit->base + REG_PITEN);
+> +	return 0;
+> +}
 > +
-> +Example with two SJA1000 CAN controllers connected to the GMI bus. We wrap the
-> +controllers with a simple-bus node since they are all connected to the same
-> +chip-select (CS4), in this example external address decoding is provided:
-> +
-> +gmi@70090000 {
-> +	compatible = "nvidia,tegra20-gmi";
-> +	reg = <0x70009000 0x1000>;
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	clocks = <&tegra_car TEGRA20_CLK_NOR>;
-> +	clock-names = "gmi";
-> +	resets = <&tegra_car 42>;
-> +	reset-names = "gmi";
-> +	ranges = <4 0x48000000 0x7ffffff>;
-> +
-> +	status = "disabled";
-> +
-> +	bus@4 {
-> +		compatible = "simple-bus";
-> +		reg = <4>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 4 0x40100>;
+> +static int jcore_pit_set(unsigned long delta, struct jcore_pit *pit)
+> +{
+> +	jcore_pit_disable(pit);
+> +	__raw_writel(delta, pit->base + REG_THROT);
+> +	__raw_writel(pit->enable_val, pit->base + REG_PITEN);
+> +	return 0;
 
-Does this work? I tried to add an example like this and I got ...
+Why do you need to use __raw_writel ?
 
-Warning (reg_format): "reg" property in /gmi@70009000/bus@4 has invalid
-length (4 bytes) (#address-cells == 1, #size-cells == 1)
+s/__raw_writel/writel/
 
-I am wondering if we should just following the arm,pl172 example and
-have ...
+> +}
+> +
+> +static int jcore_pit_set_state_shutdown(struct clock_event_device *ced)
+> +{
+> +	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
+> +
+> +	return jcore_pit_disable(pit);
+> +}
+> +
+> +static int jcore_pit_set_state_oneshot(struct clock_event_device *ced)
+> +{
+> +	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
+> +
+> +	return jcore_pit_disable(pit);
+> +}
+> +
+> +static int jcore_pit_set_state_periodic(struct clock_event_device *ced)
+> +{
+> +	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
+> +
+> +	return jcore_pit_set(pit->periodic_delta, pit);
+> +}
+> +
+> +static int jcore_pit_set_next_event(unsigned long delta,
+> +				    struct clock_event_device *ced)
+> +{
+> +	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
+> +
+> +	return jcore_pit_set(delta, pit);
+> +}
+> +
+> +static int jcore_pit_local_init(unsigned cpu)
+> +{
+> +	struct jcore_pit *pit = this_cpu_ptr(jcore_pit_percpu);
+> +	unsigned buspd, freq;
+> +
+> +	pr_info("Local J-Core PIT init on cpu %u\n", pit->cpu);
+> +
+> +	buspd = __raw_readl(pit->base + REG_BUSPD);
 
-	cs4 {
-		compatible = "simple-bus";
-		#address-cells = <1>;
-		#size-cells = <1>;
-		ranges;
+s/__raw_readl/readl/ ?
 
-		nvidia,snor-cs = <4>;
-		nvidia,snor-mux-mode;
-		nvidia,snor-adv-inv;
+> +	freq = DIV_ROUND_CLOSEST(NSEC_PER_SEC, buspd);
+> +	pit->periodic_delta = DIV_ROUND_CLOSEST(NSEC_PER_SEC, HZ*buspd);
 
-		can@0 {
-			reg = <0 0x100>;
-			...
-		};
+--->					HZ * buspd
 
-		...
-	};
+> +
+> +	clockevents_config_and_register(&pit->ced, freq, 1, ULONG_MAX);
+> +
+> +	return 0;
+> +}
+> +
+> +static int jcore_pit_local_shutdown(unsigned cpu)
+> +{
+> +	return 0;
+> +}
 
-Cheers
-Jon
+This function is useless I think. AFAIU, cpuhp_setup_state can have a
+NULL function for the cpu teardown.
+
+> +
+> +static irqreturn_t jcore_timer_interrupt(int irq, void *dev_id)
+> +{
+> +	struct jcore_pit *pit = this_cpu_ptr(dev_id);
+> +
+> +	if (clockevent_state_oneshot(&pit->ced))
+> +		jcore_pit_disable(pit);
+> +
+> +	pit->ced.event_handler(&pit->ced);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int __init jcore_pit_init(struct device_node *node)
+> +{
+> +	int err;
+> +	unsigned pit_irq, cpu;
+> +	unsigned long hwirq;
+> +	u32 irqprio, enable_val;
+> +
+> +	jcore_pit_base = of_iomap(node, 0);
+> +	if (!jcore_pit_base) {
+> +		pr_err("Error: Cannot map base address for J-Core PIT\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	pit_irq = irq_of_parse_and_map(node, 0);
+> +	if (!pit_irq) {
+> +		pr_err("Error: J-Core PIT has no IRQ\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	pr_info("Initializing J-Core PIT at %p IRQ %d\n",
+> +		jcore_pit_base, pit_irq);
+> +
+> +	jcore_cs.name = "jcore_pit_cs";
+> +	jcore_cs.rating = 400;
+> +	jcore_cs.read = jcore_clocksource_read;
+> +	jcore_cs.mult = 1;
+> +	jcore_cs.shift = 0;
+> +	jcore_cs.mask = CLOCKSOURCE_MASK(32);
+> +	jcore_cs.flags = CLOCK_SOURCE_IS_CONTINUOUS;
+> +
+> +	err = clocksource_register_hz(&jcore_cs, NSEC_PER_SEC);
+> +	if (err) {
+> +		pr_err("Error registering clocksource device: %d\n", err);
+> +		return err;
+> +	}
+
+May be you can consider by replacing the above by:
+
+	clocksource_mmio_init(jcore_pit_base, "jcore_pit_cs",
+				NSEC_PER_SEC, 32,
+				jcore_clocksource_read);
+
+> +
+> +	sched_clock_register(jcore_sched_clock_read, 32, NSEC_PER_SEC);
+> +
+> +	jcore_pit_percpu = alloc_percpu(struct jcore_pit);
+> +	if (!jcore_pit_percpu) {
+> +		pr_err("Failed to allocate memory for clock event device\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	err = request_irq(pit_irq, jcore_timer_interrupt,
+> +			  IRQF_TIMER | IRQF_PERCPU,
+> +			  "jcore_pit", jcore_pit_percpu);
+> +	if (err) {
+> +		pr_err("pit irq request failed: %d\n", err);
+> +		return err;
+> +	}
+
+That is my major concern. Regarding the description of this timer, it
+appears there is one timer per cpu but we use request_irq instead of
+request_percpu_irq.
+
+IIUC, there is a problem with the interrupt controller where the per irq
+line are not working correctly. Is that correct ?
+
+Regarding Marc Zyngier comments about the irq controller driver being
+almost empty, I'm wondering if something in the irq controller driver
+which shouldn't be added before submitting this timer driver with SMP
+support (eg. irq domain ?).
+
+> +	/*
+> +	 * The J-Core PIT is not hard-wired to a particular IRQ, but
+> +	 * integrated with the interrupt controller such that the IRQ it
+> +	 * generates is programmable. The programming interface has a
+> +	 * legacy field which was an interrupt priority for AIC1, but
+> +	 * which is OR'd onto bits 2-5 of the generated IRQ number when
+> +	 * used with J-Core AIC2, so set it to match these bits.
+> +	 */
+> +	hwirq = irq_get_irq_data(pit_irq)->hwirq;
+
+	irq_hw_number_t hwirq;
+	hwirq = irqd_to_hwirq(irq_get_irq_data(pit_irq));
+
+> +	irqprio = (hwirq >> 2) & PIT_PRIO_MASK;
+> +	enable_val = (1U << PIT_ENABLE_SHIFT)
+> +		   | (hwirq << PIT_IRQ_SHIFT)
+> +		   | (irqprio << PIT_PRIO_SHIFT);
+
+
+I'm missing the connection between the description above and the enable
+value computed here. Can you elaborate ?
+
+> +
+> +	for_each_present_cpu(cpu) {
+> +		struct jcore_pit *pit = per_cpu_ptr(jcore_pit_percpu, cpu);
+> +
+> +		pit->base = of_iomap(node, cpu);
+> +		if (!pit->base) {
+> +			pr_err("Unable to map PIT for cpu %u\n", cpu);
+> +			continue;
+> +		}
+> +
+> +		pit->ced.name = "jcore_pit";
+> +		pit->ced.features = CLOCK_EVT_FEAT_PERIODIC
+> +				  | CLOCK_EVT_FEAT_ONESHOT
+> +				  | CLOCK_EVT_FEAT_PERCPU;
+> +		pit->ced.cpumask = cpumask_of(cpu);
+> +		pit->ced.rating = 400;
+> +		pit->ced.irq = pit_irq;
+> +		pit->ced.set_state_shutdown = jcore_pit_set_state_shutdown;
+> +		pit->ced.set_state_periodic = jcore_pit_set_state_periodic;
+> +		pit->ced.set_state_oneshot = jcore_pit_set_state_oneshot;
+> +		pit->ced.set_next_event = jcore_pit_set_next_event;
+> +
+> +		pit->cpu = cpu;
+> +		pit->enable_val = enable_val;
+> +	}
+> +
+> +	cpuhp_setup_state(CPUHP_AP_JCORE_TIMER_STARTING,
+> +			  "AP_JCORE_TIMER_STARTING",
+> +			  jcore_pit_local_init, jcore_pit_local_shutdown);
+> +
+> +	return 0;
+> +}
+> +
+> +CLOCKSOURCE_OF_DECLARE(jcore_pit, "jcore,pit", jcore_pit_init);
+> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> index 242bf53..e95ed7d 100644
+> --- a/include/linux/cpuhotplug.h
+> +++ b/include/linux/cpuhotplug.h
+> @@ -50,6 +50,7 @@ enum cpuhp_state {
+>  	CPUHP_AP_ARM_ARCH_TIMER_STARTING,
+>  	CPUHP_AP_ARM_GLOBAL_TIMER_STARTING,
+>  	CPUHP_AP_DUMMY_TIMER_STARTING,
+> +	CPUHP_AP_JCORE_TIMER_STARTING,
+>  	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
+>  	CPUHP_AP_ARM_TWD_STARTING,
+>  	CPUHP_AP_METAG_TIMER_STARTING,
+> 
+
 
 -- 
-nvpublic
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
