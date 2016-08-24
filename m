@@ -1,84 +1,184 @@
-From: Karl Beldan <kbeldan@baylibre.com>
-Subject: Re: [PATCH] ARM: dts: da850: Add missing pin muxing for the UARTs
-Date: Wed, 24 Aug 2016 08:38:15 +0000
-Message-ID: <20160824082934.GA20246@gobelin>
-References: <20160804110656.25318-1-kbeldan@baylibre.com>
- <m2eg64pchw.fsf@baylibre.com> <20160804210045.GD15013@gobelin>
- <m2fuqknnqk.fsf@baylibre.com>
- <fe36e8d1-f371-b093-de15-5e03370ea38c@ti.com>
- <dd4712ba-6144-8c64-59a6-7673936af53c@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <dd4712ba-6144-8c64-59a6-7673936af53c@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, karl.beldan+oss@gmail.com, Kevin Hilman <khilman@baylibre.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/4 v2] soc: qcom: add EBI2 device tree bindings
+Date: Wed, 24 Aug 2016 10:52:35 +0200
+Message-ID: <1472028758-29272-2-git-send-email-linus.walleij@linaro.org>
+References: <1472028758-29272-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472028758-29272-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 23, 2016 at 04:46:03PM +0530, Sekhar Nori wrote:
-> On Tuesday 23 August 2016 04:39 PM, Sekhar Nori wrote:
-> > On Friday 05 August 2016 04:30 AM, Kevin Hilman wrote:
-> >> Karl Beldan <kbeldan@baylibre.com> writes:
-> >>
-> >>> On Thu, Aug 04, 2016 at 12:20:27PM -0700, Kevin Hilman wrote:
-> >>>> Karl Beldan <kbeldan@baylibre.com> writes:
-> >>>>
-> >>>>> This adds 2 pinctrl groups (rtscts, rxtx) for each of the 3 UARTs.
-> >>>>>
-> >>>>> Signed-off-by: Karl Beldan <kbeldan@baylibre.com>
-> >>>>
-> >>>> Should da850-evm be updated to use the serial2_rxtx_pins also?
-> >>>>
-> >>> I could not find the EVM schematics on the net and I only have an LCDK,
-> >>> but according to the code it should, however I can't tell whether flow
-> >>> control pins are used.
-> >>
-> >> Ok, let's just leave it for now, since it's working fine.  Sekhar can
-> >> fix that up if he can dig up the schematics.
-> > 
-> > Looks like the flow control pins are being used for McASP also on the
-> > EVM. So lets leave the EVM as-is.
-> 
-> Rather, the EVM dts file should be updated to use serial2_rxtx_pins like
-> the LCDK. Right now it seems to be relying on bootloader to serial2
-> setup pimux correctly. I can make a patch to fix that. Or if you can do
-> it, that will be great too.
-> 
+This adds device tree bindings for the External Bus Interface 2, EBI2
+to the Qualcomm SoC drivers.
 
-Indeed ATM the EVM relies on the bootloader to setup the pin muxing.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v1->v2:
+- Introduce per-SoC compatible strings for apq8060 and msm8660
+- Move the binding to bus/qcom,ebi2.txt
+- Add a vendor prefix for each chipselect XMEM configuration option
+  "qcom,xmem-foo"
+- Move all CS XMEM settings to the EBI2 node, encode the six
+  different chipselects into an array of settings.
+- Use ranges to specify the address windows for the six different
+  chipselects.
+- Alter #address-cells to <2> using the first as chipselect and the
+  second as offset into the range.
+- Augment the example accordingly.
+---
+ .../devicetree/bindings/bus/qcom,ebi2.txt          | 136 +++++++++++++++++++++
+ 1 file changed, 136 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/qcom,ebi2.txt
 
-I just checked the uart pins routing of the EVM, the dts:
-- should reclaim serial2_rxtx_pins and serial2_rtscts_pins
-- can reclaim serial1_rxtx_pins (out on Audio connector but very
-  unlikely used for audio)
-- should leave serial1_rtscts_pins (out on Audio connector but used by
-  McASP so used for audio)
+diff --git a/Documentation/devicetree/bindings/bus/qcom,ebi2.txt b/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
+new file mode 100644
+index 000000000000..4adadb65bea6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
+@@ -0,0 +1,136 @@
++Qualcomm External Bus Interface 2 (EBI2)
++
++The EBI2 contains two peripheral blocks: XMEM and LCDC. The XMEM handles any
++external memory (such as NAND or other memory-mapped peripherals) whereas
++LCDC handles LCD displays.
++
++As it says it connects devices to an external bus interface, meaning address
++lines (up to 9 address lines so can only address 1KiB external memory space),
++data lines (16 bits), OE (output enable), ADV (address valid, used on some
++NOR flash memories), WE (write enable). This on top of 6 different chip selects
++(CS0 thru CS5) so that in theory 6 different devices can be connected.
++
++Apparently this bus is clocked at 64MHz. It has dedicated pins on the package
++and the bus can only come out on these pins, however if some of the pins are
++unused they can be left unconnected or remuxed to be used as GPIO or in some
++cases other orthogonal functions as well.
++
++Also CS1 and CS2 has -A and -B signals. Why they have that is unclear to me.
++
++The chip selects have the following memory range assignments. This region of
++memory is referred to as "Chip Peripheral SS FPB0" and is 168MB big.
++
++Chip Select                     Physical address base
++CS0 GPIO134                     0x1a800000-0x1b000000 (8MB)
++CS1 GPIO39 (A) / GPIO123 (B)    0x1b000000-0x1b800000 (8MB)
++CS2 GPIO40 (A) / GPIO124 (B)    0x1b800000-0x1c000000 (8MB)
++CS3 GPIO133                     0x1d000000-0x25000000 (128 MB)
++CS4 GPIO132                     0x1c800000-0x1d000000 (8MB)
++CS5 GPIO131                     0x1c000000-0x1c800000 (8MB)
++
++The APQ8060 Qualcomm Application Processor User Guide, 80-N7150-14 Rev. A,
++August 6, 2012 contains some incomplete documentation of the EBI2.
++
++FIXME: the manual mentions "write precharge cycles" and "precharge cycles".
++We have not been able to figure out which bit fields these correspond to
++in the hardware, or what valid values exist. The current hypothesis is that
++this is something just used on the FAST chip selects and that the SLOW
++chip selects are understood fully. There is also a "byte device enable"
++flag somewhere for 8bit memories.
++
++FIXME: The chipselects have SLOW and FAST configuration registers. It's a bit
++unclear what this means, if they are mutually exclusive or can be used
++together, or if some chip selects are hardwired to be FAST and others are SLOW
++by design.
++
++The XMEM registers are totally undocumented but could be partially decoded
++because the Cypress AN49576 Antioch Westbridge apparently has suspiciously
++similar register layout, see: http://www.cypress.com/file/105771/download
++
++Required properties:
++- compatible: should be one of:
++  "qcom,msm8660-ebi2"
++  "qcom,apq8060-ebi2"
++- #address-cells: shoule be <2>: the first cell is the chipselect,
++  the second cell is the offset inside the memory range
++- #size-cells: should be <1>
++- ranges: should be set to:
++  ranges = <0 0x0 0x1a800000 0x00800000>,
++           <1 0x0 0x1b000000 0x00800000>,
++           <2 0x0 0x1b800000 0x00800000>,
++           <3 0x0 0x1d000000 0x00800000>,
++           <4 0x0 0x1c800000 0x00800000>,
++           <5 0x0 0x1c000000 0x00800000>;
++- reg: two ranges of registers: EBI2 config and XMEM config areas
++- reg-names: should be "ebi2", "xmem"
++- clocks: two clocks, EBI_2X and EBI
++- clock-names: shoule be "ebi2x", "ebi2"
++
++The following optional properties are all arrays indexed to the target
++chipselect, usually an array of six elements representing the six chipselects:
++
++Optional properties arrays for SLOW chip selects:
++- qcom,xmem-recovery-cycles: recovery cycles is the time the memory continues to
++  drive the data bus after OE is de-asserted, in order to avoid contention on
++  the data bus. They are inserted when reading one CS and switching to another
++  CS or read followed by write on the same CS. Valid values 0 thru 15. Minimum
++  value is actually 1, so a value of 0 will still yield 1 recovery cycle.
++- qcom,xmem-write-hold-cycles: write hold cycles, these are extra cycles
++  inserted after every write minimum 1. The data out is driven from the time
++  WE is asserted until CS is asserted. With a hold of 1 (value = 0), the CS
++  stays active for 1 extra cycle etc. Valid values 0 thru 15.
++- qcom,xmem-write-delta-cycles: initial latency for write cycles inserted for
++  the first write to a page or burst memory. Valid values 0 thru 255.
++- qcom,xmem-read-delta-cycles: initial latency for read cycles inserted for the
++  first read to a page or burst memory. Valid values 0 thru 255.
++- qcom,xmem-write-wait-cycles: number of wait cycles for every write access, 0=1
++  cycle. Valid values 0 thru 15.
++- qcom,xmem-read-wait-cycles: number of wait cycles for every read access, 0=1
++  cycle. Valid values 0 thru 15.
++
++Optional properties arrays for FAST chip selects:
++- qcom,xmem-address-hold-enable: this is a boolean property stating that we
++  shall hold the address for an extra cycle to meet hold time requirements
++  with ADV assertion.
++- qcom,xmem-adv-to-oe-recovery-cycles: the number of cycles elapsed before an OE
++  assertion, with respect to the cycle where ADV (address valid) is asserted.
++  2 means 2 cycles between ADV and OE. Valid values 0, 1, 2 or 3.
++- qcom,xmem-read-hold-cycles: the length in cycles of the first segment of a
++  read transfer. For a single read trandfer this will be the time from CS
++  assertion to OE assertion. Valid values 0 thru 15.
++
++Optional subnodes:
++- Nodes inside the EBI2 will be considered device nodes.
++
++Example:
++
++ebi2@1a100000 {
++	compatible = "qcom,apq8060-ebi2";
++	#address-cells = <2>;
++	#size-cells = <1>;
++	ranges = <0 0x0 0x1a800000 0x00800000>,
++		 <1 0x0 0x1b000000 0x00800000>,
++		 <2 0x0 0x1b800000 0x00800000>,
++		 <3 0x0 0x1d000000 0x00800000>,
++		 <4 0x0 0x1c800000 0x00800000>,
++		 <5 0x0 0x1c000000 0x00800000>;
++	reg = <0x1a100000 0x1000>, <0x1a110000 0x1000>;
++	reg-names = "ebi2", "xmem";
++	clocks = <&gcc EBI2_2X_CLK>, <&gcc EBI2_CLK>;
++	clock-names = "ebi2x", "ebi2";
++	/* Make sure to set up the pin control for the EBI2 */
++	pinctrl-names = "default";
++	pinctrl-0 = <&foo_ebi2_pins>;
++	qcom,xmem-recovery-cycles = <0>, <0>, <0>, <0>, <0>, <0>;
++	qcom,xmem-write-hold-cycles = <0>, <0>, <3>, <0>, <0>, <0>;
++	qcom,xmem-write-delta-cycles = <0>, <0>, <31>, <0>, <0>, <0>;
++	qcom,xmem-read-delta-cycles = <0>, <0>, <28>, <0>, <0>, <0>;
++	qcom,xmem-write-wait-cycles = <0>, <0>, <9>, <0>, <0>, <0>;
++	qcom,xmem-read-wait-cycles = <0>, <0>, <9>, <0>, <0>, <0>;
++
++ 	foo-ebi2@1b800000 {
++		compatible = "foo";
++		reg = <2 0x1b800000 0x100>;
++		(...)
++	};
++};
+-- 
+2.7.4
 
-Also I think it would be better for the serial nodes to reclaim the rxtx
-pins in the dtsi, and override the reclaimed pins in the .dts only for
-the nodes reclaiming flow control (some other pins could also be
-directly reclaimed in the dtsi).
-
-Some other cleanups would also be in order for the da850*:
-- use labels for non dtsi (like I did for the LCDK)
-- add chosen,memory nodes (I guess currently only the LCDK can
-  dispense with ATAGS)
-- use a null range translation in the da850 dtsi for the soc node
-  (computing the offsets is error prone and is there a point)
-
-Sure I could fix that, along with some of the above suggestions if you
-are ok with it.
-
-Rgds, 
-Karl
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
