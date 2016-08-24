@@ -1,145 +1,250 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: Re: [PATCH] dt: net: enhance DWC EQoS binding to support Tegra186
-Date: Wed, 24 Aug 2016 10:10:42 +0200
-Message-ID: <259bfaa8-6dcb-eafc-da9c-c16ec7d39d24@axis.com>
-References: <20160823204757.17998-1-swarren@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160823204757.17998-1-swarren@wwwdotorg.org>
-Sender: netdev-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Lars Persson <larper@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+From: Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH 1/2] hwmon: (max6650) Allow fan shutdown and initial rpm target
+Date: Wed, 24 Aug 2016 10:13:26 +0200
+Message-ID: <1472026407-3448-1-git-send-email-mike.looijmans@topic.nl>
+References: <1471334034-14894-1-git-send-email-mike.looijmans@topic.nl> <c47e4482-a8e0-6a38-cccb-062b667587ac@roeck-us.net> <57B6A8BF.2080508@topic.nl>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <5f14ba10-60dd-0e0a-dcd0-f8bbbed33510@roeck-us.net>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux@roeck-us.net, linux-kernel@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+The fan can be stopped by writing "3" to pwm1_enable in sysfs.
 
-Nice to see the driver used in other chips. I have some comments below.
+Add devicetree property for early initialization of the fan controller
+to prevent overheating, for example when resetting the board while the
+fan was completely turned off.
 
-Best Regards,
-  Lars
+Also improve error reporting, I2C failures were ignored while writing
+new values.
 
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+ Documentation/hwmon/max6650 |   1 +
+ drivers/hwmon/max6650.c     | 108 +++++++++++++++++++++++++++-----------------
+ 2 files changed, 68 insertions(+), 41 deletions(-)
 
-On 08/23/2016 10:47 PM, Stephen Warren wrote:
-> From: Stephen Warren <swarren@nvidia.com>
->
-> The Synopsys DWC EQoS is a configurable IP block which supports multiple
-> options for bus type, clocking and reset structure, and feature list.
-> Extend the DT binding to define a "compatible value" for the configuration
-> contained in NVIDIA's Tegra186 SoC, and define some new properties and
-> list property entries required by that configuration.
->
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-> ---
->  .../bindings/net/snps,dwc-qos-ethernet.txt         | 60 ++++++++++++++++++++--
->  1 file changed, 56 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
-> index 51f8d2eba8d8..6cd4129364a9 100644
-> --- a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
-> +++ b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
-> @@ -1,21 +1,72 @@
->  * Synopsys DWC Ethernet QoS IP version 4.10 driver (GMAC)
->
-> +This binding supports the Synopsys Designware Ethernet QoS (Quality Of Service)
-> +IP block. The IP supports multiple options for bus type, clocking and reset
-> +structure, and feature list. Consequently, a number of properties and list
-> +entries in properties are marked as optional, or only required in specific HW
-> +configurations.
->
->  Required properties:
-> -- compatible: Should be "snps,dwc-qos-ethernet-4.10"
-> +- compatible: One of:
-> +  - "snps,dwc-qos-ethernet-4.10"
-> +  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10"
->  - reg: Address and length of the register set for the device
-> -- clocks: Phandles to the reference clock and the bus clock
-> -- clock-names: Should be "phy_ref_clk" for the reference clock and "apb_pclk"
-> -  for the bus clock.
-> +- clocks: Phandle and clock specifiers for each entry in clock-names, in the
-> +  same order. See ../clock/clock-bindings.txt.
-> +- clock-names: May contain any/all of the following depending on the IP
-> +  configuration, in any order:
-> +  - "phy_ref_clk". The reference clock provided directly to the PHY.
-> +    Only required if under SW control, i.e. not provided by some fixed source
-> +    such as a crystal.
+diff --git a/Documentation/hwmon/max6650 b/Documentation/hwmon/max6650
+index 58d9644..dff1d29 100644
+--- a/Documentation/hwmon/max6650
++++ b/Documentation/hwmon/max6650
+@@ -34,6 +34,7 @@ fan3_input	ro	"
+ fan4_input	ro	"
+ fan1_target	rw	desired fan speed in RPM (closed loop mode only)
+ pwm1_enable	rw	regulator mode, 0=full on, 1=open loop, 2=closed loop
++			3=off
+ pwm1		rw	relative speed (0-255), 255=max. speed.
+ 			Used in open loop mode only.
+ fan1_div	rw	sets the speed range the inputs can handle. Legal
+diff --git a/drivers/hwmon/max6650.c b/drivers/hwmon/max6650.c
+index c87517a..a993b44 100644
+--- a/drivers/hwmon/max6650.c
++++ b/drivers/hwmon/max6650.c
+@@ -185,6 +185,30 @@ static struct max6650_data *max6650_update_device(struct device *dev)
+ 	return data;
+ }
+ 
++/*
++ * Change the operating mode of the chip (if needed).
++ * mode is one of the MAX6650_CFG_MODE_* values.
++ */
++static int max6650_set_operating_mode(struct max6650_data *data, u8 mode)
++{
++	int result;
++	u8 config = data->config;
++
++	if (mode == (config & MAX6650_CFG_MODE_MASK))
++		return 0;
++
++	config = (config & ~MAX6650_CFG_MODE_MASK) | mode;
++
++	result = i2c_smbus_write_byte_data(data->client, MAX6650_REG_CONFIG,
++					   config);
++	if (result < 0)
++		return result;
++
++	data->config = config;
++
++	return 0;
++}
++
+ static ssize_t get_fan(struct device *dev, struct device_attribute *devattr,
+ 		       char *buf)
+ {
+@@ -266,18 +290,12 @@ static ssize_t get_target(struct device *dev, struct device_attribute *devattr,
+ 	return sprintf(buf, "%d\n", rpm);
+ }
+ 
+-static ssize_t set_target(struct device *dev, struct device_attribute *devattr,
+-			 const char *buf, size_t count)
++static int max6650_set_target(struct max6650_data *data, unsigned long rpm)
+ {
+-	struct max6650_data *data = dev_get_drvdata(dev);
+-	struct i2c_client *client = data->client;
+ 	int kscale, ktach;
+-	unsigned long rpm;
+-	int err;
+ 
+-	err = kstrtoul(buf, 10, &rpm);
+-	if (err)
+-		return err;
++	if (rpm == 0)
++		return max6650_set_operating_mode(data, MAX6650_CFG_MODE_OFF);
+ 
+ 	rpm = clamp_val(rpm, FAN_RPM_MIN, FAN_RPM_MAX);
+ 
+@@ -288,8 +306,6 @@ static ssize_t set_target(struct device *dev, struct device_attribute *devattr,
+ 	 *     KTACH = [(fCLK x KSCALE) / (256 x FanSpeed)] - 1
+ 	 */
+ 
+-	mutex_lock(&data->update_lock);
+-
+ 	kscale = DIV_FROM_REG(data->config);
+ 	ktach = ((clock * kscale) / (256 * rpm / 60)) - 1;
+ 	if (ktach < 0)
+@@ -298,10 +314,30 @@ static ssize_t set_target(struct device *dev, struct device_attribute *devattr,
+ 		ktach = 255;
+ 	data->speed = ktach;
+ 
+-	i2c_smbus_write_byte_data(client, MAX6650_REG_SPEED, data->speed);
++	return i2c_smbus_write_byte_data(data->client, MAX6650_REG_SPEED,
++					 data->speed);
++}
++
++static ssize_t set_target(struct device *dev, struct device_attribute *devattr,
++			 const char *buf, size_t count)
++{
++	struct max6650_data *data = dev_get_drvdata(dev);
++	unsigned long rpm;
++	int err;
++
++	err = kstrtoul(buf, 10, &rpm);
++	if (err)
++		return err;
++
++	mutex_lock(&data->update_lock);
++
++	err = max6650_set_target(data, rpm);
+ 
+ 	mutex_unlock(&data->update_lock);
+ 
++	if (err < 0)
++		return err;
++
+ 	return count;
+ }
+ 
+@@ -355,12 +391,11 @@ static ssize_t set_pwm(struct device *dev, struct device_attribute *devattr,
+ 		data->dac = 180 - (180 * pwm)/255;
+ 	else
+ 		data->dac = 76 - (76 * pwm)/255;
+-
+-	i2c_smbus_write_byte_data(client, MAX6650_REG_DAC, data->dac);
++	err = i2c_smbus_write_byte_data(client, MAX6650_REG_DAC, data->dac);
+ 
+ 	mutex_unlock(&data->update_lock);
+ 
+-	return count;
++	return err < 0 ? err : count;
+ }
+ 
+ /*
+@@ -369,14 +404,14 @@ static ssize_t set_pwm(struct device *dev, struct device_attribute *devattr,
+  * 0 = Fan always on
+  * 1 = Open loop, Voltage is set according to speed, not regulated.
+  * 2 = Closed loop, RPM for all fans regulated by fan1 tachometer
++ * 3 = Fan off
+  */
+-
+ static ssize_t get_enable(struct device *dev, struct device_attribute *devattr,
+ 			  char *buf)
+ {
+ 	struct max6650_data *data = max6650_update_device(dev);
+ 	int mode = (data->config & MAX6650_CFG_MODE_MASK) >> 4;
+-	int sysfs_modes[4] = {0, 1, 2, 1};
++	int sysfs_modes[4] = {0, 3, 2, 1};
+ 
+ 	return sprintf(buf, "%d\n", sysfs_modes[mode]);
+ }
+@@ -385,25 +420,25 @@ static ssize_t set_enable(struct device *dev, struct device_attribute *devattr,
+ 			  const char *buf, size_t count)
+ {
+ 	struct max6650_data *data = dev_get_drvdata(dev);
+-	struct i2c_client *client = data->client;
+-	int max6650_modes[3] = {0, 3, 2};
+ 	unsigned long mode;
+ 	int err;
++	const u8 max6650_modes[] = {
++		MAX6650_CFG_MODE_ON,
++		MAX6650_CFG_MODE_OPEN_LOOP,
++		MAX6650_CFG_MODE_CLOSED_LOOP,
++		MAX6650_CFG_MODE_OFF,
++		};
+ 
+ 	err = kstrtoul(buf, 10, &mode);
+ 	if (err)
+ 		return err;
+ 
+-	if (mode > 2)
++	if (mode >= ARRAY_SIZE(max6650_modes))
+ 		return -EINVAL;
+ 
+ 	mutex_lock(&data->update_lock);
+ 
+-	data->config = i2c_smbus_read_byte_data(client, MAX6650_REG_CONFIG);
+-	data->config = (data->config & ~MAX6650_CFG_MODE_MASK)
+-		       | (max6650_modes[mode] << 4);
+-
+-	i2c_smbus_write_byte_data(client, MAX6650_REG_CONFIG, data->config);
++	max6650_set_operating_mode(data, max6650_modes[mode]);
+ 
+ 	mutex_unlock(&data->update_lock);
+ 
+@@ -582,6 +617,7 @@ static int max6650_init_client(struct max6650_data *data,
+ 	int err = -EIO;
+ 	u32 voltage;
+ 	u32 prescale;
++	u32 target_rpm;
+ 
+ 	if (of_property_read_u32(dev->of_node, "maxim,fan-microvolt",
+ 				 &voltage))
+@@ -642,22 +678,6 @@ static int max6650_init_client(struct max6650_data *data,
+ 		 (config & MAX6650_CFG_V12) ? 12 : 5,
+ 		 1 << (config & MAX6650_CFG_PRESCALER_MASK));
+ 
+-	/*
+-	 * If mode is set to "full off", we change it to "open loop" and
+-	 * set DAC to 255, which has the same effect. We do this because
+-	 * there's no "full off" mode defined in hwmon specifications.
+-	 */
+-
+-	if ((config & MAX6650_CFG_MODE_MASK) == MAX6650_CFG_MODE_OFF) {
+-		dev_dbg(dev, "Change mode to open loop, full off.\n");
+-		config = (config & ~MAX6650_CFG_MODE_MASK)
+-			 | MAX6650_CFG_MODE_OPEN_LOOP;
+-		if (i2c_smbus_write_byte_data(client, MAX6650_REG_DAC, 255)) {
+-			dev_err(dev, "DAC write error, aborting.\n");
+-			return err;
+-		}
+-	}
+-
+ 	if (i2c_smbus_write_byte_data(client, MAX6650_REG_CONFIG, config)) {
+ 		dev_err(dev, "Config write error, aborting.\n");
+ 		return err;
+@@ -666,6 +686,12 @@ static int max6650_init_client(struct max6650_data *data,
+ 	data->config = config;
+ 	data->count = i2c_smbus_read_byte_data(client, MAX6650_REG_COUNT);
+ 
++	if (!of_property_read_u32(client->dev.of_node, "maxim,fan-target-rpm",
++				  &target_rpm)) {
++		max6650_set_target(data, target_rpm);
++		max6650_set_operating_mode(data, MAX6650_CFG_MODE_CLOSED_LOOP);
++	}
++
+ 	return 0;
+ }
+ 
+-- 
+1.9.1
 
-I realize now that the clock name phy_ref_clock is slightly misleading. 
-It represents the source of the GMII GTXCLK signal to the phy.
-
-In our chip it is the same clock that drives clk_tx_i for GMII 1 Gb/s 
-modes, but I agree that we should have a separate binding for the tx clock.
-
-So update the description of phy_ref_clk to mention GTXCLK.
-
-> +  - "apb_pclk" (alternate name "slave_bus"; only one alternate must appear).
-> +    The CPU/slave-bus (CSR) interface clock. Despite the name, this applies to
-> +    any bus type; APB, AHB, AXI, etc. The HW signal name is hclk_i (AHB) or
-> +    clk_csr_i (other buses).
-> +  - "master_bus". The master bus interface clock. Only required in
-> +    configurations that use a separate clock for the master and slave bus
-> +    interfaces. The HW signal name is hclk_i (AHB) or aclk_i (AXI).
-> +  - "rx". The receive path clock. The HW signal name is clk_rx_i.
-> +  - "tx". The transmit path clock. The HW signal name is clk_tx_i.
-> +  - "ptp_ref". The PTP reference clock. The HW signal name is clk_ptp_ref_i.
-> +
-> +  Note: Support for additional HW configurations may require adding the
-> +  following clocks to this list in the future: clk_rx_125_i, clk_tx_125_i,
-> +  clk_pmarx_0_i, clk_pmarx1_i, clk_rmii_i.
-> +
-> +  The following compatible values require the following set of clocks:
-> +  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10":
-> +    - "slave_bus"
-> +    - "master_bus"
-> +    - "rx"
-> +    - "tx"
-> +    - "ptp_ref"
-> +  - "snps,dwc-qos-ethernet-4.10":
-> +    - "phy_ref_clk"
-> +    - "apb_clk"
->  - interrupt-parent: Should be the phandle for the interrupt controller
->    that services interrupts for this device
->  - interrupts: Should contain the core's combined interrupt signal
->  - phy-mode: See ethernet.txt file in the same directory
-> +- resets: Phandle and reset specifiers for each entry in reset-names, in the
-> +  same order. See ../reset/reset.txt.
-> +- reset-names: May contain any/all of the following depending on the IP
-> +  configuration, in any order:
-> +  - "eqos". The reset to the entire module. The HW signal name is hreset_n
-> +    (AHB) or aresetn_i (AXI).
-> +
-> +  The following compatible values require the following set of clocks:
-s/clocks/resets/
-
-> +  (the reset properties may be omitted if empty)
-> +  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10":
-> +    - "eqos".
-> +  - "snps,dwc-qos-ethernet-4.10":
-> +    - None.
->
->  Optional properties:
->  - dma-coherent: Present if dma operations are coherent
->  - mac-address: See ethernet.txt in the same directory
->  - local-mac-address: See ethernet.txt in the same directory
-> +- phy-reset-gpios: Phandle and specifier for any GPIO used to reset the PHY.
-> +  See ../gpio/gpio.txt.
-
-IMHO the phy reset gpio belongs in the binding for the PHY. I notice 
-some other ethernet drivers have this, but the PHY should be managed 
-entirely through the phylib and any special handling for reset can be 
-hidden in phy specific drivers.
-
-
->  - snps,en-lpi: If present it enables use of the AXI low-power interface
->  - snps,write-requests: Number of write requests that the AXI port can issue.
->    It depends on the SoC configuration.
-> @@ -52,6 +103,7 @@ ethernet2@40010000 {
->  	reg = <0x40010000 0x4000>;
->  	phy-handle = <&phy2>;
->  	phy-mode = "gmii";
-> +	phy-reset-gpios = <&gpioctlr 43 GPIO_ACTIVE_LOW>;
->
->  	snps,en-tx-lpi-clockgating;
->  	snps,en-lpi;
->
