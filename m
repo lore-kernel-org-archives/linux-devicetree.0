@@ -1,107 +1,81 @@
-From: Brendan Jackman <brendan.jackman@arm.com>
-Subject: [RFC 2/6] cpuidle: Add public funcion to get driver from CPU index
-Date: Wed, 24 Aug 2016 14:48:18 +0100
-Message-ID: <20160824134822.3591-3-brendan.jackman@arm.com>
+From: Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>
+Subject: [RFC 3/6] cpuidle: Add device_node pointer in cpuidle_state
+Date: Wed, 24 Aug 2016 14:48:19 +0100
+Message-ID: <20160824134822.3591-4-brendan.jackman@arm.com>
 References: <1470351902-43103-3-git-send-email-lina.iyer@linaro.org>
  <20160824134822.3591-1-brendan.jackman@arm.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160824134822.3591-1-brendan.jackman@arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net
-Cc: andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, Axel Haslam <ahaslam+renesas@baylibre.com>, devicetree@vger.kernel.org, Marc Titinger <mtitinger+renesas@baylibre.com>, Lina Iyer <lina.iyer@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sudeep Holla <sudeep.holla@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160824134822.3591-1-brendan.jackman-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Haslam <ahaslam+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This will be used to enable the PSCI driver to get a reference to the
-cpuidle driver, in absence of a registered cpuidle_device, in order to
-get the idle states that the cpuidle driver init discovered.
----
- drivers/cpuidle/driver.c | 14 +++++++-------
- include/linux/cpuidle.h  |  3 +++
- 2 files changed, 10 insertions(+), 7 deletions(-)
+Store a pointer in the cpuidle_state structure to the Device Tree node
+from which that state originated, if such a node exists.
 
-diff --git a/drivers/cpuidle/driver.c b/drivers/cpuidle/driver.c
-index 9e0ec15..9cb4300 100644
---- a/drivers/cpuidle/driver.c
-+++ b/drivers/cpuidle/driver.c
-@@ -24,13 +24,13 @@ DEFINE_SPINLOCK(cpuidle_driver_lock);
- static DEFINE_PER_CPU(struct cpuidle_driver *, cpuidle_drivers);
- 
- /**
-- * __cpuidle_get_cpu_driver - return the cpuidle driver tied to a CPU.
-+ * cpuidle_get_cpu_driver - return the cpuidle driver tied to a CPU.
-  * @cpu: the CPU handled by the driver
-  *
-  * Returns a pointer to struct cpuidle_driver or NULL if no driver has been
-  * registered for @cpu.
-  */
--static struct cpuidle_driver *__cpuidle_get_cpu_driver(int cpu)
-+struct cpuidle_driver *cpuidle_get_cpu_driver(int cpu)
- {
- 	return per_cpu(cpuidle_drivers, cpu);
+This will allow plaform-specific components to extract extra idle state
+information without duplicating the logic that finds the idle state
+nodes.
+---
+ drivers/cpuidle/dt_idle_states.c |  3 +++
+ include/linux/cpuidle.h          | 18 ++++++++++--------
+ 2 files changed, 13 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_states.c
+index a5c111b..61a70ec 100644
+--- a/drivers/cpuidle/dt_idle_states.c
++++ b/drivers/cpuidle/dt_idle_states.c
+@@ -88,6 +88,9 @@ static int init_state_node(struct cpuidle_state *idle_state,
+ 	 */
+ 	strncpy(idle_state->name, state_node->name, CPUIDLE_NAME_LEN - 1);
+ 	strncpy(idle_state->desc, desc, CPUIDLE_DESC_LEN - 1);
++
++	idle_state->of_node = state_node;
++
+ 	return 0;
  }
-@@ -49,7 +49,7 @@ static inline void __cpuidle_unset_driver(struct cpuidle_driver *drv)
  
- 	for_each_cpu(cpu, drv->cpumask) {
- 
--		if (drv != __cpuidle_get_cpu_driver(cpu))
-+		if (drv != cpuidle_get_cpu_driver(cpu))
- 			continue;
- 
- 		per_cpu(cpuidle_drivers, cpu) = NULL;
-@@ -71,7 +71,7 @@ static inline int __cpuidle_set_driver(struct cpuidle_driver *drv)
- 
- 	for_each_cpu(cpu, drv->cpumask) {
- 
--		if (__cpuidle_get_cpu_driver(cpu)) {
-+		if (cpuidle_get_cpu_driver(cpu)) {
- 			__cpuidle_unset_driver(drv);
- 			return -EBUSY;
- 		}
-@@ -87,13 +87,13 @@ static inline int __cpuidle_set_driver(struct cpuidle_driver *drv)
- static struct cpuidle_driver *cpuidle_curr_driver;
- 
- /**
-- * __cpuidle_get_cpu_driver - return the global cpuidle driver pointer.
-+ * cpuidle_get_cpu_driver - return the global cpuidle driver pointer.
-  * @cpu: ignored without the multiple driver support
-  *
-  * Return a pointer to a struct cpuidle_driver object or NULL if no driver was
-  * previously registered.
-  */
--static inline struct cpuidle_driver *__cpuidle_get_cpu_driver(int cpu)
-+inline struct cpuidle_driver *cpuidle_get_cpu_driver(int cpu)
- {
- 	return cpuidle_curr_driver;
- }
-@@ -321,7 +321,7 @@ struct cpuidle_driver *cpuidle_get_driver(void)
- 	int cpu;
- 
- 	cpu = get_cpu();
--	drv = __cpuidle_get_cpu_driver(cpu);
-+	drv = cpuidle_get_cpu_driver(cpu);
- 	put_cpu();
- 
- 	return drv;
 diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-index e32c72b..8435577 100644
+index 8435577..d4ea1e4 100644
 --- a/include/linux/cpuidle.h
 +++ b/include/linux/cpuidle.h
-@@ -134,6 +134,7 @@ extern int cpuidle_enter(struct cpuidle_driver *drv,
- extern void cpuidle_reflect(struct cpuidle_device *dev, int index);
+@@ -14,6 +14,7 @@
+ #include <linux/percpu.h>
+ #include <linux/list.h>
+ #include <linux/hrtimer.h>
++#include <linux/of.h>
  
- extern int cpuidle_register_driver(struct cpuidle_driver *drv);
-+extern struct cpuidle_driver *cpuidle_get_cpu_driver(int cpu);
- extern struct cpuidle_driver *cpuidle_get_driver(void);
- extern struct cpuidle_driver *cpuidle_driver_ref(void);
- extern void cpuidle_driver_unref(void);
-@@ -168,6 +169,8 @@ static inline int cpuidle_enter(struct cpuidle_driver *drv,
- static inline void cpuidle_reflect(struct cpuidle_device *dev, int index) { }
- static inline int cpuidle_register_driver(struct cpuidle_driver *drv)
- {return -ENODEV; }
-+static inline struct cpuidle_driver *cpuidle_get_cpu_driver(int cpu)
-+{return NULL; }
- static inline struct cpuidle_driver *cpuidle_get_driver(void) {return NULL; }
- static inline struct cpuidle_driver *cpuidle_driver_ref(void) {return NULL; }
- static inline void cpuidle_driver_unref(void) {}
+ #define CPUIDLE_STATE_MAX	10
+ #define CPUIDLE_NAME_LEN	16
+@@ -36,14 +37,15 @@ struct cpuidle_state_usage {
+ };
+ 
+ struct cpuidle_state {
+-	char		name[CPUIDLE_NAME_LEN];
+-	char		desc[CPUIDLE_DESC_LEN];
+-
+-	unsigned int	flags;
+-	unsigned int	exit_latency; /* in US */
+-	int		power_usage; /* in mW */
+-	unsigned int	target_residency; /* in US */
+-	bool		disabled; /* disabled on all CPUs */
++	char			name[CPUIDLE_NAME_LEN];
++	char			desc[CPUIDLE_DESC_LEN];
++
++	unsigned int		flags;
++	unsigned int		exit_latency; /* in US */
++	int			power_usage; /* in mW */
++	unsigned int		target_residency; /* in US */
++	bool			disabled; /* disabled on all CPUs */
++	struct device_node	*of_node;
+ 
+ 	int (*enter)	(struct cpuidle_device *dev,
+ 			struct cpuidle_driver *drv,
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
