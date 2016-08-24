@@ -1,56 +1,59 @@
-From: Sebastian Frias <sf84@laposte.net>
-Subject: ARM,SoC: About the use DT-defined properties by 3rd-party drivers
-Date: Wed, 24 Aug 2016 16:29:02 +0200
-Message-ID: <57BDAF2E.10502@laposte.net>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: tegra: Drop clock and reset names for XUSB
+ powergates
+Date: Wed, 24 Aug 2016 16:33:01 +0200
+Message-ID: <20160824143301.GA6887@ulmo.ba.sec>
+References: <1471354857-1408-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
-Cc: Mason <slash.tmp@free.fr>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1471354857-1408-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-Given a SoC and its SDK, 3rd party users of said SoC (customers of the SoC's
-manufacturer) may need/want to write kernel modules.
-Since the DT describes the HW, it would make sense to expose some HW properties
-through the DT, and have 3rd party users rely on them to write their drivers in
-a generic way.
-However, it seems that one is not allowed to upstream DT bindings and
-properties without a driver, is that right?
+--Q68bSM7Ycu6FN28Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If true, that hampers DT usage by out-of-tree drivers (or in this case,
-drivers that are not written yet) and limits the usage of DT properties as an
-API.
+On Tue, Aug 16, 2016 at 02:40:57PM +0100, Jon Hunter wrote:
+> Drop the clock and reset names for the Tegra210 XUSB powergates because
+> these are not currently used and not required by the Tegra PMC binding
+> documentation.
+>=20
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 6 ------
+>  1 file changed, 6 deletions(-)
 
-We can understand that DT maintainers want to know what goes upstream,
-make sure that the bindings are documented, that there are no conflicts with
-other bindings or generic strings, etc.
-However, it is hard to see why there is not a "relaxed" upstreaming path
-for SoC-specific properties (i.e.: that do not affect DT API nor other
-SoCs).
+Applied, thanks.
 
-As an example, we would like to add some properties to /soc/ like:
+Thierry
 
-   soc {
-       compatible = "simple-bus";
-       ...
-       sigma-register-layout-version = <2>;
-       sigma-has-XYZ-capability;
+--Q68bSM7Ycu6FN28Q
+Content-Type: application/pgp-signature; name="signature.asc"
 
-and so on.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-If this is really not possible, it forces the SoC manufacturer to expose
-those properties in a different way, thus wasting a (seemingly) perfectly
-fine way of doing so: the DT and its documentation.
+iQIcBAABCAAGBQJXvbAdAAoJEN0jrNd/PrOhOQkQAIn6BjqR2HLM1zwRx8VGlBM1
+VP/JOAGcMwFHGkdebT9JxNaKPFnli9zcRYmim33Ejdq8p6/6bfVi2OEUx3EE8qbj
+3ILQNNjcFxoFL5zfl4AgkX1wpjk7EsODGtfr/Y/ombeY68qA2kC11rRmNr7E6E9U
+AV+0oHxs+z17sHf/ap/NQub/NOqthUvitOXDXcSlBAu188Iv+3dCqgeffA7givEp
+ZhoSzlww0pboboVRGS4fGUY+I7GY9iyubQ19sWY3HuVFPMdfCBifiVjch0cTc8y7
+dt0QMjqH3uRzfN9Y7f7QDyrVbl4z/Hd45pkMpEtoXFrvuNCjs0hCqUNMDH4tKMEe
+s352XWb8+mYIjLZNiU4X0dfa47U1+ZsqcAv5PI0NGrpxb1XpscGTmM9IJE6Dzu6E
+HE+npyWFIDlVakqSp0uTp40teSg17vzMYhs/8qFLT+NngRvt+caussSJgjv/1f4k
+u3/sW3s+DSvvFfmli116lrm5B74gEBPcPCt0FnA1hejBWb587IWOhZWKHKfbg6tI
+VpLLLQHfheHFaB3Sya5LrnVkgUb9Bj1vzlpYYBViuWnhvFjXDGnmvodMHWEdJGDC
+sTKK20lqq11poBy7iypN8Q1oFceM+9GcOp+ppeyy0wJDncl3wkSwT8WRbkbKpG4h
+G+lgTQteHKmkgfZQukgQ
+=GP/d
+-----END PGP SIGNATURE-----
 
-Thoughts?
-
-By the way, what about properties generated on-the-fly by the bootloader?
-
-Thanks in advance.
-Best regards,
-
-Sebastian
+--Q68bSM7Ycu6FN28Q--
