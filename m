@@ -1,55 +1,101 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] input: misc: Add generic input driver to read
- encoded GPIO lines
-Date: Wed, 24 Aug 2016 12:09:42 +0530
-Message-ID: <8e38becb-137f-7346-258d-1c4dbb890643@ti.com>
-References: <20160823061649.3394-1-vigneshr@ti.com>
- <20160823061649.3394-2-vigneshr@ti.com>
- <949d92f3-4510-ada5-d3d6-a29544465fd6@ti.com> <20160823200335.GC6712@dtor-ws>
+From: chunfeng yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH V5, 0/5] Add MediaTek USB3 DRD Driver
+Date: Wed, 24 Aug 2016 14:42:03 +0800
+Message-ID: <1472020923.27677.1.camel@mhfsdcap03>
+References: <1470730998-9563-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160823200335.GC6712@dtor-ws>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Hung-yu Wu <hywu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, S Twiss <stwiss.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470730998-9563-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Dear all,
 
+    Could you please help me to review the code? 
 
-On Wednesday 24 August 2016 01:33 AM, Dmitry Torokhov wrote:
-> On Tue, Aug 23, 2016 at 10:27:59AM -0500, Andrew F. Davis wrote:
->> On 08/23/2016 01:16 AM, Vignesh R wrote:
->>> Add a driver to read group of GPIO lines and provide its status as a
->>> numerical value as input event to the system. This will help in
->>> intefacing devices, that can be connected over GPIOs, that provide input
->>> to the system by driving GPIO lines connected to them like a rotary dial
->>> or a switch.
->>>
->>> For example, a rotary switch can be connected to four GPIO lines. The
->>> status of the GPIO lines reflect the actual position of the rotary
->>> switch dial. For example, if dial points to 9, then the four GPIO lines
->>> connected to the switch will read HLLH(0b'1001 = 9). This value
->>> can be reported as an ABS_* event to the input subsystem.
->>>
->>> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
->>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> ---
->>>
->>> v2: Use decoder,max-value instead of gpio-decoder,max-value.
+    Thank you very much.
+
+     
+On Tue, 2016-08-09 at 16:23 +0800, Chunfeng Yun wrote:
+> These patches introduce the MediaTek USB3 dual-role controller
+> driver.
 > 
-> That's not what Rob asked for. "decoder-max-value", not "decoder" vendor
-> prefix.
+> The driver can be configured as Dual-Role Device (DRD),
+> Peripheral Only and Host Only (xHCI) modes. It works well
+> with Mass Storage, RNDIS and g_zero on FS/HS and SS. And it is
+> tested on MT8173 platform which only contains USB2.0 device IP,
+> and on MT6290 platform which contains USB3.0 device IP.
+> 
+> Change in v5:
+> 1. modify some comments
+> 2. rename some unsuitable variables
+> 3. add reg-names property for host node
+> 4. add USB_MTU3_DEBUG to control debug messages
+> 
+> Change in v4:
+> 1. fix build errors on non-mediatek platforms
+> 2. provide manual dual-role switch via debugfs instead of sysfs
+> 
+> Change in v3:
+> 1. fix some typo error
+> 2. rename mtu3.txt to mt8173-mtu3.txt
+> 
+> Change in v2:
+> 1. modify binding docs according to suggestions
+> 2. modify some comments and remove some dummy blank lines
+> 3. fix memory leakage
+> 
+> 
+> Chunfeng Yun (5):
+>   dt-bindings: mt8173-xhci: support host side of dual-role mode
+>   dt-bindings: mt8173-mtu3: add devicetree bindings
+>   usb: xhci-mtk: make IPPC register optional
+>   usb: Add MediaTek USB3 DRD Driver
+>   arm64: dts: mediatek: add USB3 DRD driver
+> 
+>  .../devicetree/bindings/usb/mt8173-mtu3.txt        |   87 ++
+>  .../devicetree/bindings/usb/mt8173-xhci.txt        |   54 +-
+>  arch/arm64/boot/dts/mediatek/mt8173-evb.dts        |   46 +-
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   29 +-
+>  drivers/usb/Kconfig                                |    2 +
+>  drivers/usb/Makefile                               |    1 +
+>  drivers/usb/host/xhci-mtk.c                        |   36 +-
+>  drivers/usb/mtu3/Kconfig                           |   54 ++
+>  drivers/usb/mtu3/Makefile                          |   19 +
+>  drivers/usb/mtu3/mtu3.h                            |  422 ++++++++++
+>  drivers/usb/mtu3/mtu3_core.c                       |  874 +++++++++++++++++++
+>  drivers/usb/mtu3/mtu3_dr.c                         |  375 +++++++++
+>  drivers/usb/mtu3/mtu3_dr.h                         |  108 +++
+>  drivers/usb/mtu3/mtu3_gadget.c                     |  731 ++++++++++++++++
+>  drivers/usb/mtu3/mtu3_gadget_ep0.c                 |  879 ++++++++++++++++++++
+>  drivers/usb/mtu3/mtu3_host.c                       |  294 +++++++
+>  drivers/usb/mtu3/mtu3_hw_regs.h                    |  473 +++++++++++
+>  drivers/usb/mtu3/mtu3_plat.c                       |  490 +++++++++++
+>  drivers/usb/mtu3/mtu3_qmu.c                        |  599 +++++++++++++
+>  drivers/usb/mtu3/mtu3_qmu.h                        |   43 +
+>  20 files changed, 5598 insertions(+), 18 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+>  create mode 100644 drivers/usb/mtu3/Kconfig
+>  create mode 100644 drivers/usb/mtu3/Makefile
+>  create mode 100644 drivers/usb/mtu3/mtu3.h
+>  create mode 100644 drivers/usb/mtu3/mtu3_core.c
+>  create mode 100644 drivers/usb/mtu3/mtu3_dr.c
+>  create mode 100644 drivers/usb/mtu3/mtu3_dr.h
+>  create mode 100644 drivers/usb/mtu3/mtu3_gadget.c
+>  create mode 100644 drivers/usb/mtu3/mtu3_gadget_ep0.c
+>  create mode 100644 drivers/usb/mtu3/mtu3_host.c
+>  create mode 100644 drivers/usb/mtu3/mtu3_hw_regs.h
+>  create mode 100644 drivers/usb/mtu3/mtu3_plat.c
+>  create mode 100644 drivers/usb/mtu3/mtu3_qmu.c
+>  create mode 100644 drivers/usb/mtu3/mtu3_qmu.h
 > 
 
-Sorry.. Will fix this in v3.
 
-
--- 
-Regards
-Vignesh
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
