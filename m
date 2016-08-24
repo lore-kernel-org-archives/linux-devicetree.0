@@ -1,64 +1,77 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Wed, 24 Aug 2016 20:01:52 +0100
-Message-ID: <20160824200152.33be0707@arm.com>
-References: <cover.147018b3518.git.dalias@libc.org>
-        <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
-        <57BDCE5D.2050609@linaro.org>
-        <20160824174001.GW15995@brightrain.aerifal.cx>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] ARM: dts: exynos: Enable HDMI for Arndale Octa
+ board
+Date: Wed, 24 Aug 2016 21:05:19 +0200
+Message-ID: <20160824190519.GA30097@kozik-book>
+References: <1472044039-16536-1-git-send-email-woogyom.kim@gmail.com>
+ <1472044039-16536-2-git-send-email-woogyom.kim@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160824174001.GW15995-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1472044039-16536-2-git-send-email-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Aug 2016 13:40:01 -0400
-Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org> wrote:
-
-[...]
-
-> > IIUC, there is a problem with the interrupt controller where
-the per irq
-> > line are not working correctly. Is that correct ?  
+On Wed, Aug 24, 2016 at 10:07:15PM +0900, Milo Kim wrote:
+> * GPIO for HDMI hot plug detect
+>   GPX3_7 is used. The HPD awareness is done when the GPIO is active high and
+>   single ended.
 > 
-> I don't think that's a correct characterization. Rather the percpu
-> infrastructure just means something completely different from what you
-> would expect it to mean. It has nothing to do with the hardware but
-> rather with kernel-internal choice of whether to do percpu devid
-> mapping inside the irq infrastructure, and the choice at the
-> irq-requester side of whether to do this is required to match the
-> irqchip driver's choice. I explained this better in another email
-> which I could dig up if necessary, but the essence is that
-> request_percpu_irq is a misnamed and unusably broken API.
-
-Or just one that simply doesn't fit your needs, because other
-architectures have different semantics than the ones you take for
-granted?
-
+> * Enable HDMI block in Exynos5420
+>   HDMI VDD and PLL consume 1.0V LDO6 (PVDD_ANAIP_1V0) and HDMI oscillator
+>   requires 1.8V LDO7 (PVDD_ANAIP_1V8).
 > 
-> > Regarding Marc Zyngier comments about the irq controller driver being
-> > almost empty, I'm wondering if something in the irq controller driver
-> > which shouldn't be added before submitting this timer driver with SMP
-> > support (eg. irq domain ?).  
+> * Support HDMI display data channel
+>   I2C #2 is assigned for the HDMI DDC. It enables the EDID access.
 > 
-> I don't think so. At most I could make the driver hard-code the percpu
-> devid model for certain irqs, but that _does not reflect_ anything
-> about the hardware. Rather it just reflects bad kernel internals. It
+> Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/exynos5420-arndale-octa.dts | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+> index 39a3b81..2fb5708 100644
+> --- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+> +++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+> @@ -70,6 +70,19 @@
+>  	status = "disabled";
+>  };
+>
 
-I'd appreciate it if instead of ranting about how broken the kernel is,
-you'd submit a patch fixing it, since you seem to have spotted
-something that we haven't in several years of using that code on a
-couple of ARM-related platforms.
+First of all - it looks like these DTS patches do not depend on DRM
+part, do they?
 
-Thanks,
+> +&hdmi {
+> +	hpd-gpios = <&gpx3 7 GPIO_OPEN_SOURCE>;
 
-	M.
--- 
-Jazz is not dead. It just smells funny.
+Are you sure it is open-source type?
+
+> +	vdd_osc-supply = <&ldo7_reg>;
+> +	vdd_pll-supply = <&ldo6_reg>;
+> +	vdd-supply = <&ldo6_reg>;
+> +	ddc = <&i2c_2>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c_2 {
+> +	status = "okay";
+
+Hm, what is connected here? Please put it in alphabetical order (so
+after hsi2c_4).
+
+Best regards,
+Krzysztof
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
