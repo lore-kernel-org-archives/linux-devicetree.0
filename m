@@ -1,124 +1,203 @@
-From: Randy Li <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [RESEND PATCH 3/4] usb: dwc2: assert phy reset when waking up in
- rk3288 platform
-Date: Wed, 24 Aug 2016 16:54:16 +0800
-Message-ID: <76f0ffdb-a3c6-f1e6-8177-b254ff5badaa@rock-chips.com>
-References: <4c931176-a09a-546c-d2b6-ea74028c78a2@cogentembedded.com>
- <1471807905-11323-1-git-send-email-ayaka@soulik.info>
- <49d2baf7-5f81-fc20-a805-f7a378d67a5e@synopsys.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V5] clk: bcm: Add driver for BCM53573 ILP clock
+Date: Wed, 24 Aug 2016 01:47:38 -0700
+Message-ID: <20160824084738.GB6502@codeaurora.org>
+References: <20160823061745.8162-1-zajec5@gmail.com>
+ <20160823062613.13865-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <49d2baf7-5f81-fc20-a805-f7a378d67a5e-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160823062613.13865-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 08/23, Rafał Miłecki wrote:
+> diff --git a/drivers/clk/bcm/clk-bcm53573-ilp.c b/drivers/clk/bcm/clk-bcm53573-ilp.c
+> new file mode 100644
+> index 0000000..b7ac0eb
+> --- /dev/null
+> +++ b/drivers/clk/bcm/clk-bcm53573-ilp.c
+> @@ -0,0 +1,146 @@
+> +/*
+> + * Copyright (C) 2016 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/clk.h>
 
+Is this include used?
 
-On 08/24/2016 04:46 AM, John Youn wrote:
-> On 8/21/2016 12:32 PM, Randy Li wrote:
->> On the rk3288 USB host-only port (the one that's not the OTG-enabled
->> port) the PHY can get into a bad state when a wakeup is asserted (not
->> just a wakeup from full system suspend but also a wakeup from
->> autosuspend).
->>
->> We can get the PHY out of its bad state by asserting its "port reset",
->> but unfortunately that seems to assert a reset onto the USB bus so it
->> could confuse things if we don't actually deenumerate / reenumerate the
->> device.
->>
->> We can also get the PHY out of its bad state by fully resetting it using
->> the reset from the CRU (clock reset unit) in chip, which does a more full
->> reset.  The CRU-based reset appears to actually cause devices on the bus
->> to be removed and reinserted, which fixes the problem (albeit in a hacky
->> way).
->>
->> It's unfortunate that we need to do a full re-enumeration of devices at
->> wakeup time, but this is better than alternative of letting the bus get
->> wedged.
->>
->> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
->> ---
->>  drivers/usb/dwc2/core_intr.c | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
->>
->> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
->> index d85c5c9..f57c48a 100644
->> --- a/drivers/usb/dwc2/core_intr.c
->> +++ b/drivers/usb/dwc2/core_intr.c
->> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
->>  static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->>  {
->>  	int ret;
->> +	struct device_node *np = hsotg->dev->of_node;
->>
->>  	/* Clear interrupt */
->>  	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
->> @@ -379,6 +380,16 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->>  			/* Restart the Phy Clock */
->>  			pcgcctl &= ~PCGCTL_STOPPCLK;
->>  			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
->> +
->> +			/*
->> +			 * It is a quirk in Rockchip RK3288, causing by
->> +			 * a hardware bug. This will propagate out and
->> +			 * eventually we'll re-enumerate the device.
->> +			 * Not great but the best we can do
->
-> Remove the trailing whitespaces in this comment.
->
-> Run scripts/checkpatch.pl to catch these.
-I see.
->
->> +			 */
->> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
->> +				hsotg->phy->ops->reset(hsotg->phy);
->> +
->
-> You should probably check for NULL before calling the reset()
-> callback.
-Sure.
->
-> Also, I'd rather see a generic quirk property that you set for your
-> platform.
->
-> Something like "phy_reset_on_wakeup_quirk".
-But Rob Herring want me to implied by the SoC specific compatible 
-string. I agree with him. It is certainly bug in RK3288 platform.
-It is no found no the other platform.
->
-> Also, try to preserve the version tag in your subject for all the
-> patches so that we can easily identify the latest version of the
-> series, like:
->
-> [PATCH v5 3/4] ...
->
-> And, typically "RESEND" means there are no code change.
-I see, I just make up my mind whether code style is new version
-before. I won't again.
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/slab.h>
+> +
+> +#define PMU_XTAL_FREQ_RATIO			0x66c
+> +#define  XTAL_ALP_PER_4ILP			0x00001fff
+> +#define  XTAL_CTL_EN				0x80000000
+> +#define PMU_SLOW_CLK_PERIOD			0x6dc
+> +
+> +struct bcm53573_ilp {
+> +	struct clk *clk;
+> +	struct clk_hw hw;
+> +	void __iomem *pmu;
+> +};
+> +
+> +static int bcm53573_ilp_enable(struct clk_hw *hw)
+> +{
+> +	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
+> +
+> +	writel(0x10199, ilp->pmu + PMU_SLOW_CLK_PERIOD);
+> +	writel(0x10000, ilp->pmu + 0x674);
 
-Thank you very much.
->
-> Regards,
-> John
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->
+Is there a name for 0x674?
+> +
+> +	return 0;
+> +}
+> +
+> +static unsigned long bcm53573_ilp_recalc_rate(struct clk_hw *hw,
+> +					      unsigned long parent_rate)
+> +{
+> +	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
+> +	void __iomem *pmu = ilp->pmu;
+> +	u32 last_val, cur_val;
+> +	u32 sum = 0, num = 0, loop_num = 0;
+
+Should these just be plain ints? Do we care about sizes for these
+variables?
+
+> +	u32 avg;
+
+This one too.
+
+> +
+> +	/* Enable measurement */
+> +	writel(XTAL_CTL_EN, pmu + PMU_XTAL_FREQ_RATIO);
+> +
+> +	/* Read initial value */
+> +	last_val = readl(pmu + PMU_XTAL_FREQ_RATIO) & XTAL_ALP_PER_4ILP;
+> +
+> +	/*
+> +	 * At minimum we should loop for a bit to let hardware do the
+> +	 * measurement. This isn't very accurate however, so for a better
+> +	 * precision lets try getting 20 different values for and use average.
+> +	 */
+> +	while (num < 20) {
+> +		cur_val = readl(pmu + PMU_XTAL_FREQ_RATIO) & XTAL_ALP_PER_4ILP;
+> +
+> +		if (cur_val != last_val) {
+> +			/* Got different value, use it */
+> +			sum += cur_val;
+> +			num++;
+> +			loop_num = 0;
+> +			last_val = cur_val;
+> +		} else if (++loop_num > 5000) {
+> +			/* Same value over and over, give up */
+> +			sum += cur_val;
+> +			num++;
+> +			break;
+> +		}
+
+Should there be a udelay() here? Or we're expected to tight loop
+read the hardware? If so we should throw in a cpu_relax() here to
+indicate tight loop.
+
+> +	}
+> +
+> +	/* Disable measurement to save power */
+> +	writel(0x0, pmu + PMU_XTAL_FREQ_RATIO);
+> +
+> +	avg = sum / num;
+> +
+> +	return parent_rate * 4 / avg;
+> +}
+> +
+> +static const struct clk_ops bcm53573_ilp_clk_ops = {
+> +	.enable = bcm53573_ilp_enable,
+
+No disable? Or .is_enabled?
+
+> +	.recalc_rate = bcm53573_ilp_recalc_rate,
+> +};
+> +
+> +static void bcm53573_ilp_init(struct device_node *np)
+> +{
+> +	struct bcm53573_ilp *ilp;
+> +	struct resource res;
+> +	struct clk_init_data init = { 0 };
+> +	const char *parent_name;
+> +	int index;
+> +	int err;
+> +
+> +	ilp = kzalloc(sizeof(*ilp), GFP_KERNEL);
+> +	if (!ilp)
+> +		return;
+> +
+> +	parent_name = of_clk_get_parent_name(np, 0);
+> +	if (!parent_name) {
+> +		err = -ENOENT;
+> +		goto err_free_ilp;
+> +	}
+> +
+> +	/* TODO: This looks generic, try making it OF helper. */
+> +	index = of_property_match_string(np, "reg-names", "pmu");
+> +	if (index < 0) {
+> +		err = index;
+> +		goto err_free_ilp;
+> +	}
+> +	err = of_address_to_resource(np, index, &res);
+> +	if (err)
+> +		goto err_free_ilp;
+> +	ilp->pmu = ioremap(res.start, resource_size(&res));
+> +	if (IS_ERR(ilp->pmu)) {
+> +		err = PTR_ERR(ilp->pmu);
+> +		goto err_free_ilp;
+> +	}
+> +
+> +	init.name = np->name;
+> +	init.ops = &bcm53573_ilp_clk_ops;
+> +	init.parent_names = &parent_name;
+> +	init.num_parents = 1;
+> +
+> +	ilp->hw.init = &init;
+> +	ilp->clk = clk_register(NULL, &ilp->hw);
+
+please use clk_hw_register() and of_clk_add_hw_provider().
+
+> +	if (WARN_ON(IS_ERR(ilp->clk)))
+> +		goto err_unmap_pmu;
+> +
+> +	err = of_clk_add_provider(np, of_clk_src_simple_get, ilp->clk);
+> +	if (err)
+> +		goto err_clk_unregister;
+> +
+> +	return;
+> +
+> +err_clk_unregister:
+> +	clk_unregister(ilp->clk);
+> +err_unmap_pmu:
+> +	iounmap(ilp->pmu);
+> +err_free_ilp:
+> +	kfree(ilp);
+> +	pr_err("Failed to init ILP clock: %d\n", err);
+> +}
+> +CLK_OF_DECLARE(bcm53573_ilp_clk, "brcm,bcm53573-ilp", bcm53573_ilp_init);
+
+Can this be a platform driver instead?
 
 -- 
-Randy Li
-The third produce department
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
