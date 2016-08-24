@@ -1,142 +1,149 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Wed, 24 Aug 2016 16:52:26 -0400
-Message-ID: <20160824205225.GY15995@brightrain.aerifal.cx>
-References: <cover.147018b3518.git.dalias@libc.org>
- <57BDCE5D.2050609@linaro.org>
- <20160824174001.GW15995@brightrain.aerifal.cx>
- <1909939.rYmWMrdImI@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1909939.rYmWMrdImI@wuerfel>
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <Marc.Zyngier@arm.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH V2] dt: net: enhance DWC EQoS binding to support Tegra186
+Date: Wed, 24 Aug 2016 15:20:46 -0600
+Message-ID: <20160824212046.2416-1-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars Persson <lars.persson-VrBV9hrLPhE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 24, 2016 at 10:01:08PM +0200, Arnd Bergmann wrote:
-> On Wednesday, August 24, 2016 1:40:01 PM CEST Rich Felker wrote:
-> > On Wed, Aug 24, 2016 at 06:42:05PM +0200, Daniel Lezcano wrote:
-> > > > diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> > > > index 5677886..3210ca5 100644
-> > > > --- a/drivers/clocksource/Kconfig
-> > > > +++ b/drivers/clocksource/Kconfig
-> > > > @@ -407,6 +407,15 @@ config SYS_SUPPORTS_SH_TMU
-> > > >  config SYS_SUPPORTS_EM_STI
-> > > >          bool
-> > > >  
-> > > > +config CLKSRC_JCORE_PIT
-> > > > +   bool "J-Core PIT timer driver"
-> > > > +   depends on OF && (SUPERH || COMPILE_TEST)
-> > > 
-> > > Even if this is correct, for the sake of consistency, it is preferable
-> > > to change it to:
-> > > 
-> > >       bool "J-Core PIT timer driver" if COMPILE_TEST
-> > >       depends on SUPERH
-> > >       select CLKSRC_OF
-> > 
-> > Is this functionally equivalent? If so that's non-obvious to me. What
-> > about the dropped OF dependency? The intent is that the option should
-> > always be available for SUPERH targets using OF, otherwise only
-> > available with COMPILE_TEST.
-> 
-> I think your version is correct here, Daniel made a mistake with the
-> SUPERH dependency. Another way to write it would be
-> 
-> config CLKSRC_JCORE_PIT
->    bool "J-Core PIT timer driver" if COMPILE_TEST && !JCORE
->    depends on OF
-> 	default JCORE
-> 
-> to make it impossible to disable when JCORE is set, but
-> user-visible on all other architectures, SUPERH or otherwise.
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-There's no JCORE config item and in theory you don't even need to pick
-CPU_J2 if you don't want SMP; CPU_SH2 should work. In practice the
-legacy hw support needs to be converted over to device tree still, but
-the goal has been to _avoid_ introducing soc/board/model specific
-config stuff and move the arch to completely DT-based.
+The Synopsys DWC EQoS is a configurable IP block which supports multiple
+options for bus type, clocking and reset structure, and feature list.
+Extend the DT binding to define a "compatible value" for the configuration
+contained in NVIDIA's Tegra186 SoC, and define some new properties and
+list property entries required by that configuration.
 
-> > > > +static int jcore_pit_set(unsigned long delta, struct jcore_pit *pit)
-> > > > +{
-> > > > +   jcore_pit_disable(pit);
-> > > > +   __raw_writel(delta, pit->base + REG_THROT);
-> > > > +   __raw_writel(pit->enable_val, pit->base + REG_PITEN);
-> > > > +   return 0;
-> > > 
-> > > Why do you need to use __raw_writel ?
-> > > 
-> > > s/__raw_writel/writel/
-> > 
-> > I actually tried multiple times to find good resources on policy for
-> > which form to prefer, but didn't have much luck. My understanding is
-> > that __raw_writel/__raw_readl always performs a native-endian
-> > load/store, whereas writel/readl behavior depends on cpu endianness
-> > and whether the arch declares that "pci bus" (that was the term I
-> > found in the source, not relevant here) io is endian-swapped or not.
-> > Can you give me a better explanation of why we might prefer one form
-> > or the other?
-> 
-> In general, a portable driver should use readl/writel because they
-> are defined to have the behavior that x86 provides, which is what
-> most developers understand best. Compared to __raw_readl/__raw_writel,
-> it guarantees
-> 
-> - correct endianess (in most cases, exceptions see below)
-> - does not leak out of spinlocks
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+v2:
+* Add an explicit compatible value for the Axis SoC's version of the EQOS
+  IP; this allows the driver to handle any SoC-specific integration quirks
+  that are required, rather than only knowing about the IP block in
+  isolation. This is good general DT practice. The existing value is still
+  documented to support existing DTs.
+* Reworked the list of clocks the binding requires:
+  - Combined "tx" and "phy_ref_clk"; for GMII/RGMII configurations, these
+    are the same thing.
+  - Added extra description to the "rx" and "tx" clocks, to make it clear
+    exactly which HW clock they represent.
+  - Made the new "tx" and "slave_bus" names more prominent than the
+    original "phy_ref_clk" and "apb_pclk". The new names are more generic
+    and should work for any enhanced version of the binding (e.g. to
+    support additional PHY types). New compatible values will hopefully
+    choose to require the new names.
+* Added a couple extra clocks to the list that may need to be supported in
+  future binding revisions.
+* Fixed a typo; "clocks" -> "resets".
+---
+ .../bindings/net/snps,dwc-qos-ethernet.txt         | 75 ++++++++++++++++++++--
+ 1 file changed, 71 insertions(+), 4 deletions(-)
 
-Not even normal non-volatile accesses can leak across spinlocks;
-they're memory+compiler barriers.
-
-> - accesses are word-sized, the compiler cannot split them into
->   byte accesses, or merge subsequent accesses into larger words
-
-Based on my reading of the code that's also true for the raw ones. At
-least GCC interprets volatile as disallowing split/combined
-loads/stores when the hardware supports the nominal load/store size,
-and this seems to agree with the intent of the C standard that
-volatile be usable for memory-mapped devices..
-
-> - ordering against dma_map_*/dma_unmap_*/dma_sync_* is maintained
-
-Aren't they barriers too?
-
-> The __raw_* accessors are used as building blocks for
-> readl/outl/ioread32/ioread32_be/readl_relaxed/... and they can
-> usually be used safely on device RAM such as framebuffers but
-> not much else in portable code. Some architectures also use the
-> __raw_* accessors for MMIO registers, but that code is generally
-> not portable.
-
-My concern is that, depending on some arcane defines, readl/writel
-could start doing byte-reversal of values since the CPU is big-endian.
-arch/sh seems to have them defined in such a way that this doesn't
-happen, but I was hoping to avoid depending on that. If you think it's
-safe to assume they do the right thing, though, I'm okay with it. If
-anything breaks when we try a little-endian version of the CPU/SoC
-later I can go back and fix it.
-
-> Endianess is always more complicated than one thinks, and it's
-> handled differently across architectures, sometimes because of
-> hardware differences, sometimes for historic reasons that differ
-> only in the Linux implementation.
-> 
-> A large majority of devices are fixed to little-endian MMIO
-> registers (as recommended by PCI), so that is a good default.
-> 
-> Exceptions to this are:
-> 
-> * Some architectures (e.g. PowerPC) typically run big-endian code,
->   and hardware designers decided to make the MMIO registers the
->   same. In this case, you can generally use ioread32_be/iowrite32_be.
-
-This is something like our case, but the mmio registers are accessed
-as 32-bit values and the endianness does not come into play. Sub-word
-accesses just don't work at all for most of the mmio devices. This
-will remain the same if/when we add little endian builds (there's work
-on this on the jcore list).
-
-Rich
+diff --git a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
+index 51f8d2eba8d8..1d028259824a 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
++++ b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
+@@ -1,21 +1,87 @@
+ * Synopsys DWC Ethernet QoS IP version 4.10 driver (GMAC)
+ 
++This binding supports the Synopsys Designware Ethernet QoS (Quality Of Service)
++IP block. The IP supports multiple options for bus type, clocking and reset
++structure, and feature list. Consequently, a number of properties and list
++entries in properties are marked as optional, or only required in specific HW
++configurations.
+ 
+ Required properties:
+-- compatible: Should be "snps,dwc-qos-ethernet-4.10"
++- compatible: One of:
++  - "axis,artpec6-eqos", "snps,dwc-qos-ethernet-4.10"
++    Represents the IP core when integrated into the Axis ARTPEC-6 SoC.
++  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10"
++    Represents the IP core when integrated into the NVIDIA Tegra186 SoC.
++  - "snps,dwc-qos-ethernet-4.10"
++    This combination is deprecated. It should be treated as equivalent to
++    "axis,artpec6-eqos", "snps,dwc-qos-ethernet-4.10". It is supported to be
++    compatible with earlier revisions of this binding.
+ - reg: Address and length of the register set for the device
+-- clocks: Phandles to the reference clock and the bus clock
+-- clock-names: Should be "phy_ref_clk" for the reference clock and "apb_pclk"
+-  for the bus clock.
++- clocks: Phandle and clock specifiers for each entry in clock-names, in the
++  same order. See ../clock/clock-bindings.txt.
++- clock-names: May contain any/all of the following depending on the IP
++  configuration, in any order:
++  - "tx"
++    (Alternate name "phy_ref_clk"; only one alternate must appear.)
++    The EQOS transmit path clock. The HW signal name is clk_tx_i.
++    In some configurations (e.g. GMII/RGMII), this clock also drives the PHY TX
++    path. In other configurations, other clocks (such as tx_125, rmii) may
++    drive the PHY TX path.
++  - "rx"
++    The EQOS receive path clock. The HW signal name is clk_rx_i.
++    In some configurations (e.g. GMII/RGMII), this clock also drives the PHY RX
++    path. In other configurations, other clocks (such as rx_125, pmarx_0,
++    pmarx_1, rmii) may drive the PHY RX path.
++  - "slave_bus"
++    (Alternate name "apb_pclk"; only one alternate must appear.)
++    The CPU/slave-bus (CSR) interface clock. Despite the name, this applies to
++    any bus type; APB, AHB, AXI, etc. The HW signal name is hclk_i (AHB) or
++    clk_csr_i (other buses).
++  - "master_bus"
++    The master bus interface clock. Only required in configurations that use a
++    separate clock for the master and slave bus interfaces. The HW signal name
++    is hclk_i (AHB) or aclk_i (AXI).
++  - "ptp_ref"
++    The PTP reference clock. The HW signal name is clk_ptp_ref_i.
++
++  Note: Support for additional IP configurations may require adding the
++  following clocks to this list in the future: clk_rx_125_i, clk_tx_125_i,
++  clk_pmarx_0_i, clk_pmarx1_i, clk_rmii_i, clk_revmii_rx_i, clk_revmii_tx_i.
++
++  The following compatible values require the following set of clocks:
++  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10":
++    - "slave_bus"
++    - "master_bus"
++    - "rx"
++    - "tx"
++    - "ptp_ref"
++  - "axis,artpec6-eqos", "snps,dwc-qos-ethernet-4.10":
++    - "phy_ref_clk"
++    - "apb_clk"
+ - interrupt-parent: Should be the phandle for the interrupt controller
+   that services interrupts for this device
+ - interrupts: Should contain the core's combined interrupt signal
+ - phy-mode: See ethernet.txt file in the same directory
++- resets: Phandle and reset specifiers for each entry in reset-names, in the
++  same order. See ../reset/reset.txt.
++- reset-names: May contain any/all of the following depending on the IP
++  configuration, in any order:
++  - "eqos". The reset to the entire module. The HW signal name is hreset_n
++    (AHB) or aresetn_i (AXI).
++
++  The following compatible values require the following set of resets:
++  (the reset properties may be omitted if empty)
++  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10":
++    - "eqos".
++  - "axis,artpec6-eqos", "snps,dwc-qos-ethernet-4.10":
++    - None.
+ 
+ Optional properties:
+ - dma-coherent: Present if dma operations are coherent
+ - mac-address: See ethernet.txt in the same directory
+ - local-mac-address: See ethernet.txt in the same directory
++- phy-reset-gpios: Phandle and specifier for any GPIO used to reset the PHY.
++  See ../gpio/gpio.txt.
+ - snps,en-lpi: If present it enables use of the AXI low-power interface
+ - snps,write-requests: Number of write requests that the AXI port can issue.
+   It depends on the SoC configuration.
+@@ -52,6 +118,7 @@ ethernet2@40010000 {
+ 	reg = <0x40010000 0x4000>;
+ 	phy-handle = <&phy2>;
+ 	phy-mode = "gmii";
++	phy-reset-gpios = <&gpioctlr 43 GPIO_ACTIVE_LOW>;
+ 
+ 	snps,en-tx-lpi-clockgating;
+ 	snps,en-lpi;
+-- 
+2.9.3
