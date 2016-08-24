@@ -1,36 +1,49 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v7 14/14] Documentation: remove the constraint on the distances of node pairs
-Date: Wed, 24 Aug 2016 15:44:53 +0800
-Message-ID: <1472024693-12912-15-git-send-email-thunder.leizhen@huawei.com>
+Subject: [PATCH v7 03/14] arm64/numa: add nid check for memory block
+Date: Wed, 24 Aug 2016 15:44:42 +0800
+Message-ID: <1472024693-12912-4-git-send-email-thunder.leizhen@huawei.com>
 References: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>
-Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank
+ Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>
+Cc: Xinwei Hu <huxinwei@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>, Zefan Li <lizefan@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Update documentation. This limit is unneccessary.
+Use the same tactic to cpu and numa-distance nodes.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/numa.txt | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/of/of_numa.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/numa.txt b/Documentation/devicetree/bindings/numa.txt
-index 21b3505..c0ea4a7 100644
---- a/Documentation/devicetree/bindings/numa.txt
-+++ b/Documentation/devicetree/bindings/numa.txt
-@@ -48,7 +48,6 @@ distance (memory latency) between all numa nodes.
+diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+index 7b3fbdc..afaeb9c 100644
+--- a/drivers/of/of_numa.c
++++ b/drivers/of/of_numa.c
+@@ -75,6 +75,11 @@ static int __init of_numa_parse_memory_nodes(void)
+ 			 */
+ 			continue;
 
-   Note:
- 	1. Each entry represents distance from first node to second node.
--	The distances are equal in either direction.
- 	2. The distance from a node to self (local distance) is represented
- 	with value 10 and all internode distance should be represented with
- 	a value greater than 10.
++		if (nid >= MAX_NUMNODES) {
++			pr_warn("NUMA: Node id %u exceeds maximum value\n", nid);
++			return -EINVAL;
++		}
++
+ 		for (i = 0; !r && !of_address_to_resource(np, i, &rsrc); i++)
+ 			r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
+
 --
 2.5.0
