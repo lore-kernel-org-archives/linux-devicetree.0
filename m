@@ -1,7 +1,7 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v7 01/14] of/numa: remove a duplicated pr_debug information
-Date: Wed, 24 Aug 2016 15:44:40 +0800
-Message-ID: <1472024693-12912-2-git-send-email-thunder.leizhen@huawei.com>
+Subject: [PATCH v7 09/14] arm64/numa: support HAVE_SETUP_PER_CPU_AREA
+Date: Wed, 24 Aug 2016 15:44:48 +0800
+Message-ID: <1472024693-12912-10-git-send-email-thunder.leizhen@huawei.com>
 References: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,29 +12,107 @@ To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-This information will be printed in the subfunction numa_add_memblk.
-They are not the same, but very similar.
+To make each percpu area allocated from its local numa node. Without this
+patch, all percpu areas will be allocated from the node which cpu0 belongs
+to.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/of_numa.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm64/Kconfig   |  8 ++++++++
+ arch/arm64/mm/numa.c | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+)
 
-diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-index ed5a097..fb71b4e 100644
---- a/drivers/of/of_numa.c
-+++ b/drivers/of/of_numa.c
-@@ -88,10 +88,6 @@ static int __init of_numa_parse_memory_nodes(void)
- 			break;
- 		}
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index bc3f00f..2815af6 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -603,6 +603,14 @@ config USE_PERCPU_NUMA_NODE_ID
+ 	def_bool y
+ 	depends on NUMA
 
--		pr_debug("NUMA:  base = %llx len = %llx, node = %u\n",
--			 rsrc.start, rsrc.end - rsrc.start + 1, nid);
--
--
- 		r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
- 		if (r)
- 			break;
++config HAVE_SETUP_PER_CPU_AREA
++	def_bool y
++	depends on NUMA
++
++config NEED_PER_CPU_EMBED_FIRST_CHUNK
++	def_bool y
++	depends on NUMA
++
+ source kernel/Kconfig.preempt
+ source kernel/Kconfig.hz
+
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index 7b73808..5e44ad1 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -26,6 +26,7 @@
+ #include <linux/of.h>
+
+ #include <asm/acpi.h>
++#include <asm/sections.h>
+
+ struct pglist_data *node_data[MAX_NUMNODES] __read_mostly;
+ EXPORT_SYMBOL(node_data);
+@@ -131,6 +132,60 @@ void __init early_map_cpu_to_node(unsigned int cpu, int nid)
+ 	cpu_to_node_map[cpu] = nid;
+ }
+
++#ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
++unsigned long __per_cpu_offset[NR_CPUS] __read_mostly;
++EXPORT_SYMBOL(__per_cpu_offset);
++
++static int __init early_cpu_to_node(int cpu)
++{
++	return cpu_to_node_map[cpu];
++}
++
++static int __init pcpu_cpu_distance(unsigned int from, unsigned int to)
++{
++	if (early_cpu_to_node(from) == early_cpu_to_node(to))
++		return LOCAL_DISTANCE;
++	else
++		return REMOTE_DISTANCE;
++}
++
++static void * __init pcpu_fc_alloc(unsigned int cpu, size_t size,
++				       size_t align)
++{
++	int nid = early_cpu_to_node(cpu);
++
++	return  memblock_virt_alloc_try_nid(size, align,
++			__pa(MAX_DMA_ADDRESS), MEMBLOCK_ALLOC_ACCESSIBLE, nid);
++}
++
++static void __init pcpu_fc_free(void *ptr, size_t size)
++{
++	memblock_free_early(__pa(ptr), size);
++}
++
++void __init setup_per_cpu_areas(void)
++{
++	unsigned long delta;
++	unsigned int cpu;
++	int rc;
++
++	/*
++	 * Always reserve area for module percpu variables.  That's
++	 * what the legacy allocator did.
++	 */
++	rc = pcpu_embed_first_chunk(PERCPU_MODULE_RESERVE,
++				    PERCPU_DYNAMIC_RESERVE, PAGE_SIZE,
++				    pcpu_cpu_distance,
++				    pcpu_fc_alloc, pcpu_fc_free);
++	if (rc < 0)
++		panic("Failed to initialize percpu areas.");
++
++	delta = (unsigned long)pcpu_base_addr - (unsigned long)__per_cpu_start;
++	for_each_possible_cpu(cpu)
++		__per_cpu_offset[cpu] = delta + pcpu_unit_offsets[cpu];
++}
++#endif
++
+ /**
+  * numa_add_memblk - Set node id to memblk
+  * @nid: NUMA node ID of the new memblk
 --
 2.5.0
