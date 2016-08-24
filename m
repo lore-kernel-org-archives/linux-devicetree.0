@@ -1,158 +1,247 @@
-From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v7 08/14] arm64: numa: Use pr_fmt()
-Date: Wed, 24 Aug 2016 15:44:47 +0800
-Message-ID: <1472024693-12912-9-git-send-email-thunder.leizhen@huawei.com>
-References: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH v3 1/2] input: misc: Add generic input driver to read encoded GPIO lines
+Date: Wed, 24 Aug 2016 13:28:58 +0530
+Message-ID: <20160824075859.30979-2-vigneshr@ti.com>
+References: <20160824075859.30979-1-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
+In-Reply-To: <20160824075859.30979-1-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>
-Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Hung-yu Wu <hywu@google.com>, Grant Grundler <grundler@chromium.org>, S Twiss <stwiss.opensource@diasemi.com>, Vignesh R <vigneshr@ti.com>, Moritz Fischer <moritz.fischer@ettus.com>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, John Stultz <john.stultz@linaro.org>, "Andrew F . Davis" <afd@ti.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+Add a driver to read group of GPIO lines and provide its status as a
+numerical value as input event to the system. This will help in
+interfacing devices, that can be connected over GPIOs, that provide
+input to the system by driving GPIO lines connected to them like a
+rotary dial or a switch.
 
-Use pr_fmt to prefix kernel output, and remove duplicated msg
-of NUMA turned off.
+For example, a rotary switch can be connected to four GPIO lines. The
+status of the GPIO lines reflect the actual position of the rotary
+switch dial. For example, if dial points to 9, then the four GPIO lines
+connected to the switch will read HLLH(0b'1001 = 9). This value
+can be reported as an ABS_* event to the input subsystem.
 
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/mm/numa.c | 40 ++++++++++++++++++++--------------------
- 1 file changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index d97c6e2..7b73808 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -17,6 +17,8 @@
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
+v3: Fix comments by Andrew and Dmitry
+Link to v2: https://lkml.org/lkml/2016/8/23/79
 
-+#define pr_fmt(fmt) "numa: " fmt
+ .../devicetree/bindings/input/gpio-decoder.txt     |  23 ++++
+ drivers/input/misc/Kconfig                         |  12 ++
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/gpio_decoder.c                  | 134 +++++++++++++++++++++
+ 4 files changed, 170 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/gpio-decoder.txt
+ create mode 100644 drivers/input/misc/gpio_decoder.c
+
+diff --git a/Documentation/devicetree/bindings/input/gpio-decoder.txt b/Documentation/devicetree/bindings/input/gpio-decoder.txt
+new file mode 100644
+index 000000000000..14a77fb96cf0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/gpio-decoder.txt
+@@ -0,0 +1,23 @@
++* GPIO Decoder DT bindings
 +
- #include <linux/acpi.h>
- #include <linux/bootmem.h>
- #include <linux/memblock.h>
-@@ -38,10 +40,9 @@ static __init int numa_parse_early_param(char *opt)
- {
- 	if (!opt)
- 		return -EINVAL;
--	if (!strncmp(opt, "off", 3)) {
--		pr_info("%s\n", "NUMA turned off");
-+	if (!strncmp(opt, "off", 3))
- 		numa_off = true;
--	}
++Required Properties:
++- compatible: should be "gpio-decoder"
++- gpios: a spec of gpios (at least two) to be decoded to a number with
++  first entry representing the MSB.
 +
- 	return 0;
- }
- early_param("numa", numa_parse_early_param);
-@@ -110,7 +111,7 @@ static void __init setup_node_to_cpumask_map(void)
- 		set_cpu_numa_node(cpu, NUMA_NO_NODE);
-
- 	/* cpumask_of_node() will now work */
--	pr_debug("NUMA: Node to cpumask map for %d nodes\n", nr_node_ids);
-+	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
- }
-
- /*
-@@ -145,13 +146,13 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
-
- 	ret = memblock_set_node(start, (end - start), &memblock.memory, nid);
- 	if (ret < 0) {
--		pr_err("NUMA: memblock [0x%llx - 0x%llx] failed to add on node %d\n",
-+		pr_err("memblock [0x%llx - 0x%llx] failed to add on node %d\n",
- 			start, (end - 1), nid);
- 		return ret;
- 	}
-
- 	node_set(nid, numa_nodes_parsed);
--	pr_info("NUMA: Adding memblock [0x%llx - 0x%llx] on node %d\n",
-+	pr_info("Adding memblock [0x%llx - 0x%llx] on node %d\n",
- 			start, (end - 1), nid);
- 	return ret;
- }
-@@ -166,19 +167,18 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
- 	void *nd;
- 	int tnid;
-
--	pr_info("NUMA: Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
--			nid, start_pfn << PAGE_SHIFT,
--			(end_pfn << PAGE_SHIFT) - 1);
-+	pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
-+		nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
-
- 	nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
- 	nd = __va(nd_pa);
-
- 	/* report and initialize */
--	pr_info("NUMA: NODE_DATA [mem %#010Lx-%#010Lx]\n",
-+	pr_info("  NODE_DATA [mem %#010Lx-%#010Lx]\n",
- 		nd_pa, nd_pa + nd_size - 1);
- 	tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
- 	if (tnid != nid)
--		pr_info("NUMA: NODE_DATA(%d) on node %d\n", nid, tnid);
-+		pr_info("    NODE_DATA(%d) on node %d\n", nid, tnid);
-
- 	node_data[nid] = nd;
- 	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
-@@ -235,8 +235,7 @@ static int __init numa_alloc_distance(void)
- 			numa_distance[i * numa_distance_cnt + j] = i == j ?
- 				LOCAL_DISTANCE : REMOTE_DISTANCE;
-
--	pr_debug("NUMA: Initialized distance table, cnt=%d\n",
--			numa_distance_cnt);
-+	pr_debug("Initialized distance table, cnt=%d\n", numa_distance_cnt);
-
- 	return 0;
- }
-@@ -257,20 +256,20 @@ static int __init numa_alloc_distance(void)
- void __init numa_set_distance(int from, int to, int distance)
- {
- 	if (!numa_distance) {
--		pr_warn_once("NUMA: Warning: distance table not allocated yet\n");
-+		pr_warn_once("Warning: distance table not allocated yet\n");
- 		return;
- 	}
-
- 	if (from >= numa_distance_cnt || to >= numa_distance_cnt ||
- 			from < 0 || to < 0) {
--		pr_warn_once("NUMA: Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
-+		pr_warn_once("Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
- 			    from, to, distance);
- 		return;
- 	}
-
- 	if ((u8)distance != distance ||
- 	    (from == to && distance != LOCAL_DISTANCE)) {
--		pr_warn_once("NUMA: Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
-+		pr_warn_once("Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
- 			     from, to, distance);
- 		return;
- 	}
-@@ -297,7 +296,7 @@ static int __init numa_register_nodes(void)
- 	/* Check that valid nid is set to memblks */
- 	for_each_memblock(memory, mblk)
- 		if (mblk->nid == NUMA_NO_NODE || mblk->nid >= MAX_NUMNODES) {
--			pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
-+			pr_warn("Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
- 				mblk->nid, mblk->base,
- 				mblk->base + mblk->size - 1);
- 			return -EINVAL;
-@@ -368,9 +367,10 @@ static int __init dummy_numa_init(void)
- 	struct memblock_region *mblk;
-
- 	if (numa_off)
--		pr_info("NUMA disabled\n"); /* Forced off on command line. */
--	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
--	       0LLU, PFN_PHYS(max_pfn) - 1);
-+		pr_warn("NUMA turned off by user\n"); /* Forced off on command line. */
++Optional Properties:
++- decoder-max-value: Maximum possible value that can be reported by
++  the gpios.
++- linux,axis: the input subsystem axis to map to (ABS_X/ABS_Y).
++  Defaults to 0 (ABS_X).
 +
-+	pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
-+		0LLU, PFN_PHYS(max_pfn) - 1);
-
- 	for_each_memblock(memory, mblk) {
- 		ret = numa_add_memblk(0, mblk->base, mblk->base + mblk->size);
---
-2.5.0
++Example:
++	gpio-decoder0 {
++		compatible = "gpio-decoder";
++		gpios = <&pca9536 3 GPIO_ACTIVE_HIGH>,
++			<&pca9536 2 GPIO_ACTIVE_HIGH>,
++			<&pca9536 1 GPIO_ACTIVE_HIGH>,
++			<&pca9536 0 GPIO_ACTIVE_HIGH>;
++		linux,axis = <0>; /* ABS_X */
++		decoder-max-value = <9>;
++	};
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index efb0ca871327..7cdb89397d18 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -292,6 +292,18 @@ config INPUT_GPIO_TILT_POLLED
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called gpio_tilt_polled.
+ 
++config INPUT_GPIO_DECODER
++	tristate "Polled GPIO Decoder Input driver"
++	depends on GPIOLIB || COMPILE_TEST
++	select INPUT_POLLDEV
++	help
++	 Say Y here if you want driver to read status of multiple GPIO
++	 lines and report the encoded value as an absolute integer to
++	 input subsystem.
++
++	 To compile this driver as a module, choose M here: the module
++	 will be called gpio_decoder.
++
+ config INPUT_IXP4XX_BEEPER
+ 	tristate "IXP4XX Beeper support"
+ 	depends on ARCH_IXP4XX
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index 6a1e5e20fc1c..0b6d025f0487 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -35,6 +35,7 @@ obj-$(CONFIG_INPUT_DRV2667_HAPTICS)	+= drv2667.o
+ obj-$(CONFIG_INPUT_GP2A)		+= gp2ap002a00f.o
+ obj-$(CONFIG_INPUT_GPIO_BEEPER)		+= gpio-beeper.o
+ obj-$(CONFIG_INPUT_GPIO_TILT_POLLED)	+= gpio_tilt_polled.o
++obj-$(CONFIG_INPUT_GPIO_DECODER)	+= gpio_decoder.o
+ obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
+ obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
+ obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
+diff --git a/drivers/input/misc/gpio_decoder.c b/drivers/input/misc/gpio_decoder.c
+new file mode 100644
+index 000000000000..1c2191d4b143
+--- /dev/null
++++ b/drivers/input/misc/gpio_decoder.c
+@@ -0,0 +1,134 @@
++/*
++ * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * A generic driver to read multiple gpio lines and translate the
++ * encoded numeric value into an input event.
++ */
++
++#include <linux/device.h>
++#include <linux/gpio/consumer.h>
++#include <linux/input.h>
++#include <linux/input-polldev.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++
++struct gpio_decoder {
++	struct input_polled_dev *poll_dev;
++	struct gpio_descs *input_gpios;
++	struct device *dev;
++	u32 axis;
++	u32 last_stable;
++};
++
++static unsigned int gpio_decoder_get_gpios_state(struct gpio_decoder
++						 *decoder)
++{
++	struct gpio_descs *gpios = decoder->input_gpios;
++	unsigned int ret = 0;
++	int i, val;
++
++	for (i = 0; i < gpios->ndescs; i++) {
++		val = gpiod_get_value_cansleep(gpios->desc[i]);
++		if (val >= 0) {
++			ret = (ret << 1) | !!val;
++		} else {
++			dev_err(decoder->dev, "Error reading gpio\n");
++			break;
++		}
++	}
++
++	return ret;
++}
++
++static void gpio_decoder_poll_gpios(struct input_polled_dev *poll_dev)
++{
++	struct gpio_decoder *decoder = poll_dev->private;
++	unsigned int state = gpio_decoder_get_gpios_state(decoder);
++
++	if (state != decoder->last_stable) {
++		input_report_abs(poll_dev->input, decoder->axis, state);
++		input_sync(poll_dev->input);
++		decoder->last_stable = state;
++	}
++}
++
++static int gpio_decoder_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct gpio_decoder *decoder;
++	struct input_polled_dev *poll_dev;
++	u32  max;
++	int err;
++
++	decoder = devm_kzalloc(dev, sizeof(struct gpio_decoder), GFP_KERNEL);
++	if (!decoder)
++		return -ENOMEM;
++
++	device_property_read_u32(dev, "linux,axis", &decoder->axis);
++	decoder->input_gpios = devm_gpiod_get_array(dev, NULL, GPIOD_IN);
++	if (IS_ERR(decoder->input_gpios)) {
++		dev_err(dev, "unable to acquire input gpios\n");
++		return PTR_ERR(decoder->input_gpios);
++	}
++	if (decoder->input_gpios->ndescs < 2) {
++		dev_err(dev, "not enough gpios found\n");
++		return -EINVAL;
++	}
++
++	if (device_property_read_u32(dev, "decoder-max-value", &max))
++		max = BIT(decoder->input_gpios->ndescs);
++
++	decoder->dev = dev;
++	poll_dev = devm_input_allocate_polled_device(decoder->dev);
++	if (!poll_dev)
++		return -ENOMEM;
++
++	poll_dev->private = decoder;
++	poll_dev->poll = gpio_decoder_poll_gpios;
++	decoder->poll_dev = poll_dev;
++
++	poll_dev->input->name = pdev->name;
++	poll_dev->input->id.bustype = BUS_HOST;
++	input_set_abs_params(poll_dev->input, decoder->axis, 0, max, 0, 1);
++
++	err = input_register_polled_device(poll_dev);
++	if (err) {
++		dev_err(dev, "failed to register polled  device\n");
++		return err;
++	}
++	platform_set_drvdata(pdev, decoder);
++
++	return 0;
++}
++
++#ifdef CONFIG_OF
++static const struct of_device_id gpio_decoder_of_match[] = {
++	{ .compatible = "gpio-decoder", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, gpio_decoder_of_match);
++#endif
++
++static struct platform_driver gpio_decoder_driver = {
++	.probe		= gpio_decoder_probe,
++	.driver		= {
++		.name	= "gpio-decoder",
++		.of_match_table = of_match_ptr(gpio_decoder_of_match),
++	}
++};
++module_platform_driver(gpio_decoder_driver);
++
++MODULE_DESCRIPTION("GPIO decoder input driver");
++MODULE_AUTHOR("Vignesh R <vigneshr@ti.com>");
++MODULE_LICENSE("GPL v2");
+-- 
+2.9.2
