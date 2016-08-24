@@ -1,80 +1,78 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] dts patches for qcom tsens support
-Date: Wed, 24 Aug 2016 17:03:03 -0500
-Message-ID: <CAPBZ5QcY_0GjeEFBOOT5v5eZkdw0ij1rhFFHS_64W6hW4fS22A@mail.gmail.com>
-References: <1471411128-4002-1-git-send-email-rnayak@codeaurora.org>
- <20160817193340.GA18215@hector.attlocal.net> <20160824102256.GA14048@harukaze>
- <57BD90A3.3000106@codeaurora.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Wed, 24 Aug 2016 23:57:08 +0200
+Message-ID: <3621664.0azN3a5cxy@wuerfel>
+References: <cover.147018b3518.git.dalias@libc.org> <20160824212212.GB1775@remoulade> <20160824214444.GZ15995@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57BD90A3.3000106-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Nayak, Rajendra" <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Paolo Pisati <p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: base64
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20160824214444.GZ15995@brightrain.aerifal.cx>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 24 August 2016 at 07:18, Nayak, Rajendra <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->
-> On 8/24/2016 3:52 PM, Paolo Pisati wrote:
->>
->> On Wed, Aug 17, 2016 at 02:33:40PM -0500, Andy Gross wrote:
->>>
->>> On Wed, Aug 17, 2016 at 10:48:43AM +0530, Rajendra Nayak wrote:
->>>>
->>>> Hey Andy,
->>>>
->>>> This is a respin of v2 with some minor fixes pointed out by Rob.
->>>> Please pull these in for 4.9
->>>>
->>>> Thanks,
->>>> Rajendra
->>>
->>>
->>> I pulled these in.
->>
->>
->> Did you try to read the content of the qfprom from userspace?
->
->
-> Hi, no I haven't tried it, I can give it a try tomorrow when I
-> have access to my board and see whats going wrong, but I did
-> look at Andys for-next and the defconfig still does not have
-> either nvmem or qcom-qfprom drivers enabled.
-> Did you manually enable them? or are you seeing this with the drivers still
-> disabled?
+T24gV2VkbmVzZGF5LCBBdWd1c3QgMjQsIDIwMTYgNTo0NDo0NCBQTSBDRVNUIFJpY2ggRmVsa2Vy
+IHdyb3RlOgo+IE9uIFdlZCwgQXVnIDI0LCAyMDE2IGF0IDEwOjIyOjEzUE0gKzAxMDAsIE1hcmsg
+UnV0bGFuZCB3cm90ZToKPiA+IE9uIFdlZCwgQXVnIDI0LCAyMDE2IGF0IDA0OjUyOjI2UE0gLTA0
+MDAsIFJpY2ggRmVsa2VyIHdyb3RlOgo+ID4gQXMgQXJuZCBhbmQgb3RoZXJzIG1lbnRpb25lZCwg
+dGhlIHZhc3RseSBjb21tb24gY2FzZSBpcyB0aGF0IHRoZSBlbmRpYW5uZXNzIG9mCj4gPiBDUFVz
+IGFuZCBkZXZpY2VzIGlzIG5vdCBmaXhlZCB0byBlYWNoIG90aGVyLCBhbmQgZGV2aWNlcyBhcmUg
+dHlwaWNhbGx5Cj4gPiBsaXR0bGUtZW5kaWFuLgo+IAo+IFNpbmNlIGl0J3Mgbm90IHVzZWQgaW4g
+b3RoZXIgZGVzaWducywgSSBjYW4ndCBzYXkgYW55dGhpbmcgbWVhbmluZ2Z1bAo+IGFib3V0IGhv
+dyBpdCBoeXBvdGhldGljYWxseSBtaWdodCBiZSwgYnV0IHRoZSBpbnRlbnQgb24gYWxsIGN1cnJl
+bnQKPiBhbmQgY3VycmVudGx5LXBsYW5uZWQgc3lzdGVtcyBpcyB0aGF0IDMyLWJpdCBsb2Fkcy9z
+dG9yZXMgYmUgcGVyZm9ybWVkCj4gdXNpbmcgdmFsdWVzIHRoYXQgYXJlIG1lYW5pbmdmdWwgYXMg
+dmFsdWVzIG9uIHRoZSBjcHUsIGkuZS4gd2l0aCBubwo+IGJ5dGUgc3dhcHBpbmcgcmVnYXJkbGVz
+cyBvZiBjcHUgZW5kaWFubmVzcy4gVGhlIGN1cnJlbnQgaGFyZHdhcmUgaXMKPiBkZXNpZ25lZCBh
+cyBiaWctZW5kaWFuLCBhbmQgdGhlIHByb3Bvc2VkIHBhdGNoZXMgZm9yIHN1cHBvcnRpbmcgbGl0
+dGxlCj4gZW5kaWFuIGp1c3QgaW52b2x2ZSBmbGlwcGluZyB0aGUgbG93IGJpdHMgb2YgdGhlIGFk
+ZHJlc3MgZm9yIDE2LSBhbmQKPiA4LWJpdCBhY2Nlc3NlcyAobm90IHJlbGV2YW50IHRvIG1taW8g
+cmVnaXN0ZXJzIHRoYXQgYXJlIG9ubHkKPiBhY2Nlc3NpYmxlIGluIDMyLWJpdCB1bml0cykuCj4K
+PiA+ID4gPiAKPiA+ID4gPiBFeGNlcHRpb25zIHRvIHRoaXMgYXJlOgo+ID4gPiA+IAo+ID4gPiA+
+ICogU29tZSBhcmNoaXRlY3R1cmVzIChlLmcuIFBvd2VyUEMpIHR5cGljYWxseSBydW4gYmlnLWVu
+ZGlhbiBjb2RlLAo+ID4gPiA+ICAgYW5kIGhhcmR3YXJlIGRlc2lnbmVycyBkZWNpZGVkIHRvIG1h
+a2UgdGhlIE1NSU8gcmVnaXN0ZXJzIHRoZQo+ID4gPiA+ICAgc2FtZS4gSW4gdGhpcyBjYXNlLCB5
+b3UgY2FuIGdlbmVyYWxseSB1c2UgaW9yZWFkMzJfYmUvaW93cml0ZTMyX2JlLgo+ID4gPiAKPiA+
+ID4gVGhpcyBpcyBzb21ldGhpbmcgbGlrZSBvdXIgY2FzZSwgYnV0IHRoZSBtbWlvIHJlZ2lzdGVy
+cyBhcmUgYWNjZXNzZWQKPiA+ID4gYXMgMzItYml0IHZhbHVlcyBhbmQgdGhlIGVuZGlhbm5lc3Mg
+ZG9lcyBub3QgY29tZSBpbnRvIHBsYXkuIAo+ID4gCj4gPiBUaGlzIHJlYWxseSBkZXBlbmRzIG9u
+IHlvdSBlbmRpYW5uZXNzIG1vZGVsLCBidXMsIGV0Yy4gVGhlIGFib3ZlIHNvdW5kcyBsaWtlCj4g
+PiBCRTMyIHJhdGhlciB0aGFuIEJFOCwgYXNzdW1pbmcgSSd2ZSB1bmRlcnN0b29kIGNvcnJlY3Rs
+eSwgd2hpY2ggaXMgYW4gdW51c3VhbAo+ID4gY2FzZSBub3dhZGF5cy4KCkNvcnJlY3QsIHdoaWNo
+IGlzIHRoZSBsYXN0IGNhc2UgSSBoYWQgaW4gbXkgbGlzdCwgbm90IHRoZSBmaXJzdCBvbmU6Cgo+
+ID4gPiAqIFNvbWUgKHVzdWFsbHkgdmVyeSBvbGQpIFNvQ3MgaGF2ZSBjb25maWd1cmFibGUgZW5k
+aWFuZXNzLCBidXQKPiA+ID4gICBkb24ndCBhY3R1YWxseSBjaGFuZ2UgdGhlIGJlaGF2aW9yIG9m
+IHRoZSBTb0Mgb3IgdGhlIE1NSU8gZGV2aWNlcywKPiA+ID4gICBidXQgb25seSBmbGlwIHRoZSBh
+ZGRyZXNzIGxpbmVzIG9uIHRoZSBtZW1vcnkgaW50ZXJmYWNlLgo+ID4gPiAgIFRoaXMgaXMgc2lt
+aWxhciB0byB0aGUgcHJldmlvdXMgb25lLCBidXQgaGFzIGFkZGl0aW9uYWwgcHJvYmxlbXMKPiA+
+ID4gICB3aXRoIEZJRk8gcmVnaXN0ZXJzLiBZb3UgZ2VuZXJhbGx5IGNhbm5vdCB1c2UgcG9ydGFi
+bGUgZHJpdmVycwo+ID4gPiAgIGhlcmUuAAoKV2l0aCB5b3VyIGRlc2NyaXB0aW9uIGFib3ZlLCB0
+aGF0IHdvdWxkIHByb2JhYmx5IGJlIGNhbGxlZCBMRTMyLCBnaXZlbgp0aGF0IHRoZSBuYXRpdmUg
+b3JkZXJpbmcgaXMgYmlnLWVuZGlhbiwgYW5kIHRoZSBsaXR0bGUtZW5kaWFuIG1vZGUKaXMgb25s
+eSBhcHByb3hpbWF0ZWQgdXNpbmcgYWRkcmVzcyBtYWdpYy4gQVJNIEJFMzIgbW9kZSAoZS5nLiBv
+biBJWFA0eHgpCmRpZCBpdCB0aGUgb3RoZXIgd2F5IHJvdW5kLgoKPiBJJ20gbm90IGZhbWlsaWFy
+IHdpdGggdGhvc2UgY2xhc3NpZmljYXRpb25zLCBidXQgZnJvbSB3aGF0IEkgY2FuIHRlbGwsCj4g
+QkUzMiBkZXNjcmliZXMgaXQgY29ycmVjdGx5LiBJJ2xsIHNlZSBpZiBJIGNhbiBnZXQgc29tZW9u
+ZSB0byB2ZXJpZnkKPiB0aGlzLiBJcyB0aGVyZSBhIHJlYXNvbiBpdCdzIG5vdCB3aWRlbHkgdXNl
+ZCBhbnltb3JlPyBQZXJoYXBzCj4gc29tZXRoaW5nIHJlbGF0ZWQgdG8gc3VwcG9ydGluZyBtaXNh
+bGlnbmVkIHdvcmQtc2l6ZWQgbG9hZHMvc3RvcmVzPwoKVGhlIG1haW4gcHJvYmxlbSBJIHNlZSBp
+cyB0aGF0IHlvdSBjYW4ndCBlYXNpbHkgdXNlIE1NSU8gcmVnaXN0ZXJzIHRoYXQKYXJlIG5vdCAz
+Mi1iaXQgd2lkZSAtLSB5b3UgZW5kIHVwIGhhdmluZyB0byBmbGlwIG5vdCBqdXN0IHRoZSByZWdp
+c3Rlcgpjb250ZW50cyBidXQgYWxzbyB0aGUgbG93ZXIgYml0cyBvZiB0aGUgYWRkcmVzcyBpbiBv
+cmRlciB0byByZWFjaAp0aGUgcmlnaHQgY29udGVudHMgb2YgdGhlIHJlZ2lzdGVyLgoKSWYgeW91
+IGNhbiBndWFyYW50ZWUgdGhhdCBhbGwgcmVnaXN0ZXJzIGFyZSAzMi1iaXQgd2lkZSwgeW91IGNh
+bgpjcmVhdGUgYSBoZWFkZXIgZmlsZSB3aXRoIHlvdXIgb3duIE1NSU8gYWNjZXNzb3JzIHRoYXQg
+d3JhcCBhcm91bmQKcmVhZGwvd3JpdGUgb3IgaW9yZWFkMzJfYmUvaW93cml0ZTMyX2JlIGRlcGVu
+ZGluZyBvbiB0aGUga2VybmVsCmVuZGlhbmVzcywgYW5kIGRvbid0IHByb3ZpZGUgcmVhZGIvd3Jp
+dGViIG9yIHJlYWR3L3dyaXRldyB3cmFwcGVycy4KCkhvd2V2ZXIsIHdoYXQgZXZlcnlvbmUgZWxz
+ZSBkb2VzIHRoZXNlIGRheXMgaXMgdG8gZmxpcCB0aGUgcmVnaXN0ZXIKdmFsdWVzIGluIGxvYWQv
+c3RvcmUgaW5zdHJ1Y3Rpb25zIHdoZW4gdGhlIG9wcG9zaXRlIGVuZGlhbmVzcyBpcwpzZWxlY3Rl
+ZCwgb3IgdG8gaGF2ZSB0d28gc2V0cyBvZiBsb2FkL3N0b3JlIGluc3RydWN0aW9ucyBhbmQgbGVh
+dmUKaXQgdXAgdG8gdGhlIGNvbXBpbGVyIHRvIHBpY2sgd2hpY2ggb25lIHRvIHVzZSAocHJvYmFi
+bHkgbm90IAphbiBvcHRpb24gZm9yIHlvdSwgc2luY2UgeW91IHVzZSBhbiBleGlzdGluZyBpbnN0
+cnVjdGlvbiBzZXQpLgpJZiB5b3UgZG8gdGhhdCwgYWxsIHBvcnRhYmxlIGRldmljZSBkcml2ZXJz
+IHNob3VsZCB3b3JrIGZpbmUKb24geW91ciBhcmNoaXRlY3R1cmUuCgoJQXJuZA==
 
-I merged my for-next with the current next and enabled the options.  I
-reproduced Paolo's problem.  It feels like either an access issue,
-alignment issue (i tried ioread32 which didnt work).  It fails
-regardless of the TSENS being enabled.
 
->
->
->>
->> $ uname -a
->> Linux dragon410c 4.8.0-rc1+ #6 SMP PREEMPT Wed Aug 24 11:11:02 CEST 2016
->> aarch64
->> aarch64 aarch64 GNU/Linux
->> $ lsmod
->> Module                  Size  Used by
->> nvmem_qfprom           16384  0
->> nvmem_core             24576  1 nvmem_qfprom
->> $ ls -la /sys/bus/nvmem/devices/
->> total 0
->> drwxr-xr-x 2 root root 0 Aug 24 10:17 .
->> drwxr-xr-x 4 root root 0 Aug 24 10:15 ..
->> lrwxrwxrwx 1 root root 0 Aug 24 10:17 qfprom0 ->
->> ../../../devices/platform/soc/5c000.qfprom/qfprom0
->> $ cat /sys/bus/nvmem/devices/qfprom0/nvmem
->>
->> [spontaneous reboot]
->>
->> This using agross's for-next tree as of today ("54ba896 Merge branch
->> 'arm64-defconfig-for-4.9' into all-for-4.8") and defconfig.
->>
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
