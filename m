@@ -1,107 +1,84 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Thu, 25 Aug 2016 15:20:11 -0400
-Message-ID: <20160825192011.GD15995@brightrain.aerifal.cx>
-References: <cover.147018b3518.git.dalias@libc.org>
- <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
- <57BDCE5D.2050609@linaro.org>
- <20160824174001.GW15995@brightrain.aerifal.cx>
- <alpine.DEB.2.20.1608250947120.5714@nanos>
- <20160825145650.GA15995@brightrain.aerifal.cx>
- <20160825163805.GA8524@remoulade>
- <20160825175135.GC15995@brightrain.aerifal.cx>
- <20160825182053.GA15000@remoulade>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160825182053.GA15000@remoulade>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: [PATCH v4 15/16] ARM64: dts: Add PSCI cpuidle support for MSM8916
+Date: Thu, 25 Aug 2016 13:51:45 -0600
+Message-ID: <1472154706-40119-16-git-send-email-lina.iyer@linaro.org>
+References: <1472154706-40119-1-git-send-email-lina.iyer@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1472154706-40119-1-git-send-email-lina.iyer@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, sudeep.holla@arm.com, Juri.Lelli@arm.com, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 25, 2016 at 07:21:13PM +0100, Mark Rutland wrote:
-> On Thu, Aug 25, 2016 at 01:51:35PM -0400, Rich Felker wrote:
-> > On Thu, Aug 25, 2016 at 05:38:06PM +0100, Mark Rutland wrote:
-> > > On Thu, Aug 25, 2016 at 10:56:50AM -0400, Rich Felker wrote:
-> > > > On Thu, Aug 25, 2016 at 10:07:08AM +0200, Thomas Gleixner wrote:
-> > > > Nominally it uses the same range of hardware interrupt numbers for all
-> > > > (presently both) cpus, but some of them get delivered to a specific
-> > > > cpu associated with the event (presently, IPI and timer; IPI is on a
-> > > > fixed number at synthesis time but timer is runtime configurable)
-> > > > while others are conceptually deliverable to either cpu (presently
-> > > > only delivered to cpu0, but that's treated as an implementation
-> > > > detail).
-> > > 
-> > > Given you say it's delivered to the CPU associated with the event (and you have
-> > > different PIT bases per-cpu), it sounds like your timer interrupt is percpu,
-> > > it's just that the hwirq number can be chosen by software.
-> > 
-> > It's what I would call percpu in the hardware, but I'm not convinced
-> > that the Linux irq subsystem's "percpu" stuff models it in a way
-> > that fits the hw, nor that it's in any way necessary.
-> 
-> My understanding was that you used the same hwirq number to handle interrupts
-> from per-cpu resources being delivered to their relevant CPUs, independently of
-> each other.
-> 
-> That in my mind is a perfect match.
-> 
-> The only difference, as I've stated a number of times, seems to be that you can
-> choose the hwirq number from software.
+Add device bindings for CPUs to suspend using PSCI as the enable-method.
 
-I don't understand where you're getting that from. The timer irq
-number can be chosen from software, but by convention the device tree
-provides an otherwise-unoccupied irq number to be used. The IPI irq
-cannot be chosen by software; it's hard-coded at synthesis time.
-Either way, though, I don't see how being able to choose the number
-from software would impact the situation.
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-The reason I don't think the current percpu irq request framework is
-well-suited is that, unlike ARM, we don't have any particular set of
-irq numbers that are designated as percpu vs global. In theory the DT
-could be extended to provide that information somehow, but it's not
-information you need to actually be able to use the hardware; if it
-were added, it would just be satisfying the Linux irq subsystem's (imo
-gratuitous) desire to know.
-
->From my perspective, a hwirq being percpu is logically a property that
-only the driver for the attached hardware needs to be aware of. In
-fact the drivers using the percpu request already encode this, but
-there's an unnecessary requirement that the irqchip driver also have
-this knowledge.
-
-> > > > It currently works requesting the irq with flags that ensure the
-> > > > handler runs on the same cpu it was delivered on, without using any
-> > > > other percpu irq framework. If you have concerns about ways this could
-> > > > break and want me to make the drivers do something else, I'm open to
-> > > > suggestions.
-> > > 
-> > > As I suggested, I don't think that this is right, and you need some mechanism
-> > > to describe to the kernel that the interrupt is percpu (e.g. a flag in the
-> > > interrupt-specifier in DT).
-> > 
-> > Thomas seemed to think it's okay as-is. Can you describe what you
-> > expect could go wrong by using request_irq rather than the ARM-style
-> > percpu irq framework?
-> 
-> The percpu irq code is designed to expect a hwirq number being shared by
-> banked, cpu-local interrupts, the regular request_irq code is not. Even if the
-> latter happens to work today for your use-case, that is not by design.
-> 
-> Relying on non-deliberate properties of request_irq makes it far harder for the
-> generic code to be altered in future, with global vs percpu locking,
-> synchronisation, accounting, etc being broken.
-
-I can see how the irq subsystem wrongly thinking an irq is percpu when
-it's actually global could cause problems (missing locking, etc.) but
-I fail to see how the opposite could. In an abstract sense, percpu
-irqs are just a special case of global ones. The general
-infrastructure has no reason to care whether it was delivered on cpuN
-because the event was associated with cpuN, or because cpuN happened
-to be where the hw decided to deliver it. Only the actual
-driver/handler needs to know that the cpu on which it was delivered is
-meaningful.
-
-Rich
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 9681200..3029773 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -62,6 +62,8 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0>;
+ 			next-level-cache = <&L2_0>;
++			enable-method = "psci";
++			cpu-idle-states = <&CPU_SPC>;
+ 		};
+ 
+ 		CPU1: cpu@1 {
+@@ -69,6 +71,8 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x1>;
+ 			next-level-cache = <&L2_0>;
++			enable-method = "psci";
++			cpu-idle-states = <&CPU_SPC>;
+ 		};
+ 
+ 		CPU2: cpu@2 {
+@@ -76,6 +80,8 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x2>;
+ 			next-level-cache = <&L2_0>;
++			enable-method = "psci";
++			cpu-idle-states = <&CPU_SPC>;
+ 		};
+ 
+ 		CPU3: cpu@3 {
+@@ -83,12 +89,30 @@
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x3>;
+ 			next-level-cache = <&L2_0>;
++			enable-method = "psci";
++			cpu-idle-states = <&CPU_SPC>;
+ 		};
+ 
+ 		L2_0: l2-cache {
+ 		      compatible = "cache";
+ 		      cache-level = <2>;
+ 		};
++
++		idle-states {
++			CPU_SPC: spc {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x40000002>;
++				entry-latency-us = <130>;
++				exit-latency-us = <150>;
++				min-residency-us = <2000>;
++				local-timer-stop;
++			};
++		};
++	};
++
++	psci {
++		compatible = "arm,psci-1.0";
++		method = "smc";
+ 	};
+ 
+ 	timer {
+-- 
+2.7.4
