@@ -1,78 +1,89 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/5] drm: add SimpleDRM driver
-Date: Thu, 25 Aug 2016 08:09:53 -0500
-Message-ID: <CAL_JsqL3xc9QwPsDh0GgcC2NjTFE1NLkwy1Ypyn34iNh7atJ+Q@mail.gmail.com>
-References: <1471897525-31118-1-git-send-email-noralf@tronnes.org>
- <1471897525-31118-4-git-send-email-noralf@tronnes.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1471897525-31118-4-git-send-email-noralf@tronnes.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2 v2] iio: gyro: Add MPU-3050 device tree bindings
+Date: Thu, 25 Aug 2016 15:16:36 +0200
+Message-ID: <1472130997-27198-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Crestez Dan Leonard <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBBdWcgMjIsIDIwMTYgYXQgMzoyNSBQTSwgTm9yYWxmIFRyw7hubmVzIDxub3JhbGZA
-dHJvbm5lcy5vcmc+IHdyb3RlOgo+IFRoZSBTaW1wbGVEUk0gZHJpdmVyIGJpbmRzIHRvIHNpbXBs
-ZS1mcmFtZWJ1ZmZlciBkZXZpY2VzIGFuZCBwcm92aWRlcyBhCj4gRFJNL0tNUyBBUEkuIEl0IHBy
-b3ZpZGVzIG9ubHkgYSBzaW5nbGUgQ1JUQytlbmNvZGVyK2Nvbm5lY3RvciBjb21iaW5hdGlvbgo+
-IHBsdXMgb25lIGluaXRpYWwgbW9kZS4KPgo+IFVzZXJzcGFjZSBjYW4gY3JlYXRlIGR1bWItYnVm
-ZmVycyB3aGljaCBjYW4gYmUgYmxpdCBpbnRvIHRoZSByZWFsCj4gZnJhbWVidWZmZXIgc2ltaWxh
-ciB0byBVREwuIE5vIGFjY2VzcyB0byB0aGUgcmVhbCBmcmFtZWJ1ZmZlciBpcyBhbGxvd2VkCj4g
-KGNvbXBhcmVkIHRvIGVhcmxpZXIgdmVyc2lvbiBvZiB0aGlzIGRyaXZlcikgdG8gYXZvaWQgc2Vj
-dXJpdHkgaXNzdWVzLgo+IEZ1cnRoZXJtb3JlLCB0aGlzIHdheSB3ZSBjYW4gc3VwcG9ydCBhcmJp
-dHJhcnkgbW9kZXMgYXMgbG9uZyBhcyB3ZSBoYXZlIGEKPiBjb252ZXJzaW9uLWhlbHBlci4KPgo+
-IFRoZSBkcml2ZXIgd2FzIG9yaWdpbmFsbHkgd3JpdHRlbiBieSBEYXZpZCBIZXJybWFubiBpbiAy
-MDE0Lgo+IE15IG1haW4gY29udHJpYnV0aW9uIGlzIHRvIG1ha2UgdXNlIG9mIGRybV9zaW1wbGVf
-a21zX2hlbHBlciBhbmQKPiByZXdvcmsgdGhlIHByb2JlIHBhdGggdG8gYXZvaWQgdXNlIG9mIHRo
-ZSBkZXByZWNhdGVkIGRybV9wbGF0Zm9ybV9pbml0KCkKPiBhbmQgZHJtX2RyaXZlci57bG9hZCx1
-bmxvYWR9KCkuCj4gQWRkaXRpb25zIGhhdmUgYWxzbyBiZWVuIG1hZGUgZm9yIGxhdGVyIGNoYW5n
-ZXMgdG8gdGhlIERldmljZSBUcmVlIGJpbmRpbmcKPiBkb2N1bWVudCwgbGlrZSBzdXBwb3J0IGZv
-ciBjbG9ja3MsIHJlZ3VsYXRvcnMgYW5kIGhhdmluZyB0aGUgbm9kZSB1bmRlcgo+IC9jaG9zZW4u
-IFRoaXMgY29kZSB3YXMgbGlmdGVkIHZlcmJhdGltIGZyb20gc2ltcGxlZmIuYy4KPgo+IENjOiBk
-aC5oZXJybWFubkBnbWFpbC5jb20KPiBDYzogbGlidkBza3luZXQuYmUKPiBTaWduZWQtb2ZmLWJ5
-OiBOb3JhbGYgVHLDuG5uZXMgPG5vcmFsZkB0cm9ubmVzLm9yZz4KClsuLi5dCgo+ICsgICAgICAg
-LyogQ291bnQgdGhlIG51bWJlciBvZiByZWd1bGF0b3Igc3VwcGxpZXMgKi8KPiArICAgICAgIGZv
-cl9lYWNoX3Byb3BlcnR5X29mX25vZGUobnAsIHByb3ApIHsKPiArICAgICAgICAgICAgICAgcCA9
-IHN0cnN0cihwcm9wLT5uYW1lLCBTVVBQTFlfU1VGRklYKTsKPiArICAgICAgICAgICAgICAgaWYg
-KHAgJiYgcCAhPSBwcm9wLT5uYW1lKQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvdW50Kys7
-Cj4gKyAgICAgICB9CgpUaGUgcmVndWxhdG9yIEFQSSBzaG91bGQgaGF2ZSBmdW5jdGlvbnMgZm9y
-IHRoaXMgcmF0aGVyIHRoYW4gb3BlbiBjb2RpbmcgaXQuCgo+ICsKPiArICAgICAgIGlmICghY291
-bnQpCj4gKyAgICAgICAgICAgICAgIHJldHVybiAwOwo+ICsKPiArICAgICAgIHNkcm0tPnJlZ3Vs
-YXRvcnMgPSBkZXZtX2tjYWxsb2MoJnBkZXYtPmRldiwgY291bnQsCj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZihzdHJ1Y3QgcmVndWxhdG9yICopLAo+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBHRlBfS0VSTkVMKTsKPiArICAg
-ICAgIGlmICghc2RybS0+cmVndWxhdG9ycykKPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9N
-RU07Cj4gKwo+ICsgICAgICAgLyogR2V0IGFsbCB0aGUgcmVndWxhdG9ycyAqLwo+ICsgICAgICAg
-Zm9yX2VhY2hfcHJvcGVydHlfb2Zfbm9kZShucCwgcHJvcCkgewo+ICsgICAgICAgICAgICAgICBj
-aGFyIG5hbWVbMzJdOyAvKiAzMiBpcyBtYXggc2l6ZSBvZiBwcm9wZXJ0eSBuYW1lICovCj4gKwo+
-ICsgICAgICAgICAgICAgICBwID0gc3Ryc3RyKHByb3AtPm5hbWUsIFNVUFBMWV9TVUZGSVgpOwo+
-ICsgICAgICAgICAgICAgICBpZiAoIXAgfHwgcCA9PSBwcm9wLT5uYW1lKQo+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIGNvbnRpbnVlOwoKVGhpcyB0b28uCgo+ICsKPiArICAgICAgICAgICAgICAg
-c3RybGNweShuYW1lLCBwcm9wLT5uYW1lLAo+ICsgICAgICAgICAgICAgICAgICAgICAgIHN0cmxl
-bihwcm9wLT5uYW1lKSAtIHN0cmxlbihTVVBQTFlfU1VGRklYKSArIDEpOwo+ICsgICAgICAgICAg
-ICAgICByZWd1bGF0b3IgPSBkZXZtX3JlZ3VsYXRvcl9nZXRfb3B0aW9uYWwoJnBkZXYtPmRldiwg
-bmFtZSk7CgpbLi4uXQoKPiArICAgICAgIGlmIChJU19FTkFCTEVEKENPTkZJR19PRl9BRERSRVNT
-KSAmJiBvZl9jaG9zZW4pIHsKPiArICAgICAgICAgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpu
-cDsKPiArCj4gKyAgICAgICAgICAgICAgIGZvcl9lYWNoX2NoaWxkX29mX25vZGUob2ZfY2hvc2Vu
-LCBucCkgewo+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmIChvZl9kZXZpY2VfaXNfY29tcGF0
-aWJsZShucCwgInNpbXBsZS1mcmFtZWJ1ZmZlciIpKQoKUmF0aGVyIHRoYW4gZXhwb3J0aW5nIG9m
-X2Nob3NlbiwgdGhpcyB3aG9sZSBjaHVuayBjYW4gYmUgcmVwbGFjZWQgd2l0aAphIG9mX2ZpbmRf
-Y29tcGF0aWJsZV9ub2RlIGNhbGwuIFllcywgdGhhdCB3b3VsZCBtYXRjaCBpZgpzaW1wbGUtZnJh
-bWVidWZmZXIgZXhpc3RzIHNvbWV3aGVyZSBlbHNlIGluIHRoZSBEVCwgYnV0IGl0IGlzIG5vdCB0
-aGUKa2VybmVsJ3Mgam9iIHRvIGRvIERUIHZhbGlkYXRpb24uCgo+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgb2ZfcGxhdGZvcm1fZGV2aWNlX2NyZWF0ZShucCwgTlVMTCwgTlVMTCk7
-Cj4gKyAgICAgICAgICAgICAgIH0KPiArICAgICAgIH0KClJvYgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This adds device tree bindings for the MPU-3050 gyroscope. Since it
+is the first set of bindings for a gyroscope, the folder for it
+is also created.
+
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v1->v2:
+- Not yet convered to use i2c-gate as I'm waiting for that
+  patch set to stabilize.
+- No changes, just reposting to keep the series together.
+---
+ .../bindings/iio/gyroscope/invensense,mpu3050.txt  | 54 ++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
+
+diff --git a/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
+new file mode 100644
+index 000000000000..e17231a5f4b5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
+@@ -0,0 +1,54 @@
++Invensense MPU-3050 Gyroscope device tree bindings
++
++Required properties:
++  - compatible : should be "invensense,mpu3050"
++  - reg : the I2C address of the sensor
++  - #address-cells : should be <1>, used to indicate the optional
++    I2C mux node
++  - #size-cells : should be <0>
++
++Optional properties:
++  - interrupt-parent : should be the phandle for the interrupt controller
++  - interrupts : interrupt mapping for the trigger interrupt from the
++    internal oscillator. The following IRQ modes are supported:
++    IRQ_TYPE_EDGE_RISING, IRQ_TYPE_EDGE_FALLING, IRQ_TYPE_LEVEL_HIGH and
++    IRQ_TYPE_LEVEL_LOW. The driver should detect and configure the hardware
++    for the desired interrupt type.
++  - vdd-supply : supply regulator for the main power voltage.
++  - vlogic-supply : supply regulator for the signal voltage.
++  - mount-matrix : see iio/mount-matrix.txt
++
++Optional subnodes:
++  - The MPU-3050 will pass through and forward the I2C signals from the
++    incoming I2C bus, alternatively drive traffic to a slave device (usually
++    an accelerometer) on its own initiative. Therefore is supports a subnode
++    i2c master node. This node is like any I2C master and should contain:
++    #address-cells = <1>;
++    #size-cells = <0>;
++    reg = <0>;
++
++Example:
++
++mpu3050@68 {
++	compatible = "invensense,mpu3050";
++	reg = <0x68>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	interrupt-parent = <&foo>;
++	interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
++	vdd-supply = <&bar>;
++	vlogic-supply = <&baz>;
++
++	/* External I2C interface */
++	i2c@0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0>;
++		fnord@18 {
++			compatible = "fnord";
++			reg = <0x18>;
++			interrupt-parent = <&foo>;
++			interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
++		};
++	};
++};
+-- 
+2.7.4
