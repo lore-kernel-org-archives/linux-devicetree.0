@@ -1,120 +1,88 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v3 3/6] clk: sunxi-ng: mux: support fixed pre-dividers on
- multiple parents
-Date: Thu, 25 Aug 2016 14:21:57 +0800
-Message-ID: <20160825062200.17206-4-wens@csie.org>
-References: <20160825062200.17206-1-wens@csie.org>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH v8 03/11] power: act8945a_charger: Remove "battery_temperature"
+Date: Thu, 25 Aug 2016 15:19:51 +0800
+Message-ID: <1472109599-21915-4-git-send-email-wenyou.yang@atmel.com>
+References: <1472109599-21915-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160825062200.17206-1-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1472109599-21915-1-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Some clocks on the A31 have fixed pre-dividers on multiple parents.
-Add support for them.
+Remove "battery_temperature" member, it is redundant, it is the
+hardware's responsibility to handle TH pin properly.
+It is unnecessary to use the dt property to check if there is
+a battery temperature monitor or not.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
 ---
-Changes since v2:
 
-  - Fixed up H3 changes for number of fixed pre-dividers.
+Changes in v8: None
+Changes in v7:
+ - Fix the missing negation sign.
 
-Changes since v1:
+Changes in v6: None
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
 
-  - Add field for number of fixed pre-dividers.
----
- drivers/clk/sunxi-ng/ccu-sun8i-h3.c | 10 +++++-----
- drivers/clk/sunxi-ng/ccu_mux.c      |  6 ++++--
- drivers/clk/sunxi-ng/ccu_mux.h      | 11 +++++++----
- 3 files changed, 16 insertions(+), 11 deletions(-)
+ drivers/power/supply/act8945a_charger.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
-index 9af359544110..4fa9374c2959 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
-@@ -184,15 +184,15 @@ static SUNXI_CCU_MP_WITH_MUX(apb2_clk, "apb2", apb2_parents, 0x058,
- 			     0);
+diff --git a/drivers/power/supply/act8945a_charger.c b/drivers/power/supply/act8945a_charger.c
+index 3f486c9..af00668 100644
+--- a/drivers/power/supply/act8945a_charger.c
++++ b/drivers/power/supply/act8945a_charger.c
+@@ -76,7 +76,6 @@ static const char *act8945a_charger_manufacturer = "Active-semi";
  
- static const char * const ahb2_parents[] = { "ahb1" , "pll-periph0" };
-+static const struct ccu_mux_fixed_prediv ahb2_fixed_predivs[] = {
-+	{ .index = 1, .div = 2 },
-+};
- static struct ccu_mux ahb2_clk = {
- 	.mux		= {
- 		.shift	= 0,
- 		.width	= 1,
--
--		.fixed_prediv	= {
--			.index	= 1,
--			.div	= 2,
--		},
-+		.fixed_predivs	= ahb2_fixed_predivs,
-+		.n_predivs	= ARRAY_SIZE(ahb2_fixed_predivs),
- 	},
+ struct act8945a_charger {
+ 	struct regmap *regmap;
+-	bool battery_temperature;
+ };
  
- 	.common		= {
-diff --git a/drivers/clk/sunxi-ng/ccu_mux.c b/drivers/clk/sunxi-ng/ccu_mux.c
-index 68b32f168a74..7b17e0c26b01 100644
---- a/drivers/clk/sunxi-ng/ccu_mux.c
-+++ b/drivers/clk/sunxi-ng/ccu_mux.c
-@@ -20,6 +20,7 @@ void ccu_mux_helper_adjust_parent_for_prediv(struct ccu_common *common,
+ static int act8945a_get_charger_state(struct regmap *regmap, int *val)
+@@ -138,8 +137,7 @@ static int act8945a_get_charge_type(struct regmap *regmap, int *val)
+ 	return 0;
+ }
+ 
+-static int act8945a_get_battery_health(struct act8945a_charger *charger,
+-				       struct regmap *regmap, int *val)
++static int act8945a_get_battery_health(struct regmap *regmap, int *val)
  {
- 	u16 prediv = 1;
- 	u32 reg;
-+	int i;
+ 	int ret;
+ 	unsigned int status;
+@@ -148,7 +146,7 @@ static int act8945a_get_battery_health(struct act8945a_charger *charger,
+ 	if (ret < 0)
+ 		return ret;
  
- 	if (!((common->features & CCU_FEATURE_FIXED_PREDIV) ||
- 	      (common->features & CCU_FEATURE_VARIABLE_PREDIV)))
-@@ -32,8 +33,9 @@ void ccu_mux_helper_adjust_parent_for_prediv(struct ccu_common *common,
+-	if (charger->battery_temperature && !(status & APCH_STATUS_TEMPDAT))
++	if (!(status & APCH_STATUS_TEMPDAT))
+ 		*val = POWER_SUPPLY_HEALTH_OVERHEAT;
+ 	else if (!(status & APCH_STATUS_INDAT))
+ 		*val = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
+@@ -188,8 +186,7 @@ static int act8945a_charger_get_property(struct power_supply *psy,
+ 		val->intval = POWER_SUPPLY_TECHNOLOGY_LION;
+ 		break;
+ 	case POWER_SUPPLY_PROP_HEALTH:
+-		ret = act8945a_get_battery_health(charger,
+-						  regmap, &val->intval);
++		ret = act8945a_get_battery_health(regmap, &val->intval);
+ 		break;
+ 	case POWER_SUPPLY_PROP_MODEL_NAME:
+ 		val->strval = act8945a_charger_model;
+@@ -235,9 +232,6 @@ static int act8945a_charger_config(struct device *dev,
+ 		return -EINVAL;
  	}
  
- 	if (common->features & CCU_FEATURE_FIXED_PREDIV)
--		if (parent_index == cm->fixed_prediv.index)
--			prediv = cm->fixed_prediv.div;
-+		for (i = 0; i < cm->n_predivs; i++)
-+			if (parent_index == cm->fixed_predivs[i].index)
-+				prediv = cm->fixed_predivs[i].div;
+-	charger->battery_temperature = of_property_read_bool(np,
+-				"active-semi,check-battery-temperature");
+-
+ 	chglev_pin = of_get_named_gpio_flags(np,
+ 				"active-semi,chglev-gpios", 0, &flags);
  
- 	if (common->features & CCU_FEATURE_VARIABLE_PREDIV)
- 		if (parent_index == cm->variable_prediv.index) {
-diff --git a/drivers/clk/sunxi-ng/ccu_mux.h b/drivers/clk/sunxi-ng/ccu_mux.h
-index b1e085612e5e..8eab1733eeac 100644
---- a/drivers/clk/sunxi-ng/ccu_mux.h
-+++ b/drivers/clk/sunxi-ng/ccu_mux.h
-@@ -5,15 +5,18 @@
- 
- #include "ccu_common.h"
- 
-+struct ccu_mux_fixed_prediv {
-+	u8	index;
-+	u16	div;
-+};
-+
- struct ccu_mux_internal {
- 	u8		shift;
- 	u8		width;
- 	const u8	*table;
- 
--	struct {
--		u8	index;
--		u16	div;
--	} fixed_prediv;
-+	const struct ccu_mux_fixed_prediv	*fixed_predivs;
-+	u8		n_predivs;
- 
- 	struct {
- 		u8	index;
 -- 
-2.9.3
+2.7.4
