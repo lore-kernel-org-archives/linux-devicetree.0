@@ -1,220 +1,67 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH V5] clk: bcm: Add driver for BCM53573 ILP clock
-Date: Thu, 25 Aug 2016 15:28:04 +0200
-Message-ID: <CACna6rwB8bPMqZ8Gz5x8WVMeB83T3J=D7dXsDpMO8YdNHFSKaA@mail.gmail.com>
-References: <20160823061745.8162-1-zajec5@gmail.com> <20160823062613.13865-1-zajec5@gmail.com>
- <20160824084738.GB6502@codeaurora.org>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v13 0/4] Mediatek MT8173 CMDQ support
+Date: Thu, 25 Aug 2016 19:12:57 +0530
+Message-ID: <CABb+yY2-cug=iwjTJEx_NQ9gj+8SZ1uHoD5hVGQDkQ7t5P=vSA@mail.gmail.com>
+References: <1472009252-1074-1-git-send-email-hs.liao@mediatek.com>
+ <20b10079-3ae2-9da9-1149-0bceabac9837@gmail.com> <1472132247.26044.23.camel@mtksdaap41>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160824084738.GB6502@codeaurora.org>
+In-Reply-To: <1472132247.26044.23.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Horng-Shyang Liao <hs.liao@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 24 August 2016 at 10:47, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 08/23, Rafa=C5=82 Mi=C5=82ecki wrote:
->> diff --git a/drivers/clk/bcm/clk-bcm53573-ilp.c b/drivers/clk/bcm/clk-bc=
-m53573-ilp.c
->> new file mode 100644
->> index 0000000..b7ac0eb
->> --- /dev/null
->> +++ b/drivers/clk/bcm/clk-bcm53573-ilp.c
->> @@ -0,0 +1,146 @@
->> +/*
->> + * Copyright (C) 2016 Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/clk.h>
+On Thu, Aug 25, 2016 at 7:07 PM, Horng-Shyang Liao <hs.liao@mediatek.com> wrote:
+> Hi Matthias,
 >
-> Is this include used?
-
-No. Good point.
-
-
->> +#include <linux/clk-provider.h>
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/slab.h>
->> +
->> +#define PMU_XTAL_FREQ_RATIO                  0x66c
->> +#define  XTAL_ALP_PER_4ILP                   0x00001fff
->> +#define  XTAL_CTL_EN                         0x80000000
->> +#define PMU_SLOW_CLK_PERIOD                  0x6dc
->> +
->> +struct bcm53573_ilp {
->> +     struct clk *clk;
->> +     struct clk_hw hw;
->> +     void __iomem *pmu;
->> +};
->> +
->> +static int bcm53573_ilp_enable(struct clk_hw *hw)
->> +{
->> +     struct bcm53573_ilp *ilp =3D container_of(hw, struct bcm53573_ilp,=
- hw);
->> +
->> +     writel(0x10199, ilp->pmu + PMU_SLOW_CLK_PERIOD);
->> +     writel(0x10000, ilp->pmu + 0x674);
+> On Wed, 2016-08-24 at 13:00 +0200, Matthias Brugger wrote:
+>> On 24/08/16 05:27, HS Liao wrote:
+> [...]
+>> > Changes since v12:
+>> >  - remove mediatek,gce from device tree
+>>
+>> Why? The binding got accepted by Rob.
 >
-> Is there a name for 0x674?
->> +
->> +     return 0;
->> +}
->> +
->> +static unsigned long bcm53573_ilp_recalc_rate(struct clk_hw *hw,
->> +                                           unsigned long parent_rate)
->> +{
->> +     struct bcm53573_ilp *ilp =3D container_of(hw, struct bcm53573_ilp,=
- hw);
->> +     void __iomem *pmu =3D ilp->pmu;
->> +     u32 last_val, cur_val;
->> +     u32 sum =3D 0, num =3D 0, loop_num =3D 0;
+> We can get cmdq dev from mailbox controller,
+> so we don't need mediatek,gce anymore.
 >
-> Should these just be plain ints? Do we care about sizes for these
-> variables?
+>> >
+>> > Best regards,
+>> > HS Liao
+>> >
+>> > HS Liao (4):
+>> >   dt-bindings: soc: Add documentation for the MediaTek GCE unit
+>> >   CMDQ: Mediatek CMDQ driver
+>> >   arm64: dts: mt8173: Add GCE node
+>> >   CMDQ: save more energy in idle
+>> >
+>> >  .../devicetree/bindings/soc/mediatek/gce.txt       |  44 +
+>> >  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  10 +
+>> >  drivers/soc/mediatek/Kconfig                       |  11 +
+>> >  drivers/soc/mediatek/Makefile                      |   1 +
+>> >  drivers/soc/mediatek/mtk-cmdq.c                    | 983 +++++++++++++++++++++
+>>
+>> The driver uses the mailbox framework, so it should live in the
+>> drivers/mailbox folder.
 >
->> +     u32 avg;
+> As you know, the maximum number of gce threads is 16.
+> However, we plan to support more clients in the future,
+> and they may need to use more than 16 gce threads.
 >
-> This one too.
-
-Right.
-
-
->> +
->> +     /* Enable measurement */
->> +     writel(XTAL_CTL_EN, pmu + PMU_XTAL_FREQ_RATIO);
->> +
->> +     /* Read initial value */
->> +     last_val =3D readl(pmu + PMU_XTAL_FREQ_RATIO) & XTAL_ALP_PER_4ILP;
->> +
->> +     /*
->> +      * At minimum we should loop for a bit to let hardware do the
->> +      * measurement. This isn't very accurate however, so for a better
->> +      * precision lets try getting 20 different values for and use aver=
-age.
->> +      */
->> +     while (num < 20) {
->> +             cur_val =3D readl(pmu + PMU_XTAL_FREQ_RATIO) & XTAL_ALP_PE=
-R_4ILP;
->> +
->> +             if (cur_val !=3D last_val) {
->> +                     /* Got different value, use it */
->> +                     sum +=3D cur_val;
->> +                     num++;
->> +                     loop_num =3D 0;
->> +                     last_val =3D cur_val;
->> +             } else if (++loop_num > 5000) {
->> +                     /* Same value over and over, give up */
->> +                     sum +=3D cur_val;
->> +                     num++;
->> +                     break;
->> +             }
+> For this issue, our plan is to let multiple clients share the same gce
+> thread; i.e. we will acquire gce thread for client dynamically by
+> internal policy in cmdq driver.
+> Unfortunately. mailbox channel has exclusive feature.
+> Quote from comment of mbox_request_channel().
+> "The channel is exclusively allocated and can't be used by another
+> client before the owner calls mbox_free_channel."
+> Therefore, we plan to remove mailbox framework from cmdq driver in the
+> future.
 >
-> Should there be a udelay() here? Or we're expected to tight loop
-> read the hardware? If so we should throw in a cpu_relax() here to
-> indicate tight loop.
->
->> +     }
->> +
->> +     /* Disable measurement to save power */
->> +     writel(0x0, pmu + PMU_XTAL_FREQ_RATIO);
->> +
->> +     avg =3D sum / num;
->> +
->> +     return parent_rate * 4 / avg;
->> +}
->> +
->> +static const struct clk_ops bcm53573_ilp_clk_ops =3D {
->> +     .enable =3D bcm53573_ilp_enable,
->
-> No disable? Or .is_enabled?
-
-The beauty of working without datasheets... I'll compare initial reg
-state with one after enabling and see if there is sth obvious.
-
-
->> +     .recalc_rate =3D bcm53573_ilp_recalc_rate,
->> +};
->> +
->> +static void bcm53573_ilp_init(struct device_node *np)
->> +{
->> +     struct bcm53573_ilp *ilp;
->> +     struct resource res;
->> +     struct clk_init_data init =3D { 0 };
->> +     const char *parent_name;
->> +     int index;
->> +     int err;
->> +
->> +     ilp =3D kzalloc(sizeof(*ilp), GFP_KERNEL);
->> +     if (!ilp)
->> +             return;
->> +
->> +     parent_name =3D of_clk_get_parent_name(np, 0);
->> +     if (!parent_name) {
->> +             err =3D -ENOENT;
->> +             goto err_free_ilp;
->> +     }
->> +
->> +     /* TODO: This looks generic, try making it OF helper. */
->> +     index =3D of_property_match_string(np, "reg-names", "pmu");
->> +     if (index < 0) {
->> +             err =3D index;
->> +             goto err_free_ilp;
->> +     }
->> +     err =3D of_address_to_resource(np, index, &res);
->> +     if (err)
->> +             goto err_free_ilp;
->> +     ilp->pmu =3D ioremap(res.start, resource_size(&res));
->> +     if (IS_ERR(ilp->pmu)) {
->> +             err =3D PTR_ERR(ilp->pmu);
->> +             goto err_free_ilp;
->> +     }
->> +
->> +     init.name =3D np->name;
->> +     init.ops =3D &bcm53573_ilp_clk_ops;
->> +     init.parent_names =3D &parent_name;
->> +     init.num_parents =3D 1;
->> +
->> +     ilp->hw.init =3D &init;
->> +     ilp->clk =3D clk_register(NULL, &ilp->hw);
->
-> please use clk_hw_register() and of_clk_add_hw_provider().
-
-I wasn't aware of this API change, thanks.
-
-
->> +     if (WARN_ON(IS_ERR(ilp->clk)))
->> +             goto err_unmap_pmu;
->> +
->> +     err =3D of_clk_add_provider(np, of_clk_src_simple_get, ilp->clk);
->> +     if (err)
->> +             goto err_clk_unregister;
->> +
->> +     return;
->> +
->> +err_clk_unregister:
->> +     clk_unregister(ilp->clk);
->> +err_unmap_pmu:
->> +     iounmap(ilp->pmu);
->> +err_free_ilp:
->> +     kfree(ilp);
->> +     pr_err("Failed to init ILP clock: %d\n", err);
->> +}
->> +CLK_OF_DECLARE(bcm53573_ilp_clk, "brcm,bcm53573-ilp", bcm53573_ilp_init=
-);
->
-> Can this be a platform driver instead?
-
-I guess it can. Should it? It's not clear to me when CLK_OF_DECLARE is
-preferred and when it's not.
-
---=20
-Rafa=C5=82
+Platforms that need shared access to a channel, implement a 'server'
+driver that serialise (which is needed still) the access to common
+channel. If you think you don't need mutual exclusion and don't care
+about replies, simply share the mailbox handle among different
+clients.
