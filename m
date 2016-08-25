@@ -1,57 +1,120 @@
-From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v8 02/11] power: act8945a_charger: Achieve properties from its node
-Date: Thu, 25 Aug 2016 15:19:50 +0800
-Message-ID: <1472109599-21915-3-git-send-email-wenyou.yang@atmel.com>
-References: <1472109599-21915-1-git-send-email-wenyou.yang@atmel.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v3 3/6] clk: sunxi-ng: mux: support fixed pre-dividers on
+ multiple parents
+Date: Thu, 25 Aug 2016 14:21:57 +0800
+Message-ID: <20160825062200.17206-4-wens@csie.org>
+References: <20160825062200.17206-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472109599-21915-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160825062200.17206-1-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Since the act8945a_charger is regarded as a sub-device, all properties will
-be assigned to its own device node. All properties can be achieved from its
-own node, instead of from its parent device.
+Some clocks on the A31 have fixed pre-dividers on multiple parents.
+Add support for them.
 
-Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
+Changes since v2:
 
-Changes in v8: None
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+  - Fixed up H3 changes for number of fixed pre-dividers.
 
- drivers/power/supply/act8945a_charger.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Changes since v1:
 
-diff --git a/drivers/power/supply/act8945a_charger.c b/drivers/power/supply/act8945a_charger.c
-index b5c00e4..3f486c9 100644
---- a/drivers/power/supply/act8945a_charger.c
-+++ b/drivers/power/supply/act8945a_charger.c
-@@ -328,11 +328,11 @@ static int act8945a_charger_probe(struct platform_device *pdev)
- 		return -EINVAL;
+  - Add field for number of fixed pre-dividers.
+---
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c | 10 +++++-----
+ drivers/clk/sunxi-ng/ccu_mux.c      |  6 ++++--
+ drivers/clk/sunxi-ng/ccu_mux.h      | 11 +++++++----
+ 3 files changed, 16 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+index 9af359544110..4fa9374c2959 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+@@ -184,15 +184,15 @@ static SUNXI_CCU_MP_WITH_MUX(apb2_clk, "apb2", apb2_parents, 0x058,
+ 			     0);
+ 
+ static const char * const ahb2_parents[] = { "ahb1" , "pll-periph0" };
++static const struct ccu_mux_fixed_prediv ahb2_fixed_predivs[] = {
++	{ .index = 1, .div = 2 },
++};
+ static struct ccu_mux ahb2_clk = {
+ 	.mux		= {
+ 		.shift	= 0,
+ 		.width	= 1,
+-
+-		.fixed_prediv	= {
+-			.index	= 1,
+-			.div	= 2,
+-		},
++		.fixed_predivs	= ahb2_fixed_predivs,
++		.n_predivs	= ARRAY_SIZE(ahb2_fixed_predivs),
+ 	},
+ 
+ 	.common		= {
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.c b/drivers/clk/sunxi-ng/ccu_mux.c
+index 68b32f168a74..7b17e0c26b01 100644
+--- a/drivers/clk/sunxi-ng/ccu_mux.c
++++ b/drivers/clk/sunxi-ng/ccu_mux.c
+@@ -20,6 +20,7 @@ void ccu_mux_helper_adjust_parent_for_prediv(struct ccu_common *common,
+ {
+ 	u16 prediv = 1;
+ 	u32 reg;
++	int i;
+ 
+ 	if (!((common->features & CCU_FEATURE_FIXED_PREDIV) ||
+ 	      (common->features & CCU_FEATURE_VARIABLE_PREDIV)))
+@@ -32,8 +33,9 @@ void ccu_mux_helper_adjust_parent_for_prediv(struct ccu_common *common,
  	}
  
--	ret = act8945a_charger_config(pdev->dev.parent, charger);
-+	ret = act8945a_charger_config(&pdev->dev, charger);
- 	if (ret)
- 		return ret;
+ 	if (common->features & CCU_FEATURE_FIXED_PREDIV)
+-		if (parent_index == cm->fixed_prediv.index)
+-			prediv = cm->fixed_prediv.div;
++		for (i = 0; i < cm->n_predivs; i++)
++			if (parent_index == cm->fixed_predivs[i].index)
++				prediv = cm->fixed_predivs[i].div;
  
--	psy_cfg.of_node	= pdev->dev.parent->of_node;
-+	psy_cfg.of_node	= pdev->dev.of_node;
- 	psy_cfg.drv_data = charger;
+ 	if (common->features & CCU_FEATURE_VARIABLE_PREDIV)
+ 		if (parent_index == cm->variable_prediv.index) {
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.h b/drivers/clk/sunxi-ng/ccu_mux.h
+index b1e085612e5e..8eab1733eeac 100644
+--- a/drivers/clk/sunxi-ng/ccu_mux.h
++++ b/drivers/clk/sunxi-ng/ccu_mux.h
+@@ -5,15 +5,18 @@
  
- 	psy = devm_power_supply_register(&pdev->dev,
+ #include "ccu_common.h"
+ 
++struct ccu_mux_fixed_prediv {
++	u8	index;
++	u16	div;
++};
++
+ struct ccu_mux_internal {
+ 	u8		shift;
+ 	u8		width;
+ 	const u8	*table;
+ 
+-	struct {
+-		u8	index;
+-		u16	div;
+-	} fixed_prediv;
++	const struct ccu_mux_fixed_prediv	*fixed_predivs;
++	u8		n_predivs;
+ 
+ 	struct {
+ 		u8	index;
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.3
