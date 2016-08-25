@@ -1,108 +1,322 @@
-From: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] dt-binding: remoteproc: venus rproc dt binding
- document
-Date: Thu, 25 Aug 2016 14:10:22 +0300
-Message-ID: <3429173a-d55a-51e1-0973-7e5bd31be297@linaro.org>
-References: <1471622000-1906-1-git-send-email-stanimir.varbanov@linaro.org>
- <1471622000-1906-4-git-send-email-stanimir.varbanov@linaro.org>
- <20160823173259.GA13327@rob-hp-laptop>
- <fbf25a9e-348b-9047-37ef-1b96808dea31@mm-sol.com>
- <20160825000521.GH15161@tuxbot>
+From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Subject: [PATCH v4] rtc: omap: Support ext_wakeup configuration
+Date: Thu, 25 Aug 2016 13:19:12 +0200
+Message-ID: <20160825111912.23017-1-m.niestroj@grinn-global.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160825000521.GH15161@tuxbot>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBD7N3SEV2QCRBVFI7O6QKGQE7JYY3HQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Support configuration of ext_wakeup sources. This patch makes it
+possible to enable ext_wakeup and set it's polarity, depending on board
+configuration. AM335x's dedicated PMIC (tps65217) uses ext_wakeup to
+notify about power-button presses. Handling power-button presses enables
+to recover from RTC-only power states correctly.
 
-On 08/25/2016 03:05 AM, Bjorn Andersson wrote:
-> On Wed 24 Aug 08:36 PDT 2016, Stanimir Varbanov wrote:
-> 
->> Hi Rob,
->>
->> On 08/23/2016 08:32 PM, Rob Herring wrote:
->>> On Fri, Aug 19, 2016 at 06:53:19PM +0300, Stanimir Varbanov wrote:
->>>> Add devicetree binding document for Venus remote processor.
->>>>
->>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/remoteproc/qcom,venus.txt  | 33 ++++++++++++++++++++++
->>>>  1 file changed, 33 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
->>>> new file mode 100644
->>>> index 000000000000..06a2db60fa38
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
->>>> @@ -0,0 +1,33 @@
->>>> +Qualcomm Venus Peripheral Image Loader
->>>> +
->>>> +This document defines the binding for a component that loads and boots firmware
->>>> +on the Qualcomm Venus remote processor core.
->>>
->>> This does not make sense to me. Venus is the video encoder/decoder h/w, 
->>> right? Why is the firmware loader separate from the codec block? Why 
->>> rproc is used? Are there multiple clients? Naming it rproc_venus implies 
->>> there aren't. And why does the firmware loading need 8MB of memory at a 
->>> fixed address?
->>>
->>
->> The firmware for Venus case is 5MB. And here is 8MB because of
->> dma_alloc_from_coherent size restriction.
->>
-> 
-> Then you should specify it 5MB large and we'll have to deal with this
-> implementation issue in the code. I've created a JIRA ticket for
-> the dma_alloc_from_coherent() behavior.
+Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+---
+Hi,
 
-Infact it should be 5MB + ~100KB for iommu page table.
+This is a total reimplementation, so it is not based on any of the previos
+patch versions. This patch adds support for ext_wakeup using generic pinconf
+device-tree bindings, with one added "ti,input-polarity" custom property.
+This approach has been suggested by Tony and Grygorii in [1].
 
-> 
->> The address is not really fixed, cause the firmware could support
->> relocation. In this example I just picked up the next free memory region
->> in memory-reserved from msm8916.dtsi.
->>
-> 
-> In 8974 we do have a physical region where it's expected to be loaded.
-> 
-> So in line with upcoming remoteproc work we should support referencing a
-> reserved-memory node with either reg or size.
-> 
-> In the case of spotting a "reg" we're currently better off using
-> ioremap. We're looking at getting the remoteproc core to deal with this
-> mess.
+Patch was developed on 4.6, rebased on 4.8-rc3, tested using chiliBoard.
 
-You mean that remoteproc core will parse memory-region property?
+[1] http://www.spinics.net/lists/devicetree/msg131516.html
 
-> 
-> 
-> So, on 8916 I think you should use the form:
-> 
-> venus_mem: venus {
-> 	size = <0x500000>;
-> };
+ Documentation/devicetree/bindings/rtc/rtc-omap.txt |  21 +++
+ drivers/rtc/Kconfig                                |   1 +
+ drivers/rtc/rtc-omap.c                             | 167 ++++++++++++++++++++-
+ 3 files changed, 181 insertions(+), 8 deletions(-)
 
-Don't forget that the physical address where the firmware is stored has
-some range, the scm call will fail if it is out of the expected range,
-probably because of some security reasons. So maybe alloc-ranges should
-be specified here.
-
-> 
-> And I don't think you should use the shared-dma-pool compatible, because
-> this is not a region for multiple devices to allocate dma memory out of.
-
-Then I cannot reuse reserved-mem infrastructure.
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+index bf7d11a..5d18373 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+@@ -18,6 +18,18 @@ Optional properties:
+   through pmic_power_en
+ - clocks: Any internal or external clocks feeding in to rtc
+ - clock-names: Corresponding names of the clocks
++- pinctrl-0: a phandle pointing to the pin settings for the device
++- pinctrl-names: should be "default"
++
++Optional subnodes:
++- generic pinctrl node
++
++Required pinctrl subnodes properties:
++- pins - Names of ext_wakeup pins to configure
++
++Optional pinctrl subnodes properties:
++- input-enable - Enables ext_wakeup
++- ti,input-polarity - GPIO_ACTIVE_LOW or GPIO_ACTIVE_HIGH depending board
+ 
+ Example:
+ 
+@@ -30,4 +42,13 @@ rtc@1c23000 {
+ 	system-power-controller;
+ 	clocks = <&clk_32k_rtc>, <&clk_32768_ck>;
+ 	clock-names = "ext-clk", "int-clk";
++
++	pinctrl-0 = <&ext_wakeup>;
++	pinctrl-names = "default";
++
++	ext_wakeup: ext_wakeup {
++		pins = "ext_wakeup0";
++		input-enable;
++		ti,input-polarity = <GPIO_ACTIVE_LOW>;
++	};
+ };
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index e215f50..647d913 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1231,6 +1231,7 @@ config RTC_DRV_IMXDI
+ config RTC_DRV_OMAP
+ 	tristate "TI OMAP Real Time Clock"
+ 	depends on ARCH_OMAP || ARCH_DAVINCI || COMPILE_TEST
++	select GENERIC_PINCONF
+ 	help
+ 	  Say "yes" here to support the on chip real time clock
+ 	  present on TI OMAP1, AM33xx, DA8xx/OMAP-L13x, AM43xx and DRA7xx.
+diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
+index ec2e9c5..b817afb 100644
+--- a/drivers/rtc/rtc-omap.c
++++ b/drivers/rtc/rtc-omap.c
+@@ -13,19 +13,23 @@
+  * 2 of the License, or (at your option) any later version.
+  */
+ 
+-#include <linux/kernel.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <linux/bcd.h>
++#include <linux/clk.h>
++#include <linux/delay.h>
+ #include <linux/init.h>
+-#include <linux/module.h>
++#include <linux/io.h>
+ #include <linux/ioport.h>
+-#include <linux/delay.h>
+-#include <linux/rtc.h>
+-#include <linux/bcd.h>
+-#include <linux/platform_device.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+-#include <linux/io.h>
+-#include <linux/clk.h>
++#include <linux/rtc.h>
+ 
+ /*
+  * The OMAP RTC is a year/month/day/hours/minutes/seconds BCD clock
+@@ -115,6 +119,8 @@
+ 
+ /* OMAP_RTC_PMIC bit fields: */
+ #define OMAP_RTC_PMIC_POWER_EN_EN	BIT(16)
++#define OMAP_RTC_PMIC_EXT_WKUP_EN(x)	BIT(x)
++#define OMAP_RTC_PMIC_EXT_WKUP_POL(x)	BIT(4 + x)
+ 
+ /* OMAP_RTC_KICKER values */
+ #define	KICK0_VALUE			0x83e70b13
+@@ -141,6 +147,7 @@ struct omap_rtc {
+ 	bool is_pmic_controller;
+ 	bool has_ext_clk;
+ 	const struct omap_rtc_device_type *type;
++	struct pinctrl_dev *pctldev;
+ };
+ 
+ static inline u8 rtc_read(struct omap_rtc *rtc, unsigned int reg)
+@@ -525,6 +532,138 @@ static const struct of_device_id omap_rtc_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, omap_rtc_of_match);
+ 
++static const struct pinctrl_pin_desc rtc_pins_desc[] = {
++	PINCTRL_PIN(0, "ext_wakeup0"),
++	PINCTRL_PIN(1, "ext_wakeup1"),
++	PINCTRL_PIN(2, "ext_wakeup2"),
++	PINCTRL_PIN(3, "ext_wakeup3"),
++};
++
++static int rtc_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
++{
++	return 0;
++}
++
++static const char *rtc_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
++					unsigned int group)
++{
++	return NULL;
++}
++
++static const struct pinctrl_ops rtc_pinctrl_ops = {
++	.get_groups_count = rtc_pinctrl_get_groups_count,
++	.get_group_name = rtc_pinctrl_get_group_name,
++	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
++	.dt_free_map = pinconf_generic_dt_free_map,
++};
++
++enum rtc_pin_config_param {
++	PIN_CONFIG_INPUT_POLARITY = PIN_CONFIG_END + 1,
++};
++
++static const struct pinconf_generic_params rtc_params[] = {
++	{"ti,input-polarity", PIN_CONFIG_INPUT_POLARITY, GPIO_ACTIVE_HIGH},
++};
++
++#ifdef CONFIG_DEBUG_FS
++static const struct pin_config_item rtc_conf_items[ARRAY_SIZE(rtc_params)] = {
++	PCONFDUMP(PIN_CONFIG_INPUT_POLARITY, "input polarity", NULL, true),
++};
++#endif
++
++static int rtc_pinconf_get(struct pinctrl_dev *pctldev,
++			unsigned int pin, unsigned long *config)
++{
++	struct omap_rtc *rtc = pinctrl_dev_get_drvdata(pctldev);
++	unsigned int param = pinconf_to_config_param(*config);
++	u32 val;
++	u16 arg = 0;
++
++	rtc->type->unlock(rtc);
++	val = rtc_readl(rtc, OMAP_RTC_PMIC_REG);
++	rtc->type->lock(rtc);
++
++	switch (param) {
++	case PIN_CONFIG_INPUT_ENABLE:
++		if (!(val & OMAP_RTC_PMIC_EXT_WKUP_EN(pin)))
++			return -EINVAL;
++		break;
++	case PIN_CONFIG_INPUT_POLARITY:
++		arg = !!(val & OMAP_RTC_PMIC_EXT_WKUP_POL(pin));
++		break;
++	default:
++		return -ENOTSUPP;
++	};
++
++	*config = pinconf_to_config_packed(param, arg);
++
++	return 0;
++}
++
++static int rtc_pinconf_set(struct pinctrl_dev *pctldev,
++			unsigned int pin, unsigned long *configs,
++			unsigned int num_configs)
++{
++	struct omap_rtc *rtc = pinctrl_dev_get_drvdata(pctldev);
++	u32 val;
++	unsigned int param;
++	u16 param_val;
++	int i;
++
++	rtc->type->unlock(rtc);
++	val = rtc_readl(rtc, OMAP_RTC_PMIC_REG);
++	rtc->type->lock(rtc);
++
++	for (i = 0; i < num_configs; i++) {
++		param = pinconf_to_config_param(configs[i]);
++		param_val = pinconf_to_config_argument(configs[i]);
++
++		switch (param) {
++		case PIN_CONFIG_INPUT_ENABLE:
++			if (param_val)
++				val |= OMAP_RTC_PMIC_EXT_WKUP_EN(pin);
++			else
++				val &= ~OMAP_RTC_PMIC_EXT_WKUP_EN(pin);
++			break;
++		case PIN_CONFIG_INPUT_POLARITY:
++			if (param_val == GPIO_ACTIVE_LOW)
++				val |= OMAP_RTC_PMIC_EXT_WKUP_POL(pin);
++			else
++				val &= ~OMAP_RTC_PMIC_EXT_WKUP_POL(pin);
++			break;
++		default:
++			dev_err(&rtc->rtc->dev, "Property %u not supported\n",
++				param);
++			return -ENOTSUPP;
++		}
++	}
++
++	rtc->type->unlock(rtc);
++	rtc_writel(rtc, OMAP_RTC_PMIC_REG, val);
++	rtc->type->lock(rtc);
++
++	return 0;
++}
++
++static const struct pinconf_ops rtc_pinconf_ops = {
++	.is_generic = true,
++	.pin_config_get = rtc_pinconf_get,
++	.pin_config_set = rtc_pinconf_set,
++};
++
++static struct pinctrl_desc rtc_pinctrl_desc = {
++	.pins = rtc_pins_desc,
++	.npins = ARRAY_SIZE(rtc_pins_desc),
++	.pctlops = &rtc_pinctrl_ops,
++	.confops = &rtc_pinconf_ops,
++	.custom_params = rtc_params,
++	.num_custom_params = ARRAY_SIZE(rtc_params),
++#ifdef CONFIG_DEBUG_FS
++	.custom_conf_items = rtc_conf_items,
++#endif
++	.owner = THIS_MODULE,
++};
++
+ static int omap_rtc_probe(struct platform_device *pdev)
+ {
+ 	struct omap_rtc	*rtc;
+@@ -681,6 +820,15 @@ static int omap_rtc_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	/* Support ext_wakeup pinconf */
++	rtc_pinctrl_desc.name = dev_name(&pdev->dev);
++
++	rtc->pctldev = pinctrl_register(&rtc_pinctrl_desc, &pdev->dev, rtc);
++	if (IS_ERR(rtc->pctldev)) {
++		dev_err(&pdev->dev, "Couldn't register pinctrl driver\n");
++		return PTR_ERR(rtc->pctldev);
++	}
++
+ 	return 0;
+ 
+ err:
+@@ -724,6 +872,9 @@ static int __exit omap_rtc_remove(struct platform_device *pdev)
+ 	pm_runtime_put_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ 
++	/* Remove ext_wakeup pinconf */
++	pinctrl_unregister(rtc->pctldev);
++
+ 	return 0;
+ }
+ 
+-- 
+2.9.3
 
 -- 
-regards,
-Stan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
