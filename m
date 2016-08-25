@@ -1,103 +1,79 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH] ARM: dts: rskrza1: initial device tree
-Date: Thu, 25 Aug 2016 11:31:15 -0400
-Message-ID: <20160825153115.15291-1-chris.brandt@renesas.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource
+ driver
+Date: Thu, 25 Aug 2016 17:41:29 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1608251727410.5714@nanos>
+References: <cover.147018b3518.git.dalias@libc.org> <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org> <57BDCE5D.2050609@linaro.org> <20160824174001.GW15995@brightrain.aerifal.cx> <alpine.DEB.2.20.1608250947120.5714@nanos>
+ <20160825145650.GA15995@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: horms@verge.net.au, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20160825145650.GA15995@brightrain.aerifal.cx>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the initial device tree for the RZ/A1 based development board (RSK).
+On Thu, 25 Aug 2016, Rich Felker wrote:
+> assumption that is was just a bug. Now that Mark Rutland has explained
+> it well (and with your additional explanation below in your email), I
+> see what the motivation was, but I still think it could be done in a
+> less-confusing and more-consistent way that doesn't assume ARM-like
+> irq architecture.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
- arch/arm/boot/dts/Makefile             |  1 +
- arch/arm/boot/dts/r7s72100-rskrza1.dts | 53 ++++++++++++++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
- create mode 100644 arch/arm/boot/dts/r7s72100-rskrza1.dts
+It's not only ARM. Some MIPS Octeon stuff has the same layout and requirements
+to use a single irq number for interrupts which are delivered on a per cpu
+basis.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index faacd52..c1c4d912 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -651,6 +651,7 @@ dtb-$(CONFIG_ARCH_S5PV210) += \
- dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += \
- 	emev2-kzm9d.dtb \
- 	r7s72100-genmai.dtb \
-+	r7s72100-rskrza1.dtb \
- 	r8a73a4-ape6evm.dtb \
- 	r8a7740-armadillo800eva.dtb \
- 	r8a7778-bockw.dtb \
-diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-new file mode 100644
-index 0000000..df9b979e
---- /dev/null
-+++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-@@ -0,0 +1,53 @@
-+/*
-+ * Device Tree Source for the RZ/A1H RSK board
-+ *
-+ * Copyright (C) 2016 Renesas Electronics
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/dts-v1/;
-+#include "r7s72100.dtsi"
-+
-+/ {
-+	model = "RSKRZA1";
-+	compatible = "renesas,rskrza1", "renesas,r7s72100";
-+
-+	aliases {
-+		serial0 = &scif2;
-+	};
-+
-+	chosen {
-+		bootargs = "ignore_loglevel";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@8000000 {
-+		device_type = "memory";
-+		reg = <0x08000000 0x02000000>;
-+	};
-+
-+	lbsc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+};
-+
-+&extal_clk {
-+	clock-frequency = <13330000>;
-+};
-+
-+&usb_x1_clk {
-+	clock-frequency = <48000000>;
-+};
-+
-+&mtu2 {
-+	status = "okay";
-+};
-+
-+&scif2 {
-+	status = "okay";
-+};
-+
--- 
-2.9.2
+Patches are welcome :)
+ 
+> > If your particular hardware has the old scheme of seperate interrupt numbers
+> > for per cpu interrupts, then you can simply use the normal interrupt scheme
+> > and request a seperate interrupt per cpu.
+> 
+> Nominally it uses the same range of hardware interrupt numbers for all
+> (presently both) cpus, but some of them get delivered to a specific
+> cpu associated with the event (presently, IPI and timer; IPI is on a
+> fixed number at synthesis time but timer is runtime configurable)
+> while others are conceptually deliverable to either cpu (presently
+> only delivered to cpu0, but that's treated as an implementation
+> detail).
+
+If I understand correctly, then this is the classic scheme:
+
+   CPU0		IPI0	   IRQ-N
+   CPU1		IPI1	   IRQ-M
+
+These and the timers or whatever are strict per cpu and therefor not routable.
+Regular device interrupts can be routed to any CPU by setting the
+affinity. Correct?
+
+> It currently works requesting the irq with flags that ensure the
+> handler runs on the same cpu it was delivered on, without using any
+> other percpu irq framework.
+
+Which special flag are you referring to? I'm not aware of one.
+
+IRQF_PER_CPU is just telling the core that this is a non routable per cpu
+interrupt. It's excluded from affinity setting and also on cpu hot unplug the
+per cpu interrupts are not touched and nothing tries to reroute them to one of
+the still online cpus.
+
+Regarding the interrupt handler. It runs on the CPU on which the interrupt is
+delivered and there is nothing you can influence with a flag.
+
+> If you have concerns about ways this could break and want me to make the
+> drivers do something else, I'm open to suggestions.
+
+If I understand the hardware halfways right, then using request_irq() with
+IRQF_PER_CPU for these special interrupts is completely correct.
+
+The handler either uses this_cpu_xxx() for accessing the per cpu data related
+to the interrupt or you can hand in a percpu pointer as dev_id to
+request_irq() which then is handed to the interrupt function as a cookie.
+
+Hope that helps.
+
+Thanks,
+
+	tglx
