@@ -1,66 +1,39 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [PATCH v3 0/5] dts patches for qcom tsens support
-Date: Wed, 24 Aug 2016 22:21:17 -0500
-Message-ID: <CAPBZ5Qdy2kf+xRC9f7ndE3GdJx0HyCabJWxyaYDbZ50HCj82Bg@mail.gmail.com>
-References: <1471411128-4002-1-git-send-email-rnayak@codeaurora.org>
- <20160817193340.GA18215@hector.attlocal.net> <20160824102256.GA14048@harukaze>
- <20160825031328.GI15161@tuxbot>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2] clk: fixed-factor: add optional dt-binding clock-flags
+Date: Wed, 24 Aug 2016 17:52:21 -0700
+Message-ID: <20160825005221.GK19826@codeaurora.org>
+References: <20160621005910.GN1521@codeaurora.org>
+ <1466741572-58802-1-git-send-email-neidhard.kim@lge.com>
+ <20160628205518.GF3737@rob-hp-laptop>
+ <146714872010.89261.1969853552594659808@resonance>
+ <5773736D.3060405@lge.com>
+ <20160702002030.GF27880@codeaurora.org>
+ <5779C056.3020209@lge.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160825031328.GI15161@tuxbot>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Paolo Pisati <p.pisati@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5779C056.3020209@lge.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jongsung Kim <neidhard.kim@lge.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chanho Min <chanho.min@lge.com>
 List-Id: devicetree@vger.kernel.org
 
-On 24 August 2016 at 22:13, Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
-> On Wed 24 Aug 03:22 PDT 2016, Paolo Pisati wrote:
->
->> On Wed, Aug 17, 2016 at 02:33:40PM -0500, Andy Gross wrote:
->> > On Wed, Aug 17, 2016 at 10:48:43AM +0530, Rajendra Nayak wrote:
->> > > Hey Andy,
->> > >
->> > > This is a respin of v2 with some minor fixes pointed out by Rob.
->> > > Please pull these in for 4.9
->> > >
->> > > Thanks,
->> > > Rajendra
->> >
->> > I pulled these in.
->>
->> Did you try to read the content of the qfprom from userspace?
->>
->> $ uname -a
->> Linux dragon410c 4.8.0-rc1+ #6 SMP PREEMPT Wed Aug 24 11:11:02 CEST 2016 aarch64
->> aarch64 aarch64 GNU/Linux
->> $ lsmod
->> Module                  Size  Used by
->> nvmem_qfprom           16384  0
->> nvmem_core             24576  1 nvmem_qfprom
->> $ ls -la /sys/bus/nvmem/devices/
->> total 0
->> drwxr-xr-x 2 root root 0 Aug 24 10:17 .
->> drwxr-xr-x 4 root root 0 Aug 24 10:15 ..
->> lrwxrwxrwx 1 root root 0 Aug 24 10:17 qfprom0 ->
->> ../../../devices/platform/soc/5c000.qfprom/qfprom0
->> $ cat /sys/bus/nvmem/devices/qfprom0/nvmem
->>
->> [spontaneous reboot]
->>
->> This using agross's for-next tree as of today ("54ba896 Merge branch
->> 'arm64-defconfig-for-4.9' into all-for-4.8") and defconfig.
->
-> This was reported in some other forum as well, after some investigation
-> we concluded that it looks like one of the entries are locked down -
-> probably from some security reason.
->
-> I'm not aware of any way to query this configuration. But the main use
-> case for the qfprom is in-kernel access to certain elements and that we
-> do get from the driver as is...
+On 07/04, Jongsung Kim wrote:
+> On 2016년 07월 02일 09:20, Stephen Boyd wrote:
+> > Do you actually have an IC on the board that is doing some fixed
+> > factor calculation? Or is this a clk driver design where we are
+> > listing out each piece of an SoC's clk controller in DT?
+> >
+> The SoC has several PLLs of identical design, and one of them is divided
+> to half and used for CPUs. The fixed-factor-clock represents the divider.
+> 
 
-Yeah this appears to be the case.  So I guess the response is 'don't
-do that'.  At least don't cat or od the file.  You need to seek and
-read.
+Ok, so it sounds like we can have the driver that registers the
+CPU PLL also register the fixed factor clk? I fail to see why we
+need this from DT in that case.
 
-Andy
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
