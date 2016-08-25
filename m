@@ -1,102 +1,53 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 2/2] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
-Date: Thu, 25 Aug 2016 22:47:26 +0200
-Message-ID: <20160825204726.GH32598@lukather>
-References: <20160823064451.25997-1-icenowy@aosc.xyz>
- <20160823064451.25997-3-icenowy@aosc.xyz>
- <20160824193600.GS8103@lukather> <43951472083107@web23m.yandex.ru>
- <CAGb2v66tFENk8QBw7D1+bwFN-zWaE2SGDrNyc-zdbJSRzENk4Q@mail.gmail.com>
- <97321472108244@web8m.yandex.ru> <20160825080334.GD7776@lukather>
- <116041472134355@web12g.yandex.ru>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1931570542950262735=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <116041472134355@web12g.yandex.ru>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+Subject: [PATCH v4 0/2] Add support for Smart Battery System Manager
+Date: Thu, 25 Aug 2016 22:20:59 +0200
+Message-ID: <1472156461-25180-1-git-send-email-karl-heinz@schneider-inet.de>
+References: <1bIiDr-0004G1-0P>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1bIiDr-0004G1-0P>
+Sender: linux-acpi-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Peter Rosin <peda@axentia.se>, Phil Reid <preid@electromag.com.au>, Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
 List-Id: devicetree@vger.kernel.org
 
+This patch series adds support for Smart Battery System Manager.
+A SBSM is a device listening at I2C/SMBus address 0x0a and is capable of
+communicating up to four I2C smart battery devices. All smart battery
+devices are listening at address 0x0b, so the SBSM muliplexes between
+them. The driver makes use of the I2C-Mux framework to allow smart
+batteries to be bound via device tree, i.e. the sbs-battery driver.
 
---===============1931570542950262735==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LZFKeWUZP29EKQNE"
-Content-Disposition: inline
+Via sysfs interface the online state and charge type are presented. If
+the driver is bound as ltc1760 (a Dual Smart Battery System Manager)
+the charge type can also be changed from trickle to fast.
 
+Changes:
+V2:
+* Fixed sample node names and compatible strings in binding documentaton.
+* Removed optional property "sbsm,i2c-retry-count"
+* Retry count hardcoded. Removed no longer needed OF readout function
+* Rebased onto v4.7rc-5
 
---LZFKeWUZP29EKQNE
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+V3:
+* Changed enumeration sheme
+* Rebased onto v4.7rc-7
 
-On Thu, Aug 25, 2016 at 10:12:35PM +0800, Icenowy Zheng wrote:
-> >> =A0But many codes will require a ttyS0 as console... So I think the
-> >> =A0bluetooth should be located at ttyS1...
-> >
-> > Most of them would use /dev/console anyway. What do you have in mind?
->=20
-> As a general configuration, /dev/ttyS0 will be indicated as the default c=
-onsole=3D
-> value... (Otherwise more boards will fail)
+V4:
+* removed .owner field as advised by kbuild test robot
+* removed print on ENOMEM
+* added reference to i2c-mux documentation in binding doc
 
-There's no reason to make that assumption. The console might be on
-another UART entirely (ttyS3, for the sake of the argument), on a
-different UART "class" (ttyUSB?, framebuffer console?), or not present
-at all.
+Karl-Heinz Schneider (2):
+  Documentation: Add sbs-manager device tree node documentation
+  power: Adds support for Smart Battery System Manager
 
-If you want to use the console, use /dev/console.
+ .../devicetree/bindings/power/sbs,sbs-manager.txt  |  53 ++++
+ drivers/power/Kconfig                              |  13 +
+ drivers/power/Makefile                             |   1 +
+ drivers/power/sbs-manager.c                        | 323 +++++++++++++++++++++
+ 4 files changed, 390 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
+ create mode 100644 drivers/power/sbs-manager.c
 
-I don't what's so special about the UART here. Every single device in
-Linux behaves that way.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---LZFKeWUZP29EKQNE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXv1leAAoJEBx+YmzsjxAg/u4P/j5Ef6igixO11gVOZDSqG5at
-yDchkzu+I+hLWlLRic4Umm2YcbiGi32wb/oG4nd7LFqbzy+fOUbrSDJfY7Dsj2CP
-bwOn7Ow5m+dI6L4w5USsh4Lqr1cgJjS9aasP51oSxBxZuooJPAA7kpCg7JBczI2m
-FhA3rL16QlLXU9Ld2uhPhpnyVjO4E49m2ftg4rWDSfQUID6toV17JOLMxMqB7NIA
-553g6a4lB4tzOvPGbeXQXAjzSys38BuSvGjMe0lG6gjsSheMatJ8qVj4lcpXTOYa
-Gpwx5DKMq2pnpu1vNiVlTWdjpRC2PU5ua/Oo5sxLxny0HWTw4bo7T0rKRG4O5rKQ
-zatp20VPadXIqGXj36cAS92+g7T9e8yPfk65F8qGHbQwF+v/BstQj8eFSvZZEvys
-CbmOl6MT7bpQVJ/jC8odLQ6NdTUtvUpqgUgZDEMGlpSlMPXT1+Vi7FxajTinfcm5
-NqUXZ0fie86DF4bA6JeKg9fbh42GSWxqm9YPBKk/qxKDs8k1yf6sPIqXSARDjhPL
-NngQDgZvXIKv4ItzQNygCcxlvgorcbjT37C9V8m0y+bUM9CF9UaxYcKeYE93Oxsf
-7WMQabTYIsRkT/SJgniTlpVCzJTevZJvKAOPgZ3kJXFCtm+Tw754SLNk+86viSBL
-J5iRPqYeKwA76Rk2bAw5
-=HyAC
------END PGP SIGNATURE-----
-
---LZFKeWUZP29EKQNE--
-
-
---===============1931570542950262735==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1931570542950262735==--
+--
+2.7.4
