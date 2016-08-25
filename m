@@ -1,117 +1,74 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 2/2] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
-Date: Thu, 25 Aug 2016 10:03:34 +0200
-Message-ID: <20160825080334.GD7776@lukather>
-References: <20160823064451.25997-1-icenowy@aosc.xyz>
- <20160823064451.25997-3-icenowy@aosc.xyz>
- <20160824193600.GS8103@lukather> <43951472083107@web23m.yandex.ru>
- <CAGb2v66tFENk8QBw7D1+bwFN-zWaE2SGDrNyc-zdbJSRzENk4Q@mail.gmail.com>
- <97321472108244@web8m.yandex.ru>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource
+ driver
+Date: Thu, 25 Aug 2016 10:07:08 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1608250947120.5714@nanos>
+References: <cover.147018b3518.git.dalias@libc.org> <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org> <57BDCE5D.2050609@linaro.org> <20160824174001.GW15995@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7341039146447104955=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <97321472108244@web8m.yandex.ru>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160824174001.GW15995@brightrain.aerifal.cx>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+Rich,
 
---===============7341039146447104955==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xB0nW4MQa6jZONgY"
-Content-Disposition: inline
+On Wed, 24 Aug 2016, Rich Felker wrote:
+> I don't think that's a correct characterization. Rather the percpu
+> infrastructure just means something completely different from what you
+> would expect it to mean. It has nothing to do with the hardware but
+> rather with kernel-internal choice of whether to do percpu devid
+> mapping inside the irq infrastructure, and the choice at the
+> irq-requester side of whether to do this is required to match the
+> irqchip driver's choice. I explained this better in another email
+> which I could dig up if necessary, but the essence is that
+> request_percpu_irq is a misnamed and unusably broken API.
 
+I slowly get tired about your permanent ranting about misnamed, misdesigned
+and unusable code in the kernel.
 
---xB0nW4MQa6jZONgY
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The percpu infrastructure was designed explicitely to reflect the hardware and
+is not a random kernel internal choice. It's there to handle the situation
+where a single interrupt number is actually available on each CPU.
 
-Hi,
+ARM has a very clear distinction between PPI (per processor interrutps) and
+SPI (shared peripheral interrupts). So we end up with the following interrupt
+space:
 
-On Thu, Aug 25, 2016 at 02:57:24PM +0800, Icenowy Zheng wrote:
-> >>>> =A0=A0diff --git a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts b/=
-arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
-> >>>> =A0=A0index 78823d8..3ac22d4 100644
-> >>>> =A0=A0--- a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
-> >>>> =A0=A0+++ b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
-> >>>> =A0=A0@@ -48,6 +48,10 @@
-> >>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0model =3D "INet-D978 Rev 02";
-> >>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0compatible =3D "primux,inet-d978-re=
-v2", "allwinner,sun8i-a33";
-> >>>>
-> >>>> =A0=A0+ aliases {
-> >>>> =A0=A0+ serial1 =3D &uart1;
-> >>>> =A0=A0+ };
-> >>>> =A0=A0+
-> >>>
-> >>> =A0Is there any other UART in the system?
-> >>
-> >> =A0serial0 is defined in sun8i-reference-design-tablet.dtsi, as r_uart.
-> >
-> > If your board does not have r_uart pads, then the right thing to do
-> > would be to disable it. You can then have uart1 as serial0.
->=20
-> I don't know it. The RX/TX is wired on PF2/PF4 on the board (UART0 muxed =
-with
-> MMC)
+IRQ	CPU0	CPU1
+0	PPI	PPI
+...	...	...
+15	PPI	PPI
 
-Then you don't support it and you need to disable it.
+16	SPI	SPI
+...
+N	SPI	SPI
 
-> But many codes will require a ttyS0 as console... So I think the
-> bluetooth should be located at ttyS1...
+The fundamental difference between PPI and SPI is that PPIs originate from the
+CPU itself or are injected as IPIs targeted to a particular CPU. Each CPU has
+its own interrupt controller to mask/ack/... PPIs.
 
-Most of them would use /dev/console anyway. What do you have in mind?
+The SPIs have a shared interrupt controller and therefor are globally shared
+between all cpus.
 
-Maxime
+The percpu infrastructure reflects exaclty this scenario and allows us to
+handle PPIs with the same irq number (which makes a lot of sense) seperately
+on each CPU.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+So how does this not reflect the hardware?
 
---xB0nW4MQa6jZONgY
-Content-Type: application/pgp-signature; name="signature.asc"
+If your particular hardware has the old scheme of seperate interrupt numbers
+for per cpu interrupts, then you can simply use the normal interrupt scheme
+and request a seperate interrupt per cpu.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Just because something does not fit your needs and does not match your SH
+blinkered worldview does not make it misnamed, misdesigned and unusable.
 
-iQIcBAEBAgAGBQJXvqZWAAoJEBx+YmzsjxAgDywP/0z0xE4A93WkCDFajH2Smc3e
-ItKmanSVQGKWVHiiiAimBPZMBSeybC2r48230uKMDr1UfYL4YPlOfSZdrvtvx0nN
-ybSHahet4M+Ltym1/R5UEbWou9u2+YEO5wR6rxXMkW1ALgfUyZvbPq+grwFMHkPt
-+ebvc/I/ELLHiYACO6nhlkdAi1+pB1MRTmOlBlqguXSilSfAhrHSNtSDJ3ZLeiX8
-wJduLSiuWEAa3IT51k4Hte798P7cTGzOS0Ql2thqFWvVrPLV+rWg3Kvf9gvvDjg5
-fwpgQagrT5/zKRjybhZQoBr1blk86COr/jruEOmOqyRu1L4o+cSwPOCJVSGWUxFg
-EAnjfnZwVAOvIrkDmrLaym5MzVdccTB81peLxHponii2IzG2j3EHuaVjZ2Yr3uHt
-xMpGaCaEGjVCsi9q+A0d3vqbE5caHxhMFZ/6uW7ZLbGZAyGimDxb7vmDvfZkvROh
-YgJ2iCCOxOnrF7ZV9t82+L7Tx8nlgpOx4YrtZuNGpBG6bUfajs7JvzjqrElnMUAC
-YvPsy/jK6a4X87PtBluuwuJCxNmei7ySXexHJqFhIxWXg0S7U/Ts+BvmjEr/kgcg
-YWUMJtCaK4OBI1u1EKB0YE7tYu32i1WlUDLLUud5XGuoozkHJQ08YdvAdTIeJ4ED
-0XfWJTVMLEJggPg9bIjH
-=lYzw
------END PGP SIGNATURE-----
+If you want to work with this community you really should start to talk
+constructive with us and stop this unjustified ranting attitude.
 
---xB0nW4MQa6jZONgY--
+Thanks,
 
-
---===============7341039146447104955==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7341039146447104955==--
+	tglx
