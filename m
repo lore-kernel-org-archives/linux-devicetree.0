@@ -1,64 +1,75 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2] sdhci-of-arasan: Add quirk and device tree parameter
- to fake CD bit
-Date: Thu, 25 Aug 2016 19:10:00 +0100
-Message-ID: <20160825180959.GA14705@remoulade>
-References: <1472080984-17373-1-git-send-email-zach.brown@ni.com>
- <20160825105640.GA5439@remoulade>
- <20160825171539.GA13571@zach-desktop>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Thu, 25 Aug 2016 19:21:13 +0100
+Message-ID: <20160825182053.GA15000@remoulade>
+References: <cover.147018b3518.git.dalias@libc.org>
+ <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
+ <57BDCE5D.2050609@linaro.org>
+ <20160824174001.GW15995@brightrain.aerifal.cx>
+ <alpine.DEB.2.20.1608250947120.5714@nanos>
+ <20160825145650.GA15995@brightrain.aerifal.cx>
+ <20160825163805.GA8524@remoulade>
+ <20160825175135.GC15995@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160825171539.GA13571@zach-desktop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zach Brown <zach.brown@ni.com>
-Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, lars@metafoo.de, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com
+In-Reply-To: <20160825175135.GC15995@brightrain.aerifal.cx>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 25, 2016 at 12:15:44PM -0500, Zach Brown wrote:
-> On Thu, Aug 25, 2016 at 11:56:55AM +0100, Mark Rutland wrote:
-> > On Wed, Aug 24, 2016 at 06:23:03PM -0500, Zach Brown wrote:
-> > > +- fake-cd: On Zynq Devices the SDHCI Controller will not work without the cd
-> > > +  bit. When this option is set the driver will put the controller in test mode
-> > > +  and fake the cd bit so it will function.
+On Thu, Aug 25, 2016 at 01:51:35PM -0400, Rich Felker wrote:
+> On Thu, Aug 25, 2016 at 05:38:06PM +0100, Mark Rutland wrote:
+> > On Thu, Aug 25, 2016 at 10:56:50AM -0400, Rich Felker wrote:
+> > > On Thu, Aug 25, 2016 at 10:07:08AM +0200, Thomas Gleixner wrote:
+> > > Nominally it uses the same range of hardware interrupt numbers for all
+> > > (presently both) cpus, but some of them get delivered to a specific
+> > > cpu associated with the event (presently, IPI and timer; IPI is on a
+> > > fixed number at synthesis time but timer is runtime configurable)
+> > > while others are conceptually deliverable to either cpu (presently
+> > > only delivered to cpu0, but that's treated as an implementation
+> > > detail).
 > > 
-> > As Lars noted, the DT should describe the HW, and the policy of how to deal
-> > with that should be left to the kernel. So from a DT perspective the above is
-> > not correct.
-> > 
-> > If I understand the linked documentation, this is slightly different to typical
-> > uses of broken-cd in that in the absence of a card detect signal the HW will
-> > not be able to access the SD card at all, even if requested to. Is that correct?
-> > 
-> > If so, perhaps a better option is to have the combination of broken-cd and the
-> > compatible string for this IP block imply that the test mode workaround is
-> > required. Obviously that requires a fixup to the usual broken-cd binding to
-> > remove the implication that polling alone must be used.
-> > 
-> > Thanks,
-> > Mark.
+> > Given you say it's delivered to the CPU associated with the event (and you have
+> > different PIT bases per-cpu), it sounds like your timer interrupt is percpu,
+> > it's just that the hwirq number can be chosen by software.
 > 
-> In cases where the card is non-removable then polling doesn't make sense.
+> It's what I would call percpu in the hardware, but I'm not convinced
+> that the Linux irq subsystem's "percpu" stuff models it in a way
+> that fits the hw, nor that it's in any way necessary.
 
-We have the non-removable property to describe that, so we can also look at that.
+My understanding was that you used the same hwirq number to handle interrupts
+from per-cpu resources being delivered to their relevant CPUs, independently of
+each other.
 
-> So it doesn't make sense to tie the test mode workaround into the broken-cd
-> property, even though I agree the nature of the defect fits under the notion
-> of the CD being broken.
+That in my mind is a perfect match.
 
-Maybe not solely on broken-cd, but I think that we dont necessarily need a new
-DT property. As above, broken-cd, non-removable, and the compatible string may
-together give the kernel enough information to choose the right thing to do.
+The only difference, as I've stated a number of times, seems to be that you can
+choose the hwirq number from software.
+
+> > > It currently works requesting the irq with flags that ensure the
+> > > handler runs on the same cpu it was delivered on, without using any
+> > > other percpu irq framework. If you have concerns about ways this could
+> > > break and want me to make the drivers do something else, I'm open to
+> > > suggestions.
+> > 
+> > As I suggested, I don't think that this is right, and you need some mechanism
+> > to describe to the kernel that the interrupt is percpu (e.g. a flag in the
+> > interrupt-specifier in DT).
+> 
+> Thomas seemed to think it's okay as-is. Can you describe what you
+> expect could go wrong by using request_irq rather than the ARM-style
+> percpu irq framework?
+
+The percpu irq code is designed to expect a hwirq number being shared by
+banked, cpu-local interrupts, the regular request_irq code is not. Even if the
+latter happens to work today for your use-case, that is not by design.
+
+Relying on non-deliberate properties of request_irq makes it far harder for the
+generic code to be altered in future, with global vs percpu locking,
+synchronisation, accounting, etc being broken.
 
 Thanks,
 Mark.
