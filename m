@@ -1,17 +1,16 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v7 01/16] remoteproc: st_slim_rproc: add a slimcore rproc
- driver
-Date: Thu, 25 Aug 2016 17:41:24 +0100
-Message-ID: <20160825164124.GE3281@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1470071453-10730-1-git-send-email-peter.griffin@linaro.org>
- <1470071453-10730-2-git-send-email-peter.griffin@linaro.org>
- <20160810192922.GR26240@tuxbot>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3 1/2] input: misc: Add generic input driver to read
+ encoded GPIO lines
+Date: Thu, 25 Aug 2016 09:56:31 -0700
+Message-ID: <20160825165631.GE11206@dtor-ws>
+References: <20160824075859.30979-1-vigneshr@ti.com>
+ <20160824075859.30979-2-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20160810192922.GR26240@tuxbot>
+In-Reply-To: <20160824075859.30979-2-vigneshr@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,415 +20,261 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: ohad@wizery.com, devicetree@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, John Stultz <john.stultz@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Daniel Hung-yu Wu <hywu@google.com>, Russell King <linux@armlinux.org.uk>, "Andrew F . Davis" <afd@ti.com>, Grant Grundler <grundler@chromium.org>, Rob Herring <robh+dt@kernel.org>, S Twiss <stwiss.opensource@diasemi.com>, linux-input@vger.kernel.org, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-
-On Wed, 10 Aug 2016, Bjorn Andersson wrote:
-
-> On Mon 01 Aug 10:10 PDT 2016, Peter Griffin wrote:
+On Wed, Aug 24, 2016 at 01:28:58PM +0530, Vignesh R wrote:
+> Add a driver to read group of GPIO lines and provide its status as a
+> numerical value as input event to the system. This will help in
+> interfacing devices, that can be connected over GPIOs, that provide
+> input to the system by driving GPIO lines connected to them like a
+> rotary dial or a switch.
 > 
-> Sorry for the slow response, but I have a few more (small) concerns.
-
-No problem, thanks for reviewing. Equally I've been away on holiday last 3
-weeks, so sorry about my delay as well :)
+> For example, a rotary switch can be connected to four GPIO lines. The
+> status of the GPIO lines reflect the actual position of the rotary
+> switch dial. For example, if dial points to 9, then the four GPIO lines
+> connected to the switch will read HLLH(0b'1001 = 9). This value
+> can be reported as an ABS_* event to the input subsystem.
 > 
-> [..]
-> > diff --git a/drivers/remoteproc/st_slim_rproc.c b/drivers/remoteproc/st_slim_rproc.c
-> [..]
-> > +static int slim_rproc_start(struct rproc *rproc)
-> > +{
-> > +	struct device *dev = &rproc->dev;
-> > +	struct st_slim_rproc *slim_rproc = rproc->priv;
-> > +	unsigned long hw_id, hw_ver, fw_rev;
-> > +	u32 val;
-> > +	int ret;
-> > +
-> > +	ret = slim_clk_enable(slim_rproc);
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed to enable clocks\n");
-> > +		goto err_clk;
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
 > 
-> Nit. just return ret here and have a static "return 0" at the bottom.
-
-Will fix.
-
+> v3: Fix comments by Andrew and Dmitry
+> Link to v2: https://lkml.org/lkml/2016/8/23/79
 > 
-> > +	}
-> > +
-> > +	/* disable CPU pipeline clock & reset cpu pipeline */
-> > +	val = SLIM_CLK_GATE_DIS | SLIM_CLK_GATE_RESET;
-> > +	writel(val, slim_rproc->slimcore + SLIM_CLK_GATE_OFST);
-> > +
-> > +	/* disable SLIM core STBus sync */
-> > +	writel(SLIM_STBUS_SYNC_DIS, slim_rproc->peri + SLIM_STBUS_SYNC_OFST);
-> > +
-> > +	/* enable cpu pipeline clock */
-> > +	writel(!SLIM_CLK_GATE_DIS,
-> > +		slim_rproc->slimcore + SLIM_CLK_GATE_OFST);
-> > +
-> > +	/* clear int & cmd mailbox */
-> > +	writel(~0U, slim_rproc->peri + SLIM_INT_CLR_OFST);
-> > +	writel(~0U, slim_rproc->peri + SLIM_CMD_CLR_OFST);
-> > +
-> > +	/* enable all channels cmd & int */
-> > +	writel(~0U, slim_rproc->peri + SLIM_INT_MASK_OFST);
-> > +	writel(~0U, slim_rproc->peri + SLIM_CMD_MASK_OFST);
-> > +
-> > +	/* enable cpu */
-> > +	writel(SLIM_EN_RUN, slim_rproc->slimcore + SLIM_EN_OFST);
-> > +
-> > +	hw_id = readl_relaxed(slim_rproc->slimcore + SLIM_ID_OFST);
-> > +	hw_ver = readl_relaxed(slim_rproc->slimcore + SLIM_VER_OFST);
-> > +
-> > +	fw_rev = readl(slim_rproc->mem[SLIM_DMEM].cpu_addr +
-> > +			SLIM_REV_ID_OFST);
-> > +
-> > +	dev_info(dev, "fw rev:%ld.%ld on SLIM %ld.%ld\n",
-> > +		 SLIM_REV_ID_MAJ(fw_rev), SLIM_REV_ID_MIN(fw_rev),
-> > +		 hw_id, hw_ver);
-> > +
-> > +err_clk:
-> > +	return ret;
-> > +}
-> > +
-> > +static int slim_rproc_stop(struct rproc *rproc)
-> > +{
-> > +	struct st_slim_rproc *slim_rproc = rproc->priv;
-> > +	u32 val;
-> > +
-> > +	/* mask all (cmd & int) channels */
-> > +	writel(0UL, slim_rproc->peri + SLIM_INT_MASK_OFST);
-> > +	writel(0UL, slim_rproc->peri + SLIM_CMD_MASK_OFST);
-> > +
-> > +	/* disable cpu pipeline clock */
-> > +	writel(SLIM_CLK_GATE_DIS
-> > +		, slim_rproc->slimcore + SLIM_CLK_GATE_OFST);
+>  .../devicetree/bindings/input/gpio-decoder.txt     |  23 ++++
+>  drivers/input/misc/Kconfig                         |  12 ++
+>  drivers/input/misc/Makefile                        |   1 +
+>  drivers/input/misc/gpio_decoder.c                  | 134 +++++++++++++++++++++
+>  4 files changed, 170 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/gpio-decoder.txt
+>  create mode 100644 drivers/input/misc/gpio_decoder.c
 > 
-> Odd placement of ','
+> diff --git a/Documentation/devicetree/bindings/input/gpio-decoder.txt b/Documentation/devicetree/bindings/input/gpio-decoder.txt
+> new file mode 100644
+> index 000000000000..14a77fb96cf0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/gpio-decoder.txt
+> @@ -0,0 +1,23 @@
+> +* GPIO Decoder DT bindings
+> +
+> +Required Properties:
+> +- compatible: should be "gpio-decoder"
+> +- gpios: a spec of gpios (at least two) to be decoded to a number with
+> +  first entry representing the MSB.
+> +
+> +Optional Properties:
+> +- decoder-max-value: Maximum possible value that can be reported by
+> +  the gpios.
+> +- linux,axis: the input subsystem axis to map to (ABS_X/ABS_Y).
+> +  Defaults to 0 (ABS_X).
+> +
+> +Example:
+> +	gpio-decoder0 {
+> +		compatible = "gpio-decoder";
+> +		gpios = <&pca9536 3 GPIO_ACTIVE_HIGH>,
+> +			<&pca9536 2 GPIO_ACTIVE_HIGH>,
+> +			<&pca9536 1 GPIO_ACTIVE_HIGH>,
+> +			<&pca9536 0 GPIO_ACTIVE_HIGH>;
+> +		linux,axis = <0>; /* ABS_X */
+> +		decoder-max-value = <9>;
+> +	};
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index efb0ca871327..7cdb89397d18 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -292,6 +292,18 @@ config INPUT_GPIO_TILT_POLLED
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called gpio_tilt_polled.
+>  
+> +config INPUT_GPIO_DECODER
+> +	tristate "Polled GPIO Decoder Input driver"
+> +	depends on GPIOLIB || COMPILE_TEST
+> +	select INPUT_POLLDEV
+> +	help
+> +	 Say Y here if you want driver to read status of multiple GPIO
+> +	 lines and report the encoded value as an absolute integer to
+> +	 input subsystem.
+> +
+> +	 To compile this driver as a module, choose M here: the module
+> +	 will be called gpio_decoder.
+> +
+>  config INPUT_IXP4XX_BEEPER
+>  	tristate "IXP4XX Beeper support"
+>  	depends on ARCH_IXP4XX
+> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> index 6a1e5e20fc1c..0b6d025f0487 100644
+> --- a/drivers/input/misc/Makefile
+> +++ b/drivers/input/misc/Makefile
+> @@ -35,6 +35,7 @@ obj-$(CONFIG_INPUT_DRV2667_HAPTICS)	+= drv2667.o
+>  obj-$(CONFIG_INPUT_GP2A)		+= gp2ap002a00f.o
+>  obj-$(CONFIG_INPUT_GPIO_BEEPER)		+= gpio-beeper.o
+>  obj-$(CONFIG_INPUT_GPIO_TILT_POLLED)	+= gpio_tilt_polled.o
+> +obj-$(CONFIG_INPUT_GPIO_DECODER)	+= gpio_decoder.o
+>  obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
+>  obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
+>  obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
+> diff --git a/drivers/input/misc/gpio_decoder.c b/drivers/input/misc/gpio_decoder.c
+> new file mode 100644
+> index 000000000000..1c2191d4b143
+> --- /dev/null
+> +++ b/drivers/input/misc/gpio_decoder.c
+> @@ -0,0 +1,134 @@
+> +/*
+> + * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation version 2.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether express or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * A generic driver to read multiple gpio lines and translate the
+> + * encoded numeric value into an input event.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/input.h>
+> +#include <linux/input-polldev.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +
+> +struct gpio_decoder {
+> +	struct input_polled_dev *poll_dev;
+> +	struct gpio_descs *input_gpios;
+> +	struct device *dev;
+> +	u32 axis;
+> +	u32 last_stable;
+> +};
+> +
+> +static unsigned int gpio_decoder_get_gpios_state(struct gpio_decoder
+> +						 *decoder)
+> +{
+> +	struct gpio_descs *gpios = decoder->input_gpios;
+> +	unsigned int ret = 0;
+> +	int i, val;
+> +
+> +	for (i = 0; i < gpios->ndescs; i++) {
+> +		val = gpiod_get_value_cansleep(gpios->desc[i]);
+> +		if (val >= 0) {
+> +			ret = (ret << 1) | !!val;
+> +		} else {
+> +			dev_err(decoder->dev, "Error reading gpio\n");
+> +			break;
 
-Will fix.
+I think if we fail reading any one of gpio lines we should skip
+reporting the event.
 
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void gpio_decoder_poll_gpios(struct input_polled_dev *poll_dev)
+> +{
+> +	struct gpio_decoder *decoder = poll_dev->private;
+> +	unsigned int state = gpio_decoder_get_gpios_state(decoder);
+> +
+> +	if (state != decoder->last_stable) {
+> +		input_report_abs(poll_dev->input, decoder->axis, state);
+> +		input_sync(poll_dev->input);
+> +		decoder->last_stable = state;
+> +	}
+> +}
+> +
+> +static int gpio_decoder_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct gpio_decoder *decoder;
+> +	struct input_polled_dev *poll_dev;
+> +	u32  max;
+> +	int err;
+> +
+> +	decoder = devm_kzalloc(dev, sizeof(struct gpio_decoder), GFP_KERNEL);
+> +	if (!decoder)
+> +		return -ENOMEM;
+> +
+> +	device_property_read_u32(dev, "linux,axis", &decoder->axis);
+> +	decoder->input_gpios = devm_gpiod_get_array(dev, NULL, GPIOD_IN);
+> +	if (IS_ERR(decoder->input_gpios)) {
+> +		dev_err(dev, "unable to acquire input gpios\n");
+> +		return PTR_ERR(decoder->input_gpios);
+> +	}
+> +	if (decoder->input_gpios->ndescs < 2) {
+> +		dev_err(dev, "not enough gpios found\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (device_property_read_u32(dev, "decoder-max-value", &max))
+> +		max = BIT(decoder->input_gpios->ndescs);
+
+Shouldn't this be
+
+		max = (1U << decoder->input_gpios->ndescs) - 1;
+
+?
+
+> +
+> +	decoder->dev = dev;
+> +	poll_dev = devm_input_allocate_polled_device(decoder->dev);
+> +	if (!poll_dev)
+> +		return -ENOMEM;
+> +
+> +	poll_dev->private = decoder;
+> +	poll_dev->poll = gpio_decoder_poll_gpios;
+> +	decoder->poll_dev = poll_dev;
+> +
+> +	poll_dev->input->name = pdev->name;
+> +	poll_dev->input->id.bustype = BUS_HOST;
+> +	input_set_abs_params(poll_dev->input, decoder->axis, 0, max, 0, 1);
+
+Why do you need flat == 1? Do you actually use joydev for this device?
+
+> +
+> +	err = input_register_polled_device(poll_dev);
+> +	if (err) {
+> +		dev_err(dev, "failed to register polled  device\n");
+> +		return err;
+> +	}
+> +	platform_set_drvdata(pdev, decoder);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id gpio_decoder_of_match[] = {
+> +	{ .compatible = "gpio-decoder", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, gpio_decoder_of_match);
+> +#endif
+> +
+> +static struct platform_driver gpio_decoder_driver = {
+> +	.probe		= gpio_decoder_probe,
+> +	.driver		= {
+> +		.name	= "gpio-decoder",
+> +		.of_match_table = of_match_ptr(gpio_decoder_of_match),
+> +	}
+> +};
+> +module_platform_driver(gpio_decoder_driver);
+> +
+> +MODULE_DESCRIPTION("GPIO decoder input driver");
+> +MODULE_AUTHOR("Vignesh R <vigneshr@ti.com>");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.9.2
 > 
-> > +
-> > +	writel(!SLIM_EN_RUN, slim_rproc->slimcore + SLIM_EN_OFST);
-> > +
-> > +	val = readl(slim_rproc->slimcore + SLIM_EN_OFST);
-> > +	if (val & SLIM_EN_RUN)
-> > +		dev_warn(&rproc->dev, "Failed to disable SLIM");
-> > +
-> > +	slim_clk_disable(slim_rproc);
-> > +
-> > +	dev_dbg(&rproc->dev, "slim stopped\n");
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void *slim_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
-> > +{
-> > +	struct st_slim_rproc *slim_rproc = rproc->priv;
-> > +	void *va = NULL;
-> > +	int i;
-> > +
-> > +	for (i = 0; i < SLIM_MEM_MAX; i++) {
-> > +		if (da != slim_rproc->mem[i].bus_addr)
-> > +			continue;
-> 
-> Are you sure you want to enforce this being called with da == base? (I'm
-> not totally against it).
 
-Yes.
+No need to resubmit, I can adjust on my side.
 
-> 
-> But you should probably double check that len is <= mem[i].size.
-
-Good point, I will add a check for this.
-
-> 
-> > +		/* __force to make sparse happy with type conversion */
-> > +		va = (__force void *)slim_rproc->mem[i].cpu_addr;
-> > +		break;
-> > +	}
-> > +
-> > +	dev_dbg(&rproc->dev, "%s: da = 0x%llx len = 0x%x va = 0x%p\n",
-> > +		__func__, da, len, va);
-> > +
-> > +	return va;
-> > +}
-> > +
-> > +static struct rproc_ops slim_rproc_ops = {
-> > +	.start		= slim_rproc_start,
-> > +	.stop		= slim_rproc_stop,
-> > +	.da_to_va       = slim_rproc_da_to_va,
-> > +};
-> > +
-> > +/**
-> > + * Firmware handler operations: sanity, boot address, load ...
-> > + */
-> > +
-> > +static struct resource_table empty_rsc_tbl = {
-> > +	.ver = 1,
-> > +	.num = 0,
-> > +};
-> > +
-> > +static struct resource_table *slim_rproc_find_rsc_table(struct rproc *rproc,
-> > +					       const struct firmware *fw,
-> > +					       int *tablesz)
-> > +{
-> > +	if (!fw)
-> > +		return NULL;
-> 
-> I consider it a BUG in the core to get here with fw == NULL, so please
-> drop this.
-
-Ok will drop in next version.
-
-> 
-> > +
-> > +	*tablesz = sizeof(empty_rsc_tbl);
-> > +	return &empty_rsc_tbl;
-> > +}
-> > +
-> > +static struct resource_table *slim_rproc_find_loaded_rsc_table(struct rproc *rproc,
-> > +						      const struct firmware *fw)
-> > +{
-> > +	if (!fw)
-> > +		return NULL;
-> > +
-> 
-> fw can't be NULL, so please drop this check.
-
-Ok will fix.
-> 
-> > +	return &empty_rsc_tbl;
-> 
-> This function is supposed to return a pointer to the resource table as
-> it appears in the space of the running firmware, so that any vring
-> updates etc are visible to the remote.
-> 
-> As your firmware doesn't do this you should return NULL here, rather
-> than a pointer back to the fake resource table.
-> 
-> But rproc_find_loaded_rsc_table() will do the same if you omit the
-> reference in the fw_ops struct, so just make that NULL instead.
-
-Good point. Will omit the reference in fw_ops struct in the next version.
-
-> 
-> > +}
-> > +
-> > +static struct rproc_fw_ops slim_rproc_fw_ops = {
-> > +	.find_rsc_table = slim_rproc_find_rsc_table,
-> > +	.find_loaded_rsc_table = slim_rproc_find_loaded_rsc_table,
-> > +};
-> > +
-> > +
-> > +/**
-> > + * slim_rproc_alloc() - allocate and initialise slim rproc
-> > + * @pdev: Pointer to the platform_device struct
-> > + * @fw_name: Name of firmware for rproc to use
-> > + *
-> > + * Function for allocating and initialising a slim rproc for use by
-> > + * device drivers whose IP is based around the slim slim core. It
-> > + * obtains and enables any clocks required by the slim core and also
-> > + * ioremaps the various IO.
-> > + *
-> > + * Returns st_slim_rproc pointer or PTR_ERR() on error.
-> > + */
-> > +
-> > +struct st_slim_rproc *slim_rproc_alloc(struct platform_device *pdev,
-> > +				char *fw_name)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct st_slim_rproc *slim_rproc;
-> > +	struct device_node *np = dev->of_node;
-> > +	struct rproc *rproc;
-> > +	struct resource *res;
-> > +	int err, i;
-> > +	const struct rproc_fw_ops *elf_ops;
-> > +
-> > +	if (WARN_ON(!np || !fw_name))
-> > +		return ERR_PTR(-EINVAL);
-> > +
-> > +	if (!of_device_is_compatible(np, "st,slim-rproc"))
-> > +		return ERR_PTR(-EINVAL);
-> > +
-> > +	rproc = rproc_alloc(dev, np->name, &slim_rproc_ops,
-> > +			fw_name, sizeof(*slim_rproc));
-> > +	if (!rproc)
-> > +		return ERR_PTR(-ENOMEM);
-> > +
-> > +	rproc->has_iommu = false;
-> > +
-> > +	slim_rproc = rproc->priv;
-> > +	slim_rproc->rproc = rproc;
-> > +
-> > +	elf_ops = rproc->fw_ops;
-> > +	/* Use some generic elf ops */
-> > +	slim_rproc_fw_ops.load = elf_ops->load;
-> > +	slim_rproc_fw_ops.sanity_check = elf_ops->sanity_check;
-> > +
-> > +	rproc->fw_ops = &slim_rproc_fw_ops;
-> > +
-> > +	/* get imem and dmem */
-> > +	for (i = 0; i < ARRAY_SIZE(mem_names); i++) {
-> > +
-> > +		res = platform_get_resource_byname
-> > +			(pdev, IORESOURCE_MEM, mem_names[i]);
-> 
-> This is an odd line breakage.
-
-Will fix.
- 
-> 
-> > +
-> > +		slim_rproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
-> > +		if (IS_ERR(slim_rproc->mem[i].cpu_addr)) {
-> > +			dev_err(&pdev->dev, "devm_ioremap_resource failed\n");
-> > +			err = PTR_ERR(slim_rproc->mem[i].cpu_addr);
-> > +			goto err;
-> > +		}
-> > +		slim_rproc->mem[i].bus_addr = res->start;
-> > +		slim_rproc->mem[i].size = resource_size(res);
-> > +	}
-> > +
-> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "slimcore");
-> > +
-> > +	slim_rproc->slimcore = devm_ioremap_resource(dev, res);
-> > +	if (IS_ERR(slim_rproc->slimcore)) {
-> > +		dev_err(&pdev->dev,
-> > +			"devm_ioremap_resource failed for slimcore\n");
-> > +		err = PTR_ERR(slim_rproc->slimcore);
-> > +		goto err;
-> > +	}
-> > +
-> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "peripherals");
-> > +
-> > +	slim_rproc->peri = devm_ioremap_resource(dev, res);
-> > +	if (IS_ERR(slim_rproc->peri)) {
-> > +		dev_err(&pdev->dev, "devm_ioremap_resource failed for peri\n");
-> > +		err = PTR_ERR(slim_rproc->peri);
-> > +		goto err;
-> > +	}
-> > +
-> > +	err = slim_clk_get(slim_rproc, dev);
-> > +	if (err)
-> > +		goto err;
-> > +
-> > +	/* Register as a remoteproc device */
-> > +	err = rproc_add(rproc);
-> > +	if (err) {
-> > +		dev_err(dev, "registration of slim remoteproc failed\n");
-> > +		goto err_clk;
-> > +	}
-> > +
-> > +	return slim_rproc;
-> > +
-> > +err_clk:
-> > +	for (i = 0; i < SLIM_MAX_CLK && slim_rproc->clks[i]; i++)
-> > +		clk_put(slim_rproc->clks[i]);
-> 
-> Is there any chance to could acquire these clocks by name instead of
-> just picking up 4 "random" clocks from the DT node?
-
-Not using clock names here was deliberate because the slim core is used as a
-basis for various IP's in the SoC, the clock names and number of them in the
-functional spec for the particular IP can change a lot.
-
-For instance all fdma instances have 4 clocks of various names, but the
-c8sectpfe demux IP also based around slim core only has one clock called STFE.
-
-The inspiration for this approach was taken from ehci-platform.c and
-ohci-platform.c drivers which have to work across a wide range of SoC's from different
-vendors and can also have many different clocks and clock names / reset lines
-and reset names & phys etc.
-
-> 
-> You are generally supposed to use clock-names and could then use
-> devm_clk_get() instead...
-> 
-> > +err:
-> > +	rproc_put(rproc);
-> > +	return ERR_PTR(err);
-> > +}
-> > +EXPORT_SYMBOL(slim_rproc_alloc);
-> > +
-> > +/**
-> > +  * slim_rproc_put() - put slim rproc resources
-> > +  * @slim_rproc: Pointer to the st_slim_rproc struct
-> > +  *
-> > +  * Function for calling respective _put() functions on
-> > +  * slim_rproc resources.
-> > +  *
-> > +  */
-> > +void slim_rproc_put(struct st_slim_rproc *slim_rproc)
-> > +{
-> > +	int clk;
-> > +
-> > +	if (!slim_rproc)
-> > +		return;
-> > +
-> > +	for (clk = 0; clk < SLIM_MAX_CLK && slim_rproc->clks[clk]; clk++)
-> > +		clk_put(slim_rproc->clks[clk]);
-> > +
-> 
-> You need to rproc_del() here before calling rproc_put().
-
-Will fix.
-
-> 
-> > +	rproc_put(slim_rproc->rproc);
-> > +}
-> > +EXPORT_SYMBOL(slim_rproc_put);
-> > +
-> > +MODULE_AUTHOR("Peter Griffin");
-> > +MODULE_DESCRIPTION("STMicroelectronics SLIM rproc driver");
-> > +MODULE_LICENSE("GPL v2");
-> > diff --git a/include/linux/remoteproc/st_slim_rproc.h b/include/linux/remoteproc/st_slim_rproc.h
-> > new file mode 100644
-> > index 0000000..c300b3e
-> > --- /dev/null
-> > +++ b/include/linux/remoteproc/st_slim_rproc.h
-> > @@ -0,0 +1,53 @@
-> > +/*
-> > + * st_slim_rproc.h
-> > + *
-> > + * Copyright (C) 2016 STMicroelectronics
-> > + * Author: Peter Griffin <peter.griffin@linaro.org>
-> > + * License terms:  GNU General Public License (GPL), version 2
-> > + */
-> > +#ifndef _ST_SLIM_H
-> > +#define _ST_SLIM_H
-> > +
-> > +#define SLIM_MEM_MAX 2
-> > +#define SLIM_MAX_CLK 4
-> > +
-> > +enum {
-> > +	SLIM_DMEM,
-> > +	SLIM_IMEM,
-> > +};
-> > +
-> > +/**
-> > + * struct slim_mem - slim internal memory structure
-> > + * @cpu_addr: MPU virtual address of the memory region
-> > + * @bus_addr: Bus address used to access the memory region
-> > + * @size: Size of the memory region
-> > + */
-> > +struct slim_mem {
-> > +	void __iomem *cpu_addr;
-> > +	phys_addr_t bus_addr;
-> > +	size_t size;
-> > +};
-> > +
-> 
-> With things like slimbus being worked on I don't think it's appropriate
-> to introduce public constants named SLIM_* or slim_*. Please rename
-> these ST_SLIM_* and st_slim_*
-
-Ok, will fix.
-
-Regards,
-
-Peter.
+-- 
+Dmitry
