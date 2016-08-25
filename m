@@ -1,75 +1,75 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 2/2] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
-Date: Thu, 25 Aug 2016 22:53:22 +0800
-Message-ID: <438381472136802@web24g.yandex.ru>
-References: <20160823064451.25997-1-icenowy@aosc.xyz>
- <20160823064451.25997-3-icenowy@aosc.xyz> <20160824193600.GS8103@lukather>
- <43951472083107@web23m.yandex.ru>
- <CAGb2v66tFENk8QBw7D1+bwFN-zWaE2SGDrNyc-zdbJSRzENk4Q@mail.gmail.com>
- <97321472108244@web8m.yandex.ru> <20160825080334.GD7776@lukather>
- <116041472134355@web12g.yandex.ru>
- <6580ba1b-f542-58d4-9f0a-fdd8e9b86092@redhat.com>
+From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Thu, 25 Aug 2016 10:56:50 -0400
+Message-ID: <20160825145650.GA15995@brightrain.aerifal.cx>
+References: <cover.147018b3518.git.dalias@libc.org>
+ <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
+ <57BDCE5D.2050609@linaro.org>
+ <20160824174001.GW15995@brightrain.aerifal.cx>
+ <alpine.DEB.2.20.1608250947120.5714@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6580ba1b-f542-58d4-9f0a-fdd8e9b86092@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.20.1608250947120.5714@nanos>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgoyNS4wOC4yMDE2LCAyMjoxOCwgIkhhbnMgZGUgR29lZGUiIDxoZGVnb2VkZUByZWRoYXQuY29t
-PjoKPiBIaSwKPgo+IE9uIDI1LTA4LTE2IDE2OjEyLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+PiDC
-oDI1LjA4LjIwMTYsIDE2OjAzLCAiTWF4aW1lIFJpcGFyZCIgPG1heGltZS5yaXBhcmRAZnJlZS1l
-bGVjdHJvbnMuY29tPjoKPj4+IMKgSGksCj4+Pgo+Pj4gwqBPbiBUaHUsIEF1ZyAyNSwgMjAxNiBh
-dCAwMjo1NzoyNFBNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+Pj4+IMKgwqA+Pj4+IGRp
-ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdW44aS1hMzMtaW5ldC1kOTc4LXJldjIuZHRz
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTMzLWluZXQtZDk3OC1yZXYyLmR0cwo+Pj4+IMKg
-wqA+Pj4+IGluZGV4IDc4ODIzZDguLjNhYzIyZDQgMTAwNjQ0Cj4+Pj4gwqDCoD4+Pj4gLS0tIGEv
-YXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTMzLWluZXQtZDk3OC1yZXYyLmR0cwo+Pj4+IMKgwqA+
-Pj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy1pbmV0LWQ5NzgtcmV2Mi5kdHMK
-Pj4+PiDCoMKgPj4+PiBAQCAtNDgsNiArNDgsMTAgQEAKPj4+PiDCoMKgPj4+PiBtb2RlbCA9ICJJ
-TmV0LUQ5NzggUmV2IDAyIjsKPj4+PiDCoMKgPj4+PiBjb21wYXRpYmxlID0gInByaW11eCxpbmV0
-LWQ5NzgtcmV2MiIsICJhbGx3aW5uZXIsc3VuOGktYTMzIjsKPj4+PiDCoMKgPj4+Pgo+Pj4+IMKg
-wqA+Pj4+ICsgYWxpYXNlcyB7Cj4+Pj4gwqDCoD4+Pj4gKyBzZXJpYWwxID0gJnVhcnQxOwo+Pj4+
-IMKgwqA+Pj4+ICsgfTsKPj4+PiDCoMKgPj4+PiArCj4+Pj4gwqDCoD4+Pgo+Pj4+IMKgwqA+Pj4g
-SXMgdGhlcmUgYW55IG90aGVyIFVBUlQgaW4gdGhlIHN5c3RlbT8KPj4+PiDCoMKgPj4KPj4+PiDC
-oMKgPj4gc2VyaWFsMCBpcyBkZWZpbmVkIGluIHN1bjhpLXJlZmVyZW5jZS1kZXNpZ24tdGFibGV0
-LmR0c2ksIGFzIHJfdWFydC4KPj4+PiDCoMKgPgo+Pj4+IMKgwqA+IElmIHlvdXIgYm9hcmQgZG9l
-cyBub3QgaGF2ZSByX3VhcnQgcGFkcywgdGhlbiB0aGUgcmlnaHQgdGhpbmcgdG8gZG8KPj4+PiDC
-oMKgPiB3b3VsZCBiZSB0byBkaXNhYmxlIGl0LiBZb3UgY2FuIHRoZW4gaGF2ZSB1YXJ0MSBhcyBz
-ZXJpYWwwLgo+Pj4+Cj4+Pj4gwqDCoEkgZG9uJ3Qga25vdyBpdC4gVGhlIFJYL1RYIGlzIHdpcmVk
-IG9uIFBGMi9QRjQgb24gdGhlIGJvYXJkIChVQVJUMCBtdXhlZCB3aXRoCj4+Pj4gwqDCoE1NQykK
-Pj4+Cj4+PiDCoFRoZW4geW91IGRvbid0IHN1cHBvcnQgaXQgYW5kIHlvdSBuZWVkIHRvIGRpc2Fi
-bGUgaXQuCj4+Pgo+Pj4+IMKgwqBCdXQgbWFueSBjb2RlcyB3aWxsIHJlcXVpcmUgYSB0dHlTMCBh
-cyBjb25zb2xlLi4uIFNvIEkgdGhpbmsgdGhlCj4+Pj4gwqDCoGJsdWV0b290aCBzaG91bGQgYmUg
-bG9jYXRlZCBhdCB0dHlTMS4uLgo+Pj4KPj4+IMKgTW9zdCBvZiB0aGVtIHdvdWxkIHVzZSAvZGV2
-L2NvbnNvbGUgYW55d2F5LiBXaGF0IGRvIHlvdSBoYXZlIGluIG1pbmQ/Cj4+Cj4+IMKgQXMgYSBn
-ZW5lcmFsIGNvbmZpZ3VyYXRpb24sIC9kZXYvdHR5UzAgd2lsbCBiZSBpbmRpY2F0ZWQgYXMgdGhl
-IGRlZmF1bHQgY29uc29sZT0KPj4gwqB2YWx1ZS4uLiAoT3RoZXJ3aXNlIG1vcmUgYm9hcmRzIHdp
-bGwgZmFpbCkKPj4KPj4gwqBPciBtYXliZSB3ZSBjYW4gc3BlY2lmeSB1YXJ0MCBhcyBzZXJpYWww
-LCBhbmQgbGVhdmUgaXQgYXMgZGlzYWJsZWQ/IChUaHVzIGlmIHRoZQo+PiDCoGRlYnVnIHBvcnQg
-aXMgbmVlZGVkLCB3ZSBjYW4gZWFzaWx5IGFwcGx5IGEgb3ZlcmxheSB3aXRoICZtbWMwIHN0YXR1
-cyBhcyBkaXNhYmxlZCwKPj4gwqBhbmQgJnVhcnQwIHN0YXR1cyBhcyBva2F5KQo+Pgo+PiDCoE9u
-IGFsbCBteSBBMzMgYm9hcmRzLCB0aGUgb2ZmaWNpYWwgYm9vdDAsIHUtYm9vdCBhbGwgdXNlcyB1
-YXJ0MCBhcyBkZWJ1Z2dpbmcgcG9ydC4KPgo+IElmIG5vIHVhcnQgaXMgYXZhaWxhYmxlIChhbmQg
-YmVpbmcgbXV4ZWQgd2l0aCB0aGUgbW1jIGNvdW50cyBhcyBub3QgYmVpbmcgYXZhaWxhYmxlKQo+
-IHRoZW4geW91IHNob3VsZCBub3QgaGF2ZSBhbnkgc2VyaWFsIGFsaWFzIGluIHRoZSBkdHMuCj4K
-PiBJbiB1LWJvb3QgeW91IG5lZWQgdG8gdXNlOgo+Cj4gIyBDT05GSUdfUkVRVUlSRV9TRVJJQUxf
-Q09OU09MRSBpcyBub3Qgc2V0Cj4KPiBJbiB0aGUgZGVmY29uZmlnIGluIHRoaXMgY2FzZSwgb3Ro
-ZXJ3aXNlIHUtYm9vdCBpcyBnb2luZyB0byBiZSB1bmhhcHB5IGFib3V0Cj4gbm90IGhhdmluZyBh
-IHNlcmlhbCBjb25zb2xlLgoKSXQncyBub3QgdGhlIHByb2JsZW0uCgpDYW4gSSBoYXZlIG5vIHR0
-eVMwIGFuZCBqdXN0IG1ha2UgYmx1ZXRvb3RoIHR0eVMxPwoKPgo+IFJlZ2FyZHMsCj4KPiBIYW5z
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+On Thu, Aug 25, 2016 at 10:07:08AM +0200, Thomas Gleixner wrote:
+> Rich,
+> 
+> On Wed, 24 Aug 2016, Rich Felker wrote:
+> > I don't think that's a correct characterization. Rather the percpu
+> > infrastructure just means something completely different from what you
+> > would expect it to mean. It has nothing to do with the hardware but
+> > rather with kernel-internal choice of whether to do percpu devid
+> > mapping inside the irq infrastructure, and the choice at the
+> > irq-requester side of whether to do this is required to match the
+> > irqchip driver's choice. I explained this better in another email
+> > which I could dig up if necessary, but the essence is that
+> > request_percpu_irq is a misnamed and unusably broken API.
+> 
+> I slowly get tired about your permanent ranting about misnamed, misdesigned
+> and unusable code in the kernel.
+
+This is the only instance I'm aware of, and my intent was not to rant.
+If you're aware of other cases where I've done this and it's come
+across abrasive to you or others, I'd appreciate it if you could point
+them out so I can try to avoid doing so in the future.
+
+As for this topic, what happened is that, after the first and second
+time of expressing confusion about how the infrastructure did not make
+sense and whether I should even be using it, I did not get anything
+resembling an explanation of why it's the way it is or why I might be
+wrong in thinking it's a bug, and so I went forward with the
+assumption that is was just a bug. Now that Mark Rutland has explained
+it well (and with your additional explanation below in your email), I
+see what the motivation was, but I still think it could be done in a
+less-confusing and more-consistent way that doesn't assume ARM-like
+irq architecture.
+
+> If your particular hardware has the old scheme of seperate interrupt numbers
+> for per cpu interrupts, then you can simply use the normal interrupt scheme
+> and request a seperate interrupt per cpu.
+
+Nominally it uses the same range of hardware interrupt numbers for all
+(presently both) cpus, but some of them get delivered to a specific
+cpu associated with the event (presently, IPI and timer; IPI is on a
+fixed number at synthesis time but timer is runtime configurable)
+while others are conceptually deliverable to either cpu (presently
+only delivered to cpu0, but that's treated as an implementation
+detail).
+
+It currently works requesting the irq with flags that ensure the
+handler runs on the same cpu it was delivered on, without using any
+other percpu irq framework. If you have concerns about ways this could
+break and want me to make the drivers do something else, I'm open to
+suggestions.
+
+Rich
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
