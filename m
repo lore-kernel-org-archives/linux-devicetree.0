@@ -1,63 +1,62 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: da850: Add missing pin muxing for the UARTs
-Date: Thu, 25 Aug 2016 19:12:16 +0530
-Message-ID: <354081bd-653d-ec98-f18e-eb0b1b1ee7e3@ti.com>
-References: <20160804110656.25318-1-kbeldan@baylibre.com>
- <m2eg64pchw.fsf@baylibre.com> <20160804210045.GD15013@gobelin>
- <m2fuqknnqk.fsf@baylibre.com> <fe36e8d1-f371-b093-de15-5e03370ea38c@ti.com>
- <dd4712ba-6144-8c64-59a6-7673936af53c@ti.com>
- <20160824082934.GA20246@gobelin>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/5] of/platform: introduce a generic way to declare a
+ platform bus
+Date: Thu, 25 Aug 2016 08:44:56 -0500
+Message-ID: <CAL_JsqK42T1M3MO26p46K0zTuvGUAdMWAf4FHGVpAJgDa+SudQ@mail.gmail.com>
+References: <1471918019-19472-1-git-send-email-haokexin@gmail.com> <1471918019-19472-4-git-send-email-haokexin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160824082934.GA20246@gobelin>
+In-Reply-To: <1471918019-19472-4-git-send-email-haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 24 August 2016 02:08 PM, Karl Beldan wrote:
-> On Tue, Aug 23, 2016 at 04:46:03PM +0530, Sekhar Nori wrote:
->> On Tuesday 23 August 2016 04:39 PM, Sekhar Nori wrote:
->>> On Friday 05 August 2016 04:30 AM, Kevin Hilman wrote:
->>>> Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
->>>>
->>>>> On Thu, Aug 04, 2016 at 12:20:27PM -0700, Kevin Hilman wrote:
->>>>>> Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
->>>>>>
->>>>>>> This adds 2 pinctrl groups (rtscts, rxtx) for each of the 3 UARTs.
->>>>>>>
->>>>>>> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>>>>
->>>>>> Should da850-evm be updated to use the serial2_rxtx_pins also?
->>>>>>
->>>>> I could not find the EVM schematics on the net and I only have an LCDK,
->>>>> but according to the code it should, however I can't tell whether flow
->>>>> control pins are used.
->>>>
->>>> Ok, let's just leave it for now, since it's working fine.  Sekhar can
->>>> fix that up if he can dig up the schematics.
->>>
->>> Looks like the flow control pins are being used for McASP also on the
->>> EVM. So lets leave the EVM as-is.
->>
->> Rather, the EVM dts file should be updated to use serial2_rxtx_pins like
->> the LCDK. Right now it seems to be relying on bootloader to serial2
->> setup pimux correctly. I can make a patch to fix that. Or if you can do
->> it, that will be great too.
->>
-> 
-> Indeed ATM the EVM relies on the bootloader to setup the pin muxing.
-> 
-> I just checked the uart pins routing of the EVM, the dts:
-> - should reclaim serial2_rxtx_pins and serial2_rtscts_pins
+On Mon, Aug 22, 2016 at 9:06 PM, Kevin Hao <haokexin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> The specific buses which need to be probed at boot time are different
+> between platforms. Instead of put all the buses into the default
+> of_default_bus_match_table[] match tables, this patch introduces a
+> general way to declare a platform bus.
 
-Can you please clarify what you mean by dts should "reclaim". You mean
-move the pins from da850.dtsi to da850-evm.dts or something else?
+I'd prefer to not do this with linker sections if possible. Doesn't
+PPC have machine descriptors that you could add the match table to? If
+that table exists then arch_want_default_of_probe could return a
+pointer to it.
 
-Thanks,
-Sekhar
+Are there any platforms that work with the default match table? I'd be
+fine with adding some strings to the default if that helps.
+
+{ .type = "soc", },
+
+device_type is deprecated for FDT, so this shouldn't be needed except
+for really old stuff.
+
+{ .compatible = "soc", },
+
+Doesn't appear in kernel dts files. Could be out of tree or old ones?
+
+{ .compatible = "simple-bus" },
+
+Already handled.
+
+{ .compatible = "gianfar" },
+
+Seems like the children of this should be probed by the gianfar driver.
+
+{ .compatible = "gpio-leds", },
+
+I don't think this is needed.
+
+{ .type = "qe", },
+
+Again, deprecated.
+
+{ .compatible = "fsl,qe", },
+
+No issue to add this. Though, you could also probe it from mpc85xx_qe_init().
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
