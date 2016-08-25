@@ -1,71 +1,63 @@
-From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH] MIPS: Octeon: mark GPIO controller node not populated
- IRQ, init.
-Date: Fri, 26 Aug 2016 01:40:33 +0300
-Message-ID: <20160825224033.GH12169@raspberrypi.musicnaut.iki.fi>
-References: <422712ab-4b0d-2b6d-4600-b917c2d327a9@cavium.com>
- <57BF6F47.4030803@caviumnetworks.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH V3 0/5] ARM: dts: bcm2835: Add Raspberry Pi Zero
+Date: Thu, 25 Aug 2016 15:45:14 -0700
+Message-ID: <87oa4gv56t.fsf@eliezer.anholt.net>
+References: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <57BF6F47.4030803-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1471792204-21908-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: "Steven J. Hill" <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 25, 2016 at 03:20:55PM -0700, David Daney wrote:
-> On 08/25/2016 02:22 PM, Steven J. Hill wrote:
-> >We clear the OF_POPULATED flag for the GPIO controller node, otherwise
-> >the GPIO lines used by the MMC driver are never probed.
+Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
 
-Please also mention that gpio-leds failed to probe.
+> This patch series add support for Raspberry Pi Zero with USB host mode. I=
+t's
+> based on the patch "ARM64: dts: bcm: Use a symlink to R-Pi dtsi files
+> from arch=3Darm" from Ian Campbell. Currently there is a bug [1] which ne=
+eds
+> to fixed before because after applying these patch series the bug isn't
+> reproducible anymore but not fixed.
+>
+> The patches 1-3 fixes the USB DT settings for bcm283x. Patch 3 is only co=
+mpile
+> tested, so it would be nice if someone with a RPi 3 could test it.
+> The last patch based on the work of Lubomir Rintel [2] and Noralf Tr=C3=
+=B8nnes [3].
+>
+> Note: Patch 3 can't be cherry-picked because it depends on Patch 2.
 
-> >Fixes: 15cc2ed6dcf9 ("of/irq: Mark initialised interrupt controllers as populated")
-> >Signed-off-by: Steven J. Hill <Steven.Hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >---
-> >  arch/mips/cavium-octeon/octeon-irq.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> >diff --git a/arch/mips/cavium-octeon/octeon-irq.c b/arch/mips/cavium-octeon/octeon-irq.c
-> >index 5a9b87b..41d12d4 100644
-> >--- a/arch/mips/cavium-octeon/octeon-irq.c
-> >+++ b/arch/mips/cavium-octeon/octeon-irq.c
-> >@@ -1619,6 +1619,13 @@ static int __init octeon_irq_init_gpio(
-> >  		return -ENOMEM;
-> >  	}
-> >
-> >+	/*
-> >+	 * Clear the OF_POPULATED flag that was set above for the
-> 
-> Can we s/above/in of_irq_init()/ to be less ambiguous?
-> 
-> >+	 * GPIO controller so that the lines used by the MMC driver
-> 
-> I suspect that it is not just MMC that was broken by commit 15cc2ed6dcf9.
-> Can we get a real description of exactly which kernel facilities are
-> impacted?  Is it all GPIO, or what?
+Pulled this series minus the arm64 patch to bcm2835-dt-next.  My Pi3
+setup is down currently so I wasn't able to test it.
 
-For me it fixes gpio-leds breakage, so I think it's all GPIO. Referring
-to MMC driver is not appropriate anyway as the OCTEON MMC is not yet
-merged. :-)
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> >+	 * will not be skipped.
-> >+	 */
-> >+	of_node_clear_flag(gpio_node, OF_POPULATED);
-> >+
-> >  	return 0;
+-----BEGIN PGP SIGNATURE-----
 
-For this actual code change, you can add:
-
-Tested-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-
-Thanks,
-
-A.
+iQIcBAEBCgAGBQJXv3T6AAoJELXWKTbR/J7oz7AP/RB69H1CF5Y/73rMJblmEkss
+NVBITfS2jKbFzG8wFWg2gErAdpVC3PNVelKcojYv3+Y0+FfW+GZUEyU5nDXW3yGM
+JWHbQ/H3mQ5n8UKxiQ1TLAbeNUURFvrgifC4cIdrb2OXDjMBYmIJZ7yPrlEXWoL7
+GkGt5BjUa5Uk26BbHSVbrpjLTyVZU6ElqAPbuSTiamsAojkQzCZCxtXbLx+Eizb0
+RMBoGgxFw0NUk+fAsaBXX5p4quEo+9PHhsrZmKDs2chwi4OmpnB4OZ/VB21Oabvz
+76d1JlRVwWjA2Q/38Pkffygo0IhjZpFKU5Grq8/+ni+myxSOsXewxcah1Lo3gW89
+8oPVaNfaducGlZk9UYk/dkJGALEM+vGpal8y3YVPcgZRG7C8OfNRjhQ8lp0DMQT3
+I3V3b94bi2PDyeMvFkUgERI2ZG8kAerKiRTka4MuKgj4jAZz4t9ko/h5ixhdpqLc
+MLqj9NDxuiMEreMcFINpho9bhot6KWB86hjGv3KjV4kbkhHfZ/syGvn4TCB5vhnX
+LKoqWslPrWzPvNXcmhWZ//Gj35LGrYRDKLKSv7firqAfAwNQth1gxlqiBg08tTF4
+3dM3XSNHTU0Ub0kggR9uab9+R46Jcy+URuz4smz6qHkeY4paao3LR9K1NNjvACNb
+PfhUaw4zcTqVwQ2jcbUw
+=3j9H
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
