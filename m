@@ -1,14 +1,19 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 2/2] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
-Date: Thu, 25 Aug 2016 07:58:27 +0800
-Message-ID: <43951472083107@web23m.yandex.ru>
-References: <20160823064451.25997-1-icenowy@aosc.xyz>
- <20160823064451.25997-3-icenowy@aosc.xyz> <20160824193600.GS8103@lukather>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [RESEND PATCH v2 02/13] drivers: clk: st: Simplify clock binding
+ of STiH4xx platforms
+Date: Wed, 24 Aug 2016 17:11:11 -0700
+Message-ID: <147208387070.66208.10807364446051184867@resonance>
+References: <1466068833-5055-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1466068833-5055-3-git-send-email-gabriel.fernandez@linaro.org>
+ <20160619150458.GA26824@rob-hp-laptop>
+ <146794221378.73491.2803164814485320331@resonance> <577F6E83.3080006@st.com>
+ <146799410307.73491.9408637761157902031@resonance>
+ <578343A2.6090801@st.com> <7b3f45bf-2fba-7563-f2a2-c74e759f6316@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160824193600.GS8103@lukather>
+In-Reply-To: <7b3f45bf-2fba-7563-f2a2-c74e759f6316@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,37 +23,143 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Gabriel Fernandez <gabriel.fernandez@st.com>, Rob Herring <robh@kernel.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, Geert Uytterhoeven <geert+renesas@glider.be>, arnaud.pouliquen@st.com, linux-kernel@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, benjamin.gaignard@st.com, Olivier Bideau <olivier.bideau@st.com>, Russell King <linux@armlinux.org.uk>, Peter Griffin <peter.griffin@linaro.org>, Thierry Reding <treding@nvidia.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, vincent.abriou@st.com, linux-arm-kernel@lists.infradead.org, Maxime Coquelin <maxime.coquelin@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Patrice Chotard <patrice.chotard@st.com>, Pankaj Dev <pankaj.dev@st.com>, Kumar Gala <gal>
 List-Id: devicetree@vger.kernel.org
 
-CgoyNS4wOC4yMDE2LCAwMzozNiwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT46Cj4gSGksCj4KPiBPbiBUdWUsIEF1ZyAyMywgMjAxNiBhdCAwMjo0NDo1
-MVBNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+PiDCoFVBUlQxIGlzIGNvbm5lY3RlZCB0
-byB0aGUgYmx1ZXRvb3RoIHBhcnQgb2YgUlRMODcyM0JTIFdpRmkvQlQgY29tYm8gY2FyZAo+PiDC
-oG9uIGlOZXQgRDk3OCBSZXYyIGJvYXJkLgo+Pgo+PiDCoEVuYWJsZSB0aGUgVUFSVDEgdG8gbWFr
-ZSBpdCBwb3NzaWJsZSB0byB1c2UgdGhlIG1vZGlmaWVkIGhjaWF0dGFjaCBieQo+PiDCoFJlYWx0
-ZWsgdG8gZHJpdmUgdGhlIEJUIHBhcnQgb2YgUlRMODcyM0JTLgo+Pgo+PiDCoFNpZ25lZC1vZmYt
-Ynk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy54eXo+Cj4KPiBJIGd1ZXNzIHlvdSBjb3Vs
-ZCBmb2xkIHRoYXQgcGF0Y2ggaW50byB0aGUgcHJldmlvdXMgb25lLgo+Cj4+IMKgLS0tCj4+IMKg
-wqBhcmNoL2FybS9ib290L2R0cy9zdW44aS1hMzMtaW5ldC1kOTc4LXJldjIuZHRzIHwgMTEgKysr
-KysrKysrKysKPj4gwqDCoDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspCj4+Cj4+IMKg
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy1pbmV0LWQ5NzgtcmV2Mi5k
-dHMgYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1hMzMtaW5ldC1kOTc4LXJldjIuZHRzCj4+IMKg
-aW5kZXggNzg4MjNkOC4uM2FjMjJkNCAxMDA2NDQKPj4gwqAtLS0gYS9hcmNoL2FybS9ib290L2R0
-cy9zdW44aS1hMzMtaW5ldC1kOTc4LXJldjIuZHRzCj4+IMKgKysrIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvc3VuOGktYTMzLWluZXQtZDk3OC1yZXYyLmR0cwo+PiDCoEBAIC00OCw2ICs0OCwxMCBAQAo+
-PiDCoMKgwqDCoMKgwqDCoMKgwqDCoG1vZGVsID0gIklOZXQtRDk3OCBSZXYgMDIiOwo+PiDCoMKg
-wqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUgPSAicHJpbXV4LGluZXQtZDk3OC1yZXYyIiwgImFs
-bHdpbm5lcixzdW44aS1hMzMiOwo+Pgo+PiDCoCsgYWxpYXNlcyB7Cj4+IMKgKyBzZXJpYWwxID0g
-JnVhcnQxOwo+PiDCoCsgfTsKPj4gwqArCj4KPiBJcyB0aGVyZSBhbnkgb3RoZXIgVUFSVCBpbiB0
-aGUgc3lzdGVtPwoKc2VyaWFsMCBpcyBkZWZpbmVkIGluIHN1bjhpLXJlZmVyZW5jZS1kZXNpZ24t
-dGFibGV0LmR0c2ksIGFzIHJfdWFydC4KCj4KPiBUaGUgYWxpYXMgaXMgbm90IHN1cHBvc2VkIHRv
-IGJlIGFib3V0IHRoZSBjb250cm9sbGVyIGluZGV4LCBidXQgdGhlCj4gaW5kZXggaW4gdGhlIGJv
-YXJkLCBtZWFuaW5nIHRoYXQgaWYgeW91IG9ubHkgaGF2ZSBhIHNpbmdsZSBVQVJULCB0aGF0Cj4g
-d291bGQgYmUgc2VyaWFsMC4KPgo+IFRoYW5rcyEKPiBNYXhpbWUKPgo+IC0tCj4gTWF4aW1lIFJp
-cGFyZCwgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVy
-aW5nCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Quoting Gabriel Fernandez (2016-08-22 09:06:20)
+> Hi Mike,
+> 
+> you forgot me ?
+> 
+> Best Regards
+> 
+> Gabriel
+> 
+> 
+> On 07/11/2016 08:58 AM, Gabriel Fernandez wrote:
+> >
+> >
+> > On 07/08/2016 06:08 PM, Michael Turquette wrote:
+> >> Quoting Gabriel Fernandez (2016-07-08 02:12:35)
+> >>> Hi Mike,
+> >>>
+> >>> On 07/08/2016 03:43 AM, Michael Turquette wrote:
+> >>>> Quoting Rob Herring (2016-06-19 08:04:58)
+> >>>>> On Thu, Jun 16, 2016 at 11:20:22AM +0200, Gabriel Fernandez wrote:
+> >>>>>> This patch reworks the clock binding to avoid too much detail in DT.
+> >>>>>> Now we have only compatible string per type of clock
+> >>>>>> (remark from Rob https://lkml.org/lkml/2016/5/25/492)
+> >>>>>>
+> >>>>> I have no idea what the clock trees and clock controller in these 
+> >>>>> chips
+> >>>>> look like, so it's hard to say if the changes here are good. It still
+> >>>>> looks like things are somewhat fine grained clocks in DT. I'll leave
+> >>>>> it up to the platform maintainers to decide...
+> >>>> Is this series breaking ABI? If yes, why not do what Maxime did for 
+> >>>> the
+> >>>> Allwinner/sunxi clocks and just fully convert over to a
+> >>>> one-node-per-clock-controller binding? This one-node-per-clock 
+> >>>> stuff is
+> >>>> pretty unfortunate, and if we're deprecating platforms (patch #1) then
+> >>>> now might be a good time to re-evaluate the whole thing.
+> >>> The goal of my patchset was to be aligned with DRM / KMS development 
+> >>> and
+> >>> to offer
+> >>> the possibility to make a correct video playback on STiH407/STiH410
+> >>> platform.
+> >>> Our milestone is the 4.8 for that.
+> >>>
+> >>> Currently people need these patches to work.
+> >>> I'm not sure it's a good time to re-evaluate the whole thing.
+> >>>
+> >>> Is it possible to re-evaluate later ?
+> >> Are you OK to break ABI later? Or at a minimum, deprecate the current
+> >> binding (maintain it forever for legacy platforms) and create a new
+> >> clock controller binding description that supersedes the legacy binding
+> >> for all new platforms?
+> >>
+> >> If the answer to either question is "yes", then I'm OK to put it aside
+> >> for now. But if the answer to both is "no", and this patch series is
+> >> breaking ABI, then we really should fix it now.
+> >
+> > Hi Mike,
+> > i m ok to break ABI later.
+
+Hi Gabriel,
+
+This change never received any other reviews, and no pings before v4.7
+was released. Sorry that it fell through the cracks, but always feel
+free to re-ping leading up to the merge window.
+
+Can you rebase this against -rc1? Also, do you have a plan to rework the
+binding to move away from the one-node-per-clock style?
+
+Regards,
+Mike
+
+> >
+> > Many Thanks !
+> >
+> > Best Regards
+> >
+> > Gabriel.
+> >
+> >> Regards,
+> >> Mike
+> >>
+> >>> Best regards,
+> >>> Gabriel
+> >>>
+> >>>> Regards,
+> >>>> Mike
+> >>>>
+> >>>>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> >>>>>> ---
+> >>>>>>    .../devicetree/bindings/clock/st/st,clkgen-mux.txt | 2 +-
+> >>>>>>    .../devicetree/bindings/clock/st/st,clkgen-pll.txt | 11 ++--
+> >>>>>>    .../devicetree/bindings/clock/st/st,clkgen.txt     | 2 +-
+> >>>>>>    .../devicetree/bindings/clock/st/st,quadfs.txt     | 6 +--
+> >>>>>>    drivers/clk/st/clkgen-fsyn.c                       | 41 
+> >>>>>> ++++++--------
+> >>>>>>    drivers/clk/st/clkgen-mux.c                        | 28 
+> >>>>>> ++++------
+> >>>>>>    drivers/clk/st/clkgen-pll.c                        | 62 
+> >>>>>> ++++++++++------------
+> >>>>>>    7 files changed, 65 insertions(+), 87 deletions(-)
+> >>>>>>
+> >>>>>> diff --git 
+> >>>>>> a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt 
+> >>>>>> b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+> >>>>>> index 4d277d6..9a46cb1d7 100644
+> >>>>>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+> >>>>>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+> >>>>>> @@ -10,7 +10,7 @@ This binding uses the common clock binding[1].
+> >>>>>>    Required properties:
+> >>>>>>       - compatible : shall be:
+> >>>>>> -     "st,stih407-clkgen-a9-mux",     "st,clkgen-mux"
+> >>>>>> +     "st,stih407-clkgen-a9-mux"
+> >>>>>>       - #clock-cells : from common clock binding; shall be set to 0.
+> >>>>>>    diff --git 
+> >>>>>> a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt 
+> >>>>>> b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> >>>>>> index c9fd674..be0b043 100644
+> >>>>>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> >>>>>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+> >>>>>> @@ -9,11 +9,10 @@ Base address is located to the parent node. See 
+> >>>>>> clock binding[2]
+> >>>>>>    Required properties:
+> >>>>>>       - compatible : shall be:
+> >>>>>> -     "st,stih407-plls-c32-a0", "st,clkgen-plls-c32"
+> >>>>>> -     "st,stih407-plls-c32-a9", "st,clkgen-plls-c32"
+> >>>>>> -     "sst,plls-c32-cx_0", "st,clkgen-plls-c32"
+> >>>>>> -     "sst,plls-c32-cx_1", "st,clkgen-plls-c32"
+> >>>>>> -     "st,stih418-plls-c28-a9", "st,clkgen-plls-c32"
+> >>>>>> +     "st,clkgen-pll0"
+> >>>>>> +     "st,clkgen-pll0"
+> >>>>> Repeated. Supposed to be 0 and 1? This seems a bit generic, too.
+> >>>>>
+> >>>>>> +     "st,stih407-clkgen-plla9"
+> >>>>>> +     "st,stih418-clkgen-plla9"
+> >
+> 
