@@ -1,162 +1,64 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 7/7] musb: sunxi: Add support for platform_set_mode
-Date: Thu, 25 Aug 2016 20:00:18 +0200
-Message-ID: <20160825180018.23736-1-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] sdhci-of-arasan: Add quirk and device tree parameter
+ to fake CD bit
+Date: Thu, 25 Aug 2016 19:10:00 +0100
+Message-ID: <20160825180959.GA14705@remoulade>
+References: <1472080984-17373-1-git-send-email-zach.brown@ni.com>
+ <20160825105640.GA5439@remoulade>
+ <20160825171539.GA13571@zach-desktop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20160825171539.GA13571@zach-desktop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zach Brown <zach.brown@ni.com>
+Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, lars@metafoo.de, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-This allows run-time dr_mode switching support via the "mode" musb
-sysfs attribute.
+On Thu, Aug 25, 2016 at 12:15:44PM -0500, Zach Brown wrote:
+> On Thu, Aug 25, 2016 at 11:56:55AM +0100, Mark Rutland wrote:
+> > On Wed, Aug 24, 2016 at 06:23:03PM -0500, Zach Brown wrote:
+> > > +- fake-cd: On Zynq Devices the SDHCI Controller will not work without the cd
+> > > +  bit. When this option is set the driver will put the controller in test mode
+> > > +  and fake the cd bit so it will function.
+> > 
+> > As Lars noted, the DT should describe the HW, and the policy of how to deal
+> > with that should be left to the kernel. So from a DT perspective the above is
+> > not correct.
+> > 
+> > If I understand the linked documentation, this is slightly different to typical
+> > uses of broken-cd in that in the absence of a card detect signal the HW will
+> > not be able to access the SD card at all, even if requested to. Is that correct?
+> > 
+> > If so, perhaps a better option is to have the combination of broken-cd and the
+> > compatible string for this IP block imply that the test mode workaround is
+> > required. Obviously that requires a fixup to the usual broken-cd binding to
+> > remove the implication that polling alone must be used.
+> > 
+> > Thanks,
+> > Mark.
+> 
+> In cases where the card is non-removable then polling doesn't make sense.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--No changes
-Changes in v3:
--Fix switch-case code style
-Changes in v4:
--Call musb_root_disconnect() before role change to make sure any attached
- devices get seen as disconnected by the kernel
----
- drivers/usb/musb/sunxi.c | 61 ++++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 57 insertions(+), 4 deletions(-)
+We have the non-removable property to describe that, so we can also look at that.
 
-diff --git a/drivers/usb/musb/sunxi.c b/drivers/usb/musb/sunxi.c
-index c6ee166..1408245 100644
---- a/drivers/usb/musb/sunxi.c
-+++ b/drivers/usb/musb/sunxi.c
-@@ -74,6 +74,7 @@
- #define SUNXI_MUSB_FL_HAS_SRAM			5
- #define SUNXI_MUSB_FL_HAS_RESET			6
- #define SUNXI_MUSB_FL_NO_CONFIGDATA		7
-+#define SUNXI_MUSB_FL_PHY_MODE_PEND		8
- 
- /* Our read/write methods need access and do not get passed in a musb ref :| */
- static struct musb *sunxi_musb;
-@@ -87,6 +88,7 @@ struct sunxi_glue {
- 	struct phy		*phy;
- 	struct platform_device	*usb_phy;
- 	struct usb_phy		*xceiv;
-+	enum phy_mode		phy_mode;
- 	unsigned long		flags;
- 	struct work_struct	work;
- 	struct extcon_dev	*extcon;
-@@ -140,6 +142,9 @@ static void sunxi_musb_work(struct work_struct *work)
- 			clear_bit(SUNXI_MUSB_FL_PHY_ON, &glue->flags);
- 		}
- 	}
-+
-+	if (test_and_clear_bit(SUNXI_MUSB_FL_PHY_MODE_PEND, &glue->flags))
-+		phy_set_mode(glue->phy, glue->phy_mode);
- }
- 
- static void sunxi_musb_set_vbus(struct musb *musb, int is_on)
-@@ -341,6 +346,50 @@ static void sunxi_musb_dma_controller_destroy(struct dma_controller *c)
- {
- }
- 
-+static int sunxi_musb_set_mode(struct musb *musb, u8 mode)
-+{
-+	struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
-+	enum phy_mode new_mode;
-+
-+	switch (mode) {
-+	case MUSB_HOST:
-+		new_mode = PHY_MODE_USB_HOST;
-+		break;
-+	case MUSB_PERIPHERAL:
-+		new_mode = PHY_MODE_USB_DEVICE;
-+		break;
-+	case MUSB_OTG:
-+		new_mode = PHY_MODE_USB_OTG;
-+		break;
-+	default:
-+		dev_err(musb->controller->parent,
-+			"Error requested mode not supported by this kernel\n");
-+		return -EINVAL;
-+	}
-+
-+	if (glue->phy_mode == new_mode)
-+		return 0;
-+
-+	if (musb->port_mode != MUSB_PORT_MODE_DUAL_ROLE) {
-+		dev_err(musb->controller->parent,
-+			"Error changing modes is only supported in dual role mode\n");
-+		return -EINVAL;
-+	}
-+
-+	if (musb->port1_status & USB_PORT_STAT_ENABLE)
-+		musb_root_disconnect(musb);
-+
-+	/*
-+	 * phy_set_mode may sleep, and we're called with a spinlock held,
-+	 * so let sunxi_musb_work deal with it.
-+	 */
-+	glue->phy_mode = new_mode;
-+	set_bit(SUNXI_MUSB_FL_PHY_MODE_PEND, &glue->flags);
-+	schedule_work(&glue->work);
-+
-+	return 0;
-+}
-+
- /*
-  * sunxi musb register layout
-  * 0x00 - 0x17	fifo regs, 1 long per fifo
-@@ -568,6 +617,7 @@ static const struct musb_platform_ops sunxi_musb_ops = {
- 	.writew		= sunxi_musb_writew,
- 	.dma_init	= sunxi_musb_dma_controller_create,
- 	.dma_exit	= sunxi_musb_dma_controller_destroy,
-+	.set_mode	= sunxi_musb_set_mode,
- 	.set_vbus	= sunxi_musb_set_vbus,
- 	.pre_root_reset_end = sunxi_musb_pre_root_reset_end,
- 	.post_root_reset_end = sunxi_musb_post_root_reset_end,
-@@ -614,21 +664,28 @@ static int sunxi_musb_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
-+	glue = devm_kzalloc(&pdev->dev, sizeof(*glue), GFP_KERNEL);
-+	if (!glue)
-+		return -ENOMEM;
-+
- 	memset(&pdata, 0, sizeof(pdata));
- 	switch (usb_get_dr_mode(&pdev->dev)) {
- #if defined CONFIG_USB_MUSB_DUAL_ROLE || defined CONFIG_USB_MUSB_HOST
- 	case USB_DR_MODE_HOST:
- 		pdata.mode = MUSB_PORT_MODE_HOST;
-+		glue->phy_mode = PHY_MODE_USB_HOST;
- 		break;
- #endif
- #if defined CONFIG_USB_MUSB_DUAL_ROLE || defined CONFIG_USB_MUSB_GADGET
- 	case USB_DR_MODE_PERIPHERAL:
- 		pdata.mode = MUSB_PORT_MODE_GADGET;
-+		glue->phy_mode = PHY_MODE_USB_DEVICE;
- 		break;
- #endif
- #ifdef CONFIG_USB_MUSB_DUAL_ROLE
- 	case USB_DR_MODE_OTG:
- 		pdata.mode = MUSB_PORT_MODE_DUAL_ROLE;
-+		glue->phy_mode = PHY_MODE_USB_OTG;
- 		break;
- #endif
- 	default:
-@@ -638,10 +695,6 @@ static int sunxi_musb_probe(struct platform_device *pdev)
- 	pdata.platform_ops	= &sunxi_musb_ops;
- 	pdata.config		= &sunxi_musb_hdrc_config;
- 
--	glue = devm_kzalloc(&pdev->dev, sizeof(*glue), GFP_KERNEL);
--	if (!glue)
--		return -ENOMEM;
--
- 	glue->dev = &pdev->dev;
- 	INIT_WORK(&glue->work, sunxi_musb_work);
- 	glue->host_nb.notifier_call = sunxi_musb_host_notifier;
--- 
-2.9.3
+> So it doesn't make sense to tie the test mode workaround into the broken-cd
+> property, even though I agree the nature of the defect fits under the notion
+> of the CD being broken.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maybe not solely on broken-cd, but I think that we dont necessarily need a new
+DT property. As above, broken-cd, non-removable, and the compatible string may
+together give the kernel enough information to choose the right thing to do.
+
+Thanks,
+Mark.
