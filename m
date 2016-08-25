@@ -1,82 +1,59 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 2/2] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
-Date: Thu, 25 Aug 2016 12:40:57 +0800
-Message-ID: <CAGb2v66tFENk8QBw7D1+bwFN-zWaE2SGDrNyc-zdbJSRzENk4Q@mail.gmail.com>
-References: <20160823064451.25997-1-icenowy@aosc.xyz>
- <20160823064451.25997-3-icenowy@aosc.xyz>
- <20160824193600.GS8103@lukather> <43951472083107@web23m.yandex.ru>
+From: Matthijs van Duin <matthijsvanduin@gmail.com>
+Subject: Re: [PATCH 1/3] ARM: dts: omap5-board-common: enable rtc and charging
+ of backup battery
+Date: Thu, 25 Aug 2016 04:43:40 +0200
+Message-ID: <CAALWOA_JStjvXv3u46bq91Dz0sR6HwAoL8Y6t2MzPVMw5zz=Tw@mail.gmail.com>
+References: <CCB763BE-5D1F-4A53-BF9A-C12C08A6EFC4@goldelico.com>
+ <20160111202421.GA12777@atomide.com> <20160112000917.GC12777@atomide.com>
+ <417BBA32-A7DC-40CD-8A6B-EA910B1C9C13@goldelico.com> <E4C8F6CA-37C1-406F-9804-46055253BED9@goldelico.com>
+ <001346CD-CF31-4FEF-B406-B89EEBDFA063@goldelico.com> <56966558.1070608@ti.com>
+ <569669C5.2070200@ti.com> <20160113164856.GF12777@atomide.com>
+ <5696896F.4090309@ti.com> <20160113180006.GJ12777@atomide.com>
+ <2B99611A-5D2E-4D17-A17D-0150516109FD@goldelico.com> <56969800.5010206@ti.com>
+ <D6479E92-4226-4B07-95F3-C0DF092B827C@goldelico.com> <5696A002.6050402@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <43951472083107@web23m.yandex.ru>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5696A002.6050402@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Tony Lindgren <tony@atomide.com>, Grygorii Strashko <grygorii.strashko@ti.com>, Laxman Dewangan <ldewangan@nvidia.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek@goldelico.com>, =?UTF-8?Q?Gra=C5=BEvydas_Ignotas?= <notasas@gmail.com>, Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 25, 2016 at 7:58 AM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
->
->
-> 25.08.2016, 03:36, "Maxime Ripard" <maxime.ripard@free-electrons.com>:
->> Hi,
->>
->> On Tue, Aug 23, 2016 at 02:44:51PM +0800, Icenowy Zheng wrote:
->>>  UART1 is connected to the bluetooth part of RTL8723BS WiFi/BT combo card
->>>  on iNet D978 Rev2 board.
->>>
->>>  Enable the UART1 to make it possible to use the modified hciattach by
->>>  Realtek to drive the BT part of RTL8723BS.
->>>
->>>  Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
->>
->> I guess you could fold that patch into the previous one.
->>
->>>  ---
->>>   arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts | 11 +++++++++++
->>>   1 file changed, 11 insertions(+)
->>>
->>>  diff --git a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
->>>  index 78823d8..3ac22d4 100644
->>>  --- a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
->>>  +++ b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
->>>  @@ -48,6 +48,10 @@
->>>           model = "INet-D978 Rev 02";
->>>           compatible = "primux,inet-d978-rev2", "allwinner,sun8i-a33";
->>>
->>>  + aliases {
->>>  + serial1 = &uart1;
->>>  + };
->>>  +
->>
->> Is there any other UART in the system?
->
-> serial0 is defined in sun8i-reference-design-tablet.dtsi, as r_uart.
+On 13 January 2016 at 19:18, Nishanth Menon <nm@ti.com> wrote:
+> As you already see it is ridiculously round about way of protecting RTC
+> time.. but anyways, for what ever reason, that was mandatory function to
+> support on certain product lines.
 
-If your board does not have r_uart pads, then the right thing to do
-would be to disable it. You can then have uart1 as serial0.
+Having secure date/time is probably necessary for some digital rights
+management schemes; e.g. you rent a movie for limited time, but it may
+not always be acceptable to require working internet connectivity to
+be able to hit the play button hence the need to rely on a secure RTC.
 
-AFAIK Linux requires a console, but that console can be simplefb.
+There wouldn't even be an SMC for setting the RTC, probably it would
+synchronize when the secure-world shizzle contacts the Big Server
+O'Secrety Bits. :P
 
-ChenYu
+Protecting pinmux through the L4 firewall sounds hilarious: the whole
+ctrl_core module (0x4a002000 - 0x4a002fff) is a single firewall
+region. All permitted access to it by linux would have to be
+redirected to an SMC or similar.
 
->>
->> The alias is not supposed to be about the controller index, but the
->> index in the board, meaning that if you only have a single UART, that
->> would be serial0.
->>
->> Thanks!
->> Maxime
->>
->> --
->> Maxime Ripard, Free Electrons
->> Embedded Linux and Kernel engineering
->> http://free-electrons.com
+On 13 January 2016 at 20:05, Nishanth Menon <nm@ti.com> wrote:
+> An internal feedback I got some time back on AM57 (not OMAP5) - context
+> was that we were discussing if an external pull up resistor was needed
+> for a GPIO button:
+> "Internal pull-ups are relatively weak (ranging to 100kOhm or higher)
+
+Unlike the OMAP5, AM57xx uses 1.8V/3.3V drivers for its generic IOs,
+which have to do magic to not get fried by such high voltages.
+Crappier specs result, especially for pulling up to 3.3V:
+1.8V mode, pull-down current while pin is held high: 50-210 uA
+3.3V mode, pull-down current while pin is held high: 40-200 uA
+1.8V mode, pull-up current while pin is held low: 60-200 uA
+3.3V mode, pull-up current while pin is held low: 10-290 uA
+
+Note the worst-case equivalent pull-up resistance in 3.3V mode is 330
+kOhm, eleven times higher than in 1.8V mode.
+
+Matthijs
