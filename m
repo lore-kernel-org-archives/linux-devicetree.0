@@ -1,54 +1,96 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] sdhci-of-arasan: Add quirk and device tree parameter
- to fake CD bit
-Date: Thu, 25 Aug 2016 19:28:55 +0100
-Message-ID: <20160825182852.GB15000@remoulade>
-References: <1472080984-17373-1-git-send-email-zach.brown@ni.com>
- <20160825105640.GA5439@remoulade>
- <20160825171539.GA13571@zach-desktop>
- <20160825180959.GA14705@remoulade>
- <20160825182621.GA14817@zach-desktop>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH v4 3/5] drm: add SimpleDRM driver
+Date: Thu, 25 Aug 2016 20:42:09 +0200
+Message-ID: <b8f7a377-b7c7-5d51-1c80-b24894cd9f12@tronnes.org>
+References: <1471897525-31118-1-git-send-email-noralf@tronnes.org>
+ <1471897525-31118-4-git-send-email-noralf@tronnes.org>
+ <CAL_JsqL3xc9QwPsDh0GgcC2NjTFE1NLkwy1Ypyn34iNh7atJ+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160825182621.GA14817@zach-desktop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
-Cc: adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqL3xc9QwPsDh0GgcC2NjTFE1NLkwy1Ypyn34iNh7atJ+Q@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 25, 2016 at 01:26:22PM -0500, Zach Brown wrote:
-> On Thu, Aug 25, 2016 at 07:10:00PM +0100, Mark Rutland wrote:
-> > On Thu, Aug 25, 2016 at 12:15:44PM -0500, Zach Brown wrote:
-> > > In cases where the card is non-removable then polling doesn't make sense.
-> > 
-> > We have the non-removable property to describe that, so we can also look at that.
-> > 
-> > > So it doesn't make sense to tie the test mode workaround into the broken-cd
-> > > property, even though I agree the nature of the defect fits under the notion
-> > > of the CD being broken.
-> > 
-> > Maybe not solely on broken-cd, but I think that we dont necessarily need a new
-> > DT property. As above, broken-cd, non-removable, and the compatible string may
-> > together give the kernel enough information to choose the right thing to do.
-> > 
-> > Thanks,
-> > Mark.
-> 
-> I'm not sure if I understand your suggestion completely. Are you suggesting
-> setting both the broken-cd and non-removable properties? That would make sense,
-> but my understanding was that the two properities are not meant to co-exist. In
-> /Documentation/devicetree/bindings/mmc/mmc.txt it states that only one should
-> be supplied. Don't the two properties conflict with each other?
-
-They do for the cases that exist today, but given we're updating the document
-anyway, we could simply clarify the cases in which the two can sanely co-exist
-(e.g.  for this particular IP block).
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CkRlbiAyNS4wOC4yMDE2IDE1OjA5LCBza3JldiBSb2IgSGVycmluZzoKPiBPbiBNb24sIEF1ZyAy
+MiwgMjAxNiBhdCAzOjI1IFBNLCBOb3JhbGYgVHLDuG5uZXMgPG5vcmFsZkB0cm9ubmVzLm9yZz4g
+d3JvdGU6Cj4+IFRoZSBTaW1wbGVEUk0gZHJpdmVyIGJpbmRzIHRvIHNpbXBsZS1mcmFtZWJ1ZmZl
+ciBkZXZpY2VzIGFuZCBwcm92aWRlcyBhCj4+IERSTS9LTVMgQVBJLiBJdCBwcm92aWRlcyBvbmx5
+IGEgc2luZ2xlIENSVEMrZW5jb2Rlcitjb25uZWN0b3IgY29tYmluYXRpb24KPj4gcGx1cyBvbmUg
+aW5pdGlhbCBtb2RlLgo+Pgo+PiBVc2Vyc3BhY2UgY2FuIGNyZWF0ZSBkdW1iLWJ1ZmZlcnMgd2hp
+Y2ggY2FuIGJlIGJsaXQgaW50byB0aGUgcmVhbAo+PiBmcmFtZWJ1ZmZlciBzaW1pbGFyIHRvIFVE
+TC4gTm8gYWNjZXNzIHRvIHRoZSByZWFsIGZyYW1lYnVmZmVyIGlzIGFsbG93ZWQKPj4gKGNvbXBh
+cmVkIHRvIGVhcmxpZXIgdmVyc2lvbiBvZiB0aGlzIGRyaXZlcikgdG8gYXZvaWQgc2VjdXJpdHkg
+aXNzdWVzLgo+PiBGdXJ0aGVybW9yZSwgdGhpcyB3YXkgd2UgY2FuIHN1cHBvcnQgYXJiaXRyYXJ5
+IG1vZGVzIGFzIGxvbmcgYXMgd2UgaGF2ZSBhCj4+IGNvbnZlcnNpb24taGVscGVyLgo+Pgo+PiBU
+aGUgZHJpdmVyIHdhcyBvcmlnaW5hbGx5IHdyaXR0ZW4gYnkgRGF2aWQgSGVycm1hbm4gaW4gMjAx
+NC4KPj4gTXkgbWFpbiBjb250cmlidXRpb24gaXMgdG8gbWFrZSB1c2Ugb2YgZHJtX3NpbXBsZV9r
+bXNfaGVscGVyIGFuZAo+PiByZXdvcmsgdGhlIHByb2JlIHBhdGggdG8gYXZvaWQgdXNlIG9mIHRo
+ZSBkZXByZWNhdGVkIGRybV9wbGF0Zm9ybV9pbml0KCkKPj4gYW5kIGRybV9kcml2ZXIue2xvYWQs
+dW5sb2FkfSgpLgo+PiBBZGRpdGlvbnMgaGF2ZSBhbHNvIGJlZW4gbWFkZSBmb3IgbGF0ZXIgY2hh
+bmdlcyB0byB0aGUgRGV2aWNlIFRyZWUgYmluZGluZwo+PiBkb2N1bWVudCwgbGlrZSBzdXBwb3J0
+IGZvciBjbG9ja3MsIHJlZ3VsYXRvcnMgYW5kIGhhdmluZyB0aGUgbm9kZSB1bmRlcgo+PiAvY2hv
+c2VuLiBUaGlzIGNvZGUgd2FzIGxpZnRlZCB2ZXJiYXRpbSBmcm9tIHNpbXBsZWZiLmMuCj4+Cj4+
+IENjOiBkaC5oZXJybWFubkBnbWFpbC5jb20KPj4gQ2M6IGxpYnZAc2t5bmV0LmJlCj4+IFNpZ25l
+ZC1vZmYtYnk6IE5vcmFsZiBUcsO4bm5lcyA8bm9yYWxmQHRyb25uZXMub3JnPgo+IFsuLi5dCj4K
+Pj4gKyAgICAgICAvKiBDb3VudCB0aGUgbnVtYmVyIG9mIHJlZ3VsYXRvciBzdXBwbGllcyAqLwo+
+PiArICAgICAgIGZvcl9lYWNoX3Byb3BlcnR5X29mX25vZGUobnAsIHByb3ApIHsKPj4gKyAgICAg
+ICAgICAgICAgIHAgPSBzdHJzdHIocHJvcC0+bmFtZSwgU1VQUExZX1NVRkZJWCk7Cj4+ICsgICAg
+ICAgICAgICAgICBpZiAocCAmJiBwICE9IHByb3AtPm5hbWUpCj4+ICsgICAgICAgICAgICAgICAg
+ICAgICAgIGNvdW50Kys7Cj4+ICsgICAgICAgfQo+IFRoZSByZWd1bGF0b3IgQVBJIHNob3VsZCBo
+YXZlIGZ1bmN0aW9ucyBmb3IgdGhpcyByYXRoZXIgdGhhbiBvcGVuIGNvZGluZyBpdC4KCkkgY291
+bGRuJ3QgZmluZCBhbnl0aGluZyB0aGF0IG1hdGNoZXMgdGhpcyB1c2VjYXNlLiBUaGVyZSBhcmUg
+cmVndWxhdG9yCmJ1bGsgZnVuY3Rpb25zLCBidXQgdGhleSByZXF1aXJlIHRoZSBuYW1lcyB0byBi
+ZSBrbm93biBpbiBhZHZhbmNlLgpBbmQgSSBkb24ndCBrbm93IGhvdyBtYW55IHJlZ3VsYXRvcnMg
+dGhlcmUgYXJlIG5vciB0aGVpciBuYW1lcy4KCkZyb20gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvc2ltcGxlLWZyYW1lYnVmZmVyLnR4dDoKCi0gKi1zdXBwbHkgOiBB
+bnkgbnVtYmVyIG9mIHJlZ3VsYXRvcnMgdXNlZCBieSB0aGUgZnJhbWVidWZmZXIuIFRoZXNlIHNo
+b3VsZAogICAgICAgICAgYmUgbmFtZWQgYWNjb3JkaW5nIHRvIHRoZSBuYW1lcyBpbiB0aGUgZGV2
+aWNlJ3MgZGVzaWduLgoKPj4gKwo+PiArICAgICAgIGlmICghY291bnQpCj4+ICsgICAgICAgICAg
+ICAgICByZXR1cm4gMDsKPj4gKwo+PiArICAgICAgIHNkcm0tPnJlZ3VsYXRvcnMgPSBkZXZtX2tj
+YWxsb2MoJnBkZXYtPmRldiwgY291bnQsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBzaXplb2Yoc3RydWN0IHJlZ3VsYXRvciAqKSwKPj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIEdGUF9LRVJORUwpOwo+PiArICAgICAgIGlmICghc2Ry
+bS0+cmVndWxhdG9ycykKPj4gKyAgICAgICAgICAgICAgIHJldHVybiAtRU5PTUVNOwo+PiArCj4+
+ICsgICAgICAgLyogR2V0IGFsbCB0aGUgcmVndWxhdG9ycyAqLwo+PiArICAgICAgIGZvcl9lYWNo
+X3Byb3BlcnR5X29mX25vZGUobnAsIHByb3ApIHsKPj4gKyAgICAgICAgICAgICAgIGNoYXIgbmFt
+ZVszMl07IC8qIDMyIGlzIG1heCBzaXplIG9mIHByb3BlcnR5IG5hbWUgKi8KPj4gKwo+PiArICAg
+ICAgICAgICAgICAgcCA9IHN0cnN0cihwcm9wLT5uYW1lLCBTVVBQTFlfU1VGRklYKTsKPj4gKyAg
+ICAgICAgICAgICAgIGlmICghcCB8fCBwID09IHByb3AtPm5hbWUpCj4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgIGNvbnRpbnVlOwo+IFRoaXMgdG9vLgo+Cj4+ICsKPj4gKyAgICAgICAgICAgICAg
+IHN0cmxjcHkobmFtZSwgcHJvcC0+bmFtZSwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgc3Ry
+bGVuKHByb3AtPm5hbWUpIC0gc3RybGVuKFNVUFBMWV9TVUZGSVgpICsgMSk7Cj4+ICsgICAgICAg
+ICAgICAgICByZWd1bGF0b3IgPSBkZXZtX3JlZ3VsYXRvcl9nZXRfb3B0aW9uYWwoJnBkZXYtPmRl
+diwgbmFtZSk7Cj4gWy4uLl0KPgo+PiArICAgICAgIGlmIChJU19FTkFCTEVEKENPTkZJR19PRl9B
+RERSRVNTKSAmJiBvZl9jaG9zZW4pIHsKPj4gKyAgICAgICAgICAgICAgIHN0cnVjdCBkZXZpY2Vf
+bm9kZSAqbnA7Cj4+ICsKPj4gKyAgICAgICAgICAgICAgIGZvcl9lYWNoX2NoaWxkX29mX25vZGUo
+b2ZfY2hvc2VuLCBucCkgewo+PiArICAgICAgICAgICAgICAgICAgICAgICBpZiAob2ZfZGV2aWNl
+X2lzX2NvbXBhdGlibGUobnAsICJzaW1wbGUtZnJhbWVidWZmZXIiKSkKPiBSYXRoZXIgdGhhbiBl
+eHBvcnRpbmcgb2ZfY2hvc2VuLCB0aGlzIHdob2xlIGNodW5rIGNhbiBiZSByZXBsYWNlZCB3aXRo
+Cj4gYSBvZl9maW5kX2NvbXBhdGlibGVfbm9kZSBjYWxsLiBZZXMsIHRoYXQgd291bGQgbWF0Y2gg
+aWYKPiBzaW1wbGUtZnJhbWVidWZmZXIgZXhpc3RzIHNvbWV3aGVyZSBlbHNlIGluIHRoZSBEVCwg
+YnV0IGl0IGlzIG5vdCB0aGUKPiBrZXJuZWwncyBqb2IgdG8gZG8gRFQgdmFsaWRhdGlvbi4KClRo
+aXMgc2VlbXMgdG8gZG8gdGhlIGpvYjoKCiAgICAgLyoKICAgICAgKiBUaGUgYmluZGluZyBkb2Mg
+c3RhdGVzIHRoYXQgc2ltcGxlZmIgbm9kZXMgc2hvdWxkIGJlIHN1Yi1ub2RlcyBvZgogICAgICAq
+IGNob3NlbiBhbmQgdGhhdCBvbGRlciBkZXZpY2V0cmVlIGZpbGVzIGNhbiBoYXZlIHRoZW0gaW4g
+YSBkaWZmZXJlbnQKICAgICAgKiBwbGFjZS4gb2ZfcGxhdGZvcm1fZGV2aWNlX2NyZWF0ZSgpIGp1
+c3QgcmV0dXJucyBOVUxMIGlmIGEgZGV2aWNlCiAgICAgICogaGFzIGFscmVhZHkgYmVlbiBjcmVh
+dGVkIGZvciB0aGUgbm9kZS4KICAgICAgKi8KICAgICBmb3JfZWFjaF9jb21wYXRpYmxlX25vZGUo
+bnAsIE5VTEwsICJzaW1wbGUtZnJhbWVidWZmZXIiKQogICAgICAgICBvZl9wbGF0Zm9ybV9kZXZp
+Y2VfY3JlYXRlKG5wLCBOVUxMLCBOVUxMKTsKCgpOb3JhbGYuCgo+PiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIG9mX3BsYXRmb3JtX2RldmljZV9jcmVhdGUobnAsIE5VTEwsIE5VTEwp
+Owo+PiArICAgICAgICAgICAgICAgfQo+PiArICAgICAgIH0KPiBSb2IKPgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
