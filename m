@@ -1,16 +1,20 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v2 3/7] pinctrl: samsung: Add the support the multiple
- IORESOURCE_MEM for one pin-bank
-Date: Thu, 25 Aug 2016 23:41:04 +0900
-Message-ID: <CA+Ln22Guw1LghdV64cSKjByDExr+2HnvEK7DNkYz+XPAmVuAzA@mail.gmail.com>
-References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
- <1472046551-703-4-git-send-email-cw00.choi@samsung.com>
- <CA+Ln22Ew=8S382zn+M8Ys5vztqvzp1+3EOTKtd81WSfuSyvY6w@mail.gmail.com>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Subject: Re: [RESEND PATCH v2 02/13] drivers: clk: st: Simplify clock binding
+ of STiH4xx platforms
+Date: Thu, 25 Aug 2016 16:51:59 +0200
+Message-ID: <52c1f647-7719-715c-270e-0779038b856b@st.com>
+References: <1466068833-5055-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1466068833-5055-3-git-send-email-gabriel.fernandez@linaro.org>
+ <20160619150458.GA26824@rob-hp-laptop>
+ <146794221378.73491.2803164814485320331@resonance> <577F6E83.3080006@st.com>
+ <146799410307.73491.9408637761157902031@resonance> <578343A2.6090801@st.com>
+ <7b3f45bf-2fba-7563-f2a2-c74e759f6316@st.com>
+ <147208387070.66208.10807364446051184867@resonance>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CA+Ln22Ew=8S382zn+M8Ys5vztqvzp1+3EOTKtd81WSfuSyvY6w@mail.gmail.com>
+In-Reply-To: <147208387070.66208.10807364446051184867@resonance>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,64 +24,149 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, chanwoo@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Andrzej Hajda <a.hajda@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Beomho Seo <beomho.seo@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Jonghwa Lee <jonghwa3.lee@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Joonyoung Shim <jy0922.shim@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, ingi2.kim@samsung.comlinux-arm-kernel <li>
+To: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, Geert Uytterhoeven <geert+renesas@glider.be>, arnaud.pouliquen@st.com, linux-kernel@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, benjamin.gaignard@st.com, Olivier Bideau <olivier.bideau@st.com>, Russell King <linux@armlinux.org.uk>, Peter Griffin <peter.griffin@linaro.org>, Thierry Reding <treding@nvidia.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, vincent.abriou@st.com, linux-arm-kernel@lists.infradead.org, Maxime Coquelin <maxime.coquelin@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Patrice Chotard <patrice.chotard@st.com>, Pankaj Dev <pankaj.dev@st.com>, Kumar Gala <gal>
 List-Id: devicetree@vger.kernel.org
 
-2016-08-25 23:30 GMT+09:00 Tomasz Figa <tomasz.figa@gmail.com>:
->> +       }
->> +
->> +#define EXYNOS_PIN_BANK_EINTN_EXT(pins, reg, id, pctl_idx, eint_idx)   \
->> +       {                                               \
->> +               .type           = &bank_type_off,       \
->> +               .pctl_offset    = reg,                  \
->> +               .nr_pins        = pins,                 \
->> +               .eint_type      = EINT_TYPE_NONE,       \
->> +               .name           = id,                   \
->> +               .pctl_res_idx   = pctl_idx,             \
->> +               .eint_res_idx   = eint_dix              \
->> +       }
->
-> Your patch 4/7 doesn't seem to use this one, so this is dead code for
-> the time being. Please add when there is real need for it.
->
-> Also it doesn't really make much sense to have index for both pctl and
-> eint. Please define first entry of regs property as always pointing to
-> pctl registers and by also eint registers for usual controllers. Then
-> second regs entry would be eint registers for controllers with
-> separate register blocks. Then there is only a need to have
-> eint_res_idx in the driver and no need for pctl_res_idx, because it
-> would be always 0.
 
-Ah, sorry, I got confused again by which registers are where in these
-GPF banks. Let's make it the other way around and make DT contain eint
-registers in first regs entry and hardcode eint_res_idx to 0 for the
-time being. However it should be still beneficial to refactor the code
-and calculate per-bank eint_base to avoid adding the offset every
-time, similarly to pctl_base/offset, from my suggestion below.
-
->> @@ -345,7 +346,8 @@ static void pin_to_reg_bank(struct samsung_pinctrl_drv_data *drvdata,
->>                         ((b->pin_base + b->nr_pins - 1) < pin))
->>                 b++;
+On 08/25/2016 02:11 AM, Michael Turquette wrote:
+> Quoting Gabriel Fernandez (2016-08-22 09:06:20)
+>> Hi Mike,
 >>
->> -       *reg = drvdata->virt_base + b->pctl_offset;
->> +       pctl_res_idx = b->pctl_res_idx;
->> +       *reg = drvdata->virt_base[pctl_res_idx] + b->pctl_offset;
+>> you forgot me ?
+>>
+>> Best Regards
+>>
+>> Gabriel
+>>
+>>
+>> On 07/11/2016 08:58 AM, Gabriel Fernandez wrote:
+>>>
+>>> On 07/08/2016 06:08 PM, Michael Turquette wrote:
+>>>> Quoting Gabriel Fernandez (2016-07-08 02:12:35)
+>>>>> Hi Mike,
+>>>>>
+>>>>> On 07/08/2016 03:43 AM, Michael Turquette wrote:
+>>>>>> Quoting Rob Herring (2016-06-19 08:04:58)
+>>>>>>> On Thu, Jun 16, 2016 at 11:20:22AM +0200, Gabriel Fernandez wrote:
+>>>>>>>> This patch reworks the clock binding to avoid too much detail in DT.
+>>>>>>>> Now we have only compatible string per type of clock
+>>>>>>>> (remark from Rob https://lkml.org/lkml/2016/5/25/492)
+>>>>>>>>
+>>>>>>> I have no idea what the clock trees and clock controller in these
+>>>>>>> chips
+>>>>>>> look like, so it's hard to say if the changes here are good. It still
+>>>>>>> looks like things are somewhat fine grained clocks in DT. I'll leave
+>>>>>>> it up to the platform maintainers to decide...
+>>>>>> Is this series breaking ABI? If yes, why not do what Maxime did for
+>>>>>> the
+>>>>>> Allwinner/sunxi clocks and just fully convert over to a
+>>>>>> one-node-per-clock-controller binding? This one-node-per-clock
+>>>>>> stuff is
+>>>>>> pretty unfortunate, and if we're deprecating platforms (patch #1) then
+>>>>>> now might be a good time to re-evaluate the whole thing.
+>>>>> The goal of my patchset was to be aligned with DRM / KMS development
+>>>>> and
+>>>>> to offer
+>>>>> the possibility to make a correct video playback on STiH407/STiH410
+>>>>> platform.
+>>>>> Our milestone is the 4.8 for that.
+>>>>>
+>>>>> Currently people need these patches to work.
+>>>>> I'm not sure it's a good time to re-evaluate the whole thing.
+>>>>>
+>>>>> Is it possible to re-evaluate later ?
+>>>> Are you OK to break ABI later? Or at a minimum, deprecate the current
+>>>> binding (maintain it forever for legacy platforms) and create a new
+>>>> clock controller binding description that supersedes the legacy binding
+>>>> for all new platforms?
+>>>>
+>>>> If the answer to either question is "yes", then I'm OK to put it aside
+>>>> for now. But if the answer to both is "no", and this patch series is
+>>>> breaking ABI, then we really should fix it now.
+>>> Hi Mike,
+>>> i m ok to break ABI later.
+> Hi Gabriel,
 >
-> I suggested something slightly different. Instead of
-> bank::pctl_res_idx, I proposed bank::pctl_base.
-> bank_info::pctl_res_idx would be specified only in init driver data
-> and bank::pctl_base would be calculated at probe time as
-> drvdata->virt_base[bank_info->pctl_res_idx] + bank_info->pctl_offset.
-> This would eliminate the need to do any indexing and adding further in
-> the code and make things simpler.
+> This change never received any other reviews, and no pings before v4.7
+> was released. Sorry that it fell through the cracks, but always feel
+> free to re-ping leading up to the merge window.
 >
-> Taking my other comments above, pctl part would be unchanged and only
-> eint addresses and offsets would be affected.
+> Can you rebase this against -rc1? Also, do you have a plan to rework the
+> binding to move away from the one-node-per-clock style?
+>
+> Regards,
+> Mike
 
-Ah, scratch this one sentence. I got confused with the register layout
-again, sorry. Please refactor both eint and pctl as I suggested in the
-upper paragraph.
+Hi  Mike,
 
-Best regards,
-Tomasz
+Ok i will send a v3 rebased on a rc1.
+
+Concerning the binding rework, i plan to start work at the end of October.
+
+Thanks
+
+Gabriel
+
+>>> Many Thanks !
+>>>
+>>> Best Regards
+>>>
+>>> Gabriel.
+>>>
+>>>> Regards,
+>>>> Mike
+>>>>
+>>>>> Best regards,
+>>>>> Gabriel
+>>>>>
+>>>>>> Regards,
+>>>>>> Mike
+>>>>>>
+>>>>>>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+>>>>>>>> ---
+>>>>>>>>     .../devicetree/bindings/clock/st/st,clkgen-mux.txt | 2 +-
+>>>>>>>>     .../devicetree/bindings/clock/st/st,clkgen-pll.txt | 11 ++--
+>>>>>>>>     .../devicetree/bindings/clock/st/st,clkgen.txt     | 2 +-
+>>>>>>>>     .../devicetree/bindings/clock/st/st,quadfs.txt     | 6 +--
+>>>>>>>>     drivers/clk/st/clkgen-fsyn.c                       | 41
+>>>>>>>> ++++++--------
+>>>>>>>>     drivers/clk/st/clkgen-mux.c                        | 28
+>>>>>>>> ++++------
+>>>>>>>>     drivers/clk/st/clkgen-pll.c                        | 62
+>>>>>>>> ++++++++++------------
+>>>>>>>>     7 files changed, 65 insertions(+), 87 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git
+>>>>>>>> a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>>>>>>>> b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>>>>>>>> index 4d277d6..9a46cb1d7 100644
+>>>>>>>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>>>>>>>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>>>>>>>> @@ -10,7 +10,7 @@ This binding uses the common clock binding[1].
+>>>>>>>>     Required properties:
+>>>>>>>>        - compatible : shall be:
+>>>>>>>> -     "st,stih407-clkgen-a9-mux",     "st,clkgen-mux"
+>>>>>>>> +     "st,stih407-clkgen-a9-mux"
+>>>>>>>>        - #clock-cells : from common clock binding; shall be set to 0.
+>>>>>>>>     diff --git
+>>>>>>>> a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>>>>>>>> b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>>>>>>>> index c9fd674..be0b043 100644
+>>>>>>>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>>>>>>>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>>>>>>>> @@ -9,11 +9,10 @@ Base address is located to the parent node. See
+>>>>>>>> clock binding[2]
+>>>>>>>>     Required properties:
+>>>>>>>>        - compatible : shall be:
+>>>>>>>> -     "st,stih407-plls-c32-a0", "st,clkgen-plls-c32"
+>>>>>>>> -     "st,stih407-plls-c32-a9", "st,clkgen-plls-c32"
+>>>>>>>> -     "sst,plls-c32-cx_0", "st,clkgen-plls-c32"
+>>>>>>>> -     "sst,plls-c32-cx_1", "st,clkgen-plls-c32"
+>>>>>>>> -     "st,stih418-plls-c28-a9", "st,clkgen-plls-c32"
+>>>>>>>> +     "st,clkgen-pll0"
+>>>>>>>> +     "st,clkgen-pll0"
+>>>>>>> Repeated. Supposed to be 0 and 1? This seems a bit generic, too.
+>>>>>>>
+>>>>>>>> +     "st,stih407-clkgen-plla9"
+>>>>>>>> +     "st,stih418-clkgen-plla9"
