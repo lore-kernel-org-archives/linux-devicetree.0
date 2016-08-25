@@ -1,56 +1,51 @@
-From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
-Subject: [PATCH RESEND] bindings: PCI: artpec: correct pci binding example
-Date: Fri, 26 Aug 2016 00:01:56 +0200
-Message-ID: <1472162516-8966-1-git-send-email-niklass@axis.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: document bindings for mounting matrixes
+Date: Fri, 26 Aug 2016 00:04:45 +0200
+Message-ID: <CACRpkda-Mz0wOAXx4uoZ43OCVw0U_E0+iCrboUO_7keYV2scBw@mail.gmail.com>
+References: <1469355434-17043-1-git-send-email-linus.walleij@linaro.org>
+ <CACRpkdY0gCLKD3rmiYuFgWSYOe6dtUaBeRi1ns-UFF=AspntFg@mail.gmail.com>
+ <c8e83cf2-f9dc-0bc9-fcde-326b05ee290b@kernel.org> <57BD9EB6.1090504@parrot.com>
+ <067a4882-c6f2-5994-e3ce-100e317ed121@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <067a4882-c6f2-5994-e3ce-100e317ed121-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Niklas Cassel <niklass-VrBV9hrLPhE@public.gmane.org>
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
+On Wed, Aug 24, 2016 at 11:29 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> Gregor:
+>> So I feel like we should keep away from any temptation to define the coordinates
+>> system too strictly.
+>> I also think of systems composed of multiple hardware parts with sensors
+>> scattered all over them. What would be the right "device/main hardware" reference
+>> frame definition in these cases ?
+>> As this is product specific, I feel like "device/main hardware" reference frame
+>> definition should be left to the "board/main hardware/device..." implementor's
+>> choice.
+>
+> Flexible is good, but I think we should define a base rule for the chips frame
+> of reference and fix up any that disagree (which is nasty ABI breakage :(
+> Trivial choice of either right handed or left handed frame might be all we
+> define in general.  Useful to define consistent frames for device types that
+> are common perhaps as well.  (such as the screen ones Linus has here).
 
- - Increase config size. When using a PCIe switch,
-   the previous config size only had room for one device.
- - Add bus range. Inherited optional property.
- - Map downstream I/O to PCI address 0. We can map it to any
-   address, but let's be consistent with other drivers.
+Admittedly I come from the mobile phone industry.
 
-Signed-off-by: Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>
----
- Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+So these frames of reference is not cooked up by me, I installed the
+Android app "Sensors test" to test two devices relative the world, so this
+is the frame of reference used by all mobile phones and tablets on the
+planet (I hardly think iPhone deviates).
 
-diff --git a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-index 330a45b..5ecaea1 100644
---- a/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/axis,artpec6-pcie.txt
-@@ -24,16 +24,17 @@ Example:
- 		compatible = "axis,artpec6-pcie", "snps,dw-pcie";
- 		reg = <0xf8050000 0x2000
- 		       0xf8040000 0x1000
--		       0xc0000000 0x1000>;
-+		       0xc0000000 0x2000>;
- 		reg-names = "dbi", "phy", "config";
- 		#address-cells = <3>;
- 		#size-cells = <2>;
- 		device_type = "pci";
- 			  /* downstream I/O */
--		ranges = <0x81000000 0 0x00010000 0xc0010000 0 0x00010000
-+		ranges = <0x81000000 0 0 0xc0002000 0 0x00010000
- 			  /* non-prefetchable memory */
--			  0x82000000 0 0xc0020000 0xc0020000 0 0x1ffe0000>;
-+			  0x82000000 0 0xc0012000 0xc0012000 0 0x1ffee000>;
- 		num-lanes = <2>;
-+		bus-range = <0x00 0xff>;
- 		interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-names = "msi";
- 		#interrupt-cells = <1>;
--- 
-2.1.4
+I would be happy to write explicitly that for human interaction devices
+with screens that frame of reference should always be assumed, but for
+other uses and device types other frames of reference may apply, would
+you agree?
 
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
