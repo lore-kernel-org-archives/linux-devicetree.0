@@ -1,154 +1,227 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 2/3] dt-bindings: genpd: Add K2G device definitions
-Date: Thu, 25 Aug 2016 09:32:47 +0200
-Message-ID: <CAPDyKFq2XjO5Tzsp-1EMYp=EWdMLwWmA_ZneGntrGR6LtyHFmw@mail.gmail.com>
-References: <20160819235653.26355-1-nm@ti.com> <20160819235653.26355-3-nm@ti.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/2] ARM: dts: sun8i: Add dts file for inet-d978_rev2
+ tablets
+Date: Thu, 25 Aug 2016 09:35:55 +0200
+Message-ID: <20160825073555.GC7776@lukather>
+References: <20160823064451.25997-1-icenowy@aosc.xyz>
+ <20160823064451.25997-2-icenowy@aosc.xyz>
+ <20160824193235.GR8103@lukather> <43601472083053@web23m.yandex.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160819235653.26355-3-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Kevin Hilman <khilman@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============0930342371254041785=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <43601472083053@web23m.yandex.ru>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20 August 2016 at 01:56, Nishanth Menon <nm@ti.com> wrote:
-> From: Dave Gerlach <d-gerlach@ti.com>
->
-> Provide macros representing each devices index as understood by TI
-> SCI to be used in the device node power-domain references. These
-> are identifiers for the K2G devices managed by the PMMC. Includes
-> contributions from Peter Ujfalusi <peter.ujfalusi@ti.com>
->
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> Signed-off-by: Nishanth Menon <nm@ti.com>
 
-I would squash this change into patch 1/3, as the DT documentation
-patch refers to dt-bindings/genpd/k2g.h which is added in @subject
-patch.
+--===============0930342371254041785==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="R+My9LyyhiUvIEro"
+Content-Disposition: inline
 
-Otherwise feel free to add my tag below, which applied to patch 1/3 as well.
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+--R+My9LyyhiUvIEro
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Kind regards
-Uffe
+On Thu, Aug 25, 2016 at 07:57:33AM +0800, Icenowy Zheng wrote:
+>=20
+>=20
+> 25.08.2016, 03:32, "Maxime Ripard" <maxime.ripard@free-electrons.com>:
+> > Hi,
+> >
+> > On Tue, Aug 23, 2016 at 02:44:50PM +0800, Icenowy Zheng wrote:
+> >> =A0The inet-d978_rev2 is a pcb used in generic A33 based tablets. It f=
+eatures
+> >> =A0volume buttons, micro-usb otg, headphone connector and a power butt=
+on.
+> >>
+> >> =A0On the board a Realtek RTL8723BS SDIO Wi-Fi module are soldered, an=
+d there
+> >> =A0is also a accompanied board which has a Goodix GT9271 soldered.
+> >>
+> >> =A0As this board is desired to create tablets with a Home key dealed by
+> >> =A0GT9271, a LED is present at the front panel at the position of the
+> >> =A0Home key.
+> >>
+> >> =A0Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> >> =A0---
+> >> =A0=A0arch/arm/boot/dts/Makefile | 1 +
+> >> =A0=A0arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts | 87 ++++++++++++=
+++++++++++++++
+> >> =A0=A02 files changed, 88 insertions(+)
+> >> =A0=A0create mode 100644 arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
+> >>
+> >> =A0diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> >> =A0index faacd52..d1812a0 100644
+> >> =A0--- a/arch/arm/boot/dts/Makefile
+> >> =A0+++ b/arch/arm/boot/dts/Makefile
+> >> =A0@@ -782,6 +782,7 @@ dtb-$(CONFIG_MACH_SUN8I) +=3D \
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0sun8i-a23-q8-tablet.dtb \
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0sun8i-a33-et-q8-v1.6.dtb \
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0sun8i-a33-ga10h-v1.1.dtb \
+> >> =A0+ sun8i-a33-inet-d978-rev2.dtb \
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0sun8i-a33-ippo-q8h-v1.2.dtb \
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0sun8i-a33-q8-tablet.dtb \
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0sun8i-a33-sinlinx-sina33.dtb \
+> >> =A0diff --git a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts b/arch/=
+arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
+> >> =A0new file mode 100644
+> >> =A0index 0000000..78823d8
+> >> =A0--- /dev/null
+> >> =A0+++ b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
+> >> =A0@@ -0,0 +1,87 @@
+> >> =A0+/*
+> >> =A0+ * Copyright 2015 Hans de Goede <hdegoede@redhat.com>
+> >
+> > I guess you are the author too :)
+> >
+> >> =A0+ *
+> >> =A0+ * This file is dual-licensed: you can use it either under the ter=
+ms
+> >> =A0+ * of the GPL or the X11 license, at your option. Note that this d=
+ual
+> >> =A0+ * licensing only applies to this file, and not this project as a
+> >> =A0+ * whole.
+> >> =A0+ *
+> >> =A0+ * a) This file is free software; you can redistribute it and/or
+> >> =A0+ * modify it under the terms of the GNU General Public License as
+> >> =A0+ * published by the Free Software Foundation; either version 2 of =
+the
+> >> =A0+ * License, or (at your option) any later version.
+> >> =A0+ *
+> >> =A0+ * This file is distributed in the hope that it will be useful,
+> >> =A0+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> >> =A0+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> >> =A0+ * GNU General Public License for more details.
+> >> =A0+ *
+> >> =A0+ * Or, alternatively,
+> >> =A0+ *
+> >> =A0+ * b) Permission is hereby granted, free of charge, to any person
+> >> =A0+ * obtaining a copy of this software and associated documentation
+> >> =A0+ * files (the "Software"), to deal in the Software without
+> >> =A0+ * restriction, including without limitation the rights to use,
+> >> =A0+ * copy, modify, merge, publish, distribute, sublicense, and/or
+> >> =A0+ * sell copies of the Software, and to permit persons to whom the
+> >> =A0+ * Software is furnished to do so, subject to the following
+> >> =A0+ * conditions:
+> >> =A0+ *
+> >> =A0+ * The above copyright notice and this permission notice shall be
+> >> =A0+ * included in all copies or substantial portions of the Software.
+> >> =A0+ *
+> >> =A0+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> >> =A0+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> >> =A0+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> >> =A0+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> >> =A0+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> >> =A0+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> >> =A0+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> >> =A0+ * OTHER DEALINGS IN THE SOFTWARE.
+> >> =A0+ */
+> >> =A0+
+> >> =A0+/dts-v1/;
+> >> =A0+#include "sun8i-a33.dtsi"
+> >> =A0+#include "sun8i-reference-design-tablet.dtsi"
+> >> =A0+
+> >> =A0+/ {
+> >> =A0+ model =3D "INet-D978 Rev 02";
+> >> =A0+ compatible =3D "primux,inet-d978-rev2", "allwinner,sun8i-a33";
+> >> =A0+
+> >> =A0+ leds {
+> >> =A0+ compatible =3D "gpio-leds";
+> >> =A0+ pinctrl-names =3D "default";
+> >> =A0+ pinctrl-0 =3D <&led_pin_d978>;
+> >> =A0+
+> >> =A0+ home {
+> >> =A0+ label =3D "d978:home";
+> >
+> > This is not the proper format for the led labels.
+> >
+> > It's supposed to be <board>:<color>:<function>
+>=20
+> Thanks.
+> So I'd use "d978:blue:home".
+>=20
+> >
+> >> =A0+ gpios =3D <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
+> >> =A0+ };
+> >> =A0+ };
+> >> =A0+};
+> >> =A0+
+> >> =A0+&mmc1_pins_a {
+> >> =A0+ allwinner,pull =3D <SUN4I_PINCTRL_PULL_UP>;
+> >> =A0+};
+> >> =A0+
+> >> =A0+&mmc1 {
+> >> =A0+ pinctrl-names =3D "default";
+> >> =A0+ pinctrl-0 =3D <&mmc1_pins_a>;
+> >> =A0+ vmmc-supply =3D <&reg_dldo1>;
+> >> =A0+ bus-width =3D <4>;
+> >> =A0+ non-removable;
+> >> =A0+ status =3D "okay";
+> >> =A0+
+> >> =A0+ rtl8723bs: sdio_wifi@1 {
+> >> =A0+ reg =3D <1>;
+> >> =A0+ };
+> >
+> > Don't you need an alias to this node to have the MAC address set?
+>=20
+> It seems that rtl8723bs come with an eFUSE.
 
-> ---
->  MAINTAINERS                     |  1 +
->  include/dt-bindings/genpd/k2g.h | 90 +++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 91 insertions(+)
->  create mode 100644 include/dt-bindings/genpd/k2g.h
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 657fb6a10286..ea14b08c30bb 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11574,6 +11574,7 @@ F:      Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->  F:     drivers/firmware/ti_sci*
->  F:     include/linux/soc/ti/ti_sci_protocol.h
->  F:     Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> +F:     include/dt-bindings/genpd/k2g.h
->
->  THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
->  M:     Hans Verkuil <hverkuil@xs4all.nl>
-> diff --git a/include/dt-bindings/genpd/k2g.h b/include/dt-bindings/genpd/k2g.h
-> new file mode 100644
-> index 000000000000..91ad827e0ca1
-> --- /dev/null
-> +++ b/include/dt-bindings/genpd/k2g.h
-> @@ -0,0 +1,90 @@
-> +/*
-> + * TI K2G SoC Device definitions
-> + *
-> + * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_GENPD_K2G_H
-> +#define _DT_BINDINGS_GENPD_K2G_H
-> +
-> +/* Documented in http://processors.wiki.ti.com/index.php/TISCI */
-> +
-> +#define K2G_DEV_PMMC0                  0x0000
-> +#define K2G_DEV_MLB0                   0x0001
-> +#define K2G_DEV_DSS0                   0x0002
-> +#define K2G_DEV_MCBSP0                 0x0003
-> +#define K2G_DEV_MCASP0                 0x0004
-> +#define K2G_DEV_MCASP1                 0x0005
-> +#define K2G_DEV_MCASP2                 0x0006
-> +#define K2G_DEV_DCAN0                  0x0008
-> +#define K2G_DEV_DCAN1                  0x0009
-> +#define K2G_DEV_EMIF0                  0x000a
-> +#define K2G_DEV_MMCHS0                 0x000b
-> +#define K2G_DEV_MMCHS1                 0x000c
-> +#define K2G_DEV_GPMC0                  0x000d
-> +#define K2G_DEV_ELM0                   0x000e
-> +#define K2G_DEV_SPI0                   0x0010
-> +#define K2G_DEV_SPI1                   0x0011
-> +#define K2G_DEV_SPI2                   0x0012
-> +#define K2G_DEV_SPI3                   0x0013
-> +#define K2G_DEV_ICSS0                  0x0014
-> +#define K2G_DEV_ICSS1                  0x0015
-> +#define K2G_DEV_USB0                   0x0016
-> +#define K2G_DEV_USB1                   0x0017
-> +#define K2G_DEV_NSS0                   0x0018
-> +#define K2G_DEV_PCIE0                  0x0019
-> +#define K2G_DEV_GPIO0                  0x001b
-> +#define K2G_DEV_GPIO1                  0x001c
-> +#define K2G_DEV_TIMER64_0              0x001d
-> +#define K2G_DEV_TIMER64_1              0x001e
-> +#define K2G_DEV_TIMER64_2              0x001f
-> +#define K2G_DEV_TIMER64_3              0x0020
-> +#define K2G_DEV_TIMER64_4              0x0021
-> +#define K2G_DEV_TIMER64_5              0x0022
-> +#define K2G_DEV_TIMER64_6              0x0023
-> +#define K2G_DEV_MSGMGR0                        0x0025
-> +#define K2G_DEV_BOOTCFG0               0x0026
-> +#define K2G_DEV_ARM_BOOTROM0           0x0027
-> +#define K2G_DEV_DSP_BOOTROM0           0x0029
-> +#define K2G_DEV_DEBUGSS0               0x002b
-> +#define K2G_DEV_UART0                  0x002c
-> +#define K2G_DEV_UART1                  0x002d
-> +#define K2G_DEV_UART2                  0x002e
-> +#define K2G_DEV_EHRPWM0                        0x002f
-> +#define K2G_DEV_EHRPWM1                        0x0030
-> +#define K2G_DEV_EHRPWM2                        0x0031
-> +#define K2G_DEV_EHRPWM3                        0x0032
-> +#define K2G_DEV_EHRPWM4                        0x0033
-> +#define K2G_DEV_EHRPWM5                        0x0034
-> +#define K2G_DEV_EQEP0                  0x0035
-> +#define K2G_DEV_EQEP1                  0x0036
-> +#define K2G_DEV_EQEP2                  0x0037
-> +#define K2G_DEV_ECAP0                  0x0038
-> +#define K2G_DEV_ECAP1                  0x0039
-> +#define K2G_DEV_I2C0                   0x003a
-> +#define K2G_DEV_I2C1                   0x003b
-> +#define K2G_DEV_I2C2                   0x003c
-> +#define K2G_DEV_EDMA0                  0x003f
-> +#define K2G_DEV_SEMAPHORE0             0x0040
-> +#define K2G_DEV_INTC0                  0x0041
-> +#define K2G_DEV_GIC0                   0x0042
-> +#define K2G_DEV_QSPI0                  0x0043
-> +#define K2G_DEV_ARM_64B_COUNTER0       0x0044
-> +#define K2G_DEV_TETRIS0                        0x0045
-> +#define K2G_DEV_CGEM0                  0x0046
-> +#define K2G_DEV_MSMC0                  0x0047
-> +#define K2G_DEV_CBASS0                 0x0049
-> +#define K2G_DEV_BOARD0                 0x004c
-> +#define K2G_DEV_EDMA1                  0x004f
-> +
-> +#endif
-> --
-> 2.9.1.200.gb1ec08f
->
+Ok, good to know.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--R+My9LyyhiUvIEro
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXvp/bAAoJEBx+YmzsjxAgHF4P/1FOhPMHotVViqu/kAqo0zT1
+2UtHwJhGwlwBglt5yk1v4oZuqV2UI++nVcS+unj+P+IiirhdI8Pr0+vF+2nnjSLb
+SmHkdk/5EiyehrLUKgHkjWvK0oH5JSvywnRPO01okhTMg2RPnplvQyl5g77yHIP0
+JlA0N26cPzk7Cp+fBGfmxfbP9+Q5TcjLlj3GDUejk4q0eScIIb9KLueChey3RqHJ
+xO/4QmHK8jdj5kgK/sQIPCUqZsHcEe65Ivc4oQNJQgFVJ4uTl+ZGuAFCSRgqcmwA
+BVd81fLsMySe+AZG9jZUzp+3ha+TS2uhdgacsBMNU5yJ3P4Lt6rS2Kxdnk7723/F
+inn5yNG1HwD8AUyciqCZyG/RwH3UMfFcVrHdT5hkEjwM9kT/OyANAalY5VWpqG8q
+qiYNUkcC4EvafD7qZO7PimNMhLOltoyaLDN89CqcVrM+ALFBr4XQJ0bI7GJafmVJ
+oeH5AJo6F5fC5O7FxnSF/vVIP5m2DM8GOiimDG4dTAbtzhWyEJA8s/ZuevRPGEER
+tf+4znm27OkImg/Wt8Y6H/grtPpPVULRhLpt1Y6kDr0G1bB6BFBzUuQNU13fOSw2
+nDEKj6CLYuHJZiakC6CwEaD80FaEhW1NVBcJoVKGh4buhl4JraiXXDk2JmJIZ5sx
+FdfBZ6Br9iwFJW/fYg4y
+=ZvBP
+-----END PGP SIGNATURE-----
+
+--R+My9LyyhiUvIEro--
+
+
+--===============0930342371254041785==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0930342371254041785==--
