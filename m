@@ -1,15 +1,12 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 2/2] sdhci-of-arasan: Add quirk and device tree parameter
- to fake CD bit
-Date: Thu, 25 Aug 2016 11:50:07 +0300
-Message-ID: <38d4d636-dc98-cc3b-3397-75924200ef9f@intel.com>
-References: <1472080984-17373-1-git-send-email-zach.brown@ni.com>
- <1472080984-17373-2-git-send-email-zach.brown@ni.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v8 00/11] power: act8945a_charger: Improvements
+Date: Thu, 25 Aug 2016 09:59:35 +0100
+Message-ID: <20160825085935.GH22076@sirena.org.uk>
+References: <1472109599-21915-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============7575142902590356206=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1472080984-17373-2-git-send-email-zach.brown@ni.com>
+In-Reply-To: <1472109599-21915-1-git-send-email-wenyou.yang@atmel.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,128 +16,60 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zach Brown <zach.brown@ni.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, soren.brinkmann@xilinx.com
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-pm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/08/16 02:23, Zach Brown wrote:
-> The sdhci controller on xilinx zynq devices will not function unless
-> the cd bit is provided. http://www.xilinx.com/support/answers/61064.html
-> In cases where it is impossible to provide the cd bit in hardware,
-> setting the controller to test mode and then setting inserted to true
-> will get the controller to function with out the cd bit.
 
-with out -> without
+--===============7575142902590356206==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="+E165xXSMiO4rFaE"
+Content-Disposition: inline
 
-> 
-> The device property "fake-cd" will let the arasan driver know it needs
-> to fake the cd bit for the controller inorder for the controller to
 
-inorder -> in order
+--+E165xXSMiO4rFaE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> function with a SD card that does not provide the CD bit.
+On Thu, Aug 25, 2016 at 03:19:48PM +0800, Wenyou Yang wrote:
+> This patch series is to improve the implementation of act8945a-charger
+> driver, such as regard the act8945-charger as a sub-device, improve
+> the way to check the status, fix the power supply type property,
+> add the status change update, and add more properties: capacity level
+> property and max current property.
 
-Please use either 'cd' or 'CD' consistently.
+I don't know why you're copying me on this series but can you please
+either stop or let me know what you're looking for me to do with it?
+It's quite large, is getting resent regularly with frequent replies and
+I'm never quite sure why it's there.
 
-> 
-> Signed-off-by: Zach Brown <zach.brown@ni.com>
-> ---
->  drivers/mmc/host/sdhci-of-arasan.c | 23 ++++++++++++++++++++++-
->  drivers/mmc/host/sdhci.h           |  4 ++++
->  2 files changed, 26 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> index e0f193f..a74bcf5 100644
-> --- a/drivers/mmc/host/sdhci-of-arasan.c
-> +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> @@ -26,6 +26,7 @@
->  #include <linux/phy/phy.h>
->  #include <linux/regmap.h>
->  #include "sdhci-pltfm.h"
-> +#include <linux/of.h>
->  
->  #define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
->  #define SDHCI_ARASAN_VENDOR_REGISTER	0x78
-> @@ -203,12 +204,26 @@ static void sdhci_arasan_hs400_enhanced_strobe(struct mmc_host *mmc,
->  	writel(vendor, host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
->  }
->  
-> +void sdhci_arasan_reset(struct sdhci_host *host, u8 mask)
-> +{
-> +	u8 ctrl;
-> +
-> +	sdhci_reset(host, mask);
-> +
-> +	if (host->quirks2 & SDHCI_QUIRK2_NEED_FAKE_CD) {
-> +		ctrl = sdhci_readl(host, SDHCI_HOST_CONTROL);
+--+E165xXSMiO4rFaE
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Is there a reason this is sdhci_readl instead of sdhci_readb
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> +		ctrl |= SDHCI_CTRL_CD_TEST_INSERTED |
-> +		SDHCI_CTRL_CD_TEST_ENABLE;
+iQEcBAEBCAAGBQJXvrN2AAoJECTWi3JdVIfQbf8H/0tbDEoLn+WNe9KsmcI0HM1L
+ToBlyDkG+Zgr6vBw5XOlGQd8uC5ZPSEOLJqRiiMukhmfY1tXuflGkaURP2Zhstag
+qAA16mJO6e5c6LpP30MHHtBNIO+vdgjcYTDV8Yz4UrPmYRJqPGR7c9gIc+cZIoFb
+dvEy4HSmCo6xOWPOLJa/Qi9h8MHZrwMl4tvu1YxWh7Hp9CRfikwsQy1baHGzDofb
+16LW6+77nVvL5sUNDDD5xUF0XS0x9EKpD2kHHJ4tMlxA5+p3V/R7uZXcf+eeoC5J
+jtznTpePFipWYn+CaeezrvlKufv2/NvLcfc7O5YlNnaKcj2IwgWGyc68xv6tVjE=
+=029Y
+-----END PGP SIGNATURE-----
 
-Please indent SDHCI_CTRL_CD_TEST_ENABLE
+--+E165xXSMiO4rFaE--
 
-> +		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> +	}
-> +}
-> +
->  static struct sdhci_ops sdhci_arasan_ops = {
->  	.set_clock = sdhci_arasan_set_clock,
->  	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
->  	.get_timeout_clock = sdhci_arasan_get_timeout_clock,
->  	.set_bus_width = sdhci_set_bus_width,
-> -	.reset = sdhci_reset,
-> +	.reset = sdhci_arasan_reset,
->  	.set_uhs_signaling = sdhci_set_uhs_signaling,
->  };
->  
-> @@ -516,6 +531,12 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
->  	}
->  
->  	sdhci_get_of_property(pdev);
-> +
-> +	if (of_get_property(pdev->dev.of_node, "fake-cd", NULL))
-> +		host->quirks2 |= SDHCI_QUIRK2_NEED_FAKE_CD;
 
-Please don't use a quirk bit for this.  Instead add a flag to, for example,
-struct sdhci_arasan_data.
+--===============7575142902590356206==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-> +
-> +	pltfm_host = sdhci_priv(host);
-> +	pltfm_host->priv = sdhci_arasan;
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-These 2 lines don't belong.
-
->  	pltfm_host->clk = clk_xin;
->  
->  	sdhci_arasan_update_baseclkfreq(host);
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 0411c9f..ff3c8ba 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -84,6 +84,8 @@
->  #define   SDHCI_CTRL_ADMA32	0x10
->  #define   SDHCI_CTRL_ADMA64	0x18
->  #define   SDHCI_CTRL_8BITBUS	0x20
-> +#define  SDHCI_CTRL_CD_TEST_INSERTED   0x40
-> +#define  SDHCI_CTRL_CD_TEST_ENABLE     0x80
-
-For the sake of neatness, let's make these a little more abbreviated, say:
-
-	SDHCI_CTRL_CDTEST_INS
-	SDHCI_CTRL_CDTEST_EN
-
->  
->  #define SDHCI_POWER_CONTROL	0x29
->  #define  SDHCI_POWER_ON		0x01
-> @@ -422,6 +424,8 @@ struct sdhci_host {
->  #define SDHCI_QUIRK2_ACMD23_BROKEN			(1<<14)
->  /* Broken Clock divider zero in controller */
->  #define SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN		(1<<15)
-> +/* Controller needs the cd bit faked */
-> +#define SDHCI_QUIRK2_NEED_FAKE_CD (1<<16)
->  
->  	int irq;		/* Device IRQ */
->  	void __iomem *ioaddr;	/* Mapped address */
-> 
+--===============7575142902590356206==--
