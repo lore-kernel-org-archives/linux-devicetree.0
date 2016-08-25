@@ -1,39 +1,78 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V5] clk: bcm: Add driver for BCM53573 ILP clock
-Date: Thu, 25 Aug 2016 14:42:52 +0200
-Message-ID: <CACna6rzeLdAW_mEpUN355Xrr3v-zjBtQW_4z-gV1kOrPS=wr8A@mail.gmail.com>
-References: <20160823061745.8162-1-zajec5@gmail.com> <20160823062613.13865-1-zajec5@gmail.com>
- <20160823195528.GA17844@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 3/5] drm: add SimpleDRM driver
+Date: Thu, 25 Aug 2016 08:09:53 -0500
+Message-ID: <CAL_JsqL3xc9QwPsDh0GgcC2NjTFE1NLkwy1Ypyn34iNh7atJ+Q@mail.gmail.com>
+References: <1471897525-31118-1-git-send-email-noralf@tronnes.org>
+ <1471897525-31118-4-git-send-email-noralf@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160823195528.GA17844@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1471897525-31118-4-git-send-email-noralf@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23 August 2016 at 21:55, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Aug 23, 2016 at 08:25:59AM +0200, Rafa=C5=82 Mi=C5=82ecki wrote:
->> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>
->> This clock is present on BCM53573 devices (including BCM47189) that use
->> Cortex-A7. ILP is a part of PMU (Power Management Unit) and so it should
->> be defined as one of its subnodes (subdevices). For more details see
->> Documentation entry.
->>
->> Unfortunately there isn't a set of registers related to ILP clock only.
->> We use registers 0x66c, 0x674 and 0x6dc and between them there are e.g.
->> "retention*" and "control_ext" regs. This is why this driver maps all
->> 0x1000 B of space.
->
-> Then describe the block as a syscon which has several functions of
-> which clocks are one.
-
-This isn't clear to me, sorry, could you describe it? Would you like
-me to update commit message or documentation? Is code fine as is?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBBdWcgMjIsIDIwMTYgYXQgMzoyNSBQTSwgTm9yYWxmIFRyw7hubmVzIDxub3JhbGZA
+dHJvbm5lcy5vcmc+IHdyb3RlOgo+IFRoZSBTaW1wbGVEUk0gZHJpdmVyIGJpbmRzIHRvIHNpbXBs
+ZS1mcmFtZWJ1ZmZlciBkZXZpY2VzIGFuZCBwcm92aWRlcyBhCj4gRFJNL0tNUyBBUEkuIEl0IHBy
+b3ZpZGVzIG9ubHkgYSBzaW5nbGUgQ1JUQytlbmNvZGVyK2Nvbm5lY3RvciBjb21iaW5hdGlvbgo+
+IHBsdXMgb25lIGluaXRpYWwgbW9kZS4KPgo+IFVzZXJzcGFjZSBjYW4gY3JlYXRlIGR1bWItYnVm
+ZmVycyB3aGljaCBjYW4gYmUgYmxpdCBpbnRvIHRoZSByZWFsCj4gZnJhbWVidWZmZXIgc2ltaWxh
+ciB0byBVREwuIE5vIGFjY2VzcyB0byB0aGUgcmVhbCBmcmFtZWJ1ZmZlciBpcyBhbGxvd2VkCj4g
+KGNvbXBhcmVkIHRvIGVhcmxpZXIgdmVyc2lvbiBvZiB0aGlzIGRyaXZlcikgdG8gYXZvaWQgc2Vj
+dXJpdHkgaXNzdWVzLgo+IEZ1cnRoZXJtb3JlLCB0aGlzIHdheSB3ZSBjYW4gc3VwcG9ydCBhcmJp
+dHJhcnkgbW9kZXMgYXMgbG9uZyBhcyB3ZSBoYXZlIGEKPiBjb252ZXJzaW9uLWhlbHBlci4KPgo+
+IFRoZSBkcml2ZXIgd2FzIG9yaWdpbmFsbHkgd3JpdHRlbiBieSBEYXZpZCBIZXJybWFubiBpbiAy
+MDE0Lgo+IE15IG1haW4gY29udHJpYnV0aW9uIGlzIHRvIG1ha2UgdXNlIG9mIGRybV9zaW1wbGVf
+a21zX2hlbHBlciBhbmQKPiByZXdvcmsgdGhlIHByb2JlIHBhdGggdG8gYXZvaWQgdXNlIG9mIHRo
+ZSBkZXByZWNhdGVkIGRybV9wbGF0Zm9ybV9pbml0KCkKPiBhbmQgZHJtX2RyaXZlci57bG9hZCx1
+bmxvYWR9KCkuCj4gQWRkaXRpb25zIGhhdmUgYWxzbyBiZWVuIG1hZGUgZm9yIGxhdGVyIGNoYW5n
+ZXMgdG8gdGhlIERldmljZSBUcmVlIGJpbmRpbmcKPiBkb2N1bWVudCwgbGlrZSBzdXBwb3J0IGZv
+ciBjbG9ja3MsIHJlZ3VsYXRvcnMgYW5kIGhhdmluZyB0aGUgbm9kZSB1bmRlcgo+IC9jaG9zZW4u
+IFRoaXMgY29kZSB3YXMgbGlmdGVkIHZlcmJhdGltIGZyb20gc2ltcGxlZmIuYy4KPgo+IENjOiBk
+aC5oZXJybWFubkBnbWFpbC5jb20KPiBDYzogbGlidkBza3luZXQuYmUKPiBTaWduZWQtb2ZmLWJ5
+OiBOb3JhbGYgVHLDuG5uZXMgPG5vcmFsZkB0cm9ubmVzLm9yZz4KClsuLi5dCgo+ICsgICAgICAg
+LyogQ291bnQgdGhlIG51bWJlciBvZiByZWd1bGF0b3Igc3VwcGxpZXMgKi8KPiArICAgICAgIGZv
+cl9lYWNoX3Byb3BlcnR5X29mX25vZGUobnAsIHByb3ApIHsKPiArICAgICAgICAgICAgICAgcCA9
+IHN0cnN0cihwcm9wLT5uYW1lLCBTVVBQTFlfU1VGRklYKTsKPiArICAgICAgICAgICAgICAgaWYg
+KHAgJiYgcCAhPSBwcm9wLT5uYW1lKQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvdW50Kys7
+Cj4gKyAgICAgICB9CgpUaGUgcmVndWxhdG9yIEFQSSBzaG91bGQgaGF2ZSBmdW5jdGlvbnMgZm9y
+IHRoaXMgcmF0aGVyIHRoYW4gb3BlbiBjb2RpbmcgaXQuCgo+ICsKPiArICAgICAgIGlmICghY291
+bnQpCj4gKyAgICAgICAgICAgICAgIHJldHVybiAwOwo+ICsKPiArICAgICAgIHNkcm0tPnJlZ3Vs
+YXRvcnMgPSBkZXZtX2tjYWxsb2MoJnBkZXYtPmRldiwgY291bnQsCj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZihzdHJ1Y3QgcmVndWxhdG9yICopLAo+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBHRlBfS0VSTkVMKTsKPiArICAg
+ICAgIGlmICghc2RybS0+cmVndWxhdG9ycykKPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9N
+RU07Cj4gKwo+ICsgICAgICAgLyogR2V0IGFsbCB0aGUgcmVndWxhdG9ycyAqLwo+ICsgICAgICAg
+Zm9yX2VhY2hfcHJvcGVydHlfb2Zfbm9kZShucCwgcHJvcCkgewo+ICsgICAgICAgICAgICAgICBj
+aGFyIG5hbWVbMzJdOyAvKiAzMiBpcyBtYXggc2l6ZSBvZiBwcm9wZXJ0eSBuYW1lICovCj4gKwo+
+ICsgICAgICAgICAgICAgICBwID0gc3Ryc3RyKHByb3AtPm5hbWUsIFNVUFBMWV9TVUZGSVgpOwo+
+ICsgICAgICAgICAgICAgICBpZiAoIXAgfHwgcCA9PSBwcm9wLT5uYW1lKQo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIGNvbnRpbnVlOwoKVGhpcyB0b28uCgo+ICsKPiArICAgICAgICAgICAgICAg
+c3RybGNweShuYW1lLCBwcm9wLT5uYW1lLAo+ICsgICAgICAgICAgICAgICAgICAgICAgIHN0cmxl
+bihwcm9wLT5uYW1lKSAtIHN0cmxlbihTVVBQTFlfU1VGRklYKSArIDEpOwo+ICsgICAgICAgICAg
+ICAgICByZWd1bGF0b3IgPSBkZXZtX3JlZ3VsYXRvcl9nZXRfb3B0aW9uYWwoJnBkZXYtPmRldiwg
+bmFtZSk7CgpbLi4uXQoKPiArICAgICAgIGlmIChJU19FTkFCTEVEKENPTkZJR19PRl9BRERSRVNT
+KSAmJiBvZl9jaG9zZW4pIHsKPiArICAgICAgICAgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpu
+cDsKPiArCj4gKyAgICAgICAgICAgICAgIGZvcl9lYWNoX2NoaWxkX29mX25vZGUob2ZfY2hvc2Vu
+LCBucCkgewo+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmIChvZl9kZXZpY2VfaXNfY29tcGF0
+aWJsZShucCwgInNpbXBsZS1mcmFtZWJ1ZmZlciIpKQoKUmF0aGVyIHRoYW4gZXhwb3J0aW5nIG9m
+X2Nob3NlbiwgdGhpcyB3aG9sZSBjaHVuayBjYW4gYmUgcmVwbGFjZWQgd2l0aAphIG9mX2ZpbmRf
+Y29tcGF0aWJsZV9ub2RlIGNhbGwuIFllcywgdGhhdCB3b3VsZCBtYXRjaCBpZgpzaW1wbGUtZnJh
+bWVidWZmZXIgZXhpc3RzIHNvbWV3aGVyZSBlbHNlIGluIHRoZSBEVCwgYnV0IGl0IGlzIG5vdCB0
+aGUKa2VybmVsJ3Mgam9iIHRvIGRvIERUIHZhbGlkYXRpb24uCgo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgb2ZfcGxhdGZvcm1fZGV2aWNlX2NyZWF0ZShucCwgTlVMTCwgTlVMTCk7
+Cj4gKyAgICAgICAgICAgICAgIH0KPiArICAgICAgIH0KClJvYgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
