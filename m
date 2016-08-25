@@ -1,59 +1,70 @@
-From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH] ARM: dts: keystone: specify usb mode explicitly
-Date: Thu, 25 Aug 2016 09:31:29 -0700
-Message-ID: <a91ec980-c8be-7a67-58a8-6e25508eb573@oracle.com>
-References: <20160628094245.9521-1-grygorii.strashko@ti.com>
- <578D15B3.1040705@ti.com> <09af5947-1a0e-9f44-e046-67276062530d@oracle.com>
- <62e7960a-7f47-8125-c369-2407ffc5a2dd@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Thu, 25 Aug 2016 17:38:06 +0100
+Message-ID: <20160825163805.GA8524@remoulade>
+References: <cover.147018b3518.git.dalias@libc.org>
+ <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
+ <57BDCE5D.2050609@linaro.org>
+ <20160824174001.GW15995@brightrain.aerifal.cx>
+ <alpine.DEB.2.20.1608250947120.5714@nanos>
+ <20160825145650.GA15995@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <62e7960a-7f47-8125-c369-2407ffc5a2dd@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160825145650.GA15995@brightrain.aerifal.cx>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8/25/2016 7:11 AM, Grygorii Strashko wrote:
-> Hi Santosh,
->
-> On 07/18/2016 08:49 PM, Santosh Shilimkar wrote:
->> On 7/18/2016 10:45 AM, Grygorii Strashko wrote:
->>> Hi Santosh,
->>> On 06/28/2016 12:42 PM, Grygorii Strashko wrote:
->>>> The USB OTG mode is not supported by Kestone 2 devices, as result, the
->>>> USB devices enumeration and detection will not work properly when
->>>> kernel is built with CONFIG_USB_DWC3_DUAL_ROLE=y (default for multi
->>>> platform build):
->>>>   - it's required to load gadget drivers manually to make host mode
->>>> work and this confuses current Keystone 2 users
->>>>   - device mode is not working, because port can't detect and switch to
->>>> peripheral/host mode dynamically.
->>>>
->>>> Hence, specify usb mode explicitly in DT: usb0 = "host" for all KS2
->>>> devices and usb1 = "peripheral" for K2E.
->>>>
->>>> Cc: Sekhar Nori <nsekhar@ti.com>
->>>> Cc: Roger Quadros <rogerq@ti.com>
->>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>>
->>> Do you expect any additional actions from my side relate to this patch?
->>>
->> Nope. I will pick this up though it has to wait for next merge window
->> now.
->
-> I'd like to remind you about this patch.
-> Would you like me to resend it ?
-> (I've checked - it can be applied as is on top master and next/master without issues)
->
-Merge window has a time ;-)
-No need to re-send. As I mentioned, will pick it up.
+On Thu, Aug 25, 2016 at 10:56:50AM -0400, Rich Felker wrote:
+> On Thu, Aug 25, 2016 at 10:07:08AM +0200, Thomas Gleixner wrote:
+> > On Wed, 24 Aug 2016, Rich Felker wrote:
+> As for this topic, what happened is that, after the first and second
+> time of expressing confusion about how the infrastructure did not make
+> sense and whether I should even be using it, I did not get anything
+> resembling an explanation of why it's the way it is or why I might be
+> wrong in thinking it's a bug, and so I went forward with the
+> assumption that is was just a bug. Now that Mark Rutland has explained
+> it well (and with your additional explanation below in your email), I
+> see what the motivation was, but I still think it could be done in a
+> less-confusing and more-consistent way that doesn't assume ARM-like
+> irq architecture.
+
+The fun this is that right until the point you sent this patch, it was
+consistent for all hardware that we support and were aware of. For others, it
+is your hardware that is the confusing case. ;)
+
+In future, it's better to state 'this doesn't seem to match my hardware' rather
+than 'this is misdesigned'. Ideally, with a description of how your hardware
+works, as that's the thing no-one else is familiar with.
+
+> > If your particular hardware has the old scheme of seperate interrupt numbers
+> > for per cpu interrupts, then you can simply use the normal interrupt scheme
+> > and request a seperate interrupt per cpu.
+> 
+> Nominally it uses the same range of hardware interrupt numbers for all
+> (presently both) cpus, but some of them get delivered to a specific
+> cpu associated with the event (presently, IPI and timer; IPI is on a
+> fixed number at synthesis time but timer is runtime configurable)
+> while others are conceptually deliverable to either cpu (presently
+> only delivered to cpu0, but that's treated as an implementation
+> detail).
+
+Given you say it's delivered to the CPU associated with the event (and you have
+different PIT bases per-cpu), it sounds like your timer interrupt is percpu,
+it's just that the hwirq number can be chosen by software.
+
+> It currently works requesting the irq with flags that ensure the
+> handler runs on the same cpu it was delivered on, without using any
+> other percpu irq framework. If you have concerns about ways this could
+> break and want me to make the drivers do something else, I'm open to
+> suggestions.
+
+As I suggested, I don't think that this is right, and you need some mechanism
+to describe to the kernel that the interrupt is percpu (e.g. a flag in the
+interrupt-specifier in DT).
+
+Thanks,
+Mark.
