@@ -1,33 +1,88 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH V5] clk: bcm: Add driver for BCM53573 ILP clock
-Date: Thu, 25 Aug 2016 16:11:40 +0200
-Message-ID: <CACna6rzUc2Gz2JJdTC_S3+Fo24X4rTisxRz7-THvnyCt5rk4Xw@mail.gmail.com>
-References: <20160823061745.8162-1-zajec5@gmail.com> <20160823062613.13865-1-zajec5@gmail.com>
- <20160824084738.GB6502@codeaurora.org>
+From: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: da850: Add missing pin muxing for the UARTs
+Date: Thu, 25 Aug 2016 14:15:10 +0000
+Message-ID: <20160825140507.GA13734@gobelin>
+References: <20160804110656.25318-1-kbeldan@baylibre.com>
+ <m2eg64pchw.fsf@baylibre.com>
+ <20160804210045.GD15013@gobelin>
+ <m2fuqknnqk.fsf@baylibre.com>
+ <fe36e8d1-f371-b093-de15-5e03370ea38c@ti.com>
+ <dd4712ba-6144-8c64-59a6-7673936af53c@ti.com>
+ <20160824082934.GA20246@gobelin>
+ <354081bd-653d-ec98-f18e-eb0b1b1ee7e3@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160824084738.GB6502@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <354081bd-653d-ec98-f18e-eb0b1b1ee7e3-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 24 August 2016 at 10:47, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 08/23, Rafa=C5=82 Mi=C5=82ecki wrote:
->> +static int bcm53573_ilp_enable(struct clk_hw *hw)
->> +{
->> +     struct bcm53573_ilp *ilp =3D container_of(hw, struct bcm53573_ilp,=
- hw);
->> +
->> +     writel(0x10199, ilp->pmu + PMU_SLOW_CLK_PERIOD);
->> +     writel(0x10000, ilp->pmu + 0x674);
+On Thu, Aug 25, 2016 at 07:12:16PM +0530, Sekhar Nori wrote:
+> On Wednesday 24 August 2016 02:08 PM, Karl Beldan wrote:
+> > On Tue, Aug 23, 2016 at 04:46:03PM +0530, Sekhar Nori wrote:
+> >> On Tuesday 23 August 2016 04:39 PM, Sekhar Nori wrote:
+> >>> On Friday 05 August 2016 04:30 AM, Kevin Hilman wrote:
+> >>>> Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+> >>>>
+> >>>>> On Thu, Aug 04, 2016 at 12:20:27PM -0700, Kevin Hilman wrote:
+> >>>>>> Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+> >>>>>>
+> >>>>>>> This adds 2 pinctrl groups (rtscts, rxtx) for each of the 3 UARTs.
+> >>>>>>>
+> >>>>>>> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> >>>>>>
+> >>>>>> Should da850-evm be updated to use the serial2_rxtx_pins also?
+> >>>>>>
+> >>>>> I could not find the EVM schematics on the net and I only have an LCDK,
+> >>>>> but according to the code it should, however I can't tell whether flow
+> >>>>> control pins are used.
+> >>>>
+> >>>> Ok, let's just leave it for now, since it's working fine.  Sekhar can
+> >>>> fix that up if he can dig up the schematics.
+> >>>
+> >>> Looks like the flow control pins are being used for McASP also on the
+> >>> EVM. So lets leave the EVM as-is.
+> >>
+> >> Rather, the EVM dts file should be updated to use serial2_rxtx_pins like
+> >> the LCDK. Right now it seems to be relying on bootloader to serial2
+> >> setup pimux correctly. I can make a patch to fix that. Or if you can do
+> >> it, that will be great too.
+> >>
+> > 
+> > Indeed ATM the EVM relies on the bootloader to setup the pin muxing.
+> > 
+> > I just checked the uart pins routing of the EVM, the dts:
+> > - should reclaim serial2_rxtx_pins and serial2_rtscts_pins
+> 
+> Can you please clarify what you mean by dts should "reclaim". You mean
+> move the pins from da850.dtsi to da850-evm.dts or something else?
 >
-> Is there a name for 0x674?
 
-No in any sources published by Broadcom. I was experimenting with bit
-0x10000 in PMU_SLOW_CLK_PERIOD and 0x10000 in 0x674. Both have to be
-set. I was suspecting that maybe one of them is just some trigger and
-it can be switched back to 0, but it's not the case. I definitely need
-to set both of them to get clock working.
+No, in the part you are replying to I am not referring to moving the
+pins but reclaiming them. The pins are declared in the dtsi, as they
+should. Eg. the LCDK dts reclaims serial2_rxtx_pins but doesn't reclaim
+serial2_rtscts_pins while their declarations remain in the dtsi.
+
+The purpose of this part was to clarify what I saw on the schematics
+because your emails include the following 2 statements:
+
+> >>> Looks like the flow control pins are being used for McASP also on the
+> >>> EVM. So lets leave the EVM as-is.
+
+> >> Rather, the EVM dts file should be updated to use serial2_rxtx_pins like
+> >> the LCDK. Right now it seems to be relying on bootloader to serial2
+
+My email was to inform that it concerns the flow control pins of the
+UART1 only and that the UART2 flow control pins are not concerned and, 
+since they are dedicated to the UART2, should be reclaimed unlike
+in the LCDK.
+
+ 
+Karl
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
