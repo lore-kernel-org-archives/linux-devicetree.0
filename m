@@ -1,7 +1,7 @@
 From: Icenowy Zheng <icenowy@aosc.xyz>
 Subject: Re: [PATCH 2/2] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
 Date: Thu, 25 Aug 2016 22:53:22 +0800
-Message-ID: <3505621472136802@web14h.yandex.ru>
+Message-ID: <438381472136802@web24g.yandex.ru>
 References: <20160823064451.25997-1-icenowy@aosc.xyz>
  <20160823064451.25997-3-icenowy@aosc.xyz> <20160824193600.GS8103@lukather>
  <43951472083107@web23m.yandex.ru>
