@@ -1,42 +1,108 @@
-From: Matthias Brugger <mbrugger@suse.com>
-Subject: Re: [PATCH v4 1/4] arm64: arch_timer: Add device tree binding for
- A-008585 erratum
-Date: Thu, 25 Aug 2016 13:04:56 +0200
-Message-ID: <e69db8b1-5fe2-ed0a-b073-de3efdd854d2@suse.com>
-References: <1467877572-10817-1-git-send-email-oss@buserror.net>
+From: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] dt-binding: remoteproc: venus rproc dt binding
+ document
+Date: Thu, 25 Aug 2016 14:10:22 +0300
+Message-ID: <3429173a-d55a-51e1-0973-7e5bd31be297@linaro.org>
+References: <1471622000-1906-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1471622000-1906-4-git-send-email-stanimir.varbanov@linaro.org>
+ <20160823173259.GA13327@rob-hp-laptop>
+ <fbf25a9e-348b-9047-37ef-1b96808dea31@mm-sol.com>
+ <20160825000521.GH15161@tuxbot>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1467877572-10817-1-git-send-email-oss@buserror.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Scott Wood <oss@buserror.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: devicetree@vger.kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160825000521.GH15161@tuxbot>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Hi Bjorn,
 
-On 07/07/16 09:46, Scott Wood wrote:
-> This erratum describes a bug in logic outside the core, so MIDR can't be
-> used to identify its presence, and reading an SoC-specific revision
-> register from common arch timer code would be awkward.  So, describe it
-> in the device tree.
->
-> Signed-off-by: Scott Wood <oss@buserror.net>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
+On 08/25/2016 03:05 AM, Bjorn Andersson wrote:
+> On Wed 24 Aug 08:36 PDT 2016, Stanimir Varbanov wrote:
+> 
+>> Hi Rob,
+>>
+>> On 08/23/2016 08:32 PM, Rob Herring wrote:
+>>> On Fri, Aug 19, 2016 at 06:53:19PM +0300, Stanimir Varbanov wrote:
+>>>> Add devicetree binding document for Venus remote processor.
+>>>>
+>>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>>  .../devicetree/bindings/remoteproc/qcom,venus.txt  | 33 ++++++++++++++++++++++
+>>>>  1 file changed, 33 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
+>>>> new file mode 100644
+>>>> index 000000000000..06a2db60fa38
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
+>>>> @@ -0,0 +1,33 @@
+>>>> +Qualcomm Venus Peripheral Image Loader
+>>>> +
+>>>> +This document defines the binding for a component that loads and boots firmware
+>>>> +on the Qualcomm Venus remote processor core.
+>>>
+>>> This does not make sense to me. Venus is the video encoder/decoder h/w, 
+>>> right? Why is the firmware loader separate from the codec block? Why 
+>>> rproc is used? Are there multiple clients? Naming it rproc_venus implies 
+>>> there aren't. And why does the firmware loading need 8MB of memory at a 
+>>> fixed address?
+>>>
+>>
+>> The firmware for Venus case is 5MB. And here is 8MB because of
+>> dma_alloc_from_coherent size restriction.
+>>
+> 
+> Then you should specify it 5MB large and we'll have to deal with this
+> implementation issue in the code. I've created a JIRA ticket for
+> the dma_alloc_from_coherent() behavior.
 
-As of today I wasn't able to find this series in linux-next. Was this 
-series somehow forgotten? Scott maybe you can resend the patches adding 
-the clocksource maintainer.
+Infact it should be 5MB + ~100KB for iommu page table.
 
-Regards,
-Matthias
+> 
+>> The address is not really fixed, cause the firmware could support
+>> relocation. In this example I just picked up the next free memory region
+>> in memory-reserved from msm8916.dtsi.
+>>
+> 
+> In 8974 we do have a physical region where it's expected to be loaded.
+> 
+> So in line with upcoming remoteproc work we should support referencing a
+> reserved-memory node with either reg or size.
+> 
+> In the case of spotting a "reg" we're currently better off using
+> ioremap. We're looking at getting the remoteproc core to deal with this
+> mess.
+
+You mean that remoteproc core will parse memory-region property?
+
+> 
+> 
+> So, on 8916 I think you should use the form:
+> 
+> venus_mem: venus {
+> 	size = <0x500000>;
+> };
+
+Don't forget that the physical address where the firmware is stored has
+some range, the scm call will fail if it is out of the expected range,
+probably because of some security reasons. So maybe alloc-ranges should
+be specified here.
+
+> 
+> And I don't think you should use the shared-dma-pool compatible, because
+> this is not a region for multiple devices to allocate dma memory out of.
+
+Then I cannot reuse reserved-mem infrastructure.
+
+-- 
+regards,
+Stan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
