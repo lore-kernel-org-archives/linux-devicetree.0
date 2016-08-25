@@ -1,61 +1,39 @@
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Subject: Re: [PATCH v4 4/6] media: rc: meson-ir: Add support for newer
- versions of the IR decoder
-Date: Thu, 25 Aug 2016 09:41:14 -0300
-Message-ID: <20160825094114.2ca0a9e9@vento.lan>
-References: <20160628191802.21227-1-martin.blumenstingl@googlemail.com>
-        <20160819215547.20063-1-martin.blumenstingl@googlemail.com>
-        <20160819215547.20063-5-martin.blumenstingl@googlemail.com>
-        <7hy43s5r7d.fsf@baylibre.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V5] clk: bcm: Add driver for BCM53573 ILP clock
+Date: Thu, 25 Aug 2016 14:42:52 +0200
+Message-ID: <CACna6rzeLdAW_mEpUN355Xrr3v-zjBtQW_4z-gV1kOrPS=wr8A@mail.gmail.com>
+References: <20160823061745.8162-1-zajec5@gmail.com> <20160823062613.13865-1-zajec5@gmail.com>
+ <20160823195528.GA17844@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <7hy43s5r7d.fsf@baylibre.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, narmstrong@baylibre.com, carlo@caione.org, linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, will.deacon@arm.com, catalin.marinas@arm.com, mark.rutland@arm.com, robh+dt@kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160823195528.GA17844@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Em Fri, 19 Aug 2016 15:28:22 -0700
-Kevin Hilman <khilman@baylibre.com> escreveu:
+On 23 August 2016 at 21:55, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Aug 23, 2016 at 08:25:59AM +0200, Rafa=C5=82 Mi=C5=82ecki wrote:
+>> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>
+>> This clock is present on BCM53573 devices (including BCM47189) that use
+>> Cortex-A7. ILP is a part of PMU (Power Management Unit) and so it should
+>> be defined as one of its subnodes (subdevices). For more details see
+>> Documentation entry.
+>>
+>> Unfortunately there isn't a set of registers related to ILP clock only.
+>> We use registers 0x66c, 0x674 and 0x6dc and between them there are e.g.
+>> "retention*" and "control_ext" regs. This is why this driver maps all
+>> 0x1000 B of space.
+>
+> Then describe the block as a syscon which has several functions of
+> which clocks are one.
 
-> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
-> 
-> > From: Neil Armstrong <narmstrong@baylibre.com>
-> >
-> > Newer SoCs (Meson 8b and GXBB) are using REG2 (offset 0x20) instead of
-> > REG1 to configure the decoder mode. This makes it necessary to
-> > introduce new bindings so the driver knows which register has to be
-> > used.
-> >
-> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>  
-> 
-> Acked-by: Kevin Hilman <khilman@baylibre.com>
-> 
-> Mauro, are you the one to pick up new media/rc drivers?  Or if you
-> prefer, with your ack, I'll take this along with the DT and submit via
-> arm-soc.
-
-I generally pick new media rc drivers, but in the specific case of this
-patchset, it is just adding a few extra lines to existing drivers, and
-most of the work are actually at the ARM tree.
-
-So, feel free to merge via arm-soc with my ack:
-
-Acked-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-
-> 
-> Thanks,
-> 
-> Kevin
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-media" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
-Thanks,
-Mauro
+This isn't clear to me, sorry, could you describe it? Would you like
+me to update commit message or documentation? Is code fine as is?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
