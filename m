@@ -1,74 +1,33 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource
- driver
-Date: Thu, 25 Aug 2016 10:07:08 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1608250947120.5714@nanos>
-References: <cover.147018b3518.git.dalias@libc.org> <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org> <57BDCE5D.2050609@linaro.org> <20160824174001.GW15995@brightrain.aerifal.cx>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] phy: rcar-gen3-usb2: Add a compatible string for r8a7796
+Date: Thu, 25 Aug 2016 10:23:29 +0200
+Message-ID: <CAMuHMdW6a_eivVCK7xBfjPvh1vt66pEqXOgBzxUjVmaYSd3cRQ@mail.gmail.com>
+References: <1472021362-8085-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1472021362-8085-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160824174001.GW15995@brightrain.aerifal.cx>
+In-Reply-To: <1472021362-8085-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Rich,
+On Wed, Aug 24, 2016 at 8:49 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> This driver can support for r8a7796 SoC. So, this patch adds it.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-On Wed, 24 Aug 2016, Rich Felker wrote:
-> I don't think that's a correct characterization. Rather the percpu
-> infrastructure just means something completely different from what you
-> would expect it to mean. It has nothing to do with the hardware but
-> rather with kernel-internal choice of whether to do percpu devid
-> mapping inside the irq infrastructure, and the choice at the
-> irq-requester side of whether to do this is required to match the
-> irqchip driver's choice. I explained this better in another email
-> which I could dig up if necessary, but the essence is that
-> request_percpu_irq is a misnamed and unusably broken API.
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I slowly get tired about your permanent ranting about misnamed, misdesigned
-and unusable code in the kernel.
+Gr{oetje,eeting}s,
 
-The percpu infrastructure was designed explicitely to reflect the hardware and
-is not a random kernel internal choice. It's there to handle the situation
-where a single interrupt number is actually available on each CPU.
+                        Geert
 
-ARM has a very clear distinction between PPI (per processor interrutps) and
-SPI (shared peripheral interrupts). So we end up with the following interrupt
-space:
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-IRQ	CPU0	CPU1
-0	PPI	PPI
-...	...	...
-15	PPI	PPI
-
-16	SPI	SPI
-...
-N	SPI	SPI
-
-The fundamental difference between PPI and SPI is that PPIs originate from the
-CPU itself or are injected as IPIs targeted to a particular CPU. Each CPU has
-its own interrupt controller to mask/ack/... PPIs.
-
-The SPIs have a shared interrupt controller and therefor are globally shared
-between all cpus.
-
-The percpu infrastructure reflects exaclty this scenario and allows us to
-handle PPIs with the same irq number (which makes a lot of sense) seperately
-on each CPU.
-
-So how does this not reflect the hardware?
-
-If your particular hardware has the old scheme of seperate interrupt numbers
-for per cpu interrupts, then you can simply use the normal interrupt scheme
-and request a seperate interrupt per cpu.
-
-Just because something does not fit your needs and does not match your SH
-blinkered worldview does not make it misnamed, misdesigned and unusable.
-
-If you want to work with this community you really should start to talk
-constructive with us and stop this unjustified ranting attitude.
-
-Thanks,
-
-	tglx
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
