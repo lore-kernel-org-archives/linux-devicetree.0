@@ -1,30 +1,65 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH v4 00/17] pwm: Add support for PWM
- Capture
-Date: Thu, 25 Aug 2016 12:51:37 +0100
-Message-ID: <20160825115137.GD3281@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <20160816093508.28307-1-lee.jones@linaro.org>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v2 0/7] drm/tilcdc: Address LCDC rev 2 color errata
+Date: Thu, 25 Aug 2016 15:03:35 +0300
+Message-ID: <cover.1472126231.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160816093508.28307-1-lee.jones@linaro.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, kernel@stlinux.com, devicetree@vger.kernel.org, thierry.reding@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com
+Cc: Jyri Sarha <jsarha@ti.com>, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, kbeldan@baylibre.com, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
-
-On Tue, 16 Aug 2016, Lee Jones wrote:
-
-> This patch-set makes use of the new Capture API by supplying PWM
-> Capture functionality into the already existing STi PWM driver.
-
-For the series: -
-
-Acked-by: Peter Griffin <peter.griffin@linaro.org>
-
-Regards,
-
-Peter.
+Q2hhbmdlcyBzaW5jZSB2MToKLSBDaGFuZ2UgdGhlIGJsdWUtYW5kLXJlZC13aXJpbmcgcHJvcGVy
+dHkgdG8gYm9vbGVhbiBibHVlLWFuZC1yZWQtY3Jvc3NlZAogIC0gVGhpcyBicmVha3MgdG8gbGl0
+dGxlIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgdGhlIGVhcmxpZXIgc2VyaWVzIGhhZCwgYnV0CiAg
+ICBtYWtlcyB0aGUgYmluZGluZyBtb3JlIHN0cmFpZ2h0IGZvcndhcmQKICAtIFRoaXMgY2hhbmdl
+cyByZXF1aXJlcyBjaGFuZ2VzIHRvIGFtMzM1eC1ldm0gYW5kIGFtMzM1eC1ldm1zayBkdHMtZmls
+ZXMKICAtIFRoZSBvbGQgYmVhZ2xlYm9uZS1ibGFjayBkdHMgZmlsZXMgcmVtYWluIGNvbXBhdGli
+bGUsIGJ1dCB0aGUgcGF0Y2gKICAgIHN1Z2dlc3RzIGluIGNvbW1lbnN0IG9uIGhvdyB0byBzdXBw
+b3J0IDI0LWJpdCBSR0IgbW9kZSB3aXRoIEJCQgoKVGhlIGZpcnN0IHBhdGNoICgiZHJtL3RpbGNk
+YzogUmVtb3ZlIGRybV9oZWxwZXJfZGlzYWJsZV91bnVzZWRfZnVuY3Rpb25zKCkKY2FsbCIpIGlz
+IGNvbXBsZXRlbHkgaW5kZXBlbmRlbnQgZml4LgoKVGhlIHJlZCBhbmQgYmx1ZSBjb21wb25lbnRz
+IGFyZSByZXZlcnNlZCBiZXR3ZWVuIDI0IGFuZCAxNiBiaXQgbW9kZXMKb24gYW0zMzV4IExDREMg
+b3V0cHV0IHBpbnMuIFRvIGdldCAyNCBSR0IgZm9ybWF0IHRoZSB3aXJlcyByZWQgYW5kCmJsdWUg
+d2lyZXMgaGFzIHRvIGJlIGNyb3NzZWQgYW5kIHRoaXMgaW4gdHVybiBjYXVzZXMgMTYgY29sb3Jz
+IG91dHB1dAp0byBiZSBpbiBCR1IgZm9ybWF0LiBXaXRoIHN0cmFpZ2h0IHdpcmluZyB0aGUgMTYg
+Y29sb3IgaXMgUkdCIGFuZCAyNApiaXQgaXMgQkdSLiBUaGVzZSBwYXRjaGVzIHRyeSB0byBkZWFs
+IHdpdGggdGhlIGlzc3VlIGluIHJlYXNvbmFibGUKbWFubmVyLgoKRm9yIG1vcmUgZGV0YWlscyBz
+ZWUgc2VjdGlvbiAzLjEuMSBpbiBBTTMzNXggU2lsaWNvbiBFcnJhdGE6Cmh0dHA6Ly93d3cudGku
+Y29tL2dlbmVyYWwvZG9jcy9saXQvZ2V0bGl0ZXJhdHVyZS50c3A/YmFzZUxpdGVyYXR1cmVOdW1i
+ZXI9c3ByejM2MAoKSnlyaSBTYXJoYSAoNyk6CiAgZHJtL3RpbGNkYzogUmVtb3ZlIGRybV9oZWxw
+ZXJfZGlzYWJsZV91bnVzZWRfZnVuY3Rpb25zKCkgY2FsbAogIGRybS90aWxjZGM6IEFkZCBibHVl
+LWFuZC1yZWQtY3Jvc3NlZCBkZXZpY2V0cmVlIHByb3BlcnR5CiAgZHJtL3RpbGNkYzogQ2hvb3Nl
+IGNvbnNvbGUgQlBQIHRoYXQgc3VwcG9ydHMgUkdCCiAgQVJNOiBkdHM6IGFtMzM1eC1ib25lYmxh
+Y2s6IEFkZCBjb21tZW50cyBvbiBob3cgdG8gc3VwcG9ydCAyNCBiaXQgUkdCCiAgICBtb2RlCiAg
+QVJNOiBkdHM6IGFtMzM1eC1ldm06IEFkZCBibHVlLWFuZC1yZWQtY3Jvc3NlZCAtcHJvcGVydHkg
+dG8gbGNkYyBub2RlCiAgQVJNOiBkdHM6IGFtMzM1eC1ldm1zazogV2hpdGVzcGFjZSBjbGVhbnVw
+IG9mIGxjZGMgcmVsYXRlZCBub2RlcwogIEFSTTogZHRzOiBhbTMzNXgtZXZtc2s6IEFkZCBibHVl
+LWFuZC1yZWQtY3Jvc3NlZCAtcHJvcGVydHkgdG8gbGNkYwogICAgbm9kZQoKIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGlsY2RjL3RpbGNkYy50eHQgIHwgMTIgKysrKysrKwogYXJj
+aC9hcm0vYm9vdC9kdHMvYW0zMzV4LWJvbmVibGFjay5kdHMgICAgICAgICAgICAgfCAxMiArKysr
+KysrCiBhcmNoL2FybS9ib290L2R0cy9hbTMzNXgtZXZtLmR0cyAgICAgICAgICAgICAgICAgICB8
+ICAyICsrCiBhcmNoL2FybS9ib290L2R0cy9hbTMzNXgtZXZtc2suZHRzICAgICAgICAgICAgICAg
+ICB8IDQyICsrKysrKysrKysrLS0tLS0tLS0tLS0KIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGls
+Y2RjX2Rydi5jICAgICAgICAgICAgICAgIHwgMzkgKysrKysrKysrKysrKystLS0tLS0KIGRyaXZl
+cnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Rydi5oICAgICAgICAgICAgICAgIHwgIDUgKystCiBk
+cml2ZXJzL2dwdS9kcm0vdGlsY2RjL3RpbGNkY19leHRlcm5hbC5jICAgICAgICAgICB8ICA3ICsr
+LS0KIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2V4dGVybmFsLmggICAgICAgICAgIHwg
+IDIgKy0KIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX3BhbmVsLmMgICAgICAgICAgICAg
+IHwgIDIgLS0KIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX3BsYW5lLmMgICAgICAgICAg
+ICAgIHwgIDkgKystLS0KIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX3RmcDQxMC5jICAg
+ICAgICAgICAgIHwgIDIgLS0KIDExIGZpbGVzIGNoYW5nZWQsIDg3IGluc2VydGlvbnMoKyksIDQ3
+IGRlbGV0aW9ucygtKQoKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
