@@ -1,76 +1,109 @@
-From: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
-Subject: Re: [PATCH 1/2] sdhci-of-arasan: Add quirk and device tree parameter
- to fake CD bit
-Date: Thu, 25 Aug 2016 12:15:44 -0500
-Message-ID: <20160825171539.GA13571@zach-desktop>
-References: <1472080984-17373-1-git-send-email-zach.brown@ni.com>
- <20160825105640.GA5439@remoulade>
+From: Rich Felker <dalias@libc.org>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Thu, 25 Aug 2016 13:45:36 -0400
+Message-ID: <20160825174536.GB15995@brightrain.aerifal.cx>
+References: <cover.147018b3518.git.dalias@libc.org>
+ <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
+ <57BDCE5D.2050609@linaro.org>
+ <20160824174001.GW15995@brightrain.aerifal.cx>
+ <alpine.DEB.2.20.1608250947120.5714@nanos>
+ <20160825145650.GA15995@brightrain.aerifal.cx>
+ <alpine.DEB.2.20.1608251727410.5714@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160825105640.GA5439@remoulade>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org
+In-Reply-To: <alpine.DEB.2.20.1608251727410.5714@nanos>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 25, 2016 at 11:56:55AM +0100, Mark Rutland wrote:
-> On Wed, Aug 24, 2016 at 06:23:03PM -0500, Zach Brown wrote:
-> > The sdhci controller on xilinx zynq devices will not function unless
-> > the cd bit is provided. http://www.xilinx.com/support/answers/61064.html
-> > In cases where it is impossible to provide the cd bit in hardware,
-> > setting the controller to test mode and then setting inserted to true
-> > will get the controller to function with out the cd bit.
-> > 
-> > The device property "fake-cd" will let the arasan driver know it needs
-> > to fake the cd bit for the controller inorder for the controller to
+On Thu, Aug 25, 2016 at 05:41:29PM +0200, Thomas Gleixner wrote:
+> On Thu, 25 Aug 2016, Rich Felker wrote:
+> > assumption that is was just a bug. Now that Mark Rutland has explained
+> > it well (and with your additional explanation below in your email), I
+> > see what the motivation was, but I still think it could be done in a
+> > less-confusing and more-consistent way that doesn't assume ARM-like
+> > irq architecture.
 > 
-> Nit: s/inorder/in order/
+> It's not only ARM. Some MIPS Octeon stuff has the same layout and requirements
+> to use a single irq number for interrupts which are delivered on a per cpu
+> basis.
 > 
-> Comments on the actual patch below.
-> 
-> > function with a SD card that does not provide the CD bit.
-> > 
-> > Signed-off-by: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > index 3404afa..3b9f406 100644
-> > --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> > @@ -21,6 +21,10 @@ Required Properties:
-> >    - interrupts: Interrupt specifier
-> >    - interrupt-parent: Phandle for the interrupt controller that services
-> >  		      interrupts for this device.
-> > +Optional Properties:
-> > +- fake-cd: On Zynq Devices the SDHCI Controller will not work without the cd
-> > +  bit. When this option is set the driver will put the controller in test mode
-> > +  and fake the cd bit so it will function.
-> 
-> As Lars noted, the DT should describe the HW, and the policy of how to deal
-> with that should be left to the kernel. So from a DT perspective the above is
-> not correct.
-> 
-> If I understand the linked documentation, this is slightly different to typical
-> uses of broken-cd in that in the absence of a card detect signal the HW will
-> not be able to access the SD card at all, even if requested to. Is that correct?
-> 
-> If so, perhaps a better option is to have the combination of broken-cd and the
-> compatible string for this IP block imply that the test mode workaround is
-> required. Obviously that requires a fixup to the usual broken-cd binding to
-> remove the implication that polling alone must be used.
-> 
-> Thanks,
-> Mark.
+> Patches are welcome :)
 
-In cases where the card is non-removable then polling doesn't make sense. So it
-doesn't make sense to tie the test mode workaround into the broken-cd property,
-even though I agree the nature of the defect fits under the notion of the CD 
-being broken.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm not opposed to working on changes, but based on your below
+comments I think maybe this (percpu request) is just infrastructure I
+shouldn't be using. I think the source of my frustration was the
+repeated (maybe by different people; I don't remember now) suggestions
+that I use it even when I found that it didn't currently match well
+with the hardware.
+
+> > > If your particular hardware has the old scheme of seperate interrupt numbers
+> > > for per cpu interrupts, then you can simply use the normal interrupt scheme
+> > > and request a seperate interrupt per cpu.
+> > 
+> > Nominally it uses the same range of hardware interrupt numbers for all
+> > (presently both) cpus, but some of them get delivered to a specific
+> > cpu associated with the event (presently, IPI and timer; IPI is on a
+> > fixed number at synthesis time but timer is runtime configurable)
+> > while others are conceptually deliverable to either cpu (presently
+> > only delivered to cpu0, but that's treated as an implementation
+> > detail).
+> 
+> If I understand correctly, then this is the classic scheme:
+> 
+>    CPU0		IPI0	   IRQ-N
+>    CPU1		IPI1	   IRQ-M
+> 
+> These and the timers or whatever are strict per cpu and therefor not routable.
+> Regular device interrupts can be routed to any CPU by setting the
+> affinity. Correct?
+
+IPI generates hw irq 97 on whichever cpu it's targeted at, and the
+timer generates whatever hw irq you program it to generate (by
+convention, currently 72) on the cpu associated with the timer that
+expired. Treating "cpu0's irq 97" and "cpu1's irq 97" as separate hw
+irq numbers would be possible at the kernel level (just by using the
+cpu id as part of the logical hw irq number) but this would require
+lots of (imo useless) infrastructure/overhead and hard-coded
+assumptions about which irq numbers are used for percpu events, and it
+would not model the hardware well.
+
+> > It currently works requesting the irq with flags that ensure the
+> > handler runs on the same cpu it was delivered on, without using any
+> > other percpu irq framework.
+> 
+> Which special flag are you referring to? I'm not aware of one.
+> 
+> IRQF_PER_CPU is just telling the core that this is a non routable per cpu
+> interrupt. It's excluded from affinity setting and also on cpu hot unplug the
+> per cpu interrupts are not touched and nothing tries to reroute them to one of
+> the still online cpus.
+> 
+> Regarding the interrupt handler. It runs on the CPU on which the interrupt is
+> delivered and there is nothing you can influence with a flag.
+
+OK, I was not clear on whether there was such a guarantee in general
+but knew there must be one for IRQF_TIMER or IRQF_PER_CPU.
+
+(Without knowing the system doesn't do this, it's possible that the
+softirq/tasklet stuff could migrate handling to a different cpu than
+the hardware irq was delivered on.)
+
+> > If you have concerns about ways this could break and want me to make the
+> > drivers do something else, I'm open to suggestions.
+> 
+> If I understand the hardware halfways right, then using request_irq() with
+> IRQF_PER_CPU for these special interrupts is completely correct.
+> 
+> The handler either uses this_cpu_xxx() for accessing the per cpu data related
+> to the interrupt or you can hand in a percpu pointer as dev_id to
+> request_irq() which then is handed to the interrupt function as a cookie.
+
+Yes, that's exactly what my driver is doing now, and I'm happy to
+leave it that way. Can we move forward with that? If so I'll make the
+other changes requested and submit a new version of the patch.
+
+Rich
