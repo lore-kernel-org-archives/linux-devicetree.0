@@ -1,62 +1,179 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: add NAND controller node
- for A23/A33
-Date: Thu, 25 Aug 2016 22:53:43 +0200
-Message-ID: <20160825205343.GJ32598@lukather>
-References: <20160823135546.60179-1-icenowy@aosc.xyz>
- <20160824060222.GT2598@lukather>
- <16141472026895@web4j.yandex.ru>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/2] pwm: sun4i: Add Allwinner H3 support
+Date: Thu, 25 Aug 2016 22:51:38 +0200
+Message-ID: <20160825205138.GI32598@lukather>
+References: <1472107494-20740-1-git-send-email-woogyom.kim@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="QnBU6tTI9sljzm9u"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBY5V7W6QKGQEC5WUSPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="2xeD/fx0+7k8I/QN"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <16141472026895-ECYPE5Ced+Nuio3avFS2gg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1472107494-20740-1-git-send-email-woogyom.kim@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Milo Kim <woogyom.kim@gmail.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---QnBU6tTI9sljzm9u
-Content-Type: text/plain; charset=UTF-8
+--2xeD/fx0+7k8I/QN
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Milo,
 
-On Wed, Aug 24, 2016 at 04:21:35PM +0800, Icenowy Zheng wrote:
-> Hi Maxime,
+Remember to use get_maintainers to send your patches, you missed a few
+mailing lists (linux-arm-kernel, for example), developpers (Alexandre
+Belloni, the original author of the driver) and maintainers (Linus
+Walleij for the pinctrl changes).
+
+On Thu, Aug 25, 2016 at 03:44:53PM +0900, Milo Kim wrote:
+> According to the latest datasheet (v1.2), H3 has single PWM channel.
+> H3 PWM controller has same register layout as sun4i driver, so it works=
+=20
+> by adding H3 specific data.
+> And the second PWM channel is not supported, so the pinctrl function is r=
+emoved.
 >=20
-> 24.08.2016, 14:02, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> > Hi,
-> >
-> > On Tue, Aug 23, 2016 at 09:55:46PM +0800, Icenowy Zheng wrote:
-> >> =C2=A0A23/A33 has a NAND controller which can now be used properly.
-> >>
-> >> =C2=A0Add a device node for it.
-> >>
-> >> =C2=A0The DMA function cannot work because of changed DMA IP block, so=
- it's
-> >> =C2=A0temporarily removed in the device node. However, with PIO mode i=
-t can still
-> >> =C2=A0work.
-> >
-> > What is preventing the NAND driver to work with DMA with the sun6i driv=
-er?
->
-> It seems that under sun6i we should use dedicated rx and tx DMAs, but not=
- a
-> "rxtx" DMA.
+> Datasheet:
+>   http://linux-sunxi.org/File:Allwinner_H3_Datasheet_V1.2.pdf
 
-Ah, I see. I just applied your patch, thanks!
+That should be in your cover letter, but not in your commit log. A
+commit log is here forever, this link will very likely not.
+
+>=20
+> Test environment:
+>   Tested on Nano Pi M1 board, but PA5 pin is assigned for UART0.
+>   So the debug console should be changed to other port like UART1.
+>=20
+>   Ex)
+> 	aliases {
+> 		serial0 =3D &uart1;
+> 	};
+>=20
+> 	&uart1 {
+>         	pinctrl-names =3D "default";
+> 	        pinctrl-0 =3D <&uart1_pins_a>;
+>         	status =3D "okay";
+> 	};
+
+That should be part of your cover letter too.
+
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-sun4i.txt |  1 +
+>  arch/arm/boot/dts/sun8i-h3.dtsi                     | 15 +++++++++++++++
+>  drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c            |  1 -
+>  drivers/pwm/pwm-sun4i.c                             |  9 +++++++++
+
+Please split these changes into several patches:
+
+>  4 files changed, 25 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt b/Docume=
+ntation/devicetree/bindings/pwm/pwm-sun4i.txt
+> index cf6068b..f1cbeef 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
+> @@ -6,6 +6,7 @@ Required properties:
+>      - "allwinner,sun5i-a10s-pwm"
+>      - "allwinner,sun5i-a13-pwm"
+>      - "allwinner,sun7i-a20-pwm"
+> +    - "allwinner,sun8i-h3-pwm"
+>    - reg: physical base address and length of the controller's registers
+>    - #pwm-cells: should be 3. See pwm.txt in this directory for a descrip=
+tion of
+>      the cells format.
+> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3=
+=2Edtsi
+> index b44bc48..3a965fb 100644
+> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+> @@ -512,6 +512,13 @@
+>  				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+>  			};
+> =20
+> +			pwm0_pin_a: pwm0@0 {
+> +				allwinner,pins =3D "PA5";
+> +				allwinner,function =3D "pwm0";
+> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
+> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
+> +			};
+> +
+
+One to add the new pin...
+
+>  			uart0_pins_a: uart0@0 {
+>  				allwinner,pins =3D "PA4", "PA5";
+>  				allwinner,function =3D "uart0";
+> @@ -585,6 +592,14 @@
+>  			interrupts =3D <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+> =20
+> +		pwm: pwm@01c21400 {
+> +			compatible =3D "allwinner,sun8i-h3-pwm";
+> +			reg =3D <0x01c21400 0x8>;
+> +			clocks =3D <&osc24M>;
+> +			#pwm-cells =3D <3>;
+> +			status =3D "disabled";
+> +		};
+> +
+
+=2E.. one to add the controller node ...
+
+>  		uart0: serial@01c28000 {
+>  			compatible =3D "snps,dw-apb-uart";
+>  			reg =3D <0x01c28000 0x400>;
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c b/drivers/pinctrl/s=
+unxi/pinctrl-sun8i-h3.c
+> index 11760bb..087f231 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-h3.c
+> @@ -60,7 +60,6 @@ static const struct sunxi_desc_pin sun8i_h3_pins[] =3D {
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x2, "sim"),		/* PWREN */
+> -		  SUNXI_FUNCTION(0x3, "pwm1"),
+
+=2E.. one to remove the pinctrl pin ...
+
+>  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 6)),	/* PA_EINT6 */
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(A, 7),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> index 03a99a5..b0803f6 100644
+> --- a/drivers/pwm/pwm-sun4i.c
+> +++ b/drivers/pwm/pwm-sun4i.c
+> @@ -284,6 +284,12 @@ static const struct sun4i_pwm_data sun4i_pwm_data_a2=
+0 =3D {
+>  	.npwm =3D 2,
+>  };
+> =20
+> +static const struct sun4i_pwm_data sun4i_pwm_data_h3 =3D {
+> +	.has_prescaler_bypass =3D true,
+> +	.has_rdy =3D true,
+> +	.npwm =3D 1,
+> +};
+> +
+>  static const struct of_device_id sun4i_pwm_dt_ids[] =3D {
+>  	{
+>  		.compatible =3D "allwinner,sun4i-a10-pwm",
+> @@ -298,6 +304,9 @@ static const struct of_device_id sun4i_pwm_dt_ids[] =
+=3D {
+>  		.compatible =3D "allwinner,sun7i-a20-pwm",
+>  		.data =3D &sun4i_pwm_data_a20,
+>  	}, {
+> +		.compatible =3D "allwinner,sun8i-h3-pwm",
+> +		.data =3D &sun4i_pwm_data_h3,
+> +	}, {
+
+=2E.. and one to add the H3 support in the driver.
+
+It looks good otherwise, thanks!
 Maxime
 
 --=20
@@ -64,32 +181,25 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---QnBU6tTI9sljzm9u
+--2xeD/fx0+7k8I/QN
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXv1rXAAoJEBx+YmzsjxAgnKoP/2b0u2VfPMMj5Ujo/0CCSVmP
-SxU8g+zv54IlF7UgafnyIb0qahT48ZNmppnR6tFEKq848qcbtw/80VGCnACdlAlJ
-PSbV4bQNBqW8toDvWDjvq2KdddPCxfaOJLk718ZpHR5wkvG6lyGFkQCsDOTKNfas
-B2GGtGOc0AMl/YRk9DldVobqVPa1k7/mRPwnD5OheW29ExgRX0XpfCThAsNaaeQj
-4c5PeksXNLullJM5wcwnpYqNkEybxRCanln6eW7f7NAgNeEyBMY5UYJqoV/NvcV7
-PjA/wZi9bbSNi0sMEU2tm4w+hp9TUrGkOeIZGQRSCNSxVDaI9x6Nw+3xd+uwEPI9
-FkDDMFQXQI343XdUJxAtWseCd1dhrSNspAa6eGFJ/jD77R7dvKafOMU0VKXlqTFD
-hgRuvz/xjGphTW9mu90YwVq7G6e4cZ1Nh390alhXj9Zyfl6k2srJ9G7eAvl2MQgB
-ZzYjwVr3/R/aVpMQYBSAMkEMo3ldR26j7fBLnF3mggYMa4XZJ7UN/sT0F7cccHI8
-t9DR20W5AwiPnceDvnvmg97ST/yzEvDWho5hJULu5yo1HIo6ugiYFdNOg6HqU3ii
-HoaiOO99qLcaOqWbvvXidq1v6EaddhucqmAvci/rX3+l49FNLmftEHHI3O/eJJro
-mgAuhum8G1IjhXhkJP6p
-=aVsc
+iQIcBAEBAgAGBQJXv1paAAoJEBx+YmzsjxAg3rgQAISuAi+cDxZiagHoPlix01nM
+D8oEZm2kdoNvYv+SW9KskeWCsudpx5mnBfZs0i2ridXXV1PWDOCVjL+OK1dIhNGm
+u9hhIX3t3AmlJB24SAXBewLS0lxFwiet55uMf/SPF7B6HbswSF6fnPEWon4bzbU3
+mkhVBk6+ZfhhHNLNCZ1SVqsGiZdK3VetdTwxZmHtKG+fsiocXrFY1Pwk7HswVuuZ
+wZajBFiUV9o2Pafu0HdMQvqAHfaqA7JW6VSKUf1LE65pOEO3f9YPi79IdXT5L3x9
+AvAoSbHvvbV1+PHW881YVvcPWZ6M+tliBxAOjaK+Yr17jnsmwfGSK8cNq+/GKEy/
+c2vD5mQBGA5tf/MQDCdeZcKu95qAePHiQuujy2PeQIFW0Km+KFkZXUXaFdOdEzRV
+lonwIbEwSXUWvB29BYYVVWrTTrI1ERU88aLrrlq/Ph4SDpDbfIWQXLGuyNpyjkq0
+8VcAo+FkDQcWF74FN5tsRUS94NjSrZRDGfPUd0R+KffI5kA85wk4a/Zj4QByEge2
+AOIUwFLbaBS27QInrufV9su0wxOql8LRjxFFtpM2TPM5GUsf3XPKHVSeFjjb7EFP
+9YJlTm8dgBDeRZz6XLiU4xosZJn1R2LSV+mRNzxscGZq6sv1lc+iU9B3tyB4xs7j
+BVb+KsJWzEMbHBIyefjB
+=ncF6
 -----END PGP SIGNATURE-----
 
---QnBU6tTI9sljzm9u--
+--2xeD/fx0+7k8I/QN--
