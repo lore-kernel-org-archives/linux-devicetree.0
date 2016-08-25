@@ -1,34 +1,32 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3 2/6] clk: sunxi-ng: mux: Add support for mux tables
-Date: Thu, 25 Aug 2016 22:27:04 +0200
-Message-ID: <20160825202704.GC32598@lukather>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 3/6] clk: sunxi-ng: mux: support fixed pre-dividers on
+ multiple parents
+Date: Thu, 25 Aug 2016 22:27:36 +0200
+Message-ID: <20160825202736.GD32598@lukather>
 References: <20160825062200.17206-1-wens@csie.org>
- <20160825062200.17206-3-wens@csie.org>
+ <20160825062200.17206-4-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="3siQDZowHQqNOShm"
-Return-path: <linux-clk-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="XvKFcGCOAo53UbWW"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160825062200.17206-3-wens@csie.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20160825062200.17206-4-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---3siQDZowHQqNOShm
+--XvKFcGCOAo53UbWW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 25, 2016 at 02:21:56PM +0800, Chen-Yu Tsai wrote:
-> Some clock muxes have holes, i.e. invalid or unconnected inputs,
-> between parent mux values.
+On Thu, Aug 25, 2016 at 02:21:57PM +0800, Chen-Yu Tsai wrote:
+> Some clocks on the A31 have fixed pre-dividers on multiple parents.
+> Add support for them.
 >=20
-> Add support for specifying a mux table to map clock parents to
-> mux values.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
 Applied, thanks!
 Maxime
@@ -38,25 +36,29 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---3siQDZowHQqNOShm
+--XvKFcGCOAo53UbWW
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXv1SYAAoJEBx+YmzsjxAgEYQP/0r8kd26zTesOgMayp955SQN
-erEwSWA4pT77R7OzRqq27SqBMjpY96EK4misr48LTd1unJcVynQ/DjFKvJJAaneR
-9upNZY18Mv9PPFcbuYj/tKkR3BDB2y2KDPgvYTZSzZ6/x/uhyh3qlwpHXpc3hefd
-Y6JPxNI3CGnkj74secT5E5HfICc+5jR8oR+TDx0kN4nzuHkoXx+x1RZW9kjFJx/F
-WlY2LSbLhskbdIbN953CIbv6OwtjWoKOcLkvekJ+/Y+j0mFuJWOouuGAQwPtjvul
-7oCFJ5wtG6rkolsY1eWhNdPWOP2fg1zXmc0KzUXCy4OC0+6hqBBqkLtmrky0wtX2
-V/xbLG9y9YBCPrI0yTYgT9MnRdwXpBHquqhAwQmFDdqIq7PbZhaD0KQEhgwMKHlP
-Ej/2EO2yCarbA/ijq5rnKmOMTL+Vnnr0k3/WCPZrEN0qM3UX/t2g02ivEZKXce63
-GK6M+Ml1d6iJvLj/2cxmsTYPIAmYhJOOFORwS6VS71DPi2vwkRvUWSKvcb3C0tnB
-tVnDfPTMpfSJf+XUG7ndc2Z53dkbC3/RB0ClmMd50x/K/uQyX3Fpy9m5BqCVZk+y
-h5uzoO600QXLIRx1fEpawQkk6ELYROMjJzgJ21CrEDqL3dJhiv94kUnyzklgt3TZ
-t6Kvizgdj0BpE8HhGnE9
-=/zyL
+iQIcBAEBAgAGBQJXv1S4AAoJEBx+YmzsjxAgMVMQAJdZzBfBTF+7rKs8AGXDwcok
+YvGz4tOXcG1ZzHfvLuSEXRCCxY0TIt+X5kO4Cvq9Ugt+5loCNvexN+qggzGYXAKj
+N2N0C32WYstkAJhwyVUjBxWO3pIGAuRBrB4L3Y5ZMjHbe4TfG0z8B1JRCFsjcRX2
+Nnoci1fmi3kmgnjWnKnsfcHIPOtcxM9jSC+QSPvHnumouTky8/bAlvvz0w6eLWij
+Y1XH4bshmutvflqBur0cj02aJHBftz1Jwk/J7JMvqQo2W06EKTqrHJrQS7fLGc0i
+OaLuf6H1OTSmTMq6C3lQL228cQIEg5MX9OD4TUypTMxghgr9Aq6rZhABJzg0xnCM
+cKsDf3llpWollsagMqiDSj8NFPfwkqsdXt43AxzJPaaLirKJ3dYoSIF06k6iAC+D
+WvqB0tYssaqqF4PxD7pMRBfkF8oOBPh+DliEUETrXelsAPQxnjAHRstZnhVldGg5
+Sp524qXhxLAyIxOtImXZvk85cX2G6nmW0LcOeja+cxXahdMo75wwOJFZAiIhxHa2
+KzPWicbK9CxaT+zHplwRxdTQNZxbZVzw2eH8cWEbMSK5oTOVCXw3mYphFIXxquFo
+fyhQYuaotityoCJL/nYb7zFY0PUBq6gbIXj89T1Hvv2SqRDRRfJJ4/Yj8exiE7zZ
+pKqwQdjuCy0lh/4VWezC
+=GZkd
 -----END PGP SIGNATURE-----
 
---3siQDZowHQqNOShm--
+--XvKFcGCOAo53UbWW--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
