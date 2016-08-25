@@ -1,39 +1,86 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2] clk: fixed-factor: add optional dt-binding clock-flags
-Date: Wed, 24 Aug 2016 17:52:21 -0700
-Message-ID: <20160825005221.GK19826@codeaurora.org>
-References: <20160621005910.GN1521@codeaurora.org>
- <1466741572-58802-1-git-send-email-neidhard.kim@lge.com>
- <20160628205518.GF3737@rob-hp-laptop>
- <146714872010.89261.1969853552594659808@resonance>
- <5773736D.3060405@lge.com>
- <20160702002030.GF27880@codeaurora.org>
- <5779C056.3020209@lge.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 3/4] dt-binding: remoteproc: venus rproc dt binding
+ document
+Date: Wed, 24 Aug 2016 17:05:21 -0700
+Message-ID: <20160825000521.GH15161@tuxbot>
+References: <1471622000-1906-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1471622000-1906-4-git-send-email-stanimir.varbanov@linaro.org>
+ <20160823173259.GA13327@rob-hp-laptop>
+ <fbf25a9e-348b-9047-37ef-1b96808dea31@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5779C056.3020209@lge.com>
+In-Reply-To: <fbf25a9e-348b-9047-37ef-1b96808dea31@mm-sol.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jongsung Kim <neidhard.kim@lge.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chanho Min <chanho.min@lge.com>
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Rob Herring <robh@kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Andy Gross <andy.gross@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Clark <robdclark@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/04, Jongsung Kim wrote:
-> On 2016년 07월 02일 09:20, Stephen Boyd wrote:
-> > Do you actually have an IC on the board that is doing some fixed
-> > factor calculation? Or is this a clk driver design where we are
-> > listing out each piece of an SoC's clk controller in DT?
-> >
-> The SoC has several PLLs of identical design, and one of them is divided
-> to half and used for CPUs. The fixed-factor-clock represents the divider.
+On Wed 24 Aug 08:36 PDT 2016, Stanimir Varbanov wrote:
+
+> Hi Rob,
+> 
+> On 08/23/2016 08:32 PM, Rob Herring wrote:
+> > On Fri, Aug 19, 2016 at 06:53:19PM +0300, Stanimir Varbanov wrote:
+> >> Add devicetree binding document for Venus remote processor.
+> >>
+> >> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> >> ---
+> >>  .../devicetree/bindings/remoteproc/qcom,venus.txt  | 33 ++++++++++++++++++++++
+> >>  1 file changed, 33 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
+> >> new file mode 100644
+> >> index 000000000000..06a2db60fa38
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
+> >> @@ -0,0 +1,33 @@
+> >> +Qualcomm Venus Peripheral Image Loader
+> >> +
+> >> +This document defines the binding for a component that loads and boots firmware
+> >> +on the Qualcomm Venus remote processor core.
+> > 
+> > This does not make sense to me. Venus is the video encoder/decoder h/w, 
+> > right? Why is the firmware loader separate from the codec block? Why 
+> > rproc is used? Are there multiple clients? Naming it rproc_venus implies 
+> > there aren't. And why does the firmware loading need 8MB of memory at a 
+> > fixed address?
+> > 
+> 
+> The firmware for Venus case is 5MB. And here is 8MB because of
+> dma_alloc_from_coherent size restriction.
 > 
 
-Ok, so it sounds like we can have the driver that registers the
-CPU PLL also register the fixed factor clk? I fail to see why we
-need this from DT in that case.
+Then you should specify it 5MB large and we'll have to deal with this
+implementation issue in the code. I've created a JIRA ticket for
+the dma_alloc_from_coherent() behavior.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> The address is not really fixed, cause the firmware could support
+> relocation. In this example I just picked up the next free memory region
+> in memory-reserved from msm8916.dtsi.
+> 
+
+In 8974 we do have a physical region where it's expected to be loaded.
+
+So in line with upcoming remoteproc work we should support referencing a
+reserved-memory node with either reg or size.
+
+In the case of spotting a "reg" we're currently better off using
+ioremap. We're looking at getting the remoteproc core to deal with this
+mess.
+
+
+So, on 8916 I think you should use the form:
+
+venus_mem: venus {
+	size = <0x500000>;
+};
+
+And I don't think you should use the shared-dma-pool compatible, because
+this is not a region for multiple devices to allocate dma memory out of.
+
+
+Regards,
+Bjorn
