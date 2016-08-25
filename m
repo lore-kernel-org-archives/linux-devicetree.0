@@ -1,34 +1,40 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Thu, 25 Aug 2016 12:23:48 +0200
-Message-ID: <1815946.6MSqSqog7A@wuerfel>
-References: <cover.147018b3518.git.dalias@libc.org> <20160824214444.GZ15995@brightrain.aerifal.cx> <3621664.0azN3a5cxy@wuerfel>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 2/2] sdhci-of-arasan: Add quirk and device tree parameter
+ to fake CD bit
+Date: Thu, 25 Aug 2016 12:37:46 +0200
+Message-ID: <935c7618-a403-775b-b45c-c3b97e0ed252@metafoo.de>
+References: <1472080984-17373-1-git-send-email-zach.brown@ni.com>
+ <1472080984-17373-2-git-send-email-zach.brown@ni.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3621664.0azN3a5cxy@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <Marc.Zyngier@arm.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1472080984-17373-2-git-send-email-zach.brown@ni.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zach Brown <zach.brown@ni.com>, adrian.hunter@intel.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, soren.brinkmann@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, August 24, 2016 11:57:08 PM CEST Arnd Bergmann wrote:
-> > I'm not familiar with those classifications, but from what I can tell,
-> > BE32 describes it correctly. I'll see if I can get someone to verify
-> > this. Is there a reason it's not widely used anymore? Perhaps
-> > something related to supporting misaligned word-sized loads/stores?
+On 08/25/2016 01:23 AM, Zach Brown wrote:
+> The sdhci controller on xilinx zynq devices will not function unless
+> the cd bit is provided. http://www.xilinx.com/support/answers/61064.html
+> In cases where it is impossible to provide the cd bit in hardware,
+> setting the controller to test mode and then setting inserted to true
+> will get the controller to function with out the cd bit.
 > 
-> The main problem I see is that you can't easily use MMIO registers that
-> are not 32-bit wide -- you end up having to flip not just the register
-> contents but also the lower bits of the address in order to reach
-> the right contents of the register.
-> 
+> The device property "fake-cd" will let the arasan driver know it needs
+> to fake the cd bit for the controller inorder for the controller to
+> function with a SD card that does not provide the CD bit.
 
-Actually there is a much more serious problem with BE32/LE32 mode:
-doing unaligned access to RAM is a huge pain at the HW level,
-and also when emulating it in the kernel on CPUs that require
-aligned access. In ARM THUMB2 mode, you can even have unaligned
-32-bit instructions.
-
-	Arnd
+The devicetree is supposed to be descriptive rather than imperative. fake-cd
+is a bit more on the later side. There is already a standard property for
+describing that the card-detect pin is not connected, called 'broken-cd'.
+Can that be used instead?
