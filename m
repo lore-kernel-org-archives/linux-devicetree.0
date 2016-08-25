@@ -1,71 +1,80 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH 1/2] sdhci-of-arasan: Add quirk and device tree parameter
- to fake CD bit
-Date: Thu, 25 Aug 2016 17:50:16 +0200
-Message-ID: <e703a068-810f-77fe-d702-138911669147@metafoo.de>
-References: <1472080984-17373-1-git-send-email-zach.brown@ni.com>
- <20160825151047.GO16583@xsjsorenbubuntu>
- <d5dd97b1-f58f-2e45-5c95-17a77a46b30c@metafoo.de>
- <20160825152944.GP16583@xsjsorenbubuntu>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: Question about dma-ranges property for PCI host controllers
+Date: Thu, 25 Aug 2016 18:03:07 +0200
+Message-ID: <3869406.UKMxvRzqOg@wuerfel>
+References: <HK2PR0601MB1393CA771AB65556D4E2F0B9F51E0@HK2PR0601MB1393.apcprd06.prod.outlook.com> <2867793.PfGZpZFyEJ@wuerfel> <HK2PR0601MB1393EA9F8117F8EC5A1E6520F51F0@HK2PR0601MB1393.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160825152944.GP16583@xsjsorenbubuntu>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <HK2PR0601MB1393EA9F8117F8EC5A1E6520F51F0@HK2PR0601MB1393.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/25/2016 05:29 PM, Sören Brinkmann wrote:
-> On Thu, 2016-08-25 at 17:23:47 +0200, Lars-Peter Clausen wrote:
->> On 08/25/2016 05:10 PM, Sören Brinkmann wrote:
->>> On Wed, 2016-08-24 at 18:23:03 -0500, Zach Brown wrote:
->>>> The sdhci controller on xilinx zynq devices will not function unless
->>>> the cd bit is provided. http://www.xilinx.com/support/answers/61064.html
->>>> In cases where it is impossible to provide the cd bit in hardware,
->>>> setting the controller to test mode and then setting inserted to true
->>>> will get the controller to function with out the cd bit.
->>>>
->>>> The device property "fake-cd" will let the arasan driver know it needs
->>>> to fake the cd bit for the controller inorder for the controller to
->>>> function with a SD card that does not provide the CD bit.
->>>
->>> I thought the CD is, if not pinned out, tied off to some valid logic
->>> level. Isn't it enough to specify cd-inverted if needed to make it work
->>> in those cases?
->>
->> It is always brought out to some pin, that is the problem on the Zynq. This
->> means you'd have to set at least one pin aside as dummy CD or WP pin. Which
->> is not always possible when you are tight on available pins.
+On Friday, August 12, 2016 9:43:44 AM CEST Phil Edworthy wrote:
+> On 11 August 2016 16:09 Arnd Bergmann wrote:
+
+> > In the past, we have said that the dma-ranges property should reflect
+> > the address space that is used when programming the bridge registers
+> > in the PCI host bridge itself.
+> > 
+> > I think we have also made the assumption that a PCI host bridge
+> > with an IOMMU uses a flat 32-bit DMA address space that goes through
+> > the IOMMU (possibly a separate address space per PCI function,
+> > depending on the type of IOMMU).
+> I saw Robin Murphy's patches for PCI IOMMU map bindings, though at the
+> moment to get things going I'm ignoring it because it will require quite a lot
+> of changes to the iommu/ipmmu-vmsa driver. Other IOMMU drivers will
+> also have to change a fair bit to support this new binding.
+
+Ok
+
+> > One corner case that doesn't really fit in that model is a PCI host
+> > bridge that requires the bridge register to be programmed in a special
+> > way for the IOMMU to work (e.g. away from the RAM to the address that
+> > is routed to the IOMMU).
+> In our case, there is nothing special in programming the bridge registers
+> for use with an IOMMU other than the range of addresses that is exposed.
+> The PCI host has a HW limitation that the AXI bus addresses must be
+> 32-bit. The HW will allow you to set up the bridge registers so that PCI
+> bus addresses above 32-bits are mapped into the 32-bit AXI space. This
+> isn't used though at the moment, the PCI:AXI mapping is simply 1:1.
 > 
-> I have to admit that I haven't looked at Vivado for quite a while. Is it
-> possible to select EMIO for those pins? If those are not routed anything
-> they should be tied to some logic level, I believe.
-> If they are always forced to be on a physical pin, do you let that pin
-> just float? Otherwise, the logic level should also be defined, give and
-> take a logic inversion.
+> Simply changing the dma-ranges prop to specify all of the 32-bit range is
+> enough to get it to work with the IOMMU.
 
-Yes, it is possible to source them from EMIO. We had the same issue with WP
-on one of our boards and the routing to EMIO approach was one of the
-solutions I considered. But I could not find documentation on whether and
-how the pins are tied when the FPGA is not configured or what happens during
-reconfiguration, is there a chance of glitches.
+That is the problem I was referring to above: the dma-ranges property
+contents depend on whether the IOMMU is used or not, and that
+is not something you know in the DT, because it depends on the OS.
 
-So I went with the software solution of specifying disable-wp for the slot
-instead.
+> Without IOMMU, the dma-ranges prop was:
+> dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000>;
 
-But even if using EMIO works I think correctly describing the hardware,
-which is that there is no external WP or CD pin connected, is the better
-approach rather than playing around with invert flags, which has a different
-semantical meaning. Software can than work with that information and take
-the approach it is best to handle the situation. And this approach might
-change if we find better ways to handle it, whereas the hardware description
-stays static.
+Ok, so you map the second 1GB of PCI space into the second 1GB of AXI
+space, which presumably is also the first 1GB of the physical RAM
+at CPU address 0x00000000, correct?
 
+> Note that this does not cover all of DDR, as there is 3GiB above the 32-bit
+> address space. Other restrictions in the way the bridge registers are
+> programmed mean we cannot even map all DDR in the 32-bit space.
+> 
+> With the IOMMU, the dma-ranges prop is simply:
+> dma-ranges = <0x42000000 0 0x00000000 0 0x00000000 1 0x00000000>;
 
+Does this mean the IOMMU virtual address space covers the entire 4GB
+of low addresses, or is it a subset of that space, e.g. the first
+1GB, below where the PCI bus sees the RAM?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > Another tricky case is a PCI host that uses the IOMMU only for 32-bit
+> > DMA masters but that does have a dma-ranges property that can be
+> > used for direct mapping of all RAM through a nonzero offset that
+> > gets set up according to dma-ranges.
+> I don't think that applies, though I'm struggling a bit to understand your
+> comment.
+
+It doesn't apply since the 32-bit limitation you see is part of the
+PCI host bridge, not a limitation of some PCI devices.
+
+	Arnd
