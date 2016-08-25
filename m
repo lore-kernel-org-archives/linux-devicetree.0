@@ -1,87 +1,34 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: [PATCH] mfd: arizona: Add DT options for max_channels_clocked and PDM speaker config
-Date: Thu, 25 Aug 2016 10:44:08 +0100
-Message-ID: <1472118248-27924-1-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 2/2] dt: arm: shmobile: add H3ULCB board DT bindings
+Date: Thu, 25 Aug 2016 12:09:43 +0200
+Message-ID: <CAMuHMdU-uvjqH=WwW9OvUsAHfNBXcBCs5f2__sJXSw9HwPhDHw@mail.gmail.com>
+References: <1469382353-14847-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1469382412-14935-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: patches@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1469382412-14935-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT settings for the max_channels_clocked, spk_fmt and
-spk_mute pdata.
+On Sun, Jul 24, 2016 at 7:46 PM, Vladimir Barinov
+<vladimir.barinov@cogentembedded.com> wrote:
+> Add H3ULCB Device tree bindings Documentation, listing it as a supported
+> board.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
----
- Documentation/devicetree/bindings/mfd/arizona.txt | 11 ++++++++
- drivers/mfd/arizona-core.c                        | 31 +++++++++++++++++++++++
- 2 files changed, 42 insertions(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index a6e2ea41..6eaf006 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -85,6 +85,17 @@ Optional properties:
-     present, the number of values should be less than or equal to the
-     number of inputs, unspecified inputs will use the chip default.
- 
-+  - wlf,max-channels-clocked : The maximum number of channels to be clocked on
-+    each AIF, useful for I2S systems with multiple data lines being mastered.
-+    Specify one cell for each AIF, specify zero for AIFs that should be handled
-+    normally.
-+
-+  - wlf,spk_fmt : PDM speaker data format, must contain 2 cells (OUT5 and OUT6).
-+    See the datasheet for values.
-+
-+  - wlf,spk_mute : PDM speaker mute setting, must contain 2 cells (OUT5 and OUT6).
-+    See the datasheet for values.
-+
-   - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
-     they are being externally supplied. As covered in
-     Documentation/devicetree/bindings/regulator/regulator.txt
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index b95ff2d..36a9633 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -816,6 +816,37 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
- 		count++;
- 	}
- 
-+	count = 0;
-+	of_property_for_each_u32(arizona->dev->of_node,
-+				 "wlf,max-channels-clocked",
-+				 prop, cur, val) {
-+		if (count == ARRAY_SIZE(pdata->max_channels_clocked))
-+			break;
-+
-+		pdata->max_channels_clocked[count] = val;
-+		count++;
-+	}
-+
-+	count = 0;
-+	of_property_for_each_u32(arizona->dev->of_node, "wlf,spk-fmt", prop,
-+				 cur, val) {
-+		if (count == ARRAY_SIZE(pdata->spk_fmt))
-+			break;
-+
-+		pdata->spk_fmt[count] = val;
-+		count++;
-+	}
-+
-+	count = 0;
-+	of_property_for_each_u32(arizona->dev->of_node, "wlf,spk-mute", prop,
-+				 cur, val) {
-+		if (count == ARRAY_SIZE(pdata->spk_mute))
-+			break;
-+
-+		pdata->spk_mute[count] = val;
-+		count++;
-+	}
-+
- 	return 0;
- }
- 
--- 
-1.9.1
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
