@@ -1,86 +1,162 @@
-From: Rich Felker <dalias@libc.org>
-Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Thu, 25 Aug 2016 13:51:35 -0400
-Message-ID: <20160825175135.GC15995@brightrain.aerifal.cx>
-References: <cover.147018b3518.git.dalias@libc.org>
- <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.147018b3518.git.dalias@libc.org>
- <57BDCE5D.2050609@linaro.org>
- <20160824174001.GW15995@brightrain.aerifal.cx>
- <alpine.DEB.2.20.1608250947120.5714@nanos>
- <20160825145650.GA15995@brightrain.aerifal.cx>
- <20160825163805.GA8524@remoulade>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160825163805.GA8524@remoulade>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4 7/7] musb: sunxi: Add support for platform_set_mode
+Date: Thu, 25 Aug 2016 20:00:18 +0200
+Message-ID: <20160825180018.23736-1-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 25, 2016 at 05:38:06PM +0100, Mark Rutland wrote:
-> On Thu, Aug 25, 2016 at 10:56:50AM -0400, Rich Felker wrote:
-> > On Thu, Aug 25, 2016 at 10:07:08AM +0200, Thomas Gleixner wrote:
-> > > On Wed, 24 Aug 2016, Rich Felker wrote:
-> > As for this topic, what happened is that, after the first and second
-> > time of expressing confusion about how the infrastructure did not make
-> > sense and whether I should even be using it, I did not get anything
-> > resembling an explanation of why it's the way it is or why I might be
-> > wrong in thinking it's a bug, and so I went forward with the
-> > assumption that is was just a bug. Now that Mark Rutland has explained
-> > it well (and with your additional explanation below in your email), I
-> > see what the motivation was, but I still think it could be done in a
-> > less-confusing and more-consistent way that doesn't assume ARM-like
-> > irq architecture.
-> 
-> The fun this is that right until the point you sent this patch, it was
-> consistent for all hardware that we support and were aware of. For others, it
-> is your hardware that is the confusing case. ;)
-> 
-> In future, it's better to state 'this doesn't seem to match my hardware' rather
-> than 'this is misdesigned'. Ideally, with a description of how your hardware
-> works, as that's the thing no-one else is familiar with.
+This allows run-time dr_mode switching support via the "mode" musb
+sysfs attribute.
 
-OK. What I meant is "it's not sufficiently general". I usually come at
-these things not from a particular preconception of how it
-is/should-be done on some archs I'm familiar with, but minimizing
-unnecessary (i.e. not beneficial to performance or correctness or
-simplicity) assumptions at the subsystem level about how hardware
-could work.
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+-No changes
+Changes in v3:
+-Fix switch-case code style
+Changes in v4:
+-Call musb_root_disconnect() before role change to make sure any attached
+ devices get seen as disconnected by the kernel
+---
+ drivers/usb/musb/sunxi.c | 61 ++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 57 insertions(+), 4 deletions(-)
 
-> > > If your particular hardware has the old scheme of seperate interrupt numbers
-> > > for per cpu interrupts, then you can simply use the normal interrupt scheme
-> > > and request a seperate interrupt per cpu.
-> > 
-> > Nominally it uses the same range of hardware interrupt numbers for all
-> > (presently both) cpus, but some of them get delivered to a specific
-> > cpu associated with the event (presently, IPI and timer; IPI is on a
-> > fixed number at synthesis time but timer is runtime configurable)
-> > while others are conceptually deliverable to either cpu (presently
-> > only delivered to cpu0, but that's treated as an implementation
-> > detail).
-> 
-> Given you say it's delivered to the CPU associated with the event (and you have
-> different PIT bases per-cpu), it sounds like your timer interrupt is percpu,
-> it's just that the hwirq number can be chosen by software.
+diff --git a/drivers/usb/musb/sunxi.c b/drivers/usb/musb/sunxi.c
+index c6ee166..1408245 100644
+--- a/drivers/usb/musb/sunxi.c
++++ b/drivers/usb/musb/sunxi.c
+@@ -74,6 +74,7 @@
+ #define SUNXI_MUSB_FL_HAS_SRAM			5
+ #define SUNXI_MUSB_FL_HAS_RESET			6
+ #define SUNXI_MUSB_FL_NO_CONFIGDATA		7
++#define SUNXI_MUSB_FL_PHY_MODE_PEND		8
+ 
+ /* Our read/write methods need access and do not get passed in a musb ref :| */
+ static struct musb *sunxi_musb;
+@@ -87,6 +88,7 @@ struct sunxi_glue {
+ 	struct phy		*phy;
+ 	struct platform_device	*usb_phy;
+ 	struct usb_phy		*xceiv;
++	enum phy_mode		phy_mode;
+ 	unsigned long		flags;
+ 	struct work_struct	work;
+ 	struct extcon_dev	*extcon;
+@@ -140,6 +142,9 @@ static void sunxi_musb_work(struct work_struct *work)
+ 			clear_bit(SUNXI_MUSB_FL_PHY_ON, &glue->flags);
+ 		}
+ 	}
++
++	if (test_and_clear_bit(SUNXI_MUSB_FL_PHY_MODE_PEND, &glue->flags))
++		phy_set_mode(glue->phy, glue->phy_mode);
+ }
+ 
+ static void sunxi_musb_set_vbus(struct musb *musb, int is_on)
+@@ -341,6 +346,50 @@ static void sunxi_musb_dma_controller_destroy(struct dma_controller *c)
+ {
+ }
+ 
++static int sunxi_musb_set_mode(struct musb *musb, u8 mode)
++{
++	struct sunxi_glue *glue = dev_get_drvdata(musb->controller->parent);
++	enum phy_mode new_mode;
++
++	switch (mode) {
++	case MUSB_HOST:
++		new_mode = PHY_MODE_USB_HOST;
++		break;
++	case MUSB_PERIPHERAL:
++		new_mode = PHY_MODE_USB_DEVICE;
++		break;
++	case MUSB_OTG:
++		new_mode = PHY_MODE_USB_OTG;
++		break;
++	default:
++		dev_err(musb->controller->parent,
++			"Error requested mode not supported by this kernel\n");
++		return -EINVAL;
++	}
++
++	if (glue->phy_mode == new_mode)
++		return 0;
++
++	if (musb->port_mode != MUSB_PORT_MODE_DUAL_ROLE) {
++		dev_err(musb->controller->parent,
++			"Error changing modes is only supported in dual role mode\n");
++		return -EINVAL;
++	}
++
++	if (musb->port1_status & USB_PORT_STAT_ENABLE)
++		musb_root_disconnect(musb);
++
++	/*
++	 * phy_set_mode may sleep, and we're called with a spinlock held,
++	 * so let sunxi_musb_work deal with it.
++	 */
++	glue->phy_mode = new_mode;
++	set_bit(SUNXI_MUSB_FL_PHY_MODE_PEND, &glue->flags);
++	schedule_work(&glue->work);
++
++	return 0;
++}
++
+ /*
+  * sunxi musb register layout
+  * 0x00 - 0x17	fifo regs, 1 long per fifo
+@@ -568,6 +617,7 @@ static const struct musb_platform_ops sunxi_musb_ops = {
+ 	.writew		= sunxi_musb_writew,
+ 	.dma_init	= sunxi_musb_dma_controller_create,
+ 	.dma_exit	= sunxi_musb_dma_controller_destroy,
++	.set_mode	= sunxi_musb_set_mode,
+ 	.set_vbus	= sunxi_musb_set_vbus,
+ 	.pre_root_reset_end = sunxi_musb_pre_root_reset_end,
+ 	.post_root_reset_end = sunxi_musb_post_root_reset_end,
+@@ -614,21 +664,28 @@ static int sunxi_musb_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
++	glue = devm_kzalloc(&pdev->dev, sizeof(*glue), GFP_KERNEL);
++	if (!glue)
++		return -ENOMEM;
++
+ 	memset(&pdata, 0, sizeof(pdata));
+ 	switch (usb_get_dr_mode(&pdev->dev)) {
+ #if defined CONFIG_USB_MUSB_DUAL_ROLE || defined CONFIG_USB_MUSB_HOST
+ 	case USB_DR_MODE_HOST:
+ 		pdata.mode = MUSB_PORT_MODE_HOST;
++		glue->phy_mode = PHY_MODE_USB_HOST;
+ 		break;
+ #endif
+ #if defined CONFIG_USB_MUSB_DUAL_ROLE || defined CONFIG_USB_MUSB_GADGET
+ 	case USB_DR_MODE_PERIPHERAL:
+ 		pdata.mode = MUSB_PORT_MODE_GADGET;
++		glue->phy_mode = PHY_MODE_USB_DEVICE;
+ 		break;
+ #endif
+ #ifdef CONFIG_USB_MUSB_DUAL_ROLE
+ 	case USB_DR_MODE_OTG:
+ 		pdata.mode = MUSB_PORT_MODE_DUAL_ROLE;
++		glue->phy_mode = PHY_MODE_USB_OTG;
+ 		break;
+ #endif
+ 	default:
+@@ -638,10 +695,6 @@ static int sunxi_musb_probe(struct platform_device *pdev)
+ 	pdata.platform_ops	= &sunxi_musb_ops;
+ 	pdata.config		= &sunxi_musb_hdrc_config;
+ 
+-	glue = devm_kzalloc(&pdev->dev, sizeof(*glue), GFP_KERNEL);
+-	if (!glue)
+-		return -ENOMEM;
+-
+ 	glue->dev = &pdev->dev;
+ 	INIT_WORK(&glue->work, sunxi_musb_work);
+ 	glue->host_nb.notifier_call = sunxi_musb_host_notifier;
+-- 
+2.9.3
 
-It's what I would call percpu in the hardware, but I'm not convinced
-that the Linux irq subsystem's "percpu" stuff models it in a way
-that fits the hw, nor that it's in any way necessary.
-
-> > It currently works requesting the irq with flags that ensure the
-> > handler runs on the same cpu it was delivered on, without using any
-> > other percpu irq framework. If you have concerns about ways this could
-> > break and want me to make the drivers do something else, I'm open to
-> > suggestions.
-> 
-> As I suggested, I don't think that this is right, and you need some mechanism
-> to describe to the kernel that the interrupt is percpu (e.g. a flag in the
-> interrupt-specifier in DT).
-
-Thomas seemed to think it's okay as-is. Can you describe what you
-expect could go wrong by using request_irq rather than the ARM-style
-percpu irq framework?
-
-Rich
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
