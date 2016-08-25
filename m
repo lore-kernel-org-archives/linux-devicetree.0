@@ -1,58 +1,30 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH v2 6/7] ARM: dts: am335x-evmsk: Whitespace cleanup of lcdc
- related nodes
-Date: Thu, 25 Aug 2016 15:03:41 +0300
-Message-ID: <f9c65ad5ad4ccac6bd9d908678ef8ad284919281.1472126231.git.jsarha@ti.com>
-References: <cover.1472126231.git.jsarha@ti.com>
+From: Paolo Pisati <p.pisati@gmail.com>
+Subject: Re: [PATCH v3 0/5] dts patches for qcom tsens support
+Date: Thu, 25 Aug 2016 14:21:14 +0200
+Message-ID: <20160825122114.GA13196@harukaze>
+References: <1471411128-4002-1-git-send-email-rnayak@codeaurora.org>
+ <20160817193340.GA18215@hector.attlocal.net>
+ <20160824102256.GA14048@harukaze>
+ <20160825031328.GI15161@tuxbot>
+ <CAPBZ5Qdy2kf+xRC9f7ndE3GdJx0HyCabJWxyaYDbZ50HCj82Bg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.1472126231.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com
-Cc: Jyri Sarha <jsarha@ti.com>, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, kbeldan@baylibre.com, laurent.pinchart@ideasonboard.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPBZ5Qdy2kf+xRC9f7ndE3GdJx0HyCabJWxyaYDbZ50HCj82Bg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Paolo Pisati <p.pisati@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-V2hpdGVzcGFjZSBjbGVhbnVwIG9mIGxjZGMgcmVsYXRlZCBub2Rlcy4gRG8gYWxsIGluZGVudGF0
-aW9uIGFuZAphbGlnbm1lbnQgd2l0aCB0YWJzIGluc3RlYWQgb2Ygc3BhY2VzLgoKU2lnbmVkLW9m
-Zi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9h
-bTMzNXgtZXZtc2suZHRzIHwgNDAgKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0t
-LS0KIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspLCAyMCBkZWxldGlvbnMoLSkKCmRp
-ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9hbTMzNXgtZXZtc2suZHRzIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvYW0zMzV4LWV2bXNrLmR0cwppbmRleCAwOTMwOGQ2Li4yM2I5NGU3IDEwMDY0NAot
-LS0gYS9hcmNoL2FybS9ib290L2R0cy9hbTMzNXgtZXZtc2suZHRzCisrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL2FtMzM1eC1ldm1zay5kdHMKQEAgLTE3MCwyOSArMTcwLDI5IEBACiAJCXBpbmN0cmwt
-MSA9IDwmbGNkX3BpbnNfc2xlZXA+OwogCQlzdGF0dXMgPSAib2theSI7CiAJCXBhbmVsLWluZm8g
-ewotCQkJYWMtYmlhcyAgICAgICAgICAgPSA8MjU1PjsKLQkJCWFjLWJpYXMtaW50cnB0ICAgID0g
-PDA+OwotCQkJZG1hLWJ1cnN0LXN6ICAgICAgPSA8MTY+OwotCQkJYnBwICAgICAgICAgICAgICAg
-PSA8MzI+OwotCQkJZmRkICAgICAgICAgICAgICAgPSA8MHg4MD47Ci0JCQlzeW5jLWVkZ2UgICAg
-ICAgICA9IDwwPjsKLQkJCXN5bmMtY3RybCAgICAgICAgID0gPDE+OwotCQkJcmFzdGVyLW9yZGVy
-ICAgICAgPSA8MD47Ci0JCQlmaWZvLXRoICAgICAgICAgICA9IDwwPjsKKwkJCWFjLWJpYXMJCT0g
-PDI1NT47CisJCQlhYy1iaWFzLWludHJwdAk9IDwwPjsKKwkJCWRtYS1idXJzdC1zegk9IDwxNj47
-CisJCQlicHAJCT0gPDMyPjsKKwkJCWZkZAkJPSA8MHg4MD47CisJCQlzeW5jLWVkZ2UJPSA8MD47
-CisJCQlzeW5jLWN0cmwJPSA8MT47CisJCQlyYXN0ZXItb3JkZXIJPSA8MD47CisJCQlmaWZvLXRo
-CQk9IDwwPjsKIAkJfTsKIAkJZGlzcGxheS10aW1pbmdzIHsKIAkJCTQ4MHgyNzIgewotCQkJCWhh
-Y3RpdmUgICAgICAgICA9IDw0ODA+OwotCQkJCXZhY3RpdmUgICAgICAgICA9IDwyNzI+OwotCQkJ
-CWhiYWNrLXBvcmNoICAgICA9IDw0Mz47Ci0JCQkJaGZyb250LXBvcmNoICAgID0gPDg+OwotCQkJ
-CWhzeW5jLWxlbiAgICAgICA9IDw0PjsKLQkJCQl2YmFjay1wb3JjaCAgICAgPSA8MTI+OwotCQkJ
-CXZmcm9udC1wb3JjaCAgICA9IDw0PjsKLQkJCQl2c3luYy1sZW4gICAgICAgPSA8MTA+OworCQkJ
-CWhhY3RpdmUJCT0gPDQ4MD47CisJCQkJdmFjdGl2ZQkJPSA8MjcyPjsKKwkJCQloYmFjay1wb3Jj
-aAk9IDw0Mz47CisJCQkJaGZyb250LXBvcmNoCT0gPDg+OworCQkJCWhzeW5jLWxlbgk9IDw0PjsK
-KwkJCQl2YmFjay1wb3JjaAk9IDwxMj47CisJCQkJdmZyb250LXBvcmNoCT0gPDQ+OworCQkJCXZz
-eW5jLWxlbgk9IDwxMD47CiAJCQkJY2xvY2stZnJlcXVlbmN5ID0gPDkwMDAwMDA+OwotCQkJCWhz
-eW5jLWFjdGl2ZSAgICA9IDwwPjsKLQkJCQl2c3luYy1hY3RpdmUgICAgPSA8MD47CisJCQkJaHN5
-bmMtYWN0aXZlCT0gPDA+OworCQkJCXZzeW5jLWFjdGl2ZQk9IDwwPjsKIAkJCX07CiAJCX07CiAJ
-fTsKQEAgLTcxMSw1ICs3MTEsNSBAQAogfTsKIAogJmxjZGMgewotICAgICAgc3RhdHVzID0gIm9r
-YXkiOworCXN0YXR1cyA9ICJva2F5IjsKIH07Ci0tIAoxLjkuMQoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, Aug 24, 2016 at 10:21:17PM -0500, Andy Gross wrote:
+> 
+> Yeah this appears to be the case.  So I guess the response is 'don't
+> do that'.  At least don't cat or od the file.  You need to seek and
+> read.
+
+True, but the dev file is user readable and any user can trigger it (or
+any regression test that rummage among dev files looking for bugs).
+-- 
+bye,
+p.
