@@ -1,34 +1,34 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 2/2] dt: arm: shmobile: add H3ULCB board DT bindings
-Date: Thu, 25 Aug 2016 12:09:43 +0200
-Message-ID: <CAMuHMdU-uvjqH=WwW9OvUsAHfNBXcBCs5f2__sJXSw9HwPhDHw@mail.gmail.com>
-References: <1469382353-14847-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1469382412-14935-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
+Date: Thu, 25 Aug 2016 12:23:48 +0200
+Message-ID: <1815946.6MSqSqog7A@wuerfel>
+References: <cover.147018b3518.git.dalias@libc.org> <20160824214444.GZ15995@brightrain.aerifal.cx> <3621664.0azN3a5cxy@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1469382412-14935-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3621664.0azN3a5cxy@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rich Felker <dalias@libc.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sh@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 24, 2016 at 7:46 PM, Vladimir Barinov
-<vladimir.barinov@cogentembedded.com> wrote:
-> Add H3ULCB Device tree bindings Documentation, listing it as a supported
-> board.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+On Wednesday, August 24, 2016 11:57:08 PM CEST Arnd Bergmann wrote:
+> > I'm not familiar with those classifications, but from what I can tell,
+> > BE32 describes it correctly. I'll see if I can get someone to verify
+> > this. Is there a reason it's not widely used anymore? Perhaps
+> > something related to supporting misaligned word-sized loads/stores?
+> 
+> The main problem I see is that you can't easily use MMIO registers that
+> are not 32-bit wide -- you end up having to flip not just the register
+> contents but also the lower bits of the address in order to reach
+> the right contents of the register.
+> 
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Actually there is a much more serious problem with BE32/LE32 mode:
+doing unaligned access to RAM is a huge pain at the HW level,
+and also when emulating it in the kernel on CPUs that require
+aligned access. In ARM THUMB2 mode, you can even have unaligned
+32-bit instructions.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+	Arnd
