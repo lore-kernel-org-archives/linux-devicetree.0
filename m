@@ -1,64 +1,65 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH V3 0/5] ARM: dts: bcm2835: Add Raspberry Pi Zero
-Date: Thu, 25 Aug 2016 15:45:14 -0700
-Message-ID: <87oa4gv56t.fsf@eliezer.anholt.net>
-References: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471792204-21908-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+From: Zach Brown <zach.brown@ni.com>
+Subject: [PATCH v2 1/2] sdhci-of-arasan: Modify arasan sdhci documentation about broken-cd and non-removable properties.
+Date: Thu, 25 Aug 2016 18:01:50 -0500
+Message-ID: <1472166111-28872-1-git-send-email-zach.brown@ni.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: adrian.hunter@intel.com
+Cc: robh+dt@kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org, zach.brown@ni.com
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+The sdhci controller on xilinx zynq devices will not function unless
+the CD bit is provided. http://www.xilinx.com/support/answers/61064.html
+In cases where it is impossible to provide the CD bit in hardware,
+setting the controller to test mode and then setting inserted to true
+will get the controller to function without the CD bit.
 
-Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
+Additionally in some situations it will make sense to use the
+"broken-cd" and "non-removable" property together.
+i.e the sd device is non-removable so polling doesn't make sense, but
+the CD is broken and the controller will need to be in test mode to
+function.
 
-> This patch series add support for Raspberry Pi Zero with USB host mode. I=
-t's
-> based on the patch "ARM64: dts: bcm: Use a symlink to R-Pi dtsi files
-> from arch=3Darm" from Ian Campbell. Currently there is a bug [1] which ne=
-eds
-> to fixed before because after applying these patch series the bug isn't
-> reproducible anymore but not fixed.
->
-> The patches 1-3 fixes the USB DT settings for bcm283x. Patch 3 is only co=
-mpile
-> tested, so it would be nice if someone with a RPi 3 could test it.
-> The last patch based on the work of Lubomir Rintel [2] and Noralf Tr=C3=
-=B8nnes [3].
->
-> Note: Patch 3 can't be cherry-picked because it depends on Patch 2.
+This patch modifies the documentation to reflect those differences
+from the standard behaviours.
 
-Pulled this series minus the arm64 patch to bcm2835-dt-next.  My Pi3
-setup is down currently so I wasn't able to test it.
+Signed-off-by: Zach Brown <zach.brown@ni.com>
+---
+v2:
+  * improved commit messages
+  * removed fake-cd device property
+  * removed fake-cd quirk
+  * use broken-cd device property
+  * documented new usage of broken-cd
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+ Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+index 3404afa..b41c448 100644
+--- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
++++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+@@ -37,6 +37,14 @@ Optional Properties:
+     in place we will export a clock representing the Card Clock.  This clock
+     is expected to be consumed by our PHY.  You must also specify
+ 
++Card detection:
++The arasan controller does not work
++when the CD bit is not supplied unless in test mode.
++- broken-cd: The CD bit is not supplied and the controller will
++  need to be set to test mode to function.
++- non-removable: like normal, except it can now be partnered with
++  broken-cd, which will turn off polling, but keep test mode on.
++
+ Example:
+ 	sdhci@e0100000 {
+ 		compatible = "arasan,sdhci-8.9a";
+@@ -72,4 +80,4 @@ Example:
+ 		phy-names = "phy_arasan";
+ 		#clock-cells = <0>;
+ 		status = "disabled";
+-	};
++	} ;
+-- 
+2.7.4
 
-iQIcBAEBCgAGBQJXv3T6AAoJELXWKTbR/J7oz7AP/RB69H1CF5Y/73rMJblmEkss
-NVBITfS2jKbFzG8wFWg2gErAdpVC3PNVelKcojYv3+Y0+FfW+GZUEyU5nDXW3yGM
-JWHbQ/H3mQ5n8UKxiQ1TLAbeNUURFvrgifC4cIdrb2OXDjMBYmIJZ7yPrlEXWoL7
-GkGt5BjUa5Uk26BbHSVbrpjLTyVZU6ElqAPbuSTiamsAojkQzCZCxtXbLx+Eizb0
-RMBoGgxFw0NUk+fAsaBXX5p4quEo+9PHhsrZmKDs2chwi4OmpnB4OZ/VB21Oabvz
-76d1JlRVwWjA2Q/38Pkffygo0IhjZpFKU5Grq8/+ni+myxSOsXewxcah1Lo3gW89
-8oPVaNfaducGlZk9UYk/dkJGALEM+vGpal8y3YVPcgZRG7C8OfNRjhQ8lp0DMQT3
-I3V3b94bi2PDyeMvFkUgERI2ZG8kAerKiRTka4MuKgj4jAZz4t9ko/h5ixhdpqLc
-MLqj9NDxuiMEreMcFINpho9bhot6KWB86hjGv3KjV4kbkhHfZ/syGvn4TCB5vhnX
-LKoqWslPrWzPvNXcmhWZ//Gj35LGrYRDKLKSv7firqAfAwNQth1gxlqiBg08tTF4
-3dM3XSNHTU0Ub0kggR9uab9+R46Jcy+URuz4smz6qHkeY4paao3LR9K1NNjvACNb
-PfhUaw4zcTqVwQ2jcbUw
-=3j9H
------END PGP SIGNATURE-----
---=-=-=--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
