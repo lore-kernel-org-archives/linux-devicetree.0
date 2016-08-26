@@ -1,56 +1,55 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [RFC/PATCH] dt: bindings: Define bindings for device idle states
-Date: Fri, 26 Aug 2016 15:58:42 +0200
-Message-ID: <20160826135842.GA9303@amd>
-References: <1472207073-4901-1-git-send-email-ulf.hansson@linaro.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4] rtc: omap: Support ext_wakeup configuration
+Date: Fri, 26 Aug 2016 07:18:33 -0700
+Message-ID: <20160826141833.wyz4bn3jtdr7iadv@atomide.com>
+References: <20160825111912.23017-1-m.niestroj@grinn-global.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCQPVKWLVAIRBPU7QG7AKGQEIJUIDPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1472207073-4901-1-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Kevin Hilman <khilman@kernel.org>, Lina Iyer <lina.iyer@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Brendan Jackman <Brendan.Jackman@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Axel Haslam <ahaslam@baylibre.com>, linux-pm@vger.kernel.org
+In-Reply-To: <20160825111912.23017-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+* Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org> [160825 04:20]:
+> Support configuration of ext_wakeup sources. This patch makes it
+> possible to enable ext_wakeup and set it's polarity, depending on board
+> configuration. AM335x's dedicated PMIC (tps65217) uses ext_wakeup to
+> notify about power-button presses. Handling power-button presses enables
+> to recover from RTC-only power states correctly.
+> 
+> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+> ---
+> Hi,
+> 
+> This is a total reimplementation, so it is not based on any of the previos
+> patch versions. This patch adds support for ext_wakeup using generic pinconf
+> device-tree bindings, with one added "ti,input-polarity" custom property.
+> This approach has been suggested by Tony and Grygorii in [1].
+> 
+> Patch was developed on 4.6, rebased on 4.8-rc3, tested using chiliBoard.
+> 
+> [1] http://www.spinics.net/lists/devicetree/msg131516.html
 
-> @@ -0,0 +1,102 @@
-> +Device idle states
-> +========================
-> +
-> +A device are often capable of entering a low power state(s) when it becomes
-> +idle, hence the terminology of device idle states. Entering an idle state for a
-> +device helps it to avoid wasting power and reduces the leakage of current.
+Thanks for persistance with this one, looks good to me:
 
-First things first: what do these states _really_ represent? We have
-GPIOs in device tree, we have clock domains. What are these?
-
-Actually I don't think I like this. We should describe the hardware,
-not particular use case.
-
-On what hardware would you use these new bindings?
-
-> +Required properties:
-> +- compatible:		Must contain "simple-dev, idle-state".
-> +- entry-latency-ns:	An u32 value in nano-seconds representing the worst case
-> +			latency required for the device to enter the idle state.
-> +- exit-latency-ns:	An u32 value in nano-seconds representing the worst case
-> +			wakeup latency of the device, after entry-latency-ns has
-> +			passed.
-
-u32 nanoseconds have 4sec limit, right? So anything with spinning
-harddrive is out?
-
-> +== Assigning idle states to devices ==
-> +
-> +Required properties:
-> + - dev-idle-states:	A list of phandles pointing to the supported
-> +			device idle states nodes. The list must be ordered as
-> +			the shallower state - the earlier in the list.
-
-Does such ordering really neccessarily exist?
+Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
