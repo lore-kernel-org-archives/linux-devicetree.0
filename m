@@ -1,70 +1,178 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: fix the address map for WDT0 and
- WDT1
-Date: Fri, 26 Aug 2016 18:49:16 +0800
-Message-ID: <57C01EAC.4020501@rock-chips.com>
-References: <1472192551-16754-1-git-send-email-zhengxing@rock-chips.com> <607537bf-1c49-d7e0-ead9-8c1e6164e44e@rock-chips.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: imx: add SMP support for i.MX7D
+Date: Fri, 26 Aug 2016 12:13:57 +0100
+Message-ID: <20160826111356.GM1041@n2100.armlinux.org.uk>
+References: <1472209971-32469-1-git-send-email-Anson.Huang@nxp.com>
+ <1472209971-32469-4-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <607537bf-1c49-d7e0-ead9-8c1e6164e44e-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1472209971-32469-4-git-send-email-Anson.Huang-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+On Fri, Aug 26, 2016 at 07:12:51PM +0800, Anson Huang wrote:
+> i.MX7D has 2 cortex-a7 ARM core, add support for
+> booting up SMP kernel with 2 CPUs.
+> 
+> The existing i.MX SMP code is designed for i.MX6
+> series SoCs which have cortex-a9 ARM core, but i.MX7D
+> has 2 cortex-a7 ARM core, so we need to add runtime
+> check for those differences between cortex-a9 and
+> cortex-a7.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  arch/arm/mach-imx/headsmp.S    | 11 +++++++++++
+>  arch/arm/mach-imx/mach-imx7d.c |  2 ++
+>  arch/arm/mach-imx/platsmp.c    | 19 ++++++++++++++++++-
+>  arch/arm/mach-imx/src.c        | 38 ++++++++++++++++++++++++++++++--------
+>  4 files changed, 61 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm/mach-imx/headsmp.S b/arch/arm/mach-imx/headsmp.S
+> index 6c28d28..a26e459 100644
+> --- a/arch/arm/mach-imx/headsmp.S
+> +++ b/arch/arm/mach-imx/headsmp.S
+> @@ -26,7 +26,18 @@ diag_reg_offset:
+>  	.endm
+>  
+>  ENTRY(v7_secondary_startup)
+> +	.word	0xc070			@ 0xc07 is cortex-a7 id
+> +	.word	0xfff0			@ mask for core type
+> +
+>  ARM_BE8(setend be)			@ go BE8 if entered LE
+> +	mrc     p15, 0, r0, c0, c0, 0
+> +	adr	r1, v7_secondary_startup
+> +	ldr	r2, [r1]
+> +	ldr	r3, [r1, #0x4]
+> +	and     r0, r0, r3
+> +	cmp     r0, r2
+> +	beq     secondary_startup
+> +
 
-On 2016年08月26日 17:41, Shawn Lin wrote:
-> On 2016/8/26 14:22, Xing Zheng wrote:
->> Dues to incorrect description in the TRM, the WDTs base address
->> should be fixed and swap them like this:
->> WDT0 - 0xff848000
->> WDT1 - 0xff840000
->>
->> And, it is right that only WDT0 can generate global software reset.
->> We will update the TRM to fix it.
->>
->> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>
->> arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++--
->> 1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi 
->> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> index bc86e8c..f0f52c1 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->> @@ -1002,9 +1002,9 @@
->> };
->> };
->>
->> - watchdog@ff840000 {
->> + watchdog@ff848000 {
->
-> Just a nit, should we mark this explicitly as "watchdog0" ?
-> I still need to look up for which wdt you are using.:)
-Done.
+Total NAK on the above.  There's no way that we want to even try
+executing those two .word values (and I don't care if "it works
+when tested", we just don't try and execute data.)
 
-Thanks.
->
->> compatible = "snps,dw-wdt";
->> - reg = <0x0 0xff840000 0x0 0x100>;
->> + reg = <0x0 0xff848000 0x0 0x100>;
->> clocks = <&cru PCLK_WDT>;
->> interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
->> };
->>
->
->
+>  	set_diag_reg
+>  	b	secondary_startup
+>  ENDPROC(v7_secondary_startup)
+> diff --git a/arch/arm/mach-imx/mach-imx7d.c b/arch/arm/mach-imx/mach-imx7d.c
+> index 26ca744..ef3dce6 100644
+> --- a/arch/arm/mach-imx/mach-imx7d.c
+> +++ b/arch/arm/mach-imx/mach-imx7d.c
+> @@ -99,6 +99,7 @@ static void __init imx7d_init_machine(void)
+>  
+>  static void __init imx7d_init_irq(void)
+>  {
+> +	imx_gpcv2_check_dt();
+>  	imx_init_revision_from_anatop();
+>  	imx_src_init();
+>  	irqchip_init();
+> @@ -111,6 +112,7 @@ static const char *const imx7d_dt_compat[] __initconst = {
+>  };
+>  
+>  DT_MACHINE_START(IMX7D, "Freescale i.MX7 Dual (Device Tree)")
+> +	.smp		= smp_ops(imx_smp_ops),
+>  	.init_irq	= imx7d_init_irq,
+>  	.init_machine	= imx7d_init_machine,
+>  	.dt_compat	= imx7d_dt_compat,
+> diff --git a/arch/arm/mach-imx/platsmp.c b/arch/arm/mach-imx/platsmp.c
+> index 711dbbd..63af911 100644
+> --- a/arch/arm/mach-imx/platsmp.c
+> +++ b/arch/arm/mach-imx/platsmp.c
+> @@ -60,8 +60,17 @@ static int imx_boot_secondary(unsigned int cpu, struct task_struct *idle)
+>  static void __init imx_smp_init_cpus(void)
+>  {
+>  	int i, ncores;
+> +	unsigned long val, arch_type;
+>  
+> -	ncores = scu_get_core_count(scu_base);
+> +	asm volatile("mrc p15, 0, %0, c0, c0, 0" : "=r" (arch_type));
+> +
+> +	if (((arch_type >> 4) & 0xfff) == 0xc07) {
 
+This is buggy.  Plus, we have macros for this.  Please use the
+macros in asm/cputype.h to achieve these tests.
+
+> +		/* cortex-a7 core number is in bit[25:24] of CP15 L2CTLR */
+> +		asm volatile("mrc p15, 1, %0, c9, c0, 2" : "=r" (val));
+> +		ncores = ((val >> 24) & 0x3) + 1;
+> +	} else {
+> +		ncores = scu_get_core_count(scu_base);
+> +	}
+>  
+>  	for (i = ncores; i < NR_CPUS; i++)
+>  		set_cpu_possible(i, false);
+> @@ -74,6 +83,14 @@ void imx_smp_prepare(void)
+>  
+>  static void __init imx_smp_prepare_cpus(unsigned int max_cpus)
+>  {
+> +	unsigned long arch_type;
+> +
+> +	asm volatile("mrc p15, 0, %0, c0, c0, 0" : "=r" (arch_type));
+> +
+> +	/* no need for cortex-a7 */
+> +	if (((arch_type >> 4) & 0xfff) == 0xc07)
+
+Ditto.
+
+> +		return;
+> +
+>  	imx_smp_prepare();
+>  
+>  	/*
+> diff --git a/arch/arm/mach-imx/src.c b/arch/arm/mach-imx/src.c
+> index 70b083f..1fda72a 100644
+> --- a/arch/arm/mach-imx/src.c
+> +++ b/arch/arm/mach-imx/src.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/smp.h>
+>  #include <asm/smp_plat.h>
+>  #include "common.h"
+> +#include "hardware.h"
+>  
+>  #define SRC_SCR				0x000
+>  #define SRC_GPR1			0x020
+> @@ -30,6 +31,15 @@
+>  #define BP_SRC_SCR_CORE1_RST		14
+>  #define BP_SRC_SCR_CORE1_ENABLE		22
+>  
+> +/* below are for i.MX7D */
+> +#define SRC_GPR1_V2                     0x074
+> +#define SRC_A7RCR0                      0x004
+> +#define SRC_A7RCR1                      0x008
+> +#define SRC_M4RCR                       0x00C
+> +
+> +#define BP_SRC_A7RCR0_A7_CORE_RESET0   0
+> +#define BP_SRC_A7RCR1_A7_CORE1_ENABLE  1
+> +
+>  static void __iomem *src_base;
+>  static DEFINE_SPINLOCK(scr_lock);
+>  
+> @@ -87,12 +97,21 @@ void imx_enable_cpu(int cpu, bool enable)
+>  	u32 mask, val;
+>  
+>  	cpu = cpu_logical_map(cpu);
+> -	mask = 1 << (BP_SRC_SCR_CORE1_ENABLE + cpu - 1);
+>  	spin_lock(&scr_lock);
+> -	val = readl_relaxed(src_base + SRC_SCR);
+> -	val = enable ? val | mask : val & ~mask;
+> -	val |= 1 << (BP_SRC_SCR_CORE1_RST + cpu - 1);
+> -	writel_relaxed(val, src_base + SRC_SCR);
+> +	if (cpu_is_imx7d()) {
+
+It's about time iMX folk learned that "imx*" is a SoC and _not_ a CPU.
+It should be "soc_is_imx7d()" because we're wanting to know whether
+the _SoC_ is an iMX7D.  The _CPU_ is a _Cortex-A7_.
 
 -- 
-- Xing Zheng
-
-
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
