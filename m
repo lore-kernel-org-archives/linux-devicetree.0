@@ -1,88 +1,69 @@
-From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/8] arm: orion5x: Add clk support for mv88f5181
-Date: Fri, 26 Aug 2016 13:34:37 +0200
-Message-ID: <20160826113437.GA12692@Red>
-References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
- <1472203264-21089-1-git-send-email-jm@lentin.co.uk>
- <1472203264-21089-3-git-send-email-jm@lentin.co.uk>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: da850: Add missing pin muxing for the UARTs
+Date: Fri, 26 Aug 2016 17:12:53 +0530
+Message-ID: <cf22ea55-ab23-ca29-fd18-76d51320d3f8@ti.com>
+References: <20160804110656.25318-1-kbeldan@baylibre.com>
+ <m2eg64pchw.fsf@baylibre.com> <20160804210045.GD15013@gobelin>
+ <m2fuqknnqk.fsf@baylibre.com> <fe36e8d1-f371-b093-de15-5e03370ea38c@ti.com>
+ <dd4712ba-6144-8c64-59a6-7673936af53c@ti.com>
+ <20160824082934.GA20246@gobelin>
+ <354081bd-653d-ec98-f18e-eb0b1b1ee7e3@ti.com>
+ <20160825140507.GA13734@gobelin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1472203264-21089-3-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+In-Reply-To: <20160825140507.GA13734@gobelin>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello
+On Thursday 25 August 2016 07:45 PM, Karl Beldan wrote:
 
-I have some minor comments below
+>>> Indeed ATM the EVM relies on the bootloader to setup the pin muxing.
+>>>
+>>> I just checked the uart pins routing of the EVM, the dts:
+>>> - should reclaim serial2_rxtx_pins and serial2_rtscts_pins
+>>
+>> Can you please clarify what you mean by dts should "reclaim". You mean
+>> move the pins from da850.dtsi to da850-evm.dts or something else?
+>>
+> 
+> No, in the part you are replying to I am not referring to moving the
+> pins but reclaiming them. The pins are declared in the dtsi, as they
+> should. Eg. the LCDK dts reclaims serial2_rxtx_pins but doesn't reclaim
+> serial2_rtscts_pins while their declarations remain in the dtsi.
 
-[...]
-> +
-> +static u32 __init mv88f5181_get_tclk_freq(void __iomem *sar)
-> +{
-> +	u32 opt = (readl(sar) >> SAR_MV88F5181_TCLK_FREQ) &
-> +		SAR_MV88F5181_TCLK_FREQ_MASK;
+Alright. I am not sure if "reclaim" is the right term for this, but it
+doesn't matter ;) I understand the intent now.
 
-Checkpatch complain about a missing blank line after declaration.
-And spliting the read and the & operation will prevent this line breaking
+> The purpose of this part was to clarify what I saw on the schematics
+> because your emails include the following 2 statements:
+> 
+>>>>> Looks like the flow control pins are being used for McASP also on the
+>>>>> EVM. So lets leave the EVM as-is.
+> 
+>>>> Rather, the EVM dts file should be updated to use serial2_rxtx_pins like
+>>>> the LCDK. Right now it seems to be relying on bootloader to serial2
+> 
+> My email was to inform that it concerns the flow control pins of the
+> UART1 only and that the UART2 flow control pins are not concerned and, 
+> since they are dedicated to the UART2, should be reclaimed unlike
+> in the LCDK.
 
-> +	if (opt == 0)
-> +		return 133333333;
-> +	else if (opt == 1)
-> +		return 150000000;
-> +	else if (opt == 2)
-> +		return 166666667;
-> +	else
-> +		return 0;
-> +}
+I see now.
 
-Why not using a switch here ?
+I think I was thrown off by looking at the fact that mcasp0_pins in
+da850-evm.dts muxes UART2_RTS as AMUTE. But, its the mcasp0_pins that
+needs fixing. AMUTE is not used by audio on the board. As is AFSR. Plus,
+that pinmux entry goes and writes to PINMIX0[31:28] the value of 0x1
+which is reserved. Sigh.
 
-> +
-> +#define SAR_MV88F5181_CPU_FREQ       4
-> +#define SAR_MV88F5181_CPU_FREQ_MASK  0xf
-> +
-> +static u32 __init mv88f5181_get_cpu_freq(void __iomem *sar)
-> +{
-> +	u32 opt = (readl(sar) >> SAR_MV88F5181_CPU_FREQ) &
-> +		SAR_MV88F5181_CPU_FREQ_MASK;
-> +	if (opt == 0)
-> +		return 333333333;
-> +	else if (opt == 1 || opt == 2)
-> +		return 400000000;
-> +	else if (opt == 3)
-> +		return 500000000;
-> +	else
-> +		return 0;
-> +}
+I will review your original e-mail and reply back.
 
-Same comments
-
-> +
-> +static void __init mv88f5181_get_clk_ratio(void __iomem *sar, int id,
-> +					   int *mult, int *div)
-> +{
-> +	u32 opt = (readl(sar) >> SAR_MV88F5181_CPU_FREQ) &
-> +		SAR_MV88F5181_CPU_FREQ_MASK;
-> +	if (opt == 0 || opt == 1) {
-> +		*mult = 1;
-> +		*div  = 2;
-> +	} else if (opt == 2 || opt == 3) {
-> +		*mult = 1;
-> +		*div  = 3;
-> +	} else {
-> +		*mult = 0;
-> +		*div  = 1;
-> +	}
-> +}
-
-Same comments
-
-Regards
-
+Thanks,
+Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
