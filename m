@@ -1,34 +1,56 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/3] ARM: imx: add SMP support for i.MX7D
-Date: Fri, 26 Aug 2016 15:48:08 +0200
-Message-ID: <201608261548.08227.arnd@arndb.de>
-References: <1472209971-32469-1-git-send-email-Anson.Huang@nxp.com> <20160826111356.GM1041@n2100.armlinux.org.uk> <AM3PR04MB13154FA0116D397AABD75E10F5EC0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [RFC/PATCH] dt: bindings: Define bindings for device idle states
+Date: Fri, 26 Aug 2016 15:58:42 +0200
+Message-ID: <20160826135842.GA9303@amd>
+References: <1472207073-4901-1-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM3PR04MB13154FA0116D397AABD75E10F5EC0@AM3PR04MB1315.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Yongcai Huang <anson.huang@nxp.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1472207073-4901-1-git-send-email-ulf.hansson@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Kevin Hilman <khilman@kernel.org>, Lina Iyer <lina.iyer@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Brendan Jackman <Brendan.Jackman@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Axel Haslam <ahaslam@baylibre.com>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 26 August 2016, Yongcai Huang wrote:
-> > 
-> > It's about time iMX folk learned that "imx*" is a SoC and not a CPU.
-> > It should be "soc_is_imx7d()" because we're wanting to know whether the
-> > SoC is an iMX7D.  The CPU is a _Cortex-A7_.
-> 
-> Agree, I will add a new patch in this patch set to replace all the cpu_is_xxx with
-> Soc_is_xxx.
+Hi!
 
-I recently did a patch to remove all the cpu_is_mx{1,2,3,5}* macros, which ended up
-making the code simpler and more readable in most places. I think we can
-do the same for the cpu_is_imx{6,7}* macros.
+> @@ -0,0 +1,102 @@
+> +Device idle states
+> +========================
+> +
+> +A device are often capable of entering a low power state(s) when it becomes
+> +idle, hence the terminology of device idle states. Entering an idle state for a
+> +device helps it to avoid wasting power and reduces the leakage of current.
 
-In this instance, the easy alternative is to have a separate smp_operation
-structure for imx7d rather than using the same as imx6 and then figuring
-out at runtime which one you have.
+First things first: what do these states _really_ represent? We have
+GPIOs in device tree, we have clock domains. What are these?
 
-	Arnd
+Actually I don't think I like this. We should describe the hardware,
+not particular use case.
+
+On what hardware would you use these new bindings?
+
+> +Required properties:
+> +- compatible:		Must contain "simple-dev, idle-state".
+> +- entry-latency-ns:	An u32 value in nano-seconds representing the worst case
+> +			latency required for the device to enter the idle state.
+> +- exit-latency-ns:	An u32 value in nano-seconds representing the worst case
+> +			wakeup latency of the device, after entry-latency-ns has
+> +			passed.
+
+u32 nanoseconds have 4sec limit, right? So anything with spinning
+harddrive is out?
+
+> +== Assigning idle states to devices ==
+> +
+> +Required properties:
+> + - dev-idle-states:	A list of phandles pointing to the supported
+> +			device idle states nodes. The list must be ordered as
+> +			the shallower state - the earlier in the list.
+
+Does such ordering really neccessarily exist?
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
