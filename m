@@ -1,61 +1,53 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH v2 03/22] usb: ulpi: Support device discovery via device
- properties
-Date: Fri, 26 Aug 2016 11:54:02 -0700
-Message-ID: <147223764261.20053.3850778721234482249@sboyd-linaro>
-References: <20160707222114.1673-1-stephen.boyd@linaro.org>
- <20160707222114.1673-4-stephen.boyd@linaro.org>
- <20160708090458.GB20485@shlinux2>
- <147043245520.26915.14153612182716236022@sboyd-linaro>
- <CAJOFmgz=BSq=mmo4-2p-BZLbb=qeE-2paUcgCv0_vx72PTYfWg@mail.gmail.com>
- <20160824073134.GB12117@kuha.fi.intel.com>
+From: "Steven J. Hill" <Steven.Hill@cavium.com>
+Subject: [PATCH v2] MIPS: Octeon: mark GPIO controller node not populated
+ after IRQ init.
+Date: Fri, 26 Aug 2016 14:02:04 -0500
+Message-ID: <57C0922C.40907@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160824073134.GB12117@kuha.fi.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Chen <hzpeterchen@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: linux-mips@linux-mips.org, ralf@linux-mips.org
+Cc: David Daney <david.daney@cavium.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Heikki Krogerus (2016-08-24 00:31:34)
-> On Tue, Aug 23, 2016 at 12:58:07PM -0700, Stephen Boyd wrote:
-> > On Fri, Aug 5, 2016 at 2:27 PM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
-> > > Quoting Peter Chen (2016-07-08 02:04:58)
-> > >> On Thu, Jul 07, 2016 at 03:20:54PM -0700, Stephen Boyd wrote:
-> > >> > @@ -39,6 +42,10 @@ static int ulpi_match(struct device *dev, struct device_driver *driver)
-> > >> >       struct ulpi *ulpi = to_ulpi_dev(dev);
-> > >> >       const struct ulpi_device_id *id;
-> > >> >
-> > >> > +     /* Some ULPI devices don't have a product id so rely on OF match */
-> > >> > +     if (ulpi->id.product == 0)
-> > >> > +             return of_driver_match_device(dev, driver);
-> > >> > +
-> > >>
-> > >> How about using vendor id? It can't be 0, but pid may be 0.
-> > >> See: http://www.linux-usb.org/usb.ids
-> > >
-> > > Heikki suggested a product id of 0 would mean we need to use DT
-> > > matching. Should it be changed to vendor id instead?
-> > 
-> > Any comments here?
-> 
-> It makes sense. I don't have any problem with that.
+We clear the OF_POPULATED flag for the GPIO controller node on Octeon
+processors. Otherwise, none of the devices hanging on the GPIO lines
+are probed. The 'gpio-leds' driver on OCTEON failed to probe in addition
+to other devices on Cavium 71xx and 78xx development boards.
 
-Ok. Having pid equal to 0 in DT/device properties seems wrong, so I
-think I'll be dropping those properties that this patch introduced and
-go back to always attempting to read the hardware when the device is
-populated.
+Fixes: 15cc2ed6dcf9 ("of/irq: Mark initialised interrupt controllers as populated")
+Signed-off-by: Steven J. Hill <steven.hill@cavium.com>
+Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+---
+ arch/mips/cavium-octeon/octeon-irq.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-That will bring back the power sequencing problem though, so I have to
-think of some way to solve that. For now I'll just set the pid and vid
-to 0 when the power is off and we try to read and see how it goes.
+diff --git a/arch/mips/cavium-octeon/octeon-irq.c b/arch/mips/cavium-octeon/octeon-irq.c
+index 5a9b87b..c1eb1ff 100644
+--- a/arch/mips/cavium-octeon/octeon-irq.c
++++ b/arch/mips/cavium-octeon/octeon-irq.c
+@@ -1619,6 +1619,12 @@ static int __init octeon_irq_init_gpio(
+ 		return -ENOMEM;
+ 	}
+
++	/*
++	 * Clear the OF_POPULATED flag that was set by of_irq_init()
++	 * so that all GPIO devices will be probed.
++	 */
++	of_node_clear_flag(gpio_node, OF_POPULATED);
++
+ 	return 0;
+ }
+ /*
+-- 
+1.9.1
