@@ -1,41 +1,48 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: [PATCH 11/26] dt-bindings: Document mti,mips-cpc binding
-Date: Fri, 26 Aug 2016 16:37:10 +0100
-Message-ID: <20160826153725.11629-12-paul.burton@imgtec.com>
-References: <20160826153725.11629-1-paul.burton@imgtec.com>
+From: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
+Subject: [PATCH 08/10] dt-bindings: usb: Update bindings for LS1012A
+Date: Fri, 26 Aug 2016 15:57:47 +0530
+Message-ID: <1472207269-18499-8-git-send-email-Bhaskar.Upadhaya@nxp.com>
+References: <1472207269-18499-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160826153725.11629-1-paul.burton@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1472207269-18499-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, shawnguo@kernel.org
+Cc: oss@buserror.net, linux-devel@gforge.freescale.net, Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document a binding for the MIPS Cluster Power Controller (CPC) which
-simply allows the device tree to specify where the CPC registers should
-be mapped.
-
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
 ---
+ Documentation/devicetree/bindings/usb/fsl-usb.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
- Documentation/devicetree/bindings/misc/mti,mips-cpc.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
-
-diff --git a/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt b/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
-new file mode 100644
-index 0000000..92eb08f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
-@@ -0,0 +1,8 @@
-+Binding for MIPS Cluster Power Controller (CPC).
+diff --git a/Documentation/devicetree/bindings/usb/fsl-usb.txt b/Documentation/devicetree/bindings/usb/fsl-usb.txt
+index 4779c02..08ccc6e 100644
+--- a/Documentation/devicetree/bindings/usb/fsl-usb.txt
++++ b/Documentation/devicetree/bindings/usb/fsl-usb.txt
+@@ -81,3 +81,13 @@ Example dual role USB controller device node for MPC5121ADS:
+ 		fsl,invert-drvvbus;
+ 		fsl,invert-pwr-fault;
+ 	};
 +
-+This binding allows a system to specify where the CPC registers should be
-+mapped using device tree.
-+
-+Required properties:
-+compatible : Should be "mti,mips-cpc".
-+regs: Should describe the address & size of the CPC register region.
++Example dual role USB controller device node for LS1012A:
++	usb@8600000 {
++		compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
++		reg = <0x0 0x8600000 0x0 0x1000>;
++		interrupts = <0 139 0x4>;
++		dr_mode = "host";
++		phy_type = "ulpi";
++		fsl,usb-erratum-a005697;
++	};
 -- 
-2.9.3
+1.9.1
