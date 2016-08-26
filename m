@@ -1,7 +1,7 @@
 From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Subject: [PATCH 1/8] arm: orion5x: Add documentation for SoC and board bindings
-Date: Fri, 26 Aug 2016 10:20:57 +0100
-Message-ID: <1472203264-21089-2-git-send-email-jm@lentin.co.uk>
+Subject: [PATCH 5/8] arm: orion5x: Add DT include for mv88f5181
+Date: Fri, 26 Aug 2016 10:21:01 +0100
+Message-ID: <1472203264-21089-6-git-send-email-jm@lentin.co.uk>
 References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
  <1472203264-21089-1-git-send-email-jm@lentin.co.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -11,45 +11,82 @@ To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGT
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Copy the format for kirkwood/dove to orion5x
+Common definitions for the SoC for board definitions to use.
 
 Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- .../bindings/arm/marvell/marvell,orion5x.txt       | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/marvell/marvell,orion5x.txt
+ .../bindings/arm/marvell/marvell,orion5x.txt       |  1 +
+ arch/arm/boot/dts/orion5x-mv88f5181.dtsi           | 49 ++++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
+ create mode 100644 arch/arm/boot/dts/orion5x-mv88f5181.dtsi
 
 diff --git a/Documentation/devicetree/bindings/arm/marvell/marvell,orion5x.txt b/Documentation/devicetree/bindings/arm/marvell/marvell,orion5x.txt
-new file mode 100644
-index 0000000..a888011
---- /dev/null
+index a888011..ff3c120 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/marvell,orion5x.txt
 +++ b/Documentation/devicetree/bindings/arm/marvell/marvell,orion5x.txt
-@@ -0,0 +1,23 @@
-+Marvell Orion SoC Family Device Tree Bindings
-+---------------------------------------------
+@@ -9,6 +9,7 @@ compatible: must contain "marvell,orion5x"
+ In addition, the above compatible shall be extended with the specific
+ SoC. Currently known SoC compatibles are:
+ 
++"marvell,orion5x-88f5181"
+ "marvell,orion5x-88f5182"
+ 
+ And in addition, the compatible shall be extended with the specific
+diff --git a/arch/arm/boot/dts/orion5x-mv88f5181.dtsi b/arch/arm/boot/dts/orion5x-mv88f5181.dtsi
+new file mode 100644
+index 0000000..f667012
+--- /dev/null
++++ b/arch/arm/boot/dts/orion5x-mv88f5181.dtsi
+@@ -0,0 +1,49 @@
++/*
++ * Copyright (C) 2016 Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
 +
-+Boards with a SoC of the Marvell Orion family, eg 88f5181
++#include "orion5x.dtsi"
 +
-+* Required root node properties:
-+compatible: must contain "marvell,orion5x"
++/ {
++	compatible = "marvell,orion5x-88f5181", "marvell,orion5x";
 +
-+In addition, the above compatible shall be extended with the specific
-+SoC. Currently known SoC compatibles are:
++	soc {
++		compatible = "marvell,orion5x-88f5181-mbus", "simple-bus";
 +
-+"marvell,orion5x-88f5182"
++		internal-regs {
++			pinctrl: pinctrl@10000 {
++				compatible = "marvell,88f5181-pinctrl";
++				reg = <0x10000 0x8>, <0x10050 0x4>;
++			};
 +
-+And in addition, the compatible shall be extended with the specific
-+board. Currently known boards are:
++			core_clk: core-clocks@10030 {
++				compatible = "marvell,mv88f5181-core-clock";
++				reg = <0x10010 0x4>;
++				#clock-cells = <1>;
++			};
 +
-+"buffalo,lsgl"
-+"buffalo,lswsgl"
-+"buffalo,lswtgl"
-+"lacie,ethernet-disk-mini-v2"
-+"lacie,d2-network"
-+"marvell,rd-88f5182-nas"
-+"maxtor,shared-storage-2"
++			mbusc: mbus-controller@20000 {
++				compatible = "marvell,mbus-controller";
++				reg = <0x20000 0x100>, <0x1500 0x20>;
++			};
++		};
++	};
++};
++
++&pinctrl {
++	pmx_ge: pmx-ge {
++		marvell,pins = "mpp8", "mpp9", "mpp10", "mpp11",
++			       "mpp12", "mpp13", "mpp14", "mpp15",
++			       "mpp16", "mpp17", "mpp18", "mpp19";
++		marvell,function = "ge";
++	};
++};
++
++&eth {
++	pinctrl-0 = <&pmx_ge>;
++	pinctrl-names = "default";
++};
 -- 
 2.8.1
 
