@@ -1,85 +1,96 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: sun8i-h3: Add UART1 pinctrl
-Date: Sat, 27 Aug 2016 00:29:32 +0200
-Message-ID: <20160826222932.GI3165@lukather>
-References: <1472107494-20740-1-git-send-email-woogyom.kim@gmail.com>
- <1472107494-20740-2-git-send-email-woogyom.kim@gmail.com>
- <20160826071056.GA10545@lukather>
- <89195613-d5b6-bfc6-1c8c-0d74d9d02a99@gmail.com>
+From: Zach Brown <zach.brown@ni.com>
+Subject: Re: [PATCH 1/2] sdhci-of-arasan: Add quirk and device tree parameter
+ to fake CD bit
+Date: Fri, 26 Aug 2016 17:29:46 -0500
+Message-ID: <20160826222945.GA6679@zach-desktop>
+References: <1472080984-17373-1-git-send-email-zach.brown@ni.com>
+ <20160825105640.GA5439@remoulade>
+ <20160825171539.GA13571@zach-desktop>
+ <20160825180959.GA14705@remoulade>
+ <20160825182621.GA14817@zach-desktop>
+ <20160825182852.GB15000@remoulade>
+ <20160825204645.GA19450@zach-desktop>
+ <CAPDyKFpcFus1oysdRuK6vUALXXdy8_SsDZ3n8LkyM1AZLZY+QQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="AptwxgnoZDC4KQWS"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <89195613-d5b6-bfc6-1c8c-0d74d9d02a99-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CAPDyKFpcFus1oysdRuK6vUALXXdy8_SsDZ3n8LkyM1AZLZY+QQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, linux-mmc <linux-mmc@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Michal Simek <michal.simek@xilinx.com>, =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Aug 26, 2016 at 09:42:38AM +0200, Ulf Hansson wrote:
+> On 25 August 2016 at 22:46, Zach Brown <zach.brown@ni.com> wrote:
+> > On Thu, Aug 25, 2016 at 07:28:55PM +0100, Mark Rutland wrote:
+> >> On Thu, Aug 25, 2016 at 01:26:22PM -0500, Zach Brown wrote:
+> >> > On Thu, Aug 25, 2016 at 07:10:00PM +0100, Mark Rutland wrote:
+> >> > > On Thu, Aug 25, 2016 at 12:15:44PM -0500, Zach Brown wrote:
+> >> > > > In cases where the card is non-removable then polling doesn't make sense.
+> >> > >
+> >> > > We have the non-removable property to describe that, so we can also look at that.
+> >> > >
+> >> > > > So it doesn't make sense to tie the test mode workaround into the broken-cd
+> >> > > > property, even though I agree the nature of the defect fits under the notion
+> >> > > > of the CD being broken.
+> >> > >
+> >> > > Maybe not solely on broken-cd, but I think that we dont necessarily need a new
+> >> > > DT property. As above, broken-cd, non-removable, and the compatible string may
+> >> > > together give the kernel enough information to choose the right thing to do.
+> >> > >
+> >> > > Thanks,
+> >> > > Mark.
+> >> >
+> >> > I'm not sure if I understand your suggestion completely. Are you suggesting
+> >> > setting both the broken-cd and non-removable properties? That would make sense,
+> >> > but my understanding was that the two properities are not meant to co-exist. In
+> >> > /Documentation/devicetree/bindings/mmc/mmc.txt it states that only one should
+> >> > be supplied. Don't the two properties conflict with each other?
+> >>
+> >> They do for the cases that exist today, but given we're updating the document
+> >> anyway, we could simply clarify the cases in which the two can sanely co-exist
+> >> (e.g.  for this particular IP block).
+> 
+> No, please!
+> 
+> Depending on the SDHCI variant there is already some difference on how
+> broken-cd is treated.
+> 
+> Let's not add yet another, as I think it will be too complicated for
+> people to understand the bindings.
+> 
 
---AptwxgnoZDC4KQWS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Shawn Lin pointed out that there might be instances of the arasan controller 
+that don't have the behavior the patch addresses. Having a new DT binding
+specific for this case would avoid needing to maintain a list of controllers
+that need the fix.  
 
-Hi Milo,
-
-On Fri, Aug 26, 2016 at 05:00:37PM +0900, Milo Kim wrote:
-> On 08/26/2016 04:10 PM, Maxime Ripard wrote:
-> >>+			uart1_pins_a: uart1@0 {
-> >>> +				allwinner,pins =3D "PG6", "PG7";
-> >>> +				allwinner,function =3D "uart1";
-> >>> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> >>> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-> >>> +			};
-> >>> +
-> >Our policy is that we don't introduce new pinctrl nodes that are not
-> >used by any board to avoid bloating the DT too much with unused nodes.
+> >>
+> >> Thanks,
+> >> Mark.
 > >
-> >If you have a board using it, please submit that change as well.
->=20
-> OK, I agree.
->=20
-> However, this pinmux is only useful in case PA5 is assigned for PWM.
-> PA5 is commonly used for UART0_RX, so I'd like to add UART1 node into *.d=
-ts
-> and disable it (status =3D "disabled"). Does it make sense?
+> > That makes sense. I'll change the documentation for broken-cd and non-removable
+> > in the IP specific document and change the driver accordingly.
+> 
+> I rather have a new DT binding specific for this case.
+> 
+> Perhaps there's a better name than "fake-cd". How about "force-cd", or
+> if someone can come up with a better name.
+> 
+> Kind regards
+> Uffe
 
-I guess UART1 is either used or not used on that board. In the former
-case, it should be enabled, in the latter, left out of the DTS
-entirely.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---AptwxgnoZDC4KQWS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXwMLMAAoJEBx+YmzsjxAgRy4P/ApeOZdmr5YRg8ZXe2/2l1ou
-v//coqmbaExBtCv1kP2jABXtxr1lL1mkZO0OKF2WAi+M60zjA9U0Og/+4HVKSteJ
-7G4em8K7hNfjsBqJQ8Duhd0A4xheo1Jeh8qDeFIuBjjdQRYGWZrVIl5e+PvOIYT2
-tknWZKo9zWKrs23ZNW9rCxwk6Zcs1y6rvIn8Utk1g91KE4zUgmsJd6p3j0BUSpcn
-9kTzgxzq/nqFGdiDEn8exHBldTtNRyj+UaCEligc0/YhrlIr8ZwTEzN0Nubh8PWa
-M3pa9G21EzRs8EoU1KeDGr6e+gC8PBgOUZjl0ZxU2UMrceVUMnInG+/GqL5yCkYC
-Ly4sOtAbMTzkVlGvxwM8q8/k8etsjtyUwtRuVV1Q9ywYkRBkivjrueqbzGK/rXry
-NxFtJUHviA4Eyx909s1gKTf+lBWzZWeUbm00e1Keco+HXthKJ+cXvqJq8diEOc16
-6tk2YL2YZEInY2qkZEZu2SgrSWfNwMtvEunyyurQKoxm02zbXUal/2HAPLMt7kwe
-ISQy+m0r6AskHKNCc9WSacHCWo3dd1k/3FphCKalETu11LBZyka/mTeB27gNTwtV
-jQNH+hpy0x+5iGwXTvGPI4mxFTJ8y/jB+AKrdZq9e41rKIgPcOnqdGf1IZvBEwl1
-OrE+OaMzdmw+Z3Ma7Zws
-=m87D
------END PGP SIGNATURE-----
-
---AptwxgnoZDC4KQWS--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I've been trying to come up with a better name. Here are a few ideas
+cd-not-wired
+needs-test-cd
+fails-without-force-cd
