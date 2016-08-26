@@ -1,38 +1,59 @@
-From: Milo Kim <woogyom.kim@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: sun8i-h3: Add UART1 pinctrl
-Date: Fri, 26 Aug 2016 17:00:37 +0900
-Message-ID: <89195613-d5b6-bfc6-1c8c-0d74d9d02a99@gmail.com>
-References: <1472107494-20740-1-git-send-email-woogyom.kim@gmail.com>
- <1472107494-20740-2-git-send-email-woogyom.kim@gmail.com>
- <20160826071056.GA10545@lukather>
+From: David Herrmann <dh.herrmann@gmail.com>
+Subject: Re: [RFC] drm: implement generic firmware eviction
+Date: Fri, 26 Aug 2016 10:01:42 +0200
+Message-ID: <CANq1E4QFB4k+8C4eZUuUwO7mYDDYrKx2wbPJfAKe_GoOLOHv=A@mail.gmail.com>
+References: <20160826000056.12806-1-dh.herrmann@gmail.com>
+ <29bc1dab-7445-8470-f59b-6df908e83a3f@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160826071056.GA10545@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <29bc1dab-7445-8470-f59b-6df908e83a3f@redhat.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/26/2016 04:10 PM, Maxime Ripard wrote:
->> +			uart1_pins_a: uart1@0 {
->> > +				allwinner,pins = "PG6", "PG7";
->> > +				allwinner,function = "uart1";
->> > +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
->> > +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
->> > +			};
->> > +
-> Our policy is that we don't introduce new pinctrl nodes that are not
-> used by any board to avoid bloating the DT too much with unused nodes.
->
-> If you have a board using it, please submit that change as well.
-
-OK, I agree.
-
-However, this pinmux is only useful in case PA5 is assigned for PWM.
-PA5 is commonly used for UART0_RX, so I'd like to add UART1 node into 
-*.dts and disable it (status = "disabled"). Does it make sense?
-
-Best regards,
-Milo
+SGkKCk9uIEZyaSwgQXVnIDI2LCAyMDE2IGF0IDk6NTcgQU0sIEhhbnMgZGUgR29lZGUgPGhkZWdv
+ZWRlQHJlZGhhdC5jb20+IHdyb3RlOgo+IEhpLAo+Cj4gT24gMjYtMDgtMTYgMDI6MDAsIERhdmlk
+IEhlcnJtYW5uIHdyb3RlOgo+Pgo+PiBQcm92aWRlIGEgZ2VuZXJpYyBEUk0gaGVscGVyIHRoYXQg
+ZXZpY3RzIGFsbCBjb25mbGljdGluZyBmaXJtd2FyZQo+PiBmcmFtZWJ1ZmZlcnMsIGRldmljZXMs
+IGFuZCBkcml2ZXJzLiBUaGUgbmV3IGhlbHBlciBpcyBjYWxsZWQKPj4gZHJtX2V2aWN0X2Zpcm13
+YXJlKCksIGFuZCB0YWtlcyBhIGZsYWdzZXQgY29udHJvbGxpbmcgd2hpY2ggZmlybXdhcmUgdG8K
+Pj4ga2ljayBvdXQuCj4+Cj4+IFRoaXMgaXMgbWVhbnQgdG8gYmUgdXNlZCBieSBkcml2ZXJzIGlu
+IHRoZWlyIC0+cHJvYmUoKSBjYWxsYmFja3Mgb2YgdGhlaXIKPj4gcGFyZW50IGJ1cywgYmVmb3Jl
+IGNhbGxpbmcgaW50byBkcm1fZGV2X3JlZ2lzdGVyKCkuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IERh
+dmlkIEhlcnJtYW5uIDxkaC5oZXJybWFubkBnbWFpbC5jb20+Cj4+IC0tLQo+PiBIZXkKPj4KPj4g
+VGhpcyBpcyBqdXN0IGNvbXBpbGUtdGVzdGVkIGZvciBub3cuIEkganVzdCB3YW50IHRvIGdldCBz
+b21lIGNvbW1lbnRzIG9uCj4+IHRoZQo+PiBkZXNpZ24uIEkgZGVjaWRlZCB0byBkcm9wIHRoZSBz
+eXNmYiBpbmZyYXN0cnVjdHVyZSBhbmQgcmF0aGVyIGp1c3QgdXNlCj4+IHRoaXMKPj4gZ2VuZXJp
+YyBoZWxwZXIuIEl0IGtlZXBzIHRoaW5ncyBzaW1wbGUgYW5kIHNob3VsZCB3b3JrIGp1c3QgZmlu
+ZSBmb3IgYWxsCj4+IHJlYXNvbmFibGUgdXNlLWNhc2VzLgo+Pgo+PiBUaGlzIHdpbGwgd29yayB3
+aXRoIFNpbXBsZURSTSBvdXQtb2YtdGhlLWJveCBvbiB4ODYuCj4+Cj4+IEFyY2hpdGVjdHVyZXMg
+d2l0aCBkeW5hbWljIHNpbXBsZS1mcmFtZWJ1ZmZlciBkZXZpY2VzIGFyZSBub3Qgc3VwcG9ydGVk
+Cj4+IHlldC4gSQo+PiBhY3R1YWxseSBoYXZlIG5vIGlkZWEgd2hhdCB0aGUgc3RyYXRlZ3kgdGhl
+cmUgaXM/IENhbiB0aGUgRGV2aWNlVHJlZQo+PiBwZW9wbGUgY29tZQo+PiB1cCB3aXRoIHNvbWV0
+aGluZz8gQW0gSSBzdXBwb3NlZCB0byBjYWxsIG9mX3BsYXRmb3JtX2RlcG9wdWxhdGUoKT8gT3IK
+Pj4gb2ZfZGV0YWNoX25vZGUoKT8gT3Igd2hhdD8KPgo+Cj4gSSdtIG5vdCBzdXJlIHdlIHdvdWxk
+IHdhbnQgdG8gcmVtb3ZlIHRoZSBkZXZpY2UgYXQgYWxsLCB3ZSBjZXJ0YWlubHkgc2hvdWxkCj4g
+bm90Cj4gYmUgcmVtb3ZpbmcgdGhlIGR0X25vZGUgZnJvbSB0aGUgZGV2aWNldHJlZSBJTUhPLiBI
+YXZpbmcgdGhhdCBhcm91bmQgdG8gc2VlCj4gaG93Cj4gdGhlIGJvb3Rsb2FkZXIgc2V0IHRoaW5n
+cyB1cCBpcyByZWFsbHkgdXNlZnVsIGZvciBkZWJ1Z2dpbmcgYW5kIG5vcm1hbGx5IHdlCj4gc2hv
+dWxkIG5ldmVyIG1vZGlmeSB0aGUgZGV2aWNldHJlZSBhcyBzZXQgdXAgYnkgdGhlIGJvb3Rsb2Fk
+ZXIuCj4KPiBXaHkgbm90IGp1c3QgdW5iaW5kIHRoZSBkcml2ZXIgZnJvbSB0aGUgcGxhdGZvcm0g
+ZGV2aWNlPyBUaGF0IHNob3VsZCBiZQo+IGVub3VnaC4KClRoYXQgd2lsbCBsZWF2ZSBJT1JFU09V
+UkNFX01FTSBhcm91bmQsIGNhdXNpbmcgY29uZmxpY3RzIGlmCnJlLXVzZWQvY2xhaW1lZCBieSBv
+dGhlciBkZXZpY2VzL2RyaXZlcnMuIEZ1cnRoZXJtb3JlLCBpdCBpcyByZWFsbHkKZnJhZ2lsZSBs
+ZWF2aW5nIHRoZSBkZXZpY2UgYXJvdW5kLCB3aXRob3V0IGFueSBjb250cm9sIG92ZXIgcG9zc2li
+bGUKZnV0dXJlIGRyaXZlciBwcm9iaW5nLgoKVGhhbmtzCkRhdmlkCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
