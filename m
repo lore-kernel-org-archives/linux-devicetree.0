@@ -1,46 +1,34 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: Add Keith&Koep vendor prefix
-Date: Fri, 26 Aug 2016 17:58:15 +0200
-Message-ID: <201608261758.16050.arnd@arndb.de>
-References: <20160826142918.7310-1-marex@denx.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 1/7] clocksource: exynos_mct: Add the support for ARM64
+Date: Fri, 26 Aug 2016 18:02:19 +0200
+Message-ID: <20160826160219.GA15511@kozik-book>
+References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
+ <1472046551-703-2-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160826142918.7310-1-marex-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1472046551-703-2-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: k.kozlowski@samsung.com, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, krzk@kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 26 August 2016, Marek Vasut wrote:
-> Add vendor prefix for Keith&Koep GmbH , http://keith-koep.com/en/
+On Wed, Aug 24, 2016 at 10:49:05PM +0900, Chanwoo Choi wrote:
+> This patch adds the support for ARM 64bit. The delay_timer is only supported
+> on ARM 32bit.
 > 
-> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 2c2500d..0fec4a7 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -141,6 +141,7 @@ jedec	JEDEC Solid State Technology Association
->  karo	Ka-Ro electronics GmbH
->  keymile	Keymile GmbH
->  kinetic Kinetic Technologies
-> +kk	Keith & Koep GmbH
+>  drivers/clocksource/Kconfig      | 2 +-
+>  drivers/clocksource/exynos_mct.c | 4 ++++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
 
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-This is really short, and my first guess what 'kk' should mean would be 'kankun',
-so I'd suggest using something longer here.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
