@@ -1,157 +1,73 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: [PATCH v2 18/19] MIPS: SEAD3: Use img-ascii-lcd driver
-Date: Fri, 26 Aug 2016 15:17:50 +0100
-Message-ID: <20160826141751.13121-19-paul.burton@imgtec.com>
-References: <20160826141751.13121-1-paul.burton@imgtec.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 2/8] arm: orion5x: Add clk support for mv88f5181
+Date: Fri, 26 Aug 2016 16:24:32 +0200
+Message-ID: <20160826142432.GH25046@lunn.ch>
+References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
+ <1472203264-21089-1-git-send-email-jm@lentin.co.uk>
+ <1472203264-21089-3-git-send-email-jm@lentin.co.uk>
+ <20160826113437.GA12692@Red>
+ <alpine.DEB.2.11.1608261256170.19980@marmot.wormnet.eu>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160826141751.13121-1-paul.burton@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.11.1608261256170.19980@marmot.wormnet.eu>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jamie Lentin <jm@lentin.co.uk>
+Cc: Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, devicetree@vger.kernel.org, LABBE Corentin <clabbe.montjoie@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Probe the img-ascii-lcd driver using device tree in order to display a
-message on the SEAD3 board's LCD display, and remove the platform code
-that was formerly performing this function. This removes more platform
-code and moves SEAD3 further towards being entirely DT-based.
+On Fri, Aug 26, 2016 at 01:24:18PM +0100, Jamie Lentin wrote:
+> On Fri, 26 Aug 2016, LABBE Corentin wrote:
+> 
+> >Hello
+> >
+> >I have some minor comments below
+> >
+> >[...]
+> >>+
+> >>+static u32 __init mv88f5181_get_tclk_freq(void __iomem *sar)
+> >>+{
+> >>+	u32 opt = (readl(sar) >> SAR_MV88F5181_TCLK_FREQ) &
+> >>+		SAR_MV88F5181_TCLK_FREQ_MASK;
+> >
+> >Checkpatch complain about a missing blank line after declaration.
+> >And spliting the read and the & operation will prevent this line breaking
+> 
+> It isn't here, although I'm not arguing the line is missing. Is
+> there an extra switch I'm missing?
 
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
----
+I agree it is a false positive.
 
-Changes in v2: None
+Probably the best action is to report it to the checkpatch people.
 
- arch/mips/boot/dts/mti/sead3.dts    |  5 +++
- arch/mips/mti-sead3/Makefile        |  3 +-
- arch/mips/mti-sead3/sead3-display.c | 77 -------------------------------------
- arch/mips/mti-sead3/sead3-time.c    |  2 -
- 4 files changed, 6 insertions(+), 81 deletions(-)
- delete mode 100644 arch/mips/mti-sead3/sead3-display.c
+> >>+	if (opt == 0)
+> >>+		return 133333333;
+> >>+	else if (opt == 1)
+> >>+		return 150000000;
+> >>+	else if (opt == 2)
+> >>+		return 166666667;
+> >>+	else
+> >>+		return 0;
+> >>+}
+> >
+> >Why not using a switch here ?
+> 
+> If you look at this in context[0], this is one of several
+> code-as-config declarations, none of which use a switch. IMO it's
+> more useful to make the similarity as obvious as possible if this is
+> ever refactored.
 
-diff --git a/arch/mips/boot/dts/mti/sead3.dts b/arch/mips/boot/dts/mti/sead3.dts
-index 32a5ab9..2579ca5 100644
---- a/arch/mips/boot/dts/mti/sead3.dts
-+++ b/arch/mips/boot/dts/mti/sead3.dts
-@@ -210,6 +210,11 @@
- 			mask = <0x80>;
- 			label = "fled7";
- 		};
-+
-+		lcd@200 {
-+			compatible = "mti,sead3-lcd";
-+			offset = <0x200>;
-+		};
- 	};
+Agreed. Please leave it as is, and if anybody does care about this,
+they can submit a followup patch refactoring all instances.
  
- 	/* UART connected to FTDI & miniUSB socket */
-diff --git a/arch/mips/mti-sead3/Makefile b/arch/mips/mti-sead3/Makefile
-index cb6d620..1674b9c 100644
---- a/arch/mips/mti-sead3/Makefile
-+++ b/arch/mips/mti-sead3/Makefile
-@@ -8,8 +8,7 @@
- # Copyright (C) 2012 MIPS Technoligies, Inc.  All rights reserved.
- # Steven J. Hill <sjhill@mips.com>
- #
--obj-y := sead3-display.o
--obj-y += sead3-dtshim.o
-+obj-y := sead3-dtshim.o
- obj-y += sead3-init.o
- obj-y += sead3-int.o
- obj-y += sead3-setup.o
-diff --git a/arch/mips/mti-sead3/sead3-display.c b/arch/mips/mti-sead3/sead3-display.c
-deleted file mode 100644
-index 9487599..0000000
---- a/arch/mips/mti-sead3/sead3-display.c
-+++ /dev/null
-@@ -1,77 +0,0 @@
--/*
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file "COPYING" in the main directory of this archive
-- * for more details.
-- *
-- * Copyright (C) 2012 MIPS Technologies, Inc.  All rights reserved.
-- */
--#include <linux/timer.h>
--#include <linux/io.h>
--#include <asm/mips-boards/generic.h>
--
--static unsigned int display_count;
--static unsigned int max_display_count;
--
--#define LCD_DISPLAY_POS_BASE		0x1f000400
--#define DISPLAY_LCDINSTRUCTION		(0*2)
--#define DISPLAY_LCDDATA			(1*2)
--#define DISPLAY_CPLDSTATUS		(2*2)
--#define DISPLAY_CPLDDATA		(3*2)
--#define LCD_SETDDRAM			0x80
--#define LCD_IR_BF			0x80
--
--const char display_string[] = "		      LINUX ON SEAD3		   ";
--
--static void scroll_display_message(unsigned long data);
--static DEFINE_TIMER(mips_scroll_timer, scroll_display_message, HZ, 0);
--
--static void lcd_wait(unsigned int __iomem *display)
--{
--	/* Wait for CPLD state machine to become idle. */
--	do { } while (__raw_readl(display + DISPLAY_CPLDSTATUS) & 1);
--
--	do {
--		__raw_readl(display + DISPLAY_LCDINSTRUCTION);
--
--		/* Wait for CPLD state machine to become idle. */
--		do { } while (__raw_readl(display + DISPLAY_CPLDSTATUS) & 1);
--	} while (__raw_readl(display + DISPLAY_CPLDDATA) & LCD_IR_BF);
--}
--
--void mips_display_message(const char *str)
--{
--	static unsigned int __iomem *display;
--	char ch;
--	int i;
--
--	if (unlikely(display == NULL))
--		display = ioremap_nocache(LCD_DISPLAY_POS_BASE,
--			(8 * sizeof(int)));
--
--	for (i = 0; i < 16; i++) {
--		if (*str)
--			ch = *str++;
--		else
--			ch = ' ';
--		lcd_wait(display);
--		__raw_writel((LCD_SETDDRAM | i),
--			(display + DISPLAY_LCDINSTRUCTION));
--		lcd_wait(display);
--		__raw_writel(ch, display + DISPLAY_LCDDATA);
--	}
--}
--
--static void scroll_display_message(unsigned long data)
--{
--	mips_display_message(&display_string[display_count++]);
--	if (display_count == max_display_count)
--		display_count = 0;
--	mod_timer(&mips_scroll_timer, jiffies + HZ);
--}
--
--void mips_scroll_message(void)
--{
--	del_timer_sync(&mips_scroll_timer);
--	max_display_count = strlen(display_string) + 1 - 16;
--	mod_timer(&mips_scroll_timer, jiffies + 1);
--}
-diff --git a/arch/mips/mti-sead3/sead3-time.c b/arch/mips/mti-sead3/sead3-time.c
-index a120b7a..10b0bf3 100644
---- a/arch/mips/mti-sead3/sead3-time.c
-+++ b/arch/mips/mti-sead3/sead3-time.c
-@@ -94,6 +94,4 @@ void __init plat_time_init(void)
- 
- 	pr_debug("CPU frequency %d.%02d MHz\n", (est_freq / 1000000),
- 		(est_freq % 1000000) * 100 / 1000000);
--
--	mips_scroll_message();
- }
--- 
-2.9.3
+	Andrew
