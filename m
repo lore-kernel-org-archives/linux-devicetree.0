@@ -1,11 +1,16 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: [PATCH v2] ARM: dts: sun8i: Add dts file for inet-d978_rev2 tablets
-Date: Fri, 26 Aug 2016 18:23:56 +0800
-Message-ID: <20160826102356.9524-1-icenowy@aosc.xyz>
+From: Yongcai Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 3/3] ARM: imx: add SMP support for i.MX7D
+Date: Fri, 26 Aug 2016 10:28:15 +0000
+Message-ID: <AM3PR04MB1315EF67563EFA9F9B8450E4F5EC0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <1472209971-32469-1-git-send-email-Anson.Huang@nxp.com>
+ <1472209971-32469-4-git-send-email-Anson.Huang@nxp.com>
+ <3283479.PKRDjkX0Md@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3283479.PKRDjkX0Md@wuerfel>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,136 +20,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The inet-d978_rev2 is a pcb used in generic A33 based tablets. It features
-volume buttons, micro-usb otg, headphone connector and a power button.
 
-On the board a Realtek RTL8723BS SDIO Wi-Fi module are soldered, and there
-is also a accompanied board which has a Goodix GT9271 soldered.
 
-As this board is desired to create tablets with a Home key dealed by
-GT9271, a LED is present at the front panel at the position of the
-Home key.
+Best Regards!
+Anson Huang
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
----
-Changes since v1:
-- Add copyright infomation of me.
-- Rename LED node to d978:blue:home, as it's a blue LED.
 
- arch/arm/boot/dts/Makefile                     |  1 +
- arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts | 88 ++++++++++++++++++++++++++
- 2 files changed, 89 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index faacd52..d1812a0 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -782,6 +782,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a23-q8-tablet.dtb \
- 	sun8i-a33-et-q8-v1.6.dtb \
- 	sun8i-a33-ga10h-v1.1.dtb \
-+	sun8i-a33-inet-d978-rev2.dtb \
- 	sun8i-a33-ippo-q8h-v1.2.dtb \
- 	sun8i-a33-q8-tablet.dtb \
- 	sun8i-a33-sinlinx-sina33.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
-new file mode 100644
-index 0000000..0f52cd9
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
-@@ -0,0 +1,88 @@
-+/*
-+ * Copyright 2015 Hans de Goede <hdegoede@redhat.com>
-+ * Copyright 2016 Icenowy Zheng <icenowy@aosc.xyz>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-a33.dtsi"
-+#include "sun8i-reference-design-tablet.dtsi"
-+
-+/ {
-+	model = "INet-D978 Rev 02";
-+	compatible = "primux,inet-d978-rev2", "allwinner,sun8i-a33";
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pin_d978>;
-+
-+		home {
-+			label = "d978:blue:home";
-+			gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
-+		};
-+	};
-+};
-+
-+&mmc1_pins_a {
-+	allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+};
-+
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins_a>;
-+	vmmc-supply = <&reg_dldo1>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+
-+	rtl8723bs: sdio_wifi@1 {
-+		reg = <1>;
-+	};
-+};
-+
-+&r_pio {
-+	led_pin_d978: led_pin_d978@0 {
-+		allwinner,pins = "PL5";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_20_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
--- 
-2.9.3
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: 2016-08-26 4:59 PM
+> To: Yongcai Huang <anson.huang@nxp.com>
+> Cc: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; shawnguo@kernel.org; kernel@pengutronix.de;
+> Fabio Estevam <fabio.estevam@nxp.com>; robh+dt@kernel.org;
+> mark.rutland@arm.com; linux@armlinux.org.uk
+> Subject: Re: [PATCH 3/3] ARM: imx: add SMP support for i.MX7D
+> 
+> On Friday, August 26, 2016 7:12:51 PM CEST Anson Huang wrote:
+> > i.MX7D has 2 cortex-a7 ARM core, add support for booting up SMP kernel
+> > with 2 CPUs.
+> >
+> > The existing i.MX SMP code is designed for i.MX6 series SoCs which
+> > have cortex-a9 ARM core, but i.MX7D has 2 cortex-a7 ARM core, so we
+> > need to add runtime check for those differences between cortex-a9 and
+> > cortex-a7.
+> >
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> >
+> 
+> Can't you just point i.MX7D to start from secondary_startup rather than
+> v7_secondary_startup?
+> 
+>  ENTRY(v7_secondary_startup)
+> +       .word   0xc070                  @ 0xc07 is cortex-a7 id
+> +       .word   0xfff0                  @ mask for core type
+> +
+> 
+> This looks like you are trying to execute instructions that are actually data. Does
+> this work?
+> 
+> On a side note, could you rename v7_secondary_startup to
+> imx6_secondary_startup? The name sounds overly generic on a multiplatform
+> kernel.
+> 
+> 	Arnd
+
+
+Thanks for review, yes, I made a mistake here, the data should put in another place,
+but it accidently can work and boot up secondary CPU (see below the objdump),
+ and also, I can just use  secondary_startup for i.MX7D. So I will
+leave this file untouched, will verify the function next Mon and send out a V2 patch.
+
+10 00000004 <v7_secondary_startup>:
+ 11    4:   0000c070        andeq   ip, r0, r0, ror r0
+ 12    8:   0000fff0        strdeq  pc, [r0], -r0
+
+Anson.
