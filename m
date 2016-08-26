@@ -1,93 +1,61 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: sun8i: Extend Orange Pi PC dt to also
- handle the PC Plus
-Date: Fri, 26 Aug 2016 20:45:42 +0200
-Message-ID: <0829543d-f6f6-1f14-3a68-4172b026968e@redhat.com>
-References: <1468095718-18515-1-git-send-email-hdegoede@redhat.com>
- <20160713084505.GE4761@lukather>
- <bce2b340-a930-8771-4560-dc61bf5828d5@redhat.com>
- <20160725064033.GA7419@lukather>
- <74d3b5eb-601a-cc1d-a44e-fea2895fd8b2@redhat.com>
- <20160728181757.GD6682@lukather>
- <f71f9d2b-00d4-27b8-1535-1ddc58f04ca3@redhat.com>
- <b6636083-917e-cc3a-9107-401fbd483fb7@redhat.com>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH v2 03/22] usb: ulpi: Support device discovery via device
+ properties
+Date: Fri, 26 Aug 2016 11:54:02 -0700
+Message-ID: <147223764261.20053.3850778721234482249@sboyd-linaro>
+References: <20160707222114.1673-1-stephen.boyd@linaro.org>
+ <20160707222114.1673-4-stephen.boyd@linaro.org>
+ <20160708090458.GB20485@shlinux2>
+ <147043245520.26915.14153612182716236022@sboyd-linaro>
+ <CAJOFmgz=BSq=mmo4-2p-BZLbb=qeE-2paUcgCv0_vx72PTYfWg@mail.gmail.com>
+ <20160824073134.GB12117@kuha.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b6636083-917e-cc3a-9107-401fbd483fb7-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160824073134.GB12117@kuha.fi.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Chen <hzpeterchen@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Quoting Heikki Krogerus (2016-08-24 00:31:34)
+> On Tue, Aug 23, 2016 at 12:58:07PM -0700, Stephen Boyd wrote:
+> > On Fri, Aug 5, 2016 at 2:27 PM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
+> > > Quoting Peter Chen (2016-07-08 02:04:58)
+> > >> On Thu, Jul 07, 2016 at 03:20:54PM -0700, Stephen Boyd wrote:
+> > >> > @@ -39,6 +42,10 @@ static int ulpi_match(struct device *dev, struct device_driver *driver)
+> > >> >       struct ulpi *ulpi = to_ulpi_dev(dev);
+> > >> >       const struct ulpi_device_id *id;
+> > >> >
+> > >> > +     /* Some ULPI devices don't have a product id so rely on OF match */
+> > >> > +     if (ulpi->id.product == 0)
+> > >> > +             return of_driver_match_device(dev, driver);
+> > >> > +
+> > >>
+> > >> How about using vendor id? It can't be 0, but pid may be 0.
+> > >> See: http://www.linux-usb.org/usb.ids
+> > >
+> > > Heikki suggested a product id of 0 would mean we need to use DT
+> > > matching. Should it be changed to vendor id instead?
+> > 
+> > Any comments here?
+> 
+> It makes sense. I don't have any problem with that.
 
-On 07-08-16 16:25, Hans de Goede wrote:
-> Hi,
->
-> On 28-07-16 22:36, Hans de Goede wrote:
->> Hi,
->>
->> On 28-07-16 20:17, Maxime Ripard wrote:
->>> Hi Hans,
->>>
->>> On Tue, Jul 26, 2016 at 11:07:23PM +0200, Hans de Goede wrote:
->>>>>>> Nothing prevents you from including the orange pi pc dts, from the
->>>>>>> orange pi plus dts.
->>>>>>>
->>>>>>> It prevents the duplication you were trying to avoid, and it doesn't
->>>>>>> create all those spurious errors and devices.
->>>>>>
->>>>>> That would solve the copy paste problem on the kernel side, but that
->>>>>> would still mean adding a new u-boot defconfig for this, which means that
->>>>>> all the distro's which ship with prebuild u-boot binaries need to build
->>>>>> for yet another board, something which I would like to avoid.
->>>>>
->>>>> Still, registering devices that are not present on the board is not an
->>>>> option.
->>>>
->>>> Ok, new version send.
->>>>
->>>> What about the other 3 patches in this series ?
->>>
->>> I guess the same comment applies for patch 2.
->>
->> The difference is that there really is no harm at all from
->> enabling the extra usb controllers used on the plus 2e
->> on the plus and plus 2 as well, no errors, no nothing, they
->> just sit their as usb controllers without an usb device plugged
->> in. But if you insist I can do a separate dts + u-boot defconfig
->> for the plus 2e as well (but I would rather not).
->
-> Ping, what is the verdict on this, are you ok with the patch or
-> do you want me to create a separate dts file for the Orange Pi
-> Plus 2E, note that doing so is going to be highly confusing to
-> users, there are 3 plus boards:
->
-> Orange Pi Plus
-> Orange Pi Plus 2   (same as the original plus but with 2G RAM, uses same u-boot defconfig / dts file)
-> Orange Pi Plus 2E  (drops the USB-hub instead using all 3 host controllers)
->
-> So if you insist on a separate dts for the 2E, we get a case where
-> the user with the "2" needs to guess which config to use, sure we
-> can document this, but who is going to read the docs ?
+Ok. Having pid equal to 0 in DT/device properties seems wrong, so I
+think I'll be dropping those properties that this patch introduced and
+go back to always attempting to read the hardware when the device is
+populated.
 
-Ping can you please make a call on this, I'm ok with doing this
-either way (*), but please lets just make a call and move forward.
-
-Regards,
-
-Hans
-
-
-*) With a preference for a single dts file for all plus boards as explained
-in my previous email
->
-> Regards,
->
-> Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That will bring back the power sequencing problem though, so I have to
+think of some way to solve that. For now I'll just set the pid and vid
+to 0 when the power is off and we try to read and see how it goes.
