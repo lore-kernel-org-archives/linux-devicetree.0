@@ -1,64 +1,66 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: imx: add SMP support for i.MX7D
-Date: Fri, 26 Aug 2016 13:35:50 +0100
-Message-ID: <20160826123550.GQ1041@n2100.armlinux.org.uk>
-References: <1472209971-32469-1-git-send-email-Anson.Huang@nxp.com>
- <1472209971-32469-4-git-send-email-Anson.Huang@nxp.com>
- <20160826111356.GM1041@n2100.armlinux.org.uk>
- <AM3PR04MB13154FA0116D397AABD75E10F5EC0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC] drm: implement generic firmware eviction
+Date: Fri, 26 Aug 2016 07:36:18 -0500
+Message-ID: <CAL_Jsq+1MeicZmr+7Q4K6FLnTfD4jBBAQR1KPHMSLfNNUe4ENw@mail.gmail.com>
+References: <20160826000056.12806-1-dh.herrmann@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <AM3PR04MB13154FA0116D397AABD75E10F5EC0-f56W/S9L6NR9w2ZlgAudoc9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+In-Reply-To: <20160826000056.12806-1-dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yongcai Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 26, 2016 at 12:20:15PM +0000, Yongcai Huang wrote:
-> > On Fri, Aug 26, 2016 at 07:12:51PM +0800, Anson Huang wrote:
-> > > diff --git a/arch/arm/mach-imx/platsmp.c b/arch/arm/mach-imx/platsmp.c
-> > > index 711dbbd..63af911 100644
-> > > --- a/arch/arm/mach-imx/platsmp.c
-> > > +++ b/arch/arm/mach-imx/platsmp.c
-> > > @@ -60,8 +60,17 @@ static int imx_boot_secondary(unsigned int cpu,
-> > > struct task_struct *idle)  static void __init imx_smp_init_cpus(void)
-> > > {
-> > >  	int i, ncores;
-> > > +	unsigned long val, arch_type;
-> > >
-> > > -	ncores = scu_get_core_count(scu_base);
-> > > +	asm volatile("mrc p15, 0, %0, c0, c0, 0" : "=r" (arch_type));
-> > > +
-> > > +	if (((arch_type >> 4) & 0xfff) == 0xc07) {
-> > 
-> > This is buggy.  Plus, we have macros for this.  Please use the macros in
-> > asm/cputype.h to achieve these tests.
-> 
-> Thanks, I will use read_cpuid_id() API intead of putting asm code here.
+On Thu, Aug 25, 2016 at 7:00 PM, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Provide a generic DRM helper that evicts all conflicting firmware
+> framebuffers, devices, and drivers. The new helper is called
+> drm_evict_firmware(), and takes a flagset controlling which firmware to
+> kick out.
+>
+> This is meant to be used by drivers in their ->probe() callbacks of their
+> parent bus, before calling into drm_dev_register().
+>
+> Signed-off-by: David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Hey
+>
+> This is just compile-tested for now. I just want to get some comments on the
+> design. I decided to drop the sysfb infrastructure and rather just use this
+> generic helper. It keeps things simple and should work just fine for all
+> reasonable use-cases.
+>
+> This will work with SimpleDRM out-of-the-box on x86.
+>
+> Architectures with dynamic simple-framebuffer devices are not supported yet. I
+> actually have no idea what the strategy there is? Can the DeviceTree people come
+> up with something? Am I supposed to call of_platform_depopulate()?
 
-Nope.  Do this:
+If of_platform_populate was used to create the device, then yes call
+of_platform_depopulate. In this case, I think it wasn't. If
+of_platform_device_create was used, then platform_device_del.
 
-	if (read_cpuid_part() == ARM_CPU_PART_CORTEX_A7) {
+> Or
+> of_detach_node()? Or what?
 
-Because the part number field is defined by the implementer, so before
-you can interpret the part number field, you have to first check who
-has implemented the device.
+No. Only the struct device and its resources should need to be
+destroyed. The node should remain.
 
-That's exactly why these macros exist - to help you get these tests
-correct, so when someone else releases an ARM core with the same value
-in the part number field, we don't end up with a load of tests which
-incorrectly matching.
+> Looking at drivers/of/{platform,dynamic}.c, I cannot see how this is supposed to
+> work at all. Who protects platform_device_del() from being called in parallel?
 
-While it may be unlikely that an iMX7 would end up with a non-ARM CPU,
-that's no real excuse for avoiding using what's been provided for you,
-especially when avoiding it causes issues for static analysis.
+Not sure. In parallel to what? On most systems, nodes never go away
+and on those that do it is only a few things that get hotplugged.
+That's changing with DT overlays now, so there certainly could be some
+issues.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+> Also: Does any platform make use the of 'display:' entry in 'simple-framebuffer'
+> DT nodes? If yes, how do I get access to it? And why don't vc4/sun4i make use of
+> it, rather than falling back to remove_conflicting_framebuffers()?
+
+No idea.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
