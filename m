@@ -1,155 +1,88 @@
-From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 10/10] dt-bindings: sec: Update bindings for LS1012A
-Date: Fri, 26 Aug 2016 17:57:14 -0500
-Message-ID: <1472252234.13245.28.camel@buserror.net>
-References: <1472207269-18499-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
-         <1472207269-18499-10-git-send-email-Bhaskar.Upadhaya@nxp.com>
+From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/3] soc: ti: Add ti_sci_pm_domains driver
+Date: Fri, 26 Aug 2016 18:37:45 -0500
+Message-ID: <57C0D2C9.1030801@ti.com>
+References: <20160819235653.26355-1-nm@ti.com> <20160819235653.26355-4-nm@ti.com> <CAPDyKFooDUOPT9dP8HaW3YBO9PsX-1+96PPE7CRMyjEkra7cBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472207269-18499-10-git-send-email-Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <CAPDyKFooDUOPT9dP8HaW3YBO9PsX-1+96PPE7CRMyjEkra7cBQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-08-26 at 15:57 +0530, Bhaskar Upadhaya wrote:
-> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>
-> ---
->  .../devicetree/bindings/crypto/fsl-sec5.txt        | 153
-> +++++++++++++++++++++
->  1 file changed, 153 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/fsl-sec5.txt
+Hi,
+On 08/25/2016 02:27 AM, Ulf Hansson wrote:
+> + Jon
+>
+> [...]
+>
+>> +
+>> +static int ti_sci_pm_domains_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device *dev = &pdev->dev;
+>> +       struct device_node *np = dev->of_node;
+>> +       struct ti_sci_genpd_data *ti_sci_genpd;
+>> +
+>> +       ti_sci_genpd = devm_kzalloc(dev, sizeof(*ti_sci_genpd), GFP_KERNEL);
+>> +       if (!ti_sci_genpd)
+>> +               return -ENOMEM;
+>> +
+>> +       ti_sci_genpd->ti_sci = devm_ti_sci_get_handle(dev);
+>> +       if (IS_ERR(ti_sci_genpd->ti_sci))
+>> +               return PTR_ERR(ti_sci_genpd->ti_sci);
+>> +
+>> +       ti_sci_genpd->dev = dev;
+>> +
+>> +       INIT_LIST_HEAD(&ti_sci_genpd->pd_list);
+>> +       mutex_init(&ti_sci_genpd->pd_list_mutex);
+>> +
+>> +       return __of_genpd_add_provider(np, of_ti_sci_genpd_xlate_onecell,
+>> +                                      ti_sci_genpd);
+>
+> Jon Hunter are working on adding robust method to be able to remove
+> initialized genpds [1].
+>
+> In that series we intend to remove the __of_genpd_add_provider() API,
+> and instead only have of_genpd_add_provider_onecell() and
+> of_genpd_add_provider_simple(). Could you please convert to use any of
+> these APIs instead?
 
-Again, the subject should explain what you're adding, not why.  You're adding
-a sec5 binding, not an LS1012A binding.
+Thanks for pointing this out. I took at look at the series you've linked and the
+short answer is that I see no good way to directly convert what we've done to
+use those APIs.
 
-Why aren't the crypto maintainers/list CCed?
+On this platform each device has it's power state controlled through the SCI
+protocol described in the cover letter. The system makes a request for powering
+on or off the device using a unique ID number for each device, as provided in
+patches 1 and 2. These operations map to those of a genpd, so we decided to do a
+1:1 device to genpd mapping, where each device has it's own genpd.
 
-Why do we need a separate binding document for each SEC version?  What is
-different from the sec4 binding or the sec6 binding?  Especially given that
-the example claims compatibility with sec4?
+The split that we took from the provided simple and onecell xlate functions
+arises from this mapping. The IDs are not necessarily linear and also they are
+not necessarily defined in a fixed way for all SoCs, they are entirely data
+driven based on the provided device ID. To make use of these IDs, I created a
+new xlate function that takes a onecell value but instead dynamically allocates
+a new genpd, at probe time, to give us a genpd that contains the necessary SoC
+specific data for that device that probed and is mapped directly to the device.
+This lets us only create the genpds we need without having to redefine a static
+list of all possible genpds and duplicate the data.
 
-> diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec5.txt
-> b/Documentation/devicetree/bindings/crypto/fsl-sec5.txt
-> new file mode 100644
-> index 0000000..7bcaa6f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/crypto/fsl-sec5.txt
-> @@ -0,0 +1,153 @@
-> +SEC 5 is Freescale's Cryptographic Accelerator and Assurance Module (CAAM).
-> +Currently Freescale arm chip LS1012A is embedded with SEC 5.
-> +SEC 5 device tree binding include:
-> +   -SEC 5 Node
-> +   -Job Ring Node
-> +   -Full Example
-> +
-> +=====================================================================
-> +SEC 5 Node
-> +
-> +Description
-> +
-> +    Node defines the base address of the SEC 5 block.
-> +    This block specifies the address range of all global
-> +    configuration registers for the SEC 5 block.
-> +    For example, In LS1012A, we could see three SEC 5 node.
-> +
-> +PROPERTIES
-> +
-> +   - compatible
-> +      Usage: required
-> +      Value type: <string>
-> +      Definition: Must include "fsl,sec-v5.4".
+So my question back would be, how critical is it to be able to drop the ability
+to provide custom xlate functions?
 
-There was no v5.x prior to v5.4?
+Regards,
+Dave
 
-> +   - fsl,sec-era
-> +      Usage: optional
-> +      Value type: <u32>
-> +      Definition: A standard property. Define the 'ERA' of the SEC
-> +          device.
-
-This is not "a standard property".
-
-> +   - reg
-> +      Usage: required
-> +      Value type: <prop-encoded-array>
-> +      Definition: A standard property.  Specifies the physical
-> +          address and length of the SEC 5 configuration registers.
-
-Whether this property expresses the raw physical address depends on the ranges
-of the parent node.  Just say that there's one reg resource which is the SEC
-configuration registers.
-
-> +
-> +   - ranges
-> +       Usage: required
-> +       Value type: <prop-encoded-array>
-> +       Definition: A standard property.  Specifies the physical address
-> +           range of the SEC 5.0 register space (-SNVS not included).  A
-> +           triplet that includes the child address, parent address, &
-> +           length.
-
-Likewise with the talk about "physical address".  It's also not required that
-it contain such a triplet -- it could theoretically be an empty ranges
-property, or there could be multiple translations.  Bindings shouldn't try to
-(poorly) repeat the definition of standard properties.  They should specify
-information that is specific to this binding.
-
-The only thing worth mentioning here about ranges is if the driver will expect
-a particular translation independently of whether a child reg is using it.
-
-> +===================================================================
-> +Full Example
-> +
-> +Since some chips may contain more than one SEC, the dtsi contains
-> +only the node contents, not the node itself.  A chip using the SEC
-> +should include the dtsi inside each SEC node.  Example:
-
-Bindings generally describe what the OS expects to see, not the details of the
-dtsi structure.
-
-> +
-> +In fsl-ls1012a.dtsi:
-> +
-> +	compatible = "fsl,sec-v5.4";
-> +	fsl,sec-era = <8>;
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +
-> +	sec_jr0: jr@10000 {
-> +		compatible = "fsl,sec-v5.4-job-ring",
-> +			"fsl,sec-v5.0-job-ring",
-> +			"fsl,sec-v4.0-job-ring";
-> +			reg = <0x10000 0x10000>;
-> +			interrupts = <0 71 0x4>;
-> +	};
-> +	sec_jr1: jr@20000 {
-> +		compatible = "fsl,sec-v5.4-job-ring",
-> +			"fsl,sec-v5.0-job-ring",
-> +			"fsl,sec-v4.0-job-ring";
-> +			reg = <0x20000 0x10000>;
-> +			interrupts = <0 72 0x4>;
-> +	};
-> +	sec_jr2: jr@30000 {
-> +		compatible = "fsl,sec-v5.4-job-ring",
-> +			"fsl,sec-v5.0-job-ring",
-> +			"fsl,sec-v4.0-job-ring";
-> +			reg = <0x30000 0x10000>;
-> +			interrupts = <0 73 0x4>;
-> +	};
-> +	sec_jr3: jr@40000 {
-> +		compatible = "fsl,sec-v5.4-job-ring",
-> +			"fsl,sec-v5.0-job-ring",
-> +			"fsl,sec-v4.0-job-ring";
-> +			reg = <0x40000 0x10000>;
-> +			interrupts = <0 74 0x4>;
-> +	};
-
-This is terrible whitespace.
-
--Scott
+>
+> Kind regards
+> Uffe
+>
+> [1]
+> http://www.spinics.net/lists/arm-kernel/msg524151.html
+>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
