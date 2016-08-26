@@ -1,225 +1,473 @@
-From: David Herrmann <dh.herrmann@gmail.com>
-Subject: [RFC] drm: implement generic firmware eviction
-Date: Fri, 26 Aug 2016 02:00:56 +0200
-Message-ID: <20160826000056.12806-1-dh.herrmann@gmail.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 19/19] iommu/dma: Add support for mapping MSIs
+Date: Fri, 26 Aug 2016 02:17:36 +0100
+Message-ID: <20160826021736.571a732f@m750.lan>
+References: <cover.1471975357.git.robin.murphy@arm.com>
+	<4c901ff0f6355039de55b0bc0df283065f02efa1.1471975357.git.robin.murphy@arm.com>
+	<5d8d4ae0-846a-2499-eb46-6f215b87ebd4@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <5d8d4ae0-846a-2499-eb46-6f215b87ebd4-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, punit.agrawal-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, nd-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-UHJvdmlkZSBhIGdlbmVyaWMgRFJNIGhlbHBlciB0aGF0IGV2aWN0cyBhbGwgY29uZmxpY3Rpbmcg
-ZmlybXdhcmUKZnJhbWVidWZmZXJzLCBkZXZpY2VzLCBhbmQgZHJpdmVycy4gVGhlIG5ldyBoZWxw
-ZXIgaXMgY2FsbGVkCmRybV9ldmljdF9maXJtd2FyZSgpLCBhbmQgdGFrZXMgYSBmbGFnc2V0IGNv
-bnRyb2xsaW5nIHdoaWNoIGZpcm13YXJlIHRvCmtpY2sgb3V0LgoKVGhpcyBpcyBtZWFudCB0byBi
-ZSB1c2VkIGJ5IGRyaXZlcnMgaW4gdGhlaXIgLT5wcm9iZSgpIGNhbGxiYWNrcyBvZiB0aGVpcgpw
-YXJlbnQgYnVzLCBiZWZvcmUgY2FsbGluZyBpbnRvIGRybV9kZXZfcmVnaXN0ZXIoKS4KClNpZ25l
-ZC1vZmYtYnk6IERhdmlkIEhlcnJtYW5uIDxkaC5oZXJybWFubkBnbWFpbC5jb20+Ci0tLQpIZXkK
-ClRoaXMgaXMganVzdCBjb21waWxlLXRlc3RlZCBmb3Igbm93LiBJIGp1c3Qgd2FudCB0byBnZXQg
-c29tZSBjb21tZW50cyBvbiB0aGUKZGVzaWduLiBJIGRlY2lkZWQgdG8gZHJvcCB0aGUgc3lzZmIg
-aW5mcmFzdHJ1Y3R1cmUgYW5kIHJhdGhlciBqdXN0IHVzZSB0aGlzCmdlbmVyaWMgaGVscGVyLiBJ
-dCBrZWVwcyB0aGluZ3Mgc2ltcGxlIGFuZCBzaG91bGQgd29yayBqdXN0IGZpbmUgZm9yIGFsbApy
-ZWFzb25hYmxlIHVzZS1jYXNlcy4KClRoaXMgd2lsbCB3b3JrIHdpdGggU2ltcGxlRFJNIG91dC1v
-Zi10aGUtYm94IG9uIHg4Ni4KCkFyY2hpdGVjdHVyZXMgd2l0aCBkeW5hbWljIHNpbXBsZS1mcmFt
-ZWJ1ZmZlciBkZXZpY2VzIGFyZSBub3Qgc3VwcG9ydGVkIHlldC4gSQphY3R1YWxseSBoYXZlIG5v
-IGlkZWEgd2hhdCB0aGUgc3RyYXRlZ3kgdGhlcmUgaXM/IENhbiB0aGUgRGV2aWNlVHJlZSBwZW9w
-bGUgY29tZQp1cCB3aXRoIHNvbWV0aGluZz8gQW0gSSBzdXBwb3NlZCB0byBjYWxsIG9mX3BsYXRm
-b3JtX2RlcG9wdWxhdGUoKT8gT3IKb2ZfZGV0YWNoX25vZGUoKT8gT3Igd2hhdD8KTG9va2luZyBh
-dCBkcml2ZXJzL29mL3twbGF0Zm9ybSxkeW5hbWljfS5jLCBJIGNhbm5vdCBzZWUgaG93IHRoaXMg
-aXMgc3VwcG9zZWQgdG8Kd29yayBhdCBhbGwuIFdobyBwcm90ZWN0cyBwbGF0Zm9ybV9kZXZpY2Vf
-ZGVsKCkgZnJvbSBiZWluZyBjYWxsZWQgaW4gcGFyYWxsZWw/CkFsc286IERvZXMgYW55IHBsYXRm
-b3JtIG1ha2UgdXNlIHRoZSBvZiAnZGlzcGxheTonIGVudHJ5IGluICdzaW1wbGUtZnJhbWVidWZm
-ZXInCkRUIG5vZGVzPyBJZiB5ZXMsIGhvdyBkbyBJIGdldCBhY2Nlc3MgdG8gaXQ/IEFuZCB3aHkg
-ZG9uJ3QgdmM0L3N1bjRpIG1ha2UgdXNlIG9mCml0LCByYXRoZXIgdGhhbiBmYWxsaW5nIGJhY2sg
-dG8gcmVtb3ZlX2NvbmZsaWN0aW5nX2ZyYW1lYnVmZmVycygpPwoKVGhhbmtzCkRhdmlkCgogZHJp
-dmVycy9ncHUvZHJtL2RybV9kcnYuYyB8IDI1NyArKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrCiBpbmNsdWRlL2RybS9kcm1QLmggICAgICAgIHwgIDEzICsrKwog
-MiBmaWxlcyBjaGFuZ2VkLCAyNzAgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9kcm1fZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX2Rydi5jCmluZGV4IDA3NzM1
-NDcuLjU4MWMzNDIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fZHJ2LmMKKysrIGIv
-ZHJpdmVycy9ncHUvZHJtL2RybV9kcnYuYwpAQCAtMjYsMTIgKzI2LDE2IEBACiAgKiBERUFMSU5H
-UyBJTiBUSEUgU09GVFdBUkUuCiAgKi8KIAorI2luY2x1ZGUgPGxpbnV4L2NvbnNvbGUuaD4KICNp
-bmNsdWRlIDxsaW51eC9kZWJ1Z2ZzLmg+CisjaW5jbHVkZSA8bGludXgvZmIuaD4KICNpbmNsdWRl
-IDxsaW51eC9mcy5oPgogI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgogI2luY2x1ZGUgPGxpbnV4
-L21vZHVsZXBhcmFtLmg+CiAjaW5jbHVkZSA8bGludXgvbW91bnQuaD4KKyNpbmNsdWRlIDxsaW51
-eC9vZi5oPgogI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KKyNpbmNsdWRlIDxsaW51eC92dC5oPgog
-I2luY2x1ZGUgPGRybS9kcm1QLmg+CiAjaW5jbHVkZSAiZHJtX2NydGNfaW50ZXJuYWwuaCIKICNp
-bmNsdWRlICJkcm1fbGVnYWN5LmgiCkBAIC04ODEsNiArODg1LDI1OSBAQCB2b2lkIGRybV9kZXZf
-dW5yZWdpc3RlcihzdHJ1Y3QgZHJtX2RldmljZSAqZGV2KQogfQogRVhQT1JUX1NZTUJPTChkcm1f
-ZGV2X3VucmVnaXN0ZXIpOwogCitzdHJ1Y3QgZHJtX2V2aWN0X2N0eCB7CisJc3RydWN0IGFwZXJ0
-dXJlc19zdHJ1Y3QgKmFwOworCXVuc2lnbmVkIGludCBmbGFnczsKK307CisKK3N0YXRpYyBib29s
-IGRybV9ldmljdF9tYXRjaF9yZXNvdXJjZShzdHJ1Y3QgZHJtX2V2aWN0X2N0eCAqY3R4LAorCQkJ
-CSAgICAgc3RydWN0IHJlc291cmNlICptZW0pCit7CisJc3RydWN0IGFwZXJ0dXJlICpnOworCXVu
-c2lnbmVkIGludCBpOworCisJZm9yIChpID0gMDsgaSA8IGN0eC0+YXAtPmNvdW50OyArK2kpIHsK
-KwkJZyA9ICZjdHgtPmFwLT5yYW5nZXNbaV07CisKKwkJaWYgKG1lbS0+c3RhcnQgPT0gZy0+YmFz
-ZSkKKwkJCXJldHVybiB0cnVlOworCQlpZiAobWVtLT5zdGFydCA+PSBnLT5iYXNlICYmIG1lbS0+
-ZW5kIDwgZy0+YmFzZSArIGctPnNpemUpCisJCQlyZXR1cm4gdHJ1ZTsKKwkJaWYgKChjdHgtPmZs
-YWdzICYgRFJNX0VWSUNUX1ZCRSkgJiYgbWVtLT5zdGFydCA9PSAweEEwMDAwKQorCQkJcmV0dXJu
-IHRydWU7CisJfQorCisJcmV0dXJuIGZhbHNlOworfQorCitzdGF0aWMgaW50IGRybV9ldmljdF9w
-bGF0Zm9ybV9kZXZpY2Uoc3RydWN0IGRldmljZSAqZGV2LCB2b2lkICp1c2VyZGF0YSkKK3sKKwlz
-dHJ1Y3QgZHJtX2V2aWN0X2N0eCAqY3R4ID0gdXNlcmRhdGE7CisJc3RydWN0IHBsYXRmb3JtX2Rl
-dmljZSAqcGRldiA9IHRvX3BsYXRmb3JtX2RldmljZShkZXYpOworCXN0cnVjdCByZXNvdXJjZSAq
-bWVtOworCisJLyoKKwkgKiBXZSBhcmUgb25seSBpbnRlcmVzdGVkIGluIHN0YXRpYyBkZXZpY2Vz
-IGhlcmUgKGkuZS4sIHRoZXkgY2FycnkKKwkgKiBpbmZvcm1hdGlvbiB2aWEgYSBzdGF0aWNhbGx5
-IGFsbG9jYXRlZCBwbGF0Zm9ybSBkYXRhIGZpZWxkKS4gQW55CisJICogZHluYW1pY2FsbHkgYWxs
-b2NhdGVkIGRldmljZXMgaGF2ZSBzZXBhcmF0ZSBvd25lcnNoaXAgbW9kZWxzIGFuZAorCSAqIG11
-c3QgYmUgaGFuZGxlZCB2aWEgdGhlaXIgcmVzcGVjdGl2ZSBtYW5hZ2VtZW50IGNhbGxzLgorCSAq
-LworCWlmICghZGV2X2dldF9wbGF0ZGF0YSgmcGRldi0+ZGV2KSkKKwkJcmV0dXJuIDA7CisJaWYg
-KCFwZGV2LT5uYW1lKQorCQlyZXR1cm4gMDsKKworCWlmICghc3RyY21wKHBkZXYtPm5hbWUsICJz
-aW1wbGUtZnJhbWVidWZmZXIiKSkgeworCQltZW0gPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRl
-diwgSU9SRVNPVVJDRV9NRU0sIDApOworCQlpZiAoIW1lbSkKKwkJCXJldHVybiAwOworCQlpZiAo
-IWRybV9ldmljdF9tYXRjaF9yZXNvdXJjZShjdHgsIG1lbSkpCisJCQlyZXR1cm4gMDsKKworCQlw
-bGF0Zm9ybV9kZXZpY2VfZGVsKHBkZXYpOworCX0KKworCXJldHVybiAwOworfQorCitzdGF0aWMg
-aW50IGRybV9ldmljdF9wbGF0Zm9ybShzdHJ1Y3QgZHJtX2V2aWN0X2N0eCAqY3R4KQoreworCS8q
-CisJICogRWFybHktYm9vdCBhcmNoaXRlY3R1cmUgc2V0dXAgYW5kIGJvb3QtbG9hcmRlcnMgc29t
-ZXRpbWVzIGNyZWF0ZQorCSAqIHByZWxpbWluYXJ5IHBsYXRmb3JtIGRldmljZXMgd2l0aCBhIGdl
-bmVyaWMgZnJhbWVidWZmZXIgc2V0dXAuIFRoaXMKKwkgKiBhbGxvd3MgZ3JhcGhpY3MgYWNjZXNz
-IGR1cmluZyBib290LXVwLCB3aXRob3V0IGEgcmVhbCBncmFwaGljcworCSAqIGRyaXZlciBsb2Fk
-ZWQuIEhvd2V2ZXIsIG9uY2UgYSByZWFsIGdyYXBoaWNzIGRyaXZlciB0YWtlcyBvdmVyLCB3ZQor
-CSAqIGhhdmUgdG8gZGVzdHJveSB0aG9zZSBwbGF0Zm9ybSBkZXZpY2VzLiBJbiB0aGUgbGVnYWN5
-IGZiZGV2IGNhc2UsIHdlCisJICoganVzdCB1c2VkIHRvIHVubG9hZCB0aGUgZmJkZXYgZHJpdmVy
-LiBIb3dldmVyLCB0byBtYWtlIHN1cmUgYW55IGtpbmQKKwkgKiBvZiBkcml2ZXIgaXMgdW5sb2Fk
-ZWQsIHRoZSBwbGF0Zm9ybS1ldmljdGlvbiBjb2RlIGhlcmUgc2ltcGx5CisJICogcmVtb3ZlcyBh
-bnkgY29uZmxpY3RpbmcgcGxhdGZvcm0gZGV2aWNlIGRpcmVjdGx5LiBUaGlzIGNhdXNlcyBhbnkK
-KwkgKiBib3VuZCBkcml2ZXIgdG8gYmUgZGV0YWNoZWQsIGFuZCB0aGVuIHJlbW92ZXMgdGhlIGRl
-dmljZSBlbnRpcmVseSBzbworCSAqIGl0IGNhbm5vdCBiZSBib3VuZCB0byBsYXRlciBvbi4KKwkg
-KgorCSAqIFBsZWFzZSBub3RlIHRoYXQgYW55IHN1Y2ggcGxhdGZvcm0gZGV2aWNlIG11c3QgYmUg
-cmVnaXN0ZXJlZCBieQorCSAqIGVhcmx5IGFyY2hpdGVjdHVyZSBzZXR1cCBjb2RlLiBJZiB0aGV5
-IGFyZSByZWdpc3RlcmVkIGFmdGVyIHJlZ3VsYXIKKwkgKiBEUk0gZHJpdmVycywgdGhpcyB3aWxs
-IGZhaWwgaG9ycmlibHkuCisJICovCisKKwlzdGF0aWMgREVGSU5FX01VVEVYKGxvY2spOworCWlu
-dCByZXQ7CisKKwkvKgorCSAqIEluIGNhc2Ugb2Ygc3RhdGljIHBsYXRmb3JtLWRldmljZXMsIHdl
-IG11c3QgaXRlcmF0ZSB0aGUgYnVzIGFuZAorCSAqIHJlbW92ZSB0aGVtIG1hbnVhbGx5LiBXZSBr
-bm93IHRoYXQgd2UncmUgdGhlIG9ubHkgY29kZSB0aGF0IG1pZ2h0CisJICogcmVtb3ZlIHRoZW0s
-IHNvIGEgc2ltcGxlIHN0YXRpYyBsb2NrIHNlcmlhbGl6ZXMgYWxsIGNhbGxzIGhlcmUuIFdlCisJ
-ICogbXVzdCBtYWtlIHN1cmUgb3VyIGV2aWN0aW9uIGNhbGxiYWNrIGxlYXZlcyBhbnkgbm9uLXN0
-YXRpYyBwbGF0Zm9ybQorCSAqIGRldmljZXMgdW50b3VjaGVkLCB0aG91Z2guCisJICoKKwkgKiBY
-WFg6IEFSTSBhbmQgb3RoZXIgT0YgdXNlcnMgc2hvdWxkIHJlYWxseSBtYWtlIHN1cmUgdG8gYWRk
-IHRoZWlyIG93bgorCSAqICAgICAgZXZpY3Rpb24gY29kZSBoZXJlLCBwb3NzaWJseSB1c2luZyB0
-aGUgJ2Rpc3BsYXknIERULWhhbmRsZSBhcworCSAqICAgICAgZGVmaW5lZCBieSB0aGUgJ3NpbXBs
-ZS1mcmFtZWJ1ZmZlcicgT0Ytbm9kZS4KKwkgKi8KKwltdXRleF9sb2NrKCZsb2NrKTsKKwlyZXQg
-PSBidXNfZm9yX2VhY2hfZGV2KCZwbGF0Zm9ybV9idXNfdHlwZSwgTlVMTCwgY3R4LAorCQkJICAg
-ICAgIGRybV9ldmljdF9wbGF0Zm9ybV9kZXZpY2UpOworCW11dGV4X3VubG9jaygmbG9jayk7CisJ
-cmV0dXJuIHJldDsKK30KKworc3RhdGljIGludCBkcm1fZXZpY3RfZmJkZXYoc3RydWN0IGRybV9l
-dmljdF9jdHggKmN0eCkKK3sKKwkvKgorCSAqIFdlIGhhdmUgMiBkaWZmZXJlbnQgY2FzZXMgd2hl
-cmUgZmJkZXYgZHJpdmVycyBjYW4gb3BlcmF0ZSBvbiB0aGUKKwkgKiBzYW1lIGRldmljZXMgYXMg
-RFJNIGRyaXZlcnM6CisJICoKKwkgKiAgIG8gVHdvIGRyaXZlcnMgZXhpc3QgZm9yIHRoZSBzYW1l
-IGRldmljZSwgb25lIERSTSBkcml2ZXIgYW5kIG9uZQorCSAqICAgICBmYmRldiBkcml2ZXIgKGUu
-Zy4sIG52aWRpYWZiIGFuZCBub3V2ZWF1KS4gSW4gdGhvc2UgY2FzZXMsIGJvdGgKKwkgKiAgICAg
-ZHJpdmVycyBiaW5kIHRvIHRoZSBzYW1lIHJlYWwgaHctZGV2aWNlIGFuZCBkcml2ZXIgY29yZSB0
-YWtlcworCSAqICAgICBjYXJlIG9mIGFueSBjb25mbGljdHMuCisJICoKKwkgKiAgIG8gQSBnZW5l
-cmljIGZiZGV2IGRyaXZlciB1c2VzIHNvbWUgcHNldWRvLWRldmljZSB0byBwcm92aWRlCisJICog
-ICAgIGVhcmx5LWJvb3QgZ3JhcGhpY3MgYWNjZXNzIG9yIHNvbWUgb3RoZXIga2luZCBvZiBnZW5l
-cmljIGRpc3BsYXkKKwkgKiAgICAgZHJpdmVyLiBBdCB0aGUgc2FtZSB0aW1lLCBhIERSTSBkcml2
-ZXIgZXhpc3RzIHRoYXQgY2FuIHJ1biB0aGUKKwkgKiAgICAgcmVhbCBoYXJkd2FyZSAoZS5nLiwg
-dmVzYWZiL2VmaWZiIGFuZCBpOTE1KS4KKwkgKgorCSAqIElmIHBvc3NpYmxlLCBkcml2ZXIgY29y
-ZSB0YWtlcyBjYXJlIG9mIGFueSBjb25mbGljdHMgYW5kIHByZXZlbnRzCisJICogdHdvIGRyaXZl
-cnMgZnJvbSBiZWluZyBib3VuZCB0byB0aGUgc2FtZSBkZXZpY2UuIEhvd2V2ZXIsIGluIHNvbWUK
-KwkgKiBjYXNlcyB0aGlzIGlzIG5vdCBwb3NzaWJsZS4gV2UgdGhlbiB1c2UKKwkgKiByZW1vdmVf
-Y29uZmxpY3RpbmdfZnJhbWVidWZmZXJzKCkgdG8gbWF0Y2ggdGhlIGFwZXJ0dXJlcyBvZiB0aGUg
-RFJNCisJICogZGV2aWNlIGFnYWluc3QgYWxsIGV4aXN0aW5nIGZiZGV2IGRldmljZXMsIGV2aWN0
-aW5nIGFueSBjb25mbGljdGluZworCSAqIGZiZGV2IGRyaXZlcnMuIEFkZGl0aW9uYWxseSwgaWYg
-cmVxdWVzdGVkLCBhbnkgVkJFIGRyaXZlciBpcyBldmljdGVkCisJICogYXMgd2VsbC4KKwkgKgor
-CSAqIE5vdGUgdGhhdCB0aGlzIGJyZWFrcyBob3JyaWJseSBpZiBhbiBmYmRldiBkcml2ZXIgaXMg
-cHJvYmVkIGFmdGVyIGEKKwkgKiBEUk0gZHJpdmVyLiBTbyBtYWtlIHN1cmUgd2hlbmV2ZXIgc3Vj
-aCBjb25mbGljdHMgYXJlIHBvc3NpYmxlLCB0aGUKKwkgKiBmYmRldiBkcml2ZXJzIG11c3QgYmUg
-cHJvYmVkIGluIGVhcmx5IGJvb3QuIElmIHlvdSBjYW5ub3QgZ3VhcmFudGVlCisJICogdGhhdCwg
-eW91IGJldHRlciBtYWtlIHN1cmUgdGhhdCB0aGUgZHJpdmVyIGNvcmUgcHJldmVudHMgYm90aAor
-CSAqIGRyaXZlcnMgZnJvbSBiZWluZyBwcm9iZWQgaW4gcGFyYWxsZWwuCisJICovCisKKyNpZiAh
-ZGVmaW5lZChDT05GSUdfRkIpCisJcmV0dXJuIDA7CisjZWxzZQorCXJldHVybiByZW1vdmVfY29u
-ZmxpY3RpbmdfZnJhbWVidWZmZXJzKGN0eC0+YXAsICJkcm0iLAorCQkJCQkgICAgICAgISEoY3R4
-LT5mbGFncyAmIERSTV9FVklDVF9WQkUpKTsKKyNlbmRpZgorfQorCitzdGF0aWMgaW50IGRybV9l
-dmljdF92Z2Fjb24odm9pZCkKK3sKKwkvKgorCSAqIFRoZSBWR0FDT04gY29uc29sZSBkcml2ZXIg
-cG9rZXMgYXQgVkdBIHJlZ2lzdGVycyByYW5kb21seS4gSWYgYSBEUk0KKwkgKiBkcml2ZXIgY2Fu
-bm90IGtlZXAgdGhlIFZHQSBzdXBwb3J0IGFsaXZlLCBpdCBiZXR0ZXIgbWFrZXMgc3VyZSB0bwor
-CSAqIHVubG9hZCBWR0FDT04gYmVmb3JlIHByb2JpbmcuCisJICoKKwkgKiBVbmxvYWRpbmcgVkdB
-Q09OIHJlcXVpcmVzIHVzIHRvIGZpcnN0IGZvcmNlIGR1bW15Y29uIHRvIHRha2Ugb3ZlcgorCSAq
-IGZyb20gdmdhY29uIChidXQgb25seSBpZiB2Z2Fjb24gaXMgcmVhbGx5IGluIHVzZSksIGZvbGxv
-d2VkIGJ5IGEKKwkgKiBkZXJlZ2lzdHJhdGlvbiBvZiB2Z2Fjb24uIE5vdGUgdGhhdCB0aGlzIHBy
-ZXZlbnRzIHZnYWNvbiBmcm9tIGJlaW5nCisJICogdXNlZCBhZ2FpbiBhZnRlciB0aGUgRFJNIGRy
-aXZlciBpcyB1bmxvYWRlZC4gQnV0IHRoYXQgaXMgdXN1YWxseQorCSAqIGZpbmUsIHNpbmNlIFZH
-QSBzdGF0ZSBpcyByYXJlbHkgcmVzdG9yZWQgb24gZHJpdmVyLXVubG9hZCwgYW55d2F5LgorCSAq
-CisJICogTm90ZSB0aGF0IHdlIHJlbHkgb24gVkdBQ09OIHRvIGJlIHByb2JlZCBpbiBlYXJseSBi
-b290IChhY3R1YWxseQorCSAqIGRvbmUgYnkgQVJDSCBzZXR1cCBjb2RlKS4gSWYgaXQgaXMgcHJv
-YmVkIGFmdGVyIERSTSBkcml2ZXJzLCB0aGlzCisJICogd2lsbCBmYWlsIGhvcnJpYmx5LiBZb3Ug
-YmV0dGVyIG1ha2Ugc3VyZSBWR0FDT04gaXMgcHJvYmVkIGVhcmx5IGFuZAorCSAqIERSTSBkcml2
-ZXJzIGFyZSBwcm9iZWQgYXMgbm9ybWFsIG1vZHVsZXMuCisJICovCisKKyNpZiAhZGVmaW5lZChD
-T05GSUdfVkdBX0NPTlNPTEUpCisJcmV0dXJuIDA7CisjZWxpZiAhZGVmaW5lZChDT05GSUdfRFVN
-TVlfQ09OU09MRSkKKyMJd2FybmluZyAiRHVtbXkgY29uc29sZSBpcyBkaXNhYmxlZCwgYnV0IHJl
-cXVpcmVkIHRvIGtpY2sgb3V0IFZHQUNPTiIKKwlyZXR1cm4gLUVOT0RFVjsKKyNlbHNlCisJaW50
-IHJldCA9IDA7CisKKwlEUk1fSU5GTygiUmVwbGFjaW5nIFZHQSBjb25zb2xlIGRyaXZlclxuIik7
-CisKKwljb25zb2xlX2xvY2soKTsKKwlpZiAoY29uX2lzX2JvdW5kKCZ2Z2FfY29uKSkKKwkJcmV0
-ID0gZG9fdGFrZV9vdmVyX2NvbnNvbGUoJmR1bW15X2NvbiwgMCwKKwkJCQkJICAgTUFYX05SX0NP
-TlNPTEVTIC0gMSwgMSk7CisJaWYgKHJldCA9PSAwKSB7CisJCXJldCA9IGRvX3VucmVnaXN0ZXJf
-Y29uX2RyaXZlcigmdmdhX2Nvbik7CisJCWlmIChyZXQgPT0gLUVOT0RFVikgLyogaWdub3JlICJh
-bHJlYWR5IHVucmVnaXN0ZXJlZCIgKi8KKwkJCXJldCA9IDA7CisJfQorCWNvbnNvbGVfdW5sb2Nr
-KCk7CisKKwlyZXR1cm4gcmV0OworI2VuZGlmCit9CisKKy8qKgorICogZHJtX2V2aWN0X2Zpcm13
-YXJlIC0gcmVtb3ZlIGFueSBjb25mbGljdGluZyBmaXJtd2FyZS1mcmFtZWJ1ZmZlcnMKKyAqIEBh
-cDoJCQlhcGVydHVyZXMgY2xhaW1lZCBieSBkcml2ZXIsIG9yIE5VTEwKKyAqIEBmbGFnczoJCWV2
-aWN0aW9uIGZsYWdzCisgKgorICogVGhpcyBmdW5jdGlvbiBldmljdHMgYW55IGNvbmZsaWN0aW5n
-IGZpcm13YXJlLWZyYW1lYnVmZmVycyBhbmQgdGhlaXIgYm91bmQKKyAqIGRyaXZlcnMsIGFjY29y
-ZGluZyB0byB0aGUgZGF0YSBnaXZlbiBhcyBAYXAgYW5kIEBmbGFncy4KKyAqCisgKiBEZXBlbmRp
-bmcgb24gQGZsYWdzLCB0aGUgZm9sbG93aW5nIG9wZXJhdGlvbnMgYXJlIHBlcmZvcm1lZDoKKyAq
-CisgKiAgIERSTV9FVklDVF9GQkRFVjogQW55IGZiZGV2IGRyaXZlcnMgdGhhdCBvdmVybGFwIEBh
-cCBhcmUgdW5sb2FkZWQuCisgKiAgICAgICAgICAgICAgICAgICAgRnVydGhlcm1vcmUsIGlmIERS
-TV9FVklDVF9WQkUgaXMgZ2l2ZW4gYXMgd2VsbCwgYW55IGZiZGV2CisgKiAgICAgICAgICAgICAg
-ICAgICAgZHJpdmVyIHRoYXQgbWFwcyB0aGUgVkdBIHJlZ2lvbiBpcyB1bmxvYWRlZC4KKyAqCisg
-KiAgIERSTV9FVklDVF9QTEFURk9STTogRmlybXdhcmUgZnJhbWVidWZmZXIgcGxhdGZvcm0gZGV2
-aWNlcyAoZWcuLAorICogICAgICAgICAgICAgICAgICAgICAgICdzaW1wbGUtZnJhbWVidWZmZXIn
-KSB0aGF0IG92ZXJsYXAgQGFwIGFyZSByZW1vdmVkCisgKiAgICAgICAgICAgICAgICAgICAgICAg
-ZnJvbSB0aGUgc3lzdGVtLCBjYXVzaW5nIGRyaXZlcnMgdG8gYmUgdW5ib3VuZC4KKyAqICAgICAg
-ICAgICAgICAgICAgICAgICBJZiBEUk1fRVZJQ1RfVkJFIGlzIGdpdmVuLCB0aGlzIGFsc28gYWZm
-ZWN0cyBkZXZpY2VzCisgKiAgICAgICAgICAgICAgICAgICAgICAgdGhhdCBtYXAgdGhlIFZHQSBy
-ZWdpb24uCisgKgorICogICBEUk1fRVZJQ1RfVkdBQ09OOiBUaGUgdmdhY29uIGNvbnNvbGUgZHJp
-dmVyIGlzIHVuYm91bmQgYW5kIHVucmVnaXN0ZXJlZC4KKyAqCisgKiBUaGUgY2FsbGVyIG11c3Qg
-cHJvdmlkZSB0aGVpciBhcGVydHVyZXMgYXMgQGFwLiBJZiBpdCBpcyBOVUxMLCBhbiBlbXB0eSBz
-ZXQKKyAqIGlzIGFzc3VtZWQsIGV4Y2VwdCBpZiBEUk1fRVZJQ1RfQU5ZV0hFUkUgaXMgZ2l2ZW4s
-IGluIHdoaWNoIGNhc2UgYSBmYWtlCisgKiBhcGVydHVyZSBhY3Jvc3MgdGhlIGVudGlyZSBhZGRy
-ZXNzIHJhbmdlIGlzIHVzZWQuCisgKgorICogUkVUVVJOUzoKKyAqIDAgb24gc3VjY2VzcywgbmVn
-YXRpdmUgZXJyb3IgY29kZSBvbiBmYWlsdXJlLgorICovCitpbnQgZHJtX2V2aWN0X2Zpcm13YXJl
-KHN0cnVjdCBhcGVydHVyZXNfc3RydWN0ICphcCwgdW5zaWduZWQgaW50IGZsYWdzKQoreworCXN0
-cnVjdCBkcm1fZXZpY3RfY3R4IGN0eDsKKwlzdHJ1Y3QgYXBlcnR1cmVzX3N0cnVjdCAqYWxsb2Nh
-dGVkX2FwID0gTlVMTDsKKwlpbnQgcmV0OworCisJV0FSTl9PTihhcCAmJiAoZmxhZ3MgJiBEUk1f
-RVZJQ1RfQU5ZV0hFUkUpKTsKKworCWlmICghYXApIHsKKwkJYWxsb2NhdGVkX2FwID0gYWxsb2Nf
-YXBlcnR1cmVzKCEhKGZsYWdzICYgRFJNX0VWSUNUX0FOWVdIRVJFKSk7CisJCWlmICghYWxsb2Nh
-dGVkX2FwKQorCQkJcmV0dXJuIC1FTk9NRU07CisKKwkJYXAgPSBhbGxvY2F0ZWRfYXA7CisKKwkJ
-aWYgKGZsYWdzICYgRFJNX0VWSUNUX0FOWVdIRVJFKSB7CisJCQlhcC0+cmFuZ2VzWzBdLmJhc2Ug
-PSAwOworCQkJYXAtPnJhbmdlc1swXS5zaXplID0gfjA7CisJCX0KKwl9CisKKwljdHguYXAgPSBh
-cDsKKwljdHguZmxhZ3MgPSBmbGFnczsKKworCWlmIChmbGFncyAmIERSTV9FVklDVF9QTEFURk9S
-TSkgeworCQlyZXQgPSBkcm1fZXZpY3RfcGxhdGZvcm0oJmN0eCk7CisJCWlmIChyZXQgPCAwKQor
-CQkJcmV0dXJuIHJldDsKKwl9CisKKwlpZiAoZmxhZ3MgJiBEUk1fRVZJQ1RfRkJERVYpIHsKKwkJ
-cmV0ID0gZHJtX2V2aWN0X2ZiZGV2KCZjdHgpOworCQlpZiAocmV0IDwgMCkKKwkJCXJldHVybiBy
-ZXQ7CisJfQorCisJaWYgKGZsYWdzICYgRFJNX0VWSUNUX1ZHQUNPTikgeworCQlyZXQgPSBkcm1f
-ZXZpY3RfdmdhY29uKCk7CisJCWlmIChyZXQgPCAwKQorCQkJcmV0dXJuIHJldDsKKwl9CisKKwlr
-ZnJlZShhbGxvY2F0ZWRfYXApOworCXJldHVybiAwOworfQorCiAvKgogICogRFJNIENvcmUKICAq
-IFRoZSBEUk0gY29yZSBtb2R1bGUgaW5pdGlhbGl6ZXMgYWxsIGdsb2JhbCBEUk0gb2JqZWN0cyBh
-bmQgbWFrZXMgdGhlbQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kcm0vZHJtUC5oIGIvaW5jbHVkZS9k
-cm0vZHJtUC5oCmluZGV4IDIxOTdhYjEuLjZjOGJjZjUgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvZHJt
-L2RybVAuaAorKysgYi9pbmNsdWRlL2RybS9kcm1QLmgKQEAgLTg4LDYgKzg4LDcgQEAgc3RydWN0
-IGRybV9nZW1fb2JqZWN0Owogc3RydWN0IGRybV9tYXN0ZXI7CiBzdHJ1Y3QgZHJtX3ZibGFua19j
-cnRjOwogCitzdHJ1Y3QgYXBlcnR1cmVzX3N0cnVjdDsKIHN0cnVjdCBkZXZpY2Vfbm9kZTsKIHN0
-cnVjdCB2aWRlb21vZGU7CiBzdHJ1Y3QgcmVzZXJ2YXRpb25fb2JqZWN0OwpAQCAtOTcxLDYgKzk3
-MiwxOCBAQCB2b2lkIGRybV9kZXZfdW5yZWYoc3RydWN0IGRybV9kZXZpY2UgKmRldik7CiBpbnQg
-ZHJtX2Rldl9yZWdpc3RlcihzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LCB1bnNpZ25lZCBsb25nIGZs
-YWdzKTsKIHZvaWQgZHJtX2Rldl91bnJlZ2lzdGVyKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYpOwog
-CitlbnVtIHsKKwlEUk1fRVZJQ1RfRkJERVYJCQkJPSAoMVUgPDwgIDApLAorCURSTV9FVklDVF9Q
-TEFURk9STQkJCT0gKDFVIDw8ICAxKSwKKwlEUk1fRVZJQ1RfVkdBQ09OCQkJPSAoMVUgPDwgIDIp
-LAorCURSTV9FVklDVF9WQkUJCQkJPSAoMVUgPDwgIDMpLAorCURSTV9FVklDVF9BTllXSEVSRQkJ
-CT0gKDFVIDw8ICA0KSwKKworCURSTV9FVklDVF9ERUZBVUxUID0gRFJNX0VWSUNUX0ZCREVWLAor
-fTsKKworaW50IGRybV9ldmljdF9maXJtd2FyZShzdHJ1Y3QgYXBlcnR1cmVzX3N0cnVjdCAqYXAs
-IHVuc2lnbmVkIGludCBmbGFncyk7CisKIHN0cnVjdCBkcm1fbWlub3IgKmRybV9taW5vcl9hY3F1
-aXJlKHVuc2lnbmVkIGludCBtaW5vcl9pZCk7CiB2b2lkIGRybV9taW5vcl9yZWxlYXNlKHN0cnVj
-dCBkcm1fbWlub3IgKm1pbm9yKTsKIAotLSAKMi45LjMKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Eric,
+
+On Fri, 26 Aug 2016 00:25:34 +0200
+Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+
+> Hi Robin,
+> 
+> On 23/08/2016 21:05, Robin Murphy wrote:
+> > When an MSI doorbell is located downstream of an IOMMU, attaching
+> > devices to a DMA ops domain and switching on translation leads to a
+> > rude shock when their attempt to write to the physical address
+> > returned by the irqchip driver faults (or worse, writes into some
+> > already-mapped buffer) and no interrupt is forthcoming.
+> > 
+> > Address this by adding a hook for relevant irqchip drivers to call
+> > from their compose_msi_msg() callback, to swizzle the physical
+> > address with an appropriatly-mapped IOVA for any device attached to
+> > one of our DMA ops domains.
+> > 
+> > CC: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> > CC: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> > CC: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> > CC: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >  drivers/iommu/dma-iommu.c        | 141
+> > ++++++++++++++++++++++++++++++++++-----
+> > drivers/irqchip/irq-gic-v2m.c    |   3 +
+> > drivers/irqchip/irq-gic-v3-its.c |   3 +
+> > include/linux/dma-iommu.h        |   9 +++ 4 files changed, 141
+> > insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> > index 00c8a08d56e7..330cce60cad9 100644
+> > --- a/drivers/iommu/dma-iommu.c
+> > +++ b/drivers/iommu/dma-iommu.c
+> > @@ -25,10 +25,29 @@
+> >  #include <linux/huge_mm.h>
+> >  #include <linux/iommu.h>
+> >  #include <linux/iova.h>
+> > +#include <linux/irq.h>
+> >  #include <linux/mm.h>
+> >  #include <linux/scatterlist.h>
+> >  #include <linux/vmalloc.h>
+> >  
+> > +struct iommu_dma_msi_page {
+> > +	struct list_head	list;
+> > +	dma_addr_t		iova;
+> > +	u32			phys_lo;
+> > +	u32			phys_hi;
+> > +};
+> > +
+> > +struct iommu_dma_cookie {
+> > +	struct iova_domain	iovad;
+> > +	struct list_head	msi_page_list;
+> > +	spinlock_t		msi_lock;
+> > +};
+> > +
+> > +static inline struct iova_domain *cookie_iovad(struct iommu_domain
+> > *domain) +{
+> > +	return &((struct iommu_dma_cookie
+> > *)domain->iova_cookie)->iovad; +}
+> > +
+> >  int iommu_dma_init(void)
+> >  {
+> >  	return iova_cache_get();
+> > @@ -43,15 +62,19 @@ int iommu_dma_init(void)
+> >   */
+> >  int iommu_get_dma_cookie(struct iommu_domain *domain)
+> >  {
+> > -	struct iova_domain *iovad;
+> > +	struct iommu_dma_cookie *cookie;
+> >  
+> >  	if (domain->iova_cookie)
+> >  		return -EEXIST;
+> >  
+> > -	iovad = kzalloc(sizeof(*iovad), GFP_KERNEL);
+> > -	domain->iova_cookie = iovad;
+> > +	cookie = kzalloc(sizeof(*cookie), GFP_KERNEL);
+> > +	if (!cookie)
+> > +		return -ENOMEM;
+> >  
+> > -	return iovad ? 0 : -ENOMEM;
+> > +	spin_lock_init(&cookie->msi_lock);
+> > +	INIT_LIST_HEAD(&cookie->msi_page_list);
+> > +	domain->iova_cookie = cookie;
+> > +	return 0;
+> >  }
+> >  EXPORT_SYMBOL(iommu_get_dma_cookie);
+> >  
+> > @@ -63,14 +86,20 @@ EXPORT_SYMBOL(iommu_get_dma_cookie);
+> >   */
+> >  void iommu_put_dma_cookie(struct iommu_domain *domain)
+> >  {
+> > -	struct iova_domain *iovad = domain->iova_cookie;
+> > +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+> > +	struct iommu_dma_msi_page *msi, *tmp;
+> >  
+> > -	if (!iovad)
+> > +	if (!cookie)
+> >  		return;
+> >  
+> > -	if (iovad->granule)
+> > -		put_iova_domain(iovad);
+> > -	kfree(iovad);
+> > +	if (cookie->iovad.granule)
+> > +		put_iova_domain(&cookie->iovad);
+> > +
+> > +	list_for_each_entry_safe(msi, tmp, &cookie->msi_page_list,
+> > list) {
+> > +		list_del(&msi->list);
+> > +		kfree(msi);
+> > +	}
+> > +	kfree(cookie);
+> >  	domain->iova_cookie = NULL;
+> >  }
+> >  EXPORT_SYMBOL(iommu_put_dma_cookie);
+> > @@ -88,7 +117,7 @@ EXPORT_SYMBOL(iommu_put_dma_cookie);
+> >   */
+> >  int iommu_dma_init_domain(struct iommu_domain *domain, dma_addr_t
+> > base, u64 size) {
+> > -	struct iova_domain *iovad = domain->iova_cookie;
+> > +	struct iova_domain *iovad = cookie_iovad(domain);
+> >  	unsigned long order, base_pfn, end_pfn;
+> >  
+> >  	if (!iovad)
+> > @@ -155,7 +184,7 @@ int dma_direction_to_prot(enum
+> > dma_data_direction dir, bool coherent) static struct iova
+> > *__alloc_iova(struct iommu_domain *domain, size_t size, dma_addr_t
+> > dma_limit) {
+> > -	struct iova_domain *iovad = domain->iova_cookie;
+> > +	struct iova_domain *iovad = cookie_iovad(domain);
+> >  	unsigned long shift = iova_shift(iovad);
+> >  	unsigned long length = iova_align(iovad, size) >> shift;
+> >  
+> > @@ -171,7 +200,7 @@ static struct iova *__alloc_iova(struct
+> > iommu_domain *domain, size_t size, /* The IOVA allocator knows what
+> > we mapped, so just unmap whatever that was */ static void
+> > __iommu_dma_unmap(struct iommu_domain *domain, dma_addr_t dma_addr)
+> > {
+> > -	struct iova_domain *iovad = domain->iova_cookie;
+> > +	struct iova_domain *iovad = cookie_iovad(domain);
+> >  	unsigned long shift = iova_shift(iovad);
+> >  	unsigned long pfn = dma_addr >> shift;
+> >  	struct iova *iova = find_iova(iovad, pfn);
+> > @@ -294,7 +323,7 @@ struct page **iommu_dma_alloc(struct device
+> > *dev, size_t size, gfp_t gfp, void (*flush_page)(struct device *,
+> > const void *, phys_addr_t)) {
+> >  	struct iommu_domain *domain =
+> > iommu_get_domain_for_dev(dev);
+> > -	struct iova_domain *iovad = domain->iova_cookie;
+> > +	struct iova_domain *iovad = cookie_iovad(domain);
+> >  	struct iova *iova;
+> >  	struct page **pages;
+> >  	struct sg_table sgt;
+> > @@ -386,7 +415,7 @@ dma_addr_t iommu_dma_map_page(struct device
+> > *dev, struct page *page, {
+> >  	dma_addr_t dma_addr;
+> >  	struct iommu_domain *domain =
+> > iommu_get_domain_for_dev(dev);
+> > -	struct iova_domain *iovad = domain->iova_cookie;
+> > +	struct iova_domain *iovad = cookie_iovad(domain);
+> >  	phys_addr_t phys = page_to_phys(page) + offset;
+> >  	size_t iova_off = iova_offset(iovad, phys);
+> >  	size_t len = iova_align(iovad, size + iova_off);
+> > @@ -495,7 +524,7 @@ int iommu_dma_map_sg(struct device *dev, struct
+> > scatterlist *sg, int nents, int prot)
+> >  {
+> >  	struct iommu_domain *domain =
+> > iommu_get_domain_for_dev(dev);
+> > -	struct iova_domain *iovad = domain->iova_cookie;
+> > +	struct iova_domain *iovad = cookie_iovad(domain);
+> >  	struct iova *iova;
+> >  	struct scatterlist *s, *prev = NULL;
+> >  	dma_addr_t dma_addr;
+> > @@ -587,3 +616,85 @@ int iommu_dma_mapping_error(struct device
+> > *dev, dma_addr_t dma_addr) {
+> >  	return dma_addr == DMA_ERROR_CODE;
+> >  }
+> > +
+> > +static int __iommu_dma_map_msi_page(struct device *dev, struct
+> > msi_msg *msg,
+> > +		struct iommu_domain *domain, struct
+> > iommu_dma_msi_page **ppage) +{
+> > +	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+> > +	struct iommu_dma_msi_page *msi_page;
+> > +	struct iova_domain *iovad = &cookie->iovad;
+> > +	struct iova *iova;
+> > +	phys_addr_t msi_addr = (u64)msg->address_hi << 32 |
+> > msg->address_lo;
+> > +	int ret, prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;  
+> In my series I ended up putting the memory attributes as a property of
+> the doorbell, advised to do so by Marc. Here we hard freeze them. Do
+> you foresee all the doorbells ill have the same attributes?
+
+I can't think of any good reason any device would want to read from an
+ITS or GICv2m doorbell, execute it, or allow the interconnect to reorder
+or cache its MSI writes. If some crazy hardware comes along to prove my
+assumption wrong then we'll revisit it, but right now I just want the
+simplest possible solution for PCI DMA ops to not break MSIs.
+
+> > +
+> > +	msi_page = kzalloc(sizeof(*msi_page), GFP_ATOMIC);
+> > +	if (!msi_page)
+> > +		return -ENOMEM;
+> > +
+> > +	iova = __alloc_iova(domain, iovad->granule,
+> > dma_get_mask(dev));
+> > +	if (!iova) {
+> > +		ret = -ENOSPC;
+> > +		goto out_free_page;
+> > +	}
+> > +
+> > +	msi_page->iova = iova_dma_addr(iovad, iova);
+> > +	ret = iommu_map(domain, msi_page->iova, msi_addr &
+> > ~iova_mask(iovad),
+> > +			iovad->granule, prot);
+> > +	if (ret)
+> > +		goto out_free_iova;
+> > +
+> > +	msi_page->phys_hi = msg->address_hi;
+> > +	msi_page->phys_lo = msg->address_lo;
+> > +	INIT_LIST_HEAD(&msi_page->list);
+> > +	list_add(&msi_page->list, &cookie->msi_page_list);
+> > +	*ppage = msi_page;
+> > +	return 0;
+> > +
+> > +out_free_iova:
+> > +	__free_iova(iovad, iova);
+> > +out_free_page:
+> > +	kfree(msi_page);
+> > +	return ret;
+> > +}
+> > +
+> > +void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg)  
+> Marc told in the past it was reasonable to consider adding a size
+> parameter to the allocate function. Obviously you don't have the same
+> concern as I had in the passthrough series where the window aperture
+> is set by the userspace but well that is just for checking.
+
+The beauty is that at this level we really don't care. It's simply
+"here's an address from the irqchip driver, is there a mapping in this
+domain which covers it?" The only possible use of knowing a size
+here would be if it happens to correspond to a larger page size we
+could use for the mapping, but that would entail a bunch of complication
+for what seems like a highly tenuous benefit, and right now I just want
+the simplest possible solution for PCI DMA ops to not break MSIs.
+
+> 
+> > +{
+> > +	struct device *dev =
+> > msi_desc_to_dev(irq_get_msi_desc(irq));
+> > +	struct iommu_domain *domain =
+> > iommu_get_domain_for_dev(dev);
+> > +	struct iova_domain *iovad;
+> > +	struct iommu_dma_cookie *cookie;
+> > +	struct iommu_dma_msi_page *msi_page;
+> > +	int ret = 0;
+> > +
+> > +	if (!domain || !domain->iova_cookie)
+> > +		return;
+> > +
+> > +	cookie = domain->iova_cookie;
+> > +	iovad = &cookie->iovad;
+> > +
+> > +	spin_lock(&cookie->msi_lock);
+> > +	list_for_each_entry(msi_page, &cookie->msi_page_list, list)
+> > +		if (msi_page->phys_hi == msg->address_hi &&
+> > +		    msi_page->phys_lo - msg->address_lo <
+> > iovad->granule)
+> > +			goto unlock;
+> > +
+> > +	ret = __iommu_dma_map_msi_page(dev, msg, domain,
+> > &msi_page); +unlock:
+> > +	spin_unlock(&cookie->msi_lock);
+> > +
+> > +	if (!ret) {
+> > +		msg->address_hi = upper_32_bits(msi_page->iova);
+> > +		msg->address_lo &= iova_mask(iovad);
+> > +		msg->address_lo += lower_32_bits(msi_page->iova);
+> > +	} else {
+> > +		/*
+> > +		 * We're called from a void callback, so the best
+> > we can do is
+> > +		 * 'fail' by filling the message with obviously
+> > bogus values.
+> > +		 * Since we got this far due to an IOMMU being
+> > present, it's
+> > +		 * not like the existing address would have worked
+> > anyway...
+> > +		 */
+> > +		msg->address_hi = ~0U;
+> > +		msg->address_lo = ~0U;
+> > +		msg->data = ~0U;
+> > +	}
+> > +}
+> > diff --git a/drivers/irqchip/irq-gic-v2m.c
+> > b/drivers/irqchip/irq-gic-v2m.c index 35eb7ac5d21f..863e073c6f7f
+> > 100644 --- a/drivers/irqchip/irq-gic-v2m.c
+> > +++ b/drivers/irqchip/irq-gic-v2m.c
+> > @@ -16,6 +16,7 @@
+> >  #define pr_fmt(fmt) "GICv2m: " fmt
+> >  
+> >  #include <linux/acpi.h>
+> > +#include <linux/dma-iommu.h>
+> >  #include <linux/irq.h>
+> >  #include <linux/irqdomain.h>
+> >  #include <linux/kernel.h>
+> > @@ -108,6 +109,8 @@ static void gicv2m_compose_msi_msg(struct
+> > irq_data *data, struct msi_msg *msg) 
+> >  	if (v2m->flags & GICV2M_NEEDS_SPI_OFFSET)
+> >  		msg->data -= v2m->spi_offset;
+> > +
+> > +	iommu_dma_map_msi_msg(data->irq, msg);  
+> In the past we identified that msi_compose was not authorized to sleep
+> (https://lkml.org/lkml/2016/3/10/216) since potentialy called in
+> atomic context.
+> 
+> This is why in my passthrough series I was forced to move the mapping
+> in msi_domain_alloc, which also has the benefit to happen earlier and
+> is able to fail whereas the compose cannot due, to the subsequent
+> BUG_ON. Has things changed since this notice which now allow to do
+> the mapping here?
+
+We've got a non-sleeping spinlock covering the lookup, and new pages are
+allocated with GFP_ATOMIC; what have I missed? Any IOMMU driver whose
+iommu_map() implementation might sleep already can't use this layer, as
+DMA API calls may come from atomic context as well.
+
+The "oh well, at least we tried" failure case (I've added a WARN_ON
+now for good measure) is largely mitigated by the fact that 99% of the
+time in practice we'll just be mapping one page once per domain and
+hitting it on subsequent lookups. If someone's already consumed all the
+available IOVA space before that page is mapped, or the IOMMU page
+tables are corrupted, then the device won't be able to do DMA anyway, so
+the fact that it can't raise its MSI is likely moot.
+
+> 
+> >  }
+> >  
+> >  static struct irq_chip gicv2m_irq_chip = {
+> > diff --git a/drivers/irqchip/irq-gic-v3-its.c
+> > b/drivers/irqchip/irq-gic-v3-its.c index 7ceaba81efb4..73f4f10dc204
+> > 100644 --- a/drivers/irqchip/irq-gic-v3-its.c
+> > +++ b/drivers/irqchip/irq-gic-v3-its.c
+> > @@ -18,6 +18,7 @@
+> >  #include <linux/bitmap.h>
+> >  #include <linux/cpu.h>
+> >  #include <linux/delay.h>
+> > +#include <linux/dma-iommu.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/log2.h>
+> >  #include <linux/mm.h>
+> > @@ -655,6 +656,8 @@ static void its_irq_compose_msi_msg(struct
+> > irq_data *d, struct msi_msg *msg) msg->address_lo		=
+> > addr & ((1UL << 32) - 1); msg->address_hi		= addr >>
+> > 32; msg->data		= its_get_event_id(d);
+> > +
+> > +	iommu_dma_map_msi_msg(d->irq, msg);
+> >  }
+> >  
+> >  static struct irq_chip its_irq_chip = {
+> > diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
+> > index 81c5c8d167ad..5ee806e41b5c 100644
+> > --- a/include/linux/dma-iommu.h
+> > +++ b/include/linux/dma-iommu.h
+> > @@ -21,6 +21,7 @@
+> >  
+> >  #ifdef CONFIG_IOMMU_DMA
+> >  #include <linux/iommu.h>
+> > +#include <linux/msi.h>
+> >  
+> >  int iommu_dma_init(void);
+> >  
+> > @@ -62,9 +63,13 @@ void iommu_dma_unmap_sg(struct device *dev,
+> > struct scatterlist *sg, int nents, int iommu_dma_supported(struct
+> > device *dev, u64 mask); int iommu_dma_mapping_error(struct device
+> > *dev, dma_addr_t dma_addr); 
+> > +/* The DMA API isn't _quite_ the whole story, though... */
+> > +void iommu_dma_map_msi_msg(int irq, struct msi_msg *msg);  
+> So I understand the patch currently addresses dma-mapping use case.
+> What about the passthrough use case? Here you obviously propose a
+> simpler version but it also looks to me it skips some comments we
+> collected in the past which resulted in the direction taken before:
+
+This is only intended to be the lowest-level remapping machinery -
+clearly the guest MSI case has a lot more complexity on top, but that
+doesn't apply on the host side, and right now I just want the simplest
+possible solution for PCI DMA ops to not break MSIs.
+
+> - generic API to allocate msi iovas
+> - msi_geometry semantic recommended by Alex
+> - the handling of the size parameter as recommended by Marc
+> - separation of allocation/enumeration for msi_domain_allocate_irqs
+> /msi_compose separation.
+
+I have also thrown together an illustrative patch for plugging
+this into VFIO domains [1] following some internal discussion, but
+that's about as far as I was planning to go myself - AFAICS all your
+MSI geometry and VFIO bits remain valid, I just looked at the
+msi_cookie stuff and found it really didn't tie in with DMA ops at all
+well.
+ 
+> 
+> For passthrough we also have to care about the safety issue, the
+> window size computation. Please can we collaborate to converge on a
+> unified solution?
+
+I remain adamant that the safety thing is a property of the irqchip and
+the irqchip alone (I've also come to realise that iommu_capable() is
+fundamentally unworkable altogether, but that's another story). Thus
+as I see it, getting the low-level remapping aspect out of the way in a
+common manner leaves the rest of the guest MSI problem firmly between
+VFIO and the MSI layer, now that we've got a much clearer view of
+it thanks to your efforts. What do you think?
+
+After all, right now... well, y'know ;)
+
+Robin.
+
+[1]:http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=991effe0712750ce24f6a0b2e2e3f8f57d4a9910
+
+> 
+> Best Regards
+> 
+> Eric
+> 
+> > +
+> >  #else
+> >  
+> >  struct iommu_domain;
+> > +struct msi_msg;
+> >  
+> >  static inline int iommu_dma_init(void)
+> >  {
+> > @@ -80,6 +85,10 @@ static inline void iommu_put_dma_cookie(struct
+> > iommu_domain *domain) {
+> >  }
+> >  
+> > +static inline void iommu_dma_map_msi_msg(int irq, struct msi_msg
+> > *msg) +{
+> > +}
+> > +
+> >  #endif	/* CONFIG_IOMMU_DMA */
+> >  #endif	/* __KERNEL__ */
+> >  #endif	/* __DMA_IOMMU_H */
+> >   
+> 
