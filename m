@@ -1,67 +1,76 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [RFC] drm: implement generic firmware eviction
-Date: Fri, 26 Aug 2016 14:58:51 +0200
-Message-ID: <ae99ee66-e3c4-8d97-0ff1-c6764e0d9d87@redhat.com>
-References: <20160826000056.12806-1-dh.herrmann@gmail.com>
- <29bc1dab-7445-8470-f59b-6df908e83a3f@redhat.com>
- <CANq1E4QFB4k+8C4eZUuUwO7mYDDYrKx2wbPJfAKe_GoOLOHv=A@mail.gmail.com>
- <345e23d3-b55b-4d4d-e585-0ec8b243feb8@redhat.com>
- <20160826085823.GB30441@lukather>
- <04f9cb51-94f3-a26d-4966-385175340dd7@redhat.com>
- <20160826125253.GB21452@lukather>
+From: Yongcai Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 0/3] Add SMP support for i.MX7D
+Date: Fri, 26 Aug 2016 13:02:12 +0000
+Message-ID: <AM3PR04MB13159C5A59AA393F082C2445F5EC0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <1472209971-32469-1-git-send-email-Anson.Huang@nxp.com>
+ <CAOMZO5DaL+CKQe0hOHi_Kv8Vt9y0RHyERS8ek78WebxFmjj9rg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160826125253.GB21452@lukather>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOMZO5DaL+CKQe0hOHi_Kv8Vt9y0RHyERS8ek78WebxFmjj9rg@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Russell King - ARM Linux <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAyNi0wOC0xNiAxNDo1MiwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBPbiBGcmksIEF1
-ZyAyNiwgMjAxNiBhdCAxMTowMjoxN0FNICswMjAwLCBIYW5zIGRlIEdvZWRlIHdyb3RlOgo+PiBI
-aSwKPj4KPj4gT24gMjYtMDgtMTYgMTA6NTgsIE1heGltZSBSaXBhcmQgd3JvdGU6Cj4+PiBIaSwK
-Pj4+Cj4+PiBPbiBGcmksIEF1ZyAyNiwgMjAxNiBhdCAxMDo0Mzo1NUFNICswMjAwLCBIYW5zIGRl
-IEdvZWRlIHdyb3RlOgo+Pj4+Pj4gSSdtIG5vdCBzdXJlIHdlIHdvdWxkIHdhbnQgdG8gcmVtb3Zl
-IHRoZSBkZXZpY2UgYXQgYWxsLCB3ZQo+Pj4+Pj4gY2VydGFpbmx5IHNob3VsZCBub3QgYmUgcmVt
-b3ZpbmcgdGhlIGR0X25vZGUgZnJvbSB0aGUgZGV2aWNldHJlZQo+Pj4+Pj4gSU1ITy4gSGF2aW5n
-IHRoYXQgYXJvdW5kIHRvIHNlZSBob3cgdGhlIGJvb3Rsb2FkZXIgc2V0IHRoaW5ncyB1cAo+Pj4+
-Pj4gaXMgcmVhbGx5IHVzZWZ1bCBmb3IgZGVidWdnaW5nIGFuZCBub3JtYWxseSB3ZSBzaG91bGQg
-bmV2ZXIgbW9kaWZ5Cj4+Pj4+PiB0aGUgZGV2aWNldHJlZSBhcyBzZXQgdXAgYnkgdGhlIGJvb3Rs
-b2FkZXIuCj4+Pj4+Pgo+Pj4+Pj4gV2h5IG5vdCBqdXN0IHVuYmluZCB0aGUgZHJpdmVyIGZyb20g
-dGhlIHBsYXRmb3JtIGRldmljZT8gVGhhdAo+Pj4+Pj4gc2hvdWxkIGJlIGVub3VnaC4KPj4+Pj4K
-Pj4+Pj4gVGhhdCB3aWxsIGxlYXZlIElPUkVTT1VSQ0VfTUVNIGFyb3VuZCwgY2F1c2luZyBjb25m
-bGljdHMgaWYKPj4+Pj4gcmUtdXNlZC9jbGFpbWVkIGJ5IG90aGVyIGRldmljZXMvZHJpdmVycy4g
-RnVydGhlcm1vcmUsIGl0IGlzIHJlYWxseQo+Pj4+PiBmcmFnaWxlIGxlYXZpbmcgdGhlIGRldmlj
-ZSBhcm91bmQsIHdpdGhvdXQgYW55IGNvbnRyb2wgb3Zlcgo+Pj4+PiBwb3NzaWJsZSBmdXR1cmUg
-ZHJpdmVyIHByb2JpbmcuCj4+Pj4KPj4+PiBBaCwgZ29vZCBwb2ludC4gT24gQVJNIHRoaXMgY3Vy
-cmVudGx5IHR5cGljYWxseSBpcyByZXNlcnZlZCBieSB0aGUgYm9vdGxvYWRlcgo+Pj4+IHNvIG5l
-dmVyIHRvdWNoZWQgYnkgdGhlIGtlcm5lbCBhdCBhbGwsIG5vdCBldmVuIHdoZW4gdGhlIHNpbXBs
-ZWZiIGlzIG5vIGxvbmdlcgo+Pj4+IHVzZWQsIGFjdHVhbGx5IHJldHVybmluZyB0aGlzIG1lbW9y
-eSB0byB0aGUga2VybmVsIGFmdGVyIHVuYmluZGluZyB0aGUgc2ltcGxlZmIgLwo+Pj4+IGRlc3Ry
-b3lpbmcgdGhlIHNpbXBsZWZiIHBsYXRmb3JtLWRldiB3b3VsZCBiZSByZWFsbHkgZ29vZCB0byBk
-by4gV2Ugc2hvdWxkCj4+Pj4gcHJvYmFibHkgZmlndXJlIG91dCBob3cgdGhhdCBzaG91bGQgYmUg
-ZG9uZSBiZWZvcmUgZ2V0dGluZyByaWQgb2YKPj4+PiByZW1vdmVfY29uZmxpY3RpbmdfZnJhbWVi
-dWZmZXJzLi4uIChzb3JyeSkuCj4+Pgo+Pj4gVGhhdCB3b3VsZCBiZSByYXRoZXIgZWFzeSB0byBk
-by4gVGhlIGZpcm13YXJlIGNvdWxkIGdlbmVyYXRlIGEKPj4+IHJlc2VydmVkLW1lbW9yeSBub2Rl
-IGluc3RlYWQgb2YgcGFzc2luZyBhIHNtYWxsZXIgbWVtb3J5IHNpemUgdG8gdGhlCj4+PiBrZXJu
-ZWwuIFRoYXQgd2F5LCB0aGUga2VybmVsIHdpbGwga25vdyB0aGF0IGl0J3MgYWN0dWFsIHJhbSB0
-aGF0IGl0Cj4+PiBjYW4gcmVjbGFpbS4KPj4KPj4gU28gd2hlbiB3b3VsZCB0aGUga2VybmVsIHJl
-Y2xhaW0gdGhlIFJBTSB0aGVuPwo+Cj4gV2hlbiB3ZSBraWNrb3V0IHRoZSBmcmFtZWJ1ZmZlciBk
-cml2ZXI/CgpZZXMgdGhhdCBpcyB3aGVuIHdlIF93YW50XyBpdCB0byByZWNsYWltIHRoZSBSQU0s
-IG15IHF1ZXN0aW9uIHdhcyB3aGVuCml0IHdpbGwgX2FjdHVhbGx5XyBoYXBwZW4gPyBJJ20gbm90
-IGZhbWlsaWFyIHdpdGggdGhlIHJlc2VydmVkLW1lbW9yeQppbXBsZW1lbnRhdGlvbi4gRG9lcyB5
-b3VyIGFuc3dlciBtZWFuIHRoYXQgc29tZSBkcml2ZXIgbXVzdCBtYWtlIGFuCmV4cGxpY2l0IGNh
-bGwgdG8gZ2V0IHRoZSBtZW1vcnkgcmVjbGFpbWVkID8KClJlZ2FyZHMsCgpIYW5zCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+
+Best Regards!
+Anson Huang
+
+
+
+> -----Original Message-----
+> From: Fabio Estevam [mailto:festevam@gmail.com]
+> Sent: 2016-08-26 8:43 PM
+> To: Yongcai Huang <anson.huang@nxp.com>
+> Cc: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> kernel <linux-kernel@vger.kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; Russell King - ARM Linux <linux@armlinux.org.uk>;
+> robh+dt@kernel.org; Sascha Hauer <kernel@pengutronix.de>; Fabio Estevam
+> <fabio.estevam@nxp.com>; Shawn Guo <shawnguo@kernel.org>
+> Subject: Re: [PATCH 0/3] Add SMP support for i.MX7D
+> 
+> Hi Anson,
+> 
+> On Fri, Aug 26, 2016 at 8:12 AM, Anson Huang <Anson.Huang@nxp.com> wrote:
+> > i.MX7D has 2 Cortex-A7 ARM cores, and it has a different GPC design
+> > than i.MX6, so this patch set adds a new GPCV2 driver for i.MX7D, and
+> > also adds runtime check in SMP code to support both Cortex-A9 and
+> > Cortex-A7 ARM cores.
+> >
+> > With this patch set, i.MX7D can boot up SMP kernel with 2 CPUs.
+> 
+> Currently mx7d can boot the 2 CPUs if you use PSCI in the bootloader.
+> 
+> Give mainline U-Boot a try and it will boot the 2 CPUs via PSCI.
+> 
+> There was an attempt to add gpcv2 support at:
+> https://patchwork.kernel.org/patch/6919831/
+> 
+> , and Shawn suggested to go to the PSCI approach.
+> 
+> PSCI for mx7 is still missing suspend support though.
+> 
+> Regards,
+> 
+> Fabio Estevam
+
+Thanks Fabio for the info, OK, now that i.MX7D goes with PSCI, then please
+Ignore this patch set, and I will add suspend support later. Please ignore this
+Patch set.
+
+For the suggestion of replace cpu_is_xxx with soc_is_xxx by Russell King, I will
+Send another patch to improve that.
+
+Anson.
