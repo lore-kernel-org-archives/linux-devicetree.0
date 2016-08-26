@@ -1,69 +1,81 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [RFC] drm: implement generic firmware eviction
-Date: Fri, 26 Aug 2016 10:43:55 +0200
-Message-ID: <345e23d3-b55b-4d4d-e585-0ec8b243feb8@redhat.com>
-References: <20160826000056.12806-1-dh.herrmann@gmail.com>
- <29bc1dab-7445-8470-f59b-6df908e83a3f@redhat.com>
- <CANq1E4QFB4k+8C4eZUuUwO7mYDDYrKx2wbPJfAKe_GoOLOHv=A@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/4] arm64: dts: marvell: describe the PIC and PMU on Armada 7K/8K
+Date: Fri, 26 Aug 2016 10:58:20 +0200
+Message-ID: <87bn0fkitv.fsf@free-electrons.com>
+References: <1470408921-447-1-git-send-email-thomas.petazzoni@free-electrons.com>
+        <1470408921-447-5-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CANq1E4QFB4k+8C4eZUuUwO7mYDDYrKx2wbPJfAKe_GoOLOHv=A@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Herrmann <dh.herrmann@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470408921-447-5-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+        (Thomas Petazzoni's message of "Fri, 5 Aug 2016 16:55:21 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAyNi0wOC0xNiAxMDowMSwgRGF2aWQgSGVycm1hbm4gd3JvdGU6Cj4gSGkKPgo+IE9u
-IEZyaSwgQXVnIDI2LCAyMDE2IGF0IDk6NTcgQU0sIEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJl
-ZGhhdC5jb20+IHdyb3RlOgo+PiBIaSwKPj4KPj4gT24gMjYtMDgtMTYgMDI6MDAsIERhdmlkIEhl
-cnJtYW5uIHdyb3RlOgo+Pj4KPj4+IFByb3ZpZGUgYSBnZW5lcmljIERSTSBoZWxwZXIgdGhhdCBl
-dmljdHMgYWxsIGNvbmZsaWN0aW5nIGZpcm13YXJlCj4+PiBmcmFtZWJ1ZmZlcnMsIGRldmljZXMs
-IGFuZCBkcml2ZXJzLiBUaGUgbmV3IGhlbHBlciBpcyBjYWxsZWQKPj4+IGRybV9ldmljdF9maXJt
-d2FyZSgpLCBhbmQgdGFrZXMgYSBmbGFnc2V0IGNvbnRyb2xsaW5nIHdoaWNoIGZpcm13YXJlIHRv
-Cj4+PiBraWNrIG91dC4KPj4+Cj4+PiBUaGlzIGlzIG1lYW50IHRvIGJlIHVzZWQgYnkgZHJpdmVy
-cyBpbiB0aGVpciAtPnByb2JlKCkgY2FsbGJhY2tzIG9mIHRoZWlyCj4+PiBwYXJlbnQgYnVzLCBi
-ZWZvcmUgY2FsbGluZyBpbnRvIGRybV9kZXZfcmVnaXN0ZXIoKS4KPj4+Cj4+PiBTaWduZWQtb2Zm
-LWJ5OiBEYXZpZCBIZXJybWFubiA8ZGguaGVycm1hbm5AZ21haWwuY29tPgo+Pj4gLS0tCj4+PiBI
-ZXkKPj4+Cj4+PiBUaGlzIGlzIGp1c3QgY29tcGlsZS10ZXN0ZWQgZm9yIG5vdy4gSSBqdXN0IHdh
-bnQgdG8gZ2V0IHNvbWUgY29tbWVudHMgb24KPj4+IHRoZQo+Pj4gZGVzaWduLiBJIGRlY2lkZWQg
-dG8gZHJvcCB0aGUgc3lzZmIgaW5mcmFzdHJ1Y3R1cmUgYW5kIHJhdGhlciBqdXN0IHVzZQo+Pj4g
-dGhpcwo+Pj4gZ2VuZXJpYyBoZWxwZXIuIEl0IGtlZXBzIHRoaW5ncyBzaW1wbGUgYW5kIHNob3Vs
-ZCB3b3JrIGp1c3QgZmluZSBmb3IgYWxsCj4+PiByZWFzb25hYmxlIHVzZS1jYXNlcy4KPj4+Cj4+
-PiBUaGlzIHdpbGwgd29yayB3aXRoIFNpbXBsZURSTSBvdXQtb2YtdGhlLWJveCBvbiB4ODYuCj4+
-Pgo+Pj4gQXJjaGl0ZWN0dXJlcyB3aXRoIGR5bmFtaWMgc2ltcGxlLWZyYW1lYnVmZmVyIGRldmlj
-ZXMgYXJlIG5vdCBzdXBwb3J0ZWQKPj4+IHlldC4gSQo+Pj4gYWN0dWFsbHkgaGF2ZSBubyBpZGVh
-IHdoYXQgdGhlIHN0cmF0ZWd5IHRoZXJlIGlzPyBDYW4gdGhlIERldmljZVRyZWUKPj4+IHBlb3Bs
-ZSBjb21lCj4+PiB1cCB3aXRoIHNvbWV0aGluZz8gQW0gSSBzdXBwb3NlZCB0byBjYWxsIG9mX3Bs
-YXRmb3JtX2RlcG9wdWxhdGUoKT8gT3IKPj4+IG9mX2RldGFjaF9ub2RlKCk/IE9yIHdoYXQ/Cj4+
-Cj4+Cj4+IEknbSBub3Qgc3VyZSB3ZSB3b3VsZCB3YW50IHRvIHJlbW92ZSB0aGUgZGV2aWNlIGF0
-IGFsbCwgd2UgY2VydGFpbmx5IHNob3VsZAo+PiBub3QKPj4gYmUgcmVtb3ZpbmcgdGhlIGR0X25v
-ZGUgZnJvbSB0aGUgZGV2aWNldHJlZSBJTUhPLiBIYXZpbmcgdGhhdCBhcm91bmQgdG8gc2VlCj4+
-IGhvdwo+PiB0aGUgYm9vdGxvYWRlciBzZXQgdGhpbmdzIHVwIGlzIHJlYWxseSB1c2VmdWwgZm9y
-IGRlYnVnZ2luZyBhbmQgbm9ybWFsbHkgd2UKPj4gc2hvdWxkIG5ldmVyIG1vZGlmeSB0aGUgZGV2
-aWNldHJlZSBhcyBzZXQgdXAgYnkgdGhlIGJvb3Rsb2FkZXIuCj4+Cj4+IFdoeSBub3QganVzdCB1
-bmJpbmQgdGhlIGRyaXZlciBmcm9tIHRoZSBwbGF0Zm9ybSBkZXZpY2U/IFRoYXQgc2hvdWxkIGJl
-Cj4+IGVub3VnaC4KPgo+IFRoYXQgd2lsbCBsZWF2ZSBJT1JFU09VUkNFX01FTSBhcm91bmQsIGNh
-dXNpbmcgY29uZmxpY3RzIGlmCj4gcmUtdXNlZC9jbGFpbWVkIGJ5IG90aGVyIGRldmljZXMvZHJp
-dmVycy4gRnVydGhlcm1vcmUsIGl0IGlzIHJlYWxseQo+IGZyYWdpbGUgbGVhdmluZyB0aGUgZGV2
-aWNlIGFyb3VuZCwgd2l0aG91dCBhbnkgY29udHJvbCBvdmVyIHBvc3NpYmxlCj4gZnV0dXJlIGRy
-aXZlciBwcm9iaW5nLgoKQWgsIGdvb2QgcG9pbnQuIE9uIEFSTSB0aGlzIGN1cnJlbnRseSB0eXBp
-Y2FsbHkgaXMgcmVzZXJ2ZWQgYnkgdGhlIGJvb3Rsb2FkZXIKc28gbmV2ZXIgdG91Y2hlZCBieSB0
-aGUga2VybmVsIGF0IGFsbCwgbm90IGV2ZW4gd2hlbiB0aGUgc2ltcGxlZmIgaXMgbm8gbG9uZ2Vy
-CnVzZWQsIGFjdHVhbGx5IHJldHVybmluZyB0aGlzIG1lbW9yeSB0byB0aGUga2VybmVsIGFmdGVy
-IHVuYmluZGluZyB0aGUgc2ltcGxlZmIgLwpkZXN0cm95aW5nIHRoZSBzaW1wbGVmYiBwbGF0Zm9y
-bS1kZXYgd291bGQgYmUgcmVhbGx5IGdvb2QgdG8gZG8uIFdlIHNob3VsZApwcm9iYWJseSBmaWd1
-cmUgb3V0IGhvdyB0aGF0IHNob3VsZCBiZSBkb25lIGJlZm9yZSBnZXR0aW5nIHJpZCBvZgpyZW1v
-dmVfY29uZmxpY3RpbmdfZnJhbWVidWZmZXJzLi4uIChzb3JyeSkuCgpSZWdhcmRzLAoKSGFucwpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Thomas,
+ 
+ On ven., août 05 2016, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+
+> This commit adds the necessary Device Tree description for the PIC
+> interrupt controller and the PMU available in the Marvell Armada 7K and
+> Armada 8K SoCs.
+>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Applied on mvebu/dt64
+
+Thanks,
+
+Gregory
+> ---
+>  arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> index eab1a42..e70b996 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> @@ -128,6 +128,12 @@
+>  					     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
+>  			};
+>  
+> +			pmu {
+> +				compatible = "arm,cortex-a72-pmu";
+> +				interrupt-parent = <&pic>;
+> +				interrupts = <17>;
+> +			};
+> +
+>  			odmi: odmi@300000 {
+>  				compatible = "marvell,odmi-controller";
+>  				interrupt-controller;
+> @@ -140,6 +146,14 @@
+>  				marvell,spi-base = <128>, <136>, <144>, <152>;
+>  			};
+>  
+> +			pic: interrupt-controller@3f0100 {
+> +				compatible = "marvell,armada-8k-pic";
+> +				reg = <0x3f0100 0x10>;
+> +				#interrupt-cells = <1>;
+> +				interrupt-controller;
+> +				interrupts = <GIC_PPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +
+>  			xor@400000 {
+>  				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
+>  				reg = <0x400000 0x1000>,
+> -- 
+> 2.7.4
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
