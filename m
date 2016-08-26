@@ -1,380 +1,144 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 00/13] arm64: Allwinner A64 support based on sunxi-ng
-Date: Sat, 27 Aug 2016 00:18:26 +0200
-Message-ID: <20160826221826.GF3165@lukather>
-References: <20160726203041.29366-1-maxime.ripard@free-electrons.com>
- <fb559224-561c-3476-1146-96f7aea427f0@arm.com>
- <20160823193129.GO2598@lukather>
- <822ff63c-117d-2250-c1ac-27cd1f787095@arm.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] dt-binding: remoteproc: venus rproc dt binding
+ document
+Date: Fri, 26 Aug 2016 15:23:45 -0700
+Message-ID: <20160826222345.GK15161@tuxbot>
+References: <1471622000-1906-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1471622000-1906-4-git-send-email-stanimir.varbanov@linaro.org>
+ <20160823173259.GA13327@rob-hp-laptop>
+ <fbf25a9e-348b-9047-37ef-1b96808dea31@mm-sol.com>
+ <20160825000521.GH15161@tuxbot>
+ <3429173a-d55a-51e1-0973-7e5bd31be297@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0rSojgWGcpz+ezC3"
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <822ff63c-117d-2250-c1ac-27cd1f787095@arm.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Andr=E9?= Przywara <andre.przywara@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+In-Reply-To: <3429173a-d55a-51e1-0973-7e5bd31be297-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu 25 Aug 04:10 PDT 2016, Stanimir Varbanov wrote:
 
---0rSojgWGcpz+ezC3
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Aug 25, 2016 at 12:54:14AM +0100, Andr=E9 Przywara wrote:
-> >> Now the long part ....
+> Hi Bjorn,
+> 
+> On 08/25/2016 03:05 AM, Bjorn Andersson wrote:
+> > On Wed 24 Aug 08:36 PDT 2016, Stanimir Varbanov wrote:
+> > 
+> >> Hi Rob,
 > >>
-> >> Basically I see those issues with the new clocks:
-> >> - sunxi-ng requires a complicated SoC specific source file in the
-> >> kernel. Although that makes the DT pretty easy (and avoids breaking it
-> >> the future), it ultimately requires an explicit code drop for every new
-> >> SoC, even if they share 95% of the clocks (as H3 and A64 do, for insta=
-nce).
-> >> - This code file does not actually contain any code, instead it's just
-> >> data and looks like it should really be presented in DT - which brings
-> >> us back to something like the old sunxi clock scheme, which is
-> >> apparently not considered good enough. I still wonder if we could crea=
-te
-> >> a generic sunxi-ng user, which explains the needed clocks in the DT
-> >> instead of in code. I admit that looks like quite some work.
-> >> - It makes it quite hard for any other DT user (*BSD, U-Boot) to use t=
-he
-> >> clocks, since they would have to copy quite verbatim the Linux
-> >> implementation choice. This is admittedly also true for the old clock
-> >> framework, but still unfortunate.
-> >=20
-> > 3 - You never get a complete clock support for any SoC, requirining
-> >     for pretty much every driver to create from scratch a new clock
-> >     driver.
->=20
-> I don't understand this. Are you referring to the old clock system? Or
-> to the proposed SCPI approach? Or to sunxi-ng with DT descriptions?
-
-I was referring here to the old clock system.
-
-> And why would a *driver* care about a specific clock if it's using the
-> common clock framework?
-> Confused ...
-
-Because a driver drives an IP that is fed by a specific clock, and
-those clocks entirely change from one controller to the other, and
-=66rom one SoC to the other.
-
-So we were in a situation where you had to write that clock driver
-before doing something useful, and then debug because obviously it was
-not written properly. This is not acceptable.
-
-> > 4 - You require for all these clocks drivers some Ack from both the DT
-> >     and clocks maintainers, who both said they were fed up with this.
->=20
-> Again which new clock drivers? The old sunxi-clks?
-
-Old clks. I was under the impression that you were advocating against
-sunxi-ng here, and your patches were using the old system. Sorry if I
-mixed things up. Obviously, that wouldn't happen with SCPI.
-
-> For the SCPI version I propose we don't need any ACKs (apart from the
-> new .dtsi, maybe), because the clocks are already there.
->=20
-> > 5 - If you realise some day down the road that the parenting
-> >     relationship is not right, or that some clock is not doing what
-> >     you thought it was, you can't really fix it properly because of
-> >     the DT stability you wanted us to enforce.
-> >=20
-> >> So as mentioned several times before, I am looking into a more firmware
-> >> driven clock system using the SCPI[1] framework.
-> >> The idea is:
-> >> - The basic clocks (OSC24M, OSC32K, AHB1, APB1, APB2, PERIPH0) are
-> >> expressed as fixed clocks. If I am not mistaken, Allwinner recommends
-> >> certain frequencies for them anyway, so we just use that and set them =
-up
-> >> before booting Linux, for instance in ATF.
-> >> - The gates clocks are expressed as before, but by defining a generic =
-DT
-> >> compatible fallback name. I have no idea why every SoC enters its name
-> >> into the simple_gates.c source file, while just mentioning the
-> >> compatible string in the DT bindings and using the SoC specific name
-> >> together with a generic fallback like "allwinner,sunxi-simple-gates"
-> >> would suffice. This means that we don't need to touch simple-gates.c
-> >> anymore most of the time.
-> >> - Any clock that can (and has to) be programmed with a variable
-> >> frequency is expressed as an SCPI clock. This interface allows basical=
-ly
-> >> querying and setting a frequency - not very powerful, but sufficient f=
-or
-> >> the clocks I checked. Firmware then takes the burden of programming the
-> >> respective clock register - which is not rocket science if we lock the
-> >> base clocks to a certain frequency.
+> >> On 08/23/2016 08:32 PM, Rob Herring wrote:
+> >>> On Fri, Aug 19, 2016 at 06:53:19PM +0300, Stanimir Varbanov wrote:
+> >>>> Add devicetree binding document for Venus remote processor.
+> >>>>
+> >>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>>> ---
+> >>>>  .../devicetree/bindings/remoteproc/qcom,venus.txt  | 33 ++++++++++++++++++++++
+> >>>>  1 file changed, 33 insertions(+)
+> >>>>  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
+> >>>> new file mode 100644
+> >>>> index 000000000000..06a2db60fa38
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
+> >>>> @@ -0,0 +1,33 @@
+> >>>> +Qualcomm Venus Peripheral Image Loader
+> >>>> +
+> >>>> +This document defines the binding for a component that loads and boots firmware
+> >>>> +on the Qualcomm Venus remote processor core.
+> >>>
+> >>> This does not make sense to me. Venus is the video encoder/decoder h/w, 
+> >>> right? Why is the firmware loader separate from the codec block? Why 
+> >>> rproc is used? Are there multiple clients? Naming it rproc_venus implies 
+> >>> there aren't. And why does the firmware loading need 8MB of memory at a 
+> >>> fixed address?
+> >>>
 > >>
-> >> The advantage of this approach would be:
-> >> - The impact to Linux code is minimized. Normally there would be no ne=
-ed
-> >> to touch the kernel at all when we introduce a new SoC.
-> >=20
-> > But you duplicate the clock framework entirely, both the core code and
-> > the data you were complaining about, with all the issues that arise
-> > from code duplication. You still have to create that big file you were
-> > complaining about, with exactly the same constraints.
->=20
-> We don't need to comply with some common clock framework in firmware, we
-> just need to provide implementations for specific clocks. From a
-> maintainer's point of view the CCF is nice, but its implementation is
-> quite complicated and hard to understand for mere mortals.
+> >> The firmware for Venus case is 5MB. And here is 8MB because of
+> >> dma_alloc_from_coherent size restriction.
+> >>
+> > 
+> > Then you should specify it 5MB large and we'll have to deal with this
+> > implementation issue in the code. I've created a JIRA ticket for
+> > the dma_alloc_from_coherent() behavior.
+> 
+> Infact it should be 5MB + ~100KB for iommu page table.
+> 
 
-Well, it might just be because "dealing with clocks is hard"? And you
-would have to reimplement at least part of it anyway.
+Trying to wrap my head around how the iommu part works here. The
+downstream code seems to indicate that this is a "generic" secure iommu
+interface - used by venus, camera and kgsl; likely for dealing with DRM
+protected buffers.
 
-> Also tweaking a particular clock is not easy, as it has to fit into
-> the framework and we may miss the interfaces.
+As such the iommu tables are not part of the venus rproc; I believe they
+should either be tied into the msm-iommu driver or perhaps exposed as
+its own iommu(?).
 
-Then add the interface. We do that on a regular basis, and Mike and
-Stephen are usually open to it if it's relevant.
 
-> See the MMC clock implementation for instance: it's just a simple
-> divider clock. My implementation in ATF is probably bad and stupid, but
-> at the end of the day I just have to provide a way to set a frequency of
-> one single clock.
+But I presume from your inclusion that you've concluded that the venus
+firmware we have refuses to execute without these tables at least
+initialized, is this correct?
 
-For all clock rates that are possible on MMC? With DDR? I seriously
-doubt this will be stupid.
+> > 
+> >> The address is not really fixed, cause the firmware could support
+> >> relocation. In this example I just picked up the next free memory region
+> >> in memory-reserved from msm8916.dtsi.
+> >>
+> > 
+> > In 8974 we do have a physical region where it's expected to be loaded.
+> > 
+> > So in line with upcoming remoteproc work we should support referencing a
+> > reserved-memory node with either reg or size.
+> > 
+> > In the case of spotting a "reg" we're currently better off using
+> > ioremap. We're looking at getting the remoteproc core to deal with this
+> > mess.
+> 
+> You mean that remoteproc core will parse memory-region property?
+> 
 
-> I think we win a lot if we go away from possibly tuning the parent's
-> clocks (AHB, PLL6 & friends), instead leaving them as fixed clocks - my
-> understanding is that Allwinner recommends this anyway.
+It has to, because it's a quite common scenario for remoteproc drivers
+to either get its backing memory from a static region or be restricted
+to part of system ram - properties that reserved-memory and
+memory-region captures already.
 
-Being a fixed clock doesn't help. We had the issue in the past where
-we actually had to change those rates to have DMA working (A31's AHB),
-or simply because the rate was bad (A13's pll5). A fixed clock removes
-that possibility. However, a clock properly modelled can.
+> > 
+> > 
+> > So, on 8916 I think you should use the form:
+> > 
+> > venus_mem: venus {
+> > 	size = <0x500000>;
+> > };
+> 
+> Don't forget that the physical address where the firmware is stored has
+> some range, the scm call will fail if it is out of the expected range,
+> probably because of some security reasons. So maybe alloc-ranges should
+> be specified here.
+> 
 
-Which doesn't mean that we would change it (and we don't!).
+Thanks for highlighting this.
 
-> Then the whole complex clock tree degrades into just a bunch of more
-> or less independent clock registers.
->
-> Also we can go with a much easier implementation, since we don't need to
-> support all clocks in one image, but just the clocks for one particular
-> SoC. This brings the complexity down, so we can get away with a much
-> simpler implementation (compare U-Boot, though this isn't the best
-> example, admittedly).
+> > 
+> > And I don't think you should use the shared-dma-pool compatible, because
+> > this is not a region for multiple devices to allocate dma memory out of.
+> 
+> Then I cannot reuse reserved-mem infrastructure.
+> 
 
-Yeah, ignoring 95% of the problem is usually a very efficient way to
-simplify it. Now, throw the audio clocks, the pixel clocks, the SPI
-clocks, the camera clocks, the GPU clocks. Had some frequency change
-for all of them, with some weird frequencies for the pixel clocks to
-deal with all the panels out there, and see how it goes.
+You're right. If I understand the code correctly we need to use the
+compatible shared-dma-pool and mark it either "no-map" or "reusable", to
+be able to use dma_alloc_coherent().
 
-For example, during the A13 DRM development, we had to support
-changing from TV-out to the panel output. In order to generate the
-right frequencies, we had to change the rate of 4 clocks with a direct
-relationship, and try to come up with a combination of these four
-clocks that would generate the right frequency.
 
-This is trivial with the CCF. Yes, it's complex, but the complexity is
-here for a reason. Otherwise no-one would use it (yet everyone does).
+But I presume we have the implementation issue of dma_alloc_coherent()
+failing in either case with the 5MB size. I think we need to look into
+that - and have created a JIRA ticket for it.
 
-> >> - Any other DT user can quite easily make use of the clock system
-> >> without adding tons of complicated Allwinner specific clock code. The
-> >> simple-gates driver is almost trivial to implement, and chances are SC=
-PI
-> >> is already around anyway.
-> >> - If there are any peculiarities with a certain clock (implementation),
-> >> we can solve this in firmware. Fixes to code would immediately benefit
-> >> all users - existing kernels (from distributions), newer kernels and
-> >> other OSes.
-> >=20
-> > But no-one would actually be able to use it, because no one upgrades
-> > its firmware, including all the major distributions (Debian, Ubuntu,
-> > Fedora, OpenWRT, Arch, Gento, you name it). So there's effectively no
-> > way to fix a bug that was there.
->=20
-> But currently distributions do upgrade U-Boot, don't they?
-
-Debian Jessie has a package with U-Boot 2014.10. I don't even know how
-they can install it, since there's no generic way to do it.
-
-Fedora, Arch, Gentoo don't have a package.
-OpenWRT is made to run on whatever bootloader comes on the board.
-
-So no, really, they don't.
-
-> ATF would be part of a FIT image, compiled alongside U-Boot and
-> included in one image with the SPL and the U-Boot proper. In the
-> Allwinner world with firmware on SD cards or in eMMC I don't see big
-> issues.
-
-And on NAND? SPI-NOR? And on which MMC card would you install it?
-
-> Also honestly I don't expect frequent updates. Yes: in the beginning we
-> may have changes, but at some point we make a (tested) release and maybe
-> publish updates every now and then. Either these updates fix bugs or
-> provide new features, so there is some incentive for users to update. Or
-> they don't care, in which case it may just work for them and they keep
-> using the old version.
-
-Judging from the past experience, in 4 years, we haven't been able to
-complete a single clock tree. And by complete, I mean with all the
-clocks defined, and tested properly. This will be much easier with
-sunxi-ng, but really, don't count on having everything that works
-after a short while.
-
-Even if you have all the clocks exposed quite soon, we don't have any
-driver to test them.
-
-So what you suggest is to actually upgrade the bootloader each time,
-for the foreseeable future. And that alone is a showstopper.
-
-> >> - This approach matches many of the more serious ARM64 machines out
-> >> there, which refrain from exposing all of their clock framework to Lin=
-ux.
-> >=20
-> > $ git grep -l scpi arch/arm64/boot/dts/**.dtsi
-> > arch/arm64/boot/dts/arm/juno-base.dtsi
-> >=20
-> > Are you saying that only Juno is a serious ARM64 machine?
->=20
-> I wasn't referring to SCPI in particular (which is indeed used only by
-> Juno at the moment), but about not exposing the actual internal clock
-> layout to Linux. PCs certainly don't, but also AMD Seattle and ThunderX
-> avoid this.
-
-I don't need to upgrade my BIOS or UEFI on my PC everytime I get a new
-kernel release to have everything working as it should.
-
-And I'm guessing both ThunderX and Seattle had an army of engineers
-working on that firmware, and testing every last bit of it.
-
-If we also had such a firmware, I would be all in. But we don't, and
-we can't in a reasonable (less than a month) timeframe. It really
-boils down to this. This has been stalled for something like 6 monthes
-now, waiting for solutions that might or might not happen (and I know
-I have my share of responsibilities in this). But I don't want to wait
-any longer.
-
-> >> Also this opens the door to much easier support for new SoCs - up to a
-> >> point where any new chip would actually run out of the box on existing
-> >> distributions (thinking of LTS releases here). The pinctrl driver is a
-> >> nasty guy around here - but let's not make it worse and try to fix that
-> >> guy later ;-)
-> >=20
-> > That's not true and you know it.
-> >=20
-> > What you actually suggest is to implement a minimal set of clocks in
-> > ATF (the opposite being, the entire set of clocks, which would of
-> > course be untested, so it basically falls down in the exact same
-> > category).
-> >=20
-> > What this means is that, since we will obviously not support all the
-> > clocks client from day one, any user will be *required* for a new
-> > kernel release to operate as it's expected to upgrade the ATF.
->=20
-> I don't see that these are related - unless you consider the DT part of
-> the kernel - which it clearly isn't (although the current scheme of DT
-> updates suggests this). Actually the firmware should provide the DT,
-> just advertising all the clocks it implements.
-
-I consider my firmware just like you consider your DT: I really like
-the fact that I can go with _one_ known best firmware.
-
-> And as I don't expect implementing an isolated clock as an SCPI clock to
-> be rocket science, I'd hope for the error rate to be minimal.
-
-I'm more pessimistic than you are on this, but even with that
-assumption, the point still holds: you cannot support all the clocks
-=66rom day one.
-
-> So we may publish an early firmware version with support for certain
-> devices only and later upgrade this. U-Boot gets also upgraded via the
-> distributions at the moment.
-
-Like I said, this is not true.
-
-> We could even introduce some firmware upgrade infrastructure (or use
-> the Linux one) if we find us in dire need for.
-
-And I want something that works *today*, not some blurry thing that
-redhat, fedora and debian might or might not help us with at some
-point in a vague future.
-
-> > Without any help from the distribution (s)he's running, because no one
-> > has that kind of scenario in mind. And let's be honest, I don't see
-> > Ubuntu changing the dependencies for the kernel for the Allwinner SoCs
-> > alone (let alone the fact that it's pretty much impossible in a
-> > generic way to know where and how the ATF is installed).
->=20
-> Again how does this differ from U-Boot, which I consider firmware as
-> well and which is handled by the distributions (although I don't like
-> this approach very much, because it pushes hardware support to Linux
-> vendors).
-
-U-boot configuration is mostly static. The video modes are always the
-same. You don't have to do any arbitration between devices. You don't
-have audio. It's totally fine for a firmware, but you need something
-more advanced in the kernel.
-
->=20
-> > Apart from being a major pain for any user, upgrading the bootloader
-> > is also a showstopper for most industries.
-> >=20
-> > So, no, we won't do that. The A64 support is something we actually
-> > want to use in real-life products, and our users to be happy with the
-> > support they have.
->=20
-> I can understand that we can just do what we did in the past: Spoon feed
-> every new SoC as soon as we get our hands on some boards and explicitly
-> add support for it in the Linux kernel.
-> But I'd like to revisit this approach, as it actually takes quite some
-> time for support to trickle in down the kernel road - especially if we
-> look at major distributions (think LTS).
-> If we can get closer to a state were new SoCs just require appropriate
-> firmware and a DT - without any new kernel code - I see a big
-> opportunity to get much quicker support for new SoCs - up to a point
-> where the firmware is the only thing that's needed. Maybe some day the
-> board vendors provide these firmware bits even, who knows?
-
-I understand the need for ARM to find a technical showcase
-platform. What I don't understand is why I should feel the pain of
-going against the current, and waiting for suffering to (maybe) stop
-at some point in the future.
-
-That goal is very noble. I'm under the impression that it's the kind
-of soft-lobbying that Marc wanted to do with PSCI too, that we were
-basically the first one to implement. And it worked for us because it
-worked from day one, and it was an all or nothing.
-
-What you suggest is an entire different story.
-
-Please speak to the vendors, make them provide those firmwares. I'll
-be more than happy to switch to them then.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---0rSojgWGcpz+ezC3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXwMAyAAoJEBx+YmzsjxAgrXUP/jW03iTYuZvS+9bjNStPoQcw
-r6heub9vI5Q0lfn/bBEODGWi3GinlXUACrMLm5g2oMWDazcBSteqP6owAjnKH8Od
-xSsv0gNq8IjSUKf7iOpXlwADSEv5Dhu0weSZ0lcQaeu8OA3MSqoMXLdJqI9nJWIy
-eoHLjUhvGm4jE3SQ9hMRPa5/szsNCL86WdyfhTAmwnDJZyN2vDIMwIHMgY2DO8UH
-pJO8LvPyr15vRvhFEGvziRKAMCbSAVnuJpm2qAuvnA1m+5pxPlQXf7K/QRQz/F/+
-ysXCyF+w5p3XAAjXBwq27iqFICWmXvUgWcg/e34k0zTAq+akn2WxiHr+3qzfIyfp
-JmwvYSfv2Bw+zK1x+a2zGXJeH1OEPPk9divjR9RtJXMohVL3V1XJibQlRrzsic6i
-kQILOsSmRLBy0BFk+KlR8dFafJRlljURP3EiT3c6RrgRbIjt/omwKyyTE9aKMjFM
-KHSfADIxjwBy3oaM976HtnGW6OnWE/ss+vz9QxHKxXqM+KFh4ymQd51XstUMMGM0
-i7q/Ahrf0met7eFHQPJlJBM1eCMn660UOkXs7C/7B9iouiLkflS9IVc/62HvO4CW
-bOfSNHx5+mZgtU4uSTOQTiaZDHJth4DFrqJqF1nd8/Yx3udOuzEyf0ng4hW+/rqK
-R1/hvmUkF+XfizQt5MCj
-=NVtp
------END PGP SIGNATURE-----
-
---0rSojgWGcpz+ezC3--
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
