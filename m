@@ -1,138 +1,98 @@
-From: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] dt/bindings: Add bindings for Tegra GMI controller
-Date: Fri, 26 Aug 2016 06:53:59 +0200
-Message-ID: <CALw8SCWtTvWGmKru2MX7T7sFpoUpD-V400+w2nPkxaFB5WUKSA@mail.gmail.com>
-References: <1472045838-22628-1-git-send-email-mirza.krak@gmail.com>
- <1472045838-22628-4-git-send-email-mirza.krak@gmail.com> <de2fb909-829e-6c04-4f6a-442cbb9171c9@nvidia.com>
- <CALw8SCVcPymDZ8NyUbeanRF0TCT1TZzL6iRDticYA42FWrEWqw@mail.gmail.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 24/25] arm64: dts: msm8916: Add display support
+Date: Fri, 26 Aug 2016 10:27:11 +0530
+Message-ID: <57BFCC27.1060306@codeaurora.org>
+References: <1466077007-26792-1-git-send-email-architt@codeaurora.org>
+ <1466691210-22779-1-git-send-email-architt@codeaurora.org>
+ <1466691210-22779-25-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALw8SCVcPymDZ8NyUbeanRF0TCT1TZzL6iRDticYA42FWrEWqw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1466691210-22779-25-git-send-email-architt@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: robh@kernel.org
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2016-08-24 21:54 GMT+02:00 Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> 2016-08-24 17:56 GMT+02:00 Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>:
-> +
->>> +Example with two SJA1000 CAN controllers connected to the GMI bus. We wrap the
->>> +controllers with a simple-bus node since they are all connected to the same
->>> +chip-select (CS4), in this example external address decoding is provided:
->>> +
->>> +gmi@70090000 {
->>> +     compatible = "nvidia,tegra20-gmi";
->>> +     reg = <0x70009000 0x1000>;
->>> +     #address-cells = <1>;
->>> +     #size-cells = <1>;
->>> +     clocks = <&tegra_car TEGRA20_CLK_NOR>;
->>> +     clock-names = "gmi";
->>> +     resets = <&tegra_car 42>;
->>> +     reset-names = "gmi";
->>> +     ranges = <4 0x48000000 0x7ffffff>;
->>> +
->>> +     status = "disabled";
->>> +
->>> +     bus@4 {
->>> +             compatible = "simple-bus";
->>> +             reg = <4>;
->>> +             #address-cells = <1>;
->>> +             #size-cells = <1>;
->>> +             ranges = <0 4 0x40100>;
->>
->> Does this work? I tried to add an example like this and I got ...
->>
->> Warning (reg_format): "reg" property in /gmi@70009000/bus@4 has invalid
->> length (4 bytes) (#address-cells == 1, #size-cells == 1)
->
-> Shoot, to get rid of the warning it should be
->
-> reg = <4 0 >;
->
-> But it works either way.
->
->>
->> I am wondering if we should just following the arm,pl172 example and
->> have ...
->>
->>         cs4 {
->>                 compatible = "simple-bus";
->>                 #address-cells = <1>;
->>                 #size-cells = <1>;
->>                 ranges;
->>
->>                 nvidia,snor-cs = <4>;
->>                 nvidia,snor-mux-mode;
->>                 nvidia,snor-adv-inv;
->>
->>                 can@0 {
->>                         reg = <0 0x100>;
->>                         ...
->>                 };
->>
->>                 ...
->>         };
->>
->
-> That means to go back to V1 really (almost :)). Which I do not mind.
-> Will give it a test run.
->
-> But I am a little hesitant if will be any better/cleaner. In your example above:
->
-> can@0 {
->          reg = <0 0x100>;
->          ...
-> };
->
-> Would this really translate correctly? In the pl172 example they have
-> multiple ranges and address with "flash@0,0" which a range defined in
-> parent node. "can@0" does not have valid match in parent node in our
-> example. So I probably need add some more logic for it to properly
-> translate.
->
-> I have an idea which is following:
->
-> gmi@70090000 {
->          status = "okay";
->          #address-cells = <2>;
->          #size-cells = <1>;
->          ranges = <4 0 0x48000000 0x00040000>;
->
->          cs4 {
->                  compatible = "simple-bus";
->                  #address-cells = <2>;
->                  #size-cells = <1>;
->                  ranges;
->
->                  nvidia,snor-cs = <4>;
->                  nvidia,snor-mux-mode;
->                  nvidia,snor-adv-inv;
->
->                  can@0 {
->                          compatible = "nxp,sja1000";
->                          reg = <4 0 0x100>;
->                          ...
->                  };
->
->
->                  can@40000 {
->                          compatible = "nxp,sja1000";
->                          reg = <4 0x40000 0x100>;
->                          ...
->                  };
->          };
-> };
->
-> Do not know if above will work at all (not able to test at current
-> location), anyway I will play around with it some more and get back to
-> you.
-
-Gave above a test run and it works like a charm. Are we happy with that?
-
-Best Regards
-Mirza
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUm9iLAoKT24gMDYvMjMvMjAxNiAwNzo0MyBQTSwgQXJjaGl0IFRhbmVqYSB3cm90ZToKPiBU
+aGUgTVNNODkxNiBTb0MgY29udGFpbnMgYSBNRFA1IGJhc2VkIGRpc3BsYXkgYmxvY2ssIGFuZCBv
+bmUgRFNJIG91dHB1dC4KPiBBZGQgdGhlIHRvcCBsZXZlbCBNRFNTIERUIG5vZGUsIGFuZCB0aGUg
+TURQNSwgRFNJIGFuZCBEU0kgUEhZIGNoaWxkcmVuCj4gc3ViLWJsb2Nrcy4gRXN0YWJsaXNoIHRo
+ZSBsaW5rIGJldHdlZW4gTURQNSdzIElOVEYxIG91dHB1dCBwb3J0IGFuZCBEU0kncwo+IGlucHV0
+IHBvcnQuCj4KPiBDYzogQW5keSBHcm9zcyA8YW5keS5ncm9zc0BsaW5hcm8ub3JnPgo+IENjOiBS
+b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZwoKQ2FuIEkgZ2V0IGFuIEFjayBvbiB0aGlzPwoKVGhhbmtzLApBcmNoaXQKCj4KPiBTaWdu
+ZWQtb2ZmLWJ5OiBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+
+IHYyOgo+ICAgLSBSZW1vdmVkICJxY29tLGRzaS1ob3N0LWluZGV4IiBhbmQgInFjb20sZHNpLXBo
+eS1pbmRleCIgcHJvcHMKPgo+ICAgYXJjaC9hcm02NC9ib290L2R0cy9xY29tL21zbTg5MTYuZHRz
+aSB8IDExNyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gICAxIGZpbGUgY2hh
+bmdlZCwgMTE3IGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL3Fjb20vbXNtODkxNi5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL21zbTg5MTYu
+ZHRzaQo+IGluZGV4IDk2ODEyMDAuLmZlNzRmZWEgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9i
+b290L2R0cy9xY29tL21zbTg5MTYuZHRzaQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNv
+bS9tc204OTE2LmR0c2kKPiBAQCAtNTM3LDYgKzUzNywxMjMgQEAKPiAgIAkJCWNsb2NrcyA9IDwm
+Z2NjIEdDQ19QUk5HX0FIQl9DTEs+Owo+ICAgCQkJY2xvY2stbmFtZXMgPSAiY29yZSI7Cj4gICAJ
+CX07Cj4gKwo+ICsJCW1kc3M6IG1kc3NAMWEwMDAwMCB7Cj4gKwkJCWNvbXBhdGlibGUgPSAicWNv
+bSxtZHNzIjsKPiArCQkJcmVnID0gPDB4MWEwMDAwMCAweDEwMDA+LAo+ICsJCQkgICAgICA8MHgx
+YWM4MDAwIDB4MzAwMD47Cj4gKwkJCXJlZy1uYW1lcyA9ICJtZHNzX3BoeXMiLCAidmJpZl9waHlz
+IjsKPiArCj4gKwkJCXBvd2VyLWRvbWFpbnMgPSA8JmdjYyBNRFNTX0dEU0M+Owo+ICsKPiArCQkJ
+Y2xvY2tzID0gPCZnY2MgR0NDX01EU1NfQUhCX0NMSz4sCj4gKwkJCQkgPCZnY2MgR0NDX01EU1Nf
+QVhJX0NMSz4sCj4gKwkJCQkgPCZnY2MgR0NDX01EU1NfVlNZTkNfQ0xLPjsKPiArCQkJY2xvY2st
+bmFtZXMgPSAiaWZhY2VfY2xrIiwKPiArCQkJCSAgICAgICJidXNfY2xrIiwKPiArCQkJCSAgICAg
+ICJ2c3luY19jbGsiOwo+ICsKPiArCQkJaW50ZXJydXB0cyA9IDwwIDcyIDA+Owo+ICsKPiArCQkJ
+aW50ZXJydXB0LWNvbnRyb2xsZXI7Cj4gKwkJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47Cj4gKwo+
+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJI3NpemUtY2VsbHMgPSA8MT47Cj4gKwkJ
+CXJhbmdlczsKPiArCj4gKwkJCW1kcDogbWRwQDFhMDEwMDAgewo+ICsJCQkJY29tcGF0aWJsZSA9
+ICJxY29tLG1kcDUiOwo+ICsJCQkJcmVnID0gPDB4MWEwMTAwMCAweDkwMDAwPjsKPiArCQkJCXJl
+Zy1uYW1lcyA9ICJtZHBfcGh5cyI7Cj4gKwo+ICsJCQkJaW50ZXJydXB0LXBhcmVudCA9IDwmbWRz
+cz47Cj4gKwkJCQlpbnRlcnJ1cHRzID0gPDAgMD47Cj4gKwo+ICsJCQkJY2xvY2tzID0gPCZnY2Mg
+R0NDX01EU1NfQUhCX0NMSz4sCj4gKwkJCQkJIDwmZ2NjIEdDQ19NRFNTX0FYSV9DTEs+LAo+ICsJ
+CQkJCSA8JmdjYyBHQ0NfTURTU19NRFBfQ0xLPiwKPiArCQkJCQkgPCZnY2MgR0NDX01EU1NfVlNZ
+TkNfQ0xLPjsKPiArCQkJCWNsb2NrLW5hbWVzID0gImlmYWNlX2NsayIsCj4gKwkJCQkJICAgICAg
+ImJ1c19jbGsiLAo+ICsJCQkJCSAgICAgICJjb3JlX2NsayIsCj4gKwkJCQkJICAgICAgInZzeW5j
+X2NsayI7Cj4gKwo+ICsJCQkJcG9ydHMgewo+ICsJCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+
+ICsJCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArCQkJCQlwb3J0QDAgewo+ICsJCQkJCQly
+ZWcgPSA8MD47Cj4gKwkJCQkJCW1kcDVfaW50ZjFfb3V0OiBlbmRwb2ludCB7Cj4gKwkJCQkJCQly
+ZW1vdGUtZW5kcG9pbnQgPSA8JmRzaTBfaW4+Owo+ICsJCQkJCQl9Owo+ICsJCQkJCX07Cj4gKwkJ
+CQl9Owo+ICsJCQl9Owo+ICsKPiArCQkJZHNpMDogZHNpQDFhOTgwMDAgewo+ICsJCQkJY29tcGF0
+aWJsZSA9ICJxY29tLG1kc3MtZHNpLWN0cmwiOwo+ICsJCQkJcmVnID0gPDB4MWE5ODAwMCAweDI1
+Yz47Cj4gKwkJCQlyZWctbmFtZXMgPSAiZHNpX2N0cmwiOwo+ICsKPiArCQkJCWludGVycnVwdC1w
+YXJlbnQgPSA8Jm1kc3M+Owo+ICsJCQkJaW50ZXJydXB0cyA9IDw0IDA+Owo+ICsKPiArCQkJCWFz
+c2lnbmVkLWNsb2NrcyA9IDwmZ2NjIEJZVEUwX0NMS19TUkM+LAo+ICsJCQkJCQkgIDwmZ2NjIFBD
+TEswX0NMS19TUkM+Owo+ICsJCQkJYXNzaWduZWQtY2xvY2stcGFyZW50cyA9IDwmZHNpX3BoeTAg
+MD4sCj4gKwkJCQkJCQkgPCZkc2lfcGh5MCAxPjsKPiArCj4gKwkJCQljbG9ja3MgPSA8JmdjYyBH
+Q0NfTURTU19NRFBfQ0xLPiwKPiArCQkJCQkgPCZnY2MgR0NDX01EU1NfQUhCX0NMSz4sCj4gKwkJ
+CQkJIDwmZ2NjIEdDQ19NRFNTX0FYSV9DTEs+LAo+ICsJCQkJCSA8JmdjYyBHQ0NfTURTU19CWVRF
+MF9DTEs+LAo+ICsJCQkJCSA8JmdjYyBHQ0NfTURTU19QQ0xLMF9DTEs+LAo+ICsJCQkJCSA8Jmdj
+YyBHQ0NfTURTU19FU0MwX0NMSz47Cj4gKwkJCQljbG9jay1uYW1lcyA9ICJtZHBfY29yZV9jbGsi
+LAo+ICsJCQkJCSAgICAgICJpZmFjZV9jbGsiLAo+ICsJCQkJCSAgICAgICJidXNfY2xrIiwKPiAr
+CQkJCQkgICAgICAiYnl0ZV9jbGsiLAo+ICsJCQkJCSAgICAgICJwaXhlbF9jbGsiLAo+ICsJCQkJ
+CSAgICAgICJjb3JlX2NsayI7Cj4gKwkJCQlwaHlzID0gPCZkc2lfcGh5MD47Cj4gKwkJCQlwaHkt
+bmFtZXMgPSAiZHNpLXBoeSI7Cj4gKwo+ICsJCQkJcG9ydHMgewo+ICsJCQkJCSNhZGRyZXNzLWNl
+bGxzID0gPDE+Owo+ICsJCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArCQkJCQlwb3J0QDAg
+ewo+ICsJCQkJCQlyZWcgPSA8MD47Cj4gKwkJCQkJCWRzaTBfaW46IGVuZHBvaW50IHsKPiArCQkJ
+CQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbWRwNV9pbnRmMV9vdXQ+Owo+ICsJCQkJCQl9Owo+ICsJ
+CQkJCX07Cj4gKwo+ICsJCQkJCXBvcnRAMSB7Cj4gKwkJCQkJCXJlZyA9IDwxPjsKPiArCQkJCQkJ
+ZHNpMF9vdXQ6IGVuZHBvaW50IHsKPiArCQkJCQkJfTsKPiArCQkJCQl9Owo+ICsJCQkJfTsKPiAr
+CQkJfTsKPiArCj4gKwkJCWRzaV9waHkwOiBkc2ktcGh5QDFhOTgzMDAgewo+ICsJCQkJY29tcGF0
+aWJsZSA9ICJxY29tLGRzaS1waHktMjhubS1scCI7Cj4gKwkJCQlyZWcgPSA8MHgxYTk4MzAwIDB4
+ZDQ+LAo+ICsJCQkJICAgICAgPDB4MWE5ODUwMCAweDI4MD4sCj4gKwkJCQkgICAgICA8MHgxYTk4
+NzgwIDB4MzA+Owo+ICsJCQkJcmVnLW5hbWVzID0gImRzaV9wbGwiLAo+ICsJCQkJCSAgICAiZHNp
+X3BoeSIsCj4gKwkJCQkJICAgICJkc2lfcGh5X3JlZ3VsYXRvciI7Cj4gKwo+ICsJCQkJI2Nsb2Nr
+LWNlbGxzID0gPDE+Owo+ICsKPiArCQkJCWNsb2NrcyA9IDwmZ2NjIEdDQ19NRFNTX0FIQl9DTEs+
+Owo+ICsJCQkJY2xvY2stbmFtZXMgPSAiaWZhY2VfY2xrIjsKPiArCQkJfTsKPiArCQl9Owo+ICAg
+CX07Cj4KPiAgIAlzbWQgewo+CgotLSAKUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4g
+aXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xs
+YWJvcmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
