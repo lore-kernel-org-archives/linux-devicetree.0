@@ -1,121 +1,171 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [RFC] drm: implement generic firmware eviction
-Date: Fri, 26 Aug 2016 14:52:53 +0200
-Message-ID: <20160826125253.GB21452@lukather>
-References: <20160826000056.12806-1-dh.herrmann@gmail.com>
- <29bc1dab-7445-8470-f59b-6df908e83a3f@redhat.com>
- <CANq1E4QFB4k+8C4eZUuUwO7mYDDYrKx2wbPJfAKe_GoOLOHv=A@mail.gmail.com>
- <345e23d3-b55b-4d4d-e585-0ec8b243feb8@redhat.com>
- <20160826085823.GB30441@lukather>
- <04f9cb51-94f3-a26d-4966-385175340dd7@redhat.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 08/14] arm64: numa: Use pr_fmt()
+Date: Fri, 26 Aug 2016 13:54:26 +0100
+Message-ID: <20160826125426.GC30302@arm.com>
+References: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
+ <1472024693-12912-9-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0057438060=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <04f9cb51-94f3-a26d-4966-385175340dd7@redhat.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1472024693-12912-9-git-send-email-thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 24, 2016 at 03:44:47PM +0800, Zhen Lei wrote:
+> From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> 
+> Use pr_fmt to prefix kernel output, and remove duplicated msg
+> of NUMA turned off.
+> 
+> Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm64/mm/numa.c | 40 ++++++++++++++++++++--------------------
+>  1 file changed, 20 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+> index d97c6e2..7b73808 100644
+> --- a/arch/arm64/mm/numa.c
+> +++ b/arch/arm64/mm/numa.c
+> @@ -17,6 +17,8 @@
+>   * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>   */
+> 
+> +#define pr_fmt(fmt) "numa: " fmt
 
---===============0057438060==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/e2eDi0V/xtL+Mc8"
-Content-Disposition: inline
+Shouldn't this be uppercase for consistency with the existing code and
+the code in places like drivers/of/of_numa.c?
+
+>  #include <linux/acpi.h>
+>  #include <linux/bootmem.h>
+>  #include <linux/memblock.h>
+> @@ -38,10 +40,9 @@ static __init int numa_parse_early_param(char *opt)
+>  {
+>  	if (!opt)
+>  		return -EINVAL;
+> -	if (!strncmp(opt, "off", 3)) {
+> -		pr_info("%s\n", "NUMA turned off");
+> +	if (!strncmp(opt, "off", 3))
+>  		numa_off = true;
+> -	}
+> +
+>  	return 0;
+>  }
+>  early_param("numa", numa_parse_early_param);
+> @@ -110,7 +111,7 @@ static void __init setup_node_to_cpumask_map(void)
+>  		set_cpu_numa_node(cpu, NUMA_NO_NODE);
+> 
+>  	/* cpumask_of_node() will now work */
+> -	pr_debug("NUMA: Node to cpumask map for %d nodes\n", nr_node_ids);
+> +	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
+>  }
+> 
+>  /*
+> @@ -145,13 +146,13 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+> 
+>  	ret = memblock_set_node(start, (end - start), &memblock.memory, nid);
+>  	if (ret < 0) {
+> -		pr_err("NUMA: memblock [0x%llx - 0x%llx] failed to add on node %d\n",
+> +		pr_err("memblock [0x%llx - 0x%llx] failed to add on node %d\n",
+>  			start, (end - 1), nid);
+>  		return ret;
+>  	}
+> 
+>  	node_set(nid, numa_nodes_parsed);
+> -	pr_info("NUMA: Adding memblock [0x%llx - 0x%llx] on node %d\n",
+> +	pr_info("Adding memblock [0x%llx - 0x%llx] on node %d\n",
+>  			start, (end - 1), nid);
+>  	return ret;
+>  }
+> @@ -166,19 +167,18 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+>  	void *nd;
+>  	int tnid;
+> 
+> -	pr_info("NUMA: Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
+> -			nid, start_pfn << PAGE_SHIFT,
+> -			(end_pfn << PAGE_SHIFT) - 1);
+> +	pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
+> +		nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
+> 
+>  	nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
+>  	nd = __va(nd_pa);
+> 
+>  	/* report and initialize */
+> -	pr_info("NUMA: NODE_DATA [mem %#010Lx-%#010Lx]\n",
+> +	pr_info("  NODE_DATA [mem %#010Lx-%#010Lx]\n",
+
+Why are you adding leading whitespace?
+
+>  		nd_pa, nd_pa + nd_size - 1);
+>  	tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
+>  	if (tnid != nid)
+> -		pr_info("NUMA: NODE_DATA(%d) on node %d\n", nid, tnid);
+> +		pr_info("    NODE_DATA(%d) on node %d\n", nid, tnid);
 
 
---/e2eDi0V/xtL+Mc8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Same here.
 
-On Fri, Aug 26, 2016 at 11:02:17AM +0200, Hans de Goede wrote:
-> Hi,
->=20
-> On 26-08-16 10:58, Maxime Ripard wrote:
-> >Hi,
-> >
-> >On Fri, Aug 26, 2016 at 10:43:55AM +0200, Hans de Goede wrote:
-> >>>>I'm not sure we would want to remove the device at all, we
-> >>>>certainly should not be removing the dt_node from the devicetree
-> >>>>IMHO. Having that around to see how the bootloader set things up
-> >>>>is really useful for debugging and normally we should never modify
-> >>>>the devicetree as set up by the bootloader.
-> >>>>
-> >>>>Why not just unbind the driver from the platform device? That
-> >>>>should be enough.
-> >>>
-> >>>That will leave IORESOURCE_MEM around, causing conflicts if
-> >>>re-used/claimed by other devices/drivers. Furthermore, it is really
-> >>>fragile leaving the device around, without any control over
-> >>>possible future driver probing.
-> >>
-> >>Ah, good point. On ARM this currently typically is reserved by the boot=
-loader
-> >>so never touched by the kernel at all, not even when the simplefb is no=
- longer
-> >>used, actually returning this memory to the kernel after unbinding the =
-simplefb /
-> >>destroying the simplefb platform-dev would be really good to do. We sho=
-uld
-> >>probably figure out how that should be done before getting rid of
-> >>remove_conflicting_framebuffers... (sorry).
-> >
-> >That would be rather easy to do. The firmware could generate a
-> >reserved-memory node instead of passing a smaller memory size to the
-> >kernel. That way, the kernel will know that it's actual ram that it
-> >can reclaim.
->=20
-> So when would the kernel reclaim the RAM then?
+>  	node_data[nid] = nd;
+>  	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
+> @@ -235,8 +235,7 @@ static int __init numa_alloc_distance(void)
+>  			numa_distance[i * numa_distance_cnt + j] = i == j ?
+>  				LOCAL_DISTANCE : REMOTE_DISTANCE;
+> 
+> -	pr_debug("NUMA: Initialized distance table, cnt=%d\n",
+> -			numa_distance_cnt);
+> +	pr_debug("Initialized distance table, cnt=%d\n", numa_distance_cnt);
+> 
+>  	return 0;
+>  }
+> @@ -257,20 +256,20 @@ static int __init numa_alloc_distance(void)
+>  void __init numa_set_distance(int from, int to, int distance)
+>  {
+>  	if (!numa_distance) {
+> -		pr_warn_once("NUMA: Warning: distance table not allocated yet\n");
+> +		pr_warn_once("Warning: distance table not allocated yet\n");
+>  		return;
+>  	}
+> 
+>  	if (from >= numa_distance_cnt || to >= numa_distance_cnt ||
+>  			from < 0 || to < 0) {
+> -		pr_warn_once("NUMA: Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
+> +		pr_warn_once("Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
+>  			    from, to, distance);
+>  		return;
+>  	}
+> 
+>  	if ((u8)distance != distance ||
+>  	    (from == to && distance != LOCAL_DISTANCE)) {
+> -		pr_warn_once("NUMA: Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
+> +		pr_warn_once("Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
+>  			     from, to, distance);
+>  		return;
+>  	}
+> @@ -297,7 +296,7 @@ static int __init numa_register_nodes(void)
+>  	/* Check that valid nid is set to memblks */
+>  	for_each_memblock(memory, mblk)
+>  		if (mblk->nid == NUMA_NO_NODE || mblk->nid >= MAX_NUMNODES) {
+> -			pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
+> +			pr_warn("Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
+>  				mblk->nid, mblk->base,
+>  				mblk->base + mblk->size - 1);
+>  			return -EINVAL;
+> @@ -368,9 +367,10 @@ static int __init dummy_numa_init(void)
+>  	struct memblock_region *mblk;
+> 
+>  	if (numa_off)
+> -		pr_info("NUMA disabled\n"); /* Forced off on command line. */
+> -	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
+> -	       0LLU, PFN_PHYS(max_pfn) - 1);
+> +		pr_warn("NUMA turned off by user\n"); /* Forced off on command line. */
 
-When we kickout the framebuffer driver?
+Why are you changing the string? What's wrong with "NUMA turned off" like
+we had before?
 
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---/e2eDi0V/xtL+Mc8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXwDulAAoJEBx+YmzsjxAgkTIP/RAbddk7wybXW0cuJntieUoT
-+NHRf9EMTAOaMU+ZKBLam+bIuaB4RxZBpegfS4enijxeHPLxYJMP2VYtzovPQtqG
-2ITvU7cydZYzIoJScnviLtaib3dKSrThyQ+H4n1U1zu7bFk9wIZWNoFK/SwiQSy5
-Vr3Jivy8+4CCsVlvPwtd9MdDPr0XMb4W1+w9fK55AzBaYjn9akFWW3I8aO6RtSE4
-BAjMimnwezdrS0E63FLcMMOWHRtmP3zyPeROP7J21GJK4U03jQ8kjQZFCgjJLhlZ
-z1gqpo9JBIctsm8UAYqAatT56QoljJu7hkAcyPOR4+4VTR5R+NJ4hQKypzO6IOvL
-QRgMagmnRDy/6woL4KtXFKGDrHaGdlCNNt5r+wcC4iiClCAcg7JzBpmaBQGBEVdJ
-/6yHb3yV4SbASrciWgTYuhgY+sx+NKaUrUsmR90RCGEw5lkND/d8nOrCFI5ibQd9
-isz22lb4KbZKjdqHQ0wk7TVcpXWUdg2NK25cadGeL569KBgg4dsJpjVfyWzw5tAp
-XyxOdAHmk7WGSj4RHtdtlwYMztiQvXXGV+wsbHuEkvM+JGPGV79omF8jknZ0XJpt
-98o6B+pUkBX/1Q7mBux5nJUd7hX6BOPDef7gAoaXr6l2RGiGhZeEIYMRsLmz/oTa
-QLbdGf9f3+pyj+3pfHp8
-=1jP2
------END PGP SIGNATURE-----
-
---/e2eDi0V/xtL+Mc8--
-
---===============0057438060==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0057438060==--
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
