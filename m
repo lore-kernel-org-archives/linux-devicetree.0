@@ -1,55 +1,80 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 05/14] arm64/numa: avoid inconsistent information to
- be printed
-Date: Fri, 26 Aug 2016 13:47:46 +0100
-Message-ID: <20160826124746.GB30302@arm.com>
-References: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
- <1472024693-12912-6-git-send-email-thunder.leizhen@huawei.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/7] drm/tilcdc: Add blue-and-red-crossed devicetree
+ property
+Date: Fri, 26 Aug 2016 07:51:03 -0500
+Message-ID: <CAL_JsqJyUz_PKHsT_kk=204C7dxa9_Wdh2UMvptV3oKjYV=CFQ@mail.gmail.com>
+References: <cover.1472126231.git.jsarha@ti.com>
+ <d5e79ebd165f772758014f087a7f0fedba3efc84.1472126231.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1472024693-12912-6-git-send-email-thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <d5e79ebd165f772758014f087a7f0fedba3efc84.1472126231.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, dri-devel <dri-devel@lists.freedesktop.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Karl Beldan <kbeldan@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Benoit Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 24, 2016 at 03:44:44PM +0800, Zhen Lei wrote:
-> numa_init(of_numa_init) may returned error because of numa configuration
-> error. So "No NUMA configuration found" is inaccurate. In fact, specific
-> configuration error information should be immediately printed by the
-> testing branch.
-> 
-> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm64/mm/numa.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-> index 5bb15ea..d97c6e2 100644
-> --- a/arch/arm64/mm/numa.c
-> +++ b/arch/arm64/mm/numa.c
-> @@ -335,8 +335,10 @@ static int __init numa_init(int (*init_func)(void))
->  	if (ret < 0)
->  		return ret;
-> 
-> -	if (nodes_empty(numa_nodes_parsed))
-> +	if (nodes_empty(numa_nodes_parsed)) {
-> +		pr_info("No NUMA configuration found\n");
->  		return -EINVAL;
-
-Hmm, but dummy_numa_init calls node_set(nid, numa_nodes_parsed) for a
-completely artificial setup, created by adding all memblocks to node 0,
-so this new message will be suppressed even though things really did go
-wrong.
-
-In that case, don't we want to print *something* (like we do today in
-dummy_numa_init) but maybe not "No NUMA configuration found"? What
-exactly do you find inaccurate about the current message?
-
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBBdWcgMjUsIDIwMTYgYXQgNzowMyBBTSwgSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNv
+bT4gd3JvdGU6Cj4gQWRkICJibHVlLWFuZC1yZWQtY3Jvc3NlZCItZGV2aWNlIHRyZWUgcHJvcGVy
+dHkgYW5kIHVwZGF0ZSBkZXZpY2V0cmVlCj4gYmluZGluZyBkb2N1bWVudC4gVGhlIHJlZCBhbmQg
+Ymx1ZSBjb21wb25lbnRzIGFyZSByZXZlcnNlZCBiZXR3ZWVuIDI0Cj4gYW5kIDE2IGJpdCBtb2Rl
+cyBvbiBhbTMzNXggTENEQyBvdXRwdXQgcGlucy4gVG8gZ2V0IDI0IFJHQiBmb3JtYXQgdGhlCj4g
+cmVkIGFuZCBibHVlIHdpcmVzIGhhcyB0byBiZSBjcm9zc2VkIGFuZCB0aGlzIGluIHR1cm4gY2F1
+c2VzIDE2IGNvbG9ycwo+IG91dHB1dCB0byBiZSBpbiBCR1IgZm9ybWF0LiBXaXRoIHN0cmFpZ2h0
+IHdpcmluZyB0aGUgMTYgY29sb3IgaXMgUkdCCj4gYW5kIDI0IGJpdCBpcyBCR1IuIFRoZSBuZXcg
+cHJvcGVydHkgZGVzY3JpYmVzIHdoZXRoZXIgdGhlIHJlZCBhbmQgYmx1ZQo+IHdpcmVzIGFyZSBj
+cm9zc2VkIG9yIG5vdC4gSWYgdGhlIHdpcmVzIGFyZSBjcm9zc2VkIHRoaXMgYm9vbGVhbiBwcm9w
+ZXJ0eQo+IHNob3VsZCBiZSBwcmVzZW50IGluIHRoZSByZWxldmFudCBkZXZpY2V0cmVlIG5vZGUu
+Cj4KPiBUaGUgYW0zMzV4LWV2bSBhbmQgYW0zMzV4LWV2bSBoYXZlIHRoZSBibHVlIGFuZCByZWQg
+d2lyZXMgY3Jvc3NlZCBmb3IKPiAyNCBiaXQgUkdCIG1vZGUgYW5kIGFmdGVyIHRoaXMgcGF0Y2gg
+dGhlaXIgTENEQyBub2RlcyBzaG91bGQgaGF2ZSB0aGlzCj4gcHJvcGVydHkgdG8gZ2V0IGNvcnJl
+Y3QgY29sb3JzIGluIHRoZSBkaXNwbGF5Lgo+Cj4gRm9yIG1vcmUgZGV0YWlscyBzZWUgc2VjdGlv
+biAzLjEuMSBpbiBBTTMzNXggU2lsaWNvbiBFcnJhdGE6Cj4gaHR0cDovL3d3dy50aS5jb20vZ2Vu
+ZXJhbC9kb2NzL2xpdC9nZXRsaXRlcmF0dXJlLnRzcD9iYXNlTGl0ZXJhdHVyZU51bWJlcj1zcHJ6
+MzYwCj4KPiBTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29tPgo+IC0tLQo+
+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpbGNkYy90aWxjZGMudHh0ICB8IDEy
+ICsrKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Rydi5jICAgICAg
+ICAgICAgICAgIHwgMjQgKysrKysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0v
+dGlsY2RjL3RpbGNkY19kcnYuaCAgICAgICAgICAgICAgICB8ICA0ICsrKysKPiAgZHJpdmVycy9n
+cHUvZHJtL3RpbGNkYy90aWxjZGNfcGxhbmUuYyAgICAgICAgICAgICAgfCAgOSArKystLS0tLQo+
+ICA0IGZpbGVzIGNoYW5nZWQsIDQzIGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4KPiBk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGls
+Y2RjL3RpbGNkYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS90aWxjZGMvdGlsY2RjLnR4dAo+IGluZGV4IDZlZmE0YzUuLjQ4YTY2MGEgMTAwNjQ0Cj4gLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGlsY2RjL3RpbGNk
+Yy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90
+aWxjZGMvdGlsY2RjLnR4dAo+IEBAIC0xNyw2ICsxNyw4IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6
+Cj4gICAgIHRoZSBsY2QgY29udHJvbGxlci4KPiAgIC0gbWF4LXBpeGVsY2xvY2s6IFRoZSBtYXhp
+bXVtIHBpeGVsIGNsb2NrIHRoYXQgY2FuIGJlIHN1cHBvcnRlZAo+ICAgICBieSB0aGUgbGNkIGNv
+bnRyb2xsZXIgaW4gS0h6Lgo+ICsgLSBibHVlLWFuZC1yZWQtY3Jvc3NlZDogQm9vbGVhbiBwcm9w
+ZXJ0eSwgc2V0IHRoaXMgb2YgYmx1ZSBhbmQgcmVkIHdpcmVzCj4gKyAgIGZvciBMQ0RfREFUQSBh
+cmUgY3Jvc3NlZCBmb3IgMjQtYml0IFJHQiBzdXBwb3J0IChhbmQgMTYtYml0IEJHUiBtb2RlKS4g
+WzFdCgpEb2Vzbid0IHRoaXMgbmVlZCB0byBiZSBibHVlLWFuZC1yZWQtc3RyYWlnaHQgZm9yIGNv
+bXBhdGliaWxpdHk/Cgo+Cj4gIE9wdGlvbmFsIG5vZGVzOgo+Cj4gQEAgLTI4LDYgKzMwLDE0IEBA
+IE9wdGlvbmFsIG5vZGVzOgo+ICAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS90aWxjZGMvdGZwNDEwLnR4dCBmb3IgY29ubmVjdGluZwo+ICAgICB0ZnA0MTAgRFZJ
+IGVuY29kZXIgb3IgbGNkIHBhbmVsIHRvIGxjZGMKPgo+ICtbMV0gVGhlcmUgaXMgYW4gZXJyYXRh
+IGFib3V0IEFNMzM1eCBjb2xvciB3aXJpbmcuIEZvciAxNi1iaXQgY29sb3IgbW9kZQo+ICsgICAg
+dGhlIHdpcmVzIHdvcmsgYXMgdGhleSBzaG91bGQgKExDRF9EQVRBWzA6NF0gaXMgZm9yIEJsdWVb
+Mzo3XSksCj4gKyAgICBidXQgZm9yIDI0IGJpdCBjb2xvciBtb2RlcyB0aGUgd2lyaW5nIG9mIGJs
+dWUgYW5kIHJlZCBjb21wb25lbnRzIGlzCj4gKyAgICBjcm9zc2VkIGFuZCBMQ0RfREFUQVswOjRd
+IGlzIGZvciBSZWRbMzo3XSBhbmQgTENEX0RBVEFbMTE6MTVdIGlzCj4gKyAgICBmb3IgQmx1ZVsz
+LTddLiBGb3IgbW9yZSBkZXRhaWxzIHNlZSBzZWN0aW9uIDMuMS4xIGluIEFNMzM1eAo+ICsgICAg
+U2lsaWNvbiBFcnJhdGE6Cj4gKyAgICBodHRwOi8vd3d3LnRpLmNvbS9nZW5lcmFsL2RvY3MvbGl0
+L2dldGxpdGVyYXR1cmUudHNwP2Jhc2VMaXRlcmF0dXJlTnVtYmVyPXNwcnozNjAKPiArCj4gIEV4
+YW1wbGU6Cj4KPiAgICAgICAgIGZiOiBmYkA0ODMwZTAwMCB7Cj4gQEAgLTM3LDYgKzQ3LDggQEAg
+RXhhbXBsZToKPiAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDwzNj47Cj4gICAgICAgICAg
+ICAgICAgIHRpLGh3bW9kcyA9ICJsY2RjIjsKPgo+ICsgICAgICAgICAgICAgICBibHVlLWFuZC1y
+ZWQtd2lyaW5nID0gImNyb3NzZWQiOwo+ICsKClRoaXMgbmVlZHMgdG8gYmUgdXBkYXRlZC4KClJv
+YgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
