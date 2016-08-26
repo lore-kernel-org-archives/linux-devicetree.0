@@ -1,73 +1,70 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 2/8] arm: orion5x: Add clk support for mv88f5181
-Date: Fri, 26 Aug 2016 16:24:32 +0200
-Message-ID: <20160826142432.GH25046@lunn.ch>
-References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
- <1472203264-21089-1-git-send-email-jm@lentin.co.uk>
- <1472203264-21089-3-git-send-email-jm@lentin.co.uk>
- <20160826113437.GA12692@Red>
- <alpine.DEB.2.11.1608261256170.19980@marmot.wormnet.eu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.11.1608261256170.19980@marmot.wormnet.eu>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jamie Lentin <jm@lentin.co.uk>
-Cc: Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, devicetree@vger.kernel.org, LABBE Corentin <clabbe.montjoie@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: mxsfb: Add bindings for the MXSFB KMS/DRM driver
+Date: Fri, 26 Aug 2016 16:27:41 +0200
+Message-ID: <20160826142742.7236-1-marex@denx.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 26, 2016 at 01:24:18PM +0100, Jamie Lentin wrote:
-> On Fri, 26 Aug 2016, LABBE Corentin wrote:
-> 
-> >Hello
-> >
-> >I have some minor comments below
-> >
-> >[...]
-> >>+
-> >>+static u32 __init mv88f5181_get_tclk_freq(void __iomem *sar)
-> >>+{
-> >>+	u32 opt = (readl(sar) >> SAR_MV88F5181_TCLK_FREQ) &
-> >>+		SAR_MV88F5181_TCLK_FREQ_MASK;
-> >
-> >Checkpatch complain about a missing blank line after declaration.
-> >And spliting the read and the & operation will prevent this line breaking
-> 
-> It isn't here, although I'm not arguing the line is missing. Is
-> there an extra switch I'm missing?
+Add DT bindings for new MXSFB driver using the DRM framework.
+The old MXSFB fbdev driver bindings are preserved in mxsfb.txt .
 
-I agree it is a false positive.
+Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/display/mxsfb-drm.txt      | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/mxsfb-drm.txt
 
-Probably the best action is to report it to the checkpatch people.
+diff --git a/Documentation/devicetree/bindings/display/mxsfb-drm.txt b/Documentation/devicetree/bindings/display/mxsfb-drm.txt
+new file mode 100644
+index 0000000..e70d337
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/mxsfb-drm.txt
+@@ -0,0 +1,33 @@
++* Freescale MXS LCD Interface (LCDIF) with KMS/DRM support
++
++Required properties:
++- compatible:	Should be "fsl,imx23-lcdif" for i.MX23.
++		Should be "fsl,imx28-lcdif" for i.MX28 and i.MX6SX.
++- reg:		Address and length of the register set for lcdif
++- interrupts:	Should contain lcdif interrupts
++- clocks:	A list of phandle + clock-specifier pairs, one for each
++		entry in 'clock-names'.
++- clock-names:	A list of clock names. For MXSFB it should contain:
++    - "pix" for the MXSFB block clock
++    - (optional) "axi", "disp_axi" for the bus interface clock on MX6SX
++
++Required sub-nodes:
++  - port: The connection to an encoder chip.
++
++Example:
++
++	lcdif1: lcdif@02220000 {
++		compatible = "fsl,imx6sx-lcdif", "fsl,imx28-lcdif";
++		reg = <0x02220000 0x4000>;
++		interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clks IMX6SX_CLK_LCDIF1_PIX>,
++			 <&clks IMX6SX_CLK_LCDIF_APB>,
++			 <&clks IMX6SX_CLK_DISPLAY_AXI>;
++		clock-names = "pix", "axi", "disp_axi";
++
++		port {
++			parallel_out: endpoint {
++				remote-endpoint = <&panel_in_parallel>;
++			};
++		};
++	};
+-- 
+2.9.3
 
-> >>+	if (opt == 0)
-> >>+		return 133333333;
-> >>+	else if (opt == 1)
-> >>+		return 150000000;
-> >>+	else if (opt == 2)
-> >>+		return 166666667;
-> >>+	else
-> >>+		return 0;
-> >>+}
-> >
-> >Why not using a switch here ?
-> 
-> If you look at this in context[0], this is one of several
-> code-as-config declarations, none of which use a switch. IMO it's
-> more useful to make the similarity as obvious as possible if this is
-> ever refactored.
-
-Agreed. Please leave it as is, and if anybody does care about this,
-they can submit a followup patch refactoring all instances.
- 
-	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
