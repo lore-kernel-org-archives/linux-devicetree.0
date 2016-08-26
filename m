@@ -1,73 +1,67 @@
-From: Jamie Lentin <jm@lentin.co.uk>
-Subject: Re: [PATCH 0/8] Convert Netgear WNR854T to devicetree
-Date: Fri, 26 Aug 2016 13:56:53 +0100 (BST)
-Message-ID: <alpine.DEB.2.11.1608261325310.19980@marmot.wormnet.eu>
-References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
- <1472203264-21089-1-git-send-email-jm@lentin.co.uk> <op.ymsxegsy2s3iss@ecaz>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [RFC] drm: implement generic firmware eviction
+Date: Fri, 26 Aug 2016 14:58:51 +0200
+Message-ID: <ae99ee66-e3c4-8d97-0ff1-c6764e0d9d87@redhat.com>
+References: <20160826000056.12806-1-dh.herrmann@gmail.com>
+ <29bc1dab-7445-8470-f59b-6df908e83a3f@redhat.com>
+ <CANq1E4QFB4k+8C4eZUuUwO7mYDDYrKx2wbPJfAKe_GoOLOHv=A@mail.gmail.com>
+ <345e23d3-b55b-4d4d-e585-0ec8b243feb8@redhat.com>
+ <20160826085823.GB30441@lukather>
+ <04f9cb51-94f3-a26d-4966-385175340dd7@redhat.com>
+ <20160826125253.GB21452@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <op.ymsxegsy2s3iss@ecaz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Imre Kaloz <kaloz@openwrt.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, devicetree@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160826125253.GB21452@lukather>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Aug 2016, Imre Kaloz wrote:
-
-> Hi Jamie,
->
-> On Fri, 26 Aug 2016 11:20:56 +0200, Jamie Lentin <jm@lentin.co.uk> wrote:
->
-> <snip>
->
->> * Use Flash partition scheme from original netgear Linux image (but
->> keeping the uboot/uboot_env split) instead of the partition scheme from
->> the old non-DT support, which didn't match either Netgear's layout,
->> u-boot or openWRT. NB: I've no copy of the original flash contents
->> (Netgear's firmware images only contain a squashfs image of the rootfs),
->> so I can't confirm the other partitions are accurately named.
->
-> Both the factory layout and OpenWrt's changed a few times - the later just to 
-> accommodate bigger kernels. Some factory firmwares did include a kernel 
-> update, too.
-
-The Netgear firwmare images (as far as I've seen) all contain a uImage, as 
-the uImage lives in the same JFFS2 partition as the rootfs, which the 
-firmware image is a dump of.
-
-> I would suggest staying with the OpenWrt layour (maybe increase again the 
-> size of the kernel partition):
-> - the bootloader loads the kernel from JFFS2
-> - most of the partitions in the factory firmware are empty
-
-Phew, I'm not missing out on much then :)
-
-> - the factory layout gives you almost no space to play with
->
-> But this is up to you now :)
-
-When making a patchset for the D-Link DNS-325 I remember being told that 
-the kernel's default partition scheme should match the vendor's (even if 
-it is fairly nonsensical). It's easy enough to override if you've replaced 
-the default firmware, and I'll invariably be overriding it so the mainline 
-kernel definition won't make much difference to me either way.
-
-Of course, one could also argue I'm breaking backwards compatibility at 
-this point by changing it, so maybe I should put it back.
-
-> Best,
->
-> Imre
-
--- 
-Jamie Lentin
+SGksCgpPbiAyNi0wOC0xNiAxNDo1MiwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBPbiBGcmksIEF1
+ZyAyNiwgMjAxNiBhdCAxMTowMjoxN0FNICswMjAwLCBIYW5zIGRlIEdvZWRlIHdyb3RlOgo+PiBI
+aSwKPj4KPj4gT24gMjYtMDgtMTYgMTA6NTgsIE1heGltZSBSaXBhcmQgd3JvdGU6Cj4+PiBIaSwK
+Pj4+Cj4+PiBPbiBGcmksIEF1ZyAyNiwgMjAxNiBhdCAxMDo0Mzo1NUFNICswMjAwLCBIYW5zIGRl
+IEdvZWRlIHdyb3RlOgo+Pj4+Pj4gSSdtIG5vdCBzdXJlIHdlIHdvdWxkIHdhbnQgdG8gcmVtb3Zl
+IHRoZSBkZXZpY2UgYXQgYWxsLCB3ZQo+Pj4+Pj4gY2VydGFpbmx5IHNob3VsZCBub3QgYmUgcmVt
+b3ZpbmcgdGhlIGR0X25vZGUgZnJvbSB0aGUgZGV2aWNldHJlZQo+Pj4+Pj4gSU1ITy4gSGF2aW5n
+IHRoYXQgYXJvdW5kIHRvIHNlZSBob3cgdGhlIGJvb3Rsb2FkZXIgc2V0IHRoaW5ncyB1cAo+Pj4+
+Pj4gaXMgcmVhbGx5IHVzZWZ1bCBmb3IgZGVidWdnaW5nIGFuZCBub3JtYWxseSB3ZSBzaG91bGQg
+bmV2ZXIgbW9kaWZ5Cj4+Pj4+PiB0aGUgZGV2aWNldHJlZSBhcyBzZXQgdXAgYnkgdGhlIGJvb3Rs
+b2FkZXIuCj4+Pj4+Pgo+Pj4+Pj4gV2h5IG5vdCBqdXN0IHVuYmluZCB0aGUgZHJpdmVyIGZyb20g
+dGhlIHBsYXRmb3JtIGRldmljZT8gVGhhdAo+Pj4+Pj4gc2hvdWxkIGJlIGVub3VnaC4KPj4+Pj4K
+Pj4+Pj4gVGhhdCB3aWxsIGxlYXZlIElPUkVTT1VSQ0VfTUVNIGFyb3VuZCwgY2F1c2luZyBjb25m
+bGljdHMgaWYKPj4+Pj4gcmUtdXNlZC9jbGFpbWVkIGJ5IG90aGVyIGRldmljZXMvZHJpdmVycy4g
+RnVydGhlcm1vcmUsIGl0IGlzIHJlYWxseQo+Pj4+PiBmcmFnaWxlIGxlYXZpbmcgdGhlIGRldmlj
+ZSBhcm91bmQsIHdpdGhvdXQgYW55IGNvbnRyb2wgb3Zlcgo+Pj4+PiBwb3NzaWJsZSBmdXR1cmUg
+ZHJpdmVyIHByb2JpbmcuCj4+Pj4KPj4+PiBBaCwgZ29vZCBwb2ludC4gT24gQVJNIHRoaXMgY3Vy
+cmVudGx5IHR5cGljYWxseSBpcyByZXNlcnZlZCBieSB0aGUgYm9vdGxvYWRlcgo+Pj4+IHNvIG5l
+dmVyIHRvdWNoZWQgYnkgdGhlIGtlcm5lbCBhdCBhbGwsIG5vdCBldmVuIHdoZW4gdGhlIHNpbXBs
+ZWZiIGlzIG5vIGxvbmdlcgo+Pj4+IHVzZWQsIGFjdHVhbGx5IHJldHVybmluZyB0aGlzIG1lbW9y
+eSB0byB0aGUga2VybmVsIGFmdGVyIHVuYmluZGluZyB0aGUgc2ltcGxlZmIgLwo+Pj4+IGRlc3Ry
+b3lpbmcgdGhlIHNpbXBsZWZiIHBsYXRmb3JtLWRldiB3b3VsZCBiZSByZWFsbHkgZ29vZCB0byBk
+by4gV2Ugc2hvdWxkCj4+Pj4gcHJvYmFibHkgZmlndXJlIG91dCBob3cgdGhhdCBzaG91bGQgYmUg
+ZG9uZSBiZWZvcmUgZ2V0dGluZyByaWQgb2YKPj4+PiByZW1vdmVfY29uZmxpY3RpbmdfZnJhbWVi
+dWZmZXJzLi4uIChzb3JyeSkuCj4+Pgo+Pj4gVGhhdCB3b3VsZCBiZSByYXRoZXIgZWFzeSB0byBk
+by4gVGhlIGZpcm13YXJlIGNvdWxkIGdlbmVyYXRlIGEKPj4+IHJlc2VydmVkLW1lbW9yeSBub2Rl
+IGluc3RlYWQgb2YgcGFzc2luZyBhIHNtYWxsZXIgbWVtb3J5IHNpemUgdG8gdGhlCj4+PiBrZXJu
+ZWwuIFRoYXQgd2F5LCB0aGUga2VybmVsIHdpbGwga25vdyB0aGF0IGl0J3MgYWN0dWFsIHJhbSB0
+aGF0IGl0Cj4+PiBjYW4gcmVjbGFpbS4KPj4KPj4gU28gd2hlbiB3b3VsZCB0aGUga2VybmVsIHJl
+Y2xhaW0gdGhlIFJBTSB0aGVuPwo+Cj4gV2hlbiB3ZSBraWNrb3V0IHRoZSBmcmFtZWJ1ZmZlciBk
+cml2ZXI/CgpZZXMgdGhhdCBpcyB3aGVuIHdlIF93YW50XyBpdCB0byByZWNsYWltIHRoZSBSQU0s
+IG15IHF1ZXN0aW9uIHdhcyB3aGVuCml0IHdpbGwgX2FjdHVhbGx5XyBoYXBwZW4gPyBJJ20gbm90
+IGZhbWlsaWFyIHdpdGggdGhlIHJlc2VydmVkLW1lbW9yeQppbXBsZW1lbnRhdGlvbi4gRG9lcyB5
+b3VyIGFuc3dlciBtZWFuIHRoYXQgc29tZSBkcml2ZXIgbXVzdCBtYWtlIGFuCmV4cGxpY2l0IGNh
+bGwgdG8gZ2V0IHRoZSBtZW1vcnkgcmVjbGFpbWVkID8KClJlZ2FyZHMsCgpIYW5zCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
