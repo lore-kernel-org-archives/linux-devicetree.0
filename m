@@ -1,103 +1,41 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] ARM: dts: mvebu: fix reference to a390 spi controller
-Date: Fri, 26 Aug 2016 17:38:54 +0200
-Message-ID: <20160826153925.863488-1-arnd@arndb.de>
+From: Paul Burton <paul.burton@imgtec.com>
+Subject: [PATCH 11/26] dt-bindings: Document mti,mips-cpc binding
+Date: Fri, 26 Aug 2016 16:37:10 +0100
+Message-ID: <20160826153725.11629-12-paul.burton@imgtec.com>
+References: <20160826153725.11629-1-paul.burton@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160826153725.11629-1-paul.burton@imgtec.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Stefan Roese <sr@denx.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
+Cc: Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The SPI controller in the arch/arm/boot/dts/armada-39x.dtsi file has moved
-to a different location in the hierarchy, which breaks the overrides
-in the board specific file:
+Document a binding for the MIPS Cluster Power Controller (CPC) which
+simply allows the device tree to specify where the CPC registers should
+be mapped.
 
-Warning (reg_format): "reg" property in /soc/internal-regs/spi@10680/spi-flash@1 has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/internal-regs/spi@10680/spi-flash@1
-
-This changes the board to reference the spi controller by its label
-(which has not changed) rather than the full path.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Fixes: 0160a4b68987 ("ARM: dts: mvebu: A37x/XP/38x/39x: Move SPI controller nodes into 'soc' node")
+Signed-off-by: Paul Burton <paul.burton@imgtec.com>
 ---
- arch/arm/boot/dts/armada-390-db.dts | 60 ++++++++++++++++++-------------------
- 1 file changed, 30 insertions(+), 30 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-390-db.dts b/arch/arm/boot/dts/armada-390-db.dts
-index 9d0d9b2e9bfc..34e279d973c8 100644
---- a/arch/arm/boot/dts/armada-390-db.dts
-+++ b/arch/arm/boot/dts/armada-390-db.dts
-@@ -66,36 +66,6 @@
- 			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000>;
- 
- 		internal-regs {
--			spi@10680 {
--				status = "okay";
--				pinctrl-0 = <&spi1_pins>;
--				pinctrl-names = "default";
--
--				spi-flash@1 {
--					#address-cells = <1>;
--					#size-cells = <1>;
--					compatible = "n25q128a13",
--						     "jedec,spi-nor";
--					reg = <0>; /* Chip select 0 */
--					spi-max-frequency = <108000000>;
--
--					partitions {
--						compatible = "fixed-partitions";
--						#address-cells = <1>;
--						#size-cells = <1>;
--
--						partition@0 {
--							label = "U-Boot";
--							reg = <0 0x400000>;
--						};
--						partition@400000 {
--							label = "Filesystem";
--							reg = <0x400000 0xc00000>;
--						};
--					};
--				};
--			};
--
- 			i2c@11000 {
- 				status = "okay";
- 				clock-frequency = <100000>;
-@@ -173,3 +143,33 @@
- 		};
- 	};
- };
+ Documentation/devicetree/bindings/misc/mti,mips-cpc.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
+
+diff --git a/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt b/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
+new file mode 100644
+index 0000000..92eb08f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/mti,mips-cpc.txt
+@@ -0,0 +1,8 @@
++Binding for MIPS Cluster Power Controller (CPC).
 +
-+&spi1 {
-+	status = "okay";
-+	pinctrl-0 = <&spi1_pins>;
-+	pinctrl-names = "default";
++This binding allows a system to specify where the CPC registers should be
++mapped using device tree.
 +
-+	spi-flash@1 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "n25q128a13",
-+			     "jedec,spi-nor";
-+		reg = <0>; /* Chip select 0 */
-+		spi-max-frequency = <108000000>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "U-Boot";
-+				reg = <0 0x400000>;
-+			};
-+			partition@400000 {
-+				label = "Filesystem";
-+				reg = <0x400000 0xc00000>;
-+			};
-+		};
-+	};
-+};
++Required properties:
++compatible : Should be "mti,mips-cpc".
++regs: Should describe the address & size of the CPC register region.
 -- 
-2.9.0
+2.9.3
