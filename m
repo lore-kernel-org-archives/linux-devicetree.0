@@ -1,54 +1,59 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v2 2/7] drm/tilcdc: Add blue-and-red-crossed devicetree
- property
-Date: Fri, 26 Aug 2016 20:44:06 +0300
-Message-ID: <f4f9d53e-bc9a-6b88-7fe4-3f3015abfdb5@ti.com>
-References: <cover.1472126231.git.jsarha@ti.com>
- <d5e79ebd165f772758014f087a7f0fedba3efc84.1472126231.git.jsarha@ti.com>
- <CAL_JsqJyUz_PKHsT_kk=204C7dxa9_Wdh2UMvptV3oKjYV=CFQ@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 24/26] dt-bindings: Document img,boston-clock binding
+Date: Fri, 26 Aug 2016 10:44:46 -0700
+Message-ID: <20160826174446.GX19826@codeaurora.org>
+References: <20160826153725.11629-1-paul.burton@imgtec.com>
+ <20160826153725.11629-25-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqJyUz_PKHsT_kk=204C7dxa9_Wdh2UMvptV3oKjYV=CFQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, dri-devel <dri-devel@lists.freedesktop.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Karl Beldan <kbeldan@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Benoit Cousson <bcousson@baylibre.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160826153725.11629-25-paul.burton@imgtec.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Paul Burton <paul.burton@imgtec.com>
+Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMjYvMTYgMTU6NTEsIFJvYiBIZXJyaW5nIHdyb3RlOgo+PiAtLS0gYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aWxjZGMvdGlsY2RjLnR4dAo+PiA+ICsr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpbGNkYy90aWxj
-ZGMudHh0Cj4+ID4gQEAgLTE3LDYgKzE3LDggQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPj4gPiAg
-ICAgdGhlIGxjZCBjb250cm9sbGVyLgo+PiA+ICAgLSBtYXgtcGl4ZWxjbG9jazogVGhlIG1heGlt
-dW0gcGl4ZWwgY2xvY2sgdGhhdCBjYW4gYmUgc3VwcG9ydGVkCj4+ID4gICAgIGJ5IHRoZSBsY2Qg
-Y29udHJvbGxlciBpbiBLSHouCj4+ID4gKyAtIGJsdWUtYW5kLXJlZC1jcm9zc2VkOiBCb29sZWFu
-IHByb3BlcnR5LCBzZXQgdGhpcyBvZiBibHVlIGFuZCByZWQgd2lyZXMKPj4gPiArICAgZm9yIExD
-RF9EQVRBIGFyZSBjcm9zc2VkIGZvciAyNC1iaXQgUkdCIHN1cHBvcnQgKGFuZCAxNi1iaXQgQkdS
-IG1vZGUpLiBbMV0KPiBEb2Vzbid0IHRoaXMgbmVlZCB0byBiZSBibHVlLWFuZC1yZWQtc3RyYWln
-aHQgZm9yIGNvbXBhdGliaWxpdHk/Cj4gCgpUaGVyZSBpcyBubyB3YXkgdG8gYmUgYmFja3dhcmQg
-Y29tcGF0aWJsZSB3aXRoIGFsbCBhbTMgYmFzZWQgZGV2aWNlcy4KVGhpcyBjaG9pY2Uga2VlcHMg
-dGhlIGNvbXBhdGliaWxpdHkgd2l0aCBCZWFnbGVib25lLUJsYWNrIGFzIGZhciBhcyBpdApjYW4g
-YmUga2VwdCBhbmQgaXQgaXMgbW9yZSBsb2dpY2FsIGNob2ljZSBmb3IgdGhlIGJpbmRpbmcuIEFm
-dGVyIGFsbCBCQkIKaXMgd2F5IG1vcmUgY29tbW9uIGRldmljZSB0aGFuIGFtMzM1eC1ldm0gYW5k
-IGFtMzM1eC1ldm1zayBhcmUgdG9nZXRoZXIuCgpJIGRvbid0IHRoaW5rIHRoZXJlIGlzIGFueSBw
-cm9ibGVtcyB3aXRoIHRoZSBib2FyZHMgdGhhdCBoYXZlIGR0cyBmaWxlCmluIHRoZSBtYWlubGlu
-ZSBzb3VyY2UgdHJlZSwgbGlrZSB0aGVzZSB0aHJlZSBib2FyZHMsIGFzIGlmIHRoZSB1c2VyCnVz
-ZXMgdGhlIGxhdGVzdCBtYWlubGluZSBrZXJuZWwsIGhlIHByb2JhYmx5IHVzZXMgdGhlIGxhdGVz
-dCBkdGIgZmlsZSB0b28uCgpUaGUgcHJvYmxlbSBpcyB0aGUgY3VzdG9tIGJvYXJkcyB3aXRoIGN1
-c3RvbSBkdHMgZmlsZXMuIEkgY2FuIG5vdCB0aGluawpvZiBhbnkgd2F5IHRvIGRlYWwgd2l0aCB0
-aGlzIHByb2JsZW0gd2hpbGUgc3RpbGwgYmVpbmcgMTAwJSBjb21wYXRpYmxlCndpdGggYWxsIHRo
-ZSBkdGIgb3V0IHRoZXJlLiBUaGlzIGRlZmF1bHQgc2V0dGluZyBpcyBjb21wYXRpYmxlIHdpdGgK
-c3RhbmRhcmQgY29sb3VyIHdpcmluZyB0aGF0IGRvZXMgbm90IHRha2UgdGhlIGNvbG91ciBlcnJh
-dGEgaW50byBhY2NvdW50LgoKQlIsCkp5cmkKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+On 08/26, Paul Burton wrote:
+> diff --git a/Documentation/devicetree/bindings/clock/img,boston-clock.txt b/Documentation/devicetree/bindings/clock/img,boston-clock.txt
+> new file mode 100644
+> index 0000000..c01ea60
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/img,boston-clock.txt
+> @@ -0,0 +1,27 @@
+> +Binding for Imagination Technologies MIPS Boston clock sources.
+> +
+> +This binding uses the common clock binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required properties:
+> +- compatible : Should be "img,boston-clock".
+> +- #clock-cells : Should be set to 1.
+> +  Values available for clock consumers can be found in the header file:
+> +    <dt-bindings/clock/boston-clock.h>
+> +- regmap : Phandle to the Boston platform register system controller.
+> +  This should contain a phandle to the system controller node covering the
+> +  platform registers provided by the Boston board.
+> +
+> +Example:
+> +
+> +	clk_boston: clock {
+> +		compatible = "img,boston-clock";
+> +		#clock-cells = <1>;
+> +		regmap = <&plat_regs>;
+
+Isn't syscon more standard than regmap as the property name? Is
+there a binding for the plat_regs device? Is there any reason the
+clks can't be populated in that syscon driver?
+
+> +	};
+> +
+> +	uart0: uart@17ffe000 {
+> +		/* ... */
+> +		clocks = <&clk_boston BOSTON_CLK_SYS>;
+> +	};
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
