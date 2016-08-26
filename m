@@ -1,70 +1,43 @@
-From: Yang-Leo Li <leoyang.li@nxp.com>
-Subject: RE: [linux-devel] [PATCH 02/10] dt-bindings: esdhc: Update bindings
- for	LS1012A
-Date: Fri, 26 Aug 2016 16:08:49 +0000
-Message-ID: <AM2PR04MB07709867FC1968AAB4B6FE208FEC0@AM2PR04MB0770.eurprd04.prod.outlook.com>
-References: <1472207269-18499-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
- <1472207269-18499-2-git-send-email-Bhaskar.Upadhaya@nxp.com>
+From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/4] ARM: dts: TPS65218: Clean ups
+Date: Fri, 26 Aug 2016 21:41:59 +0530
+Message-ID: <6b1ba3c8-dcb5-4d9d-d231-734735d88eb9@ti.com>
+References: <1467626113-15705-1-git-send-email-j-keerthy@ti.com>
+ <20160826145059.ar37v7rbtcrah5yu@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1472207269-18499-2-git-send-email-Bhaskar.Upadhaya@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: "oss@buserror.net" <oss@buserror.net>, "linux-devel@gforge.freescale.net" <linux-devel@gforge.freescale.net>, Bhaskar U <bhaskar.upadhaya@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160826145059.ar37v7rbtcrah5yu-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-> -----Original Message-----
-> From: linux-devel-bounces@gforge.freescale.net [mailto:linux-devel-
-> bounces@gforge.freescale.net] On Behalf Of Bhaskar Upadhaya
-> Sent: Friday, August 26, 2016 5:28 AM
-> To: devicetree@vger.kernel.org; shawnguo@kernel.org
-> Cc: oss@buserror.net; linux-devel@gforge.freescale.net; Bhaskar U
-> <bhaskar.upadhaya@nxp.com>; linux-arm-kernel@lists.infradead.org
-> Subject: [linux-devel] [PATCH 02/10] dt-bindings: esdhc: Update bindings for
-> LS1012A
-> 
-> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
-> ---
->  Documentation/devicetree/bindings/mmc/fsl-esdhc.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
-> b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
-> index dedfb02..3257b4a 100644
-> --- a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
-> @@ -7,9 +7,9 @@ This file documents differences between the core properties
-> described  by mmc.txt and the properties used by the sdhci-esdhc driver.
-> 
->  Required properties:
-> +  - compatible : "fsl,mpc8378-esdhc", "fsl,ls1012a-esdhc0", "fsl,ls1012a-
-> esdhc1".
+On Friday 26 August 2016 08:21 PM, Tony Lindgren wrote:
+> * Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [160704 02:58]:
+>> Now that all the driver patches are Acked by respective sub-system
+>> Maintainers. Here is the set of Device Tree patches. Another set
+>> of Device Tree patches were posted earlier which touch the same
+>> files: https://lkml.org/lkml/2016/7/4/36
+>
+> Applying into omap-for-v4.9/dt thanks.
 
-What does it mean for esdhc0 and esdhc1?  If these are two different controllers used on the same chip, please describe what is the difference.  It is not clear from the name itself.
+Lee Jones,
 
->    - interrupt-parent : interrupt source phandle.
->    - clock-frequency : specifies eSDHC base clock frequency.
-> -
->  Optional properties:
->    - sdhci,wp-inverted : specifies that eSDHC controller reports
->      inverted write-protect state; New devices should use the generic
-> --
-> 1.9.1
-> 
-> _______________________________________________
-> linux-devel mailing list
-> linux-devel@gforge.freescale.net
-> http://gforge.freescale.net/mailman/listinfo/linux-devel
+This series was dependent on:
+https://lkml.org/lkml/2016/8/10/286
+
+All Acks are in place. Could you please pull the series?
+
+- Keerthy
+
+>
+> Tony
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
