@@ -1,11 +1,14 @@
 From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 0/3] nvmem: rockchip-efuse: support more rockchip SoCs
-Date: Fri, 26 Aug 2016 00:36:28 -0700
-Message-ID: <1472196991-8529-1-git-send-email-finley.xiao@rock-chips.com>
+Subject: [PATCH v3 2/3] ARM: dts: rockchip: update compatible strings for
+ Rockchip efuse
+Date: Fri, 26 Aug 2016 00:36:30 -0700
+Message-ID: <1472196991-8529-3-git-send-email-finley.xiao@rock-chips.com>
+References: <1472196991-8529-1-git-send-email-finley.xiao@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1472196991-8529-1-git-send-email-finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -19,26 +22,52 @@ To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-w
 Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-As the timing and organization of efuse may be different
-between rockchip SoCs, so their read function may be different.
-We add different device tree compatible string for rockchip SoCs
-to match their own read function.
+Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3066a.dtsi | 2 +-
+ arch/arm/boot/dts/rk3188.dtsi  | 2 +-
+ arch/arm/boot/dts/rk3288.dtsi  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+index c0ba86c..5387cc8 100644
+--- a/arch/arm/boot/dts/rk3066a.dtsi
++++ b/arch/arm/boot/dts/rk3066a.dtsi
+@@ -162,7 +162,7 @@
+ 	};
  
-V2->V3:
-- delete patch 3/4 in v2, don't add efuse0 device node
-- 3/3 fix read data error sometimes by disable efuse redundancy
-
-Finley Xiao (3):
-  nvmem: rockchip-efuse: update compatible strings for Rockchip efuse
-  ARM: dts: rockchip: update compatible strings for Rockchip efuse
-  nvmem: rockchip-efuse: add rk3399-efuse support
-
- .../devicetree/bindings/nvmem/rockchip-efuse.txt   |  13 +-
- arch/arm/boot/dts/rk3066a.dtsi                     |   2 +-
- arch/arm/boot/dts/rk3188.dtsi                      |   2 +-
- arch/arm/boot/dts/rk3288.dtsi                      |   2 +-
- drivers/nvmem/rockchip-efuse.c                     | 131 ++++++++++++++++++---
- 5 files changed, 126 insertions(+), 24 deletions(-)
-
+ 	efuse: efuse@20010000 {
+-		compatible = "rockchip,rockchip-efuse";
++		compatible = "rockchip,rk3066a-efuse";
+ 		reg = <0x20010000 0x4000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+index 31f81b2..869e189 100644
+--- a/arch/arm/boot/dts/rk3188.dtsi
++++ b/arch/arm/boot/dts/rk3188.dtsi
+@@ -147,7 +147,7 @@
+ 	};
+ 
+ 	efuse: efuse@20010000 {
+-		compatible = "rockchip,rockchip-efuse";
++		compatible = "rockchip,rk3188-efuse";
+ 		reg = <0x20010000 0x4000>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index cd33f01..0eadb96 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -1073,7 +1073,7 @@
+ 	};
+ 
+ 	efuse: efuse@ffb40000 {
+-		compatible = "rockchip,rockchip-efuse";
++		compatible = "rockchip,rk3288-efuse";
+ 		reg = <0xffb40000 0x20>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 1.9.1
