@@ -1,15 +1,17 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/7] drm/tilcdc: Add blue-and-red-crossed devicetree
- property
-Date: Fri, 26 Aug 2016 07:51:03 -0500
-Message-ID: <CAL_JsqJyUz_PKHsT_kk=204C7dxa9_Wdh2UMvptV3oKjYV=CFQ@mail.gmail.com>
-References: <cover.1472126231.git.jsarha@ti.com>
- <d5e79ebd165f772758014f087a7f0fedba3efc84.1472126231.git.jsarha@ti.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [RFC] drm: implement generic firmware eviction
+Date: Fri, 26 Aug 2016 14:52:53 +0200
+Message-ID: <20160826125253.GB21452@lukather>
+References: <20160826000056.12806-1-dh.herrmann@gmail.com>
+ <29bc1dab-7445-8470-f59b-6df908e83a3f@redhat.com>
+ <CANq1E4QFB4k+8C4eZUuUwO7mYDDYrKx2wbPJfAKe_GoOLOHv=A@mail.gmail.com>
+ <345e23d3-b55b-4d4d-e585-0ec8b243feb8@redhat.com>
+ <20160826085823.GB30441@lukather>
+ <04f9cb51-94f3-a26d-4966-385175340dd7@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============0057438060=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <d5e79ebd165f772758014f087a7f0fedba3efc84.1472126231.git.jsarha@ti.com>
+In-Reply-To: <04f9cb51-94f3-a26d-4966-385175340dd7@redhat.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -19,62 +21,101 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, dri-devel <dri-devel@lists.freedesktop.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Karl Beldan <kbeldan@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Benoit Cousson <bcousson@baylibre.com>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBBdWcgMjUsIDIwMTYgYXQgNzowMyBBTSwgSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNv
-bT4gd3JvdGU6Cj4gQWRkICJibHVlLWFuZC1yZWQtY3Jvc3NlZCItZGV2aWNlIHRyZWUgcHJvcGVy
-dHkgYW5kIHVwZGF0ZSBkZXZpY2V0cmVlCj4gYmluZGluZyBkb2N1bWVudC4gVGhlIHJlZCBhbmQg
-Ymx1ZSBjb21wb25lbnRzIGFyZSByZXZlcnNlZCBiZXR3ZWVuIDI0Cj4gYW5kIDE2IGJpdCBtb2Rl
-cyBvbiBhbTMzNXggTENEQyBvdXRwdXQgcGlucy4gVG8gZ2V0IDI0IFJHQiBmb3JtYXQgdGhlCj4g
-cmVkIGFuZCBibHVlIHdpcmVzIGhhcyB0byBiZSBjcm9zc2VkIGFuZCB0aGlzIGluIHR1cm4gY2F1
-c2VzIDE2IGNvbG9ycwo+IG91dHB1dCB0byBiZSBpbiBCR1IgZm9ybWF0LiBXaXRoIHN0cmFpZ2h0
-IHdpcmluZyB0aGUgMTYgY29sb3IgaXMgUkdCCj4gYW5kIDI0IGJpdCBpcyBCR1IuIFRoZSBuZXcg
-cHJvcGVydHkgZGVzY3JpYmVzIHdoZXRoZXIgdGhlIHJlZCBhbmQgYmx1ZQo+IHdpcmVzIGFyZSBj
-cm9zc2VkIG9yIG5vdC4gSWYgdGhlIHdpcmVzIGFyZSBjcm9zc2VkIHRoaXMgYm9vbGVhbiBwcm9w
-ZXJ0eQo+IHNob3VsZCBiZSBwcmVzZW50IGluIHRoZSByZWxldmFudCBkZXZpY2V0cmVlIG5vZGUu
-Cj4KPiBUaGUgYW0zMzV4LWV2bSBhbmQgYW0zMzV4LWV2bSBoYXZlIHRoZSBibHVlIGFuZCByZWQg
-d2lyZXMgY3Jvc3NlZCBmb3IKPiAyNCBiaXQgUkdCIG1vZGUgYW5kIGFmdGVyIHRoaXMgcGF0Y2gg
-dGhlaXIgTENEQyBub2RlcyBzaG91bGQgaGF2ZSB0aGlzCj4gcHJvcGVydHkgdG8gZ2V0IGNvcnJl
-Y3QgY29sb3JzIGluIHRoZSBkaXNwbGF5Lgo+Cj4gRm9yIG1vcmUgZGV0YWlscyBzZWUgc2VjdGlv
-biAzLjEuMSBpbiBBTTMzNXggU2lsaWNvbiBFcnJhdGE6Cj4gaHR0cDovL3d3dy50aS5jb20vZ2Vu
-ZXJhbC9kb2NzL2xpdC9nZXRsaXRlcmF0dXJlLnRzcD9iYXNlTGl0ZXJhdHVyZU51bWJlcj1zcHJ6
-MzYwCj4KPiBTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29tPgo+IC0tLQo+
-ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpbGNkYy90aWxjZGMudHh0ICB8IDEy
-ICsrKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Rydi5jICAgICAg
-ICAgICAgICAgIHwgMjQgKysrKysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0v
-dGlsY2RjL3RpbGNkY19kcnYuaCAgICAgICAgICAgICAgICB8ICA0ICsrKysKPiAgZHJpdmVycy9n
-cHUvZHJtL3RpbGNkYy90aWxjZGNfcGxhbmUuYyAgICAgICAgICAgICAgfCAgOSArKystLS0tLQo+
-ICA0IGZpbGVzIGNoYW5nZWQsIDQzIGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4KPiBk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGls
-Y2RjL3RpbGNkYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS90aWxjZGMvdGlsY2RjLnR4dAo+IGluZGV4IDZlZmE0YzUuLjQ4YTY2MGEgMTAwNjQ0Cj4gLS0t
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGlsY2RjL3RpbGNk
-Yy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90
-aWxjZGMvdGlsY2RjLnR4dAo+IEBAIC0xNyw2ICsxNyw4IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6
-Cj4gICAgIHRoZSBsY2QgY29udHJvbGxlci4KPiAgIC0gbWF4LXBpeGVsY2xvY2s6IFRoZSBtYXhp
-bXVtIHBpeGVsIGNsb2NrIHRoYXQgY2FuIGJlIHN1cHBvcnRlZAo+ICAgICBieSB0aGUgbGNkIGNv
-bnRyb2xsZXIgaW4gS0h6Lgo+ICsgLSBibHVlLWFuZC1yZWQtY3Jvc3NlZDogQm9vbGVhbiBwcm9w
-ZXJ0eSwgc2V0IHRoaXMgb2YgYmx1ZSBhbmQgcmVkIHdpcmVzCj4gKyAgIGZvciBMQ0RfREFUQSBh
-cmUgY3Jvc3NlZCBmb3IgMjQtYml0IFJHQiBzdXBwb3J0IChhbmQgMTYtYml0IEJHUiBtb2RlKS4g
-WzFdCgpEb2Vzbid0IHRoaXMgbmVlZCB0byBiZSBibHVlLWFuZC1yZWQtc3RyYWlnaHQgZm9yIGNv
-bXBhdGliaWxpdHk/Cgo+Cj4gIE9wdGlvbmFsIG5vZGVzOgo+Cj4gQEAgLTI4LDYgKzMwLDE0IEBA
-IE9wdGlvbmFsIG5vZGVzOgo+ICAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS90aWxjZGMvdGZwNDEwLnR4dCBmb3IgY29ubmVjdGluZwo+ICAgICB0ZnA0MTAgRFZJ
-IGVuY29kZXIgb3IgbGNkIHBhbmVsIHRvIGxjZGMKPgo+ICtbMV0gVGhlcmUgaXMgYW4gZXJyYXRh
-IGFib3V0IEFNMzM1eCBjb2xvciB3aXJpbmcuIEZvciAxNi1iaXQgY29sb3IgbW9kZQo+ICsgICAg
-dGhlIHdpcmVzIHdvcmsgYXMgdGhleSBzaG91bGQgKExDRF9EQVRBWzA6NF0gaXMgZm9yIEJsdWVb
-Mzo3XSksCj4gKyAgICBidXQgZm9yIDI0IGJpdCBjb2xvciBtb2RlcyB0aGUgd2lyaW5nIG9mIGJs
-dWUgYW5kIHJlZCBjb21wb25lbnRzIGlzCj4gKyAgICBjcm9zc2VkIGFuZCBMQ0RfREFUQVswOjRd
-IGlzIGZvciBSZWRbMzo3XSBhbmQgTENEX0RBVEFbMTE6MTVdIGlzCj4gKyAgICBmb3IgQmx1ZVsz
-LTddLiBGb3IgbW9yZSBkZXRhaWxzIHNlZSBzZWN0aW9uIDMuMS4xIGluIEFNMzM1eAo+ICsgICAg
-U2lsaWNvbiBFcnJhdGE6Cj4gKyAgICBodHRwOi8vd3d3LnRpLmNvbS9nZW5lcmFsL2RvY3MvbGl0
-L2dldGxpdGVyYXR1cmUudHNwP2Jhc2VMaXRlcmF0dXJlTnVtYmVyPXNwcnozNjAKPiArCj4gIEV4
-YW1wbGU6Cj4KPiAgICAgICAgIGZiOiBmYkA0ODMwZTAwMCB7Cj4gQEAgLTM3LDYgKzQ3LDggQEAg
-RXhhbXBsZToKPiAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDwzNj47Cj4gICAgICAgICAg
-ICAgICAgIHRpLGh3bW9kcyA9ICJsY2RjIjsKPgo+ICsgICAgICAgICAgICAgICBibHVlLWFuZC1y
-ZWQtd2lyaW5nID0gImNyb3NzZWQiOwo+ICsKClRoaXMgbmVlZHMgdG8gYmUgdXBkYXRlZC4KClJv
-YgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============0057438060==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/e2eDi0V/xtL+Mc8"
+Content-Disposition: inline
+
+
+--/e2eDi0V/xtL+Mc8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Aug 26, 2016 at 11:02:17AM +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 26-08-16 10:58, Maxime Ripard wrote:
+> >Hi,
+> >
+> >On Fri, Aug 26, 2016 at 10:43:55AM +0200, Hans de Goede wrote:
+> >>>>I'm not sure we would want to remove the device at all, we
+> >>>>certainly should not be removing the dt_node from the devicetree
+> >>>>IMHO. Having that around to see how the bootloader set things up
+> >>>>is really useful for debugging and normally we should never modify
+> >>>>the devicetree as set up by the bootloader.
+> >>>>
+> >>>>Why not just unbind the driver from the platform device? That
+> >>>>should be enough.
+> >>>
+> >>>That will leave IORESOURCE_MEM around, causing conflicts if
+> >>>re-used/claimed by other devices/drivers. Furthermore, it is really
+> >>>fragile leaving the device around, without any control over
+> >>>possible future driver probing.
+> >>
+> >>Ah, good point. On ARM this currently typically is reserved by the boot=
+loader
+> >>so never touched by the kernel at all, not even when the simplefb is no=
+ longer
+> >>used, actually returning this memory to the kernel after unbinding the =
+simplefb /
+> >>destroying the simplefb platform-dev would be really good to do. We sho=
+uld
+> >>probably figure out how that should be done before getting rid of
+> >>remove_conflicting_framebuffers... (sorry).
+> >
+> >That would be rather easy to do. The firmware could generate a
+> >reserved-memory node instead of passing a smaller memory size to the
+> >kernel. That way, the kernel will know that it's actual ram that it
+> >can reclaim.
+>=20
+> So when would the kernel reclaim the RAM then?
+
+When we kickout the framebuffer driver?
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--/e2eDi0V/xtL+Mc8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXwDulAAoJEBx+YmzsjxAgkTIP/RAbddk7wybXW0cuJntieUoT
++NHRf9EMTAOaMU+ZKBLam+bIuaB4RxZBpegfS4enijxeHPLxYJMP2VYtzovPQtqG
+2ITvU7cydZYzIoJScnviLtaib3dKSrThyQ+H4n1U1zu7bFk9wIZWNoFK/SwiQSy5
+Vr3Jivy8+4CCsVlvPwtd9MdDPr0XMb4W1+w9fK55AzBaYjn9akFWW3I8aO6RtSE4
+BAjMimnwezdrS0E63FLcMMOWHRtmP3zyPeROP7J21GJK4U03jQ8kjQZFCgjJLhlZ
+z1gqpo9JBIctsm8UAYqAatT56QoljJu7hkAcyPOR4+4VTR5R+NJ4hQKypzO6IOvL
+QRgMagmnRDy/6woL4KtXFKGDrHaGdlCNNt5r+wcC4iiClCAcg7JzBpmaBQGBEVdJ
+/6yHb3yV4SbASrciWgTYuhgY+sx+NKaUrUsmR90RCGEw5lkND/d8nOrCFI5ibQd9
+isz22lb4KbZKjdqHQ0wk7TVcpXWUdg2NK25cadGeL569KBgg4dsJpjVfyWzw5tAp
+XyxOdAHmk7WGSj4RHtdtlwYMztiQvXXGV+wsbHuEkvM+JGPGV79omF8jknZ0XJpt
+98o6B+pUkBX/1Q7mBux5nJUd7hX6BOPDef7gAoaXr6l2RGiGhZeEIYMRsLmz/oTa
+QLbdGf9f3+pyj+3pfHp8
+=1jP2
+-----END PGP SIGNATURE-----
+
+--/e2eDi0V/xtL+Mc8--
+
+--===============0057438060==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0057438060==--
