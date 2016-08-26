@@ -1,53 +1,39 @@
-From: "Steven J. Hill" <Steven.Hill@cavium.com>
-Subject: [PATCH v2] MIPS: Octeon: mark GPIO controller node not populated
- after IRQ init.
-Date: Fri, 26 Aug 2016 14:02:04 -0500
-Message-ID: <57C0922C.40907@cavium.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 0/3] Add R8A7792/Wheat board support
+Date: Fri, 26 Aug 2016 23:16:49 +0300
+Message-ID: <3665116.9BjHTnhfR3@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: linux-mips@linux-mips.org, ralf@linux-mips.org
-Cc: David Daney <david.daney@cavium.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: linux@arm.linux.org.uk, magnus.damm@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-We clear the OF_POPULATED flag for the GPIO controller node on Octeon
-processors. Otherwise, none of the devices hanging on the GPIO lines
-are probed. The 'gpio-leds' driver on OCTEON failed to probe in addition
-to other devices on Cavium 71xx and 78xx development boards.
+Hello.
 
-Fixes: 15cc2ed6dcf9 ("of/irq: Mark initialised interrupt controllers as populated")
-Signed-off-by: Steven J. Hill <steven.hill@cavium.com>
-Tested-by: Aaro Koskinen <aaro.koskinen@iki.fi>
----
- arch/mips/cavium-octeon/octeon-irq.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+   Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-20160826-v4.8-rc3' tag. We add the device tree support for
+the R8A7792-based Wheat board. I have only sparse board documentation
+at this point, according to which this board somewhat differs from the other
+R-Car evaluation boards in that it has debug serial port, debug Ethernet chip,
+and a NOR flash on the separate debug board (connected to the main board
+with a ribbon cable). I'm not sure how to approach this (DT overlay, perhaps?),
+for now I'm just posting the debug UART/Ethernet support the same way it was
+done for the Blanche board -- these components seem to be the same between 
+these 2 boards...
 
-diff --git a/arch/mips/cavium-octeon/octeon-irq.c b/arch/mips/cavium-octeon/octeon-irq.c
-index 5a9b87b..c1eb1ff 100644
---- a/arch/mips/cavium-octeon/octeon-irq.c
-+++ b/arch/mips/cavium-octeon/octeon-irq.c
-@@ -1619,6 +1619,12 @@ static int __init octeon_irq_init_gpio(
- 		return -ENOMEM;
- 	}
+[1/3] DT: arm: shmobile: document Wheat board
+[2/3] ARM: dts: wheat: initial device tree
+[3/3] ARM: dts: wheat: add Ethernet support
 
-+	/*
-+	 * Clear the OF_POPULATED flag that was set by of_irq_init()
-+	 * so that all GPIO devices will be probed.
-+	 */
-+	of_node_clear_flag(gpio_node, OF_POPULATED);
-+
- 	return 0;
- }
- /*
--- 
-1.9.1
+WBR, Sergei
