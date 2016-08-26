@@ -1,23 +1,34 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] ARM: dts: blanche: add support for general purpose
- LEDs
-Date: Fri, 26 Aug 2016 15:40:52 +0200
-Message-ID: <20160826134052.GA18513@verge.net.au>
-References: <5383928.8UnDsUpmkz@wasted.cogentembedded.com>
- <2604564.o6QQK9elnf@wasted.cogentembedded.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/3] ARM: imx: add SMP support for i.MX7D
+Date: Fri, 26 Aug 2016 15:48:08 +0200
+Message-ID: <201608261548.08227.arnd@arndb.de>
+References: <1472209971-32469-1-git-send-email-Anson.Huang@nxp.com> <20160826111356.GM1041@n2100.armlinux.org.uk> <AM3PR04MB13154FA0116D397AABD75E10F5EC0@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2604564.o6QQK9elnf@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM3PR04MB13154FA0116D397AABD75E10F5EC0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Yongcai Huang <anson.huang@nxp.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 24, 2016 at 10:22:22PM +0300, Sergei Shtylyov wrote:
-> Add support for the general purpose LEDs on the Blanche board.
+On Friday 26 August 2016, Yongcai Huang wrote:
+> > 
+> > It's about time iMX folk learned that "imx*" is a SoC and not a CPU.
+> > It should be "soc_is_imx7d()" because we're wanting to know whether the
+> > SoC is an iMX7D.  The CPU is a _Cortex-A7_.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Agree, I will add a new patch in this patch set to replace all the cpu_is_xxx with
+> Soc_is_xxx.
 
-Thanks, I have queued this up.
+I recently did a patch to remove all the cpu_is_mx{1,2,3,5}* macros, which ended up
+making the code simpler and more readable in most places. I think we can
+do the same for the cpu_is_imx{6,7}* macros.
+
+In this instance, the easy alternative is to have a separate smp_operation
+structure for imx7d rather than using the same as imx6 and then figuring
+out at runtime which one you have.
+
+	Arnd
