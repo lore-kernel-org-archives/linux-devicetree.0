@@ -1,157 +1,123 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 24/25] arm64: dts: msm8916: Add display support
-Date: Fri, 26 Aug 2016 07:12:45 -0500
-Message-ID: <CAL_Jsq+QjDm4oVoKVmmhe3+-RnVR8R3=wLoMqiKQDKm8W7tcPg@mail.gmail.com>
-References: <1466077007-26792-1-git-send-email-architt@codeaurora.org>
- <1466691210-22779-1-git-send-email-architt@codeaurora.org>
- <1466691210-22779-25-git-send-email-architt@codeaurora.org>
- <57BFCC27.1060306@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <57BFCC27.1060306@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/3] pinctrl: export pin_request to support parent pin
+Date: Fri, 26 Aug 2016 20:19:02 +0800
+Message-ID: <1472213942-4815-1-git-send-email-jun.nie@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jason.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBBdWcgMjUsIDIwMTYgYXQgMTE6NTcgUE0sIEFyY2hpdCBUYW5lamEgPGFyY2hpdHRA
-Y29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+IEhpIFJvYiwKPgo+IE9uIDA2LzIzLzIwMTYgMDc6NDMg
-UE0sIEFyY2hpdCBUYW5lamEgd3JvdGU6Cj4+Cj4+IFRoZSBNU004OTE2IFNvQyBjb250YWlucyBh
-IE1EUDUgYmFzZWQgZGlzcGxheSBibG9jaywgYW5kIG9uZSBEU0kgb3V0cHV0Lgo+PiBBZGQgdGhl
-IHRvcCBsZXZlbCBNRFNTIERUIG5vZGUsIGFuZCB0aGUgTURQNSwgRFNJIGFuZCBEU0kgUEhZIGNo
-aWxkcmVuCj4+IHN1Yi1ibG9ja3MuIEVzdGFibGlzaCB0aGUgbGluayBiZXR3ZWVuIE1EUDUncyBJ
-TlRGMSBvdXRwdXQgcG9ydCBhbmQgRFNJJ3MKPj4gaW5wdXQgcG9ydC4KPj4KPj4gQ2M6IEFuZHkg
-R3Jvc3MgPGFuZHkuZ3Jvc3NAbGluYXJvLm9yZz4KPj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoQGtl
-cm5lbC5vcmc+Cj4+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+Cj4KPiBDYW4gSSBn
-ZXQgYW4gQWNrIG9uIHRoaXM/CgpJIGRvbid0IHJlZ3VsYXJseSBhY2sgdGhlIGR0cyBmaWxlcyBh
-bmQgbGVhdmUgdGhhdCB0byB0aGUgcGxhdGZvcm0KbWFpbnRhaW5lcnMsIGJ1dCBsb29rcyBmaW5l
-IHRvIG1lOgoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+CgpSb2IKCgo+
-Cj4gVGhhbmtzLAo+IEFyY2hpdAo+Cj4KPj4KPj4gU2lnbmVkLW9mZi1ieTogQXJjaGl0IFRhbmVq
-YSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4KPj4gLS0tCj4+IHYyOgo+PiAgIC0gUmVtb3ZlZCAi
-cWNvbSxkc2ktaG9zdC1pbmRleCIgYW5kICJxY29tLGRzaS1waHktaW5kZXgiIHByb3BzCj4+Cj4+
-ICAgYXJjaC9hcm02NC9ib290L2R0cy9xY29tL21zbTg5MTYuZHRzaSB8IDExNwo+PiArKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDExNyBpbnNl
-cnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vbXNt
-ODkxNi5kdHNpCj4+IGIvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL21zbTg5MTYuZHRzaQo+PiBp
-bmRleCA5NjgxMjAwLi5mZTc0ZmVhIDEwMDY0NAo+PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRz
-L3Fjb20vbXNtODkxNi5kdHNpCj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204
-OTE2LmR0c2kKPj4gQEAgLTUzNyw2ICs1MzcsMTIzIEBACj4+ICAgICAgICAgICAgICAgICAgICAg
-ICAgIGNsb2NrcyA9IDwmZ2NjIEdDQ19QUk5HX0FIQl9DTEs+Owo+PiAgICAgICAgICAgICAgICAg
-ICAgICAgICBjbG9jay1uYW1lcyA9ICJjb3JlIjsKPj4gICAgICAgICAgICAgICAgIH07Cj4+ICsK
-Pj4gKyAgICAgICAgICAgICAgIG1kc3M6IG1kc3NAMWEwMDAwMCB7Cj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNvbSxtZHNzIjsKPj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgcmVnID0gPDB4MWEwMDAwMCAweDEwMDA+LAo+PiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICA8MHgxYWM4MDAwIDB4MzAwMD47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJl
-Zy1uYW1lcyA9ICJtZHNzX3BoeXMiLCAidmJpZl9waHlzIjsKPj4gKwo+PiArICAgICAgICAgICAg
-ICAgICAgICAgICBwb3dlci1kb21haW5zID0gPCZnY2MgTURTU19HRFNDPjsKPj4gKwo+PiArICAg
-ICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmdjYyBHQ0NfTURTU19BSEJfQ0xLPiwKPj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZnY2MgR0NDX01EU1NfQVhJX0NMSz4s
-Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmZ2NjIEdDQ19NRFNTX1ZTWU5D
-X0NMSz47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImlmYWNlX2Ns
-ayIsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImJ1c19jbGsiLAo+
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJ2c3luY19jbGsiOwo+PiAr
-Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MCA3MiAwPjsKPj4gKwo+
-PiArICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtY29udHJvbGxlcjsKPj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgI2ludGVycnVwdC1jZWxscyA9IDwxPjsKPj4gKwo+PiArICAgICAg
-ICAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgI3NpemUtY2VsbHMgPSA8MT47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJh
-bmdlczsKPj4gKwo+PiArICAgICAgICAgICAgICAgICAgICAgICBtZHA6IG1kcEAxYTAxMDAwIHsK
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInFjb20sbWRw
-NSI7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MWEwMTAwMCAw
-eDkwMDAwPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWctbmFtZXMgPSAi
-bWRwX3BoeXMiOwo+PiArCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJy
-dXB0LXBhcmVudCA9IDwmbWRzcz47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-aW50ZXJydXB0cyA9IDwwIDA+Owo+PiArCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgY2xvY2tzID0gPCZnY2MgR0NDX01EU1NfQUhCX0NMSz4sCj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgPCZnY2MgR0NDX01EU1NfQVhJX0NMSz4sCj4+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZnY2MgR0NDX01EU1NfTURQX0NM
-Sz4sCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZnY2MgR0ND
-X01EU1NfVlNZTkNfQ0xLPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9j
-ay1uYW1lcyA9ICJpZmFjZV9jbGsiLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgImJ1c19jbGsiLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgImNvcmVfY2xrIiwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICJ2c3luY19jbGsiOwo+PiArCj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgcG9ydHMgewo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsKPj4gKwo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9ydEAwIHsKPj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDA+Owo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtZHA1X2ludGYxX291dDogZW5k
-cG9pbnQgewo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9Cj4+IDwmZHNpMF9pbj47Cj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIH07Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4+ICsKPj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgZHNpMDogZHNpQDFhOTgwMDAgewo+PiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNvbSxtZHNzLWRzaS1jdHJsIjsKPj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHgxYTk4MDAwIDB4MjVjPjsKPj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWctbmFtZXMgPSAiZHNpX2N0cmwiOwo+PiAr
-Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0LXBhcmVudCA9IDwm
-bWRzcz47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDw0
-IDA+Owo+PiArCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXNzaWduZWQtY2xv
-Y2tzID0gPCZnY2MgQllURTBfQ0xLX1NSQz4sCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgPCZnY2MgUENMSzBfQ0xLX1NSQz47Cj4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgYXNzaWduZWQtY2xvY2stcGFyZW50cyA9IDwmZHNpX3Bo
-eTAgMD4sCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIDwmZHNpX3BoeTAgMT47Cj4+ICsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBjbG9ja3MgPSA8JmdjYyBHQ0NfTURTU19NRFBfQ0xLPiwKPj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmdjYyBHQ0NfTURTU19BSEJfQ0xLPiwKPj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmdjYyBHQ0NfTURTU19B
-WElfQ0xLPiwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8Jmdj
-YyBHQ0NfTURTU19CWVRFMF9DTEs+LAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIDwmZ2NjIEdDQ19NRFNTX1BDTEswX0NMSz4sCj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgPCZnY2MgR0NDX01EU1NfRVNDMF9DTEs+Owo+PiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gIm1kcF9jb3JlX2NsayIs
-Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiaWZhY2Vf
-Y2xrIiwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJi
-dXNfY2xrIiwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICJieXRlX2NsayIsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAicGl4ZWxfY2xrIiwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICJjb3JlX2NsayI7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-cGh5cyA9IDwmZHNpX3BoeTA+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBo
-eS1uYW1lcyA9ICJkc2ktcGh5IjsKPj4gKwo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHBvcnRzIHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNh
-ZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4+ICsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHBvcnRAMCB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgZHNpMF9pbjogZW5kcG9pbnQgewo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRw
-b2ludCA9Cj4+IDwmbWRwNV9pbnRmMV9vdXQ+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICB9Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfTsKPj4gKwo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgcG9ydEAxIHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgcmVnID0gPDE+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBkc2kwX291dDogZW5kcG9pbnQgewo+PiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+PiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgfTsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9
-Owo+PiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+PiArCj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIGRzaV9waHkwOiBkc2ktcGh5QDFhOTgzMDAgewo+PiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNvbSxkc2ktcGh5LTI4bm0tbHAiOwo+PiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDFhOTgzMDAgMHhkND4sCj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDB4MWE5ODUwMCAweDI4MD4sCj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDB4MWE5ODc4MCAweDMwPjsK
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWctbmFtZXMgPSAiZHNpX3BsbCIs
-Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImRzaV9waHki
-LAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJkc2lfcGh5
-X3JlZ3VsYXRvciI7Cj4+ICsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjY2xv
-Y2stY2VsbHMgPSA8MT47Cj4+ICsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBj
-bG9ja3MgPSA8JmdjYyBHQ0NfTURTU19BSEJfQ0xLPjsKPj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJpZmFjZV9jbGsiOwo+PiArICAgICAgICAgICAgICAg
-ICAgICAgICB9Owo+PiArICAgICAgICAgICAgICAgfTsKPj4gICAgICAgICB9Owo+Pgo+PiAgICAg
-ICAgIHNtZCB7Cj4+Cj4KPiAtLQo+IFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlz
-IGEgbWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAo+IGEgTGludXggRm91bmRhdGlvbiBDb2xs
-YWJvcmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+Some pin functions may be controlled in 2nd level multiplex.
+We need configure 1st level multiplex when request such
+functions. Export pin_request functionality so that parent
+can be configured automatically with calling it in
+pinmux_ops->request().
+
+Signed-off-by: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/pinctrl/core.c          | 20 ++++++++++++++++++++
+ drivers/pinctrl/pinmux.c        |  3 ++-
+ drivers/pinctrl/pinmux.h        |  9 +++++++++
+ include/linux/pinctrl/pinctrl.h |  2 ++
+ 4 files changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index fb38e20..0782a93 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -688,6 +688,26 @@ int pinctrl_gpio_direction_output(unsigned gpio)
+ }
+ EXPORT_SYMBOL_GPL(pinctrl_gpio_direction_output);
+ 
++/**
++ * pinctrl_request_pin() - request a single pin to be used
++ * @offset: the pin number from pinctrl dev pin number space
++ */
++int pinctrl_request_pin(struct pinctrl_dev *pctldev,
++			int offset, const char *owner)
++{
++	int ret;
++
++	mutex_lock(&pctldev->mutex);
++
++	ret = pin_request(pctldev, offset, owner, NULL);
++
++	mutex_unlock(&pctldev->mutex);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(pinctrl_request_pin);
++
++
+ static struct pinctrl_state *find_state(struct pinctrl *p,
+ 					const char *name)
+ {
+diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+index ece7028..b18c1f0 100644
+--- a/drivers/pinctrl/pinmux.c
++++ b/drivers/pinctrl/pinmux.c
+@@ -80,7 +80,7 @@ int pinmux_validate_map(struct pinctrl_map const *map, int i)
+  * @gpio_range: the range matching the GPIO pin if this is a request for a
+  *	single GPIO pin
+  */
+-static int pin_request(struct pinctrl_dev *pctldev,
++int pin_request(struct pinctrl_dev *pctldev,
+ 		       int pin, const char *owner,
+ 		       struct pinctrl_gpio_range *gpio_range)
+ {
+@@ -180,6 +180,7 @@ out:
+ 
+ 	return status;
+ }
++EXPORT_SYMBOL(pin_request);
+ 
+ /**
+  * pin_free() - release a single muxed in pin so something else can be muxed
+diff --git a/drivers/pinctrl/pinmux.h b/drivers/pinctrl/pinmux.h
+index d1a98b1c..6ff9baf 100644
+--- a/drivers/pinctrl/pinmux.h
++++ b/drivers/pinctrl/pinmux.h
+@@ -30,6 +30,9 @@ int pinmux_map_to_setting(struct pinctrl_map const *map,
+ void pinmux_free_setting(struct pinctrl_setting const *setting);
+ int pinmux_enable_setting(struct pinctrl_setting const *setting);
+ void pinmux_disable_setting(struct pinctrl_setting const *setting);
++int pin_request(struct pinctrl_dev *pctldev,
++		int pin, const char *owner,
++		struct pinctrl_gpio_range *gpio_range);
+ 
+ #else
+ 
+@@ -83,6 +86,12 @@ static inline void pinmux_disable_setting(
+ {
+ }
+ 
++int pin_request(struct pinctrl_dev *pctldev,
++		int pin, const char *owner,
++		struct pinctrl_gpio_range *gpio_range)
++{
++}
++
+ #endif
+ 
+ #if defined(CONFIG_PINMUX) && defined(CONFIG_DEBUG_FS)
+diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
+index a42e57d..13bb7a1 100644
+--- a/include/linux/pinctrl/pinctrl.h
++++ b/include/linux/pinctrl/pinctrl.h
+@@ -167,6 +167,8 @@ pinctrl_find_gpio_range_from_pin(struct pinctrl_dev *pctldev,
+ extern int pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
+ 				const char *pin_group, const unsigned **pins,
+ 				unsigned *num_pins);
++extern int pinctrl_request_pin(struct pinctrl_dev *pctldev,
++				int offset, const char *owner);
+ 
+ #ifdef CONFIG_OF
+ extern struct pinctrl_dev *of_pinctrl_get(struct device_node *np);
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
