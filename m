@@ -1,7 +1,7 @@
 From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Subject: [PATCH 8/8] arm: orion5x: Configure WNR854T ethernet PHY LEDs
-Date: Fri, 26 Aug 2016 10:21:04 +0100
-Message-ID: <1472203264-21089-9-git-send-email-jm@lentin.co.uk>
+Subject: [PATCH 1/8] arm: orion5x: Add documentation for SoC and board bindings
+Date: Fri, 26 Aug 2016 10:20:57 +0100
+Message-ID: <1472203264-21089-2-git-send-email-jm@lentin.co.uk>
 References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
  <1472203264-21089-1-git-send-email-jm@lentin.co.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -11,108 +11,45 @@ To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGT
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The default PHY configuration disables most of the LEDs. The following
-configures the ethernet activity LEDs as Netgear intended.
+Copy the format for kirkwood/dove to orion5x
 
 Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
-Andrew, note that the slave mdio bus is called "mdio", however there is
-an example in bindings/net/dsa/dsa.txt using "mdio-bus". Is this a
-mismatch to fix?
+ .../bindings/arm/marvell/marvell,orion5x.txt       | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell/marvell,orion5x.txt
 
-That said there's no formal definition of either node, and there's at
-least one DT (vf610-zii-dev-rev-b.dts) that uses "mdio" already merged.
----
- arch/arm/boot/dts/orion5x-netgear-wnr854t.dts | 51 +++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
-
-diff --git a/arch/arm/boot/dts/orion5x-netgear-wnr854t.dts b/arch/arm/boot/dts/orion5x-netgear-wnr854t.dts
-index 402a364..2a35a04 100644
---- a/arch/arm/boot/dts/orion5x-netgear-wnr854t.dts
-+++ b/arch/arm/boot/dts/orion5x-netgear-wnr854t.dts
-@@ -136,31 +136,82 @@
- 			port@0 {
- 				reg = <0>;
- 				label = "lan3";
-+				phy-handle = <&lan3phy>;
- 			};
- 
- 			port@1 {
- 				reg = <1>;
- 				label = "lan4";
-+				phy-handle = <&lan4phy>;
- 			};
- 
- 			port@2 {
- 				reg = <2>;
- 				label = "wan";
-+				phy-handle = <&wanphy>;
- 			};
- 
- 			port@3 {
- 				reg = <3>;
- 				label = "cpu";
-+				ethernet = <&ethport>;
- 			};
- 
- 			port@5 {
- 				reg = <5>;
- 				label = "lan1";
-+				phy-handle = <&lan1phy>;
- 			};
- 
- 			port@7 {
- 				reg = <7>;
- 				label = "lan2";
-+				phy-handle = <&lan2phy>;
-+			};
-+		};
+diff --git a/Documentation/devicetree/bindings/arm/marvell/marvell,orion5x.txt b/Documentation/devicetree/bindings/arm/marvell/marvell,orion5x.txt
+new file mode 100644
+index 0000000..a888011
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/marvell/marvell,orion5x.txt
+@@ -0,0 +1,23 @@
++Marvell Orion SoC Family Device Tree Bindings
++---------------------------------------------
 +
-+		mdio {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++Boards with a SoC of the Marvell Orion family, eg 88f5181
 +
-+			lan3phy: ethernet-phy@0 {
-+				/* Marvell 88E1121R (port 1) */
-+				compatible = "ethernet-phy-id0141.0cb0",
-+					     "ethernet-phy-ieee802.3-c22";
-+				reg = <0>;
-+				marvell,reg-init = <3 16 0 0x1777 3 17 0 0x15>;
-+			};
++* Required root node properties:
++compatible: must contain "marvell,orion5x"
 +
-+			lan4phy: ethernet-phy@1 {
-+				/* Marvell 88E1121R (port 2) */
-+				compatible = "ethernet-phy-id0141.0cb0",
-+					     "ethernet-phy-ieee802.3-c22";
-+				reg = <1>;
-+				marvell,reg-init = <3 16 0 0x1777 3 17 0 0x15>;
-+			};
++In addition, the above compatible shall be extended with the specific
++SoC. Currently known SoC compatibles are:
 +
-+			wanphy: ethernet-phy@2 {
-+				/* Marvell 88E1121R (port 1) */
-+				compatible = "ethernet-phy-id0141.0cb0",
-+					     "ethernet-phy-ieee802.3-c22";
-+				reg = <2>;
-+				marvell,reg-init = <3 16 0 0x1777 3 17 0 0x15>;
-+			};
++"marvell,orion5x-88f5182"
 +
-+			lan1phy: ethernet-phy@5 {
-+				/* Marvell 88E1112 */
-+				compatible = "ethernet-phy-id0141.0cb0",
-+					     "ethernet-phy-ieee802.3-c22";
-+				reg = <5>;
-+				marvell,reg-init = <3 16 0 0x1777 3 17 0 0x15>;
-+			};
++And in addition, the compatible shall be extended with the specific
++board. Currently known boards are:
 +
-+			lan2phy: ethernet-phy@7 {
-+				/* Marvell 88E1112 */
-+				compatible = "ethernet-phy-id0141.0cb0",
-+					     "ethernet-phy-ieee802.3-c22";
-+				reg = <7>;
-+				marvell,reg-init = <3 16 0 0x1777 3 17 0 0x15>;
- 			};
- 		};
- 	};
++"buffalo,lsgl"
++"buffalo,lswsgl"
++"buffalo,lswtgl"
++"lacie,ethernet-disk-mini-v2"
++"lacie,d2-network"
++"marvell,rd-88f5182-nas"
++"maxtor,shared-storage-2"
 -- 
 2.8.1
 
