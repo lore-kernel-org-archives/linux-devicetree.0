@@ -1,120 +1,156 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] sdhci-of-arasan: Set controller to test mode when
- Card Detection is broken.
-Date: Fri, 26 Aug 2016 17:50:43 +0800
-Message-ID: <0fa180a6-5634-bac9-f933-7d68eef84796@rock-chips.com>
-References: <1472166111-28872-1-git-send-email-zach.brown@ni.com>
- <1472166111-28872-2-git-send-email-zach.brown@ni.com>
- <57C000FF.3090307@topic.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57C000FF.3090307-Oq418RWZeHk@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>, adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [RFC/PATCH] dt: bindings: Define bindings for device idle states
+Date: Fri, 26 Aug 2016 12:24:33 +0200
+Message-ID: <1472207073-4901-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>, Lina Iyer <lina.iyer@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Brendan Jackman <Brendan.Jackman@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Geert Uytterhoeven <geert+renesas@glider.be>, Axel Haslam <ahaslam@baylibre.com>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016/8/26 16:42, Mike Looijmans wrote:
-> On 26-08-16 01:01, Zach Brown wrote:
->> The sdhci controller on xilinx zynq devices will not function unless
->> the CD bit is provided. http://www.xilinx.com/support/answers/61064.html
->> In cases where it is impossible to provide the CD bit in hardware,
->> setting the controller to test mode and then setting inserted to true
->> will get the controller to function without the CD bit.
->>
->> When the device has the property broken-cd the driver changes the
->> controller to test mode and sets test inserted to true to make the
->> controller function.
->>
->> Signed-off-by: Zach Brown <zach.brown-acOepvfBmUk@public.gmane.org>
->> ---
->>   drivers/mmc/host/sdhci-of-arasan.c | 17 ++++++++++++++++-
->>   drivers/mmc/host/sdhci.h           |  2 ++
->>   2 files changed, 18 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mmc/host/sdhci-of-arasan.c
->> b/drivers/mmc/host/sdhci-of-arasan.c
->> index e0f193f..3798a3b 100644
->> --- a/drivers/mmc/host/sdhci-of-arasan.c
->> +++ b/drivers/mmc/host/sdhci-of-arasan.c
->> @@ -26,6 +26,7 @@
->>   #include <linux/phy/phy.h>
->>   #include <linux/regmap.h>
->>   #include "sdhci-pltfm.h"
->> +#include <linux/of.h>
->
-> Not needed.
->
->>   #define SDHCI_ARASAN_CLK_CTRL_OFFSET    0x2c
->>   #define SDHCI_ARASAN_VENDOR_REGISTER    0x78
->> @@ -203,12 +204,26 @@ static void
->> sdhci_arasan_hs400_enhanced_strobe(struct mmc_host *mmc,
->>       writel(vendor, host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
->>   }
->>
->> +void sdhci_arasan_reset(struct sdhci_host *host, u8 mask)
->> +{
->> +    u8 ctrl;
->> +
->> +    sdhci_reset(host, mask);
->> +
->> +    if (host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) {
->> +        ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
->> +        ctrl |= SDHCI_CTRL_CDTEST_INS |
->> +            SDHCI_CTRL_CDTEST_EN;
->> +        sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
->> +    }
->> +}
+A device may be capable of entering a low power state when it becomes
+idle, which should avoid the device from wasting power.
 
-Although I don't have a "broken-cd" arasan controller,
-but are you suring that all the broken-cd arasan controller
-need to set these bit either? It seems your case is vendor specific?:)
+Unfortunate entering a such low power state for a device may often also
+come with a cost. This because when a new request is about to be served,
+the device must first to be woken up from its low power state. As that may
+take a while, the request may suffer from an initial latency.
 
->> +
->>   static struct sdhci_ops sdhci_arasan_ops = {
->>       .set_clock = sdhci_arasan_set_clock,
->>       .get_max_clock = sdhci_pltfm_clk_get_max_clock,
->>       .get_timeout_clock = sdhci_arasan_get_timeout_clock,
->>       .set_bus_width = sdhci_set_bus_width,
->> -    .reset = sdhci_reset,
->> +    .reset = sdhci_arasan_reset,
->>       .set_uhs_signaling = sdhci_set_uhs_signaling,
->>   };
->>
->> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
->> index 0411c9f..8d92d6e9 100644
->> --- a/drivers/mmc/host/sdhci.h
->> +++ b/drivers/mmc/host/sdhci.h
->> @@ -84,6 +84,8 @@
->>   #define   SDHCI_CTRL_ADMA32    0x10
->>   #define   SDHCI_CTRL_ADMA64    0x18
->>   #define   SDHCI_CTRL_8BITBUS    0x20
->> +#define  SDHCI_CTRL_CDTEST_INS   0x40
->> +#define  SDHCI_CTRL_CDTEST_EN     0x80
->>
->>   #define SDHCI_POWER_CONTROL    0x29
->>   #define  SDHCI_POWER_ON        0x01
->
-> Looks okay, tested it and appears to work just as well as a tie-off in
-> logic.
->
-> Tested-by: mike.looijmans-Oq418RWZeHk@public.gmane.org
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+These so called device idle states are characteristics of the hardware, so
+let's define some DT bindings to enable us to describe them.
 
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
 
+Similar DT bindings has been suggested earlier [1], although Rob raised
+primarily two conserns in that approach.
+
+*) The bindings was probably not future proof, some more flexibility was needed.
+
+**) As the bindings also relates to idles states for PM domains, it seemed
+reasonable to discuss them at the same time. As there is an ongoing discussion
+for that right now [2], I took the opportunity to bring up the discussion for
+device idles states again.
+
+[1]
+http://www.spinics.net/lists/devicetree/msg120515.html
+
+[2]
+http://www.spinics.net/lists/arm-kernel/msg522023.html
+
+---
+ .../bindings/power/device-idle-states.txt          | 102 +++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/device-idle-states.txt
+
+diff --git a/Documentation/devicetree/bindings/power/device-idle-states.txt b/Documentation/devicetree/bindings/power/device-idle-states.txt
+new file mode 100644
+index 0000000..222fafb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/device-idle-states.txt
+@@ -0,0 +1,102 @@
++Device idle states
++========================
++
++A device are often capable of entering a low power state(s) when it becomes
++idle, hence the terminology of device idle states. Entering an idle state for a
++device helps it to avoid wasting power and reduces the leakage of current.
++
++However, entering an idle state for a device may unfortunate often also come
++with a cost, as it could introduce a wakeup latency when a new request needs to
++be served using the device.
++
++Devices may support more than one idle state, where each state could have its
++own specific characteristic on how it impacts power saving, wakeup latency etc.
++
++These DT bindings can be used to describe these device idle states, but also to
++assign the supported idle states to devices.
++
++
++== Device idle states container node ==
++
++The device idle states are defined within a device-idle-states node, which
++provides a container where the device idle states must be listed as device tree
++nodes.
++
++
++== Device idle states nodes ==
++
++To be able to distinguish between different types of device idle states, a
++compatible string is assigned to each type. Currently one type is described,
++but this can be extended to more types if needed.
++
++Each device idle state node represents a device idle state description and must
++be defined as a child of the device idle states container node.
++
++
++== The simple device idle state type ==
++
++For most of the simple devices this type of device idle state, is sufficient to
++be able to describe the device's idle states. The supported properties can be
++extended if needed, although a more complex idle state is probably better
++described by using another type/compatible.
++
++Required properties:
++- compatible:		Must contain "simple-dev, idle-state".
++- entry-latency-ns:	An u32 value in nano-seconds representing the worst case
++			latency required for the device to enter the idle state.
++- exit-latency-ns:	An u32 value in nano-seconds representing the worst case
++			wakeup latency of the device, after entry-latency-ns has
++			passed.
++
++Optional properties:
++- idle-state-name: A string used as a descriptive name for the idle state.
++
++
++== Assigning idle states to devices ==
++
++Required properties:
++ - dev-idle-states:	A list of phandles pointing to the supported
++			device idle states nodes. The list must be ordered as
++			the shallower state - the earlier in the list.
++
++
++== Examples ==
++
++	device-idle-states {
++		RETENTION_0: dev-retention-0 {
++			compatible = "simple-dev,idle-state";
++			entry-latency-ns = <300>;
++			exit-latency-ns = <1000>;
++		};
++
++		SLEEP_0: dev-sleep-0 {
++			compatible = "simple-dev,idle-state";
++			entry-latency-us = <3000>;
++			exit-latency-us = <10000>;
++		};
++
++		SLEEP_1: dev-sleep-1 {
++			compatible = "simple-dev,idle-state";
++			entry-latency-us = <50000>;
++			exit-latency-us = <100000>;
++		};
++	};
++
++	leaky-device@12340000 {
++		compatible = "foo,i-leak-current";
++		reg = <0x12340000 0x1000>;
++		dev-idle-states = <&SLEEP_0>;
++	};
++
++	leaky-device@23450000 {
++		compatible = "foo,i-leak-current";
++		reg = <0x23450000 0x1000>;
++		dev-idle-states = <&RETENTION_0>, <&SLEEP_0>;
++	};
++
++	leaky-device@34560000 {
++		compatible = "foo,i-leak-current";
++		reg = <0x34560000 0x1000>;
++		dev-idle-states = <&SLEEP_1>;
++	};
++
 -- 
-Best Regards
-Shawn Lin
+1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
