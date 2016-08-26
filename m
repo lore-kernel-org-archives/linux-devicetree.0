@@ -1,36 +1,47 @@
-From: Vinay Simha BN <simhavcs@gmail.com>
-Subject: [PATCH 1/3] dt-bindings: Add Japan Display Inc vendor id
-Date: Fri, 26 Aug 2016 08:07:05 +0530
-Message-ID: <1472179029-9803-1-git-send-email-simhavcs@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Vinay Simha BN <simhavcs@gmail.com>, Archit Taneja <archit.taneja@gmail.com>, John Stultz <john.stultz@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Antony Pavlov <antonynpavlov@gmail.com>, Matt Ranostay <mranostay@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 0/3] Add SMP support for i.MX7D
+Date: Fri, 26 Aug 2016 19:12:48 +0800
+Message-ID: <1472209971-32469-1-git-send-email-Anson.Huang@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, linux@armlinux.org.uk, robh+dt@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add vendor id for Japan Display Inc.
+i.MX7D has 2 Cortex-A7 ARM cores, and it has a different GPC design
+than i.MX6, so this patch set adds a new GPCV2 driver for i.MX7D,
+and also adds runtime check in SMP code to support both Cortex-A9
+and Cortex-A7 ARM cores.
 
-Cc: Archit Taneja <archit.taneja@gmail.com>
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+With this patch set, i.MX7D can boot up SMP kernel with 2 CPUs.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 0d9d4d8..48b8128 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -139,6 +139,7 @@ invensense	InvenSense Inc.
- isee	ISEE 2007 S.L.
- isil	Intersil
- issi	Integrated Silicon Solutions Inc.
-+jdi	Japan Display Inc.
- jedec	JEDEC Solid State Technology Association
- karo	Ka-Ro electronics GmbH
- keymile	Keymile GmbH
+Anson Huang (3):
+  ARM: dts: imx7: support SMP boot up
+  ARM: imx: add gpcv2 support
+  ARM: imx: add SMP support for i.MX7D
+
+ arch/arm/boot/dts/imx7s.dtsi   |  8 +++++
+ arch/arm/mach-imx/Kconfig      |  4 +++
+ arch/arm/mach-imx/Makefile     |  1 +
+ arch/arm/mach-imx/common.h     |  2 ++
+ arch/arm/mach-imx/gpcv2.c      | 66 ++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-imx/headsmp.S    | 11 +++++++
+ arch/arm/mach-imx/mach-imx7d.c |  2 ++
+ arch/arm/mach-imx/platsmp.c    | 23 ++++++++++++++-
+ arch/arm/mach-imx/src.c        | 38 +++++++++++++++++++-----
+ 9 files changed, 146 insertions(+), 9 deletions(-)
+ create mode 100644 arch/arm/mach-imx/gpcv2.c
+
 -- 
-2.1.2
+1.9.1
