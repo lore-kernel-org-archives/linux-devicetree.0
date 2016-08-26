@@ -1,40 +1,130 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: fix the address map for WDT0 and WDT1
-Date: Fri, 26 Aug 2016 13:14:01 +0200
-Message-ID: <17136512.4k6A6uo3GV@diego>
-References: <1472208482-30862-1-git-send-email-zhengxing@rock-chips.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH 2/3] ARM: imx: add gpcv2 support
+Date: Fri, 26 Aug 2016 12:17:58 +0100
+Message-ID: <20160826111758.GN1041@n2100.armlinux.org.uk>
+References: <1472209971-32469-1-git-send-email-Anson.Huang@nxp.com>
+ <1472209971-32469-3-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472208482-30862-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1472209971-32469-3-git-send-email-Anson.Huang@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 26. August 2016, 18:48:01 schrieb Xing Zheng:
-> To rename "watchdog" to "watchdog0" explicitly for looking up.
-> Dues to incorrect description in the TRM, the WDTs base address
-> should be fixed and swap them like this:
-> WDT0 - 0xff848000
-> WDT1 - 0xff840000
+On Fri, Aug 26, 2016 at 07:12:50PM +0800, Anson Huang wrote:
+> diff --git a/arch/arm/mach-imx/gpcv2.c b/arch/arm/mach-imx/gpcv2.c
+> new file mode 100644
+> index 0000000..98577c4
+> --- /dev/null
+> +++ b/arch/arm/mach-imx/gpcv2.c
+> @@ -0,0 +1,66 @@
+> +/*
+> + * Copyright 2016 Freescale Semiconductor, Inc.
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +
+> +#include "common.h"
+> +
+> +#define GPC_CPU_PGC_SW_PUP_REQ	0xf0
+> +#define GPC_CPU_PGC_SW_PDN_REQ	0xfc
+> +#define GPC_PGC_C1		0x840
+> +
+> +#define BM_CPU_PGC_SW_PDN_PUP_REQ_CORE1_A7	0x2
+> +#define BM_GPC_PGC_PCG				0x1
+> +
+> +static void __iomem *gpcv2_base;
+> +
+> +static void imx_gpcv2_set_m_core_pgc(bool enable, u32 offset)
+> +{
+> +	u32 val = readl_relaxed(gpcv2_base + offset) & (~BM_GPC_PGC_PCG);
+
+Unnecessary parens, and the code doesn't flow with the bit clearance
+here...
+
+> +
+> +	if (enable)
+> +		val |= BM_GPC_PGC_PCG;
+
+My first read of this lead me to think "okay, so what's the point of
+enable=false".  It would be clearer with:
+
+	u32 val = readl_relaxed(gpcv2_base + offset);
+
+	if (enable)
+		val |= BM_GPC_PGC_PCG;
+	else
+		val &= ~BM_GPC_PGC_PCG;
+
+here.
+
+> +
+> +	writel_relaxed(val, gpcv2_base + offset);
+> +}
+> +
+> +void imx_gpcv2_set_core1_pdn_pup_by_software(bool pdn)
+> +{
+> +	u32 val = readl_relaxed(gpcv2_base + (pdn ?
+> +		GPC_CPU_PGC_SW_PDN_REQ : GPC_CPU_PGC_SW_PUP_REQ));
+> +
+> +	imx_gpcv2_set_m_core_pgc(true, GPC_PGC_C1);
+> +	val |= BM_CPU_PGC_SW_PDN_PUP_REQ_CORE1_A7;
+> +	writel_relaxed(val, gpcv2_base + (pdn ?
+> +		GPC_CPU_PGC_SW_PDN_REQ : GPC_CPU_PGC_SW_PUP_REQ));
+> +
+> +	while ((readl_relaxed(gpcv2_base + (pdn ?
+> +		GPC_CPU_PGC_SW_PDN_REQ : GPC_CPU_PGC_SW_PUP_REQ)) &
+> +		BM_CPU_PGC_SW_PDN_PUP_REQ_CORE1_A7) != 0)
+> +		;
+> +	imx_gpcv2_set_m_core_pgc(false, GPC_PGC_C1);
+> +}
+> +
+> +void __init imx_gpcv2_check_dt(void)
+> +{
+> +	struct device_node *np;
+> +
+> +	np = of_find_compatible_node(NULL, NULL, "fsl,imx7d-gpc");
+> +	if (WARN_ON(!np))
+> +		return;
+> +
+> +	gpcv2_base = of_iomap(np, 0);
+> +	WARN_ON(!gpcv2_base);
+
+What happens if gpcv2_base is NULL (apart from the obvious warning
+from the above line)?  I guess a bit later in the boot,
+imx_gpcv2_set_core1_pdn_pup_by_software() oopses the kernel,
+probably before the console has been initialised.  Probably not
+nice behaviour.
+
+> +}
+> -- 
+> 1.9.1
 > 
-> And, it is right that only WDT0 can generate global software reset.
-> We will update the TRM to fix it.
-> 
-> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-I had applied v1 already, so I have now just amended it with the watchdog0
-change [0]. In any case the fix is in my dts64 branch for 4.9 now.
-
-
-Heiko
-
-
-[0] https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.git/commit/?id=8859d81a562e484f06712fadb8886d78ed0be851
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
