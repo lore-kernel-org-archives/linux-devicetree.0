@@ -1,35 +1,30 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: sun8i: Rename reference-design-tablet
- touchscreen node
-Date: Sat, 27 Aug 2016 00:34:29 +0200
-Message-ID: <20160826223429.GM3165@lukather>
-References: <20160826144226.29969-1-hdegoede@redhat.com>
- <20160826144226.29969-4-hdegoede@redhat.com>
+Subject: Re: [PATCH 1/3] ARM: dts: sun8i: Add dt node for esp8089 wifi chip
+ on polaroid-mid2407
+Date: Sat, 27 Aug 2016 00:35:46 +0200
+Message-ID: <20160826223546.GN3165@lukather>
+References: <20160826145236.30210-1-hdegoede@redhat.com>
+ <20160826145236.30210-2-hdegoede@redhat.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="mI5TpPl/qDRoXxBg"
+        protocol="application/pgp-signature"; boundary="eGLW8NzjjVmDHwQh"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160826144226.29969-4-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20160826145236.30210-2-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---mI5TpPl/qDRoXxBg
+--eGLW8NzjjVmDHwQh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 26, 2016 at 04:42:26PM +0200, Hans de Goede wrote:
-> Rename the reference-design-tablet touchscreen node from gsl1680 to
-> touchscreen, all? tablets seem to use the same power and interrupt
-> gpio-s, but not all tablets use a gsl1680 controller making the
-> gsl1680 name somewhat misleading.
->=20
-> Also move the reg and compatible property to the actual tablet dts
-> as they may differ per tablet.
+On Fri, Aug 26, 2016 at 04:52:34PM +0200, Hans de Goede wrote:
+> The polaroid-mid2407 tablet has an esp8089 wifi chip,
+> add a dt node describing it.
 >=20
 > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
@@ -41,28 +36,28 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---mI5TpPl/qDRoXxBg
+--eGLW8NzjjVmDHwQh
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXwMP1AAoJEBx+YmzsjxAg6IUP/1Rhq6k8/W/yjuJGq5OxO5bp
-x3ffrN8dVCJIm/HY9VZ8VZmbEcKwJ3P7d80YABgVbeD9MsppsxLKFAk9mnPp4K/Q
-znrpKTY6E5xHHBx+julIbFc619Ivmx+v0/54M5kBRrTTzHfzuBU/rMi4Unf5eNRt
-t9flKOhxXiq2DVCqms3Zs2R2kr87Is/qXuEr+1KUnajcg7IKg/XfieTXKZkXij0r
-MlhgkOpX+FLXXKXOTq7nyZXCBqDYf1dhoM1J/aVGTAyvdrASah7O637otFmn3ypT
-jd/yNDpUnU+n42KEW6F/oJtkgVuESZoa7wwwrWwjifkYv+MGMEdQkhirIoZintXU
-Ghn1rVL3SU2iIyi6iCkJRvVfU8b4NtGrbuljiugt6HZ6n/9UwROhtfd67NdZj8n5
-rNHy6qflti4W3QSatZEMkpRIIP0r0ojz1rQg3fYUmzMIOMGer6xXMzf1Qo7o6raQ
-P8UcbfTc5dD+xFACWEYnf+P9qOoo+PYKePOIaYkNcuovgW5oEPbyUIJwosRfNSO6
-KaFkg/wSmYe/Haos6vlR0DAd03wQ/cAs9cPBhzHokPzzZPmx2IbJcUR9n4StGVdy
-lFqOoiZIRNPNCkR3Vmtz4oN9uEsZSfiO12QwhKY5CSVEiV+7khKdduICNoQE0AG4
-uu0blED7CoovzU4aZ3/u
-=pqSn
+iQIcBAEBAgAGBQJXwMRCAAoJEBx+YmzsjxAgxWUP/1yQAetWsqPYlyfCKftC43eS
+Q7zdpFvW0G0/GaxmGcXOtO2KGNtnDXl1S+r6v9yZwWEx+8VSUSN25Lrl/OgSzIfJ
+i3/y2g2Yqux9J7+IRbuiHMHg7SmyobCXMVFptGKGID7R9YWtr5RyXwEk9kEoLx2t
+pxJx1wDrr8WOuBMyyYEPjosbrdEesz1lLsXxiQMMPp1K/tTlHdzVyI+gnPncJipK
+FQMdWpx6qpngCykTL821sotYjRbRAvMSMh0viwl9/xc8GvdZqZ3Hj63JN6xIN5xp
+zBG7Zc3l+oonThWzduPbPVPKshbqTkWoP9SImmTiNyd4EfBvLVcK2D8HtXpihSWB
+169tRVKKWQsp8GMwmBTQwVXA4v4f7UMWMtyHsuWXsfkf12SVE+BXjV64d0trXmVr
+St6RkFT6skd/bmPX+XyHVZsCp7MORy199+Bjw8CSsy6S+Ycei74HP1JkKoIZ22EX
+SWxWHpXVhv9JgNmSkJWsYV7V+kGFuut8b1Cm9mhCSxds8N7Wl1ywoSOho1XR2f/T
+PunIZhP6e3mNMWPnUcRK0hhGXTsmMwvAsz+gq6u7U6YNUA1JcOZs0js/DkQL2j7v
+t/T0r+r8zwY0AXdAjc8hU4+ENDuotjCcnRUnTpLLuBpCnSJVajKY5QXpNBlGHPmG
+e1sF18bIZ/rRV+zHSsLA
+=Atcy
 -----END PGP SIGNATURE-----
 
---mI5TpPl/qDRoXxBg--
+--eGLW8NzjjVmDHwQh--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
