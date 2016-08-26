@@ -1,59 +1,149 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 24/26] dt-bindings: Document img,boston-clock binding
-Date: Fri, 26 Aug 2016 10:44:46 -0700
-Message-ID: <20160826174446.GX19826@codeaurora.org>
-References: <20160826153725.11629-1-paul.burton@imgtec.com>
- <20160826153725.11629-25-paul.burton@imgtec.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH v2 5/7] arm64: dts: exynos: Add dts files for Samsung
+ Exynos5433 64bit SoC
+Date: Fri, 26 Aug 2016 13:49:21 -0400
+Message-ID: <4341f429-64a9-b14c-aeca-d61aac2ee81d@osg.samsung.com>
+References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
+ <1472046551-703-6-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160826153725.11629-25-paul.burton@imgtec.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Paul Burton <paul.burton@imgtec.com>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472046551-703-6-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chanwoo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/26, Paul Burton wrote:
-> diff --git a/Documentation/devicetree/bindings/clock/img,boston-clock.txt b/Documentation/devicetree/bindings/clock/img,boston-clock.txt
-> new file mode 100644
-> index 0000000..c01ea60
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/img,boston-clock.txt
-> @@ -0,0 +1,27 @@
-> +Binding for Imagination Technologies MIPS Boston clock sources.
-> +
-> +This binding uses the common clock binding[1].
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible : Should be "img,boston-clock".
-> +- #clock-cells : Should be set to 1.
-> +  Values available for clock consumers can be found in the header file:
-> +    <dt-bindings/clock/boston-clock.h>
-> +- regmap : Phandle to the Boston platform register system controller.
-> +  This should contain a phandle to the system controller node covering the
-> +  platform registers provided by the Boston board.
-> +
-> +Example:
-> +
-> +	clk_boston: clock {
-> +		compatible = "img,boston-clock";
-> +		#clock-cells = <1>;
-> +		regmap = <&plat_regs>;
+Hello Chanwoo,
 
-Isn't syscon more standard than regmap as the property name? Is
-there a binding for the plat_regs device? Is there any reason the
-clks can't be populated in that syscon driver?
+The patch looks good to me, I just have a few minor comments:
 
-> +	};
+On 08/24/2016 09:49 AM, Chanwoo Choi wrote:
+
+[snip]
+
 > +
-> +	uart0: uart@17ffe000 {
-> +		/* ... */
-> +		clocks = <&clk_boston BOSTON_CLK_SYS>;
-> +	};
+> +	reboot: syscon-reboot {
+> +		compatible = "syscon-reboot";
+> +		regmap = <&pmu_system_controller>;
+> +		offset = <0x400>;
 
+Maybe adding a comment that the register is SWRESET to be consistent with the
+arm32 Exynos node definition in arch/arm/boot/dts/exynos-syscon-restart.dtsi?
+
+[snip]
+
+> +
+> +		tmu_atlas0: tmu@10060000 {
+> +			compatible = "samsung,exynos5433-tmu";
+> +			reg = <0x10060000 0x200>;
+> +			interrupts = <0 95 0>;
+
+For some interrupts definitions, you are using the GIC interrupt type macros
+while for others like this you are using the constant numbers. I think would
+be better to use the macros consistently (i.e: interrupts = <GIC_SPI 95 0>).
+
+[snip]
+
+> +		mipi_phy: video-phy@105C0708 {
+> +			compatible = "samsung,exynos5433-mipi-video-phy";
+> +			#phy-cells = <1>;
+> +			samsung,pmu-syscon = <&pmu_system_controller>;
+> +			samsung,cam0-sysreg = <&syscon_cam0>;
+> +			samsung,cam1-sysreg = <&syscon_cam1>;
+> +			samsung,disp-sysreg = <&syscon_disp>;
+> +		};
+
+This node has a unit name but it doesn't have a reg property so dtc will
+warn about the mismatch when executed with W=1.
+
+[snip]
+
+> +		usbdrd30: usb@15400000 {
+> +			compatible = "samsung,exynos5250-dwusb3";
+> +			clocks = <&cmu_fsys CLK_ACLK_USBDRD30>,
+> +				<&cmu_fsys CLK_SCLK_USBDRD30>;
+> +			clock-names = "usbdrd30", "usbdrd30_susp_clk";
+> +			assigned-clocks =
+> +				<&cmu_fsys CLK_MOUT_SCLK_USBDRD30_USER>,
+> +				<&cmu_top CLK_MOUT_SCLK_USBDRD30>,
+> +				<&cmu_top CLK_DIV_SCLK_USBDRD30>;
+> +			assigned-clock-parents =
+> +				<&cmu_top CLK_SCLK_USBDRD30_FSYS>,
+> +				<&cmu_top CLK_MOUT_BUS_PLL_USER>;
+> +			assigned-clock-rates = <0>, <0>, <66700000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			status = "disabled";
+> +
+
+Ditto, the node has unit address but no reg property.
+
+> +			dwc3 {
+> +				compatible = "snps,dwc3";
+> +				reg = <0x15400000 0x10000>;
+
+Ditto, the node doesn't have a unit address but has reg property.
+
+> +				interrupts = <0 231 0>;
+> +				phys = <&usbdrd30_phy 0>, <&usbdrd30_phy 1>;
+> +				phy-names = "usb2-phy", "usb3-phy";
+> +			};
+> +		};
+> +
+> +
+> +		usbhost30: usb@15a00000 {
+> +			compatible = "samsung,exynos5250-dwusb3";
+> +			clocks = <&cmu_fsys CLK_ACLK_USBHOST30>,
+> +				<&cmu_fsys CLK_SCLK_USBHOST30>;
+> +			clock-names = "usbdrd30", "usbdrd30_susp_clk";
+> +			assigned-clocks =
+> +				<&cmu_fsys CLK_MOUT_SCLK_USBHOST30_USER>,
+> +				<&cmu_top CLK_MOUT_SCLK_USBHOST30>,
+> +				<&cmu_top CLK_DIV_SCLK_USBHOST30>;
+> +			assigned-clock-parents =
+> +				<&cmu_top CLK_SCLK_USBHOST30_FSYS>,
+> +				<&cmu_top CLK_MOUT_BUS_PLL_USER>;
+> +			assigned-clock-rates = <0>, <0>, <66700000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			status = "disabled";
+> +
+
+Ditto, the node has unit address but no reg property.
+
+> +			usbdrd_dwc3_0: dwc3 {
+> +				compatible = "snps,dwc3";
+> +				reg = <0x15a00000 0x10000>;
+
+Ditto, the node doesn't have a unit address but has reg property.
+
+> +				interrupts = <0 244 0>;
+> +				phys = <&usbhost30_phy 0>, <&usbhost30_phy 1>;
+> +				phy-names = "usb2-phy", "usb3-phy";
+> +			};
+> +		};
+> +
+
+[snip]
+
+> +		audio-subsystem {
+> +			compatible = "samsung,exynos5433-lpass";
+> +			reg = <0x11400000 0x100>, <0x11500000 0x08>;
+
+Ditto, the node doesn't have a unit address but has reg property.
+
+Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+
+Best regards,
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
