@@ -1,47 +1,46 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 0/3] ARM: dts: sun8i: Add dt nodes for sdio wifi
-Date: Fri, 26 Aug 2016 17:52:05 +0200
-Message-ID: <43e78c53-77ee-5e20-a060-9e60ce37d3f0@redhat.com>
-References: <20160826145236.30210-1-hdegoede@redhat.com>
- <1318301472223656@web13m.yandex.ru>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: Add Keith&Koep vendor prefix
+Date: Fri, 26 Aug 2016 17:58:15 +0200
+Message-ID: <201608261758.16050.arnd@arndb.de>
+References: <20160826142918.7310-1-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1318301472223656@web13m.yandex.ru>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160826142918.7310-1-marex-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Friday 26 August 2016, Marek Vasut wrote:
+> Add vendor prefix for Keith&Koep GmbH , http://keith-koep.com/en/
+> 
+> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 2c2500d..0fec4a7 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -141,6 +141,7 @@ jedec	JEDEC Solid State Technology Association
+>  karo	Ka-Ro electronics GmbH
+>  keymile	Keymile GmbH
+>  kinetic Kinetic Technologies
+> +kk	Keith & Koep GmbH
 
-On 26-08-16 17:00, Icenowy Zheng wrote:
->
->
-> 26.08.2016, 22:58, "Hans de Goede" <hdegoede@redhat.com>:
->> Hi Maxime,
->>
->> Now that Ulf has merged the post-power-on-delay-ms mmc-pwrseq patches
->> in his mmc/next tree and Rob Herring has accepted the esp8089 dt
->> bindings (and specifically the esp,crystal-26M-en property), these
->> are ready for merging.
->
-> Can the driver now work without broken-cd?
 
-Sort-off, my fork of the esp8089 driver has a workaround so that
-it does not need broken-cd. I'm also working together with
-Ulf (the mmc maintainer) to come up with a clean upstream
-solution for this.
+This is really short, and my first guess what 'kk' should mean would be 'kankun',
+so I'd suggest using something longer here.
 
-Regards,
-
-Hans
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
