@@ -1,84 +1,54 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v8 16/18] ARM: DT: STi: stihxxx-b2120: Add DT nodes for STi audio card
-Date: Fri, 26 Aug 2016 15:56:51 +0100
-Message-ID: <1472223413-7254-17-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v8 02/18] MAINTAINERS: Add st slim core rproc driver to STi
+ section.
+Date: Fri, 26 Aug 2016 15:56:37 +0100
+Message-ID: <1472223413-7254-3-git-send-email-peter.griffin@linaro.org>
 References: <1472223413-7254-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472223413-7254-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1472223413-7254-1-git-send-email-peter.griffin@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, patrice.chotard@st.com, dan.j.williams@intel.com, airlied@linux.ie, kraxel@redhat.com, ohad@wizery.com, bjorn.andersson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, peter.griffin@linaro.org, dmaengine@vger.kernel.org, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables the uniperif players 2 & 3 for b2120 boards
-and also adds the "simple-audio-card" device node to interconnect
-the SoC sound device and the codec.
+This patch adds the slim core rproc driver to the STi section
+of the MAINTAINERS file.
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- arch/arm/boot/dts/stihxxx-b2120.dtsi | 45 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-index 722c63f..1f64bb6 100644
---- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-+++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-@@ -131,5 +131,50 @@
- 				dvb-card	= <STV0367_TDA18212_NIMA_1>;
- 			};
- 		};
-+
-+		sti_uni_player2: sti-uni-player@2 {
-+			status = "okay";
-+		};
-+
-+		sti_uni_player3: sti-uni-player@3 {
-+			status = "okay";
-+		};
-+
-+		sti_sasg_codec: sti-sasg-codec {
-+			status = "okay";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_spdif_out>;
-+		};
-+
-+		sound {
-+			compatible = "simple-audio-card";
-+			simple-audio-card,name = "sti audio card";
-+			status = "okay";
-+
-+			simple-audio-card,dai-link@0 {
-+				/* DAC */
-+				format = "i2s";
-+				mclk-fs = <256>;
-+				cpu {
-+					sound-dai = <&sti_uni_player2>;
-+				};
-+
-+				codec {
-+					sound-dai = <&sti_sasg_codec 1>;
-+				};
-+			};
-+			simple-audio-card,dai-link@1 {
-+				/* SPDIF */
-+				format = "left_j";
-+				mclk-fs = <128>;
-+				cpu {
-+					sound-dai = <&sti_uni_player3>;
-+				};
-+
-+				codec {
-+					sound-dai = <&sti_sasg_codec 0>;
-+				};
-+			};
-+		};
- 	};
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0bbe4b1..5dd3b24 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1749,6 +1749,7 @@ F:	drivers/phy/phy-stih407-usb.c
+ F:	drivers/phy/phy-stih41x-usb.c
+ F:	drivers/pinctrl/pinctrl-st.c
+ F:	drivers/remoteproc/st_remoteproc.c
++F:	drivers/remoteproc/st_slim_rproc.c
+ F:	drivers/reset/sti/
+ F:	drivers/rtc/rtc-st-lpc.c
+ F:	drivers/tty/serial/st-asc.c
+@@ -1757,6 +1758,7 @@ F:	drivers/usb/host/ehci-st.c
+ F:	drivers/usb/host/ohci-st.c
+ F:	drivers/watchdog/st_lpc_wdt.c
+ F:	drivers/ata/ahci_st.c
++F:	include/linux/remoteproc/st_slim_rproc.h
+ 
+ ARM/STM32 ARCHITECTURE
+ M:	Maxime Coquelin <mcoquelin.stm32@gmail.com>
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
