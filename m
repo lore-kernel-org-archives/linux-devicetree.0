@@ -1,16 +1,14 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v7 12/14] arm64/numa: remove the limitation that cpu0
- must bind to node0
-Date: Fri, 26 Aug 2016 16:49:42 +0100
-Message-ID: <20160826154942.GK30302@arm.com>
-References: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
- <1472024693-12912-13-git-send-email-thunder.leizhen@huawei.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 0/3] ARM: dts: sun8i: Add dt nodes for sdio wifi
+Date: Fri, 26 Aug 2016 17:52:05 +0200
+Message-ID: <43e78c53-77ee-5e20-a060-9e60ce37d3f0@redhat.com>
+References: <20160826145236.30210-1-hdegoede@redhat.com>
+ <1318301472223656@web13m.yandex.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1472024693-12912-13-git-send-email-thunder.leizhen@huawei.com>
+In-Reply-To: <1318301472223656@web13m.yandex.ru>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,87 +18,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zhen Lei <thunder.leizhen@huawei.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, Hanjun Guo <guohanjun@huawei.com>, linux-kernel <linux-kernel@vger.kernel.org>, Xinwei Hu <huxinwei@huawei.com>, Rob Herring <robh+dt@kernel.org>, Tianhong Ding <dingtianhong@huawei.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Icenowy Zheng <icenowy@aosc.xyz>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 24, 2016 at 03:44:51PM +0800, Zhen Lei wrote:
-> 1. Currently only cpu0 set on cpu_possible_mask and percpu areas have not
->    been initialized.
-> 2. No reason to limit cpu0 must belongs to node0.
+Hi,
 
-Whilst I suspect you're using enumerated lists in order to try to make
-things clearer, I'm having a really hard time understanding the commit
-messages you have in this series. It's actually much better if you
-structure them as concise paragraphs explaining:
+On 26-08-16 17:00, Icenowy Zheng wrote:
+>
+>
+> 26.08.2016, 22:58, "Hans de Goede" <hdegoede@redhat.com>:
+>> Hi Maxime,
+>>
+>> Now that Ulf has merged the post-power-on-delay-ms mmc-pwrseq patches
+>> in his mmc/next tree and Rob Herring has accepted the esp8089 dt
+>> bindings (and specifically the esp,crystal-26M-en property), these
+>> are ready for merging.
+>
+> Can the driver now work without broken-cd?
 
-  - What is the problem that you're fixing?
+Sort-off, my fork of the esp8089 driver has a workaround so that
+it does not need broken-cd. I'm also working together with
+Ulf (the mmc maintainer) to come up with a clean upstream
+solution for this.
 
-  - How does that problem manifest?
+Regards,
 
-  - How does the patch fix it?
-
-As far as I can see, this patch just removes a bunch of code with no
-explanation as to why it's not required or any problems caused by
-keeping it around.
-
-Will
-
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> ---
->  arch/arm64/mm/numa.c | 12 ++----------
->  1 file changed, 2 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-> index 114180f..07a1978 100644
-> --- a/arch/arm64/mm/numa.c
-> +++ b/arch/arm64/mm/numa.c
-> @@ -94,7 +94,6 @@ void numa_clear_node(unsigned int cpu)
->   */
->  static void __init setup_node_to_cpumask_map(void)
->  {
-> -	unsigned int cpu;
->  	int node;
-> 
->  	/* setup nr_node_ids if not done yet */
-> @@ -107,9 +106,6 @@ static void __init setup_node_to_cpumask_map(void)
->  		cpumask_clear(node_to_cpumask_map[node]);
->  	}
-> 
-> -	for_each_possible_cpu(cpu)
-> -		set_cpu_numa_node(cpu, NUMA_NO_NODE);
-> -
->  	/* cpumask_of_node() will now work */
->  	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
->  }
-> @@ -119,13 +115,13 @@ static void __init setup_node_to_cpumask_map(void)
->   */
->  void numa_store_cpu_info(unsigned int cpu)
->  {
-> -	map_cpu_to_node(cpu, numa_off ? 0 : cpu_to_node_map[cpu]);
-> +	map_cpu_to_node(cpu, cpu_to_node_map[cpu]);
->  }
-> 
->  void __init early_map_cpu_to_node(unsigned int cpu, int nid)
->  {
->  	/* fallback to node 0 */
-> -	if (nid < 0 || nid >= MAX_NUMNODES)
-> +	if (nid < 0 || nid >= MAX_NUMNODES || numa_off)
->  		nid = 0;
-> 
->  	cpu_to_node_map[cpu] = nid;
-> @@ -375,10 +371,6 @@ static int __init numa_init(int (*init_func)(void))
-> 
->  	setup_node_to_cpumask_map();
-> 
-> -	/* init boot processor */
-> -	cpu_to_node_map[0] = 0;
-> -	map_cpu_to_node(0, 0);
-> -
->  	return 0;
->  }
-> 
-> --
-> 2.5.0
-> 
-> 
+Hans
