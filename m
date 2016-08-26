@@ -1,276 +1,171 @@
 From: Paul Burton <paul.burton@imgtec.com>
-Subject: [PATCH v2 09/19] MIPS: SEAD3: Use register-bit-led driver via DT for LEDs
-Date: Fri, 26 Aug 2016 15:17:41 +0100
-Message-ID: <20160826141751.13121-10-paul.burton@imgtec.com>
+Subject: [PATCH v2 05/19] MIPS: SEAD3: Probe ethernet controller using DT
+Date: Fri, 26 Aug 2016 15:17:37 +0100
+Message-ID: <20160826141751.13121-6-paul.burton@imgtec.com>
 References: <20160826141751.13121-1-paul.burton@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <20160826141751.13121-1-paul.burton@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, Jacek Anaszewski <j.anaszewski@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Probe a driver for the PLED & FLED LEDs found on the SEAD3 board using
-the register-bit-led driver via device tree, rather than a custom driver
-via platform code. Enable support for the register-bit-led driver & its
-prerequisite syscon in sead3_defconfig.
+Probe the smsc911x ethernet controller using device tree rather than
+platform code, reducing the amount of the latter.
 
 Signed-off-by: Paul Burton <paul.burton@imgtec.com>
 ---
 
 Changes in v2: None
 
- arch/mips/boot/dts/mti/sead3.dts     | 103 +++++++++++++++++++++++++++++++++++
- arch/mips/configs/sead3_defconfig    |   2 +
- arch/mips/mti-sead3/Makefile         |   1 -
- arch/mips/mti-sead3/sead3-platform.c |  91 -------------------------------
- 4 files changed, 105 insertions(+), 92 deletions(-)
- delete mode 100644 arch/mips/mti-sead3/sead3-platform.c
+ arch/mips/boot/dts/mti/sead3.dts             | 12 ++++++++++
+ arch/mips/include/asm/mips-boards/sead3int.h |  2 --
+ arch/mips/mti-sead3/sead3-dtshim.c           | 15 ++++++++++++-
+ arch/mips/mti-sead3/sead3-platform.c         | 33 ----------------------------
+ 4 files changed, 26 insertions(+), 36 deletions(-)
 
 diff --git a/arch/mips/boot/dts/mti/sead3.dts b/arch/mips/boot/dts/mti/sead3.dts
-index 8844cc0..0159450 100644
+index 3f681c5..29ed194 100644
 --- a/arch/mips/boot/dts/mti/sead3.dts
 +++ b/arch/mips/boot/dts/mti/sead3.dts
-@@ -93,6 +93,109 @@
- 		};
- 	};
+@@ -87,4 +87,16 @@
  
-+	system-controller@1f000200 {
-+		compatible = "mti,sead3-cpld", "syscon", "simple-mfd";
-+		reg = <0x1f000200 0x300>;
+ 		no-loopback-test;
+ 	};
 +
-+		led@10.0 {
-+			compatible = "register-bit-led";
-+			offset = <0x10>;
-+			mask = <0x1>;
-+			label = "pled0";
-+		};
-+		led@10.1 {
-+			compatible = "register-bit-led";
-+			offset = <0x10>;
-+			mask = <0x2>;
-+			label = "pled1";
-+		};
-+		led@10.2 {
-+			compatible = "register-bit-led";
-+			offset = <0x10>;
-+			mask = <0x4>;
-+			label = "pled2";
-+		};
-+		led@10.3 {
-+			compatible = "register-bit-led";
-+			offset = <0x10>;
-+			mask = <0x8>;
-+			label = "pled3";
-+		};
-+		led@10.4 {
-+			compatible = "register-bit-led";
-+			offset = <0x10>;
-+			mask = <0x10>;
-+			label = "pled4";
-+		};
-+		led@10.5 {
-+			compatible = "register-bit-led";
-+			offset = <0x10>;
-+			mask = <0x20>;
-+			label = "pled5";
-+		};
-+		led@10.6 {
-+			compatible = "register-bit-led";
-+			offset = <0x10>;
-+			mask = <0x40>;
-+			label = "pled6";
-+		};
-+		led@10.7 {
-+			compatible = "register-bit-led";
-+			offset = <0x10>;
-+			mask = <0x80>;
-+			label = "pled7";
-+		};
++	eth@1f010000 {
++		compatible = "smsc,lan9115";
++		reg = <0x1f010000 0x10000>;
++		reg-io-width = <4>;
 +
-+		led@18.0 {
-+			compatible = "register-bit-led";
-+			offset = <0x18>;
-+			mask = <0x1>;
-+			label = "fled0";
-+		};
-+		led@18.1 {
-+			compatible = "register-bit-led";
-+			offset = <0x18>;
-+			mask = <0x2>;
-+			label = "fled1";
-+		};
-+		led@18.2 {
-+			compatible = "register-bit-led";
-+			offset = <0x18>;
-+			mask = <0x4>;
-+			label = "fled2";
-+		};
-+		led@18.3 {
-+			compatible = "register-bit-led";
-+			offset = <0x18>;
-+			mask = <0x8>;
-+			label = "fled3";
-+		};
-+		led@18.4 {
-+			compatible = "register-bit-led";
-+			offset = <0x18>;
-+			mask = <0x10>;
-+			label = "fled4";
-+		};
-+		led@18.5 {
-+			compatible = "register-bit-led";
-+			offset = <0x18>;
-+			mask = <0x20>;
-+			label = "fled5";
-+		};
-+		led@18.6 {
-+			compatible = "register-bit-led";
-+			offset = <0x18>;
-+			mask = <0x40>;
-+			label = "fled6";
-+		};
-+		led@18.7 {
-+			compatible = "register-bit-led";
-+			offset = <0x18>;
-+			mask = <0x80>;
-+			label = "fled7";
-+		};
++		interrupts = <0>; /* GIC 0 or CPU 6 */
++
++		phy-mode = "mii";
++		smsc,irq-push-pull;
++		smsc,save-mac-address;
 +	};
+ };
+diff --git a/arch/mips/include/asm/mips-boards/sead3int.h b/arch/mips/include/asm/mips-boards/sead3int.h
+index 3a5e079..7fdb9d4 100644
+--- a/arch/mips/include/asm/mips-boards/sead3int.h
++++ b/arch/mips/include/asm/mips-boards/sead3int.h
+@@ -14,10 +14,8 @@
+ 
+ /* CPU interrupt offsets */
+ #define CPU_INT_EHCI		2
+-#define CPU_INT_NET		6
+ 
+ /* GIC interrupt offsets */
+-#define GIC_INT_NET		GIC_SHARED_TO_HWIRQ(0)
+ #define GIC_INT_EHCI		GIC_SHARED_TO_HWIRQ(5)
+ 
+ #endif /* !(_MIPS_SEAD3INT_H) */
+diff --git a/arch/mips/mti-sead3/sead3-dtshim.c b/arch/mips/mti-sead3/sead3-dtshim.c
+index b462f65..279d8d4 100644
+--- a/arch/mips/mti-sead3/sead3-dtshim.c
++++ b/arch/mips/mti-sead3/sead3-dtshim.c
+@@ -25,7 +25,8 @@ static unsigned char fdt_buf[16 << 10] __initdata;
+ static int remove_gic(void *fdt)
+ {
+ 	const unsigned int cpu_uart_int = 4;
+-	int gic_off, cpu_off, uart_off, err;
++	const unsigned int cpu_eth_int = 6;
++	int gic_off, cpu_off, uart_off, eth_off, err;
+ 	uint32_t cfg, cpu_phandle;
+ 
+ 	/* leave the GIC node intact if a GIC is present */
+@@ -82,6 +83,18 @@ static int remove_gic(void *fdt)
+ 		return uart_off;
+ 	}
+ 
++	eth_off = fdt_node_offset_by_compatible(fdt, -1, "smsc,lan9115");
++	if (eth_off < 0) {
++		pr_err("unable to find ethernet DT node: %d\n", eth_off);
++		return eth_off;
++	}
 +
- 	/* UART connected to FTDI & miniUSB socket */
- 	uart0: uart@1f000900 {
- 		compatible = "ns16550a";
-diff --git a/arch/mips/configs/sead3_defconfig b/arch/mips/configs/sead3_defconfig
-index 23cce81..e1c6582 100644
---- a/arch/mips/configs/sead3_defconfig
-+++ b/arch/mips/configs/sead3_defconfig
-@@ -81,6 +81,7 @@ CONFIG_I2C_CHARDEV=y
- # CONFIG_I2C_HELPER_AUTO is not set
- CONFIG_SPI=y
- CONFIG_SENSORS_ADT7475=y
-+CONFIG_MFD_SYSCON=y
- CONFIG_BACKLIGHT_LCD_SUPPORT=y
- CONFIG_LCD_CLASS_DEVICE=y
- CONFIG_BACKLIGHT_CLASS_DEVICE=y
-@@ -95,6 +96,7 @@ CONFIG_MMC_DEBUG=y
- CONFIG_MMC_SPI=y
- CONFIG_NEW_LEDS=y
- CONFIG_LEDS_CLASS=y
-+CONFIG_LEDS_SYSCON=y
- CONFIG_LEDS_TRIGGERS=y
- CONFIG_LEDS_TRIGGER_HEARTBEAT=y
- CONFIG_RTC_CLASS=y
-diff --git a/arch/mips/mti-sead3/Makefile b/arch/mips/mti-sead3/Makefile
-index a58b6d9..04ea002 100644
---- a/arch/mips/mti-sead3/Makefile
-+++ b/arch/mips/mti-sead3/Makefile
-@@ -13,7 +13,6 @@ obj-y += sead3-display.o
- obj-y += sead3-dtshim.o
- obj-y += sead3-init.o
- obj-y += sead3-int.o
--obj-y += sead3-platform.o
- obj-y += sead3-reset.o
- obj-y += sead3-setup.o
- obj-y += sead3-time.o
++	err = fdt_setprop_u32(fdt, eth_off, "interrupts", cpu_eth_int);
++	if (err) {
++		pr_err("unable to set ethernet interrupts property: %d\n", err);
++		return err;
++	}
++
+ 	return 0;
+ }
+ 
 diff --git a/arch/mips/mti-sead3/sead3-platform.c b/arch/mips/mti-sead3/sead3-platform.c
-deleted file mode 100644
-index 5c1f42a..0000000
+index 538a6f8..9f9e914 100644
 --- a/arch/mips/mti-sead3/sead3-platform.c
-+++ /dev/null
-@@ -1,91 +0,0 @@
--/*
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file "COPYING" in the main directory of this archive
-- * for more details.
-- *
-- * Copyright (C) 2012 MIPS Technologies, Inc.  All rights reserved.
-- */
--#include <linux/dma-mapping.h>
--#include <linux/init.h>
--#include <linux/leds.h>
--#include <linux/platform_device.h>
--
--#define LEDFLAGS(bits, shift)		\
--	((bits << 8) | (shift << 8))
--
--#define LEDBITS(id, shift, bits)	\
--	.name = id #shift,		\
--	.flags = LEDFLAGS(bits, shift)
--
--static struct led_info led_data_info[] = {
--	{ LEDBITS("bit", 0, 1) },
--	{ LEDBITS("bit", 1, 1) },
--	{ LEDBITS("bit", 2, 1) },
--	{ LEDBITS("bit", 3, 1) },
--	{ LEDBITS("bit", 4, 1) },
--	{ LEDBITS("bit", 5, 1) },
--	{ LEDBITS("bit", 6, 1) },
--	{ LEDBITS("bit", 7, 1) },
--	{ LEDBITS("all", 0, 8) },
++++ b/arch/mips/mti-sead3/sead3-platform.c
+@@ -14,37 +14,9 @@
+ #include <linux/mtd/physmap.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+-#include <linux/smsc911x.h>
+ 
+ #include <asm/mips-boards/sead3int.h>
+ 
+-static struct smsc911x_platform_config sead3_smsc911x_data = {
+-	.irq_polarity	= SMSC911X_IRQ_POLARITY_ACTIVE_LOW,
+-	.irq_type	= SMSC911X_IRQ_TYPE_PUSH_PULL,
+-	.flags		= SMSC911X_USE_32BIT | SMSC911X_SAVE_MAC_ADDRESS,
+-	.phy_interface	= PHY_INTERFACE_MODE_MII,
 -};
 -
--static struct led_platform_data led_data = {
--	.num_leds	= ARRAY_SIZE(led_data_info),
--	.leds		= led_data_info
--};
--
--static struct resource pled_resources[] = {
+-static struct resource sead3_net_resources[] = {
 -	{
--		.start	= 0x1f000210,
--		.end	= 0x1f000217,
--		.flags	= IORESOURCE_MEM
--	}
--};
--
--static struct platform_device pled_device = {
--	.name			= "sead3::pled",
--	.id			= 0,
--	.dev			= {
--		.platform_data	= &led_data,
--	},
--	.num_resources		= ARRAY_SIZE(pled_resources),
--	.resource		= pled_resources
--};
--
--
--static struct resource fled_resources[] = {
--	{
--		.start			= 0x1f000218,
--		.end			= 0x1f00021f,
+-		.start			= 0x1f010000,
+-		.end			= 0x1f01ffff,
 -		.flags			= IORESOURCE_MEM
+-	}, {
+-		.flags			= IORESOURCE_IRQ
 -	}
 -};
 -
--static struct platform_device fled_device = {
--	.name			= "sead3::fled",
+-static struct platform_device sead3_net_device = {
+-	.name			= "smsc911x",
 -	.id			= 0,
 -	.dev			= {
--		.platform_data	= &led_data,
+-		.platform_data	= &sead3_smsc911x_data,
 -	},
--	.num_resources		= ARRAY_SIZE(fled_resources),
--	.resource		= fled_resources
+-	.num_resources		= ARRAY_SIZE(sead3_net_resources),
+-	.resource		= sead3_net_resources
 -};
 -
--static struct platform_device sead3_led_device = {
--        .name   = "sead3-led",
--        .id     = -1,
--};
--
--static struct platform_device *sead3_platform_devices[] __initdata = {
--	&pled_device,
--	&fled_device,
--	&sead3_led_device,
--};
--
--static int __init sead3_platforms_device_init(void)
--{
--	return platform_add_devices(sead3_platform_devices,
--				    ARRAY_SIZE(sead3_platform_devices));
--}
--
--device_initcall(sead3_platforms_device_init);
+ static struct mtd_partition sead3_mtd_partitions[] = {
+ 	{
+ 		.name =		"User FS",
+@@ -175,7 +147,6 @@ static struct platform_device *sead3_platform_devices[] __initdata = {
+ 	&fled_device,
+ 	&sead3_led_device,
+ 	&ehci_device,
+-	&sead3_net_device,
+ };
+ 
+ static int __init sead3_platforms_device_init(void)
+@@ -204,13 +175,9 @@ static int __init sead3_platforms_device_init(void)
+ 	if (gic_present) {
+ 		ehci_resources[1].start =
+ 			irq_create_mapping(irqd, GIC_INT_EHCI);
+-		sead3_net_resources[1].start =
+-			irq_create_mapping(irqd, GIC_INT_NET);
+ 	} else {
+ 		ehci_resources[1].start =
+ 			irq_create_mapping(irqd, CPU_INT_EHCI);
+-		sead3_net_resources[1].start =
+-			irq_create_mapping(irqd, CPU_INT_NET);
+ 	}
+ 
+ 	return platform_add_devices(sead3_platform_devices,
 -- 
 2.9.3
