@@ -1,22 +1,22 @@
 From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 4/8] arm: orion5x: Alias uart0 to serial0 for all orion5x
-Date: Fri, 26 Aug 2016 16:54:13 +0200
-Message-ID: <20160826145413.GJ25046@lunn.ch>
+Subject: Re: [PATCH 5/8] arm: orion5x: Add DT include for mv88f5181
+Date: Fri, 26 Aug 2016 16:55:21 +0200
+Message-ID: <20160826145521.GK25046@lunn.ch>
 References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
  <1472203264-21089-1-git-send-email-jm@lentin.co.uk>
- <1472203264-21089-5-git-send-email-jm@lentin.co.uk>
+ <1472203264-21089-6-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1472203264-21089-5-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+In-Reply-To: <1472203264-21089-6-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 26, 2016 at 10:21:00AM +0100, Jamie Lentin wrote:
-> Allowing us to specify boot console in a standard manner in board DTs.
+On Fri, Aug 26, 2016 at 10:21:01AM +0100, Jamie Lentin wrote:
+> Common definitions for the SoC for board definitions to use.
 > 
 > Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 
