@@ -1,70 +1,54 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: da850: Add missing pin muxing for the UARTs
-Date: Fri, 26 Aug 2016 17:12:53 +0530
-Message-ID: <cf22ea55-ab23-ca29-fd18-76d51320d3f8@ti.com>
-References: <20160804110656.25318-1-kbeldan@baylibre.com>
- <m2eg64pchw.fsf@baylibre.com> <20160804210045.GD15013@gobelin>
- <m2fuqknnqk.fsf@baylibre.com> <fe36e8d1-f371-b093-de15-5e03370ea38c@ti.com>
- <dd4712ba-6144-8c64-59a6-7673936af53c@ti.com>
- <20160824082934.GA20246@gobelin>
- <354081bd-653d-ec98-f18e-eb0b1b1ee7e3@ti.com>
- <20160825140507.GA13734@gobelin>
+From: "Imre Kaloz" <kaloz@openwrt.org>
+Subject: Re: [PATCH 0/8] Convert Netgear WNR854T to devicetree
+Date: Fri, 26 Aug 2016 14:09:42 +0200
+Message-ID: <op.ymsxegsy2s3iss@ecaz>
+References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
+ <1472203264-21089-1-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160825140507.GA13734@gobelin>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1472203264-21089-1-git-send-email-jm@lentin.co.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, Rob
+ Herring <robh@kernel.org>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Jamie Lentin <jm@lentin.co.uk>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 25 August 2016 07:45 PM, Karl Beldan wrote:
+Hi Jamie,
 
->>> Indeed ATM the EVM relies on the bootloader to setup the pin muxing.
->>>
->>> I just checked the uart pins routing of the EVM, the dts:
->>> - should reclaim serial2_rxtx_pins and serial2_rtscts_pins
->>
->> Can you please clarify what you mean by dts should "reclaim". You mean
->> move the pins from da850.dtsi to da850-evm.dts or something else?
->>
-> 
-> No, in the part you are replying to I am not referring to moving the
-> pins but reclaiming them. The pins are declared in the dtsi, as they
-> should. Eg. the LCDK dts reclaims serial2_rxtx_pins but doesn't reclaim
-> serial2_rtscts_pins while their declarations remain in the dtsi.
+On Fri, 26 Aug 2016 11:20:56 +0200, Jamie Lentin <jm@lentin.co.uk> wrote:
 
-Alright. I am not sure if "reclaim" is the right term for this, but it
-doesn't matter ;) I understand the intent now.
+<snip>
 
-> The purpose of this part was to clarify what I saw on the schematics
-> because your emails include the following 2 statements:
-> 
->>>>> Looks like the flow control pins are being used for McASP also on the
->>>>> EVM. So lets leave the EVM as-is.
-> 
->>>> Rather, the EVM dts file should be updated to use serial2_rxtx_pins like
->>>> the LCDK. Right now it seems to be relying on bootloader to serial2
-> 
-> My email was to inform that it concerns the flow control pins of the
-> UART1 only and that the UART2 flow control pins are not concerned and, 
-> since they are dedicated to the UART2, should be reclaimed unlike
-> in the LCDK.
+> * Use Flash partition scheme from original netgear Linux image (but
+> keeping the uboot/uboot_env split) instead of the partition scheme from
+> the old non-DT support, which didn't match either Netgear's layout,
+> u-boot or openWRT. NB: I've no copy of the original flash contents
+> (Netgear's firmware images only contain a squashfs image of the rootfs),
+> so I can't confirm the other partitions are accurately named.
 
-I see now.
+Both the factory layout and OpenWrt's changed a few times - the later just  
+to accommodate bigger kernels. Some factory firmwares did include a kernel  
+update, too.
 
-I think I was thrown off by looking at the fact that mcasp0_pins in
-da850-evm.dts muxes UART2_RTS as AMUTE. But, its the mcasp0_pins that
-needs fixing. AMUTE is not used by audio on the board. As is AFSR. Plus,
-that pinmux entry goes and writes to PINMIX0[31:28] the value of 0x1
-which is reserved. Sigh.
+I would suggest staying with the OpenWrt layour (maybe increase again the  
+size of the kernel partition):
+- the bootloader loads the kernel from JFFS2
+- most of the partitions in the factory firmware are empty
+- the factory layout gives you almost no space to play with
 
-I will review your original e-mail and reply back.
+But this is up to you now :)
 
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Best,
+
+Imre
