@@ -1,97 +1,85 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: DT connectors, thoughts
-Date: Thu, 25 Aug 2016 18:38:41 -0700
-Message-ID: <147217552167.17958.11590706771471540284@sboyd-linaro>
-References: <577ACE0D.9050700@gmail.com> <20160718142037.GS16769@voom.fritz.box>
- <CAL_JsqLkMA1VHfHpP4oCWtONWq5GeyS731r8PjjeL_DZ4u1Z_g@mail.gmail.com>
- <20160722042556.GL15941@voom.fritz.box>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160722042556.GL15941@voom.fritz.box>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Gibson <david@gibson.dropbear.id.au>, Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Mark Rutland <mark.rutland@arm.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek =?utf-8?B?VmHFoXV0?= <marex@denx.de>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>
+From: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 2/3] dt-bindings: Add jdi lt070me05000 panel bindings
+Date: Fri, 26 Aug 2016 08:07:06 +0530
+Message-ID: <1472179029-9803-2-git-send-email-simhavcs@gmail.com>
+References: <1472179029-9803-1-git-send-email-simhavcs@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472179029-9803-1-git-send-email-simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Archit Taneja <archit.taneja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:DRM PANEL DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting David Gibson (2016-07-21 21:25:56)
-> On Thu, Jul 21, 2016 at 02:15:57PM -0500, Rob Herring wrote:
-> > On Mon, Jul 18, 2016 at 9:20 AM, David Gibson
-> > <david@gibson.dropbear.id.au> wrote:
-> > =
+Add documentation for lt070me05000 panel
 
-> > I understand how you are using i2c alias, but not the intc. It would
-> > help if the same names were not used in multiple places unless they
-> > are the same thing.
-> =
+Cc: Archit Taneja <archit.taneja-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sumit Semwal <sumit.semwal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Vinay Simha BN <simhavcs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> Yes, sorry.  We have both the /soc/intc node which is the base board's
-> master interrupt controller.  Then we have the connector local 'intc'
-> alias which describes the local interrupt space for just the
-> connector.
-> =
+---
+v2:
+ * incorporated rob herring and thierry reviews
+   gpio to gpios, gpio to regulator using fixed regulators
+   and pwm backlight is removed, since it is controlled by
+   dcs commands
 
-> > What does using aliases here buy us vs. just properties with a
-> > phandle?
-> =
+v3:
+ * incorporated thierry reviews
+   - Added gpio polarity details for reset-gpios
+   - proper naming conventions and sequence wrt panel datasheet
+     (vddp-supply, iovcc-supply,
+      enable-gpios, reset-gpios, dcdc-en-gpios)
+---
+ .../bindings/display/panel/jdi,lt070me05000.txt    | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
 
-> Um.. I'm not sure what you mean.
+diff --git a/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
+new file mode 100644
+index 0000000..4724952
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
+@@ -0,0 +1,33 @@
++JDI model LT070ME05000 1200x1920 7" DSI Panel
++
++Required properties:
++- compatible: should be "jdi,lt070me05000"
++- vddp-supply: phandle of the regulator that provides the supply voltage
++  Power IC supply (3-5V)
++- iovcc-supply: phandle of the regulator that provides the supply voltage
++  IOVCC , power supply for LCM (1.8V)
++- enable-gpios: phandle of gpio for enable line
++  LED_EN, LED backlight enable, High active
++- reset-gpios: phandle of gpio for reset line
++  This should be 8mA, gpio can be configured using mux, pinctrl, pinctrl-names
++  XRES, Reset, Low active
++- dcdc-en-gpios: phandle of the gpio for power ic line
++  Power IC supply enable, High active
++
++Example:
++
++	dsi0: qcom,mdss_dsi@4700000 {
++		panel@0 {
++			compatible = "jdi,lt070me05000";
++			reg = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&dsi_panel_pinctrl>;
++
++			vddp-supply = <&pm8921_l17>;
++			iovcc-supply = <&pm8921_lvs7>;
++
++			enable-gpios = <&pm8921_gpio 36 GPIO_ACTIVE_HIGH>;
++			reset-gpios = <&tlmm_pinmux 54 GPIO_ACTIVE_LOW>;
++			dcdc-en-gpios = <&pm8921_gpio 23 GPIO_ACTIVE_HIGH>;
++		};
++	};
+-- 
+2.1.2
 
-I think Rob means drop the aliases node and just have:
-
-	property =3D &phandle;
-
-In this example:
-
-	i2c =3D &i2c;
-	intc =3D &w1_irqs;
-	mmio =3D &mmio;
-
-or perhaps to have a list of phandles and names that map to them?
-
-	targets =3D <&i2c>, <&w1_irqs>, <&mmio>;
-	target-names =3D "i2c", "intc", "mmio";
-
-?
-
-> =
-
-> > >                                 mmio =3D &mmio;
-> > >                         };
-> > >                 };
-> > >         };
-> > > };
-> > >
-> > > Note that the symbols are local to the connector, and explicitly
-> > > listed, rather than including all labels in the tree.  This is to
-> > > enforce (or at the very least encourage) plugins to only access those
-> > > parts of the base tree.
-> > >
-> > > Note also the use of an interrupt nexus node contained within the
-> > > connector to control which irqs the socketed device can use.  I think
-> > > this needs some work to properly handle unit addresses, but hope
-> > > that's enough to give the rough idea.
-> > >
-> > > So, what does the thing that goes in the socket look like?  I'm
-> > > thinking some new dts syntax like this:
-> > >
-> > > /dts-v1/;
-> > >
-> > > /plugin/ foo,widget-socket {
-> > >         compatible =3D "foo,whirligig-widget";
-> > > };
-> > >
-> > > &i2c {
-> > >         whirligig-controller@... {
-> > >                 ...
-> > >                 interrupt-parent =3D <&widget-irqs>;
-> > >                 interrupts =3D <0>;
-> > >         };
-> > > };
-
-How would we support an expansion board that goes onto two
-sockets/connectors provided by the baseboard when the connectors
-"export" the same phandle aliases? From what I can tell with this design
-we'll be unable to describe a device on the expansion board that is
-wired to properties provided by the two connectors.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
