@@ -1,279 +1,158 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V6] clk: bcm: Add driver for BCM53573 ILP clock
-Date: Fri, 26 Aug 2016 14:25:02 +0200
-Message-ID: <20160826122511.19047-1-zajec5@gmail.com>
-References: <20160823062613.13865-1-zajec5@gmail.com>
+From: Yongcai Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 2/3] ARM: imx: add gpcv2 support
+Date: Fri, 26 Aug 2016 12:25:34 +0000
+Message-ID: <AM3PR04MB131555F86F300E9B544069D6F5EC0@AM3PR04MB1315.eurprd04.prod.outlook.com>
+References: <1472209971-32469-1-git-send-email-Anson.Huang@nxp.com>
+ <1472209971-32469-3-git-send-email-Anson.Huang@nxp.com>
+ <20160826111758.GN1041@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160823062613.13865-1-zajec5@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, Eric Anholt <eric@anholt.net>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160826111758.GN1041-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
 
-This clock is present on BCM53573 devices (including BCM47189) that use
-Cortex-A7. ILP is a part of PMU (Power Management Unit) and so it should
-be defined as one of its subnodes (subdevices). For more details see
-Documentation entry.
 
-Unfortunately there isn't a set of registers related to ILP clock only.
-We use registers 0x66c, 0x674 and 0x6dc and between them there are e.g.
-"retention*" and "control_ext" regs. This is why this driver maps all
-0x1000 B of space.
+Best Regards!
+Anson Huang
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
-V2: Rebase on top of clk-next
-    Use ALP as parent clock
-    Improve comments
-    Switch from ioremap_nocache to ioremap
-    Check of_clk_add_provide result for error
-V3: Drop #include <linux/moduleh>
-    Make ILP DT entry part of PMU
-    Describe ILP as subdevice of PMU in Documentation
-V4: Use BCM53573 name as suggested by Jon and Ray. It seems "Northstar"
-    (even if used in some resources) should be used in relation to
-    Cortex-A9 devices only.
-V5: Rename remaining "ns" references to "bcm53573", sorry, I sent V4 too
-    early.
-V6: Drop #include <linux/clk.h>
-    Use "int" as type where it matches usage
-    Add cpu_relax() in the loop
-    Add disable callback
-    Use _hw_ functions for registering struct clk_hw (new API)
 
-    Thanks a lot Stephen!
----
- .../bindings/clock/brcm,bcm53573-ilp.txt           |  40 ++++++
- drivers/clk/bcm/Makefile                           |   1 +
- drivers/clk/bcm/clk-bcm53573-ilp.c                 | 157 +++++++++++++++++++++
- 3 files changed, 198 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
- create mode 100644 drivers/clk/bcm/clk-bcm53573-ilp.c
 
-diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt b/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
-new file mode 100644
-index 0000000..5ab3107
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
-@@ -0,0 +1,40 @@
-+Broadcom BCM53573 ILP clock
-+===========================
-+
-+This binding uses the common clock binding:
-+    Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+This binding is used for ILP clock (sometimes referred as "slow clock")
-+on Broadcom BCM53573 devices using Cortex-A7 CPU.
-+
-+This clock is part of PMU (Power Management Unit), a Broadcom's device
-+handing power-related aspects. Please note PMU contains more subdevices,
-+ILP is only one of them.
-+
-+ILP's rate has to be calculated on runtime and it depends on ALP clock
-+which has to be referenced.
-+
-+Required properties:
-+- compatible: "brcm,bcm53573-ilp"
-+- reg: iomem address range of PMU (Power Management Unit)
-+- reg-names: "pmu", the only needed & supported reg right now
-+- clocks: has to reference an ALP clock
-+- #clock-cells: should be <0>
-+
-+Example:
-+
-+pmu@18012000 {
-+	compatible = "simple-bus";
-+	ranges = <0x00000000 0x18012000 0x00001000>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	ilp: ilp@0 {
-+		compatible = "brcm,bcm53573-ilp";
-+		reg = <0 0x1000>;
-+		reg-names = "pmu";
-+		clocks = <&alp>;
-+		#clock-cells = <0>;
-+		clock-output-names = "ilp";
-+	};
-+};
-diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-index 1d79bd2..4b8c56d 100644
---- a/drivers/clk/bcm/Makefile
-+++ b/drivers/clk/bcm/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-ns2.o
- obj-$(CONFIG_ARCH_BCM_CYGNUS)	+= clk-cygnus.o
- obj-$(CONFIG_ARCH_BCM_NSP)	+= clk-nsp.o
- obj-$(CONFIG_ARCH_BCM_5301X)	+= clk-nsp.o
-+obj-$(CONFIG_ARCH_BCM_53573)	+= clk-bcm53573-ilp.o
-diff --git a/drivers/clk/bcm/clk-bcm53573-ilp.c b/drivers/clk/bcm/clk-bcm53573-ilp.c
-new file mode 100644
-index 0000000..faf2b0a
---- /dev/null
-+++ b/drivers/clk/bcm/clk-bcm53573-ilp.c
-@@ -0,0 +1,157 @@
-+/*
-+ * Copyright (C) 2016 Rafał Miłecki <rafal@milecki.pl>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/slab.h>
-+
-+#define PMU_XTAL_FREQ_RATIO			0x66c
-+#define  XTAL_ALP_PER_4ILP			0x00001fff
-+#define  XTAL_CTL_EN				0x80000000
-+#define PMU_SLOW_CLK_PERIOD			0x6dc
-+
-+struct bcm53573_ilp {
-+	struct clk_hw hw;
-+	void __iomem *pmu;
-+};
-+
-+static int bcm53573_ilp_enable(struct clk_hw *hw)
-+{
-+	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
-+
-+	writel(0x10199, ilp->pmu + PMU_SLOW_CLK_PERIOD);
-+	writel(0x10000, ilp->pmu + 0x674);
-+
-+	return 0;
-+}
-+
-+static void bcm53573_ilp_disable(struct clk_hw *hw)
-+{
-+	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
-+
-+	writel(0, ilp->pmu + PMU_SLOW_CLK_PERIOD);
-+	writel(0, ilp->pmu + 0x674);
-+}
-+
-+static unsigned long bcm53573_ilp_recalc_rate(struct clk_hw *hw,
-+					      unsigned long parent_rate)
-+{
-+	struct bcm53573_ilp *ilp = container_of(hw, struct bcm53573_ilp, hw);
-+	void __iomem *pmu = ilp->pmu;
-+	u32 last_val, cur_val;
-+	int sum = 0, num = 0, loop_num = 0;
-+	int avg;
-+
-+	/* Enable measurement */
-+	writel(XTAL_CTL_EN, pmu + PMU_XTAL_FREQ_RATIO);
-+
-+	/* Read initial value */
-+	last_val = readl(pmu + PMU_XTAL_FREQ_RATIO) & XTAL_ALP_PER_4ILP;
-+
-+	/*
-+	 * At minimum we should loop for a bit to let hardware do the
-+	 * measurement. This isn't very accurate however, so for a better
-+	 * precision lets try getting 20 different values for and use average.
-+	 */
-+	while (num < 20) {
-+		cur_val = readl(pmu + PMU_XTAL_FREQ_RATIO) & XTAL_ALP_PER_4ILP;
-+
-+		if (cur_val != last_val) {
-+			/* Got different value, use it */
-+			sum += cur_val;
-+			num++;
-+			loop_num = 0;
-+			last_val = cur_val;
-+		} else if (++loop_num > 5000) {
-+			/* Same value over and over, give up */
-+			sum += cur_val;
-+			num++;
-+			break;
-+		}
-+
-+		cpu_relax();
-+	}
-+
-+	/* Disable measurement to save power */
-+	writel(0x0, pmu + PMU_XTAL_FREQ_RATIO);
-+
-+	avg = sum / num;
-+
-+	return parent_rate * 4 / avg;
-+}
-+
-+static const struct clk_ops bcm53573_ilp_clk_ops = {
-+	.enable = bcm53573_ilp_enable,
-+	.disable = bcm53573_ilp_disable,
-+	.recalc_rate = bcm53573_ilp_recalc_rate,
-+};
-+
-+static void bcm53573_ilp_init(struct device_node *np)
-+{
-+	struct bcm53573_ilp *ilp;
-+	struct resource res;
-+	struct clk_init_data init = { 0 };
-+	const char *parent_name;
-+	int index;
-+	int err;
-+
-+	ilp = kzalloc(sizeof(*ilp), GFP_KERNEL);
-+	if (!ilp)
-+		return;
-+
-+	parent_name = of_clk_get_parent_name(np, 0);
-+	if (!parent_name) {
-+		err = -ENOENT;
-+		goto err_free_ilp;
-+	}
-+
-+	/* TODO: This looks generic, try making it OF helper. */
-+	index = of_property_match_string(np, "reg-names", "pmu");
-+	if (index < 0) {
-+		err = index;
-+		goto err_free_ilp;
-+	}
-+	err = of_address_to_resource(np, index, &res);
-+	if (err)
-+		goto err_free_ilp;
-+	ilp->pmu = ioremap(res.start, resource_size(&res));
-+	if (IS_ERR(ilp->pmu)) {
-+		err = PTR_ERR(ilp->pmu);
-+		goto err_free_ilp;
-+	}
-+
-+	init.name = np->name;
-+	init.ops = &bcm53573_ilp_clk_ops;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+
-+	ilp->hw.init = &init;
-+	err = clk_hw_register(NULL, &ilp->hw);
-+	if (err)
-+		goto err_unmap_pmu;
-+
-+	err = of_clk_add_hw_provider(np, of_clk_hw_simple_get, &ilp->hw);
-+	if (err)
-+		goto err_clk_hw_unregister;
-+
-+	return;
-+
-+err_clk_hw_unregister:
-+	clk_hw_unregister(&ilp->hw);
-+err_unmap_pmu:
-+	iounmap(ilp->pmu);
-+err_free_ilp:
-+	kfree(ilp);
-+	pr_err("Failed to init ILP clock: %d\n", err);
-+}
-+
-+/* We need it very early for arch code, before device model gets ready */
-+CLK_OF_DECLARE(bcm53573_ilp_clk, "brcm,bcm53573-ilp", bcm53573_ilp_init);
--- 
-2.9.3
+> -----Original Message-----
+> From: Russell King - ARM Linux [mailto:linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org]
+> Sent: 2016-08-26 7:18 PM
+> To: Yongcai Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; lin=
+ux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org;
+> Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
+> mark.rutland-5wv7dgnIgG8@public.gmane.org
+> Subject: Re: [PATCH 2/3] ARM: imx: add gpcv2 support
+>=20
+> On Fri, Aug 26, 2016 at 07:12:50PM +0800, Anson Huang wrote:
+> > diff --git a/arch/arm/mach-imx/gpcv2.c b/arch/arm/mach-imx/gpcv2.c new
+> > file mode 100644 index 0000000..98577c4
+> > --- /dev/null
+> > +++ b/arch/arm/mach-imx/gpcv2.c
+> > @@ -0,0 +1,66 @@
+> > +/*
+> > + * Copyright 2016 Freescale Semiconductor, Inc.
+> > + *
+> > + * The code contained herein is licensed under the GNU General Public
+> > + * License. You may obtain a copy of the GNU General Public License
+> > + * Version 2 or later at the following locations:
+> > + *
+> > + * http://www.opensource.org/licenses/gpl-license.html
+> > + * http://www.gnu.org/copyleft/gpl.html
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/io.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_address.h>
+> > +
+> > +#include "common.h"
+> > +
+> > +#define GPC_CPU_PGC_SW_PUP_REQ	0xf0
+> > +#define GPC_CPU_PGC_SW_PDN_REQ	0xfc
+> > +#define GPC_PGC_C1		0x840
+> > +
+> > +#define BM_CPU_PGC_SW_PDN_PUP_REQ_CORE1_A7	0x2
+> > +#define BM_GPC_PGC_PCG				0x1
+> > +
+> > +static void __iomem *gpcv2_base;
+> > +
+> > +static void imx_gpcv2_set_m_core_pgc(bool enable, u32 offset) {
+> > +	u32 val =3D readl_relaxed(gpcv2_base + offset) & (~BM_GPC_PGC_PCG);
+>=20
+> Unnecessary parens, and the code doesn't flow with the bit clearance here=
+...
+>=20
+> > +
+> > +	if (enable)
+> > +		val |=3D BM_GPC_PGC_PCG;
+>=20
+> My first read of this lead me to think "okay, so what's the point of
+> enable=3Dfalse".  It would be clearer with:
+>=20
+> 	u32 val =3D readl_relaxed(gpcv2_base + offset);
+>=20
+> 	if (enable)
+> 		val |=3D BM_GPC_PGC_PCG;
+> 	else
+> 		val &=3D ~BM_GPC_PGC_PCG;
+>=20
+> here.
 
+Agree, will improve it in V2 patch.
+
+>=20
+> > +
+> > +	writel_relaxed(val, gpcv2_base + offset); }
+> > +
+> > +void imx_gpcv2_set_core1_pdn_pup_by_software(bool pdn) {
+> > +	u32 val =3D readl_relaxed(gpcv2_base + (pdn ?
+> > +		GPC_CPU_PGC_SW_PDN_REQ :
+> GPC_CPU_PGC_SW_PUP_REQ));
+> > +
+> > +	imx_gpcv2_set_m_core_pgc(true, GPC_PGC_C1);
+> > +	val |=3D BM_CPU_PGC_SW_PDN_PUP_REQ_CORE1_A7;
+> > +	writel_relaxed(val, gpcv2_base + (pdn ?
+> > +		GPC_CPU_PGC_SW_PDN_REQ :
+> GPC_CPU_PGC_SW_PUP_REQ));
+> > +
+> > +	while ((readl_relaxed(gpcv2_base + (pdn ?
+> > +		GPC_CPU_PGC_SW_PDN_REQ :
+> GPC_CPU_PGC_SW_PUP_REQ)) &
+> > +		BM_CPU_PGC_SW_PDN_PUP_REQ_CORE1_A7) !=3D 0)
+> > +		;
+> > +	imx_gpcv2_set_m_core_pgc(false, GPC_PGC_C1); }
+> > +
+> > +void __init imx_gpcv2_check_dt(void)
+> > +{
+> > +	struct device_node *np;
+> > +
+> > +	np =3D of_find_compatible_node(NULL, NULL, "fsl,imx7d-gpc");
+> > +	if (WARN_ON(!np))
+> > +		return;
+> > +
+> > +	gpcv2_base =3D of_iomap(np, 0);
+> > +	WARN_ON(!gpcv2_base);
+>=20
+> What happens if gpcv2_base is NULL (apart from the obvious warning from t=
+he
+> above line)?  I guess a bit later in the boot,
+> imx_gpcv2_set_core1_pdn_pup_by_software() oopses the kernel, probably
+> before the console has been initialised.  Probably not nice behaviour.
+>
+
+Yes, normal console is NOT ready at this stage, unless early console is ena=
+bled.
+
+Could you please advise how to handle such case if gpcv2_base is NULL and c=
+onsole is NOT
+ready? Checking gpcv2_base everywhere before using it? Normally gpcv2_base
+should NOT be NULL.=20
+
+Thanks.
+Anson
+=20
+> > +}
+> > --
+> > 1.9.1
+> >
+>=20
+> --
+> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+> according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
