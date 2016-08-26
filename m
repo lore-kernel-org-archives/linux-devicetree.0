@@ -1,101 +1,69 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH v2 2/2] sdhci-of-arasan: Set controller to test mode when
- Card Detection is broken.
-Date: Fri, 26 Aug 2016 10:42:39 +0200
-Message-ID: <57C000FF.3090307@topic.nl>
-References: <1472166111-28872-1-git-send-email-zach.brown@ni.com>
- <1472166111-28872-2-git-send-email-zach.brown@ni.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [RFC] drm: implement generic firmware eviction
+Date: Fri, 26 Aug 2016 10:43:55 +0200
+Message-ID: <345e23d3-b55b-4d4d-e585-0ec8b243feb8@redhat.com>
+References: <20160826000056.12806-1-dh.herrmann@gmail.com>
+ <29bc1dab-7445-8470-f59b-6df908e83a3f@redhat.com>
+ <CANq1E4QFB4k+8C4eZUuUwO7mYDDYrKx2wbPJfAKe_GoOLOHv=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1472166111-28872-2-git-send-email-zach.brown@ni.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zach Brown <zach.brown@ni.com>, adrian.hunter@intel.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CANq1E4QFB4k+8C4eZUuUwO7mYDDYrKx2wbPJfAKe_GoOLOHv=A@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Herrmann <dh.herrmann@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26-08-16 01:01, Zach Brown wrote:
-> The sdhci controller on xilinx zynq devices will not function unless
-> the CD bit is provided. http://www.xilinx.com/support/answers/61064.html
-> In cases where it is impossible to provide the CD bit in hardware,
-> setting the controller to test mode and then setting inserted to true
-> will get the controller to function without the CD bit.
->
-> When the device has the property broken-cd the driver changes the
-> controller to test mode and sets test inserted to true to make the
-> controller function.
->
-> Signed-off-by: Zach Brown <zach.brown@ni.com>
-> ---
->   drivers/mmc/host/sdhci-of-arasan.c | 17 ++++++++++++++++-
->   drivers/mmc/host/sdhci.h           |  2 ++
->   2 files changed, 18 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> index e0f193f..3798a3b 100644
-> --- a/drivers/mmc/host/sdhci-of-arasan.c
-> +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> @@ -26,6 +26,7 @@
->   #include <linux/phy/phy.h>
->   #include <linux/regmap.h>
->   #include "sdhci-pltfm.h"
-> +#include <linux/of.h>
-
-Not needed.
-
->   #define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
->   #define SDHCI_ARASAN_VENDOR_REGISTER	0x78
-> @@ -203,12 +204,26 @@ static void sdhci_arasan_hs400_enhanced_strobe(struct mmc_host *mmc,
->   	writel(vendor, host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
->   }
->
-> +void sdhci_arasan_reset(struct sdhci_host *host, u8 mask)
-> +{
-> +	u8 ctrl;
-> +
-> +	sdhci_reset(host, mask);
-> +
-> +	if (host->quirks & SDHCI_QUIRK_BROKEN_CARD_DETECTION) {
-> +		ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
-> +		ctrl |= SDHCI_CTRL_CDTEST_INS |
-> +			SDHCI_CTRL_CDTEST_EN;
-> +		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> +	}
-> +}
-> +
->   static struct sdhci_ops sdhci_arasan_ops = {
->   	.set_clock = sdhci_arasan_set_clock,
->   	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
->   	.get_timeout_clock = sdhci_arasan_get_timeout_clock,
->   	.set_bus_width = sdhci_set_bus_width,
-> -	.reset = sdhci_reset,
-> +	.reset = sdhci_arasan_reset,
->   	.set_uhs_signaling = sdhci_set_uhs_signaling,
->   };
->
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 0411c9f..8d92d6e9 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -84,6 +84,8 @@
->   #define   SDHCI_CTRL_ADMA32	0x10
->   #define   SDHCI_CTRL_ADMA64	0x18
->   #define   SDHCI_CTRL_8BITBUS	0x20
-> +#define  SDHCI_CTRL_CDTEST_INS   0x40
-> +#define  SDHCI_CTRL_CDTEST_EN     0x80
->
->   #define SDHCI_POWER_CONTROL	0x29
->   #define  SDHCI_POWER_ON		0x01
-
-Looks okay, tested it and appears to work just as well as a tie-off in logic.
-
-Tested-by: mike.looijmans@topic.nl
+SGksCgpPbiAyNi0wOC0xNiAxMDowMSwgRGF2aWQgSGVycm1hbm4gd3JvdGU6Cj4gSGkKPgo+IE9u
+IEZyaSwgQXVnIDI2LCAyMDE2IGF0IDk6NTcgQU0sIEhhbnMgZGUgR29lZGUgPGhkZWdvZWRlQHJl
+ZGhhdC5jb20+IHdyb3RlOgo+PiBIaSwKPj4KPj4gT24gMjYtMDgtMTYgMDI6MDAsIERhdmlkIEhl
+cnJtYW5uIHdyb3RlOgo+Pj4KPj4+IFByb3ZpZGUgYSBnZW5lcmljIERSTSBoZWxwZXIgdGhhdCBl
+dmljdHMgYWxsIGNvbmZsaWN0aW5nIGZpcm13YXJlCj4+PiBmcmFtZWJ1ZmZlcnMsIGRldmljZXMs
+IGFuZCBkcml2ZXJzLiBUaGUgbmV3IGhlbHBlciBpcyBjYWxsZWQKPj4+IGRybV9ldmljdF9maXJt
+d2FyZSgpLCBhbmQgdGFrZXMgYSBmbGFnc2V0IGNvbnRyb2xsaW5nIHdoaWNoIGZpcm13YXJlIHRv
+Cj4+PiBraWNrIG91dC4KPj4+Cj4+PiBUaGlzIGlzIG1lYW50IHRvIGJlIHVzZWQgYnkgZHJpdmVy
+cyBpbiB0aGVpciAtPnByb2JlKCkgY2FsbGJhY2tzIG9mIHRoZWlyCj4+PiBwYXJlbnQgYnVzLCBi
+ZWZvcmUgY2FsbGluZyBpbnRvIGRybV9kZXZfcmVnaXN0ZXIoKS4KPj4+Cj4+PiBTaWduZWQtb2Zm
+LWJ5OiBEYXZpZCBIZXJybWFubiA8ZGguaGVycm1hbm5AZ21haWwuY29tPgo+Pj4gLS0tCj4+PiBI
+ZXkKPj4+Cj4+PiBUaGlzIGlzIGp1c3QgY29tcGlsZS10ZXN0ZWQgZm9yIG5vdy4gSSBqdXN0IHdh
+bnQgdG8gZ2V0IHNvbWUgY29tbWVudHMgb24KPj4+IHRoZQo+Pj4gZGVzaWduLiBJIGRlY2lkZWQg
+dG8gZHJvcCB0aGUgc3lzZmIgaW5mcmFzdHJ1Y3R1cmUgYW5kIHJhdGhlciBqdXN0IHVzZQo+Pj4g
+dGhpcwo+Pj4gZ2VuZXJpYyBoZWxwZXIuIEl0IGtlZXBzIHRoaW5ncyBzaW1wbGUgYW5kIHNob3Vs
+ZCB3b3JrIGp1c3QgZmluZSBmb3IgYWxsCj4+PiByZWFzb25hYmxlIHVzZS1jYXNlcy4KPj4+Cj4+
+PiBUaGlzIHdpbGwgd29yayB3aXRoIFNpbXBsZURSTSBvdXQtb2YtdGhlLWJveCBvbiB4ODYuCj4+
+Pgo+Pj4gQXJjaGl0ZWN0dXJlcyB3aXRoIGR5bmFtaWMgc2ltcGxlLWZyYW1lYnVmZmVyIGRldmlj
+ZXMgYXJlIG5vdCBzdXBwb3J0ZWQKPj4+IHlldC4gSQo+Pj4gYWN0dWFsbHkgaGF2ZSBubyBpZGVh
+IHdoYXQgdGhlIHN0cmF0ZWd5IHRoZXJlIGlzPyBDYW4gdGhlIERldmljZVRyZWUKPj4+IHBlb3Bs
+ZSBjb21lCj4+PiB1cCB3aXRoIHNvbWV0aGluZz8gQW0gSSBzdXBwb3NlZCB0byBjYWxsIG9mX3Bs
+YXRmb3JtX2RlcG9wdWxhdGUoKT8gT3IKPj4+IG9mX2RldGFjaF9ub2RlKCk/IE9yIHdoYXQ/Cj4+
+Cj4+Cj4+IEknbSBub3Qgc3VyZSB3ZSB3b3VsZCB3YW50IHRvIHJlbW92ZSB0aGUgZGV2aWNlIGF0
+IGFsbCwgd2UgY2VydGFpbmx5IHNob3VsZAo+PiBub3QKPj4gYmUgcmVtb3ZpbmcgdGhlIGR0X25v
+ZGUgZnJvbSB0aGUgZGV2aWNldHJlZSBJTUhPLiBIYXZpbmcgdGhhdCBhcm91bmQgdG8gc2VlCj4+
+IGhvdwo+PiB0aGUgYm9vdGxvYWRlciBzZXQgdGhpbmdzIHVwIGlzIHJlYWxseSB1c2VmdWwgZm9y
+IGRlYnVnZ2luZyBhbmQgbm9ybWFsbHkgd2UKPj4gc2hvdWxkIG5ldmVyIG1vZGlmeSB0aGUgZGV2
+aWNldHJlZSBhcyBzZXQgdXAgYnkgdGhlIGJvb3Rsb2FkZXIuCj4+Cj4+IFdoeSBub3QganVzdCB1
+bmJpbmQgdGhlIGRyaXZlciBmcm9tIHRoZSBwbGF0Zm9ybSBkZXZpY2U/IFRoYXQgc2hvdWxkIGJl
+Cj4+IGVub3VnaC4KPgo+IFRoYXQgd2lsbCBsZWF2ZSBJT1JFU09VUkNFX01FTSBhcm91bmQsIGNh
+dXNpbmcgY29uZmxpY3RzIGlmCj4gcmUtdXNlZC9jbGFpbWVkIGJ5IG90aGVyIGRldmljZXMvZHJp
+dmVycy4gRnVydGhlcm1vcmUsIGl0IGlzIHJlYWxseQo+IGZyYWdpbGUgbGVhdmluZyB0aGUgZGV2
+aWNlIGFyb3VuZCwgd2l0aG91dCBhbnkgY29udHJvbCBvdmVyIHBvc3NpYmxlCj4gZnV0dXJlIGRy
+aXZlciBwcm9iaW5nLgoKQWgsIGdvb2QgcG9pbnQuIE9uIEFSTSB0aGlzIGN1cnJlbnRseSB0eXBp
+Y2FsbHkgaXMgcmVzZXJ2ZWQgYnkgdGhlIGJvb3Rsb2FkZXIKc28gbmV2ZXIgdG91Y2hlZCBieSB0
+aGUga2VybmVsIGF0IGFsbCwgbm90IGV2ZW4gd2hlbiB0aGUgc2ltcGxlZmIgaXMgbm8gbG9uZ2Vy
+CnVzZWQsIGFjdHVhbGx5IHJldHVybmluZyB0aGlzIG1lbW9yeSB0byB0aGUga2VybmVsIGFmdGVy
+IHVuYmluZGluZyB0aGUgc2ltcGxlZmIgLwpkZXN0cm95aW5nIHRoZSBzaW1wbGVmYiBwbGF0Zm9y
+bS1kZXYgd291bGQgYmUgcmVhbGx5IGdvb2QgdG8gZG8uIFdlIHNob3VsZApwcm9iYWJseSBmaWd1
+cmUgb3V0IGhvdyB0aGF0IHNob3VsZCBiZSBkb25lIGJlZm9yZSBnZXR0aW5nIHJpZCBvZgpyZW1v
+dmVfY29uZmxpY3RpbmdfZnJhbWVidWZmZXJzLi4uIChzb3JyeSkuCgpSZWdhcmRzLAoKSGFucwpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
