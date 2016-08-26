@@ -1,13 +1,14 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 0/3] ARM: dts: sun8i: Add dt nodes for sdio wifi
-Date: Fri, 26 Aug 2016 23:00:56 +0800
-Message-ID: <1318301472223656@web13m.yandex.ru>
-References: <20160826145236.30210-1-hdegoede@redhat.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am57xx-idk-common: Enable support for QSPI
+Date: Fri, 26 Aug 2016 08:16:00 -0700
+Message-ID: <20160826151600.twqqour447jpkfzx@atomide.com>
+References: <20160802052147.11085-1-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160826145236.30210-1-hdegoede@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20160802052147.11085-1-vigneshr@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,27 +18,14 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Vignesh R <vigneshr@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+* Vignesh R <vigneshr@ti.com> [160801 22:22]:
+> AM572x IDK has a Spansion s25fl256s1 QSPI flash on the EVM connected to
+> TI QSPI IP over CS0. Hence, add QSPI and flash slave DT nodes.
 
+Applying into omap-for-v4.9/dt thanks.
 
-26.08.2016, 22:58, "Hans de Goede" <hdegoede@redhat.com>:
-> Hi Maxime,
->
-> Now that Ulf has merged the post-power-on-delay-ms mmc-pwrseq patches
-> in his mmc/next tree and Rob Herring has accepted the esp8089 dt
-> bindings (and specifically the esp,crystal-26M-en property), these
-> are ready for merging.
-
-Can the driver now work without broken-cd?
->
-> Thanks & Regards,
->
-> Hans
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Tony
