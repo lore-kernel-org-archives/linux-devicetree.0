@@ -1,43 +1,103 @@
-From: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
-Subject: [PATCH 07/10] dt-bindings: thermal: Update bindings for LS1012A
-Date: Fri, 26 Aug 2016 15:57:46 +0530
-Message-ID: <1472207269-18499-7-git-send-email-Bhaskar.Upadhaya@nxp.com>
-References: <1472207269-18499-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1472207269-18499-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, shawnguo@kernel.org
-Cc: oss@buserror.net, linux-devel@gforge.freescale.net, Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] ARM: dts: mvebu: fix reference to a390 spi controller
+Date: Fri, 26 Aug 2016 17:38:54 +0200
+Message-ID: <20160826153925.863488-1-arnd@arndb.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Stefan Roese <sr@denx.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
----
- Documentation/devicetree/bindings/thermal/qoriq-thermal.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The SPI controller in the arch/arm/boot/dts/armada-39x.dtsi file has moved
+to a different location in the hierarchy, which breaks the overrides
+in the board specific file:
 
-diff --git a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-index 66223d5..8e2b211 100644
---- a/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/qoriq-thermal.txt
-@@ -1,7 +1,7 @@
- * Thermal Monitoring Unit (TMU) on Freescale QorIQ SoCs
+Warning (reg_format): "reg" property in /soc/internal-regs/spi@10680/spi-flash@1 has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/internal-regs/spi@10680/spi-flash@1
+
+This changes the board to reference the spi controller by its label
+(which has not changed) rather than the full path.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 0160a4b68987 ("ARM: dts: mvebu: A37x/XP/38x/39x: Move SPI controller nodes into 'soc' node")
+---
+ arch/arm/boot/dts/armada-390-db.dts | 60 ++++++++++++++++++-------------------
+ 1 file changed, 30 insertions(+), 30 deletions(-)
+
+diff --git a/arch/arm/boot/dts/armada-390-db.dts b/arch/arm/boot/dts/armada-390-db.dts
+index 9d0d9b2e9bfc..34e279d973c8 100644
+--- a/arch/arm/boot/dts/armada-390-db.dts
++++ b/arch/arm/boot/dts/armada-390-db.dts
+@@ -66,36 +66,6 @@
+ 			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000>;
  
- Required properties:
--- compatible : Must include "fsl,qoriq-tmu". The version of the device is
-+- compatible :"fsl,qoriq-tmu", "fsl,ls1012a-tmu". The version of the device is
- 	determined by the TMU IP Block Revision Register (IPBRR0) at
- 	offset 0x0BF8.
- 	Table of correspondences between IPBRR0 values and example  chips:
+ 		internal-regs {
+-			spi@10680 {
+-				status = "okay";
+-				pinctrl-0 = <&spi1_pins>;
+-				pinctrl-names = "default";
+-
+-				spi-flash@1 {
+-					#address-cells = <1>;
+-					#size-cells = <1>;
+-					compatible = "n25q128a13",
+-						     "jedec,spi-nor";
+-					reg = <0>; /* Chip select 0 */
+-					spi-max-frequency = <108000000>;
+-
+-					partitions {
+-						compatible = "fixed-partitions";
+-						#address-cells = <1>;
+-						#size-cells = <1>;
+-
+-						partition@0 {
+-							label = "U-Boot";
+-							reg = <0 0x400000>;
+-						};
+-						partition@400000 {
+-							label = "Filesystem";
+-							reg = <0x400000 0xc00000>;
+-						};
+-					};
+-				};
+-			};
+-
+ 			i2c@11000 {
+ 				status = "okay";
+ 				clock-frequency = <100000>;
+@@ -173,3 +143,33 @@
+ 		};
+ 	};
+ };
++
++&spi1 {
++	status = "okay";
++	pinctrl-0 = <&spi1_pins>;
++	pinctrl-names = "default";
++
++	spi-flash@1 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "n25q128a13",
++			     "jedec,spi-nor";
++		reg = <0>; /* Chip select 0 */
++		spi-max-frequency = <108000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "U-Boot";
++				reg = <0 0x400000>;
++			};
++			partition@400000 {
++				label = "Filesystem";
++				reg = <0x400000 0xc00000>;
++			};
++		};
++	};
++};
 -- 
-1.9.1
+2.9.0
