@@ -1,170 +1,162 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ARM: dts: Add MDM9615 dtsi
-Date: Fri, 26 Aug 2016 10:55:02 -0700
-Message-ID: <20160826175502.GY19826@codeaurora.org>
-References: <1471951850-29842-1-git-send-email-narmstrong@baylibre.com>
- <1471951850-29842-2-git-send-email-narmstrong@baylibre.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH v2 6/7] arm64: dts: exynos: Add dts file for
+ Exynos5433-based TM2 board
+Date: Fri, 26 Aug 2016 14:30:23 -0400
+Message-ID: <0a6dffe0-8508-724e-c831-d14c32f8cd64@osg.samsung.com>
+References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
+ <1472046551-703-7-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1471951850-29842-2-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1472046551-703-7-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chanwoo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/23, Neil Armstrong wrote:
-> diff --git a/arch/arm/boot/dts/qcom-mdm9615.dtsi b/arch/arm/boot/dts/qcom-mdm9615.dtsi
-> new file mode 100644
-> index 0000000..e30bfbd
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/qcom-mdm9615.dtsi
-> +/ {
-> +	model = "Qualcomm MDM9615";
-> +	compatible = "qcom,mdm9615";
-> +	interrupt-parent = <&intc>;
+Hello Chanwoo,
+
+The patch looks mostly good to me, I've just some comments:
+
+[snip]
+
 > +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+> +&decon {
+> +	status = "okay";
+> +	iommu-reserved-mapping = <0x20000000 0x20000000 0xc0000000>;
 > +
-> +		cpu0: cpu@0 {
-> +			compatible = "arm,cortex-a5";
-> +			device_type = "cpu";
-> +			next-level-cache = <&L2>;
+
+This property never made to mainline due not having an agreement on
+how this should be fixed properly IIUC [0]. So you should remove it.
+
+[snip]
+
+> +
+> +	s2mps13-pmic@66 {
+> +		compatible = "samsung,s2mps13-pmic";
+> +		interrupt-parent = <&gpa0>;
+> +		interrupts = <7 IRQ_TYPE_NONE>;
+> +		reg = <0x66>;
+> +		samsung,s2mps11-wrstbi-ground;
+> +
+> +		s2mps13_osc: clocks {
+> +			compatible = "samsung,s2mps13-clk";
+> +			#clock-cells = <1>;
+> +			clock-output-names = "s2mps13_ap", "s2mps13_cp",
+> +				"s2mps13_bt";
 > +		};
-> +	};
 > +
-> +	cpu-pmu {
-> +		compatible = "arm,cortex-a5-pmu";
-> +		interrupts = <GIC_SPI 10 0x304>;
 
-Should be 0x104? Or GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH?
+I see that most of the following regulators are marked as always-on
+but I wonder if this is really needed. For example some of them are
+looked up by consumer devices.
 
-> +	};
+[snip]
+
+> +			};
 > +
-> +	clocks {
-> +		cxo_board {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <19200000>;
-> +		};
-> +	};
+> +			ldo3_reg: LDO3 {
+> +				regulator-name = "VDD1_E_1.8V_AP";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+> +			};
+
+This is used by both the ADC and the TMU so I guess it should be safe
+to not mark it as always-on (unless is used by other critical IP block
+not described in the DT).
+
+[snip]
+
 > +
-> +	regulators {
+> +			ldo6_reg: LDO6 {
+> +				regulator-name = "VDD10_MIPI2L_1.0V_AP";
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <1000000>;
+> +				regulator-always-on;
 
-This doesn't need to be a simple bus? so that the child devices
-probe? That's good if so.
+Same question, this is used by both the dsi and usbdrd30 nodes so maybe
+it shouldn't be marked as always-on as well.
 
-> +		vsdcc_fixed: vsdcc-regulator {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "SDCC Power";
-> +			regulator-min-microvolt = <2700000>;
-> +			regulator-max-microvolt = <2700000>;
-> +			regulator-always-on;
-> +		};
-> +	};
-> +
-> +	soc: soc {
-[...]
-> +		L2: l2-cache {
-
-Missing unit address.
-
-> +			compatible = "arm,pl310-cache";
-> +			reg = <0x02040000 0x1000>;
-> +			arm,data-latency = <2 2 0>;
-> +			cache-unified;
-> +			cache-level = <2>;
-> +		};
-[..]
-> +
-> +		qcom,ssbi@500000 {
-> +			compatible = "qcom,ssbi";
-> +			reg = <0x500000 0x1000>;
-> +			qcom,controller-type = "pmic-arbiter";
-> +
-> +			pmicintc: pmic@0 {
-> +				compatible = "qcom,pm8018", "qcom,pm8921";
-> +				interrupts = <GIC_PPI 226 IRQ_TYPE_LEVEL_HIGH>;
-> +				#interrupt-cells = <2>;
-> +				interrupt-controller;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				pwrkey@1c {
-> +					compatible = "qcom,pm8018-pwrkey", "qcom,pm8921-pwrkey";
-> +					reg = <0x1c>;
-> +					interrupt-parent = <&pmicintc>;
-> +					interrupts = <50 IRQ_TYPE_NONE>,
-> +						     <51 IRQ_TYPE_NONE>;
-
-IRQ_TYPE_EDGE_RISING?
-
-> +					debounce = <15625>;
-> +					pull-up;
-> +				};
-> +
-> +				pmicmpp: mpp@50 {
-> +					compatible = "qcom,pm8018-mpp", "qcom,ssbi-mpp";
-> +					interrupt-parent = <&pmicintc>;
-> +					interrupts = <24 IRQ_TYPE_NONE>,
-> +						     <25 IRQ_TYPE_NONE>,
-> +						     <26 IRQ_TYPE_NONE>,
-> +						     <27 IRQ_TYPE_NONE>,
-> +						     <28 IRQ_TYPE_NONE>,
-> +						     <29 IRQ_TYPE_NONE>;
-
-These are right though.
-
-> +					reg = <0x50>;
-> +					gpio-controller;
-> +					#gpio-cells = <2>;
-> +				};
-> +
-> +				rtc@11d {
-> +					compatible = "qcom,pm8018-rtc", "qcom,pm8921-rtc";
-> +					interrupt-parent = <&pmicintc>;
-> +					interrupts = <39 IRQ_TYPE_NONE>;
-
-IRQ_TYPE_EDGE_RISING?
-
-> +					reg = <0x11d>;
-> +					allow-set-time;
-> +				};
-> +
-> +				pmicgpio: gpio@150 {
-> +					compatible = "qcom,pm8018-gpio", "qcom,ssbi-gpio";
-> +					interrupt-parent = <&pmicintc>;
-> +					interrupts = <24 IRQ_TYPE_NONE>,
-> +						     <25 IRQ_TYPE_NONE>,
-> +						     <26 IRQ_TYPE_NONE>,
-> +						     <27 IRQ_TYPE_NONE>,
-> +						     <28 IRQ_TYPE_NONE>,
-> +						     <29 IRQ_TYPE_NONE>;
-
-These are right though.
-
-> +					gpio-controller;
-> +					#gpio-cells = <2>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
 > +				};
 > +			};
-> +		};
 > +
-> +		rpm: rpm@108000 {
-> +			compatible = "qcom,rpm-mdm9615";
-> +			reg = <0x108000 0x1000>;
-> +
-> +			qcom,ipc = <&l2cc 0x8 2>;
-> +
-> +			interrupts = <0 19 0>, <0 21 0>, <0 22 0>;
+> +			ldo7_reg: LDO7 {
+> +				regulator-name = "VDD18_MIPI2L_1.8V_AP";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
 
-IRQ_TYPE_EDGE_RISING and GIC_SPI?
+This is used by the dsi node as well.
 
+[snip]
+
+> +
+> +			ldo10_reg: LDO10 {
+> +				regulator-name = "VDD33_USB30_3.0V_AP";
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-always-on;
+
+Use by the usbdrd30 node.
+
+[snip]
+
+> +
+> +			ldo18_reg: LDO18 {
+> +				regulator-name = "V_CODEC_1.8V_AP";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+
+Use by the wm5110-codec node.
+
+[snip]
+
+> +
+> +			buck2_reg: BUCK2 {
+> +				regulator-name = "VDD_EGL_1.0V_AP";
+
+I wonder if this shouldn't be "VDD_ATL_1.0V_AP" or something since
+the big cluster isn't called Eagle like in arm32 Exynos but Atlas?
+
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <1300000>;
+> +				regulator-always-on;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			buck3_reg: BUCK3 {
+> +				regulator-name = "VDD_KFC_1.0V_AP";
+
+Same, maybe using "VDD_APL_1.0V_AP" since the big cluster is Apollo?
+
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-always-on;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+
+Used by the big and LITTLE clusters respectively, although for these two
+I'm not that sure if it would be safe to remove the always-on property.
+
+Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+
+[0]: http://www.spinics.net/lists/arm-kernel/msg419747.html
+
+Best regards,
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
