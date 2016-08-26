@@ -1,148 +1,170 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH v2 5/7] arm64: dts: exynos: Add dts files for Samsung
- Exynos5433 64bit SoC
-Date: Fri, 26 Aug 2016 13:49:21 -0400
-Message-ID: <4341f429-64a9-b14c-aeca-d61aac2ee81d@osg.samsung.com>
-References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
- <1472046551-703-6-git-send-email-cw00.choi@samsung.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ARM: dts: Add MDM9615 dtsi
+Date: Fri, 26 Aug 2016 10:55:02 -0700
+Message-ID: <20160826175502.GY19826@codeaurora.org>
+References: <1471951850-29842-1-git-send-email-narmstrong@baylibre.com>
+ <1471951850-29842-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472046551-703-6-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1471951850-29842-2-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jaewon02.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ingi2.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chanwoo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Chanwoo,
-
-The patch looks good to me, I just have a few minor comments:
-
-On 08/24/2016 09:49 AM, Chanwoo Choi wrote:
-
-[snip]
-
+On 08/23, Neil Armstrong wrote:
+> diff --git a/arch/arm/boot/dts/qcom-mdm9615.dtsi b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+> new file mode 100644
+> index 0000000..e30bfbd
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+> +/ {
+> +	model = "Qualcomm MDM9615";
+> +	compatible = "qcom,mdm9615";
+> +	interrupt-parent = <&intc>;
 > +
-> +	reboot: syscon-reboot {
-> +		compatible = "syscon-reboot";
-> +		regmap = <&pmu_system_controller>;
-> +		offset = <0x400>;
-
-Maybe adding a comment that the register is SWRESET to be consistent with the
-arm32 Exynos node definition in arch/arm/boot/dts/exynos-syscon-restart.dtsi?
-
-[snip]
-
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
 > +
-> +		tmu_atlas0: tmu@10060000 {
-> +			compatible = "samsung,exynos5433-tmu";
-> +			reg = <0x10060000 0x200>;
-> +			interrupts = <0 95 0>;
-
-For some interrupts definitions, you are using the GIC interrupt type macros
-while for others like this you are using the constant numbers. I think would
-be better to use the macros consistently (i.e: interrupts = <GIC_SPI 95 0>).
-
-[snip]
-
-> +		mipi_phy: video-phy@105C0708 {
-> +			compatible = "samsung,exynos5433-mipi-video-phy";
-> +			#phy-cells = <1>;
-> +			samsung,pmu-syscon = <&pmu_system_controller>;
-> +			samsung,cam0-sysreg = <&syscon_cam0>;
-> +			samsung,cam1-sysreg = <&syscon_cam1>;
-> +			samsung,disp-sysreg = <&syscon_disp>;
+> +		cpu0: cpu@0 {
+> +			compatible = "arm,cortex-a5";
+> +			device_type = "cpu";
+> +			next-level-cache = <&L2>;
 > +		};
-
-This node has a unit name but it doesn't have a reg property so dtc will
-warn about the mismatch when executed with W=1.
-
-[snip]
-
-> +		usbdrd30: usb@15400000 {
-> +			compatible = "samsung,exynos5250-dwusb3";
-> +			clocks = <&cmu_fsys CLK_ACLK_USBDRD30>,
-> +				<&cmu_fsys CLK_SCLK_USBDRD30>;
-> +			clock-names = "usbdrd30", "usbdrd30_susp_clk";
-> +			assigned-clocks =
-> +				<&cmu_fsys CLK_MOUT_SCLK_USBDRD30_USER>,
-> +				<&cmu_top CLK_MOUT_SCLK_USBDRD30>,
-> +				<&cmu_top CLK_DIV_SCLK_USBDRD30>;
-> +			assigned-clock-parents =
-> +				<&cmu_top CLK_SCLK_USBDRD30_FSYS>,
-> +				<&cmu_top CLK_MOUT_BUS_PLL_USER>;
-> +			assigned-clock-rates = <0>, <0>, <66700000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			status = "disabled";
+> +	};
 > +
+> +	cpu-pmu {
+> +		compatible = "arm,cortex-a5-pmu";
+> +		interrupts = <GIC_SPI 10 0x304>;
 
-Ditto, the node has unit address but no reg property.
+Should be 0x104? Or GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH?
 
-> +			dwc3 {
-> +				compatible = "snps,dwc3";
-> +				reg = <0x15400000 0x10000>;
+> +	};
+> +
+> +	clocks {
+> +		cxo_board {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <19200000>;
+> +		};
+> +	};
+> +
+> +	regulators {
 
-Ditto, the node doesn't have a unit address but has reg property.
+This doesn't need to be a simple bus? so that the child devices
+probe? That's good if so.
 
-> +				interrupts = <0 231 0>;
-> +				phys = <&usbdrd30_phy 0>, <&usbdrd30_phy 1>;
-> +				phy-names = "usb2-phy", "usb3-phy";
+> +		vsdcc_fixed: vsdcc-regulator {
+> +			compatible = "regulator-fixed";
+> +			regulator-name = "SDCC Power";
+> +			regulator-min-microvolt = <2700000>;
+> +			regulator-max-microvolt = <2700000>;
+> +			regulator-always-on;
+> +		};
+> +	};
+> +
+> +	soc: soc {
+[...]
+> +		L2: l2-cache {
+
+Missing unit address.
+
+> +			compatible = "arm,pl310-cache";
+> +			reg = <0x02040000 0x1000>;
+> +			arm,data-latency = <2 2 0>;
+> +			cache-unified;
+> +			cache-level = <2>;
+> +		};
+[..]
+> +
+> +		qcom,ssbi@500000 {
+> +			compatible = "qcom,ssbi";
+> +			reg = <0x500000 0x1000>;
+> +			qcom,controller-type = "pmic-arbiter";
+> +
+> +			pmicintc: pmic@0 {
+> +				compatible = "qcom,pm8018", "qcom,pm8921";
+> +				interrupts = <GIC_PPI 226 IRQ_TYPE_LEVEL_HIGH>;
+> +				#interrupt-cells = <2>;
+> +				interrupt-controller;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				pwrkey@1c {
+> +					compatible = "qcom,pm8018-pwrkey", "qcom,pm8921-pwrkey";
+> +					reg = <0x1c>;
+> +					interrupt-parent = <&pmicintc>;
+> +					interrupts = <50 IRQ_TYPE_NONE>,
+> +						     <51 IRQ_TYPE_NONE>;
+
+IRQ_TYPE_EDGE_RISING?
+
+> +					debounce = <15625>;
+> +					pull-up;
+> +				};
+> +
+> +				pmicmpp: mpp@50 {
+> +					compatible = "qcom,pm8018-mpp", "qcom,ssbi-mpp";
+> +					interrupt-parent = <&pmicintc>;
+> +					interrupts = <24 IRQ_TYPE_NONE>,
+> +						     <25 IRQ_TYPE_NONE>,
+> +						     <26 IRQ_TYPE_NONE>,
+> +						     <27 IRQ_TYPE_NONE>,
+> +						     <28 IRQ_TYPE_NONE>,
+> +						     <29 IRQ_TYPE_NONE>;
+
+These are right though.
+
+> +					reg = <0x50>;
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +				};
+> +
+> +				rtc@11d {
+> +					compatible = "qcom,pm8018-rtc", "qcom,pm8921-rtc";
+> +					interrupt-parent = <&pmicintc>;
+> +					interrupts = <39 IRQ_TYPE_NONE>;
+
+IRQ_TYPE_EDGE_RISING?
+
+> +					reg = <0x11d>;
+> +					allow-set-time;
+> +				};
+> +
+> +				pmicgpio: gpio@150 {
+> +					compatible = "qcom,pm8018-gpio", "qcom,ssbi-gpio";
+> +					interrupt-parent = <&pmicintc>;
+> +					interrupts = <24 IRQ_TYPE_NONE>,
+> +						     <25 IRQ_TYPE_NONE>,
+> +						     <26 IRQ_TYPE_NONE>,
+> +						     <27 IRQ_TYPE_NONE>,
+> +						     <28 IRQ_TYPE_NONE>,
+> +						     <29 IRQ_TYPE_NONE>;
+
+These are right though.
+
+> +					gpio-controller;
+> +					#gpio-cells = <2>;
+> +				};
 > +			};
 > +		};
 > +
+> +		rpm: rpm@108000 {
+> +			compatible = "qcom,rpm-mdm9615";
+> +			reg = <0x108000 0x1000>;
 > +
-> +		usbhost30: usb@15a00000 {
-> +			compatible = "samsung,exynos5250-dwusb3";
-> +			clocks = <&cmu_fsys CLK_ACLK_USBHOST30>,
-> +				<&cmu_fsys CLK_SCLK_USBHOST30>;
-> +			clock-names = "usbdrd30", "usbdrd30_susp_clk";
-> +			assigned-clocks =
-> +				<&cmu_fsys CLK_MOUT_SCLK_USBHOST30_USER>,
-> +				<&cmu_top CLK_MOUT_SCLK_USBHOST30>,
-> +				<&cmu_top CLK_DIV_SCLK_USBHOST30>;
-> +			assigned-clock-parents =
-> +				<&cmu_top CLK_SCLK_USBHOST30_FSYS>,
-> +				<&cmu_top CLK_MOUT_BUS_PLL_USER>;
-> +			assigned-clock-rates = <0>, <0>, <66700000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			status = "disabled";
+> +			qcom,ipc = <&l2cc 0x8 2>;
 > +
+> +			interrupts = <0 19 0>, <0 21 0>, <0 22 0>;
 
-Ditto, the node has unit address but no reg property.
+IRQ_TYPE_EDGE_RISING and GIC_SPI?
 
-> +			usbdrd_dwc3_0: dwc3 {
-> +				compatible = "snps,dwc3";
-> +				reg = <0x15a00000 0x10000>;
-
-Ditto, the node doesn't have a unit address but has reg property.
-
-> +				interrupts = <0 244 0>;
-> +				phys = <&usbhost30_phy 0>, <&usbhost30_phy 1>;
-> +				phy-names = "usb2-phy", "usb3-phy";
-> +			};
-> +		};
-> +
-
-[snip]
-
-> +		audio-subsystem {
-> +			compatible = "samsung,exynos5433-lpass";
-> +			reg = <0x11400000 0x100>, <0x11500000 0x08>;
-
-Ditto, the node doesn't have a unit address but has reg property.
-
-Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-
-Best regards,
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
