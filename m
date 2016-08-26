@@ -1,85 +1,29 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 2/3] ARM: dts: sun8i: Add dt node for esp8089 wifi chip on
- polaroid-mid2809
-Date: Fri, 26 Aug 2016 16:52:35 +0200
-Message-ID: <20160826145236.30210-3-hdegoede@redhat.com>
-References: <20160826145236.30210-1-hdegoede@redhat.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 4/8] arm: orion5x: Alias uart0 to serial0 for all orion5x
+Date: Fri, 26 Aug 2016 16:54:13 +0200
+Message-ID: <20160826145413.GJ25046@lunn.ch>
+References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
+ <1472203264-21089-1-git-send-email-jm@lentin.co.uk>
+ <1472203264-21089-5-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160826145236.30210-1-hdegoede@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1472203264-21089-5-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The polaroid-mid2809 tablet has an esp8089 wifi chip,
-add a dt node describing it.
+On Fri, Aug 26, 2016 at 10:21:00AM +0100, Jamie Lentin wrote:
+> Allowing us to specify boot console in a standard manner in board DTs.
+> 
+> Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- .../boot/dts/sun8i-a23-polaroid-mid2809pxe04.dts   | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-diff --git a/arch/arm/boot/dts/sun8i-a23-polaroid-mid2809pxe04.dts b/arch/arm/boot/dts/sun8i-a23-polaroid-mid2809pxe04.dts
-index 6d06e24..c9213ca 100644
---- a/arch/arm/boot/dts/sun8i-a23-polaroid-mid2809pxe04.dts
-+++ b/arch/arm/boot/dts/sun8i-a23-polaroid-mid2809pxe04.dts
-@@ -47,4 +47,46 @@
- / {
- 	model = "Polaroid MID2809PXE04 tablet";
- 	compatible = "polaroid,mid2809pxe04", "allwinner,sun8i-a23";
-+
-+	aliases {
-+		ethernet0 = &esp8089;
-+	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wifi_pwrseq_pin_mid2809>;
-+		reset-gpios = <&r_pio 0 6 GPIO_ACTIVE_LOW>; /* PL6 */
-+		/* The esp8089 needs 200 ms after driving wifi-en high */
-+		post-power-on-delay-ms = <200>;
-+	};
-+};
-+
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins_a>;
-+	vmmc-supply = <&reg_dldo1>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+
-+	esp8089: sdio_wifi@1 {
-+		compatible = "esp,esp8089";
-+		reg = <1>;
-+		esp,crystal-26M-en = <2>;
-+	};
-+};
-+
-+&mmc1_pins_a {
-+	allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+};
-+
-+&r_pio {
-+	wifi_pwrseq_pin_mid2809: wifi_pwrseq_pin@0 {
-+		allwinner,pins = "PL6";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
- };
--- 
-2.9.3
+    Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
