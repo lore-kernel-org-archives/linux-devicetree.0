@@ -1,30 +1,43 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 8/8] arm: orion5x: Configure WNR854T ethernet PHY LEDs
-Date: Fri, 26 Aug 2016 17:05:27 +0200
-Message-ID: <20160826150527.GN25046@lunn.ch>
-References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
- <1472203264-21089-1-git-send-email-jm@lentin.co.uk>
- <1472203264-21089-9-git-send-email-jm@lentin.co.uk>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH 0/3] ARM: dts: sun8i: Add dt nodes for sdio wifi
+Date: Fri, 26 Aug 2016 23:00:56 +0800
+Message-ID: <1318301472223656@web13m.yandex.ru>
+References: <20160826145236.30210-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1472203264-21089-9-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160826145236.30210-1-hdegoede@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 26, 2016 at 10:21:04AM +0100, Jamie Lentin wrote:
-> The default PHY configuration disables most of the LEDs. The following
-> configures the ethernet activity LEDs as Netgear intended.
-> 
-> Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 
-Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-    Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+26.08.2016, 22:58, "Hans de Goede" <hdegoede@redhat.com>:
+> Hi Maxime,
+>
+> Now that Ulf has merged the post-power-on-delay-ms mmc-pwrseq patches
+> in his mmc/next tree and Rob Herring has accepted the esp8089 dt
+> bindings (and specifically the esp,crystal-26M-en property), these
+> are ready for merging.
+
+Can the driver now work without broken-cd?
+>
+> Thanks & Regards,
+>
+> Hans
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
