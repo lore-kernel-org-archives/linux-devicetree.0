@@ -1,81 +1,110 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/4] arm64: dts: marvell: describe the PIC and PMU on Armada 7K/8K
-Date: Fri, 26 Aug 2016 10:58:20 +0200
-Message-ID: <87bn0fkitv.fsf@free-electrons.com>
-References: <1470408921-447-1-git-send-email-thomas.petazzoni@free-electrons.com>
-        <1470408921-447-5-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [RFC] drm: implement generic firmware eviction
+Date: Fri, 26 Aug 2016 10:58:23 +0200
+Message-ID: <20160826085823.GB30441@lukather>
+References: <20160826000056.12806-1-dh.herrmann@gmail.com>
+ <29bc1dab-7445-8470-f59b-6df908e83a3f@redhat.com>
+ <CANq1E4QFB4k+8C4eZUuUwO7mYDDYrKx2wbPJfAKe_GoOLOHv=A@mail.gmail.com>
+ <345e23d3-b55b-4d4d-e585-0ec8b243feb8@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470408921-447-5-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-        (Thomas Petazzoni's message of "Fri, 5 Aug 2016 16:55:21 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1523840133=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <345e23d3-b55b-4d4d-e585-0ec8b243feb8@redhat.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
- 
- On ven., août 05 2016, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-> This commit adds the necessary Device Tree description for the PIC
-> interrupt controller and the PMU available in the Marvell Armada 7K and
-> Armada 8K SoCs.
->
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+--===============1523840133==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gatW/ieO32f1wygP"
+Content-Disposition: inline
 
-Applied on mvebu/dt64
 
-Thanks,
+--gatW/ieO32f1wygP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Gregory
-> ---
->  arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> index eab1a42..e70b996 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> @@ -128,6 +128,12 @@
->  					     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
->  			};
->  
-> +			pmu {
-> +				compatible = "arm,cortex-a72-pmu";
-> +				interrupt-parent = <&pic>;
-> +				interrupts = <17>;
-> +			};
-> +
->  			odmi: odmi@300000 {
->  				compatible = "marvell,odmi-controller";
->  				interrupt-controller;
-> @@ -140,6 +146,14 @@
->  				marvell,spi-base = <128>, <136>, <144>, <152>;
->  			};
->  
-> +			pic: interrupt-controller@3f0100 {
-> +				compatible = "marvell,armada-8k-pic";
-> +				reg = <0x3f0100 0x10>;
-> +				#interrupt-cells = <1>;
-> +				interrupt-controller;
-> +				interrupts = <GIC_PPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> +			};
-> +
->  			xor@400000 {
->  				compatible = "marvell,armada-7k-xor", "marvell,xor-v2";
->  				reg = <0x400000 0x1000>,
-> -- 
-> 2.7.4
->
+Hi,
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
+On Fri, Aug 26, 2016 at 10:43:55AM +0200, Hans de Goede wrote:
+> >>I'm not sure we would want to remove the device at all, we
+> >>certainly should not be removing the dt_node from the devicetree
+> >>IMHO. Having that around to see how the bootloader set things up
+> >>is really useful for debugging and normally we should never modify
+> >>the devicetree as set up by the bootloader.
+> >>
+> >>Why not just unbind the driver from the platform device? That
+> >>should be enough.
+> >
+> >That will leave IORESOURCE_MEM around, causing conflicts if
+> >re-used/claimed by other devices/drivers. Furthermore, it is really
+> >fragile leaving the device around, without any control over
+> >possible future driver probing.
+>=20
+> Ah, good point. On ARM this currently typically is reserved by the bootlo=
+ader
+> so never touched by the kernel at all, not even when the simplefb is no l=
+onger
+> used, actually returning this memory to the kernel after unbinding the si=
+mplefb /
+> destroying the simplefb platform-dev would be really good to do. We should
+> probably figure out how that should be done before getting rid of
+> remove_conflicting_framebuffers... (sorry).
+
+That would be rather easy to do. The firmware could generate a
+reserved-memory node instead of passing a smaller memory size to the
+kernel. That way, the kernel will know that it's actual ram that it
+can reclaim.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
 http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--gatW/ieO32f1wygP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXwASvAAoJEBx+YmzsjxAghCAQAKrGY65Fy9gQqDC+ZQHacZsI
+zsQkt5Skpb1xMze2jo5I3hCRwMJlcYcczt/pcEjPlfD0V/K4FGgvfptA+bTHAjL9
+aqtJCGr3VRuGce0AcUn7sPS3nKbQGGryKIT6c2sCMyQAptxmOURrkQNrmBfQD8x+
+2+AzTfGRki7Oitec5WVUfTf1sAvf1YNSUKqyrAi0RGiA402ULmGN7GSNa0J75AqC
+WAJiSoDJsp8NJYPYOp4uaSarE1Ozp8M/J322Ufbp4gB/BqpppQqGgrhcR0yri7sO
+N8dXbeFEGBsz/7z5U40vrppaAz2+R6LcqsBqCBfcgJoQSs//acPuFfkLT5SEd2Bh
+DLrfNYhoRrXVdPHxfipxpulM4b0+ackutjc7J9UEsaSEt6Z+uz2ZxxCHAV7gq+Np
+c5lF3QhuAt6Zb8WlRGwQPYzF3Gngv5PsPV89Lszgdf2H/c7FMqqZhjoLRSo77rKr
+/2eHLnfskUwP+gnPR+FCly94U/WaRLbOQcCpOt3gigvQ9Jtj4q2RSwTm10DIc0MV
+qY9OA7cJWsJQOY3t8hCAUDfZNdRf1PO/u+CSAVv3ZZWA8oIUzuS+kKcMVXxFmUy2
+HpoEITWZ9Muduu6XSmzkH504xo8Q7O87JmhiVJwCH2MMkk/Cio3yVa+OLACtv/Nh
+f7EQ6egXBqh0tgCNFjdP
+=lgES
+-----END PGP SIGNATURE-----
+
+--gatW/ieO32f1wygP--
+
+--===============1523840133==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1523840133==--
