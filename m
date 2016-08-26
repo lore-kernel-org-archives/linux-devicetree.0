@@ -1,109 +1,64 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: da850: Add missing pin muxing for the UARTs
-Date: Fri, 26 Aug 2016 17:55:23 +0530
-Message-ID: <a076cc95-d338-ec13-ba05-360c1857cda5@ti.com>
-References: <20160804110656.25318-1-kbeldan@baylibre.com>
- <m2eg64pchw.fsf@baylibre.com> <20160804210045.GD15013@gobelin>
- <m2fuqknnqk.fsf@baylibre.com> <fe36e8d1-f371-b093-de15-5e03370ea38c@ti.com>
- <dd4712ba-6144-8c64-59a6-7673936af53c@ti.com>
- <20160824082934.GA20246@gobelin>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: imx: add SMP support for i.MX7D
+Date: Fri, 26 Aug 2016 13:35:50 +0100
+Message-ID: <20160826123550.GQ1041@n2100.armlinux.org.uk>
+References: <1472209971-32469-1-git-send-email-Anson.Huang@nxp.com>
+ <1472209971-32469-4-git-send-email-Anson.Huang@nxp.com>
+ <20160826111356.GM1041@n2100.armlinux.org.uk>
+ <AM3PR04MB13154FA0116D397AABD75E10F5EC0@AM3PR04MB1315.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160824082934.GA20246@gobelin>
+Content-Disposition: inline
+In-Reply-To: <AM3PR04MB13154FA0116D397AABD75E10F5EC0-f56W/S9L6NR9w2ZlgAudoc9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Yongcai Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 24 August 2016 02:08 PM, Karl Beldan wrote:
-> On Tue, Aug 23, 2016 at 04:46:03PM +0530, Sekhar Nori wrote:
->> On Tuesday 23 August 2016 04:39 PM, Sekhar Nori wrote:
->>> On Friday 05 August 2016 04:30 AM, Kevin Hilman wrote:
->>>> Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
->>>>
->>>>> On Thu, Aug 04, 2016 at 12:20:27PM -0700, Kevin Hilman wrote:
->>>>>> Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
->>>>>>
->>>>>>> This adds 2 pinctrl groups (rtscts, rxtx) for each of the 3 UARTs.
->>>>>>>
->>>>>>> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>>>>
->>>>>> Should da850-evm be updated to use the serial2_rxtx_pins also?
->>>>>>
->>>>> I could not find the EVM schematics on the net and I only have an LCDK,
->>>>> but according to the code it should, however I can't tell whether flow
->>>>> control pins are used.
->>>>
->>>> Ok, let's just leave it for now, since it's working fine.  Sekhar can
->>>> fix that up if he can dig up the schematics.
->>>
->>> Looks like the flow control pins are being used for McASP also on the
->>> EVM. So lets leave the EVM as-is.
->>
->> Rather, the EVM dts file should be updated to use serial2_rxtx_pins like
->> the LCDK. Right now it seems to be relying on bootloader to serial2
->> setup pimux correctly. I can make a patch to fix that. Or if you can do
->> it, that will be great too.
->>
+On Fri, Aug 26, 2016 at 12:20:15PM +0000, Yongcai Huang wrote:
+> > On Fri, Aug 26, 2016 at 07:12:51PM +0800, Anson Huang wrote:
+> > > diff --git a/arch/arm/mach-imx/platsmp.c b/arch/arm/mach-imx/platsmp.c
+> > > index 711dbbd..63af911 100644
+> > > --- a/arch/arm/mach-imx/platsmp.c
+> > > +++ b/arch/arm/mach-imx/platsmp.c
+> > > @@ -60,8 +60,17 @@ static int imx_boot_secondary(unsigned int cpu,
+> > > struct task_struct *idle)  static void __init imx_smp_init_cpus(void)
+> > > {
+> > >  	int i, ncores;
+> > > +	unsigned long val, arch_type;
+> > >
+> > > -	ncores = scu_get_core_count(scu_base);
+> > > +	asm volatile("mrc p15, 0, %0, c0, c0, 0" : "=r" (arch_type));
+> > > +
+> > > +	if (((arch_type >> 4) & 0xfff) == 0xc07) {
+> > 
+> > This is buggy.  Plus, we have macros for this.  Please use the macros in
+> > asm/cputype.h to achieve these tests.
 > 
-> Indeed ATM the EVM relies on the bootloader to setup the pin muxing.
-> 
-> I just checked the uart pins routing of the EVM, the dts:
-> - should reclaim serial2_rxtx_pins and serial2_rtscts_pins
+> Thanks, I will use read_cpuid_id() API intead of putting asm code here.
 
-Agree.
+Nope.  Do this:
 
-> - can reclaim serial1_rxtx_pins (out on Audio connector but very
->   unlikely used for audio)
+	if (read_cpuid_part() == ARM_CPU_PART_CORTEX_A7) {
 
-I would leave alone pins which are unused on the board. Most likely the
-SPI pins are being send to audio connector for codec control over SPI.
+Because the part number field is defined by the implementer, so before
+you can interpret the part number field, you have to first check who
+has implemented the device.
 
-> - should leave serial1_rtscts_pins (out on Audio connector but used by
->   McASP so used for audio)
+That's exactly why these macros exist - to help you get these tests
+correct, so when someone else releases an ARM core with the same value
+in the part number field, we don't end up with a load of tests which
+incorrectly matching.
 
-Agree.
+While it may be unlikely that an iMX7 would end up with a non-ARM CPU,
+that's no real excuse for avoiding using what's been provided for you,
+especially when avoiding it causes issues for static analysis.
 
-> Also I think it would be better for the serial nodes to reclaim the rxtx
-> pins in the dtsi, and override the reclaimed pins in the .dts only for
-> the nodes reclaiming flow control (some other pins could also be
-> directly reclaimed in the dtsi).
-
-You lost me here. I guess I will benefit from a code snippet to
-illustrate the intention.
-
-> 
-> Some other cleanups would also be in order for the da850*:
-> - use labels for non dtsi (like I did for the LCDK)
-
-Agree. That would be better and more modern.
-
-> - add chosen,memory nodes (I guess currently only the LCDK can
->   dispense with ATAGS)
-
-ok.
-
-> - use a null range translation in the da850 dtsi for the soc node
->   (computing the offsets is error prone and is there a point)
-
-I do agree its easier to read if offsets directly matches addresses
-specified in the technical reference manual than doing the math with
-offsets and making sure they are correct.
-
-That said, I am not sure null range translation is really the preferred
-approach. I would go with what DT maintainers say here.
-
-> 
-> Sure I could fix that, along with some of the above suggestions if you
-> are ok with it.
-
-It would be nice if you could fixup mcasp0_pins in da850-evm.dts. Surely
-it is doing more than what is needed.
-
-Regards,
-Sekhar
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
