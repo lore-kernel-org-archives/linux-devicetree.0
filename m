@@ -1,34 +1,70 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 1/7] clocksource: exynos_mct: Add the support for ARM64
-Date: Fri, 26 Aug 2016 18:02:19 +0200
-Message-ID: <20160826160219.GA15511@kozik-book>
-References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
- <1472046551-703-2-git-send-email-cw00.choi@samsung.com>
+From: Yang-Leo Li <leoyang.li@nxp.com>
+Subject: RE: [linux-devel] [PATCH 02/10] dt-bindings: esdhc: Update bindings
+ for	LS1012A
+Date: Fri, 26 Aug 2016 16:08:49 +0000
+Message-ID: <AM2PR04MB07709867FC1968AAB4B6FE208FEC0@AM2PR04MB0770.eurprd04.prod.outlook.com>
+References: <1472207269-18499-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+ <1472207269-18499-2-git-send-email-Bhaskar.Upadhaya@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1472046551-703-2-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: k.kozlowski@samsung.com, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, krzk@kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1472207269-18499-2-git-send-email-Bhaskar.Upadhaya@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "oss@buserror.net" <oss@buserror.net>, "linux-devel@gforge.freescale.net" <linux-devel@gforge.freescale.net>, Bhaskar U <bhaskar.upadhaya@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 24, 2016 at 10:49:05PM +0900, Chanwoo Choi wrote:
-> This patch adds the support for ARM 64bit. The delay_timer is only supported
-> on ARM 32bit.
+
+
+> -----Original Message-----
+> From: linux-devel-bounces@gforge.freescale.net [mailto:linux-devel-
+> bounces@gforge.freescale.net] On Behalf Of Bhaskar Upadhaya
+> Sent: Friday, August 26, 2016 5:28 AM
+> To: devicetree@vger.kernel.org; shawnguo@kernel.org
+> Cc: oss@buserror.net; linux-devel@gforge.freescale.net; Bhaskar U
+> <bhaskar.upadhaya@nxp.com>; linux-arm-kernel@lists.infradead.org
+> Subject: [linux-devel] [PATCH 02/10] dt-bindings: esdhc: Update bindings for
+> LS1012A
 > 
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
 > ---
->  drivers/clocksource/Kconfig      | 2 +-
->  drivers/clocksource/exynos_mct.c | 4 ++++
->  2 files changed, 5 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/mmc/fsl-esdhc.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> index dedfb02..3257b4a 100644
+> --- a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+> @@ -7,9 +7,9 @@ This file documents differences between the core properties
+> described  by mmc.txt and the properties used by the sdhci-esdhc driver.
+> 
+>  Required properties:
+> +  - compatible : "fsl,mpc8378-esdhc", "fsl,ls1012a-esdhc0", "fsl,ls1012a-
+> esdhc1".
 
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+What does it mean for esdhc0 and esdhc1?  If these are two different controllers used on the same chip, please describe what is the difference.  It is not clear from the name itself.
 
-Best regards,
-Krzysztof
+>    - interrupt-parent : interrupt source phandle.
+>    - clock-frequency : specifies eSDHC base clock frequency.
+> -
+>  Optional properties:
+>    - sdhci,wp-inverted : specifies that eSDHC controller reports
+>      inverted write-protect state; New devices should use the generic
+> --
+> 1.9.1
+> 
+> _______________________________________________
+> linux-devel mailing list
+> linux-devel@gforge.freescale.net
+> http://gforge.freescale.net/mailman/listinfo/linux-devel
