@@ -1,49 +1,62 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: imx: add SMP support for i.MX7D
-Date: Fri, 26 Aug 2016 10:59:11 +0200
-Message-ID: <3283479.PKRDjkX0Md@wuerfel>
-References: <1472209971-32469-1-git-send-email-Anson.Huang@nxp.com> <1472209971-32469-4-git-send-email-Anson.Huang@nxp.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [RFC] drm: implement generic firmware eviction
+Date: Fri, 26 Aug 2016 11:02:17 +0200
+Message-ID: <04f9cb51-94f3-a26d-4966-385175340dd7@redhat.com>
+References: <20160826000056.12806-1-dh.herrmann@gmail.com>
+ <29bc1dab-7445-8470-f59b-6df908e83a3f@redhat.com>
+ <CANq1E4QFB4k+8C4eZUuUwO7mYDDYrKx2wbPJfAKe_GoOLOHv=A@mail.gmail.com>
+ <345e23d3-b55b-4d4d-e585-0ec8b243feb8@redhat.com>
+ <20160826085823.GB30441@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472209971-32469-4-git-send-email-Anson.Huang-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160826085823.GB30441@lukather>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, August 26, 2016 7:12:51 PM CEST Anson Huang wrote:
-> i.MX7D has 2 cortex-a7 ARM core, add support for
-> booting up SMP kernel with 2 CPUs.
-> 
-> The existing i.MX SMP code is designed for i.MX6
-> series SoCs which have cortex-a9 ARM core, but i.MX7D
-> has 2 cortex-a7 ARM core, so we need to add runtime
-> check for those differences between cortex-a9 and
-> cortex-a7.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
-> 
-
-Can't you just point i.MX7D to start from secondary_startup
-rather than v7_secondary_startup?
-
- ENTRY(v7_secondary_startup)
-+       .word   0xc070                  @ 0xc07 is cortex-a7 id
-+       .word   0xfff0                  @ mask for core type
-+
-
-This looks like you are trying to execute instructions that are
-actually data. Does this work?
-
-On a side note, could you rename v7_secondary_startup to
-imx6_secondary_startup? The name sounds overly generic
-on a multiplatform kernel.
-
-	Arnd
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpPbiAyNi0wOC0xNiAxMDo1OCwgTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBIaSwKPgo+IE9u
+IEZyaSwgQXVnIDI2LCAyMDE2IGF0IDEwOjQzOjU1QU0gKzAyMDAsIEhhbnMgZGUgR29lZGUgd3Jv
+dGU6Cj4+Pj4gSSdtIG5vdCBzdXJlIHdlIHdvdWxkIHdhbnQgdG8gcmVtb3ZlIHRoZSBkZXZpY2Ug
+YXQgYWxsLCB3ZQo+Pj4+IGNlcnRhaW5seSBzaG91bGQgbm90IGJlIHJlbW92aW5nIHRoZSBkdF9u
+b2RlIGZyb20gdGhlIGRldmljZXRyZWUKPj4+PiBJTUhPLiBIYXZpbmcgdGhhdCBhcm91bmQgdG8g
+c2VlIGhvdyB0aGUgYm9vdGxvYWRlciBzZXQgdGhpbmdzIHVwCj4+Pj4gaXMgcmVhbGx5IHVzZWZ1
+bCBmb3IgZGVidWdnaW5nIGFuZCBub3JtYWxseSB3ZSBzaG91bGQgbmV2ZXIgbW9kaWZ5Cj4+Pj4g
+dGhlIGRldmljZXRyZWUgYXMgc2V0IHVwIGJ5IHRoZSBib290bG9hZGVyLgo+Pj4+Cj4+Pj4gV2h5
+IG5vdCBqdXN0IHVuYmluZCB0aGUgZHJpdmVyIGZyb20gdGhlIHBsYXRmb3JtIGRldmljZT8gVGhh
+dAo+Pj4+IHNob3VsZCBiZSBlbm91Z2guCj4+Pgo+Pj4gVGhhdCB3aWxsIGxlYXZlIElPUkVTT1VS
+Q0VfTUVNIGFyb3VuZCwgY2F1c2luZyBjb25mbGljdHMgaWYKPj4+IHJlLXVzZWQvY2xhaW1lZCBi
+eSBvdGhlciBkZXZpY2VzL2RyaXZlcnMuIEZ1cnRoZXJtb3JlLCBpdCBpcyByZWFsbHkKPj4+IGZy
+YWdpbGUgbGVhdmluZyB0aGUgZGV2aWNlIGFyb3VuZCwgd2l0aG91dCBhbnkgY29udHJvbCBvdmVy
+Cj4+PiBwb3NzaWJsZSBmdXR1cmUgZHJpdmVyIHByb2JpbmcuCj4+Cj4+IEFoLCBnb29kIHBvaW50
+LiBPbiBBUk0gdGhpcyBjdXJyZW50bHkgdHlwaWNhbGx5IGlzIHJlc2VydmVkIGJ5IHRoZSBib290
+bG9hZGVyCj4+IHNvIG5ldmVyIHRvdWNoZWQgYnkgdGhlIGtlcm5lbCBhdCBhbGwsIG5vdCBldmVu
+IHdoZW4gdGhlIHNpbXBsZWZiIGlzIG5vIGxvbmdlcgo+PiB1c2VkLCBhY3R1YWxseSByZXR1cm5p
+bmcgdGhpcyBtZW1vcnkgdG8gdGhlIGtlcm5lbCBhZnRlciB1bmJpbmRpbmcgdGhlIHNpbXBsZWZi
+IC8KPj4gZGVzdHJveWluZyB0aGUgc2ltcGxlZmIgcGxhdGZvcm0tZGV2IHdvdWxkIGJlIHJlYWxs
+eSBnb29kIHRvIGRvLiBXZSBzaG91bGQKPj4gcHJvYmFibHkgZmlndXJlIG91dCBob3cgdGhhdCBz
+aG91bGQgYmUgZG9uZSBiZWZvcmUgZ2V0dGluZyByaWQgb2YKPj4gcmVtb3ZlX2NvbmZsaWN0aW5n
+X2ZyYW1lYnVmZmVycy4uLiAoc29ycnkpLgo+Cj4gVGhhdCB3b3VsZCBiZSByYXRoZXIgZWFzeSB0
+byBkby4gVGhlIGZpcm13YXJlIGNvdWxkIGdlbmVyYXRlIGEKPiByZXNlcnZlZC1tZW1vcnkgbm9k
+ZSBpbnN0ZWFkIG9mIHBhc3NpbmcgYSBzbWFsbGVyIG1lbW9yeSBzaXplIHRvIHRoZQo+IGtlcm5l
+bC4gVGhhdCB3YXksIHRoZSBrZXJuZWwgd2lsbCBrbm93IHRoYXQgaXQncyBhY3R1YWwgcmFtIHRo
+YXQgaXQKPiBjYW4gcmVjbGFpbS4KClNvIHdoZW4gd291bGQgdGhlIGtlcm5lbCByZWNsYWltIHRo
+ZSBSQU0gdGhlbj8gV2UgZG8gbm90IHdhbnQgaXQKdG8gcmVjbGFpbSBiZWZvcmUgbG9hZGluZyB0
+aGUgc2ltcGxlZmIgLyBzaW1wbGVkcm0gZHJpdmVyLgoKQW5kIHRoZSByZWFsIGRybSBkcml2ZXIg
+d2lsbCBsaWtlbHkgYmUgYSBtb2R1bGUsIHNvIGlmIHRoZSBrZXJuZWwKcmVjbGFpbXMganVzdCBi
+ZWZvcmUgZXhlY3V0aW5nIC9zYmluL2luaXQgdGhhdCB3b3VsZCBiZSB0b28KZWFybHksIHVubGVz
+cyB3ZSBjYW4gc29tZWhvdyBtYW51YWxseSBtYWtlIGl0IGRvIGFub3RoZXIgcmVjbGFpbQpwYXNz
+IHdoZW4gdGhlIHNpbXBsZWZiIGdldHMgZGlzYWJsZWQgLi4uCgpSZWdhcmRzLAoKSGFucwpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
