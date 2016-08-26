@@ -1,130 +1,89 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH 2/3] ARM: imx: add gpcv2 support
-Date: Fri, 26 Aug 2016 12:17:58 +0100
-Message-ID: <20160826111758.GN1041@n2100.armlinux.org.uk>
-References: <1472209971-32469-1-git-send-email-Anson.Huang@nxp.com>
- <1472209971-32469-3-git-send-email-Anson.Huang@nxp.com>
+From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/8] arm: orion5x: Add clk support for mv88f5181
+Date: Fri, 26 Aug 2016 13:34:37 +0200
+Message-ID: <20160826113437.GA12692@Red>
+References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
+ <1472203264-21089-1-git-send-email-jm@lentin.co.uk>
+ <1472203264-21089-3-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1472209971-32469-3-git-send-email-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1472203264-21089-3-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 26, 2016 at 07:12:50PM +0800, Anson Huang wrote:
-> diff --git a/arch/arm/mach-imx/gpcv2.c b/arch/arm/mach-imx/gpcv2.c
-> new file mode 100644
-> index 0000000..98577c4
-> --- /dev/null
-> +++ b/arch/arm/mach-imx/gpcv2.c
-> @@ -0,0 +1,66 @@
-> +/*
-> + * Copyright 2016 Freescale Semiconductor, Inc.
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
+Hello
+
+I have some minor comments below
+
+[...]
 > +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +
-> +#include "common.h"
-> +
-> +#define GPC_CPU_PGC_SW_PUP_REQ	0xf0
-> +#define GPC_CPU_PGC_SW_PDN_REQ	0xfc
-> +#define GPC_PGC_C1		0x840
-> +
-> +#define BM_CPU_PGC_SW_PDN_PUP_REQ_CORE1_A7	0x2
-> +#define BM_GPC_PGC_PCG				0x1
-> +
-> +static void __iomem *gpcv2_base;
-> +
-> +static void imx_gpcv2_set_m_core_pgc(bool enable, u32 offset)
+> +static u32 __init mv88f5181_get_tclk_freq(void __iomem *sar)
 > +{
-> +	u32 val = readl_relaxed(gpcv2_base + offset) & (~BM_GPC_PGC_PCG);
+> +	u32 opt = (readl(sar) >> SAR_MV88F5181_TCLK_FREQ) &
+> +		SAR_MV88F5181_TCLK_FREQ_MASK;
 
-Unnecessary parens, and the code doesn't flow with the bit clearance
-here...
+Checkpatch complain about a missing blank line after declaration.
+And spliting the read and the & operation will prevent this line breaking
 
-> +
-> +	if (enable)
-> +		val |= BM_GPC_PGC_PCG;
-
-My first read of this lead me to think "okay, so what's the point of
-enable=false".  It would be clearer with:
-
-	u32 val = readl_relaxed(gpcv2_base + offset);
-
-	if (enable)
-		val |= BM_GPC_PGC_PCG;
-	else
-		val &= ~BM_GPC_PGC_PCG;
-
-here.
-
-> +
-> +	writel_relaxed(val, gpcv2_base + offset);
+> +	if (opt == 0)
+> +		return 133333333;
+> +	else if (opt == 1)
+> +		return 150000000;
+> +	else if (opt == 2)
+> +		return 166666667;
+> +	else
+> +		return 0;
 > +}
+
+Why not using a switch here ?
+
 > +
-> +void imx_gpcv2_set_core1_pdn_pup_by_software(bool pdn)
+> +#define SAR_MV88F5181_CPU_FREQ       4
+> +#define SAR_MV88F5181_CPU_FREQ_MASK  0xf
+> +
+> +static u32 __init mv88f5181_get_cpu_freq(void __iomem *sar)
 > +{
-> +	u32 val = readl_relaxed(gpcv2_base + (pdn ?
-> +		GPC_CPU_PGC_SW_PDN_REQ : GPC_CPU_PGC_SW_PUP_REQ));
-> +
-> +	imx_gpcv2_set_m_core_pgc(true, GPC_PGC_C1);
-> +	val |= BM_CPU_PGC_SW_PDN_PUP_REQ_CORE1_A7;
-> +	writel_relaxed(val, gpcv2_base + (pdn ?
-> +		GPC_CPU_PGC_SW_PDN_REQ : GPC_CPU_PGC_SW_PUP_REQ));
-> +
-> +	while ((readl_relaxed(gpcv2_base + (pdn ?
-> +		GPC_CPU_PGC_SW_PDN_REQ : GPC_CPU_PGC_SW_PUP_REQ)) &
-> +		BM_CPU_PGC_SW_PDN_PUP_REQ_CORE1_A7) != 0)
-> +		;
-> +	imx_gpcv2_set_m_core_pgc(false, GPC_PGC_C1);
+> +	u32 opt = (readl(sar) >> SAR_MV88F5181_CPU_FREQ) &
+> +		SAR_MV88F5181_CPU_FREQ_MASK;
+> +	if (opt == 0)
+> +		return 333333333;
+> +	else if (opt == 1 || opt == 2)
+> +		return 400000000;
+> +	else if (opt == 3)
+> +		return 500000000;
+> +	else
+> +		return 0;
 > +}
+
+Same comments
+
 > +
-> +void __init imx_gpcv2_check_dt(void)
+> +static void __init mv88f5181_get_clk_ratio(void __iomem *sar, int id,
+> +					   int *mult, int *div)
 > +{
-> +	struct device_node *np;
-> +
-> +	np = of_find_compatible_node(NULL, NULL, "fsl,imx7d-gpc");
-> +	if (WARN_ON(!np))
-> +		return;
-> +
-> +	gpcv2_base = of_iomap(np, 0);
-> +	WARN_ON(!gpcv2_base);
-
-What happens if gpcv2_base is NULL (apart from the obvious warning
-from the above line)?  I guess a bit later in the boot,
-imx_gpcv2_set_core1_pdn_pup_by_software() oopses the kernel,
-probably before the console has been initialised.  Probably not
-nice behaviour.
-
+> +	u32 opt = (readl(sar) >> SAR_MV88F5181_CPU_FREQ) &
+> +		SAR_MV88F5181_CPU_FREQ_MASK;
+> +	if (opt == 0 || opt == 1) {
+> +		*mult = 1;
+> +		*div  = 2;
+> +	} else if (opt == 2 || opt == 3) {
+> +		*mult = 1;
+> +		*div  = 3;
+> +	} else {
+> +		*mult = 0;
+> +		*div  = 1;
+> +	}
 > +}
-> -- 
-> 1.9.1
-> 
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Same comments
+
+Regards
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
