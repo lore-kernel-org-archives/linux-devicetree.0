@@ -1,41 +1,54 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] Add SMP support for i.MX7D
-Date: Fri, 26 Aug 2016 09:43:08 -0300
-Message-ID: <CAOMZO5DaL+CKQe0hOHi_Kv8Vt9y0RHyERS8ek78WebxFmjj9rg@mail.gmail.com>
-References: <1472209971-32469-1-git-send-email-Anson.Huang@nxp.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 05/14] arm64/numa: avoid inconsistent information to
+ be printed
+Date: Fri, 26 Aug 2016 13:47:46 +0100
+Message-ID: <20160826124746.GB30302@arm.com>
+References: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
+ <1472024693-12912-6-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472209971-32469-1-git-send-email-Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1472024693-12912-6-git-send-email-thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
+On Wed, Aug 24, 2016 at 03:44:44PM +0800, Zhen Lei wrote:
+> numa_init(of_numa_init) may returned error because of numa configuration
+> error. So "No NUMA configuration found" is inaccurate. In fact, specific
+> configuration error information should be immediately printed by the
+> testing branch.
+> 
+> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm64/mm/numa.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+> index 5bb15ea..d97c6e2 100644
+> --- a/arch/arm64/mm/numa.c
+> +++ b/arch/arm64/mm/numa.c
+> @@ -335,8 +335,10 @@ static int __init numa_init(int (*init_func)(void))
+>  	if (ret < 0)
+>  		return ret;
+> 
+> -	if (nodes_empty(numa_nodes_parsed))
+> +	if (nodes_empty(numa_nodes_parsed)) {
+> +		pr_info("No NUMA configuration found\n");
+>  		return -EINVAL;
 
-On Fri, Aug 26, 2016 at 8:12 AM, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org> wrote:
-> i.MX7D has 2 Cortex-A7 ARM cores, and it has a different GPC design
-> than i.MX6, so this patch set adds a new GPCV2 driver for i.MX7D,
-> and also adds runtime check in SMP code to support both Cortex-A9
-> and Cortex-A7 ARM cores.
->
-> With this patch set, i.MX7D can boot up SMP kernel with 2 CPUs.
+Hmm, but dummy_numa_init calls node_set(nid, numa_nodes_parsed) for a
+completely artificial setup, created by adding all memblocks to node 0,
+so this new message will be suppressed even though things really did go
+wrong.
 
-Currently mx7d can boot the 2 CPUs if you use PSCI in the bootloader.
+In that case, don't we want to print *something* (like we do today in
+dummy_numa_init) but maybe not "No NUMA configuration found"? What
+exactly do you find inaccurate about the current message?
 
-Give mainline U-Boot a try and it will boot the 2 CPUs via PSCI.
-
-There was an attempt to add gpcv2 support at:
-https://patchwork.kernel.org/patch/6919831/
-
-, and Shawn suggested to go to the PSCI approach.
-
-PSCI for mx7 is still missing suspend support though.
-
-Regards,
-
-Fabio Estevam
+Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
