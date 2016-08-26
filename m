@@ -1,219 +1,113 @@
-From: Yongcai Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 3/3] ARM: imx: add SMP support for i.MX7D
-Date: Fri, 26 Aug 2016 12:20:15 +0000
-Message-ID: <AM3PR04MB13154FA0116D397AABD75E10F5EC0@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1472209971-32469-1-git-send-email-Anson.Huang@nxp.com>
- <1472209971-32469-4-git-send-email-Anson.Huang@nxp.com>
- <20160826111356.GM1041@n2100.armlinux.org.uk>
+From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Subject: Re: [PATCH 2/8] arm: orion5x: Add clk support for mv88f5181
+Date: Fri, 26 Aug 2016 13:24:18 +0100 (BST)
+Message-ID: <alpine.DEB.2.11.1608261256170.19980@marmot.wormnet.eu>
+References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk> <1472203264-21089-1-git-send-email-jm@lentin.co.uk> <1472203264-21089-3-git-send-email-jm@lentin.co.uk> <20160826113437.GA12692@Red>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160826111356.GM1041@n2100.armlinux.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160826113437.GA12692@Red>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 26 Aug 2016, LABBE Corentin wrote:
 
+> Hello
+>
+> I have some minor comments below
+>
+> [...]
+>> +
+>> +static u32 __init mv88f5181_get_tclk_freq(void __iomem *sar)
+>> +{
+>> +	u32 opt = (readl(sar) >> SAR_MV88F5181_TCLK_FREQ) &
+>> +		SAR_MV88F5181_TCLK_FREQ_MASK;
+>
+> Checkpatch complain about a missing blank line after declaration.
+> And spliting the read and the & operation will prevent this line breaking
 
-Best Regards!
-Anson Huang
+It isn't here, although I'm not arguing the line is missing. Is there an 
+extra switch I'm missing?
 
+>> +	if (opt == 0)
+>> +		return 133333333;
+>> +	else if (opt == 1)
+>> +		return 150000000;
+>> +	else if (opt == 2)
+>> +		return 166666667;
+>> +	else
+>> +		return 0;
+>> +}
+>
+> Why not using a switch here ?
 
+If you look at this in context[0], this is one of several code-as-config 
+declarations, none of which use a switch. IMO it's more useful to make the 
+similarity as obvious as possible if this is ever refactored.
 
-> -----Original Message-----
-> From: Russell King - ARM Linux [mailto:linux@armlinux.org.uk]
-> Sent: 2016-08-26 7:14 PM
-> To: Yongcai Huang <anson.huang@nxp.com>
-> Cc: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; shawnguo@kernel.org; kernel@pengutronix.de;
-> Fabio Estevam <fabio.estevam@nxp.com>; robh+dt@kernel.org;
-> mark.rutland@arm.com
-> Subject: Re: [PATCH 3/3] ARM: imx: add SMP support for i.MX7D
-> 
-> On Fri, Aug 26, 2016 at 07:12:51PM +0800, Anson Huang wrote:
-> > i.MX7D has 2 cortex-a7 ARM core, add support for booting up SMP kernel
-> > with 2 CPUs.
-> >
-> > The existing i.MX SMP code is designed for i.MX6 series SoCs which
-> > have cortex-a9 ARM core, but i.MX7D has 2 cortex-a7 ARM core, so we
-> > need to add runtime check for those differences between cortex-a9 and
-> > cortex-a7.
-> >
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> >  arch/arm/mach-imx/headsmp.S    | 11 +++++++++++
-> >  arch/arm/mach-imx/mach-imx7d.c |  2 ++
-> >  arch/arm/mach-imx/platsmp.c    | 19 ++++++++++++++++++-
-> >  arch/arm/mach-imx/src.c        | 38 ++++++++++++++++++++++++++++++----
-> ----
-> >  4 files changed, 61 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/arch/arm/mach-imx/headsmp.S b/arch/arm/mach-
-> imx/headsmp.S
-> > index 6c28d28..a26e459 100644
-> > --- a/arch/arm/mach-imx/headsmp.S
-> > +++ b/arch/arm/mach-imx/headsmp.S
-> > @@ -26,7 +26,18 @@ diag_reg_offset:
-> >  	.endm
-> >
-> >  ENTRY(v7_secondary_startup)
-> > +	.word	0xc070			@ 0xc07 is cortex-a7 id
-> > +	.word	0xfff0			@ mask for core type
-> > +
-> >  ARM_BE8(setend be)			@ go BE8 if entered LE
-> > +	mrc     p15, 0, r0, c0, c0, 0
-> > +	adr	r1, v7_secondary_startup
-> > +	ldr	r2, [r1]
-> > +	ldr	r3, [r1, #0x4]
-> > +	and     r0, r0, r3
-> > +	cmp     r0, r2
-> > +	beq     secondary_startup
-> > +
-> 
-> Total NAK on the above.  There's no way that we want to even try executing
-> those two .word values (and I don't care if "it works when tested", we just
-> don't try and execute data.)
+Obviously the rest of the file could also be refactored with switch 
+statements, but instead of doing that it seems more tempting to move the 
+config into the DT binding, e.g.
 
-Sure, I misunderstood the way of putting .word, actually, for i.MX7D, I can
-just call common secondary_startup instead of v7_seondary_startup, so I can
-remove all changes in this file.
+   cpu-freq-addr = <4>;
+   cpu-freq-mask = <0xf>;
+   cpu-freqs = <0 333333333 400000000 400000000 500000000>;
+   clk-ratios = <0 1 1 2 1 2 1 3 1 3>;
 
-> 
-> >  	set_diag_reg
-> >  	b	secondary_startup
-> >  ENDPROC(v7_secondary_startup)
-> > diff --git a/arch/arm/mach-imx/mach-imx7d.c
-> > b/arch/arm/mach-imx/mach-imx7d.c index 26ca744..ef3dce6 100644
-> > --- a/arch/arm/mach-imx/mach-imx7d.c
-> > +++ b/arch/arm/mach-imx/mach-imx7d.c
-> > @@ -99,6 +99,7 @@ static void __init imx7d_init_machine(void)
-> >
-> >  static void __init imx7d_init_irq(void)  {
-> > +	imx_gpcv2_check_dt();
-> >  	imx_init_revision_from_anatop();
-> >  	imx_src_init();
-> >  	irqchip_init();
-> > @@ -111,6 +112,7 @@ static const char *const imx7d_dt_compat[]
-> > __initconst = {  };
-> >
-> >  DT_MACHINE_START(IMX7D, "Freescale i.MX7 Dual (Device Tree)")
-> > +	.smp		= smp_ops(imx_smp_ops),
-> >  	.init_irq	= imx7d_init_irq,
-> >  	.init_machine	= imx7d_init_machine,
-> >  	.dt_compat	= imx7d_dt_compat,
-> > diff --git a/arch/arm/mach-imx/platsmp.c b/arch/arm/mach-imx/platsmp.c
-> > index 711dbbd..63af911 100644
-> > --- a/arch/arm/mach-imx/platsmp.c
-> > +++ b/arch/arm/mach-imx/platsmp.c
-> > @@ -60,8 +60,17 @@ static int imx_boot_secondary(unsigned int cpu,
-> > struct task_struct *idle)  static void __init imx_smp_init_cpus(void)
-> > {
-> >  	int i, ncores;
-> > +	unsigned long val, arch_type;
-> >
-> > -	ncores = scu_get_core_count(scu_base);
-> > +	asm volatile("mrc p15, 0, %0, c0, c0, 0" : "=r" (arch_type));
-> > +
-> > +	if (((arch_type >> 4) & 0xfff) == 0xc07) {
-> 
-> This is buggy.  Plus, we have macros for this.  Please use the macros in
-> asm/cputype.h to achieve these tests.
+...this is completely off the top of my head mind, so could easily be 
+missing something obvious / some prior art.
 
-Thanks, I will use read_cpuid_id() API intead of putting asm code here.
+[0] http://lxr.free-electrons.com/source/drivers/clk/mvebu/orion.c
 
-> 
-> > +		/* cortex-a7 core number is in bit[25:24] of CP15 L2CTLR */
-> > +		asm volatile("mrc p15, 1, %0, c9, c0, 2" : "=r" (val));
-> > +		ncores = ((val >> 24) & 0x3) + 1;
-> > +	} else {
-> > +		ncores = scu_get_core_count(scu_base);
-> > +	}
-> >
-> >  	for (i = ncores; i < NR_CPUS; i++)
-> >  		set_cpu_possible(i, false);
-> > @@ -74,6 +83,14 @@ void imx_smp_prepare(void)
-> >
-> >  static void __init imx_smp_prepare_cpus(unsigned int max_cpus)  {
-> > +	unsigned long arch_type;
-> > +
-> > +	asm volatile("mrc p15, 0, %0, c0, c0, 0" : "=r" (arch_type));
-> > +
-> > +	/* no need for cortex-a7 */
-> > +	if (((arch_type >> 4) & 0xfff) == 0xc07)
-> 
-> Ditto.
+>> +
+>> +#define SAR_MV88F5181_CPU_FREQ       4
+>> +#define SAR_MV88F5181_CPU_FREQ_MASK  0xf
+>> +
+>> +static u32 __init mv88f5181_get_cpu_freq(void __iomem *sar)
+>> +{
+>> +	u32 opt = (readl(sar) >> SAR_MV88F5181_CPU_FREQ) &
+>> +		SAR_MV88F5181_CPU_FREQ_MASK;
+>> +	if (opt == 0)
+>> +		return 333333333;
+>> +	else if (opt == 1 || opt == 2)
+>> +		return 400000000;
+>> +	else if (opt == 3)
+>> +		return 500000000;
+>> +	else
+>> +		return 0;
+>> +}
+>
+> Same comments
+>
+>> +
+>> +static void __init mv88f5181_get_clk_ratio(void __iomem *sar, int id,
+>> +					   int *mult, int *div)
+>> +{
+>> +	u32 opt = (readl(sar) >> SAR_MV88F5181_CPU_FREQ) &
+>> +		SAR_MV88F5181_CPU_FREQ_MASK;
+>> +	if (opt == 0 || opt == 1) {
+>> +		*mult = 1;
+>> +		*div  = 2;
+>> +	} else if (opt == 2 || opt == 3) {
+>> +		*mult = 1;
+>> +		*div  = 3;
+>> +	} else {
+>> +		*mult = 0;
+>> +		*div  = 1;
+>> +	}
+>> +}
+>
+> Same comments
+>
+> Regards
+>
+>
 
-Ditto.
-
-> 
-> > +		return;
-> > +
-> >  	imx_smp_prepare();
-> >
-> >  	/*
-> > diff --git a/arch/arm/mach-imx/src.c b/arch/arm/mach-imx/src.c index
-> > 70b083f..1fda72a 100644
-> > --- a/arch/arm/mach-imx/src.c
-> > +++ b/arch/arm/mach-imx/src.c
-> > @@ -18,6 +18,7 @@
-> >  #include <linux/smp.h>
-> >  #include <asm/smp_plat.h>
-> >  #include "common.h"
-> > +#include "hardware.h"
-> >
-> >  #define SRC_SCR				0x000
-> >  #define SRC_GPR1			0x020
-> > @@ -30,6 +31,15 @@
-> >  #define BP_SRC_SCR_CORE1_RST		14
-> >  #define BP_SRC_SCR_CORE1_ENABLE		22
-> >
-> > +/* below are for i.MX7D */
-> > +#define SRC_GPR1_V2                     0x074
-> > +#define SRC_A7RCR0                      0x004
-> > +#define SRC_A7RCR1                      0x008
-> > +#define SRC_M4RCR                       0x00C
-> > +
-> > +#define BP_SRC_A7RCR0_A7_CORE_RESET0   0
-> > +#define BP_SRC_A7RCR1_A7_CORE1_ENABLE  1
-> > +
-> >  static void __iomem *src_base;
-> >  static DEFINE_SPINLOCK(scr_lock);
-> >
-> > @@ -87,12 +97,21 @@ void imx_enable_cpu(int cpu, bool enable)
-> >  	u32 mask, val;
-> >
-> >  	cpu = cpu_logical_map(cpu);
-> > -	mask = 1 << (BP_SRC_SCR_CORE1_ENABLE + cpu - 1);
-> >  	spin_lock(&scr_lock);
-> > -	val = readl_relaxed(src_base + SRC_SCR);
-> > -	val = enable ? val | mask : val & ~mask;
-> > -	val |= 1 << (BP_SRC_SCR_CORE1_RST + cpu - 1);
-> > -	writel_relaxed(val, src_base + SRC_SCR);
-> > +	if (cpu_is_imx7d()) {
-> 
-> It's about time iMX folk learned that "imx*" is a SoC and _not_ a CPU.
-> It should be "soc_is_imx7d()" because we're wanting to know whether the
-> _SoC_ is an iMX7D.  The _CPU_ is a _Cortex-A7_.
-
-Agree, I will add a new patch in this patch set to replace all the cpu_is_xxx with
-Soc_is_xxx.
-
-Thanks for review.
-Anson.
-
-> 
-> --
-> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-> according to speedtest.net.
+-- 
+Jamie Lentin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
