@@ -1,60 +1,75 @@
-From: Ziyuan Xu <xzy.xu@rock-chips.com>
-Subject: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support for rk3399
-Date: Sat, 27 Aug 2016 21:41:03 +0800
-Message-ID: <20160827134103.28160-3-xzy.xu@rock-chips.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: mmc: sdhci-of-arasan: add description
+ of power domain
+Date: Sat, 27 Aug 2016 22:50:33 +0800
+Message-ID: <40f46bd6-22d2-f008-602a-47200340f733@rock-chips.com>
 References: <20160827134103.28160-1-xzy.xu@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160827134103.28160-1-xzy.xu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, robh+dt@kernel.org, heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, Ziyuan Xu <xzy.xu@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, devicetree@vger.kernel.org, David Wu <david.wu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, Frank Wang <frank.wang@rock-chips.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Shunqian Zheng <zhengsq@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Will Deacon <will.deacon@arm.com>, Jianqun Xu <jay.xu@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org, Xing Zheng <zhengxing@rock-chips.com>
+ <20160827134103.28160-2-xzy.xu@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160827134103.28160-2-xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Control power domain for eMMC via genpd to reduce power consumption.
+On 2016/8/27 21:41, Ziyuan Xu wrote:
+> Add power domain as a optional property for sdhci-of-arasan, which can
+> be truned off in the so-called unused condition, such as suspend and
+> remove. Aim to lower power requirements.
+>
+> Signed-off-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>
+> ---
+>
+>  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> index 3404afa..3f5189c 100644
+> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> @@ -1,12 +1,14 @@
+>  Device Tree Bindings for the Arasan SDHCI Controller
+>
+> -  The bindings follow the mmc[1], clock[2], interrupt[3] and phy[4] bindings.
+> +  The bindings follow the mmc[1], clock[2], interrupt[3], phy[4] and power
+> +  domain[5] bindings.
+>    Only deviations are documented here.
+>
+>    [1] Documentation/devicetree/bindings/mmc/mmc.txt
+>    [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
+>    [3] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>    [4] Documentation/devicetree/bindings/phy/phy-bindings.txt
+> +  [5] Documentation/devicetree/bindings/power/power_domain.txt
+>
+>  Required Properties:
+>    - compatible: Compatibility string.  One of:
+> @@ -36,6 +38,8 @@ Optional Properties:
+>    - #clock-cells: If specified this should be the value <0>.  With this property
+>      in place we will export a clock representing the Card Clock.  This clock
+>      is expected to be consumed by our PHY.  You must also specify
+> +  - power-domains: A phandle of and PM domain as specifier defined by bindings
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-Signed-off-by: Ziyuan Xu <xzy.xu@rock-chips.com>
+	A phandle of what?
 
----
+> +    of the power controller specified by phandle.
+>
+>  Example:
+>  	sdhci@e0100000 {
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+It would be nice to add the example code.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 32aebc8..71733d4 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -239,6 +239,7 @@
- 		#clock-cells = <0>;
- 		phys = <&emmc_phy>;
- 		phy-names = "phy_arasan";
-+		power-domains = <&power RK3399_PD_EMMC>;
- 		status = "disabled";
- 	};
- 
-@@ -611,6 +612,11 @@
- 		status = "disabled";
- 	};
- 
-+	qos_emmc: qos@ffa58000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffa58000 0x0 0x20>;
-+	};
-+
- 	qos_hdcp: qos@ffa90000 {
- 		compatible = "syscon";
- 		reg = <0x0 0xffa90000 0x0 0x20>;
-@@ -739,6 +745,11 @@
- 			};
- 
- 			/* These power domains are grouped by VD_LOGIC */
-+			pd_emmc@RK3399_PD_EMMC {
-+				reg = <RK3399_PD_EMMC>;
-+				clocks = <&cru ACLK_EMMC>;
-+				pm_qos = <&qos_emmc>;
-+			};
- 			pd_vio@RK3399_PD_VIO {
- 				reg = <RK3399_PD_VIO>;
- 				#address-cells = <1>;
+>
+
+
 -- 
-2.9.2
+Best Regards
+Shawn Lin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
