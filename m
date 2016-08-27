@@ -1,15 +1,15 @@
 From: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 08/14] arm64: numa: Use pr_fmt()
-Date: Sat, 27 Aug 2016 17:14:08 +0800
-Message-ID: <57C159E0.5050108@huawei.com>
+Subject: Re: [PATCH v7 09/14] arm64/numa: support HAVE_SETUP_PER_CPU_AREA
+Date: Sat, 27 Aug 2016 18:06:09 +0800
+Message-ID: <57C16611.1040206@huawei.com>
 References: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
- <1472024693-12912-9-git-send-email-thunder.leizhen@huawei.com>
- <20160826125426.GC30302@arm.com>
+ <1472024693-12912-10-git-send-email-thunder.leizhen@huawei.com>
+ <20160826132838.GE30302@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160826125426.GC30302-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20160826132838.GE30302-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
@@ -17,163 +17,135 @@ List-Id: devicetree@vger.kernel.org
 
 
 
-On 2016/8/26 20:54, Will Deacon wrote:
-> On Wed, Aug 24, 2016 at 03:44:47PM +0800, Zhen Lei wrote:
->> From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+On 2016/8/26 21:28, Will Deacon wrote:
+> On Wed, Aug 24, 2016 at 03:44:48PM +0800, Zhen Lei wrote:
+>> To make each percpu area allocated from its local numa node. Without this
+>> patch, all percpu areas will be allocated from the node which cpu0 belongs
+>> to.
 >>
->> Use pr_fmt to prefix kernel output, and remove duplicated msg
->> of NUMA turned off.
->>
->> Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 >> ---
->>  arch/arm64/mm/numa.c | 40 ++++++++++++++++++++--------------------
->>  1 file changed, 20 insertions(+), 20 deletions(-)
+>>  arch/arm64/Kconfig   |  8 ++++++++
+>>  arch/arm64/mm/numa.c | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 63 insertions(+)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index bc3f00f..2815af6 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -603,6 +603,14 @@ config USE_PERCPU_NUMA_NODE_ID
+>>  	def_bool y
+>>  	depends on NUMA
+>>
+>> +config HAVE_SETUP_PER_CPU_AREA
+>> +	def_bool y
+>> +	depends on NUMA
+>> +
+>> +config NEED_PER_CPU_EMBED_FIRST_CHUNK
+>> +	def_bool y
+>> +	depends on NUMA
+> 
+> Why do we need this? Is it purely about using block mappings for the
+> pcpu area?
+Without NEED_PER_CPU_EMBED_FIRST_CHUNK, Link error will be reported.
+
+#if defined(CONFIG_NEED_PER_CPU_EMBED_FIRST_CHUNK) || \
+	!defined(CONFIG_HAVE_SETUP_PER_CPU_AREA)
+#define BUILD_EMBED_FIRST_CHUNK
+#endif
+
+#if defined(BUILD_EMBED_FIRST_CHUNK)
+//pcpu_embed_first_chunk definition
+#endif
+
+setup_per_cpu_areas -->pcpu_embed_first_chunk
+
+
+> 
+>>  source kernel/Kconfig.preempt
+>>  source kernel/Kconfig.hz
 >>
 >> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
->> index d97c6e2..7b73808 100644
+>> index 7b73808..5e44ad1 100644
 >> --- a/arch/arm64/mm/numa.c
 >> +++ b/arch/arm64/mm/numa.c
->> @@ -17,6 +17,8 @@
->>   * along with this program.  If not, see <http://www.gnu.org/licenses/>.
->>   */
+>> @@ -26,6 +26,7 @@
+>>  #include <linux/of.h>
 >>
->> +#define pr_fmt(fmt) "numa: " fmt
-> 
-> Shouldn't this be uppercase for consistency with the existing code and
-> the code in places like drivers/of/of_numa.c?
-OK, I will change it to "NUMA: ".
-
-> 
->>  #include <linux/acpi.h>
->>  #include <linux/bootmem.h>
->>  #include <linux/memblock.h>
->> @@ -38,10 +40,9 @@ static __init int numa_parse_early_param(char *opt)
->>  {
->>  	if (!opt)
->>  		return -EINVAL;
->> -	if (!strncmp(opt, "off", 3)) {
->> -		pr_info("%s\n", "NUMA turned off");
->> +	if (!strncmp(opt, "off", 3))
->>  		numa_off = true;
->> -	}
+>>  #include <asm/acpi.h>
+>> +#include <asm/sections.h>
+>>
+>>  struct pglist_data *node_data[MAX_NUMNODES] __read_mostly;
+>>  EXPORT_SYMBOL(node_data);
+>> @@ -131,6 +132,60 @@ void __init early_map_cpu_to_node(unsigned int cpu, int nid)
+>>  	cpu_to_node_map[cpu] = nid;
+>>  }
+>>
+>> +#ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
+>> +unsigned long __per_cpu_offset[NR_CPUS] __read_mostly;
+>> +EXPORT_SYMBOL(__per_cpu_offset);
 >> +
->>  	return 0;
->>  }
->>  early_param("numa", numa_parse_early_param);
->> @@ -110,7 +111,7 @@ static void __init setup_node_to_cpumask_map(void)
->>  		set_cpu_numa_node(cpu, NUMA_NO_NODE);
->>
->>  	/* cpumask_of_node() will now work */
->> -	pr_debug("NUMA: Node to cpumask map for %d nodes\n", nr_node_ids);
->> +	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
->>  }
->>
->>  /*
->> @@ -145,13 +146,13 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
->>
->>  	ret = memblock_set_node(start, (end - start), &memblock.memory, nid);
->>  	if (ret < 0) {
->> -		pr_err("NUMA: memblock [0x%llx - 0x%llx] failed to add on node %d\n",
->> +		pr_err("memblock [0x%llx - 0x%llx] failed to add on node %d\n",
->>  			start, (end - 1), nid);
->>  		return ret;
->>  	}
->>
->>  	node_set(nid, numa_nodes_parsed);
->> -	pr_info("NUMA: Adding memblock [0x%llx - 0x%llx] on node %d\n",
->> +	pr_info("Adding memblock [0x%llx - 0x%llx] on node %d\n",
->>  			start, (end - 1), nid);
->>  	return ret;
->>  }
->> @@ -166,19 +167,18 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
->>  	void *nd;
->>  	int tnid;
->>
->> -	pr_info("NUMA: Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
->> -			nid, start_pfn << PAGE_SHIFT,
->> -			(end_pfn << PAGE_SHIFT) - 1);
->> +	pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
->> +		nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
->>
->>  	nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
->>  	nd = __va(nd_pa);
->>
->>  	/* report and initialize */
->> -	pr_info("NUMA: NODE_DATA [mem %#010Lx-%#010Lx]\n",
->> +	pr_info("  NODE_DATA [mem %#010Lx-%#010Lx]\n",
+>> +static int __init early_cpu_to_node(int cpu)
+>> +{
+>> +	return cpu_to_node_map[cpu];
+>> +}
+>> +
+>> +static int __init pcpu_cpu_distance(unsigned int from, unsigned int to)
+>> +{
+>> +	if (early_cpu_to_node(from) == early_cpu_to_node(to))
+>> +		return LOCAL_DISTANCE;
+>> +	else
+>> +		return REMOTE_DISTANCE;
+>> +}
 > 
-> Why are you adding leading whitespace?
-Kefeng Wang said that just in order to make the final print info looks more clear.
-
-I will remove the leading whitespace in v8.
+> Is it too early to use __node_distance here?
+Good, we can directly use node_distance, thanks.
 
 > 
->>  		nd_pa, nd_pa + nd_size - 1);
->>  	tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
->>  	if (tnid != nid)
->> -		pr_info("NUMA: NODE_DATA(%d) on node %d\n", nid, tnid);
->> +		pr_info("    NODE_DATA(%d) on node %d\n", nid, tnid);
+>> +static void * __init pcpu_fc_alloc(unsigned int cpu, size_t size,
+>> +				       size_t align)
+>> +{
+>> +	int nid = early_cpu_to_node(cpu);
+>> +
+>> +	return  memblock_virt_alloc_try_nid(size, align,
+>> +			__pa(MAX_DMA_ADDRESS), MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+>> +}
+>> +
+>> +static void __init pcpu_fc_free(void *ptr, size_t size)
+>> +{
+>> +	memblock_free_early(__pa(ptr), size);
+>> +}
+>> +
+>> +void __init setup_per_cpu_areas(void)
+>> +{
+>> +	unsigned long delta;
+>> +	unsigned int cpu;
+>> +	int rc;
+>> +
+>> +	/*
+>> +	 * Always reserve area for module percpu variables.  That's
+>> +	 * what the legacy allocator did.
+>> +	 */
+>> +	rc = pcpu_embed_first_chunk(PERCPU_MODULE_RESERVE,
+>> +				    PERCPU_DYNAMIC_RESERVE, PAGE_SIZE,
+>> +				    pcpu_cpu_distance,
+>> +				    pcpu_fc_alloc, pcpu_fc_free);
+>> +	if (rc < 0)
+>> +		panic("Failed to initialize percpu areas.");
+>> +
+>> +	delta = (unsigned long)pcpu_base_addr - (unsigned long)__per_cpu_start;
+>> +	for_each_possible_cpu(cpu)
+>> +		__per_cpu_offset[cpu] = delta + pcpu_unit_offsets[cpu];
+>> +}
+>> +#endif
 > 
-> 
-> Same here.
-> 
->>  	node_data[nid] = nd;
->>  	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
->> @@ -235,8 +235,7 @@ static int __init numa_alloc_distance(void)
->>  			numa_distance[i * numa_distance_cnt + j] = i == j ?
->>  				LOCAL_DISTANCE : REMOTE_DISTANCE;
->>
->> -	pr_debug("NUMA: Initialized distance table, cnt=%d\n",
->> -			numa_distance_cnt);
->> +	pr_debug("Initialized distance table, cnt=%d\n", numa_distance_cnt);
->>
->>  	return 0;
->>  }
->> @@ -257,20 +256,20 @@ static int __init numa_alloc_distance(void)
->>  void __init numa_set_distance(int from, int to, int distance)
->>  {
->>  	if (!numa_distance) {
->> -		pr_warn_once("NUMA: Warning: distance table not allocated yet\n");
->> +		pr_warn_once("Warning: distance table not allocated yet\n");
->>  		return;
->>  	}
->>
->>  	if (from >= numa_distance_cnt || to >= numa_distance_cnt ||
->>  			from < 0 || to < 0) {
->> -		pr_warn_once("NUMA: Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
->> +		pr_warn_once("Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
->>  			    from, to, distance);
->>  		return;
->>  	}
->>
->>  	if ((u8)distance != distance ||
->>  	    (from == to && distance != LOCAL_DISTANCE)) {
->> -		pr_warn_once("NUMA: Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
->> +		pr_warn_once("Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
->>  			     from, to, distance);
->>  		return;
->>  	}
->> @@ -297,7 +296,7 @@ static int __init numa_register_nodes(void)
->>  	/* Check that valid nid is set to memblks */
->>  	for_each_memblock(memory, mblk)
->>  		if (mblk->nid == NUMA_NO_NODE || mblk->nid >= MAX_NUMNODES) {
->> -			pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
->> +			pr_warn("Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
->>  				mblk->nid, mblk->base,
->>  				mblk->base + mblk->size - 1);
->>  			return -EINVAL;
->> @@ -368,9 +367,10 @@ static int __init dummy_numa_init(void)
->>  	struct memblock_region *mblk;
->>
->>  	if (numa_off)
->> -		pr_info("NUMA disabled\n"); /* Forced off on command line. */
->> -	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
->> -	       0LLU, PFN_PHYS(max_pfn) - 1);
->> +		pr_warn("NUMA turned off by user\n"); /* Forced off on command line. */
-> 
-> Why are you changing the string? What's wrong with "NUMA turned off" like
-> we had before?
-OK. I will keep it no change in v8.
+> It's a pity that this is practically identical to PowerPC. Ideally, there
+> would be definitions of this initialisation gunk in the core code that
+> could be reused across architectures.
+But these are different from other ARCHs, except PPC.
+
+I originally want to put it into driver/of/of_numa.c, but now the ACPI NUMA is
+coming up, so I don't known where.
 
 > 
 > Will
