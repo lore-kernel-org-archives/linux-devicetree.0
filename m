@@ -1,87 +1,43 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support
- for rk3399
-Date: Sat, 27 Aug 2016 23:05:20 +0800
-Message-ID: <2ab8ab94-fa4d-2cd6-5805-a92ac5f9697e@rock-chips.com>
-References: <20160827134103.28160-1-xzy.xu@rock-chips.com>
- <20160827134103.28160-3-xzy.xu@rock-chips.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] [v9] net: emac: emac gigabit ethernet controller driver
+Date: Sat, 27 Aug 2016 10:58:41 -0700
+Message-ID: <192979DC-62CB-4767-BA30-21ECADD8C727@gmail.com>
+References: <1472161143-26417-1-git-send-email-timur@codeaurora.org> <20160826.212939.1362447220540461922.davem@davemloft.net> <57C186FF.6090702@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160827134103.28160-3-xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <57C186FF.6090702@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>, David Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, LinoSanfilippo@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-On 2016/8/27 21:41, Ziyuan Xu wrote:
-> Control power domain for eMMC via genpd to reduce power consumption.
+On August 27, 2016 5:26:39 AM PDT, Timur Tabi <timur@codeaurora.org> wrote:
+>David Miller wrote:
+>> From: Timur Tabi <timur@codeaurora.org>
+>> Date: Thu, 25 Aug 2016 16:39:03 -0500
+>>
+>>> +static const u8 duuid[] = {
+>>> +	0x77, 0x79, 0x60, 0xbf,
+>>> +	0x2d, 0xab,
+>>> +	0x9d, 0x4b,
+>>> +	0x94, 0xf0,
+>>> +	0xe1, 0x11, 0x98, 0x01, 0xa2, 0xba
+>>> +};
+>>
+>> This seems to be completely unused, please remove it.
 >
-> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>Sorry, I missed that during my cleanup.  I'll remove it in v10.
 >
+>I wonder why my compiler didn't complain about the unused static.
 
-It looks nice to me. But this should be merged after applying that[0]
-as your patch will break bind/unbind test for sdhci-of-arasan on rk3399
-without it[0]. Moreover, Elaine should make sure that upstreamed
-rockchip power domain stuff would not off pd for emmc, *otherwise*, I
-should update my patch to make sure we update clkmul every time when
-doing suspend 2 resume..
+AFAICT this really depends on how modern your compiler is and which warnings it may now enable by default.
 
+Since you are very close from an accepted driver, you may want to squash potential warnings (and more) with doing a sparse build (make C=) which covers a bit more than what a traditional C compiler does.
 
-
-[0]: https://patchwork.kernel.org/patch/9300971/
-
-> ---
->
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 32aebc8..71733d4 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -239,6 +239,7 @@
->  		#clock-cells = <0>;
->  		phys = <&emmc_phy>;
->  		phy-names = "phy_arasan";
-> +		power-domains = <&power RK3399_PD_EMMC>;
->  		status = "disabled";
->  	};
->
-> @@ -611,6 +612,11 @@
->  		status = "disabled";
->  	};
->
-> +	qos_emmc: qos@ffa58000 {
-> +		compatible = "syscon";
-> +		reg = <0x0 0xffa58000 0x0 0x20>;
-> +	};
-> +
->  	qos_hdcp: qos@ffa90000 {
->  		compatible = "syscon";
->  		reg = <0x0 0xffa90000 0x0 0x20>;
-> @@ -739,6 +745,11 @@
->  			};
->
->  			/* These power domains are grouped by VD_LOGIC */
-> +			pd_emmc@RK3399_PD_EMMC {
-> +				reg = <RK3399_PD_EMMC>;
-> +				clocks = <&cru ACLK_EMMC>;
-> +				pm_qos = <&qos_emmc>;
-> +			};
->  			pd_vio@RK3399_PD_VIO {
->  				reg = <RK3399_PD_VIO>;
->  				#address-cells = <1>;
->
-
+Almost there!
 
 -- 
-Best Regards
-Shawn Lin
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
