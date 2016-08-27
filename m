@@ -1,25 +1,60 @@
 From: Ziyuan Xu <xzy.xu@rock-chips.com>
-Subject: [PATCH 0/2] Add power domain support for eMMC node on rk3399
-Date: Sat, 27 Aug 2016 21:41:01 +0800
-Message-ID: <20160827134103.28160-1-xzy.xu@rock-chips.com>
+Subject: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support for rk3399
+Date: Sat, 27 Aug 2016 21:41:03 +0800
+Message-ID: <20160827134103.28160-3-xzy.xu@rock-chips.com>
+References: <20160827134103.28160-1-xzy.xu@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160827134103.28160-1-xzy.xu@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: ulf.hansson@linaro.org, robh+dt@kernel.org, heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, Ziyuan Xu <xzy.xu@rock-chips.com>, Frank Wang <frank.wang@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Elaine Zhang <zhangqing@rock-chips.com>, David Wu <david.wu@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, Will Deacon <will.deacon@arm.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jianqun Xu <jay.xu@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Xing Zheng <zhengxing@rock-chips.com>, Shunqian Zheng <zhengsq@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-rockchip@lists.infradead.org, Ziyuan Xu <xzy.xu@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, devicetree@vger.kernel.org, David Wu <david.wu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, Frank Wang <frank.wang@rock-chips.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Shunqian Zheng <zhengsq@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Will Deacon <will.deacon@arm.com>, Jianqun Xu <jay.xu@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org, Xing Zheng <zhengxing@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-This series add power domain for eMMC node which will be controlled by
-genpd to make sure it's available in probing state, and will be off
-once suspend/remove.
+Control power domain for eMMC via genpd to reduce power consumption.
 
+Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+Signed-off-by: Ziyuan Xu <xzy.xu@rock-chips.com>
 
-Ziyuan Xu (2):
-  Documentation: mmc: sdhci-of-arasan: add description of power domain
-  arm64: dts: rockchip: add eMMC's power domain support for rk3399
+---
 
- Documentation/devicetree/bindings/mmc/arasan,sdhci.txt |  6 +++++-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi               | 11 +++++++++++
- 2 files changed, 16 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 32aebc8..71733d4 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -239,6 +239,7 @@
+ 		#clock-cells = <0>;
+ 		phys = <&emmc_phy>;
+ 		phy-names = "phy_arasan";
++		power-domains = <&power RK3399_PD_EMMC>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -611,6 +612,11 @@
+ 		status = "disabled";
+ 	};
+ 
++	qos_emmc: qos@ffa58000 {
++		compatible = "syscon";
++		reg = <0x0 0xffa58000 0x0 0x20>;
++	};
++
+ 	qos_hdcp: qos@ffa90000 {
+ 		compatible = "syscon";
+ 		reg = <0x0 0xffa90000 0x0 0x20>;
+@@ -739,6 +745,11 @@
+ 			};
+ 
+ 			/* These power domains are grouped by VD_LOGIC */
++			pd_emmc@RK3399_PD_EMMC {
++				reg = <RK3399_PD_EMMC>;
++				clocks = <&cru ACLK_EMMC>;
++				pm_qos = <&qos_emmc>;
++			};
+ 			pd_vio@RK3399_PD_VIO {
+ 				reg = <RK3399_PD_VIO>;
+ 				#address-cells = <1>;
 -- 
 2.9.2
