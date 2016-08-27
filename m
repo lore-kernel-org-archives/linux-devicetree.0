@@ -1,38 +1,56 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH] [v9] net: emac: emac gigabit ethernet controller driver
-Date: Sat, 27 Aug 2016 07:26:39 -0500
-Message-ID: <57C186FF.6090702@codeaurora.org>
-References: <1472161143-26417-1-git-send-email-timur@codeaurora.org>
- <20160826.212939.1362447220540461922.davem@davemloft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160826.212939.1362447220540461922.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, f.fainelli@gmail.com, LinoSanfilippo@gmx.de
+From: Ziyuan Xu <xzy.xu@rock-chips.com>
+Subject: [PATCH 1/2] Documentation: mmc: sdhci-of-arasan: add description of power domain
+Date: Sat, 27 Aug 2016 21:41:02 +0800
+Message-ID: <20160827134103.28160-2-xzy.xu@rock-chips.com>
+References: <20160827134103.28160-1-xzy.xu@rock-chips.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20160827134103.28160-1-xzy.xu@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, robh+dt@kernel.org, heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org, Ziyuan Xu <xzy.xu@rock-chips.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-David Miller wrote:
-> From: Timur Tabi <timur@codeaurora.org>
-> Date: Thu, 25 Aug 2016 16:39:03 -0500
->
->> +static const u8 duuid[] = {
->> +	0x77, 0x79, 0x60, 0xbf,
->> +	0x2d, 0xab,
->> +	0x9d, 0x4b,
->> +	0x94, 0xf0,
->> +	0xe1, 0x11, 0x98, 0x01, 0xa2, 0xba
->> +};
->
-> This seems to be completely unused, please remove it.
+Add power domain as a optional property for sdhci-of-arasan, which can
+be truned off in the so-called unused condition, such as suspend and
+remove. Aim to lower power requirements.
 
-Sorry, I missed that during my cleanup.  I'll remove it in v10.
+Signed-off-by: Ziyuan Xu <xzy.xu@rock-chips.com>
 
-I wonder why my compiler didn't complain about the unused static.
+---
 
+ Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+index 3404afa..3f5189c 100644
+--- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
++++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+@@ -1,12 +1,14 @@
+ Device Tree Bindings for the Arasan SDHCI Controller
+ 
+-  The bindings follow the mmc[1], clock[2], interrupt[3] and phy[4] bindings.
++  The bindings follow the mmc[1], clock[2], interrupt[3], phy[4] and power
++  domain[5] bindings.
+   Only deviations are documented here.
+ 
+   [1] Documentation/devicetree/bindings/mmc/mmc.txt
+   [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
+   [3] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+   [4] Documentation/devicetree/bindings/phy/phy-bindings.txt
++  [5] Documentation/devicetree/bindings/power/power_domain.txt
+ 
+ Required Properties:
+   - compatible: Compatibility string.  One of:
+@@ -36,6 +38,8 @@ Optional Properties:
+   - #clock-cells: If specified this should be the value <0>.  With this property
+     in place we will export a clock representing the Card Clock.  This clock
+     is expected to be consumed by our PHY.  You must also specify
++  - power-domains: A phandle of and PM domain as specifier defined by bindings
++    of the power controller specified by phandle.
+ 
+ Example:
+ 	sdhci@e0100000 {
 -- 
-Sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the
-Code Aurora Forum, hosted by The Linux Foundation.
+2.9.2
+
+
