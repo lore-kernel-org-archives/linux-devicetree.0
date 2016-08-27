@@ -1,43 +1,36 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] [v9] net: emac: emac gigabit ethernet controller driver
-Date: Sat, 27 Aug 2016 10:58:41 -0700
-Message-ID: <192979DC-62CB-4767-BA30-21ECADD8C727@gmail.com>
-References: <1472161143-26417-1-git-send-email-timur@codeaurora.org> <20160826.212939.1362447220540461922.davem@davemloft.net> <57C186FF.6090702@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <57C186FF.6090702@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>, David Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, LinoSanfilippo@gmx.de
+From: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/4] hw_random: Add driver for Ingenic JZ4780 SoC RNG
+Date: Sat, 27 Aug 2016 23:44:53 +0530
+Message-ID: <1472321697-3094-1-git-send-email-prasannatsmkumar@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, prarit-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On August 27, 2016 5:26:39 AM PDT, Timur Tabi <timur@codeaurora.org> wrote:
->David Miller wrote:
->> From: Timur Tabi <timur@codeaurora.org>
->> Date: Thu, 25 Aug 2016 16:39:03 -0500
->>
->>> +static const u8 duuid[] = {
->>> +	0x77, 0x79, 0x60, 0xbf,
->>> +	0x2d, 0xab,
->>> +	0x9d, 0x4b,
->>> +	0x94, 0xf0,
->>> +	0xe1, 0x11, 0x98, 0x01, 0xa2, 0xba
->>> +};
->>
->> This seems to be completely unused, please remove it.
->
->Sorry, I missed that during my cleanup.  I'll remove it in v10.
->
->I wonder why my compiler didn't complain about the unused static.
+This is the v2 patch series that adds support for random number generator
+present in Ingenic JZ4780 SoC.
 
-AFAICT this really depends on how modern your compiler is and which warnings it may now enable by default.
+Patch 1: Add device tree bindings for RNG in JZ4780 SoC.
+Patch 2: Add Ingenic JZ4780 hardware RNG driver.
+Patch 3: Add RNG to jz4780.dtsi.
+Patch 4: Enable RNG in ci20_defconfig
 
-Since you are very close from an accepted driver, you may want to squash potential warnings (and more) with doing a sparse build (make C=) which covers a bit more than what a traditional C compiler does.
+PrasannaKumar Muralidharan (4):
+  hw_random: jz4780-rng: Add devicetree bindings for RNG in JZ4780 SoC
+  hw_random: jz4780-rng: Add Ingenic JZ4780 hardware RNG driver
+  hw_random: jz4780-rng: Add RNG node to jz4780.dtsi
+  hw_random: jz4780-rng: Enable hardware RNG in CI20 defconfig
 
-Almost there!
+ Documentation/devicetree/bindings/rng/ingenic,jz4780-rng.txt |   12 +
+ MAINTAINERS                                                  |    5 
+ arch/mips/boot/dts/ingenic/jz4780.dtsi                       |    7 
+ arch/mips/configs/ci20_defconfig                             |    4 
+ drivers/char/hw_random/Kconfig                               |   14 +
+ drivers/char/hw_random/Makefile                              |    1 
+ drivers/char/hw_random/jz4780-rng.c                          |  102 +++++++++++
+ 7 files changed, 143 insertions(+), 2 deletions(-)
 
--- 
-Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
