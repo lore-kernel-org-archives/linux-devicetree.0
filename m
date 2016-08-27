@@ -1,53 +1,63 @@
-From: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 10/14] arm64/numa: define numa_distance as array to
- simplify code
-Date: Sat, 27 Aug 2016 18:29:28 +0800
-Message-ID: <57C16B88.7080500@huawei.com>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Subject: Re: [PATCH v7 14/14] Documentation: remove the constraint on the
+ distances of node pairs
+Date: Sat, 27 Aug 2016 18:44:39 +0800
+Message-ID: <57C16F17.5070609@huawei.com>
 References: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
- <1472024693-12912-11-git-send-email-thunder.leizhen@huawei.com>
- <20160826152915.GH30302@arm.com>
+ <1472024693-12912-15-git-send-email-thunder.leizhen@huawei.com>
+ <20160826153550.GI30302@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160826152915.GH30302-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160826153550.GI30302@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, Hanjun Guo <guohanjun@huawei.com>, linux-kernel <linux-kernel@vger.kernel.org>, Xinwei Hu <huxinwei@huawei.com>, Rob Herring <robh+dt@kernel.org>, Tianhong Ding <dingtianhong@huawei.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 2016/8/26 23:29, Will Deacon wrote:
-> On Wed, Aug 24, 2016 at 03:44:49PM +0800, Zhen Lei wrote:
->> 1. MAX_NUMNODES is base on CONFIG_NODES_SHIFT, the default value of the
->>    latter is very small now.
->> 2. Suppose the default value of MAX_NUMNODES is enlarged to 64, so the
->>    size of numa_distance is 4K, it's still acceptable if run the Image
->>    on other processors.
->> 3. It will make function __node_distance quicker than before.
+On 2016/8/26 23:35, Will Deacon wrote:
+> On Wed, Aug 24, 2016 at 03:44:53PM +0800, Zhen Lei wrote:
+>> Update documentation. This limit is unneccessary.
 >>
->> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
 >> ---
->>  arch/arm64/include/asm/numa.h |  1 -
->>  arch/arm64/mm/numa.c          | 74 +++----------------------------------------
->>  2 files changed, 5 insertions(+), 70 deletions(-)
+>>  Documentation/devicetree/bindings/numa.txt | 1 -
+>>  1 file changed, 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/numa.txt b/Documentation/devicetree/bindings/numa.txt
+>> index 21b3505..c0ea4a7 100644
+>> --- a/Documentation/devicetree/bindings/numa.txt
+>> +++ b/Documentation/devicetree/bindings/numa.txt
+>> @@ -48,7 +48,6 @@ distance (memory latency) between all numa nodes.
+>>
+>>    Note:
+>>  	1. Each entry represents distance from first node to second node.
+>> -	The distances are equal in either direction.
 > 
-> I fail to see the advantages of this patch. Do you have some compelling
-> performance figures or something?
-
-We can only put numa_distance_cnt on one node, so for the cpus of other nodes to access it should
-spend more time. I have not tested how many can be improved yet.
-
-I will try to get some data next week.
+> Hmm, so what happens now if firmware provides a description where both
+> distances (in either direction) are supplied, but are different?
+I have not known any hardware that the distances of two direction are different yet, but:
+1. software have no need to limit the distances of two direction must be equal.
+2. suppose below software scenario:
+   1) cpu0 and cpu1 belong to the same hardware node.
+   2) cpu0 is a master control CPU, many tasks and interrupts deliver to cpu0 first. So cpu0 often busy than cpu1.
+   3) we split cpu0 and cpu1 into two logical nodes, cpu0 belongs to node0, cpu1 belong to node1. Now, we make
+      the distance from cpu0 to cpu1 larger than the distance from cpu1 to cpu0.
 
 > 
 > Will
 > 
 > .
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
