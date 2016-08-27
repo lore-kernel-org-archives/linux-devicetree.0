@@ -1,16 +1,15 @@
 From: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 05/14] arm64/numa: avoid inconsistent information to be
- printed
-Date: Sat, 27 Aug 2016 16:54:56 +0800
-Message-ID: <57C15560.6020702@huawei.com>
+Subject: Re: [PATCH v7 08/14] arm64: numa: Use pr_fmt()
+Date: Sat, 27 Aug 2016 17:14:08 +0800
+Message-ID: <57C159E0.5050108@huawei.com>
 References: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
- <1472024693-12912-6-git-send-email-thunder.leizhen@huawei.com>
- <20160826124746.GB30302@arm.com>
+ <1472024693-12912-9-git-send-email-thunder.leizhen@huawei.com>
+ <20160826125426.GC30302@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160826124746.GB30302-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20160826125426.GC30302-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
@@ -18,47 +17,163 @@ List-Id: devicetree@vger.kernel.org
 
 
 
-On 2016/8/26 20:47, Will Deacon wrote:
-> On Wed, Aug 24, 2016 at 03:44:44PM +0800, Zhen Lei wrote:
->> numa_init(of_numa_init) may returned error because of numa configuration
->> error. So "No NUMA configuration found" is inaccurate. In fact, specific
->> configuration error information should be immediately printed by the
->> testing branch.
+On 2016/8/26 20:54, Will Deacon wrote:
+> On Wed, Aug 24, 2016 at 03:44:47PM +0800, Zhen Lei wrote:
+>> From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 >>
->> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> Use pr_fmt to prefix kernel output, and remove duplicated msg
+>> of NUMA turned off.
+>>
+>> Signed-off-by: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 >> ---
->>  arch/arm64/mm/numa.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>  arch/arm64/mm/numa.c | 40 ++++++++++++++++++++--------------------
+>>  1 file changed, 20 insertions(+), 20 deletions(-)
 >>
 >> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
->> index 5bb15ea..d97c6e2 100644
+>> index d97c6e2..7b73808 100644
 >> --- a/arch/arm64/mm/numa.c
 >> +++ b/arch/arm64/mm/numa.c
->> @@ -335,8 +335,10 @@ static int __init numa_init(int (*init_func)(void))
->>  	if (ret < 0)
->>  		return ret;
+>> @@ -17,6 +17,8 @@
+>>   * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>>   */
 >>
->> -	if (nodes_empty(numa_nodes_parsed))
->> +	if (nodes_empty(numa_nodes_parsed)) {
->> +		pr_info("No NUMA configuration found\n");
+>> +#define pr_fmt(fmt) "numa: " fmt
+> 
+> Shouldn't this be uppercase for consistency with the existing code and
+> the code in places like drivers/of/of_numa.c?
+OK, I will change it to "NUMA: ".
+
+> 
+>>  #include <linux/acpi.h>
+>>  #include <linux/bootmem.h>
+>>  #include <linux/memblock.h>
+>> @@ -38,10 +40,9 @@ static __init int numa_parse_early_param(char *opt)
+>>  {
+>>  	if (!opt)
 >>  		return -EINVAL;
+>> -	if (!strncmp(opt, "off", 3)) {
+>> -		pr_info("%s\n", "NUMA turned off");
+>> +	if (!strncmp(opt, "off", 3))
+>>  		numa_off = true;
+>> -	}
+>> +
+>>  	return 0;
+>>  }
+>>  early_param("numa", numa_parse_early_param);
+>> @@ -110,7 +111,7 @@ static void __init setup_node_to_cpumask_map(void)
+>>  		set_cpu_numa_node(cpu, NUMA_NO_NODE);
+>>
+>>  	/* cpumask_of_node() will now work */
+>> -	pr_debug("NUMA: Node to cpumask map for %d nodes\n", nr_node_ids);
+>> +	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
+>>  }
+>>
+>>  /*
+>> @@ -145,13 +146,13 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+>>
+>>  	ret = memblock_set_node(start, (end - start), &memblock.memory, nid);
+>>  	if (ret < 0) {
+>> -		pr_err("NUMA: memblock [0x%llx - 0x%llx] failed to add on node %d\n",
+>> +		pr_err("memblock [0x%llx - 0x%llx] failed to add on node %d\n",
+>>  			start, (end - 1), nid);
+>>  		return ret;
+>>  	}
+>>
+>>  	node_set(nid, numa_nodes_parsed);
+>> -	pr_info("NUMA: Adding memblock [0x%llx - 0x%llx] on node %d\n",
+>> +	pr_info("Adding memblock [0x%llx - 0x%llx] on node %d\n",
+>>  			start, (end - 1), nid);
+>>  	return ret;
+>>  }
+>> @@ -166,19 +167,18 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+>>  	void *nd;
+>>  	int tnid;
+>>
+>> -	pr_info("NUMA: Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
+>> -			nid, start_pfn << PAGE_SHIFT,
+>> -			(end_pfn << PAGE_SHIFT) - 1);
+>> +	pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
+>> +		nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
+>>
+>>  	nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
+>>  	nd = __va(nd_pa);
+>>
+>>  	/* report and initialize */
+>> -	pr_info("NUMA: NODE_DATA [mem %#010Lx-%#010Lx]\n",
+>> +	pr_info("  NODE_DATA [mem %#010Lx-%#010Lx]\n",
 > 
-> Hmm, but dummy_numa_init calls node_set(nid, numa_nodes_parsed) for a
-> completely artificial setup, created by adding all memblocks to node 0,
-> so this new message will be suppressed even though things really did go
-> wrong.
-It will be printed by the former: numa_init(of_numa_init)
+> Why are you adding leading whitespace?
+Kefeng Wang said that just in order to make the final print info looks more clear.
+
+I will remove the leading whitespace in v8.
 
 > 
-> In that case, don't we want to print *something* (like we do today in
-> dummy_numa_init) but maybe not "No NUMA configuration found"? What
-> exactly do you find inaccurate about the current message?
-For example:
-[    0.000000] NUMA: No distance-matrix property in distance-map
-[    0.000000] No NUMA configuration found
-
-So if of_numa_init or arm64_acpi_numa_init returned error, because of
-some numa configuration error had been found, it's no good to print "No NUMA ...".
+>>  		nd_pa, nd_pa + nd_size - 1);
+>>  	tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
+>>  	if (tnid != nid)
+>> -		pr_info("NUMA: NODE_DATA(%d) on node %d\n", nid, tnid);
+>> +		pr_info("    NODE_DATA(%d) on node %d\n", nid, tnid);
+> 
+> 
+> Same here.
+> 
+>>  	node_data[nid] = nd;
+>>  	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
+>> @@ -235,8 +235,7 @@ static int __init numa_alloc_distance(void)
+>>  			numa_distance[i * numa_distance_cnt + j] = i == j ?
+>>  				LOCAL_DISTANCE : REMOTE_DISTANCE;
+>>
+>> -	pr_debug("NUMA: Initialized distance table, cnt=%d\n",
+>> -			numa_distance_cnt);
+>> +	pr_debug("Initialized distance table, cnt=%d\n", numa_distance_cnt);
+>>
+>>  	return 0;
+>>  }
+>> @@ -257,20 +256,20 @@ static int __init numa_alloc_distance(void)
+>>  void __init numa_set_distance(int from, int to, int distance)
+>>  {
+>>  	if (!numa_distance) {
+>> -		pr_warn_once("NUMA: Warning: distance table not allocated yet\n");
+>> +		pr_warn_once("Warning: distance table not allocated yet\n");
+>>  		return;
+>>  	}
+>>
+>>  	if (from >= numa_distance_cnt || to >= numa_distance_cnt ||
+>>  			from < 0 || to < 0) {
+>> -		pr_warn_once("NUMA: Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
+>> +		pr_warn_once("Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
+>>  			    from, to, distance);
+>>  		return;
+>>  	}
+>>
+>>  	if ((u8)distance != distance ||
+>>  	    (from == to && distance != LOCAL_DISTANCE)) {
+>> -		pr_warn_once("NUMA: Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
+>> +		pr_warn_once("Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
+>>  			     from, to, distance);
+>>  		return;
+>>  	}
+>> @@ -297,7 +296,7 @@ static int __init numa_register_nodes(void)
+>>  	/* Check that valid nid is set to memblks */
+>>  	for_each_memblock(memory, mblk)
+>>  		if (mblk->nid == NUMA_NO_NODE || mblk->nid >= MAX_NUMNODES) {
+>> -			pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
+>> +			pr_warn("Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
+>>  				mblk->nid, mblk->base,
+>>  				mblk->base + mblk->size - 1);
+>>  			return -EINVAL;
+>> @@ -368,9 +367,10 @@ static int __init dummy_numa_init(void)
+>>  	struct memblock_region *mblk;
+>>
+>>  	if (numa_off)
+>> -		pr_info("NUMA disabled\n"); /* Forced off on command line. */
+>> -	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
+>> -	       0LLU, PFN_PHYS(max_pfn) - 1);
+>> +		pr_warn("NUMA turned off by user\n"); /* Forced off on command line. */
+> 
+> Why are you changing the string? What's wrong with "NUMA turned off" like
+> we had before?
+OK. I will keep it no change in v8.
 
 > 
 > Will
