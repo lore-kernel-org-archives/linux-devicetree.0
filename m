@@ -1,674 +1,570 @@
 From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4] iio: adc: add ADC12130/ADC12132/ADC12138 ADC driver
-Date: Sun, 28 Aug 2016 23:52:49 +0900
-Message-ID: <1472395969-13322-1-git-send-email-akinobu.mita@gmail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH] rtc: add support for EPSON TOYOCOM RTC-7301SF/DG
+Date: Sun, 28 Aug 2016 23:55:18 +0900
+Message-ID: <1472396118-13424-1-git-send-email-akinobu.mita@gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCPM5SUWUYIRBY7WRO7AKGQE7SN2TJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds Texas Instruments' ADC12130/ADC12132/ADC12138 12-bit plus
-sign ADC driver.  I have tested with the ADC12138.  The ADC12130 and
-ADC12132 are not tested but these are similar to ADC12138 except that
-the mode programming instruction is a bit different.
+This adds support for EPSON TOYOCOM RTC-7301SF/DG which has parallel
+interface compatible with SRAM.
+
+This driver supports basic clock, calendar and alarm functionality.
+
+Tested with Microblaze linux running on Artix7 FPGA board with my own
+custom IP for RTC-7301.
 
 Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
-* Changes from v3
-- rename acquisition-time DT property to ti,acquisition-time
-- add explanation for ti,acquisition-time DT property
-- add a note for vref-n-supply in the device tree document
-- change parameter for ADC12138_VOLTAGE_CHANNEL_DIFF
-- handle defer probing for vref-n optional regulator
+ .../devicetree/bindings/rtc/epson,rtc7301.txt      |  15 +
+ drivers/rtc/Kconfig                                |  11 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-r7301.c                            | 458 +++++++++++++++++++++
+ 4 files changed, 485 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/epson,rtc7301.txt
+ create mode 100644 drivers/rtc/rtc-r7301.c
 
- .../devicetree/bindings/iio/adc/ti-adc12138.txt    |  37 ++
- drivers/iio/adc/Kconfig                            |  12 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/ti-adc12138.c                      | 551 +++++++++++++++++++++
- 4 files changed, 601 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
- create mode 100644 drivers/iio/adc/ti-adc12138.c
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
+diff --git a/Documentation/devicetree/bindings/rtc/epson,rtc7301.txt b/Documentation/devicetree/bindings/rtc/epson,rtc7301.txt
 new file mode 100644
-index 0000000..049a1d3
+index 0000000..e1a94cb
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/ti-adc12138.txt
-@@ -0,0 +1,37 @@
-+* Texas Instruments' ADC12130/ADC12132/ADC12138
++++ b/Documentation/devicetree/bindings/rtc/epson,rtc7301.txt
+@@ -0,0 +1,15 @@
++EPSON TOYOCOM RTC-7301SF/DG
 +
 +Required properties:
-+ - compatible: Should be one of
-+	* "ti,adc12130"
-+	* "ti,adc12132"
-+	* "ti,adc12138"
-+ - reg: SPI chip select number for the device
-+ - interrupts: Should contain interrupt for EOC (end of conversion)
-+ - clocks: phandle to conversion clock input
-+ - spi-max-frequency: Definision as per
-+	Documentation/devicetree/bindings/spi/spi-bus.txt
-+ - vref-p-supply: The regulator supply for positive analog voltage reference
 +
-+Optional properties:
-+ - vref-n-supply: The regulator supply for negative analog voltage reference
-+	(Note that this must not go below GND or exceed vref-p)
-+	If not specified, this is assumed to be analog ground.
-+ - ti,acquisition-time: The number of conversion clock periods for the S/H's
-+	acquisition time.  Should be one of 6, 10, 18, 34.  If not specified,
-+	default value of 10 is used.
-+	For high source impedances, this value can be increased to 18 or 34.
-+	For less ADC accuracy and/or slower CCLK frequencies this value may be
-+	decreased to 6.  See section 6.0 INPUT SOURCE RESISTANCE in the
-+	datasheet for details.
++- compatible: Should be "epson,rtc7301sf" or "epson,rtc7301dg"
++- reg: Specifies base physical address and size of the registers.
++- interrupts: A single interrupt specifier.
 +
 +Example:
-+adc@0 {
-+	compatible = "ti,adc12138";
-+	reg = <0>;
-+	interrupts = <28 IRQ_TYPE_EDGE_RISING>;
-+	interrupt-parent = <&gpio1>;
-+	clocks = <&cclk>;
-+	vref-p-supply = <&ldo4_reg>;
-+	spi-max-frequency = <5000000>;
-+	ti,acquisition-time = <6>;
++
++rtc: rtc@44a00000 {
++	compatible = "epson,rtc7301dg";
++	reg = <0x44a00000 0x10000>;
++	interrupts = <2 2>;
 +};
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index fa0ff29..87ed82d 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -414,6 +414,18 @@ config TI_ADC0832
- 	  This driver can also be built as a module. If so, the module will be
- 	  called ti-adc0832.
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 618f644..9242c5e 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1669,6 +1669,17 @@ config RTC_DRV_PIC32
+ 	   This driver can also be built as a module. If so, the module
+ 	   will be called rtc-pic32
  
-+config TI_ADC12138
-+	tristate "Texas Instruments ADC12130/ADC12132/ADC12138"
-+	depends on SPI
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
++config RTC_DRV_R7301
++	tristate "EPSON TOYOCOM RTC-7301SF/DG"
++	select REGMAP_MMIO
++	depends on OF && HAS_IOMEM
 +	help
-+	  If you say yes here you get support for Texas Instruments ADC12130,
-+	  ADC12132 and ADC12138 chips.
++	   If you say yes here you get support for the EPSON TOYOCOM
++	   RTC-7301SF/DG chips.
 +
-+	  This driver can also be built as a module. If so, the module will be
-+	  called ti-adc12138.
++	   This driver can also be built as a module. If so, the module
++	   will be called rtc-r7301.
 +
- config TI_ADC128S052
- 	tristate "Texas Instruments ADC128S052/ADC122S021/ADC124S021"
- 	depends on SPI
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index 599714b..3ae4ae3 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_QCOM_SPMI_VADC) += qcom-spmi-vadc.o
- obj-$(CONFIG_ROCKCHIP_SARADC) += rockchip_saradc.o
- obj-$(CONFIG_TI_ADC081C) += ti-adc081c.o
- obj-$(CONFIG_TI_ADC0832) += ti-adc0832.o
-+obj-$(CONFIG_TI_ADC12138) += ti-adc12138.o
- obj-$(CONFIG_TI_ADC128S052) += ti-adc128s052.o
- obj-$(CONFIG_TI_ADS1015) += ti-ads1015.o
- obj-$(CONFIG_TI_ADS8688) += ti-ads8688.o
-diff --git a/drivers/iio/adc/ti-adc12138.c b/drivers/iio/adc/ti-adc12138.c
+ comment "HID Sensor RTC drivers"
+ 
+ config RTC_DRV_HID_SENSOR_TIME
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index ea28337..abab534 100644
+--- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -118,6 +118,7 @@ obj-$(CONFIG_RTC_DRV_PM8XXX)	+= rtc-pm8xxx.o
+ obj-$(CONFIG_RTC_DRV_PS3)	+= rtc-ps3.o
+ obj-$(CONFIG_RTC_DRV_PUV3)	+= rtc-puv3.o
+ obj-$(CONFIG_RTC_DRV_PXA)	+= rtc-pxa.o
++obj-$(CONFIG_RTC_DRV_R7301)	+= rtc-r7301.o
+ obj-$(CONFIG_RTC_DRV_R9701)	+= rtc-r9701.o
+ obj-$(CONFIG_RTC_DRV_RC5T583)	+= rtc-rc5t583.o
+ obj-$(CONFIG_RTC_DRV_RK808)	+= rtc-rk808.o
+diff --git a/drivers/rtc/rtc-r7301.c b/drivers/rtc/rtc-r7301.c
 new file mode 100644
-index 0000000..908b8b5
+index 0000000..b1be281
 --- /dev/null
-+++ b/drivers/iio/adc/ti-adc12138.c
-@@ -0,0 +1,551 @@
++++ b/drivers/rtc/rtc-r7301.c
+@@ -0,0 +1,458 @@
 +/*
-+ * ADC12130/ADC12132/ADC12138 12-bit plus sign ADC driver
++ * EPSON TOYOCOM RTC-7301SF/DG Driver
 + *
 + * Copyright (c) 2016 Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 + *
-+ * This file is subject to the terms and conditions of version 2 of
-+ * the GNU General Public License.  See the file COPYING in the main
-+ * directory of this archive for more details.
++ * Based on rtc-rp5c01.c
 + *
-+ * Datasheet: http://www.ti.com/lit/ds/symlink/adc12138.pdf
++ * Datasheet: http://www5.epsondevice.com/en/products/parallel/rtc7301sf.html
 + */
 +
++#include <linux/io.h>
++#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/completion.h>
-+#include <linux/clk.h>
-+#include <linux/spi/spi.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/buffer.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/regulator/consumer.h>
++#include <linux/delay.h>
++#include <linux/regmap.h>
++#include <linux/platform_device.h>
++#include <linux/rtc.h>
 +
-+#define ADC12138_MODE_AUTO_CAL			0x08
-+#define ADC12138_MODE_READ_STATUS		0x0c
-+#define ADC12138_MODE_ACQUISITION_TIME_6	0x0e
-+#define ADC12138_MODE_ACQUISITION_TIME_10	0x4e
-+#define ADC12138_MODE_ACQUISITION_TIME_18	0x8e
-+#define ADC12138_MODE_ACQUISITION_TIME_34	0xce
-+
-+#define ADC12138_STATUS_CAL			BIT(6)
++#define DRV_NAME "rtc-r7301"
 +
 +enum {
-+	adc12130,
-+	adc12132,
-+	adc12138,
++	RTC7301_1_SEC		= 0x0,	/* Bank 0 and Band 1 */
++	RTC7301_10_SEC		= 0x1,	/* Bank 0 and Band 1 */
++	RTC7301_AE		= BIT(3),
++	RTC7301_1_MIN		= 0x2,	/* Bank 0 and Band 1 */
++	RTC7301_10_MIN		= 0x3,	/* Bank 0 and Band 1 */
++	RTC7301_1_HOUR		= 0x4,	/* Bank 0 and Band 1 */
++	RTC7301_10_HOUR		= 0x5,	/* Bank 0 and Band 1 */
++	RTC7301_DAY_OF_WEEK	= 0x6,	/* Bank 0 and Band 1 */
++	RTC7301_1_DAY		= 0x7,	/* Bank 0 and Band 1 */
++	RTC7301_10_DAY		= 0x8,	/* Bank 0 and Band 1 */
++	RTC7301_1_MONTH		= 0x9,	/* Bank 0 */
++	RTC7301_10_MONTH	= 0xa,	/* Bank 0 */
++	RTC7301_1_YEAR		= 0xb,	/* Bank 0 */
++	RTC7301_10_YEAR		= 0xc,	/* Bank 0 */
++	RTC7301_100_YEAR	= 0xd,	/* Bank 0 */
++	RTC7301_1000_YEAR	= 0xe,	/* Bank 0 */
++	RTC7301_ALARM_CONTROL	= 0xe,	/* Bank 1 */
++	RTC7301_ALARM_CONTROL_AIE	= BIT(0),
++	RTC7301_ALARM_CONTROL_AF	= BIT(1),
++	RTC7301_TIMER_CONTROL	= 0xe,	/* Bank 2 */
++	RTC7301_ALARM_CONTROL_TIE	= BIT(0),
++	RTC7301_ALARM_CONTROL_TF	= BIT(1),
++	RTC7301_CONTROL		= 0xf,	/* All banks */
++	RTC7301_CONTROL_BUSY		= BIT(0),
++	RTC7301_CONTROL_STOP		= BIT(1),
++	RTC7301_CONTROL_BANK_SEL_0	= BIT(2),
++	RTC7301_CONTROL_BANK_SEL_1	= BIT(3),
 +};
 +
-+struct adc12138 {
-+	struct spi_device *spi;
-+	unsigned int id;
-+	/* conversion clock */
-+	struct clk *cclk;
-+	/* positive analog voltage reference */
-+	struct regulator *vref_p;
-+	/* negative analog voltage reference */
-+	struct regulator *vref_n;
-+	struct mutex lock;
-+	struct completion complete;
-+	/* The number of cclk periods for the S/H's acquisition time */
-+	unsigned int acquisition_time;
-+
-+	u8 tx_buf[2] ____cacheline_aligned;
-+	u8 rx_buf[2];
++struct rtc7301_priv {
++	struct regmap *regmap;
++	int irq;
++	spinlock_t lock;
++	u8 bank;
 +};
 +
-+#define ADC12138_VOLTAGE_CHANNEL(chan)					\
-+	{								\
-+		.type = IIO_VOLTAGE,					\
-+		.indexed = 1,						\
-+		.channel = chan,					\
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE)	\
-+					| BIT(IIO_CHAN_INFO_OFFSET),	\
-+		.scan_index = chan,					\
-+		.scan_type = {						\
-+			.sign = 's',					\
-+			.realbits = 13,					\
-+			.storagebits = 16,				\
-+			.shift = 3,					\
-+			.endianness = IIO_BE,				\
-+		},							\
-+	}
-+
-+#define ADC12138_VOLTAGE_CHANNEL_DIFF(chan1, chan2, si)			\
-+	{								\
-+		.type = IIO_VOLTAGE,					\
-+		.indexed = 1,						\
-+		.channel = (chan1),					\
-+		.channel2 = (chan2),					\
-+		.differential = 1,					\
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE)	\
-+					| BIT(IIO_CHAN_INFO_OFFSET),	\
-+		.scan_index = si,					\
-+		.scan_type = {						\
-+			.sign = 's',					\
-+			.realbits = 13,					\
-+			.storagebits = 16,				\
-+			.shift = 3,					\
-+			.endianness = IIO_BE,				\
-+		},							\
-+	}
-+
-+static const struct iio_chan_spec adc12132_channels[] = {
-+	ADC12138_VOLTAGE_CHANNEL(0),
-+	ADC12138_VOLTAGE_CHANNEL(1),
-+	ADC12138_VOLTAGE_CHANNEL_DIFF(0, 1, 2),
-+	ADC12138_VOLTAGE_CHANNEL_DIFF(1, 0, 3),
-+	IIO_CHAN_SOFT_TIMESTAMP(4),
++static const struct regmap_config rtc7301_regmap_config = {
++	.reg_bits = 32,
++	.val_bits = 8,
++	.reg_stride = 4,
 +};
 +
-+static const struct iio_chan_spec adc12138_channels[] = {
-+	ADC12138_VOLTAGE_CHANNEL(0),
-+	ADC12138_VOLTAGE_CHANNEL(1),
-+	ADC12138_VOLTAGE_CHANNEL(2),
-+	ADC12138_VOLTAGE_CHANNEL(3),
-+	ADC12138_VOLTAGE_CHANNEL(4),
-+	ADC12138_VOLTAGE_CHANNEL(5),
-+	ADC12138_VOLTAGE_CHANNEL(6),
-+	ADC12138_VOLTAGE_CHANNEL(7),
-+	ADC12138_VOLTAGE_CHANNEL_DIFF(0, 1, 8),
-+	ADC12138_VOLTAGE_CHANNEL_DIFF(1, 0, 9),
-+	ADC12138_VOLTAGE_CHANNEL_DIFF(2, 3, 10),
-+	ADC12138_VOLTAGE_CHANNEL_DIFF(3, 2, 11),
-+	ADC12138_VOLTAGE_CHANNEL_DIFF(4, 5, 12),
-+	ADC12138_VOLTAGE_CHANNEL_DIFF(5, 4, 13),
-+	ADC12138_VOLTAGE_CHANNEL_DIFF(6, 7, 14),
-+	ADC12138_VOLTAGE_CHANNEL_DIFF(7, 6, 15),
-+	IIO_CHAN_SOFT_TIMESTAMP(16),
-+};
-+
-+static int adc12138_mode_programming(struct adc12138 *adc, u8 mode,
-+				     void *rx_buf, int len)
++static u8 rtc7301_read(struct rtc7301_priv *priv, unsigned int reg)
 +{
-+	struct spi_transfer xfer = {
-+		.tx_buf = adc->tx_buf,
-+		.rx_buf = adc->rx_buf,
-+		.len = len,
-+	};
-+	int ret;
++	int reg_stride = regmap_get_reg_stride(priv->regmap);
++	unsigned int val;
 +
-+	/* Skip unused bits for ADC12130 and ADC12132 */
-+	if (adc->id != adc12138)
-+		mode = (mode & 0xc0) | ((mode & 0x0f) << 2);
++	regmap_read(priv->regmap, reg_stride * reg, &val);
 +
-+	adc->tx_buf[0] = mode;
++	return val & 0xf;
++}
 +
-+	ret = spi_sync_transfer(adc->spi, &xfer, 1);
-+	if (ret)
-+		return ret;
++static void rtc7301_write(struct rtc7301_priv *priv, u8 val, unsigned int reg)
++{
++	int reg_stride = regmap_get_reg_stride(priv->regmap);
 +
-+	memcpy(rx_buf, adc->rx_buf, len);
++	regmap_write(priv->regmap, reg_stride * reg, val);
++}
++
++static void rtc7301_update_bits(struct rtc7301_priv *priv, unsigned int reg,
++				u8 mask, u8 val)
++{
++	int reg_stride = regmap_get_reg_stride(priv->regmap);
++
++	regmap_update_bits(priv->regmap, reg_stride * reg, mask, val);
++}
++
++static int rtc7301_wait_while_busy(struct rtc7301_priv *priv)
++{
++	int retries = 100;
++
++	while (retries-- > 0) {
++		u8 val;
++
++		val = rtc7301_read(priv, RTC7301_CONTROL);
++		if (!(val & RTC7301_CONTROL_BUSY))
++			return 0;
++
++		usleep_range(200, 300);
++	}
++
++	return -ETIMEDOUT;
++}
++
++static void rtc7301_stop(struct rtc7301_priv *priv)
++{
++	rtc7301_update_bits(priv, RTC7301_CONTROL, RTC7301_CONTROL_STOP,
++			    RTC7301_CONTROL_STOP);
++}
++
++static void rtc7301_start(struct rtc7301_priv *priv)
++{
++	rtc7301_update_bits(priv, RTC7301_CONTROL, RTC7301_CONTROL_STOP, 0);
++}
++
++static void rtc7301_select_bank(struct rtc7301_priv *priv, u8 bank)
++{
++	u8 val = 0;
++
++	if (bank == priv->bank)
++		return;
++
++	if (bank & BIT(0))
++		val |= RTC7301_CONTROL_BANK_SEL_0;
++	if (bank & BIT(1))
++		val |= RTC7301_CONTROL_BANK_SEL_1;
++
++	rtc7301_update_bits(priv, RTC7301_CONTROL,
++			    RTC7301_CONTROL_BANK_SEL_0 |
++			    RTC7301_CONTROL_BANK_SEL_1, val);
++
++	priv->bank = bank;
++}
++
++static void rtc7301_get_time(struct rtc7301_priv *priv, struct rtc_time *tm,
++			     bool alarm)
++{
++	int year;
++
++	tm->tm_sec = rtc7301_read(priv, RTC7301_1_SEC);
++	tm->tm_sec += (rtc7301_read(priv, RTC7301_10_SEC) & ~RTC7301_AE) * 10;
++	tm->tm_min = rtc7301_read(priv, RTC7301_1_MIN);
++	tm->tm_min += (rtc7301_read(priv, RTC7301_10_MIN) & ~RTC7301_AE) * 10;
++	tm->tm_hour = rtc7301_read(priv, RTC7301_1_HOUR);
++	tm->tm_hour += (rtc7301_read(priv, RTC7301_10_HOUR) & ~RTC7301_AE) * 10;
++	tm->tm_mday = rtc7301_read(priv, RTC7301_1_DAY);
++	tm->tm_mday += (rtc7301_read(priv, RTC7301_10_DAY) & ~RTC7301_AE) * 10;
++
++	if (alarm) {
++		tm->tm_wday = -1;
++		tm->tm_mon = -1;
++		tm->tm_year = -1;
++		tm->tm_yday = -1;
++		tm->tm_isdst = -1;
++		return;
++	}
++
++	tm->tm_wday = (rtc7301_read(priv, RTC7301_DAY_OF_WEEK) & ~RTC7301_AE);
++	tm->tm_mon = rtc7301_read(priv, RTC7301_10_MONTH) * 10 +
++		     rtc7301_read(priv, RTC7301_1_MONTH) - 1;
++	year = rtc7301_read(priv, RTC7301_1000_YEAR) * 1000 +
++	       rtc7301_read(priv, RTC7301_100_YEAR) * 100 +
++	       rtc7301_read(priv, RTC7301_10_YEAR) * 10 +
++	       rtc7301_read(priv, RTC7301_1_YEAR);
++
++	tm->tm_year = year - 1900;
++}
++
++static void rtc7301_write_time(struct rtc7301_priv *priv, struct rtc_time *tm,
++			       bool alarm)
++{
++	int year;
++
++	rtc7301_write(priv, tm->tm_sec % 10, RTC7301_1_SEC);
++	rtc7301_write(priv, tm->tm_sec / 10, RTC7301_10_SEC);
++
++	rtc7301_write(priv, tm->tm_min % 10, RTC7301_1_MIN);
++	rtc7301_write(priv, tm->tm_min / 10, RTC7301_10_MIN);
++
++	rtc7301_write(priv, tm->tm_hour % 10, RTC7301_1_HOUR);
++	rtc7301_write(priv, tm->tm_hour / 10, RTC7301_10_HOUR);
++
++	rtc7301_write(priv, tm->tm_mday % 10, RTC7301_1_DAY);
++	rtc7301_write(priv, tm->tm_mday / 10, RTC7301_10_DAY);
++
++	/* Don't care for alarm register */
++	rtc7301_write(priv, alarm ? RTC7301_AE : tm->tm_wday,
++		      RTC7301_DAY_OF_WEEK);
++
++	if (alarm)
++		return;
++
++	rtc7301_write(priv, (tm->tm_mon + 1) % 10, RTC7301_1_MONTH);
++	rtc7301_write(priv, (tm->tm_mon + 1) / 10, RTC7301_10_MONTH);
++
++	year = tm->tm_year + 1900;
++
++	rtc7301_write(priv, year % 10, RTC7301_1_YEAR);
++	rtc7301_write(priv, (year / 10) % 10, RTC7301_10_YEAR);
++	rtc7301_write(priv, (year / 100) % 10, RTC7301_100_YEAR);
++	rtc7301_write(priv, year / 1000, RTC7301_1000_YEAR);
++}
++
++static void rtc7301_alarm_irq(struct rtc7301_priv *priv, unsigned int enabled)
++{
++	rtc7301_update_bits(priv, RTC7301_ALARM_CONTROL,
++			    RTC7301_ALARM_CONTROL_AF |
++			    RTC7301_ALARM_CONTROL_AIE,
++			    enabled ? RTC7301_ALARM_CONTROL_AIE : 0);
++}
++
++static int rtc7301_read_time(struct device *dev, struct rtc_time *tm)
++{
++	struct rtc7301_priv *priv = dev_get_drvdata(dev);
++	unsigned long flags;
++	int err;
++
++	spin_lock_irqsave(&priv->lock, flags);
++
++	rtc7301_select_bank(priv, 0);
++
++	err = rtc7301_wait_while_busy(priv);
++	if (!err)
++		rtc7301_get_time(priv, tm, false);
++
++	spin_unlock_irqrestore(&priv->lock, flags);
++
++	return err ? err : rtc_valid_tm(tm);
++}
++
++static int rtc7301_set_time(struct device *dev, struct rtc_time *tm)
++{
++	struct rtc7301_priv *priv = dev_get_drvdata(dev);
++	unsigned long flags;
++
++	spin_lock_irqsave(&priv->lock, flags);
++
++	rtc7301_stop(priv);
++	usleep_range(200, 300);
++	rtc7301_select_bank(priv, 0);
++	rtc7301_write_time(priv, tm, false);
++	rtc7301_start(priv);
++
++	spin_unlock_irqrestore(&priv->lock, flags);
 +
 +	return 0;
 +}
 +
-+static int adc12138_read_status(struct adc12138 *adc)
++static int rtc7301_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
 +{
-+	u8 rx_buf[2];
-+	int ret;
++	struct rtc7301_priv *priv = dev_get_drvdata(dev);
++	unsigned long flags;
++	u8 alrm_ctrl;
 +
-+	ret = adc12138_mode_programming(adc, ADC12138_MODE_READ_STATUS,
-+					rx_buf, 2);
-+	if (ret)
-+		return ret;
-+
-+	return (rx_buf[0] << 1) | (rx_buf[1] >> 7);
-+}
-+
-+static int __adc12138_start_conv(struct adc12138 *adc,
-+				 struct iio_chan_spec const *channel,
-+				 void *data, int len)
-+
-+{
-+	const u8 ch_to_mux[] = { 0, 4, 1, 5, 2, 6, 3, 7 };
-+	u8 mode = (ch_to_mux[channel->channel] << 4) |
-+		  (channel->differential ? 0 : 0x80);
-+
-+	return adc12138_mode_programming(adc, mode, data, len);
-+}
-+
-+static int adc12138_start_conv(struct adc12138 *adc,
-+			       struct iio_chan_spec const *channel)
-+{
-+	u8 trash;
-+
-+	return __adc12138_start_conv(adc, channel, &trash, 1);
-+}
-+
-+static int adc12138_start_and_read_conv(struct adc12138 *adc,
-+					struct iio_chan_spec const *channel,
-+					__be16 *data)
-+{
-+	return __adc12138_start_conv(adc, channel, data, 2);
-+}
-+
-+static int adc12138_read_conv_data(struct adc12138 *adc, __be16 *value)
-+{
-+	/* Issue a read status instruction and read previous conversion data */
-+	return adc12138_mode_programming(adc, ADC12138_MODE_READ_STATUS,
-+					 value, sizeof(*value));
-+}
-+
-+static int adc12138_wait_eoc(struct adc12138 *adc, unsigned long timeout)
-+{
-+	if (!wait_for_completion_timeout(&adc->complete, timeout))
-+		return -ETIMEDOUT;
-+
-+	return 0;
-+}
-+
-+static int adc12138_adc_conversion(struct adc12138 *adc,
-+				   struct iio_chan_spec const *channel,
-+				   __be16 *value)
-+{
-+	int ret;
-+
-+	reinit_completion(&adc->complete);
-+
-+	ret = adc12138_start_conv(adc, channel);
-+	if (ret)
-+		return ret;
-+
-+	ret = adc12138_wait_eoc(adc, msecs_to_jiffies(100));
-+	if (ret)
-+		return ret;
-+
-+	return adc12138_read_conv_data(adc, value);
-+}
-+
-+static int adc12138_read_raw(struct iio_dev *iio,
-+			     struct iio_chan_spec const *channel, int *value,
-+			     int *shift, long mask)
-+{
-+	struct adc12138 *adc = iio_priv(iio);
-+	int ret;
-+	__be16 data;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		mutex_lock(&adc->lock);
-+		ret = adc12138_adc_conversion(adc, channel, &data);
-+		mutex_unlock(&adc->lock);
-+		if (ret)
-+			return ret;
-+
-+		*value = sign_extend32(be16_to_cpu(data) >> 3, 12);
-+
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		ret = regulator_get_voltage(adc->vref_p);
-+		if (ret < 0)
-+			return ret;
-+		*value = ret;
-+
-+		if (!IS_ERR(adc->vref_n)) {
-+			ret = regulator_get_voltage(adc->vref_n);
-+			if (ret < 0)
-+				return ret;
-+			*value -= ret;
-+		}
-+
-+		/* convert regulator output voltage to mV */
-+		*value /= 1000;
-+		*shift = channel->scan_type.realbits - 1;
-+
-+		return IIO_VAL_FRACTIONAL_LOG2;
-+	case IIO_CHAN_INFO_OFFSET:
-+		if (!IS_ERR(adc->vref_n)) {
-+			*value = regulator_get_voltage(adc->vref_n);
-+			if (*value < 0)
-+				return *value;
-+		} else {
-+			*value = 0;
-+		}
-+
-+		/* convert regulator output voltage to mV */
-+		*value /= 1000;
-+
-+		return IIO_VAL_INT;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const struct iio_info adc12138_info = {
-+	.read_raw = adc12138_read_raw,
-+	.driver_module = THIS_MODULE,
-+};
-+
-+static int adc12138_init(struct adc12138 *adc)
-+{
-+	int ret;
-+	int status;
-+	u8 mode;
-+	u8 trash;
-+
-+	reinit_completion(&adc->complete);
-+
-+	ret = adc12138_mode_programming(adc, ADC12138_MODE_AUTO_CAL, &trash, 1);
-+	if (ret)
-+		return ret;
-+
-+	/* data output at this time has no significance */
-+	status = adc12138_read_status(adc);
-+	if (status < 0)
-+		return status;
-+
-+	adc12138_wait_eoc(adc, msecs_to_jiffies(100));
-+
-+	status = adc12138_read_status(adc);
-+	if (status & ADC12138_STATUS_CAL) {
-+		dev_warn(&adc->spi->dev,
-+			"Auto Cal sequence is still in progress: %#x\n",
-+			status);
-+		return -EIO;
-+	}
-+
-+	switch (adc->acquisition_time) {
-+	case 6:
-+		mode = ADC12138_MODE_ACQUISITION_TIME_6;
-+		break;
-+	case 10:
-+		mode = ADC12138_MODE_ACQUISITION_TIME_10;
-+		break;
-+	case 18:
-+		mode = ADC12138_MODE_ACQUISITION_TIME_18;
-+		break;
-+	case 34:
-+		mode = ADC12138_MODE_ACQUISITION_TIME_34;
-+		break;
-+	default:
++	if (priv->irq <= 0)
 +		return -EINVAL;
-+	}
 +
-+	return adc12138_mode_programming(adc, mode, &trash, 1);
-+}
++	spin_lock_irqsave(&priv->lock, flags);
 +
-+static irqreturn_t adc12138_trigger_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct adc12138 *adc = iio_priv(indio_dev);
-+	__be16 data[20] = { }; /* 16x 2 bytes ADC data + 8 bytes timestamp */
-+	__be16 trash;
-+	int ret;
-+	int scan_index;
-+	int i = 0;
++	rtc7301_select_bank(priv, 1);
++	rtc7301_get_time(priv, &alarm->time, true);
 +
-+	mutex_lock(&adc->lock);
++	alrm_ctrl = rtc7301_read(priv, RTC7301_ALARM_CONTROL);
 +
-+	for_each_set_bit(scan_index, indio_dev->active_scan_mask,
-+			 indio_dev->masklength) {
-+		const struct iio_chan_spec *scan_chan =
-+				&indio_dev->channels[scan_index];
++	alarm->enabled = !!(alrm_ctrl & RTC7301_ALARM_CONTROL_AIE);
++	alarm->pending = !!(alrm_ctrl & RTC7301_ALARM_CONTROL_AF);
 +
-+		reinit_completion(&adc->complete);
-+
-+		ret = adc12138_start_and_read_conv(adc, scan_chan,
-+						   i ? &data[i - 1] : &trash);
-+		if (ret) {
-+			dev_warn(&adc->spi->dev,
-+				 "failed to start conversion\n");
-+			goto out;
-+		}
-+
-+		ret = adc12138_wait_eoc(adc, msecs_to_jiffies(100));
-+		if (ret) {
-+			dev_warn(&adc->spi->dev, "wait eoc timeout\n");
-+			goto out;
-+		}
-+
-+		i++;
-+	}
-+
-+	if (i) {
-+		ret = adc12138_read_conv_data(adc, &data[i - 1]);
-+		if (ret) {
-+			dev_warn(&adc->spi->dev,
-+				 "failed to get conversion data\n");
-+			goto out;
-+		}
-+	}
-+
-+	iio_push_to_buffers_with_timestamp(indio_dev, data, iio_get_time_ns());
-+out:
-+	mutex_unlock(&adc->lock);
-+
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t adc12138_eoc_handler(int irq, void *p)
-+{
-+	struct iio_dev *indio_dev = p;
-+	struct adc12138 *adc = iio_priv(indio_dev);
-+
-+	complete(&adc->complete);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int adc12138_probe(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev;
-+	struct adc12138 *adc;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	adc = iio_priv(indio_dev);
-+	adc->spi = spi;
-+	adc->id = spi_get_device_id(spi)->driver_data;
-+	mutex_init(&adc->lock);
-+	init_completion(&adc->complete);
-+
-+	indio_dev->name = spi_get_device_id(spi)->name;
-+	indio_dev->dev.parent = &spi->dev;
-+	indio_dev->info = &adc12138_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	switch (adc->id) {
-+	case adc12130:
-+	case adc12132:
-+		indio_dev->channels = adc12132_channels;
-+		indio_dev->num_channels = ARRAY_SIZE(adc12132_channels);
-+		break;
-+	case adc12138:
-+		indio_dev->channels = adc12138_channels;
-+		indio_dev->num_channels = ARRAY_SIZE(adc12138_channels);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = of_property_read_u32(spi->dev.of_node, "ti,acquisition-time",
-+				   &adc->acquisition_time);
-+	if (ret)
-+		adc->acquisition_time = 10;
-+
-+	adc->cclk = devm_clk_get(&spi->dev, NULL);
-+	if (IS_ERR(adc->cclk))
-+		return PTR_ERR(adc->cclk);
-+
-+	adc->vref_p = devm_regulator_get(&spi->dev, "vref-p");
-+	if (IS_ERR(adc->vref_p))
-+		return PTR_ERR(adc->vref_p);
-+
-+	adc->vref_n = devm_regulator_get_optional(&spi->dev, "vref-n");
-+	if (IS_ERR(adc->vref_n)) {
-+		/*
-+		 * Assume vref_n is 0V if an optional regulator is not
-+		 * specified, otherwise return the error code.
-+		 */
-+		ret = PTR_ERR(adc->vref_n);
-+		if (ret != -ENODEV)
-+			return ret;
-+	}
-+
-+	ret = devm_request_irq(&spi->dev, spi->irq, adc12138_eoc_handler,
-+			       IRQF_TRIGGER_RISING, indio_dev->name, indio_dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(adc->cclk);
-+	if (ret)
-+		return ret;
-+
-+	ret = regulator_enable(adc->vref_p);
-+	if (ret)
-+		goto err_clk_disable;
-+
-+	if (!IS_ERR(adc->vref_n)) {
-+		ret = regulator_enable(adc->vref_n);
-+		if (ret)
-+			goto err_vref_p_disable;
-+	}
-+
-+	ret = adc12138_init(adc);
-+	if (ret)
-+		goto err_vref_n_disable;
-+
-+	spi_set_drvdata(spi, indio_dev);
-+
-+	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-+					 adc12138_trigger_handler, NULL);
-+	if (ret)
-+		goto err_vref_n_disable;
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret)
-+		goto err_buffer_cleanup;
++	spin_unlock_irqrestore(&priv->lock, flags);
 +
 +	return 0;
-+err_buffer_cleanup:
-+	iio_triggered_buffer_cleanup(indio_dev);
-+err_vref_n_disable:
-+	if (!IS_ERR(adc->vref_n))
-+		regulator_disable(adc->vref_n);
-+err_vref_p_disable:
-+	regulator_disable(adc->vref_p);
-+err_clk_disable:
-+	clk_disable_unprepare(adc->cclk);
++}
++
++static int rtc7301_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
++{
++	struct rtc7301_priv *priv = dev_get_drvdata(dev);
++	unsigned long flags;
++
++	if (priv->irq <= 0)
++		return -EINVAL;
++
++	spin_lock_irqsave(&priv->lock, flags);
++
++	rtc7301_select_bank(priv, 1);
++	rtc7301_write_time(priv, &alarm->time, true);
++	rtc7301_alarm_irq(priv, alarm->enabled);
++
++	spin_unlock_irqrestore(&priv->lock, flags);
++
++	return 0;
++}
++
++static int rtc7301_alarm_irq_enable(struct device *dev, unsigned int enabled)
++{
++	struct rtc7301_priv *priv = dev_get_drvdata(dev);
++	unsigned long flags;
++
++	if (priv->irq <= 0)
++		return -EINVAL;
++
++	spin_lock_irqsave(&priv->lock, flags);
++
++	rtc7301_select_bank(priv, 1);
++	rtc7301_alarm_irq(priv, enabled);
++
++	spin_unlock_irqrestore(&priv->lock, flags);
++
++	return 0;
++}
++
++static const struct rtc_class_ops rtc7301_rtc_ops = {
++	.read_time	= rtc7301_read_time,
++	.set_time	= rtc7301_set_time,
++	.read_alarm	= rtc7301_read_alarm,
++	.set_alarm	= rtc7301_set_alarm,
++	.alarm_irq_enable = rtc7301_alarm_irq_enable,
++};
++
++static irqreturn_t rtc7301_irq_handler(int irq, void *dev_id)
++{
++	struct rtc_device *rtc = dev_id;
++	struct rtc7301_priv *priv = dev_get_drvdata(rtc->dev.parent);
++	unsigned long flags;
++	irqreturn_t ret = IRQ_NONE;
++	u8 alrm_ctrl;
++
++	spin_lock_irqsave(&priv->lock, flags);
++
++	rtc7301_select_bank(priv, 1);
++
++	alrm_ctrl = rtc7301_read(priv, RTC7301_ALARM_CONTROL);
++	if (alrm_ctrl & RTC7301_ALARM_CONTROL_AF) {
++		ret = IRQ_HANDLED;
++		rtc7301_alarm_irq(priv, false);
++		rtc_update_irq(rtc, 1, RTC_IRQF | RTC_AF);
++	}
++
++	spin_unlock_irqrestore(&priv->lock, flags);
 +
 +	return ret;
 +}
 +
-+static int adc12138_remove(struct spi_device *spi)
++static void rtc7301_init(struct rtc7301_priv *priv)
 +{
-+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-+	struct adc12138 *adc = iio_priv(indio_dev);
++	unsigned long flags;
 +
-+	iio_device_unregister(indio_dev);
-+	iio_triggered_buffer_cleanup(indio_dev);
-+	if (!IS_ERR(adc->vref_n))
-+		regulator_disable(adc->vref_n);
-+	regulator_disable(adc->vref_p);
-+	clk_disable_unprepare(adc->cclk);
++	spin_lock_irqsave(&priv->lock, flags);
++
++	rtc7301_select_bank(priv, 1);
++	rtc7301_alarm_irq(priv, false);
++
++	rtc7301_select_bank(priv, 2);
++	rtc7301_write(priv, 0, RTC7301_TIMER_CONTROL);
++
++	spin_unlock_irqrestore(&priv->lock, flags);
++}
++
++static int __init rtc7301_rtc_probe(struct platform_device *dev)
++{
++	struct resource *res;
++	void __iomem *regs;
++	struct rtc7301_priv *priv;
++	struct rtc_device *rtc;
++	int ret;
++
++	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
++	if (!res)
++		return -ENODEV;
++
++	priv = devm_kzalloc(&dev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	regs = devm_ioremap_resource(&dev->dev, res);
++	if (IS_ERR(regs))
++		return PTR_ERR(regs);
++
++	priv->regmap = devm_regmap_init_mmio(&dev->dev, regs,
++					     &rtc7301_regmap_config);
++	if (IS_ERR(priv->regmap))
++		return PTR_ERR(priv->regmap);
++
++	priv->irq = platform_get_irq(dev, 0);
++
++	spin_lock_init(&priv->lock);
++	priv->bank = -1;
++
++	rtc7301_init(priv);
++
++	platform_set_drvdata(dev, priv);
++
++	rtc = devm_rtc_device_register(&dev->dev, DRV_NAME, &rtc7301_rtc_ops,
++				       THIS_MODULE);
++	if (IS_ERR(rtc))
++		return PTR_ERR(rtc);
++
++	if (priv->irq > 0) {
++		ret = devm_request_irq(&dev->dev, priv->irq,
++				       rtc7301_irq_handler, IRQF_SHARED,
++				       dev_name(&dev->dev), rtc);
++		if (ret) {
++			priv->irq = 0;
++			dev_err(&dev->dev, "unable to request IRQ\n");
++		} else {
++			device_set_wakeup_capable(&dev->dev, true);
++		}
++	}
 +
 +	return 0;
 +}
 +
-+#ifdef CONFIG_OF
++#ifdef CONFIG_PM_SLEEP
 +
-+static const struct of_device_id adc12138_dt_ids[] = {
-+	{ .compatible = "ti,adc12130", },
-+	{ .compatible = "ti,adc12132", },
-+	{ .compatible = "ti,adc12138", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, adc12138_dt_ids);
++static int rtc7301_suspend(struct device *dev)
++{
++	struct rtc7301_priv *priv = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev))
++		enable_irq_wake(priv->irq);
++
++	return 0;
++}
++
++static int rtc7301_resume(struct device *dev)
++{
++	struct rtc7301_priv *priv = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev))
++		disable_irq_wake(priv->irq);
++
++	return 0;
++}
 +
 +#endif
 +
-+static const struct spi_device_id adc12138_id[] = {
-+	{ "adc12130", adc12130 },
-+	{ "adc12132", adc12132 },
-+	{ "adc12138", adc12138 },
++static SIMPLE_DEV_PM_OPS(rtc7301_pm_ops, rtc7301_suspend, rtc7301_resume);
++
++static const struct of_device_id rtc7301_dt_match[] = {
++	{ .compatible = "epson,rtc7301sf" },
++	{ .compatible = "epson,rtc7301dg" },
 +	{}
 +};
-+MODULE_DEVICE_TABLE(spi, adc12138_id);
++MODULE_DEVICE_TABLE(of, rtc7301_dt_match);
 +
-+static struct spi_driver adc12138_driver = {
-+	.driver = {
-+		.name = "adc12138",
-+		.of_match_table = of_match_ptr(adc12138_dt_ids),
++static struct platform_driver rtc7301_rtc_driver = {
++	.driver	= {
++		.name = DRV_NAME,
++		.of_match_table = rtc7301_dt_match,
++		.pm = &rtc7301_pm_ops,
 +	},
-+	.probe = adc12138_probe,
-+	.remove = adc12138_remove,
-+	.id_table = adc12138_id,
 +};
-+module_spi_driver(adc12138_driver);
++
++module_platform_driver_probe(rtc7301_rtc_driver, rtc7301_rtc_probe);
 +
 +MODULE_AUTHOR("Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
-+MODULE_DESCRIPTION("ADC12130/ADC12132/ADC12138 driver");
-+MODULE_LICENSE("GPL v2");
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("EPSON TOYOCOM RTC-7301SF/DG Driver");
++MODULE_ALIAS("platform:rtc-r7301");
 -- 
 2.7.4
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
