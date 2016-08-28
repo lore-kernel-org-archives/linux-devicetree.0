@@ -1,54 +1,73 @@
-From: Randy Li <ayaka@soulik.info>
-Subject: [PATCH 3/4] ARM: dts: add fimc support in exynos4412 TOPEET iTop Elite board
-Date: Sun, 28 Aug 2016 19:21:08 +0800
-Message-ID: <1472383269-3126-4-git-send-email-ayaka@soulik.info>
-References: <CAL_JsqKY=VEZ+U11kY+XbMWuXhaFDr6GpnR3AXKd1U=9_=8fgA@mail.gmail.com>
- <1472383269-3126-1-git-send-email-ayaka@soulik.info>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472383269-3126-1-git-send-email-ayaka@soulik.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, krzk@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, Randy Li <ayaka@soulik.info>
+From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [BISECTED REGRESSION] v4.8-rc: DT/OCTEON driver probing broken
+Date: Sun, 28 Aug 2016 15:22:39 +0300
+Message-ID: <20160828122239.GA14316@raspberrypi.musicnaut.iki.fi>
+References: <20160816150056.GD18731@ak-desktop.emea.nsn-net.net>
+ <0336fae0-1717-2f90-c221-6ef69f7024ee@leemhuis.info>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <0336fae0-1717-2f90-c221-6ef69f7024ee-rCxcAJFjeRkk+I/owrrOrA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thorsten Leemhuis <regressions-rCxcAJFjeRkk+I/owrrOrA@public.gmane.org>
+Cc: Aaro Koskinen <aaro.koskinen-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The is not used for camera, I enabled it just for a colorspace
-convertor.
+Hi,
 
-Signed-off-by: Randy Li <ayaka@soulik.info>
----
- arch/arm/boot/dts/exynos4412-itop-elite.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+On Sun, Aug 28, 2016 at 12:34:06PM +0200, Thorsten Leemhuis wrote:
+> Lo! Kefeng, below report made it to the list of regression for 4.8, but
+> afaics nothing happened after the initial report. Is there maybe some
+> reason why it shouldn't be on the list of regressions at all? Or was the
+> problem discussed elsewhere? Or is it even fixed already? I noticed
+> https://git.kernel.org/torvalds/c/fc520f8b4f (of/platform: disable the
+> of_platform_default_populate_init() for all the ppc board), but that
+> change is PPC specific.
 
-diff --git a/arch/arm/boot/dts/exynos4412-itop-elite.dts b/arch/arm/boot/dts/exynos4412-itop-elite.dts
-index 5688589..2d11b9a 100644
---- a/arch/arm/boot/dts/exynos4412-itop-elite.dts
-+++ b/arch/arm/boot/dts/exynos4412-itop-elite.dts
-@@ -82,6 +82,14 @@
- 		pinctrl-0 = <&pwm0_out>;
- 		pinctrl-names = "default";
- 	};
-+
-+	camera: camera {
-+		pinctrl-0 = <&cam_port_a_clk_active>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+		assigned-clocks = <&clock CLK_MOUT_CAM0>;
-+		assigned-clock-parents = <&clock CLK_XUSBXTI>;
-+	};
- };
- 
- &pinctrl_1 {
-@@ -146,3 +154,11 @@
- 	vdd-supply = <&ldo3_reg>;
- 	status = "okay";
- };
-+
-+&fimc_0 {
-+	status = "okay";
-+	assigned-clocks = <&clock CLK_MOUT_FIMC0>,
-+			<&clock CLK_SCLK_FIMC0>;
-+	assigned-clock-parents = <&clock CLK_MOUT_MPLL_USER_T>;
-+	assigned-clock-rates = <0>, <176000000>;
-+};
--- 
-2.7.4
+There is a fix proposal here:
+
+	https://patchwork.linux-mips.org/patch/14041/
+
+There is still few other boards remaining that use of_platform_bus_probe()
+from device_initcall, but who knows, maybe they are not affected.
+
+arch/microblaze/kernel/platform.c
+arch/mips/mti-malta/malta-dt.c
+arch/mips/netlogic/xlp/dt.c
+arch/x86/platform/olpc/olpc_dt.c
+
+A.
+
+> On 16.08.2016 17:00, Aaro Koskinen wrote:
+> > Hi,
+> > 
+> > Commit 44a7185c2ae6 ("of/platform: Add common method to populate default
+> > bus") added new arch_initcall of_platform_default_populate_init() that
+> > will be called before device_initcall octeon_publish_devices(). Now the
+> > of_platform_bus_probe() called in octeon_publish_devices() is apparently
+> > doing nothing:
+> > 
+> > [   52.331353] calling  octeon_publish_devices+0x0/0x14 @ 1
+> > [   52.331358] OF: of_platform_bus_probe()
+> > [   52.331362] OF:  starting at: /
+> > [   52.331378] OF: of_platform_bus_create() - skipping /soc@0, already populated
+> > [   52.331394] initcall octeon_publish_devices+0x0/0x14 returned 0 after 29 usecs
+> > 
+> > This also means that USB etc. won't get probed.
+> > 
+> > Any ideas what would be the proper fix for this? Changing
+> > octeon_publish_devices() to arch_initcall seems to work but that may be
+> > a bit hackish... Also, there might be also other MIPS boards affected
+> > (arch/mips/netlogic/xlp/dt.c, arch/mips/mti-malta/malta-dt.c).
+> > 
+> > A.
+> > 
+> > http://news.gmane.org/find-root.php?message_id=20160816150056.GD18731%40ak-desktop.emea.nsn-net.net 
+> > http://mid.gmane.org/20160816150056.GD18731%40ak-desktop.emea.nsn-net.net
+> > 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
