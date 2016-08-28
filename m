@@ -1,49 +1,58 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 2/5] clk: gxbb: expose MPLL2 clock for use by DT
-Date: Sun, 28 Aug 2016 18:16:34 +0200
-Message-ID: <20160828161637.9941-3-martin.blumenstingl@googlemail.com>
-References: <20160820093538.9707-1-martin.blumenstingl@googlemail.com>
- <20160828161637.9941-1-martin.blumenstingl@googlemail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160828161637.9941-1-martin.blumenstingl@googlemail.com>
-Sender: netdev-owner@vger.kernel.org
-To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org, mturquette@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org, manabian@gmail.com, arnd@arndb.de, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] ARM64: dts: meson-gxbb: Add Meson GXBB PWM
+ Controller nodes
+Date: Sun, 28 Aug 2016 18:29:39 +0200
+Message-ID: <CAFBinCDBPgrHsDuPLV=4MTFLZn10DmXM8FR171W9g3SoZUJ9aw@mail.gmail.com>
+References: <1471880193-21879-1-git-send-email-narmstrong@baylibre.com> <1471880193-21879-4-git-send-email-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471880193-21879-4-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This exposes the MPLL2 clock as this is one of the input clocks of the
-ethernet controller's internal mux.
+On Mon, Aug 22, 2016 at 5:36 PM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> index e502c24..e3f4d36 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> @@ -153,6 +153,27 @@
+>                                 status = "disabled";
+>                         };
+>
+> +                       pwm_ab: pwm@8550 {
+> +                               compatible = "amlogic,meson-gxbb-pwm";
+> +                               reg = <0x0 0x08550 0x0 0x10>;
+> +                               #pwm-cells = <3>;
+> +                               status = "disabled";
+> +                       };
+> +
+> +                       pwm_cd: pwm@8650 {
+> +                               compatible = "amlogic,meson-gxbb-pwm";
+> +                               reg = <0x0 0x08650 0x0 0x10>;
+> +                               #pwm-cells = <3>;
+> +                               status = "disabled";
+> +                       };
+> +
+> +                       pwm_ef: pwm@86c0 {
+> +                               compatible = "amlogic,meson-gxbb-pwm";
+> +                               reg = <0x0 0x086c0 0x0 0x10>;
+> +                               #pwm-cells = <3>;
+> +                               status = "disabled";
+> +                       };
+I have successfully tested pwm_e on my meson-gxbb-vega-s95-meta clone
+(see [0] for the corresponding patches), thus:
+Tested-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/clk/meson/gxbb.h              | 2 +-
- include/dt-bindings/clock/gxbb-clkc.h | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
-index 217df51..3606e875 100644
---- a/drivers/clk/meson/gxbb.h
-+++ b/drivers/clk/meson/gxbb.h
-@@ -183,7 +183,7 @@
- /* CLKID_CLK81 */
- #define CLKID_MPLL0		  13
- #define CLKID_MPLL1		  14
--#define CLKID_MPLL2		  15
-+/* CLKID_MPLL2 */
- #define CLKID_DDR		  16
- #define CLKID_DOS		  17
- #define CLKID_ISA		  18
-diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-bindings/clock/gxbb-clkc.h
-index 7d41864..244ea6e 100644
---- a/include/dt-bindings/clock/gxbb-clkc.h
-+++ b/include/dt-bindings/clock/gxbb-clkc.h
-@@ -8,6 +8,7 @@
- #define CLKID_CPUCLK		1
- #define CLKID_FCLK_DIV2		4
- #define CLKID_CLK81		12
-+#define CLKID_MPLL2		15
- #define CLKID_ETH		36
- #define CLKID_SD_EMMC_A		94
- #define CLKID_SD_EMMC_B		95
--- 
-2.9.3
+[0] https://github.com/xdarklight/linux/tree/meson-gxbb-integration-4.8-20160828
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
