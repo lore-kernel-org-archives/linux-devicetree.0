@@ -1,68 +1,81 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] Documentation: dt: net: add ath9k wireless device binding
-Date: Sun, 28 Aug 2016 22:51:54 +0200
-Message-ID: <CAFBinCAj0gFnKkqBrmUxCwXjsv6NY4KuWGRA4_mnXjq_boYx8w@mail.gmail.com>
-References: <20160709232834.31654-1-martin.blumenstingl@googlemail.com>
- <20160821143105.27487-1-martin.blumenstingl@googlemail.com>
- <20160821143105.27487-2-martin.blumenstingl@googlemail.com> <2913835.hr5kg63Vcv@wuerfel>
+Subject: Re: [PATCH 5/5] ath9k: Make EEPROM endianness swapping configurable
+ via devicetree
+Date: Sun, 28 Aug 2016 23:10:21 +0200
+Message-ID: <CAFBinCCK4zG7QXENpCgEr9wUgzinfr1ugEm3HepjE6c3RDqtVg@mail.gmail.com>
+References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
+ <20160821144906.30984-6-martin.blumenstingl@googlemail.com> <2303906.Xe1WvCfP0V@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2913835.hr5kg63Vcv@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn-yOkvZcmFvRU@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2303906.Xe1WvCfP0V@wuerfel>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, nbd-Vt+b4OUoWG0@public.gmane.org
+Cc: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 22, 2016 at 11:08 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Sunday, August 21, 2016 4:31:03 PM CEST Martin Blumenstingl wrote:
->> +pci {
->> +       pcie@0 {
->> +               reg = <0 0 0 0 0>;
+On Mon, Aug 22, 2016 at 1:52 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Sunday, August 21, 2016 4:49:06 PM CEST Martin Blumenstingl wrote:
+>> +- qca,check-eeprom-endianness: When enabled, the driver checks if the
+>> +                               endianness of the EEPROM (using two checks,
+>> +                               one is based on the two magic bytes at the
+>> +                               start of the EEPROM and a second one which
+>> +                               relies on a flag within the EEPROM data)
+>> +                               matches the host system's native endianness.
+>> +                               The data will be swapped accordingly if there
+>> +                               is a mismatch.
+>> +                               Leaving this disabled means that the EEPROM
+>> +                               data will always be interpreted in the
+>> +                               system's native endianness.
+>> +                               Enable this option only when the EEPROMs
+>> +                               endianness identifiers are known to be
+>> +                               correct, because otherwise the EEPROM data
+>> +                               may be swapped and thus interpreted
+>> +                               incorrectly.
 >
-> It's not clear what these two nodes refer to in the example. Is the top-level
-> node the PCI host bridge, and the second node the first PCIe port?
+> The property should not describe the driver behavior, but instead
+> describe what the hardware is like.
 >
-> Maybe add the properties from a real system here to make this a little
-> clearer.
->
-> The unit address for the slot should be "00,0", not "0" here.
-good point - I'll skip the part where I am describing the bridge as
-well and keep it simple.
+> A default of "system's native endianess" should not be specified
+> in a binding, as the same DTB can be used with both big-endian or
+> little-endian kernels on some architectures (ARM and PowerPC among
+> others), so disabling the property means that it is guaranteed to
+> be broken on one of the two.
+OK, I went back to have a separate look at the whole issue again.
+Let's recap, there are two types of swapping:
+1. swab16 for the whole EEPROM data
+2. EEPROM format specific swapping (for all u16 and u32 values)
 
->> +               ath9k@0,0 {
->
-> According to the PCI binding, the name should be the same as the
-> compatible string here, or match the class code in the table.
-The original example was from an actual system (where an ath9k is
-connected to the PCIe bug). Unfortunately the PCIe driver contains
-some hacks, so I'm not sure if these values serve as a good example.
-Thus I took an example from a device where the ath9k chip is connected
-via PCI (no "express" - found in sysfs at:
-/sys/bus/pci/devices/0000:00:0e.0):
-&pci0 {
-    ath9k@168c,002d {
-        compatible = "pci168c,002d";
-        reg = <0x7000 0 0 0 0>;
-        qca,disable-5ghz;
-    };
-};
+Actually I am not 100% sure what #1 exists. In OpenWrt and LEDE it's
+only used by the brcm63xx and lantiq targets (I personally have only
+lantiq based devices, so that's what I can test with).
+Without patch 4 from this series the EEPROM data is loaded like this:
+1. out of tree code extracts the EEPROM data from NOR/SPI/NAND flash
+2. board specific entry (usually device-tree) tells the code to apply
+swab16 to the data
+3. board specific entry (usually device-tree again) sets the
+"endian_check" property in the ath9k_platform_data to true
+4.a ath9k sees that the magic bytes are not matching and applies swab16
+4.b while doing that it notifies the EEPROM format specific swapping
 
->> +                       compatible = "pci168c,0030";
->> +                       reg = <0 0 0 0 0>;
->
-> Are the device/fn numbers all zero on your system? This is a bit
-> confusing, as it's not immediately clear what the reg properties
-> refers to. Also, I think the length should reflect the actual length
-> of the config space, either 0x100 or 0x1000.
-The first issue is solved with the updated example (see above).
-Where would the size go (is it the second-last or last value)?
+However, with patch 4 from this series steps 4.a and 4.b are replaced with:
+4. ath9k checks the eepMisc field of the EEPROM and applies the EEPROM
+format specific swapping
+
+Currently this code is still guarded by a check whether swapping is
+enabled or not.
+However, FreeBSD uses the same check but has no guarding if-clause for it.
+
+TL;DR: if we remove if (ah->ah_flags & AH_NO_EEP_SWAP) from patch 4 we
+don't need an extra device-tree property.
+
+The question is how we can test this properly:
+I can test this on the boards I own (3 in total) - but I don't think
+that this is enough.
+Maybe we can test this together with some LEDE people - this should
+get us test-coverage for embedded devices.
+I'm open to more/better suggestions
 
 
-Thanks for your patience!
 Regards,
 Martin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
