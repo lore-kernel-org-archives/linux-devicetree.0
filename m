@@ -1,55 +1,51 @@
-From: Thorsten Leemhuis <regressions-rCxcAJFjeRkk+I/owrrOrA@public.gmane.org>
-Subject: Re: [BISECTED REGRESSION] v4.8-rc: DT/OCTEON driver probing broken
-Date: Sun, 28 Aug 2016 12:34:06 +0200
-Message-ID: <0336fae0-1717-2f90-c221-6ef69f7024ee@leemhuis.info>
-References: <20160816150056.GD18731@ak-desktop.emea.nsn-net.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Subject: [PATCH 0/4 v3] Add a new board TOPEET iTOP for exynos 4412
+Date: Sun, 28 Aug 2016 19:21:05 +0800
+Message-ID: <1472383269-3126-1-git-send-email-ayaka@soulik.info>
+References: <CAL_JsqKY=VEZ+U11kY+XbMWuXhaFDr6GpnR3AXKd1U=9_=8fgA@mail.gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160816150056.GD18731-wKwWf7Pro3RJlwZWLBHdvBaOaYmgohGe0e7PPNI6Mm0@public.gmane.org>
+In-Reply-To: <CAL_JsqKY=VEZ+U11kY+XbMWuXhaFDr6GpnR3AXKd1U=9_=8fgA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaro Koskinen <aaro.koskinen-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Lo! Kefeng, below report made it to the list of regression for 4.8, but
-afaics nothing happened after the initial report. Is there maybe some
-reason why it shouldn't be on the list of regressions at all? Or was the
-problem discussed elsewhere? Or is it even fixed already? I noticed
-https://git.kernel.org/torvalds/c/fc520f8b4f (of/platform: disable the
-of_platform_default_populate_init() for all the ppc board), but that
-change is PPC specific.
+The added the audio codec seems work now, but the audio sounds
+still a little different to the original. But I didn't hear the sound
+in the Android, I don't know whether it is qualified.
 
-Ciao, Thorsten
+Also it lacks of full pinctrl for the sleep state.
 
-On 16.08.2016 17:00, Aaro Koskinen wrote:
-> Hi,
-> 
-> Commit 44a7185c2ae6 ("of/platform: Add common method to populate default
-> bus") added new arch_initcall of_platform_default_populate_init() that
-> will be called before device_initcall octeon_publish_devices(). Now the
-> of_platform_bus_probe() called in octeon_publish_devices() is apparently
-> doing nothing:
-> 
-> [   52.331353] calling  octeon_publish_devices+0x0/0x14 @ 1
-> [   52.331358] OF: of_platform_bus_probe()
-> [   52.331362] OF:  starting at: /
-> [   52.331378] OF: of_platform_bus_create() - skipping /soc@0, already populated
-> [   52.331394] initcall octeon_publish_devices+0x0/0x14 returned 0 after 29 usecs
-> 
-> This also means that USB etc. won't get probed.
-> 
-> Any ideas what would be the proper fix for this? Changing
-> octeon_publish_devices() to arch_initcall seems to work but that may be
-> a bit hackish... Also, there might be also other MIPS boards affected
-> (arch/mips/netlogic/xlp/dt.c, arch/mips/mti-malta/malta-dt.c).
-> 
-> A.
-> 
-> http://news.gmane.org/find-root.php?message_id=20160816150056.GD18731%40ak-desktop.emea.nsn-net.net 
-> http://mid.gmane.org/20160816150056.GD18731%40ak-desktop.emea.nsn-net.net
-> 
+Changelog:
+ - v3:
+   - fixing the rtc clock, using clock source from PMIC
+   - enable the tmu
+   - enable the fimc for elite board
+   - suuport the audio codec at elite board
+   - fixing minor bugs in the last commit
+ - v2:
+   - removing rtc node
+     the clock source driver is not done yet.
+   - adding exynos-bus
+   - fixing the MFC
+
+Randy Li (4):
+  ARM: dts: Add TOPEET itop core board SCP package version
+  ARM: dts: add TOPEET itop elite based board
+  ARM: dts: add fimc support in exynos4412 TOPEET iTop Elite board
+  ARM: dts: samsung: add analog audio codec on TOPEET iTop 4412 Elite
+
+ .../bindings/arm/samsung/samsung-boards.txt        |   3 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/exynos4412-itop-elite.dts        | 241 ++++++++++
+ arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi    | 489 +++++++++++++++++++++
+ 4 files changed, 734 insertions(+)
+ create mode 100644 arch/arm/boot/dts/exynos4412-itop-elite.dts
+ create mode 100644 arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
+
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
