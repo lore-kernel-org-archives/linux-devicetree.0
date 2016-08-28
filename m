@@ -1,39 +1,38 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] [v9] net: emac: emac gigabit ethernet controller driver
-Date: Sun, 28 Aug 2016 00:50:48 -0400 (EDT)
-Message-ID: <20160828.005048.1178621280768183048.davem@davemloft.net>
-References: <1472161143-26417-1-git-send-email-timur@codeaurora.org>
-        <20160826.212939.1362447220540461922.davem@davemloft.net>
-        <57C186FF.6090702@codeaurora.org>
+From: Rask Ingemann Lambertsen <ccc94453@vip.cybercity.dk>
+Subject: Re: [PATCH v2] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
+Date: Sun, 28 Aug 2016 10:09:36 +0200
+Message-ID: <20160828080334.e7kul4n75i3hqk5t@vip.cybercity.dk>
+References: <20160828005521.58221-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <57C186FF.6090702@codeaurora.org>
-Sender: netdev-owner@vger.kernel.org
-To: timur@codeaurora.org
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, f.fainelli@gmail.com, LinoSanfilippo@gmx.de
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20160828005521.58221-1-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Timur Tabi <timur@codeaurora.org>
-Date: Sat, 27 Aug 2016 07:26:39 -0500
+On Sun, Aug 28, 2016 at 08:55:21AM +0800, Icenowy Zheng wrote:
+> +			uart1_pins_cts_rts_a: uart1_cts_rts@0 {
+> +				allwinner,pins = "PG8", "PG9";
+> +				allwinner,function = "uart1";
+> +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +			};
 
-> David Miller wrote:
->> From: Timur Tabi <timur@codeaurora.org>
->> Date: Thu, 25 Aug 2016 16:39:03 -0500
->>
->>> +static const u8 duuid[] = {
->>> +	0x77, 0x79, 0x60, 0xbf,
->>> +	0x2d, 0xab,
->>> +	0x9d, 0x4b,
->>> +	0x94, 0xf0,
->>> +	0xe1, 0x11, 0x98, 0x01, 0xa2, 0xba
->>> +};
->>
->> This seems to be completely unused, please remove it.
-> 
-> Sorry, I missed that during my cleanup.  I'll remove it in v10.
-> 
-> I wonder why my compiler didn't complain about the unused static.
+Node names should not contain underscores. Use hyphens instead.
+https://www.mail-archive.com/linux-kernel%40vger.kernel.org/msg1122967.html
+https://www.mail-archive.com/linux-kernel%40vger.kernel.org/msg1145633.html
 
-Unused static "const" is not warned about.
+-- 
+Rask Ingemann Lambertsen
