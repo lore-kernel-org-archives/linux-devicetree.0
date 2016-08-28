@@ -1,38 +1,34 @@
-From: Rask Ingemann Lambertsen <ccc94453@vip.cybercity.dk>
-Subject: Re: [PATCH v2] ARM: dts: sun8i: enable UART1 for iNet D978 Rev2 board
-Date: Sun, 28 Aug 2016 10:09:36 +0200
-Message-ID: <20160828080334.e7kul4n75i3hqk5t@vip.cybercity.dk>
-References: <20160828005521.58221-1-icenowy@aosc.xyz>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RFC/PATCH] dt: bindings: Define bindings for device idle states
+Date: Sun, 28 Aug 2016 10:15:53 +0200
+Message-ID: <CAMuHMdUopKey_HujyeK+GnTx6JpjmcQ7-zL+8=4hqhdxG4UFNQ@mail.gmail.com>
+References: <1472207073-4901-1-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20160828005521.58221-1-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1472207073-4901-1-git-send-email-ulf.hansson@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Kevin Hilman <khilman@kernel.org>, Lina Iyer <lina.iyer@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Brendan Jackman <Brendan.Jackman@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Geert Uytterhoeven <geert+renesas@glider.be>, Axel Haslam <ahaslam@baylibre.com>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 28, 2016 at 08:55:21AM +0800, Icenowy Zheng wrote:
-> +			uart1_pins_cts_rts_a: uart1_cts_rts@0 {
-> +				allwinner,pins = "PG8", "PG9";
-> +				allwinner,function = "uart1";
-> +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> +			};
+On Fri, Aug 26, 2016 at 12:24 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/device-idle-states.txt
+> @@ -0,0 +1,102 @@
 
-Node names should not contain underscores. Use hyphens instead.
-https://www.mail-archive.com/linux-kernel%40vger.kernel.org/msg1122967.html
-https://www.mail-archive.com/linux-kernel%40vger.kernel.org/msg1145633.html
+> +Required properties:
+> +- compatible:          Must contain "simple-dev, idle-state".
 
--- 
-Rask Ingemann Lambertsen
+Bogus space after the comma.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
