@@ -1,570 +1,446 @@
-From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] rtc: add support for EPSON TOYOCOM RTC-7301SF/DG
-Date: Sun, 28 Aug 2016 23:55:18 +0900
-Message-ID: <1472396118-13424-1-git-send-email-akinobu.mita@gmail.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCPM5SUWUYIRBY7WRO7AKGQE7SN2TJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v2] input: touchscreen: Add support for Elan eKTF2127 touchscreen controller
+Date: Sun, 28 Aug 2016 18:00:05 +0200
+Message-ID: <20160828160005.20415-1-hdegoede@redhat.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Siebren Vroegindeweij <siebren.vroegindeweij@gmail.com>, Michel Verlaan <michel.verl@gmail.com>, Siebren Vroegindeweij <siebren.vroegindeweij@hotmail.com>, Hans de Goede <hdegoede@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds support for EPSON TOYOCOM RTC-7301SF/DG which has parallel
-interface compatible with SRAM.
+From: Siebren Vroegindeweij <siebren.vroegindeweij@hotmail.com>
 
-This driver supports basic clock, calendar and alarm functionality.
+This adds a driver for the Elan eKTF2127 touchscreen controller,
+which speaks an i2c protocol which is distinctly different from
+the already supported eKTH controllers.
 
-Tested with Microblaze linux running on Artix7 FPGA board with my own
-custom IP for RTC-7301.
-
-Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Michel Verlaan <michel.verl@gmail.com>
+Signed-off-by: Siebren Vroegindeweij <siebren.vroegindeweij@hotmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- .../devicetree/bindings/rtc/epson,rtc7301.txt      |  15 +
- drivers/rtc/Kconfig                                |  11 +
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-r7301.c                            | 458 +++++++++++++++++++++
- 4 files changed, 485 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/epson,rtc7301.txt
- create mode 100644 drivers/rtc/rtc-r7301.c
+Changes in v2:
+-Improve devicetree bindings document
+-Use touchscreen_parse_properties and touchscreen_report_pos instead of DIY
+-Remove a bunch of unused defines (copy and paste leftover from chipone driver)
+-Some other minor cleanups and review comments addressed
+-Add defines for some command / address hex-values
+-Check packet header in interrupt handler
+---
+ .../bindings/input/touchscreen/ektf2127.txt        |  27 ++
+ drivers/input/touchscreen/Kconfig                  |  12 +
+ drivers/input/touchscreen/Makefile                 |   1 +
+ drivers/input/touchscreen/ektf2127.c               | 333 +++++++++++++++++++++
+ 4 files changed, 373 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/ektf2127.txt
+ create mode 100644 drivers/input/touchscreen/ektf2127.c
 
-diff --git a/Documentation/devicetree/bindings/rtc/epson,rtc7301.txt b/Documentation/devicetree/bindings/rtc/epson,rtc7301.txt
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/ektf2127.txt b/Documentation/devicetree/bindings/input/touchscreen/ektf2127.txt
 new file mode 100644
-index 0000000..e1a94cb
+index 0000000..5a19f4c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/epson,rtc7301.txt
-@@ -0,0 +1,15 @@
-+EPSON TOYOCOM RTC-7301SF/DG
++++ b/Documentation/devicetree/bindings/input/touchscreen/ektf2127.txt
+@@ -0,0 +1,27 @@
++* Elan eKTF2127 I2C touchscreen controller
 +
 +Required properties:
++ - compatible		  : "elan,ektf2127"
++ - reg			  : I2C slave address of the chip (0x40)
++ - interrupt-parent	  : a phandle pointing to the interrupt controller
++			    serving the interrupt for this chip
++ - interrupts		  : interrupt specification for the ektf2127 interrupt
++ - power-gpios		  : GPIO specification for the pin connected to the
++			    ektf2127's wake input. This needs to be driven high
++			    to take ektf2127 out of it's low power state
 +
-+- compatible: Should be "epson,rtc7301sf" or "epson,rtc7301dg"
-+- reg: Specifies base physical address and size of the registers.
-+- interrupts: A single interrupt specifier.
++For additional optional properties see: touchscreen.txt
 +
 +Example:
 +
-+rtc: rtc@44a00000 {
-+	compatible = "epson,rtc7301dg";
-+	reg = <0x44a00000 0x10000>;
-+	interrupts = <2 2>;
++i2c@00000000 {
++	ektf2127: touchscreen@15 {
++		compatible = "elan,ektf2127";
++		reg = <0x15>;
++		interrupt-parent = <&pio>;
++		interrupts = <6 11 IRQ_TYPE_EDGE_FALLING>
++		power-gpios = <&pio 1 3 GPIO_ACTIVE_HIGH>;
++		touchscreen-inverted-x;
++		touchscreen-swapped-x-y;
++	};
 +};
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 618f644..9242c5e 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1669,6 +1669,17 @@ config RTC_DRV_PIC32
- 	   This driver can also be built as a module. If so, the module
- 	   will be called rtc-pic32
+diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
+index 3b3d07a..880aa50 100644
+--- a/drivers/input/touchscreen/Kconfig
++++ b/drivers/input/touchscreen/Kconfig
+@@ -396,6 +396,18 @@ config TOUCHSCREEN_ELAN
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called elants_i2c.
  
-+config RTC_DRV_R7301
-+	tristate "EPSON TOYOCOM RTC-7301SF/DG"
-+	select REGMAP_MMIO
-+	depends on OF && HAS_IOMEM
++config TOUCHSCREEN_EKTF2127
++	tristate "Elan eKTF2127 I2C touchscreen"
++	depends on I2C
 +	help
-+	   If you say yes here you get support for the EPSON TOYOCOM
-+	   RTC-7301SF/DG chips.
++	  Say Y here if you have an Elan eKTF2127 touchscreen
++	  connected to your system.
 +
-+	   This driver can also be built as a module. If so, the module
-+	   will be called rtc-r7301.
++	  If unsure, say N.
 +
- comment "HID Sensor RTC drivers"
- 
- config RTC_DRV_HID_SENSOR_TIME
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index ea28337..abab534 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -118,6 +118,7 @@ obj-$(CONFIG_RTC_DRV_PM8XXX)	+= rtc-pm8xxx.o
- obj-$(CONFIG_RTC_DRV_PS3)	+= rtc-ps3.o
- obj-$(CONFIG_RTC_DRV_PUV3)	+= rtc-puv3.o
- obj-$(CONFIG_RTC_DRV_PXA)	+= rtc-pxa.o
-+obj-$(CONFIG_RTC_DRV_R7301)	+= rtc-r7301.o
- obj-$(CONFIG_RTC_DRV_R9701)	+= rtc-r9701.o
- obj-$(CONFIG_RTC_DRV_RC5T583)	+= rtc-rc5t583.o
- obj-$(CONFIG_RTC_DRV_RK808)	+= rtc-rk808.o
-diff --git a/drivers/rtc/rtc-r7301.c b/drivers/rtc/rtc-r7301.c
++	  To compile this driver as a module, choose M here: the
++	  module will be called ektf2127.
++
+ config TOUCHSCREEN_ELO
+ 	tristate "Elo serial touchscreens"
+ 	select SERIO
+diff --git a/drivers/input/touchscreen/Makefile b/drivers/input/touchscreen/Makefile
+index 33b2eb8..db876ef 100644
+--- a/drivers/input/touchscreen/Makefile
++++ b/drivers/input/touchscreen/Makefile
+@@ -33,6 +33,7 @@ obj-$(CONFIG_TOUCHSCREEN_HAMPSHIRE)	+= hampshire.o
+ obj-$(CONFIG_TOUCHSCREEN_GUNZE)		+= gunze.o
+ obj-$(CONFIG_TOUCHSCREEN_EETI)		+= eeti_ts.o
+ obj-$(CONFIG_TOUCHSCREEN_ELAN)		+= elants_i2c.o
++obj-$(CONFIG_TOUCHSCREEN_EKTF2127)	+= ektf2127.o
+ obj-$(CONFIG_TOUCHSCREEN_ELO)		+= elo.o
+ obj-$(CONFIG_TOUCHSCREEN_EGALAX)	+= egalax_ts.o
+ obj-$(CONFIG_TOUCHSCREEN_EGALAX_SERIAL)	+= egalax_ts_serial.o
+diff --git a/drivers/input/touchscreen/ektf2127.c b/drivers/input/touchscreen/ektf2127.c
 new file mode 100644
-index 0000000..b1be281
+index 0000000..512a394
 --- /dev/null
-+++ b/drivers/rtc/rtc-r7301.c
-@@ -0,0 +1,458 @@
++++ b/drivers/input/touchscreen/ektf2127.c
+@@ -0,0 +1,333 @@
 +/*
-+ * EPSON TOYOCOM RTC-7301SF/DG Driver
++ * Driver for ELAN eKTF2127 i2c touchscreen controller
 + *
-+ * Copyright (c) 2016 Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ * For this driver the layout of the Chipone icn8318 i2c
++ * touchscreencontroller is used.
 + *
-+ * Based on rtc-rp5c01.c
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
 + *
-+ * Datasheet: http://www5.epsondevice.com/en/products/parallel/rtc7301sf.html
++ * Author:
++ * Michel Verlaan <michel.verl@gmail.com>
++ * Siebren Vroegindeweij <siebren.vroegindeweij@hotmail.com>
++ *
++ * Original chipone_icn8318 driver:
++ * Hans de Goede <hdegoede@redhat.com>
 + */
 +
-+#include <linux/io.h>
-+#include <linux/kernel.h>
++#include <linux/gpio/consumer.h>
++#include <linux/interrupt.h>
++#include <linux/i2c.h>
++#include <linux/input.h>
++#include <linux/input/mt.h>
++#include <linux/input/touchscreen.h>
 +#include <linux/module.h>
++#include <linux/of.h>
 +#include <linux/delay.h>
-+#include <linux/regmap.h>
-+#include <linux/platform_device.h>
-+#include <linux/rtc.h>
 +
-+#define DRV_NAME "rtc-r7301"
++/* Packet header defines (first byte of data send / received) */
++#define EKTF2127_NOISE			0x40
++#define EKTF2127_RESPONSE		0x52
++#define EKTF2127_REQUEST		0x53
++#define EKTF2127_HELLO			0x55
++#define EKTF2127_REPORT			0x5d
++#define EKTF2127_CALIB_DONE		0x66
 +
-+enum {
-+	RTC7301_1_SEC		= 0x0,	/* Bank 0 and Band 1 */
-+	RTC7301_10_SEC		= 0x1,	/* Bank 0 and Band 1 */
-+	RTC7301_AE		= BIT(3),
-+	RTC7301_1_MIN		= 0x2,	/* Bank 0 and Band 1 */
-+	RTC7301_10_MIN		= 0x3,	/* Bank 0 and Band 1 */
-+	RTC7301_1_HOUR		= 0x4,	/* Bank 0 and Band 1 */
-+	RTC7301_10_HOUR		= 0x5,	/* Bank 0 and Band 1 */
-+	RTC7301_DAY_OF_WEEK	= 0x6,	/* Bank 0 and Band 1 */
-+	RTC7301_1_DAY		= 0x7,	/* Bank 0 and Band 1 */
-+	RTC7301_10_DAY		= 0x8,	/* Bank 0 and Band 1 */
-+	RTC7301_1_MONTH		= 0x9,	/* Bank 0 */
-+	RTC7301_10_MONTH	= 0xa,	/* Bank 0 */
-+	RTC7301_1_YEAR		= 0xb,	/* Bank 0 */
-+	RTC7301_10_YEAR		= 0xc,	/* Bank 0 */
-+	RTC7301_100_YEAR	= 0xd,	/* Bank 0 */
-+	RTC7301_1000_YEAR	= 0xe,	/* Bank 0 */
-+	RTC7301_ALARM_CONTROL	= 0xe,	/* Bank 1 */
-+	RTC7301_ALARM_CONTROL_AIE	= BIT(0),
-+	RTC7301_ALARM_CONTROL_AF	= BIT(1),
-+	RTC7301_TIMER_CONTROL	= 0xe,	/* Bank 2 */
-+	RTC7301_ALARM_CONTROL_TIE	= BIT(0),
-+	RTC7301_ALARM_CONTROL_TF	= BIT(1),
-+	RTC7301_CONTROL		= 0xf,	/* All banks */
-+	RTC7301_CONTROL_BUSY		= BIT(0),
-+	RTC7301_CONTROL_STOP		= BIT(1),
-+	RTC7301_CONTROL_BANK_SEL_0	= BIT(2),
-+	RTC7301_CONTROL_BANK_SEL_1	= BIT(3),
++/* Register deines (second byte of data send / received) */
++#define EKTF2127_ENV_NOISY		0x41
++#define EKTF2127_HEIGHT			0x60
++#define EKTF2127_WIDTH			0x63
++
++/* 2 bytes header + 5 * 3 bytes coordinates + 3 bytes pressure info + footer */
++#define EKTF2127_TOUCH_REPORT_SIZE	21
++#define EKTF2127_MAX_TOUCHES		5
++
++struct ektf2127_data {
++	struct i2c_client *client;
++	struct input_dev *input;
++	struct gpio_desc *power_gpios;
++	struct touchscreen_properties prop;
 +};
 +
-+struct rtc7301_priv {
-+	struct regmap *regmap;
-+	int irq;
-+	spinlock_t lock;
-+	u8 bank;
-+};
-+
-+static const struct regmap_config rtc7301_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 8,
-+	.reg_stride = 4,
-+};
-+
-+static u8 rtc7301_read(struct rtc7301_priv *priv, unsigned int reg)
++static void retrieve_coordinates(struct input_mt_pos *touches,
++				int touch_count, char *buf)
 +{
-+	int reg_stride = regmap_get_reg_stride(priv->regmap);
-+	unsigned int val;
++	int index = 0;
++	int i = 0;
 +
-+	regmap_read(priv->regmap, reg_stride * reg, &val);
++	for (i = 0; i < touch_count; i++) {
++		index = 2 + i * 3;
 +
-+	return val & 0xf;
++		touches[i].x = (buf[index] & 0x0f);
++		touches[i].x <<= 8;
++		touches[i].x |= buf[index + 2];
++
++		touches[i].y = (buf[index] & 0xf0);
++		touches[i].y <<= 4;
++		touches[i].y |= buf[index + 1];
++	}
 +}
 +
-+static void rtc7301_write(struct rtc7301_priv *priv, u8 val, unsigned int reg)
++static irqreturn_t ektf2127_irq(int irq, void *dev_id)
 +{
-+	int reg_stride = regmap_get_reg_stride(priv->regmap);
++	struct ektf2127_data *data = dev_id;
++	struct device *dev = &data->client->dev;
++	struct input_mt_pos touches[EKTF2127_MAX_TOUCHES];
++	int touch_count;
++	int slots[EKTF2127_MAX_TOUCHES];
++	char buff[EKTF2127_TOUCH_REPORT_SIZE];
++	int i, ret;
 +
-+	regmap_write(priv->regmap, reg_stride * reg, val);
-+}
-+
-+static void rtc7301_update_bits(struct rtc7301_priv *priv, unsigned int reg,
-+				u8 mask, u8 val)
-+{
-+	int reg_stride = regmap_get_reg_stride(priv->regmap);
-+
-+	regmap_update_bits(priv->regmap, reg_stride * reg, mask, val);
-+}
-+
-+static int rtc7301_wait_while_busy(struct rtc7301_priv *priv)
-+{
-+	int retries = 100;
-+
-+	while (retries-- > 0) {
-+		u8 val;
-+
-+		val = rtc7301_read(priv, RTC7301_CONTROL);
-+		if (!(val & RTC7301_CONTROL_BUSY))
-+			return 0;
-+
-+		usleep_range(200, 300);
++	ret = i2c_master_recv(data->client, buff, EKTF2127_TOUCH_REPORT_SIZE);
++	if (ret != EKTF2127_TOUCH_REPORT_SIZE) {
++		dev_err(dev, "Error reading touch data\n");
++		return IRQ_HANDLED;
 +	}
 +
-+	return -ETIMEDOUT;
-+}
-+
-+static void rtc7301_stop(struct rtc7301_priv *priv)
-+{
-+	rtc7301_update_bits(priv, RTC7301_CONTROL, RTC7301_CONTROL_STOP,
-+			    RTC7301_CONTROL_STOP);
-+}
-+
-+static void rtc7301_start(struct rtc7301_priv *priv)
-+{
-+	rtc7301_update_bits(priv, RTC7301_CONTROL, RTC7301_CONTROL_STOP, 0);
-+}
-+
-+static void rtc7301_select_bank(struct rtc7301_priv *priv, u8 bank)
-+{
-+	u8 val = 0;
-+
-+	if (bank == priv->bank)
-+		return;
-+
-+	if (bank & BIT(0))
-+		val |= RTC7301_CONTROL_BANK_SEL_0;
-+	if (bank & BIT(1))
-+		val |= RTC7301_CONTROL_BANK_SEL_1;
-+
-+	rtc7301_update_bits(priv, RTC7301_CONTROL,
-+			    RTC7301_CONTROL_BANK_SEL_0 |
-+			    RTC7301_CONTROL_BANK_SEL_1, val);
-+
-+	priv->bank = bank;
-+}
-+
-+static void rtc7301_get_time(struct rtc7301_priv *priv, struct rtc_time *tm,
-+			     bool alarm)
-+{
-+	int year;
-+
-+	tm->tm_sec = rtc7301_read(priv, RTC7301_1_SEC);
-+	tm->tm_sec += (rtc7301_read(priv, RTC7301_10_SEC) & ~RTC7301_AE) * 10;
-+	tm->tm_min = rtc7301_read(priv, RTC7301_1_MIN);
-+	tm->tm_min += (rtc7301_read(priv, RTC7301_10_MIN) & ~RTC7301_AE) * 10;
-+	tm->tm_hour = rtc7301_read(priv, RTC7301_1_HOUR);
-+	tm->tm_hour += (rtc7301_read(priv, RTC7301_10_HOUR) & ~RTC7301_AE) * 10;
-+	tm->tm_mday = rtc7301_read(priv, RTC7301_1_DAY);
-+	tm->tm_mday += (rtc7301_read(priv, RTC7301_10_DAY) & ~RTC7301_AE) * 10;
-+
-+	if (alarm) {
-+		tm->tm_wday = -1;
-+		tm->tm_mon = -1;
-+		tm->tm_year = -1;
-+		tm->tm_yday = -1;
-+		tm->tm_isdst = -1;
-+		return;
++	switch (buff[0]) {
++	case EKTF2127_REPORT:
++		/* Handled below */
++		break;
++	case EKTF2127_NOISE:
++		if (buff[1] == EKTF2127_ENV_NOISY)
++			dev_dbg(dev, "Environment is electically noisy\n");
++		return IRQ_HANDLED;
++	case EKTF2127_HELLO:
++	case EKTF2127_CALIB_DONE:
++		return IRQ_HANDLED;
++	default:
++		dev_err(dev, "Unexpected packet header byte %02x\n", buff[0]);
++		return IRQ_HANDLED;
 +	}
 +
-+	tm->tm_wday = (rtc7301_read(priv, RTC7301_DAY_OF_WEEK) & ~RTC7301_AE);
-+	tm->tm_mon = rtc7301_read(priv, RTC7301_10_MONTH) * 10 +
-+		     rtc7301_read(priv, RTC7301_1_MONTH) - 1;
-+	year = rtc7301_read(priv, RTC7301_1000_YEAR) * 1000 +
-+	       rtc7301_read(priv, RTC7301_100_YEAR) * 100 +
-+	       rtc7301_read(priv, RTC7301_10_YEAR) * 10 +
-+	       rtc7301_read(priv, RTC7301_1_YEAR);
++	touch_count = buff[1] & 0x07;
 +
-+	tm->tm_year = year - 1900;
-+}
-+
-+static void rtc7301_write_time(struct rtc7301_priv *priv, struct rtc_time *tm,
-+			       bool alarm)
-+{
-+	int year;
-+
-+	rtc7301_write(priv, tm->tm_sec % 10, RTC7301_1_SEC);
-+	rtc7301_write(priv, tm->tm_sec / 10, RTC7301_10_SEC);
-+
-+	rtc7301_write(priv, tm->tm_min % 10, RTC7301_1_MIN);
-+	rtc7301_write(priv, tm->tm_min / 10, RTC7301_10_MIN);
-+
-+	rtc7301_write(priv, tm->tm_hour % 10, RTC7301_1_HOUR);
-+	rtc7301_write(priv, tm->tm_hour / 10, RTC7301_10_HOUR);
-+
-+	rtc7301_write(priv, tm->tm_mday % 10, RTC7301_1_DAY);
-+	rtc7301_write(priv, tm->tm_mday / 10, RTC7301_10_DAY);
-+
-+	/* Don't care for alarm register */
-+	rtc7301_write(priv, alarm ? RTC7301_AE : tm->tm_wday,
-+		      RTC7301_DAY_OF_WEEK);
-+
-+	if (alarm)
-+		return;
-+
-+	rtc7301_write(priv, (tm->tm_mon + 1) % 10, RTC7301_1_MONTH);
-+	rtc7301_write(priv, (tm->tm_mon + 1) / 10, RTC7301_10_MONTH);
-+
-+	year = tm->tm_year + 1900;
-+
-+	rtc7301_write(priv, year % 10, RTC7301_1_YEAR);
-+	rtc7301_write(priv, (year / 10) % 10, RTC7301_10_YEAR);
-+	rtc7301_write(priv, (year / 100) % 10, RTC7301_100_YEAR);
-+	rtc7301_write(priv, year / 1000, RTC7301_1000_YEAR);
-+}
-+
-+static void rtc7301_alarm_irq(struct rtc7301_priv *priv, unsigned int enabled)
-+{
-+	rtc7301_update_bits(priv, RTC7301_ALARM_CONTROL,
-+			    RTC7301_ALARM_CONTROL_AF |
-+			    RTC7301_ALARM_CONTROL_AIE,
-+			    enabled ? RTC7301_ALARM_CONTROL_AIE : 0);
-+}
-+
-+static int rtc7301_read_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct rtc7301_priv *priv = dev_get_drvdata(dev);
-+	unsigned long flags;
-+	int err;
-+
-+	spin_lock_irqsave(&priv->lock, flags);
-+
-+	rtc7301_select_bank(priv, 0);
-+
-+	err = rtc7301_wait_while_busy(priv);
-+	if (!err)
-+		rtc7301_get_time(priv, tm, false);
-+
-+	spin_unlock_irqrestore(&priv->lock, flags);
-+
-+	return err ? err : rtc_valid_tm(tm);
-+}
-+
-+static int rtc7301_set_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct rtc7301_priv *priv = dev_get_drvdata(dev);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&priv->lock, flags);
-+
-+	rtc7301_stop(priv);
-+	usleep_range(200, 300);
-+	rtc7301_select_bank(priv, 0);
-+	rtc7301_write_time(priv, tm, false);
-+	rtc7301_start(priv);
-+
-+	spin_unlock_irqrestore(&priv->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int rtc7301_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-+{
-+	struct rtc7301_priv *priv = dev_get_drvdata(dev);
-+	unsigned long flags;
-+	u8 alrm_ctrl;
-+
-+	if (priv->irq <= 0)
-+		return -EINVAL;
-+
-+	spin_lock_irqsave(&priv->lock, flags);
-+
-+	rtc7301_select_bank(priv, 1);
-+	rtc7301_get_time(priv, &alarm->time, true);
-+
-+	alrm_ctrl = rtc7301_read(priv, RTC7301_ALARM_CONTROL);
-+
-+	alarm->enabled = !!(alrm_ctrl & RTC7301_ALARM_CONTROL_AIE);
-+	alarm->pending = !!(alrm_ctrl & RTC7301_ALARM_CONTROL_AF);
-+
-+	spin_unlock_irqrestore(&priv->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int rtc7301_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-+{
-+	struct rtc7301_priv *priv = dev_get_drvdata(dev);
-+	unsigned long flags;
-+
-+	if (priv->irq <= 0)
-+		return -EINVAL;
-+
-+	spin_lock_irqsave(&priv->lock, flags);
-+
-+	rtc7301_select_bank(priv, 1);
-+	rtc7301_write_time(priv, &alarm->time, true);
-+	rtc7301_alarm_irq(priv, alarm->enabled);
-+
-+	spin_unlock_irqrestore(&priv->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int rtc7301_alarm_irq_enable(struct device *dev, unsigned int enabled)
-+{
-+	struct rtc7301_priv *priv = dev_get_drvdata(dev);
-+	unsigned long flags;
-+
-+	if (priv->irq <= 0)
-+		return -EINVAL;
-+
-+	spin_lock_irqsave(&priv->lock, flags);
-+
-+	rtc7301_select_bank(priv, 1);
-+	rtc7301_alarm_irq(priv, enabled);
-+
-+	spin_unlock_irqrestore(&priv->lock, flags);
-+
-+	return 0;
-+}
-+
-+static const struct rtc_class_ops rtc7301_rtc_ops = {
-+	.read_time	= rtc7301_read_time,
-+	.set_time	= rtc7301_set_time,
-+	.read_alarm	= rtc7301_read_alarm,
-+	.set_alarm	= rtc7301_set_alarm,
-+	.alarm_irq_enable = rtc7301_alarm_irq_enable,
-+};
-+
-+static irqreturn_t rtc7301_irq_handler(int irq, void *dev_id)
-+{
-+	struct rtc_device *rtc = dev_id;
-+	struct rtc7301_priv *priv = dev_get_drvdata(rtc->dev.parent);
-+	unsigned long flags;
-+	irqreturn_t ret = IRQ_NONE;
-+	u8 alrm_ctrl;
-+
-+	spin_lock_irqsave(&priv->lock, flags);
-+
-+	rtc7301_select_bank(priv, 1);
-+
-+	alrm_ctrl = rtc7301_read(priv, RTC7301_ALARM_CONTROL);
-+	if (alrm_ctrl & RTC7301_ALARM_CONTROL_AF) {
-+		ret = IRQ_HANDLED;
-+		rtc7301_alarm_irq(priv, false);
-+		rtc_update_irq(rtc, 1, RTC_IRQF | RTC_AF);
++	if (touch_count > EKTF2127_MAX_TOUCHES) {
++		dev_err(dev, "Too many touches %d > %d\n",
++			touch_count, EKTF2127_MAX_TOUCHES);
++		touch_count = EKTF2127_MAX_TOUCHES;
 +	}
 +
-+	spin_unlock_irqrestore(&priv->lock, flags);
++	retrieve_coordinates(touches, touch_count, buff);
++	input_mt_assign_slots(data->input, slots, touches,
++			      touch_count, 0);
 +
-+	return ret;
++	for (i = 0; i < touch_count; i++) {
++		input_mt_slot(data->input, slots[i]);
++		input_mt_report_slot_state(data->input, MT_TOOL_FINGER, true);
++		touchscreen_report_pos(data->input, &data->prop, touches[i].x,
++			touches[i].y, true);
++	}
++
++	input_mt_sync_frame(data->input);
++	input_sync(data->input);
++
++	return IRQ_HANDLED;
 +}
 +
-+static void rtc7301_init(struct rtc7301_priv *priv)
++static int ektf2127_start(struct input_dev *dev)
 +{
-+	unsigned long flags;
++	struct ektf2127_data *data = input_get_drvdata(dev);
 +
-+	spin_lock_irqsave(&priv->lock, flags);
++	enable_irq(data->client->irq);
++	gpiod_set_value_cansleep(data->power_gpios, 1);
 +
-+	rtc7301_select_bank(priv, 1);
-+	rtc7301_alarm_irq(priv, false);
-+
-+	rtc7301_select_bank(priv, 2);
-+	rtc7301_write(priv, 0, RTC7301_TIMER_CONTROL);
-+
-+	spin_unlock_irqrestore(&priv->lock, flags);
++	return 0;
 +}
 +
-+static int __init rtc7301_rtc_probe(struct platform_device *dev)
++static void ektf2127_stop(struct input_dev *dev)
 +{
-+	struct resource *res;
-+	void __iomem *regs;
-+	struct rtc7301_priv *priv;
-+	struct rtc_device *rtc;
-+	int ret;
++	struct ektf2127_data *data = input_get_drvdata(dev);
 +
-+	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -ENODEV;
++	disable_irq(data->client->irq);
++	gpiod_set_value_cansleep(data->power_gpios, 0);
++}
 +
-+	priv = devm_kzalloc(&dev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
++static int ektf2127_suspend(struct device *dev)
++{
++	struct ektf2127_data *data = i2c_get_clientdata(to_i2c_client(dev));
++
++	mutex_lock(&data->input->mutex);
++	if (data->input->users)
++		ektf2127_stop(data->input);
++	mutex_unlock(&data->input->mutex);
++
++	return 0;
++}
++
++static int ektf2127_resume(struct device *dev)
++{
++	struct ektf2127_data *data = i2c_get_clientdata(to_i2c_client(dev));
++
++	mutex_lock(&data->input->mutex);
++	if (data->input->users)
++		ektf2127_start(data->input);
++	mutex_unlock(&data->input->mutex);
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(ektf2127_pm_ops, ektf2127_suspend,
++			ektf2127_resume);
++
++static int ektf2127_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
++{
++	struct device *dev = &client->dev;
++	struct ektf2127_data *data;
++	struct input_dev *input;
++	char buff[4];
++	int error, max_x, max_y, ret = 0;
++
++	if (!client->irq) {
++		dev_err(dev, "Error no irq specified\n");
++		return -EINVAL;
++	}
++
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
 +		return -ENOMEM;
 +
-+	regs = devm_ioremap_resource(&dev->dev, res);
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
-+
-+	priv->regmap = devm_regmap_init_mmio(&dev->dev, regs,
-+					     &rtc7301_regmap_config);
-+	if (IS_ERR(priv->regmap))
-+		return PTR_ERR(priv->regmap);
-+
-+	priv->irq = platform_get_irq(dev, 0);
-+
-+	spin_lock_init(&priv->lock);
-+	priv->bank = -1;
-+
-+	rtc7301_init(priv);
-+
-+	platform_set_drvdata(dev, priv);
-+
-+	rtc = devm_rtc_device_register(&dev->dev, DRV_NAME, &rtc7301_rtc_ops,
-+				       THIS_MODULE);
-+	if (IS_ERR(rtc))
-+		return PTR_ERR(rtc);
-+
-+	if (priv->irq > 0) {
-+		ret = devm_request_irq(&dev->dev, priv->irq,
-+				       rtc7301_irq_handler, IRQF_SHARED,
-+				       dev_name(&dev->dev), rtc);
-+		if (ret) {
-+			priv->irq = 0;
-+			dev_err(&dev->dev, "unable to request IRQ\n");
-+		} else {
-+			device_set_wakeup_capable(&dev->dev, true);
-+		}
++	/* This requests the gpio *and* turns on the touchscreen controller */
++	data->power_gpios = devm_gpiod_get(dev, "power", GPIOD_OUT_HIGH);
++	if (IS_ERR(data->power_gpios)) {
++		error = PTR_ERR(data->power_gpios);
++		if (error != -EPROBE_DEFER)
++			dev_err(dev, "Error getting power gpio: %d\n", error);
++		return error;
 +	}
 +
++	input = devm_input_allocate_device(dev);
++	if (!input)
++		return -ENOMEM;
++
++	input->name = client->name;
++	input->id.bustype = BUS_I2C;
++	input->open = ektf2127_start;
++	input->close = ektf2127_stop;
++
++	data->client = client;
++
++	/* Read hello (ignore result, depends on initial power state) */
++	msleep(20);
++	i2c_master_recv(data->client, buff, 4);
++
++	/* Read resolution from chip */
++
++	/* Request width */
++	buff[0] = EKTF2127_REQUEST;
++	buff[1] = EKTF2127_WIDTH;
++	buff[2] = 0x00;
++	buff[3] = 0x00;
++	ret = i2c_master_send(data->client, buff, 4);
++	if (ret != 4) {
++		dev_err(dev, "Error requesting width\n");
++		return ret < 0 ? ret : -EIO;
++	}
++
++	msleep(20);
++
++	/* Read response */
++	ret = i2c_master_recv(data->client, buff, 4);
++	if (ret != 4) {
++		dev_err(dev, "Error receiving width\n");
++		return ret < 0 ? ret : -EIO;
++	}
++
++	if ((buff[0] == EKTF2127_RESPONSE) && (buff[1] == EKTF2127_WIDTH)) {
++		max_x = (((buff[3] & 0xf0) << 4) | buff[2]) - 1;
++	} else {
++		dev_err(dev, "Error unexpected width data\n");
++		return -EIO;
++	}
++
++	/* Request height */
++	buff[0] = EKTF2127_REQUEST;
++	buff[1] = EKTF2127_HEIGHT;
++	buff[2] = 0x00;
++	buff[3] = 0x00;
++	ret = i2c_master_send(data->client, buff, 4);
++	if (ret != 4) {
++		dev_err(dev, "Error requesting height\n");
++		return ret < 0 ? ret : -EIO;
++	}
++
++	msleep(20);
++
++	/* Read response */
++	ret = i2c_master_recv(data->client, buff, 4);
++	if (ret != 4) {
++		dev_err(dev, "Error receiving height\n");
++		return ret < 0 ? ret : -EIO;
++	}
++
++	if ((buff[0] == EKTF2127_RESPONSE) && (buff[1] == EKTF2127_HEIGHT)) {
++		max_y = (((buff[3] & 0xf0) << 4) | buff[2]) - 1;
++	} else {
++		dev_err(dev, "Error unexpected height data\n");
++		return -EIO;
++	}
++
++	input_set_abs_params(input, ABS_MT_POSITION_X, 0, max_x, 0, 0);
++	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, max_y, 0, 0);
++	touchscreen_parse_properties(input, true, &data->prop);
++
++	error = input_mt_init_slots(input, EKTF2127_MAX_TOUCHES,
++				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED
++				    | INPUT_MT_TRACK);
++	if (error)
++		return error;
++
++	data->input = input;
++	input_set_drvdata(input, data);
++
++	error = devm_request_threaded_irq(dev, client->irq, NULL, ektf2127_irq,
++					  IRQF_ONESHOT, client->name, data);
++	if (error) {
++		dev_err(dev, "Error requesting irq: %d\n", error);
++		return error;
++	}
++
++	/* Stop device till opened */
++	ektf2127_stop(data->input);
++
++	error = input_register_device(input);
++	if (error)
++		return error;
++
++	i2c_set_clientdata(client, data);
++
 +	return 0;
 +}
 +
-+#ifdef CONFIG_PM_SLEEP
-+
-+static int rtc7301_suspend(struct device *dev)
-+{
-+	struct rtc7301_priv *priv = dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev))
-+		enable_irq_wake(priv->irq);
-+
-+	return 0;
-+}
-+
-+static int rtc7301_resume(struct device *dev)
-+{
-+	struct rtc7301_priv *priv = dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev))
-+		disable_irq_wake(priv->irq);
-+
-+	return 0;
-+}
-+
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(rtc7301_pm_ops, rtc7301_suspend, rtc7301_resume);
-+
-+static const struct of_device_id rtc7301_dt_match[] = {
-+	{ .compatible = "epson,rtc7301sf" },
-+	{ .compatible = "epson,rtc7301dg" },
++#ifdef CONFIG_OF
++static const struct of_device_id ektf2127_of_match[] = {
++	{ .compatible = "elan,ektf2127" },
 +	{}
 +};
-+MODULE_DEVICE_TABLE(of, rtc7301_dt_match);
++MODULE_DEVICE_TABLE(of, ektf2127_of_match);
++#endif
 +
-+static struct platform_driver rtc7301_rtc_driver = {
-+	.driver	= {
-+		.name = DRV_NAME,
-+		.of_match_table = rtc7301_dt_match,
-+		.pm = &rtc7301_pm_ops,
++static const struct i2c_device_id ektf2127_i2c_id[] = {
++	{ "ektf2127", 0 },
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, ektf2127_i2c_id);
++
++static struct i2c_driver ektf2127_driver = {
++	.driver = {
++		.name	= "elan_ektf2127",
++		.pm	= &ektf2127_pm_ops,
++		.of_match_table = of_match_ptr(ektf2127_of_match),
 +	},
++	.probe = ektf2127_probe,
++	.id_table = ektf2127_i2c_id,
 +};
 +
-+module_platform_driver_probe(rtc7301_rtc_driver, rtc7301_rtc_probe);
++module_i2c_driver(ektf2127_driver);
 +
-+MODULE_AUTHOR("Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
++MODULE_DESCRIPTION("ELAN eKTF2127 I2C Touchscreen Driver");
++MODULE_AUTHOR("Michel Verlaan, Siebren Vroegindeweij");
 +MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("EPSON TOYOCOM RTC-7301SF/DG Driver");
-+MODULE_ALIAS("platform:rtc-r7301");
 -- 
-2.7.4
+2.9.3
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
