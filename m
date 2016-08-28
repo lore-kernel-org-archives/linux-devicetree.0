@@ -1,79 +1,101 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] [v9] net: emac: emac gigabit ethernet controller driver
-Date: Sat, 27 Aug 2016 15:42:42 -0500
-Message-ID: <57C1FB42.104@codeaurora.org>
-References: <1472161143-26417-1-git-send-email-timur@codeaurora.org>
- <CAKoUAr=Z56VxzW=zHu7r9ossdXHQ6xpeYdR5jwhv38zkV_eKFQ@mail.gmail.com>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: sun8i: enable UART1 for iNet D978
+ Rev2 board
+Date: Sun, 28 Aug 2016 08:55:21 +0800
+Message-ID: <20160828005521.58221-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKoUAr=Z56VxzW=zHu7r9ossdXHQ6xpeYdR5jwhv38zkV_eKFQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rami Rosen <roszenrami-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBGPNRC7AKGQEPE7UXYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rami Rosen wrote:
-> Hi,
->
-> Shouldn't it be obj-$(CONFIG_QCOM_EMAC) instead obj-y?
+UART1 is connected to the bluetooth part of RTL8723BS WiFi/BT combo card
+on iNet D978 Rev2 board.
 
-Yes, I noticed this soon after I posted this patch.  I will fix it in v10.
+Enable the UART1 to make it possible to use the modified hciattach by
+Realtek to drive the BT part of RTL8723BS.
 
-> The return type of the method emac_tx_tpd_create()  should be void, as
-> it always returns true.
+On the board no r_uart pins are found now (the onboard RX/TX pins are
+wired to PF2/PF4, which is muxed with mmc0), so also disabled it.
 
-Will fix, thanks.
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+---
+Changes since v1:
+- Deleted r_uart.
+- Added the pinmux of uart1 at PG.
 
-> Seems that there are several unused members in the emac_stats struct:
->
->> +struct emac_stats {
-> ...
-> ...
-> Both rx_bcast_byte_cnt and rx_mcast_byte_cnt are not used anywhere/
->> +       u64 rx_bcast_byte_cnt;  /* broadcast packets byte count (without FCS) */
->> +       u64 rx_mcast_byte_cnt;  /* multicast packets byte count (without FCS) */
-> ...
-> rx_err_addr is not used
->> +       u64 rx_err_addr;        /* packets dropped due to address filtering */
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi           | 14 ++++++++++++++
+ arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts | 20 ++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
 
-I'll go through the structure and remove the unused fields.
-
->
-> Typo: it is jabbers and not jubbers; greppping for "jubber" under
-> drivers/net/ethernet gives
-> 0 results, whereas:
-> /net-next/drivers/net/ethernet$ grep -R jabber | wc -l
-> gives 241 results.
->
->> +       u64 rx_jubbers;         /* jubbers */
-
-Thanks.  I'll fix that in v10.
-
->
->
-> ...
-> ..
-> tx_rd_eop and tx_len_err are not used
->> +       u64 tx_rd_eop;          /* count of reads beyond EOP */
->> +       u64 tx_len_err;         /* packets with length mismatch */
->
-> Both tx_bcast_byte and tx_mcast_byte are not used.
->> +       u64 tx_bcast_byte;      /* broadcast packets byte count (without FCS) */
->> +       u64 tx_mcast_byte;      /* multicast packets byte count (without FCS) */
->
-> Thanks for your good work, it seems that the driver is almost done!
-
-I'm grateful for the opportunity to improve this driver over the crappy 
-one that's been bouncing around internally for years, and for all the 
-people who helped me along the way.
-
+diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+index 7e05e09..d236104 100644
+--- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+@@ -361,6 +361,20 @@
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
++			uart1_pins_a: uart1@0 {
++				allwinner,pins = "PG6", "PG7";
++				allwinner,function = "uart1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart1_pins_cts_rts_a: uart1_cts_rts@0 {
++				allwinner,pins = "PG8", "PG9";
++				allwinner,function = "uart1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
+ 			mmc0_pins_a: mmc0@0 {
+ 				allwinner,pins = "PF0", "PF1", "PF2",
+ 						 "PF3", "PF4", "PF5";
+diff --git a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
+index 0f52cd9..a1f654a8 100644
+--- a/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
++++ b/arch/arm/boot/dts/sun8i-a33-inet-d978-rev2.dts
+@@ -49,6 +49,15 @@
+ 	model = "INet-D978 Rev 02";
+ 	compatible = "primux,inet-d978-rev2", "allwinner,sun8i-a33";
+ 
++	aliases {
++		/delete-property/serial0;
++		serial1 = &uart1;
++	};
++
++	chosen {
++		/delete-property/stdout-path;
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
+@@ -86,3 +95,14 @@
+ 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 	};
+ };
++
++&r_uart {
++	status = "disabled";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins_a>,
++		    <&uart1_pins_cts_rts_a>;
++	status = "okay";
++};
 -- 
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
-Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.3
