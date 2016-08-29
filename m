@@ -1,97 +1,55 @@
-From: Stuart Yoder <stuart.yoder@nxp.com>
-Subject: [PATCH 2/2 v2] arm64: dts: add stdout-path to chosen node for
- ls2080a/ls1043a boards
-Date: Mon, 29 Aug 2016 13:44:44 -0500
-Message-ID: <1472496284-28403-1-git-send-email-stuart.yoder@nxp.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH v6] drm: bridge/dw_hdmi: add dw hdmi i2c bus adapter
+ support
+Date: Mon, 29 Aug 2016 21:49:55 +0300
+Message-ID: <c4561762-6c94-6d2d-3834-5ce6f30eb555@mentor.com>
+References: <1472017597-11221-1-git-send-email-vladimir_zapolskiy@mentor.com>
+ <CACvgo50WjosoeV81eBESyVpjyJqPGt-R5yWR6sFr0ZbPe2LJHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: shawnguo@kernel.org, Stuart Yoder <stuart.yoder@nxp.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CACvgo50WjosoeV81eBESyVpjyJqPGt-R5yWR6sFr0ZbPe2LJHw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, devicetree <devicetree@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, Russell King <rmk+kernel@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Add a default stdout-path to chosen node for ls2080a/ls1043a boards to
-allow booting kernels without specifying console info in bootargs.
-
-Signed-off-by: Stuart Yoder <stuart.yoder@nxp.com>
----
--v2
-  -no change
-
- arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts | 4 ++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 4 ++++
- arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts | 3 +++
- arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts | 4 ++++
- 4 files changed, 15 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-index f813d67..dd9e919 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-@@ -61,6 +61,10 @@
- 		serial2 = &duart2;
- 		serial3 = &duart3;
- 	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
- };
- 
- &duart0 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-index 8031cde..d2313e0 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-@@ -57,6 +57,10 @@
- 		serial2 = &duart2;
- 		serial3 = &duart3;
- 	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
- };
- 
- &i2c0 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-index e8801fa..b0dd010 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-@@ -57,6 +57,9 @@
- 		serial1 = &serial1;
- 	};
- 
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
- };
- 
- &esdhc {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts
-index e127f0b..ad0ebb8 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts
-@@ -56,6 +56,10 @@
- 		serial0 = &serial0;
- 		serial1 = &serial1;
- 	};
-+
-+	chosen {
-+		stdout-path = "serial1:115200n8";
-+	};
- };
- 
- &esdhc {
--- 
-1.9.0
+SGkgRW1pbCwKCk9uIDA4LzI5LzIwMTYgMDc6NDEgUE0sIEVtaWwgVmVsaWtvdiB3cm90ZToKPiBI
+aSBhbGwsCj4KPiBPbiAyNCBBdWd1c3QgMjAxNiBhdCAwNjo0NiwgVmxhZGltaXIgWmFwb2xza2l5
+Cj4gPHZsYWRpbWlyX3phcG9sc2tpeUBtZW50b3IuY29tPiB3cm90ZToKPgo+PiAgTU9EVUxFX0FV
+VEhPUigiU2FzY2hhIEhhdWVyIDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPiIpOwo+PiAgTU9EVUxF
+X0FVVEhPUigiQW5keSBZYW4gPGFuZHkueWFuQHJvY2stY2hpcHMuY29tPiIpOwo+PiAgTU9EVUxF
+X0FVVEhPUigiWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPiIpOwo+PiArTU9EVUxFX0FV
+VEhPUigiVmxhZGltaXIgWmFwb2xza2l5IDx2bGFkaW1pcl96YXBvbHNraXlAbWVudG9yLmNvbT4i
+KTsKPiBEb24ndCBtZWFudCB0byBzdGFydCBhIGZsYW1lLXdhciBvciBhbGlrZSBidXQgdG8gZWR1
+Y2F0ZSBteXNlbGY6Cj4gV2hlcmUgZG9lcyBvbmUgZHJhdyB0aGUgbGluZSBhYm91dCBhZGRpbmcg
+bmV3IGF1dGhvcihzKSBvZiBzYWlkCj4gbW9kdWxlL3N1YnN5c3RlbSA/CgpJIHN1cHBvcnQgeW91
+LCBsZXQncyBkb24ndCBzaW5rLiBTaW5jZSBpdCBldm9rZXMgcXVlc3Rpb25zIEknbQpyZWFkeSB0
+byBwcm92aWRlIHlvdSB3aXRoIG1vcmUgYmFja2dyb3VuZCBpbmZvcm1hdGlvbi4KCj4gQWZhaWN0
+IHRoaXMgaXMgdGhlIG1vc3QgY29tbW9uICg/KSBkcml2ZXIgaW4gRFJNIHdoZXJlIHRoZSBsaXN0
+IGhhcwo+IGdyb3duIG92ZXIgdGltZS4gU2hvdWxkIHdlIGRvIHRoZSBzYW1lIHdpdGggb3RoZXJz
+ID8KCklmIHlvdSBsb29rIGludG8gdGhlIGVzc2Vuc2Ugb2YgdGhpcyBjaGFuZ2UgaXQgYWRkcyBz
+dXBwb3J0IHRvCmFuIEkyQyBtYXN0ZXIgY29udHJvbGxlciwgd2hpY2ggaXMgYSBwYXJ0IG9mIERX
+IEhETUkgY29udHJvbGxlci4KCk9yaWdpbmFsbHkgdGhpcyBwYXJ0aWN1bGFyIGNoYW5nZSB3YXMg
+ZG9uZSBhcyBhIHNlcGFyYXRlIGRyaXZlcgppbiBJMkMgc3Vic3lzdGVtIGFib3V0IDMgeWVhcnMg
+YWdvIGFuZCBkZWxpdmVyZWQgdG8gdGhlIGN1c3RvbWVycywKYWJvdXQgMiB5ZWFycyBhZ28gSSBw
+dWJsaXNoZWQgaXRzIFJGQyB2ZXJzaW9uOgoKICBSRkM6ICAgICAgICAgICBodHRwczovL3BhdGNo
+d29yay5vemxhYnMub3JnL3BhdGNoLzQwNTEwMC8KICB2MSBkaXNjdXNzaW9uOiBodHRwOi8vd3d3
+Lm1haWxicm93c2UuY29tL2xpbnV4LWkyYy8yMDk0OS5odG1sCgpBcyB5b3UgbWF5IHNlZSB0aGlz
+IHdhcyBhIHN0YW5kLWFsb25lIGRyaXZlciwgd2hpY2ggc2VydmVkIGFzCnRoZSBmb3VydGggSTJD
+IG1hc3RlciBjb250cm9sbGVyIG9uIGlNWDZRLCBob3dldmVyIEkgYmVsaWV2ZQppdCBpcyBiZXR0
+ZXIgdG8gbWVyZ2UgdHdvIGRyaXZlcnMgaW50byBvbmUuIERvZXMgaXQgc291bmQgbGlrZQphIGdv
+b2QgZW5vdWdoIHJlYXNvbiB0byBtZXJnZSBsaXN0cyBvZiBhdXRob3JzIGFzIHdlbGw/CgpIb3Bl
+IGl0IGNsYXJpZmllcyB0aGUgc2l0dWF0aW9uIGEgYml0LgoKLS0KV2l0aCBiZXN0IHdpc2hlcywK
+VmxhZGltaXIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
