@@ -1,80 +1,105 @@
-From: Mirza Krak <mirza.krak@gmail.com>
-Subject: Re: [PATCH v2 3/6] dt/bindings: Add bindings for Tegra GMI controller
-Date: Mon, 29 Aug 2016 09:38:39 +0200
-Message-ID: <CALw8SCV4a98B0ct483wxf9ZMuCv8qV1BPM_9g6vV3huyp6YdOg@mail.gmail.com>
-References: <1472045838-22628-1-git-send-email-mirza.krak@gmail.com>
- <1472045838-22628-4-git-send-email-mirza.krak@gmail.com> <de2fb909-829e-6c04-4f6a-442cbb9171c9@nvidia.com>
- <CALw8SCVcPymDZ8NyUbeanRF0TCT1TZzL6iRDticYA42FWrEWqw@mail.gmail.com>
- <CALw8SCWtTvWGmKru2MX7T7sFpoUpD-V400+w2nPkxaFB5WUKSA@mail.gmail.com> <a7851104-1aa1-fd8d-a594-545a01046cdf@nvidia.com>
+From: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: dts: da850-lcdk: Add NAND to DT
+Date: Mon, 29 Aug 2016 07:49:58 +0000
+Message-ID: <20160829074958.GA30462@gobelin>
+References: <20160809171518.22690-1-kbeldan@baylibre.com>
+ <20160809171518.22690-4-kbeldan@baylibre.com>
+ <57AAE67D.4000404@ti.com>
+ <20160810090417.GE16481@gobelin>
+ <57AAF472.7000804@ti.com>
+ <20160810111944.GA31616@gobelin>
+ <57AB15B3.1050907@ti.com>
+ <20160816232029.GA31105@gobelin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a7851104-1aa1-fd8d-a594-545a01046cdf@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, linux@armlinux.org.uk, pdeschrijver@nvidia.com, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160816232029.GA31105@gobelin>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Karl Beldan <karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2016-08-26 9:25 GMT+02:00 Jon Hunter <jonathanh@nvidia.com>:
->
-> On 26/08/16 05:53, Mirza Krak wrote:
->
-> ...
->
->>> I have an idea which is following:
->>>
->>> gmi@70090000 {
->>>          status = "okay";
->>>          #address-cells = <2>;
->>>          #size-cells = <1>;
->>>          ranges = <4 0 0x48000000 0x00040000>;
->>>
->>>          cs4 {
->>>                  compatible = "simple-bus";
->>>                  #address-cells = <2>;
->>>                  #size-cells = <1>;
->>>                  ranges;
->>>
->>>                  nvidia,snor-cs = <4>;
->>>                  nvidia,snor-mux-mode;
->>>                  nvidia,snor-adv-inv;
->>>
->>>                  can@0 {
->>>                          compatible = "nxp,sja1000";
->>>                          reg = <4 0 0x100>;
->>>                          ...
->>>                  };
->>>
->>>
->>>                  can@40000 {
->>>                          compatible = "nxp,sja1000";
->>>                          reg = <4 0x40000 0x100>;
->>>                          ...
->>>                  };
->>>          };
->>> };
->>>
->>> Do not know if above will work at all (not able to test at current
->>> location), anyway I will play around with it some more and get back to
->>> you.
->>
->> Gave above a test run and it works like a charm. Are we happy with that?
->
-> Does it not work with #address-cells = <1>? Seems odd to have the cs in
-> the reg for the device.
->
+On Tue, Aug 16, 2016 at 11:20:29PM +0000, Karl Beldan wrote:
+> On Wed, Aug 10, 2016 at 05:23:23PM +0530, Sekhar Nori wrote:
+> > On Wednesday 10 August 2016 04:49 PM, Karl Beldan wrote:
+> > > On Wed, Aug 10, 2016 at 03:01:30PM +0530, Sekhar Nori wrote:
+> > >> On Wednesday 10 August 2016 02:34 PM, Karl Beldan wrote:
+> > >>> On Wed, Aug 10, 2016 at 02:01:57PM +0530, Sekhar Nori wrote:
+> > >>>> On Tuesday 09 August 2016 10:45 PM, Karl Beldan wrote:
+> > >>>>> This adds DT support for the NAND connected to the SoC AEMIF.
+> > >>>>> The parameters (timings, ecc) are the same as what the board ships with
+> > >>>>> (default AEMIF timings, 1bit ECC) and improvements will be handled in
+> > >>>>> due course.
+> > >>>>
+> > >>>> I disagree that we need to be compatible to the software that ships with
+> > >>>> the board. Thats software was last updated 3 years ago. Instead I would
+> > >>>> concern with what the hardware supports. So, if the hardware can support
+> > >>>> 4-bit ECC, I would use that.
+> > >>>>
+> > >>> I am not saying we _need_ to be compatible.
+> > >>
+> > >> Alright then, please drop references to what software the board ships
+> > >> with in the commit message and in the patch itself.
+> > >>
+> > > 
+> > > I hadn't seen this comment before sending v2.
+> > > 
+> > >>>
+> > >>>> If driver is broken for 4-bit ECC, please fix that up first.
+> > >>>>
+> > >>> Since this issue is completely separate from my DT improvements
+> > >>> I'll stick to resubmitting the series, applying my LCDK changes to the
+> > >>> EVM too, besides you'll be able to compare the behavior without ECC
+> > >>> discrepancies.
+> > >>> I took note that you are likely to not apply without the ECC fix.
+> > >>
+> > >> Yeah, I would not like to apply with 1-bit ECC now and then change to
+> > >> 4-bit ECC soon after.
+> > >>
+> > > 
+> > > Both mityomapl138 from mainline and hawkboard from TI's BSP release
+> > > include the comment:
+> > > - "4 bit mode is not supported with 16 bit NAND"
+> > > It is not clear whether they imply that the HW has issues or if it's SW
+> > 
+> > At least the TRM says "The EMIFA supports 4-bit ECC on 8-bit/16-bit NAND
+> > Flash.". And then the TRM goes on to describe how 4-bit ECC is supposed
+> > to work for 16-bit NAND. I could not find any errata related to this in
+> > the errata document.
+> > 
+> > > only, but 4-bits ECC is a different matter and I hope you'll integrate
+> > > the current changes prior to tackling it.
+> > 
+> > Lets apply everything together. This is a new feature, not a bug fix.
+> > There is no need to rush it. Also, for the NAND part on LCDK, per the
+> > micron datasheet, minimum of 4-bit ECC is needed.
+> > 
+> 
+> FYI my patches are related to a small contracting work spanning 20 days
+> amounting to 15 real days (from scratch).  ATM my SoW not only doesn't
+> include this 'new feature' but excludes it. So I cannot promise I'll
+> look into it, though it shouldn't be too big a thing.
 
-No it does not work with #address-cells = <1> with the current
-structure that we have.
+I took a look at it yesterday, cf. https://lkml.org/lkml/2016/8/29/71
+ 
+Karl
 
-With #address-cells = <2>, we can state that this device is on
-chip-select 4 and on this specific offset of chip-select 4 (that is
-the second address cell). I do not see how we can specify this with
-only one address cell.
-
-And is it really that odd? Looking at other drivers they all use the
-same metod, even the arm,pl172 that you where referring to as a base
-for our implementation.
-
-Best Regards
-Mirza
+> It seemed clear that you wanted to squeeze it with the rest, but after
+> setting things up for the EVM and observing mainline was broken with
+> 4bits ECC on an 8bits NAND I thought it was impossible nobody hadn't
+> noticed it .. so I dug in the mail archive, only to find there had
+> already been some alerts raised some months ago on the list, so I picked
+> up my next item.
+> 
+> > I will take a look at other patches in this series.
+> > 
+> 
+> Ok, thanks.
+> 
+> Rgds, 
+> Karl
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
