@@ -1,63 +1,114 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 1/3] Documentation: dt: net: add ath9k
-	wireless device binding
-Date: Mon, 29 Aug 2016 14:12:23 +0200
-Message-ID: <201608291412.23530.arnd@arndb.de>
-References: <20160709232834.31654-1-martin.blumenstingl@googlemail.com>
-	<2913835.hr5kg63Vcv@wuerfel>
-	<CAFBinCAj0gFnKkqBrmUxCwXjsv6NY4KuWGRA4_mnXjq_boYx8w@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/4] soc: qcom: add an EBI2 device tree bindings
+Date: Mon, 29 Aug 2016 07:24:15 -0500
+Message-ID: <CAL_JsqJPckLGDSiqnspvtP_=t+yZ+0vO-8MxGB6x7poOZiyK+Q@mail.gmail.com>
+References: <1470691445-27571-1-git-send-email-linus.walleij@linaro.org>
+ <2988918.zNxvaGl6en@wuerfel> <CACRpkdZ=HU6j3=Ye4dm=tFU=KmG54bq06KDfxPViWUouOA=jOA@mail.gmail.com>
+ <201608291351.12915.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ath9k-devel-bounces@lists.ath9k.org>
-In-Reply-To: <CAFBinCAj0gFnKkqBrmUxCwXjsv6NY4KuWGRA4_mnXjq_boYx8w@mail.gmail.com>
-List-Unsubscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
-	<mailto:ath9k-devel-request@lists.ath9k.org?subject=unsubscribe>
-List-Archive: <http://lists.ath9k.org/pipermail/ath9k-devel>
-List-Post: <mailto:ath9k-devel@lists.ath9k.org>
-List-Help: <mailto:ath9k-devel-request@lists.ath9k.org?subject=help>
-List-Subscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
-	<mailto:ath9k-devel-request@lists.ath9k.org?subject=subscribe>
-Sender: ath9k-devel-bounces@lists.ath9k.org
-Errors-To: ath9k-devel-bounces@lists.ath9k.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, arend.vanspriel@broadcom.com, mcgrof@do-not-panic.com, julian.calaby@gmail.com, linux-wireless@vger.kernel.org, ath9k-devel@qca.qualcomm.com, robh+dt@kernel.org, ath9k-devel@lists.ath9k.org, bjorn@mork.no, chunkeey@googlemail.com, kvalo@codeaurora.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <201608291351.12915.arnd@arndb.de>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 28 August 2016, Martin Blumenstingl wrote:
-> On Mon, Aug 22, 2016 at 11:08 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Sunday, August 21, 2016 4:31:03 PM CEST Martin Blumenstingl wrote:
-> >> +               ath9k@0,0 {
-> >
-> > According to the PCI binding, the name should be the same as the
-> > compatible string here, or match the class code in the table.
-> The original example was from an actual system (where an ath9k is
-> connected to the PCIe bug). Unfortunately the PCIe driver contains
-> some hacks, so I'm not sure if these values serve as a good example.
-> Thus I took an example from a device where the ath9k chip is connected
-> via PCI (no "express" - found in sysfs at:
-> /sys/bus/pci/devices/0000:00:0e.0):
-> &pci0 {
->     ath9k@168c,002d {
->         compatible = "pci168c,002d";
->         reg = <0x7000 0 0 0 0>;
->         qca,disable-5ghz;
->     };
-> };
+On Mon, Aug 29, 2016 at 6:51 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thursday 18 August 2016, Linus Walleij wrote:
+>> On Mon, Aug 8, 2016 at 11:32 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> > On Monday, August 8, 2016 11:24:02 PM CEST Linus Walleij wrote:
+>
+>>
+>> So two devices "foo" and "bar" on the EBI2 bus, in the old
+>> scheme.
+>>
+>> So I need to encode the CS in the first cell of the reg for
+>> foo-ebi2, and get rid of chipselect = <2> fine:
+>>
+>> ebi2@1a100000 {
+>>        compatible = "qcom,msm8660-ebi2";
+>>        #address-cells = <1>;
+>>        #size-cells = <1>;
+>>        (...)
+>>        cs2@1b800000 {
+>>                #address-cells = <2>;
+>>                #size-cells = <1>;
+>>                qcom,xmem-recovery-cycles = <5>;
+>>                foo-ebi2@1b800000 {
+>>                        compatible = "foo";
+>>                        reg = <2 0x1b800000 0x100>;
+>>                        (...)
+>>                };
+>>                bar-ebi2@1ba00000 {
+>>                        compatible = "bar";
+>>                        reg = <2 0x1ba00000 0x100>;
+>>                        (...)
+>>                };
+>>        };
+>> };
+>>
+>> This is not looking good at all. First: the configuration settings for
+>> the chipselect (i.e. all devices below it, both "foo" and "bar" are
+>> just floating in space. When parsing the tree how should you know
+>> what chipselect to set up the stuff on? Shall I check the child nodes
+>> first value in the reg property and then make a majority vote on what
+>> chipselect they apply to or what? That doesn't make sense.
+>
+> I would have one node per chip-select and then put the devices on
+> that CS below it, with #address-cells=1 again.
 
-Ok, that would be a better example.
+Actually, how I've been guiding folks is 2 levels of nodes.
 
+eim {
+  #address-cells = <3>;
+  cs@0,0 {
+    compatible = "bar,some-device";
+    foo,eim-timing-prop = <0>;
+  };
 
-> >> +                       compatible = "pci168c,0030";
-> >> +                       reg = <0 0 0 0 0>;
-> >
-> > Are the device/fn numbers all zero on your system? This is a bit
-> > confusing, as it's not immediately clear what the reg properties
-> > refers to. Also, I think the length should reflect the actual length
-> > of the config space, either 0x100 or 0x1000.
-> The first issue is solved with the updated example (see above).
-> Where would the size go (is it the second-last or last value)?
+This is how most bindings have been done. There's not really any point
+to 3 levels other than keeping CS properties separate, but they don't
+need to be if they are properly prefixed. The timing for a device is a
+property of the device even though we express them in terms of the
+controller.
 
-The last one.
+>> So I assume doing away with the chipselect node altogether would
+>> be prefered. But then: where do I put stuff like "qcom,xmem-recovery-cycles"
+>> that apply to the whole chipselect, not just a single subdevice on that
+>> chipselect? I certainly cannot encode it in the reg since it needs
+>> to be the same for all devices and it's not about addressing.
+>>
+>> The only thing I can reasonably come up with would be this:
+>>
+>> ebi2@1a100000 {
+>>        compatible = "qcom,msm8660-ebi2";
+>>        #address-cells = <2>;
+>>        #size-cells = <1>;
+>>        qcom,xmem-recovery-cycles = <0>, <0>, <5>, <0>, <0>, <0>;
+>
+> No, better put the settings into one device per cs.
 
-	Arnd
+Yes.
+
+>
+>> So the chip select settings are shoehorned into an array in the top
+>> node that is then indexed to find the settings for cs0, cs1 etc.
+>>
+>> There will be 6 such arrays for the different per-cs settings.
+>>
+>> Is this what you want? I kind of thought the hierarchical model
+>> was nice since each device was below its chipselect node, but
+>> I understand that it breaks the pattern of other similar bus drivers.
+>
+> Nothing wrong with having a hierarchy here, what I'm interested
+> in is making the addressing reflect what the hardware actually
+> does. With the empty "ranges", it looks like the entire 32-bit
+> address is getting exposed to the external bus, which is usually
+> not how things work: instead, each "cs" line gets raised by an I/O
+> operation on a particular CPU address range, and that range should
+> be part of the "ranges" propert of the main bus node, and the
+> externally visible addresses should be the translated addresses
+> in the child bus representation in DT.
+
+Yes.
