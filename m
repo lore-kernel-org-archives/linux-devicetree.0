@@ -1,83 +1,37 @@
-From: Hoan Tran <hotran@apm.com>
-Subject: Re: [PATCH 1/3] Documentation: dtb: xgene: Add PMD clock binding
-Date: Mon, 29 Aug 2016 09:05:29 -0700
-Message-ID: <CAFHUOYxUh5dCkjJddfJy1ODR5p4P9v7C=8dxEvsbnJ6mPiscXQ@mail.gmail.com>
-References: <1471967561-23634-1-git-send-email-hotran@apm.com>
- <1471967561-23634-2-git-send-email-hotran@apm.com> <20160829154228.GA23350@rob-hp-laptop>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] soc: qcom: add an EBI2 device tree bindings
+Date: Mon, 29 Aug 2016 18:18:43 +0200
+Message-ID: <CACRpkdbkJWk6_VcD6deW1imuOzfdJtm0twyd3RiEgyQE=64F9g@mail.gmail.com>
+References: <1470691445-27571-1-git-send-email-linus.walleij@linaro.org>
+ <CAL_JsqJPckLGDSiqnspvtP_=t+yZ+0vO-8MxGB6x7poOZiyK+Q@mail.gmail.com>
+ <CACRpkdaRPa=tCH2FQUOUzp0Q2YvdLNA7R2y3w==sH40DwJ2vGA@mail.gmail.com> <201608291542.55387.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160829154228.GA23350@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Loc Ho <lho@apm.com>, Duc Dang <dhdang@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201608291542.55387.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-
-
-On Mon, Aug 29, 2016 at 8:42 AM, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Aug 23, 2016 at 08:52:39AM -0700, Hoan Tran wrote:
->> Add APM X-Gene clock binding documentation for PMD clock.
->>
->> Signed-off-by: Hoan Tran <hotran@apm.com>
->> ---
->>  Documentation/devicetree/bindings/clock/xgene.txt | 22 ++++++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/clock/xgene.txt b/Documentation/devicetree/bindings/clock/xgene.txt
->> index 82f9638..c381733 100644
->> --- a/Documentation/devicetree/bindings/clock/xgene.txt
->> +++ b/Documentation/devicetree/bindings/clock/xgene.txt
->> @@ -8,6 +8,7 @@ Required properties:
->>  - compatible : shall be one of the following:
->>       "apm,xgene-socpll-clock" - for a X-Gene SoC PLL clock
->>       "apm,xgene-pcppll-clock" - for a X-Gene PCP PLL clock
->> +     "apm,xgene-pmd-clock" - for a X-Gene PMD clock
->>       "apm,xgene-device-clock" - for a X-Gene device clock
->>       "apm,xgene-socpll-v2-clock" - for a X-Gene SoC PLL v2 clock
->>       "apm,xgene-pcppll-v2-clock" - for a X-Gene PCP PLL v2 clock
->> @@ -22,6 +23,17 @@ Required properties for SoC or PCP PLL clocks:
->>  Optional properties for PLL clocks:
->>  - clock-names : shall be the name of the PLL. If missing, use the device name.
->>
->> +Required properties for PMD clocks:
->> +- reg : shall be the physical register address for the pmd clock.
->> +- clocks : shall be the input parent clock phandle for the clock.
->> +- #clock-cells : shall be set to 1.
->> +- clock-output-names : shall be the name of the clock referenced by derive
->> +  clock.
->> +- clock-shift: Bit shift of the clock register. Default is 0.
->> +- clock-width: Width of the clock register. Default is 32.
->> +Optional properties for PLL clocks:
->> +- clock-names : shall be the name of the clock. If missing, use the device name.
->> +
->>  Required properties for device clocks:
->>  - reg : shall be a list of address and length pairs describing the CSR
->>           reset and/or the divider. Either may be omitted, but at least
->> @@ -59,6 +71,16 @@ For example:
->>               type = <0>;
->>       };
->>
->> +     pmd0clk: pmd0clk {
->> +             compatible = "apm,xgene-pmd-clock";
->> +             #clock-cells = <1>;
->> +             clocks = <&pmdpll 0>;
->> +             reg = <0x0 0x7E200200 0x0 0x10>;
->> +             clock-shift = <8>;
->> +             clock-width = <3>;
+On Mon, Aug 29, 2016 at 3:42 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Monday 29 August 2016, Linus Walleij wrote:
+>> Gnah. Each chipselect can (in theory) house several memory-mapped
+>> devices at different offsets. Like two ethernet controllers. It gets a bit
+>> weird.
 >
-> These should be implied by the compatible string. It's not a big deal
-> for just adding this clock, but if you have lots more clocks to add then
-> it is a problem. We only want leaf clocks (the ones going to devices) in
-> DT unless there is only a few clocks.
->
+> How theoretical is that setup though? From looking at other external
+> bus interfaces that we support, I can't find anyone actually doing
+> this.
 
-This clock node is the clock of CPU.
-A PMD has 2 CPUs, and they are using the same PMD clock.
+I only have this one device on EBI2.
 
-Thanks
-Hoan
+However I suspect it could be common to use e.g. two
+NOR flash chips in the same CS.
 
-> Rob
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
