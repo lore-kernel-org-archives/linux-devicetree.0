@@ -1,72 +1,48 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/2] arm64: dts: updates serial aliases for ls1043a rdb
- and qds boards
-Date: Mon, 29 Aug 2016 22:38:17 +0200
-Message-ID: <201608292238.17985.arnd@arndb.de>
-References: <1472244381-1766-1-git-send-email-stuart.yoder@nxp.com>
- <8035333.yr2FRs5mHk@wuerfel>
- <VI1PR0401MB2638BCBA99A6305262FD3EE78DE10@VI1PR0401MB2638.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR0401MB2638BCBA99A6305262FD3EE78DE10@VI1PR0401MB2638.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Stuart Yoder <stuart.yoder@nxp.com>
+From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/6] usb: dwc2: gadget: Fix TX FIFO handling
+Date: Mon, 29 Aug 2016 13:38:46 -0700
+Message-ID: <cover.1472502978.git.johnyoun__36669.1432115205$1472503257$gmane$org@synopsys.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 29 August 2016, Stuart Yoder wrote:
-> > -----Original Message-----
-> > From: Arnd Bergmann [mailto:arnd@arndb.de]
-> > Sent: Monday, August 29, 2016 6:01 AM
-> > To: Stuart Yoder <stuart.yoder@nxp.com>
-> > Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; shawnguo@kernel.org
-> > Subject: Re: [PATCH 1/2] arm64: dts: updates serial aliases for ls1043a rdb and qds boards
-> > 
-> > On Friday, August 26, 2016 3:46:20 PM CEST Stuart Yoder wrote:
-> > > -               serial0 = &lpuart0;
-> > > -               serial1 = &lpuart1;
-> > > -               serial2 = &lpuart2;
-> > > -               serial3 = &lpuart3;
-> > > -               serial4 = &lpuart4;
-> > > -               serial5 = &lpuart5;
-> > > +               serial0 = &duart0;
-> > > +               serial1 = &duart1;
-> > > +               serial2 = &duart2;
-> > > +               serial3 = &duart3;
-> > 
-> > It looks like your board has six uarts that are all driven with the
-> > lpuart driver, but after the change, you only list four. Should
-> > the serial4 and serial5 aliases keep pointing at lpuart devices
-> > so you can still drive all physical connectors?
-> 
-> The only existing reference I can find to the serial aliases is if the
-> OF_STDOUT_VIA_ALIAS is enabled in u-boot to specify the console.  The
-> standard ls1043aqds_defconfig in u-boot specifies DUARTs for the console,
-> which is why I'm proposing making the 4 DUARTs the default serial aliases
-> in the device tree.
+Hi,
 
-Ok, so they are mutually exclusive, and the last two ports are
-unavailable in the default configuration?
- 
-> There is a separate defconfig in u-boot to enable/use LPUARTs instead
-> of the normal DUARTs.  For that scenario, my take is that firmware should
-> update the DT aliases to reflect the actual use of the serial ports.
+This is a resend of a patch series originally submitted by Robert
+Baldyga back in February.
 
-Yes, makes sense.
+Somehow I missed it back then. Sorry about that.
 
-> But, the default should be the DUARTs which is the normal case for this
-> board, which is why this patch is changing them.
+It should fix some FIFO programming related issues on RPi and maybe
+other platforms.
 
-Ok
+Also, this series makes the g-tx-fifo-size DT property obsolete. I've
+added a patch at the end of the series to document that.
 
-	Arnd
+Regards,
+John
+
+John Youn (1):
+  Documentation: devicetree: dwc2: Deprecate g-tx-fifo-size
+
+Robert Baldyga (5):
+  usb: dwc2: gadget: use ep->fifo_index in context of FIFO registers
+  usb: dwc2: gadget: fix TX FIFO size and address initialization
+  usb: dwc2: gadget: change variable name to more meaningful
+  usb: dwc2: gadget: remove dead code from dwc2_hsotg_ep_enable()
+  usb: dwc2: gadget: free TX FIFO after killing requests
+
+ Documentation/devicetree/bindings/usb/dwc2.txt |  5 +-
+ drivers/usb/dwc2/core.h                        |  7 ---
+ drivers/usb/dwc2/gadget.c                      | 79 +++++++-------------------
+ 3 files changed, 23 insertions(+), 68 deletions(-)
+
+-- 
+2.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
