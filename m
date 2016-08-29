@@ -1,54 +1,59 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2] ARM: dts: imx6ul iomuxc syscon is compatible to imx6q
-Date: Mon, 29 Aug 2016 22:34:47 +0800
-Message-ID: <20160829143447.GV30790@tiger>
-References: <1472480743-8405-1-git-send-email-Anson.Huang@nxp.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [Patch v4 9/9] arm64: Update device tree for Layerscape SoCs
+Date: Mon, 29 Aug 2016 15:51:30 +0200
+Message-ID: <20160829135130.GB28806@nazgul.tnic>
+References: <1470780000-16750-1-git-send-email-york.sun@nxp.com>
+ <20160812091354.GB333@nazgul.tnic> <20160829063448.GA32489@tiger>
+ <20160829080530.GA25468@nazgul.tnic> <20160829083350.GL30790@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1472480743-8405-1-git-send-email-Anson.Huang-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+In-Reply-To: <20160829083350.GL30790@tiger>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Liu Gang <Gang.Liu@nxp.com>, morbidrsa@gmail.com, linux-edac@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, stuart.yoder@nxp.com, linux-kernel@vger.kernel.org, oss@buserror.net, Rob Herring <robh+dt@kernel.org>, Rajesh Bhagat <rajesh.bhagat@freescale.com>, Yuan Yao <yao.yuan@nxp.com>, Olof Johansson <olof@lixom.net>, York Sun <york.sun@nxp.com>, Li Yang <leoli@freescale.com>, Mingkai Hu <Mingkai.Hu@freescale.com>, linux-arm-kernel@lists.infradead.org, yangbo lu <yangbo.lu@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 29, 2016 at 10:25:43PM +0800, Anson Huang wrote:
-> The imx6ul iomuxc syscon is compatible to imx6q,
-> so let's add compatible string 'fsl,imx6q-iomuxc-gpr'
-> for imx6ul iomuxc syscon node.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+On Mon, Aug 29, 2016 at 04:33:50PM +0800, Shawn Guo wrote:
+> To avoid potential merge conflicts. 
 
-Will this patch still be needed if you implement imx6ul suspend support
-with PSCI?
+Haven't heard of any so far. And I don't see how adding 1 or 2 DT
+entries more per driver is a serious merge conflict.
 
-Shawn
+> Unless there are hard dependencies like making it compile, avoiding
+> regression or maintaining bisect, patches should go through their
+> established subsystem/architecture tree.
 
-> ---
-> changes since V1:
-> 	improve commit message.
->  arch/arm/boot/dts/imx6ul.dtsi | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-> index 33b95d7..acc9486 100644
-> --- a/arch/arm/boot/dts/imx6ul.dtsi
-> +++ b/arch/arm/boot/dts/imx6ul.dtsi
-> @@ -644,7 +644,8 @@
->  			};
->  
->  			gpr: iomuxc-gpr@020e4000 {
-> -				compatible = "fsl,imx6ul-iomuxc-gpr", "syscon";
-> +				compatible = "fsl,imx6ul-iomuxc-gpr",
-> +					     "fsl,imx6q-iomuxc-gpr", "syscon";
->  				reg = <0x020e4000 0x4000>;
->  			};
->  
-> -- 
-> 1.9.1
-> 
+Well, doh, the driver simply doesn't work. How are people even supposed
+to test the EDAC tree?
+
+Why is it even such a big deal if it is acked by the proper maintainers?
+Cross-tree maintainer acking happens all the time. So don't tell me the
+merge conflicts are your big issue with this.
+
+> Luckily.  If there are many patches on architecture DT branch changing
+> the same file, when driver branch and DT branch merges in upstream
+> branch, there will likely be merge conflicts.
+
+So? There are tools to resolve those. And again, the DT changes for
+EDAC are basically adding blocks so resolving those conflicts should be
+trivial most of the time.
+
+So no, I don't consider the potential merge conflicts an issue here.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
