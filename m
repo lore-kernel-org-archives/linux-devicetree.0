@@ -1,146 +1,95 @@
-From: Winter Wang <wente.wang-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 1/2] ASoC: imx-sgtl5000: Support non-ssi cpu-dai
-Date: Mon, 29 Aug 2016 18:51:54 +0800
-Message-ID: <1472467915-21317-2-git-send-email-wente.wang@nxp.com>
-References: <1472467915-21317-1-git-send-email-wente.wang@nxp.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/2] sdhci-of-arasan: Add quirk and device tree parameter
+ to fake CD bit
+Date: Mon, 29 Aug 2016 13:21:41 +0200
+Message-ID: <CAPDyKFpGJ=0y3B5dsQZsaU41pzEoU5PuwWi9R-zXtKet7O87ZA@mail.gmail.com>
+References: <1472080984-17373-1-git-send-email-zach.brown@ni.com>
+ <20160825105640.GA5439@remoulade> <20160825171539.GA13571@zach-desktop>
+ <20160825180959.GA14705@remoulade> <20160825182621.GA14817@zach-desktop>
+ <20160825182852.GB15000@remoulade> <20160825204645.GA19450@zach-desktop>
+ <CAPDyKFpcFus1oysdRuK6vUALXXdy8_SsDZ3n8LkyM1AZLZY+QQ@mail.gmail.com> <20160826222945.GA6679@zach-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472467915-21317-1-git-send-email-wente.wang-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20160826222945.GA6679@zach-desktop>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Zach Brown <zach.brown@ni.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lars-Peter Clausen <lars@metafoo.de>
 List-Id: devicetree@vger.kernel.org
 
-The current imx-sgtl5000 driver always attaches the cpu-dai to ssi while
-in fact it could be attached to other cpu-dais like SAI. Thus this patch
-use a general code to support another cpu-dai.
+On 27 August 2016 at 00:29, Zach Brown <zach.brown@ni.com> wrote:
+> On Fri, Aug 26, 2016 at 09:42:38AM +0200, Ulf Hansson wrote:
+>> On 25 August 2016 at 22:46, Zach Brown <zach.brown@ni.com> wrote:
+>> > On Thu, Aug 25, 2016 at 07:28:55PM +0100, Mark Rutland wrote:
+>> >> On Thu, Aug 25, 2016 at 01:26:22PM -0500, Zach Brown wrote:
+>> >> > On Thu, Aug 25, 2016 at 07:10:00PM +0100, Mark Rutland wrote:
+>> >> > > On Thu, Aug 25, 2016 at 12:15:44PM -0500, Zach Brown wrote:
+>> >> > > > In cases where the card is non-removable then polling doesn't make sense.
+>> >> > >
+>> >> > > We have the non-removable property to describe that, so we can also look at that.
+>> >> > >
+>> >> > > > So it doesn't make sense to tie the test mode workaround into the broken-cd
+>> >> > > > property, even though I agree the nature of the defect fits under the notion
+>> >> > > > of the CD being broken.
+>> >> > >
+>> >> > > Maybe not solely on broken-cd, but I think that we dont necessarily need a new
+>> >> > > DT property. As above, broken-cd, non-removable, and the compatible string may
+>> >> > > together give the kernel enough information to choose the right thing to do.
+>> >> > >
+>> >> > > Thanks,
+>> >> > > Mark.
+>> >> >
+>> >> > I'm not sure if I understand your suggestion completely. Are you suggesting
+>> >> > setting both the broken-cd and non-removable properties? That would make sense,
+>> >> > but my understanding was that the two properities are not meant to co-exist. In
+>> >> > /Documentation/devicetree/bindings/mmc/mmc.txt it states that only one should
+>> >> > be supplied. Don't the two properties conflict with each other?
+>> >>
+>> >> They do for the cases that exist today, but given we're updating the document
+>> >> anyway, we could simply clarify the cases in which the two can sanely co-exist
+>> >> (e.g.  for this particular IP block).
+>>
+>> No, please!
+>>
+>> Depending on the SDHCI variant there is already some difference on how
+>> broken-cd is treated.
+>>
+>> Let's not add yet another, as I think it will be too complicated for
+>> people to understand the bindings.
+>>
+>
+> Shawn Lin pointed out that there might be instances of the arasan controller
+> that don't have the behavior the patch addresses. Having a new DT binding
+> specific for this case would avoid needing to maintain a list of controllers
+> that need the fix.
+>
 
-Signed-off-by: Winter Wang <wente.wang-3arQi8VN3Tc@public.gmane.org>
----
- .../bindings/sound/imx-audio-sgtl5000.txt          |  4 +--
- sound/soc/fsl/imx-sgtl5000.c                       | 41 ++++++++++++++--------
- 2 files changed, 29 insertions(+), 16 deletions(-)
+Okay!
 
-diff --git a/Documentation/devicetree/bindings/sound/imx-audio-sgtl5000.txt b/Documentation/devicetree/bindings/sound/imx-audio-sgtl5000.txt
-index 2f89db8..cf59521 100644
---- a/Documentation/devicetree/bindings/sound/imx-audio-sgtl5000.txt
-+++ b/Documentation/devicetree/bindings/sound/imx-audio-sgtl5000.txt
-@@ -6,7 +6,7 @@ Required properties:
- 
-   - model		: The user-visible name of this sound complex
- 
--  - ssi-controller	: The phandle of the i.MX SSI controller
-+  - cpu-dai		: The phandle of CPU dai
- 
-   - audio-codec		: The phandle of the SGTL5000 audio codec
- 
-@@ -45,7 +45,7 @@ sound {
- 	compatible = "fsl,imx51-babbage-sgtl5000",
- 		     "fsl,imx-audio-sgtl5000";
- 	model = "imx51-babbage-sgtl5000";
--	ssi-controller = <&ssi1>;
-+	cpu-dai = <&ssi1>;
- 	audio-codec = <&sgtl5000>;
- 	audio-routing =
- 		"MIC_IN", "Mic Jack",
-diff --git a/sound/soc/fsl/imx-sgtl5000.c b/sound/soc/fsl/imx-sgtl5000.c
-index b99e0b5..ed652ae 100644
---- a/sound/soc/fsl/imx-sgtl5000.c
-+++ b/sound/soc/fsl/imx-sgtl5000.c
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2012 Freescale Semiconductor, Inc.
-+ * Copyright 2012-2016 Freescale Semiconductor, Inc.
-  * Copyright 2012 Linaro Ltd.
-  *
-  * The code contained herein is licensed under the GNU General Public
-@@ -55,13 +55,9 @@ static const struct snd_soc_dapm_widget imx_sgtl5000_dapm_widgets[] = {
- 	SND_SOC_DAPM_SPK("Ext Spk", NULL),
- };
- 
--static int imx_sgtl5000_probe(struct platform_device *pdev)
-+static int imx_sgtl5000_audmux_config(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
--	struct device_node *ssi_np, *codec_np;
--	struct platform_device *ssi_pdev;
--	struct i2c_client *codec_dev;
--	struct imx_sgtl5000_data *data = NULL;
- 	int int_port, ext_port;
- 	int ret;
- 
-@@ -101,16 +97,33 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ssi_np = of_parse_phandle(pdev->dev.of_node, "ssi-controller", 0);
-+	return 0;
-+}
-+
-+static int imx_sgtl5000_probe(struct platform_device *pdev)
-+{
-+	struct device_node *cpu_np, *codec_np;
-+	struct platform_device *cpu_pdev;
-+	struct i2c_client *codec_dev;
-+	struct imx_sgtl5000_data *data = NULL;
-+	int ret;
-+
-+	cpu_np = of_parse_phandle(pdev->dev.of_node, "cpu-dai", 0);
- 	codec_np = of_parse_phandle(pdev->dev.of_node, "audio-codec", 0);
--	if (!ssi_np || !codec_np) {
-+	if (!cpu_np || !codec_np) {
- 		dev_err(&pdev->dev, "phandle missing or invalid\n");
- 		ret = -EINVAL;
- 		goto fail;
- 	}
- 
--	ssi_pdev = of_find_device_by_node(ssi_np);
--	if (!ssi_pdev) {
-+	if (strstr(cpu_np->name, "ssi")) {
-+		ret = imx_sgtl5000_audmux_config(pdev);
-+		if (ret)
-+			goto fail;
-+	}
-+
-+	cpu_pdev = of_find_device_by_node(cpu_np);
-+	if (!cpu_pdev) {
- 		dev_err(&pdev->dev, "failed to find SSI platform device\n");
- 		ret = -EPROBE_DEFER;
- 		goto fail;
-@@ -139,8 +152,8 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
- 	data->dai.stream_name = "HiFi";
- 	data->dai.codec_dai_name = "sgtl5000";
- 	data->dai.codec_of_node = codec_np;
--	data->dai.cpu_of_node = ssi_np;
--	data->dai.platform_of_node = ssi_np;
-+	data->dai.cpu_of_node = cpu_np;
-+	data->dai.platform_of_node = cpu_np;
- 	data->dai.init = &imx_sgtl5000_dai_init;
- 	data->dai.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
- 			    SND_SOC_DAIFMT_CBM_CFM;
-@@ -167,7 +180,7 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
- 		goto fail;
- 	}
- 
--	of_node_put(ssi_np);
-+	of_node_put(cpu_np);
- 	of_node_put(codec_np);
- 
- 	return 0;
-@@ -175,7 +188,7 @@ static int imx_sgtl5000_probe(struct platform_device *pdev)
- fail:
- 	if (data && !IS_ERR(data->codec_clk))
- 		clk_put(data->codec_clk);
--	of_node_put(ssi_np);
-+	of_node_put(cpu_np);
- 	of_node_put(codec_np);
- 
- 	return ret;
--- 
-1.9.1
+>> >>
+>> >> Thanks,
+>> >> Mark.
+>> >
+>> > That makes sense. I'll change the documentation for broken-cd and non-removable
+>> > in the IP specific document and change the driver accordingly.
+>>
+>> I rather have a new DT binding specific for this case.
+>>
+>> Perhaps there's a better name than "fake-cd". How about "force-cd", or
+>> if someone can come up with a better name.
+>>
+>> Kind regards
+>> Uffe
+>
+> I've been trying to come up with a better name. Here are a few ideas
+> cd-not-wired
+> needs-test-cd
+> fails-without-force-cd
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yeah, we could probably announce a naming competition for this. :-)
+
+Just select one of them and try to get an ack from Rob/Mark then I
+will pick up the change.
+
+Kind regards
+Uffe
