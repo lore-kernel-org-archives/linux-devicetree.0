@@ -1,33 +1,100 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] ARM: dts: rskrza1: initial device tree
-Date: Mon, 29 Aug 2016 14:56:37 +0000
-Message-ID: <SG2PR06MB116594771BED3BAF944ECE298AE10@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20160825153115.15291-1-chris.brandt@renesas.com>
- <CAMuHMdXmJPcgDcLkeVuF5YVfpwxRkJpACHGwtbNab18gK-nBbQ@mail.gmail.com>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [alsa-devel] [PATCH v5 2/2] ASoC: samsung: Add machine driver
+ for Exynos5433 based TM2 board
+Date: Mon, 29 Aug 2016 16:02:51 +0100
+Message-ID: <20160829150251.GU21682@localhost.localdomain>
+References: <1470752514-11409-1-git-send-email-s.nawrocki@samsung.com>
+ <1470752514-11409-2-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdXmJPcgDcLkeVuF5YVfpwxRkJpACHGwtbNab18gK-nBbQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1470752514-11409-2-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: broonie@kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, k.kozlowski@samsung.com, Inha Song <ideal.song@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIEF1ZyAyOSwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KDQo+ID4g
-LS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I3czcyMTAwLXJza3J6
-YTEuZHRzDQo+DQo+ID4gKyAgICAgICBjb21wYXRpYmxlID0gInJlbmVzYXMscnNrcnphMSIsICJy
-ZW5lc2FzLHI3czcyMTAwIjsNCj4NCj4gc2NyaXB0cy9jaGVja3BhdGNoLnBsIHNheXM6DQo+DQo+
-ICAgIERUIGNvbXBhdGlibGUgc3RyaW5nICJyZW5lc2FzLHJza3J6YTEiIGFwcGVhcnMgdW4tZG9j
-dW1lbnRlZCAtLSBjaGVjayAuL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy8NCj4N
-Cj4gUGxlYXNlIHNlbmQgYSBmb2xsb3ctdXAgcGF0Y2ggdG8gYWRkIHRoaXMgY29tcGF0aWJsZSB2
-YWx1ZSB0byBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NobW9iaWxlLnR4
-dC4NCj4NCj4gPiArJnNjaWYyIHsNCj4gPiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsNCj4gPiAr
-fTsNCj4gPiArDQo+DQo+IFBsZWFzZSBkcm9wIHRoZSB0cmFpbGluZyBlbXB0eSBsaW5lLg0KDQpU
-aGFuayB5b3UgZm9yIHRoZSByZXZpZXcuDQpJIHdpbGwgbW9kaWZ5IGFuZCByZXNlbmQuDQoNCkNo
-cmlzDQoNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Aug 09, 2016 at 04:21:54PM +0200, Sylwester Nawrocki wrote:
+> This patch adds the sound machine driver for TM2 and TM2E board.
+> Speaker and headphone playback, Main Mic capture, Bluetooth,
+> Voice call and external accessory are supported.
+> 
+> Signed-off-by: Inha Song <ideal.song@samsung.com>
+> [k.kozlowski: rebased on 4.1]
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> [s.nawrocki: rebased to 4.7, adjustment to the ASoC core changes,
+>  removed unused ops and direct calls to the max98504 function,
+>  added parsing of "audio-amplifier" and "audio-codec"
+>  properties, added TDM API calls, switched to gpiod API]
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+> 
+> Changes since v4 (addressing review comments from Charles):
+>  - changed the order of WM5110_FLL{1,2}, WM5110_FLL{1,2}_REFCLK setting,
+>  - ARIZONA_CLK_SYSCLK, ARIZONA_CLK_ASYNCCLK setting moved to late_probe,
+>  - added tm2_aif2_hw_free callback for disabling FLL2,
+>  - removed unneded card->dapm.bias_level assignment in tm2_mic_bias callback,
+>  - suspend_late, resume_early dev_pm_ops used instead of suspend_post,
+>    resume_pre struct snd_soc_card callbacks.
+> 
+> Changes since v3:
+>  - removed SND_SOC_SAMSUNG_AUDSS from Kconfig.
+> 
+> Changes since v2:
+>  - added missing Kconfig dependencies.
+> 
+> Changes since initial version:
+>  - added PDM Tx channels setup through TDM API
+>  - adaptation to renamed 'samsung,model', 'samsung,i2s-controller',
+>    'samsung,speaker-amplifier' properties,
+>  - removed some dev_dbg() calls,
+>  - cleaned up mic-bias GPIO handling and switched to gpiod API,
+>  - added parsing of 'audio-codec' property,
+>  - initialized codec_of_node of dai_link instead of codec_name,
+>  - switched to using clock, clock-names properties from the wm5110
+>    codec node,
+>  - fixed error paths in probe() (of_node reference counting).
+> ---
+<snip>
+> +static int tm2_suspend_late(struct device *dev)
+> +{
+> +	struct snd_soc_card *card = dev_get_drvdata(dev);
+> +
+> +	return tm2_stop_sysclk(card);
+> +}
+> +
+> +static int tm2_resume_early(struct device *dev)
+> +{
+> +	struct snd_soc_card *card = dev_get_drvdata(dev);
+> +
+> +	return tm2_start_sysclk(card);
+> +}
+> +
+> +const struct dev_pm_ops tm2_pm_ops = {
+> +	.suspend	= snd_soc_suspend,
+> +	.suspend_late	= tm2_suspend_late,
+> +	.resume		= snd_soc_resume,
+> +	.resume_early	= tm2_resume_early,
+> +	.freeze		= snd_soc_suspend,
+> +	.thaw		= snd_soc_resume,
+> +	.poweroff	= snd_soc_poweroff,
+> +	.restore	= snd_soc_resume,
+> +};
+
+This bit still looks problematic to me, although admittedly I not
+sure exactly why you don't seem to be hitting any issues with
+it. Before you were effectively calling things from .suspend, now
+its .suspend_late.  As we are now later in the suspend process
+that means its even more likely the SPI will be unavailable when
+we try to talk to the CODEC. You need to run before the SPI
+has started suspending so you can still communicate with the
+CODEC, I still think prepare/complete are likely to be the best
+options for this, unless there are some complications there I
+have missed.
+
+Aside from that and the clock stuff we are already discussing
+everything else looks totally fine to me.
+
+Thanks,
+Charles
