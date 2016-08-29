@@ -1,61 +1,72 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: Explicitly set pclk_pmu_src on
- rk3399
-Date: Mon, 29 Aug 2016 11:18:42 -0700
-Message-ID: <20160829181841.GA8682@localhost>
-References: <1472494284-11315-1-git-send-email-dianders@chromium.org>
+From: John Youn <John.Youn@synopsys.com>
+Subject: Re: [RESEND PATCH 3/4] usb: dwc2: assert phy reset when waking up in
+ rk3288 platform
+Date: Mon, 29 Aug 2016 11:24:49 -0700
+Message-ID: <ea25555d-7b94-ad53-4380-4e8d4a50dcce@synopsys.com>
+References: <4c931176-a09a-546c-d2b6-ea74028c78a2@cogentembedded.com>
+ <1471807905-11323-1-git-send-email-ayaka@soulik.info>
+ <49d2baf7-5f81-fc20-a805-f7a378d67a5e@synopsys.com>
+ <76f0ffdb-a3c6-f1e6-8177-b254ff5badaa@rock-chips.com>
+ <f6bbd88b-5d80-c30d-36c1-5b95763ae4bb@synopsys.com>
+ <87fupodnd8.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1472494284-11315-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87fupodnd8.fsf@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <felipe.balbi@linux.intel.com>, John Youn <John.Youn@synopsys.com>, Randy Li <randy.li@rock-chips.com>, Randy Li <ayaka@soulik.info>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "heiko@sntech.de" <heiko@sntech.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "eddie.cai@rock-chips.com" <eddie.cai@rock-chips.com>, "kishon@ti.com" <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 29, 2016 at 11:11:24AM -0700, Doug Anderson wrote:
-> On rk3399 we explicitly set ppll in the device tree to 676000000.  The
-> ppll has one major child, pclk_pmu_src, that is the parent of lots of
-> other clocks.  Right now nobody is setting that clock rate and we're
-> relying on the divider to just happen to be something sane.  Let's be
-> explicit in our request so we're not relying on the firmware.
+On 8/29/2016 12:51 AM, Felipe Balbi wrote:
 > 
-> With the current firmware I tested with this patch has no expected
-> impact but it's probably good to do anyway.
+> Hi,
 > 
-> Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> John Youn <John.Youn@synopsys.com> writes:
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 62d450935a57..ffb3faa8c176 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -908,8 +908,8 @@
->  		reg = <0x0 0xff750000 0x0 0x1000>;
->  		#clock-cells = <1>;
->  		#reset-cells = <1>;
-> -		assigned-clocks = <&pmucru PLL_PPLL>;
-> -		assigned-clock-rates = <676000000>;
-> +		assigned-clocks = <&pmucru PLL_PPLL>, <&pmucru PCLK_SRC_PMU>;
-> +		assigned-clock-rates = <676000000>, <112666667>;
+> [...]
+> 
+>>>>> +			 */
+>>>>> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
+>>>>> +				hsotg->phy->ops->reset(hsotg->phy);
+>>>>> +
+>>>>
+>>>> You should probably check for NULL before calling the reset()
+>>>> callback.
+>>> Sure.
+>>>>
+>>>> Also, I'd rather see a generic quirk property that you set for your
+>>>> platform.
+>>>>
+>>>> Something like "phy_reset_on_wakeup_quirk".
+>>> But Rob Herring want me to implied by the SoC specific compatible 
+>>> string. I agree with him. It is certainly bug in RK3288 platform.
+>>> It is no found no the other platform.
+>>
+>> Ok, I missed that before.
+>>
+>> Based on the drivers I'm familiar with (like dwc3), you would
+>> typically add a "quirk" anyways.
+>>
+>> Felipe,
+>>
+>> Do you have some policy or preference on this?
+> 
+> if it's not a dwc2-generic feature, then let's do it via compatible
+> flag, sure. What we don't want is for things like:
+> 
+> if (is_compatible('synopsys') || is_compatible('rockchip') ||
+> 	is_compatible('foobar') ... )
+> 
+> For that, we'd be better of adding a generic quirk flag which several
+> can use.
+> 
 
-I think this makes sense and is a good idea. One alternative would be to
-have the various children actually set a rate that they expect, but
-several of them don't have a separate driver at all, and that would be
-of dubious value anyway I think.
+Alright sounds reasonable.
 
-Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Randy, could you respin with the other feedback? There's no need to
+add a quirk.
 
->  	};
->  
->  	cru: clock-controller@ff760000 {
-> -- 
-> 2.8.0.rc3.226.g39d4020
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+John
