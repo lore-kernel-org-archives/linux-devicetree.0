@@ -1,40 +1,40 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] ARm64: amlogic: Introduce common GX family dtsi
-Date: Mon, 29 Aug 2016 10:01:46 +0200
-Message-ID: <CAOQ7t2YGbASh7v25wgDspKNWgFOcRsikJs_WZptn+LkVXmaHig@mail.gmail.com>
-References: <1472457371-1305-1-git-send-email-narmstrong@baylibre.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/3] ARM: dts: wheat: initial device tree
+Date: Mon, 29 Aug 2016 10:03:57 +0200
+Message-ID: <CAMuHMdUTsv=-pFaZDPi8JunUn8suhwyMMOXX3dFJ0WupZKfj_w@mail.gmail.com>
+References: <3665116.9BjHTnhfR3@wasted.cogentembedded.com> <4464163.ssfn2FILGm@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472457371-1305-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <4464163.ssfn2FILGm@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 29, 2016 at 9:56 AM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> The new Amlogic GLX SoCs (S905X and S905D) are part of the Meson GX family so
-> they share some basic characteritics that can be described in a common GX
-> dtsi file used by the Meson GXBB and Meson GXL dtsi.
+On Fri, Aug 26, 2016 at 10:21 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Add the initial device tree for the R8A7792  SoC based Wheat board.
+> The Wheat board itself has  no serial ports  wired up, the USB serial chips
+> are situated on a separate  debug board and  one of them is connected to
+> SCFI0  -- include unconditional support for  it, so that the serial console
+> can work.
 >
-> This patchset introduces the common dtsi and switches the GLX and GXBB to use
-> the common dtsi, the GXBB dtsi is reformated to handle this situation.
+> Based  on the original (and large) patch by Vladimir Barinov
+> <vladimir.barinov@cogentembedded.com>.
 >
-> This patchset depends on Carlo Caione "ARM64: dts: amlogic: Add basic support for Amlogic S905X" [1]
->
-> [1] http://lkml.kernel.org/r/1472382113-10754-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
->
-> Neil Armstrong (3):
->   ARM64: dts: amlogic: Add Meson GX Family common dtsi
->   ARM64: dts: amlogic: Switch Meson GXL dtsi to use common GX dtsi
->   ARM64: dts: amlogic: Switch Meson GXBB dtsi to use common GX dtsi
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-FWIW
-Acked-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+(limited to review that can be done without board documentation)
 
--- 
-Carlo Caione
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
