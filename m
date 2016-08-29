@@ -1,47 +1,43 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 5/5] ath9k: Make EEPROM endianness
-	swapping configurable via devicetree
-Date: Mon, 29 Aug 2016 23:25:37 +0200
-Message-ID: <201608292325.38091.arnd@arndb.de>
-References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
-	<201608291410.44338.arnd@arndb.de>
-	<CAFBinCCSBE8KsLgP3t=FzB-2jgjfQBtuF+EjqQEk-7mmmps_Pg@mail.gmail.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [Patch v4 9/9] arm64: Update device tree for Layerscape SoCs
+Date: Mon, 29 Aug 2016 14:39:21 -0700
+Message-ID: <CAOesGMjg3XNrVESr+fS-D5HkwVZEx+ng8TCUriRyohCu0NvJAQ@mail.gmail.com>
+References: <1470780000-16750-1-git-send-email-york.sun@nxp.com>
+ <20160812091354.GB333@nazgul.tnic> <20160829063448.GA32489@tiger> <20160829080530.GA25468@nazgul.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ath9k-devel-bounces@lists.ath9k.org>
-In-Reply-To: <CAFBinCCSBE8KsLgP3t=FzB-2jgjfQBtuF+EjqQEk-7mmmps_Pg@mail.gmail.com>
-List-Unsubscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
-	<mailto:ath9k-devel-request@lists.ath9k.org?subject=unsubscribe>
-List-Archive: <http://lists.ath9k.org/pipermail/ath9k-devel>
-List-Post: <mailto:ath9k-devel@lists.ath9k.org>
-List-Help: <mailto:ath9k-devel-request@lists.ath9k.org?subject=help>
-List-Subscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
-	<mailto:ath9k-devel-request@lists.ath9k.org?subject=subscribe>
-Sender: ath9k-devel-bounces@lists.ath9k.org
-Errors-To: ath9k-devel-bounces@lists.ath9k.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-wireless@vger.kernel.org, ath9k-devel@qca.qualcomm.com, robh+dt@kernel.org, ath9k-devel@lists.ath9k.org, chunkeey@googlemail.com, kvalo@codeaurora.org, nbd@nbd.name
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160829080530.GA25468@nazgul.tnic>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, York Sun <york.sun@nxp.com>, Mark Rutland <mark.rutland@arm.com>, yangbo lu <yangbo.lu@freescale.com>, Liu Gang <Gang.Liu@nxp.com>, morbidrsa@gmail.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, stuart.yoder@nxp.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, oss@buserror.net, Rob Herring <robh+dt@kernel.org>, Rajesh Bhagat <rajesh.bhagat@freescale.com>, Mingkai Hu <Mingkai.Hu@freescale.com>, Li Yang <leoli@freescale.com>, Yuan Yao <yao.yuan@nxp.com>linux-
 List-Id: devicetree@vger.kernel.org
 
-On Monday 29 August 2016, Martin Blumenstingl wrote:
-> > and then do a swab32() on them. I suspect these should just be __le32
-> > (and __le16, respectively where needed), using appropriate accessors
-> > everywhere that those fields are being read instead of having one function
-> > that tries to turn them into cpu-native ordering.
-> I'm not sure if we want those fields to be __le32:
-> BIT(0) in the eepMisc field indicates whether to interpret the data as
-> big or little endian.
-> When this bit is set we would want these fields to be __be32 instead -
-> so I guess the current implementation is "OK" for this specific
-> use-case.
+On Mon, Aug 29, 2016 at 1:05 AM, Borislav Petkov <bp@alien8.de> wrote:
+> On Mon, Aug 29, 2016 at 02:34:48PM +0800, Shawn Guo wrote:
+>> Is it mandatory to have DTS changes go with driver part altogether?
+>
+> Yes, because the EDAC driver needs them to even load properly.
+>
+>> Otherwise, I prefer to have them go through separate tree.
+>
+> Any particular reason why you prefer that?
+>
+> We've been doing this for other ARM EDAC drivers already and there were
+> no issues whatsoever.
 
-Ok, I see. It's still confusing because it's different from how other
-drivers handle this (case in point: I was very confused by this). 
+DT changes need to go through arm-soc. It's how we've been operating
+for several years now.
 
-Do you see any downsides in changing the code to consistently annotate
-the eeprom as either __le or __be (whichever is more common), using
-the respective endianess accessors, and then doing the swap if the
-data we read is the opposite way?
+It can be a huge pain when DT patches get merged through driver trees
+and others are also modifying those files. Don't do it. You don't know
+if someone else out there is changing these files, that's why we have
+maintainers who own them and coordinate the changes.
 
-	Arnd
+
+If there are special circumstances such that the DT contents has to go
+in with the same tree, then we can consider alternatives. But I can't
+remember having one of those situations for quite a while now.
+
+
+-Olof
