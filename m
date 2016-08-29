@@ -1,202 +1,64 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio: document bindings for mounting matrixes
-Date: Mon, 29 Aug 2016 18:31:44 +0100
-Message-ID: <8137ebdc-fcf5-8b5b-bed6-1b72eaf5ecca@kernel.org>
-References: <1469355434-17043-1-git-send-email-linus.walleij@linaro.org>
- <ab89a386-dfca-bbc3-3dec-613d32d374a5@kernel.org>
- <CACRpkdbA=qZO9M=nc2mUK7Sg5ZdOzcH=x0kUQ004_+uVTQ8tCA@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [BISECTED REGRESSION] v4.8-rc: DT/OCTEON driver probing broken
+Date: Mon, 29 Aug 2016 12:36:41 -0500
+Message-ID: <CAL_JsqK-+MOw1VCb57DXdEBwaVZP+KypapXJb7Mw3unD4A0-GQ@mail.gmail.com>
+References: <20160816150056.GD18731@ak-desktop.emea.nsn-net.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdbA=qZO9M=nc2mUK7Sg5ZdOzcH=x0kUQ004_+uVTQ8tCA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20160816150056.GD18731-wKwWf7Pro3RJlwZWLBHdvBaOaYmgohGe0e7PPNI6Mm0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Aaro Koskinen <aaro.koskinen-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Cc: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thorsten Leemhuis <regressions-rCxcAJFjeRkk+I/owrrOrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25/08/16 22:56, Linus Walleij wrote:
-> On Sun, Aug 21, 2016 at 5:56 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> 
->> Sorry I took so long to get to this...
->> (out of curiosity are you running a fifo queue of patches? Every time
->> I review and merge one, another one turns up in my inbox :)
-> 
-> Haha no, IIO is just sucking me in, it's such a nice subsystem.
-> 
->>> +The axes may also be flipped: for a screen you probably want (x) coordinates to
->>> +go from negative on the left to positive on the right and (z) depth to be
->>> +negative under the screen and positive in front of it, toward the face of the
->>> +user.
->>
->> I'm not sure we don't want to define that it can't be flipped and enforce the
->> correct coordinate system on the underlying drivers (fingers crossed they are
->> currently all left or all right handed? - oops should have been keeping an eye on
->> this).
-> 
-> I'll reword. What I wante to get across was the concept of flipped axes.
-> 
-> We need to keep an eye on drivers coming from the middle
-> east as their writing systems go from right to left, but I suspect they are
-> all aware of this issue.
-> 
->> For now we are being a bit simplistic as for accelerometers at least, it can be
->> of interest to know the translation as well as the rotation.  You can use a couple
->> of them to do fairly precise rotation estimate if they are located in different
->> places on a device.
-> 
-> Hm the mounting matrix doesn't account for that at all. Oh well sigh, that
-> would be another property in sysfs the day we need to handle it.
-> 
->>> +Examples for some three-dimensional sensor types:
->>> +
->>> +- Accelerometers have their frame of reference
->>
->> Not quite right.  Their frame of reference is in the frame of the device - it has
->> nothing to do with the world frame which you are describing here (except when
->> the device is deliberate oriented to match.
-> 
-> So the core of the crux, the help I'm trying to provide, is for people
-> that develop sensor drivers to be able to verify that they have the right
-> mounting matrix.
-> 
-> They need to see that the figures coming out of the buffers match to
-> something they can verify and thus understand that they got it right.
-> 
-> Maybe this is too ambitious :(
-That's fine, but the trick is to explicitly say that under these circumstances
-the rotation matrix between the device and the world is the identity matrix
-(and highlight that that means it has no effect).  Under these specific
-circumstances, the mounting matrix may be easily verified.
+On Tue, Aug 16, 2016 at 10:00 AM, Aaro Koskinen <aaro.koskinen-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org> wrote:
+> Hi,
+>
+> Commit 44a7185c2ae6 ("of/platform: Add common method to populate default
+> bus") added new arch_initcall of_platform_default_populate_init() that
+> will be called before device_initcall octeon_publish_devices(). Now the
+> of_platform_bus_probe() called in octeon_publish_devices() is apparently
+> doing nothing:
+>
+> [   52.331353] calling  octeon_publish_devices+0x0/0x14 @ 1
+> [   52.331358] OF: of_platform_bus_probe()
+> [   52.331362] OF:  starting at: /
+> [   52.331378] OF: of_platform_bus_create() - skipping /soc@0, already populated
+> [   52.331394] initcall octeon_publish_devices+0x0/0x14 returned 0 after 29 usecs
+>
+> This also means that USB etc. won't get probed.
+>
+> Any ideas what would be the proper fix for this? Changing
+> octeon_publish_devices() to arch_initcall seems to work but that may be
+> a bit hackish... Also, there might be also other MIPS boards affected
+> (arch/mips/netlogic/xlp/dt.c, arch/mips/mti-malta/malta-dt.c).
 
-> 
->> So we have 3 frames - that of the sensor, that of the device and that of the world.
-> 
-> OK reworded and tried to reflect this.
-> 
->   is toward the center of gravity,
->>> +  usually to the core of the planet, and users would likely expect a value of
->>> +  9.81N upwards along the (z) axis when the device is held with its screen
->>> +  perpendicular to the planets surface and 0 on the other axes.
->>
->> I'd have thought screen parallel  - i.e. z is out of the screen?
->> Might be the same thing I suppose, but I'd define it simply as into the screen
->> then y towards top of screen and x from left to right of the screen.
-> 
-> Trying to fix up the confusion by rewording.
-> 
->>> +- Magnetometers (compasses) have their frame of reference relative to the
->>> +  geomagnetic field. In a mounting matrix for a magnetometer sensor the main
->>> +  hardware orientation is defined with respect to the local earth geomagnetic
->>> +  reference frame where (y) is in the ground plane and positive towards
->>> +  magnetic North, (x) is in the ground plane, perpendicular to the North axis
->>> +  and positive towards the East and (z) is perpendicular to the ground plane
->>> +  and positive upwards.
->>
->> Same issue, world to frame transform is not included...
-> 
-> OK rewording, this is all about the system-to-world really.
-> 
->>> +- Gyroscopes detects the movement relative the device itself, and has no other
->>> +  frame of reference than the mounting chassis itself.
->>
->> This is true for all of them as far as we are concerned here...
->>> The angular momentum is
->> Hang on, where did momentum come into it from?  Mems gyros are detecting rate
->> of change of rotation about an axis (lets ignore the significant cross talk and
->> effects of linear acceleration and pretend it's all easy here ;)
->>
->> Rest of this description is fine.
-> 
-> Angular velocity. Sorry, just screwed it up.
-> 
->>> +Flipped X axis (negative values means positive):
->>> +
->>> +mount-matrix = "-1", "0", "0",
->>> +               "0", "1", "0",
->>> +               "0", "0", "1";
->>
->> Hmm. This is an odd one as it basically means the device had a right hand
->> coordinate system in the first place... If that happens I think we should
->> by default report the negative of the scale for that axis.
->>
->> We've never strictly defined a coordinate system but I think left handed
->> is a good start!
->>> +
->>> +X and Y flipped (X values are for Y and Y values are for X):
->>> +
->>> +mount-matrix = "0", "1", "0",
->>> +               "1", "0", "0",
->>> +               "0", "0", "1";
->> Same with this one, we are flipping coordinate systems.
-> 
-> Hm you have a point.
-> 
-> Those are inspired by the touchscreen input properties
-> Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-> as those have:
-> 
->  - touchscreen-inverted-x       : X axis is inverted (boolean)
->  - touchscreen-inverted-y       : Y axis is inverted (boolean)
->  - touchscreen-swapped-x-y      : X and Y axis are swapped (boolean)
->                                   Swapping is done after inverting the axis
-> 
-> By supporting the mount matrix we open the door for augmenting
-> driver bugs with this. Sigh.
-> 
->> I'd expect only
->> rotation matrices to be valid mount matrices.
-> 
-> OK what about sensor mounted upside-down relative device:
-> 
-> mount-matrix = "1", "0", "0",
->                "0", "1", "0",
->                "0", "0", "-1";
-> 
-> Sensor mounted standing on the side so X becomes Z
-> and Z becomes X:
-> 
-> mount-matrix = "0", "0", "1",
->                "0", "1", "0",
->                "1", "0", "0";
-> 
-> Are these proper rotation matrices?
-Determinant = 1? 
+Can you try reverting this hunk. I don't think it should be needed and
+it is preventing /soc@0 children from being probed. If things still
+don't work, then it should purely be a probe ordering problem. I have
+some better fixes in mind, but not for 4.8. So if this doesn't work,
+then the same fix as PPC is fine.
 
-Err (been a while) but using trusted wolfram alpa.
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 16e8daf..c559ef8 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -363,6 +363,12 @@ static int of_platform_bus_create(struct device_node *bus,
+                return 0;
+        }
 
-Nope to the first one That's a rotoinversion.
-No to the second as well..  You can't end up just swapping axis.
++       if (of_node_check_flag(bus, OF_POPULATED_BUS)) {
++               pr_debug("%s() - skipping %s, already populated\n",
++                       __func__, bus->full_name);
++               return 0;
++       }
++
+        auxdata = of_dev_lookup(lookup, bus);
+        if (auxdata) {
+                bus_id = auxdata->name;
 
-Imagine taking your thumb and first two fingers to form a 3D axis
-then see if you can spin it using your circus skills to match
-the new orientation.
-
-> 
->>> +Complex angular mounting with X and Z in a certain tilted orienation and
->> orientation
->>> +Y flipped:
->>> +
->>> +mount-matrix = "-0.984807753012208",  /* x0 */
->>> +               "0",                   /* y0 */
->>> +               "-0.173648177666930",  /* z0 */
->>> +               "0",                   /* x1 */
->>> +               "-1",                  /* y1 */
->>> +               "0",                   /* z1 */
->>> +               "-0.173648177666930",  /* x2 */
->>> +               "0",                   /* y2 */
->>> +               "0.984807753012208";   /* z2 */
->>>
-This one is a rotation ;)
->>
->> Anyhow, now my head hurts.
-> 
-> That is a real-world example from the AK8975 on some Nokia...
-> 
-> Yours,
-> Linus Walleij
-> 
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
