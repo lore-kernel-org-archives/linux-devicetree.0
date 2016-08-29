@@ -1,77 +1,74 @@
-From: Carlo Caione <carlo@caione.org>
-Subject: Re: [RFC PATCH 0/3] ARm64: amlogic: Introduce common GX family dtsi
-Date: Mon, 29 Aug 2016 21:50:30 +0200
-Message-ID: <20160829195030.GA10797@localhost>
-References: <1472457371-1305-1-git-send-email-narmstrong@baylibre.com>
- <CAOQ7t2YGbASh7v25wgDspKNWgFOcRsikJs_WZptn+LkVXmaHig@mail.gmail.com>
- <2983d731-82fd-63fc-7541-8c1d6a929416@suse.de>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] ARM: dts: wheat: add CAN support
+Date: Mon, 29 Aug 2016 23:11:26 +0300
+Message-ID: <5729004.lSWLzbWbOW@wasted.cogentembedded.com>
+References: <34968644.DhifNderY8@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2983d731-82fd-63fc-7541-8c1d6a929416@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic <linux-amlogic@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <34968644.DhifNderY8-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 29/08/16 20:38, Andreas Färber wrote:
-> Am 29.08.2016 um 10:01 schrieb Carlo Caione:
-> > On Mon, Aug 29, 2016 at 9:56 AM, Neil Armstrong <narmstrong@baylibre.com> wrote:
-> >> The new Amlogic GLX SoCs (S905X and S905D) are part of the Meson GX family so
-> >> they share some basic characteritics that can be described in a common GX
-> >> dtsi file used by the Meson GXBB and Meson GXL dtsi.
-> >>
-> >> This patchset introduces the common dtsi and switches the GLX and GXBB to use
-> >> the common dtsi, the GXBB dtsi is reformated to handle this situation.
-> >>
-> >> This patchset depends on Carlo Caione "ARM64: dts: amlogic: Add basic support for Amlogic S905X" [1]
-> >>
-> >> [1] http://lkml.kernel.org/r/1472382113-10754-1-git-send-email-carlo@caione.org
-> >>
-> >> Neil Armstrong (3):
-> >>   ARM64: dts: amlogic: Add Meson GX Family common dtsi
-> >>   ARM64: dts: amlogic: Switch Meson GXL dtsi to use common GX dtsi
-> >>   ARM64: dts: amlogic: Switch Meson GXBB dtsi to use common GX dtsi
-> > 
-> > FWIW
-> > Acked-by: Carlo Caione <carlo@endlessm.com>
-> 
-> Adding an unused .dtsi duplicating GXBB makes me uneasy.
+Define the Wheat board dependent part of the CAN0/1 device nodes...
 
-S905x (GXL) is different from S905 (GXBB), it's unused now but in the
-future we can expect something different in the two DTSI.
+Based  on the original (and large) patch by Vladimir Barinov 
+<vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
 
-> Any chance we can simplify this to at most two steps?
-> 1) Move code from gxbb to gx (1/3 + 3/3)
-> 2) Add gxl using gx ("Add basic support for Amlogic S905X" + 2/3)
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-fine by me.
+---
+This patch is against the 'renesas-devel-20160829-v4.8-rc4' of Simon Horman's
+'renesas.git' repo.
 
-> Alternatively:
-> 1) "Add basic support for Amlogic S905X"
-> 2) Factor out common bits (1/3 + 2/3 + 3/3)
+ arch/arm/boot/dts/r8a7792-wheat.dts |   24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-how is this different from this patchset?
+Index: renesas/arch/arm/boot/dts/r8a7792-wheat.dts
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7792-wheat.dts
++++ renesas/arch/arm/boot/dts/r8a7792-wheat.dts
+@@ -76,6 +76,16 @@
+ 			function = "lbsc";
+ 		};
+ 	};
++
++	can0_pins: can0 {
++		groups = "can0_data";
++		function = "can0";
++	};
++
++	can1_pins: can1 {
++		groups = "can1_data";
++		function = "can1";
++	};
+ };
+ 
+ &scif0 {
+@@ -83,4 +93,18 @@
+ 	pinctrl-names = "default";
+ 
+ 	status = "okay";
++};
++
++&can0 {
++	pinctrl-0 = <&can0_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
++
++&can1 {
++	pinctrl-0 = <&can1_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
+ };
 
-> As for bike-shedding, is there a GX family as well or could we drop
-> -common? .dtsi is always something common - compare Exynos or i.MX.
-> Since there are meson8b and meson8 I was anticipating that after gxbb
-> would come gx, not gxl.
-
-AFAIK we have:
-- GXBB
-- GXL
-- GXM
-- GXTVBB
-
-> Do you know what the L in GXL is for? Should we consider renaming gxbb
-> to gxb, and then also insert -s905 as suggested by Kevin, for symmetry?
-
-Yes, that make sense.
-
-Cheers,
-
--- 
-Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
