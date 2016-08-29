@@ -1,84 +1,221 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: sun8i-q8-common: Add support for SDIO wifi
- controllers
-Date: Mon, 29 Aug 2016 11:46:14 +0200
-Message-ID: <724a6222-36e3-e230-5071-a7cb23c51697@redhat.com>
-References: <20160826145236.30210-1-hdegoede@redhat.com>
- <20160826145236.30210-4-hdegoede@redhat.com> <20160829065620.GC7612@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160829065620.GC7612@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Finley Xiao <finley.xiao@rock-chips.com>
+Subject: [PATCH v4 3/3] nvmem: rockchip-efuse: add rk3399-efuse support
+Date: Mon, 29 Aug 2016 02:50:10 -0700
+Message-ID: <1472464210-30252-4-git-send-email-finley.xiao@rock-chips.com>
+References: <1472464210-30252-1-git-send-email-finley.xiao@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1472464210-30252-1-git-send-email-finley.xiao@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: srinivas.kandagatla@linaro.org, maxime.ripard@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, dianders@chromium.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wxt@rock-chips.com, jay.xu@rock-chips.com, huangtao@rock-chips.com, cl@rock-chips.com, tony.xie@rock-chips.com, Finley Xiao <finley.xiao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+1) the efuse timing of rk3399 is different from earlier SoCs.
+2) rk3399-efuse is organized as 32bits by 32 one-time programmable
+electrical fuses, the efuse of earlier SoCs is organized as 32bits
+by 8 one-time programmable electrical fuses with random access interface.
 
-On 29-08-16 08:56, Maxime Ripard wrote:
-> On Fri, Aug 26, 2016 at 04:52:36PM +0200, Hans de Goede wrote:
->> Most of the sun8i q8 boards have an usb wifi controller, on the
->> variants which use an USB wifi controller, this will result in a
->> couple of error msg-s in dmesg when proving the sdio bus and
->> an used mmc controller.
->>
->> The best way to deal with wifi on this boards really is to simply
->> let the kernel auto-detect usb or sdio wifi controllers, so we
->> will just have to live with the few errors in dmesg.
->
-> No, because that grabs PINs that might or might not be supposed to be
-> used for that, it leaves clocks and regulators enabled, which draw
-> power, to no end. And that's even worth since most boards will not use
-> it.
->
-> You can put the definition of the nodes in the DTSI, but the final
-> status will have to be in the (relevant) DTS.
+This patch adds a new read function for rk3399-efuse.
 
-This is again the q8-tablet thing where china produces a new variant
-every 2 weeks. So we've sun8i-a23-q8-tablet.dts and sun8i-a33-q8-tablet.dts
-which try to be generic dts files for these tablets, since creating
-a custom dts per variant is madness.
+Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+---
+ drivers/nvmem/rockchip-efuse.c | 131 +++++++++++++++++++++++++++++++++++------
+ 1 file changed, 112 insertions(+), 19 deletions(-)
 
-This commit puts the node in sun8i-q8-common.dtsi because the
-A23 and A33 are pin compatible and we've tablets where the
-only difference is the SoC soldered on there, the use the _exact_
-same PCB and components otherwise, so we have all the sun8i q8
-stuff in a common place for sun8i-a23-q8-tablet.dts and
-sun8i-a33-q8-tablet.dts, those are the only users of this
-dtsi file.
-
-You've already merged the bits which handle the variants with
-an USB attached wifi module (enabling ehci0 also on boards
-where nothing is connected). This is the counter-part for
-PCB's which use a sdio wifi module (about 90% of all boards
-in my experience). As for turning a regulator on unnecessary,
-both the wifi and sdio wifi solution use the same regulator,
-so that is already turned on through the usb bits and it
-needs to be in either case.
-
-The only downside of this approach is that we either have
-the USB controller turned on unnecessarily (in most cases)
-or the mmc controller (in the rare A23 tablet which still
-uses an USB wifi module).
-
-This all actually fits neatly into the plans to do hardware
-autodetection for these tablets which I'm working on, in
-this case we can just let the kernel handle things without
-additional code (think the beaglebone capemanager) since
-both busses are discoverable.
-
-Once we have the q8-hardwaremgr I'm working on and hope
-to post an RFC of soon, we could even make that turn off
-the unused controller (as a future enhancement).
-
-I hope this explains things.
-
-Regards,
-
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/nvmem/rockchip-efuse.c b/drivers/nvmem/rockchip-efuse.c
+index 4d3f391..1825fd3 100644
+--- a/drivers/nvmem/rockchip-efuse.c
++++ b/drivers/nvmem/rockchip-efuse.c
+@@ -22,17 +22,29 @@
+ #include <linux/nvmem-provider.h>
+ #include <linux/slab.h>
+ #include <linux/of.h>
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ 
+-#define EFUSE_A_SHIFT			6
+-#define EFUSE_A_MASK			0x3ff
+-#define EFUSE_PGENB			BIT(3)
+-#define EFUSE_LOAD			BIT(2)
+-#define EFUSE_STROBE			BIT(1)
+-#define EFUSE_CSB			BIT(0)
+-
+-#define REG_EFUSE_CTRL			0x0000
+-#define REG_EFUSE_DOUT			0x0004
++#define RK3288_A_SHIFT		6
++#define RK3288_A_MASK		0x3ff
++#define RK3288_PGENB		BIT(3)
++#define RK3288_LOAD			BIT(2)
++#define RK3288_STROBE		BIT(1)
++#define RK3288_CSB			BIT(0)
++
++#define RK3399_A_SHIFT		16
++#define RK3399_A_MASK		0x3ff
++#define RK3399_NBYTES		4
++#define RK3399_STROBSFTSEL	BIT(9)
++#define RK3399_RSB			BIT(7)
++#define RK3399_PD			BIT(5)
++#define RK3399_PGENB		BIT(3)
++#define RK3399_LOAD			BIT(2)
++#define RK3399_STROBE		BIT(1)
++#define RK3399_CSB			BIT(0)
++
++#define REG_EFUSE_CTRL		0x0000
++#define REG_EFUSE_DOUT		0x0004
+ 
+ struct rockchip_efuse_chip {
+ 	struct device *dev;
+@@ -40,8 +52,8 @@ struct rockchip_efuse_chip {
+ 	struct clk *clk;
+ };
+ 
+-static int rockchip_efuse_read(void *context, unsigned int offset,
+-			       void *val, size_t bytes)
++static int rockchip_rk3288_efuse_read(void *context, unsigned int offset,
++				      void *val, size_t bytes)
+ {
+ 	struct rockchip_efuse_chip *efuse = context;
+ 	u8 *buf = val;
+@@ -53,27 +65,80 @@ static int rockchip_efuse_read(void *context, unsigned int offset,
+ 		return ret;
+ 	}
+ 
+-	writel(EFUSE_LOAD | EFUSE_PGENB, efuse->base + REG_EFUSE_CTRL);
++	writel(RK3288_LOAD | RK3288_PGENB, efuse->base + REG_EFUSE_CTRL);
+ 	udelay(1);
+ 	while (bytes--) {
+ 		writel(readl(efuse->base + REG_EFUSE_CTRL) &
+-			     (~(EFUSE_A_MASK << EFUSE_A_SHIFT)),
++			     (~(RK3288_A_MASK << RK3288_A_SHIFT)),
+ 			     efuse->base + REG_EFUSE_CTRL);
+ 		writel(readl(efuse->base + REG_EFUSE_CTRL) |
+-			     ((offset++ & EFUSE_A_MASK) << EFUSE_A_SHIFT),
++			     ((offset++ & RK3288_A_MASK) << RK3288_A_SHIFT),
+ 			     efuse->base + REG_EFUSE_CTRL);
+ 		udelay(1);
+ 		writel(readl(efuse->base + REG_EFUSE_CTRL) |
+-			     EFUSE_STROBE, efuse->base + REG_EFUSE_CTRL);
++			     RK3288_STROBE, efuse->base + REG_EFUSE_CTRL);
+ 		udelay(1);
+ 		*buf++ = readb(efuse->base + REG_EFUSE_DOUT);
+ 		writel(readl(efuse->base + REG_EFUSE_CTRL) &
+-		     (~EFUSE_STROBE), efuse->base + REG_EFUSE_CTRL);
++		     (~RK3288_STROBE), efuse->base + REG_EFUSE_CTRL);
+ 		udelay(1);
+ 	}
+ 
+ 	/* Switch to standby mode */
+-	writel(EFUSE_PGENB | EFUSE_CSB, efuse->base + REG_EFUSE_CTRL);
++	writel(RK3288_PGENB | RK3288_CSB, efuse->base + REG_EFUSE_CTRL);
++
++	clk_disable_unprepare(efuse->clk);
++
++	return 0;
++}
++
++static int rockchip_rk3399_efuse_read(void *context, unsigned int offset,
++				      void *val, size_t bytes)
++{
++	struct rockchip_efuse_chip *efuse = context;
++	unsigned int addr_start, addr_end, addr_offset, addr_len;
++	u32 out_value;
++	u8 *buf;
++	int ret, i = 0;
++
++	ret = clk_prepare_enable(efuse->clk);
++	if (ret < 0) {
++		dev_err(efuse->dev, "failed to prepare/enable efuse clk\n");
++		return ret;
++	}
++
++	addr_start = rounddown(offset, RK3399_NBYTES) / RK3399_NBYTES;
++	addr_end = roundup(offset + bytes, RK3399_NBYTES) / RK3399_NBYTES;
++	addr_offset = offset % RK3399_NBYTES;
++	addr_len = addr_end - addr_start;
++
++	buf = kzalloc(sizeof(*buf) * addr_len * RK3399_NBYTES, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	writel(RK3399_LOAD | RK3399_PGENB | RK3399_STROBSFTSEL | RK3399_RSB,
++	       efuse->base + REG_EFUSE_CTRL);
++	udelay(1);
++	while (addr_len--) {
++		writel(readl(efuse->base + REG_EFUSE_CTRL) | RK3399_STROBE |
++			((addr_start++ & RK3399_A_MASK) << RK3399_A_SHIFT),
++			efuse->base + REG_EFUSE_CTRL);
++		udelay(1);
++		out_value = readl(efuse->base + REG_EFUSE_DOUT);
++		writel(readl(efuse->base + REG_EFUSE_CTRL) & (~RK3399_STROBE),
++		       efuse->base + REG_EFUSE_CTRL);
++		udelay(1);
++
++		memcpy(&buf[i], &out_value, RK3399_NBYTES);
++		i += RK3399_NBYTES;
++	}
++
++	/* Switch to standby mode */
++	writel(RK3399_PD | RK3399_CSB, efuse->base + REG_EFUSE_CTRL);
++
++	memcpy(val, buf + addr_offset, bytes);
++
++	kfree(buf);
+ 
+ 	clk_disable_unprepare(efuse->clk);
+ 
+@@ -89,7 +154,27 @@ static struct nvmem_config econfig = {
+ };
+ 
+ static const struct of_device_id rockchip_efuse_match[] = {
+-	{ .compatible = "rockchip,rockchip-efuse", },
++	/* deprecated but kept around for dts binding compatibility */
++	{
++		.compatible = "rockchip,rockchip-efuse",
++		.data = (void *)&rockchip_rk3288_efuse_read,
++	},
++	{
++		.compatible = "rockchip,rk3066a-efuse",
++		.data = (void *)&rockchip_rk3288_efuse_read,
++	},
++	{
++		.compatible = "rockchip,rk3188-efuse",
++		.data = (void *)&rockchip_rk3288_efuse_read,
++	},
++	{
++		.compatible = "rockchip,rk3288-efuse",
++		.data = (void *)&rockchip_rk3288_efuse_read,
++	},
++	{
++		.compatible = "rockchip,rk3399-efuse",
++		.data = (void *)&rockchip_rk3399_efuse_read,
++	},
+ 	{ /* sentinel */},
+ };
+ MODULE_DEVICE_TABLE(of, rockchip_efuse_match);
+@@ -99,6 +184,14 @@ static int rockchip_efuse_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	struct nvmem_device *nvmem;
+ 	struct rockchip_efuse_chip *efuse;
++	const struct of_device_id *match;
++	struct device *dev = &pdev->dev;
++
++	match = of_match_device(dev->driver->of_match_table, dev);
++	if (!match || !match->data) {
++		dev_err(dev, "failed to get match data\n");
++		return -EINVAL;
++	}
+ 
+ 	efuse = devm_kzalloc(&pdev->dev, sizeof(struct rockchip_efuse_chip),
+ 			     GFP_KERNEL);
+@@ -116,7 +209,7 @@ static int rockchip_efuse_probe(struct platform_device *pdev)
+ 
+ 	efuse->dev = &pdev->dev;
+ 	econfig.size = resource_size(res);
+-	econfig.reg_read = rockchip_efuse_read;
++	econfig.reg_read = match->data;
+ 	econfig.priv = efuse;
+ 	econfig.dev = efuse->dev;
+ 	nvmem = nvmem_register(&econfig);
+-- 
+1.9.1
