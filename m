@@ -1,43 +1,77 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [Patch v4 9/9] arm64: Update device tree for Layerscape SoCs
-Date: Mon, 29 Aug 2016 14:39:21 -0700
-Message-ID: <CAOesGMjg3XNrVESr+fS-D5HkwVZEx+ng8TCUriRyohCu0NvJAQ@mail.gmail.com>
-References: <1470780000-16750-1-git-send-email-york.sun@nxp.com>
- <20160812091354.GB333@nazgul.tnic> <20160829063448.GA32489@tiger> <20160829080530.GA25468@nazgul.tnic>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH 5/5] ath9k: Make EEPROM endianness swapping configurable
+ via devicetree
+Date: Tue, 30 Aug 2016 00:07:35 +0200
+Message-ID: <CAFBinCCXqX1F3XpU-DFLLB5ZNjU1XVNiTLR-ZB34QgrL8uyv8Q@mail.gmail.com>
+References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
+ <201608291410.44338.arnd@arndb.de> <CAFBinCCSBE8KsLgP3t=FzB-2jgjfQBtuF+EjqQEk-7mmmps_Pg@mail.gmail.com>
+ <201608292325.38091.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160829080530.GA25468@nazgul.tnic>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Shawn Guo <shawnguo@kernel.org>, York Sun <york.sun@nxp.com>, Mark Rutland <mark.rutland@arm.com>, yangbo lu <yangbo.lu@freescale.com>, Liu Gang <Gang.Liu@nxp.com>, morbidrsa@gmail.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, stuart.yoder@nxp.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, oss@buserror.net, Rob Herring <robh+dt@kernel.org>, Rajesh Bhagat <rajesh.bhagat@freescale.com>, Mingkai Hu <Mingkai.Hu@freescale.com>, Li Yang <leoli@freescale.com>, Yuan Yao <yao.yuan@nxp.com>linux-
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201608292325.38091.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: nbd-Vt+b4OUoWG0@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 29, 2016 at 1:05 AM, Borislav Petkov <bp@alien8.de> wrote:
-> On Mon, Aug 29, 2016 at 02:34:48PM +0800, Shawn Guo wrote:
->> Is it mandatory to have DTS changes go with driver part altogether?
+On Mon, Aug 29, 2016 at 11:25 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Monday 29 August 2016, Martin Blumenstingl wrote:
+>> > and then do a swab32() on them. I suspect these should just be __le32
+>> > (and __le16, respectively where needed), using appropriate accessors
+>> > everywhere that those fields are being read instead of having one function
+>> > that tries to turn them into cpu-native ordering.
+>> I'm not sure if we want those fields to be __le32:
+>> BIT(0) in the eepMisc field indicates whether to interpret the data as
+>> big or little endian.
+>> When this bit is set we would want these fields to be __be32 instead -
+>> so I guess the current implementation is "OK" for this specific
+>> use-case.
 >
-> Yes, because the EDAC driver needs them to even load properly.
->
->> Otherwise, I prefer to have them go through separate tree.
->
-> Any particular reason why you prefer that?
->
-> We've been doing this for other ARM EDAC drivers already and there were
-> no issues whatsoever.
+> Ok, I see. It's still confusing because it's different from how other
+> drivers handle this (case in point: I was very confused by this).
+lesson learned: specification should state that data is _either_ big
+or little endian, no mix between these two
 
-DT changes need to go through arm-soc. It's how we've been operating
-for several years now.
+> Do you see any downsides in changing the code to consistently annotate
+> the eeprom as either __le or __be (whichever is more common), using
+> the respective endianess accessors, and then doing the swap if the
+> data we read is the opposite way?
+I am assuming you mean leNN_to_cpu() and beNN_to_cpu() here?
 
-It can be a huge pain when DT patches get merged through driver trees
-and others are also modifying those files. Don't do it. You don't know
-if someone else out there is changing these files, that's why we have
-maintainers who own them and coordinate the changes.
+old logic:
+- reading data: simply access the struct fields
+
+LE system:
+- LE EEPROM -> no swap will be applied
+- BE EEPROM -> swab16 / swab32 the fields
+BE system:
+- LE EEPROM -> swab16 / swab32 the fields
+- BE EEPROM -> no swap will be applied
+
+new logic (assuming that we went for __le16/__le32 fields):
+- reading data: use le16_to_cpu and le32_to_cpu for all fields
+
+LE system:
+- LE EEPROM -> no swap will be applied
+- BE EEPROM -> be16_to_cpu / be32_to_cpu (or swab16 / swab32 as before)
+BE system:
+- LE EEPROM -> le16_to_cpu / le32_to_cpu (or swab16 / swab32 as before)
+- BE EEPROM -> no swap will be applied
+
+There is one downside of the "new approach" I can think of: you need
+to swap the data twice in some cases (BE EEPROM on a BE machine).
+- first swap while writing the data to __le16/__le32 fields
+- second swap while reading the data from the __le16/__le32 fields
+If you forget to swap a field in either place then things will be broken.
+
+Maybe someone else wants to state his/her opinion on this - I guess
+some fresh thoughts could help us a lot!
 
 
-If there are special circumstances such that the DT contents has to go
-in with the same tree, then we can consider alternatives. But I can't
-remember having one of those situations for quite a while now.
-
-
--Olof
+Regards,
+Martin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
