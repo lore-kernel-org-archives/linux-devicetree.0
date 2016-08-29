@@ -1,76 +1,45 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 5/5] ath9k: Make EEPROM endianness swapping configurable
- via devicetree
-Date: Tue, 30 Aug 2016 00:07:35 +0200
-Message-ID: <CAFBinCCXqX1F3XpU-DFLLB5ZNjU1XVNiTLR-ZB34QgrL8uyv8Q@mail.gmail.com>
-References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
- <201608291410.44338.arnd@arndb.de> <CAFBinCCSBE8KsLgP3t=FzB-2jgjfQBtuF+EjqQEk-7mmmps_Pg@mail.gmail.com>
- <201608292325.38091.arnd@arndb.de>
+From: Santosh Shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/5] firmware: ti_sci: Add support for Device control
+Date: Mon, 29 Aug 2016 15:30:18 -0700
+Message-ID: <e936ee55-34ec-dbc6-5ba0-7fe9c54013cc@oracle.com>
+References: <20160819225159.10758-1-nm@ti.com>
+ <20160819225159.10758-4-nm@ti.com>
+ <9a6a8663-a3f7-7875-253f-98232d56b860@ti.com>
+ <CAGo_u6p3Bm+zGDtxpOyT+DeGN8_XPWWE0zhCYuxsH47n41Z8jg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201608292325.38091.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <CAGo_u6p3Bm+zGDtxpOyT+DeGN8_XPWWE0zhCYuxsH47n41Z8jg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: nbd-Vt+b4OUoWG0@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Cc: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 29, 2016 at 11:25 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Monday 29 August 2016, Martin Blumenstingl wrote:
->> > and then do a swab32() on them. I suspect these should just be __le32
->> > (and __le16, respectively where needed), using appropriate accessors
->> > everywhere that those fields are being read instead of having one function
->> > that tries to turn them into cpu-native ordering.
->> I'm not sure if we want those fields to be __le32:
->> BIT(0) in the eepMisc field indicates whether to interpret the data as
->> big or little endian.
->> When this bit is set we would want these fields to be __be32 instead -
->> so I guess the current implementation is "OK" for this specific
->> use-case.
+Hi Nishant,
+
+On 8/23/2016 11:45 AM, Nishanth Menon wrote:
+> On Sun, Aug 21, 2016 at 10:56 PM, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> wrote:
+>>>  /**
+>>> + * tis_sci_is_response_ack() - Generic ACK/NACK message checkup
+>>> + * @r:       pointer to response buffer
+>>> + *
+>>> + * Return: true if the response was an ACK, else returns false.
+>>> + */
+>>> +static inline bool tis_sci_is_response_ack(void *r)
+>>
+>> May be just ti_sci_is_response_ack() to be consistent? or you wanted to
+>> keep it tis_sci* ?
 >
-> Ok, I see. It's still confusing because it's different from how other
-> drivers handle this (case in point: I was very confused by this).
-lesson learned: specification should state that data is _either_ big
-or little endian, no mix between these two
-
-> Do you see any downsides in changing the code to consistently annotate
-> the eeprom as either __le or __be (whichever is more common), using
-> the respective endianess accessors, and then doing the swap if the
-> data we read is the opposite way?
-I am assuming you mean leNN_to_cpu() and beNN_to_cpu() here?
-
-old logic:
-- reading data: simply access the struct fields
-
-LE system:
-- LE EEPROM -> no swap will be applied
-- BE EEPROM -> swab16 / swab32 the fields
-BE system:
-- LE EEPROM -> swab16 / swab32 the fields
-- BE EEPROM -> no swap will be applied
-
-new logic (assuming that we went for __le16/__le32 fields):
-- reading data: use le16_to_cpu and le32_to_cpu for all fields
-
-LE system:
-- LE EEPROM -> no swap will be applied
-- BE EEPROM -> be16_to_cpu / be32_to_cpu (or swab16 / swab32 as before)
-BE system:
-- LE EEPROM -> le16_to_cpu / le32_to_cpu (or swab16 / swab32 as before)
-- BE EEPROM -> no swap will be applied
-
-There is one downside of the "new approach" I can think of: you need
-to swap the data twice in some cases (BE EEPROM on a BE machine).
-- first swap while writing the data to __le16/__le32 fields
-- second swap while reading the data from the __le16/__le32 fields
-If you forget to swap a field in either place then things will be broken.
-
-Maybe someone else wants to state his/her opinion on this - I guess
-some fresh thoughts could help us a lot!
-
+>
+> Uggh.. Fat fingered that one.. thanks for catching.. fixed and will
+> post a v2 next week if there is no further comments
+>
+I would like to send the next merge window queue up so please repost
+the reviewed patches which needs to be queued up.
 
 Regards,
-Martin
+Santosh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
