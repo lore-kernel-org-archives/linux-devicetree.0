@@ -1,227 +1,56 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCHv2] of: Add generic handling for ePAPR 1.1 fail-sss states
-Date: Mon, 29 Aug 2016 15:35:42 -0700
-Message-ID: <20160829223542.18871-1-tony@atomide.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Tom Rini <trini@konsulko.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [BISECTED REGRESSION] v4.8-rc: DT/OCTEON driver probing broken
+Date: Mon, 29 Aug 2016 17:39:15 -0500
+Message-ID: <CAL_Jsq+mmBH+HVLubj1_rQ0T60zfQj_Dbz41EVe7v_Mj_u2Vug@mail.gmail.com>
+References: <20160816150056.GD18731@ak-desktop.emea.nsn-net.net>
+ <0336fae0-1717-2f90-c221-6ef69f7024ee@leemhuis.info> <20160828122239.GA14316@raspberrypi.musicnaut.iki.fi>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160828122239.GA14316-FnsA7b+Nu9VnX4FghcBuy1lsiSbylPe+PBWPt36IahQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Thorsten Leemhuis <regressions-rCxcAJFjeRkk+I/owrrOrA@public.gmane.org>, Aaro Koskinen <aaro.koskinen-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We have devices that are in incomplete state, but still need to be
-probed to allow properly idling them for PM. Some examples are
-devices that are not pinned out on certain packages, or otherwise
-unusable on some SoCs.
+On Sun, Aug 28, 2016 at 7:22 AM, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org> wrote:
+> Hi,
+>
+> On Sun, Aug 28, 2016 at 12:34:06PM +0200, Thorsten Leemhuis wrote:
+>> Lo! Kefeng, below report made it to the list of regression for 4.8, but
+>> afaics nothing happened after the initial report. Is there maybe some
+>> reason why it shouldn't be on the list of regressions at all? Or was the
+>> problem discussed elsewhere? Or is it even fixed already? I noticed
+>> https://git.kernel.org/torvalds/c/fc520f8b4f (of/platform: disable the
+>> of_platform_default_populate_init() for all the ppc board), but that
+>> change is PPC specific.
+>
+> There is a fix proposal here:
+>
+>         https://patchwork.linux-mips.org/patch/14041/
+>
+> There is still few other boards remaining that use of_platform_bus_probe()
+> from device_initcall, but who knows, maybe they are not affected.
+>
+> arch/microblaze/kernel/platform.c
 
-Setting status = "disabled" cannot be used for this case. Setting
-"disabled" makes Linux ignore these devices so they are not probed
-and can never get idled properly by Linux PM runtime.
+xlnx,compound is going to fail to probe. I'm adding this to the default.
 
-The proper way deal with the incomplete devices is to probe them,
-then allow the driver to check the state, and then disable or idle
-the device using PM runtime. To do this, we need to often enable
-the device and run some device specific code to idle the device.
+> arch/mips/mti-malta/malta-dt.c
 
-Also boards may have needs to disable and idle unused devices.
-This may be needed for example if all resources are not wired
-for a certain board variant.
+This should be fine. It does probe for "isa", but nothing in mainline
+is using that. We can add it to the default when it does.
 
-It seems we can use the ePAPR 1.1 status fail-sss to do this.
-Quoting "Table 2-4 Values for status property" we have "fail-sss":
+> arch/mips/netlogic/xlp/dt.c
 
-"Indicates that the device is not operational. A serious error was
- detected in the device and it is unlikely to become operational
- without repair. The sss portion of the value is specific to the
- device and indicates the error condition detected."
+Should be okay with default.
 
-We can handle these fail states can be handled in a generic
-way. So let's introduce a generic status = "fail-" that
-describes a situation where a device driver probe should just
-shut down or idle the device if possible and then bail out.
-This allows the SoC variant and board specific dts files to set
-the status as needed.
+> arch/x86/platform/olpc/olpc_dt.c
 
-The suggested usage in a device driver probe is:
+This one needs fixing.
 
-static int foo_probe(struct platform_device *pdev)
-{
-	int err;
-	const char *status;
-	...
-
-        pm_runtime_enable(&pdev->dev);
-        pm_runtime_get_sync(&pdev->dev);
-        pm_runtime_use_autosuspend(&pdev->dev);
-	...
-
-	/* Configure device, load firmware, idle device */
-	...
-
-	if (of_device_is_incomplete(pdev->dev.of_node, status)) {
-		if (!strcmp("hw-incomplete-pins", status)) {
-			dev_info(&pdev->dev,
-				 "Unusable hardware: Not pinned out\n");
-			err = -ENODEV;
-			goto out;
-		}
-		if (!strcmp("hw-missing-daughter-card")) {
-			err = -EPROBE_DEFER;
-			goto out;
-		}
-		if (!strcmp("hw-buggy-dma")) {
-			dev_warn(&pdev->dev,
-				 "Replace hardware for working DMA\n");
-		}
-	}
-
-	/* Continue normal device probe */
-	...
-
-	return 0;
-
-out:
-	pm_runtime_dont_use_autosuspend(&pdev->dev);
-	pm_runtime_put_sync(&pdev->dev);
-	pm_runtime_disable(&pdev->dev);
-
-	return err;
-}
-
-Cc: Nishanth Menon <nm@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Cc: Tom Rini <trini@konsulko.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
-Changes since v1 ([PATCH] of: Add generic handling for hardware incomplete
-fail state):
-
-- Make more generic as suggested by Frank but stick with
-  "operational status of a device" approch most people seem
-  to prefer that
-
-- Pass the failure status back to caller so the caller may
-  attempt to handle the failure status
-
-- Improved the description with more examples
-
- drivers/of/base.c  | 64 +++++++++++++++++++++++++++++++++++++++++++++++++++---
- include/linux/of.h |  8 +++++++
- 2 files changed, 69 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index ff37f6d..4d39857 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -550,8 +550,8 @@ EXPORT_SYMBOL(of_machine_is_compatible);
-  *
-  *  @device: Node to check for availability, with locks already held
-  *
-- *  Returns true if the status property is absent or set to "okay" or "ok",
-- *  false otherwise
-+ *  Returns true if the status property is absent or set to "okay", "ok",
-+ *  or starting with "fail-", false otherwise
-  */
- static bool __of_device_is_available(const struct device_node *device)
- {
-@@ -566,7 +566,8 @@ static bool __of_device_is_available(const struct device_node *device)
- 		return true;
- 
- 	if (statlen > 0) {
--		if (!strcmp(status, "okay") || !strcmp(status, "ok"))
-+		if (!strcmp(status, "okay") || !strcmp(status, "ok") ||
-+		    !strncmp(status, "fail-", 5))
- 			return true;
- 	}
- 
-@@ -595,6 +596,63 @@ bool of_device_is_available(const struct device_node *device)
- EXPORT_SYMBOL(of_device_is_available);
- 
- /**
-+ *  __of_device_is_incomplete - check if a device is incomplete
-+ *
-+ *  @device: Node to check for partial failure with locks already held
-+ *  @status: Status string for optional handling of the fail-sss state
-+ */
-+static bool __of_device_is_incomplete(const struct device_node *device,
-+				      const char **status)
-+{
-+	const char *s, *m = "fail-";
-+	int slen, mlen;
-+
-+	if (!device)
-+		return false;
-+
-+	s = __of_get_property(device, "status", &slen);
-+	if (!s)
-+		return false;
-+
-+	mlen = strlen(m);
-+	if (slen <= mlen)
-+		return false;
-+
-+	if (strncmp("fail-", s, mlen))
-+		return false;
-+
-+	*status = s + mlen;
-+
-+	return true;
-+}
-+
-+/**
-+ *  of_device_is_incomplete - check if a device is incomplete
-+ *
-+ *  @device: Node to check for partial failure
-+ *  @status: Status string for optional handling of the fail-sss state
-+ *
-+ *  Returns true if the status property is set to "fail-sss",
-+ *  false otherwise. Fore more information, see fail-sss in ePAPR 1.1
-+ *  "Table 2-4 Values for status property".
-+ *
-+ *  The caller can optionally try to handle the error based on the
-+ *  status string.
-+ */
-+bool of_device_is_incomplete(const struct device_node *device,
-+			     const char **status)
-+{
-+	unsigned long flags;
-+	bool res;
-+
-+	raw_spin_lock_irqsave(&devtree_lock, flags);
-+	res = __of_device_is_incomplete(device, status);
-+	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-+	return res;
-+}
-+EXPORT_SYMBOL(of_device_is_incomplete);
-+
-+/**
-  *  of_device_is_big_endian - check if a device has BE registers
-  *
-  *  @device: Node to check for endianness
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 3d9ff8e..b593936 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -320,6 +320,8 @@ extern int of_device_is_compatible(const struct device_node *device,
- extern int of_device_compatible_match(struct device_node *device,
- 				      const char *const *compat);
- extern bool of_device_is_available(const struct device_node *device);
-+extern bool of_device_is_incomplete(const struct device_node *device,
-+				    const char **status);
- extern bool of_device_is_big_endian(const struct device_node *device);
- extern const void *of_get_property(const struct device_node *node,
- 				const char *name,
-@@ -504,6 +506,12 @@ static inline bool of_device_is_available(const struct device_node *device)
- 	return false;
- }
- 
-+static inline bool of_device_is_incomplete(const struct device_node *device,
-+					   const char **status)
-+{
-+	return false;
-+}
-+
- static inline bool of_device_is_big_endian(const struct device_node *device)
- {
- 	return false;
--- 
-2.9.3
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
