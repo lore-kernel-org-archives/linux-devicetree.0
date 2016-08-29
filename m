@@ -1,94 +1,75 @@
-From: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: add stdout-path to chosen node for ls2080a/ls1043a boards
-Date: Mon, 29 Aug 2016 13:31:13 -0500
-Message-ID: <1472495473-27387-3-git-send-email-stuart.yoder@nxp.com>
+From: Stuart Yoder <stuart.yoder@nxp.com>
+Subject: [PATCH 1/2 v2] arm64: dts: updates serial aliases for ls1043a rdb and
+ qds boards
+Date: Mon, 29 Aug 2016 13:31:12 -0500
+Message-ID: <1472495473-27387-2-git-send-email-stuart.yoder@nxp.com>
 References: <1472495473-27387-1-git-send-email-stuart.yoder@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472495473-27387-1-git-send-email-stuart.yoder-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1472495473-27387-1-git-send-email-stuart.yoder@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: shawnguo@kernel.org, Stuart Yoder <stuart.yoder@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a default stdout-path to chosen node for ls2080a/ls1043a boards to
-allow booting kernels without specifying console info in bootargs.
+-add missing serial aliases to ls1043a-rdb
+-update ls1043a-qds boards serial aliases to use the standard duarts
+ instead of low power uarts
 
-Signed-off-by: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Stuart Yoder <stuart.yoder@nxp.com>
 ---
 -v2
-  -no change
+  -fix typo in commit message
 
- arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts | 4 ++++
- arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 4 ++++
- arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts | 3 +++
- arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts | 4 ++++
- 4 files changed, 15 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts | 10 ++++------
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts |  4 ++++
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-index f813d67..dd9e919 100644
+index 9d3e9fe..f813d67 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-@@ -61,6 +61,10 @@
- 		serial2 = &duart2;
- 		serial3 = &duart3;
+@@ -56,12 +56,10 @@
+ 		gpio1 = &gpio2;
+ 		gpio2 = &gpio3;
+ 		gpio3 = &gpio4;
+-		serial0 = &lpuart0;
+-		serial1 = &lpuart1;
+-		serial2 = &lpuart2;
+-		serial3 = &lpuart3;
+-		serial4 = &lpuart4;
+-		serial5 = &lpuart5;
++		serial0 = &duart0;
++		serial1 = &duart1;
++		serial2 = &duart2;
++		serial3 = &duart3;
  	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
  };
  
- &duart0 {
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-index 8031cde..d2313e0 100644
+index 4084631..8031cde 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-@@ -57,6 +57,10 @@
- 		serial2 = &duart2;
- 		serial3 = &duart3;
+@@ -52,6 +52,10 @@
+ 
+ 	aliases {
+ 		crypto = &crypto;
++		serial0 = &duart0;
++		serial1 = &duart1;
++		serial2 = &duart2;
++		serial3 = &duart3;
  	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
  };
  
- &i2c0 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-index e8801fa..b0dd010 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-@@ -57,6 +57,9 @@
- 		serial1 = &serial1;
- 	};
- 
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
- };
- 
- &esdhc {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts
-index e127f0b..ad0ebb8 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts
-@@ -56,6 +56,10 @@
- 		serial0 = &serial0;
- 		serial1 = &serial1;
- 	};
-+
-+	chosen {
-+		stdout-path = "serial1:115200n8";
-+	};
- };
- 
- &esdhc {
 -- 
 1.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
