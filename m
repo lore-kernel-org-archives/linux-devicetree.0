@@ -1,107 +1,69 @@
 From: <gabriel.fernandez@st.com>
-Subject: [PATCH v3 05/14] drivers: clk: st: Add clock propagation for audio clocks
-Date: Mon, 29 Aug 2016 14:26:57 +0200
-Message-ID: <1472473626-15398-6-git-send-email-gabriel.fernandez@st.com>
+Subject: [PATCH v3 14/14] ARM: DT: STi: STiH410: clock configuration to address 720p and 1080p
+Date: Mon, 29 Aug 2016 14:27:06 +0200
+Message-ID: <1472473626-15398-15-git-send-email-gabriel.fernandez@st.com>
 References: <1472473626-15398-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1472473626-15398-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-clk-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Olivier Bideau <olivier.bideau@st.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>, Pankaj Dev <pankaj.dev@st.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Arnd Bergmann <arnd@arndb.de>, Thierry Reding <treding@nvidia.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-clk@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Peter Griffin <peter.griffin@linaro.org>, arnaud.pouliquen@st.com, benjamin.gaignard@st.com, vincent.abriou@st.com, gabriel.fernandez@st.com, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-This patch allows fine tuning of the quads FS for audio clocks
-accuracy.
+It is necessary to properly configure these clocks in order
+to address 720p and 1080p HDMI resolution.
 
-Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
+Signed-off-by: Vincent Abriou <vincent.abriou@st.com>
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 Acked-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- .../devicetree/bindings/clock/st/st,flexgen.txt    |  2 ++
- drivers/clk/st/clk-flexgen.c                       | 26 +++++++++++++++++++++-
- 2 files changed, 27 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/stih410.dtsi | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
-index b7ee5c7..d68f6a5f 100644
---- a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
-+++ b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
-@@ -60,6 +60,8 @@ This binding uses the common clock binding[2].
- Required properties:
- - compatible : shall be:
-   "st,flexgen"
-+  "st,flexgen-audio", "st,flexgen" (enable clock propagation on parent for
-+  audio use case)
+diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
+index 18ed1ad..7eec729 100644
+--- a/arch/arm/boot/dts/stih410.dtsi
++++ b/arch/arm/boot/dts/stih410.dtsi
+@@ -103,7 +103,10 @@
+ 			#size-cells = <1>;
  
- - #clock-cells : from common clock binding; shall be set to 1 (multiple clock
-   outputs).
-diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
-index 546bd79..7ed05f0 100644
---- a/drivers/clk/st/clk-flexgen.c
-+++ b/drivers/clk/st/clk-flexgen.c
-@@ -15,6 +15,10 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
+ 			assigned-clocks	= <&clk_s_d2_quadfs 0>,
+-					  <&clk_s_d2_quadfs 0>,
++					  <&clk_s_d2_quadfs 1>,
++					  <&clk_s_c0_pll1 0>,
++					  <&clk_s_c0_flexgen CLK_COMPO_DVP>,
++					  <&clk_s_c0_flexgen CLK_MAIN_DISP>,
+ 					  <&clk_s_d2_flexgen CLK_PIX_MAIN_DISP>,
+ 					  <&clk_s_d2_flexgen CLK_PIX_AUX_DISP>,
+ 					  <&clk_s_d2_flexgen CLK_PIX_GDP1>,
+@@ -113,14 +116,21 @@
  
-+struct clkgen_data {
-+	unsigned long flags;
-+};
-+
- struct flexgen {
- 	struct clk_hw hw;
+ 			assigned-clock-parents = <0>,
+ 						 <0>,
++						 <0>,
++						 <&clk_s_c0_pll1 0>,
++						 <&clk_s_c0_pll1 0>,
+ 						 <&clk_s_d2_quadfs 0>,
+-						 <&clk_s_d2_quadfs 0>,
++						 <&clk_s_d2_quadfs 1>,
+ 						 <&clk_s_d2_quadfs 0>,
+ 						 <&clk_s_d2_quadfs 0>,
+ 						 <&clk_s_d2_quadfs 0>,
+ 						 <&clk_s_d2_quadfs 0>;
  
-@@ -259,6 +263,18 @@ static const char ** __init flexgen_get_parents(struct device_node *np,
- 	return parents;
- }
+-			assigned-clock-rates = <297000000>, <297000000>;
++			assigned-clock-rates = <297000000>,
++					       <108000000>,
++					       <0>,
++					       <400000000>,
++					       <400000000>;
  
-+static const struct clkgen_data clkgen_audio = {
-+	.flags = CLK_SET_RATE_PARENT,
-+};
-+
-+static const struct of_device_id flexgen_of_match[] = {
-+	{
-+		.compatible = "st,flexgen-audio",
-+		.data = &clkgen_audio,
-+	},
-+	{}
-+};
-+
- static void __init st_of_flexgen_setup(struct device_node *np)
- {
- 	struct device_node *pnode;
-@@ -267,6 +283,9 @@ static void __init st_of_flexgen_setup(struct device_node *np)
- 	const char **parents;
- 	int num_parents, i;
- 	spinlock_t *rlock = NULL;
-+	const struct of_device_id *match;
-+	struct clkgen_data *data = NULL;
-+	unsigned long flex_flags = 0;
- 	int ret;
+ 			ranges;
  
- 	pnode = of_get_parent(np);
-@@ -281,6 +300,12 @@ static void __init st_of_flexgen_setup(struct device_node *np)
- 	if (!parents)
- 		return;
- 
-+	match = of_match_node(flexgen_of_match, np);
-+	if (match) {
-+		data = (struct clkgen_data *)match->data;
-+		flex_flags = data->flags;
-+	}
-+
- 	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
- 	if (!clk_data)
- 		goto err;
-@@ -307,7 +332,6 @@ static void __init st_of_flexgen_setup(struct device_node *np)
- 	for (i = 0; i < clk_data->clk_num; i++) {
- 		struct clk *clk;
- 		const char *clk_name;
--		unsigned long flex_flags = 0;
- 
- 		if (of_property_read_string_index(np, "clock-output-names",
- 						  i, &clk_name)) {
 -- 
 1.9.1
+
