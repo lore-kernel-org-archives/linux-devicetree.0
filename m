@@ -1,34 +1,41 @@
-From: Rask Ingemann Lambertsen <ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: dts: Add TOPEET itop core board SCP package
- version
-Date: Sun, 28 Aug 2016 23:13:14 +0200
-Message-ID: <20160828211314.nj2hxepxym3x3tee@vip.cybercity.dk>
-References: <CAL_JsqKY=VEZ+U11kY+XbMWuXhaFDr6GpnR3AXKd1U=9_=8fgA@mail.gmail.com>
- <1472383269-3126-1-git-send-email-ayaka@soulik.info>
- <1472383269-3126-2-git-send-email-ayaka@soulik.info>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6] input: add ADC resistor ladder driver
+Date: Sun, 28 Aug 2016 19:33:28 -0500
+Message-ID: <20160829003328.GA19426@rob-hp-laptop>
+References: <1471954696-11897-1-git-send-email-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1472383269-3126-2-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1471954696-11897-1-git-send-email-alexandre.belloni@free-electrons.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 28, 2016 at 07:21:06PM +0800, Randy Li wrote:
+On Tue, Aug 23, 2016 at 02:18:16PM +0200, Alexandre Belloni wrote:
+> A common way of multiplexing buttons on a single input in cheap devices is
+> to use a resistor ladder on an ADC. This driver supports that configuration
+> by polling an ADC channel provided by IIO.
+> 
+> Acked-by: Jonathan Cameron <jic23@kernel.org>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> ---
+> Changes in v6:
+>  - switched to microvolts
+> 
+> Changes in v5:
+>  - Dmitry's changes
+>  - s/mvolt/millivolt/
+> 
+> 
+>  .../devicetree/bindings/input/adc-keys.txt         |  49 +++++
 
-> +	s5m8767: s5m8767_pmic@66 {
-> +		compatible = "samsung,s5m8767-pmic";
-> +		reg = <0x66>;
+Acked-by: Rob Herring <robh@kernel.org>
 
-You shouldn't use underscores in node names.
-https://www.mail-archive.com/linux-kernel%40vger.kernel.org/msg1122967.html
-https://www.mail-archive.com/linux-kernel%40vger.kernel.org/msg1145633.html
-
--- 
-Rask Ingemann Lambertsen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/input/keyboard/Kconfig                     |  15 ++
+>  drivers/input/keyboard/Makefile                    |   1 +
+>  drivers/input/keyboard/adc-keys.c                  | 210 +++++++++++++++++++++
+>  4 files changed, 275 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/adc-keys.txt
+>  create mode 100644 drivers/input/keyboard/adc-keys.c
