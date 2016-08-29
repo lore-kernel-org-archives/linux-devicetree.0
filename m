@@ -1,78 +1,65 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH] dt-bindings: touchscreen: silead_gsl1680: Document
- touchscreen-fw-name
-Date: Mon, 29 Aug 2016 07:18:34 +0200
-Message-ID: <20160829051834.GW3165@lukather>
-References: <1471964688-12188-1-git-send-email-hdegoede@redhat.com>
- <20160829003725.GA20749@rob-hp-laptop>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] PM / AVS: rockchip-cpu-avs: add driver handling
+ Rockchip cpu avs
+Date: Mon, 29 Aug 2016 11:38:01 +0530
+Message-ID: <20160829060801.GB5094@vireshk-i7>
+References: <1471510341-63926-1-git-send-email-finley.xiao@rock-chips.com>
+ <1471510341-63926-5-git-send-email-finley.xiao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="L+ytD9kXoSFEJYhc"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160829003725.GA20749@rob-hp-laptop>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
+In-Reply-To: <1471510341-63926-5-git-send-email-finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Finlye Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tim.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ulysses.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lin.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 18-08-16, 16:52, Finlye Xiao wrote:
+> +static int rockchip_adjust_opp_table(struct device *cpu_dev,
+> +				     struct cpufreq_frequency_table *table,
+> +				     int volt)
+> +{
+> +	struct opp_table *opp_table;
+> +	struct cpufreq_frequency_table *pos;
+> +	struct dev_pm_opp *opp;
+> +
+> +	if (!volt)
+> +		return 0;
+> +
+> +	rcu_read_lock();
+> +
+> +	opp_table = _find_opp_table(cpu_dev);
+> +	if (IS_ERR(opp_table)) {
+> +		rcu_read_unlock();
+> +		return PTR_ERR(opp_table);
+> +	}
+> +
+> +	cpufreq_for_each_valid_entry(pos, table) {
+> +		opp = dev_pm_opp_find_freq_exact(cpu_dev, pos->frequency * 1000,
+> +						 true);
+> +		if (IS_ERR(opp))
+> +			continue;
+> +
+> +		opp->u_volt += volt;
+> +		opp->u_volt_min += volt;
+> +		opp->u_volt_max += volt;
+> +	}
+> +
+> +	rcu_read_unlock();
+> +
+> +	return 0;
+> +}
 
---L+ytD9kXoSFEJYhc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I wouldn't prefer altering the opp tables from individual drivers at all. At the
+least, it should be done via some helpers exposed by the core.
 
-Hi Rob,
+But before that I would like to hear from Stephen a bit as I recall he was also
+working on something similar.
 
-On Sun, Aug 28, 2016 at 07:37:25PM -0500, Rob Herring wrote:
-> On Tue, Aug 23, 2016 at 05:04:48PM +0200, Hans de Goede wrote:
-> > The driver has supported touchscreen-fw-name to specify the firmware to
-> > load since day 0, but this was omitted from the binding, document this.
-> >=20
-> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > ---
-> >  Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt=
- | 1 +
-> >  1 file changed, 1 insertion(+)
->=20
-> I'd really like to deprecate in favor of a standard property name. We've=
-=20
-> somewhat agreed on 'firmware-name' though there is no common binding doc=
-=20
-> yet. But given this is in use:
-
-This has been introduced in 4.8-rc1, so it hasn't been used in any
-stable version yet, and we don't have any users in tree so far.
-
-If you want to something else, it feels like now is the time to change
-it.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---L+ytD9kXoSFEJYhc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXw8WqAAoJEBx+YmzsjxAg2RIQAJPc6UqXojIRHy2TF85VwVqx
-wWxYAwfEnyI8ojm7VLMcoDobBE4LdUHqNfeH7wBizmxULavDUJIrQG+G64k/C3Q2
-R+GAwDPKcapb/ISuBDYjS3wa15XP5sUoO6pLQ1qYlmxXPBAF0o7wAd85NN3SC6MT
-bLc4kF59bmHIiU+RSAiBzn0b1AYj6XAzOJirl8JWMqAiGMi5qJOXIMRDa89TDyO6
-SyoT61Xpmkvq2kqS3RNZTmTfcNGWdZPI1wuOLJFX1YkY9OuQwgsnK3elds/A70zw
-8nZ/E/OJv65wEqr5FLk6OcPXL7VPiWyxD02MuNcFFPWaz59MD76UzG9/RJfHM2yx
-JodVi5MYJec0YtIO1wpiposfscNbMjpdzDGuxSLSgXKQaU0JFPztKak2clcrVEY2
-GQtFTT4LbyG0SWQRu5ovMtg6Pz385nIAvhU+l/APkuQRprCqZY0wDgSqnokfczI2
-L1cNm1Wqp1hvOjsqSikMtKM23Wf+oxDZgTyU3sksMpwFr1T/VsyzPW0M9T3N2d1K
-hi9ltqcW/TcKhQ7RqZM0HJTM5azxogJged1d8lxWi25R/9fQwc3fKkWUYrAksb80
-VeeftHguBb5XCQGML3UP5RqpAA6H0DwBQiqYQxY4634zqVHW+5WbxuqFt5MAR2rr
-s4EpRJeqj1c20hTB4WXx
-=CHFH
------END PGP SIGNATURE-----
-
---L+ytD9kXoSFEJYhc--
+-- 
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
