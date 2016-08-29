@@ -1,34 +1,70 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2] ARM: dts: imx6ul iomuxc syscon is compatible to imx6q
-Date: Mon, 29 Aug 2016 23:20:06 +0800
-Message-ID: <20160829152006.GZ30790@tiger>
-References: <1472480743-8405-1-git-send-email-Anson.Huang@nxp.com>
- <20160829143447.GV30790@tiger>
- <AM3PR04MB1315C6AE3AC95A1150DB04D7F5E10@AM3PR04MB1315.eurprd04.prod.outlook.com>
+From: Vagrant Cascadian <vagrantc@aikidev.net>
+Subject: [PATCH] ARM: dts: rockchip: temporarily remove emmc hs200 speed from
+        rk3288-veyron-speedy.
+Date: Mon, 29 Aug 2016 08:18:13 -0700
+Message-ID: <87inujbo3u.fsf@aikidev.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <AM3PR04MB1315C6AE3AC95A1150DB04D7F5E10-f56W/S9L6NR9w2ZlgAudoc9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yongcai Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 29, 2016 at 02:44:47PM +0000, Yongcai Huang wrote:
-> This patch is to set the GINT bit for all low power mode transition.
-> 
-> Do we decide to go with PSCI for all i.MX6 SoCs? Currently i.MX6UL's suspend is
-> already supported with non-PCSI method, only i.MX7D uses PSCI, right? If we decide
-> to implement all power management feature with PSCI, then yes, all these changes
-> can be put into PSCI. But since current suspend/cpuidle function are already supported
-> using old method, this bit must be set to avoid system goes into low power mode
-> unexpected.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-My apology.  I messed up it with i.MX7D.  Patch applied, thanks.
+This essentially mimics what was done with rk3288-veyron-minnie in
+commit 984926781122f034d5bc9962815d135b6c4a8e1d.
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The eMMC of the speedy Chromebook also appears to need the same tuning
+workaround, as it frequently fails to recognize the eMMC without it.
+
+=2D--
+ arch/arm/boot/dts/rk3288-veyron-speedy.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts=
+/rk3288-veyron-speedy.dts
+index a0d033f..500fd18 100644
+=2D-- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+@@ -124,6 +124,11 @@
+ 			&sdmmc_bus4>;
+ };
+=20
++
++&emmc {
++       /delete-property/mmc-hs200-1_8v;
++};
++
+ &vcc_5v {
+ 	enable-active-high;
+ 	gpio =3D <&gpio7 21 GPIO_ACTIVE_HIGH>;
+=2D-=20
+2.9.3
+
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJXxFI/AAoJELeLgtSBS5G2YzEP/i11ETInXlVaKFkdBkPRIQZI
+VrdjxlJIyv6QB7EYYpsP0euj0bHGEGyW1zKMAT6VhtgJgf9/+lZT+ILIoBcWite/
+Z/9mUsngASUnmuEhObfjpSdEZm8N8nyRdTtOeVI9l1wMIG8VvzNWEGdYXqrgUTDH
+UNn/GssDe+1PdbB3oUMTWeHUAyw1uXpAZSMWIQDnCUA9LCH7/mh9oSURyRQn7zHc
+YsCylmU2FC3uWeSI8R6Gd5tqsm5EGYtHiV9f+9SGH4gQsiRRP/mzthiwtlA+VcSf
+3QTGB6KqOC3zmvVk8T5wDgXbzU6cu/xFqPtxgOFV3H3r45gp//LW3ucCo3Kzhdto
+6xCUAjp9woe1e9Gf6LcNA4AujrGxLi3Igazk9pDaABWtgPS2CsoDkuQFssq+rNTs
+Oki51snxsNuR8Xyg4CpO691YAbcNJfbdbTwwZtMNS5kRmGXsRrM8x435BDF1ZAMP
+8UD4StYFFnX48qbrVntxGnow/5l6OXrqo/mhTTgWa9IDURFJg0Mwb8VpKC9xeV2I
+MDSgdQH4QD0oY/GUP/wCNgrz9BGg57pq11YEyH9Pv2vNXIs/uTdYL5WFIMTuds5a
+noeUE7q73EfvtG5nsoo0idNvThYz6x8ppXfIDRj3UIHLNg84zWEgk1h0agayvGj9
+3PoywFFrH0xSdAUWlFpC
+=RALr
+-----END PGP SIGNATURE-----
+--=-=-=--
