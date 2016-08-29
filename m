@@ -1,174 +1,95 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH 3/4] dt-binding: remoteproc: venus rproc dt binding
- document
-Date: Mon, 29 Aug 2016 14:48:32 +0300
-Message-ID: <5afd7f2f-ec1b-d2ce-b833-81df010e24de@linaro.org>
-References: <1471622000-1906-1-git-send-email-stanimir.varbanov@linaro.org>
- <1471622000-1906-4-git-send-email-stanimir.varbanov@linaro.org>
- <20160823173259.GA13327@rob-hp-laptop>
- <fbf25a9e-348b-9047-37ef-1b96808dea31@mm-sol.com>
- <20160825000521.GH15161@tuxbot>
- <3429173a-d55a-51e1-0973-7e5bd31be297@linaro.org>
- <20160826222345.GK15161@tuxbot>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/4] soc: qcom: add an EBI2 device tree bindings
+Date: Mon, 29 Aug 2016 13:51:12 +0200
+Message-ID: <201608291351.12915.arnd@arndb.de>
+References: <1470691445-27571-1-git-send-email-linus.walleij@linaro.org> <2988918.zNxvaGl6en@wuerfel> <CACRpkdZ=HU6j3=Ye4dm=tFU=KmG54bq06KDfxPViWUouOA=jOA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: Text/Plain;
+  charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160826222345.GK15161@tuxbot>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Andy Gross <andy.gross@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Clark <robdclark@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZ=HU6j3=Ye4dm=tFU=KmG54bq06KDfxPViWUouOA=jOA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 08/27/2016 01:23 AM, Bjorn Andersson wrote:
-> On Thu 25 Aug 04:10 PDT 2016, Stanimir Varbanov wrote:
-> 
->> Hi Bjorn,
->>
->> On 08/25/2016 03:05 AM, Bjorn Andersson wrote:
->>> On Wed 24 Aug 08:36 PDT 2016, Stanimir Varbanov wrote:
->>>
->>>> Hi Rob,
->>>>
->>>> On 08/23/2016 08:32 PM, Rob Herring wrote:
->>>>> On Fri, Aug 19, 2016 at 06:53:19PM +0300, Stanimir Varbanov wrote:
->>>>>> Add devicetree binding document for Venus remote processor.
->>>>>>
->>>>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->>>>>> ---
->>>>>>  .../devicetree/bindings/remoteproc/qcom,venus.txt  | 33 ++++++++++++++++++++++
->>>>>>  1 file changed, 33 insertions(+)
->>>>>>  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
->>>>>> new file mode 100644
->>>>>> index 000000000000..06a2db60fa38
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,venus.txt
->>>>>> @@ -0,0 +1,33 @@
->>>>>> +Qualcomm Venus Peripheral Image Loader
->>>>>> +
->>>>>> +This document defines the binding for a component that loads and boots firmware
->>>>>> +on the Qualcomm Venus remote processor core.
->>>>>
->>>>> This does not make sense to me. Venus is the video encoder/decoder h/w, 
->>>>> right? Why is the firmware loader separate from the codec block? Why 
->>>>> rproc is used? Are there multiple clients? Naming it rproc_venus implies 
->>>>> there aren't. And why does the firmware loading need 8MB of memory at a 
->>>>> fixed address?
->>>>>
->>>>
->>>> The firmware for Venus case is 5MB. And here is 8MB because of
->>>> dma_alloc_from_coherent size restriction.
->>>>
->>>
->>> Then you should specify it 5MB large and we'll have to deal with this
->>> implementation issue in the code. I've created a JIRA ticket for
->>> the dma_alloc_from_coherent() behavior.
->>
->> Infact it should be 5MB + ~100KB for iommu page table.
->>
-> 
-> Trying to wrap my head around how the iommu part works here. The
-> downstream code seems to indicate that this is a "generic" secure iommu
-> interface - used by venus, camera and kgsl; likely for dealing with DRM
-> protected buffers.
-
-The secure iommu interface is for content protected buffers. But these
-secure iommu contexts aren't used by msm DRM nor Venus in mainline. In
-Venus case I use non-secure iommu context for data buffers.
+On Thursday 18 August 2016, Linus Walleij wrote:
+> On Mon, Aug 8, 2016 at 11:32 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Monday, August 8, 2016 11:24:02 PM CEST Linus Walleij wrote:
 
 > 
-> As such the iommu tables are not part of the venus rproc; I believe they
-> should either be tied into the msm-iommu driver or perhaps exposed as
-> its own iommu(?).
-
-The page tables are in msm-iommu driver.
-
+> So two devices "foo" and "bar" on the EBI2 bus, in the old
+> scheme.
 > 
+> So I need to encode the CS in the first cell of the reg for
+> foo-ebi2, and get rid of chipselect = <2> fine:
 > 
-> But I presume from your inclusion that you've concluded that the venus
-> firmware we have refuses to execute without these tables at least
-> initialized, is this correct?
+> ebi2@1a100000 {
+>        compatible = "qcom,msm8660-ebi2";
+>        #address-cells = <1>;
+>        #size-cells = <1>;
+>        (...)
+>        cs2@1b800000 {
+>                #address-cells = <2>;
+>                #size-cells = <1>;
+>                qcom,xmem-recovery-cycles = <5>;
+>                foo-ebi2@1b800000 {
+>                        compatible = "foo";
+>                        reg = <2 0x1b800000 0x100>;
+>                        (...)
+>                };
+>                bar-ebi2@1ba00000 {
+>                        compatible = "bar";
+>                        reg = <2 0x1ba00000 0x100>;
+>                        (...)
+>                };
+>        };
+> };
+> 
+> This is not looking good at all. First: the configuration settings for
+> the chipselect (i.e. all devices below it, both "foo" and "bar" are
+> just floating in space. When parsing the tree how should you know
+> what chipselect to set up the stuff on? Shall I check the child nodes
+> first value in the reg property and then make a majority vote on what
+> chipselect they apply to or what? That doesn't make sense.
 
-Yes, the SMC call for PAS memory-setup will fail if this page table is
-not initialized.
+I would have one node per chip-select and then put the devices on
+that CS below it, with #address-cells=1 again.
 
+> So I assume doing away with the chipselect node altogether would
+> be prefered. But then: where do I put stuff like "qcom,xmem-recovery-cycles"
+> that apply to the whole chipselect, not just a single subdevice on that
+> chipselect? I certainly cannot encode it in the reg since it needs
+> to be the same for all devices and it's not about addressing.
 > 
->>>
->>>> The address is not really fixed, cause the firmware could support
->>>> relocation. In this example I just picked up the next free memory region
->>>> in memory-reserved from msm8916.dtsi.
->>>>
->>>
->>> In 8974 we do have a physical region where it's expected to be loaded.
->>>
->>> So in line with upcoming remoteproc work we should support referencing a
->>> reserved-memory node with either reg or size.
->>>
->>> In the case of spotting a "reg" we're currently better off using
->>> ioremap. We're looking at getting the remoteproc core to deal with this
->>> mess.
->>
->> You mean that remoteproc core will parse memory-region property?
->>
+> The only thing I can reasonably come up with would be this:
 > 
-> It has to, because it's a quite common scenario for remoteproc drivers
-> to either get its backing memory from a static region or be restricted
-> to part of system ram - properties that reserved-memory and
-> memory-region captures already.
+> ebi2@1a100000 {
+>        compatible = "qcom,msm8660-ebi2";
+>        #address-cells = <2>;
+>        #size-cells = <1>;
+>        qcom,xmem-recovery-cycles = <0>, <0>, <5>, <0>, <0>, <0>;
 
-OK, I have no issues with that. My concern is the manual parsing of
-'memory-region' and 'reg' properties in remoteproc core.
+No, better put the settings into one device per cs.
 
-So that idea is to have generic binding for rproc, that would be good.
+> So the chip select settings are shoehorned into an array in the top
+> node that is then indexed to find the settings for cs0, cs1 etc.
+> 
+> There will be 6 such arrays for the different per-cs settings.
+> 
+> Is this what you want? I kind of thought the hierarchical model
+> was nice since each device was below its chipselect node, but
+> I understand that it breaks the pattern of other similar bus drivers.
 
-> 
->>>
->>>
->>> So, on 8916 I think you should use the form:
->>>
->>> venus_mem: venus {
->>> 	size = <0x500000>;
->>> };
->>
->> Don't forget that the physical address where the firmware is stored has
->> some range, the scm call will fail if it is out of the expected range,
->> probably because of some security reasons. So maybe alloc-ranges should
->> be specified here.
->>
-> 
-> Thanks for highlighting this.
-> 
->>>
->>> And I don't think you should use the shared-dma-pool compatible, because
->>> this is not a region for multiple devices to allocate dma memory out of.
->>
->> Then I cannot reuse reserved-mem infrastructure.
->>
-> 
-> You're right. If I understand the code correctly we need to use the
-> compatible shared-dma-pool and mark it either "no-map" or "reusable", to
-> be able to use dma_alloc_coherent().
+Nothing wrong with having a hierarchy here, what I'm interested
+in is making the addressing reflect what the hardware actually
+does. With the empty "ranges", it looks like the entire 32-bit
+address is getting exposed to the external bus, which is usually
+not how things work: instead, each "cs" line gets raised by an I/O
+operation on a particular CPU address range, and that range should
+be part of the "ranges" propert of the main bus node, and the
+externally visible addresses should be the translated addresses
+in the child bus representation in DT.
 
-correct.
-
-> 
-> 
-> But I presume we have the implementation issue of dma_alloc_coherent()
-> failing in either case with the 5MB size. I think we need to look into
-
-I'd be good to include Marek Szyprowski? At least he will know what
-design restrictions there are.
-
-> that - and have created a JIRA ticket for it.
-> 
-> Regards,
-> Bjorn
-> 
-
--- 
-regards,
-Stan
+	Arnd
