@@ -1,90 +1,33 @@
-From: Yongcai Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V2] ARM: dts: imx6ul iomuxc syscon is compatible to imx6q
-Date: Mon, 29 Aug 2016 14:44:47 +0000
-Message-ID: <AM3PR04MB1315C6AE3AC95A1150DB04D7F5E10@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1472480743-8405-1-git-send-email-Anson.Huang@nxp.com>
- <20160829143447.GV30790@tiger>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] ARM: dts: rskrza1: initial device tree
+Date: Mon, 29 Aug 2016 14:56:37 +0000
+Message-ID: <SG2PR06MB116594771BED3BAF944ECE298AE10@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20160825153115.15291-1-chris.brandt@renesas.com>
+ <CAMuHMdXmJPcgDcLkeVuF5YVfpwxRkJpACHGwtbNab18gK-nBbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160829143447.GV30790@tiger>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdXmJPcgDcLkeVuF5YVfpwxRkJpACHGwtbNab18gK-nBbQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-Best Regards!
-Anson Huang
-
-
-
-> -----Original Message-----
-> From: Shawn Guo [mailto:shawnguo@kernel.org]
-> Sent: 2016-08-29 10:35 PM
-> To: Yongcai Huang <anson.huang@nxp.com>
-> Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; mark.rutland@arm.com; robh+dt@kernel.org;
-> kernel@pengutronix.de; Fabio Estevam <fabio.estevam@nxp.com>;
-> linux@armlinux.org.uk
-> Subject: Re: [PATCH V2] ARM: dts: imx6ul iomuxc syscon is compatible to imx6q
-> 
-> On Mon, Aug 29, 2016 at 10:25:43PM +0800, Anson Huang wrote:
-> > The imx6ul iomuxc syscon is compatible to imx6q, so let's add
-> > compatible string 'fsl,imx6q-iomuxc-gpr'
-> > for imx6ul iomuxc syscon node.
-> >
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> 
-> Will this patch still be needed if you implement imx6ul suspend support with
-> PSCI?
-> 
-> Shawn
-
-This patch is to set the GINT bit for all low power mode transition.
-
-Do we decide to go with PSCI for all i.MX6 SoCs? Currently i.MX6UL's suspend is
-already supported with non-PCSI method, only i.MX7D uses PSCI, right? If we decide
-to implement all power management feature with PSCI, then yes, all these changes
-can be put into PSCI. But since current suspend/cpuidle function are already supported
-using old method, this bit must be set to avoid system goes into low power mode
-unexpected.
-
-Regards!
-Anson.
-
-> 
-> > ---
-> > changes since V1:
-> > 	improve commit message.
-> >  arch/arm/boot/dts/imx6ul.dtsi | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/imx6ul.dtsi
-> > b/arch/arm/boot/dts/imx6ul.dtsi index 33b95d7..acc9486 100644
-> > --- a/arch/arm/boot/dts/imx6ul.dtsi
-> > +++ b/arch/arm/boot/dts/imx6ul.dtsi
-> > @@ -644,7 +644,8 @@
-> >  			};
-> >
-> >  			gpr: iomuxc-gpr@020e4000 {
-> > -				compatible = "fsl,imx6ul-iomuxc-gpr", "syscon";
-> > +				compatible = "fsl,imx6ul-iomuxc-gpr",
-> > +					     "fsl,imx6q-iomuxc-gpr", "syscon";
-> >  				reg = <0x020e4000 0x4000>;
-> >  			};
-> >
-> > --
-> > 1.9.1
-> >
+SGkgR2VlcnQsDQoNCk9uIEF1ZyAyOSwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KDQo+ID4g
+LS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I3czcyMTAwLXJza3J6
+YTEuZHRzDQo+DQo+ID4gKyAgICAgICBjb21wYXRpYmxlID0gInJlbmVzYXMscnNrcnphMSIsICJy
+ZW5lc2FzLHI3czcyMTAwIjsNCj4NCj4gc2NyaXB0cy9jaGVja3BhdGNoLnBsIHNheXM6DQo+DQo+
+ICAgIERUIGNvbXBhdGlibGUgc3RyaW5nICJyZW5lc2FzLHJza3J6YTEiIGFwcGVhcnMgdW4tZG9j
+dW1lbnRlZCAtLSBjaGVjayAuL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy8NCj4N
+Cj4gUGxlYXNlIHNlbmQgYSBmb2xsb3ctdXAgcGF0Y2ggdG8gYWRkIHRoaXMgY29tcGF0aWJsZSB2
+YWx1ZSB0byBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3NobW9iaWxlLnR4
+dC4NCj4NCj4gPiArJnNjaWYyIHsNCj4gPiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsNCj4gPiAr
+fTsNCj4gPiArDQo+DQo+IFBsZWFzZSBkcm9wIHRoZSB0cmFpbGluZyBlbXB0eSBsaW5lLg0KDQpU
+aGFuayB5b3UgZm9yIHRoZSByZXZpZXcuDQpJIHdpbGwgbW9kaWZ5IGFuZCByZXNlbmQuDQoNCkNo
+cmlzDQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
