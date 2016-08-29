@@ -1,95 +1,74 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/4] soc: qcom: add an EBI2 device tree bindings
-Date: Mon, 29 Aug 2016 13:51:12 +0200
-Message-ID: <201608291351.12915.arnd@arndb.de>
-References: <1470691445-27571-1-git-send-email-linus.walleij@linaro.org> <2988918.zNxvaGl6en@wuerfel> <CACRpkdZ=HU6j3=Ye4dm=tFU=KmG54bq06KDfxPViWUouOA=jOA@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC/PATCH] dt: bindings: Define bindings for device idle states
+Date: Mon, 29 Aug 2016 13:55:56 +0200
+Message-ID: <CAPDyKFpwDR25G=9RTsEZ5nzMMuRKpEPTK=V1E5mMXKfWA-yvEw@mail.gmail.com>
+References: <1472207073-4901-1-git-send-email-ulf.hansson@linaro.org>
+ <20160826135842.GA9303@amd> <CAPDyKFpQ-kG0jkOXwVWJkwT41JjTg=KwNv4z-E7UUBqfKMNHgg@mail.gmail.com>
+ <20160829104019.GA16212@amd>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZ=HU6j3=Ye4dm=tFU=KmG54bq06KDfxPViWUouOA=jOA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160829104019.GA16212@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Brendan Jackman <Brendan.Jackman-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 18 August 2016, Linus Walleij wrote:
-> On Mon, Aug 8, 2016 at 11:32 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Monday, August 8, 2016 11:24:02 PM CEST Linus Walleij wrote:
+On 29 August 2016 at 12:40, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> wrote:
+> On Mon 2016-08-29 11:34:34, Ulf Hansson wrote:
+>> On 26 August 2016 at 15:58, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> wrote:
+>> > Hi!
+>> >
+>> >> @@ -0,0 +1,102 @@
+>> >> +Device idle states
+>> >> +========================
+>> >> +
+>> >> +A device are often capable of entering a low power state(s) when it becomes
+>> >> +idle, hence the terminology of device idle states. Entering an idle state for a
+>> >> +device helps it to avoid wasting power and reduces the leakage of current.
+>> >
+>> > First things first: what do these states _really_ represent? We have
+>> > GPIOs in device tree, we have clock domains. What are these?
+>>
+>> On most ARM SoCs which I am familiar of and which isn't using ACPI,
+>> these kind of resources may can be considered as "power resources"
+>> connected to a generic device. Although it's of course highly
+>> dependent on the SoC. Other typical resources are clocks, pinctrls,
+>> regulators etc.
+>>
+>> To enter a low power state, these devices may not explicitly have to
+>> change some internal logic, but instead relies on external "power
+>> resources " to be put into low power mode.
+>>
+>> I guess one could compare this to what can be described in the ACPI's
+>> Device Power Management.
+>
+> If they are clocks, describe them as clocks, DT supports that. If they
+> are regulators, describe them as regulators.
+>
+> We don't want to have "we have these magic somethings here". We want
+> to know whether it is clock, regulator, or what.
 
-> 
-> So two devices "foo" and "bar" on the EBI2 bus, in the old
-> scheme.
-> 
-> So I need to encode the CS in the first cell of the reg for
-> foo-ebi2, and get rid of chipselect = <2> fine:
-> 
-> ebi2@1a100000 {
->        compatible = "qcom,msm8660-ebi2";
->        #address-cells = <1>;
->        #size-cells = <1>;
->        (...)
->        cs2@1b800000 {
->                #address-cells = <2>;
->                #size-cells = <1>;
->                qcom,xmem-recovery-cycles = <5>;
->                foo-ebi2@1b800000 {
->                        compatible = "foo";
->                        reg = <2 0x1b800000 0x100>;
->                        (...)
->                };
->                bar-ebi2@1ba00000 {
->                        compatible = "bar";
->                        reg = <2 0x1ba00000 0x100>;
->                        (...)
->                };
->        };
-> };
-> 
-> This is not looking good at all. First: the configuration settings for
-> the chipselect (i.e. all devices below it, both "foo" and "bar" are
-> just floating in space. When parsing the tree how should you know
-> what chipselect to set up the stuff on? Shall I check the child nodes
-> first value in the reg property and then make a majority vote on what
-> chipselect they apply to or what? That doesn't make sense.
+This isn't something that will *replace* clocks etc. If those
+resources are needed, of course those needs to be described.
 
-I would have one node per chip-select and then put the devices on
-that CS below it, with #address-cells=1 again.
+What is missing in DT, and what I suggest to add, is to be able to
+describe the actual idle states of a device and the HW characteristics
+related to that.
+In this RFC, I picked the most common properties that I could think
+of, which ought to be latencies for enter and wakeup from a low power
+state.
 
-> So I assume doing away with the chipselect node altogether would
-> be prefered. But then: where do I put stuff like "qcom,xmem-recovery-cycles"
-> that apply to the whole chipselect, not just a single subdevice on that
-> chipselect? I certainly cannot encode it in the reg since it needs
-> to be the same for all devices and it's not about addressing.
-> 
-> The only thing I can reasonably come up with would be this:
-> 
-> ebi2@1a100000 {
->        compatible = "qcom,msm8660-ebi2";
->        #address-cells = <2>;
->        #size-cells = <1>;
->        qcom,xmem-recovery-cycles = <0>, <0>, <5>, <0>, <0>, <0>;
+And... we also have devices that have internal logics that must be
+changed to enter and wakeup from a low power state. For example WLAN
+circuits, PCI devices, etc. So this isn't all about clocks/regulators
+etc, but devices in general.
 
-No, better put the settings into one device per cs.
+[...]
 
-> So the chip select settings are shoehorned into an array in the top
-> node that is then indexed to find the settings for cs0, cs1 etc.
-> 
-> There will be 6 such arrays for the different per-cs settings.
-> 
-> Is this what you want? I kind of thought the hierarchical model
-> was nice since each device was below its chipselect node, but
-> I understand that it breaks the pattern of other similar bus drivers.
-
-Nothing wrong with having a hierarchy here, what I'm interested
-in is making the addressing reflect what the hardware actually
-does. With the empty "ranges", it looks like the entire 32-bit
-address is getting exposed to the external bus, which is usually
-not how things work: instead, each "cs" line gets raised by an I/O
-operation on a particular CPU address range, and that range should
-be part of the "ranges" propert of the main bus node, and the
-externally visible addresses should be the translated addresses
-in the child bus representation in DT.
-
-	Arnd
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
