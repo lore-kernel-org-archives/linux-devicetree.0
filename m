@@ -1,54 +1,78 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 2/3] ARM: dts: imx7-colibri: add basic supply regulators
-Date: Sun, 28 Aug 2016 22:13:23 -0700
-Message-ID: <20160829051324.2276-2-stefan@agner.ch>
-References: <20160829051324.2276-1-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160829051324.2276-1-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: max.krummenacher@toradex.com, marcel.ziswiler@toradex.com, fabio.estevam@nxp.com, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, grinberg@compulab.co.il, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH] dt-bindings: touchscreen: silead_gsl1680: Document
+ touchscreen-fw-name
+Date: Mon, 29 Aug 2016 07:18:34 +0200
+Message-ID: <20160829051834.GW3165@lukather>
+References: <1471964688-12188-1-git-send-email-hdegoede@redhat.com>
+ <20160829003725.GA20749@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="L+ytD9kXoSFEJYhc"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160829003725.GA20749@rob-hp-laptop>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Colibri modules need to be powered using the power pins 3V3 and
-AVDD_AUDIO. Add fixed regulators which represent this power rails.
-Potentially, those power rails could be switched on a carrier
-board. A carrier board device tree could add a own regulator with
-a GPIO, and reference that regulator in a vin-supply property of
-those new module level system regulators. This also synchronize
-the name of the +3.3V regulator with the one used in the Colibri
-VF50/VF61 device tree.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- arch/arm/boot/dts/imx7-colibri.dtsi | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+--L+ytD9kXoSFEJYhc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index 044b83e..06fb567 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -46,12 +46,18 @@
- 		pwms = <&pwm1 0 5000000>;
- 	};
- 
--	reg_3p3v: regulator-3p3v {
-+	reg_module_3v3: regulator-module-3v3 {
- 		compatible = "regulator-fixed";
--		regulator-name = "3P3V";
-+		regulator-name = "+V3.3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	reg_module_3v3_avdd: regulator-module-3v3-avdd {
-+		compatible = "regulator-fixed";
-+		regulator-name = "+V3.3_AVDD_AUDIO";
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
--		regulator-always-on;
- 	};
- 
- 	reg_vref_1v8: regulator-vref-1v8 {
--- 
-2.9.0
+Hi Rob,
+
+On Sun, Aug 28, 2016 at 07:37:25PM -0500, Rob Herring wrote:
+> On Tue, Aug 23, 2016 at 05:04:48PM +0200, Hans de Goede wrote:
+> > The driver has supported touchscreen-fw-name to specify the firmware to
+> > load since day 0, but this was omitted from the binding, document this.
+> >=20
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > ---
+> >  Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt=
+ | 1 +
+> >  1 file changed, 1 insertion(+)
+>=20
+> I'd really like to deprecate in favor of a standard property name. We've=
+=20
+> somewhat agreed on 'firmware-name' though there is no common binding doc=
+=20
+> yet. But given this is in use:
+
+This has been introduced in 4.8-rc1, so it hasn't been used in any
+stable version yet, and we don't have any users in tree so far.
+
+If you want to something else, it feels like now is the time to change
+it.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--L+ytD9kXoSFEJYhc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXw8WqAAoJEBx+YmzsjxAg2RIQAJPc6UqXojIRHy2TF85VwVqx
+wWxYAwfEnyI8ojm7VLMcoDobBE4LdUHqNfeH7wBizmxULavDUJIrQG+G64k/C3Q2
+R+GAwDPKcapb/ISuBDYjS3wa15XP5sUoO6pLQ1qYlmxXPBAF0o7wAd85NN3SC6MT
+bLc4kF59bmHIiU+RSAiBzn0b1AYj6XAzOJirl8JWMqAiGMi5qJOXIMRDa89TDyO6
+SyoT61Xpmkvq2kqS3RNZTmTfcNGWdZPI1wuOLJFX1YkY9OuQwgsnK3elds/A70zw
+8nZ/E/OJv65wEqr5FLk6OcPXL7VPiWyxD02MuNcFFPWaz59MD76UzG9/RJfHM2yx
+JodVi5MYJec0YtIO1wpiposfscNbMjpdzDGuxSLSgXKQaU0JFPztKak2clcrVEY2
+GQtFTT4LbyG0SWQRu5ovMtg6Pz385nIAvhU+l/APkuQRprCqZY0wDgSqnokfczI2
+L1cNm1Wqp1hvOjsqSikMtKM23Wf+oxDZgTyU3sksMpwFr1T/VsyzPW0M9T3N2d1K
+hi9ltqcW/TcKhQ7RqZM0HJTM5azxogJged1d8lxWi25R/9fQwc3fKkWUYrAksb80
+VeeftHguBb5XCQGML3UP5RqpAA6H0DwBQiqYQxY4634zqVHW+5WbxuqFt5MAR2rr
+s4EpRJeqj1c20hTB4WXx
+=CHFH
+-----END PGP SIGNATURE-----
+
+--L+ytD9kXoSFEJYhc--
