@@ -1,67 +1,61 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] soc: qcom: add an EBI2 device tree bindings
-Date: Mon, 29 Aug 2016 14:45:49 +0200
-Message-ID: <CACRpkdZ4bGJYuR+hJQ5sZR+pYQ5dnmtHY6RRS0oLtcd_N=akZg@mail.gmail.com>
-References: <1470691445-27571-1-git-send-email-linus.walleij@linaro.org>
- <2988918.zNxvaGl6en@wuerfel> <CACRpkdZ=HU6j3=Ye4dm=tFU=KmG54bq06KDfxPViWUouOA=jOA@mail.gmail.com>
- <201608291351.12915.arnd@arndb.de>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: Add Keith&Koep vendor prefix
+Date: Mon, 29 Aug 2016 13:24:39 +0200
+Message-ID: <1a429145-c1b4-d5ec-83c4-74c3621b1941@denx.de>
+References: <20160826142918.7310-1-marex@denx.de>
+ <201608261758.16050.arnd@arndb.de>
+ <d33c482e-8ce8-e6a2-6b39-f5711e3651cc@denx.de> <54135611.ZknNUmHIGf@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201608291351.12915.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <54135611.ZknNUmHIGf@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 29, 2016 at 1:51 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Thursday 18 August 2016, Linus Walleij wrote:
+On 08/29/2016 01:04 PM, Arnd Bergmann wrote:
+> On Friday, August 26, 2016 6:07:24 PM CEST Marek Vasut wrote:
+>> On 08/26/2016 05:58 PM, Arnd Bergmann wrote:
+>>> On Friday 26 August 2016, Marek Vasut wrote:
+>>>> Add vendor prefix for Keith&Koep GmbH , http://keith-koep.com/en/
+>>>>
+>>>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+>>>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+>>>> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>>> index 2c2500d..0fec4a7 100644
+>>>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>>> @@ -141,6 +141,7 @@ jedec    JEDEC Solid State Technology Association
+>>>>  karo        Ka-Ro electronics GmbH
+>>>>  keymile     Keymile GmbH
+>>>>  kinetic Kinetic Technologies
+>>>> +kk  Keith & Koep GmbH
+>>>
+>>>
+>>> This is really short, and my first guess what 'kk' should mean would be 'kankun',
+>>> so I'd suggest using something longer here.
+>>
+>> keithkoep or kuk maybe ?
+> 
+> keithkoep sounds best to me, that would be completely unambiguous.
 
->> This is not looking good at all. First: the configuration settings for
->> the chipselect (i.e. all devices below it, both "foo" and "bar" are
->> just floating in space. When parsing the tree how should you know
->> what chipselect to set up the stuff on? Shall I check the child nodes
->> first value in the reg property and then make a majority vote on what
->> chipselect they apply to or what? That doesn't make sense.
->
-> I would have one node per chip-select and then put the devices on
-> that CS below it, with #address-cells=1 again.
+OK
 
-Hm I already sent out a new version I think...
-http://marc.info/?l=linux-arm-kernel&m=147202889722541&w=2
-http://marc.info/?l=linux-arm-kernel&m=147202889622540&w=2
-http://marc.info/?l=linux-arm-kernel&m=147202890622543&w=2
-http://marc.info/?l=linux-arm-kernel&m=147202894222555&w=2
-http://marc.info/?l=linux-arm-kernel&m=147202898022571&w=2
+btw the "kuk" came up from their vendorkernel(TM), they prefix some of
+the files with "kuk".
 
-(OK I know, no patience this guy...)
 
-Check it and see what you think.
-
->> ebi2@1a100000 {
->>        compatible = "qcom,msm8660-ebi2";
->>        #address-cells = <2>;
->>        #size-cells = <1>;
->>        qcom,xmem-recovery-cycles = <0>, <0>, <5>, <0>, <0>, <0>;
->
-> No, better put the settings into one device per cs.
-
-Yeah sigh I already made a version like this...
-
-> Nothing wrong with having a hierarchy here, what I'm interested
-> in is making the addressing reflect what the hardware actually
-> does. With the empty "ranges", it looks like the entire 32-bit
-> address is getting exposed to the external bus, which is usually
-> not how things work: instead, each "cs" line gets raised by an I/O
-> operation on a particular CPU address range, and that range should
-> be part of the "ranges" propert of the main bus node, and the
-> externally visible addresses should be the translated addresses
-> in the child bus representation in DT.
-
-I have fixed the ranges too in the new version.
-
-Yours,
-Linus Walleij
+-- 
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
