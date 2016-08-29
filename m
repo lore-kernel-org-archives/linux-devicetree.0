@@ -1,40 +1,66 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/4] soc: qcom: add an EBI2 device tree bindings
-Date: Mon, 29 Aug 2016 19:21:41 +0200
-Message-ID: <CACRpkdbZdRc+75YKTGLSogK6zqnR9crks3-YYmMFOLsxHbk2dQ@mail.gmail.com>
-References: <1470691445-27571-1-git-send-email-linus.walleij@linaro.org>
- <2988918.zNxvaGl6en@wuerfel> <CACRpkdZ=HU6j3=Ye4dm=tFU=KmG54bq06KDfxPViWUouOA=jOA@mail.gmail.com>
- <201608291351.12915.arnd@arndb.de> <CAL_JsqJPckLGDSiqnspvtP_=t+yZ+0vO-8MxGB6x7poOZiyK+Q@mail.gmail.com>
- <CACRpkdaRPa=tCH2FQUOUzp0Q2YvdLNA7R2y3w==sH40DwJ2vGA@mail.gmail.com> <CAL_JsqJSO4Bco_BJqYFVEQ73_-nm_QeHy=HF3u6bNhxsikOAGw@mail.gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: document bindings for mounting matrixes
+Date: Mon, 29 Aug 2016 18:24:58 +0100
+Message-ID: <ec3fb3a4-1f8e-1eae-e4b7-42f8eb16fe25@kernel.org>
+References: <1469355434-17043-1-git-send-email-linus.walleij@linaro.org>
+ <CACRpkdY0gCLKD3rmiYuFgWSYOe6dtUaBeRi1ns-UFF=AspntFg@mail.gmail.com>
+ <c8e83cf2-f9dc-0bc9-fcde-326b05ee290b@kernel.org>
+ <57BD9EB6.1090504@parrot.com>
+ <067a4882-c6f2-5994-e3ce-100e317ed121@kernel.org>
+ <CACRpkda-Mz0wOAXx4uoZ43OCVw0U_E0+iCrboUO_7keYV2scBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJSO4Bco_BJqYFVEQ73_-nm_QeHy=HF3u6bNhxsikOAGw@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkda-Mz0wOAXx4uoZ43OCVw0U_E0+iCrboUO_7keYV2scBw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samu Onkalo <samu.onkalo-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 29, 2016 at 4:06 PM, Rob Herring <robh+dt@kernel.org> wrote:
-> [Me]
->> That is very close to how
->> Documentation/devicetree/bindings/bus/imx-weim.txt
->> drivers/bus/imx-weim.c
->> does things, just with the additional property arrays.
->
-> Maybe so, but I'm trying to bring some consistency here, so I'd
-> suggest looking at newer ones like atmel IIRC.
+On 25/08/16 23:04, Linus Walleij wrote:
+> On Wed, Aug 24, 2016 at 11:29 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> Gregor:
+>>> So I feel like we should keep away from any temptation to define the coordinates
+>>> system too strictly.
+>>> I also think of systems composed of multiple hardware parts with sensors
+>>> scattered all over them. What would be the right "device/main hardware" reference
+>>> frame definition in these cases ?
+>>> As this is product specific, I feel like "device/main hardware" reference frame
+>>> definition should be left to the "board/main hardware/device..." implementor's
+>>> choice.
+>>
+>> Flexible is good, but I think we should define a base rule for the chips frame
+>> of reference and fix up any that disagree (which is nasty ABI breakage :(
+>> Trivial choice of either right handed or left handed frame might be all we
+>> define in general.  Useful to define consistent frames for device types that
+>> are common perhaps as well.  (such as the screen ones Linus has here).
+> 
+> Admittedly I come from the mobile phone industry.
+> 
+> So these frames of reference is not cooked up by me, I installed the
+> Android app "Sensors test" to test two devices relative the world, so this
+> is the frame of reference used by all mobile phones and tablets on the
+> planet (I hardly think iPhone deviates).
+> 
+> I would be happy to write explicitly that for human interaction devices
+> with screens that frame of reference should always be assumed, but for
+> other uses and device types other frames of reference may apply, would
+> you agree?
+Absolutely.  The references Gregor gave might also be worth mentioning
+as they provide pretty pictures etc ;)
 
-The Uniphier bindings also look like this and it's the most recent
-bus driver ...
-Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
+Jonathan
+> 
+> Yours,
+> Linus Walleij
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-But OK it's probably best to follow an example so I get it the way
-you prefer. Which binding and driver is that?
-
-There's no Atmel stuff in Documentation/devicetree/bindings/bus/
-nor drivers/bus from what I can tell, so just point out what you're
-referring to here and I'll do my best to follow that example.
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
