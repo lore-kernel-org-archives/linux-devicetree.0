@@ -1,49 +1,54 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/4] soc: qcom: add an EBI2 device tree bindings
-Date: Mon, 29 Aug 2016 17:51:14 -0500
-Message-ID: <CAL_JsqLTHTt9ZMLLxhK4bFCYjF_aX0cYDc0nueGS8ByDFzCsVw@mail.gmail.com>
-References: <1470691445-27571-1-git-send-email-linus.walleij@linaro.org>
- <2988918.zNxvaGl6en@wuerfel> <CACRpkdZ=HU6j3=Ye4dm=tFU=KmG54bq06KDfxPViWUouOA=jOA@mail.gmail.com>
- <201608291351.12915.arnd@arndb.de> <CAL_JsqJPckLGDSiqnspvtP_=t+yZ+0vO-8MxGB6x7poOZiyK+Q@mail.gmail.com>
- <CACRpkdaRPa=tCH2FQUOUzp0Q2YvdLNA7R2y3w==sH40DwJ2vGA@mail.gmail.com>
- <CAL_JsqJSO4Bco_BJqYFVEQ73_-nm_QeHy=HF3u6bNhxsikOAGw@mail.gmail.com> <CACRpkdbZdRc+75YKTGLSogK6zqnR9crks3-YYmMFOLsxHbk2dQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbZdRc+75YKTGLSogK6zqnR9crks3-YYmMFOLsxHbk2dQ@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Zach Brown <zach.brown@ni.com>
+Subject: [PATCH 1/2] sdhci-of-arasan: Add device tree parameter fails-without-test-cd bit
+Date: Mon, 29 Aug 2016 18:20:56 -0500
+Message-ID: <1472512857-13063-1-git-send-email-zach.brown@ni.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: adrian.hunter@intel.com
+Cc: robh+dt@kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org, zach.brown@ni.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 29, 2016 at 12:21 PM, Linus Walleij
-<linus.walleij@linaro.org> wrote:
-> On Mon, Aug 29, 2016 at 4:06 PM, Rob Herring <robh+dt@kernel.org> wrote:
->> [Me]
->>> That is very close to how
->>> Documentation/devicetree/bindings/bus/imx-weim.txt
->>> drivers/bus/imx-weim.c
->>> does things, just with the additional property arrays.
->>
->> Maybe so, but I'm trying to bring some consistency here, so I'd
->> suggest looking at newer ones like atmel IIRC.
->
-> The Uniphier bindings also look like this and it's the most recent
-> bus driver ...
-> Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
->
-> But OK it's probably best to follow an example so I get it the way
-> you prefer. Which binding and driver is that?
->
-> There's no Atmel stuff in Documentation/devicetree/bindings/bus/
-> nor drivers/bus from what I can tell, so just point out what you're
-> referring to here and I'll do my best to follow that example.
+The sdhci controller on xilinx zynq devices will not function unless
+the CD bit is provided. http://www.xilinx.com/support/answers/61064.html
+In cases where it is impossible to provide the CD bit in hardware,
+setting the controller to test mode and then setting inserted to true
+will get the controller to function without the CD bit.
 
-Argg, that's because it is in a different spot:
+The device property "fails-without-test-cd" will let the arasan driver know
+the controller does not have the CD line wired and that the controller
+does not function without it.
 
-Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+Signed-off-by: Zach Brown <zach.brown@ni.com>
+---
+v2:
+ * improved commit messages
+ * removed fake-cd device property
+ * removed fake-cd quirk
+ * use broken-cd device property
+ * documented new usage of broken-cd
+v3:
+ * removed new usage of broken-cd
+ * created fails-without-test-cd device property
+ * created arasan controller specific quirk
 
-Time to clean things up... bindings/bus is supposed to be internal,
-on-chip buses.
 
-Rob
+ Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+index 3404afa..ec0dc82 100644
+--- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
++++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+@@ -21,6 +21,10 @@ Required Properties:
+   - interrupts: Interrupt specifier
+   - interrupt-parent: Phandle for the interrupt controller that services
+ 		      interrupts for this device.
++Optional Properties:
++- fails-without-test-cd: when present, the controller doesn't work when the CD
++  line is not connected properly, and the line is not connected properly. Test
++  mode can be used to force the controller to function.
+
+ Required Properties for "arasan,sdhci-5.1":
+   - phys: From PHY bindings: Phandle for the Generic PHY for arasan.
+--
+2.7.4
