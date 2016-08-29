@@ -1,119 +1,41 @@
-From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] arm64: Add DTS support for FSL's LS1012A SoC
-Date: Mon, 29 Aug 2016 12:51:01 -0500
-Message-ID: <1472493061.13245.39.camel@buserror.net>
-References: <1472207241-18461-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
-         <20160829095239.GM30790@tiger>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160829095239.GM30790@tiger>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org, Pratiyush Mohan Srivastava <pratiyush.srivastava-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH] arm64: dts: rockchip: Explicitly set pclk_pmu_src on rk3399
+Date: Mon, 29 Aug 2016 11:11:24 -0700
+Message-ID: <1472494284-11315-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: briannorris@chromium.org, linux-rockchip@lists.infradead.org, zhengxing@rock-chips.com, Douglas Anderson <dianders@chromium.org>, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, wxt@rock-chips.com, jay.xu@rock-chips.com, zhangqing@rock-chips.com, david.wu@rock-chips.com, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-08-29 at 17:52 +0800, Shawn Guo wrote:
-> On Fri, Aug 26, 2016 at 03:57:21PM +0530, Bhaskar Upadhaya wrote:
-> > 
-> > +		clockgen: clocking@1ee1000 {
-> > +			compatible = "fsl,ls1012a-clockgen";
-> The compatible cannot be found in binding docs.
+On rk3399 we explicitly set ppll in the device tree to 676000000.  The
+ppll has one major child, pclk_pmu_src, that is the parent of lots of
+other clocks.  Right now nobody is setting that clock rate and we're
+relying on the divider to just happen to be something sane.  Let's be
+explicit in our request so we're not relying on the firmware.
 
-From Documentation/devicetree/bindings/clock/qoriq-clock.txt:
+With the current firmware I tested with this patch has no expected
+impact but it's probably good to do anyway.
 
-- compatible: Should contain a chip-specific clock block compatible
-        string and (if applicable) may contain a chassis-version clock
-        compatible string.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-        Chip-specific strings are of the form "fsl,<chip>-clockgen", such as:
-        * "fsl,p2041-clockgen"
-        * "fsl,p3041-clockgen"
-        * "fsl,p4080-clockgen"
-        * "fsl,p5020-clockgen"
-        * "fsl,p5040-clockgen"
-        * "fsl,t4240-clockgen"
-        * "fsl,b4420-clockgen"
-        * "fsl,b4860-clockgen"
-        * "fsl,ls1021a-clockgen"
-        Chassis-version clock strings include:
-        * "fsl,qoriq-clockgen-1.0": for chassis 1.0 clocks
-        * "fsl,qoriq-clockgen-2.0": for chassis 2.0 clocks
-
-I really hope we don't have to update every single fsl,<chip>-whatever binding
-every time a new chip comes out.  There are already other chips not listed,
-FWIW (e.g. t1040, t2080, ls1043a, and ls2080a).  That's why it says "such as".
-
-> > +		scfg: scfg@1570000 {
-> > +			compatible = "fsl,ls1012a-scfg", "syscon";
-> Ditto
-> 
-> > 
-> > +			reg = <0x0 0x1570000 0x0 0x10000>;
-> > +			big-endian;
-> > +		};
-> > +
-> > +		dcfg: dcfg@1ee0000 {
-> > +			compatible = "fsl,ls1012a-dcfg",
-> > +				     "fsl,ls1043a-dcfg",
-> If these compatibles are not documented or used, we can drop them?  I
-> guess we only need "syscon" to get it work?
-
-If you only have "syscon" then how to do the users of the node properly know
-what register set they're dealing with?  "syscon" should not be the only
-compatible on a node.
-
-
-
-> > +
-> > +		rcpm: rcpm@1ee2000 {
-> > +			compatible = "fsl,ls1012a-rcpm";
-> Undocumented/unsupported bindings?
-
-Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-
-> > +		tmu: tmu@1f00000 {
-> > +			compatible = "fsl,ls1012a-tmu", "fsl,qoriq-tmu";
-> > +			reg = <0x0 0x1f00000 0x0 0x10000>;
-> > +			interrupts = <0 33 0x4>;
-> > +			fsl,tmu-range = <0xb0000 0x9002a 0x6004c
-> > 0x30062>;
-> > +			fsl,tmu-calibration = <0x00000000 0x00000026
-> > +					       0x00000001 0x0000002d
-> > +					       0x00000002 0x00000032
-> > +					       0x00000003 0x00000039
-> > +					       0x00000004 0x0000003f
-> > +					       0x00000005 0x00000046
-> > +					       0x00000006 0x0000004d
-> > +					       0x00000007 0x00000054
-> > +					       0x00000008 0x0000005a
-> > +					       0x00000009 0x00000061
-> > +					       0x0000000a 0x0000006a
-> > +					       0x0000000b 0x00000071
-> > +
-> Drop the newline.
-> 
-> > 
-> > +					       0x00010000 0x00000025
-> > +					       0x00010001 0x0000002c
-> > +					       0x00010002 0x00000035
-> > +					       0x00010003 0x0000003d
-> > +					       0x00010004 0x00000045
-> > +					       0x00010005 0x0000004e
-> > +					       0x00010006 0x00000057
-> > +					       0x00010007 0x00000061
-> > +					       0x00010008 0x0000006b
-> > +					       0x00010009 0x00000076
-> > +
-> Ditto
-
-This is how other instances of this property are formatted -- is it so wrong
-to provide visual grouping?
-
--Scott
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 62d450935a57..ffb3faa8c176 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -908,8 +908,8 @@
+ 		reg = <0x0 0xff750000 0x0 0x1000>;
+ 		#clock-cells = <1>;
+ 		#reset-cells = <1>;
+-		assigned-clocks = <&pmucru PLL_PPLL>;
+-		assigned-clock-rates = <676000000>;
++		assigned-clocks = <&pmucru PLL_PPLL>, <&pmucru PCLK_SRC_PMU>;
++		assigned-clock-rates = <676000000>, <112666667>;
+ 	};
+ 
+ 	cru: clock-controller@ff760000 {
+-- 
+2.8.0.rc3.226.g39d4020
