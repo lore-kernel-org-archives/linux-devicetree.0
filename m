@@ -1,56 +1,81 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [BISECTED REGRESSION] v4.8-rc: DT/OCTEON driver probing broken
-Date: Mon, 29 Aug 2016 17:39:15 -0500
-Message-ID: <CAL_Jsq+mmBH+HVLubj1_rQ0T60zfQj_Dbz41EVe7v_Mj_u2Vug@mail.gmail.com>
-References: <20160816150056.GD18731@ak-desktop.emea.nsn-net.net>
- <0336fae0-1717-2f90-c221-6ef69f7024ee@leemhuis.info> <20160828122239.GA14316@raspberrypi.musicnaut.iki.fi>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160828122239.GA14316-FnsA7b+Nu9VnX4FghcBuy1lsiSbylPe+PBWPt36IahQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Thorsten Leemhuis <regressions-rCxcAJFjeRkk+I/owrrOrA@public.gmane.org>, Aaro Koskinen <aaro.koskinen-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Randy Li <ayaka@soulik.info>
+Subject: [PATCH RFC] ARM: dts: samsung: add rga-lvds panel in itop elite
+Date: Tue, 30 Aug 2016 06:50:02 +0800
+Message-ID: <1472511002-9019-1-git-send-email-ayaka@soulik.info>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, krzk@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, dri-devel@lists.freedesktop.org, Randy Li <ayaka@soulik.info>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 28, 2016 at 7:22 AM, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org> wrote:
-> Hi,
->
-> On Sun, Aug 28, 2016 at 12:34:06PM +0200, Thorsten Leemhuis wrote:
->> Lo! Kefeng, below report made it to the list of regression for 4.8, but
->> afaics nothing happened after the initial report. Is there maybe some
->> reason why it shouldn't be on the list of regressions at all? Or was the
->> problem discussed elsewhere? Or is it even fixed already? I noticed
->> https://git.kernel.org/torvalds/c/fc520f8b4f (of/platform: disable the
->> of_platform_default_populate_init() for all the ppc board), but that
->> change is PPC specific.
->
-> There is a fix proposal here:
->
->         https://patchwork.linux-mips.org/patch/14041/
->
-> There is still few other boards remaining that use of_platform_bus_probe()
-> from device_initcall, but who knows, maybe they are not affected.
->
-> arch/microblaze/kernel/platform.c
+It is actually a lvds panel connected through a rga-lvds bridge.
+But I really have no idea about what does a port mean in fimd node.
 
-xlnx,compound is going to fail to probe. I'm adding this to the default.
+Also how should I configure this panel size? I think the i2c found
+on the panel schematic, but it more likely to be used a touch screen
+touth. Also the touch screen is not supported in currently driver.
 
-> arch/mips/mti-malta/malta-dt.c
+Signed-off-by: Randy Li <ayaka@soulik.info>
+---
+ arch/arm/boot/dts/exynos4412-itop-elite.dts | 35 ++++++++++++++++++++++++++---
+ 1 file changed, 32 insertions(+), 3 deletions(-)
 
-This should be fine. It does probe for "isa", but nothing in mainline
-is using that. We can add it to the default when it does.
-
-> arch/mips/netlogic/xlp/dt.c
-
-Should be okay with default.
-
-> arch/x86/platform/olpc/olpc_dt.c
-
-This one needs fixing.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos4412-itop-elite.dts b/arch/arm/boot/dts/exynos4412-itop-elite.dts
+index e1cda54..2d67385 100644
+--- a/arch/arm/boot/dts/exynos4412-itop-elite.dts
++++ b/arch/arm/boot/dts/exynos4412-itop-elite.dts
+@@ -139,6 +139,20 @@
+ 		assigned-clocks = <&clock CLK_MOUT_CAM0>;
+ 		assigned-clock-parents = <&clock CLK_XUSBXTI>;
+ 	};
++	
++	vcc_sys_lcd: sys-lcd {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
++	};
++
++	panel: panel {
++		ddc-i2c-bus = <&i2c_3>;
++		power-supply = <&vcc_sys_lcd>;
++		enable-gpios = <&gpl0 2 GPIO_ACTIVE_HIGH>;
++	};
+ };
+ 
+ &pinctrl_1 {
+@@ -221,9 +235,6 @@
+ };
+ 
+ &pwm {
+-	pinctrl-0 = <&pwm1_out>;
+-	pinctrl-names = "default";
+-	samsung,pwm-outputs = <1>;
+ 	status = "okay";
+ };
+ 
+@@ -239,3 +250,21 @@
+ 	assigned-clock-parents = <&clock CLK_MOUT_MPLL_USER_T>;
+ 	assigned-clock-rates = <0>, <176000000>;
+ };
++
++&i2c_3 {
++	status = "okay";
++};
++
++&fimd {
++	pinctrl-0 = <&lcd_clk &lcd_data24 &pwm1_out>;
++	pinctrl-names = "default";
++	status = "okay";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	port@0 {
++		reg = <0>;
++		rga_lvds: endpoint {
++			remote-endpoint = <&panel>;
++		};
++	};
++};
+-- 
+2.7.4
