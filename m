@@ -1,61 +1,143 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: Add Keith&Koep vendor prefix
-Date: Mon, 29 Aug 2016 13:24:39 +0200
-Message-ID: <1a429145-c1b4-d5ec-83c4-74c3621b1941@denx.de>
-References: <20160826142918.7310-1-marex@denx.de>
- <201608261758.16050.arnd@arndb.de>
- <d33c482e-8ce8-e6a2-6b39-f5711e3651cc@denx.de> <54135611.ZknNUmHIGf@wuerfel>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] soc: qcom: add an EBI2 device tree bindings
+Date: Mon, 29 Aug 2016 15:13:34 +0200
+Message-ID: <CACRpkdaRPa=tCH2FQUOUzp0Q2YvdLNA7R2y3w==sH40DwJ2vGA@mail.gmail.com>
+References: <1470691445-27571-1-git-send-email-linus.walleij@linaro.org>
+ <2988918.zNxvaGl6en@wuerfel> <CACRpkdZ=HU6j3=Ye4dm=tFU=KmG54bq06KDfxPViWUouOA=jOA@mail.gmail.com>
+ <201608291351.12915.arnd@arndb.de> <CAL_JsqJPckLGDSiqnspvtP_=t+yZ+0vO-8MxGB6x7poOZiyK+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54135611.ZknNUmHIGf@wuerfel>
+In-Reply-To: <CAL_JsqJPckLGDSiqnspvtP_=t+yZ+0vO-8MxGB6x7poOZiyK+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/29/2016 01:04 PM, Arnd Bergmann wrote:
-> On Friday, August 26, 2016 6:07:24 PM CEST Marek Vasut wrote:
->> On 08/26/2016 05:58 PM, Arnd Bergmann wrote:
->>> On Friday 26 August 2016, Marek Vasut wrote:
->>>> Add vendor prefix for Keith&Koep GmbH , http://keith-koep.com/en/
->>>>
->>>> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->>>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
->>>> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> ---
->>>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->>>> index 2c2500d..0fec4a7 100644
->>>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->>>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->>>> @@ -141,6 +141,7 @@ jedec    JEDEC Solid State Technology Association
->>>>  karo        Ka-Ro electronics GmbH
->>>>  keymile     Keymile GmbH
->>>>  kinetic Kinetic Technologies
->>>> +kk  Keith & Koep GmbH
->>>
->>>
->>> This is really short, and my first guess what 'kk' should mean would be 'kankun',
->>> so I'd suggest using something longer here.
+On Mon, Aug 29, 2016 at 2:24 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Aug 29, 2016 at 6:51 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+
+>> I would have one node per chip-select and then put the devices on
+>> that CS below it, with #address-cells=1 again.
+>
+> Actually, how I've been guiding folks is 2 levels of nodes.
+>
+> eim {
+>   #address-cells = <3>;
+>   cs@0,0 {
+>     compatible = "bar,some-device";
+>     foo,eim-timing-prop = <0>;
+>   };
+>
+> This is how most bindings have been done. There's not really any point
+> to 3 levels other than keeping CS properties separate, but they don't
+> need to be if they are properly prefixed. The timing for a device is a
+> property of the device even though we express them in terms of the
+> controller.
+
+This is what I'm doing in the most recent version from aug 24 I think.
+http://marc.info/?l=linux-arm-kernel&m=147202889622540&w=2
+
+>>> ebi2@1a100000 {
+>>>        compatible = "qcom,msm8660-ebi2";
+>>>        #address-cells = <2>;
+>>>        #size-cells = <1>;
+>>>        qcom,xmem-recovery-cycles = <0>, <0>, <5>, <0>, <0>, <0>;
 >>
->> keithkoep or kuk maybe ?
-> 
-> keithkoep sounds best to me, that would be completely unambiguous.
+>> No, better put the settings into one device per cs.
+>
+> Yes.
 
-OK
+Gnah. Each chipselect can (in theory) house several memory-mapped
+devices at different offsets. Like two ethernet controllers. It gets a bit
+weird.
 
-btw the "kuk" came up from their vendorkernel(TM), they prefix some of
-the files with "kuk".
+This is how it currently looks (v2):
 
+ebi2@1a100000 {
+    compatible = "qcom,apq8060-ebi2";
+    #address-cells = <2>;
+    #size-cells = <1>;
+    ranges = <0 0x0 0x1a800000 0x00800000>,
+        <1 0x0 0x1b000000 0x00800000>,
+        <2 0x0 0x1b800000 0x00800000>,
+        <3 0x0 0x1d000000 0x00800000>,
+        <4 0x0 0x1c800000 0x00800000>,
+        <5 0x0 0x1c000000 0x00800000>;
+    reg = <0x1a100000 0x1000>, <0x1a110000 0x1000>;
+    reg-names = "ebi2", "xmem";
+    qcom,xmem-recovery-cycles = <0>, <0>, <0>, <0>, <0>, <0>;
+    qcom,xmem-write-hold-cycles = <0>, <0>, <3>, <0>, <0>, <0>;
+    qcom,xmem-write-delta-cycles = <0>, <0>, <31>, <0>, <0>, <0>;
+    qcom,xmem-read-delta-cycles = <0>, <0>, <28>, <0>, <0>, <0>;
+    qcom,xmem-write-wait-cycles = <0>, <0>, <9>, <0>, <0>, <0>;
+    qcom,xmem-read-wait-cycles = <0>, <0>, <9>, <0>, <0>, <0>;
 
--- 
-Best regards,
-Marek Vasut
+    foo-ebi2@1b800000 {
+        compatible = "foo";
+        reg = <2 0x0 0x100>;
+        (...)
+    };
+};
+
+That is very close to how
+Documentation/devicetree/bindings/bus/imx-weim.txt
+drivers/bus/imx-weim.c
+does things, just with the additional property arrays.
+
+By looping over the subnodes and inspecting the first address cell of
+them I can figure out what chipselects need to be turned on, and
+the settings for those chipselects I need to activate are taken from
+those 6 qcom,xmem* arrays of timings.
+
+So if I reintroduce the cs nodes how do you imagine it'd look? Like this?
+
+ebi2@1a100000 {
+    compatible = "qcom,apq8060-ebi2";
+    #address-cells = <1>;
+    #size-cells = <1>;
+    reg = <0x1a100000 0x1000>, <0x1a110000 0x1000>;
+    reg-names = "ebi2", "xmem";
+
+   cs@2 {
+       compatible = "bar,some-device";
+       #address-cells = <1>;
+       #size-cells = <1>;
+       ranges = <0x0 0x1b800000 0x00800000>;
+       chipselect = <2>;
+       foo,eim-timing-prop = <0>;
+       qcom,xmem-recovery-cycles = <0>;
+       qcom,xmem-write-hold-cycles = <3>;
+       qcom,xmem-write-delta-cycles = <31>;
+       qcom,xmem-read-delta-cycles = <28>;
+       qcom,xmem-write-wait-cycles = <9>;
+       qcom,xmem-read-wait-cycles = <9>;
+
+       foo-ebi2@0 {
+           compatible = "foo";
+           reg = <0x0 0x100>;
+           (...)
+       };
+
+       bar-ebi2@100 {
+           compatible = "bar";
+           reg = <0x100 0x100>;
+           (...)
+       };
+
+    };
+};
+
+Note: the chipselect goes out of the address cell, into the old
+chipselect = <n> property, because we have no other way to know
+which chipselect the settings apply to! (It's not like we can parse
+the subnodes and make a majority decision...)
+
+I kind of think both are non-perfect but the first one is the lesser
+evil.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
