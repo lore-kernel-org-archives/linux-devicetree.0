@@ -1,30 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: touchscreen: silead_gsl1680: Document
- touchscreen-fw-name
-Date: Sun, 28 Aug 2016 19:37:25 -0500
-Message-ID: <20160829003725.GA20749@rob-hp-laptop>
-References: <1471964688-12188-1-git-send-email-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1471964688-12188-1-git-send-email-hdegoede@redhat.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx7d-sdb: fix ti,x-plate-ohms property name
+Date: Mon, 29 Aug 2016 04:41:50 +0300
+Message-ID: <1472434910-29071-1-git-send-email-vz@mleia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 23, 2016 at 05:04:48PM +0200, Hans de Goede wrote:
-> The driver has supported touchscreen-fw-name to specify the firmware to
-> load since day 0, but this was omitted from the binding, document this.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt | 1 +
->  1 file changed, 1 insertion(+)
+Fix misspelled "ti,x-plate-ohms" property name of TI TSC2046
+touchscreen controller.
 
-I'd really like to deprecate in favor of a standard property name. We've 
-somewhat agreed on 'firmware-name' though there is no common binding doc 
-yet. But given this is in use:
+Fixes: d09e6beafa23 ("ARM: dts: imx7d-sdb: Add support for touchscreen")
+Signed-off-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/imx7d-sdb.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
+index 95ee268..2f33c46 100644
+--- a/arch/arm/boot/dts/imx7d-sdb.dts
++++ b/arch/arm/boot/dts/imx7d-sdb.dts
+@@ -131,7 +131,7 @@
+ 		ti,y-min = /bits/ 16 <0>;
+ 		ti,y-max = /bits/ 16 <0>;
+ 		ti,pressure-max = /bits/ 16 <0>;
+-		ti,x-plat-ohms = /bits/ 16 <400>;
++		ti,x-plate-ohms = /bits/ 16 <400>;
+ 		wakeup-source;
+ 	};
+ };
+-- 
+2.8.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
