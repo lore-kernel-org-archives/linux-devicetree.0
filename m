@@ -1,55 +1,84 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH] dt-bindings: touchscreen: silead_gsl1680: Document
- touchscreen-fw-name
-Date: Mon, 29 Aug 2016 11:35:47 +0200
-Message-ID: <64d65f63-db47-d9c2-1c3f-cc544c2da2ab@redhat.com>
-References: <1471964688-12188-1-git-send-email-hdegoede@redhat.com>
- <20160829003725.GA20749@rob-hp-laptop> <20160829051834.GW3165@lukather>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: sun8i-q8-common: Add support for SDIO wifi
+ controllers
+Date: Mon, 29 Aug 2016 11:46:14 +0200
+Message-ID: <724a6222-36e3-e230-5071-a7cb23c51697@redhat.com>
+References: <20160826145236.30210-1-hdegoede@redhat.com>
+ <20160826145236.30210-4-hdegoede@redhat.com> <20160829065620.GC7612@lukather>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160829051834.GW3165@lukather>
-Sender: linux-input-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160829065620.GC7612@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 29-08-16 07:18, Maxime Ripard wrote:
-> Hi Rob,
->
-> On Sun, Aug 28, 2016 at 07:37:25PM -0500, Rob Herring wrote:
->> On Tue, Aug 23, 2016 at 05:04:48PM +0200, Hans de Goede wrote:
->>> The driver has supported touchscreen-fw-name to specify the firmware to
->>> load since day 0, but this was omitted from the binding, document this.
->>>
->>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->>> ---
->>>  Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt | 1 +
->>>  1 file changed, 1 insertion(+)
+On 29-08-16 08:56, Maxime Ripard wrote:
+> On Fri, Aug 26, 2016 at 04:52:36PM +0200, Hans de Goede wrote:
+>> Most of the sun8i q8 boards have an usb wifi controller, on the
+>> variants which use an USB wifi controller, this will result in a
+>> couple of error msg-s in dmesg when proving the sdio bus and
+>> an used mmc controller.
 >>
->> I'd really like to deprecate in favor of a standard property name. We've
->> somewhat agreed on 'firmware-name' though there is no common binding doc
->> yet. But given this is in use:
+>> The best way to deal with wifi on this boards really is to simply
+>> let the kernel auto-detect usb or sdio wifi controllers, so we
+>> will just have to live with the few errors in dmesg.
 >
-> This has been introduced in 4.8-rc1, so it hasn't been used in any
-> stable version yet, and we don't have any users in tree so far.
->
-> If you want to something else, it feels like now is the time to change
+> No, because that grabs PINs that might or might not be supposed to be
+> used for that, it leaves clocks and regulators enabled, which draw
+> power, to no end. And that's even worth since most boards will not use
 > it.
+>
+> You can put the definition of the nodes in the DTSI, but the final
+> status will have to be in the (relevant) DTS.
 
-Ack, I can still change it to firmware-name if you want (Maxime has not yet
-merged any dts changes using the touchscreen-fw-name). We should probably
-also decide if the silead/ prefix we're using (so the firmware files are
-/lib/firmware/silead/foo.fw under Linux) goes into the firmware-name
-property as my current wip code is doing, or if we put the "silead/"
-part in the driver and only put the part after it in the property.
+This is again the q8-tablet thing where china produces a new variant
+every 2 weeks. So we've sun8i-a23-q8-tablet.dts and sun8i-a33-q8-tablet.dts
+which try to be generic dts files for these tablets, since creating
+a custom dts per variant is madness.
 
-I've a feeling that just putting only the base filename (so no "silead/"
-prefix) in the property is best.
+This commit puts the node in sun8i-q8-common.dtsi because the
+A23 and A33 are pin compatible and we've tablets where the
+only difference is the SoC soldered on there, the use the _exact_
+same PCB and components otherwise, so we have all the sun8i q8
+stuff in a common place for sun8i-a23-q8-tablet.dts and
+sun8i-a33-q8-tablet.dts, those are the only users of this
+dtsi file.
+
+You've already merged the bits which handle the variants with
+an USB attached wifi module (enabling ehci0 also on boards
+where nothing is connected). This is the counter-part for
+PCB's which use a sdio wifi module (about 90% of all boards
+in my experience). As for turning a regulator on unnecessary,
+both the wifi and sdio wifi solution use the same regulator,
+so that is already turned on through the usb bits and it
+needs to be in either case.
+
+The only downside of this approach is that we either have
+the USB controller turned on unnecessarily (in most cases)
+or the mmc controller (in the rare A23 tablet which still
+uses an USB wifi module).
+
+This all actually fits neatly into the plans to do hardware
+autodetection for these tablets which I'm working on, in
+this case we can just let the kernel handle things without
+additional code (think the beaglebone capemanager) since
+both busses are discoverable.
+
+Once we have the q8-hardwaremgr I'm working on and hope
+to post an RFC of soon, we could even make that turn off
+the unused controller (as a future enhancement).
+
+I hope this explains things.
 
 Regards,
 
 Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
