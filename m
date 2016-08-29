@@ -1,34 +1,60 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/3] Add R8A7792/Wheat board support
-Date: Mon, 29 Aug 2016 11:02:46 +0200
-Message-ID: <20160829090245.GB12085@verge.net.au>
-References: <3665116.9BjHTnhfR3@wasted.cogentembedded.com>
+From: Marcin Niestroj <m.niestroj@grinn-global.com>
+Subject: Re: [PATCH v4 1/5] mfd: tps65217: Add support for IRQs
+Date: Mon, 29 Aug 2016 11:05:34 +0200
+Message-ID: <c339a5bb-7e0d-bda4-2d76-38808977d3f6@grinn-global.com>
+References: <20160620105056.25843-1-m.niestroj@grinn-global.com>
+ <20160620105056.25843-2-m.niestroj@grinn-global.com>
+ <576D0437.1020800@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3665116.9BjHTnhfR3@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <576D0437.1020800@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 26, 2016 at 11:16:49PM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
->    Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
-> 'renesas-devel-20160826-v4.8-rc3' tag. We add the device tree support for
-> the R8A7792-based Wheat board. I have only sparse board documentation
-> at this point, according to which this board somewhat differs from the other
-> R-Car evaluation boards in that it has debug serial port, debug Ethernet chip,
-> and a NOR flash on the separate debug board (connected to the main board
-> with a ribbon cable). I'm not sure how to approach this (DT overlay, perhaps?),
-> for now I'm just posting the debug UART/Ethernet support the same way it was
-> done for the Blanche board -- these components seem to be the same between 
-> these 2 boards...
-> 
-> [1/3] DT: arm: shmobile: document Wheat board
-> [2/3] ARM: dts: wheat: initial device tree
-> [3/3] ARM: dts: wheat: add Ethernet support
+ping
 
-Thanks, I have queued this up.
+On 24.06.2016 11:58, Grygorii Strashko wrote:
+> On 06/20/2016 01:50 PM, Marcin Niestroj wrote:
+>> Add support for handling IRQs: power button, AC and USB power state
+>> changes. Mask and interrupt bits are shared within one register, which
+>> prevents us to use regmap_irq implementation. New irq_domain is
+>> created in
+>> order to add interrupt handling for each tps65217's subsystem. IRQ
+>> resources have been added for charger subsystem to be able to notify
+>> about
+>> AC and USB state changes.
+>>
+>> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+>> Acked-by: Lee Jones <lee.jones@linaro.org>
+>> ---
+>> Changes v3 -> v4 (suggested by Grygorii):
+>>   * Add irq_set_parent() during irq init
+>>   * Remove hardcoded IRQ trigger type, rely on DT bindings instead
+>>
+>> Changes v2 -> v3 (suggested by Lee):
+>>   * Alphabetical reorder of includes
+>>   * Rename enum tps65217_irqs -> tps65217_irq_type, so we won't confuse
+>>     it with structure object with the same name.
+>>   * Fix inconsistent order of irq_enable and irq_disable
+>>   * Remove redundant 'else' when returning from tps65217_irq_thread
+>>
+>> Changes v1 -> v2: none
+>>
+>>   drivers/mfd/Kconfig          |   1 +
+>>   drivers/mfd/tps65217.c       | 195
+>> +++++++++++++++++++++++++++++++++++++++++--
+>>   include/linux/mfd/tps65217.h |  12 +++
+>>   3 files changed, 200 insertions(+), 8 deletions(-)
+>>
+>
+> Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>
+>
+>
+
+-- 
+Marcin Niestroj
