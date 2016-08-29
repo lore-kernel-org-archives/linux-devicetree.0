@@ -1,132 +1,80 @@
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Subject: Re: [PATCH v7 12/14] arm64/numa: remove the limitation that cpu0 must
- bind to node0
-Date: Mon, 29 Aug 2016 14:55:42 +0800
-Message-ID: <57C3DC6E.4040406@huawei.com>
-References: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
- <1472024693-12912-13-git-send-email-thunder.leizhen@huawei.com>
- <20160826154942.GK30302@arm.com>
+From: Mirza Krak <mirza.krak@gmail.com>
+Subject: Re: [PATCH v2 3/6] dt/bindings: Add bindings for Tegra GMI controller
+Date: Mon, 29 Aug 2016 09:38:39 +0200
+Message-ID: <CALw8SCV4a98B0ct483wxf9ZMuCv8qV1BPM_9g6vV3huyp6YdOg@mail.gmail.com>
+References: <1472045838-22628-1-git-send-email-mirza.krak@gmail.com>
+ <1472045838-22628-4-git-send-email-mirza.krak@gmail.com> <de2fb909-829e-6c04-4f6a-442cbb9171c9@nvidia.com>
+ <CALw8SCVcPymDZ8NyUbeanRF0TCT1TZzL6iRDticYA42FWrEWqw@mail.gmail.com>
+ <CALw8SCWtTvWGmKru2MX7T7sFpoUpD-V400+w2nPkxaFB5WUKSA@mail.gmail.com> <a7851104-1aa1-fd8d-a594-545a01046cdf@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160826154942.GK30302@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Zefan Li <lizefan@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, Hanjun Guo <guohanjun@huawei.com>, linux-kernel <linux-kernel@vger.kernel.org>, Xinwei Hu <huxinwei@huawei.com>, Rob Herring <robh+dt@kernel.org>, Tianhong Ding <dingtianhong@huawei.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a7851104-1aa1-fd8d-a594-545a01046cdf@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, linux@armlinux.org.uk, pdeschrijver@nvidia.com, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+2016-08-26 9:25 GMT+02:00 Jon Hunter <jonathanh@nvidia.com>:
+>
+> On 26/08/16 05:53, Mirza Krak wrote:
+>
+> ...
+>
+>>> I have an idea which is following:
+>>>
+>>> gmi@70090000 {
+>>>          status = "okay";
+>>>          #address-cells = <2>;
+>>>          #size-cells = <1>;
+>>>          ranges = <4 0 0x48000000 0x00040000>;
+>>>
+>>>          cs4 {
+>>>                  compatible = "simple-bus";
+>>>                  #address-cells = <2>;
+>>>                  #size-cells = <1>;
+>>>                  ranges;
+>>>
+>>>                  nvidia,snor-cs = <4>;
+>>>                  nvidia,snor-mux-mode;
+>>>                  nvidia,snor-adv-inv;
+>>>
+>>>                  can@0 {
+>>>                          compatible = "nxp,sja1000";
+>>>                          reg = <4 0 0x100>;
+>>>                          ...
+>>>                  };
+>>>
+>>>
+>>>                  can@40000 {
+>>>                          compatible = "nxp,sja1000";
+>>>                          reg = <4 0x40000 0x100>;
+>>>                          ...
+>>>                  };
+>>>          };
+>>> };
+>>>
+>>> Do not know if above will work at all (not able to test at current
+>>> location), anyway I will play around with it some more and get back to
+>>> you.
+>>
+>> Gave above a test run and it works like a charm. Are we happy with that?
+>
+> Does it not work with #address-cells = <1>? Seems odd to have the cs in
+> the reg for the device.
+>
 
+No it does not work with #address-cells = <1> with the current
+structure that we have.
 
-On 2016/8/26 23:49, Will Deacon wrote:
-> On Wed, Aug 24, 2016 at 03:44:51PM +0800, Zhen Lei wrote:
->> 1. Currently only cpu0 set on cpu_possible_mask and percpu areas have not
->>    been initialized.
-This description refer to below:
--	for_each_possible_cpu(cpu)
--		set_cpu_numa_node(cpu, NUMA_NO_NODE);
+With #address-cells = <2>, we can state that this device is on
+chip-select 4 and on this specific offset of chip-select 4 (that is
+the second address cell). I do not see how we can specify this with
+only one address cell.
 
-1. When the above code is executed, only the bit of cpu0 was set on cpu_possible_mask.
-   So that, only set_cpu_numa_node(0, NUMA_NO_NODE); will be executed.
-2. set_cpu_numa_node will access percpu variable numa_node, but setup_per_cpu_areas is
-   called after current time. Without the first problem, it will lead kernel crash.
+And is it really that odd? Looking at other drivers they all use the
+same metod, even the arm,pl172 that you where referring to as a base
+for our implementation.
 
-I changed the title of this patch in v7, the original is "remove some useless code".
-I think I should separate this into a new patch.
-
-
-
->> 2. No reason to limit cpu0 must belongs to node0.
-> 
-> Whilst I suspect you're using enumerated lists in order to try to make
-> things clearer, I'm having a really hard time understanding the commit
-> messages you have in this series. It's actually much better if you
-> structure them as concise paragraphs explaining:
-> 
->   - What is the problem that you're fixing?
-> 
->   - How does that problem manifest?
-> 
->   - How does the patch fix it?
-> 
-> As far as I can see, this patch just removes a bunch of code with no
-> explanation as to why it's not required or any problems caused by
-> keeping it around.
-> 
-> Will
-> 
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  arch/arm64/mm/numa.c | 12 ++----------
->>  1 file changed, 2 insertions(+), 10 deletions(-)
->>
->> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
->> index 114180f..07a1978 100644
->> --- a/arch/arm64/mm/numa.c
->> +++ b/arch/arm64/mm/numa.c
->> @@ -94,7 +94,6 @@ void numa_clear_node(unsigned int cpu)
->>   */
->>  static void __init setup_node_to_cpumask_map(void)
->>  {
->> -	unsigned int cpu;
->>  	int node;
->>
->>  	/* setup nr_node_ids if not done yet */
->> @@ -107,9 +106,6 @@ static void __init setup_node_to_cpumask_map(void)
->>  		cpumask_clear(node_to_cpumask_map[node]);
->>  	}
->>
->> -	for_each_possible_cpu(cpu)
->> -		set_cpu_numa_node(cpu, NUMA_NO_NODE);
->> -
->>  	/* cpumask_of_node() will now work */
->>  	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
->>  }
->> @@ -119,13 +115,13 @@ static void __init setup_node_to_cpumask_map(void)
->>   */
->>  void numa_store_cpu_info(unsigned int cpu)
->>  {
->> -	map_cpu_to_node(cpu, numa_off ? 0 : cpu_to_node_map[cpu]);
->> +	map_cpu_to_node(cpu, cpu_to_node_map[cpu]);
->>  }
->>
->>  void __init early_map_cpu_to_node(unsigned int cpu, int nid)
->>  {
->>  	/* fallback to node 0 */
->> -	if (nid < 0 || nid >= MAX_NUMNODES)
->> +	if (nid < 0 || nid >= MAX_NUMNODES || numa_off)
->>  		nid = 0;
-After the below code have been removed, we should make the corresponding adjustment.
-otherwise, kernel will be crashed if "numa=off" was set in bootargs.
-
->>
->>  	cpu_to_node_map[cpu] = nid;
->> @@ -375,10 +371,6 @@ static int __init numa_init(int (*init_func)(void))
->>
->>  	setup_node_to_cpumask_map();
->>
->> -	/* init boot processor */
->> -	cpu_to_node_map[0] = 0;
->> -	map_cpu_to_node(0, 0);
-These code limit cpu0 must belong to node0, but our current implementation deesn't
-have this limitation.
-
->> -
->>  	return 0;
->>  }
->>
->> --
->> 2.5.0
->>
->>
-> 
-> .
-> 
+Best Regards
+Mirza
