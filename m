@@ -1,108 +1,76 @@
-From: Karl Beldan <kbeldan@baylibre.com>
-Subject: [PATCH] ARM: dts: da850-lcdk: Add NAND to DT
-Date: Mon, 29 Aug 2016 15:32:42 +0000
-Message-ID: <20160829153242.18615-1-kbeldan@baylibre.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] Documentation: dtb: xgene: Add PMD clock binding
+Date: Mon, 29 Aug 2016 10:42:28 -0500
+Message-ID: <20160829154228.GA23350@rob-hp-laptop>
+References: <1471967561-23634-1-git-send-email-hotran@apm.com>
+ <1471967561-23634-2-git-send-email-hotran@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Karl Beldan <karl.beldan+oss@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Karl Beldan <kbeldan@baylibre.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1471967561-23634-2-git-send-email-hotran-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hoan Tran <hotran-qTEPVZfXA3Y@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lho-qTEPVZfXA3Y@public.gmane.org, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds DT support for the NAND connected to the SoC AEMIF.
-Passed torture hashing a 40MB file on top of UBIFS using subpages.
+On Tue, Aug 23, 2016 at 08:52:39AM -0700, Hoan Tran wrote:
+> Add APM X-Gene clock binding documentation for PMD clock.
+> 
+> Signed-off-by: Hoan Tran <hotran-qTEPVZfXA3Y@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/clock/xgene.txt | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/xgene.txt b/Documentation/devicetree/bindings/clock/xgene.txt
+> index 82f9638..c381733 100644
+> --- a/Documentation/devicetree/bindings/clock/xgene.txt
+> +++ b/Documentation/devicetree/bindings/clock/xgene.txt
+> @@ -8,6 +8,7 @@ Required properties:
+>  - compatible : shall be one of the following:
+>  	"apm,xgene-socpll-clock" - for a X-Gene SoC PLL clock
+>  	"apm,xgene-pcppll-clock" - for a X-Gene PCP PLL clock
+> +	"apm,xgene-pmd-clock" - for a X-Gene PMD clock
+>  	"apm,xgene-device-clock" - for a X-Gene device clock
+>  	"apm,xgene-socpll-v2-clock" - for a X-Gene SoC PLL v2 clock
+>  	"apm,xgene-pcppll-v2-clock" - for a X-Gene PCP PLL v2 clock
+> @@ -22,6 +23,17 @@ Required properties for SoC or PCP PLL clocks:
+>  Optional properties for PLL clocks:
+>  - clock-names : shall be the name of the PLL. If missing, use the device name.
+>  
+> +Required properties for PMD clocks:
+> +- reg : shall be the physical register address for the pmd clock.
+> +- clocks : shall be the input parent clock phandle for the clock.
+> +- #clock-cells : shall be set to 1.
+> +- clock-output-names : shall be the name of the clock referenced by derive
+> +  clock.
+> +- clock-shift: Bit shift of the clock register. Default is 0.
+> +- clock-width: Width of the clock register. Default is 32.
+> +Optional properties for PLL clocks:
+> +- clock-names : shall be the name of the clock. If missing, use the device name.
+> +
+>  Required properties for device clocks:
+>  - reg : shall be a list of address and length pairs describing the CSR
+>           reset and/or the divider. Either may be omitted, but at least
+> @@ -59,6 +71,16 @@ For example:
+>  		type = <0>;
+>  	};
+>  
+> +	pmd0clk: pmd0clk {
+> +		compatible = "apm,xgene-pmd-clock";
+> +		#clock-cells = <1>;
+> +		clocks = <&pmdpll 0>;
+> +		reg = <0x0 0x7E200200 0x0 0x10>;
+> +		clock-shift = <8>;
+> +		clock-width = <3>;
 
-Signed-off-by: Karl Beldan <kbeldan@baylibre.com>
----
-v2:
+These should be implied by the compatible string. It's not a big deal 
+for just adding this clock, but if you have lots more clocks to add then 
+it is a problem. We only want leaf clocks (the ones going to devices) in 
+DT unless there is only a few clocks.
 
-- Removed comments pertaining to the BSP the LCDK ships with (Sekhar)
-- s/"ok"/"okay"/
-- Removed partitions since it relates to the BSP the LCDK ships with and
-  also removed the references to the shortcomings of davinci_nand wrt DT
-  parsing vs scan_ident (use of ti,davinci-ecc* vs nand-ecc*)
-- use 4-bit ECC (since I have sent a fix for the driver)
-
- arch/arm/boot/dts/da850-lcdk.dts | 53 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
-
-diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-index 7563260..1665eee 100644
---- a/arch/arm/boot/dts/da850-lcdk.dts
-+++ b/arch/arm/boot/dts/da850-lcdk.dts
-@@ -63,6 +63,27 @@
- 			0x04 0x00000110 0x00000ff0
- 		>;
- 	};
-+
-+	nand_pins: nand_pins {
-+		pinctrl-single,bits = <
-+			/* EMA_WAIT[0], EMA_OE, EMA_WE, EMA_CS[3] */
-+			0x1c 0x10110010  0xf0ff00f0
-+			/*
-+			 * EMA_D[0], EMA_D[1], EMA_D[2],
-+			 * EMA_D[3], EMA_D[4], EMA_D[5],
-+			 * EMA_D[6], EMA_D[7]
-+			 */
-+			0x24 0x11111111  0xffffffff
-+			/*
-+			 * EMA_D[8],  EMA_D[9],  EMA_D[10],
-+			 * EMA_D[11], EMA_D[12], EMA_D[13],
-+			 * EMA_D[14], EMA_D[15]
-+			 */
-+			0x20 0x11111111  0xffffffff
-+			/* EMA_A[1], EMA_A[2] */
-+			0x30 0x01100000  0x0ff00000
-+		>;
-+	};
- };
- 
- &serial2 {
-@@ -136,3 +157,35 @@
- 	tx-num-evt = <32>;
- 	rx-num-evt = <32>;
- };
-+
-+&aemif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&nand_pins>;
-+	status = "okay";
-+	cs3 {
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		clock-ranges;
-+		ranges;
-+
-+		ti,cs-chipselect = <3>;
-+
-+		nand@2000000,0 {
-+			compatible = "ti,davinci-nand";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0 0x02000000 0x02000000
-+			       1 0x00000000 0x00008000>;
-+
-+			ti,davinci-chipselect = <1>;
-+			ti,davinci-mask-ale = <0>;
-+			ti,davinci-mask-cle = <0>;
-+			ti,davinci-mask-chipsel = <0>;
-+
-+			ti,davinci-nand-buswidth = <16>;
-+			ti,davinci-ecc-mode = "hw";
-+			ti,davinci-ecc-bits = <4>;
-+			ti,davinci-nand-use-bbt;
-+		};
-+	};
-+};
--- 
-2.9.2
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
