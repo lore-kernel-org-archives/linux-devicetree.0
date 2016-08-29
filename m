@@ -1,19 +1,19 @@
-From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+From: John Youn <johnyoun@synopsys.com>
 Subject: [PATCH 6/6] Documentation: devicetree: dwc2: Deprecate g-tx-fifo-size
 Date: Mon, 29 Aug 2016 13:39:03 -0700
-Message-ID: <47342acebdbd240cb1f92b2da7c1055a06f440d6.1472502978.git.johnyoun@synopsys.com>
+Message-ID: <47342acebdbd240cb1f92b2da7c1055a06f440d6.1472502978.git.johnyoun__6745.28082968226$1472503177$gmane$org@synopsys.com>
 References: <cover.1472502978.git.johnyoun@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1472502978.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1472502978.git.johnyoun@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Youn <johnyoun@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
 This property is not needed because the periodic fifos are not
 configurable. So it was incorrect to add this property in the first
 place.
 
-Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Signed-off-by: John Youn <johnyoun@synopsys.com>
 ---
  Documentation/devicetree/bindings/usb/dwc2.txt | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
@@ -36,8 +36,3 @@ index 20a68bf..7d16ebf 100644
  
 -- 
 2.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
