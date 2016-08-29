@@ -1,88 +1,47 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] ARm64: amlogic: Introduce common GX family dtsi
-Date: Mon, 29 Aug 2016 22:15:51 +0200
-Message-ID: <ca513cb4-34d4-72f9-9e32-7908329243a6@suse.de>
-References: <1472457371-1305-1-git-send-email-narmstrong@baylibre.com>
- <CAOQ7t2YGbASh7v25wgDspKNWgFOcRsikJs_WZptn+LkVXmaHig@mail.gmail.com>
- <2983d731-82fd-63fc-7541-8c1d6a929416@suse.de>
- <20160829195030.GA10797@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/6] usb: dwc2: gadget: Fix TX FIFO handling
+Date: Mon, 29 Aug 2016 13:38:46 -0700
+Message-ID: <cover.1472502978.git.johnyoun@synopsys.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160829195030.GA10797@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-amlogic <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 29.08.2016 um 21:50 schrieb Carlo Caione:
-> On 29/08/16 20:38, Andreas Färber wrote:
->> Am 29.08.2016 um 10:01 schrieb Carlo Caione:
->>> On Mon, Aug 29, 2016 at 9:56 AM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->>>> Neil Armstrong (3):
->>>>   ARM64: dts: amlogic: Add Meson GX Family common dtsi
->>>>   ARM64: dts: amlogic: Switch Meson GXL dtsi to use common GX dtsi
->>>>   ARM64: dts: amlogic: Switch Meson GXBB dtsi to use common GX dtsi
->>
->> Adding an unused .dtsi duplicating GXBB makes me uneasy.
-> 
-> S905x (GXL) is different from S905 (GXBB), it's unused now but in the
-> future we can expect something different in the two DTSI.
+Hi,
 
-Guess I need to be --verbose. ;)
+This is a resend of a patch series originally submitted by Robert
+Baldyga back in February.
 
-I meant: After patch 1/3 there is a gx-common.dtsi that duplicates
-contents of gxbb.dtsi and is not yet #include'd anywhere, i.e., unused.
+Somehow I missed it back then. Sorry about that.
 
->> Any chance we can simplify this to at most two steps?
->> 1) Move code from gxbb to gx (1/3 + 3/3)
->> 2) Add gxl using gx ("Add basic support for Amlogic S905X" + 2/3)
-> 
-> fine by me.
-> 
->> Alternatively:
->> 1) "Add basic support for Amlogic S905X"
->> 2) Factor out common bits (1/3 + 2/3 + 3/3)
-> 
-> how is this different from this patchset?
+It should fix some FIFO programming related issues on RPi and maybe
+other platforms.
 
-I'm suggesting we do "atomic" move operations, not copy and then remove.
+Also, this series makes the g-tx-fifo-size DT property obsolete. I've
+added a patch at the end of the series to document that.
 
-The difference between my two suggestions is how many and which changes
-we squash - I do appreciate that it's easy for review as is but what I
-have in mind is that either we should get this refactoring applied asap
-(#1 1)) and rebase all pending patches on it, or we may need to rebase
-the refactoring onto any pending MMC, SDIO, etc. patches, which I feel
-is safer to do in one big patch (#2 2)) than split over multiple ones.
-It really depends on the merge order and roadmap you guys have in mind.
+Regards,
+John
 
->> As for bike-shedding, is there a GX family as well or could we drop
->> -common? .dtsi is always something common - compare Exynos or i.MX.
->> Since there are meson8b and meson8 I was anticipating that after gxbb
->> would come gx, not gxl.
-> 
-> AFAIK we have:
-> - GXBB
-> - GXL
-> - GXM
-> - GXTVBB
-> 
->> Do you know what the L in GXL is for? Should we consider renaming gxbb
->> to gxb, and then also insert -s905 as suggested by Kevin, for symmetry?
-> 
-> Yes, that make sense.
+John Youn (1):
+  Documentation: devicetree: dwc2: Deprecate g-tx-fifo-size
 
-Hm, GXTVB would still be longer than GXL then, not much point then.
-We could still do -gxbb-s905 though.
+Robert Baldyga (5):
+  usb: dwc2: gadget: use ep->fifo_index in context of FIFO registers
+  usb: dwc2: gadget: fix TX FIFO size and address initialization
+  usb: dwc2: gadget: change variable name to more meaningful
+  usb: dwc2: gadget: remove dead code from dwc2_hsotg_ep_enable()
+  usb: dwc2: gadget: free TX FIFO after killing requests
 
-Cheers,
-Andreas
+ Documentation/devicetree/bindings/usb/dwc2.txt |  5 +-
+ drivers/usb/dwc2/core.h                        |  7 ---
+ drivers/usb/dwc2/gadget.c                      | 79 +++++++-------------------
+ 3 files changed, 23 insertions(+), 68 deletions(-)
 
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+2.9.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
