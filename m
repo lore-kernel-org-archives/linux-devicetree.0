@@ -1,98 +1,76 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] ARM: dts: imx6: Add support for Toradex Apalis
- iMX6Q/D SoM
-Date: Mon, 29 Aug 2016 13:54:50 -0700
-Message-ID: <8379c5d41f44fc1b59a5c15650f30c68@agner.ch>
-References: <1454688741-4238-1-git-send-email-marcel.ziswiler@toradex.com>
- <1454688741-4238-2-git-send-email-marcel.ziswiler@toradex.com>
- <97a3d506-35a0-2a15-18ef-2719c0596cc1@mentor.com>
+From: Stuart Yoder <stuart.yoder@nxp.com>
+Subject: RE: [PATCH 1/2] arm64: dts: updates serial aliases for ls1043a rdb
+ and qds boards
+Date: Mon, 29 Aug 2016 21:10:09 +0000
+Message-ID: <VI1PR0401MB263861544E640ED526373EC78DE10@VI1PR0401MB2638.eurprd04.prod.outlook.com>
+References: <1472244381-1766-1-git-send-email-stuart.yoder@nxp.com>
+ <8035333.yr2FRs5mHk@wuerfel>
+ <VI1PR0401MB2638BCBA99A6305262FD3EE78DE10@VI1PR0401MB2638.eurprd04.prod.outlook.com>
+ <201608292238.17985.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <97a3d506-35a0-2a15-18ef-2719c0596cc1-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201608292238.17985.arnd@arndb.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-08-29 06:28, Vladimir Zapolskiy wrote:
-> Hi Marcel,
-> 
-> On 02/05/2016 06:12 PM, Marcel Ziswiler wrote:
->> From: Petr Štetiar <ynezz-knWk7/PSn+s@public.gmane.org>
->>
->> Signed-off-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: Petr Štetiar <ynezz-knWk7/PSn+s@public.gmane.org>
->> Reviewed-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
->> ---
->>
-> 
-> because the change is in mainline now below is kind of out of date
-> information, but you may find it helpful.
-> 
-> [snip]
-> 
->> - fixed HDMI DDC (requires GPIO-based bitbanging I2C to be enabled)
-> 
-> This is not needed.
-> 
-> [snip]
-> 
->> +	/* DDC_I2C: I2C2_SDA/SCL on MXM3 205/207 */
->> +	i2cddc: i2c@0 {
->> +		compatible = "i2c-gpio";
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&pinctrl_i2c_ddc>;
->> +		gpios = <&gpio3 16 GPIO_ACTIVE_HIGH /* sda */
->> +			 &gpio2 30 GPIO_ACTIVE_HIGH /* scl */
->> +			>;
->> +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
->> +		status = "disabled";
->> +	};
->> +
-> 
-> This is not needed.
-> 
-> [snip]
-> 
->> +	pinctrl_i2c_ddc: gpioi2cddcgrp {
->> +		fsl,pins = <
->> +			/* DDC bitbang */
->> +			MX6QDL_PAD_EIM_EB2__GPIO2_IO30 0x1b0b0
->> +			MX6QDL_PAD_EIM_D16__GPIO3_IO16 0x1b0b0
->> +		>;
->> +	};
->> +
-> 
-> Practically you don't need this overcomplicated GPIO-based bitbanging
-> to emulate I2C, because the DW HDMI controller has a reduced I2C
-> controller on board, you may take a look at its support published here:
-> 
->    http://www.spinics.net/lists/dri-devel/msg116308.html
-> 
-> To utilize it the pads should be set to HDMI function instead of
-> I2C or GPIO.
 
-Thanks for the notification! I guess we'd also have to remove...
 
-+&hdmi {
-+    ddc-i2c-bus = <&i2cddc>;
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: Monday, August 29, 2016 3:38 PM
+> To: linux-arm-kernel@lists.infradead.org
+> Cc: Stuart Yoder <stuart.yoder@nxp.com>; devicetree@vger.kernel.org; shawnguo@kernel.org
+> Subject: Re: [PATCH 1/2] arm64: dts: updates serial aliases for ls1043a rdb and qds boards
+> 
+> On Monday 29 August 2016, Stuart Yoder wrote:
+> > > -----Original Message-----
+> > > From: Arnd Bergmann [mailto:arnd@arndb.de]
+> > > Sent: Monday, August 29, 2016 6:01 AM
+> > > To: Stuart Yoder <stuart.yoder@nxp.com>
+> > > Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; shawnguo@kernel.org
+> > > Subject: Re: [PATCH 1/2] arm64: dts: updates serial aliases for ls1043a rdb and qds boards
+> > >
+> > > On Friday, August 26, 2016 3:46:20 PM CEST Stuart Yoder wrote:
+> > > > -               serial0 = &lpuart0;
+> > > > -               serial1 = &lpuart1;
+> > > > -               serial2 = &lpuart2;
+> > > > -               serial3 = &lpuart3;
+> > > > -               serial4 = &lpuart4;
+> > > > -               serial5 = &lpuart5;
+> > > > +               serial0 = &duart0;
+> > > > +               serial1 = &duart1;
+> > > > +               serial2 = &duart2;
+> > > > +               serial3 = &duart3;
+> > >
+> > > It looks like your board has six uarts that are all driven with the
+> > > lpuart driver, but after the change, you only list four. Should
+> > > the serial4 and serial5 aliases keep pointing at lpuart devices
+> > > so you can still drive all physical connectors?
+> >
+> > The only existing reference I can find to the serial aliases is if the
+> > OF_STDOUT_VIA_ALIAS is enabled in u-boot to specify the console.  The
+> > standard ls1043aqds_defconfig in u-boot specifies DUARTs for the console,
+> > which is why I'm proposing making the 4 DUARTs the default serial aliases
+> > in the device tree.
+> 
+> Ok, so they are mutually exclusive, and the last two ports are
+> unavailable in the default configuration?
 
-...this line...
+Yes, that's the case with u-boot's defconfig.  I'm still trying to
+find out whether that mutual exlusivity was a firmware decision or
+a hardware limitation.
 
-+    status = "okay";
-+};
-+
-+&i2cddc {
-+    status = "okay";
-+};
-
-and this from arch/arm/boot/dts/imx6q-apalis-ixora.dts.
-
---
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stuart
