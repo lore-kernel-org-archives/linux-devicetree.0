@@ -1,41 +1,35 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/3] ARM: dts: wheat: add Ethernet support
-Date: Mon, 29 Aug 2016 10:05:19 +0200
-Message-ID: <CAMuHMdU6zu2J8dBfC7EySCtk79uSi=NmaOXDHpZf+pAp48HhLw@mail.gmail.com>
-References: <3665116.9BjHTnhfR3@wasted.cogentembedded.com> <6321460.7sCGaKUd5m@wasted.cogentembedded.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [Patch v4 9/9] arm64: Update device tree for Layerscape SoCs
+Date: Mon, 29 Aug 2016 10:05:30 +0200
+Message-ID: <20160829080530.GA25468@nazgul.tnic>
+References: <1470780000-16750-1-git-send-email-york.sun@nxp.com>
+ <20160812091354.GB333@nazgul.tnic>
+ <20160829063448.GA32489@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <6321460.7sCGaKUd5m@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160829063448.GA32489@tiger>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: York Sun <york.sun@nxp.com>, Mark Rutland <mark.rutland@arm.com>, yangbo lu <yangbo.lu@freescale.com>, Liu Gang <Gang.Liu@nxp.com>, morbidrsa@gmail.com, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, stuart.yoder@nxp.com, linux-kernel@vger.kernel.org, oss@buserror.net, Rob Herring <robh+dt@kernel.org>, Rajesh Bhagat <rajesh.bhagat@freescale.com>, Olof Johansson <olof@lixom.net>, Mingkai Hu <Mingkai.Hu@freescale.com>, Li Yang <leoli@freescale.com>, Yuan Yao <yao.yuan@nxp.com>, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 26, 2016 at 10:23 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> R8A7792  SoC  doesn't have the  EtherMAC core, so SMSC LAN89218 Ethernet
-> chip was used instead on the Wheat debug board; this chip is compatible
-> with SMSC LAN9115 for which  there's a (device  tree aware)  driver.
-> Describe the chip  in the Wheat device tree unconditionally (the driver
-> should fail the probe if the debug board isn't connected); enable DHCP and
-> NFS root in the command line for the kernel boot...
->
-> Based  on the original (and large) patch by Vladimir Barinov
-> <vladimir.barinov@cogentembedded.com>.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+On Mon, Aug 29, 2016 at 02:34:48PM +0800, Shawn Guo wrote:
+> Is it mandatory to have DTS changes go with driver part altogether?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-(limited to review that can be done without board documentation)
+Yes, because the EDAC driver needs them to even load properly.
 
-Gr{oetje,eeting}s,
+> Otherwise, I prefer to have them go through separate tree.
 
-                        Geert
+Any particular reason why you prefer that?
 
+We've been doing this for other ARM EDAC drivers already and there were
+no issues whatsoever.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
