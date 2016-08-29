@@ -1,41 +1,43 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [Patch v4 9/9] arm64: Update device tree for Layerscape SoCs
-Date: Mon, 29 Aug 2016 14:34:48 +0800
-Message-ID: <20160829063448.GA32489@tiger>
-References: <1470780000-16750-1-git-send-email-york.sun@nxp.com>
- <20160812091354.GB333@nazgul.tnic>
+From: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH V2] ARM: dts: imx6ul iomuxc syscon is compatible to imx6q
+Date: Mon, 29 Aug 2016 22:25:43 +0800
+Message-ID: <1472480743-8405-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160812091354.GB333-K5JNixvcfoxupOikMc4+xw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: York Sun <york.sun-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, yangbo lu <yangbo.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Liu Gang <Gang.Liu-3arQi8VN3Tc@public.gmane.org>, morbidrsa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rajesh Bhagat <rajesh.bhagat-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 12, 2016 at 11:13:54AM +0200, Borislav Petkov wrote:
-> On Tue, Aug 09, 2016 at 02:59:39PM -0700, York Sun wrote:
-> > Add DDR memory controller nodes to enable EDAC driver.
-> > 
-> > Signed-off-by: York Sun <york.sun-3arQi8VN3Tc@public.gmane.org>
-> > 
-> > ---
-> > Change log
-> >   v4: no change
-> >   v3: no change
-> >   v2: no change
-> > 
-> >  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |  7 +++++++
-> >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 14 ++++++++++++++
-> >  2 files changed, 21 insertions(+)
-> 
-> This needs an ACK from DT people.
+The imx6ul iomuxc syscon is compatible to imx6q,
+so let's add compatible string 'fsl,imx6q-iomuxc-gpr'
+for imx6ul iomuxc syscon node.
 
-Is it mandatory to have DTS changes go with driver part altogether?
-Otherwise, I prefer to have them go through separate tree.
+Signed-off-by: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+---
+changes since V1:
+	improve commit message.
+ arch/arm/boot/dts/imx6ul.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Shawn
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 33b95d7..acc9486 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -644,7 +644,8 @@
+ 			};
+ 
+ 			gpr: iomuxc-gpr@020e4000 {
+-				compatible = "fsl,imx6ul-iomuxc-gpr", "syscon";
++				compatible = "fsl,imx6ul-iomuxc-gpr",
++					     "fsl,imx6q-iomuxc-gpr", "syscon";
+ 				reg = <0x020e4000 0x4000>;
+ 			};
+ 
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
