@@ -1,65 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [BISECTED REGRESSION] v4.8-rc: DT/OCTEON driver probing broken
-Date: Mon, 29 Aug 2016 12:36:41 -0500
-Message-ID: <CAL_JsqK-+MOw1VCb57DXdEBwaVZP+KypapXJb7Mw3unD4A0-GQ@mail.gmail.com>
-References: <20160816150056.GD18731@ak-desktop.emea.nsn-net.net>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 3/3] ARM64: dts: meson-gxbb: Add GXBB AO Clock and Reset node
+Date: Mon, 29 Aug 2016 12:37:37 -0500
+Message-ID: <m260qjjx26.fsf@baylibre.com>
+References: <1471514928-3341-1-git-send-email-narmstrong@baylibre.com>
+        <1471514928-3341-4-git-send-email-narmstrong@baylibre.com>
+        <7hk2fc76xx.fsf@baylibre.com>
+        <147208015014.66208.14165603610884470316@resonance>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160816150056.GD18731-wKwWf7Pro3RJlwZWLBHdvBaOaYmgohGe0e7PPNI6Mm0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaro Koskinen <aaro.koskinen-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Cc: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thorsten Leemhuis <regressions-rCxcAJFjeRkk+I/owrrOrA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <147208015014.66208.14165603610884470316@resonance> (Michael
+        Turquette's message of "Wed, 24 Aug 2016 16:09:10 -0700")
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 16, 2016 at 10:00 AM, Aaro Koskinen <aaro.koskinen-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org> wrote:
-> Hi,
->
-> Commit 44a7185c2ae6 ("of/platform: Add common method to populate default
-> bus") added new arch_initcall of_platform_default_populate_init() that
-> will be called before device_initcall octeon_publish_devices(). Now the
-> of_platform_bus_probe() called in octeon_publish_devices() is apparently
-> doing nothing:
->
-> [   52.331353] calling  octeon_publish_devices+0x0/0x14 @ 1
-> [   52.331358] OF: of_platform_bus_probe()
-> [   52.331362] OF:  starting at: /
-> [   52.331378] OF: of_platform_bus_create() - skipping /soc@0, already populated
-> [   52.331394] initcall octeon_publish_devices+0x0/0x14 returned 0 after 29 usecs
->
-> This also means that USB etc. won't get probed.
->
-> Any ideas what would be the proper fix for this? Changing
-> octeon_publish_devices() to arch_initcall seems to work but that may be
-> a bit hackish... Also, there might be also other MIPS boards affected
-> (arch/mips/netlogic/xlp/dt.c, arch/mips/mti-malta/malta-dt.c).
+Michael Turquette <mturquette@baylibre.com> writes:
 
-Can you try reverting this hunk. I don't think it should be needed and
-it is preventing /soc@0 children from being probed. If things still
-don't work, then it should purely be a probe ordering problem. I have
-some better fixes in mind, but not for 4.8. So if this doesn't work,
-then the same fix as PPC is fine.
+> Quoting Kevin Hilman (2016-08-19 15:03:06)
+>> Neil Armstrong <narmstrong@baylibre.com> writes:
+>> 
+>> > Add the AO clock controller node for the AmLogic GXBB SoC.
+>> >
+>> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> > ---
+>> 
+>> Applying this to the amlogic tree, but will need to wait a cycle due to
+>> include dependencies on the bindings, which are going through the clock
+>> tree.
+>
+> FYI, for picked patches, Stephen and I create a stable branch for each
+> platform. You can pull this into your tree if you want, just let us know
+> so we'll be sure not to rebase:
+>
+> git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-meson-gxbb-ao
+>
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 16e8daf..c559ef8 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -363,6 +363,12 @@ static int of_platform_bus_create(struct device_node *bus,
-                return 0;
-        }
+OK, I'll be using clk-meson-gxb and clk-meson-gxbb-ao.
 
-+       if (of_node_check_flag(bus, OF_POPULATED_BUS)) {
-+               pr_debug("%s() - skipping %s, already populated\n",
-+                       __func__, bus->full_name);
-+               return 0;
-+       }
-+
-        auxdata = of_dev_lookup(lookup, bus);
-        if (auxdata) {
-                bus_id = auxdata->name;
+Thanks,
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kevin
