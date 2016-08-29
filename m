@@ -1,36 +1,40 @@
-From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6] drm: bridge/dw_hdmi: add dw hdmi i2c bus adapter support
-Date: Mon, 29 Aug 2016 17:41:10 +0100
-Message-ID: <CACvgo50WjosoeV81eBESyVpjyJqPGt-R5yWR6sFr0ZbPe2LJHw@mail.gmail.com>
-References: <1472017597-11221-1-git-send-email-vladimir_zapolskiy@mentor.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/4] soc: qcom: add an EBI2 device tree bindings
+Date: Mon, 29 Aug 2016 19:21:41 +0200
+Message-ID: <CACRpkdbZdRc+75YKTGLSogK6zqnR9crks3-YYmMFOLsxHbk2dQ@mail.gmail.com>
+References: <1470691445-27571-1-git-send-email-linus.walleij@linaro.org>
+ <2988918.zNxvaGl6en@wuerfel> <CACRpkdZ=HU6j3=Ye4dm=tFU=KmG54bq06KDfxPViWUouOA=jOA@mail.gmail.com>
+ <201608291351.12915.arnd@arndb.de> <CAL_JsqJPckLGDSiqnspvtP_=t+yZ+0vO-8MxGB6x7poOZiyK+Q@mail.gmail.com>
+ <CACRpkdaRPa=tCH2FQUOUzp0Q2YvdLNA7R2y3w==sH40DwJ2vGA@mail.gmail.com> <CAL_JsqJSO4Bco_BJqYFVEQ73_-nm_QeHy=HF3u6bNhxsikOAGw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472017597-11221-1-git-send-email-vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJSO4Bco_BJqYFVEQ73_-nm_QeHy=HF3u6bNhxsikOAGw@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Mon, Aug 29, 2016 at 4:06 PM, Rob Herring <robh+dt@kernel.org> wrote:
+> [Me]
+>> That is very close to how
+>> Documentation/devicetree/bindings/bus/imx-weim.txt
+>> drivers/bus/imx-weim.c
+>> does things, just with the additional property arrays.
+>
+> Maybe so, but I'm trying to bring some consistency here, so I'd
+> suggest looking at newer ones like atmel IIRC.
 
-On 24 August 2016 at 06:46, Vladimir Zapolskiy
-<vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
+The Uniphier bindings also look like this and it's the most recent
+bus driver ...
+Documentation/devicetree/bindings/bus/uniphier-system-bus.txt
 
->  MODULE_AUTHOR("Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
->  MODULE_AUTHOR("Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
->  MODULE_AUTHOR("Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-> +MODULE_AUTHOR("Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>");
-Don't meant to start a flame-war or alike but to educate myself:
-Where does one draw the line about adding new author(s) of said
-module/subsystem ?
+But OK it's probably best to follow an example so I get it the way
+you prefer. Which binding and driver is that?
 
-Afaict this is the most common (?) driver in DRM where the list has
-grown over time. Should we do the same with others ?
+There's no Atmel stuff in Documentation/devicetree/bindings/bus/
+nor drivers/bus from what I can tell, so just point out what you're
+referring to here and I'll do my best to follow that example.
 
-Thanks
-Emil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
