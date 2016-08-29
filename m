@@ -1,72 +1,67 @@
-From: John Youn <John.Youn@synopsys.com>
-Subject: Re: [RESEND PATCH 3/4] usb: dwc2: assert phy reset when waking up in
- rk3288 platform
-Date: Mon, 29 Aug 2016 11:24:49 -0700
-Message-ID: <ea25555d-7b94-ad53-4380-4e8d4a50dcce@synopsys.com>
-References: <4c931176-a09a-546c-d2b6-ea74028c78a2@cogentembedded.com>
- <1471807905-11323-1-git-send-email-ayaka@soulik.info>
- <49d2baf7-5f81-fc20-a805-f7a378d67a5e@synopsys.com>
- <76f0ffdb-a3c6-f1e6-8177-b254ff5badaa@rock-chips.com>
- <f6bbd88b-5d80-c30d-36c1-5b95763ae4bb@synopsys.com>
- <87fupodnd8.fsf@linux.intel.com>
+From: Stuart Yoder <stuart.yoder@nxp.com>
+Subject: RE: [PATCH 1/2] arm64: dts: updates serial aliases for ls1043a rdb
+ and qds boards
+Date: Mon, 29 Aug 2016 18:30:59 +0000
+Message-ID: <VI1PR0401MB2638BCBA99A6305262FD3EE78DE10@VI1PR0401MB2638.eurprd04.prod.outlook.com>
+References: <1472244381-1766-1-git-send-email-stuart.yoder@nxp.com>
+ <1472244381-1766-2-git-send-email-stuart.yoder@nxp.com>
+ <8035333.yr2FRs5mHk@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87fupodnd8.fsf@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <felipe.balbi@linux.intel.com>, John Youn <John.Youn@synopsys.com>, Randy Li <randy.li@rock-chips.com>, Randy Li <ayaka@soulik.info>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "heiko@sntech.de" <heiko@sntech.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "eddie.cai@rock-chips.com" <eddie.cai@rock-chips.com>, "kishon@ti.com" <kishon@ti.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8035333.yr2FRs5mHk@wuerfel>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/29/2016 12:51 AM, Felipe Balbi wrote:
-> 
-> Hi,
-> 
-> John Youn <John.Youn@synopsys.com> writes:
-> 
-> [...]
-> 
->>>>> +			 */
->>>>> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
->>>>> +				hsotg->phy->ops->reset(hsotg->phy);
->>>>> +
->>>>
->>>> You should probably check for NULL before calling the reset()
->>>> callback.
->>> Sure.
->>>>
->>>> Also, I'd rather see a generic quirk property that you set for your
->>>> platform.
->>>>
->>>> Something like "phy_reset_on_wakeup_quirk".
->>> But Rob Herring want me to implied by the SoC specific compatible 
->>> string. I agree with him. It is certainly bug in RK3288 platform.
->>> It is no found no the other platform.
->>
->> Ok, I missed that before.
->>
->> Based on the drivers I'm familiar with (like dwc3), you would
->> typically add a "quirk" anyways.
->>
->> Felipe,
->>
->> Do you have some policy or preference on this?
-> 
-> if it's not a dwc2-generic feature, then let's do it via compatible
-> flag, sure. What we don't want is for things like:
-> 
-> if (is_compatible('synopsys') || is_compatible('rockchip') ||
-> 	is_compatible('foobar') ... )
-> 
-> For that, we'd be better of adding a generic quirk flag which several
-> can use.
-> 
 
-Alright sounds reasonable.
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: Monday, August 29, 2016 6:01 AM
+> To: Stuart Yoder <stuart.yoder@nxp.com>
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; shawnguo@kernel.org
+> Subject: Re: [PATCH 1/2] arm64: dts: updates serial aliases for ls1043a rdb and qds boards
+> 
+> On Friday, August 26, 2016 3:46:20 PM CEST Stuart Yoder wrote:
+> > -               serial0 = &lpuart0;
+> > -               serial1 = &lpuart1;
+> > -               serial2 = &lpuart2;
+> > -               serial3 = &lpuart3;
+> > -               serial4 = &lpuart4;
+> > -               serial5 = &lpuart5;
+> > +               serial0 = &duart0;
+> > +               serial1 = &duart1;
+> > +               serial2 = &duart2;
+> > +               serial3 = &duart3;
+> 
+> It looks like your board has six uarts that are all driven with the
+> lpuart driver, but after the change, you only list four. Should
+> the serial4 and serial5 aliases keep pointing at lpuart devices
+> so you can still drive all physical connectors?
 
-Randy, could you respin with the other feedback? There's no need to
-add a quirk.
+The only existing reference I can find to the serial aliases is if the
+OF_STDOUT_VIA_ALIAS is enabled in u-boot to specify the console.  The
+standard ls1043aqds_defconfig in u-boot specifies DUARTs for the console,
+which is why I'm proposing making the 4 DUARTs the default serial aliases
+in the device tree.
 
-Regards,
-John
+There is a separate defconfig in u-boot to enable/use LPUARTs instead
+of the normal DUARTs.  For that scenario, my take is that firmware should
+update the DT aliases to reflect the actual use of the serial ports.
+
+But, the default should be the DUARTs which is the normal case for this
+board, which is why this patch is changing them.
+
+Thanks,
+Stuart
