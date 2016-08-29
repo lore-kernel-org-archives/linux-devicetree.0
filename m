@@ -1,43 +1,43 @@
-From: John Youn <johnyoun@synopsys.com>
-Subject: [PATCH 0/6] usb: dwc2: gadget: Fix TX FIFO handling
-Date: Mon, 29 Aug 2016 13:38:46 -0700
-Message-ID: <cover.1472502978.git.johnyoun__9706.34783520854$1472503141$gmane$org@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Youn <johnyoun@synopsys.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Robert Baldyga <r.baldyga@samsung.com>
+From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 6/6] Documentation: devicetree: dwc2: Deprecate g-tx-fifo-size
+Date: Mon, 29 Aug 2016 13:39:03 -0700
+Message-ID: <47342acebdbd240cb1f92b2da7c1055a06f440d6.1472502978.git.johnyoun@synopsys.com>
+References: <cover.1472502978.git.johnyoun@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1472502978.git.johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This property is not needed because the periodic fifos are not
+configurable. So it was incorrect to add this property in the first
+place.
 
-This is a resend of a patch series originally submitted by Robert
-Baldyga back in February.
+Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/dwc2.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Somehow I missed it back then. Sorry about that.
-
-It should fix some FIFO programming related issues on RPi and maybe
-other platforms.
-
-Also, this series makes the g-tx-fifo-size DT property obsolete. I've
-added a patch at the end of the series to document that.
-
-Regards,
-John
-
-John Youn (1):
-  Documentation: devicetree: dwc2: Deprecate g-tx-fifo-size
-
-Robert Baldyga (5):
-  usb: dwc2: gadget: use ep->fifo_index in context of FIFO registers
-  usb: dwc2: gadget: fix TX FIFO size and address initialization
-  usb: dwc2: gadget: change variable name to more meaningful
-  usb: dwc2: gadget: remove dead code from dwc2_hsotg_ep_enable()
-  usb: dwc2: gadget: free TX FIFO after killing requests
-
- Documentation/devicetree/bindings/usb/dwc2.txt |  5 +-
- drivers/usb/dwc2/core.h                        |  7 ---
- drivers/usb/dwc2/gadget.c                      | 79 +++++++-------------------
- 3 files changed, 23 insertions(+), 68 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+index 20a68bf..7d16ebf 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.txt
++++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+@@ -26,7 +26,10 @@ Refer to phy/phy-bindings.txt for generic phy consumer properties
+ - g-use-dma: enable dma usage in gadget driver.
+ - g-rx-fifo-size: size of rx fifo size in gadget mode.
+ - g-np-tx-fifo-size: size of non-periodic tx fifo size in gadget mode.
+-- g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0) in gadget mode.
++
++Deprecated properties:
++- g-tx-fifo-size: size of periodic tx fifo per endpoint (except ep0)
++  in gadget mode.
+ 
+ Example:
+ 
 -- 
 2.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
