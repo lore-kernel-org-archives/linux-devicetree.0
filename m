@@ -1,109 +1,92 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/4] phy: rockchip-usb: use rockchip_usb_phy_reset to
- reset phy during wakeup
-Date: Mon, 29 Aug 2016 15:02:55 +0530
-Message-ID: <57C40147.60700@ti.com>
-References: <7ca3b54d-e9d8-a137-79b6-d24f0b7065c7@synopsys.com>
- <1471725140-3833-3-git-send-email-ayaka@soulik.info>
- <57BAE65D.2090303@ti.com> <2546474.rLYzuqPxCa@diego>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [RFC/PATCH] dt: bindings: Define bindings for device idle states
+Date: Mon, 29 Aug 2016 11:34:34 +0200
+Message-ID: <CAPDyKFpQ-kG0jkOXwVWJkwT41JjTg=KwNv4z-E7UUBqfKMNHgg@mail.gmail.com>
+References: <1472207073-4901-1-git-send-email-ulf.hansson@linaro.org> <20160826135842.GA9303@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2546474.rLYzuqPxCa@diego>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160826135842.GA9303@amd>
+Sender: linux-pm-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Kevin Hilman <khilman@kernel.org>, Lina Iyer <lina.iyer@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Brendan Jackman <Brendan.Jackman@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Axel Haslam <ahaslam@baylibre.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 26 August 2016 at 15:58, Pavel Machek <pavel@ucw.cz> wrote:
+> Hi!
+>
+>> @@ -0,0 +1,102 @@
+>> +Device idle states
+>> +========================
+>> +
+>> +A device are often capable of entering a low power state(s) when it becomes
+>> +idle, hence the terminology of device idle states. Entering an idle state for a
+>> +device helps it to avoid wasting power and reduces the leakage of current.
+>
+> First things first: what do these states _really_ represent? We have
+> GPIOs in device tree, we have clock domains. What are these?
 
-On Monday 22 August 2016 06:30 PM, Heiko Stübner wrote:
-> Am Montag, 22. August 2016, 17:17:41 schrieb Kishon Vijay Abraham I:
->> Hi,
->>
->> On Sunday 21 August 2016 02:02 AM, Randy Li wrote:
->>> It is a hardware bug in RK3288, the only way to solve it is to
->>> reset the phy.
->>>
->>> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
->>> ---
->>>
->>>  drivers/phy/phy-rockchip-usb.c | 20 ++++++++++++++++++++
->>>  1 file changed, 20 insertions(+)
->>>
->>> diff --git a/drivers/phy/phy-rockchip-usb.c
->>> b/drivers/phy/phy-rockchip-usb.c index 2a7381f..734987f 100644
->>> --- a/drivers/phy/phy-rockchip-usb.c
->>> +++ b/drivers/phy/phy-rockchip-usb.c
->>> @@ -29,6 +29,7 @@
->>>
->>>  #include <linux/reset.h>
->>>  #include <linux/regmap.h>
->>>  #include <linux/mfd/syscon.h>
->>>
->>> +#include <linux/delay.h>
->>>
->>>  static int enable_usb_uart;
->>>
->>> @@ -64,6 +65,7 @@ struct rockchip_usb_phy {
->>>
->>>  	struct clk_hw	clk480m_hw;
->>>  	struct phy	*phy;
->>>  	bool		uart_enabled;
->>>
->>> +	struct reset_control *reset;
->>>
->>>  };
->>>  
->>>  static int rockchip_usb_phy_power(struct rockchip_usb_phy *phy,
->>>
->>> @@ -144,9 +146,23 @@ static int rockchip_usb_phy_power_on(struct phy
->>> *_phy)
->>>
->>>  	return clk_prepare_enable(phy->clk480m);
->>>  
->>>  }
->>>
->>> +static int rockchip_usb_phy_reset(struct phy *_phy)
->>> +{
->>> +	struct rockchip_usb_phy *phy = phy_get_drvdata(_phy);
->>> +
->>> +	if (phy->reset) {
->>> +		reset_control_assert(phy->reset);
->>> +		udelay(10);
->>> +		reset_control_deassert(phy->reset);
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->>>
->>>  static const struct phy_ops ops = {
->>>  
->>>  	.power_on	= rockchip_usb_phy_power_on,
->>>  	.power_off	= rockchip_usb_phy_power_off,
->>>
->>> +	.reset		= rockchip_usb_phy_reset,
->>
->> why not just reuse the .init ops? reset can be done during initialization
->> right?
-> 
-> The naming of power_on + power_off and init + exit probably suggests that they 
-> are supposed to be used in pairs. (aka module_init + module_exit and probably 
-> more)
-> 
-> But in fact I've seen different combinations so far (phy_init + phy_power_on 
-> ... phy_power_off + phy_exit but also phy_power_on + phy_init ... phy_exit + 
-> phy_power_off), so I guess the semantics are not that strictly defined.
+On most ARM SoCs which I am familiar of and which isn't using ACPI,
+these kind of resources may can be considered as "power resources"
+connected to a generic device. Although it's of course highly
+dependent on the SoC. Other typical resources are clocks, pinctrls,
+regulators etc.
 
-yeah, it got difficult to maintain the semantics once the number of phy users
-increased. Thought it was better than bloating the framework with platform
-specific callbacks.
+To enter a low power state, these devices may not explicitly have to
+change some internal logic, but instead relies on external "power
+resources " to be put into low power mode.
 
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I guess one could compare this to what can be described in the ACPI's
+Device Power Management.
+
+>
+> Actually I don't think I like this. We should describe the hardware,
+> not particular use case.
+
+I am not describing use cases, but I am trying invent a generic
+binding that describes a generic device's idle states. At least to me,
+this is characteristics of the HW.
+
+Rob requested a flexible future proof binding, but perhaps you think
+this became too generic/flexible?
+
+>
+> On what hardware would you use these new bindings?
+
+Lot's of ARM SoCs, especially those that don't use ACPI.
+
+>
+>> +Required properties:
+>> +- compatible:                Must contain "simple-dev, idle-state".
+>> +- entry-latency-ns:  An u32 value in nano-seconds representing the worst case
+>> +                     latency required for the device to enter the idle state.
+>> +- exit-latency-ns:   An u32 value in nano-seconds representing the worst case
+>> +                     wakeup latency of the device, after entry-latency-ns has
+>> +                     passed.
+>
+> u32 nanoseconds have 4sec limit, right? So anything with spinning
+> harddrive is out?
+
+In most cases 4 sec is probably good enough.
+
+We could increase it to u64 or we could have another compatible string
+for those idle states types that requires this.
+
+>
+>> +== Assigning idle states to devices ==
+>> +
+>> +Required properties:
+>> + - dev-idle-states:  A list of phandles pointing to the supported
+>> +                     device idle states nodes. The list must be ordered as
+>> +                     the shallower state - the earlier in the list.
+>
+> Does such ordering really neccessarily exist?
+
+On several devices that I am aware of yes. Although, again this
+SoC/device specific.
+
+If this becomes a problem for some devices, we can assign them another
+compatible string used deal with those idle state types.
+
+Kind regards
+Uffe
