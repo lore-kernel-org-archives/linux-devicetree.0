@@ -1,76 +1,47 @@
-From: Stuart Yoder <stuart.yoder@nxp.com>
-Subject: RE: [PATCH 1/2] arm64: dts: updates serial aliases for ls1043a rdb
- and qds boards
-Date: Mon, 29 Aug 2016 21:10:09 +0000
-Message-ID: <VI1PR0401MB263861544E640ED526373EC78DE10@VI1PR0401MB2638.eurprd04.prod.outlook.com>
-References: <1472244381-1766-1-git-send-email-stuart.yoder@nxp.com>
- <8035333.yr2FRs5mHk@wuerfel>
- <VI1PR0401MB2638BCBA99A6305262FD3EE78DE10@VI1PR0401MB2638.eurprd04.prod.outlook.com>
- <201608292238.17985.arnd@arndb.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 5/5] ath9k: Make EEPROM endianness
+	swapping configurable via devicetree
+Date: Mon, 29 Aug 2016 23:25:37 +0200
+Message-ID: <201608292325.38091.arnd@arndb.de>
+References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
+	<201608291410.44338.arnd@arndb.de>
+	<CAFBinCCSBE8KsLgP3t=FzB-2jgjfQBtuF+EjqQEk-7mmmps_Pg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201608292238.17985.arnd@arndb.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Return-path: <ath9k-devel-bounces@lists.ath9k.org>
+In-Reply-To: <CAFBinCCSBE8KsLgP3t=FzB-2jgjfQBtuF+EjqQEk-7mmmps_Pg@mail.gmail.com>
+List-Unsubscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
+	<mailto:ath9k-devel-request@lists.ath9k.org?subject=unsubscribe>
+List-Archive: <http://lists.ath9k.org/pipermail/ath9k-devel>
+List-Post: <mailto:ath9k-devel@lists.ath9k.org>
+List-Help: <mailto:ath9k-devel-request@lists.ath9k.org?subject=help>
+List-Subscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
+	<mailto:ath9k-devel-request@lists.ath9k.org?subject=subscribe>
+Sender: ath9k-devel-bounces@lists.ath9k.org
+Errors-To: ath9k-devel-bounces@lists.ath9k.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-wireless@vger.kernel.org, ath9k-devel@qca.qualcomm.com, robh+dt@kernel.org, ath9k-devel@lists.ath9k.org, chunkeey@googlemail.com, kvalo@codeaurora.org, nbd@nbd.name
 List-Id: devicetree@vger.kernel.org
 
+On Monday 29 August 2016, Martin Blumenstingl wrote:
+> > and then do a swab32() on them. I suspect these should just be __le32
+> > (and __le16, respectively where needed), using appropriate accessors
+> > everywhere that those fields are being read instead of having one function
+> > that tries to turn them into cpu-native ordering.
+> I'm not sure if we want those fields to be __le32:
+> BIT(0) in the eepMisc field indicates whether to interpret the data as
+> big or little endian.
+> When this bit is set we would want these fields to be __be32 instead -
+> so I guess the current implementation is "OK" for this specific
+> use-case.
 
+Ok, I see. It's still confusing because it's different from how other
+drivers handle this (case in point: I was very confused by this). 
 
-> -----Original Message-----
-> From: Arnd Bergmann [mailto:arnd@arndb.de]
-> Sent: Monday, August 29, 2016 3:38 PM
-> To: linux-arm-kernel@lists.infradead.org
-> Cc: Stuart Yoder <stuart.yoder@nxp.com>; devicetree@vger.kernel.org; shawnguo@kernel.org
-> Subject: Re: [PATCH 1/2] arm64: dts: updates serial aliases for ls1043a rdb and qds boards
-> 
-> On Monday 29 August 2016, Stuart Yoder wrote:
-> > > -----Original Message-----
-> > > From: Arnd Bergmann [mailto:arnd@arndb.de]
-> > > Sent: Monday, August 29, 2016 6:01 AM
-> > > To: Stuart Yoder <stuart.yoder@nxp.com>
-> > > Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; shawnguo@kernel.org
-> > > Subject: Re: [PATCH 1/2] arm64: dts: updates serial aliases for ls1043a rdb and qds boards
-> > >
-> > > On Friday, August 26, 2016 3:46:20 PM CEST Stuart Yoder wrote:
-> > > > -               serial0 = &lpuart0;
-> > > > -               serial1 = &lpuart1;
-> > > > -               serial2 = &lpuart2;
-> > > > -               serial3 = &lpuart3;
-> > > > -               serial4 = &lpuart4;
-> > > > -               serial5 = &lpuart5;
-> > > > +               serial0 = &duart0;
-> > > > +               serial1 = &duart1;
-> > > > +               serial2 = &duart2;
-> > > > +               serial3 = &duart3;
-> > >
-> > > It looks like your board has six uarts that are all driven with the
-> > > lpuart driver, but after the change, you only list four. Should
-> > > the serial4 and serial5 aliases keep pointing at lpuart devices
-> > > so you can still drive all physical connectors?
-> >
-> > The only existing reference I can find to the serial aliases is if the
-> > OF_STDOUT_VIA_ALIAS is enabled in u-boot to specify the console.  The
-> > standard ls1043aqds_defconfig in u-boot specifies DUARTs for the console,
-> > which is why I'm proposing making the 4 DUARTs the default serial aliases
-> > in the device tree.
-> 
-> Ok, so they are mutually exclusive, and the last two ports are
-> unavailable in the default configuration?
+Do you see any downsides in changing the code to consistently annotate
+the eeprom as either __le or __be (whichever is more common), using
+the respective endianess accessors, and then doing the swap if the
+data we read is the opposite way?
 
-Yes, that's the case with u-boot's defconfig.  I'm still trying to
-find out whether that mutual exlusivity was a firmware decision or
-a hardware limitation.
-
-Stuart
+	Arnd
