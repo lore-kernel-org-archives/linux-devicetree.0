@@ -1,87 +1,46 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v3 0/8] aspeed: Add pinctrl and gpio drivers
-Date: Tue, 30 Aug 2016 17:24:19 +0930
-Message-ID: <20160830075427.11493-1-andrew@aj.id.au>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
+Subject: [PATCH v3 2/8] syscon: dt-bindings: Add documentation for Aspeed system control units
+Date: Tue, 30 Aug 2016 17:24:21 +0930
+Message-ID: <20160830075427.11493-3-andrew@aj.id.au>
+References: <20160830075427.11493-1-andrew@aj.id.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160830075427.11493-1-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>
 Cc: Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-
-Here's v3 of the Aspeed pinctrl and gpio driver patches, which aims to address
-the review comments on v2:
-
-  https://lkml.org/lkml/2016/8/19/394
-
-The combined series has been tested with both the AST2400 (g4) and AST2500 (g5)
-SoCs on OpenPOWER Palmetto and Aspeed AST2500 EVB machines respectively, and
-similarly in QEMU with the palmetto-bmc and ast2500-evb machines[1].
-
-Since v2:
-
-* Add interrupt-controller as a required property to gpio devicetree node
-* Drop unit address in pinctrl devicetree example
-* PINCTRL_ASPEED depends on MFD_SYSCON rather than selecting it
-* Use regmap_update_bits() where possible
-
-Since v1:
-
-* Split the series in two: driver and SoC patches.
-* Update devicetree bindings documentation
-* Add documentation for aspeed pinctrl core functions
-* Fix bugs in existing signal descriptors
-* Add a number of pin and mux function declarations
-* Provide debug information on unexpected conditions
-
-Cheers,
-
-Andrew
-
-[1] https://lists.gnu.org/archive/html/qemu-arm/2016-08/msg00019.html
-
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Joel Stanley <joel@jms.id.au>
 ---
-
-Andrew Jeffery (7):
-  MAINTAINERS: Add glob for Aspeed devicetree bindings
-  syscon: dt-bindings: Add documentation for Aspeed system control units
-  pinctrl: dt-bindings: Add documentation for Aspeed pin controllers
-  gpio: dt-bindings: Add documentation for Aspeed GPIO controllers
-  pinctrl: Add core support for Aspeed SoCs
-  pinctrl: Add pinctrl-aspeed-g4 driver
-  pinctrl: Add pinctrl-aspeed-g5 driver
-
-Joel Stanley (1):
-  gpio: Add Aspeed driver
-
- .../devicetree/bindings/gpio/gpio-aspeed.txt       |   36 +
- .../devicetree/bindings/mfd/aspeed-scu.txt         |   18 +
- .../devicetree/bindings/pinctrl/pinctrl-aspeed.txt |   65 ++
- MAINTAINERS                                        |    2 +
- drivers/gpio/Kconfig                               |    7 +
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/gpio-aspeed.c                         |  457 ++++++++
- drivers/pinctrl/Kconfig                            |    1 +
- drivers/pinctrl/Makefile                           |    1 +
- drivers/pinctrl/aspeed/Kconfig                     |   24 +
- drivers/pinctrl/aspeed/Makefile                    |    6 +
- drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c         | 1231 ++++++++++++++++++++
- drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c         |  808 +++++++++++++
- drivers/pinctrl/aspeed/pinctrl-aspeed.c            |  498 ++++++++
- drivers/pinctrl/aspeed/pinctrl-aspeed.h            |  569 +++++++++
- 15 files changed, 3724 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+ Documentation/devicetree/bindings/mfd/aspeed-scu.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-scu.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
- create mode 100644 drivers/gpio/gpio-aspeed.c
- create mode 100644 drivers/pinctrl/aspeed/Kconfig
- create mode 100644 drivers/pinctrl/aspeed/Makefile
- create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
- create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
- create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed.c
- create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed.h
 
+diff --git a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
+new file mode 100644
+index 000000000000..4fc5b83726d6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
+@@ -0,0 +1,18 @@
++The Aspeed System Control Unit manages the global behaviour of the SoC,
++configuring elements such as clocks, pinmux, and reset.
++
++Required properties:
++- compatible:	One of:
++		"aspeed,ast2400-scu", "syscon", "simple-mfd"
++		"aspeed,g4-scu", "syscon", "simple-mfd"
++		"aspeed,ast2500-scu", "syscon", "simple-mfd"
++		"aspeed,g5-scu", "syscon", "simple-mfd"
++
++- reg:		contains the offset and length of the SCU memory region
++
++Example:
++
++syscon: syscon@1e6e2000 {
++	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
++	reg = <0x1e6e2000 0x1a8>;
++};
 -- 
 2.9.3.1.g0db844e
-
