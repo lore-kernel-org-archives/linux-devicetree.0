@@ -1,94 +1,79 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v8 05/18] dmaengine: st_fdma: Add STMicroelectronics FDMA
- engine driver support
-Date: Tue, 30 Aug 2016 22:00:19 +0530
-Message-ID: <20160830163019.GM9355@localhost>
-References: <1472223413-7254-1-git-send-email-peter.griffin@linaro.org>
- <1472223413-7254-6-git-send-email-peter.griffin@linaro.org>
+From: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 2/8] arm: parse cpu capacity-dmips-mhz from DT
+Date: Tue, 30 Aug 2016 17:28:53 +0100
+Message-ID: <20160830162853.GF9337@e106622-lin>
+References: <1468932048-31635-1-git-send-email-juri.lelli@arm.com>
+ <1468932048-31635-3-git-send-email-juri.lelli@arm.com>
+ <CAKfTPtBy7LGCW2T4AGoqL5L_1AHtW6KxHigxFVFVc_EU4oUO0g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1472223413-7254-6-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, patrice.chotard@st.com, dan.j.williams@intel.com, airlied@linux.ie, kraxel@redhat.com, ohad@wizery.com, bjorn.andersson@linaro.org, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, linux-remoteproc@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+In-Reply-To: <CAKfTPtBy7LGCW2T4AGoqL5L_1AHtW6KxHigxFVFVc_EU4oUO0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org>, Dietmar Eggemann <dietmar.eggemann-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 26, 2016 at 03:56:40PM +0100, Peter Griffin wrote:
+Hi Vincent,
 
->  config STM32_DMA
->  	bool "STMicroelectronics STM32 DMA support"
->  	depends on ARCH_STM32
-> @@ -567,7 +580,6 @@ config ZX_DMA
->  	help
->  	  Support the DMA engine for ZTE ZX296702 platform devices.
->  
-> -
+On 16/08/16 10:20, Vincent Guittot wrote:
+> Hi Juri,
+> 
+> 
+> On 19 July 2016 at 14:40, Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org> wrote:
 
-unrelated change?
+[...]
 
-> +	fdev->chans = devm_kzalloc(&pdev->dev,
-> +				   fdev->nr_channels
-> +				   * sizeof(struct st_fdma_chan), GFP_KERNEL);
+> > +static int
+> > +init_cpu_capacity_callback(struct notifier_block *nb,
+> > +                          unsigned long val,
+> > +                          void *data)
+> > +{
+> > +       struct cpufreq_policy *policy = data;
+> > +       int cpu;
+> > +
+> > +       if (cap_parsing_failed || cap_parsing_done)
+> > +               return 0;
+> > +
+> > +       switch (val) {
+> > +       case CPUFREQ_NOTIFY:
+> > +               pr_debug("cpu_capacity: init cpu capacity for CPUs [%*pbl] (to_visit=%*pbl)\n",
+> > +                               cpumask_pr_args(policy->related_cpus),
+> > +                               cpumask_pr_args(cpus_to_visit));
+> > +               cpumask_andnot(cpus_to_visit,
+> > +                              cpus_to_visit,
+> > +                              policy->related_cpus);
+> > +               for_each_cpu(cpu, policy->related_cpus) {
+> > +                       raw_capacity[cpu] = arch_scale_cpu_capacity(NULL, cpu) *
+> > +                                           policy->max / 1000UL;
+> 
+> Should it be policy->cpuinfo.max_freq instead of policy->max ?
+> 
 
-devm_kcalloc()
+Right. I'll fix the arm64 bits as well.
 
-> +	if (!fdev->chans)
-> +		return -ENOMEM;
-> +
-> +	fdev->dev = &pdev->dev;
-> +	fdev->drvdata = drvdata;
-> +	platform_set_drvdata(pdev, fdev);
-> +
-> +	fdev->irq = platform_get_irq(pdev, 0);
-> +	if (fdev->irq < 0) {
-> +		dev_err(&pdev->dev, "Failed to get irq resource\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = devm_request_irq(&pdev->dev, fdev->irq, st_fdma_irq_handler, 0,
-> +			       dev_name(&pdev->dev), fdev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to request irq (%d)\n", ret);
-> +		goto err;
-> +	}
-> +
-> +	fdev->slim_rproc = st_slim_rproc_alloc(pdev, fdev->fw_name);
-> +	if (!fdev->slim_rproc) {
-> +		ret = PTR_ERR(fdev->slim_rproc);
-> +		dev_err(&pdev->dev, "slim_rproc_alloc failed (%d)\n", ret);
-> +		goto err;
-> +	}
-> +
-> +	/* Initialise list of FDMA channels */
-> +	INIT_LIST_HEAD(&fdev->dma_device.channels);
-> +	for (i = 0; i < fdev->nr_channels; i++) {
-> +		struct st_fdma_chan *fchan = &fdev->chans[i];
-> +
-> +		fchan->fdev = fdev;
-> +		fchan->vchan.desc_free = st_fdma_free_desc;
-> +		vchan_init(&fchan->vchan, &fdev->dma_device);
+> > +                       capacity_scale = max(raw_capacity[cpu], capacity_scale);
+> > +               }
+> > +               if (cpumask_empty(cpus_to_visit)) {
+> > +                       normalize_cpu_capacity();
+> > +                       kfree(raw_capacity);
+> > +                       pr_debug("cpu_capacity: parsing done\n");
+> > +                       cap_parsing_done = true;
+> 
+> ok so you do that once with the 1st governor that will be registered
+> for the CPU. Can't you unregister the notifier then ?
+> 
 
-this initialized a tasklet
+I tried, but the only place I could find to unregister it is from the
+callback itself; and it is not possible to do so AFAIK. Suggestions?
 
-> +static int st_fdma_remove(struct platform_device *pdev)
-> +{
-> +	struct st_fdma_dev *fdev = platform_get_drvdata(pdev);
-> +
-> +	devm_free_irq(&pdev->dev, fdev->irq, fdev);
-> +	st_slim_rproc_put(fdev->slim_rproc);
-> +	of_dma_controller_free(pdev->dev.of_node);
-> +	dma_async_device_unregister(&fdev->dma_device);
+Thanks for the review.
 
-and that vchan tasklet is not quisced here :(
+Best,
 
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("STMicroelectronics FDMA engine driver");
-> +MODULE_AUTHOR("Ludovic.barre <Ludovic.barre@st.com>");
-> +MODULE_AUTHOR("Peter Griffin <peter.griffin@linaro.org>");
-
-No MODULE_ALIAS?
-
--- 
-~Vinod
+- Juri
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
