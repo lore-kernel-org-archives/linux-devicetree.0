@@ -1,127 +1,209 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V2] dt: net: enhance DWC EQoS binding to support Tegra186
-Date: Wed, 31 Aug 2016 15:48:08 -0600
-Message-ID: <f4f85b48-4df6-4a3c-2831-e5707d35ebb6@wwwdotorg.org>
-References: <20160824212046.2416-1-swarren@wwwdotorg.org>
- <20160830190152.GA25083@rob-hp-laptop>
- <54b380c4-179f-2260-55dd-4220e65f8f46@wwwdotorg.org>
- <190a6bc1-ef66-2927-e542-13c543bab3b9@axis.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <190a6bc1-ef66-2927-e542-13c543bab3b9@axis.com>
-Sender: netdev-owner@vger.kernel.org
-To: Lars Persson <lars.persson@axis.com>, Rob Herring <robh@kernel.org>
-Cc: Lars Persson <larper@axis.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
-List-Id: devicetree@vger.kernel.org
+Return-Path: <stephen.boyd@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+From: Stephen Boyd <stephen.boyd@linaro.org>
+In-Reply-To: <20160829134511.GC2166@littlecatz>
+References: <577ACE0D.9050700@gmail.com> <20160718142037.GS16769@voom.fritz.box>
+ <CAL_JsqLkMA1VHfHpP4oCWtONWq5GeyS731r8PjjeL_DZ4u1Z_g@mail.gmail.com>
+ <20160722042556.GL15941@voom.fritz.box>
+ <147217552167.17958.11590706771471540284@sboyd-linaro>
+ <20160829134511.GC2166@littlecatz>
+Message-ID: <147252286938.20899.1763773530822329216@sboyd-linaro>
+Subject: Re: DT connectors, thoughts
+Date: Mon, 29 Aug 2016 19:07:49 -0700
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Mark Rutland <mark.rutland@arm.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek =?utf-8?B?VmHFoXV0?= <marex@denx.de>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>
+List-ID: <devicetree@vger.kernel.org>
 
-On 08/31/2016 03:15 AM, Lars Persson wrote:
-> On 08/30/2016 10:50 PM, Stephen Warren wrote:
->> On 08/30/2016 01:01 PM, Rob Herring wrote:
->>> On Wed, Aug 24, 2016 at 03:20:46PM -0600, Stephen Warren wrote:
->>>> The Synopsys DWC EQoS is a configurable IP block which supports multiple
->>>> options for bus type, clocking and reset structure, and feature list.
->>>> Extend the DT binding to define a "compatible value" for the configuration
->>>> contained in NVIDIA's Tegra186 SoC, and define some new properties and
->>>> list property entries required by that configuration.
+Quoting David Gibson (2016-08-29 06:45:11)
+> On Thu, Aug 25, 2016 at 06:38:41PM -0700, Stephen Boyd wrote:
+> > Quoting David Gibson (2016-07-21 21:25:56)
+> > > On Thu, Jul 21, 2016 at 02:15:57PM -0500, Rob Herring wrote:
+> > > > On Mon, Jul 18, 2016 at 9:20 AM, David Gibson
+> > > > <david@gibson.dropbear.id.au> wrote:
+> > > > =
 
->>>> diff --git
->>>> a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
->>>> b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
+> > > > I understand how you are using i2c alias, but not the intc. It would
+> > > > help if the same names were not used in multiple places unless they
+> > > > are the same thing.
+> > > =
 
->>>> +- clock-names: May contain any/all of the following depending on the IP
->>>> +  configuration, in any order:
->>>> +    The EQOS transmit path clock. The HW signal name is clk_tx_i.
->>>> +    In some configurations (e.g. GMII/RGMII), this clock also drives
->>>> the PHY TX
->>>> +    path. In other configurations, other clocks (such as tx_125,
->>>> rmii) may
->>>> +    drive the PHY TX path.
->>>> +  - "rx"
->>>> +    The EQOS receive path clock. The HW signal name is clk_rx_i.
->>>> +    In some configurations (e.g. GMII/RGMII), this clock also drives
->>>> the PHY RX
->>>> +    path. In other configurations, other clocks (such as rx_125,
->>>> pmarx_0,
->>>> +    pmarx_1, rmii) may drive the PHY RX path.
->
-> It is not correct that clk_rx_i drives the PHY rx path for GMII/RGMII.
-> The PHY is the source of the rx clock for these modes.
+> > > Yes, sorry.  We have both the /soc/intc node which is the base board's
+> > > master interrupt controller.  Then we have the connector local 'intc'
+> > > alias which describes the local interrupt space for just the
+> > > connector.
+> > > =
 
-I think both of our statements are true.
+> > > > What does using aliases here buy us vs. just properties with a
+> > > > phandle?
+> > > =
 
-There's a clock input to the EQOS module (clk_rx_i) that does drive the 
-RX path in the EQOS module.
+> > > Um.. I'm not sure what you mean.
+> > =
 
-That clock also drives the PHY's RX path.
+> > I think Rob means drop the aliases node and just have:
+> =
 
-Those statements make no comment regarding the /source/ of that clock; 
-either of the following might be true:
+> Oh, ok.  The reason for the aliases node is that putting the aliases
+> (or whatever you want to call them) in the top level connector node
+> limits what potential extensions we can make to the connector format.
+> The aliases can essentially have any property name, so they could
+> collide with additional "metadata" properties we might want to add.
 
-1) The PHY could generate the clock internally somehow, feed its own 
-internal logic with that clock, and send the clock out to feed the EQOS 
-RX path too.
+Agreed. Putting them into a subnode will prevent any collisions, but
+what sorts of collisions would there even be? Presumably the one making
+up the connector binding will be choosing the phandles they want to
+export with specific properties, and during that time they can also
+choose to have other properties that don't conflict?
 
-or,
+> =
 
-2)  SoC integration could drive the same clock into both the EQOS and 
-PHY modules, so that both sets of logic are fed from the same external 
-clock.
+> > =
 
-Perhaps the phrase "PHY RX path" is confusing; I was talking about the 
-EQOS modules' RX path from the PHY more than the PHY itself, although 
-given what I said above I believe either interpretation is valid and 
-correct.
+> > How would we support an expansion board that goes onto two
+> > sockets/connectors provided by the baseboard when the connectors
+> > "export" the same phandle aliases? From what I can tell with this design
+> > we'll be unable to describe a device on the expansion board that is
+> > wired to properties provided by the two connectors.
+> =
 
-> Will the driver need to make any clock ops on the "rx" clock ?
+> Ok, so there are two parts to this.
+> =
 
-Yes. The EQOS driver needs to ensure that the clock is running before 
-attempting to receive data from the PHY, otherwise the EQOS's own RX 
-logic won't be clocked.
+> 1) Allowing a plugin to use multiple connectors.
+> =
 
-Whether the phandle for this clock points at a SoC-level provider (it 
-will in Tegra) or a clock provider in the PHY (it might in other SoCs), 
-shouldn't matter as far as the DT binding goes, although it might affect 
-device probe ordering in some implementations.
+> I thought a bit about this case, but didn't address it for
+> simplicity.  That would require a different syntax, so we can rethink
+> this if it's a use case we think we need.
 
->>>> +  Note: Support for additional IP configurations may require adding the
->>>> +  following clocks to this list in the future: clk_rx_125_i, clk_tx_125_i,
->>>> +  clk_pmarx_0_i, clk_pmarx1_i, clk_rmii_i, clk_revmii_rx_i, clk_revmii_tx_i.
->>>> +
->>>> +  The following compatible values require the following set of clocks:
->>>> +  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10":
->>>> +    - "slave_bus"
->>>> +    - "master_bus"
->>>> +    - "rx"
->>>> +    - "tx"
->>>> +    - "ptp_ref"
->>>> +  - "axis,artpec6-eqos", "snps,dwc-qos-ethernet-4.10":
->>>> +    - "phy_ref_clk"
->>>> +    - "apb_clk"
->>>
->>> It would be good if this was marked deprecated and the full set of
->>> clocks could be described and supported. Not sure if you can figure that
->>> out. Is it really only 2 clocks, or these have multiple connections to
->>> the same source.
->>
->> Lars, can you answer here?
->>
->> I deliberately didn't attempt to change the binding definition for the
->> existing use-case, since I'm not familiar with that SoC, and don't
->> relish changing DTs for a platform I can't test.
->
-> For the artpec-6 the clocks are like this:
-> apb_clk: It is both the master and slave bus clock.
-> phy_ref_clk: It corresponds to tx clock in the proposed new binding.
->
-> There is a also a ptp reference clock that will map to the new ptp_ref
-> clock binding.
->
-> So the full set of clocks in a new artpec-6 binding is:
-> slave_bus
-> master_bus
-> tx
-> ptp_ref
+Yes it would be nice to design for this case as well.
 
-Given the discussion above, I think we should represent the rx clock too.
+> =
+
+> 2) Dealing with alias collisions between connector types
+> =
+
+> This one is fairly straightforward to handle.  By default, we'll use
+> labels from connectors we plug into "as is".  However, we can add a
+> syntax that allows us to locally rename labels from a connector (for
+> those familiar with Python, think "import foo from bar as baz").
+> =
+
+> =
+
+> So, combining those thoughts together, I'm thinking dtc format for
+> something connecting to two different widget sockets (pretty much the
+> worst case) would look something like:
+> =
+
+> /plugin/ foo,widget-socket {
+> };
+> =
+
+> /plugin/ foo,widget-socket {
+>         realias {
+>                 i2c-b =3D "i2c";
+>                 intc-b =3D "intc";
+>                 mmio-b =3D "mmio";
+>         };
+> };
+> =
+
+> &i2c {
+>         .. devices on the i2c from the first plug ..
+> };
+> =
+
+> &i2c-b {
+>         .. devices on the i2c from the second plug ..
+> };
+> =
+
+> Obviously we'd also need to devise an encoding for this to compile
+> into, since the one I proposed previously won't work in this case.
+> =
+
+
+I suppose we can distribute the realias nodes when we compile the plugin
+into overlay fragments. The socket matching is a little vague though.
+How would we know which socket to apply to when we have two identical
+looking sockets? I'm thinking we could put some of that information into
+the fragment itself.
+
+/{
+	compatible =3D "foo,whirlgig-widget";
+
+	fragment@0 { /* corresponds to i2c in example above */
+		target-socket =3D "foo,widget-socket-a";
+		target-alias =3D "i2c";
+		__overlay__ {
+			....
+		};
+	};
+
+	fragment@1 { /* corresponds to i2c-b in example above */
+		target-socket =3D "foo,widget-socket-b";
+		target-alias =3D "i2c";
+		__overlay__ {
+			...
+		};
+	};
+};
+
+If we have two identical connectors maybe we'll have to enforce that the
+connectors have some more specific unique compatible string so that we
+can match up the right socket. But I don't see how we can require that
+the overlays know this detail if they only care about one socket and
+could go into either one of them. In that case we should have the loader
+ask the user which socket they connected this extension board to?
+
+I was also thinking it would be better to leave the gpio-map and
+interrupt-map properties at the connector level. For example:
+
+	widget1 {
+		compatible =3D "foo,widget-socket";
+		interrupt-map-mask =3D <0xffffffff>;
+		interrupt-map =3D <0 &intc 7 0>,
+				<1 &intc 8 0>;
+	};
+
+and then we could put a label on the plugin/expansion syntax so we can
+reference the connector as a whole:
+
+	/plugin/ connector: foo,widget-socket {
+		compatible =3D "foo,whirlgig-widget";
+	};
+
+	&i2c {
+		device@40 {
+			interrupt-parent =3D <&connector>;
+			interrupts =3D <1>;
+		};
+	};
+
+I also thought about making another alias inside the connector node to
+point to itself, but that fails when you get into the situation of two
+connectors and collisions, unless you rename them of course. It felt
+better to leave that choice to the overlay though.
+
+In conclusion, I see a few topics/patterns emerging:
+
+1) Expose phandles through the connectors in some way that allows us to
+   limit what the plugin/expansion boards can modify or use
+
+2) Have some flexible syntax to remap cell sizes from the baseboard
+   through the connector to provide a consistent connector size (i.e.
+   remap interrupts and gpios from multiple sources, etc. into a fixed
+   number of cells)
+
+3) Allow plugin/expansion boards to use multiple connectors from the
+   baseboard in a consistent way
+
+4) Attempt to maintain almost all of the current overlay syntax with
+   syntactic sugar
+
+5) Connectors on expansion boards should be supported
+
+Is there anything else we should add to this list?
