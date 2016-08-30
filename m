@@ -1,94 +1,63 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v8 17/18] drm/virtio: kconfig: Fix recursive dependency.
-Date: Tue, 30 Aug 2016 10:55:46 +0100
-Message-ID: <20160830095546.GL1661@dell>
+Subject: Re: [PATCH v8 16/18] ARM: DT: STi: stihxxx-b2120: Add DT nodes for
+ STi audio card
+Date: Tue, 30 Aug 2016 10:56:46 +0100
+Message-ID: <20160830095646.GM1661@dell>
 References: <1472223413-7254-1-git-send-email-peter.griffin@linaro.org>
- <1472223413-7254-18-git-send-email-peter.griffin@linaro.org>
+ <1472223413-7254-17-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1472223413-7254-18-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1472223413-7254-17-git-send-email-peter.griffin@linaro.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, patrice.chotard@st.com, dan.j.williams@intel.com, airlied@linux.ie, kraxel@redhat.com, ohad@wizery.com, bjorn.andersson@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, virtualization@lists.linux-foundation.org, linux-remoteproc@vger.kernel.org
+Cc: ohad@wizery.com, devicetree@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, Arnaud Pouliquen <arnaud.pouliquen@st.com>, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, kraxel@redhat.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, bjorn.andersson@linaro.org, virtualization@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Aug 2016, Peter Griffin wrote:
-
-> [..]
-> drivers/video/fbdev/Kconfig:5:error: recursive dependency detected!
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> drivers/video/fbdev/Kconfig:5:	symbol FB is selected by DRM_KMS_FB_HELPER
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> drivers/gpu/drm/Kconfig:42:	symbol DRM_KMS_FB_HELPER depends on DRM_KMS_HELPER
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> drivers/gpu/drm/Kconfig:36:	symbol DRM_KMS_HELPER is selected by DRM_VIRTIO_GPU
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> drivers/gpu/drm/virtio/Kconfig:1:	symbol DRM_VIRTIO_GPU depends on VIRTIO
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> drivers/virtio/Kconfig:1:	symbol VIRTIO is selected by REMOTEPROC
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> drivers/remoteproc/Kconfig:4:	symbol REMOTEPROC is selected by ST_SLIM_REMOTEPROC
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> drivers/remoteproc/Kconfig:103:	symbol ST_SLIM_REMOTEPROC is selected by ST_FDMA
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> drivers/dma/Kconfig:440:	symbol ST_FDMA depends on DMADEVICES
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> drivers/dma/Kconfig:5:	symbol DMADEVICES is selected by SND_SOC_SH4_SIU
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> sound/soc/sh/Kconfig:29:	symbol SND_SOC_SH4_SIU is selected by SND_SIU_MIGOR
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> sound/soc/sh/Kconfig:64:	symbol SND_SIU_MIGOR depends on I2C
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> drivers/i2c/Kconfig:7:	symbol I2C is selected by FB_DDC
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> drivers/video/fbdev/Kconfig:63:	symbol FB_DDC is selected by FB_CYBER2000_DDC
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> drivers/video/fbdev/Kconfig:378:	symbol FB_CYBER2000_DDC depends on FB_CYBER2000
-> For a resolution refer to Documentation/kbuild/kconfig-language.txt
-> subsection "Kconfig recursive dependency limitations"
-> drivers/video/fbdev/Kconfig:366:	symbol FB_CYBER2000 depends on FB
-
-An explanation of why this is happening and why your fix works is
-usually helpful here.
-
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->  drivers/gpu/drm/virtio/Kconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/virtio/Kconfig b/drivers/gpu/drm/virtio/Kconfig
-> index e1afc3d..90357d9 100644
-> --- a/drivers/gpu/drm/virtio/Kconfig
-> +++ b/drivers/gpu/drm/virtio/Kconfig
-> @@ -1,6 +1,7 @@
->  config DRM_VIRTIO_GPU
->  	tristate "Virtio GPU driver"
-> -	depends on DRM && VIRTIO
-> +	depends on DRM
-> +	select VIRTIO
->          select DRM_KMS_HELPER
->          select DRM_TTM
->  	help
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+T24gRnJpLCAyNiBBdWcgMjAxNiwgUGV0ZXIgR3JpZmZpbiB3cm90ZToKCj4gVGhpcyBwYXRjaCBl
+bmFibGVzIHRoZSB1bmlwZXJpZiBwbGF5ZXJzIDIgJiAzIGZvciBiMjEyMCBib2FyZHMKPiBhbmQg
+YWxzbyBhZGRzIHRoZSAic2ltcGxlLWF1ZGlvLWNhcmQiIGRldmljZSBub2RlIHRvIGludGVyY29u
+bmVjdAo+IHRoZSBTb0Mgc291bmQgZGV2aWNlIGFuZCB0aGUgY29kZWMuCj4gCj4gU2lnbmVkLW9m
+Zi1ieTogQXJuYXVkIFBvdWxpcXVlbiA8YXJuYXVkLnBvdWxpcXVlbkBzdC5jb20+Cj4gU2lnbmVk
+LW9mZi1ieTogUGV0ZXIgR3JpZmZpbiA8cGV0ZXIuZ3JpZmZpbkBsaW5hcm8ub3JnPgo+IC0tLQo+
+ICBhcmNoL2FybS9ib290L2R0cy9zdGloeHh4LWIyMTIwLmR0c2kgfCA0NSArKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMo
+KykKCkFja2VkLWJ5OiBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPgoKPiBkaWZmIC0t
+Z2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaHh4eC1iMjEyMC5kdHNpIGIvYXJjaC9hcm0vYm9v
+dC9kdHMvc3RpaHh4eC1iMjEyMC5kdHNpCj4gaW5kZXggNzIyYzYzZi4uMWY2NGJiNiAxMDA2NDQK
+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdGloeHh4LWIyMTIwLmR0c2kKPiArKysgYi9hcmNo
+L2FybS9ib290L2R0cy9zdGloeHh4LWIyMTIwLmR0c2kKPiBAQCAtMTMxLDUgKzEzMSw1MCBAQAo+
+ICAJCQkJZHZiLWNhcmQJPSA8U1RWMDM2N19UREExODIxMl9OSU1BXzE+Owo+ICAJCQl9Owo+ICAJ
+CX07Cj4gKwo+ICsJCXN0aV91bmlfcGxheWVyMjogc3RpLXVuaS1wbGF5ZXJAMiB7Cj4gKwkJCXN0
+YXR1cyA9ICJva2F5IjsKPiArCQl9Owo+ICsKPiArCQlzdGlfdW5pX3BsYXllcjM6IHN0aS11bmkt
+cGxheWVyQDMgewo+ICsJCQlzdGF0dXMgPSAib2theSI7Cj4gKwkJfTsKPiArCj4gKwkJc3RpX3Nh
+c2dfY29kZWM6IHN0aS1zYXNnLWNvZGVjIHsKPiArCQkJc3RhdHVzID0gIm9rYXkiOwo+ICsJCQlw
+aW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICsJCQlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfc3Bk
+aWZfb3V0PjsKPiArCQl9Owo+ICsKPiArCQlzb3VuZCB7Cj4gKwkJCWNvbXBhdGlibGUgPSAic2lt
+cGxlLWF1ZGlvLWNhcmQiOwo+ICsJCQlzaW1wbGUtYXVkaW8tY2FyZCxuYW1lID0gInN0aSBhdWRp
+byBjYXJkIjsKPiArCQkJc3RhdHVzID0gIm9rYXkiOwo+ICsKPiArCQkJc2ltcGxlLWF1ZGlvLWNh
+cmQsZGFpLWxpbmtAMCB7Cj4gKwkJCQkvKiBEQUMgKi8KPiArCQkJCWZvcm1hdCA9ICJpMnMiOwo+
+ICsJCQkJbWNsay1mcyA9IDwyNTY+Owo+ICsJCQkJY3B1IHsKPiArCQkJCQlzb3VuZC1kYWkgPSA8
+JnN0aV91bmlfcGxheWVyMj47Cj4gKwkJCQl9Owo+ICsKPiArCQkJCWNvZGVjIHsKPiArCQkJCQlz
+b3VuZC1kYWkgPSA8JnN0aV9zYXNnX2NvZGVjIDE+Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCQkJ
+c2ltcGxlLWF1ZGlvLWNhcmQsZGFpLWxpbmtAMSB7Cj4gKwkJCQkvKiBTUERJRiAqLwo+ICsJCQkJ
+Zm9ybWF0ID0gImxlZnRfaiI7Cj4gKwkJCQltY2xrLWZzID0gPDEyOD47Cj4gKwkJCQljcHUgewo+
+ICsJCQkJCXNvdW5kLWRhaSA9IDwmc3RpX3VuaV9wbGF5ZXIzPjsKPiArCQkJCX07Cj4gKwo+ICsJ
+CQkJY29kZWMgewo+ICsJCQkJCXNvdW5kLWRhaSA9IDwmc3RpX3Nhc2dfY29kZWMgMD47Cj4gKwkJ
+CQl9Owo+ICsJCQl9Owo+ICsJCX07Cj4gIAl9Owo+ICB9OwoKLS0gCkxlZSBKb25lcwpMaW5hcm8g
+U1RNaWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4g
+c291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3
+aXR0ZXIgfCBCbG9nCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
