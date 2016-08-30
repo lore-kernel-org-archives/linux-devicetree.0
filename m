@@ -1,85 +1,62 @@
-From: David Herrmann <dh.herrmann@gmail.com>
-Subject: Re: [RFC] drm: implement generic firmware eviction
-Date: Tue, 30 Aug 2016 21:30:44 +0200
-Message-ID: <CANq1E4Shy1+rQsshWxeFRhFvuAg1sB3ffnVT7hoMZSjZAR=yuQ@mail.gmail.com>
-References: <20160826000056.12806-1-dh.herrmann@gmail.com>
- <CAL_Jsq+1MeicZmr+7Q4K6FLnTfD4jBBAQR1KPHMSLfNNUe4ENw@mail.gmail.com>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v11 2/4] tee: generic TEE subsystem
+Date: Tue, 30 Aug 2016 14:29:45 -0500
+Message-ID: <e08f821b-bf7c-be65-59a5-281aa3343cf4@ti.com>
+References: <1471870856-18684-1-git-send-email-jens.wiklander@linaro.org>
+ <1471870856-18684-3-git-send-email-jens.wiklander@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_Jsq+1MeicZmr+7Q4K6FLnTfD4jBBAQR1KPHMSLfNNUe4ENw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471870856-18684-3-git-send-email-jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Al Viro <viro-3bDd1+5oDREiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iCgpPbiBGcmksIEF1ZyAyNiwgMjAxNiBhdCAyOjM2IFBNLCBSb2IgSGVycmluZyA8cm9i
-aCtkdEBrZXJuZWwub3JnPiB3cm90ZToKPiBPbiBUaHUsIEF1ZyAyNSwgMjAxNiBhdCA3OjAwIFBN
-LCBEYXZpZCBIZXJybWFubiA8ZGguaGVycm1hbm5AZ21haWwuY29tPiB3cm90ZToKPj4gUHJvdmlk
-ZSBhIGdlbmVyaWMgRFJNIGhlbHBlciB0aGF0IGV2aWN0cyBhbGwgY29uZmxpY3RpbmcgZmlybXdh
-cmUKPj4gZnJhbWVidWZmZXJzLCBkZXZpY2VzLCBhbmQgZHJpdmVycy4gVGhlIG5ldyBoZWxwZXIg
-aXMgY2FsbGVkCj4+IGRybV9ldmljdF9maXJtd2FyZSgpLCBhbmQgdGFrZXMgYSBmbGFnc2V0IGNv
-bnRyb2xsaW5nIHdoaWNoIGZpcm13YXJlIHRvCj4+IGtpY2sgb3V0Lgo+Pgo+PiBUaGlzIGlzIG1l
-YW50IHRvIGJlIHVzZWQgYnkgZHJpdmVycyBpbiB0aGVpciAtPnByb2JlKCkgY2FsbGJhY2tzIG9m
-IHRoZWlyCj4+IHBhcmVudCBidXMsIGJlZm9yZSBjYWxsaW5nIGludG8gZHJtX2Rldl9yZWdpc3Rl
-cigpLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBIZXJybWFubiA8ZGguaGVycm1hbm5AZ21h
-aWwuY29tPgo+PiAtLS0KPj4gSGV5Cj4+Cj4+IFRoaXMgaXMganVzdCBjb21waWxlLXRlc3RlZCBm
-b3Igbm93LiBJIGp1c3Qgd2FudCB0byBnZXQgc29tZSBjb21tZW50cyBvbiB0aGUKPj4gZGVzaWdu
-LiBJIGRlY2lkZWQgdG8gZHJvcCB0aGUgc3lzZmIgaW5mcmFzdHJ1Y3R1cmUgYW5kIHJhdGhlciBq
-dXN0IHVzZSB0aGlzCj4+IGdlbmVyaWMgaGVscGVyLiBJdCBrZWVwcyB0aGluZ3Mgc2ltcGxlIGFu
-ZCBzaG91bGQgd29yayBqdXN0IGZpbmUgZm9yIGFsbAo+PiByZWFzb25hYmxlIHVzZS1jYXNlcy4K
-Pj4KPj4gVGhpcyB3aWxsIHdvcmsgd2l0aCBTaW1wbGVEUk0gb3V0LW9mLXRoZS1ib3ggb24geDg2
-Lgo+Pgo+PiBBcmNoaXRlY3R1cmVzIHdpdGggZHluYW1pYyBzaW1wbGUtZnJhbWVidWZmZXIgZGV2
-aWNlcyBhcmUgbm90IHN1cHBvcnRlZCB5ZXQuIEkKPj4gYWN0dWFsbHkgaGF2ZSBubyBpZGVhIHdo
-YXQgdGhlIHN0cmF0ZWd5IHRoZXJlIGlzPyBDYW4gdGhlIERldmljZVRyZWUgcGVvcGxlIGNvbWUK
-Pj4gdXAgd2l0aCBzb21ldGhpbmc/IEFtIEkgc3VwcG9zZWQgdG8gY2FsbCBvZl9wbGF0Zm9ybV9k
-ZXBvcHVsYXRlKCk/Cj4KPiBJZiBvZl9wbGF0Zm9ybV9wb3B1bGF0ZSB3YXMgdXNlZCB0byBjcmVh
-dGUgdGhlIGRldmljZSwgdGhlbiB5ZXMgY2FsbAo+IG9mX3BsYXRmb3JtX2RlcG9wdWxhdGUuIElu
-IHRoaXMgY2FzZSwgSSB0aGluayBpdCB3YXNuJ3QuIElmCj4gb2ZfcGxhdGZvcm1fZGV2aWNlX2Ny
-ZWF0ZSB3YXMgdXNlZCwgdGhlbiBwbGF0Zm9ybV9kZXZpY2VfZGVsLgo+Cj4+IE9yCj4+IG9mX2Rl
-dGFjaF9ub2RlKCk/IE9yIHdoYXQ/Cj4KPiBOby4gT25seSB0aGUgc3RydWN0IGRldmljZSBhbmQg
-aXRzIHJlc291cmNlcyBzaG91bGQgbmVlZCB0byBiZQo+IGRlc3Ryb3llZC4gVGhlIG5vZGUgc2hv
-dWxkIHJlbWFpbi4KPgo+PiBMb29raW5nIGF0IGRyaXZlcnMvb2Yve3BsYXRmb3JtLGR5bmFtaWN9
-LmMsIEkgY2Fubm90IHNlZSBob3cgdGhpcyBpcyBzdXBwb3NlZCB0bwo+PiB3b3JrIGF0IGFsbC4g
-V2hvIHByb3RlY3RzIHBsYXRmb3JtX2RldmljZV9kZWwoKSBmcm9tIGJlaW5nIGNhbGxlZCBpbiBw
-YXJhbGxlbD8KPgo+IE5vdCBzdXJlLiBJbiBwYXJhbGxlbCB0byB3aGF0PyBPbiBtb3N0IHN5c3Rl
-bXMsIG5vZGVzIG5ldmVyIGdvIGF3YXkKPiBhbmQgb24gdGhvc2UgdGhhdCBkbyBpdCBpcyBvbmx5
-IGEgZmV3IHRoaW5ncyB0aGF0IGdldCBob3RwbHVnZ2VkLgo+IFRoYXQncyBjaGFuZ2luZyB3aXRo
-IERUIG92ZXJsYXlzIG5vdywgc28gdGhlcmUgY2VydGFpbmx5IGNvdWxkIGJlIHNvbWUKPiBpc3N1
-ZXMuCgpUd28gdGFza3MgY2FsbGluZyBwbGF0Zm9ybV9kZXZpY2VfZGVsKCkgaW4gcGFyYWxsZWwg
-b24gdGhlIHNhbWUgZGV2aWNlCndpbGwgbm90IHdvcmsuIE1lYW5pbmcsIGNhbGxpbmcgb2ZfcGxh
-dGZvcm1fZGV2aWNlX2Rlc3Ryb3koKSBpbgpwYXJhbGxlbCBkb2VzIG5vdCB3b3JrIGVpdGhlci4g
-U2FtZSBmb3Igb2ZfcGxhdGZvcm1fZGVwb3B1bGF0ZSgpLiBTYW1lCmZvciBvZl9ub2RlX2RldGFj
-aCgpLgoKU3VyZSwgYWxsIHRob3NlIGZ1bmN0aW9ucyBhcmUgbm90IG1lYW50IHRvIGJlIGNhbGxl
-ZCBpbiBwYXJhbGxlbCBieQptdWx0aXBsZSB0YXNrcy4gVGhleSBhcmUgcmF0aGVyIG1lYW50IHRv
-IGhhdmUgYSBzaW5nbGUgaG9sZGVyIHdoaWNoCnByZWZlcmFibHkgaXMgdGhlIG9uZSBpbnN0YW50
-aWF0aW5nIGFuZCBkZXN0cm95aW5nIHRoZQpub2RlL2RldmljZS9mb29iYXIuIEJ1dCB0aGUgZnJh
-bWVidWZmZXIgZXZpY3Rpb24gY29kZSBzb21laG93IG5lZWRzIHRvCnRyaWdnZXIgdGhlIHJlbW92
-YWwsIGFuZCB0aHVzIG5lZWRzIHNvbWUgaG9vaywgdGhhdCBjYW4gYmUgY2FsbGVkIGluCnBhcmFs
-bGVsIGJ5IGFueSBkcml2ZXIgdGhhdCBpcyBsb2FkZWQuCgpJIGNhbiBtYWtlIHN1cmUgdGhlIHNp
-bXBsZS1mcmFtZWJ1ZmZlciBldmljdGlvbiBjb2RlIGlzIGxvY2tlZApwcm9wZXJseS4gVGhhdCds
-bCB3b3JrLCBmb3Igbm93LiBCdXQgaWYgc29tZW9uZSBlbmRzIHVwIHByb3ZpZGluZwpzaW1wbGUt
-ZnJhbWVidWZmZXIgZGV2aWNlcyB2aWEgb3ZlcmxheXMgb3IgYW55IG90aGVyIGR5bmFtaWMKbWVj
-aGFuaXNtLCB0aGV5IHdpbGwgcmFjZSB0aGUgcmVtb3ZhbC4gQW5kIGl0IHdpbGwgYmUgY29tcGxl
-dGVseQpub24tb2J2aW91cyB0byB0aGVtLiBJIHJlYWxseSBkb24ndCB3YW50IHRvIGJlIHJlc3Bv
-bnNpYmxlIHRvIGhhdmUKc3VibWl0dGVkIHRoYXQgY29kZS4gSWYgYW55b25lIGNhcmVzIGZvciBw
-cm9wZXIgZGV2aWNlIGhhbmQtb3ZlciBvbgpBUk0sIHBsZWFzZSBjb21lIHVwIHdpdGggYW4gaWRl
-YSB0byBmaXggaXQuIE90aGVyd2lzZSwgSSB3aWxsIGp1c3QKbGltaXQgdGhlIHNpbXBsZWRybSBj
-b2RlIHRvIHg4Ni4KCklPVyB0aGUgZGV2aWNlIGhhbmRvdmVyIGNvZGUgc29tZWhvdyBuZWVkcyB0
-byBrbm93IHdobyB3YXMgcmVzcG9uc2libGUKZm9yIHRoZSBpbnN0YW50aWF0aW9uIG9mIHRoZSBz
-aW1wbGUtZnJhbWVidWZmZXIgZGV2aWNlLCBzbyBpdCBjYW4gdGVsbAp0aGVtIHRvIHJlbW92ZSBp
-dCBhZ2Fpbi4gT24geDg2IHRoZXJlIGlzIG9ubHkgb25lIHBsYWNlIHdoZXJlIHRob3NlCmNhbiBi
-ZSBpbnN0YW50aWF0ZWQuIEJ1dCBvbiBPRi1iYXNlZCBzeXN0ZW1zLCBpdCBjYW4gYmUgZHluYW1p
-Y2FsbHkKaW5zdGFudGlhdGVkIGluIG1hbnkgcGxhY2VzIHJpZ2h0IG5vdy4KClRoYW5rcwpEYXZp
-ZApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 08/22/2016 08:00 AM, Jens Wiklander wrote:
+> +/*
+> + * Unprivileged devices in the in the lower half range and privileged
+
+                                ^^ in the in the
+[snip]
+
+> +
+> +	rc = alloc_chrdev_region(&tee_devt, 0, TEE_NUM_DEVICES, "tee");
+> +	if (rc < 0) {
+
+if (rc) ?
+
+[snip]
+
+> + * Memory allocated as global shared memory is automatically freed when the
+> + * TEE file pointer is closed. The @flags field uses the bits defined by
+> + * TEE_SHM_* above. TEE_SHM_MAPPED must currently always be set. If
+
+             ^^^ not really above anymore, out of file now looks like
+
+> + * TEE_SHM_DMA_BUF global shared memory will be allocated and associated
+> + * with a dma-buf handle, else driver private memory.
+> + *
+> + * @returns a pointer to 'struct tee_shm'
+
+Doesn't say anything, is this really needed?
+
+[snip]
+
+> +/**
+> + * struct tee_shm_pool_mem_info - holds information needed to create a shared
+> + * memory pool
+> + * @vaddr:	Virtual address of start of pool
+> + * @paddr:	Physical address of start of pool
+> + * @size:	Size in bytes of the pool
+> + */
+> +struct tee_shm_pool_mem_info {
+> +	unsigned long vaddr;
+> +	unsigned long paddr;
+
+phys_addr_t paddr; ?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
