@@ -1,76 +1,103 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: Documentation: tpm: Adds the TPM device tree node documentation
-Date: Tue, 30 Aug 2016 22:51:56 +0200
-Message-ID: <20160830205156.GA31948@katana>
-References: <1472532277-21933-1-git-send-email-nayna@linux.vnet.ibm.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC] drm: implement generic firmware eviction
+Date: Tue, 30 Aug 2016 15:58:18 -0500
+Message-ID: <CAL_JsqKOOExaBcQfzxYyPE-h9qd4E8T+9GOKQGvXpuNSaObxoA@mail.gmail.com>
+References: <20160826000056.12806-1-dh.herrmann@gmail.com>
+ <CAL_Jsq+1MeicZmr+7Q4K6FLnTfD4jBBAQR1KPHMSLfNNUe4ENw@mail.gmail.com>
+ <CANq1E4Shy1+rQsshWxeFRhFvuAg1sB3ffnVT7hoMZSjZAR=yuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1472532277-21933-1-git-send-email-nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hellerda-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, ltcgcw-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, gcwilson-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CANq1E4Shy1+rQsshWxeFRhFvuAg1sB3ffnVT7hoMZSjZAR=yuQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Herrmann <dh.herrmann@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-
---IS0zKkzwUGydFO0o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Aug 30, 2016 at 12:44:37AM -0400, Nayna Jain wrote:
-> This is documenting device tree binding for
-> I2C based TPM, similar concept which being used
-> for virtual TPM on POWER7 and POWER8 systems running PowerVM.
->=20
-> Signed-off-by: Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-tpm.txt | 29 +++++++++++++++++=
-++++++
-
-Is the driver in 'drivers/i2c/*'? No, so the binding shouldn't be in i2c
-as well.
-
-> +- compatible : 'manufacturer,model'
-
-You need to specify them here!
-
-> +Optional properties:
-> +
-> +- status: indicates whether the device is enabled or disabled. "okay" for
-> +          enabled and "disabled" for disabled.
-
-Optional? Rather "implicit" I'd say.
-
-This is far from ready. You should really wait for Rob's review. Or
-better: Have a look at other bindings.
-
-
---IS0zKkzwUGydFO0o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXxfHsAAoJEBQN5MwUoCm216AP/2ykfd1BzMMquv9yH07veqHb
-ow8zAhzV5v7mRUXC4ezVt9WU2KYpv4U6OXj4J45ONJASne3XJnTeSjqz6jGXZJZy
-E3ET1+xHEEhvTGlWKcRkLFfDsD7VSKeQ7VfkznCQYwIOFBQFCjzhXJkhZ5CxSYAY
-J7uu6CUjG05I7JLYgJ1cQ9xeVb8W+EO9204CmLFj4MMuHp+tbBBsB/cc/cLGNepa
-38ItuZuYPM4/VD/qWqjYk++29B0fLQ3OwAtgaq5p4D+1KZgUINLYFpJxSg0zGMg7
-b2tgw5GVgHuU+/+gwm/aPjQVrad4oVCItqi0/9VpH43WZ9lU4WHKfnhu/awYBC1b
-yF6gkE+CLKfvoqMuuEsaYWYhGV1w0H4c0/KLJ62s+Qu7Oh0LsC3aiJltnpl0Cac5
-seNnq1Nc86iI0lKK85CuFzvtvRZ0D3GXe/20LTnPbjzf9lKmTU+kCPAHA0gnJDOe
-jXkwYhhv4Q9hw+w5Dg8WvtXfCLUSrdqcpkLeWxLqav5h2Yj5uhOShBg4YcbrgrXO
-hyMS6apnpy2suVzmSvFq1GB5ulafJcdlJaV5hIq89M6V2lBQMBDA38LXzjzpHzTb
-drguaYnaNxXQBjllxUbQvecgnpuIoTr9Dp44TYvZF+knsbrM+g+8hTJ28/xKllU5
-iYNRLMN1syKKOV1nm0Em
-=iTjI
------END PGP SIGNATURE-----
-
---IS0zKkzwUGydFO0o--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBBdWcgMzAsIDIwMTYgYXQgMjozMCBQTSwgRGF2aWQgSGVycm1hbm4gPGRoLmhlcnJt
+YW5uQGdtYWlsLmNvbT4gd3JvdGU6Cj4gSGkgUm9iCj4KPiBPbiBGcmksIEF1ZyAyNiwgMjAxNiBh
+dCAyOjM2IFBNLCBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPiB3cm90ZToKPj4gT24g
+VGh1LCBBdWcgMjUsIDIwMTYgYXQgNzowMCBQTSwgRGF2aWQgSGVycm1hbm4gPGRoLmhlcnJtYW5u
+QGdtYWlsLmNvbT4gd3JvdGU6Cj4+PiBQcm92aWRlIGEgZ2VuZXJpYyBEUk0gaGVscGVyIHRoYXQg
+ZXZpY3RzIGFsbCBjb25mbGljdGluZyBmaXJtd2FyZQo+Pj4gZnJhbWVidWZmZXJzLCBkZXZpY2Vz
+LCBhbmQgZHJpdmVycy4gVGhlIG5ldyBoZWxwZXIgaXMgY2FsbGVkCj4+PiBkcm1fZXZpY3RfZmly
+bXdhcmUoKSwgYW5kIHRha2VzIGEgZmxhZ3NldCBjb250cm9sbGluZyB3aGljaCBmaXJtd2FyZSB0
+bwo+Pj4ga2ljayBvdXQuCj4+Pgo+Pj4gVGhpcyBpcyBtZWFudCB0byBiZSB1c2VkIGJ5IGRyaXZl
+cnMgaW4gdGhlaXIgLT5wcm9iZSgpIGNhbGxiYWNrcyBvZiB0aGVpcgo+Pj4gcGFyZW50IGJ1cywg
+YmVmb3JlIGNhbGxpbmcgaW50byBkcm1fZGV2X3JlZ2lzdGVyKCkuCj4+Pgo+Pj4gU2lnbmVkLW9m
+Zi1ieTogRGF2aWQgSGVycm1hbm4gPGRoLmhlcnJtYW5uQGdtYWlsLmNvbT4KPj4+IC0tLQo+Pj4g
+SGV5Cj4+Pgo+Pj4gVGhpcyBpcyBqdXN0IGNvbXBpbGUtdGVzdGVkIGZvciBub3cuIEkganVzdCB3
+YW50IHRvIGdldCBzb21lIGNvbW1lbnRzIG9uIHRoZQo+Pj4gZGVzaWduLiBJIGRlY2lkZWQgdG8g
+ZHJvcCB0aGUgc3lzZmIgaW5mcmFzdHJ1Y3R1cmUgYW5kIHJhdGhlciBqdXN0IHVzZSB0aGlzCj4+
+PiBnZW5lcmljIGhlbHBlci4gSXQga2VlcHMgdGhpbmdzIHNpbXBsZSBhbmQgc2hvdWxkIHdvcmsg
+anVzdCBmaW5lIGZvciBhbGwKPj4+IHJlYXNvbmFibGUgdXNlLWNhc2VzLgo+Pj4KPj4+IFRoaXMg
+d2lsbCB3b3JrIHdpdGggU2ltcGxlRFJNIG91dC1vZi10aGUtYm94IG9uIHg4Ni4KPj4+Cj4+PiBB
+cmNoaXRlY3R1cmVzIHdpdGggZHluYW1pYyBzaW1wbGUtZnJhbWVidWZmZXIgZGV2aWNlcyBhcmUg
+bm90IHN1cHBvcnRlZCB5ZXQuIEkKPj4+IGFjdHVhbGx5IGhhdmUgbm8gaWRlYSB3aGF0IHRoZSBz
+dHJhdGVneSB0aGVyZSBpcz8gQ2FuIHRoZSBEZXZpY2VUcmVlIHBlb3BsZSBjb21lCj4+PiB1cCB3
+aXRoIHNvbWV0aGluZz8gQW0gSSBzdXBwb3NlZCB0byBjYWxsIG9mX3BsYXRmb3JtX2RlcG9wdWxh
+dGUoKT8KPj4KPj4gSWYgb2ZfcGxhdGZvcm1fcG9wdWxhdGUgd2FzIHVzZWQgdG8gY3JlYXRlIHRo
+ZSBkZXZpY2UsIHRoZW4geWVzIGNhbGwKPj4gb2ZfcGxhdGZvcm1fZGVwb3B1bGF0ZS4gSW4gdGhp
+cyBjYXNlLCBJIHRoaW5rIGl0IHdhc24ndC4gSWYKPj4gb2ZfcGxhdGZvcm1fZGV2aWNlX2NyZWF0
+ZSB3YXMgdXNlZCwgdGhlbiBwbGF0Zm9ybV9kZXZpY2VfZGVsLgo+Pgo+Pj4gT3IKPj4+IG9mX2Rl
+dGFjaF9ub2RlKCk/IE9yIHdoYXQ/Cj4+Cj4+IE5vLiBPbmx5IHRoZSBzdHJ1Y3QgZGV2aWNlIGFu
+ZCBpdHMgcmVzb3VyY2VzIHNob3VsZCBuZWVkIHRvIGJlCj4+IGRlc3Ryb3llZC4gVGhlIG5vZGUg
+c2hvdWxkIHJlbWFpbi4KPj4KPj4+IExvb2tpbmcgYXQgZHJpdmVycy9vZi97cGxhdGZvcm0sZHlu
+YW1pY30uYywgSSBjYW5ub3Qgc2VlIGhvdyB0aGlzIGlzIHN1cHBvc2VkIHRvCj4+PiB3b3JrIGF0
+IGFsbC4gV2hvIHByb3RlY3RzIHBsYXRmb3JtX2RldmljZV9kZWwoKSBmcm9tIGJlaW5nIGNhbGxl
+ZCBpbiBwYXJhbGxlbD8KPj4KPj4gTm90IHN1cmUuIEluIHBhcmFsbGVsIHRvIHdoYXQ/IE9uIG1v
+c3Qgc3lzdGVtcywgbm9kZXMgbmV2ZXIgZ28gYXdheQo+PiBhbmQgb24gdGhvc2UgdGhhdCBkbyBp
+dCBpcyBvbmx5IGEgZmV3IHRoaW5ncyB0aGF0IGdldCBob3RwbHVnZ2VkLgo+PiBUaGF0J3MgY2hh
+bmdpbmcgd2l0aCBEVCBvdmVybGF5cyBub3csIHNvIHRoZXJlIGNlcnRhaW5seSBjb3VsZCBiZSBz
+b21lCj4+IGlzc3Vlcy4KPgo+IFR3byB0YXNrcyBjYWxsaW5nIHBsYXRmb3JtX2RldmljZV9kZWwo
+KSBpbiBwYXJhbGxlbCBvbiB0aGUgc2FtZSBkZXZpY2UKPiB3aWxsIG5vdCB3b3JrLiBNZWFuaW5n
+LCBjYWxsaW5nIG9mX3BsYXRmb3JtX2RldmljZV9kZXN0cm95KCkgaW4KPiBwYXJhbGxlbCBkb2Vz
+IG5vdCB3b3JrIGVpdGhlci4gU2FtZSBmb3Igb2ZfcGxhdGZvcm1fZGVwb3B1bGF0ZSgpLiBTYW1l
+Cj4gZm9yIG9mX25vZGVfZGV0YWNoKCkuCgpDaGFuZ2VzIHRvIERUIG5vZGVzIGFuZCBzdHJ1Y3Qg
+ZGV2aWNlJ3MgYXJlIGNvbXBsZXRlbHkgc2VwYXJhdGUgZnJvbSBhCkRUIGNvcmUgcGVyc3BlY3Rp
+dmUgQVRNLiBBIGNhbGxlciBpcyByZXNwb25zaWJsZSBhZGRpbmcgZGV2aWNlcyB3aGVuCm5vZGVz
+IGFyZSBhZGRlZCwgcmVtb3ZpbmcgdGhlIGRldmljZXMsIHRoZW4gcmVtb3ZpbmcgdGhlIG5vZGVz
+LiBUaGUKb25seSBvdmVybGF5cyBjdXJyZW50bHkgc3VwcG9ydGVkIHJlcXVpcmUgYSBkcml2ZXIg
+dG8gbG9hZCB0aGVtIGFuZApoYW5kbGUgYW55IHRyYW5zaXRpb25zLgoKRFQgaXMgc3RpbGwgZmFy
+IGZyb20gZHluYW1pYyBpbiB0aGUgc2Vuc2UgdGhhdCBhbnkgcmFuZG9tIG5vZGUgY2FuIGNvbWUg
+YW5kIGdvLgoKPiBTdXJlLCBhbGwgdGhvc2UgZnVuY3Rpb25zIGFyZSBub3QgbWVhbnQgdG8gYmUg
+Y2FsbGVkIGluIHBhcmFsbGVsIGJ5Cj4gbXVsdGlwbGUgdGFza3MuIFRoZXkgYXJlIHJhdGhlciBt
+ZWFudCB0byBoYXZlIGEgc2luZ2xlIGhvbGRlciB3aGljaAo+IHByZWZlcmFibHkgaXMgdGhlIG9u
+ZSBpbnN0YW50aWF0aW5nIGFuZCBkZXN0cm95aW5nIHRoZQo+IG5vZGUvZGV2aWNlL2Zvb2Jhci4g
+QnV0IHRoZSBmcmFtZWJ1ZmZlciBldmljdGlvbiBjb2RlIHNvbWVob3cgbmVlZHMgdG8KPiB0cmln
+Z2VyIHRoZSByZW1vdmFsLCBhbmQgdGh1cyBuZWVkcyBzb21lIGhvb2ssIHRoYXQgY2FuIGJlIGNh
+bGxlZCBpbgo+IHBhcmFsbGVsIGJ5IGFueSBkcml2ZXIgdGhhdCBpcyBsb2FkZWQuCj4KPiBJIGNh
+biBtYWtlIHN1cmUgdGhlIHNpbXBsZS1mcmFtZWJ1ZmZlciBldmljdGlvbiBjb2RlIGlzIGxvY2tl
+ZAo+IHByb3Blcmx5LiBUaGF0J2xsIHdvcmssIGZvciBub3cuIEJ1dCBpZiBzb21lb25lIGVuZHMg
+dXAgcHJvdmlkaW5nCj4gc2ltcGxlLWZyYW1lYnVmZmVyIGRldmljZXMgdmlhIG92ZXJsYXlzIG9y
+IGFueSBvdGhlciBkeW5hbWljCj4gbWVjaGFuaXNtLCB0aGV5IHdpbGwgcmFjZSB0aGUgcmVtb3Zh
+bC4KCk5vIGRvdWJ0IHNvbWVvbmUgd2lsbCBjb21lIHVwIHdpdGggc29tZSB1c2VjYXNlIHdhbnRp
+bmcgdG8gZG8gdGhhdCwKYnV0IElNTyB0aGF0IGlzIG5vdCBhIHN1cHBvcnRlZCB1c2VjYXNlIGFu
+ZCBzaG91bGQgbm90IGJlLgpzaW1wbGUtZnJhbWVidWZmZXIgaXMgZm9yIHByb3ZpZGluZyBhIGZp
+cm13YXJlIHNldHVwIGZyYW1lYnVmZmVyLgoKPiBBbmQgaXQgd2lsbCBiZSBjb21wbGV0ZWx5Cj4g
+bm9uLW9idmlvdXMgdG8gdGhlbS4gSSByZWFsbHkgZG9uJ3Qgd2FudCB0byBiZSByZXNwb25zaWJs
+ZSB0byBoYXZlCj4gc3VibWl0dGVkIHRoYXQgY29kZS4gSWYgYW55b25lIGNhcmVzIGZvciBwcm9w
+ZXIgZGV2aWNlIGhhbmQtb3ZlciBvbgo+IEFSTSwgcGxlYXNlIGNvbWUgdXAgd2l0aCBhbiBpZGVh
+IHRvIGZpeCBpdC4gT3RoZXJ3aXNlLCBJIHdpbGwganVzdAo+IGxpbWl0IHRoZSBzaW1wbGVkcm0g
+Y29kZSB0byB4ODYuCj4KPiBJT1cgdGhlIGRldmljZSBoYW5kb3ZlciBjb2RlIHNvbWVob3cgbmVl
+ZHMgdG8ga25vdyB3aG8gd2FzIHJlc3BvbnNpYmxlCj4gZm9yIHRoZSBpbnN0YW50aWF0aW9uIG9m
+IHRoZSBzaW1wbGUtZnJhbWVidWZmZXIgZGV2aWNlLCBzbyBpdCBjYW4gdGVsbAo+IHRoZW0gdG8g
+cmVtb3ZlIGl0IGFnYWluLiBPbiB4ODYgdGhlcmUgaXMgb25seSBvbmUgcGxhY2Ugd2hlcmUgdGhv
+c2UKPiBjYW4gYmUgaW5zdGFudGlhdGVkLiBCdXQgb24gT0YtYmFzZWQgc3lzdGVtcywgaXQgY2Fu
+IGJlIGR5bmFtaWNhbGx5Cj4gaW5zdGFudGlhdGVkIGluIG1hbnkgcGxhY2VzIHJpZ2h0IG5vdy4K
+CldoYXQgZG8geW91IG1lYW4gYnkgYWxsIG92ZXIgdGhlIHBsYWNlPyBJdCBpcyBvbmx5IGluIHNp
+bXBsZWZiX2luaXQKQVRNLiBJIGhhdmVuJ3QgbG9va2VkIGF0IHdoYXQgc2ltcGxlZHJtIGlzIGRv
+aW5nLCBidXQgd2UgY2FuIG1vdmUgdGhlCmRldmljZSBjcmVhdGlvbiB0byBvZl9wbGF0Zm9ybV9k
+ZWZhdWx0X3BvcHVsYXRlX2luaXQgaWYgd2UgbmVlZCBhCnNpbmdsZSBzcG90LgoKUm9iCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
