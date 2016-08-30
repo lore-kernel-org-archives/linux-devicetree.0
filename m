@@ -1,96 +1,63 @@
-From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Subject: Re: [PATCH v4 4/5] mfd: tps65217: Add power button as subdevice
-Date: Tue, 30 Aug 2016 11:19:30 +0200
-Message-ID: <9fafa9b0-cc45-6fe9-ddb9-5c933064261c@grinn-global.com>
-References: <20160620105056.25843-1-m.niestroj@grinn-global.com>
- <20160620105056.25843-5-m.niestroj@grinn-global.com>
- <c849849f-ba1d-3263-9941-b346ef9eef59@grinn-global.com>
- <20160830090329.GD1661@dell>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH RFC 1/3] DT: bindings: mmc: Add property for 3.3V only support
+Date: Tue, 30 Aug 2016 11:26:28 +0200
+Message-ID: <CAPDyKFr8X93oqiPzkQxPnfMGyV9UBEybvfODX5if3VwMbheKcw@mail.gmail.com>
+References: <1470488140-10104-1-git-send-email-stefan.wahren@i2se.com>
+ <1470488140-10104-2-git-send-email-stefan.wahren@i2se.com>
+ <20160810184451.GA13473@rob-hp-laptop> <853617027.179290.63a6f478-ad48-40c8-82ca-760dd1afc040.open-xchange@email.1und1.de>
+ <CAL_JsqJ09hXYrp_pgAw9FXrBv+=grkm_zip6qB9XefujPECTxQ@mail.gmail.com>
+ <468a6704-a9f0-1715-ff64-9e331a6a80b1@rock-chips.com> <8f87c885-3c55-cac8-a9f5-e121ae031f90@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160830090329.GD1661@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <8f87c885-3c55-cac8-a9f5-e121ae031f90@intel.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh@kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Sascha Hauer <kernel@pengutronix.de>, Otavio Salvador <otavio@ossystems.com.br>, Holger Schurig <holgerschurig@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marex@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 30.08.2016 11:03, Lee Jones wrote:
-> On Mon, 29 Aug 2016, Marcin Niestroj wrote:
->
->> ping
->
-> Don't do that!
->
-> If you think the patch hasn't attracted attention in >2 weeks, then
-> it's probably slipped through the gaps and you need to send a
-> [RESEND].
-
-Clear.
-
->
-> However ...
->
->> On 20.06.2016 12:50, Marcin Niestroj wrote:
->>> Add tps65217 power buttor subdevice with assigned IRQ resources.
->>>
->>> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
->>> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> This patch has a maintainer Ack, so why are you pinging?
-
-Because I didn't see it applied anywhere and there were no new
-comments, so I thought it slipped somewhere.
-
-So my question is: what happens with the patch after maintainer Ack?
-Are we still waiting for some comments from the community? Do I still
-need to worry, that the patch might slipped? What is author's role now?
-
->
->>> ---
->>> Depends on patch 1 in series
->>>
->>> Changes v1 -> v4: none
->>>
->>>  drivers/mfd/tps65217.c | 10 ++++++++++
->>>  1 file changed, 10 insertions(+)
->>>
->>> diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
->>> index 41b5d59..57c8741 100644
->>> --- a/drivers/mfd/tps65217.c
->>> +++ b/drivers/mfd/tps65217.c
->>> @@ -38,6 +38,10 @@ static struct resource charger_resources[] = {
->>>  	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_USB, "USB"),
->>>  };
->>>
->>> +static struct resource pb_resources[] = {
->>> +	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_PB, "PB"),
->>> +};
->>> +
->>>  struct tps65217_irq {
->>>  	int mask;
->>>  	int interrupt;
->>> @@ -122,6 +126,12 @@ static struct mfd_cell tps65217s[] = {
->>>  		.resources = charger_resources,
->>>  		.of_compatible = "ti,tps65217-charger",
->>>  	},
->>> +	{
->>> +		.name = "tps65217-pwrbutton",
->>> +		.num_resources = ARRAY_SIZE(pb_resources),
->>> +		.resources = pb_resources,
->>> +		.of_compatible = "ti,tps65217-pwrbutton",
->>> +	},
->>>  };
->>>
->>>  static irqreturn_t tps65217_irq_thread(int irq, void *data)
->>>
+On 18 August 2016 at 14:25, Adrian Hunter <adrian.hunter@intel.com> wrote:
+> On 11/08/16 03:48, Shawn Lin wrote:
+>> + Adrian
 >>
+>> Let's queue Adrian here who now maintains SDHCI stuff.
 >
+> SDHCI drivers may not implement no-1-8-v in a consistent manner, but as far
+> as I can see, the meaning is still clear: 1.8V will not be used for either
+> supply or signaling.
 
--- 
-Marcin Niestroj
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Okay.
+
+>
+> SDHCI is complicated because the SDHCI specification does not cover eMMC.
+> From the perspective of SDHCI, the only 1.8V modes are the UHS-I modes, so
+> support for 1.8V signaling is the same as support for one of those modes
+> (the spec even says as much).  But what happens is that the host controller
+> can support those modes but the board can't supply 1.8V so the drivers
+> remove capability for the modes.  Support for 1.8V supply has a capability
+> bit which drivers can override if necessary but removable SD cards don't
+> support 1.8V supply anyway, so the issue doesn't arise if the host
+> controller is only used for uSD cards.
+
+By looking how SDHCI uses the SDHCI_SUPPORT_DDR50 in conjunction with
+SDHCI_QUIRK2_NO_1_8_V (which is set when no-1-8-v DT property is
+provided), this becomes a bit messy.
+
+>From Adrian's summary above, it then seems appropriate to limit the
+no-1-8-v DT property to apply only to capabilities related to SD
+cards, as I assume that also was the original purpose.
+
+Do you think it's possible to clean up this in sdhci when assigning
+the caps masks, and then also clarify the no-1-8-v DT binding in the
+documentation?
+
+Regarding the new DT binding proposed to be added, mmc-ddr-3_3v, it
+seems we need this to be able to properly describe the HW.
+Rob, do you have an issue with adding this binding? I am thinking that
+we already have mmc-ddr-1_8v and mmc-ddr-1_2v, so it just follow
+existing pattern.
+
+[...]
+
+Kind regards
+Uffe
