@@ -1,65 +1,137 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH v6] drm: bridge/dw_hdmi: add dw hdmi i2c bus adapter
- support
-Date: Tue, 30 Aug 2016 12:33:41 +0100
-Message-ID: <CACvgo50BRyTF6RVU=_=AzSgHJuGJWuST5Uc9DQaYaZU-2aisYQ@mail.gmail.com>
-References: <1472017597-11221-1-git-send-email-vladimir_zapolskiy@mentor.com>
- <CACvgo50WjosoeV81eBESyVpjyJqPGt-R5yWR6sFr0ZbPe2LJHw@mail.gmail.com>
- <20160830081244.GK1041@n2100.armlinux.org.uk>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] arm64: Add DTS support for FSL's LS1012A SoC
+Date: Tue, 30 Aug 2016 20:02:20 +0800
+Message-ID: <20160830120220.GC8363@tiger>
+References: <1472207241-18461-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+ <20160829095239.GM30790@tiger>
+ <1472493061.13245.39.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160830081244.GK1041@n2100.armlinux.org.uk>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, ML dri-devel <dri-devel@lists.freedesktop.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1472493061.13245.39.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Cc: Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pratiyush Mohan Srivastava <pratiyush.srivastava-3arQi8VN3Tc@public.gmane.org>, stuart.yoder-3arQi8VN3Tc@public.gmane.org, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMzAgQXVndXN0IDIwMTYgYXQgMDk6MTIsIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eAo8bGlu
-dXhAYXJtbGludXgub3JnLnVrPiB3cm90ZToKPiBPbiBNb24sIEF1ZyAyOSwgMjAxNiBhdCAwNTo0
-MToxMFBNICswMTAwLCBFbWlsIFZlbGlrb3Ygd3JvdGU6Cj4+IEhpIGFsbCwKPj4KPj4gT24gMjQg
-QXVndXN0IDIwMTYgYXQgMDY6NDYsIFZsYWRpbWlyIFphcG9sc2tpeQo+PiA8dmxhZGltaXJfemFw
-b2xza2l5QG1lbnRvci5jb20+IHdyb3RlOgo+Pgo+PiA+ICBNT0RVTEVfQVVUSE9SKCJTYXNjaGEg
-SGF1ZXIgPHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU+Iik7Cj4+ID4gIE1PRFVMRV9BVVRIT1IoIkFu
-ZHkgWWFuIDxhbmR5LnlhbkByb2NrLWNoaXBzLmNvbT4iKTsKPj4gPiAgTU9EVUxFX0FVVEhPUigi
-WWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPiIpOwo+PiA+ICtNT0RVTEVfQVVUSE9SKCJW
-bGFkaW1pciBaYXBvbHNraXkgPHZsYWRpbWlyX3phcG9sc2tpeUBtZW50b3IuY29tPiIpOwo+PiBE
-b24ndCBtZWFudCB0byBzdGFydCBhIGZsYW1lLXdhciBvciBhbGlrZSBidXQgdG8gZWR1Y2F0ZSBt
-eXNlbGY6Cj4+IFdoZXJlIGRvZXMgb25lIGRyYXcgdGhlIGxpbmUgYWJvdXQgYWRkaW5nIG5ldyBh
-dXRob3Iocykgb2Ygc2FpZAo+PiBtb2R1bGUvc3Vic3lzdGVtID8KPj4KPj4gQWZhaWN0IHRoaXMg
-aXMgdGhlIG1vc3QgY29tbW9uICg/KSBkcml2ZXIgaW4gRFJNIHdoZXJlIHRoZSBsaXN0IGhhcwo+
-PiBncm93biBvdmVyIHRpbWUuIFNob3VsZCB3ZSBkbyB0aGUgc2FtZSB3aXRoIG90aGVycyA/Cj4K
-PiAuLi4gYW5kIEknbSByZXNwb25zaWJsZSBmb3IganVzdCBvdmVyIGhhbGYgdGhlIGNvbW1pdHMg
-aW4gdGhlIG1haW5saW5lCj4ga2VybmVsIGFuZCBJIGhhdmVuJ3QgYWRkZWQgbXlzZWxmLiAgSSBn
-ZW5lcmFsbHkgb25seSBhZGQgbXlzZWxmIGlmIEknbQo+IGNyZWF0aW5nIG5ldyBjb2RlIG9yIGJl
-ZW4gaW52b2x2ZWQgaW4gYWRkaW5nIG5ldyBjb2RlLCBJIGRvbid0IGFkZCBpZgo+IEknbSBtZXJl
-bHkgbW9kaWZ5aW5nIGV4aXN0aW5nIGNvZGUgdW5sZXNzIEkndmUgcmVwbGFjZWQgYSBsYXJnZQo+
-IHF1YW50aXR5IG9mIHRoZSBjb2RlLiAgSSB0aGluayB0aGUgcXVlc3Rpb24gcGVvcGxlIG5lZWQg
-dG8gYXNrIGlzOgo+Cj4gICAiSGF2ZSBJIGNvbnRyaWJ1dGVkIGEgc2lnbmlmaWNhbnQgc2V0IG9m
-IGNoYW5nZXMgdG8gYmUgYWJsZSB0byBjbGFpbQo+ICAgIHNoYXJlZCBhdXRob3JzaGlwIG9mIHRo
-YXQgY29kZT8iCj4KPiBZb3Ugd291bGRuJ3QgY2xhaW0gYXV0aG9yc2hpcCBvZiBhIDUwMCBwYWdl
-IGJvb2sgaWYgeW91IHN1Z2dlc3RlZCBhCj4gZmV3IGVkaXRzIGhlcmUgYW5kIHRoZXJlLgo+Cj4g
-TG9va2luZyBhdCBjby1hdXRob3JzaGlwIGluIGdvb2dsZSwgSSBjYW1lIGFjcm9zczoKPgo+IGh0
-dHA6Ly93d3cuc291dGhlcm5mcmllZHNjaWVuY2UuY29tL3RvLWNvLWF1dGhvci1vci1ub3QtdG8t
-Y28tYXV0aG9yLwo+Cj4gd2hpY2ggaGFzIGFuIGludGVyZXN0aW5nIGxpc3Qgb2YgcG9pbnRzIG9u
-IHRoaXMgc3ViamVjdCwgYWx0aG91Z2ggbW9yZQo+IGJpYXNlZCB0byByZXNlYXJjaCBwYXBlcnMs
-IHdoaWNoIGlzIHdoZXJlIHRoaXMgcHJvYmxlbSBub3JtYWxseSBhcmlzZXMuCj4gVGhhdCBzZWVt
-cyB0byBiYWNrIHVwIG15IGlkZWEgb2YgInNpZ25pZmljYW50IGNvbnRyaWJ1dGlvbiIgbm90IGp1
-c3QKPiBhIGZldyBtaW5vciBjaGFuZ2VzLgo+Cj4gVGhlIHF1ZXN0aW9uIHRoZW4gYmVjb21lcy4u
-LiB3aGF0IGlzIGEgc2lnbmlmaWNhbnQgY29udHJpYnV0aW9uLiA6KQo+ClJvdWdobHkgbXkgbGlu
-ZSBvZiB0aGlua2luZyBhcyB3ZWxsLgoKQ29uc2lkZXJpbmcgdGhhdCB0aGUgZHJpdmVyIGhhcyBi
-ZWVuIGRldmVsb3BlZCBpbmRlcGVuZGVudGx5IGluIG9uZQpzaGFwZSBvciBhbm90aGVyIGZvciBh
-IGZldyB5ZWFycyBJIHRoaW5rIGl0J3MgcGVyZmVjdGx5IHJlYXNvbmFibGUgaW4KdGhpcyBjYXNl
-LgoKVGhhbmtzIGZvciB0aGUgaW5wdXQgYWxsICEKRW1pbApfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Mon, Aug 29, 2016 at 12:51:01PM -0500, Scott Wood wrote:
+> On Mon, 2016-08-29 at 17:52 +0800, Shawn Guo wrote:
+> > On Fri, Aug 26, 2016 at 03:57:21PM +0530, Bhaskar Upadhaya wrote:
+> > > 
+> > > +		clockgen: clocking@1ee1000 {
+> > > +			compatible = "fsl,ls1012a-clockgen";
+> > The compatible cannot be found in binding docs.
+> 
+> From Documentation/devicetree/bindings/clock/qoriq-clock.txt:
+> 
+> - compatible: Should contain a chip-specific clock block compatible
+>         string and (if applicable) may contain a chassis-version clock
+>         compatible string.
+> 
+>         Chip-specific strings are of the form "fsl,<chip>-clockgen", such as:
+>         * "fsl,p2041-clockgen"
+>         * "fsl,p3041-clockgen"
+>         * "fsl,p4080-clockgen"
+>         * "fsl,p5020-clockgen"
+>         * "fsl,p5040-clockgen"
+>         * "fsl,t4240-clockgen"
+>         * "fsl,b4420-clockgen"
+>         * "fsl,b4860-clockgen"
+>         * "fsl,ls1021a-clockgen"
+>         Chassis-version clock strings include:
+>         * "fsl,qoriq-clockgen-1.0": for chassis 1.0 clocks
+>         * "fsl,qoriq-clockgen-2.0": for chassis 2.0 clocks
+> 
+> I really hope we don't have to update every single fsl,<chip>-whatever binding
+> every time a new chip comes out.  There are already other chips not listed,
+> FWIW (e.g. t1040, t2080, ls1043a, and ls2080a).  That's why it says "such as".
+
+If I remember correctly, DT maintainers want every supported compatible
+string explicitly listed in bindings doc.  And they even added a check
+into checkpatch.pl with commit bff5da433525 ("checkpatch: add DT
+compatible string documentation checks").
+
+> 
+> > > +		scfg: scfg@1570000 {
+> > > +			compatible = "fsl,ls1012a-scfg", "syscon";
+> > Ditto
+> > 
+> > > 
+> > > +			reg = <0x0 0x1570000 0x0 0x10000>;
+> > > +			big-endian;
+> > > +		};
+> > > +
+> > > +		dcfg: dcfg@1ee0000 {
+> > > +			compatible = "fsl,ls1012a-dcfg",
+> > > +				     "fsl,ls1043a-dcfg",
+> > If these compatibles are not documented or used, we can drop them?  I
+> > guess we only need "syscon" to get it work?
+> 
+> If you only have "syscon" then how to do the users of the node properly know
+> what register set they're dealing with?  "syscon" should not be the only
+> compatible on a node.
+
+Okay, I assumed that a single user only need to deal with one particular
+version of "dcfg" block, and the register set should be fixed.  It seems
+that's not always the case.  But at least, "fsl,ls1043a-dcfg" can be
+dropped here?
+
+> > > +
+> > > +		rcpm: rcpm@1ee2000 {
+> > > +			compatible = "fsl,ls1012a-rcpm";
+> > Undocumented/unsupported bindings?
+> 
+> Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+
+I failed to grep the string in both bindings and drivers folder, so
+thought this is an undocumented/unsupported compatible.
+
+> 
+> > > +		tmu: tmu@1f00000 {
+> > > +			compatible = "fsl,ls1012a-tmu", "fsl,qoriq-tmu";
+> > > +			reg = <0x0 0x1f00000 0x0 0x10000>;
+> > > +			interrupts = <0 33 0x4>;
+> > > +			fsl,tmu-range = <0xb0000 0x9002a 0x6004c
+> > > 0x30062>;
+> > > +			fsl,tmu-calibration = <0x00000000 0x00000026
+> > > +					       0x00000001 0x0000002d
+> > > +					       0x00000002 0x00000032
+> > > +					       0x00000003 0x00000039
+> > > +					       0x00000004 0x0000003f
+> > > +					       0x00000005 0x00000046
+> > > +					       0x00000006 0x0000004d
+> > > +					       0x00000007 0x00000054
+> > > +					       0x00000008 0x0000005a
+> > > +					       0x00000009 0x00000061
+> > > +					       0x0000000a 0x0000006a
+> > > +					       0x0000000b 0x00000071
+> > > +
+> > Drop the newline.
+> > 
+> > > 
+> > > +					       0x00010000 0x00000025
+> > > +					       0x00010001 0x0000002c
+> > > +					       0x00010002 0x00000035
+> > > +					       0x00010003 0x0000003d
+> > > +					       0x00010004 0x00000045
+> > > +					       0x00010005 0x0000004e
+> > > +					       0x00010006 0x00000057
+> > > +					       0x00010007 0x00000061
+> > > +					       0x00010008 0x0000006b
+> > > +					       0x00010009 0x00000076
+> > > +
+> > Ditto
+> 
+> This is how other instances of this property are formatted -- is it so wrong
+> to provide visual grouping?
+
+Can we replace the newline with a single line comment to tell how they
+are grouped?
+
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
