@@ -1,135 +1,87 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 4/4] ARM: dts: samsung: add analog audio codec on TOPEET
- iTop 4412 Elite
-Date: Tue, 30 Aug 2016 09:35:58 +0200
-Message-ID: <1dbacd78-6457-0877-91a3-2e1033d06d9b@kernel.org>
-References: <CAL_JsqKY=VEZ+U11kY+XbMWuXhaFDr6GpnR3AXKd1U=9_=8fgA@mail.gmail.com>
- <1472383269-3126-1-git-send-email-ayaka@soulik.info>
- <1472383269-3126-5-git-send-email-ayaka@soulik.info>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1472383269-3126-5-git-send-email-ayaka@soulik.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Li <ayaka@soulik.info>, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH v3 0/8] aspeed: Add pinctrl and gpio drivers
+Date: Tue, 30 Aug 2016 17:24:19 +0930
+Message-ID: <20160830075427.11493-1-andrew@aj.id.au>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2016 01:21 PM, Randy Li wrote:
-> Enable the WM8960 analog audio codec on TOPEET iTop 4412 Elite board.
-> 
-> Signed-off-by: Randy Li <ayaka@soulik.info>
-> ---
->  arch/arm/boot/dts/exynos4412-itop-elite.dts | 77 +++++++++++++++++++++++++++++
->  1 file changed, 77 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4412-itop-elite.dts b/arch/arm/boot/dts/exynos4412-itop-elite.dts
-> index 2d11b9a..e1cda54 100644
-> --- a/arch/arm/boot/dts/exynos4412-itop-elite.dts
-> +++ b/arch/arm/boot/dts/exynos4412-itop-elite.dts
-> @@ -15,6 +15,7 @@
->  
->  /dts-v1/;
->  #include "exynos4412-itop-scp-core.dtsi"
-> +#include <dt-bindings/sound/samsung-i2s.h>
+Hi all,
 
-Reverse the includes and squash the patch with #2.
+Here's v3 of the Aspeed pinctrl and gpio driver patches, which aims to address
+the review comments on v2:
 
-Best regards,
-Krzysztof
+  https://lkml.org/lkml/2016/8/19/394
 
->  
->  / {
->  	model = "TOPEET iTop 4412 Elite board based on Exynos4412";
-> @@ -75,6 +76,54 @@
->  			gpios = <&gpx2 0 GPIO_ACTIVE_LOW>;
->  		};
->  	};
-> +
-> +	sound {
-> +		compatible = "simple-audio-card";
-> +		simple-audio-card,name = "wm-sound";
-> +
-> +		assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>,
-> +				<&clock_audss EXYNOS_MOUT_I2S>,
-> +				<&clock_audss EXYNOS_DOUT_SRP>,
-> +				<&clock_audss EXYNOS_DOUT_AUD_BUS>;
-> +		assigned-clock-parents = <&clock CLK_FOUT_EPLL>,
-> +				<&clock_audss EXYNOS_MOUT_AUDSS>;
-> +		assigned-clock-rates = <0>,
-> +				<0>,
-> +				<112896000>,
-> +				<11289600>;
-> +
-> +		simple-audio-card,format = "i2s";
-> +		simple-audio-card,bitclock-master = <&link0_codec>;
-> +		simple-audio-card,frame-master = <&link0_codec>;
-> +
-> +		simple-audio-card,widgets =
-> +			"Microphone", "Mic Jack",
-> +			"Line", "Line In",
-> +			"Line", "Line Out",
-> +			"Speaker", "Speaker",
-> +			"Headphone", "Headphone Jack";
-> +		simple-audio-card,routing =
-> +			"Headphone Jack", "HP_L",
-> +			"Headphone Jack", "HP_R",
-> +			"Speaker", "SPK_LP",
-> +			"Speaker", "SPK_LN",
-> +			"Speaker", "SPK_RP",
-> +			"Speaker", "SPK_RN",
-> +			"LINPUT1", "Mic Jack",
-> +			"LINPUT3", "Mic Jack",
-> +			"RINPUT1", "Mic Jack",
-> +			"RINPUT2", "Mic Jack";
-> +
-> +		simple-audio-card,cpu {
-> +			sound-dai = <&i2s0 0>;
-> +		};
-> +
-> +		link0_codec: simple-audio-card,codec {
-> +			sound-dai = <&codec>;
-> +			clocks = <&i2s0 CLK_I2S_CDCLK>;
-> +			system-clock-frequency = <11289600>;
-> +		};
-> +	};
->  	
->  	beep {
->  		compatible = "pwm-beeper";
-> @@ -143,6 +192,34 @@
->  	status = "okay";
->  };
->  
-> +&i2c_4 {
-> +	samsung,i2c-sda-delay = <100>;
-> +	samsung,i2c-slave-addr = <0x10>;
-> +	samsung,i2c-max-bus-freq = <100000>;
-> +	pinctrl-0 = <&i2c4_bus>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +
-> +	codec: wm8960@1a {
-> +		compatible = "wlf,wm8960";
-> +		reg = <0x1a>;
-> +		clocks = <&pmu_system_controller 0>;
-> +		clock-names = "MCLK1";
-> +		wlf,shared-lrclk;
-> +		#sound-dai-cells = <0>;
-> +	};
-> +};
-> +
-> +&i2s0 {
-> +	pinctrl-0 = <&i2s0_bus>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +	clocks = <&clock_audss EXYNOS_I2S_BUS>,
-> +		 <&clock_audss EXYNOS_DOUT_AUD_BUS>,
-> +		 <&clock_audss EXYNOS_SCLK_I2S>;
-> +	clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
-> +};
-> +
->  &pwm {
->  	pinctrl-0 = <&pwm1_out>;
->  	pinctrl-names = "default";
-> 
+The combined series has been tested with both the AST2400 (g4) and AST2500 (g5)
+SoCs on OpenPOWER Palmetto and Aspeed AST2500 EVB machines respectively, and
+similarly in QEMU with the palmetto-bmc and ast2500-evb machines[1].
+
+Since v2:
+
+* Add interrupt-controller as a required property to gpio devicetree node
+* Drop unit address in pinctrl devicetree example
+* PINCTRL_ASPEED depends on MFD_SYSCON rather than selecting it
+* Use regmap_update_bits() where possible
+
+Since v1:
+
+* Split the series in two: driver and SoC patches.
+* Update devicetree bindings documentation
+* Add documentation for aspeed pinctrl core functions
+* Fix bugs in existing signal descriptors
+* Add a number of pin and mux function declarations
+* Provide debug information on unexpected conditions
+
+Cheers,
+
+Andrew
+
+[1] https://lists.gnu.org/archive/html/qemu-arm/2016-08/msg00019.html
+
+---
+
+Andrew Jeffery (7):
+  MAINTAINERS: Add glob for Aspeed devicetree bindings
+  syscon: dt-bindings: Add documentation for Aspeed system control units
+  pinctrl: dt-bindings: Add documentation for Aspeed pin controllers
+  gpio: dt-bindings: Add documentation for Aspeed GPIO controllers
+  pinctrl: Add core support for Aspeed SoCs
+  pinctrl: Add pinctrl-aspeed-g4 driver
+  pinctrl: Add pinctrl-aspeed-g5 driver
+
+Joel Stanley (1):
+  gpio: Add Aspeed driver
+
+ .../devicetree/bindings/gpio/gpio-aspeed.txt       |   36 +
+ .../devicetree/bindings/mfd/aspeed-scu.txt         |   18 +
+ .../devicetree/bindings/pinctrl/pinctrl-aspeed.txt |   65 ++
+ MAINTAINERS                                        |    2 +
+ drivers/gpio/Kconfig                               |    7 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-aspeed.c                         |  457 ++++++++
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/aspeed/Kconfig                     |   24 +
+ drivers/pinctrl/aspeed/Makefile                    |    6 +
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c         | 1231 ++++++++++++++++++++
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c         |  808 +++++++++++++
+ drivers/pinctrl/aspeed/pinctrl-aspeed.c            |  498 ++++++++
+ drivers/pinctrl/aspeed/pinctrl-aspeed.h            |  569 +++++++++
+ 15 files changed, 3724 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-scu.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+ create mode 100644 drivers/gpio/gpio-aspeed.c
+ create mode 100644 drivers/pinctrl/aspeed/Kconfig
+ create mode 100644 drivers/pinctrl/aspeed/Makefile
+ create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c
+ create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+ create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed.c
+ create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed.h
+
+-- 
+2.9.3.1.g0db844e
+
