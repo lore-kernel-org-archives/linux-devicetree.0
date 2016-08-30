@@ -1,52 +1,47 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM: dts: TPS65218: Clean ups
-Date: Tue, 30 Aug 2016 10:53:39 +0100
-Message-ID: <20160830095339.GJ1661@dell>
-References: <1467626113-15705-1-git-send-email-j-keerthy@ti.com>
- <20160826145059.ar37v7rbtcrah5yu@atomide.com>
- <6b1ba3c8-dcb5-4d9d-d231-734735d88eb9@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 18/18] drm/virtio: kconfig: Fixup white space.
+Date: Tue, 30 Aug 2016 10:54:25 +0100
+Message-ID: <20160830095425.GK1661@dell>
+References: <1472223413-7254-1-git-send-email-peter.griffin@linaro.org>
+ <1472223413-7254-19-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <6b1ba3c8-dcb5-4d9d-d231-734735d88eb9-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <1472223413-7254-19-git-send-email-peter.griffin@linaro.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: ohad@wizery.com, devicetree@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, kraxel@redhat.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, bjorn.andersson@linaro.org, virtualization@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Aug 2016, Keerthy wrote:
-
-> 
-> 
-> On Friday 26 August 2016 08:21 PM, Tony Lindgren wrote:
-> > * Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> [160704 02:58]:
-> > > Now that all the driver patches are Acked by respective sub-system
-> > > Maintainers. Here is the set of Device Tree patches. Another set
-> > > of Device Tree patches were posted earlier which touch the same
-> > > files: https://lkml.org/lkml/2016/7/4/36
-> > 
-> > Applying into omap-for-v4.9/dt thanks.
-> 
-> Lee Jones,
-> 
-> This series was dependent on:
-> https://lkml.org/lkml/2016/8/10/286
-> 
-> All Acks are in place. Could you please pull the series?
-
-That's not how it works.
-
-Besides, there are no dependencies between this and the set you link
-to. Please just relax and let us to our jobs.
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCAyNiBBdWcgMjAxNiwgUGV0ZXIgR3JpZmZpbiB3cm90ZToKCj4gVXNlIHRhYnMgaW5z
+dGVhZCBvZiBzcGFjZXMuCj4gCj4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgR3JpZmZpbiA8cGV0ZXIu
+Z3JpZmZpbkBsaW5hcm8ub3JnPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vdmlydGlvL0tjb25m
+aWcgfCA2ICsrKy0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0
+aW9ucygtKQoKRm9yIG15IG93biByZWZlcmVuY2U6CiAgQWNrZWQtYnk6IExlZSBKb25lcyA8bGVl
+LmpvbmVzQGxpbmFyby5vcmc+Cgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdmlydGlv
+L0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vdmlydGlvL0tjb25maWcKPiBpbmRleCA5MDM1N2Q5
+Li4yZDgzOTMyIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS92aXJ0aW8vS2NvbmZpZwo+
+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS92aXJ0aW8vS2NvbmZpZwo+IEBAIC0yLDEwICsyLDEwIEBA
+IGNvbmZpZyBEUk1fVklSVElPX0dQVQo+ICAJdHJpc3RhdGUgIlZpcnRpbyBHUFUgZHJpdmVyIgo+
+ICAJZGVwZW5kcyBvbiBEUk0KPiAgCXNlbGVjdCBWSVJUSU8KPiAtICAgICAgICBzZWxlY3QgRFJN
+X0tNU19IRUxQRVIKPiAtICAgICAgICBzZWxlY3QgRFJNX1RUTQo+ICsJc2VsZWN0IERSTV9LTVNf
+SEVMUEVSCj4gKwlzZWxlY3QgRFJNX1RUTQo+ICAJaGVscAo+ICAJICAgVGhpcyBpcyB0aGUgdmly
+dHVhbCBHUFUgZHJpdmVyIGZvciB2aXJ0aW8uICBJdCBjYW4gYmUgdXNlZCB3aXRoCj4gLSAgICAg
+ICAgICAgUUVNVSBiYXNlZCBWTU1zIChsaWtlIEtWTSBvciBYZW4pLgo+ICsJICAgUUVNVSBiYXNl
+ZCBWTU1zIChsaWtlIEtWTSBvciBYZW4pLgo+ICAKPiAgCSAgIElmIHVuc3VyZSBzYXkgTS4KCi0t
+IApMZWUgSm9uZXMKTGluYXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZApM
+aW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExp
+bmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
