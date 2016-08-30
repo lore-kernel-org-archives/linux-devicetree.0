@@ -1,134 +1,42 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 2/2] sdhci-of-arasan: Set controller to test mode when
- fails-without-test-cd is present
-Date: Tue, 30 Aug 2016 07:47:17 +0200
-Message-ID: <13c1a30f-fb4f-a813-df0a-3ac9914cfa61@xilinx.com>
-References: <1472512857-13063-1-git-send-email-zach.brown@ni.com>
- <1472512857-13063-2-git-send-email-zach.brown@ni.com>
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH v2 1/8] MAINTAINERS: Add glob for Aspeed devicetree bindings
+Date: Tue, 30 Aug 2016 15:34:05 +0930
+Message-ID: <CACPK8Xe8J-cVUeo0PhmBqQ8PW=eEHsPAO5=W9t10WL+FKhLN-w@mail.gmail.com>
+References: <20160819124414.24242-1-andrew@aj.id.au> <20160819124414.24242-2-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1472512857-13063-2-git-send-email-zach.brown@ni.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zach Brown <zach.brown@ni.com>, adrian.hunter@intel.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, soren.brinkmann@xilinx.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160819124414.24242-2-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 30.8.2016 01:20, Zach Brown wrote:
-> The sdhci controller on xilinx zynq devices will not function unless
-> the CD bit is provided. http://www.xilinx.com/support/answers/61064.html
-> In cases where it is impossible to provide the CD bit in hardware,
-> setting the controller to test mode and then setting inserted to true
-> will get the controller to function without the CD bit.
-> 
-> When the device has the property fails-without-test-cd the driver
-> changes the controller to test mode and sets test inserted to true to
-> make the controller function.
-> 
-> Signed-off-by: Zach Brown <zach.brown@ni.com>
+On Fri, Aug 19, 2016 at 10:14 PM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+
+Acked-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+
 > ---
->  drivers/mmc/host/sdhci-of-arasan.c | 34 +++++++++++++++++++++++++++++++++-
->  drivers/mmc/host/sdhci.h           |  2 ++
->  2 files changed, 35 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> index e0f193f..c3e5145 100644
-> --- a/drivers/mmc/host/sdhci-of-arasan.c
-> +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> @@ -26,6 +26,7 @@
->  #include <linux/phy/phy.h>
->  #include <linux/regmap.h>
->  #include "sdhci-pltfm.h"
-> +#include <linux/of.h>
-> 
->  #define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
->  #define SDHCI_ARASAN_VENDOR_REGISTER	0x78
-> @@ -92,6 +93,12 @@ struct sdhci_arasan_data {
-> 
->  	struct regmap	*soc_ctl_base;
->  	const struct sdhci_arasan_soc_ctl_map *soc_ctl_map;
-> +
-> +	unsigned int arasan_quirks; /* Arasan deviations from spec */
-> +
-> +/* Controller does not have CD wired and will not function normally without */
-> +#define SDHCI_ARASAN_QUIRK_FAILS_WITHOUT_TEST_CD (1<<0)
-
-Bit macro instead?
-
-> +
-
-remove this line.
-
->  };
-> 
->  static const struct sdhci_arasan_soc_ctl_map rk3399_soc_ctl_map = {
-> @@ -203,12 +210,32 @@ static void sdhci_arasan_hs400_enhanced_strobe(struct mmc_host *mmc,
->  	writel(vendor, host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
->  }
-> 
-> +void sdhci_arasan_reset(struct sdhci_host *host, u8 mask)
-> +{
-> +	u8 ctrl;
-> +	struct sdhci_pltfm_host *pltfm_host;
-> +	struct sdhci_arasan_data *sdhci_arasan;
-> +
-> +	sdhci_reset(host, mask);
-> +
-> +	pltfm_host = sdhci_priv(host);
-> +	sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
-> +
-> +	if (sdhci_arasan->arasan_quirks &
-> +	    SDHCI_ARASAN_QUIRK_FAILS_WITHOUT_TEST_CD) {
-> +		ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
-> +		ctrl |= SDHCI_CTRL_CDTEST_INS |
-> +			SDHCI_CTRL_CDTEST_EN;
-> +		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> +	}
-> +}
-> +
->  static struct sdhci_ops sdhci_arasan_ops = {
->  	.set_clock = sdhci_arasan_set_clock,
->  	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
->  	.get_timeout_clock = sdhci_arasan_get_timeout_clock,
->  	.set_bus_width = sdhci_set_bus_width,
-> -	.reset = sdhci_reset,
-> +	.reset = sdhci_arasan_reset,
->  	.set_uhs_signaling = sdhci_set_uhs_signaling,
->  };
-> 
-> @@ -516,6 +543,11 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
->  	}
-> 
->  	sdhci_get_of_property(pdev);
-> +
-> +	if (of_get_property(pdev->dev.of_node, "fails-without-test-cd", NULL))
-> +		sdhci_arasan->arasan_quirks |=
-> +				SDHCI_ARASAN_QUIRK_FAILS_WITHOUT_TEST_CD;
-> +
->  	pltfm_host->clk = clk_xin;
-> 
->  	sdhci_arasan_update_baseclkfreq(host);
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 0411c9f..8d92d6e9 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -84,6 +84,8 @@
->  #define   SDHCI_CTRL_ADMA32	0x10
->  #define   SDHCI_CTRL_ADMA64	0x18
->  #define   SDHCI_CTRL_8BITBUS	0x20
-> +#define  SDHCI_CTRL_CDTEST_INS   0x40
-> +#define  SDHCI_CTRL_CDTEST_EN     0x80
-
-You should follow coding style above.
-
-Thanks,
-Michal
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a306795a7450..b9d5a9d4eee6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1027,6 +1027,7 @@ S:        Maintained
+>  F:     arch/arm/mach-aspeed/
+>  F:     arch/arm/boot/dts/aspeed-*
+>  F:     drivers/*/*aspeed*
+> +F:     Documentation/devicetree/bindings/*/*aspeed*
+>
+>  ARM/ATMEL AT91RM9200, AT91SAM9 AND SAMA5 SOC SUPPORT
+>  M:     Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> --
+> 2.9.3
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
