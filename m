@@ -1,24 +1,33 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [Patch v4 9/9] arm64: Update device tree for Layerscape SoCs
-Date: Tue, 30 Aug 2016 18:57:43 +0800
-Message-ID: <20160830105743.GA8366@tiger>
-References: <1470780000-16750-1-git-send-email-york.sun@nxp.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [RESEND PATCH v3 1/3] ARM: dts: DRA7: Add "linux,pci-domain"
+ property for pci dt nodes
+Date: Tue, 30 Aug 2016 16:35:32 +0530
+Message-ID: <57C5687C.8030805@ti.com>
+References: <1470832400-11929-1-git-send-email-kishon@ti.com>
+ <1470832400-11929-2-git-send-email-kishon@ti.com>
+ <20160826153035.h6uyplc4mjlbc3v3@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1470780000-16750-1-git-send-email-york.sun@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: York Sun <york.sun@nxp.com>
-Cc: linux-edac@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Liu Gang <Gang.Liu@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Li Yang <leoli@freescale.com>, yangbo lu <yangbo.lu@freescale.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, stuart.yoder@nxp.com, oss@buserror.net, Rob Herring <robh+dt@kernel.org>, bp@alien8.de, Yuan Yao <yao.yuan@nxp.com>, Mingkai Hu <Mingkai.Hu@freescale.com>, linux-arm-kernel@lists.infradead.org, Rajesh Bhagat <rajesh.bhagat@freescale.com>, morbidrsa@gmail.com, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160826153035.h6uyplc4mjlbc3v3@atomide.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Russell King <linux@armlinux.org.uk>, Benoit Cousson <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Krzysztof Halasa <khalasa@piap.pl>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Santosh Shilimkar <ssant>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 09, 2016 at 02:59:39PM -0700, York Sun wrote:
-> Add DDR memory controller nodes to enable EDAC driver.
+Hi Tony,
+
+On Friday 26 August 2016 09:00 PM, Tony Lindgren wrote:
+> * Kishon Vijay Abraham I <kishon@ti.com> [160810 05:34]:
+>> Since DRA7 has multiple PCIe Rootcomplex, add "linux,pci-domain"
+>> property to assign a PCI domain number to each of the host
+>> bridges.
 > 
-> Signed-off-by: York Sun <york.sun@nxp.com>
+> Is this patch safe to apply without the other changes?
 
-The patch subject is too general.  I changed it to "arm64: dts: Add DDR
-memory controller for Layerscape SoCs", and applied patch.
+Yes. I verified pcie on dra7x by applying only this patch and it doesn't break
+anything.
 
-Shawn
+Thanks
+Kishon
