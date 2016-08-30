@@ -1,63 +1,51 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v3 4/8] gpio: dt-bindings: Add documentation for Aspeed GPIO controllers
-Date: Tue, 30 Aug 2016 17:24:23 +0930
-Message-ID: <20160830075427.11493-5-andrew@aj.id.au>
-References: <20160830075427.11493-1-andrew@aj.id.au>
+Subject: [PATCH v3 0/7] aspeed: Integrate pinctrl and gpio drivers
+Date: Tue, 30 Aug 2016 17:25:53 +0930
+Message-ID: <20160830075600.11559-1-andrew@aj.id.au>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160830075427.11493-1-andrew@aj.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>
+To: Joel Stanley <joel@jms.id.au>
+Cc: Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Acked-by: Joel Stanley <joel@jms.id.au>
----
- .../devicetree/bindings/gpio/gpio-aspeed.txt       | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+Hi all,
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-new file mode 100644
-index 000000000000..09f26cac18d1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-@@ -0,0 +1,36 @@
-+Aspeed GPIO controller Device Tree Bindings
-+-------------------------------------------
-+
-+Required properties:
-+- #gpio-cells 		: Should be two
-+			  - First cell is the GPIO line number
-+			  - Second cell is used to specify optional
-+			    parameters (unused)
-+
-+- compatible		: Either "aspeed,ast2400-gpio" or "aspeed,ast2500-gpio"
-+
-+- reg			: Address and length of the register set for the device
-+- gpio-controller	: Marks the device node as a GPIO controller.
-+- interrupts		: Interrupt specifier (see interrupt bindings for
-+			  details)
-+- interrupt-controller	: Mark the GPIO controller as an interrupt-controller
-+
-+Optional properties:
-+
-+- interrupt-parent     : The parent interrupt controller, optional if inherited
-+
-+The gpio and interrupt properties are further described in their respective
-+bindings documentation:
-+
-+- Documentation/devicetree/bindings/gpio/gpio.txt
-+- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+  Example:
-+	gpio@1e780000 {
-+		#gpio-cells = <2>;
-+		compatible = "aspeed,ast2400-gpio";
-+		gpio-controller;
-+		interrupts = <20>;
-+		reg = <0x1e780000 0x1000>;
-+		interrupt-controller;
-+	};
+Here's v3 of the Aspeed pinctrl and gpio driver integration patches. v2 of the
+integration series can be found at:
+
+  https://lkml.org/lkml/2016/8/19/403
+
+v3 captures changes required to address review comments from v2 of the driver
+series:
+
+  https://lkml.org/lkml/2016/8/22/343
+
+Since v2:
+
+* Add interrupt-controller property to gpio devicetree nodes
+* Drop unit address from pinctrl devicetree nodes
+* ARCH_ASPEED selects MFD_SYSCON
+
+Cheers,
+
+Andrew
+
+---
+
+Andrew Jeffery (7):
+  mach-aspeed: Select pinctrl drivers
+  mach-aspeed: Select GPIO driver
+  aspeed-g4: Add syscon and pin controller nodes
+  palmetto: Request relevant mux functions in devicetree
+  aspeed-g4: Add gpio controller to devicetree
+  aspeed-g5: Add syscon and pin controller nodes
+  aspeed-g5: Add gpio controller to devicetree
+
+ arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts |  14 +
+ arch/arm/boot/dts/aspeed-g4.dtsi              | 430 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/aspeed-g5.dtsi              | 214 +++++++++++++
+ arch/arm/mach-aspeed/Kconfig                  |   6 +
+ 4 files changed, 664 insertions(+)
+
 -- 
 2.9.3.1.g0db844e
