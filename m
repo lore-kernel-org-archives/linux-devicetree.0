@@ -1,47 +1,95 @@
-From: "Peter Huewe" <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH] Documentation: tpm: Adds the TPM device
- tree node documentation
-Date: Tue, 30 Aug 2016 08:46:32 +0200
-Message-ID: <trinity-7d511ee9-e33e-4cc0-88d7-abd58297fe7c-1472539592268@3capp-gmx-bs40>
-References: <1472532277-21933-1-git-send-email-nayna@linux.vnet.ibm.com>
-	<20160830063631.GA5336@intel.com>,
-	<D8028209-446C-4C50-9AEC-25F6F8C98995@gmx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <D8028209-446C-4C50-9AEC-25F6F8C98995-Mmb7MZpHnFY@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Peter Huewe <peterhuewe-Mmb7MZpHnFY@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, gcwilson-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v25] 9/9] Documentation: dt: chosen properties for arm64 kdump
+Date: Tue, 30 Aug 2016 15:54:31 +0900
+Message-ID: <20160830065431.19663-1-takahiro.akashi@linaro.org>
+References: <20160830064941.19452-2-takahiro.akashi@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160830064941.19452-2-takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I agree - I always get stuck upon the sml thing.
->
->Also, enabled should be "enabled", not "okay".
+From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
 
-No!
-okay/ok is a dt keyword! (Or at least used in everything else)
+Add documentation for
+	linux,crashkernel-base and crashkernel-size,
+	linux,usable-memory-range, and
+	linux,elfcorehdr
+used by arm64 kexec/kdump to decribe the kdump reserved area, and
+the elfcorehdr's location within it.
 
-It has nothing to do whether the TPM is enabled/disabled/activated whatever
-See http://www.devicetree.org/specifications-pdf table 2.4
+Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+[takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org:
+    renamed "usable-memory" to "usable-memory-range",
+    added "linux,crashkernel-base" and "-size" ]
+Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-Value Description
-"okay" Indicates the device is operational
-"disabled" Indicates that the device is not presently operational, but it might become operational in the
-future (for example, something is not plugged in, or switched off).
-Refer to the device binding for details on what disabled means for a given device.
-"fail" Indicates that the device is not operational. A serious error was detected in the device, and it
-is unlikely to become operational without repair.
-"fail-sss" Indicates that the device is not operational. A serious error was detected in the device and it
-is unlikely to become operational without repair. The sss portion of the value is specific to
-the device and indicates the error condition detected.
+diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+index 6ae9d82..236188a 100644
+--- a/Documentation/devicetree/bindings/chosen.txt
++++ b/Documentation/devicetree/bindings/chosen.txt
+@@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
+ book3e) by some versions of kexec-tools to tell the new kernel that it
+ is being booted by kexec, as the booting environment may differ (e.g.
+ a different secondary CPU release mechanism)
++
++linux,crashkernel-base
++linux,crashkernel-size
++----------------------
++These properties (currently used on PowerPC and arm64) indicates
++the base address and the size, respectively, of the reserved memory
++range for crash dump kernel.
++e.g.
++
++/ {
++	chosen {
++		linux,crashkernel-base = <0x9 0xf0000000>;
++		linux,crashkernel-size = <0x0 0x10000000>;
++	};
++};
++
++linux,usable-memory-range
++-------------------------
++
++This property (currently used only on arm64) holds the memory range,
++the base address and the size, which can be used as system ram on
++the *current* kernel. Note that, if this property is present, any memory
++regions under "memory" nodes in DT blob or ones marked as "conventional
++memory" in EFI memory map should be ignored.
++e.g.
++
++/ {
++	chosen {
++		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
++	};
++};
++
++The main usage is for crash dump kernel to identify its own usable
++memory and exclude, at its boot time, any other memory areas that are
++part of the panicked kernel's memory.
++
++linux,elfcorehdr
++----------------
++
++This property (currently used only on arm64) holds the memory range,
++the address and the size, of the elf core header which mainly describes
++the panicked kernel's memory layout in elf format.
++e.g.
++
++/ {
++	chosen {
++		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
++		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
++	};
++};
+-- 
+2.9.0
 
-------------------------------------------------------------------------------
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
