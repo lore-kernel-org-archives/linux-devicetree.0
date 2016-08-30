@@ -1,76 +1,56 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 11/18] ARM: DT: STiH407: Add i2s_in pinctrl
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 10/18] ARM: DT: STiH407: Add i2s_out pinctrl
  configuration
-Date: Tue, 30 Aug 2016 11:23:50 +0100
-Message-ID: <20160830102350.GT1661@dell>
+Date: Tue, 30 Aug 2016 11:24:13 +0100
+Message-ID: <20160830102413.GU1661@dell>
 References: <1472223413-7254-1-git-send-email-peter.griffin@linaro.org>
- <1472223413-7254-12-git-send-email-peter.griffin@linaro.org>
+ <1472223413-7254-11-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1472223413-7254-12-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <1472223413-7254-11-git-send-email-peter.griffin@linaro.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: ohad@wizery.com, devicetree@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, Arnaud Pouliquen <arnaud.pouliquen@st.com>, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, kraxel@redhat.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, bjorn.andersson@linaro.org, virtualization@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Aug 2016, Peter Griffin wrote:
-
-> This patch adds the pinctrl config for the i2s_in pins
-> used by the uniperif reader IP.
-> 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/stih407-pinctrl.dtsi | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-  
-> diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-> index 0fb5c8a..537db7e 100644
-> --- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-> @@ -1090,6 +1090,30 @@
->  				};
->  			};
->  
-> +			i2s_in {
-> +				pinctrl_i2s_8ch_in: i2s_8ch_in{
-> +					st,pins {
-> +						mclk = <&pio32 5 ALT1 IN>;
-> +						lrclk = <&pio32 7 ALT1 IN>;
-> +						sclk = <&pio32 6 ALT1 IN>;
-> +						data0 = <&pio32 4 ALT1 IN>;
-> +						data1 = <&pio33 0 ALT1 IN>;
-> +						data2 = <&pio33 1 ALT1 IN>;
-> +						data3 = <&pio33 2 ALT1 IN>;
-> +						data4 = <&pio33 3 ALT1 IN>;
-> +					};
-> +				};
-> +
-> +				pinctrl_i2s_2ch_in: i2s_2ch_in{
-> +					st,pins {
-> +						mclk = <&pio32 5 ALT1 IN>;
-> +						lrclk = <&pio32 7 ALT1 IN>;
-> +						sclk = <&pio32 6 ALT1 IN>;
-> +						data0 = <&pio32 4 ALT1 IN>;
-> +					};
-> +				};
-> +			};
-> +
->  			serial3 {
->  				pinctrl_serial3: serial3-0 {
->  					st,pins {
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCAyNiBBdWcgMjAxNiwgUGV0ZXIgR3JpZmZpbiB3cm90ZToKCj4gVGhpcyBwYXRjaCBh
+ZGRzIHRoZSBwaW5jdHJsIGNvbmZpZyBmb3IgdGhlIGkyc19vdXQgcGlucwo+IHVzZWQgYnkgdGhl
+IHVuaXBlcmlmIHBsYXllciBJUC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBBcm5hdWQgUG91bGlxdWVu
+IDxhcm5hdWQucG91bGlxdWVuQHN0LmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBHcmlmZmlu
+IDxwZXRlci5ncmlmZmluQGxpbmFyby5vcmc+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N0
+aWg0MDctcGluY3RybC5kdHNpIHwgMjMgKysrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxl
+IGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKykKCkFja2VkLWJ5OiBMZWUgSm9uZXMgPGxlZS5qb25l
+c0BsaW5hcm8ub3JnPgoKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1w
+aW5jdHJsLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LXBpbmN0cmwuZHRzaQo+IGlu
+ZGV4IGE1MzhhZTUuLjBmYjVjOGEgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3Rp
+aDQwNy1waW5jdHJsLmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LXBpbmN0
+cmwuZHRzaQo+IEBAIC0xMDY3LDYgKzEwNjcsMjkgQEAKPiAgCQkJCX07Cj4gIAkJCX07Cj4gIAo+
+ICsJCQlpMnNfb3V0IHsKPiArCQkJCXBpbmN0cmxfaTJzXzhjaF9vdXQ6IGkyc184Y2hfb3V0ewo+
+ICsJCQkJCXN0LHBpbnMgewo+ICsJCQkJCQltY2xrID0gPCZwaW8zMyA1IEFMVDEgT1VUPjsKPiAr
+CQkJCQkJbHJjbGsgPSA8JnBpbzMzIDcgQUxUMSBPVVQ+Owo+ICsJCQkJCQlzY2xrID0gPCZwaW8z
+MyA2IEFMVDEgT1VUPjsKPiArCQkJCQkJZGF0YTAgPSA8JnBpbzMzIDQgQUxUMSBPVVQ+Owo+ICsJ
+CQkJCQlkYXRhMSA9IDwmcGlvMzQgMCBBTFQxIE9VVD47Cj4gKwkJCQkJCWRhdGEyID0gPCZwaW8z
+NCAxIEFMVDEgT1VUPjsKPiArCQkJCQkJZGF0YTMgPSA8JnBpbzM0IDIgQUxUMSBPVVQ+Owo+ICsJ
+CQkJCX07Cj4gKwkJCQl9Owo+ICsKPiArCQkJCXBpbmN0cmxfaTJzXzJjaF9vdXQ6IGkyc18yY2hf
+b3V0ewo+ICsJCQkJCXN0LHBpbnMgewo+ICsJCQkJCQltY2xrID0gPCZwaW8zMyA1IEFMVDEgT1VU
+PjsKPiArCQkJCQkJbHJjbGsgPSA8JnBpbzMzIDcgQUxUMSBPVVQ+Owo+ICsJCQkJCQlzY2xrID0g
+PCZwaW8zMyA2IEFMVDEgT1VUPjsKPiArCQkJCQkJZGF0YTAgPSA8JnBpbzMzIDQgQUxUMSBPVVQ+
+Owo+ICsJCQkJCX07Cj4gKwkJCQl9Owo+ICsJCQl9Owo+ICsKPiAgCQkJc2VyaWFsMyB7Cj4gIAkJ
+CQlwaW5jdHJsX3NlcmlhbDM6IHNlcmlhbDMtMCB7Cj4gIAkJCQkJc3QscGlucyB7CgotLSAKTGVl
+IEpvbmVzCkxpbmFybyBTVE1pY3JvZWxlY3Ryb25pY3MgTGFuZGluZyBUZWFtIExlYWQKTGluYXJv
+Lm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86
+IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
