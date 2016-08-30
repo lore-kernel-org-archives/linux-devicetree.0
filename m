@@ -1,136 +1,132 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] arm64: Add DTS support for FSL's LS1012A SoC
-Date: Tue, 30 Aug 2016 20:02:20 +0800
-Message-ID: <20160830120220.GC8363@tiger>
-References: <1472207241-18461-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
- <20160829095239.GM30790@tiger>
- <1472493061.13245.39.camel@buserror.net>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] microblaze: move xlnx,compound to default bus matching
+Date: Tue, 30 Aug 2016 14:10:44 +0200
+Message-ID: <916117df-bedf-fde0-ef96-b1a9a77a4c62@monstr.eu>
+References: <20160829234558.2903-1-robh@kernel.org>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="DjaSFKSjGIQxFMF3mcOJ6giARtvJt6eNT"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1472493061.13245.39.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <20160829234558.2903-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Cc: Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pratiyush Mohan Srivastava <pratiyush.srivastava-3arQi8VN3Tc@public.gmane.org>, stuart.yoder-3arQi8VN3Tc@public.gmane.org, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 29, 2016 at 12:51:01PM -0500, Scott Wood wrote:
-> On Mon, 2016-08-29 at 17:52 +0800, Shawn Guo wrote:
-> > On Fri, Aug 26, 2016 at 03:57:21PM +0530, Bhaskar Upadhaya wrote:
-> > > 
-> > > +		clockgen: clocking@1ee1000 {
-> > > +			compatible = "fsl,ls1012a-clockgen";
-> > The compatible cannot be found in binding docs.
-> 
-> From Documentation/devicetree/bindings/clock/qoriq-clock.txt:
-> 
-> - compatible: Should contain a chip-specific clock block compatible
->         string and (if applicable) may contain a chassis-version clock
->         compatible string.
-> 
->         Chip-specific strings are of the form "fsl,<chip>-clockgen", such as:
->         * "fsl,p2041-clockgen"
->         * "fsl,p3041-clockgen"
->         * "fsl,p4080-clockgen"
->         * "fsl,p5020-clockgen"
->         * "fsl,p5040-clockgen"
->         * "fsl,t4240-clockgen"
->         * "fsl,b4420-clockgen"
->         * "fsl,b4860-clockgen"
->         * "fsl,ls1021a-clockgen"
->         Chassis-version clock strings include:
->         * "fsl,qoriq-clockgen-1.0": for chassis 1.0 clocks
->         * "fsl,qoriq-clockgen-2.0": for chassis 2.0 clocks
-> 
-> I really hope we don't have to update every single fsl,<chip>-whatever binding
-> every time a new chip comes out.  There are already other chips not listed,
-> FWIW (e.g. t1040, t2080, ls1043a, and ls2080a).  That's why it says "such as".
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--DjaSFKSjGIQxFMF3mcOJ6giARtvJt6eNT
+Content-Type: multipart/mixed; boundary="xJ4mKiuUuv9H2aFkVi8c2oDpDR11j3DvI";
+ protected-headers="v1"
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Message-ID: <916117df-bedf-fde0-ef96-b1a9a77a4c62-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] microblaze: move xlnx,compound to default bus matching
+References: <20160829234558.2903-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20160829234558.2903-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-If I remember correctly, DT maintainers want every supported compatible
-string explicitly listed in bindings doc.  And they even added a check
-into checkpatch.pl with commit bff5da433525 ("checkpatch: add DT
-compatible string documentation checks").
+--xJ4mKiuUuv9H2aFkVi8c2oDpDR11j3DvI
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > > +		scfg: scfg@1570000 {
-> > > +			compatible = "fsl,ls1012a-scfg", "syscon";
-> > Ditto
-> > 
-> > > 
-> > > +			reg = <0x0 0x1570000 0x0 0x10000>;
-> > > +			big-endian;
-> > > +		};
-> > > +
-> > > +		dcfg: dcfg@1ee0000 {
-> > > +			compatible = "fsl,ls1012a-dcfg",
-> > > +				     "fsl,ls1043a-dcfg",
-> > If these compatibles are not documented or used, we can drop them?  I
-> > guess we only need "syscon" to get it work?
-> 
-> If you only have "syscon" then how to do the users of the node properly know
-> what register set they're dealing with?  "syscon" should not be the only
-> compatible on a node.
+Hi Rob,
 
-Okay, I assumed that a single user only need to deal with one particular
-version of "dcfg" block, and the register set should be fixed.  It seems
-that's not always the case.  But at least, "fsl,ls1043a-dcfg" can be
-dropped here?
+On 30.8.2016 01:45, Rob Herring wrote:
+> Microblaze bus probing is partially broken because "xlnx,compound" is
+> missing from the default bus probe. Add it to the default and remove fr=
+om
+> the Microblaze arch code.
 
-> > > +
-> > > +		rcpm: rcpm@1ee2000 {
-> > > +			compatible = "fsl,ls1012a-rcpm";
-> > Undocumented/unsupported bindings?
-> 
-> Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+xlnx,compound is not used for ages. I see see dts files for MB in the
+tree but really it is just an very old example.
 
-I failed to grep the string in both bindings and drivers folder, so
-thought this is an undocumented/unsupported compatible.
 
-> 
-> > > +		tmu: tmu@1f00000 {
-> > > +			compatible = "fsl,ls1012a-tmu", "fsl,qoriq-tmu";
-> > > +			reg = <0x0 0x1f00000 0x0 0x10000>;
-> > > +			interrupts = <0 33 0x4>;
-> > > +			fsl,tmu-range = <0xb0000 0x9002a 0x6004c
-> > > 0x30062>;
-> > > +			fsl,tmu-calibration = <0x00000000 0x00000026
-> > > +					       0x00000001 0x0000002d
-> > > +					       0x00000002 0x00000032
-> > > +					       0x00000003 0x00000039
-> > > +					       0x00000004 0x0000003f
-> > > +					       0x00000005 0x00000046
-> > > +					       0x00000006 0x0000004d
-> > > +					       0x00000007 0x00000054
-> > > +					       0x00000008 0x0000005a
-> > > +					       0x00000009 0x00000061
-> > > +					       0x0000000a 0x0000006a
-> > > +					       0x0000000b 0x00000071
-> > > +
-> > Drop the newline.
-> > 
-> > > 
-> > > +					       0x00010000 0x00000025
-> > > +					       0x00010001 0x0000002c
-> > > +					       0x00010002 0x00000035
-> > > +					       0x00010003 0x0000003d
-> > > +					       0x00010004 0x00000045
-> > > +					       0x00010005 0x0000004e
-> > > +					       0x00010006 0x00000057
-> > > +					       0x00010007 0x00000061
-> > > +					       0x00010008 0x0000006b
-> > > +					       0x00010009 0x00000076
-> > > +
-> > Ditto
-> 
-> This is how other instances of this property are formatted -- is it so wrong
-> to provide visual grouping?
+>=20
+> Fixes: 44a7185c2ae6 ("of/platform: Add common method to populate defaul=
+t bus")
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  arch/microblaze/kernel/platform.c | 9 ---------
+>  drivers/of/platform.c             | 1 +
+>  2 files changed, 1 insertion(+), 9 deletions(-)
+>=20
+> diff --git a/arch/microblaze/kernel/platform.c b/arch/microblaze/kernel=
+/platform.c
+> index b9529ca..9d520bf 100644
+> --- a/arch/microblaze/kernel/platform.c
+> +++ b/arch/microblaze/kernel/platform.c
+> @@ -11,19 +11,10 @@
+>   */
+> =20
+>  #include <linux/init.h>
+> -#include <linux/of_platform.h>
+> -#include <asm/prom.h>
+>  #include <asm/setup.h>
+> =20
+> -static struct of_device_id xilinx_of_bus_ids[] __initdata =3D {
+> -	{ .compatible =3D "simple-bus", },
+> -	{ .compatible =3D "xlnx,compound", },
+> -	{}
+> -};
+> -
+>  static int __init microblaze_device_probe(void)
+>  {
+> -	of_platform_bus_probe(NULL, xilinx_of_bus_ids, NULL);
+>  	of_platform_reset_gpio_probe();
+>  	return 0;
+>  }
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index f39ccd5..f0314c4 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -32,6 +32,7 @@ const struct of_device_id of_default_bus_match_table[=
+] =3D {
+>  #ifdef CONFIG_ARM_AMBA
+>  	{ .compatible =3D "arm,amba-bus", },
+>  #endif /* CONFIG_ARM_AMBA */
+> +	{ .compatible =3D "xlnx,compound", },
+>  	{} /* Empty terminated list */
+>  };
+> =20
+>=20
 
-Can we replace the newline with a single line comment to tell how they
-are grouped?
+Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-Shawn
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
+
+
+
+--xJ4mKiuUuv9H2aFkVi8c2oDpDR11j3DvI--
+
+--DjaSFKSjGIQxFMF3mcOJ6giARtvJt6eNT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iEYEARECAAYFAlfFd8QACgkQykllyylKDCH54gCdE5nYbDbr4nYE8qqWhVsGumW7
+Ql0AoJrKEiJ3/U57nTMPT+n0a4CoaxYp
+=QhfA
+-----END PGP SIGNATURE-----
+
+--DjaSFKSjGIQxFMF3mcOJ6giARtvJt6eNT--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
