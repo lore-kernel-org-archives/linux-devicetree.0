@@ -1,237 +1,52 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v3 6/7] aspeed-g5: Add syscon and pin controller nodes
-Date: Tue, 30 Aug 2016 17:25:59 +0930
-Message-ID: <20160830075600.11559-7-andrew@aj.id.au>
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Subject: [PATCH v3 4/7] palmetto: Request relevant mux functions in devicetree
+Date: Tue, 30 Aug 2016 17:25:57 +0930
+Message-ID: <20160830075600.11559-5-andrew@aj.id.au>
 References: <20160830075600.11559-1-andrew@aj.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160830075600.11559-1-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160830075600.11559-1-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The pin controller's child nodes expose the functions currently
-implemented in the g5 pin controller driver.
+The requested functions are parented by the pinctrl node to provide the
+Palmetto's static pin configuration.
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 ---
- arch/arm/boot/dts/aspeed-g5.dtsi | 204 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 204 insertions(+)
+ arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index dd94d9361fda..24d79c88019f 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -44,6 +44,210 @@
- 				reg = <0x1e6e2070 0x04>;
- 			};
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+index cc5fcf2940bf..648fb6b9e427 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
+@@ -20,6 +20,20 @@
+ 	};
+ };
  
-+			syscon: syscon@1e6e2000 {
-+				compatible = "aspeed,g5-scu", "syscon", "simple-mfd";
-+				reg = <0x1e6e2000 0x1a8>;
++&pinctrl {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flbusy_default &pinctrl_flwp_default
++			&pinctrl_vgahs_default &pinctrl_vgavs_default
++			&pinctrl_ddcclk_default &pinctrl_ddcdat_default
 +
-+				pinctrl: pinctrl {
-+					compatible = "aspeed,g5-pinctrl";
++			&pinctrl_pwm1_default &pinctrl_pwm2_default
++			&pinctrl_pwm3_default &pinctrl_pwm4_default
++			&pinctrl_pwm5_default &pinctrl_pwm6_default
++			&pinctrl_pwm7_default
 +
-+					pinctrl_gpid0_default: gpid0_default {
-+						function = "GPID0";
-+						groups = "GPID0";
-+					};
++			&pinctrl_bmcint_default &pinctrl_flack_default>;
++};
 +
-+					pinctrl_gpid2_default: gpid2_default {
-+						function = "GPID2";
-+						groups = "GPID2";
-+					};
-+
-+					pinctrl_gpie0_default: gpie0_default {
-+						function = "GPIE0";
-+						groups = "GPIE0";
-+					};
-+
-+					pinctrl_i2c10_default: i2c10_default {
-+						function = "I2C10";
-+						groups = "I2C10";
-+					};
-+
-+					pinctrl_i2c11_default: i2c11_default {
-+						function = "I2C11";
-+						groups = "I2C11";
-+					};
-+
-+					pinctrl_i2c12_default: i2c12_default {
-+						function = "I2C12";
-+						groups = "I2C12";
-+					};
-+
-+					pinctrl_i2c13_default: i2c13_default {
-+						function = "I2C13";
-+						groups = "I2C13";
-+					};
-+
-+					pinctrl_i2c14_default: i2c14_default {
-+						function = "I2C14";
-+						groups = "I2C14";
-+					};
-+
-+					pinctrl_i2c3_default: i2c3_default {
-+						function = "I2C3";
-+						groups = "I2C3";
-+					};
-+
-+					pinctrl_i2c4_default: i2c4_default {
-+						function = "I2C4";
-+						groups = "I2C4";
-+					};
-+
-+					pinctrl_i2c5_default: i2c5_default {
-+						function = "I2C5";
-+						groups = "I2C5";
-+					};
-+
-+					pinctrl_i2c6_default: i2c6_default {
-+						function = "I2C6";
-+						groups = "I2C6";
-+					};
-+
-+					pinctrl_i2c7_default: i2c7_default {
-+						function = "I2C7";
-+						groups = "I2C7";
-+					};
-+
-+					pinctrl_i2c8_default: i2c8_default {
-+						function = "I2C8";
-+						groups = "I2C8";
-+					};
-+
-+					pinctrl_i2c9_default: i2c9_default {
-+						function = "I2C9";
-+						groups = "I2C9";
-+					};
-+
-+					pinctrl_mac1link_default: mac1link_default {
-+						function = "MAC1LINK";
-+						groups = "MAC1LINK";
-+					};
-+
-+					pinctrl_mdio1_default: mdio1_default {
-+						function = "MDIO1";
-+						groups = "MDIO1";
-+					};
-+
-+					pinctrl_mdio2_default: mdio2_default {
-+						function = "MDIO2";
-+						groups = "MDIO2";
-+					};
-+
-+					pinctrl_oscclk_default: oscclk_default {
-+						function = "OSCCLK";
-+						groups = "OSCCLK";
-+					};
-+
-+					pinctrl_pewake_default: pewake_default {
-+						function = "PEWAKE";
-+						groups = "PEWAKE";
-+					};
-+
-+					pinctrl_pwm0_default: pwm0_default {
-+						function = "PWM0";
-+						groups = "PWM0";
-+					};
-+
-+					pinctrl_pwm1_default: pwm1_default {
-+						function = "PWM1";
-+						groups = "PWM1";
-+					};
-+
-+					pinctrl_pwm2_default: pwm2_default {
-+						function = "PWM2";
-+						groups = "PWM2";
-+					};
-+
-+					pinctrl_pwm3_default: pwm3_default {
-+						function = "PWM3";
-+						groups = "PWM3";
-+					};
-+
-+					pinctrl_pwm4_default: pwm4_default {
-+						function = "PWM4";
-+						groups = "PWM4";
-+					};
-+
-+					pinctrl_pwm5_default: pwm5_default {
-+						function = "PWM5";
-+						groups = "PWM5";
-+					};
-+
-+					pinctrl_pwm6_default: pwm6_default {
-+						function = "PWM6";
-+						groups = "PWM6";
-+					};
-+
-+					pinctrl_pwm7_default: pwm7_default {
-+						function = "PWM7";
-+						groups = "PWM7";
-+					};
-+
-+					pinctrl_rgmii1_default: rgmii1_default {
-+						function = "RGMII1";
-+						groups = "RGMII1";
-+					};
-+
-+					pinctrl_rgmii2_default: rgmii2_default {
-+						function = "RGMII2";
-+						groups = "RGMII2";
-+					};
-+
-+					pinctrl_rmii1_default: rmii1_default {
-+						function = "RMII1";
-+						groups = "RMII1";
-+					};
-+
-+					pinctrl_rmii2_default: rmii2_default {
-+						function = "RMII2";
-+						groups = "RMII2";
-+					};
-+
-+					pinctrl_sd1_default: sd1_default {
-+						function = "SD1";
-+						groups = "SD1";
-+					};
-+
-+					pinctrl_spi1_default: spi1_default {
-+						function = "SPI1";
-+						groups = "SPI1";
-+					};
-+
-+					pinctrl_timer4_default: timer4_default {
-+						function = "TIMER4";
-+						groups = "TIMER4";
-+					};
-+
-+					pinctrl_timer5_default: timer5_default {
-+						function = "TIMER5";
-+						groups = "TIMER5";
-+					};
-+
-+					pinctrl_timer6_default: timer6_default {
-+						function = "TIMER6";
-+						groups = "TIMER6";
-+					};
-+
-+					pinctrl_timer7_default: timer7_default {
-+						function = "TIMER7";
-+						groups = "TIMER7";
-+					};
-+
-+					pinctrl_timer8_default: timer8_default {
-+						function = "TIMER8";
-+						groups = "TIMER8";
-+					};
-+				};
-+			};
-+
- 			clk_hpll: clk_hpll@1e6e2024 {
- 				#clock-cells = <0>;
- 				compatible = "aspeed,g5-hpll-clock";
+ &uart5 {
+ 	status = "okay";
+ };
 -- 
 2.9.3.1.g0db844e
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
