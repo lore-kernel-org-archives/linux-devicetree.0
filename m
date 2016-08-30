@@ -1,88 +1,100 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 3/3] arm64: dts: marvell: enable MSI for PCIe on Armada 7K/8K
-Date: Tue, 30 Aug 2016 14:57:10 +0200
-Message-ID: <1472561830-20932-4-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCH 2/3] pci: pcie-designware: add support for external MSI controller
+Date: Tue, 30 Aug 2016 14:57:09 +0200
+Message-ID: <1472561830-20932-3-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1472561830-20932-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472561830-20932-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1472561830-20932-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Joao Pinto <jpinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Yehuda Yitschak <yehuday@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds a reference to the appropriate MSI controller in the
-description of the PCIe controllers on Marvel Armada 7K and 8K
-platforms.
+The Designware PCIe controllers have a built-in MSI controller, which is
+already supported by the existing. However, in some situations, it might
+be a better choice to use an external MSI controller, especially when it
+provides a higher number of MSI interrupts than the built-in one.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Therefore, this commit extends the pcie-designware driver to support the
+"msi-parent" DT property, already used by other drivers. It contains a
+phandle pointing to the external MSI controller to be used.
+
+Following this commit, the pcie-designware code supports three
+possibilities, in this order:
+
+ 1. If msi-parent is provided, then the MSI controller pointed by this
+    property is used.
+
+ 2. Otherwise, and if no ->msi_host_init() function is provided by the
+    platform-specific "glue", then the built-in MSI controller of the
+    Designware controller is used.
+
+ 3. Otherwise, the ->msi_host_init() function of the platform-specific
+    "glue" is used to do some additional initialization, but it's still
+    the built-in MSI controller that is used.
+
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
-Please only apply once the DT binding and the driver change have been
-accepted.
+ drivers/pci/host/pcie-designware.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
- arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi | 3 +++
- arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi  | 3 +++
- 2 files changed, 6 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-index ceb83b0..ff469e1 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-@@ -177,6 +177,7 @@
- 			#interrupt-cells = <1>;
- 			device_type = "pci";
- 			dma-coherent;
-+			msi-parent = <&gic_v2m0>;
+diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+index 12afce1..1e18a85 100644
+--- a/drivers/pci/host/pcie-designware.c
++++ b/drivers/pci/host/pcie-designware.c
+@@ -437,6 +437,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	int i, ret;
+ 	LIST_HEAD(res);
+ 	struct resource_entry *win;
++	struct msi_controller *msi = NULL;
  
- 			bus-range = <0 0xff>;
- 			ranges =
-@@ -202,6 +203,7 @@
- 			#interrupt-cells = <1>;
- 			device_type = "pci";
- 			dma-coherent;
-+			msi-parent = <&gic_v2m0>;
+ 	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+ 	if (cfg_res) {
+@@ -525,10 +526,21 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 		pp->lanes = 0;
  
- 			bus-range = <0 0xff>;
- 			ranges =
-@@ -228,6 +230,7 @@
- 			#interrupt-cells = <1>;
- 			device_type = "pci";
- 			dma-coherent;
-+			msi-parent = <&gic_v2m0>;
- 
- 			bus-range = <0 0xff>;
- 			ranges =
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-index 2d863f2..43cecf0 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-@@ -177,6 +177,7 @@
- 			#interrupt-cells = <1>;
- 			device_type = "pci";
- 			dma-coherent;
-+			msi-parent = <&gic_v2m0>;
- 
- 			bus-range = <0 0xff>;
- 			ranges =
-@@ -202,6 +203,7 @@
- 			#interrupt-cells = <1>;
- 			device_type = "pci";
- 			dma-coherent;
-+			msi-parent = <&gic_v2m0>;
- 
- 			bus-range = <0 0xff>;
- 			ranges =
-@@ -228,6 +230,7 @@
- 			#interrupt-cells = <1>;
- 			device_type = "pci";
- 			dma-coherent;
-+			msi-parent = <&gic_v2m0>;
- 
- 			bus-range = <0 0xff>;
- 			ranges =
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+-		if (!pp->ops->msi_host_init) {
++		if (of_find_property(pp->dev->of_node, "msi-parent", NULL)) {
++			struct device_node *msi_node;
++
++			msi_node = of_parse_phandle(pp->dev->of_node,
++						    "msi-parent", 0);
++			if (!msi_node)
++				return -ENODEV;
++
++			msi = of_pci_find_msi_chip_by_node(msi_node);
++		} else if (!pp->ops->msi_host_init) {
++			msi = &dw_pcie_msi_chip;
++			msi->dev = pp->dev;
+ 			pp->irq_domain = irq_domain_add_linear(pp->dev->of_node,
+ 						MAX_MSI_IRQS, &msi_domain_ops,
+-						&dw_pcie_msi_chip);
++						msi);
+ 			if (!pp->irq_domain) {
+ 				dev_err(pp->dev, "irq domain init failed\n");
+ 				ret = -ENXIO;
+@@ -538,7 +550,9 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 			for (i = 0; i < MAX_MSI_IRQS; i++)
+ 				irq_create_mapping(pp->irq_domain, i);
+ 		} else {
+-			ret = pp->ops->msi_host_init(pp, &dw_pcie_msi_chip);
++			msi = &dw_pcie_msi_chip;
++			msi->dev = pp->dev;
++			ret = pp->ops->msi_host_init(pp, msi);
+ 			if (ret < 0)
+ 				goto error;
+ 		}
+@@ -550,9 +564,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
+ 	pp->root_bus_nr = pp->busn->start;
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+ 		bus = pci_scan_root_bus_msi(pp->dev, pp->root_bus_nr,
+-					    &dw_pcie_ops, pp, &res,
+-					    &dw_pcie_msi_chip);
+-		dw_pcie_msi_chip.dev = pp->dev;
++					    &dw_pcie_ops, pp, &res, msi);
+ 	} else
+ 		bus = pci_scan_root_bus(pp->dev, pp->root_bus_nr, &dw_pcie_ops,
+ 					pp, &res);
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
