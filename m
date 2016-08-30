@@ -1,25 +1,65 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/2 v2] arm64: dts: ls1043a/ls2080a serial updates
-Date: Tue, 30 Aug 2016 19:07:35 +0800
-Message-ID: <20160830110735.GA8363@tiger>
-References: <1472495473-27387-1-git-send-email-stuart.yoder@nxp.com>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH v6] drm: bridge/dw_hdmi: add dw hdmi i2c bus adapter
+ support
+Date: Tue, 30 Aug 2016 12:33:41 +0100
+Message-ID: <CACvgo50BRyTF6RVU=_=AzSgHJuGJWuST5Uc9DQaYaZU-2aisYQ@mail.gmail.com>
+References: <1472017597-11221-1-git-send-email-vladimir_zapolskiy@mentor.com>
+ <CACvgo50WjosoeV81eBESyVpjyJqPGt-R5yWR6sFr0ZbPe2LJHw@mail.gmail.com>
+ <20160830081244.GK1041@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1472495473-27387-1-git-send-email-stuart.yoder-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160830081244.GK1041@n2100.armlinux.org.uk>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, ML dri-devel <dri-devel@lists.freedesktop.org>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 29, 2016 at 01:31:11PM -0500, Stuart Yoder wrote:
-> Stuart Yoder (2):
->   arm64: dts: updates serial aliases for ls1043a rdb and qds boards
->   arm64: dts: add stdout-path to chosen node for ls2080a/ls1043a boards
-
-Applied both, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMzAgQXVndXN0IDIwMTYgYXQgMDk6MTIsIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eAo8bGlu
+dXhAYXJtbGludXgub3JnLnVrPiB3cm90ZToKPiBPbiBNb24sIEF1ZyAyOSwgMjAxNiBhdCAwNTo0
+MToxMFBNICswMTAwLCBFbWlsIFZlbGlrb3Ygd3JvdGU6Cj4+IEhpIGFsbCwKPj4KPj4gT24gMjQg
+QXVndXN0IDIwMTYgYXQgMDY6NDYsIFZsYWRpbWlyIFphcG9sc2tpeQo+PiA8dmxhZGltaXJfemFw
+b2xza2l5QG1lbnRvci5jb20+IHdyb3RlOgo+Pgo+PiA+ICBNT0RVTEVfQVVUSE9SKCJTYXNjaGEg
+SGF1ZXIgPHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU+Iik7Cj4+ID4gIE1PRFVMRV9BVVRIT1IoIkFu
+ZHkgWWFuIDxhbmR5LnlhbkByb2NrLWNoaXBzLmNvbT4iKTsKPj4gPiAgTU9EVUxFX0FVVEhPUigi
+WWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPiIpOwo+PiA+ICtNT0RVTEVfQVVUSE9SKCJW
+bGFkaW1pciBaYXBvbHNraXkgPHZsYWRpbWlyX3phcG9sc2tpeUBtZW50b3IuY29tPiIpOwo+PiBE
+b24ndCBtZWFudCB0byBzdGFydCBhIGZsYW1lLXdhciBvciBhbGlrZSBidXQgdG8gZWR1Y2F0ZSBt
+eXNlbGY6Cj4+IFdoZXJlIGRvZXMgb25lIGRyYXcgdGhlIGxpbmUgYWJvdXQgYWRkaW5nIG5ldyBh
+dXRob3Iocykgb2Ygc2FpZAo+PiBtb2R1bGUvc3Vic3lzdGVtID8KPj4KPj4gQWZhaWN0IHRoaXMg
+aXMgdGhlIG1vc3QgY29tbW9uICg/KSBkcml2ZXIgaW4gRFJNIHdoZXJlIHRoZSBsaXN0IGhhcwo+
+PiBncm93biBvdmVyIHRpbWUuIFNob3VsZCB3ZSBkbyB0aGUgc2FtZSB3aXRoIG90aGVycyA/Cj4K
+PiAuLi4gYW5kIEknbSByZXNwb25zaWJsZSBmb3IganVzdCBvdmVyIGhhbGYgdGhlIGNvbW1pdHMg
+aW4gdGhlIG1haW5saW5lCj4ga2VybmVsIGFuZCBJIGhhdmVuJ3QgYWRkZWQgbXlzZWxmLiAgSSBn
+ZW5lcmFsbHkgb25seSBhZGQgbXlzZWxmIGlmIEknbQo+IGNyZWF0aW5nIG5ldyBjb2RlIG9yIGJl
+ZW4gaW52b2x2ZWQgaW4gYWRkaW5nIG5ldyBjb2RlLCBJIGRvbid0IGFkZCBpZgo+IEknbSBtZXJl
+bHkgbW9kaWZ5aW5nIGV4aXN0aW5nIGNvZGUgdW5sZXNzIEkndmUgcmVwbGFjZWQgYSBsYXJnZQo+
+IHF1YW50aXR5IG9mIHRoZSBjb2RlLiAgSSB0aGluayB0aGUgcXVlc3Rpb24gcGVvcGxlIG5lZWQg
+dG8gYXNrIGlzOgo+Cj4gICAiSGF2ZSBJIGNvbnRyaWJ1dGVkIGEgc2lnbmlmaWNhbnQgc2V0IG9m
+IGNoYW5nZXMgdG8gYmUgYWJsZSB0byBjbGFpbQo+ICAgIHNoYXJlZCBhdXRob3JzaGlwIG9mIHRo
+YXQgY29kZT8iCj4KPiBZb3Ugd291bGRuJ3QgY2xhaW0gYXV0aG9yc2hpcCBvZiBhIDUwMCBwYWdl
+IGJvb2sgaWYgeW91IHN1Z2dlc3RlZCBhCj4gZmV3IGVkaXRzIGhlcmUgYW5kIHRoZXJlLgo+Cj4g
+TG9va2luZyBhdCBjby1hdXRob3JzaGlwIGluIGdvb2dsZSwgSSBjYW1lIGFjcm9zczoKPgo+IGh0
+dHA6Ly93d3cuc291dGhlcm5mcmllZHNjaWVuY2UuY29tL3RvLWNvLWF1dGhvci1vci1ub3QtdG8t
+Y28tYXV0aG9yLwo+Cj4gd2hpY2ggaGFzIGFuIGludGVyZXN0aW5nIGxpc3Qgb2YgcG9pbnRzIG9u
+IHRoaXMgc3ViamVjdCwgYWx0aG91Z2ggbW9yZQo+IGJpYXNlZCB0byByZXNlYXJjaCBwYXBlcnMs
+IHdoaWNoIGlzIHdoZXJlIHRoaXMgcHJvYmxlbSBub3JtYWxseSBhcmlzZXMuCj4gVGhhdCBzZWVt
+cyB0byBiYWNrIHVwIG15IGlkZWEgb2YgInNpZ25pZmljYW50IGNvbnRyaWJ1dGlvbiIgbm90IGp1
+c3QKPiBhIGZldyBtaW5vciBjaGFuZ2VzLgo+Cj4gVGhlIHF1ZXN0aW9uIHRoZW4gYmVjb21lcy4u
+LiB3aGF0IGlzIGEgc2lnbmlmaWNhbnQgY29udHJpYnV0aW9uLiA6KQo+ClJvdWdobHkgbXkgbGlu
+ZSBvZiB0aGlua2luZyBhcyB3ZWxsLgoKQ29uc2lkZXJpbmcgdGhhdCB0aGUgZHJpdmVyIGhhcyBi
+ZWVuIGRldmVsb3BlZCBpbmRlcGVuZGVudGx5IGluIG9uZQpzaGFwZSBvciBhbm90aGVyIGZvciBh
+IGZldyB5ZWFycyBJIHRoaW5rIGl0J3MgcGVyZmVjdGx5IHJlYXNvbmFibGUgaW4KdGhpcyBjYXNl
+LgoKVGhhbmtzIGZvciB0aGUgaW5wdXQgYWxsICEKRW1pbApfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
