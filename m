@@ -1,32 +1,80 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH 0/4] Support the rk3399 gmac pd function
-Date: Wed, 31 Aug 2016 04:30:03 +0800
-Message-ID: <1472589008-7713-1-git-send-email-wxt@rock-chips.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, netdev@vger.kernel.org
-Cc: linux-rockchip@lists.infradead.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, dbasehore@chromium.org, Caesar Wang <wxt@rock-chips.com>, Arnd Bergmann <arnd@arndb.de>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Frank Wang <frank.wang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Elaine Zhang <zhangqing@rock-chips.com>, David Wu <david.wu@rock-chips.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jianqun Xu <jay.xu@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Shunqian Zheng <zhengsq@rock-chips.com>, Mark
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 4/4] arm64: dts: rockchip: enable the gmac for rk3399 evb board
+Date: Wed, 31 Aug 2016 04:30:07 +0800
+Message-ID: <1472589008-7713-5-git-send-email-wxt@rock-chips.com>
+References: <1472589008-7713-1-git-send-email-wxt@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472589008-7713-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add to handle the gmac pd issue, and support
-the rk3399 gmac for devicetree.
+We add the required and optional properties for evb board.
+See the [0] to get the detail information.
 
+[0]:
+Documentation/devicetree/bindings/net/rockchip-dwmac.txt
 
+Signed-off-by: Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
-Caesar Wang (2):
-  arm64: dts: rockchip: support gmac for rk3399
-  arm64: dts: rockchip: enable the gmac for rk3399 evb board
+ arch/arm64/boot/dts/rockchip/rk3399-evb.dts | 31 +++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-David Wu (1):
-  net: stmmac: dwmac-rk: add pd_gmac support for rk3399
-
-Roger Chen (1):
-  net: stmmac: dwmac-rk: fixes the gmac resume after PD on/off
-
- arch/arm64/boot/dts/rockchip/rk3399-evb.dts    | 31 +++++++++
- arch/arm64/boot/dts/rockchip/rk3399.dtsi       | 90 ++++++++++++++++++++++++++
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 27 +++++---
- 3 files changed, 139 insertions(+), 9 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+index d47b4e9..ed6f2e8 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-evb.dts
+@@ -94,12 +94,43 @@
+ 		regulator-always-on;
+ 		regulator-boot-on;
+ 	};
++
++	clkin_gmac: external-gmac-clock {
++		compatible = "fixed-clock";
++		clock-frequency = <125000000>;
++		clock-output-names = "clkin_gmac";
++		#clock-cells = <0>;
++	};
++
++	vcc_phy: vcc-phy-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_phy";
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ };
+ 
+ &emmc_phy {
+ 	status = "okay";
+ };
+ 
++&gmac {
++	phy-supply = <&vcc_phy>;
++	phy-mode = "rgmii";
++	clock_in_out = "input";
++	snps,reset-gpio = <&gpio3 15 GPIO_ACTIVE_LOW>;
++	snps,reset-active-low;
++	snps,reset-delays-us = <0 10000 50000>;
++	assigned-clocks = <&cru SCLK_RMII_SRC>;
++	assigned-clock-parents = <&clkin_gmac>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&rgmii_pins>;
++	tx_delay = <0x28>;
++	rx_delay = <0x11>;
++	status = "okay";
++};
++
+ &pwm0 {
+ 	status = "okay";
+ };
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
