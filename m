@@ -1,66 +1,250 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] microblaze: move xlnx,compound to default bus matching
-Date: Mon, 29 Aug 2016 18:45:58 -0500
-Message-ID: <20160829234558.2903-1-robh@kernel.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2] of: Add generic handling for ePAPR 1.1 fail-sss states
+Date: Mon, 29 Aug 2016 19:23:01 -0500
+Message-ID: <CAL_JsqK=JLN+ujvyVv62E-d1sB_DgeZCGP5Pddt9ohPkypHdEg@mail.gmail.com>
+References: <20160829223542.18871-1-tony@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160829223542.18871-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Microblaze bus probing is partially broken because "xlnx,compound" is
-missing from the default bus probe. Add it to the default and remove from
-the Microblaze arch code.
+On Mon, Aug 29, 2016 at 5:35 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> We have devices that are in incomplete state, but still need to be
+> probed to allow properly idling them for PM. Some examples are
+> devices that are not pinned out on certain packages, or otherwise
+> unusable on some SoCs.
+>
+> Setting status = "disabled" cannot be used for this case. Setting
+> "disabled" makes Linux ignore these devices so they are not probed
+> and can never get idled properly by Linux PM runtime.
+>
+> The proper way deal with the incomplete devices is to probe them,
+> then allow the driver to check the state, and then disable or idle
+> the device using PM runtime. To do this, we need to often enable
+> the device and run some device specific code to idle the device.
+>
+> Also boards may have needs to disable and idle unused devices.
+> This may be needed for example if all resources are not wired
+> for a certain board variant.
+>
+> It seems we can use the ePAPR 1.1 status fail-sss to do this.
+> Quoting "Table 2-4 Values for status property" we have "fail-sss":
+>
+> "Indicates that the device is not operational. A serious error was
+>  detected in the device and it is unlikely to become operational
+>  without repair. The sss portion of the value is specific to the
+>  device and indicates the error condition detected."
 
-Fixes: 44a7185c2ae6 ("of/platform: Add common method to populate default bus")
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- arch/microblaze/kernel/platform.c | 9 ---------
- drivers/of/platform.c             | 1 +
- 2 files changed, 1 insertion(+), 9 deletions(-)
+I had read this as 'sss' is just 3 characters, but I guess that doesn't matter.
 
-diff --git a/arch/microblaze/kernel/platform.c b/arch/microblaze/kernel/platform.c
-index b9529ca..9d520bf 100644
---- a/arch/microblaze/kernel/platform.c
-+++ b/arch/microblaze/kernel/platform.c
-@@ -11,19 +11,10 @@
-  */
- 
- #include <linux/init.h>
--#include <linux/of_platform.h>
--#include <asm/prom.h>
- #include <asm/setup.h>
- 
--static struct of_device_id xilinx_of_bus_ids[] __initdata = {
--	{ .compatible = "simple-bus", },
--	{ .compatible = "xlnx,compound", },
--	{}
--};
--
- static int __init microblaze_device_probe(void)
- {
--	of_platform_bus_probe(NULL, xilinx_of_bus_ids, NULL);
- 	of_platform_reset_gpio_probe();
- 	return 0;
- }
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index f39ccd5..f0314c4 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -32,6 +32,7 @@ const struct of_device_id of_default_bus_match_table[] = {
- #ifdef CONFIG_ARM_AMBA
- 	{ .compatible = "arm,amba-bus", },
- #endif /* CONFIG_ARM_AMBA */
-+	{ .compatible = "xlnx,compound", },
- 	{} /* Empty terminated list */
- };
- 
--- 
-2.9.3
+> We can handle these fail states can be handled in a generic
+> way. So let's introduce a generic status = "fail-" that
+> describes a situation where a device driver probe should just
+> shut down or idle the device if possible and then bail out.
+> This allows the SoC variant and board specific dts files to set
+> the status as needed.
+>
+> The suggested usage in a device driver probe is:
+>
+> static int foo_probe(struct platform_device *pdev)
+> {
+>         int err;
+>         const char *status;
+>         ...
+>
+>         pm_runtime_enable(&pdev->dev);
+>         pm_runtime_get_sync(&pdev->dev);
+>         pm_runtime_use_autosuspend(&pdev->dev);
+>         ...
+>
+>         /* Configure device, load firmware, idle device */
+>         ...
+>
+>         if (of_device_is_incomplete(pdev->dev.of_node, status)) {
 
+&status
+
+>                 if (!strcmp("hw-incomplete-pins", status)) {
+>                         dev_info(&pdev->dev,
+>                                  "Unusable hardware: Not pinned out\n");
+>                         err = -ENODEV;
+>                         goto out;
+>                 }
+>                 if (!strcmp("hw-missing-daughter-card")) {
+>                         err = -EPROBE_DEFER;
+
+This implies we're going to change this on the fly? I guess
+disabled->okay can already happen.
+
+>                         goto out;
+>                 }
+>                 if (!strcmp("hw-buggy-dma")) {
+>                         dev_warn(&pdev->dev,
+>                                  "Replace hardware for working DMA\n");
+>                 }
+>         }
+>
+>         /* Continue normal device probe */
+>         ...
+>
+>         return 0;
+>
+> out:
+>         pm_runtime_dont_use_autosuspend(&pdev->dev);
+>         pm_runtime_put_sync(&pdev->dev);
+>         pm_runtime_disable(&pdev->dev);
+>
+>         return err;
+> }
+>
+> Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+> Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Changes since v1 ([PATCH] of: Add generic handling for hardware incomplete
+> fail state):
+>
+> - Make more generic as suggested by Frank but stick with
+>   "operational status of a device" approch most people seem
+>   to prefer that
+>
+> - Pass the failure status back to caller so the caller may
+>   attempt to handle the failure status
+>
+> - Improved the description with more examples
+>
+>  drivers/of/base.c  | 64 +++++++++++++++++++++++++++++++++++++++++++++++++++---
+>  include/linux/of.h |  8 +++++++
+>  2 files changed, 69 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index ff37f6d..4d39857 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -550,8 +550,8 @@ EXPORT_SYMBOL(of_machine_is_compatible);
+>   *
+>   *  @device: Node to check for availability, with locks already held
+>   *
+> - *  Returns true if the status property is absent or set to "okay" or "ok",
+> - *  false otherwise
+> + *  Returns true if the status property is absent or set to "okay", "ok",
+> + *  or starting with "fail-", false otherwise
+>   */
+>  static bool __of_device_is_available(const struct device_node *device)
+>  {
+> @@ -566,7 +566,8 @@ static bool __of_device_is_available(const struct device_node *device)
+>                 return true;
+>
+>         if (statlen > 0) {
+> -               if (!strcmp(status, "okay") || !strcmp(status, "ok"))
+> +               if (!strcmp(status, "okay") || !strcmp(status, "ok") ||
+> +                   !strncmp(status, "fail-", 5))
+>                         return true;
+>         }
+>
+> @@ -595,6 +596,63 @@ bool of_device_is_available(const struct device_node *device)
+>  EXPORT_SYMBOL(of_device_is_available);
+>
+>  /**
+> + *  __of_device_is_incomplete - check if a device is incomplete
+> + *
+> + *  @device: Node to check for partial failure with locks already held
+> + *  @status: Status string for optional handling of the fail-sss state
+> + */
+> +static bool __of_device_is_incomplete(const struct device_node *device,
+> +                                     const char **status)
+> +{
+> +       const char *s, *m = "fail-";
+> +       int slen, mlen;
+> +
+> +       if (!device)
+> +               return false;
+> +
+> +       s = __of_get_property(device, "status", &slen);
+
+You can use the string helper function here (or is the lock a problem?).
+
+Overall, seems okay to me.
+
+> +       if (!s)
+> +               return false;
+> +
+> +       mlen = strlen(m);
+> +       if (slen <= mlen)
+> +               return false;
+> +
+> +       if (strncmp("fail-", s, mlen))
+> +               return false;
+> +
+> +       *status = s + mlen;
+> +
+> +       return true;
+> +}
+> +
+> +/**
+> + *  of_device_is_incomplete - check if a device is incomplete
+> + *
+> + *  @device: Node to check for partial failure
+> + *  @status: Status string for optional handling of the fail-sss state
+> + *
+> + *  Returns true if the status property is set to "fail-sss",
+> + *  false otherwise. Fore more information, see fail-sss in ePAPR 1.1
+> + *  "Table 2-4 Values for status property".
+> + *
+> + *  The caller can optionally try to handle the error based on the
+> + *  status string.
+> + */
+> +bool of_device_is_incomplete(const struct device_node *device,
+> +                            const char **status)
+> +{
+> +       unsigned long flags;
+> +       bool res;
+> +
+> +       raw_spin_lock_irqsave(&devtree_lock, flags);
+> +       res = __of_device_is_incomplete(device, status);
+> +       raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +       return res;
+> +}
+> +EXPORT_SYMBOL(of_device_is_incomplete);
+> +
+> +/**
+>   *  of_device_is_big_endian - check if a device has BE registers
+>   *
+>   *  @device: Node to check for endianness
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 3d9ff8e..b593936 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -320,6 +320,8 @@ extern int of_device_is_compatible(const struct device_node *device,
+>  extern int of_device_compatible_match(struct device_node *device,
+>                                       const char *const *compat);
+>  extern bool of_device_is_available(const struct device_node *device);
+> +extern bool of_device_is_incomplete(const struct device_node *device,
+> +                                   const char **status);
+>  extern bool of_device_is_big_endian(const struct device_node *device);
+>  extern const void *of_get_property(const struct device_node *node,
+>                                 const char *name,
+> @@ -504,6 +506,12 @@ static inline bool of_device_is_available(const struct device_node *device)
+>         return false;
+>  }
+>
+> +static inline bool of_device_is_incomplete(const struct device_node *device,
+> +                                          const char **status)
+> +{
+> +       return false;
+> +}
+> +
+>  static inline bool of_device_is_big_endian(const struct device_node *device)
+>  {
+>         return false;
+> --
+> 2.9.3
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
