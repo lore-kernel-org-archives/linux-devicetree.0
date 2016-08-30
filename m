@@ -1,72 +1,538 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 1/5] mfd: tps65217: Add support for IRQs
-Date: Tue, 30 Aug 2016 10:04:30 +0100
-Message-ID: <20160830090430.GE1661@dell>
-References: <20160620105056.25843-1-m.niestroj@grinn-global.com>
- <20160620105056.25843-2-m.niestroj@grinn-global.com>
- <576D0437.1020800@ti.com>
- <c339a5bb-7e0d-bda4-2d76-38808977d3f6@grinn-global.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c339a5bb-7e0d-bda4-2d76-38808977d3f6@grinn-global.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Marcin Niestroj <m.niestroj@grinn-global.com>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+From: Jagan Teki <jagannadh.teki@gmail.com>
+Subject: [PATCH v3] ARM: dts: imx6ul-geam: Add Engicam IMX6UL GEA M6UL initial support
+Date: Tue, 30 Aug 2016 14:43:31 +0530
+Message-ID: <1472548411-25018-1-git-send-email-jagan@amarulasolutions.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 29 Aug 2016, Marcin Niestroj wrote:
+From: Michael Trimarchi <michael@amarulasolutions.com>
 
-> ping
+IMX6UL GEA M6UL modules are system on module solutions manufactured
+by Engicam with following characteristics:
+Processor	Freescale i.MX 6UltraLite MCIMX6G2, 528 MHz
+RAM		128MB, 16-bit DDR3
+NAND SLC	256MB
+Power supply	Single 5V
+MAX LCD RES	up to WXGA, 1366x768
 
-Again, 2 pings on a patch which has a Maintainer Ack.  Why?
+and more info at
+http://www.engicam.com/prodotti/embedded/som/sodimm/gea-m6ul
 
-If you're still missing Acks on some patches in the set, resend the set!
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Signed-off-by: Matteo Lisi <matteo.lisi@engicam.com>
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v3:
+- Rebase on master
+- Replace flexcan1 and flexcan2 with can1 and can2
+- Fix to use RAM size as 128MB instead of 512MB
+- Add commit message
+Changes for v2:
+- remove not used muxed
+- sort better regulator but not remove "silly" one propertes for now
+- small issue on code style
+- add Matteo from Engicam that help me to test and verify the board, provide hw support
 
-> On 24.06.2016 11:58, Grygorii Strashko wrote:
-> > On 06/20/2016 01:50 PM, Marcin Niestroj wrote:
-> > > Add support for handling IRQs: power button, AC and USB power state
-> > > changes. Mask and interrupt bits are shared within one register, which
-> > > prevents us to use regmap_irq implementation. New irq_domain is
-> > > created in
-> > > order to add interrupt handling for each tps65217's subsystem. IRQ
-> > > resources have been added for charger subsystem to be able to notify
-> > > about
-> > > AC and USB state changes.
-> > > 
-> > > Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
-> > > Acked-by: Lee Jones <lee.jones@linaro.org>
-> > > ---
-> > > Changes v3 -> v4 (suggested by Grygorii):
-> > >   * Add irq_set_parent() during irq init
-> > >   * Remove hardcoded IRQ trigger type, rely on DT bindings instead
-> > > 
-> > > Changes v2 -> v3 (suggested by Lee):
-> > >   * Alphabetical reorder of includes
-> > >   * Rename enum tps65217_irqs -> tps65217_irq_type, so we won't confuse
-> > >     it with structure object with the same name.
-> > >   * Fix inconsistent order of irq_enable and irq_disable
-> > >   * Remove redundant 'else' when returning from tps65217_irq_thread
-> > > 
-> > > Changes v1 -> v2: none
-> > > 
-> > >   drivers/mfd/Kconfig          |   1 +
-> > >   drivers/mfd/tps65217.c       | 195
-> > > +++++++++++++++++++++++++++++++++++++++++--
-> > >   include/linux/mfd/tps65217.h |  12 +++
-> > >   3 files changed, 200 insertions(+), 8 deletions(-)
-> > > 
-> > 
-> > Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> > 
-> > 
-> > 
-> 
+ arch/arm/boot/dts/Makefile            |   1 +
+ arch/arm/boot/dts/imx6ul-geam-kit.dts | 102 ++++++++++
+ arch/arm/boot/dts/imx6ul-geam.dtsi    | 362 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 465 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6ul-geam-kit.dts
+ create mode 100644 arch/arm/boot/dts/imx6ul-geam.dtsi
 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index faacd52..f571417 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -407,6 +407,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
+ 	imx6sx-sdb.dtb
+ dtb-$(CONFIG_SOC_IMX6UL) += \
+ 	imx6ul-14x14-evk.dtb \
++	imx6ul-geam-kit.dtb \
+ 	imx6ul-pico-hobbit.dtb \
+ 	imx6ul-tx6ul-0010.dtb \
+ 	imx6ul-tx6ul-0011.dtb \
+diff --git a/arch/arm/boot/dts/imx6ul-geam-kit.dts b/arch/arm/boot/dts/imx6ul-geam-kit.dts
+new file mode 100644
+index 0000000..31ff4ad
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6ul-geam-kit.dts
+@@ -0,0 +1,102 @@
++/*
++ * Copyright (C) 2016 Amarula Solutions B.V.
++ * Copyright (C) 2016 Engicam S.r.l.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include "imx6ul-geam.dtsi"
++
++/ {
++	model = "Engicam GEAM6UL";
++	compatible = "engicam,imx6ul-geam", "fsl,imx6ul";
++};
++
++&can1 {
++	status = "okay";
++};
++
++&can2 {
++	status = "okay";
++};
++
++&lcdif {
++	display = <&display0>;
++	status = "okay";
++
++	display0: display {
++		bits-per-pixel = <16>;
++		bus-width = <18>;
++
++		display-timings {
++			native-mode = <&timing0>;
++			timing0: timing0 {
++				clock-frequency = <28000000>;
++				hactive = <800>;
++				vactive = <480>;
++				hfront-porch = <30>;
++				hback-porch = <30>;
++				hsync-len = <64>;
++				vback-porch = <5>;
++				vfront-porch = <5>;
++				vsync-len = <20>;
++
++				hsync-active = <0>;
++				vsync-active = <0>;
++				de-active = <1>;
++				pixelclk-active = <0>;
++			};
++		};
++	};
++};
++
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	status = "okay";
++};
++
++&tsc {
++	measure_delay_time = <0x1ffff>;
++	pre_charge_time = <0x1fff>;
++	status = "okay";
++};
++
+diff --git a/arch/arm/boot/dts/imx6ul-geam.dtsi b/arch/arm/boot/dts/imx6ul-geam.dtsi
+new file mode 100644
+index 0000000..773d18a
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6ul-geam.dtsi
+@@ -0,0 +1,362 @@
++/*
++ * Copyright (C) 2016 Amarula Solutions B.V.
++ * Copyright (C) 2016 Engicam S.r.l.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include "imx6ul.dtsi"
++
++/ {
++	memory {
++		reg = <0x80000000 0x08000000>;
++	};
++
++	chosen {
++		stdout-path = &uart1;
++	};
++
++	reg_1p8v: regulator-1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "1P8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
++
++&can1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan1>;
++	xceiver-supply = <&reg_3p3v>;
++};
++
++&can2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan2>;
++	xceiver-supply = <&reg_3p3v>;
++};
++
++&fec1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet1>;
++	phy-mode = "rmii";
++	phy-handle = <&ethphy0>;
++	status = "okay";
++};
++
++&fec2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet2>;
++	phy-mode = "rmii";
++	phy-handle = <&ethphy1>;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy0: ethernet-phy@0 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <0>;
++		};
++
++		ethphy1: ethernet-phy@1 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <1>;
++		};
++	};
++};
++
++&gpmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_gpmi_nand>;
++	status = "okay";
++	nand-on-flash-bbt;
++};
++
++&lcdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_lcdif_dat
++		     &pinctrl_lcdif_ctrl>;
++	display = <&display0>;
++};
++
++&tsc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_tsc>;
++	xnur-gpio = <&gpio1 3 GPIO_ACTIVE_LOW>;
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&usbotg1 {
++	dr_mode = "peripheral";
++	status = "okay";
++};
++
++&usbotg2 {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
++	bus-width = <4>;
++	cd-gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
++	no-1-8-v;
++	status = "okay";
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++};
++
++&i2c2 {
++	clock_frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++};
++
++&iomuxc {
++
++	pinctrl_enet1: enet1grp {
++		fsl,pins = <
++			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
++			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
++			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
++			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
++			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
++			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
++			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
++		>;
++	};
++
++	pinctrl_enet2: enet2grp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO07__ENET2_MDC		0x1b0b0
++			MX6UL_PAD_GPIO1_IO06__ENET2_MDIO	0x1b0b0
++			MX6UL_PAD_ENET2_RX_EN__ENET2_RX_EN	0x1b0b0
++			MX6UL_PAD_ENET2_RX_ER__GPIO2_IO15	0x1b0b0		/* ENET_nRST */
++			MX6UL_PAD_ENET2_RX_DATA0__ENET2_RDATA00	0x1b0b0
++			MX6UL_PAD_ENET2_RX_DATA1__ENET2_RDATA01	0x1b0b0
++			MX6UL_PAD_ENET2_TX_EN__ENET2_TX_EN	0x1b0b0
++			MX6UL_PAD_ENET2_TX_DATA0__ENET2_TDATA00	0x1b0b0
++			MX6UL_PAD_ENET2_TX_DATA1__ENET2_TDATA01	0x1b0b0
++			MX6UL_PAD_GPIO1_IO05__ENET2_REF_CLK2	0x4001b031
++		>;
++	};
++
++	pinctrl_flexcan1: flexcan1grp {
++		fsl,pins = <
++			MX6UL_PAD_UART3_RTS_B__FLEXCAN1_RX	0x1b020
++			MX6UL_PAD_UART3_CTS_B__FLEXCAN1_TX	0x1b020
++		>;
++	};
++
++	pinctrl_flexcan2: flexcan2grp {
++		fsl,pins = <
++			MX6UL_PAD_UART2_RTS_B__FLEXCAN2_RX	0x1b020
++			MX6UL_PAD_UART2_CTS_B__FLEXCAN2_TX	0x1b020
++		>;
++	};
++
++	pinctrl_gpmi_nand: gpmi-nand {
++		fsl,pins = <
++			MX6UL_PAD_NAND_CLE__RAWNAND_CLE         0xb0b1
++			MX6UL_PAD_NAND_ALE__RAWNAND_ALE         0xb0b1
++			MX6UL_PAD_NAND_WP_B__RAWNAND_WP_B       0xb0b1
++			MX6UL_PAD_NAND_READY_B__RAWNAND_READY_B 0xb000
++			MX6UL_PAD_NAND_CE0_B__RAWNAND_CE0_B     0xb0b1
++			MX6UL_PAD_NAND_RE_B__RAWNAND_RE_B       0xb0b1
++			MX6UL_PAD_NAND_WE_B__RAWNAND_WE_B       0xb0b1
++			MX6UL_PAD_NAND_DATA00__RAWNAND_DATA00   0xb0b1
++			MX6UL_PAD_NAND_DATA01__RAWNAND_DATA01   0xb0b1
++			MX6UL_PAD_NAND_DATA02__RAWNAND_DATA02   0xb0b1
++			MX6UL_PAD_NAND_DATA03__RAWNAND_DATA03   0xb0b1
++			MX6UL_PAD_NAND_DATA04__RAWNAND_DATA04   0xb0b1
++			MX6UL_PAD_NAND_DATA05__RAWNAND_DATA05   0xb0b1
++			MX6UL_PAD_NAND_DATA06__RAWNAND_DATA06   0xb0b1
++			MX6UL_PAD_NAND_DATA07__RAWNAND_DATA07   0xb0b1
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6UL_PAD_UART4_TX_DATA__I2C1_SCL 0x4001b8b0
++			MX6UL_PAD_UART4_RX_DATA__I2C1_SDA 0x4001b8b0
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++			fsl,pins = <
++			MX6UL_PAD_UART5_TX_DATA__I2C2_SCL 0x4001b8b0
++			MX6UL_PAD_UART5_RX_DATA__I2C2_SDA 0x4001b8b0
++		>;
++	};
++
++	pinctrl_lcdif_ctrl: lcdifctrlgrp {
++		fsl,pins = <
++			MX6UL_PAD_LCD_CLK__LCDIF_CLK	    0x79
++			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE  0x79
++			MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC    0x79
++			MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC    0x79
++		>;
++	};
++
++	pinctrl_lcdif_dat: lcdifdatgrp {
++		fsl,pins = <
++			MX6UL_PAD_LCD_DATA00__LCDIF_DATA00  0x79
++			MX6UL_PAD_LCD_DATA01__LCDIF_DATA01  0x79
++			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02  0x79
++			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03  0x79
++			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04  0x79
++			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05  0x79
++			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06  0x79
++			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07  0x79
++			MX6UL_PAD_LCD_DATA08__LCDIF_DATA08  0x79
++			MX6UL_PAD_LCD_DATA09__LCDIF_DATA09  0x79
++			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10  0x79
++			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11  0x79
++			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12  0x79
++			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13  0x79
++			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14  0x79
++			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15  0x79
++			MX6UL_PAD_LCD_DATA16__LCDIF_DATA16  0x79
++			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17  0x79
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX 0x1b0b1
++			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX 0x1b0b1
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX	0x1b0b1
++			MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX	0x1b0b1
++			MX6UL_PAD_UART3_RX_DATA__UART2_DCE_RTS	0x1b0b1
++			MX6UL_PAD_UART3_TX_DATA__UART2_DCE_CTS	0x1b0b1
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX6UL_PAD_SD1_CMD__USDHC1_CMD     0x17059
++			MX6UL_PAD_SD1_CLK__USDHC1_CLK     0x10059
++			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0 0x17059
++			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1 0x17059
++			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2 0x17059
++			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3 0x17059
++		>;
++	};
++
++	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
++		fsl,pins = <
++			MX6UL_PAD_SD1_CMD__USDHC1_CMD     0x170b9
++			MX6UL_PAD_SD1_CLK__USDHC1_CLK     0x100b9
++			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0 0x170b9
++			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1 0x170b9
++			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2 0x170b9
++			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3 0x170b9
++		>;
++	};
++
++	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
++		fsl,pins = <
++			MX6UL_PAD_SD1_CMD__USDHC1_CMD     0x170f9
++			MX6UL_PAD_SD1_CLK__USDHC1_CLK     0x100f9
++			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0 0x170f9
++			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1 0x170f9
++			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2 0x170f9
++			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3 0x170f9
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX6UL_PAD_CSI_VSYNC__USDHC2_CLK     0x17070
++			MX6UL_PAD_CSI_HSYNC__USDHC2_CMD     0x10070
++			MX6UL_PAD_CSI_DATA00__USDHC2_DATA0  0x17070
++			MX6UL_PAD_CSI_DATA01__USDHC2_DATA1  0x17070
++			MX6UL_PAD_CSI_DATA02__USDHC2_DATA2  0x17070
++			MX6UL_PAD_CSI_DATA03__USDHC2_DATA3  0x17070
++		>;
++	};
++
++	pinctrl_tsc: tscgrp {
++		fsl,pin = <
++			MX6UL_PAD_GPIO1_IO01__GPIO1_IO01	0xb0
++			MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0xb0
++			MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0xb0
++			MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0xb0
++		>;
++	};
++};
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
