@@ -1,537 +1,868 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: [PATCH v3 8/8] gpio: Add Aspeed driver
-Date: Tue, 30 Aug 2016 17:24:27 +0930
-Message-ID: <20160830075427.11493-9-andrew@aj.id.au>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH v3 7/8] pinctrl: Add pinctrl-aspeed-g5 driver
+Date: Tue, 30 Aug 2016 17:24:26 +0930
+Message-ID: <20160830075427.11493-8-andrew@aj.id.au>
 References: <20160830075427.11493-1-andrew@aj.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160830075427.11493-1-andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160830075427.11493-1-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>
 List-Id: devicetree@vger.kernel.org
 
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+A small subset of pins and functions are exposed. The selection of pins
+and functions is driven by the development of OpenBMC[1] on the
+AST2500 SoC, particularly around booting the IBM Witherspoon platform.
 
-The Aspeed SoCs contain GPIOs banked by letter, where each bank contains
-8 pins. The GPIO banks are then grouped in sets of four in the register
-layout.
+[1] https://github.com/openbmc/docs
 
-The implementation exposes multiple banks through the one driver and
-requests and releases pins via the pinctrl subsystem. The hardware
-supports generation of interrupts from all GPIO-capable pins.
-
-A number of hardware features are not yet supported: Configuration of
-interrupt direction (ARM or LPC), debouncing, and WDT reset tolerance
-for output ports.
-
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Reviewed-by: Joel Stanley <joel@jms.id.au>
 ---
- drivers/gpio/Kconfig       |   7 +
- drivers/gpio/Makefile      |   1 +
- drivers/gpio/gpio-aspeed.c | 457 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 465 insertions(+)
- create mode 100644 drivers/gpio/gpio-aspeed.c
+ drivers/pinctrl/aspeed/Kconfig             |   8 +
+ drivers/pinctrl/aspeed/Makefile            |   1 +
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 808 +++++++++++++++++++++++++++++
+ 3 files changed, 817 insertions(+)
+ create mode 100644 drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 98dd47a30fc7..479077e56767 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -127,6 +127,13 @@ config GPIO_AMDPT
- 	  driver for GPIO functionality on Promontory IOHub
- 	  Require ACPI ASL code to enumerate as a platform device.
- 
-+config GPIO_ASPEED
-+	tristate "Aspeed GPIO support"
-+	depends on (ARCH_ASPEED || COMPILE_TEST) && OF_GPIO
-+	select GPIOLIB_IRQCHIP
+diff --git a/drivers/pinctrl/aspeed/Kconfig b/drivers/pinctrl/aspeed/Kconfig
+index 1f3d74549381..998eabef3a65 100644
+--- a/drivers/pinctrl/aspeed/Kconfig
++++ b/drivers/pinctrl/aspeed/Kconfig
+@@ -14,3 +14,11 @@ config PINCTRL_ASPEED_G4
+ 	help
+ 	  Say Y here to enable pin controller support for Aspeed's 4th
+ 	  generation SoCs. GPIO is provided by a separate GPIO driver.
++
++config PINCTRL_ASPEED_G5
++	bool "Aspeed G5 SoC pin control"
++	depends on (MACH_ASPEED_G5 || COMPILE_TEST) && OF
++	select PINCTRL_ASPEED
 +	help
-+	  Say Y here to support Aspeed AST2400 and AST2500 GPIO controllers.
-+
- config GPIO_ATH79
- 	tristate "Atheros AR71XX/AR724X/AR913X GPIO support"
- 	default y if ATH79
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 2a035ed8f168..79eaffd0b157 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_GPIO_AMD8111)	+= gpio-amd8111.o
- obj-$(CONFIG_GPIO_AMDPT)	+= gpio-amdpt.o
- obj-$(CONFIG_GPIO_ARIZONA)	+= gpio-arizona.o
- obj-$(CONFIG_GPIO_ATH79)	+= gpio-ath79.o
-+obj-$(CONFIG_GPIO_ASPEED)	+= gpio-aspeed.o
- obj-$(CONFIG_GPIO_BCM_KONA)	+= gpio-bcm-kona.o
- obj-$(CONFIG_GPIO_BRCMSTB)	+= gpio-brcmstb.o
- obj-$(CONFIG_GPIO_BT8XX)	+= gpio-bt8xx.o
-diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
++	  Say Y here to enable pin controller support for Aspeed's 5th
++	  generation SoCs. GPIO is provided by a separate GPIO driver.
+diff --git a/drivers/pinctrl/aspeed/Makefile b/drivers/pinctrl/aspeed/Makefile
+index 8675d6fd82df..191ed0fc1804 100644
+--- a/drivers/pinctrl/aspeed/Makefile
++++ b/drivers/pinctrl/aspeed/Makefile
+@@ -3,3 +3,4 @@
+ ccflags-y += -Woverride-init
+ obj-$(CONFIG_PINCTRL_ASPEED)	+= pinctrl-aspeed.o
+ obj-$(CONFIG_PINCTRL_ASPEED_G4)	+= pinctrl-aspeed-g4.o
++obj-$(CONFIG_PINCTRL_ASPEED_G5)	+= pinctrl-aspeed-g5.o
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
 new file mode 100644
-index 000000000000..64348a6fb60f
+index 000000000000..e1ab864e1a7f
 --- /dev/null
-+++ b/drivers/gpio/gpio-aspeed.c
-@@ -0,0 +1,457 @@
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
+@@ -0,0 +1,808 @@
 +/*
-+ * Copyright 2015 IBM Corp.
++ * Copyright (C) 2016 IBM Corp.
 + *
-+ * Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version
-+ * 2 of the License, or (at your option) any later version.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
 + */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
++#include <linux/bitops.h>
 +#include <linux/init.h>
 +#include <linux/io.h>
-+#include <linux/spinlock.h>
++#include <linux/kernel.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
 +#include <linux/platform_device.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/pinctrl/consumer.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/string.h>
++#include <linux/types.h>
 +
-+struct aspeed_gpio {
-+	struct gpio_chip chip;
-+	spinlock_t lock;
-+	void __iomem *base;
-+	int irq;
++#include "../core.h"
++#include "../pinctrl-utils.h"
++#include "pinctrl-aspeed.h"
++
++#define ASPEED_G5_NR_PINS 228
++
++#define COND1		SIG_DESC_BIT(SCU90, 6, 0)
++#define COND2		{ SCU94, GENMASK(1, 0), 0, 0 }
++
++#define B14 0
++SSSF_PIN_DECL(B14, GPIOA0, MAC1LINK, SIG_DESC_SET(SCU80, 0));
++
++#define E13 3
++SSSF_PIN_DECL(E13, GPIOA3, TIMER4, SIG_DESC_SET(SCU80, 3));
++
++#define I2C9_DESC	SIG_DESC_SET(SCU90, 22)
++
++#define C14 4
++SIG_EXPR_LIST_DECL_SINGLE(SCL9, I2C9, I2C9_DESC, COND1);
++SIG_EXPR_LIST_DECL_SINGLE(TIMER5, TIMER5, SIG_DESC_SET(SCU80, 4), COND1);
++MS_PIN_DECL(C14, GPIOA4, SCL9, TIMER5);
++
++FUNC_GROUP_DECL(TIMER5, C14);
++
++#define A13 5
++SIG_EXPR_LIST_DECL_SINGLE(SDA9, I2C9, I2C9_DESC, COND1);
++SIG_EXPR_LIST_DECL_SINGLE(TIMER6, TIMER6, SIG_DESC_SET(SCU80, 5), COND1);
++MS_PIN_DECL(A13, GPIOA5, SDA9, TIMER6);
++
++FUNC_GROUP_DECL(TIMER6, A13);
++
++FUNC_GROUP_DECL(I2C9, C14, A13);
++
++#define MDIO2_DESC	SIG_DESC_SET(SCU90, 2)
++
++#define C13 6
++SIG_EXPR_LIST_DECL_SINGLE(MDC2, MDIO2, MDIO2_DESC, COND1);
++SIG_EXPR_LIST_DECL_SINGLE(TIMER7, TIMER7, SIG_DESC_SET(SCU80, 6), COND1);
++MS_PIN_DECL(C13, GPIOA6, MDC2, TIMER7);
++
++FUNC_GROUP_DECL(TIMER7, C13);
++
++#define B13 7
++SIG_EXPR_LIST_DECL_SINGLE(MDIO2, MDIO2, MDIO2_DESC, COND1);
++SIG_EXPR_LIST_DECL_SINGLE(TIMER8, TIMER8, SIG_DESC_SET(SCU80, 7), COND1);
++MS_PIN_DECL(B13, GPIOA7, MDIO2, TIMER8);
++
++FUNC_GROUP_DECL(TIMER8, B13);
++
++FUNC_GROUP_DECL(MDIO2, C13, B13);
++
++#define H20 15
++GPIO_PIN_DECL(H20, GPIOB7);
++
++#define SD1_DESC	SIG_DESC_SET(SCU90, 0)
++
++#define C12 16
++#define I2C10_DESC	SIG_DESC_SET(SCU90, 23)
++SIG_EXPR_LIST_DECL_SINGLE(SD1CLK, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SCL10, I2C10, I2C10_DESC);
++MS_PIN_DECL(C12, GPIOC0, SD1CLK, SCL10);
++
++#define A12 17
++SIG_EXPR_LIST_DECL_SINGLE(SD1CMD, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SDA10, I2C10, I2C10_DESC);
++MS_PIN_DECL(A12, GPIOC1, SD1CMD, SDA10);
++
++FUNC_GROUP_DECL(I2C10, C12, A12);
++
++#define B12 18
++#define I2C11_DESC	SIG_DESC_SET(SCU90, 24)
++SIG_EXPR_LIST_DECL_SINGLE(SD1DAT0, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SCL11, I2C11, I2C11_DESC);
++MS_PIN_DECL(B12, GPIOC2, SD1DAT0, SCL11);
++
++#define D9  19
++SIG_EXPR_LIST_DECL_SINGLE(SD1DAT1, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SDA11, I2C11, I2C11_DESC);
++MS_PIN_DECL(D9, GPIOC3, SD1DAT1, SDA11);
++
++FUNC_GROUP_DECL(I2C11, B12, D9);
++
++#define D10 20
++#define I2C12_DESC	SIG_DESC_SET(SCU90, 25)
++SIG_EXPR_LIST_DECL_SINGLE(SD1DAT2, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SCL12, I2C12, I2C12_DESC);
++MS_PIN_DECL(D10, GPIOC4, SD1DAT2, SCL12);
++
++#define E12 21
++SIG_EXPR_LIST_DECL_SINGLE(SD1DAT3, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SDA12, I2C12, I2C12_DESC);
++MS_PIN_DECL(E12, GPIOC5, SD1DAT3, SDA12);
++
++FUNC_GROUP_DECL(I2C12, D10, E12);
++
++#define C11 22
++#define I2C13_DESC	SIG_DESC_SET(SCU90, 26)
++SIG_EXPR_LIST_DECL_SINGLE(SD1CD, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SCL13, I2C13, I2C13_DESC);
++MS_PIN_DECL(C11, GPIOC6, SD1CD, SCL13);
++
++#define B11 23
++SIG_EXPR_LIST_DECL_SINGLE(SD1WP, SD1, SD1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(SDA13, I2C13, I2C13_DESC);
++MS_PIN_DECL(B11, GPIOC7, SD1WP, SDA13);
++
++FUNC_GROUP_DECL(I2C13, C11, B11);
++FUNC_GROUP_DECL(SD1, C12, A12, B12, D9, D10, E12, C11, B11);
++
++#define SD2_DESC        SIG_DESC_SET(SCU90, 1)
++#define GPID0_DESC      SIG_DESC_SET(SCU8C, 8)
++#define GPID_DESC       SIG_DESC_SET(HW_STRAP1, 21)
++
++#define F19 24
++SIG_EXPR_LIST_DECL_SINGLE(SD2CLK, SD2, SD2_DESC);
++SIG_EXPR_DECL(GPID0IN, GPID0, GPID0_DESC);
++SIG_EXPR_DECL(GPID0IN, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(GPID0IN, GPID0, GPID);
++MS_PIN_DECL(F19, GPIOD0, SD2CLK, GPID0IN);
++
++#define E21 25
++SIG_EXPR_LIST_DECL_SINGLE(SD2CMD, SD2, SD2_DESC);
++SIG_EXPR_DECL(GPID0OUT, GPID0, GPID0_DESC);
++SIG_EXPR_DECL(GPID0OUT, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(GPID0OUT, GPID0, GPID);
++MS_PIN_DECL(E21, GPIOD1, SD2CMD, GPID0OUT);
++
++FUNC_GROUP_DECL(GPID0, F19, E21);
++
++#define GPID2_DESC      SIG_DESC_SET(SCU8C, 9)
++
++#define D20 26
++SIG_EXPR_LIST_DECL_SINGLE(SD2DAT0, SD2, SD2_DESC);
++SIG_EXPR_DECL(GPID2IN, GPID2, GPID2_DESC);
++SIG_EXPR_DECL(GPID2IN, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(GPID2IN, GPID2, GPID);
++MS_PIN_DECL(D20, GPIOD2, SD2DAT0, GPID2IN);
++
++#define D21 27
++SIG_EXPR_LIST_DECL_SINGLE(SD2DAT1, SD2, SD2_DESC);
++SIG_EXPR_DECL(GPID2OUT, GPID2, GPID2_DESC);
++SIG_EXPR_DECL(GPID2OUT, GPID, GPID_DESC);
++SIG_EXPR_LIST_DECL_DUAL(GPID2OUT, GPID2, GPID);
++MS_PIN_DECL(D21, GPIOD3, SD2DAT1, GPID2OUT);
++
++FUNC_GROUP_DECL(GPID2, D20, D21);
++
++#define GPIE_DESC	SIG_DESC_SET(HW_STRAP1, 21)
++#define GPIE0_DESC	SIG_DESC_SET(SCU8C, 12)
++
++#define B20 32
++SIG_EXPR_LIST_DECL_SINGLE(NCTS3, NCTS3, SIG_DESC_SET(SCU80, 16));
++SIG_EXPR_DECL(GPIE0IN, GPIE0, GPIE0_DESC);
++SIG_EXPR_DECL(GPIE0IN, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(GPIE0IN, GPIE0, GPIE);
++MS_PIN_DECL(B20, GPIOE0, NCTS3, GPIE0IN);
++
++#define C20 33
++SIG_EXPR_LIST_DECL_SINGLE(NDCD3, NDCD3, SIG_DESC_SET(SCU80, 17));
++SIG_EXPR_DECL(GPIE0OUT, GPIE0, GPIE0_DESC);
++SIG_EXPR_DECL(GPIE0OUT, GPIE, GPIE_DESC);
++SIG_EXPR_LIST_DECL_DUAL(GPIE0OUT, GPIE0, GPIE);
++MS_PIN_DECL(C20, GPIE0, NDCD3, GPIE0OUT);
++
++FUNC_GROUP_DECL(GPIE0, B20, C20);
++
++#define SPI1_DESC	SIG_DESC_SET(HW_STRAP1, 13)
++#define C18 64
++SIG_EXPR_LIST_DECL_SINGLE(SYSCS, SPI1, COND1, SPI1_DESC);
++SS_PIN_DECL(C18, GPIOI0, SYSCS);
++
++#define E15 65
++SIG_EXPR_LIST_DECL_SINGLE(SYSCK, SPI1, COND1, SPI1_DESC);
++SS_PIN_DECL(E15, GPIOI1, SYSCK);
++
++#define A14 66
++SIG_EXPR_LIST_DECL_SINGLE(SYSMOSI, SPI1, COND1, SPI1_DESC);
++SS_PIN_DECL(A14, GPIOI2, SYSMOSI);
++
++#define C16 67
++SIG_EXPR_LIST_DECL_SINGLE(SYSMISO, SPI1, COND1, SPI1_DESC);
++SS_PIN_DECL(C16, GPIOI3, SYSMISO);
++
++FUNC_GROUP_DECL(SPI1, C18, E15, A14, C16);
++
++#define L2 73
++SIG_EXPR_LIST_DECL_SINGLE(SGPMLD, SGPM, SIG_DESC_SET(SCU84, 9));
++SS_PIN_DECL(L2, GPIOJ1, SGPMLD);
++
++#define N3 74
++SIG_EXPR_LIST_DECL_SINGLE(SGPMO, SGPM, SIG_DESC_SET(SCU84, 10));
++SS_PIN_DECL(N3, GPIOJ2, SGPMO);
++
++#define N4 75
++SIG_EXPR_LIST_DECL_SINGLE(SGPMI, SGPM, SIG_DESC_SET(SCU84, 11));
++SS_PIN_DECL(N4, GPIOJ3, SGPMI);
++
++#define I2C5_DESC       SIG_DESC_SET(SCU90, 18)
++
++#define L3 80
++SIG_EXPR_LIST_DECL_SINGLE(SCL5, I2C5, I2C5_DESC);
++SS_PIN_DECL(L3, GPIOK0, SCL5);
++
++#define L4 81
++SIG_EXPR_LIST_DECL_SINGLE(SDA5, I2C5, I2C5_DESC);
++SS_PIN_DECL(L4, GPIOK1, SDA5);
++
++FUNC_GROUP_DECL(I2C5, L3, L4);
++
++#define I2C6_DESC       SIG_DESC_SET(SCU90, 19)
++
++#define L1 82
++SIG_EXPR_LIST_DECL_SINGLE(SCL6, I2C6, I2C6_DESC);
++SS_PIN_DECL(L1, GPIOK2, SCL6);
++
++#define N2 83
++SIG_EXPR_LIST_DECL_SINGLE(SDA6, I2C6, I2C6_DESC);
++SS_PIN_DECL(N2, GPIOK3, SDA6);
++
++FUNC_GROUP_DECL(I2C6, L1, N2);
++
++#define I2C7_DESC       SIG_DESC_SET(SCU90, 20)
++
++#define N1 84
++SIG_EXPR_LIST_DECL_SINGLE(SCL7, I2C7, I2C7_DESC);
++SS_PIN_DECL(N1, GPIOK4, SCL7);
++
++#define P1 85
++SIG_EXPR_LIST_DECL_SINGLE(SDA7, I2C7, I2C7_DESC);
++SS_PIN_DECL(P1, GPIOK5, SDA7);
++
++FUNC_GROUP_DECL(I2C7, N1, P1);
++
++#define I2C8_DESC       SIG_DESC_SET(SCU90, 21)
++
++#define P2 86
++SIG_EXPR_LIST_DECL_SINGLE(SCL8, I2C8, I2C8_DESC);
++SS_PIN_DECL(P2, GPIOK6, SCL8);
++
++#define R1 87
++SIG_EXPR_LIST_DECL_SINGLE(SDA8, I2C8, I2C8_DESC);
++SS_PIN_DECL(R1, GPIOK7, SDA8);
++
++FUNC_GROUP_DECL(I2C8, P2, R1);
++
++#define VPIOFF0_DESC    { SCU90, GENMASK(5, 4), 0, 0 }
++#define VPIOFF1_DESC    { SCU90, GENMASK(5, 4), 1, 0 }
++#define VPI24_DESC      { SCU90, GENMASK(5, 4), 2, 0 }
++#define VPIRSVD_DESC    { SCU90, GENMASK(5, 4), 3, 0 }
++
++#define V2 104
++#define V2_DESC         SIG_DESC_SET(SCU88, 0)
++SIG_EXPR_LIST_DECL_SINGLE(DASHN0, DASHN0, VPIRSVD_DESC, V2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(PWM0, PWM0, V2_DESC, COND2);
++MS_PIN_DECL(V2, GPION0, DASHN0, PWM0);
++FUNC_GROUP_DECL(PWM0, V2);
++
++#define W2 105
++#define W2_DESC         SIG_DESC_SET(SCU88, 1)
++SIG_EXPR_LIST_DECL_SINGLE(DASHN1, DASHN1, VPIRSVD_DESC, W2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(PWM1, PWM1, W2_DESC, COND2);
++MS_PIN_DECL(W2, GPION1, DASHN1, PWM1);
++FUNC_GROUP_DECL(PWM1, W2);
++
++#define V3 106
++#define V3_DESC         SIG_DESC_SET(SCU88, 2)
++SIG_EXPR_DECL(VPIG2, VPI24, VPI24_DESC, V3_DESC, COND2);
++SIG_EXPR_DECL(VPIG2, VPIRSVD, VPIRSVD_DESC, V3_DESC, COND2);
++SIG_EXPR_LIST_DECL_DUAL(VPIG2, VPI24, VPIRSVD);
++SIG_EXPR_LIST_DECL_SINGLE(PWM2, PWM2, V3_DESC, COND2);
++MS_PIN_DECL(V3, GPION2, VPIG2, PWM2);
++FUNC_GROUP_DECL(PWM2, V3);
++
++#define U3 107
++#define U3_DESC         SIG_DESC_SET(SCU88, 3)
++SIG_EXPR_DECL(VPIG3, VPI24, VPI24_DESC, U3_DESC, COND2);
++SIG_EXPR_DECL(VPIG3, VPIRSVD, VPIRSVD_DESC, U3_DESC, COND2);
++SIG_EXPR_LIST_DECL_DUAL(VPIG3, VPI24, VPIRSVD);
++SIG_EXPR_LIST_DECL_SINGLE(PWM3, PWM3, U3_DESC, COND2);
++MS_PIN_DECL(U3, GPION3, VPIG3, PWM3);
++FUNC_GROUP_DECL(PWM3, U3);
++
++#define W3 108
++#define W3_DESC         SIG_DESC_SET(SCU88, 4)
++SIG_EXPR_DECL(VPIG4, VPI24, VPI24_DESC, W3_DESC, COND2);
++SIG_EXPR_DECL(VPIG4, VPIRSVD, VPIRSVD_DESC, W3_DESC, COND2);
++SIG_EXPR_LIST_DECL_DUAL(VPIG4, VPI24, VPIRSVD);
++SIG_EXPR_LIST_DECL_SINGLE(PWM4, PWM4, W3_DESC, COND2);
++MS_PIN_DECL(W3, GPION4, VPIG4, PWM4);
++FUNC_GROUP_DECL(PWM4, W3);
++
++#define AA3 109
++#define AA3_DESC        SIG_DESC_SET(SCU88, 5)
++SIG_EXPR_DECL(VPIG5, VPI24, VPI24_DESC, AA3_DESC, COND2);
++SIG_EXPR_DECL(VPIG5, VPIRSVD, VPIRSVD_DESC, AA3_DESC, COND2);
++SIG_EXPR_LIST_DECL_DUAL(VPIG5, VPI24, VPIRSVD);
++SIG_EXPR_LIST_DECL_SINGLE(PWM5, PWM5, AA3_DESC, COND2);
++MS_PIN_DECL(AA3, GPION5, VPIG5, PWM5);
++FUNC_GROUP_DECL(PWM5, AA3);
++
++#define Y3 110
++#define Y3_DESC         SIG_DESC_SET(SCU88, 6)
++SIG_EXPR_LIST_DECL_SINGLE(VPIG6, VPI24, VPI24_DESC, Y3_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(PWM6, PWM6, Y3_DESC, COND2);
++MS_PIN_DECL(Y3, GPION6, VPIG6, PWM6);
++FUNC_GROUP_DECL(PWM6, Y3);
++
++#define T4 111
++#define T4_DESC         SIG_DESC_SET(SCU88, 7)
++SIG_EXPR_LIST_DECL_SINGLE(VPIG7, VPI24, VPI24_DESC, T4_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(PWM7, PWM7, T4_DESC, COND2);
++MS_PIN_DECL(T4, GPION7, VPIG7, PWM7);
++FUNC_GROUP_DECL(PWM7, T4);
++
++#define V6 127
++SIG_EXPR_LIST_DECL_SINGLE(DASHV6, DASHV6, SIG_DESC_SET(SCU90, 28),
++		SIG_DESC_SET(SCU88, 23));
++SS_PIN_DECL(V6, GPIOP7, DASHV6);
++
++#define I2C3_DESC	SIG_DESC_SET(SCU90, 16)
++
++#define A11 128
++SIG_EXPR_LIST_DECL_SINGLE(SCL3, I2C3, I2C3_DESC);
++SS_PIN_DECL(A11, GPIOQ0, SCL3);
++
++#define A10 129
++SIG_EXPR_LIST_DECL_SINGLE(SDA3, I2C3, I2C3_DESC);
++SS_PIN_DECL(A10, GPIOQ1, SDA3);
++
++FUNC_GROUP_DECL(I2C3, A11, A10);
++
++#define I2C4_DESC	SIG_DESC_SET(SCU90, 17)
++
++#define A9 130
++SIG_EXPR_LIST_DECL_SINGLE(SCL4, I2C4, I2C4_DESC);
++SS_PIN_DECL(A9, GPIOQ2, SCL4);
++
++#define B9 131
++SIG_EXPR_LIST_DECL_SINGLE(SDA4, I2C4, I2C4_DESC);
++SS_PIN_DECL(B9, GPIOQ3, SDA4);
++
++FUNC_GROUP_DECL(I2C4, A9, B9);
++
++#define I2C14_DESC	SIG_DESC_SET(SCU90, 27)
++
++#define N21 132
++SIG_EXPR_LIST_DECL_SINGLE(SCL14, I2C14, I2C14_DESC);
++SS_PIN_DECL(N21, GPIOQ4, SCL14);
++
++#define N22 133
++SIG_EXPR_LIST_DECL_SINGLE(SDA14, I2C14, I2C14_DESC);
++SS_PIN_DECL(N22, GPIOQ5, SDA14);
++
++FUNC_GROUP_DECL(I2C14, N21, N22);
++
++#define B10 134
++SSSF_PIN_DECL(B10, GPIOQ6, OSCCLK, SIG_DESC_SET(SCU2C, 1));
++
++#define N20 135
++SSSF_PIN_DECL(N20, GPIOQ7, PEWAKE, SIG_DESC_SET(SCU2C, 29));
++
++#define D8 142
++SIG_EXPR_LIST_DECL_SINGLE(MDC1, MDIO1, SIG_DESC_SET(SCU88, 30));
++SS_PIN_DECL(D8, GPIOR6, MDC1);
++
++#define E10 143
++SIG_EXPR_LIST_DECL_SINGLE(MDIO1, MDIO1, SIG_DESC_SET(SCU88, 31));
++SS_PIN_DECL(E10, GPIOR7, MDIO1);
++
++FUNC_GROUP_DECL(MDIO1, D8, E10);
++
++/* RGMII1/RMII1 */
++
++#define RMII1_DESC      SIG_DESC_BIT(HW_STRAP1, 6, 0)
++#define RMII2_DESC      SIG_DESC_BIT(HW_STRAP1, 7, 0)
++
++#define B5 152
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT0, GPIOT0, SIG_DESC_SET(SCUA0, 0));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1RCLKO, RMII1, RMII1_DESC,
++		SIG_DESC_SET(SCU48, 29));
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXCK, RGMII1);
++MS_PIN_DECL_(B5, SIG_EXPR_LIST_PTR(GPIOT0), SIG_EXPR_LIST_PTR(RMII1RCLKO),
++		SIG_EXPR_LIST_PTR(RGMII1TXCK));
++
++#define E9 153
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT1, GPIOT1, SIG_DESC_SET(SCUA0, 1));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1TXEN, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXCTL, RGMII1);
++MS_PIN_DECL_(E9, SIG_EXPR_LIST_PTR(GPIOT1), SIG_EXPR_LIST_PTR(RMII1TXEN),
++		SIG_EXPR_LIST_PTR(RGMII1TXCTL));
++
++#define F9 154
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT2, GPIOT2, SIG_DESC_SET(SCUA0, 2));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1TXD0, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD0, RGMII1);
++MS_PIN_DECL_(F9, SIG_EXPR_LIST_PTR(GPIOT2), SIG_EXPR_LIST_PTR(RMII1TXD0),
++		SIG_EXPR_LIST_PTR(RGMII1TXD0));
++
++#define A5 155
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT3, GPIOT3, SIG_DESC_SET(SCUA0, 3));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1TXD1, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD1, RGMII1);
++MS_PIN_DECL_(A5, SIG_EXPR_LIST_PTR(GPIOT3), SIG_EXPR_LIST_PTR(RMII1TXD1),
++		SIG_EXPR_LIST_PTR(RGMII1TXD1));
++
++#define E7 156
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT4, GPIOT4, SIG_DESC_SET(SCUA0, 4));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1DASH0, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD2, RGMII1);
++MS_PIN_DECL_(E7, SIG_EXPR_LIST_PTR(GPIOT4), SIG_EXPR_LIST_PTR(RMII1DASH0),
++		SIG_EXPR_LIST_PTR(RGMII1TXD2));
++
++#define D7 157
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT5, GPIOT5, SIG_DESC_SET(SCUA0, 5));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1DASH1, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1TXD3, RGMII1);
++MS_PIN_DECL_(D7, SIG_EXPR_LIST_PTR(GPIOT5), SIG_EXPR_LIST_PTR(RMII1DASH1),
++		SIG_EXPR_LIST_PTR(RGMII1TXD3));
++
++#define B2 158
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT6, GPIOT6, SIG_DESC_SET(SCUA0, 6));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2RCLKO, RMII2, RMII2_DESC,
++		SIG_DESC_SET(SCU48, 30));
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXCK, RGMII2);
++MS_PIN_DECL_(B2, SIG_EXPR_LIST_PTR(GPIOT6), SIG_EXPR_LIST_PTR(RMII2RCLKO),
++		SIG_EXPR_LIST_PTR(RGMII2TXCK));
++
++#define B1 159
++SIG_EXPR_LIST_DECL_SINGLE(GPIOT7, GPIOT7, SIG_DESC_SET(SCUA0, 7));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2TXEN, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXCTL, RGMII2);
++MS_PIN_DECL_(B1, SIG_EXPR_LIST_PTR(GPIOT7), SIG_EXPR_LIST_PTR(RMII2TXEN),
++		SIG_EXPR_LIST_PTR(RGMII2TXCTL));
++
++#define A2 160
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU0, GPIOU0, SIG_DESC_SET(SCUA0, 8));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2TXD0, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD0, RGMII2);
++MS_PIN_DECL_(A2, SIG_EXPR_LIST_PTR(GPIOU0), SIG_EXPR_LIST_PTR(RMII2TXD0),
++		SIG_EXPR_LIST_PTR(RGMII2TXD0));
++
++#define B3 161
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU1, GPIOU1, SIG_DESC_SET(SCUA0, 9));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2TXD1, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD1, RGMII2);
++MS_PIN_DECL_(B3, SIG_EXPR_LIST_PTR(GPIOU1), SIG_EXPR_LIST_PTR(RMII2TXD1),
++		SIG_EXPR_LIST_PTR(RGMII2TXD1));
++
++#define D5 162
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU2, GPIOU2, SIG_DESC_SET(SCUA0, 10));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2DASH0, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD2, RGMII2);
++MS_PIN_DECL_(D5, SIG_EXPR_LIST_PTR(GPIOU2), SIG_EXPR_LIST_PTR(RMII2DASH0),
++		SIG_EXPR_LIST_PTR(RGMII2TXD2));
++
++#define D4 163
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU3, GPIOU3, SIG_DESC_SET(SCUA0, 11));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2DASH1, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2TXD3, RGMII2);
++MS_PIN_DECL_(D4, SIG_EXPR_LIST_PTR(GPIOU3), SIG_EXPR_LIST_PTR(RMII2DASH1),
++		SIG_EXPR_LIST_PTR(RGMII2TXD3));
++
++#define B4 164
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU4, GPIOU4, SIG_DESC_SET(SCUA0, 12));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1RCLKI, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXCK, RGMII1);
++MS_PIN_DECL_(B4, SIG_EXPR_LIST_PTR(GPIOU4), SIG_EXPR_LIST_PTR(RMII1RCLKI),
++		SIG_EXPR_LIST_PTR(RGMII1RXCK));
++
++#define A4 165
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU5, GPIOU5, SIG_DESC_SET(SCUA0, 13));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1DASH2, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXCTL, RGMII1);
++MS_PIN_DECL_(A4, SIG_EXPR_LIST_PTR(GPIOU5), SIG_EXPR_LIST_PTR(RMII1DASH2),
++		SIG_EXPR_LIST_PTR(RGMII1RXCTL));
++
++#define A3 166
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU6, GPIOU6, SIG_DESC_SET(SCUA0, 14));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1RXD0, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD0, RGMII1);
++MS_PIN_DECL_(A3, SIG_EXPR_LIST_PTR(GPIOU6), SIG_EXPR_LIST_PTR(RMII1RXD0),
++		SIG_EXPR_LIST_PTR(RGMII1RXD0));
++
++#define D6 167
++SIG_EXPR_LIST_DECL_SINGLE(GPIOU7, GPIOU7, SIG_DESC_SET(SCUA0, 15));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1RXD1, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD1, RGMII1);
++MS_PIN_DECL_(D6, SIG_EXPR_LIST_PTR(GPIOU7), SIG_EXPR_LIST_PTR(RMII1RXD1),
++		SIG_EXPR_LIST_PTR(RGMII1RXD1));
++
++#define C5 168
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV0, GPIOV0, SIG_DESC_SET(SCUA0, 16));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1CRSDV, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD2, RGMII1);
++MS_PIN_DECL_(C5, SIG_EXPR_LIST_PTR(GPIOV0), SIG_EXPR_LIST_PTR(RMII1CRSDV),
++		SIG_EXPR_LIST_PTR(RGMII1RXD2));
++
++#define C4 169
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV1, GPIOV1, SIG_DESC_SET(SCUA0, 17));
++SIG_EXPR_LIST_DECL_SINGLE(RMII1RXER, RMII1, RMII1_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII1RXD3, RGMII1);
++MS_PIN_DECL_(C4, SIG_EXPR_LIST_PTR(GPIOV1), SIG_EXPR_LIST_PTR(RMII1RXER),
++		SIG_EXPR_LIST_PTR(RGMII1RXD3));
++
++FUNC_GROUP_DECL(RGMII1, B4, A4, A3, D6, C5, C4, B5, E9, F9, A5, E7, D7);
++FUNC_GROUP_DECL(RMII1, B4, A3, D6, C5, C4, B5, E9, F9, A5);
++
++#define C2 170
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV2, GPIOV2, SIG_DESC_SET(SCUA0, 18));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2RCLKI, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXCK, RGMII2);
++MS_PIN_DECL_(C2, SIG_EXPR_LIST_PTR(GPIOV2), SIG_EXPR_LIST_PTR(RMII2RCLKI),
++		SIG_EXPR_LIST_PTR(RGMII2RXCK));
++
++#define C1 171
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV3, GPIOV3, SIG_DESC_SET(SCUA0, 19));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2DASH2, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXCTL, RGMII2);
++MS_PIN_DECL_(C1, SIG_EXPR_LIST_PTR(GPIOV3), SIG_EXPR_LIST_PTR(RMII2DASH2),
++		SIG_EXPR_LIST_PTR(RGMII2RXCTL));
++
++#define C3 172
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV4, GPIOV4, SIG_DESC_SET(SCUA0, 20));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2RXD0, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD0, RGMII2);
++MS_PIN_DECL_(C3, SIG_EXPR_LIST_PTR(GPIOV4), SIG_EXPR_LIST_PTR(RMII2RXD0),
++		SIG_EXPR_LIST_PTR(RGMII2RXD0));
++
++#define D1 173
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV5, GPIOV5, SIG_DESC_SET(SCUA0, 21));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2RXD1, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD1, RGMII2);
++MS_PIN_DECL_(D1, SIG_EXPR_LIST_PTR(GPIOV5), SIG_EXPR_LIST_PTR(RMII2RXD1),
++		SIG_EXPR_LIST_PTR(RGMII2RXD1));
++
++#define D2 174
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV6, GPIOV6, SIG_DESC_SET(SCUA0, 22));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2CRSDV, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD2, RGMII2);
++MS_PIN_DECL_(D2, SIG_EXPR_LIST_PTR(GPIOV6), SIG_EXPR_LIST_PTR(RMII2CRSDV),
++		SIG_EXPR_LIST_PTR(RGMII2RXD2));
++
++#define E6 175
++SIG_EXPR_LIST_DECL_SINGLE(GPIOV7, GPIOV7, SIG_DESC_SET(SCUA0, 23));
++SIG_EXPR_LIST_DECL_SINGLE(RMII2RXER, RMII2, RMII2_DESC);
++SIG_EXPR_LIST_DECL_SINGLE(RGMII2RXD3, RGMII2);
++MS_PIN_DECL_(E6, SIG_EXPR_LIST_PTR(GPIOV7), SIG_EXPR_LIST_PTR(RMII2RXER),
++		SIG_EXPR_LIST_PTR(RGMII2RXD3));
++
++FUNC_GROUP_DECL(RGMII2, B2, B1, A2, B3, D5, D4, C2, C1, C3, D1, D2, E6);
++FUNC_GROUP_DECL(RMII2, B2, B1, A2, B3, C2, C3, D1, D2, E6);
++
++/* Pins, groups and functions are sort(1):ed alphabetically for sanity */
++
++static struct pinctrl_pin_desc aspeed_g5_pins[ASPEED_G5_NR_PINS] = {
++	ASPEED_PINCTRL_PIN(A10),
++	ASPEED_PINCTRL_PIN(A11),
++	ASPEED_PINCTRL_PIN(A12),
++	ASPEED_PINCTRL_PIN(A13),
++	ASPEED_PINCTRL_PIN(A14),
++	ASPEED_PINCTRL_PIN(A2),
++	ASPEED_PINCTRL_PIN(A3),
++	ASPEED_PINCTRL_PIN(A4),
++	ASPEED_PINCTRL_PIN(A5),
++	ASPEED_PINCTRL_PIN(A9),
++	ASPEED_PINCTRL_PIN(AA3),
++	ASPEED_PINCTRL_PIN(B1),
++	ASPEED_PINCTRL_PIN(B10),
++	ASPEED_PINCTRL_PIN(B11),
++	ASPEED_PINCTRL_PIN(B12),
++	ASPEED_PINCTRL_PIN(B13),
++	ASPEED_PINCTRL_PIN(B14),
++	ASPEED_PINCTRL_PIN(B2),
++	ASPEED_PINCTRL_PIN(B20),
++	ASPEED_PINCTRL_PIN(B3),
++	ASPEED_PINCTRL_PIN(B4),
++	ASPEED_PINCTRL_PIN(B5),
++	ASPEED_PINCTRL_PIN(B9),
++	ASPEED_PINCTRL_PIN(C1),
++	ASPEED_PINCTRL_PIN(C11),
++	ASPEED_PINCTRL_PIN(C12),
++	ASPEED_PINCTRL_PIN(C13),
++	ASPEED_PINCTRL_PIN(C14),
++	ASPEED_PINCTRL_PIN(C16),
++	ASPEED_PINCTRL_PIN(C18),
++	ASPEED_PINCTRL_PIN(C2),
++	ASPEED_PINCTRL_PIN(C20),
++	ASPEED_PINCTRL_PIN(C3),
++	ASPEED_PINCTRL_PIN(C4),
++	ASPEED_PINCTRL_PIN(C5),
++	ASPEED_PINCTRL_PIN(D1),
++	ASPEED_PINCTRL_PIN(D10),
++	ASPEED_PINCTRL_PIN(D2),
++	ASPEED_PINCTRL_PIN(D20),
++	ASPEED_PINCTRL_PIN(D21),
++	ASPEED_PINCTRL_PIN(D4),
++	ASPEED_PINCTRL_PIN(D5),
++	ASPEED_PINCTRL_PIN(D6),
++	ASPEED_PINCTRL_PIN(D7),
++	ASPEED_PINCTRL_PIN(D8),
++	ASPEED_PINCTRL_PIN(D9),
++	ASPEED_PINCTRL_PIN(E10),
++	ASPEED_PINCTRL_PIN(E12),
++	ASPEED_PINCTRL_PIN(E13),
++	ASPEED_PINCTRL_PIN(E15),
++	ASPEED_PINCTRL_PIN(E21),
++	ASPEED_PINCTRL_PIN(E6),
++	ASPEED_PINCTRL_PIN(E7),
++	ASPEED_PINCTRL_PIN(E9),
++	ASPEED_PINCTRL_PIN(F19),
++	ASPEED_PINCTRL_PIN(F9),
++	ASPEED_PINCTRL_PIN(H20),
++	ASPEED_PINCTRL_PIN(L1),
++	ASPEED_PINCTRL_PIN(L2),
++	ASPEED_PINCTRL_PIN(L3),
++	ASPEED_PINCTRL_PIN(L4),
++	ASPEED_PINCTRL_PIN(N1),
++	ASPEED_PINCTRL_PIN(N2),
++	ASPEED_PINCTRL_PIN(N20),
++	ASPEED_PINCTRL_PIN(N21),
++	ASPEED_PINCTRL_PIN(N22),
++	ASPEED_PINCTRL_PIN(N3),
++	ASPEED_PINCTRL_PIN(N4),
++	ASPEED_PINCTRL_PIN(P1),
++	ASPEED_PINCTRL_PIN(P2),
++	ASPEED_PINCTRL_PIN(R1),
++	ASPEED_PINCTRL_PIN(T4),
++	ASPEED_PINCTRL_PIN(U3),
++	ASPEED_PINCTRL_PIN(V2),
++	ASPEED_PINCTRL_PIN(V3),
++	ASPEED_PINCTRL_PIN(V6),
++	ASPEED_PINCTRL_PIN(W2),
++	ASPEED_PINCTRL_PIN(W3),
++	ASPEED_PINCTRL_PIN(Y3),
 +};
 +
-+struct aspeed_gpio_bank {
-+	uint16_t	val_regs;
-+	uint16_t	irq_regs;
-+	const char	names[4];
++static const struct aspeed_pin_group aspeed_g5_groups[] = {
++	ASPEED_PINCTRL_GROUP(GPID0),
++	ASPEED_PINCTRL_GROUP(GPID2),
++	ASPEED_PINCTRL_GROUP(GPIE0),
++	ASPEED_PINCTRL_GROUP(I2C10),
++	ASPEED_PINCTRL_GROUP(I2C11),
++	ASPEED_PINCTRL_GROUP(I2C12),
++	ASPEED_PINCTRL_GROUP(I2C13),
++	ASPEED_PINCTRL_GROUP(I2C14),
++	ASPEED_PINCTRL_GROUP(I2C3),
++	ASPEED_PINCTRL_GROUP(I2C4),
++	ASPEED_PINCTRL_GROUP(I2C5),
++	ASPEED_PINCTRL_GROUP(I2C6),
++	ASPEED_PINCTRL_GROUP(I2C7),
++	ASPEED_PINCTRL_GROUP(I2C8),
++	ASPEED_PINCTRL_GROUP(I2C9),
++	ASPEED_PINCTRL_GROUP(MAC1LINK),
++	ASPEED_PINCTRL_GROUP(MDIO1),
++	ASPEED_PINCTRL_GROUP(MDIO2),
++	ASPEED_PINCTRL_GROUP(OSCCLK),
++	ASPEED_PINCTRL_GROUP(PEWAKE),
++	ASPEED_PINCTRL_GROUP(PWM0),
++	ASPEED_PINCTRL_GROUP(PWM1),
++	ASPEED_PINCTRL_GROUP(PWM2),
++	ASPEED_PINCTRL_GROUP(PWM3),
++	ASPEED_PINCTRL_GROUP(PWM4),
++	ASPEED_PINCTRL_GROUP(PWM5),
++	ASPEED_PINCTRL_GROUP(PWM6),
++	ASPEED_PINCTRL_GROUP(PWM7),
++	ASPEED_PINCTRL_GROUP(RGMII1),
++	ASPEED_PINCTRL_GROUP(RGMII2),
++	ASPEED_PINCTRL_GROUP(RMII1),
++	ASPEED_PINCTRL_GROUP(RMII2),
++	ASPEED_PINCTRL_GROUP(SD1),
++	ASPEED_PINCTRL_GROUP(SPI1),
++	ASPEED_PINCTRL_GROUP(TIMER4),
++	ASPEED_PINCTRL_GROUP(TIMER5),
++	ASPEED_PINCTRL_GROUP(TIMER6),
++	ASPEED_PINCTRL_GROUP(TIMER7),
++	ASPEED_PINCTRL_GROUP(TIMER8),
 +};
 +
-+static const struct aspeed_gpio_bank aspeed_gpio_banks[] = {
-+	{
-+		.val_regs = 0x0000,
-+		.irq_regs = 0x0008,
-+		.names = { 'A', 'B', 'C', 'D' },
-+	},
-+	{
-+		.val_regs = 0x0020,
-+		.irq_regs = 0x0028,
-+		.names = { 'E', 'F', 'G', 'H' },
-+	},
-+	{
-+		.val_regs = 0x0070,
-+		.irq_regs = 0x0098,
-+		.names = { 'I', 'J', 'K', 'L' },
-+	},
-+	{
-+		.val_regs = 0x0078,
-+		.irq_regs = 0x00e8,
-+		.names = { 'M', 'N', 'O', 'P' },
-+	},
-+	{
-+		.val_regs = 0x0080,
-+		.irq_regs = 0x0118,
-+		.names = { 'Q', 'R', 'S', 'T' },
-+	},
-+	{
-+		.val_regs = 0x0088,
-+		.irq_regs = 0x0148,
-+		.names = { 'U', 'V', 'W', 'X' },
-+	},
-+	/*
-+	 * A bank exists for { 'Y', 'Z', "AA", "AB" }, but is not implemented.
-+	 * Only half of GPIOs Y support interrupt configuration, and none of Z,
-+	 * AA or AB do as they are output only.
-+	 */
++static const struct aspeed_pin_function aspeed_g5_functions[] = {
++	ASPEED_PINCTRL_FUNC(GPID0),
++	ASPEED_PINCTRL_FUNC(GPID2),
++	ASPEED_PINCTRL_FUNC(GPIE0),
++	ASPEED_PINCTRL_FUNC(I2C10),
++	ASPEED_PINCTRL_FUNC(I2C11),
++	ASPEED_PINCTRL_FUNC(I2C12),
++	ASPEED_PINCTRL_FUNC(I2C13),
++	ASPEED_PINCTRL_FUNC(I2C14),
++	ASPEED_PINCTRL_FUNC(I2C3),
++	ASPEED_PINCTRL_FUNC(I2C4),
++	ASPEED_PINCTRL_FUNC(I2C5),
++	ASPEED_PINCTRL_FUNC(I2C6),
++	ASPEED_PINCTRL_FUNC(I2C7),
++	ASPEED_PINCTRL_FUNC(I2C8),
++	ASPEED_PINCTRL_FUNC(I2C9),
++	ASPEED_PINCTRL_FUNC(MAC1LINK),
++	ASPEED_PINCTRL_FUNC(MDIO1),
++	ASPEED_PINCTRL_FUNC(MDIO2),
++	ASPEED_PINCTRL_FUNC(OSCCLK),
++	ASPEED_PINCTRL_FUNC(PEWAKE),
++	ASPEED_PINCTRL_FUNC(PWM0),
++	ASPEED_PINCTRL_FUNC(PWM1),
++	ASPEED_PINCTRL_FUNC(PWM2),
++	ASPEED_PINCTRL_FUNC(PWM3),
++	ASPEED_PINCTRL_FUNC(PWM4),
++	ASPEED_PINCTRL_FUNC(PWM5),
++	ASPEED_PINCTRL_FUNC(PWM6),
++	ASPEED_PINCTRL_FUNC(PWM7),
++	ASPEED_PINCTRL_FUNC(RGMII1),
++	ASPEED_PINCTRL_FUNC(RGMII2),
++	ASPEED_PINCTRL_FUNC(RMII1),
++	ASPEED_PINCTRL_FUNC(RMII2),
++	ASPEED_PINCTRL_FUNC(SD1),
++	ASPEED_PINCTRL_FUNC(SPI1),
++	ASPEED_PINCTRL_FUNC(TIMER4),
++	ASPEED_PINCTRL_FUNC(TIMER5),
++	ASPEED_PINCTRL_FUNC(TIMER6),
++	ASPEED_PINCTRL_FUNC(TIMER7),
++	ASPEED_PINCTRL_FUNC(TIMER8),
 +};
 +
-+#define GPIO_BANK(x)	((x) >> 5)
-+#define GPIO_OFFSET(x)	((x) & 0x1f)
-+#define GPIO_BIT(x)	BIT(GPIO_OFFSET(x))
-+
-+#define GPIO_DATA	0x00
-+#define GPIO_DIR	0x04
-+
-+#define GPIO_IRQ_ENABLE	0x00
-+#define GPIO_IRQ_TYPE0	0x04
-+#define GPIO_IRQ_TYPE1	0x08
-+#define GPIO_IRQ_TYPE2	0x0c
-+#define GPIO_IRQ_STATUS	0x10
-+
-+static const struct aspeed_gpio_bank *to_bank(unsigned int offset)
-+{
-+	unsigned int bank = GPIO_BANK(offset);
-+
-+	WARN_ON(bank > ARRAY_SIZE(aspeed_gpio_banks));
-+	return &aspeed_gpio_banks[bank];
-+}
-+
-+static void __iomem *bank_val_reg(struct aspeed_gpio *gpio,
-+		const struct aspeed_gpio_bank *bank,
-+		unsigned int reg)
-+{
-+	return gpio->base + bank->val_regs + reg;
-+}
-+
-+static void __iomem *bank_irq_reg(struct aspeed_gpio *gpio,
-+		const struct aspeed_gpio_bank *bank,
-+		unsigned int reg)
-+{
-+	return gpio->base + bank->irq_regs + reg;
-+}
-+
-+static int aspeed_gpio_get(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct aspeed_gpio *gpio = gpiochip_get_data(gc);
-+	const struct aspeed_gpio_bank *bank = to_bank(offset);
-+
-+	return !!(ioread32(bank_val_reg(gpio, bank, GPIO_DATA))
-+			& GPIO_BIT(offset));
-+}
-+
-+static void __aspeed_gpio_set(struct gpio_chip *gc, unsigned int offset,
-+			      int val)
-+{
-+	struct aspeed_gpio *gpio = gpiochip_get_data(gc);
-+	const struct aspeed_gpio_bank *bank = to_bank(offset);
-+	void __iomem *addr;
-+	u32 reg;
-+
-+	addr = bank_val_reg(gpio, bank, GPIO_DATA);
-+	reg = ioread32(addr);
-+
-+	if (val)
-+		reg |= GPIO_BIT(offset);
-+	else
-+		reg &= ~GPIO_BIT(offset);
-+
-+	iowrite32(reg, addr);
-+}
-+
-+static void aspeed_gpio_set(struct gpio_chip *gc, unsigned int offset,
-+			    int val)
-+{
-+	struct aspeed_gpio *gpio = gpiochip_get_data(gc);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	__aspeed_gpio_set(gc, offset, val);
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+}
-+
-+static int aspeed_gpio_dir_in(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct aspeed_gpio *gpio = gpiochip_get_data(gc);
-+	const struct aspeed_gpio_bank *bank = to_bank(offset);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	reg = ioread32(bank_val_reg(gpio, bank, GPIO_DIR));
-+	iowrite32(reg & ~GPIO_BIT(offset), bank_val_reg(gpio, bank, GPIO_DIR));
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int aspeed_gpio_dir_out(struct gpio_chip *gc,
-+			       unsigned int offset, int val)
-+{
-+	struct aspeed_gpio *gpio = gpiochip_get_data(gc);
-+	const struct aspeed_gpio_bank *bank = to_bank(offset);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	reg = ioread32(bank_val_reg(gpio, bank, GPIO_DIR));
-+	iowrite32(reg | GPIO_BIT(offset), bank_val_reg(gpio, bank, GPIO_DIR));
-+
-+	__aspeed_gpio_set(gc, offset, val);
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int aspeed_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct aspeed_gpio *gpio = gpiochip_get_data(gc);
-+	const struct aspeed_gpio_bank *bank = to_bank(offset);
-+	unsigned long flags;
-+	u32 val;
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	val = ioread32(bank_val_reg(gpio, bank, GPIO_DIR)) & GPIO_BIT(offset);
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+
-+	return !val;
-+
-+}
-+
-+static inline int irqd_to_aspeed_gpio_data(struct irq_data *d,
-+		struct aspeed_gpio **gpio,
-+		const struct aspeed_gpio_bank **bank,
-+		u32 *bit)
-+{
-+	int offset;
-+
-+	offset = irqd_to_hwirq(d);
-+
-+	*gpio = irq_data_get_irq_chip_data(d);
-+	*bank = to_bank(offset);
-+	*bit = GPIO_BIT(offset);
-+
-+	return 0;
-+}
-+
-+static void aspeed_gpio_irq_ack(struct irq_data *d)
-+{
-+	const struct aspeed_gpio_bank *bank;
-+	struct aspeed_gpio *gpio;
-+	unsigned long flags;
-+	void __iomem *status_addr;
-+	u32 bit;
-+	int rc;
-+
-+	rc = irqd_to_aspeed_gpio_data(d, &gpio, &bank, &bit);
-+	if (rc)
-+		return;
-+
-+	status_addr = bank_irq_reg(gpio, bank, GPIO_IRQ_STATUS);
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+	iowrite32(bit, status_addr);
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+}
-+
-+static void aspeed_gpio_irq_set_mask(struct irq_data *d, bool set)
-+{
-+	const struct aspeed_gpio_bank *bank;
-+	struct aspeed_gpio *gpio;
-+	unsigned long flags;
-+	u32 reg, bit;
-+	void __iomem *addr;
-+	int rc;
-+
-+	rc = irqd_to_aspeed_gpio_data(d, &gpio, &bank, &bit);
-+	if (rc)
-+		return;
-+
-+	addr = bank_irq_reg(gpio, bank, GPIO_IRQ_ENABLE);
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	reg = ioread32(addr);
-+	if (set)
-+		reg |= bit;
-+	else
-+		reg &= bit;
-+	iowrite32(reg, addr);
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+}
-+
-+static void aspeed_gpio_irq_mask(struct irq_data *d)
-+{
-+	aspeed_gpio_irq_set_mask(d, false);
-+}
-+
-+static void aspeed_gpio_irq_unmask(struct irq_data *d)
-+{
-+	aspeed_gpio_irq_set_mask(d, true);
-+}
-+
-+static int aspeed_gpio_set_type(struct irq_data *d, unsigned int type)
-+{
-+	u32 type0 = 0;
-+	u32 type1 = 0;
-+	u32 type2 = 0;
-+	u32 bit, reg;
-+	const struct aspeed_gpio_bank *bank;
-+	irq_flow_handler_t handler;
-+	struct aspeed_gpio *gpio;
-+	unsigned long flags;
-+	void __iomem *addr;
-+	int rc;
-+
-+	rc = irqd_to_aspeed_gpio_data(d, &gpio, &bank, &bit);
-+	if (rc)
-+		return -EINVAL;
-+
-+	switch (type & IRQ_TYPE_SENSE_MASK) {
-+	case IRQ_TYPE_EDGE_BOTH:
-+		type2 |= bit;
-+	case IRQ_TYPE_EDGE_RISING:
-+		type0 |= bit;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		handler = handle_edge_irq;
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		type0 |= bit;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		type1 |= bit;
-+		handler = handle_level_irq;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	spin_lock_irqsave(&gpio->lock, flags);
-+
-+	addr = bank_irq_reg(gpio, bank, GPIO_IRQ_TYPE0);
-+	reg = ioread32(addr);
-+	reg = (reg & ~bit) | type0;
-+	iowrite32(reg, addr);
-+
-+	addr = bank_irq_reg(gpio, bank, GPIO_IRQ_TYPE1);
-+	reg = ioread32(addr);
-+	reg = (reg & ~bit) | type1;
-+	iowrite32(reg, addr);
-+
-+	addr = bank_irq_reg(gpio, bank, GPIO_IRQ_TYPE2);
-+	reg = ioread32(addr);
-+	reg = (reg & ~bit) | type2;
-+	iowrite32(reg, addr);
-+
-+	spin_unlock_irqrestore(&gpio->lock, flags);
-+
-+	irq_set_handler_locked(d, handler);
-+
-+	return 0;
-+}
-+
-+static void aspeed_gpio_irq_handler(struct irq_desc *desc)
-+{
-+	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-+	struct irq_chip *ic = irq_desc_get_chip(desc);
-+	struct aspeed_gpio *data = gpiochip_get_data(gc);
-+	unsigned int i, p, girq;
-+	unsigned long reg;
-+
-+	chained_irq_enter(ic, desc);
-+
-+	for (i = 0; i < ARRAY_SIZE(aspeed_gpio_banks); i++) {
-+		const struct aspeed_gpio_bank *bank = &aspeed_gpio_banks[i];
-+
-+		reg = ioread32(bank_irq_reg(data, bank, GPIO_IRQ_STATUS));
-+
-+		for_each_set_bit(p, &reg, 32) {
-+			girq = irq_find_mapping(gc->irqdomain, i * 32 + p);
-+			generic_handle_irq(girq);
-+		}
-+
-+	}
-+
-+	chained_irq_exit(ic, desc);
-+}
-+
-+static struct irq_chip aspeed_gpio_irqchip = {
-+	.name		= "aspeed-gpio",
-+	.irq_ack	= aspeed_gpio_irq_ack,
-+	.irq_mask	= aspeed_gpio_irq_mask,
-+	.irq_unmask	= aspeed_gpio_irq_unmask,
-+	.irq_set_type	= aspeed_gpio_set_type,
++static struct aspeed_pinctrl_data aspeed_g5_pinctrl_data = {
++	.pins = aspeed_g5_pins,
++	.npins = ARRAY_SIZE(aspeed_g5_pins),
++	.groups = aspeed_g5_groups,
++	.ngroups = ARRAY_SIZE(aspeed_g5_groups),
++	.functions = aspeed_g5_functions,
++	.nfunctions = ARRAY_SIZE(aspeed_g5_functions),
 +};
 +
-+static int aspeed_gpio_setup_irqs(struct aspeed_gpio *gpio,
-+		struct platform_device *pdev)
-+{
-+	int rc;
-+
-+	rc = platform_get_irq(pdev, 0);
-+	if (rc < 0)
-+		return rc;
-+
-+	gpio->irq = rc;
-+
-+	rc = gpiochip_irqchip_add(&gpio->chip, &aspeed_gpio_irqchip,
-+			0, handle_bad_irq, IRQ_TYPE_NONE);
-+	if (rc) {
-+		dev_info(&pdev->dev, "Could not add irqchip\n");
-+		return rc;
-+	}
-+
-+	gpiochip_set_chained_irqchip(&gpio->chip, &aspeed_gpio_irqchip,
-+				     gpio->irq, aspeed_gpio_irq_handler);
-+
-+	return 0;
-+}
-+
-+static int aspeed_gpio_request(struct gpio_chip *chip, unsigned int offset)
-+{
-+	return pinctrl_request_gpio(chip->base + offset);
-+}
-+
-+static void aspeed_gpio_free(struct gpio_chip *chip, unsigned int offset)
-+{
-+	pinctrl_free_gpio(chip->base + offset);
-+}
-+
-+static int __init aspeed_gpio_probe(struct platform_device *pdev)
-+{
-+	struct aspeed_gpio *gpio;
-+	struct resource *res;
-+	int rc;
-+
-+	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-+	if (!gpio)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -ENXIO;
-+
-+	gpio->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (!gpio->base)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&gpio->lock);
-+
-+	gpio->chip.ngpio = ARRAY_SIZE(aspeed_gpio_banks) * 32;
-+
-+	gpio->chip.parent = &pdev->dev;
-+	gpio->chip.direction_input = aspeed_gpio_dir_in;
-+	gpio->chip.direction_output = aspeed_gpio_dir_out;
-+	gpio->chip.get_direction = aspeed_gpio_get_direction;
-+	gpio->chip.request = aspeed_gpio_request;
-+	gpio->chip.free = aspeed_gpio_free;
-+	gpio->chip.get = aspeed_gpio_get;
-+	gpio->chip.set = aspeed_gpio_set;
-+	gpio->chip.label = dev_name(&pdev->dev);
-+	gpio->chip.base = -1;
-+
-+	rc = devm_gpiochip_add_data(&pdev->dev, &gpio->chip, gpio);
-+	if (rc < 0)
-+		return rc;
-+
-+	return aspeed_gpio_setup_irqs(gpio, pdev);
-+}
-+
-+static const struct of_device_id aspeed_gpio_of_table[] = {
-+	{ .compatible = "aspeed,ast2400-gpio" },
-+	{ .compatible = "aspeed,ast2500-gpio" },
-+	{}
++static struct pinmux_ops aspeed_g5_pinmux_ops = {
++	.get_functions_count = aspeed_pinmux_get_fn_count,
++	.get_function_name = aspeed_pinmux_get_fn_name,
++	.get_function_groups = aspeed_pinmux_get_fn_groups,
++	.set_mux = aspeed_pinmux_set_mux,
++	.gpio_request_enable = aspeed_gpio_request_enable,
++	.strict = true,
 +};
-+MODULE_DEVICE_TABLE(of, aspeed_gpio_of_table);
 +
-+static struct platform_driver aspeed_gpio_driver = {
++static struct pinctrl_ops aspeed_g5_pinctrl_ops = {
++	.get_groups_count = aspeed_pinctrl_get_groups_count,
++	.get_group_name = aspeed_pinctrl_get_group_name,
++	.get_group_pins = aspeed_pinctrl_get_group_pins,
++	.pin_dbg_show = aspeed_pinctrl_pin_dbg_show,
++	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
++	.dt_free_map = pinctrl_utils_free_map,
++};
++
++static struct pinctrl_desc aspeed_g5_pinctrl_desc = {
++	.name = "aspeed-g5-pinctrl",
++	.pins = aspeed_g5_pins,
++	.npins = ARRAY_SIZE(aspeed_g5_pins),
++	.pctlops = &aspeed_g5_pinctrl_ops,
++	.pmxops = &aspeed_g5_pinmux_ops,
++};
++
++static int aspeed_g5_pinctrl_probe(struct platform_device *pdev)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(aspeed_g5_pins); i++)
++		aspeed_g5_pins[i].number = i;
++
++	return aspeed_pinctrl_probe(pdev, &aspeed_g5_pinctrl_desc,
++			&aspeed_g5_pinctrl_data);
++}
++
++static const struct of_device_id aspeed_g5_pinctrl_of_match[] = {
++	{ .compatible = "aspeed,ast2500-pinctrl", },
++	{ .compatible = "aspeed,g5-pinctrl", },
++	{ },
++};
++
++static struct platform_driver aspeed_g5_pinctrl_driver = {
++	.probe = aspeed_g5_pinctrl_probe,
 +	.driver = {
-+		.name = KBUILD_MODNAME,
-+		.of_match_table = aspeed_gpio_of_table,
++		.name = "aspeed-g5-pinctrl",
++		.of_match_table = aspeed_g5_pinctrl_of_match,
 +	},
 +};
 +
-+module_platform_driver_probe(aspeed_gpio_driver, aspeed_gpio_probe);
++static int aspeed_g5_pinctrl_init(void)
++{
++	return platform_driver_register(&aspeed_g5_pinctrl_driver);
++}
 +
-+MODULE_DESCRIPTION("Aspeed GPIO Driver");
++arch_initcall(aspeed_g5_pinctrl_init);
 -- 
 2.9.3.1.g0db844e
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
