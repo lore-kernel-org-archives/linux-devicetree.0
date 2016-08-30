@@ -1,93 +1,76 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 2/2] arm64: dts: qcom: msm8916: Add Hexagon PIL node
-Date: Tue, 30 Aug 2016 14:09:30 -0700
-Message-ID: <1472591370-20550-2-git-send-email-bjorn.andersson@linaro.org>
-References: <1472591370-20550-1-git-send-email-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472591370-20550-1-git-send-email-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: David Herrmann <dh.herrmann@gmail.com>
+Subject: Re: [RFC] drm: implement generic firmware eviction
+Date: Tue, 30 Aug 2016 23:12:52 +0200
+Message-ID: <CANq1E4Twr6Uy2QnowV_WP8yz9QymkchnFS1GwFf_FBRcYF6oOQ@mail.gmail.com>
+References: <20160826000056.12806-1-dh.herrmann@gmail.com>
+ <CAL_Jsq+1MeicZmr+7Q4K6FLnTfD4jBBAQR1KPHMSLfNNUe4ENw@mail.gmail.com>
+ <CANq1E4Shy1+rQsshWxeFRhFvuAg1sB3ffnVT7hoMZSjZAR=yuQ@mail.gmail.com>
+ <CAL_JsqKOOExaBcQfzxYyPE-h9qd4E8T+9GOKQGvXpuNSaObxoA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqKOOExaBcQfzxYyPE-h9qd4E8T+9GOKQGvXpuNSaObxoA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The Hexagon core on the msm8916 provides services for audio control,
-audio output, sensors and the Hexagon SDK. The Hexagon remoteproc node
-allows us to boot this core.
-
-Although its part of the core platform its left disabled as it will
-crash without the rmtfs QMI service and we do not yet handle crashes
-gracefully.
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-
-Changes since v1:
-- Rebase ontop of linux-next
-
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 44 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 5a1b5f5b3a90..f6df72da6c4d 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -77,7 +77,7 @@
- 			no-map;
- 		};
- 
--		mpss@86800000 {
-+		mpss_mem: mpss@86800000 {
- 			reg = <0x0 0x86800000 0x0 0x2b00000>;
- 			no-map;
- 		};
-@@ -684,6 +684,48 @@
- 			nvmem-cell-names = "calib", "calib_sel";
- 			#thermal-sensor-cells = <1>;
- 		};
-+
-+		hexagon@4080000 {
-+			compatible = "qcom,q6v5-pil";
-+			reg = <0x04080000 0x100>,
-+			      <0x04020000 0x040>;
-+
-+			reg-names = "qdsp6", "rmb";
-+
-+			interrupts-extended = <&intc 0 24 1>,
-+					      <&hexagon_smp2p_in 0 0>,
-+					      <&hexagon_smp2p_in 1 0>,
-+					      <&hexagon_smp2p_in 2 0>,
-+					      <&hexagon_smp2p_in 3 0>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack";
-+
-+			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
-+				 <&gcc GCC_MSS_Q6_BIMC_AXI_CLK>,
-+				 <&gcc GCC_BOOT_ROM_AHB_CLK>;
-+			clock-names = "iface", "bus", "mem";
-+
-+			qcom,smem-states = <&hexagon_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			resets = <&scm 0>;
-+			reset-names = "mss_restart";
-+
-+			mx-supply = <&pm8916_l3>;
-+			pll-supply = <&pm8916_l7>;
-+
-+			qcom,halt-regs = <&tcsr 0x18000 0x19000 0x1a000>;
-+
-+			status = "disabled";
-+
-+			mba {
-+				memory-region = <&mba_mem>;
-+			};
-+
-+			mpss {
-+				memory-region = <&mpss_mem>;
-+			};
-+		};
- 	};
- 
- 	smd {
--- 
-2.5.0
+SGkKCk9uIFR1ZSwgQXVnIDMwLCAyMDE2IGF0IDEwOjU4IFBNLCBSb2IgSGVycmluZyA8cm9iaCtk
+dEBrZXJuZWwub3JnPiB3cm90ZToKPiBPbiBUdWUsIEF1ZyAzMCwgMjAxNiBhdCAyOjMwIFBNLCBE
+YXZpZCBIZXJybWFubiA8ZGguaGVycm1hbm5AZ21haWwuY29tPiB3cm90ZToKPj4gU3VyZSwgYWxs
+IHRob3NlIGZ1bmN0aW9ucyBhcmUgbm90IG1lYW50IHRvIGJlIGNhbGxlZCBpbiBwYXJhbGxlbCBi
+eQo+PiBtdWx0aXBsZSB0YXNrcy4gVGhleSBhcmUgcmF0aGVyIG1lYW50IHRvIGhhdmUgYSBzaW5n
+bGUgaG9sZGVyIHdoaWNoCj4+IHByZWZlcmFibHkgaXMgdGhlIG9uZSBpbnN0YW50aWF0aW5nIGFu
+ZCBkZXN0cm95aW5nIHRoZQo+PiBub2RlL2RldmljZS9mb29iYXIuIEJ1dCB0aGUgZnJhbWVidWZm
+ZXIgZXZpY3Rpb24gY29kZSBzb21laG93IG5lZWRzIHRvCj4+IHRyaWdnZXIgdGhlIHJlbW92YWws
+IGFuZCB0aHVzIG5lZWRzIHNvbWUgaG9vaywgdGhhdCBjYW4gYmUgY2FsbGVkIGluCj4+IHBhcmFs
+bGVsIGJ5IGFueSBkcml2ZXIgdGhhdCBpcyBsb2FkZWQuCj4+Cj4+IEkgY2FuIG1ha2Ugc3VyZSB0
+aGUgc2ltcGxlLWZyYW1lYnVmZmVyIGV2aWN0aW9uIGNvZGUgaXMgbG9ja2VkCj4+IHByb3Blcmx5
+LiBUaGF0J2xsIHdvcmssIGZvciBub3cuIEJ1dCBpZiBzb21lb25lIGVuZHMgdXAgcHJvdmlkaW5n
+Cj4+IHNpbXBsZS1mcmFtZWJ1ZmZlciBkZXZpY2VzIHZpYSBvdmVybGF5cyBvciBhbnkgb3RoZXIg
+ZHluYW1pYwo+PiBtZWNoYW5pc20sIHRoZXkgd2lsbCByYWNlIHRoZSByZW1vdmFsLgo+Cj4gTm8g
+ZG91YnQgc29tZW9uZSB3aWxsIGNvbWUgdXAgd2l0aCBzb21lIHVzZWNhc2Ugd2FudGluZyB0byBk
+byB0aGF0LAo+IGJ1dCBJTU8gdGhhdCBpcyBub3QgYSBzdXBwb3J0ZWQgdXNlY2FzZSBhbmQgc2hv
+dWxkIG5vdCBiZS4KPiBzaW1wbGUtZnJhbWVidWZmZXIgaXMgZm9yIHByb3ZpZGluZyBhIGZpcm13
+YXJlIHNldHVwIGZyYW1lYnVmZmVyLgoKU3VyZS4gQW55IHNlbnNpYmxlIHNpbXBsZS1mcmFtZWJ1
+ZmZlciB1c2Ugd291bGQgZm9sbG93IHdoYXQgd2UgaGF2ZQpub3cuIEJ1dCBpdCBmZWVscyB3cm9u
+ZyB0byBtZSB0aGF0IGlmIHNvbWUgbm9kZSBpcyBhZGRlZCB0aGF0IGp1c3QKaGFwcGVucyB0byBo
+YXZlICJzaW1wbGUtZnJhbWVidWZmZXIiIGFzIG5hbWUsIHN1ZGRlbmx5IHRoaW5ncyB3aWxsIGdv
+Cndyb25nLiBJIG1lYW4sIHllYWgsIERUIGlzIG5vdCBhIHVzZXJzcGFjZSBBUEksIGJ1dCBJIHN0
+aWxsIHdvdWxkIGxpa2UKdGhlIGNvZGUgdG8gY2F0Y2ggbWlzdXNlcyByYXRoZXIgdGhhbiBmYWls
+LiBJdCBpcyBhbiBBUEkgYWZ0ZXIgYWxsLiBPcgppcyB0aGF0IGJlaW5nIG92ZXJseSBwZWRhbnRp
+Yz8KCj4+IEFuZCBpdCB3aWxsIGJlIGNvbXBsZXRlbHkKPj4gbm9uLW9idmlvdXMgdG8gdGhlbS4g
+SSByZWFsbHkgZG9uJ3Qgd2FudCB0byBiZSByZXNwb25zaWJsZSB0byBoYXZlCj4+IHN1Ym1pdHRl
+ZCB0aGF0IGNvZGUuIElmIGFueW9uZSBjYXJlcyBmb3IgcHJvcGVyIGRldmljZSBoYW5kLW92ZXIg
+b24KPj4gQVJNLCBwbGVhc2UgY29tZSB1cCB3aXRoIGFuIGlkZWEgdG8gZml4IGl0LiBPdGhlcndp
+c2UsIEkgd2lsbCBqdXN0Cj4+IGxpbWl0IHRoZSBzaW1wbGVkcm0gY29kZSB0byB4ODYuCj4+Cj4+
+IElPVyB0aGUgZGV2aWNlIGhhbmRvdmVyIGNvZGUgc29tZWhvdyBuZWVkcyB0byBrbm93IHdobyB3
+YXMgcmVzcG9uc2libGUKPj4gZm9yIHRoZSBpbnN0YW50aWF0aW9uIG9mIHRoZSBzaW1wbGUtZnJh
+bWVidWZmZXIgZGV2aWNlLCBzbyBpdCBjYW4gdGVsbAo+PiB0aGVtIHRvIHJlbW92ZSBpdCBhZ2Fp
+bi4gT24geDg2IHRoZXJlIGlzIG9ubHkgb25lIHBsYWNlIHdoZXJlIHRob3NlCj4+IGNhbiBiZSBp
+bnN0YW50aWF0ZWQuIEJ1dCBvbiBPRi1iYXNlZCBzeXN0ZW1zLCBpdCBjYW4gYmUgZHluYW1pY2Fs
+bHkKPj4gaW5zdGFudGlhdGVkIGluIG1hbnkgcGxhY2VzIHJpZ2h0IG5vdy4KPgo+IFdoYXQgZG8g
+eW91IG1lYW4gYnkgYWxsIG92ZXIgdGhlIHBsYWNlPyBJdCBpcyBvbmx5IGluIHNpbXBsZWZiX2lu
+aXQKPiBBVE0uIEkgaGF2ZW4ndCBsb29rZWQgYXQgd2hhdCBzaW1wbGVkcm0gaXMgZG9pbmcsIGJ1
+dCB3ZSBjYW4gbW92ZSB0aGUKPiBkZXZpY2UgY3JlYXRpb24gdG8gb2ZfcGxhdGZvcm1fZGVmYXVs
+dF9wb3B1bGF0ZV9pbml0IGlmIHdlIG5lZWQgYQo+IHNpbmdsZSBzcG90LgoKQ3VycmVudGx5IEkg
+c2VlIGF0IGxlYXN0IDMgcGF0aHMgdGhhdCBtaWdodCBhZGQgc3VjaCBub2RlczoKCiAtIG9mX3Bs
+YXRmb3JtX3BvcHVsYXRlKCkKIC0gb2Zfbm9kZV9hdHRhY2goKSAodmlhIHRoZSBub3RpZmllcikK
+IC0gc2ltcGxlZmJfaW5pdCgpCgpTaG91bGQgSSBqdXN0IGlnbm9yZSBhbnl0aGluZyBidXQgc2lt
+cGxlZmJfaW5pdCgpPyBJIHVuZGVyc3RhbmQgdGhhdAppdCdzIHRoZSBvbmx5IG9uZSB1c2VkIGJ5
+IG5vcm1hbCBjb2RlLXBhdGhzLCBidXQgaXNuJ3QgaXQga2luZGEgdWdseQp0byBzaWxlbnRseSBp
+bnRyb2R1Y2UgcmFjZSBjb25kaXRpb25zIGlmIGEgbm9kZSBqdXN0IGhhcHBlbnMgdG8gYmUKaW50
+cm9kdWNlZCB2aWEgb25lIG9mIHRoZSBvdGhlciBtZXRob2RzPyBPciBhcmUgZXJyb3JzIGluIHRo
+ZSBEVCBub3QKbWVhbnQgdG8gYmUgY2F1Z2h0PwoKVGhhbmtzCkRhdmlkCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
