@@ -1,414 +1,78 @@
-From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 26/26] MIPS: generic: Support MIPS Boston development boards
-Date: Tue, 30 Aug 2016 18:29:29 +0100
-Message-ID: <20160830172929.16948-27-paul.burton@imgtec.com>
-References: <20160830172929.16948-1-paul.burton@imgtec.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 05/14] arm64/numa: avoid inconsistent information to
+ be printed
+Date: Tue, 30 Aug 2016 18:51:15 +0100
+Message-ID: <20160830175115.GL24906@arm.com>
+References: <1472024693-12912-1-git-send-email-thunder.leizhen@huawei.com>
+ <1472024693-12912-6-git-send-email-thunder.leizhen@huawei.com>
+ <20160826124746.GB30302@arm.com>
+ <57C15560.6020702@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160830172929.16948-1-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57C15560.6020702-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the MIPS Boston development board to generic kernels,
-which essentially amounts to:
+On Sat, Aug 27, 2016 at 04:54:56PM +0800, Leizhen (ThunderTown) wrote:
+> 
+> 
+> On 2016/8/26 20:47, Will Deacon wrote:
+> > On Wed, Aug 24, 2016 at 03:44:44PM +0800, Zhen Lei wrote:
+> >> numa_init(of_numa_init) may returned error because of numa configuration
+> >> error. So "No NUMA configuration found" is inaccurate. In fact, specific
+> >> configuration error information should be immediately printed by the
+> >> testing branch.
+> >>
+> >> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> >> ---
+> >>  arch/arm64/mm/numa.c | 6 +++---
+> >>  1 file changed, 3 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+> >> index 5bb15ea..d97c6e2 100644
+> >> --- a/arch/arm64/mm/numa.c
+> >> +++ b/arch/arm64/mm/numa.c
+> >> @@ -335,8 +335,10 @@ static int __init numa_init(int (*init_func)(void))
+> >>  	if (ret < 0)
+> >>  		return ret;
+> >>
+> >> -	if (nodes_empty(numa_nodes_parsed))
+> >> +	if (nodes_empty(numa_nodes_parsed)) {
+> >> +		pr_info("No NUMA configuration found\n");
+> >>  		return -EINVAL;
+> > 
+> > Hmm, but dummy_numa_init calls node_set(nid, numa_nodes_parsed) for a
+> > completely artificial setup, created by adding all memblocks to node 0,
+> > so this new message will be suppressed even though things really did go
+> > wrong.
+> It will be printed by the former: numa_init(of_numa_init)
 
-  - Adding the device tree source for the MIPS Boston board.
+Does that print an error for every possible failure case? What about the
+acpi path?
 
-  - Adding a Kconfig fragment which enables the appropriate drivers for
-    the MIPS Boston board.
+> > In that case, don't we want to print *something* (like we do today in
+> > dummy_numa_init) but maybe not "No NUMA configuration found"? What
+> > exactly do you find inaccurate about the current message?
+> For example:
+> [    0.000000] NUMA: No distance-matrix property in distance-map
+> [    0.000000] No NUMA configuration found
+> 
+> So if of_numa_init or arm64_acpi_numa_init returned error, because of
+> some numa configuration error had been found, it's no good to print "No
+> NUMA ...".
 
-With these changes in place generic kernels will support the board by
-default, and kernels with only the drivers needed for Boston enabled can
-be configured by setting BOARDS=boston during configuration. For
-example:
+Sure, I'm all for changing the message. I just think removing it is
+probably unhelpful. Something like:
 
-  $ make ARCH=mips 64r6el_defconfig BOARDS=boston
+"NUMA: Failed to initialise from firmware"
 
-Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+might do the trick?
 
----
-
-Changes in v2: None
-
- arch/mips/boot/dts/Makefile                   |   1 +
- arch/mips/boot/dts/img/Makefile               |   7 +
- arch/mips/boot/dts/img/boston.dts             | 230 ++++++++++++++++++++++++++
- arch/mips/configs/generic/board-boston.config |  46 ++++++
- arch/mips/generic/Kconfig                     |   8 +
- arch/mips/generic/vmlinux.its.S               |  25 +++
- 6 files changed, 317 insertions(+)
- create mode 100644 arch/mips/boot/dts/img/Makefile
- create mode 100644 arch/mips/boot/dts/img/boston.dts
- create mode 100644 arch/mips/configs/generic/board-boston.config
-
-diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-index fc7a0a9..b9db492 100644
---- a/arch/mips/boot/dts/Makefile
-+++ b/arch/mips/boot/dts/Makefile
-@@ -1,5 +1,6 @@
- dts-dirs	+= brcm
- dts-dirs	+= cavium-octeon
-+dts-dirs	+= img
- dts-dirs	+= ingenic
- dts-dirs	+= lantiq
- dts-dirs	+= mti
-diff --git a/arch/mips/boot/dts/img/Makefile b/arch/mips/boot/dts/img/Makefile
-new file mode 100644
-index 0000000..ae119d3
---- /dev/null
-+++ b/arch/mips/boot/dts/img/Makefile
-@@ -0,0 +1,7 @@
-+dtb-$(CONFIG_FIT_IMAGE_FDT_BOSTON)	+= boston.dtb
-+
-+# Force kbuild to make empty built-in.o if necessary
-+obj-					+= dummy.o
-+
-+always					:= $(dtb-y)
-+clean-files				:= *.dtb *.dtb.S
-diff --git a/arch/mips/boot/dts/img/boston.dts b/arch/mips/boot/dts/img/boston.dts
-new file mode 100644
-index 0000000..b357376
---- /dev/null
-+++ b/arch/mips/boot/dts/img/boston.dts
-@@ -0,0 +1,230 @@
-+/dts-v1/;
-+
-+#include <dt-bindings/clock/boston-clock.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/mips-gic.h>
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "img,boston";
-+
-+	chosen {
-+		stdout-path = "uart0:115200";
-+	};
-+
-+	aliases {
-+		uart0 = &uart0;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "img,mips";
-+			reg = <0>;
-+			clocks = <&clk_boston BOSTON_CLK_CPU>;
-+		};
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x00000000 0x10000000>;
-+	};
-+
-+	pci0: pci@10000000 {
-+		compatible = "xlnx,axi-pcie-host-1.00.a";
-+		device_type = "pci";
-+		reg = <0x10000000 0x2000000>;
-+
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_SHARED 2 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		ranges = <0x02000000 0 0x40000000
-+			  0x40000000 0 0x40000000>;
-+
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pci0_intc 0>,
-+				<0 0 0 2 &pci0_intc 1>,
-+				<0 0 0 3 &pci0_intc 2>,
-+				<0 0 0 4 &pci0_intc 3>;
-+
-+		pci0_intc: interrupt-controller {
-+			interrupt-controller;
-+			#address-cells = <0>;
-+			#interrupt-cells = <1>;
-+		};
-+	};
-+
-+	pci1: pci@12000000 {
-+		compatible = "xlnx,axi-pcie-host-1.00.a";
-+		device_type = "pci";
-+		reg = <0x12000000 0x2000000>;
-+
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_SHARED 1 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		ranges = <0x02000000 0 0x20000000
-+			  0x20000000 0 0x20000000>;
-+
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pci1_intc 0>,
-+				<0 0 0 2 &pci1_intc 1>,
-+				<0 0 0 3 &pci1_intc 2>,
-+				<0 0 0 4 &pci1_intc 3>;
-+
-+		pci1_intc: interrupt-controller {
-+			interrupt-controller;
-+			#address-cells = <0>;
-+			#interrupt-cells = <1>;
-+		};
-+	};
-+
-+	pci2: pci@14000000 {
-+		compatible = "xlnx,axi-pcie-host-1.00.a";
-+		device_type = "pci";
-+		reg = <0x14000000 0x2000000>;
-+
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_SHARED 0 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		ranges = <0x02000000 0 0x16000000
-+			  0x16000000 0 0x100000>;
-+
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pci2_intc 0>,
-+				<0 0 0 2 &pci2_intc 1>,
-+				<0 0 0 3 &pci2_intc 2>,
-+				<0 0 0 4 &pci2_intc 3>;
-+
-+		pci2_intc: interrupt-controller {
-+			interrupt-controller;
-+			#address-cells = <0>;
-+			#interrupt-cells = <1>;
-+		};
-+
-+		pci2_root@0,0,0 {
-+			compatible = "pci10ee,7021";
-+			reg = <0x00000000 0 0 0 0>;
-+
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+
-+			eg20t_bridge@1,0,0 {
-+				compatible = "pci8086,8800";
-+				reg = <0x00010000 0 0 0 0>;
-+
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				#interrupt-cells = <1>;
-+
-+				eg20t_mac@2,0,1 {
-+					compatible = "pci8086,8802";
-+					reg = <0x00020100 0 0 0 0>;
-+					phy-reset-gpios = <&eg20t_gpio 6
-+							   GPIO_ACTIVE_LOW>;
-+				};
-+
-+				eg20t_gpio: eg20t_gpio@2,0,2 {
-+					compatible = "pci8086,8803";
-+					reg = <0x00020200 0 0 0 0>;
-+
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+				};
-+
-+				eg20t_i2c@2,12,2 {
-+					compatible = "pci8086,8817";
-+					reg = <0x00026200 0 0 0 0>;
-+
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					rtc@0x68 {
-+						compatible = "st,m41t81s";
-+						reg = <0x68>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+
-+	gic: interrupt-controller@16120000 {
-+		compatible = "mti,gic";
-+		reg = <0x16120000 0x20000>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+
-+		timer {
-+			compatible = "mti,gic-timer";
-+			interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
-+			clocks = <&clk_boston BOSTON_CLK_CPU>;
-+		};
-+	};
-+
-+	cdmm@16140000 {
-+		compatible = "mti,mips-cdmm";
-+		reg = <0x16140000 0x8000>;
-+	};
-+
-+	cpc@16200000 {
-+		compatible = "mti,mips-cpc";
-+		reg = <0x16200000 0x8000>;
-+	};
-+
-+	plat_regs: system-controller@17ffd000 {
-+		compatible = "img,boston-platform-regs", "syscon";
-+		reg = <0x17ffd000 0x1000>;
-+		u-boot,dm-pre-reloc;
-+	};
-+
-+	clk_boston: clock {
-+		compatible = "img,boston-clock";
-+		#clock-cells = <1>;
-+		regmap = <&plat_regs>;
-+		u-boot,dm-pre-reloc;
-+	};
-+
-+	reboot: syscon-reboot {
-+		compatible = "syscon-reboot";
-+		regmap = <&plat_regs>;
-+		offset = <0x10>;
-+		mask = <0x10>;
-+	};
-+
-+	uart0: uart@17ffe000 {
-+		compatible = "ns16550a";
-+		reg = <0x17ffe000 0x1000>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_SHARED 3 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		clocks = <&clk_boston BOSTON_CLK_SYS>;
-+
-+		u-boot,dm-pre-reloc;
-+	};
-+
-+	lcd: lcd@17fff000 {
-+		compatible = "img,boston-lcd";
-+		reg = <0x17fff000 0x8>;
-+	};
-+};
-diff --git a/arch/mips/configs/generic/board-boston.config b/arch/mips/configs/generic/board-boston.config
-new file mode 100644
-index 0000000..09864a4
---- /dev/null
-+++ b/arch/mips/configs/generic/board-boston.config
-@@ -0,0 +1,46 @@
-+CONFIG_FIT_IMAGE_FDT_BOSTON=y
-+
-+CONFIG_ATA=y
-+CONFIG_SATA_AHCI=y
-+CONFIG_SCSI=y
-+
-+CONFIG_AUXDISPLAY=y
-+CONFIG_IMG_ASCII_LCD=y
-+
-+CONFIG_COMMON_CLK_BOSTON=y
-+
-+CONFIG_DMADEVICES=y
-+CONFIG_PCH_DMA=y
-+
-+CONFIG_GPIO_SYSFS=y
-+CONFIG_GPIO_PCH=y
-+
-+CONFIG_I2C=y
-+CONFIG_I2C_EG20T=y
-+
-+CONFIG_MMC=y
-+CONFIG_MMC_SDHCI=y
-+CONFIG_MMC_SDHCI_PCI=y
-+
-+CONFIG_NETDEVICES=y
-+CONFIG_PCH_GBE=y
-+
-+CONFIG_PCI=y
-+CONFIG_PCI_MSI=y
-+CONFIG_PCIE_XILINX=y
-+
-+CONFIG_PCH_PHUB=y
-+
-+CONFIG_RTC_CLASS=y
-+CONFIG_RTC_DRV_M41T80=y
-+
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_OF_PLATFORM=y
-+
-+CONFIG_SPI=y
-+CONFIG_SPI_TOPCLIFF_PCH=y
-+
-+CONFIG_USB=y
-+CONFIG_USB_EHCI_HCD=y
-+CONFIG_USB_OHCI_HCD=y
-diff --git a/arch/mips/generic/Kconfig b/arch/mips/generic/Kconfig
-index a606b3f..16eb939 100644
---- a/arch/mips/generic/Kconfig
-+++ b/arch/mips/generic/Kconfig
-@@ -16,4 +16,12 @@ config LEGACY_BOARD_SEAD3
- 	  Enable this to include support for booting on MIPS SEAD-3 FPGA-based
- 	  development boards, which boot using a legacy boot protocol.
- 
-+config FIT_IMAGE_FDT_BOSTON
-+	bool "Include FDT for MIPS Boston boards"
-+	help
-+	  Enable this to include the FDT for the MIPS Boston development board
-+	  from Imagination Technologies in the FIT kernel image. You should
-+	  enable this if you wish to boot on a MIPS Boston board, as it is
-+	  expected by the bootloader.
-+
- endif
-diff --git a/arch/mips/generic/vmlinux.its.S b/arch/mips/generic/vmlinux.its.S
-index f67fbf1..3390e2f 100644
---- a/arch/mips/generic/vmlinux.its.S
-+++ b/arch/mips/generic/vmlinux.its.S
-@@ -29,3 +29,28 @@
- 		};
- 	};
- };
-+
-+#ifdef CONFIG_FIT_IMAGE_FDT_BOSTON
-+/ {
-+	images {
-+		fdt@boston {
-+			description = "img,boston Device Tree";
-+			data = /incbin/("boot/dts/img/boston.dtb");
-+			type = "flat_dt";
-+			arch = "mips";
-+			compression = "none";
-+			hash@0 {
-+				algo = "sha1";
-+			};
-+		};
-+	};
-+
-+	configurations {
-+		conf@boston {
-+			description = "Boston Linux kernel";
-+			kernel = "kernel@0";
-+			fdt = "fdt@boston";
-+		};
-+	};
-+};
-+#endif /* CONFIG_FIT_IMAGE_FDT_BOSTON */
--- 
-2.9.3
-
+Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
