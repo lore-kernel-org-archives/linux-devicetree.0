@@ -1,146 +1,119 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH 3/4] arm64: dts: rockchip: support gmac for rk3399
-Date: Wed, 31 Aug 2016 04:30:06 +0800
-Message-ID: <1472589008-7713-4-git-send-email-wxt@rock-chips.com>
-References: <1472589008-7713-1-git-send-email-wxt@rock-chips.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1472589008-7713-1-git-send-email-wxt@rock-chips.com>
-Sender: netdev-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, netdev@vger.kernel.org
-Cc: linux-rockchip@lists.infradead.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, dbasehore@chromium.org, Caesar Wang <wxt@rock-chips.com>, Roger Chen <roger.chen@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jianqun Xu <jay.xu@rock-chips.com>, Xing Zheng <zhengxing@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Elaine Zhang <zhangqing@rock-chips.com>, David Wu <david.wu@rock-chips.com>, Shunqian Zheng <zhengsq@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2] dt: net: enhance DWC EQoS binding to support Tegra186
+Date: Tue, 30 Aug 2016 14:50:58 -0600
+Message-ID: <54b380c4-179f-2260-55dd-4220e65f8f46@wwwdotorg.org>
+References: <20160824212046.2416-1-swarren@wwwdotorg.org>
+ <20160830190152.GA25083@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160830190152.GA25083@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lars Persson <lars.persson-VrBV9hrLPhE@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds needed gamc information for rk3399,
-also support the gmac pd.
+On 08/30/2016 01:01 PM, Rob Herring wrote:
+> On Wed, Aug 24, 2016 at 03:20:46PM -0600, Stephen Warren wrote:
+>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> The Synopsys DWC EQoS is a configurable IP block which supports multiple
+>> options for bus type, clocking and reset structure, and feature list.
+>> Extend the DT binding to define a "compatible value" for the configuration
+>> contained in NVIDIA's Tegra186 SoC, and define some new properties and
+>> list property entries required by that configuration.
 
-Signed-off-by: Roger Chen <roger.chen@rock-chips.com>
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
----
+>> diff --git a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 90 ++++++++++++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
+>>  Required properties:
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 32aebc8..53ac651 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -200,6 +200,26 @@
- 		};
- 	};
- 
-+	gmac: eth@fe300000 {
-+		compatible = "rockchip,rk3399-gmac";
-+		reg = <0x0 0xfe300000 0x0 0x10000>;
-+		rockchip,grf = <&grf>;
-+		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "macirq";
-+		clocks = <&cru SCLK_MAC>, <&cru SCLK_MAC_RX>,
-+			 <&cru SCLK_MAC_TX>, <&cru SCLK_MACREF>,
-+			 <&cru SCLK_MACREF_OUT>, <&cru ACLK_GMAC>,
-+			 <&cru PCLK_GMAC>;
-+		clock-names = "stmmaceth", "mac_clk_rx",
-+			      "mac_clk_tx", "clk_mac_ref",
-+			      "clk_mac_refout", "aclk_mac",
-+			      "pclk_mac";
-+		resets = <&cru SRST_A_GMAC>;
-+		reset-names = "stmmaceth";
-+		power-domains = <&power RK3399_PD_GMAC>;
-+		status = "disabled";
-+	};
-+
- 	sdio0: dwmmc@fe310000 {
- 		compatible = "rockchip,rk3399-dw-mshc",
- 			     "rockchip,rk3288-dw-mshc";
-@@ -611,6 +631,11 @@
- 		status = "disabled";
- 	};
- 
-+	qos_gmac: qos@ffa5c000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffa5c000 0x0 0x20>;
-+	};
-+
- 	qos_hdcp: qos@ffa90000 {
- 		compatible = "syscon";
- 		reg = <0x0 0xffa90000 0x0 0x20>;
-@@ -704,6 +729,11 @@
- 			#size-cells = <0>;
- 
- 			/* These power domains are grouped by VD_CENTER */
-+			pd_gmac@RK3399_PD_GMAC {
-+				reg = <RK3399_PD_GMAC>;
-+				clocks = <&cru ACLK_GMAC>;
-+				pm_qos = <&qos_gmac>;
-+			};
- 			pd_iep@RK3399_PD_IEP {
- 				reg = <RK3399_PD_IEP>;
- 				clocks = <&cru ACLK_IEP>,
-@@ -1183,6 +1213,66 @@
- 			drive-strength = <13>;
- 		};
- 
-+		gmac {
-+			rgmii_pins: rgmii-pins {
-+				rockchip,pins =
-+					/* mac_txclk */
-+					<3 17 RK_FUNC_1 &pcfg_pull_none_13ma>,
-+					/* mac_rxclk */
-+					<3 14 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_mdio */
-+					<3 13 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_txen */
-+					<3 12 RK_FUNC_1 &pcfg_pull_none_13ma>,
-+					/* mac_clk */
-+					<3 11 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_rxdv */
-+					<3 9 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_mdc */
-+					<3 8 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_rxd1 */
-+					<3 7 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_rxd0 */
-+					<3 6 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_txd1 */
-+					<3 5 RK_FUNC_1 &pcfg_pull_none_13ma>,
-+					/* mac_txd0 */
-+					<3 4 RK_FUNC_1 &pcfg_pull_none_13ma>,
-+					/* mac_rxd3 */
-+					<3 3 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_rxd2 */
-+					<3 2 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_txd3 */
-+					<3 1 RK_FUNC_1 &pcfg_pull_none_13ma>,
-+					/* mac_txd2 */
-+					<3 0 RK_FUNC_1 &pcfg_pull_none_13ma>;
-+			};
-+
-+			rmii_pins: rmii-pins {
-+				rockchip,pins =
-+					/* mac_mdio */
-+					<3 13 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_txen */
-+					<3 12 RK_FUNC_1 &pcfg_pull_none_13ma>,
-+					/* mac_clk */
-+					<3 11 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_rxer */
-+					<3 10 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_rxdv */
-+					<3 9 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_mdc */
-+					<3 8 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_rxd1 */
-+					<3 7 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_rxd0 */
-+					<3 6 RK_FUNC_1 &pcfg_pull_none>,
-+					/* mac_txd1 */
-+					<3 5 RK_FUNC_1 &pcfg_pull_none_13ma>,
-+					/* mac_txd0 */
-+					<3 4 RK_FUNC_1 &pcfg_pull_none_13ma>;
-+			};
-+		};
-+
- 		i2c0 {
- 			i2c0_xfer: i2c0-xfer {
- 				rockchip,pins =
--- 
-1.9.1
+>> -- clocks: Phandles to the reference clock and the bus clock
+>> -- clock-names: Should be "phy_ref_clk" for the reference clock and "apb_pclk"
+>> -  for the bus clock.
+>> +- clocks: Phandle and clock specifiers for each entry in clock-names, in the
+>> +  same order. See ../clock/clock-bindings.txt.
+>> +- clock-names: May contain any/all of the following depending on the IP
+>> +  configuration, in any order:
+>
+> No, they should be in a defined order.
+
+If the binding only defines "clocks", then yes the order must be specified.
+
+If the binding defines clock-names too, then the order is arbitrary 
+since all clocks must be looked up via clock-names. That's the entire 
+point of having a clock-names property.
+
+...
+>> +    The EQOS transmit path clock. The HW signal name is clk_tx_i.
+>> +    In some configurations (e.g. GMII/RGMII), this clock also drives the PHY TX
+>> +    path. In other configurations, other clocks (such as tx_125, rmii) may
+>> +    drive the PHY TX path.
+>> +  - "rx"
+>> +    The EQOS receive path clock. The HW signal name is clk_rx_i.
+>> +    In some configurations (e.g. GMII/RGMII), this clock also drives the PHY RX
+>> +    path. In other configurations, other clocks (such as rx_125, pmarx_0,
+>> +    pmarx_1, rmii) may drive the PHY RX path.
+>> +  - "slave_bus"
+>> +    (Alternate name "apb_pclk"; only one alternate must appear.)
+>> +    The CPU/slave-bus (CSR) interface clock. Despite the name, this applies to
+>> +    any bus type; APB, AHB, AXI, etc. The HW signal name is hclk_i (AHB) or
+>> +    clk_csr_i (other buses).
+>
+> Sounds like 2 clocks here.
+>
+>> +  - "master_bus"
+>> +    The master bus interface clock. Only required in configurations that use a
+>> +    separate clock for the master and slave bus interfaces. The HW signal name
+>> +    is hclk_i (AHB) or aclk_i (AXI).
+>
+> Sounds like 2 clocks. I'm guessing these are mutually exclusive based on
+> whether you configure the IP for AHB or AXI?
+
+Yes, my understanding is that the two clocks are mutually exclusive in 
+both cases.
+
+It seems simpler to have an entry in clocks/clock-names for each logical 
+purpose, so that the driver can always retrieve a "slave bus clock" and 
+a "master bus clock". That way, there's never any conditional code in 
+the driver; it just gets two fixed clock names and enables them, no 
+matter what the HW configuration.
+
+If the binding specifies 3 clocks, hclk_i, clk_csr_i, and aclk_i, then 
+the driver needs to know which subset of clocks to retrieve based on 
+compatible value or HW configuration. That seems like unnecessary 
+complexity. I suppose the driver could just attempt to retrieve all 3 
+clocks, and ignore any missing clocks, but that would allow malformed 
+DTs not to be noticed since the driver wouldn't validate the set of 
+clocks present, and could lead to the driver touching the HW without all 
+required clocks active, which at least in Tegra can lead to a HW hang.
+
+>> +  Note: Support for additional IP configurations may require adding the
+>> +  following clocks to this list in the future: clk_rx_125_i, clk_tx_125_i,
+>> +  clk_pmarx_0_i, clk_pmarx1_i, clk_rmii_i, clk_revmii_rx_i, clk_revmii_tx_i.
+>> +
+>> +  The following compatible values require the following set of clocks:
+>> +  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10":
+>> +    - "slave_bus"
+>> +    - "master_bus"
+>> +    - "rx"
+>> +    - "tx"
+>> +    - "ptp_ref"
+>> +  - "axis,artpec6-eqos", "snps,dwc-qos-ethernet-4.10":
+>> +    - "phy_ref_clk"
+>> +    - "apb_clk"
+>
+> It would be good if this was marked deprecated and the full set of
+> clocks could be described and supported. Not sure if you can figure that
+> out. Is it really only 2 clocks, or these have multiple connections to
+> the same source.
+
+Lars, can you answer here?
+
+I deliberately didn't attempt to change the binding definition for the 
+existing use-case, since I'm not familiar with that SoC, and don't 
+relish changing DTs for a platform I can't test.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
