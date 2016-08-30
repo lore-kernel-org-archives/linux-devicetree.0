@@ -1,149 +1,94 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] ARm64: amlogic: Introduce common GX family dtsi
-Date: Tue, 30 Aug 2016 10:33:19 +0200
-Message-ID: <58294020-4c10-5e77-7d0a-b81de4497962@baylibre.com>
-References: <1472457371-1305-1-git-send-email-narmstrong@baylibre.com>
- <CAOQ7t2YGbASh7v25wgDspKNWgFOcRsikJs_WZptn+LkVXmaHig@mail.gmail.com>
- <2983d731-82fd-63fc-7541-8c1d6a929416@suse.de>
- <20160829195030.GA10797@localhost>
- <ca513cb4-34d4-72f9-9e32-7908329243a6@suse.de>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: da850: Add missing pin muxing for the UARTs
+Date: Tue, 30 Aug 2016 14:24:53 +0530
+Message-ID: <c3b0be53-d9ed-574e-4699-3e294ec6c927@ti.com>
+References: <20160804110656.25318-1-kbeldan@baylibre.com>
+ <m2eg64pchw.fsf@baylibre.com> <20160804210045.GD15013@gobelin>
+ <m2fuqknnqk.fsf@baylibre.com> <fe36e8d1-f371-b093-de15-5e03370ea38c@ti.com>
+ <dd4712ba-6144-8c64-59a6-7673936af53c@ti.com>
+ <20160824082934.GA20246@gobelin>
+ <a076cc95-d338-ec13-ba05-360c1857cda5@ti.com>
+ <20160826171718.GB20752@gobelin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ca513cb4-34d4-72f9-9e32-7908329243a6-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <20160826171718.GB20752@gobelin>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-amlogic <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/29/2016 10:15 PM, Andreas Färber wrote:
-> Am 29.08.2016 um 21:50 schrieb Carlo Caione:
->> On 29/08/16 20:38, Andreas Färber wrote:
->>> Am 29.08.2016 um 10:01 schrieb Carlo Caione:
->>>> On Mon, Aug 29, 2016 at 9:56 AM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->>>>> Neil Armstrong (3):
->>>>>   ARM64: dts: amlogic: Add Meson GX Family common dtsi
->>>>>   ARM64: dts: amlogic: Switch Meson GXL dtsi to use common GX dtsi
->>>>>   ARM64: dts: amlogic: Switch Meson GXBB dtsi to use common GX dtsi
->>>
->>> Adding an unused .dtsi duplicating GXBB makes me uneasy.
+On Friday 26 August 2016 10:47 PM, Karl Beldan wrote:
+
+>>> Also I think it would be better for the serial nodes to reclaim the rxtx
+>>> pins in the dtsi, and override the reclaimed pins in the .dts only for
+>>> the nodes reclaiming flow control (some other pins could also be
+>>> directly reclaimed in the dtsi).
 >>
->> S905x (GXL) is different from S905 (GXBB), it's unused now but in the
->> future we can expect something different in the two DTSI.
-> 
-> Guess I need to be --verbose. ;)
-> 
-> I meant: After patch 1/3 there is a gx-common.dtsi that duplicates
-> contents of gxbb.dtsi and is not yet #include'd anywhere, i.e., unused.
-> 
->>> Any chance we can simplify this to at most two steps?
->>> 1) Move code from gxbb to gx (1/3 + 3/3)
->>> 2) Add gxl using gx ("Add basic support for Amlogic S905X" + 2/3)
+>> You lost me here. I guess I will benefit from a code snippet to
+>> illustrate the intention.
 >>
->> fine by me.
+> 
+> Sure, instead of having: {
+> 
+> ### board.dts:
+> &serialN {
+> 	pinctrl-names = "default";
+> 	pinctrl-0 = <&serialN_rxtx_pins>;
+> 	status = "okay";
+> };
+> &serialN+1 {
+> 	pinctrl-names = "default";
+> 	pinctrl-0 = <&serialN+1_rxtx_pins>, <&serialN+1_rtscts_pins>;
+> 	status = "okay";
+> };
+> 
+> } use ------------------ {
+> 
+> ### plat.dtsi:
+> serialN: serial@xxxxx {
+> 	compatible = "ns16550a";
+> 	pinctrl-0 = <&serialN_rxtx_pins>;
+> 	status = "disabled";
+> 	[...]
+> };
+> serialN+1: serial@xxxxx {
+> 	compatible = "ns16550a";
+> 	pinctrl-0 = <&serialN+1_rxtx_pins>;
+> 	status = "disabled";
+> 	[...]
+> };
+> 
+> ### board.dts:
+> &serialN {
+> 	status = "okay";
+> };
+> &serialN+1 {
+> 	pinctrl-0 = <&serialN+1_rxtx_pins>, <&serialN+1_rtscts_pins>;
+> 	status = "okay";
+> };
 
-I can merge carlo's GXL support into this patchet.
+I dont think it is a good idea to specify a pinctrl setting in
+da850.dtsi and override it in board.dts. Fundamentally I am against
+having properties in <soc.dtsi> overridden from <board.dts>.  Sure, it
+saves some code in some cases, but it is confusing to read/debug and you
+are never sure that the property you seen set in one place is the one
+finally taking effect.
 
+The only notable exception is 'status' property. If you see other
+exceptions in DaVinci, its only because of my oversight.
+
+>> It would be nice if you could fixup mcasp0_pins in da850-evm.dts. Surely
+>> it is doing more than what is needed.
 >>
->>> Alternatively:
->>> 1) "Add basic support for Amlogic S905X"
->>> 2) Factor out common bits (1/3 + 2/3 + 3/3)
->>
->> how is this different from this patchset?
 > 
-> I'm suggesting we do "atomic" move operations, not copy and then remove.
-> 
-> The difference between my two suggestions is how many and which changes
-> we squash - I do appreciate that it's easy for review as is but what I
-> have in mind is that either we should get this refactoring applied asap
-> (#1 1)) and rebase all pending patches on it, or we may need to rebase
-> the refactoring onto any pending MMC, SDIO, etc. patches, which I feel
-> is safer to do in one big patch (#2 2)) than split over multiple ones.
-> It really depends on the merge order and roadmap you guys have in mind.
+> According to the schematics it is indeed, I could squeeze it in the series.
 
-I'm not very convinced about the utility the reduce commits... having a dtsi alone won't arm anyone.
-Nevertheless, I will squash the two commits.
+Thanks!
 
-> 
->>> As for bike-shedding, is there a GX family as well or could we drop
->>> -common? .dtsi is always something common - compare Exynos or i.MX.
->>> Since there are meson8b and meson8 I was anticipating that after gxbb
->>> would come gx, not gxl.
->>
->> AFAIK we have:
->> - GXBB
->> - GXL
->> - GXM
->> - GXTVBB
->>
->>> Do you know what the L in GXL is for? Should we consider renaming gxbb
->>> to gxb, and then also insert -s905 as suggested by Kevin, for symmetry?
->>
->> Yes, that make sense.
-
-As Amlogic told us, we have at least two families :
- - GXBB with the S905
- - GXL with the S905D and S905X
-
-The GXL and GXBB families will share a lot, except the clocks tree, pinctrl registers, USB IP versions and at least ethernet PHY handling.
-
-But the two GXL SoCs will still share a lot, maybe everything, we are not sure for now.
-
-In the Amlogic SDK kernel, we can see more families :
- - GXM seems to be the S912 since it has two clusters of 4xA53, but looks identical to GXL for pinctrl and clocks
- - GXTVBB looking at the Amlogic SDK it could be a GXBB variant with a different GPU (t83x instead of mali450), pinctrl and clocks
-
-In their SDK, there is a single GXL pinctrl and clock driver for GXL and GXM.
-
-Taking in account all the boards, families and SoCs, we should have the following:
-meson-gx-common.dtsi
-├── meson-gxbb-s905.dtsi
-│   ├── meson-gxbb-s905-odroidc2.dts
-│   └── meson-gxbb-s905-p20x.dtsi
-│       ├── meson-gxbb-s905-p200.dts
-│       └── meson-gxbb-s905-p201.dts
-├── meson-gxl.dtsi
-│   ├── meson-gxl-s905d.dtsi
-│   │   └── meson-gxl-s905d-p23x.dts
-│   │       ├── meson-gxl-s905d-p230.dts
-│   │       └── meson-gxl-s905d-p231.dts
-│   └── meson-gxl-s905x.dtsi
-│       └── meson-gxl-s905x-p212.dts
-└── meson-gxm-s912.dtsi
-    └── meson-gxm-s912-q20x.dtsi
-        ├── meson-gxm-s912-q200.dts
-        └── meson-gxm-s912-q201.dts
-
-But since GXBB will only be S905, we can drop the S905 naming and keep what is already upstream,
-then GXM won't happen until a certain time so I plan to push the following :
-
-meson-gx-common.dtsi
-├── meson-gxbb.dtsi
-│   ├── meson-gxbb-odroidc2.dts
-│   └── meson-gxbb-p20x.dtsi
-│       ├── meson-gxbb-p200.dts
-│       └── meson-gxbb-p201.dts
-└── meson-gxl.dtsi
-    ├── meson-gxl-s905d.dtsi
-    │   └── meson-gxl-s905d-p23x.dts
-    │       ├── meson-gxl-s905d-p230.dts
-    │       └── meson-gxl-s905d-p231.dts
-    └── meson-gxl-s905x.dtsi
-        └── meson-gxl-s905x-p212.dts
-
-But the meson-gxl-s905d.dtsi, meson-gxl-s905x.dtsi and meson-gxl.dtsi will be empty until we push the pinctrl, clock, ethernet PHY and USB nodes for them.
-
-> 
-> Hm, GXTVB would still be longer than GXL then, not much point then.
-> We could still do -gxbb-s905 though.
-> 
-> Cheers,
-> Andreas
-> 
-
-Thanks,
-Neil
+Regards,
+Sekhar
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
