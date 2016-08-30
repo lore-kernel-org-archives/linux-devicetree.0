@@ -1,96 +1,119 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: da850: Add missing pin muxing for the UARTs
-Date: Tue, 30 Aug 2016 14:24:53 +0530
-Message-ID: <c3b0be53-d9ed-574e-4699-3e294ec6c927@ti.com>
-References: <20160804110656.25318-1-kbeldan@baylibre.com>
- <m2eg64pchw.fsf@baylibre.com> <20160804210045.GD15013@gobelin>
- <m2fuqknnqk.fsf@baylibre.com> <fe36e8d1-f371-b093-de15-5e03370ea38c@ti.com>
- <dd4712ba-6144-8c64-59a6-7673936af53c@ti.com>
- <20160824082934.GA20246@gobelin>
- <a076cc95-d338-ec13-ba05-360c1857cda5@ti.com>
- <20160826171718.GB20752@gobelin>
+From: Peter Huewe <peterhuewe-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH] Documentation: tpm: Adds the TPM device
+	tree node documentation
+Date: Tue, 30 Aug 2016 01:55:53 -0700
+Message-ID: <B4FE41A5-DE20-46FE-A781-7B31F2AB703D@gmx.de>
+References: <1472532277-21933-1-git-send-email-nayna@linux.vnet.ibm.com>
+	<20160830063631.GA5336@intel.com>
+	<D8028209-446C-4C50-9AEC-25F6F8C98995@gmx.de>
+	<20160830070649.GA6215@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160826171718.GB20752@gobelin>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20160830070649.GA6215-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gcwilson-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 26 August 2016 10:47 PM, Karl Beldan wrote:
 
->>> Also I think it would be better for the serial nodes to reclaim the rxtx
->>> pins in the dtsi, and override the reclaimed pins in the .dts only for
->>> the nodes reclaiming flow control (some other pins could also be
->>> directly reclaimed in the dtsi).
->>
->> You lost me here. I guess I will benefit from a code snippet to
->> illustrate the intention.
->>
-> 
-> Sure, instead of having: {
-> 
-> ### board.dts:
-> &serialN {
-> 	pinctrl-names = "default";
-> 	pinctrl-0 = <&serialN_rxtx_pins>;
-> 	status = "okay";
-> };
-> &serialN+1 {
-> 	pinctrl-names = "default";
-> 	pinctrl-0 = <&serialN+1_rxtx_pins>, <&serialN+1_rtscts_pins>;
-> 	status = "okay";
-> };
-> 
-> } use ------------------ {
-> 
-> ### plat.dtsi:
-> serialN: serial@xxxxx {
-> 	compatible = "ns16550a";
-> 	pinctrl-0 = <&serialN_rxtx_pins>;
-> 	status = "disabled";
-> 	[...]
-> };
-> serialN+1: serial@xxxxx {
-> 	compatible = "ns16550a";
-> 	pinctrl-0 = <&serialN+1_rxtx_pins>;
-> 	status = "disabled";
-> 	[...]
-> };
-> 
-> ### board.dts:
-> &serialN {
-> 	status = "okay";
-> };
-> &serialN+1 {
-> 	pinctrl-0 = <&serialN+1_rxtx_pins>, <&serialN+1_rtscts_pins>;
-> 	status = "okay";
-> };
 
-I dont think it is a good idea to specify a pinctrl setting in
-da850.dtsi and override it in board.dts. Fundamentally I am against
-having properties in <soc.dtsi> overridden from <board.dts>.  Sure, it
-saves some code in some cases, but it is confusing to read/debug and you
-are never sure that the property you seen set in one place is the one
-finally taking effect.
+Am 30. August 2016 00:06:49 GMT-07:00, schrieb Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>:
+>On Mon, Aug 29, 2016 at 11:41:51PM -0700, Peter Huewe wrote:
+>> 
+>> 
+>> Am 29. August 2016 23:36:31 GMT-07:00, schrieb Jarkko Sakkinen
+><jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>:
+>> >On Tue, Aug 30, 2016 at 12:44:37AM -0400, Nayna Jain wrote:
+>> >> This is documenting device tree binding for
+>> >> I2C based TPM, similar concept which being used
+>> >> for virtual TPM on POWER7 and POWER8 systems running PowerVM.
+>> >> 
+>> >> Signed-off-by: Nayna Jain <nayna-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+>> >> ---
+>> >>  Documentation/devicetree/bindings/i2c/i2c-tpm.txt | 29
+>> >+++++++++++++++++++++++
+>> >>  1 file changed, 29 insertions(+)
+>> >>  create mode 100644
+>Documentation/devicetree/bindings/i2c/i2c-tpm.txt
+>> >> 
+>> >> diff --git a/Documentation/devicetree/bindings/i2c/i2c-tpm.txt
+>> >b/Documentation/devicetree/bindings/i2c/i2c-tpm.txt
+>> >> new file mode 100644
+>> >> index 0000000..8fdee14
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/i2c/i2c-tpm.txt
+>> >> @@ -0,0 +1,29 @@
+>> >> +Device Tree Bindings for I2C based Trusted Platform Module(TPM)
+>> >> +---------------------------------------------------------------
+>> >> +
+>> >> +This node describes a TPM device connected to Processor on i2c
+>bus.
+>> >> +
+>> >> +Required properties:
+>> >> +
+>> >> +- compatible : 'manufacturer,model'
+>> >> +- label : represents device type
+>> >> +- linux,sml-base : base address of the Event Log. It is a
+>physical
+>> >address.
+>> >> +		   sml stands for shared memory log.
+>> >> +- linux,sml-size : size of the memory allocated for the Event
+>Log.
+>> >> +
+>> >> +Optional properties:
+>> >> +
+>> >> +- status: indicates whether the device is enabled or disabled.
+>> >"okay" for
+>> >> +          enabled and "disabled" for disabled.
+>> >> +
+>> >> +Example
+>> >> +-------
+>> >> +
+>> >> +tpm@57 {
+>> >> +	reg = <0x57>;
+>> >> +	label = "tpm";
+>> >> +	compatible = "nuvoton,npct650", "nuvoton,npct601";
+>> >> +	linux,sml-base = <0x7f 0xfd450000>;
+>> >> +	linux,sml-size = <0x10000>;
+>> >> +	status = "okay";
+>> >> +};
+>> >
+>> >I would rather name the fields event-log-base and event-log-size.
+>They
+>> >would be much more readable and obvious names.
+>> 
+>> I agree - I always get stuck upon the sml thing.
+>> >
+>> >Also, enabled should be "enabled", not "okay".
+>> 
+>> No!
+>> okay/ok is a dt keyword! (Or at least used in everything else)
+>> 
+>> It has nothing to do whether the TPM is enabled/disabled/activated
+>whatever
+>> Peter
+>
+>OK, just to educate myself, where can I find these standard keywords?
 
-The only notable exception is 'status' property. If you see other
-exceptions in DaVinci, its only because of my oversight.
 
->> It would be nice if you could fixup mcasp0_pins in da850-evm.dts. Surely
->> it is doing more than what is needed.
->>
-> 
-> According to the schematics it is indeed, I could squeeze it in the series.
+See http://www.devicetree.org/specifications-pdf table 2.4
+>
+>The granularity is wrong (section 8.7 of TPM 2.0 Structures
+>specification). There are four different things that you can
+>enabled/disable.
+>
+>/Jarkko
 
-Thanks!
+-- 
+Sent from my mobile
 
-Regards,
-Sekhar
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------------------------------------------------------------------------------
