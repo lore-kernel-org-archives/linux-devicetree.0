@@ -1,76 +1,66 @@
-From: David Herrmann <dh.herrmann@gmail.com>
-Subject: Re: [RFC] drm: implement generic firmware eviction
-Date: Tue, 30 Aug 2016 23:12:52 +0200
-Message-ID: <CANq1E4Twr6Uy2QnowV_WP8yz9QymkchnFS1GwFf_FBRcYF6oOQ@mail.gmail.com>
-References: <20160826000056.12806-1-dh.herrmann@gmail.com>
- <CAL_Jsq+1MeicZmr+7Q4K6FLnTfD4jBBAQR1KPHMSLfNNUe4ENw@mail.gmail.com>
- <CANq1E4Shy1+rQsshWxeFRhFvuAg1sB3ffnVT7hoMZSjZAR=yuQ@mail.gmail.com>
- <CAL_JsqKOOExaBcQfzxYyPE-h9qd4E8T+9GOKQGvXpuNSaObxoA@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 01/12] of: add vendor prefix for J-Core
+Date: Tue, 30 Aug 2016 16:13:07 -0500
+Message-ID: <20160830211307.GB18526@rob-hp-laptop>
+References: <cover.1464148904.git.dalias@libc.org>
+ <b6d33800300bde8f1d9a7b88a715d741548fad4a.1464148904.git.dalias@libc.org>
+ <CAL_JsqKWq-DBQMWof6hyh0_sS4OPOP7afJXYdaWTiqf15MpKAg@mail.gmail.com>
+ <20160727053112.GY15995@brightrain.aerifal.cx>
+ <20160804222757.GO15995@brightrain.aerifal.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqKOOExaBcQfzxYyPE-h9qd4E8T+9GOKQGvXpuNSaObxoA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160804222757.GO15995-C3MtFaGISjmo6RMmaWD+6Sb1p8zYI1N1@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkKCk9uIFR1ZSwgQXVnIDMwLCAyMDE2IGF0IDEwOjU4IFBNLCBSb2IgSGVycmluZyA8cm9iaCtk
-dEBrZXJuZWwub3JnPiB3cm90ZToKPiBPbiBUdWUsIEF1ZyAzMCwgMjAxNiBhdCAyOjMwIFBNLCBE
-YXZpZCBIZXJybWFubiA8ZGguaGVycm1hbm5AZ21haWwuY29tPiB3cm90ZToKPj4gU3VyZSwgYWxs
-IHRob3NlIGZ1bmN0aW9ucyBhcmUgbm90IG1lYW50IHRvIGJlIGNhbGxlZCBpbiBwYXJhbGxlbCBi
-eQo+PiBtdWx0aXBsZSB0YXNrcy4gVGhleSBhcmUgcmF0aGVyIG1lYW50IHRvIGhhdmUgYSBzaW5n
-bGUgaG9sZGVyIHdoaWNoCj4+IHByZWZlcmFibHkgaXMgdGhlIG9uZSBpbnN0YW50aWF0aW5nIGFu
-ZCBkZXN0cm95aW5nIHRoZQo+PiBub2RlL2RldmljZS9mb29iYXIuIEJ1dCB0aGUgZnJhbWVidWZm
-ZXIgZXZpY3Rpb24gY29kZSBzb21laG93IG5lZWRzIHRvCj4+IHRyaWdnZXIgdGhlIHJlbW92YWws
-IGFuZCB0aHVzIG5lZWRzIHNvbWUgaG9vaywgdGhhdCBjYW4gYmUgY2FsbGVkIGluCj4+IHBhcmFs
-bGVsIGJ5IGFueSBkcml2ZXIgdGhhdCBpcyBsb2FkZWQuCj4+Cj4+IEkgY2FuIG1ha2Ugc3VyZSB0
-aGUgc2ltcGxlLWZyYW1lYnVmZmVyIGV2aWN0aW9uIGNvZGUgaXMgbG9ja2VkCj4+IHByb3Blcmx5
-LiBUaGF0J2xsIHdvcmssIGZvciBub3cuIEJ1dCBpZiBzb21lb25lIGVuZHMgdXAgcHJvdmlkaW5n
-Cj4+IHNpbXBsZS1mcmFtZWJ1ZmZlciBkZXZpY2VzIHZpYSBvdmVybGF5cyBvciBhbnkgb3RoZXIg
-ZHluYW1pYwo+PiBtZWNoYW5pc20sIHRoZXkgd2lsbCByYWNlIHRoZSByZW1vdmFsLgo+Cj4gTm8g
-ZG91YnQgc29tZW9uZSB3aWxsIGNvbWUgdXAgd2l0aCBzb21lIHVzZWNhc2Ugd2FudGluZyB0byBk
-byB0aGF0LAo+IGJ1dCBJTU8gdGhhdCBpcyBub3QgYSBzdXBwb3J0ZWQgdXNlY2FzZSBhbmQgc2hv
-dWxkIG5vdCBiZS4KPiBzaW1wbGUtZnJhbWVidWZmZXIgaXMgZm9yIHByb3ZpZGluZyBhIGZpcm13
-YXJlIHNldHVwIGZyYW1lYnVmZmVyLgoKU3VyZS4gQW55IHNlbnNpYmxlIHNpbXBsZS1mcmFtZWJ1
-ZmZlciB1c2Ugd291bGQgZm9sbG93IHdoYXQgd2UgaGF2ZQpub3cuIEJ1dCBpdCBmZWVscyB3cm9u
-ZyB0byBtZSB0aGF0IGlmIHNvbWUgbm9kZSBpcyBhZGRlZCB0aGF0IGp1c3QKaGFwcGVucyB0byBo
-YXZlICJzaW1wbGUtZnJhbWVidWZmZXIiIGFzIG5hbWUsIHN1ZGRlbmx5IHRoaW5ncyB3aWxsIGdv
-Cndyb25nLiBJIG1lYW4sIHllYWgsIERUIGlzIG5vdCBhIHVzZXJzcGFjZSBBUEksIGJ1dCBJIHN0
-aWxsIHdvdWxkIGxpa2UKdGhlIGNvZGUgdG8gY2F0Y2ggbWlzdXNlcyByYXRoZXIgdGhhbiBmYWls
-LiBJdCBpcyBhbiBBUEkgYWZ0ZXIgYWxsLiBPcgppcyB0aGF0IGJlaW5nIG92ZXJseSBwZWRhbnRp
-Yz8KCj4+IEFuZCBpdCB3aWxsIGJlIGNvbXBsZXRlbHkKPj4gbm9uLW9idmlvdXMgdG8gdGhlbS4g
-SSByZWFsbHkgZG9uJ3Qgd2FudCB0byBiZSByZXNwb25zaWJsZSB0byBoYXZlCj4+IHN1Ym1pdHRl
-ZCB0aGF0IGNvZGUuIElmIGFueW9uZSBjYXJlcyBmb3IgcHJvcGVyIGRldmljZSBoYW5kLW92ZXIg
-b24KPj4gQVJNLCBwbGVhc2UgY29tZSB1cCB3aXRoIGFuIGlkZWEgdG8gZml4IGl0LiBPdGhlcndp
-c2UsIEkgd2lsbCBqdXN0Cj4+IGxpbWl0IHRoZSBzaW1wbGVkcm0gY29kZSB0byB4ODYuCj4+Cj4+
-IElPVyB0aGUgZGV2aWNlIGhhbmRvdmVyIGNvZGUgc29tZWhvdyBuZWVkcyB0byBrbm93IHdobyB3
-YXMgcmVzcG9uc2libGUKPj4gZm9yIHRoZSBpbnN0YW50aWF0aW9uIG9mIHRoZSBzaW1wbGUtZnJh
-bWVidWZmZXIgZGV2aWNlLCBzbyBpdCBjYW4gdGVsbAo+PiB0aGVtIHRvIHJlbW92ZSBpdCBhZ2Fp
-bi4gT24geDg2IHRoZXJlIGlzIG9ubHkgb25lIHBsYWNlIHdoZXJlIHRob3NlCj4+IGNhbiBiZSBp
-bnN0YW50aWF0ZWQuIEJ1dCBvbiBPRi1iYXNlZCBzeXN0ZW1zLCBpdCBjYW4gYmUgZHluYW1pY2Fs
-bHkKPj4gaW5zdGFudGlhdGVkIGluIG1hbnkgcGxhY2VzIHJpZ2h0IG5vdy4KPgo+IFdoYXQgZG8g
-eW91IG1lYW4gYnkgYWxsIG92ZXIgdGhlIHBsYWNlPyBJdCBpcyBvbmx5IGluIHNpbXBsZWZiX2lu
-aXQKPiBBVE0uIEkgaGF2ZW4ndCBsb29rZWQgYXQgd2hhdCBzaW1wbGVkcm0gaXMgZG9pbmcsIGJ1
-dCB3ZSBjYW4gbW92ZSB0aGUKPiBkZXZpY2UgY3JlYXRpb24gdG8gb2ZfcGxhdGZvcm1fZGVmYXVs
-dF9wb3B1bGF0ZV9pbml0IGlmIHdlIG5lZWQgYQo+IHNpbmdsZSBzcG90LgoKQ3VycmVudGx5IEkg
-c2VlIGF0IGxlYXN0IDMgcGF0aHMgdGhhdCBtaWdodCBhZGQgc3VjaCBub2RlczoKCiAtIG9mX3Bs
-YXRmb3JtX3BvcHVsYXRlKCkKIC0gb2Zfbm9kZV9hdHRhY2goKSAodmlhIHRoZSBub3RpZmllcikK
-IC0gc2ltcGxlZmJfaW5pdCgpCgpTaG91bGQgSSBqdXN0IGlnbm9yZSBhbnl0aGluZyBidXQgc2lt
-cGxlZmJfaW5pdCgpPyBJIHVuZGVyc3RhbmQgdGhhdAppdCdzIHRoZSBvbmx5IG9uZSB1c2VkIGJ5
-IG5vcm1hbCBjb2RlLXBhdGhzLCBidXQgaXNuJ3QgaXQga2luZGEgdWdseQp0byBzaWxlbnRseSBp
-bnRyb2R1Y2UgcmFjZSBjb25kaXRpb25zIGlmIGEgbm9kZSBqdXN0IGhhcHBlbnMgdG8gYmUKaW50
-cm9kdWNlZCB2aWEgb25lIG9mIHRoZSBvdGhlciBtZXRob2RzPyBPciBhcmUgZXJyb3JzIGluIHRo
-ZSBEVCBub3QKbWVhbnQgdG8gYmUgY2F1Z2h0PwoKVGhhbmtzCkRhdmlkCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Thu, Aug 04, 2016 at 06:27:57PM -0400, Rich Felker wrote:
+> On Wed, Jul 27, 2016 at 01:31:12AM -0400, Rich Felker wrote:
+> > On Wed, May 25, 2016 at 08:18:06AM -0500, Rob Herring wrote:
+> > > On Wed, May 25, 2016 at 12:43 AM, Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org> wrote:
+> > > > The J-Core project (j-core.org) produces open source cpu and SoC
+> > > > peripheral cores synthesizable as FPGA bitstreams or ASICs.
+> > > >
+> > > > Signed-off-by: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
+> > > 
+> > > Please add acks when posting subsequent versions.
+> > > 
+> > > > ---
+> > > >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > > > index 86740d4..9c070b8 100644
+> > > > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > > > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > > > @@ -126,6 +126,7 @@ invensense  InvenSense Inc.
+> > > >  isee   ISEE 2007 S.L.
+> > > >  isil   Intersil
+> > > >  issi   Integrated Silicon Solutions Inc.
+> > > > +jcore  J-Core.org
+> > > >  jedec  JEDEC Solid State Technology Association
+> > > >  karo   Ka-Ro electronics GmbH
+> > > >  keymile        Keymile GmbH
+> > > > --
+> > > > 2.8.1
+> > 
+> > Since this was previously acked, can I include it in my tree for
+> > upstreaming? Or do you want me to submit the patch again?
+> 
+> Ping. Should this go upstream via me or someone else? It doesn't
+> correspond to any specific driver subsystem.
+
+If the maintainer has acked it, you can take it normally.
+
+However, for this cycle I've now applied a patch fixing the 
+alphabetizing of this file which surely will cause merge conflicts. So 
+I've now applied this.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
