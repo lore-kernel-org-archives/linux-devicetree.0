@@ -1,42 +1,43 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RESEND PATCH v3 1/3] ARM: dts: DRA7: Add "linux,pci-domain"
- property for pci dt nodes
-Date: Tue, 30 Aug 2016 11:47:03 -0700
-Message-ID: <20160830184702.hgn2vgxlts4pgkyy@atomide.com>
-References: <1470832400-11929-1-git-send-email-kishon@ti.com>
- <1470832400-11929-2-git-send-email-kishon@ti.com>
- <20160826153035.h6uyplc4mjlbc3v3@atomide.com>
- <57C5687C.8030805@ti.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v3 0/5] meson: Meson8b and GXBB DWMAC glue driver
+Date: Tue, 30 Aug 2016 20:49:28 +0200
+Message-ID: <CAFBinCCmg-+8mjd0Xc5c7bEWL9_S_4kizs_UMiiW9ATBH_G8iw@mail.gmail.com>
+References: <20160820093538.9707-1-martin.blumenstingl@googlemail.com>
+ <20160828161637.9941-1-martin.blumenstingl@googlemail.com> <20160828.234008.445367966910278179.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57C5687C.8030805@ti.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Russell King <linux@armlinux.org.uk>, Benoit Cousson <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Krzysztof Halasa <khalasa@piap.pl>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Santosh Shilimkar <ssantosh@kernel.o>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20160828.234008.445367966910278179.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>, khilman@baylibre.com
+Cc: linux-amlogic@lists.infradead.org, carlo@caione.org, mturquette@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org, manabian@gmail.com, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon@ti.com> [160830 04:06]:
-> Hi Tony,
-> 
-> On Friday 26 August 2016 09:00 PM, Tony Lindgren wrote:
-> > * Kishon Vijay Abraham I <kishon@ti.com> [160810 05:34]:
-> >> Since DRA7 has multiple PCIe Rootcomplex, add "linux,pci-domain"
-> >> property to assign a PCI domain number to each of the host
-> >> bridges.
-> > 
-> > Is this patch safe to apply without the other changes?
-> 
-> Yes. I verified pcie on dra7x by applying only this patch and it doesn't break
-> anything.
+On Mon, Aug 29, 2016 at 5:40 AM, David Miller <davem@davemloft.net> wrote:
+> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Date: Sun, 28 Aug 2016 18:16:32 +0200
+>
+>> This adds a DWMAC glue driver for the PRG_ETHERNET registers found in
+>> Meson8b and GXBB SoCs. Based on the "old" meson6b-dwmac glue driver
+>> the register layout is completely different.
+>> Thus I introduced a separate driver.
+>>
+>> Changes since v2:
+>> - fixed unloading the glue driver when built as module. This pulls in a
+>>   patch from Joachim Eastwood (thanks) to get our private data structure
+>>   (bsp_priv).
+>
+> This doesn't apply cleanly at all to the net-next tree, so I have
+> no idea where you expect these changes to be applied.
+OK, maybe Kevin can me help out here as I think the patches should go
+to various trees.
 
-OK thanks for testing, I'm picking the dts change into omap-for-v4.9/dt
-branch.
+I think patches 1, 3 and 4 should go through the net-next tree (as
+these touch drivers/net/ethernet/stmicro/stmmac/ and the corresponding
+documentation).
+Patch 2 should probably go through clk-meson-gxbb / clk-next (just
+like the other clk changes we had).
+The last patch (patch 5) should probably go through the ARM SoC tree
+(just like the other dts changes we had).
 
-The other patches you probably should upload to RMKs patch system
-if no more comments.
-
-Regards,
-
-Tony
+@David, Kevin: would this be fine for you?
