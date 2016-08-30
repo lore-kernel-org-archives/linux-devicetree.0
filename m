@@ -1,66 +1,56 @@
-From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] arm64: dts: hikey: extend default cma size to
- 128MB
-Date: Tue, 30 Aug 2016 16:56:48 +0100
-Message-ID: <57C5ACC0.90902@hisilicon.com>
-References: <1472094041-5357-1-git-send-email-guodong.xu@linaro.org>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/3] pcie-designware: support for external MSI
+ controller
+Date: Tue, 30 Aug 2016 18:06:33 +0200
+Message-ID: <20160830180633.67d6479d@free-electrons.com>
+References: <1472561830-20932-1-git-send-email-thomas.petazzoni@free-electrons.com>
+        <20160830172447.65d10772@free-electrons.com>
+        <000c01d202d5$a3809bd0$ea81d370$@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472094041-5357-1-git-send-email-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <000c01d202d5$a3809bd0$ea81d370$@gmail.com>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: fathi.boudra-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: 'Joao Pinto' <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Pratyush Anand' <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Ian Campbell' <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, 'Pawel Moll' <pawel.moll-5wv7dgnIgG8@public.gmane.org>, 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>, 'Kumar Gala' <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, 'Jason Cooper' <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, 'Andrew Lunn' <andrew-g2DYL2Zd6BY@public.gmane.org>, 'Sebastian Hesselbarth' <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Gregory Clement' <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, 'Yehuda Yitschak' <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, 'Shadi Ammouri' <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, 'Nadav Haklai' <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, 'Marc Zyngier'
 List-Id: devicetree@vger.kernel.org
 
-Hi Guodong,
+Hello,
 
-On 25/08/2016 04:00, Guodong Xu wrote:
-> To support display in Debian on HiKey, cma heap is used to allocate
-> graphic buffers. The default size of CMA is 16 MB which is not enough.
+On Tue, 30 Aug 2016 11:46:13 -0400, Jingoo Han wrote:
+
+> > Please discard this patch series, it's just pure crap. No changes at all
+> > are needed on the pcie-designware driver, using the msi-parent property
+> > already works, and my new code does nothing good.
+> > 
+> > The of_pci_find_msi_chip_by_node() API is on its way to being removed, and
+> > it doesn't return anything useful.
+> > 
+> > Only PATCH 3/3 is needed, which I'll resubmit separately.
+> > 
+> > Sorry for the noise.  
 > 
-> Increase the default CMA size to 128 MB.
-> 
-> cc: Fathi Boudra <fathi.boudra-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> cc: Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
+> Oh, good.
+> The support for External MSI controller is really necessary.
+> Thank you for your patch!
 
-Series applied to the hisilicon dt branch.
-Thanks!
+Well, no change in the driver is needed to use an external MSI
+controller. Just specify:
 
-Best Regards,
-Wei
+	msi-parent = <&....>
 
->  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> index 9e4e06a..dba3c13 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> @@ -57,8 +57,15 @@
->  			console-size	= <0x00020000>;
->  			ftrace-size	= <0x00020000>;
->  		};
-> -	};
->  
-> +		/* global autoconfigured region for contiguous allocations */
-> +		linux,cma {
-> +			compatible = "shared-dma-pool";
-> +			reusable;
-> +			size = <0x00000000 0x08000000>;
-> +			linux,cma-default;
-> +		};
-> +	};
->  
->  	reboot-mode-syscon@5f01000 {
->  		compatible = "syscon", "simple-mfd";
-> 
+in the DT description of your Designware PCIe controller. And that's
+it. I've tested it with the GIC v2m MSI controller on an ARM64
+platform, and it works as expected.
 
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
