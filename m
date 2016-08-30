@@ -1,52 +1,62 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: [PATCH v3 4/7] palmetto: Request relevant mux functions in devicetree
-Date: Tue, 30 Aug 2016 17:25:57 +0930
-Message-ID: <20160830075600.11559-5-andrew@aj.id.au>
-References: <20160830075600.11559-1-andrew@aj.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160830075600.11559-1-andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 5/5] ath9k: Make EEPROM endianness
+	swapping configurable via devicetree
+Date: Tue, 30 Aug 2016 09:57:24 +0200
+Message-ID: <201608300957.24770.arnd@arndb.de>
+References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
+	<201608292325.38091.arnd@arndb.de>
+	<CAFBinCCXqX1F3XpU-DFLLB5ZNjU1XVNiTLR-ZB34QgrL8uyv8Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <ath9k-devel-bounces@lists.ath9k.org>
+In-Reply-To: <CAFBinCCXqX1F3XpU-DFLLB5ZNjU1XVNiTLR-ZB34QgrL8uyv8Q@mail.gmail.com>
+List-Unsubscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
+	<mailto:ath9k-devel-request@lists.ath9k.org?subject=unsubscribe>
+List-Archive: <http://lists.ath9k.org/pipermail/ath9k-devel>
+List-Post: <mailto:ath9k-devel@lists.ath9k.org>
+List-Help: <mailto:ath9k-devel-request@lists.ath9k.org?subject=help>
+List-Subscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
+	<mailto:ath9k-devel-request@lists.ath9k.org?subject=subscribe>
+Sender: ath9k-devel-bounces@lists.ath9k.org
+Errors-To: ath9k-devel-bounces@lists.ath9k.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-wireless@vger.kernel.org, ath9k-devel@qca.qualcomm.com, robh+dt@kernel.org, ath9k-devel@lists.ath9k.org, chunkeey@googlemail.com, kvalo@codeaurora.org, nbd@nbd.name
 List-Id: devicetree@vger.kernel.org
 
-The requested functions are parented by the pinctrl node to provide the
-Palmetto's static pin configuration.
+On Tuesday 30 August 2016, Martin Blumenstingl wrote:
+> new logic (assuming that we went for __le16/__le32 fields):
+> - reading data: use le16_to_cpu and le32_to_cpu for all fields
+> 
+> LE system:
+> - LE EEPROM -> no swap will be applied
+> - BE EEPROM -> be16_to_cpu / be32_to_cpu (or swab16 / swab32 as before)
+> BE system:
+> - LE EEPROM -> le16_to_cpu / le32_to_cpu (or swab16 / swab32 as before)
+> - BE EEPROM -> no swap will be applied
 
-Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
----
- arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+I think this should be:
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-index cc5fcf2940bf..648fb6b9e427 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-palmetto.dts
-@@ -20,6 +20,20 @@
- 	};
- };
- 
-+&pinctrl {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flbusy_default &pinctrl_flwp_default
-+			&pinctrl_vgahs_default &pinctrl_vgavs_default
-+			&pinctrl_ddcclk_default &pinctrl_ddcdat_default
-+
-+			&pinctrl_pwm1_default &pinctrl_pwm2_default
-+			&pinctrl_pwm3_default &pinctrl_pwm4_default
-+			&pinctrl_pwm5_default &pinctrl_pwm6_default
-+			&pinctrl_pwm7_default
-+
-+			&pinctrl_bmcint_default &pinctrl_flack_default>;
-+};
-+
- &uart5 {
- 	status = "okay";
- };
--- 
-2.9.3.1.g0db844e
+LE and BE systems:
+ - LE EEPROM -> no swap will be applied
+ - BE EEPROM -> or swab16 / swab32
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The upside of this is that we no longer care about what the CPU is,
+and in my opinion that makes the code easier to understand.
+
+> There is one downside of the "new approach" I can think of: you need
+> to swap the data twice in some cases (BE EEPROM on a BE machine).
+> - first swap while writing the data to __le16/__le32 fields
+> - second swap while reading the data from the __le16/__le32 fields
+> If you forget to swap a field in either place then things will be broken.
+
+Correct. Fortunately, "make C=1" with sparse helps you find those bugs
+at compile time.
+
+> Maybe someone else wants to state his/her opinion on this - I guess
+> some fresh thoughts could help us a lot!
+
+Yes, that would be helpful. It's possible I'm missing something here,
+or that changing this will just add confusion with other people.
+
+	Arnd
