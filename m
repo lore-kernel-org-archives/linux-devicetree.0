@@ -1,32 +1,41 @@
-From: york sun <york.sun@nxp.com>
-Subject: Re: [Patch v4 9/9] arm64: Update device tree for Layerscape SoCs
-Date: Tue, 30 Aug 2016 15:15:55 +0000
-Message-ID: <AM4PR0401MB173299306761F5F59DA0B2FF9AE00@AM4PR0401MB1732.eurprd04.prod.outlook.com>
-References: <1470780000-16750-1-git-send-email-york.sun@nxp.com>
- <20160830105743.GA8366@tiger>
-Reply-To: york sun <york.sun@nxp.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 0/3] pcie-designware: support for external MSI
+ controller
+Date: Tue, 30 Aug 2016 17:24:47 +0200
+Message-ID: <20160830172447.65d10772@free-electrons.com>
+References: <1472561830-20932-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gang Liu <gang.liu@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Li Yang <leoli@freescale.com>, yangbo lu <yangbo.lu@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Stuart Yoder <stuart.yoder@nxp.com>, "oss@buserror.net" <oss@buserror.net>, Rob Herring <robh+dt@kernel.org>, "bp@alien8.de" <bp@alien8.de>, Yao Yuan <yao.yuan@nxp.com>, Mingkai Hu <Mingkai.Hu@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rajesh Bhagat <rajesh.bhagat@freescale.com>, morbidrsa
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1472561830-20932-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Joao Pinto <jpinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Pratyush Anand <pratyush.anand@gmail.com>, linux-pci@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Yehuda Yitschak <yehuday@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/30/2016 03:58 AM, Shawn Guo wrote:=0A=
-> On Tue, Aug 09, 2016 at 02:59:39PM -0700, York Sun wrote:=0A=
->> Add DDR memory controller nodes to enable EDAC driver.=0A=
->>=0A=
->> Signed-off-by: York Sun <york.sun@nxp.com>=0A=
->=0A=
-> The patch subject is too general.  I changed it to "arm64: dts: Add DDR=
-=0A=
-> memory controller for Layerscape SoCs", and applied patch.=0A=
->=0A=
-=0A=
-Thanks, Shawn.=0A=
-=0A=
-York=0A=
-=0A=
+Hello,
+
+On Tue, 30 Aug 2016 14:57:07 +0200, Thomas Petazzoni wrote:
+
+> Thomas Petazzoni (3):
+>   dt-bindings: designware-pcie: document optional msi-parent property
+>   pci: pcie-designware: add support for external MSI controller
+>   arm64: dts: marvell: enable MSI for PCIe on Armada 7K/8K
+
+Please discard this patch series, it's just pure crap. No changes at
+all are needed on the pcie-designware driver, using the msi-parent
+property already works, and my new code does nothing good.
+
+The of_pci_find_msi_chip_by_node() API is on its way to being removed,
+and it doesn't return anything useful.
+
+Only PATCH 3/3 is needed, which I'll resubmit separately.
+
+Sorry for the noise.
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
