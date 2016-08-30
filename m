@@ -1,102 +1,68 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv2] of: Add generic handling for ePAPR 1.1 fail-sss states
-Date: Mon, 29 Aug 2016 17:39:22 -0700
-Message-ID: <20160830003922.462byzmpnq277h2u@atomide.com>
-References: <20160829223542.18871-1-tony@atomide.com>
- <CAL_JsqK=JLN+ujvyVv62E-d1sB_DgeZCGP5Pddt9ohPkypHdEg@mail.gmail.com>
+From: Elaine Zhang <zhangqing@rock-chips.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Explicitly set pclk_pmu_src on
+ rk3399
+Date: Tue, 30 Aug 2016 08:59:31 +0800
+Message-ID: <57C4DA73.5000505@rock-chips.com>
+References: <1472494284-11315-1-git-send-email-dianders@chromium.org> <20160829181841.GA8682@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqK=JLN+ujvyVv62E-d1sB_DgeZCGP5Pddt9ohPkypHdEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160829181841.GA8682@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, zhengxing@rock-chips.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, wxt@rock-chips.com, jay.xu@rock-chips.com, david.wu@rock-chips.com, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [160829 17:24]:
-> On Mon, Aug 29, 2016 at 5:35 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> > It seems we can use the ePAPR 1.1 status fail-sss to do this.
-> > Quoting "Table 2-4 Values for status property" we have "fail-sss":
-> >
-> > "Indicates that the device is not operational. A serious error was
-> >  detected in the device and it is unlikely to become operational
-> >  without repair. The sss portion of the value is specific to the
-> >  device and indicates the error condition detected."
-> 
-> I had read this as 'sss' is just 3 characters, but I guess that doesn't matter.
 
-Yeah I'd assume it does not matter for the length.
 
-> > We can handle these fail states can be handled in a generic
-> > way. So let's introduce a generic status = "fail-" that
-> > describes a situation where a device driver probe should just
-> > shut down or idle the device if possible and then bail out.
-> > This allows the SoC variant and board specific dts files to set
-> > the status as needed.
-> >
-> > The suggested usage in a device driver probe is:
-> >
-> > static int foo_probe(struct platform_device *pdev)
-> > {
-> >         int err;
-> >         const char *status;
-> >         ...
-> >
-> >         pm_runtime_enable(&pdev->dev);
-> >         pm_runtime_get_sync(&pdev->dev);
-> >         pm_runtime_use_autosuspend(&pdev->dev);
-> >         ...
-> >
-> >         /* Configure device, load firmware, idle device */
-> >         ...
-> >
-> >         if (of_device_is_incomplete(pdev->dev.of_node, status)) {
-> 
-> &status
+On 08/30/2016 02:18 AM, Brian Norris wrote:
+> On Mon, Aug 29, 2016 at 11:11:24AM -0700, Doug Anderson wrote:
+>> On rk3399 we explicitly set ppll in the device tree to 676000000.  The
+>> ppll has one major child, pclk_pmu_src, that is the parent of lots of
+>> other clocks.  Right now nobody is setting that clock rate and we're
+>> relying on the divider to just happen to be something sane.  Let's be
+>> explicit in our request so we're not relying on the firmware.
+>>
+>> With the current firmware I tested with this patch has no expected
+>> impact but it's probably good to do anyway.
+>>
+>> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+>> ---
+>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> index 62d450935a57..ffb3faa8c176 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> @@ -908,8 +908,8 @@
+>>   		reg = <0x0 0xff750000 0x0 0x1000>;
+>>   		#clock-cells = <1>;
+>>   		#reset-cells = <1>;
+>> -		assigned-clocks = <&pmucru PLL_PPLL>;
+>> -		assigned-clock-rates = <676000000>;
+>> +		assigned-clocks = <&pmucru PLL_PPLL>, <&pmucru PCLK_SRC_PMU>;
+>> +		assigned-clock-rates = <676000000>, <112666667>;
+>
+> I think this makes sense and is a good idea. One alternative would be to
+> have the various children actually set a rate that they expect, but
+> several of them don't have a separate driver at all, and that would be
+> of dubious value anyway I think.
 
-Oops, I guess I should compile test the example.
-
-> >                 if (!strcmp("hw-incomplete-pins", status)) {
-> >                         dev_info(&pdev->dev,
-> >                                  "Unusable hardware: Not pinned out\n");
-> >                         err = -ENODEV;
-> >                         goto out;
-> >                 }
-> >                 if (!strcmp("hw-missing-daughter-card")) {
-> >                         err = -EPROBE_DEFER;
-> 
-> This implies we're going to change this on the fly? I guess
-> disabled->okay can already happen.
-
-Well let's assume the bootloader sets some i2c controlled daughter
-board with "fail-hw-missing-daughter-card", then in theory kernel
-could probe it if it pops up on the i2c bus later on. Not sure if
-we want to do this, but it seems we could..
-
-> > +static bool __of_device_is_incomplete(const struct device_node *device,
-> > +                                     const char **status)
-> > +{
-> > +       const char *s, *m = "fail-";
-> > +       int slen, mlen;
-> > +
-> > +       if (!device)
-> > +               return false;
-> > +
-> > +       s = __of_get_property(device, "status", &slen);
-> 
-> You can use the string helper function here (or is the lock a problem?).
-
-I'll check.
-
-> Overall, seems okay to me.
-
-OK thanks for looking.
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I agree with you. This clk default div is set in the uboot or coreboot.
+And if is need to set in kernel ,I hope the freq is 50M(<48285714>).
+This freq can meet the performance,and the power consumption is not too 
+much.
+>
+> Reviewed-by: Brian Norris <briannorris@chromium.org>
+>
+>>   	};
+>>
+>>   	cru: clock-controller@ff760000 {
+>> --
+>> 2.8.0.rc3.226.g39d4020
+>>
+>
+>
+>
