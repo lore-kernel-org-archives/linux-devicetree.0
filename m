@@ -1,39 +1,54 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 09/11] doc: bindings: mfd: act8945a: Update the example
-Date: Tue, 30 Aug 2016 14:52:23 -0500
-Message-ID: <20160830195223.GA2824@rob-hp-laptop>
-References: <1472109599-21915-1-git-send-email-wenyou.yang@atmel.com>
- <1472110715-22242-1-git-send-email-wenyou.yang@atmel.com>
+Subject: Re: [PATCH] mfd: arizona: Add DT options for max_channels_clocked
+ and PDM speaker config
+Date: Tue, 30 Aug 2016 14:54:38 -0500
+Message-ID: <20160830195438.GA13255@rob-hp-laptop>
+References: <1472118248-27924-1-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1472110715-22242-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1472118248-27924-1-git-send-email-rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 25, 2016 at 03:38:35PM +0800, Wenyou Yang wrote:
-> Since the act8945a-charger is regarded as a sub-device and it using
-> "interrupts" property, update the examples section.
+On Thu, Aug 25, 2016 at 10:44:08AM +0100, Richard Fitzgerald wrote:
+> This patch adds DT settings for the max_channels_clocked, spk_fmt and
+> spk_mute pdata.
 > 
-> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 > ---
+>  Documentation/devicetree/bindings/mfd/arizona.txt | 11 ++++++++
+>  drivers/mfd/arizona-core.c                        | 31 +++++++++++++++++++++++
+>  2 files changed, 42 insertions(+)
 > 
-> Changes in v8: None
-> Changes in v7: None
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> index a6e2ea41..6eaf006 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -85,6 +85,17 @@ Optional properties:
+>      present, the number of values should be less than or equal to the
+>      number of inputs, unspecified inputs will use the chip default.
+>  
+> +  - wlf,max-channels-clocked : The maximum number of channels to be clocked on
+> +    each AIF, useful for I2S systems with multiple data lines being mastered.
+> +    Specify one cell for each AIF, specify zero for AIFs that should be handled
+> +    normally.
+> +
+> +  - wlf,spk_fmt : PDM speaker data format, must contain 2 cells (OUT5 and OUT6).
 
-Humm, appears to be a new patch to me.
+Use '-' rather than '_' in property names.
 
-> 
->  Documentation/devicetree/bindings/mfd/act8945a.txt | 22 +++++++++++++++-------
->  1 file changed, 15 insertions(+), 7 deletions(-)
+> +    See the datasheet for values.
+> +
+> +  - wlf,spk_mute : PDM speaker mute setting, must contain 2 cells (OUT5 and OUT6).
+> +    See the datasheet for values.
+
+ditto
+
+With that,
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
