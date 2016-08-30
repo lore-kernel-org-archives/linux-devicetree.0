@@ -1,62 +1,65 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 5/5] ath9k: Make EEPROM endianness
-	swapping configurable via devicetree
-Date: Tue, 30 Aug 2016 09:57:24 +0200
-Message-ID: <201608300957.24770.arnd@arndb.de>
-References: <20160821144906.30984-1-martin.blumenstingl@googlemail.com>
-	<201608292325.38091.arnd@arndb.de>
-	<CAFBinCCXqX1F3XpU-DFLLB5ZNjU1XVNiTLR-ZB34QgrL8uyv8Q@mail.gmail.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v6] drm: bridge/dw_hdmi: add dw hdmi i2c bus adapter
+ support
+Date: Tue, 30 Aug 2016 09:12:45 +0100
+Message-ID: <20160830081244.GK1041@n2100.armlinux.org.uk>
+References: <1472017597-11221-1-git-send-email-vladimir_zapolskiy@mentor.com>
+ <CACvgo50WjosoeV81eBESyVpjyJqPGt-R5yWR6sFr0ZbPe2LJHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ath9k-devel-bounces@lists.ath9k.org>
-In-Reply-To: <CAFBinCCXqX1F3XpU-DFLLB5ZNjU1XVNiTLR-ZB34QgrL8uyv8Q@mail.gmail.com>
-List-Unsubscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
-	<mailto:ath9k-devel-request@lists.ath9k.org?subject=unsubscribe>
-List-Archive: <http://lists.ath9k.org/pipermail/ath9k-devel>
-List-Post: <mailto:ath9k-devel@lists.ath9k.org>
-List-Help: <mailto:ath9k-devel-request@lists.ath9k.org?subject=help>
-List-Subscribe: <https://lists.ath9k.org/mailman/listinfo/ath9k-devel>,
-	<mailto:ath9k-devel-request@lists.ath9k.org?subject=subscribe>
-Sender: ath9k-devel-bounces@lists.ath9k.org
-Errors-To: ath9k-devel-bounces@lists.ath9k.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-wireless@vger.kernel.org, ath9k-devel@qca.qualcomm.com, robh+dt@kernel.org, ath9k-devel@lists.ath9k.org, chunkeey@googlemail.com, kvalo@codeaurora.org, nbd@nbd.name
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACvgo50WjosoeV81eBESyVpjyJqPGt-R5yWR6sFr0ZbPe2LJHw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 30 August 2016, Martin Blumenstingl wrote:
-> new logic (assuming that we went for __le16/__le32 fields):
-> - reading data: use le16_to_cpu and le32_to_cpu for all fields
+On Mon, Aug 29, 2016 at 05:41:10PM +0100, Emil Velikov wrote:
+> Hi all,
 > 
-> LE system:
-> - LE EEPROM -> no swap will be applied
-> - BE EEPROM -> be16_to_cpu / be32_to_cpu (or swab16 / swab32 as before)
-> BE system:
-> - LE EEPROM -> le16_to_cpu / le32_to_cpu (or swab16 / swab32 as before)
-> - BE EEPROM -> no swap will be applied
+> On 24 August 2016 at 06:46, Vladimir Zapolskiy
+> <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
+> 
+> >  MODULE_AUTHOR("Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
+> >  MODULE_AUTHOR("Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
+> >  MODULE_AUTHOR("Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
+> > +MODULE_AUTHOR("Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>");
+> Don't meant to start a flame-war or alike but to educate myself:
+> Where does one draw the line about adding new author(s) of said
+> module/subsystem ?
+> 
+> Afaict this is the most common (?) driver in DRM where the list has
+> grown over time. Should we do the same with others ?
 
-I think this should be:
+... and I'm responsible for just over half the commits in the mainline
+kernel and I haven't added myself.  I generally only add myself if I'm
+creating new code or been involved in adding new code, I don't add if
+I'm merely modifying existing code unless I've replaced a large
+quantity of the code.  I think the question people need to ask is:
 
-LE and BE systems:
- - LE EEPROM -> no swap will be applied
- - BE EEPROM -> or swab16 / swab32
+  "Have I contributed a significant set of changes to be able to claim
+   shared authorship of that code?"
 
-The upside of this is that we no longer care about what the CPU is,
-and in my opinion that makes the code easier to understand.
+You wouldn't claim authorship of a 500 page book if you suggested a
+few edits here and there.
 
-> There is one downside of the "new approach" I can think of: you need
-> to swap the data twice in some cases (BE EEPROM on a BE machine).
-> - first swap while writing the data to __le16/__le32 fields
-> - second swap while reading the data from the __le16/__le32 fields
-> If you forget to swap a field in either place then things will be broken.
+Looking at co-authorship in google, I came across:
 
-Correct. Fortunately, "make C=1" with sparse helps you find those bugs
-at compile time.
+http://www.southernfriedscience.com/to-co-author-or-not-to-co-author/
 
-> Maybe someone else wants to state his/her opinion on this - I guess
-> some fresh thoughts could help us a lot!
+which has an interesting list of points on this subject, although more
+biased to research papers, which is where this problem normally arises.
+That seems to back up my idea of "significant contribution" not just
+a few minor changes.
 
-Yes, that would be helpful. It's possible I'm missing something here,
-or that changing this will just add confusion with other people.
+The question then becomes... what is a significant contribution. :)
 
-	Arnd
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
