@@ -1,13 +1,12 @@
-From: Rob Herring <robh+dt@kernel.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
 Subject: Re: [RFC] drm: implement generic firmware eviction
-Date: Tue, 30 Aug 2016 15:58:18 -0500
-Message-ID: <CAL_JsqKOOExaBcQfzxYyPE-h9qd4E8T+9GOKQGvXpuNSaObxoA@mail.gmail.com>
+Date: Tue, 30 Aug 2016 23:00:31 +0200
+Message-ID: <20160830210031.GJ18605@lukather>
 References: <20160826000056.12806-1-dh.herrmann@gmail.com>
  <CAL_Jsq+1MeicZmr+7Q4K6FLnTfD4jBBAQR1KPHMSLfNNUe4ENw@mail.gmail.com>
  <CANq1E4Shy1+rQsshWxeFRhFvuAg1sB3ffnVT7hoMZSjZAR=yuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============0800082167=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <CANq1E4Shy1+rQsshWxeFRhFvuAg1sB3ffnVT7hoMZSjZAR=yuQ@mail.gmail.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
@@ -20,84 +19,79 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: David Herrmann <dh.herrmann@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Vetter <daniel.vetter@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBdWcgMzAsIDIwMTYgYXQgMjozMCBQTSwgRGF2aWQgSGVycm1hbm4gPGRoLmhlcnJt
-YW5uQGdtYWlsLmNvbT4gd3JvdGU6Cj4gSGkgUm9iCj4KPiBPbiBGcmksIEF1ZyAyNiwgMjAxNiBh
-dCAyOjM2IFBNLCBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPiB3cm90ZToKPj4gT24g
-VGh1LCBBdWcgMjUsIDIwMTYgYXQgNzowMCBQTSwgRGF2aWQgSGVycm1hbm4gPGRoLmhlcnJtYW5u
-QGdtYWlsLmNvbT4gd3JvdGU6Cj4+PiBQcm92aWRlIGEgZ2VuZXJpYyBEUk0gaGVscGVyIHRoYXQg
-ZXZpY3RzIGFsbCBjb25mbGljdGluZyBmaXJtd2FyZQo+Pj4gZnJhbWVidWZmZXJzLCBkZXZpY2Vz
-LCBhbmQgZHJpdmVycy4gVGhlIG5ldyBoZWxwZXIgaXMgY2FsbGVkCj4+PiBkcm1fZXZpY3RfZmly
-bXdhcmUoKSwgYW5kIHRha2VzIGEgZmxhZ3NldCBjb250cm9sbGluZyB3aGljaCBmaXJtd2FyZSB0
-bwo+Pj4ga2ljayBvdXQuCj4+Pgo+Pj4gVGhpcyBpcyBtZWFudCB0byBiZSB1c2VkIGJ5IGRyaXZl
-cnMgaW4gdGhlaXIgLT5wcm9iZSgpIGNhbGxiYWNrcyBvZiB0aGVpcgo+Pj4gcGFyZW50IGJ1cywg
-YmVmb3JlIGNhbGxpbmcgaW50byBkcm1fZGV2X3JlZ2lzdGVyKCkuCj4+Pgo+Pj4gU2lnbmVkLW9m
-Zi1ieTogRGF2aWQgSGVycm1hbm4gPGRoLmhlcnJtYW5uQGdtYWlsLmNvbT4KPj4+IC0tLQo+Pj4g
-SGV5Cj4+Pgo+Pj4gVGhpcyBpcyBqdXN0IGNvbXBpbGUtdGVzdGVkIGZvciBub3cuIEkganVzdCB3
-YW50IHRvIGdldCBzb21lIGNvbW1lbnRzIG9uIHRoZQo+Pj4gZGVzaWduLiBJIGRlY2lkZWQgdG8g
-ZHJvcCB0aGUgc3lzZmIgaW5mcmFzdHJ1Y3R1cmUgYW5kIHJhdGhlciBqdXN0IHVzZSB0aGlzCj4+
-PiBnZW5lcmljIGhlbHBlci4gSXQga2VlcHMgdGhpbmdzIHNpbXBsZSBhbmQgc2hvdWxkIHdvcmsg
-anVzdCBmaW5lIGZvciBhbGwKPj4+IHJlYXNvbmFibGUgdXNlLWNhc2VzLgo+Pj4KPj4+IFRoaXMg
-d2lsbCB3b3JrIHdpdGggU2ltcGxlRFJNIG91dC1vZi10aGUtYm94IG9uIHg4Ni4KPj4+Cj4+PiBB
-cmNoaXRlY3R1cmVzIHdpdGggZHluYW1pYyBzaW1wbGUtZnJhbWVidWZmZXIgZGV2aWNlcyBhcmUg
-bm90IHN1cHBvcnRlZCB5ZXQuIEkKPj4+IGFjdHVhbGx5IGhhdmUgbm8gaWRlYSB3aGF0IHRoZSBz
-dHJhdGVneSB0aGVyZSBpcz8gQ2FuIHRoZSBEZXZpY2VUcmVlIHBlb3BsZSBjb21lCj4+PiB1cCB3
-aXRoIHNvbWV0aGluZz8gQW0gSSBzdXBwb3NlZCB0byBjYWxsIG9mX3BsYXRmb3JtX2RlcG9wdWxh
-dGUoKT8KPj4KPj4gSWYgb2ZfcGxhdGZvcm1fcG9wdWxhdGUgd2FzIHVzZWQgdG8gY3JlYXRlIHRo
-ZSBkZXZpY2UsIHRoZW4geWVzIGNhbGwKPj4gb2ZfcGxhdGZvcm1fZGVwb3B1bGF0ZS4gSW4gdGhp
-cyBjYXNlLCBJIHRoaW5rIGl0IHdhc24ndC4gSWYKPj4gb2ZfcGxhdGZvcm1fZGV2aWNlX2NyZWF0
-ZSB3YXMgdXNlZCwgdGhlbiBwbGF0Zm9ybV9kZXZpY2VfZGVsLgo+Pgo+Pj4gT3IKPj4+IG9mX2Rl
-dGFjaF9ub2RlKCk/IE9yIHdoYXQ/Cj4+Cj4+IE5vLiBPbmx5IHRoZSBzdHJ1Y3QgZGV2aWNlIGFu
-ZCBpdHMgcmVzb3VyY2VzIHNob3VsZCBuZWVkIHRvIGJlCj4+IGRlc3Ryb3llZC4gVGhlIG5vZGUg
-c2hvdWxkIHJlbWFpbi4KPj4KPj4+IExvb2tpbmcgYXQgZHJpdmVycy9vZi97cGxhdGZvcm0sZHlu
-YW1pY30uYywgSSBjYW5ub3Qgc2VlIGhvdyB0aGlzIGlzIHN1cHBvc2VkIHRvCj4+PiB3b3JrIGF0
-IGFsbC4gV2hvIHByb3RlY3RzIHBsYXRmb3JtX2RldmljZV9kZWwoKSBmcm9tIGJlaW5nIGNhbGxl
-ZCBpbiBwYXJhbGxlbD8KPj4KPj4gTm90IHN1cmUuIEluIHBhcmFsbGVsIHRvIHdoYXQ/IE9uIG1v
-c3Qgc3lzdGVtcywgbm9kZXMgbmV2ZXIgZ28gYXdheQo+PiBhbmQgb24gdGhvc2UgdGhhdCBkbyBp
-dCBpcyBvbmx5IGEgZmV3IHRoaW5ncyB0aGF0IGdldCBob3RwbHVnZ2VkLgo+PiBUaGF0J3MgY2hh
-bmdpbmcgd2l0aCBEVCBvdmVybGF5cyBub3csIHNvIHRoZXJlIGNlcnRhaW5seSBjb3VsZCBiZSBz
-b21lCj4+IGlzc3Vlcy4KPgo+IFR3byB0YXNrcyBjYWxsaW5nIHBsYXRmb3JtX2RldmljZV9kZWwo
-KSBpbiBwYXJhbGxlbCBvbiB0aGUgc2FtZSBkZXZpY2UKPiB3aWxsIG5vdCB3b3JrLiBNZWFuaW5n
-LCBjYWxsaW5nIG9mX3BsYXRmb3JtX2RldmljZV9kZXN0cm95KCkgaW4KPiBwYXJhbGxlbCBkb2Vz
-IG5vdCB3b3JrIGVpdGhlci4gU2FtZSBmb3Igb2ZfcGxhdGZvcm1fZGVwb3B1bGF0ZSgpLiBTYW1l
-Cj4gZm9yIG9mX25vZGVfZGV0YWNoKCkuCgpDaGFuZ2VzIHRvIERUIG5vZGVzIGFuZCBzdHJ1Y3Qg
-ZGV2aWNlJ3MgYXJlIGNvbXBsZXRlbHkgc2VwYXJhdGUgZnJvbSBhCkRUIGNvcmUgcGVyc3BlY3Rp
-dmUgQVRNLiBBIGNhbGxlciBpcyByZXNwb25zaWJsZSBhZGRpbmcgZGV2aWNlcyB3aGVuCm5vZGVz
-IGFyZSBhZGRlZCwgcmVtb3ZpbmcgdGhlIGRldmljZXMsIHRoZW4gcmVtb3ZpbmcgdGhlIG5vZGVz
-LiBUaGUKb25seSBvdmVybGF5cyBjdXJyZW50bHkgc3VwcG9ydGVkIHJlcXVpcmUgYSBkcml2ZXIg
-dG8gbG9hZCB0aGVtIGFuZApoYW5kbGUgYW55IHRyYW5zaXRpb25zLgoKRFQgaXMgc3RpbGwgZmFy
-IGZyb20gZHluYW1pYyBpbiB0aGUgc2Vuc2UgdGhhdCBhbnkgcmFuZG9tIG5vZGUgY2FuIGNvbWUg
-YW5kIGdvLgoKPiBTdXJlLCBhbGwgdGhvc2UgZnVuY3Rpb25zIGFyZSBub3QgbWVhbnQgdG8gYmUg
-Y2FsbGVkIGluIHBhcmFsbGVsIGJ5Cj4gbXVsdGlwbGUgdGFza3MuIFRoZXkgYXJlIHJhdGhlciBt
-ZWFudCB0byBoYXZlIGEgc2luZ2xlIGhvbGRlciB3aGljaAo+IHByZWZlcmFibHkgaXMgdGhlIG9u
-ZSBpbnN0YW50aWF0aW5nIGFuZCBkZXN0cm95aW5nIHRoZQo+IG5vZGUvZGV2aWNlL2Zvb2Jhci4g
-QnV0IHRoZSBmcmFtZWJ1ZmZlciBldmljdGlvbiBjb2RlIHNvbWVob3cgbmVlZHMgdG8KPiB0cmln
-Z2VyIHRoZSByZW1vdmFsLCBhbmQgdGh1cyBuZWVkcyBzb21lIGhvb2ssIHRoYXQgY2FuIGJlIGNh
-bGxlZCBpbgo+IHBhcmFsbGVsIGJ5IGFueSBkcml2ZXIgdGhhdCBpcyBsb2FkZWQuCj4KPiBJIGNh
-biBtYWtlIHN1cmUgdGhlIHNpbXBsZS1mcmFtZWJ1ZmZlciBldmljdGlvbiBjb2RlIGlzIGxvY2tl
-ZAo+IHByb3Blcmx5LiBUaGF0J2xsIHdvcmssIGZvciBub3cuIEJ1dCBpZiBzb21lb25lIGVuZHMg
-dXAgcHJvdmlkaW5nCj4gc2ltcGxlLWZyYW1lYnVmZmVyIGRldmljZXMgdmlhIG92ZXJsYXlzIG9y
-IGFueSBvdGhlciBkeW5hbWljCj4gbWVjaGFuaXNtLCB0aGV5IHdpbGwgcmFjZSB0aGUgcmVtb3Zh
-bC4KCk5vIGRvdWJ0IHNvbWVvbmUgd2lsbCBjb21lIHVwIHdpdGggc29tZSB1c2VjYXNlIHdhbnRp
-bmcgdG8gZG8gdGhhdCwKYnV0IElNTyB0aGF0IGlzIG5vdCBhIHN1cHBvcnRlZCB1c2VjYXNlIGFu
-ZCBzaG91bGQgbm90IGJlLgpzaW1wbGUtZnJhbWVidWZmZXIgaXMgZm9yIHByb3ZpZGluZyBhIGZp
-cm13YXJlIHNldHVwIGZyYW1lYnVmZmVyLgoKPiBBbmQgaXQgd2lsbCBiZSBjb21wbGV0ZWx5Cj4g
-bm9uLW9idmlvdXMgdG8gdGhlbS4gSSByZWFsbHkgZG9uJ3Qgd2FudCB0byBiZSByZXNwb25zaWJs
-ZSB0byBoYXZlCj4gc3VibWl0dGVkIHRoYXQgY29kZS4gSWYgYW55b25lIGNhcmVzIGZvciBwcm9w
-ZXIgZGV2aWNlIGhhbmQtb3ZlciBvbgo+IEFSTSwgcGxlYXNlIGNvbWUgdXAgd2l0aCBhbiBpZGVh
-IHRvIGZpeCBpdC4gT3RoZXJ3aXNlLCBJIHdpbGwganVzdAo+IGxpbWl0IHRoZSBzaW1wbGVkcm0g
-Y29kZSB0byB4ODYuCj4KPiBJT1cgdGhlIGRldmljZSBoYW5kb3ZlciBjb2RlIHNvbWVob3cgbmVl
-ZHMgdG8ga25vdyB3aG8gd2FzIHJlc3BvbnNpYmxlCj4gZm9yIHRoZSBpbnN0YW50aWF0aW9uIG9m
-IHRoZSBzaW1wbGUtZnJhbWVidWZmZXIgZGV2aWNlLCBzbyBpdCBjYW4gdGVsbAo+IHRoZW0gdG8g
-cmVtb3ZlIGl0IGFnYWluLiBPbiB4ODYgdGhlcmUgaXMgb25seSBvbmUgcGxhY2Ugd2hlcmUgdGhv
-c2UKPiBjYW4gYmUgaW5zdGFudGlhdGVkLiBCdXQgb24gT0YtYmFzZWQgc3lzdGVtcywgaXQgY2Fu
-IGJlIGR5bmFtaWNhbGx5Cj4gaW5zdGFudGlhdGVkIGluIG1hbnkgcGxhY2VzIHJpZ2h0IG5vdy4K
-CldoYXQgZG8geW91IG1lYW4gYnkgYWxsIG92ZXIgdGhlIHBsYWNlPyBJdCBpcyBvbmx5IGluIHNp
-bXBsZWZiX2luaXQKQVRNLiBJIGhhdmVuJ3QgbG9va2VkIGF0IHdoYXQgc2ltcGxlZHJtIGlzIGRv
-aW5nLCBidXQgd2UgY2FuIG1vdmUgdGhlCmRldmljZSBjcmVhdGlvbiB0byBvZl9wbGF0Zm9ybV9k
-ZWZhdWx0X3BvcHVsYXRlX2luaXQgaWYgd2UgbmVlZCBhCnNpbmdsZSBzcG90LgoKUm9iCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--===============0800082167==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="QnBU6tTI9sljzm9u"
+Content-Disposition: inline
+
+
+--QnBU6tTI9sljzm9u
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi David,
+
+On Tue, Aug 30, 2016 at 09:30:44PM +0200, David Herrmann wrote:
+> Hi Rob
+> IOW the device handover code somehow needs to know who was responsible
+> for the instantiation of the simple-framebuffer device, so it can tell
+> them to remove it again. On x86 there is only one place where those
+> can be instantiated. But on OF-based systems, it can be dynamically
+> instantiated in many places right now.
+
+I don't think that's true. There's the assumption that the bootloader
+will have set up the framebuffer and Linux just takes over. Even on
+ARM, you'll need to at least reserve the memory, grab the clocks and
+so on, and it needs to happen way before you can load overlays (for
+the buffer even way before the simple-framebuffer driver is probed).
+
+I don't see how we could use overlays with simple-framebuffer, unless
+we apply those overlays before linux starts, but then Linux basically
+doesn't care if it was an overlay or not, it's treated as a single DT.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--QnBU6tTI9sljzm9u
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXxfPvAAoJEBx+YmzsjxAgG4EQAKMmSfkzF/kpBCgjbN+KgdNP
+bs/t6B+TU9MI/Ho4/Q0CAowwyIID9FGTMGnNnxvYm9pbYF6il+CQ4PxyXV9kj64Z
+hqMDj0VhaiCrXHCGEKLdGOszZH330pnNrT6QfbFneTZEcAJ8pUQTJO19IvqWFdV8
+QoshtajPDOlUEh6I2QOhNm335y/rgnSQuAI2zO8cY7pYaI1wp5AwTpx78dWm7gWl
+bFs/y2nbEU5TbEuJ1tZCvFk/cD1cxtXLEGJtqfuzdKXwN7xWXqzfheOnvJrrw1sz
+FbwjgyPw8yKcLeK7tw4zLT3JSynFqCCXaw4oiKF8AaXPa7YgtBTj0gQ3yP9cofG3
+ZstYI3bCIqqwgefy58/K5GjBgzX4CF0AiCvT2/Y6INZNKB1MCNm5ledS0pQvZBdh
+ZnYqGTj0ncD/+McqI0jnYstUXszjyg1Razajxa19uRSHZZBeoaM2b8/hwRGpcZNn
+fz0Q2vUEpw6RYzoMmFNL48YcbO3wXqU44AKG1WfA7qairCDXi1HR+Uzp9edrQ98Z
+GysqGumi+yKrcPzFVIRXGKc4Cx2MlLQe/lKNgNc8UMmHCzh2GvL47BTLWUZeQhMA
+ZNDEHXIp5FFyKnNEBC9G6gvWuo7BB889yoxR5wWpGlv+vx/xa9TyTyqIzkuB2qj8
+PhW8HugcL0iqpQa6DJsv
+=Kwjz
+-----END PGP SIGNATURE-----
+
+--QnBU6tTI9sljzm9u--
+
+--===============0800082167==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0800082167==--
