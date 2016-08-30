@@ -1,95 +1,29 @@
-From: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v25] 9/9] Documentation: dt: chosen properties for arm64 kdump
-Date: Tue, 30 Aug 2016 15:54:31 +0900
-Message-ID: <20160830065431.19663-1-takahiro.akashi@linaro.org>
-References: <20160830064941.19452-2-takahiro.akashi@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160830064941.19452-2-takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: Add RSKRZA1 DT bindings documentation
+Date: Tue, 30 Aug 2016 09:04:21 +0200
+Message-ID: <20160830070420.GB12845@verge.net.au>
+References: <20160829181429.25115-1-chris.brandt@renesas.com>
+ <CAMuHMdXdsUci=K8C1iN5_oYGj9p3eR7hmQoMbE+DH1Ke28+HqQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXdsUci=K8C1iN5_oYGj9p3eR7hmQoMbE+DH1Ke28+HqQ@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+On Mon, Aug 29, 2016 at 08:40:23PM +0200, Geert Uytterhoeven wrote:
+> On Mon, Aug 29, 2016 at 8:14 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
+> > Add RSKRZA1 Device tree bindings Documentation, listing it as a supported
+> > board.
+> >
+> > This allows to use checkpatch to validate DTSes referring to the RSKRZA1
+> > board.
+> >
+> > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Add documentation for
-	linux,crashkernel-base and crashkernel-size,
-	linux,usable-memory-range, and
-	linux,elfcorehdr
-used by arm64 kexec/kdump to decribe the kdump reserved area, and
-the elfcorehdr's location within it.
-
-Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-[takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org:
-    renamed "usable-memory" to "usable-memory-range",
-    added "linux,crashkernel-base" and "-size" ]
-Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 6ae9d82..236188a 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
- book3e) by some versions of kexec-tools to tell the new kernel that it
- is being booted by kexec, as the booting environment may differ (e.g.
- a different secondary CPU release mechanism)
-+
-+linux,crashkernel-base
-+linux,crashkernel-size
-+----------------------
-+These properties (currently used on PowerPC and arm64) indicates
-+the base address and the size, respectively, of the reserved memory
-+range for crash dump kernel.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,crashkernel-base = <0x9 0xf0000000>;
-+		linux,crashkernel-size = <0x0 0x10000000>;
-+	};
-+};
-+
-+linux,usable-memory-range
-+-------------------------
-+
-+This property (currently used only on arm64) holds the memory range,
-+the base address and the size, which can be used as system ram on
-+the *current* kernel. Note that, if this property is present, any memory
-+regions under "memory" nodes in DT blob or ones marked as "conventional
-+memory" in EFI memory map should be ignored.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-+	};
-+};
-+
-+The main usage is for crash dump kernel to identify its own usable
-+memory and exclude, at its boot time, any other memory areas that are
-+part of the panicked kernel's memory.
-+
-+linux,elfcorehdr
-+----------------
-+
-+This property (currently used only on arm64) holds the memory range,
-+the address and the size, of the elf core header which mainly describes
-+the panicked kernel's memory layout in elf format.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-+		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
-+	};
-+};
--- 
-2.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, I have queued this up.
