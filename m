@@ -1,60 +1,127 @@
-From: Ritesh Harjani <riteshh@codeaurora.org>
-Subject: Re: [PATCH v4 3/9] mmc: sdhci-msm: add pltfm_data support to get
- clk-rates from DT
-Date: Tue, 30 Aug 2016 19:42:59 +0530
-Message-ID: <1a44bb54-d88c-737d-7fb1-e7c3597ac03b@codeaurora.org>
-References: <1472033024-14890-1-git-send-email-riteshh@codeaurora.org>
- <1472033024-14890-4-git-send-email-riteshh@codeaurora.org>
- <20160825222747.GU19826@codeaurora.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH v8 15/18] ARM: STi: DT: STiH407: Add uniperif reader dt
+	nodes
+Date: Tue, 30 Aug 2016 15:21:12 +0100
+Message-ID: <20160830142112.GA22514@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1472223413-7254-1-git-send-email-peter.griffin@linaro.org>
+	<1472223413-7254-16-git-send-email-peter.griffin@linaro.org>
+	<20160830100148.GO1661@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20160825222747.GU19826@codeaurora.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, pramod.gurav@linaro.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org
+Return-path: <virtualization-bounces@lists.linux-foundation.org>
+Content-Disposition: inline
+In-Reply-To: <20160830100148.GO1661@dell>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
+	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
+List-Post: <mailto:virtualization@lists.linux-foundation.org>
+List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
+	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
+Sender: virtualization-bounces@lists.linux-foundation.org
+Errors-To: virtualization-bounces@lists.linux-foundation.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, Arnaud Pouliquen <arnaud.pouliquen@st.com>, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, airlied@linux.ie, dmaengine@vger.kernel.org, dan.j.williams@intel.com, bjorn.andersson@linaro.org, virtualization@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Hi Lee,
 
-On 8/26/2016 3:57 AM, Stephen Boyd wrote:
-> On 08/24, Ritesh Harjani wrote:
->> This adds support for sdhc-msm controllers to get supported
->> clk-rates from DT. sdhci-msm would need it's own set_clock
->> ops to be implemented. For this, supported clk-rates needs
->> to be populated in sdhci_msm_pltfm_data.
->>
->> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
->> ---
->
-> Please include the DT binding review list in binding updates.
->
->>  .../devicetree/bindings/mmc/sdhci-msm.txt          |  1 +
->>  drivers/mmc/host/sdhci-msm.c                       | 60 ++++++++++++++++++++++
->>  2 files changed, 61 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> index 485483a..6a83b38 100644
->> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> @@ -17,6 +17,7 @@ Required properties:
->>  	"iface" - Main peripheral bus clock (PCLK/HCLK - AHB Bus clock) (required)
->>  	"core"	- SDC MMC clock (MCLK) (required)
->>  	"bus"	- SDCC bus voter clock (optional)
->> +- clk-rates: Array of supported GCC clock frequencies for sdhc, Units - Hz.
->>
->
-> Why not use OPPv2 binding for this? We already have a way to
-> express frequencies for devices with that binding, and we'll need
-> to attach voltages to those frequencies at some point in the
-> future if we want to handle DVFS on these devices.
->
-OPPv2 may not work out in this case. This was also discussed at [1].
-These clk-rates are not as per voltage points(or any OPP) but as per bus 
-speed mode request from higher layer.
+Thanks for reviewing and your very valuable feedback.
 
-[1] - https://patchwork.kernel.org/patch/9204879/
+On Tue, 30 Aug 2016, Lee Jones wrote:
 
-Thanks
-Ritesh
+> On Fri, 26 Aug 2016, Peter Griffin wrote:
+> 
+> > This patch adds the DT node for the uniperif reader
+> > IP block found on STiH407 family silicon.
+> > 
+> > Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > ---
+> >  arch/arm/boot/dts/stih407-family.dtsi | 26 ++++++++++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+> > index d263c96..bdddf2c 100644
+> > --- a/arch/arm/boot/dts/stih407-family.dtsi
+> > +++ b/arch/arm/boot/dts/stih407-family.dtsi
+> > @@ -956,5 +956,31 @@
+> >  			st,version = <5>;
+> >  			st,mode = "SPDIF";
+> >  		};
+> > +
+> > +		sti_uni_reader0: sti-uni-reader@0 {
+> > +			compatible = "st,sti-uni-reader";
+> > +			status = "disabled";
+> 
+> I find it's normally nicer to place the status of the node at the
+> bottom, separated by a '\n'.
+
+Ok I'll add a superflous '\n' in the next version.
+
+>  There isn't a functional difference
+> admittedly, but it would be my preference, since it's not describing
+> the device per se.
+
+Will change to your preference in the next version.
+
+> 
+> > +			#sound-dai-cells = <0>;
+> > +			st,syscfg = <&syscfg_core>;
+> > +			reg = <0x8D83000 0x158>;
+> 
+> We usually use lower-case for the address.
+
+Will fix.
+
+> 
+> Since this has a 'reg' property, the '0' in the node name does not
+> look appropriate.
+
+Will fix.
+> 
+> > +			interrupts = <GIC_SPI 87 IRQ_TYPE_NONE>;
+> > +			dmas = <&fdma0 5 0 1>;
+> > +			dma-names = "rx";
+> > +			dai-name = "Uni Reader #0 (PCM IN)";
+> 
+> Oooo, not seen something like this before.
+> 
+> If it does not already have one, it would require a DT Ack.
+
+No idea, the driver got merged 1 year ago.
+
+Arnaud did you get a DT ack when you merged this driver & binding?
+> 
+> > +			st,version = <3>;
+> 
+> This will likely need a DT Ack too.  We usually encode this sort of
+> information in the compatible string.
+
+See 05c1b4480e86a871b18030d6f3d532dc0ecdf38c
+> 
+> > +		};
+> > +
+> > +		sti_uni_reader1: sti-uni-reader@1 {
+> > +			compatible = "st,sti-uni-reader";
+> > +			status = "disabled";
+> > +			#sound-dai-cells = <0>;
+> > +			st,syscfg = <&syscfg_core>;
+> > +			reg = <0x8D84000 0x158>;
+> > +			interrupts = <GIC_SPI 88 IRQ_TYPE_NONE>;
+> > +			dmas = <&fdma0 6 0 1>;
+> > +			dma-names = "rx";
+> > +			dai-name = "Uni Reader #1 (HDMI RX)";
+> > +			st,version = <3>;
+> > +		};
+> 
+> All as above.
+> 
+> >  	};
+> >  };
+> 
+
+Regards,
+
+Peter.
