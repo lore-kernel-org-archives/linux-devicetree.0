@@ -1,64 +1,150 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v6] drm: bridge/dw_hdmi: add dw hdmi i2c bus adapter
- support
-Date: Tue, 30 Aug 2016 09:12:45 +0100
-Message-ID: <20160830081244.GK1041@n2100.armlinux.org.uk>
-References: <1472017597-11221-1-git-send-email-vladimir_zapolskiy@mentor.com>
- <CACvgo50WjosoeV81eBESyVpjyJqPGt-R5yWR6sFr0ZbPe2LJHw@mail.gmail.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC PATCH 0/3] ARm64: amlogic: Introduce common GX family dtsi
+Date: Tue, 30 Aug 2016 10:33:19 +0200
+Message-ID: <58294020-4c10-5e77-7d0a-b81de4497962@baylibre.com>
+References: <1472457371-1305-1-git-send-email-narmstrong@baylibre.com>
+ <CAOQ7t2YGbASh7v25wgDspKNWgFOcRsikJs_WZptn+LkVXmaHig@mail.gmail.com>
+ <2983d731-82fd-63fc-7541-8c1d6a929416@suse.de>
+ <20160829195030.GA10797@localhost>
+ <ca513cb4-34d4-72f9-9e32-7908329243a6@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACvgo50WjosoeV81eBESyVpjyJqPGt-R5yWR6sFr0ZbPe2LJHw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <ca513cb4-34d4-72f9-9e32-7908329243a6-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-amlogic <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 29, 2016 at 05:41:10PM +0100, Emil Velikov wrote:
-> Hi all,
+On 08/29/2016 10:15 PM, Andreas Färber wrote:
+> Am 29.08.2016 um 21:50 schrieb Carlo Caione:
+>> On 29/08/16 20:38, Andreas Färber wrote:
+>>> Am 29.08.2016 um 10:01 schrieb Carlo Caione:
+>>>> On Mon, Aug 29, 2016 at 9:56 AM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+>>>>> Neil Armstrong (3):
+>>>>>   ARM64: dts: amlogic: Add Meson GX Family common dtsi
+>>>>>   ARM64: dts: amlogic: Switch Meson GXL dtsi to use common GX dtsi
+>>>>>   ARM64: dts: amlogic: Switch Meson GXBB dtsi to use common GX dtsi
+>>>
+>>> Adding an unused .dtsi duplicating GXBB makes me uneasy.
+>>
+>> S905x (GXL) is different from S905 (GXBB), it's unused now but in the
+>> future we can expect something different in the two DTSI.
 > 
-> On 24 August 2016 at 06:46, Vladimir Zapolskiy
-> <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
+> Guess I need to be --verbose. ;)
 > 
-> >  MODULE_AUTHOR("Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
-> >  MODULE_AUTHOR("Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-> >  MODULE_AUTHOR("Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-> > +MODULE_AUTHOR("Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>");
-> Don't meant to start a flame-war or alike but to educate myself:
-> Where does one draw the line about adding new author(s) of said
-> module/subsystem ?
+> I meant: After patch 1/3 there is a gx-common.dtsi that duplicates
+> contents of gxbb.dtsi and is not yet #include'd anywhere, i.e., unused.
 > 
-> Afaict this is the most common (?) driver in DRM where the list has
-> grown over time. Should we do the same with others ?
+>>> Any chance we can simplify this to at most two steps?
+>>> 1) Move code from gxbb to gx (1/3 + 3/3)
+>>> 2) Add gxl using gx ("Add basic support for Amlogic S905X" + 2/3)
+>>
+>> fine by me.
 
-... and I'm responsible for just over half the commits in the mainline
-kernel and I haven't added myself.  I generally only add myself if I'm
-creating new code or been involved in adding new code, I don't add if
-I'm merely modifying existing code unless I've replaced a large
-quantity of the code.  I think the question people need to ask is:
+I can merge carlo's GXL support into this patchet.
 
-  "Have I contributed a significant set of changes to be able to claim
-   shared authorship of that code?"
+>>
+>>> Alternatively:
+>>> 1) "Add basic support for Amlogic S905X"
+>>> 2) Factor out common bits (1/3 + 2/3 + 3/3)
+>>
+>> how is this different from this patchset?
+> 
+> I'm suggesting we do "atomic" move operations, not copy and then remove.
+> 
+> The difference between my two suggestions is how many and which changes
+> we squash - I do appreciate that it's easy for review as is but what I
+> have in mind is that either we should get this refactoring applied asap
+> (#1 1)) and rebase all pending patches on it, or we may need to rebase
+> the refactoring onto any pending MMC, SDIO, etc. patches, which I feel
+> is safer to do in one big patch (#2 2)) than split over multiple ones.
+> It really depends on the merge order and roadmap you guys have in mind.
 
-You wouldn't claim authorship of a 500 page book if you suggested a
-few edits here and there.
+I'm not very convinced about the utility the reduce commits... having a dtsi alone won't arm anyone.
+Nevertheless, I will squash the two commits.
 
-Looking at co-authorship in google, I came across:
+> 
+>>> As for bike-shedding, is there a GX family as well or could we drop
+>>> -common? .dtsi is always something common - compare Exynos or i.MX.
+>>> Since there are meson8b and meson8 I was anticipating that after gxbb
+>>> would come gx, not gxl.
+>>
+>> AFAIK we have:
+>> - GXBB
+>> - GXL
+>> - GXM
+>> - GXTVBB
+>>
+>>> Do you know what the L in GXL is for? Should we consider renaming gxbb
+>>> to gxb, and then also insert -s905 as suggested by Kevin, for symmetry?
+>>
+>> Yes, that make sense.
 
-http://www.southernfriedscience.com/to-co-author-or-not-to-co-author/
+As Amlogic told us, we have at least two families :
+ - GXBB with the S905
+ - GXL with the S905D and S905X
 
-which has an interesting list of points on this subject, although more
-biased to research papers, which is where this problem normally arises.
-That seems to back up my idea of "significant contribution" not just
-a few minor changes.
+The GXL and GXBB families will share a lot, except the clocks tree, pinctrl registers, USB IP versions and at least ethernet PHY handling.
 
-The question then becomes... what is a significant contribution. :)
+But the two GXL SoCs will still share a lot, maybe everything, we are not sure for now.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+In the Amlogic SDK kernel, we can see more families :
+ - GXM seems to be the S912 since it has two clusters of 4xA53, but looks identical to GXL for pinctrl and clocks
+ - GXTVBB looking at the Amlogic SDK it could be a GXBB variant with a different GPU (t83x instead of mali450), pinctrl and clocks
+
+In their SDK, there is a single GXL pinctrl and clock driver for GXL and GXM.
+
+Taking in account all the boards, families and SoCs, we should have the following:
+meson-gx-common.dtsi
+├── meson-gxbb-s905.dtsi
+│   ├── meson-gxbb-s905-odroidc2.dts
+│   └── meson-gxbb-s905-p20x.dtsi
+│       ├── meson-gxbb-s905-p200.dts
+│       └── meson-gxbb-s905-p201.dts
+├── meson-gxl.dtsi
+│   ├── meson-gxl-s905d.dtsi
+│   │   └── meson-gxl-s905d-p23x.dts
+│   │       ├── meson-gxl-s905d-p230.dts
+│   │       └── meson-gxl-s905d-p231.dts
+│   └── meson-gxl-s905x.dtsi
+│       └── meson-gxl-s905x-p212.dts
+└── meson-gxm-s912.dtsi
+    └── meson-gxm-s912-q20x.dtsi
+        ├── meson-gxm-s912-q200.dts
+        └── meson-gxm-s912-q201.dts
+
+But since GXBB will only be S905, we can drop the S905 naming and keep what is already upstream,
+then GXM won't happen until a certain time so I plan to push the following :
+
+meson-gx-common.dtsi
+├── meson-gxbb.dtsi
+│   ├── meson-gxbb-odroidc2.dts
+│   └── meson-gxbb-p20x.dtsi
+│       ├── meson-gxbb-p200.dts
+│       └── meson-gxbb-p201.dts
+└── meson-gxl.dtsi
+    ├── meson-gxl-s905d.dtsi
+    │   └── meson-gxl-s905d-p23x.dts
+    │       ├── meson-gxl-s905d-p230.dts
+    │       └── meson-gxl-s905d-p231.dts
+    └── meson-gxl-s905x.dtsi
+        └── meson-gxl-s905x-p212.dts
+
+But the meson-gxl-s905d.dtsi, meson-gxl-s905x.dtsi and meson-gxl.dtsi will be empty until we push the pinctrl, clock, ethernet PHY and USB nodes for them.
+
+> 
+> Hm, GXTVB would still be longer than GXL then, not much point then.
+> We could still do -gxbb-s905 though.
+> 
+> Cheers,
+> Andreas
+> 
+
+Thanks,
+Neil
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
