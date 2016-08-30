@@ -1,146 +1,159 @@
-From: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 2/5] dt-bindings: Add a binding for Mediatek MDP
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3] ARM: dts: imx6ul-geam: Add Engicam IMX6UL GEA M6UL
+ initial support
 Date: Tue, 30 Aug 2016 20:25:41 +0800
-Message-ID: <1472559944-55114-3-git-send-email-minghsiu.tsai@mediatek.com>
-References: <1472559944-55114-1-git-send-email-minghsiu.tsai@mediatek.com>
+Message-ID: <20160830122541.GD8363@tiger>
+References: <1472548411-25018-1-git-send-email-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472559944-55114-1-git-send-email-minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1472548411-25018-1-git-send-email-jagan@amarulasolutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagannadh.teki@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a DT binding documentation of MDP for the MT8173 SoC
-from Mediatek
+On Tue, Aug 30, 2016 at 02:43:31PM +0530, Jagan Teki wrote:
 
-Signed-off-by: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/media/mediatek-mdp.txt     |  109 ++++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek-mdp.txt
+<snip>
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek-mdp.txt b/Documentation/devicetree/bindings/media/mediatek-mdp.txt
-new file mode 100644
-index 0000000..4182063
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/mediatek-mdp.txt
-@@ -0,0 +1,109 @@
-+* Mediatek Media Data Path
-+
-+Media Data Path is used for scaling and color space conversion.
-+
-+Required properties (controller (parent) node):
-+- compatible: "mediatek,mt8173-mdp"
-+- mediatek,vpu: the node of video processor unit, see
-+  Documentation/devicetree/bindings/media/mediatek-vpu.txt for details.
-+
-+Required properties (all function blocks, child node):
-+- compatible: Should be one of
-+        "mediatek,mt8173-mdp-rdma"  - read DMA
-+        "mediatek,mt8173-mdp-rsz"   - resizer
-+        "mediatek,mt8173-mdp-wdma"  - write DMA
-+        "mediatek,mt8173-mdp-wrot"  - write DMA with rotation
-+- reg: Physical base address and length of the function block register space
-+- clocks: device clocks, see
-+  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
-+- power-domains: a phandle to the power domain, see
-+  Documentation/devicetree/bindings/power/power_domain.txt for details.
-+
-+Required properties (DMA function blocks, child node):
-+- compatible: Should be one of
-+        "mediatek,mt8173-mdp-rdma"
-+        "mediatek,mt8173-mdp-wdma"
-+        "mediatek,mt8173-mdp-wrot"
-+- iommus: should point to the respective IOMMU block with master port as
-+  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-+  for details.
-+- mediatek,larb: must contain the local arbiters in the current Socs, see
-+  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
-+  for details.
-+
-+Example:
-+mdp {
-+	compatible = "mediatek,mt8173-mdp";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	ranges;
-+	mediatek,vpu = <&vpu>;
-+
-+	mdp_rdma0: rdma@14001000 {
-+		compatible = "mediatek,mt8173-mdp-rdma";
-+		reg = <0 0x14001000 0 0x1000>;
-+		clocks = <&mmsys CLK_MM_MDP_RDMA0>,
-+			 <&mmsys CLK_MM_MUTEX_32K>;
-+		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+		iommus = <&iommu M4U_PORT_MDP_RDMA0>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	mdp_rdma1: rdma@14002000 {
-+		compatible = "mediatek,mt8173-mdp-rdma";
-+		reg = <0 0x14002000 0 0x1000>;
-+		clocks = <&mmsys CLK_MM_MDP_RDMA1>,
-+			 <&mmsys CLK_MM_MUTEX_32K>;
-+		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+		iommus = <&iommu M4U_PORT_MDP_RDMA1>;
-+		mediatek,larb = <&larb4>;
-+	};
-+
-+	mdp_rsz0: rsz@14003000 {
-+		compatible = "mediatek,mt8173-mdp-rsz";
-+		reg = <0 0x14003000 0 0x1000>;
-+		clocks = <&mmsys CLK_MM_MDP_RSZ0>;
-+		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+	};
-+
-+	mdp_rsz1: rsz@14004000 {
-+		compatible = "mediatek,mt8173-mdp-rsz";
-+		reg = <0 0x14004000 0 0x1000>;
-+		clocks = <&mmsys CLK_MM_MDP_RSZ1>;
-+		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+	};
-+
-+	mdp_rsz2: rsz@14005000 {
-+		compatible = "mediatek,mt8173-mdp-rsz";
-+		reg = <0 0x14005000 0 0x1000>;
-+		clocks = <&mmsys CLK_MM_MDP_RSZ2>;
-+		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+	};
-+
-+	mdp_wdma0: wdma@14006000 {
-+		compatible = "mediatek,mt8173-mdp-wdma";
-+		reg = <0 0x14006000 0 0x1000>;
-+		clocks = <&mmsys CLK_MM_MDP_WDMA>;
-+		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+		iommus = <&iommu M4U_PORT_MDP_WDMA>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	mdp_wrot0: wrot@14007000 {
-+		compatible = "mediatek,mt8173-mdp-wrot";
-+		reg = <0 0x14007000 0 0x1000>;
-+		clocks = <&mmsys CLK_MM_MDP_WROT0>;
-+		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+		iommus = <&iommu M4U_PORT_MDP_WROT0>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	mdp_wrot1: wrot@14008000 {
-+		compatible = "mediatek,mt8173-mdp-wrot";
-+		reg = <0 0x14008000 0 0x1000>;
-+		clocks = <&mmsys CLK_MM_MDP_WROT1>;
-+		power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+		iommus = <&iommu M4U_PORT_MDP_WROT1>;
-+		mediatek,larb = <&larb4>;
-+	};
-+};
--- 
-1.7.9.5
+> +&lcdif {
+> +	display = <&display0>;
+> +	status = "okay";
+> +
+> +	display0: display {
+> +		bits-per-pixel = <16>;
+> +		bus-width = <18>;
+> +
+> +		display-timings {
+> +			native-mode = <&timing0>;
+> +			timing0: timing0 {
+> +				clock-frequency = <28000000>;
+> +				hactive = <800>;
+> +				vactive = <480>;
+> +				hfront-porch = <30>;
+> +				hback-porch = <30>;
+> +				hsync-len = <64>;
+> +				vback-porch = <5>;
+> +				vfront-porch = <5>;
+> +				vsync-len = <20>;
+> +
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Drop this newline.
+
+> +				hsync-active = <0>;
+> +				vsync-active = <0>;
+> +				de-active = <1>;
+> +				pixelclk-active = <0>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&usdhc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	status = "okay";
+> +};
+> +
+> +&tsc {
+> +	measure_delay_time = <0x1ffff>;
+
+measure-delay-time
+
+> +	pre_charge_time = <0x1fff>;
+
+pre-charge-time
+
+> +	status = "okay";
+> +};
+
+<snip>
+
+> +&gpmi {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_gpmi_nand>;
+> +	status = "okay";
+
+Please put 'status' property at the end of property list.
+
+> +	nand-on-flash-bbt;
+> +};
+> +
+> +&lcdif {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_lcdif_dat
+> +		     &pinctrl_lcdif_ctrl>;
+> +	display = <&display0>;
+
+It is set in imx6ul-geam-kit.dts, isn't it?
+
+> +};
+
+<snip>
+j
+> +&i2c1 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c1>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c2 {
+
+Except &iomuxc, please sort these node alphabetically in name.
+
+> +	clock_frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c2>;
+> +	status = "okay";
+> +};
+> +
+> +&iomuxc {
+> +
+
+Drop this newline.
+
+> +	pinctrl_enet1: enet1grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
+> +			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
+> +		>;
+> +	};
+
+<snip>
+
+> +	pinctrl_usdhc2: usdhc2grp {
+> +		fsl,pins = <
+> +			MX6UL_PAD_CSI_VSYNC__USDHC2_CLK     0x17070
+> +			MX6UL_PAD_CSI_HSYNC__USDHC2_CMD     0x10070
+> +			MX6UL_PAD_CSI_DATA00__USDHC2_DATA0  0x17070
+> +			MX6UL_PAD_CSI_DATA01__USDHC2_DATA1  0x17070
+> +			MX6UL_PAD_CSI_DATA02__USDHC2_DATA2  0x17070
+> +			MX6UL_PAD_CSI_DATA03__USDHC2_DATA3  0x17070
+> +		>;
+> +	};
+> +
+> +	pinctrl_tsc: tscgrp {
+
+This one is not sorted.
+
+Shawn
+
+> +		fsl,pin = <
+> +			MX6UL_PAD_GPIO1_IO01__GPIO1_IO01	0xb0
+> +			MX6UL_PAD_GPIO1_IO02__GPIO1_IO02	0xb0
+> +			MX6UL_PAD_GPIO1_IO03__GPIO1_IO03	0xb0
+> +			MX6UL_PAD_GPIO1_IO04__GPIO1_IO04	0xb0
+> +		>;
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
