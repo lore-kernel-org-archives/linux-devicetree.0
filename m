@@ -1,143 +1,95 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v5 2/2] ASoC: samsung: Add machine driver for
- Exynos5433 based TM2 board
-Date: Tue, 30 Aug 2016 16:57:25 +0200
-Message-ID: <65238f9c-bed0-7ad5-1961-fa2ff3848782@samsung.com>
-References: <1470752514-11409-1-git-send-email-s.nawrocki@samsung.com>
- <1470752514-11409-2-git-send-email-s.nawrocki@samsung.com>
- <20160829150251.GU21682@localhost.localdomain>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 2/2] ARM: dts: dra7: cpsw: fix clocks tree
+Date: Tue, 30 Aug 2016 17:58:01 +0300
+Message-ID: <20160830145801.10364-2-grygorii.strashko@ti.com>
+References: <20160830145801.10364-1-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20160829150251.GU21682-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+In-Reply-To: <20160830145801.10364-1-grygorii.strashko-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/29/2016 05:02 PM, Charles Keepax wrote:
-> On Tue, Aug 09, 2016 at 04:21:54PM +0200, Sylwester Nawrocki wrote:
->> ---
-> <snip>
->> +static int tm2_suspend_late(struct device *dev)
->> +{
->> +	struct snd_soc_card *card = dev_get_drvdata(dev);
->> +
->> +	return tm2_stop_sysclk(card);
->> +}
->> +
->> +static int tm2_resume_early(struct device *dev)
->> +{
->> +	struct snd_soc_card *card = dev_get_drvdata(dev);
->> +
->> +	return tm2_start_sysclk(card);
->> +}
->> +
->> +const struct dev_pm_ops tm2_pm_ops = {
->> +	.suspend	= snd_soc_suspend,
->> +	.suspend_late	= tm2_suspend_late,
->> +	.resume		= snd_soc_resume,
->> +	.resume_early	= tm2_resume_early,
->> +	.freeze		= snd_soc_suspend,
->> +	.thaw		= snd_soc_resume,
->> +	.poweroff	= snd_soc_poweroff,
->> +	.restore	= snd_soc_resume,
->> +};
-> 
-> This bit still looks problematic to me, although admittedly I not
-> sure exactly why you don't seem to be hitting any issues with
-> it. Before you were effectively calling things from .suspend, now
-> its .suspend_late.  As we are now later in the suspend process
-> that means its even more likely the SPI will be unavailable when
-> we try to talk to the CODEC. You need to run before the SPI
-> has started suspending so you can still communicate with the
-> CODEC, I still think prepare/complete are likely to be the best
-> options for this, unless there are some complications there I
-> have missed.
-> 
-> Aside from that and the clock stuff we are already discussing
-> everything else looks totally fine to me.
+Current clocks tree definition for CPSW/CPTS doesn't
+correspond TRM for dra7/am57 SoCs.
 
-Thanks for your review. First of all I'm testing system suspend
-related changes on 4.1 kernel as there is no full support for the
-exynos5433 SoC in mainline yet.
-I will use prepare/complete as with late_suspend/early_resume power
-sequences are wrong as you point out. I still need to debug why
-there is no errors reported when the SPI controller is suspended
-while there are supposed to be done SPI bus transfers.
+CPTS: has to be sourced from gmac_rft_clk_mux clock
+CPSW: DPLL_GMAC -> CLKOUT_M2 -> GMAC_250M_CLK -> 1/2 ->
+      -> GMAC_MAIN_CLK (125 MHZ)
 
-It seems I missed the main point of making that pm_ops change, I
-focused on the MCLK clock presence while the main issue was
-communication with the codec over SPI bus.
+Hence, correct clock tree for GMAC_MAIN_CLK and use proper
+clock for CPTS. This also require updating of CPTS clock
+multiplier.
 
-I added some debug prints and below are logs when using
-late_suspend/early_resume and prepare/complete. In both cases
-tm2_stop_sysclk() returns 0.
+Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Cc: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/dra7.dtsi          |  4 ++--
+ arch/arm/boot/dts/dra7xx-clocks.dtsi | 16 ++++++++--------
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-I think suspend/resume sequences are still correct when snd_soc_pm_ops
-are used thanks to order of linking drivers into kernel image and
-adding device to dpm_list.
-
--------------------------------8<-----------------------------------
-suspend_late/early_resume
-
-# dmesg | grep "resume\|suspend\|arizona"
-
-[   42.169691] Suspending console(s) (use no_console_suspend to debug)
-
-[   42.211115] tm2-audio sound: snd_soc_suspend
-[   42.213991] s3c64xx-spi 14d30000.spi: s3c64xx_spi_suspend
-
-[   42.215097] PM: suspend of devices complete after 40.028 msecs
-[   42.229764] tm2-audio sound: tm2_suspend_late: 0
-
-[   42.231496] PM: late suspend of devices complete after 6.362 msecs
-[   42.237318] PM: noirq suspend of devices complete after 5.804 msecs
-[   42.819161] PM: noirq resume of devices complete after 62.500 msecs
-
-[   43.063552] arizona spi1.0: FLL1: Timed out waiting for lock
-[   43.063572] tm2-audio sound: tm2_resume_early: 0
-[   43.066830] PM: early resume of devices complete after 247.302 msecs
-
-[   43.078789] s3c64xx-spi 14d30000.spi: s3c64xx_spi_resume
-[   43.080192] tm2-audio sound: snd_soc_resume
-[   43.080212] tm2-audio sound: ASoC: starting resume work
-
-[   43.319459] PM: resume of devices complete after 241.698 msecs
--------------------------------8<-----------------------------------
-
-
--------------------------------8<-----------------------------------
-prepare/complete
-
-# dmesg -c | grep "prepare\|complete\|suspend\|resume\|arizona"
-
-[  172.398552] Suspending console(s) (use no_console_suspend to debug)
-[  172.399431] tm2-audio sound: tm2_prepare: 0
-[  172.441073] tm2-audio sound: snd_soc_suspend
-[  172.443653] s3c64xx-spi 14d30000.spi: s3c64xx_spi_suspend
-
-[  172.444766] PM: suspend of devices complete after 42.202 msecs
-[  172.459500] PM: late suspend of devices complete after 6.407 msecs
-[  172.465277] PM: noirq suspend of devices complete after 5.758 msecs
-[  173.039052] PM: noirq resume of devices complete after 62.396 msecs
-[  173.044578] PM: early resume of devices complete after 5.152 msecs
-
-[  173.057042] s3c64xx-spi 14d30000.spi: s3c64xx_spi_resume
-[  173.058423] tm2-audio sound: snd_soc_resume
-[  173.058442] tm2-audio sound: ASoC: starting resume work
-
-[  173.299428] PM: resume of devices complete after 243.393 msecs
-[  173.329555] arizona spi1.0: Spurious HPDET IRQ
-[  173.329704] arizona spi1.0: Mixer dropped sample
-[  173.329758] tm2-audio sound: tm2_complete: 0
--------------------------------8<-----------------------------------
-
-
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index d9bfb94..9f14eed 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -1717,7 +1717,7 @@
+ 		mac: ethernet@48484000 {
+ 			compatible = "ti,dra7-cpsw","ti,cpsw";
+ 			ti,hwmods = "gmac";
+-			clocks = <&dpll_gmac_ck>, <&gmac_gmii_ref_clk_div>;
++			clocks = <&gmac_main_clk>, <&gmac_rft_clk_mux>;
+ 			clock-names = "fck", "cpts";
+ 			cpdma_channels = <8>;
+ 			ale_entries = <1024>;
+@@ -1726,7 +1726,7 @@
+ 			mac_control = <0x20>;
+ 			slaves = <2>;
+ 			active_slave = <0>;
+-			cpts_clock_mult = <0x80000000>;
++			cpts_clock_mult = <0x784CFE14>;
+ 			cpts_clock_shift = <29>;
+ 			reg = <0x48484000 0x1000
+ 			       0x48485200 0x2E00>;
+diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+index 3f0c61d..3330738e 100644
+--- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
++++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+@@ -1003,6 +1003,14 @@
+ 		ti,index-power-of-two;
+ 	};
+ 
++	gmac_main_clk: gmac_main_clk {
++		#clock-cells = <0>;
++		compatible = "fixed-factor-clock";
++		clocks = <&gmac_250m_dclk_div>;
++		clock-mult = <1>;
++		clock-div = <2>;
++	};
++
+ 	l3init_480m_dclk_div: l3init_480m_dclk_div@1ac {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,divider-clock";
+@@ -1726,14 +1734,6 @@
+ 		reg = <0x13d0>;
+ 	};
+ 
+-	gmac_gmii_ref_clk_div: gmac_gmii_ref_clk_div {
+-		#clock-cells = <0>;
+-		compatible = "fixed-factor-clock";
+-		clocks = <&dpll_gmac_m2_ck>;
+-		clock-mult = <1>;
+-		clock-div = <2>;
+-	};
+-
+ 	gmac_rft_clk_mux: gmac_rft_clk_mux@13d0 {
+ 		#clock-cells = <0>;
+ 		compatible = "ti,mux-clock";
 -- 
-Thanks,
-Sylwester
+2.9.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
