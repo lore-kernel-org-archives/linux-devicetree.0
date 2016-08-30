@@ -1,96 +1,58 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v8 14/18] ARM: STi: DT: STiH407: Add uniperif player dt
- nodes
-Date: Tue, 30 Aug 2016 11:03:17 +0100
-Message-ID: <20160830100317.GQ1661@dell>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 13/18] ARM: STi: DT: STiH407: Add sti-sasg-codec dt
+ node
+Date: Tue, 30 Aug 2016 11:03:48 +0100
+Message-ID: <20160830100348.GR1661@dell>
 References: <1472223413-7254-1-git-send-email-peter.griffin@linaro.org>
- <1472223413-7254-15-git-send-email-peter.griffin@linaro.org>
- <20160830100258.GP1661@dell>
+ <1472223413-7254-14-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160830100258.GP1661@dell>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: ohad@wizery.com, devicetree@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, Arnaud Pouliquen <arnaud.pouliquen@st.com>, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, kraxel@redhat.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, bjorn.andersson@linaro.org, virtualization@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1472223413-7254-14-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAzMCBBdWcgMjAxNiwgTGVlIEpvbmVzIHdyb3RlOgoKPiBPbiBGcmksIDI2IEF1ZyAy
-MDE2LCBQZXRlciBHcmlmZmluIHdyb3RlOgo+IAo+ID4gVGhpcyBwYXRjaCBhZGRzIHRoZSBEVCBu
-b2RlcyBmb3IgdGhlIHVuaXBlcmlmIHBsYXllcgo+ID4gSVAgYmxvY2tzIGZvdW5kIG9uIFNUaUg0
-MDcgZmFtaWx5IHNpbGljb24uCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IEFybmF1ZCBQb3VsaXF1
-ZW4gPGFybmF1ZC5wb3VsaXF1ZW5Ac3QuY29tPgo+ID4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgR3Jp
-ZmZpbiA8cGV0ZXIuZ3JpZmZpbkBsaW5hcm8ub3JnPgo+ID4gLS0tCj4gPiAgYXJjaC9hcm0vYm9v
-dC9kdHMvc3RpaDQwNy1mYW1pbHkuZHRzaSB8IDc2ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDc2IGluc2VydGlvbnMoKykKPiAKPiBTYW1l
-IGNvbW1lbnRzIGFzIGluIHBhdGNoIDE0LgoKcy8xNC8xNS8KCj4gPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1mYW1pbHkuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0
-aWg0MDctZmFtaWx5LmR0c2kKPiA+IGluZGV4IGQxMjU4ZDUuLmQyNjNjOTYgMTAwNjQ0Cj4gPiAt
-LS0gYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpCj4gPiArKysgYi9hcmNo
-L2FybS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpCj4gPiBAQCAtODgwLDUgKzg4MCw4MSBA
-QAo+ID4gIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gPiAgCQkJc3Qsc3lzY2ZnID0gPCZzeXNj
-ZmdfY29yZT47Cj4gPiAgCQl9Owo+ID4gKwo+ID4gKwkJc3RpX3VuaV9wbGF5ZXIwOiBzdGktdW5p
-LXBsYXllckAwIHsKPiA+ICsJCQljb21wYXRpYmxlID0gInN0LHN0aS11bmktcGxheWVyIjsKPiA+
-ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ID4gKwkJCSNzb3VuZC1kYWktY2VsbHMgPSA8MD47
-Cj4gPiArCQkJc3Qsc3lzY2ZnID0gPCZzeXNjZmdfY29yZT47Cj4gPiArCQkJY2xvY2tzID0gPCZj
-bGtfc19kMF9mbGV4Z2VuIENMS19QQ01fMD47Cj4gPiArCQkJYXNzaWduZWQtY2xvY2tzID0gPCZj
-bGtfc19kMF9xdWFkZnMgMD4sIDwmY2xrX3NfZDBfZmxleGdlbiBDTEtfUENNXzA+Owo+ID4gKwkJ
-CWFzc2lnbmVkLWNsb2NrLXBhcmVudHMgPSA8MD4sIDwmY2xrX3NfZDBfcXVhZGZzIDA+Owo+ID4g
-KwkJCWFzc2lnbmVkLWNsb2NrLXJhdGVzID0gPDUwMDAwMDAwPjsKPiA+ICsJCQlyZWcgPSA8MHg4
-RDgwMDAwIDB4MTU4PjsKPiA+ICsJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODQgSVJRX1RZUEVf
-Tk9ORT47Cj4gPiArCQkJZG1hcyA9IDwmZmRtYTAgMiAwIDE+Owo+ID4gKwkJCWRhaS1uYW1lID0g
-IlVuaSBQbGF5ZXIgIzAgKEhETUkpIjsKPiA+ICsJCQlkbWEtbmFtZXMgPSAidHgiOwo+ID4gKwkJ
-CXN0LHVuaXBlcmlwaC1pZCA9IDwwPjsKPiA+ICsJCQlzdCx2ZXJzaW9uID0gPDU+Owo+ID4gKwkJ
-CXN0LG1vZGUgPSAiSERNSSI7Cj4gPiArCQl9Owo+ID4gKwo+ID4gKwkJc3RpX3VuaV9wbGF5ZXIx
-OiBzdGktdW5pLXBsYXllckAxIHsKPiA+ICsJCQljb21wYXRpYmxlID0gInN0LHN0aS11bmktcGxh
-eWVyIjsKPiA+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ID4gKwkJCSNzb3VuZC1kYWktY2Vs
-bHMgPSA8MD47Cj4gPiArCQkJc3Qsc3lzY2ZnID0gPCZzeXNjZmdfY29yZT47Cj4gPiArCQkJY2xv
-Y2tzID0gPCZjbGtfc19kMF9mbGV4Z2VuIENMS19QQ01fMT47Cj4gPiArCQkJYXNzaWduZWQtY2xv
-Y2tzID0gPCZjbGtfc19kMF9xdWFkZnMgMT4sIDwmY2xrX3NfZDBfZmxleGdlbiBDTEtfUENNXzE+
-Owo+ID4gKwkJCWFzc2lnbmVkLWNsb2NrLXBhcmVudHMgPSA8MD4sIDwmY2xrX3NfZDBfcXVhZGZz
-IDE+Owo+ID4gKwkJCWFzc2lnbmVkLWNsb2NrLXJhdGVzID0gPDUwMDAwMDAwPjsKPiA+ICsJCQly
-ZWcgPSA8MHg4RDgxMDAwIDB4MTU4PjsKPiA+ICsJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODUg
-SVJRX1RZUEVfTk9ORT47Cj4gPiArCQkJZG1hcyA9IDwmZmRtYTAgMyAwIDE+Owo+ID4gKwkJCWRh
-aS1uYW1lID0gIlVuaSBQbGF5ZXIgIzEgKFBJTykiOwo+ID4gKwkJCWRtYS1uYW1lcyA9ICJ0eCI7
-Cj4gPiArCQkJc3QsdW5pcGVyaXBoLWlkID0gPDE+Owo+ID4gKwkJCXN0LHZlcnNpb24gPSA8NT47
-Cj4gPiArCQkJc3QsbW9kZSA9ICJQQ00iOwo+ID4gKwkJfTsKPiA+ICsKPiA+ICsJCXN0aV91bmlf
-cGxheWVyMjogc3RpLXVuaS1wbGF5ZXJAMiB7Cj4gPiArCQkJY29tcGF0aWJsZSA9ICJzdCxzdGkt
-dW5pLXBsYXllciI7Cj4gPiArCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+ICsJCQkjc291bmQt
-ZGFpLWNlbGxzID0gPDA+Owo+ID4gKwkJCXN0LHN5c2NmZyA9IDwmc3lzY2ZnX2NvcmU+Owo+ID4g
-KwkJCWNsb2NrcyA9IDwmY2xrX3NfZDBfZmxleGdlbiBDTEtfUENNXzI+Owo+ID4gKwkJCWFzc2ln
-bmVkLWNsb2NrcyA9IDwmY2xrX3NfZDBfcXVhZGZzIDI+LCA8JmNsa19zX2QwX2ZsZXhnZW4gQ0xL
-X1BDTV8yPjsKPiA+ICsJCQlhc3NpZ25lZC1jbG9jay1wYXJlbnRzID0gPDA+LCA8JmNsa19zX2Qw
-X3F1YWRmcyAyPjsKPiA+ICsJCQlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDw1MDAwMDAwMD47Cj4g
-PiArCQkJcmVnID0gPDB4OEQ4MjAwMCAweDE1OD47Cj4gPiArCQkJaW50ZXJydXB0cyA9IDxHSUNf
-U1BJIDg2IElSUV9UWVBFX05PTkU+Owo+ID4gKwkJCWRtYXMgPSA8JmZkbWEwIDQgMCAxPjsKPiA+
-ICsJCQlkYWktbmFtZSA9ICJVbmkgUGxheWVyICMxIChEQUMpIjsKPiA+ICsJCQlkbWEtbmFtZXMg
-PSAidHgiOwo+ID4gKwkJCXN0LHVuaXBlcmlwaC1pZCA9IDwyPjsKPiA+ICsJCQlzdCx2ZXJzaW9u
-ID0gPDU+Owo+ID4gKwkJCXN0LG1vZGUgPSAiUENNIjsKPiA+ICsJCX07Cj4gPiArCj4gPiArCQlz
-dGlfdW5pX3BsYXllcjM6IHN0aS11bmktcGxheWVyQDMgewo+ID4gKwkJCWNvbXBhdGlibGUgPSAi
-c3Qsc3RpLXVuaS1wbGF5ZXIiOwo+ID4gKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gPiArCQkJ
-I3NvdW5kLWRhaS1jZWxscyA9IDwwPjsKPiA+ICsJCQlzdCxzeXNjZmcgPSA8JnN5c2NmZ19jb3Jl
-PjsKPiA+ICsJCQljbG9ja3MgPSA8JmNsa19zX2QwX2ZsZXhnZW4gQ0xLX1NQRElGRj47Cj4gPiAr
-CQkJYXNzaWduZWQtY2xvY2tzID0gPCZjbGtfc19kMF9xdWFkZnMgMz4sIDwmY2xrX3NfZDBfZmxl
-eGdlbiBDTEtfU1BESUZGPjsKPiA+ICsJCQlhc3NpZ25lZC1jbG9jay1wYXJlbnRzID0gPDA+LCA8
-JmNsa19zX2QwX3F1YWRmcyAzPjsKPiA+ICsJCQlhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDw1MDAw
-MDAwMD47Cj4gPiArCQkJcmVnID0gPDB4OEQ4NTAwMCAweDE1OD47Cj4gPiArCQkJaW50ZXJydXB0
-cyA9IDxHSUNfU1BJIDg5IElSUV9UWVBFX05PTkU+Owo+ID4gKwkJCWRtYXMgPSA8JmZkbWEwIDcg
-MCAxPjsKPiA+ICsJCQlkbWEtbmFtZXMgPSAidHgiOwo+ID4gKwkJCWRhaS1uYW1lID0gIlVuaSBQ
-bGF5ZXIgIzEgKFBJTykiOwo+ID4gKwkJCXN0LHVuaXBlcmlwaC1pZCA9IDwzPjsKPiA+ICsJCQlz
-dCx2ZXJzaW9uID0gPDU+Owo+ID4gKwkJCXN0LG1vZGUgPSAiU1BESUYiOwo+ID4gKwkJfTsKPiA+
-ICAJfTsKPiA+ICB9Owo+IAoKLS0gCkxlZSBKb25lcwpMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNz
-IExhbmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZv
-ciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Fri, 26 Aug 2016, Peter Griffin wrote:
+
+> This patch adds the dt node for the internal audio
+> codec IP.
+> 
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/stih407-family.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+  
+> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+> index 45cab30..d1258d5 100644
+> --- a/arch/arm/boot/dts/stih407-family.dtsi
+> +++ b/arch/arm/boot/dts/stih407-family.dtsi
+> @@ -873,5 +873,12 @@
+>  				<&clk_s_c0_flexgen CLK_TX_ICN_DISP_0>,
+>  				<&clk_s_c0_flexgen CLK_EXT2F_A9>;
+>  		};
+> +
+> +		sti_sasg_codec: sti-sasg-codec {
+> +			compatible = "st,stih407-sas-codec";
+> +			#sound-dai-cells = <1>;
+> +			status = "disabled";
+> +			st,syscfg = <&syscfg_core>;
+> +		};
+>  	};
+>  };
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
