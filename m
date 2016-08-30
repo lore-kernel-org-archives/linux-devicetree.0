@@ -1,127 +1,144 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v8 15/18] ARM: STi: DT: STiH407: Add uniperif reader dt
-	nodes
-Date: Tue, 30 Aug 2016 15:21:12 +0100
-Message-ID: <20160830142112.GA22514@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1472223413-7254-1-git-send-email-peter.griffin@linaro.org>
-	<1472223413-7254-16-git-send-email-peter.griffin@linaro.org>
-	<20160830100148.GO1661@dell>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v5 2/2] ASoC: samsung: Add machine driver for
+ Exynos5433 based TM2 board
+Date: Tue, 30 Aug 2016 16:57:25 +0200
+Message-ID: <65238f9c-bed0-7ad5-1961-fa2ff3848782@samsung.com>
+References: <1470752514-11409-1-git-send-email-s.nawrocki@samsung.com>
+ <1470752514-11409-2-git-send-email-s.nawrocki@samsung.com>
+ <20160829150251.GU21682@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <virtualization-bounces@lists.linux-foundation.org>
-Content-Disposition: inline
-In-Reply-To: <20160830100148.GO1661@dell>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
-List-Post: <mailto:virtualization@lists.linux-foundation.org>
-List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
-Sender: virtualization-bounces@lists.linux-foundation.org
-Errors-To: virtualization-bounces@lists.linux-foundation.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, Arnaud Pouliquen <arnaud.pouliquen@st.com>, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, airlied@linux.ie, dmaengine@vger.kernel.org, dan.j.williams@intel.com, bjorn.andersson@linaro.org, virtualization@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20160829150251.GU21682-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
-
-Thanks for reviewing and your very valuable feedback.
-
-On Tue, 30 Aug 2016, Lee Jones wrote:
-
-> On Fri, 26 Aug 2016, Peter Griffin wrote:
+On 08/29/2016 05:02 PM, Charles Keepax wrote:
+> On Tue, Aug 09, 2016 at 04:21:54PM +0200, Sylwester Nawrocki wrote:
+>> ---
+> <snip>
+>> +static int tm2_suspend_late(struct device *dev)
+>> +{
+>> +	struct snd_soc_card *card = dev_get_drvdata(dev);
+>> +
+>> +	return tm2_stop_sysclk(card);
+>> +}
+>> +
+>> +static int tm2_resume_early(struct device *dev)
+>> +{
+>> +	struct snd_soc_card *card = dev_get_drvdata(dev);
+>> +
+>> +	return tm2_start_sysclk(card);
+>> +}
+>> +
+>> +const struct dev_pm_ops tm2_pm_ops = {
+>> +	.suspend	= snd_soc_suspend,
+>> +	.suspend_late	= tm2_suspend_late,
+>> +	.resume		= snd_soc_resume,
+>> +	.resume_early	= tm2_resume_early,
+>> +	.freeze		= snd_soc_suspend,
+>> +	.thaw		= snd_soc_resume,
+>> +	.poweroff	= snd_soc_poweroff,
+>> +	.restore	= snd_soc_resume,
+>> +};
 > 
-> > This patch adds the DT node for the uniperif reader
-> > IP block found on STiH407 family silicon.
-> > 
-> > Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > ---
-> >  arch/arm/boot/dts/stih407-family.dtsi | 26 ++++++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-> > index d263c96..bdddf2c 100644
-> > --- a/arch/arm/boot/dts/stih407-family.dtsi
-> > +++ b/arch/arm/boot/dts/stih407-family.dtsi
-> > @@ -956,5 +956,31 @@
-> >  			st,version = <5>;
-> >  			st,mode = "SPDIF";
-> >  		};
-> > +
-> > +		sti_uni_reader0: sti-uni-reader@0 {
-> > +			compatible = "st,sti-uni-reader";
-> > +			status = "disabled";
+> This bit still looks problematic to me, although admittedly I not
+> sure exactly why you don't seem to be hitting any issues with
+> it. Before you were effectively calling things from .suspend, now
+> its .suspend_late.  As we are now later in the suspend process
+> that means its even more likely the SPI will be unavailable when
+> we try to talk to the CODEC. You need to run before the SPI
+> has started suspending so you can still communicate with the
+> CODEC, I still think prepare/complete are likely to be the best
+> options for this, unless there are some complications there I
+> have missed.
 > 
-> I find it's normally nicer to place the status of the node at the
-> bottom, separated by a '\n'.
+> Aside from that and the clock stuff we are already discussing
+> everything else looks totally fine to me.
 
-Ok I'll add a superflous '\n' in the next version.
+Thanks for your review. First of all I'm testing system suspend
+related changes on 4.1 kernel as there is no full support for the
+exynos5433 SoC in mainline yet.
+I will use prepare/complete as with late_suspend/early_resume power
+sequences are wrong as you point out. I still need to debug why
+there is no errors reported when the SPI controller is suspended
+while there are supposed to be done SPI bus transfers.
 
->  There isn't a functional difference
-> admittedly, but it would be my preference, since it's not describing
-> the device per se.
+It seems I missed the main point of making that pm_ops change, I
+focused on the MCLK clock presence while the main issue was
+communication with the codec over SPI bus.
 
-Will change to your preference in the next version.
+I added some debug prints and below are logs when using
+late_suspend/early_resume and prepare/complete. In both cases
+tm2_stop_sysclk() returns 0.
 
-> 
-> > +			#sound-dai-cells = <0>;
-> > +			st,syscfg = <&syscfg_core>;
-> > +			reg = <0x8D83000 0x158>;
-> 
-> We usually use lower-case for the address.
+I think suspend/resume sequences are still correct when snd_soc_pm_ops
+are used thanks to order of linking drivers into kernel image and
+adding device to dpm_list.
 
-Will fix.
+-------------------------------8<-----------------------------------
+suspend_late/early_resume
 
-> 
-> Since this has a 'reg' property, the '0' in the node name does not
-> look appropriate.
+# dmesg | grep "resume\|suspend\|arizona"
 
-Will fix.
-> 
-> > +			interrupts = <GIC_SPI 87 IRQ_TYPE_NONE>;
-> > +			dmas = <&fdma0 5 0 1>;
-> > +			dma-names = "rx";
-> > +			dai-name = "Uni Reader #0 (PCM IN)";
-> 
-> Oooo, not seen something like this before.
-> 
-> If it does not already have one, it would require a DT Ack.
+[   42.169691] Suspending console(s) (use no_console_suspend to debug)
 
-No idea, the driver got merged 1 year ago.
+[   42.211115] tm2-audio sound: snd_soc_suspend
+[   42.213991] s3c64xx-spi 14d30000.spi: s3c64xx_spi_suspend
 
-Arnaud did you get a DT ack when you merged this driver & binding?
-> 
-> > +			st,version = <3>;
-> 
-> This will likely need a DT Ack too.  We usually encode this sort of
-> information in the compatible string.
+[   42.215097] PM: suspend of devices complete after 40.028 msecs
+[   42.229764] tm2-audio sound: tm2_suspend_late: 0
 
-See 05c1b4480e86a871b18030d6f3d532dc0ecdf38c
-> 
-> > +		};
-> > +
-> > +		sti_uni_reader1: sti-uni-reader@1 {
-> > +			compatible = "st,sti-uni-reader";
-> > +			status = "disabled";
-> > +			#sound-dai-cells = <0>;
-> > +			st,syscfg = <&syscfg_core>;
-> > +			reg = <0x8D84000 0x158>;
-> > +			interrupts = <GIC_SPI 88 IRQ_TYPE_NONE>;
-> > +			dmas = <&fdma0 6 0 1>;
-> > +			dma-names = "rx";
-> > +			dai-name = "Uni Reader #1 (HDMI RX)";
-> > +			st,version = <3>;
-> > +		};
-> 
-> All as above.
-> 
-> >  	};
-> >  };
-> 
+[   42.231496] PM: late suspend of devices complete after 6.362 msecs
+[   42.237318] PM: noirq suspend of devices complete after 5.804 msecs
+[   42.819161] PM: noirq resume of devices complete after 62.500 msecs
 
-Regards,
+[   43.063552] arizona spi1.0: FLL1: Timed out waiting for lock
+[   43.063572] tm2-audio sound: tm2_resume_early: 0
+[   43.066830] PM: early resume of devices complete after 247.302 msecs
 
-Peter.
+[   43.078789] s3c64xx-spi 14d30000.spi: s3c64xx_spi_resume
+[   43.080192] tm2-audio sound: snd_soc_resume
+[   43.080212] tm2-audio sound: ASoC: starting resume work
+
+[   43.319459] PM: resume of devices complete after 241.698 msecs
+-------------------------------8<-----------------------------------
+
+
+-------------------------------8<-----------------------------------
+prepare/complete
+
+# dmesg -c | grep "prepare\|complete\|suspend\|resume\|arizona"
+
+[  172.398552] Suspending console(s) (use no_console_suspend to debug)
+[  172.399431] tm2-audio sound: tm2_prepare: 0
+[  172.441073] tm2-audio sound: snd_soc_suspend
+[  172.443653] s3c64xx-spi 14d30000.spi: s3c64xx_spi_suspend
+
+[  172.444766] PM: suspend of devices complete after 42.202 msecs
+[  172.459500] PM: late suspend of devices complete after 6.407 msecs
+[  172.465277] PM: noirq suspend of devices complete after 5.758 msecs
+[  173.039052] PM: noirq resume of devices complete after 62.396 msecs
+[  173.044578] PM: early resume of devices complete after 5.152 msecs
+
+[  173.057042] s3c64xx-spi 14d30000.spi: s3c64xx_spi_resume
+[  173.058423] tm2-audio sound: snd_soc_resume
+[  173.058442] tm2-audio sound: ASoC: starting resume work
+
+[  173.299428] PM: resume of devices complete after 243.393 msecs
+[  173.329555] arizona spi1.0: Spurious HPDET IRQ
+[  173.329704] arizona spi1.0: Mixer dropped sample
+[  173.329758] tm2-audio sound: tm2_complete: 0
+-------------------------------8<-----------------------------------
+
+
+-- 
+Thanks,
+Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
