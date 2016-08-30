@@ -1,100 +1,79 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4] rtc: omap: Support ext_wakeup configuration
-Date: Tue, 30 Aug 2016 14:59:03 -0500
-Message-ID: <20160830195903.GA14471@rob-hp-laptop>
-References: <20160825111912.23017-1-m.niestroj@grinn-global.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: rockchip: Explicitly set pclk_pmu_src on rk3399
+Date: Tue, 30 Aug 2016 13:17:24 -0700
+Message-ID: <CAD=FV=U9F5uYeZc0m1b0B5KNX5PnP6w+-_tT1bhQf1tEv9TxSw@mail.gmail.com>
+References: <1472494284-11315-1-git-send-email-dianders@chromium.org>
+ <20160829181841.GA8682@localhost> <57C4DA73.5000505@rock-chips.com>
+ <4298293.ZqJ4n19bHK@diego> <20160830170635.GA129134@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDJIP47K7MERBCWLS67AKGQEQ4WCOGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160825111912.23017-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160830170635.GA129134-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 25, 2016 at 01:19:12PM +0200, Marcin Niestroj wrote:
-> Support configuration of ext_wakeup sources. This patch makes it
-> possible to enable ext_wakeup and set it's polarity, depending on board
-> configuration. AM335x's dedicated PMIC (tps65217) uses ext_wakeup to
-> notify about power-button presses. Handling power-button presses enables
-> to recover from RTC-only power states correctly.
-> 
-> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-> ---
-> Hi,
-> 
-> This is a total reimplementation, so it is not based on any of the previos
-> patch versions. This patch adds support for ext_wakeup using generic pinconf
-> device-tree bindings, with one added "ti,input-polarity" custom property.
-> This approach has been suggested by Tony and Grygorii in [1].
-> 
-> Patch was developed on 4.6, rebased on 4.8-rc3, tested using chiliBoard.
-> 
-> [1] http://www.spinics.net/lists/devicetree/msg131516.html
-> 
->  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  21 +++
->  drivers/rtc/Kconfig                                |   1 +
->  drivers/rtc/rtc-omap.c                             | 167 ++++++++++++++++++++-
->  3 files changed, 181 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> index bf7d11a..5d18373 100644
-> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-> @@ -18,6 +18,18 @@ Optional properties:
->    through pmic_power_en
->  - clocks: Any internal or external clocks feeding in to rtc
->  - clock-names: Corresponding names of the clocks
-> +- pinctrl-0: a phandle pointing to the pin settings for the device
-> +- pinctrl-names: should be "default"
-> +
-> +Optional subnodes:
-> +- generic pinctrl node
-> +
-> +Required pinctrl subnodes properties:
-> +- pins - Names of ext_wakeup pins to configure
-> +
-> +Optional pinctrl subnodes properties:
-> +- input-enable - Enables ext_wakeup
-> +- ti,input-polarity - GPIO_ACTIVE_LOW or GPIO_ACTIVE_HIGH depending board
+Hi,
 
-This is not a GPIO, so don't use GPIO defines. Just make this boolean 
-with not present ideally being the more common case.
+On Tue, Aug 30, 2016 at 10:06 AM, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> On Tue, Aug 30, 2016 at 09:05:06AM +0200, Heiko Stuebner wrote:
+>> Am Dienstag, 30. August 2016, 08:59:31 schrieb Elaine Zhang:
+>> > On 08/30/2016 02:18 AM, Brian Norris wrote:
+>> > > On Mon, Aug 29, 2016 at 11:11:24AM -0700, Doug Anderson wrote:
+>> > >> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> > >> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+>> > >> @@ -908,8 +908,8 @@
+>> > >>
+>> > >>                  reg = <0x0 0xff750000 0x0 0x1000>;
+>> > >>                  #clock-cells = <1>;
+>> > >>                  #reset-cells = <1>;
+>> > >>
+>> > >> -                assigned-clocks = <&pmucru PLL_PPLL>;
+>> > >> -                assigned-clock-rates = <676000000>;
+>> > >> +                assigned-clocks = <&pmucru PLL_PPLL>, <&pmucru PCLK_SRC_PMU>;
+>> > >> +                assigned-clock-rates = <676000000>, <112666667>;
+>> > >
+>> > > I think this makes sense and is a good idea. One alternative would be to
+>> > > have the various children actually set a rate that they expect, but
+>> > > several of them don't have a separate driver at all, and that would be
+>> > > of dubious value anyway I think.
+>> >
+>> > I agree with you. This clk default div is set in the uboot or coreboot.
+>> > And if is need to set in kernel ,I hope the freq is 50M(<48285714>).
+>> > This freq can meet the performance,and the power consumption is not too
+>> > much.
+>>
+>> can you maybe also provide a tag like the one Brian did below. Your sentence
+>> above indicates that you reviewed and approve, but it's helpful to also state
+>> that explicitly :-)
 
->  Example:
->  
-> @@ -30,4 +42,13 @@ rtc@1c23000 {
->  	system-power-controller;
->  	clocks = <&clk_32k_rtc>, <&clk_32768_ck>;
->  	clock-names = "ext-clk", "int-clk";
-> +
-> +	pinctrl-0 = <&ext_wakeup>;
-> +	pinctrl-names = "default";
-> +
-> +	ext_wakeup: ext_wakeup {
+Also, I actually realized that I may want to NAK my own patch and
+possibly want to suggest doing the opposite: removing the set of
+"PPLL" from the dtsi and moving it into the board .dts files for any
+boards that need it.
 
-Use '-', not '_' in node names.
+Specifically on out rk3399 boards we use PWM regulators for all the
+major rails in the system.  The firmware inits the PWMs to give the
+system a good voltage and then boots the kernel.  The kernel reads the
+PWMs to find out what the boot voltage was.
 
-> +		pins = "ext_wakeup0";
-> +		input-enable;
-> +		ti,input-polarity = <GPIO_ACTIVE_LOW>;
-> +	};
->  };
+That whole scheme only works if the PWM's clock doesn't get mucked
+with at bootup.  ...and the PWM's clock is derived from "pclk_pmu_src"
+which comes from PPLL.
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+So it's actually very important that we _don't_ mess with whatever the
+firmware set here and that the firmware set something sane.
+
+> If I understand Elaine correctly, that's not actually a full agreement;
+> it looks like a suggestion to change that from 112 MHz to 48.2 MHz. I
+> haven't tested that out personally yet, but if that's a formal
+> recommendation from Rockchip, we'd like to know more about it :)
+
+Yes, if this is a good idea we should update our firmware to do it.
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
