@@ -1,46 +1,112 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/8] arm: orion5x: Add DT-based support for Netgear
- WNR854T
-Date: Wed, 31 Aug 2016 10:26:25 -0500
-Message-ID: <20160831152625.GA25415@rob-hp-laptop>
-References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
- <1472203264-21089-1-git-send-email-jm@lentin.co.uk>
- <1472203264-21089-7-git-send-email-jm@lentin.co.uk>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 03/19] iommu/of: Handle iommu-map property for PCI
+Date: Wed, 31 Aug 2016 16:43:47 +0100
+Message-ID: <20160831154346.GF29505@arm.com>
+References: <cover.1471975357.git.robin.murphy@arm.com>
+	<93909648835867008b21cb688a1d7db238d3641a.1471975357.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1472203264-21089-7-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <93909648835867008b21cb688a1d7db238d3641a.1471975357.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 26, 2016 at 10:21:02AM +0100, Jamie Lentin wrote:
-> This is a router based on the mv88f5181 chipset.
+On Tue, Aug 23, 2016 at 08:05:14PM +0100, Robin Murphy wrote:
+> Now that we have a way to pick up the RID translation and target IOMMU,
+> hook up of_iommu_configure() to bring PCI devices into the of_xlate
+> mechanism and allow them IOMMU-backed DMA ops without the need for
+> driver-specific handling.
 > 
-> http://www.netgear.com/support/product/WNR854T.aspx
-> http://wiki.openwrt.org/toh/netgear/wnr854t
-> 
-> Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 > ---
->  .../bindings/arm/marvell/marvell,orion5x.txt       |   1 +
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/orion5x-netgear-wnr854t.dts      | 212 +++++++++++++++++++++
+>  drivers/iommu/of_iommu.c | 43 ++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 36 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index 57f23eaaa2f9..1a65cc806898 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/limits.h>
+>  #include <linux/of.h>
+>  #include <linux/of_iommu.h>
+> +#include <linux/of_pci.h>
+>  #include <linux/slab.h>
+>  
+>  static const struct of_device_id __iommu_of_table_sentinel
+> @@ -134,20 +135,48 @@ const struct iommu_ops *of_iommu_get_ops(struct device_node *np)
+>  	return ops;
+>  }
+>  
+> +static int __get_pci_rid(struct pci_dev *pdev, u16 alias, void *data)
+> +{
+> +	struct of_phandle_args *iommu_spec = data;
+> +
+> +	iommu_spec->args[0] = alias;
+> +	return iommu_spec->np == pdev->bus->dev.of_node;
+> +}
+> +
+>  const struct iommu_ops *of_iommu_configure(struct device *dev,
+>  					   struct device_node *master_np)
+>  {
+>  	struct of_phandle_args iommu_spec;
+> -	struct device_node *np;
+> +	struct device_node *np = NULL;
+>  	const struct iommu_ops *ops = NULL;
+>  	int idx = 0;
+>  
+> -	/*
+> -	 * We can't do much for PCI devices without knowing how
+> -	 * device IDs are wired up from the PCI bus to the IOMMU.
+> -	 */
+> -	if (dev_is_pci(dev))
+> -		return NULL;
+> +	if (dev_is_pci(dev)) {
+> +		/*
+> +		 * Start by tracing the RID alias down the PCI topology as
+> +		 * far as the host bridge whose OF node we have...
+> +		 */
+> +		iommu_spec.np = master_np;
+> +		pci_for_each_dma_alias(to_pci_dev(dev), __get_pci_rid,
+> +				       &iommu_spec);
+> +		/*
+> +		 * ...then find out what that becomes once it escapes the PCI
+> +		 * bus into the system beyond, and which IOMMU it ends up at.
+> +		 */
+> +		if (of_pci_map_rid(master_np, iommu_spec.args[0], "iommu-map",
+> +				    "iommu-map-mask", &np, iommu_spec.args))
+> +			return NULL;
+> +
+> +		/* We're not attempting to handle multi-alias devices yet */
+> +		iommu_spec.np = np;
+> +		iommu_spec.args_count = 1;
+> +		ops = of_iommu_get_ops(np);
+> +		if (!ops || !ops->of_xlate || ops->of_xlate(dev, &iommu_spec))
+> +			ops = NULL;
+> +
+> +		of_node_put(np);
+> +		return ops;
+> +	}
 
-For the bindings,
+I think you should stick this in a separate function, rather than inline
+it into of_iommu_configure, otherwise the control flow is pretty whacky
+until you realise that the PCI path and the platform device path are
+mutually exclusive.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+With that:
 
->  arch/arm/mach-orion5x/Kconfig                      |   6 +
->  arch/arm/mach-orion5x/Makefile                     |   1 +
->  arch/arm/mach-orion5x/board-wnr854t.c              |  78 ++++++++
+Reviewed-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 
-This is all PCI setup it appears. The PCI driver should be converted to 
-a modern PCI host driver before it is supported with DT IMO.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will
