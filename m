@@ -1,199 +1,168 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v3 2/2] regulator: pwm: Prevent falling too fast
-Date: Tue, 30 Aug 2016 21:21:16 -0700
-Message-ID: <1472617277-30814-2-git-send-email-dianders@chromium.org>
-References: <1472617277-30814-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472617277-30814-1-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com
-Cc: mka@chromium.org, briannorris@chromium.org, javier@dowhile0.org, linux-rockchip@lists.infradead.org, Douglas Anderson <dianders@chromium.org>, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v24 9/9] Documentation: dt: chosen properties for arm64
+ kdump
+Date: Wed, 31 Aug 2016 14:02:16 +0900
+Message-ID: <20160831050215.GQ20080@linaro.org>
+References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
+ <20160809015747.28591-1-takahiro.akashi@linaro.org>
+ <20160819132641.GA12709@rob-hp-laptop>
+ <20160822042832.GJ20080@linaro.org>
+ <CAL_JsqJ5SqesEL5QWX_NJj+gL2jpne4NN_WzADiH+1VB7CkvOA@mail.gmail.com>
+ <20160830234545.GP20080@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-2022-jp
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160830234545.GP20080-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>, Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On some boards it's possible that transitioning the PWM regulator
-downwards too fast will trigger the over voltage protection (OVP) on the
-regulator.  This is because until the voltage actually falls there is a
-time when the requested voltage is much lower than the actual voltage.
+On Wed, Aug 31, 2016 at 08:45:46AM +0900, AKASHI Takahiro wrote:
+> Rob,
+> 
+> On Tue, Aug 30, 2016 at 11:34:10AM -0500, Rob Herring wrote:
+> > On Sun, Aug 21, 2016 at 11:28 PM, AKASHI Takahiro
+> > <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > > Rob,
+> > > [Cc: Mark]
+> > >
+> > > On Fri, Aug 19, 2016 at 08:26:41AM -0500, Rob Herring wrote:
+> > >> On Tue, Aug 09, 2016 at 10:57:47AM +0900, AKASHI Takahiro wrote:
+> > >> > From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+> > >> >
+> > >> > Add documentation for
+> > >> >     linux,crashkernel-base and crashkernel-size,
+> > >> >     linux,usable-memory-range, and
+> > >> >     linux,elfcorehdr
+> > >> > used by arm64 kexec/kdump to decribe the kdump reserved area, and
+> > >> > the elfcorehdr's location within it.
+> > >> >
+> > >> > Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+> > >> > [takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org:
+> > >> >     renamed "usable-memory" to "usable-memory-range",
+> > >> >     added "linux,crashkernel-base" and "-size" ]
+> > >> > Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > >> > ---
+> > >> >  Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
+> > >> >  1 file changed, 50 insertions(+)
+> > >> >
+> > >> > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> > >> > index 6ae9d82..236188a 100644
+> > >> > --- a/Documentation/devicetree/bindings/chosen.txt
+> > >> > +++ b/Documentation/devicetree/bindings/chosen.txt
+> > >> > @@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
+> > >> >  book3e) by some versions of kexec-tools to tell the new kernel that it
+> > >> >  is being booted by kexec, as the booting environment may differ (e.g.
+> > >> >  a different secondary CPU release mechanism)
+> > >> > +
+> > >> > +linux,crashkernel-base
+> > >> > +linux,crashkernel-size
+> > >> > +----------------------
+> > >> > +These properties (currently used on PowerPC and arm64) indicates
+> > >> > +the base address and the size, respectively, of the reserved memory
+> > >> > +range for crash dump kernel.
+> > >> > +e.g.
+> > >> > +
+> > >> > +/ {
+> > >> > +   chosen {
+> > >> > +           linux,crashkernel-base = <0x9 0xf0000000>;
+> > >> > +           linux,crashkernel-size = <0x0 0x10000000>;
+> > >> > +   };
+> > >> > +};
+> > >> > +
+> > >> > +linux,usable-memory-range
+> > >> > +-------------------------
+> > >> > +
+> > >> > +This property (currently used only on arm64) holds the memory range,
+> > >> > +the base address and the size, which can be used as system ram on
+> > >> > +the *current* kernel. Note that, if this property is present, any memory
+> > >> > +regions under "memory" nodes in DT blob or ones marked as "conventional
+> > >> > +memory" in EFI memory map should be ignored.
+> > >> > +e.g.
+> > >> > +
+> > >> > +/ {
+> > >> > +   chosen {
+> > >> > +           linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
+> > >> > +   };
+> > >> > +};
+> > >>
+> > >> I've read the discussion on this. I think you should use the existing
+> > >> linux,usable-memory property in the memory nodes. If UEFI systems don't
+> > >> have memory nodes, then you can find an UEFI way to describe this. DT is
+> > >> not the dumping ground for what doesn't fit in UEFI. How do x86 systems
+> > >> work?
+> > >
+> > > Kdump for x86 passes the range of usable memory to crash dump kernel
+> > > either via:
+> > > (a) "memmap=nn@ss" command line parameter, or
+> > > (b) faked BIOS e820 map (a sort of memory map table)
+> > >
+> > > (a) was rejected by Mark [1], and (b) is x86-specific.
+> > >
+> > > I believe that my approach is better because it works in the same way
+> > > either on UEFI systems or DT-based systems.
+> > 
+> > So we have a new way for both UEFI and DT. If UEFI folks can't come up
+> > with a standard way to do things in the UEFI standard, then we just
+> > dump them into DT?
+> 
+> No, I don't think so.
+> According to "Documentation/devicetree/bindings/chosen.txt,
+>   "The chosen node does not represent a real device, but serves as a place
+>    for passing data between firmware and the operating system, like boot
+>    arguments."
+> 
+> Since kexec/dump is some sort of boot loader, it all makes sense to
+> add a new property as an interface from the old kernel(kexec/dump)
+> to the new kernel. So my approach doesn't break any DT rules.
+> 
+> Please note that, even on UEFI/APCI systems, there are already a few
+> properties used under /chosen, like "linux,uefi-system-table" and 
+> "linux,mmap-*."
+> (Those properties are currently *not* defined in this document, though.)
+> 
+> > I'd rather see alignment with existing DT systems
+> > (PPC) and in particular the tools.
+> 
+> I'm not sure what you mean here, but I guess:
+> 1) On DT-only systems, we should follow the way that PPC does.
+>    (That is, adding "usable-memory" property to each "memory" node.)
+> 2) On UEFI/ACPI system, we must invent a new own way for our purpose
+>    because, as I said before, there is no standard, but x86-specific way. 
+> 
+> Is this what you want to do?
+> 
+> If so,
+> do you agree to my approach of adding "linux,usable-memory-range" property
+> to /chosen *for UEFI/ACPI use*?
 
-We'll fix this OVP problem by allowing users to specify the maximum
-voltage that we can safely fall.  Apparently this maximum safe voltage
-should be specified as a percentage of the current voltage.  The PWM
-regulator will then break things into separate steps with a delay in
-between.
+I've got another idea here: using "/memreserve/" field.
+All the memory regions used by the crashed kernel would be added
+as "/memreserve/" and be memblock_reserve'd later in crash dump kernel.
+Consequently, they will be excluded from the usable memory.
 
-In order to figure out what the delay should be we need to figure out
-how slowly the voltage rail might fall in the worst (slowest) case.
-We'll assume this worst case is present and delay so we know for sure
-that we've finished each step.
+Obviously,
+- this approach will work both on UEFI/ACPI and DT-only systems, and
+- patch#2 ("memblock: add memblock_cap_memory_range()"), as well as
+  "linux,usable-memory-range" property, is no longer necessary.
+  (So nothing new, except for "linux.elfcorehdr," will be invented.)
 
-In this patch we actually block returning from the set_voltage() call
-until we've finished delaying.  A future patch atop this one might
-choose to return more immediately and let the voltages fall in the
-background.  That would possibly to allow us to cancel a slow downward
-decay if there was a request to go back up.
+But on the other hand,
+- arm64 and ppc do the different ways even though both are DT systems,
+- those reserved regions are still *in* linear mapping and appear as
+  "System RAM" in /proc/iomem, and
+- this may imply that we cannot do kexec on crash dump kernel.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-Changes in v3:
-- Prevent falling too fast new for v3.
+-Takahiro AKASHI
 
- .../bindings/regulator/pwm-regulator.txt           |  7 ++
- drivers/regulator/pwm-regulator.c                  | 79 +++++++++++++++++++---
- 2 files changed, 78 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-index 9dc15d18e787..99fa09c42aac 100644
---- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-@@ -39,6 +39,13 @@ Optional properties:
- - settle-time-up-us:	Time to settle down after a voltage increase
- 			(unit: us). For regulators with a ramp delay
- 			the two values are added.
-+- safe-fall-percent:	If specified, it's not safe to transition the regulator
-+			down faster than this amount and bigger jumps need to
-+			be broken into more than one step.
-+- slowest-decay-rate:	Describes how slowly the regulator voltage will
-+			decay down in the worst case (lightest expected load).
-+			Specified in uV / us (like main regulator ramp rate).
-+			This is required when safe-fall-percent is specified.
- 
- Optional properties for Continuous mode:
- - pwm-dutycycle-unit:	Integer value encoding the duty cycle unit. If not
-diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
-index 94f1ca3b793d..47675632c0c6 100644
---- a/drivers/regulator/pwm-regulator.c
-+++ b/drivers/regulator/pwm-regulator.c
-@@ -50,6 +50,8 @@ struct pwm_regulator_data {
- 	struct gpio_desc *enb_gpio;
- 
- 	u32 settle_time_up_us;
-+	u32 slowest_decay_rate;
-+	u32 safe_fall_percent;
- };
- 
- struct pwm_voltages {
-@@ -188,9 +190,8 @@ static int pwm_regulator_get_voltage(struct regulator_dev *rdev)
- 	return voltage + min_uV;
- }
- 
--static int pwm_regulator_set_voltage(struct regulator_dev *rdev,
--				     int req_min_uV, int req_max_uV,
--				     unsigned int *selector)
-+static int _pwm_regulator_set_voltage(struct regulator_dev *rdev,
-+				      int old_uV, int req_uV)
- {
- 	struct pwm_regulator_data *drvdata = rdev_get_drvdata(rdev);
- 	unsigned int min_uV_duty = drvdata->continuous.min_uV_dutycycle;
-@@ -202,7 +203,6 @@ static int pwm_regulator_set_voltage(struct regulator_dev *rdev,
- 	int max_uV = rdev->constraints->max_uV;
- 	int diff_uV = max_uV - min_uV;
- 	struct pwm_state pstate;
--	int old_uV = pwm_regulator_get_voltage(rdev);
- 	unsigned int diff_duty;
- 	unsigned int dutycycle;
- 	int ret;
-@@ -219,8 +219,7 @@ static int pwm_regulator_set_voltage(struct regulator_dev *rdev,
- 	else
- 		diff_duty = max_uV_duty - min_uV_duty;
- 
--	dutycycle = DIV_ROUND_CLOSEST_ULL((u64)(req_min_uV - min_uV) *
--					  diff_duty,
-+	dutycycle = DIV_ROUND_CLOSEST_ULL((u64)(req_uV - min_uV) * diff_duty,
- 					  diff_uV);
- 
- 	if (max_uV_duty < min_uV_duty)
-@@ -236,12 +235,12 @@ static int pwm_regulator_set_voltage(struct regulator_dev *rdev,
- 		return ret;
- 	}
- 
--	if (req_min_uV > old_uV)
-+	if (req_uV > old_uV)
- 		delay = drvdata->settle_time_up_us;
- 
- 	if (ramp_delay != 0)
- 		/* Adjust ramp delay to uS and add to settle time. */
--		delay += DIV_ROUND_UP(abs(req_min_uV - old_uV), ramp_delay);
-+		delay += DIV_ROUND_UP(abs(req_uV - old_uV), ramp_delay);
- 
- 	if ((delay == 0) || !pwm_regulator_is_enabled(rdev))
- 		return 0;
-@@ -251,6 +250,47 @@ static int pwm_regulator_set_voltage(struct regulator_dev *rdev,
- 	return 0;
- }
- 
-+static int pwm_regulator_set_voltage(struct regulator_dev *rdev,
-+				     int req_min_uV, int req_max_uV,
-+				     unsigned int *selector)
-+{
-+	struct pwm_regulator_data *drvdata = rdev_get_drvdata(rdev);
-+	int safe_fall_percent = drvdata->safe_fall_percent;
-+	int slowest_decay_rate = drvdata->slowest_decay_rate;
-+	int orig_uV = pwm_regulator_get_voltage(rdev);
-+	int uV = orig_uV;
-+	int ret;
-+
-+	/* If we're rising or we're falling but don't need to slow; easy */
-+	if (req_min_uV >= uV || !safe_fall_percent)
-+		return _pwm_regulator_set_voltage(rdev, uV, req_min_uV);
-+
-+	while (uV > req_min_uV) {
-+		int max_drop_uV = (uV * safe_fall_percent) / 100;
-+		int next_uV;
-+		int delay;
-+
-+		/* Make sure no infinite loop even in crazy cases */
-+		if (max_drop_uV == 0)
-+			max_drop_uV = 1;
-+
-+		next_uV = max_t(int, req_min_uV, uV - max_drop_uV);
-+		delay = DIV_ROUND_UP(uV - next_uV, slowest_decay_rate);
-+
-+		ret = _pwm_regulator_set_voltage(rdev, uV, next_uV);
-+		if (ret) {
-+			/* Try to go back to original */
-+			_pwm_regulator_set_voltage(rdev, uV, orig_uV);
-+			return ret;
-+		}
-+
-+		usleep_range(delay, delay + DIV_ROUND_UP(delay, 10));
-+		uV = next_uV;
-+	}
-+
-+	return 0;
-+}
-+
- static struct regulator_ops pwm_regulator_voltage_table_ops = {
- 	.set_voltage_sel = pwm_regulator_set_voltage_sel,
- 	.get_voltage_sel = pwm_regulator_get_voltage_sel,
-@@ -378,6 +418,29 @@ static int pwm_regulator_probe(struct platform_device *pdev)
- 
- 	of_property_read_u32(np, "settle-time-up-us",
- 			&drvdata->settle_time_up_us);
-+	of_property_read_u32(np, "slowest-decay-rate",
-+			&drvdata->slowest_decay_rate);
-+	of_property_read_u32(np, "safe-fall-percent",
-+			&drvdata->safe_fall_percent);
-+
-+	/* We treat as int above; sanity check */
-+	if (drvdata->slowest_decay_rate > INT_MAX) {
-+		dev_err(&pdev->dev, "slowest-decay-rate (%u) too big\n",
-+			(unsigned int)drvdata->slowest_decay_rate);
-+		return -EINVAL;
-+	}
-+
-+	if (drvdata->safe_fall_percent > 100) {
-+		dev_err(&pdev->dev, "safe-fall-percent (%u) > 100\n",
-+			(unsigned int)drvdata->safe_fall_percent);
-+		return -EINVAL;
-+	}
-+
-+	if (drvdata->safe_fall_percent && !drvdata->slowest_decay_rate) {
-+		dev_err(&pdev->dev,
-+			"slowest-decay-rate required safe-fall-percent\n");
-+		return -EINVAL;
-+	}
- 
- 	config.of_node = np;
- 	config.dev = &pdev->dev;
--- 
-2.8.0.rc3.226.g39d4020
+> Thanks,
+> -Takahiro AKASHI
+> 
+> > Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
