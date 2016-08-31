@@ -1,68 +1,132 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v8 15/18] ARM: STi: DT: STiH407: Add uniperif reader dt
-	nodes
-Date: Wed, 31 Aug 2016 12:28:19 +0100
-Message-ID: <20160831112819.GJ27357@dell>
-References: <1472223413-7254-1-git-send-email-peter.griffin@linaro.org>
-	<1472223413-7254-16-git-send-email-peter.griffin@linaro.org>
-	<20160830100148.GO1661@dell>
-	<20160830142112.GA22514@griffinp-ThinkPad-X1-Carbon-2nd>
+Subject: Re: [PATCH v6 1/2] mfd: Add DT bindings documentation for Samsung
+ Exynos LPASS
+Date: Wed, 31 Aug 2016 12:31:23 +0100
+Message-ID: <20160831113123.GL27357@dell>
+References: <1470840500-2428-1-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <virtualization-bounces@lists.linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160830142112.GA22514@griffinp-ThinkPad-X1-Carbon-2nd>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
-List-Post: <mailto:virtualization@lists.linux-foundation.org>
-List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
-Sender: virtualization-bounces@lists.linux-foundation.org
-Errors-To: virtualization-bounces@lists.linux-foundation.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, Arnaud Pouliquen <arnaud.pouliquen@st.com>, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, airlied@linux.ie, dmaengine@vger.kernel.org, dan.j.williams@intel.com, bjorn.andersson@linaro.org, virtualization@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1470840500-2428-1-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: broonie@kernel.org, alsa-devel@alsa-project.org, robh@kernel.org, devicetree@vger.kernel.org, b.zolnierkie@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAzMCBBdWcgMjAxNiwgUGV0ZXIgR3JpZmZpbiB3cm90ZToKPiBUaGFua3MgZm9yIHJl
-dmlld2luZyBhbmQgeW91ciB2ZXJ5IHZhbHVhYmxlIGZlZWRiYWNrLgo+IE9uIFR1ZSwgMzAgQXVn
-IDIwMTYsIExlZSBKb25lcyB3cm90ZToKPiA+IE9uIEZyaSwgMjYgQXVnIDIwMTYsIFBldGVyIEdy
-aWZmaW4gd3JvdGU6Cj4gPiAKPiA+ID4gVGhpcyBwYXRjaCBhZGRzIHRoZSBEVCBub2RlIGZvciB0
-aGUgdW5pcGVyaWYgcmVhZGVyCj4gPiA+IElQIGJsb2NrIGZvdW5kIG9uIFNUaUg0MDcgZmFtaWx5
-IHNpbGljb24uCj4gPiA+IAo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBcm5hdWQgUG91bGlxdWVuIDxh
-cm5hdWQucG91bGlxdWVuQHN0LmNvbT4KPiA+ID4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgR3JpZmZp
-biA8cGV0ZXIuZ3JpZmZpbkBsaW5hcm8ub3JnPgo+ID4gPiAtLS0KPiA+ID4gIGFyY2gvYXJtL2Jv
-b3QvZHRzL3N0aWg0MDctZmFtaWx5LmR0c2kgfCAyNiArKysrKysrKysrKysrKysrKysrKysrKysr
-Kwo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKykKPiA+ID4gCj4gPiA+IGRp
-ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvc3RpaDQwNy1mYW1pbHkuZHRzaQo+ID4gPiBpbmRleCBkMjYzYzk2Li5iZGRk
-ZjJjIDEwMDY0NAo+ID4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5k
-dHNpCj4gPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctZmFtaWx5LmR0c2kKPiA+
-ID4gQEAgLTk1Niw1ICs5NTYsMzEgQEAKPiA+ID4gIAkJCXN0LHZlcnNpb24gPSA8NT47Cj4gPiA+
-ICAJCQlzdCxtb2RlID0gIlNQRElGIjsKPiA+ID4gIAkJfTsKPiA+ID4gKwo+ID4gPiArCQlzdGlf
-dW5pX3JlYWRlcjA6IHN0aS11bmktcmVhZGVyQDAgewo+ID4gPiArCQkJY29tcGF0aWJsZSA9ICJz
-dCxzdGktdW5pLXJlYWRlciI7Cj4gPiA+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ID4gCj4g
-PiBJIGZpbmQgaXQncyBub3JtYWxseSBuaWNlciB0byBwbGFjZSB0aGUgc3RhdHVzIG9mIHRoZSBu
-b2RlIGF0IHRoZQo+ID4gYm90dG9tLCBzZXBhcmF0ZWQgYnkgYSAnXG4nLgo+IAo+IE9rIEknbGwg
-YWRkIGEgc3VwZXJmbG91cyAnXG4nIGluIHRoZSBuZXh0IHZlcnNpb24uCgpFdmVyeW9uZSBsb3Zl
-cyBhIHNtYXJ0IGFyc2UhCgpJbiB0aGlzIGNhc2UgSSBiZWxpZXZlIHRoZSAnXG4nIHRvIGJlIGEg
-ZnVuY3Rpb25hbCBzZXBhcmF0b3IgYW5kIG5vdApzdXBlcmZsdW91cyBhdCBhbGwuCgo+ID4gPiAr
-CQkJZGFpLW5hbWUgPSAiVW5pIFJlYWRlciAjMCAoUENNIElOKSI7Cj4gPiAKPiA+IE9vb28sIG5v
-dCBzZWVuIHNvbWV0aGluZyBsaWtlIHRoaXMgYmVmb3JlLgo+ID4gCj4gPiBJZiBpdCBkb2VzIG5v
-dCBhbHJlYWR5IGhhdmUgb25lLCBpdCB3b3VsZCByZXF1aXJlIGEgRFQgQWNrLgo+IAo+IE5vIGlk
-ZWEsIHRoZSBkcml2ZXIgZ290IG1lcmdlZCAxIHllYXIgYWdvLgo+IAo+IEFybmF1ZCBkaWQgeW91
-IGdldCBhIERUIGFjayB3aGVuIHlvdSBtZXJnZWQgdGhpcyBkcml2ZXIgJiBiaW5kaW5nPwo+ID4g
-Cj4gPiA+ICsJCQlzdCx2ZXJzaW9uID0gPDM+Owo+ID4gCj4gPiBUaGlzIHdpbGwgbGlrZWx5IG5l
-ZWQgYSBEVCBBY2sgdG9vLiAgV2UgdXN1YWxseSBlbmNvZGUgdGhpcyBzb3J0IG9mCj4gPiBpbmZv
-cm1hdGlvbiBpbiB0aGUgY29tcGF0aWJsZSBzdHJpbmcuCj4gCj4gU2VlIDA1YzFiNDQ4MGU4NmE4
-NzFiMTgwMzBkNmYzZDUzMmRjMGVjZGYzOGMKCldlbGwgUm9iJ3MgdGhlIGJvc3MuICBXZSBjZXJ0
-YWlubHkgbmV2ZXIgdXNlZCB0byB0YWtlICdkZXZpY2UgSUQnIG9yCid2ZXJzaW9uJyBhdHRyaWJ1
-dGVzLiAgSSBndWVzcyBzb21ldGhpbmcgbXVzdCBoYXZlIGNoYW5nZWQuCgotLSAKTGVlIEpvbmVz
-CkxpbmFybyBTVE1pY3JvZWxlY3Ryb25pY3MgTGFuZGluZyBUZWFtIExlYWQKTGluYXJvLm9yZyDi
-lIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86IEZhY2Vi
-b29rIHwgVHdpdHRlciB8IEJsb2cKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KVmlydHVhbGl6YXRpb24gbWFpbGluZyBsaXN0ClZpcnR1YWxpemF0aW9uQGxp
-c3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnCmh0dHBzOi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL3ZpcnR1YWxpemF0aW9u
+On Wed, 10 Aug 2016, Sylwester Nawrocki wrote:
+
+> This patch adds documentation of the DT bindings for the Samsung
+> Exynos SoC Low Power Audio Subsystem.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> 
+> Changes since v5:
+>  - none.
+> 
+> Changes since v4:
+>  - text reformatting, added VIC to the list of sub-devices, relative
+>    paths used for the reference DT binding documentation files, added
+>    example dts.
+> 
+> Changes since v3:
+>  - moved to Documentation/devicetree/bindings/mfd,
+>  - added #address-cells, #size-cells, ranges as required
+>    properties,
+>  - added description of the IP block subnodes and links
+>    to their binding's documentation.
+> 
+> Changes since v2:
+>  - none.
+> ---
+>  .../bindings/mfd/samsung,exynos5433-lpass.txt      | 70 ++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
+
+Applied, thanks.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt b/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
+> new file mode 100644
+> index 0000000..c110e11
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/samsung,exynos5433-lpass.txt
+> @@ -0,0 +1,70 @@
+> +Samsung Exynos SoC Low Power Audio Subsystem (LPASS)
+> +
+> +Required properties:
+> +
+> + - compatible		: "samsung,exynos5433-lpass"
+> + - reg			: should contain the LPASS top SFR region location
+> +			  and size
+> + - samsung,pmu-syscon	: the phandle to the Power Management Unit node
+> + - #address-cells	: should be 1
+> + - #size-cells		: should be 1
+> + - ranges		: must be present
+> +
+> +Each IP block of the Low Power Audio Subsystem should be specified as
+> +an optional sub-node. For "samsung,exynos5433-lpass" compatible this includes:
+> +UART, SLIMBUS, PCM, I2S, DMAC, Timers 0...4, VIC, WDT 0...1 devices.
+> +
+> +Bindings of the sub-nodes are described in:
+> +  ../serial/samsung_uart.txt
+> +  ../sound/samsung-i2s.txt
+> +  ../dma/arm-pl330.txt
+> +
+> +
+> +Example:
+> +
+> +audio-subsystem {
+> +	compatible = "samsung,exynos5433-lpass";
+> +	reg = <0x11400000 0x100>, <0x11500000 0x08>;
+> +	samsung,pmu-syscon = <&pmu_system_controller>;
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges;
+> +
+> +	adma: adma@11420000 {
+> +		compatible = "arm,pl330", "arm,primecell";
+> +		reg = <0x11420000 0x1000>;
+> +		interrupts = <0 73 0>;
+> +		clocks = <&cmu_aud CLK_ACLK_DMAC>;
+> +		clock-names = "apb_pclk";
+> +		#dma-cells = <1>;
+> +		#dma-channels = <8>;
+> +		#dma-requests = <32>;
+> +	};
+> +
+> +	i2s0: i2s0@11440000 {
+> +		compatible = "samsung,exynos7-i2s";
+> +		reg = <0x11440000 0x100>;
+> +		dmas = <&adma 0 &adma 2>;
+> +		dma-names = "tx", "rx";
+> +		interrupts = <0 70 0>;
+> +		clocks = <&cmu_aud CLK_PCLK_AUD_I2S>,
+> +			 <&cmu_aud CLK_SCLK_AUD_I2S>,
+> +			 <&cmu_aud CLK_SCLK_I2S_BCLK>;
+> +		clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&i2s0_bus>;
+> +		status = "disabled";
+> +	};
+> +
+> +	serial_3: serial@11460000 {
+> +		compatible = "samsung,exynos5433-uart";
+> +		reg = <0x11460000 0x100>;
+> +		interrupts = <0 67 0>;
+> +		clocks = <&cmu_aud CLK_PCLK_AUD_UART>,
+> +			 <&cmu_aud CLK_SCLK_AUD_UART>;
+> +		clock-names = "uart", "clk_uart_baud0";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&uart_aud_bus>;
+> +		status = "disabled";
+> +	};
+> + };
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
