@@ -1,20 +1,15 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 1/4] ARM: dts: sun8i: Extend Orange Pi PC dt to also
- handle the PC Plus
-Date: Wed, 31 Aug 2016 18:28:19 +0200
-Message-ID: <20160831162819.GK14379@lukather>
-References: <1468095718-18515-1-git-send-email-hdegoede@redhat.com>
- <20160713084505.GE4761@lukather>
- <bce2b340-a930-8771-4560-dc61bf5828d5@redhat.com>
- <20160725064033.GA7419@lukather>
- <74d3b5eb-601a-cc1d-a44e-fea2895fd8b2@redhat.com>
- <20160728181757.GD6682@lukather>
- <f71f9d2b-00d4-27b8-1535-1ddc58f04ca3@redhat.com>
- <b6636083-917e-cc3a-9107-401fbd483fb7@redhat.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH v11 3/4] tee: add OP-TEE driver
+Date: Wed, 31 Aug 2016 11:40:20 -0500
+Message-ID: <fe88749e-82c7-c310-b2bc-4e73bf76302b@ti.com>
+References: <1471870856-18684-1-git-send-email-jens.wiklander@linaro.org>
+ <1471870856-18684-4-git-send-email-jens.wiklander@linaro.org>
+ <050a2ce4-e175-d09e-ddff-3b0cbe766d88@ti.com> <20160831135015.GB25472@ermac>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1155198543418189867=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b6636083-917e-cc3a-9107-401fbd483fb7@redhat.com>
+In-Reply-To: <20160831135015.GB25472@ermac>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,131 +19,129 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: valentin.manea@huawei.com, devicetree@vger.kernel.org, javier@javigon.com, emmanuel.michel@st.com, Arnd Bergmann <arnd@arndb.de>, Nishanth Menon <nm@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, jean-michel.delorme@st.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 08/31/2016 08:50 AM, Jens Wiklander wrote:
+> On Tue, Aug 30, 2016 at 03:23:24PM -0500, Andrew F. Davis wrote:
+>> On 08/22/2016 08:00 AM, Jens Wiklander wrote:
+>>> +static struct tee_shm_pool *
+>>> +optee_config_shm_ioremap(struct device *dev, optee_invoke_fn *invoke_fn,
+>>> +			 void __iomem **ioremaped_shm)
+>>> +{
+>>> +	struct arm_smccc_res res;
+>>> +	struct tee_shm_pool *pool;
+>>> +	unsigned long vaddr;
+>>> +	phys_addr_t paddr;
+>>> +	size_t size;
+>>> +	phys_addr_t begin;
+>>> +	phys_addr_t end;
+>>> +	void __iomem *va;
+>>> +	struct tee_shm_pool_mem_info priv_info;
+>>> +	struct tee_shm_pool_mem_info dmabuf_info;
+>>> +
+>>> +	invoke_fn(OPTEE_SMC_GET_SHM_CONFIG, 0, 0, 0, 0, 0, 0, 0, &res);
+>>> +	if (res.a0 != OPTEE_SMC_RETURN_OK) {
+>>> +		dev_info(dev, "shm service not available\n");
+>>> +		return ERR_PTR(-ENOENT);
+>>> +	}
+>>> +
+>>> +	if (res.a3 != OPTEE_SMC_SHM_CACHED) {
+>>> +		dev_err(dev, "only normal cached shared memory supported\n");
+>>> +		return ERR_PTR(-EINVAL);
+>>> +	}
+>>> +
+>>> +	begin = roundup(res.a1, PAGE_SIZE);
+>>> +	end = rounddown(res.a1 + res.a2, PAGE_SIZE);
+>>
+>> res.a1/2/3 is really hard to review and understand, would it work better
+>> to use a union or cast for the output of invoke_fn based on the function
+>> type?
+>>
+>> In the header that defines what the returned info from these calls means
+>> add:
+>>
+>> struct OPTEE_SMC_GET_SHM_CONFIG_RESULT {
+>> 	unsigned long status;
+>> 	unsigned long start;
+>> 	unsigned long size;
+>> 	unsigned long settings;
+>> };
+>>
+>> then:
+>>
+>> union something result;
+>>
+>> begin = roundup(result.ret.start, PAGE_SIZE);
+>> end = rounddown(result.ret.start + result.ret.size, PAGE_SIZE);
+>>
+>> or similar with just casting to the better named struct type.
+> 
+> optee_smc.h describes what's passed in the registers during an SMC I'd
+> rather not clutter it with structs that doesn't add any information
+> there. I'm not that happy with casting or using unions to alias struct
+> arm_smccc_res either. How about a simple wrapper function for this call
+> to deal with the details instead?
+> 
 
---===============1155198543418189867==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gWRamliw218YCZO9"
-Content-Disposition: inline
+I think that would be a good idea anyway, for instance, someday if the
+interface changes slightly then you will be able to contain the
+compatibility fixes in the wrapper and not out here in the main driver.
 
+>>> +static int optee_remove(struct platform_device *pdev)
+>>> +{
+>>> +	struct optee *optee = platform_get_drvdata(pdev);
+>>> +
+>>> +	optee_disable_shm_cache(optee);
+>>> +
+>>> +	tee_device_unregister(optee->teedev);
+>>> +	tee_device_unregister(optee->supp_teedev);
+>>> +	tee_shm_pool_free(optee->pool);
+>>> +	if (optee->ioremaped_shm)
+>>> +		iounmap(optee->ioremaped_shm);
+>>> +	optee_wait_queue_exit(&optee->wait_queue);
+>>> +	optee_supp_uninit(&optee->supp);
+>>> +	mutex_destroy(&optee->call_queue.mutex);
+>>
+>> Can these be reordered to match the reverse of the order they are used
+>> in probe?
+> 
+> Not entirely, optee->teedev and optee->supp_teedev can be unregisterted
+> in the reverse order but both has to complete before we can get any
+> further.  I'll add some comments.
+> 
 
---gWRamliw218YCZO9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That would be great, thanks.
 
-Hi Hans,
+>>
+>>> +	return 0;
+>>> +}
+>>> +
+>>
+>> [snip]
+>>
+>>> +#define OPTEE_MSG_ATTR_CACHE_SHIFT		16
+>>> +#define OPTEE_MSG_ATTR_CACHE_MASK		0x7
+>>
+>> GENMASK
+> 
+> Do you mean that OPTEE_MSG_ATTR_CACHE_MASK should be defined using the
+> GENMASK() macro? If so I guess I should update OPTEE_MSG_ATTR_TYPE_MASK
+> also.
+> 
 
-Sorry for the slow response, it was burried in my inbox.
+Right, I can tell what bits 0x7 mask, but sometimes it's not so easy
+(7F8, etc) so I find it's best to use GENMASKS for all masks so I don't
+have to ever think about it at all.
 
-On Sun, Aug 07, 2016 at 04:25:20PM +0200, Hans de Goede wrote:
-> Hi,
->=20
-> On 28-07-16 22:36, Hans de Goede wrote:
-> >Hi,
-> >
-> >On 28-07-16 20:17, Maxime Ripard wrote:
-> >>Hi Hans,
-> >>
-> >>On Tue, Jul 26, 2016 at 11:07:23PM +0200, Hans de Goede wrote:
-> >>>>>>Nothing prevents you from including the orange pi pc dts, from the
-> >>>>>>orange pi plus dts.
-> >>>>>>
-> >>>>>>It prevents the duplication you were trying to avoid, and it doesn't
-> >>>>>>create all those spurious errors and devices.
-> >>>>>
-> >>>>>That would solve the copy paste problem on the kernel side, but that
-> >>>>>would still mean adding a new u-boot defconfig for this, which means=
- that
-> >>>>>all the distro's which ship with prebuild u-boot binaries need to bu=
-ild
-> >>>>>for yet another board, something which I would like to avoid.
-> >>>>
-> >>>>Still, registering devices that are not present on the board is not an
-> >>>>option.
-> >>>
-> >>>Ok, new version send.
-> >>>
-> >>>What about the other 3 patches in this series ?
-> >>
-> >>I guess the same comment applies for patch 2.
-> >
-> >The difference is that there really is no harm at all from
-> >enabling the extra usb controllers used on the plus 2e
-> >on the plus and plus 2 as well, no errors, no nothing, they
-> >just sit their as usb controllers without an usb device plugged
-> >in. But if you insist I can do a separate dts + u-boot defconfig
-> >for the plus 2e as well (but I would rather not).
->=20
-> Ping, what is the verdict on this, are you ok with the patch or
-> do you want me to create a separate dts file for the Orange Pi
-> Plus 2E, note that doing so is going to be highly confusing to
-> users, there are 3 plus boards:
+Also I like to mask then shift, so it would be:
 
-I still believe that enabling clocks, regulators, claiming pins for
-device that are entirely unused on the board is not ok.
+#define OPTEE_MSG_ATTR_CACHE_SHIFT	16
+#define OPTEE_MSG_ATTR_CACHE_MASK	GENMASK(18, 16)
 
-> Orange Pi Plus
-> Orange Pi Plus 2   (same as the original plus but with 2G RAM, uses same =
-u-boot defconfig / dts file)
+Then we can see at a glance the actual bits we are looking for (18-16)
+and verify the shift is the right amount.
 
-Yes, that makes sense.
-
-> Orange Pi Plus 2E  (drops the USB-hub instead using all 3 host controller=
-s)
-
-However, I'm really worried about this one. If we go this way, there's
-essentially no going back. If for some reason we want to have a
-separate DT in the future (some unforeseen quirk to apply, pin to
-setup that conflicts on another board, etc.), we will be completely
-screwed because our users will be expecting to use the common DT,
-while it wouldn't be wise anymore.
-
-The other way around is much easier to deal with.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---gWRamliw218YCZO9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXxwWjAAoJEBx+YmzsjxAgfjgP/2k/m2i2MYQOgHY6/VsrLdSi
-EBwMn9Of+R482jMUG0i1L7jpxsaAVlfqb7S5oWB4VWLd5kupI0ifNUXS/8XM2stL
-9RpTcQ9DYRAJxiDNXLD63aZbAkzJY78ssH/jb7jXSfaw8tuk4YMpXR2e00L+zWUr
-ll4/Ll/SWWUHEKSt92k9PkXV8t/RHQQg5W8WM/wJ48p3KSBt6bqxLD5EjeYcetQh
-7RLRogjcoAaOVUbnKInItPnPu5V6XsqdDoxkPtgBWkJJSUNlLbWcZJy4KExHIOVd
-rj0ZqYlNdNOnA6koozKxSlENlftkNU7TUjtSJZapQVRYwosyIs+heuW/myfSpwW4
-uA1BXvmWdjUL8rml+B61d4os9tpWKP2EUXJBEg/HzmhrhPNLx4w8rLs5yvkIIAyt
-5DAUHq5KAwmdV3MtpgIO4IMuyFfBiZRUllmnFhiD39EXciqr3xrZCpAs+lmeWrHb
-n6+QRnlMHzuHd9U9Vx9P5OGlnjpMOZ227CbMsxHfdmh47Spn0K1IS/BEvX3PCo7X
-Nbt2NEuzpUjhNt9u4HBDFye7O2LelKFOy7L+oIHmpt2dqeRXPA912AB1paCV9niO
-z5sWaGxEs4s+xaKp3cS9X+MuEGoeUEc9C2lcEnvlQ4ZBMh+E4iJtC0KwIFkBoM1A
-5Ko4iIcEYjJWIWbx5fNc
-=DSsu
------END PGP SIGNATURE-----
-
---gWRamliw218YCZO9--
-
-
---===============1155198543418189867==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1155198543418189867==--
+Thanks,
+Andrew
