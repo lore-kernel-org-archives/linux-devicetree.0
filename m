@@ -1,14 +1,14 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: dra7: cpsw: fix clocks tree
-Date: Wed, 31 Aug 2016 14:08:54 +0530
-Message-ID: <94120809-8e43-36f2-152a-e82fadfa1095@ti.com>
-References: <20160830145801.10364-1-grygorii.strashko@ti.com>
- <20160830145801.10364-2-grygorii.strashko@ti.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v2 4/4] pwm: sunxi: Add H3 support
+Date: Wed, 31 Aug 2016 16:41:10 +0800
+Message-ID: <CAGb2v64YuoBjzq07x1kVtk5Zwy2wtzfcuy7Sajij2ZQ4dRUzyA@mail.gmail.com>
+References: <20160831082520.25962-1-woogyom.kim@gmail.com>
+ <20160831082520.25962-5-woogyom.kim@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160830145801.10364-2-grygorii.strashko@ti.com>
+In-Reply-To: <20160831082520.25962-5-woogyom.kim@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,27 +18,23 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, linux-arm-kernel@lists.infradead.org
+To: Milo Kim <woogyom.kim@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 30 August 2016 08:28 PM, Grygorii Strashko wrote:
-> Current clocks tree definition for CPSW/CPTS doesn't
-> correspond TRM for dra7/am57 SoCs.
-> 
-> CPTS: has to be sourced from gmac_rft_clk_mux clock
-> CPSW: DPLL_GMAC -> CLKOUT_M2 -> GMAC_250M_CLK -> 1/2 ->
->       -> GMAC_MAIN_CLK (125 MHZ)
-> 
-> Hence, correct clock tree for GMAC_MAIN_CLK and use proper
-> clock for CPTS. This also require updating of CPTS clock
-> multiplier.
-> 
-> Cc: Tero Kristo <t-kristo@ti.com>
-> Cc: Mugunthan V N <mugunthanvnm@ti.com>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+On Wed, Aug 31, 2016 at 4:25 PM, Milo Kim <woogyom.kim@gmail.com> wrote:
+> H3 PWM controller has same register layout as sun4i driver, so it works
+> by adding H3 specific data.
+>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: linux-pwm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
 
-Reviewed-by: Mugunthan V N <mugunthanvnm@ti.com>
-
-Regards
-Mugunthan V N
+Acked-by: Chen-Yu Tsai <wens@csie.org>
