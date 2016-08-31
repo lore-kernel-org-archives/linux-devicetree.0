@@ -1,129 +1,88 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [RESEND PATCH 3/4] arm64: dts: rockchip: support gmac for rk3399
-Date: Wed, 31 Aug 2016 23:29:37 +0200
-Message-ID: <2498365.kqzATN1cjf@diego>
-References: <1472624028-7082-1-git-send-email-wxt@rock-chips.com> <1472624028-7082-4-git-send-email-wxt@rock-chips.com> <CAD=FV=XQX__rFqGLY2U5mPT8WR4P4aW5tbCqFmA+3rZunbzUZQ@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv2] of: Add generic handling for ePAPR 1.1 fail-sss states
+Date: Wed, 31 Aug 2016 14:41:52 -0700
+Message-ID: <20160831214151.wzq7y54xxs2qj422@atomide.com>
+References: <20160829223542.18871-1-tony@atomide.com>
+ <57C74306.9020901@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=XQX__rFqGLY2U5mPT8WR4P4aW5tbCqFmA+3rZunbzUZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57C74306.9020901-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel@li>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 31. August 2016, 13:42:17 schrieb Doug Anderson:
-> Caesar,
+* Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [160831 13:51]:
+> On 08/29/16 15:35, Tony Lindgren wrote:
+> > 	if (of_device_is_incomplete(pdev->dev.of_node, status)) {
+> > 		if (!strcmp("hw-incomplete-pins", status)) {
+> > 			dev_info(&pdev->dev,
+> > 				 "Unusable hardware: Not pinned out\n");
+> > 			err = -ENODEV;
+> > 			goto out;
+> > 		}
+> > 		if (!strcmp("hw-missing-daughter-card")) {
+> > 			err = -EPROBE_DEFER;
+> > 			goto out;
+> > 		}
+> > 		if (!strcmp("hw-buggy-dma")) {
+> > 			dev_warn(&pdev->dev,
+> > 				 "Replace hardware for working DMA\n");
+> > 		}
+> > 	}
 > 
-> On Tue, Aug 30, 2016 at 11:13 PM, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> > This patch adds needed gamc information for rk3399,
-> > also support the gmac pd.
-> > 
-> > Signed-off-by: Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > ---
-> > 
-> >  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 90
-> >  ++++++++++++++++++++++++++++++++ 1 file changed, 90 insertions(+)
-> 
-> I noticed that your subject for this patch contains "RESEND" and not
-> "v2" event though there are changes between this version and the last
-> one.  That's really confusing.  This should have been "v2" and the
-> next version should be "v3".
-> 
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index 32aebc8..abf27a4 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> > @@ -200,6 +200,26 @@
-> > 
-> >                 };
-> >         
-> >         };
-> > 
-> > +       gmac: eth@fe300000 {
-> 
-> nit: on rk3288 the node was "ethernet@" instead of "eth@".  Presumably
-> "ethernet" is more correct?
-> 
-> > +               compatible = "rockchip,rk3399-gmac";
-> > +               reg = <0x0 0xfe300000 0x0 0x10000>;
-> > +               interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> > +               interrupt-names = "macirq";
-> > +               clocks = <&cru SCLK_MAC>, <&cru SCLK_MAC_RX>,
-> > +                        <&cru SCLK_MAC_TX>, <&cru SCLK_MACREF>,
-> > +                        <&cru SCLK_MACREF_OUT>, <&cru ACLK_GMAC>,
-> > +                        <&cru PCLK_GMAC>;
-> > +               clock-names = "stmmaceth", "mac_clk_rx",
-> > +                             "mac_clk_tx", "clk_mac_ref",
-> > +                             "clk_mac_refout", "aclk_mac",
-> > +                             "pclk_mac";
-> > +               power-domains = <&power RK3399_PD_GMAC>;
-> > +               resets = <&cru SRST_A_GMAC>;
-> > +               reset-names = "stmmaceth";
-> > +               rockchip,grf = <&grf>;
-> > +               status = "disabled";
-> > +       };
-> > +
-> > 
-> >         sdio0: dwmmc@fe310000 {
-> >         
-> >                 compatible = "rockchip,rk3399-dw-mshc",
-> >                 
-> >                              "rockchip,rk3288-dw-mshc";
-> > 
-> > @@ -611,6 +631,11 @@
-> > 
-> >                 status = "disabled";
-> >         
-> >         };
-> > 
-> > +       qos_gmac: qos@ffa5c000 {
-> > +               compatible = "syscon";
-> > +               reg = <0x0 0xffa5c000 0x0 0x20>;
-> > +       };
-> > +
-> > 
-> >         qos_hdcp: qos@ffa90000 {
-> >         
-> >                 compatible = "syscon";
-> >                 reg = <0x0 0xffa90000 0x0 0x20>;
-> > 
-> > @@ -704,6 +729,11 @@
-> > 
-> >                         #size-cells = <0>;
-> >                         
-> >                         /* These power domains are grouped by VD_CENTER */
-> > 
-> > +                       pd_gmac@RK3399_PD_GMAC {
-> 
-> RK3399_PD_GMAC is not in VD_CENTER but in VD_LOGIC, right?  ...so this
-> should move.
-> 
-> > +                               reg = <RK3399_PD_GMAC>;
-> > +                               clocks = <&cru ACLK_GMAC>;
-> > +                               pm_qos = <&qos_gmac>;
-> > +                       };
-> 
-> IMHO it would be nice if this were broken into two patches.
-> 
-> 1. First patch would be the power domain patch and that could land any
-> time.  You wouldn't actually be able to use the gmac but at least
-> you'd be able to turn off its power.  This would be a handy patch to
-> be able to backport if you happened to not need Ethernet support but
-> wanted to save power.
-> 
-> 2. Second patch would actually add the gmac.
+> What if the device has two issues to be reported?  You can not
+> specify two different values for the status property.
 
-according to my talk with Caesar in the real v1, the gmac even with power-
-domains should work just nicely even without the dts patches, as the driver 
-core takes care of powering up the pd before probe.
+That's a good point.
 
-But I may miss some peculiarity of the dwmac?
+> What if the firmware wants to report that the hardware failed
+> self-test (thus status = "fail-sss") but is already using
+> status to describe the hardware?
 
+Yeah that's true. Do you know what the "sss" stands for here?
+Status Self teSt, or Side Scan Sonar? :)
 
-Heiko
+> > - Make more generic as suggested by Frank but stick with
+> >   "operational status of a device" approch most people seem
+> >   to prefer that
+> 
+> I am still opposed to using the status property for this purpose.
+> 
+> The status property is intended to report an operational problem with
+> a device or a device that the kernel can cause to be operational (such
+> as a quiescent cpu being enabled).  It is the only property I am aware
+> of to report _state_.
+> 
+> It is unfortunate that Linux has adopted the practice of overloading status
+> to determine whether a piece of hardware exists or does not exist.  This
+> is extremely useful for the way we structure the .dts and .dtsi files but
+> should have used a new property name.  We are stuck with that choice of
+> using the status property for two purposes, first the state of a device,
+> and secondly the hardware description of existing or not existing.
+> 
+> Why not just create a new property that describes the hardware?
+> Perhaps something like:
+> 
+>    incomplete = "pins_output", "buggy_dma";
+
+New property for incomplete works for me. Rob, got any comments here?
+
+> > + *  __of_device_is_incomplete - check if a device is incomplete
+> 
+> It is not checking if a device is incomplete.  It is checking whether the
+> device is operational _or_ incomplete.
+> 
+> This is conflating concepts and likely to be confusing.  This is the problem
+> with overloading the status property for yet another purpose.
+
+Sure that's a valid point.
+
+Regards,
+
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
