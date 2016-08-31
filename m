@@ -1,89 +1,50 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/9] ARM: dts: exynos: Add macros for GPIO configuration
-Date: Wed, 31 Aug 2016 15:07:00 +0200
-Message-ID: <bf55b24c-b1ee-78be-d56d-8fdda4f2fdc9@samsung.com>
-References: <1472645613-5362-1-git-send-email-k.kozlowski@samsung.com>
- <28320955.k33BrW2NEN@wuerfel>
- <07ddb8f8-a9e1-6105-ace9-edb5c8cc2f57@samsung.com> <6113443.1q3Xq4YM82@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] arm64: dts: hi6220: add sd-uhs- properties into dwmmc_1
+Date: Wed, 31 Aug 2016 21:10:58 +0800
+Message-ID: <1472649058-22364-1-git-send-email-guodong.xu@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <6113443.1q3Xq4YM82@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jinguojun <kid.jin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/31/2016 02:58 PM, Arnd Bergmann wrote:
-> On Wednesday, August 31, 2016 2:53:02 PM CEST Krzysztof Kozlowski wrote:
->> On 08/31/2016 02:42 PM, Arnd Bergmann wrote:
->>> On Wednesday, August 31, 2016 2:13:25 PM CEST Krzysztof Kozlowski wrote:
->>>>
->>>> +#define PIN_PULL_NONE          0
->>>> +#define PIN_PULL_DOWN          1
->>>> +#define PIN_PULL_UP            3
->>>> +
->>>> +#define PIN_DRV_LV1            0
->>>> +#define PIN_DRV_LV2            2
->>>> +#define PIN_DRV_LV3            1
->>>> +#define PIN_DRV_LV4            3
->>>> +
->>>> +#define PIN_FUNC_INPUT         0
->>>> +#define PIN_FUNC_OUTPUT                1
->>>> +#define PIN_FUNC_SPC_2         2
->>>> +#define PIN_FUNC_SPC_3         3
->>>> +#define PIN_FUNC_SPC_4         4
->>>> +#define PIN_FUNC_SPC_5         5
->>>> +#define PIN_FUNC_SPC_F         0xf
->>>
->>> Any reason for having a copy in each of those files instead of one
->>> that is shared across all of them?
->>
->> The drive strengths differ between some of them. There are three groups
->> of drive strengths:
->> 1. Exynos3250, Exynos4 (all) and Exynos5250,
->> 2. Exynos5260,
->> 3. Exynos5410, 542x and 5800.
-> 
-> I see. That sounds like an even stronger reason to not duplicate
-> the definitions, as this is very confusing.
+With these properties added, sd cards inserted into hikey can work at UHS
+mode if they have such capability.
 
-Okay.
+Note, this depends on HiKey UHS-SD support patch [1] to work properly.
+If you didn't add this patch, but added sd-uhs- properties into dwmmc_1,
+then sd cards cannot work. As of this post, patch [1] has been integrated
+into maintainer's next branch [2].
 
-> 
->> Rest (functions and pull up/down) is the same so sharing the defines is
->> possible but not that obvious. Solution would be for example adding a
->> SoC-family prefix for PIN_DRV_LVx. Not that good...
->>
->> I could put it into three DTSI:
->>  - exynos3-pinctrl.dtsi (new file)
->>  - exynos5260-pinctrl.dtsi (like it is now)
->>  - exynos54xx-pinctrl.dtsi (new file)
->>
->> which would reduce the duplication. Other ideas?
-> 
-> I think having the soc-family prefix is better, as it avoids
-> defining the same symbol to a different value. Better make this
-> as explicit as possible.
+[1]: [V4] mmc: dw_mmc-k3: UHS-SD card for Hisilicon Hikey,
+ https://patchwork.kernel.org/patch/9262515/
+[2]: https://git.linaro.org/people/ulf.hansson/mmc.git next
+ commit a8a5b2909cfc ("mmc: dw_mmc: k3: UHS-SD card for Hisilicon Hikey")
 
-Ok, sounds reasonable. I want to convert also older platforms S3C (drive
-strengths and pull up/down differ) and arm64 SoC: Exynos7. For the
-latter the problem is there is no common place for sharing DTS, except
-the headers. However this does not really belong to headers. I guess
-some level of duplication might be still exist.
+cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+cc: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+cc: Jinguojun <kid.jin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-
-> I think overall, a better solution would have been to define the
-> constants globally (shared with non-exynos) to start with,
-> and have the driver translate generic numbers into vendor
-> specific ones. Obviously it's too late for that now.
-
-We could extend driver by adding new bindings accepting generic numbers
-(and still backward compatible) but this looks like an overkill.
-
-Best regards,
-Krzysztof
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 63608e9..17839db 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -785,6 +785,9 @@
+ 			card-detect-delay = <200>;
+ 			hisilicon,peripheral-syscon = <&ao_ctrl>;
+ 			cap-sd-highspeed;
++			sd-uhs-sdr12;
++			sd-uhs-sdr25;
++			sd-uhs-sdr50;
+ 			reg = <0x0 0xf723e000 0x0 0x1000>;
+ 			interrupts = <0x0 0x49 0x4>;
+ 			#address-cells = <0x1>;
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
