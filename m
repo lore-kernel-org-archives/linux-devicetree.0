@@ -1,62 +1,63 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] [v9] net: emac: emac gigabit ethernet controller driver
-Date: Wed, 31 Aug 2016 16:00:18 -0500
-Message-ID: <57C74562.3050203@codeaurora.org>
-References: <1472161143-26417-1-git-send-email-timur@codeaurora.org>
- <20160831150043.GA575@rob-hp-laptop> <57C6F395.1030904@codeaurora.org>
- <CAL_Jsq+BtwBtB7Vd8HB+vhucfUmn_0bxRRXmyO13GoCM82LgFg@mail.gmail.com>
+From: Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 18/19] iommu/arm-smmu: Set domain geometry
+Date: Wed, 31 Aug 2016 23:00:57 +0200
+Message-ID: <f8e7e2eb-c237-d569-9323-5aec229c18f4@redhat.com>
+References: <cover.1471975357.git.robin.murphy@arm.com>
+ <d6cedec16fe96a081ea2f9f27378dd1a6f406c72.1471975357.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+BtwBtB7Vd8HB+vhucfUmn_0bxRRXmyO13GoCM82LgFg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <d6cedec16fe96a081ea2f9f27378dd1a6f406c72.1471975357.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shanker Donthineni <shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vikram Sethi <vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gilad Avidov <gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Langsdorf <mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lino Sanfilippo <LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org>
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring wrote:
->> It's not a generic phy.  It's a funky "internal phy" that differs among
->> >SOCs.  I call it the internal phy, but I could use another name. Internally,
->> >some people call it the "sgmii phy", but I don't think that's accurate.
+Hi,
 
-> Funky internal PHYs are precisely the types of PHYs this binding is
-> for. It is generic in that the type is not defined. It can be USB,
-> HDMI, DSI, LVDS, etc.
+On 23/08/2016 21:05, Robin Murphy wrote:
+> For non-aperture-based IOMMUs, the domain geometry seems to have become
+> the de-facto way of indicating the input address space size. That is
+> quite a useful thing from the users' perspective, so let's do the same.
+> 
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 2 ++
+>  drivers/iommu/arm-smmu.c    | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index 72b996aa7460..9c56bd194dc2 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -1574,6 +1574,8 @@ static int arm_smmu_domain_finalise(struct iommu_domain *domain)
+>  		return -ENOMEM;
+>  
+>  	domain->pgsize_bitmap = pgtbl_cfg.pgsize_bitmap;
+> +	domain->geometry.aperture_end = (1UL << ias) - 1;
+> +	domain->geometry.force_aperture = true;
+>  	smmu_domain->pgtbl_ops = pgtbl_ops;
+>  
+>  	ret = finalise_stage_fn(smmu_domain, &pgtbl_cfg);
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 85bc74d8fca0..112918d787eb 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -913,6 +913,8 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>  
+>  	/* Update the domain's page sizes to reflect the page table format */
+>  	domain->pgsize_bitmap = pgtbl_cfg.pgsize_bitmap;
+> +	domain->geometry.aperture_end = (1UL << ias) - 1;
+> +	domain->geometry.force_aperture = true;
+>  
+>  	/* Initialise the context bank with our page table cfg */
+>  	arm_smmu_init_context_bank(smmu_domain, &pgtbl_cfg);
+> 
+Reviewed-by: Eric Auger <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-I don't understand what you're getting at.  There are two IP blocks that 
-have a private interconnect.  One is the MAC, and the other is an 
-internal PHY, but the driver programs them as one device.
 
-If you want me to make some kind of change, you're going to have to be 
-more specific.
-
->> >That's what I thought to, but without it, of_phy_find_device() won't work.
->> >I need a pointer to the phy node, and I use of_parse_phandle() to get it:
->> >
->> >         struct device_node *phy_np;
->> >
->> >         ret = of_mdiobus_register(mii_bus, np);
->> >         if (ret) {
->> >                 dev_err(&pdev->dev, "could not register mdio bus\n");
->> >                 return ret;
->> >         }
->> >
->> >         phy_np = of_parse_phandle(np, "phy-handle", 0);
-
-> You can just as easily find the child node called ethernet-phy.
-
-As Andrew pointed out, using phy-handle allows me to place the phy node 
-anywhere.
-
-I've already made changes to this design, and every change has raised 
-objections.  I don't see anything wrong with phy-handle.  A lot of 
-drivers use it.
-
--- 
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
-Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Eric
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
