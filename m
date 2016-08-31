@@ -1,110 +1,107 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 00/11] Add HW throttle for Tegra soctherm
-Date: Wed, 31 Aug 2016 11:07:14 +0800
-Message-ID: <57C649E2.30608@nvidia.com>
-References: <1462962026-19653-1-git-send-email-wni@nvidia.com>   <5746C4FD.9070909@nvidia.com> <1471590924.2691.34.camel@intel.com>
+From: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] mmc: sdhci-of-arasan: Control clock for accessing
+ syscon
+Date: Wed, 31 Aug 2016 11:11:01 +0800
+Message-ID: <e1ed95dc-ae81-d603-fde3-06db12c12a07@rock-chips.com>
+References: <1472607448-4462-1-git-send-email-shawn.lin@rock-chips.com>
+ <1472607448-4462-3-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471590924.2691.34.camel-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mikko.perttunen-/1wQRMveznE@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1472607448-4462-3-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/19/2016 03:15 PM, Zhang Rui wrote:
-> On 四, 2016-05-26 at 17:42 +0800, Wei Ni wrote:
->> Hi,
->> Does there have any comments on this series?
->> Let me know if someone has suggestions.
->>
-> I have no objections to this patch set.
-> As 10 patches out of 11, in this patch series, contain changes out of
-> thermal scope, if you prefer this patch set go through thermal tree, I
-> still need ACKs for the changes out of thermal scope.
-
-Rui, thanks for your comments.
-
-Thierry & Matt could you ACK this series ?
-
-Thanks.
-Wei.
-
-> 
-> thanks,
-> rui
-> 
->> Thanks.
->> Wei.
->>
->> On 05/11/2016 06:20 PM, Wei Ni wrote:
->>>
->>> This series add following functions for Tegra soctherm:
->>> 1. add HW throttle function.
->>> 2. enable soctherm node for Tegra124, Tegra132, Tegra210, and
->>> set "critical", "hot" trips for them.
->>>
->>> Main changes from v4:
->>> 1. drop the "nvidia" prefix from the node name, per Rob's comments.
->>>
->>> Main changes from v3:
->>> 1. change some properties'name and descriptions, per Rob's
->>> comments.
->>> 2. change the corresponding driver codes.
->>>
->>> Main changes from v2:
->>> 1. improve the of-binding, per Eduardo's comments, and
->>> change the corresponding driver codes.
->>> 2. move two setting critical trip patches in this series,
->>> 3. fix some bugs in dts changes.
->>>
->>> Main changes from v1:
->>> 1. use readl/writel instead of __raw_readl/__raw_writel.
->>> 2. rebase on the linux-next.
->>>
->>> The v1 series is in:
->>> https://lkml.org/lkml/2016/3/31/230
->>>
->>> The v2 series is in:
->>> https://lkml.org/lkml/2016/4/26/1577
->>>
->>> The v3 series is in:
->>> https://lkml.org/lkml/2016/5/3/274
->>>
->>> The v4 series is in:
->>> https://lkml.org/lkml/2016/5/9/45
->>>
->>> Wei Ni (11):
->>>   of: Add bindings of hw throttle for Tegra soctherm
->>>   thermal: tegra: add hw-throttle function
->>>   thermal: tegra: add hw-throttle for Tegra132
->>>   arm: tegra: set critical trips for Tegra124
->>>   arm: tegra: set hot trips for Tegra124
->>>   arm64: tegra: use tegra132-soctherm for Tegra132
->>>   arm64: tegra: set critical trips for Tegra132
->>>   arm64: tegra: set hot trips for Tegra132
->>>   arm64: tegra: add soctherm node for Tegra210
->>>   arm64: tegra: set critical trips for Tegra210
->>>   arm64: tegra: set hot trips for Tegra210
->>>
->>>  .../bindings/thermal/nvidia,tegra124-soctherm.txt  | 121 ++-
->>>  arch/arm/boot/dts/tegra124-jetson-tk1.dts          |  18 +-
->>>  arch/arm/boot/dts/tegra124.dtsi                    |  83 +-
->>>  arch/arm64/boot/dts/nvidia/tegra132.dtsi           | 119 ++-
->>>  arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 127 ++++
->>>  drivers/thermal/tegra/soctherm.c                   | 842
->>> ++++++++++++++++++++-
->>>  drivers/thermal/tegra/soctherm.h                   |  10 +
->>>  drivers/thermal/tegra/tegra124-soctherm.c          |  18 +
->>>  drivers/thermal/tegra/tegra132-soctherm.c          |  18 +
->>>  drivers/thermal/tegra/tegra210-soctherm.c          |  18 +
->>>  include/dt-bindings/thermal/tegra124-soctherm.h    |   5 +
->>>  11 files changed, 1344 insertions(+), 35 deletions(-)
->>>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgU2hhd24sCgoKT24gMjAxNuW5tDA45pyIMzHml6UgMDk6MzcsIFNoYXduIExpbiB3cm90ZToK
+PiBJbiB0aGUgZWFyaWxlciBjb21taXQgNjU4MjAxOTkyNzJkICgiRG9jdW1lbnRhdGlvbjogbW1j
+Ogo+IHNkaGNpLW9mLWFyYXNhbjogQWRkIHNvYy1jdGwtc3lzY29uIGZvciBjb3JlY2ZnIHJlZ3Mi
+KSwgd2UKPiBpbnRyb2R1Y2VkIHN5c2NvbiB0byBjb250cm9sIGNvcmVjZmdfKiBzdHVmZiBwcm92
+aWRlZCBieQo+IGFyYXNhbi4gQnV0IGdpdmVuIHRoYXQgd2UgbWF5IG5lZWQgdG8gdW5nYXRlIHRo
+ZSBjbG9jayBmb3IKPiBhY2Nlc3NpbmcgY29yZWNmZ18qLCBpdCBub3Qgc28gcGVyZmVjdCBhcyBp
+dCBkZXBlbmRzIG9uCj4gd2hldGhlciBzcGVjaWZpYyBjbG9jayBkcml2ZXIgZGlzYWJsZXMgaXQg
+aWYgbm90IHJlZmVyZW5jZWQuCj4gTWVhbndoaWxlLCBpZiB3ZSBkb24ndCBuZWVkIGFyYXNhbiBj
+b250b2xsZXIgdG8gd29yayBhbnltb3JlLAo+IHRoZXJlIGlzIG5vIHJlYXNvbiB0byBzdGlsbCBl
+bmFibGUgaXQuIFNvIGxldCdzIGNvbnRyb2wgdGhpcwo+IGNsb2NrIHdoZW4gbmVlZGVkLgo+Cj4g
+U2lnbmVkLW9mZi1ieTogU2hhd24gTGluIDxzaGF3bi5saW5Acm9jay1jaGlwcy5jb20+Cj4KPiAt
+LS0KCldpdGhvdXQgIHRoaXMgc2VyaWVzIG9mIHBhdGNoZXMsIHdlIGNhbid0IGdhdGUgYWNsa19l
+bW1jZ3JmIGV2ZW4gdGhvdWdoIApkcml2ZXIgZW50ZXIgc3VzcGVuZC9yZW1vdmUuIEl0IG1lYW5p
+bmdmdWwgdG8gc2F2ZSBwb3dlciBjb25zdW1wdGlvbi4KSXQgbG9va3MgbmljZSB0byBtZSwgYW5k
+IGFsc28gSSBoYXZlIHRlc3RlZCBvbiByazMzOTkgYm9hcmQsIHNvCgpUZXN0ZWQtYnk6IFppeXVh
+biBYdSA8eHp5Lnh1QHJvY2stY2hpcHMuY29tPgoKPgo+IENoYW5nZXMgaW4gdjI6Cj4gLSBhc3Np
+Z24gTlVMTCB0byBjbGtfc3lzY29uIGlmIGl0J3Mgbm90IGRlZmVycmFsIGVycm9yLgo+Cj4gICBk
+cml2ZXJzL21tYy9ob3N0L3NkaGNpLW9mLWFyYXNhbi5jIHwgMzMgKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrLS0tCj4gICAxIGZpbGUgY2hhbmdlZCwgMzAgaW5zZXJ0aW9ucygrKSwgMyBk
+ZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21tYy9ob3N0L3NkaGNpLW9mLWFy
+YXNhbi5jIGIvZHJpdmVycy9tbWMvaG9zdC9zZGhjaS1vZi1hcmFzYW4uYwo+IGluZGV4IDBiM2E5
+Y2YuLjMxNjlmODEgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9tbWMvaG9zdC9zZGhjaS1vZi1hcmFz
+YW4uYwo+ICsrKyBiL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2ktb2YtYXJhc2FuLmMKPiBAQCAtNzgs
+NiArNzgsNyBAQCBzdHJ1Y3Qgc2RoY2lfYXJhc2FuX3NvY19jdGxfbWFwIHsKPiAgICAqIHN0cnVj
+dCBzZGhjaV9hcmFzYW5fZGF0YQo+ICAgICogQGhvc3Q6CQlQb2ludGVyIHRvIHRoZSBtYWluIFNE
+SENJIGhvc3Qgc3RydWN0dXJlLgo+ICAgICogQGNsa19haGI6CQlQb2ludGVyIHRvIHRoZSBBSEIg
+Y2xvY2sKPiArICogQGNsa19zeXNjb246CQlQb2ludGVyIHRvIHRoZSBvcHRpb25hbCBjbG9jayBm
+b3IgYWNjZXNzaW5nIHN5c2Nvbgo+ICAgICogQHBoeToJCVBvaW50ZXIgdG8gdGhlIGdlbmVyaWMg
+cGh5Cj4gICAgKiBAaXNfcGh5X29uOgkJVHJ1ZSBpZiB0aGUgUEhZIGlzIG9uOyBmYWxzZSBpZiBu
+b3QuCj4gICAgKiBAc2RjYXJkY2xrX2h3OglTdHJ1Y3QgZm9yIHRoZSBjbG9jayB3ZSBtaWdodCBw
+cm92aWRlIHRvIGEgUEhZLgo+IEBAIC04OCw2ICs4OSw3IEBAIHN0cnVjdCBzZGhjaV9hcmFzYW5f
+c29jX2N0bF9tYXAgewo+ICAgc3RydWN0IHNkaGNpX2FyYXNhbl9kYXRhIHsKPiAgIAlzdHJ1Y3Qg
+c2RoY2lfaG9zdCAqaG9zdDsKPiAgIAlzdHJ1Y3QgY2xrCSpjbGtfYWhiOwo+ICsJc3RydWN0IGNs
+awkqY2xrX3N5c2NvbjsKPiAgIAlzdHJ1Y3QgcGh5CSpwaHk7Cj4gICAJYm9vbAkJaXNfcGh5X29u
+Owo+ICAgCj4gQEAgLTI5MCw2ICsyOTIsNyBAQCBzdGF0aWMgaW50IHNkaGNpX2FyYXNhbl9zdXNw
+ZW5kKHN0cnVjdCBkZXZpY2UgKmRldikKPiAgIAo+ICAgCWNsa19kaXNhYmxlKHBsdGZtX2hvc3Qt
+PmNsayk7Cj4gICAJY2xrX2Rpc2FibGUoc2RoY2lfYXJhc2FuLT5jbGtfYWhiKTsKPiArCWNsa19k
+aXNhYmxlKHNkaGNpX2FyYXNhbi0+Y2xrX3N5c2Nvbik7Cj4gICAKPiAgIAlyZXR1cm4gMDsKPiAg
+IH0KPiBAQCAtMzA5LDYgKzMxMiwxMiBAQCBzdGF0aWMgaW50IHNkaGNpX2FyYXNhbl9yZXN1bWUo
+c3RydWN0IGRldmljZSAqZGV2KQo+ICAgCXN0cnVjdCBzZGhjaV9hcmFzYW5fZGF0YSAqc2RoY2lf
+YXJhc2FuID0gc2RoY2lfcGx0Zm1fcHJpdihwbHRmbV9ob3N0KTsKPiAgIAlpbnQgcmV0Owo+ICAg
+Cj4gKwlyZXQgPSBjbGtfZW5hYmxlKHNkaGNpX2FyYXNhbi0+Y2xrX3N5c2Nvbik7Cj4gKwlpZiAo
+cmV0KSB7Cj4gKwkJZGV2X2VycihkZXYsICJDYW5ub3QgZW5hYmxlIHN5c2NvbiBjbG9jay5cbiIp
+Owo+ICsJCXJldHVybiByZXQ7Cj4gKwl9Cj4gKwo+ICAgCXJldCA9IGNsa19lbmFibGUoc2RoY2lf
+YXJhc2FuLT5jbGtfYWhiKTsKPiAgIAlpZiAocmV0KSB7Cj4gICAJCWRldl9lcnIoZGV2LCAiQ2Fu
+bm90IGVuYWJsZSBBSEIgY2xvY2suXG4iKTsKPiBAQCAtNTI4LDI2ICs1MzcsNDEgQEAgc3RhdGlj
+IGludCBzZGhjaV9hcmFzYW5fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAg
+IAkJCQkJcmV0KTsKPiAgIAkJCWdvdG8gZXJyX3BsdGZtX2ZyZWU7Cj4gICAJCX0KPiArCj4gKwkJ
+c2RoY2lfYXJhc2FuLT5jbGtfc3lzY29uID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsCj4gKwkJ
+CQkJCQkiY2xrX3N5c2NvbiIpOwo+ICsJCWlmIChJU19FUlIoc2RoY2lfYXJhc2FuLT5jbGtfc3lz
+Y29uKSkgewo+ICsJCQlyZXQgPSBQVFJfRVJSKHNkaGNpX2FyYXNhbi0+Y2xrX3N5c2Nvbik7Cj4g
+KwkJCWlmIChyZXQgPT0gLUVQUk9CRV9ERUZFUikKPiArCQkJCWdvdG8gZXJyX3BsdGZtX2ZyZWU7
+Cj4gKwkJCWVsc2UKPiArCQkJCXNkaGNpX2FyYXNhbi0+Y2xrX3N5c2NvbiA9IE5VTEw7Cj4gKwkJ
+fQo+ICsKPiArCQlpZiAoY2xrX3ByZXBhcmVfZW5hYmxlKHNkaGNpX2FyYXNhbi0+Y2xrX3N5c2Nv
+bikpIHsKPiArCQkJZGV2X2VycigmcGRldi0+ZGV2LCAiVW5hYmxlIHRvIGVuYWJsZSBzeXNjb24g
+Y2xvY2suXG4iKTsKPiArCQkJZ290byBlcnJfcGx0Zm1fZnJlZTsKPiArCQl9Cj4gICAJfQo+ICAg
+Cj4gICAJc2RoY2lfYXJhc2FuLT5jbGtfYWhiID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJj
+bGtfYWhiIik7Cj4gICAJaWYgKElTX0VSUihzZGhjaV9hcmFzYW4tPmNsa19haGIpKSB7Cj4gICAJ
+CWRldl9lcnIoJnBkZXYtPmRldiwgImNsa19haGIgY2xvY2sgbm90IGZvdW5kLlxuIik7Cj4gICAJ
+CXJldCA9IFBUUl9FUlIoc2RoY2lfYXJhc2FuLT5jbGtfYWhiKTsKPiAtCQlnb3RvIGVycl9wbHRm
+bV9mcmVlOwo+ICsJCWdvdG8gY2xrX2Rpc19zeXNjb247Cj4gICAJfQo+ICAgCj4gICAJY2xrX3hp
+biA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCAiY2xrX3hpbiIpOwo+ICAgCWlmIChJU19FUlIo
+Y2xrX3hpbikpIHsKPiAgIAkJZGV2X2VycigmcGRldi0+ZGV2LCAiY2xrX3hpbiBjbG9jayBub3Qg
+Zm91bmQuXG4iKTsKPiAgIAkJcmV0ID0gUFRSX0VSUihjbGtfeGluKTsKPiAtCQlnb3RvIGVycl9w
+bHRmbV9mcmVlOwo+ICsJCWdvdG8gY2xrX2Rpc19zeXNjb247Cj4gICAJfQo+ICAgCj4gICAJcmV0
+ID0gY2xrX3ByZXBhcmVfZW5hYmxlKHNkaGNpX2FyYXNhbi0+Y2xrX2FoYik7Cj4gICAJaWYgKHJl
+dCkgewo+ICAgCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJVbmFibGUgdG8gZW5hYmxlIEFIQiBjbG9j
+ay5cbiIpOwo+IC0JCWdvdG8gZXJyX3BsdGZtX2ZyZWU7Cj4gKwkJZ290byBjbGtfZGlzX3N5c2Nv
+bjsKPiAgIAl9Cj4gICAKPiAgIAlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoY2xrX3hpbik7Cj4g
+QEAgLTYwNyw2ICs2MzEsOCBAQCBjbGtfZGlzYWJsZV9hbGw6Cj4gICAJY2xrX2Rpc2FibGVfdW5w
+cmVwYXJlKGNsa194aW4pOwo+ICAgY2xrX2Rpc19haGI6Cj4gICAJY2xrX2Rpc2FibGVfdW5wcmVw
+YXJlKHNkaGNpX2FyYXNhbi0+Y2xrX2FoYik7Cj4gK2Nsa19kaXNfc3lzY29uOgo+ICsJY2xrX2Rp
+c2FibGVfdW5wcmVwYXJlKHNkaGNpX2FyYXNhbi0+Y2xrX3N5c2Nvbik7Cj4gICBlcnJfcGx0Zm1f
+ZnJlZToKPiAgIAlzZGhjaV9wbHRmbV9mcmVlKHBkZXYpOwo+ICAgCXJldHVybiByZXQ7Cj4gQEAg
+LTYzMSw2ICs2NTcsNyBAQCBzdGF0aWMgaW50IHNkaGNpX2FyYXNhbl9yZW1vdmUoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqcGRldikKPiAgIAlyZXQgPSBzZGhjaV9wbHRmbV91bnJlZ2lzdGVyKHBk
+ZXYpOwo+ICAgCj4gICAJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGNsa19haGIpOwo+ICsJY2xrX2Rp
+c2FibGVfdW5wcmVwYXJlKHNkaGNpX2FyYXNhbi0+Y2xrX3N5c2Nvbik7Cj4gICAKPiAgIAlyZXR1
+cm4gcmV0Owo+ICAgfQoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKTGludXgtcm9ja2NoaXBAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LXJvY2tjaGlwCg==
