@@ -1,33 +1,46 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] [v9] net: emac: emac gigabit ethernet controller driver
-Date: Wed, 31 Aug 2016 14:19:26 -0500
-Message-ID: <57C72DBE.5000802@codeaurora.org>
-References: <1472161143-26417-1-git-send-email-timur@codeaurora.org>
- <CAKoUAr=Z56VxzW=zHu7r9ossdXHQ6xpeYdR5jwhv38zkV_eKFQ@mail.gmail.com>
- <57C1FB42.104@codeaurora.org> <57C728B4.7070303@codeaurora.org>
- <60d13549-f9ea-694b-1030-0c610e0d9722@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org
+Subject: [PATCH v2 0/7] dts: sun8i: add extra uart/i2c to H3
+Date: Wed, 31 Aug 2016 21:30:51 +0200
+Message-ID: <1472671858-29220-1-git-send-email-jorik@kippendief.biz>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <60d13549-f9ea-694b-1030-0c610e0d9722-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rami Rosen <roszenrami-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Florian Fainelli wrote:
-> if these are truly 64-bits stats, how come you are using a single
-> readl_* to access them? Or is the u64 rx_err_addr just used as temporary
-> storage and aligned to the largest size you need to deal with?
+From: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
 
-"*stats_itr += val;" takes the 32-bit val, zero-extends it to 64 bits, 
-and then adds that to the corresponding 64-bit field in emac_stats.
+This is v2 of my patch series. Just after sending I noticed the interrupts
+of i2c1 were too liberally copy/paste'd. This is fixed in v2.
+
+This series is a follow-up to Martin Ayotte's efforts to add additional UARTS
+and I2C ports to the AllWinner H3 SoC DTS files. In this series I explicitly
+leave out i2c2, since this is not broken out on my boards, so I cannot verify if
+it actually works.
+
+After the patch, one enables for example uart1 on a opi+ like this from u-boot:
+ => fdt set /soc/serial@01c28400 status okay
+
+Regards,
+Jorik
+
+Jorik Jonker (7):
+  dts: sun8i-h3: add pinmux definitions for uart2/uart3
+  dts: sun8i-h3: add pinmux definitions for i2c0/i2c1
+  dts: sun8i-h3: add i2c0/i2c1 SoC peripherals
+  dts: sun8i-h3: add UART1-3 to Orange Pi Plus
+  dts: sun8i-h3: add UART1-3 to Orange Pi PC
+  dts: sun8i-h3: add I2C0-1 to Orange Pi Plus
+  dts: sun8i-h3: add I2C0-1 to Orange Pi PC
+
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts   | 25 ++++++++++++++
+ arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 25 ++++++++++++++
+ arch/arm/boot/dts/sun8i-h3.dtsi              | 50 ++++++++++++++++++++++++++++
+ 3 files changed, 100 insertions(+)
 
 -- 
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
-Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
