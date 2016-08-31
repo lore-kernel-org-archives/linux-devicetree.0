@@ -1,38 +1,67 @@
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/2] ARM: dts: dra7: Fix clock data for
- gmac_gmii_ref_clk_div
-Date: Wed, 31 Aug 2016 09:08:12 +0300
-Message-ID: <fd7850dd-b7a2-e6ef-508f-8406c3f2cea9@ti.com>
-References: <20160830145801.10364-1-grygorii.strashko@ti.com>
- <20160830184158.xydy3ixy7c5b73le@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4] ARM: dts: exynos: Enable HDMI for Arndale Octa board
+Date: Wed, 31 Aug 2016 15:08:47 +0900
+Message-ID: <20160831060847.1350-1-woogyom.kim@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160830184158.xydy3ixy7c5b73le-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "J.D. Schroeder" <jay.schroeder-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+To: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/08/16 21:41, Tony Lindgren wrote:
-> * Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org> [160830 07:58]:
->>
->> Originally this patch was posted (and acked) here
->> https://lkml.org/lkml/2016/4/27/272,
->> but it, unfortunatelly, has never been merged.
->> So re-send + minor subj change.
->
-> OK yeah sorry about that. And thanks for the resend. If some patches
-> have pending discussion as I tend to tag threads that have pending
-> discussion as read and then forget them. And I miss patches in other
-> ways too..
->
-> Tero, care to take a look and ack?
+* GPIO for HDMI hot plug detect
+  GPX3_7 is used. The HPD awareness is done when the GPIO is active high.
 
-For both patches:
+* Enable HDMI block in Exynos5420
+  HDMI VDD and PLL consume 1.0V LDO6 (PVDD_ANAIP_1V0) and HDMI oscillator
+  requires 1.8V LDO7 (PVDD_ANAIP_1V8).
 
-Acked-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+* Support HDMI display data channel
+  I2C #2 is assigned for the HDMI DDC. It enables the EDID access.
+
+Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+index 39a3b81..d2ad48e 100644
+--- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
++++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+@@ -70,6 +70,15 @@
+ 	status = "disabled";
+ };
+ 
++&hdmi {
++	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_HIGH>;
++	vdd_osc-supply = <&ldo7_reg>;
++	vdd_pll-supply = <&ldo6_reg>;
++	vdd-supply = <&ldo6_reg>;
++	ddc = <&i2c_2>;
++	status = "okay";
++};
++
+ &hsi2c_4 {
+ 	status = "okay";
+ 
+@@ -347,6 +356,10 @@
+ 	};
+ };
+ 
++&i2c_2 {
++	status = "okay";
++};
++
+ &mmc_0 {
+ 	status = "okay";
+ 	broken-cd;
+-- 
+2.9.3
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
