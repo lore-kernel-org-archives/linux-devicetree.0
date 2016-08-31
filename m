@@ -1,61 +1,94 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 01/11] mfd: act8945a: Add .of_compatible for
- act8945a-charger
-Date: Wed, 31 Aug 2016 13:28:49 +0100
-Message-ID: <20160831122849.GF9415@dell>
-References: <1472109599-21915-1-git-send-email-wenyou.yang@atmel.com>
- <1472109599-21915-2-git-send-email-wenyou.yang@atmel.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH RFC] ARM: dts: samsung: add rga-lvds panel in itop elite
+Date: Wed, 31 Aug 2016 14:30:39 +0200
+Message-ID: <dee989f5-17b0-7445-514b-559e98d77acd@samsung.com>
+References: <1472511002-9019-1-git-send-email-ayaka@soulik.info>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1472109599-21915-2-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1472511002-9019-1-git-send-email-ayaka@soulik.info>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Randy Li <ayaka@soulik.info>, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, linux-samsung-soc@vger.kernel.org, linux@armlinux.org.uk, krzk@kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Aug 2016, Wenyou Yang wrote:
+Hi,
 
-> To regard the act8945a-charger as a sub-device, add .of_compatible for
-> act8945a-charger cell.
-> 
-> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+On 08/30/2016 12:50 AM, Randy Li wrote:
+> It is actually a lvds panel connected through a rga-lvds bridge.
+> But I really have no idea about what does a port mean in fimd node.
+>
+> Also how should I configure this panel size? I think the i2c found
+> on the panel schematic, but it more likely to be used a touch screen
+> touth. Also the touch screen is not supported in currently driver.
+>
+> Signed-off-by: Randy Li <ayaka@soulik.info>
 > ---
-> 
-> Changes in v8: None
-> Changes in v7: None
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-> 
->  drivers/mfd/act8945a.c | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/arm/boot/dts/exynos4412-itop-elite.dts | 35 ++++++++++++++++++++++++++---
+>  1 file changed, 32 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos4412-itop-elite.dts b/arch/arm/boot/dts/exynos4412-itop-elite.dts
+> index e1cda54..2d67385 100644
+> --- a/arch/arm/boot/dts/exynos4412-itop-elite.dts
+> +++ b/arch/arm/boot/dts/exynos4412-itop-elite.dts
+> @@ -139,6 +139,20 @@
+>  		assigned-clocks = <&clock CLK_MOUT_CAM0>;
+>  		assigned-clock-parents = <&clock CLK_XUSBXTI>;
+>  	};
+> +	
+> +	vcc_sys_lcd: sys-lcd {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_5v";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	panel: panel {
+> +		ddc-i2c-bus = <&i2c_3>;
+> +		power-supply = <&vcc_sys_lcd>;
+> +		enable-gpios = <&gpl0 2 GPIO_ACTIVE_HIGH>;
+> +	};
 
-Applied, thanks.
+Panel has no compatible string, which driver will handle this node?
 
-> diff --git a/drivers/mfd/act8945a.c b/drivers/mfd/act8945a.c
-> index 10c6d2d..a4024d9 100644
-> --- a/drivers/mfd/act8945a.c
-> +++ b/drivers/mfd/act8945a.c
-> @@ -23,6 +23,7 @@ static const struct mfd_cell act8945a_devs[] = {
->  	},
->  	{
->  		.name = "act8945a-charger",
-> +		.of_compatible = "active-semi,act8945a-charger",
->  	},
+Regards
+Andrzej
+
 >  };
 >  
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  &pinctrl_1 {
+> @@ -221,9 +235,6 @@
+>  };
+>  
+>  &pwm {
+> -	pinctrl-0 = <&pwm1_out>;
+> -	pinctrl-names = "default";
+> -	samsung,pwm-outputs = <1>;
+>  	status = "okay";
+>  };
+>  
+> @@ -239,3 +250,21 @@
+>  	assigned-clock-parents = <&clock CLK_MOUT_MPLL_USER_T>;
+>  	assigned-clock-rates = <0>, <176000000>;
+>  };
+> +
+> +&i2c_3 {
+> +	status = "okay";
+> +};
+> +
+> +&fimd {
+> +	pinctrl-0 = <&lcd_clk &lcd_data24 &pwm1_out>;
+> +	pinctrl-names = "default";
+> +	status = "okay";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	port@0 {
+> +		reg = <0>;
+> +		rga_lvds: endpoint {
+> +			remote-endpoint = <&panel>;
+> +		};
+> +	};
+> +};
