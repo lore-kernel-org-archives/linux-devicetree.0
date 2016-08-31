@@ -1,100 +1,419 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2] mfd: arizona: Add DT options for max_channels_clocked
- and PDM speaker config
-Date: Wed, 31 Aug 2016 13:15:35 +0100
-Message-ID: <20160831121535.GB9415@dell>
-References: <1472635543-21577-1-git-send-email-rf@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH 8/9] ARM: dts: exynos: Use macros for GPIO configuration on
+ exynos5410
+Date: Wed, 31 Aug 2016 14:13:32 +0200
+Message-ID: <1472645613-5362-9-git-send-email-k.kozlowski@samsung.com>
+References: <1472645613-5362-1-git-send-email-k.kozlowski@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1472635543-21577-1-git-send-email-rf@opensource.wolfsonmicro.com>
+In-reply-to: <1472645613-5362-1-git-send-email-k.kozlowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: patches@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Requires a DT Ack.
+Usage of DTS macros instead of hard-coded numbers makes code easier to
+read.  One does not have to remember which value means pull-up/down or
+specific driver strength.
 
-On Wed, 31 Aug 2016, Richard Fitzgerald wrote:
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+---
+ arch/arm/boot/dts/exynos5410-odroidxu.dts |  30 ++---
+ arch/arm/boot/dts/exynos5410-pinctrl.dtsi | 180 +++++++++++++++---------------
+ arch/arm/boot/dts/exynos5410-smdk5410.dts |  10 +-
+ 3 files changed, 110 insertions(+), 110 deletions(-)
 
-> This patch adds DT settings for the max_channels_clocked, spk_fmt and
-> spk_mute pdata.
-> 
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> ---
->  Documentation/devicetree/bindings/mfd/arizona.txt | 11 ++++++++
->  drivers/mfd/arizona-core.c                        | 31 +++++++++++++++++++++++
->  2 files changed, 42 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-> index a6e2ea41..6eaf006 100644
-> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> @@ -85,6 +85,17 @@ Optional properties:
->      present, the number of values should be less than or equal to the
->      number of inputs, unspecified inputs will use the chip default.
->  
-> +  - wlf,max-channels-clocked : The maximum number of channels to be clocked on
-> +    each AIF, useful for I2S systems with multiple data lines being mastered.
-> +    Specify one cell for each AIF, specify zero for AIFs that should be handled
-> +    normally.
-> +
-> +  - wlf,spk-fmt : PDM speaker data format, must contain 2 cells (OUT5 and OUT6).
-> +    See the datasheet for values.
-> +
-> +  - wlf,spk-mute : PDM speaker mute setting, must contain 2 cells (OUT5 and OUT6).
-> +    See the datasheet for values.
-> +
->    - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
->      they are being externally supplied. As covered in
->      Documentation/devicetree/bindings/regulator/regulator.txt
-> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-> index b95ff2d..36a9633 100644
-> --- a/drivers/mfd/arizona-core.c
-> +++ b/drivers/mfd/arizona-core.c
-> @@ -816,6 +816,37 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
->  		count++;
->  	}
->  
-> +	count = 0;
-> +	of_property_for_each_u32(arizona->dev->of_node,
-> +				 "wlf,max-channels-clocked",
-> +				 prop, cur, val) {
-> +		if (count == ARRAY_SIZE(pdata->max_channels_clocked))
-> +			break;
-> +
-> +		pdata->max_channels_clocked[count] = val;
-> +		count++;
-> +	}
-> +
-> +	count = 0;
-> +	of_property_for_each_u32(arizona->dev->of_node, "wlf,spk-fmt", prop,
-> +				 cur, val) {
-> +		if (count == ARRAY_SIZE(pdata->spk_fmt))
-> +			break;
-> +
-> +		pdata->spk_fmt[count] = val;
-> +		count++;
-> +	}
-> +
-> +	count = 0;
-> +	of_property_for_each_u32(arizona->dev->of_node, "wlf,spk-mute", prop,
-> +				 cur, val) {
-> +		if (count == ARRAY_SIZE(pdata->spk_mute))
-> +			break;
-> +
-> +		pdata->spk_mute[count] = val;
-> +		count++;
-> +	}
-> +
->  	return 0;
->  }
->  
-
+diff --git a/arch/arm/boot/dts/exynos5410-odroidxu.dts b/arch/arm/boot/dts/exynos5410-odroidxu.dts
+index a5ae76c1838f..6b36b9bfd1ec 100644
+--- a/arch/arm/boot/dts/exynos5410-odroidxu.dts
++++ b/arch/arm/boot/dts/exynos5410-odroidxu.dts
+@@ -473,38 +473,38 @@
+ &pinctrl_0 {
+ 	emmc_nrst_pin: emmc-nrst {
+ 		samsung,pins = "gpd1-0";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	pmic_dvs_3: pmic-dvs-3 {
+ 		samsung,pins = "gpx0-0";
+-		samsung,pin-function = <1>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	pmic_dvs_2: pmic-dvs-2 {
+ 		samsung,pins = "gpx0-1";
+-		samsung,pin-function = <1>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	pmic_dvs_1: pmic-dvs-1 {
+ 		samsung,pins = "gpx0-2";
+-		samsung,pin-function = <1>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 		samsung,pin-val = <1>;
+ 	};
+ 
+ 	max77802_irq: max77802-irq {
+ 		samsung,pins = "gpx0-4";
+-		samsung,pin-function = <0xf>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_F>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/exynos5410-pinctrl.dtsi b/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
+index 10272fa54c37..acb21cbbb1e1 100644
+--- a/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
++++ b/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
+@@ -296,212 +296,212 @@
+ 
+ 	uart0_data: uart0-data {
+ 		samsung,pins = "gpa0-0", "gpa0-1";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	uart0_fctl: uart0-fctl {
+ 		samsung,pins = "gpa0-2", "gpa0-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	uart1_data: uart1-data {
+ 		samsung,pins = "gpa0-4", "gpa0-5";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	uart1_fctl: uart1-fctl {
+ 		samsung,pins = "gpa0-6", "gpa0-7";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c2_bus: i2c2-bus {
+ 		samsung,pins = "gpa0-6", "gpa0-7";
+-		samsung,pin-function = <3>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_3>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	uart2_data: uart2-data {
+ 		samsung,pins = "gpa1-0", "gpa1-1";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	uart2_fctl: uart2-fctl {
+ 		samsung,pins = "gpa1-2", "gpa1-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c3_bus: i2c3-bus {
+ 		samsung,pins = "gpa1-2", "gpa1-3";
+-		samsung,pin-function = <3>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_3>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	uart3_data: uart3-data {
+ 		samsung,pins = "gpa1-4", "gpa1-5";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c4_hs_bus: i2c4-hs-bus {
+ 		samsung,pins = "gpa2-0", "gpa2-1";
+-		samsung,pin-function = <3>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_3>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c5_hs_bus: i2c5-hs-bus {
+ 		samsung,pins = "gpa2-2", "gpa2-3";
+-		samsung,pin-function = <3>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_3>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c6_hs_bus: i2c6-hs-bus {
+ 		samsung,pins = "gpb1-3", "gpb1-4";
+-		samsung,pin-function = <4>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_4>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	pwm0_out: pwm0-out {
+ 		samsung,pins = "gpb2-0";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	pwm1_out: pwm1-out {
+ 		samsung,pins = "gpb2-1";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	pwm2_out: pwm2-out {
+ 		samsung,pins = "gpb2-2";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	pwm3_out: pwm3-out {
+ 		samsung,pins = "gpb2-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c7_hs_bus: i2c7-hs-bus {
+ 		samsung,pins = "gpb2-2", "gpb2-3";
+-		samsung,pin-function = <3>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_3>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c0_bus: i2c0-bus {
+ 		samsung,pins = "gpb3-0", "gpb3-1";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c1_bus: i2c1-bus {
+ 		samsung,pins = "gpb3-2", "gpb3-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	sd0_clk: sd0-clk {
+ 		samsung,pins = "gpc0-0";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd0_cmd: sd0-cmd {
+ 		samsung,pins = "gpc0-1";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd0_cd: sd0-cd {
+ 		samsung,pins = "gpc0-2";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd0_bus1: sd0-bus-width1 {
+ 		samsung,pins = "gpc0-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd0_bus4: sd0-bus-width4 {
+ 		samsung,pins = "gpc0-4", "gpc0-5", "gpc0-6";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd2_clk: sd2-clk {
+ 		samsung,pins = "gpc2-0";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd2_cmd: sd2-cmd {
+ 		samsung,pins = "gpc2-1";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_NONE>;
++		samsung,pin-drv = <PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd2_cd: sd2-cd {
+ 		samsung,pins = "gpc2-2";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd2_bus1: sd2-bus-width1 {
+ 		samsung,pins = "gpc2-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd2_bus4: sd2-bus-width4 {
+ 		samsung,pins = "gpc2-4", "gpc2-5", "gpc2-6";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd0_bus8: sd0-bus-width8 {
+ 		samsung,pins = "gpc3-0", "gpc3-1", "gpc3-2", "gpc3-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV4>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/exynos5410-smdk5410.dts b/arch/arm/boot/dts/exynos5410-smdk5410.dts
+index 777fcf2edd79..e566a18bb067 100644
+--- a/arch/arm/boot/dts/exynos5410-smdk5410.dts
++++ b/arch/arm/boot/dts/exynos5410-smdk5410.dts
+@@ -66,8 +66,8 @@
+ 	srom_ctl: srom-ctl {
+ 		samsung,pins = "gpy0-3", "gpy0-4", "gpy0-5",
+ 			       "gpy1-0", "gpy1-1", "gpy1-2", "gpy1-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ 
+ 	srom_ebi: srom-ebi {
+@@ -77,9 +77,9 @@
+ 			       "gpy5-4", "gpy5-5", "gpy5-6", "gpy5-7",
+ 			       "gpy6-0", "gpy6-1", "gpy6-2", "gpy6-3",
+ 			       "gpy6-4", "gpy6-5", "gpy6-6", "gpy6-7";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <PIN_FUNC_SPC_2>;
++		samsung,pin-pud = <PIN_PULL_UP>;
++		samsung,pin-drv = <PIN_DRV_LV1>;
+ 	};
+ };
+ 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+1.9.1
