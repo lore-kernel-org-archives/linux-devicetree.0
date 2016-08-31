@@ -1,82 +1,100 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [RESEND PATCH, v5 4/5] usb: Add MediaTek USB3 DRD Driver
-Date: Wed, 31 Aug 2016 20:11:26 +0800
-Message-ID: <1472645486.27677.42.camel@mhfsdcap03>
-References: <1472094329-18466-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1472094329-18466-5-git-send-email-chunfeng.yun@mediatek.com>
-         <1472113973.2877.22.camel@suse.com> <1472204307.27677.41.camel@mhfsdcap03>
-         <20160830172055.GA29742@kroah.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2] mfd: arizona: Add DT options for max_channels_clocked
+ and PDM speaker config
+Date: Wed, 31 Aug 2016 13:15:35 +0100
+Message-ID: <20160831121535.GB9415@dell>
+References: <1472635543-21577-1-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160830172055.GA29742@kroah.com>
+Content-Disposition: inline
+In-Reply-To: <1472635543-21577-1-git-send-email-rf@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Oliver Neukum <oneukum@suse.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, KumarGala <galak@codeaurora.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, AlanCooper <alcooperx@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>, Alan Stern <stern@rowland.harvard.edu>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: patches@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-08-30 at 19:20 +0200, Greg Kroah-Hartman wrote:
-> On Fri, Aug 26, 2016 at 05:38:27PM +0800, chunfeng yun wrote:
-> > Hi,
-> > 
-> > On Thu, 2016-08-25 at 10:32 +0200, Oliver Neukum wrote:
-> > > On Thu, 2016-08-25 at 11:05 +0800, Chunfeng Yun wrote:
-> > > > This patch adds support for the MediaTek USB3 controller
-> > > > integrated into MT8173. It can be configured as Dual-Role
-> > > > Device (DRD), Peripheral Only and Host Only (xHCI) modes.
-> > > > 
-> > > 
-> > > > +/**
-> > > > + * General Purpose Descriptor (GPD):
-> > > > + *	The format of TX GPD is a little different from RX one.
-> > > > + *	And the size of GPD is 16 bytes.
-> > > > + *
-> > > > + * @flag:
-> > > > + *	bit0: Hardware Own (HWO)
-> > > > + *	bit1: Buffer Descriptor Present (BDP), always 0, BD is not supported
-> > > > + *	bit2: Bypass (BPS), 1: HW skips this GPD if HWO = 1
-> > > > + *	bit7: Interrupt On Completion (IOC)
-> > > > + * @chksum: This is used to validate the contents of this GPD;
-> > > > + *	If TXQ_CS_EN / RXQ_CS_EN bit is set, an interrupt is issued
-> > > > + *	when checksum validation fails;
-> > > > + *	Checksum value is calculated over the 16 bytes of the GPD by default;
-> > > > + * @data_buf_len (RX ONLY): This value indicates the length of
-> > > > + *	the assigned data buffer
-> > > > + * @next_gpd: Physical address of the next GPD
-> > > > + * @buffer: Physical address of the data buffer
-> > > > + * @buf_len:
-> > > > + *	(TX): This value indicates the length of the assigned data buffer
-> > > > + *	(RX): The total length of data received
-> > > > + * @ext_len: reserved
-> > > > + * @ext_flag:
-> > > > + *	bit5 (TX ONLY): Zero Length Packet (ZLP),
-> > > > + */
-> > > > +struct qmu_gpd {
-> > > > +	u8 flag;
-> > > > +	u8 chksum;
-> > > > +	u16 data_buf_len;
-> > > > +	u32 next_gpd;
-> > > > +	u32 buffer;
-> > > > +	u16 buf_len;
-> > > > +	u8 ext_len;
-> > > > +	u8 ext_flag;
-> > > > +} __packed;
-> > > 
-> > > It looks like this is shared with hardware in memory.
-> > > But you leave the endianness of the bigger fields undeclared.
-> > > 
-> > The driver only supports Little-Endian SoCs currently, because I have no
-> > Big-Endian platform to test it.
-> 
-> that's ok, you still have to mark the endian of the data and use it in
-> that manner, you can't just not worry about it.
-> 
-> Please fix up.
-Ok, I will do it
+Requires a DT Ack.
 
-thank you
+On Wed, 31 Aug 2016, Richard Fitzgerald wrote:
+
+> This patch adds DT settings for the max_channels_clocked, spk_fmt and
+> spk_mute pdata.
 > 
-> thanks,
+> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/arizona.txt | 11 ++++++++
+>  drivers/mfd/arizona-core.c                        | 31 +++++++++++++++++++++++
+>  2 files changed, 42 insertions(+)
 > 
-> greg k-h
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> index a6e2ea41..6eaf006 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -85,6 +85,17 @@ Optional properties:
+>      present, the number of values should be less than or equal to the
+>      number of inputs, unspecified inputs will use the chip default.
+>  
+> +  - wlf,max-channels-clocked : The maximum number of channels to be clocked on
+> +    each AIF, useful for I2S systems with multiple data lines being mastered.
+> +    Specify one cell for each AIF, specify zero for AIFs that should be handled
+> +    normally.
+> +
+> +  - wlf,spk-fmt : PDM speaker data format, must contain 2 cells (OUT5 and OUT6).
+> +    See the datasheet for values.
+> +
+> +  - wlf,spk-mute : PDM speaker mute setting, must contain 2 cells (OUT5 and OUT6).
+> +    See the datasheet for values.
+> +
+>    - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
+>      they are being externally supplied. As covered in
+>      Documentation/devicetree/bindings/regulator/regulator.txt
+> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+> index b95ff2d..36a9633 100644
+> --- a/drivers/mfd/arizona-core.c
+> +++ b/drivers/mfd/arizona-core.c
+> @@ -816,6 +816,37 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
+>  		count++;
+>  	}
+>  
+> +	count = 0;
+> +	of_property_for_each_u32(arizona->dev->of_node,
+> +				 "wlf,max-channels-clocked",
+> +				 prop, cur, val) {
+> +		if (count == ARRAY_SIZE(pdata->max_channels_clocked))
+> +			break;
+> +
+> +		pdata->max_channels_clocked[count] = val;
+> +		count++;
+> +	}
+> +
+> +	count = 0;
+> +	of_property_for_each_u32(arizona->dev->of_node, "wlf,spk-fmt", prop,
+> +				 cur, val) {
+> +		if (count == ARRAY_SIZE(pdata->spk_fmt))
+> +			break;
+> +
+> +		pdata->spk_fmt[count] = val;
+> +		count++;
+> +	}
+> +
+> +	count = 0;
+> +	of_property_for_each_u32(arizona->dev->of_node, "wlf,spk-mute", prop,
+> +				 cur, val) {
+> +		if (count == ARRAY_SIZE(pdata->spk_mute))
+> +			break;
+> +
+> +		pdata->spk_mute[count] = val;
+> +		count++;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
