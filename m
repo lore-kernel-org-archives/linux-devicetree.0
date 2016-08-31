@@ -1,42 +1,42 @@
-From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 0/12] arm64: renesas: add H3ULCB board
-Date: Wed, 31 Aug 2016 13:01:52 +0300
-Message-ID: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Subject: [PATCH v3 01/12] dt: arm: shmobile: add H3ULCB board DT bindings
+Date: Wed, 31 Aug 2016 13:02:21 +0300
+Message-ID: <1472637741-14624-1-git-send-email-vladimir.barinov@cogentembedded.com>
+References: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add H3ULCB Device tree bindings Documentation, listing it as a supported
+board.
 
-This adds the folowing:
-- R8A7795 SoC based H3ULCB low cost board device tree
-- Document DT bindings
-
-Vladimir Barinov (12):
-[01/12] dt: arm: shmobile: add H3ULCB board DT bindings
-[02/12] arm64: dts: h3ulcb: initial device tree
-[03/12] arm64: dts: h3ulcb: enable SCIF clk and pins
-[04/12] arm64: dts: h3ulcb: enable EthernetAVB
-[05/12] arm64: dts: h3ulcb: enable GPIO leds
-[06/12] arm64: dts: h3ulcb: enable SDHI0
-[07/12] arm64: dts: h3ulcb: enable I2C2
-[08/12] arm64: dts: h3ulcb: enable EXTALR clk
-[09/12] arm64: dts: h3ulcb: enable WDT
-[10/12] arm64: dts: h3ulcb: enable USB2 PHY of channel 1
-[11/12] arm64: dts: h3ulcb: enable USB2.0 Host channel 1
-[12/12] arm64: dts: h3ulcb: Sound SSI support
-
+Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-This patchset is against the 'kernel/git/horms/renesas.git' repo.
+Changes in version 2:
+- none
+Changes in version 3:
+- none
 
- arch/arm64/boot/dts/renesas/Makefile               |   2 +-
- arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts     | 316 +++++++++++++++++++++++++
- Documentation/devicetree/bindings/arm/shmobile.txt |   2 ++
- 3 files changed, 319 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+index 5484c31d..2f0b716 100644
+--- a/Documentation/devicetree/bindings/arm/shmobile.txt
++++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -49,6 +49,8 @@ Boards:
+     compatible = "renesas,genmai", "renesas,r7s72100"
+   - Gose
+     compatible = "renesas,gose", "renesas,r8a7793"
++  - H3ULCB (RTP0RC7795SKB00010S)
++    compatible = "renesas,h3ulcb", "renesas,r8a7795";
+   - Henninger
+     compatible = "renesas,henninger", "renesas,r8a7791"
+   - Koelsch (RTP0RC7791SEB00010S)
+-- 
+1.9.1
