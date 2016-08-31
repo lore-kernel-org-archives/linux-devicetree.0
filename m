@@ -1,48 +1,52 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v3 0/8] drm/tilcdc: Address LCDC rev 2 color errata +
- other fixes
-Date: Wed, 31 Aug 2016 21:48:24 +0300
-Message-ID: <c049825a-0802-0637-3b1e-5290032e6d10@ti.com>
-References: <cover.1472634657.git.jsarha@ti.com>
- <20160831180418.rte4sf5s4llyuuvn@atomide.com>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH] [v9] net: emac: emac gigabit ethernet controller driver
+Date: Wed, 31 Aug 2016 13:57:56 -0500
+Message-ID: <57C728B4.7070303@codeaurora.org>
+References: <1472161143-26417-1-git-send-email-timur@codeaurora.org>
+ <CAKoUAr=Z56VxzW=zHu7r9ossdXHQ6xpeYdR5jwhv38zkV_eKFQ@mail.gmail.com>
+ <57C1FB42.104@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160831180418.rte4sf5s4llyuuvn@atomide.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com, kbeldan@baylibre.com, laurent.pinchart@ideasonboard.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <57C1FB42.104@codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: Rami Rosen <roszenrami@gmail.com>
+Cc: Netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, robh+dt@kernel.org, andrew@lunn.ch, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, LinoSanfilippo@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMzEvMTYgMjE6MDQsIFRvbnkgTGluZGdyZW4gd3JvdGU6Cj4gKiBKeXJpIFNhcmhhIDxq
-c2FyaGFAdGkuY29tPiBbMTYwODMxIDA2OjE5XToKPj4gICBBUk06IGR0czogYW0zMzV4LWJvbmVi
-bGFjazogQWRkIGJsdWUtYW5kLXJlZC13aXJpbmcgLXByb3BlcnR5IHRvIExDREMKPj4gICAgIG5v
-ZGUKPj4gICBBUk06IGR0czogYW0zMzV4LWV2bTogQWRkIGJsdWUtYW5kLXJlZC13aXJpbmcgLXBy
-b3BlcnR5IHRvIGxjZGMgbm9kZQo+PiAgIEFSTTogZHRzOiBhbTMzNXgtZXZtc2s6IFdoaXRlc3Bh
-Y2UgY2xlYW51cCBvZiBsY2RjIHJlbGF0ZWQgbm9kZXMKPj4gICBBUk06IGR0czogYW0zMzV4LWV2
-bXNrOiBBZGQgYmx1ZS1hbmQtcmVkLXdpcmluZyAtcHJvcGVydHkgdG8gbGNkYyBub2RlCj4gCj4g
-SWYgc29tZSBvZiB0aGVzZSBkdHMgY2hhbmdlcyBhcmUgT0sgZm9yIG1lIHRvIGFwcGx5IHNlcGFy
-YXRlbHkgYWxyZWFkeSwKPiBwbGVhc2UgbGV0IG1lIGtub3cuCj4gCj4gT3RoZXJ3aXNlIEknbGwg
-dGFnIHRoaXMgdGhyZWFkIGFzIHJlYWQgYW5kIGFzc3VtZSB5b3UnbGwgc2VuZCB0aGUgZHRzCj4g
-Y2hhbmdlcyBzZXBhcmF0ZWx5IHdoZW4gcmVhZHkgOikKPiAKCkFjY29yZGluZyB0byBteSBwbGFu
-IHRoZSBkcm0gc2lkZSBjaGFuZ2VzIHNob3VsZCBnbyBpbnRvIDQuOS4KClRoZSBjb21taXQgbWVz
-c2FnZXMgYW5kIHRoZSBjb21tZW50cyBtYXkgbG9vayBjb25mdXNpbmcgd2l0aG91dCB0aGUKaW1w
-bGVtZW50YXRpb24sIGJ1dCBvdGhlcndpc2UgdGhlcmUgc2hvdWxkIGJlIG5vIGhhcm0gaW4gYXBw
-bHlpbmcgdGhlc2UKYWxyZWFkeS4gVGhlIG5ldyBwcm9wZXJ0aWVzIGluIGR0cyBzaW1wbHkgd29u
-dCBoYXZlIGFueSBlZmZlY3QuIE9uIHRoZQpvdGhlciBoYW5kLCBub3QgaGF2aW5nIHRoZSBkdHMg
-Y2hhbmdlcyB3b24ndCBoYXZlIGFueSBkcmFtYXRpYyBlZmZlY3QKZWl0aGVyLiBUaGUgc3VwcG9y
-dGVkIGNvbG91ciBmb3JtYXRzIHdpbGwganVzdCByZW1haW4gaW4gdGhlIHNhbWUKaW5jb3JyZWN0
-IHN0YXRlIGFzIHRoZXkgaGF2ZSBhbHdheXMgYmVlbiB1bnRpbCB0aGUgZHRzIGNoYW5nZXMgYXJl
-CnRoZXJlLiBTbyB3aGF0IGV2ZXIgaXMgbW9yZSBjb252ZW5pZW50IGZvciB5b3UuCgpUaGFua3Ms
-Ckp5cmkKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Timur Tabi wrote:
+>
+>> Seems that there are several unused members in the emac_stats struct:
+>>
+>>> +struct emac_stats {
+>> ...
+>> ...
+>> Both rx_bcast_byte_cnt and rx_mcast_byte_cnt are not used anywhere/
+>>> +       u64 rx_bcast_byte_cnt;  /* broadcast packets byte count
+>>> (without FCS) */
+>>> +       u64 rx_mcast_byte_cnt;  /* multicast packets byte count
+>>> (without FCS) */
+>> ...
+>> rx_err_addr is not used
+>>> +       u64 rx_err_addr;        /* packets dropped due to address
+>>> filtering */
+>
+> I'll go through the structure and remove the unused fields.
+
+It turns out I cannot actually strip out those "unused" fields.  They 
+are all indirectly used in emac_get_stats64:
+
+	u64 *stats_itr = &adpt->stats.rx_ok;
+
+	while (addr <= REG_MAC_RX_STATUS_END) {
+		val = readl_relaxed(adpt->base + addr);
+		*stats_itr += val;
+		stats_itr++;
+		addr += sizeof(u32);
+	}
+
+-- 
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
