@@ -1,168 +1,154 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/3] misc: Add Aspeed BT IPMI host driver
-Date: Wed, 31 Aug 2016 21:57:31 +0200
-Message-ID: <8157811.GypLEN0R9B@wuerfel>
-References: <1472664259-23933-1-git-send-email-clg@kaod.org> <1472664259-23933-2-git-send-email-clg@kaod.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Changed: sunxi-ng clock code - NKMP clock
+ implementation is wrong
+Date: Wed, 31 Aug 2016 22:25:22 +0200
+Message-ID: <20160831202522.GB20462@lukather>
+References: <20160715085356.GR4761@lukather>
+ <085e185a-ac76-dd3f-9b0e-a7dc9c0c09f3@megous.com>
+ <20160721094852.GI5993@lukather>
+ <c46d1af5-9410-402a-7144-48b396ef6da7@megous.com>
+ <20160726063253.GW7419@lukather>
+ <e1b8127f-c422-46ab-384b-aeee85aa940b@megous.com>
+ <20160728210011.GJ6682@lukather>
+ <7c5f2835-f044-7c18-def9-52af5ce4afc3@megous.com>
+ <20160731103114.GY6215@lukather>
+ <9175af7e-e1b1-df88-de2b-16f0e8d719c1@megous.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472664259-23933-2-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FkmkrVfFsRoUs1wW"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNH2TS7AKGQEF3FZJEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <9175af7e-e1b1-df88-de2b-16f0e8d719c1-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+Cc: dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, August 31, 2016 7:24:17 PM CEST Cédric Le Goater wrote:
-> From: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-> 
-> This patch adds a simple device driver to expose the iBT interface on
-> Aspeed chips as a character device (/dev/bt).
-> 
-> The iBT interface is used to perform in-band IPMI communication from a
-> BMC to the host.
-> 
-> Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-> [clg: checkpatch fixes
->       devicetree binding documentation]
-> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
-> ---
->  .../devicetree/bindings/misc/aspeed,bt-host.txt    |  19 +
->  drivers/misc/Kconfig                               |   5 +
->  drivers/misc/Makefile                              |   1 +
->  drivers/misc/bt-host.c                             | 433 +++++++++++++++++++++
->  include/uapi/linux/Kbuild                          |   1 +
->  include/uapi/linux/bt-host.h                       |  18 +
->  6 files changed, 477 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/aspeed,bt-host.txt
->  create mode 100644 drivers/misc/bt-host.c
->  create mode 100644 include/uapi/linux/bt-host.h
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/aspeed,bt-host.txt b/Documentation/devicetree/bindings/misc/aspeed,bt-host.txt
-> new file mode 100644
-> index 000000000000..938c5998c331
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/aspeed,bt-host.txt
 
-"misc" seems like a bad category here. Does this fit nowhere else?
+--FkmkrVfFsRoUs1wW
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> @@ -0,0 +1,19 @@
-> +* Aspeed BT IPMI interface
+Hi Ondrej,
 
-What does "BT" stand for? IPMI is a more commonly known acronym,
-but maybe list both with their full name as well.
+Sorry for the (very) belated reply.
 
-> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> index 7410c6d9a34d..71a7b9feb0f0 100644
-> --- a/drivers/misc/Makefile
-> +++ b/drivers/misc/Makefile
-> @@ -57,6 +57,7 @@ obj-$(CONFIG_ECHO)		+= echo/
->  obj-$(CONFIG_VEXPRESS_SYSCFG)	+= vexpress-syscfg.o
->  obj-$(CONFIG_CXL_BASE)		+= cxl/
->  obj-$(CONFIG_PANEL)             += panel.o
-> +obj-$(CONFIG_ASPEED_BT_IPMI_HOST)	+= bt-host.o
->  
->  lkdtm-$(CONFIG_LKDTM)		+= lkdtm_core.o
->  lkdtm-$(CONFIG_LKDTM)		+= lkdtm_bugs.o
+On Mon, Aug 01, 2016 at 12:01:39AM +0200, Ond=C5=99ej Jirman wrote:
+> >>>> In the vendor code M is never anything else but 0, and P is used onl=
+y
+> >>>> for frequencies below 288MHz, which matches the H3 datasheet, which =
+says:
+> >>>
+> >>> In the vendor code, P is never used either. All the boards we had so
+> >>> far don't go that low, so we cannot make any of these assumptions,
+> >>> especially since the vendor code has had the bad habit of doing
+> >>> something wrong and / or useless in the past.
+> >>
+> >> P is used in the arisc firmware according to the spec for the lower
+> >> frequencies.
+> >=20
+> > Yes, but has anyone actually tested those frequencies? Judging from
+> > the FEX files I could gather, cpufreq never actually goes lower than
+> > 480 MHz.
+> >=20
+>=20
+> I tested it. It works well down to 60MHz. You can even run on 24MHz if
+> you run directly from 24mhz osc. It's terribly slow, but it works ok.
 
-Maybe put this in a subdirectory of drivers/char/ipmi?
-I understand that this is the other end of the protocol,
-but they are closely related after all.
+Ok, it's good to know (and yeah, I wouldn't expect a CPU at 24MHz to
+be very fast :))
 
-> +#define DEVICE_NAME	"bt-host"
+> I've rebased my working branch over the mainline kernel, which now
+> contains the sunxi-ng, and tested it. Cpufreq seems to work on orange pi
+> pc without any changes discussed in this thread. I didn't do any
+> extensive testing though. But it doesn't hang on boot or cpufreq config
+> changes.
+>=20
+> You can see it here:
+>=20
+> https://github.com/megous/linux/commits/orange-pi-4.8
 
-here maybe "ipmi/bt-host" or "ipmi-bt-host"?
+Thanks a lot. That's good to know as well.
 
-> +static ssize_t bt_host_read(struct file *file, char __user *buf,
-> +				size_t count, loff_t *ppos)
-> +{
-> +	struct bt_host *bt_host = file_bt_host(file);
-> +	char __user *p = buf;
-> +	u8 len;
-> +
-> +	if (!access_ok(VERIFY_WRITE, buf, count))
-> +		return -EFAULT;
-> +
-> +	WARN_ON(*ppos);
-> +
-> +	if (wait_event_interruptible(bt_host->queue,
-> +				bt_inb(bt_host, BT_CTRL) & BT_CTRL_H2B_ATN))
-> +		return -ERESTARTSYS;
-> +
-> +	set_b_busy(bt_host);
-> +	clr_h2b_atn(bt_host);
-> +	clr_rd_ptr(bt_host);
-> +
-> +	len = bt_read(bt_host);
-> +	__put_user(len, p++);
-> +
-> +	/* We pass the length back as well */
-> +	if (len + 1 > count)
-> +		len = count - 1;
-> +
-> +	while (len) {
-> +		if (__put_user(bt_read(bt_host), p))
-> +			return -EFAULT;
-> +		len--; p++;
-> +	}
+> >>>> "The P factor only use in the condition that PLL output less than 28=
+8
+> >>>> MHz."
+> >>>
+> >>> And the datasheet also had some issues, either misleading or wrong
+> >>> comments in the past. Don't get me wrong, I'm not saying that this is
+> >>> wrong, just that we should not follow it religiously, and that we
+> >>> should trust more the experiments than the datasheet.
+> >>
+> >> I can believe that. :) Regardless, I think the reasons given for
+> >> avoiding dividers are quite reasonable. It's based on how PLL block
+> >> works, not what manual says.
+> >=20
+> > Yes, indeed.
+> >=20
+> > Would replacing the current factors computation function by something
+> > like:
+> >=20
+> > for (m =3D 1; m < max_m; m++)
+> >     for (p =3D 1; p < max_p; p++)
+> >         for (n =3D 1; n < max_n; n++)
+> > 	     for (k =3D 1; k < max_k; k++)
+> > 	         if rate =3D=3D computed rate
+> > 		     break;
+> >=20
+> > work for you?
+>=20
+> This would be better.
 
-If there are larger chunks of data to be transferred,
-using a temporary buffer with copy_from_user/copy_to_user
-would be more efficient. Since the size appears to
-be limited to 256 bytes anyway, that easily fits on the stack.
+Ok, I'll try to cook something up when I get the time. If you feel
+like it's not done fast enough, feel free to do it.
 
-> +
-> +	clr_b_busy(bt_host);
-> +
-> +	return p - buf;
-> +}
+Note that we also ended up merging for the A31 some code that reparent
+CPUx temporarily while setting the PLL-CPUX rate, and it should be
+somewhat generic. But of course, it's not exclusive.
 
-What is the motivation for only allowing complete messages
-to be transferred or truncated for short buffers?
+Thanks again for all your tests, it's very appreciated.
 
-Have you considered reading the message into a device specific
-buffer and allowing continued reads?
+Maxime
 
-I don't see an obvious reason one way or another, and I suppose
-you had an idea of what you were doing, so maybe explain it
-in a comment.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-> +static long bt_host_ioctl(struct file *file, unsigned int cmd,
-> +		unsigned long param)
-> +{
-> +	struct bt_host *bt_host = file_bt_host(file);
-> +
-> +	switch (cmd) {
-> +	case BT_HOST_IOCTL_SMS_ATN:
-> +		set_sms_atn(bt_host);
-> +		return 0;
-> +	}
-> +	return -EINVAL;
-> +}
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-Is this ioctl interface defined in a way that makes sense on
-any IPMI host hardware, or did you just do it like this because
-it is the easiest way on the hardware. I think it's important
-for the user interface to be extensible to other implementations
-if we ever add any.
+--FkmkrVfFsRoUs1wW
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +static int bt_host_config_irq(struct bt_host *bt_host,
-> +		struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	uint32_t reg;
-> +	int rc;
-> +
-> +	bt_host->irq = irq_of_parse_and_map(dev->of_node, 0);
-> +	if (!bt_host->irq)
-> +		return -ENODEV;
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-I think platform_get_irq() is the preferred interface here.
+iQIcBAEBAgAGBQJXxz0yAAoJEBx+YmzsjxAghv4P/1atWvA2BYC6XIG2HdccL3rg
+ApTBzeA7n9LZbt/+4WsWjeOxoOL6dkGmhV37xK6Jt5MoRBpIK2vk+SRqea1hmuYg
+xlcsO9LG3HRI0whHfe0PpOXjWJSYx3vybBxShWvObDeiVidVxinBA+AvK/8V/hVd
+pT0t9AWKOfyro4HgFMYLD7x1wB+Cl5+0pAXMKylJxu9EQFPDD8+s5hQIOZqmpGaU
+2ZtCq42D6nh+jJ+itaCYTBB5gY7m/qiBra90AEzq1mLZwebCGl9jCe4ZGqpP7CqN
+4RVQr/Xl0wRk7WgIqgaJRtkdRkOsTC1FupEgEF63xw0Pbv9rXAaHe2TXellQbjZy
+3xdZw9I/RtQfRB0bb+57VwpjGT5rWgCHMwI8lfteKEOYSEL/OJ40md6cOgT7BtBM
+toFTsNmgqu5akDDfWUSO6y/VxcO3sWWZ8xJLYzBWeB9Sdv/k0R1/G17a3ok+BYUP
+s/tNQxQo0olFFMtbo2hLwyfLj+Clk25lQaZDED1CkVp/EhULIrealgSSXTtG7N2n
+P/iU64RLtO5zFkCMAwLzZda9BgoLsyn7O5xSZz/QVhiFi/T7GfCm5+68D6f57nmO
+hyMWpB8goqaWNav/TiO4ZNLMimlyYLjrTEH7WBLa7sALUbZuFLRVOsx3hcOmRIJm
+bI0lFF/jgGcSrY2z9H73
+=MCv2
+-----END PGP SIGNATURE-----
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--FkmkrVfFsRoUs1wW--
