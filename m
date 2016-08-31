@@ -1,40 +1,132 @@
-From: Volodymyr Babchuk <vlad.babchuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v11 3/4] tee: add OP-TEE driver
-Date: Wed, 31 Aug 2016 20:02:49 +0300
-Message-ID: <88c4207b-9e18-7b39-ec73-7f9716e51c99@gmail.com>
-References: <1471870856-18684-1-git-send-email-jens.wiklander@linaro.org>
- <1471870856-18684-4-git-send-email-jens.wiklander@linaro.org>
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: Re: [PATCH v6 2/8] arm: parse cpu capacity-dmips-mhz from DT
+Date: Wed, 31 Aug 2016 18:08:35 +0100
+Message-ID: <20160831170835.GL9337@e106622-lin>
+References: <1468932048-31635-1-git-send-email-juri.lelli@arm.com>
+ <1468932048-31635-3-git-send-email-juri.lelli@arm.com>
+ <CAKfTPtBy7LGCW2T4AGoqL5L_1AHtW6KxHigxFVFVc_EU4oUO0g@mail.gmail.com>
+ <20160830162853.GF9337@e106622-lin>
+ <CAKfTPtDAjedxh9J2rqOwafrmubN6+-wDyTRdNQh6fCAb2HS4RQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471870856-18684-4-git-send-email-jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Al Viro <viro-3bDd1+5oDREiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtDAjedxh9J2rqOwafrmubN6+-wDyTRdNQh6fCAb2HS4RQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 31/08/16 10:14, Vincent Guittot wrote:
+> On 30 August 2016 at 18:28, Juri Lelli <juri.lelli@arm.com> wrote:
+> > Hi Vincent,
+> >
+> > On 16/08/16 10:20, Vincent Guittot wrote:
+> >> Hi Juri,
+> >>
+> >>
+> >> On 19 July 2016 at 14:40, Juri Lelli <juri.lelli@arm.com> wrote:
+> >
+> > [...]
+> >
+> >> > +static int
+> >> > +init_cpu_capacity_callback(struct notifier_block *nb,
+> >> > +                          unsigned long val,
+> >> > +                          void *data)
+> >> > +{
+> >> > +       struct cpufreq_policy *policy = data;
+> >> > +       int cpu;
+> >> > +
+> >> > +       if (cap_parsing_failed || cap_parsing_done)
+> >> > +               return 0;
+> >> > +
+> >> > +       switch (val) {
+> >> > +       case CPUFREQ_NOTIFY:
+> >> > +               pr_debug("cpu_capacity: init cpu capacity for CPUs [%*pbl] (to_visit=%*pbl)\n",
+> >> > +                               cpumask_pr_args(policy->related_cpus),
+> >> > +                               cpumask_pr_args(cpus_to_visit));
+> >> > +               cpumask_andnot(cpus_to_visit,
+> >> > +                              cpus_to_visit,
+> >> > +                              policy->related_cpus);
+> >> > +               for_each_cpu(cpu, policy->related_cpus) {
+> >> > +                       raw_capacity[cpu] = arch_scale_cpu_capacity(NULL, cpu) *
+> >> > +                                           policy->max / 1000UL;
+> >>
+> >> Should it be policy->cpuinfo.max_freq instead of policy->max ?
+> >>
+> >
+> > Right. I'll fix the arm64 bits as well.
+> >
+> >> > +                       capacity_scale = max(raw_capacity[cpu], capacity_scale);
+> >> > +               }
+> >> > +               if (cpumask_empty(cpus_to_visit)) {
+> >> > +                       normalize_cpu_capacity();
+> >> > +                       kfree(raw_capacity);
+> >> > +                       pr_debug("cpu_capacity: parsing done\n");
+> >> > +                       cap_parsing_done = true;
+> >>
+> >> ok so you do that once with the 1st governor that will be registered
+> >> for the CPU. Can't you unregister the notifier then ?
+> >>
+> >
+> > I tried, but the only place I could find to unregister it is from the
+> > callback itself; and it is not possible to do so AFAIK. Suggestions?
+> 
+> yes, you're right
+> Can't you queue a work to unregister your callback ?
 
+You mean something like this? I guess I thought it would be much more
+ugly. :)
 
-On 22.08.16 16:00, Jens Wiklander wrote:
-> On 31.08.16 16:50, Jerome Forissier wrote:Adds a OP-TEE driver which also can be compiled as a loadable module.
->
-> * Targets ARM and ARM64
-> * Supports using reserved memory from OP-TEE as shared memory
-> * Probes OP-TEE version using SMCs
-> * Accepts requests on privileged and unprivileged device
-> * Uses OPTEE message protocol version 2 to communicate with secure world
->
-> Acked-by: Andreas Dannenberg<dannenberg-l0cyMroinI0@public.gmane.org>
-> Reviewed-by: Javier González<javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Jens Wiklander<jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-Tested-by: Volodymyr Babchuk <vlad.babchuk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+If it looks OK, I'll add the same for arm64 and test it a bit more.
 
-patches were tested on Renesas Rcar H3 board.
+--->8---
+ arch/arm/kernel/topology.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+index cbc57c287145..672ae22e2768 100644
+--- a/arch/arm/kernel/topology.c
++++ b/arch/arm/kernel/topology.c
+@@ -215,7 +215,8 @@ static void normalize_cpu_capacity(void)
+ 
+ #ifdef CONFIG_CPU_FREQ
+ static cpumask_var_t cpus_to_visit;
+-static bool cap_parsing_done;
++static void parsing_done_workfn(struct work_struct *work);
++static DECLARE_WORK(parsing_done_work, parsing_done_workfn);
+ 
+ static int
+ init_cpu_capacity_callback(struct notifier_block *nb,
+@@ -225,7 +226,7 @@ init_cpu_capacity_callback(struct notifier_block *nb,
+ 	struct cpufreq_policy *policy = data;
+ 	int cpu;
+ 
+-	if (cap_parsing_failed || cap_parsing_done)
++	if (cap_parsing_failed)
+ 		return 0;
+ 
+ 	switch (val) {
+@@ -245,7 +246,7 @@ init_cpu_capacity_callback(struct notifier_block *nb,
+ 			normalize_cpu_capacity();
+ 			kfree(raw_capacity);
+ 			pr_debug("cpu_capacity: parsing done\n");
+-			cap_parsing_done = true;
++			schedule_work(&parsing_done_work);
+ 		}
+ 	}
+ 	return 0;
+@@ -270,6 +271,13 @@ static int __init register_cpufreq_notifier(void)
+ 					 CPUFREQ_POLICY_NOTIFIER);
+ }
+ core_initcall(register_cpufreq_notifier);
++
++static void parsing_done_workfn(struct work_struct *work)
++{
++	cpufreq_unregister_notifier(&init_cpu_capacity_notifier,
++					 CPUFREQ_POLICY_NOTIFIER);
++}
++
+ #else
+ static int __init free_raw_capacity(void)
+ {
