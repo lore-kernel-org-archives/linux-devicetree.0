@@ -1,7 +1,7 @@
 From: jorik@kippendief.biz
-Subject: [PATCH 4/7] dts: sun8i-h3: add UART1-3 to Orange Pi Plus
-Date: Wed, 31 Aug 2016 15:54:03 +0200
-Message-ID: <1472651646-15579-5-git-send-email-jorik@kippendief.biz>
+Subject: [PATCH 2/7] dts: sun8i-h3: add pinmux definitions for i2c0/i2c1
+Date: Wed, 31 Aug 2016 15:54:01 +0200
+Message-ID: <1472651646-15579-3-git-send-email-jorik@kippendief.biz>
 References: <1472651646-15579-1-git-send-email-jorik@kippendief.biz>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1472651646-15579-1-git-send-email-jorik@kippendief.biz>
@@ -12,38 +12,39 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jorik Jonker <jorik@kippendief.biz>
 
-This board has UARTS1-3 exposed on its expansion header
+This adds proper pinmux definitions for i2c0 and i2c1. Although H3 has a third
+i2c controller, these are not exposed on my boards. If someone actually has a
+H3 board with an exposed i2c2, they could add the third.
 
 Signed-off-by: Jorik Jonker <jorik@kippendief.biz>
 ---
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-index b0cb417..7a17839 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-@@ -90,6 +90,21 @@
- 	};
- };
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index 7740748..0637b95 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -327,6 +327,20 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
  
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins_a>;
-+};
++			i2c0_pins_a: i2c0@0 {
++				allwinner,pins = "PA11", "PA12";
++				allwinner,function = "i2c0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
 +
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins_a>;
-+};
++			i2c1_pins_a: i2c1@0 {
++				allwinner,pins = "PA18", "PA19";
++				allwinner,function = "i2c1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
 +
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins_a>;
-+};
-+
- &usbphy {
- 	usb3_vbus-supply = <&reg_usb3_vbus>;
- };
+ 			mmc0_pins_a: mmc0@0 {
+ 				allwinner,pins = "PF0", "PF1", "PF2", "PF3",
+ 						 "PF4", "PF5";
 -- 
 2.7.4
