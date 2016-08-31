@@ -1,79 +1,69 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [GIT PULL] Immutable branch between MFD, Regulator and
- RTC due for the v4.9 merge window
-Date: Wed, 31 Aug 2016 13:51:37 +0100
-Message-ID: <20160831125137.GI9415@dell>
-References: <1472468881-15337-1-git-send-email-w.egorov@phytec.de>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD, GPIO and Regulator due
+ for the v4.9 merge window
+Date: Wed, 31 Aug 2016 18:20:32 +0530
+Message-ID: <8e1378ce-b757-39f9-7c36-707f2d9db21e@ti.com>
+References: <1472633892-8261-1-git-send-email-j-keerthy@ti.com>
+ <20160831122435.GD9415@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <rtc-linux+bncBDA7X7F2WUEBB3VETO7AKGQEW4JWW2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1472468881-15337-1-git-send-email-w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160831122435.GD9415@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enjoy!
+On Wednesday 31 August 2016 05:54 PM, Lee Jones wrote:
+> Enjoy!
 
-The following changes since commit 694d0d0bb2030d2e36df73e2d23d5770511dbc8d=
-:
+Thanks! Just curious to know where to pull the below patch from:
 
-  Linux 4.8-rc2 (2016-08-14 19:11:36 -0700)
+https://patchwork.kernel.org/patch/9266665/
 
-are available in the git repository at:
+I checked in couple of other branches in your tree could not find the 
+above patch.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-regulato=
-r-rtc-v4.9-1
+Regards,
+Keerthy
 
-for you to fetch changes up to 5d2fd5c79e169547fcd4bf363f96cc544fd3489e:
-
-  rtc: Kconfig: Name RK818 in Kconfig for RTC_DRV_RK808 (2016-08-31 13:48:5=
-7 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD, Regulator and RTC due for the v4.9 merge wind=
-ow
-
-----------------------------------------------------------------
-Wadim Egorov (4):
-      mfd: rk808: Add RK818 support
-      regulator: rk808: Add regulator driver for RK818
-      mfd: dt-bindings: Add RK818 device tree bindings document
-      rtc: Kconfig: Name RK818 in Kconfig for RTC_DRV_RK808
-
- Documentation/devicetree/bindings/mfd/rk808.txt |  37 +++-
- drivers/mfd/Kconfig                             |   4 +-
- drivers/mfd/rk808.c                             | 226 ++++++++++++++++++++=
-----
- drivers/regulator/Kconfig                       |   4 +-
- drivers/regulator/rk808-regulator.c             | 143 ++++++++++++++-
- drivers/rtc/Kconfig                             |   4 +-
- include/linux/mfd/rk808.h                       | 154 +++++++++++++++-
- 7 files changed, 516 insertions(+), 56 deletions(-)
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
----=20
-You received this message because you are subscribed to the Google Groups "=
-rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+>
+> The following changes since commit 694d0d0bb2030d2e36df73e2d23d5770511dbc8d:
+>
+>   Linux 4.8-rc2 (2016-08-14 19:11:36 -0700)
+>
+> are available in the git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-gpio-regulator-v4.9
+>
+> for you to fetch changes up to f618ed218dc01207882a8f02b1310c7daaf5156a:
+>
+>   regulator: lp873x: Change the MFD config option as per latest naming (2016-08-31 13:20:44 +0100)
+>
+> ----------------------------------------------------------------
+> Immutable branch between MFD, GPIO and Regulator due for the v4.9 merge window
+>
+> ----------------------------------------------------------------
+> Keerthy (3):
+>       mfd: lp873x: Add lp873x PMIC support
+>       gpio: lp873x: Add support for General Purpose Outputs
+>       regulator: lp873x: Change the MFD config option as per latest naming
+>
+>  drivers/gpio/Kconfig       |  10 ++
+>  drivers/gpio/Makefile      |   1 +
+>  drivers/gpio/gpio-lp873x.c | 193 ++++++++++++++++++++++++++++++++
+>  drivers/mfd/Kconfig        |  14 +++
+>  drivers/mfd/Makefile       |   2 +
+>  drivers/mfd/lp873x.c       |  99 +++++++++++++++++
+>  drivers/regulator/Kconfig  |   2 +-
+>  include/linux/mfd/lp873x.h | 269 +++++++++++++++++++++++++++++++++++++++++++++
+>  8 files changed, 589 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/gpio/gpio-lp873x.c
+>  create mode 100644 drivers/mfd/lp873x.c
+>  create mode 100644 include/linux/mfd/lp873x.h
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
