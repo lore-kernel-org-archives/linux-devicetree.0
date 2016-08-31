@@ -1,75 +1,82 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [GIT PULL] Immutable branch between MFD, GPIO and Regulator due
- for the v4.9 merge window
-Date: Wed, 31 Aug 2016 16:21:09 +0100
-Message-ID: <20160831152109.GQ9415@dell>
-References: <1472633892-8261-1-git-send-email-j-keerthy@ti.com>
- <20160831122435.GD9415@dell>
- <8e1378ce-b757-39f9-7c36-707f2d9db21e@ti.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] [v9] net: emac: emac gigabit ethernet controller driver
+Date: Wed, 31 Aug 2016 17:24:02 +0200
+Message-ID: <20160831152402.GH15078@lunn.ch>
+References: <1472161143-26417-1-git-send-email-timur@codeaurora.org>
+ <20160831150043.GA575@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8e1378ce-b757-39f9-7c36-707f2d9db21e@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Keerthy <a0393675@ti.com>
-Cc: Keerthy <j-keerthy@ti.com>, broonie@kernel.org, linus.walleij@linaro.org, linux-omap@vger.kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20160831150043.GA575@rob-hp-laptop>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Timur Tabi <timur@codeaurora.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sdharia@codeaurora.org, shankerd@codeaurora.org, vikrams@codeaurora.org, cov@codeaurora.org, gavidov@codeaurora.org, bjorn.andersson@linaro.org, mlangsdo@redhat.com, jcm@redhat.com, agross@codeaurora.org, davem@davemloft.net, f.fainelli@gmail.com, LinoSanfilippo@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 31 Aug 2016, Keerthy wrote:
-
-> On Wednesday 31 August 2016 05:54 PM, Lee Jones wrote:
-> > Enjoy!
+> > +soc {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <1>;
+> > +
+> > +	emac0: ethernet@feb20000 {
+> > +		compatible = "qcom,fsm9900-emac";
+> > +		reg = <0xfeb20000 0x10000>,
+> > +		      <0xfeb36000 0x1000>;
+> > +		interrupts = <76>;
+> > +
+> > +		clocks = <&gcc 0>, <&gcc 1>, <&gcc 3>, <&gcc 4>, <&gcc 5>,
+> > +			<&gcc 6>, <&gcc 7>;
+> > +		clock-names = "axi_clk", "cfg_ahb_clk", "high_speed_clk",
+> > +			"mdio_clk", "tx_clk", "rx_clk", "sys_clk";
+> > +
+> > +		internal-phy = <&emac_sgmii>;
 > 
-> Thanks! Just curious to know where to pull the below patch from:
+> Can't this use the standard generic phy binding (i.e. 'phys'). It's a 
+> bit confusing as there's the ethernet phy binding (phy-handle) and the 
+> generic one. 
+
+Hi Rob
+
+An ethernet PHY is much more complex than a generic PHY. The generic
+phy API basically allows you to turn on/off or power up/down. An
+Ethernet phy you can find out if there is anybody on the other end,
+what speed is being used, set parameters used to negotiate what speed
+to use, turn power saving features on off, find out if the other end
+has power saving features, change the signal delays between the MAC
+and the PHY, configure and handle interrupts when something changes,
+configure WoL, etc.
+
+If generic PHYs would of come first, things might be different, but
+given that Ethernet PHYs are much much older and well entrenched into
+device tree bindings, i don't see them merging.
+
+> > +
+> > +		phy-handle = <&phy0>;
 > 
-> https://patchwork.kernel.org/patch/9266665/
+> This is bit redundant as the phy is the child node.
+
+The Internal PHY is a child node. However, there is no reason an
+external phy is a child. You sometimes see it connected to another
+devices MDIO bus.
+
+> I guess if you had multiple devices on the mdio bus you would need
+> it.
+
+And this is where people make errors. They hard code in the driver
+that it should use the first phy on the bus. Then some hardware
+engineer comes along and adds a second phy to the bus, and it
+breaks. It is more robust to explicitly indicate which PHY is
+connected to this MAC.
+
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		phy0: ethernet-phy@0 {
 > 
-> I checked in couple of other branches in your tree could not find the above
-> patch.
+> It's just an example, but don't we require compatible strings for phys 
+> now?
 
-The name has changed.  Pull my MFD branch and look for:
+We have never required compatibility strings for Ethernet PHYs. And
+due to the stable binding rules, we now never can. The binding
+documentation says it may contain compatible strings.
 
-  ea7f225 Documentation: mfd: Add DT bindings for the LP873X
-
-> > The following changes since commit 694d0d0bb2030d2e36df73e2d23d5770511dbc8d:
-> > 
-> >   Linux 4.8-rc2 (2016-08-14 19:11:36 -0700)
-> > 
-> > are available in the git repository at:
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-gpio-regulator-v4.9
-> > 
-> > for you to fetch changes up to f618ed218dc01207882a8f02b1310c7daaf5156a:
-> > 
-> >   regulator: lp873x: Change the MFD config option as per latest naming (2016-08-31 13:20:44 +0100)
-> > 
-> > ----------------------------------------------------------------
-> > Immutable branch between MFD, GPIO and Regulator due for the v4.9 merge window
-> > 
-> > ----------------------------------------------------------------
-> > Keerthy (3):
-> >       mfd: lp873x: Add lp873x PMIC support
-> >       gpio: lp873x: Add support for General Purpose Outputs
-> >       regulator: lp873x: Change the MFD config option as per latest naming
-> > 
-> >  drivers/gpio/Kconfig       |  10 ++
-> >  drivers/gpio/Makefile      |   1 +
-> >  drivers/gpio/gpio-lp873x.c | 193 ++++++++++++++++++++++++++++++++
-> >  drivers/mfd/Kconfig        |  14 +++
-> >  drivers/mfd/Makefile       |   2 +
-> >  drivers/mfd/lp873x.c       |  99 +++++++++++++++++
-> >  drivers/regulator/Kconfig  |   2 +-
-> >  include/linux/mfd/lp873x.h | 269 +++++++++++++++++++++++++++++++++++++++++++++
-> >  8 files changed, 589 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/gpio/gpio-lp873x.c
-> >  create mode 100644 drivers/mfd/lp873x.c
-> >  create mode 100644 include/linux/mfd/lp873x.h
-> > 
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+	      Andrew
