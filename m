@@ -1,58 +1,38 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH v3 7/8] ARM: dts: am335x-evmsk: Whitespace cleanup of lcdc
- related nodes
-Date: Wed, 31 Aug 2016 16:14:12 +0300
-Message-ID: <becff9a54834d26720970ae8f81395fb820f6e3e.1472634657.git.jsarha@ti.com>
-References: <cover.1472634657.git.jsarha@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/9] ARM: dts: exynos: Add macros for GPIO configuration
+Date: Wed, 31 Aug 2016 15:33:47 +0200
+Message-ID: <5709554.y3Mq6my3Uz@wuerfel>
+References: <1472645613-5362-1-git-send-email-k.kozlowski@samsung.com> <6113443.1q3Xq4YM82@wuerfel> <bf55b24c-b1ee-78be-d56d-8fdda4f2fdc9@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.1472634657.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, linux-arm-kernel@lists.infradead.org
-Cc: Jyri Sarha <jsarha@ti.com>, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, kbeldan@baylibre.com, laurent.pinchart@ideasonboard.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <bf55b24c-b1ee-78be-d56d-8fdda4f2fdc9@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-V2hpdGVzcGFjZSBjbGVhbnVwIG9mIGxjZGMgcmVsYXRlZCBub2Rlcy4gRG8gYWxsIGluZGVudGF0
-aW9uIGFuZAphbGlnbm1lbnQgd2l0aCB0YWJzIGluc3RlYWQgb2Ygc3BhY2VzLgoKU2lnbmVkLW9m
-Zi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9h
-bTMzNXgtZXZtc2suZHRzIHwgNDAgKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0t
-LS0KIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspLCAyMCBkZWxldGlvbnMoLSkKCmRp
-ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9hbTMzNXgtZXZtc2suZHRzIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvYW0zMzV4LWV2bXNrLmR0cwppbmRleCAwOTMwOGQ2Li4yM2I5NGU3IDEwMDY0NAot
-LS0gYS9hcmNoL2FybS9ib290L2R0cy9hbTMzNXgtZXZtc2suZHRzCisrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL2FtMzM1eC1ldm1zay5kdHMKQEAgLTE3MCwyOSArMTcwLDI5IEBACiAJCXBpbmN0cmwt
-MSA9IDwmbGNkX3BpbnNfc2xlZXA+OwogCQlzdGF0dXMgPSAib2theSI7CiAJCXBhbmVsLWluZm8g
-ewotCQkJYWMtYmlhcyAgICAgICAgICAgPSA8MjU1PjsKLQkJCWFjLWJpYXMtaW50cnB0ICAgID0g
-PDA+OwotCQkJZG1hLWJ1cnN0LXN6ICAgICAgPSA8MTY+OwotCQkJYnBwICAgICAgICAgICAgICAg
-PSA8MzI+OwotCQkJZmRkICAgICAgICAgICAgICAgPSA8MHg4MD47Ci0JCQlzeW5jLWVkZ2UgICAg
-ICAgICA9IDwwPjsKLQkJCXN5bmMtY3RybCAgICAgICAgID0gPDE+OwotCQkJcmFzdGVyLW9yZGVy
-ICAgICAgPSA8MD47Ci0JCQlmaWZvLXRoICAgICAgICAgICA9IDwwPjsKKwkJCWFjLWJpYXMJCT0g
-PDI1NT47CisJCQlhYy1iaWFzLWludHJwdAk9IDwwPjsKKwkJCWRtYS1idXJzdC1zegk9IDwxNj47
-CisJCQlicHAJCT0gPDMyPjsKKwkJCWZkZAkJPSA8MHg4MD47CisJCQlzeW5jLWVkZ2UJPSA8MD47
-CisJCQlzeW5jLWN0cmwJPSA8MT47CisJCQlyYXN0ZXItb3JkZXIJPSA8MD47CisJCQlmaWZvLXRo
-CQk9IDwwPjsKIAkJfTsKIAkJZGlzcGxheS10aW1pbmdzIHsKIAkJCTQ4MHgyNzIgewotCQkJCWhh
-Y3RpdmUgICAgICAgICA9IDw0ODA+OwotCQkJCXZhY3RpdmUgICAgICAgICA9IDwyNzI+OwotCQkJ
-CWhiYWNrLXBvcmNoICAgICA9IDw0Mz47Ci0JCQkJaGZyb250LXBvcmNoICAgID0gPDg+OwotCQkJ
-CWhzeW5jLWxlbiAgICAgICA9IDw0PjsKLQkJCQl2YmFjay1wb3JjaCAgICAgPSA8MTI+OwotCQkJ
-CXZmcm9udC1wb3JjaCAgICA9IDw0PjsKLQkJCQl2c3luYy1sZW4gICAgICAgPSA8MTA+OworCQkJ
-CWhhY3RpdmUJCT0gPDQ4MD47CisJCQkJdmFjdGl2ZQkJPSA8MjcyPjsKKwkJCQloYmFjay1wb3Jj
-aAk9IDw0Mz47CisJCQkJaGZyb250LXBvcmNoCT0gPDg+OworCQkJCWhzeW5jLWxlbgk9IDw0PjsK
-KwkJCQl2YmFjay1wb3JjaAk9IDwxMj47CisJCQkJdmZyb250LXBvcmNoCT0gPDQ+OworCQkJCXZz
-eW5jLWxlbgk9IDwxMD47CiAJCQkJY2xvY2stZnJlcXVlbmN5ID0gPDkwMDAwMDA+OwotCQkJCWhz
-eW5jLWFjdGl2ZSAgICA9IDwwPjsKLQkJCQl2c3luYy1hY3RpdmUgICAgPSA8MD47CisJCQkJaHN5
-bmMtYWN0aXZlCT0gPDA+OworCQkJCXZzeW5jLWFjdGl2ZQk9IDwwPjsKIAkJCX07CiAJCX07CiAJ
-fTsKQEAgLTcxMSw1ICs3MTEsNSBAQAogfTsKIAogJmxjZGMgewotICAgICAgc3RhdHVzID0gIm9r
-YXkiOworCXN0YXR1cyA9ICJva2F5IjsKIH07Ci0tIAoxLjkuMQoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wednesday, August 31, 2016 3:07:00 PM CEST Krzysztof Kozlowski wrote:
+> 
+> Ok, sounds reasonable. I want to convert also older platforms S3C (drive
+> strengths and pull up/down differ) and arm64 SoC: Exynos7. For the
+> latter the problem is there is no common place for sharing DTS, except
+> the headers. However this does not really belong to headers. I guess
+> some level of duplication might be still exist.
+
+We have stuff in the headers that belongs way less there, so I wouldn't
+mind, but having a separate set of definitions for arm64 also isn't
+a problem at all.
+ 
+> > I think overall, a better solution would have been to define the
+> > constants globally (shared with non-exynos) to start with,
+> > and have the driver translate generic numbers into vendor
+> > specific ones. Obviously it's too late for that now.
+> 
+> We could extend driver by adding new bindings accepting generic numbers
+> (and still backward compatible) but this looks like an overkill.
+
+Agreed, that would only make things more confusing, not less.
+
+	Arnd
