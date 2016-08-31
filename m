@@ -1,47 +1,48 @@
-From: jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org
-Subject: [PATCH v2 0/7] dts: sun8i: add extra uart/i2c to H3
-Date: Wed, 31 Aug 2016 21:30:51 +0200
-Message-ID: <1472671858-29220-1-git-send-email-jorik@kippendief.biz>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
+From: jorik@kippendief.biz
+Subject: [PATCH v2 1/7] dts: sun8i-h3: add pinmux definitions for uart2/uart3
+Date: Wed, 31 Aug 2016 21:30:52 +0200
+Message-ID: <1472671858-29220-2-git-send-email-jorik@kippendief.biz>
+References: <1472671858-29220-1-git-send-email-jorik@kippendief.biz>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1472671858-29220-1-git-send-email-jorik@kippendief.biz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Jorik Jonker <jorik@kippendief.biz>
 List-Id: devicetree@vger.kernel.org
 
-From: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
+From: Jorik Jonker <jorik@kippendief.biz>
 
-This is v2 of my patch series. Just after sending I noticed the interrupts
-of i2c1 were too liberally copy/paste'd. This is fixed in v2.
+This adds pinmux definitions for uarts 2 and 3 on H3 boards
 
-This series is a follow-up to Martin Ayotte's efforts to add additional UARTS
-and I2C ports to the AllWinner H3 SoC DTS files. In this series I explicitly
-leave out i2c2, since this is not broken out on my boards, so I cannot verify if
-it actually works.
+Signed-off-by: Jorik Jonker <jorik@kippendief.biz>
+---
+ arch/arm/boot/dts/sun8i-h3.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-After the patch, one enables for example uart1 on a opi+ like this from u-boot:
- => fdt set /soc/serial@01c28400 status okay
-
-Regards,
-Jorik
-
-Jorik Jonker (7):
-  dts: sun8i-h3: add pinmux definitions for uart2/uart3
-  dts: sun8i-h3: add pinmux definitions for i2c0/i2c1
-  dts: sun8i-h3: add i2c0/i2c1 SoC peripherals
-  dts: sun8i-h3: add UART1-3 to Orange Pi Plus
-  dts: sun8i-h3: add UART1-3 to Orange Pi PC
-  dts: sun8i-h3: add I2C0-1 to Orange Pi Plus
-  dts: sun8i-h3: add I2C0-1 to Orange Pi PC
-
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts   | 25 ++++++++++++++
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 25 ++++++++++++++
- arch/arm/boot/dts/sun8i-h3.dtsi              | 50 ++++++++++++++++++++++++++++
- 3 files changed, 100 insertions(+)
-
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index fdf9fdb..7740748 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -373,6 +373,20 @@
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
++
++			uart2_pins_a: uart2@0 {
++				allwinner,pins = "PA0", "PA1";
++				allwinner,function = "uart2";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart3_pins_a: uart3@0 {
++				allwinner,pins = "PA13", "PA14";
++				allwinner,function = "uart3";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
+ 		};
+ 
+ 		timer@01c20c00 {
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
