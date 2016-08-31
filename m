@@ -1,82 +1,107 @@
-From: David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] drm: implement generic firmware eviction
-Date: Wed, 31 Aug 2016 08:59:09 +0200
-Message-ID: <CANq1E4QMneZt2Uef26Voz-N4BeHkha7niXDMO9GPqJe5zQEDOw@mail.gmail.com>
-References: <20160826000056.12806-1-dh.herrmann@gmail.com> <CAL_Jsq+1MeicZmr+7Q4K6FLnTfD4jBBAQR1KPHMSLfNNUe4ENw@mail.gmail.com>
- <CANq1E4Shy1+rQsshWxeFRhFvuAg1sB3ffnVT7hoMZSjZAR=yuQ@mail.gmail.com>
- <CAL_JsqKOOExaBcQfzxYyPE-h9qd4E8T+9GOKQGvXpuNSaObxoA@mail.gmail.com>
- <CANq1E4Twr6Uy2QnowV_WP8yz9QymkchnFS1GwFf_FBRcYF6oOQ@mail.gmail.com> <CAL_JsqJuyPW-kPBbiaq2hRyMN0CBY5UXiUOxHR7GYkjDQodAfA@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: wheat: add SDHI0 support
+Date: Wed, 31 Aug 2016 09:06:34 +0200
+Message-ID: <CAMuHMdXbVPigVM=ObWY724B6Yf1TFWBn2j9q2RVWse=Z57ovvA@mail.gmail.com>
+References: <34968644.DhifNderY8@wasted.cogentembedded.com> <1659137.gEKJxNrmrk@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJuyPW-kPBbiaq2hRyMN0CBY5UXiUOxHR7GYkjDQodAfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1659137.gEKJxNrmrk-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey Rob!
+Hi Sergei,
 
-On Wed, Aug 31, 2016 at 1:01 AM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Aug 30, 2016 at 4:12 PM, David Herrmann <dh.herrmann-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Currently I see at least 3 paths that might add such nodes:
->>
->>  - of_platform_populate()
+On Wed, Aug 31, 2016 at 12:24 AM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Define the Wheat board dependent  part of  the SDHI0 (connected to the
+> micro-SD slot)  device node along with the necessary voltage regulator.
 >
-> If we assume the node is only under chosen, then that would require a
-> call to of_platform_populate with /chosen as the root which shouldn't
-> happen. More generally the assumption is of_platform_populate is only
-> called once from for the root node and only on sub-trees by the driver
-> of sub-tree's root device.
-
-I see.
-
->>  - of_node_attach() (via the notifier)
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 >
-> A node getting attached would be harmless. Nothing really would happen
-> until a handler calls of_platform_populate. So this is the same as the
-> 1st case.
+> ---
+> This patch is against the 'renesas-devel-20160830-v4.8-rc4' of Simon Horman's
+> 'renesas.git' repo plus the CAN patch posted yesterday.
+> Starting with this patch, SMSC LAN89218 Ethernet chip starts to misbehave on my
+> board...
 
-drivers/of/platform.c has a notifier callback and registers the
-platform devices when added. It has a check that the parent is a
-populated bus, which I guess is what you refer to?
+Are GP11_11 or GP11_12 connected to the Ethernet chip?
+Does the misbehaving go away if you drop
+  - cd-gpios?
+  - The regulator?
+  - sdhi0-pins (there may be a bug in the pfc register bit definitions)?
 
->>  - simplefb_init()
+>  arch/arm/boot/dts/r8a7792-wheat.dts |   26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 >
-> Actually, I'd prefer to move it out of there and into the core. I
-> don't think drivers should look at /chosen and only the core and arch
-> code should. Of course, the only enforcing of that is policy. For
-> overlays though, there's been some discussion on limiting where
-> overlays can be applied.
+> Index: renesas/arch/arm/boot/dts/r8a7792-wheat.dts
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7792-wheat.dts
+> +++ renesas/arch/arm/boot/dts/r8a7792-wheat.dts
+> @@ -11,6 +11,7 @@
 >
->> Should I just ignore anything but simplefb_init()? I understand that
->> it's the only one used by normal code-paths, but isn't it kinda ugly
->> to silently introduce race conditions if a node just happens to be
->> introduced via one of the other methods? Or are errors in the DT not
->> meant to be caught?
+>  /dts-v1/;
+>  #include "r8a7792.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
 >
-> In general there's no limit to how wrong a DT could be. I could write
-> a DT that causes every DT enabled driver in the kernel to probe (that
-> would be an interesting test case). The kernel is limited in knowing
-> what is correct, and the whole point of DT is to move that information
-> out of the kernel.  This is case is just one compatible string out of
-> thousands and location in the tree is just one thing to check.
+>  / {
+>         model = "Wheat";
+> @@ -54,6 +55,17 @@
+>                 pinctrl-0 = <&lan89218_pins>;
+>                 pinctrl-names = "default";
+>         };
+> +
+> +       vcc_sdhi0: regulator-vcc-sdhi0 {
+> +               compatible = "regulator-fixed";
+> +
+> +               regulator-name = "SDHI0 Vcc";
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+> +
+> +               gpio = <&gpio11 12 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +       };
+>  };
 >
-> This is a major reason why there is not yet a userspace interface for
-> applying DT overlays as who knows what random crap could be in the DT.
-> We're nervous about what could happen from frying h/w to creating
-> security holes. Evidently the ACPI folks were not so nervous and added
-> an interface.
+>  &extal_clk {
+> @@ -86,6 +98,11 @@
+>                 groups = "can1_data";
+>                 function = "can1";
+>         };
+> +
+> +       sdhi0_pins: sdhi0 {
+> +               groups = "sdhi0_data4", "sdhi0_ctrl";
+> +               function = "sdhi0";
+> +       };
+>  };
+>
+>  &scif0 {
+> @@ -108,3 +125,12 @@
+>
+>         status = "okay";
+>  };
+> +
+> +&sdhi0 {
+> +       pinctrl-0 = <&sdhi0_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       vmmc-supply = <&vcc_sdhi0>;
+> +       cd-gpios = <&gpio11 11 GPIO_ACTIVE_LOW>;
+> +       status = "okay";
+> +};
 
-I see. Thanks a lot for the clarifications! I will put the
-of_platform_device_destroy() right next to the x86 handler, making
-sure it is properly locked. I'm not so sure about the of_chosen
-instantiation, though. x86 has the instantiation in
-arch/x86/kernel/sysfb_simplefb.c, so maybe an equivalent for arm would
-be fine?
+Gr{oetje,eeting}s,
 
-Thanks
-David
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
