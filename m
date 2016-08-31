@@ -1,63 +1,72 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v4 0/2] Add support for Smart Battery System Manager
-Date: Wed, 31 Aug 2016 17:10:44 +0200
-Message-ID: <20160831151044.xftg6k5f66n53jem@earth>
-References: <1bIiDr-0004G1-0P>
- <1472156461-25180-1-git-send-email-karl-heinz@schneider-inet.de>
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] [v9] net: emac: emac gigabit ethernet controller driver
+Date: Wed, 31 Aug 2016 10:11:17 -0500
+Message-ID: <57C6F395.1030904@codeaurora.org>
+References: <1472161143-26417-1-git-send-email-timur@codeaurora.org>
+ <20160831150043.GA575@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jv7h5xtxyz5e2qhv"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1472156461-25180-1-git-send-email-karl-heinz@schneider-inet.de>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Peter Rosin <peda@axentia.se>, Phil Reid <preid@electromag.com.au>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160831150043.GA575@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Rob Herring wrote:
 
---jv7h5xtxyz5e2qhv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>> +		internal-phy = <&emac_sgmii>;
+>
+> Can't this use the standard generic phy binding (i.e. 'phys'). It's a
+> bit confusing as there's the ethernet phy binding (phy-handle) and the
+> generic one.
 
-Hi,
+It's not a generic phy.  It's a funky "internal phy" that differs among 
+SOCs.  I call it the internal phy, but I could use another name. 
+Internally, some people call it the "sgmii phy", but I don't think 
+that's accurate.
 
-On Thu, Aug 25, 2016 at 10:20:59PM +0200, Karl-Heinz Schneider wrote:
-> This patch series adds support for Smart Battery System Manager.
-> A SBSM is a device listening at I2C/SMBus address 0x0a and is capable of
-> communicating up to four I2C smart battery devices. All smart battery
-> devices are listening at address 0x0b, so the SBSM muliplexes between
-> them. The driver makes use of the I2C-Mux framework to allow smart
-> batteries to be bound via device tree, i.e. the sbs-battery driver.
->=20
-> Via sysfs interface the online state and charge type are presented. If
-> the driver is bound as ltc1760 (a Dual Smart Battery System Manager)
-> the charge type can also be changed from trickle to fast.
+I can call it "emac-phy", but I don't know if that's any better.
 
-Driver looks fine to me. Waiting for Rob's ACK on the DT bindings.
+>> +		phy-handle = <&phy0>;
+>
+> This is bit redundant as the phy is the child node. I guess if you had
+> multiple devices on the mdio bus you would need it. I'd drop it if you
+> don't envision needing it and the kernel doesn't require it.
 
--- Sebastian
+That's what I thought to, but without it, of_phy_find_device() won't 
+work.  I need a pointer to the phy node, and I use of_parse_phandle() to 
+get it:
 
---jv7h5xtxyz5e2qhv
-Content-Type: application/pgp-signature; name="signature.asc"
+	struct device_node *phy_np;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+	ret = of_mdiobus_register(mii_bus, np);
+	if (ret) {
+		dev_err(&pdev->dev, "could not register mdio bus\n");
+		return ret;
+	}
 
-iQIcBAEBCgAGBQJXxvNxAAoJENju1/PIO/qa49wP/3McyNdIOMNdL9ZRQkC85q1A
-EPs24jdq5hbqrM8AR1fVTQBE+5FgfB4+lW/W7JRLhRm2+wzDSXg8ZyiWHJO9toiz
-aRNlsOpXwGMxXqmZfkX9LhicKnF8qJ5sQLpP1PIMoBWNoUKwkpGNj7HMH8ZrByOx
-XsYBGeTqMZy8nlD190E2DFktcFQzqfYDeg8QEGOPZyCnP4NrfFlFq5dQ4HAjorM1
-sgXIB4uTlxj5uSnfzFQWbqd2S5PC/mW6XNH4MBpOrqdLjCquvfMqDQR8rX02tDyf
-QoziunCB2/rSDOcOFdnMyfqlveZ1v1teUtPmhOfRDzgGfoLGEBV2jUsu1zlbCBvx
-Zz53zlkwDWBqMQVZz2ICHcefOPfqi92Nhssf/o3WsHDXJ2L/a1XGr1geerI8FD7B
-95XN8nZ4Dvx38mBNugJa20Mp2BmeR+24fAZxMQgHrBCkwAUh8FVXbZfsJiVaH+n7
-JfdAusuVJ6HHpxiSNWeeXRkvG2mmPiqeMlgN+8zK9V+ndAf9L/1296083n74ochB
-40F3IoXIMdxZlgiK3oHwyESkI6ou6hBamFI70aSiKfoVPilKPjKMGu+86TSkqmuO
-vPe7c8RZ4xijBG0GjGYTATnKlnj2WoTAlx/f0f6mQSoYtkW51P18u4KQNylghBqX
-oTbVk894oMY8vLWlj/Hr
-=WrQJ
------END PGP SIGNATURE-----
+	phy_np = of_parse_phandle(np, "phy-handle", 0);
+	adpt->phydev = of_phy_find_device(phy_np);
 
---jv7h5xtxyz5e2qhv--
+>> +
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		phy0: ethernet-phy@0 {
+>
+> It's just an example, but don't we require compatible strings for phys
+> now?
+
+Nope. I had a compatible property, but it broke 
+of_mdiobus_child_is_phy().  I don't want to specify why kind of phy it 
+is.  I want to let phylib figure it out.
+
+-- 
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
+Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
