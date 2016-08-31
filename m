@@ -1,7 +1,7 @@
 From: jorik@kippendief.biz
-Subject: [PATCH v2 7/7] dts: sun8i-h3: add I2C0-1 to Orange Pi PC
-Date: Wed, 31 Aug 2016 21:30:58 +0200
-Message-ID: <1472671858-29220-8-git-send-email-jorik@kippendief.biz>
+Subject: [PATCH v2 5/7] dts: sun8i-h3: add UART1-3 to Orange Pi PC
+Date: Wed, 31 Aug 2016 21:30:56 +0200
+Message-ID: <1472671858-29220-6-git-send-email-jorik@kippendief.biz>
 References: <1472671858-29220-1-git-send-email-jorik@kippendief.biz>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1472671858-29220-1-git-send-email-jorik@kippendief.biz>
@@ -12,33 +12,38 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jorik Jonker <jorik@kippendief.biz>
 
-This board has I2C0-I2C1 exposed on its expansion header.
+This board has UARTS1-3 exposed on its expansion header
 
 Signed-off-by: Jorik Jonker <jorik@kippendief.biz>
 ---
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-index 602b012..6102e37 100644
+index daf50b9..602b012 100644
 --- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
 +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-@@ -108,6 +108,16 @@
+@@ -161,6 +161,21 @@
  	status = "okay";
  };
  
-+&i2c0 {
++&uart1 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
++	pinctrl-0 = <&uart1_pins_a>;
 +};
 +
-+&i2c1 {
++&uart2 {
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
++	pinctrl-0 = <&uart2_pins_a>;
 +};
 +
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart3_pins_a>;
++};
++
+ &usbphy {
+ 	/* USB VBUS is always on */
+ 	status = "okay";
 -- 
 2.7.4
