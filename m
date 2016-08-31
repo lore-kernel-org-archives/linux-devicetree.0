@@ -1,63 +1,86 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v8 10/11] doc: bindings: power: act8945a-charger: Update
- properties.
-Date: Wed, 31 Aug 2016 16:48:18 +0200
-Message-ID: <20160831144818.b3i4fplqsfom7uql@earth>
-References: <1472109599-21915-1-git-send-email-wenyou.yang@atmel.com>
- <1472110826-22328-1-git-send-email-wenyou.yang@atmel.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Applied "mfd: tps65218: add version check to the PMIC probe" to
+ the regulator tree
+Date: Wed, 31 Aug 2016 15:50:18 +0100
+Message-ID: <20160831145018.GO9415@dell>
+References: <1466412218-5906-8-git-send-email-j-keerthy@ti.com>
+ <E1bXZjd-0000YR-7n@debutante>
+ <20160831083114.GP10121@dell>
+ <20160831114105.GH3950@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gk56p4kmqtzymzuq"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1472110826-22328-1-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@atmel.com>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+In-Reply-To: <20160831114105.GH3950-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, russ.dill-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 31 Aug 2016, Mark Brown wrote:
 
---gk56p4kmqtzymzuq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Wed, Aug 31, 2016 at 09:31:14AM +0100, Lee Jones wrote:
+> > On Wed, 10 Aug 2016, Mark Brown wrote:
+> 
+> > > The patch
+> 
+> > >    mfd: tps65218: add version check to the PMIC probe
+> 
+> > Why did you take this patch?
+> 
+> You acked it, that's saying that you're OK with the patch and are
+> expecting someone else to apply it.
 
-Hi,
+No it doesn't, you made that up. :)
 
-On Thu, Aug 25, 2016 at 03:40:26PM +0800, Wenyou Yang wrote:
-> Due the driver improvements, update the properties,
->  - Remove "active-semi,check-battery-temperature" property.
->  - Add the properties, "active-semi,irq_gpio"
->    and "active-semi,lbo-gpios".
->  - As act8945a-charger is regarded as a sub-device, update
->    the compatible and examples.
->=20
-> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+I know when you and some others Ack a patch, that's what you mean, but
+you've been working with me for long enough to know that's not what I
+mean when I Ack a patch.  I do it as an indication that I've reviewed
+the patch and I'm happy with it.  Most MFD patches that have
+dependencies tend to come through the MFD tree.  If that's not the
+case, my Ack is usually backed up with a "I expect this patch to go
+through the X tree".
 
-Thanks, queued.
+> > I now have a merge conflict.
+> 
+> > Did you provide a pull-request that I can use to resolve?
+> 
+> The following changes since commit 29b4817d4018df78086157ea3a55c1d9424a7cfc:
 
--- Sebastian
+Thanks.
 
---gk56p4kmqtzymzuq
-Content-Type: application/pgp-signature; name="signature.asc"
+>   Linux 4.8-rc1 (2016-08-07 18:18:00 -0700)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/tps65218-ver-check
+> 
+> for you to fetch changes up to f11fa1796a4b4f8c6d4ced37e8824276ec57057d:
+> 
+>   mfd: tps65218: add version check to the PMIC probe (2016-08-10 18:21:55 +0100)
+> 
+> ----------------------------------------------------------------
+> mfd: tps65218: Add hardware version check
+> 
+> This will be used for quirks by some function drivers.
+> 
+> ----------------------------------------------------------------
+> Tero Kristo (1):
+>       mfd: tps65218: add version check to the PMIC probe
+> 
+>  drivers/mfd/tps65218.c       | 9 +++++++++
+>  include/linux/mfd/tps65218.h | 1 +
+>  2 files changed, 10 insertions(+)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iQIcBAEBCgAGBQJXxu4yAAoJENju1/PIO/qanxAQAKg69po6yvpFyrK1skP2brrN
-oe0yYUOyje0g5CZo8RsnlmQBcteEBY56PBayGMQ31yV1mn3i0dAr/a+z557+Lp8Z
-RaylErt3t56QGOV4zO5vJEJodEGMDjO9RdJyS3r0fA2IGQb14oAclb5DdTja9PuS
-152auP8i9OnUeT3/PPPIHAUEe4LMHTjhuVtYT1Ra3rD+Movm26j6+t3LCAvXyNj8
-W4pcL0L2Q+PDCyB4F1Q9KipuqW/t0tgVRbY4uiR7Udl0f5hnrTZG/lFx36/DmFab
-R9LuR8I0Oy7zwwKm0LpyMaIQ8bHQwRV92c1cpjvBo7TZJZ+TPSPDG9cZ1bvkmEjp
-uLzAj85NzAx3tlLIFUk2ldwb+8hhz9LfjRsHMsbfFjDnE7+xPQpT+L62mGFa/BwH
-aMItVBM0Fn+hBiQ7uXs6RsxEzC0hQPDqlsl1JEC9n2ECeD826YfZiSPiOCD6t+EX
-Cy5uGkMhwUvUpkD7O/aYKbJYOSJc7SO0IBI0kTsQEUiBJxhtQniWpUFdGmvJW+f9
-IfjFcJMcbTkHThmUwfRCWgxWA+LIwib23KSnon2piP8hN3gvua62rNQ7HtiiVIz9
-RFEWUQBlwsXrjWD0OfhJBCw+emvBC5FQkEOfDpppSNPcUHGy/WtjJVmW41rQDIXL
-9ts+4SY1QPpCKjB9Id8A
-=yCxp
------END PGP SIGNATURE-----
 
---gk56p4kmqtzymzuq--
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
