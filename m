@@ -1,54 +1,44 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v8 09/11] doc: bindings: mfd: act8945a: Update the example
-Date: Wed, 31 Aug 2016 16:50:35 +0200
-Message-ID: <20160831145035.uec3xkdavwuysxsa@earth>
-References: <1472109599-21915-1-git-send-email-wenyou.yang@atmel.com>
- <1472110715-22242-1-git-send-email-wenyou.yang@atmel.com>
+From: Winter Wang <wente.wang-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx6ul-pico-hobbit: add adc081c support
+Date: Wed, 31 Aug 2016 20:26:34 +0800
+Message-ID: <1472646394-23772-1-git-send-email-wente.wang@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yieq3wx66ozfxfhl"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1472110715-22242-1-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Wenyou Yang <wenyou.yang@atmel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+enable ADC081C on pico-hobbit
 
---yieq3wx66ozfxfhl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Change-Id: Ib1575b50dcf32b74abe0ab618ddc55999d19ee47
+Signed-off-by: Winter Wang <wente.wang-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6ul-pico-hobbit.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Hi Lee,
+diff --git a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+index c72ee8b..b400582 100644
+--- a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
++++ b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+@@ -220,6 +220,12 @@
+ 			};
+ 		};
+ 	};
++
++	adc: adc081c {
++		compatible = "ti,adc081c";
++		reg = <0x50>;
++		vref-supply = <&reg_3p3v>;
++	};
+ };
+ 
+ &i2c2 {
+-- 
+1.9.1
 
-On Thu, Aug 25, 2016 at 03:38:35PM +0800, Wenyou Yang wrote:
-> Since the act8945a-charger is regarded as a sub-device and it using
-> "interrupts" property, update the examples section.
-
-I assume, that this will go through your tree.
-
--- Sebastian
-
---yieq3wx66ozfxfhl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJXxu67AAoJENju1/PIO/qabDEP/19Zx98EaQ/yKJHG7KEz0JSZ
-5AA6IC0n7100zzmP45LP+iDz3raJ/t+L7CBQnfXFss9gXJyvaze74KxRmaBnKpBk
-kb7ON0/EHo/ZSl8lG00KJkM8YWyMhYSqHTydiw1v+Kkrn+8FznjVi92heBElh+DN
-x2hG48ICVahm9Ix3rOqBDPCZ+7R8vkzMOxVs3Zo10+YSC4pe2mR7oVbQLQkD/zdH
-d3O+7hLzUu+gq0jR0rADYY72YByOxoFBAxbxVITfDGlP79BtlsZBghDY5doYgNEf
-Fvo/Sg8MQ0LPYYCpdea5XFBaGdGk9V/9kzN6/0Tq/wYWDmA+1KJgoC64Phoj+VtN
-FsHRASw4c4rBRa2d3iQtZNc82liv6tAU62sSb7l4dPfqXZOA6Bsmc+rETDmkHVsJ
-XmFejgwTDt7wqzL8ZDAddify7lcUrrVTJWIvoNBvVfgT3T8ZQjx9ulsDSRFiXumq
-ArQTbkTKPd7LiWzlFaSFDJgC3GgGpW5/ofEjwP7OCZLFNVjK++K1l5qz1kwb0yhn
-BPlrTJGdS4uLpX1yXWMVwztjg3Kz3ltooiMJMqOssTQoDg/LAMNqBnwXToGIjTSC
-u4b5+xMbT+EVaVdywB7sWoLzOj32XVelRKLRyPFJYutG12o9IDz4Fbqxeyr+VqDG
-0MhsreYUFTUTCHOY+dMi
-=7EGn
------END PGP SIGNATURE-----
-
---yieq3wx66ozfxfhl--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
