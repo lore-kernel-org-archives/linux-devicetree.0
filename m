@@ -1,54 +1,62 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] drm/tilcdc: Address LCDC rev 2 color errata +
- other fixes
-Date: Wed, 31 Aug 2016 12:44:49 -0700
-Message-ID: <20160831194449.6zca45xs3eyngpme@atomide.com>
-References: <cover.1472634657.git.jsarha@ti.com>
- <20160831180418.rte4sf5s4llyuuvn@atomide.com>
- <c049825a-0802-0637-3b1e-5290032e6d10@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Ayaka <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Subject: Re: [RESEND PATCH 1/3] ARM: dts: Add TOPEET itop core board SCP package version
+Date: Thu, 1 Sep 2016 03:49:24 +0800
+Message-ID: <647A092E-0CD6-4BA7-B3D8-AFF4BBEB611A@soulik.info>
+References: <a35686c3-294b-a16a-2b0e-0ef2fd460244@kernel.org> <1472648307-3818-1-git-send-email-ayaka@soulik.info> <20160831184226.GA23416@kozik-lap>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain;
+        charset=big5
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <c049825a-0802-0637-3b1e-5290032e6d10-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20160831184226.GA23416@kozik-lap>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> [160831 11:49]:
-> On 08/31/16 21:04, Tony Lindgren wrote:
-> > * Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> [160831 06:19]:
-> >>   ARM: dts: am335x-boneblack: Add blue-and-red-wiring -property to LCDC
-> >>     node
-> >>   ARM: dts: am335x-evm: Add blue-and-red-wiring -property to lcdc node
-> >>   ARM: dts: am335x-evmsk: Whitespace cleanup of lcdc related nodes
-> >>   ARM: dts: am335x-evmsk: Add blue-and-red-wiring -property to lcdc node
-> > 
-> > If some of these dts changes are OK for me to apply separately already,
-> > please let me know.
-> > 
-> > Otherwise I'll tag this thread as read and assume you'll send the dts
-> > changes separately when ready :)
-> > 
+
+
+從我的 iPad 傳送
+
+> Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 於 2016年9月1日 上午2:42 寫道：
 > 
-> According to my plan the drm side changes should go into 4.9.
+>> On Wed, Aug 31, 2016 at 08:58:27PM +0800, Randy Li wrote:
+>> The TOPEET itop is a samsung exnynos 4412 core board, which have
+>> two package versions. This patch add the support for SCP version.
+>> 
+>> Currently supported are USB3503A HSIC, USB OTG, eMMC, rtc and
+>> PMIC. The future features are in the based board. Also MFC and
+>> watchdog have been enabled.
+>> 
+>> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+>> ---
+>> arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi | 490 ++++++++++++++++++++++++
+>> 1 file changed, 490 insertions(+)
+>> create mode 100644 arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
 > 
-> The commit messages and the comments may look confusing without the
-> implementation, but otherwise there should be no harm in applying these
-> already. The new properties in dts simply wont have any effect. On the
-> other hand, not having the dts changes won't have any dramatic effect
-> either. The supported colour formats will just remain in the same
-> incorrect state as they have always been until the dts changes are
-> there. So what ever is more convenient for you.
+> You are not making the review process easier... I asked for:
+> 1. Not chaining the consecutive versions of patchset to the previous
+> ones. But now you removed chain replies totally (also from patches).
+> 2. Versioning all patches.... but this is a resend of v1?
+> 
+> The changelog and cover letters disappeared...
+> 
+> Please, make it simple:
+> [PATCH v5 0/3] ARM: dts: exynos: some cover letter etc etc
+>  \---[PATCH v5 1/3] ARM: dts: exynos: Add TOPEET itop core board SCP
+>  \---[PATCH v5 2/3] ARM: dts: exynos: something more
+>  \---[PATCH v5 3/3] ARM: dts: exynos: something even more
+> 
+> git format-patch and git send-email do this by default. In every
+> sensible mail program this looks like that and is easy to read.
+I see, sir. I misunderstand your order before(English is not my native). And thank you for you patient guide. I would resend in the morning.
+> 
+> I don't have a clue what happened to these patches and what is current
+> status...
+> 
+> Best regards,
+> Krzysztof
 
-OK well please ping me or resend just the dts changes once the driver
-changes are queued. Probably safer to wait a bit in case things still
-change.
-
-Thanks,
-
-Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
