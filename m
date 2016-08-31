@@ -1,65 +1,50 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [PATCH v8 01/18] remoteproc: st_slim_rproc: add a slimcore rproc
-	driver
-Date: Wed, 31 Aug 2016 12:11:36 +0100
-Message-ID: <20160831111136.GA16490@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1472223413-7254-1-git-send-email-peter.griffin@linaro.org>
-	<1472223413-7254-2-git-send-email-peter.griffin@linaro.org>
-	<20160830123453.GG10121@dell> <20160830165409.GM15161@tuxbot>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 1/3] mfd: lp873x: Add lp873x PMIC support
+Date: Wed, 31 Aug 2016 12:16:04 +0100
+Message-ID: <20160831111604.GG27357@dell>
+References: <1470977889-27991-1-git-send-email-j-keerthy@ti.com>
+ <1470977889-27991-2-git-send-email-j-keerthy@ti.com>
+ <20160831075633.GO10121@dell>
+ <c54c042b-1661-07a4-53f9-c67550a41e68@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <virtualization-bounces@lists.linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160830165409.GM15161@tuxbot>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
-List-Post: <mailto:virtualization@lists.linux-foundation.org>
-List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
-Sender: virtualization-bounces@lists.linux-foundation.org
-Errors-To: virtualization-bounces@lists.linux-foundation.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, airlied@linux.ie, dmaengine@vger.kernel.org, dan.j.williams@intel.com, virtualization@lists.linux-foundation.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <c54c042b-1661-07a4-53f9-c67550a41e68@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <a0393675@ti.com>
+Cc: Keerthy <j-keerthy@ti.com>, broonie@kernel.org, linus.walleij@linaro.org, linux-omap@vger.kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Wed, 31 Aug 2016, Keerthy wrote:
+> On Wednesday 31 August 2016 01:26 PM, Lee Jones wrote:
+> > On Fri, 12 Aug 2016, Keerthy wrote:
+> > 
+> > > The LP873X chip is a power management IC for Portable Navigation Systems
+> > >     and Tablet Computing devices. It contains the following components:
+> > > 
+> > >      - Regulators.
+> > >      - Configurable General Purpose Output Signals(GPO).
 
-On Tue, 30 Aug 2016, Bjorn Andersson wrote:
+[...]
 
-> On Tue 30 Aug 05:34 PDT 2016, Lee Jones wrote:
+> > > +static const struct i2c_device_id lp873x_id_table[] = {
+> > > +	{ "lp873x", LP873X },
+> > > +	{ },
+> > > +};
+> > > +MODULE_DEVICE_TABLE(i2c, lp873x_id_table);
+> > 
+> > Don't set the ID in this table.
 > 
-> Thanks for your review Lee.
-> 
-> > On Fri, 26 Aug 2016, Peter Griffin wrote:
-> [..]
-> > > diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> > > index 1a8bf76a..06765e0 100644
-> > > --- a/drivers/remoteproc/Kconfig
-> > > +++ b/drivers/remoteproc/Kconfig
-> > > @@ -100,4 +100,12 @@ config ST_REMOTEPROC
-> > >  	  processor framework.
-> > >  	  This can be either built-in or a loadable module.
-> > >  
-> > > +config ST_SLIM_REMOTEPROC
-> > > +	tristate "ST Slim remoteproc support"
-> > > +	select REMOTEPROC
-> > > +	help
-> > > +	  Say y here to support firmware loading on IP based around
-> > > +	  the Slim core.
-> > > +	  If unsure say N.
-> 
-> Saw one more thing when browsing through...
-> 
-> As this piece of code doesn't do anything on its own and is going to be
-> selected by the "function driver" I don't think this should be
-> user-selectable.
+> I did not understand this. Could you please elaborate?
+> You mean no need of LP873X can just be a '0' as i am seeing in other mfd
+> drivers?
 
-Applogies, I believe you pointed this out in a previous review, but it seems to
-have slipped through the net. Will fix in the next version.
+Just leave it blank.  No need for the second attribute.
 
-Regards,
-
-Peter.
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
