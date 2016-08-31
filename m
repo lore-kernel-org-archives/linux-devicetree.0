@@ -1,90 +1,51 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 1/4] ARM: dts: sun8i: Add PWM pin in H3
-Date: Wed, 31 Aug 2016 18:20:02 +0200
-Message-ID: <20160831162002.GI14379@lukather>
-References: <20160831082520.25962-1-woogyom.kim@gmail.com>
- <20160831082520.25962-2-woogyom.kim@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: sun8i: enable UART1 for iNet
+ D978 Rev2 board
+Date: Wed, 31 Aug 2016 18:22:40 +0200
+Message-ID: <20160831162240.GJ14379@lukather>
+References: <20160829141832.10566-1-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5LiOUhUlsRX0HDkW"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="I4g3zIzscEHdx6fd"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUMITS7AKGQEOFFAV7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20160831082520.25962-2-woogyom.kim@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <woogyom.kim@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20160829141832.10566-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---5LiOUhUlsRX0HDkW
-Content-Type: text/plain; charset=us-ascii
+--I4g3zIzscEHdx6fd
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi Milo,
+On Mon, Aug 29, 2016 at 10:18:32PM +0800, Icenowy Zheng wrote:
+> UART1 is connected to the bluetooth part of RTL8723BS WiFi/BT combo card
+> on iNet D978 Rev2 board.
+> 
+> Enable the UART1 to make it possible to use the modified hciattach by
+> Realtek to drive the BT part of RTL8723BS.
+> 
+> On the board no r_uart pins are found now (the onboard RX/TX pins are
+> wired to PF2/PF4, which is muxed with mmc0), so also disabled it.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 
-On Wed, Aug 31, 2016 at 05:25:17PM +0900, Milo Kim wrote:
-> H3 PA5 pin is assigned for single PWM channel.
->=20
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
-> ---
->  arch/arm/boot/dts/sun8i-h3.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3=
-=2Edtsi
-> index fdf9fdb..05d0c4b 100644
-> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> @@ -360,6 +360,13 @@
->  				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
->  			};
-> =20
-> +			pwm0_pin_a: pwm0@0 {
-> +				allwinner,pins =3D "PA5";
-> +				allwinner,function =3D "pwm0";
-> +				allwinner,drive =3D <SUN4I_PINCTRL_10_MA>;
-> +				allwinner,pull =3D <SUN4I_PINCTRL_NO_PULL>;
-> +			};
-> +
-
-Is it used on any boards?
-
-If not, we have the policy of not merging the pinctrl nodes that are
-not used by anyone to avoid bloating the DT for no particular reason.
+I'll make the same comments than in the v2.
+https://www.spinics.net/lists/arm-kernel/msg527001.html
 
 Maxime
 
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---5LiOUhUlsRX0HDkW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXxwOyAAoJEBx+YmzsjxAgZMoP/1O0ZF37IA20Go5n0MZxA/yw
-r86DSQ7NLprXdtaJ8L6C8RrgSruwiPyHlFrPl6i7v4qsxIe8bYungEZhbkQ4jdkJ
-4benjUJIqjB3p/aQUDZKM/ZA82rxO/agyIAbM4Fad3/7UdOulLzUUHizjCQRrqxS
-NWF44R+PI8c6IBMBrBbUadooc17eZ7Xps+P2UUuT5uLJ7AGd6f5bD3qpP2dopx7K
-wXmoElVQp2686IItnVT/BOUWax9c8XEV7tddET0+0TMa4+q2PEPXSTA9BO6UoOn4
-5X7XHuYvSKFL9D4T0oNuIMfIzA8Z9y0HgNa/Y6OwDUwTvp6fLzK2LVNXe2Zoojaq
-aQtu/jwdxHF0qgpGTNe5ZO2P9BxoLlP3jPjJXMW99Y+hKeNielKE8Qs3b29/RvrL
-smok0LTqq2YdfsYdD8aFjISAvo4MoLKbBxRLL5iC8QOCJAFgmdeJ7Ojrn/yFxrNa
-czcvWjFGAgWZ5+CYaBzQNlmje/nkIMsMtcVeojnQ/u19f8hbykD6lNI14OPLm3mK
-kh6X/thuw6pCdngNvIvm1AzkM+9coqBd7j0RYWqXX0nmcemgdhpOxTiDcbe/eHwC
-1UpDL4VeJY/UVOYIOMXuwpChZuEq+OiAKEhefAnHSuE1YFvoH5UaM9L6mFqgL5wH
-O2pUHDeUMtvJgVEPkUaT
-=ZJMN
------END PGP SIGNATURE-----
-
---5LiOUhUlsRX0HDkW--
+--I4g3zIzscEHdx6fd--
