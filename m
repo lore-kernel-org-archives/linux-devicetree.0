@@ -1,147 +1,181 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH v11 3/4] tee: add OP-TEE driver
-Date: Wed, 31 Aug 2016 11:40:20 -0500
-Message-ID: <fe88749e-82c7-c310-b2bc-4e73bf76302b@ti.com>
-References: <1471870856-18684-1-git-send-email-jens.wiklander@linaro.org>
- <1471870856-18684-4-git-send-email-jens.wiklander@linaro.org>
- <050a2ce4-e175-d09e-ddff-3b0cbe766d88@ti.com> <20160831135015.GB25472@ermac>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 0/8] power: add power sequence library
+Date: Wed, 31 Aug 2016 22:28:20 +0530
+Message-ID: <fd94340b-1c1d-2307-7e57-5b05f1655d2c@linaro.org>
+References: <1471252398-957-1-git-send-email-peter.chen@nxp.com>
+ <b1848eb2-9298-9089-ee4d-5356998c6c08@linaro.org>
+ <20160824085335.GB27233@shlinux2> <20160829111045.GB3736@b29397-desktop>
+ <3a45793f-18d9-0688-d2ab-ef79432c473c@linaro.org>
+ <20160831095220.GA11938@b29397-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160831135015.GB25472@ermac>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: valentin.manea@huawei.com, devicetree@vger.kernel.org, javier@javigon.com, emmanuel.michel@st.com, Arnd Bergmann <arnd@arndb.de>, Nishanth Menon <nm@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, jean-michel.delorme@st.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160831095220.GA11938@b29397-desktop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw3-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/31/2016 08:50 AM, Jens Wiklander wrote:
-> On Tue, Aug 30, 2016 at 03:23:24PM -0500, Andrew F. Davis wrote:
->> On 08/22/2016 08:00 AM, Jens Wiklander wrote:
->>> +static struct tee_shm_pool *
->>> +optee_config_shm_ioremap(struct device *dev, optee_invoke_fn *invoke_fn,
->>> +			 void __iomem **ioremaped_shm)
->>> +{
->>> +	struct arm_smccc_res res;
->>> +	struct tee_shm_pool *pool;
->>> +	unsigned long vaddr;
->>> +	phys_addr_t paddr;
->>> +	size_t size;
->>> +	phys_addr_t begin;
->>> +	phys_addr_t end;
->>> +	void __iomem *va;
->>> +	struct tee_shm_pool_mem_info priv_info;
->>> +	struct tee_shm_pool_mem_info dmabuf_info;
->>> +
->>> +	invoke_fn(OPTEE_SMC_GET_SHM_CONFIG, 0, 0, 0, 0, 0, 0, 0, &res);
->>> +	if (res.a0 != OPTEE_SMC_RETURN_OK) {
->>> +		dev_info(dev, "shm service not available\n");
->>> +		return ERR_PTR(-ENOENT);
->>> +	}
->>> +
->>> +	if (res.a3 != OPTEE_SMC_SHM_CACHED) {
->>> +		dev_err(dev, "only normal cached shared memory supported\n");
->>> +		return ERR_PTR(-EINVAL);
->>> +	}
->>> +
->>> +	begin = roundup(res.a1, PAGE_SIZE);
->>> +	end = rounddown(res.a1 + res.a2, PAGE_SIZE);
->>
->> res.a1/2/3 is really hard to review and understand, would it work better
->> to use a union or cast for the output of invoke_fn based on the function
->> type?
->>
->> In the header that defines what the returned info from these calls means
->> add:
->>
->> struct OPTEE_SMC_GET_SHM_CONFIG_RESULT {
->> 	unsigned long status;
->> 	unsigned long start;
->> 	unsigned long size;
->> 	unsigned long settings;
->> };
->>
->> then:
->>
->> union something result;
->>
->> begin = roundup(result.ret.start, PAGE_SIZE);
->> end = rounddown(result.ret.start + result.ret.size, PAGE_SIZE);
->>
->> or similar with just casting to the better named struct type.
-> 
-> optee_smc.h describes what's passed in the registers during an SMC I'd
-> rather not clutter it with structs that doesn't add any information
-> there. I'm not that happy with casting or using unions to alias struct
-> arm_smccc_res either. How about a simple wrapper function for this call
-> to deal with the details instead?
-> 
 
-I think that would be a good idea anyway, for instance, someday if the
-interface changes slightly then you will be able to contain the
-compatibility fixes in the wrapper and not out here in the main driver.
 
->>> +static int optee_remove(struct platform_device *pdev)
->>> +{
->>> +	struct optee *optee = platform_get_drvdata(pdev);
->>> +
->>> +	optee_disable_shm_cache(optee);
->>> +
->>> +	tee_device_unregister(optee->teedev);
->>> +	tee_device_unregister(optee->supp_teedev);
->>> +	tee_shm_pool_free(optee->pool);
->>> +	if (optee->ioremaped_shm)
->>> +		iounmap(optee->ioremaped_shm);
->>> +	optee_wait_queue_exit(&optee->wait_queue);
->>> +	optee_supp_uninit(&optee->supp);
->>> +	mutex_destroy(&optee->call_queue.mutex);
+On Wednesday 31 August 2016 03:22 PM, Peter Chen wrote:
+> On Wed, Aug 31, 2016 at 01:46:30PM +0530, Vaibhav Hiremath wrote:
 >>
->> Can these be reordered to match the reverse of the order they are used
->> in probe?
-> 
-> Not entirely, optee->teedev and optee->supp_teedev can be unregisterted
-> in the reverse order but both has to complete before we can get any
-> further.  I'll add some comments.
-> 
-
-That would be great, thanks.
-
+>> On Monday 29 August 2016 04:40 PM, Peter Chen wrote:
+>>> On Wed, Aug 24, 2016 at 04:53:35PM +0800, Peter Chen wrote:
+>>>> On Tue, Aug 23, 2016 at 04:02:48PM +0530, Vaibhav Hiremath wrote:
+>>>>> On Monday 15 August 2016 02:43 PM, Peter Chen wrote:
+>>>>>> Hi all,
+>>>>>>
+>>>>>> This is a follow-up for my last power sequence framework patch set [1].
+>>>>>> According to Rob Herring and Ulf Hansson's comments[2], I use a generic
+>>>>>> power sequence library for parsing the power sequence elements on DT,
+>>>>>> and implement generic power sequence on library. The host driver
+>>>>>> can allocate power sequence instance, and calls pwrseq APIs accordingly.
+>>>>>>
+>>>>>> In future, if there are special power sequence requirements, the special
+>>>>>> power sequence library can be created.
+>>>>>>
+>>>>>> This patch set is tested on i.mx6 sabresx evk using a dts change, I use
+>>>>>> two hot-plug devices to simulate this use case, the related binding
+>>>>>> change is updated at patch [1/6], The udoo board changes were tested
+>>>>>> using my last power sequence patch set.[3]
+>>>>>>
+>>>>>> Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
+>>>>>> need to power on itself before it can be found by ULPI bus.
+>>>>>>
+>>>>>> [1]http://www.spinics.net/lists/linux-usb/msg142755.html
+>>>>>> [2]http://www.spinics.net/lists/linux-usb/msg143106.html
+>>>>>> [3]http://www.spinics.net/lists/linux-usb/msg142815.html
+>>>>> (Please ignore my response on V2)
+>>>>>
+>>>>> Sorry being so late in the discussion...
+>>>>>
+>>>>> If I am not missing anything, then I am afraid to say that the
+>>>>> generic library
+>>>>> implementation in this patch series is not going to solve many of
+>>>>> the custom
+>>>>> requirement of power on, off, etc...
+>>>>> I know you mentioned about adding another library when we come
+>>>>> across such platforms, but should we not keep provision (or easy
+>>>>> hooks/path)
+>>>>> to enable that ?
+>>>>>
+>>>>> Let me bring in the use case I am dealing with,
+>>>>>
+>>>>>
+>>>>>                                Host
+>>>>>                                 |
+>>>>>                                 V
+>>>>>                             USB port
+>>>>> ------------------------------------------------------------
+>>>>>                                 |
+>>>>>                                 V
+>>>>>                        USB HUB device (May need custom on/off seq)
+>>>>>                                 |
+>>>>>                                 V
+>>>>>                =============================
+>>>>>               |                             |
+>>>>>               V                             V
+>>>>>           Device-1                       Device-2
+>>>>> (Needs special power               (Needs special power
+>>>>>   on/off sequence.                   on/off sequence.
+>>>>>   Also may need custom               Also, may need custom
+>>>>>   sequence for                       sequence for
+>>>>>   suspend/resume)                    suspend/resume)
+>>>>>
+>>>>>
+>>>>> Note: Both Devices are connected to HUB via HSIC and may differ
+>>>>>            in terms of functionality, features they support.
+>>>>>
+>>>>> In the above case, both Device-1 and Device-2, need separate
+>>>>> power on/off sequence. So generic library currently we have in this
+>>>>> patch series is not going to satisfy the need here.
+>>>>>
+>>>>> I looked at all 6 revisions of this patch-series, went through the
+>>>>> review comments, and looked at MMC power sequence code;
+>>>>> what I can say here is, we need something similar to
+>>>>> MMC power sequence here, where every device can have its own
+>>>>> power sequence (if needed).
+>>>>>
+>>>>> I know Rob is not in favor of creating platform device for
+>>>>> this, and I understand his comment.
+>>>>> If not platform device, but atleast we need mechanism to
+>>>>> connect each device back to its of_node and its respective
+>>>>> driver/library fns. For example, the Devices may support different
+>>>>> boot modes, and platform driver needs to make sure that
+>>>>> the right sequence is followed for booting.
+>>>>>
+>>>>> Peter, My apologies for taking you back again on this series.
+>>>>> I am OK, if you wish to address this in incremental addition,
+>>>>> but my point is, we know that the current generic way is not
+>>>>> enough for us, so I think we should try to fix it in initial phase only.
+>>>>>
+>>>> Rob, it seems generic power sequence can't cover all cases.
+>>>> Without information from DT, we can't know which power sequence
+>>>> for which device.
+>>>>
+>>> Vaibhav, do you agree that I create pwrseq library list using postcore_initcall
+>>> for each library, and choose pwrseq library according to compatible
+>>> string first, if there is no compatible string for this library, just
+>>> use generic pwrseq library.
+>>>
+>> Lets hear from MMC folks. Ulf, do you agree on approach
+>> for pwr seq ??
 >>
->>> +	return 0;
->>> +}
->>> +
 >>
->> [snip]
+>> With above approach, I kind of agree on it, but I have couple
+>> of comments,
 >>
->>> +#define OPTEE_MSG_ATTR_CACHE_SHIFT		16
->>> +#define OPTEE_MSG_ATTR_CACHE_MASK		0x7
+>>   - How DTS looks like now ?? Can you put example here ?
+> The dts is the same with current version.
+
+How would consumer driver get the power sequence ?
+You must point to right power sequence driver.
+For example, in the above example, Device-1, should
+get handle to pwrseq-1, and Device-2 to pwrseq-2.
+
+>>   - Should we merge MMC power sequence in next series ?
+>>     We also can take this as an incremental change, to avoid further
+>>     delay :)
+> We had an agreement that keep mmc's pwrseq framework unchanging.
+> Unless Ulf and rob both agree to change.
+
+Why 2 separate approach for same problem ?
+And I see this as possible duplication of code/functionality :)
+
+Rob ??? Ulf ???
+
+>>   - Lets also add suspend/resume callback to struct pwrseq
 >>
->> GENMASK
-> 
-> Do you mean that OPTEE_MSG_ATTR_CACHE_MASK should be defined using the
-> GENMASK() macro? If so I guess I should update OPTEE_MSG_ATTR_TYPE_MASK
-> also.
-> 
+> Why suspend/resume can't do at related driver's suspend/resume API?
 
-Right, I can tell what bits 0x7 mask, but sometimes it's not so easy
-(7F8, etc) so I find it's best to use GENMASKS for all masks so I don't
-have to ever think about it at all.
+Nope...
+The pwrseq library would have taken ownership of resources, so
+related driver cannot suspend the device. Again it is architecture
+specific, but we should have provision to handle this.
 
-Also I like to mask then shift, so it would be:
+The system I am dealing with today, does need suspend/resume
+callback. To be precise, suspend is close to off state for some devices or
+they could enter standby or different low power state, but to do that,
+we need same resource as used for ON/OFF functionality.
 
-#define OPTEE_MSG_ATTR_CACHE_SHIFT	16
-#define OPTEE_MSG_ATTR_CACHE_MASK	GENMASK(18, 16)
-
-Then we can see at a glance the actual bits we are looking for (18-16)
-and verify the shift is the right amount.
 
 Thanks,
-Andrew
+Vaibhav
+>> There are some comments I have on the patches,
+>> I will respond directly on respective patches, it would be useful
+>> for next series.
+>>
+> Thanks.
+>
+
+-- 
+Thanks,
+Vaibhav
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
