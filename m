@@ -1,40 +1,42 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] drm/i2c: tda998x ASoC hdmi-codec support +
- BeagleBoneBlack audio support
-Date: Wed, 31 Aug 2016 13:41:14 +0100
-Message-ID: <20160831124113.GZ5783@n2100.arm.linux.org.uk>
-References: <cover.1470754071.git.jsarha@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/9] ARM: dts: exynos: Add macros for GPIO configuration
+Date: Wed, 31 Aug 2016 14:42:57 +0200
+Message-ID: <28320955.k33BrW2NEN@wuerfel>
+References: <1472645613-5362-1-git-send-email-k.kozlowski@samsung.com> <1472645613-5362-2-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1470754071.git.jsarha-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1472645613-5362-2-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 09, 2016 at 10:00:03PM +0300, Jyri Sarha wrote:
-> Changes since first version [1] of this series:
-> - "drm/i2c: tda998x: Improve tda998x_configure_audio() audio related pdata"
->   - Change audio in tda998x pdata to audio_params to match the naming in
->     private data struct
->   - Skip IEC958_AES2 byte when writing status bytes to registers 
->   - Turn AFMT-macros to enum
->   - include linux/hdmi.h in drm/i2c/tda998x.h
-> - "drm/i2c: tda998x: Register ASoC hdmi-codec and add audio DT binding"
->   - Fix macronaming naming in dt-bindings/display/tda998x.h
->   - Turn AFMT-macros to enum
->   - Add locking to protect access to audio registers from ASoC thread
-> - "dts/am335x-boneblack: SQUASH"
->   - Use corrected macros from dt-bindings/display/tda998x.h
+On Wednesday, August 31, 2016 2:13:25 PM CEST Krzysztof Kozlowski wrote:
+> 
+> +#define PIN_PULL_NONE          0
+> +#define PIN_PULL_DOWN          1
+> +#define PIN_PULL_UP            3
+> +
+> +#define PIN_DRV_LV1            0
+> +#define PIN_DRV_LV2            2
+> +#define PIN_DRV_LV3            1
+> +#define PIN_DRV_LV4            3
+> +
+> +#define PIN_FUNC_INPUT         0
+> +#define PIN_FUNC_OUTPUT                1
+> +#define PIN_FUNC_SPC_2         2
+> +#define PIN_FUNC_SPC_3         3
+> +#define PIN_FUNC_SPC_4         4
+> +#define PIN_FUNC_SPC_5         5
+> +#define PIN_FUNC_SPC_F         0xf
 
-Thanks, series queued.
+Any reason for having a copy in each of those files instead of one
+that is shared across all of them?
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+	Arnd
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
