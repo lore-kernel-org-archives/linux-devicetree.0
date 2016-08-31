@@ -1,162 +1,55 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [RFC PATCH 0/3] ARm64: amlogic: Introduce common GX family dtsi
-Date: Wed, 31 Aug 2016 12:32:42 -0700
-Message-ID: <7hh9a068f9.fsf@baylibre.com>
-References: <1472457371-1305-1-git-send-email-narmstrong@baylibre.com>
-        <CAOQ7t2YGbASh7v25wgDspKNWgFOcRsikJs_WZptn+LkVXmaHig@mail.gmail.com>
-        <2983d731-82fd-63fc-7541-8c1d6a929416@suse.de>
-        <20160829195030.GA10797@localhost>
-        <ca513cb4-34d4-72f9-9e32-7908329243a6@suse.de>
-        <58294020-4c10-5e77-7d0a-b81de4497962@baylibre.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] drm/tilcdc: Address LCDC rev 2 color errata +
+ other fixes
+Date: Wed, 31 Aug 2016 12:44:49 -0700
+Message-ID: <20160831194449.6zca45xs3eyngpme@atomide.com>
+References: <cover.1472634657.git.jsarha@ti.com>
+ <20160831180418.rte4sf5s4llyuuvn@atomide.com>
+ <c049825a-0802-0637-3b1e-5290032e6d10@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <58294020-4c10-5e77-7d0a-b81de4497962@baylibre.com> (Neil
-        Armstrong's message of "Tue, 30 Aug 2016 10:33:19 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Carlo Caione <carlo@caione.org>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic <linux-amlogic@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <c049825a-0802-0637-3b1e-5290032e6d10-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+* Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> [160831 11:49]:
+> On 08/31/16 21:04, Tony Lindgren wrote:
+> > * Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> [160831 06:19]:
+> >>   ARM: dts: am335x-boneblack: Add blue-and-red-wiring -property to LCDC
+> >>     node
+> >>   ARM: dts: am335x-evm: Add blue-and-red-wiring -property to lcdc node
+> >>   ARM: dts: am335x-evmsk: Whitespace cleanup of lcdc related nodes
+> >>   ARM: dts: am335x-evmsk: Add blue-and-red-wiring -property to lcdc node
+> > 
+> > If some of these dts changes are OK for me to apply separately already,
+> > please let me know.
+> > 
+> > Otherwise I'll tag this thread as read and assume you'll send the dts
+> > changes separately when ready :)
+> > 
+> 
+> According to my plan the drm side changes should go into 4.9.
+> 
+> The commit messages and the comments may look confusing without the
+> implementation, but otherwise there should be no harm in applying these
+> already. The new properties in dts simply wont have any effect. On the
+> other hand, not having the dts changes won't have any dramatic effect
+> either. The supported colour formats will just remain in the same
+> incorrect state as they have always been until the dts changes are
+> there. So what ever is more convenient for you.
 
-> On 08/29/2016 10:15 PM, Andreas F=C3=A4rber wrote:
->> Am 29.08.2016 um 21:50 schrieb Carlo Caione:
->>> On 29/08/16 20:38, Andreas F=C3=A4rber wrote:
->>>> Am 29.08.2016 um 10:01 schrieb Carlo Caione:
->>>>> On Mon, Aug 29, 2016 at 9:56 AM, Neil Armstrong <narmstrong@baylibre.=
-com> wrote:
->>>>>> Neil Armstrong (3):
->>>>>>   ARM64: dts: amlogic: Add Meson GX Family common dtsi
->>>>>>   ARM64: dts: amlogic: Switch Meson GXL dtsi to use common GX dtsi
->>>>>>   ARM64: dts: amlogic: Switch Meson GXBB dtsi to use common GX dtsi
->>>>
->>>> Adding an unused .dtsi duplicating GXBB makes me uneasy.
->>>
->>> S905x (GXL) is different from S905 (GXBB), it's unused now but in the
->>> future we can expect something different in the two DTSI.
->>=20
->> Guess I need to be --verbose. ;)
->>=20
->> I meant: After patch 1/3 there is a gx-common.dtsi that duplicates
->> contents of gxbb.dtsi and is not yet #include'd anywhere, i.e., unused.
->>=20
->>>> Any chance we can simplify this to at most two steps?
->>>> 1) Move code from gxbb to gx (1/3 + 3/3)
->>>> 2) Add gxl using gx ("Add basic support for Amlogic S905X" + 2/3)
->>>
->>> fine by me.
->
-> I can merge carlo's GXL support into this patchet.
->
->>>
->>>> Alternatively:
->>>> 1) "Add basic support for Amlogic S905X"
->>>> 2) Factor out common bits (1/3 + 2/3 + 3/3)
->>>
->>> how is this different from this patchset?
->>=20
->> I'm suggesting we do "atomic" move operations, not copy and then remove.
->>=20
->> The difference between my two suggestions is how many and which changes
->> we squash - I do appreciate that it's easy for review as is but what I
->> have in mind is that either we should get this refactoring applied asap
->> (#1 1)) and rebase all pending patches on it, or we may need to rebase
->> the refactoring onto any pending MMC, SDIO, etc. patches, which I feel
->> is safer to do in one big patch (#2 2)) than split over multiple ones.
->> It really depends on the merge order and roadmap you guys have in mind.
->
-> I'm not very convinced about the utility the reduce commits... having a d=
-tsi alone won't arm anyone.
-> Nevertheless, I will squash the two commits.
->
->>=20
->>>> As for bike-shedding, is there a GX family as well or could we drop
->>>> -common? .dtsi is always something common - compare Exynos or i.MX.
->>>> Since there are meson8b and meson8 I was anticipating that after gxbb
->>>> would come gx, not gxl.
->>>
->>> AFAIK we have:
->>> - GXBB
->>> - GXL
->>> - GXM
->>> - GXTVBB
->>>
->>>> Do you know what the L in GXL is for? Should we consider renaming gxbb
->>>> to gxb, and then also insert -s905 as suggested by Kevin, for symmetry?
->>>
->>> Yes, that make sense.
->
-> As Amlogic told us, we have at least two families :
->  - GXBB with the S905
->  - GXL with the S905D and S905X
->
-> The GXL and GXBB families will share a lot, except the clocks tree, pinct=
-rl registers, USB IP versions and at least ethernet PHY handling.
->
-> But the two GXL SoCs will still share a lot, maybe everything, we are not=
- sure for now.
->
-> In the Amlogic SDK kernel, we can see more families :
->  - GXM seems to be the S912 since it has two clusters of 4xA53, but looks=
- identical to GXL for pinctrl and clocks
->  - GXTVBB looking at the Amlogic SDK it could be a GXBB variant with a di=
-fferent GPU (t83x instead of mali450), pinctrl and clocks
->
-> In their SDK, there is a single GXL pinctrl and clock driver for GXL and =
-GXM.
->
-> Taking in account all the boards, families and SoCs, we should have the f=
-ollowing:
-> meson-gx-common.dtsi
-> =E2=94=9C=E2=94=80=E2=94=80 meson-gxbb-s905.dtsi
-> =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 meson-gxbb-s905-odroidc2.dts
-> =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 meson-gxbb-s905-p20x.dtsi
-> =E2=94=82       =E2=94=9C=E2=94=80=E2=94=80 meson-gxbb-s905-p200.dts
-> =E2=94=82       =E2=94=94=E2=94=80=E2=94=80 meson-gxbb-s905-p201.dts
-> =E2=94=9C=E2=94=80=E2=94=80 meson-gxl.dtsi
-> =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 meson-gxl-s905d.dtsi
-> =E2=94=82   =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 meson-gxl-s905d-p23x.=
-dts
-> =E2=94=82   =E2=94=82       =E2=94=9C=E2=94=80=E2=94=80 meson-gxl-s905d-p=
-230.dts
-> =E2=94=82   =E2=94=82       =E2=94=94=E2=94=80=E2=94=80 meson-gxl-s905d-p=
-231.dts
-> =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 meson-gxl-s905x.dtsi
-> =E2=94=82       =E2=94=94=E2=94=80=E2=94=80 meson-gxl-s905x-p212.dts
-> =E2=94=94=E2=94=80=E2=94=80 meson-gxm-s912.dtsi
->     =E2=94=94=E2=94=80=E2=94=80 meson-gxm-s912-q20x.dtsi
->         =E2=94=9C=E2=94=80=E2=94=80 meson-gxm-s912-q200.dts
->         =E2=94=94=E2=94=80=E2=94=80 meson-gxm-s912-q201.dts
->
-> But since GXBB will only be S905, we can drop the S905 naming and keep wh=
-at is already upstream,
-> then GXM won't happen until a certain time so I plan to push the followin=
-g :
->
-> meson-gx-common.dtsi
+OK well please ping me or resend just the dts changes once the driver
+changes are queued. Probably safer to wait a bit in case things still
+change.
 
-nit: drop the -common, as suggested by Andreas since it's kidna
-redundant since it's a .dtsi.
+Thanks,
 
-> =E2=94=9C=E2=94=80=E2=94=80 meson-gxbb.dtsi
-> =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 meson-gxbb-odroidc2.dts
-> =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 meson-gxbb-p20x.dtsi
-> =E2=94=82       =E2=94=9C=E2=94=80=E2=94=80 meson-gxbb-p200.dts
-> =E2=94=82       =E2=94=94=E2=94=80=E2=94=80 meson-gxbb-p201.dts
-> =E2=94=94=E2=94=80=E2=94=80 meson-gxl.dtsi
->     =E2=94=9C=E2=94=80=E2=94=80 meson-gxl-s905d.dtsi
->     =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 meson-gxl-s905d-p23x.dts
->     =E2=94=82       =E2=94=9C=E2=94=80=E2=94=80 meson-gxl-s905d-p230.dts
->     =E2=94=82       =E2=94=94=E2=94=80=E2=94=80 meson-gxl-s905d-p231.dts
->     =E2=94=94=E2=94=80=E2=94=80 meson-gxl-s905x.dtsi
->         =E2=94=94=E2=94=80=E2=94=80 meson-gxl-s905x-p212.dts
->
-> But the meson-gxl-s905d.dtsi, meson-gxl-s905x.dtsi and meson-gxl.dtsi wil=
-l be empty until we push the pinctrl, clock, ethernet PHY and USB nodes for=
- them.
-
-Looks good to me.
-
-Kevin
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
