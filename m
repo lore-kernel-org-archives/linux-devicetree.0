@@ -1,107 +1,79 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [RESEND PATCH 3/4] arm64: dts: rockchip: support gmac for rk3399
-Date: Wed, 31 Aug 2016 13:42:17 -0700
-Message-ID: <CAD=FV=XQX__rFqGLY2U5mPT8WR4P4aW5tbCqFmA+3rZunbzUZQ@mail.gmail.com>
-References: <1472624028-7082-1-git-send-email-wxt@rock-chips.com> <1472624028-7082-4-git-send-email-wxt@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] [v9] net: emac: emac gigabit ethernet controller driver
+Date: Wed, 31 Aug 2016 15:46:27 -0500
+Message-ID: <CAL_Jsq+BtwBtB7Vd8HB+vhucfUmn_0bxRRXmyO13GoCM82LgFg@mail.gmail.com>
+References: <1472161143-26417-1-git-send-email-timur@codeaurora.org>
+ <20160831150043.GA575@rob-hp-laptop> <57C6F395.1030904@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472624028-7082-4-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel@li>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <57C6F395.1030904@codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, Shanker Donthineni <shankerd@codeaurora.org>, Vikram Sethi <vikrams@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-Caesar,
-
-On Tue, Aug 30, 2016 at 11:13 PM, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> This patch adds needed gamc information for rk3399,
-> also support the gmac pd.
+On Wed, Aug 31, 2016 at 10:11 AM, Timur Tabi <timur@codeaurora.org> wrote:
+> Rob Herring wrote:
 >
-> Signed-off-by: Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
+>>> +               internal-phy = <&emac_sgmii>;
+>>
+>>
+>> Can't this use the standard generic phy binding (i.e. 'phys'). It's a
+>> bit confusing as there's the ethernet phy binding (phy-handle) and the
+>> generic one.
 >
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 90 ++++++++++++++++++++++++++++++++
->  1 file changed, 90 insertions(+)
-
-I noticed that your subject for this patch contains "RESEND" and not
-"v2" event though there are changes between this version and the last
-one.  That's really confusing.  This should have been "v2" and the
-next version should be "v3".
-
-
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 32aebc8..abf27a4 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -200,6 +200,26 @@
->                 };
->         };
 >
-> +       gmac: eth@fe300000 {
+> It's not a generic phy.  It's a funky "internal phy" that differs among
+> SOCs.  I call it the internal phy, but I could use another name. Internally,
+> some people call it the "sgmii phy", but I don't think that's accurate.
 
-nit: on rk3288 the node was "ethernet@" instead of "eth@".  Presumably
-"ethernet" is more correct?
+Funky internal PHYs are precisely the types of PHYs this binding is
+for. It is generic in that the type is not defined. It can be USB,
+HDMI, DSI, LVDS, etc.
 
-> +               compatible = "rockchip,rk3399-gmac";
-> +               reg = <0x0 0xfe300000 0x0 0x10000>;
-> +               interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> +               interrupt-names = "macirq";
-> +               clocks = <&cru SCLK_MAC>, <&cru SCLK_MAC_RX>,
-> +                        <&cru SCLK_MAC_TX>, <&cru SCLK_MACREF>,
-> +                        <&cru SCLK_MACREF_OUT>, <&cru ACLK_GMAC>,
-> +                        <&cru PCLK_GMAC>;
-> +               clock-names = "stmmaceth", "mac_clk_rx",
-> +                             "mac_clk_tx", "clk_mac_ref",
-> +                             "clk_mac_refout", "aclk_mac",
-> +                             "pclk_mac";
-> +               power-domains = <&power RK3399_PD_GMAC>;
-> +               resets = <&cru SRST_A_GMAC>;
-> +               reset-names = "stmmaceth";
-> +               rockchip,grf = <&grf>;
-> +               status = "disabled";
-> +       };
-> +
->         sdio0: dwmmc@fe310000 {
->                 compatible = "rockchip,rk3399-dw-mshc",
->                              "rockchip,rk3288-dw-mshc";
-> @@ -611,6 +631,11 @@
->                 status = "disabled";
->         };
 >
-> +       qos_gmac: qos@ffa5c000 {
-> +               compatible = "syscon";
-> +               reg = <0x0 0xffa5c000 0x0 0x20>;
-> +       };
-> +
->         qos_hdcp: qos@ffa90000 {
->                 compatible = "syscon";
->                 reg = <0x0 0xffa90000 0x0 0x20>;
-> @@ -704,6 +729,11 @@
->                         #size-cells = <0>;
+> I can call it "emac-phy", but I don't know if that's any better.
 >
->                         /* These power domains are grouped by VD_CENTER */
-> +                       pd_gmac@RK3399_PD_GMAC {
+>>> +               phy-handle = <&phy0>;
+>>
+>>
+>> This is bit redundant as the phy is the child node. I guess if you had
+>> multiple devices on the mdio bus you would need it. I'd drop it if you
+>> don't envision needing it and the kernel doesn't require it.
+>
+>
+> That's what I thought to, but without it, of_phy_find_device() won't work.
+> I need a pointer to the phy node, and I use of_parse_phandle() to get it:
+>
+>         struct device_node *phy_np;
+>
+>         ret = of_mdiobus_register(mii_bus, np);
+>         if (ret) {
+>                 dev_err(&pdev->dev, "could not register mdio bus\n");
+>                 return ret;
+>         }
+>
+>         phy_np = of_parse_phandle(np, "phy-handle", 0);
 
-RK3399_PD_GMAC is not in VD_CENTER but in VD_LOGIC, right?  ...so this
-should move.
+You can just as easily find the child node called ethernet-phy.
 
-> +                               reg = <RK3399_PD_GMAC>;
-> +                               clocks = <&cru ACLK_GMAC>;
-> +                               pm_qos = <&qos_gmac>;
-> +                       };
+>         adpt->phydev = of_phy_find_device(phy_np);
+>
+>>> +
+>>> +               #address-cells = <1>;
+>>> +               #size-cells = <0>;
+>>> +               phy0: ethernet-phy@0 {
+>>
+>>
+>> It's just an example, but don't we require compatible strings for phys
+>> now?
+>
+>
+> Nope. I had a compatible property, but it broke of_mdiobus_child_is_phy().
+> I don't want to specify why kind of phy it is.  I want to let phylib figure
+> it out.
 
-IMHO it would be nice if this were broken into two patches.
+Okay, I'll defer to the mdio folks.
 
-1. First patch would be the power domain patch and that could land any
-time.  You wouldn't actually be able to use the gmac but at least
-you'd be able to turn off its power.  This would be a handy patch to
-be able to backport if you happened to not need Ethernet support but
-wanted to save power.
-
-2. Second patch would actually add the gmac.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
