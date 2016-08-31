@@ -1,32 +1,75 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/8] arm: orion5x: Add DT include for mv88f5181
-Date: Wed, 31 Aug 2016 10:15:27 -0500
-Message-ID: <20160831151527.GA12171@rob-hp-laptop>
-References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
- <1472203264-21089-1-git-send-email-jm@lentin.co.uk>
- <1472203264-21089-6-git-send-email-jm@lentin.co.uk>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD, GPIO and Regulator due
+ for the v4.9 merge window
+Date: Wed, 31 Aug 2016 16:21:09 +0100
+Message-ID: <20160831152109.GQ9415@dell>
+References: <1472633892-8261-1-git-send-email-j-keerthy@ti.com>
+ <20160831122435.GD9415@dell>
+ <8e1378ce-b757-39f9-7c36-707f2d9db21e@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1472203264-21089-6-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <8e1378ce-b757-39f9-7c36-707f2d9db21e@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Keerthy <a0393675@ti.com>
+Cc: Keerthy <j-keerthy@ti.com>, broonie@kernel.org, linus.walleij@linaro.org, linux-omap@vger.kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 26, 2016 at 10:21:01AM +0100, Jamie Lentin wrote:
-> Common definitions for the SoC for board definitions to use.
-> 
-> Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-> ---
->  .../bindings/arm/marvell/marvell,orion5x.txt       |  1 +
->  arch/arm/boot/dts/orion5x-mv88f5181.dtsi           | 49 ++++++++++++++++++++++
->  2 files changed, 50 insertions(+)
->  create mode 100644 arch/arm/boot/dts/orion5x-mv88f5181.dtsi
+On Wed, 31 Aug 2016, Keerthy wrote:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On Wednesday 31 August 2016 05:54 PM, Lee Jones wrote:
+> > Enjoy!
+> 
+> Thanks! Just curious to know where to pull the below patch from:
+> 
+> https://patchwork.kernel.org/patch/9266665/
+> 
+> I checked in couple of other branches in your tree could not find the above
+> patch.
+
+The name has changed.  Pull my MFD branch and look for:
+
+  ea7f225 Documentation: mfd: Add DT bindings for the LP873X
+
+> > The following changes since commit 694d0d0bb2030d2e36df73e2d23d5770511dbc8d:
+> > 
+> >   Linux 4.8-rc2 (2016-08-14 19:11:36 -0700)
+> > 
+> > are available in the git repository at:
+> > 
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-gpio-regulator-v4.9
+> > 
+> > for you to fetch changes up to f618ed218dc01207882a8f02b1310c7daaf5156a:
+> > 
+> >   regulator: lp873x: Change the MFD config option as per latest naming (2016-08-31 13:20:44 +0100)
+> > 
+> > ----------------------------------------------------------------
+> > Immutable branch between MFD, GPIO and Regulator due for the v4.9 merge window
+> > 
+> > ----------------------------------------------------------------
+> > Keerthy (3):
+> >       mfd: lp873x: Add lp873x PMIC support
+> >       gpio: lp873x: Add support for General Purpose Outputs
+> >       regulator: lp873x: Change the MFD config option as per latest naming
+> > 
+> >  drivers/gpio/Kconfig       |  10 ++
+> >  drivers/gpio/Makefile      |   1 +
+> >  drivers/gpio/gpio-lp873x.c | 193 ++++++++++++++++++++++++++++++++
+> >  drivers/mfd/Kconfig        |  14 +++
+> >  drivers/mfd/Makefile       |   2 +
+> >  drivers/mfd/lp873x.c       |  99 +++++++++++++++++
+> >  drivers/regulator/Kconfig  |   2 +-
+> >  include/linux/mfd/lp873x.h | 269 +++++++++++++++++++++++++++++++++++++++++++++
+> >  8 files changed, 589 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/gpio/gpio-lp873x.c
+> >  create mode 100644 drivers/mfd/lp873x.c
+> >  create mode 100644 include/linux/mfd/lp873x.h
+> > 
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
