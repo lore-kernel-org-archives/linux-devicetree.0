@@ -1,55 +1,41 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 0/9] ARM: dts: exynos: Use macros for GPIO to make it more
- readable
-Date: Wed, 31 Aug 2016 14:40:52 +0200
-Message-ID: <9c17ea4e-780e-2e1b-4c97-40399c8e3086@osg.samsung.com>
-References: <1472645613-5362-1-git-send-email-k.kozlowski@samsung.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] drm/i2c: tda998x ASoC hdmi-codec support +
+ BeagleBoneBlack audio support
+Date: Wed, 31 Aug 2016 13:41:14 +0100
+Message-ID: <20160831124113.GZ5783@n2100.arm.linux.org.uk>
+References: <cover.1470754071.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1472645613-5362-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1470754071.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+On Tue, Aug 09, 2016 at 10:00:03PM +0300, Jyri Sarha wrote:
+> Changes since first version [1] of this series:
+> - "drm/i2c: tda998x: Improve tda998x_configure_audio() audio related pdata"
+>   - Change audio in tda998x pdata to audio_params to match the naming in
+>     private data struct
+>   - Skip IEC958_AES2 byte when writing status bytes to registers 
+>   - Turn AFMT-macros to enum
+>   - include linux/hdmi.h in drm/i2c/tda998x.h
+> - "drm/i2c: tda998x: Register ASoC hdmi-codec and add audio DT binding"
+>   - Fix macronaming naming in dt-bindings/display/tda998x.h
+>   - Turn AFMT-macros to enum
+>   - Add locking to protect access to audio registers from ASoC thread
+> - "dts/am335x-boneblack: SQUASH"
+>   - Use corrected macros from dt-bindings/display/tda998x.h
 
-On 08/31/2016 02:13 PM, Krzysztof Kozlowski wrote:
-> Hi,
-> 
-> Example:
-> -		samsung,pin-function = <0x2>;
-> -		samsung,pin-pud = <0>;
-> -		samsung,pin-drv = <0>;
-> +		samsung,pin-function = <PIN_FUNC_SPC_2>;
-> +		samsung,pin-pud = <PIN_PULL_NONE>;
-> +		samsung,pin-drv = <PIN_DRV_LV1>;
->  
-> This should be just more readable. Especially for drive strenghts which
-> are unobvious and different between some SoCs.
->
+Thanks, series queued.
 
-I agree that's better to have macros for these instead of using magic numbers.
-
-For all the series:
-
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
-> Tested with dtx_diff:
-> for i in dts-old/exynos*dtb; do scripts/dtc/dtx_diff $i dts-new/$(basename $i);  done
->
-
-I've also tested the patches on an Exynos5800 Peach Pi board, and as expected
-everything is working correctly since the compiled DTB is exactly the same.
-
-So for patches 1/9 and 9/9:
-
-Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
-Best regards,
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
