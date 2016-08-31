@@ -1,130 +1,78 @@
-From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Subject: Re: [PATCH v4 4/5] mfd: tps65217: Add power button as subdevice
-Date: Wed, 31 Aug 2016 13:18:31 +0200
-Message-ID: <a1752816-3cee-adb9-79e2-bafce286a5c3@grinn-global.com>
-References: <20160620105056.25843-1-m.niestroj@grinn-global.com>
- <20160620105056.25843-5-m.niestroj@grinn-global.com>
- <c849849f-ba1d-3263-9941-b346ef9eef59@grinn-global.com>
- <20160830090329.GD1661@dell>
- <9fafa9b0-cc45-6fe9-ddb9-5c933064261c@grinn-global.com>
- <20160830095034.GI1661@dell>
- <fe1fd5ea-5fce-61d0-d607-e4d527b51d4c@grinn-global.com>
- <20160831111724.GH27357@dell>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 01/18] remoteproc: st_slim_rproc: add a slimcore rproc
+ driver
+Date: Wed, 31 Aug 2016 12:24:05 +0100
+Message-ID: <20160831112405.GI27357@dell>
+References: <1472223413-7254-1-git-send-email-peter.griffin@linaro.org>
+ <1472223413-7254-2-git-send-email-peter.griffin@linaro.org>
+ <20160830123453.GG10121@dell>
+ <20160830154451.GB22514@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160831111724.GH27357@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20160830154451.GB22514@griffinp-ThinkPad-X1-Carbon-2nd>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: ohad@wizery.com, devicetree@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, kraxel@redhat.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, bjorn.andersson@linaro.org, virtualization@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 31.08.2016 13:17, Lee Jones wrote:
-> On Wed, 31 Aug 2016, Marcin Niestroj wrote:
->
->> On 30.08.2016 11:50, Lee Jones wrote:
->>> On Tue, 30 Aug 2016, Marcin Niestroj wrote:
->>>
->>>> On 30.08.2016 11:03, Lee Jones wrote:
->>>>> On Mon, 29 Aug 2016, Marcin Niestroj wrote:
->>>>>
->>>>>> ping
->>>>>
->>>>> Don't do that!
->>>>>
->>>>> If you think the patch hasn't attracted attention in >2 weeks, then
->>>>> it's probably slipped through the gaps and you need to send a
->>>>> [RESEND].
->>>>
->>>> Clear.
->>>>
->>>>>
->>>>> However ...
->>>>>
->>>>>> On 20.06.2016 12:50, Marcin Niestroj wrote:
->>>>>>> Add tps65217 power buttor subdevice with assigned IRQ resources.
->>>>>>>
->>>>>>> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
->>>>>>> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>>
->>>>> This patch has a maintainer Ack, so why are you pinging?
->>>>
->>>> Because I didn't see it applied anywhere and there were no new
->>>> comments, so I thought it slipped somewhere.
->>>>
->>>> So my question is: what happens with the patch after maintainer Ack?
->>>> Are we still waiting for some comments from the community? Do I still
->>>> need to worry, that the patch might slipped? What is author's role now?
->>>
->>> Since you sent the patches as a set, it is assumed there are some
->>> dependencies between them, or they are at least in some way related.
->>> To that end, it is normal for Maintainers (especially for me as the
->>> MFD Maintainer, since there often some complex ties into the leaf
->>> driver's changes) to wait until *all* of the patches have either been
->>> accepted or have acquired an Ack of their own to proceed.
->>>
->>> I believe we are still waiting on other patches to be reviewed, no?
->>
->> I've just noticed, that patch 5 was only partially Acked.
->>
->> I will send a RESEND. However patch 2 is already in mainline. Should I
->> contain this patch or remove it from the patch set? Additionally
->> patch 3 has been queued into power-supply's -next branch.
->
-> You should rebase the set and drop any patches which have already been
-> applied.
-
-So include or drop patch 3?
-
->
->>>>>>> ---
->>>>>>> Depends on patch 1 in series
->>>>>>>
->>>>>>> Changes v1 -> v4: none
->>>>>>>
->>>>>>>  drivers/mfd/tps65217.c | 10 ++++++++++
->>>>>>>  1 file changed, 10 insertions(+)
->>>>>>>
->>>>>>> diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
->>>>>>> index 41b5d59..57c8741 100644
->>>>>>> --- a/drivers/mfd/tps65217.c
->>>>>>> +++ b/drivers/mfd/tps65217.c
->>>>>>> @@ -38,6 +38,10 @@ static struct resource charger_resources[] = {
->>>>>>>  	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_USB, "USB"),
->>>>>>>  };
->>>>>>>
->>>>>>> +static struct resource pb_resources[] = {
->>>>>>> +	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_PB, "PB"),
->>>>>>> +};
->>>>>>> +
->>>>>>>  struct tps65217_irq {
->>>>>>>  	int mask;
->>>>>>>  	int interrupt;
->>>>>>> @@ -122,6 +126,12 @@ static struct mfd_cell tps65217s[] = {
->>>>>>>  		.resources = charger_resources,
->>>>>>>  		.of_compatible = "ti,tps65217-charger",
->>>>>>>  	},
->>>>>>> +	{
->>>>>>> +		.name = "tps65217-pwrbutton",
->>>>>>> +		.num_resources = ARRAY_SIZE(pb_resources),
->>>>>>> +		.resources = pb_resources,
->>>>>>> +		.of_compatible = "ti,tps65217-pwrbutton",
->>>>>>> +	},
->>>>>>>  };
->>>>>>>
->>>>>>>  static irqreturn_t tps65217_irq_thread(int irq, void *data)
->>>>>>>
->>>>>>
->>>>>
->>>>
->>>
->>
->
-
--- 
-Marcin Niestroj
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCAzMCBBdWcgMjAxNiwgUGV0ZXIgR3JpZmZpbiB3cm90ZToKPiBPbiBUdWUsIDMwIEF1
+ZyAyMDE2LCBMZWUgSm9uZXMgd3JvdGU6Cj4gPiBPbiBGcmksIDI2IEF1ZyAyMDE2LCBQZXRlciBH
+cmlmZmluIHdyb3RlOgo+ID4gCj4gPiA+IHNsaW0gY29yZSBpcyB1c2VkIGFzIGEgYmFzaXMgZm9y
+IG1hbnkgSVBzIGluIHRoZSBTVGkKPiA+ID4gY2hpcHNldHMgc3VjaCBhcyBmZG1hIGFuZCBkZW11
+eC4gVG8gYXZvaWQgZHVwbGljYXRpbmcKPiA+ID4gdGhlIGVsZiBsb2FkaW5nIGNvZGUgaW4gZWFj
+aCBkZXZpY2UgZHJpdmVyIGEgc2xpbQo+ID4gPiBycHJvYyBkcml2ZXIgaGFzIGJlZW4gY3JlYXRl
+ZC4KPiA+ID4gCj4gPiA+IFRoaXMgZHJpdmVyIGlzIGRlc2lnbmVkIHRvIGJlIHVzZWQgYnkgb3Ro
+ZXIgZGV2aWNlIGRyaXZlcnMKPiA+ID4gc3VjaCBhcyBmZG1hLCBvciBkZW11eCB3aG9zZSBJUCBp
+cyBiYXNlZCBhcm91bmQgYSBzbGltIGNvcmUuCj4gPiA+IFRoZSBkZXZpY2UgZHJpdmVyIGNhbiBj
+YWxsIHNsaW1fcnByb2NfYWxsb2MoKSB0byBhbGxvY2F0ZQo+ID4gPiBhIHNsaW0gcnByb2MgYW5k
+IHNsaW1fcnByb2NfcHV0KCkgd2hlbiBmaW5pc2hlZC4KPiA+ID4gCj4gPiA+IFRoaXMgZHJpdmVy
+IHRha2VzIGNhcmUgb2YgaW9yZW1hcHBpbmcgdGhlIHNsaW0KPiA+ID4gcmVnaXN0ZXJzIChkbWVt
+LCBpbWVtLCBzbGltY29yZSwgcGVyaXBoZXJhbHMpLCB3aG9zZSBvZmZzZXRzCj4gPiA+IGFuZCBz
+aXplcyBjYW4gY2hhbmdlIGJldHdlZW4gSVAncy4gSXQgYWxzbyBvYnRhaW5zIGFuZCBlbmFibGVz
+Cj4gPiA+IGFueSBjbG9ja3MgdXNlZCBieSB0aGUgZGV2aWNlLiBUaGlzIGFwcHJvYWNoIGF2b2lk
+cyBoYXZpbmcKPiA+ID4gYSBkb3VibGUgbWFwcGluZyBvZiB0aGUgcmVnaXN0ZXJzIGFzIHNsaW1f
+cnByb2MgZG9lcyBub3QgcmVnaXN0ZXIKPiA+ID4gaXRzIG93biBwbGF0Zm9ybSBkZXZpY2UuIEl0
+IGFsc28gbWFwcyB3ZWxsIHRvIGRldmljZSB0cmVlCj4gPiA+IGFic3RyYWN0aW9uIGFzIGl0IGFs
+bG93cyB1cyB0byBoYXZlIG9uZSBkdCBub2RlIGZvciB0aGUgd2hvbGUKPiA+ID4gZGV2aWNlLgo+
+ID4gPiAKPiA+ID4gQWxsIG9mIHRoZSBnZW5lcmljIHJwcm9jIGVsZiBsb2FkaW5nIGNvZGUgY2Fu
+IGJlIHJldXNlZCwgYW5kCj4gPiA+IHdlIHByb3ZpZGUgc3RhcnQoKSBzdG9wKCkgaG9va3MgdG8g
+c3RhcnQgYW5kIHN0b3AgdGhlIHNsaW0KPiA+ID4gY29yZSBvbmNlIHRoZSBmaXJtd2FyZSBoYXMg
+YmVlbiBsb2FkZWQuIFRoaXMgaGFzIGJlZW4gdGVzdGVkCj4gPiA+IHN1Y2Nlc3NmdWxseSB3aXRo
+IGZkbWEgZHJpdmVyLgo+ID4gCj4gPiBOaXQuICBJdCB3b3VsZCBiZSBnb29kIHRvIHVzZSBhIGNv
+bnN0YW50IGxpbmUtd3JhcC4KPiA+IAo+ID4gJ00teCBwb3N0LW1vZGUnIHdpbGwgaGVscCB3aXRo
+IHRoaXMuCj4gCj4gQ2FuIHlvdSBwcm92aWRlIHRoZSBtYWdpYyB3aGljaCBtYWtlcyB0aGlzIGhh
+cHBlbiBmb3IgR0lUIGNvbW1pdCBtZXNzYWdlcz8KCkkgdGVuZCB0byBkbyBpdCBtYW51YWxseS4g
+IEhvd2V2ZXIgYSAzIHNlY29uZCBHb29nbGUgc2VhcmNoIHByb2R1Y2VkClswXSwgd2hpY2ggbG9v
+a3MgbGlrZSBpdCBjb3VsZCBiZSBmdW4vdXNlZnVsLgoKWzBdIGh0dHBzOi8vd3d3LmVtYWNzd2lr
+aS5vcmcvZW1hY3MvR2l0CgpbLi4uXQoKPiA+ID4gKyAqIExpY2Vuc2UgdGVybXM6ICBHTlUgR2Vu
+ZXJhbCBQdWJsaWMgTGljZW5zZSAoR1BMKSwgdmVyc2lvbiAyCj4gPiAKPiA+IEFyZSB5b3Ugc3Vy
+ZSBTVCBhcmUgb2theSB3aXRoIHRoZSBzaG9ydGVuZWQgdmVyc2lvbiBvZiB0aGUgR1BMPwo+IAo+
+IERvIHlvdSBtZWFuIHRoZSBiYW5uZXIgc2hvdWxkIGJlIGxpa2UgdGhpcz8KPiAKPiAgKiBUaGlz
+IHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29y
+IG1vZGlmeQo+ICAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGlj
+IExpY2Vuc2UgYXMgcHVibGlzaGVkIGJ5Cj4gICogdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlv
+bjsgZWl0aGVyIHZlcnNpb24gMiBvZiB0aGUgTGljZW5zZSwgb3IKPiAgKiAoYXQgeW91ciBvcHRp
+b24pIGFueSBsYXRlciB2ZXJzaW9uLgoKWWVzLCBleGFjdGx5LgoKWy4uLl0KCj4gPiA+ICsvKiBz
+bGltY29yZSByZWdpc3RlcnMgKi8KPiA+IAo+ID4gV2hhdCdzIGl0IGNhbGxlZD8gc2xpbWNvcmUs
+IHNsaW0gY29yZSwgU1QgU2xpbT8KPiAKPiBJdCBpcyB1c3VhbGx5IHJlZmVycmVkIHRvIGFzIFNM
+SU0gY29yZSwgb3IgU0xJTSBDUFUgaW4gdGhlIHZhcmlvdXMgZnVuY3Rpb25hbAo+IHNwZWNpZmlj
+YXRpb25zLgo+IAo+ID4gCj4gPiBQbGVhc2UgYmUgY29uc2lzdGVudC4gIFVzZSB0aGUgbmFtZSBm
+cm9tIHRoZSBkYXRhc2hlZXQuCj4gCj4gT0suIFRoZSBkYXRhc2hlZXQgaXNuJ3QgY29uc2lzdGVu
+dCBlaXRoZXIsIHNvIHdlIHdpbGwgc2V0dGxlIG9uIFNMSU0gY29yZSBhbmQKPiBTTElNIENQVS4K
+ClBlcmZlY3QuCgotLSAKTGVlIEpvbmVzCkxpbmFybyBTVE1pY3JvZWxlY3Ryb25pY3MgTGFuZGlu
+ZyBUZWFtIExlYWQKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBT
+b0NzCkZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
