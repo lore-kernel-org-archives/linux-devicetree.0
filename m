@@ -1,71 +1,31 @@
-From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] [v9] net: emac: emac gigabit ethernet controller driver
-Date: Wed, 31 Aug 2016 10:11:17 -0500
-Message-ID: <57C6F395.1030904@codeaurora.org>
-References: <1472161143-26417-1-git-send-email-timur@codeaurora.org>
- <20160831150043.GA575@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/8] arm: orion5x: Add DT include for mv88f5181
+Date: Wed, 31 Aug 2016 10:15:27 -0500
+Message-ID: <20160831151527.GA12171@rob-hp-laptop>
+References: <1468679348-10522-1-git-send-email-jm@lentin.co.uk>
+ <1472203264-21089-1-git-send-email-jm@lentin.co.uk>
+ <1472203264-21089-6-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160831150043.GA575@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <1472203264-21089-6-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org
+To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring wrote:
+On Fri, Aug 26, 2016 at 10:21:01AM +0100, Jamie Lentin wrote:
+> Common definitions for the SoC for board definitions to use.
+> 
+> Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+> ---
+>  .../bindings/arm/marvell/marvell,orion5x.txt       |  1 +
+>  arch/arm/boot/dts/orion5x-mv88f5181.dtsi           | 49 ++++++++++++++++++++++
+>  2 files changed, 50 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/orion5x-mv88f5181.dtsi
 
->> +		internal-phy = <&emac_sgmii>;
->
-> Can't this use the standard generic phy binding (i.e. 'phys'). It's a
-> bit confusing as there's the ethernet phy binding (phy-handle) and the
-> generic one.
-
-It's not a generic phy.  It's a funky "internal phy" that differs among 
-SOCs.  I call it the internal phy, but I could use another name. 
-Internally, some people call it the "sgmii phy", but I don't think 
-that's accurate.
-
-I can call it "emac-phy", but I don't know if that's any better.
-
->> +		phy-handle = <&phy0>;
->
-> This is bit redundant as the phy is the child node. I guess if you had
-> multiple devices on the mdio bus you would need it. I'd drop it if you
-> don't envision needing it and the kernel doesn't require it.
-
-That's what I thought to, but without it, of_phy_find_device() won't 
-work.  I need a pointer to the phy node, and I use of_parse_phandle() to 
-get it:
-
-	struct device_node *phy_np;
-
-	ret = of_mdiobus_register(mii_bus, np);
-	if (ret) {
-		dev_err(&pdev->dev, "could not register mdio bus\n");
-		return ret;
-	}
-
-	phy_np = of_parse_phandle(np, "phy-handle", 0);
-	adpt->phydev = of_phy_find_device(phy_np);
-
->> +
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		phy0: ethernet-phy@0 {
->
-> It's just an example, but don't we require compatible strings for phys
-> now?
-
-Nope. I had a compatible property, but it broke 
-of_mdiobus_child_is_phy().  I don't want to specify why kind of phy it 
-is.  I want to let phylib figure it out.
-
--- 
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
-Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
