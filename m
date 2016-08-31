@@ -1,106 +1,56 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 04/19] iommu/of: Introduce iommu_fwspec
-Date: Wed, 31 Aug 2016 18:28:57 +0100
-Message-ID: <20160831172856.GI29505@arm.com>
-References: <cover.1471975357.git.robin.murphy@arm.com>
- <3e8eaf4fd65833fecc62828214aee81f6ca6c190.1471975357.git.robin.murphy@arm.com>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RESEND PATCH 1/2] ARM: dts: dra7: Fix clock data for
+ gmac_gmii_ref_clk_div
+Date: Wed, 31 Aug 2016 20:34:48 +0300
+Message-ID: <232e8fb7-320f-3d64-b1f2-599d53d65291@ti.com>
+References: <20160830145801.10364-1-grygorii.strashko@ti.com>
+ <20160830184158.xydy3ixy7c5b73le@atomide.com>
+ <fd7850dd-b7a2-e6ef-508f-8406c3f2cea9@ti.com>
+ <20160831143928.vxuaznyws2pipohu@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3e8eaf4fd65833fecc62828214aee81f6ca6c190.1471975357.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20160831143928.vxuaznyws2pipohu-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "J.D. Schroeder" <jay.schroeder-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 23, 2016 at 08:05:15PM +0100, Robin Murphy wrote:
-> Introduce a common structure to hold the per-device firmware data that
-> non-architectural IOMMU drivers generally need to keep track of.
-> Initially this is DT-specific to complement the existing of_iommu
-> support code, but will generalise further once other firmware methods
-> (e.g. ACPI IORT) come along.
-> 
-> Ultimately the aim is to promote the fwspec to a first-class member of
-> struct device, and handle the init/free automatically in the firmware
-> code. That way we can have API calls look for dev->fwspec->iommu_ops
-> before falling back to dev->bus->iommu_ops, and thus gracefully handle
-> those troublesome multi-IOMMU systems which we currently cannot. To
-> start with, though, make use of the existing archdata field and delegate
-> the init/free to drivers to allow an incremental conversion rather than
-> the impractical pain of trying to attempt everything in one go.
-> 
-> Suggested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> ---
-> 
-> v5: Fix shocking num_ids oversight.
-> 
->  drivers/iommu/of_iommu.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_iommu.h | 15 ++++++++++++++
->  2 files changed, 67 insertions(+)
-> 
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index 1a65cc806898..bec51eb47b0d 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -219,3 +219,55 @@ static int __init of_iommu_init(void)
->  	return 0;
->  }
->  postcore_initcall_sync(of_iommu_init);
-> +
-> +int iommu_fwspec_init(struct device *dev, struct device_node *iommu_np)
-> +{
-> +	struct iommu_fwspec *fwspec = dev->archdata.iommu;
-> +
-> +	if (fwspec)
-> +		return 0;
-> +
-> +	fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
-> +	if (!fwspec)
-> +		return -ENOMEM;
-> +
-> +	fwspec->iommu_np = of_node_get(iommu_np);
-> +	fwspec->iommu_ops = of_iommu_get_ops(iommu_np);
-> +	dev->archdata.iommu = fwspec;
-> +	return 0;
-> +}
-> +
-> +void iommu_fwspec_free(struct device *dev)
-> +{
-> +	struct iommu_fwspec *fwspec = dev->archdata.iommu;
-> +
-> +	if (fwspec) {
-> +		of_node_put(fwspec->iommu_np);
-> +		kfree(fwspec);
-> +	}
-> +}
-> +
-> +int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids)
-> +{
-> +	struct iommu_fwspec *fwspec = dev->archdata.iommu;
-> +	size_t size;
-> +
-> +	if (!fwspec)
-> +		return -EINVAL;
-> +
-> +	size = offsetof(struct iommu_fwspec, ids[fwspec->num_ids + num_ids]);
-> +	fwspec = krealloc(dev->archdata.iommu, size, GFP_KERNEL);
-> +	if (!fwspec)
-> +		return -ENOMEM;
-> +
-> +	while (num_ids--)
-> +		fwspec->ids[fwspec->num_ids++] = *ids++;
-> +
-> +	dev->archdata.iommu = fwspec;
+On 31/08/16 17:39, Tony Lindgren wrote:
+> * Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> [160830 23:09]:
+>> On 30/08/16 21:41, Tony Lindgren wrote:
+>>> * Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org> [160830 07:58]:
+>>>>
+>>>> Originally this patch was posted (and acked) here
+>>>> https://lkml.org/lkml/2016/4/27/272,
+>>>> but it, unfortunatelly, has never been merged.
+>>>> So re-send + minor subj change.
+>>>
+>>> OK yeah sorry about that. And thanks for the resend. If some patches
+>>> have pending discussion as I tend to tag threads that have pending
+>>> discussion as read and then forget them. And I miss patches in other
+>>> ways too..
+>>>
+>>> Tero, care to take a look and ack?
+>>
+>> For both patches:
+>>
+>> Acked-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+>
+> Thanks applying both into omap-for-v4.9/dt as the Ethernet works
+> currently.
+>
+> Regards,
+>
+> Tony
+>
 
-It might just be me, but I find this really fiddly to read. The fact
-that you realloc the whole fwspec, rather than just the array isn't
-helping, but I also think that while loop would be much better off as
-a for loop, using the index as, well, an index into the ids array and
-fwspec->ids array.
+Yea I think the ethernet clock rate happens to be the same in the 
+existing setup, just the hierarchy is wrong. That is at least what I saw 
+with quick testing.
 
-Will
+-Tero
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
