@@ -1,96 +1,131 @@
-MIME-Version: 1.0
-In-Reply-To: <20160827074012.GA28370@pek-khao-d1>
-References: <1471918019-19472-1-git-send-email-haokexin@gmail.com>
-	<1471918019-19472-4-git-send-email-haokexin@gmail.com>
-	<CAL_JsqK42T1M3MO26p46K0zTuvGUAdMWAf4FHGVpAJgDa+SudQ@mail.gmail.com>
-	<20160827074012.GA28370@pek-khao-d1>
-Date: Mon, 29 Aug 2016 16:08:14 -0500
-Message-ID: <CAL_JsqLtXTSCvHLXUPHKqmk+2fWUhbik2EMNuLuazDyD9WEyhg@mail.gmail.com>
-Subject: Re: [PATCH 3/5] of/platform: introduce a generic way to declare a
- platform bus
-From: Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-To: Kevin Hao <haokexin@gmail.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, Arnd Bergmann <arnd@arndb.de>
+Return-Path: <karl-heinz@schneider-inet.de>
+Message-ID: <1472673151.5102.12.camel@schneider-inet.de>
+Subject: Re: [PATCH v4 1/2] Documentation: Add sbs-manager device tree node
+ documentation
+From: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+Date: Wed, 31 Aug 2016 21:52:31 +0200
+In-Reply-To: <20160831144349.GA18510@rob-hp-laptop>
+References: <1bIiDr-0004G1-0P>
+	 <1472156461-25180-1-git-send-email-karl-heinz@schneider-inet.de>
+	 <1472156461-25180-2-git-send-email-karl-heinz@schneider-inet.de>
+	 <20160831144349.GA18510@rob-hp-laptop>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Peter Rosin <peda@axentia.se>, Phil Reid <preid@electromag.com.au>
 List-ID: <devicetree@vger.kernel.org>
 
-On Sat, Aug 27, 2016 at 2:40 AM, Kevin Hao <haokexin@gmail.com> wrote:
-> On Thu, Aug 25, 2016 at 08:44:56AM -0500, Rob Herring wrote:
->> On Mon, Aug 22, 2016 at 9:06 PM, Kevin Hao <haokexin@gmail.com> wrote:
->> > The specific buses which need to be probed at boot time are different
->> > between platforms. Instead of put all the buses into the default
->> > of_default_bus_match_table[] match tables, this patch introduces a
->> > general way to declare a platform bus.
->>
->> I'd prefer to not do this with linker sections if possible. Doesn't
->> PPC have machine descriptors that you could add the match table to? If
->> that table exists then arch_want_default_of_probe could return a
->> pointer to it.
->
-> Hmm, I thought about adding a match table in ppc_md. But it is very arch
-> specific. I thought maybe other archs also need to probe some arch or even
-> board specific bus, so I introduces these arch independent macros and wish
-> it may be useful for other archs. :-)
+Hi Rob,
 
-The match table ptr coming from ppc_md would be ppc specific, but that would be part of the ppc arch_want_default_of_probe function. Other arches can do it differently.
+Am Mittwoch, den 31.08.2016, 09:43 -0500 schrieb Rob Herring:
+> On Thu, Aug 25, 2016 at 10:21:00PM +0200, Karl-Heinz Schneider wrote:
+> > 
+> > This patch adds device tree documentation for the sbs-manager
+> > 
+> > Reviewed-by: Phil Reid <preid@electromag.com.au>
+> > Signed-off-by: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+> > ---
+> >  .../devicetree/bindings/power/sbs,sbs-manager.txt  | 53
+> > ++++++++++++++++++++++
+> >  1 file changed, 53 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/power/sbs,sbs-
+> > manager.txt b/Documentation/devicetree/bindings/power/sbs,sbs-
+> > manager.txt
+> > new file mode 100644
+> > index 0000000..6b1a87ce
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
+> > @@ -0,0 +1,53 @@
+> > +Binding for sbs-manager
+> > +
+> > +Required properties:
+> > +- compatible: should be "lltc,ltc1760" or use "sbs,sbs-manager" as
+> > fallback.
+> > +- reg: integer, i2c address of the device. Should be <0xa>.
+> What happened to adding Phil's interrupt support into this? You
+> don't 
+> have to add the whole patch, just the binding part. The driver
+> support 
+> can come later.
 
-Now that I've looked more closely, of_platform_populate has more problems being re-entrant 
+Phil revoked his patch. Right now it's not clear how the interrupt/gpio
+solution will look like and if they will need an device tree binding at
+all...
 
->
->>
->> Are there any platforms that work with the default match table?
->
-> Yes, some boards can work with the default match table. But most won't.
->
->> I'd be
->> fine with adding some strings to the default if that helps.
->>
->> { .type = "soc", },
->>
->> device_type is deprecated for FDT, so this shouldn't be needed except
->> for really old stuff.
->>
->> { .compatible = "soc", },
->>
->> Doesn't appear in kernel dts files. Could be out of tree or old ones?
->>
->> { .compatible = "simple-bus" },
->>
->> Already handled.
->>
->> { .compatible = "gianfar" },
->>
->> Seems like the children of this should be probed by the gianfar driver.
->>
->> { .compatible = "gpio-leds", },
->>
->> I don't think this is needed.
->>
->> { .type = "qe", },
->>
->> Again, deprecated.
->>
->> { .compatible = "fsl,qe", },
->>
->> No issue to add this. Though, you could also probe it from mpc85xx_qe_init().
->
-> Do you mean we put all the probe of the specific bus into the corresponding
-> drivers? Yes, if we do so, we probably can shrink the default match table to
-> be something like this:
->         { .compatible = "soc", },
->         { .compatible = "simple-bus" },
->
-> OK, now we have three options to fix this issue:
-> a) Create a separate link section to contain all the buses needed to be probed.
->    Just as what this patch does.
->
-> b) Put the match table into the machine descriptor.
->
-> c) Sprinkle the probe of all the specific bus into the corresponding driver
->    (such as gian, pcie controller) and the default probe function only handle
->    the very common buses.
->
-> So what option do you guys think is best?
->
-> Thanks,
-> Kevin
+> 
+> > 
+> > +
+> > +From OS view the device is basically an i2c-mux used to
+> > communicate with up to
+> > +four smart battery devices at address 0xb. The driver actually
+> > implements this
+> > +behaviour. So standard i2c-mux nodes can be used to register up to
+> > four slave
+> > +batteries. See Documentation/devicetree/bindings/i2c/i2c-mux.txt
+> > for more
+> > +information on i2c-mux nodes. Channels will be numerated starting
+> > from 1 to 4.
+> > +
+> > +Example:
+> > +
+> > +batman@0a {
+> drop leading 0.
+
+OK.
+
+> > 
+> > +    compatible = "lltc,ltc1760";
+> > +    reg = <0x0a>;
+
+Will remove leading 0 at this places too.
+
+> > +    #address-cells = <1>;
+> > +    #size-cells = <0>;
+> > +
+> > +    i2c@1 {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +        reg = <1>;
+> > +
+> > +        battery@0b {
+> and here...
+
+OK.
+
+> > 
+> > +            compatible = "ti,bq2060", "sbs,sbs-battery";
+> > +            reg = <0x0b>;
+> > +        };
+> > +    };
+> > +
+> > +    i2c@2 {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +        reg = <2>;
+> > +
+> > +        battery@0b {
+> > +            compatible = "ti,bq2060", "sbs,sbs-battery";
+> > +            reg = <0x0b>;
+> > +        };
+> > +    };
+> > +
+> > +    i2c@3 {
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +        reg = <3>;
+> > +
+> > +        battery@0b {
+> > +            compatible = "ti,bq2060", "sbs,sbs-battery";
+> > +            reg = <0x0b>;
+> > +        };
+> > +    };
+> > +};
+
+
+Thanks for review Rob. 
+-- 
+Karl-Heinz
