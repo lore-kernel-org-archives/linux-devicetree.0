@@ -1,75 +1,78 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support
- for rk3399
-Date: Wed, 31 Aug 2016 10:42:40 -0700
-Message-ID: <CAD=FV=W=LkVAm187hxp0Kbjxi5kSThwKnCMX+tr8SXQ-v_xQTQ@mail.gmail.com>
-References: <20160827134103.28160-1-xzy.xu@rock-chips.com> <20160827134103.28160-3-xzy.xu@rock-chips.com>
- <2ab8ab94-fa4d-2cd6-5805-a92ac5f9697e@rock-chips.com> <57C3A30B.5080707@rock-chips.com>
- <ceba6a89-6945-58c5-62e4-7d842cfa2312@rock-chips.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/7] ARM: dts: exynos: Add missing memory node for
+ Exynos5440 boards
+Date: Wed, 31 Aug 2016 19:46:57 +0200
+Message-ID: <20160831174657.GA19969@kozik-lap>
+References: <1472645679-5696-1-git-send-email-javier@osg.samsung.com>
+ <1472645679-5696-2-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ceba6a89-6945-58c5-62e4-7d842cfa2312-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shunqian
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1472645679-5696-2-git-send-email-javier@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Aug 31, 2016 at 02:14:33PM +0200, Javier Martinez Canillas wrote:
+> The skeleton.dtsi file was removed in ARM64 for different reasons as
+> explained in commit ("3ebee5a2e141 arm64: dts: kill skeleton.dtsi").
+> 
+> These also applies to ARM and it will also allow to get rid of the
+> following DTC warnings in the future:
+> 
+> "Node /memory has a reg or ranges property, but no unit name"
+> 
+> But these boards don't have a memory node defined, so removing the
+> skeleton.dtsi inclusion in exynos4.dtsi will cause a change in the
+> compiled DTB. Add a dummy memory node so the compiled DTB doesn't
+> change if the skeleton.dtsi is removed from exynos4.dtsi.
 
-On Sun, Aug 28, 2016 at 8:25 PM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> On 2016/8/29 10:50, Elaine Zhang wrote:
->>
->>
->>
->> On 08/27/2016 11:05 PM, Shawn Lin wrote:
->>>
->>> On 2016/8/27 21:41, Ziyuan Xu wrote:
->>>>
->>>> Control power domain for eMMC via genpd to reduce power consumption.
->>>>
->>>> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>> Signed-off-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>>
->>>
->>> It looks nice to me. But this should be merged after applying that[0]
->>> as your patch will break bind/unbind test for sdhci-of-arasan on rk3399
->>> without it[0]. Moreover, Elaine should make sure that upstreamed
->>> rockchip power domain stuff would not off pd for emmc, *otherwise*, I
->>> should update my patch to make sure we update clkmul every time when
->>> doing suspend 2 resume..
->>>
->>>
->> Forgot to say:
->> If use pd, Although there is no call to power odd the pd_emmc,
->> it will be power off when the system doing suspend 2 resume.
->> (Because the system call
->> __device_suspend_noirq->pm_genpd_suspend_noirq->rockchip_pd_power_off)
->
->
-> Thanks for explaining this. I checked the code a bit and actually I
-> don't need to updata clkmul since it was recorded, although it is still
-> reset to 0x10 reading from syscon. So for that, we can now pick it
-> up without waiting for my sdhci-of-arasan's update.
->
-> Reviewed-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+You mean extnos5440.dtsi?
 
-This is fine to pick up _only_ if you don't care about suspend/resume.
-If you care about suspend/resume then someone needs to first write a
-patch that will re-init all "corecfg" values after power is turned on.
+> 
+> Eventually the correct starting addresses and sizes should be used
+> but I didn't find that information.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> ---
+> 
+>  arch/arm/boot/dts/exynos5440-sd5v1.dts    | 5 +++++
+>  arch/arm/boot/dts/exynos5440-ssdk5440.dts | 5 +++++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5440-sd5v1.dts b/arch/arm/boot/dts/exynos5440-sd5v1.dts
+> index a98501bab6fc..333db4ff373a 100644
+> --- a/arch/arm/boot/dts/exynos5440-sd5v1.dts
+> +++ b/arch/arm/boot/dts/exynos5440-sd5v1.dts
+> @@ -20,6 +20,11 @@
+>  		bootargs = "root=/dev/sda2 rw rootwait ignore_loglevel earlyprintk no_console_suspend mem=2048M@0x80000000 mem=6144M@0x100000000 console=ttySAC0,115200";
+>  	};
+>  
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0 0>;
+> +	};
+> +
+>  	fixed-rate-clocks {
+>  		xtal {
+>  			compatible = "samsung,clock-xtal";
+> diff --git a/arch/arm/boot/dts/exynos5440-ssdk5440.dts b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+> index 6a0d802e87c8..82fea6f94704 100644
+> --- a/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+> +++ b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+> @@ -21,6 +21,11 @@
+>  		bootargs = "root=/dev/sda2 rw rootwait ignore_loglevel earlyprintk no_console_suspend mem=2048M@0x80000000 mem=6144M@0x100000000 console=ttySAC0,115200";
+>  	};
+>  
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0 0>;
+> +	};
 
-Technically I think this should probably use "pm runtime" and not
-normal suspend/resume hooks.  Any time we end up pm runtime suspended
-then I think our power will go off (because of genpd?) and we need to
-restore values.
+This looks okay, but the default size and address cells won't be
+present. Won't that be a problem?
 
-I'm not sure if this should be done in a generic way where we try to
-save and restore all values in the "sdhci_arasan_soc_ctl_map" or if we
-should try to be smarter...
-
-
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
