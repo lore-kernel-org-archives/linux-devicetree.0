@@ -1,48 +1,101 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/2] ARM: dts: dra7: Fix clock data for
- gmac_gmii_ref_clk_div
-Date: Wed, 31 Aug 2016 07:39:29 -0700
-Message-ID: <20160831143928.vxuaznyws2pipohu@atomide.com>
-References: <20160830145801.10364-1-grygorii.strashko@ti.com>
- <20160830184158.xydy3ixy7c5b73le@atomide.com>
- <fd7850dd-b7a2-e6ef-508f-8406c3f2cea9@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/2] Documentation: Add sbs-manager device tree node
+ documentation
+Date: Wed, 31 Aug 2016 09:43:49 -0500
+Message-ID: <20160831144349.GA18510@rob-hp-laptop>
+References: <1bIiDr-0004G1-0P>
+ <1472156461-25180-1-git-send-email-karl-heinz@schneider-inet.de>
+ <1472156461-25180-2-git-send-email-karl-heinz@schneider-inet.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <fd7850dd-b7a2-e6ef-508f-8406c3f2cea9-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "J.D. Schroeder" <jay.schroeder-UF6BFNFdnjXQT0dZR+AlfA@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1472156461-25180-2-git-send-email-karl-heinz@schneider-inet.de>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Peter Rosin <peda@axentia.se>, Phil Reid <preid@electromag.com.au>
 List-Id: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> [160830 23:09]:
-> On 30/08/16 21:41, Tony Lindgren wrote:
-> > * Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org> [160830 07:58]:
-> > > 
-> > > Originally this patch was posted (and acked) here
-> > > https://lkml.org/lkml/2016/4/27/272,
-> > > but it, unfortunatelly, has never been merged.
-> > > So re-send + minor subj change.
-> > 
-> > OK yeah sorry about that. And thanks for the resend. If some patches
-> > have pending discussion as I tend to tag threads that have pending
-> > discussion as read and then forget them. And I miss patches in other
-> > ways too..
-> > 
-> > Tero, care to take a look and ack?
+On Thu, Aug 25, 2016 at 10:21:00PM +0200, Karl-Heinz Schneider wrote:
+> This patch adds device tree documentation for the sbs-manager
 > 
-> For both patches:
+> Reviewed-by: Phil Reid <preid@electromag.com.au>
+> Signed-off-by: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+> ---
+>  .../devicetree/bindings/power/sbs,sbs-manager.txt  | 53 ++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
 > 
-> Acked-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+> diff --git a/Documentation/devicetree/bindings/power/sbs,sbs-manager.txt b/Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
+> new file mode 100644
+> index 0000000..6b1a87ce
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/sbs,sbs-manager.txt
+> @@ -0,0 +1,53 @@
+> +Binding for sbs-manager
+> +
+> +Required properties:
+> +- compatible: should be "lltc,ltc1760" or use "sbs,sbs-manager" as fallback.
+> +- reg: integer, i2c address of the device. Should be <0xa>.
 
-Thanks applying both into omap-for-v4.9/dt as the Ethernet works
-currently.
+What happened to adding Phil's interrupt support into this? You don't 
+have to add the whole patch, just the binding part. The driver support 
+can come later.
 
-Regards,
+> +
+> +From OS view the device is basically an i2c-mux used to communicate with up to
+> +four smart battery devices at address 0xb. The driver actually implements this
+> +behaviour. So standard i2c-mux nodes can be used to register up to four slave
+> +batteries. See Documentation/devicetree/bindings/i2c/i2c-mux.txt for more
+> +information on i2c-mux nodes. Channels will be numerated starting from 1 to 4.
+> +
+> +Example:
+> +
+> +batman@0a {
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+drop leading 0.
+
+> +    compatible = "lltc,ltc1760";
+> +    reg = <0x0a>;
+> +    #address-cells = <1>;
+> +    #size-cells = <0>;
+> +
+> +    i2c@1 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        reg = <1>;
+> +
+> +        battery@0b {
+
+and here...
+
+> +            compatible = "ti,bq2060", "sbs,sbs-battery";
+> +            reg = <0x0b>;
+> +        };
+> +    };
+> +
+> +    i2c@2 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        reg = <2>;
+> +
+> +        battery@0b {
+> +            compatible = "ti,bq2060", "sbs,sbs-battery";
+> +            reg = <0x0b>;
+> +        };
+> +    };
+> +
+> +    i2c@3 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        reg = <3>;
+> +
+> +        battery@0b {
+> +            compatible = "ti,bq2060", "sbs,sbs-battery";
+> +            reg = <0x0b>;
+> +        };
+> +    };
+> +};
+> -- 
+> 2.7.4
+> 
