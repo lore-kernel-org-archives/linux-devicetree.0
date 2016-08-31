@@ -1,42 +1,106 @@
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: [PATCH v3 01/12] dt: arm: shmobile: add H3ULCB board DT bindings
-Date: Wed, 31 Aug 2016 13:02:21 +0300
-Message-ID: <1472637741-14624-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 02/12] arm64: dts: h3ulcb: initial device tree
+Date: Wed, 31 Aug 2016 13:02:39 +0300
+Message-ID: <1472637759-14663-1-git-send-email-vladimir.barinov@cogentembedded.com>
 References: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472637712-14583-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add H3ULCB Device tree bindings Documentation, listing it as a supported
+Add the initial device tree for the R8A7795 SoC based H3ULCB low cost
 board.
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This commit supports the following peripherals:
+- SCIF (console)
+
+Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 ---
 Changes in version 2:
-- none
+- removed bootargs property
+- removed comment related to amixer
+---
 Changes in version 3:
-- none
+- split the big patch v2 in small ones
 
- Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/renesas/Makefile           |  2 +-
+ arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts | 51 ++++++++++++++++++++++++++
+ 2 files changed, 52 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-index 5484c31d..2f0b716 100644
---- a/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -49,6 +49,8 @@ Boards:
-     compatible = "renesas,genmai", "renesas,r7s72100"
-   - Gose
-     compatible = "renesas,gose", "renesas,r8a7793"
-+  - H3ULCB (RTP0RC7795SKB00010S)
-+    compatible = "renesas,h3ulcb", "renesas,r8a7795";
-   - Henninger
-     compatible = "renesas,henninger", "renesas,r8a7791"
-   - Koelsch (RTP0RC7791SEB00010S)
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index 17139f7..eb72830 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -1,4 +1,4 @@
+-dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb
++dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
+ dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-x.dtb
+ 
+ always		:= $(dtb-y)
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
+new file mode 100644
+index 0000000..ecb9e11
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
+@@ -0,0 +1,51 @@
++/*
++ * Device Tree Source for the H3ULCB board
++ *
++ * Copyright (C) 2016 Renesas Electronics Corp.
++ * Copyright (C) 2016 Cogent Embedded, Inc.
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++/dts-v1/;
++#include "r8a7795.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "Renesas H3ULCB board based on r8a7795";
++	compatible = "renesas,h3ulcb", "renesas,r8a7795";
++
++	aliases {
++		serial0 = &scif2;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@48000000 {
++		device_type = "memory";
++		/* first 128MB is reserved for secure area. */
++		reg = <0x0 0x48000000 0x0 0x38000000>;
++	};
++};
++
++&extal_clk {
++	clock-frequency = <16666666>;
++};
++
++&pfc {
++	scif2_pins: scif2 {
++		groups = "scif2_data_a";
++		function = "scif2";
++	};
++};
++
++&scif2 {
++	pinctrl-0 = <&scif2_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
