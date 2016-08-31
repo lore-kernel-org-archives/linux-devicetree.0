@@ -1,167 +1,54 @@
-From: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v24 9/9] Documentation: dt: chosen properties for arm64
- kdump
-Date: Wed, 31 Aug 2016 14:02:16 +0900
-Message-ID: <20160831050215.GQ20080@linaro.org>
-References: <20160809015248.28414-2-takahiro.akashi@linaro.org>
- <20160809015747.28591-1-takahiro.akashi@linaro.org>
- <20160819132641.GA12709@rob-hp-laptop>
- <20160822042832.GJ20080@linaro.org>
- <CAL_JsqJ5SqesEL5QWX_NJj+gL2jpne4NN_WzADiH+1VB7CkvOA@mail.gmail.com>
- <20160830234545.GP20080@linaro.org>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] meson: Meson8b and GXBB DWMAC glue driver
+Date: Tue, 30 Aug 2016 21:57:32 -0700 (PDT)
+Message-ID: <20160830.215732.429612225008644820.davem@davemloft.net>
+References: <20160828161637.9941-1-martin.blumenstingl@googlemail.com>
+        <20160828.234008.445367966910278179.davem@davemloft.net>
+        <CAFBinCCmg-+8mjd0Xc5c7bEWL9_S_4kizs_UMiiW9ATBH_G8iw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-2022-jp
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160830234545.GP20080-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CAFBinCCmg-+8mjd0Xc5c7bEWL9_S_4kizs_UMiiW9ATBH_G8iw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>, Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Cc: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 31, 2016 at 08:45:46AM +0900, AKASHI Takahiro wrote:
-> Rob,
-> 
-> On Tue, Aug 30, 2016 at 11:34:10AM -0500, Rob Herring wrote:
-> > On Sun, Aug 21, 2016 at 11:28 PM, AKASHI Takahiro
-> > <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > > Rob,
-> > > [Cc: Mark]
-> > >
-> > > On Fri, Aug 19, 2016 at 08:26:41AM -0500, Rob Herring wrote:
-> > >> On Tue, Aug 09, 2016 at 10:57:47AM +0900, AKASHI Takahiro wrote:
-> > >> > From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-> > >> >
-> > >> > Add documentation for
-> > >> >     linux,crashkernel-base and crashkernel-size,
-> > >> >     linux,usable-memory-range, and
-> > >> >     linux,elfcorehdr
-> > >> > used by arm64 kexec/kdump to decribe the kdump reserved area, and
-> > >> > the elfcorehdr's location within it.
-> > >> >
-> > >> > Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-> > >> > [takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org:
-> > >> >     renamed "usable-memory" to "usable-memory-range",
-> > >> >     added "linux,crashkernel-base" and "-size" ]
-> > >> > Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > >> > ---
-> > >> >  Documentation/devicetree/bindings/chosen.txt | 50 ++++++++++++++++++++++++++++
-> > >> >  1 file changed, 50 insertions(+)
-> > >> >
-> > >> > diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> > >> > index 6ae9d82..236188a 100644
-> > >> > --- a/Documentation/devicetree/bindings/chosen.txt
-> > >> > +++ b/Documentation/devicetree/bindings/chosen.txt
-> > >> > @@ -52,3 +52,53 @@ This property is set (currently only on PowerPC, and only needed on
-> > >> >  book3e) by some versions of kexec-tools to tell the new kernel that it
-> > >> >  is being booted by kexec, as the booting environment may differ (e.g.
-> > >> >  a different secondary CPU release mechanism)
-> > >> > +
-> > >> > +linux,crashkernel-base
-> > >> > +linux,crashkernel-size
-> > >> > +----------------------
-> > >> > +These properties (currently used on PowerPC and arm64) indicates
-> > >> > +the base address and the size, respectively, of the reserved memory
-> > >> > +range for crash dump kernel.
-> > >> > +e.g.
-> > >> > +
-> > >> > +/ {
-> > >> > +   chosen {
-> > >> > +           linux,crashkernel-base = <0x9 0xf0000000>;
-> > >> > +           linux,crashkernel-size = <0x0 0x10000000>;
-> > >> > +   };
-> > >> > +};
-> > >> > +
-> > >> > +linux,usable-memory-range
-> > >> > +-------------------------
-> > >> > +
-> > >> > +This property (currently used only on arm64) holds the memory range,
-> > >> > +the base address and the size, which can be used as system ram on
-> > >> > +the *current* kernel. Note that, if this property is present, any memory
-> > >> > +regions under "memory" nodes in DT blob or ones marked as "conventional
-> > >> > +memory" in EFI memory map should be ignored.
-> > >> > +e.g.
-> > >> > +
-> > >> > +/ {
-> > >> > +   chosen {
-> > >> > +           linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-> > >> > +   };
-> > >> > +};
-> > >>
-> > >> I've read the discussion on this. I think you should use the existing
-> > >> linux,usable-memory property in the memory nodes. If UEFI systems don't
-> > >> have memory nodes, then you can find an UEFI way to describe this. DT is
-> > >> not the dumping ground for what doesn't fit in UEFI. How do x86 systems
-> > >> work?
-> > >
-> > > Kdump for x86 passes the range of usable memory to crash dump kernel
-> > > either via:
-> > > (a) "memmap=nn@ss" command line parameter, or
-> > > (b) faked BIOS e820 map (a sort of memory map table)
-> > >
-> > > (a) was rejected by Mark [1], and (b) is x86-specific.
-> > >
-> > > I believe that my approach is better because it works in the same way
-> > > either on UEFI systems or DT-based systems.
-> > 
-> > So we have a new way for both UEFI and DT. If UEFI folks can't come up
-> > with a standard way to do things in the UEFI standard, then we just
-> > dump them into DT?
-> 
-> No, I don't think so.
-> According to "Documentation/devicetree/bindings/chosen.txt,
->   "The chosen node does not represent a real device, but serves as a place
->    for passing data between firmware and the operating system, like boot
->    arguments."
-> 
-> Since kexec/dump is some sort of boot loader, it all makes sense to
-> add a new property as an interface from the old kernel(kexec/dump)
-> to the new kernel. So my approach doesn't break any DT rules.
-> 
-> Please note that, even on UEFI/APCI systems, there are already a few
-> properties used under /chosen, like "linux,uefi-system-table" and 
-> "linux,mmap-*."
-> (Those properties are currently *not* defined in this document, though.)
-> 
-> > I'd rather see alignment with existing DT systems
-> > (PPC) and in particular the tools.
-> 
-> I'm not sure what you mean here, but I guess:
-> 1) On DT-only systems, we should follow the way that PPC does.
->    (That is, adding "usable-memory" property to each "memory" node.)
-> 2) On UEFI/ACPI system, we must invent a new own way for our purpose
->    because, as I said before, there is no standard, but x86-specific way. 
-> 
-> Is this what you want to do?
-> 
-> If so,
-> do you agree to my approach of adding "linux,usable-memory-range" property
-> to /chosen *for UEFI/ACPI use*?
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Date: Tue, 30 Aug 2016 20:49:28 +0200
 
-I've got another idea here: using "/memreserve/" field.
-All the memory regions used by the crashed kernel would be added
-as "/memreserve/" and be memblock_reserve'd later in crash dump kernel.
-Consequently, they will be excluded from the usable memory.
-
-Obviously,
-- this approach will work both on UEFI/ACPI and DT-only systems, and
-- patch#2 ("memblock: add memblock_cap_memory_range()"), as well as
-  "linux,usable-memory-range" property, is no longer necessary.
-  (So nothing new, except for "linux.elfcorehdr," will be invented.)
-
-But on the other hand,
-- arm64 and ppc do the different ways even though both are DT systems,
-- those reserved regions are still *in* linear mapping and appear as
-  "System RAM" in /proc/iomem, and
-- this may imply that we cannot do kexec on crash dump kernel.
-
--Takahiro AKASHI
-
-
-> Thanks,
-> -Takahiro AKASHI
+> On Mon, Aug 29, 2016 at 5:40 AM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
+>> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> Date: Sun, 28 Aug 2016 18:16:32 +0200
+>>
+>>> This adds a DWMAC glue driver for the PRG_ETHERNET registers found in
+>>> Meson8b and GXBB SoCs. Based on the "old" meson6b-dwmac glue driver
+>>> the register layout is completely different.
+>>> Thus I introduced a separate driver.
+>>>
+>>> Changes since v2:
+>>> - fixed unloading the glue driver when built as module. This pulls in a
+>>>   patch from Joachim Eastwood (thanks) to get our private data structure
+>>>   (bsp_priv).
+>>
+>> This doesn't apply cleanly at all to the net-next tree, so I have
+>> no idea where you expect these changes to be applied.
+> OK, maybe Kevin can me help out here as I think the patches should go
+> to various trees.
 > 
-> > Rob
+> I think patches 1, 3 and 4 should go through the net-next tree (as
+> these touch drivers/net/ethernet/stmicro/stmmac/ and the corresponding
+> documentation).
+> Patch 2 should probably go through clk-meson-gxbb / clk-next (just
+> like the other clk changes we had).
+> The last patch (patch 5) should probably go through the ARM SoC tree
+> (just like the other dts changes we had).
+> 
+> @David, Kevin: would this be fine for you?
+
+I would prefer if all of the patches went through one tree, that way
+all the dependencies are satisfied in one place.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
