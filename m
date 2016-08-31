@@ -1,93 +1,135 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC/PATCH] dt: bindings: Define bindings for device idle states
-Date: Wed, 31 Aug 2016 16:19:41 +0200
-Message-ID: <CAPDyKFq-WCJoew1ba7hK+Z+9r5CHecscR7zecaqD4aFaphRnGA@mail.gmail.com>
-References: <1472207073-4901-1-git-send-email-ulf.hansson@linaro.org> <20160831101644.GA2508@brendan-thinkstation>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 4/5] mfd: tps65217: Add power button as subdevice
+Date: Wed, 31 Aug 2016 15:31:10 +0100
+Message-ID: <20160831143110.GK9415@dell>
+References: <20160620105056.25843-1-m.niestroj@grinn-global.com>
+ <20160620105056.25843-5-m.niestroj@grinn-global.com>
+ <c849849f-ba1d-3263-9941-b346ef9eef59@grinn-global.com>
+ <20160830090329.GD1661@dell>
+ <9fafa9b0-cc45-6fe9-ddb9-5c933064261c@grinn-global.com>
+ <20160830095034.GI1661@dell>
+ <fe1fd5ea-5fce-61d0-d607-e4d527b51d4c@grinn-global.com>
+ <20160831111724.GH27357@dell>
+ <a1752816-3cee-adb9-79e2-bafce286a5c3@grinn-global.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160831101644.GA2508@brendan-thinkstation>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Axel Haslam <ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a1752816-3cee-adb9-79e2-bafce286a5c3@grinn-global.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Marcin Niestroj <m.niestroj@grinn-global.com>
+Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31 August 2016 at 12:16, Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Fri, Aug 26, 2016 at 12:24:33PM +0200, Ulf Hansson wrote:
->> A device may be capable of entering a low power state when it becomes
->> idle, which should avoid the device from wasting power.
->>
->> Unfortunate entering a such low power state for a device may often also
->> come with a cost. This because when a new request is about to be served,
->> the device must first to be woken up from its low power state. As that may
->> take a while, the request may suffer from an initial latency.
->>
->> These so called device idle states are characteristics of the hardware, so
->> let's define some DT bindings to enable us to describe them.
->>
->> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>
->> Similar DT bindings has been suggested earlier [1], although Rob raised
->> primarily two conserns in that approach.
->>
->> *) The bindings was probably not future proof, some more flexibility was needed.
->>
->> **) As the bindings also relates to idles states for PM domains, it seemed
->> reasonable to discuss them at the same time. As there is an ongoing discussion
->> for that right now [2], I took the opportunity to bring up the discussion for
->> device idles states again.
->>
->
-> Hi Ulf,
->
-> There was some previous discussion of whether device idle state bindings are
-> necessary. It was proposed that rather than adding a whole new binding, we could
-> just use the power domain idle state binding from [2]. We suggested that any
-> device that has an idle state is, by definition, in a power domain of its own:
-> rather than add a device-idle-states property to that device, we just put it in
-> a power domain with a domain-idle-states property.
+On Wed, 31 Aug 2016, Marcin Niestroj wrote:
 
-Yes, we can do that software wise, but is that really a proper
-description of the HW!?
+> On 31.08.2016 13:17, Lee Jones wrote:
+> > On Wed, 31 Aug 2016, Marcin Niestroj wrote:
+> > 
+> > > On 30.08.2016 11:50, Lee Jones wrote:
+> > > > On Tue, 30 Aug 2016, Marcin Niestroj wrote:
+> > > > 
+> > > > > On 30.08.2016 11:03, Lee Jones wrote:
+> > > > > > On Mon, 29 Aug 2016, Marcin Niestroj wrote:
+> > > > > > 
+> > > > > > > ping
+> > > > > > 
+> > > > > > Don't do that!
+> > > > > > 
+> > > > > > If you think the patch hasn't attracted attention in >2 weeks, then
+> > > > > > it's probably slipped through the gaps and you need to send a
+> > > > > > [RESEND].
+> > > > > 
+> > > > > Clear.
+> > > > > 
+> > > > > > 
+> > > > > > However ...
+> > > > > > 
+> > > > > > > On 20.06.2016 12:50, Marcin Niestroj wrote:
+> > > > > > > > Add tps65217 power buttor subdevice with assigned IRQ resources.
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+> > > > > > > > Acked-by: Lee Jones <lee.jones@linaro.org>
+> > > > > > 
+> > > > > > This patch has a maintainer Ack, so why are you pinging?
+> > > > > 
+> > > > > Because I didn't see it applied anywhere and there were no new
+> > > > > comments, so I thought it slipped somewhere.
+> > > > > 
+> > > > > So my question is: what happens with the patch after maintainer Ack?
+> > > > > Are we still waiting for some comments from the community? Do I still
+> > > > > need to worry, that the patch might slipped? What is author's role now?
+> > > > 
+> > > > Since you sent the patches as a set, it is assumed there are some
+> > > > dependencies between them, or they are at least in some way related.
+> > > > To that end, it is normal for Maintainers (especially for me as the
+> > > > MFD Maintainer, since there often some complex ties into the leaf
+> > > > driver's changes) to wait until *all* of the patches have either been
+> > > > accepted or have acquired an Ack of their own to proceed.
+> > > > 
+> > > > I believe we are still waiting on other patches to be reviewed, no?
+> > > 
+> > > I've just noticed, that patch 5 was only partially Acked.
+> > > 
+> > > I will send a RESEND. However patch 2 is already in mainline. Should I
+> > > contain this patch or remove it from the patch set? Additionally
+> > > patch 3 has been queued into power-supply's -next branch.
+> > 
+> > You should rebase the set and drop any patches which have already been
+> > applied.
+> 
+> So include or drop patch 3?
 
->
-> When I say "by definition", I of course mean "by the definition of 'power
-> domain' that's most convenient to my argument", but I think that definition is
-> also the one that's most useful for solving our problem.
->
-> Sudeep posted some examples in [3] (in the thread for [2]).
->
-> Before we discuss device idle state bindings, could we finish discussing that
-> idea so that everyone agrees on whether they're actually needed? It might be
-> worth having that discussion in replies to [3] so that we can use Sudeep's
-> examples. The 5th example in his mail is the most interesting.
+You said it's been applied, so drop it.
 
-Sure, I will get back to that thread.
+> > > > > > > > ---
+> > > > > > > > Depends on patch 1 in series
+> > > > > > > > 
+> > > > > > > > Changes v1 -> v4: none
+> > > > > > > > 
+> > > > > > > >  drivers/mfd/tps65217.c | 10 ++++++++++
+> > > > > > > >  1 file changed, 10 insertions(+)
+> > > > > > > > 
+> > > > > > > > diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
+> > > > > > > > index 41b5d59..57c8741 100644
+> > > > > > > > --- a/drivers/mfd/tps65217.c
+> > > > > > > > +++ b/drivers/mfd/tps65217.c
+> > > > > > > > @@ -38,6 +38,10 @@ static struct resource charger_resources[] = {
+> > > > > > > >  	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_USB, "USB"),
+> > > > > > > >  };
+> > > > > > > > 
+> > > > > > > > +static struct resource pb_resources[] = {
+> > > > > > > > +	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_PB, "PB"),
+> > > > > > > > +};
+> > > > > > > > +
+> > > > > > > >  struct tps65217_irq {
+> > > > > > > >  	int mask;
+> > > > > > > >  	int interrupt;
+> > > > > > > > @@ -122,6 +126,12 @@ static struct mfd_cell tps65217s[] = {
+> > > > > > > >  		.resources = charger_resources,
+> > > > > > > >  		.of_compatible = "ti,tps65217-charger",
+> > > > > > > >  	},
+> > > > > > > > +	{
+> > > > > > > > +		.name = "tps65217-pwrbutton",
+> > > > > > > > +		.num_resources = ARRAY_SIZE(pb_resources),
+> > > > > > > > +		.resources = pb_resources,
+> > > > > > > > +		.of_compatible = "ti,tps65217-pwrbutton",
+> > > > > > > > +	},
+> > > > > > > >  };
+> > > > > > > > 
+> > > > > > > >  static irqreturn_t tps65217_irq_thread(int irq, void *data)
+> > > > > > > > 
+> > > > > > > 
+> > > > > > 
+> > > > > 
+> > > > 
+> > > 
+> > 
+> 
 
-Although as Rob told me earlier, he wanted to discuss the dev PM QoS
-(device idle states) DT  bindings together with the PM domain idle
-states DT bindings. So, that's why I brought this up at this point.
-
-Perhaps we can get some input from Rob on how he thinks we should proceed!?
-
->
->> [1]
->> http://www.spinics.net/lists/devicetree/msg120515.html
->>
->> [2]
->> http://www.spinics.net/lists/arm-kernel/msg522023.html
->
-> [3]
-> http://www.spinics.net/lists/arm-kernel/msg526162.html
-> ^ Message-ID: <9b2ed5d3-c071-8828-5a22-1ab6f3753d74-5wv7dgnIgG8@public.gmane.org>
->
-> Cheers,
-> Brendan
-
-Kind regards
-Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
