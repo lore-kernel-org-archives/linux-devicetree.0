@@ -1,63 +1,45 @@
-From: Ayaka <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/3] ARM: dts: Add TOPEET itop core board SCP package version
-Date: Thu, 1 Sep 2016 03:49:24 +0800
-Message-ID: <647A092E-0CD6-4BA7-B3D8-AFF4BBEB611A@soulik.info>
-References: <a35686c3-294b-a16a-2b0e-0ef2fd460244@kernel.org> <1472648307-3818-1-git-send-email-ayaka@soulik.info> <20160831184226.GA23416@kozik-lap>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-        charset=big5
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160831184226.GA23416@kozik-lap>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Karl-Heinz Schneider <karl-heinz@schneider-inet.de>
+Subject: Re: [PATCH v4 0/2] Add support for Smart Battery System Manager
+Date: Wed, 31 Aug 2016 21:54:16 +0200
+Message-ID: <1472673256.5102.13.camel@schneider-inet.de>
+References: <1bIiDr-0004G1-0P>
+         <1472156461-25180-1-git-send-email-karl-heinz@schneider-inet.de>
+         <20160831151044.xftg6k5f66n53jem@earth>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160831151044.xftg6k5f66n53jem@earth>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Peter Rosin <peda@axentia.se>, Phil Reid <preid@electromag.com.au>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sebastian,
 
-
-從我的 iPad 傳送
-
-> Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 於 2016年9月1日 上午2:42 寫道：
+Am Mittwoch, den 31.08.2016, 17:10 +0200 schrieb Sebastian Reichel:
+> Hi,
 > 
->> On Wed, Aug 31, 2016 at 08:58:27PM +0800, Randy Li wrote:
->> The TOPEET itop is a samsung exnynos 4412 core board, which have
->> two package versions. This patch add the support for SCP version.
->> 
->> Currently supported are USB3503A HSIC, USB OTG, eMMC, rtc and
->> PMIC. The future features are in the based board. Also MFC and
->> watchdog have been enabled.
->> 
->> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
->> ---
->> arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi | 490 ++++++++++++++++++++++++
->> 1 file changed, 490 insertions(+)
->> create mode 100644 arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
+> On Thu, Aug 25, 2016 at 10:20:59PM +0200, Karl-Heinz Schneider wrote:
+> > 
+> > This patch series adds support for Smart Battery System Manager.
+> > A SBSM is a device listening at I2C/SMBus address 0x0a and is
+> > capable of
+> > communicating up to four I2C smart battery devices. All smart
+> > battery
+> > devices are listening at address 0x0b, so the SBSM muliplexes
+> > between
+> > them. The driver makes use of the I2C-Mux framework to allow smart
+> > batteries to be bound via device tree, i.e. the sbs-battery driver.
+> > 
+> > Via sysfs interface the online state and charge type are presented.
+> > If
+> > the driver is bound as ltc1760 (a Dual Smart Battery System
+> > Manager)
+> > the charge type can also be changed from trickle to fast.
+> Driver looks fine to me. Waiting for Rob's ACK on the DT bindings.
 > 
-> You are not making the review process easier... I asked for:
-> 1. Not chaining the consecutive versions of patchset to the previous
-> ones. But now you removed chain replies totally (also from patches).
-> 2. Versioning all patches.... but this is a resend of v1?
-> 
-> The changelog and cover letters disappeared...
-> 
-> Please, make it simple:
-> [PATCH v5 0/3] ARM: dts: exynos: some cover letter etc etc
->  \---[PATCH v5 1/3] ARM: dts: exynos: Add TOPEET itop core board SCP
->  \---[PATCH v5 2/3] ARM: dts: exynos: something more
->  \---[PATCH v5 3/3] ARM: dts: exynos: something even more
-> 
-> git format-patch and git send-email do this by default. In every
-> sensible mail program this looks like that and is easy to read.
-I see, sir. I misunderstand your order before(English is not my native). And thank you for you patient guide. I would resend in the morning.
-> 
-> I don't have a clue what happened to these patches and what is current
-> status...
-> 
-> Best regards,
-> Krzysztof
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -- Sebastian
+Thanks
+-- 
+Karl-Heinz
