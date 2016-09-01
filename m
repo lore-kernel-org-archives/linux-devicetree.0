@@ -1,34 +1,45 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] support GMAC for RK3399 & RK3366
-Date: Thu, 01 Sep 2016 13:39:50 +0200
-Message-ID: <3113078.0eK6SFMBVA@diego>
-References: <1470900288-10109-1-git-send-email-roger.chen@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH] ARM: dts: explicitly mark skeleton.dtsi as deprecated
+Date: Thu,  1 Sep 2016 12:40:37 +0100
+Message-ID: <1472730037-4972-1-git-send-email-mark.rutland@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1470900288-10109-1-git-send-email-roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger, Caesar,
+As noted in commit 3ebee5a2e141496b ("arm64: dts: kill skeleton.dtsi"),
+there are a number of problems with skeleton.dtsi, and it would be
+prefereable to remove it entirely. As there are a large number of
+existing users, fixing these up will take a while.
 
-Am Donnerstag, 11. August 2016, 15:24:45 schrieb Roger Chen:
-> This series adds registers description for RK3366 & RK3399 GMAC.
-> And also DT nodes for RK3399 SoC and EVB.
-> 
-> Roger Chen (3):
->   net: stmmac: dwmac-rk: add rk3366 & rk3399 specific data
->   arm64: dts: rockchip: add GMAC dt nodes for rk3399 SoC
->   arm64: dts: rockchip: add GMAC dt nodes for RK3399 evb
+This patch adds a note to arm's skeleton.dtsi noting that this is the
+case, to make this more obvious and hopefully minimize new uptake of
+skeleton.dtsi in the mean time.
 
-can you please respin this series addressing the comments from patch 1?
+Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <rob.herring-5wv7dgnIgG8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+---
+ arch/arm/boot/dts/skeleton.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-
-Thanks
-Heiko
+diff --git a/arch/arm/boot/dts/skeleton.dtsi b/arch/arm/boot/dts/skeleton.dtsi
+index b41d241..28b81d6 100644
+--- a/arch/arm/boot/dts/skeleton.dtsi
++++ b/arch/arm/boot/dts/skeleton.dtsi
+@@ -1,4 +1,8 @@
+ /*
++ * This file is deprecated, and will be removed once existing users have been
++ * updated. New dts{,i} files should *not* include skeleton.dtsi, and should
++ * instead explicitly provide the below nodes only as required.
++ *
+  * Skeleton device tree; the bare minimum needed to boot; just include and
+  * add a compatible value.  The bootloader will typically populate the memory
+  * node.
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
