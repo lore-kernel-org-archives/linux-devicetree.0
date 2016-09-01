@@ -1,339 +1,78 @@
-From: Lin Huang <hl@rock-chips.com>
-Subject: [PATCH 2/5] PM / devfreq: event: support rockchip dfi controller
-Date: Fri,  2 Sep 2016 06:31:22 +0800
-Message-ID: <1472769085-20715-3-git-send-email-hl@rock-chips.com>
-References: <1472769085-20715-1-git-send-email-hl@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472769085-20715-1-git-send-email-hl@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: myungjoo.ham@samsung.com, mark.yao@rock-chips.com, cw00.choi@samsung.com, airlied@linux.ie, mturquette@baylibre.com, dbasehore@chromium.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, tixy@linaro.org, typ@rock-chips.com, sudeep.holla@arm.com, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Lin Huang <hl@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] [v9] net: emac: emac gigabit ethernet controller driver
+Date: Thu, 1 Sep 2016 17:49:13 -0500
+Message-ID: <CAL_Jsq+75RJOCFUrUV43457kQ4o5oRjRhLLT2yGzTFfYhSESfg@mail.gmail.com>
+References: <1472161143-26417-1-git-send-email-timur@codeaurora.org>
+ <20160831150043.GA575@rob-hp-laptop> <57C6F395.1030904@codeaurora.org>
+ <CAL_Jsq+BtwBtB7Vd8HB+vhucfUmn_0bxRRXmyO13GoCM82LgFg@mail.gmail.com> <57C74562.3050203@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <57C74562.3050203@codeaurora.org>
+Sender: netdev-owner@vger.kernel.org
+To: Timur Tabi <timur@codeaurora.org>
+Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, Shanker Donthineni <shankerd@codeaurora.org>, Vikram Sethi <vikrams@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-on rk3399 platform, there is dfi conroller can monitor
-ddr load, base on this result, we can do ddr freqency
-scaling.
+On Wed, Aug 31, 2016 at 4:00 PM, Timur Tabi <timur@codeaurora.org> wrote:
+> Rob Herring wrote:
+>>>
+>>> It's not a generic phy.  It's a funky "internal phy" that differs among
+>>> >SOCs.  I call it the internal phy, but I could use another name.
+>>> > Internally,
+>>> >some people call it the "sgmii phy", but I don't think that's accurate.
+>
+>
+>> Funky internal PHYs are precisely the types of PHYs this binding is
+>> for. It is generic in that the type is not defined. It can be USB,
+>> HDMI, DSI, LVDS, etc.
+>
+>
+> I don't understand what you're getting at.  There are two IP blocks that
+> have a private interconnect.  One is the MAC, and the other is an internal
+> PHY, but the driver programs them as one device.
+>
+> If you want me to make some kind of change, you're going to have to be more
+> specific.
 
-Signed-off-by: Lin Huang <hl@rock-chips.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
----
-Changes in v8:
--None
+The change would simply be use "phys" for the property here and add
+#phy-cells to the phy node. See bindings/phy/phy-binding.txt.
 
-Changes in v7:
--access need to *4 to get right DDR loading
+And just because you just the phy binding, that doesn't mean you have
+to use the generic phy framework in the kernel. I'm not suggesting you
+need to. That could change in time as this becomes more common (i.e.
+with 10G).
 
-Changes in v6:
--None
+>>> >That's what I thought to, but without it, of_phy_find_device() won't
+>>> > work.
+>>> >I need a pointer to the phy node, and I use of_parse_phandle() to get
+>>> > it:
+>>> >
+>>> >         struct device_node *phy_np;
+>>> >
+>>> >         ret = of_mdiobus_register(mii_bus, np);
+>>> >         if (ret) {
+>>> >                 dev_err(&pdev->dev, "could not register mdio bus\n");
+>>> >                 return ret;
+>>> >         }
+>>> >
+>>> >         phy_np = of_parse_phandle(np, "phy-handle", 0);
+>
+>
+>> You can just as easily find the child node called ethernet-phy.
+>
+>
+> As Andrew pointed out, using phy-handle allows me to place the phy node
+> anywhere.
 
-Changes in v5:
--None
+But you can't because the binding says (or should say) it is a child node.
 
-Changes in v4:
--None
+> I've already made changes to this design, and every change has raised
+> objections.  I don't see anything wrong with phy-handle.  A lot of drivers
+> use it.
 
-Changes in v3:
--None
+You said it wouldn't work. I'm only pointing out that that is not
+true. As I said to begin with, if everything else is using it, then
+it's fine.
 
-Changes in v2:
--None 
-
-Changes in v1:
--None
-
- drivers/devfreq/event/Kconfig        |   7 +
- drivers/devfreq/event/Makefile       |   1 +
- drivers/devfreq/event/rockchip-dfi.c | 256 +++++++++++++++++++++++++++++++++++
- 3 files changed, 264 insertions(+)
- create mode 100644 drivers/devfreq/event/rockchip-dfi.c
-
-diff --git a/drivers/devfreq/event/Kconfig b/drivers/devfreq/event/Kconfig
-index eb6f74a..20d82c2 100644
---- a/drivers/devfreq/event/Kconfig
-+++ b/drivers/devfreq/event/Kconfig
-@@ -30,4 +30,11 @@ config DEVFREQ_EVENT_EXYNOS_PPMU
- 	  (Platform Performance Monitoring Unit) counters to estimate the
- 	  utilization of each module.
- 
-+config DEVFREQ_EVENT_ROCKCHIP_DFI
-+	tristate "ROCKCHIP DFI DEVFREQ event Driver"
-+	depends on ARCH_ROCKCHIP
-+	help
-+	  This add the devfreq-event driver for Rockchip SoC. It provides DFI
-+	  (DDR Monitor Module) driver to count ddr load.
-+
- endif # PM_DEVFREQ_EVENT
-diff --git a/drivers/devfreq/event/Makefile b/drivers/devfreq/event/Makefile
-index 3d6afd3..dda7090 100644
---- a/drivers/devfreq/event/Makefile
-+++ b/drivers/devfreq/event/Makefile
-@@ -2,3 +2,4 @@
- 
- obj-$(CONFIG_DEVFREQ_EVENT_EXYNOS_NOCP) += exynos-nocp.o
- obj-$(CONFIG_DEVFREQ_EVENT_EXYNOS_PPMU) += exynos-ppmu.o
-+obj-$(CONFIG_DEVFREQ_EVENT_ROCKCHIP_DFI) += rockchip-dfi.o
-diff --git a/drivers/devfreq/event/rockchip-dfi.c b/drivers/devfreq/event/rockchip-dfi.c
-new file mode 100644
-index 0000000..43fcc5a
---- /dev/null
-+++ b/drivers/devfreq/event/rockchip-dfi.c
-@@ -0,0 +1,256 @@
-+/*
-+ * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd
-+ * Author: Lin Huang <hl@rock-chips.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/devfreq-event.h>
-+#include <linux/kernel.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <linux/list.h>
-+#include <linux/of.h>
-+
-+#define RK3399_DMC_NUM_CH	2
-+
-+/* DDRMON_CTRL */
-+#define DDRMON_CTRL	0x04
-+#define CLR_DDRMON_CTRL	(0x1f0000 << 0)
-+#define LPDDR4_EN	(0x10001 << 4)
-+#define HARDWARE_EN	(0x10001 << 3)
-+#define LPDDR3_EN	(0x10001 << 2)
-+#define SOFTWARE_EN	(0x10001 << 1)
-+#define SOFTWARE_DIS	(0x10000 << 1)
-+#define TIME_CNT_EN	(0x10001 << 0)
-+
-+#define DDRMON_CH0_COUNT_NUM		0x28
-+#define DDRMON_CH0_DFI_ACCESS_NUM	0x2c
-+#define DDRMON_CH1_COUNT_NUM		0x3c
-+#define DDRMON_CH1_DFI_ACCESS_NUM	0x40
-+
-+/* pmu grf */
-+#define PMUGRF_OS_REG2	0x308
-+#define DDRTYPE_SHIFT	13
-+#define DDRTYPE_MASK	7
-+
-+enum {
-+	DDR3 = 3,
-+	LPDDR3 = 6,
-+	LPDDR4 = 7,
-+	UNUSED = 0xFF
-+};
-+
-+struct dmc_usage {
-+	u32 access;
-+	u32 total;
-+};
-+
-+/*
-+ * The dfi controller can monitor DDR load. It has an upper and lower threshold
-+ * for the operating points. Whenever the usage leaves these bounds an event is
-+ * generated to indicate the DDR frequency should be changed.
-+ */
-+struct rockchip_dfi {
-+	struct devfreq_event_dev *edev;
-+	struct devfreq_event_desc *desc;
-+	struct dmc_usage ch_usage[RK3399_DMC_NUM_CH];
-+	struct device *dev;
-+	void __iomem *regs;
-+	struct regmap *regmap_pmu;
-+	struct clk *clk;
-+};
-+
-+static void rockchip_dfi_start_hardware_counter(struct devfreq_event_dev *edev)
-+{
-+	struct rockchip_dfi *info = devfreq_event_get_drvdata(edev);
-+	void __iomem *dfi_regs = info->regs;
-+	u32 val;
-+	u32 ddr_type;
-+
-+	/* get ddr type */
-+	regmap_read(info->regmap_pmu, PMUGRF_OS_REG2, &val);
-+	ddr_type = (val >> DDRTYPE_SHIFT) & DDRTYPE_MASK;
-+
-+	/* clear DDRMON_CTRL setting */
-+	writel_relaxed(CLR_DDRMON_CTRL, dfi_regs + DDRMON_CTRL);
-+
-+	/* set ddr type to dfi */
-+	if (ddr_type == LPDDR3)
-+		writel_relaxed(LPDDR3_EN, dfi_regs + DDRMON_CTRL);
-+	else if (ddr_type == LPDDR4)
-+		writel_relaxed(LPDDR4_EN, dfi_regs + DDRMON_CTRL);
-+
-+	/* enable count, use software mode */
-+	writel_relaxed(SOFTWARE_EN, dfi_regs + DDRMON_CTRL);
-+}
-+
-+static void rockchip_dfi_stop_hardware_counter(struct devfreq_event_dev *edev)
-+{
-+	struct rockchip_dfi *info = devfreq_event_get_drvdata(edev);
-+	void __iomem *dfi_regs = info->regs;
-+
-+	writel_relaxed(SOFTWARE_DIS, dfi_regs + DDRMON_CTRL);
-+}
-+
-+static int rockchip_dfi_get_busier_ch(struct devfreq_event_dev *edev)
-+{
-+	struct rockchip_dfi *info = devfreq_event_get_drvdata(edev);
-+	u32 tmp, max = 0;
-+	u32 i, busier_ch = 0;
-+	void __iomem *dfi_regs = info->regs;
-+
-+	rockchip_dfi_stop_hardware_counter(edev);
-+
-+	/* Find out which channel is busier */
-+	for (i = 0; i < RK3399_DMC_NUM_CH; i++) {
-+		info->ch_usage[i].access = readl_relaxed(dfi_regs +
-+				DDRMON_CH0_DFI_ACCESS_NUM + i * 20) * 4;
-+		info->ch_usage[i].total = readl_relaxed(dfi_regs +
-+				DDRMON_CH0_COUNT_NUM + i * 20);
-+		tmp = info->ch_usage[i].access;
-+		if (tmp > max) {
-+			busier_ch = i;
-+			max = tmp;
-+		}
-+	}
-+	rockchip_dfi_start_hardware_counter(edev);
-+
-+	return busier_ch;
-+}
-+
-+static int rockchip_dfi_disable(struct devfreq_event_dev *edev)
-+{
-+	struct rockchip_dfi *info = devfreq_event_get_drvdata(edev);
-+
-+	rockchip_dfi_stop_hardware_counter(edev);
-+	clk_disable_unprepare(info->clk);
-+
-+	return 0;
-+}
-+
-+static int rockchip_dfi_enable(struct devfreq_event_dev *edev)
-+{
-+	struct rockchip_dfi *info = devfreq_event_get_drvdata(edev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(info->clk);
-+	if (ret) {
-+		dev_err(&edev->dev, "failed to enable dfi clk: %d\n", ret);
-+		return ret;
-+	}
-+
-+	rockchip_dfi_start_hardware_counter(edev);
-+	return 0;
-+}
-+
-+static int rockchip_dfi_set_event(struct devfreq_event_dev *edev)
-+{
-+	return 0;
-+}
-+
-+static int rockchip_dfi_get_event(struct devfreq_event_dev *edev,
-+				  struct devfreq_event_data *edata)
-+{
-+	struct rockchip_dfi *info = devfreq_event_get_drvdata(edev);
-+	int busier_ch;
-+
-+	busier_ch = rockchip_dfi_get_busier_ch(edev);
-+
-+	edata->load_count = info->ch_usage[busier_ch].access;
-+	edata->total_count = info->ch_usage[busier_ch].total;
-+
-+	return 0;
-+}
-+
-+static const struct devfreq_event_ops rockchip_dfi_ops = {
-+	.disable = rockchip_dfi_disable,
-+	.enable = rockchip_dfi_enable,
-+	.get_event = rockchip_dfi_get_event,
-+	.set_event = rockchip_dfi_set_event,
-+};
-+
-+static const struct of_device_id rockchip_dfi_id_match[] = {
-+	{ .compatible = "rockchip,rk3399-dfi" },
-+	{ },
-+};
-+
-+static int rockchip_dfi_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct rockchip_dfi *data;
-+	struct resource *res;
-+	struct devfreq_event_desc *desc;
-+	struct device_node *np = pdev->dev.of_node, *node;
-+
-+	data = devm_kzalloc(dev, sizeof(struct rockchip_dfi), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	data->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(data->regs))
-+		return PTR_ERR(data->regs);
-+
-+	data->clk = devm_clk_get(dev, "pclk_ddr_mon");
-+	if (IS_ERR(data->clk)) {
-+		dev_err(dev, "Cannot get the clk dmc_clk\n");
-+		return PTR_ERR(data->clk);
-+	};
-+
-+	/* try to find the optional reference to the pmu syscon */
-+	node = of_parse_phandle(np, "rockchip,pmu", 0);
-+	if (node) {
-+		data->regmap_pmu = syscon_node_to_regmap(node);
-+		if (IS_ERR(data->regmap_pmu))
-+			return PTR_ERR(data->regmap_pmu);
-+	}
-+	data->dev = dev;
-+
-+	desc = devm_kzalloc(dev, sizeof(*desc), GFP_KERNEL);
-+	if (!desc)
-+		return -ENOMEM;
-+
-+	desc->ops = &rockchip_dfi_ops;
-+	desc->driver_data = data;
-+	desc->name = np->name;
-+	data->desc = desc;
-+
-+	data->edev = devm_devfreq_event_add_edev(&pdev->dev, desc);
-+	if (IS_ERR(data->edev)) {
-+		dev_err(&pdev->dev,
-+			"failed to add devfreq-event device\n");
-+		return PTR_ERR(data->edev);
-+	}
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver rockchip_dfi_driver = {
-+	.probe	= rockchip_dfi_probe,
-+	.driver = {
-+		.name	= "rockchip-dfi",
-+		.of_match_table = rockchip_dfi_id_match,
-+	},
-+};
-+module_platform_driver(rockchip_dfi_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Lin Huang <hl@rock-chips.com>");
-+MODULE_DESCRIPTION("Rockchip DFI driver");
--- 
-2.6.6
+Rob
