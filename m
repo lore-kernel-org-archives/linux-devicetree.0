@@ -1,40 +1,66 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH v4 6/8] ARM: dts: am335x-evm: Add blue-and-red-wiring
- -property to lcdc node
-Date: Thu, 1 Sep 2016 12:09:10 +0300
-Message-ID: <48abf4ec2a2f317cfbfb83d17d3620b4e39223fa.1472719892.git.jsarha@ti.com>
-References: <cover.1472719892.git.jsarha@ti.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH 1/7] ARM: dts: exynos: Add missing memory node for
+ Exynos5440 boards
+Date: Thu, 1 Sep 2016 11:19:24 +0200
+Message-ID: <0e8e0b3c-0dd9-c44b-d1ad-03c840d3a725@osg.samsung.com>
+References: <1472645679-5696-1-git-send-email-javier@osg.samsung.com>
+ <1472645679-5696-2-git-send-email-javier@osg.samsung.com>
+ <20160831174657.GA19969@kozik-lap>
+ <c043b569-fbad-23bb-5807-5dda9cc8b37f@osg.samsung.com>
+ <e3cdab3d-f1ef-f751-b169-e3328178b835@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.1472719892.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, linux-arm-kernel@lists.infradead.org
-Cc: Jyri Sarha <jsarha@ti.com>, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, kbeldan@baylibre.com, laurent.pinchart@ideasonboard.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e3cdab3d-f1ef-f751-b169-e3328178b835-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGJsdWUtYW5kLXJlZC13aXJpbmcgLXByb3BlcnR5IHRvIGxjZGMgbm9kZS4gVGhlIGFtMzM1
-eC1ldm0gaGFzCmJsdWUgYW5kIHJlZCB3aXJlcyBjcm9zc2VkIHRvIGdldCAyNC1iaXQgUkdCIChh
-bmQgMTYtYml0IEJHUikKc3VwcG9ydC4gQWZ0ZXIgdGhpcyBwYXRjaCBhbTMzNXgtZXZtIHN1cHBv
-cnRzIEJHUjU2NSwgUkdCODg4LCBhbmQKWFJHQjg4ODggY29sb3IgZm9ybWF0cy4gU2VlIGRldGFp
-bHMgaW4KRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGlsY2RjL3Rp
-bGNkYy50eHQuCgpTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29tPgotLS0K
-IGFyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1ldm0uZHRzIHwgMiArKwogMSBmaWxlIGNoYW5nZWQs
-IDIgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FtMzM1eC1l
-dm0uZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYW0zMzV4LWV2bS5kdHMKaW5kZXggNWQyODcxMi4u
-YzNjYmNlMCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYW0zMzV4LWV2bS5kdHMKKysr
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvYW0zMzV4LWV2bS5kdHMKQEAgLTQ5Nyw2ICs0OTcsOCBAQAog
-CiAmbGNkYyB7CiAJc3RhdHVzID0gIm9rYXkiOworCisJYmx1ZS1hbmQtcmVkLXdpcmluZyA9ICJj
-cm9zc2VkIjsKIH07CiAKICZlbG0gewotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hello Krzysztof,
+
+On 09/01/2016 11:05 AM, Krzysztof Kozlowski wrote:
+> On 09/01/2016 10:43 AM, Javier Martinez Canillas wrote:
+>>>> --- a/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+>>>> +++ b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+>>>> @@ -21,6 +21,11 @@
+>>>>  		bootargs = "root=/dev/sda2 rw rootwait ignore_loglevel earlyprintk no_console_suspend mem=2048M@0x80000000 mem=6144M@0x100000000 console=ttySAC0,115200";
+>>>>  	};
+>>>>  
+>>>> +	memory {
+>>>> +		device_type = "memory";
+>>>> +		reg = <0 0>;
+>>>> +	};
+>>>
+>>> This looks okay, but the default size and address cells won't be
+>>> present. Won't that be a problem?
+>>>
+>>
+>> They will be present since at this point exynos5440.dtsi is still including
+>> exynos5440.dtsi, we are just overriding the memory node with the same values
+>> than skeleton.dtsi so this can be removed later in patch 7/7.
+> 
+> I don't get it. exynos5440.dtsi does not set size/address cells in top node.
+>
+
+Sorry, maybe I'm misunderstanding your question. The size/address cells are set
+in the top node by exynos5440.dtsi including the skeleton.dtsi (since these are
+set in that included dtsi).
+
+IOW, scripts/dtc/dtx_diff doesn't show differences for these exynos5440 DTB
+before and after $SUBJECT.
+
+> Best regards,
+> Krzysztof
+> 
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
