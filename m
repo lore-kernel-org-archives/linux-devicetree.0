@@ -1,78 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] [v9] net: emac: emac gigabit ethernet controller driver
-Date: Thu, 1 Sep 2016 17:49:13 -0500
-Message-ID: <CAL_Jsq+75RJOCFUrUV43457kQ4o5oRjRhLLT2yGzTFfYhSESfg@mail.gmail.com>
-References: <1472161143-26417-1-git-send-email-timur@codeaurora.org>
- <20160831150043.GA575@rob-hp-laptop> <57C6F395.1030904@codeaurora.org>
- <CAL_Jsq+BtwBtB7Vd8HB+vhucfUmn_0bxRRXmyO13GoCM82LgFg@mail.gmail.com> <57C74562.3050203@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <57C74562.3050203@codeaurora.org>
-Sender: netdev-owner@vger.kernel.org
-To: Timur Tabi <timur@codeaurora.org>
-Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Sagar Dharia <sdharia@codeaurora.org>, Shanker Donthineni <shankerd@codeaurora.org>, Vikram Sethi <vikrams@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Gilad Avidov <gavidov@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Langsdorf <mlangsdo@redhat.com>, "jcm@redhat.com" <jcm@redhat.com>, Andy Gross <agross@codeaurora.org>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 2/3] clk: rockchip: add dclk_vop_frac ids for vop
+Date: Thu,  1 Sep 2016 15:53:27 -0700
+Message-ID: <1472770408-32278-2-git-send-email-zyw@rock-chips.com>
+References: <1472770408-32278-1-git-send-email-zyw@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472770408-32278-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 31, 2016 at 4:00 PM, Timur Tabi <timur@codeaurora.org> wrote:
-> Rob Herring wrote:
->>>
->>> It's not a generic phy.  It's a funky "internal phy" that differs among
->>> >SOCs.  I call it the internal phy, but I could use another name.
->>> > Internally,
->>> >some people call it the "sgmii phy", but I don't think that's accurate.
->
->
->> Funky internal PHYs are precisely the types of PHYs this binding is
->> for. It is generic in that the type is not defined. It can be USB,
->> HDMI, DSI, LVDS, etc.
->
->
-> I don't understand what you're getting at.  There are two IP blocks that
-> have a private interconnect.  One is the MAC, and the other is an internal
-> PHY, but the driver programs them as one device.
->
-> If you want me to make some kind of change, you're going to have to be more
-> specific.
+From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-The change would simply be use "phys" for the property here and add
-#phy-cells to the phy node. See bindings/phy/phy-binding.txt.
+Export the dclk_vop_frac out, so we can set the dclk_vop as the
+child of dclk_vop_frac, and then we can start to take use of
+the fractional dividers.
 
-And just because you just the phy binding, that doesn't mean you have
-to use the generic phy framework in the kernel. I'm not suggesting you
-need to. That could change in time as this becomes more common (i.e.
-with 10G).
+Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
->>> >That's what I thought to, but without it, of_phy_find_device() won't
->>> > work.
->>> >I need a pointer to the phy node, and I use of_parse_phandle() to get
->>> > it:
->>> >
->>> >         struct device_node *phy_np;
->>> >
->>> >         ret = of_mdiobus_register(mii_bus, np);
->>> >         if (ret) {
->>> >                 dev_err(&pdev->dev, "could not register mdio bus\n");
->>> >                 return ret;
->>> >         }
->>> >
->>> >         phy_np = of_parse_phandle(np, "phy-handle", 0);
->
->
->> You can just as easily find the child node called ethernet-phy.
->
->
-> As Andrew pointed out, using phy-handle allows me to place the phy node
-> anywhere.
+ include/dt-bindings/clock/rk3399-cru.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-But you can't because the binding says (or should say) it is a child node.
+diff --git a/include/dt-bindings/clock/rk3399-cru.h b/include/dt-bindings/clock/rk3399-cru.h
+index ce5f3e9..220a60f 100644
+--- a/include/dt-bindings/clock/rk3399-cru.h
++++ b/include/dt-bindings/clock/rk3399-cru.h
+@@ -138,6 +138,8 @@
+ #define DCLK_VOP0_DIV			182
+ #define DCLK_VOP1_DIV			183
+ #define DCLK_M0_PERILP			184
++#define DCLK_VOP0_FRAC			185
++#define DCLK_VOP1_FRAC			186
+ 
+ #define FCLK_CM0S			190
+ 
+-- 
+1.9.1
 
-> I've already made changes to this design, and every change has raised
-> objections.  I don't see anything wrong with phy-handle.  A lot of drivers
-> use it.
-
-You said it wouldn't work. I'm only pointing out that that is not
-true. As I said to begin with, if everything else is using it, then
-it's fine.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
