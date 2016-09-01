@@ -1,134 +1,419 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v3 0/8] drm/tilcdc: Address LCDC rev 2 color errata +
- other fixes
-Date: Thu, 1 Sep 2016 10:24:48 +0300
-Message-ID: <43d0d368-f19a-a098-0641-8d4314815d80@ti.com>
-References: <cover.1472634657.git.jsarha@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1638233650=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.1472634657.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, linux-arm-kernel@lists.infradead.org
-Cc: peter.ujfalusi@ti.com, kbeldan@baylibre.com, laurent.pinchart@ideasonboard.com
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v2 09/10] ARM: dts: exynos: Use macros for pinctrl
+ configuration on exynos5410
+Date: Thu, 01 Sep 2016 09:23:57 +0200
+Message-ID: <1472714638-15676-10-git-send-email-k.kozlowski@samsung.com>
+References: <1472714638-15676-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1472714638-15676-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, javier@osg.samsung.com, Linus Walleij <linus.walleij@linaro.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---===============1638233650==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="Rkufp2DpDNcsujj8M8lhSgWTXQklGHenk"
+Usage of DTS macros instead of hard-coded numbers makes code easier to
+read.  One does not have to remember which value means pull-up/down or
+specific driver strength.
 
---Rkufp2DpDNcsujj8M8lhSgWTXQklGHenk
-Content-Type: multipart/mixed; boundary="17X4JDIBCun06qWwNCsRXQEjFtGi7EkhK";
- protected-headers="v1"
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com,
- linux-arm-kernel@lists.infradead.org
-Cc: airlied@linux.ie, daniel@ffwll.ch, laurent.pinchart@ideasonboard.com,
- peter.ujfalusi@ti.com, robh@kernel.org, kbeldan@baylibre.com
-Message-ID: <43d0d368-f19a-a098-0641-8d4314815d80@ti.com>
-Subject: Re: [PATCH v3 0/8] drm/tilcdc: Address LCDC rev 2 color errata +
- other fixes
-References: <cover.1472634657.git.jsarha@ti.com>
-In-Reply-To: <cover.1472634657.git.jsarha@ti.com>
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+---
+ arch/arm/boot/dts/exynos5410-odroidxu.dts |  30 ++---
+ arch/arm/boot/dts/exynos5410-pinctrl.dtsi | 180 +++++++++++++++---------------
+ arch/arm/boot/dts/exynos5410-smdk5410.dts |  10 +-
+ 3 files changed, 110 insertions(+), 110 deletions(-)
 
---17X4JDIBCun06qWwNCsRXQEjFtGi7EkhK
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-On 31/08/16 16:14, Jyri Sarha wrote:
-> Changes since v2:
-> - Fiddle with color wiring propety once more, now it follows this Tomi'=
-s
->   comment:
->   - No property set: driver advertises RG16 and RG24. This is
->     wrong, but that's what the current status is, right?
->   - Property set to "default" or "straight" or whatever: driver
->     says RG16 and BG24
->   - Property set to "crossed": driver says BG16 and RG24
-> - Add v2 version of "drm/tilcdc: Write DMA base and ceiling address wit=
-h..."
->   - The first version was sent individually, this second version has
->     __iowmb(); and __cpu_to_le64(); added to tilcdc_write64()
->=20
-> Changes since v1:
-> - Change the blue-and-red-wiring property to boolean blue-and-red-cross=
-ed
->   - This breaks to little backward compatibility the earlier series had=
-, but
->     makes the binding more straight forward
->   - This changes requires changes to am335x-evm and am335x-evmsk dts-fi=
-les
->   - The old beaglebone-black dts files remain compatible, but the patch=
-
->     suggests in commenst on how to support 24-bit RGB mode with BBB
->=20
-> The first patch ("drm/tilcdc: Remove drm_helper_disable_unused_function=
-s()
-> call") is completely independent fix.
->=20
-> The red and blue components are reversed between 24 and 16 bit modes
-> on am335x LCDC output pins. To get 24 RGB format the wires red and
-> blue wires has to be crossed and this in turn causes 16 colors output
-> to be in BGR format. With straight wiring the 16 color is RGB and 24
-> bit is BGR. These patches try to deal with the issue in reasonable
-> manner.
->=20
-> For more details see section 3.1.1 in AM335x Silicon Errata:
-> http://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumb=
-er=3Dsprz360
-
-Aside the few minor comments I had, for the series:
-
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-
- Tomi
-
-
---17X4JDIBCun06qWwNCsRXQEjFtGi7EkhK--
-
---Rkufp2DpDNcsujj8M8lhSgWTXQklGHenk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXx9fAAAoJEPo9qoy8lh71DP8P/R3OHyQqQbiSaFJx7b+TF/Vp
-BwVfV6frctlzErCrspXeWtgtAQCjjJBScW7fY2xzfwo3hwwVqNtt+hG3jOh6vzU+
-dVief3RMIYKw4fH3xQgIC9kYQYoOb8cIb4kbZoNbN/gKL+L3vhICXBnCwBer3qsp
-+vYqb7ox4iKzLy1YBXlalLK2xYrpWk25q7JN9sydLJ35g8tR4rV4nEVZOEnc/11D
-jJ+E/ExKiHrrcbqV1rYDQhTILmCd44kl+ZMbhl/bw2hPPuMOdRWx5RIv5o9FvDkJ
-HyL+/0MYTNCoTCUYaD+ivaXeIvE99+tTsX8kBB3xyz6wOkbTBd03CC8ZV1Nttvus
-H48lKSL1slNCbOmZPADAJmVcU6TSR3RMHfhj8YOjHoHd1cyCI1ySTK8hu3UXlFjX
-C2+DHi8BJf1OOTgZ5NXf7qCdS+28fJQi9T5IvZOrPfkNKtheprO6fjGnPdo4J4xG
-4/0pLnJHN4xEn1Oq+W8vlgcfyw6A8wSjnnU2/vTh8nh2wqpji9vtLrHMwwoWHGii
-sCVgvXuqO0rOTBVf49Z0fitg8W0yPWcrkE594VDhO53WcdrEZZ1Z96jni+oHUQNg
-O7LYc73WUlZAjZEj1YDzRXJKjZpvG3Xnr0l9KZJRpLPoIXuPJBXdBjmjbdrPdjmP
-KZ27oZ+xiu38bBtIicU4
-=XXMf
------END PGP SIGNATURE-----
-
---Rkufp2DpDNcsujj8M8lhSgWTXQklGHenk--
-
---===============1638233650==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1638233650==--
+diff --git a/arch/arm/boot/dts/exynos5410-odroidxu.dts b/arch/arm/boot/dts/exynos5410-odroidxu.dts
+index a5ae76c1838f..f263372bfb7b 100644
+--- a/arch/arm/boot/dts/exynos5410-odroidxu.dts
++++ b/arch/arm/boot/dts/exynos5410-odroidxu.dts
+@@ -473,38 +473,38 @@
+ &pinctrl_0 {
+ 	emmc_nrst_pin: emmc-nrst {
+ 		samsung,pins = "gpd1-0";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	pmic_dvs_3: pmic-dvs-3 {
+ 		samsung,pins = "gpx0-0";
+-		samsung,pin-function = <1>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	pmic_dvs_2: pmic-dvs-2 {
+ 		samsung,pins = "gpx0-1";
+-		samsung,pin-function = <1>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	pmic_dvs_1: pmic-dvs-1 {
+ 		samsung,pins = "gpx0-2";
+-		samsung,pin-function = <1>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 		samsung,pin-val = <1>;
+ 	};
+ 
+ 	max77802_irq: max77802-irq {
+ 		samsung,pins = "gpx0-4";
+-		samsung,pin-function = <0xf>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_F>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/exynos5410-pinctrl.dtsi b/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
+index bf43792efe27..a083d23fdee3 100644
+--- a/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
++++ b/arch/arm/boot/dts/exynos5410-pinctrl.dtsi
+@@ -282,212 +282,212 @@
+ 
+ 	uart0_data: uart0-data {
+ 		samsung,pins = "gpa0-0", "gpa0-1";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	uart0_fctl: uart0-fctl {
+ 		samsung,pins = "gpa0-2", "gpa0-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	uart1_data: uart1-data {
+ 		samsung,pins = "gpa0-4", "gpa0-5";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	uart1_fctl: uart1-fctl {
+ 		samsung,pins = "gpa0-6", "gpa0-7";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c2_bus: i2c2-bus {
+ 		samsung,pins = "gpa0-6", "gpa0-7";
+-		samsung,pin-function = <3>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	uart2_data: uart2-data {
+ 		samsung,pins = "gpa1-0", "gpa1-1";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	uart2_fctl: uart2-fctl {
+ 		samsung,pins = "gpa1-2", "gpa1-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c3_bus: i2c3-bus {
+ 		samsung,pins = "gpa1-2", "gpa1-3";
+-		samsung,pin-function = <3>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	uart3_data: uart3-data {
+ 		samsung,pins = "gpa1-4", "gpa1-5";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c4_hs_bus: i2c4-hs-bus {
+ 		samsung,pins = "gpa2-0", "gpa2-1";
+-		samsung,pin-function = <3>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c5_hs_bus: i2c5-hs-bus {
+ 		samsung,pins = "gpa2-2", "gpa2-3";
+-		samsung,pin-function = <3>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c6_hs_bus: i2c6-hs-bus {
+ 		samsung,pins = "gpb1-3", "gpb1-4";
+-		samsung,pin-function = <4>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	pwm0_out: pwm0-out {
+ 		samsung,pins = "gpb2-0";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	pwm1_out: pwm1-out {
+ 		samsung,pins = "gpb2-1";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	pwm2_out: pwm2-out {
+ 		samsung,pins = "gpb2-2";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	pwm3_out: pwm3-out {
+ 		samsung,pins = "gpb2-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c7_hs_bus: i2c7-hs-bus {
+ 		samsung,pins = "gpb2-2", "gpb2-3";
+-		samsung,pin-function = <3>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c0_bus: i2c0-bus {
+ 		samsung,pins = "gpb3-0", "gpb3-1";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	i2c1_bus: i2c1-bus {
+ 		samsung,pins = "gpb3-2", "gpb3-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	sd0_clk: sd0-clk {
+ 		samsung,pins = "gpc0-0";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd0_cmd: sd0-cmd {
+ 		samsung,pins = "gpc0-1";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd0_cd: sd0-cd {
+ 		samsung,pins = "gpc0-2";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd0_bus1: sd0-bus-width1 {
+ 		samsung,pins = "gpc0-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd0_bus4: sd0-bus-width4 {
+ 		samsung,pins = "gpc0-4", "gpc0-5", "gpc0-6";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd2_clk: sd2-clk {
+ 		samsung,pins = "gpc2-0";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd2_cmd: sd2-cmd {
+ 		samsung,pins = "gpc2-1";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <0>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd2_cd: sd2-cd {
+ 		samsung,pins = "gpc2-2";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd2_bus1: sd2-bus-width1 {
+ 		samsung,pins = "gpc2-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd2_bus4: sd2-bus-width4 {
+ 		samsung,pins = "gpc2-4", "gpc2-5", "gpc2-6";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
+ 	};
+ 
+ 	sd0_bus8: sd0-bus-width8 {
+ 		samsung,pins = "gpc3-0", "gpc3-1", "gpc3-2", "gpc3-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <3>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/exynos5410-smdk5410.dts b/arch/arm/boot/dts/exynos5410-smdk5410.dts
+index 777fcf2edd79..7a67bc02291d 100644
+--- a/arch/arm/boot/dts/exynos5410-smdk5410.dts
++++ b/arch/arm/boot/dts/exynos5410-smdk5410.dts
+@@ -66,8 +66,8 @@
+ 	srom_ctl: srom-ctl {
+ 		samsung,pins = "gpy0-3", "gpy0-4", "gpy0-5",
+ 			       "gpy1-0", "gpy1-1", "gpy1-2", "gpy1-3";
+-		samsung,pin-function = <2>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
+ 	srom_ebi: srom-ebi {
+@@ -77,9 +77,9 @@
+ 			       "gpy5-4", "gpy5-5", "gpy5-6", "gpy5-7",
+ 			       "gpy6-0", "gpy6-1", "gpy6-2", "gpy6-3",
+ 			       "gpy6-4", "gpy6-5", "gpy6-6", "gpy6-7";
+-		samsung,pin-function = <2>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ };
+ 
+-- 
+1.9.1
