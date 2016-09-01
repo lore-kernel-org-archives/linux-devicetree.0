@@ -1,70 +1,71 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4] rtc: omap: Support ext_wakeup configuration
-Date: Fri, 2 Sep 2016 00:29:14 +0200
-Message-ID: <20160901222914.446w33zljvz4fdpr@piout.net>
-References: <20160825111912.23017-1-m.niestroj@grinn-global.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBO6XUK7AKGQEEEZMRVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20160825111912.23017-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+From: Lin Huang <hl@rock-chips.com>
+Subject: [PATCH 1/5] Documentation: bindings: add dt documentation for dfi controller
+Date: Fri,  2 Sep 2016 06:31:21 +0800
+Message-ID: <1472769085-20715-2-git-send-email-hl@rock-chips.com>
+References: <1472769085-20715-1-git-send-email-hl@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1472769085-20715-1-git-send-email-hl@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: myungjoo.ham@samsung.com, mark.yao@rock-chips.com, cw00.choi@samsung.com, airlied@linux.ie, mturquette@baylibre.com, dbasehore@chromium.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, tixy@linaro.org, typ@rock-chips.com, sudeep.holla@arm.com, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Lin Huang <hl@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch adds the documentation for rockchip dfi devfreq-event driver.
 
-On 25/08/2016 at 13:19:12 +0200, Marcin Niestroj wrote :
-> Support configuration of ext_wakeup sources. This patch makes it
-> possible to enable ext_wakeup and set it's polarity, depending on board
-> configuration. AM335x's dedicated PMIC (tps65217) uses ext_wakeup to
-> notify about power-button presses. Handling power-button presses enables
-> to recover from RTC-only power states correctly.
-> 
-> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-> ---
-> Hi,
-> 
-> This is a total reimplementation, so it is not based on any of the previos
-> patch versions. This patch adds support for ext_wakeup using generic pinconf
-> device-tree bindings, with one added "ti,input-polarity" custom property.
-> This approach has been suggested by Tony and Grygorii in [1].
-> 
-> Patch was developed on 4.6, rebased on 4.8-rc3, tested using chiliBoard.
-> 
-> [1] http://www.spinics.net/lists/devicetree/msg131516.html
-> 
->  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  21 +++
->  drivers/rtc/Kconfig                                |   1 +
->  drivers/rtc/rtc-omap.c                             | 167 ++++++++++++++++++++-
->  3 files changed, 181 insertions(+), 8 deletions(-)
-> 
+Signed-off-by: Lin Huang <hl@rock-chips.com>
+---
+Changes in v8:
+- delete a unuse blank line
 
-I'm fine with this patch and I'll apply it as soon as you fix the
-comments from Rob.
+Changes in v7:
+- None
 
-Thanks!
+Changes in v6:
+- None
 
+Changes in v5:
+- None
 
+Changes in v4:
+- None
+
+Changes in v3:
+- None
+
+Changes in v2:
+- None 
+
+Changes in v1:
+- None
+
+ .../bindings/devfreq/event/rockchip-dfi.txt           | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/event/rockchip-dfi.txt
+
+diff --git a/Documentation/devicetree/bindings/devfreq/event/rockchip-dfi.txt b/Documentation/devicetree/bindings/devfreq/event/rockchip-dfi.txt
+new file mode 100644
+index 0000000..d66aca6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/devfreq/event/rockchip-dfi.txt
+@@ -0,0 +1,19 @@
++
++* Rockchip rk3399 DFI device
++
++Required properties:
++- compatible: Must be "rockchip,rk3399-dfi".
++- reg: physical base address of each DFI and length of memory mapped region
++- rockchip,pmu: phandle to the syscon managing the "pmu general register files"
++- clocks: phandles for clock specified in "clock-names" property
++- clock-names : the name of clock used by the DFI, must be "pclk_ddr_mon";
++
++Example:
++	dfi: dfi@0xff630000 {
++		reg = <0x00 0xff630000 0x00 0x4000>;
++		compatible = "rockchip,rk3399-dfi";
++		rockchip,pmu = <&pmugrf>;
++		clocks = <&cru PCLK_DDR_MON>;
++		clock-names = "pclk_ddr_mon";
++		status = "disabled";
++	};
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+2.6.6
