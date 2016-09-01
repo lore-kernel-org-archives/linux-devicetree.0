@@ -1,245 +1,122 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] nvmem: rockchip-efuse: add rk3399-efuse support
-Date: Thu, 1 Sep 2016 10:58:07 -0700
-Message-ID: <CAD=FV=X7p9ikQeuMQ4OKiVJMtPpwnPe4Md_68seWmaZSdhFD_A@mail.gmail.com>
-References: <1472464210-30252-1-git-send-email-finley.xiao@rock-chips.com>
- <1472464210-30252-4-git-send-email-finley.xiao@rock-chips.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 14/19] iommu/arm-smmu: Intelligent SMR allocation
+Date: Thu, 1 Sep 2016 18:59:40 +0100
+Message-ID: <382ae80f-9cd7-95e7-8d12-06abf282e581@arm.com>
+References: <cover.1471975357.git.robin.murphy@arm.com>
+	<693b7fdd58be254297eb43ac8f5e035beb5226b2.1471975357.git.robin.murphy@arm.com>
+	<20160901151702.GC28180@red-moon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1472464210-30252-4-git-send-email-finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tony Xie <tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Xu Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20160901151702.GC28180@red-moon>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 01/09/16 16:17, Lorenzo Pieralisi wrote:
+[...]
+>> +static int arm_smmu_find_sme(struct arm_smmu_device *smmu, u16 id, u16 mask)
+>>  {
+>>  	struct arm_smmu_smr *smrs = smmu->smrs;
+>> -	int i, idx;
+>> +	int i, idx = -ENOSPC;
+>>  
+>> -	/* Allocate the SMRs on the SMMU */
+>> -	for_each_cfg_sme(cfg, i, idx) {
+>> -		if (idx >= 0)
+>> -			return -EEXIST;
+>> +	/* Stream indexing is blissfully easy */
+>> +	if (!smrs)
+>> +		return id;
+>>  
+>> -		/* ...except on stream indexing hardware, of course */
+>> -		if (!smrs) {
+>> -			cfg->smendx[i] = cfg->streamids[i];
+>> +	/* Validating SMRs is... less so */
+>> +	for (i = 0; i < smmu->num_mapping_groups; ++i) {
+>> +		if (!smrs[i].valid) {
+>> +			if (idx < 0)
+>> +				idx = i;
+> 
+> This is to stash an "empty" entry index in case none matches, right ?
+> Let me say it is not that obvious, that deserves a comment since it
+> is hard to follow.
 
-On Mon, Aug 29, 2016 at 2:50 AM, Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> 1) the efuse timing of rk3399 is different from earlier SoCs.
-> 2) rk3399-efuse is organized as 32bits by 32 one-time programmable
-> electrical fuses, the efuse of earlier SoCs is organized as 32bits
-> by 8 one-time programmable electrical fuses with random access interface.
->
-> This patch adds a new read function for rk3399-efuse.
->
-> Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
->  drivers/nvmem/rockchip-efuse.c | 131 +++++++++++++++++++++++++++++++++++------
->  1 file changed, 112 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/nvmem/rockchip-efuse.c b/drivers/nvmem/rockchip-efuse.c
-> index 4d3f391..1825fd3 100644
-> --- a/drivers/nvmem/rockchip-efuse.c
-> +++ b/drivers/nvmem/rockchip-efuse.c
-> @@ -22,17 +22,29 @@
->  #include <linux/nvmem-provider.h>
->  #include <linux/slab.h>
->  #include <linux/of.h>
-> +#include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->
-> -#define EFUSE_A_SHIFT                  6
-> -#define EFUSE_A_MASK                   0x3ff
-> -#define EFUSE_PGENB                    BIT(3)
-> -#define EFUSE_LOAD                     BIT(2)
-> -#define EFUSE_STROBE                   BIT(1)
-> -#define EFUSE_CSB                      BIT(0)
-> -
-> -#define REG_EFUSE_CTRL                 0x0000
-> -#define REG_EFUSE_DOUT                 0x0004
-> +#define RK3288_A_SHIFT         6
-> +#define RK3288_A_MASK          0x3ff
-> +#define RK3288_PGENB           BIT(3)
-> +#define RK3288_LOAD                    BIT(2)
-> +#define RK3288_STROBE          BIT(1)
-> +#define RK3288_CSB                     BIT(0)
-> +
-> +#define RK3399_A_SHIFT         16
-> +#define RK3399_A_MASK          0x3ff
-> +#define RK3399_NBYTES          4
-> +#define RK3399_STROBSFTSEL     BIT(9)
-> +#define RK3399_RSB                     BIT(7)
-> +#define RK3399_PD                      BIT(5)
-> +#define RK3399_PGENB           BIT(3)
-> +#define RK3399_LOAD                    BIT(2)
-> +#define RK3399_STROBE          BIT(1)
-> +#define RK3399_CSB                     BIT(0)
-> +
-> +#define REG_EFUSE_CTRL         0x0000
-> +#define REG_EFUSE_DOUT         0x0004
+Yes, since we have to iterate through every SMR anyway, this just keeps
+a note of the first free entry we see along the way. It _could_ be
+simplified slightly further by being made unconditional so that we end
+up allocating top-down instead, although that would pessimize the
+early-out cases below. I'll certainly comment it, though.
 
-For me the alignment of the above is all off after your patch.  Are
-you sure you have your editor set to 8 spaces per tab?
+>>  			continue;
+>>  		}
+>>  
+>> -		idx = arm_smmu_alloc_smr(smmu);
+>> -		if (idx < 0) {
+>> -			dev_err(smmu->dev, "failed to allocate free SMR\n");
+>> -			goto err_free_smrs;
+>> -		}
+>> -		cfg->smendx[i] = idx;
+>> +		/* Exact matches are good */
+>> +		if (mask == smrs[i].mask && id == smrs[i].id)
+>> +			return i;
+>>  
+>> -		smrs[idx].id = cfg->streamids[i];
+>> -		smrs[idx].mask = 0; /* We don't currently share SMRs */
+>> +		/* New unmasked IDs matching existing masks we can cope with */
+>> +		if (!mask && !((smrs[i].id ^ id) & ~smrs[i].mask))
+>> +			return i;
+>> +
+>> +		/* Overlapping masks are right out */
+>> +		if (mask & smrs[i].mask)
+>> +			return -EINVAL;
+>> +
+>> +		/* Distinct masks must match unambiguous ranges */
+>> +		if (mask && !((smrs[i].id ^ id) & ~(smrs[i].mask | mask)))
+>> +			return -EINVAL;
+> 
+> And this is to _prevent_ an entry to match the input streamid
+> range (masked streamid) because it would create an ambiguous match ?
 
->
->  struct rockchip_efuse_chip {
->         struct device *dev;
-> @@ -40,8 +52,8 @@ struct rockchip_efuse_chip {
->         struct clk *clk;
->  };
->
-> -static int rockchip_efuse_read(void *context, unsigned int offset,
-> -                              void *val, size_t bytes)
-> +static int rockchip_rk3288_efuse_read(void *context, unsigned int offset,
-> +                                     void *val, size_t bytes)
->  {
->         struct rockchip_efuse_chip *efuse = context;
->         u8 *buf = val;
-> @@ -53,27 +65,80 @@ static int rockchip_efuse_read(void *context, unsigned int offset,
->                 return ret;
->         }
->
-> -       writel(EFUSE_LOAD | EFUSE_PGENB, efuse->base + REG_EFUSE_CTRL);
-> +       writel(RK3288_LOAD | RK3288_PGENB, efuse->base + REG_EFUSE_CTRL);
->         udelay(1);
->         while (bytes--) {
->                 writel(readl(efuse->base + REG_EFUSE_CTRL) &
-> -                            (~(EFUSE_A_MASK << EFUSE_A_SHIFT)),
-> +                            (~(RK3288_A_MASK << RK3288_A_SHIFT)),
->                              efuse->base + REG_EFUSE_CTRL);
->                 writel(readl(efuse->base + REG_EFUSE_CTRL) |
-> -                            ((offset++ & EFUSE_A_MASK) << EFUSE_A_SHIFT),
-> +                            ((offset++ & RK3288_A_MASK) << RK3288_A_SHIFT),
->                              efuse->base + REG_EFUSE_CTRL);
->                 udelay(1);
->                 writel(readl(efuse->base + REG_EFUSE_CTRL) |
-> -                            EFUSE_STROBE, efuse->base + REG_EFUSE_CTRL);
-> +                            RK3288_STROBE, efuse->base + REG_EFUSE_CTRL);
->                 udelay(1);
->                 *buf++ = readb(efuse->base + REG_EFUSE_DOUT);
->                 writel(readl(efuse->base + REG_EFUSE_CTRL) &
-> -                    (~EFUSE_STROBE), efuse->base + REG_EFUSE_CTRL);
-> +                    (~RK3288_STROBE), efuse->base + REG_EFUSE_CTRL);
->                 udelay(1);
->         }
->
->         /* Switch to standby mode */
-> -       writel(EFUSE_PGENB | EFUSE_CSB, efuse->base + REG_EFUSE_CTRL);
-> +       writel(RK3288_PGENB | RK3288_CSB, efuse->base + REG_EFUSE_CTRL);
-> +
-> +       clk_disable_unprepare(efuse->clk);
-> +
-> +       return 0;
-> +}
-> +
-> +static int rockchip_rk3399_efuse_read(void *context, unsigned int offset,
-> +                                     void *val, size_t bytes)
-> +{
-> +       struct rockchip_efuse_chip *efuse = context;
-> +       unsigned int addr_start, addr_end, addr_offset, addr_len;
-> +       u32 out_value;
-> +       u8 *buf;
-> +       int ret, i = 0;
-> +
-> +       ret = clk_prepare_enable(efuse->clk);
-> +       if (ret < 0) {
-> +               dev_err(efuse->dev, "failed to prepare/enable efuse clk\n");
-> +               return ret;
-> +       }
-> +
-> +       addr_start = rounddown(offset, RK3399_NBYTES) / RK3399_NBYTES;
-> +       addr_end = roundup(offset + bytes, RK3399_NBYTES) / RK3399_NBYTES;
-> +       addr_offset = offset % RK3399_NBYTES;
-> +       addr_len = addr_end - addr_start;
-> +
-> +       buf = kzalloc(sizeof(*buf) * addr_len * RK3399_NBYTES, GFP_KERNEL);
-> +       if (!buf)
-> +               return -ENOMEM;
+Indeed; say we have the (ID,mask) pair (0x0100,0x000f) already in an
+SMR, then we'd allow (0x0000,0x00f0), since bit 8 still uniquely matches
+one or the other, but we'd have to reject (0x0100,0x00f0) as that would
+create a conflict for ID 0x0100. In general, unless there are distinct
+bits outside both masks then there will always exist at least one ID
+capable of causing a conflict.
 
-you forget to clk_disable_unprepare() here.
+> Basically here you keep looping because this function is at the
+> same time allocating and validating the SMRS (ie you want to make
+> sure there are no valid entries that clash with the streamid you
+> are currently allocating).
+> 
+> It is a tad complicated and a bit hard to parse. I wonder if it would
+> not be better to split into two SMRS validation and allocation
+> functions, I think I fully grasped what you want to achieve but it is
+> not that trivial.
 
-> +
-> +       writel(RK3399_LOAD | RK3399_PGENB | RK3399_STROBSFTSEL | RK3399_RSB,
-> +              efuse->base + REG_EFUSE_CTRL);
-> +       udelay(1);
-> +       while (addr_len--) {
-> +               writel(readl(efuse->base + REG_EFUSE_CTRL) | RK3399_STROBE |
-> +                       ((addr_start++ & RK3399_A_MASK) << RK3399_A_SHIFT),
-> +                       efuse->base + REG_EFUSE_CTRL);
-> +               udelay(1);
-> +               out_value = readl(efuse->base + REG_EFUSE_DOUT);
-> +               writel(readl(efuse->base + REG_EFUSE_CTRL) & (~RK3399_STROBE),
-> +                      efuse->base + REG_EFUSE_CTRL);
-> +               udelay(1);
-> +
-> +               memcpy(&buf[i], &out_value, RK3399_NBYTES);
-> +               i += RK3399_NBYTES;
-> +       }
-> +
-> +       /* Switch to standby mode */
-> +       writel(RK3399_PD | RK3399_CSB, efuse->base + REG_EFUSE_CTRL);
-> +
-> +       memcpy(val, buf + addr_offset, bytes);
-> +
-> +       kfree(buf);
->
->         clk_disable_unprepare(efuse->clk);
->
-> @@ -89,7 +154,27 @@ static struct nvmem_config econfig = {
->  };
->
->  static const struct of_device_id rockchip_efuse_match[] = {
-> -       { .compatible = "rockchip,rockchip-efuse", },
-> +       /* deprecated but kept around for dts binding compatibility */
-> +       {
-> +               .compatible = "rockchip,rockchip-efuse",
-> +               .data = (void *)&rockchip_rk3288_efuse_read,
-> +       },
-> +       {
-> +               .compatible = "rockchip,rk3066a-efuse",
-> +               .data = (void *)&rockchip_rk3288_efuse_read,
-> +       },
-> +       {
-> +               .compatible = "rockchip,rk3188-efuse",
-> +               .data = (void *)&rockchip_rk3288_efuse_read,
-> +       },
-> +       {
-> +               .compatible = "rockchip,rk3288-efuse",
-> +               .data = (void *)&rockchip_rk3288_efuse_read,
-> +       },
-> +       {
-> +               .compatible = "rockchip,rk3399-efuse",
-> +               .data = (void *)&rockchip_rk3399_efuse_read,
-> +       },
->         { /* sentinel */},
->  };
->  MODULE_DEVICE_TABLE(of, rockchip_efuse_match);
-> @@ -99,6 +184,14 @@ static int rockchip_efuse_probe(struct platform_device *pdev)
->         struct resource *res;
->         struct nvmem_device *nvmem;
->         struct rockchip_efuse_chip *efuse;
-> +       const struct of_device_id *match;
-> +       struct device *dev = &pdev->dev;
-> +
-> +       match = of_match_device(dev->driver->of_match_table, dev);
-> +       if (!match || !match->data) {
-> +               dev_err(dev, "failed to get match data\n");
-> +               return -EINVAL;
-> +       }
->
->         efuse = devm_kzalloc(&pdev->dev, sizeof(struct rockchip_efuse_chip),
->                              GFP_KERNEL);
-> @@ -116,7 +209,7 @@ static int rockchip_efuse_probe(struct platform_device *pdev)
->
->         efuse->dev = &pdev->dev;
->         econfig.size = resource_size(res);
-> -       econfig.reg_read = rockchip_efuse_read;
-> +       econfig.reg_read = match->data;
->         econfig.priv = efuse;
->         econfig.dev = efuse->dev;
->         nvmem = nvmem_register(&econfig);
-> --
-> 1.9.1
->
->
+Things were actually considerably more complicated until I realised the
+neatness of hoisting the allocation (which itself is all of 4 lines
+here) up into the same function. A real logical separation of concerns
+would involve iterating through the whole array two-and-a-bit times,
+first validating against conflicts, then looking to return an existing
+entry which already matches, then finally falling back to allocating a
+free entry. Even disregarding the efficiency angle, I'm not convinced
+that having more code spread about with similar but subtly different
+repetition would actually be any easier to follow (unfortunately earlier
+implementations of this have been rebased into oblivion so I can't pull
+one out to demonstrate). I'll definitely beef up the comments here - on
+reflection these are more notes to myself than actual explanations for
+others...
+
+Robin.
