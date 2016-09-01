@@ -1,436 +1,157 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v6 2/2] phy: add a driver for the Rockchip SoC internal PCIe PHY
-Date: Thu,  1 Sep 2016 15:44:54 +0800
-Message-ID: <1472715894-28985-2-git-send-email-shawn.lin@rock-chips.com>
-References: <1472715894-28985-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472715894-28985-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: Lars Persson <lars.persson@axis.com>
+Subject: Re: [PATCH V2] dt: net: enhance DWC EQoS binding to support Tegra186
+Date: Thu, 1 Sep 2016 09:50:38 +0200
+Message-ID: <d60d2deb-49dd-2561-bbde-20d2ff13ca4b@axis.com>
+References: <20160824212046.2416-1-swarren@wwwdotorg.org>
+ <20160830190152.GA25083@rob-hp-laptop>
+ <54b380c4-179f-2260-55dd-4220e65f8f46@wwwdotorg.org>
+ <190a6bc1-ef66-2927-e542-13c543bab3b9@axis.com>
+ <f4f85b48-4df6-4a3c-2831-e5707d35ebb6@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <f4f85b48-4df6-4a3c-2831-e5707d35ebb6@wwwdotorg.org>
+Sender: netdev-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Lars Persson <larper@axis.com>, Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch to add a generic PHY driver for rockchip PCIe PHY.
-Access the PHY via registers provided by GRF (general register
-files) module.
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 
----
+On 08/31/2016 11:48 PM, Stephen Warren wrote:
+> On 08/31/2016 03:15 AM, Lars Persson wrote:
+>> On 08/30/2016 10:50 PM, Stephen Warren wrote:
+>>> On 08/30/2016 01:01 PM, Rob Herring wrote:
+>>>> On Wed, Aug 24, 2016 at 03:20:46PM -0600, Stephen Warren wrote:
+>>>>> The Synopsys DWC EQoS is a configurable IP block which supports
+>>>>> multiple
+>>>>> options for bus type, clocking and reset structure, and feature list.
+>>>>> Extend the DT binding to define a "compatible value" for the
+>>>>> configuration
+>>>>> contained in NVIDIA's Tegra186 SoC, and define some new properties and
+>>>>> list property entries required by that configuration.
+>
+>>>>> diff --git
+>>>>> a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
+>>>>> b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
+>
+>>>>> +- clock-names: May contain any/all of the following depending on
+>>>>> the IP
+>>>>> +  configuration, in any order:
+>>>>> +    The EQOS transmit path clock. The HW signal name is clk_tx_i.
+>>>>> +    In some configurations (e.g. GMII/RGMII), this clock also drives
+>>>>> the PHY TX
+>>>>> +    path. In other configurations, other clocks (such as tx_125,
+>>>>> rmii) may
+>>>>> +    drive the PHY TX path.
+>>>>> +  - "rx"
+>>>>> +    The EQOS receive path clock. The HW signal name is clk_rx_i.
+>>>>> +    In some configurations (e.g. GMII/RGMII), this clock also drives
+>>>>> the PHY RX
+>>>>> +    path. In other configurations, other clocks (such as rx_125,
+>>>>> pmarx_0,
+>>>>> +    pmarx_1, rmii) may drive the PHY RX path.
+>>
+>> It is not correct that clk_rx_i drives the PHY rx path for GMII/RGMII.
+>> The PHY is the source of the rx clock for these modes.
+>
+> I think both of our statements are true.
+>
+> There's a clock input to the EQOS module (clk_rx_i) that does drive the
+> RX path in the EQOS module.
+>
+> That clock also drives the PHY's RX path.
+>
+> Those statements make no comment regarding the /source/ of that clock;
+> either of the following might be true:
+>
+> 1) The PHY could generate the clock internally somehow, feed its own
+> internal logic with that clock, and send the clock out to feed the EQOS
+> RX path too.
+>
+> or,
+>
+> 2)  SoC integration could drive the same clock into both the EQOS and
+> PHY modules, so that both sets of logic are fed from the same external
+> clock.
+>
+> Perhaps the phrase "PHY RX path" is confusing; I was talking about the
+> EQOS modules' RX path from the PHY more than the PHY itself, although
+> given what I said above I believe either interpretation is valid and
+> correct.
+>
+>> Will the driver need to make any clock ops on the "rx" clock ?
+>
+> Yes. The EQOS driver needs to ensure that the clock is running before
+> attempting to receive data from the PHY, otherwise the EQOS's own RX
+> logic won't be clocked.
+>
+> Whether the phandle for this clock points at a SoC-level provider (it
+> will in Tegra) or a clock provider in the PHY (it might in other SoCs),
+> shouldn't matter as far as the DT binding goes, although it might affect
+> device probe ordering in some implementations.
+>
 
-Changes in v6:
-- use dev_* instead of pr_*
+I understand your point. The lines between PHY, MAC and SoC gets blurred 
+with high integration.
 
-Changes in v5:
-- add COMPILE_TEST and select MFD_SYSCON on Kconfig
+The thing is that when we talk about standard PHY interfaces the clock 
+is a well defined part of the interface and it should not be mixed up 
+with SoC-specific implementations that deviate from this. Please update 
+the description of the rx clock to only cover cases when the clock is 
+not implicitly sourced from the PHY.
 
-Changes in v4:
-- remove laneoff symbol as we still fail to get a workable solution
-  except for exporting symbol. But I will be back with some other possible
-  routine once finished.
+When the PHY is the source of the clock then it is managed by the phy 
+library and the phy driver so it does not need to be also handled by the 
+common clock framework.
 
-Changes in v3: None
-Changes in v2: None
 
- drivers/phy/Kconfig             |   8 +
- drivers/phy/Makefile            |   1 +
- drivers/phy/phy-rockchip-pcie.c | 357 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 366 insertions(+)
- create mode 100644 drivers/phy/phy-rockchip-pcie.c
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index f9bf981..46e5536 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -388,6 +388,14 @@ config PHY_ROCKCHIP_DP
- 	help
- 	  Enable this to support the Rockchip Display Port PHY.
- 
-+config PHY_ROCKCHIP_PCIE
-+	tristate "Rockchip PCIe PHY Driver"
-+	depends on (ARCH_ROCKCHIP && OF) || COMPILE_TEST
-+	select GENERIC_PHY
-+	select MFD_SYSCON
-+	help
-+	  Enable this to support the Rockchip PCIe PHY.
-+
- config PHY_ST_SPEAR1310_MIPHY
- 	tristate "ST SPEAR1310-MIPHY driver"
- 	select GENERIC_PHY
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 74b44ef..ce0e526 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -42,6 +42,7 @@ obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
- obj-$(CONFIG_PHY_ROCKCHIP_USB) += phy-rockchip-usb.o
- obj-$(CONFIG_PHY_ROCKCHIP_INNO_USB2)	+= phy-rockchip-inno-usb2.o
- obj-$(CONFIG_PHY_ROCKCHIP_EMMC) += phy-rockchip-emmc.o
-+obj-$(CONFIG_PHY_ROCKCHIP_PCIE) += phy-rockchip-pcie.o
- obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
- obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
- obj-$(CONFIG_PHY_ST_SPEAR1310_MIPHY)	+= phy-spear1310-miphy.o
-diff --git a/drivers/phy/phy-rockchip-pcie.c b/drivers/phy/phy-rockchip-pcie.c
-new file mode 100644
-index 0000000..a2b4c6b
---- /dev/null
-+++ b/drivers/phy/phy-rockchip-pcie.c
-@@ -0,0 +1,357 @@
-+/*
-+ * Rockchip PCIe PHY driver
-+ *
-+ * Copyright (C) 2016 Shawn Lin <shawn.lin@rock-chips.com>
-+ * Copyright (C) 2016 ROCKCHIP, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+/*
-+ * The higher 16-bit of this register is used for write protection
-+ * only if BIT(x + 16) set to 1 the BIT(x) can be written.
-+ */
-+#define HIWORD_UPDATE(val, mask, shift) \
-+		((val) << (shift) | (mask) << ((shift) + 16))
-+
-+#define PHY_MAX_LANE_NUM      4
-+#define PHY_CFG_DATA_SHIFT    7
-+#define PHY_CFG_ADDR_SHIFT    1
-+#define PHY_CFG_DATA_MASK     0xf
-+#define PHY_CFG_ADDR_MASK     0x3f
-+#define PHY_CFG_RD_MASK       0x3ff
-+#define PHY_CFG_WR_ENABLE     1
-+#define PHY_CFG_WR_DISABLE    1
-+#define PHY_CFG_WR_SHIFT      0
-+#define PHY_CFG_WR_MASK       1
-+#define PHY_CFG_PLL_LOCK      0x10
-+#define PHY_CFG_CLK_TEST      0x10
-+#define PHY_CFG_CLK_SCC       0x12
-+#define PHY_CFG_SEPE_RATE     BIT(3)
-+#define PHY_CFG_PLL_100M      BIT(3)
-+#define PHY_PLL_LOCKED        BIT(9)
-+#define PHY_PLL_OUTPUT        BIT(10)
-+#define PHY_LANE_A_STATUS     0x30
-+#define PHY_LANE_B_STATUS     0x31
-+#define PHY_LANE_C_STATUS     0x32
-+#define PHY_LANE_D_STATUS     0x33
-+#define PHY_LANE_RX_DET_SHIFT 11
-+#define PHY_LANE_RX_DET_TH    0x1
-+#define PHY_LANE_IDLE_OFF     0x1
-+#define PHY_LANE_IDLE_MASK    0x1
-+#define PHY_LANE_IDLE_A_SHIFT 3
-+#define PHY_LANE_IDLE_B_SHIFT 4
-+#define PHY_LANE_IDLE_C_SHIFT 5
-+#define PHY_LANE_IDLE_D_SHIFT 6
-+
-+struct rockchip_pcie_data {
-+	unsigned int pcie_conf;
-+	unsigned int pcie_status;
-+	unsigned int pcie_laneoff;
-+};
-+
-+struct rockchip_pcie_phy {
-+	struct rockchip_pcie_data *phy_data;
-+	struct regmap *reg_base;
-+	struct reset_control *phy_rst;
-+	struct clk *clk_pciephy_ref;
-+};
-+
-+static inline void phy_wr_cfg(struct rockchip_pcie_phy *rk_phy,
-+			      u32 addr, u32 data)
-+{
-+	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-+		     HIWORD_UPDATE(data,
-+				   PHY_CFG_DATA_MASK,
-+				   PHY_CFG_DATA_SHIFT) |
-+		     HIWORD_UPDATE(addr,
-+				   PHY_CFG_ADDR_MASK,
-+				   PHY_CFG_ADDR_SHIFT));
-+	udelay(1);
-+	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-+		     HIWORD_UPDATE(PHY_CFG_WR_ENABLE,
-+				   PHY_CFG_WR_MASK,
-+				   PHY_CFG_WR_SHIFT));
-+	udelay(1);
-+	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-+		     HIWORD_UPDATE(PHY_CFG_WR_DISABLE,
-+				   PHY_CFG_WR_MASK,
-+				   PHY_CFG_WR_SHIFT));
-+}
-+
-+static inline u32 phy_rd_cfg(struct rockchip_pcie_phy *rk_phy,
-+			     u32 addr)
-+{
-+	u32 val;
-+
-+	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-+		     HIWORD_UPDATE(addr,
-+				   PHY_CFG_RD_MASK,
-+				   PHY_CFG_ADDR_SHIFT));
-+	regmap_read(rk_phy->reg_base,
-+		    rk_phy->phy_data->pcie_status,
-+		    &val);
-+	return val;
-+}
-+
-+static int rockchip_pcie_phy_power_off(struct phy *phy)
-+{
-+	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-+	int err = 0;
-+
-+	err = reset_control_assert(rk_phy->phy_rst);
-+	if (err) {
-+		dev_err(&phy->dev, "assert phy_rst err %d\n", err);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rockchip_pcie_phy_power_on(struct phy *phy)
-+{
-+	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-+	int err = 0;
-+	u32 status;
-+	unsigned long timeout;
-+
-+	err = reset_control_deassert(rk_phy->phy_rst);
-+	if (err) {
-+		dev_err(&phy->dev, "deassert phy_rst err %d\n", err);
-+		return err;
-+	}
-+
-+	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-+		     HIWORD_UPDATE(PHY_CFG_PLL_LOCK,
-+				   PHY_CFG_ADDR_MASK,
-+				   PHY_CFG_ADDR_SHIFT));
-+
-+	/*
-+	 * No documented timeout value for phy operation below,
-+	 * so we make it large enough here. And we use loop-break
-+	 * method which should not be harmful.
-+	 */
-+	timeout = jiffies + msecs_to_jiffies(1000);
-+
-+	err = -EINVAL;
-+	while (time_before(jiffies, timeout)) {
-+		regmap_read(rk_phy->reg_base,
-+			    rk_phy->phy_data->pcie_status,
-+			    &status);
-+		if (status & PHY_PLL_LOCKED) {
-+			dev_dbg(&phy->dev, "pll locked!\n");
-+			err = 0;
-+			break;
-+		}
-+		msleep(20);
-+	}
-+
-+	if (err) {
-+		dev_err(&phy->dev, "pll lock timeout!\n");
-+		goto err_pll_lock;
-+	}
-+
-+	phy_wr_cfg(rk_phy, PHY_CFG_CLK_TEST, PHY_CFG_SEPE_RATE);
-+	phy_wr_cfg(rk_phy, PHY_CFG_CLK_SCC, PHY_CFG_PLL_100M);
-+
-+	err = -ETIMEDOUT;
-+	while (time_before(jiffies, timeout)) {
-+		regmap_read(rk_phy->reg_base,
-+			    rk_phy->phy_data->pcie_status,
-+			    &status);
-+		if (!(status & PHY_PLL_OUTPUT)) {
-+			dev_dbg(&phy->dev, "pll output enable done!\n");
-+			err = 0;
-+			break;
-+		}
-+		msleep(20);
-+	}
-+
-+	if (err) {
-+		dev_err(&phy->dev, "pll output enable timeout!\n");
-+		goto err_pll_lock;
-+	}
-+
-+	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-+		     HIWORD_UPDATE(PHY_CFG_PLL_LOCK,
-+				   PHY_CFG_ADDR_MASK,
-+				   PHY_CFG_ADDR_SHIFT));
-+	err = -EINVAL;
-+	while (time_before(jiffies, timeout)) {
-+		regmap_read(rk_phy->reg_base,
-+			    rk_phy->phy_data->pcie_status,
-+			    &status);
-+		if (status & PHY_PLL_LOCKED) {
-+			dev_dbg(&phy->dev, "pll relocked!\n");
-+			err = 0;
-+			break;
-+		}
-+		msleep(20);
-+	}
-+
-+	if (err) {
-+		dev_err(&phy->dev, "pll relock timeout!\n");
-+		goto err_pll_lock;
-+	}
-+
-+	return 0;
-+
-+err_pll_lock:
-+	reset_control_assert(rk_phy->phy_rst);
-+	return err;
-+}
-+
-+static int rockchip_pcie_phy_init(struct phy *phy)
-+{
-+	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-+	int err = 0;
-+
-+	err = clk_prepare_enable(rk_phy->clk_pciephy_ref);
-+	if (err) {
-+		dev_err(&phy->dev, "Fail to enable pcie ref clock.\n");
-+		goto err_refclk;
-+	}
-+
-+	err = reset_control_assert(rk_phy->phy_rst);
-+	if (err) {
-+		dev_err(&phy->dev, "assert phy_rst err %d\n", err);
-+		goto err_reset;
-+	}
-+
-+	return err;
-+
-+err_reset:
-+	clk_disable_unprepare(rk_phy->clk_pciephy_ref);
-+err_refclk:
-+	return err;
-+}
-+
-+static int rockchip_pcie_phy_exit(struct phy *phy)
-+{
-+	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-+	int err = 0;
-+
-+	clk_disable_unprepare(rk_phy->clk_pciephy_ref);
-+
-+	err = reset_control_deassert(rk_phy->phy_rst);
-+	if (err) {
-+		dev_err(&phy->dev, "deassert phy_rst err %d\n", err);
-+		goto err_reset;
-+	}
-+
-+	return err;
-+
-+err_reset:
-+	clk_prepare_enable(rk_phy->clk_pciephy_ref);
-+	return err;
-+}
-+
-+static const struct phy_ops ops = {
-+	.init		= rockchip_pcie_phy_init,
-+	.exit		= rockchip_pcie_phy_exit,
-+	.power_on	= rockchip_pcie_phy_power_on,
-+	.power_off	= rockchip_pcie_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct rockchip_pcie_data rk3399_pcie_data = {
-+	.pcie_conf = 0xe220,
-+	.pcie_status = 0xe2a4,
-+	.pcie_laneoff = 0xe214,
-+};
-+
-+static const struct of_device_id rockchip_pcie_phy_dt_ids[] = {
-+	{
-+		.compatible = "rockchip,rk3399-pcie-phy",
-+		.data = &rk3399_pcie_data,
-+	},
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, rockchip_pcie_phy_dt_ids);
-+
-+static int rockchip_pcie_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct rockchip_pcie_phy *rk_phy;
-+	struct phy *generic_phy;
-+	struct phy_provider *phy_provider;
-+	struct regmap *grf;
-+	const struct of_device_id *of_id;
-+
-+	grf = syscon_node_to_regmap(dev->parent->of_node);
-+	if (IS_ERR(grf)) {
-+		dev_err(dev, "Cannot find GRF syscon\n");
-+		return PTR_ERR(grf);
-+	}
-+
-+	rk_phy = devm_kzalloc(dev, sizeof(*rk_phy), GFP_KERNEL);
-+	if (!rk_phy)
-+		return -ENOMEM;
-+
-+	of_id = of_match_device(rockchip_pcie_phy_dt_ids, &pdev->dev);
-+	if (!of_id)
-+		return -EINVAL;
-+
-+	rk_phy->phy_data = (struct rockchip_pcie_data *)of_id->data;
-+	rk_phy->reg_base = grf;
-+
-+	rk_phy->phy_rst = devm_reset_control_get(dev, "phy");
-+	if (IS_ERR(rk_phy->phy_rst)) {
-+		if (PTR_ERR(rk_phy->phy_rst) != -EPROBE_DEFER)
-+			dev_err(dev,
-+				"missing phy property for reset controller\n");
-+		return PTR_ERR(rk_phy->phy_rst);
-+	}
-+
-+	rk_phy->clk_pciephy_ref = devm_clk_get(dev, "refclk");
-+	if (IS_ERR(rk_phy->clk_pciephy_ref)) {
-+		dev_err(dev, "refclk not found.\n");
-+		return PTR_ERR(rk_phy->clk_pciephy_ref);
-+	}
-+
-+	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
-+	if (IS_ERR(generic_phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(generic_phy);
-+	}
-+
-+	phy_set_drvdata(generic_phy, rk_phy);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static struct platform_driver rockchip_pcie_driver = {
-+	.probe		= rockchip_pcie_phy_probe,
-+	.driver		= {
-+		.name	= "rockchip-pcie-phy",
-+		.of_match_table = rockchip_pcie_phy_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(rockchip_pcie_driver);
-+
-+MODULE_AUTHOR("Shawn Lin <shawn.lin@rock-chips.com>");
-+MODULE_DESCRIPTION("Rockchip PCIe PHY driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.3.7
+>>>>> +  Note: Support for additional IP configurations may require
+>>>>> adding the
+>>>>> +  following clocks to this list in the future: clk_rx_125_i,
+>>>>> clk_tx_125_i,
+>>>>> +  clk_pmarx_0_i, clk_pmarx1_i, clk_rmii_i, clk_revmii_rx_i,
+>>>>> clk_revmii_tx_i.
+>>>>> +
+>>>>> +  The following compatible values require the following set of
+>>>>> clocks:
+>>>>> +  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10":
+>>>>> +    - "slave_bus"
+>>>>> +    - "master_bus"
+>>>>> +    - "rx"
+>>>>> +    - "tx"
+>>>>> +    - "ptp_ref"
+>>>>> +  - "axis,artpec6-eqos", "snps,dwc-qos-ethernet-4.10":
+>>>>> +    - "phy_ref_clk"
+>>>>> +    - "apb_clk"
+>>>>
+>>>> It would be good if this was marked deprecated and the full set of
+>>>> clocks could be described and supported. Not sure if you can figure
+>>>> that
+>>>> out. Is it really only 2 clocks, or these have multiple connections to
+>>>> the same source.
+>>>
+>>> Lars, can you answer here?
+>>>
+>>> I deliberately didn't attempt to change the binding definition for the
+>>> existing use-case, since I'm not familiar with that SoC, and don't
+>>> relish changing DTs for a platform I can't test.
+>>
+>> For the artpec-6 the clocks are like this:
+>> apb_clk: It is both the master and slave bus clock.
+>> phy_ref_clk: It corresponds to tx clock in the proposed new binding.
+>>
+>> There is a also a ptp reference clock that will map to the new ptp_ref
+>> clock binding.
+>>
+>> So the full set of clocks in a new artpec-6 binding is:
+>> slave_bus
+>> master_bus
+>> tx
+>> ptp_ref
+>
+> Given the discussion above, I think we should represent the rx clock too.
+
+It does not make sense to add rx clock for artpec-6.
