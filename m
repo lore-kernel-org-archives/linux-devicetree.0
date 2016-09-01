@@ -1,85 +1,39 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [v10,2/2] PCI: Rockchip: Add Rockchip PCIe controller support
-Date: Thu, 1 Sep 2016 10:14:01 -0700
-Message-ID: <20160901171400.GA4093@localhost>
-References: <1471570498-3284-1-git-send-email-shawn.lin@rock-chips.com>
- <20160831181754.GA7460@roeck-us.net>
- <9075a2c1-c787-986f-31b4-4d5b7c92b771@rock-chips.com>
- <20160901163455.GA9471@localhost>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 07/19] iommu/arm-smmu: Set PRIVCFG in stage 1 STEs
+Date: Thu, 1 Sep 2016 18:19:17 +0100
+Message-ID: <20160901171917.GR6721@arm.com>
+References: <cover.1471975357.git.robin.murphy@arm.com>
+	<1cda9861ce3ede6c2de9c6c4f2294549808b421b.1471975357.git.robin.murphy@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160901163455.GA9471@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <1cda9861ce3ede6c2de9c6c4f2294549808b421b.1471975357.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 01, 2016 at 11:34:55AM -0500, Bjorn Helgaas wrote:
-> In the interest of making progress, I made most of the changes Guenter
-> suggested (thanks very much, Guenter!) and made some more of my own on
-> top of those.
+On Tue, Aug 23, 2016 at 08:05:18PM +0100, Robin Murphy wrote:
+> Implement the SMMUv3 equivalent of d346180e70b9 ("iommu/arm-smmu: Treat
+> all device transactions as unprivileged"), so that once again those
+> pesky DMA controllers with their privileged instruction fetches don't
+> unexpectedly fault in stage 1 domains due to VMSAv8 rules.
+> 
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/iommu/arm-smmu-v3.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 
-I'm not sure, but was this change your idea Bjorn?
+Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 
-commit 88cb3f59d73e261a3cd1957ff392f98c9916a5d1
-Author: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Date:   Thu Sep 1 10:27:44 2016 -0500
-
-    Simplify the confusing HIWORD_UPDATE scheme.
-
-[Which I'll summarize here; you're replacing the macro:
-
--/*
--  * The higher 16-bit of this register is used for write protection
--  * only if BIT(x + 16) set to 1 the BIT(x) can be written.
--  */
--#define HIWORD_UPDATE(val, mask, shift) \
--       ((val) << (shift) | (mask) << ((shift) + 16))
-
-with its expansions:
-
-+
-+/*
-+ * The higher 16-bit of this register is used for write protection
-+ * only if BIT(x + 16) set to 1 the BIT(x) can be written.
-+ */
-+#define PCIE_CLIENT_CONF_ENABLE                (0x00010000 | 0x0001)
-+#define PCIE_CLIENT_LINK_TRAIN_ENABLE  (0x00020000 | 0x0002)
-+#define PCIE_CLIENT_ARI_ENABLE         (0x00080000 | 0x0008)
-+#define PCIE_CLIENT_CONF_LANE_NUM(x)   (0x00300000 | (((x >> 1) & 3) << 4)
-+#define PCIE_CLIENT_MODE_RC            (0x00400000 | 0x0040)
-+#define PCIE_CLIENT_GEN_SEL(x)         (0x00800000 | ((x & 1) << 7)
-+#define  PCIE_CLIENT_GEN_SEL_0                 0
-+#define  PCIE_CLIENT_GEN_SEL_2                 1
-
-Full change can be had by:
-git fetch git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host-rockchip-wip
-]
-
-
-The use of HIWORD_UPDATE can indeed be a bit confusing, IMO, but this is
-really a common Rockchip-ism that, once you read several of their
-drivers, can make a little more sense. If you grep around, it's in at
-least their clock, ethernet, SDHCI, PHY, and DP/DRM drivers. I might
-defer to Heiko (upstream maintainer of Rockchip code) for a decision.
-Maybe there's some intermediate ground where we keep the HIWORK_UPDATE()
-logic (it does make sure we get the 16-bit shift right, I think) while
-still refactoring a few other bits (like PCIE_CLIENT_CONF_LANE_NUM() and
-PCIE_CLIENT_GEN_SEL() for wrapping HIWORK_UPDATE()?).
-
-Anyway, just a thought. If it really is most understandable to write it
-this way, then maybe it's fine to be different than the other 16
-rockchip files that have this pattern.
-
-Brian
+Will
