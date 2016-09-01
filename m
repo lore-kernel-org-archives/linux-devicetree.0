@@ -1,121 +1,114 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] phy: add a driver for the Rockchip SoC internal
- PCIe PHY
-Date: Thu, 1 Sep 2016 10:35:16 +0530
-Message-ID: <57C7B70C.3020101@ti.com>
-References: <1471661617-26432-1-git-send-email-shawn.lin@rock-chips.com>
- <1471661617-26432-2-git-send-email-shawn.lin@rock-chips.com>
- <6005500.MI6i4QbaFN@diego>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: da850-lcdk: Add NAND to DT
+Date: Thu, 1 Sep 2016 10:47:04 +0530
+Message-ID: <3945712b-d02f-d97a-2356-9383d7fe1984@ti.com>
+References: <20160829153242.18615-1-kbeldan@baylibre.com>
+ <7h37lk5wrd.fsf@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <6005500.MI6i4QbaFN@diego>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7h37lk5wrd.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Karl Beldan <karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Wednesday 31 August 2016 07:38 PM, Heiko St=FCbner wrote:
-> Hi,
-> =
-
-> Am Samstag, 20. August 2016, 10:53:37 schrieb Shawn Lin:
->> This patch to add a generic PHY driver for rockchip PCIe PHY.
->> Access the PHY via registers provided by GRF (general register
->> files) module.
+On Thursday 01 September 2016 05:14 AM, Kevin Hilman wrote:
+> Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+> 
+>> This adds DT support for the NAND connected to the SoC AEMIF.
+>> Passed torture hashing a 40MB file on top of UBIFS using subpages.
 >>
->> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> =
+>> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
+>> v2:
+>>
+>> - Removed comments pertaining to the BSP the LCDK ships with (Sekhar)
+>> - s/"ok"/"okay"/
+>> - Removed partitions since it relates to the BSP the LCDK ships with
+> 
+> IMO, some default partitions are nice to have, at least for u-boot and
+> u-boot env so factory-shipped u-boot is not accidentally overridden.
+> The left over space can be labeled "free space".
+> 
+> Anyways, after adding some partitions back, I tested with ubifs on my
+> LCDK:
 
-> seems I'm late to the party, but when looking if I can apply the pcie-
-> devicetree patches, I found that the phy is still pending.
-> =
+This[1] is what I had commented on the partitions before. I did not 
+mean to remove partitions altogether, just comments referring to 
+compatibility with pre-flashed software shipping with LCDK (since that 
+changes without notice).
 
-> Apart from some error-message nitpicks below, this looks ok to me. I don'=
-t =
+Apologies for any confusion caused. The "Rest of the patch looks good
+to me" in the end was to say that the partitions themselves look fine :)
 
-> know enough about the actual pci phy part though.
-> =
+Can you please submit a v2 with partitions added?
 
-> Kishon, is this on your radar?
+Thanks,
+Sekhar
 
-yes.. can the nipicks be fixed and posted asap?
+[1]
 
-Thanks
-Kishon
+> +
+> +			/*
+> +			 * LCDK original partitions:
+> +			 * 0x000000000000-0x000000020000 : "u-boot env"
+> +			 * 0x000000020000-0x0000000a0000 : "u-boot"
+> +			 * 0x0000000a0000-0x0000002a0000 : "kernel"
+> +			 * 0x0000002a0000-0x000020000000 : "filesystem"
+> +			 *
+> +			 * The 1st NAND block being guaranted to be valid w/o ECC (> 1k cycles),
+> +			 * it makes a perfect candidate as an SPL for the BootROM to jump to.
+> +			 * However the OMAP-L132/L138 Bootloader doc SPRAB41E reads:
+> +			 * "To boot from NAND Flash, the AIS should be written to NAND block 1
+> +			 * (NAND block 0 is not used by default)", which matches the LCDK
+> +			 * original partitioning.
 
-> =
+FWIW, silicon version 2.1 supports booting from block 0, but needs new
+boot pin settings not possible in stock LCDK.
 
-> [...]
-> =
+> +			 * Also, the LCDK ships with only the u-boot partition provisioned and
+> +			 * boots on it in its default configuration while using the MMC for the
+> +			 * kernel and rootfs, so preserve that one as is for now.
+> +			 * [1]: Ensuring for example that U-Boot LCDK SPL can handle it properly
+> +			 * and a proper boot chain ROM->SPL->U-Boot->Linux wrt ECC, would allow
+> +			 * for a better partitioning.
+> +			 */
 
->> +static int rockchip_pcie_phy_power_off(struct phy *phy)
->> +{
->> +	struct rockchip_pcie_phy *rk_phy =3D phy_get_drvdata(phy);
->> +	int err =3D 0;
->> +
->> +	err =3D reset_control_assert(rk_phy->phy_rst);
->> +	if (err) {
->> +		pr_err("assert phy_rst err %d\n", err);
-> =
+I would rather not refer to the software that LCDK ships with in the
+comments at all. Because that can change without notice. At some point,
+if mainline kernel works well enough on LCDK, TI might decide to ship
+LCDKs with mainline kernel flashed.
 
-> 	dev_err(phy->dev, ...)
-> =
+> +			partitions {
+> +				compatible = "fixed-partitions";
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +
+> +				partition@0 {
+> +					label = "u-boot env";
+> +					reg = <0 0x020000>;
+> +				};
+> +				partition@0x020000 {
+> +					/* The LCDK defaults to booting from this partition */
+> +					label = "u-boot";
+> +					reg = <0x020000 0x080000>;
+> +				};
+> +				partition@0x0a0000 {
+> +					label = "space";
+> +					reg = <0x0a0000 0>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
 
-> probably the same for all other pr_err invocations
-> =
+Rest of the patch looks good to me.
 
-> =
-
->> +		return err;
->> +	}
->> +
->> +	return 0;
->> +}
-> =
-
-> [...]
-> =
-
->> +static const struct of_device_id rockchip_pcie_phy_dt_ids[] =3D {
->> +	{
->> +		.compatible =3D "rockchip,rk3399-pcie-phy",
->> +		.data =3D &rk3399_pcie_data,
->> +	},
->> +	{}
->> +};
->> +
->> +MODULE_DEVICE_TABLE(of, rockchip_pcie_phy_dt_ids);
->> +
->> +static int rockchip_pcie_phy_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev =3D &pdev->dev;
->> +	struct rockchip_pcie_phy *rk_phy;
->> +	struct phy *generic_phy;
->> +	struct phy_provider *phy_provider;
->> +	struct regmap *grf;
->> +	const struct of_device_id *of_id;
->> +
->> +	grf =3D syscon_node_to_regmap(dev->parent->of_node);
->> +	if (IS_ERR(grf)) {
->> +		dev_err(dev, "Missing rockchip,grf property\n");
-> =
-
-> 		dev_err(dev, "Cannot find GRF syscon\n");
-> =
-
-> =
-
-> Heiko
-> =
+Regards,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
