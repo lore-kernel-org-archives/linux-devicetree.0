@@ -1,20 +1,20 @@
-From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+From: John Youn <johnyoun@synopsys.com>
 Subject: [PATCH 1/2] usb: dwc3: Add ref clock period setting
 Date: Thu, 01 Sep 2016 14:32:30 -0700
-Message-ID: <ae2c9b5683820c6456f91a2ef631efa2de0bec28.1472764828.git.johnyoun@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Thinh Nguyen <thinhn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Message-ID: <ae2c9b5683820c6456f91a2ef631efa2de0bec28.1472764828.git.johnyoun__45652.7743525386$1472765581$gmane$org@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: John Youn <johnyoun@synopsys.com>, Thinh Nguyen <thinhn@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Thinh Nguyen <thinhn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+From: Thinh Nguyen <thinhn@synopsys.com>
 
 Added ref_clk_per for writing to GUCTL.RefClkPer which
 sets the period of ref_clk in nano second.
 
-Signed-off-by: Thinh Nguyen <thinhn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: John Youn <johnyoun@synopsys.com>
 ---
  Documentation/devicetree/bindings/usb/dwc3.txt |  2 ++
  drivers/usb/dwc3/core.c                        | 21 +++++++++++++++++++++
@@ -118,8 +118,3 @@ index 2eb84d6..254788b 100644
  
 -- 
 2.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
