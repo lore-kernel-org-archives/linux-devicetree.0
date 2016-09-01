@@ -1,147 +1,182 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH RFC] ARM: dts: samsung: add rga-lvds panel in itop elite
-Date: Thu, 01 Sep 2016 10:53:27 +0200
-Message-ID: <28f6838b-6bd8-a533-fcdb-5af41dbdaa7f@samsung.com>
-References: <1472511002-9019-1-git-send-email-ayaka@soulik.info>
- <dee989f5-17b0-7445-514b-559e98d77acd@samsung.com>
- <790048d1-6533-2e43-5343-13782382bf84@soulik.info>
- <94dc2e0d-2521-a636-ee3d-90168f30fe28@samsung.com>
- <20EC8D13-CF96-4869-B46F-93A89211367E@soulik.info>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [PATCH v5] Axi-usb: Add support for 64-bit addressing.
+Date: Thu, 1 Sep 2016 14:22:56 +0530
+Message-ID: <1472719976-25410-1-git-send-email-navam@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20EC8D13-CF96-4869-B46F-93A89211367E@soulik.info>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ayaka <ayaka@soulik.info>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, linux@armlinux.org.uk, krzk@kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, soren.brinkmann@xilinx.com, balbi@kernel.org, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: Nava kishore Manne <navam@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDkvMDEvMjAxNiAxMDoyNCBBTSwgQXlha2Egd3JvdGU6Cj4KPiDlvp7miJHnmoQgaVBhZCDl
-grPpgIEKPiBUaGFuayB5b3UKPj4gQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4g
-5pa8IDIwMTblubQ55pyIMeaXpSDkuIvljYgzOjA0IOWvq+mBk++8mgo+Pgo+Pj4gT24gMDgvMzEv
-MjAxNiAwNzo1NSBQTSwgYXlha2Egd3JvdGU6Cj4+Pgo+Pj4+IE9uIDA4LzMxLzIwMTYgMDg6MzAg
-UE0sIEFuZHJ6ZWogSGFqZGEgd3JvdGU6Cj4+Pj4gSGksCj4+Pj4KPj4+Pgo+Pj4+PiBPbiAwOC8z
-MC8yMDE2IDEyOjUwIEFNLCBSYW5keSBMaSB3cm90ZToKPj4+Pj4gSXQgaXMgYWN0dWFsbHkgYSBs
-dmRzIHBhbmVsIGNvbm5lY3RlZCB0aHJvdWdoIGEgcmdhLWx2ZHMgYnJpZGdlLgo+Pj4+PiBCdXQg
-SSByZWFsbHkgaGF2ZSBubyBpZGVhIGFib3V0IHdoYXQgZG9lcyBhIHBvcnQgbWVhbiBpbiBmaW1k
-IG5vZGUuCj4+Pj4+Cj4+Pj4+IEFsc28gaG93IHNob3VsZCBJIGNvbmZpZ3VyZSB0aGlzIHBhbmVs
-IHNpemU/IEkgdGhpbmsgdGhlIGkyYyBmb3VuZAo+Pj4+PiBvbiB0aGUgcGFuZWwgc2NoZW1hdGlj
-LCBidXQgaXQgbW9yZSBsaWtlbHkgdG8gYmUgdXNlZCBhIHRvdWNoIHNjcmVlbgo+Pj4+PiB0b3V0
-aC4gQWxzbyB0aGUgdG91Y2ggc2NyZWVuIGlzIG5vdCBzdXBwb3J0ZWQgaW4gY3VycmVudGx5IGRy
-aXZlci4KPj4+Pj4KPj4+Pj4gU2lnbmVkLW9mZi1ieTogUmFuZHkgTGkgPGF5YWthQHNvdWxpay5p
-bmZvPgo+Pj4+PiAtLS0KPj4+Pj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQ0MTItaXRvcC1l
-bGl0ZS5kdHMgfCAzNSArKysrKysrKysrKysrKysrKysrKysrKysrKy0tLQo+Pj4+PiAgMSBmaWxl
-IGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4+Pj4+Cj4+Pj4+IGRp
-ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M0NDEyLWl0b3AtZWxpdGUuZHRzIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNDQxMi1pdG9wLWVsaXRlLmR0cwo+Pj4+PiBpbmRleCBl
-MWNkYTU0Li4yZDY3Mzg1IDEwMDY0NAo+Pj4+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9leHlu
-b3M0NDEyLWl0b3AtZWxpdGUuZHRzCj4+Pj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5v
-czQ0MTItaXRvcC1lbGl0ZS5kdHMKPj4+Pj4gQEAgLTEzOSw2ICsxMzksMjAgQEAKPj4+Pj4gICAg
-ICAgICAgYXNzaWduZWQtY2xvY2tzID0gPCZjbG9jayBDTEtfTU9VVF9DQU0wPjsKPj4+Pj4gICAg
-ICAgICAgYXNzaWduZWQtY2xvY2stcGFyZW50cyA9IDwmY2xvY2sgQ0xLX1hVU0JYVEk+Owo+Pj4+
-PiAgICAgIH07Cj4+Pj4+ICsgICAgCj4+Pj4+ICsgICAgdmNjX3N5c19sY2Q6IHN5cy1sY2Qgewo+
-Pj4+PiArICAgICAgICBjb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7Cj4+Pj4+ICsgICAg
-ICAgIHJlZ3VsYXRvci1uYW1lID0gInZjY181diI7Cj4+Pj4+ICsgICAgICAgIHJlZ3VsYXRvci1t
-aW4tbWljcm92b2x0ID0gPDUwMDAwMDA+Owo+Pj4+PiArICAgICAgICByZWd1bGF0b3ItbWF4LW1p
-Y3Jvdm9sdCA9IDw1MDAwMDAwPjsKPj4+Pj4gKyAgICAgICAgZ3BpbyA9IDwmZ3BsMCA0IEdQSU9f
-QUNUSVZFX0hJR0g+Owo+Pj4+PiArICAgIH07Cj4+Pj4+ICsKPj4+Pj4gKyAgICBwYW5lbDogcGFu
-ZWwgewo+Pj4+PiArICAgICAgICBkZGMtaTJjLWJ1cyA9IDwmaTJjXzM+Owo+Pj4+PiArICAgICAg
-ICBwb3dlci1zdXBwbHkgPSA8JnZjY19zeXNfbGNkPjsKPj4+Pj4gKyAgICAgICAgZW5hYmxlLWdw
-aW9zID0gPCZncGwwIDIgR1BJT19BQ1RJVkVfSElHSD47Cj4+Pj4+ICsgICAgfTsKPj4+PiBQYW5l
-bCBoYXMgbm8gY29tcGF0aWJsZSBzdHJpbmcsIHdoaWNoIGRyaXZlciB3aWxsIGhhbmRsZSB0aGlz
-IG5vZGU/Cj4+PiBUaGUgcHJvYmxlbSBpcyB0aGF0LCBpdCBpcyBwYW5lbCBub3Qgc3VwcG9ydGVk
-IGJ5IGtlcm5lbC4gCj4+IEZvciBzaW1wbGUgcGFuZWwgeW91IGNhbiB0YWtlIGEgbG9vayBhdCBb
-MV1bMl0uIEllLiBpZiB0aGUgcGFuZWwgbmVlZHMKPj4gb25seSBwb3dlciBzdXBwbHkgYW5kIGVu
-YWJsZSBncGlvLCB5b3UganVzdCBuZWVkIHRvIGFkZCBmZXcgbGluZXMgdG8gWzJdLgo+IEJ1dCBJ
-IHN0aWxsIGRvbid0IGtub3cgd2hpY2ggY29tcGF0aWJsZSBzdHJpbmcgSSBzaG91bGQgdXNlLCAi
-c2ltcGxlLWRwaSIgPwoKSGF2ZSB5b3UgbG9va2VkIGF0IFsyXT8KT3IganVzdCBydW4gY29tbWFu
-ZCBpbiBrZXJuZWwgZ2l0IHRyZWU6CmdpdCBsb2cgLXAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3Bh
-bmVsLXNpbXBsZS5jCgpUbyBhZGQgc3VwcG9ydCBmb3Igc3BlY2lmaWMgcGFuZWwgeW91IGFkZDoK
-MS4gZGlzcGxheSBtb2RlKHMpLAoyLiBwYW5lbCBkZXNjcmlwdGlvbiwKMy4gcGFuZWwgY29tcGF0
-aWJsZSBzdHJpbmcuCgpBbmQgdGhlbiB5b3UgdXNlIHRoaXMgY29tcGF0aWJsZSBpbiBkdHMuClRv
-IGhhdmUgcGF0Y2hlcyBhY2NlcHRlZCBpbiBtYWlubGluZSB5b3Ugc2hvdWxkIGFkZCBiaW5kaW5n
-cwpmb3IgdGhlIHBhbmVsLCBjaGVjayBoaXN0b3J5IG9mIGRyaS1kZXZlbCB0byBzZWUgaG93IHRv
-IGRvIGl0LgoKPj4KPj4gWzFdOiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0Cj4+IFsyXTogZHJpdmVycy9ncHUvZHJtL3BhbmVs
-L3BhbmVsLXNpbXBsZS5jCj4+Cj4+PiBJcyBpdCBwb3NzaWJsZSAKPj4+IHRvIHN1cHBvcnQgd2l0
-aG91dCBhZGRpbmcgYSBuZXcgZHJpdmVyIGZvciBpdCA/IEkga25vdyB0aGVyZSBpcyBhIAo+Pj4g
-c2ltcGxlLWRwaSBmb3IgTUlQSSwgYnV0IHdoYXQgaXMgZm9yIHBhcmFsbGVsIHZpZGVvIG9yIGx2
-ZHM/Cj4+IHNpbXBsZS1kcGkgaXMganVzdCBwYXJhbGxlbCBvdXRwdXQuIExWRFMgaXMgbm90IHN1
-cHBvcnRlZCBieSBFeHlub3M0NDEyIGJ1dAo+PiBib2FyZHMgdXN1YWxseSBoYXZlIFJHQi9MVkRT
-IGJyaWRnZSBmb3Igc3VjaCBwYW5lbHMsIEkgaGF2ZSBubyBhY2Nlc3MgdG8KPj4gaXRvcAo+PiBi
-b2FyZCBzY2hlbWF0aWNzLCBidXQgSSBzdXBwb3NlIGl0IGhhcyBzdWNoIGJyaWRnZS4gTFZEUyBi
-cmlkZ2VzIG9mdGVuCj4+IGRvIG5vdAo+PiBuZWVkIExpbnV4IGRyaXZlciwgc28gZnJvbSBkZXZl
-bG9wZXIgcG9pbnQgb2YgdmlldyBMVkRTIHBhbmVscyB3aXRoIHN1Y2gKPj4gYnJpZGdlCj4gWWVz
-IGl0IGlzLgo+PiBhcmUgaGFuZGxlZCB0aGUgc2FtZSB3YXkgYXMgUkdCIHBhbmVscy4gRXhhbXBs
-ZSBmaW1kIGJpbmRpbmdzIGZvciBSR0IgcGFuZWxzCj4+IGFyZSBpbiBbM10uCj4+Cj4+IFszXTog
-YXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNDIxMC11bml2ZXJzYWxfYzIxMC5kdHMKPj4KPiBXb3Vs
-ZCBpdCBhcHBlYXIgYXMgYSBmcmFtZSBidWZmZXIgZGV2aWNlIGluIExpbnV4ID8gUmVnYXJkIG9m
-IGRpc3BsYXkgdGltaW5ncywgSSBjb3VsZCBzb2x2ZSBpdCBsYXRlci4gSWYgdGhlIGZyYW1lIGJ1
-ZmZlciBub2RlIGlzIGNyZWF0ZWQsIEkgY291bGQga25vdyBJIGhhdmUgYSB3YXkgdG8gdGVzdC4K
-ClllcywgaXQgc2hvdWxkLCBpZiBldmVyeXRoaW5nIGlzIHByb3Blcmx5IGRvbmUgL2Rldi9mYjAg
-c2hvdWxkIGJlIGF2YWlsYWJsZS4KUm91Z2hseSBzdGVwcyB0byBkbzoKMS4gYWRkIHBhbmVsIGRl
-ZmluaXRpb24gdG8gZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jLgoyLiBhZGQg
-cGFuZWwgZW50cnkgYW5kIGZpbWQgYmluZGluZ3MgdG8gaXRvcCBkdHMuCjMuIGVuYWJsZSBleHlu
-b3MgZHBpLCBzaW1wbGUgcGFuZWwsIGRybV9mcmFtZWJ1ZmZlciBpbiAuY29uZmlnLgoKCj4+Pj4g
-UmVnYXJkcwo+Pj4+IEFuZHJ6ZWoKPj4+IFRoZSBvdGhlciBwcm9ibGVtIGlzIHRoYXQgSSBkb24n
-dCBob3cgdG8gY29uZmlndXJlIHRoZSBkaXNwbGF5LXRpbWVzLCAKPj4+IHRoZSBkYXRhc2hlZXQg
-Zm9yIENMQUEwNzBXUDAzWEcgb25seSB0YWxrIGFib3V0IHRvdGFsIHRpbWUsIGFjdGl2ZSB0aW1l
-IAo+Pj4gYW5kIGJsYW5rIHRpbWUgZm9yIGJvdGggSG9yaXpvbnRhbCBhbiBWZXJ0aWNhbCB0aW1l
-LiBEb2VzIGl0IG1lYW4gdGhlIAo+Pj4gZnJvbnQtcG9yY2ggYW5kIHN5bmMtbGVuIGZvciBob3Jp
-em9udGFsIGFuZCB2ZXJ0aWNhbCBhcmUgemVybyA/Cj4+IFlvdSBjYW4gbG9vayBhdCB2ZW5kb3In
-cyBjb2RlLgo+IEl0IGlzIGEgdmVyeSBvbGQga2VybmVsLiBCdXQgaXQgc2VlbXMgdGhhdCB0aGV5
-IGRpZG4ndCBjb25maWd1cmUgdGhlIGZpbWQgYnV0IHRoZSBmcmFtZSBidWZmZXIuCgpUaGlzIGlz
-IGp1c3QgbWF0dGVyIG9mIGRpZmZlcmVudCBkaXNwbGF5IGZyYW1ld29yayB0aGV5IGhhdmUgdXNl
-ZC4KSW4gY3VycmVudCBrZXJuZWwgeW91IHNob3VsZCB1c2UgZHJtIGZyYW1ld29yay4KCj4+IE9y
-IGp1c3QgZXhwZXJpbWVudCB3aXRoIGRpZmZlcmVudCB2YWx1ZXMuCj4+IFRoZSBlcXVhdGlvbiBp
-czogdG90YWw9YWN0aXZlK2JhY2tfcG9yY2grYmxhbmsrZnJvbnRfcG9yY2guCj4+IFNvIGlmIGh0
-b3RhbD04NjQsIGhhY3RpdmU9ODAwLCBoYmxhbms9NjQsIHRoZW4gaHBvcmNoZXMgYXJlIDAuCj4+
-IEluIGNhc2Ugb2YgdnRvdGFsPTEyODgsIHZhY3RpdmU9MTIwMCwgdmJsYW5rPTggeW91IGhhdmUg
-bGVmdCA4MCBmb3IgcG9yY2hlcywKPj4geW91IGNhbiB0cnkgdG8gc3BsaXQgdGhlbSBlcXVhbGx5
-IGZvciBmcm9udCBhbmQgYmFjayBmb3Igc3RhcnRlcnMuCj4gQnV0IHRpbWluZ3MgZGlhZ3JhbSBp
-biBkYXRhIHNoZWV0IGRvZXNuJ3QgbG9vayBsaWtlIHRoYXQsIEkgaGF2ZSBhc2tlZCB0aGUgdmVu
-ZG9yIGZvciBzb21lIGhlbHAsIEkgaG9wZSBJIGNvdWxkIGdldCBhIHJlcGx5IGZyb20gdGhlIHZl
-bmRvci4KCkFmdGVyIGVudGVyaW5nIENMQUEwNzBXUDAzWEcgaW50byB3ZWIgc2VhcmNoIHlvdSBj
-YW4gZmluZCBkYXRhc2hlZXQgb2YgaXQuCkl0IGNvbnRhaW5zIHRpbWluZ3Mgc3BlY2lmaWVkIGFi
-b3ZlLgoKUmVnYXJkcwpBbmRyemVqCgoKPj4gUmVnYXJkcwo+PiBBbmRyemVqCj4+Cj4+PiArICAg
-ICAgIHBvcnRzIHsKPj4+ICsgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4+
-ICsgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsKPj4+ICsgICAgICAgICAgICAgICBw
-b3J0QDMgewo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDM+Owo+Pj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgcmdhX2x2ZHM6IGVuZHBvaW50IHsKPj4+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbD47Cj4+PiArICAgICAg
-ICAgICAgICAgICAgICAgICB9Owo+Pj4gKyAgICAgICAgICAgICAgIH07Cj4+PiArICAgICAgIH07
-Cj4+PiArCj4+PiArICAgICAgIHBhbmVsOiBwYW5lbEAwIHsKPj4+ICsgICAgICAgICAgICAgICBj
-b21wYXRpYmxlID0gInBhbmVsLXNpbXBsZSI7Cj4+PiArCj4+PiArICAgICAgICAgICAgICAgcG93
-ZXItc3VwcGx5ID0gPCZ2Y2Nfc3lzX2xjZD47Cj4+PiArICAgICAgICAgICAgICAgZW5hYmxlLWdw
-aW9zID0gPCZncGwwIDIgR1BJT19BQ1RJVkVfSElHSD47Cj4+PiArICAgICAgICAgICAgICAgZGlz
-cGxheS10aW1pbmdzIHsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHRpbWluZy0wIHsKPj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xvY2stZnJlcXVlbmN5ID0gPDY2Nzcw
-MDAwPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaGFjdGl2ZSA9IDw4MDA+
-Owo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWN0aXZlID0gPDEyODA+Owo+
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBoZnJvbnQtcG9yY2ggPSA8MD47Cj4+
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGhiYWNrLXBvcmNoID0gPDY0PjsKPj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaHN5bmMtbGVuID0gPDA+Owo+Pj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2ZnJvbnQtcG9yY2ggPSA8MD47Cj4+PiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZiYWNrLXBvcmNoID0gPDg+Owo+Pj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB2c3luYy1sZW4gPSA8MD47Cj4+PiArICAgICAgICAg
-ICAgICAgICAgICAgICB9Owo+Pj4gKyAgICAgIH07Cj4+Pgo+Pj4gLS0KPj4+IFRvIHVuc3Vic2Ny
-aWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1zYW1z
-dW5nLXNvYyIgaW4KPj4+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5r
-ZXJuZWwub3JnCj4+PiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwu
-b3JnL21ham9yZG9tby1pbmZvLmh0bWwKPj4+Cj4+Pgo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJv
-bSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LXNhbXN1bmctc29j
-IiBpbgo+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3Jn
-Cj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRv
-bW8taW5mby5odG1sCj4KPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+This patch updates the driver to support 64-bit DMA addressing.
+
+Signed-off-by: Nava kishore Manne <navam@xilinx.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+Changes for v5:
+                -None.
+
+Changes for v4:
+                -Used boolen property insted of addrwith property in the DT
+                 as suggested by Arnd Bergmann.
+                -Adopt the DT relevant changes into the driver.
+
+Changes for v3:
+                -Added new compatable string for 5.00 IP version as suggested by
+                 Arnd Bergmann.
+                -Used write_fn() insted of lo_hi_writeq() as suggested by
+                 Arnd Bergmann.
+Changes for v2:
+                -Added dma-ranges property in device tree as suggested by
+                 Arnd Bergmann.
+                -Modified the driver code based on the xlnx,addrwidth.
+
+ .../devicetree/bindings/usb/udc-xilinx.txt         |  5 ++-
+ drivers/usb/gadget/udc/udc-xilinx.c                | 52 +++++++++++++++++++++-
+ 2 files changed, 54 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+index 47b4e39..d08d972 100644
+--- a/Documentation/devicetree/bindings/usb/udc-xilinx.txt
++++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+@@ -1,12 +1,14 @@
+ Xilinx USB2 device controller
+ 
+ Required properties:
+-- compatible		: Should be "xlnx,usb2-device-4.00.a"
++- compatible		: Should be "xlnx,usb2-device-4.00.a" or
++			  "xlnx,usb2-device-5.00"
+ - reg			: Physical base address and size of the USB2
+ 			  device registers map.
+ - interrupts		: Should contain single irq line of USB2 device
+ 			  controller
+ - xlnx,has-builtin-dma	: if DMA is included
++- xlnx,has-64bit-dma	: if DMA is included 64-bit addressing support.
+ 
+ Example:
+  		axi-usb2-device@42e00000 {
+@@ -14,5 +16,6 @@ Example:
+                         interrupts = <0x0 0x39 0x1>;
+                         reg = <0x42e00000 0x10000>;
+                         xlnx,has-builtin-dma;
++			xlnx,has-64bit-dma;
+                 };
+ 
+diff --git a/drivers/usb/gadget/udc/udc-xilinx.c b/drivers/usb/gadget/udc/udc-xilinx.c
+index 1cbb0ac..6fb80c6 100644
+--- a/drivers/usb/gadget/udc/udc-xilinx.c
++++ b/drivers/usb/gadget/udc/udc-xilinx.c
+@@ -47,6 +47,15 @@
+ #define XUSB_DMA_LENGTH_OFFSET		0x0210	/* DMA Length Register */
+ #define XUSB_DMA_STATUS_OFFSET		0x0214	/* DMA Status Register */
+ 
++/* DMA source Address Reg for LSB */
++#define XUSB_DMA_DSAR_ADDR_OFFSET_LSB   0x0308
++/* DMA source Address Reg for MSB */
++#define XUSB_DMA_DSAR_ADDR_OFFSET_MSB   0x030C
++/* DMA destination Addr Reg LSB */
++#define XUSB_DMA_DDAR_ADDR_OFFSET_LSB   0x0310
++/* DMA destination Addr Reg MSB */
++#define XUSB_DMA_DDAR_ADDR_OFFSET_MSB   0x0314
++
+ /* Endpoint Configuration Space offsets */
+ #define XUSB_EP_CFGSTATUS_OFFSET	0x00	/* Endpoint Config Status  */
+ #define XUSB_EP_BUF0COUNT_OFFSET	0x08	/* Buffer 0 Count */
+@@ -169,6 +178,7 @@ struct xusb_ep {
+  * @setup: usb_ctrlrequest structure for control requests
+  * @req: pointer to dummy request for get status command
+  * @dev: pointer to device structure in gadget
++ * @is_extend_dma: flag indiacting whether the dma is 64-bit support or not.
+  * @usb_state: device in suspended state or not
+  * @remote_wkp: remote wakeup enabled by host
+  * @setupseqtx: tx status
+@@ -186,6 +196,7 @@ struct xusb_udc {
+ 	struct usb_ctrlrequest setup;
+ 	struct xusb_req *req;
+ 	struct device *dev;
++	bool is_extend_dma;
+ 	u32 usb_state;
+ 	u32 remote_wkp;
+ 	u32 setupseqtx;
+@@ -215,6 +226,20 @@ static const struct usb_endpoint_descriptor config_bulk_out_desc = {
+ };
+ 
+ /**
++ * xudc_write64 - write 64bit value to device registers
++ * @ep: pointer to the usb device endpoint structure.
++ * @offset: register offset
++ * @val: data to be written
++ **/
++static void xudc_write64(struct xusb_ep *ep, u32 offset, u64 val)
++{
++	struct xusb_udc *udc = ep->udc;
++
++	udc->write_fn(udc->addr, offset, lower_32_bits(val));
++	udc->write_fn(udc->addr, offset+0x04, upper_32_bits(val));
++}
++
++/**
+  * xudc_write32 - little endian write to device registers
+  * @addr: base addr of device registers
+  * @offset: register offset
+@@ -330,8 +355,13 @@ static int xudc_start_dma(struct xusb_ep *ep, dma_addr_t src,
+ 	 * destination registers and then set the length
+ 	 * into the DMA length register.
+ 	 */
+-	udc->write_fn(udc->addr, XUSB_DMA_DSAR_ADDR_OFFSET, src);
+-	udc->write_fn(udc->addr, XUSB_DMA_DDAR_ADDR_OFFSET, dst);
++	if (udc->is_extend_dma) {
++		xudc_write64(ep, XUSB_DMA_DSAR_ADDR_OFFSET_LSB, src);
++		xudc_write64(ep, XUSB_DMA_DDAR_ADDR_OFFSET_LSB, dst);
++	} else {
++		udc->write_fn(udc->addr, XUSB_DMA_DSAR_ADDR_OFFSET, src);
++		udc->write_fn(udc->addr, XUSB_DMA_DDAR_ADDR_OFFSET, dst);
++	}
+ 	udc->write_fn(udc->addr, XUSB_DMA_LENGTH_OFFSET, length);
+ 
+ 	/*
+@@ -2097,6 +2127,23 @@ static int xudc_probe(struct platform_device *pdev)
+ 
+ 	udc->dma_enabled = of_property_read_bool(np, "xlnx,has-builtin-dma");
+ 
++	udc->is_extend_dma = false;
++
++	if (of_device_is_compatible(np, "xlnx,usb2-device-5.00"))
++		udc->is_extend_dma = of_property_read_bool(np,
++						"xlnx,has-64bit-dma");
++
++	/* Set the dma mask bits */
++	if (udc->is_extend_dma)
++		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++	else
++		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
++
++	if (ret < 0) {
++		dev_dbg(&pdev->dev, "no usable DMA configuration");
++		goto fail;
++	}
++
+ 	/* Setup gadget structure */
+ 	udc->gadget.ops = &xusb_udc_ops;
+ 	udc->gadget.max_speed = USB_SPEED_HIGH;
+@@ -2168,6 +2215,7 @@ static int xudc_remove(struct platform_device *pdev)
+ /* Match table for of_platform binding */
+ static const struct of_device_id usb_of_match[] = {
+ 	{ .compatible = "xlnx,usb2-device-4.00.a", },
++	{ .compatible = "xlnx,usb2-device-5.00", },
+ 	{ /* end of list */ },
+ };
+ MODULE_DEVICE_TABLE(of, usb_of_match);
+-- 
+2.1.2
