@@ -1,296 +1,223 @@
 From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: [PATCH v3 21/22] phy: Add support for Qualcomm's USB HSIC phy
-Date: Wed, 31 Aug 2016 17:40:35 -0700
-Message-ID: <20160901004036.23936-22-stephen.boyd@linaro.org>
+Subject: [PATCH v3 03/22] usb: ulpi: Support device discovery via device properties
+Date: Wed, 31 Aug 2016 17:40:17 -0700
+Message-ID: <20160901004036.23936-4-stephen.boyd@linaro.org>
 References: <20160901004036.23936-1-stephen.boyd@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160901004036.23936-1-stephen.boyd@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-usb@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The HSIC USB controller on qcom SoCs has an integrated all
-digital phy controlled via the ULPI viewport.
+The qcom HSIC ULPI phy doesn't have any bits set in the vendor or
+product ID registers. This makes it impossible to make a ULPI
+driver match against the ID registers. Add support to discover
+the ULPI phys via DT help alleviate this problem. In the DT case,
+we'll look for a ULPI bus node underneath the device registering
+the ULPI viewport (or the parent of that device to support
+chipidea's device layout) and then match up the phy node
+underneath that with the ULPI device that's created.
 
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
+The side benefit of this is that we can use standard properties
+in the phy node like clks, regulators, gpios, etc. because we
+don't have firmware like ACPI to turn these things on for us. And
+we can use the DT phy binding to point our phy consumer to the
+phy provider.
+
+The ULPI bus code supports native enumeration by reading the
+vendor ID and product ID registers at device creation time, but
+we can't be certain that those register reads will succeed if the
+phy is not powered up. To avoid any problems with reading the ID
+registers before the phy is powered we fallback to DT matching
+when the ID reads fail.
+
+If the ULPI spec had some generic power sequencing for these
+registers we could put that into the ULPI bus layer and power up
+the device before reading the ID registers. Unfortunately this
+doesn't exist and the power sequence is usually device specific.
+By having the vendor and product ID properties in ACPI or DT, we
+can match up devices with drivers without having to read the
+hardware before it's powered up and avoid this problem.
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Cc: <devicetree@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
 Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
 ---
- .../devicetree/bindings/phy/qcom,usb-hsic-phy.txt  |  65 +++++++++
- drivers/phy/Kconfig                                |   7 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-qcom-usb-hsic.c                    | 160 +++++++++++++++++++++
- 4 files changed, 233 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
- create mode 100644 drivers/phy/phy-qcom-usb-hsic.c
+ Documentation/devicetree/bindings/usb/ulpi.txt | 20 +++++++
+ drivers/usb/common/ulpi.c                      | 73 +++++++++++++++++++++++++-
+ 2 files changed, 91 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/ulpi.txt
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt b/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
+diff --git a/Documentation/devicetree/bindings/usb/ulpi.txt b/Documentation/devicetree/bindings/usb/ulpi.txt
 new file mode 100644
-index 000000000000..3c7cb2be4b12
+index 000000000000..ca179dc4bd50
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
-@@ -0,0 +1,65 @@
-+Qualcomm's USB HSIC PHY
++++ b/Documentation/devicetree/bindings/usb/ulpi.txt
+@@ -0,0 +1,20 @@
++ULPI bus binding
++----------------
 +
-+PROPERTIES
-+
-+- compatible:
-+    Usage: required
-+    Value type: <string>
-+    Definition: Should contain "qcom,usb-hsic-phy" and more specifically one of the
-+		following:
-+
-+			"qcom,usb-hsic-phy-mdm9615"
-+			"qcom,usb-hsic-phy-msm8974"
-+
-+- #phy-cells:
-+    Usage: required
-+    Value type: <u32>
-+    Definition: Should contain 0
-+
-+- clocks:
-+    Usage: required
-+    Value type: <prop-encoded-array>
-+    Definition: Should contain clock specifier for phy, calibration and
-+                a calibration sleep clock
-+
-+- clock-names:
-+    Usage: required
-+    Value type: <stringlist>
-+    Definition: Should contain "phy, "cal" and "cal_sleep"
-+
-+- pinctrl-names:
-+    Usage: required
-+    Value type: <stringlist>
-+    Definition: Should contain "init" and "default" in that order
-+
-+- pinctrl-0:
-+    Usage: required
-+    Value type: <prop-encoded-array>
-+    Definition: List of pinctrl settings to apply to keep HSIC pins in a glitch
-+                free state
-+
-+- pinctrl-1:
-+    Usage: required
-+    Value type: <prop-encoded-array>
-+    Definition: List of pinctrl settings to apply to mux out the HSIC pins
++Phys that are behind a ULPI connection can be described with the following
++binding. The host controller shall have a "ulpi" named node as a child, and
++that node shall have one enabled node underneath it representing the ulpi
++device on the bus.
 +
 +EXAMPLE
++-------
 +
-+usb-controller {
++usb {
++	compatible = "vendor,usb-controller";
++
 +	ulpi {
 +		phy {
-+			compatible = "qcom,usb-hsic-phy-msm8974",
-+				     "qcom,usb-hsic-phy";
-+			#phy-cells = <0>;
-+			pinctrl-names = "init", "default";
-+			pinctrl-0 = <&hsic_sleep>;
-+			pinctrl-1 = <&hsic_default>;
-+			clocks = <&gcc GCC_USB_HSIC_CLK>,
-+				 <&gcc GCC_USB_HSIC_IO_CAL_CLK>,
-+				 <&gcc GCC_USB_HSIC_IO_CAL_SLEEP_CLK>;
-+			clock-names = "phy", "cal", "cal_sleep";
-+			assigned-clocks = <&gcc GCC_USB_HSIC_IO_CAL_CLK>;
-+			assigned-clock-rates = <960000>;
++			compatible = "vendor,phy";
 +		};
 +	};
 +};
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 19bff3a10f69..830c443eeabf 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -417,6 +417,13 @@ config PHY_QCOM_UFS
- 	help
- 	  Support for UFS PHY on QCOM chipsets.
+diff --git a/drivers/usb/common/ulpi.c b/drivers/usb/common/ulpi.c
+index 01c0c0477a9e..33039a374847 100644
+--- a/drivers/usb/common/ulpi.c
++++ b/drivers/usb/common/ulpi.c
+@@ -16,6 +16,9 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/acpi.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/clk/clk-conf.h>
  
-+config PHY_QCOM_USB_HSIC
-+	tristate "Qualcomm USB HSIC ULPI PHY module"
-+	depends on USB_ULPI_BUS
-+	select GENERIC_PHY
-+	help
-+	  Support for the USB HSIC ULPI compliant PHY on QCOM chipsets.
+ /* -------------------------------------------------------------------------- */
+ 
+@@ -39,6 +42,10 @@ static int ulpi_match(struct device *dev, struct device_driver *driver)
+ 	struct ulpi *ulpi = to_ulpi_dev(dev);
+ 	const struct ulpi_device_id *id;
+ 
++	/* Some ULPI devices don't have a vendor id so rely on OF match */
++	if (ulpi->id.vendor == 0)
++		return of_driver_match_device(dev, driver);
 +
- config PHY_TUSB1210
- 	tristate "TI TUSB1210 ULPI PHY module"
- 	depends on USB_ULPI_BUS
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 90ae19879b0a..5422f543d17d 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -50,6 +50,7 @@ obj-$(CONFIG_PHY_STIH41X_USB)		+= phy-stih41x-usb.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
-+obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
- obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
- obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
-diff --git a/drivers/phy/phy-qcom-usb-hsic.c b/drivers/phy/phy-qcom-usb-hsic.c
-new file mode 100644
-index 000000000000..47690f9945b9
---- /dev/null
-+++ b/drivers/phy/phy-qcom-usb-hsic.c
-@@ -0,0 +1,160 @@
-+/**
-+ * Copyright (C) 2016 Linaro Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/module.h>
-+#include <linux/ulpi/driver.h>
-+#include <linux/ulpi/regs.h>
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/pinctrl/pinctrl-state.h>
-+#include <linux/delay.h>
-+#include <linux/clk.h>
-+
-+#include "ulpi_phy.h"
-+
-+#define ULPI_HSIC_CFG		0x30
-+#define ULPI_HSIC_IO_CAL	0x33
-+
-+struct qcom_usb_hsic_phy {
-+	struct ulpi *ulpi;
-+	struct phy *phy;
-+	struct pinctrl *pctl;
-+	struct clk *phy_clk;
-+	struct clk *cal_clk;
-+	struct clk *cal_sleep_clk;
-+};
-+
-+static int qcom_usb_hsic_phy_power_on(struct phy *phy)
-+{
-+	struct qcom_usb_hsic_phy *uphy = phy_get_drvdata(phy);
-+	struct ulpi *ulpi = uphy->ulpi;
-+	struct pinctrl_state *pins_default;
+ 	for (id = drv->id_table; id->vendor; id++)
+ 		if (id->vendor == ulpi->id.vendor &&
+ 		    id->product == ulpi->id.product)
+@@ -50,6 +57,11 @@ static int ulpi_match(struct device *dev, struct device_driver *driver)
+ static int ulpi_uevent(struct device *dev, struct kobj_uevent_env *env)
+ {
+ 	struct ulpi *ulpi = to_ulpi_dev(dev);
 +	int ret;
 +
-+	ret = clk_prepare_enable(uphy->phy_clk);
-+	if (ret)
++	ret = of_device_uevent_modalias(dev, env);
++	if (ret != -ENODEV)
 +		return ret;
+ 
+ 	if (add_uevent_var(env, "MODALIAS=ulpi:v%04xp%04x",
+ 			   ulpi->id.vendor, ulpi->id.product))
+@@ -60,6 +72,11 @@ static int ulpi_uevent(struct device *dev, struct kobj_uevent_env *env)
+ static int ulpi_probe(struct device *dev)
+ {
+ 	struct ulpi_driver *drv = to_ulpi_driver(dev->driver);
++	int ret;
 +
-+	ret = clk_prepare_enable(uphy->cal_clk);
-+	if (ret)
-+		goto err_cal;
++	ret = of_clk_set_defaults(dev->of_node, false);
++	if (ret < 0)
++		return ret;
+ 
+ 	return drv->probe(to_ulpi_dev(dev));
+ }
+@@ -87,8 +104,13 @@ static struct bus_type ulpi_bus = {
+ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+ 			     char *buf)
+ {
++	int len;
+ 	struct ulpi *ulpi = to_ulpi_dev(dev);
+ 
++	len = of_device_get_modalias(dev, buf, PAGE_SIZE - 1);
++	if (len != -ENODEV)
++		return len;
 +
-+	ret = clk_prepare_enable(uphy->cal_sleep_clk);
-+	if (ret)
-+		goto err_sleep;
-+
-+	/* Set periodic calibration interval to ~2.048sec in HSIC_IO_CAL_REG */
-+	ret = ulpi_write(ulpi, ULPI_HSIC_IO_CAL, 0xff);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	/* Enable periodic IO calibration in HSIC_CFG register */
-+	ret = ulpi_write(ulpi, ULPI_HSIC_CFG, 0xa8);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	/* Configure pins for HSIC functionality */
-+	pins_default = pinctrl_lookup_state(uphy->pctl, PINCTRL_STATE_DEFAULT);
-+	if (IS_ERR(pins_default))
-+		return PTR_ERR(pins_default);
-+
-+	ret = pinctrl_select_state(uphy->pctl, pins_default);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	 /* Enable HSIC mode in HSIC_CFG register */
-+	ret = ulpi_write(ulpi, ULPI_SET(ULPI_HSIC_CFG), 0x01);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	/* Disable auto-resume */
-+	ret = ulpi_write(ulpi, ULPI_CLR(ULPI_IFC_CTRL),
-+			 ULPI_IFC_CTRL_AUTORESUME);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	return ret;
-+err_ulpi:
-+	clk_disable_unprepare(uphy->cal_sleep_clk);
-+err_sleep:
-+	clk_disable_unprepare(uphy->cal_clk);
-+err_cal:
-+	clk_disable_unprepare(uphy->phy_clk);
-+	return ret;
-+}
-+
-+static int qcom_usb_hsic_phy_power_off(struct phy *phy)
+ 	return sprintf(buf, "ulpi:v%04xp%04x\n",
+ 		       ulpi->id.vendor, ulpi->id.product);
+ }
+@@ -152,7 +174,30 @@ EXPORT_SYMBOL_GPL(ulpi_unregister_driver);
+ 
+ /* -------------------------------------------------------------------------- */
+ 
+-static int ulpi_register(struct device *dev, struct ulpi *ulpi)
++static int ulpi_of_register(struct ulpi *ulpi)
 +{
-+	struct qcom_usb_hsic_phy *uphy = phy_get_drvdata(phy);
++	struct device_node *np = NULL, *child;
 +
-+	clk_disable_unprepare(uphy->cal_sleep_clk);
-+	clk_disable_unprepare(uphy->cal_clk);
-+	clk_disable_unprepare(uphy->phy_clk);
++	/* Find a ulpi bus underneath the parent or the parent of the parent */
++	if (ulpi->dev.parent->of_node)
++		np = of_find_node_by_name(ulpi->dev.parent->of_node, "ulpi");
++	else if (ulpi->dev.parent->parent && ulpi->dev.parent->parent->of_node)
++		np = of_find_node_by_name(ulpi->dev.parent->parent->of_node,
++					  "ulpi");
++	if (!np)
++		return 0;
++
++	child = of_get_next_available_child(np, NULL);
++	of_node_put(np);
++	if (!child)
++		return -EINVAL;
++
++	ulpi->dev.of_node = child;
 +
 +	return 0;
 +}
 +
-+static const struct phy_ops qcom_usb_hsic_phy_ops = {
-+	.power_on = qcom_usb_hsic_phy_power_on,
-+	.power_off = qcom_usb_hsic_phy_power_off,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int qcom_usb_hsic_phy_probe(struct ulpi *ulpi)
-+{
-+	struct qcom_usb_hsic_phy *uphy;
-+	struct phy_provider *p;
-+	struct clk *clk;
-+
-+	uphy = devm_kzalloc(&ulpi->dev, sizeof(*uphy), GFP_KERNEL);
-+	if (!uphy)
-+		return -ENOMEM;
-+	ulpi_set_drvdata(ulpi, uphy);
-+
-+	uphy->ulpi = ulpi;
-+	uphy->pctl = devm_pinctrl_get(&ulpi->dev);
-+	if (IS_ERR(uphy->pctl))
-+		return PTR_ERR(uphy->pctl);
-+
-+	uphy->phy_clk = clk = devm_clk_get(&ulpi->dev, "phy");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	uphy->cal_clk = clk = devm_clk_get(&ulpi->dev, "cal");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	uphy->cal_sleep_clk = clk = devm_clk_get(&ulpi->dev, "cal_sleep");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	uphy->phy = devm_phy_create(&ulpi->dev, ulpi->dev.of_node,
-+				    &qcom_usb_hsic_phy_ops);
-+	if (IS_ERR(uphy->phy))
-+		return PTR_ERR(uphy->phy);
-+	phy_set_drvdata(uphy->phy, uphy);
-+
-+	p = devm_of_phy_provider_register(&ulpi->dev, of_phy_simple_xlate);
-+	return PTR_ERR_OR_ZERO(p);
++static int ulpi_read_id(struct ulpi *ulpi)
+ {
+ 	int ret;
+ 
+@@ -174,14 +219,37 @@ static int ulpi_register(struct device *dev, struct ulpi *ulpi)
+ 	ulpi->id.product = ulpi_read(ulpi, ULPI_PRODUCT_ID_LOW);
+ 	ulpi->id.product |= ulpi_read(ulpi, ULPI_PRODUCT_ID_HIGH) << 8;
+ 
++	return 0;
 +}
 +
-+static const struct of_device_id qcom_usb_hsic_phy_match[] = {
-+	{ .compatible = "qcom,usb-hsic-phy", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, qcom_usb_hsic_phy_match);
++static int ulpi_register(struct device *dev, struct ulpi *ulpi)
++{
++	int ret;
 +
-+static struct ulpi_driver qcom_usb_hsic_phy_driver = {
-+	.probe = qcom_usb_hsic_phy_probe,
-+	.driver = {
-+		.name = "qcom_usb_hsic_phy",
-+		.of_match_table = qcom_usb_hsic_phy_match,
-+	},
-+};
-+module_ulpi_driver(qcom_usb_hsic_phy_driver);
+ 	ulpi->dev.parent = dev;
+ 	ulpi->dev.bus = &ulpi_bus;
+ 	ulpi->dev.type = &ulpi_dev_type;
+ 	dev_set_name(&ulpi->dev, "%s.ulpi", dev_name(dev));
+ 
++	if (IS_ENABLED(CONFIG_OF)) {
++		ret = ulpi_of_register(ulpi);
++		if (ret)
++			return ret;
++	}
 +
-+MODULE_DESCRIPTION("Qualcomm USB HSIC phy");
-+MODULE_LICENSE("GPL v2");
+ 	ACPI_COMPANION_SET(&ulpi->dev, ACPI_COMPANION(dev));
+ 
+-	request_module("ulpi:v%04xp%04x", ulpi->id.vendor, ulpi->id.product);
++	ret = ulpi_read_id(ulpi);
++	/*
++	 * Ignore failure in case of DT node because the device may
++	 * not be powered up yet but we can still match by compatible
++	 */
++	if (ret && !ulpi->dev.of_node)
++		return ret;
++
++	if (of_device_request_module(&ulpi->dev))
++		request_module("ulpi:v%04xp%04x", ulpi->id.vendor,
++			       ulpi->id.product);
+ 
+ 	ret = device_register(&ulpi->dev);
+ 	if (ret)
+@@ -232,6 +300,7 @@ EXPORT_SYMBOL_GPL(ulpi_register_interface);
+  */
+ void ulpi_unregister_interface(struct ulpi *ulpi)
+ {
++	of_node_put(ulpi->dev.of_node);
+ 	device_unregister(&ulpi->dev);
+ }
+ EXPORT_SYMBOL_GPL(ulpi_unregister_interface);
 -- 
 2.9.0.rc2.8.ga28705d
