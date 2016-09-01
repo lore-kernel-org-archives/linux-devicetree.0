@@ -1,13 +1,13 @@
 From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v3 02/12] arm64: dts: h3ulcb: initial device tree
-Date: Thu, 1 Sep 2016 09:38:21 +0200
-Message-ID: <CAMuHMdUTrSJ9goAhZ4Vj4rC3Z_A5PB+y+5SM87CCQnsPLjoEbg@mail.gmail.com>
+Subject: Re: [PATCH v3 03/12] arm64: dts: h3ulcb: enable SCIF clk and pins
+Date: Thu, 1 Sep 2016 09:39:26 +0200
+Message-ID: <CAMuHMdVfFXkqmSn918T1H0ts+t7YzsPYcORrs+=dRb35_PtX2w@mail.gmail.com>
 References: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1472637759-14663-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1472637769-14702-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472637759-14663-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1472637769-14702-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -15,11 +15,8 @@ List-Id: devicetree@vger.kernel.org
 
 On Wed, Aug 31, 2016 at 12:02 PM, Vladimir Barinov
 <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Add the initial device tree for the R8A7795 SoC based H3ULCB low cost
-> board.
->
-> This commit supports the following peripherals:
-> - SCIF (console)
+> This enables the external crystal for the SCIF_CLK and its pinctrl, to
+> be used by the Baud Rate Generator for External Clock (BRG) on (H)SCIF.
 >
 > Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
