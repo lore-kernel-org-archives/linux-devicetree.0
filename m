@@ -1,103 +1,31 @@
-From: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support
- for rk3399
-Date: Thu, 1 Sep 2016 10:29:32 +0800
-Message-ID: <77f5cff1-80a2-76b3-40e9-f77caced2257@rock-chips.com>
-References: <20160827134103.28160-1-xzy.xu@rock-chips.com>
- <20160827134103.28160-3-xzy.xu@rock-chips.com>
- <2ab8ab94-fa4d-2cd6-5805-a92ac5f9697e@rock-chips.com>
- <57C3A30B.5080707@rock-chips.com>
- <ceba6a89-6945-58c5-62e4-7d842cfa2312@rock-chips.com>
- <CAD=FV=W=LkVAm187hxp0Kbjxi5kSThwKnCMX+tr8SXQ-v_xQTQ@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 3/7] dts: sun8i-h3: add i2c0/i2c1 SoC peripherals
+Date: Thu, 1 Sep 2016 10:42:04 +0800
+Message-ID: <CAGb2v66c8uFHUtVtHOZCfxDEEgG7CzZgBRKWMUQS7NTizF6jyQ@mail.gmail.com>
+References: <1472671858-29220-1-git-send-email-jorik@kippendief.biz> <1472671858-29220-4-git-send-email-jorik@kippendief.biz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=W=LkVAm187hxp0Kbjxi5kSThwKnCMX+tr8SXQ-v_xQTQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1472671858-29220-4-git-send-email-jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kern
+To: jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-
-On 2016年09月01日 01:42, Doug Anderson wrote:
-> Hi,
+On Thu, Sep 1, 2016 at 3:30 AM,  <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org> wrote:
+> From: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
 >
-> On Sun, Aug 28, 2016 at 8:25 PM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
->> On 2016/8/29 10:50, Elaine Zhang wrote:
->>>
->>>
->>> On 08/27/2016 11:05 PM, Shawn Lin wrote:
->>>> On 2016/8/27 21:41, Ziyuan Xu wrote:
->>>>> Control power domain for eMMC via genpd to reduce power consumption.
->>>>>
->>>>> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>>> Signed-off-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>>>
->>>> It looks nice to me. But this should be merged after applying that[0]
->>>> as your patch will break bind/unbind test for sdhci-of-arasan on rk3399
->>>> without it[0]. Moreover, Elaine should make sure that upstreamed
->>>> rockchip power domain stuff would not off pd for emmc, *otherwise*, I
->>>> should update my patch to make sure we update clkmul every time when
->>>> doing suspend 2 resume..
->>>>
->>>>
->>> Forgot to say:
->>> If use pd, Although there is no call to power odd the pd_emmc,
->>> it will be power off when the system doing suspend 2 resume.
->>> (Because the system call
->>> __device_suspend_noirq->pm_genpd_suspend_noirq->rockchip_pd_power_off)
->>
->> Thanks for explaining this. I checked the code a bit and actually I
->> don't need to updata clkmul since it was recorded, although it is still
->> reset to 0x10 reading from syscon. So for that, we can now pick it
->> up without waiting for my sdhci-of-arasan's update.
->>
->> Reviewed-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> This is fine to pick up _only_ if you don't care about suspend/resume.
-> If you care about suspend/resume then someone needs to first write a
-> patch that will re-init all "corecfg" values after power is turned on.
+> This enables the i2c0/i2c1 peripherals of the SoC. There is actually a third
+> controller, but I do not have a board on hands on which i2c2 is exposed in such
+> a way that I can verify that it works.
 
-Do you mean corecfg_clockmultiplier and corecfg_baseclkfreq, if yes, we 
-don't need to strore/re-init it after resume.
-corecfg_clockmultiplier is only used to fetch host->clk_mul, and 
-host->clk_mul has been a fixed value at run-time, unless driver unbind.
-The same as corecfg_clockmultiplier, corecfg_baseclkfreq is used to 
-check the xin_clk at probe time, we don't reference it at run-time.
-BTW, I have tested suspend/resume on rk3399 prior to this sumbit, eMMC 
-works fine.
+If they are listed in the manual, and the interrupts, clocks, resets, pins
+all exist, that is good enough for me.
 
 >
-> Technically I think this should probably use "pm runtime" and not
-> normal suspend/resume hooks.  Any time we end up pm runtime suspended
-> then I think our power will go off (because of genpd?) and we need to
-> restore values.
+> Signed-off-by: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
 
-I understand your consideration. BUT genpd is in charge of on/off pd if 
-the corresponding device node has "power-domains" property. RPM is 
-unnecessary for this situation, we will not use autosuspend, right?
-
-@shawn, what's your opinion?
-
->
-> I'm not sure if this should be done in a generic way where we try to
-> save and restore all values in the "sdhci_arasan_soc_ctl_map" or if we
-> should try to be smarter...
->
->
-> -Doug
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->
->
->
-
-
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
