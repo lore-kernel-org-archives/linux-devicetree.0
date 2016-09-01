@@ -1,39 +1,26 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V6 1/2] thermal: max77620: Add DT binding doc for thermal
- driver
-Date: Thu, 1 Sep 2016 16:42:09 +0530
-Message-ID: <57C80D09.9020905@nvidia.com>
-References: <1471940427-2063-1-git-send-email-ldewangan@nvidia.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: Fix mismatched values of SD drive
+ strengh configuration on exynos4415
+Date: Thu, 01 Sep 2016 13:26:02 +0200
+Message-ID: <6af62df7-1740-4168-4edc-63b6f1c699ae@samsung.com>
+References: <1472719022-27226-1-git-send-email-k.kozlowski@samsung.com>
+ <1472719022-27226-2-git-send-email-k.kozlowski@samsung.com>
+ <3122615.TmPyqONA3V@amdc1976>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471940427-2063-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <3122615.TmPyqONA3V@amdc1976>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: javier@osg.samsung.com, Arnd Bergmann <arnd@arndb.de>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhang,
+On 09/01/2016 01:21 PM, Bartlomiej Zolnierkiewicz wrote:
+> BTW This reminds me that there are still no board files for Exynos4415
+> SoC based boards so maybe we should consider removal of its support?
 
-On Tuesday 23 August 2016 01:50 PM, Laxman Dewangan wrote:
-> Maxim Semiconductor MAX77620 supports alarm interrupts when
-> its die temperature crosses 120C and 140C. These threshold
-> temperatures are not configurable.
->
-> Add DT binding document to details out the DT property related
-> to MAX77620 thermal functionality.
->
-> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
+Fine with me. I would ack such patches so (anyone) please go ahead. :)
 
-Are you queuing thermal patches? If yes then please consider this also 
-if it is fine.
-
-Thanks,
-Laxman
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
