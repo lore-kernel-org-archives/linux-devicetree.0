@@ -1,131 +1,125 @@
-From: Sean Young <sean@mess.org>
-Subject: Re: [PATCH v2 3/7] [media] rc-core: add support for IR raw
- transmitters
-Date: Thu, 1 Sep 2016 22:31:16 +0100
-Message-ID: <20160901213116.GC22198@gofer.mess.org>
-References: <20160901171629.15422-1-andi.shyti@samsung.com>
- <20160901171629.15422-4-andi.shyti@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160901171629.15422-4-andi.shyti@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Shyti <andi.shyti@samsung.com>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>
+From: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/2] usb: dwc3: Add ref clock period setting
+Date: Thu, 01 Sep 2016 14:32:30 -0700
+Message-ID: <ae2c9b5683820c6456f91a2ef631efa2de0bec28.1472764828.git.johnyoun@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Thinh Nguyen <thinhn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 02, 2016 at 02:16:25AM +0900, Andi Shyti wrote:
-> IR raw transmitter driver type is specified in the enum
-> rc_driver_type as RC_DRIVER_IR_RAW_TX which includes all those
-> devices that transmit raw stream of bit to a receiver.
-> 
-> The data are provided by userspace applications, therefore they
-> don't need any input device allocation, but still they need to be
-> registered as raw devices.
-> 
-> Suggested-by: Sean Young <sean@mess.org>
-> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> ---
->  drivers/media/rc/rc-main.c | 39 +++++++++++++++++++++++----------------
->  include/media/rc-core.h    |  9 ++++++---
->  2 files changed, 29 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/media/rc/rc-main.c b/drivers/media/rc/rc-main.c
-> index 7961083..c3c1f68 100644
-> --- a/drivers/media/rc/rc-main.c
-> +++ b/drivers/media/rc/rc-main.c
-> @@ -1361,20 +1361,24 @@ struct rc_dev *rc_allocate_device(enum rc_driver_type type)
->  	if (!dev)
->  		return NULL;
->  
-> -	dev->input_dev = input_allocate_device();
-> -	if (!dev->input_dev) {
-> -		kfree(dev);
-> -		return NULL;
-> -	}
-> +	if (type != RC_DRIVER_IR_RAW_TX) {
-> +		dev->input_dev = input_allocate_device();
-> +		if (!dev->input_dev) {
-> +			kfree(dev);
-> +			return NULL;
-> +		}
-> +
-> +		dev->input_dev->getkeycode = ir_getkeycode;
-> +		dev->input_dev->setkeycode = ir_setkeycode;
-> +		input_set_drvdata(dev->input_dev, dev);
->  
-> -	dev->input_dev->getkeycode = ir_getkeycode;
-> -	dev->input_dev->setkeycode = ir_setkeycode;
-> -	input_set_drvdata(dev->input_dev, dev);
-> +		setup_timer(&dev->timer_keyup, ir_timer_keyup,
-> +						(unsigned long)dev);
->  
-> -	spin_lock_init(&dev->rc_map.lock);
-> -	spin_lock_init(&dev->keylock);
-> +		spin_lock_init(&dev->rc_map.lock);
-> +		spin_lock_init(&dev->keylock);
-> +	}
->  	mutex_init(&dev->lock);
-> -	setup_timer(&dev->timer_keyup, ir_timer_keyup, (unsigned long)dev);
->  
->  	dev->dev.type = &rc_dev_type;
->  	dev->dev.class = &rc_class;
-> @@ -1474,7 +1478,7 @@ out_table:
->  
->  static void rc_free_rx_device(struct rc_dev *dev)
->  {
-> -	if (!dev)
-> +	if (!dev || dev->driver_type == RC_DRIVER_IR_RAW_TX)
->  		return;
->  
->  	ir_free_table(&dev->rc_map);
-> @@ -1522,11 +1526,14 @@ int rc_register_device(struct rc_dev *dev)
+From: Thinh Nguyen <thinhn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 
-An tx-only device shouldn't have the sysfs attribute protocol, that
-should be handled here too.
+Added ref_clk_per for writing to GUCTL.RefClkPer which
+sets the period of ref_clk in nano second.
 
->  		dev->input_name ?: "Unspecified device", path ?: "N/A");
->  	kfree(path);
->  
-> -	rc = rc_setup_rx_device(dev);
-> -	if (rc)
-> -		goto out_dev;
-> +	if (dev->driver_type != RC_DRIVER_IR_RAW_TX) {
-> +		rc = rc_setup_rx_device(dev);
-> +		if (rc)
-> +			goto out_dev;
-> +	}
->  
-> -	if (dev->driver_type == RC_DRIVER_IR_RAW) {
-> +	if (dev->driver_type == RC_DRIVER_IR_RAW ||
-> +				dev->driver_type == RC_DRIVER_IR_RAW_TX) {
->  		if (!raw_init) {
->  			request_module_nowait("ir-lirc-codec");
->  			raw_init = true;
-> diff --git a/include/media/rc-core.h b/include/media/rc-core.h
-> index 4fc60dd..56e33c1 100644
-> --- a/include/media/rc-core.h
-> +++ b/include/media/rc-core.h
-> @@ -32,13 +32,16 @@ do {								\
->  /**
->   * enum rc_driver_type - type of the RC output
->   *
-> - * @RC_DRIVER_SCANCODE:	Driver or hardware generates a scancode
-> - * @RC_DRIVER_IR_RAW:	Driver or hardware generates pulse/space sequences.
-> - *			It needs a Infra-Red pulse/space decoder
-> + * @RC_DRIVER_SCANCODE:	 Driver or hardware generates a scancode
-> + * @RC_DRIVER_IR_RAW:	 Driver or hardware generates pulse/space sequences.
-> + *			 It needs a Infra-Red pulse/space decoder
-> + * @RC_DRIVER_IR_RAW_TX: Device transmitter only,
-> +			 driver requires pulce/spce data sequence.
->   */
->  enum rc_driver_type {
->  	RC_DRIVER_SCANCODE = 0,
->  	RC_DRIVER_IR_RAW,
-> +	RC_DRIVER_IR_RAW_TX,
->  };
->  
->  /**
-> -- 
-> 2.9.3
+Signed-off-by: Thinh Nguyen <thinhn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Signed-off-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/dwc3.txt |  2 ++
+ drivers/usb/dwc3/core.c                        | 21 +++++++++++++++++++++
+ drivers/usb/dwc3/core.h                        |  5 +++++
+ drivers/usb/dwc3/dwc3-pci.c                    |  1 +
+ 4 files changed, 29 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index e3e6983..aa54ba7 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -50,6 +50,8 @@ Optional properties:
+  - snps,hird-threshold: HIRD threshold
+  - snps,hsphy_interface: High-Speed PHY interface selection between "utmi" for
+    UTMI+ and "ulpi" for ULPI when the DWC_USB3_HSPHY_INTERFACE has value 3.
++ - snps,ref_clk_per: value for GUTCL.RefClkPer field that sets the period of
++			ref_clk in nano seconds.
+  - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field of GFLADJ
+ 	register for post-silicon frame length adjustment when the
+ 	fladj_30mhz_sdbnd signal is invalid or incorrect.
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index d6d3fa0..b96bf69 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -145,6 +145,23 @@ static int dwc3_soft_reset(struct dwc3 *dwc)
+ 	return 0;
+ }
+ 
++/*
++ * dwc3_ref_clock_period - Sets the reference clock period
++ * @dwc3: Pointer to our controller context structure
++ */
++static void dwc3_ref_clock_period(struct dwc3 *dwc)
++{
++	u32 reg;
++
++	if (dwc->ref_clk_per == 0)
++		return;
++
++	reg = dwc3_readl(dwc->regs, DWC3_GUCTL);
++	reg &= ~DWC3_GUCTL_REFCLKPER_MASK;
++	reg |= DWC3_GUCTL_REFCLKPER(dwc->ref_clk_per);
++	dwc3_writel(dwc->regs, DWC3_GUCTL, reg);
++}
++
+ /*
+  * dwc3_frame_length_adjustment - Adjusts frame length if required
+  * @dwc3: Pointer to our controller context structure
+@@ -670,6 +687,9 @@ static int dwc3_core_init(struct dwc3 *dwc)
+ 	if (ret)
+ 		goto err1;
+ 
++	/* Initialize ref clock period */
++	dwc3_ref_clock_period(dwc);
++
+ 	/* Adjust Frame Length */
+ 	dwc3_frame_length_adjustment(dwc);
+ 
+@@ -984,6 +1004,7 @@ static int dwc3_probe(struct platform_device *pdev)
+ 				    &dwc->hsphy_interface);
+ 	device_property_read_u32(dev, "snps,quirk-frame-length-adjustment",
+ 				 &dwc->fladj);
++	device_property_read_u32(dev, "snps,ref_clk_per", &dwc->ref_clk_per);
+ 
+ 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
+ 	dwc->tx_de_emphasis = tx_de_emphasis;
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index b2317e7..ab58334 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -198,6 +198,10 @@
+ #define DWC3_GCTL_GBLHIBERNATIONEN	(1 << 1)
+ #define DWC3_GCTL_DSBLCLKGTNG		(1 << 0)
+ 
++/* Global USB3 user Control Register */
++#define DWC3_GUCTL_REFCLKPER(n)		((n) << 22)
++#define DWC3_GUCTL_REFCLKPER_MASK	DWC3_GUCTL_REFCLKPER(0x3ff)
++
+ /* Global USB2 PHY Configuration Register */
+ #define DWC3_GUSB2PHYCFG_PHYSOFTRST	(1 << 31)
+ #define DWC3_GUSB2PHYCFG_U2_FREECLK_EXISTS	(1 << 30)
+@@ -872,6 +876,7 @@ struct dwc3 {
+ 	enum usb_dr_mode	dr_mode;
+ 	enum usb_phy_interface	hsphy_mode;
+ 
++	u32			ref_clk_per;
+ 	u32			fladj;
+ 	u32			irq_gadget;
+ 	u32			nr_scratch;
+diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
+index 2eb84d6..254788b 100644
+--- a/drivers/usb/dwc3/dwc3-pci.c
++++ b/drivers/usb/dwc3/dwc3-pci.c
+@@ -127,6 +127,7 @@ static int dwc3_pci_quirks(struct pci_dev *pdev, struct platform_device *dwc3)
+ 			PROPERTY_ENTRY_BOOL("snps,usb3_lpm_capable"),
+ 			PROPERTY_ENTRY_BOOL("snps,has-lpm-erratum"),
+ 			PROPERTY_ENTRY_BOOL("snps,dis_enblslpm_quirk"),
++			PROPERTY_ENTRY_U32("snps,ref_clk_per", 0x32),
+ 			{ },
+ 		};
+ 
+-- 
+2.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
