@@ -1,55 +1,84 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 1/6] pinctrl: dt-bindings: samsung: Update documentation
- with new macros
-Date: Thu, 01 Sep 2016 12:31:44 +0200
-Message-ID: <880fac86-0a8b-2151-c926-89281fe69be1@samsung.com>
-References: <1472721715-2833-1-git-send-email-k.kozlowski@samsung.com>
- <1472721715-2833-2-git-send-email-k.kozlowski@samsung.com>
- <8dda7bb7-fb99-3e13-be03-e21e3b18e501@osg.samsung.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v2 4/4] pwm: sunxi: Add H3 support
+Date: Thu, 1 Sep 2016 12:39:18 +0200
+Message-ID: <20160901103918.dphgrha7ega3752o@piout.net>
+References: <20160831082520.25962-1-woogyom.kim@gmail.com>
+ <20160831082520.25962-5-woogyom.kim@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <8dda7bb7-fb99-3e13-be03-e21e3b18e501@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160831082520.25962-5-woogyom.kim@gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Milo Kim <woogyom.kim@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/01/2016 12:29 PM, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
+On 31/08/2016 at 17:25:20 +0900, Milo Kim wrote :
+> H3 PWM controller has same register layout as sun4i driver, so it works
+> by adding H3 specific data.
 > 
-> On 09/01/2016 11:21 AM, Krzysztof Kozlowski wrote:
->> Update examples in Samsung pinctrl dt-bindings with new macros coming
->> from header file.
->>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> ---
->>  .../bindings/pinctrl/samsung-pinctrl.txt           | 42 +++++++++++-----------
->>  1 file changed, 21 insertions(+), 21 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
->> index 6db16b90873a..828ef7fdd437 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
->> +++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
->> @@ -238,53 +238,53 @@ Example 1: A pin-controller node with pin groups.
->>  
->>  		uart0_data: uart0-data {
->>  			samsung,pins = "gpa0-0", "gpa0-1";
->> -			samsung,pin-function = <2>;
->> -			samsung,pin-pud = <0>;
->> -			samsung,pin-drv = <0>;
->> +			samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
->> +			samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
->> +			samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
->>  		};
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: linux-pwm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
+Reviewed-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-sun4i.txt | 1 +
+>  drivers/pwm/pwm-sun4i.c                             | 9 +++++++++
+>  2 files changed, 10 insertions(+)
 > 
-> I wonder if besides updating the examples, the DT binding shouldn't also
-> mention include/dt-bindings/pinctrl/samsung.h and list the macros for each
-> possible pin configuration.
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
+> index cf6068b..f1cbeef 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-sun4i.txt
+> @@ -6,6 +6,7 @@ Required properties:
+>      - "allwinner,sun5i-a10s-pwm"
+>      - "allwinner,sun5i-a13-pwm"
+>      - "allwinner,sun7i-a20-pwm"
+> +    - "allwinner,sun8i-h3-pwm"
+>    - reg: physical base address and length of the controller's registers
+>    - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+>      the cells format.
+> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> index 03a99a5..b0803f6 100644
+> --- a/drivers/pwm/pwm-sun4i.c
+> +++ b/drivers/pwm/pwm-sun4i.c
+> @@ -284,6 +284,12 @@ static const struct sun4i_pwm_data sun4i_pwm_data_a20 = {
+>  	.npwm = 2,
+>  };
+>  
+> +static const struct sun4i_pwm_data sun4i_pwm_data_h3 = {
+> +	.has_prescaler_bypass = true,
+> +	.has_rdy = true,
+> +	.npwm = 1,
+> +};
+> +
+>  static const struct of_device_id sun4i_pwm_dt_ids[] = {
+>  	{
+>  		.compatible = "allwinner,sun4i-a10-pwm",
+> @@ -298,6 +304,9 @@ static const struct of_device_id sun4i_pwm_dt_ids[] = {
+>  		.compatible = "allwinner,sun7i-a20-pwm",
+>  		.data = &sun4i_pwm_data_a20,
+>  	}, {
+> +		.compatible = "allwinner,sun8i-h3-pwm",
+> +		.data = &sun4i_pwm_data_h3,
+> +	}, {
+>  		/* sentinel */
+>  	},
+>  };
+> -- 
+> 2.9.3
+> 
 
-Yes, of course it should. I actually added it at beginning but then
-checkout and I tested my sed scripts... I'll fix it in v2.
-
-Best regards,
-Krzysztof
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
