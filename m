@@ -1,70 +1,98 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH v3] ARM: dts: sun8i: enable UART1 for
- iNet D978 Rev2 board
-Date: Thu, 1 Sep 2016 10:40:32 +0200
-Message-ID: <a3097f99-a761-76e7-1405-2574c56ac94d@redhat.com>
-References: <20160829141832.10566-1-icenowy@aosc.xyz>
- <20160831162240.GJ14379@lukather>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 1/7] ARM: dts: exynos: Add missing memory node for
+ Exynos5440 boards
+Date: Thu, 1 Sep 2016 10:43:35 +0200
+Message-ID: <c043b569-fbad-23bb-5807-5dda9cc8b37f@osg.samsung.com>
+References: <1472645679-5696-1-git-send-email-javier@osg.samsung.com>
+ <1472645679-5696-2-git-send-email-javier@osg.samsung.com>
+ <20160831174657.GA19969@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBCGTT67AKGQET6SOGBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160831162240.GJ14379@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160831174657.GA19969@kozik-lap>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Krzysztof,
 
-On 31-08-16 18:22, Maxime Ripard wrote:
-> On Mon, Aug 29, 2016 at 10:18:32PM +0800, Icenowy Zheng wrote:
->> UART1 is connected to the bluetooth part of RTL8723BS WiFi/BT combo card
->> on iNet D978 Rev2 board.
+On 08/31/2016 07:46 PM, Krzysztof Kozlowski wrote:
+> On Wed, Aug 31, 2016 at 02:14:33PM +0200, Javier Martinez Canillas wrote:
+>> The skeleton.dtsi file was removed in ARM64 for different reasons as
+>> explained in commit ("3ebee5a2e141 arm64: dts: kill skeleton.dtsi").
 >>
->> Enable the UART1 to make it possible to use the modified hciattach by
->> Realtek to drive the BT part of RTL8723BS.
+>> These also applies to ARM and it will also allow to get rid of the
+>> following DTC warnings in the future:
 >>
->> On the board no r_uart pins are found now (the onboard RX/TX pins are
->> wired to PF2/PF4, which is muxed with mmc0), so also disabled it.
+>> "Node /memory has a reg or ranges property, but no unit name"
 >>
->> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>> But these boards don't have a memory node defined, so removing the
+>> skeleton.dtsi inclusion in exynos4.dtsi will cause a change in the
+>> compiled DTB. Add a dummy memory node so the compiled DTB doesn't
+>> change if the skeleton.dtsi is removed from exynos4.dtsi.
+> 
+> You mean extnos5440.dtsi?
 >
-> I'll make the same comments than in the v2.
-> https://www.spinics.net/lists/arm-kernel/msg527001.html
 
-I've a feeling there is a bit of miscommunication here,
-let me try to clarify things:
+Yes, I meant exynos5440.dtsi, it's a commit message copy and paste error.
+Thanks for pointing out, I'll fix it in v2.
+ 
+>>
+>> Eventually the correct starting addresses and sizes should be used
+>> but I didn't find that information.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>> ---
+>>
+>>  arch/arm/boot/dts/exynos5440-sd5v1.dts    | 5 +++++
+>>  arch/arm/boot/dts/exynos5440-ssdk5440.dts | 5 +++++
+>>  2 files changed, 10 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5440-sd5v1.dts b/arch/arm/boot/dts/exynos5440-sd5v1.dts
+>> index a98501bab6fc..333db4ff373a 100644
+>> --- a/arch/arm/boot/dts/exynos5440-sd5v1.dts
+>> +++ b/arch/arm/boot/dts/exynos5440-sd5v1.dts
+>> @@ -20,6 +20,11 @@
+>>  		bootargs = "root=/dev/sda2 rw rootwait ignore_loglevel earlyprintk no_console_suspend mem=2048M@0x80000000 mem=6144M@0x100000000 console=ttySAC0,115200";
+>>  	};
+>>  
+>> +	memory {
+>> +		device_type = "memory";
+>> +		reg = <0 0>;
+>> +	};
+>> +
+>>  	fixed-rate-clocks {
+>>  		xtal {
+>>  			compatible = "samsung,clock-xtal";
+>> diff --git a/arch/arm/boot/dts/exynos5440-ssdk5440.dts b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+>> index 6a0d802e87c8..82fea6f94704 100644
+>> --- a/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+>> +++ b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+>> @@ -21,6 +21,11 @@
+>>  		bootargs = "root=/dev/sda2 rw rootwait ignore_loglevel earlyprintk no_console_suspend mem=2048M@0x80000000 mem=6144M@0x100000000 console=ttySAC0,115200";
+>>  	};
+>>  
+>> +	memory {
+>> +		device_type = "memory";
+>> +		reg = <0 0>;
+>> +	};
+> 
+> This looks okay, but the default size and address cells won't be
+> present. Won't that be a problem?
+>
 
-Icenowy, Maxime wants you to split this into 2 patches:
+They will be present since at this point exynos5440.dtsi is still including
+exynos5440.dtsi, we are just overriding the memory node with the same values
+than skeleton.dtsi so this can be removed later in patch 7/7.
+ 
+> Best regards,
+> Krzysztof
+> 
 
-1) Adding just the uart1_pins_a and uart1_pins_cts_rts_a nodes to
-sun8i-a23-a33.dtsi; and
-2) Another patch with the sun8i-a33-inet-d978-rev2.dts changes
-
-And for 2. Maxime wants you to change:
-
-	aliases {
-		/delete-property/serial0;
-		serial1 = &uart1;
-	};
-
-to:
-
-	aliases {
-		serial0 = &uart1;
-	};
-
-There is no serial0 and Maxime wants the serial-s
-to be numbered starting at 0 (iow there is no reason
-to make the bluetooth uart serial1).
-
-Regards,
-
-Hans
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
