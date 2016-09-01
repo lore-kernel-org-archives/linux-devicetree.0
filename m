@@ -1,157 +1,65 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: Re: [PATCH V2] dt: net: enhance DWC EQoS binding to support Tegra186
-Date: Thu, 1 Sep 2016 09:50:38 +0200
-Message-ID: <d60d2deb-49dd-2561-bbde-20d2ff13ca4b@axis.com>
-References: <20160824212046.2416-1-swarren@wwwdotorg.org>
- <20160830190152.GA25083@rob-hp-laptop>
- <54b380c4-179f-2260-55dd-4220e65f8f46@wwwdotorg.org>
- <190a6bc1-ef66-2927-e542-13c543bab3b9@axis.com>
- <f4f85b48-4df6-4a3c-2831-e5707d35ebb6@wwwdotorg.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v3 05/12] arm64: dts: h3ulcb: enable GPIO leds
+Date: Thu, 1 Sep 2016 09:52:56 +0200
+Message-ID: <CAMuHMdUpcajev3CsdhtpaD4PrqAOPsAcnv+65TFv-we6FPmDVw@mail.gmail.com>
+References: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1472637789-14780-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <f4f85b48-4df6-4a3c-2831-e5707d35ebb6@wwwdotorg.org>
-Sender: netdev-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Lars Persson <larper@axis.com>, Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472637789-14780-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 31, 2016 at 12:03 PM, Vladimir Barinov
+<vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> This supports GPIO leds on H3ULCB board
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-On 08/31/2016 11:48 PM, Stephen Warren wrote:
-> On 08/31/2016 03:15 AM, Lars Persson wrote:
->> On 08/30/2016 10:50 PM, Stephen Warren wrote:
->>> On 08/30/2016 01:01 PM, Rob Herring wrote:
->>>> On Wed, Aug 24, 2016 at 03:20:46PM -0600, Stephen Warren wrote:
->>>>> The Synopsys DWC EQoS is a configurable IP block which supports
->>>>> multiple
->>>>> options for bus type, clocking and reset structure, and feature list.
->>>>> Extend the DT binding to define a "compatible value" for the
->>>>> configuration
->>>>> contained in NVIDIA's Tegra186 SoC, and define some new properties and
->>>>> list property entries required by that configuration.
->
->>>>> diff --git
->>>>> a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
->>>>> b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
->
->>>>> +- clock-names: May contain any/all of the following depending on
->>>>> the IP
->>>>> +  configuration, in any order:
->>>>> +    The EQOS transmit path clock. The HW signal name is clk_tx_i.
->>>>> +    In some configurations (e.g. GMII/RGMII), this clock also drives
->>>>> the PHY TX
->>>>> +    path. In other configurations, other clocks (such as tx_125,
->>>>> rmii) may
->>>>> +    drive the PHY TX path.
->>>>> +  - "rx"
->>>>> +    The EQOS receive path clock. The HW signal name is clk_rx_i.
->>>>> +    In some configurations (e.g. GMII/RGMII), this clock also drives
->>>>> the PHY RX
->>>>> +    path. In other configurations, other clocks (such as rx_125,
->>>>> pmarx_0,
->>>>> +    pmarx_1, rmii) may drive the PHY RX path.
->>
->> It is not correct that clk_rx_i drives the PHY rx path for GMII/RGMII.
->> The PHY is the source of the rx clock for these modes.
->
-> I think both of our statements are true.
->
-> There's a clock input to the EQOS module (clk_rx_i) that does drive the
-> RX path in the EQOS module.
->
-> That clock also drives the PHY's RX path.
->
-> Those statements make no comment regarding the /source/ of that clock;
-> either of the following might be true:
->
-> 1) The PHY could generate the clock internally somehow, feed its own
-> internal logic with that clock, and send the clock out to feed the EQOS
-> RX path too.
->
-> or,
->
-> 2)  SoC integration could drive the same clock into both the EQOS and
-> PHY modules, so that both sets of logic are fed from the same external
-> clock.
->
-> Perhaps the phrase "PHY RX path" is confusing; I was talking about the
-> EQOS modules' RX path from the PHY more than the PHY itself, although
-> given what I said above I believe either interpretation is valid and
-> correct.
->
->> Will the driver need to make any clock ops on the "rx" clock ?
->
-> Yes. The EQOS driver needs to ensure that the clock is running before
-> attempting to receive data from the PHY, otherwise the EQOS's own RX
-> logic won't be clocked.
->
-> Whether the phandle for this clock points at a SoC-level provider (it
-> will in Tegra) or a clock provider in the PHY (it might in other SoCs),
-> shouldn't matter as far as the DT binding goes, although it might affect
-> device probe ordering in some implementations.
->
+> --- a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
+> @@ -31,6 +31,19 @@
+>                 /* first 128MB is reserved for secure area. */
+>                 reg = <0x0 0x48000000 0x0 0x38000000>;
+>         };
+> +
+> +       leds {
+> +               compatible = "gpio-leds";
+> +               led4 {
+> +                       gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
+> +               };
+> +               led5 {
+> +                       gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+> +               };
+> +               led6 {
+> +                       gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
+> +               };
+> +       };
 
-I understand your point. The lines between PHY, MAC and SoC gets blurred 
-with high integration.
+The LEDs share GPIOs with the switches. Unfortunately you cannot use both
+at the same time.
+Perhaps we want to configure one of them for the switch, to be used as a
+wakeup-source?
 
-The thing is that when we talk about standard PHY interfaces the clock 
-is a well defined part of the interface and it should not be mixed up 
-with SoC-specific implementations that deviate from this. Please update 
-the description of the rx clock to only cover cases when the clock is 
-not implicitly sourced from the PHY.
+The same applies to Salvator-X, where we haven't wired up the LEDs nor
+switches (yet).
 
-When the PHY is the source of the clock then it is managed by the phy 
-library and the phy driver so it does not need to be also handled by the 
-common clock framework.
+Gr{oetje,eeting}s,
 
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
->>>>> +  Note: Support for additional IP configurations may require
->>>>> adding the
->>>>> +  following clocks to this list in the future: clk_rx_125_i,
->>>>> clk_tx_125_i,
->>>>> +  clk_pmarx_0_i, clk_pmarx1_i, clk_rmii_i, clk_revmii_rx_i,
->>>>> clk_revmii_tx_i.
->>>>> +
->>>>> +  The following compatible values require the following set of
->>>>> clocks:
->>>>> +  - "nvidia,tegra186-eqos", "snps,dwc-qos-ethernet-4.10":
->>>>> +    - "slave_bus"
->>>>> +    - "master_bus"
->>>>> +    - "rx"
->>>>> +    - "tx"
->>>>> +    - "ptp_ref"
->>>>> +  - "axis,artpec6-eqos", "snps,dwc-qos-ethernet-4.10":
->>>>> +    - "phy_ref_clk"
->>>>> +    - "apb_clk"
->>>>
->>>> It would be good if this was marked deprecated and the full set of
->>>> clocks could be described and supported. Not sure if you can figure
->>>> that
->>>> out. Is it really only 2 clocks, or these have multiple connections to
->>>> the same source.
->>>
->>> Lars, can you answer here?
->>>
->>> I deliberately didn't attempt to change the binding definition for the
->>> existing use-case, since I'm not familiar with that SoC, and don't
->>> relish changing DTs for a platform I can't test.
->>
->> For the artpec-6 the clocks are like this:
->> apb_clk: It is both the master and slave bus clock.
->> phy_ref_clk: It corresponds to tx clock in the proposed new binding.
->>
->> There is a also a ptp reference clock that will map to the new ptp_ref
->> clock binding.
->>
->> So the full set of clocks in a new artpec-6 binding is:
->> slave_bus
->> master_bus
->> tx
->> ptp_ref
->
-> Given the discussion above, I think we should represent the rx clock too.
-
-It does not make sense to add rx clock for artpec-6.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
