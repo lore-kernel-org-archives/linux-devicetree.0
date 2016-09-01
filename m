@@ -1,65 +1,76 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 3/7] dts: sun8i-h3: add i2c0/i2c1 SoC peripherals
-Date: Thu, 1 Sep 2016 14:42:41 +0800
-Message-ID: <CAGb2v66tW+F_aitXUkxTtwzfkijAwAP+OqC1gGQi6JgZN0w-2A@mail.gmail.com>
-References: <1472671858-29220-1-git-send-email-jorik@kippendief.biz>
- <1472671858-29220-4-git-send-email-jorik@kippendief.biz> <CAGb2v66c8uFHUtVtHOZCfxDEEgG7CzZgBRKWMUQS7NTizF6jyQ@mail.gmail.com>
- <CAKqGPHwBqWn05SQqEPUQiwxi=WyBJ2LFto2Ucbh8w=Eqe49eTA@mail.gmail.com>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v8 05/16] arm64/numa: avoid inconsistent information to be printed
+Date: Thu, 1 Sep 2016 14:54:56 +0800
+Message-ID: <1472712907-12700-6-git-send-email-thunder.leizhen@huawei.com>
+References: <1472712907-12700-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKqGPHwBqWn05SQqEPUQiwxi=WyBJ2LFto2Ucbh8w=Eqe49eTA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <1472712907-12700-1-git-send-email-thunder.leizhen@huawei.com>
+Sender: owner-linux-mm@kvack.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank
+ Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, linux-mm <linux-mm@kvack.org>
+Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong
+ Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 1, 2016 at 2:31 PM, Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org> wrote:
-> Hi,
->
-> A bit tricky to reply to two mails in one, as I think my reply relates to
-> both, but here it goes.
->
-> On 1 September 2016 at 04:42, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->>
->> On Thu, Sep 1, 2016 at 3:30 AM,  <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org> wrote:
->> > From: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
->> >
->> > This enables the i2c0/i2c1 peripherals of the SoC. There is actually a
->> > third
->> > controller, but I do not have a board on hands on which i2c2 is exposed
->> > in such
->> > a way that I can verify that it works.
->>
->> If they are listed in the manual, and the interrupts, clocks, resets, pins
->> all exist, that is good enough for me.
->
->
-> That sounds sensible, I will do that in v3.
->
->> These pinmuxes are the only ones possible for each peripheral.
->> Please drop the _a suffix and the @0 address for both of them.
->
-> Agreed. But: I think the same goes for UARTs 0-3, of which 0-1 have a pinmux
-> following the _a / @0 syntax in current kernel. There are not really options
-> here, except leaving out RTS/CTS on uarts1-3, which one could do in a
-> board-specific pinmux.
+numa_init may return error because of numa configuration error. So "No
+NUMA configuration found" is inaccurate. In fact, specific configuration
+error information should be immediately printed by the testing branch.
 
-That would work. You could also do the RTS/CTS pins and call them
-"uartX_rts_cts_pins: uartX-rts-cts { ... }". Of course doing all these
-is dependent on some board actually using them. Let's see what Maxime
-has to say about your other patches. :)
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ arch/arm64/kernel/acpi_numa.c | 4 +++-
+ arch/arm64/mm/numa.c          | 6 +++---
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-> Moreover, I could put all the pinmux-peripheral associations for H3 in the
-> DTSI, removing them from the DTS files (including already existing), as the
-> associations themselves are not really board specific, right?
+diff --git a/arch/arm64/kernel/acpi_numa.c b/arch/arm64/kernel/acpi_numa.c
+index f85149c..f01fab6 100644
+--- a/arch/arm64/kernel/acpi_numa.c
++++ b/arch/arm64/kernel/acpi_numa.c
+@@ -105,8 +105,10 @@ int __init arm64_acpi_numa_init(void)
+ 	int ret;
 
-I've done so for a few peripherals, such as RSB and IR, where there are
-only 1 set of pins that make sense. For 2/4/8 pin UARTs, MMC, LCDs, etc,
-I wouldn't do it.
+ 	ret = acpi_numa_init();
+-	if (ret)
++	if (ret) {
++		pr_info("Failed to initialise from firmware\n");
+ 		return ret;
++	}
 
-ChenYu
+ 	return srat_disabled() ? -EINVAL : 0;
+ }
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index 5bb15ea..d97c6e2 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -335,8 +335,10 @@ static int __init numa_init(int (*init_func)(void))
+ 	if (ret < 0)
+ 		return ret;
+
+-	if (nodes_empty(numa_nodes_parsed))
++	if (nodes_empty(numa_nodes_parsed)) {
++		pr_info("No NUMA configuration found\n");
+ 		return -EINVAL;
++	}
+
+ 	ret = numa_register_nodes();
+ 	if (ret < 0)
+@@ -367,8 +369,6 @@ static int __init dummy_numa_init(void)
+
+ 	if (numa_off)
+ 		pr_info("NUMA disabled\n"); /* Forced off on command line. */
+-	else
+-		pr_info("No NUMA configuration found\n");
+ 	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
+ 	       0LLU, PFN_PHYS(max_pfn) - 1);
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.5.0
+
+
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
