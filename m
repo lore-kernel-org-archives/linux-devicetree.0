@@ -1,129 +1,43 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: da850-lcdk: Add NAND to DT
-Date: Thu, 1 Sep 2016 15:46:44 +0530
-Message-ID: <fdf48f3c-c7f5-4b9b-ff6b-f801b04f3f33@ti.com>
-References: <20160829153242.18615-1-kbeldan@baylibre.com>
- <7h37lk5wrd.fsf@baylibre.com> <3945712b-d02f-d97a-2356-9383d7fe1984@ti.com>
- <20160901095857.GA27385@gobelin>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: Fix mismatched values of SD drive
+ strengh configuration on exynos4415
+Date: Thu, 1 Sep 2016 12:21:54 +0200
+Message-ID: <c8d20e28-bac5-77e1-afd8-3e4860d09f5f@osg.samsung.com>
+References: <1472719022-27226-1-git-send-email-k.kozlowski@samsung.com>
+ <1472719022-27226-2-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160901095857.GA27385@gobelin>
+In-Reply-To: <1472719022-27226-2-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Karl Beldan <karl.beldan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Karl Beldan <karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 01 September 2016 03:30 PM, Karl Beldan wrote:
-> On Thu, Sep 01, 2016 at 10:47:04AM +0530, Sekhar Nori wrote:
->> On Thursday 01 September 2016 05:14 AM, Kevin Hilman wrote:
->>> Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
->>>
->>>> This adds DT support for the NAND connected to the SoC AEMIF.
->>>> Passed torture hashing a 40MB file on top of UBIFS using subpages.
->>>>
->>>> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>> ---
->>>> v2:
->>>>
->>>> - Removed comments pertaining to the BSP the LCDK ships with (Sekhar)
->>>> - s/"ok"/"okay"/
->>>> - Removed partitions since it relates to the BSP the LCDK ships with
->>>
->>> IMO, some default partitions are nice to have, at least for u-boot and
->>> u-boot env so factory-shipped u-boot is not accidentally overridden.
->>> The left over space can be labeled "free space".
->>>
->>> Anyways, after adding some partitions back, I tested with ubifs on my
->>> LCDK:
->>
->> This[1] is what I had commented on the partitions before. I did not 
->> mean to remove partitions altogether, just comments referring to 
->> compatibility with pre-flashed software shipping with LCDK (since that 
->> changes without notice).
->>
->> Apologies for any confusion caused. The "Rest of the patch looks good
->> to me" in the end was to say that the partitions themselves look fine :)
->>
+Hello Krzysztof,
+
+On 09/01/2016 10:37 AM, Krzysztof Kozlowski wrote:
+> The pinctrl drive strength register on exynos4415 is 2-bit wide for each
+> pin.  The pins for SD2 were configured with value of 4.  The driver does
+> not validate the value so this overflow effectively set a bit 1 in
+> adjacent pins thus configuring them to drive strength 2x.
 > 
-> None necessary, I just pushed the logic further on my own as specified
-> in the changelog. I can add the partitions back as I don't have any
-> strong preference on this, but not without mentioning that it is because
-> that is what the LCDK ships with, as in my original version, please see
-> if the adjustments below accomodate your preferences.
+> The author's intention was probably to set drive strength of 4x.
+> All other SD pins are configured with drive strength of 4x.  Fix these
+> with same pattern.
 > 
->> Can you please submit a v2 with partitions added?
->>
->> Thanks,
->> Sekhar
->>
->> [1]
->>
->>> +
->>> +			/*
->>> +			 * LCDK original partitions:
->>> +			 * 0x000000000000-0x000000020000 : "u-boot env"
->>> +			 * 0x000000020000-0x0000000a0000 : "u-boot"
->>> +			 * 0x0000000a0000-0x0000002a0000 : "kernel"
->>> +			 * 0x0000002a0000-0x000020000000 : "filesystem"
->>> +			 *
->>> +			 * The 1st NAND block being guaranted to be valid w/o ECC (> 1k cycles),
->>> +			 * it makes a perfect candidate as an SPL for the BootROM to jump to.
->>> +			 * However the OMAP-L132/L138 Bootloader doc SPRAB41E reads:
->>> +			 * "To boot from NAND Flash, the AIS should be written to NAND block 1
->>> +			 * (NAND block 0 is not used by default)", which matches the LCDK
->>> +			 * original partitioning.
->>
->> FWIW, silicon version 2.1 supports booting from block 0, but needs new
->> boot pin settings not possible in stock LCDK.
->>
-> 
-> I'd add [1]:
-> Same doc reads for ROM "Silicon Revision 2.1", "Updated NAND boot mode
-> to offer boot from block 0 or block 1", (Sekhar:) "but needs new boot pin
-> settings not possible in stock LCDK".
-> 
->>> +			 * Also, the LCDK ships with only the u-boot partition provisioned and
->>> +			 * boots on it in its default configuration while using the MMC for the
->>> +			 * kernel and rootfs, so preserve that one as is for now.
->>> +			 * [1]: Ensuring for example that U-Boot LCDK SPL can handle it properly
->>> +			 * and a proper boot chain ROM->SPL->U-Boot->Linux wrt ECC, would allow
->>> +			 * for a better partitioning.
->>> +			 */
->>
->> I would rather not refer to the software that LCDK ships with in the
->> comments at all. Because that can change without notice. At some point,
->> if mainline kernel works well enough on LCDK, TI might decide to ship
->> LCDKs with mainline kernel flashed.
->>
-> 
-> If you want me to keep the partitions, I would change that to [2] "Here
-> we keep the first two provisioned default partitions and labels the LCDK
-> ships with as is." (although FWIU it conflicts with your request above).
+> Fixes: 9246e7ff24c5 ("ARM: dts: Add dts files for exynos4415 SoC")
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
 
-The reason for choosing the two partitions like the way you do is not
-because "LCDK ships with as is", but because:
+Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 
-a) LCDK cannot book from block 0 (needs a different boot mode)
-
-b) Block 0 is guaranteed to be good and capable of ~1000 erase cycles on
-most NANDs so using it to store environment variables makes sense.
-Especially on development boards where environment might be updated
-frequently during course of usage. Coupled with the fact that U-Boot
-does not implement any sort of wear-leveling on environment block (AFAIK).
-
-c) If block 0 is dedicated to env, block 1 is the next logical block to
-be used for u-boot.ais
-
-d) rest of the space is left to be used as the user deems fit.
-
-I still disagree with any references to legacy software that ships with
-LCDK. The partitioning scheme is used because it makes most sense. Not
-because the board ships with it.
-
-Thanks,
-Sekhar
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
