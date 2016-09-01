@@ -1,77 +1,94 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 05/19] iommu/arm-smmu: Implement of_xlate() for SMMUv3
-Date: Thu, 1 Sep 2016 18:40:57 +0100
-Message-ID: <31dc6a30-570d-db5f-d177-6b6393257133@arm.com>
-References: <cover.1471975357.git.robin.murphy@arm.com>
-	<6088007f60a24b36a3bf965b62521f99cd908019.1471975357.git.robin.murphy@arm.com>
-	<20160901170604.GP6721@arm.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [v10,2/2] PCI: Rockchip: Add Rockchip PCIe controller support
+Date: Thu, 01 Sep 2016 19:46:42 +0200
+Message-ID: <3757057.lFUFRYFCvk@diego>
+References: <1471570498-3284-1-git-send-email-shawn.lin@rock-chips.com>
+ <20160901163455.GA9471@localhost> <20160901171400.GA4093@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20160901170604.GP6721-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20160901171400.GA4093@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/09/16 18:06, Will Deacon wrote:
-> Hi Robin,
+Am Donnerstag, 1. September 2016, 10:14:01 schrieb Brian Norris:
+> On Thu, Sep 01, 2016 at 11:34:55AM -0500, Bjorn Helgaas wrote:
+> > In the interest of making progress, I made most of the changes Guenter
+> > suggested (thanks very much, Guenter!) and made some more of my own on
+> > top of those.
 > 
-> On Tue, Aug 23, 2016 at 08:05:16PM +0100, Robin Murphy wrote:
->> Now that we can properly describe the mapping between PCI RIDs and
->> stream IDs via "iommu-map", and have it fed it to the driver
->> automatically via of_xlate(), rework the SMMUv3 driver to benefit from
->> that, and get rid of the current misuse of the "iommus" binding.
->>
->> Since having of_xlate wired up means that masters will now be given the
->> appropriate DMA ops, we also need to make sure that default domains work
->> properly. This necessitates dispensing with the "whole group at a time"
->> notion for attaching to a domain, as devices which share a group get
->> attached to the group's default domain one by one as they are initially
->> probed.
->>
->> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
->> ---
->>
->> v5: Simplify init code, use firmware-agnostic (and more efficient)
->>     driver-based instance lookup
+> I'm not sure, but was this change your idea Bjorn?
 > 
-> I'm largely happy with this, just one question below...
+> commit 88cb3f59d73e261a3cd1957ff392f98c9916a5d1
+> Author: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Date:   Thu Sep 1 10:27:44 2016 -0500
 > 
->> @@ -2649,7 +2602,14 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
->>  	platform_set_drvdata(pdev, smmu);
->>  
->>  	/* Reset the device */
->> -	return arm_smmu_device_reset(smmu);
->> +	ret = arm_smmu_device_reset(smmu);
->> +	if (ret)
->> +		return ret;
+>     Simplify the confusing HIWORD_UPDATE scheme.
 > 
-> ... if we fail the probe at this point, the drvdata remains set. Do you
-> need to clear it, or we can we guarantee that nobody is going to try
-> arm_smmu_get_by_node with the (failed) SMMU's device node?
+> [Which I'll summarize here; you're replacing the macro:
+> 
+> -/*
+> -  * The higher 16-bit of this register is used for write protection
+> -  * only if BIT(x + 16) set to 1 the BIT(x) can be written.
+> -  */
+> -#define HIWORD_UPDATE(val, mask, shift) \
+> -       ((val) << (shift) | (mask) << ((shift) + 16))
+> 
+> with its expansions:
+> 
+> +
+> +/*
+> + * The higher 16-bit of this register is used for write protection
+> + * only if BIT(x + 16) set to 1 the BIT(x) can be written.
+> + */
+> +#define PCIE_CLIENT_CONF_ENABLE                (0x00010000 | 0x0001)
+> +#define PCIE_CLIENT_LINK_TRAIN_ENABLE  (0x00020000 | 0x0002)
+> +#define PCIE_CLIENT_ARI_ENABLE         (0x00080000 | 0x0008)
+> +#define PCIE_CLIENT_CONF_LANE_NUM(x)   (0x00300000 | (((x >> 1) & 3) << 4)
+> +#define PCIE_CLIENT_MODE_RC            (0x00400000 | 0x0040)
+> +#define PCIE_CLIENT_GEN_SEL(x)         (0x00800000 | ((x & 1) << 7)
+> +#define  PCIE_CLIENT_GEN_SEL_0                 0
+> +#define  PCIE_CLIENT_GEN_SEL_2                 1
+> 
+> Full change can be had by:
+> git fetch git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
+> pci/host-rockchip-wip ]
+> 
+> 
+> The use of HIWORD_UPDATE can indeed be a bit confusing, IMO, but this is
+> really a common Rockchip-ism that, once you read several of their
+> drivers, can make a little more sense. If you grep around, it's in at
+> least their clock, ethernet, SDHCI, PHY, and DP/DRM drivers. I might
+> defer to Heiko (upstream maintainer of Rockchip code) for a decision.
+> Maybe there's some intermediate ground where we keep the HIWORK_UPDATE()
+> logic (it does make sure we get the 16-bit shift right, I think) while
+> still refactoring a few other bits (like PCIE_CLIENT_CONF_LANE_NUM() and
+> PCIE_CLIENT_GEN_SEL() for wrapping HIWORK_UPDATE()?).
+> 
+> Anyway, just a thought. If it really is most understandable to write it
+> this way, then maybe it's fine to be different than the other 16
+> rockchip files that have this pattern.
 
-The device only gets added to the driver's list by driver_bound(), and
-really_probe() will bail before it calls that if we return nonzero from
-the probe function here. Since get_by_node() is thus safe, and .remove()
-shouldn't be called given that .probe() failed, I can't see a legitimate
-situation in which leaving behind a stale pointer in the drvdata of an
-unbound device might be problematic.
+personally I find it nicer to explicitly state, this is the common HIWORD-
+update mechanism we have in a lot of places and not some other register 
+voodoo.
 
-Robin.
+Because right now, GRF and PMU syscons even contain most registers using that 
+mechanism, but some that don't.
 
-> 
-> Alternatively, we could postpone setting the drvdata until the very end
-> of probe.
-> 
-> Will
-> 
+But I guess I won't protest to loudly if you like it differently in your 
+subsystem ;-)
+
+
+Heiko
