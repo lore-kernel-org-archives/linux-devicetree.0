@@ -1,52 +1,66 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] nvmem: rockchip-efuse: support more rockchip SoCs
-Date: Thu, 01 Sep 2016 22:43:32 +0200
-Message-ID: <3728837.exfccSJxkh@diego>
-References: <1472464210-30252-1-git-send-email-finley.xiao@rock-chips.com>
- <f9c6e53e-ae5f-d67a-3464-e10a3dee808c@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/3] ARM: dts: r7s72100: add ethernet to device tree
+Date: Thu, 1 Sep 2016 22:50:12 +0200
+Message-ID: <CAMuHMdWXB23w98Xaz+HnrKpgL_zYMj7YntauFUEvuDjTYLwm5Q@mail.gmail.com>
+References: <20160901155430.23400-1-chris.brandt@renesas.com>
+ <20160901155430.23400-2-chris.brandt@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <f9c6e53e-ae5f-d67a-3464-e10a3dee808c-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160901155430.23400-2-chris.brandt@renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi srini,
+On Thu, Sep 1, 2016 at 5:54 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-Am Donnerstag, 1. September 2016, 21:02:23 schrieb Srinivas Kandagatla:
-> On 29/08/16 10:50, Finley Xiao wrote:
-> > As the timing and organization of efuse may be different
-> > between rockchip SoCs, so their read function may be different.
-> > We add different device tree compatible string for rockchip SoCs
-> > to match their own read function.
-> > 
-> > V3->V4:
-> > - 3/3 change the type of out_value into u32 and buf into u8, their values
-> > 
-> >   come from register, use u32 and u8 may be more readable.
-> > 
-> > Finley Xiao (3):
-> >   nvmem: rockchip-efuse: update compatible strings for Rockchip efuse
-> >   ARM: dts: rockchip: update compatible strings for Rockchip efuse
-> >   nvmem: rockchip-efuse: add rk3399-efuse support
-> 
-> I can take patch 1 and 3, but dts has to go via arm soc tree.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-that is really fine, and also what I somehow expect :-) .
+But...
 
-So once you picked these two (I guess after Doug's comments are fixed) I'll 
-pick up the dts patch.
+> ---"
+>  arch/arm/boot/dts/r7s72100.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+> index e8e2a5d7..fb9ef9c 100644
+> --- a/arch/arm/boot/dts/r7s72100.dtsi
+> +++ b/arch/arm/boot/dts/r7s72100.dtsi
+> @@ -108,6 +108,15 @@
+>                         clock-output-names = "scif0", "scif1", "scif2", "scif3", "scif4", "scif5", "scif6", "scif7";
+>                 };
+>
+> +               mstp7_clks: mstp7_clks@fcfe0430 {
+> +                       #clock-cells = <1>;
+> +                       compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+> +                       reg = <0xfcfe0430 4>;
+> +                       clocks = <&p0_clk>;
+> +                       clock-indices = <R7S72100_CLK_ETHER>;
+> +                       clock-output-names = "ether";
+> +               };
+> +
 
+... please move this chunk to "[PATCH 1/3] ARM: dts: r7s72100: add ethernet
+clock to device tree.
 
-Heiko
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
