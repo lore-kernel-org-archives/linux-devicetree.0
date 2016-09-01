@@ -1,43 +1,65 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 00/19] Generic DT bindings for PCI IOMMUs and ARM SMMU
-Date: Thu, 1 Sep 2016 11:10:38 +0100
-Message-ID: <18cc3892-5735-10a2-bd45-7e5087329d51@arm.com>
-References: <cover.1471975357.git.robin.murphy@arm.com>
-	<3a9a9369-d8cd-66f4-9344-965c80894bb6@arm.com>
-	<CAALAos-OzPG=+aU8eKEZtx6EFXytPXq09k3QweHvtYCD=mN0mQ@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 04/12] arm64: dts: h3ulcb: enable EthernetAVB
+Date: Thu, 1 Sep 2016 13:11:30 +0300
+Message-ID: <ccc345ae-74d5-2f20-9e6e-af4f49622454@cogentembedded.com>
+References: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1472637779-14741-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <CAMuHMdVwO+uyR9P7NBGFCyMPHzwFX2umZL=UT2-B7qme8nenPg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAALAos-OzPG=+aU8eKEZtx6EFXytPXq09k3QweHvtYCD=mN0mQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Punit Agrawal <punit.agrawal-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVwO+uyR9P7NBGFCyMPHzwFX2umZL=UT2-B7qme8nenPg@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/09/16 04:49, Anup Patel wrote:
-> Hi Robin,
-> 
-> What are the chances of having this series in Linux-4.9?
+On 9/1/2016 10:48 AM, Geert Uytterhoeven wrote:
 
-Well, I'm planning to do everything I can over the next few weeks to
-make that happen, but ultimately it's down to maintainers, not me ;)
+>> This supports Ethernet AVB on H3ULCB board
+>>
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+>> --- a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
+>> +++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
+>
+>> @@ -62,3 +68,29 @@
+>>         clock-frequency = <14745600>;
+>>         status = "okay";
+>>  };
+>> +
+>> +&avb {
+>> +       pinctrl-0 = <&avb_pins>;
+>> +       pinctrl-names = "default";
+>> +       renesas,no-ether-link;
+>> +       phy-handle = <&phy0>;
+>> +       status = "okay";
+>> +
+>> +       phy0: ethernet-phy@0 {
+>> +               rxc-skew-ps = <900>;
+>> +               rxdv-skew-ps = <0>;
+>> +               rxd0-skew-ps = <0>;
+>> +               rxd1-skew-ps = <0>;
+>> +               rxd2-skew-ps = <0>;
+>> +               rxd3-skew-ps = <0>;
+>> +               txc-skew-ps = <900>;
+>> +               txen-skew-ps = <0>;
+>> +               txd0-skew-ps = <0>;
+>> +               txd1-skew-ps = <0>;
+>> +               txd2-skew-ps = <0>;
+>> +               txd3-skew-ps = <0>;
+>> +               reg = <0>;
+>> +               interrupt-parent = <&gpio2>;
+>> +               interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
+>
+> Just wondering (it's done the same way on Salvator-X) why this is using a
+> GPIO interrupt, and not the dedicated AVB_PHY_INT?
 
-I'll certainly be posting a v6 next week to address the feedback so far,
-but the more people who can find time to give it a proper review
-(particularly, say, in terms of systems with funky PCI topology) the better!
+    AVB_PHY_INT isn't supported by the driver yet (due to the phylib's 
+misfeature which has been fixed now). I simply lack the time to work on this 
+support.
 
-Robin.
-
-> 
-> Regards,
-> Anup
-> 
+MBR, Sergei
