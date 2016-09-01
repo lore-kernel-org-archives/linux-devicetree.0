@@ -1,70 +1,50 @@
-From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH v9 3/4] doc: bindings: mfd: act8945a: Update the example
-Date: Thu, 1 Sep 2016 17:30:00 +0800
-Message-ID: <1472722201-31872-4-git-send-email-wenyou.yang@atmel.com>
-References: <1472722201-31872-1-git-send-email-wenyou.yang@atmel.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: Applied "mfd: tps65218: add version check to the PMIC probe" to
+ the regulator tree
+Date: Thu, 1 Sep 2016 10:34:20 +0100
+Message-ID: <20160901093420.GH4921@dell>
+References: <1466412218-5906-8-git-send-email-j-keerthy@ti.com>
+ <E1bXZjd-0000YR-7n@debutante>
+ <20160831083114.GP10121@dell>
+ <20160831114105.GH3950@sirena.org.uk>
+ <20160831145018.GO9415@dell>
+ <20160831160227.GC5967@sirena.org.uk>
+ <20160901082308.GF4921@dell>
+ <20160901085451.GF5967@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1472722201-31872-1-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160901085451.GF5967@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Tero Kristo <t-kristo@ti.com>, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, russ.dill@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Since the act8945a-charger is regarded as a sub-device and it using
-"interrupts" property, update the examples section.
+On Thu, 01 Sep 2016, Mark Brown wrote:
 
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
----
+> On Thu, Sep 01, 2016 at 09:23:08AM +0100, Lee Jones wrote:
+> > On Wed, 31 Aug 2016, Mark Brown wrote:
+> 
+> > > That's the standard meaning I'm afraid, you're going to confuse people
+> > > if you do that.  I'd suggest using a different tag if you want to do
+> > > this, probably make one up.
+> 
+> > Reviewed-by-BUT-DONT-TAKE-IT-YOU-FIEND: <me>
+> 
+> > :)
+> 
+> > Temporary-Acked-by-[to go through MFD tree]: <me>
+> 
+> > Suggestions?
+> 
+> Reviwed-for-MFD-by: ?
 
-Changes in v9: None
-Changes in v8: None
-Changes in v7: None
-Changes in v6: None
-Changes in v4: None
+Okay, done.  Thanks for your suggestion.
 
- Documentation/devicetree/bindings/mfd/act8945a.txt | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/act8945a.txt b/Documentation/devicetree/bindings/mfd/act8945a.txt
-index f712830..462819a 100644
---- a/Documentation/devicetree/bindings/mfd/act8945a.txt
-+++ b/Documentation/devicetree/bindings/mfd/act8945a.txt
-@@ -14,13 +14,6 @@ Example:
- 		reg = <0x5b>;
- 		status = "okay";
- 
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_charger_chglev>;
--		active-semi,chglev-gpio = <&pioA 12 GPIO_ACTIVE_HIGH>;
--		active-semi,input-voltage-threshold-microvolt = <6600>;
--		active-semi,precondition-timeout = <40>;
--		active-semi,total-timeout = <3>;
--
- 		active-semi,vsel-high;
- 
- 		regulators {
-@@ -73,4 +66,19 @@ Example:
- 				regulator-always-on;
- 			};
- 		};
-+
-+		charger {
-+			compatible = "active-semi,act8945a-charger";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
-+			interrupt-parent = <&pioA>;
-+			interrupts = <45 GPIO_ACTIVE_LOW>;
-+
-+			active-semi,chglev-gpios = <&pioA 12 GPIO_ACTIVE_HIGH>;
-+			active-semi,lbo-gpios = <&pioA 72 GPIO_ACTIVE_LOW>;
-+			active-semi,input-voltage-threshold-microvolt = <6600>;
-+			active-semi,precondition-timeout = <40>;
-+			active-semi,total-timeout = <3>;
-+			status = "okay";
-+		};
- 	};
 -- 
-2.7.4
-
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
