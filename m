@@ -1,47 +1,49 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH] ARM: dts: explicitly mark skeleton.dtsi as deprecated
-Date: Thu,  1 Sep 2016 12:40:37 +0100
-Message-ID: <1472730037-4972-1-git-send-email-mark.rutland@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 0/7] ARM: dts: exynos: Remove skeleton.dtsi usage and fix
+ memory node DTC warnings
+Date: Thu, 1 Sep 2016 12:40:46 +0100
+Message-ID: <20160901114046.GB4220@leverpostej>
+References: <1472645679-5696-1-git-send-email-javier@osg.samsung.com>
+ <12377780.GCreFUiXAa@amdc1976>
+ <21e643af-bff7-2563-0254-d2b6e4a9a385@osg.samsung.com>
+ <11690712.d89FASKYvI@amdc1976>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <11690712.d89FASKYvI@amdc1976>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-As noted in commit 3ebee5a2e141496b ("arm64: dts: kill skeleton.dtsi"),
-there are a number of problems with skeleton.dtsi, and it would be
-prefereable to remove it entirely. As there are a large number of
-existing users, fixing these up will take a while.
+On Thu, Sep 01, 2016 at 11:59:48AM +0200, Bartlomiej Zolnierkiewicz wrote:
+> On Thursday, September 01, 2016 10:35:15 AM Javier Martinez Canillas wrote:
+> > On 08/31/2016 07:40 PM, Bartlomiej Zolnierkiewicz wrote:
+> > > On Wednesday, August 31, 2016 03:45:24 PM Javier Martinez Canillas wrote:
+> > >> The idea is to get rid of skeleton.dtsi [0], but that will of course take
+> > >> time until the dtsi is removed from all the files. So this patch is a step
+> > >> in the right direction so at least Exynos is not a blocker to remove it.
+> > > 
+> > > Krzysztof's point is valid.  If you are going to convert all DTS/DTSI
+> > > then it is okay to apply Exynos specific changes, otherwise the code
+> > > should stay as it is currently.
+> > > 
+> > > Exynos won't be a blocker since we have your patches now and they can
+> > > be applied when/if needed ;)..
+> > 
+> > Sorry but I disagree. I see no reasons to need this to be an atomic, rather
+> > than incremental change. Deprecated things are usually handled by removing
+> > the usage and once there are no users, finally removing them.
+> 
+> Yes, given that there is agreement on the direction and people are aware
+> of the needed changes.  This doesn't seem to be a case yet as there is
+> no comment in skeleton.dtsi about being deprecated and other platforms'
+> Maintainers are not aware of the need for the change.
 
-This patch adds a note to arm's skeleton.dtsi noting that this is the
-case, to make this more obvious and hopefully minimize new uptake of
-skeleton.dtsi in the mean time.
+On the DT side we're all agreed that skeleton.dtsi should die. I'll send
+a patch adding a note to skeleton.dtsi to make this more obvious, but
+that shouldn't be a blocker for removing existing uses.
 
-Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <rob.herring-5wv7dgnIgG8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
----
- arch/arm/boot/dts/skeleton.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/skeleton.dtsi b/arch/arm/boot/dts/skeleton.dtsi
-index b41d241..28b81d6 100644
---- a/arch/arm/boot/dts/skeleton.dtsi
-+++ b/arch/arm/boot/dts/skeleton.dtsi
-@@ -1,4 +1,8 @@
- /*
-+ * This file is deprecated, and will be removed once existing users have been
-+ * updated. New dts{,i} files should *not* include skeleton.dtsi, and should
-+ * instead explicitly provide the below nodes only as required.
-+ *
-  * Skeleton device tree; the bare minimum needed to boot; just include and
-  * add a compatible value.  The bootloader will typically populate the memory
-  * node.
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
