@@ -1,171 +1,95 @@
-From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v8 16/16] arm64/numa: define numa_distance as array to simplify code
-Date: Thu, 1 Sep 2016 14:55:07 +0800
-Message-ID: <1472712907-12700-17-git-send-email-thunder.leizhen@huawei.com>
-References: <1472712907-12700-1-git-send-email-thunder.leizhen@huawei.com>
+From: Ziyuan Xu <xzy.xu@rock-chips.com>
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support
+ for rk3399
+Date: Thu, 1 Sep 2016 14:56:46 +0800
+Message-ID: <411dfc7b-1089-61a8-7a7e-6f378c0a6074@rock-chips.com>
+References: <20160827134103.28160-1-xzy.xu@rock-chips.com>
+ <20160827134103.28160-3-xzy.xu@rock-chips.com>
+ <2ab8ab94-fa4d-2cd6-5805-a92ac5f9697e@rock-chips.com>
+ <57C3A30B.5080707@rock-chips.com>
+ <ceba6a89-6945-58c5-62e4-7d842cfa2312@rock-chips.com>
+ <CAD=FV=W=LkVAm187hxp0Kbjxi5kSThwKnCMX+tr8SXQ-v_xQTQ@mail.gmail.com>
+ <77f5cff1-80a2-76b3-40e9-f77caced2257@rock-chips.com>
+ <CAD=FV=WmoyoZmV_uj281S37ZpWqg8Dr2U8ntkD2Sr58qbcB0wg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <1472712907-12700-1-git-send-email-thunder.leizhen@huawei.com>
-Sender: owner-linux-mm@kvack.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank
- Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, linux-mm <linux-mm@kvack.org>
-Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong
- Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=WmoyoZmV_uj281S37ZpWqg8Dr2U8ntkD2Sr58qbcB0wg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Xing Zheng <zhengxing@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Frank Wang <frank.wang@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Elaine Zhang <zhangqing@rock-chips.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, David Wu <david.wu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, Jianqun Xu <j>
 List-Id: devicetree@vger.kernel.org
 
-1. MAX_NUMNODES is base on CONFIG_NODES_SHIFT, the default value of the
-   latter is very small now.
-2. Suppose the default value of MAX_NUMNODES is enlarged to 64, so the
-   size of numa_distance is 4K, it's still acceptable if run the Image
-   on other processors.
-3. It will make function __node_distance quicker than before.
-
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- arch/arm64/include/asm/numa.h |  1 -
- arch/arm64/mm/numa.c          | 74 +++----------------------------------------
- 2 files changed, 5 insertions(+), 70 deletions(-)
-
-diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
-index 600887e..9b6cc38 100644
---- a/arch/arm64/include/asm/numa.h
-+++ b/arch/arm64/include/asm/numa.h
-@@ -32,7 +32,6 @@ static inline const struct cpumask *cpumask_of_node(int node)
- void __init arm64_numa_init(void);
- int __init numa_add_memblk(int nodeid, u64 start, u64 end);
- void __init numa_set_distance(int from, int to, int distance);
--void __init numa_free_distance(void);
- void __init early_map_cpu_to_node(unsigned int cpu, int nid);
- void numa_store_cpu_info(unsigned int cpu);
-
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index ef7e336..15ff117 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -33,8 +33,7 @@ EXPORT_SYMBOL(node_data);
- nodemask_t numa_nodes_parsed __initdata;
- static int cpu_to_node_map[NR_CPUS] = { [0 ... NR_CPUS-1] = NUMA_NO_NODE };
-
--static int numa_distance_cnt;
--static u8 *numa_distance;
-+static u8 numa_distance[MAX_NUMNODES][MAX_NUMNODES];
- static bool numa_off;
-
- static __init int numa_parse_early_param(char *opt)
-@@ -245,59 +244,6 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
- }
-
- /**
-- * numa_free_distance
-- *
-- * The current table is freed.
-- */
--void __init numa_free_distance(void)
--{
--	size_t size;
--
--	if (!numa_distance)
--		return;
--
--	size = numa_distance_cnt * numa_distance_cnt *
--		sizeof(numa_distance[0]);
--
--	memblock_free(__pa(numa_distance), size);
--	numa_distance_cnt = 0;
--	numa_distance = NULL;
--}
--
--/**
-- *
-- * Create a new NUMA distance table.
-- *
-- */
--static int __init numa_alloc_distance(void)
--{
--	size_t size;
--	u64 phys;
--	int i, j;
--
--	size = nr_node_ids * nr_node_ids * sizeof(numa_distance[0]);
--	phys = memblock_find_in_range(0, PFN_PHYS(max_pfn),
--				      size, PAGE_SIZE);
--	if (WARN_ON(!phys))
--		return -ENOMEM;
--
--	memblock_reserve(phys, size);
--
--	numa_distance = __va(phys);
--	numa_distance_cnt = nr_node_ids;
--
--	/* fill with the default distances */
--	for (i = 0; i < numa_distance_cnt; i++)
--		for (j = 0; j < numa_distance_cnt; j++)
--			numa_distance[i * numa_distance_cnt + j] = i == j ?
--				LOCAL_DISTANCE : REMOTE_DISTANCE;
--
--	pr_debug("Initialized distance table, cnt=%d\n", numa_distance_cnt);
--
--	return 0;
--}
--
--/**
-  * numa_set_distance - Set inter node NUMA distance from node to node.
-  * @from: the 'from' node to set distance
-  * @to: the 'to'  node to set distance
-@@ -312,12 +258,7 @@ static int __init numa_alloc_distance(void)
-  */
- void __init numa_set_distance(int from, int to, int distance)
- {
--	if (!numa_distance) {
--		pr_warn_once("Warning: distance table not allocated yet\n");
--		return;
--	}
--
--	if (from >= numa_distance_cnt || to >= numa_distance_cnt ||
-+	if (from >= MAX_NUMNODES || to >= MAX_NUMNODES ||
- 			from < 0 || to < 0) {
- 		pr_warn_once("Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
- 			    from, to, distance);
-@@ -331,7 +272,7 @@ void __init numa_set_distance(int from, int to, int distance)
- 		return;
- 	}
-
--	numa_distance[from * numa_distance_cnt + to] = distance;
-+	numa_distance[from][to] = distance;
- }
-
- /**
-@@ -339,9 +280,9 @@ void __init numa_set_distance(int from, int to, int distance)
-  */
- int __node_distance(int from, int to)
- {
--	if (from >= numa_distance_cnt || to >= numa_distance_cnt)
-+	if (from >= MAX_NUMNODES || to >= MAX_NUMNODES)
- 		return from == to ? LOCAL_DISTANCE : REMOTE_DISTANCE;
--	return numa_distance[from * numa_distance_cnt + to];
-+	return numa_distance[from][to];
- }
- EXPORT_SYMBOL(__node_distance);
-
-@@ -381,11 +322,6 @@ static int __init numa_init(int (*init_func)(void))
- 	nodes_clear(numa_nodes_parsed);
- 	nodes_clear(node_possible_map);
- 	nodes_clear(node_online_map);
--	numa_free_distance();
--
--	ret = numa_alloc_distance();
--	if (ret < 0)
--		return ret;
-
- 	ret = init_func();
- 	if (ret < 0)
---
-2.5.0
+Hi
 
 
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+On 2016年09月01日 12:20, Doug Anderson wrote:
+> Hi,
+>
+> On Wed, Aug 31, 2016 at 7:29 PM, Ziyuan Xu <xzy.xu@rock-chips.com> wrote:
+>>> This is fine to pick up _only_ if you don't care about suspend/resume.
+>>> If you care about suspend/resume then someone needs to first write a
+>>> patch that will re-init all "corecfg" values after power is turned on.
+>>
+>> Do you mean corecfg_clockmultiplier and corecfg_baseclkfreq, if yes, we
+>> don't need to strore/re-init it after resume.
+>> corecfg_clockmultiplier is only used to fetch host->clk_mul, and
+>> host->clk_mul has been a fixed value at run-time, unless driver unbind.
+>> The same as corecfg_clockmultiplier, corecfg_baseclkfreq is used to check
+>> the xin_clk at probe time, we don't reference it at run-time.
+>> BTW, I have tested suspend/resume on rk3399 prior to this sumbit, eMMC works
+>> fine.
+> I guess I don't actually know how the corecfg_clockmultiplier and
+> corecfg_baseclkfreq fields are actually used, but I presume that they
+> actually do something useful and aren't used to just communicate back
+> to software?
+
+Take corecfg_clockmultiplier as example.
+1. sdhci driver fetch host->clk_mul from corecfg_clockmultiplier
+2. mmc->f_min and mmc->f_max are calculated via host->clk_mul, they're 
+used for further initialization.
+3. if the corecfg_clockmultiplier is incorrect, sdhci will use improper 
+frequency to play.
+
+I think we don't need to store it due to it's a fixed value at run-time, 
+even if it is reset after a power cycle, the above will not be changed 
+via software, except for dirver unbind .
+
+>
+> I know that:
+>
+> 1. If I don't pick this patch and I suspend/resume,
+> corecfg_clockmultiplier and corecfg_baseclkfreq are still fine after
+> suspend / resume.
+>
+> 2. If I do pick this patch and I suspend/resume,
+> corecfg_clockmultiplier and corecfg_baseclkfreq are wrong after
+> suspend/resume (tested by reading /dev/mem directly from userspace
+> after suspend/resume).
+>
+>
+> Are you saying that it is unimportant that corecfg_clockmultiplier and
+> corecfg_baseclkfreq are wrong?
+
+Yup, corecfg_* stuff will be reset after a power cycle.
+I mean that we need only to guarantee they're correct at probe time.
+
+>
+>>> Technically I think this should probably use "pm runtime" and not
+>>> normal suspend/resume hooks.  Any time we end up pm runtime suspended
+>>> then I think our power will go off (because of genpd?) and we need to
+>>> restore values.
+>>
+>> I understand your consideration. BUT genpd is in charge of on/off pd if the
+>> corresponding device node has "power-domains" property. RPM is unnecessary
+>> for this situation, we will not use autosuspend, right?
+>>
+>> @shawn, what's your opinion?
+> I haven't dug.  If Runtime PM isn't enabled for sdhci-of-arasan then I
+> guess we can just worry about suspend/resume, though.
+>
+> -Doug
+>
+>
+>
