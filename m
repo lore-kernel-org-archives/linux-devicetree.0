@@ -1,95 +1,136 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/7] ARM: dts: exynos: Add missing memory node for
- Exynos5440 boards
-Date: Thu, 01 Sep 2016 11:48:28 +0200
-Message-ID: <bcda1f60-7820-7501-1c62-883145f60739@kernel.org>
-References: <1472645679-5696-1-git-send-email-javier@osg.samsung.com>
- <1472645679-5696-2-git-send-email-javier@osg.samsung.com>
- <20160831174657.GA19969@kozik-lap>
- <c043b569-fbad-23bb-5807-5dda9cc8b37f@osg.samsung.com>
- <e3cdab3d-f1ef-f751-b169-e3328178b835@kernel.org>
- <0e8e0b3c-0dd9-c44b-d1ad-03c840d3a725@osg.samsung.com>
- <b051f0fc-e99c-769c-e790-aaafc749a9ef@kernel.org>
- <184ad5f6-5528-2ad7-7c2b-46beda9b6dc9@osg.samsung.com>
+From: Karl Beldan <karl.beldan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: da850-lcdk: Add NAND to DT
+Date: Thu, 1 Sep 2016 10:00:25 +0000
+Message-ID: <20160901095857.GA27385@gobelin>
+References: <20160829153242.18615-1-kbeldan@baylibre.com>
+ <7h37lk5wrd.fsf@baylibre.com>
+ <3945712b-d02f-d97a-2356-9383d7fe1984@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <184ad5f6-5528-2ad7-7c2b-46beda9b6dc9-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3945712b-d02f-d97a-2356-9383d7fe1984-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Karl Beldan <karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/01/2016 11:36 AM, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
+On Thu, Sep 01, 2016 at 10:47:04AM +0530, Sekhar Nori wrote:
+> On Thursday 01 September 2016 05:14 AM, Kevin Hilman wrote:
+> > Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+> > 
+> >> This adds DT support for the NAND connected to the SoC AEMIF.
+> >> Passed torture hashing a 40MB file on top of UBIFS using subpages.
+> >>
+> >> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> >> ---
+> >> v2:
+> >>
+> >> - Removed comments pertaining to the BSP the LCDK ships with (Sekhar)
+> >> - s/"ok"/"okay"/
+> >> - Removed partitions since it relates to the BSP the LCDK ships with
+> > 
+> > IMO, some default partitions are nice to have, at least for u-boot and
+> > u-boot env so factory-shipped u-boot is not accidentally overridden.
+> > The left over space can be labeled "free space".
+> > 
+> > Anyways, after adding some partitions back, I tested with ubifs on my
+> > LCDK:
 > 
-> On 09/01/2016 11:28 AM, Krzysztof Kozlowski wrote:
->> On 09/01/2016 11:19 AM, Javier Martinez Canillas wrote:
->>> Hello Krzysztof,
->>>
->>> On 09/01/2016 11:05 AM, Krzysztof Kozlowski wrote:
->>>> On 09/01/2016 10:43 AM, Javier Martinez Canillas wrote:
->>>>>>> --- a/arch/arm/boot/dts/exynos5440-ssdk5440.dts
->>>>>>> +++ b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
->>>>>>> @@ -21,6 +21,11 @@
->>>>>>>  		bootargs = "root=/dev/sda2 rw rootwait ignore_loglevel earlyprintk no_console_suspend mem=2048M@0x80000000 mem=6144M@0x100000000 console=ttySAC0,115200";
->>>>>>>  	};
->>>>>>>  
->>>>>>> +	memory {
->>>>>>> +		device_type = "memory";
->>>>>>> +		reg = <0 0>;
->>>>>>> +	};
->>>>>>
->>>>>> This looks okay, but the default size and address cells won't be
->>>>>> present. Won't that be a problem?
->>>>>>
->>>>>
->>>>> They will be present since at this point exynos5440.dtsi is still including
->>>>> exynos5440.dtsi, we are just overriding the memory node with the same values
->>>>> than skeleton.dtsi so this can be removed later in patch 7/7.
->>>>
->>>> I don't get it. exynos5440.dtsi does not set size/address cells in top node.
->>>>
->>>
->>> Sorry, maybe I'm misunderstanding your question. The size/address cells are set
->>> in the top node by exynos5440.dtsi including the skeleton.dtsi (since these are
->>> set in that included dtsi).
->>
->> Where? Nothing in my sources...
->>
->> 15 / {
->> 16         compatible = "samsung,exynos5440", "samsung,exynos5";
->> 17
->> 18         interrupt-parent = <&gic>;
->>
+> This[1] is what I had commented on the partitions before. I did not 
+> mean to remove partitions altogether, just comments referring to 
+> compatibility with pre-flashed software shipping with LCDK (since that 
+> changes without notice).
 > 
-> No, I meant that these are set by the fact that exynos5440.dtsi is including
-> the skeleton.dtsi, since the dtsi set these properties in the top node.
+> Apologies for any confusion caused. The "Rest of the patch looks good
+> to me" in the end was to say that the partitions themselves look fine :)
 > 
->>>
->>> IOW, scripts/dtc/dtx_diff doesn't show differences for these exynos5440 DTB
->>> before and after $SUBJECT.
->>
->> Maybe these are also the default values so no differences... stating
->> them explicitly would be useful.
->>
-> 
-> I could do it in this patch... but I don't see why that should be needed since:
-> 
-> a) All the others Exynos SoC dtsi file don't explicitly set these properties
->    since are set by skeleton.dtsi when including it. So not adding them keeps
->    exynos5440.dtsi consistent with the other SoC dtsi.
-> 
-> b) Adding those to the Exynos SoC dtsi when removing the skeleton.dtsi is done
->    in a later patch of this series. Again, making it consistent with all the
->    Exynos SoC dtsi since none will include skeleton.dtsi anymore.
 
-Ah, I missed it. The 'b' is the solution I wanted so everything is fine.
+None necessary, I just pushed the logic further on my own as specified
+in the changelog. I can add the partitions back as I don't have any
+strong preference on this, but not without mentioning that it is because
+that is what the LCDK ships with, as in my original version, please see
+if the adjustments below accomodate your preferences.
 
-Best regards,
-Krzysztof
+> Can you please submit a v2 with partitions added?
+> 
+> Thanks,
+> Sekhar
+> 
+> [1]
+> 
+> > +
+> > +			/*
+> > +			 * LCDK original partitions:
+> > +			 * 0x000000000000-0x000000020000 : "u-boot env"
+> > +			 * 0x000000020000-0x0000000a0000 : "u-boot"
+> > +			 * 0x0000000a0000-0x0000002a0000 : "kernel"
+> > +			 * 0x0000002a0000-0x000020000000 : "filesystem"
+> > +			 *
+> > +			 * The 1st NAND block being guaranted to be valid w/o ECC (> 1k cycles),
+> > +			 * it makes a perfect candidate as an SPL for the BootROM to jump to.
+> > +			 * However the OMAP-L132/L138 Bootloader doc SPRAB41E reads:
+> > +			 * "To boot from NAND Flash, the AIS should be written to NAND block 1
+> > +			 * (NAND block 0 is not used by default)", which matches the LCDK
+> > +			 * original partitioning.
+> 
+> FWIW, silicon version 2.1 supports booting from block 0, but needs new
+> boot pin settings not possible in stock LCDK.
+> 
 
+I'd add [1]:
+Same doc reads for ROM "Silicon Revision 2.1", "Updated NAND boot mode
+to offer boot from block 0 or block 1", (Sekhar:) "but needs new boot pin
+settings not possible in stock LCDK".
+
+> > +			 * Also, the LCDK ships with only the u-boot partition provisioned and
+> > +			 * boots on it in its default configuration while using the MMC for the
+> > +			 * kernel and rootfs, so preserve that one as is for now.
+> > +			 * [1]: Ensuring for example that U-Boot LCDK SPL can handle it properly
+> > +			 * and a proper boot chain ROM->SPL->U-Boot->Linux wrt ECC, would allow
+> > +			 * for a better partitioning.
+> > +			 */
+> 
+> I would rather not refer to the software that LCDK ships with in the
+> comments at all. Because that can change without notice. At some point,
+> if mainline kernel works well enough on LCDK, TI might decide to ship
+> LCDKs with mainline kernel flashed.
+> 
+
+If you want me to keep the partitions, I would change that to [2] "Here
+we keep the first two provisioned default partitions and labels the LCDK
+ships with as is." (although FWIU it conflicts with your request above).
+
+ 
+Karl
+
+> > +			partitions {
+> > +				compatible = "fixed-partitions";
+> > +				#address-cells = <1>;
+> > +				#size-cells = <1>;
+> > +
+> > +				partition@0 {
+> > +					label = "u-boot env";
+> > +					reg = <0 0x020000>;
+> > +				};
+> > +				partition@0x020000 {
+> > +					/* The LCDK defaults to booting from this partition */
+> > +					label = "u-boot";
+> > +					reg = <0x020000 0x080000>;
+> > +				};
+> > +				partition@0x0a0000 {
+> > +					label = "space";
+> > +					reg = <0x0a0000 0>;
+> > +				};
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> 
+> Rest of the patch looks good to me.
+> 
+> Regards,
+> Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
