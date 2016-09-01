@@ -1,53 +1,74 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 0/5] Use mmio-sram driver for Keystone MSMC RAM
-Date: Thu, 1 Sep 2016 17:58:41 -0500
-Message-ID: <20160901225846.31058-1-s-anna@ti.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 4/5] PM / devfreq: rockchip: add devfreq driver for rk3399
+ dmc
+Date: Fri, 02 Sep 2016 01:17:41 +0200
+Message-ID: <8339852.vAWNvCSMju@diego>
+References: <1472769085-20715-1-git-send-email-hl@rock-chips.com>
+ <1472769085-20715-5-git-send-email-hl@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Vitaly Andrianov <vitalya@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1472769085-20715-5-git-send-email-hl@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lin Huang <hl@rock-chips.com>
+Cc: tixy@linaro.org, mark.rutland@arm.com, devicetree@vger.kernel.org, typ@rock-chips.com, linux-rockchip@lists.infradead.org, mturquette@baylibre.com, dbasehore@chromium.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dianders@chromium.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, myungjoo.ham@samsung.com, MyngJoo Ham <myngjoo.ham@samsung.com>, sudeep.holla@arm.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-The Keystone 2 family of SoCs have an on-chip RAM called the
-Multicore Shared Memory (MSM) RAM. This RAM is accessible through
-the Multicore Shared Memory Controller (MSMC). This series represents
-these on-chip RAMs as sram nodes so that the memory allocations
-can be managed by the in-kernel mmio-sram driver.
-
-The first 4 patches adds the basic SRAM nodes on each of the SoCs,
-and the last patch enables the generic on-chip SRAM driver for
-keystone defconfig.
-
-regards
-Suman
-
-
-Suman Anna (5):
-  ARM: dts: keystone-k2hk: Add MSM RAM node
-  ARM: dts: keystone-k2l: Add MSM RAM node
-  ARM: dts: keystone-k2e: Add MSM RAM node
-  ARM: dts: keystone-k2g: Add MSM RAM node
-  ARM: configs: keystone: Enable Generic on-chip SRAM driver
-
- arch/arm/boot/dts/keystone-k2e.dtsi  | 8 ++++++++
- arch/arm/boot/dts/keystone-k2g.dtsi  | 8 ++++++++
- arch/arm/boot/dts/keystone-k2hk.dtsi | 8 ++++++++
- arch/arm/boot/dts/keystone-k2l.dtsi  | 8 ++++++++
- arch/arm/configs/keystone_defconfig  | 1 +
- 5 files changed, 33 insertions(+)
-
--- 
-2.9.3
+QW0gRnJlaXRhZywgMi4gU2VwdGVtYmVyIDIwMTYsIDA2OjMxOjI0IHNjaHJpZWIgTGluIEh1YW5n
+Ogo+IGJhc2Ugb24gZGZpIHJlc3VsdCwgd2UgZG8gZGRyIGZyZXF1ZW5jeSBzY2FsaW5nLCByZWdp
+c3Rlcgo+IGRtYyBkcml2ZXIgdG8gZGV2ZnJlcSBmcmFtZXdvcmssIGFuZCB1c2Ugc2ltcGxlLW9u
+ZGVtYW5kCj4gcG9saWN5Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IExpbiBIdWFuZyA8aGxAcm9jay1j
+aGlwcy5jb20+Cj4gU2lnbmVkLW9mZi1ieTogTXluZ0pvbyBIYW0gPG15bmdqb28uaGFtQHNhbXN1
+bmcuY29tPgo+IFJldmlld2VkLWJ5OiBDaGFud29vIENob2kgPGN3MDAuY2hvaUBzYW1zdW5nLmNv
+bT4KPiAtLS0KClsuLi5dCgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2RldmZyZXEvcmszMzk5X2Rt
+Yy5jIGIvZHJpdmVycy9kZXZmcmVxL3JrMzM5OV9kbWMuYwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
+Cj4gaW5kZXggMDAwMDAwMC4uNTRkNjVmMgo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJz
+L2RldmZyZXEvcmszMzk5X2RtYy5jCj4gQEAgLTAsMCArMSw0ODAgQEAKPiArLyoKPiArICogQ29w
+eXJpZ2h0IChjKSAyMDE2LCBGdXpob3UgUm9ja2NoaXAgRWxlY3Ryb25pY3MgQ28uLCBMdGQuCj4g
+KyAqIEF1dGhvcjogTGluIEh1YW5nIDxobEByb2NrLWNoaXBzLmNvbT4KPiArICoKPiArICogVGhp
+cyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9v
+ciBtb2RpZnkgaXQKPiArICogdW5kZXIgdGhlIHRlcm1zIGFuZCBjb25kaXRpb25zIG9mIHRoZSBH
+TlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSwKPiArICogdmVyc2lvbiAyLCBhcyBwdWJsaXNoZWQg
+YnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbi4KPiArICoKPiArICogVGhpcyBwcm9ncmFt
+IGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIGl0IHdpbGwgYmUgdXNlZnVsLCBidXQgV0lUSE9V
+VAo+ICsgKiBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBv
+ZiBNRVJDSEFOVEFCSUxJVFkgb3IKPiArICogRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFSIFBVUlBP
+U0UuICBTZWUgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlCj4gZm9yICsgKiBtb3JlIGRl
+dGFpbHMuCj4gKyAqLwo+ICsKPiArI2luY2x1ZGUgPGxpbnV4L2FybS1zbWNjYy5oPgo+ICsjaW5j
+bHVkZSA8bGludXgvY2xrLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9kZWxheS5oPgo+ICsjaW5jbHVk
+ZSA8bGludXgvZGV2ZnJlcS5oPgo+ICsjaW5jbHVkZSA8bGludXgvZGV2ZnJlcS1ldmVudC5oPgo+
+ICsjaW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUu
+aD4KPiArI2luY2x1ZGUgPGxpbnV4L29mLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9k
+ZXZpY2UuaD4KPiArI2luY2x1ZGUgPGxpbnV4L3BtX29wcC5oPgo+ICsjaW5jbHVkZSA8bGludXgv
+cmVndWxhdG9yL2NvbnN1bWVyLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9yd3NlbS5oPgo+ICsjaW5j
+bHVkZSA8bGludXgvc3VzcGVuZC5oPgo+ICsKPiArI2luY2x1ZGUgPHNvYy9yb2NrY2hpcC9yb2Nr
+Y2hpcF9zaXAuaD4KCihSZXBlYXRlZCBmcm9tIHByZXZpb3VzIHZlcnNpb24pCkZvciB0aGUgc2hh
+cmVkIHNpcC1pbnRlcmZhY2UgaGVhZGVyIEkndmUgcHJlcGFyZWQgYSBzaWduZWQsIHN0YWJsZSB0
+YWcKd2hpY2ggY2FuIGJlIHB1bGxlZCBmcm9tCgpUaGUgZm9sbG93aW5nIGNoYW5nZXMgc2luY2Ug
+Y29tbWl0IDI5YjQ4MTdkNDAxOGRmNzgwODYxNTdlYTNhNTVjMWQ5NDI0YTdjZmM6CgogIExpbnV4
+IDQuOC1yYzEgKDIwMTYtMDgtMDcgMTg6MTg6MDAgLTA3MDApCgphcmUgYXZhaWxhYmxlIGluIHRo
+ZSBnaXQgcmVwb3NpdG9yeSBhdDoKCiAgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51
+eC9rZXJuZWwvZ2l0L21taW5kL2xpbnV4LXJvY2tjaGlwLmdpdCB0YWdzL3JvY2tjaGlwLWRkci1z
+aXAKCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdlcyB1cCB0byA5N2RkODI2ODJmMWE2MTc0Njk4ZmJl
+YTE0OWEwNGI0Y2FiYzU4YzRmOgoKICBzb2M6IHJvY2tjaGlwOiBhZGQgaGVhZGVyIGZvciBkZHIg
+cmF0ZSBTSVAgaW50ZXJmYWNlICgyMDE2LTA4LTMxIDE4OjUzOjI0ICswMjAwKQoKLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpI
+ZWFkZXIgZmlsZSBkZWZpbmluZyB0aGUgU0lQLWludGVyZmFjZSB0byB0aGUgQVRGIGZvciBERFIg
+ZnJlcXVlbmN5IGNoYW5nZXMKCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KTGluIEh1YW5nICgxKToKICAgICAgc29jOiByb2Nr
+Y2hpcDogYWRkIGhlYWRlciBmb3IgZGRyIHJhdGUgU0lQIGludGVyZmFjZQoKIGluY2x1ZGUvc29j
+L3JvY2tjaGlwL3JvY2tjaGlwX3NpcC5oIHwgMjcgKysrKysrKysrKysrKysrKysrKysrKysrKysr
+CiAxIGZpbGUgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGlu
+Y2x1ZGUvc29jL3JvY2tjaGlwL3JvY2tjaGlwX3NpcC5oCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
