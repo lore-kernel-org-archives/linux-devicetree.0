@@ -1,41 +1,78 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/3] ARM: dts: r7s72100: add ethernet clock to device tree
-Date: Thu, 1 Sep 2016 21:35:15 +0200
-Message-ID: <CAMuHMdV3iNL_WLrEDUJUcSoRbjx0KVOxrErajF3QdV301bzaQQ@mail.gmail.com>
-References: <20160901155430.23400-1-chris.brandt@renesas.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] regulator: pwm: Prevent falling too fast
+Date: Thu, 1 Sep 2016 20:51:06 +0100
+Message-ID: <20160901195106.GM5967@sirena.org.uk>
+References: <1472617277-30814-1-git-send-email-dianders@chromium.org>
+ <1472617277-30814-2-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160901155430.23400-1-chris.brandt@renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============5401415086689464727=="
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1472617277-30814-2-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 1, 2016 at 5:54 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+--===============5401415086689464727==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="WuedheRyq6FDfQ9j"
+Content-Disposition: inline
 
-But as Sergei mentioned, the addition of mstp7_clks to the .dtsi really belongs
-in this patch.
 
-Gr{oetje,eeting}s,
+--WuedheRyq6FDfQ9j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-                        Geert
+On Tue, Aug 30, 2016 at 09:21:16PM -0700, Douglas Anderson wrote:
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> In this patch we actually block returning from the set_voltage() call
+> until we've finished delaying.  A future patch atop this one might
+> choose to return more immediately and let the voltages fall in the
+> background.  That would possibly to allow us to cancel a slow downward
+> decay if there was a request to go back up.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+We already have mechanisms in the core for drivers to tell the core how
+long a ramp they need for a given voltage transition - you should extend
+them (probably needs a set_voltage_time() operation adding) so that
+anything like this can be done in the core rather than open coded in
+drivers.
+
+--WuedheRyq6FDfQ9j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXyIapAAoJECTWi3JdVIfQH/sH/019NSsj2ZkhigUIIiffZnKR
+ZuP/Oi0cmEQcG87Pyn7ENVPDdvbiKzq2kx72tVNKjNBSFnNKHL1e8ZVWO0hGi7xp
+YUxL+KhFFC5pKSHppjvsfY3UxawTaC3IBRX9eVBHfysLtaQmPhouk6pKyXuiqL99
+nbB/ktvjR4EVGNh8PFCINlzvJPUvfj7/mVz+v/dx1MYql0lwU0+1e0AO27lkCjCi
+FbOtt5GSWp1EyIkbD+jCmeeqwhVgHp9IRCG/oe92GFJ8zlJu2dRLCd6e04pPcocf
+66/kdGXqC5VTkdnDYA8JqjU/zm1hPmXkS39g1IZssqbjnx2QxP7IyKyT26R7LNc=
+=Xidr
+-----END PGP SIGNATURE-----
+
+--WuedheRyq6FDfQ9j--
+
+
+--===============5401415086689464727==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linux-rockchip mailing list
+Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+http://lists.infradead.org/mailman/listinfo/linux-rockchip
+
+--===============5401415086689464727==--
