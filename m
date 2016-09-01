@@ -1,61 +1,39 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] arm64: regard FDT_SW_MAGIC as good fdt magic
-Date: Thu, 1 Sep 2016 17:45:49 +0100
-Message-ID: <20160901164549.GA7136@leverpostej>
-References: <a6a8826c-3006-ae43-ef4c-8049ef93cd9f@zoho.com>
- <20160901112113.GA4220@leverpostej>
- <57C8516E.7000105@zoho.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/3] ARM: dts: r7s72100: add ethernet clock to device tree
+Date: Thu, 1 Sep 2016 19:54:01 +0300
+Message-ID: <e277692a-8ea5-9ca7-bfe5-c9980ec7a858@cogentembedded.com>
+References: <20160901155430.23400-1-chris.brandt@renesas.com>
+ <aaf8c5de-a4f8-42e5-583d-c81a9d92edae@cogentembedded.com>
+ <SG2PR06MB116534DAEDA31113AB14C46B8AE20@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57C8516E.7000105@zoho.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: zijun_hu <zijun_hu@zoho.com>
-Cc: zijun_hu@htc.com, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <SG2PR06MB116534DAEDA31113AB14C46B8AE20@SG2PR06MB1165.apcprd06.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Brandt <Chris.Brandt@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 02, 2016 at 12:03:58AM +0800, zijun_hu wrote:
-> On 09/01/2016 07:21 PM, Mark Rutland wrote:
-> > On Thu, Sep 01, 2016 at 06:58:29PM +0800, zijun_hu wrote:
-> >> From: zijun_hu <zijun_hu@htc.com>
-> >>
-> >> regard FDT_SW_MAGIC as good fdt magic during mapping fdt area
-> >> see fdt_check_header() for details
-> > 
-> > It looks like we should only see FDT_SW_MAGIC for a FDT that was in the
-> > process of being created, but was not finished. So I'm somewhat confused
-> > as to why fdt_check_header() would allow this.
-> > 
-> > Neither ePAPR nor the new devicetree spec define FDT_SW_MAGIC. They both
-> > only define 0xd00dfeed as a valid magic value. In libfdt, FDT_SW_MAGIC
-> > is an internal constant, and it looks like fdt_check_header() simply
-> > accepts this for convenience within libfdt.
+On 09/01/2016 07:38 PM, Chris Brandt wrote:
 
-> > Why do you think this is necessary? Have you seen a problem in practice?
+>>    I'd add the MSTP7 clock node itself in the same patch...
+>
+> OK. I tried to look at previous commits to figure out what goes in what patch.
 
-> i don't understand function modules involved with FDT_SW_MAGIC very well
-> i just think it isn't a bad thing to keep consistent with fdt_check_header()
+    There's no single approach here... but it was just that your patch subject 
+doesn't seem to correspond well to what the patch does.
 
-I agree that the inconsistency is not great.
+> Thanks.
+>
+> Chris
 
-However, I think that we do not want the kernel to accept FDT_SW_MAGIC
-in any case, given this implies a DTB mid-creation.
-
-Which is to say that either fdt_check_header() is doing the wrong thing,
-or that we're using it in places where it's inappropriate.
-
-> BTW
-> it seems FDT_SW_MAGIC is involved in fdt_create_empty_tree()@fdt_sw.c which
-> operate fdt in runtime
-> in kernel, this function is used in drivers/firmware/efi/libstub/fdt.c
-> in u-boot, in arch/sandbox/cpu/cpu.c an arch/sandbox/cpu/state.c
-> the sources mentioned above maybe help you for further decision
-
-Note that fdt_create_empty_tree() calls fdt_finish(), which fixes some
-details up, then sets the magic to the real FDT_MAGIC.
-
-So that should be fine.
-
-Thanks,
-Mark.
+MBR, Sergei
