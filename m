@@ -1,7 +1,7 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v8 02/16] of/numa: fix a memory@ node can only contains one memory block
-Date: Thu, 1 Sep 2016 14:54:53 +0800
-Message-ID: <1472712907-12700-3-git-send-email-thunder.leizhen@huawei.com>
+Subject: [PATCH v8 09/16] arm64/numa: support HAVE_SETUP_PER_CPU_AREA
+Date: Thu, 1 Sep 2016 14:55:00 +0800
+Message-ID: <1472712907-12700-10-git-send-email-thunder.leizhen@huawei.com>
 References: <1472712907-12700-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,70 +14,105 @@ Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong
  Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-For a normal memory@ devicetree node, its reg property can contains more
-memory blocks.
-
-Because we don't known how many memory blocks maybe contained, so we try
-from index=0, increase 1 until error returned(the end).
+To make each percpu area allocated from its local numa node. Without this
+patch, all percpu areas will be allocated from the node which cpu0 belongs
+to.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/of_numa.c | 29 ++++++++++-------------------
- 1 file changed, 10 insertions(+), 19 deletions(-)
+ arch/arm64/Kconfig   |  8 ++++++++
+ arch/arm64/mm/numa.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 60 insertions(+)
 
-diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-index fb71b4e..7b3fbdc 100644
---- a/drivers/of/of_numa.c
-+++ b/drivers/of/of_numa.c
-@@ -63,13 +63,9 @@ static int __init of_numa_parse_memory_nodes(void)
- 	struct device_node *np = NULL;
- 	struct resource rsrc;
- 	u32 nid;
--	int r = 0;
--
--	for (;;) {
--		np = of_find_node_by_type(np, "memory");
--		if (!np)
--			break;
-+	int i, r;
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index bc3f00f..2815af6 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -603,6 +603,14 @@ config USE_PERCPU_NUMA_NODE_ID
+ 	def_bool y
+ 	depends on NUMA
 
-+	for_each_node_by_type(np, "memory") {
- 		r = of_property_read_u32(np, "numa-node-id", &nid);
- 		if (r == -EINVAL)
- 			/*
-@@ -78,23 +74,18 @@ static int __init of_numa_parse_memory_nodes(void)
- 			 * "numa-node-id" property
- 			 */
- 			continue;
--		else if (r)
--			/* some other error */
--			break;
++config HAVE_SETUP_PER_CPU_AREA
++	def_bool y
++	depends on NUMA
++
++config NEED_PER_CPU_EMBED_FIRST_CHUNK
++	def_bool y
++	depends on NUMA
++
+ source kernel/Kconfig.preempt
+ source kernel/Kconfig.hz
 
--		r = of_address_to_resource(np, 0, &rsrc);
--		if (r) {
--			pr_err("NUMA: bad reg property in memory node\n");
--			break;
--		}
-+		for (i = 0; !r && !of_address_to_resource(np, i, &rsrc); i++)
-+			r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index 0e75b53..087064d 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -26,6 +26,7 @@
+ #include <linux/of.h>
 
--		r = numa_add_memblk(nid, rsrc.start, rsrc.end + 1);
--		if (r)
--			break;
-+		if (!i || r) {
-+			of_node_put(np);
-+			pr_err("NUMA: bad property in memory node\n");
-+			return r ? : -EINVAL;
-+		}
- 	}
--	of_node_put(np);
+ #include <asm/acpi.h>
++#include <asm/sections.h>
 
--	return r;
-+	return 0;
+ struct pglist_data *node_data[MAX_NUMNODES] __read_mostly;
+ EXPORT_SYMBOL(node_data);
+@@ -131,6 +132,57 @@ void __init early_map_cpu_to_node(unsigned int cpu, int nid)
+ 	cpu_to_node_map[cpu] = nid;
  }
 
- static int __init of_numa_parse_distance_map_v1(struct device_node *map)
++#ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
++unsigned long __per_cpu_offset[NR_CPUS] __read_mostly;
++EXPORT_SYMBOL(__per_cpu_offset);
++
++static int __init early_cpu_to_node(int cpu)
++{
++	return cpu_to_node_map[cpu];
++}
++
++static int __init pcpu_cpu_distance(unsigned int from, unsigned int to)
++{
++	return node_distance(from, to);
++}
++
++static void * __init pcpu_fc_alloc(unsigned int cpu, size_t size,
++				       size_t align)
++{
++	int nid = early_cpu_to_node(cpu);
++
++	return  memblock_virt_alloc_try_nid(size, align,
++			__pa(MAX_DMA_ADDRESS), MEMBLOCK_ALLOC_ACCESSIBLE, nid);
++}
++
++static void __init pcpu_fc_free(void *ptr, size_t size)
++{
++	memblock_free_early(__pa(ptr), size);
++}
++
++void __init setup_per_cpu_areas(void)
++{
++	unsigned long delta;
++	unsigned int cpu;
++	int rc;
++
++	/*
++	 * Always reserve area for module percpu variables.  That's
++	 * what the legacy allocator did.
++	 */
++	rc = pcpu_embed_first_chunk(PERCPU_MODULE_RESERVE,
++				    PERCPU_DYNAMIC_RESERVE, PAGE_SIZE,
++				    pcpu_cpu_distance,
++				    pcpu_fc_alloc, pcpu_fc_free);
++	if (rc < 0)
++		panic("Failed to initialize percpu areas.");
++
++	delta = (unsigned long)pcpu_base_addr - (unsigned long)__per_cpu_start;
++	for_each_possible_cpu(cpu)
++		__per_cpu_offset[cpu] = delta + pcpu_unit_offsets[cpu];
++}
++#endif
++
+ /**
+  * numa_add_memblk - Set node id to memblk
+  * @nid: NUMA node ID of the new memblk
 --
 2.5.0
 
