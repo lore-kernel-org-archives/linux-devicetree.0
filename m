@@ -1,80 +1,107 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 04/19] iommu/of: Introduce iommu_fwspec
-Date: Thu, 1 Sep 2016 14:25:12 +0100
-Message-ID: <f3eb3c16-27dd-1b89-33e9-e62507b9270f@arm.com>
-References: <cover.1471975357.git.robin.murphy@arm.com>
-	<3e8eaf4fd65833fecc62828214aee81f6ca6c190.1471975357.git.robin.murphy@arm.com>
-	<20160831172856.GI29505@arm.com>
-	<900f3dcb-217c-4fb3-2f7d-15572f31a0c0@arm.com>
-	<20160901123158.GE6721@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20160901123158.GE6721-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+From: Archit Taneja <architt@codeaurora.org>
+Subject: [PATCH v2 2/4] drm/msm/hdmi: Clean up HDMI gpio DT bindings
+Date: Thu,  1 Sep 2016 19:06:52 +0530
+Message-ID: <1472737015-29382-3-git-send-email-architt@codeaurora.org>
+References: <1467957354-7620-1-git-send-email-architt@codeaurora.org>
+ <1472737015-29382-1-git-send-email-architt@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1472737015-29382-1-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: andy.gross@linaro.org, robdclark@gmail.com
+Cc: linux-arm-msm@vger.kernel.org, john.stultz@linaro.org, dri-devel@lists.freedesktop.org, Archit Taneja <architt@codeaurora.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/09/16 13:31, Will Deacon wrote:
-> On Thu, Sep 01, 2016 at 01:07:19PM +0100, Robin Murphy wrote:
->> On 31/08/16 18:28, Will Deacon wrote:
->>> On Tue, Aug 23, 2016 at 08:05:15PM +0100, Robin Murphy wrote:
->>>> +int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids)
->>>> +{
->>>> +	struct iommu_fwspec *fwspec = dev->archdata.iommu;
->>>> +	size_t size;
->>>> +
->>>> +	if (!fwspec)
->>>> +		return -EINVAL;
->>>> +
->>>> +	size = offsetof(struct iommu_fwspec, ids[fwspec->num_ids + num_ids]);
->>>> +	fwspec = krealloc(dev->archdata.iommu, size, GFP_KERNEL);
->>>> +	if (!fwspec)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	while (num_ids--)
->>>> +		fwspec->ids[fwspec->num_ids++] = *ids++;
->>>> +
->>>> +	dev->archdata.iommu = fwspec;
->>>
->>> It might just be me, but I find this really fiddly to read. The fact
->>> that you realloc the whole fwspec, rather than just the array isn't
->>> helping, but I also think that while loop would be much better off as
->>> a for loop, using the index as, well, an index into the ids array and
->>> fwspec->ids array.
->>
->> Sure - copying one array into the tail end of another is always going to
->> be boring, ugly code, which I feel compelled to make as compact as
->> possible so as not to distract from the more interesting code, but I
->> guess that's self-defeating if it then no longer looks like something
->> simple and boring to skip over. I'll expend a few more precious lines on
->> turning it back into something staid and sensible ;)
-> 
-> Why do you need to make the copy explicit?
+Make the following changes in the HDMI gpio bindings:
 
-Er, because we're filling the *new* ID(s) from the caller-provided
-pointer into the now-enlarged array - I don't see how one could do that
-implicitly. Tell you what, I'll also rename the variables to be less
-confusing while I'm cleaning up the loop.
+- Use "-gpios" as the suffix for all the gpio names
+- Move all the gpios to optional, since there are platforms that use none
+  of them.
+- The HPD gpio is a standard one, remove the "qcom,hdmi-tx-" prefix from
+  it.
+- Add a missing lpm gpio used on some platforms.
 
-Robin.
+Make the necessary changes in the driver to incorporate these changes.
 
-> If you ensure that the array
-> is NULL in a freshly initialised fwspec, then you can either kmalloc
-> it when adding the IDs, or krealloc it if you need to append to an
-> array that's already been initialised. It's pretty much the same as you
-> have already, just operating on the array as opposed to the containing
-> structure.
-> 
-> Will
-> 
+There hasn't been any upstream DT that uses the HDMI bindings, so it's
+okay to change and move around these properties.
+
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Archit Taneja <architt@codeaurora.org>
+---
+v2:
+- Keep "qcom,hdmi-tx-" suffix for all gpios except for hpd.
+- Use "-gpios" suffix instead of "-gpio".
+- Move all the gpios to optional properties.
+
+ .../devicetree/bindings/display/msm/hdmi.txt        | 11 ++++++-----
+ drivers/gpu/drm/msm/hdmi/hdmi.c                     | 21 +++++++++++++++++++--
+ 2 files changed, 25 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/msm/hdmi.txt b/Documentation/devicetree/bindings/display/msm/hdmi.txt
+index ce84459..f1a83ab 100644
+--- a/Documentation/devicetree/bindings/display/msm/hdmi.txt
++++ b/Documentation/devicetree/bindings/display/msm/hdmi.txt
+@@ -13,17 +13,18 @@ Required properties:
+ - interrupts: The interrupt signal from the hdmi block.
+ - clocks: device clocks
+   See ../clocks/clock-bindings.txt for details.
+-- qcom,hdmi-tx-ddc-clk-gpio: ddc clk pin
+-- qcom,hdmi-tx-ddc-data-gpio: ddc data pin
+-- qcom,hdmi-tx-hpd-gpio: hpd pin
+ - core-vdda-supply: phandle to supply regulator
+ - hdmi-mux-supply: phandle to mux regulator
+ - phys: the phandle for the HDMI PHY device
+ - phy-names: the name of the corresponding PHY device
+ 
+ Optional properties:
+-- qcom,hdmi-tx-mux-en-gpio: hdmi mux enable pin
+-- qcom,hdmi-tx-mux-sel-gpio: hdmi mux select pin
++- qcom,hdmi-tx-ddc-clk-gpios: ddc clk pin
++- qcom,hdmi-tx-ddc-data-gpios: ddc data pin
++- hpd-gpios: hpd pin
++- qcom,hdmi-tx-mux-en-gpios: hdmi mux enable pin
++- qcom,hdmi-tx-mux-sel-gpios: hdmi mux select pin
++- qcom,hdmi-tx-mux-lpm-gpios: hdmi mux lpm pin
+ - power-domains: reference to the power domain(s), if available.
+ - pinctrl-names: the pin control state names; should contain "default"
+ - pinctrl-0: the default pinctrl state (active)
+diff --git a/drivers/gpu/drm/msm/hdmi/hdmi.c b/drivers/gpu/drm/msm/hdmi/hdmi.c
+index 9737207..a968cad 100644
+--- a/drivers/gpu/drm/msm/hdmi/hdmi.c
++++ b/drivers/gpu/drm/msm/hdmi/hdmi.c
+@@ -422,12 +422,29 @@ static const struct {
+ 
+ static int msm_hdmi_get_gpio(struct device_node *of_node, const char *name)
+ {
+-	int gpio = of_get_named_gpio(of_node, name, 0);
++	int gpio;
++
++	/* try with the gpio names as in the table (downstream bindings) */
++	gpio = of_get_named_gpio(of_node, name, 0);
+ 	if (gpio < 0) {
+ 		char name2[32];
+-		snprintf(name2, sizeof(name2), "%s-gpio", name);
++
++		/* try with the gpio names as in the upstream bindings */
++		snprintf(name2, sizeof(name2), "%s-gpios", name);
+ 		gpio = of_get_named_gpio(of_node, name2, 0);
+ 		if (gpio < 0) {
++			char name3[32];
++
++			/*
++			 * try again after stripping out the "qcom,hdmi-tx"
++			 * prefix. This is mainly to match "hpd-gpios" used
++			 * in the upstream bindings
++			 */
++			if (sscanf(name2, "qcom,hdmi-tx-%s", name3))
++				gpio = of_get_named_gpio(of_node, name3, 0);
++		}
++
++		if (gpio < 0) {
+ 			DBG("failed to get gpio: %s (%d)", name, gpio);
+ 			gpio = -1;
+ 		}
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
