@@ -1,54 +1,110 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH v3 21/22] phy: Add support for Qualcomm's USB HSIC phy
-Date: Thu, 01 Sep 2016 15:00:22 -0700
-Message-ID: <147276722271.30255.17486402880702436547@sboyd-linaro>
-References: <20160901004036.23936-1-stephen.boyd@linaro.org>
- <20160901004036.23936-22-stephen.boyd@linaro.org>
- <CAFp+6iGJo5P3_oFCboKmOno6QzcMhVHhTWVWPFw3fCop0PSa8g@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] rcar-du: add R8A7792 support
+Date: Fri, 02 Sep 2016 01:28:34 +0300
+Message-ID: <2732207.dbAaUn7yem@avalon>
+References: <1934824.sESTIjSbbp@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFp+6iGJo5P3_oFCboKmOno6QzcMhVHhTWVWPFw3fCop0PSa8g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1934824.sESTIjSbbp@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: airlied@linux.ie, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-(Please trim replies)
+Hi Sergei,
 
-Quoting Vivek Gautam (2016-08-31 23:17:55)
-> On Thu, Sep 1, 2016 at 6:10 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
-> > +
-> > +       uphy->cal_sleep_clk = clk = devm_clk_get(&ulpi->dev, "cal_sleep");
-> > +       if (IS_ERR(clk))
-> > +               return PTR_ERR(clk);
-> > +
-> > +       uphy->phy = devm_phy_create(&ulpi->dev, ulpi->dev.of_node,
-> > +                                   &qcom_usb_hsic_phy_ops);
+Thank you for the patch.
+
+On Thursday 04 Aug 2016 15:01:02 Sergei Shtylyov wrote:
+> Add support for the R8A7792 DU; it has 2 DPAD (RGB) outputs.
 > 
-> There's a ulpi_phy library available in  drivers/phy/. Do we want to use that ?
-> That also creates a phy-lookup of this PHY so that the ulpi device's parent
-> can request the PHY.
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-I don't have any interest in using those two functions (does two
-functions constitute a library?). There's no devm as you say, and it
-seems to be specific to the ULPI hardware for dwc3 (the only user) where
-the phy is called "usb2-phy". This is a phy for the ChipIdea controller
-which only has one phy and it's called "usb-phy" in that case.
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
+And applied to my tree.
+
+> ---
+> This patch is against the 'drm/next/du' branch of Laurent Pinchart's
+> 'media.git' repo...
 > 
-> You may want to modify the APIs available in ulpi_phy library to use the
-> devm_* APIs.
+>  Documentation/devicetree/bindings/display/renesas,du.txt |    4 ++
+>  drivers/gpu/drm/rcar-du/rcar_du_drv.c                    |   22 +++++++++++
+>  2 files changed, 25 insertions(+), 1 deletion(-)
 > 
+> Index: media/Documentation/devicetree/bindings/display/renesas,du.txt
+> ===================================================================
+> --- media.orig/Documentation/devicetree/bindings/display/renesas,du.txt
+> +++ media/Documentation/devicetree/bindings/display/renesas,du.txt
+> @@ -6,6 +6,7 @@ Required Properties:
+>      - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
+>      - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
+>      - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
+> +    - "renesas,du-r8a7792" for R8A7792 (R-Car V2H) compatible DU
+>      - "renesas,du-r8a7793" for R8A7793 (R-Car M2-N) compatible DU
+>      - "renesas,du-r8a7794" for R8A7794 (R-Car E2) compatible DU
+>      - "renesas,du-r8a7795" for R8A7795 (R-Car H3) compatible DU
+> @@ -25,7 +26,7 @@ Required Properties:
+>    - clock-names: Name of the clocks. This property is model-dependent.
+>      - R8A7779 uses a single functional clock. The clock doesn't need to be
+>        named.
+> -    - R8A779[01345] use one functional clock per channel and one clock per
+> LVDS +    - R8A779[012345] use one functional clock per channel and one
+> clock per LVDS encoder (if available). The functional clocks must be named
+> "du.x" with "x" being the channel numerical index. The LVDS clocks must be
+> named "lvds.x" with "x" being the LVDS encoder numerical index.
+> @@ -47,6 +48,7 @@ corresponding to each DU output.
+>   R8A7779 (H1)	DPAD 0		DPAD 1		-		-
+>   R8A7790 (H2)	DPAD		LVDS 0		LVDS 1		-
+>   R8A7791 (M2-W)	DPAD		LVDS 0		-		-
+> + R8A7792 (V2H)	DPAD 0		DPAD 1		-		-
+>   R8A7793 (M2-N)	DPAD		LVDS 0		-		-
+>   R8A7794 (E2)	DPAD 0		DPAD 1		-		-
+>   R8A7795 (H3)	DPAD		HDMI 0		HDMI 1		LVDS
+> Index: media/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> ===================================================================
+> --- media.orig/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> +++ media/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> @@ -110,6 +110,27 @@ static const struct rcar_du_device_info
+>  	.num_lvds = 1,
+>  };
+> 
+> +static const struct rcar_du_device_info rcar_du_r8a7792_info = {
+> +	.gen = 2,
+> +	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
+> +		  | RCAR_DU_FEATURE_EXT_CTRL_REGS,
+> +	.num_crtcs = 2,
+> +	.routes = {
+> +		/* R8A7792 has two RGB outputs. */
+> +		[RCAR_DU_OUTPUT_DPAD0] = {
+> +			.possible_crtcs = BIT(0),
+> +			.encoder_type = DRM_MODE_ENCODER_NONE,
+> +			.port = 0,
+> +		},
+> +		[RCAR_DU_OUTPUT_DPAD1] = {
+> +			.possible_crtcs = BIT(1),
+> +			.encoder_type = DRM_MODE_ENCODER_NONE,
+> +			.port = 1,
+> +		},
+> +	},
+> +	.num_lvds = 0,
+> +};
+> +
+>  static const struct rcar_du_device_info rcar_du_r8a7794_info = {
+>  	.gen = 2,
+>  	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
+> @@ -161,6 +182,7 @@ static const struct of_device_id rcar_du
+>  	{ .compatible = "renesas,du-r8a7779", .data = &rcar_du_r8a7779_info },
+>  	{ .compatible = "renesas,du-r8a7790", .data = &rcar_du_r8a7790_info },
+>  	{ .compatible = "renesas,du-r8a7791", .data = &rcar_du_r8a7791_info },
+> +	{ .compatible = "renesas,du-r8a7792", .data = &rcar_du_r8a7792_info },
+>  	{ .compatible = "renesas,du-r8a7793", .data = &rcar_du_r8a7791_info },
+>  	{ .compatible = "renesas,du-r8a7794", .data = &rcar_du_r8a7794_info },
+>  	{ .compatible = "renesas,du-r8a7795", .data = &rcar_du_r8a7795_info },
 
-The lookup isn't necessary because we use DT to find the lookup. I seem
-to recall the phy framework requiring a DT lookup too.
+-- 
+Regards,
+
+Laurent Pinchart
