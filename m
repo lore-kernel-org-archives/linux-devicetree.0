@@ -1,13 +1,16 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: [v10,2/2] PCI: Rockchip: Add Rockchip PCIe controller support
-Date: Thu, 01 Sep 2016 19:46:42 +0200
-Message-ID: <3757057.lFUFRYFCvk@diego>
+Date: Thu, 1 Sep 2016 12:48:52 -0500
+Message-ID: <20160901174852.GC9471@localhost>
 References: <1471570498-3284-1-git-send-email-shawn.lin@rock-chips.com>
+ <20160831181754.GA7460@roeck-us.net>
+ <9075a2c1-c787-986f-31b4-4d5b7c92b771@rock-chips.com>
  <20160901163455.GA9471@localhost> <20160901171400.GA4093@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
 In-Reply-To: <20160901171400.GA4093@localhost>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
@@ -19,17 +22,19 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
 Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 1. September 2016, 10:14:01 schrieb Brian Norris:
+On Thu, Sep 01, 2016 at 10:14:01AM -0700, Brian Norris wrote:
 > On Thu, Sep 01, 2016 at 11:34:55AM -0500, Bjorn Helgaas wrote:
 > > In the interest of making progress, I made most of the changes Guenter
 > > suggested (thanks very much, Guenter!) and made some more of my own on
 > > top of those.
 > 
 > I'm not sure, but was this change your idea Bjorn?
-> 
+
+Yep.
+
 > commit 88cb3f59d73e261a3cd1957ff392f98c9916a5d1
 > Author: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 > Date:   Thu Sep 1 10:27:44 2016 -0500
@@ -62,8 +67,8 @@ Am Donnerstag, 1. September 2016, 10:14:01 schrieb Brian Norris:
 > +#define  PCIE_CLIENT_GEN_SEL_2                 1
 > 
 > Full change can be had by:
-> git fetch git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
-> pci/host-rockchip-wip ]
+> git fetch git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host-rockchip-wip
+> ]
 > 
 > 
 > The use of HIWORD_UPDATE can indeed be a bit confusing, IMO, but this is
@@ -80,15 +85,27 @@ Am Donnerstag, 1. September 2016, 10:14:01 schrieb Brian Norris:
 > this way, then maybe it's fine to be different than the other 16
 > rockchip files that have this pattern.
 
-personally I find it nicer to explicitly state, this is the common HIWORD-
-update mechanism we have in a lot of places and not some other register 
-voodoo.
+Hmm.  I did look at the other files, so I know this isn't a PCIe
+special.  HIWORD_UPDATE is ugly as sin, especially in cases like this
+where we're always writing a constant value and it takes three
+#defines plus HIWORD_UPDATE itself, e.g.,
 
-Because right now, GRF and PMU syscons even contain most registers using that 
-mechanism, but some that don't.
+  -          HIWORD_UPDATE(PCIE_CLIENT_CONF_ENABLE,
+  -                        PCIE_CLIENT_CONF_ENABLE_MASK,
+  -                        PCIE_CLIENT_CONF_ENABLE_SHIFT) |
 
-But I guess I won't protest to loudly if you like it differently in your 
-subsystem ;-)
+vs this:
 
+  +                   PCIE_CLIENT_CONF_ENABLE |
 
-Heiko
+For these constant cases, a HIWORD_UPDATE that generated the
+associated macro names would help readability a bit, though we'd still
+need the ugly #defines:
+
+  #define HIWORD_UPDATE_CONSTANT(x) (HIWORD_UPDATE(x, x ## _MASK, x ## _SHIFT)
+
+  #define PCIE_CLIENT_CONF_ENABLE                0x1
+  #define PCIE_CLIENT_CONF_ENABLE_SHIFT          0
+  #define PCIE_CLIENT_CONF_ENABLE_MASK           0x1
+
+             HIWORD_UPDATE_CONSTANT(PCIE_CLIENT_CONF_ENABLE) |
