@@ -1,83 +1,76 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH 0/7] ARM: dts: exynos: Remove skeleton.dtsi usage and fix
- memory node DTC warnings
-Date: Thu, 01 Sep 2016 11:59:48 +0200
-Message-ID: <11690712.d89FASKYvI@amdc1976>
-References: <1472645679-5696-1-git-send-email-javier@osg.samsung.com>
- <12377780.GCreFUiXAa@amdc1976>
- <21e643af-bff7-2563-0254-d2b6e4a9a385@osg.samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: Applied "regulator: tps65218: do not disable DCDC3 during
+ poweroff on broken PMICs" to the regulator tree
+Date: Thu, 1 Sep 2016 11:06:16 +0100
+Message-ID: <20160901100616.GH5967@sirena.org.uk>
+References: <1466412218-5906-9-git-send-email-j-keerthy@ti.com>
+ <E1bXZja-0000XE-A6@debutante>
+ <20160831150115.GP9415@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <21e643af-bff7-2563-0254-d2b6e4a9a385@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="G44BJl3Aq1QbV/QL"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160831150115.GP9415@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Tero Kristo <t-kristo@ti.com>, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, russ.dill@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
 
-Hi,
+--G44BJl3Aq1QbV/QL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thursday, September 01, 2016 10:35:15 AM Javier Martinez Canillas wrote:
-> Hello Bartlomiej,
-> 
-> On 08/31/2016 07:40 PM, Bartlomiej Zolnierkiewicz wrote:
-> > 
-> > Hi,
-> > 
-> > On Wednesday, August 31, 2016 03:45:24 PM Javier Martinez Canillas wrote:
-> >> Hello Krzysztof,
-> >>
-> >> On 08/31/2016 02:55 PM, Krzysztof Kozlowski wrote:
-> >>> On 08/31/2016 02:14 PM, Javier Martinez Canillas wrote:
-> >>>> Hello Krzysztof,
-> >>>>
-> >>>> This series removes the usage of the skeleton.dtsi in all the Exynos dts,
-> >>>> which allows to get rid of the DTC warnings about a mismatch between the
-> >>>> memory nodes' unit names and reg properties.
-> >>>>
-> >>>> Patches are pretty trivial and shouldn't cause functional changes AFAIK,
-> >>>> but only the Exynos5 changes have been tested. The others patches were
-> >>>> just built tested.
-> >>>
-> >>> I think this is a common problem, not only Exynos-specific, so I would
-> >>
-> >> That's correct.
-> >>
-> >>> prefer to stick to common pattern. Either all DTS/DTSI include skeleton
-> >>> or none of them.
-> >>>
-> >>
-> >> The idea is to get rid of skeleton.dtsi [0], but that will of course take
-> >> time until the dtsi is removed from all the files. So this patch is a step
-> >> in the right direction so at least Exynos is not a blocker to remove it.
-> > 
-> > Krzysztof's point is valid.  If you are going to convert all DTS/DTSI
-> > then it is okay to apply Exynos specific changes, otherwise the code
-> > should stay as it is currently.
-> > 
-> > Exynos won't be a blocker since we have your patches now and they can
-> > be applied when/if needed ;)..
-> >
-> 
-> Sorry but I disagree. I see no reasons to need this to be an atomic, rather
-> than incremental change. Deprecated things are usually handled by removing
-> the usage and once there are no users, finally removing them.
+On Wed, Aug 31, 2016 at 04:01:15PM +0100, Lee Jones wrote:
+> On Wed, 10 Aug 2016, Mark Brown wrote:
 
-Yes, given that there is agreement on the direction and people are aware
-of the needed changes.  This doesn't seem to be a case yet as there is
-no comment in skeleton.dtsi about being deprecated and other platforms'
-Maintainers are not aware of the need for the change.
+> > The patch
 
-> Also, each subsystem maintainer should carry the patches for their platform
-> so it can't be a kernel wide change anyways and most likely split by kernel
-> releases.
+> >    regulator: tps65218: do not disable DCDC3 during poweroff on broken PMICs
 
-Yep.
+> Looks like I also need this patch.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+> Would you be kind enough to shoot me a pull-request please?
+
+The following changes since commit 29b4817d4018df78086157ea3a55c1d9424a7cfc:
+
+  Linux 4.8-rc1 (2016-08-07 18:18:00 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/tps65218-dcdc3-workaround
+
+for you to fetch changes up to 23a34f9d03a5d40a6234855bc069da370708cc9e:
+
+  regulator: tps65218: do not disable DCDC3 during poweroff on broken PMICs (2016-08-10 18:21:55 +0100)
+
+----------------------------------------------------------------
+regulator: tps65218: Workaround for broken DCDC3 disable on some revisions
+
+----------------------------------------------------------------
+Tero Kristo (2):
+      mfd: tps65218: add version check to the PMIC probe
+      regulator: tps65218: do not disable DCDC3 during poweroff on broken PMICs
+
+ drivers/mfd/tps65218.c                 | 9 +++++++++
+ drivers/regulator/tps65218-regulator.c | 8 ++++++++
+ include/linux/mfd/tps65218.h           | 6 ++++++
+ 3 files changed, 23 insertions(+)
+
+--G44BJl3Aq1QbV/QL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXx/2XAAoJECTWi3JdVIfQ5p8H/1dMoqP+DukVRQFI0kS1ke7E
+CxaWhdRm96082V/2vBuI7wrD+2h4nkQZnzG/tb23XHK/3oss9YR3GsX3KpY0IUtR
+xLIcvbkihL1eFpDsIatIJZwpthVRGMK+Vak5Hp/r78DKE1nAn9172Dwd3/zcRBtW
+AUb/sbl/ZEFzoRkLWnSC6bm8GHFuMDYPA+22yiN2eEjqgWJvB2zNUjFO94UwmYc5
+CnehegI9mnoCpX6KVWiCvJxTUgUCQY/xAuPaVsFNKd+7XsJQbPiUnZUXTwd0U4O8
+Xz20q1I8W3FCvN36159xD/2kl2MRDxv+hJZzRS0nlftDIhz4zn1xca+CjhOjOkE=
+=NElR
+-----END PGP SIGNATURE-----
+
+--G44BJl3Aq1QbV/QL--
