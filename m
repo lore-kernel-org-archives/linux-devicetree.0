@@ -1,99 +1,59 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv2 1/3] Documentation: dt: Add TI SCI clock driver
-Date: Thu, 1 Sep 2016 15:40:33 +0300
-Message-ID: <1472733635-22661-2-git-send-email-t-kristo@ti.com>
-References: <1472733635-22661-1-git-send-email-t-kristo@ti.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v9 1/4] power: act8945a_charger: Add capacity level
+ property
+Date: Thu, 1 Sep 2016 14:43:58 +0200
+Message-ID: <20160901124358.64hsgqcpexnd7hmu@earth>
+References: <1472722201-31872-1-git-send-email-wenyou.yang@atmel.com>
+ <1472722201-31872-2-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1472733635-22661-1-git-send-email-t-kristo@ti.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: sboyd@codeaurora.org, mturquette@baylibre.com, linux-clk@vger.kernel.org
-Cc: ssantosh@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nm@ti.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2aq7uk26rfyfq4ul"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1472722201-31872-2-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a clock implementation, TI SCI clock, that will hook to the common
-clock framework, and allow each clock to be controlled via TI SCI
-protocol.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Tested-by: Dave Gerlach <d-gerlach@ti.com>
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
- .../devicetree/bindings/clock/ti,sci-clk.txt       | 51 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+--2aq7uk26rfyfq4ul
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-new file mode 100644
-index 0000000..231cb80
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-@@ -0,0 +1,51 @@
-+Texas Instruments TI-SCI Clocks
-+===============================
-+
-+All clocks on Texas Instruments' SoCs that contain a System Controller,
-+are only controlled by this entity. Communication between a host processor
-+running an OS and the System Controller happens through a protocol known
-+as TI-SCI[1]. This clock implementation plugs into the common clock
-+framework and makes use of the TI-SCI protocol on clock API requests.
-+
-+[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-+
-+Required properties:
-+-------------------
-+- compatible: Must be "ti,sci-clk"
-+- #clock-cells: Shall be 2.
-+  In clock consumers, this cell represents the device ID and clock ID
-+  exposed by the PM firmware. The assignments can be found in the header
-+  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
-+  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where <soc>
-+  is the SoC involved, for example 'k2g'.
-+- ti,sci: Phandle to the TI SCI device to use for managing the clocks
-+
-+Optional properties:
-+-------------------
-+- ti,ssc-clocks: Array of phandle clocks that shall enable spread spectrum
-+		 clocking while enabled
-+- ti,allow-freq-change-clocks: Array of phandle clocks that shall allow
-+			       dynamic clock frequency changes by firmware
-+- ti,input-term-clocks: Array of phandle clocks that shall enable input
-+			termination
-+
-+Examples:
-+--------
-+
-+k2g_clks: k2g_clks {
-+	compatible = "ti,sci-clk";
-+	ti,sci = <&pmmc>;
-+	#clock-cells = <2>;
-+};
-+
-+dummy_node@1234 {
-+	clocks = <&k2g_clks K2G_DEV_DUMMY K2G_DEV_DUMMY_FCK>;
-+};
-+
-+dummy_node2@2345 {
-+	clocks = <&k2g_clks K2G_DEV_DUMMY2 K2G_DEV_DUMMY_X1_CLK>;
-+};
-+
-+&k2g_clks {
-+	ti,ssc-clocks = <&k2g_clks K2G_DEV_DUMMY K2G_DEV_DUMMY_FCK>;
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0c5e3d1..ef88726 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11573,6 +11573,7 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
- F:	drivers/firmware/ti_sci*
- F:	include/linux/soc/ti/ti_sci_protocol.h
-+F:	Documentation/devicetree/bindings/clock/ti,sci-clk.txt
- 
- THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
- M:	Hans Verkuil <hverkuil@xs4all.nl>
--- 
-1.9.1
+Hi,
 
+On Thu, Sep 01, 2016 at 05:29:58PM +0800, Wenyou Yang wrote:
+> Add the power supply capacity level property, it corresponds to
+> POWER_SUPPLY_CAPACITY_LEVEL_*.
+>=20
+> It also utilizes the precision voltage detector function module
+> to catch the low battery voltage.
+
+Thanks, queued.
+
+-- Sebastian
+
+--2aq7uk26rfyfq4ul
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJXyCKNAAoJENju1/PIO/qalFMP/1WDU4NfQAJ5GdlLLX2Zdy6U
+rXM6ArePp820CExYUJ5mpLSVT5bRfWjlu5IRjPzwEVHvMMGZgeLpC+aWMjp7jLuh
+F/UrAR4xkq3FECp74ALEZP4nx2+YqwPnBKIVjlD4lTLsuIl/kIePkXktf1TY2Q9m
+O0q6tqcDFzNsprNBLbojrY1ktQQ4+ytOxskYLAMoyfzQkZh+nLHyVspWq498ScOy
+qXN5RsdQtzo1ByjQxIg8Oynx2oF5jxFu2xa+CHYyFQsOM2j5RSzo5HvX2OU0zil+
+ADVlquAGnT5xCI4hfBG/IEeQJs6XmR9O30S3QeHjCqMiLZX9Pbu4V52zVeaninIG
+IZ6qBAvWwvEaza8Ew+WQ4d86Z4B6b1V6fVKeawkSQVR7iKdR0v021sHC1kupmO5D
+QgLvKMKrrzAcXtM1J/kNpKYwkY5idQxcJGlU+0NkHVFdJnsMs3+52V/eQKUE3iJi
+GrESktBgKXO3nYK+WOI+qVyJbpkpdvqng/6q+nyBHFvOjqB8IPb4HSkfcfPYFWPl
+M11Wpa0C9sIIZJKT9b1Ae6x8dDTby/fXdPj5FXLkwapfKAGR4HvtI30OKVweyvPn
+HVtJ57b/yhWnkyJD31kOWNPaaA/yTGeZvVOq7sTevw95DEt8xESfGTCSMt6AHENn
+yR5z1SS4elqnIZLAkheh
+=Wp89
+-----END PGP SIGNATURE-----
+
+--2aq7uk26rfyfq4ul--
