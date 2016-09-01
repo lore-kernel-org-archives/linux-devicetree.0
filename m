@@ -1,57 +1,146 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [RESEND PATCH 2/3] ARM: dts: add TOPEET itop elite based board
-Date: Thu, 01 Sep 2016 15:07:03 +0200
-Message-ID: <6405623.At7R6O470M@amdc1976>
-References: <750b6941-7d22-971e-84c9-996deab9a7c1@kernel.org>
- <1472648361-3871-1-git-send-email-ayaka@soulik.info>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v2 2/4] mmc: sdhci-of-arasan: Control clock for accessing
+ syscon
+Date: Thu, 1 Sep 2016 16:02:54 +0300
+Message-ID: <68db3e82-6c3d-676c-2b3b-7cd2809afc22@intel.com>
+References: <1472607448-4462-1-git-send-email-shawn.lin@rock-chips.com>
+ <1472607448-4462-3-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1472648361-3871-1-git-send-email-ayaka@soulik.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Li <ayaka@soulik.info>
-Cc: devicetree@vger.kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, krzk@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1472607448-4462-3-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Douglas Anderson <dianders@chromium.org>, Ziyuan Xu <xzy.xu@rock-chips.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi,
-
-On Wednesday, August 31, 2016 08:59:21 PM Randy Li wrote:
-> The TOPEET itop exynos 4412 have three versions base board. The
-> Elite version is the cheap one without too much peripheral devices
-> on it.
+On 31/08/16 04:37, Shawn Lin wrote:
+> In the eariler commit 65820199272d ("Documentation: mmc:
+> sdhci-of-arasan: Add soc-ctl-syscon for corecfg regs"), we
+> introduced syscon to control corecfg_* stuff provided by
+> arasan. But given that we may need to ungate the clock for
+> accessing corecfg_*, it not so perfect as it depends on
+> whether specific clock driver disables it if not referenced.
+> Meanwhile, if we don't need arasan contoller to work anymore,
+> there is no reason to still enable it. So let's control this
+> clock when needed.
 > 
-> Currently supported are serial console, wired networking(USB),
-> USB OTG in peripheral mode, USB host, SD storage, GPIO buttons,
-> PWM beeper, ADC and LEDs. The WM8960 analog audio codec is also
-> enabled.
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 > 
-> The FIMC is not used for camera currently, I enabled it just for a
-> colorspace convertor.
+> ---
 > 
-> Signed-off-by: Randy Li <ayaka@soulik.info>
+> Changes in v2:
+> - assign NULL to clk_syscon if it's not deferral error.
+> 
+>  drivers/mmc/host/sdhci-of-arasan.c | 33 ++++++++++++++++++++++++++++++---
+>  1 file changed, 30 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index 0b3a9cf..3169f81 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -78,6 +78,7 @@ struct sdhci_arasan_soc_ctl_map {
+>   * struct sdhci_arasan_data
+>   * @host:		Pointer to the main SDHCI host structure.
+>   * @clk_ahb:		Pointer to the AHB clock
+> + * @clk_syscon:		Pointer to the optional clock for accessing syscon
+>   * @phy:		Pointer to the generic phy
+>   * @is_phy_on:		True if the PHY is on; false if not.
+>   * @sdcardclk_hw:	Struct for the clock we might provide to a PHY.
+> @@ -88,6 +89,7 @@ struct sdhci_arasan_soc_ctl_map {
+>  struct sdhci_arasan_data {
+>  	struct sdhci_host *host;
+>  	struct clk	*clk_ahb;
+> +	struct clk	*clk_syscon;
+>  	struct phy	*phy;
+>  	bool		is_phy_on;
+>  
+> @@ -290,6 +292,7 @@ static int sdhci_arasan_suspend(struct device *dev)
+>  
+>  	clk_disable(pltfm_host->clk);
+>  	clk_disable(sdhci_arasan->clk_ahb);
+> +	clk_disable(sdhci_arasan->clk_syscon);
+>  
+>  	return 0;
+>  }
+> @@ -309,6 +312,12 @@ static int sdhci_arasan_resume(struct device *dev)
+>  	struct sdhci_arasan_data *sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
+>  	int ret;
+>  
+> +	ret = clk_enable(sdhci_arasan->clk_syscon);
+> +	if (ret) {
+> +		dev_err(dev, "Cannot enable syscon clock.\n");
+> +		return ret;
+> +	}
+> +
+>  	ret = clk_enable(sdhci_arasan->clk_ahb);
+>  	if (ret) {
+>  		dev_err(dev, "Cannot enable AHB clock.\n");
+> @@ -528,26 +537,41 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+>  					ret);
+>  			goto err_pltfm_free;
+>  		}
+> +
+> +		sdhci_arasan->clk_syscon = devm_clk_get(&pdev->dev,
+> +							"clk_syscon");
+> +		if (IS_ERR(sdhci_arasan->clk_syscon)) {
+> +			ret = PTR_ERR(sdhci_arasan->clk_syscon);
+> +			if (ret == -EPROBE_DEFER)
+> +				goto err_pltfm_free;
+> +			else
+> +				sdhci_arasan->clk_syscon = NULL;
+> +		}
+> +
+> +		if (clk_prepare_enable(sdhci_arasan->clk_syscon)) {
+> +			dev_err(&pdev->dev, "Unable to enable syscon clock.\n");
 
-[...]
+Do you need to set 'ret' here?
 
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -135,6 +135,7 @@ dtb-$(CONFIG_ARCH_EXYNOS4) += \
->  	exynos4412-origen.dtb \
->  	exynos4412-smdk4412.dtb \
->  	exynos4412-tiny4412.dtb \
-> +	exynos4412-itop-elite.dtb \
+> +			goto err_pltfm_free;
+> +		}
+>  	}
+>  
+>  	sdhci_arasan->clk_ahb = devm_clk_get(&pdev->dev, "clk_ahb");
+>  	if (IS_ERR(sdhci_arasan->clk_ahb)) {
+>  		dev_err(&pdev->dev, "clk_ahb clock not found.\n");
+>  		ret = PTR_ERR(sdhci_arasan->clk_ahb);
+> -		goto err_pltfm_free;
+> +		goto clk_dis_syscon;
+>  	}
+>  
+>  	clk_xin = devm_clk_get(&pdev->dev, "clk_xin");
+>  	if (IS_ERR(clk_xin)) {
+>  		dev_err(&pdev->dev, "clk_xin clock not found.\n");
+>  		ret = PTR_ERR(clk_xin);
+> -		goto err_pltfm_free;
+> +		goto clk_dis_syscon;
+>  	}
+>  
+>  	ret = clk_prepare_enable(sdhci_arasan->clk_ahb);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Unable to enable AHB clock.\n");
+> -		goto err_pltfm_free;
+> +		goto clk_dis_syscon;
+>  	}
+>  
+>  	ret = clk_prepare_enable(clk_xin);
+> @@ -607,6 +631,8 @@ clk_disable_all:
+>  	clk_disable_unprepare(clk_xin);
+>  clk_dis_ahb:
+>  	clk_disable_unprepare(sdhci_arasan->clk_ahb);
+> +clk_dis_syscon:
+> +	clk_disable_unprepare(sdhci_arasan->clk_syscon);
+>  err_pltfm_free:
+>  	sdhci_pltfm_free(pdev);
+>  	return ret;
+> @@ -631,6 +657,7 @@ static int sdhci_arasan_remove(struct platform_device *pdev)
+>  	ret = sdhci_pltfm_unregister(pdev);
+>  
+>  	clk_disable_unprepare(clk_ahb);
+> +	clk_disable_unprepare(sdhci_arasan->clk_syscon);
+>  
+>  	return ret;
+>  }
+> 
 
-Minor nit:
-
-Please keep dtb files in alphabetical order.
-
->  	exynos4412-trats2.dtb
->  dtb-$(CONFIG_ARCH_EXYNOS5) += \
->  	exynos5250-arndale.dtb \
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
