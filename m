@@ -1,76 +1,116 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: Applied "regulator: tps65218: do not disable DCDC3 during
- poweroff on broken PMICs" to the regulator tree
-Date: Thu, 1 Sep 2016 11:06:16 +0100
-Message-ID: <20160901100616.GH5967@sirena.org.uk>
-References: <1466412218-5906-9-git-send-email-j-keerthy@ti.com>
- <E1bXZja-0000XE-A6@debutante>
- <20160831150115.GP9415@dell>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 05/18] dmaengine: st_fdma: Add STMicroelectronics FDMA
+ engine driver support
+Date: Thu, 1 Sep 2016 11:06:19 +0100
+Message-ID: <20160901100619.GA8268@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1472223413-7254-1-git-send-email-peter.griffin@linaro.org>
+ <1472223413-7254-6-git-send-email-peter.griffin@linaro.org>
+ <20160830163019.GM9355@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="G44BJl3Aq1QbV/QL"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160831150115.GP9415@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Tero Kristo <t-kristo@ti.com>, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, russ.dill@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+In-Reply-To: <20160830163019.GM9355@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Vinod,
 
---G44BJl3Aq1QbV/QL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks for reviewing.
 
-On Wed, Aug 31, 2016 at 04:01:15PM +0100, Lee Jones wrote:
-> On Wed, 10 Aug 2016, Mark Brown wrote:
+On Tue, 30 Aug 2016, Vinod Koul wrote:
 
-> > The patch
+> On Fri, Aug 26, 2016 at 03:56:40PM +0100, Peter Griffin wrote:
+> 
+> >  config STM32_DMA
+> >  	bool "STMicroelectronics STM32 DMA support"
+> >  	depends on ARCH_STM32
+> > @@ -567,7 +580,6 @@ config ZX_DMA
+> >  	help
+> >  	  Support the DMA engine for ZTE ZX296702 platform devices.
+> >  
+> > -
+> 
+> unrelated change?
 
-> >    regulator: tps65218: do not disable DCDC3 during poweroff on broken PMICs
+OK will remove and send a separate patch.
+> 
+> > +	fdev->chans = devm_kzalloc(&pdev->dev,
+> > +				   fdev->nr_channels
+> > +				   * sizeof(struct st_fdma_chan), GFP_KERNEL);
+> 
+> devm_kcalloc()
 
-> Looks like I also need this patch.
+Will fix in next version.
 
-> Would you be kind enough to shoot me a pull-request please?
+> 
+> > +	if (!fdev->chans)
+> > +		return -ENOMEM;
+> > +
+> > +	fdev->dev = &pdev->dev;
+> > +	fdev->drvdata = drvdata;
+> > +	platform_set_drvdata(pdev, fdev);
+> > +
+> > +	fdev->irq = platform_get_irq(pdev, 0);
+> > +	if (fdev->irq < 0) {
+> > +		dev_err(&pdev->dev, "Failed to get irq resource\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	ret = devm_request_irq(&pdev->dev, fdev->irq, st_fdma_irq_handler, 0,
+> > +			       dev_name(&pdev->dev), fdev);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "Failed to request irq (%d)\n", ret);
+> > +		goto err;
+> > +	}
+> > +
+> > +	fdev->slim_rproc = st_slim_rproc_alloc(pdev, fdev->fw_name);
+> > +	if (!fdev->slim_rproc) {
+> > +		ret = PTR_ERR(fdev->slim_rproc);
+> > +		dev_err(&pdev->dev, "slim_rproc_alloc failed (%d)\n", ret);
+> > +		goto err;
+> > +	}
+> > +
+> > +	/* Initialise list of FDMA channels */
+> > +	INIT_LIST_HEAD(&fdev->dma_device.channels);
+> > +	for (i = 0; i < fdev->nr_channels; i++) {
+> > +		struct st_fdma_chan *fchan = &fdev->chans[i];
+> > +
+> > +		fchan->fdev = fdev;
+> > +		fchan->vchan.desc_free = st_fdma_free_desc;
+> > +		vchan_init(&fchan->vchan, &fdev->dma_device);
+> 
+> this initialized a tasklet
+> 
+> > +static int st_fdma_remove(struct platform_device *pdev)
+> > +{
+> > +	struct st_fdma_dev *fdev = platform_get_drvdata(pdev);
+> > +
+> > +	devm_free_irq(&pdev->dev, fdev->irq, fdev);
+> > +	st_slim_rproc_put(fdev->slim_rproc);
+> > +	of_dma_controller_free(pdev->dev.of_node);
+> > +	dma_async_device_unregister(&fdev->dma_device);
+> 
+> and that vchan tasklet is not quisced here :(
 
-The following changes since commit 29b4817d4018df78086157ea3a55c1d9424a7cfc:
+Eeek, good spot. Will fix in next version.
 
-  Linux 4.8-rc1 (2016-08-07 18:18:00 -0700)
+> 
+> > +MODULE_LICENSE("GPL v2");
+> > +MODULE_DESCRIPTION("STMicroelectronics FDMA engine driver");
+> > +MODULE_AUTHOR("Ludovic.barre <Ludovic.barre-qxv4g6HH51o@public.gmane.org>");
+> > +MODULE_AUTHOR("Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
+> 
+> No MODULE_ALIAS?
 
-are available in the git repository at:
+Will add in next version.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/tps65218-dcdc3-workaround
+regards,
 
-for you to fetch changes up to 23a34f9d03a5d40a6234855bc069da370708cc9e:
-
-  regulator: tps65218: do not disable DCDC3 during poweroff on broken PMICs (2016-08-10 18:21:55 +0100)
-
-----------------------------------------------------------------
-regulator: tps65218: Workaround for broken DCDC3 disable on some revisions
-
-----------------------------------------------------------------
-Tero Kristo (2):
-      mfd: tps65218: add version check to the PMIC probe
-      regulator: tps65218: do not disable DCDC3 during poweroff on broken PMICs
-
- drivers/mfd/tps65218.c                 | 9 +++++++++
- drivers/regulator/tps65218-regulator.c | 8 ++++++++
- include/linux/mfd/tps65218.h           | 6 ++++++
- 3 files changed, 23 insertions(+)
-
---G44BJl3Aq1QbV/QL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXx/2XAAoJECTWi3JdVIfQ5p8H/1dMoqP+DukVRQFI0kS1ke7E
-CxaWhdRm96082V/2vBuI7wrD+2h4nkQZnzG/tb23XHK/3oss9YR3GsX3KpY0IUtR
-xLIcvbkihL1eFpDsIatIJZwpthVRGMK+Vak5Hp/r78DKE1nAn9172Dwd3/zcRBtW
-AUb/sbl/ZEFzoRkLWnSC6bm8GHFuMDYPA+22yiN2eEjqgWJvB2zNUjFO94UwmYc5
-CnehegI9mnoCpX6KVWiCvJxTUgUCQY/xAuPaVsFNKd+7XsJQbPiUnZUXTwd0U4O8
-Xz20q1I8W3FCvN36159xD/2kl2MRDxv+hJZzRS0nlftDIhz4zn1xca+CjhOjOkE=
-=NElR
------END PGP SIGNATURE-----
-
---G44BJl3Aq1QbV/QL--
+Peter. 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
