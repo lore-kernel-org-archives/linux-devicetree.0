@@ -1,43 +1,54 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 4/6] arm64: dts: rockchip: add the gmac power domain on rk3399
-Date: Thu, 1 Sep 2016 14:57:58 -0700
-Message-ID: <CAD=FV=Ww2eGyCbKAxFWNaMEzwwHEZJKvyeYpSGaX_2YqcLUM_w@mail.gmail.com>
-References: <1472752204-8924-1-git-send-email-wxt@rock-chips.com> <1472752204-8924-5-git-send-email-wxt@rock-chips.com>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH v3 21/22] phy: Add support for Qualcomm's USB HSIC phy
+Date: Thu, 01 Sep 2016 15:00:22 -0700
+Message-ID: <147276722271.30255.17486402880702436547@sboyd-linaro>
+References: <20160901004036.23936-1-stephen.boyd@linaro.org>
+ <20160901004036.23936-22-stephen.boyd@linaro.org>
+ <CAFp+6iGJo5P3_oFCboKmOno6QzcMhVHhTWVWPFw3fCop0PSa8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472752204-8924-5-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel@list
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAFp+6iGJo5P3_oFCboKmOno6QzcMhVHhTWVWPFw3fCop0PSa8g@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>, Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+(Please trim replies)
 
-On Thu, Sep 1, 2016 at 10:50 AM, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> This patch supports the gmac pd to save power consumption.
-> Even though some boards not need Ethernet support, the driver
-> core can also take care of powering up the pd before probe.
->
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->
-> Changes in v4:
-> - remove the Roger signed-off for domain patch.
->
-> Changes in v3:
-> - leave into two patches based on patchv2, and fix nits and commit, as
->   comment on https://patchwork.kernel.org/patch/9306339/
->
-> Changes in v2:
-> - Fixes the order, ss Heiko commnets on
->   https://patchwork.kernel.org/patch/9305991/
->
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+Quoting Vivek Gautam (2016-08-31 23:17:55)
+> On Thu, Sep 1, 2016 at 6:10 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
+> > +
+> > +       uphy->cal_sleep_clk = clk = devm_clk_get(&ulpi->dev, "cal_sleep");
+> > +       if (IS_ERR(clk))
+> > +               return PTR_ERR(clk);
+> > +
+> > +       uphy->phy = devm_phy_create(&ulpi->dev, ulpi->dev.of_node,
+> > +                                   &qcom_usb_hsic_phy_ops);
+> 
+> There's a ulpi_phy library available in  drivers/phy/. Do we want to use that ?
+> That also creates a phy-lookup of this PHY so that the ulpi device's parent
+> can request the PHY.
 
-Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I don't have any interest in using those two functions (does two
+functions constitute a library?). There's no devm as you say, and it
+seems to be specific to the ULPI hardware for dwc3 (the only user) where
+the phy is called "usb2-phy". This is a phy for the ChipIdea controller
+which only has one phy and it's called "usb-phy" in that case.
+
+> 
+> You may want to modify the APIs available in ulpi_phy library to use the
+> devm_* APIs.
+> 
+
+The lookup isn't necessary because we use DT to find the lookup. I seem
+to recall the phy framework requiring a DT lookup too.
