@@ -1,221 +1,39 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: [PATCH v2 3/7] ARM: dts: exynos: Remove skeleton.dtsi usage for Exynos4
-Date: Thu,  1 Sep 2016 11:06:52 +0200
-Message-ID: <1472720817-20362-4-git-send-email-javier@osg.samsung.com>
-References: <1472720817-20362-1-git-send-email-javier@osg.samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472720817-20362-1-git-send-email-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v4 1/8] drm/tilcdc: Remove
+ drm_helper_disable_unused_functions() call
+Date: Thu, 1 Sep 2016 12:09:05 +0300
+Message-ID: <1a33932c42a976bef3168fca50d20740f17c54e3.1472719892.git.jsarha@ti.com>
+References: <cover.1472719892.git.jsarha@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1472719892.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, linux-arm-kernel@lists.infradead.org
+Cc: Jyri Sarha <jsarha@ti.com>, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, kbeldan@baylibre.com, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-The skeleton.dtsi file was removed in ARM64 for different reasons as
-explained in commit ("3ebee5a2e141 arm64: dts: kill skeleton.dtsi").
-
-These also applies to ARM and it will also allow to get rid of the
-following DTC warnings in the future:
-
-"Node /memory has a reg or ranges property, but no unit name"
-
-The disassembled DTB are almost the same besides an empty chosen
-node being removed and nodes reordered, so it should not have
-functional changes.
-
-Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
----
-
-Changes in v2: None
-
- arch/arm/boot/dts/exynos4.dtsi                  | 3 ++-
- arch/arm/boot/dts/exynos4210-origen.dts         | 1 +
- arch/arm/boot/dts/exynos4210-smdkv310.dts       | 1 +
- arch/arm/boot/dts/exynos4210-trats.dts          | 1 +
- arch/arm/boot/dts/exynos4210-universal_c210.dts | 1 +
- arch/arm/boot/dts/exynos4412-odroidu3.dts       | 1 +
- arch/arm/boot/dts/exynos4412-odroidx.dts        | 1 +
- arch/arm/boot/dts/exynos4412-odroidx2.dts       | 1 +
- arch/arm/boot/dts/exynos4412-origen.dts         | 1 +
- arch/arm/boot/dts/exynos4412-smdk4412.dts       | 1 +
- arch/arm/boot/dts/exynos4412-tiny4412.dts       | 1 +
- arch/arm/boot/dts/exynos4412-trats2.dts         | 1 +
- arch/arm/boot/dts/exynos4415.dtsi               | 3 ++-
- 13 files changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index 32f22e12c70b..5f034eb5a5e2 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -21,11 +21,12 @@
- 
- #include <dt-bindings/clock/exynos4.h>
- #include <dt-bindings/clock/exynos-audss-clk.h>
--#include "skeleton.dtsi"
- #include "exynos-syscon-restart.dtsi"
- 
- / {
- 	interrupt-parent = <&gic>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
- 
- 	aliases {
- 		spi0 = &spi_0;
-diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
-index be2751eebaf8..6b2c41a87a3e 100644
---- a/arch/arm/boot/dts/exynos4210-origen.dts
-+++ b/arch/arm/boot/dts/exynos4210-origen.dts
-@@ -25,6 +25,7 @@
- 	compatible = "insignal,origen", "samsung,exynos4210", "samsung,exynos4";
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x40000000 0x10000000
- 		       0x50000000 0x10000000
- 		       0x60000000 0x10000000
-diff --git a/arch/arm/boot/dts/exynos4210-smdkv310.dts b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-index 847fae3dd1f1..3c759baeadcc 100644
---- a/arch/arm/boot/dts/exynos4210-smdkv310.dts
-+++ b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-@@ -24,6 +24,7 @@
- 	compatible = "samsung,smdkv310", "samsung,exynos4210", "samsung,exynos4";
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x40000000 0x80000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
-index 79d983036560..5f7ddb0627fb 100644
---- a/arch/arm/boot/dts/exynos4210-trats.dts
-+++ b/arch/arm/boot/dts/exynos4210-trats.dts
-@@ -21,6 +21,7 @@
- 	compatible = "samsung,trats", "samsung,exynos4210", "samsung,exynos4";
- 
- 	memory {
-+		device_type = "memory";
- 		reg =  <0x40000000 0x10000000
- 			0x50000000 0x10000000
- 			0x60000000 0x10000000
-diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-index cf95202fa310..30d938e17c9f 100644
---- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
-+++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-@@ -21,6 +21,7 @@
- 	compatible = "samsung,universal_c210", "samsung,exynos4210", "samsung,exynos4";
- 
- 	memory {
-+		device_type = "memory";
- 		reg =  <0x40000000 0x10000000
- 			0x50000000 0x10000000>;
- 	};
-diff --git a/arch/arm/boot/dts/exynos4412-odroidu3.dts b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-index d73aa6c58fe3..cc1b87e09534 100644
---- a/arch/arm/boot/dts/exynos4412-odroidu3.dts
-+++ b/arch/arm/boot/dts/exynos4412-odroidu3.dts
-@@ -19,6 +19,7 @@
- 	compatible = "hardkernel,odroid-u3", "samsung,exynos4412", "samsung,exynos4";
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x40000000 0x7FF00000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/exynos4412-odroidx.dts b/arch/arm/boot/dts/exynos4412-odroidx.dts
-index 2af235151301..518ca57837be 100644
---- a/arch/arm/boot/dts/exynos4412-odroidx.dts
-+++ b/arch/arm/boot/dts/exynos4412-odroidx.dts
-@@ -19,6 +19,7 @@
- 	compatible = "hardkernel,odroid-x", "samsung,exynos4412", "samsung,exynos4";
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x40000000 0x3FF00000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/exynos4412-odroidx2.dts b/arch/arm/boot/dts/exynos4412-odroidx2.dts
-index 3e3584270e00..92cdeea1cfb3 100644
---- a/arch/arm/boot/dts/exynos4412-odroidx2.dts
-+++ b/arch/arm/boot/dts/exynos4412-odroidx2.dts
-@@ -18,6 +18,7 @@
- 	compatible = "hardkernel,odroid-x2", "samsung,exynos4412", "samsung,exynos4";
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x40000000 0x7FF00000>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
-index 26a36fed9652..9156a35a6117 100644
---- a/arch/arm/boot/dts/exynos4412-origen.dts
-+++ b/arch/arm/boot/dts/exynos4412-origen.dts
-@@ -23,6 +23,7 @@
- 	compatible = "insignal,origen4412", "samsung,exynos4412", "samsung,exynos4";
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x40000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/exynos4412-smdk4412.dts b/arch/arm/boot/dts/exynos4412-smdk4412.dts
-index 231ffbdbf9d0..2e868c4c307e 100644
---- a/arch/arm/boot/dts/exynos4412-smdk4412.dts
-+++ b/arch/arm/boot/dts/exynos4412-smdk4412.dts
-@@ -21,6 +21,7 @@
- 	compatible = "samsung,smdk4412", "samsung,exynos4412", "samsung,exynos4";
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x40000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/exynos4412-tiny4412.dts b/arch/arm/boot/dts/exynos4412-tiny4412.dts
-index 4840bbdaa9ec..ad60f3840e24 100644
---- a/arch/arm/boot/dts/exynos4412-tiny4412.dts
-+++ b/arch/arm/boot/dts/exynos4412-tiny4412.dts
-@@ -24,6 +24,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg = <0x40000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index 129e973a06a6..e1380bae8ee3 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -31,6 +31,7 @@
- 	};
- 
- 	memory {
-+		device_type = "memory";
- 		reg =  <0x40000000 0x40000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/exynos4415.dtsi b/arch/arm/boot/dts/exynos4415.dtsi
-index 28b04b6795c9..3c40f8a956dd 100644
---- a/arch/arm/boot/dts/exynos4415.dtsi
-+++ b/arch/arm/boot/dts/exynos4415.dtsi
-@@ -16,13 +16,14 @@
-  * published by the Free Software Foundation.
-  */
- 
--#include "skeleton.dtsi"
- #include <dt-bindings/clock/exynos4415.h>
- #include <dt-bindings/clock/exynos-audss-clk.h>
- 
- / {
- 	compatible = "samsung,exynos4415";
- 	interrupt-parent = <&gic>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
- 
- 	aliases {
- 		pinctrl0 = &pinctrl_0;
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ZHJtX2hlbHBlcl9kaXNhYmxlX3VudXNlZF9mdW5jdGlvbnMoKSBzaG91bGQgbm90IGJlIGNhbGxl
+ZCBieSBhdG9taWMKZHJpdmVycy4KClNpZ25lZC1vZmYtYnk6IEp5cmkgU2FyaGEgPGpzYXJoYUB0
+aS5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3RpbGNkYy90aWxjZGNfZHJ2LmMgfCAyIC0tCiAx
+IGZpbGUgY2hhbmdlZCwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
+cm0vdGlsY2RjL3RpbGNkY19kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Ry
+di5jCmluZGV4IDM0MDRkMjQuLmU0NWMyNjggMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS90
+aWxjZGMvdGlsY2RjX2Rydi5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2Ry
+di5jCkBAIC0zNjEsOCArMzYxLDYgQEAgc3RhdGljIGludCB0aWxjZGNfbG9hZChzdHJ1Y3QgZHJt
+X2RldmljZSAqZGV2LCB1bnNpZ25lZCBsb25nIGZsYWdzKQogCQkJYnJlYWs7CiAJfQogCi0JZHJt
+X2hlbHBlcl9kaXNhYmxlX3VudXNlZF9mdW5jdGlvbnMoZGV2KTsKLQogCWRybV9tb2RlX2NvbmZp
+Z19yZXNldChkZXYpOwogCiAJcHJpdi0+ZmJkZXYgPSBkcm1fZmJkZXZfY21hX2luaXQoZGV2LCBi
+cHAsCi0tIAoxLjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
