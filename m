@@ -1,45 +1,57 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: rskrza1: add ethernet DT support
-Date: Thu,  1 Sep 2016 11:54:30 -0400
-Message-ID: <20160901155430.23400-3-chris.brandt@renesas.com>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH 2/3] ARM: dts: r7s72100: add ethernet to device tree
+Date: Thu,  1 Sep 2016 11:54:29 -0400
+Message-ID: <20160901155430.23400-2-chris.brandt@renesas.com>
 References: <20160901155430.23400-1-chris.brandt@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160901155430.23400-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160901155430.23400-1-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 ---
- arch/arm/boot/dts/r7s72100-rskrza1.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/r7s72100.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-index aabfa04..e5dea5b 100644
---- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
-+++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-@@ -47,6 +47,15 @@
- 	status = "okay";
- };
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index e8e2a5d7..fb9ef9c 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -108,6 +108,15 @@
+ 			clock-output-names = "scif0", "scif1", "scif2", "scif3", "scif4", "scif5", "scif6", "scif7";
+ 		};
  
-+&ether {
-+	status = "okay";
-+	renesas,no-ether-link;
-+	phy-handle = <&phy0>;
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
-+};
++		mstp7_clks: mstp7_clks@fcfe0430 {
++			#clock-cells = <1>;
++			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
++			reg = <0xfcfe0430 4>;
++			clocks = <&p0_clk>;
++			clock-indices = <R7S72100_CLK_ETHER>;
++			clock-output-names = "ether";
++		};
 +
- &scif2 {
- 	status = "okay";
+ 		mstp9_clks: mstp9_clks@fcfe0438 {
+ 			#clock-cells = <1>;
+ 			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+@@ -419,4 +428,17 @@
+ 		power-domains = <&cpg_clocks>;
+ 		status = "disabled";
+ 	};
++
++	ether: ethernet@e8203000 {
++		compatible = "renesas,ether-r7s72100";
++		reg = <0xe8203000 0x800>,
++		      <0xe8204800 0x200>;
++		interrupts = <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp7_clks R7S72100_CLK_ETHER>;
++		power-domains = <&cpg_clocks>;
++		phy-mode = "mii";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
  };
 -- 
 2.9.2
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
