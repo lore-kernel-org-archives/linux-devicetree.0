@@ -1,58 +1,119 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support
- for rk3399
-Date: Thu, 1 Sep 2016 14:50:56 -0700
-Message-ID: <CAD=FV=VQ7Gf33fH8=FM_Lj-r9uovoEHxusMrFQrDwf2rxeiecg@mail.gmail.com>
-References: <20160827134103.28160-1-xzy.xu@rock-chips.com> <20160827134103.28160-3-xzy.xu@rock-chips.com>
- <2ab8ab94-fa4d-2cd6-5805-a92ac5f9697e@rock-chips.com> <57C3A30B.5080707@rock-chips.com>
- <ceba6a89-6945-58c5-62e4-7d842cfa2312@rock-chips.com> <CAD=FV=W=LkVAm187hxp0Kbjxi5kSThwKnCMX+tr8SXQ-v_xQTQ@mail.gmail.com>
- <77f5cff1-80a2-76b3-40e9-f77caced2257@rock-chips.com> <12451b81-321e-b661-8f1c-25c91bffba54@rock-chips.com>
- <CAPDyKFqwqdu=9PSzD32aOYAeBVRMQ0s8oKA29JGBsMsRMsDz4w@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2] dt: net: enhance DWC EQoS binding to support Tegra186
+Date: Thu, 1 Sep 2016 12:15:11 -0600
+Message-ID: <a86d0be6-8efb-0180-675f-032bfdf1044c@wwwdotorg.org>
+References: <20160824212046.2416-1-swarren@wwwdotorg.org>
+ <20160830190152.GA25083@rob-hp-laptop>
+ <54b380c4-179f-2260-55dd-4220e65f8f46@wwwdotorg.org>
+ <190a6bc1-ef66-2927-e542-13c543bab3b9@axis.com>
+ <f4f85b48-4df6-4a3c-2831-e5707d35ebb6@wwwdotorg.org>
+ <d60d2deb-49dd-2561-bbde-20d2ff13ca4b@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFqwqdu=9PSzD32aOYAeBVRMQ0s8oKA29JGBsMsRMsDz4w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Ziyuan Xu <xzy.xu@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xing Zheng <zhengxing@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Frank Wang <frank.wang@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Elaine Zhang <zhangqing@rock-chips.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, David Wu <david.wu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, Jianqun Xu <jay.>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d60d2deb-49dd-2561-bbde-20d2ff13ca4b-VrBV9hrLPhE@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars Persson <lars.persson-VrBV9hrLPhE@public.gmane.org>, Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Sep 1, 2016 at 6:45 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> I was reading the discussion regarding this change and browsing the DT
-> documentation around this... Can you guys explain what really goes on
-> here, please.
+On 09/01/2016 01:50 AM, Lars Persson wrote:
 >
-> To me, it seems like you are managing one device's resources in one
-> separate genpd. One genpd per device. Is that correct?
 >
-> Perhaps each device actually has its own PM domain and thus it makes
-> sense to assign one genpd per device?
+> On 08/31/2016 11:48 PM, Stephen Warren wrote:
+>> On 08/31/2016 03:15 AM, Lars Persson wrote:
+>>> On 08/30/2016 10:50 PM, Stephen Warren wrote:
+>>>> On 08/30/2016 01:01 PM, Rob Herring wrote:
+>>>>> On Wed, Aug 24, 2016 at 03:20:46PM -0600, Stephen Warren wrote:
+>>>>>> The Synopsys DWC EQoS is a configurable IP block which supports
+>>>>>> multiple
+>>>>>> options for bus type, clocking and reset structure, and feature list.
+>>>>>> Extend the DT binding to define a "compatible value" for the
+>>>>>> configuration
+>>>>>> contained in NVIDIA's Tegra186 SoC, and define some new properties
+>>>>>> and
+>>>>>> list property entries required by that configuration.
+>>
+>>>>>> diff --git
+>>>>>> a/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
+>>>>>> b/Documentation/devicetree/bindings/net/snps,dwc-qos-ethernet.txt
+>>
+>>>>>> +- clock-names: May contain any/all of the following depending on
+>>>>>> the IP
+>>>>>> +  configuration, in any order:
+>>>>>> +    The EQOS transmit path clock. The HW signal name is clk_tx_i.
+>>>>>> +    In some configurations (e.g. GMII/RGMII), this clock also drives
+>>>>>> the PHY TX
+>>>>>> +    path. In other configurations, other clocks (such as tx_125,
+>>>>>> rmii) may
+>>>>>> +    drive the PHY TX path.
+>>>>>> +  - "rx"
+>>>>>> +    The EQOS receive path clock. The HW signal name is clk_rx_i.
+>>>>>> +    In some configurations (e.g. GMII/RGMII), this clock also drives
+>>>>>> the PHY RX
+>>>>>> +    path. In other configurations, other clocks (such as rx_125,
+>>>>>> pmarx_0,
+>>>>>> +    pmarx_1, rmii) may drive the PHY RX path.
+>>>
+>>> It is not correct that clk_rx_i drives the PHY rx path for GMII/RGMII.
+>>> The PHY is the source of the rx clock for these modes.
+>>
+>> I think both of our statements are true.
+>>
+>> There's a clock input to the EQOS module (clk_rx_i) that does drive the
+>> RX path in the EQOS module.
+>>
+>> That clock also drives the PHY's RX path.
+>>
+>> Those statements make no comment regarding the /source/ of that clock;
+>> either of the following might be true:
+>>
+>> 1) The PHY could generate the clock internally somehow, feed its own
+>> internal logic with that clock, and send the clock out to feed the EQOS
+>> RX path too.
+>>
+>> or,
+>>
+>> 2)  SoC integration could drive the same clock into both the EQOS and
+>> PHY modules, so that both sets of logic are fed from the same external
+>> clock.
+>>
+>> Perhaps the phrase "PHY RX path" is confusing; I was talking about the
+>> EQOS modules' RX path from the PHY more than the PHY itself, although
+>> given what I said above I believe either interpretation is valid and
+>> correct.
+>>
+>>> Will the driver need to make any clock ops on the "rx" clock ?
+>>
+>> Yes. The EQOS driver needs to ensure that the clock is running before
+>> attempting to receive data from the PHY, otherwise the EQOS's own RX
+>> logic won't be clocked.
+>>
+>> Whether the phandle for this clock points at a SoC-level provider (it
+>> will in Tegra) or a clock provider in the PHY (it might in other SoCs),
+>> shouldn't matter as far as the DT binding goes, although it might affect
+>> device probe ordering in some implementations.
+>>
+>
+> I understand your point. The lines between PHY, MAC and SoC gets blurred
+> with high integration.
+>
+> The thing is that when we talk about standard PHY interfaces the clock
+> is a well defined part of the interface and it should not be mixed up
+> with SoC-specific implementations that deviate from this. Please update
+> the description of the rx clock to only cover cases when the clock is
+> not implicitly sourced from the PHY.
+>
+> When the PHY is the source of the clock then it is managed by the phy
+> library and the phy driver so it does not need to be also handled by the
+> common clock framework.
 
-I'm not as familiar with genpd as I should be, so hopefully this makes sense.
+Ah, I've found the source of confusion. We don't have an SoC-level clock 
+that feeds both the MAC and the PHY RX logic, but simply a clock gate 
+that sits between the RX clock output of the PHY and the RX clock input 
+of the MAC (clk_rx_i). This gate is what's currently represented by the 
+"rx" clock name the binding mentions.
 
-...in hardware there is a "pd_emmc" that is the power domain for just
-eMMC.  That will be referenced hooked up via device tree, like:
-
-power-domains = <&power RK3399_PD_EMMC>;
-
-I believe that means that power will automatically be removed whenever
-the device is runtime suspended or suspended.
-
-If w're not supporting "autosuspend" and nobody is tweaking anything
-manually, then it's possible (I think) that runtime suspend happens at
-exactly the same time as suspend.  ...but my point was that it was
-cleaner to actually do it any restoring in the "runtime resume" hooks
-to match what genpd does.  This matches what you say: use runtime PM.
-
-...but it also sounds like it might not be terribly important to
-restore these values since they're a bit silly to begin with.  If
-that's true then I guess we don't need to do anything special here.
-
-
-Did that all make sense (it's entirely possible it didn't since
-somehow my brain still hasn't absorbed all runtime PM and genpd
-concepts)
-
--Doug
+tl;dr is that yes I agree to update the description of this rx clock 
+along the lines you ask for.
