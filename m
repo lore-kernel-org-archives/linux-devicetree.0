@@ -1,15 +1,14 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH RFC] ARM: dts: samsung: add rga-lvds panel in itop elite
-Date: Thu, 01 Sep 2016 09:04:41 +0200
-Message-ID: <94dc2e0d-2521-a636-ee3d-90168f30fe28@samsung.com>
-References: <1472511002-9019-1-git-send-email-ayaka@soulik.info>
- <dee989f5-17b0-7445-514b-559e98d77acd@samsung.com>
- <790048d1-6533-2e43-5343-13782382bf84@soulik.info>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v3 2/8] drm/tilcdc: Write DMA base and ceiling address
+ with single instruction
+Date: Thu, 1 Sep 2016 10:13:08 +0300
+Message-ID: <0f92d770-3a76-1495-cef2-a5f2230b4a07@ti.com>
+References: <cover.1472634657.git.jsarha@ti.com>
+ <82b100a090a929ac30d1d47687cb5726b93a929e.1472634657.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============1365500991=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <790048d1-6533-2e43-5343-13782382bf84@soulik.info>
+In-Reply-To: <82b100a090a929ac30d1d47687cb5726b93a929e.1472634657.git.jsarha@ti.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -19,89 +18,116 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: ayaka <ayaka@soulik.info>, devicetree <devicetree@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc@vger.kernel.org, linux@armlinux.org.uk, krzk@kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, linux-arm-kernel@lists.infradead.org
+Cc: peter.ujfalusi@ti.com, kbeldan@baylibre.com, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMzEvMjAxNiAwNzo1NSBQTSwgYXlha2Egd3JvdGU6Cj4KPiBPbiAwOC8zMS8yMDE2IDA4
-OjMwIFBNLCBBbmRyemVqIEhhamRhIHdyb3RlOgo+PiBIaSwKPj4KPj4KPj4gT24gMDgvMzAvMjAx
-NiAxMjo1MCBBTSwgUmFuZHkgTGkgd3JvdGU6Cj4+PiBJdCBpcyBhY3R1YWxseSBhIGx2ZHMgcGFu
-ZWwgY29ubmVjdGVkIHRocm91Z2ggYSByZ2EtbHZkcyBicmlkZ2UuCj4+PiBCdXQgSSByZWFsbHkg
-aGF2ZSBubyBpZGVhIGFib3V0IHdoYXQgZG9lcyBhIHBvcnQgbWVhbiBpbiBmaW1kIG5vZGUuCj4+
-Pgo+Pj4gQWxzbyBob3cgc2hvdWxkIEkgY29uZmlndXJlIHRoaXMgcGFuZWwgc2l6ZT8gSSB0aGlu
-ayB0aGUgaTJjIGZvdW5kCj4+PiBvbiB0aGUgcGFuZWwgc2NoZW1hdGljLCBidXQgaXQgbW9yZSBs
-aWtlbHkgdG8gYmUgdXNlZCBhIHRvdWNoIHNjcmVlbgo+Pj4gdG91dGguIEFsc28gdGhlIHRvdWNo
-IHNjcmVlbiBpcyBub3Qgc3VwcG9ydGVkIGluIGN1cnJlbnRseSBkcml2ZXIuCj4+Pgo+Pj4gU2ln
-bmVkLW9mZi1ieTogUmFuZHkgTGkgPGF5YWthQHNvdWxpay5pbmZvPgo+Pj4gLS0tCj4+PiAgIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQ0MTItaXRvcC1lbGl0ZS5kdHMgfCAzNSArKysrKysrKysr
-KysrKysrKysrKysrKysrKy0tLQo+Pj4gICAxIGZpbGUgY2hhbmdlZCwgMzIgaW5zZXJ0aW9ucygr
-KSwgMyBkZWxldGlvbnMoLSkKPj4+Cj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
-ZXh5bm9zNDQxMi1pdG9wLWVsaXRlLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQ0MTIt
-aXRvcC1lbGl0ZS5kdHMKPj4+IGluZGV4IGUxY2RhNTQuLjJkNjczODUgMTAwNjQ0Cj4+PiAtLS0g
-YS9hcmNoL2FybS9ib290L2R0cy9leHlub3M0NDEyLWl0b3AtZWxpdGUuZHRzCj4+PiArKysgYi9h
-cmNoL2FybS9ib290L2R0cy9leHlub3M0NDEyLWl0b3AtZWxpdGUuZHRzCj4+PiBAQCAtMTM5LDYg
-KzEzOSwyMCBAQAo+Pj4gICAJCWFzc2lnbmVkLWNsb2NrcyA9IDwmY2xvY2sgQ0xLX01PVVRfQ0FN
-MD47Cj4+PiAgIAkJYXNzaWduZWQtY2xvY2stcGFyZW50cyA9IDwmY2xvY2sgQ0xLX1hVU0JYVEk+
-Owo+Pj4gICAJfTsKPj4+ICsJCj4+PiArCXZjY19zeXNfbGNkOiBzeXMtbGNkIHsKPj4+ICsJCWNv
-bXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVkIjsKPj4+ICsJCXJlZ3VsYXRvci1uYW1lID0gInZj
-Y181diI7Cj4+PiArCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw1MDAwMDAwPjsKPj4+ICsJ
-CXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDUwMDAwMDA+Owo+Pj4gKwkJZ3BpbyA9IDwmZ3Bs
-MCA0IEdQSU9fQUNUSVZFX0hJR0g+Owo+Pj4gKwl9Owo+Pj4gKwo+Pj4gKwlwYW5lbDogcGFuZWwg
-ewo+Pj4gKwkJZGRjLWkyYy1idXMgPSA8JmkyY18zPjsKPj4+ICsJCXBvd2VyLXN1cHBseSA9IDwm
-dmNjX3N5c19sY2Q+Owo+Pj4gKwkJZW5hYmxlLWdwaW9zID0gPCZncGwwIDIgR1BJT19BQ1RJVkVf
-SElHSD47Cj4+PiArCX07Cj4+IFBhbmVsIGhhcyBubyBjb21wYXRpYmxlIHN0cmluZywgd2hpY2gg
-ZHJpdmVyIHdpbGwgaGFuZGxlIHRoaXMgbm9kZT8KPiBUaGUgcHJvYmxlbSBpcyB0aGF0LCBpdCBp
-cyBwYW5lbCBub3Qgc3VwcG9ydGVkIGJ5IGtlcm5lbC4gCgpGb3Igc2ltcGxlIHBhbmVsIHlvdSBj
-YW4gdGFrZSBhIGxvb2sgYXQgWzFdWzJdLiBJZS4gaWYgdGhlIHBhbmVsIG5lZWRzCm9ubHkgcG93
-ZXIgc3VwcGx5IGFuZCBlbmFibGUgZ3BpbywgeW91IGp1c3QgbmVlZCB0byBhZGQgZmV3IGxpbmVz
-IHRvIFsyXS4KClsxXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvc2ltcGxlLXBhbmVsLnR4dApbMl06IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1z
-aW1wbGUuYwoKPiBJcyBpdCBwb3NzaWJsZSAKPiB0byBzdXBwb3J0IHdpdGhvdXQgYWRkaW5nIGEg
-bmV3IGRyaXZlciBmb3IgaXQgPyBJIGtub3cgdGhlcmUgaXMgYSAKPiBzaW1wbGUtZHBpIGZvciBN
-SVBJLCBidXQgd2hhdCBpcyBmb3IgcGFyYWxsZWwgdmlkZW8gb3IgbHZkcz8KCnNpbXBsZS1kcGkg
-aXMganVzdCBwYXJhbGxlbCBvdXRwdXQuIExWRFMgaXMgbm90IHN1cHBvcnRlZCBieSBFeHlub3M0
-NDEyIGJ1dApib2FyZHMgdXN1YWxseSBoYXZlIFJHQi9MVkRTIGJyaWRnZSBmb3Igc3VjaCBwYW5l
-bHMsIEkgaGF2ZSBubyBhY2Nlc3MgdG8KaXRvcApib2FyZCBzY2hlbWF0aWNzLCBidXQgSSBzdXBw
-b3NlIGl0IGhhcyBzdWNoIGJyaWRnZS4gTFZEUyBicmlkZ2VzIG9mdGVuCmRvIG5vdApuZWVkIExp
-bnV4IGRyaXZlciwgc28gZnJvbSBkZXZlbG9wZXIgcG9pbnQgb2YgdmlldyBMVkRTIHBhbmVscyB3
-aXRoIHN1Y2gKYnJpZGdlCmFyZSBoYW5kbGVkIHRoZSBzYW1lIHdheSBhcyBSR0IgcGFuZWxzLiBF
-eGFtcGxlIGZpbWQgYmluZGluZ3MgZm9yIFJHQiBwYW5lbHMKYXJlIGluIFszXS4KClszXTogYXJj
-aC9hcm0vYm9vdC9kdHMvZXh5bm9zNDIxMC11bml2ZXJzYWxfYzIxMC5kdHMKCj4+IFJlZ2FyZHMK
-Pj4gQW5kcnplago+IFRoZSBvdGhlciBwcm9ibGVtIGlzIHRoYXQgSSBkb24ndCBob3cgdG8gY29u
-ZmlndXJlIHRoZSBkaXNwbGF5LXRpbWVzLCAKPiB0aGUgZGF0YXNoZWV0IGZvciBDTEFBMDcwV1Aw
-M1hHIG9ubHkgdGFsayBhYm91dCB0b3RhbCB0aW1lLCBhY3RpdmUgdGltZSAKPiBhbmQgYmxhbmsg
-dGltZSBmb3IgYm90aCBIb3Jpem9udGFsIGFuIFZlcnRpY2FsIHRpbWUuIERvZXMgaXQgbWVhbiB0
-aGUgCj4gZnJvbnQtcG9yY2ggYW5kIHN5bmMtbGVuIGZvciBob3Jpem9udGFsIGFuZCB2ZXJ0aWNh
-bCBhcmUgemVybyA/CgpZb3UgY2FuIGxvb2sgYXQgdmVuZG9yJ3MgY29kZS4gT3IganVzdCBleHBl
-cmltZW50IHdpdGggZGlmZmVyZW50IHZhbHVlcy4KVGhlIGVxdWF0aW9uIGlzOiB0b3RhbD1hY3Rp
-dmUrYmFja19wb3JjaCtibGFuaytmcm9udF9wb3JjaC4KU28gaWYgaHRvdGFsPTg2NCwgaGFjdGl2
-ZT04MDAsIGhibGFuaz02NCwgdGhlbiBocG9yY2hlcyBhcmUgMC4KSW4gY2FzZSBvZiB2dG90YWw9
-MTI4OCwgdmFjdGl2ZT0xMjAwLCB2Ymxhbms9OCB5b3UgaGF2ZSBsZWZ0IDgwIGZvciBwb3JjaGVz
-LAp5b3UgY2FuIHRyeSB0byBzcGxpdCB0aGVtIGVxdWFsbHkgZm9yIGZyb250IGFuZCBiYWNrIGZv
-ciBzdGFydGVycy4KClJlZ2FyZHMKQW5kcnplagoKPgo+ICsgICAgICAgcG9ydHMgewo+ICsgICAg
-ICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArICAgICAgICAgICAgICAgI3NpemUt
-Y2VsbHMgPSA8MD47Cj4gKyAgICAgICAgICAgICAgIHBvcnRAMyB7Cj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgcmVnID0gPDM+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJnYV9sdmRzOiBl
-bmRwb2ludCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9p
-bnQgPSA8JnBhbmVsPjsKPiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAg
-ICAgICB9Owo+ICsgICAgICAgfTsKPiArCj4gKyAgICAgICBwYW5lbDogcGFuZWxAMCB7Cj4gKyAg
-ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicGFuZWwtc2ltcGxlIjsKPiArCj4gKyAgICAgICAg
-ICAgICAgIHBvd2VyLXN1cHBseSA9IDwmdmNjX3N5c19sY2Q+Owo+ICsgICAgICAgICAgICAgICBl
-bmFibGUtZ3Bpb3MgPSA8JmdwbDAgMiBHUElPX0FDVElWRV9ISUdIPjsKPiArICAgICAgICAgICAg
-ICAgZGlzcGxheS10aW1pbmdzIHsKPiArICAgICAgICAgICAgICAgICAgICAgICB0aW1pbmctMCB7
-Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbG9jay1mcmVxdWVuY3kgPSA8NjY3
-NzAwMDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaGFjdGl2ZSA9IDw4MDA+
-Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFjdGl2ZSA9IDwxMjgwPjsKPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGhmcm9udC1wb3JjaCA9IDwwPjsKPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGhiYWNrLXBvcmNoID0gPDY0PjsKPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIGhzeW5jLWxlbiA9IDwwPjsKPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHZmcm9udC1wb3JjaCA9IDwwPjsKPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHZiYWNrLXBvcmNoID0gPDg+Owo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgdnN5bmMtbGVuID0gPDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07
-Cj4gKyAgICAgIH07Cj4KPiAtLQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5k
-IHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1zYW1zdW5nLXNvYyIgaW4KPiB0aGUgYm9keSBv
-ZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZwo+IE1vcmUgbWFqb3Jkb21v
-IGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAo+Cj4K
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+--===============1365500991==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="lo6Ff3ud9X0TBGbI09Xrn8VJS9Nwra4Wj"
+
+--lo6Ff3ud9X0TBGbI09Xrn8VJS9Nwra4Wj
+Content-Type: multipart/mixed; boundary="R7RfdtewsmM5h7Fpm8psdoGENdjNTE1xV";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com,
+ linux-arm-kernel@lists.infradead.org
+Cc: airlied@linux.ie, daniel@ffwll.ch, laurent.pinchart@ideasonboard.com,
+ peter.ujfalusi@ti.com, robh@kernel.org, kbeldan@baylibre.com
+Message-ID: <0f92d770-3a76-1495-cef2-a5f2230b4a07@ti.com>
+Subject: Re: [PATCH v3 2/8] drm/tilcdc: Write DMA base and ceiling address
+ with single instruction
+References: <cover.1472634657.git.jsarha@ti.com>
+ <82b100a090a929ac30d1d47687cb5726b93a929e.1472634657.git.jsarha@ti.com>
+In-Reply-To: <82b100a090a929ac30d1d47687cb5726b93a929e.1472634657.git.jsarha@ti.com>
+
+--R7RfdtewsmM5h7Fpm8psdoGENdjNTE1xV
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+On 31/08/16 16:14, Jyri Sarha wrote:
+> Write DMA base and ceiling address with a single instruction, if
+> available. This should make it more unlikely that LCDC would fetch the
+> DMA addresses in the middle of an update. Having bad combination of
+> addresses in dma base and ceiling (e.g base > ceiling) can cause
+> unpredictaple behavior in LCDC.
+>=20
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  drivers/gpu/drm/tilcdc/tilcdc_crtc.c |  9 +++++++--
+>  drivers/gpu/drm/tilcdc/tilcdc_regs.h | 14 ++++++++++++++
+>  2 files changed, 21 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/tilcdc/tilcdc_crtc.c b/drivers/gpu/drm/til=
+cdc/tilcdc_crtc.c
+> index 6350f2a..41ec5b3 100644
+> --- a/drivers/gpu/drm/tilcdc/tilcdc_crtc.c
+> +++ b/drivers/gpu/drm/tilcdc/tilcdc_crtc.c
+> @@ -70,6 +70,7 @@ static void set_scanout(struct drm_crtc *crtc, struct=
+ drm_framebuffer *fb)
+>  	struct drm_gem_cma_object *gem;
+>  	unsigned int depth, bpp;
+>  	dma_addr_t start, end;
+> +	u64 dma_base_and_ceiling;
+> =20
+>  	drm_fb_get_bpp_depth(fb->pixel_format, &depth, &bpp);
+>  	gem =3D drm_fb_cma_get_gem_obj(fb, 0);
+> @@ -80,8 +81,12 @@ static void set_scanout(struct drm_crtc *crtc, struc=
+t drm_framebuffer *fb)
+> =20
+>  	end =3D start + (crtc->mode.vdisplay * fb->pitches[0]);
+> =20
+> -	tilcdc_write(dev, LCDC_DMA_FB_BASE_ADDR_0_REG, start);
+> -	tilcdc_write(dev, LCDC_DMA_FB_CEILING_ADDR_0_REG, end - 1);
+> +	/* Write DMA base and ceiling address with a single insruction,
+> +	 * if available. This should make it more unlikely that LCDC would
+> +	 * fetch the DMA addresses in the middle of an update.
+> +	 */
+
+I think it would be good to have the register names mentioned in the
+above comment. Otherwise I can imagine grepping for CEILING_ADDR, and
+not finding it set anywhere in the driver...
+
+ Tomi
+
+
+--R7RfdtewsmM5h7Fpm8psdoGENdjNTE1xV--
+
+--lo6Ff3ud9X0TBGbI09Xrn8VJS9Nwra4Wj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJXx9UEAAoJEPo9qoy8lh710H0P/0FYu12JdB0NAYVApFGg8r1u
+kuyOfPsp7+JqogfejZQ1WrznMyMh8ONmAfXpA1l92TxJnWZkUjg+R7KiUeIQ73Ue
+3BDEbzdZMkxYU13MxywifPZTQ9KTpN4BNT5NTz14bLzzMiu/arpw7Th+WwuyqpzF
+ygZqPozC5sJcDG62cEtHgzdDu5299JXiR5K4yUviN3n708dHT+PSbimIh7vzrB8F
+66ijmvkhpPye4UEW71D9Aue8pW8xuvkk/TB0GCt6tXzjKRMcNI0UCOzwuj2GyME5
+aB42Fses7GUBZaDfXahvqGzGrTRdYqASSpscI7bjF2wJZmi+vCsxVFXrBLywcf24
+HFc7+s493R5e4hWJRdWbWkGirm3revfB5DH9msULa/FaaPXiw7yRAzSbKNssdp8W
+zzvWJdQQUc5uN2tXtFPKwW+Ywdzai5coHNqAEawFmUrrlVqCYIEtDYVgx5k80Yyo
+4qCnY9OgVzKOTGjnda35g2+6kQS2oceKHOGFmXpHnwMNDEahBEF9k/+iJY2EHTJ2
++q9F/i2r6pnB8QLraAIBY1RgY8fRyMHxxBBsmRehArB501lOmKr8FxrXtyMmTDgk
+nbw19ZyZ3yzrkGBDcCPBQxST0O+z5SrDKu5KHBmt/PXEwNrCLmYF7TgZ7/2MxbWh
+5yz57Qu2Mh+kS6ZAS8ZU
+=Chrn
+-----END PGP SIGNATURE-----
+
+--lo6Ff3ud9X0TBGbI09Xrn8VJS9Nwra4Wj--
+
+--===============1365500991==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1365500991==--
