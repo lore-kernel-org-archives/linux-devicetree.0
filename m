@@ -1,337 +1,126 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5/9] Use a local "dev" to avoid repetition of
- "rockchip->dev".
-Date: Thu, 01 Sep 2016 11:44:34 -0500
-Message-ID: <20160901164434.14195.62167.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 7/9] Simplify the confusing HIWORD_UPDATE scheme.
+Date: Thu, 01 Sep 2016 11:44:51 -0500
+Message-ID: <20160901164451.14195.61057.stgit@bhelgaas-glaptop2.roam.corp.google.com>
 References: <20160901163758.14195.15725.stgit@bhelgaas-glaptop2.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160901163758.14195.15725.stgit@bhelgaas-glaptop2.roam.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: devicetree@vger.kernel.org, Wenrui Li <wenrui.li@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20160901163758.14195.15725.stgit-1RhO1Y9PlrlHTL0Zs8A6p/gx64E7kk8eUsxypvmhUTTZJqsBc5GL+g@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 ---
- drivers/pci/host/pcie-rockchip.c |   95 ++++++++++++++++++++------------------
- 1 file changed, 50 insertions(+), 45 deletions(-)
+ drivers/pci/host/pcie-rockchip.c |   69 +++++++++++++-------------------------
+ 1 file changed, 23 insertions(+), 46 deletions(-)
 
 diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
-index 63fb0ebc..17612e5 100644
+index 33bf2e1..7f6fe7d 100644
 --- a/drivers/pci/host/pcie-rockchip.c
 +++ b/drivers/pci/host/pcie-rockchip.c
-@@ -380,6 +380,7 @@ static struct pci_ops rockchip_pcie_ops = {
-  */
- static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- {
-+	struct device *dev = rockchip->dev;
- 	int err;
- 	u32 status;
- 	unsigned long timeout;
-@@ -388,31 +389,31 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+@@ -115,36 +115,25 @@
+ 	  (PCIE_ECAM_BUS(bus) | PCIE_ECAM_DEV(dev) | \
+ 	   PCIE_ECAM_FUNC(func) | PCIE_ECAM_REG(reg))
  
- 	err = phy_init(rockchip->phy);
- 	if (err < 0) {
--		dev_err(rockchip->dev, "fail to init phy, err %d\n", err);
-+		dev_err(dev, "fail to init phy, err %d\n", err);
- 		return err;
+-/*
+-  * The higher 16-bit of this register is used for write protection
+-  * only if BIT(x + 16) set to 1 the BIT(x) can be written.
+-  */
+-#define HIWORD_UPDATE(val, mask, shift) \
+-	((val) << (shift) | (mask) << ((shift) + 16))
+-
+ #define RC_REGION_0_ADDR_TRANS_H		0x00000000
+ #define RC_REGION_0_ADDR_TRANS_L		0x00000000
+ #define RC_REGION_0_PASS_BITS			(25 - 1)
+ #define MAX_AXI_WRAPPER_REGION_NUM		33
+ #define PCIE_CORE_LCSR_RETRAIN_LINK		BIT(5)
+-#define PCIE_CLIENT_CONF_ENABLE			BIT(0)
+-#define PCIE_CLIENT_CONF_ENABLE_SHIFT		0
+-#define PCIE_CLIENT_CONF_ENABLE_MASK		0x1
+-#define PCIE_CLIENT_LINK_TRAIN_ENABLE		1
+-#define PCIE_CLIENT_LINK_TRAIN_SHIFT		1
+-#define PCIE_CLIENT_LINK_TRAIN_MASK		0x1
+-#define PCIE_CLIENT_ARI_ENABLE			BIT(0)
+-#define PCIE_CLIENT_ARI_ENABLE_SHIFT		3
+-#define PCIE_CLIENT_ARI_ENABLE_MASK		0x1
+-#define PCIE_CLIENT_CONF_LANE_NUM(x)		(x / 2)
+-#define PCIE_CLIENT_CONF_LANE_NUM_SHIFT		4
+-#define PCIE_CLIENT_CONF_LANE_NUM_MASK		0x3
+-#define PCIE_CLIENT_MODE_RC			BIT(0)
+-#define PCIE_CLIENT_MODE_SHIFT			6
+-#define PCIE_CLIENT_MODE_MASK			0x1
+-#define PCIE_CLIENT_GEN_SEL_2			1
+-#define PCIE_CLIENT_GEN_SEL_SHIFT		7
+-#define PCIE_CLIENT_GEN_SEL_MASK		0x1
++
++/*
++ * The higher 16-bit of this register is used for write protection
++ * only if BIT(x + 16) set to 1 the BIT(x) can be written.
++ */
++#define PCIE_CLIENT_CONF_ENABLE		(0x00010000 | 0x0001)
++#define PCIE_CLIENT_LINK_TRAIN_ENABLE	(0x00020000 | 0x0002)
++#define PCIE_CLIENT_ARI_ENABLE		(0x00080000 | 0x0008)
++#define PCIE_CLIENT_CONF_LANE_NUM(x)	(0x00300000 | (((x >> 1) & 3) << 4)
++#define PCIE_CLIENT_MODE_RC		(0x00400000 | 0x0040)
++#define PCIE_CLIENT_GEN_SEL(x)		(0x00800000 | ((x & 1) << 7)
++#define  PCIE_CLIENT_GEN_SEL_0			0
++#define  PCIE_CLIENT_GEN_SEL_2			1
++
+ #define PCIE_CLIENT_LINK_STATUS_UP		0x3
+ #define PCIE_CLIENT_LINK_STATUS_SHIFT		20
+ #define PCIE_CLIENT_LINK_STATUS_MASK		0x3
+@@ -423,22 +412,13 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
  	}
  
- 	err = reset_control_assert(rockchip->core_rst);
- 	if (err) {
--		dev_err(rockchip->dev, "assert core_rst err %d\n", err);
-+		dev_err(dev, "assert core_rst err %d\n", err);
- 		return err;
- 	}
- 
- 	err = reset_control_assert(rockchip->mgmt_rst);
- 	if (err) {
--		dev_err(rockchip->dev, "assert mgmt_rst err %d\n", err);
-+		dev_err(dev, "assert mgmt_rst err %d\n", err);
- 		return err;
- 	}
- 
- 	err = reset_control_assert(rockchip->mgmt_sticky_rst);
- 	if (err) {
--		dev_err(rockchip->dev, "assert mgmt_sticky_rst err %d\n", err);
-+		dev_err(dev, "assert mgmt_sticky_rst err %d\n", err);
- 		return err;
- 	}
- 
- 	err = reset_control_assert(rockchip->pipe_rst);
- 	if (err) {
--		dev_err(rockchip->dev, "assert pipe_rst err %d\n", err);
-+		dev_err(dev, "assert pipe_rst err %d\n", err);
- 		return err;
- 	}
- 
-@@ -436,31 +437,31 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 	rockchip_pcie_write(rockchip,
+-		   HIWORD_UPDATE(PCIE_CLIENT_CONF_ENABLE,
+-				 PCIE_CLIENT_CONF_ENABLE_MASK,
+-				 PCIE_CLIENT_CONF_ENABLE_SHIFT) |
+-		   HIWORD_UPDATE(PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes),
+-				 PCIE_CLIENT_CONF_LANE_NUM_MASK,
+-				 PCIE_CLIENT_CONF_LANE_NUM_SHIFT) |
+-		   HIWORD_UPDATE(PCIE_CLIENT_MODE_RC,
+-				 PCIE_CLIENT_MODE_MASK,
+-				 PCIE_CLIENT_MODE_SHIFT) |
+-		   HIWORD_UPDATE(PCIE_CLIENT_ARI_ENABLE,
+-				 PCIE_CLIENT_ARI_ENABLE_MASK,
+-				 PCIE_CLIENT_ARI_ENABLE_SHIFT) |
+-		   HIWORD_UPDATE(PCIE_CLIENT_GEN_SEL_2,
+-				 PCIE_CLIENT_GEN_SEL_MASK,
+-				 PCIE_CLIENT_GEN_SEL_SHIFT),
+-		   PCIE_CLIENT_BASE);
++			    PCIE_CLIENT_CONF_ENABLE |
++			    PCIE_CLIENT_LINK_TRAIN_ENABLE |
++			    PCIE_CLIENT_ARI_ENABLE |
++			    PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes) |
++			    PCIE_CLIENT_MODE_RC |
++			    PCIE_CLIENT_GEN_SEL(PCIE_CLIENT_GEN_SEL_2),
++			    PCIE_CLIENT_BASE);
  
  	err = phy_power_on(rockchip->phy);
  	if (err) {
--		dev_err(rockchip->dev, "fail to power on phy, err %d\n", err);
-+		dev_err(dev, "fail to power on phy, err %d\n", err);
- 		return err;
- 	}
+@@ -482,11 +462,8 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 				 PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2);
  
- 	err = reset_control_deassert(rockchip->core_rst);
- 	if (err) {
--		dev_err(rockchip->dev, "deassert core_rst err %d\n", err);
-+		dev_err(dev, "deassert core_rst err %d\n", err);
- 		return err;
- 	}
+ 	/* Enable Gen1 training */
+-	rockchip_pcie_write(rockchip,
+-		   HIWORD_UPDATE(PCIE_CLIENT_LINK_TRAIN_ENABLE,
+-				 PCIE_CLIENT_LINK_TRAIN_MASK,
+-				 PCIE_CLIENT_LINK_TRAIN_SHIFT),
+-		   PCIE_CLIENT_BASE);
++	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
++			    PCIE_CLIENT_BASE);
  
- 	err = reset_control_deassert(rockchip->mgmt_rst);
- 	if (err) {
--		dev_err(rockchip->dev, "deassert mgmt_rst err %d\n", err);
-+		dev_err(dev, "deassert mgmt_rst err %d\n", err);
- 		return err;
- 	}
- 
- 	err = reset_control_deassert(rockchip->mgmt_sticky_rst);
- 	if (err) {
--		dev_err(rockchip->dev, "deassert mgmt_sticky_rst err %d\n", err);
-+		dev_err(dev, "deassert mgmt_sticky_rst err %d\n", err);
- 		return err;
- 	}
- 
- 	err = reset_control_deassert(rockchip->pipe_rst);
- 	if (err) {
--		dev_err(rockchip->dev, "deassert pipe_rst err %d\n", err);
-+		dev_err(dev, "deassert pipe_rst err %d\n", err);
- 		return err;
- 	}
- 
-@@ -492,7 +493,7 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 		if (((status >> PCIE_CLIENT_LINK_STATUS_SHIFT) &
- 		      PCIE_CLIENT_LINK_STATUS_MASK) ==
- 		      PCIE_CLIENT_LINK_STATUS_UP) {
--			dev_dbg(rockchip->dev, "PCIe link training gen1 pass!\n");
-+			dev_dbg(dev, "PCIe link training gen1 pass!\n");
- 			break;
- 		}
- 
-@@ -511,7 +512,7 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 			PCIE_CLIENT_LINK_STATUS_MASK) ==
- 			PCIE_CLIENT_LINK_STATUS_UP) ? 0 : -ETIMEDOUT;
- 		if (err) {
--			dev_err(rockchip->dev, "PCIe link training gen1 timeout!\n");
-+			dev_err(dev, "PCIe link training gen1 timeout!\n");
- 			return err;
- 		}
- 	}
-@@ -532,7 +533,7 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 		if (((status >> PCIE_CORE_PL_CONF_SPEED_SHIFT) &
- 		     PCIE_CORE_PL_CONF_SPEED_MASK) ==
- 		     PCIE_CORE_PL_CONF_SPEED_5G) {
--			dev_dbg(rockchip->dev, "PCIe link training gen2 pass!\n");
-+			dev_dbg(dev, "PCIe link training gen2 pass!\n");
- 			break;
- 		}
- 
-@@ -551,14 +552,14 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 			PCIE_CORE_PL_CONF_SPEED_MASK) ==
- 			PCIE_CORE_PL_CONF_SPEED_5G) ? 0 : -ETIMEDOUT;
- 		if (err)
--			dev_dbg(rockchip->dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
-+			dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
- 	}
- 
- 	/* Check the final link width from negotiated lane counter from MGMT */
- 	status = rockchip_pcie_read(rockchip, PCIE_CORE_CTRL_MGMT_BASE);
- 	status =  0x1 << ((status >> PCIE_CORE_PL_CONF_LANE_SHIFT) &
- 			   PCIE_CORE_PL_CONF_LANE_MASK);
--	dev_dbg(rockchip->dev, "current link width is x%d\n", status);
-+	dev_dbg(dev, "current link width is x%d\n", status);
- 
- 	rockchip_pcie_write(rockchip, ROCKCHIP_VENDOR_ID, PCIE_RC_CONFIG_BASE);
- 	rockchip_pcie_write(rockchip, PCI_CLASS_BRIDGE_PCI << PCIE_CORE_RC_CONF_SCC_SHIFT,
-@@ -580,58 +581,59 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- static irqreturn_t rockchip_pcie_subsys_irq_handler(int irq, void *arg)
- {
- 	struct rockchip_pcie *rockchip = arg;
-+	struct device *dev = rockchip->dev;
- 	u32 reg;
- 	u32 sub_reg;
- 
- 	reg = rockchip_pcie_read(rockchip, PCIE_CLIENT_INT_STATUS);
- 	if (reg & PCIE_CLIENT_INT_LOCAL) {
--		dev_dbg(rockchip->dev, "local interrupt received\n");
-+		dev_dbg(dev, "local interrupt received\n");
- 		sub_reg = rockchip_pcie_read(rockchip, PCIE_CORE_INT_STATUS);
- 		if (sub_reg & PCIE_CORE_INT_PRFPE)
--			dev_dbg(rockchip->dev, "parity error detected while reading from the PNP receive FIFO RAM\n");
-+			dev_dbg(dev, "parity error detected while reading from the PNP receive FIFO RAM\n");
- 
- 		if (sub_reg & PCIE_CORE_INT_CRFPE)
--			dev_dbg(rockchip->dev, "parity error detected while reading from the Completion Receive FIFO RAM\n");
-+			dev_dbg(dev, "parity error detected while reading from the Completion Receive FIFO RAM\n");
- 
- 		if (sub_reg & PCIE_CORE_INT_RRPE)
--			dev_dbg(rockchip->dev, "parity error detected while reading from replay buffer RAM\n");
-+			dev_dbg(dev, "parity error detected while reading from replay buffer RAM\n");
- 
- 		if (sub_reg & PCIE_CORE_INT_PRFO)
--			dev_dbg(rockchip->dev, "overflow occurred in the PNP receive FIFO\n");
-+			dev_dbg(dev, "overflow occurred in the PNP receive FIFO\n");
- 
- 		if (sub_reg & PCIE_CORE_INT_CRFO)
--			dev_dbg(rockchip->dev, "overflow occurred in the completion receive FIFO\n");
-+			dev_dbg(dev, "overflow occurred in the completion receive FIFO\n");
- 
- 		if (sub_reg & PCIE_CORE_INT_RT)
--			dev_dbg(rockchip->dev, "replay timer timed out\n");
-+			dev_dbg(dev, "replay timer timed out\n");
- 
- 		if (sub_reg & PCIE_CORE_INT_RTR)
--			dev_dbg(rockchip->dev, "replay timer rolled over after 4 transmissions of the same TLP\n");
-+			dev_dbg(dev, "replay timer rolled over after 4 transmissions of the same TLP\n");
- 
- 		if (sub_reg & PCIE_CORE_INT_PE)
--			dev_dbg(rockchip->dev, "phy error detected on receive side\n");
-+			dev_dbg(dev, "phy error detected on receive side\n");
- 
- 		if (sub_reg & PCIE_CORE_INT_MTR)
--			dev_dbg(rockchip->dev, "malformed TLP received from the link\n");
-+			dev_dbg(dev, "malformed TLP received from the link\n");
- 
- 		if (sub_reg & PCIE_CORE_INT_UCR)
--			dev_dbg(rockchip->dev, "malformed TLP received from the link\n");
-+			dev_dbg(dev, "malformed TLP received from the link\n");
- 
- 		if (sub_reg & PCIE_CORE_INT_FCE)
--			dev_dbg(rockchip->dev, "an error was observed in the flow control advertisements from the other side\n");
-+			dev_dbg(dev, "an error was observed in the flow control advertisements from the other side\n");
- 
- 		if (sub_reg & PCIE_CORE_INT_CT)
--			dev_dbg(rockchip->dev, "a request timed out waiting for completion\n");
-+			dev_dbg(dev, "a request timed out waiting for completion\n");
- 
- 		if (sub_reg & PCIE_CORE_INT_UTC)
--			dev_dbg(rockchip->dev, "unmapped TC error\n");
-+			dev_dbg(dev, "unmapped TC error\n");
- 
- 		if (sub_reg & PCIE_CORE_INT_MMVC)
--			dev_dbg(rockchip->dev, "MSI mask register changes\n");
-+			dev_dbg(dev, "MSI mask register changes\n");
- 
- 		rockchip_pcie_write(rockchip, sub_reg, PCIE_CORE_INT_STATUS);
- 	} else if (reg & PCIE_CLIENT_INT_PHY) {
--		dev_dbg(rockchip->dev, "phy link changes\n");
-+		dev_dbg(dev, "phy link changes\n");
- 		rockchip_pcie_clr_bw_int(rockchip);
- 	}
- 
-@@ -643,32 +645,33 @@ static irqreturn_t rockchip_pcie_subsys_irq_handler(int irq, void *arg)
- static irqreturn_t rockchip_pcie_client_irq_handler(int irq, void *arg)
- {
- 	struct rockchip_pcie *rockchip = arg;
-+	struct device *dev = rockchip->dev;
- 	u32 reg;
- 
- 	reg = rockchip_pcie_read(rockchip, PCIE_CLIENT_INT_STATUS);
- 	if (reg & PCIE_CLIENT_INT_LEGACY_DONE)
--		dev_dbg(rockchip->dev, "legacy done interrupt received\n");
-+		dev_dbg(dev, "legacy done interrupt received\n");
- 
- 	if (reg & PCIE_CLIENT_INT_MSG)
--		dev_dbg(rockchip->dev, "message done interrupt received\n");
-+		dev_dbg(dev, "message done interrupt received\n");
- 
- 	if (reg & PCIE_CLIENT_INT_HOT_RST)
--		dev_dbg(rockchip->dev, "hot reset interrupt received\n");
-+		dev_dbg(dev, "hot reset interrupt received\n");
- 
- 	if (reg & PCIE_CLIENT_INT_DPA)
--		dev_dbg(rockchip->dev, "dpa interrupt received\n");
-+		dev_dbg(dev, "dpa interrupt received\n");
- 
- 	if (reg & PCIE_CLIENT_INT_FATAL_ERR)
--		dev_dbg(rockchip->dev, "fatal error interrupt received\n");
-+		dev_dbg(dev, "fatal error interrupt received\n");
- 
- 	if (reg & PCIE_CLIENT_INT_NFATAL_ERR)
--		dev_dbg(rockchip->dev, "no fatal error interrupt received\n");
-+		dev_dbg(dev, "no fatal error interrupt received\n");
- 
- 	if (reg & PCIE_CLIENT_INT_CORR_ERR)
--		dev_dbg(rockchip->dev, "correctable error interrupt received\n");
-+		dev_dbg(dev, "correctable error interrupt received\n");
- 
- 	if (reg & PCIE_CLIENT_INT_PHY)
--		dev_dbg(rockchip->dev, "phy interrupt received\n");
-+		dev_dbg(dev, "phy interrupt received\n");
- 
- 	rockchip_pcie_write(rockchip, reg & (PCIE_CLIENT_INT_LEGACY_DONE |
- 			      PCIE_CLIENT_INT_MSG | PCIE_CLIENT_INT_HOT_RST |
-@@ -685,6 +688,7 @@ static void rockchip_pcie_legacy_int_handler(struct irq_desc *desc)
- {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
- 	struct rockchip_pcie *rockchip;
-+	struct device *dev = rockchip->dev;
- 	u32 reg;
- 	u32 hwirq;
- 	u32 virq;
-@@ -704,7 +708,7 @@ static void rockchip_pcie_legacy_int_handler(struct irq_desc *desc)
- 		if (virq)
- 			generic_handle_irq(virq);
- 		else
--			dev_err(rockchip->dev, "unexpected IRQ, INT%d\n", hwirq);
-+			dev_err(dev, "unexpected IRQ, INT%d\n", hwirq);
- 	}
- 
- 	chained_irq_exit(chip, desc);
-@@ -876,12 +880,13 @@ static int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
- 
- static int rockchip_pcie_set_vpcie(struct rockchip_pcie *rockchip)
- {
-+	struct device *dev = rockchip->dev;
- 	int err;
- 
- 	if (!IS_ERR(rockchip->vpcie3v3)) {
- 		err = regulator_enable(rockchip->vpcie3v3);
- 		if (err) {
--			dev_err(rockchip->dev, "fail to enable vpcie3v3 regulator\n");
-+			dev_err(dev, "fail to enable vpcie3v3 regulator\n");
- 			goto err_out;
- 		}
- 	}
-@@ -889,7 +894,7 @@ static int rockchip_pcie_set_vpcie(struct rockchip_pcie *rockchip)
- 	if (!IS_ERR(rockchip->vpcie1v8)) {
- 		err = regulator_enable(rockchip->vpcie1v8);
- 		if (err) {
--			dev_err(rockchip->dev, "fail to enable vpcie1v8 regulator\n");
-+			dev_err(dev, "fail to enable vpcie1v8 regulator\n");
- 			goto err_disable_3v3;
- 		}
- 	}
-@@ -897,7 +902,7 @@ static int rockchip_pcie_set_vpcie(struct rockchip_pcie *rockchip)
- 	if (!IS_ERR(rockchip->vpcie0v9)) {
- 		err = regulator_enable(rockchip->vpcie0v9);
- 		if (err) {
--			dev_err(rockchip->dev, "fail to enable vpcie0v9 regulator\n");
-+			dev_err(dev, "fail to enable vpcie0v9 regulator\n");
- 			goto err_disable_1v8;
- 		}
- 	}
-@@ -1082,7 +1087,7 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
- 
- 	err = rockchip_pcie_set_vpcie(rockchip);
- 	if (err) {
--		dev_err(rockchip->dev, "failed to set vpcie regulator\n");
-+		dev_err(dev, "failed to set vpcie regulator\n");
- 		goto err_set_vpcie;
- 	}
- 
-@@ -1117,7 +1122,7 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
- 			io_bus_addr = io->start - win->offset;
- 			err = pci_remap_iospace(io, io_base);
- 			if (err) {
--				dev_warn(rockchip->dev, "error %d: failed to map resource %pR\n",
-+				dev_warn(dev, "error %d: failed to map resource %pR\n",
- 					 err, io);
- 				continue;
- 			}
+ 	gpiod_set_value(rockchip->ep_gpio, 1);
