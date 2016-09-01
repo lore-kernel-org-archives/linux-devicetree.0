@@ -1,47 +1,39 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 01/26] dt-bindings: display: display-timing: Add property to configure sync drive edge
-Date: Thu, 1 Sep 2016 14:22:55 +0300
-Message-ID: <20160901112320.15246-2-peter.ujfalusi@ti.com>
-References: <20160901112320.15246-1-peter.ujfalusi@ti.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V6 1/2] thermal: max77620: Add DT binding doc for thermal
+ driver
+Date: Thu, 1 Sep 2016 16:42:09 +0530
+Message-ID: <57C80D09.9020905@nvidia.com>
+References: <1471940427-2063-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160901112320.15246-1-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, airlied@linux.ie, tomi.valkeinen@ti.com
-Cc: daniel.vetter@ffwll.ch, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1471940427-2063-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There are display panels which demands that the sync signal is driven on
-different edge than the pixel data.
-With the syncclk-active property we can specify the clk edge to be used to
-drive the sync signal. When the property is missing it indicates that the
-sync is driven on the same edge as the pixel data.
+Hi Zhang,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/display/panel/display-timing.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+On Tuesday 23 August 2016 01:50 PM, Laxman Dewangan wrote:
+> Maxim Semiconductor MAX77620 supports alarm interrupts when
+> its die temperature crosses 120C and 140C. These threshold
+> temperatures are not configurable.
+>
+> Add DT binding document to details out the DT property related
+> to MAX77620 thermal functionality.
+>
+> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
 
-diff --git a/Documentation/devicetree/bindings/display/panel/display-timing.txt b/Documentation/devicetree/bindings/display/panel/display-timing.txt
-index e1d4a0b59612..1436292e7a56 100644
---- a/Documentation/devicetree/bindings/display/panel/display-timing.txt
-+++ b/Documentation/devicetree/bindings/display/panel/display-timing.txt
-@@ -32,6 +32,12 @@ optional properties:
- 			- active low  = drive pixel data on falling edge/
- 					sample data on rising edge
- 			- ignored     = ignored
-+ - syncclk-active: with
-+			- active high = drive sync on rising edge/
-+					sample sync on falling edge
-+			- active low  = drive sync on falling edge/
-+					sample sync on rising edge
-+			- omitted     = same configuration as pixelclk-active
-  - interlaced (bool): boolean to enable interlaced mode
-  - doublescan (bool): boolean to enable doublescan mode
-  - doubleclk (bool): boolean to enable doubleclock mode
--- 
-2.9.3
+Are you queuing thermal patches? If yes then please consider this also 
+if it is fine.
+
+Thanks,
+Laxman
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
