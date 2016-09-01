@@ -1,95 +1,164 @@
-From: Ziyuan Xu <xzy.xu@rock-chips.com>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support
- for rk3399
-Date: Thu, 1 Sep 2016 14:56:46 +0800
-Message-ID: <411dfc7b-1089-61a8-7a7e-6f378c0a6074@rock-chips.com>
-References: <20160827134103.28160-1-xzy.xu@rock-chips.com>
- <20160827134103.28160-3-xzy.xu@rock-chips.com>
- <2ab8ab94-fa4d-2cd6-5805-a92ac5f9697e@rock-chips.com>
- <57C3A30B.5080707@rock-chips.com>
- <ceba6a89-6945-58c5-62e4-7d842cfa2312@rock-chips.com>
- <CAD=FV=W=LkVAm187hxp0Kbjxi5kSThwKnCMX+tr8SXQ-v_xQTQ@mail.gmail.com>
- <77f5cff1-80a2-76b3-40e9-f77caced2257@rock-chips.com>
- <CAD=FV=WmoyoZmV_uj281S37ZpWqg8Dr2U8ntkD2Sr58qbcB0wg@mail.gmail.com>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v8 08/16] arm64: numa: Use pr_fmt()
+Date: Thu, 1 Sep 2016 14:54:59 +0800
+Message-ID: <1472712907-12700-9-git-send-email-thunder.leizhen@huawei.com>
+References: <1472712907-12700-1-git-send-email-thunder.leizhen@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WmoyoZmV_uj281S37ZpWqg8Dr2U8ntkD2Sr58qbcB0wg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Xing Zheng <zhengxing@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Frank Wang <frank.wang@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Elaine Zhang <zhangqing@rock-chips.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, David Wu <david.wu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, Jianqun Xu <j>
+Content-Type: text/plain
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <1472712907-12700-1-git-send-email-thunder.leizhen@huawei.com>
+Sender: owner-linux-mm@kvack.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank
+ Rowand <frowand.list@gmail.com>, devicetree <devicetree@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, linux-mm <linux-mm@kvack.org>
+Cc: Zefan Li <lizefan@huawei.com>, Xinwei Hu <huxinwei@huawei.com>, Tianhong
+ Ding <dingtianhong@huawei.com>, Hanjun Guo <guohanjun@huawei.com>, Zhen Lei <thunder.leizhen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+
+Use pr_fmt to prefix kernel output, and remove duplicated msg
+of NUMA turned off.
+
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+---
+ arch/arm64/mm/numa.c | 37 ++++++++++++++++++-------------------
+ 1 file changed, 18 insertions(+), 19 deletions(-)
+
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index d97c6e2..0e75b53 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -17,6 +17,8 @@
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+
++#define pr_fmt(fmt) "NUMA: " fmt
++
+ #include <linux/acpi.h>
+ #include <linux/bootmem.h>
+ #include <linux/memblock.h>
+@@ -38,10 +40,9 @@ static __init int numa_parse_early_param(char *opt)
+ {
+ 	if (!opt)
+ 		return -EINVAL;
+-	if (!strncmp(opt, "off", 3)) {
+-		pr_info("%s\n", "NUMA turned off");
++	if (!strncmp(opt, "off", 3))
+ 		numa_off = true;
+-	}
++
+ 	return 0;
+ }
+ early_param("numa", numa_parse_early_param);
+@@ -110,7 +111,7 @@ static void __init setup_node_to_cpumask_map(void)
+ 		set_cpu_numa_node(cpu, NUMA_NO_NODE);
+
+ 	/* cpumask_of_node() will now work */
+-	pr_debug("NUMA: Node to cpumask map for %d nodes\n", nr_node_ids);
++	pr_debug("Node to cpumask map for %d nodes\n", nr_node_ids);
+ }
+
+ /*
+@@ -145,13 +146,13 @@ int __init numa_add_memblk(int nid, u64 start, u64 end)
+
+ 	ret = memblock_set_node(start, (end - start), &memblock.memory, nid);
+ 	if (ret < 0) {
+-		pr_err("NUMA: memblock [0x%llx - 0x%llx] failed to add on node %d\n",
++		pr_err("memblock [0x%llx - 0x%llx] failed to add on node %d\n",
+ 			start, (end - 1), nid);
+ 		return ret;
+ 	}
+
+ 	node_set(nid, numa_nodes_parsed);
+-	pr_info("NUMA: Adding memblock [0x%llx - 0x%llx] on node %d\n",
++	pr_info("Adding memblock [0x%llx - 0x%llx] on node %d\n",
+ 			start, (end - 1), nid);
+ 	return ret;
+ }
+@@ -166,19 +167,18 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+ 	void *nd;
+ 	int tnid;
+
+-	pr_info("NUMA: Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
+-			nid, start_pfn << PAGE_SHIFT,
+-			(end_pfn << PAGE_SHIFT) - 1);
++	pr_info("Initmem setup node %d [mem %#010Lx-%#010Lx]\n",
++		nid, start_pfn << PAGE_SHIFT, (end_pfn << PAGE_SHIFT) - 1);
+
+ 	nd_pa = memblock_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
+ 	nd = __va(nd_pa);
+
+ 	/* report and initialize */
+-	pr_info("NUMA: NODE_DATA [mem %#010Lx-%#010Lx]\n",
++	pr_info("NODE_DATA [mem %#010Lx-%#010Lx]\n",
+ 		nd_pa, nd_pa + nd_size - 1);
+ 	tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
+ 	if (tnid != nid)
+-		pr_info("NUMA: NODE_DATA(%d) on node %d\n", nid, tnid);
++		pr_info("NODE_DATA(%d) on node %d\n", nid, tnid);
+
+ 	node_data[nid] = nd;
+ 	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
+@@ -235,8 +235,7 @@ static int __init numa_alloc_distance(void)
+ 			numa_distance[i * numa_distance_cnt + j] = i == j ?
+ 				LOCAL_DISTANCE : REMOTE_DISTANCE;
+
+-	pr_debug("NUMA: Initialized distance table, cnt=%d\n",
+-			numa_distance_cnt);
++	pr_debug("Initialized distance table, cnt=%d\n", numa_distance_cnt);
+
+ 	return 0;
+ }
+@@ -257,20 +256,20 @@ static int __init numa_alloc_distance(void)
+ void __init numa_set_distance(int from, int to, int distance)
+ {
+ 	if (!numa_distance) {
+-		pr_warn_once("NUMA: Warning: distance table not allocated yet\n");
++		pr_warn_once("Warning: distance table not allocated yet\n");
+ 		return;
+ 	}
+
+ 	if (from >= numa_distance_cnt || to >= numa_distance_cnt ||
+ 			from < 0 || to < 0) {
+-		pr_warn_once("NUMA: Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
++		pr_warn_once("Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
+ 			    from, to, distance);
+ 		return;
+ 	}
+
+ 	if ((u8)distance != distance ||
+ 	    (from == to && distance != LOCAL_DISTANCE)) {
+-		pr_warn_once("NUMA: Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
++		pr_warn_once("Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
+ 			     from, to, distance);
+ 		return;
+ 	}
+@@ -297,7 +296,7 @@ static int __init numa_register_nodes(void)
+ 	/* Check that valid nid is set to memblks */
+ 	for_each_memblock(memory, mblk)
+ 		if (mblk->nid == NUMA_NO_NODE || mblk->nid >= MAX_NUMNODES) {
+-			pr_warn("NUMA: Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
++			pr_warn("Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
+ 				mblk->nid, mblk->base,
+ 				mblk->base + mblk->size - 1);
+ 			return -EINVAL;
+@@ -369,8 +368,8 @@ static int __init dummy_numa_init(void)
+
+ 	if (numa_off)
+ 		pr_info("NUMA disabled\n"); /* Forced off on command line. */
+-	pr_info("NUMA: Faking a node at [mem %#018Lx-%#018Lx]\n",
+-	       0LLU, PFN_PHYS(max_pfn) - 1);
++	pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
++		0LLU, PFN_PHYS(max_pfn) - 1);
+
+ 	for_each_memblock(memory, mblk) {
+ 		ret = numa_add_memblk(0, mblk->base, mblk->base + mblk->size);
+--
+2.5.0
 
 
-On 2016年09月01日 12:20, Doug Anderson wrote:
-> Hi,
->
-> On Wed, Aug 31, 2016 at 7:29 PM, Ziyuan Xu <xzy.xu@rock-chips.com> wrote:
->>> This is fine to pick up _only_ if you don't care about suspend/resume.
->>> If you care about suspend/resume then someone needs to first write a
->>> patch that will re-init all "corecfg" values after power is turned on.
->>
->> Do you mean corecfg_clockmultiplier and corecfg_baseclkfreq, if yes, we
->> don't need to strore/re-init it after resume.
->> corecfg_clockmultiplier is only used to fetch host->clk_mul, and
->> host->clk_mul has been a fixed value at run-time, unless driver unbind.
->> The same as corecfg_clockmultiplier, corecfg_baseclkfreq is used to check
->> the xin_clk at probe time, we don't reference it at run-time.
->> BTW, I have tested suspend/resume on rk3399 prior to this sumbit, eMMC works
->> fine.
-> I guess I don't actually know how the corecfg_clockmultiplier and
-> corecfg_baseclkfreq fields are actually used, but I presume that they
-> actually do something useful and aren't used to just communicate back
-> to software?
-
-Take corecfg_clockmultiplier as example.
-1. sdhci driver fetch host->clk_mul from corecfg_clockmultiplier
-2. mmc->f_min and mmc->f_max are calculated via host->clk_mul, they're 
-used for further initialization.
-3. if the corecfg_clockmultiplier is incorrect, sdhci will use improper 
-frequency to play.
-
-I think we don't need to store it due to it's a fixed value at run-time, 
-even if it is reset after a power cycle, the above will not be changed 
-via software, except for dirver unbind .
-
->
-> I know that:
->
-> 1. If I don't pick this patch and I suspend/resume,
-> corecfg_clockmultiplier and corecfg_baseclkfreq are still fine after
-> suspend / resume.
->
-> 2. If I do pick this patch and I suspend/resume,
-> corecfg_clockmultiplier and corecfg_baseclkfreq are wrong after
-> suspend/resume (tested by reading /dev/mem directly from userspace
-> after suspend/resume).
->
->
-> Are you saying that it is unimportant that corecfg_clockmultiplier and
-> corecfg_baseclkfreq are wrong?
-
-Yup, corecfg_* stuff will be reset after a power cycle.
-I mean that we need only to guarantee they're correct at probe time.
-
->
->>> Technically I think this should probably use "pm runtime" and not
->>> normal suspend/resume hooks.  Any time we end up pm runtime suspended
->>> then I think our power will go off (because of genpd?) and we need to
->>> restore values.
->>
->> I understand your consideration. BUT genpd is in charge of on/off pd if the
->> corresponding device node has "power-domains" property. RPM is unnecessary
->> for this situation, we will not use autosuspend, right?
->>
->> @shawn, what's your opinion?
-> I haven't dug.  If Runtime PM isn't enabled for sdhci-of-arasan then I
-> guess we can just worry about suspend/resume, though.
->
-> -Doug
->
->
->
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
