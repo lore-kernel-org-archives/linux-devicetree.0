@@ -1,74 +1,46 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support
- for rk3399
-Date: Wed, 31 Aug 2016 21:20:16 -0700
-Message-ID: <CAD=FV=WmoyoZmV_uj281S37ZpWqg8Dr2U8ntkD2Sr58qbcB0wg@mail.gmail.com>
-References: <20160827134103.28160-1-xzy.xu@rock-chips.com> <20160827134103.28160-3-xzy.xu@rock-chips.com>
- <2ab8ab94-fa4d-2cd6-5805-a92ac5f9697e@rock-chips.com> <57C3A30B.5080707@rock-chips.com>
- <ceba6a89-6945-58c5-62e4-7d842cfa2312@rock-chips.com> <CAD=FV=W=LkVAm187hxp0Kbjxi5kSThwKnCMX+tr8SXQ-v_xQTQ@mail.gmail.com>
- <77f5cff1-80a2-76b3-40e9-f77caced2257@rock-chips.com>
+From: Winter Wang <wente.wang-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: imx6ul-pico-hobbit: add adc081c support
+Date: Thu, 1 Sep 2016 12:34:24 +0800
+Message-ID: <1472704464-7520-1-git-send-email-wente.wang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <77f5cff1-80a2-76b3-40e9-f77caced2257-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>Jianqun Xu <j>
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+enable ADC081C on pico-hobbit
 
-On Wed, Aug 31, 2016 at 7:29 PM, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
->> This is fine to pick up _only_ if you don't care about suspend/resume.
->> If you care about suspend/resume then someone needs to first write a
->> patch that will re-init all "corecfg" values after power is turned on.
->
->
-> Do you mean corecfg_clockmultiplier and corecfg_baseclkfreq, if yes, we
-> don't need to strore/re-init it after resume.
-> corecfg_clockmultiplier is only used to fetch host->clk_mul, and
-> host->clk_mul has been a fixed value at run-time, unless driver unbind.
-> The same as corecfg_clockmultiplier, corecfg_baseclkfreq is used to check
-> the xin_clk at probe time, we don't reference it at run-time.
-> BTW, I have tested suspend/resume on rk3399 prior to this sumbit, eMMC works
-> fine.
+Signed-off-by: Winter Wang <wente.wang-3arQi8VN3Tc@public.gmane.org>
+---
+Changes from v1 to v2:
+	Add unit address for adc081
+	Remove Chang-ID in commit message
 
-I guess I don't actually know how the corecfg_clockmultiplier and
-corecfg_baseclkfreq fields are actually used, but I presume that they
-actually do something useful and aren't used to just communicate back
-to software?
+ arch/arm/boot/dts/imx6ul-pico-hobbit.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I know that:
+diff --git a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+index c72ee8b..cefef49 100644
+--- a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
++++ b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+@@ -220,6 +220,12 @@
+ 			};
+ 		};
+ 	};
++
++	adc: adc081c@50 {
++		compatible = "ti,adc081c";
++		reg = <0x50>;
++		vref-supply = <&reg_3p3v>;
++	};
+ };
+ 
+ &i2c2 {
+-- 
+1.9.1
 
-1. If I don't pick this patch and I suspend/resume,
-corecfg_clockmultiplier and corecfg_baseclkfreq are still fine after
-suspend / resume.
-
-2. If I do pick this patch and I suspend/resume,
-corecfg_clockmultiplier and corecfg_baseclkfreq are wrong after
-suspend/resume (tested by reading /dev/mem directly from userspace
-after suspend/resume).
-
-
-Are you saying that it is unimportant that corecfg_clockmultiplier and
-corecfg_baseclkfreq are wrong?
-
->> Technically I think this should probably use "pm runtime" and not
->> normal suspend/resume hooks.  Any time we end up pm runtime suspended
->> then I think our power will go off (because of genpd?) and we need to
->> restore values.
->
->
-> I understand your consideration. BUT genpd is in charge of on/off pd if the
-> corresponding device node has "power-domains" property. RPM is unnecessary
-> for this situation, we will not use autosuspend, right?
->
-> @shawn, what's your opinion?
-
-I haven't dug.  If Runtime PM isn't enabled for sdhci-of-arasan then I
-guess we can just worry about suspend/resume, though.
-
--Doug
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
