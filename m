@@ -1,77 +1,41 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] regulator: pwm: Add support for a fixed delay
- after duty cycle changes
-Date: Thu, 1 Sep 2016 20:24:19 +0100
-Message-ID: <20160901192419.GL5967@sirena.org.uk>
-References: <1472617277-30814-1-git-send-email-dianders@chromium.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/3] ARM: dts: r7s72100: add ethernet clock to device tree
+Date: Thu, 1 Sep 2016 21:35:15 +0200
+Message-ID: <CAMuHMdV3iNL_WLrEDUJUcSoRbjx0KVOxrErajF3QdV301bzaQQ@mail.gmail.com>
+References: <20160901155430.23400-1-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2284081235463652093=="
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1472617277-30814-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160901155430.23400-1-chris.brandt@renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 1, 2016 at 5:54 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
---===============2284081235463652093==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="HBg0C3yr6HVa1ZCc"
-Content-Disposition: inline
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+But as Sergei mentioned, the addition of mstp7_clks to the .dtsi really belongs
+in this patch.
 
---HBg0C3yr6HVa1ZCc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Gr{oetje,eeting}s,
 
-On Tue, Aug 30, 2016 at 09:21:15PM -0700, Douglas Anderson wrote:
+                        Geert
 
-> A change of the duty cycle doesn't necessarily cause an immediate switch
-> to the target voltage.  On many PWM regulators there is a fixed "settle
-> time" (irrespective of the jump size) that we need to wait after an
-> upward jump.  This change introduces the device tree property
-> "settle-time-up-us" which allows us to specify a fixed delay after a
-> voltage increase.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Why is this specific to regulators implemented with PWM controllers?
-Most DCDCs have a PWM element and the concept of a hard time limit for
-transition rather than a ramp rate doesn't seem like it'd be unique.
-
---HBg0C3yr6HVa1ZCc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXyIBiAAoJECTWi3JdVIfQOD8H/0qFr0dDOkmyN+xoLzbttad0
-A8vebSkbaWa2XxU5XCCFbm0r06OqEOWoEOsGlw8tvDAouFDOJjhQcyp6X46PQ0Bq
-dcR7BNXyKUDjeiUcMs+WeKSJ9j5eIUkaeoquV5q1IJag0q3p8Z0ZAp5bJofS41DA
-dxLdvOwNuPthl0Feo614a7wSV8wyjyItcEDgit58Q49bTnRxFHWVWobXTQNghlAh
-FuvAfFLMJWL9YZF42IwwDqeN+cAhkJNreCLMNP+gHoSk94Mxllsjs3/NKnwUJ8Un
-SlZjKP0fBXhDjk7AMBe2A4TtxWEorYAJ2SLTg1YaMnue+PB/RNDoEGiElT4ada0=
-=mzHm
------END PGP SIGNATURE-----
-
---HBg0C3yr6HVa1ZCc--
-
-
---===============2284081235463652093==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Linux-rockchip mailing list
-Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
---===============2284081235463652093==--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
