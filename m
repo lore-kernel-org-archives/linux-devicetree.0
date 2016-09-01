@@ -1,43 +1,84 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 5/6] ARM: dts: s3c2416: Use macros for pinctrl
- configuration
-Date: Thu, 01 Sep 2016 13:17:13 +0200
-Message-ID: <5137342.oSWmFr9Y8D@wuerfel>
-References: <1472721715-2833-1-git-send-email-k.kozlowski@samsung.com>
- <1608454.1ZuTJsprje@amdc1976>
- <e37fbfa0-f30c-ab34-3428-fb9a66182089@samsung.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 3/4] doc: bindings: mfd: act8945a: Update the example
+Date: Thu, 1 Sep 2016 12:22:51 +0100
+Message-ID: <20160901112251.GK4921@dell>
+References: <1472722201-31872-1-git-send-email-wenyou.yang@atmel.com>
+ <1472722201-31872-4-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e37fbfa0-f30c-ab34-3428-fb9a66182089@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, javier@osg.samsung.com, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1472722201-31872-4-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, September 1, 2016 1:12:18 PM CEST Krzysztof Kozlowski wrote:
-> > 
-> > Shouldn't macros that are also used by s3c* be named as
-> > SAMSUNG_PIN_FUNC_2 etc. (s3c* SoCs are not Exynos)?
+On Thu, 01 Sep 2016, Wenyou Yang wrote:
+
+> Since the act8945a-charger is regarded as a sub-device and it using
+> "interrupts" property, update the examples section.
 > 
-> Right, this is the inconsistency. The problem with "samsung" prefix is
-> that there is no guarantee it will be like that for newer SoCs. How
-> about one of:
-> 1. using the oldest prefix (S3C24XX in this case),
-> 2. duplicating them per SoC family (so S3C24XX, S3C64XX, EXYNOS).
-> ?
+> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+> 
+> Changes in v9: None
+> Changes in v8: None
+> Changes in v7: None
+> Changes in v6: None
+> Changes in v4: None
+> 
+>  Documentation/devicetree/bindings/mfd/act8945a.txt | 22 +++++++++++++++-------
+>  1 file changed, 15 insertions(+), 7 deletions(-)
 
-I'd suggest living with the inconsistency and using EXYNOS as the prefix,
-as that is the most common one these days, even if the other ones
-predate it.
+This is a functional change.  I'll require a DT Ack.
 
-	Arnd
+> diff --git a/Documentation/devicetree/bindings/mfd/act8945a.txt b/Documentation/devicetree/bindings/mfd/act8945a.txt
+> index f712830..462819a 100644
+> --- a/Documentation/devicetree/bindings/mfd/act8945a.txt
+> +++ b/Documentation/devicetree/bindings/mfd/act8945a.txt
+> @@ -14,13 +14,6 @@ Example:
+>  		reg = <0x5b>;
+>  		status = "okay";
+>  
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&pinctrl_charger_chglev>;
+> -		active-semi,chglev-gpio = <&pioA 12 GPIO_ACTIVE_HIGH>;
+> -		active-semi,input-voltage-threshold-microvolt = <6600>;
+> -		active-semi,precondition-timeout = <40>;
+> -		active-semi,total-timeout = <3>;
+> -
+>  		active-semi,vsel-high;
+>  
+>  		regulators {
+> @@ -73,4 +66,19 @@ Example:
+>  				regulator-always-on;
+>  			};
+>  		};
+> +
+> +		charger {
+> +			compatible = "active-semi,act8945a-charger";
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
+> +			interrupt-parent = <&pioA>;
+> +			interrupts = <45 GPIO_ACTIVE_LOW>;
+> +
+> +			active-semi,chglev-gpios = <&pioA 12 GPIO_ACTIVE_HIGH>;
+> +			active-semi,lbo-gpios = <&pioA 72 GPIO_ACTIVE_LOW>;
+> +			active-semi,input-voltage-threshold-microvolt = <6600>;
+> +			active-semi,precondition-timeout = <40>;
+> +			active-semi,total-timeout = <3>;
+> +			status = "okay";
+> +		};
+>  	};
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
