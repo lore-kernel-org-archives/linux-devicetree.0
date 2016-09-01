@@ -1,17 +1,11 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [v10,2/2] PCI: Rockchip: Add Rockchip PCIe controller support
-Date: Thu, 1 Sep 2016 12:48:52 -0500
-Message-ID: <20160901174852.GC9471@localhost>
-References: <1471570498-3284-1-git-send-email-shawn.lin@rock-chips.com>
- <20160831181754.GA7460@roeck-us.net>
- <9075a2c1-c787-986f-31b4-4d5b7c92b771@rock-chips.com>
- <20160901163455.GA9471@localhost> <20160901171400.GA4093@localhost>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 0/6] Support the rk3399 gmac and pd function
+Date: Fri,  2 Sep 2016 01:49:58 +0800
+Message-ID: <1472752204-8924-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160901171400.GA4093@localhost>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -21,91 +15,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
 Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders@chromium.>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 01, 2016 at 10:14:01AM -0700, Brian Norris wrote:
-> On Thu, Sep 01, 2016 at 11:34:55AM -0500, Bjorn Helgaas wrote:
-> > In the interest of making progress, I made most of the changes Guenter
-> > suggested (thanks very much, Guenter!) and made some more of my own on
-> > top of those.
-> 
-> I'm not sure, but was this change your idea Bjorn?
+This patch have the following changes:
 
-Yep.
+7edf13e net: stmmac: dwmac-rk: add rk3366 & rk3399 specific data
+26e004e net: stmmac: dwmac-rk: fixes the gmac resume after PD on/off
+b216c2f net: stmmac: dwmac-rk: add pd_gmac support for rk3399
+848bb71 arm64: dts: rockchip: add the gmac power domain on rk3399
+508e41f arm64: dts: rockchip: add the gmac needed node for rk3399
+fb26795 arm64: dts: rockchip: enable the gmac for rk3399 evb board
 
-> commit 88cb3f59d73e261a3cd1957ff392f98c9916a5d1
-> Author: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Date:   Thu Sep 1 10:27:44 2016 -0500
-> 
->     Simplify the confusing HIWORD_UPDATE scheme.
-> 
-> [Which I'll summarize here; you're replacing the macro:
-> 
-> -/*
-> -  * The higher 16-bit of this register is used for write protection
-> -  * only if BIT(x + 16) set to 1 the BIT(x) can be written.
-> -  */
-> -#define HIWORD_UPDATE(val, mask, shift) \
-> -       ((val) << (shift) | (mask) << ((shift) + 16))
-> 
-> with its expansions:
-> 
-> +
-> +/*
-> + * The higher 16-bit of this register is used for write protection
-> + * only if BIT(x + 16) set to 1 the BIT(x) can be written.
-> + */
-> +#define PCIE_CLIENT_CONF_ENABLE                (0x00010000 | 0x0001)
-> +#define PCIE_CLIENT_LINK_TRAIN_ENABLE  (0x00020000 | 0x0002)
-> +#define PCIE_CLIENT_ARI_ENABLE         (0x00080000 | 0x0008)
-> +#define PCIE_CLIENT_CONF_LANE_NUM(x)   (0x00300000 | (((x >> 1) & 3) << 4)
-> +#define PCIE_CLIENT_MODE_RC            (0x00400000 | 0x0040)
-> +#define PCIE_CLIENT_GEN_SEL(x)         (0x00800000 | ((x & 1) << 7)
-> +#define  PCIE_CLIENT_GEN_SEL_0                 0
-> +#define  PCIE_CLIENT_GEN_SEL_2                 1
-> 
-> Full change can be had by:
-> git fetch git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host-rockchip-wip
-> ]
-> 
-> 
-> The use of HIWORD_UPDATE can indeed be a bit confusing, IMO, but this is
-> really a common Rockchip-ism that, once you read several of their
-> drivers, can make a little more sense. If you grep around, it's in at
-> least their clock, ethernet, SDHCI, PHY, and DP/DRM drivers. I might
-> defer to Heiko (upstream maintainer of Rockchip code) for a decision.
-> Maybe there's some intermediate ground where we keep the HIWORK_UPDATE()
-> logic (it does make sure we get the 16-bit shift right, I think) while
-> still refactoring a few other bits (like PCIE_CLIENT_CONF_LANE_NUM() and
-> PCIE_CLIENT_GEN_SEL() for wrapping HIWORK_UPDATE()?).
-> 
-> Anyway, just a thought. If it really is most understandable to write it
-> this way, then maybe it's fine to be different than the other 16
-> rockchip files that have this pattern.
+Hi David,
+The patch 1,2,3 is related to the rockchip net/stammc driver,
 
-Hmm.  I did look at the other files, so I know this isn't a PCIe
-special.  HIWORD_UPDATE is ugly as sin, especially in cases like this
-where we're always writing a constant value and it takes three
-#defines plus HIWORD_UPDATE itself, e.g.,
+Hi Heiko,
+The patch 4,5,6 is related to the dts changes.
 
-  -          HIWORD_UPDATE(PCIE_CLIENT_CONF_ENABLE,
-  -                        PCIE_CLIENT_CONF_ENABLE_MASK,
-  -                        PCIE_CLIENT_CONF_ENABLE_SHIFT) |
+The History version:
 
-vs this:
+v1: https://lkml.org/lkml/2016/8/30/668
+v2: https://lkml.org/lkml/2016/8/31/27
+v3: https://lkml.org/lkml/2016/8/31/981
 
-  +                   PCIE_CLIENT_CONF_ENABLE |
+Thanks your reviewing!
 
-For these constant cases, a HIWORD_UPDATE that generated the
-associated macro names would help readability a bit, though we'd still
-need the ugly #defines:
+-
+Caesar
 
-  #define HIWORD_UPDATE_CONSTANT(x) (HIWORD_UPDATE(x, x ## _MASK, x ## _SHIFT)
 
-  #define PCIE_CLIENT_CONF_ENABLE                0x1
-  #define PCIE_CLIENT_CONF_ENABLE_SHIFT          0
-  #define PCIE_CLIENT_CONF_ENABLE_MASK           0x1
+Changes in v4:
+- Fixes from the original patch on https://patchwork.kernel.org/patch/9274557/
+- remove the Roger signed-off for domain patch.
+- The Roger had posted patch on https://patchwork.kernel.org/patch/9274561/.
+- re-fixup to original author.
 
-             HIWORD_UPDATE_CONSTANT(PCIE_CLIENT_CONF_ENABLE) |
+Changes in v3:
+- leave into two patches based on patchv2, and fix nits and commit, as
+  comment on https://patchwork.kernel.org/patch/9306339/
+- generate a patch from https://patchwork.kernel.org/patch/9306339/.
+
+Changes in v2:
+- rk_gmac_powerup instead of the rk_gmac_init.
+- fixes the build error on next kernel.
+- Fixes the order, ss Heiko commnets on
+  https://patchwork.kernel.org/patch/9305991/
+
+Caesar Wang (1):
+  arm64: dts: rockchip: add the gmac power domain on rk3399
+
+David Wu (1):
+  net: stmmac: dwmac-rk: add pd_gmac support for rk3399
+
+Roger Chen (4):
+  net: stmmac: dwmac-rk: add rk3366 & rk3399 specific data
+  net: stmmac: dwmac-rk: fixes the gmac resume after PD on/off
+  arm64: dts: rockchip: add the gmac needed node for rk3399
+  arm64: dts: rockchip: enable the gmac for rk3399 evb board
+
+ .../devicetree/bindings/net/rockchip-dwmac.txt     |   8 +-
+ arch/arm64/boot/dts/rockchip/rk3399-evb.dts        |  31 +++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  90 ++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     | 254 ++++++++++++++++++++-
+ 4 files changed, 372 insertions(+), 11 deletions(-)
+
+-- 
+1.9.1
