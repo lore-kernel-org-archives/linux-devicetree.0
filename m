@@ -1,140 +1,200 @@
 From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support
- for rk3399
-Date: Thu, 1 Sep 2016 11:23:42 +0800
-Message-ID: <12451b81-321e-b661-8f1c-25c91bffba54@rock-chips.com>
-References: <20160827134103.28160-1-xzy.xu@rock-chips.com>
- <20160827134103.28160-3-xzy.xu@rock-chips.com>
- <2ab8ab94-fa4d-2cd6-5805-a92ac5f9697e@rock-chips.com>
- <57C3A30B.5080707@rock-chips.com>
- <ceba6a89-6945-58c5-62e4-7d842cfa2312@rock-chips.com>
- <CAD=FV=W=LkVAm187hxp0Kbjxi5kSThwKnCMX+tr8SXQ-v_xQTQ@mail.gmail.com>
- <77f5cff1-80a2-76b3-40e9-f77caced2257@rock-chips.com>
+Subject: Re: [v10,2/2] PCI: Rockchip: Add Rockchip PCIe controller support
+Date: Thu, 1 Sep 2016 11:39:41 +0800
+Message-ID: <9075a2c1-c787-986f-31b4-4d5b7c92b771@rock-chips.com>
+References: <1471570498-3284-1-git-send-email-shawn.lin@rock-chips.com>
+ <20160831181754.GA7460@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <77f5cff1-80a2-76b3-40e9-f77caced2257-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20160831181754.GA7460-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-在 2016/9/1 10:29, Ziyuan Xu 写道:
-> Hi,
->
->
-> On 2016年09月01日 01:42, Doug Anderson wrote:
->> Hi,
->>
->> On Sun, Aug 28, 2016 at 8:25 PM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> wrote:
->>> On 2016/8/29 10:50, Elaine Zhang wrote:
->>>>
->>>>
->>>> On 08/27/2016 11:05 PM, Shawn Lin wrote:
->>>>> On 2016/8/27 21:41, Ziyuan Xu wrote:
->>>>>> Control power domain for eMMC via genpd to reduce power consumption.
->>>>>>
->>>>>> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>>>> Signed-off-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>>>>
->>>>> It looks nice to me. But this should be merged after applying that[0]
->>>>> as your patch will break bind/unbind test for sdhci-of-arasan on
->>>>> rk3399
->>>>> without it[0]. Moreover, Elaine should make sure that upstreamed
->>>>> rockchip power domain stuff would not off pd for emmc, *otherwise*, I
->>>>> should update my patch to make sure we update clkmul every time when
->>>>> doing suspend 2 resume..
->>>>>
->>>>>
->>>> Forgot to say:
->>>> If use pd, Although there is no call to power odd the pd_emmc,
->>>> it will be power off when the system doing suspend 2 resume.
->>>> (Because the system call
->>>> __device_suspend_noirq->pm_genpd_suspend_noirq->rockchip_pd_power_off)
->>>
->>> Thanks for explaining this. I checked the code a bit and actually I
->>> don't need to updata clkmul since it was recorded, although it is still
->>> reset to 0x10 reading from syscon. So for that, we can now pick it
->>> up without waiting for my sdhci-of-arasan's update.
->>>
->>> Reviewed-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> This is fine to pick up _only_ if you don't care about suspend/resume.
->> If you care about suspend/resume then someone needs to first write a
->> patch that will re-init all "corecfg" values after power is turned on.
->
-> Do you mean corecfg_clockmultiplier and corecfg_baseclkfreq, if yes, we
-> don't need to strore/re-init it after resume.
-> corecfg_clockmultiplier is only used to fetch host->clk_mul, and
-> host->clk_mul has been a fixed value at run-time, unless driver unbind.
-> The same as corecfg_clockmultiplier, corecfg_baseclkfreq is used to
-> check the xin_clk at probe time, we don't reference it at run-time.
+Hi Guenter,
 
-correct. That is why we don't need to update it even we power off pd.
+Thanks for your review, and I think it still not too late
+for nitpicking as it isn't merged to next branch. :)
 
-> BTW, I have tested suspend/resume on rk3399 prior to this sumbit, eMMC
-> works fine.
->
->>
->> Technically I think this should probably use "pm runtime" and not
->> normal suspend/resume hooks.  Any time we end up pm runtime suspended
->> then I think our power will go off (because of genpd?) and we need to
->> restore values.
->
-> I understand your consideration. BUT genpd is in charge of on/off pd if
-> the corresponding device node has "power-domains" property. RPM is
-> unnecessary for this situation, we will not use autosuspend, right?
+We have amend the code a bit, so probably we fixed some of
+the minor issues against V10. But some of them are really
+personal taste, if you still insist on that, I will be ok
+to modify them.
 
-That is irrelevant to rpm as what we need is just to control genpd here.
-If we need to support rmp, we need some extra patches to do it,
-including genpd off, clk-disable, etc...
-
->
-> @shawn, what's your opinion?
->
->>
->> I'm not sure if this should be done in a generic way where we try to
->> save and restore all values in the "sdhci_arasan_soc_ctl_map" or if we
->> should try to be smarter...
-
-I am prone to keep it as-is, unless we see a stronge requirement for
-coming users who argue that they have some extra corecfg_* need to
-recovery due to whatever reason.:)
-
-If we see something like this:
-
-if(of_device_is_compatible(A))
-  	update X
-else if (of_device_is_compatible(B))
-	update Y
-.....
-
-Then we could consider trying to save & restrore all the values.
+I will push patch to fix them after your feedback. :)
 
 
->>
->>
->> -Doug
->>
->> _______________________________________________
->> Linux-rockchip mailing list
->> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-rockchip
->>
->>
->>
+On 2016/9/1 2:17, Guenter Roeck wrote:
+> On Fri, Aug 19, 2016 at 09:34:58AM +0800, Shawn Lin wrote:
+
+[...]
+
+>> +	rockchip_pcie_enable_interrupts(port);
+>> +
 >
+> There is no matching disable_interrupts call in error handling after this.
+> Is that ok ?
 >
+
+ From test, probably ok since the genpd will be off and all of them wil 
+be cleared.
+
+> Also, is it ok to enable interrupts this early (before the rest of the
+> initialization is complete) ?
 >
+
+The training starts, so we some client irq should be handled now, and we
+already register isr.
+
+>> +	err = rockchip_pcie_init_irq_domain(port);
+>> +	if (err < 0)
+>> +		goto err_vpcie;
+>> +
+>> +	err = of_pci_get_host_bridge_resources(dev->of_node, 0, 0xff,
+>> +					       &res, &io_base);
+>> +	if (err)
+>> +		goto err_vpcie;
+>> +
+>> +	err = devm_request_pci_bus_resources(dev, &res);
+>> +	if (err)
+>> +		goto err_vpcie;
+>> +
+>> +	/* Get the I/O and memory ranges from DT */
+>> +	resource_list_for_each_entry(win, &res) {
+>> +		switch (resource_type(win->res)) {
+>> +		case IORESOURCE_IO:
+>> +			io = win->res;
+>> +			io->name = "I/O";
+>> +			io_size = resource_size(io);
+>> +			io_bus_addr = io->start - win->offset;
+>> +			err = pci_remap_iospace(io, io_base);
+>> +			if (err) {
+>> +				dev_warn(port->dev, "error %d: failed to map resource %pR\n",
+>> +					 err, io);
+>> +				continue;
+>> +			}
+>> +			break;
+>> +		case IORESOURCE_MEM:
+>> +			mem = win->res;
+>> +			mem->name = "MEM";
+>> +			mem_size = resource_size(mem);
+>> +			mem_bus_addr = mem->start - win->offset;
+>> +			break;
+>> +		case IORESOURCE_BUS:
+>> +			busn = win->res;
+>> +			break;
+>> +		default:
+>> +			continue;
+>> +		}
+>> +	}
+>> +
+>> +	if (mem_size)
+>
+> While strictly speaking not needed, I would recommend { }
+> here to improve readability.
+>
+>> +		for (reg_no = 0; reg_no < (mem_size >> 20); reg_no++) {
+>
+> This doesn't support mem sizes smaller than 1 << 20 (and clips the size
+> if it is not aligned to 1M). Is this intentional ?
+
+yes, we don't support.
+
+>
+>> +			err = rockchip_pcie_prog_ob_atu(port, reg_no + 1,
+>> +							AXI_WRAPPER_MEM_WRITE,
+>> +							20 - 1,
+>> +							mem_bus_addr +
+>> +							(reg_no << 20),
+>> +							0);
+>> +			if (err) {
+>> +				dev_err(dev, "program RC mem outbound ATU failed\n");
+>> +				goto err_vpcie;
+>> +			}
+>> +		}
+
+>
+>> +			err = rockchip_pcie_prog_ob_atu(port,
+>> +							reg_no + 1 + offset,
+>> +							AXI_WRAPPER_IO_WRITE,
+>> +							20 - 1,
+>> +							io_bus_addr +
+>> +							(reg_no << 20),
+>> +							0);
+>> +			if (err) {
+>> +				dev_err(dev, "program RC io outbound ATU failed\n");
+>> +				goto err_vpcie;
+>> +			}
+>> +		}
+
+>> +
+>> +	pci_bus_add_devices(bus);
+>> +
+>> +	dev_warn(dev, "only 32-bit config accesses supported; smaller writes may corrupt adjacent RW1C fields\n");
+>> +
+>
+> A warning which is always displayed seems to be a bit useless. If this is a
+> concern, maybe the driver should provide its own config space access functions
+> and map smaller accesses into 32 bit accesses. But isn't that already done ?
+>
+
+No, that is just for normal code path. When users comfigure it via some
+user-space tool, it is sane to make them know this limitation. So we was 
+suggested to do this.
+
+>> +	return err;
+>> +
+>> +err_vpcie:
+>> +	if (!IS_ERR(port->vpcie3v3))
+>> +		regulator_disable(port->vpcie3v3);
+>> +	if (!IS_ERR(port->vpcie1v8))
+>> +		regulator_disable(port->vpcie1v8);
+>> +	if (!IS_ERR(port->vpcie0v9))
+>> +		regulator_disable(port->vpcie0v9);
+>> +err_set_vpcie:
+>> +	clk_disable_unprepare(port->clk_pcie_pm);
+>> +err_pcie_pm:
+>> +	clk_disable_unprepare(port->hclk_pcie);
+>> +err_hclk_pcie:
+>> +	clk_disable_unprepare(port->aclk_perf_pcie);
+>> +err_aclk_perf_pcie:
+>> +	clk_disable_unprepare(port->aclk_pcie);
+>> +err_aclk_pcie:
+>> +	return err;
+>> +}
+>> +
+>> +static const struct of_device_id rockchip_pcie_of_match[] = {
+>> +	{ .compatible = "rockchip,rk3399-pcie", },
+>> +	{}
+>> +};
+>> +
+>> +static struct platform_driver rockchip_pcie_driver = {
+>> +	.driver = {
+>> +		.name = "rockchip-pcie",
+>> +		.of_match_table = rockchip_pcie_of_match,
+>> +	},
+>> +	.probe = rockchip_pcie_probe,
+>> +
+>> +};
+>> +builtin_platform_driver(rockchip_pcie_driver);
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 >
 
 
 -- 
 Best Regards
 Shawn Lin
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
