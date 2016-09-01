@@ -1,45 +1,53 @@
 From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 4/5] ARM: dts: keystone-k2g: Add MSM RAM node
-Date: Thu, 1 Sep 2016 17:58:45 -0500
-Message-ID: <20160901225846.31058-5-s-anna@ti.com>
-References: <20160901225846.31058-1-s-anna@ti.com>
+Subject: [PATCH 0/5] Use mmio-sram driver for Keystone MSMC RAM
+Date: Thu, 1 Sep 2016 17:58:41 -0500
+Message-ID: <20160901225846.31058-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160901225846.31058-1-s-anna@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Vitaly Andrianov <vitalya@ti.com>, Suman Anna <s-anna@ti.com>
+Cc: devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Vitaly Andrianov <vitalya@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Murali Karicheri <m-karicheri2@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the RAM managed by the Multicore Shared Memory Controller (MSMC)
-as a mmio-sram node. The Keystone 2 K2G SoC has 1 MB of such memory.
-Any specific MSM memory range needed by a software module ought to
-be reserved using an appropriate child node.
+Hi,
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- arch/arm/boot/dts/keystone-k2g.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+The Keystone 2 family of SoCs have an on-chip RAM called the
+Multicore Shared Memory (MSM) RAM. This RAM is accessible through
+the Multicore Shared Memory Controller (MSMC). This series represents
+these on-chip RAMs as sram nodes so that the memory allocations
+can be managed by the in-kernel mmio-sram driver.
 
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index 3372615b885c..be1db22db0d3 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -76,6 +76,14 @@
- 		ranges = <0x0 0x0 0x0 0xc0000000>;
- 		dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
- 
-+		msm_ram: msmram@0c000000 {
-+			compatible = "mmio-sram";
-+			reg = <0x0c000000 0x100000>;
-+			ranges = <0x0 0x0c000000 0x100000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+		};
-+
- 		k2g_pinctrl: pinmux@02621000 {
- 			compatible = "pinctrl-single";
- 			reg = <0x02621000 0x410>;
+The first 4 patches adds the basic SRAM nodes on each of the SoCs,
+and the last patch enables the generic on-chip SRAM driver for
+keystone defconfig.
+
+regards
+Suman
+
+
+Suman Anna (5):
+  ARM: dts: keystone-k2hk: Add MSM RAM node
+  ARM: dts: keystone-k2l: Add MSM RAM node
+  ARM: dts: keystone-k2e: Add MSM RAM node
+  ARM: dts: keystone-k2g: Add MSM RAM node
+  ARM: configs: keystone: Enable Generic on-chip SRAM driver
+
+ arch/arm/boot/dts/keystone-k2e.dtsi  | 8 ++++++++
+ arch/arm/boot/dts/keystone-k2g.dtsi  | 8 ++++++++
+ arch/arm/boot/dts/keystone-k2hk.dtsi | 8 ++++++++
+ arch/arm/boot/dts/keystone-k2l.dtsi  | 8 ++++++++
+ arch/arm/configs/keystone_defconfig  | 1 +
+ 5 files changed, 33 insertions(+)
+
 -- 
 2.9.3
