@@ -1,124 +1,95 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 04/19] iommu/of: Introduce iommu_fwspec
-Date: Thu, 1 Sep 2016 13:07:19 +0100
-Message-ID: <900f3dcb-217c-4fb3-2f7d-15572f31a0c0@arm.com>
-References: <cover.1471975357.git.robin.murphy@arm.com>
- <3e8eaf4fd65833fecc62828214aee81f6ca6c190.1471975357.git.robin.murphy@arm.com>
- <20160831172856.GI29505@arm.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 3/3] clk: keystone: Add sci-clk driver support
+Date: Thu, 1 Sep 2016 15:27:33 +0300
+Message-ID: <7b74dc9f-54f3-3081-72b7-116d4c44e98a@ti.com>
+References: <20160820003342.13599-1-nm@ti.com>
+ <20160820003342.13599-4-nm@ti.com> <20160824083415.GA6502@codeaurora.org>
+ <c1a66f45-fa81-8137-4d9b-73e84141f67f@ti.com>
+ <20160831223101.GI12510@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160831172856.GI29505-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160831223101.GI12510@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Michael Turquette <mturquette@baylibre.com>, Santosh Shilimkar <ssantosh@kernel.org>, linux-kernel@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 31/08/16 18:28, Will Deacon wrote:
-> On Tue, Aug 23, 2016 at 08:05:15PM +0100, Robin Murphy wrote:
->> Introduce a common structure to hold the per-device firmware data that
->> non-architectural IOMMU drivers generally need to keep track of.
->> Initially this is DT-specific to complement the existing of_iommu
->> support code, but will generalise further once other firmware methods
->> (e.g. ACPI IORT) come along.
+On 01/09/16 01:31, Stephen Boyd wrote:
+> On 08/31, Tero Kristo wrote:
+>> On 24/08/16 11:34, Stephen Boyd wrote:
+>>> On 08/19, Nishanth Menon wrote:
+>>>> diff --git a/drivers/clk/keystone/sci-clk.c b/drivers/clk/keystone/sci-clk.c
+>>>> new file mode 100644
+>>>> index 000000000000..6c43e097e6d6
+>>>> --- /dev/null
+>>>> +++ b/drivers/clk/keystone/sci-clk.c
+>>>> @@ -0,0 +1,539 @@
+>>>> +	return (int)new_rate;
+>>>
+>>> determine rate should return a negative number on failure and 0
+>>> on success. The actual rate that was found should go into
+>>> req->rate. This looks broken.
 >>
->> Ultimately the aim is to promote the fwspec to a first-class member of
->> struct device, and handle the init/free automatically in the firmware
->> code. That way we can have API calls look for dev->fwspec->iommu_ops
->> before falling back to dev->bus->iommu_ops, and thus gracefully handle
->> those troublesome multi-IOMMU systems which we currently cannot. To
->> start with, though, make use of the existing archdata field and delegate
->> the init/free to drivers to allow an incremental conversion rather than
->> the impractical pain of trying to attempt everything in one go.
+>> Yea it seems broken, I wonder how we haven't seen any issues with
+>> this in testing.... Apparently positive return values from this are
+>> interpreted as success. Having a quick look at clk.c seems to
+>> confirm this.
 >>
->> Suggested-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
->> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
->> ---
+>> Anyway, will fix.
+>
+> True, perhaps we should fix that so we don't use a long to hold
+> the int return value either.
+>
+>>>> + *
+>>>> + * Gets a handle to an existing TI SCI clock, or builds a new clock
+>>>> + * entry and registers it with the common clock framework. Called from
+>>>> + * the common clock framework, when a corresponding of_clk_get call is
+>>>> + * executed, or recursively from itself when parsing parent clocks.
+>>>> + * Returns a pointer to the clock struct, or ERR_PTR value in failure.
+>>>> + */
+>>>
+>>> Please move this driver to clk_hw_register() and friends. This on
+>>> the fly clk generation is scary considering how we hold locks
+>>> while the provider is asked to give us the pointer, so allocating
+>>> and registering clks (basically reentering the CCF again) could
+>>> lead to a locking nightmare. Best to avoid that.
 >>
->> v5: Fix shocking num_ids oversight.
->>
->>  drivers/iommu/of_iommu.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++
->>  include/linux/of_iommu.h | 15 ++++++++++++++
->>  2 files changed, 67 insertions(+)
->>
->> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
->> index 1a65cc806898..bec51eb47b0d 100644
->> --- a/drivers/iommu/of_iommu.c
->> +++ b/drivers/iommu/of_iommu.c
->> @@ -219,3 +219,55 @@ static int __init of_iommu_init(void)
->>  	return 0;
->>  }
->>  postcore_initcall_sync(of_iommu_init);
->> +
->> +int iommu_fwspec_init(struct device *dev, struct device_node *iommu_np)
->> +{
->> +	struct iommu_fwspec *fwspec = dev->archdata.iommu;
->> +
->> +	if (fwspec)
->> +		return 0;
->> +
->> +	fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
->> +	if (!fwspec)
->> +		return -ENOMEM;
->> +
->> +	fwspec->iommu_np = of_node_get(iommu_np);
->> +	fwspec->iommu_ops = of_iommu_get_ops(iommu_np);
->> +	dev->archdata.iommu = fwspec;
->> +	return 0;
->> +}
->> +
->> +void iommu_fwspec_free(struct device *dev)
->> +{
->> +	struct iommu_fwspec *fwspec = dev->archdata.iommu;
->> +
->> +	if (fwspec) {
->> +		of_node_put(fwspec->iommu_np);
->> +		kfree(fwspec);
->> +	}
->> +}
->> +
->> +int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids)
->> +{
->> +	struct iommu_fwspec *fwspec = dev->archdata.iommu;
->> +	size_t size;
->> +
->> +	if (!fwspec)
->> +		return -EINVAL;
->> +
->> +	size = offsetof(struct iommu_fwspec, ids[fwspec->num_ids + num_ids]);
->> +	fwspec = krealloc(dev->archdata.iommu, size, GFP_KERNEL);
->> +	if (!fwspec)
->> +		return -ENOMEM;
->> +
->> +	while (num_ids--)
->> +		fwspec->ids[fwspec->num_ids++] = *ids++;
->> +
->> +	dev->archdata.iommu = fwspec;
-> 
-> It might just be me, but I find this really fiddly to read. The fact
-> that you realloc the whole fwspec, rather than just the array isn't
-> helping, but I also think that while loop would be much better off as
-> a for loop, using the index as, well, an index into the ids array and
-> fwspec->ids array.
+>> Ok, so just converting the driver to use provider->get_hw should be
+>> enough? This seems to be a relatively new API in the CCF. Will look
+>> at that.
+>
+> Hopefully it will simplify things greatly.
 
-Sure - copying one array into the tail end of another is always going to
-be boring, ugly code, which I feel compelled to make as compact as
-possible so as not to distract from the more interesting code, but I
-guess that's self-defeating if it then no longer looks like something
-simple and boring to skip over. I'll expend a few more precious lines on
-turning it back into something staid and sensible ;)
+Well, it didn't simplify things greatly, but somewhat. I still need to 
+use of_parse_phandle_with_args with one of the helpers for example. Will 
+send out v2 in a bit.
 
-My argument for embedding the IDs directly in the fwspec is that for
-most devices there's only likely to be a single one anyway, and other
-than a brief period up until add_device() they're then going to be fixed
-for the lifetime of the device, so saving a little memory fragmentation
-and a level of indirection on all subsequent uses is certainly not going
-to be detrimental (plus it slightly simplifies the cleanup/free cases
-here as well).
+>
+>>
+>>>> +	}
+>>>> +
+>>>> +	snprintf(name, 20, "%s:%d:%d", dev_name(provider->dev), sci_clk->dev_id,
+>>>> +		 sci_clk->clk_id);
+>>>
+>>> I hope we don't make dev_name() longer than 20 characters
+>>
+>> Shall I just increase the size of the buffer and add a length check?
+>> Using kmalloc or something here seems overkill, as the name gets
+>> copied by CCF anyway.
+>
+> There's kasprintf() which would always make it long enough. I
+> don't know if it really matters though.
 
-Robin.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, I will use this one.
+
+-Tero
