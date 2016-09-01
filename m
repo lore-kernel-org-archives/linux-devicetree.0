@@ -1,135 +1,104 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v3 3/8] drm/tilcdc: Add blue-and-red-crossed devicetree
- property
-Date: Thu, 1 Sep 2016 10:19:19 +0300
-Message-ID: <64641724-24d8-47ff-92ad-7f05f86669da@ti.com>
-References: <cover.1472634657.git.jsarha@ti.com>
- <1fc6a6bb5b56b9bac845502b0724d7a07f0675fb.1472634657.git.jsarha@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0744496396=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1fc6a6bb5b56b9bac845502b0724d7a07f0675fb.1472634657.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com, linux-arm-kernel@lists.infradead.org
-Cc: peter.ujfalusi@ti.com, kbeldan@baylibre.com, laurent.pinchart@ideasonboard.com
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH v2 01/10] pinctrl: dt-bindings: samsung: Add header with values
+ used for configuration
+Date: Thu, 01 Sep 2016 09:23:49 +0200
+Message-ID: <1472714638-15676-2-git-send-email-k.kozlowski@samsung.com>
+References: <1472714638-15676-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1472714638-15676-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, javier@osg.samsung.com, Linus Walleij <linus.walleij@linaro.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---===============0744496396==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="3IWlJ9alxL2PAraXx9pVcVjC2ekcv1t1w"
+Hard-coded pinctrl configuration values are scattered through DTS files.
+The numbers are difficult to decode by human, especially without the
+datasheet.  Additionally the drive strength differs between Exynos SoC
+families increasing the confusion.
 
---3IWlJ9alxL2PAraXx9pVcVjC2ekcv1t1w
-Content-Type: multipart/mixed; boundary="h3tj3Iibu9n8LAoTe6UbIbrB3ObdJMGTA";
- protected-headers="v1"
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, bcousson@baylibre.com, tony@atomide.com,
- linux-arm-kernel@lists.infradead.org
-Cc: airlied@linux.ie, daniel@ffwll.ch, laurent.pinchart@ideasonboard.com,
- peter.ujfalusi@ti.com, robh@kernel.org, kbeldan@baylibre.com
-Message-ID: <64641724-24d8-47ff-92ad-7f05f86669da@ti.com>
-Subject: Re: [PATCH v3 3/8] drm/tilcdc: Add blue-and-red-crossed devicetree
- property
-References: <cover.1472634657.git.jsarha@ti.com>
- <1fc6a6bb5b56b9bac845502b0724d7a07f0675fb.1472634657.git.jsarha@ti.com>
-In-Reply-To: <1fc6a6bb5b56b9bac845502b0724d7a07f0675fb.1472634657.git.jsarha@ti.com>
+The header will help making this more readable and maintainable.
 
---h3tj3Iibu9n8LAoTe6UbIbrB3ObdJMGTA
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+---
+ MAINTAINERS                           |  1 +
+ include/dt-bindings/pinctrl/samsung.h | 57 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 58 insertions(+)
+ create mode 100644 include/dt-bindings/pinctrl/samsung.h
 
-
-
-On 31/08/16 16:14, Jyri Sarha wrote:
-> Add "blue-and-red-wiring"-device tree property and update devicetree
-> binding document. The red and blue components are reversed between 24
-> and 16 bit modes on am335x LCDC output pins. To get 24 RGB format the
-> red and blue wires has to be crossed and this in turn causes 16 colors
-> output to be in BGR format. With straight wiring the 16 color is RGB
-> and 24 bit is BGR. The new property describes whether the red and blue
-> wires are crossed or not. If the property is not present or its value
-> is not recognized the legacy mode is assumed. The legacy configuration
-> supports RGB565, RGB888 and XRGB8888 formats. However, depending on
-> wiring, the red and blue colors are swapped in either 16 or 24-bit
-> color modes.
->=20
-> For more details see section 3.1.1 in AM335x Silicon Errata:
-> http://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumb=
-er=3Dsprz360
->=20
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> ---
->  .../devicetree/bindings/display/tilcdc/tilcdc.txt  | 22 ++++++++++++
->  drivers/gpu/drm/tilcdc/tilcdc_drv.c                | 42 ++++++++++++++=
-++++++++
->  drivers/gpu/drm/tilcdc/tilcdc_drv.h                |  4 +++
->  drivers/gpu/drm/tilcdc/tilcdc_plane.c              |  9 ++---
->  4 files changed, 71 insertions(+), 6 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.tx=
-t b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
-> index 6efa4c5..5b7b5f8 100644
-> --- a/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
-> +++ b/Documentation/devicetree/bindings/display/tilcdc/tilcdc.txt
-> @@ -17,6 +17,18 @@ Optional properties:
->     the lcd controller.
->   - max-pixelclock: The maximum pixel clock that can be supported
->     by the lcd controller in KHz.
-> + - blue-and-red-wiring: Recognized values "default", "straight" or
-> +   "crossed". This property deals with the LCDC revision 2 (found on
-> +   AM335x) color errata [1].
-> +     - "default" and "straight" indicates normal wiring that supports
-
-I didn't mean to add two values for this =3D). Just use one, there's no
-benefit in supporting multiple values meaning the same thing.
-
- Tomi
-
-
---h3tj3Iibu9n8LAoTe6UbIbrB3ObdJMGTA--
-
---3IWlJ9alxL2PAraXx9pVcVjC2ekcv1t1w
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXx9Z4AAoJEPo9qoy8lh71UM8P/RvUwAQCRuIjbZCQSr1tM+QJ
-v5QYMz5E4p1RKh2xEipTQ7G/+nyQVtXr4sZucmqhFIE49MG8x+hWK0D/9rWcGqvt
-Dqzvo6MEZqzz0LevjFJh3pwUxusutcPGHWvyCq/ghu7ndX4JJOYyDw7NHlW41bam
-HTM/z4f2iEk1FCfj+xMXPX0Y2fQElmN+LvDW2jG/91/PrU/UyEwn4x/HGxP11P/k
-hP001OpW0CdqbRZfgZ/FHY4qVyhxw/sEzs6ZawKkIV2AZacU/ETGtuXns6wq5qmh
-izvLZ7Hd1ewmjOy3mEkyXwTt803CAqpGPpR5x1RK6dMRiW+7nM1ohMHbhMMUcjtH
-LKEDn52N9i3jBcPU1+fvQo11bUmp9U8K93TVLYwZrJE3DLoZdXu6GH18V9sPDrq9
-MVCFUI0E08vofpcdLl5lMOkymHSOzoMqyEaiTJ7qinZKXJK9AaeblxMRrdgzxgVE
-EiYiV7E4YwhXF6jQJH3sxXZLNzjcpECi7y18Q+YfooJey3QaPfodR8+yO5YpXCRN
-YQbx/z4/3t7kaCIoqg7wEmJTdxO9UaG5rNxVEu74nQD23soiWakuwvEUFHGzFEP3
-cy70uTJ7/ir/DZmyboQBBgczfdn4GasoC1iGXdw6Bru4mx62L/XqxkWmjPQ7+Gv4
-6pi7UkZ+yavrqqtwEt4B
-=fwCD
------END PGP SIGNATURE-----
-
---3IWlJ9alxL2PAraXx9pVcVjC2ekcv1t1w--
-
---===============0744496396==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0744496396==--
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d8e81b1dde30..836bcd327ee4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9318,6 +9318,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ L:	linux-samsung-soc@vger.kernel.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	drivers/pinctrl/samsung/
++F:	include/dt-bindings/pinctrl/samsung.h
+ 
+ PIN CONTROLLER - SINGLE
+ M:	Tony Lindgren <tony@atomide.com>
+diff --git a/include/dt-bindings/pinctrl/samsung.h b/include/dt-bindings/pinctrl/samsung.h
+new file mode 100644
+index 000000000000..0f410ba5ec7e
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/samsung.h
+@@ -0,0 +1,57 @@
++/*
++ * Samsung's Exynos pinctrl bindings
++ *
++ * Copyright (c) 2016 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com
++ * Author: Krzysztof Kozlowski <krzk@kernel.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++*/
++
++#ifndef __DT_BINDINGS_PINCTRL_EXYNOS_H__
++#define __DT_BINDINGS_PINCTRL_EXYNOS_H__
++
++#define EXYNOS_PIN_PULL_NONE		0
++#define EXYNOS_PIN_PULL_DOWN		1
++#define EXYNOS_PIN_PULL_UP		3
++
++/* Pin function in power down mode */
++#define EXYNOS_PIN_PDN_OUT0		0
++#define EXYNOS_PIN_PDN_OUT1		1
++#define EXYNOS_PIN_PDN_INPUT		2
++#define EXYNOS_PIN_PDN_PREV		3
++
++/* Drive strengths for Exynos3250, Exynos4 (all) and Exynos5250 */
++#define EXYNOS4_PIN_DRV_LV1		0
++#define EXYNOS4_PIN_DRV_LV2		2
++#define EXYNOS4_PIN_DRV_LV3		1
++#define EXYNOS4_PIN_DRV_LV4		3
++
++/* Drive strengths for Exynos5260 */
++#define EXYNOS5260_PIN_DRV_LV1		0
++#define EXYNOS5260_PIN_DRV_LV2		1
++#define EXYNOS5260_PIN_DRV_LV4		2
++#define EXYNOS5260_PIN_DRV_LV6		3
++
++/* Drive strengths for Exynos5410, Exynos542x and Exynos5800 */
++#define EXYNOS5420_PIN_DRV_LV1		0
++#define EXYNOS5420_PIN_DRV_LV2		1
++#define EXYNOS5420_PIN_DRV_LV3		2
++#define EXYNOS5420_PIN_DRV_LV4		3
++
++#define EXYONS_PIN_PDN_OUT0		0
++#define EXYNOS_PIN_PDN_OUT1		1
++#define EXYNOS_PIN_PDN_INPUT		2
++#define EXYNOS_PIN_PDN_PREV		3
++
++#define EXYNOS_PIN_FUNC_INPUT		0
++#define EXYNOS_PIN_FUNC_OUTPUT		1
++#define EXYNOS_PIN_FUNC_2		2
++#define EXYNOS_PIN_FUNC_3		3
++#define EXYNOS_PIN_FUNC_4		4
++#define EXYNOS_PIN_FUNC_5		5
++#define EXYNOS_PIN_FUNC_F		0xf
++
++#endif /* __DT_BINDINGS_PINCTRL_EXYNOS_H__ */
+-- 
+1.9.1
