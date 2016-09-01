@@ -1,99 +1,51 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 00/19] Generic DT bindings for PCI IOMMUs and ARM SMMU
-Date: Thu, 1 Sep 2016 16:22:34 +0100
-Message-ID: <20160901152234.GD28180@red-moon>
-References: <cover.1471975357.git.robin.murphy@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/3] pci: remove msi_controller registration API
+Date: Thu,  1 Sep 2016 17:38:01 +0200
+Message-ID: <1472744284-18305-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1471975357.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 23, 2016 at 08:05:11PM +0100, Robin Murphy wrote:
-> Hi all,
-> 
-> At long last I've finished the big SMMUv2 rework, so here's everything
-> all together for a v5. As a quick breakdown:
-> 
-> Patches 1-3 are the core PCI part, all acked and ready to go. No code
-> changes from v4.
-> 
-> Patch 4 is merely bugfixed from v4 for simplicity, as I've not yet
-> managed to take as close a look at Lorenzo's follow-on work as I'd like.
-> 
-> Patches 5-7 (SMMUv3) are mostly unchanged beyond a slight tweak to #5.
-> 
-> Patches 8-17 are the all-new SMMUv2 rework.
-> 
-> Patch 18 goes along with the fix already in 4.8-rc3 to help avoid 64-bit
-> DMA masks going wrong now that DMA ops will be enabled.
-> 
-> Finally, patch 19 addresses the previous problem of having to choose
-> between DMA ops or working MSIs. This is currently at the end as
-> moving it before #17 would require a further interim SMMUv2 patch, and
-> a 19-patch series is already quite enough...
-> 
-> I've pushed out a branch based on iommu/next to the usual place:
-> 
-> git://linux-arm.org/linux-rm iommu/generic-v5
+Hello,
 
-I tested my ACPI IORT SMMU series on top of it on FVP and Juno (and
-respective SMMU versions) and have not spotted any issues so far, so
-feel free to add my:
+This small patch series aims at removing the small msi_controller
+registration API implemented in drivers/of/of_pci.c.
 
-Tested-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+In order to do so, it moves the last two users of this API to the
+generic MSI support:
 
-> Thanks,
-> Robin.
-> ---
-> 
-> Mark Rutland (1):
->   Docs: dt: add PCI IOMMU map bindings
-> 
-> Robin Murphy (18):
->   of/irq: Break out msi-map lookup (again)
->   iommu/of: Handle iommu-map property for PCI
->   iommu/of: Introduce iommu_fwspec
->   iommu/arm-smmu: Implement of_xlate() for SMMUv3
->   iommu/arm-smmu: Support non-PCI devices with SMMUv3
->   iommu/arm-smmu: Set PRIVCFG in stage 1 STEs
->   iommu/arm-smmu: Handle stream IDs more dynamically
->   iommu/arm-smmu: Consolidate stream map entry state
->   iommu/arm-smmu: Keep track of S2CR state
->   iommu/arm-smmu: Refactor mmu-masters handling
->   iommu/arm-smmu: Streamline SMMU data lookups
->   iommu/arm-smmu: Add a stream map entry iterator
->   iommu/arm-smmu: Intelligent SMR allocation
->   iommu/arm-smmu: Convert to iommu_fwspec
->   Docs: dt: document ARM SMMU generic binding usage
->   iommu/arm-smmu: Wire up generic configuration support
->   iommu/arm-smmu: Set domain geometry
->   iommu/dma: Add support for mapping MSIs
-> 
->  .../devicetree/bindings/iommu/arm,smmu.txt         |  63 +-
->  .../devicetree/bindings/pci/pci-iommu.txt          | 171 ++++
->  drivers/iommu/Kconfig                              |   2 +-
->  drivers/iommu/arm-smmu-v3.c                        | 347 ++++----
->  drivers/iommu/arm-smmu.c                           | 952 ++++++++++-----------
->  drivers/iommu/dma-iommu.c                          | 141 ++-
->  drivers/iommu/of_iommu.c                           |  95 +-
->  drivers/irqchip/irq-gic-v2m.c                      |   3 +
->  drivers/irqchip/irq-gic-v3-its.c                   |   3 +
->  drivers/of/irq.c                                   |  78 +-
->  drivers/of/of_pci.c                                | 102 +++
->  include/linux/dma-iommu.h                          |   9 +
->  include/linux/of_iommu.h                           |  15 +
->  include/linux/of_pci.h                             |  10 +
->  14 files changed, 1208 insertions(+), 783 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.txt
-> 
-> -- 
-> 2.8.1.dirty
-> 
+ - The pci-aardvark driver is moved to use the generic MSI
+   support. This driver is both the provider of the MSI capability and
+   the consumer of this capability.
+
+ - The pci-mvebu driver is cleaned up from using the msi_controller
+   registration API. This driver is only consuming MSI capabilies from
+   another driver (irq-armada-370-xp) which was migrated to the
+   generic MSI support some time ago. Therefore, this patch is simply
+   removing dead code.
+
+Finally, the last commit removed the now unused API.
+
+Thanks,
+
+Thomas
+
+Thomas Petazzoni (3):
+  pci: pci-aardvark: move to MSI handling using generic MSI support
+  pci: pci-mvebu: remove useless MSI enabling code
+  of: pci: remove unused MSI controller helpers
+
+ drivers/of/of_pci.c             |  45 -----------
+ drivers/pci/host/pci-aardvark.c | 172 ++++++++++++++++------------------------
+ drivers/pci/host/pci-mvebu.c    |  17 ----
+ include/linux/of_pci.h          |  11 ---
+ 4 files changed, 67 insertions(+), 178 deletions(-)
+
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
