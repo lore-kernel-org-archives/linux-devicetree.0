@@ -1,91 +1,85 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 06/19] iommu/arm-smmu: Support non-PCI devices with
-	SMMUv3
-Date: Thu, 1 Sep 2016 18:08:57 +0100
-Message-ID: <20160901170857.GQ6721@arm.com>
-References: <cover.1471975357.git.robin.murphy@arm.com>
-	<207d0ae38c5b01b7cf7e48231a4d01bac453b57c.1471975357.git.robin.murphy@arm.com>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [v10,2/2] PCI: Rockchip: Add Rockchip PCIe controller support
+Date: Thu, 1 Sep 2016 10:14:01 -0700
+Message-ID: <20160901171400.GA4093@localhost>
+References: <1471570498-3284-1-git-send-email-shawn.lin@rock-chips.com>
+ <20160831181754.GA7460@roeck-us.net>
+ <9075a2c1-c787-986f-31b4-4d5b7c92b771@rock-chips.com>
+ <20160901163455.GA9471@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <207d0ae38c5b01b7cf7e48231a4d01bac453b57c.1471975357.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+In-Reply-To: <20160901163455.GA9471@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 23, 2016 at 08:05:17PM +0100, Robin Murphy wrote:
-> With the device <-> stream ID relationship suitably abstracted and
-> of_xlate() hooked up, the PCI dependency now looks, and is, entirely
-> arbitrary. Any bus using the of_dma_configure() mechanism will work,
-> so extend support to the platform and AMBA buses which do just that.
-> 
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> ---
->  drivers/iommu/Kconfig       |  2 +-
->  drivers/iommu/arm-smmu-v3.c | 40 ++++++++++++++++++++++++++++++++--------
->  2 files changed, 33 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index d432ca828472..8ee54d71c7eb 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -309,7 +309,7 @@ config ARM_SMMU
->  
->  config ARM_SMMU_V3
->  	bool "ARM Ltd. System MMU Version 3 (SMMUv3) Support"
-> -	depends on ARM64 && PCI
-> +	depends on ARM64
->  	select IOMMU_API
->  	select IOMMU_IO_PGTABLE_LPAE
->  	select GENERIC_MSI_IRQ_DOMAIN
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 094babff64a6..e0384f7afb03 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -35,6 +35,8 @@
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
->  
-> +#include <linux/amba/bus.h>
-> +
->  #include "io-pgtable.h"
->  
->  /* MMIO registers */
-> @@ -1830,6 +1832,23 @@ static void arm_smmu_remove_device(struct device *dev)
->  	iommu_fwspec_free(dev);
->  }
->  
-> +static struct iommu_group *arm_smmu_device_group(struct device *dev)
-> +{
-> +	struct iommu_group *group;
-> +
-> +	/*
-> +	 * We don't support devices sharing stream IDs other than PCI RID
-> +	 * aliases, since the necessary ID-to-device lookup becomes rather
-> +	 * impractical given a potential sparse 32-bit stream ID space.
-> +	 */
-> +	if (dev_is_pci(dev))
-> +		group = pci_device_group(dev);
-> +	else
-> +		group = generic_device_group(dev);
-> +
-> +	return group;
-> +}
+On Thu, Sep 01, 2016 at 11:34:55AM -0500, Bjorn Helgaas wrote:
+> In the interest of making progress, I made most of the changes Guenter
+> suggested (thanks very much, Guenter!) and made some more of my own on
+> top of those.
 
-It's a pity that this ends up in the driver(s), but I can live with it
-for now.
+I'm not sure, but was this change your idea Bjorn?
 
-Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+commit 88cb3f59d73e261a3cd1957ff392f98c9916a5d1
+Author: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Date:   Thu Sep 1 10:27:44 2016 -0500
 
-Will
+    Simplify the confusing HIWORD_UPDATE scheme.
+
+[Which I'll summarize here; you're replacing the macro:
+
+-/*
+-  * The higher 16-bit of this register is used for write protection
+-  * only if BIT(x + 16) set to 1 the BIT(x) can be written.
+-  */
+-#define HIWORD_UPDATE(val, mask, shift) \
+-       ((val) << (shift) | (mask) << ((shift) + 16))
+
+with its expansions:
+
++
++/*
++ * The higher 16-bit of this register is used for write protection
++ * only if BIT(x + 16) set to 1 the BIT(x) can be written.
++ */
++#define PCIE_CLIENT_CONF_ENABLE                (0x00010000 | 0x0001)
++#define PCIE_CLIENT_LINK_TRAIN_ENABLE  (0x00020000 | 0x0002)
++#define PCIE_CLIENT_ARI_ENABLE         (0x00080000 | 0x0008)
++#define PCIE_CLIENT_CONF_LANE_NUM(x)   (0x00300000 | (((x >> 1) & 3) << 4)
++#define PCIE_CLIENT_MODE_RC            (0x00400000 | 0x0040)
++#define PCIE_CLIENT_GEN_SEL(x)         (0x00800000 | ((x & 1) << 7)
++#define  PCIE_CLIENT_GEN_SEL_0                 0
++#define  PCIE_CLIENT_GEN_SEL_2                 1
+
+Full change can be had by:
+git fetch git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host-rockchip-wip
+]
+
+
+The use of HIWORD_UPDATE can indeed be a bit confusing, IMO, but this is
+really a common Rockchip-ism that, once you read several of their
+drivers, can make a little more sense. If you grep around, it's in at
+least their clock, ethernet, SDHCI, PHY, and DP/DRM drivers. I might
+defer to Heiko (upstream maintainer of Rockchip code) for a decision.
+Maybe there's some intermediate ground where we keep the HIWORK_UPDATE()
+logic (it does make sure we get the 16-bit shift right, I think) while
+still refactoring a few other bits (like PCIE_CLIENT_CONF_LANE_NUM() and
+PCIE_CLIENT_GEN_SEL() for wrapping HIWORK_UPDATE()?).
+
+Anyway, just a thought. If it really is most understandable to write it
+this way, then maybe it's fine to be different than the other 16
+rockchip files that have this pattern.
+
+Brian
