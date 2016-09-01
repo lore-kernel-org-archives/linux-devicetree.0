@@ -1,87 +1,37 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: Applied "mfd: tps65218: add version check to the PMIC probe" to
- the regulator tree
-Date: Thu, 1 Sep 2016 09:18:34 +0100
-Message-ID: <20160901081834.GE4921@dell>
-References: <1466412218-5906-8-git-send-email-j-keerthy@ti.com>
- <E1bXZjd-0000YR-7n@debutante>
- <20160831083114.GP10121@dell>
- <20160831175701.GA5783@n2100.arm.linux.org.uk>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v3 07/12] arm64: dts: h3ulcb: enable I2C2
+Date: Thu, 1 Sep 2016 10:21:12 +0200
+Message-ID: <CAMuHMdURf4Y043rb6R8_YGhjqUKPVHCwonBq3v68GPj+P2=5Uw@mail.gmail.com>
+References: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1472637809-14858-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160831175701.GA5783@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Mark Brown <broonie@kernel.org>, Tero Kristo <t-kristo@ti.com>, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, russ.dill@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472637809-14858-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 31 Aug 2016, Russell King - ARM Linux wrote:
+On Wed, Aug 31, 2016 at 12:03 PM, Vladimir Barinov
+<vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> This supports I2C2 bus on H3ULCB board
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-> On Wed, Aug 31, 2016 at 09:31:14AM +0100, Lee Jones wrote:
-> > On Wed, 10 Aug 2016, Mark Brown wrote:
-> > 
-> > > The patch
-> > > 
-> > >    mfd: tps65218: add version check to the PMIC probe
-> > 
-> > Why did you take this patch?
-> 
-> I think folk need to start to understand the purpose of the To: and Cc:
-> lines in emails.
-> 
-> To: means you're sending the message _to_ the recipient, expecting them
-> to be the _primary_ receiver of the message, and to _process_ the message
-> in some way.  In the case of a patch, that may be applying the change.
-> 
-> Cc: means you're providing the recipient with a copy of the message, "for
-> their information" and you're not expecting them to take action.
-> 
-> If you think that there's no difference between To: and Cc: then ask
-> yourself this question: what's the point of having the two headers,
-> why not list all recipients under one single header.
-> 
-> Mark was in the To: line, therefore it is perfectly reasonable for him
-> to apply the patch when it gets acked, since the original author sent
-> it _TO_ Mark implicitly asking him to apply it.
-> 
-> If you have a problem with that, then you need to say something in
-> reply to the patch, or you need to instruct folk who send patches for
-> bits of your subsystem not to place others in the To: field who may
-> pick up the patch.
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-It's not up to submitters which repo patches get applied to.  They are
-free to make a verbal (written) request and if it's justified then we
-can choose to agree to it or not.  For instance, a submitter is more
-likely to know if a dependency was recently taken in via a particular
-tree than a Maintainer, since it's almost impossible to keep track
-each and every patch and all it's possible dependants.
+Gr{oetje,eeting}s,
 
-I personally review/accept patches based solely on the subsystem(s)
-touched and the actions of particular Maintainers, knowing firstly how
-they operate.  Actioning patches based on whether a contributor uses
-the To: or Cc: lines seems very fragile and prone to unnecessary
-complications.
+                        Geert
 
-> However, there is a tendency with some people's mailers (including
-> yours) which keeps the recipients of the To: and Cc: from the message
-> being replied to, and copies them to the reply as-is.  That totally
-> screws up the meaning of the To: and Cc: headers, and is really
-> really really really annoying for people who are in the To: field
-> but who aren't being asked to do anything in the replies.  (Fix your
-> bloody mailer not to do this please!)
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-I use the Mutt's default configuration for 'reply-to-all' in all
-cases.  I really don't have time to manually reorganise something as
-trivial as To: and Cc: lines.  I find them irrelevant in this
-setting.  Any time spent on trivial activities such as these adds
-further delay to patch-reviews.  Some of us have day jobs too you
-know. ;)
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
