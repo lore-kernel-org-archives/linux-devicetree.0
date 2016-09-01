@@ -1,110 +1,70 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] rcar-du: add R8A7792 support
-Date: Fri, 02 Sep 2016 01:28:34 +0300
-Message-ID: <2732207.dbAaUn7yem@avalon>
-References: <1934824.sESTIjSbbp@wasted.cogentembedded.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4] rtc: omap: Support ext_wakeup configuration
+Date: Fri, 2 Sep 2016 00:29:14 +0200
+Message-ID: <20160901222914.446w33zljvz4fdpr@piout.net>
+References: <20160825111912.23017-1-m.niestroj@grinn-global.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1934824.sESTIjSbbp@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: airlied@linux.ie, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBO6XUK7AKGQEEEZMRVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20160825111912.23017-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Hi,
 
-Thank you for the patch.
-
-On Thursday 04 Aug 2016 15:01:02 Sergei Shtylyov wrote:
-> Add support for the R8A7792 DU; it has 2 DPAD (RGB) outputs.
+On 25/08/2016 at 13:19:12 +0200, Marcin Niestroj wrote :
+> Support configuration of ext_wakeup sources. This patch makes it
+> possible to enable ext_wakeup and set it's polarity, depending on board
+> configuration. AM335x's dedicated PMIC (tps65217) uses ext_wakeup to
+> notify about power-button presses. Handling power-button presses enables
+> to recover from RTC-only power states correctly.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-And applied to my tree.
-
+> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 > ---
-> This patch is against the 'drm/next/du' branch of Laurent Pinchart's
-> 'media.git' repo...
+> Hi,
 > 
->  Documentation/devicetree/bindings/display/renesas,du.txt |    4 ++
->  drivers/gpu/drm/rcar-du/rcar_du_drv.c                    |   22 +++++++++++
->  2 files changed, 25 insertions(+), 1 deletion(-)
+> This is a total reimplementation, so it is not based on any of the previos
+> patch versions. This patch adds support for ext_wakeup using generic pinconf
+> device-tree bindings, with one added "ti,input-polarity" custom property.
+> This approach has been suggested by Tony and Grygorii in [1].
 > 
-> Index: media/Documentation/devicetree/bindings/display/renesas,du.txt
-> ===================================================================
-> --- media.orig/Documentation/devicetree/bindings/display/renesas,du.txt
-> +++ media/Documentation/devicetree/bindings/display/renesas,du.txt
-> @@ -6,6 +6,7 @@ Required Properties:
->      - "renesas,du-r8a7779" for R8A7779 (R-Car H1) compatible DU
->      - "renesas,du-r8a7790" for R8A7790 (R-Car H2) compatible DU
->      - "renesas,du-r8a7791" for R8A7791 (R-Car M2-W) compatible DU
-> +    - "renesas,du-r8a7792" for R8A7792 (R-Car V2H) compatible DU
->      - "renesas,du-r8a7793" for R8A7793 (R-Car M2-N) compatible DU
->      - "renesas,du-r8a7794" for R8A7794 (R-Car E2) compatible DU
->      - "renesas,du-r8a7795" for R8A7795 (R-Car H3) compatible DU
-> @@ -25,7 +26,7 @@ Required Properties:
->    - clock-names: Name of the clocks. This property is model-dependent.
->      - R8A7779 uses a single functional clock. The clock doesn't need to be
->        named.
-> -    - R8A779[01345] use one functional clock per channel and one clock per
-> LVDS +    - R8A779[012345] use one functional clock per channel and one
-> clock per LVDS encoder (if available). The functional clocks must be named
-> "du.x" with "x" being the channel numerical index. The LVDS clocks must be
-> named "lvds.x" with "x" being the LVDS encoder numerical index.
-> @@ -47,6 +48,7 @@ corresponding to each DU output.
->   R8A7779 (H1)	DPAD 0		DPAD 1		-		-
->   R8A7790 (H2)	DPAD		LVDS 0		LVDS 1		-
->   R8A7791 (M2-W)	DPAD		LVDS 0		-		-
-> + R8A7792 (V2H)	DPAD 0		DPAD 1		-		-
->   R8A7793 (M2-N)	DPAD		LVDS 0		-		-
->   R8A7794 (E2)	DPAD 0		DPAD 1		-		-
->   R8A7795 (H3)	DPAD		HDMI 0		HDMI 1		LVDS
-> Index: media/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> ===================================================================
-> --- media.orig/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> +++ media/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> @@ -110,6 +110,27 @@ static const struct rcar_du_device_info
->  	.num_lvds = 1,
->  };
+> Patch was developed on 4.6, rebased on 4.8-rc3, tested using chiliBoard.
 > 
-> +static const struct rcar_du_device_info rcar_du_r8a7792_info = {
-> +	.gen = 2,
-> +	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
-> +		  | RCAR_DU_FEATURE_EXT_CTRL_REGS,
-> +	.num_crtcs = 2,
-> +	.routes = {
-> +		/* R8A7792 has two RGB outputs. */
-> +		[RCAR_DU_OUTPUT_DPAD0] = {
-> +			.possible_crtcs = BIT(0),
-> +			.encoder_type = DRM_MODE_ENCODER_NONE,
-> +			.port = 0,
-> +		},
-> +		[RCAR_DU_OUTPUT_DPAD1] = {
-> +			.possible_crtcs = BIT(1),
-> +			.encoder_type = DRM_MODE_ENCODER_NONE,
-> +			.port = 1,
-> +		},
-> +	},
-> +	.num_lvds = 0,
-> +};
-> +
->  static const struct rcar_du_device_info rcar_du_r8a7794_info = {
->  	.gen = 2,
->  	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
-> @@ -161,6 +182,7 @@ static const struct of_device_id rcar_du
->  	{ .compatible = "renesas,du-r8a7779", .data = &rcar_du_r8a7779_info },
->  	{ .compatible = "renesas,du-r8a7790", .data = &rcar_du_r8a7790_info },
->  	{ .compatible = "renesas,du-r8a7791", .data = &rcar_du_r8a7791_info },
-> +	{ .compatible = "renesas,du-r8a7792", .data = &rcar_du_r8a7792_info },
->  	{ .compatible = "renesas,du-r8a7793", .data = &rcar_du_r8a7791_info },
->  	{ .compatible = "renesas,du-r8a7794", .data = &rcar_du_r8a7794_info },
->  	{ .compatible = "renesas,du-r8a7795", .data = &rcar_du_r8a7795_info },
+> [1] http://www.spinics.net/lists/devicetree/msg131516.html
+> 
+>  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  21 +++
+>  drivers/rtc/Kconfig                                |   1 +
+>  drivers/rtc/rtc-omap.c                             | 167 ++++++++++++++++++++-
+>  3 files changed, 181 insertions(+), 8 deletions(-)
+> 
+
+I'm fine with this patch and I'll apply it as soon as you fix the
+comments from Rob.
+
+Thanks!
+
 
 -- 
-Regards,
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-Laurent Pinchart
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
