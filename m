@@ -1,50 +1,36 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 03/26] video: of: display_timing: Add support for syncclk-active property
-Date: Thu, 1 Sep 2016 14:22:57 +0300
-Message-ID: <20160901112320.15246-4-peter.ujfalusi@ti.com>
-References: <20160901112320.15246-1-peter.ujfalusi@ti.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] support GMAC for RK3399 & RK3366
+Date: Thu, 01 Sep 2016 13:39:50 +0200
+Message-ID: <3113078.0eK6SFMBVA@diego>
+References: <1470900288-10109-1-git-send-email-roger.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160901112320.15246-1-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, airlied@linux.ie, tomi.valkeinen@ti.com
-Cc: daniel.vetter@ffwll.ch, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1470900288-10109-1-git-send-email-roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Configure the DISPLAY_FLAGS_SYNC_POSEDGE/NEGEDGE flags according to the
-binding document.
-If the syncclk-active is present in DT, configure the flags accordingly, if
-it is omitted it means that the SYNC edge is following the pixdata
-configuration.
+Hi Roger, Caesar,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: devicetree@vger.kernel.org
----
- drivers/video/of_display_timing.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Am Donnerstag, 11. August 2016, 15:24:45 schrieb Roger Chen:
+> This series adds registers description for RK3366 & RK3399 GMAC.
+> And also DT nodes for RK3399 SoC and EVB.
+> 
+> Roger Chen (3):
+>   net: stmmac: dwmac-rk: add rk3366 & rk3399 specific data
+>   arm64: dts: rockchip: add GMAC dt nodes for rk3399 SoC
+>   arm64: dts: rockchip: add GMAC dt nodes for RK3399 evb
 
-diff --git a/drivers/video/of_display_timing.c b/drivers/video/of_display_timing.c
-index 8a1076beecd3..db992c684f09 100644
---- a/drivers/video/of_display_timing.c
-+++ b/drivers/video/of_display_timing.c
-@@ -88,6 +88,15 @@ static int of_parse_display_timing(const struct device_node *np,
- 		dt->flags |= val ? DISPLAY_FLAGS_PIXDATA_POSEDGE :
- 				DISPLAY_FLAGS_PIXDATA_NEGEDGE;
- 
-+	if (!of_property_read_u32(np, "syncclk-active", &val))
-+		dt->flags |= val ? DISPLAY_FLAGS_SYNC_POSEDGE :
-+				DISPLAY_FLAGS_SYNC_NEGEDGE;
-+	else if (dt->flags & (DISPLAY_FLAGS_PIXDATA_POSEDGE |
-+			      DISPLAY_FLAGS_PIXDATA_NEGEDGE))
-+		dt->flags |= dt->flags & DISPLAY_FLAGS_PIXDATA_POSEDGE ?
-+				DISPLAY_FLAGS_SYNC_POSEDGE :
-+				DISPLAY_FLAGS_SYNC_NEGEDGE;
-+
- 	if (of_property_read_bool(np, "interlaced"))
- 		dt->flags |= DISPLAY_FLAGS_INTERLACED;
- 	if (of_property_read_bool(np, "doublescan"))
--- 
-2.9.3
+can you please respin this series addressing the comments from patch 1?
+
+
+Thanks
+Heiko
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
