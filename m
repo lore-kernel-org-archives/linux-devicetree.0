@@ -1,107 +1,75 @@
 From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH v2 2/4] drm/msm/hdmi: Clean up HDMI gpio DT bindings
-Date: Thu,  1 Sep 2016 19:06:52 +0530
-Message-ID: <1472737015-29382-3-git-send-email-architt@codeaurora.org>
+Subject: [PATCH v2 3/4] arm: dts: qcom: apq8064: Add display DT nodes
+Date: Thu,  1 Sep 2016 19:06:53 +0530
+Message-ID: <1472737015-29382-4-git-send-email-architt@codeaurora.org>
 References: <1467957354-7620-1-git-send-email-architt@codeaurora.org>
  <1472737015-29382-1-git-send-email-architt@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1472737015-29382-1-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: andy.gross@linaro.org, robdclark@gmail.com
-Cc: linux-arm-msm@vger.kernel.org, john.stultz@linaro.org, dri-devel@lists.freedesktop.org, Archit Taneja <architt@codeaurora.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Make the following changes in the HDMI gpio bindings:
-
-- Use "-gpios" as the suffix for all the gpio names
-- Move all the gpios to optional, since there are platforms that use none
-  of them.
-- The HPD gpio is a standard one, remove the "qcom,hdmi-tx-" prefix from
-  it.
-- Add a missing lpm gpio used on some platforms.
-
-Make the necessary changes in the driver to incorporate these changes.
-
-There hasn't been any upstream DT that uses the HDMI bindings, so it's
-okay to change and move around these properties.
-
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Archit Taneja <architt@codeaurora.org>
----
-v2:
-- Keep "qcom,hdmi-tx-" suffix for all gpios except for hpd.
-- Use "-gpios" suffix instead of "-gpio".
-- Move all the gpios to optional properties.
-
- .../devicetree/bindings/display/msm/hdmi.txt        | 11 ++++++-----
- drivers/gpu/drm/msm/hdmi/hdmi.c                     | 21 +++++++++++++++++++--
- 2 files changed, 25 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/msm/hdmi.txt b/Documentation/devicetree/bindings/display/msm/hdmi.txt
-index ce84459..f1a83ab 100644
---- a/Documentation/devicetree/bindings/display/msm/hdmi.txt
-+++ b/Documentation/devicetree/bindings/display/msm/hdmi.txt
-@@ -13,17 +13,18 @@ Required properties:
- - interrupts: The interrupt signal from the hdmi block.
- - clocks: device clocks
-   See ../clocks/clock-bindings.txt for details.
--- qcom,hdmi-tx-ddc-clk-gpio: ddc clk pin
--- qcom,hdmi-tx-ddc-data-gpio: ddc data pin
--- qcom,hdmi-tx-hpd-gpio: hpd pin
- - core-vdda-supply: phandle to supply regulator
- - hdmi-mux-supply: phandle to mux regulator
- - phys: the phandle for the HDMI PHY device
- - phy-names: the name of the corresponding PHY device
- 
- Optional properties:
--- qcom,hdmi-tx-mux-en-gpio: hdmi mux enable pin
--- qcom,hdmi-tx-mux-sel-gpio: hdmi mux select pin
-+- qcom,hdmi-tx-ddc-clk-gpios: ddc clk pin
-+- qcom,hdmi-tx-ddc-data-gpios: ddc data pin
-+- hpd-gpios: hpd pin
-+- qcom,hdmi-tx-mux-en-gpios: hdmi mux enable pin
-+- qcom,hdmi-tx-mux-sel-gpios: hdmi mux select pin
-+- qcom,hdmi-tx-mux-lpm-gpios: hdmi mux lpm pin
- - power-domains: reference to the power domain(s), if available.
- - pinctrl-names: the pin control state names; should contain "default"
- - pinctrl-0: the default pinctrl state (active)
-diff --git a/drivers/gpu/drm/msm/hdmi/hdmi.c b/drivers/gpu/drm/msm/hdmi/hdmi.c
-index 9737207..a968cad 100644
---- a/drivers/gpu/drm/msm/hdmi/hdmi.c
-+++ b/drivers/gpu/drm/msm/hdmi/hdmi.c
-@@ -422,12 +422,29 @@ static const struct {
- 
- static int msm_hdmi_get_gpio(struct device_node *of_node, const char *name)
- {
--	int gpio = of_get_named_gpio(of_node, name, 0);
-+	int gpio;
-+
-+	/* try with the gpio names as in the table (downstream bindings) */
-+	gpio = of_get_named_gpio(of_node, name, 0);
- 	if (gpio < 0) {
- 		char name2[32];
--		snprintf(name2, sizeof(name2), "%s-gpio", name);
-+
-+		/* try with the gpio names as in the upstream bindings */
-+		snprintf(name2, sizeof(name2), "%s-gpios", name);
- 		gpio = of_get_named_gpio(of_node, name2, 0);
- 		if (gpio < 0) {
-+			char name3[32];
-+
-+			/*
-+			 * try again after stripping out the "qcom,hdmi-tx"
-+			 * prefix. This is mainly to match "hpd-gpios" used
-+			 * in the upstream bindings
-+			 */
-+			if (sscanf(name2, "qcom,hdmi-tx-%s", name3))
-+				gpio = of_get_named_gpio(of_node, name3, 0);
-+		}
-+
-+		if (gpio < 0) {
- 			DBG("failed to get gpio: %s (%d)", name, gpio);
- 			gpio = -1;
- 		}
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+QVBRODA2NCBjb250YWlucyBhIE1EUDQgYmFzZWQgZGlzcGxheSBjb250cm9sbGVyLiBJdCBjb250
+YWlucyBhIEhETUksIExWRFMKYW5kIDIgRFNJIG91dHB1dHMuCgpBZGQgZGlzcGxheSBEVCBub2Rl
+cyBmb3IgTURQNCwgSERNSSBUWCBhbmQgSERNSSBQSFkuIE1EUDQgYmFzZWQgZGlzcGxheQpibG9j
+a3MgaGF2ZSBhIGZsYXQgZGV2aWNlIGhpZXJhcmNoeS4KCk5vZGVzIGZvciBvdGhlciBvdXRwdXRz
+IHdpbGwgYmUgYWRkZWQgbGF0ZXIuCgpDYzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4K
+Q2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCgpTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFu
+ZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL3Fjb20t
+YXBxODA2NC5kdHNpIHwgOTEgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwog
+MSBmaWxlIGNoYW5nZWQsIDkxIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9i
+b290L2R0cy9xY29tLWFwcTgwNjQuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3Fjb20tYXBxODA2
+NC5kdHNpCmluZGV4IDc0YTliNmMuLmI2ODhmYjYgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL3Fjb20tYXBxODA2NC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3Fjb20tYXBxODA2
+NC5kdHNpCkBAIC05NTUsNiArOTU1LDk3IEBACiAJCQlyZXNldC1uYW1lcyA9ICJheGkiLCAiYWhi
+IiwgInBvciIsICJwY2kiLCAicGh5IjsKIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CiAJCX07CisK
+KwkJaGRtaTogaGRtaS10eEA0YTAwMDAwIHsKKwkJCWNvbXBhdGlibGUgPSAicWNvbSxoZG1pLXR4
+LTg5NjAiOworCQkJcmVnID0gPDB4MDRhMDAwMDAgMHgyZjA+OworCQkJcmVnLW5hbWVzID0gImNv
+cmVfcGh5c2ljYWwiOworCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDc5IElSUV9UWVBFX05PTkU+
+OworCQkJY2xvY2tzID0gPCZtbWNjIEhETUlfQVBQX0NMSz4sCisJCQkJIDwmbW1jYyBIRE1JX01f
+QUhCX0NMSz4sCisJCQkJIDwmbW1jYyBIRE1JX1NfQUhCX0NMSz47CisJCQljbG9jay1uYW1lcyA9
+ICJjb3JlX2NsayIsCisJCQkJICAgICAgIm1hc3Rlcl9pZmFjZV9jbGsiLAorCQkJCSAgICAgICJz
+bGF2ZV9pZmFjZV9jbGsiOworCisJCQlwaHlzID0gPCZoZG1pX3BoeT47CisJCQlwaHktbmFtZXMg
+PSAiaGRtaS1waHkiOworCisJCQlwb3J0cyB7CisJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJ
+CQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCQlwb3J0QDAgeworCQkJCQlyZWcgPSA8MD47CisJ
+CQkJCWhkbWlfaW46IGVuZHBvaW50IHsKKwkJCQkJfTsKKwkJCQl9OworCisJCQkJcG9ydEAxIHsK
+KwkJCQkJcmVnID0gPDE+OworCQkJCQloZG1pX291dDogZW5kcG9pbnQgeworCQkJCQl9OworCQkJ
+CX07CisJCQl9OworCQl9OworCisJCWhkbWlfcGh5OiBoZG1pLXBoeUA0YTAwNDAwIHsKKwkJCWNv
+bXBhdGlibGUgPSAicWNvbSxoZG1pLXBoeS04OTYwIjsKKwkJCXJlZyA9IDwweDRhMDA0MDAgMHg2
+MD4sCisJCQkgICAgICA8MHg0YTAwNTAwIDB4MTAwPjsKKwkJCXJlZy1uYW1lcyA9ICJoZG1pX3Bo
+eSIsCisJCQkJICAgICJoZG1pX3BsbCI7CisKKwkJCWNsb2NrcyA9IDwmbW1jYyBIRE1JX1NfQUhC
+X0NMSz47CisJCQljbG9jay1uYW1lcyA9ICJzbGF2ZV9pZmFjZV9jbGsiOworCQl9OworCisJCW1k
+cDogbWRwQDUxMDAwMDAgeworCQkJY29tcGF0aWJsZSA9ICJxY29tLG1kcDQiOworCQkJcmVnID0g
+PDB4MDUxMDAwMDAgMHhmMDAwMD47CisJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNzUgSVJRX1RZ
+UEVfTk9ORT47CisJCQljbG9ja3MgPSA8Jm1tY2MgTURQX0NMSz4sCisJCQkJIDwmbW1jYyBNRFBf
+QUhCX0NMSz4sCisJCQkJIDwmbW1jYyBNRFBfQVhJX0NMSz4sCisJCQkJIDwmbW1jYyBNRFBfTFVU
+X0NMSz4sCisJCQkJIDwmbW1jYyBIRE1JX1RWX0NMSz4sCisJCQkJIDwmbW1jYyBNRFBfVFZfQ0xL
+PjsKKwkJCWNsb2NrLW5hbWVzID0gImNvcmVfY2xrIiwKKwkJCQkgICAgICAiaWZhY2VfY2xrIiwK
+KwkJCQkgICAgICAiYnVzX2NsayIsCisJCQkJICAgICAgImx1dF9jbGsiLAorCQkJCSAgICAgICJo
+ZG1pX2NsayIsCisJCQkJICAgICAgInR2X2NsayI7CisKKwkJCXBvcnRzIHsKKwkJCQkjYWRkcmVz
+cy1jZWxscyA9IDwxPjsKKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQkJCXBvcnRAMCB7CisJ
+CQkJCXJlZyA9IDwwPjsKKwkJCQkJbWRwX2x2ZHNfb3V0OiBlbmRwb2ludCB7CisJCQkJCX07CisJ
+CQkJfTsKKworCQkJCXBvcnRAMSB7CisJCQkJCXJlZyA9IDwxPjsKKwkJCQkJbWRwX2RzaTFfb3V0
+OiBlbmRwb2ludCB7CisJCQkJCX07CisJCQkJfTsKKworCQkJCXBvcnRAMiB7CisJCQkJCXJlZyA9
+IDwyPjsKKwkJCQkJbWRwX2RzaTJfb3V0OiBlbmRwb2ludCB7CisJCQkJCX07CisJCQkJfTsKKwor
+CQkJCXBvcnRAMyB7CisJCQkJCXJlZyA9IDwzPjsKKwkJCQkJbWRwX2R0dl9vdXQ6IGVuZHBvaW50
+IHsKKwkJCQkJfTsKKwkJCQl9OworCQkJfTsKKwkJfTsKIAl9OwogfTsKICNpbmNsdWRlICJxY29t
+LWFwcTgwNjQtcGlucy5kdHNpIgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJ
+bmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKaG9zdGVkIGJ5IFRoZSBM
+aW51eCBGb3VuZGF0aW9uCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
