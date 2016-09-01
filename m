@@ -1,60 +1,57 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC v3 00/22] soc: renesas: Add R-Car RST driver for
- obtaining mode pin state
-Date: Thu, 1 Sep 2016 13:46:02 +0200
-Message-ID: <CAMuHMdWu34OQSS6J3bf=0-1TYULc=coiVomBjtBatwGta5F3HQ@mail.gmail.com>
-References: <1464808880-343-1-git-send-email-geert+renesas@glider.be> <20160630201407.GA27880@codeaurora.org>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 0/7] ARM: dts: exynos: Remove skeleton.dtsi usage and fix
+ memory node DTC warnings
+Date: Thu, 01 Sep 2016 13:59:34 +0200
+Message-ID: <9206996.z0QQMGk4HW@amdc1976>
+References: <1472645679-5696-1-git-send-email-javier@osg.samsung.com>
+ <11690712.d89FASKYvI@amdc1976> <20160901114046.GB4220@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160630201407.GA27880@codeaurora.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Dirk Behme <dirk.behme@de.bosch.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20160901114046.GB4220@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
 
-On Thu, Jun 30, 2016 at 10:14 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 06/01, Geert Uytterhoeven wrote:
->> Currently the R-Car Clock Pulse Generator (CPG) drivers obtains the
->> state of the mode pins either by a call from the board code, or directly
->> by using a hardcoded register access. This is a bit messy, and creates a
->> dependency between driver and platform code.
->>
->> This RFC patch series converts the various Renesas R-Car clock drivers
->> and support code from reading the mode pin states using a hardcoded
->> register access to using a new R-Car RST driver.
->
-> Dumb question, can we use the nvmem reading APIs instead of an
-> SoC specific function to read the modes?
+Hi,
 
-Thanks for your suggestion, the nvmem API indeed looks like a suitable API,
-as it does support read-only nvmems.
+On Thursday, September 01, 2016 12:40:46 PM Mark Rutland wrote:
+> On Thu, Sep 01, 2016 at 11:59:48AM +0200, Bartlomiej Zolnierkiewicz wrote:
+> > On Thursday, September 01, 2016 10:35:15 AM Javier Martinez Canillas wrote:
+> > > On 08/31/2016 07:40 PM, Bartlomiej Zolnierkiewicz wrote:
+> > > > On Wednesday, August 31, 2016 03:45:24 PM Javier Martinez Canillas wrote:
+> > > >> The idea is to get rid of skeleton.dtsi [0], but that will of course take
+> > > >> time until the dtsi is removed from all the files. So this patch is a step
+> > > >> in the right direction so at least Exynos is not a blocker to remove it.
+> > > > 
+> > > > Krzysztof's point is valid.  If you are going to convert all DTS/DTSI
+> > > > then it is okay to apply Exynos specific changes, otherwise the code
+> > > > should stay as it is currently.
+> > > > 
+> > > > Exynos won't be a blocker since we have your patches now and they can
+> > > > be applied when/if needed ;)..
+> > > 
+> > > Sorry but I disagree. I see no reasons to need this to be an atomic, rather
+> > > than incremental change. Deprecated things are usually handled by removing
+> > > the usage and once there are no users, finally removing them.
+> > 
+> > Yes, given that there is agreement on the direction and people are aware
+> > of the needed changes.  This doesn't seem to be a case yet as there is
+> > no comment in skeleton.dtsi about being deprecated and other platforms'
+> > Maintainers are not aware of the need for the change.
+> 
+> On the DT side we're all agreed that skeleton.dtsi should die. I'll send
+> a patch adding a note to skeleton.dtsi to make this more obvious, but
+> that shouldn't be a blocker for removing existing uses.
 
-Unfortunately I also see a few disadvantages:
-  1. nvmem_init() is a subsys_initcall(), while most of our users (except for
-     the recent renesas-cpg-mssr driver) are clock drivers using
-     CLK_OF_DECLARE(), and are thus initialized from of_clk_init() at much
-     earlier time_init() time.
-     Of course the mvmem subsystem and/or the clock drivers can be changed, if
-     deemed useful.
-  2. Using the nvmem DT bindings means we have to add more DT glue from the
-     nvmem consumer(s) to the nvmem provider. As we need to provide backwards
-     compatibility with old DTSes, this means we need more C code or DT fixup
-     code to handle that.
-  3. The nvmem subsystem may be overkill to provide access to a simple 32-bit
-     read-only register that never changes value after boot.
+Thank you for clarifying this, I see no problem with applying Javier's
+Exynos DTS/DTSI changes now.
 
-Thoughts?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Best regards,
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
