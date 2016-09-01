@@ -1,74 +1,78 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v3 04/12] arm64: dts: h3ulcb: enable EthernetAVB
-Date: Thu, 1 Sep 2016 09:48:39 +0200
-Message-ID: <CAMuHMdVwO+uyR9P7NBGFCyMPHzwFX2umZL=UT2-B7qme8nenPg@mail.gmail.com>
-References: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1472637779-14741-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v6 1/2] Documentation: bindings: add dt documentation for Rockchip PCIe PHY
+Date: Thu,  1 Sep 2016 15:44:53 +0800
+Message-ID: <1472715894-28985-1-git-send-email-shawn.lin@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472637779-14741-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 31, 2016 at 12:02 PM, Vladimir Barinov
-<vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> This supports Ethernet AVB on H3ULCB board
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+This patch adds a binding that describes the Rockchip PCIe PHY found on Rockchip SoCs PCIe interface.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-> --- a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
 
-> @@ -62,3 +68,29 @@
->         clock-frequency = <14745600>;
->         status = "okay";
->  };
-> +
-> +&avb {
-> +       pinctrl-0 = <&avb_pins>;
-> +       pinctrl-names = "default";
-> +       renesas,no-ether-link;
-> +       phy-handle = <&phy0>;
-> +       status = "okay";
-> +
-> +       phy0: ethernet-phy@0 {
-> +               rxc-skew-ps = <900>;
-> +               rxdv-skew-ps = <0>;
-> +               rxd0-skew-ps = <0>;
-> +               rxd1-skew-ps = <0>;
-> +               rxd2-skew-ps = <0>;
-> +               rxd3-skew-ps = <0>;
-> +               txc-skew-ps = <900>;
-> +               txen-skew-ps = <0>;
-> +               txd0-skew-ps = <0>;
-> +               txd1-skew-ps = <0>;
-> +               txd2-skew-ps = <0>;
-> +               txd3-skew-ps = <0>;
-> +               reg = <0>;
-> +               interrupt-parent = <&gpio2>;
-> +               interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
+Changes in v6: None
+Changes in v5:
+- add Rob's ack tag
 
-Just wondering (it's done the same way on Salvator-X) why this is using a
-GPIO interrupt, and not the dedicated AVB_PHY_INT?
+Changes in v4: None
+Changes in v3:
+- rename the node to pcie_phy: pcie-phy suggested by Doug
 
-> +       };
-> +};
+Changes in v2:
+- add clk and reset description
+- remove unit-address
 
-Gr{oetje,eeting}s,
+ .../devicetree/bindings/phy/rockchip-pcie-phy.txt  | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
 
-                        Geert
+diff --git a/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
+new file mode 100644
+index 0000000..aedca29
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
+@@ -0,0 +1,32 @@
++Rockchip PCIE PHY
++-----------------------
++
++Required properties:
++ - compatible: rockchip,rk3399-pcie-phy
++ - #phy-cells: must be 0
++ - clocks: Must contain an entry in clock-names.
++	See ../clocks/clock-bindings.txt for details.
++ - clock-names: Must be "refclk"
++ - resets: Must contain an entry in reset-names.
++	See ../reset/reset.txt for details.
++ - reset-names: Must be "phy"
++
++Example:
++
++grf: syscon@ff770000 {
++	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	...
++
++	pcie_phy: pcie-phy {
++		compatible = "rockchip,rk3399-pcie-phy";
++		#phy-cells = <0>;
++		clocks = <&cru SCLK_PCIEPHY_REF>;
++		clock-names = "refclk";
++		resets = <&cru SRST_PCIEPHY>;
++		reset-names = "phy";
++	};
++};
++
+-- 
+2.3.7
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
