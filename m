@@ -1,51 +1,60 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] arm64: dts: rockchip: add the gmac needed node for
- rk3399
-Date: Thu, 01 Sep 2016 13:43:42 +0200
-Message-ID: <4350667.JBNzRWMVzQ@diego>
-References: <1472686132-27827-1-git-send-email-wxt@rock-chips.com>
- <1472686132-27827-5-git-send-email-wxt@rock-chips.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC v3 00/22] soc: renesas: Add R-Car RST driver for
+ obtaining mode pin state
+Date: Thu, 1 Sep 2016 13:46:02 +0200
+Message-ID: <CAMuHMdWu34OQSS6J3bf=0-1TYULc=coiVomBjtBatwGta5F3HQ@mail.gmail.com>
+References: <1464808880-343-1-git-send-email-geert+renesas@glider.be> <20160630201407.GA27880@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1472686132-27827-5-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160630201407.GA27880@codeaurora.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Dirk Behme <dirk.behme@de.bosch.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Caesar,
+Hi Stephen,
 
-Am Donnerstag, 1. September 2016, 07:28:51 schrieb Caesar Wang:
-> The RK3399 GMAC Ethernet Controller provides a complete Ethernet interface
-> from processor to a Reduced Media Independent Interface (RMII) and Reduced
-> Gigabit Media Independent Interface (RGMII) compliant Ethernet PHY.
-> 
-> This patch adds the related needed device information.
-> e.g.: interrupts, grf, clocks, pinctrl and so on.
-> 
-> The full details are in [0].
-> 
-> [0]:
-> Documentation/devicetree/bindings/net/rockchip-dwmac.txt
-> 
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On Thu, Jun 30, 2016 at 10:14 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 06/01, Geert Uytterhoeven wrote:
+>> Currently the R-Car Clock Pulse Generator (CPG) drivers obtains the
+>> state of the mode pins either by a call from the board code, or directly
+>> by using a hardcoded register access. This is a bit messy, and creates a
+>> dependency between driver and platform code.
+>>
+>> This RFC patch series converts the various Renesas R-Car clock drivers
+>> and support code from reading the mode pin states using a hardcoded
+>> register access to using a new R-Car RST driver.
+>
+> Dumb question, can we use the nvmem reading APIs instead of an
+> SoC specific function to read the modes?
 
-the core rk3399 gmac support is still stuck and needs a respin. This patch is 
-part of that other series as well which needs a respin itself.
+Thanks for your suggestion, the nvmem API indeed looks like a suitable API,
+as it does support read-only nvmems.
 
-Maybe you could just fold both series into one so that we don't have to track 
-two.
+Unfortunately I also see a few disadvantages:
+  1. nvmem_init() is a subsys_initcall(), while most of our users (except for
+     the recent renesas-cpg-mssr driver) are clock drivers using
+     CLK_OF_DECLARE(), and are thus initialized from of_clk_init() at much
+     earlier time_init() time.
+     Of course the mvmem subsystem and/or the clock drivers can be changed, if
+     deemed useful.
+  2. Using the nvmem DT bindings means we have to add more DT glue from the
+     nvmem consumer(s) to the nvmem provider. As we need to provide backwards
+     compatibility with old DTSes, this means we need more C code or DT fixup
+     code to handle that.
+  3. The nvmem subsystem may be overkill to provide access to a simple 32-bit
+     read-only register that never changes value after boot.
 
+Thoughts?
 
-Thanks
-Heiko
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
