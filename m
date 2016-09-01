@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 2/6] clk: sunxi-ng: mux: Add mux table macro
-Date: Thu,  1 Sep 2016 16:16:13 +0200
-Message-ID: <20160901141617.9777-3-maxime.ripard@free-electrons.com>
+Subject: [PATCH 1/6] clk: sunxi-ng: div: Add mux table macros
+Date: Thu,  1 Sep 2016 16:16:12 +0200
+Message-ID: <20160901141617.9777-2-maxime.ripard@free-electrons.com>
 References: <20160901141617.9777-1-maxime.ripard@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20160901141617.9777-1-maxime.ripard@free-electrons.com>
@@ -10,57 +10,64 @@ To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org
 Cc: Hans de Goede <hdegoede@redhat.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a new macro to declare muxes based on a table and a gate.
+Add some macros to ease the declaration of clocks that are using them.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- drivers/clk/sunxi-ng/ccu_mux.h | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ drivers/clk/sunxi-ng/ccu_div.h | 28 +++++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu_mux.h b/drivers/clk/sunxi-ng/ccu_mux.h
-index f5123a1a6603..47aba3a48245 100644
---- a/drivers/clk/sunxi-ng/ccu_mux.h
-+++ b/drivers/clk/sunxi-ng/ccu_mux.h
-@@ -43,9 +43,12 @@ struct ccu_mux {
- 	struct ccu_common	common;
- };
+diff --git a/drivers/clk/sunxi-ng/ccu_div.h b/drivers/clk/sunxi-ng/ccu_div.h
+index 5d98549e23a6..a5c9eaf90e84 100644
+--- a/drivers/clk/sunxi-ng/ccu_div.h
++++ b/drivers/clk/sunxi-ng/ccu_div.h
+@@ -77,13 +77,16 @@ struct ccu_div {
+ 				      _shift, _width, _table, 0,	\
+ 				      _flags)
  
--#define SUNXI_CCU_MUX(_struct, _name, _parents, _reg, _shift, _width, _flags) \
-+#define SUNXI_CCU_MUX_TABLE_WITH_GATE(_struct, _name, _parents, _table,	\
-+				     _reg, _shift, _width, _gate,	\
-+				     _flags)				\
- 	struct ccu_mux _struct = {					\
--		.mux	= _SUNXI_CCU_MUX(_shift, _width),		\
-+		.enable	= _gate,					\
-+		.mux	= _SUNXI_CCU_MUX_TABLE(_shift, _width, _table),	\
+-#define SUNXI_CCU_M_WITH_MUX_GATE(_struct, _name, _parents, _reg,	\
+-				  _mshift, _mwidth, _muxshift, _muxwidth, \
+-				  _gate, _flags)			\
++#define SUNXI_CCU_M_WITH_MUX_TABLE_GATE(_struct, _name,			\
++					_parents, _table,		\
++					_reg,				\
++					_mshift, _mwidth,		\
++					_muxshift, _muxwidth,		\
++					_gate, _flags)			\
+ 	struct ccu_div _struct = {					\
+ 		.enable	= _gate,					\
+ 		.div	= _SUNXI_CCU_DIV(_mshift, _mwidth),		\
+-		.mux	= _SUNXI_CCU_MUX(_muxshift, _muxwidth),		\
++		.mux	= _SUNXI_CCU_MUX_TABLE(_muxshift, _muxwidth, _table), \
  		.common	= {						\
  			.reg		= _reg,				\
  			.hw.init	= CLK_HW_INIT_PARENTS(_name,	\
-@@ -57,17 +60,14 @@ struct ccu_mux {
+@@ -93,12 +96,23 @@ struct ccu_div {
+ 		},							\
+ 	}
  
- #define SUNXI_CCU_MUX_WITH_GATE(_struct, _name, _parents, _reg,		\
- 				_shift, _width, _gate, _flags)		\
--	struct ccu_mux _struct = {					\
--		.enable	= _gate,					\
--		.mux	= _SUNXI_CCU_MUX(_shift, _width),		\
--		.common	= {						\
--			.reg		= _reg,				\
--			.hw.init	= CLK_HW_INIT_PARENTS(_name,	\
--							      _parents, \
--							      &ccu_mux_ops, \
--							      _flags),	\
--		}							\
--	}
-+	SUNXI_CCU_MUX_TABLE_WITH_GATE(_struct, _name, _parents, NULL,	\
-+				      _reg, _shift, _width, _gate,	\
-+				      _flags)
++#define SUNXI_CCU_M_WITH_MUX_GATE(_struct, _name, _parents, _reg,	\
++				  _mshift, _mwidth, _muxshift, _muxwidth, \
++				  _gate, _flags)			\
++	SUNXI_CCU_M_WITH_MUX_TABLE_GATE(_struct, _name,			\
++					_parents, NULL,			\
++					_reg, _mshift, _mwidth,		\
++					_muxshift, _muxwidth,		\
++					_gate, _flags)
 +
-+#define SUNXI_CCU_MUX(_struct, _name, _parents, _reg, _shift, _width,	\
-+		      _flags)						\
-+	SUNXI_CCU_MUX_TABLE_WITH_GATE(_struct, _name, _parents, NULL,	\
-+				      _reg, _shift, _width, 0, _flags)
+ #define SUNXI_CCU_M_WITH_MUX(_struct, _name, _parents, _reg,		\
+ 			     _mshift, _mwidth, _muxshift, _muxwidth,	\
+ 			     _flags)					\
+-	SUNXI_CCU_M_WITH_MUX_GATE(_struct, _name, _parents, _reg,	\
+-				  _mshift, _mwidth, _muxshift, _muxwidth, \
+-				  0, _flags)
++	SUNXI_CCU_M_WITH_MUX_TABLE_GATE(_struct, _name,			\
++					_parents, NULL,			\
++					_reg, _mshift, _mwidth,		\
++					_muxshift, _muxwidth,		\
++					0, _flags)
  
- static inline struct ccu_mux *hw_to_ccu_mux(struct clk_hw *hw)
- {
+ 
+ #define SUNXI_CCU_M_WITH_GATE(_struct, _name, _parent, _reg,		\
 -- 
 2.9.2
