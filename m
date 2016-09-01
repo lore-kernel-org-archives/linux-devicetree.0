@@ -1,114 +1,86 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: da850-lcdk: Add NAND to DT
-Date: Thu, 1 Sep 2016 10:47:04 +0530
-Message-ID: <3945712b-d02f-d97a-2356-9383d7fe1984@ti.com>
-References: <20160829153242.18615-1-kbeldan@baylibre.com>
- <7h37lk5wrd.fsf@baylibre.com>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: RE: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
+Date: Thu, 1 Sep 2016 06:01:35 +0000
+Message-ID: <C89496FEAE474D468F30D558A9468D9F26D14089@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1464626798-1334-1-git-send-email-navam@xilinx.com>
+ <20160602225815.GA5508@rob-hp-laptop>
+ <C89496FEAE474D468F30D558A9468D9F26CF8BC0@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <20160711220623.GB8465@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7h37lk5wrd.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Karl Beldan <karl.beldan+oss-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Hyun Kwon <hyunk@xilinx.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Radhey Shyam Pandey <radheys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 01 September 2016 05:14 AM, Kevin Hilman wrote:
-> Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+Ping!!
+
+> -----Original Message-----
+> From: Nava kishore Manne
+> Sent: Monday, July 25, 2016 3:57 PM
+> To: 'gregkh@linuxfoundation.org' <gregkh@linuxfoundation.org>
+> Cc: 'Rob Herring' <robh@kernel.org>; 'pawel.moll@arm.com'
+> <pawel.moll@arm.com>; 'mark.rutland@arm.com'
+> <mark.rutland@arm.com>; 'ijc+devicetree@hellion.org.uk'
+> <ijc+devicetree@hellion.org.uk>; 'galak@codeaurora.org'
+> <galak@codeaurora.org>; Michal Simek <michals@xilinx.com>; Soren
+> Brinkmann <sorenb@xilinx.com>; 'balbi@ti.com' <balbi@ti.com>; Hyun
+> Kwon <hyunk@xilinx.com>; Radhey Shyam Pandey <radheys@xilinx.com>;
+> 'devicetree@vger.kernel.org' <devicetree@vger.kernel.org>; 'linux-arm-
+> kernel@lists.infradead.org' <linux-arm-kernel@lists.infradead.org>; 'linux-
+> kernel@vger.kernel.org' <linux-kernel@vger.kernel.org>
+> Subject: RE: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
 > 
->> This adds DT support for the NAND connected to the SoC AEMIF.
->> Passed torture hashing a 40MB file on top of UBIFS using subpages.
->>
->> Signed-off-by: Karl Beldan <kbeldan-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->> v2:
->>
->> - Removed comments pertaining to the BSP the LCDK ships with (Sekhar)
->> - s/"ok"/"okay"/
->> - Removed partitions since it relates to the BSP the LCDK ships with
+> Ping!!
 > 
-> IMO, some default partitions are nice to have, at least for u-boot and
-> u-boot env so factory-shipped u-boot is not accidentally overridden.
-> The left over space can be labeled "free space".
-> 
-> Anyways, after adding some partitions back, I tested with ubifs on my
-> LCDK:
-
-This[1] is what I had commented on the partitions before. I did not 
-mean to remove partitions altogether, just comments referring to 
-compatibility with pre-flashed software shipping with LCDK (since that 
-changes without notice).
-
-Apologies for any confusion caused. The "Rest of the patch looks good
-to me" in the end was to say that the partitions themselves look fine :)
-
-Can you please submit a v2 with partitions added?
-
-Thanks,
-Sekhar
-
-[1]
-
-> +
-> +			/*
-> +			 * LCDK original partitions:
-> +			 * 0x000000000000-0x000000020000 : "u-boot env"
-> +			 * 0x000000020000-0x0000000a0000 : "u-boot"
-> +			 * 0x0000000a0000-0x0000002a0000 : "kernel"
-> +			 * 0x0000002a0000-0x000020000000 : "filesystem"
-> +			 *
-> +			 * The 1st NAND block being guaranted to be valid w/o ECC (> 1k cycles),
-> +			 * it makes a perfect candidate as an SPL for the BootROM to jump to.
-> +			 * However the OMAP-L132/L138 Bootloader doc SPRAB41E reads:
-> +			 * "To boot from NAND Flash, the AIS should be written to NAND block 1
-> +			 * (NAND block 0 is not used by default)", which matches the LCDK
-> +			 * original partitioning.
-
-FWIW, silicon version 2.1 supports booting from block 0, but needs new
-boot pin settings not possible in stock LCDK.
-
-> +			 * Also, the LCDK ships with only the u-boot partition provisioned and
-> +			 * boots on it in its default configuration while using the MMC for the
-> +			 * kernel and rootfs, so preserve that one as is for now.
-> +			 * [1]: Ensuring for example that U-Boot LCDK SPL can handle it properly
-> +			 * and a proper boot chain ROM->SPL->U-Boot->Linux wrt ECC, would allow
-> +			 * for a better partitioning.
-> +			 */
-
-I would rather not refer to the software that LCDK ships with in the
-comments at all. Because that can change without notice. At some point,
-if mainline kernel works well enough on LCDK, TI might decide to ship
-LCDKs with mainline kernel flashed.
-
-> +			partitions {
-> +				compatible = "fixed-partitions";
-> +				#address-cells = <1>;
-> +				#size-cells = <1>;
-> +
-> +				partition@0 {
-> +					label = "u-boot env";
-> +					reg = <0 0x020000>;
-> +				};
-> +				partition@0x020000 {
-> +					/* The LCDK defaults to booting from this partition */
-> +					label = "u-boot";
-> +					reg = <0x020000 0x080000>;
-> +				};
-> +				partition@0x0a0000 {
-> +					label = "space";
-> +					reg = <0x0a0000 0>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-
-Rest of the patch looks good to me.
-
-Regards,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > -----Original Message-----
+> > From: Nava kishore Manne
+> > Sent: Wednesday, July 13, 2016 1:00 PM
+> > To: 'gregkh@linuxfoundation.org' <gregkh@linuxfoundation.org>
+> > Cc: Rob Herring <robh@kernel.org>; pawel.moll@arm.com;
+> > mark.rutland@arm.com; ijc+devicetree@hellion.org.uk;
+> > galak@codeaurora.org; Michal Simek <michals@xilinx.com>; Soren
+> > Brinkmann <sorenb@xilinx.com>; balbi@ti.com; Hyun Kwon
+> > <hyunk@xilinx.com>; Radhey Shyam Pandey <radheys@xilinx.com>;
+> > devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > linux- kernel@vger.kernel.org
+> > Subject: RE: [PATCH v4] Axi-usb: Add support for 64-bit addressing.
+> >
+> > Hi Greg,
+> >
+> > > > Ping!!
+> > >
+> > > <snip>
+> > >
+> > > >
+> > > > This email and any attachments are intended for the sole use of
+> > > > the named
+> > > recipient(s) and contain(s) confidential information that may be
+> > > proprietary, privileged or copyrighted under applicable law. If you
+> > > are not the intended recipient, do not read, copy, or forward this
+> > > email message or any attachments. Delete this email message and any
+> > attachments immediately.
+> > >
+> > > You do realize that with an email footer like this, you prevent any
+> > > of us from responding to you, sorry.  I shouldn't even be writing this...
+> >
+> > Sorry something fishy happened with my email-client I have fixed it
+> > now next time onwards will take care before giving replies...
+> >
+> > Regards,
+> > Navakishore.
+> > >
+> >
+> >
+> > > greg k-h
