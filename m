@@ -1,52 +1,75 @@
-From: <Wenyou.Yang-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: RE: [PATCH v9 3/4] doc: bindings: mfd: act8945a: Update the example
-Date: Thu, 1 Sep 2016 12:52:51 +0000
-Message-ID: <F9F4555C4E01D7469D37975B62D0EFBB3B600E@CHN-SV-EXMX07.mchp-main.com>
-References: <1472722201-31872-1-git-send-email-wenyou.yang@atmel.com>
- <1472722201-31872-4-git-send-email-wenyou.yang@atmel.com>
- <20160901112251.GK4921@dell> <20160901124746.vbhrz4f53vb63d7t@earth>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RESEND PATCH 1/3] ARM: dts: Add TOPEET itop core board SCP
+ package version
+Date: Thu, 01 Sep 2016 15:03:51 +0200
+Message-ID: <5477278.USWYFxDPfA@amdc1976>
+References: <a35686c3-294b-a16a-2b0e-0ef2fd460244@kernel.org>
+ <1472648307-3818-1-git-send-email-ayaka@soulik.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160901124746.vbhrz4f53vb63d7t@earth>
-Content-Language: en-US
+In-reply-to: <1472648307-3818-1-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2ViYXN0aWFuIFJlaWNo
-ZWwgW21haWx0bzpzcmVAa2VybmVsLm9yZ10NCj4gU2VudDogMjAxNsTqOdTCMcjVIDIwOjQ4DQo+
-IFRvOiBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPg0KPiBDYzogV2VueW91IFlhbmcg
-LSBBNDE1MzUgPFdlbnlvdS5ZYW5nQG1pY3JvY2hpcC5jb20+OyBEbWl0cnkgRXJlbWluLQ0KPiBT
-b2xlbmlrb3YgPGRiYXJ5c2hrb3ZAZ21haWwuY29tPjsgRGF2aWQgV29vZGhvdXNlDQo+IDxkd213
-MkBpbmZyYWRlYWQub3JnPjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IFBhd2Vs
-IE1vbGwNCj4gPHBhd2VsLm1vbGxAYXJtLmNvbT47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5k
-QGFybS5jb20+OyBJYW4gQ2FtcGJlbGwNCj4gPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVr
-PjsgS3VtYXIgR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+OyBOaWNvbGFzDQo+IEZlcnJlIDxu
-aWNvbGFzLmZlcnJlQGF0bWVsLmNvbT47IEFsZXhhbmRyZSBCZWxsb25pIDxhbGV4YW5kcmUuYmVs
-bG9uaUBmcmVlLQ0KPiBlbGVjdHJvbnMuY29tPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
-ZzsgV2VueW91IFlhbmcgLSBBNDE1MzUNCj4gPFdlbnlvdS5ZYW5nQG1pY3JvY2hpcC5jb20+OyBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZzsgbGludXgtcG1Admdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFU
-Q0ggdjkgMy80XSBkb2M6IGJpbmRpbmdzOiBtZmQ6IGFjdDg5NDVhOiBVcGRhdGUgdGhlIGV4YW1w
-bGUNCj4gDQo+IEhpIExlZSwNCj4gDQo+IE9uIFRodSwgU2VwIDAxLCAyMDE2IGF0IDEyOjIyOjUx
-UE0gKzAxMDAsIExlZSBKb25lcyB3cm90ZToNCj4gPiBPbiBUaHUsIDAxIFNlcCAyMDE2LCBXZW55
-b3UgWWFuZyB3cm90ZToNCj4gPg0KPiA+ID4gU2luY2UgdGhlIGFjdDg5NDVhLWNoYXJnZXIgaXMg
-cmVnYXJkZWQgYXMgYSBzdWItZGV2aWNlIGFuZCBpdCB1c2luZw0KPiA+ID4gImludGVycnVwdHMi
-IHByb3BlcnR5LCB1cGRhdGUgdGhlIGV4YW1wbGVzIHNlY3Rpb24uDQo+ID4gPg0KPiA+ID4gU2ln
-bmVkLW9mZi1ieTogV2VueW91IFlhbmcgPHdlbnlvdS55YW5nQGF0bWVsLmNvbT4NCj4gPiA+IC0t
-LQ0KPiA+ID4NCj4gPiA+IENoYW5nZXMgaW4gdjk6IE5vbmUNCj4gPiA+IENoYW5nZXMgaW4gdjg6
-IE5vbmUNCj4gPiA+IENoYW5nZXMgaW4gdjc6IE5vbmUNCj4gPiA+IENoYW5nZXMgaW4gdjY6IE5v
-bmUNCj4gPiA+IENoYW5nZXMgaW4gdjQ6IE5vbmUNCj4gPiA+DQo+ID4gPiAgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9hY3Q4OTQ1YS50eHQgfCAyMg0KPiA+ID4gKysrKysr
-KysrKysrKysrLS0tLS0tLQ0KPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCsp
-LCA3IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gVGhpcyBpcyBhIGZ1bmN0aW9uYWwgY2hhbmdlLiAg
-SSdsbCByZXF1aXJlIGEgRFQgQWNrLg0KPiANCj4gV2VueW91IFlhbmcgZm9yZ290IHRvIHRha2Ug
-b3ZlciBSb2IncyBBY2tlZC1CeSBmcm9tIHRoZSBwcmV2aW91cw0KPiB2ZXJzaW9uOiBodHRwczov
-L3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzkyOTg4NzEvDQoNClllcywgc29ycnkuIEkgZm9y
-Z290Lg0KDQoNCkJlc3QgUmVnYXJkcywNCldlbnlvdSBZYW5nDQo=
+
+Hi,
+
+On Wednesday, August 31, 2016 08:58:27 PM Randy Li wrote:
+> The TOPEET itop is a samsung exnynos 4412 core board, which have
+> two package versions. This patch add the support for SCP version.
+> 
+> Currently supported are USB3503A HSIC, USB OTG, eMMC, rtc and
+> PMIC. The future features are in the based board. Also MFC and
+> watchdog have been enabled.
+> 
+> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi | 490 ++++++++++++++++++++++++
+>  1 file changed, 490 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
+
+[...]
+
+> +		s5m8767_osc: clocks {
+
+Don't you also need:
+
+			compatible = "samsung,s5m8767-clk";
+
+here?
+
+BTW Does anyone know why there are no users of
+"samsung,s2mps11-clk" compatible in the tree
+(commit 53c31b3437a6400c6ffc2c9315680217ad84cb6d
+"mfd: sec-core: Add of_compatible strings for
+clock MFD cells" added it in March 2014)?
+
+> +			#clock-cells = <1>;
+> +			clock-output-names = "s5m8767_ap",
+> +					"s5m8767_cp", "s5m8767_bt";
+> +		};
+> +
+> +	};
+> +};
+
+[...]
+
+> +&rtc {
+> +	status = "okay";
+> +	clocks = <&clock CLK_RTC>, <&s5m8767_osc S2MPS11_CLK_AP>;
+> +	clock-names = "rtc", "rtc_src";
+> +};
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
