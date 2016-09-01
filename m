@@ -1,32 +1,75 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [v10,2/2] PCI: Rockchip: Add Rockchip PCIe controller support
-Date: Wed, 31 Aug 2016 21:14:47 -0700
-Message-ID: <a061d3d4-d4fa-f7ab-a00f-73389c259559@roeck-us.net>
-References: <1471570498-3284-1-git-send-email-shawn.lin@rock-chips.com>
- <20160831181754.GA7460@roeck-us.net>
- <9075a2c1-c787-986f-31b4-4d5b7c92b771@rock-chips.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support
+ for rk3399
+Date: Wed, 31 Aug 2016 21:20:16 -0700
+Message-ID: <CAD=FV=WmoyoZmV_uj281S37ZpWqg8Dr2U8ntkD2Sr58qbcB0wg@mail.gmail.com>
+References: <20160827134103.28160-1-xzy.xu@rock-chips.com> <20160827134103.28160-3-xzy.xu@rock-chips.com>
+ <2ab8ab94-fa4d-2cd6-5805-a92ac5f9697e@rock-chips.com> <57C3A30B.5080707@rock-chips.com>
+ <ceba6a89-6945-58c5-62e4-7d842cfa2312@rock-chips.com> <CAD=FV=W=LkVAm187hxp0Kbjxi5kSThwKnCMX+tr8SXQ-v_xQTQ@mail.gmail.com>
+ <77f5cff1-80a2-76b3-40e9-f77caced2257@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9075a2c1-c787-986f-31b4-4d5b7c92b771@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <77f5cff1-80a2-76b3-40e9-f77caced2257-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>Jianqun Xu <j>
 List-Id: devicetree@vger.kernel.org
 
-On 08/31/2016 08:39 PM, Shawn Lin wrote:
-> Hi Guenter,
->
-> Thanks for your review, and I think it still not too late
-> for nitpicking as it isn't merged to next branch. :)
->
-> We have amend the code a bit, so probably we fixed some of
-> the minor issues against V10. But some of them are really
-> personal taste, if you still insist on that, I will be ok
-> to modify them.
->
+Hi,
 
-Take it as suggestions; I won't insist on anything.
+On Wed, Aug 31, 2016 at 7:29 PM, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>> This is fine to pick up _only_ if you don't care about suspend/resume.
+>> If you care about suspend/resume then someone needs to first write a
+>> patch that will re-init all "corecfg" values after power is turned on.
+>
+>
+> Do you mean corecfg_clockmultiplier and corecfg_baseclkfreq, if yes, we
+> don't need to strore/re-init it after resume.
+> corecfg_clockmultiplier is only used to fetch host->clk_mul, and
+> host->clk_mul has been a fixed value at run-time, unless driver unbind.
+> The same as corecfg_clockmultiplier, corecfg_baseclkfreq is used to check
+> the xin_clk at probe time, we don't reference it at run-time.
+> BTW, I have tested suspend/resume on rk3399 prior to this sumbit, eMMC works
+> fine.
 
-Guenter
+I guess I don't actually know how the corecfg_clockmultiplier and
+corecfg_baseclkfreq fields are actually used, but I presume that they
+actually do something useful and aren't used to just communicate back
+to software?
+
+I know that:
+
+1. If I don't pick this patch and I suspend/resume,
+corecfg_clockmultiplier and corecfg_baseclkfreq are still fine after
+suspend / resume.
+
+2. If I do pick this patch and I suspend/resume,
+corecfg_clockmultiplier and corecfg_baseclkfreq are wrong after
+suspend/resume (tested by reading /dev/mem directly from userspace
+after suspend/resume).
+
+
+Are you saying that it is unimportant that corecfg_clockmultiplier and
+corecfg_baseclkfreq are wrong?
+
+>> Technically I think this should probably use "pm runtime" and not
+>> normal suspend/resume hooks.  Any time we end up pm runtime suspended
+>> then I think our power will go off (because of genpd?) and we need to
+>> restore values.
+>
+>
+> I understand your consideration. BUT genpd is in charge of on/off pd if the
+> corresponding device node has "power-domains" property. RPM is unnecessary
+> for this situation, we will not use autosuspend, right?
+>
+> @shawn, what's your opinion?
+
+I haven't dug.  If Runtime PM isn't enabled for sdhci-of-arasan then I
+guess we can just worry about suspend/resume, though.
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
