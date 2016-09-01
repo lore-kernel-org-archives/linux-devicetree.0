@@ -1,62 +1,42 @@
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: Re: [PATCH v3 0/12] arm64: renesas: add H3ULCB board
-Date: Thu, 1 Sep 2016 13:43:04 +0300
-Message-ID: <8126894f-252a-3579-ddde-2df13a309ece@cogentembedded.com>
-References: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <CAMuHMdX4sxY4_FKemcQfYtvCr5ZZ52nTqnRtp5G42X93UTT8aw@mail.gmail.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 0/6] pinctrl: s3c/samsung: Add header with values used for
+ configuration
+Date: Thu, 1 Sep 2016 12:53:25 +0200
+Message-ID: <f235a3a0-36cb-7816-6f57-4a09d63d109f@osg.samsung.com>
+References: <1472721715-2833-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdX4sxY4_FKemcQfYtvCr5ZZ52nTqnRtp5G42X93UTT8aw@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1472721715-2833-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hello Krzysztof,
 
-Thank you for the review!
-I will wait for Morimoto-san review and respin the patch series 
-accordingly to your comments.
+On 09/01/2016 11:21 AM, Krzysztof Kozlowski wrote:
+> Hi,
+> 
+> Extend previous patchset (v2) [1] to older, legacy platforms.
+> This depends on v2 of prevoius patchset.
+> 
+> 
+> Changes in DTS/DTSI generated with:
+> sed -i -e 's/samsung,pin-drv = <0>;$/samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;/' arch/arm/boot/dts/s5p*
+> sed -i -e 's/samsung,pin-drv = <2>;$/samsung,pin-drv = <EXYNOS4_PIN_DRV_LV2>;/' arch/arm/boot/dts/s5p*
+> sed -i -e 's/samsung,pin-drv = <1>;$/samsung,pin-drv = <EXYNOS4_PIN_DRV_LV3>;/' arch/arm/boot/dts/s5p*
+> sed -i -e 's/samsung,pin-drv = <3>;$/samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;/' arch/arm/boot/dts/s5p*
+> 
 
-Regards,
-Vladimir
+Besides the comment for patch 1/6, the series looks good to me.
+So when posting v2 feel free to add:
 
-On 01.09.2016 11:39, Geert Uytterhoeven wrote:
-> Hi Vladimir,
->
-> On Wed, Aug 31, 2016 at 12:01 PM, Vladimir Barinov
-> <vladimir.barinov@cogentembedded.com> wrote:
->> This adds the folowing:
->> - R8A7795 SoC based H3ULCB low cost board device tree
->> - Document DT bindings
-> Thanks for your split series!
->
->> Vladimir Barinov (12):
->> [01/12] dt: arm: shmobile: add H3ULCB board DT bindings
->> [02/12] arm64: dts: h3ulcb: initial device tree
->> [03/12] arm64: dts: h3ulcb: enable SCIF clk and pins
->> [04/12] arm64: dts: h3ulcb: enable EthernetAVB
->> [05/12] arm64: dts: h3ulcb: enable GPIO leds
->> [06/12] arm64: dts: h3ulcb: enable SDHI0
->> [07/12] arm64: dts: h3ulcb: enable I2C2
->> [08/12] arm64: dts: h3ulcb: enable EXTALR clk
->> [09/12] arm64: dts: h3ulcb: enable WDT
->> [10/12] arm64: dts: h3ulcb: enable USB2 PHY of channel 1
->> [11/12] arm64: dts: h3ulcb: enable USB2.0 Host channel 1
-> I went through all of the above...
->
->> [12/12] arm64: dts: h3ulcb: Sound SSI support
-> ... but I'm leaving this one for Morimoto-san.
->
-> Gr{oetje,eeting}s,
->
->                          Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                  -- Linus Torvalds
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
