@@ -1,176 +1,138 @@
-From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 1/2] Documentation: dt: add bindings for ti-cpufreq
-Date: Wed, 31 Aug 2016 21:53:27 -0500
-Message-ID: <20160901025328.376-2-d-gerlach@ti.com>
-References: <20160901025328.376-1-d-gerlach@ti.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support
+ for rk3399
+Date: Thu, 1 Sep 2016 11:23:42 +0800
+Message-ID: <12451b81-321e-b661-8f1c-25c91bffba54@rock-chips.com>
+References: <20160827134103.28160-1-xzy.xu@rock-chips.com>
+ <20160827134103.28160-3-xzy.xu@rock-chips.com>
+ <2ab8ab94-fa4d-2cd6-5805-a92ac5f9697e@rock-chips.com>
+ <57C3A30B.5080707@rock-chips.com>
+ <ceba6a89-6945-58c5-62e4-7d842cfa2312@rock-chips.com>
+ <CAD=FV=W=LkVAm187hxp0Kbjxi5kSThwKnCMX+tr8SXQ-v_xQTQ@mail.gmail.com>
+ <77f5cff1-80a2-76b3-40e9-f77caced2257@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160901025328.376-1-d-gerlach-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <77f5cff1-80a2-76b3-40e9-f77caced2257-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+To: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the device tree bindings document for the TI CPUFreq/OPP driver
-on AM33xx, AM43xx, DRA7, and AM57 SoCs. The operating-points-v2 binding
-allows us to provide an opp-supported-hw property for each OPP to define
-when it is available. This driver is responsible for reading and parsing
-registers to determine which OPPs can be selectively enabled based
-on the specific SoC in use by matching against the opp-supported-hw
-data.
+在 2016/9/1 10:29, Ziyuan Xu 写道:
+> Hi,
+>
+>
+> On 2016年09月01日 01:42, Doug Anderson wrote:
+>> Hi,
+>>
+>> On Sun, Aug 28, 2016 at 8:25 PM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> wrote:
+>>> On 2016/8/29 10:50, Elaine Zhang wrote:
+>>>>
+>>>>
+>>>> On 08/27/2016 11:05 PM, Shawn Lin wrote:
+>>>>> On 2016/8/27 21:41, Ziyuan Xu wrote:
+>>>>>> Control power domain for eMMC via genpd to reduce power consumption.
+>>>>>>
+>>>>>> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>>>> Signed-off-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>>>>
+>>>>> It looks nice to me. But this should be merged after applying that[0]
+>>>>> as your patch will break bind/unbind test for sdhci-of-arasan on
+>>>>> rk3399
+>>>>> without it[0]. Moreover, Elaine should make sure that upstreamed
+>>>>> rockchip power domain stuff would not off pd for emmc, *otherwise*, I
+>>>>> should update my patch to make sure we update clkmul every time when
+>>>>> doing suspend 2 resume..
+>>>>>
+>>>>>
+>>>> Forgot to say:
+>>>> If use pd, Although there is no call to power odd the pd_emmc,
+>>>> it will be power off when the system doing suspend 2 resume.
+>>>> (Because the system call
+>>>> __device_suspend_noirq->pm_genpd_suspend_noirq->rockchip_pd_power_off)
+>>>
+>>> Thanks for explaining this. I checked the code a bit and actually I
+>>> don't need to updata clkmul since it was recorded, although it is still
+>>> reset to 0x10 reading from syscon. So for that, we can now pick it
+>>> up without waiting for my sdhci-of-arasan's update.
+>>>
+>>> Reviewed-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> This is fine to pick up _only_ if you don't care about suspend/resume.
+>> If you care about suspend/resume then someone needs to first write a
+>> patch that will re-init all "corecfg" values after power is turned on.
+>
+> Do you mean corecfg_clockmultiplier and corecfg_baseclkfreq, if yes, we
+> don't need to strore/re-init it after resume.
+> corecfg_clockmultiplier is only used to fetch host->clk_mul, and
+> host->clk_mul has been a fixed value at run-time, unless driver unbind.
+> The same as corecfg_clockmultiplier, corecfg_baseclkfreq is used to
+> check the xin_clk at probe time, we don't reference it at run-time.
 
-Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
----
-v1->v2:
-	- Dropped all driver/linux specific documentation
-	- Fixed some typos
-	- Add new compatibles for each SoC family to match against
-	- Switched to use am335x example to better demonstrate field one of
-	  opp-supported-hw.
+correct. That is why we don't need to update it even we power off pd.
 
- .../devicetree/bindings/cpufreq/ti-cpufreq.txt     | 130 +++++++++++++++++++++
- 1 file changed, 130 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
+> BTW, I have tested suspend/resume on rk3399 prior to this sumbit, eMMC
+> works fine.
+>
+>>
+>> Technically I think this should probably use "pm runtime" and not
+>> normal suspend/resume hooks.  Any time we end up pm runtime suspended
+>> then I think our power will go off (because of genpd?) and we need to
+>> restore values.
+>
+> I understand your consideration. BUT genpd is in charge of on/off pd if
+> the corresponding device node has "power-domains" property. RPM is
+> unnecessary for this situation, we will not use autosuspend, right?
 
-diff --git a/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
-new file mode 100644
-index 000000000000..6276ae494121
---- /dev/null
-+++ b/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
-@@ -0,0 +1,130 @@
-+TI CPUFreq and OPP bindings
-+================================
-+
-+Certain TI SoCs, like those in the am335x, am437x, am57xx, and dra7xx
-+families support different OPPs depending on the silicon variant in use.
-+The ti_cpufreq driver can use revision and an efuse value from the SoC to
-+provide the OPP framework with supported hardware information. This is
-+used to determine which OPPs from the operating-points-v2 table get enabled
-+when it is parsed by the OPP framework.
-+
-+Required properties:
-+--------------------
-+In 'cpus' nodes:
-+- operating-points-v2: Phandle to the operating-points-v2 table to use.
-+- ti,syscon-efuse: Syscon phandle, offset to efuse register, efuse register
-+		   mask, and efuse register shift to get the relevant bits
-+		   that describe OPP availability.
-+- ti,syscon-rev: Syscon and offset used to look up revision value on SoC.
-+
-+In 'operating-points-v2' table:
-+- compatible: Should be
-+	- 'operating-points-v2-ti-am3352-cpu' for am335x SoCs
-+	- 'operating-points-v2-ti-am4372-cpu' for am43xx SoCs
-+	- 'operating-points-v2-ti-dra7-cpu' for dra7xx/am57xx SoCs
-+
-+- opp-supported-hw: Two bitfields indicating:
-+	1. Which revision of the SoC the OPP is supported by
-+	2. Which eFuse bits indicate this OPP is available
-+
-+	A bitwise AND is performed against these values and if any bit
-+	matches, the OPP gets enabled.
-+
-+Example:
-+--------
-+
-+/* From arch/arm/boot/dts/am33xx.dtsi */
-+cpus {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	cpu@0 {
-+		compatible = "arm,cortex-a8";
-+		device_type = "cpu";
-+		reg = <0>;
-+
-+		operating-points-v2 = <&cpu0_opp_table>;
-+		ti,syscon-efuse = <&scm_conf 0x7fc 0x1fff 0>;
-+		ti,syscon-rev = <&scm_conf 0x600>;
-+
-+		clocks = <&dpll_mpu_ck>;
-+		clock-names = "cpu";
-+
-+		clock-latency = <300000>; /* From omap-cpufreq driver */
-+	};
-+};
-+
-+/*
-+ * cpu0 has different OPPs depending on SoC revision and some on revisions
-+ * 0x2 and 0x4 have eFuse bits that indicate if they are available or not
-+ */
-+cpu0_opp_table: opp_table0 {
-+	compatible = "operating-points-v2-ti-am3352-cpu";
-+
-+	/*
-+	 * The three following nodes are marked with opp-suspend
-+	 * because they can not be enabled simultaneously on a
-+	 * single SoC.
-+	 */
-+	opp50@300000000 {
-+		opp-hz = /bits/ 64 <300000000>;
-+		opp-microvolt = <950000 931000 969000>;
-+		opp-supported-hw = <0x06 0x0010>;
-+		opp-suspend;
-+	};
-+
-+	opp100@275000000 {
-+		opp-hz = /bits/ 64 <275000000>;
-+		opp-microvolt = <1100000 1078000 1122000>;
-+		opp-supported-hw = <0x01 0x00FF>;
-+		opp-suspend;
-+	};
-+
-+	opp100@300000000 {
-+		opp-hz = /bits/ 64 <300000000>;
-+		opp-microvolt = <1100000 1078000 1122000>;
-+		opp-supported-hw = <0x06 0x0020>;
-+		opp-suspend;
-+	};
-+
-+	opp100@500000000 {
-+		opp-hz = /bits/ 64 <500000000>;
-+		opp-microvolt = <1100000 1078000 1122000>;
-+		opp-supported-hw = <0x01 0xFFFF>;
-+	};
-+
-+	opp100@600000000 {
-+		opp-hz = /bits/ 64 <600000000>;
-+		opp-microvolt = <1100000 1078000 1122000>;
-+		opp-supported-hw = <0x06 0x0040>;
-+	};
-+
-+	opp120@600000000 {
-+		opp-hz = /bits/ 64 <600000000>;
-+		opp-microvolt = <1200000 1176000 1224000>;
-+		opp-supported-hw = <0x01 0xFFFF>;
-+	};
-+
-+	opp120@720000000 {
-+		opp-hz = /bits/ 64 <720000000>;
-+		opp-microvolt = <1200000 1176000 1224000>;
-+		opp-supported-hw = <0x06 0x0080>;
-+	};
-+
-+	oppturbo@720000000 {
-+		opp-hz = /bits/ 64 <720000000>;
-+		opp-microvolt = <1260000 1234800 1285200>;
-+		opp-supported-hw = <0x01 0xFFFF>;
-+	};
-+
-+	oppturbo@800000000 {
-+		opp-hz = /bits/ 64 <800000000>;
-+		opp-microvolt = <1260000 1234800 1285200>;
-+		opp-supported-hw = <0x06 0x0100>;
-+	};
-+
-+	oppnitro@1000000000 {
-+		opp-hz = /bits/ 64 <1000000000>;
-+		opp-microvolt = <1325000 1298500 1351500>;
-+		opp-supported-hw = <0x04 0x0200>;
-+	};
-+};
+That is irrelevant to rpm as what we need is just to control genpd here.
+If we need to support rmp, we need some extra patches to do it,
+including genpd off, clk-disable, etc...
+
+>
+> @shawn, what's your opinion?
+>
+>>
+>> I'm not sure if this should be done in a generic way where we try to
+>> save and restore all values in the "sdhci_arasan_soc_ctl_map" or if we
+>> should try to be smarter...
+
+I am prone to keep it as-is, unless we see a stronge requirement for
+coming users who argue that they have some extra corecfg_* need to
+recovery due to whatever reason.:)
+
+If we see something like this:
+
+if(of_device_is_compatible(A))
+  	update X
+else if (of_device_is_compatible(B))
+	update Y
+.....
+
+Then we could consider trying to save & restrore all the values.
+
+
+>>
+>>
+>> -Doug
+>>
+>> _______________________________________________
+>> Linux-rockchip mailing list
+>> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>>
+>>
+>>
+>
+>
+>
+>
+
+
 -- 
-2.9.0
+Best Regards
+Shawn Lin
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
