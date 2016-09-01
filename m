@@ -1,46 +1,45 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 2/3] clk: rockchip: add dclk_vop_frac ids for vop
-Date: Thu,  1 Sep 2016 15:53:27 -0700
-Message-ID: <1472770408-32278-2-git-send-email-zyw@rock-chips.com>
-References: <1472770408-32278-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472770408-32278-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH 2/5] ARM: dts: keystone-k2l: Add MSM RAM node
+Date: Thu, 1 Sep 2016 17:58:43 -0500
+Message-ID: <20160901225846.31058-3-s-anna@ti.com>
+References: <20160901225846.31058-1-s-anna@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160901225846.31058-1-s-anna@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, Vitaly Andrianov <vitalya@ti.com>, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Add the RAM managed by the Multicore Shared Memory Controller (MSMC)
+as a mmio-sram node. The Keystone 2 Lamarr SoC has 2 MB of such
+memory. Any specific MSM memory range needed by a software module
+ought to be reserved using an appropriate child node.
 
-Export the dclk_vop_frac out, so we can set the dclk_vop as the
-child of dclk_vop_frac, and then we can start to take use of
-the fractional dividers.
-
-Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
+ arch/arm/boot/dts/keystone-k2l.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
- include/dt-bindings/clock/rk3399-cru.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/dt-bindings/clock/rk3399-cru.h b/include/dt-bindings/clock/rk3399-cru.h
-index ce5f3e9..220a60f 100644
---- a/include/dt-bindings/clock/rk3399-cru.h
-+++ b/include/dt-bindings/clock/rk3399-cru.h
-@@ -138,6 +138,8 @@
- #define DCLK_VOP0_DIV			182
- #define DCLK_VOP1_DIV			183
- #define DCLK_M0_PERILP			184
-+#define DCLK_VOP0_FRAC			185
-+#define DCLK_VOP1_FRAC			186
+diff --git a/arch/arm/boot/dts/keystone-k2l.dtsi b/arch/arm/boot/dts/keystone-k2l.dtsi
+index 2ee3d0ac2816..b2994c9ded43 100644
+--- a/arch/arm/boot/dts/keystone-k2l.dtsi
++++ b/arch/arm/boot/dts/keystone-k2l.dtsi
+@@ -34,6 +34,14 @@
+ 	soc {
+ 		/include/ "keystone-k2l-clocks.dtsi"
  
- #define FCLK_CM0S			190
- 
++		msm_ram: msmram@0c000000 {
++			compatible = "mmio-sram";
++			reg = <0x0c000000 0x200000>;
++			ranges = <0x0 0x0c000000 0x200000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
++
+ 		uart2: serial@02348400 {
+ 			compatible = "ns16550a";
+ 			current-speed = <115200>;
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.3
