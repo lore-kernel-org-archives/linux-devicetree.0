@@ -1,98 +1,132 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 1/7] ARM: dts: exynos: Add missing memory node for
- Exynos5440 boards
-Date: Thu, 1 Sep 2016 10:43:35 +0200
-Message-ID: <c043b569-fbad-23bb-5807-5dda9cc8b37f@osg.samsung.com>
-References: <1472645679-5696-1-git-send-email-javier@osg.samsung.com>
- <1472645679-5696-2-git-send-email-javier@osg.samsung.com>
- <20160831174657.GA19969@kozik-lap>
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: Re: [PATCH v6 2/8] arm: parse cpu capacity-dmips-mhz from DT
+Date: Thu, 1 Sep 2016 09:50:52 +0100
+Message-ID: <20160901085052.GN9337@e106622-lin>
+References: <1468932048-31635-1-git-send-email-juri.lelli@arm.com>
+ <1468932048-31635-3-git-send-email-juri.lelli@arm.com>
+ <CAKfTPtBy7LGCW2T4AGoqL5L_1AHtW6KxHigxFVFVc_EU4oUO0g@mail.gmail.com>
+ <20160830162853.GF9337@e106622-lin>
+ <CAKfTPtDAjedxh9J2rqOwafrmubN6+-wDyTRdNQh6fCAb2HS4RQ@mail.gmail.com>
+ <20160831170835.GL9337@e106622-lin>
+ <CAKfTPtAuo+d=NspXRjZuaHHmi70Ky+gNCoVcQBa1aGxkMP+F1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160831174657.GA19969@kozik-lap>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtAuo+d=NspXRjZuaHHmi70Ky+gNCoVcQBa1aGxkMP+F1g@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Mark Brown <broonie@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, LAK <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
-
-On 08/31/2016 07:46 PM, Krzysztof Kozlowski wrote:
-> On Wed, Aug 31, 2016 at 02:14:33PM +0200, Javier Martinez Canillas wrote:
->> The skeleton.dtsi file was removed in ARM64 for different reasons as
->> explained in commit ("3ebee5a2e141 arm64: dts: kill skeleton.dtsi").
->>
->> These also applies to ARM and it will also allow to get rid of the
->> following DTC warnings in the future:
->>
->> "Node /memory has a reg or ranges property, but no unit name"
->>
->> But these boards don't have a memory node defined, so removing the
->> skeleton.dtsi inclusion in exynos4.dtsi will cause a change in the
->> compiled DTB. Add a dummy memory node so the compiled DTB doesn't
->> change if the skeleton.dtsi is removed from exynos4.dtsi.
+On 01/09/16 10:22, Vincent Guittot wrote:
+> On 31 August 2016 at 19:08, Juri Lelli <juri.lelli@arm.com> wrote:
+> > On 31/08/16 10:14, Vincent Guittot wrote:
+> >> On 30 August 2016 at 18:28, Juri Lelli <juri.lelli@arm.com> wrote:
+> >> > Hi Vincent,
+> >> >
+> >> > On 16/08/16 10:20, Vincent Guittot wrote:
+> >> >> Hi Juri,
+> >> >>
+> >> >>
+> >> >> On 19 July 2016 at 14:40, Juri Lelli <juri.lelli@arm.com> wrote:
+> >> >
+> >> > [...]
+> >> >
+> >> >> > +static int
+> >> >> > +init_cpu_capacity_callback(struct notifier_block *nb,
+> >> >> > +                          unsigned long val,
+> >> >> > +                          void *data)
+> >> >> > +{
+> >> >> > +       struct cpufreq_policy *policy = data;
+> >> >> > +       int cpu;
+> >> >> > +
+> >> >> > +       if (cap_parsing_failed || cap_parsing_done)
+> >> >> > +               return 0;
+> >> >> > +
+> >> >> > +       switch (val) {
+> >> >> > +       case CPUFREQ_NOTIFY:
+> >> >> > +               pr_debug("cpu_capacity: init cpu capacity for CPUs [%*pbl] (to_visit=%*pbl)\n",
+> >> >> > +                               cpumask_pr_args(policy->related_cpus),
+> >> >> > +                               cpumask_pr_args(cpus_to_visit));
+> >> >> > +               cpumask_andnot(cpus_to_visit,
+> >> >> > +                              cpus_to_visit,
+> >> >> > +                              policy->related_cpus);
+> >> >> > +               for_each_cpu(cpu, policy->related_cpus) {
+> >> >> > +                       raw_capacity[cpu] = arch_scale_cpu_capacity(NULL, cpu) *
+> >> >> > +                                           policy->max / 1000UL;
+> >> >>
+> >> >> Should it be policy->cpuinfo.max_freq instead of policy->max ?
+> >> >>
+> >> >
+> >> > Right. I'll fix the arm64 bits as well.
+> >> >
+> >> >> > +                       capacity_scale = max(raw_capacity[cpu], capacity_scale);
+> >> >> > +               }
+> >> >> > +               if (cpumask_empty(cpus_to_visit)) {
+> >> >> > +                       normalize_cpu_capacity();
+> >> >> > +                       kfree(raw_capacity);
+> >> >> > +                       pr_debug("cpu_capacity: parsing done\n");
+> >> >> > +                       cap_parsing_done = true;
+> >> >>
+> >> >> ok so you do that once with the 1st governor that will be registered
+> >> >> for the CPU. Can't you unregister the notifier then ?
+> >> >>
+> >> >
+> >> > I tried, but the only place I could find to unregister it is from the
+> >> > callback itself; and it is not possible to do so AFAIK. Suggestions?
+> >>
+> >> yes, you're right
+> >> Can't you queue a work to unregister your callback ?
+> >
+> > You mean something like this? I guess I thought it would be much more
+> > ugly. :)
 > 
-> You mean extnos5440.dtsi?
->
-
-Yes, I meant exynos5440.dtsi, it's a commit message copy and paste error.
-Thanks for pointing out, I'll fix it in v2.
- 
->>
->> Eventually the correct starting addresses and sizes should be used
->> but I didn't find that information.
->>
->> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
->> ---
->>
->>  arch/arm/boot/dts/exynos5440-sd5v1.dts    | 5 +++++
->>  arch/arm/boot/dts/exynos5440-ssdk5440.dts | 5 +++++
->>  2 files changed, 10 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5440-sd5v1.dts b/arch/arm/boot/dts/exynos5440-sd5v1.dts
->> index a98501bab6fc..333db4ff373a 100644
->> --- a/arch/arm/boot/dts/exynos5440-sd5v1.dts
->> +++ b/arch/arm/boot/dts/exynos5440-sd5v1.dts
->> @@ -20,6 +20,11 @@
->>  		bootargs = "root=/dev/sda2 rw rootwait ignore_loglevel earlyprintk no_console_suspend mem=2048M@0x80000000 mem=6144M@0x100000000 console=ttySAC0,115200";
->>  	};
->>  
->> +	memory {
->> +		device_type = "memory";
->> +		reg = <0 0>;
->> +	};
->> +
->>  	fixed-rate-clocks {
->>  		xtal {
->>  			compatible = "samsung,clock-xtal";
->> diff --git a/arch/arm/boot/dts/exynos5440-ssdk5440.dts b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
->> index 6a0d802e87c8..82fea6f94704 100644
->> --- a/arch/arm/boot/dts/exynos5440-ssdk5440.dts
->> +++ b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
->> @@ -21,6 +21,11 @@
->>  		bootargs = "root=/dev/sda2 rw rootwait ignore_loglevel earlyprintk no_console_suspend mem=2048M@0x80000000 mem=6144M@0x100000000 console=ttySAC0,115200";
->>  	};
->>  
->> +	memory {
->> +		device_type = "memory";
->> +		reg = <0 0>;
->> +	};
+> Yes something like below.
 > 
-> This looks okay, but the default size and address cells won't be
-> present. Won't that be a problem?
->
-
-They will be present since at this point exynos5440.dtsi is still including
-exynos5440.dtsi, we are just overriding the memory node with the same values
-than skeleton.dtsi so this can be removed later in patch 7/7.
- 
-> Best regards,
-> Krzysztof
+> >
+> > If it looks OK, I'll add the same for arm64 and test it a bit more.
+> >
+> > --->8---
+> >  arch/arm/kernel/topology.c | 14 +++++++++++---
+> >  1 file changed, 11 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+> > index cbc57c287145..672ae22e2768 100644
+> > --- a/arch/arm/kernel/topology.c
+> > +++ b/arch/arm/kernel/topology.c
+> > @@ -215,7 +215,8 @@ static void normalize_cpu_capacity(void)
+> >
+> >  #ifdef CONFIG_CPU_FREQ
+> >  static cpumask_var_t cpus_to_visit;
+> > -static bool cap_parsing_done;
+> > +static void parsing_done_workfn(struct work_struct *work);
+> > +static DECLARE_WORK(parsing_done_work, parsing_done_workfn);
+> >
+> >  static int
+> >  init_cpu_capacity_callback(struct notifier_block *nb,
+> > @@ -225,7 +226,7 @@ init_cpu_capacity_callback(struct notifier_block *nb,
+> >         struct cpufreq_policy *policy = data;
+> >         int cpu;
+> >
+> > -       if (cap_parsing_failed || cap_parsing_done)
+> > +       if (cap_parsing_failed)
+> 
+> you probably need to keep cap_parsing_done to prevent spurious
+> notification until the work is scheduled
 > 
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+OK. Thanks.
+
+Best,
+
+- Juri
