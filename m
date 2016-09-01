@@ -1,68 +1,53 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH 2/2] ARM: dts: exynos: Fix mismatched values of SD drive
- strengh configuration on exynos4415
-Date: Thu, 01 Sep 2016 10:37:02 +0200
-Message-ID: <1472719022-27226-2-git-send-email-k.kozlowski@samsung.com>
-References: <1472719022-27226-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1472719022-27226-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: javier@osg.samsung.com, Arnd Bergmann <arnd@arndb.de>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 0/12] arm64: renesas: add H3ULCB board
+Date: Thu, 1 Sep 2016 10:39:04 +0200
+Message-ID: <CAMuHMdX4sxY4_FKemcQfYtvCr5ZZ52nTqnRtp5G42X93UTT8aw@mail.gmail.com>
+References: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-The pinctrl drive strength register on exynos4415 is 2-bit wide for each
-pin.  The pins for SD2 were configured with value of 4.  The driver does
-not validate the value so this overflow effectively set a bit 1 in
-adjacent pins thus configuring them to drive strength 2x.
+Hi Vladimir,
 
-The author's intention was probably to set drive strength of 4x.
-All other SD pins are configured with drive strength of 4x.  Fix these
-with same pattern.
+On Wed, Aug 31, 2016 at 12:01 PM, Vladimir Barinov
+<vladimir.barinov@cogentembedded.com> wrote:
+> This adds the folowing:
+> - R8A7795 SoC based H3ULCB low cost board device tree
+> - Document DT bindings
 
-Fixes: 9246e7ff24c5 ("ARM: dts: Add dts files for exynos4415 SoC")
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm/boot/dts/exynos4415-pinctrl.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Thanks for your split series!
 
-diff --git a/arch/arm/boot/dts/exynos4415-pinctrl.dtsi b/arch/arm/boot/dts/exynos4415-pinctrl.dtsi
-index f54aee53b6ec..76cfd872ead3 100644
---- a/arch/arm/boot/dts/exynos4415-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/exynos4415-pinctrl.dtsi
-@@ -480,14 +480,14 @@
- 		samsung,pins = "gpk2-0";
- 		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
- 		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
--		samsung,pin-drv = <4>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
- 	};
- 
- 	sd2_cmd: sd2-cmd {
- 		samsung,pins = "gpk2-1";
- 		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
- 		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
--		samsung,pin-drv = <4>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
- 	};
- 
- 	sd2_cd: sd2-cd {
-@@ -501,14 +501,14 @@
- 		samsung,pins = "gpk2-3";
- 		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
- 		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
--		samsung,pin-drv = <4>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
- 	};
- 
- 	sd2_bus4: sd2-bus-width4 {
- 		samsung,pins = "gpk2-4", "gpk2-5", "gpk2-6";
- 		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
- 		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
--		samsung,pin-drv = <4>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
- 	};
- 
- 	cam_port_b_io: cam-port-b-io {
--- 
-1.9.1
+> Vladimir Barinov (12):
+> [01/12] dt: arm: shmobile: add H3ULCB board DT bindings
+> [02/12] arm64: dts: h3ulcb: initial device tree
+> [03/12] arm64: dts: h3ulcb: enable SCIF clk and pins
+> [04/12] arm64: dts: h3ulcb: enable EthernetAVB
+> [05/12] arm64: dts: h3ulcb: enable GPIO leds
+> [06/12] arm64: dts: h3ulcb: enable SDHI0
+> [07/12] arm64: dts: h3ulcb: enable I2C2
+> [08/12] arm64: dts: h3ulcb: enable EXTALR clk
+> [09/12] arm64: dts: h3ulcb: enable WDT
+> [10/12] arm64: dts: h3ulcb: enable USB2 PHY of channel 1
+> [11/12] arm64: dts: h3ulcb: enable USB2.0 Host channel 1
+
+I went through all of the above...
+
+> [12/12] arm64: dts: h3ulcb: Sound SSI support
+
+... but I'm leaving this one for Morimoto-san.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
