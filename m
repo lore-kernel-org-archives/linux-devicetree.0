@@ -1,77 +1,95 @@
-From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH v9 4/4] ARM: at91/dt: sama5d2_xplained: Add act8945a-charger node.
-Date: Thu, 1 Sep 2016 17:30:01 +0800
-Message-ID: <1472722201-31872-5-git-send-email-wenyou.yang@atmel.com>
-References: <1472722201-31872-1-git-send-email-wenyou.yang@atmel.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 1/7] ARM: dts: exynos: Add missing memory node for
+ Exynos5440 boards
+Date: Thu, 1 Sep 2016 11:36:54 +0200
+Message-ID: <184ad5f6-5528-2ad7-7c2b-46beda9b6dc9@osg.samsung.com>
+References: <1472645679-5696-1-git-send-email-javier@osg.samsung.com>
+ <1472645679-5696-2-git-send-email-javier@osg.samsung.com>
+ <20160831174657.GA19969@kozik-lap>
+ <c043b569-fbad-23bb-5807-5dda9cc8b37f@osg.samsung.com>
+ <e3cdab3d-f1ef-f751-b169-e3328178b835@kernel.org>
+ <0e8e0b3c-0dd9-c44b-d1ad-03c840d3a725@osg.samsung.com>
+ <b051f0fc-e99c-769c-e790-aaafc749a9ef@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472722201-31872-1-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <b051f0fc-e99c-769c-e790-aaafc749a9ef@kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add act8945a-charger as a sub-device node.
-Use the "interrupts" property, instead of the "active-semi,irq_gpios"
-to denote the act8945a chager's irq.
+Hello Krzysztof,
 
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
----
+On 09/01/2016 11:28 AM, Krzysztof Kozlowski wrote:
+> On 09/01/2016 11:19 AM, Javier Martinez Canillas wrote:
+>> Hello Krzysztof,
+>>
+>> On 09/01/2016 11:05 AM, Krzysztof Kozlowski wrote:
+>>> On 09/01/2016 10:43 AM, Javier Martinez Canillas wrote:
+>>>>>> --- a/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+>>>>>> +++ b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+>>>>>> @@ -21,6 +21,11 @@
+>>>>>>  		bootargs = "root=/dev/sda2 rw rootwait ignore_loglevel earlyprintk no_console_suspend mem=2048M@0x80000000 mem=6144M@0x100000000 console=ttySAC0,115200";
+>>>>>>  	};
+>>>>>>  
+>>>>>> +	memory {
+>>>>>> +		device_type = "memory";
+>>>>>> +		reg = <0 0>;
+>>>>>> +	};
+>>>>>
+>>>>> This looks okay, but the default size and address cells won't be
+>>>>> present. Won't that be a problem?
+>>>>>
+>>>>
+>>>> They will be present since at this point exynos5440.dtsi is still including
+>>>> exynos5440.dtsi, we are just overriding the memory node with the same values
+>>>> than skeleton.dtsi so this can be removed later in patch 7/7.
+>>>
+>>> I don't get it. exynos5440.dtsi does not set size/address cells in top node.
+>>>
+>>
+>> Sorry, maybe I'm misunderstanding your question. The size/address cells are set
+>> in the top node by exynos5440.dtsi including the skeleton.dtsi (since these are
+>> set in that included dtsi).
+> 
+> Where? Nothing in my sources...
+> 
+> 15 / {
+> 16         compatible = "samsung,exynos5440", "samsung,exynos5";
+> 17
+> 18         interrupt-parent = <&gic>;
+>
 
-Changes in v9:
- - Not include seven patches which have been queued or applied.
+No, I meant that these are set by the fact that exynos5440.dtsi is including
+the skeleton.dtsi, since the dtsi set these properties in the top node.
 
-Changes in v8:
- - Add 4 new patches: 1/11, 2/11, 9/11, and 11/11.
+>>
+>> IOW, scripts/dtc/dtx_diff doesn't show differences for these exynos5440 DTB
+>> before and after $SUBJECT.
+> 
+> Maybe these are also the default values so no differences... stating
+> them explicitly would be useful.
+>
 
-Changes in v7: None
-Changes in v6: None
-Changes in v4: None
+I could do it in this patch... but I don't see why that should be needed since:
 
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+a) All the others Exynos SoC dtsi file don't explicitly set these properties
+   since are set by skeleton.dtsi when including it. So not adding them keeps
+   exynos5440.dtsi consistent with the other SoC dtsi.
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index 0b9a59d..87eff10 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -162,14 +162,6 @@
- 					compatible = "active-semi,act8945a";
- 					reg = <0x5b>;
- 					active-semi,vsel-high;
--					active-semi,chglev-gpios = <&pioA 12 GPIO_ACTIVE_HIGH>;
--					active-semi,lbo-gpios = <&pioA 72 GPIO_ACTIVE_LOW>;
--					active-semi,irq_gpios = <&pioA 45 GPIO_ACTIVE_LOW>;
--					active-semi,input-voltage-threshold-microvolt = <6600>;
--					active-semi,precondition-timeout = <40>;
--					active-semi,total-timeout = <3>;
--					pinctrl-names = "default";
--					pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
- 					status = "okay";
- 
- 					regulators {
-@@ -222,6 +214,21 @@
- 							regulator-always-on;
- 						};
- 					};
-+
-+					charger {
-+						compatible = "active-semi,act8945a-charger";
-+						pinctrl-names = "default";
-+						pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
-+						interrupt-parent = <&pioA>;
-+						interrupts = <45 GPIO_ACTIVE_LOW>;
-+
-+						active-semi,chglev-gpios = <&pioA 12 GPIO_ACTIVE_HIGH>;
-+						active-semi,lbo-gpios = <&pioA 72 GPIO_ACTIVE_LOW>;
-+						active-semi,input-voltage-threshold-microvolt = <6600>;
-+						active-semi,precondition-timeout = <40>;
-+						active-semi,total-timeout = <3>;
-+						status = "okay";
-+					};
- 				};
- 			};
- 
+b) Adding those to the Exynos SoC dtsi when removing the skeleton.dtsi is done
+   in a later patch of this series. Again, making it consistent with all the
+   Exynos SoC dtsi since none will include skeleton.dtsi anymore.
+
+> Best regards,
+> Krzysztof
+> 
+> 
+
+Best regards,
 -- 
-2.7.4
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
