@@ -1,70 +1,58 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 6/7] Documentation: bindings: add documentation for
- ir-spi device driver
-Date: Thu, 1 Sep 2016 16:40:54 -0500
-Message-ID: <CAL_JsqL_AG0m_BctOBV+QOGJcUEup_6ovS6shjo+BrJ974jpaA@mail.gmail.com>
-References: <20160901171629.15422-1-andi.shyti@samsung.com> <20160901171629.15422-7-andi.shyti@samsung.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support
+ for rk3399
+Date: Thu, 1 Sep 2016 14:50:56 -0700
+Message-ID: <CAD=FV=VQ7Gf33fH8=FM_Lj-r9uovoEHxusMrFQrDwf2rxeiecg@mail.gmail.com>
+References: <20160827134103.28160-1-xzy.xu@rock-chips.com> <20160827134103.28160-3-xzy.xu@rock-chips.com>
+ <2ab8ab94-fa4d-2cd6-5805-a92ac5f9697e@rock-chips.com> <57C3A30B.5080707@rock-chips.com>
+ <ceba6a89-6945-58c5-62e4-7d842cfa2312@rock-chips.com> <CAD=FV=W=LkVAm187hxp0Kbjxi5kSThwKnCMX+tr8SXQ-v_xQTQ@mail.gmail.com>
+ <77f5cff1-80a2-76b3-40e9-f77caced2257@rock-chips.com> <12451b81-321e-b661-8f1c-25c91bffba54@rock-chips.com>
+ <CAPDyKFqwqdu=9PSzD32aOYAeBVRMQ0s8oKA29JGBsMsRMsDz4w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160901171629.15422-7-andi.shyti@samsung.com>
+In-Reply-To: <CAPDyKFqwqdu=9PSzD32aOYAeBVRMQ0s8oKA29JGBsMsRMsDz4w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Shyti <andi.shyti@samsung.com>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sean Young <sean@mess.org>, Mark Rutland <mark.rutland@arm.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andi Shyti <andi@etezian.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Ziyuan Xu <xzy.xu@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xing Zheng <zhengxing@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Frank Wang <frank.wang@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Elaine Zhang <zhangqing@rock-chips.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, David Wu <david.wu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, Jianqun Xu <jay.>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 1, 2016 at 12:16 PM, Andi Shyti <andi.shyti@samsung.com> wrote:
-> Document the ir-spi driver's binding which is a IR led driven
-> through the SPI line.
+Hi,
+
+On Thu, Sep 1, 2016 at 6:45 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> I was reading the discussion regarding this change and browsing the DT
+> documentation around this... Can you guys explain what really goes on
+> here, please.
 >
-> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> ---
->  Documentation/devicetree/bindings/media/spi-ir.txt | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/spi-ir.txt
+> To me, it seems like you are managing one device's resources in one
+> separate genpd. One genpd per device. Is that correct?
 >
-> diff --git a/Documentation/devicetree/bindings/media/spi-ir.txt b/Documentation/devicetree/bindings/media/spi-ir.txt
-> new file mode 100644
-> index 0000000..85cb21b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/spi-ir.txt
+> Perhaps each device actually has its own PM domain and thus it makes
+> sense to assign one genpd per device?
 
-Move this to bindings/leds, and CC the leds maintainers.
+I'm not as familiar with genpd as I should be, so hopefully this makes sense.
 
-> @@ -0,0 +1,26 @@
-> +Device tree bindings for IR LED connected through SPI bus which is used as
-> +remote controller.
-> +
-> +The IR LED switch is connected to the MOSI line of the SPI device and the data
-> +are delivered thourgh that.
-> +
-> +Required properties:
-> +       - compatible: should be "ir-spi".
+...in hardware there is a "pd_emmc" that is the power domain for just
+eMMC.  That will be referenced hooked up via device tree, like:
 
-Really this is just an LED connected to a SPI, so maybe this should
-just be "spi-led". If being more specific is helpful, then I'm all for
-that, but perhaps spi-ir-led. (Trying to be consistent in naming with
-gpio-leds).
+power-domains = <&power RK3399_PD_EMMC>;
 
-> +
-> +Optional properties:
-> +       - irled,switch: specifies the gpio switch which enables the irled/
+I believe that means that power will automatically be removed whenever
+the device is runtime suspended or suspended.
 
-As I said previously, "switch-gpios" as gpio lines should have a
-'-gpios' suffix. Or better yet, "enable-gpios" as that is a standard
-name for an enable line.
+If w're not supporting "autosuspend" and nobody is tweaking anything
+manually, then it's possible (I think) that runtime suspend happens at
+exactly the same time as suspend.  ...but my point was that it was
+cleaner to actually do it any restoring in the "runtime resume" hooks
+to match what genpd does.  This matches what you say: use runtime PM.
 
-> +       - negated: boolean value that specifies whether the output is negated
-> +         with a NOT gate.
+...but it also sounds like it might not be terribly important to
+restore these values since they're a bit silly to begin with.  If
+that's true then I guess we don't need to do anything special here.
 
-Negated or inverted assumes I know what normal is. Define this in
-terms of what is the on state. If on is normally active low, then this
-should be led-active-high. There may already be an LED property for
-this.
 
-> +       - duty-cycle: 8 bit value that stores the percentage of the duty cycle.
-> +         it can be 50, 60, 70, 75, 80 or 90.
+Did that all make sense (it's entirely possible it didn't since
+somehow my brain still hasn't absorbed all runtime PM and genpd
+concepts)
 
-This is percent time on or off?
-
-Rob
+-Doug
