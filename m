@@ -1,86 +1,102 @@
-From: Alexandre TORGUE <alexandre.torgue@st.com>
-Subject: [PATCH v3 8/9] ARM: dts: Declare push button as GPIO key on stm32f429 boards
-Date: Fri, 2 Sep 2016 17:33:17 +0200
-Message-ID: <1472830398-13275-9-git-send-email-alexandre.torgue@st.com>
-References: <1472830398-13275-1-git-send-email-alexandre.torgue@st.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [v10,2/2] PCI: Rockchip: Add Rockchip PCIe controller support
+Date: Fri, 2 Sep 2016 10:44:09 -0500
+Message-ID: <20160902154409.GA8370@localhost>
+References: <1471570498-3284-1-git-send-email-shawn.lin@rock-chips.com>
+ <20160831181754.GA7460@roeck-us.net>
+ <9075a2c1-c787-986f-31b4-4d5b7c92b771@rock-chips.com>
+ <20160901163455.GA9471@localhost>
+ <20160901171400.GA4093@localhost>
+ <20160901174852.GC9471@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472830398-13275-1-git-send-email-alexandre.torgue@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160901174852.GC9471@localhost>
+Sender: linux-pci-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Guenter Roeck <linux@roeck-us.net>, Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+On Thu, Sep 01, 2016 at 12:48:52PM -0500, Bjorn Helgaas wrote:
+> On Thu, Sep 01, 2016 at 10:14:01AM -0700, Brian Norris wrote:
 
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index 6bfc595..0fd78e4 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -47,6 +47,7 @@
- 
- /dts-v1/;
- #include "stm32f429.dtsi"
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	model = "STMicroelectronics STM32429i-EVAL board";
-@@ -82,6 +83,23 @@
- 		};
- 	};
- 
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		autorepeat;
-+		button@0 {
-+			label = "Wake up";
-+			linux,code = <KEY_WAKEUP>;
-+			gpios = <&gpioa 0 0>;
-+		};
-+		button@1 {
-+			label = "Tamper";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&gpioc 13 0>;
-+		};
-+	};
+> > The use of HIWORD_UPDATE can indeed be a bit confusing, IMO, but this is
+> > really a common Rockchip-ism that, once you read several of their
+> > drivers, can make a little more sense. If you grep around, it's in at
+> > least their clock, ethernet, SDHCI, PHY, and DP/DRM drivers. I might
+> > defer to Heiko (upstream maintainer of Rockchip code) for a decision.
+> > Maybe there's some intermediate ground where we keep the HIWORK_UPDATE()
+> > logic (it does make sure we get the 16-bit shift right, I think) while
+> > still refactoring a few other bits (like PCIE_CLIENT_CONF_LANE_NUM() and
+> > PCIE_CLIENT_GEN_SEL() for wrapping HIWORK_UPDATE()?).
+
+Here's a second proposal.  It retains HIWORD_UPDATE (though the structure
+is different) so grep finds it along with the other Rockchip ones.
+
+I'll post updated actual patches; this is just to give the idea:
+
+-/*
+-  * The higher 16-bit of this register is used for write protection
+-  * only if BIT(x + 16) set to 1 the BIT(x) can be written.
+-  */
+-#define HIWORD_UPDATE(val, mask, shift) \
+-	((val) << (shift) | (mask) << ((shift) + 16))
+
+-#define PCIE_CLIENT_CONF_ENABLE			BIT(0)
+-#define PCIE_CLIENT_CONF_ENABLE_SHIFT		0
+-#define PCIE_CLIENT_CONF_ENABLE_MASK		0x1
+-#define PCIE_CLIENT_LINK_TRAIN_ENABLE		1
+-#define PCIE_CLIENT_LINK_TRAIN_SHIFT		1
+-#define PCIE_CLIENT_LINK_TRAIN_MASK		0x1
+-#define PCIE_CLIENT_ARI_ENABLE			BIT(0)
+-#define PCIE_CLIENT_ARI_ENABLE_SHIFT		3
+-#define PCIE_CLIENT_ARI_ENABLE_MASK		0x1
+-#define PCIE_CLIENT_CONF_LANE_NUM(x)		(x / 2)
+-#define PCIE_CLIENT_CONF_LANE_NUM_SHIFT		4
+-#define PCIE_CLIENT_CONF_LANE_NUM_MASK		0x3
+-#define PCIE_CLIENT_MODE_RC			BIT(0)
+-#define PCIE_CLIENT_MODE_SHIFT			6
+-#define PCIE_CLIENT_MODE_MASK			0x1
+-#define PCIE_CLIENT_GEN_SEL_2			1
+-#define PCIE_CLIENT_GEN_SEL_SHIFT		7
+-#define PCIE_CLIENT_GEN_SEL_MASK		0x1
+
++/*
++ * The upper 16 bits of the PCIE_CLIENT registers are a write mask for the
++ * lower 16 bits.  This allows atomic updates of the register without
++ * locking.
++ */
++#define HIWORD_UPDATE(mask, val)	((mask << 16) | val)
 +
- 	usbotg_hs_phy: usbphy {
- 		#phy-cells = <0>;
- 		compatible = "usb-nop-xceiv";
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index 0140807..7d0415e 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -47,6 +47,7 @@
- 
- /dts-v1/;
- #include "stm32f429.dtsi"
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	model = "STMicroelectronics STM32F429i-DISCO board";
-@@ -75,6 +76,18 @@
- 			linux,default-trigger = "heartbeat";
- 		};
- 	};
++#define ENCODE_LANES(x)			(((x >> 1) & 3) << 4)
 +
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		autorepeat;
-+		button@0 {
-+			label = "User";
-+			linux,code = <KEY_HOME>;
-+			gpios = <&gpioa 0 0>;
-+		};
-+	};
- };
- 
- &clk_hse {
--- 
-1.9.1
++#define PCIE_CLIENT_CONF_ENABLE		HIWORD_UPDATE(0x0001, 0x0001)
++#define PCIE_CLIENT_LINK_TRAIN_ENABLE	HIWORD_UPDATE(0x0002, 0x0002)
++#define PCIE_CLIENT_CONF_LANE_NUM(x)	HIWORD_UPDATE(0x0030, ENCODE_LANES(x))
++#define PCIE_CLIENT_GEN_SEL_2		HIWORD_UPDATE(0x0040, 0x0040)
+
+ 	rockchip_pcie_write(rockchip,
+-		   HIWORD_UPDATE(PCIE_CLIENT_CONF_ENABLE,
+-				 PCIE_CLIENT_CONF_ENABLE_MASK,
+-				 PCIE_CLIENT_CONF_ENABLE_SHIFT) |
+-		   HIWORD_UPDATE(PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes),
+-				 PCIE_CLIENT_CONF_LANE_NUM_MASK,
+-				 PCIE_CLIENT_CONF_LANE_NUM_SHIFT) |
+-		   HIWORD_UPDATE(PCIE_CLIENT_MODE_RC,
+-				 PCIE_CLIENT_MODE_MASK,
+-				 PCIE_CLIENT_MODE_SHIFT) |
+-		   HIWORD_UPDATE(PCIE_CLIENT_ARI_ENABLE,
+-				 PCIE_CLIENT_ARI_ENABLE_MASK,
+-				 PCIE_CLIENT_ARI_ENABLE_SHIFT) |
+-		   HIWORD_UPDATE(PCIE_CLIENT_GEN_SEL_2,
+-				 PCIE_CLIENT_GEN_SEL_MASK,
+-				 PCIE_CLIENT_GEN_SEL_SHIFT),
+-		   PCIE_CLIENT_BASE);
++			    PCIE_CLIENT_CONF_ENABLE |
++			    PCIE_CLIENT_LINK_TRAIN_ENABLE |
++			    PCIE_CLIENT_ARI_ENABLE |
++			    PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes) |
++			    PCIE_CLIENT_MODE_RC |
++			    PCIE_CLIENT_GEN_SEL_2,
++				PCIE_CLIENT_BASE);
