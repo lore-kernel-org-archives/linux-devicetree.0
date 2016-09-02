@@ -1,50 +1,66 @@
-From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH] iio: sx9500: add final devicetree support
-Date: Fri, 02 Sep 2016 18:47:13 +0200
-Message-ID: <1472834833.12668.11.camel@googlemail.com>
-References: <1472827740.1929.26.camel@googlemail.com>
-         <CAOMZO5BeL1EKOQvZQoXXObttHSKxL7UQ1s2r8H4EOuROOb_YnQ@mail.gmail.com>
-         <1472828671.1929.32.camel@googlemail.com>
-         <CAOMZO5BVDS=AaSyRS0ELBiEKx3RxdstXgA_xJ6ANUzKDxdyBxg@mail.gmail.com>
-         <1472829819.12668.3.camel@googlemail.com>
-         <CAOMZO5DbJLnH1wm2KuML+O36O-eSYWeGwrxE5pdKSRtB-Js-yA@mail.gmail.com>
-Reply-To: chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [GIT PULL] firmware: add support for TI System Control Interface
+ (TI-SCI) protocol driver
+Date: Fri, 2 Sep 2016 12:03:52 -0500
+Message-ID: <CAGo_u6rXd9=664xhVkvrtEymD=4LF1KbCj+go_Vnyv6t5j963w@mail.gmail.com>
+References: <375758c3-f5f2-b267-31c2-c28812ed3359@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5DbJLnH1wm2KuML+O36O-eSYWeGwrxE5pdKSRtB-Js-yA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vlad Dogaru <ddvlad-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <375758c3-f5f2-b267-31c2-c28812ed3359@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: Santosh Shilimkar <ssantosh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-09-02 at 13:16 -0300, Fabio Estevam wrote:
-> On Fri, Sep 2, 2016 at 12:23 PM, Christoph Fritz
-> <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> 
-> > What do you mean by "software command", to send a reset command by i2c?
-> 
-> Yes, by writing 0xDE into RegReset register.
-> 
-> >
-> > The reset GPIO is fetched in sx9500 here:
-> >
-> > See sx9500_gpio_probe():
-> > ...
-> >         data->gpiod_rst = devm_gpiod_get_index(dev, SX9500_GPIO_RESET,
-> >                                                0, GPIOD_OUT_HIGH);
-> 
-> but there is no code that actually reads the "reset-gpios" dt property.
+On Thu, Sep 1, 2016 at 2:24 AM, Tero Kristo <t-kristo@ti.com> wrote:
+> Hi Santosh,
+>
+> The following changes since commit 29b4817d4018df78086157ea3a55c1d9424a7cfc:
+>
+>   Linux 4.8-rc1 (2016-08-07 18:18:00 -0700)
+>
+> are available in the git repository at:
+>
+>   https://github.com/t-kristo/linux-pm.git 4.8-rc1-ti-sci-fw
+>
+> for you to fetch changes up to 7a2c510cdfa6a4b2f4200c122a377c4d5f4af552:
+>
+>   firmware: ti_sci: Add support for reboot core service (2016-08-31 14:50:20
+> +0300)
+>
+> ----------------------------------------------------------------
+> Nishanth Menon (5):
+>       Documentation: Add support for TI System Control Interface (TI-SCI)
+> protocol
+>       firmware: Add basic support for TI System Control Interface (TI-SCI)
+> protocol
+>       firmware: ti_sci: Add support for Device control
+>       firmware: ti_sci: Add support for Clock control
+>       firmware: ti_sci: Add support for reboot core service
+>
+>  .../devicetree/bindings/arm/keystone/ti,sci.txt    |   66 +
+>  MAINTAINERS                                        |   10 +
+>  drivers/firmware/Kconfig                           |   15 +
+>  drivers/firmware/Makefile                          |    1 +
+>  drivers/firmware/ti_sci.c                          | 1997
+> ++++++++++++++++++++
+>  drivers/firmware/ti_sci.h                          |  492 +++++
+>  include/linux/soc/ti/ti_sci_protocol.h             |  249 +++
+>  7 files changed, 2830 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+>  create mode 100644 drivers/firmware/ti_sci.c
+>  create mode 100644 drivers/firmware/ti_sci.h
+>  create mode 100644 include/linux/soc/ti/ti_sci_protocol.h
+>
 
-But there is: devm_gpiod_get_index() calls gpiod_get_index() which calls
-of_find_gpio() for of-string "reset-gpios".
+Folks, could you hold back on this pull request.. Rob did have a
+comment on https://patchwork.kernel.org/patch/9305413/ which I think
+should be discussed as well -> has implications to the driver arch
+ofcourse.
 
-> 
-> Does your board work well without passing "reset-gpios" property?
-
-I don't know, the driver looks that way. I'll check that. If so, I'll
-fix the docu and add the reset-gpios property as optional. Okay?
-
-Thanks
- -- Christoph
+-- 
+---
+Regards,
+Nishanth Menon
