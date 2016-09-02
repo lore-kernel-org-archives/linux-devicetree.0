@@ -1,55 +1,57 @@
-From: Finley Xiao <finley.xiao@rock-chips.com>
-Subject: [PATCH v5 2/4] ARM: dts: rockchip: update compatible strings for Rockchip efuse
-Date: Thu,  1 Sep 2016 20:16:55 -0700
-Message-ID: <1472786217-52214-3-git-send-email-finley.xiao@rock-chips.com>
+From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v5 1/4] nvmem: rockchip-efuse: update compatible strings for Rockchip efuse
+Date: Thu,  1 Sep 2016 20:16:54 -0700
+Message-ID: <1472786217-52214-2-git-send-email-finley.xiao@rock-chips.com>
 References: <1472786217-52214-1-git-send-email-finley.xiao@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472786217-52214-1-git-send-email-finley.xiao@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org, maxime.ripard@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, dianders@chromium.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wxt@rock-chips.com, zhengsq@rock-chips.com, jay.xu@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com, cl@rock-chips.com, Finley Xiao <finley.xiao@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472786217-52214-1-git-send-email-finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
----
- arch/arm/boot/dts/rk3066a.dtsi | 2 +-
- arch/arm/boot/dts/rk3188.dtsi  | 2 +-
- arch/arm/boot/dts/rk3288.dtsi  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Rk3399-efuse is organized as 32bits by 32 one-time programmable electrical
+fuses. The efuse of earlier SoCs are organized as 32bits by 8 one-time
+programmable electrical fuses with random access interface.
 
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index c0ba86c..5387cc8 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -162,7 +162,7 @@
- 	};
+Add different device tree compatible string for different SoCs to be able
+to differentiate between the two. The old binding is of course preserved,
+though deprecated.
+
+Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
+index 8f86ab3..94aeeea 100644
+--- a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
++++ b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
+@@ -1,11 +1,20 @@
+ = Rockchip eFuse device tree bindings =
  
- 	efuse: efuse@20010000 {
--		compatible = "rockchip,rockchip-efuse";
-+		compatible = "rockchip,rk3066a-efuse";
- 		reg = <0x20010000 0x4000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index 31f81b2..869e189 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -147,7 +147,7 @@
- 	};
+ Required properties:
+-- compatible: Should be "rockchip,rockchip-efuse"
++- compatible: Should be one of the following.
++  - "rockchip,rk3066a-efuse" - for RK3066a SoCs.
++  - "rockchip,rk3188-efuse" - for RK3188 SoCs.
++  - "rockchip,rk3288-efuse" - for RK3288 SoCs.
++  - "rockchip,rk3399-efuse" - for RK3399 SoCs.
+ - reg: Should contain the registers location and exact eFuse size
+ - clocks: Should be the clock id of eFuse
+ - clock-names: Should be "pclk_efuse"
  
- 	efuse: efuse@20010000 {
--		compatible = "rockchip,rockchip-efuse";
-+		compatible = "rockchip,rk3188-efuse";
- 		reg = <0x20010000 0x4000>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index cd33f01..0eadb96 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -1073,7 +1073,7 @@
- 	};
++Deprecated properties:
++- compatible: "rockchip,rockchip-efuse"
++  Old efuse compatible value compatible to rk3066a, rk3188 and rk3288
++  efuses
++
+ = Data cells =
+ Are child nodes of eFuse, bindings of which as described in
+ bindings/nvmem/nvmem.txt
+@@ -13,7 +22,7 @@ bindings/nvmem/nvmem.txt
+ Example:
  
  	efuse: efuse@ffb40000 {
 -		compatible = "rockchip,rockchip-efuse";
@@ -59,3 +61,9 @@ index cd33f01..0eadb96 100644
  		#size-cells = <1>;
 -- 
 2.7.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
