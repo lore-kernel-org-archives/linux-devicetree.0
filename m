@@ -1,118 +1,84 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 4/7] dts: sun8i-h3: add UART1-3 to Orange Pi Plus
-Date: Fri, 2 Sep 2016 09:04:25 +0200
-Message-ID: <20160902070425.GB6313@lukather>
-References: <1472671858-29220-1-git-send-email-jorik@kippendief.biz>
- <1472671858-29220-5-git-send-email-jorik@kippendief.biz>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 1/6] clk: sunxi-ng: div: Add mux table macros
+Date: Fri, 2 Sep 2016 15:25:14 +0800
+Message-ID: <CAGb2v65LC_r_ppfm48xt8gsomGQPaTHg+F6CwFdeq9mvBiAGBg@mail.gmail.com>
+References: <20160901141617.9777-1-maxime.ripard@free-electrons.com> <20160901141617.9777-2-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7793460851939266052=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1472671858-29220-5-git-send-email-jorik@kippendief.biz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jorik@kippendief.biz
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160901141617.9777-2-maxime.ripard@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 1, 2016 at 10:16 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Add some macros to ease the declaration of clocks that are using them.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
---===============7793460851939266052==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RASg3xLB4tUQ4RcS"
-Content-Disposition: inline
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 
-
---RASg3xLB4tUQ4RcS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, Aug 31, 2016 at 09:30:55PM +0200, jorik@kippendief.biz wrote:
-> From: Jorik Jonker <jorik@kippendief.biz>
->=20
-> This board has UARTS1-3 exposed on its expansion header
->=20
-> Signed-off-by: Jorik Jonker <jorik@kippendief.biz>
 > ---
->  arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot=
-/dts/sun8i-h3-orangepi-plus.dts
-> index b0cb417..7a17839 100644
-> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-> @@ -90,6 +90,21 @@
->  	};
->  };
-> =20
-> +&uart1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&uart1_pins_a>;
-> +};
+>  drivers/clk/sunxi-ng/ccu_div.h | 28 +++++++++++++++++++++-------
+>  1 file changed, 21 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/clk/sunxi-ng/ccu_div.h b/drivers/clk/sunxi-ng/ccu_div.h
+> index 5d98549e23a6..a5c9eaf90e84 100644
+> --- a/drivers/clk/sunxi-ng/ccu_div.h
+> +++ b/drivers/clk/sunxi-ng/ccu_div.h
+> @@ -77,13 +77,16 @@ struct ccu_div {
+>                                       _shift, _width, _table, 0,        \
+>                                       _flags)
+>
+> -#define SUNXI_CCU_M_WITH_MUX_GATE(_struct, _name, _parents, _reg,      \
+> -                                 _mshift, _mwidth, _muxshift, _muxwidth, \
+> -                                 _gate, _flags)                        \
+> +#define SUNXI_CCU_M_WITH_MUX_TABLE_GATE(_struct, _name,                        \
+> +                                       _parents, _table,               \
+> +                                       _reg,                           \
+> +                                       _mshift, _mwidth,               \
+> +                                       _muxshift, _muxwidth,           \
+> +                                       _gate, _flags)                  \
+>         struct ccu_div _struct = {                                      \
+>                 .enable = _gate,                                        \
+>                 .div    = _SUNXI_CCU_DIV(_mshift, _mwidth),             \
+> -               .mux    = _SUNXI_CCU_MUX(_muxshift, _muxwidth),         \
+> +               .mux    = _SUNXI_CCU_MUX_TABLE(_muxshift, _muxwidth, _table), \
+>                 .common = {                                             \
+>                         .reg            = _reg,                         \
+>                         .hw.init        = CLK_HW_INIT_PARENTS(_name,    \
+> @@ -93,12 +96,23 @@ struct ccu_div {
+>                 },                                                      \
+>         }
+>
+> +#define SUNXI_CCU_M_WITH_MUX_GATE(_struct, _name, _parents, _reg,      \
+> +                                 _mshift, _mwidth, _muxshift, _muxwidth, \
+> +                                 _gate, _flags)                        \
+> +       SUNXI_CCU_M_WITH_MUX_TABLE_GATE(_struct, _name,                 \
+> +                                       _parents, NULL,                 \
+> +                                       _reg, _mshift, _mwidth,         \
+> +                                       _muxshift, _muxwidth,           \
+> +                                       _gate, _flags)
 > +
-> +&uart2 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&uart2_pins_a>;
-> +};
-> +
-> +&uart3 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&uart3_pins_a>;
-> +};
-> +
+>  #define SUNXI_CCU_M_WITH_MUX(_struct, _name, _parents, _reg,           \
+>                              _mshift, _mwidth, _muxshift, _muxwidth,    \
+>                              _flags)                                    \
+> -       SUNXI_CCU_M_WITH_MUX_GATE(_struct, _name, _parents, _reg,       \
+> -                                 _mshift, _mwidth, _muxshift, _muxwidth, \
+> -                                 0, _flags)
+> +       SUNXI_CCU_M_WITH_MUX_TABLE_GATE(_struct, _name,                 \
+> +                                       _parents, NULL,                 \
+> +                                       _reg, _mshift, _mwidth,         \
+> +                                       _muxshift, _muxwidth,           \
+> +                                       0, _flags)
 
-Unfortunately, these pins can be used for other purposes as well, so
-we cannot make force that decision down to our users.
+You probably didn't need to change this one though.
 
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---RASg3xLB4tUQ4RcS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXySR5AAoJEBx+YmzsjxAga9wQALWe2ruLMnmkXl8uSJ0mU3fQ
-Ks7EgO6xDO/2Ozi83zoDNIUcH4+I1G0CV8fH6spkAXuSQ5nMTjATOCw9Txfq3eVq
-pMNaSFP+bBYa4dKjre1tIXcjinIZ67KsSdOfMN+kroO/cDAKuWbqavIWltpi/VfO
-f6TjmUT0wkbhTcTboF4ApRrff/eJRacvU/v/sZEo/CqLd2nG6DquG8wJVICVKXX5
-A1ccGoK4eYcd1c8mJhbWZLmAvHL4Zd2BTRPH83IC4+D9poTv/2/fWTAePOJgD1b3
-777WgO6I4AeSFxm6SqBqPpQaxp3oEYqIAa94mdK+FPbZ89l8OS3XwxZYjYj/tMYL
-YU6TK2brW2xZCPH1P+1z1Y9QSr4/Psy6L7M4P9aSZ+YdPnZcAK6UgNApB18fPFT4
-pzSo9xekhWFwQmXCA+FmC0ecapr/uo9B0pR25Ns0W6+++3GxNB5+qSjY04Ho7qF4
-2/RnQrzl/A2yHoZqWyclB0KzpQoVEUAYHBG+6iKQFctHAdQ5Ve1UGK9WpSxcXy/S
-hCIcMlos4xn6LYmZDjoQKlq8XatXm+f0y1xpU+fLzKYyoeYj+waWkcUnqYrlreD0
-qJVmt7MdTfVixNkzrNCspO2MmiyHuMcUhvsDiIc6sg+2mTiQOu+gLrCGBsTPT+rA
-WcbMMEHwTwzm5kaoirtp
-=qwlI
------END PGP SIGNATURE-----
-
---RASg3xLB4tUQ4RcS--
-
-
---===============7793460851939266052==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7793460851939266052==--
+>
+>
+>  #define SUNXI_CCU_M_WITH_GATE(_struct, _name, _parent, _reg,           \
+> --
+> 2.9.2
+>
