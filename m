@@ -1,447 +1,222 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v6 2/2] phy: add a driver for the Rockchip SoC internal
- PCIe PHY
-Date: Fri, 2 Sep 2016 17:50:10 +0530
-Message-ID: <57C96E7A.3070708@ti.com>
-References: <1472715894-28985-1-git-send-email-shawn.lin@rock-chips.com>
- <1472715894-28985-2-git-send-email-shawn.lin@rock-chips.com>
+From: Tiffany Lin <tiffany.lin@mediatek.com>
+Subject: [PATCH v5 0/9] Add MT8173 Video Decoder Driver
+Date: Fri, 2 Sep 2016 20:19:51 +0800
+Message-ID: <1472818800-22558-1-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472715894-28985-2-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
+Cc: devicetree@vger.kernel.org, Tiffany Lin <tiffany.lin@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+==============
+ Introduction
+==============
+
+The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
+Mediatek Video Codec is able to handle video decoding and encoding of in a range of formats.
+
+This patch series rely on MTK VPU driver that have been merged in v4.8-rc1.
+Mediatek Video Decoder driver rely on VPU driver to load, communicate with VPU.
+
+Internally the driver uses videobuf2 framework, and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
+
+[1]https://chromium-review.googlesource.com/#/c/245241/
+
+==================
+ Device interface
+==================
+
+In principle the driver bases on v4l2 memory-to-memory framework:
+it provides a single video node and each opened file handle gets its own private context with separate buffer queues. Each context consist of 2 buffer 
+queues: OUTPUT (for source buffers, i.e. bitstream) and CAPTURE (for destination buffers, i.e. decoded video frames).
+OUTPUT and CAPTURE buffer could be MMAP or DMABUF memory type.
+
+Change in v5:
+1. Merge wucheng's V4L2_PIX_FMT_VP9 series to this series
+   V4L: add VP9 format documentation
+   v4l2-ioctl: add VP9 format description.
+   videodev2.h: add V4L2_PIX_FMT_VP9 format.
+2. Remove V4L2_PIX_FMT_MT21C to another series
+
+Change in v4:
+1.Change V4L2_PIX_FMT_MT21 to v4l2_PIX_FMT_MT21C
+2.Fix g/s_selection implementation
+3.Refine code according to review comments and pass V4l2-compliance test
+
+-/bin/sh: v4l2: not found
+# v4l2-compliance -d /dev/video0
+v4l2-compliance SHA   : fc45cdc502065bc1dfb4ef9ceb9a822bb9877bce
+
+Driver Info:
+        Driver name   : mtk-vcodec-dec
+        Card type     : platform:mt8173
+        Bus info      : platform:mt8173
+        Driver version: 4.8.0
+        Capabilities  : 0x84204000
+                Video Memory-to-Memory Multiplanar
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps   : 0x04204000
+                Video Memory-to-Memory Multiplanar
+                Streaming
+                Extended Pix Format
+
+Compliance test for device /dev/video0 (not using libv4l2):
+
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+        test second video open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+        test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+        Control ioctls:
+                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+                test VIDIOC_QUERYCTRL: OK
+                test VIDIOC_G/S_CTRL: OK
+                test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+                Standard Controls: 2 Private Controls: 0
+
+        Format ioctls:
+                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+                test VIDIOC_G/S_PARM: OK (Not Supported)
+                test VIDIOC_G_FBUF: OK (Not Supported)
+                test VIDIOC_G_FMT: OK
+                test VIDIOC_TRY_FMT: OK
+                test VIDIOC_S_FMT: OK
+                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+                test Cropping: OK (Not Supported)
+                test Composing: OK
+                test Scaling: OK
+
+        Codec ioctls:
+                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+        Buffer ioctls:
+                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+                test VIDIOC_EXPBUF: OK
+
+Test input 0:
+
+Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
 
 
-On Thursday 01 September 2016 01:14 PM, Shawn Lin wrote:
-> This patch to add a generic PHY driver for rockchip PCIe PHY.
-> Access the PHY via registers provided by GRF (general register
-> files) module.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+Change in v3:
+1. Refine vdec hw clock setting
+2. Refine vp9 codec driver
+3. Refine v4l2 codec driver
 
-merged, thanks
+Change in v2:
+1. Add documentation for V4L2_PIX_FMT_MT21 2. Remove DRM_FORMAT_MT21 2. Refine code according to review comments
 
--Kishon
-> 
-> ---
-> 
-> Changes in v6:
-> - use dev_* instead of pr_*
-> 
-> Changes in v5:
-> - add COMPILE_TEST and select MFD_SYSCON on Kconfig
-> 
-> Changes in v4:
-> - remove laneoff symbol as we still fail to get a workable solution
->   except for exporting symbol. But I will be back with some other possible
->   routine once finished.
-> 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  drivers/phy/Kconfig             |   8 +
->  drivers/phy/Makefile            |   1 +
->  drivers/phy/phy-rockchip-pcie.c | 357 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 366 insertions(+)
->  create mode 100644 drivers/phy/phy-rockchip-pcie.c
-> 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index f9bf981..46e5536 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -388,6 +388,14 @@ config PHY_ROCKCHIP_DP
->  	help
->  	  Enable this to support the Rockchip Display Port PHY.
->  
-> +config PHY_ROCKCHIP_PCIE
-> +	tristate "Rockchip PCIe PHY Driver"
-> +	depends on (ARCH_ROCKCHIP && OF) || COMPILE_TEST
-> +	select GENERIC_PHY
-> +	select MFD_SYSCON
-> +	help
-> +	  Enable this to support the Rockchip PCIe PHY.
-> +
->  config PHY_ST_SPEAR1310_MIPHY
->  	tristate "ST SPEAR1310-MIPHY driver"
->  	select GENERIC_PHY
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 74b44ef..ce0e526 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -42,6 +42,7 @@ obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
->  obj-$(CONFIG_PHY_ROCKCHIP_USB) += phy-rockchip-usb.o
->  obj-$(CONFIG_PHY_ROCKCHIP_INNO_USB2)	+= phy-rockchip-inno-usb2.o
->  obj-$(CONFIG_PHY_ROCKCHIP_EMMC) += phy-rockchip-emmc.o
-> +obj-$(CONFIG_PHY_ROCKCHIP_PCIE) += phy-rockchip-pcie.o
->  obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
->  obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
->  obj-$(CONFIG_PHY_ST_SPEAR1310_MIPHY)	+= phy-spear1310-miphy.o
-> diff --git a/drivers/phy/phy-rockchip-pcie.c b/drivers/phy/phy-rockchip-pcie.c
-> new file mode 100644
-> index 0000000..a2b4c6b
-> --- /dev/null
-> +++ b/drivers/phy/phy-rockchip-pcie.c
-> @@ -0,0 +1,357 @@
-> +/*
-> + * Rockchip PCIe PHY driver
-> + *
-> + * Copyright (C) 2016 Shawn Lin <shawn.lin@rock-chips.com>
-> + * Copyright (C) 2016 ROCKCHIP, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +
-> +/*
-> + * The higher 16-bit of this register is used for write protection
-> + * only if BIT(x + 16) set to 1 the BIT(x) can be written.
-> + */
-> +#define HIWORD_UPDATE(val, mask, shift) \
-> +		((val) << (shift) | (mask) << ((shift) + 16))
-> +
-> +#define PHY_MAX_LANE_NUM      4
-> +#define PHY_CFG_DATA_SHIFT    7
-> +#define PHY_CFG_ADDR_SHIFT    1
-> +#define PHY_CFG_DATA_MASK     0xf
-> +#define PHY_CFG_ADDR_MASK     0x3f
-> +#define PHY_CFG_RD_MASK       0x3ff
-> +#define PHY_CFG_WR_ENABLE     1
-> +#define PHY_CFG_WR_DISABLE    1
-> +#define PHY_CFG_WR_SHIFT      0
-> +#define PHY_CFG_WR_MASK       1
-> +#define PHY_CFG_PLL_LOCK      0x10
-> +#define PHY_CFG_CLK_TEST      0x10
-> +#define PHY_CFG_CLK_SCC       0x12
-> +#define PHY_CFG_SEPE_RATE     BIT(3)
-> +#define PHY_CFG_PLL_100M      BIT(3)
-> +#define PHY_PLL_LOCKED        BIT(9)
-> +#define PHY_PLL_OUTPUT        BIT(10)
-> +#define PHY_LANE_A_STATUS     0x30
-> +#define PHY_LANE_B_STATUS     0x31
-> +#define PHY_LANE_C_STATUS     0x32
-> +#define PHY_LANE_D_STATUS     0x33
-> +#define PHY_LANE_RX_DET_SHIFT 11
-> +#define PHY_LANE_RX_DET_TH    0x1
-> +#define PHY_LANE_IDLE_OFF     0x1
-> +#define PHY_LANE_IDLE_MASK    0x1
-> +#define PHY_LANE_IDLE_A_SHIFT 3
-> +#define PHY_LANE_IDLE_B_SHIFT 4
-> +#define PHY_LANE_IDLE_C_SHIFT 5
-> +#define PHY_LANE_IDLE_D_SHIFT 6
-> +
-> +struct rockchip_pcie_data {
-> +	unsigned int pcie_conf;
-> +	unsigned int pcie_status;
-> +	unsigned int pcie_laneoff;
-> +};
-> +
-> +struct rockchip_pcie_phy {
-> +	struct rockchip_pcie_data *phy_data;
-> +	struct regmap *reg_base;
-> +	struct reset_control *phy_rst;
-> +	struct clk *clk_pciephy_ref;
-> +};
-> +
-> +static inline void phy_wr_cfg(struct rockchip_pcie_phy *rk_phy,
-> +			      u32 addr, u32 data)
-> +{
-> +	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-> +		     HIWORD_UPDATE(data,
-> +				   PHY_CFG_DATA_MASK,
-> +				   PHY_CFG_DATA_SHIFT) |
-> +		     HIWORD_UPDATE(addr,
-> +				   PHY_CFG_ADDR_MASK,
-> +				   PHY_CFG_ADDR_SHIFT));
-> +	udelay(1);
-> +	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-> +		     HIWORD_UPDATE(PHY_CFG_WR_ENABLE,
-> +				   PHY_CFG_WR_MASK,
-> +				   PHY_CFG_WR_SHIFT));
-> +	udelay(1);
-> +	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-> +		     HIWORD_UPDATE(PHY_CFG_WR_DISABLE,
-> +				   PHY_CFG_WR_MASK,
-> +				   PHY_CFG_WR_SHIFT));
-> +}
-> +
-> +static inline u32 phy_rd_cfg(struct rockchip_pcie_phy *rk_phy,
-> +			     u32 addr)
-> +{
-> +	u32 val;
-> +
-> +	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-> +		     HIWORD_UPDATE(addr,
-> +				   PHY_CFG_RD_MASK,
-> +				   PHY_CFG_ADDR_SHIFT));
-> +	regmap_read(rk_phy->reg_base,
-> +		    rk_phy->phy_data->pcie_status,
-> +		    &val);
-> +	return val;
-> +}
-> +
-> +static int rockchip_pcie_phy_power_off(struct phy *phy)
-> +{
-> +	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-> +	int err = 0;
-> +
-> +	err = reset_control_assert(rk_phy->phy_rst);
-> +	if (err) {
-> +		dev_err(&phy->dev, "assert phy_rst err %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int rockchip_pcie_phy_power_on(struct phy *phy)
-> +{
-> +	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-> +	int err = 0;
-> +	u32 status;
-> +	unsigned long timeout;
-> +
-> +	err = reset_control_deassert(rk_phy->phy_rst);
-> +	if (err) {
-> +		dev_err(&phy->dev, "deassert phy_rst err %d\n", err);
-> +		return err;
-> +	}
-> +
-> +	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-> +		     HIWORD_UPDATE(PHY_CFG_PLL_LOCK,
-> +				   PHY_CFG_ADDR_MASK,
-> +				   PHY_CFG_ADDR_SHIFT));
-> +
-> +	/*
-> +	 * No documented timeout value for phy operation below,
-> +	 * so we make it large enough here. And we use loop-break
-> +	 * method which should not be harmful.
-> +	 */
-> +	timeout = jiffies + msecs_to_jiffies(1000);
-> +
-> +	err = -EINVAL;
-> +	while (time_before(jiffies, timeout)) {
-> +		regmap_read(rk_phy->reg_base,
-> +			    rk_phy->phy_data->pcie_status,
-> +			    &status);
-> +		if (status & PHY_PLL_LOCKED) {
-> +			dev_dbg(&phy->dev, "pll locked!\n");
-> +			err = 0;
-> +			break;
-> +		}
-> +		msleep(20);
-> +	}
-> +
-> +	if (err) {
-> +		dev_err(&phy->dev, "pll lock timeout!\n");
-> +		goto err_pll_lock;
-> +	}
-> +
-> +	phy_wr_cfg(rk_phy, PHY_CFG_CLK_TEST, PHY_CFG_SEPE_RATE);
-> +	phy_wr_cfg(rk_phy, PHY_CFG_CLK_SCC, PHY_CFG_PLL_100M);
-> +
-> +	err = -ETIMEDOUT;
-> +	while (time_before(jiffies, timeout)) {
-> +		regmap_read(rk_phy->reg_base,
-> +			    rk_phy->phy_data->pcie_status,
-> +			    &status);
-> +		if (!(status & PHY_PLL_OUTPUT)) {
-> +			dev_dbg(&phy->dev, "pll output enable done!\n");
-> +			err = 0;
-> +			break;
-> +		}
-> +		msleep(20);
-> +	}
-> +
-> +	if (err) {
-> +		dev_err(&phy->dev, "pll output enable timeout!\n");
-> +		goto err_pll_lock;
-> +	}
-> +
-> +	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-> +		     HIWORD_UPDATE(PHY_CFG_PLL_LOCK,
-> +				   PHY_CFG_ADDR_MASK,
-> +				   PHY_CFG_ADDR_SHIFT));
-> +	err = -EINVAL;
-> +	while (time_before(jiffies, timeout)) {
-> +		regmap_read(rk_phy->reg_base,
-> +			    rk_phy->phy_data->pcie_status,
-> +			    &status);
-> +		if (status & PHY_PLL_LOCKED) {
-> +			dev_dbg(&phy->dev, "pll relocked!\n");
-> +			err = 0;
-> +			break;
-> +		}
-> +		msleep(20);
-> +	}
-> +
-> +	if (err) {
-> +		dev_err(&phy->dev, "pll relock timeout!\n");
-> +		goto err_pll_lock;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_pll_lock:
-> +	reset_control_assert(rk_phy->phy_rst);
-> +	return err;
-> +}
-> +
-> +static int rockchip_pcie_phy_init(struct phy *phy)
-> +{
-> +	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-> +	int err = 0;
-> +
-> +	err = clk_prepare_enable(rk_phy->clk_pciephy_ref);
-> +	if (err) {
-> +		dev_err(&phy->dev, "Fail to enable pcie ref clock.\n");
-> +		goto err_refclk;
-> +	}
-> +
-> +	err = reset_control_assert(rk_phy->phy_rst);
-> +	if (err) {
-> +		dev_err(&phy->dev, "assert phy_rst err %d\n", err);
-> +		goto err_reset;
-> +	}
-> +
-> +	return err;
-> +
-> +err_reset:
-> +	clk_disable_unprepare(rk_phy->clk_pciephy_ref);
-> +err_refclk:
-> +	return err;
-> +}
-> +
-> +static int rockchip_pcie_phy_exit(struct phy *phy)
-> +{
-> +	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-> +	int err = 0;
-> +
-> +	clk_disable_unprepare(rk_phy->clk_pciephy_ref);
-> +
-> +	err = reset_control_deassert(rk_phy->phy_rst);
-> +	if (err) {
-> +		dev_err(&phy->dev, "deassert phy_rst err %d\n", err);
-> +		goto err_reset;
-> +	}
-> +
-> +	return err;
-> +
-> +err_reset:
-> +	clk_prepare_enable(rk_phy->clk_pciephy_ref);
-> +	return err;
-> +}
-> +
-> +static const struct phy_ops ops = {
-> +	.init		= rockchip_pcie_phy_init,
-> +	.exit		= rockchip_pcie_phy_exit,
-> +	.power_on	= rockchip_pcie_phy_power_on,
-> +	.power_off	= rockchip_pcie_phy_power_off,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static const struct rockchip_pcie_data rk3399_pcie_data = {
-> +	.pcie_conf = 0xe220,
-> +	.pcie_status = 0xe2a4,
-> +	.pcie_laneoff = 0xe214,
-> +};
-> +
-> +static const struct of_device_id rockchip_pcie_phy_dt_ids[] = {
-> +	{
-> +		.compatible = "rockchip,rk3399-pcie-phy",
-> +		.data = &rk3399_pcie_data,
-> +	},
-> +	{}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, rockchip_pcie_phy_dt_ids);
-> +
-> +static int rockchip_pcie_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct rockchip_pcie_phy *rk_phy;
-> +	struct phy *generic_phy;
-> +	struct phy_provider *phy_provider;
-> +	struct regmap *grf;
-> +	const struct of_device_id *of_id;
-> +
-> +	grf = syscon_node_to_regmap(dev->parent->of_node);
-> +	if (IS_ERR(grf)) {
-> +		dev_err(dev, "Cannot find GRF syscon\n");
-> +		return PTR_ERR(grf);
-> +	}
-> +
-> +	rk_phy = devm_kzalloc(dev, sizeof(*rk_phy), GFP_KERNEL);
-> +	if (!rk_phy)
-> +		return -ENOMEM;
-> +
-> +	of_id = of_match_device(rockchip_pcie_phy_dt_ids, &pdev->dev);
-> +	if (!of_id)
-> +		return -EINVAL;
-> +
-> +	rk_phy->phy_data = (struct rockchip_pcie_data *)of_id->data;
-> +	rk_phy->reg_base = grf;
-> +
-> +	rk_phy->phy_rst = devm_reset_control_get(dev, "phy");
-> +	if (IS_ERR(rk_phy->phy_rst)) {
-> +		if (PTR_ERR(rk_phy->phy_rst) != -EPROBE_DEFER)
-> +			dev_err(dev,
-> +				"missing phy property for reset controller\n");
-> +		return PTR_ERR(rk_phy->phy_rst);
-> +	}
-> +
-> +	rk_phy->clk_pciephy_ref = devm_clk_get(dev, "refclk");
-> +	if (IS_ERR(rk_phy->clk_pciephy_ref)) {
-> +		dev_err(dev, "refclk not found.\n");
-> +		return PTR_ERR(rk_phy->clk_pciephy_ref);
-> +	}
-> +
-> +	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
-> +	if (IS_ERR(generic_phy)) {
-> +		dev_err(dev, "failed to create PHY\n");
-> +		return PTR_ERR(generic_phy);
-> +	}
-> +
-> +	phy_set_drvdata(generic_phy, rk_phy);
-> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +
-> +	return PTR_ERR_OR_ZERO(phy_provider);
-> +}
-> +
-> +static struct platform_driver rockchip_pcie_driver = {
-> +	.probe		= rockchip_pcie_phy_probe,
-> +	.driver		= {
-> +		.name	= "rockchip-pcie-phy",
-> +		.of_match_table = rockchip_pcie_phy_dt_ids,
-> +	},
-> +};
-> +
-> +module_platform_driver(rockchip_pcie_driver);
-> +
-> +MODULE_AUTHOR("Shawn Lin <shawn.lin@rock-chips.com>");
-> +MODULE_DESCRIPTION("Rockchip PCIe PHY driver");
-> +MODULE_LICENSE("GPL v2");
-> 
+
+Andrew-CT Chen (1):
+  VPU: mediatek: Add decode support
+
+Tiffany Lin (10):
+  dt-bindings: Add a binding for Mediatek Video Decoder
+  vcodec: mediatek: Add Mediatek V4L2 Video Decoder Driver
+  vcodec: mediatek: Add Mediatek H264 Video Decoder Drive
+  vcodec: mediatek: Add Mediatek VP8 Video Decoder Driver
+  Add documentation for V4L2_PIX_FMT_VP9.
+  vcodec: mediatek: Add Mediatek VP9 Video Decoder Driver
+  v4l: add Mediatek compressed video block format
+  docs-rst: Add compressed video formats used on MT8173 codec driver
+  vcodec: mediatek: Add V4L2_PIX_FMT_MT21C support for v4l2 decoder
+  arm64: dts: mediatek: Add Video Decoder for MT8173
+
+Wu-Cheng Li (2):
+  videodev2.h: add V4L2_PIX_FMT_VP9 format.
+  v4l2-ioctl: add VP9 format description.
+
+ .../devicetree/bindings/media/mediatek-vcodec.txt  |   57 +-
+ Documentation/media/uapi/v4l/pixfmt-013.rst        |    8 +
+ Documentation/media/uapi/v4l/pixfmt-reserved.rst   |    6 +
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   44 +
+ drivers/media/platform/mtk-vcodec/Makefile         |   15 +-
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c | 1448 ++++++++++++++++++++
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h |   88 ++
+ .../media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c |  394 ++++++
+ .../media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c  |  205 +++
+ .../media/platform/mtk-vcodec/mtk_vcodec_dec_pm.h  |   28 +
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h |   62 +-
+ .../media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c |    8 +-
+ .../media/platform/mtk-vcodec/mtk_vcodec_intr.c    |    3 +-
+ .../media/platform/mtk-vcodec/mtk_vcodec_util.c    |   33 +-
+ .../media/platform/mtk-vcodec/mtk_vcodec_util.h    |    5 +
+ .../media/platform/mtk-vcodec/vdec/vdec_h264_if.c  |  506 +++++++
+ .../media/platform/mtk-vcodec/vdec/vdec_vp8_if.c   |  633 +++++++++
+ .../media/platform/mtk-vcodec/vdec/vdec_vp9_if.c   |  967 +++++++++++++
+ drivers/media/platform/mtk-vcodec/vdec_drv_base.h  |   56 +
+ drivers/media/platform/mtk-vcodec/vdec_drv_if.c    |  122 ++
+ drivers/media/platform/mtk-vcodec/vdec_drv_if.h    |  101 ++
+ drivers/media/platform/mtk-vcodec/vdec_ipi_msg.h   |  103 ++
+ drivers/media/platform/mtk-vcodec/vdec_vpu_if.c    |  168 +++
+ drivers/media/platform/mtk-vcodec/vdec_vpu_if.h    |   96 ++
+ drivers/media/platform/mtk-vpu/mtk_vpu.c           |   12 +
+ drivers/media/platform/mtk-vpu/mtk_vpu.h           |   27 +
+ drivers/media/v4l2-core/v4l2-ioctl.c               |    2 +
+ include/uapi/linux/videodev2.h                     |    2 +
+ 28 files changed, 5173 insertions(+), 26 deletions(-)
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/vdec/vdec_h264_if.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/vdec/vdec_vp8_if.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/vdec/vdec_vp9_if.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/vdec_drv_base.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/vdec_drv_if.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/vdec_drv_if.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/vdec_ipi_msg.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/vdec_vpu_if.h
+
+-- 
+1.7.9.5
