@@ -1,74 +1,76 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [v3 1/2] mmc: DT: sdhci-brcmstb: Bindings document for common
- sdhci-brcmstb
-Date: Fri, 2 Sep 2016 09:55:45 -0500
-Message-ID: <20160902145545.GA14098@rob-hp-laptop>
-References: <20160830063010.10171-1-jaedon.shin@gmail.com>
- <20160830063010.10171-2-jaedon.shin@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 4/8] gpio: dt-bindings: Add documentation for Aspeed
+ GPIO controllers
+Date: Fri, 2 Sep 2016 10:00:45 -0500
+Message-ID: <20160902150045.GA17024@rob-hp-laptop>
+References: <20160830075427.11493-1-andrew@aj.id.au>
+ <20160830075427.11493-5-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160830063010.10171-2-jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <20160830075427.11493-5-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 30, 2016 at 03:30:09PM +0900, Jaedon Shin wrote:
-> - Renames the DT binding document to common for ARM and MIPS based SoCs
-> - Adds a compatible string "brcm,bcm7445-sdhci" that is representation
->   for the Broadcom BCM7445 and family. It is initial and typical 28nm
->   generation ARM based SoC.
-> 
-> Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Tue, Aug 30, 2016 at 05:24:23PM +0930, Andrew Jeffery wrote:
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Acked-by: Joel Stanley <joel@jms.id.au>
 > ---
->  .../mmc/{brcm,bcm7425-sdhci.txt => brcm,sdhci-brcmstb.txt}        | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->  rename Documentation/devicetree/bindings/mmc/{brcm,bcm7425-sdhci.txt => brcm,sdhci-brcmstb.txt} (81%)
+>  .../devicetree/bindings/gpio/gpio-aspeed.txt       | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+
+Acked-by: Rob Herring <robh@kernel.org>
+
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/brcm,bcm7425-sdhci.txt b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
-> similarity index 81%
-> rename from Documentation/devicetree/bindings/mmc/brcm,bcm7425-sdhci.txt
-> rename to Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
-> index 82847174c37d..555229367935 100644
-> --- a/Documentation/devicetree/bindings/mmc/brcm,bcm7425-sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
-> @@ -8,14 +8,16 @@ on Device Tree properties to enable them for SoC/Board combinations
->  that support them.
->  
->  Required properties:
-> -- compatible: "brcm,bcm7425-sdhci"
-> +- compatible: should be one of the following
-> +  - "brcm,bcm7425-sdhci"
-> +  - "brcm,bcm7445-sdhci"
->  
->  Refer to clocks/clock-bindings.txt for generic clock consumer properties.
->  
->  Example:
->  
->  	sdhci@f03e0100 {
-> -		compatible = "brcm,bcm7425-sdhci";
-> +		compatible = "brcm,bcm7445-sdhci";
->  		reg = <0xf03e0000 0x100>;
->  		interrupts = <0x0 0x26 0x0>;
->  		sdhci,auto-cmd12;
-> @@ -27,7 +29,7 @@ Example:
->  	sdhci@f03e0300 {
->  		non-removable;
->  		bus-width = <0x8>;
-> -		compatible = "brcm,bcm7425-sdhci";
-> +		compatible = "brcm,bcm7445-sdhci";
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+> new file mode 100644
+> index 000000000000..09f26cac18d1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+> @@ -0,0 +1,36 @@
+> +Aspeed GPIO controller Device Tree Bindings
+> +-------------------------------------------
+> +
+> +Required properties:
+> +- #gpio-cells 		: Should be two
+> +			  - First cell is the GPIO line number
+> +			  - Second cell is used to specify optional
+> +			    parameters (unused)
+> +
+> +- compatible		: Either "aspeed,ast2400-gpio" or "aspeed,ast2500-gpio"
 
-These changes to the example seem pointless. Drop them.
+I'd prefer this be listed first if you respin this.
 
->  		reg = <0xf03e0200 0x100>;
->  		interrupts = <0x0 0x27 0x0>;
->  		sdhci,auto-cmd12;
+> +
+> +- reg			: Address and length of the register set for the device
+> +- gpio-controller	: Marks the device node as a GPIO controller.
+> +- interrupts		: Interrupt specifier (see interrupt bindings for
+> +			  details)
+> +- interrupt-controller	: Mark the GPIO controller as an interrupt-controller
+> +
+> +Optional properties:
+> +
+> +- interrupt-parent     : The parent interrupt controller, optional if inherited
+> +
+> +The gpio and interrupt properties are further described in their respective
+> +bindings documentation:
+> +
+> +- Documentation/devicetree/bindings/gpio/gpio.txt
+> +- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +
+> +  Example:
+> +	gpio@1e780000 {
+> +		#gpio-cells = <2>;
+> +		compatible = "aspeed,ast2400-gpio";
+> +		gpio-controller;
+> +		interrupts = <20>;
+> +		reg = <0x1e780000 0x1000>;
+> +		interrupt-controller;
+> +	};
 > -- 
-> 2.9.3
+> 2.9.3.1.g0db844e
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
