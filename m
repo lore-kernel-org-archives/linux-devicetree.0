@@ -1,84 +1,195 @@
-From: vivek.gautam@codeaurora.org
-Subject: Re: [PATCH v3 21/22] phy: Add support for Qualcomm's USB HSIC phy
-Date: Fri, 02 Sep 2016 16:58:12 +0530
-Message-ID: <0a3780a5073324772b873b8c474358c5@codeaurora.org>
-References: <20160901004036.23936-1-stephen.boyd@linaro.org>
- <20160901004036.23936-22-stephen.boyd@linaro.org>
- <CAFp+6iGJo5P3_oFCboKmOno6QzcMhVHhTWVWPFw3fCop0PSa8g@mail.gmail.com>
- <147276722271.30255.17486402880702436547@sboyd-linaro>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v2 6/7] arm64: dts: exynos: Add dts file for
+ Exynos5433-based TM2 board
+Date: Fri, 02 Sep 2016 20:29:27 +0900
+Message-ID: <57C96297.1080704@samsung.com>
+References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
+ <1472046551-703-7-git-send-email-cw00.choi@samsung.com>
+ <CGME20160826183044epcas1p1335170a5e46d0432d97c415de293e8ac@epcas1p1.samsung.com>
+ <0a6dffe0-8508-724e-c831-d14c32f8cd64@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <147276722271.30255.17486402880702436547@sboyd-linaro>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: Linux USB Mailing List <linux-usb@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <0a6dffe0-8508-724e-c831-d14c32f8cd64@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>, k.kozlowski@samsung.com, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: krzk@kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-09-02 03:30, Stephen Boyd wrote:
-> (Please trim replies)
+Hi Javier,
 
-sorry, will take care from next time.
+On 2016년 08월 27일 03:30, Javier Martinez Canillas wrote:
+> Hello Chanwoo,
+> 
+> The patch looks mostly good to me, I've just some comments:
+> 
+> [snip]
+> 
+>> +
+>> +&decon {
+>> +	status = "okay";
+>> +	iommu-reserved-mapping = <0x20000000 0x20000000 0xc0000000>;
+>> +
+> 
+> This property never made to mainline due not having an agreement on
+> how this should be fixed properly IIUC [0]. So you should remove it.
+
+OK. I'll remove it.
 
 > 
-> Quoting Vivek Gautam (2016-08-31 23:17:55)
->> On Thu, Sep 1, 2016 at 6:10 AM, Stephen Boyd <stephen.boyd@linaro.org> 
->> wrote:
->> > +
->> > +       uphy->cal_sleep_clk = clk = devm_clk_get(&ulpi->dev, "cal_sleep");
->> > +       if (IS_ERR(clk))
->> > +               return PTR_ERR(clk);
->> > +
->> > +       uphy->phy = devm_phy_create(&ulpi->dev, ulpi->dev.of_node,
->> > +                                   &qcom_usb_hsic_phy_ops);
->> 
->> There's a ulpi_phy library available in  drivers/phy/. Do we want to 
->> use that ?
->> That also creates a phy-lookup of this PHY so that the ulpi device's 
->> parent
->> can request the PHY.
+> [snip]
 > 
-> I don't have any interest in using those two functions (does two
-> functions constitute a library?).
+>> +
+>> +	s2mps13-pmic@66 {
+>> +		compatible = "samsung,s2mps13-pmic";
+>> +		interrupt-parent = <&gpa0>;
+>> +		interrupts = <7 IRQ_TYPE_NONE>;
+>> +		reg = <0x66>;
+>> +		samsung,s2mps11-wrstbi-ground;
+>> +
+>> +		s2mps13_osc: clocks {
+>> +			compatible = "samsung,s2mps13-clk";
+>> +			#clock-cells = <1>;
+>> +			clock-output-names = "s2mps13_ap", "s2mps13_cp",
+>> +				"s2mps13_bt";
+>> +		};
+>> +
+> 
+> I see that most of the following regulators are marked as always-on
+> but I wonder if this is really needed. For example some of them are
+> looked up by consumer devices.
+> 
+> [snip]
+> 
+>> +			};
+>> +
+>> +			ldo3_reg: LDO3 {
+>> +				regulator-name = "VDD1_E_1.8V_AP";
+>> +				regulator-min-microvolt = <1800000>;
+>> +				regulator-max-microvolt = <1800000>;
+>> +				regulator-always-on;
+>> +			};
+> 
+> This is used by both the ADC and the TMU so I guess it should be safe
+> to not mark it as always-on (unless is used by other critical IP block
+> not described in the DT).
 
-Not really.
-
-> There's no devm as you say,
-
-I meant to say that you may need to change the existing APIs to the 
-devm_* APIs.
-
-> and it seems to be specific to the ULPI hardware for dwc3 (the only 
-> user) where
-> the phy is called "usb2-phy".
-
-This was used with TI's USB 2.0 PHY, that has ULPI interface.
-
-> This is a phy for the ChipIdea controller
-> which only has one phy and it's called "usb-phy" in that case.
-
-In a way this is also a USB 2.0 phy, isn't it ?
+This regulator should be always ON state.
+This regulator provides the voltage to ALIVE domain of Exynos5433.
 
 > 
->> 
->> You may want to modify the APIs available in ulpi_phy library to use 
->> the
->> devm_* APIs.
->> 
+> [snip]
 > 
-> The lookup isn't necessary because we use DT to find the lookup. I seem
-> to recall the phy framework requiring a DT lookup too.
+>> +
+>> +			ldo6_reg: LDO6 {
+>> +				regulator-name = "VDD10_MIPI2L_1.0V_AP";
+>> +				regulator-min-microvolt = <1000000>;
+>> +				regulator-max-microvolt = <1000000>;
+>> +				regulator-always-on;
+> 
+> Same question, this is used by both the dsi and usbdrd30 nodes so maybe
+> it shouldn't be marked as always-on as well.
 
-The lookup created in this ulpi_phy.h was used to help getting the PHY 
-in the
-driver for parent device (a core wrapper) of the controller (platform 
-glue layer) that requests this PHY.
-I am not certain at this point about how PHY has to be handled in case 
-of Chipidea.
-Was just throwing in ideas. :-)
+OK. I'll remove it.
 
+> 
+>> +				regulator-state-mem {
+>> +					regulator-off-in-suspend;
+>> +				};
+>> +			};
+>> +
+>> +			ldo7_reg: LDO7 {
+>> +				regulator-name = "VDD18_MIPI2L_1.8V_AP";
+>> +				regulator-min-microvolt = <1800000>;
+>> +				regulator-max-microvolt = <1800000>;
+>> +				regulator-always-on;
+> 
+> This is used by the dsi node as well.
 
-Thanks
-Vivek
+OK. I'll remove it.
+
+> 
+> [snip]
+> 
+>> +
+>> +			ldo10_reg: LDO10 {
+>> +				regulator-name = "VDD33_USB30_3.0V_AP";
+>> +				regulator-min-microvolt = <3000000>;
+>> +				regulator-max-microvolt = <3000000>;
+>> +				regulator-always-on;
+> 
+> Use by the usbdrd30 node.
+
+OK. I'll remove it.
+
+> 
+> [snip]
+> 
+>> +
+>> +			ldo18_reg: LDO18 {
+>> +				regulator-name = "V_CODEC_1.8V_AP";
+>> +				regulator-min-microvolt = <1800000>;
+>> +				regulator-max-microvolt = <1800000>;
+>> +				regulator-always-on;
+> 
+> Use by the wm5110-codec node.
+
+OK. I'll remove it.
+
+> 
+> [snip]
+> 
+>> +
+>> +			buck2_reg: BUCK2 {
+>> +				regulator-name = "VDD_EGL_1.0V_AP";
+> 
+> I wonder if this shouldn't be "VDD_ATL_1.0V_AP" or something since
+> the big cluster isn't called Eagle like in arm32 Exynos but Atlas?
+
+I used the regulator's name according to TM2's schematic.
+As I knew, Eagle means the big cores.
+
+> 
+>> +				regulator-min-microvolt = <900000>;
+>> +				regulator-max-microvolt = <1300000>;
+>> +				regulator-always-on;
+>> +				regulator-state-mem {
+>> +					regulator-off-in-suspend;
+>> +				};
+>> +			};
+>> +
+>> +			buck3_reg: BUCK3 {
+>> +				regulator-name = "VDD_KFC_1.0V_AP";
+> 
+> Same, maybe using "VDD_APL_1.0V_AP" since the big cluster is Apollo?
+
+ditto.
+The KFC (King Fisher) means the little cores.
+
+> 
+>> +				regulator-min-microvolt = <800000>;
+>> +				regulator-max-microvolt = <1200000>;
+>> +				regulator-always-on;
+>> +				regulator-state-mem {
+>> +					regulator-off-in-suspend;
+>> +				};
+>> +			};
+>> +
+> 
+> Used by the big and LITTLE clusters respectively, although for these two
+> I'm not that sure if it would be safe to remove the always-on property.
+
+> 
+> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Thanks for your review.
+
+> 
+> [0]: http://www.spinics.net/lists/arm-kernel/msg419747.html
+> 
+> Best regards,
+> 
+-- 
+Best Regards,
+Chanwoo Choi
