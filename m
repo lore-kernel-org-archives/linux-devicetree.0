@@ -1,90 +1,74 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH RFC 1/3] DT: bindings: mmc: Add property for 3.3V only
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v3 2/9] drivers: irqchip: Add STM32 external interrupts
  support
-Date: Fri, 2 Sep 2016 20:50:28 +0200 (CEST)
-Message-ID: <1736517218.106027.c3e46c0d-6759-48dd-92a9-ce98ef74d48a.open-xchange@email.1und1.de>
-References: <1470488140-10104-1-git-send-email-stefan.wahren@i2se.com>
- <1470488140-10104-2-git-send-email-stefan.wahren@i2se.com>
- <20160810184451.GA13473@rob-hp-laptop>
- <853617027.179290.63a6f478-ad48-40c8-82ca-760dd1afc040.open-xchange@email.1und1.de>
- <CAL_JsqJ09hXYrp_pgAw9FXrBv+=grkm_zip6qB9XefujPECTxQ@mail.gmail.com>
- <468a6704-a9f0-1715-ff64-9e331a6a80b1@rock-chips.com>
- <8f87c885-3c55-cac8-a9f5-e121ae031f90@intel.com>
- <CAPDyKFr8X93oqiPzkQxPnfMGyV9UBEybvfODX5if3VwMbheKcw@mail.gmail.com>
+Date: Fri, 2 Sep 2016 20:57:11 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1609022052470.5647@nanos>
+References: <1472830398-13275-1-git-send-email-alexandre.torgue@st.com> <1472830398-13275-3-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFr8X93oqiPzkQxPnfMGyV9UBEybvfODX5if3VwMbheKcw@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Otavio Salvador <otavio@ossystems.com.br>, Holger Schurig <holgerschurig@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>, Shawn Guo <shawnguo@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>, linux-mmc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, Adrian Hunter <adrian.hunter@intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1472830398-13275-3-git-send-email-alexandre.torgue@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre TORGUE <alexandre.torgue@st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf, hi Rob
+Alexandre,
 
-> Ulf Hansson <ulf.hansson@linaro.org> hat am 30. August 2016 um 11:26
-> geschrieben:
-> 
-> 
-> On 18 August 2016 at 14:25, Adrian Hunter <adrian.hunter@intel.com> wrote:
-> > On 11/08/16 03:48, Shawn Lin wrote:
-> >> + Adrian
-> >>
-> >> Let's queue Adrian here who now maintains SDHCI stuff.
-> >
-> > SDHCI drivers may not implement no-1-8-v in a consistent manner, but as far
-> > as I can see, the meaning is still clear: 1.8V will not be used for either
-> > supply or signaling.
-> 
-> Okay.
-> 
-> >
-> > SDHCI is complicated because the SDHCI specification does not cover eMMC.
-> > From the perspective of SDHCI, the only 1.8V modes are the UHS-I modes, so
-> > support for 1.8V signaling is the same as support for one of those modes
-> > (the spec even says as much).  But what happens is that the host controller
-> > can support those modes but the board can't supply 1.8V so the drivers
-> > remove capability for the modes.  Support for 1.8V supply has a capability
-> > bit which drivers can override if necessary but removable SD cards don't
-> > support 1.8V supply anyway, so the issue doesn't arise if the host
-> > controller is only used for uSD cards.
-> 
-> By looking how SDHCI uses the SDHCI_SUPPORT_DDR50 in conjunction with
-> SDHCI_QUIRK2_NO_1_8_V (which is set when no-1-8-v DT property is
-> provided), this becomes a bit messy.
-> 
-> From Adrian's summary above, it then seems appropriate to limit the
-> no-1-8-v DT property to apply only to capabilities related to SD
-> cards, as I assume that also was the original purpose.
-> 
-> Do you think it's possible to clean up this in sdhci when assigning
-> the caps masks, and then also clarify the no-1-8-v DT binding in the
-> documentation?
+On Fri, 2 Sep 2016, Alexandre TORGUE wrote:
 
-was the question addressed to me? I think this clean up should be a separate
-patch series. Unfortunately i don't have a clue about what exactly and how it
-should be fixed.
+This all looks very reasonable. The only complaint I have is your variable
+declaration ordering or the lack thereof.
 
-> 
-> Regarding the new DT binding proposed to be added, mmc-ddr-3_3v, it
-> seems we need this to be able to properly describe the HW.
-> Rob, do you have an issue with adding this binding? I am thinking that
-> we already have mmc-ddr-1_8v and mmc-ddr-1_2v, so it just follow
-> existing pattern.
+1)
+> +	struct irq_domain *domain = irq_desc_get_handler_data(desc);
+> +	struct irq_chip_generic *gc = domain->gc->gc[0];
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	unsigned long pending;
+> +	int n;
 
-@Rob: gently ping ...
+2)
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+> +	u32 rtsr, ftsr;
+> +	int pin = data->hwirq;
 
-Regards
-Stefan
+3)
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+> +	int pin = data->hwirq;
+> +	u32 emr;
 
-> 
-> [...]
-> 
-> Kind regards
-> Uffe
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+4)
+> +	irq_hw_number_t hwirq;
+> +	struct irq_fwspec *fwspec = data;
+> +	struct irq_chip_generic *gc = d->gc->gc[0];
+
+5)
+> +	int nr_irqs, nr_exti, ret, i;
+> +	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
+> +	struct irq_domain *domain;
+> +	struct irq_chip_generic *gc;
+> +	void *base;
+
+#1 and 3 have the ordering which is preferred in the irq code.
+
+#2, #4 and #5 are three permutations which are way harder to read.
+
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+> +	int pin = data->hwirq;
+> +	u32 rtsr, ftsr;
+
+> +	struct irq_chip_generic *gc = d->gc->gc[0];
+> +	struct irq_fwspec *fwspec = data;
+> +	irq_hw_number_t hwirq;
+
+> +	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
+> +	int nr_irqs, nr_exti, ret, i;
+> +	struct irq_chip_generic *gc;
+> +	struct irq_domain *domain;
+> +	void *base;
+
+Can you spot the difference?
+
+Thanks,
+
+	tglx
