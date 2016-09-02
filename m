@@ -1,52 +1,99 @@
-From: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5 6/9] videodev2.h: add V4L2_PIX_FMT_VP9 format.
-Date: Fri, 2 Sep 2016 20:19:57 +0800
-Message-ID: <1472818800-22558-7-git-send-email-tiffany.lin@mediatek.com>
-References: <1472818800-22558-1-git-send-email-tiffany.lin@mediatek.com>
- <1472818800-22558-2-git-send-email-tiffany.lin@mediatek.com>
- <1472818800-22558-3-git-send-email-tiffany.lin@mediatek.com>
- <1472818800-22558-4-git-send-email-tiffany.lin@mediatek.com>
- <1472818800-22558-5-git-send-email-tiffany.lin@mediatek.com>
- <1472818800-22558-6-git-send-email-tiffany.lin@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mxsfb: Add bindings for the MXSFB
+ KMS/DRM driver
+Date: Fri, 2 Sep 2016 07:30:21 -0500
+Message-ID: <20160902123021.GA20726@rob-hp-laptop>
+References: <20160826142742.7236-1-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1472818800-22558-6-git-send-email-tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Wu-Cheng Li <wuchengli-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160826142742.7236-1-marex-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Wu-Cheng Li <wuchengli-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+On Fri, Aug 26, 2016 at 04:27:41PM +0200, Marek Vasut wrote:
+> Add DT bindings for new MXSFB driver using the DRM framework.
+> The old MXSFB fbdev driver bindings are preserved in mxsfb.txt .
 
-This adds VP9 video coding format, a successor to VP8.
+They should be documented in the same place as they describe the same 
+h/w. I've not looked how incompatible they are, but I'd expect that to 
+be described here.
 
-Signed-off-by: Wu-Cheng Li <wuchengli-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- include/uapi/linux/videodev2.h |    1 +
- 1 file changed, 1 insertion(+)
+> Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/display/mxsfb-drm.txt      | 33 ++++++++++++++++++++++
 
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 5529741..43326c3 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -603,6 +603,7 @@ struct v4l2_pix_format {
- #define V4L2_PIX_FMT_VC1_ANNEX_G v4l2_fourcc('V', 'C', '1', 'G') /* SMPTE 421M Annex G compliant stream */
- #define V4L2_PIX_FMT_VC1_ANNEX_L v4l2_fourcc('V', 'C', '1', 'L') /* SMPTE 421M Annex L compliant stream */
- #define V4L2_PIX_FMT_VP8      v4l2_fourcc('V', 'P', '8', '0') /* VP8 */
-+#define V4L2_PIX_FMT_VP9      v4l2_fourcc('V', 'P', '9', '0') /* VP9 */
- 
- /*  Vendor-specific formats   */
- #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /* cpia1 YUV */
--- 
-1.7.9.5
+DRM is a Linuxism.
+
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/mxsfb-drm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/mxsfb-drm.txt b/Documentation/devicetree/bindings/display/mxsfb-drm.txt
+> new file mode 100644
+> index 0000000..e70d337
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/mxsfb-drm.txt
+> @@ -0,0 +1,33 @@
+> +* Freescale MXS LCD Interface (LCDIF) with KMS/DRM support
+
+KMS/DRM is a Linuxism.
+
+> +
+> +Required properties:
+> +- compatible:	Should be "fsl,imx23-lcdif" for i.MX23.
+> +		Should be "fsl,imx28-lcdif" for i.MX28 and i.MX6SX.
+
+MX6SX should have it's own compatible string. Knowing some of the 
+development history, I would doubt they are exactly the same.
+
+Also, IIRC MX50 variants have LCDIF.
+
+> +- reg:		Address and length of the register set for lcdif
+> +- interrupts:	Should contain lcdif interrupts
+> +- clocks:	A list of phandle + clock-specifier pairs, one for each
+> +		entry in 'clock-names'.
+> +- clock-names:	A list of clock names. For MXSFB it should contain:
+> +    - "pix" for the MXSFB block clock
+> +    - (optional) "axi", "disp_axi" for the bus interface clock on MX6SX
+
+Doesn't this mean required on MX6SX?
+
+> +
+> +Required sub-nodes:
+> +  - port: The connection to an encoder chip.
+> +
+> +Example:
+> +
+> +	lcdif1: lcdif@02220000 {
+
+Drop the leading 0.
+
+> +		compatible = "fsl,imx6sx-lcdif", "fsl,imx28-lcdif";
+> +		reg = <0x02220000 0x4000>;
+> +		interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&clks IMX6SX_CLK_LCDIF1_PIX>,
+> +			 <&clks IMX6SX_CLK_LCDIF_APB>,
+> +			 <&clks IMX6SX_CLK_DISPLAY_AXI>;
+> +		clock-names = "pix", "axi", "disp_axi";
+> +
+> +		port {
+> +			parallel_out: endpoint {
+> +				remote-endpoint = <&panel_in_parallel>;
+> +			};
+> +		};
+> +	};
+> -- 
+> 2.9.3
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
