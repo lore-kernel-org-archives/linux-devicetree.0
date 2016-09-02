@@ -1,113 +1,71 @@
-From: Ziyuan Xu <xzy.xu@rock-chips.com>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support
- for rk3399
-Date: Fri, 2 Sep 2016 22:23:15 +0800
-Message-ID: <10dfff58-88b2-a397-ef2e-9cd451253c40@rock-chips.com>
-References: <20160827134103.28160-1-xzy.xu@rock-chips.com>
- <20160827134103.28160-3-xzy.xu@rock-chips.com>
- <2ab8ab94-fa4d-2cd6-5805-a92ac5f9697e@rock-chips.com>
- <57C3A30B.5080707@rock-chips.com>
- <ceba6a89-6945-58c5-62e4-7d842cfa2312@rock-chips.com>
- <CAD=FV=W=LkVAm187hxp0Kbjxi5kSThwKnCMX+tr8SXQ-v_xQTQ@mail.gmail.com>
- <77f5cff1-80a2-76b3-40e9-f77caced2257@rock-chips.com>
- <12451b81-321e-b661-8f1c-25c91bffba54@rock-chips.com>
- <CAPDyKFqwqdu=9PSzD32aOYAeBVRMQ0s8oKA29JGBsMsRMsDz4w@mail.gmail.com>
- <CAD=FV=VQ7Gf33fH8=FM_Lj-r9uovoEHxusMrFQrDwf2rxeiecg@mail.gmail.com>
- <CAPDyKFra7L5iUJegHH43mF4Dw=wYo0PmH2g_96fNL_=oRnGgug@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] Documentation: dt: Add TI-SCI PM Domains
+Date: Fri, 2 Sep 2016 09:31:50 -0500
+Message-ID: <20160902143150.GA32012@rob-hp-laptop>
+References: <20160819235653.26355-1-nm@ti.com>
+ <20160819235653.26355-2-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFra7L5iUJegHH43mF4Dw=wYo0PmH2g_96fNL_=oRnGgug@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Doug Anderson <dianders@chromium.org>
-Cc: Shawn Lin <shawn.lin@rock-chips.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xing Zheng <zhengxing@rock-chips.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Frank Wang <frank.wang@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Elaine Zhang <zhangqing@rock-chips.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, David Wu <david.wu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kern
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160819235653.26355-2-nm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+On Fri, Aug 19, 2016 at 06:56:51PM -0500, Nishanth Menon wrote:
+> From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+> 
+> Add a generic power domain implementation, TI SCI PM Domains, that
+> will hook into the genpd framework and allow each PD, which will be
+> created one per device, to be managed over the TI-SCI protocol.
+> 
+> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/soc/ti/sci-pm-domain.txt   | 58 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> new file mode 100644
+> index 000000000000..059a5d71d692
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+> @@ -0,0 +1,58 @@
+> +Texas Instruments TI-SCI Generic Power Domain
+> +---------------------------------------------
+> +
+> +Some TI SoCs contain a system controller (like the PMMC, etc...) that are
+> +responsible for control the state of the IPs that are present. Communication
+> +between the host processor running an OS and the system controller happens
+> +through a protocol known as TI-SCI[1]. This pm domain implementation plugs into
+> +the generic pm domain framework and makes use of the TI SCI protocol power on
+> +and off each device when needed.
+> +
+> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
+> +
+> +PM Domains Nodes
+> +================
+> +The PM domains node represents the global PM domain managed by the PMMC,
+> +which in this case is one cell implementation as documented by the generic
+> +PM domain bindings in
+> +Documentation/devicetree/bindings/power/power_domain.txt.
+> +
+> +Required Properties:
+> +--------------------
+> +- compatible: should be "ti,sci-pm-domains"
+> +- #power-domain-cells: Must be 1 so that an offset can be provided in each
+> +		       device node.
+> +- ti,sci: Phandle to the TI SCI device to use for managing the devices
 
+How about just making this a child node of the SCI device?
 
-On 2016年09月02日 18:24, Ulf Hansson wrote:
-> On 1 September 2016 at 23:50, Doug Anderson<dianders@chromium.org>  wrote:
->> >Hi,
->> >
->> >On Thu, Sep 1, 2016 at 6:45 AM, Ulf Hansson<ulf.hansson@linaro.org>  wrote:
->>> >>I was reading the discussion regarding this change and browsing the DT
->>> >>documentation around this... Can you guys explain what really goes on
->>> >>here, please.
->>> >>
->>> >>To me, it seems like you are managing one device's resources in one
->>> >>separate genpd. One genpd per device. Is that correct?
->>> >>
->>> >>Perhaps each device actually has its own PM domain and thus it makes
->>> >>sense to assign one genpd per device?
->> >
->> >I'm not as familiar with genpd as I should be, so hopefully this makes sense.
->> >
->> >...in hardware there is a "pd_emmc" that is the power domain for just
->> >eMMC.  That will be referenced hooked up via device tree, like:
->> >
->> >power-domains = <&power RK3399_PD_EMMC>;
-> Yes, I noticed that and this is what puzzles me a bit.
->
->> >
->> >I believe that means that power will automatically be removed whenever
->> >the device is runtime suspended or suspended.
-> Well, it depends if the genpd has a subdomain or other devices in it
-> being runtime resumed.
-> The genpd will not power off unless all devices within it are runtime
-> enabled+suspended and that its subdomains are also powered off.
->
-> So, in case you only have one device and no subdomains, then your
-> statement is correct.
+Rob
 
-Yup, pd_emmc is a individual power domain which is only deployed to eMMC 
-on rk3399. It has no subdomains.
-
->
->> >
->> >If w're not supporting "autosuspend" and nobody is tweaking anything
-> I guess you mean runtime PM autosuspend? Then why don't you support this?
->
-> Wouldn't that allow you to avoid wasting power in runtime when the
-> device is idle?
-
-pd_emmc manages the sdhci controller, phy and corecfg_* stuff, if we 
-support autosuspend in driver, we have to re-init context. I didn't test 
-the latency, if it's acceptable, we will apply it.:-)
-But it's not a blocker, right?
-
->
->> >manually, then it's possible (I think) that runtime suspend happens at
->> >exactly the same time as suspend.  ...but my point was that it was
-> I am not sure I follow you here. You must not rely on that the device
-> always becomes runtime suspended during system suspend, as there are
-> no guarantees for this.
->
-> Instead that is something you need to take care of in the
-> subsystem/driver for the device, of course.
->
->> >cleaner to actually do it any restoring in the "runtime resume" hooks
->> >to match what genpd does.  This matches what you say: use runtime PM.
-> Yes!
->
-> Using genpd without deploying runtime PM for the devices doesn't make
-> much sense, at least to me.
->
->> >
->> >...but it also sounds like it might not be terribly important to
->> >restore these values since they're a bit silly to begin with.  If
->> >that's true then I guess we don't need to do anything special here.
->> >
->> >
->> >Did that all make sense (it's entirely possible it didn't since
->> >somehow my brain still hasn't absorbed all runtime PM and genpd
->> >concepts)
-> No worries. I understand this might be a bit tricky, that's why I also
-> tries to help review related changes.
->
-> Kind regards
-> Uffe
->
->
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
