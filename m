@@ -1,52 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] regulator: pwm: Add support for a fixed delay
- after duty cycle changes
-Date: Fri, 2 Sep 2016 10:13:15 -0500
-Message-ID: <20160902151315.GA24205@rob-hp-laptop>
-References: <1472617277-30814-1-git-send-email-dianders@chromium.org>
- <20160902151151.GA21418@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/2] pci:aer: add support aer interrupt with none
+ MSI/MSI-X/INTx mode
+Date: Fri, 2 Sep 2016 10:17:25 -0500
+Message-ID: <20160902151725.GA25273@rob-hp-laptop>
+References: <1465892645-32381-2-git-send-email-po.liu@nxp.com>
+ <1472625442-23309-1-git-send-email-po.liu@nxp.com>
+ <1472625442-23309-2-git-send-email-po.liu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160902151151.GA21418@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1472625442-23309-2-git-send-email-po.liu@nxp.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Po Liu <po.liu@nxp.com>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 02, 2016 at 10:11:51AM -0500, Rob Herring wrote:
-> On Tue, Aug 30, 2016 at 09:21:15PM -0700, Douglas Anderson wrote:
-> > From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > 
-> > A change of the duty cycle doesn't necessarily cause an immediate switch
-> > to the target voltage.  On many PWM regulators there is a fixed "settle
-> > time" (irrespective of the jump size) that we need to wait after an
-> > upward jump.  This change introduces the device tree property
-> > "settle-time-up-us" which allows us to specify a fixed delay after a
-> > voltage increase.
-> > 
-> > We don't add an option of a fixed delay on the way down for now because
-> > the way down is probably modelled best with a ramp rate, not a fixed
-> > delay.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > Signed-off-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > ---
-> > Changes in v3:
-> > - Took out fixed delay for falling transitions
-> > - Updated description
-> > 
-> >  .../devicetree/bindings/regulator/pwm-regulator.txt   |  6 ++++++
+On Wed, Aug 31, 2016 at 02:37:22PM +0800, Po Liu wrote:
+> On some platforms, root port doesn't support MSI/MSI-X/INTx in RC mode.
+> When chip support the aer interrupt with none MSI/MSI-X/INTx mode,
+> maybe there is interrupt line for aer pme etc. Search the interrupt
+> number in the fdt file. Then fixup the dev->irq with it.
 > 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-I take that back. What Mark said...
-
+> Signed-off-by: Po Liu <po.liu@nxp.com>
+> ---
+> Changes for v4:
+> 	- re-use the patch changes in the root port driver;
+> 	- add binding information;
 > 
-> >  drivers/regulator/pwm-regulator.c                     | 19 +++++++++++++++----
-> >  2 files changed, 21 insertions(+), 4 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  .../devicetree/bindings/pci/layerscape-pci.txt     |  4 +--
+>  drivers/pci/pcie/portdrv_core.c                    | 31 +++++++++++++++++++---
+>  2 files changed, 30 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> index 41e9f55..1dfb1da 100644
+> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> @@ -19,7 +19,7 @@ Required properties:
+>  - interrupts: A list of interrupt outputs of the controller. Must contain an
+>    entry for each entry in the interrupt-names property.
+>  - interrupt-names: Must include the following entries:
+> -  "intr": The interrupt that is asserted for controller interrupts
+> +  "aer": The interrupt that is asserted for aer interrupts
+
+You can't just change this. That breaks compatibility with old dts 
+files. Plus, it is just a name. Why does it even matter? Not to mention 
+having the name for a single irq is a bit pointless.
+
+Rob
