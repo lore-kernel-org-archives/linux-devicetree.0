@@ -1,46 +1,51 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/3] phy: omap-usb2: Fixes for v4.9
-Date: Fri, 2 Sep 2016 17:47:39 +0530
-Message-ID: <57C96DE3.6030907@ti.com>
-References: <1471942661-1728-1-git-send-email-rogerq@ti.com>
+From: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 8/9] Add documentation for V4L2_PIX_FMT_VP9.
+Date: Fri, 2 Sep 2016 20:19:59 +0800
+Message-ID: <1472818800-22558-9-git-send-email-tiffany.lin@mediatek.com>
+References: <1472818800-22558-1-git-send-email-tiffany.lin@mediatek.com>
+ <1472818800-22558-2-git-send-email-tiffany.lin@mediatek.com>
+ <1472818800-22558-3-git-send-email-tiffany.lin@mediatek.com>
+ <1472818800-22558-4-git-send-email-tiffany.lin@mediatek.com>
+ <1472818800-22558-5-git-send-email-tiffany.lin@mediatek.com>
+ <1472818800-22558-6-git-send-email-tiffany.lin@mediatek.com>
+ <1472818800-22558-7-git-send-email-tiffany.lin@mediatek.com>
+ <1472818800-22558-8-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471942661-1728-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1472818800-22558-8-git-send-email-tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Wu-Cheng Li <wuchengli-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add documentation for V4L2_PIX_FMT_VP9.
 
+Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Wu-Cheng Li <wuchengli-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ Documentation/media/uapi/v4l/pixfmt-013.rst |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-On Tuesday 23 August 2016 02:27 PM, Roger Quadros wrote:
-> Hi Kishon & Tony,
-> 
-> Here are some fixes found in the TI vendor tree for omap-usb2 PHY
-> and are important for upstream. Please queue for -next if OK. Thanks.
+diff --git a/Documentation/media/uapi/v4l/pixfmt-013.rst b/Documentation/media/uapi/v4l/pixfmt-013.rst
+index bfef4f4..58e3ce6 100644
+--- a/Documentation/media/uapi/v4l/pixfmt-013.rst
++++ b/Documentation/media/uapi/v4l/pixfmt-013.rst
+@@ -129,3 +129,11 @@ Compressed Formats
+        -  'VP80'
+ 
+        -  VP8 video elementary stream.
++
++    -  .. _V4L2-PIX-FMT-VP9:
++
++       -  ``V4L2_PIX_FMT_VP9``
++
++       -  'VP90'
++
++       -  VP9 video elementary stream.
+-- 
+1.7.9.5
 
-merged the phy patches to linux-phy -next
-
-Thanks
-Kishon
-> 
-> The 3rd patch should probably go via Tony's SoC DT tree.
-> 
-> cheers,
-> -roger
-> 
-> Sekhar Nori (3):
->   phy: omap-usb2: support suspend/resume
->   dt-bindings: phy: ti: add documentation for ti,dra7x-usb2
->   ARM: dts: dra7: workaround silicon limitation i845
-> 
->  Documentation/devicetree/bindings/phy/ti-phy.txt |   2 +
->  arch/arm/boot/dts/dra7.dtsi                      |   2 +-
->  drivers/phy/phy-omap-usb2.c                      | 100 +++++++++++------------
->  3 files changed, 49 insertions(+), 55 deletions(-)
-> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
