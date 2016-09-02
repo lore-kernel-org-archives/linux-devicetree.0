@@ -1,43 +1,39 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v4 3/5] drm: add SimpleDRM driver
-Date: Fri, 2 Sep 2016 08:11:11 +0200
-Message-ID: <CAKMK7uEm2_woMoyBUz77ivmyL939m7fEQH_CRbUxq5NeNrmzZw@mail.gmail.com>
-References: <1471897525-31118-1-git-send-email-noralf@tronnes.org>
- <1471897525-31118-4-git-send-email-noralf@tronnes.org> <CANq1E4Ro2W0J4XTTx+3TxRDHsc6z2AN7wFBc-njsBDYZVGV4OA@mail.gmail.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH] [v10] net: emac: emac gigabit ethernet controller
+ driver
+Date: Thu, 01 Sep 2016 23:35:53 -0700 (PDT)
+Message-ID: <20160901.233553.598021775110843532.davem@davemloft.net>
+References: <1472685728-29537-1-git-send-email-timur@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANq1E4Ro2W0J4XTTx+3TxRDHsc6z2AN7wFBc-njsBDYZVGV4OA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Herrmann <dh.herrmann@gmail.com>
-Cc: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>, linux-kernel <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472685728-29537-1-git-send-email-timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mlangsdo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 2, 2016 at 1:48 AM, David Herrmann <dh.herrmann@gmail.com> wrote:
-> So either the drm_simple_kms_helpers are buggy, or the SimpleDRM use
-> of it. On DPMS updates, I get:
->
-> Sep 02 01:00:39 david-t2 kernel:
-> [drm:drm_atomic_helper_commit_cleanup_done [drm_kms_helper]] *ERROR*
-> [CRTC:25:crtc-0] flip_done timed out
-> Sep 02 01:00:39 david-t2 kernel: ------------[ cut here ]------------
-> Sep 02 01:00:39 david-t2 kernel: WARNING: CPU: 3 PID: 352 at
-> drivers/gpu/drm/drm_atomic_helper.c:1549
-> drm_atomic_helper_commit_hw_done+0xab/0xb0 [drm_kms_helper]
->
-> The atomic-commit originates in:
-> drm_atomic_helper_connector_dpms()
->
-> Any idea what is missing there? I haven't looked much into the
-> atomic-helpers, yet.
+From: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Date: Wed, 31 Aug 2016 18:22:08 -0500
 
-The bugfix for that is in latest drm-misc (or well, should be at
-least). And you need to make sure to call drm_crtc_send_vblank_event
-(if there's an event) from your update hook. That /should/ work, but I
-didn't test it myself. flip_done not happening is when the
-driver/helpers fail to submit the event for some reason or another.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+> Add support for the Qualcomm Technologies, Inc. EMAC gigabit Ethernet
+> controller.
+> 
+> This driver supports the following features:
+> 1) Checksum offload.
+> 2) Interrupt coalescing support.
+> 3) SGMII phy.
+> 4) phylib interface for external phy
+> 
+> Based on original work by
+> 	Niranjana Vishwanathapura <nvishwan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> 	Gilad Avidov <gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> 
+> Signed-off-by: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+
+Applied to net-next, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
