@@ -1,54 +1,57 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v3 12/12] arm64: dts: h3ulcb: Sound SSI support
-Date: Fri, 2 Sep 2016 10:19:25 +0200
-Message-ID: <20160902081925.GC16669@verge.net.au>
-References: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1472637850-15053-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <87d1knumv9.wl%kuninori.morimoto.gx@renesas.com>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH v2 5/7] [media] ir-lirc-codec: don't wait any
+ transmitting time for tx only devices
+Date: Fri, 2 Sep 2016 09:41:59 +0100
+Message-ID: <20160902084158.GA25342@gofer.mess.org>
+References: <20160901171629.15422-1-andi.shyti@samsung.com>
+ <20160901171629.15422-6-andi.shyti@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87d1knumv9.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20160901171629.15422-6-andi.shyti@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andi Shyti <andi.shyti@samsung.com>
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi@etezian.org>, David =?iso-8859-1?Q?H=E4rdeman?= <david@hardeman.nu>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 02, 2016 at 01:19:49AM +0000, Kuninori Morimoto wrote:
+On Fri, Sep 02, 2016 at 02:16:27AM +0900, Andi Shyti wrote:
+> Transmitters do not need to wait until the data has been sent
+> (and of course received). Return before waiting.
 > 
-> Hi Vladimir
+> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+> ---
+>  drivers/media/rc/ir-lirc-codec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> > This supports SSI sound for H3ULCB board.
-> > SSI DMA mode used. CS2000 used as AUDIO_CLK_B.
-> > 
-> > Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> > ---
-> 
-> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> 
-> > +	audio_clkout: audio_clkout {
-> > +		compatible = "fixed-clock";
-> > +		#clock-cells = <0>;
-> > +		clock-frequency = <11289600>;
-> > +	};
-> 
-> I think having commont for AUDIO_CLKOUT is better for user, like Salvator-X.
-> This "audio_clkout" is dummy. Actually, we don't need this dummy clock,
-> and we should use "<&rcar_sound 0>" as AUDIO_CLKOUT,
-> like AUDIO_CLKOUT3 as "<&rcar_sound 3>" which is used on ak4613. 
-> But Salvator-X and this ULCB board has very complex connection,
-> especially around CS2000.
-> This means cs2000 requests rcar_sound, and rcar_sound requests cs2000.
-> This audio_clkout exist to avoid probe dead-lock.
-> This is the reason why audio_clkout and rcar_sound::clock-frequency
-> has same value.
+> diff --git a/drivers/media/rc/ir-lirc-codec.c b/drivers/media/rc/ir-lirc-codec.c
+> index c327730..d8953fb 100644
+> --- a/drivers/media/rc/ir-lirc-codec.c
+> +++ b/drivers/media/rc/ir-lirc-codec.c
+> @@ -153,7 +153,7 @@ static ssize_t ir_lirc_transmit_ir(struct file *file, const char __user *buf,
+>  	}
+>  
+>  	ret = dev->tx_ir(dev, txbuf, count);
+> -	if (ret < 0)
+> +	if (ret < 0 || dev->driver_type == RC_DRIVER_IR_RAW_TX)
 
-Vladimir,
+Just because a driver only does transmit doesn't mean its transmit ABI
+should change.
 
-please address the above and include it when you repost the patches
-that I haven't queued up.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Now this bit of code is pretty horrible. It ensures that the call to write()
+takes at least as long as the length of the transmit IR by sleeping. That's
+not much of a guarantee that the IR has been sent.
+
+Note that in the case of ir-spi, since your spi transfer is sync no sleep
+should be introduced here.
+
+The gap calculation in lirc checks that if the call to write() took _longer_
+than expected wait before sending the next IR code (when either multiple
+IR codes or repeats are specified). Introducing the sleep in the kernel
+here does not help at all, lirc already ensures that it waits as long as
+the IR is long (see schedule_repeat_timer in lirc).
+
+This change was introduced in 3.10, commit f8e00d5. 
+
+
+Sean
