@@ -1,128 +1,101 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support
- for rk3399
-Date: Thu, 1 Sep 2016 22:22:33 -0700
-Message-ID: <CAD=FV=V69XqyOp2OXrnjs-du=dFWShAWOzmf+NbtCZ8yk5dB3A@mail.gmail.com>
-References: <20160827134103.28160-1-xzy.xu@rock-chips.com> <20160827134103.28160-3-xzy.xu@rock-chips.com>
- <2ab8ab94-fa4d-2cd6-5805-a92ac5f9697e@rock-chips.com> <57C3A30B.5080707@rock-chips.com>
- <ceba6a89-6945-58c5-62e4-7d842cfa2312@rock-chips.com> <CAD=FV=W=LkVAm187hxp0Kbjxi5kSThwKnCMX+tr8SXQ-v_xQTQ@mail.gmail.com>
- <77f5cff1-80a2-76b3-40e9-f77caced2257@rock-chips.com> <CAD=FV=WmoyoZmV_uj281S37ZpWqg8Dr2U8ntkD2Sr58qbcB0wg@mail.gmail.com>
- <411dfc7b-1089-61a8-7a7e-6f378c0a6074@rock-chips.com> <CAD=FV=Wrw=THuokXyOXSyihF4fDB4z2L0vCgkiR9XJ6aEzsNzg@mail.gmail.com>
- <16314a2c-1ed9-0307-3497-9c1d8d41a149@rock-chips.com>
+From: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] [media] rc-main: assign driver type during
+ allocation
+Date: Fri, 02 Sep 2016 14:25:14 +0900
+Message-ID: <20160902052514.fmjk4mrhblztthzb@samsunx.samsung>
+References: <20160901171629.15422-1-andi.shyti@samsung.com>
+ <20160901171629.15422-2-andi.shyti@samsung.com>
+ <CGME20160901212401epcas1p398150b4d46215d868997016db430c3c8@epcas1p3.samsung.com>
+ <20160901212351.GB22198@gofer.mess.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <16314a2c-1ed9-0307-3497-9c1d8d41a149@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ziyuan Xu <xzy.xu@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Brian Norris <briannorris@chromium.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Xing Zheng <zhengxing@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Frank Wang <frank.wang@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, David Wu <david.wu@rock-chips.com>, Shunqian Zheng <zhengsq@rock-chips.com>, Jianqu
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-disposition: inline
+In-reply-to: <20160901212351.GB22198-3XSxi2G4b3iXFJAUJl40Xg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Sean,
 
-On Thu, Sep 1, 2016 at 7:35 PM, Ziyuan Xu <xzy.xu@rock-chips.com> wrote:
->
->
-> On 2016=E5=B9=B409=E6=9C=8802=E6=97=A5 05:29, Doug Anderson wrote:
->>
->> Hi,
->>
->> On Wed, Aug 31, 2016 at 11:56 PM, Ziyuan Xu <xzy.xu@rock-chips.com> wrot=
-e:
->>>
->>> Hi
->>>
->>>
->>> On 2016=E5=B9=B409=E6=9C=8801=E6=97=A5 12:20, Doug Anderson wrote:
->>>>
->>>> Hi,
->>>>
->>>> On Wed, Aug 31, 2016 at 7:29 PM, Ziyuan Xu <xzy.xu@rock-chips.com>
->>>> wrote:
->>>>>>
->>>>>> This is fine to pick up _only_ if you don't care about suspend/resum=
-e.
->>>>>> If you care about suspend/resume then someone needs to first write a
->>>>>> patch that will re-init all "corecfg" values after power is turned o=
-n.
->>>>>
->>>>>
->>>>> Do you mean corecfg_clockmultiplier and corecfg_baseclkfreq, if yes, =
-we
->>>>> don't need to strore/re-init it after resume.
->>>>> corecfg_clockmultiplier is only used to fetch host->clk_mul, and
->>>>> host->clk_mul has been a fixed value at run-time, unless driver unbin=
-d.
->>>>> The same as corecfg_clockmultiplier, corecfg_baseclkfreq is used to
->>>>> check
->>>>> the xin_clk at probe time, we don't reference it at run-time.
->>>>> BTW, I have tested suspend/resume on rk3399 prior to this sumbit, eMM=
-C
->>>>> works
->>>>> fine.
->>>>
->>>> I guess I don't actually know how the corecfg_clockmultiplier and
->>>> corecfg_baseclkfreq fields are actually used, but I presume that they
->>>> actually do something useful and aren't used to just communicate back
->>>> to software?
->>>
->>>
->>> Take corecfg_clockmultiplier as example.
->>> 1. sdhci driver fetch host->clk_mul from corecfg_clockmultiplier
->>> 2. mmc->f_min and mmc->f_max are calculated via host->clk_mul, they're
->>> used
->>> for further initialization.
->>> 3. if the corecfg_clockmultiplier is incorrect, sdhci will use improper
->>> frequency to play.
->>>
->>> I think we don't need to store it due to it's a fixed value at run-time=
-,
->>> even if it is reset after a power cycle, the above will not be changed
->>> via
->>> software, except for dirver unbind .
->>>
->>>> I know that:
->>>>
->>>> 1. If I don't pick this patch and I suspend/resume,
->>>> corecfg_clockmultiplier and corecfg_baseclkfreq are still fine after
->>>> suspend / resume.
->>>>
->>>> 2. If I do pick this patch and I suspend/resume,
->>>> corecfg_clockmultiplier and corecfg_baseclkfreq are wrong after
->>>> suspend/resume (tested by reading /dev/mem directly from userspace
->>>> after suspend/resume).
->>>>
->>>>
->>>> Are you saying that it is unimportant that corecfg_clockmultiplier and
->>>> corecfg_baseclkfreq are wrong?
->>>
->>>
->>> Yup, corecfg_* stuff will be reset after a power cycle.
->>> I mean that we need only to guarantee they're correct at probe time.
->>
->> So are you saying that the entire purpose of "corecfg_clockmultiplier"
->> is that causes the "ClockMultiplier" field of the "EMMCCORE_CAP"
->> register to get a certain value?
->> ...and that the entire purpose of "corecfg_baseclkfreq" is that it
->> causes the "BaseClockFreqSDClock" field of the "EMMCCORE_CAP" register
->> to get a certain value?
->
-> Yes, on rk3399:
-> corecfg_clockmultiplier <=3D=3D=3D> EMMCCORE_CAP1[23:16] ClockMultiplier
-> corecfg_baseclkfreq <=3D=3D=3D> EMMCCORE_CAP[15:8] BaseClockFreqSDClock
->
-> If you re-write to either corecfg_* stuff,  the corresponding CAP registe=
-r
-> field will be changed too.
-> sdhci driver will fetch CAP register for initialization, we only need to
-> guarantee they're correct at probe time.
->
-> Did that all make sense?
+> >  	ir = kzalloc(sizeof(*ir), GFP_KERNEL);
+> > -	dev = rc_allocate_device();
+> > +	dev = rc_allocate_device(RC_DRIVER_IR_RAW);
+> >  	if (!ir || !dev)
+> >  		goto err_out_free;
+> >  
+> 
+> If ir->sampling = 0 then it should be RC_DRIVER_SCANCODE.
+> 
+> 
+> > @@ -481,7 +481,6 @@ int cx88_ir_init(struct cx88_core *core, struct pci_dev *pci)
+> >  	dev->scancode_mask = hardware_mask;
+> >  
+> >  	if (ir->sampling) {
+> > -		dev->driver_type = RC_DRIVER_IR_RAW;
+> >  		dev->timeout = 10 * 1000 * 1000; /* 10 ms */
+> >  	} else {
+> >  		dev->driver_type = RC_DRIVER_SCANCODE;
+> 
+> That assignment shouldn't really be there any more.
 
-Yes.  Very odd, but it makes sense.
+I think this doesn't change the driver's behavior, because I
+either do like:
 
-It would still be nice to get these restored after runtime resume just
-for cleanliness, but it's not a blocker IMHO.
+  -   dev = rc_allocate_device();
+  +   dev = rc_allocate_device(RC_DRIVER_SCANCODE);
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+  [ ... ]
+
+      if (ir->sampling) {
+              dev->driver_type = RC_DRIVER_IR_RAW;
+              dev->timeout = 10 * 1000 * 1000; /* 10 ms */
+      } else {
+   -          dev->driver_type = RC_DRIVER_SCANCODE;
+
+Or I would need to do aftr the long switch...case statement
+
+    +  if (ir->sampling) {
+    +          dev = rc_allocate_device(RC_DRIVER_IR_RAW);
+    +          ...
+    +  } else {
+    +          dev = rc_allocate_device(RC_DRIVER_SCANCODE);
+    +          ...
+
+I prefered the first way because it doesn't alter much the
+driver.
+
+> >  	ir = kzalloc(sizeof(*ir), GFP_KERNEL);
+> > -	rc = rc_allocate_device();
+> > +	rc = rc_allocate_device(RC_DRIVER_SCANCODE);
+> >  	if (!ir || !rc) {
+> >  		err = -ENOMEM;
+> >  		goto err_out_free;
+> 
+> This is not correct, I'm afraid. If you look at the code you can see that
+> if raw_decode is true, then it should be RC_DRIVER_IR_RAW.
+
+Same here, the driver doesn't change the behavior. raw_decode can
+be both 'true' or 'false' it's set as default RC_DRIVER_SCANCODE
+and depending on value of raw_decode it's chaged to
+RC_DRIVER_IR_RAW.
+
+also in this case I can do
+
+    +  if (raw_decode) {
+    +          rc = rc_allocate_device(RC_DRIVER_IR_RAW);
+    +          ...
+    +  } else {
+    +          rc = rc_allocate_device(RC_DRIVER_SCANCODE);
+    +          ...
+
+but also in this case my original approach doesn't add much
+changes.
+
+Thanks,
+Andi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
