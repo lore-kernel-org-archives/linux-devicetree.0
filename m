@@ -1,101 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] mfd: arizona: Add DT options for max_channels_clocked
- and PDM speaker config
-Date: Fri, 2 Sep 2016 12:51:46 -0500
-Message-ID: <CAL_JsqJpO0U3KggMddM4HB5ZNN4V2RW1ih9iQYUuvFihhS_jkA@mail.gmail.com>
-References: <1472635543-21577-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <20160902153458.GA28352@rob-hp-laptop> <1472831784.4359.6.camel@rf-debian.wolfsonmicro.main>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [tpmdd-devel] [PATCH] Documentation: tpm: Adds the TPM device
+ tree node documentation
+Date: Fri, 2 Sep 2016 12:57:19 -0500
+Message-ID: <CAL_Jsq+jmAHSGTJPxWZgc_87NTA8uvWZSegx9E7krXKzDcgBmw@mail.gmail.com>
+References: <1472532277-21933-1-git-send-email-nayna@linux.vnet.ibm.com>
+ <20160902145121.GA9636@rob-hp-laptop> <20160902170613.GA5024@obsidianresearch.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472831784.4359.6.camel-WeElTRBN8n0bEPBeyYQi64iQ8/zYDDdY1BehtkLrGTY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160902170613.GA5024@obsidianresearch.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Nayna Jain <nayna@linux.vnet.ibm.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "wsa@the-dreams.de" <wsa@the-dreams.de>, tpmdd-devel@lists.sourceforge.net, gcwilson@us.ibm.com, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 2, 2016 at 10:56 AM, Richard Fitzgerald
-<rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
-> On Fri, 2016-09-02 at 10:34 -0500, Rob Herring wrote:
->> On Wed, Aug 31, 2016 at 10:25:43AM +0100, Richard Fitzgerald wrote:
->> > This patch adds DT settings for the max_channels_clocked, spk_fmt and
->> > spk_mute pdata.
->> >
->> > Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
->> > ---
->> >  Documentation/devicetree/bindings/mfd/arizona.txt | 11 ++++++++
+On Fri, Sep 2, 2016 at 12:06 PM, Jason Gunthorpe
+<jgunthorpe@obsidianresearch.com> wrote:
+> On Fri, Sep 02, 2016 at 09:51:21AM -0500, Rob Herring wrote:
+>> > +- linux,sml-base : base address of the Event Log. It is a physical address.
+>> > +              sml stands for shared memory log.
 >>
->> Binding looks fine, but...
->>
->> >  drivers/mfd/arizona-core.c                        | 31 +++++++++++++++++++++++
->> >  2 files changed, 42 insertions(+)
->>
->> > diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
->> > index b95ff2d..36a9633 100644
->> > --- a/drivers/mfd/arizona-core.c
->> > +++ b/drivers/mfd/arizona-core.c
->> > @@ -816,6 +816,37 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
->> >             count++;
->> >     }
->> >
->> > +   count = 0;
->> > +   of_property_for_each_u32(arizona->dev->of_node,
->> > +                            "wlf,max-channels-clocked",
->> > +                            prop, cur, val) {
->> > +           if (count == ARRAY_SIZE(pdata->max_channels_clocked))
->> > +                   break;
->> > +
->> > +           pdata->max_channels_clocked[count] = val;
->> > +           count++;
->> > +   }
->>
->> of_property_read_u32_array doesn't work for you?
+>> How is it a physical address on an i2c device? Why 2 cells (which needs
+>> to be documented also)?
 >
-> No, it doesn't, because it doesn't read a variable-sized array.
-
-But the next 2 loops are fixed with 2 elements, right? They should be
-converted. If not fixed size, you have the same pattern repeated 3
-times.
-
-Maybe we should fix of_property_read_u32_array to be more flexible and
-return an array less than a max size. Not sure if anyone relies on
-that case failing though, so leaving the 1st loop is fine.
-
-Rob
-
->> > +   count = 0;
->> > +   of_property_for_each_u32(arizona->dev->of_node, "wlf,spk-fmt", prop,
->> > +                            cur, val) {
->> > +           if (count == ARRAY_SIZE(pdata->spk_fmt))
->> > +                   break;
->> > +
->> > +           pdata->spk_fmt[count] = val;
->> > +           count++;
->> > +   }
->> > +
->> > +   count = 0;
->> > +   of_property_for_each_u32(arizona->dev->of_node, "wlf,spk-mute", prop,
->> > +                            cur, val) {
->> > +           if (count == ARRAY_SIZE(pdata->spk_mute))
->> > +                   break;
->> > +
->> > +           pdata->spk_mute[count] = val;
->> > +           count++;
->> > +   }
->> > +
->> >     return 0;
->> >  }
->> >
->> > --
->> > 1.9.1
->> >
->> > --
->> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> To be clear, as I understand it, this mechanism is a hand off from the
+> boot firmware to Linux.
 >
+> The boot firmware talks i2c to the device, does some stuff, writes it
+> to memory and then linux reads that stuff. I agree it seems crazy to
+> include a random physical address like that.
+
+I'd put that in reserved-memory then if designing this from scratch...
+
+Must not be completely random as somehow the kernel doesn't use that memory.
+
+> The linux,sml-* names appear to have been used by IBM for a long time
+> on their enterprise PPC platforms (see drivers/char/tpm/tpm_of.c), so
+> I've expected we have to keep them?
+
+Yes. I wasn't aware of that.
+
+> I asked Nayna to document this stuff IBM is doing so the rest of us
+> in TPM land can have a hope of maintaining it...
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Jason
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
