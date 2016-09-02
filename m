@@ -1,48 +1,70 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [v2 PATCH 2/3] clk: rockchip: add dclk_vop_frac ids for vop
-Date: Fri, 2 Sep 2016 13:58:19 -0700
-Message-ID: <b2d57b28-19dc-c55c-39b7-4b01f9365967@rock-chips.com>
-References: <1472786785-2393-1-git-send-email-zyw@rock-chips.com>
- <1472786785-2393-2-git-send-email-zyw@rock-chips.com>
- <4896091.Zax1fNZjS5@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <4896091.Zax1fNZjS5@diego>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/5] rk3399 support ddr frequency scaling
+Date: Sat,  3 Sep 2016 05:08:18 +0800
+Message-ID: <1472850503-25232-1-git-send-email-hl@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, typ-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko
+rk3399 platform have dfi controller can monitor ddr load,
+and dcf controller to handle ddr register so we can get the
+right ddr frequency and make ddr controller happy work(which
+will implement in bl31). So we do ddr frequency scaling with
+following flow:
+
+             kernel                                bl31
+
+        monitor ddr load
+                |
+                |
+        get_target_rate
+                |
+                |           pass rate to bl31
+        clk_set_rate(ddr) --------------------->run dcf flow
+                |                                   |
+                |                                   |
+        wait dcf interrupt<-------------------trigger dcf interrupt
+                |
+                |
+              return
 
 
-On 09/02/2016 01:43 PM, Heiko St=FCbner wrote:
-> Am Donnerstag, 1. September 2016, 20:26:24 schrieb Chris Zhong:
->> From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> Export the dclk_vop_frac out, so we can set the dclk_vop as the
->> child of dclk_vop_frac, and then we can start to take use of
->> the fractional dividers.
->>
->> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Yakir is listed as author above, what relationship does Xing have to this
-> patch and the 3rd one?
->
->
+Lin Huang (5):
+  Documentation: bindings: add dt documentation for dfi controller
+  PM / devfreq: event: support rockchip dfi controller
+  Documentation: bindings: add dt documentation for rk3399 dmc
+  PM / devfreq: rockchip: add devfreq driver for rk3399 dmc
+  drm/rockchip: Add dmc notifier in vop driver
 
-Yakir is the author of the [2/3] and [3/3] patch, and Doug is the author =
+Following patch:
+clk: rockchip: add new clock-type for the ddrclk
+clk: rockchip: rk3399: add SCLK_DDRCLK ID for ddrc
+clk: rockchip: rk3399: add ddrc clock support
+have applied to:
+http://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/v4.9-clk/next
 
-of [1/3]
-The others are committer, and these tags should be removed.
+
+ .../bindings/devfreq/event/rockchip-dfi.txt        |  19 +
+ .../devicetree/bindings/devfreq/rk3399_dmc.txt     | 173 ++++++++
+ drivers/devfreq/Kconfig                            |  11 +
+ drivers/devfreq/Makefile                           |   1 +
+ drivers/devfreq/event/Kconfig                      |   7 +
+ drivers/devfreq/event/Makefile                     |   1 +
+ drivers/devfreq/event/rockchip-dfi.c               | 256 +++++++++++
+ drivers/devfreq/rk3399_dmc.c                       | 480 +++++++++++++++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c        | 116 +++++
+ 9 files changed, 1064 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/devfreq/event/rockchip-dfi.txt
+ create mode 100644 Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
+ create mode 100644 drivers/devfreq/event/rockchip-dfi.c
+ create mode 100644 drivers/devfreq/rk3399_dmc.c
+
+-- 
+2.6.6
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
