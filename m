@@ -1,98 +1,61 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: Re: [PATCH v2 6/7] Documentation: bindings: add documentation for
- ir-spi device driver
-Date: Fri, 02 Sep 2016 14:33:20 +0900
-Message-ID: <20160902053320.wqe5hklklnyvcc5m@samsunx.samsung>
-References: <20160901171629.15422-1-andi.shyti@samsung.com>
- <20160901171629.15422-7-andi.shyti@samsung.com>
- <CGME20160901214120epcas1p3c4e212a695d1575acaf0d3bd8525560d@epcas1p3.samsung.com>
- <CAL_JsqL_AG0m_BctOBV+QOGJcUEup_6ovS6shjo+BrJ974jpaA@mail.gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v3 0/5] meson: Meson8b and GXBB DWMAC glue driver
+Date: Thu, 01 Sep 2016 22:37:31 -0700 (PDT)
+Message-ID: <20160901.223731.1152520865580611814.davem@davemloft.net>
+References: <CAFBinCCmg-+8mjd0Xc5c7bEWL9_S_4kizs_UMiiW9ATBH_G8iw@mail.gmail.com>
+        <20160830.215732.429612225008644820.davem@davemloft.net>
+        <m2poonexpj.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-disposition: inline
-In-reply-to: <CAL_JsqL_AG0m_BctOBV+QOGJcUEup_6ovS6shjo+BrJ974jpaA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Sean Young <sean@mess.org>, Mark Rutland <mark.rutland@arm.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andi Shyti <andi@etezian.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <m2poonexpj.fsf@baylibre.com>
+Sender: netdev-owner@vger.kernel.org
+To: khilman@baylibre.com
+Cc: martin.blumenstingl@googlemail.com, linux-amlogic@lists.infradead.org, carlo@caione.org, mturquette@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org, manabian@gmail.com, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Kevin Hilman <khilman@baylibre.com>
+Date: Thu, 01 Sep 2016 21:23:52 -0700
 
-> > Document the ir-spi driver's binding which is a IR led driven
-> > through the SPI line.
-> >
-> > Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> > ---
-> >  Documentation/devicetree/bindings/media/spi-ir.txt | 26 ++++++++++++++++++++++
-> >  1 file changed, 26 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/spi-ir.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/spi-ir.txt b/Documentation/devicetree/bindings/media/spi-ir.txt
-> > new file mode 100644
-> > index 0000000..85cb21b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/spi-ir.txt
+> David Miller <davem@davemloft.net> writes:
 > 
-> Move this to bindings/leds, and CC the leds maintainers.
-
-More than an LED this is the driver of a remote controller, the
-driver itself is under drivers/media/rc/.
-
-Besides all the transmitters have an LED but still they are media
-devices. This is a bit special because it's so simple that the
-only hardware left is the LED itself, but still it's a media remote
-controller.
-
-> > @@ -0,0 +1,26 @@
-> > +Device tree bindings for IR LED connected through SPI bus which is used as
-> > +remote controller.
-> > +
-> > +The IR LED switch is connected to the MOSI line of the SPI device and the data
-> > +are delivered thourgh that.
-> > +
-> > +Required properties:
-> > +       - compatible: should be "ir-spi".
+>> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>> Date: Tue, 30 Aug 2016 20:49:28 +0200
+>>
+>>> On Mon, Aug 29, 2016 at 5:40 AM, David Miller <davem@davemloft.net> wrote:
+>>>> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>>>> Date: Sun, 28 Aug 2016 18:16:32 +0200
+>>>>
+>>>>> This adds a DWMAC glue driver for the PRG_ETHERNET registers found in
+>>>>> Meson8b and GXBB SoCs. Based on the "old" meson6b-dwmac glue driver
+>>>>> the register layout is completely different.
+>>>>> Thus I introduced a separate driver.
+>>>>>
+>>>>> Changes since v2:
+>>>>> - fixed unloading the glue driver when built as module. This pulls in a
+>>>>>   patch from Joachim Eastwood (thanks) to get our private data structure
+>>>>>   (bsp_priv).
+>>>>
+>>>> This doesn't apply cleanly at all to the net-next tree, so I have
+>>>> no idea where you expect these changes to be applied.
+>>> OK, maybe Kevin can me help out here as I think the patches should go
+>>> to various trees.
+>>> 
+>>> I think patches 1, 3 and 4 should go through the net-next tree (as
+>>> these touch drivers/net/ethernet/stmicro/stmmac/ and the corresponding
+>>> documentation).
+>>> Patch 2 should probably go through clk-meson-gxbb / clk-next (just
+>>> like the other clk changes we had).
+>>> The last patch (patch 5) should probably go through the ARM SoC tree
+>>> (just like the other dts changes we had).
+>>> 
+>>> @David, Kevin: would this be fine for you?
+>>
+>> I would prefer if all of the patches went through one tree, that way
+>> all the dependencies are satisfied in one place.
 > 
-> Really this is just an LED connected to a SPI, so maybe this should
-> just be "spi-led". If being more specific is helpful, then I'm all for
-> that, but perhaps spi-ir-led. (Trying to be consistent in naming with
-> gpio-leds).
+> David, with your ack on the drivers/net changes, I can take them through
+> my tree for Amlogic SoCs (which then goes via the arm-soc tree.)
 
-As I mentioned above, all transmitters have an LED, but they do
-not have the 'led' name. "ir-spi" is coherent with the device
-driver name and the driver name is coherent with the media/rc
-driver's naming.
-
-> > +
-> > +Optional properties:
-> > +       - irled,switch: specifies the gpio switch which enables the irled/
-> 
-> As I said previously, "switch-gpios" as gpio lines should have a
-> '-gpios' suffix. Or better yet, "enable-gpios" as that is a standard
-> name for an enable line.
-
-OK, thanks!
-
-> > +       - negated: boolean value that specifies whether the output is negated
-> > +         with a NOT gate.
-> 
-> Negated or inverted assumes I know what normal is. Define this in
-> terms of what is the on state. If on is normally active low, then this
-> should be led-active-high. There may already be an LED property for
-> this.
-
-Yes, thanks!
-
-> > +       - duty-cycle: 8 bit value that stores the percentage of the duty cycle.
-> > +         it can be 50, 60, 70, 75, 80 or 90.
-> 
-> This is percent time on or off?
-
-Will add more details, thanks.
-
-If it's OK for you, I would keep the name and documentation path
-and fix the rest. Please let me know if I'm missing something :)
-
-Thanks,
-Andi
+Acked-by: David S. Miller <davem@davemloft.net>
