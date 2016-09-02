@@ -1,47 +1,113 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/12] arm64: renesas: add H3ULCB board
-Date: Fri, 2 Sep 2016 09:59:20 +0200
-Message-ID: <20160902075919.GA9037@verge.net.au>
-References: <1472637712-14583-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <CAMuHMdX4sxY4_FKemcQfYtvCr5ZZ52nTqnRtp5G42X93UTT8aw@mail.gmail.com>
- <20160901141711.GE14300@verge.net.au>
- <CAMuHMdWXfb1uVRebDAmHbh23SEAGhsCMAsFNo4hYOLH3VhWCMw@mail.gmail.com>
+From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Subject: Re: [PATCH v4] rtc: omap: Support ext_wakeup configuration
+Date: Fri, 2 Sep 2016 10:13:12 +0200
+Message-ID: <53fbdcb2-99cd-4b9d-7aea-11a2a0fb7fcb@grinn-global.com>
+References: <20160825111912.23017-1-m.niestroj@grinn-global.com>
+ <20160830195903.GA14471@rob-hp-laptop>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWXfb1uVRebDAmHbh23SEAGhsCMAsFNo4hYOLH3VhWCMw@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <rtc-linux+bncBD7N3SEV2QCRBKPJUS7AKGQEHJNAR4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160830195903.GA14471@rob-hp-laptop>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 01, 2016 at 09:25:08PM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Thu, Sep 1, 2016 at 4:17 PM, Simon Horman <horms@verge.net.au> wrote:
-> >> > [01/12] dt: arm: shmobile: add H3ULCB board DT bindings
-> >
-> > I have queued up the above patch after renaming it
-> > arm64: dts: h3ulcb: enable USB2.0 Host channel 1
-> >
-> >> > [02/12] arm64: dts: h3ulcb: initial device tree
-> >> > [03/12] arm64: dts: h3ulcb: enable SCIF clk and pins
-> >> > [04/12] arm64: dts: h3ulcb: enable EthernetAVB
-> >> > [05/12] arm64: dts: h3ulcb: enable GPIO leds
-> >> > [06/12] arm64: dts: h3ulcb: enable SDHI0
-> >> > [07/12] arm64: dts: h3ulcb: enable I2C2
-> >> > [08/12] arm64: dts: h3ulcb: enable EXTALR clk
-> >> > [09/12] arm64: dts: h3ulcb: enable WDT
-> >> > [10/12] arm64: dts: h3ulcb: enable USB2 PHY of channel 1
-> >> > [11/12] arm64: dts: h3ulcb: enable USB2.0 Host channel 1
-> >>
-> >> I went through all of the above...
-> >
-> > I have also queued up 02,03,04,07,08,09,11/12.
-> 
-> Any specific reason you skipped 10/12? I'm afraid it's a prerequisite for
-> 11/12.
+On 30.08.2016 21:59, Rob Herring wrote:
+> On Thu, Aug 25, 2016 at 01:19:12PM +0200, Marcin Niestroj wrote:
+>> Support configuration of ext_wakeup sources. This patch makes it
+>> possible to enable ext_wakeup and set it's polarity, depending on board
+>> configuration. AM335x's dedicated PMIC (tps65217) uses ext_wakeup to
+>> notify about power-button presses. Handling power-button presses enables
+>> to recover from RTC-only power states correctly.
+>>
+>> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+>> ---
+>> Hi,
+>>
+>> This is a total reimplementation, so it is not based on any of the previos
+>> patch versions. This patch adds support for ext_wakeup using generic pinconf
+>> device-tree bindings, with one added "ti,input-polarity" custom property.
+>> This approach has been suggested by Tony and Grygorii in [1].
+>>
+>> Patch was developed on 4.6, rebased on 4.8-rc3, tested using chiliBoard.
+>>
+>> [1] http://www.spinics.net/lists/devicetree/msg131516.html
+>>
+>>  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  21 +++
+>>  drivers/rtc/Kconfig                                |   1 +
+>>  drivers/rtc/rtc-omap.c                             | 167 ++++++++++++++++++++-
+>>  3 files changed, 181 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+>> index bf7d11a..5d18373 100644
+>> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+>> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+>> @@ -18,6 +18,18 @@ Optional properties:
+>>    through pmic_power_en
+>>  - clocks: Any internal or external clocks feeding in to rtc
+>>  - clock-names: Corresponding names of the clocks
+>> +- pinctrl-0: a phandle pointing to the pin settings for the device
+>> +- pinctrl-names: should be "default"
+>> +
+>> +Optional subnodes:
+>> +- generic pinctrl node
+>> +
+>> +Required pinctrl subnodes properties:
+>> +- pins - Names of ext_wakeup pins to configure
+>> +
+>> +Optional pinctrl subnodes properties:
+>> +- input-enable - Enables ext_wakeup
+>> +- ti,input-polarity - GPIO_ACTIVE_LOW or GPIO_ACTIVE_HIGH depending board
+>
+> This is not a GPIO, so don't use GPIO defines. Just make this boolean
+> with not present ideally being the more common case.
+>
+>>  Example:
+>>
+>> @@ -30,4 +42,13 @@ rtc@1c23000 {
+>>  	system-power-controller;
+>>  	clocks = <&clk_32k_rtc>, <&clk_32768_ck>;
+>>  	clock-names = "ext-clk", "int-clk";
+>> +
+>> +	pinctrl-0 = <&ext_wakeup>;
+>> +	pinctrl-names = "default";
+>> +
+>> +	ext_wakeup: ext_wakeup {
+>
+> Use '-', not '_' in node names.
 
-Thanks for pointing that out, it is an oversight.
-I have queued up 10/12 and plan to push a bit later today.
+To be sure... It should look like below?
+
+ext_wakeup: ext-wakeup {
+	pins = "ext_wakeup0";
+	input-enable;
+	ti,active-high;
+}
+
+>
+>> +		pins = "ext_wakeup0";
+>> +		input-enable;
+>> +		ti,input-polarity = <GPIO_ACTIVE_LOW>;
+>> +	};
+>>  };
+
+-- 
+Marcin Niestroj
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
