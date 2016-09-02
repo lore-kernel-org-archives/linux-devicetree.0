@@ -1,7 +1,7 @@
 From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v2 08/15] Remove duplicate CSR definition.
-Date: Fri, 02 Sep 2016 10:55:01 -0500
-Message-ID: <20160902155501.8650.92863.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+Subject: [PATCH v2 07/15] Simplify the confusing HIWORD_UPDATE scheme.
+Date: Fri, 02 Sep 2016 10:54:53 -0500
+Message-ID: <20160902155453.8650.29613.stgit@bhelgaas-glaptop2.roam.corp.google.com>
 References: <20160902154501.8650.99790.stgit@bhelgaas-glaptop2.roam.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -13,84 +13,108 @@ To: Shawn Lin <shawn.lin@rock-chips.com>
 Cc: devicetree@vger.kernel.org, Wenrui Li <wenrui.li@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-PCIE_RC_CONFIG_LCSR was the same as PCIE_RC_CONFIG_LCS.  Kept
-PCIE_RC_CONFIG_LCS.
 
-PCIE_CORE_LCSR_RETRAIN_LINK was inexplicably named differently and defined
-separately.
 ---
- drivers/pci/host/pcie-rockchip.c |   27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ drivers/pci/host/pcie-rockchip.c |   70 +++++++++++++-------------------------
+ 1 file changed, 24 insertions(+), 46 deletions(-)
 
 diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
-index b204567..a2dd196 100644
+index c0c3ad5..b204567 100644
 --- a/drivers/pci/host/pcie-rockchip.c
 +++ b/drivers/pci/host/pcie-rockchip.c
-@@ -40,11 +40,12 @@
- #define PCIE_CLIENT_BASE			0x0
- #define PCIE_RC_CONFIG_BASE			0xa00000
- #define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2	0x90c
--#define PCIE_RC_CONFIG_LCSR			0xd0
--#define  PCIE_RC_CONFIG_LCSR_LBMIE		BIT(10)
--#define  PCIE_RC_CONFIG_LCSR_LABIE		BIT(11)
--#define  PCIE_RC_CONFIG_LCSR_LBMS		BIT(30)
--#define  PCIE_RC_CONFIG_LCSR_LAMS		BIT(31)
-+#define PCIE_RC_CONFIG_LCS			0xd0
-+#define  PCIE_RC_CONFIG_LCS_RETRAIN_LINK	BIT(5)
-+#define  PCIE_RC_CONFIG_LCS_LBMIE		BIT(10)
-+#define  PCIE_RC_CONFIG_LCS_LABIE		BIT(11)
-+#define  PCIE_RC_CONFIG_LCS_LBMS		BIT(30)
-+#define  PCIE_RC_CONFIG_LCS_LAMS		BIT(31)
- #define PCIE_CORE_CTRL_MGMT_BASE		0x900000
- #define PCIE_CORE_AXI_CONF_BASE			0xc00000
- #define PCIE_CORE_AXI_INBOUND_BASE		0xc00800
-@@ -68,7 +69,6 @@
- #define  PCIE_CLIENT_INT_HOT_PLUG		BIT(1)
- #define  PCIE_CLIENT_INT_PWR_STCG		BIT(0)
- #define PCIE_RC_CONFIG_RID_CCR			0x8
--#define PCIE_RC_CONFIG_LCS			0xd0
- #define PCIE_RC_BAR_CONF			0x300
- #define PCIE_CORE_OB_REGION_ADDR1		0x4
- #define PCIE_CORE_OB_REGION_DESC0		0x8
-@@ -119,7 +119,6 @@
+@@ -115,36 +115,26 @@
+ 	  (PCIE_ECAM_BUS(bus) | PCIE_ECAM_DEV(dev) | \
+ 	   PCIE_ECAM_FUNC(func) | PCIE_ECAM_REG(reg))
+ 
+-/*
+-  * The higher 16-bit of this register is used for write protection
+-  * only if BIT(x + 16) set to 1 the BIT(x) can be written.
+-  */
+-#define HIWORD_UPDATE(val, mask, shift) \
+-	((val) << (shift) | (mask) << ((shift) + 16))
+-
+ #define RC_REGION_0_ADDR_TRANS_H		0x00000000
  #define RC_REGION_0_ADDR_TRANS_L		0x00000000
  #define RC_REGION_0_PASS_BITS			(25 - 1)
  #define MAX_AXI_WRAPPER_REGION_NUM		33
--#define PCIE_CORE_LCSR_RETRAIN_LINK		BIT(5)
+ #define PCIE_CORE_LCSR_RETRAIN_LINK		BIT(5)
+-#define PCIE_CLIENT_CONF_ENABLE			BIT(0)
+-#define PCIE_CLIENT_CONF_ENABLE_SHIFT		0
+-#define PCIE_CLIENT_CONF_ENABLE_MASK		0x1
+-#define PCIE_CLIENT_LINK_TRAIN_ENABLE		1
+-#define PCIE_CLIENT_LINK_TRAIN_SHIFT		1
+-#define PCIE_CLIENT_LINK_TRAIN_MASK		0x1
+-#define PCIE_CLIENT_ARI_ENABLE			BIT(0)
+-#define PCIE_CLIENT_ARI_ENABLE_SHIFT		3
+-#define PCIE_CLIENT_ARI_ENABLE_MASK		0x1
+-#define PCIE_CLIENT_CONF_LANE_NUM(x)		(x / 2)
+-#define PCIE_CLIENT_CONF_LANE_NUM_SHIFT		4
+-#define PCIE_CLIENT_CONF_LANE_NUM_MASK		0x3
+-#define PCIE_CLIENT_MODE_RC			BIT(0)
+-#define PCIE_CLIENT_MODE_SHIFT			6
+-#define PCIE_CLIENT_MODE_MASK			0x1
+-#define PCIE_CLIENT_GEN_SEL_2			1
+-#define PCIE_CLIENT_GEN_SEL_SHIFT		7
+-#define PCIE_CLIENT_GEN_SEL_MASK		0x1
++
++/*
++ * The upper 16 bits of the PCIE_CLIENT registers are a write mask for the
++ * lower 16 bits.  This allows atomic updates of the register without
++ * locking.
++ */
++#define HIWORD_UPDATE(mask, val)	((mask << 16) | val)
++
++#define ENCODE_LANES(x)			(((x >> 1) & 3) << 4)
++
++#define PCIE_CLIENT_CONF_ENABLE		HIWORD_UPDATE(0x0001, 0x0001)
++#define PCIE_CLIENT_LINK_TRAIN_ENABLE	HIWORD_UPDATE(0x0002, 0x0002)
++#define PCIE_CLIENT_CONF_LANE_NUM(x)	HIWORD_UPDATE(0x0030, ENCODE_LANES(x))
++#define PCIE_CLIENT_GEN_SEL_2		HIWORD_UPDATE(0x0040, 0x0040)
++
+ #define PCIE_CLIENT_LINK_STATUS_UP		0x3
+ #define PCIE_CLIENT_LINK_STATUS_SHIFT		20
+ #define PCIE_CLIENT_LINK_STATUS_MASK		0x3
+@@ -423,22 +413,13 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 	}
  
- /*
-  * The upper 16 bits of the PCIE_CLIENT registers are a write mask for the
-@@ -204,18 +203,18 @@ static void rockchip_pcie_enable_bw_int(struct rockchip_pcie *rockchip)
- {
- 	u32 status;
+ 	rockchip_pcie_write(rockchip,
+-		   HIWORD_UPDATE(PCIE_CLIENT_CONF_ENABLE,
+-				 PCIE_CLIENT_CONF_ENABLE_MASK,
+-				 PCIE_CLIENT_CONF_ENABLE_SHIFT) |
+-		   HIWORD_UPDATE(PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes),
+-				 PCIE_CLIENT_CONF_LANE_NUM_MASK,
+-				 PCIE_CLIENT_CONF_LANE_NUM_SHIFT) |
+-		   HIWORD_UPDATE(PCIE_CLIENT_MODE_RC,
+-				 PCIE_CLIENT_MODE_MASK,
+-				 PCIE_CLIENT_MODE_SHIFT) |
+-		   HIWORD_UPDATE(PCIE_CLIENT_ARI_ENABLE,
+-				 PCIE_CLIENT_ARI_ENABLE_MASK,
+-				 PCIE_CLIENT_ARI_ENABLE_SHIFT) |
+-		   HIWORD_UPDATE(PCIE_CLIENT_GEN_SEL_2,
+-				 PCIE_CLIENT_GEN_SEL_MASK,
+-				 PCIE_CLIENT_GEN_SEL_SHIFT),
+-		   PCIE_CLIENT_BASE);
++			    PCIE_CLIENT_CONF_ENABLE |
++			    PCIE_CLIENT_LINK_TRAIN_ENABLE |
++			    PCIE_CLIENT_ARI_ENABLE |
++			    PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes) |
++			    PCIE_CLIENT_MODE_RC |
++			    PCIE_CLIENT_GEN_SEL_2,
++				PCIE_CLIENT_BASE);
  
--	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_BASE + PCIE_RC_CONFIG_LCSR);
--	status |= (PCIE_RC_CONFIG_LCSR_LBMIE | PCIE_RC_CONFIG_LCSR_LABIE);
--	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_BASE + PCIE_RC_CONFIG_LCSR);
-+	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_BASE + PCIE_RC_CONFIG_LCS);
-+	status |= (PCIE_RC_CONFIG_LCS_LBMIE | PCIE_RC_CONFIG_LCS_LABIE);
-+	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_BASE + PCIE_RC_CONFIG_LCS);
- }
+ 	err = phy_power_on(rockchip->phy);
+ 	if (err) {
+@@ -482,11 +463,8 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 				 PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2);
  
- static void rockchip_pcie_clr_bw_int(struct rockchip_pcie *rockchip)
- {
- 	u32 status;
+ 	/* Enable Gen1 training */
+-	rockchip_pcie_write(rockchip,
+-		   HIWORD_UPDATE(PCIE_CLIENT_LINK_TRAIN_ENABLE,
+-				 PCIE_CLIENT_LINK_TRAIN_MASK,
+-				 PCIE_CLIENT_LINK_TRAIN_SHIFT),
+-		   PCIE_CLIENT_BASE);
++	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
++			    PCIE_CLIENT_BASE);
  
--	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_BASE + PCIE_RC_CONFIG_LCSR);
--	status |= (PCIE_RC_CONFIG_LCSR_LBMS | PCIE_RC_CONFIG_LCSR_LAMS);
--	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_BASE + PCIE_RC_CONFIG_LCSR);
-+	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_BASE + PCIE_RC_CONFIG_LCS);
-+	status |= (PCIE_RC_CONFIG_LCS_LBMS | PCIE_RC_CONFIG_LCS_LAMS);
-+	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_BASE + PCIE_RC_CONFIG_LCS);
- }
- 
- static int rockchip_pcie_valid_device(struct rockchip_pcie *rockchip,
-@@ -506,7 +505,7 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 	 */
- 	status = rockchip_pcie_read(rockchip,
- 			   PCIE_RC_CONFIG_LCS + PCIE_RC_CONFIG_BASE);
--	status |= PCIE_CORE_LCSR_RETRAIN_LINK;
-+	status |= PCIE_RC_CONFIG_LCS_RETRAIN_LINK;
- 	rockchip_pcie_write(rockchip, status,
- 		   PCIE_RC_CONFIG_LCS + PCIE_RC_CONFIG_BASE);
+ 	gpiod_set_value(rockchip->ep_gpio, 1);
  
