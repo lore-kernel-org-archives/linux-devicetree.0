@@ -1,30 +1,87 @@
-From: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] hw_random: jz4780-rng: Add RNG node to jz4780.dtsi
-Date: Fri, 2 Sep 2016 18:27:17 +0530
-Message-ID: <CANc+2y5qm6zdfG5dvway=+80aqkkarSGjfXt+Lq__CiCOTw+Nw@mail.gmail.com>
-References: <1472321697-3094-1-git-send-email-prasannatsmkumar@gmail.com>
- <1472321697-3094-4-git-send-email-prasannatsmkumar@gmail.com> <4a7fb1cb-e0d4-31b7-7016-35adb63a659d@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v6 1/2] ASoC: samsung: Add DT bindings documentation for TM2
+ sound subsystem
+Date: Fri, 02 Sep 2016 14:58:12 +0200
+Message-ID: <1472821093-25815-1-git-send-email-s.nawrocki@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4a7fb1cb-e0d4-31b7-7016-35adb63a659d-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, harvey.hunt-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, prarit-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> I don't like this change. The RNG registers are documented as a part of
-> the same hardware block as the clock & power stuff which the CGU driver
-> handles, and indeed in the M200 SoC there is a power-related register
-> after the RNG registers. So shortening the range covered by the CGU
-> driver is not the right way to go.
+This patch adds DT binding documentation for Exynos5433 based TM2
+and TM2E boards sound subsystem.
 
-Could not find M200 SoC PM in ingenic's website or ftp. So did not notice this.
+Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Changes since v5:
+ - none.
 
-> Perhaps you could instead have the CGU driver make use of the syscon
-> infrastructure to expose a regmap which your RNG driver could pick up & use?
+Changes since v4:
+ - indentation changes.
 
-I will see how to use syscon and provide an updated patch.
+Changes since v2:
+ - none.
+
+Changes since initial version:
+ - dropped clocks, clock-names properties, instead properties from
+   the CODEC node will be used,
+ - property renames: 'samsung,model' -> 'model', 'samsung,i2s-controller'
+   -> 'i2s-controller', 'samsung,speaker-amplifier' -> 'audio-amplifier',
+ - added 'audio-codec' property.
+---
+ .../bindings/sound/samsung,tm2-audio.txt           | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+new file mode 100644
+index 0000000..94442e5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+@@ -0,0 +1,38 @@
++Samsung Exynos5433 TM2(E) audio complex with WM5110 codec
++
++Required properties:
++
++ - compatible		 : "samsung,tm2-audio"
++ - model		 : the user-visible name of this sound complex
++ - audio-codec		 : the phandle of the wm5110 audio codec node,
++			   as described in ../mfd/arizona.txt
++ - i2s-controller	 : the phandle of the I2S controller
++ - audio-amplifier	 : the phandle of the MAX98504 amplifier
++ - samsung,audio-routing : a list of the connections between audio components;
++			   each entry is a pair of strings, the first being the
++			   connection's sink, the second being the connection's
++			   source; valid names for sources and sinks are the
++			   WM5110's and MAX98504's pins and the jacks on the
++			   board: HP, SPK, Main Mic, Sub Mic, Third Mic,
++			   Headset Mic
++ - mic-bias-gpios	 : GPIO pin that enables the Main Mic bias regulator
++
++
++Example:
++
++sound {
++	compatible = "samsung,tm2-audio";
++	audio-codec = <&wm5110>;
++	i2s-controller = <&i2s0>;
++	audio-amplifier = <&max98504>;
++	mic-bias-gpios = <&gpr3 2 0>;
++	model = "wm5110";
++	samsung,audio-routing =
++		"HP", "HPOUT1L",
++		"HP", "HPOUT1R",
++		"SPK", "SPKOUT",
++		"SPKOUT", "HPOUT2L",
++		"SPKOUT", "HPOUT2R",
++		"Main Mic", "MICBIAS2",
++		"IN1R", "Main Mic";
++};
+--
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
