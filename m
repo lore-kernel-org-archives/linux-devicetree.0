@@ -1,84 +1,25 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 1/6] clk: sunxi-ng: div: Add mux table macros
-Date: Fri, 2 Sep 2016 15:25:14 +0800
-Message-ID: <CAGb2v65LC_r_ppfm48xt8gsomGQPaTHg+F6CwFdeq9mvBiAGBg@mail.gmail.com>
-References: <20160901141617.9777-1-maxime.ripard@free-electrons.com> <20160901141617.9777-2-maxime.ripard@free-electrons.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 2/6] clk: sunxi-ng: mux: Add mux table macro
+Date: Fri, 2 Sep 2016 15:26:54 +0800
+Message-ID: <CAGb2v66xaxcbOAFhgnbdTjF98aPW6-W95k6gRxU=OZj6uiFs6A@mail.gmail.com>
+References: <20160901141617.9777-1-maxime.ripard@free-electrons.com> <20160901141617.9777-3-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160901141617.9777-2-maxime.ripard@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160901141617.9777-3-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mylene Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On Thu, Sep 1, 2016 at 10:16 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> Add some macros to ease the declaration of clocks that are using them.
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Add a new macro to declare muxes based on a table and a gate.
 >
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-
-> ---
->  drivers/clk/sunxi-ng/ccu_div.h | 28 +++++++++++++++++++++-------
->  1 file changed, 21 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/clk/sunxi-ng/ccu_div.h b/drivers/clk/sunxi-ng/ccu_div.h
-> index 5d98549e23a6..a5c9eaf90e84 100644
-> --- a/drivers/clk/sunxi-ng/ccu_div.h
-> +++ b/drivers/clk/sunxi-ng/ccu_div.h
-> @@ -77,13 +77,16 @@ struct ccu_div {
->                                       _shift, _width, _table, 0,        \
->                                       _flags)
->
-> -#define SUNXI_CCU_M_WITH_MUX_GATE(_struct, _name, _parents, _reg,      \
-> -                                 _mshift, _mwidth, _muxshift, _muxwidth, \
-> -                                 _gate, _flags)                        \
-> +#define SUNXI_CCU_M_WITH_MUX_TABLE_GATE(_struct, _name,                        \
-> +                                       _parents, _table,               \
-> +                                       _reg,                           \
-> +                                       _mshift, _mwidth,               \
-> +                                       _muxshift, _muxwidth,           \
-> +                                       _gate, _flags)                  \
->         struct ccu_div _struct = {                                      \
->                 .enable = _gate,                                        \
->                 .div    = _SUNXI_CCU_DIV(_mshift, _mwidth),             \
-> -               .mux    = _SUNXI_CCU_MUX(_muxshift, _muxwidth),         \
-> +               .mux    = _SUNXI_CCU_MUX_TABLE(_muxshift, _muxwidth, _table), \
->                 .common = {                                             \
->                         .reg            = _reg,                         \
->                         .hw.init        = CLK_HW_INIT_PARENTS(_name,    \
-> @@ -93,12 +96,23 @@ struct ccu_div {
->                 },                                                      \
->         }
->
-> +#define SUNXI_CCU_M_WITH_MUX_GATE(_struct, _name, _parents, _reg,      \
-> +                                 _mshift, _mwidth, _muxshift, _muxwidth, \
-> +                                 _gate, _flags)                        \
-> +       SUNXI_CCU_M_WITH_MUX_TABLE_GATE(_struct, _name,                 \
-> +                                       _parents, NULL,                 \
-> +                                       _reg, _mshift, _mwidth,         \
-> +                                       _muxshift, _muxwidth,           \
-> +                                       _gate, _flags)
-> +
->  #define SUNXI_CCU_M_WITH_MUX(_struct, _name, _parents, _reg,           \
->                              _mshift, _mwidth, _muxshift, _muxwidth,    \
->                              _flags)                                    \
-> -       SUNXI_CCU_M_WITH_MUX_GATE(_struct, _name, _parents, _reg,       \
-> -                                 _mshift, _mwidth, _muxshift, _muxwidth, \
-> -                                 0, _flags)
-> +       SUNXI_CCU_M_WITH_MUX_TABLE_GATE(_struct, _name,                 \
-> +                                       _parents, NULL,                 \
-> +                                       _reg, _mshift, _mwidth,         \
-> +                                       _muxshift, _muxwidth,           \
-> +                                       0, _flags)
-
-You probably didn't need to change this one though.
-
->
->
->  #define SUNXI_CCU_M_WITH_GATE(_struct, _name, _parent, _reg,           \
-> --
-> 2.9.2
->
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
