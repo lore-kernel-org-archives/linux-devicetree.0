@@ -1,55 +1,85 @@
-From: Alexandre TORGUE <alexandre.torgue@st.com>
-Subject: [PATCH v3 1/9] Documentation: dt-bindings: Document STM32 EXTI
- controller bindings
-Date: Fri, 2 Sep 2016 17:33:10 +0200
-Message-ID: <1472830398-13275-2-git-send-email-alexandre.torgue@st.com>
-References: <1472830398-13275-1-git-send-email-alexandre.torgue@st.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] mfd: arizona: Add DT options for max_channels_clocked
+ and PDM speaker config
+Date: Fri, 2 Sep 2016 10:34:59 -0500
+Message-ID: <20160902153458.GA28352@rob-hp-laptop>
+References: <1472635543-21577-1-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1472830398-13275-1-git-send-email-alexandre.torgue@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1472635543-21577-1-git-send-email-rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+On Wed, Aug 31, 2016 at 10:25:43AM +0100, Richard Fitzgerald wrote:
+> This patch adds DT settings for the max_channels_clocked, spk_fmt and
+> spk_mute pdata.
+> 
+> Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/arizona.txt | 11 ++++++++
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
-new file mode 100644
-index 0000000..6e7703d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
-@@ -0,0 +1,20 @@
-+STM32 External Interrupt Controller
-+
-+Required properties:
-+
-+- compatible: Should be "st,stm32-exti"
-+- reg: Specifies base physical address and size of the registers
-+- interrupt-controller: Indentifies the node as an interrupt controller
-+- #interrupt-cells: Specifies the number of cells to encode an interrupt
-+  specifier, shall be 2
-+- interrupts: interrupts references to primary interrupt controller
-+
-+Example:
-+
-+exti: interrupt-controller@40013c00 {
-+	compatible = "st,stm32-exti";
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+	reg = <0x40013C00 0x400>;
-+	interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
-+};
--- 
-1.9.1
+Binding looks fine, but...
+
+>  drivers/mfd/arizona-core.c                        | 31 +++++++++++++++++++++++
+>  2 files changed, 42 insertions(+)
+
+> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+> index b95ff2d..36a9633 100644
+> --- a/drivers/mfd/arizona-core.c
+> +++ b/drivers/mfd/arizona-core.c
+> @@ -816,6 +816,37 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
+>  		count++;
+>  	}
+>  
+> +	count = 0;
+> +	of_property_for_each_u32(arizona->dev->of_node,
+> +				 "wlf,max-channels-clocked",
+> +				 prop, cur, val) {
+> +		if (count == ARRAY_SIZE(pdata->max_channels_clocked))
+> +			break;
+> +
+> +		pdata->max_channels_clocked[count] = val;
+> +		count++;
+> +	}
+
+of_property_read_u32_array doesn't work for you?
+
+> +
+> +	count = 0;
+> +	of_property_for_each_u32(arizona->dev->of_node, "wlf,spk-fmt", prop,
+> +				 cur, val) {
+> +		if (count == ARRAY_SIZE(pdata->spk_fmt))
+> +			break;
+> +
+> +		pdata->spk_fmt[count] = val;
+> +		count++;
+> +	}
+> +
+> +	count = 0;
+> +	of_property_for_each_u32(arizona->dev->of_node, "wlf,spk-mute", prop,
+> +				 cur, val) {
+> +		if (count == ARRAY_SIZE(pdata->spk_mute))
+> +			break;
+> +
+> +		pdata->spk_mute[count] = val;
+> +		count++;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
