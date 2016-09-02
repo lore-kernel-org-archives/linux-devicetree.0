@@ -1,7 +1,7 @@
 From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 2/3] ARM: dts: r7s72100: add ethernet to device tree
-Date: Thu,  1 Sep 2016 21:40:11 -0400
-Message-ID: <20160902014012.9383-2-chris.brandt@renesas.com>
+Subject: [PATCH v2 3/3] ARM: dts: rskrza1: add ethernet DT support
+Date: Thu,  1 Sep 2016 21:40:12 -0400
+Message-ID: <20160902014012.9383-3-chris.brandt@renesas.com>
 References: <20160901155430.23400-1-chris.brandt@renesas.com>
  <20160902014012.9383-1-chris.brandt@renesas.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -14,33 +14,28 @@ List-Id: devicetree@vger.kernel.org
 Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
-v2:
-* Removed MSTP7 clock node
----
- arch/arm/boot/dts/r7s72100.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/r7s72100-rskrza1.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index 6d29e8f..fb9ef9c 100644
---- a/arch/arm/boot/dts/r7s72100.dtsi
-+++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -428,4 +428,17 @@
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
-+
-+	ether: ethernet@e8203000 {
-+		compatible = "renesas,ether-r7s72100";
-+		reg = <0xe8203000 0x800>,
-+		      <0xe8204800 0x200>;
-+		interrupts = <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp7_clks R7S72100_CLK_ETHER>;
-+		power-domains = <&cpg_clocks>;
-+		phy-mode = "mii";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
+diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+index aabfa04..e5dea5b 100644
+--- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
++++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
+@@ -47,6 +47,15 @@
+ 	status = "okay";
+ };
+ 
++&ether {
++	status = "okay";
++	renesas,no-ether-link;
++	phy-handle = <&phy0>;
++	phy0: ethernet-phy@0 {
++		reg = <0>;
 +	};
++};
++
+ &scif2 {
+ 	status = "okay";
  };
 -- 
 2.9.2
