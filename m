@@ -1,42 +1,61 @@
-From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v5 0/4] nvmem: rockchip-efuse: support more rockchip SoCs
-Date: Thu,  1 Sep 2016 20:16:53 -0700
-Message-ID: <1472786217-52214-1-git-send-email-finley.xiao@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Finley Xiao <finley.xiao@rock-chips.com>
+Subject: [PATCH v5 3/4] arm64: dts: rockchip: add efuse0 device node for rk3399
+Date: Thu,  1 Sep 2016 20:16:56 -0700
+Message-ID: <1472786217-52214-4-git-send-email-finley.xiao@rock-chips.com>
+References: <1472786217-52214-1-git-send-email-finley.xiao@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1472786217-52214-1-git-send-email-finley.xiao@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: srinivas.kandagatla@linaro.org, maxime.ripard@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, dianders@chromium.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wxt@rock-chips.com, zhengsq@rock-chips.com, jay.xu@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com, cl@rock-chips.com, Finley Xiao <finley.xiao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-As the timing and organization of efuse may be different                  
-between rockchip SoCs, so their read function may be different.           
-We add different device tree compatible string for rockchip SoCs          
-to match their own read function.                                         
-                                                                          
-V4->V5:                                                                   
-- 3/4 alter the efuse node name
-- 4/4 align the macro definition
-  disable clk if fail to allocate memory
+Add a efuse0 node in the device tree for the ARM64 rk3399 SoC.
 
-Finley Xiao (4):
-  nvmem: rockchip-efuse: update compatible strings for Rockchip efuse
-  ARM: dts: rockchip: update compatible strings for Rockchip efuse
-  arm64: dts: rockchip: add efuse0 device node for rk3399
-  nvmem: rockchip-efuse: add rk3399-efuse support
+Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
- .../devicetree/bindings/nvmem/rockchip-efuse.txt   |  13 +-
- arch/arm/boot/dts/rk3066a.dtsi                     |   2 +-
- arch/arm/boot/dts/rk3188.dtsi                      |   2 +-
- arch/arm/boot/dts/rk3288.dtsi                      |   2 +-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  29 +++++
- drivers/nvmem/rockchip-efuse.c                     | 133 ++++++++++++++++++---
- 6 files changed, 157 insertions(+), 24 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index a6dd623..05b48e2 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -721,6 +721,35 @@
+ 		status = "disabled";
+ 	};
+ 
++	efuse0: efuse@ff690000 {
++		compatible = "rockchip,rk3399-efuse";
++		reg = <0x0 0xff690000 0x0 0x80>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		clocks = <&cru PCLK_EFUSE1024NS>;
++		clock-names = "pclk_efuse";
++
++		/* Data cells */
++		cpul_leakage: cpul-leakage {
++			reg = <0x1a 0x1>;
++		};
++		cpub_leakage: cpub-leakage {
++			reg = <0x17 0x1>;
++		};
++		gpu_leakage: gpu-leakage {
++			reg = <0x18 0x1>;
++		};
++		center_leakage: center-leakage {
++			reg = <0x19 0x1>;
++		};
++		logic_leakage: logic-leakage {
++			reg = <0x1b 0x1>;
++		};
++		wafer_info: wafer-info {
++			reg = <0x1c 0x1>;
++		};
++	};
++
+ 	pmucru: pmu-clock-controller@ff750000 {
+ 		compatible = "rockchip,rk3399-pmucru";
+ 		reg = <0x0 0xff750000 0x0 0x1000>;
 -- 
 2.7.4
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
