@@ -1,195 +1,114 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 6/7] arm64: dts: exynos: Add dts file for
- Exynos5433-based TM2 board
-Date: Fri, 02 Sep 2016 20:29:27 +0900
-Message-ID: <57C96297.1080704@samsung.com>
-References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
- <1472046551-703-7-git-send-email-cw00.choi@samsung.com>
- <CGME20160826183044epcas1p1335170a5e46d0432d97c415de293e8ac@epcas1p1.samsung.com>
- <0a6dffe0-8508-724e-c831-d14c32f8cd64@osg.samsung.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: am57xx-beagle-x15: Add support for rev B1
+Date: Fri, 2 Sep 2016 14:48:52 +0300
+Message-ID: <f4cff876-4457-4548-31ad-3bbe43607f72@ti.com>
+References: <20160902090600.27262-1-nm@ti.com>
+ <20160902090600.27262-3-nm@ti.com>
+ <6617013b-4fcd-76cb-7ef0-9395adcddd8d@ti.com>
+ <d3df6f32-1294-17bc-8b5f-236d14a349a0@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <0a6dffe0-8508-724e-c831-d14c32f8cd64@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, k.kozlowski@samsung.com, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: krzk@kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature";
+        boundary="1ASglPqVfcMMikjfKc7uxutPuujCcadOc"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d3df6f32-1294-17bc-8b5f-236d14a349a0@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+--1ASglPqVfcMMikjfKc7uxutPuujCcadOc
+Content-Type: multipart/mixed; boundary="LPwPgBIa5lU1sTI3dKusU1SEKcg5LAe3e";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Nishanth Menon <nm@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-omap@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org
+Message-ID: <f4cff876-4457-4548-31ad-3bbe43607f72@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: am57xx-beagle-x15: Add support for rev B1
+References: <20160902090600.27262-1-nm@ti.com>
+ <20160902090600.27262-3-nm@ti.com>
+ <6617013b-4fcd-76cb-7ef0-9395adcddd8d@ti.com>
+ <d3df6f32-1294-17bc-8b5f-236d14a349a0@ti.com>
+In-Reply-To: <d3df6f32-1294-17bc-8b5f-236d14a349a0@ti.com>
 
-On 2016년 08월 27일 03:30, Javier Martinez Canillas wrote:
-> Hello Chanwoo,
-> 
-> The patch looks mostly good to me, I've just some comments:
-> 
-> [snip]
-> 
->> +
->> +&decon {
->> +	status = "okay";
->> +	iommu-reserved-mapping = <0x20000000 0x20000000 0xc0000000>;
->> +
-> 
-> This property never made to mainline due not having an agreement on
-> how this should be fixed properly IIUC [0]. So you should remove it.
+--LPwPgBIa5lU1sTI3dKusU1SEKcg5LAe3e
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-OK. I'll remove it.
 
-> 
-> [snip]
-> 
->> +
->> +	s2mps13-pmic@66 {
->> +		compatible = "samsung,s2mps13-pmic";
->> +		interrupt-parent = <&gpa0>;
->> +		interrupts = <7 IRQ_TYPE_NONE>;
->> +		reg = <0x66>;
->> +		samsung,s2mps11-wrstbi-ground;
->> +
->> +		s2mps13_osc: clocks {
->> +			compatible = "samsung,s2mps13-clk";
->> +			#clock-cells = <1>;
->> +			clock-output-names = "s2mps13_ap", "s2mps13_cp",
->> +				"s2mps13_bt";
->> +		};
->> +
-> 
-> I see that most of the following regulators are marked as always-on
-> but I wonder if this is really needed. For example some of them are
-> looked up by consumer devices.
-> 
-> [snip]
-> 
->> +			};
->> +
->> +			ldo3_reg: LDO3 {
->> +				regulator-name = "VDD1_E_1.8V_AP";
->> +				regulator-min-microvolt = <1800000>;
->> +				regulator-max-microvolt = <1800000>;
->> +				regulator-always-on;
->> +			};
-> 
-> This is used by both the ADC and the TMU so I guess it should be safe
-> to not mark it as always-on (unless is used by other critical IP block
-> not described in the DT).
 
-This regulator should be always ON state.
-This regulator provides the voltage to ALIVE domain of Exynos5433.
+On 02/09/16 13:01, Nishanth Menon wrote:
+> On 09/02/2016 04:58 AM, Tomi Valkeinen wrote:
+>> On 02/09/16 12:06, Nishanth Menon wrote:
+>>
+>>> diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
+>>> b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
+>>> new file mode 100644
+>>> index 000000000000..da61dbba7768
+>>> --- /dev/null
+>>> +++ b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
+>>> @@ -0,0 +1,24 @@
+>>> +/*
+>>> + * Copyright (C) 2014-2016 Texas Instruments Incorporated -
+>>> http://www.ti.com/
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or mod=
+ify
+>>> + * it under the terms of the GNU General Public License version 2 as=
 
-> 
-> [snip]
-> 
->> +
->> +			ldo6_reg: LDO6 {
->> +				regulator-name = "VDD10_MIPI2L_1.0V_AP";
->> +				regulator-min-microvolt = <1000000>;
->> +				regulator-max-microvolt = <1000000>;
->> +				regulator-always-on;
-> 
-> Same question, this is used by both the dsi and usbdrd30 nodes so maybe
-> it shouldn't be marked as always-on as well.
+>>> + * published by the Free Software Foundation.
+>>> + */
+>>> +
+>>> +#include "am57xx-beagle-x15-common.dtsi"
+>>> +
+>>> +/ {
+>>> +    model =3D "TI AM5728 BeagleBoard-X15 rev B1";
+>>> +};
+>>> +
+>>> +&tpd12s015 {
+>>> +    gpios =3D <&gpio7 10 GPIO_ACTIVE_HIGH>,    /* gpio7_10, CT CP HP=
+D */
+>>> +        <&gpio2 30 GPIO_ACTIVE_HIGH>,    /* gpio6_30, LS OE */
+>>
+>> Wrong gpio in the comment.
+>=20
+> Uggh.. thanks for catching that.. should have been gpio2_30
+>=20
+> will repost a v2 if there are no further comments at the end of the day=
+=2E.
 
-OK. I'll remove it.
+Booting and HDMI works fine:
 
-> 
->> +				regulator-state-mem {
->> +					regulator-off-in-suspend;
->> +				};
->> +			};
->> +
->> +			ldo7_reg: LDO7 {
->> +				regulator-name = "VDD18_MIPI2L_1.8V_AP";
->> +				regulator-min-microvolt = <1800000>;
->> +				regulator-max-microvolt = <1800000>;
->> +				regulator-always-on;
-> 
-> This is used by the dsi node as well.
+Tested-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-OK. I'll remove it.
+ Tomi
 
-> 
-> [snip]
-> 
->> +
->> +			ldo10_reg: LDO10 {
->> +				regulator-name = "VDD33_USB30_3.0V_AP";
->> +				regulator-min-microvolt = <3000000>;
->> +				regulator-max-microvolt = <3000000>;
->> +				regulator-always-on;
-> 
-> Use by the usbdrd30 node.
 
-OK. I'll remove it.
+--LPwPgBIa5lU1sTI3dKusU1SEKcg5LAe3e--
 
-> 
-> [snip]
-> 
->> +
->> +			ldo18_reg: LDO18 {
->> +				regulator-name = "V_CODEC_1.8V_AP";
->> +				regulator-min-microvolt = <1800000>;
->> +				regulator-max-microvolt = <1800000>;
->> +				regulator-always-on;
-> 
-> Use by the wm5110-codec node.
+--1ASglPqVfcMMikjfKc7uxutPuujCcadOc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-OK. I'll remove it.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> 
-> [snip]
-> 
->> +
->> +			buck2_reg: BUCK2 {
->> +				regulator-name = "VDD_EGL_1.0V_AP";
-> 
-> I wonder if this shouldn't be "VDD_ATL_1.0V_AP" or something since
-> the big cluster isn't called Eagle like in arm32 Exynos but Atlas?
+iQIcBAEBCAAGBQJXyWckAAoJEPo9qoy8lh71wI8QAK5efoVgxyvWcOAwb9RNjUx2
+uu33RjtVMZZGSNp3MTyXBsIPv+lF8YM+fJb7npRBCYL2bcuafi8gDDFCY2PVAdy5
+sqh2I1Cx9nuVUZjCg2CMVV0atPgtUq/PG3sWXYhjfljvCkLkeb9pm/xxx1qrT43N
+JFOprDkgJReGOKTuXuKsn9Ya5617Wa8jqO9fgN/LuVAycVBy66EnHHBO3tVS1cZw
+bgd89Tqhl4wS3U0QG4rqtk7MWW0GH4FIQIF8eaY4vOw3EvzcIFOHoKAWuExDmUc3
+SI4nQ8nWBMBJl4NOZc2oq74FUOzdA4TVvtgDOfax3sHmPFGWsZUkDARtwyOYAPOH
+zKUECionF7W7KDnuxGkScegjeTKx+Lj6ALXOi1Der4PzZpGNZ4jvF0IVt9s5RUoj
+t3dT2AQOOmEK+Fo5PzWc6CYqI22HdtGWeZD8C73MVj5IjCMGRw3OOPVIH1SsSxg1
+2rCwFYdG2Ly61c0Xe61iSEaJDbW7jSr5s1I8MBDXF1kpcIuz/Cn4GUOIsCl3MT25
+HYOF3n+g03XgtvsRVpS5zWkXaCTG4pyB+qfRr0OVAKB9+J9i3xUqN+qEzJRfRr7f
+p3DtxXYV9dHI98csnMLia3sRYMH3ZOwviuT+LCZEzoC0rXpm1Dj62bz5apMWJqsG
+psEu+vxDEO1QqYZaPysm
+=57e0
+-----END PGP SIGNATURE-----
 
-I used the regulator's name according to TM2's schematic.
-As I knew, Eagle means the big cores.
-
-> 
->> +				regulator-min-microvolt = <900000>;
->> +				regulator-max-microvolt = <1300000>;
->> +				regulator-always-on;
->> +				regulator-state-mem {
->> +					regulator-off-in-suspend;
->> +				};
->> +			};
->> +
->> +			buck3_reg: BUCK3 {
->> +				regulator-name = "VDD_KFC_1.0V_AP";
-> 
-> Same, maybe using "VDD_APL_1.0V_AP" since the big cluster is Apollo?
-
-ditto.
-The KFC (King Fisher) means the little cores.
-
-> 
->> +				regulator-min-microvolt = <800000>;
->> +				regulator-max-microvolt = <1200000>;
->> +				regulator-always-on;
->> +				regulator-state-mem {
->> +					regulator-off-in-suspend;
->> +				};
->> +			};
->> +
-> 
-> Used by the big and LITTLE clusters respectively, although for these two
-> I'm not that sure if it would be safe to remove the always-on property.
-
-> 
-> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
-Thanks for your review.
-
-> 
-> [0]: http://www.spinics.net/lists/arm-kernel/msg419747.html
-> 
-> Best regards,
-> 
--- 
-Best Regards,
-Chanwoo Choi
+--1ASglPqVfcMMikjfKc7uxutPuujCcadOc--
