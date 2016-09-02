@@ -1,50 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/2] pci:aer: add support aer interrupt with none
- MSI/MSI-X/INTx mode
-Date: Fri, 2 Sep 2016 10:17:25 -0500
-Message-ID: <20160902151725.GA25273@rob-hp-laptop>
-References: <1465892645-32381-2-git-send-email-po.liu@nxp.com>
- <1472625442-23309-1-git-send-email-po.liu@nxp.com>
- <1472625442-23309-2-git-send-email-po.liu@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] pwm: sunxi: Add H3 support
+Date: Fri, 2 Sep 2016 10:18:05 -0500
+Message-ID: <20160902151805.GA26806@rob-hp-laptop>
+References: <20160831082520.25962-1-woogyom.kim@gmail.com>
+ <20160831082520.25962-5-woogyom.kim@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1472625442-23309-2-git-send-email-po.liu@nxp.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Po Liu <po.liu@nxp.com>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawnguo@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>
+In-Reply-To: <20160831082520.25962-5-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 31, 2016 at 02:37:22PM +0800, Po Liu wrote:
-> On some platforms, root port doesn't support MSI/MSI-X/INTx in RC mode.
-> When chip support the aer interrupt with none MSI/MSI-X/INTx mode,
-> maybe there is interrupt line for aer pme etc. Search the interrupt
-> number in the fdt file. Then fixup the dev->irq with it.
+On Wed, Aug 31, 2016 at 05:25:20PM +0900, Milo Kim wrote:
+> H3 PWM controller has same register layout as sun4i driver, so it works
+> by adding H3 specific data.
 > 
-> Signed-off-by: Po Liu <po.liu@nxp.com>
+> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
-> Changes for v4:
-> 	- re-use the patch changes in the root port driver;
-> 	- add binding information;
-> 
->  .../devicetree/bindings/pci/layerscape-pci.txt     |  4 +--
->  drivers/pci/pcie/portdrv_core.c                    | 31 +++++++++++++++++++---
->  2 files changed, 30 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> index 41e9f55..1dfb1da 100644
-> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> @@ -19,7 +19,7 @@ Required properties:
->  - interrupts: A list of interrupt outputs of the controller. Must contain an
->    entry for each entry in the interrupt-names property.
->  - interrupt-names: Must include the following entries:
-> -  "intr": The interrupt that is asserted for controller interrupts
-> +  "aer": The interrupt that is asserted for aer interrupts
+>  Documentation/devicetree/bindings/pwm/pwm-sun4i.txt | 1 +
+>  drivers/pwm/pwm-sun4i.c                             | 9 +++++++++
+>  2 files changed, 10 insertions(+)
 
-You can't just change this. That breaks compatibility with old dts 
-files. Plus, it is just a name. Why does it even matter? Not to mention 
-having the name for a single irq is a bit pointless.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
