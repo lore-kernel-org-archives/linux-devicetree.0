@@ -1,84 +1,84 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: am57xx-beagle-x15: Add support for rev B1
-Date: Fri, 2 Sep 2016 14:18:23 +0300
-Message-ID: <0927d74a-17cf-dc4e-081d-b27c3bf5ac3c@ti.com>
-References: <20160902090600.27262-1-nm@ti.com>
- <20160902090600.27262-3-nm@ti.com>
- <dd74f5e1-304f-661e-7fd9-f5f81bcfc55e@ti.com>
+From: vivek.gautam@codeaurora.org
+Subject: Re: [PATCH v3 21/22] phy: Add support for Qualcomm's USB HSIC phy
+Date: Fri, 02 Sep 2016 16:58:12 +0530
+Message-ID: <0a3780a5073324772b873b8c474358c5@codeaurora.org>
+References: <20160901004036.23936-1-stephen.boyd@linaro.org>
+ <20160901004036.23936-22-stephen.boyd@linaro.org>
+ <CAFp+6iGJo5P3_oFCboKmOno6QzcMhVHhTWVWPFw3fCop0PSa8g@mail.gmail.com>
+ <147276722271.30255.17486402880702436547@sboyd-linaro>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature";
-        boundary="QchJO620jlSNBAOK8iE20ugCN9OltxFGR"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <dd74f5e1-304f-661e-7fd9-f5f81bcfc55e-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <147276722271.30255.17486402880702436547@sboyd-linaro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: Linux USB Mailing List <linux-usb@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---QchJO620jlSNBAOK8iE20ugCN9OltxFGR
-Content-Type: multipart/mixed; boundary="U1fFk2kO4NfpDmbpHoxvi3opXx36nhGV4";
- protected-headers="v1"
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>,
- Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
- devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Message-ID: <0927d74a-17cf-dc4e-081d-b27c3bf5ac3c-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: am57xx-beagle-x15: Add support for rev B1
-References: <20160902090600.27262-1-nm-l0cyMroinI0@public.gmane.org>
- <20160902090600.27262-3-nm-l0cyMroinI0@public.gmane.org>
- <dd74f5e1-304f-661e-7fd9-f5f81bcfc55e-l0cyMroinI0@public.gmane.org>
-In-Reply-To: <dd74f5e1-304f-661e-7fd9-f5f81bcfc55e-l0cyMroinI0@public.gmane.org>
+On 2016-09-02 03:30, Stephen Boyd wrote:
+> (Please trim replies)
 
---U1fFk2kO4NfpDmbpHoxvi3opXx36nhGV4
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+sorry, will take care from next time.
 
-On 02/09/16 13:41, Sekhar Nori wrote:
+> 
+> Quoting Vivek Gautam (2016-08-31 23:17:55)
+>> On Thu, Sep 1, 2016 at 6:10 AM, Stephen Boyd <stephen.boyd@linaro.org> 
+>> wrote:
+>> > +
+>> > +       uphy->cal_sleep_clk = clk = devm_clk_get(&ulpi->dev, "cal_sleep");
+>> > +       if (IS_ERR(clk))
+>> > +               return PTR_ERR(clk);
+>> > +
+>> > +       uphy->phy = devm_phy_create(&ulpi->dev, ulpi->dev.of_node,
+>> > +                                   &qcom_usb_hsic_phy_ops);
+>> 
+>> There's a ulpi_phy library available in  drivers/phy/. Do we want to 
+>> use that ?
+>> That also creates a phy-lookup of this PHY so that the ulpi device's 
+>> parent
+>> can request the PHY.
+> 
+> I don't have any interest in using those two functions (does two
+> functions constitute a library?).
 
-> Also, how about renaming the existing dts to am57xx-beagle-x15-reva2.dt=
-s
-> and let the production version be called am57xx-beagle-x15.dts? Surely
-> this will cause some inconvenience to A2 users. But there are few users=
+Not really.
 
-> of those and it might be more intuitive for the majority users if the
-> file for production version is without a specific version string
-> attached. Just a thought though, not sure about it myself either.
+> There's no devm as you say,
 
-I was about to suggest the same, so yes, this sounds good to me.
+I meant to say that you may need to change the existing APIs to the 
+devm_* APIs.
 
- Tomi
+> and it seems to be specific to the ULPI hardware for dwc3 (the only 
+> user) where
+> the phy is called "usb2-phy".
+
+This was used with TI's USB 2.0 PHY, that has ULPI interface.
+
+> This is a phy for the ChipIdea controller
+> which only has one phy and it's called "usb-phy" in that case.
+
+In a way this is also a USB 2.0 phy, isn't it ?
+
+> 
+>> 
+>> You may want to modify the APIs available in ulpi_phy library to use 
+>> the
+>> devm_* APIs.
+>> 
+> 
+> The lookup isn't necessary because we use DT to find the lookup. I seem
+> to recall the phy framework requiring a DT lookup too.
+
+The lookup created in this ulpi_phy.h was used to help getting the PHY 
+in the
+driver for parent device (a core wrapper) of the controller (platform 
+glue layer) that requests this PHY.
+I am not certain at this point about how PHY has to be handled in case 
+of Chipidea.
+Was just throwing in ideas. :-)
 
 
---U1fFk2kO4NfpDmbpHoxvi3opXx36nhGV4--
-
---QchJO620jlSNBAOK8iE20ugCN9OltxFGR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXyV//AAoJEPo9qoy8lh71eQ0QAK+iWuJWwbMiPVk64eMplVes
-O3cEY9kk67C9vuWD9CHHJ+MvSgT5nXphLRz7q1qjE5lulmk+srQPWQp57kB6EvIu
-0UYMM5twpBS69Gc8hviOLVpzzxmA2fTgtCx/ionpg0ETeltmrIdnj7TH5RHOJGwG
-Pn5ABCK6GZCaSP1epNUxo3r/ExYthVf4KJFkm00wKAabL7b59QqNB6hbPLkdu4tA
-wQHwqLqjC9NRwKtVzLiAYC1YyX60oH++G/BvDDpuDrVjChDubpVsNerpK7uKNgY1
-NiJsjw1ynGBWofSRKjv92WI2tBGRnKiRi5aMaDBZZ1MtJIRLtTcDhlsxvUjGy4am
-qVDraecjNe/6cBtGzAYBRwskzIv4z5Ko4bo6tkpy5jxE7cysPFNePQNXFHaqc4m7
-7DHOf6UCOzl50wPDWydsfaOW9sRdPUqWuFWRy/rRrxTHgYchO6CH4xYeT/WwyaRQ
-/ddlqsyeT9aWUOI/oQ4N3HQqNEfBLefo3uKsLfxcJyt0yvWKY8LofpL1pYs4uNc+
-BBXhNPCUfsk2+Q3QM5jVn2vMwB5hhQYOcOkECbcxHZYRjtd7p9rqQ5J93sYMI+2v
-PWWn+FX4C3AQ87WBJwNu8nl+PWcjjjnYyllbDZP0ehD3fqBDZSAo4JdOhkbhSIKD
-ZNcm+y+QMKAVaNmU+gRg
-=kDd7
------END PGP SIGNATURE-----
-
---QchJO620jlSNBAOK8iE20ugCN9OltxFGR--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Vivek
