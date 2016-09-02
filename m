@@ -1,227 +1,95 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 5/7] arm64: dts: exynos: Add dts files for Samsung
- Exynos5433 64bit SoC
-Date: Fri, 02 Sep 2016 18:54:36 +0900
-Message-ID: <57C94C5C.8070406@samsung.com>
-References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
- <1472046551-703-6-git-send-email-cw00.choi@samsung.com>
- <CGME20160826161551epcas1p2386a62f005140f42c03d3ff1c679ebe6@epcas1p2.samsung.com>
- <20160826161442.GB15511@kozik-book>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: am57xx-beagle-x15: Add support for rev B1
+Date: Fri, 2 Sep 2016 12:58:55 +0300
+Message-ID: <6617013b-4fcd-76cb-7ef0-9395adcddd8d@ti.com>
+References: <20160902090600.27262-1-nm@ti.com>
+ <20160902090600.27262-3-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20160826161442.GB15511@kozik-book>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: k.kozlowski@samsung.com, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature";
+        boundary="Wn0CAoc5voNXRbQPjWQrdcen7lK0Stoqb"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160902090600.27262-3-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016년 08월 27일 01:14, Krzysztof Kozlowski wrote:
-> On Wed, Aug 24, 2016 at 10:49:09PM +0900, Chanwoo Choi wrote:
->> This patch adds new Exynos5433 dtsi to support 64-bit Exynos5433 SoC based on
->> Octa-core CPUs (quad Cortex-A57 and quad Cortex-A53). And Exynos5433 supports
->> PSCI (Power State Coordination Interface) v0.1.
->>
->> This patch includes following Device Tree node to support Exynos5433 SoC:
->> 1. Octa cores for big.LITTLE architecture
->> - Cortex-A53 LITTLE Quad-core
->> - Cortex-A57 big Quad-core
->> - Support PSCI v0.1
->>
->> 2. Clock controller node
->> - CMU_TOP   : clocks for IMEM/FSYS/G3D/GSCL/HEVC/MSCL/G2D/MFC/PERIC/PERIS
->> - CMU_CPIF  : clocks for LLI (Low Latency Interface)
->> - CMU_MIF   : clocks for DRAM Memory Controller
->> - CMU_PERIC : clocks for UART/I2C/SPI/I2S/PCM/SPDIF/PWM/SLIMBUS
->> - CMU_PERIS : clocks for PMU/TMU/MCT/WDT/RTC/SECKEY/TZPC
->> - CMU_FSYS  : clocks for USB/UFS/SDMMC/TSI/PDMA
->> - CMU_G2D   : clocks for G2D/MDMA
->> - CMU_DISP  : clocks for DECON/HDMI/DSIM/MIXER
->> - CMU_AUD   : clocks for Cortex-A5/BUS/AUDIO
->> - CMU_BUS{0|1|2} : clocks for global data buses and global peripheral buses
->> - CMU_G3D   : clocks for 3D Graphics Engine
->> - CMU_GSCL  : clocks for GSCALER
->> - CMU_APOLLO: clocks for Cortex-A53 Quad-core processor.
->> - CMU_ATLAS : clocks for Cortex-A57 Quad-core processor,
->>               CoreSight and L2 cache controller.
->> - CMU_MSCL  : clocks for M2M (Memory to Memory) scaler and JPEG IPs.
->> - CMU_MFC   : clocks for MFC (Multi-Format Codec) IP.
->> - CMU_HEVC  : clocks for HEVC(High Efficiency Video Codec) decoder IP.
->> - CMU_ISP   : clocks for FIMC-ISP/DRC/SCLC/DIS/3DNR IPs.
->> - CMU_CAM0  : clocks for MIPI_CSIS{0|1}/FIMC_LITE_{A|B|D}/FIMC_3AA{0|1} IPs.
->> - CMU_CAM1  : clocks for COrtex-A5/MIPI_CSIS2/FIMC_LITE_C/FIMC-FD IPs.
->>
->> 3. pinctrl node for GPIO
->> - alive/aud/cpif/ese/finger/fsys/imem/nfc/peric/touch pad
->>
->> 4. Timer
->> - ARM architecture timer (armv8-timer)
->> - MCT (Multi Core Timer) timer
->>
->> 5. Interrupt controller (GIC-400)
->>
->> 6. BUS devices
->> - HS-I2C (High-Speed I2C) device
->> - SPI (Serial Peripheral Interface) device
->>
->> 7. Sound devices
->> - I2S bus
->> - LPASS (Low Power Audio Subsystem)
->>
->> 8. Power management devices
->> - CPUFREQ for for Cortex-A53/A57
->> - TMU (Thermal Management Unit) for Cortex-A53/A57, G3D, ISP
->>
->> 9. Display controller devices
->> - DECON (Display and enhancement controller) for panel output
->> - DSI (Display Serial Interface)
->> - MIC (Mobile Image Compressor)
->>
->> 10. USB
->> - USB 3.0 DRD (Dual Role Device) controller
->> - USB 3.0 Host controller
->>
->> 11. Storage devices
->> - MSHC (Mobile Stoarage Host Controller)
->>
->> 12. Misc devices
->> - UART device
->> - ADC (Analog Digital Converter)
->> - PWM (Pulse Width Modulation)
->> - ADMA (Advanced DMA) and PDMA (Peripheral DMA)
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->> Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
->> Signed-off-by: Joonyoung Shim <jy0922.shim@samsung.com>
->> Signed-off-by: Inki Dae <inki.dae@samsung.com>
->> Signed-off-by: Jonghwa Lee <jonghwa3.lee@samsung.com>
->> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
->> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
->> Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
->> Signed-off-by: Inha Song <ideal.song@samsung.com>
->> Signed-off-by: Ingi kim <ingi2.kim@samsung.com>
->> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
->> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> ---
->>  arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi |  792 ++++++++++++
->>  .../dts/exynos/exynos5433-tmu-g3d-sensor-conf.dtsi |   23 +
->>  .../dts/exynos/exynos5433-tmu-sensor-conf.dtsi     |   22 +
->>  arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi     |  306 +++++
->>  arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 1327 ++++++++++++++++++++
->>  5 files changed, 2470 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-pinctrl.dtsi
->>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu-g3d-sensor-conf.dtsi
->>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu-sensor-conf.dtsi
->>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433-tmu.dtsi
->>  create mode 100644 arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> 
-> I got only one question:
-> 
->  +
->> +		cooling-maps {
->> +			map0 {
->> +				/* Set maximum frequency as 1300MHz  */
->> +				trip = <&apollo_alert_0>;
->> +				cooling-device = <&cpu0 0 0>;
-> 
-> Is cooling level=0 really a cooling level? I think it does nothing so it
-> should be just removed.
+--Wn0CAoc5voNXRbQPjWQrdcen7lK0Stoqb
+Content-Type: multipart/mixed; boundary="56RQLSse3egPd9gF7npX1j9WhuSn76R0M";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Nishanth Menon <nm@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-omap@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ devicetree@vger.kernel.org
+Message-ID: <6617013b-4fcd-76cb-7ef0-9395adcddd8d@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: am57xx-beagle-x15: Add support for rev B1
+References: <20160902090600.27262-1-nm@ti.com>
+ <20160902090600.27262-3-nm@ti.com>
+In-Reply-To: <20160902090600.27262-3-nm@ti.com>
 
-You are right. I'll modify it for big cores as following: 
-- cooling-device = <&cpu4 1 2>;
+--56RQLSse3egPd9gF7npX1j9WhuSn76R0M
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Also, I'll use the only 5 step cooling level instead of 7 step.
-for LITTLE cores.
+On 02/09/16 12:06, Nishanth Menon wrote:
+
+> diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts b/arch/arm/b=
+oot/dts/am57xx-beagle-x15-revb1.dts
+> new file mode 100644
+> index 000000000000..da61dbba7768
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
+> @@ -0,0 +1,24 @@
+> +/*
+> + * Copyright (C) 2014-2016 Texas Instruments Incorporated - http://www=
+=2Eti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or modif=
+y
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include "am57xx-beagle-x15-common.dtsi"
+> +
+> +/ {
+> +	model =3D "TI AM5728 BeagleBoard-X15 rev B1";
+> +};
+> +
+> +&tpd12s015 {
+> +	gpios =3D <&gpio7 10 GPIO_ACTIVE_HIGH>,	/* gpio7_10, CT CP HPD */
+> +		<&gpio2 30 GPIO_ACTIVE_HIGH>,	/* gpio6_30, LS OE */
+
+Wrong gpio in the comment.
+
+ Tomi
 
 
-For big cores:
-	cooling-maps {
-		map0 {
-			/* Set maximum frequency as 1800MHz  */
-			trip = <&atlas0_alert_0>;
-			cooling-device = <&cpu4 1 2>;
-		};
-		map1 {
-			/* Set maximum frequency as 1700MHz  */
-			trip = <&atlas0_alert_1>;
-			cooling-device = <&cpu4 2 3>;
-		};
-		map2 {
-			/* Set maximum frequency as 1600MHz  */
-			trip = <&atlas0_alert_2>;
-			cooling-device = <&cpu4 3 4>;
-		};
-		map3 {
-			/* Set maximum frequency as 1500MHz  */
-			trip = <&atlas0_alert_3>;
-			cooling-device = <&cpu4 4 5>;
-		};
-		map4 {
-			/* Set maximum frequency as 1400MHz  */
-			trip = <&atlas0_alert_4>;
-			cooling-device = <&cpu4 5 7>;
-		};
-		map5 {
-			/* Set maximum frequencyas 1200MHz  */
-			trip = <&atlas0_alert_5>;
-			cooling-device = <&cpu4 7 9>;
-		};
-		map6 {
-			/* Set maximum frequency as 1000MHz  */
-			trip = <&atlas0_alert_6>;
-			cooling-device = <&cpu4 9 14>;
-		};
-	};
+--56RQLSse3egPd9gF7npX1j9WhuSn76R0M--
 
+--Wn0CAoc5voNXRbQPjWQrdcen7lK0Stoqb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-For LITTLE cores:
-	cooling-maps {
-		map0 {
-			/* Set maximum frequency as 1200MHz  */
-			trip = <&apollo_alert_2>;
-			cooling-device = <&cpu0 1 2>;
-		};
-		map1 {
-			/* Set maximum frequency as 1100MHz  */
-			trip = <&apollo_alert_3>;
-			cooling-device = <&cpu0 2 3>;
-		};
-		map2 {
-			/* Set maximum frequency as 1000MHz  */
-			trip = <&apollo_alert_4>;
-			cooling-device = <&cpu0 3 4>;
-		};
-		map3 {
-			/* Set maximum frequency as 900MHz  */
-			trip = <&apollo_alert_5>;
-			cooling-device = <&cpu0 4 5>;
-		};
-		map4 {
-			/* Set maximum frequency as 800MHz  */
-			trip = <&apollo_alert_6>;
-			cooling-device = <&cpu0 5 9>;
-		};
-	};
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> 
-> The same for big cluster.
-> 
-> Rest looks good.
-> 
-> BR,
-> Krzysztof
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
-> 
+iQIcBAEBCAAGBQJXyU1fAAoJEPo9qoy8lh71xWwP/j7q9GCxDVgtiAeqXL9Lm8f4
+7U54PHwzz053NdCoyrq5JqCX/Is+xmpSJba4WpH93tmfb0DHq32Cl359nG9oIiYO
++g5AMqIA2BNIYO72UCmohdT7zdQ3Xw5Aih5pVzLtSAg8ewfZfZ8BcwMMKYMvymYX
+0F9Na9JCENG4tMEKI0SiEAUm9wH8DcQXzq8oEZay7fNi9By/ThNalhF2GhIzJ+GI
+DwFiwG8hcn2oGKlqptuh9KpOjuZfTiLXMjyhmaR72ANGaXaNn7V5RSc6rhDHolM2
+HlD1zDfkhbJ8Uhp/PRe2HRjI6G7aiaUcLMWfqRXs0hqn+ft9xzF/IVdMF9rQl83D
+AUCk+cdJ+6pVi1drL9jF30O8e9P3FdCLJ3pHugl1k2/u4tPfwmm5OFB0WODE1Afk
+Z9JyoTbsPAEg5BoQChQyEOhedbPr39SeeAMQ36v2VuxkbgHDHwMwikJ2o3GNluKM
+SVcZBoC3tpEkn3/LpsrrWs4jXFyHzxGQhcvT0aCwDKqQflyXA+10TTc/jTXu/+UW
+d5PzmP4n1CE5D4wBSIygd/AzWG6AdTTnJfkbWG5qJo4xx9z4jB2D+G7xLSev3/uu
+1z+MXy6JcqY9Sl2J2NgBWE4TBDIAJFtrubTZseNx9t8PbuJVTjrFzHQqOuc53f1w
+dXgr4ZCZT1Ep+QpppXE9
+=butK
+-----END PGP SIGNATURE-----
 
--- 
-Best Regards,
-Chanwoo Choi
+--Wn0CAoc5voNXRbQPjWQrdcen7lK0Stoqb--
