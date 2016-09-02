@@ -1,78 +1,64 @@
 From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH] clk: meson-gxbb: Export PWM related clocks for DT
-Date: Fri, 02 Sep 2016 16:34:16 -0700
-Message-ID: <147285925618.69079.14195001640916253279@resonance>
-References: <1471870177-10609-1-git-send-email-narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 3/3] ARM64: dts: meson-gxbb: Add GXBB AO Clock and
+ Reset node
+Date: Fri, 02 Sep 2016 16:35:51 -0700
+Message-ID: <147285935146.69079.16726192933831918899@resonance>
+References: <1471514928-3341-1-git-send-email-narmstrong@baylibre.com>
+ <1471514928-3341-4-git-send-email-narmstrong@baylibre.com>
+ <7hk2fc76xx.fsf@baylibre.com>
+ <147208015014.66208.14165603610884470316@resonance>
+ <m260qjjx26.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1471870177-10609-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: sboyd@codeaurora.org, carlo@caione.org, khilman@baylibre.com, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <m260qjjx26.fsf@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Neil Armstrong (2016-08-22 05:49:37)
-> Add the PWM related clocks in order to be referenced as PWM source
-> clocks.
-> =
+Quoting Kevin Hilman (2016-08-29 10:37:37)
+> Michael Turquette <mturquette@baylibre.com> writes:
+> 
+> > Quoting Kevin Hilman (2016-08-19 15:03:06)
+> >> Neil Armstrong <narmstrong@baylibre.com> writes:
+> >> 
+> >> > Add the AO clock controller node for the AmLogic GXBB SoC.
+> >> >
+> >> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> >> > ---
+> >> 
+> >> Applying this to the amlogic tree, but will need to wait a cycle due to
+> >> include dependencies on the bindings, which are going through the clock
+> >> tree.
+> >
+> > FYI, for picked patches, Stephen and I create a stable branch for each
+> > platform. You can pull this into your tree if you want, just let us know
+> > so we'll be sure not to rebase:
+> >
+> > git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-meson-gxbb-ao
+> >
+> 
+> OK, I'll be using clk-meson-gxb and clk-meson-gxbb-ao.
 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-
-Applied.
+Heads up, I merged clk-meson-gxbb-ao into clk-meson-gxbb yesterday to
+make it easier to merge the emmc clock gate patches. If you haven't
+pulled clk-meson-gxbb-ao already then you can just re-pull
+clk-meson-gxbb and you'll get it.
 
 Regards,
 Mike
 
-> ---
->  drivers/clk/meson/gxbb.h              | 6 +++---
->  include/dt-bindings/clock/gxbb-clkc.h | 3 +++
->  2 files changed, 6 insertions(+), 3 deletions(-)
-> =
-
-> diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
-> index a2adf34..523b494 100644
-> --- a/drivers/clk/meson/gxbb.h
-> +++ b/drivers/clk/meson/gxbb.h
-> @@ -170,11 +170,11 @@
->   */
->  #define CLKID_SYS_PLL            0
->  /* CLKID_CPUCLK */
-> -#define CLKID_HDMI_PLL           2
-> +/* CLKID_HDMI_PLL */
->  #define CLKID_FIXED_PLL                  3
->  #define CLKID_FCLK_DIV2                  4
-> -#define CLKID_FCLK_DIV3                  5
-> -#define CLKID_FCLK_DIV4                  6
-> +/* CLKID_FCLK_DIV3 */
-> +/* CLKID_FCLK_DIV4 */
->  #define CLKID_FCLK_DIV5                  7
->  #define CLKID_FCLK_DIV7                  8
->  #define CLKID_GP0_PLL            9
-> diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-bindings/=
-clock/gxbb-clkc.h
-> index f889d80..a5897f3 100644
-> --- a/include/dt-bindings/clock/gxbb-clkc.h
-> +++ b/include/dt-bindings/clock/gxbb-clkc.h
-> @@ -6,6 +6,9 @@
->  #define __GXBB_CLKC_H
->  =
-
->  #define CLKID_CPUCLK           1
-> +#define CLKID_HDMI_PLL         2
-> +#define CLKID_FCLK_DIV3                5
-> +#define CLKID_FCLK_DIV4                6
->  #define CLKID_CLK81            12
->  #define CLKID_ETH              36
->  =
-
-> -- =
-
-> 1.9.1
-> =
-
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-clk" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thanks,
+> 
+> Kevin
