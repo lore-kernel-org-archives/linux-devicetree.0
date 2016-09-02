@@ -1,76 +1,40 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [v10,2/2] PCI: Rockchip: Add Rockchip PCIe controller support
-Date: Fri, 2 Sep 2016 10:27:56 -0700
-Message-ID: <20160902172756.GA13563@roeck-us.net>
-References: <1471570498-3284-1-git-send-email-shawn.lin@rock-chips.com>
- <20160831181754.GA7460@roeck-us.net>
- <9075a2c1-c787-986f-31b4-4d5b7c92b771@rock-chips.com>
- <20160901163455.GA9471@localhost>
- <20160901165757.GA3253@localhost>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2 v4] iio: gyro: Add MPU-3050 device tree bindings
+Date: Fri, 2 Sep 2016 12:50:06 -0500
+Message-ID: <20160902175006.GA7869@rob-hp-laptop>
+References: <1472646781-5551-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160901165757.GA3253@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, Doug Anderson <dianders@chromium.org>, Wenrui Li <wenrui.li@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+In-Reply-To: <1472646781-5551-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 01, 2016 at 09:57:58AM -0700, Brian Norris wrote:
-> On Thu, Sep 01, 2016 at 11:34:55AM -0500, Bjorn Helgaas wrote:
-> > I can't conveniently build it, so I'm sure I've broken things.  I
+On Wed, Aug 31, 2016 at 02:33:00PM +0200, Linus Walleij wrote:
+> This adds device tree bindings for the MPU-3050 gyroscope. Since it
+> is the first set of bindings for a gyroscope, the folder for it
+> is also created.
 > 
-> Indeed, you have :)
-> 
-> > pushed the current work-in-progress branch to pci/host-rockchip-wip.
-> > After we fix build errors and other thinkos, I'll rename it and put it
-> > in -next.
-> 
-> I'll append a patch that gets things building and working for me. With
-> that:
-> 
-> Tested-by: Brian Norris <briannorris@chromium.org>
-> 
-> I haven't examined all the changes in detail, but they mostly seem
-> reasonable.
-> 
-> > I'll also post the broken-out patches for the changes I made on top of
-> > the previous v10 (2098142ae87d).  I'll eventually squash them all into
-> > the original commit so we don't have the clutter in the logs.
-> 
-> diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
-> index 6623598679f2..ac846bab7396 100644
-> --- a/drivers/pci/host/pcie-rockchip.c
-> +++ b/drivers/pci/host/pcie-rockchip.c
-> @@ -128,9 +128,9 @@
->  #define PCIE_CLIENT_CONF_ENABLE		(0x00010000 | 0x0001)
->  #define PCIE_CLIENT_LINK_TRAIN_ENABLE	(0x00020000 | 0x0002)
->  #define PCIE_CLIENT_ARI_ENABLE		(0x00080000 | 0x0008)
-> -#define PCIE_CLIENT_CONF_LANE_NUM(x)	(0x00300000 | (((x >> 1) & 3) << 4)
-> +#define PCIE_CLIENT_CONF_LANE_NUM(x)	(0x00300000 | (((x >> 1) & 3) << 4))
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> ChangeLog v3->v4:
+> - No changes, just reposting. If we agree on these bindings and since
+>   the dependent I2C bindings are merged, this patch should be merge
+>   material now I guess.
+> ChangeLog v2->v3:
+> - Augmented device tree bindings to reflect Peter Rosins now merged
+>   I2C gate bindings.
+> ChangeLog v1->v2:
+> - Not yet convered to use i2c-gate as I'm waiting for that
+>   patch set to stabilize.
+> ---
+>  .../bindings/iio/gyroscope/invensense,mpu3050.txt  | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
 
-I would suggest to use (x) for those.
-
->  #define PCIE_CLIENT_MODE_RC		(0x00400000 | 0x0040)
-> -#define PCIE_CLIENT_GEN_SEL(x)		(0x00800000 | ((x & 1) << 7)
-> +#define PCIE_CLIENT_GEN_SEL(x)		(0x00800000 | ((x & 1) << 7))
->  #define  PCIE_CLIENT_GEN_SEL_0		0
->  #define  PCIE_CLIENT_GEN_SEL_2		1
->  
-> @@ -643,14 +643,13 @@ static irqreturn_t rockchip_pcie_client_irq_handler(int irq, void *arg)
->  static void rockchip_pcie_legacy_int_handler(struct irq_desc *desc)
->  {
->  	struct irq_chip *chip = irq_desc_get_chip(desc);
-> -	struct rockchip_pcie *rockchip;
-> +	struct rockchip_pcie *rockchip = irq_desc_get_handler_data(desc);
->  	struct device *dev = rockchip->dev;
->  	u32 reg;
->  	u32 hwirq;
->  	u32 virq;
->  
->  	chained_irq_enter(chip, desc);
-> -	rockchip = irq_desc_get_handler_data(desc);
->  
->  	reg = rockchip_pcie_read(rockchip, PCIE_CLIENT_INT_STATUS);
->  	reg = (reg & ROCKCHIP_PCIE_RPIFR1_INTR_MASK) >>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
