@@ -1,36 +1,76 @@
-From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v3 3/9] ARM: STM32: Select external interrupts controller
-Date: Fri, 2 Sep 2016 17:33:12 +0200
-Message-ID: <1472830398-13275-4-git-send-email-alexandre.torgue@st.com>
-References: <1472830398-13275-1-git-send-email-alexandre.torgue@st.com>
+From: Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: [PATCH v3 0/9] Add STM32 EXTI interrupt controller support
+Date: Fri, 2 Sep 2016 17:33:09 +0200
+Message-ID: <1472830398-13275-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472830398-13275-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Hi,
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 2d601d7..157cea9 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -877,6 +877,7 @@ config ARCH_STM32
- 	select CLKSRC_STM32
- 	select PINCTRL
- 	select RESET_CONTROLLER
-+	select STM32_EXTI
- 	help
- 	  Support for STMicroelectronics STM32 processors.
- 
+According to Maxime, I send this V3 patch set. I took into account Maxime and
+Linus discussion about pinctrl-stm32 ("gpio_to_irq" issue). So main changes are
+related to add an irq_chip in pinctrl-stm32 and to define a hierarchical
+domain for it.
+
+
+The series adds support to EXTI interrupt controller and GPIO IRQ support in
+STM32 pinctrl driver.
+
+The STM32 external interrupt controller consists of edge detectors that
+generate interrupts requests or wake-up events.
+
+Each line can be independently configured as interrupt or wake-up source,
+and triggers either on rising, fallin or both edges. Each line can also
+be masked independently.
+
+Regards 
+
+Alex
+
+Changes since v2:
+-----------------
+ - Define irq_chip for GPIO banks
+ - Use hierarchical domain for GPIO banks
+ - Improve search loop inside stm32_exti handler 
+ - Rebased on top of v4.8-rc1
+
+Changes since v1:
+-----------------
+ - Rebased on top of v4.6-rc1
+ - Change variable name from virq to irq (Linus W.)
+   
+Alexandre TORGUE (9):
+  Documentation: dt-bindings: Document STM32 EXTI controller bindings
+  drivers: irqchip: Add STM32 external interrupts support
+  ARM: STM32: Select external interrupts controller
+  ARM: dts: Add EXTI controller node to stm32f429
+  Documentation: dt-bindings: Add IRQ related properties of STM32
+    pinctrl
+  pinctrl: Add IRQ support to STM32 gpios
+  ARM: dts: Add GPIO irq support to STM2F429
+  ARM: dts: Declare push button as GPIO key on stm32f429 boards
+  ARM: config: Enable GPIO Key driver in stm32_defconfig
+
+ .../interrupt-controller/st,stm32-exti.txt         |  20 +++
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |   3 +
+ arch/arm/Kconfig                                   |   1 +
+ arch/arm/boot/dts/stm32429i-eval.dts               |  18 ++
+ arch/arm/boot/dts/stm32f429-disco.dts              |  13 ++
+ arch/arm/boot/dts/stm32f429.dtsi                   |  10 ++
+ arch/arm/configs/stm32_defconfig                   |   6 +-
+ drivers/irqchip/Kconfig                            |   4 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-stm32-exti.c                   | 193 +++++++++++++++++++++
+ drivers/pinctrl/stm32/Kconfig                      |   2 +
+ drivers/pinctrl/stm32/pinctrl-stm32.c              | 157 ++++++++++++++++-
+ 12 files changed, 426 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+ create mode 100644 drivers/irqchip/irq-stm32-exti.c
+
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
