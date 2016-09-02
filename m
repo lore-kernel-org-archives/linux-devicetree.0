@@ -1,58 +1,105 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 1/3] ARM: dts: r7s72100: add ethernet clock to device tree
-Date: Thu,  1 Sep 2016 21:40:10 -0400
-Message-ID: <20160902014012.9383-1-chris.brandt@renesas.com>
-References: <20160901155430.23400-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160901155430.23400-1-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 4/5] PM / devfreq: rockchip: add devfreq driver for rk3399
+ dmc
+Date: Fri, 02 Sep 2016 10:46:09 +0900
+Message-ID: <57C8D9E1.4070700@samsung.com>
+References: <1472769085-20715-1-git-send-email-hl@rock-chips.com>
+ <1472769085-20715-5-git-send-email-hl@rock-chips.com>
+ <CGME20160901231806epcas1p4c0184a2d47af524a99d162b3a5a5bf59@epcas1p4.samsung.com>
+ <8339852.vAWNvCSMju@diego>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <8339852.vAWNvCSMju@diego>
+Sender: linux-pm-owner@vger.kernel.org
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, Lin Huang <hl@rock-chips.com>
+Cc: myungjoo.ham@samsung.com, mark.yao@rock-chips.com, airlied@linux.ie, mturquette@baylibre.com, dbasehore@chromium.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, tixy@linaro.org, typ@rock-chips.com, sudeep.holla@arm.com, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-* Added MSTP7 clock node
----
- arch/arm/boot/dts/r7s72100.dtsi            | 9 +++++++++
- include/dt-bindings/clock/r7s72100-clock.h | 3 +++
- 2 files changed, 12 insertions(+)
+Hi Heiko,
 
-diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index e8e2a5d7..6d29e8f 100644
---- a/arch/arm/boot/dts/r7s72100.dtsi
-+++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -108,6 +108,15 @@
- 			clock-output-names = "scif0", "scif1", "scif2", "scif3", "scif4", "scif5", "scif6", "scif7";
- 		};
- 
-+		mstp7_clks: mstp7_clks@fcfe0430 {
-+			#clock-cells = <1>;
-+			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
-+			reg = <0xfcfe0430 4>;
-+			clocks = <&p0_clk>;
-+			clock-indices = <R7S72100_CLK_ETHER>;
-+			clock-output-names = "ether";
-+		};
-+
- 		mstp9_clks: mstp9_clks@fcfe0438 {
- 			#clock-cells = <1>;
- 			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
-diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
-index 5128f4d..3cd8138 100644
---- a/include/dt-bindings/clock/r7s72100-clock.h
-+++ b/include/dt-bindings/clock/r7s72100-clock.h
-@@ -25,6 +25,9 @@
- #define R7S72100_CLK_SCIF6	1
- #define R7S72100_CLK_SCIF7	0
- 
-+/* MSTP7 */
-+#define R7S72100_CLK_ETHER	4
-+
- /* MSTP9 */
- #define R7S72100_CLK_I2C0	7
- #define R7S72100_CLK_I2C1	6
+On 2016년 09월 02일 08:17, Heiko Stübner wrote:
+> Am Freitag, 2. September 2016, 06:31:24 schrieb Lin Huang:
+>> base on dfi result, we do ddr frequency scaling, register
+>> dmc driver to devfreq framework, and use simple-ondemand
+>> policy.
+>>
+>> Signed-off-by: Lin Huang <hl@rock-chips.com>
+>> Signed-off-by: MyngJoo Ham <myngjoo.ham@samsung.com>
+>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+> 
+> [...]
+> 
+>> diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
+>> new file mode 100644
+>> index 0000000..54d65f2
+>> --- /dev/null
+>> +++ b/drivers/devfreq/rk3399_dmc.c
+>> @@ -0,0 +1,480 @@
+>> +/*
+>> + * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd.
+>> + * Author: Lin Huang <hl@rock-chips.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+>> for + * more details.
+>> + */
+>> +
+>> +#include <linux/arm-smccc.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/devfreq.h>
+>> +#include <linux/devfreq-event.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pm_opp.h>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <linux/rwsem.h>
+>> +#include <linux/suspend.h>
+>> +
+>> +#include <soc/rockchip/rockchip_sip.h>
+> 
+> (Repeated from previous version)
+> For the shared sip-interface header I've prepared a signed, stable tag
+> which can be pulled from
+> 
+> The following changes since commit 29b4817d4018df78086157ea3a55c1d9424a7cfc:
+> 
+>   Linux 4.8-rc1 (2016-08-07 18:18:00 -0700)
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git tags/rockchip-ddr-sip
+> 
+> for you to fetch changes up to 97dd82682f1a6174698fbea149a04b4cabc58c4f:
+> 
+>   soc: rockchip: add header for ddr rate SIP interface (2016-08-31 18:53:24 +0200)
+> 
+> ----------------------------------------------------------------
+> Header file defining the SIP-interface to the ATF for DDR frequency changes
+> 
+> ----------------------------------------------------------------
+> Lin Huang (1):
+>       soc: rockchip: add header for ddr rate SIP interface
+> 
+>  include/soc/rockchip/rockchip_sip.h | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 include/soc/rockchip/rockchip_sip.h
+> 
+> 
+> 
+
+Thanks for creating the immutable branch.
+
 -- 
-2.9.2
+Best Regards,
+Chanwoo Choi
