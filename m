@@ -1,39 +1,84 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4 4/6] arm64: dts: rockchip: add the gmac power domain on
- rk3399
-Date: Fri, 02 Sep 2016 13:00:16 +0200
-Message-ID: <4770120.mDmM68CBxL@diego>
-References: <1472752204-8924-1-git-send-email-wxt@rock-chips.com>
- <1472752204-8924-5-git-send-email-wxt@rock-chips.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: am57xx-beagle-x15: Add support for rev B1
+Date: Fri, 2 Sep 2016 14:18:23 +0300
+Message-ID: <0927d74a-17cf-dc4e-081d-b27c3bf5ac3c@ti.com>
+References: <20160902090600.27262-1-nm@ti.com>
+ <20160902090600.27262-3-nm@ti.com>
+ <dd74f5e1-304f-661e-7fd9-f5f81bcfc55e@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1472752204-8924-5-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature";
+        boundary="QchJO620jlSNBAOK8iE20ugCN9OltxFGR"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <dd74f5e1-304f-661e-7fd9-f5f81bcfc55e-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 2. September 2016, 01:50:02 schrieb Caesar Wang:
-> This patch supports the gmac pd to save power consumption.
-> Even though some boards not need Ethernet support, the driver
-> core can also take care of powering up the pd before probe.
-> 
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+--QchJO620jlSNBAOK8iE20ugCN9OltxFGR
+Content-Type: multipart/mixed; boundary="U1fFk2kO4NfpDmbpHoxvi3opXx36nhGV4";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>,
+ Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
+ devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Message-ID: <0927d74a-17cf-dc4e-081d-b27c3bf5ac3c-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: am57xx-beagle-x15: Add support for rev B1
+References: <20160902090600.27262-1-nm-l0cyMroinI0@public.gmane.org>
+ <20160902090600.27262-3-nm-l0cyMroinI0@public.gmane.org>
+ <dd74f5e1-304f-661e-7fd9-f5f81bcfc55e-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <dd74f5e1-304f-661e-7fd9-f5f81bcfc55e-l0cyMroinI0@public.gmane.org>
 
-applied to my dts64 branch for 4.9 with Doug's Review-tag.
+--U1fFk2kO4NfpDmbpHoxvi3opXx36nhGV4
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-I'd like to also pick up the other two dts patches after Dave is satisfied with 
-the driver-side changes in patches 1-3.
+On 02/09/16 13:41, Sekhar Nori wrote:
+
+> Also, how about renaming the existing dts to am57xx-beagle-x15-reva2.dt=
+s
+> and let the production version be called am57xx-beagle-x15.dts? Surely
+> this will cause some inconvenience to A2 users. But there are few users=
+
+> of those and it might be more intuitive for the majority users if the
+> file for production version is without a specific version string
+> attached. Just a thought though, not sure about it myself either.
+
+I was about to suggest the same, so yes, this sounds good to me.
+
+ Tomi
 
 
-Heiko
+--U1fFk2kO4NfpDmbpHoxvi3opXx36nhGV4--
+
+--QchJO620jlSNBAOK8iE20ugCN9OltxFGR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJXyV//AAoJEPo9qoy8lh71eQ0QAK+iWuJWwbMiPVk64eMplVes
+O3cEY9kk67C9vuWD9CHHJ+MvSgT5nXphLRz7q1qjE5lulmk+srQPWQp57kB6EvIu
+0UYMM5twpBS69Gc8hviOLVpzzxmA2fTgtCx/ionpg0ETeltmrIdnj7TH5RHOJGwG
+Pn5ABCK6GZCaSP1epNUxo3r/ExYthVf4KJFkm00wKAabL7b59QqNB6hbPLkdu4tA
+wQHwqLqjC9NRwKtVzLiAYC1YyX60oH++G/BvDDpuDrVjChDubpVsNerpK7uKNgY1
+NiJsjw1ynGBWofSRKjv92WI2tBGRnKiRi5aMaDBZZ1MtJIRLtTcDhlsxvUjGy4am
+qVDraecjNe/6cBtGzAYBRwskzIv4z5Ko4bo6tkpy5jxE7cysPFNePQNXFHaqc4m7
+7DHOf6UCOzl50wPDWydsfaOW9sRdPUqWuFWRy/rRrxTHgYchO6CH4xYeT/WwyaRQ
+/ddlqsyeT9aWUOI/oQ4N3HQqNEfBLefo3uKsLfxcJyt0yvWKY8LofpL1pYs4uNc+
+BBXhNPCUfsk2+Q3QM5jVn2vMwB5hhQYOcOkECbcxHZYRjtd7p9rqQ5J93sYMI+2v
+PWWn+FX4C3AQ87WBJwNu8nl+PWcjjjnYyllbDZP0ehD3fqBDZSAo4JdOhkbhSIKD
+ZNcm+y+QMKAVaNmU+gRg
+=kDd7
+-----END PGP SIGNATURE-----
+
+--QchJO620jlSNBAOK8iE20ugCN9OltxFGR--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
