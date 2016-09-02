@@ -1,53 +1,47 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH V2 1/5] Documentation: Add support for TI System Control
- Interface (TI-SCI) protocol
-Date: Fri, 2 Sep 2016 15:27:20 -0500
-Message-ID: <57C9E0A8.4010701@ti.com>
-References: <20160830130647.6828-1-nm@ti.com>
- <20160830130647.6828-2-nm@ti.com> <20160902150628.GA19493@rob-hp-laptop>
- <CAGo_u6q0xxnUj5ary82OU1uP=kTHfA_3N7_d7OiSEwS1_5dXuw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGo_u6q0xxnUj5ary82OU1uP=kTHfA_3N7_d7OiSEwS1_5dXuw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, Rob Herring <robh@kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, lkml <linux-kernel@vger.kernel.org>, "Andrew F . Davis" <afd@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Russ Dill <Russ.Dill@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Santosh Shilimkar <ssantosh@kernel.org>, dt list <devicetree@vger.kernel.org>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH] arm64: dts: rockchip: add the tcpc for rk3399 power domain
+Date: Sat,  3 Sep 2016 04:39:06 +0800
+Message-ID: <1472848746-30135-1-git-send-email-wxt@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/2016 12:07 PM, Nishanth Menon wrote:
-> Rob,
->
-> On Fri, Sep 2, 2016 at 10:06 AM, Rob Herring <robh@kernel.org> wrote:
->> On Tue, Aug 30, 2016 at 08:06:43AM -0500, Nishanth Menon wrote:
-> [...]
->>> +
->>> +TI-SCI Client Device Node:
->>> +========================
->>> +
->>> +Client nodes refer to the required TI-SCI device using the "ti,sci" property.
->>
->> As I mentioned for power domains, for clients that are self contained
->> (i.e. a single function) I think the should be child nodes.
->>
->
-> Thanks for the feedback. I think we should be able to do that and also
-> assume you have no further improvements you'd like to see here.
->
-> Looking at current Documentation/devicetree/bindings/arm/arm,scpi.txt
-> -> it makes sense to stick along the same lines as you mentioned.
->
-> Dave, Tero: do you guys have any objections?
+The tcpc is the Type C Port Controller and Type C Port Delivery (tcpd)
+is part of it, we haven't used them now, add it to save power consumption.
 
-No objections, I think this is a logical move.
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
-Regards,
-Dave
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
->
->
-> ---
-> Regards,
-> Nishanth Menon
->
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 267b812..6c89d77 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -814,6 +814,16 @@
+ 					pm_qos = <&qos_isp1_m0>,
+ 						 <&qos_isp1_m1>;
+ 				};
++				pd_tcpc0@RK3399_PD_TCPC0 {
++					reg = <RK3399_PD_TCPD0>;
++					clocks = <&cru SCLK_UPHY0_TCPDCORE>,
++						 <&cru SCLK_UPHY0_TCPDPHY_REF>;
++				};
++				pd_tcpc1@RK3399_PD_TCPC1 {
++					reg = <RK3399_PD_TCPD1>;
++					clocks = <&cru SCLK_UPHY1_TCPDCORE>,
++						 <&cru SCLK_UPHY1_TCPDPHY_REF>;
++				};
+ 				pd_vo@RK3399_PD_VO {
+ 					reg = <RK3399_PD_VO>;
+ 					#address-cells = <1>;
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
