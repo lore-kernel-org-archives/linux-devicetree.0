@@ -1,85 +1,139 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: am57xx-beagle-x15: Add support for rev B1
-Date: Fri, 2 Sep 2016 16:11:59 +0530
-Message-ID: <dd74f5e1-304f-661e-7fd9-f5f81bcfc55e@ti.com>
-References: <20160902090600.27262-1-nm@ti.com>
- <20160902090600.27262-3-nm@ti.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Subject: Re: [PATCH v11 3/4] tee: add OP-TEE driver
+Date: Fri, 2 Sep 2016 12:49:52 +0200
+Message-ID: <20160902104950.GA24088@ermac>
+References: <1471870856-18684-1-git-send-email-jens.wiklander@linaro.org>
+ <1471870856-18684-4-git-send-email-jens.wiklander@linaro.org>
+ <050a2ce4-e175-d09e-ddff-3b0cbe766d88@ti.com>
+ <20160831135015.GB25472@ermac>
+ <fe88749e-82c7-c310-b2bc-4e73bf76302b@ti.com>
+ <20160901092213.GA3968@ermac>
+ <0f9a528e-5288-ad4b-256e-f7a0b5952c3c@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160902090600.27262-3-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Robert Nelson <robertcnelson@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <0f9a528e-5288-ad4b-256e-f7a0b5952c3c@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Andrew F. Davis" <afd@ti.com>
+Cc: valentin.manea@huawei.com, devicetree@vger.kernel.org, javier@javigon.com, emmanuel.michel@st.com, Arnd Bergmann <arnd@arndb.de>, Nishanth Menon <nm@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, jean-michel.delorme@st.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-+ Robert Nelson
+On Thu, Sep 01, 2016 at 01:06:04PM -0500, Andrew F. Davis wrote:
+> On 09/01/2016 04:22 AM, Jens Wiklander wrote:
+> > On Wed, Aug 31, 2016 at 11:40:20AM -0500, Andrew F. Davis wrote:
+> >> On 08/31/2016 08:50 AM, Jens Wiklander wrote:
+> >>> On Tue, Aug 30, 2016 at 03:23:24PM -0500, Andrew F. Davis wrote:
+> >>>> On 08/22/2016 08:00 AM, Jens Wiklander wrote:
+> >>>>> +static struct tee_shm_pool *
+> >>>>> +optee_config_shm_ioremap(struct device *dev, optee_invoke_fn *invoke_fn,
+> >>>>> +			 void __iomem **ioremaped_shm)
+> >>>>> +{
+> >>>>> +	struct arm_smccc_res res;
+> >>>>> +	struct tee_shm_pool *pool;
+> >>>>> +	unsigned long vaddr;
+> >>>>> +	phys_addr_t paddr;
+> >>>>> +	size_t size;
+> >>>>> +	phys_addr_t begin;
+> >>>>> +	phys_addr_t end;
+> >>>>> +	void __iomem *va;
+> >>>>> +	struct tee_shm_pool_mem_info priv_info;
+> >>>>> +	struct tee_shm_pool_mem_info dmabuf_info;
+> >>>>> +
+> >>>>> +	invoke_fn(OPTEE_SMC_GET_SHM_CONFIG, 0, 0, 0, 0, 0, 0, 0, &res);
+> >>>>> +	if (res.a0 != OPTEE_SMC_RETURN_OK) {
+> >>>>> +		dev_info(dev, "shm service not available\n");
+> >>>>> +		return ERR_PTR(-ENOENT);
+> >>>>> +	}
+> >>>>> +
+> >>>>> +	if (res.a3 != OPTEE_SMC_SHM_CACHED) {
+> >>>>> +		dev_err(dev, "only normal cached shared memory supported\n");
+> >>>>> +		return ERR_PTR(-EINVAL);
+> >>>>> +	}
+> >>>>> +
+> >>>>> +	begin = roundup(res.a1, PAGE_SIZE);
+> >>>>> +	end = rounddown(res.a1 + res.a2, PAGE_SIZE);
+> >>>>
+> >>>> res.a1/2/3 is really hard to review and understand, would it work better
+> >>>> to use a union or cast for the output of invoke_fn based on the function
+> >>>> type?
+> >>>>
+> >>>> In the header that defines what the returned info from these calls means
+> >>>> add:
+> >>>>
+> >>>> struct OPTEE_SMC_GET_SHM_CONFIG_RESULT {
+> >>>> 	unsigned long status;
+> >>>> 	unsigned long start;
+> >>>> 	unsigned long size;
+> >>>> 	unsigned long settings;
+> >>>> };
+> >>>>
+> >>>> then:
+> >>>>
+> >>>> union something result;
+> >>>>
+> >>>> begin = roundup(result.ret.start, PAGE_SIZE);
+> >>>> end = rounddown(result.ret.start + result.ret.size, PAGE_SIZE);
+> >>>>
+> >>>> or similar with just casting to the better named struct type.
+> >>>
+> >>> optee_smc.h describes what's passed in the registers during an SMC I'd
+> >>> rather not clutter it with structs that doesn't add any information
+> >>> there. I'm not that happy with casting or using unions to alias struct
+> >>> arm_smccc_res either. How about a simple wrapper function for this call
+> >>> to deal with the details instead?
+> >>>
+> >>
+> >> I think that would be a good idea anyway, for instance, someday if the
+> >> interface changes slightly then you will be able to contain the
+> >> compatibility fixes in the wrapper and not out here in the main driver.
+> > 
+> > That interface is supposed to be a stable ABI, incompatible changes in
+> > the ABI should be discouraged. If there's an incompatible change it has
+> > to be dealt with in the main driver.
+> 
+> Why? This driver is for "OPTEE" not "OPTEE v2.0.01.02", any minor ABI
+> changes should be abstracted away as much as possible to keep the main
+> driver logically simple, agnostic to any OPTEE version ABI quirks/handling.
 
-On Friday 02 September 2016 02:36 PM, Nishanth Menon wrote:
-> Latest update to the BeagleBoard-X15 platform (revision B1)[1] updates
-> for allowing UHS SD cards to function with the split of supply to SD
-> card from a dedicated LDO.
-> 
-> As a result of this, AM57xx BeagleBoard-X15 now uses gpio2_30 instead
-> of gpio6_28 for HDMI because HDMI_LS_OE should now be switched from
-> GPIO6_28(Y9) to GPIO2_30 (AG8) to avoid a 1.8V GPIO toggling a 3.3V
-> SoC input when the SD card is in UHS 1.8V mode.
-> 
-> NOTE: For UHS mode to function, we need full fledged IODelay support
-> in kernel to be functional. IODelay support is yet to be added.
-> 
-> Further, It does not make much sense to spin off a new board
-> compatible flag since there is no real functional benefit for the
-> same.
-> 
-> Note: Even though production version is supposed to be B1, there is
-> over ~200 boards of previous version (A2)[2] out there which continue
-> to get supported with the existing dts file and the production board
-> is now supported as revb1
-> 
-> [1] https://github.com/beagleboard/beagleboard-x15/blob/master/BEAGLEBOARD_X15_REV_B1.pdf
-> [2] http://marc.info/?l=linux-arm-kernel&m=147273929820708&w=2
-> 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> ---
-> 
-> NOTE: even though I have used -C -M option with git-format-patch, the
-> diff for x15.dts might look a little weird. we could alternatively
-> split the patch into two by creating a common dtsi and then
-> introducing revb1 -> but, at least for the moment, I felt it to be an
-> overkill.
-> 
-> Also, please note that even though revb1 is the production platform,
-> there are sufficient quantities of x15 A2s (pre-prod) in the wild
-> currently to leave existing dts in sync with A2 and introduce b1 as a
-> seperate dts (instead of the other way around).
-> 
->  arch/arm/boot/dts/Makefile                         |   1 +
->  ...eagle-x15.dts => am57xx-beagle-x15-common.dtsi} |   8 +-
->  arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts      |  24 +
->  arch/arm/boot/dts/am57xx-beagle-x15.dts            | 592 +--------------------
+Call me naive, but I don't expect any quirks. The ABI should only be
+extended with new functions and old may be deprecated.
 
-I understand that there are existing users of A2 boards and so we simply
-cannot remove support for those boards (at least yet).
+Take the function optee_config_shm_ioremap() as an example. That
+function will not be used if OP-TEE doesn't use a specific shared memory
+pool but instead allocate shared memory via vmalloc() or from user
+space.
 
-But given the small numbers of A2 boards, its also quite likely that we
-will not have enough test coverage for those boards. Especially as years
-pass and there are fewer and fewer people with access to working A2 boards.
+This kind of changes/extensions are expected, but that's probably things
+the driver need to deal with directly since if change doesn't add
+something significant it wouldn't be needed.
 
-Given that, aren't we increasing the chance of A2 breakage by creating a
-common file - this essentially necessitates that any change to
-am57xx-beagle-x15-common.dtsi is also tested on A2.
+> 
+> > A small wrapper function in a
+> > standalone header file has no chance here as it probably involves using
+> > information gathered while probing secure world.
+> > 
+> > What I meant was a small wrapper function just above 
+> > optee_config_shm_ioremap() to deal with only this call.
+> > 
+> 
+> This wouldn't do anything that a cast couldn't do. Why not put the
+> wrapper function in the header as part of that OPTEE version's ABI
+> definition?
 
-Instead, it seems to be easier for maintenance and safer overall if the
-older version has a file of its own which can be kept alone.
+Choosing between wrapper functions or structs in optee_smc.h I'd choose
+structs. I'll add structs for the ABI functions where it helps, skipping
+for instance the OPTEE_SMC_*UID and OPTEE_SMC_CALL_WITH_ARG functions.
+Would that be OK?
 
-Also, how about renaming the existing dts to am57xx-beagle-x15-reva2.dts
-and let the production version be called am57xx-beagle-x15.dts? Surely
-this will cause some inconvenience to A2 users. But there are few users
-of those and it might be more intuitive for the majority users if the
-file for production version is without a specific version string
-attached. Just a thought though, not sure about it myself either.
-
-Regards,
-Sekhar
+Thanks,
+Jens
