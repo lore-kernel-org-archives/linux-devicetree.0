@@ -1,37 +1,46 @@
-From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 12/12] arm64: dts: h3ulcb: Sound SSI support
-Date: Fri, 2 Sep 2016 15:08:14 +0300
-Message-ID: <813b2951-7270-b352-1d5e-b452cb502bbb@cogentembedded.com>
-References: <1472817881-11860-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1472817933-12018-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/3] phy: omap-usb2: Fixes for v4.9
+Date: Fri, 2 Sep 2016 17:47:39 +0530
+Message-ID: <57C96DE3.6030907@ti.com>
+References: <1471942661-1728-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472817933-12018-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1471942661-1728-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02.09.2016 15:05, Vladimir Barinov wrote:
-> This supports SSI sound for H3ULCB board.
-> SSI DMA mode used. CS2000 used as AUDIO_CLK_B.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
-> Changes in version 3:
-> - initially added
-> Changes in version 4:
-> - added comment for audio_clkout
->
->   arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts | 115 +++++++++++++++++++++++++
->   1 file changed, 115 insertions(+)
->
-Sorry for the subject typo. The proper one is v4:
-[PATCH v4 4/4] arm64: dts: h3ulcb: Sound SSI support
 
+
+On Tuesday 23 August 2016 02:27 PM, Roger Quadros wrote:
+> Hi Kishon & Tony,
+> 
+> Here are some fixes found in the TI vendor tree for omap-usb2 PHY
+> and are important for upstream. Please queue for -next if OK. Thanks.
+
+merged the phy patches to linux-phy -next
+
+Thanks
+Kishon
+> 
+> The 3rd patch should probably go via Tony's SoC DT tree.
+> 
+> cheers,
+> -roger
+> 
+> Sekhar Nori (3):
+>   phy: omap-usb2: support suspend/resume
+>   dt-bindings: phy: ti: add documentation for ti,dra7x-usb2
+>   ARM: dts: dra7: workaround silicon limitation i845
+> 
+>  Documentation/devicetree/bindings/phy/ti-phy.txt |   2 +
+>  arch/arm/boot/dts/dra7.dtsi                      |   2 +-
+>  drivers/phy/phy-omap-usb2.c                      | 100 +++++++++++------------
+>  3 files changed, 49 insertions(+), 55 deletions(-)
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
