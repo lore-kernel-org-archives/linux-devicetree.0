@@ -1,67 +1,47 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: Re: [PATCH v2 3/4] hw_random: jz4780-rng: Add RNG node to jz4780.dtsi
-Date: Fri, 2 Sep 2016 13:47:18 +0100
-Message-ID: <4a7fb1cb-e0d4-31b7-7016-35adb63a659d@imgtec.com>
-References: <1472321697-3094-1-git-send-email-prasannatsmkumar@gmail.com>
- <1472321697-3094-4-git-send-email-prasannatsmkumar@gmail.com>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v2 1/3] ARM: dts: r7s72100: add ethernet clock to device
+ tree
+Date: Fri, 2 Sep 2016 12:50:39 +0000
+Message-ID: <SG2PR06MB116533792940F6E3193E7EDB8AE50@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20160901155430.23400-1-chris.brandt@renesas.com>
+ <20160902014012.9383-1-chris.brandt@renesas.com>
+ <20160902082604.GD16669@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1472321697-3094-4-git-send-email-prasannatsmkumar@gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Cc: mpm@selenic.com, herbert@gondor.apana.org.au, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, gregkh@linuxfoundation.org, boris.brezillon@free-electrons.com, harvey.hunt@imgtec.com, prarit@redhat.com, f.fainelli@gmail.com, joshua.henderson@microchip.com, narmstrong@baylibre.com, linus.walleij@linaro.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160902082604.GD16669@verge.net.au>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 9/2/2016, Simon Horman wrote:
+> For future submissions please consider:
+> 1. Supplying a cover letter (git format-patch has a --cover-letter option=
+)
+>    for patch-sets comprising more than one patch. This allows you to desc=
+ribe
+>    an overview of what the series as a whole achieves. And is also
+>    convenient for maintainers to reply to when accepting your patches.
+
+OK. I can do that.
 
 
-On 27/08/16 19:14, PrasannaKumar Muralidharan wrote:
-> This patch adds RNG node to jz4780.dtsi.
-> 
-> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-> ---
->  arch/mips/boot/dts/ingenic/jz4780.dtsi | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> index b868b42..f11d139 100644
-> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> @@ -36,7 +36,7 @@
->  
->  	cgu: jz4780-cgu@10000000 {
->  		compatible = "ingenic,jz4780-cgu";
-> -		reg = <0x10000000 0x100>;
-> +		reg = <0x10000000 0xD8>;
+> 2. Starting a new thread for each new version of a patch/patch-set.
 
-Hi PrasannaKumar,
+Does that mean to NOT use --in-reply-to=3D when submitting a v2,v3,etc... ?=
+???
 
-I don't like this change. The RNG registers are documented as a part of
-the same hardware block as the clock & power stuff which the CGU driver
-handles, and indeed in the M200 SoC there is a power-related register
-after the RNG registers. So shortening the range covered by the CGU
-driver is not the right way to go.
 
-Perhaps you could instead have the CGU driver make use of the syscon
-infrastructure to expose a regmap which your RNG driver could pick up & use?
 
-Thanks,
-    Paul
+One more question:
+Can I submit a patches series now that just adds all the MSTP clock nodes t=
+hat I'll be working on for the next couple weeks? (USB, SDHI, MMC)
+Or, do I have to wait till I have the drivers working?
+Or, better yet, can I add all the MSTP clocks that will probably get used a=
+t some point (basically, everything that we're using today in our 3.14 BSP)=
+.
 
->  
->  		clocks = <&ext>, <&rtc>;
->  		clock-names = "ext", "rtc";
-> @@ -44,6 +44,11 @@
->  		#clock-cells = <1>;
->  	};
->  
-> +	rng: jz4780-rng@100000D8 {
-> +		compatible = "ingenic,jz4780-rng";
-> +		reg = <0x100000D8 0x8>;
-> +	};
-> +
->  	uart0: serial@10030000 {
->  		compatible = "ingenic,jz4780-uart";
->  		reg = <0x10030000 0x100>;
-> 
+Chris
