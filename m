@@ -1,53 +1,101 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 4/4] clk: rockchip: remove CLK_IGNORE_UNUSED flag for
- aclk_emmc_grf on rk3399
-Date: Fri,  2 Sep 2016 08:54:41 +0800
-Message-ID: <1472777681-16656-5-git-send-email-shawn.lin@rock-chips.com>
-References: <1472777681-16656-1-git-send-email-shawn.lin@rock-chips.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 1/8] binding-doc: power: pwrseq-generic: add binding
+ doc for generic power sequence library
+Date: Fri, 2 Sep 2016 09:00:30 +0800
+Message-ID: <20160902010030.GA11262@shlinux2>
+References: <1471252398-957-1-git-send-email-peter.chen@nxp.com>
+ <1471252398-957-2-git-send-email-peter.chen@nxp.com>
+ <6832cc55-831a-1188-4878-bbbf0b3c3be8@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1472777681-16656-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <6832cc55-831a-1188-4878-bbbf0b3c3be8-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw3-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-aclk_emmc_grf is used for accessing corecfg_* of emmc stuff within
-GRF block. We don't need to add CLK_IGNORE_UNUSED for it now as the
-emmc driver will enable/disable it explicitly when needed.
+On Thu, Sep 01, 2016 at 01:33:22PM +0530, Vaibhav Hiremath wrote:
+> 
+> 
+> On Monday 15 August 2016 02:43 PM, Peter Chen wrote:
+> >Add binding doc for generic power sequence library.
+> >
+> >Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+> >Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >---
+> >  .../bindings/power/pwrseq/pwrseq-generic.txt       | 48 ++++++++++++++++++++++
+> >  1 file changed, 48 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+> >
+> >diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+> >new file mode 100644
+> >index 0000000..ebf0d47
+> >--- /dev/null
+> >+++ b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+> >@@ -0,0 +1,48 @@
+> >+The generic power sequence library
+> >+
+> >+Some hard-wired devices (eg USB/MMC) need to do power sequence before
+> >+the device can be enumerated on the bus, the typical power sequence
+> >+like: enable USB PHY clock, toggle reset pin, etc. But current
+> >+Linux device driver lacks of such code to do it, it may cause some
+> >+hard-wired devices works abnormal or can't be recognized by
+> >+controller at all. The power sequence will be done before this device
+> >+can be found at the bus.
+> >+
+> >+The power sequence properties is under the device node.
+> >+
+> >+Optional properties:
+> >+- clocks: the input clocks for device.
+> >+- reset-gpios: Should specify the GPIO for reset.
+> >+- reset-duration-us: the duration in microsecond for assert reset signal.
+> >+
+> >+Below is the example of USB power sequence properties on USB device
+> >+nodes which have two level USB hubs.
+> >+
+> >+&usbotg1 {
+> >+	vbus-supply = <&reg_usb_otg1_vbus>;
+> >+	pinctrl-names = "default";
+> >+	pinctrl-0 = <&pinctrl_usb_otg1_id>;
+> >+	status = "okay";
+> >+
+> >+	#address-cells = <1>;
+> >+	#size-cells = <0>;
+> >+	genesys: hub@1 {
+> >+		compatible = "usb5e3,608";
+> >+		reg = <1>;
+> >+
+> >+		clocks = <&clks IMX6SX_CLK_CKO>;
+> >+		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>; /* hub reset pin */
+> >+		reset-duration-us = <10>;
+> >+
+> >+		#address-cells = <1>;
+> >+		#size-cells = <0>;
+> >+		asix: ethernet@1 {
+> >+			compatible = "usbb95,1708";
+> 
+> So I assume, with our recent discussion and the change
+> we are proposing, the library would have some knowledge
+> about this compatible string, right?
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Tested-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+Yes
 
-Changes in v3: None
-Changes in v2: None
+> 
+> what I was asking on other email was, how are you connecting
+> multiple power sequence libraries to their respective consumers ?
+> 
 
- drivers/clk/rockchip/clk-rk3399.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The consumers has its of_node, then it can find related power sequence
+library according to compatible string.
 
-diff --git a/drivers/clk/rockchip/clk-rk3399.c b/drivers/clk/rockchip/clk-rk3399.c
-index ede6c47..908f684 100644
---- a/drivers/clk/rockchip/clk-rk3399.c
-+++ b/drivers/clk/rockchip/clk-rk3399.c
-@@ -934,7 +934,7 @@ static struct rockchip_clk_branch rk3399_clk_branches[] __initdata = {
- 			RK3399_CLKGATE_CON(32), 8, GFLAGS),
- 	GATE(ACLK_EMMC_NOC, "aclk_emmc_noc", "aclk_emmc", CLK_IGNORE_UNUSED,
- 			RK3399_CLKGATE_CON(32), 9, GFLAGS),
--	GATE(ACLK_EMMC_GRF, "aclk_emmcgrf", "aclk_emmc", CLK_IGNORE_UNUSED,
-+	GATE(ACLK_EMMC_GRF, "aclk_emmcgrf", "aclk_emmc", 0,
- 			RK3399_CLKGATE_CON(32), 10, GFLAGS),
- 
- 	/* perilp0 */
 -- 
-2.3.7
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
