@@ -1,86 +1,74 @@
-From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 15/15] Move msleeps to address Guenter's comments.
-Date: Fri, 02 Sep 2016 10:56:02 -0500
-Message-ID: <20160902155602.8650.82778.stgit@bhelgaas-glaptop2.roam.corp.google.com>
-References: <20160902154501.8650.99790.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: drm/bridge: adv7511: Add regulators for
+ ADV7533
+Date: Fri, 2 Sep 2016 10:56:11 -0500
+Message-ID: <20160902155611.GA4226@rob-hp-laptop>
+References: <1472640730-24326-1-git-send-email-architt@codeaurora.org>
+ <1472640730-24326-2-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20160902154501.8650.99790.stgit-1RhO1Y9PlrlHTL0Zs8A6p/gx64E7kk8eUsxypvmhUTTZJqsBc5GL+g@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1472640730-24326-2-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 31, 2016 at 04:22:08PM +0530, Archit Taneja wrote:
+> Add the regulator supply properties needed for ADV7533. The regulator
+> names are named after the pin names. The exact use of each supply isn't
+> clear from the data sheets.
+> 
+> The regulators are specified as optional properties since there can
+> be boards which have a fixed supply directly routed to the pins, and
+> these may not be modelled as regulator supplies.
+> 
+> There might be a similar set of regulators for ADV7511, but we don't
+> have the docs at the moment to find out what supplies it needs. The
+> regulator properties needed by ADV7511 can be updated as we get more
+> data on it.
 
----
- drivers/pci/host/pcie-rockchip.c |   35 +++++++----------------------------
- 1 file changed, 7 insertions(+), 28 deletions(-)
+The ADV7510 is available and there's a pinout comparison with the 7511:
 
-diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
-index e33d2f7..d293a62 100644
---- a/drivers/pci/host/pcie-rockchip.c
-+++ b/drivers/pci/host/pcie-rockchip.c
-@@ -481,24 +481,12 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 			break;
- 		}
- 
--		msleep(20);
--
--		if (!time_before(jiffies, timeout)) {
--			err = -ETIMEDOUT;
--			break;
--		}
--	}
--
--	/* Double check gen1 training */
--	if (err) {
--		status = rockchip_pcie_read(rockchip,
--					    PCIE_CLIENT_BASIC_STATUS1);
--		err = ((status & PCIE_CLIENT_LINK_STATUS_MASK) ==
--		       PCIE_CLIENT_LINK_STATUS_UP) ? 0 : -ETIMEDOUT;
--		if (err) {
-+		if (time_after(jiffies, timeout)) {
- 			dev_err(dev, "PCIe link training gen1 timeout!\n");
--			return err;
-+			return -ETIMEDOUT;
- 		}
-+
-+		msleep(20);
- 	}
- 
- 	/*
-@@ -518,21 +506,12 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 			break;
- 		}
- 
--		msleep(20);
--
--		if (!time_before(jiffies, timeout)) {
--			err = -ETIMEDOUT;
-+		if (time_after(jiffies, timeout)) {
-+			dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
- 			break;
- 		}
--	}
- 
--	/* Double check gen2 training */
--	if (err) {
--		status = rockchip_pcie_read(rockchip, PCIE_CORE_CTRL);
--		err = ((status & PCIE_CORE_PL_CONF_SPEED_MASK) ==
--		       PCIE_CORE_PL_CONF_SPEED_5G) ? 0 : -ETIMEDOUT;
--		if (err)
--			dev_dbg(dev, "PCIe link training gen2 timeout, fall back to gen1!\n");
-+		msleep(20);
- 	}
- 
- 	/* Check the final link width from negotiated lane counter from MGMT */
+http://www.analog.com/media/en/technical-documentation/evaluation-documentation/ADV7510_to_ADV7511_differences.pdf
+
+These 2 seem to have the same supplies...
+
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+> index 6532a59..669b6f2 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+> @@ -56,6 +56,12 @@ Optional properties:
+>  - adi,disable-timing-generator: Only for ADV7533. Disables the internal timing
+>    generator. The chip will rely on the sync signals in the DSI data lanes,
+>    rather than generate its own timings for HDMI output.
+> +- avdd-supply: Only for ADV7533. A 1.8V supply that powers up the AVDD, DVDD
+> +  PVDD and A2VDD pins on the chip.
+
+This sounds wrong. Each input to the chip should be a property even if 
+they are typically from the same supply.
+
+The 7511 has DVDD, AVDD, and PVDD.
+
+> +- v1p2-supply: Only for ADV7533. A supply that powers up the V1P2 pin on the
+> +  chip. Can be either 1.2V or 1.8V.
+
+This appears to be 7533 specific.
+
+> +- v3p3-supply: Only for ADV7533. A 3.3V supply that powers up the V3P3 pin on
+> +  the chip.
+
+DVDD_3V on 7511
+
+7510/7511 also have BGVDD (for Bandgap). Not clear what the voltage is.
+
+Rob
