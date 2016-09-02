@@ -1,105 +1,105 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 4/5] PM / devfreq: rockchip: add devfreq driver for rk3399
- dmc
-Date: Fri, 02 Sep 2016 10:46:09 +0900
-Message-ID: <57C8D9E1.4070700@samsung.com>
-References: <1472769085-20715-1-git-send-email-hl@rock-chips.com>
- <1472769085-20715-5-git-send-email-hl@rock-chips.com>
- <CGME20160901231806epcas1p4c0184a2d47af524a99d162b3a5a5bf59@epcas1p4.samsung.com>
- <8339852.vAWNvCSMju@diego>
+From: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add eMMC's power domain support
+ for rk3399
+Date: Fri, 2 Sep 2016 10:35:54 +0800
+Message-ID: <16314a2c-1ed9-0307-3497-9c1d8d41a149@rock-chips.com>
+References: <20160827134103.28160-1-xzy.xu@rock-chips.com>
+ <20160827134103.28160-3-xzy.xu@rock-chips.com>
+ <2ab8ab94-fa4d-2cd6-5805-a92ac5f9697e@rock-chips.com>
+ <57C3A30B.5080707@rock-chips.com>
+ <ceba6a89-6945-58c5-62e4-7d842cfa2312@rock-chips.com>
+ <CAD=FV=W=LkVAm187hxp0Kbjxi5kSThwKnCMX+tr8SXQ-v_xQTQ@mail.gmail.com>
+ <77f5cff1-80a2-76b3-40e9-f77caced2257@rock-chips.com>
+ <CAD=FV=WmoyoZmV_uj281S37ZpWqg8Dr2U8ntkD2Sr58qbcB0wg@mail.gmail.com>
+ <411dfc7b-1089-61a8-7a7e-6f378c0a6074@rock-chips.com>
+ <CAD=FV=Wrw=THuokXyOXSyihF4fDB4z2L0vCgkiR9XJ6aEzsNzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <8339852.vAWNvCSMju@diego>
-Sender: linux-pm-owner@vger.kernel.org
-To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, Lin Huang <hl@rock-chips.com>
-Cc: myungjoo.ham@samsung.com, mark.yao@rock-chips.com, airlied@linux.ie, mturquette@baylibre.com, dbasehore@chromium.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, tixy@linaro.org, typ@rock-chips.com, sudeep.holla@arm.com, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAD=FV=Wrw=THuokXyOXSyihF4fDB4z2L0vCgkiR9XJ6aEzsNzg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Caesar
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
-
-On 2016년 09월 02일 08:17, Heiko Stübner wrote:
-> Am Freitag, 2. September 2016, 06:31:24 schrieb Lin Huang:
->> base on dfi result, we do ddr frequency scaling, register
->> dmc driver to devfreq framework, and use simple-ondemand
->> policy.
->>
->> Signed-off-by: Lin Huang <hl@rock-chips.com>
->> Signed-off-by: MyngJoo Ham <myngjoo.ham@samsung.com>
->> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
-> 
-> [...]
-> 
->> diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
->> new file mode 100644
->> index 0000000..54d65f2
->> --- /dev/null
->> +++ b/drivers/devfreq/rk3399_dmc.c
->> @@ -0,0 +1,480 @@
->> +/*
->> + * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd.
->> + * Author: Lin Huang <hl@rock-chips.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify it
->> + * under the terms and conditions of the GNU General Public License,
->> + * version 2, as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope it will be useful, but WITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
->> for + * more details.
->> + */
->> +
->> +#include <linux/arm-smccc.h>
->> +#include <linux/clk.h>
->> +#include <linux/delay.h>
->> +#include <linux/devfreq.h>
->> +#include <linux/devfreq-event.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_opp.h>
->> +#include <linux/regulator/consumer.h>
->> +#include <linux/rwsem.h>
->> +#include <linux/suspend.h>
->> +
->> +#include <soc/rockchip/rockchip_sip.h>
-> 
-> (Repeated from previous version)
-> For the shared sip-interface header I've prepared a signed, stable tag
-> which can be pulled from
-> 
-> The following changes since commit 29b4817d4018df78086157ea3a55c1d9424a7cfc:
-> 
->   Linux 4.8-rc1 (2016-08-07 18:18:00 -0700)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git tags/rockchip-ddr-sip
-> 
-> for you to fetch changes up to 97dd82682f1a6174698fbea149a04b4cabc58c4f:
-> 
->   soc: rockchip: add header for ddr rate SIP interface (2016-08-31 18:53:24 +0200)
-> 
-> ----------------------------------------------------------------
-> Header file defining the SIP-interface to the ATF for DDR frequency changes
-> 
-> ----------------------------------------------------------------
-> Lin Huang (1):
->       soc: rockchip: add header for ddr rate SIP interface
-> 
->  include/soc/rockchip/rockchip_sip.h | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 include/soc/rockchip/rockchip_sip.h
-> 
-> 
-> 
-
-Thanks for creating the immutable branch.
-
--- 
-Best Regards,
-Chanwoo Choi
+CgpPbiAyMDE25bm0MDnmnIgwMuaXpSAwNToyOSwgRG91ZyBBbmRlcnNvbiB3cm90ZToKPiBIaSwK
+Pgo+IE9uIFdlZCwgQXVnIDMxLCAyMDE2IGF0IDExOjU2IFBNLCBaaXl1YW4gWHUgPHh6eS54dUBy
+b2NrLWNoaXBzLmNvbT4gd3JvdGU6Cj4+IEhpCj4+Cj4+Cj4+IE9uIDIwMTblubQwOeaciDAx5pel
+IDEyOjIwLCBEb3VnIEFuZGVyc29uIHdyb3RlOgo+Pj4gSGksCj4+Pgo+Pj4gT24gV2VkLCBBdWcg
+MzEsIDIwMTYgYXQgNzoyOSBQTSwgWml5dWFuIFh1IDx4enkueHVAcm9jay1jaGlwcy5jb20+IHdy
+b3RlOgo+Pj4+PiBUaGlzIGlzIGZpbmUgdG8gcGljayB1cCBfb25seV8gaWYgeW91IGRvbid0IGNh
+cmUgYWJvdXQgc3VzcGVuZC9yZXN1bWUuCj4+Pj4+IElmIHlvdSBjYXJlIGFib3V0IHN1c3BlbmQv
+cmVzdW1lIHRoZW4gc29tZW9uZSBuZWVkcyB0byBmaXJzdCB3cml0ZSBhCj4+Pj4+IHBhdGNoIHRo
+YXQgd2lsbCByZS1pbml0IGFsbCAiY29yZWNmZyIgdmFsdWVzIGFmdGVyIHBvd2VyIGlzIHR1cm5l
+ZCBvbi4KPj4+Pgo+Pj4+IERvIHlvdSBtZWFuIGNvcmVjZmdfY2xvY2ttdWx0aXBsaWVyIGFuZCBj
+b3JlY2ZnX2Jhc2VjbGtmcmVxLCBpZiB5ZXMsIHdlCj4+Pj4gZG9uJ3QgbmVlZCB0byBzdHJvcmUv
+cmUtaW5pdCBpdCBhZnRlciByZXN1bWUuCj4+Pj4gY29yZWNmZ19jbG9ja211bHRpcGxpZXIgaXMg
+b25seSB1c2VkIHRvIGZldGNoIGhvc3QtPmNsa19tdWwsIGFuZAo+Pj4+IGhvc3QtPmNsa19tdWwg
+aGFzIGJlZW4gYSBmaXhlZCB2YWx1ZSBhdCBydW4tdGltZSwgdW5sZXNzIGRyaXZlciB1bmJpbmQu
+Cj4+Pj4gVGhlIHNhbWUgYXMgY29yZWNmZ19jbG9ja211bHRpcGxpZXIsIGNvcmVjZmdfYmFzZWNs
+a2ZyZXEgaXMgdXNlZCB0byBjaGVjawo+Pj4+IHRoZSB4aW5fY2xrIGF0IHByb2JlIHRpbWUsIHdl
+IGRvbid0IHJlZmVyZW5jZSBpdCBhdCBydW4tdGltZS4KPj4+PiBCVFcsIEkgaGF2ZSB0ZXN0ZWQg
+c3VzcGVuZC9yZXN1bWUgb24gcmszMzk5IHByaW9yIHRvIHRoaXMgc3VtYml0LCBlTU1DCj4+Pj4g
+d29ya3MKPj4+PiBmaW5lLgo+Pj4gSSBndWVzcyBJIGRvbid0IGFjdHVhbGx5IGtub3cgaG93IHRo
+ZSBjb3JlY2ZnX2Nsb2NrbXVsdGlwbGllciBhbmQKPj4+IGNvcmVjZmdfYmFzZWNsa2ZyZXEgZmll
+bGRzIGFyZSBhY3R1YWxseSB1c2VkLCBidXQgSSBwcmVzdW1lIHRoYXQgdGhleQo+Pj4gYWN0dWFs
+bHkgZG8gc29tZXRoaW5nIHVzZWZ1bCBhbmQgYXJlbid0IHVzZWQgdG8ganVzdCBjb21tdW5pY2F0
+ZSBiYWNrCj4+PiB0byBzb2Z0d2FyZT8KPj4KPj4gVGFrZSBjb3JlY2ZnX2Nsb2NrbXVsdGlwbGll
+ciBhcyBleGFtcGxlLgo+PiAxLiBzZGhjaSBkcml2ZXIgZmV0Y2ggaG9zdC0+Y2xrX211bCBmcm9t
+IGNvcmVjZmdfY2xvY2ttdWx0aXBsaWVyCj4+IDIuIG1tYy0+Zl9taW4gYW5kIG1tYy0+Zl9tYXgg
+YXJlIGNhbGN1bGF0ZWQgdmlhIGhvc3QtPmNsa19tdWwsIHRoZXkncmUgdXNlZAo+PiBmb3IgZnVy
+dGhlciBpbml0aWFsaXphdGlvbi4KPj4gMy4gaWYgdGhlIGNvcmVjZmdfY2xvY2ttdWx0aXBsaWVy
+IGlzIGluY29ycmVjdCwgc2RoY2kgd2lsbCB1c2UgaW1wcm9wZXIKPj4gZnJlcXVlbmN5IHRvIHBs
+YXkuCj4+Cj4+IEkgdGhpbmsgd2UgZG9uJ3QgbmVlZCB0byBzdG9yZSBpdCBkdWUgdG8gaXQncyBh
+IGZpeGVkIHZhbHVlIGF0IHJ1bi10aW1lLAo+PiBldmVuIGlmIGl0IGlzIHJlc2V0IGFmdGVyIGEg
+cG93ZXIgY3ljbGUsIHRoZSBhYm92ZSB3aWxsIG5vdCBiZSBjaGFuZ2VkIHZpYQo+PiBzb2Z0d2Fy
+ZSwgZXhjZXB0IGZvciBkaXJ2ZXIgdW5iaW5kIC4KPj4KPj4+IEkga25vdyB0aGF0Ogo+Pj4KPj4+
+IDEuIElmIEkgZG9uJ3QgcGljayB0aGlzIHBhdGNoIGFuZCBJIHN1c3BlbmQvcmVzdW1lLAo+Pj4g
+Y29yZWNmZ19jbG9ja211bHRpcGxpZXIgYW5kIGNvcmVjZmdfYmFzZWNsa2ZyZXEgYXJlIHN0aWxs
+IGZpbmUgYWZ0ZXIKPj4+IHN1c3BlbmQgLyByZXN1bWUuCj4+Pgo+Pj4gMi4gSWYgSSBkbyBwaWNr
+IHRoaXMgcGF0Y2ggYW5kIEkgc3VzcGVuZC9yZXN1bWUsCj4+PiBjb3JlY2ZnX2Nsb2NrbXVsdGlw
+bGllciBhbmQgY29yZWNmZ19iYXNlY2xrZnJlcSBhcmUgd3JvbmcgYWZ0ZXIKPj4+IHN1c3BlbmQv
+cmVzdW1lICh0ZXN0ZWQgYnkgcmVhZGluZyAvZGV2L21lbSBkaXJlY3RseSBmcm9tIHVzZXJzcGFj
+ZQo+Pj4gYWZ0ZXIgc3VzcGVuZC9yZXN1bWUpLgo+Pj4KPj4+Cj4+PiBBcmUgeW91IHNheWluZyB0
+aGF0IGl0IGlzIHVuaW1wb3J0YW50IHRoYXQgY29yZWNmZ19jbG9ja211bHRpcGxpZXIgYW5kCj4+
+PiBjb3JlY2ZnX2Jhc2VjbGtmcmVxIGFyZSB3cm9uZz8KPj4KPj4gWXVwLCBjb3JlY2ZnXyogc3R1
+ZmYgd2lsbCBiZSByZXNldCBhZnRlciBhIHBvd2VyIGN5Y2xlLgo+PiBJIG1lYW4gdGhhdCB3ZSBu
+ZWVkIG9ubHkgdG8gZ3VhcmFudGVlIHRoZXkncmUgY29ycmVjdCBhdCBwcm9iZSB0aW1lLgo+IFNv
+IGFyZSB5b3Ugc2F5aW5nIHRoYXQgdGhlIGVudGlyZSBwdXJwb3NlIG9mICJjb3JlY2ZnX2Nsb2Nr
+bXVsdGlwbGllciIKPiBpcyB0aGF0IGNhdXNlcyB0aGUgIkNsb2NrTXVsdGlwbGllciIgZmllbGQg
+b2YgdGhlICJFTU1DQ09SRV9DQVAiCj4gcmVnaXN0ZXIgdG8gZ2V0IGEgY2VydGFpbiB2YWx1ZT8K
+PiAuLi5hbmQgdGhhdCB0aGUgZW50aXJlIHB1cnBvc2Ugb2YgImNvcmVjZmdfYmFzZWNsa2ZyZXEi
+IGlzIHRoYXQgaXQKPiBjYXVzZXMgdGhlICJCYXNlQ2xvY2tGcmVxU0RDbG9jayIgZmllbGQgb2Yg
+dGhlICJFTU1DQ09SRV9DQVAiIHJlZ2lzdGVyCj4gdG8gZ2V0IGEgY2VydGFpbiB2YWx1ZT8KWWVz
+LCBvbiByazMzOTk6CmNvcmVjZmdfY2xvY2ttdWx0aXBsaWVyIDw9PT0+IEVNTUNDT1JFX0NBUDFb
+MjM6MTZdIENsb2NrTXVsdGlwbGllcgpjb3JlY2ZnX2Jhc2VjbGtmcmVxIDw9PT0+IEVNTUNDT1JF
+X0NBUFsxNTo4XSBCYXNlQ2xvY2tGcmVxU0RDbG9jawoKSWYgeW91IHJlLXdyaXRlIHRvIGVpdGhl
+ciBjb3JlY2ZnXyogc3R1ZmYsICB0aGUgY29ycmVzcG9uZGluZyBDQVAgCnJlZ2lzdGVyIGZpZWxk
+IHdpbGwgYmUgY2hhbmdlZCB0b28uCnNkaGNpIGRyaXZlciB3aWxsIGZldGNoIENBUCByZWdpc3Rl
+ciBmb3IgaW5pdGlhbGl6YXRpb24sIHdlIG9ubHkgbmVlZCB0byAKZ3VhcmFudGVlIHRoZXkncmUg
+Y29ycmVjdCBhdCBwcm9iZSB0aW1lLgoKRGlkIHRoYXQgYWxsIG1ha2Ugc2Vuc2U/Cj4KPiBUaGF0
+IHdvdWxkIGhhdmUgYmVlbiBuaWNlIHRvIGtub3cgYmVmb3JlLiAgSSBoYWQgYXNzdW1lZCB0aGF0
+IHRob3NlCj4gImNvcmVjZmciIHNldHRpbmdzIGRpZCBzb21ldGhpbmcgZWxzZSBtb3JlIHVzZWZ1
+bC4KPgo+IElmIGl0IGlzIGluZGVlZCB0cnVlIHRoYXQgdGhlc2UgY29yZWNmZyB2YWx1ZXMgYXJl
+IGFzIHNpbGx5IGFzIGl0Cj4gc2VlbXMsIHRoZW4gSSBndWVzcyBpdCdzIG5vdCB0ZXJyaWJseSBp
+bXBvcnRhbnQgdG8gcmUtc2V0IHRoZW0gYWZ0ZXIKPiBzdXNwZW5kL3Jlc3VtZS4gIEV2ZW50dWFs
+bHkgaXQgd291bGQgYmUgbmljZS9jbGVhbiB0byBhY3R1YWxseSBkbyBzbwo+IChpbiBjYXNlIHRo
+ZSBTREhDSSBkcml2ZXIgZXZlbnR1YWxseSBjaGFuZ2VzKSwgYnV0IEkgZ3Vlc3Mgd2Ugd291bGRu
+J3QKPiBuZWVkIHRvIGJsb2NrLiB0aGlzIHBhdGNoIGZyb20gbGFuZGluZy4KPgo+IENhbiB5b3Ug
+cGxlYXNlIGNvbmZpcm0gbXkgdW5kZXJzdGFuZGluZyBhYm92ZT8KPgo+Cj4gLURvdWcKPgo+IF9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gTGludXgtcm9j
+a2NoaXAgbWFpbGluZyBsaXN0Cj4gTGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwo+
+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtcm9ja2No
+aXAKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGlu
+dXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yb2Nr
+Y2hpcAo=
