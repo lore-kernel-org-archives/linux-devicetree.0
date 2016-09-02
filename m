@@ -1,53 +1,31 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH] dt-binding: remoteproc: Document generic properties
-Date: Fri, 2 Sep 2016 16:45:45 -0500
-Message-ID: <46d4d351-336c-6d4f-b1b0-243cf3c5d68b@ti.com>
-References: <1470850622-29816-1-git-send-email-bjorn.andersson@linaro.org>
- <20160812183448.GA32059@rob-hp-laptop> <20160812224223.GJ26240@tuxbot>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/3] Add R8A7792/Wheat QSPI support
+Date: Sat, 03 Sep 2016 01:04:37 +0300
+Message-ID: <1648590.FPpmBRoQyh@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160812224223.GJ26240@tuxbot>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/12/2016 05:42 PM, Bjorn Andersson wrote:
-> On Fri 12 Aug 11:34 PDT 2016, Rob Herring wrote:
-> 
->> On Wed, Aug 10, 2016 at 10:37:02AM -0700, Bjorn Andersson wrote:
->>> This documents the generic properties "rprocs" and "rproc-names", used
->>> for consumer drivers to reference a remoteproc node.
->>
->> How do you intend to use this? I wonder if it would not be better to 
->> expose a remote proc with existing bindings for a particular purpose 
->> (e.g. clocks, resets, etc.) rather than a generic connection. The client 
->> side would have to have specific knowledge as to what functions the 
->> remote proc provides.
->>
-> 
-> The remoteproc node represents the mechanism and resources needed to
-> control the life cycle a co-processor, e.g. loading, booting, shutting
-> gown a video encoder/decoder.
-> 
-> The proposed reference allows a separate thingie to assert control of
-> the life cycle of that co-processor.
-> 
-> 
-> I acknowledge that in some cases there is a fine line between what is
-> the life cycle management and what is the actual functionality
-> implemented by that remote processor. But as the remoteproc mechanism is
-> reusable between various use cases I think it makes sense to not describe
-> them as one unit.
+Hello.
 
-What's the current state of this patch, not officially acked yet right?
+   Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-20160902-v4.8-rc4' tag plus the Wheat board patches posted this
+week. We're adding the R8A7792/Wheat QSPI clocks and device nodes. The board
+patch depends on the PFC driver QSPI patch in order for the QSPI pins to be
+configured...
 
-While we are at this, can we agree upon an alias stem name as well, we
-can stick to "rproc". Otherwise, I can submit an incremental patch on
-top of this along with the code that adds an API to retrieve it for
-client users.
+[1/3] ARM: dts: r8a7792: add QSPI clock
+[2/3] ARM: dts: r8a7792: add QSPI support
+[3/3] ARM: dts: wheat: add QSPI support
 
-regards
-Suman
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
