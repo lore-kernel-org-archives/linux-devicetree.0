@@ -1,97 +1,43 @@
-From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: RE: [PATCH v5] Axi-usb: Add support for 64-bit addressing.
-Date: Fri, 2 Sep 2016 06:02:14 +0000
-Message-ID: <C89496FEAE474D468F30D558A9468D9F26D143CB@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1472719976-25410-1-git-send-email-navam@xilinx.com>
- <20160901175636.GV16583@xsjsorenbubuntu>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v4 3/5] drm: add SimpleDRM driver
+Date: Fri, 2 Sep 2016 08:11:11 +0200
+Message-ID: <CAKMK7uEm2_woMoyBUz77ivmyL939m7fEQH_CRbUxq5NeNrmzZw@mail.gmail.com>
+References: <1471897525-31118-1-git-send-email-noralf@tronnes.org>
+ <1471897525-31118-4-git-send-email-noralf@tronnes.org> <CANq1E4Ro2W0J4XTTx+3TxRDHsc6z2AN7wFBc-njsBDYZVGV4OA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160901175636.GV16583@xsjsorenbubuntu>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Soren Brinkmann <sorenb@xilinx.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "balbi@kernel.org" <balbi@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANq1E4Ro2W0J4XTTx+3TxRDHsc6z2AN7wFBc-njsBDYZVGV4OA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Herrmann <dh.herrmann@gmail.com>
+Cc: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>, linux-kernel <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SEkgU29yZW4sDQoNCiAgICAgICAgVGhhbmtzIGZvciB0aGUgcmV2aWV3Li4uLg0KDQo+IC0tLS0t
-T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFPDtnJlbiBCcmlua21hbm4gW21haWx0bzpz
-b3Jlbi5icmlua21hbm5AeGlsaW54LmNvbV0NCj4gU2VudDogVGh1cnNkYXksIFNlcHRlbWJlciAw
-MSwgMjAxNiAxMToyNyBQTQ0KPiBUbzogTmF2YSBraXNob3JlIE1hbm5lIDxuYXZhbUB4aWxpbngu
-Y29tPg0KPiBDYzogcm9iaCtkdEBrZXJuZWwub3JnOyBwYXdlbC5tb2xsQGFybS5jb207IG1hcmsu
-cnV0bGFuZEBhcm0uY29tOw0KPiBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51azsgZ2FsYWtA
-Y29kZWF1cm9yYS5vcmc7IGJhbGJpQGtlcm5lbC5vcmc7DQo+IGdyZWdraEBsaW51eGZvdW5kYXRp
-b24ub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgt
-DQo+IHVzYkB2Z2VyLmtlcm5lbC5vcmc7IE5hdmEga2lzaG9yZSBNYW5uZSA8bmF2YW1AeGlsaW54
-LmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NV0gQXhpLXVzYjogQWRkIHN1cHBvcnQgZm9y
-IDY0LWJpdCBhZGRyZXNzaW5nLg0KPg0KPiBPbiBUaHUsIDIwMTYtMDktMDEgYXQgMTQ6MjI6NTYg
-KzA1MzAsIE5hdmEga2lzaG9yZSBNYW5uZSB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIHVwZGF0ZXMg
-dGhlIGRyaXZlciB0byBzdXBwb3J0IDY0LWJpdCBETUEgYWRkcmVzc2luZy4NCj4gPg0KPiA+IFNp
-Z25lZC1vZmYtYnk6IE5hdmEga2lzaG9yZSBNYW5uZSA8bmF2YW1AeGlsaW54LmNvbT4NCj4gPiBB
-Y2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gPiAtLS0NCj4gPiBDaGFu
-Z2VzIGZvciB2NToNCj4gPiAgICAgICAgICAgICAgICAgLU5vbmUuDQo+ID4NCj4gPiBDaGFuZ2Vz
-IGZvciB2NDoNCj4gPiAgICAgICAgICAgICAgICAgLVVzZWQgYm9vbGVuIHByb3BlcnR5IGluc3Rl
-ZCBvZiBhZGRyd2l0aCBwcm9wZXJ0eSBpbiB0aGUgRFQNCj4gPiAgICAgICAgICAgICAgICAgIGFz
-IHN1Z2dlc3RlZCBieSBBcm5kIEJlcmdtYW5uLg0KPiA+ICAgICAgICAgICAgICAgICAtQWRvcHQg
-dGhlIERUIHJlbGV2YW50IGNoYW5nZXMgaW50byB0aGUgZHJpdmVyLg0KPiA+DQo+ID4gQ2hhbmdl
-cyBmb3IgdjM6DQo+ID4gICAgICAgICAgICAgICAgIC1BZGRlZCBuZXcgY29tcGF0YWJsZSBzdHJp
-bmcgZm9yIDUuMDAgSVAgdmVyc2lvbiBhcyBzdWdnZXN0ZWQgYnkNCj4gPiAgICAgICAgICAgICAg
-ICAgIEFybmQgQmVyZ21hbm4uDQo+ID4gICAgICAgICAgICAgICAgIC1Vc2VkIHdyaXRlX2ZuKCkg
-aW5zdGVkIG9mIGxvX2hpX3dyaXRlcSgpIGFzIHN1Z2dlc3RlZCBieQ0KPiA+ICAgICAgICAgICAg
-ICAgICAgQXJuZCBCZXJnbWFubi4NCj4gPiBDaGFuZ2VzIGZvciB2MjoNCj4gPiAgICAgICAgICAg
-ICAgICAgLUFkZGVkIGRtYS1yYW5nZXMgcHJvcGVydHkgaW4gZGV2aWNlIHRyZWUgYXMgc3VnZ2Vz
-dGVkIGJ5DQo+ID4gICAgICAgICAgICAgICAgICBBcm5kIEJlcmdtYW5uLg0KPiA+ICAgICAgICAg
-ICAgICAgICAtTW9kaWZpZWQgdGhlIGRyaXZlciBjb2RlIGJhc2VkIG9uIHRoZSB4bG54LGFkZHJ3
-aWR0aC4NCj4gPg0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvdWRjLXhpbGlueC50
-eHQgICAgICAgICB8ICA1ICsrLQ0KPiA+ICBkcml2ZXJzL3VzYi9nYWRnZXQvdWRjL3VkYy14aWxp
-bnguYyAgICAgICAgICAgICAgICB8IDUyDQo+ICsrKysrKysrKysrKysrKysrKysrKy0NCj4gPiAg
-MiBmaWxlcyBjaGFuZ2VkLCA1NCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+DQo+
-ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvdWRj
-LXhpbGlueC50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2Iv
-dWRjLXhpbGlueC50eHQNCj4gPiBpbmRleCA0N2I0ZTM5Li5kMDhkOTcyIDEwMDY0NA0KPiA+IC0t
-LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvdWRjLXhpbGlueC50eHQN
-Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3VkYy14aWxp
-bngudHh0DQo+ID4gQEAgLTEsMTIgKzEsMTQgQEANCj4gPiAgWGlsaW54IFVTQjIgZGV2aWNlIGNv
-bnRyb2xsZXINCj4gPg0KPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+IC0tIGNvbXBhdGli
-bGUgICAgICAgICAgICAgICA6IFNob3VsZCBiZSAieGxueCx1c2IyLWRldmljZS00LjAwLmEiDQo+
-ID4gKy0gY29tcGF0aWJsZSAgICAgICAgICAgICAgIDogU2hvdWxkIGJlICJ4bG54LHVzYjItZGV2
-aWNlLTQuMDAuYSIgb3INCj4gPiArICAgICAgICAgICAgICAgICAgICAgInhsbngsdXNiMi1kZXZp
-Y2UtNS4wMCINCj4gPiAgLSByZWcgICAgICAgICAgICAgICAgICAgICAgOiBQaHlzaWNhbCBiYXNl
-IGFkZHJlc3MgYW5kIHNpemUgb2YgdGhlIFVTQjINCj4gPiAgICAgICAgICAgICAgICAgICAgICAg
-ZGV2aWNlIHJlZ2lzdGVycyBtYXAuDQo+ID4gIC0gaW50ZXJydXB0cyAgICAgICAgICAgICAgIDog
-U2hvdWxkIGNvbnRhaW4gc2luZ2xlIGlycSBsaW5lIG9mIFVTQjIgZGV2aWNlDQo+ID4gICAgICAg
-ICAgICAgICAgICAgICAgIGNvbnRyb2xsZXINCj4gPiAgLSB4bG54LGhhcy1idWlsdGluLWRtYSAg
-ICAgOiBpZiBETUEgaXMgaW5jbHVkZWQNCj4gPiArLSB4bG54LGhhcy02NGJpdC1kbWEgICAgICAg
-OiBpZiBETUEgaXMgaW5jbHVkZWQgNjQtYml0IGFkZHJlc3Npbmcgc3VwcG9ydC4NCj4NCj4gV2Ug
-YWRkIHRoZXNlIHByb3BlcnRpZXMgdG8gZGVzY3JpYmUgdGhlIElQIGNvbmZpZ3VyYXRpb24gKyB3
-ZSBoYXZlIHRoZQ0KPiB2ZXJzaW9uIGluZGljYXRvciBpbiB0aGUgY29tcGF0aWJsZSBzdHJpbmcu
-IERvIHdlIHJlYWxseSBuZWVkIGJvdGg/IEl0IHNlZW1zDQo+IHRoYXQgYWxsIHZlcnNpb25zIHVz
-ZSB0aGUgc2FtZSBkcml2ZXIgYW5kIGRpZmZlcmVudGlhdGlvbiBpcyBtYWRlIHRocm91Z2ggdGhl
-DQo+IERUIHByb3BlcnRpZXMgdGhhdCBkZXNjcmliZSB0aGUgSVAgY29uZmlndXJhdGlvbiBwYXJh
-bWV0ZXJzLg0KPiBXb3VsZG4ndCBpdCBiZSBiZXR0ZXIgdG8ganVzdCBoYXZlIG9uZSBnZW5lcmlj
-ICd4bG54LGF4aS11c2IyJyAob3INCj4gd2hhdGV2ZXIpIGNvbXBhdGlibGUgc3RyaW5nIGluc3Rl
-YWQgb2YgcGF0Y2hpbmcgdGhlIGRyaXZlciBmb3IgZWFjaCBuZXcNCj4gdmVyc2lvbiB3aXRob3V0
-IHJlYWxseSBuZWVkaW5nIHRvIGRpZmZlcmVudGlhdGUgdGhlIElQIHZlcnNpb25zIHRocm91Z2gg
-aXQ/DQo+DQpJIHRoaW5rIG1hdGNoaW5nIG9uIHRoZSB2ZXJzaW9uIG51bWJlciBpcyBzbGlnaHRs
-eSBiZXR0ZXIsIGFzIHdlIGhhdmUgdGhlIHZlcnNpb24NCkFscmVhZHkgYW5kIGl0IGlkZW50aWZp
-ZXMgdGhlIDY0LWJpdCAgcmVnaXN0ZXJzIGV4aXN0ZW5jZS4NCg0KUmVnYXJkcywNCk5hdmFraXNo
-b3JlDQoNCg0KVGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIGFyZSBpbnRlbmRlZCBmb3Ig
-dGhlIHNvbGUgdXNlIG9mIHRoZSBuYW1lZCByZWNpcGllbnQocykgYW5kIGNvbnRhaW4ocykgY29u
-ZmlkZW50aWFsIGluZm9ybWF0aW9uIHRoYXQgbWF5IGJlIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2Vk
-IG9yIGNvcHlyaWdodGVkIHVuZGVyIGFwcGxpY2FibGUgbGF3LiBJZiB5b3UgYXJlIG5vdCB0aGUg
-aW50ZW5kZWQgcmVjaXBpZW50LCBkbyBub3QgcmVhZCwgY29weSwgb3IgZm9yd2FyZCB0aGlzIGVt
-YWlsIG1lc3NhZ2Ugb3IgYW55IGF0dGFjaG1lbnRzLiBEZWxldGUgdGhpcyBlbWFpbCBtZXNzYWdl
-IGFuZCBhbnkgYXR0YWNobWVudHMgaW1tZWRpYXRlbHkuDQoNCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Fri, Sep 2, 2016 at 1:48 AM, David Herrmann <dh.herrmann@gmail.com> wrote:
+> So either the drm_simple_kms_helpers are buggy, or the SimpleDRM use
+> of it. On DPMS updates, I get:
+>
+> Sep 02 01:00:39 david-t2 kernel:
+> [drm:drm_atomic_helper_commit_cleanup_done [drm_kms_helper]] *ERROR*
+> [CRTC:25:crtc-0] flip_done timed out
+> Sep 02 01:00:39 david-t2 kernel: ------------[ cut here ]------------
+> Sep 02 01:00:39 david-t2 kernel: WARNING: CPU: 3 PID: 352 at
+> drivers/gpu/drm/drm_atomic_helper.c:1549
+> drm_atomic_helper_commit_hw_done+0xab/0xb0 [drm_kms_helper]
+>
+> The atomic-commit originates in:
+> drm_atomic_helper_connector_dpms()
+>
+> Any idea what is missing there? I haven't looked much into the
+> atomic-helpers, yet.
+
+The bugfix for that is in latest drm-misc (or well, should be at
+least). And you need to make sure to call drm_crtc_send_vblank_event
+(if there's an event) from your update hook. That /should/ work, but I
+didn't test it myself. flip_done not happening is when the
+driver/helpers fail to submit the event for some reason or another.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
