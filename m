@@ -1,27 +1,26 @@
 From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2 07/15] Simplify the confusing HIWORD_UPDATE scheme.
-Date: Fri, 2 Sep 2016 17:09:42 -0500
-Message-ID: <20160902220942.GA21718@localhost>
+Subject: Re: [PATCH v2 01/15] Remove unused symbols, unnecessary parens,
+ other minor comments from
+Date: Fri, 2 Sep 2016 17:15:34 -0500
+Message-ID: <20160902221534.GB21718@localhost>
 References: <20160902154501.8650.99790.stgit@bhelgaas-glaptop2.roam.corp.google.com>
- <20160902155453.8650.29613.stgit@bhelgaas-glaptop2.roam.corp.google.com>
- <20160902213806.GA31011@roeck-us.net>
+ <20160902155358.8650.64973.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+ <20160902214256.GC31011@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160902213806.GA31011@roeck-us.net>
+In-Reply-To: <20160902214256.GC31011@roeck-us.net>
 Sender: linux-pci-owner@vger.kernel.org
 To: Guenter Roeck <linux@roeck-us.net>
 Cc: Bjorn Helgaas <bhelgaas@google.com>, Shawn Lin <shawn.lin@rock-chips.com>, devicetree@vger.kernel.org, Wenrui Li <wenrui.li@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 02, 2016 at 02:38:06PM -0700, Guenter Roeck wrote:
-> On Fri, Sep 02, 2016 at 10:54:53AM -0500, Bjorn Helgaas wrote:
-
-> > +#define HIWORD_UPDATE(mask, val)	((mask << 16) | val)
-> > +
-> > +#define ENCODE_LANES(x)			(((x >> 1) & 3) << 4)
+On Fri, Sep 02, 2016 at 02:42:56PM -0700, Guenter Roeck wrote:
+> On Fri, Sep 02, 2016 at 10:53:58AM -0500, Bjorn Helgaas wrote:
+> > Guenter.
 > 
-> (x) ?
+> Kind of an odd patch description ;-)
 
-Done, thanks!  (And for "mask" and "val")
+Yeah :)  These are just things you commented on initially.  I'm going to
+squash all these and throw away these crappy changelogs anyway.
