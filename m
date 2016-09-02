@@ -1,288 +1,208 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v2 09/15] Move CSR bases into definition.
-Date: Fri, 02 Sep 2016 10:55:09 -0500
-Message-ID: <20160902155509.8650.75307.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 10/15] Group related CSR definitions together.
+Date: Fri, 02 Sep 2016 10:55:19 -0500
+Message-ID: <20160902155518.8650.89467.stgit@bhelgaas-glaptop2.roam.corp.google.com>
 References: <20160902154501.8650.99790.stgit@bhelgaas-glaptop2.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160902154501.8650.99790.stgit@bhelgaas-glaptop2.roam.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: devicetree@vger.kernel.org, Wenrui Li <wenrui.li@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, linux-pci@vger.kernel.org, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20160902154501.8650.99790.stgit-1RhO1Y9PlrlHTL0Zs8A6p/gx64E7kk8eUsxypvmhUTTZJqsBc5GL+g@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Instead of this:
 
-  #define PCIE_RC_CONFIG_LCS		0xd0
-  read(rockchip, PCIE_RC_CONFIG_BASE + PCIE_RC_CONFIG_LCS);
-
-do this:
-
-  #define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
-  read(rockchip, PCIE_RC_CONFIG_LCS);
-
-Mostly trivial, but rockchip_pcie_prog_ob_atu() and
-rockchip_pcie_prog_ib_atu() are a little more complicated.
 ---
- drivers/pci/host/pcie-rockchip.c |  116 ++++++++++++++++++++------------------
- 1 file changed, 61 insertions(+), 55 deletions(-)
+ drivers/pci/host/pcie-rockchip.c |  148 +++++++++++++++++++-------------------
+ 1 file changed, 74 insertions(+), 74 deletions(-)
 
 diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
-index a2dd196..6edfce5 100644
+index 6edfce5..fe1b52f 100644
 --- a/drivers/pci/host/pcie-rockchip.c
 +++ b/drivers/pci/host/pcie-rockchip.c
-@@ -39,8 +39,8 @@
+@@ -37,21 +37,27 @@
+ #include <linux/reset.h>
+ #include <linux/regmap.h>
  
- #define PCIE_CLIENT_BASE			0x0
- #define PCIE_RC_CONFIG_BASE			0xa00000
--#define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2	0x90c
--#define PCIE_RC_CONFIG_LCS			0xd0
-+#define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2	(PCIE_RC_CONFIG_BASE + 0x90c)
-+#define PCIE_RC_CONFIG_LCS			(PCIE_RC_CONFIG_BASE + 0x0d0)
- #define  PCIE_RC_CONFIG_LCS_RETRAIN_LINK	BIT(5)
- #define  PCIE_RC_CONFIG_LCS_LBMIE		BIT(10)
- #define  PCIE_RC_CONFIG_LCS_LABIE		BIT(11)
-@@ -49,9 +49,9 @@
- #define PCIE_CORE_CTRL_MGMT_BASE		0x900000
- #define PCIE_CORE_AXI_CONF_BASE			0xc00000
- #define PCIE_CORE_AXI_INBOUND_BASE		0xc00800
--#define PCIE_CLIENT_BASIC_STATUS1		0x48
--#define PCIE_CLIENT_INT_MASK			0x4c
--#define PCIE_CLIENT_INT_STATUS			0x50
-+#define PCIE_CLIENT_BASIC_STATUS1		(PCIE_CLIENT_BASE + 0x48)
-+#define PCIE_CLIENT_INT_MASK			(PCIE_CLIENT_BASE + 0x4c)
-+#define PCIE_CLIENT_INT_STATUS			(PCIE_CLIENT_BASE + 0x50)
+-#define PCIE_CLIENT_BASE			0x0
+-#define PCIE_RC_CONFIG_BASE			0xa00000
+-#define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2	(PCIE_RC_CONFIG_BASE + 0x90c)
+-#define PCIE_RC_CONFIG_LCS			(PCIE_RC_CONFIG_BASE + 0x0d0)
+-#define  PCIE_RC_CONFIG_LCS_RETRAIN_LINK	BIT(5)
+-#define  PCIE_RC_CONFIG_LCS_LBMIE		BIT(10)
+-#define  PCIE_RC_CONFIG_LCS_LABIE		BIT(11)
+-#define  PCIE_RC_CONFIG_LCS_LBMS		BIT(30)
+-#define  PCIE_RC_CONFIG_LCS_LAMS		BIT(31)
+-#define PCIE_CORE_CTRL_MGMT_BASE		0x900000
+-#define PCIE_CORE_AXI_CONF_BASE			0xc00000
+-#define PCIE_CORE_AXI_INBOUND_BASE		0xc00800
+-#define PCIE_CLIENT_BASIC_STATUS1		(PCIE_CLIENT_BASE + 0x48)
+-#define PCIE_CLIENT_INT_MASK			(PCIE_CLIENT_BASE + 0x4c)
+-#define PCIE_CLIENT_INT_STATUS			(PCIE_CLIENT_BASE + 0x50)
++/*
++ * The upper 16 bits of PCIE_CLIENT_BASE are a write mask for the lower 16
++ * bits.  This allows atomic updates of the register without locking.
++ */
++#define HIWORD_UPDATE(mask, val)	((mask << 16) | val)
++
++#define ENCODE_LANES(x)			(((x >> 1) & 3) << 4)
++
++#define PCIE_CLIENT_BASE		0x0
++#define  PCIE_CLIENT_CONF_ENABLE	  HIWORD_UPDATE(0x0001, 0x0001)
++#define  PCIE_CLIENT_LINK_TRAIN_ENABLE	  HIWORD_UPDATE(0x0002, 0x0002)
++#define  PCIE_CLIENT_CONF_LANE_NUM(x)	  HIWORD_UPDATE(0x0030, ENCODE_LANES(x))
++#define  PCIE_CLIENT_GEN_SEL_2		  HIWORD_UPDATE(0x0040, 0x0040)
++#define PCIE_CLIENT_BASIC_STATUS1	(PCIE_CLIENT_BASE + 0x48)
++#define  PCIE_CLIENT_LINK_STATUS_UP		0x3
++#define  PCIE_CLIENT_LINK_STATUS_SHIFT		20
++#define  PCIE_CLIENT_LINK_STATUS_MASK		0x3
++#define PCIE_CLIENT_INT_MASK		(PCIE_CLIENT_BASE + 0x4c)
++#define PCIE_CLIENT_INT_STATUS		(PCIE_CLIENT_BASE + 0x50)
++#define  ROCKCHIP_PCIE_RPIFR1_INTR_MASK		GENMASK(8, 5)
++#define  ROCKCHIP_PCIE_RPIFR1_INTR_SHIFT	5
  #define  PCIE_CLIENT_INT_LEGACY_DONE		BIT(15)
  #define  PCIE_CLIENT_INT_MSG			BIT(14)
  #define  PCIE_CLIENT_INT_HOT_RST		BIT(13)
-@@ -68,18 +68,18 @@
+@@ -68,18 +74,25 @@
  #define  PCIE_CLIENT_INT_PHY			BIT(2)
  #define  PCIE_CLIENT_INT_HOT_PLUG		BIT(1)
  #define  PCIE_CLIENT_INT_PWR_STCG		BIT(0)
--#define PCIE_RC_CONFIG_RID_CCR			0x8
--#define PCIE_RC_BAR_CONF			0x300
--#define PCIE_CORE_OB_REGION_ADDR1		0x4
--#define PCIE_CORE_OB_REGION_DESC0		0x8
--#define PCIE_CORE_OB_REGION_DESC1		0xc
-+#define PCIE_RC_CONFIG_RID_CCR			(PCIE_RC_CONFIG_BASE + 0x08)
-+#define PCIE_RC_BAR_CONF			(PCIE_CORE_CTRL_MGMT_BASE + 0x300)
-+#define PCIE_CORE_OB_REGION_ADDR1		(PCIE_CORE_AXI_CONF_BASE + 0x4)
-+#define PCIE_CORE_OB_REGION_DESC0		(PCIE_CORE_AXI_CONF_BASE + 0x8)
-+#define PCIE_CORE_OB_REGION_DESC1		(PCIE_CORE_AXI_CONF_BASE + 0xc)
- #define PCIE_CORE_OB_REGION_ADDR0_NUM_BITS	0x3f
- #define PCIE_CORE_OB_REGION_ADDR0_LO_ADDR	0xffffff00
- #define PCIE_CORE_IB_REGION_ADDR0_NUM_BITS	0x3f
- #define PCIE_CORE_IB_REGION_ADDR0_LO_ADDR	0xffffff00
--#define PCIE_RP_IB_ADDR_TRANS			0x4
--#define PCIE_CORE_INT_MASK			0x900210
--#define PCIE_CORE_INT_STATUS			0x90020c
-+#define PCIE_RP_IB_ADDR_TRANS			(PCIE_CORE_AXI_INBOUND_BASE + 0x4)
-+#define PCIE_CORE_INT_MASK			(PCIE_CORE_CTRL_MGMT_BASE + 0x210)
-+#define PCIE_CORE_INT_STATUS			(PCIE_CORE_CTRL_MGMT_BASE + 0x20c)
+-#define PCIE_RC_CONFIG_RID_CCR			(PCIE_RC_CONFIG_BASE + 0x08)
+-#define PCIE_RC_BAR_CONF			(PCIE_CORE_CTRL_MGMT_BASE + 0x300)
+-#define PCIE_CORE_OB_REGION_ADDR1		(PCIE_CORE_AXI_CONF_BASE + 0x4)
+-#define PCIE_CORE_OB_REGION_DESC0		(PCIE_CORE_AXI_CONF_BASE + 0x8)
+-#define PCIE_CORE_OB_REGION_DESC1		(PCIE_CORE_AXI_CONF_BASE + 0xc)
+-#define PCIE_CORE_OB_REGION_ADDR0_NUM_BITS	0x3f
+-#define PCIE_CORE_OB_REGION_ADDR0_LO_ADDR	0xffffff00
+-#define PCIE_CORE_IB_REGION_ADDR0_NUM_BITS	0x3f
+-#define PCIE_CORE_IB_REGION_ADDR0_LO_ADDR	0xffffff00
+-#define PCIE_RP_IB_ADDR_TRANS			(PCIE_CORE_AXI_INBOUND_BASE + 0x4)
+-#define PCIE_CORE_INT_MASK			(PCIE_CORE_CTRL_MGMT_BASE + 0x210)
+-#define PCIE_CORE_INT_STATUS			(PCIE_CORE_CTRL_MGMT_BASE + 0x20c)
++
++#define PCIE_CLIENT_INT_LEGACY \
++	(PCIE_CLIENT_INT_INTA | PCIE_CLIENT_INT_INTB | \
++	PCIE_CLIENT_INT_INTC | PCIE_CLIENT_INT_INTD)
++
++#define PCIE_CLIENT_INT_CLI \
++	(PCIE_CLIENT_INT_CORR_ERR | PCIE_CLIENT_INT_NFATAL_ERR | \
++	PCIE_CLIENT_INT_FATAL_ERR | PCIE_CLIENT_INT_DPA | \
++	PCIE_CLIENT_INT_HOT_RST | PCIE_CLIENT_INT_MSG | \
++	PCIE_CLIENT_INT_LEGACY_DONE | PCIE_CLIENT_INT_LEGACY | \
++	PCIE_CLIENT_INT_PHY)
++
++#define PCIE_CORE_CTRL_MGMT_BASE	0x900000
++#define  PCIE_CORE_PL_CONF_SPEED_5G		0x1
++#define  PCIE_CORE_PL_CONF_SPEED_SHIFT		3
++#define  PCIE_CORE_PL_CONF_SPEED_MASK		0x3
++#define  PCIE_CORE_PL_CONF_LANE_SHIFT		1
++#define  PCIE_CORE_PL_CONF_LANE_MASK		0x3
++#define PCIE_CORE_INT_STATUS		(PCIE_CORE_CTRL_MGMT_BASE + 0x20c)
  #define  PCIE_CORE_INT_PRFPE			BIT(0)
  #define  PCIE_CORE_INT_CRFPE			BIT(1)
  #define  PCIE_CORE_INT_RRPE			BIT(2)
-@@ -194,7 +194,8 @@ static u32 rockchip_pcie_read(struct rockchip_pcie *rockchip, u32 reg)
- 	return readl(rockchip->apb_base + reg);
- }
+@@ -94,6 +107,40 @@
+ #define  PCIE_CORE_INT_CT			BIT(11)
+ #define  PCIE_CORE_INT_UTC			BIT(18)
+ #define  PCIE_CORE_INT_MMVC			BIT(19)
++#define PCIE_CORE_INT_MASK		(PCIE_CORE_CTRL_MGMT_BASE + 0x210)
++#define PCIE_RC_BAR_CONF		(PCIE_CORE_CTRL_MGMT_BASE + 0x300)
++
++#define PCIE_CORE_INT \
++		(PCIE_CORE_INT_PRFPE | PCIE_CORE_INT_CRFPE | \
++		 PCIE_CORE_INT_RRPE | PCIE_CORE_INT_CRFO | \
++		 PCIE_CORE_INT_RT | PCIE_CORE_INT_RTR | \
++		 PCIE_CORE_INT_PE | PCIE_CORE_INT_MTR | \
++		 PCIE_CORE_INT_UCR | PCIE_CORE_INT_FCE | \
++		 PCIE_CORE_INT_CT | PCIE_CORE_INT_UTC | \
++		 PCIE_CORE_INT_MMVC)
++
++#define PCIE_RC_CONFIG_BASE		0xa00000
++#define PCIE_RC_CONFIG_RID_CCR		(PCIE_RC_CONFIG_BASE + 0x08)
++#define  PCIE_CORE_RC_CONF_SCC_SHIFT		16
++#define PCIE_RC_CONFIG_LCS		(PCIE_RC_CONFIG_BASE + 0xd0)
++#define  PCIE_RC_CONFIG_LCS_RETRAIN_LINK	BIT(5)
++#define  PCIE_RC_CONFIG_LCS_LBMIE		BIT(10)
++#define  PCIE_RC_CONFIG_LCS_LABIE		BIT(11)
++#define  PCIE_RC_CONFIG_LCS_LBMS		BIT(30)
++#define  PCIE_RC_CONFIG_LCS_LAMS		BIT(31)
++#define PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2 (PCIE_RC_CONFIG_BASE + 0x90c)
++
++#define PCIE_CORE_AXI_CONF_BASE		0xc00000
++#define PCIE_CORE_OB_REGION_ADDR1	(PCIE_CORE_AXI_CONF_BASE + 0x4)
++#define PCIE_CORE_OB_REGION_DESC0	(PCIE_CORE_AXI_CONF_BASE + 0x8)
++#define PCIE_CORE_OB_REGION_DESC1	(PCIE_CORE_AXI_CONF_BASE + 0xc)
++#define PCIE_CORE_OB_REGION_ADDR0_NUM_BITS	0x3f
++#define PCIE_CORE_OB_REGION_ADDR0_LO_ADDR	0xffffff00
++#define PCIE_CORE_IB_REGION_ADDR0_NUM_BITS	0x3f
++#define PCIE_CORE_IB_REGION_ADDR0_LO_ADDR	0xffffff00
++
++#define PCIE_CORE_AXI_INBOUND_BASE	0xc00800
++#define PCIE_RP_IB_ADDR_TRANS		(PCIE_CORE_AXI_INBOUND_BASE + 0x4)
  
--static void rockchip_pcie_write(struct rockchip_pcie *rockchip, u32 val, u32 reg)
-+static void rockchip_pcie_write(struct rockchip_pcie *rockchip, u32 val,
-+				u32 reg)
- {
- 	writel(val, rockchip->apb_base + reg);
- }
-@@ -203,18 +204,18 @@ static void rockchip_pcie_enable_bw_int(struct rockchip_pcie *rockchip)
- {
- 	u32 status;
+ /* Size of one AXI Region (not Region 0) */
+ #define AXI_REGION_SIZE				BIT(20)
+@@ -120,53 +167,6 @@
+ #define RC_REGION_0_PASS_BITS			(25 - 1)
+ #define MAX_AXI_WRAPPER_REGION_NUM		33
  
--	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_BASE + PCIE_RC_CONFIG_LCS);
-+	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
- 	status |= (PCIE_RC_CONFIG_LCS_LBMIE | PCIE_RC_CONFIG_LCS_LABIE);
--	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_BASE + PCIE_RC_CONFIG_LCS);
-+	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
- }
- 
- static void rockchip_pcie_clr_bw_int(struct rockchip_pcie *rockchip)
- {
- 	u32 status;
- 
--	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_BASE + PCIE_RC_CONFIG_LCS);
-+	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
- 	status |= (PCIE_RC_CONFIG_LCS_LBMS | PCIE_RC_CONFIG_LCS_LAMS);
--	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_BASE + PCIE_RC_CONFIG_LCS);
-+	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
- }
- 
- static int rockchip_pcie_valid_device(struct rockchip_pcie *rockchip,
-@@ -456,10 +457,8 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 	 * reliable and enabling ASPM doesn't work.  This is a controller
- 	 * bug we need to work around.
- 	 */
--	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_BASE +
--				 PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2);
--	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_BASE +
--				 PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2);
-+	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2);
-+	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_L1_SUBSTATE_CTRL2);
- 
- 	/* Enable Gen1 training */
- 	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
-@@ -471,7 +470,8 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 	timeout = jiffies + msecs_to_jiffies(500);
- 
- 	for (;;) {
--		status = rockchip_pcie_read(rockchip, PCIE_CLIENT_BASIC_STATUS1);
-+		status = rockchip_pcie_read(rockchip,
-+					    PCIE_CLIENT_BASIC_STATUS1);
- 		if (((status >> PCIE_CLIENT_LINK_STATUS_SHIFT) &
- 		      PCIE_CLIENT_LINK_STATUS_MASK) ==
- 		      PCIE_CLIENT_LINK_STATUS_UP) {
-@@ -489,7 +489,8 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 
- 	/* Double check gen1 training */
- 	if (err) {
--		status = rockchip_pcie_read(rockchip, PCIE_CLIENT_BASIC_STATUS1);
-+		status = rockchip_pcie_read(rockchip,
-+					    PCIE_CLIENT_BASIC_STATUS1);
- 		err = (((status >> PCIE_CLIENT_LINK_STATUS_SHIFT) &
- 			PCIE_CLIENT_LINK_STATUS_MASK) ==
- 			PCIE_CLIENT_LINK_STATUS_UP) ? 0 : -ETIMEDOUT;
-@@ -503,11 +504,9 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 	 * Enable retrain for gen2. This should be configured only after
- 	 * gen1 finished.
- 	 */
--	status = rockchip_pcie_read(rockchip,
--			   PCIE_RC_CONFIG_LCS + PCIE_RC_CONFIG_BASE);
--	status |= PCIE_RC_CONFIG_LCS_RETRAIN_LINK;
--	rockchip_pcie_write(rockchip, status,
--		   PCIE_RC_CONFIG_LCS + PCIE_RC_CONFIG_BASE);
-+	status = rockchip_pcie_read(rockchip, PCIE_RC_CONFIG_LCS);
-+	status |= PCIE_CORE_LCS_RETRAIN_LINK;
-+	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_LCS);
- 
- 	timeout = jiffies + msecs_to_jiffies(500);
- 	for (;;) {
-@@ -543,19 +542,20 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 			   PCIE_CORE_PL_CONF_LANE_MASK);
- 	dev_dbg(dev, "current link width is x%d\n", status);
- 
--	rockchip_pcie_write(rockchip, ROCKCHIP_VENDOR_ID, PCIE_RC_CONFIG_BASE);
--	rockchip_pcie_write(rockchip, PCI_CLASS_BRIDGE_PCI << PCIE_CORE_RC_CONF_SCC_SHIFT,
--		   PCIE_RC_CONFIG_BASE + PCIE_RC_CONFIG_RID_CCR);
--	rockchip_pcie_write(rockchip, 0x0, PCIE_CORE_CTRL_MGMT_BASE + PCIE_RC_BAR_CONF);
-+	rockchip_pcie_write(rockchip, ROCKCHIP_VENDOR_ID,
-+			    PCIE_RC_CONFIG_BASE);
-+	rockchip_pcie_write(rockchip,
-+			    PCI_CLASS_BRIDGE_PCI << PCIE_CORE_RC_CONF_SCC_SHIFT,
-+			    PCIE_RC_CONFIG_RID_CCR);
-+	rockchip_pcie_write(rockchip, 0x0, PCIE_RC_BAR_CONF);
- 
--	rockchip_pcie_write(rockchip, (RC_REGION_0_ADDR_TRANS_L + RC_REGION_0_PASS_BITS),
--		   PCIE_CORE_AXI_CONF_BASE);
-+	rockchip_pcie_write(rockchip,
-+			    (RC_REGION_0_ADDR_TRANS_L + RC_REGION_0_PASS_BITS),
-+			    PCIE_CORE_AXI_CONF_BASE);
- 	rockchip_pcie_write(rockchip, RC_REGION_0_ADDR_TRANS_H,
--		   PCIE_CORE_AXI_CONF_BASE + PCIE_CORE_OB_REGION_ADDR1);
--	rockchip_pcie_write(rockchip, 0x0080000a,
--		   PCIE_CORE_AXI_CONF_BASE + PCIE_CORE_OB_REGION_DESC0);
--	rockchip_pcie_write(rockchip, 0x0,
--		   PCIE_CORE_AXI_CONF_BASE + PCIE_CORE_OB_REGION_DESC1);
-+			    PCIE_CORE_OB_REGION_ADDR1);
-+	rockchip_pcie_write(rockchip, 0x0080000a, PCIE_CORE_OB_REGION_DESC0);
-+	rockchip_pcie_write(rockchip, 0x0, PCIE_CORE_OB_REGION_DESC1);
- 
- 	return 0;
- }
-@@ -619,7 +619,8 @@ static irqreturn_t rockchip_pcie_subsys_irq_handler(int irq, void *arg)
- 		rockchip_pcie_clr_bw_int(rockchip);
- 	}
- 
--	rockchip_pcie_write(rockchip, reg & PCIE_CLIENT_INT_LOCAL, PCIE_CLIENT_INT_STATUS);
-+	rockchip_pcie_write(rockchip, reg & PCIE_CLIENT_INT_LOCAL,
-+			    PCIE_CLIENT_INT_STATUS);
- 
- 	return IRQ_HANDLED;
- }
-@@ -903,8 +904,9 @@ err_out:
- static void rockchip_pcie_enable_interrupts(struct rockchip_pcie *rockchip)
- {
- 	rockchip_pcie_write(rockchip, (PCIE_CLIENT_INT_CLI << 16) &
--		   (~PCIE_CLIENT_INT_CLI), PCIE_CLIENT_INT_MASK);
--	rockchip_pcie_write(rockchip, (u32)(~PCIE_CORE_INT), PCIE_CORE_INT_MASK);
-+			    (~PCIE_CLIENT_INT_CLI), PCIE_CLIENT_INT_MASK);
-+	rockchip_pcie_write(rockchip, (u32)(~PCIE_CORE_INT),
-+			    PCIE_CORE_INT_MASK);
- 
- 	rockchip_pcie_enable_bw_int(rockchip);
- }
-@@ -949,7 +951,7 @@ static int rockchip_pcie_prog_ob_atu(struct rockchip_pcie *rockchip,
- 	u32 ob_addr_0;
- 	u32 ob_addr_1;
- 	u32 ob_desc_0;
--	void __iomem *aw_base;
-+	void __iomem *aw_offset;
- 
- 	if (region_no >= MAX_AXI_WRAPPER_REGION_NUM)
- 		return -EINVAL;
-@@ -966,18 +968,21 @@ static int rockchip_pcie_prog_ob_atu(struct rockchip_pcie *rockchip,
- 			return -EINVAL;
- 	}
- 
--	aw_base = rockchip->apb_base + PCIE_CORE_AXI_CONF_BASE;
--	aw_base += (region_no << OB_REG_SIZE_SHIFT);
-+	aw_offset = (region_no << OB_REG_SIZE_SHIFT);
- 
- 	ob_addr_0 = num_pass_bits & PCIE_CORE_OB_REGION_ADDR0_NUM_BITS;
- 	ob_addr_0 |= lower_addr & PCIE_CORE_OB_REGION_ADDR0_LO_ADDR;
- 	ob_addr_1 = upper_addr;
- 	ob_desc_0 = (1 << 23 | type);
- 
--	writel(ob_addr_0, aw_base);
--	writel(ob_addr_1, aw_base + PCIE_CORE_OB_REGION_ADDR1);
--	writel(ob_desc_0, aw_base + PCIE_CORE_OB_REGION_DESC0);
--	writel(0, aw_base + PCIE_CORE_OB_REGION_DESC1);
-+	rockchip_pcie_writel(rockchip, ob_addr_0,
-+			     PCIE_CORE_AXI_CONF_BASE + aw_offset);
-+	rockchip_pcie_writel(rockchip, ob_addr_1,
-+			     PCIE_CORE_OB_REGION_ADDR1 + aw_offset);
-+	rockchip_pcie_writel(rockchip, ob_desc_0,
-+			     PCIE_CORE_OB_REGION_DESC0 + aw_offset);
-+	rockchip_pcie_writel(rockchip, 0,
-+			     PCIE_CORE_OB_REGION_DESC1 + aw_offset);
- 
- 	return 0;
- }
-@@ -988,7 +993,7 @@ static int rockchip_pcie_prog_ib_atu(struct rockchip_pcie *rockchip,
- {
- 	u32 ib_addr_0;
- 	u32 ib_addr_1;
--	void __iomem *aw_base;
-+	void __iomem *aw_offset;
- 
- 	if (region_no > MAX_AXI_IB_ROOTPORT_REGION_NUM)
- 		return -EINVAL;
-@@ -997,15 +1002,16 @@ static int rockchip_pcie_prog_ib_atu(struct rockchip_pcie *rockchip,
- 	if (num_pass_bits > 63)
- 		return -EINVAL;
- 
--	aw_base = rockchip->apb_base + PCIE_CORE_AXI_INBOUND_BASE;
--	aw_base += (region_no << IB_ROOT_PORT_REG_SIZE_SHIFT);
-+	aw_offset = (region_no << IB_ROOT_PORT_REG_SIZE_SHIFT);
- 
- 	ib_addr_0 = num_pass_bits & PCIE_CORE_IB_REGION_ADDR0_NUM_BITS;
- 	ib_addr_0 |= (lower_addr << 8) & PCIE_CORE_IB_REGION_ADDR0_LO_ADDR;
- 	ib_addr_1 = upper_addr;
- 
--	writel(ib_addr_0, aw_base);
--	writel(ib_addr_1, aw_base + PCIE_RP_IB_ADDR_TRANS);
-+	rockchip_pcie_writel(rockchip, ib_addr_0,
-+			     PCIE_CORE_AXI_INBOUND_BASE + aw_offset);
-+	rockchip_pcie_writel(rockchip, ib_addr_1,
-+			     PCIE_RP_IB_ADDR_TRANS + aw_offset);
- 
- 	return 0;
- }
+-/*
+- * The upper 16 bits of the PCIE_CLIENT registers are a write mask for the
+- * lower 16 bits.  This allows atomic updates of the register without
+- * locking.
+- */
+-#define HIWORD_UPDATE(mask, val)	((mask << 16) | val)
+-
+-#define ENCODE_LANES(x)			(((x >> 1) & 3) << 4)
+-
+-#define PCIE_CLIENT_CONF_ENABLE		HIWORD_UPDATE(0x0001, 0x0001)
+-#define PCIE_CLIENT_LINK_TRAIN_ENABLE	HIWORD_UPDATE(0x0002, 0x0002)
+-#define PCIE_CLIENT_CONF_LANE_NUM(x)	HIWORD_UPDATE(0x0030, ENCODE_LANES(x))
+-#define PCIE_CLIENT_GEN_SEL_2		HIWORD_UPDATE(0x0040, 0x0040)
+-
+-#define PCIE_CLIENT_LINK_STATUS_UP		0x3
+-#define PCIE_CLIENT_LINK_STATUS_SHIFT		20
+-#define PCIE_CLIENT_LINK_STATUS_MASK		0x3
+-#define PCIE_CORE_PL_CONF_SPEED_5G		0x1
+-#define PCIE_CORE_PL_CONF_SPEED_SHIFT		3
+-#define PCIE_CORE_PL_CONF_SPEED_MASK		0x3
+-#define PCIE_CORE_PL_CONF_LANE_SHIFT		1
+-#define PCIE_CORE_PL_CONF_LANE_MASK		0x3
+-#define PCIE_CORE_RC_CONF_SCC_SHIFT		16
+-
+-#define ROCKCHIP_PCIE_RPIFR1_INTR_MASK		GENMASK(8, 5)
+-#define ROCKCHIP_PCIE_RPIFR1_INTR_SHIFT		5
+-
+-#define PCIE_CORE_INT \
+-		(PCIE_CORE_INT_PRFPE | PCIE_CORE_INT_CRFPE | \
+-		 PCIE_CORE_INT_RRPE | PCIE_CORE_INT_CRFO | \
+-		 PCIE_CORE_INT_RT | PCIE_CORE_INT_RTR | \
+-		 PCIE_CORE_INT_PE | PCIE_CORE_INT_MTR | \
+-		 PCIE_CORE_INT_UCR | PCIE_CORE_INT_FCE | \
+-		 PCIE_CORE_INT_CT | PCIE_CORE_INT_UTC | \
+-		 PCIE_CORE_INT_MMVC)
+-
+-#define PCIE_CLIENT_INT_LEGACY \
+-	(PCIE_CLIENT_INT_INTA | PCIE_CLIENT_INT_INTB | \
+-	PCIE_CLIENT_INT_INTC | PCIE_CLIENT_INT_INTD)
+-
+-#define PCIE_CLIENT_INT_CLI \
+-	(PCIE_CLIENT_INT_CORR_ERR | PCIE_CLIENT_INT_NFATAL_ERR | \
+-	PCIE_CLIENT_INT_FATAL_ERR | PCIE_CLIENT_INT_DPA | \
+-	PCIE_CLIENT_INT_HOT_RST | PCIE_CLIENT_INT_MSG | \
+-	PCIE_CLIENT_INT_LEGACY_DONE | PCIE_CLIENT_INT_LEGACY | \
+-	PCIE_CLIENT_INT_PHY)
+-
+ struct rockchip_pcie {
+ 	void	__iomem *reg_base;		/* DT axi-base */
+ 	void	__iomem *apb_base;		/* DT apb-base */
