@@ -1,40 +1,101 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2 v4] iio: gyro: Add MPU-3050 device tree bindings
-Date: Fri, 2 Sep 2016 12:50:06 -0500
-Message-ID: <20160902175006.GA7869@rob-hp-laptop>
-References: <1472646781-5551-1-git-send-email-linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] mfd: arizona: Add DT options for max_channels_clocked
+ and PDM speaker config
+Date: Fri, 2 Sep 2016 12:51:46 -0500
+Message-ID: <CAL_JsqJpO0U3KggMddM4HB5ZNN4V2RW1ih9iQYUuvFihhS_jkA@mail.gmail.com>
+References: <1472635543-21577-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <20160902153458.GA28352@rob-hp-laptop> <1472831784.4359.6.camel@rf-debian.wolfsonmicro.main>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1472646781-5551-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472831784.4359.6.camel-WeElTRBN8n0bEPBeyYQi64iQ8/zYDDdY1BehtkLrGTY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 31, 2016 at 02:33:00PM +0200, Linus Walleij wrote:
-> This adds device tree bindings for the MPU-3050 gyroscope. Since it
-> is the first set of bindings for a gyroscope, the folder for it
-> is also created.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> ChangeLog v3->v4:
-> - No changes, just reposting. If we agree on these bindings and since
->   the dependent I2C bindings are merged, this patch should be merge
->   material now I guess.
-> ChangeLog v2->v3:
-> - Augmented device tree bindings to reflect Peter Rosins now merged
->   I2C gate bindings.
-> ChangeLog v1->v2:
-> - Not yet convered to use i2c-gate as I'm waiting for that
->   patch set to stabilize.
-> ---
->  .../bindings/iio/gyroscope/invensense,mpu3050.txt  | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/invensense,mpu3050.txt
+On Fri, Sep 2, 2016 at 10:56 AM, Richard Fitzgerald
+<rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> On Fri, 2016-09-02 at 10:34 -0500, Rob Herring wrote:
+>> On Wed, Aug 31, 2016 at 10:25:43AM +0100, Richard Fitzgerald wrote:
+>> > This patch adds DT settings for the max_channels_clocked, spk_fmt and
+>> > spk_mute pdata.
+>> >
+>> > Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+>> > ---
+>> >  Documentation/devicetree/bindings/mfd/arizona.txt | 11 ++++++++
+>>
+>> Binding looks fine, but...
+>>
+>> >  drivers/mfd/arizona-core.c                        | 31 +++++++++++++++++++++++
+>> >  2 files changed, 42 insertions(+)
+>>
+>> > diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+>> > index b95ff2d..36a9633 100644
+>> > --- a/drivers/mfd/arizona-core.c
+>> > +++ b/drivers/mfd/arizona-core.c
+>> > @@ -816,6 +816,37 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
+>> >             count++;
+>> >     }
+>> >
+>> > +   count = 0;
+>> > +   of_property_for_each_u32(arizona->dev->of_node,
+>> > +                            "wlf,max-channels-clocked",
+>> > +                            prop, cur, val) {
+>> > +           if (count == ARRAY_SIZE(pdata->max_channels_clocked))
+>> > +                   break;
+>> > +
+>> > +           pdata->max_channels_clocked[count] = val;
+>> > +           count++;
+>> > +   }
+>>
+>> of_property_read_u32_array doesn't work for you?
+>
+> No, it doesn't, because it doesn't read a variable-sized array.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+But the next 2 loops are fixed with 2 elements, right? They should be
+converted. If not fixed size, you have the same pattern repeated 3
+times.
+
+Maybe we should fix of_property_read_u32_array to be more flexible and
+return an array less than a max size. Not sure if anyone relies on
+that case failing though, so leaving the 1st loop is fine.
+
+Rob
+
+>> > +   count = 0;
+>> > +   of_property_for_each_u32(arizona->dev->of_node, "wlf,spk-fmt", prop,
+>> > +                            cur, val) {
+>> > +           if (count == ARRAY_SIZE(pdata->spk_fmt))
+>> > +                   break;
+>> > +
+>> > +           pdata->spk_fmt[count] = val;
+>> > +           count++;
+>> > +   }
+>> > +
+>> > +   count = 0;
+>> > +   of_property_for_each_u32(arizona->dev->of_node, "wlf,spk-mute", prop,
+>> > +                            cur, val) {
+>> > +           if (count == ARRAY_SIZE(pdata->spk_mute))
+>> > +                   break;
+>> > +
+>> > +           pdata->spk_mute[count] = val;
+>> > +           count++;
+>> > +   }
+>> > +
+>> >     return 0;
+>> >  }
+>> >
+>> > --
+>> > 1.9.1
+>> >
+>> > --
+>> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
