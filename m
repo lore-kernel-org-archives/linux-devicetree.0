@@ -1,86 +1,78 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2] mfd: arizona: Add DT options for
- max_channels_clocked and PDM speaker config
-Date: Fri, 2 Sep 2016 16:56:24 +0100
-Message-ID: <1472831784.4359.6.camel@rf-debian.wolfsonmicro.main>
-References: <1472635543-21577-1-git-send-email-rf@opensource.wolfsonmicro.com>
-         <20160902153458.GA28352@rob-hp-laptop>
+From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [tpmdd-devel] [PATCH] Documentation: tpm: Adds the TPM device
+ tree node documentation
+Date: Fri, 2 Sep 2016 19:00:56 +0300
+Message-ID: <20160902160056.GA13795@intel.com>
+References: <1472532277-21933-1-git-send-email-nayna@linux.vnet.ibm.com>
+ <20160830063631.GA5336@intel.com>
+ <20160902145238.GB9636@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160902153458.GA28352@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160902145238.GB9636@rob-hp-laptop>
+Sender: linux-i2c-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: lee.jones@linaro.org, patches@opensource.wolfsonmicro.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Nayna Jain <nayna@linux.vnet.ibm.com>, tpmdd-devel@lists.sourceforge.net, devicetree@vger.kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, wsa@the-dreams.de, gcwilson@us.ibm.com, linux-i2c@vger.kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-09-02 at 10:34 -0500, Rob Herring wrote:
-> On Wed, Aug 31, 2016 at 10:25:43AM +0100, Richard Fitzgerald wrote:
-> > This patch adds DT settings for the max_channels_clocked, spk_fmt and
-> > spk_mute pdata.
+On Fri, Sep 02, 2016 at 09:52:38AM -0500, Rob Herring wrote:
+> On Tue, Aug 30, 2016 at 09:36:31AM +0300, Jarkko Sakkinen wrote:
+> > On Tue, Aug 30, 2016 at 12:44:37AM -0400, Nayna Jain wrote:
+> > > This is documenting device tree binding for
+> > > I2C based TPM, similar concept which being used
+> > > for virtual TPM on POWER7 and POWER8 systems running PowerVM.
+> > > 
+> > > Signed-off-by: Nayna Jain <nayna@linux.vnet.ibm.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/i2c/i2c-tpm.txt | 29 +++++++++++++++++++++++
+> > >  1 file changed, 29 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-tpm.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/i2c/i2c-tpm.txt b/Documentation/devicetree/bindings/i2c/i2c-tpm.txt
+> > > new file mode 100644
+> > > index 0000000..8fdee14
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/i2c/i2c-tpm.txt
+> > > @@ -0,0 +1,29 @@
+> > > +Device Tree Bindings for I2C based Trusted Platform Module(TPM)
+> > > +---------------------------------------------------------------
+> > > +
+> > > +This node describes a TPM device connected to Processor on i2c bus.
+> > > +
+> > > +Required properties:
+> > > +
+> > > +- compatible : 'manufacturer,model'
+> > > +- label : represents device type
+> > > +- linux,sml-base : base address of the Event Log. It is a physical address.
+> > > +		   sml stands for shared memory log.
+> > > +- linux,sml-size : size of the memory allocated for the Event Log.
+> > > +
+> > > +Optional properties:
+> > > +
+> > > +- status: indicates whether the device is enabled or disabled. "okay" for
+> > > +          enabled and "disabled" for disabled.
+> > > +
+> > > +Example
+> > > +-------
+> > > +
+> > > +tpm@57 {
+> > > +	reg = <0x57>;
+> > > +	label = "tpm";
+> > > +	compatible = "nuvoton,npct650", "nuvoton,npct601";
+> > > +	linux,sml-base = <0x7f 0xfd450000>;
+> > > +	linux,sml-size = <0x10000>;
+> > > +	status = "okay";
+> > > +};
 > > 
-> > Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/arizona.txt | 11 ++++++++
-> 
-> Binding looks fine, but...
-> 
-> >  drivers/mfd/arizona-core.c                        | 31 +++++++++++++++++++++++
-> >  2 files changed, 42 insertions(+)
-> 
-> > diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-> > index b95ff2d..36a9633 100644
-> > --- a/drivers/mfd/arizona-core.c
-> > +++ b/drivers/mfd/arizona-core.c
-> > @@ -816,6 +816,37 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
-> >  		count++;
-> >  	}
-> >  
-> > +	count = 0;
-> > +	of_property_for_each_u32(arizona->dev->of_node,
-> > +				 "wlf,max-channels-clocked",
-> > +				 prop, cur, val) {
-> > +		if (count == ARRAY_SIZE(pdata->max_channels_clocked))
-> > +			break;
-> > +
-> > +		pdata->max_channels_clocked[count] = val;
-> > +		count++;
-> > +	}
-> 
-> of_property_read_u32_array doesn't work for you?
-
-No, it doesn't, because it doesn't read a variable-sized array.
-
-> 
-> > +
-> > +	count = 0;
-> > +	of_property_for_each_u32(arizona->dev->of_node, "wlf,spk-fmt", prop,
-> > +				 cur, val) {
-> > +		if (count == ARRAY_SIZE(pdata->spk_fmt))
-> > +			break;
-> > +
-> > +		pdata->spk_fmt[count] = val;
-> > +		count++;
-> > +	}
-> > +
-> > +	count = 0;
-> > +	of_property_for_each_u32(arizona->dev->of_node, "wlf,spk-mute", prop,
-> > +				 cur, val) {
-> > +		if (count == ARRAY_SIZE(pdata->spk_mute))
-> > +			break;
-> > +
-> > +		pdata->spk_mute[count] = val;
-> > +		count++;
-> > +	}
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > -- 
-> > 1.9.1
+> > I would rather name the fields event-log-base and event-log-size. They
+> > would be much more readable and obvious names.
 > > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > Also, enabled should be "enabled", not "okay".
+> 
+> No, okay is correct. But as I mentioned, don't document it here.
+
+We'll stick to sml-base and sml-size because the existing code binds
+already to those names.
+
+/Jakrko
