@@ -1,49 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 13/26] dt-bindings: Document mti,mips-cdmm binding
-Date: Fri, 2 Sep 2016 07:38:28 -0500
-Message-ID: <20160902123828.GA1327@rob-hp-laptop>
-References: <20160826153725.11629-1-paul.burton@imgtec.com>
- <20160826153725.11629-14-paul.burton@imgtec.com>
+From: Paul Burton <paul.burton@imgtec.com>
+Subject: Re: [PATCH v2 3/4] hw_random: jz4780-rng: Add RNG node to jz4780.dtsi
+Date: Fri, 2 Sep 2016 13:47:18 +0100
+Message-ID: <4a7fb1cb-e0d4-31b7-7016-35adb63a659d@imgtec.com>
+References: <1472321697-3094-1-git-send-email-prasannatsmkumar@gmail.com>
+ <1472321697-3094-4-git-send-email-prasannatsmkumar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160826153725.11629-14-paul.burton@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Burton <paul.burton@imgtec.com>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1472321697-3094-4-git-send-email-prasannatsmkumar@gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Cc: mpm@selenic.com, herbert@gondor.apana.org.au, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, gregkh@linuxfoundation.org, boris.brezillon@free-electrons.com, harvey.hunt@imgtec.com, prarit@redhat.com, f.fainelli@gmail.com, joshua.henderson@microchip.com, narmstrong@baylibre.com, linus.walleij@linaro.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 26, 2016 at 04:37:12PM +0100, Paul Burton wrote:
-> Document a binding for the MIPS Common Device Memory Map (CDMM) which
-> simply allows the device tree to specify where the CDMM registers should
-> be mapped.
+
+
+On 27/08/16 19:14, PrasannaKumar Muralidharan wrote:
+> This patch adds RNG node to jz4780.dtsi.
 > 
-> Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
 > ---
+>  arch/mips/boot/dts/ingenic/jz4780.dtsi | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
->  Documentation/devicetree/bindings/misc/mti,mips-cdmm.txt | 8 ++++++++
+> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> index b868b42..f11d139 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> @@ -36,7 +36,7 @@
+>  
+>  	cgu: jz4780-cgu@10000000 {
+>  		compatible = "ingenic,jz4780-cgu";
+> -		reg = <0x10000000 0x100>;
+> +		reg = <0x10000000 0xD8>;
 
-Try to find another location for these. Perhaps bindings/bus/? Even 
-bindings/mips/ would be better. 
+Hi PrasannaKumar,
 
->  1 file changed, 8 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/mti,mips-cdmm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/mti,mips-cdmm.txt b/Documentation/devicetree/bindings/misc/mti,mips-cdmm.txt
-> new file mode 100644
-> index 0000000..5b0fc40
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/mti,mips-cdmm.txt
-> @@ -0,0 +1,8 @@
-> +Binding for MIPS Common Device Memory Map (CDMM) bus.
+I don't like this change. The RNG registers are documented as a part of
+the same hardware block as the clock & power stuff which the CGU driver
+handles, and indeed in the M200 SoC there is a power-related register
+after the RNG registers. So shortening the range covered by the CGU
+driver is not the right way to go.
+
+Perhaps you could instead have the CGU driver make use of the syscon
+infrastructure to expose a regmap which your RNG driver could pick up & use?
+
+Thanks,
+    Paul
+
+>  
+>  		clocks = <&ext>, <&rtc>;
+>  		clock-names = "ext", "rtc";
+> @@ -44,6 +44,11 @@
+>  		#clock-cells = <1>;
+>  	};
+>  
+> +	rng: jz4780-rng@100000D8 {
+> +		compatible = "ingenic,jz4780-rng";
+> +		reg = <0x100000D8 0x8>;
+> +	};
 > +
-> +This binding allows a system to specify where the CDMM registers should be
-> +mapped using device tree.
-> +
-> +Required properties:
-> +compatible : Should be "mti,mips-cdmm".
-> +regs: Should describe the address & size of the CDMM register region.
-> -- 
-> 2.9.3
+>  	uart0: serial@10030000 {
+>  		compatible = "ingenic,jz4780-uart";
+>  		reg = <0x10030000 0x100>;
 > 
