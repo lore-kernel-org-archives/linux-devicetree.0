@@ -1,36 +1,46 @@
-From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH] iio: sx9500: add final devicetree support
-Date: Fri, 02 Sep 2016 17:04:31 +0200
-Message-ID: <1472828671.1929.32.camel@googlemail.com>
-References: <1472827740.1929.26.camel@googlemail.com>
-         <CAOMZO5BeL1EKOQvZQoXXObttHSKxL7UQ1s2r8H4EOuROOb_YnQ@mail.gmail.com>
-Reply-To: chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: am57xx-beagle-x15: Add support for rev B1
+Date: Fri, 2 Sep 2016 08:06:49 -0700
+Message-ID: <20160902150648.lgbhxvyapo4p3lg3@atomide.com>
+References: <20160902090600.27262-1-nm@ti.com>
+ <20160902090600.27262-3-nm@ti.com>
+ <dd74f5e1-304f-661e-7fd9-f5f81bcfc55e@ti.com>
+ <CAOCHtYiFjB-cuABmCiw96spc-De+qNNQYGrjp-MmNDuH2mJ9Bw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5BeL1EKOQvZQoXXObttHSKxL7UQ1s2r8H4EOuROOb_YnQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vlad Dogaru <ddvlad-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOCHtYiFjB-cuABmCiw96spc-De+qNNQYGrjp-MmNDuH2mJ9Bw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-09-02 at 11:53 -0300, Fabio Estevam wrote:
-> On Fri, Sep 2, 2016 at 11:49 AM, Christoph Fritz
-> <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+* Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [160902 06:52]:
+> On Fri, Sep 2, 2016 at 5:41 AM, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> wrote:
+> > Instead, it seems to be easier for maintenance and safer overall if the
+> > older version has a file of its own which can be kept alone.
+> >
+> > Also, how about renaming the existing dts to am57xx-beagle-x15-reva2.dts
+> > and let the production version be called am57xx-beagle-x15.dts? Surely
+> > this will cause some inconvenience to A2 users. But there are few users
+> > of those and it might be more intuitive for the majority users if the
+> > file for production version is without a specific version string
+> > attached. Just a thought though, not sure about it myself either.
 > 
-> > +sx9500@28 {
-> > +       compatible = "semtech,sx9500";
-> > +       reg = <0x28>;
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&pinctrl_sx9500>;
-> > +       interrupt-parent = <&gpio2>;
-> > +       interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
-> > +       reset-gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;
+> Nak, let's NOT do that to A2 users.
 > 
-> Datasheet says the reset is active low.
+> The am57xx-beagle-x15.dts went mainline in v3.19, u-boot installed on
+> devices would need to be updated and this would make bisecting a pain.
+> ;)
 
-Here on my board I'm using the reset pin as an open-drain with external
-pullup, so GPIO_ACTIVE_HIGH is valid.
+I agree, let's keep things working without forcing people to update
+their u-boot enviroment for the dtb name.
 
-As this is an example, I don't care if it says _HIGH or _LOW.
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
