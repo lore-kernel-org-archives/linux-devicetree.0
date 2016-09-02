@@ -1,55 +1,49 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] rtc: add support for EPSON TOYOCOM RTC-7301SF/DG
-Date: Fri, 2 Sep 2016 09:08:05 -0500
-Message-ID: <20160902140805.GA18646@rob-hp-laptop>
-References: <1472396118-13424-1-git-send-email-akinobu.mita@gmail.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Subject: Re: [PATCH v2] input: touchscreen: Add support for Elan eKTF2127
+ touchscreen controller
+Date: Fri, 2 Sep 2016 09:09:35 -0500
+Message-ID: <20160902140935.GA19453@rob-hp-laptop>
+References: <20160828160005.20415-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDJIP47K7MERBSMPU27AKGQEAFITZUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1472396118-13424-1-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20160828160005.20415-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Siebren Vroegindeweij <siebren.vroegindeweij-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michel Verlaan <michel.verl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Siebren Vroegindeweij <siebren.vroegindeweij-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 28, 2016 at 11:55:18PM +0900, Akinobu Mita wrote:
-> This adds support for EPSON TOYOCOM RTC-7301SF/DG which has parallel
-> interface compatible with SRAM.
+On Sun, Aug 28, 2016 at 06:00:05PM +0200, Hans de Goede wrote:
+> From: Siebren Vroegindeweij <siebren.vroegindeweij-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
 > 
-> This driver supports basic clock, calendar and alarm functionality.
+> This adds a driver for the Elan eKTF2127 touchscreen controller,
+> which speaks an i2c protocol which is distinctly different from
+> the already supported eKTH controllers.
 > 
-> Tested with Microblaze linux running on Artix7 FPGA board with my own
-> custom IP for RTC-7301.
-> 
-> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
-> Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Michel Verlaan <michel.verl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Siebren Vroegindeweij <siebren.vroegindeweij-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > ---
->  .../devicetree/bindings/rtc/epson,rtc7301.txt      |  15 +
+> Changes in v2:
+> -Improve devicetree bindings document
+> -Use touchscreen_parse_properties and touchscreen_report_pos instead of DIY
+> -Remove a bunch of unused defines (copy and paste leftover from chipone driver)
+> -Some other minor cleanups and review comments addressed
+> -Add defines for some command / address hex-values
+> -Check packet header in interrupt handler
+> ---
+>  .../bindings/input/touchscreen/ektf2127.txt        |  27 ++
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
->  drivers/rtc/Kconfig                                |  11 +
->  drivers/rtc/Makefile                               |   1 +
->  drivers/rtc/rtc-r7301.c                            | 458 +++++++++++++++++++++
->  4 files changed, 485 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/epson,rtc7301.txt
->  create mode 100644 drivers/rtc/rtc-r7301.c
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+>  drivers/input/touchscreen/Kconfig                  |  12 +
+>  drivers/input/touchscreen/Makefile                 |   1 +
+>  drivers/input/touchscreen/ektf2127.c               | 333 +++++++++++++++++++++
+>  4 files changed, 373 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/ektf2127.txt
+>  create mode 100644 drivers/input/touchscreen/ektf2127.c
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
