@@ -1,15 +1,15 @@
 From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] nvmem: rockchip-efuse: update compatible strings
- for Rockchip efuse
-Date: Thu, 1 Sep 2016 20:54:24 -0700
-Message-ID: <CAD=FV=UTUAhHQd2pvS+zeRcyPe9XPD4YGjVLy2FRp2uR03NvDQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/4] ARM: dts: rockchip: update compatible strings for
+ Rockchip efuse
+Date: Thu, 1 Sep 2016 20:54:55 -0700
+Message-ID: <CAD=FV=VjqCeXnGguJzYCRboSGkOst3Findp5PxsNC9zSDKUN=g@mail.gmail.com>
 References: <1472786217-52214-1-git-send-email-finley.xiao@rock-chips.com>
- <1472786217-52214-2-git-send-email-finley.xiao@rock-chips.com>
+ <1472786217-52214-3-git-send-email-finley.xiao@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1472786217-52214-2-git-send-email-finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1472786217-52214-3-git-send-email-finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -26,18 +26,12 @@ List-Id: devicetree@vger.kernel.org
 Hi,
 
 On Thu, Sep 1, 2016 at 8:16 PM, Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Rk3399-efuse is organized as 32bits by 32 one-time programmable electrical
-> fuses. The efuse of earlier SoCs are organized as 32bits by 8 one-time
-> programmable electrical fuses with random access interface.
->
-> Add different device tree compatible string for different SoCs to be able
-> to differentiate between the two. The old binding is of course preserved,
-> though deprecated.
->
 > Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
+>  arch/arm/boot/dts/rk3066a.dtsi | 2 +-
+>  arch/arm/boot/dts/rk3188.dtsi  | 2 +-
+>  arch/arm/boot/dts/rk3288.dtsi  | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 
 Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
