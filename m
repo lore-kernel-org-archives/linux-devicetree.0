@@ -1,256 +1,75 @@
-From: Lin Huang <hl@rock-chips.com>
-Subject: [PATCH v9 3/5] Documentation: bindings: add dt documentation for rk3399 dmc
-Date: Sat,  3 Sep 2016 05:08:43 +0800
-Message-ID: <1472850525-25273-4-git-send-email-hl@rock-chips.com>
-References: <1472850525-25273-1-git-send-email-hl@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472850525-25273-1-git-send-email-hl@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: myungjoo.ham@samsung.com, mark.yao@rock-chips.com, cw00.choi@samsung.com, airlied@linux.ie, mturquette@baylibre.com, dbasehore@chromium.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, tixy@linaro.org, typ@rock-chips.com, sudeep.holla@arm.com, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Lin Huang <hl@rock-chips.com>
+From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Subject: [PATCH 2/3] MIPS: OCTEON: add DTS for D-Link DSR-500N
+Date: Sat,  3 Sep 2016 00:11:35 +0300
+Message-ID: <20160902211136.8610-3-aaro.koskinen@iki.fi>
+References: <20160902211136.8610-1-aaro.koskinen@iki.fi>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160902211136.8610-1-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the documentation for rockchip rk3399 dmc driver.
+Add DTS for D-Link DSR-500N.
 
-Signed-off-by: Lin Huang <hl@rock-chips.com>
+Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 ---
-Changes in v9:
-- add ddr timing property to node
+ .../mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts | 42 ++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+ create mode 100644 arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts
 
-Changes in v8:
-- add ddr timing properties
-
-Changes in v7:
-- None
-
-Changes in v6:
--Add more detail in Documentation
-
-Changes in v5:
--None
-
-Changes in v4:
--None
-
-Changes in v3:
--None
-
-Changes in v2:
--None 
-
-Changes in v1:
--None
- .../devicetree/bindings/devfreq/rk3399_dmc.txt     | 202 +++++++++++++++++++++
- 1 file changed, 202 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-
-diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
+diff --git a/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts b/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts
 new file mode 100644
-index 0000000..f187c8fa
+index 0000000..6cacabb
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-@@ -0,0 +1,202 @@
-+* Rockchip rk3399 DMC(Dynamic Memory Controller) device
++++ b/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts
+@@ -0,0 +1,42 @@
++/*
++ * Device tree source for D-Link DSR-500N.
++ *
++ * Written by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
 +
-+Required properties:
-+- compatible:		 Must be "rockchip,rk3399-dmc".
-+- devfreq-events:	 Node to get DDR loading, Refer to
-+			 Documentation/devicetree/bindings/devfreq/
-+			 rockchip-dfi.txt
-+- interrupts:		 The interrupt number to the CPU. The interrupt
-+			 specifier format depends on the interrupt controller.
-+			 It should be DCF interrupts, when DDR dvfs finish,
-+			 it will happen.
-+- clocks:		 Phandles for clock specified in "clock-names" property
-+- clock-names :		 The name of clock used by the DFI, must be
-+			 "pclk_ddr_mon";
-+- operating-points-v2:	 Refer to Documentation/devicetree/bindings/power/opp.txt
-+			 for details.
-+- center-supply:	 DMC supply node.
-+- status:		 Marks the node enabled/disabled.
++/include/ "dlink_dsr-500n-1000n.dtsi"
++#include <dt-bindings/gpio/gpio.h>
 +
-+Following properties are ddr timing:
++/ {
++	model = "dlink,dsr-500n";
++	compatible = "dlink,dsr-500n", "cavium,octeon-3860";
 +
-+- dram_speed_bin :	 Value is defined at include/dt-bindings/clock/ddr.h,
-+			 it select ddr3 cl-trp-trcd type, default value
-+			 "DDR3_DEFAULT".it must selected according to
-+			 "Speed Bin" in ddr3 datasheet, DO NOT use smaller
-+			 "Speed Bin" than ddr3 exactly is.
-+
-+- pd_idle :		 Config the PD_IDLE value, defined the power-down idle
-+			 period, memories are places into power-down mode if
-+			 bus is idle for PD_IDLE DFI clocks.
-+
-+- sr_idle :		 Configure the SR_IDLE value, defined the selfrefresh
-+			 idle period, memories are places into self-refresh
-+			 mode if bus is idle for SR_IDLE*1024 DFI clocks
-+			 (DFI clocks freq is half of dram's clocks), defaule
-+			 value is "0".
-+
-+- sr_mc_gate_idle :	 Defined the self-refresh with memory and controller
-+			 clock gating idle period, memories are places into
-+			 self-refresh mode and memory controller clock arg
-+			 gating if bus is idle for sr_mc_gate_idle*1024 DFI
-+			 clocks.
-+
-+- srpd_lite_idle :	 Defined the self-refresh power down idle period,
-+			 memories are places into self-refresh power down
-+			 mode if bus is idle for srpd_lite_idle*1024 DFI
-+			 clocks. This parameter is for LPDDR4 only.
-+
-+- standby_idle :	 Defined the standby idle period, memories are places
-+			 into self-refresh than controller, pi, phy and dram
-+			 clock will gating if bus is idle for
-+			 standby_idle * DFI clocks.
-+
-+- dram_dll_disb_freq :	 It's defined the DDR3 dll bypass frequency in MHz
-+			 when ddr freq less than DRAM_DLL_DISB_FREQ, ddr3
-+			 dll will bypssed note: if dll was bypassed, the
-+			 odt also stop working.
-+
-+- phy_dll_disb_freq :	 Defined the PHY dll bypass frequency in MHz (Mega Hz),
-+			 when ddr freq less than DRAM_DLL_DISB_FREQ, phy dll
-+			 will bypssed. note: phy dll and phy odt are
-+			 independent
-+
-+- ddr3_odt_disb_freq :	 When dram type is DDR3, this parameter defined the
-+			 odt disable frequency in MHz (Mega Hz), when ddr
-+			 frequency less then ddr3_odt_disb_freq, the odt
-+			 on dram side and controller side are both disabled.
-+
-+- ddr3_drv :		 When dram type is DDR3, this parameter define the
-+			 dram side driver stength in ohm, default value is
-+			 DDR3_DS_40ohm.
-+
-+- ddr3_odt :		 When dram type is DDR3, this parameter define the
-+			 dram side ODT stength in ohm, default value is
-+			 DDR3_ODT_120ohm.
-+
-+- phy_ddr3_ca_drv :	 When dram type is DDR3, this parameter define the phy
-+			 side CA line(incluing command line, address line and
-+			 clock line) driver strength. default value is
-+			 PHY_DRV_ODT_40.
-+
-+- phy_ddr3_dq_drv :	 When dram type is DDR3, this parameter define the phy
-+			 side DQ line(incluing DQS/DQ/DM line) driver strength.
-+			 default value is PHY_DRV_ODT_40.
-+
-+- phy_ddr3_odt : 	 When dram type is DDR3, this parameter define the
-+			 phy side odt strength, default value is
-+			 PHY_DRV_ODT_240.
-+
-+- lpddr3_odt_disb_freq : When dram type is LPDDR3, this parameter defined then
-+			 odt disable frequency in MHz (Mega Hz), when ddr
-+			 frequency less then ddr3_odt_disb_freq, the odt on
-+			 dram side and controller side are both disabled.
-+
-+- lpddr3_drv :		 When dram type is LPDDR3, this parameter define the
-+			 dram side driver stength in ohm, default value is
-+			 LP3_DS_34ohm.
-+
-+- lpddr3_odt :		 When dram type is LPDDR3, this parameter define the
-+			 dram side ODT stength in ohm, default value is
-+			 LP3_ODT_240ohm.
-+
-+- phy_lpddr3_ca_drv :	 When dram type is LPDDR3, this parameter define the
-+			 phy side CA line(incluing command line, address line
-+			 and clock line) driver strength. default value is
-+			 PHY_DRV_ODT_40.
-+
-+- phy_lpddr3_dq_drv :	 When dram type is LPDDR3, this parameter define the
-+			 phy side DQ line(incluing DQS/DQ/DM line) driver
-+			 strength. default value is PHY_DRV_ODT_40.
-+
-+- phy_lpddr3_odt : 	 When dram type is LPDDR3, this parameter define the phy
-+			 side odt strength, default value is PHY_DRV_ODT_240.
-+
-+- lpddr4_odt_disb_freq : When dram type is LPDDR4, this parameter defined the
-+			 odt disable frequency in MHz (Mega Hz), when ddr
-+			 frequency less then ddr3_odt_disb_freq, the odt on
-+			 dram side and controller side are both disabled.
-+
-+- lpddr4_drv :		 When dram type is LPDDR4, this parameter define the
-+			 dram side driver stength in ohm, default value is
-+			 LP4_PDDS_60ohm.
-+
-+- lpddr4_dq_odt : 	 When dram type is LPDDR4, this parameter define the
-+			 dram side ODT on dqs/dq line stength in ohm, default
-+			 value is LP4_DQ_ODT_40ohm.
-+
-+- lpddr4_ca_odt :	 When dram type is LPDDR4, this parameter define the
-+			 dram side ODT on ca line stength in ohm, default value
-+			 is LP4_CA_ODT_40ohm.
-+
-+- phy_lpddr4_ca_drv :	 When dram type is LPDDR4, this parameter define the
-+			 phy side  CA line(incluing command address line)
-+			 driver strength. default value is PHY_DRV_ODT_40.
-+
-+- phy_lpddr4_ck_cs_drv : When dram type is LPDDR4, this parameter define the
-+			 phy side clock line and cs line driver strength.
-+			 default value is PHY_DRV_ODT_80.
-+
-+- phy_lpddr4_dq_drv :	 When dram type is LPDDR4, this parameter define the
-+			 phy side DQ line(incluing DQS/DQ/DM line) driver
-+			 strength. default value is PHY_DRV_ODT_80.
-+
-+- phy_lpddr4_odt :	 When dram type is LPDDR4, this parameter define the
-+			 phy side odt strength, default value is PHY_DRV_ODT_60.
-+
-+Example:
-+	dmc_opp_table: dmc_opp_table {
-+		compatible = "operating-points-v2";
-+
-+		opp00 {
-+			opp-hz = /bits/ 64 <300000000>;
-+			opp-microvolt = <900000>;
-+		};
-+		opp01 {
-+			opp-hz = /bits/ 64 <666000000>;
-+			opp-microvolt = <900000>;
++	soc@0 {
++		uart0: serial@1180000000800 {
++			clock-frequency = <300000000>;
 +		};
 +	};
 +
-+	dmc: dmc {
-+		compatible = "rockchip,rk3399-dmc";
-+		devfreq-events = <&dfi>;
-+		interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_DDRCLK>;
-+		clock-names = "dmc_clk";
-+		operating-points-v2 = <&dmc_opp_table>;
-+		center-supply = <&ppvar_centerlogic>;
-+		upthreshold = <15>;
-+		downdifferential = <10>;
-+		rockchip,ddr3_speed_bin = <21>;
-+		rockchip,pd_idle = <0x40>;
-+		rockchip,sr_idle = <0x2>;
-+		rockchip,sr_mc_gate_idle = <0x3>;
-+		rockchip,srpd_lite_idle	= <0x4>;
-+		rockchip,standby_idle = <0x2000>;
-+		rockchip,dram_dll_dis_freq = <300>;
-+		rockchip,phy_dll_dis_freq = <125>;
-+		rockchip,auto_pd_dis_freq = <666>;
-+		rockchip,ddr3_odt_dis_freq = <333>;
-+		rockchip,ddr3_drv = <DDR3_DS_40ohm>;
-+		rockchip,ddr3_odt = <DDR3_ODT_120ohm>;
-+		rockchip,phy_ddr3_ca_drv = <PHY_DRV_ODT_40>;
-+		rockchip,phy_ddr3_dq_drv = <PHY_DRV_ODT_40>;
-+		rockchip,phy_ddr3_odt = <PHY_DRV_ODT_240>;
-+		rockchip,lpddr3_odt_dis_freq = <333>;
-+		rockchip,lpddr3_drv = <LP3_DS_34ohm>;
-+		rockchip,lpddr3_odt = <LP3_ODT_240ohm>;
-+		rockchip,phy_lpddr3_ca_drv = <PHY_DRV_ODT_40>;
-+		rockchip,phy_lpddr3_dq_drv = <PHY_DRV_ODT_40>;
-+		rockchip,phy_lpddr3_odt = <PHY_DRV_ODT_240>;
-+		rockchip,lpddr4_odt_dis_freq = <333>;
-+		rockchip,lpddr4_drv = <LP4_PDDS_60ohm>;
-+		rockchip,lpddr4_dq_odt = <LP4_DQ_ODT_40ohm>;
-+		rockchip,lpddr4_ca_odt = <LP4_CA_ODT_40ohm>;
-+		rockchip,phy_lpddr4_ca_drv = <PHY_DRV_ODT_40>;
-+		rockchip,phy_lpddr4_ck_cs_drv = <PHY_DRV_ODT_80>;
-+		rockchip,phy_lpddr4_dq_drv = <PHY_DRV_ODT_80>;
-+		rockchip,phy_lpddr4_odt = <PHY_DRV_ODT_60>;
-+		status = "disabled";
-+	};
++	leds {
++		compatible = "gpio-leds";
 +
++		usb {
++			label = "usb";
++			gpios = <&gpio 9 GPIO_ACTIVE_LOW>;
++		};
++
++		wps {
++			label = "wps";
++			gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
++		};
++
++		wireless {
++			label = "2.4g";
++			gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
 -- 
-2.6.6
+2.9.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
