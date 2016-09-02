@@ -1,48 +1,27 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 1/2] ARM: dts: am57xx-beagle-x15: Remove pinmux
- configurations
-Date: Fri, 2 Sep 2016 09:52:21 -0500
-Message-ID: <007b3c61-ec4c-a89d-e80e-adcec314e298@ti.com>
-References: <20160902090600.27262-1-nm@ti.com>
- <20160902090600.27262-2-nm@ti.com>
- <9bdf5693-ba02-8ce5-04b0-08875ccf7603@ti.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] iio: sx9500: add final devicetree support
+Date: Fri, 2 Sep 2016 11:53:52 -0300
+Message-ID: <CAOMZO5BeL1EKOQvZQoXXObttHSKxL7UQ1s2r8H4EOuROOb_YnQ@mail.gmail.com>
+References: <1472827740.1929.26.camel@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9bdf5693-ba02-8ce5-04b0-08875ccf7603@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472827740.1929.26.camel-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vlad Dogaru <ddvlad-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/2016 05:18 AM, Sekhar Nori wrote:
-> On Friday 02 September 2016 02:35 PM, Nishanth Menon wrote:
->> pinmuxing for DRA7x/AM57x family of processors need to be done in IO
->> isolation as part of initial bootloader executed from SRAM. This is
->> done as part of iodelay configuration sequence and is required due to
->> the limitations introduced by erratum ID: i869[1] and elaborated in
->> the Technical Reference Manual[2] 18.4.6.1.7 Isolation Requirements.
->>
->> Only peripheral that is permitted for dynamic pin mux configuration is
->> MMC. This is to accommodate the requirements for varied speeds (which
->
-> Actually its MMC and DCAN. DCAN because of i893 ("DCAN Initialization
-> Sequence"). But I can see you may have omitted reference to it since
-> DCAN is not really used on the x15.
+On Fri, Sep 2, 2016 at 11:49 AM, Christoph Fritz
+<chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
 
-True, I should add that for completeness. will do. thanks for catching 
-the same.
+> +sx9500@28 {
+> +       compatible = "semtech,sx9500";
+> +       reg = <0x28>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_sx9500>;
+> +       interrupt-parent = <&gpio2>;
+> +       interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
+> +       reset-gpios = <&gpio2 10 GPIO_ACTIVE_HIGH>;
 
-
--- 
-Regards,
-Nishanth Menon
+Datasheet says the reset is active low.
