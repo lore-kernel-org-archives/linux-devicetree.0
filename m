@@ -1,76 +1,122 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH v3 03/22] usb: ulpi: Support device discovery via device properties
-Date: Fri, 2 Sep 2016 18:14:25 -0700
-Message-ID: <CAJOFmgw-gCz_NnqHs2dzMJpt7WdTE0FGC6972fhFsXSg6eMaHw@mail.gmail.com>
-References: <20160901004036.23936-1-stephen.boyd@linaro.org>
- <20160901004036.23936-4-stephen.boyd@linaro.org> <20160902140922.GC21737@kuha.fi.intel.com>
+From: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
+Subject: RE: [PATCH 2/4] thermal: rcar_gen3_thermal: Add R-Car Gen3 thermal
+ driver support
+Date: Sat, 3 Sep 2016 02:10:43 +0000
+Message-ID: <SIXPR06MB09062091B864265A73F5D6FDA8E40@SIXPR06MB0906.apcprd06.prod.outlook.com>
+References: <57661211.7010900@rvc.renesas.com>
+        <576612DE.3070204@rvc.renesas.com>
+ <8760t4skro.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160902140922.GC21737@kuha.fi.intel.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Linux USB List <linux-usb@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8760t4skro.wl%kuninori.morimoto.gx@renesas.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <damm+renesas@opensource.se>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Thao Phuong Le. Nguyen" <thao.nguyen.yb@rvc.renesas.com>, Khiem Nguyen <khiem.nguyen.xt@renesas.com>, Toru Oishi <toru.oishi.zj@renesas.com>, Hien Dang <hien.dang.eb@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 2, 2016 at 7:09 AM, Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
-> Hi,
->
-> On Wed, Aug 31, 2016 at 05:40:17PM -0700, Stephen Boyd wrote:
->> @@ -174,14 +219,37 @@ static int ulpi_register(struct device *dev, struct ulpi *ulpi)
->>       ulpi->id.product = ulpi_read(ulpi, ULPI_PRODUCT_ID_LOW);
->>       ulpi->id.product |= ulpi_read(ulpi, ULPI_PRODUCT_ID_HIGH) << 8;
->>
->> +     return 0;
->> +}
->> +
->> +static int ulpi_register(struct device *dev, struct ulpi *ulpi)
->> +{
->> +     int ret;
->> +
->>       ulpi->dev.parent = dev;
->>       ulpi->dev.bus = &ulpi_bus;
->>       ulpi->dev.type = &ulpi_dev_type;
->>       dev_set_name(&ulpi->dev, "%s.ulpi", dev_name(dev));
->>
->> +     if (IS_ENABLED(CONFIG_OF)) {
->
-> I don't think you need to check that in this case.
->
->> +             ret = ulpi_of_register(ulpi);
->> +             if (ret)
->> +                     return ret;
->> +     }
->> +
->>       ACPI_COMPANION_SET(&ulpi->dev, ACPI_COMPANION(dev));
->
-> ACPI_COMPANION_SET will overwrite the primary fwnode unconditionally,
-> so just to play it safe, do this before you call ulpi_of_register().
-
-Ok.
-
->
->> -     request_module("ulpi:v%04xp%04x", ulpi->id.vendor, ulpi->id.product);
->> +     ret = ulpi_read_id(ulpi);
->> +     /*
->> +      * Ignore failure in case of DT node because the device may
->> +      * not be powered up yet but we can still match by compatible
->> +      */
->> +     if (ret && !ulpi->dev.of_node)
->> +             return ret;
->> +
->> +     if (of_device_request_module(&ulpi->dev))
->> +             request_module("ulpi:v%04xp%04x", ulpi->id.vendor,
->> +                            ulpi->id.product);
->
-> I don't think this works in all cases. If of_device_request_module()
-> fails and we don't have the id.vendor/product set, we should not
-> register the device. It also looks a bit messy.
->
-> How about just using of_device_request_module() call as fallback in
-> ulpi_read_id() and moving also request_module() call there:
-
-Sure I'll fold it in and test. Should we "goto err" if we can't read
-the scratch register though? I would think that's a "real" failure and
-we shouldn't try to support DT in that case.
+SGkgTW9yaW1vdG8tc2FuLA0KwqANClRoYW5rcyBmb3IgeW91ciBjb21tZW50cy4NCg0KPiA+ICtp
+bnQgX2xpbmVhcl90ZW1wX2NvbnZlcnRlcihzdHJ1Y3QgZXF1YXRpb25fY29lZnMgY29lZiwNCj4g
+PiArCQkJCQlpbnQgdGVtcF9jb2RlKQ0KPiA+ICt7DQo+ID4gKwlpbnQgdGVtcCwgdGVtcDEsIHRl
+bXAyOw0KPiA+ICsNCj4gPiArCXRlbXAxID0gTUNFTFNJVVMoKENPREVUU0QodGVtcF9jb2RlKSAt
+IGNvZWYuYjEpKSAvIGNvZWYuYTE7DQo+ID4gKwl0ZW1wMiA9IE1DRUxTSVVTKChDT0RFVFNEKHRl
+bXBfY29kZSkgLSBjb2VmLmIyKSkgLyBjb2VmLmEyOw0KPiA+ICsJdGVtcCA9ICh0ZW1wMSArIHRl
+bXAyKSAvIDI7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIF9yb3VuZF90ZW1wKHRlbXApOw0KPiA+ICt9
+DQo+IA0KPiBZb3Ugd2FudCB0byBoYXZlICJzdGF0aWMiIGZ1bmN0aW9uIGhlcmUgPw0KDQpTb3Vu
+ZCBnb29kLiBXaWxsIHVwZGF0ZSBpbiB2Mi4NCg0KPiA+ICtzdGF0aWMgaW50IHJjYXJfZ2VuM190
+aGVybWFsX2dldF90ZW1wKHZvaWQgKmRldmRhdGEsIGludCAqdGVtcCkgew0KPiA+ICsJc3RydWN0
+IHJjYXJfZ2VuM190aGVybWFsX3ByaXYgKnByaXYgPSBkZXZkYXRhOw0KPiA+ICsJaW50IGN0ZW1w
+Ow0KPiA+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiArDQo+ID4gKwlyY2FyX2dlbjNfdGhl
+cm1hbF91cGRhdGVfdGVtcChwcml2KTsNCj4gPiArDQo+ID4gKwlzcGluX2xvY2tfaXJxc2F2ZSgm
+cHJpdi0+bG9jaywgZmxhZ3MpOw0KPiA+ICsJY3RlbXAgPSBfbGluZWFyX3RlbXBfY29udmVydGVy
+KHByaXYtPmNvZWYsIHByaXYtPmN0ZW1wKTsNCj4gPiArCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUo
+JnByaXYtPmxvY2ssIGZsYWdzKTsNCj4gDQo+IHVzaW5nIHBvaW50ZXIgb24gX2xpbmVhcl90ZW1w
+X2NvbnZlcnRlcigpIGlzIHJlYXNvbmFibGUgPw0KPiBlc3BlY2lhbGx5IGZvciBzdHJ1Y3QgZXF1
+YXRpb25fY29lZnMgY29lZg0KIA0KSSBmYWlsZWQgdG8gc2VlIHRoZSBiZW5lZml0IG9mIHRoZSBj
+aGFuZ2UuDQpDb3VsZCB5b3UgZWxhYm9yYXRlIHRoZSBwb2ludHMgPw0KZS5nIGJldHRlciBtZW1v
+cnkgcHJvdGVjdGlvbiwgZmFzdGVyIGJ5dGUtY29kZSBleGVjdXRpb24sIHJlYWRhYmlsaXR5LCBl
+dGMNCg0KDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcmNhcl9nZW4zX3RoZXJtYWxfZGF0YSBy
+OGE3Nzk1X2RhdGEgPSB7DQo+ID4gKwkudGhlcm1hbF9pbml0ID0gcjhhNzc5NV90aGVybWFsX2lu
+aXQsIH07DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHJjYXJfZ2VuM190aGVybWFs
+X2RhdGEgcjhhNzc5Nl9kYXRhID0gew0KPiA+ICsJLnRoZXJtYWxfaW5pdCA9IHI4YTc3OTZfdGhl
+cm1hbF9pbml0LCB9Ow0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2Vf
+aWQgcmNhcl9nZW4zX3RoZXJtYWxfZHRfaWRzW10gPSB7DQo+ID4gKwl7IC5jb21wYXRpYmxlID0g
+InJlbmVzYXMsdGhlcm1hbC1yOGE3Nzk1IiwgLmRhdGEgPSAmcjhhNzc5NV9kYXRhfSwNCj4gPiAr
+CXsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyx0aGVybWFsLXI4YTc3OTYiLCAuZGF0YSA9ICZyOGE3
+Nzk2X2RhdGF9LA0KPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJyZW5lc2FzLHJjYXItZ2VuMy10aGVy
+bWFsIiwgLmRhdGEgPSAmcjhhNzc5Nl9kYXRhfSwNCj4gPiArCXt9LA0KPiA+ICt9Ow0KPiA+ICtN
+T0RVTEVfREVWSUNFX1RBQkxFKG9mLCByY2FyX2dlbjNfdGhlcm1hbF9kdF9pZHMpOw0KPiANCj4g
+V2UgY2FuJ3QgaGF2ZSBnZW5lcmFsIGNhc2UgaW4gdGhpcyBjYXNlID8NCj4gInJlbmVzYXMscmNh
+ci1nZW4zLXRoZXJtYWwiIGlzIG5vdCBuZWVkZWQgSU1PLg0KPiBFc3BlY2lhbGx5IHRoaXMgZHJp
+dmVyIGRvZXNuJ3QgbmVlZCB0byBjYXJlIGFib3V0IGJhY2sgY29tcGF0aWJpbGl0eSB5ZXQuDQoN
+Ck9LLiBJIHNlZSB5b3VyIHBvaW50LiBXaWxsIHVwZGF0ZSBpbiBWMi4NCg0KPiA+ICtzdGF0aWMg
+aW50IHJjYXJfZ2VuM190aGVybWFsX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
+IHsNCj4gPiArCXN0cnVjdCByY2FyX2dlbjNfdGhlcm1hbF9wcml2ICpwcml2Ow0KPiA+ICsJc3Ry
+dWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4gPiArCXN0cnVjdCByZXNvdXJjZSAqcmVz
+LCAqaXJxOw0KPiA+ICsJaW50IHJldCA9IC1FTk9ERVY7DQo+ID4gKwlpbnQgaWRsZTsNCj4gPiAr
+CXN0cnVjdCBkZXZpY2Vfbm9kZSAqdHpfbmQsICp0bXBfbmQ7DQo+ID4gKw0KPiA+ICsJcHJpdiA9
+IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqcHJpdiksIEdGUF9LRVJORUwpOw0KPiA+ICsJaWYg
+KCFwcml2KQ0KPiA+ICsJCXJldHVybiAtRU5PTUVNOw0KPiA+ICsNCj4gPiArCXBsYXRmb3JtX3Nl
+dF9kcnZkYXRhKHBkZXYsIHByaXYpOw0KPiA+ICsNCj4gPiArCXByaXYtPmRldiA9IGRldjsNCj4g
+PiArDQo+ID4gKwlwbV9ydW50aW1lX2VuYWJsZShkZXYpOw0KPiA+ICsJcG1fcnVudGltZV9nZXRf
+c3luYyhkZXYpOw0KPiA+ICsNCj4gPiArCXByaXYtPmRhdGEgPSBvZl9kZXZpY2VfZ2V0X21hdGNo
+X2RhdGEoZGV2KTsNCj4gPiArCWlmICghcHJpdi0+ZGF0YSkNCj4gPiArCQlnb3RvIGVycm9yX3Vu
+cmVnaXN0ZXI7DQo+ID4gKw0KPiA+ICsJaXJxID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYs
+IElPUkVTT1VSQ0VfSVJRLCAwKTsNCj4gPiArCXByaXYtPmlycSA9IDA7DQo+ID4gKwlpZiAoaXJx
+KSB7DQo+ID4gKwkJcHJpdi0+aXJxID0gMTsNCj4gPiArCQlmb3JfZWFjaF9ub2RlX3dpdGhfcHJv
+cGVydHkodHpfbmQsICJwb2xsaW5nLWRlbGF5Iikgew0KPiA+ICsJCQl0bXBfbmQgPSBvZl9wYXJz
+ZV9waGFuZGxlKHR6X25kLA0KPiA+ICsJCQkJCSJ0aGVybWFsLXNlbnNvcnMiLCAwKTsNCj4gPiAr
+CQkJaWYgKHRtcF9uZCAmJiAhc3RyY21wKHRtcF9uZC0+ZnVsbF9uYW1lLA0KPiA+ICsJCQkJCWRl
+di0+b2Zfbm9kZS0+ZnVsbF9uYW1lKSkgew0KPiA+ICsJCQkJb2ZfcHJvcGVydHlfcmVhZF91MzIo
+dHpfbmQsICJwb2xsaW5nLWRlbGF5IiwNCj4gPiArCQkJCQkmaWRsZSk7DQo+ID4gKwkJCQkoaWRs
+ZSA+IDApID8gKHByaXYtPmlycSA9IDApIDoNCj4gPiArCQkJCQkJKHByaXYtPmlycSA9IDEpOw0K
+PiA+ICsJCQkJYnJlYWs7DQo+ID4gKwkJCX0NCj4gDQo+IGl0IGlzIG5vdCByZWFkYWJsZSBmb3Ig
+bWUuDQo+IA0KPiAJaWYgKGlkbGUgPiAwKQ0KPiAJCXByaXYtPmlycSA9IDA7DQo+IAlicmVhazsN
+Cj4gDQo+IGlzIGVub3VnaCA/DQoNClVuZm9ydHVuYXRlbHksIGl0J3Mgbm90Lg0KVGhlIGNvZGUg
+dHJpZXMgdG8gY2hlY2sgInBvbGxpbmctZGVsYXkiIGluIG9yZGVyIHRvIHNlbGVjdCBwb2xsaW5n
+IG1vZGUgYW5kIGdldCBwb2xsaW5nIGR1cmF0aW9uIGZyb20gRFQuDQpTbywgeW91ciBwcm9wb3Nh
+bCBqdXN0IGRvIDFzdCBwYXJ0Lg0KDQo+IA0KPiA+ICsJcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291
+cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsNCj4gPiArCWlmICghcmVzKQ0KPiA+ICsJCWdv
+dG8gZXJyb3JfdW5yZWdpc3RlcjsNCj4gPiArDQo+ID4gKwlwcml2LT5iYXNlID0gZGV2bV9pb3Jl
+bWFwX3Jlc291cmNlKGRldiwgcmVzKTsNCj4gPiArCWlmIChJU19FUlIocHJpdi0+YmFzZSkpIHsN
+Cj4gPiArCQlyZXQgPSBQVFJfRVJSKHByaXYtPmJhc2UpOw0KPiA+ICsJCWdvdG8gZXJyb3JfdW5y
+ZWdpc3RlcjsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlzcGluX2xvY2tfaW5pdCgmcHJpdi0+bG9j
+ayk7DQo+ID4gKwlJTklUX0RFTEFZRURfV09SSygmcHJpdi0+d29yaywgcmNhcl9nZW4zX3RoZXJt
+YWxfd29yayk7DQo+ID4gKw0KPiA+ICsJcHJpdi0+aWQgPSBvZl9hbGlhc19nZXRfaWQoZGV2LT5v
+Zl9ub2RlLCAidHNjIik7DQo+IA0KPiBEbyB3ZSByZWFsbHkgbmVlZCBhbGlhcyA/DQo+IGlzICJ0
+c2MiIGdvb2QgbmFtaW5nID8NCg0KSXQncyB0aGUgYWJicmV2aWF0aW9uIG9mIFRoZXJtYWwgc2Vu
+c29yIGNvbnRyb2xsZXIuDQpUaGUgdGVybSBoYXMgYmVlbiBkZXNjcmliZWQgaW4gSFcgbWFudWFs
+LiBUaGVyZWZvcmUsIEkgdGhpbmsgaXQncyAncmVhc29uYWJsZScgbmFtZS4NCg0KPiBIYXZpbmcg
+dGhpcyBleHBsYW5hdGlvbiBvbiBbMS80XSBwYXRjaCBkb2N1bWVudCBpcyB1c2VmdWwuDQo+IG9m
+X2FsaWFzX2dldF9pZCgpIGNhbiByZXR1cm4gLUVOT0RFViwgYnV0IG5vIGVycm9yIGNoZWNrID8N
+Cg0KR29vZCBwb2ludC4gV2lsbCBmaXggaW4gdjIuDQoNCj4gPiArCXByaXYtPnpvbmUgPSBkZXZt
+X3RoZXJtYWxfem9uZV9vZl9zZW5zb3JfcmVnaXN0ZXIoZGV2LCAwLCBwcml2LA0KPiA+ICsJCQkJ
+JnJjYXJfZ2VuM190el9vZl9vcHMpOw0KPiA+ICsNCj4gPiArCWlmIChJU19FUlIocHJpdi0+em9u
+ZSkpIHsNCj4gPiArCQlkZXZfZXJyKGRldiwgIkNhbid0IHJlZ2lzdGVyIHRoZXJtYWwgem9uZVxu
+Iik7DQo+ID4gKwkJcmV0ID0gUFRSX0VSUihwcml2LT56b25lKTsNCj4gPiArCQlwcml2LT56b25l
+ID0gTlVMTDsNCj4gPiArCQlnb3RvIGVycm9yX3VucmVnaXN0ZXI7DQo+ID4gKwl9DQo+IA0KPiBJ
+dCBpcyBub3QgYmFkIG9wZXJhdGlvbiwgYnV0IG5vdCByZWFkYWJsZS4NCj4gSG93IGFib3V0IHRv
+IGhhdmUgbG9jYWwgc3RydWN0IHRoZXJtYWxfem9uZV9kZXZpY2UgKnpvbmUsIGxpa2UgdGhpcyA/
+DQoNCkl0J3MgZ29vZCBwb2ludC4NCkkgc2F3IHRoYXQgb3RoZXIgdGhlcm1hbCBkcml2ZXJzIGFs
+c28gZGlkIHRoYXQgd2F5Lg0KDQpUaGUgb3JpZ2luYWwgc291cmNlIGNvZGUgZm9sbG93cyBzYW1l
+IGNvZGUgZmxvdyBhcyByY2FyLXRoZXJtYWwgZHJpdmVyLg0KUGVyaGFwcywgd2UgY2FuIGNoYW5n
+ZSB0aGUgY29kZSBmbG93IGZvciBib3RoIGRyaXZlcnMsIGFzIHlvdXIgaWRlYS4NCg0KPiAJem9u
+ZSA9IGRldm1fdGhlcm1hbF96b25lX29mX3NlbnNvcl9yZWdpc3Rlcih4eHh4KTsNCj4gCWlmIChJ
+U19FUlIoem9uZSkpIHsNCj4gCQkuLi4NCj4gCQlyZXQgPSBQVFJfRVJSKHpvbmUpOw0KPiAJCWdv
+dG8gZXJyb3JfdW5yZWdpc3RlcjsNCj4gCX0NCj4gCXByaXYtPnpvbmUgPSB6b25lOw0KPiANCj4g
+PiArCXByaXYtPmRhdGEtPnRoZXJtYWxfaW5pdChwcml2KTsNCj4gDQo+IHRoZXJtYWxfaW5pdCgp
+IGhhcyByZXR1cm4gdmFsdWU7DQoNCk9LLiBXaWxsIGZpeCBpbiB2Mi4NCg0KPiANCj4gPiArCXJl
+dCA9IF9yZWFkX2Z1c2VfZmFjdG9yKHByaXYpOw0KPiA+ICsJaWYgKHJldCkNCj4gPiArCQlnb3Rv
+IGVycm9yX3VucmVnaXN0ZXI7DQo+ID4gKwlfbGluZWFyX2NvZWZmaWNpZW50X2NhbGN1bGF0aW9u
+KHByaXYpOw0KPiA+ICsJcmV0ID0gcmNhcl9nZW4zX3RoZXJtYWxfdXBkYXRlX3RlbXAocHJpdik7
+DQo+ID4gKw0KPiA+ICsJaWYgKHJldCA8IDApDQo+ID4gKwkJZ290byBlcnJvcl91bnJlZ2lzdGVy
+Ow0KPiANCj4gVGhpcyBpcyB2ZXJ5IHBpY2t5IGNvbW1lbnQgYWJvdXQgZW1wdHkgbGluZSwgYnV0
+IHRoaXMgaXMgcmVhZGFibGUgZm9yIG1lDQo+IA0KPiAJcmV0ID0gX3JlYWRfZnVzZV9mYWN0b3Io
+cHJpdik7DQo+IAlpZiAocmV0KQ0KPiAJCWdvdG8gZXJyb3JfdW5yZWdpc3RlcjsNCj4gDQo+IAlf
+bGluZWFyX2NvZWZmaWNpZW50X2NhbGN1bGF0aW9uKHByaXYpOw0KPiANCj4gCXJldCA9IHJjYXJf
+Z2VuM190aGVybWFsX3VwZGF0ZV90ZW1wKHByaXYpOw0KPiAJaWYgKHJldCA8IDApDQo+IAkJZ290
+byBlcnJvcl91bnJlZ2lzdGVyOw0KDQpPSy4gTmV3bGluZSBkb2VzIG5vdCBoYXJtIGFueXRoaW5n
+Lg0KV2lsbCBhZGQgaW4gdjIuDQoNClRoYW5rcy4NCg0KQmVzdCByZWdhcmRzLA0KS0hJRU0gTmd1
+eWVuDQo=
