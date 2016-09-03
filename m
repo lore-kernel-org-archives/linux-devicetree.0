@@ -1,37 +1,111 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] clk: meson-gxbb: Export PWM related clocks for DT
-Date: Sat, 03 Sep 2016 15:02:56 +0200
-Message-ID: <57CACA00.9010306@baylibre.com>
-References: <1471870177-10609-1-git-send-email-narmstrong@baylibre.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] iio: sx9500: add final devicetree support
+Date: Sat, 3 Sep 2016 15:27:41 +0100
+Message-ID: <803dc256-e26d-3f0c-b17e-b8b6eb928aa5@kernel.org>
+References: <1472827740.1929.26.camel@googlemail.com>
+ <CAOMZO5BeL1EKOQvZQoXXObttHSKxL7UQ1s2r8H4EOuROOb_YnQ@mail.gmail.com>
+ <1472828671.1929.32.camel@googlemail.com>
+ <CAOMZO5BVDS=AaSyRS0ELBiEKx3RxdstXgA_xJ6ANUzKDxdyBxg@mail.gmail.com>
+ <1472829819.12668.3.camel@googlemail.com>
+ <CAOMZO5DbJLnH1wm2KuML+O36O-eSYWeGwrxE5pdKSRtB-Js-yA@mail.gmail.com>
+ <1472834833.12668.11.camel@googlemail.com>
+ <CAOMZO5B8ttBvf-zimO5R_kgpzR2bxF73Ur0vZpBKUX8Ytbs8uQ@mail.gmail.com>
+ <1472898600.1918.4.camel@googlemail.com>
+ <CAA+rx9Th84nt8RQpXX8MhcN9ghhdJN1KBuGfd2oY59_77BiBGA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1471870177-10609-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAA+rx9Th84nt8RQpXX8MhcN9ghhdJN1KBuGfd2oY59_77BiBGA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vlad Dogaru <ddvlad-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-Le 22/08/2016 14:49, Neil Armstrong a écrit :
-> Add the PWM related clocks in order to be referenced as PWM source
-> clocks.
+On 03/09/16 12:19, Vlad Dogaru wrote:
+> On Sat, Sep 3, 2016 at 1:30 PM, Christoph Fritz
+> <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+>> This makes sx9500 driver usable on devicetree based platforms too.
+>>
+>> Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > 
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/clk/meson/gxbb.h              | 6 +++---
->  include/dt-bindings/clock/gxbb-clkc.h | 3 +++
->  2 files changed, 6 insertions(+), 3 deletions(-)
+> Reviewed-by: Vlad Dogaru <ddvlad-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+This is simple enough I'm taking it without a device tree ack.
 
-Dear Clock Maintainers,
-
-Could you review this patch since it is a strong requirement to select the PWM clock parents over DT ?
+Applied to the togreg branch of iio.git - initially pushed out
+as testing for the autobuilders to play with it.
 
 Thanks,
-Neil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Jonathan
+> 
+>> ---
+>>
+>> Changes in v2:
+>>
+>>  - fix docu: add optional property reset-gpios
+>>  - adapt docu: change example "reset-gpios"
+>>
+>>  .../devicetree/bindings/iio/proximity/sx9500.txt   | 24 ++++++++++++++++++++++
+>>  drivers/iio/proximity/sx9500.c                     |  7 +++++++
+>>  2 files changed, 31 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/sx9500.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/proximity/sx9500.txt b/Documentation/devicetree/bindings/iio/proximity/sx9500.txt
+>> new file mode 100644
+>> index 0000000..b301dd2
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/proximity/sx9500.txt
+>> @@ -0,0 +1,24 @@
+>> +Semtech's SX9500 capacitive proximity button device driver
+>> +
+>> +Required properties:
+>> +       - compatible: must be "semtech,sx9500"
+>> +       - reg: i2c address where to find the device
+>> +       - interrupt-parent : should be the phandle for the interrupt controller
+>> +       - interrupts : the sole interrupt generated by the device
+>> +
+>> +       Refer to interrupt-controller/interrupts.txt for generic
+>> +       interrupt client node bindings.
+>> +
+>> +Optional properties:
+>> +       - reset-gpios: Reference to the GPIO connected to the device's active
+>> +         low reset pin.
+>> +
+>> +Example:
+>> +
+>> +sx9500@28 {
+>> +       compatible = "semtech,sx9500";
+>> +       reg = <0x28>;
+>> +       interrupt-parent = <&gpio2>;
+>> +       interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
+>> +       reset-gpios = <&gpio2 10 GPIO_ACTIVE_LOW>;
+>> +};
+>> diff --git a/drivers/iio/proximity/sx9500.c b/drivers/iio/proximity/sx9500.c
+>> index 66cd09a..a136b34 100644
+>> --- a/drivers/iio/proximity/sx9500.c
+>> +++ b/drivers/iio/proximity/sx9500.c
+>> @@ -1025,6 +1025,12 @@ static const struct acpi_device_id sx9500_acpi_match[] = {
+>>  };
+>>  MODULE_DEVICE_TABLE(acpi, sx9500_acpi_match);
+>>
+>> +static const struct of_device_id sx9500_of_match[] = {
+>> +       { .compatible = "semtech,sx9500", },
+>> +       { }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, sx9500_of_match);
+>> +
+>>  static const struct i2c_device_id sx9500_id[] = {
+>>         {"sx9500", 0},
+>>         { },
+>> @@ -1035,6 +1041,7 @@ static struct i2c_driver sx9500_driver = {
+>>         .driver = {
+>>                 .name   = SX9500_DRIVER_NAME,
+>>                 .acpi_match_table = ACPI_PTR(sx9500_acpi_match),
+>> +               .of_match_table = of_match_ptr(sx9500_of_match),
+>>                 .pm = &sx9500_pm_ops,
+>>         },
+>>         .probe          = sx9500_probe,
+>> --
+>> 2.1.4
+>>
