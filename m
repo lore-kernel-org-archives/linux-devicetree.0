@@ -1,41 +1,25 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: sun8i: Orange Pi Plus dts is for the Plus and Plus 2
-Date: Sat,  3 Sep 2016 13:05:17 +0200
-Message-ID: <20160903110518.8267-1-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] iio: sx9500: add final devicetree support
+Date: Sat, 3 Sep 2016 08:15:20 -0300
+Message-ID: <CAOMZO5ASKq2=UTxAsZV7kMrNgamQzG4TwxQF+ZUhRVOWDM5T=A@mail.gmail.com>
+References: <1472827740.1929.26.camel@googlemail.com> <CAOMZO5BeL1EKOQvZQoXXObttHSKxL7UQ1s2r8H4EOuROOb_YnQ@mail.gmail.com>
+ <1472828671.1929.32.camel@googlemail.com> <CAOMZO5BVDS=AaSyRS0ELBiEKx3RxdstXgA_xJ6ANUzKDxdyBxg@mail.gmail.com>
+ <1472829819.12668.3.camel@googlemail.com> <CAOMZO5DbJLnH1wm2KuML+O36O-eSYWeGwrxE5pdKSRtB-Js-yA@mail.gmail.com>
+ <1472834833.12668.11.camel@googlemail.com> <CAOMZO5B8ttBvf-zimO5R_kgpzR2bxF73Ur0vZpBKUX8Ytbs8uQ@mail.gmail.com>
+ <1472898600.1918.4.camel@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472898600.1918.4.camel-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vlad Dogaru <ddvlad-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Update the sun8i-h3-orangepi-plus.dts model string to reflect that it
-is valid for both the Orange Pi Plus and the Orange Pi Plus 2.
+On Sat, Sep 3, 2016 at 7:30 AM, Christoph Fritz
+<chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> This makes sx9500 driver usable on devicetree based platforms too.
+>
+> Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 
-This is also meant to help users realize that it is not valid for
-the new Orange Pi Plus 2E, which will get its own dts.
-
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-index b0cb417..bb58591 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-@@ -44,7 +44,7 @@
- #include "sun8i-h3-orangepi-2.dts"
- 
- / {
--	model = "Xunlong Orange Pi Plus";
-+	model = "Xunlong Orange Pi Plus / Plus 2";
- 	compatible = "xunlong,orangepi-plus", "allwinner,sun8i-h3";
- 
- 	reg_usb3_vbus: usb3-vbus {
--- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
