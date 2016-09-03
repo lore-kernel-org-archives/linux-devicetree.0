@@ -1,111 +1,128 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] iio: sx9500: add final devicetree support
-Date: Sat, 3 Sep 2016 15:27:41 +0100
-Message-ID: <803dc256-e26d-3f0c-b17e-b8b6eb928aa5@kernel.org>
-References: <1472827740.1929.26.camel@googlemail.com>
- <CAOMZO5BeL1EKOQvZQoXXObttHSKxL7UQ1s2r8H4EOuROOb_YnQ@mail.gmail.com>
- <1472828671.1929.32.camel@googlemail.com>
- <CAOMZO5BVDS=AaSyRS0ELBiEKx3RxdstXgA_xJ6ANUzKDxdyBxg@mail.gmail.com>
- <1472829819.12668.3.camel@googlemail.com>
- <CAOMZO5DbJLnH1wm2KuML+O36O-eSYWeGwrxE5pdKSRtB-Js-yA@mail.gmail.com>
- <1472834833.12668.11.camel@googlemail.com>
- <CAOMZO5B8ttBvf-zimO5R_kgpzR2bxF73Ur0vZpBKUX8Ytbs8uQ@mail.gmail.com>
- <1472898600.1918.4.camel@googlemail.com>
- <CAA+rx9Th84nt8RQpXX8MhcN9ghhdJN1KBuGfd2oY59_77BiBGA@mail.gmail.com>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 00/15] PCI: rockchip: Cleanups against v10
+Date: Sat, 3 Sep 2016 11:34:19 -0500
+Message-ID: <20160903163419.GA23589@localhost>
+References: <20160902154501.8650.99790.stgit@bhelgaas-glaptop2.roam.corp.google.com>
+ <5d1e6d5f-c8d9-8fcd-41dd-cabc3027f66a@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAA+rx9Th84nt8RQpXX8MhcN9ghhdJN1KBuGfd2oY59_77BiBGA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vlad Dogaru <ddvlad-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5d1e6d5f-c8d9-8fcd-41dd-cabc3027f66a-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenrui Li <wenrui.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/09/16 12:19, Vlad Dogaru wrote:
-> On Sat, Sep 3, 2016 at 1:30 PM, Christoph Fritz
-> <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
->> This makes sx9500 driver usable on devicetree based platforms too.
->>
->> Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+On Sat, Sep 03, 2016 at 10:37:24AM +0800, Shawn Lin wrote:
+> Hi Bjorn,
 > 
-> Reviewed-by: Vlad Dogaru <ddvlad-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-This is simple enough I'm taking it without a device tree ack.
-
-Applied to the togreg branch of iio.git - initially pushed out
-as testing for the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
+> On 2016/9/2 23:53, Bjorn Helgaas wrote:
+> >These are cleanups against 2098142ae87d, the current pci/host-rockchip
+> >head in my tree.
+> >
 > 
->> ---
->>
->> Changes in v2:
->>
->>  - fix docu: add optional property reset-gpios
->>  - adapt docu: change example "reset-gpios"
->>
->>  .../devicetree/bindings/iio/proximity/sx9500.txt   | 24 ++++++++++++++++++++++
->>  drivers/iio/proximity/sx9500.c                     |  7 +++++++
->>  2 files changed, 31 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/sx9500.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iio/proximity/sx9500.txt b/Documentation/devicetree/bindings/iio/proximity/sx9500.txt
->> new file mode 100644
->> index 0000000..b301dd2
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/proximity/sx9500.txt
->> @@ -0,0 +1,24 @@
->> +Semtech's SX9500 capacitive proximity button device driver
->> +
->> +Required properties:
->> +       - compatible: must be "semtech,sx9500"
->> +       - reg: i2c address where to find the device
->> +       - interrupt-parent : should be the phandle for the interrupt controller
->> +       - interrupts : the sole interrupt generated by the device
->> +
->> +       Refer to interrupt-controller/interrupts.txt for generic
->> +       interrupt client node bindings.
->> +
->> +Optional properties:
->> +       - reset-gpios: Reference to the GPIO connected to the device's active
->> +         low reset pin.
->> +
->> +Example:
->> +
->> +sx9500@28 {
->> +       compatible = "semtech,sx9500";
->> +       reg = <0x28>;
->> +       interrupt-parent = <&gpio2>;
->> +       interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
->> +       reset-gpios = <&gpio2 10 GPIO_ACTIVE_LOW>;
->> +};
->> diff --git a/drivers/iio/proximity/sx9500.c b/drivers/iio/proximity/sx9500.c
->> index 66cd09a..a136b34 100644
->> --- a/drivers/iio/proximity/sx9500.c
->> +++ b/drivers/iio/proximity/sx9500.c
->> @@ -1025,6 +1025,12 @@ static const struct acpi_device_id sx9500_acpi_match[] = {
->>  };
->>  MODULE_DEVICE_TABLE(acpi, sx9500_acpi_match);
->>
->> +static const struct of_device_id sx9500_of_match[] = {
->> +       { .compatible = "semtech,sx9500", },
->> +       { }
->> +};
->> +MODULE_DEVICE_TABLE(of, sx9500_of_match);
->> +
->>  static const struct i2c_device_id sx9500_id[] = {
->>         {"sx9500", 0},
->>         { },
->> @@ -1035,6 +1041,7 @@ static struct i2c_driver sx9500_driver = {
->>         .driver = {
->>                 .name   = SX9500_DRIVER_NAME,
->>                 .acpi_match_table = ACPI_PTR(sx9500_acpi_match),
->> +               .of_match_table = of_match_ptr(sx9500_of_match),
->>                 .pm = &sx9500_pm_ops,
->>         },
->>         .probe          = sx9500_probe,
->> --
->> 2.1.4
->>
+> Thanks so much for you to help clean up this driver, since I think
+> it should be my duty to take over this.  Hope not too late for me to
+> help your cleanup. I think the v2 cannot compile gracefully without
+> the
+> appended patch. After fixing these compile errors, I backported this
+> driver entirely to my downstream 4.4 tree and it worked fine without
+> regression.
+> 
+> Once again, thanks for doing this. :)
+
+No problem, thanks a lot for checking it out.  A lot of this stuff is
+things I'm trying to do to other drivers as well, and I wouldn't have
+noticed or bothered except that I've been trying to make all the
+drivers more consistent.
+
+I applied your fixes and pushed it to pci/host-rockchip-wip again.
+
+> >---
+> >
+> >Bjorn Helgaas (15):
+> >      Remove unused symbols, unnecessary parens, other minor comments from
+> >      Rename pcie_read() and pcie_write() to rockchip_pcie_read() and
+> >      Always use "rockchip" as the pointer to per-device struct.
+> >      Rename struct rockchip_pcie_port to struct rockchip_pcie.
+> >      Use a local "dev" to avoid repetition of "rockchip->dev".
+> >      Add comment about why 32-bit read/modify/write isn't safe.
+> >      Simplify the confusing HIWORD_UPDATE scheme.
+> >      Remove duplicate CSR definition.
+> >      Move CSR bases into definition.
+> >      Group related CSR definitions together.
+> >      Rename PCIE_CORE_RC_CONF_SCC_SHIFT to match similar definitions.
+> >      Rename ROCKCHIP_PCIE_RPIFR1_INTR_MASK and ROCKCHIP_PCIE_RPIFR1_INTR_SHIFT
+> >      The register at PCIE_CLIENT_BASE presumably has a name of its own.  Add a
+> >      Simplify testing of link status and speed testing.
+> >      Move msleeps to address Guenter's comments.
+> >
+> >
+> > drivers/pci/host/pcie-rockchip.c |  842 ++++++++++++++++++--------------------
+> > 1 file changed, 391 insertions(+), 451 deletions(-)
+> >
+> >
+> >
+> 
+> 
+> -- 
+> Best Regards
+> Shawn Lin
+
+> diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
+> index 754d24b..2bc1c35 100644
+> --- a/drivers/pci/host/pcie-rockchip.c
+> +++ b/drivers/pci/host/pcie-rockchip.c
+> @@ -931,7 +931,7 @@ static int rockchip_pcie_prog_ob_atu(struct rockchip_pcie *rockchip,
+>  	u32 ob_addr_0;
+>  	u32 ob_addr_1;
+>  	u32 ob_desc_0;
+> -	void __iomem *aw_offset;
+> +	u32 aw_offset;
+>  
+>  	if (region_no >= MAX_AXI_WRAPPER_REGION_NUM)
+>  		return -EINVAL;
+> @@ -955,13 +955,13 @@ static int rockchip_pcie_prog_ob_atu(struct rockchip_pcie *rockchip,
+>  	ob_addr_1 = upper_addr;
+>  	ob_desc_0 = (1 << 23 | type);
+>  
+> -	rockchip_pcie_writel(rockchip, ob_addr_0,
+> +	rockchip_pcie_write(rockchip, ob_addr_0,
+>  			     PCIE_CORE_OB_REGION_ADDR0 + aw_offset);
+> -	rockchip_pcie_writel(rockchip, ob_addr_1,
+> +	rockchip_pcie_write(rockchip, ob_addr_1,
+>  			     PCIE_CORE_OB_REGION_ADDR1 + aw_offset);
+> -	rockchip_pcie_writel(rockchip, ob_desc_0,
+> +	rockchip_pcie_write(rockchip, ob_desc_0,
+>  			     PCIE_CORE_OB_REGION_DESC0 + aw_offset);
+> -	rockchip_pcie_writel(rockchip, 0,
+> +	rockchip_pcie_write(rockchip, 0,
+>  			     PCIE_CORE_OB_REGION_DESC1 + aw_offset);
+>  
+>  	return 0;
+> @@ -973,7 +973,7 @@ static int rockchip_pcie_prog_ib_atu(struct rockchip_pcie *rockchip,
+>  {
+>  	u32 ib_addr_0;
+>  	u32 ib_addr_1;
+> -	void __iomem *aw_offset;
+> +	u32 aw_offset;
+>  
+>  	if (region_no > MAX_AXI_IB_ROOTPORT_REGION_NUM)
+>  		return -EINVAL;
+> @@ -988,8 +988,8 @@ static int rockchip_pcie_prog_ib_atu(struct rockchip_pcie *rockchip,
+>  	ib_addr_0 |= (lower_addr << 8) & PCIE_CORE_IB_REGION_ADDR0_LO_ADDR;
+>  	ib_addr_1 = upper_addr;
+>  
+> -	rockchip_pcie_writel(rockchip, ib_addr_0, PCIE_RP_IB_ADDR0 + aw_offset);
+> -	rockchip_pcie_writel(rockchip, ib_addr_1, PCIE_RP_IB_ADDR1 + aw_offset);
+> +	rockchip_pcie_write(rockchip, ib_addr_0, PCIE_RP_IB_ADDR0 + aw_offset);
+> +	rockchip_pcie_write(rockchip, ib_addr_1, PCIE_RP_IB_ADDR1 + aw_offset);
+>  
+>  	return 0;
+>  }
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
