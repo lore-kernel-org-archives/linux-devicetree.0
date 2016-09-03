@@ -1,41 +1,37 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: wheat: add SDHI0 support
-Date: Sun, 4 Sep 2016 00:49:12 +0300
-Message-ID: <0defa744-2a9e-ee50-6212-589cee7e537f@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: dts: wheat: add CAN support
+Date: Sun, 4 Sep 2016 00:50:00 +0300
+Message-ID: <cc1d04e3-8083-f487-15b9-9feee84a0d60@cogentembedded.com>
 References: <34968644.DhifNderY8@wasted.cogentembedded.com>
- <1659137.gEKJxNrmrk@wasted.cogentembedded.com>
+ <5729004.lSWLzbWbOW@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1659137.gEKJxNrmrk-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5729004.lSWLzbWbOW@wasted.cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: linux@arm.linux.org.uk, magnus.damm@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 08/29/2016 11:11 PM, Sergei Shtylyov wrote:
 
-On 08/31/2016 01:24 AM, Sergei Shtylyov wrote:
-
-> Define the Wheat board dependent  part of  the SDHI0 (connected to the
-> micro-SD slot)  device node along with the necessary voltage regulator.
+> Define the Wheat board dependent part of the CAN0/1 device nodes...
 >
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Based  on the original (and large) patch by Vladimir Barinov
+> <vladimir.barinov@cogentembedded.com>.
 >
-> ---
-> This patch is against the 'renesas-devel-20160830-v4.8-rc4' of Simon Horman's
-> 'renesas.git' repo plus the CAN patch posted yesterday.
-> Starting with this patch, SMSC LAN89218 Ethernet chip starts to misbehave on my
-> board...
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+[...]
 
-    Fortunately, this ill effect has been fixed by Jeremy Lintion's smsc911x 
-driver patches that should hit Linus' tree soon (they're alredy in DaveM's 
-net.git)...
+    This patch seems stuck for no apparent reason...
 
 MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
