@@ -1,98 +1,97 @@
-From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v2] iio: sx9500: add final devicetree support
-Date: Sat, 03 Sep 2016 12:30:00 +0200
-Message-ID: <1472898600.1918.4.camel@googlemail.com>
-References: <1472827740.1929.26.camel@googlemail.com>
-         <CAOMZO5BeL1EKOQvZQoXXObttHSKxL7UQ1s2r8H4EOuROOb_YnQ@mail.gmail.com>
-         <1472828671.1929.32.camel@googlemail.com>
-         <CAOMZO5BVDS=AaSyRS0ELBiEKx3RxdstXgA_xJ6ANUzKDxdyBxg@mail.gmail.com>
-         <1472829819.12668.3.camel@googlemail.com>
-         <CAOMZO5DbJLnH1wm2KuML+O36O-eSYWeGwrxE5pdKSRtB-Js-yA@mail.gmail.com>
-         <1472834833.12668.11.camel@googlemail.com>
-         <CAOMZO5B8ttBvf-zimO5R_kgpzR2bxF73Ur0vZpBKUX8Ytbs8uQ@mail.gmail.com>
-Reply-To: chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [v3 1/2] mmc: DT: sdhci-brcmstb: Bindings document for common sdhci-brcmstb
+Date: Sat, 3 Sep 2016 19:48:09 +0900
+Message-ID: <DA8707BB-D3A3-4D77-8D5F-3F39E3FB5009@gmail.com>
+References: <20160830063010.10171-1-jaedon.shin@gmail.com> <20160830063010.10171-2-jaedon.shin@gmail.com> <20160902145545.GA14098@rob-hp-laptop>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5B8ttBvf-zimO5R_kgpzR2bxF73Ur0vZpBKUX8Ytbs8uQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20160902145545.GA14098@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vlad Dogaru <ddvlad-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This makes sx9500 driver usable on devicetree based platforms too.
+Hi Rob,
 
-Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
+On Sep 2, 2016, at 11:55 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>=20
+> On Tue, Aug 30, 2016 at 03:30:09PM +0900, Jaedon Shin wrote:
+>> - Renames the DT binding document to common for ARM and MIPS based =
+SoCs
+>> - Adds a compatible string "brcm,bcm7445-sdhci" that is =
+representation
+>>  for the Broadcom BCM7445 and family. It is initial and typical 28nm
+>>  generation ARM based SoC.
+>>=20
+>> Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>> .../mmc/{brcm,bcm7425-sdhci.txt =3D> brcm,sdhci-brcmstb.txt}        | =
+8 +++++---
+>> 1 file changed, 5 insertions(+), 3 deletions(-)
+>> rename Documentation/devicetree/bindings/mmc/{brcm,bcm7425-sdhci.txt =
+=3D> brcm,sdhci-brcmstb.txt} (81%)
+>>=20
+>> diff --git =
+a/Documentation/devicetree/bindings/mmc/brcm,bcm7425-sdhci.txt =
+b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
+>> similarity index 81%
+>> rename from =
+Documentation/devicetree/bindings/mmc/brcm,bcm7425-sdhci.txt
+>> rename to =
+Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
+>> index 82847174c37d..555229367935 100644
+>> --- a/Documentation/devicetree/bindings/mmc/brcm,bcm7425-sdhci.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
+>> @@ -8,14 +8,16 @@ on Device Tree properties to enable them for =
+SoC/Board combinations
+>> that support them.
+>>=20
+>> Required properties:
+>> -- compatible: "brcm,bcm7425-sdhci"
+>> +- compatible: should be one of the following
+>> +  - "brcm,bcm7425-sdhci"
+>> +  - "brcm,bcm7445-sdhci"
+>>=20
+>> Refer to clocks/clock-bindings.txt for generic clock consumer =
+properties.
+>>=20
+>> Example:
+>>=20
+>> 	sdhci@f03e0100 {
+>> -		compatible =3D "brcm,bcm7425-sdhci";
+>> +		compatible =3D "brcm,bcm7445-sdhci";
+>> 		reg =3D <0xf03e0000 0x100>;
+>> 		interrupts =3D <0x0 0x26 0x0>;
+>> 		sdhci,auto-cmd12;
+>> @@ -27,7 +29,7 @@ Example:
+>> 	sdhci@f03e0300 {
+>> 		non-removable;
+>> 		bus-width =3D <0x8>;
+>> -		compatible =3D "brcm,bcm7425-sdhci";
+>> +		compatible =3D "brcm,bcm7445-sdhci";
+>=20
+> These changes to the example seem pointless. Drop them.
 
-Changes in v2:
+Previously, the compatible string "brcm,bcm7425-sdhci" is representation =
+all
+MIPS and ARM SoCs including bcm7445. If compatible string is split two =
+strings,
+the example devicetree node is wrong. It is for bcm7445.
 
- - fix docu: add optional property reset-gpios
- - adapt docu: change example "reset-gpios"
+I'll be add commit message this or
+Will I need to create a new patch to change example nodes?
 
- .../devicetree/bindings/iio/proximity/sx9500.txt   | 24 ++++++++++++++++++++++
- drivers/iio/proximity/sx9500.c                     |  7 +++++++
- 2 files changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/sx9500.txt
+Thanks,
+Jaedon
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/sx9500.txt b/Documentation/devicetree/bindings/iio/proximity/sx9500.txt
-new file mode 100644
-index 0000000..b301dd2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/sx9500.txt
-@@ -0,0 +1,24 @@
-+Semtech's SX9500 capacitive proximity button device driver
-+
-+Required properties:
-+	- compatible: must be "semtech,sx9500"
-+	- reg: i2c address where to find the device
-+	- interrupt-parent : should be the phandle for the interrupt controller
-+	- interrupts : the sole interrupt generated by the device
-+
-+	Refer to interrupt-controller/interrupts.txt for generic
-+	interrupt client node bindings.
-+
-+Optional properties:
-+	- reset-gpios: Reference to the GPIO connected to the device's active
-+	  low reset pin.
-+
-+Example:
-+
-+sx9500@28 {
-+	compatible = "semtech,sx9500";
-+	reg = <0x28>;
-+	interrupt-parent = <&gpio2>;
-+	interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
-+	reset-gpios = <&gpio2 10 GPIO_ACTIVE_LOW>;
-+};
-diff --git a/drivers/iio/proximity/sx9500.c b/drivers/iio/proximity/sx9500.c
-index 66cd09a..a136b34 100644
---- a/drivers/iio/proximity/sx9500.c
-+++ b/drivers/iio/proximity/sx9500.c
-@@ -1025,6 +1025,12 @@ static const struct acpi_device_id sx9500_acpi_match[] = {
- };
- MODULE_DEVICE_TABLE(acpi, sx9500_acpi_match);
- 
-+static const struct of_device_id sx9500_of_match[] = {
-+	{ .compatible = "semtech,sx9500", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sx9500_of_match);
-+
- static const struct i2c_device_id sx9500_id[] = {
- 	{"sx9500", 0},
- 	{ },
-@@ -1035,6 +1041,7 @@ static struct i2c_driver sx9500_driver = {
- 	.driver = {
- 		.name	= SX9500_DRIVER_NAME,
- 		.acpi_match_table = ACPI_PTR(sx9500_acpi_match),
-+		.of_match_table = of_match_ptr(sx9500_of_match),
- 		.pm = &sx9500_pm_ops,
- 	},
- 	.probe		= sx9500_probe,
--- 
-2.1.4
+>=20
+>> 		reg =3D <0xf03e0200 0x100>;
+>> 		interrupts =3D <0x0 0x27 0x0>;
+>> 		sdhci,auto-cmd12;
+>> --=20
+>> 2.9.3
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
