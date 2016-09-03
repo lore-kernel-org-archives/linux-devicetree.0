@@ -1,98 +1,101 @@
-From: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [v3 1/2] mmc: DT: sdhci-brcmstb: Bindings document for common sdhci-brcmstb
-Date: Sat, 3 Sep 2016 19:48:09 +0900
-Message-ID: <DA8707BB-D3A3-4D77-8D5F-3F39E3FB5009@gmail.com>
-References: <20160830063010.10171-1-jaedon.shin@gmail.com> <20160830063010.10171-2-jaedon.shin@gmail.com> <20160902145545.GA14098@rob-hp-laptop>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: dts: sun8i: Extend Orange Pi PC dt to also
+ handle the PC Plus
+Date: Sat, 3 Sep 2016 13:05:03 +0200
+Message-ID: <a2f835f1-01c9-446f-d541-245d6b33c415@redhat.com>
+References: <1468095718-18515-1-git-send-email-hdegoede@redhat.com>
+ <20160713084505.GE4761@lukather>
+ <bce2b340-a930-8771-4560-dc61bf5828d5@redhat.com>
+ <20160725064033.GA7419@lukather>
+ <74d3b5eb-601a-cc1d-a44e-fea2895fd8b2@redhat.com>
+ <20160728181757.GD6682@lukather>
+ <f71f9d2b-00d4-27b8-1535-1ddc58f04ca3@redhat.com>
+ <b6636083-917e-cc3a-9107-401fbd483fb7@redhat.com>
+ <20160831162819.GK14379@lukather>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160902145545.GA14098@rob-hp-laptop>
+In-Reply-To: <20160831162819.GK14379@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-On Sep 2, 2016, at 11:55 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->=20
-> On Tue, Aug 30, 2016 at 03:30:09PM +0900, Jaedon Shin wrote:
->> - Renames the DT binding document to common for ARM and MIPS based =
-SoCs
->> - Adds a compatible string "brcm,bcm7445-sdhci" that is =
-representation
->>  for the Broadcom BCM7445 and family. It is initial and typical 28nm
->>  generation ARM based SoC.
->>=20
->> Signed-off-by: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->> .../mmc/{brcm,bcm7425-sdhci.txt =3D> brcm,sdhci-brcmstb.txt}        | =
-8 +++++---
->> 1 file changed, 5 insertions(+), 3 deletions(-)
->> rename Documentation/devicetree/bindings/mmc/{brcm,bcm7425-sdhci.txt =
-=3D> brcm,sdhci-brcmstb.txt} (81%)
->>=20
->> diff --git =
-a/Documentation/devicetree/bindings/mmc/brcm,bcm7425-sdhci.txt =
-b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
->> similarity index 81%
->> rename from =
-Documentation/devicetree/bindings/mmc/brcm,bcm7425-sdhci.txt
->> rename to =
-Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
->> index 82847174c37d..555229367935 100644
->> --- a/Documentation/devicetree/bindings/mmc/brcm,bcm7425-sdhci.txt
->> +++ b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
->> @@ -8,14 +8,16 @@ on Device Tree properties to enable them for =
-SoC/Board combinations
->> that support them.
->>=20
->> Required properties:
->> -- compatible: "brcm,bcm7425-sdhci"
->> +- compatible: should be one of the following
->> +  - "brcm,bcm7425-sdhci"
->> +  - "brcm,bcm7445-sdhci"
->>=20
->> Refer to clocks/clock-bindings.txt for generic clock consumer =
-properties.
->>=20
->> Example:
->>=20
->> 	sdhci@f03e0100 {
->> -		compatible =3D "brcm,bcm7425-sdhci";
->> +		compatible =3D "brcm,bcm7445-sdhci";
->> 		reg =3D <0xf03e0000 0x100>;
->> 		interrupts =3D <0x0 0x26 0x0>;
->> 		sdhci,auto-cmd12;
->> @@ -27,7 +29,7 @@ Example:
->> 	sdhci@f03e0300 {
->> 		non-removable;
->> 		bus-width =3D <0x8>;
->> -		compatible =3D "brcm,bcm7425-sdhci";
->> +		compatible =3D "brcm,bcm7445-sdhci";
->=20
-> These changes to the example seem pointless. Drop them.
+On 31-08-16 18:28, Maxime Ripard wrote:
+> Hi Hans,
+>
+> Sorry for the slow response, it was burried in my inbox.
+>
+> On Sun, Aug 07, 2016 at 04:25:20PM +0200, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 28-07-16 22:36, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 28-07-16 20:17, Maxime Ripard wrote:
+>>>> Hi Hans,
+>>>>
+>>>> On Tue, Jul 26, 2016 at 11:07:23PM +0200, Hans de Goede wrote:
+>>>>>>>> Nothing prevents you from including the orange pi pc dts, from the
+>>>>>>>> orange pi plus dts.
+>>>>>>>>
+>>>>>>>> It prevents the duplication you were trying to avoid, and it doesn't
+>>>>>>>> create all those spurious errors and devices.
+>>>>>>>
+>>>>>>> That would solve the copy paste problem on the kernel side, but that
+>>>>>>> would still mean adding a new u-boot defconfig for this, which means that
+>>>>>>> all the distro's which ship with prebuild u-boot binaries need to build
+>>>>>>> for yet another board, something which I would like to avoid.
+>>>>>>
+>>>>>> Still, registering devices that are not present on the board is not an
+>>>>>> option.
+>>>>>
+>>>>> Ok, new version send.
+>>>>>
+>>>>> What about the other 3 patches in this series ?
+>>>>
+>>>> I guess the same comment applies for patch 2.
+>>>
+>>> The difference is that there really is no harm at all from
+>>> enabling the extra usb controllers used on the plus 2e
+>>> on the plus and plus 2 as well, no errors, no nothing, they
+>>> just sit their as usb controllers without an usb device plugged
+>>> in. But if you insist I can do a separate dts + u-boot defconfig
+>>> for the plus 2e as well (but I would rather not).
+>>
+>> Ping, what is the verdict on this, are you ok with the patch or
+>> do you want me to create a separate dts file for the Orange Pi
+>> Plus 2E, note that doing so is going to be highly confusing to
+>> users, there are 3 plus boards:
+>
+> I still believe that enabling clocks, regulators, claiming pins for
+> device that are entirely unused on the board is not ok.
+>
+>> Orange Pi Plus
+>> Orange Pi Plus 2   (same as the original plus but with 2G RAM, uses same u-boot defconfig / dts file)
+>
+> Yes, that makes sense.
+>
+>> Orange Pi Plus 2E  (drops the USB-hub instead using all 3 host controllers)
+>
+> However, I'm really worried about this one. If we go this way, there's
+> essentially no going back. If for some reason we want to have a
+> separate DT in the future (some unforeseen quirk to apply, pin to
+> setup that conflicts on another board, etc.), we will be completely
+> screwed because our users will be expecting to use the common DT,
+> while it wouldn't be wise anymore.
+>
+> The other way around is much easier to deal with.
 
-Previously, the compatible string "brcm,bcm7425-sdhci" is representation =
-all
-MIPS and ARM SoCs including bcm7445. If compatible string is split two =
-strings,
-the example devicetree node is wrong. It is for bcm7445.
+OK, fair enough, one patch to add a separate dts file for
+the plus 2e coming up.
 
-I'll be add commit message this or
-Will I need to create a new patch to change example nodes?
+Regards,
 
-Thanks,
-Jaedon
-
->=20
->> 		reg =3D <0xf03e0200 0x100>;
->> 		interrupts =3D <0x0 0x27 0x0>;
->> 		sdhci,auto-cmd12;
->> --=20
->> 2.9.3
-
+Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
