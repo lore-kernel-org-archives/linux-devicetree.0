@@ -1,47 +1,73 @@
-From: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] dts: sun8i-h3: add UART1-3 to Orange Pi Plus
-Date: Sat, 3 Sep 2016 14:09:32 +0200
-Message-ID: <20160903120932.GA6289@carbon.kippendief.biz>
-References: <1472671858-29220-1-git-send-email-jorik@kippendief.biz>
- <1472671858-29220-5-git-send-email-jorik@kippendief.biz>
- <20160902070425.GB6313@lukather>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/3] MIPS: OCTEON: add DTS for D-Link DSR-500N
+Date: Sat, 3 Sep 2016 15:09:58 +0300
+Message-ID: <51b74b54-a624-f85e-55bf-a99c4188cd44@cogentembedded.com>
+References: <20160902211136.8610-1-aaro.koskinen@iki.fi>
+ <20160902211136.8610-3-aaro.koskinen@iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160902070425.GB6313@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160902211136.8610-3-aaro.koskinen@iki.fi>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aaro Koskinen <aaro.koskinen@iki.fi>, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 02, 2016 at 09:04:25AM +0200, Maxime Ripard wrote:
->Unfortunately, these pins can be used for other purposes as well, so
->we cannot make force that decision down to our users.
+Hello.
 
-Yes, but since the associated peripheral is disabled, the users are free 
-to configure other functions/peripherals, right? I mean something like 
-this in pseudo-DT:
+On 9/3/2016 12:11 AM, Aaro Koskinen wrote:
 
- /soc/pio: pinctrl@01c20800/uart1_pins:
-   allwinner,pins = "PG6, PG7";
- /soc/pio: pinctrl@01c20800/foo0_pins:
-   allwinner,pins = "PG6, PG7";
-   ..
- /soc/uart1: serial@serial@01c28400:
-   pinctrl-0 = <&uart1_pins>;
-   status = "disabled";
- /soc/bar:
-   pinctrl-0 = <&uart1_pins>;
-   status = "disabled";
+> Add DTS for D-Link DSR-500N.
+>
+> Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+> ---
+>  .../mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts | 42 ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts
+>
+> diff --git a/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts b/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts
+> new file mode 100644
+> index 0000000..6cacabb
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts
+> @@ -0,0 +1,42 @@
+> +/*
+> + * Device tree source for D-Link DSR-500N.
+> + *
+> + * Written by: Aaro Koskinen <aaro.koskinen@iki.fi>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +/include/ "dlink_dsr-500n-1000n.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +	model = "dlink,dsr-500n";
+> +	compatible = "dlink,dsr-500n", "cavium,octeon-3860";
+> +
+> +	soc@0 {
+> +		uart0: serial@1180000000800 {
+> +			clock-frequency = <300000000>;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +
+> +		usb {
+> +			label = "usb";
+> +			gpios = <&gpio 9 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		wps {
+> +			label = "wps";
 
-Assuming Linux/DT allows this, this would force nothing, only offer 
-choice and ease of use.
+    You don't need LED labels when the are identical to the node names.
 
-Best,
+[...]
 
-Jorik
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MBR, Sergei
