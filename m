@@ -1,274 +1,76 @@
-From: Hoan Tran <hotran-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v2 2/3] clk: xgene: Add PMD clock
-Date: Fri,  2 Sep 2016 17:40:54 -0700
-Message-ID: <1472863255-32337-3-git-send-email-hotran@apm.com>
-References: <1472863255-32337-1-git-send-email-hotran@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472863255-32337-1-git-send-email-hotran-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lho-qTEPVZfXA3Y@public.gmane.org, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, Hoan Tran <hotran-qTEPVZfXA3Y@public.gmane.org>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH v3 03/22] usb: ulpi: Support device discovery via device properties
+Date: Fri, 2 Sep 2016 18:14:25 -0700
+Message-ID: <CAJOFmgw-gCz_NnqHs2dzMJpt7WdTE0FGC6972fhFsXSg6eMaHw@mail.gmail.com>
+References: <20160901004036.23936-1-stephen.boyd@linaro.org>
+ <20160901004036.23936-4-stephen.boyd@linaro.org> <20160902140922.GC21737@kuha.fi.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160902140922.GC21737@kuha.fi.intel.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Linux USB List <linux-usb@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add X-Gene PMD clock support.
+On Fri, Sep 2, 2016 at 7:09 AM, Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+> Hi,
+>
+> On Wed, Aug 31, 2016 at 05:40:17PM -0700, Stephen Boyd wrote:
+>> @@ -174,14 +219,37 @@ static int ulpi_register(struct device *dev, struct ulpi *ulpi)
+>>       ulpi->id.product = ulpi_read(ulpi, ULPI_PRODUCT_ID_LOW);
+>>       ulpi->id.product |= ulpi_read(ulpi, ULPI_PRODUCT_ID_HIGH) << 8;
+>>
+>> +     return 0;
+>> +}
+>> +
+>> +static int ulpi_register(struct device *dev, struct ulpi *ulpi)
+>> +{
+>> +     int ret;
+>> +
+>>       ulpi->dev.parent = dev;
+>>       ulpi->dev.bus = &ulpi_bus;
+>>       ulpi->dev.type = &ulpi_dev_type;
+>>       dev_set_name(&ulpi->dev, "%s.ulpi", dev_name(dev));
+>>
+>> +     if (IS_ENABLED(CONFIG_OF)) {
+>
+> I don't think you need to check that in this case.
+>
+>> +             ret = ulpi_of_register(ulpi);
+>> +             if (ret)
+>> +                     return ret;
+>> +     }
+>> +
+>>       ACPI_COMPANION_SET(&ulpi->dev, ACPI_COMPANION(dev));
+>
+> ACPI_COMPANION_SET will overwrite the primary fwnode unconditionally,
+> so just to play it safe, do this before you call ulpi_of_register().
 
-PMD clock is implemented for a single register field.
-  Output rate = parent_rate * (denominator - scale) / denominator
-with
-  - denominator = bitmask of register field + 1
-  - scale = values of register field
+Ok.
 
-For example, for bitmask is 0x7, denominator will be 8 and scale
-will be computed and programmed accordingly.
+>
+>> -     request_module("ulpi:v%04xp%04x", ulpi->id.vendor, ulpi->id.product);
+>> +     ret = ulpi_read_id(ulpi);
+>> +     /*
+>> +      * Ignore failure in case of DT node because the device may
+>> +      * not be powered up yet but we can still match by compatible
+>> +      */
+>> +     if (ret && !ulpi->dev.of_node)
+>> +             return ret;
+>> +
+>> +     if (of_device_request_module(&ulpi->dev))
+>> +             request_module("ulpi:v%04xp%04x", ulpi->id.vendor,
+>> +                            ulpi->id.product);
+>
+> I don't think this works in all cases. If of_device_request_module()
+> fails and we don't have the id.vendor/product set, we should not
+> register the device. It also looks a bit messy.
+>
+> How about just using of_device_request_module() call as fallback in
+> ulpi_read_id() and moving also request_module() call there:
 
-Signed-off-by: Hoan Tran <hotran-qTEPVZfXA3Y@public.gmane.org>
----
- drivers/clk/clk-xgene.c | 221 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 221 insertions(+)
-
-diff --git a/drivers/clk/clk-xgene.c b/drivers/clk/clk-xgene.c
-index 3433132..5daddf5 100644
---- a/drivers/clk/clk-xgene.c
-+++ b/drivers/clk/clk-xgene.c
-@@ -217,6 +217,226 @@ static void xgene_pcppllclk_init(struct device_node *np)
- 	xgene_pllclk_init(np, PLL_TYPE_PCP);
- }
- 
-+/**
-+ * struct xgene_clk_pmd - PMD clock
-+ *
-+ * @hw:		handle between common and hardware-specific interfaces
-+ * @reg:	register containing the fractional scale multiplier (scaler)
-+ * @shift:	shift to the unit bit field
-+ * @denom:	1/denominator unit
-+ * @lock:	register lock
-+ * Flags:
-+ * XGENE_CLK_PMD_SCALE_INVERTED - By default the scaler is the value read
-+ *	from the register plus one. For example,
-+ *		0 for (0 + 1) / denom,
-+ *		1 for (1 + 1) / denom and etc.
-+ *	If this flag is set, it is
-+ *		0 for (denom - 0) / denom,
-+ *		1 for (denom - 1) / denom and etc.
-+ *
-+ */
-+struct xgene_clk_pmd {
-+	struct clk_hw	hw;
-+	void __iomem	*reg;
-+	u8		shift;
-+	u32		mask;
-+	u64		denom;
-+	u32		flags;
-+	spinlock_t	*lock;
-+};
-+
-+#define to_xgene_clk_pmd(_hw) container_of(_hw, struct xgene_clk_pmd, hw)
-+
-+#define XGENE_CLK_PMD_SCALE_INVERTED	BIT(0)
-+#define XGENE_CLK_PMD_SHIFT		8
-+#define XGENE_CLK_PMD_WIDTH		3
-+
-+static unsigned long xgene_clk_pmd_recalc_rate(struct clk_hw *hw,
-+					       unsigned long parent_rate)
-+{
-+	struct xgene_clk_pmd *fd = to_xgene_clk_pmd(hw);
-+	unsigned long flags = 0;
-+	u64 ret, scale;
-+	u32 val;
-+
-+	if (fd->lock)
-+		spin_lock_irqsave(fd->lock, flags);
-+	else
-+		__acquire(fd->lock);
-+
-+	val = clk_readl(fd->reg);
-+
-+	if (fd->lock)
-+		spin_unlock_irqrestore(fd->lock, flags);
-+	else
-+		__release(fd->lock);
-+
-+	ret = (u64)parent_rate;
-+
-+	scale = (val & fd->mask) >> fd->shift;
-+	if (fd->flags & XGENE_CLK_PMD_SCALE_INVERTED)
-+		scale = fd->denom - scale;
-+	else
-+		scale++;
-+
-+	/* freq = parent_rate * scaler / denom */
-+	do_div(ret, fd->denom);
-+	ret *= scale;
-+	if (ret == 0)
-+		ret = (u64)parent_rate;
-+
-+	return ret;
-+}
-+
-+static long xgene_clk_pmd_round_rate(struct clk_hw *hw, unsigned long rate,
-+				     unsigned long *parent_rate)
-+{
-+	struct xgene_clk_pmd *fd = to_xgene_clk_pmd(hw);
-+	u64 ret, scale;
-+
-+	if (!rate || rate >= *parent_rate)
-+		return *parent_rate;
-+
-+	/* freq = parent_rate * scaler / denom */
-+	ret = rate * fd->denom;
-+	scale = DIV_ROUND_UP_ULL(ret, *parent_rate);
-+
-+	ret = (u64)*parent_rate * scale;
-+	do_div(ret, fd->denom);
-+
-+	return ret;
-+}
-+
-+static int xgene_clk_pmd_set_rate(struct clk_hw *hw, unsigned long rate,
-+				  unsigned long parent_rate)
-+{
-+	struct xgene_clk_pmd *fd = to_xgene_clk_pmd(hw);
-+	unsigned long flags = 0;
-+	u64 scale, ret;
-+	u32 val;
-+
-+	/*
-+	 * Compute the scaler:
-+	 *
-+	 * freq = parent_rate * scaler / denom, or
-+	 * scaler = freq * denom / parent_rate
-+	 */
-+	ret = rate * fd->denom;
-+	scale = DIV_ROUND_UP_ULL(ret, (u64)parent_rate);
-+
-+	/* Check if inverted */
-+	if (fd->flags & XGENE_CLK_PMD_SCALE_INVERTED)
-+		scale = fd->denom - scale;
-+	else
-+		scale--;
-+
-+	if (fd->lock)
-+		spin_lock_irqsave(fd->lock, flags);
-+	else
-+		__acquire(fd->lock);
-+
-+	val = clk_readl(fd->reg);
-+	val &= ~fd->mask;
-+	val |= (scale << fd->shift);
-+	clk_writel(val, fd->reg);
-+
-+	if (fd->lock)
-+		spin_unlock_irqrestore(fd->lock, flags);
-+	else
-+		__release(fd->lock);
-+
-+	return 0;
-+}
-+
-+static const struct clk_ops xgene_clk_pmd_ops = {
-+	.recalc_rate = xgene_clk_pmd_recalc_rate,
-+	.round_rate = xgene_clk_pmd_round_rate,
-+	.set_rate = xgene_clk_pmd_set_rate,
-+};
-+
-+static struct clk *
-+xgene_register_clk_pmd(struct device *dev,
-+		       const char *name, const char *parent_name,
-+		       unsigned long flags, void __iomem *reg, u8 shift,
-+		       u8 width, u64 denom, u32 clk_flags, spinlock_t *lock)
-+{
-+	struct xgene_clk_pmd *fd;
-+	struct clk_init_data init;
-+	struct clk *clk;
-+
-+	fd = kzalloc(sizeof(*fd), GFP_KERNEL);
-+	if (!fd)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.ops = &xgene_clk_pmd_ops;
-+	init.flags = flags;
-+	init.parent_names = parent_name ? &parent_name : NULL;
-+	init.num_parents = parent_name ? 1 : 0;
-+
-+	fd->reg = reg;
-+	fd->shift = shift;
-+	fd->mask = (BIT(width) - 1) << shift;
-+	fd->denom = denom;
-+	fd->flags = clk_flags;
-+	fd->lock = lock;
-+	fd->hw.init = &init;
-+
-+	clk = clk_register(dev, &fd->hw);
-+	if (IS_ERR(clk)) {
-+		pr_err("%s: could not register clk %s\n", __func__, name);
-+		kfree(fd);
-+		return NULL;
-+	}
-+
-+	return clk;
-+}
-+
-+static void xgene_pmdclk_init(struct device_node *np)
-+{
-+	const char *clk_name = np->full_name;
-+	void __iomem *csr_reg;
-+	struct resource res;
-+	struct clk *clk;
-+	u64 denom;
-+	u32 flags = 0;
-+	int rc;
-+
-+	/* Check if the entry is disabled */
-+	if (!of_device_is_available(np))
-+		return;
-+
-+	/* Parse the DTS register for resource */
-+	rc = of_address_to_resource(np, 0, &res);
-+	if (rc != 0) {
-+		pr_err("no DTS register for %s\n", np->full_name);
-+		return;
-+	}
-+	csr_reg = of_iomap(np, 0);
-+	if (!csr_reg) {
-+		pr_err("Unable to map resource for %s\n", np->full_name);
-+		return;
-+	}
-+	of_property_read_string(np, "clock-output-names", &clk_name);
-+
-+	denom = BIT(XGENE_CLK_PMD_WIDTH);
-+	flags |= XGENE_CLK_PMD_SCALE_INVERTED;
-+
-+	clk = xgene_register_clk_pmd(NULL, clk_name,
-+				     of_clk_get_parent_name(np, 0), 0,
-+				     csr_reg, XGENE_CLK_PMD_SHIFT,
-+				     XGENE_CLK_PMD_WIDTH, denom,
-+				     flags, &clk_lock);
-+	if (!IS_ERR(clk)) {
-+		of_clk_add_provider(np, of_clk_src_simple_get, clk);
-+		clk_register_clkdev(clk, clk_name, NULL);
-+		pr_debug("Add %s clock\n", clk_name);
-+	} else {
-+		if (csr_reg)
-+			iounmap(csr_reg);
-+	}
-+}
-+
- /* IP Clock */
- struct xgene_dev_parameters {
- 	void __iomem *csr_reg;		/* CSR for IP clock */
-@@ -543,6 +763,7 @@ err:
- 
- CLK_OF_DECLARE(xgene_socpll_clock, "apm,xgene-socpll-clock", xgene_socpllclk_init);
- CLK_OF_DECLARE(xgene_pcppll_clock, "apm,xgene-pcppll-clock", xgene_pcppllclk_init);
-+CLK_OF_DECLARE(xgene_pmd_clock, "apm,xgene-pmd-clock", xgene_pmdclk_init);
- CLK_OF_DECLARE(xgene_socpll_v2_clock, "apm,xgene-socpll-v2-clock",
- 	       xgene_socpllclk_init);
- CLK_OF_DECLARE(xgene_pcppll_v2_clock, "apm,xgene-pcppll-v2-clock",
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sure I'll fold it in and test. Should we "goto err" if we can't read
+the scratch register though? I would think that's a "real" failure and
+we shouldn't try to support DT in that case.
