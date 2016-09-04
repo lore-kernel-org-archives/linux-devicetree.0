@@ -1,198 +1,96 @@
-From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: use definition in rockchip pinctrl header
- to describe gpios on Popmetal-RK3288
-Date: Sun, 4 Sep 2016 20:04:30 +0800
-Message-ID: <201609042016.JNe65VGp%fengguang.wu@intel.com>
-References: <1472978177-970-1-git-send-email-andy.yan@rock-chips.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] net: stmmac: add a glue driver for the Amlogic
+ Meson 8b / GXBB DWMAC
+Date: Sun, 4 Sep 2016 20:20:15 +0200
+Message-ID: <CAFBinCCVUhUVyceGc2capcCPOK8MTsn+RcC9gnrtMVvZUENXtQ@mail.gmail.com>
+References: <20160820093538.9707-1-martin.blumenstingl@googlemail.com>
+ <20160828161637.9941-1-martin.blumenstingl@googlemail.com>
+ <20160828161637.9941-5-martin.blumenstingl@googlemail.com> <20160830191906.GD12510@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="J/dobhs11T7y2rNN"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1472978177-970-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20160830191906.GD12510-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Aug 30, 2016 at 9:19 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>> +             return PTR_ERR(dwmac->m250_mux_clk);
+>> +
+>> +     /* create the m250_div */
+>> +     snprintf(clk_name, sizeof(clk_name), "%s#m250_div", dev_name(dev));
+>> +     init.name = devm_kstrdup(dev, clk_name, GFP_KERNEL);
+>> +     init.ops = &clk_divider_ops;
+>> +     init.flags = CLK_IS_BASIC | CLK_SET_RATE_PARENT;
+>> +     clk_div_parents[0] = __clk_get_name(dwmac->m250_mux_clk);
+>> +     init.parent_names = clk_div_parents;
+>> +     init.num_parents = ARRAY_SIZE(clk_div_parents);
+>> +
+>> +     dwmac->m250_div.reg = dwmac->regs + PRG_ETH0;
+>> +     dwmac->m250_div.shift = PRG_ETH0_CLK_M250_DIV_SHIFT;
+>> +     dwmac->m250_div.width = PRG_ETH0_CLK_M250_DIV_WIDTH;
+>> +     dwmac->m250_div.hw.init = &init;
+>> +     dwmac->m250_div.flags = CLK_DIVIDER_ONE_BASED | CLK_DIVIDER_ALLOW_ZERO;
+>> +
+>> +     dwmac->m250_div_clk = devm_clk_register(dev, &dwmac->m250_div.hw);
+>
+> We've been trying to move away from devm_clk_register() to
+> devm_clk_hw_register() so that clk providers aren't also clk
+> consumers. Obviously in this case this driver is a provider and a
+> consumer, so this isn't as important. Kevin did something similar
+> in the mmc driver, so I'll reiterate what I said on that patch.
+> Perhaps we should make __clk_create_clk() into a real clk
+> provider API so that we can use devm_clk_hw_register() here and
+> then generate a clk for this device. That would allow us to have
+> proper consumer tracking without relying on the clk that is
+> returned from clk_register() (the intent is to make that clk
+> instance internal to the framework).
+please correct me if I'm wrong but I read this as "this code is OK for
+now, but it should be changed once the clk framework has API for
+that".
+If still you want me to change the code then please send a NACK
+(preferably on the updated series which I am preparing right now).
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>> +     if (WARN_ON(PTR_ERR_OR_ZERO(dwmac->m250_div_clk)))
+>> +             return PTR_ERR(dwmac->m250_div_clk);
+>> +
+>> +     /* create the m25_div */
+>> +     snprintf(clk_name, sizeof(clk_name), "%s#m25_div", dev_name(dev));
+>> +     init.name = devm_kstrdup(dev, clk_name, GFP_KERNEL);
+>> +     init.ops = &clk_divider_ops;
+>> +     init.flags = CLK_IS_BASIC | CLK_SET_RATE_PARENT;
+>> +     clk_div_parents[0] = __clk_get_name(dwmac->m250_div_clk);
+>> +     init.parent_names = clk_div_parents;
+>> +     init.num_parents = ARRAY_SIZE(clk_div_parents);
+>> +
+>> +     dwmac->m25_div.reg = dwmac->regs + PRG_ETH0;
+>> +     dwmac->m25_div.shift = PRG_ETH0_CLK_M25_DIV_SHIFT;
+>> +     dwmac->m25_div.width = PRG_ETH0_CLK_M25_DIV_WIDTH;
+>> +     dwmac->m25_div.table = clk_25m_div_table;
+>> +     dwmac->m25_div.hw.init = &init;
+>> +     dwmac->m25_div.flags = CLK_DIVIDER_ALLOW_ZERO;
+>> +
+>> +     dwmac->m25_div_clk = devm_clk_register(dev, &dwmac->m25_div.hw);
+>> +     if (WARN_ON(PTR_ERR_OR_ZERO(dwmac->m25_div_clk)))
+>> +             return PTR_ERR(dwmac->m25_div_clk);
+>> +
+>> +     return 0;
+>
+> This could be return WARN_ON(PTR_ERR_OR_ZERO(...))
+This would work as well but I prefer the way it is right now (as one
+could easily extend the code without having to touch any existing code
+apart from the last return).
+However, as it's always the case with personal preference: if
+coding-style requires me to change it then I'll do so, just let me
+know.
 
-Hi Andy,
+I have addressed all other issues you found (thanks for that!) in v4
+(which I am about to send in the next few minutes).
 
-[auto build test ERROR on rockchip/for-next]
-[also build test ERROR on v4.8-rc4 next-20160825]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-[Suggest to use git(>=2.9.0) format-patch --base=<commit> (or --base=auto for convenience) to record what (public, well-known) commit your patch series was built on]
-[Check https://git-scm.com/docs/git-format-patch for more information]
 
-url:    https://github.com/0day-ci/linux/commits/Andy-Yan/One-fix-and-some-improvements-for-RK3288-Popmetal-board/20160904-164007
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git for-next
-config: arm-aspeed_g4_defconfig (attached as .config)
-compiler: arm-linux-gnueabi-gcc (Debian 5.4.0-6) 5.4.0 20160609
-reproduce:
-        wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # save the attached .config to linux build tree
-        make.cross ARCH=arm 
-
-All errors (new ones prefixed by >>):
-
->> Error: arch/arm/boot/dts/rk3288-popmetal.dts:131.18-19 syntax error
->> FATAL ERROR: Unable to parse input tree
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
---J/dobhs11T7y2rNN
-Content-Type: application/octet-stream
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-
---J/dobhs11T7y2rNN--
+Thanks,
+Martin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
