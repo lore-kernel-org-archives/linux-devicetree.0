@@ -1,77 +1,45 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v2 2/3] ARM64: dts: amlogic: eMMC support for all Tronsmart Vega S95 devices
-Date: Sun,  4 Sep 2016 20:29:02 +0200
-Message-ID: <20160904182903.1841-3-martin.blumenstingl@googlemail.com>
-References: <20160815133811.19646-1-martin.blumenstingl@googlemail.com>
- <20160904182903.1841-1-martin.blumenstingl@googlemail.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] ARM: dts: r8a7794: fix PWM clock parent
+Date: Sun, 04 Sep 2016 22:55:37 +0300
+Message-ID: <1994467.CVFvpbaMyF@wasted.cogentembedded.com>
+References: <1618499.8bcj8adpVO@wasted.cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160904182903.1841-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1618499.8bcj8adpVO-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds eMMC support for all Tronsmart Vega S95 devices using
-sd_emmc_c. This is implemented similar to the p20x boards (meaning it
-uses fixed regulators).
+When removing the non-existing thermal clock I forgot to remove its
+parent from the node's "clocks" property  -- this led to a wrong PWM
+clock's parent clock.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Fixes: 2a29f9d6fea8 ("ARM: dts: r8a7794: add MSTP5 clocks")
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+
 ---
- .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+The patch is against the 'renesas-devel-20160902-v4.8-rc4' branch of Simon
+Horman's 'renesas.git' repo...
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index e9ead47..4573bac 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -62,6 +62,21 @@
- 
- 		regulator-always-on;
- 	};
-+
-+	vcc_1v8: regulator@1 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "VCC1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+
-+		regulator-always-on;
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
- };
- 
- &uart_AO {
-@@ -92,3 +107,23 @@
- 	vmmc-supply = <&vcc_3v3>;
- 	voltage-ranges = <3300 3300>;
- };
-+
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-names = "default";
-+
-+	bus-width = <8>;
-+	cap-sd-highspeed;
-+	cap-mmc-highspeed;
-+	max-frequency = <200000000>;
-+	non-removable;
-+	disable-wp;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	voltage-ranges = <1800 3300>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vmmcq-sumpply = <&vcc_1v8>;
-+};
--- 
-2.9.3
+arch/arm/boot/dts/r8a7794.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: renesas/arch/arm/boot/dts/r8a7794.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7794.dtsi
++++ renesas/arch/arm/boot/dts/r8a7794.dtsi
+@@ -1251,7 +1251,7 @@
+ 		mstp5_clks: mstp5_clks@e6150144 {
+ 			compatible = "renesas,r8a7794-mstp-clocks", "renesas,cpg-mstp-clocks";
+ 			reg = <0 0xe6150144 0 4>, <0 0xe615003c 0 4>;
+-			clocks = <&hp_clk>, <&extal_clk>, <&p_clk>;
++			clocks = <&hp_clk>, <&p_clk>;
+ 			#clock-cells = <1>;
+ 			clock-indices = <R8A7794_CLK_AUDIO_DMAC0
+ 					 R8A7794_CLK_PWM>;
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
