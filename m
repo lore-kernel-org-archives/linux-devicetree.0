@@ -1,76 +1,57 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 3/4] usb: dwc2: assert phy reset when waking up in
- rk3288 platform
-Date: Sun, 4 Sep 2016 01:08:55 +0300
-Message-ID: <784a905b-61e8-3786-74fa-de1829cf3f59@cogentembedded.com>
-References: <1472939729-15187-1-git-send-email-ayaka@soulik.info>
- <1472939729-15187-4-git-send-email-ayaka@soulik.info>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1472939729-15187-4-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH] video: mxsfb: get supply regulator optionally
+Date: Sat,  3 Sep 2016 21:26:27 -0700
+Message-ID: <20160904042627.30182-1-stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/04/2016 12:55 AM, Randy Li wrote:
+The lcd-supply is meant to be optional, there are several device-
+trees not specifying it and the code handles error values silently.
+Therefor, avoid creating a dummy regulator (and the associated
+warning) by using devm_regulator_get_optional.
 
-> On the rk3288 USB host-only port (the one that's not the OTG-enabled
-> port) the PHY can get into a bad state when a wakeup is asserted (not
-> just a wakeup from full system suspend but also a wakeup from
-> autosuspend).
->
-> We can get the PHY out of its bad state by asserting its "port reset",
-> but unfortunately that seems to assert a reset onto the USB bus so it
-> could confuse things if we don't actually deenumerate / reenumerate the
-> device.
->
-> We can also get the PHY out of its bad state by fully resetting it using
-> the reset from the CRU (clock reset unit) in chip, which does a more full
-> reset.  The CRU-based reset appears to actually cause devices on the bus
-> to be removed and reinserted, which fixes the problem (albeit in a hacky
-> way).
->
-> It's unfortunate that we need to do a full re-enumeration of devices at
-> wakeup time, but this is better than alternative of letting the bus get
-> wedged.
->
-> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-> ---
->  drivers/usb/dwc2/core_intr.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
-> index d85c5c9..08485b7 100644
-> --- a/drivers/usb/dwc2/core_intr.c
-> +++ b/drivers/usb/dwc2/core_intr.c
-[...]
-> @@ -379,6 +380,17 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->  			/* Restart the Phy Clock */
->  			pcgcctl &= ~PCGCTL_STOPPCLK;
->  			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
-> +
-> +			/*
-> +			 * It is a quirk in Rockchip RK3288, causing by
-> +			 * a hardware bug. This will propagate out and
-> +			 * eventually we'll re-enumerate the device.
-> +			 * Not great but the best we can do
-> +			 */
-> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb")
-> +					&& (NULL != hsotg->phy->ops->reset))
+While at it, document that fact also in the device-tree bindings.
 
-    Don't reverse the operands of !=, please.
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+---
+ Documentation/devicetree/bindings/display/mxsfb.txt | 3 +++
+ drivers/video/fbdev/mxsfb.c                         | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-[...]
+diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt b/Documentation/devicetree/bindings/display/mxsfb.txt
+index 96ec517..0bc530f 100644
+--- a/Documentation/devicetree/bindings/display/mxsfb.txt
++++ b/Documentation/devicetree/bindings/display/mxsfb.txt
+@@ -7,6 +7,9 @@ Required properties:
+ - interrupts: Should contain lcdif interrupts
+ - display : phandle to display node (see below for details)
+ 
++Optional properties:
++- lcd-supply: Regulator for LCD supply voltage.
++
+ * display node
+ 
+ Required properties:
+diff --git a/drivers/video/fbdev/mxsfb.c b/drivers/video/fbdev/mxsfb.c
+index 4e6608c..4f7570f 100644
+--- a/drivers/video/fbdev/mxsfb.c
++++ b/drivers/video/fbdev/mxsfb.c
+@@ -920,7 +920,7 @@ static int mxsfb_probe(struct platform_device *pdev)
+ 	if (IS_ERR(host->clk_disp_axi))
+ 		host->clk_disp_axi = NULL;
+ 
+-	host->reg_lcd = devm_regulator_get(&pdev->dev, "lcd");
++	host->reg_lcd = devm_regulator_get_optional(&pdev->dev, "lcd");
+ 	if (IS_ERR(host->reg_lcd))
+ 		host->reg_lcd = NULL;
+ 
+-- 
+2.9.0
 
-MBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
