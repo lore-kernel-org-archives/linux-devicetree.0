@@ -1,31 +1,94 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: add the tcpc for rk3399 power domain
-Date: Mon, 05 Sep 2016 00:16:00 +0200
-Message-ID: <3920881.7AifuoZ7Y0@phil>
-References: <1472848746-30135-1-git-send-email-wxt@rock-chips.com>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] arm64: dts: rockchip: Support PMU for rk3399 SoCs
+Date: Mon, 05 Sep 2016 06:47:57 +0800
+Message-ID: <57CCA49D.6060907@rock-chips.com>
+References: <1467792357-9749-1-git-send-email-wxt@rock-chips.com>
+ <57CA159D.8050103@rock-chips.com> <2592055.1Nh3JWbsOA@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472848746-30135-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <2592055.1Nh3JWbsOA@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 3. September 2016, 04:39:06 CEST schrieb Caesar Wang:
-> The tcpc is the Type C Port Controller and Type C Port Delivery (tcpd)
-> is part of it, we haven't used them now, add it to save power consumption.
-> 
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
-applied to my dts64 branch for 4.9, after checking in the TRM that the tcpc 
-really doesn't seem to have a matching qos block.
-
-
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ck9uIDIwMTblubQwOeaciDA15pelIDA2OjA5LCBIZWlrbyBTdHVlYm5lciB3cm90ZToKPiBIaSBD
+YWVzYXIsCj4KPiBBbSBTYW1zdGFnLCAzLiBTZXB0ZW1iZXIgMjAxNiwgMDg6MTM6MTcgQ0VTVCBz
+Y2hyaWViIENhZXNhciBXYW5nOgo+PiBIZWlrbywKPj4KPj4gV2hhdCBkbyB5b3UgdGhpbmsgb2Yg
+aXQ/Cj4+IE1heWJlIEkgbmVlZCByZS11cGRhdGUgdGhlc2UgcGF0Y2hlcyBvbiBuZXh0IGtlcm5l
+bCwgYW5kIHJlLXRlc3QgdGhlbS4KPiBJIGNoZWNrZWQgbGludXgtbmV4dCBhbmQgdGhlIHVuZGVy
+bHlpbmcgY2hhbmdlcyBzZWVtIHRvIGFsbCBoYXZlIGdvbmUgaW4gbm93LAo+IHNvIHdlIHNob3Vs
+ZCBiZSBmaW5lLgo+Cj4gVXBkYXRpbmcgdGhlIHBhdGNoZXMgd291bGQgYmUgY29vbC4gSSB0cmll
+ZCBhcHBseWluZyB0aGVtIHRvIG15IGR0czY0IGJyYW5jaAo+IGp1c3Qgbm93LCBidXQgdGhleSBk
+b24ndCBhcHBseSBjbGVhbmx5IGFueW1vcmUgZHVlIHRvIG90aGVyIGNoYW5nZXMgZ29pbmcgaW4K
+PiBiZWZvcmUuCj4KPiBXaGVuIHlvdSBjaGVjayBhZ2FpbnN0IGxpbnV4LW5leHQsIHBsZWFzZSB0
+YWtlIGludG8gYWNjb3VudCB0aGF0IHRoZXJlIGlzIG5vCj4gbmV3IGxpbnV4LW5leHQgc2luY2Ug
+MjAxNjA4MjUgYW5kIDIwMTYwOTA1IGlzIHRoZSBuZXh0IHBsYW5uZWQgbGludXgtbmV4dAo+IHJl
+bGVhc2UgKHByb2JhYmx5IFN0ZXBoZW4gYmVpbmcgb24gaG9saWRheSkuCgpJIHdpbGwgdXBkYXRl
+L3Jlc2VuZCB0aGVtIGJhc2Ugb24geW91ciB2NC45LWFybXNvYy9kdHM2NCBicmFuY2guIChXYWl0
+IGEgCm1vbWVudCB0byByZXRlc3QgdGhlbSkKClRoYW5rcy4KCgo+Cj4KPiBUaGFua3MKPiBIZWlr
+bwo+Cj4+IE9uIDIwMTblubQwN+aciDA25pelIDE2OjA1LCBDYWVzYXIgV2FuZyB3cm90ZToKPj4+
+IEhlbGxvIEhlaWtvLCBNYXJjICYgQVJNIGd1eXMKPj4+Cj4+PiBXaGVuIEpheSBmaXJzdCBzdWJt
+aXR0ZWQgdGhlIHJrMzM5OS5kdHNpIHVwc3RyZWFtCj4+PiA8aHR0cHM6Ly9wYXRjaHdvcmsua2Vy
+bmVsLm9yZy9wYXRjaC84ODg1ODIxLz4gaGUgaGFkIHRoZSBQTVUgbm9kZSBpbgo+Pj4gdGhlcmUs
+Cj4+PiBidXQgdGhlbiB0b29rIGl0IG91dCBiZWNhdXNlIHRoZSB1cHN0cmVhbSBiaW5kaW5nIHdh
+c24ndCBkb25lIHlldC4KPj4+IEl0IGxvb2tzIGFzIGlmIHRoZSB1cHN0cmVhbSBzdHVmZiBoYXMg
+bGFuZGVkLCBzaW5jZSBpbiBsaW51eC9tYXN0ZXIgSSBzZWU6Cj4+PiAyODdlOTM1N2FiY2MgRFQv
+YXJtLGdpYy12MzogRG9jdW1tZW50IFBQSSBwYXJ0aXRpb24gc3VwcG9ydAo+Pj4gZTM4MjViYTFh
+ZjNhIGlycWNoaXAvZ2ljLXYzOiBBZGQgc3VwcG9ydCBmb3IgcGFydGl0aW9uZWQgUFBJcwo+Pj4g
+OWUyYzk4NmNiNDYwIGlycWNoaXA6IEFkZCBwZXItY3B1IGludGVycnVwdCBwYXJ0aXRpb25pbmcg
+bGlicmFyeQo+Pj4gMjIyZGY1NGZkOGI3IGdlbmlycTogQWxsb3cgdGhlIGFmZmluaXR5IG9mIGEg
+cGVyY3B1IGludGVycnVwdCB0byBiZQo+Pj4gc2V0L3JldHJpZXZlZCA2NTFlOGI1NGFiZGUgaXJx
+ZG9tYWluOiBBbGxvdyBkb21haW4gbWF0Y2hpbmcgb24gaXJxX2Z3c3BlYwo+Pj4KPj4+IFRoaXMg
+c2VyaWVzIHBhdGNoZXMgYWRkIHRvIHN1cHBvcnQgdGhlIHJrMzM5OSBTb0NzIFBNVS4KPj4+IEkg
+cGljayB1cCB0aGUgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85MjA5MzY5Ly4K
+Pj4+Cj4+PiBBcyBkbyBzb21lIHRlc3RzIHdpdGggQ2hyb21lT3MgZm9yIG15IHJrMzM5OSBib2Fy
+ZC4KPj4+IFRlc3RlZCB3aXRoIGxpbnVzIG1hc3RlciA0LjctcmM2IGtlcm5lbCBvbiByazMzOTkg
+Ym9hcmQuCj4+PiBodHRwczovL2dpdGh1Yi5jb20vQ2Flc2FyLWdpdGh1Yi9yb2NrY2hpcC90cmVl
+L3JrMzM5OS9wbXUtdXBzdHJlYW0KPj4+Cj4+PiBsb2NhbGhvc3QgLyAjIHBlcmYgbGlzdAo+Pj4K
+Pj4+IExpc3Qgb2YgcHJlLWRlZmluZWQgZXZlbnRzICh0byBiZSB1c2VkIGluIC1lKToKPj4+IGNw
+dS1jeWNsZXMgT1IgY3ljbGVzIFtIYXJkd2FyZSBldmVudF0KPj4+IGluc3RydWN0aW9ucyBbSGFy
+ZHdhcmUgZXZlbnRdCj4+PiBjYWNoZS1yZWZlcmVuY2VzIFtIYXJkd2FyZSBldmVudF0KPj4+IGNh
+Y2hlLW1pc3NlcyBbSGFyZHdhcmUgZXZlbnRdCj4+PiBicmFuY2gtaW5zdHJ1Y3Rpb25zIE9SIGJy
+YW5jaGVzIFtIYXJkd2FyZSBldmVudF0KPj4+IGJyYW5jaC1taXNzZXMgW0hhcmR3YXJlIGV2ZW50
+XQo+Pj4gYnVzLWN5Y2xlcyBbSGFyZHdhcmUgZXZlbnRdCj4+PiAuLi4KPj4+Cj4+PiBwZXJmIHN0
+YXQgLS1jcHUgMC8xLzIvMy4uLi4uIHRvIG1pbml0b3IKPj4+IGUuZy4gY3B1MDsKPj4+Cj4+PiBs
+b2NhbGhvc3QgLyAjIHBlcmYgc3RhdCAtLWNwdSAwCj4+Pgo+Pj4gUGVyZm9ybWFuY2UgY291bnRl
+ciBzdGF0cyBmb3IgJ0NQVShzKSAwJzoKPj4+Cj4+PiAzMzc0LjkxNzU3MSB0YXNrLWNsb2NrICht
+c2VjKSAjIDEuMDAxIENQVXMgdXRpbGl6ZWQgWzEwMC4wMCVdCj4+PiAyMCBjb250ZXh0LXN3aXRj
+aGVzICMgMC4wMDYgSy9zZWMgWzEwMC4wMCVdCj4+PiAyIGNwdS1taWdyYXRpb25zICMgMC4wMDEg
+Sy9zZWMgWzEwMC4wMCVdCj4+PiA1NSBwYWdlLWZhdWx0cyAjIDAuMDE2IEsvc2VjCj4+PiA3MTUx
+ODQzIGN5Y2xlcyAjIDAuMDAyIEdIeiBbMTAwLjAwJV0KPj4+IDxub3Qgc3VwcG9ydGVkPiBzdGFs
+bGVkLWN5Y2xlcy1mcm9udGVuZAo+Pj4gPG5vdCBzdXBwb3J0ZWQ+IHN0YWxsZWQtY3ljbGVzLWJh
+Y2tlbmQKPj4+IDQyNzI1MzYgaW5zdHJ1Y3Rpb25zICMgMC42MCBpbnNucyBwZXIgY3ljbGUgWzEw
+MC4wMCVdCj4+PiA1Njg0MDYgYnJhbmNoZXMgIyAwLjE2OCBNL3NlYyBbMTAwLjAwJV0KPj4+IDY1
+NjUyIGJyYW5jaC1taXNzZXMgIyAxMS41NSUgb2YgYWxsIGJyYW5jaGVzCj4+Pgo+Pj4gQWxzbywg
+J3BlcmYgdG9wJyB0byBtb25pdG9yIHRoZSBQTVUgaW50ZXJydXB0cyBmcm9tIGNwdXMKPj4+Cj4+
+PiAtQ2Flc2FyCj4+Pgo+Pj4KPj4+IENoYW5nZXMgaW4gdjI6Cj4+PiAtIEFTIE1hcmsgY29tbWVu
+dHMgb24gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85MjA5MzY5Lwo+Pj4KPj4+
+ICAgICByZW1vdmUgdGhlIGludGVycnVwdC1hZmZpbml0eSBwcm9wZXJ0eSwgd2UgbmVlZCBkZXBl
+bmQgb24gTWFyYycgcGVyZgo+Pj4gICAgIGNvZGUgb24gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
+Lm9yZy9wYXRjaC85MjA5MzY5Ly4KPj4+Cj4+PiBDYWVzYXIgV2FuZyAoMik6Cj4+PiAgICAgYXJt
+NjQ6IGR0czogcm9ja2NoaXA6IGNoYW5nZSBhbGwgaW50ZXJydXB0cyBjZWxscyBmb3IgNCBvbiBy
+azMzOTkgU29Dcwo+Pj4gICAgIGFybTY0OiBkdHM6IHJvY2tjaGlwOiBzdXBwb3J0IHRoZSBwbXUg
+bm9kZSBmb3IgcmszMzk5Cj4+PiAgICAKPj4+ICAgIGFyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2No
+aXAvcmszMzk5LmR0c2kgfCAxMTgKPj4+ICAgICsrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0t
+LS0gMSBmaWxlIGNoYW5nZWQsIDY5IGluc2VydGlvbnMoKyksIDQ5Cj4+PiAgICBkZWxldGlvbnMo
+LSkKPgo+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+PiBMaW51eC1yb2NrY2hpcCBtYWlsaW5nIGxpc3QKPiBMaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZy
+YWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
+aW51eC1yb2NrY2hpcAoKCi0tIApjYWVzYXIgd2FuZyB8IHNvZnR3YXJlIGVuZ2luZWVyIHwgd3h0
+QHJvY2stY2hpcC5jb20KCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1yb2NrY2hpcAo=
