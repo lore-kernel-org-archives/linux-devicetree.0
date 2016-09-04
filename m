@@ -1,61 +1,73 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 3/7] Documentation: dt-bindings: Add documentation for the Meson USB2 PHYs
-Date: Sun,  4 Sep 2016 23:31:48 +0200
-Message-ID: <20160904213152.25837-4-martin.blumenstingl@googlemail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/7] clk: gxbb: expose USB clocks
+Date: Sun,  4 Sep 2016 23:31:46 +0200
+Message-ID: <20160904213152.25837-2-martin.blumenstingl@googlemail.com>
 References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160904213152.25837-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org, linux-usb@vger.kernel.org, linux-amlogic@lists.infradead.org, jbrunet@baylibre.com, johnyoun@synopsys.com, kishon@ti.com, khilman@baylibre.com, carlo@caione.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, sboyd@codeaurora.org, mturquette@baylibre.com, will.deacon@arm.com, catalin.marinas@arm.com, gregkh@linuxfoundation.org, mark.rutland@arm.com, robh+dt@kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the documentation for the bindings for the Meson8b and GXBB USB2
-PHYs.
+USB0_DDR_BRIDGE and USB1_DDR_BRIDGE1 are needed for the related
+dwc2 usb controller. USB, USB0 and USB1 are needed for the PHYs.
+Expose these clocks to DT and comment out in clk driver.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../devicetree/bindings/phy/meson-usb2-phy.txt     | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/meson-usb2-phy.txt
+ drivers/clk/meson/gxbb.h              | 10 +++++-----
+ include/dt-bindings/clock/gxbb-clkc.h |  5 +++++
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/meson-usb2-phy.txt b/Documentation/devicetree/bindings/phy/meson-usb2-phy.txt
-new file mode 100644
-index 0000000..662b537
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/meson-usb2-phy.txt
-@@ -0,0 +1,27 @@
-+* Amlogic USB2 PHY
-+
-+Required properties:
-+- compatible:	Depending on the platform this should be one of:
-+	"amlogic,meson8b-usb2-phy"
-+	"amlogic,meson-gxbb-usb2-phy"
-+- reg:		The base address and length of the registers
-+- #phys-cells:	should be 0 (see phy-bindings.txt in this directory)
-+- resets:	reference to the reset controller
-+- clocks:	phandle and clock identifier for the phy clocks
-+- clock-names:	"usb_general" and "usb"
-+
-+Optional properties:
-+- phy-supply:	see phy-bindings.txt in this directory
-+
-+
-+Example:
-+
-+usb0_phy: usb_phy@0 {
-+	compatible = "amlogic,meson-gxbb-usb2-phy";
-+	#phy-cells = <0>;
-+	reg = <0x0 0x0 0x0 0x20>;
-+	resets = <&reset 34>;
-+	clocks = <&clkc CLKID_USB &clkc CLKID_USB0>;
-+	clock-names = "usb_general", "usb";
-+	phy-supply = <&usb_vbus>;
-+};
+diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
+index 3606e875..c66df2d 100644
+--- a/drivers/clk/meson/gxbb.h
++++ b/drivers/clk/meson/gxbb.h
+@@ -218,12 +218,12 @@
+ #define CLKID_AIU		  47
+ #define CLKID_UART1		  48
+ #define CLKID_G2D		  49
+-#define CLKID_USB0		  50
+-#define CLKID_USB1		  51
++/* CLKID_USB0 */
++/* CLKID_USB1 */
+ #define CLKID_RESET		  52
+ #define CLKID_NAND		  53
+ #define CLKID_DOS_PARSER	  54
+-#define CLKID_USB		  55
++/* CLKID_USB */
+ #define CLKID_VDIN1		  56
+ #define CLKID_AHB_ARB0		  57
+ #define CLKID_EFUSE		  58
+@@ -232,8 +232,8 @@
+ #define CLKID_AHB_CTRL_BUS	  61
+ #define CLKID_HDMI_INTR_SYNC	  62
+ #define CLKID_HDMI_PCLK		  63
+-#define CLKID_USB1_DDR_BRIDGE	  64
+-#define CLKID_USB0_DDR_BRIDGE	  65
++/* CLKID_USB1_DDR_BRIDGE */
++/* CLKID_USB0_DDR_BRIDGE */
+ #define CLKID_MMC_PCLK		  66
+ #define CLKID_DVIN		  67
+ #define CLKID_UART2		  68
+diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-bindings/clock/gxbb-clkc.h
+index 244ea6e..a03463f 100644
+--- a/include/dt-bindings/clock/gxbb-clkc.h
++++ b/include/dt-bindings/clock/gxbb-clkc.h
+@@ -10,6 +10,11 @@
+ #define CLKID_CLK81		12
+ #define CLKID_MPLL2		15
+ #define CLKID_ETH		36
++#define CLKID_USB0		50
++#define CLKID_USB1		51
++#define CLKID_USB		55
++#define CLKID_USB1_DDR_BRIDGE	64
++#define CLKID_USB0_DDR_BRIDGE	65
+ #define CLKID_SD_EMMC_A		94
+ #define CLKID_SD_EMMC_B		95
+ #define CLKID_SD_EMMC_C		96
 -- 
 2.9.3
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
