@@ -1,55 +1,35 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH] video: mxsfb: get supply regulator optionally
-Date: Sat,  3 Sep 2016 21:26:27 -0700
-Message-ID: <20160904042627.30182-1-stefan@agner.ch>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/4] One fix and some improvements for RK3288 Popmetal board
+Date: Sun,  4 Sep 2016 16:32:17 +0800
+Message-ID: <1472977937-758-1-git-send-email-andy.yan@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The lcd-supply is meant to be optional, there are several device-
-trees not specifying it and the code handles error values silently.
-Therefor, avoid creating a dummy regulator (and the associated
-warning) by using devm_regulator_get_optional.
 
-While at it, document that fact also in the device-tree bindings.
+This series fix one sensor i2c device address on Popmetal
+board, and change some pinctrl description to make it more
+clearly, also enable the usb otg function on this board.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
----
- Documentation/devicetree/bindings/display/mxsfb.txt | 3 +++
- drivers/video/fbdev/mxsfb.c                         | 2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/mxsfb.txt b/Documentation/devicetree/bindings/display/mxsfb.txt
-index 96ec517..0bc530f 100644
---- a/Documentation/devicetree/bindings/display/mxsfb.txt
-+++ b/Documentation/devicetree/bindings/display/mxsfb.txt
-@@ -7,6 +7,9 @@ Required properties:
- - interrupts: Should contain lcdif interrupts
- - display : phandle to display node (see below for details)
- 
-+Optional properties:
-+- lcd-supply: Regulator for LCD supply voltage.
-+
- * display node
- 
- Required properties:
-diff --git a/drivers/video/fbdev/mxsfb.c b/drivers/video/fbdev/mxsfb.c
-index 4e6608c..4f7570f 100644
---- a/drivers/video/fbdev/mxsfb.c
-+++ b/drivers/video/fbdev/mxsfb.c
-@@ -920,7 +920,7 @@ static int mxsfb_probe(struct platform_device *pdev)
- 	if (IS_ERR(host->clk_disp_axi))
- 		host->clk_disp_axi = NULL;
- 
--	host->reg_lcd = devm_regulator_get(&pdev->dev, "lcd");
-+	host->reg_lcd = devm_regulator_get_optional(&pdev->dev, "lcd");
- 	if (IS_ERR(host->reg_lcd))
- 		host->reg_lcd = NULL;
- 
+Andy Yan (4):
+  ARM: dts: rockchip: enable usbotg for Popemtal-rk3288 board
+  ARM: dts: rockchip: fix i2c address L3G4200D on PopMetal-RK3288 board
+  include: dt-bindings: Add more GPIO bank and index definition for
+    rockchip pinctrl
+  ARM: dts: use definition in rockchip pinctrl header to describe gpios
+    on Popmetal-RK3288
+
+ arch/arm/boot/dts/rk3288-popmetal.dts  | 36 +++++++++++++++++++++-------------
+ include/dt-bindings/pinctrl/rockchip.h | 35 +++++++++++++++++++++++++++++++++
+ 2 files changed, 57 insertions(+), 14 deletions(-)
+
 -- 
-2.9.0
+2.7.4
+
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
