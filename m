@@ -1,7 +1,7 @@
 From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 3/4] include: dt-bindings: Add more GPIO bank and index definition for rockchip pinctrl
-Date: Sun,  4 Sep 2016 16:35:30 +0800
-Message-ID: <1472978130-919-1-git-send-email-andy.yan@rock-chips.com>
+Subject: [PATCH 4/4] ARM: dts: use definition in rockchip pinctrl header to describe gpios on Popmetal-RK3288
+Date: Sun,  4 Sep 2016 16:36:17 +0800
+Message-ID: <1472978177-970-1-git-send-email-andy.yan@rock-chips.com>
 References: <1472977937-758-1-git-send-email-andy.yan@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1472977937-758-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
@@ -10,64 +10,118 @@ To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There are 8 gpio banks on RK3288, so add the missing
-RK_GPIO7 and RK_GPIO8. Also add gpio index definition
-to make it easier to description GPIO in dts.
+Use definition in rockchip pinctrl header to describe
+gpios, this will make it more clearer.
 
 Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
 
- include/dt-bindings/pinctrl/rockchip.h | 35 ++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ arch/arm/boot/dts/rk3288-popmetal.dts | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/include/dt-bindings/pinctrl/rockchip.h b/include/dt-bindings/pinctrl/rockchip.h
-index 743e66a..fd35350 100644
---- a/include/dt-bindings/pinctrl/rockchip.h
-+++ b/include/dt-bindings/pinctrl/rockchip.h
-@@ -24,6 +24,41 @@
- #define RK_GPIO3	3
- #define RK_GPIO4	4
- #define RK_GPIO6	6
-+#define RK_GPIO7	7
-+#define RK_GPIO8	8
-+
-+#define GPIO_A0		0
-+#define GPIO_A1		1
-+#define GPIO_A2		2
-+#define GPIO_A3		3
-+#define GPIO_A4		4
-+#define GPIO_A5		5
-+#define GPIO_A6		6
-+#define GPIO_A7		7
-+#define GPIO_B0		8
-+#define GPIO_B1		9
-+#define GPIO_B2		10
-+#define GPIO_B3		11
-+#define GPIO_B4		12
-+#define GPIO_B5		13
-+#define GPIO_B6		14
-+#define GPIO_B7		15
-+#define GPIO_C0		16
-+#define GPIO_C1		17
-+#define GPIO_C2		18
-+#define GPIO_C3		19
-+#define GPIO_C4		20
-+#define GPIO_C5		21
-+#define GPIO_C6		22
-+#define GPIO_C7		23
-+#define GPIO_D0		24
-+#define GPIO_D1		25
-+#define GPIO_D2		26
-+#define GPIO_D3		27
-+#define GPIO_D4		28
-+#define GPIO_D5		29
-+#define GPIO_D6		30
-+#define GPIO_D7		31
+diff --git a/arch/arm/boot/dts/rk3288-popmetal.dts b/arch/arm/boot/dts/rk3288-popmetal.dts
+index 706c67c..88f4ad0 100644
+--- a/arch/arm/boot/dts/rk3288-popmetal.dts
++++ b/arch/arm/boot/dts/rk3288-popmetal.dts
+@@ -72,7 +72,7 @@
+ 		pinctrl-0 = <&pwrbtn>;
  
- #define RK_FUNC_GPIO	0
- #define RK_FUNC_1	1
+ 		power {
+-			gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
++			gpios = <&gpio0 GPIO_A5 GPIO_ACTIVE_LOW>;
+ 			linux,code = <KEY_POWER>;
+ 			label = "GPIO Key Power";
+ 			linux,input-type = <1>;
+@@ -83,7 +83,7 @@
+ 
+ 	ir: ir-receiver {
+ 		compatible = "gpio-ir-receiver";
+-		gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
++		gpios = <&gpio0 GPIO_A6 GPIO_ACTIVE_LOW>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&ir_int>;
+ 	};
+@@ -98,7 +98,7 @@
+ 
+ 	vcc_sd: sdmmc-regulator {
+ 		compatible = "regulator-fixed";
+-		gpio = <&gpio7 11 GPIO_ACTIVE_LOW>;
++		gpio = <&gpio7 GPIO_B3 GPIO_ACTIVE_LOW>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&sdmmc_pwr>;
+ 		regulator-name = "vcc_sd";
+@@ -132,7 +132,7 @@
+ 	vcc28_dvp: vcc28-dvp-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+-		gpio = <&gpio0 17 GPIO_ACTIVE_HIGH>;
++		gpio = <&gpio0 GPIO0_C1 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&dvp_pwr>;
+ 		regulator-name = "vcc28_dvp";
+@@ -178,7 +178,7 @@
+ 	phy-supply = <&vcc_lan>;
+ 	phy-mode = "rgmii";
+ 	clock_in_out = "input";
+-	snps,reset-gpio = <&gpio4 7 0>;
++	snps,reset-gpio = <&gpio4 GPIO_B0 0>;
+ 	snps,reset-active-low;
+ 	snps,reset-delays-us = <0 10000 1000000>;
+ 	assigned-clocks = <&cru SCLK_MAC>;
+@@ -447,43 +447,43 @@
+ &pinctrl {
+ 	ak8963 {
+ 		comp_int: comp-int {
+-			rockchip,pins = <8 1 RK_FUNC_GPIO &pcfg_pull_up>;
++			rockchip,pins = <RK_GPIO8 GPIO_A1 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 	};
+ 
+ 	buttons {
+ 		pwrbtn: pwrbtn {
+-			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_up>;
++			rockchip,pins = <RK_GPIO0 GPIO_A5 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 	};
+ 
+ 	dvp {
+ 		dvp_pwr: dvp-pwr {
+-			rockchip,pins = <0 17 RK_FUNC_GPIO &pcfg_pull_none>;
++			rockchip,pins = <RK_GPIO0 GPIO_C1 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+ 
+ 	ir {
+ 		ir_int: ir-int {
+-			rockchip,pins = <0 6 RK_FUNC_GPIO &pcfg_pull_up>;
++			rockchip,pins = <RK_GPIO0 GPIO_A6 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 	};
+ 
+ 	mma8452 {
+ 		gsensor_int: gsensor-int {
+-			rockchip,pins = <8 0 RK_FUNC_GPIO &pcfg_pull_up>;
++			rockchip,pins = <RK_GPIO8 GPIO_A0 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 	};
+ 
+ 	pmic {
+ 		pmic_int: pmic-int {
+-			rockchip,pins = <RK_GPIO0 4 RK_FUNC_GPIO &pcfg_pull_up>;
++			rockchip,pins = <RK_GPIO0 GPIO_A4 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 	};
+ 
+ 	sdmmc {
+ 		sdmmc_pwr: sdmmc-pwr {
+-			rockchip,pins = <7 11 RK_FUNC_GPIO &pcfg_pull_none>;
++			rockchip,pins = <RK_GPIO7 GPIO_B3 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+ };
 -- 
 2.7.4
+
 
 
 --
