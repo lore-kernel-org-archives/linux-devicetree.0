@@ -1,55 +1,56 @@
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V2 1/5] Documentation: Add support for TI System Control
- Interface (TI-SCI) protocol
-Date: Mon, 5 Sep 2016 10:09:10 +0300
-Message-ID: <6c63b044-3db9-9202-b790-350a88b9eab0@ti.com>
-References: <20160830130647.6828-1-nm@ti.com>
- <20160830130647.6828-2-nm@ti.com> <20160902150628.GA19493@rob-hp-laptop>
- <CAGo_u6q0xxnUj5ary82OU1uP=kTHfA_3N7_d7OiSEwS1_5dXuw@mail.gmail.com>
- <57C9E0A8.4010701@ti.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] arm64: renesas: r8a7796/salvator-x: Add board part number
+ to DT bindings
+Date: Mon, 5 Sep 2016 09:22:29 +0200
+Message-ID: <CAMuHMdU_TE0RxDqOvYsUtBOX5p8T7RCuZgXg_uP7Jgn-Bf3NSg@mail.gmail.com>
+References: <1472635054-24372-1-git-send-email-geert+renesas@glider.be> <20160902151955.GA27150@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57C9E0A8.4010701-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20160902151955.GA27150@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/09/16 23:27, Dave Gerlach wrote:
-> On 09/02/2016 12:07 PM, Nishanth Menon wrote:
->> Rob,
+Hi Rob,
+
+On Fri, Sep 2, 2016 at 5:19 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Aug 31, 2016 at 11:17:34AM +0200, Geert Uytterhoeven wrote:
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/shmobile.txt | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> On Fri, Sep 2, 2016 at 10:06 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> On Tue, Aug 30, 2016 at 08:06:43AM -0500, Nishanth Menon wrote:
->> [...]
->>>> +
->>>> +TI-SCI Client Device Node:
->>>> +========================
->>>> +
->>>> +Client nodes refer to the required TI-SCI device using the "ti,sci"
->>>> property.
->>>
->>> As I mentioned for power domains, for clients that are self contained
->>> (i.e. a single function) I think the should be child nodes.
->>>
->>
->> Thanks for the feedback. I think we should be able to do that and also
->> assume you have no further improvements you'd like to see here.
->>
->> Looking at current Documentation/devicetree/bindings/arm/arm,scpi.txt
->> -> it makes sense to stick along the same lines as you mentioned.
->>
->> Dave, Tero: do you guys have any objections?
+>> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+>> index 90cf237ee5581978..42a046a97acba00f 100644
+>> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+>> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+>> @@ -65,7 +65,7 @@ Boards:
+>>      compatible = "renesas,porter", "renesas,r8a7791"
+>>    - Salvator-X (RTP0RC7795SIPB0010S)
+>>      compatible = "renesas,salvator-x", "renesas,r8a7795";
+>> -  - Salvator-X
+>> +  - Salvator-X (RTP0RC7796SIPB0011S)
+>>      compatible = "renesas,salvator-x", "renesas,r8a7796";
 >
-> No objections, I think this is a logical move.
+> Seems like these should be different compatibles rather than the
+> combination here defining exactly which board.
 
-Yea, sounds like a valid change. I believe you are going to post a new 
-version so I can modify the clock driver also accordingly?
+R-Car H3 (r8a7795) and R-Car M3-W (r8a7796) SiP are (sufficiently)
+pin-compatible that they use the same board. So the only difference is really
+the SoC.
 
--Tero
+Gr{oetje,eeting}s,
 
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
