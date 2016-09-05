@@ -1,107 +1,68 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v5 0/9] Add MT8173 Video Decoder Driver
-Date: Mon, 5 Sep 2016 13:32:33 +0200
-Message-ID: <9ebe9d2e-58ad-62f3-48e8-0fcb8a3beddf@xs4all.nl>
-References: <1472818800-22558-1-git-send-email-tiffany.lin@mediatek.com>
- <616d95a4-e6f3-5c42-d435-eb73795bd82c@xs4all.nl>
- <1473069011.23162.7.camel@mtksdaap41>
- <2d332670-edfd-5f2e-2c7f-4346e60baf75@xs4all.nl>
- <91bd60ab-868a-78b8-a09d-544376913387@xs4all.nl>
- <1473072735.23162.12.camel@mtksdaap41>
- <f6a217b4-7343-4758-c179-c4cc25079620@xs4all.nl>
- <1473075036.23162.14.camel@mtksdaap41>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: sun8i: Add dts file for the Orange Pi
+ Plus2E SBC
+Date: Mon, 5 Sep 2016 13:36:08 +0200
+Message-ID: <20160905113608.GE6322@lukather>
+References: <20160903110518.8267-1-hdegoede@redhat.com>
+ <20160903110518.8267-2-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="BZaMRJmqxGScZ8Mx"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473075036.23162.14.camel@mtksdaap41>
+Content-Disposition: inline
+In-Reply-To: <20160903110518.8267-2-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/05/2016 01:30 PM, Tiffany Lin wrote:
-> Hi Hans,
-> 
-> On Mon, 2016-09-05 at 13:26 +0200, Hans Verkuil wrote:
->> On 09/05/2016 12:52 PM, Tiffany Lin wrote:
->>> Hi Hans,
->>>
->>> On Mon, 2016-09-05 at 12:09 +0200, Hans Verkuil wrote:
->>>> On 09/05/2016 11:53 AM, Hans Verkuil wrote:
->>>>> On 09/05/2016 11:50 AM, Tiffany Lin wrote:
->>>>>> Hi Hans,
->>>>>>
->>>>>> On Mon, 2016-09-05 at 11:33 +0200, Hans Verkuil wrote:
->>>>>>> On 09/02/2016 02:19 PM, Tiffany Lin wrote:
->>>>>>>> ==============
->>>>>>>>  Introduction
->>>>>>>> ==============
->>>>>>>>
->>>>>>>> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
->>>>>>>> Mediatek Video Codec is able to handle video decoding and encoding of in a range of formats.
->>>>>>>>
->>>>>>>> This patch series rely on MTK VPU driver that have been merged in v4.8-rc1.
->>>>>>>> Mediatek Video Decoder driver rely on VPU driver to load, communicate with VPU.
->>>>>>>>
->>>>>>>> Internally the driver uses videobuf2 framework, and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
->>>>>>>>
->>>>>>>> [1]https://chromium-review.googlesource.com/#/c/245241/
->>>>>>>
->>>>>>> This patch series fails to apply to the media_tree master (patch 3/9). Can you rebase and repost?
->>>>>>>
->>>>>>> I'm ready to make a pull request for this, so I hope you can fix this soon.
->>>>>>>
->>>>>> I saw Encoder fix patches in fixes branch.
->>>>>> This patch series is base on Encoder fix patches. 
->>>>>>
->>>>>> [media] vcodec:mediatek: Refine VP8 encoder driver
->>>>>> [media] vcodec:mediatek: Refine H264 encoder driver
->>>>>> [media] vcodec:mediatek: change H264 profile default to profile high
->>>>>> [media] vcodec:mediatek: Add timestamp and timecode copy for V4L2
->>>>>> Encoder
->>>>>> [media] vcodec:mediatek: Fix visible_height larger than coded_height
->>>>>> issue in s_fmt_out
->>>>>> [media] vcodec:mediatek: Fix fops_vcodec_release flow for V4L2 Encoder
->>>>>> [media] vcodec:mediatek:code refine for v4l2 Encoder driver
->>>>>> [media] dvb_frontend: Use memdup_user() rather than duplicating its
->>>>>> implementation
->>>>>>
->>>>>>
->>>>>> If I do not rebase decoder patch series base on Encoder fix pathces.
->>>>>> Then it will fail after Encoder fix patches merged.
->>>>>>
->>>>>> May I know what parent patch I need to rebase to to fix this issue?
->>>>>
->>>>> Ah, OK. I will retest placing this on top of those fixes. I forgot about the
->>>>> pending fixes. I'll handle this.
->>>>
->>>> OK, that works much better when it is on top of the fixes.
->>>>
->>>> Only one thing is missing: an entry in the MAINTAINERS file. Strange that that
->>>> wasn't done for the encoder driver, we must have missed that. So can you make a
->>>> patch adding the en/decoder driver to this file? I'm ready to make the pull
->>>> request once I have that.
->>>>
->>> Got it. I will check and update it.
->>>
->>> I have a question about decoder device node.
->>> In v5 decoder patch series, I do not add device node patch at end of
->>> patch series.
->>> I plain to put it in MT21C format patch series, is it ok?
->>
->> What is the reason for not adding it in the decoder patch series?
->>
-> 
-> It is because our decoder HW only support MT21C format.
 
-Good reason :-)
+--BZaMRJmqxGScZ8Mx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK, that's fine.
+On Sat, Sep 03, 2016 at 01:05:18PM +0200, Hans de Goede wrote:
+> The Orange Pi Plus2E is an extended version of the Orange Pi Pc Plus,
+> with 2G RAM and an external gbit ethernet phy.
+>=20
+> Note currently the dts is pretty much empty (except for including the
+> pc-plus dts), I've a local patch which enables the emac actually making
+> this dts different from the pc-plus one, but that needs the h3 emac
+> driver to get merged first.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Regards,
+Applied, thanks!
+Maxime
 
-	Hans
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--BZaMRJmqxGScZ8Mx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXzVioAAoJEBx+YmzsjxAge+IQAJH6zYoN6t/nD3BZS+IbLJpZ
+wnf0OX40Jj6xW2TvV6HWtSLXiiZrmFgNQQBwaaVA2/e024WGmRsVaMUXybudf+Sh
+R+DO1+DaobVALxuK8+/PexVnPsJo2Y2hNy4nHz2BL2IBFUGN5TBV0XKWNkVQxnqU
+oePv3RKGuJRa9xx6ElvwDOAg1eNDqCP/BhBhmHR4dXjhhsNjptBDG8s5XFt6BkaU
+muJLidbuD6sLJsFbQ7DaDu1s0I6hVcSyWgpUNhC3egxIb6OxDUiJ2ae/BsaxKn0t
++7EMBqygwo1arWVzHObs7ebvAnKyL/Zpjd/WEVcC8GPe9rXFrhKXGF7RkhzmnmQy
+8vBaeD/qXLv+ACqLHWzZ0qYAkr774JgAIbuB/qEM+nQ8TyPC+joLbEUdugc1kpYD
+ed+YvmyjAwhNq8Q5ZAz9kRMDsWoJnKscY6AjAVllHCCMY3qnp2VWF9uHCn4+GGKI
+FQL7Txg+vTCIRLtVdxz3jRO97l9r9gLRCkL2aOnigNViguMtW1mVYuAXhVjCuGbv
+GtXiuz4am9MylXsfeTdmaPrsRZn8MEsDj/3KqhehDZ+wn6cP8Dtpz3pJfgAj9IOF
+EgTx/QktWTTbKCIsyoaiyBOB30nhBYSgMJAzIWsH/St6xPcg6Rlizr8PPPEf4EVk
+A9qbcjOGMxtI3X5lEOqM
+=JtIC
+-----END PGP SIGNATURE-----
+
+--BZaMRJmqxGScZ8Mx--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
