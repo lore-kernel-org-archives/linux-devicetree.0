@@ -1,114 +1,209 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v6, 1/5] dt-bindings: mt8173-xhci: support host side of dual-role mode
-Date: Mon, 5 Sep 2016 10:35:13 +0800
-Message-ID: <1473042917-27057-2-git-send-email-chunfeng.yun@mediatek.com>
-References: <1473042917-27057-1-git-send-email-chunfeng.yun@mediatek.com>
+From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sun8i: Add dts file for the
+ NanoPi NEO SBC
+Date: Mon, 5 Sep 2016 10:35:54 +0800
+Message-ID: <201609051025.IbTHt9ri%fengguang.wu@intel.com>
+References: <1473036168-20933-1-git-send-email-james@innovum.com.au>
+Reply-To: fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473042917-27057-1-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mathias Nyman <mathias.nyman@intel.com>, Oliver Neukum <oneukum@suse.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Alan Cooper <alcooperx@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: multipart/mixed; boundary="PNTmBPCT7hxwcZjr"
+Return-path: <linux-sunxi+bncBDJ4N37Q6EERBFNUWO7AKGQEJEE6NYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1473036168-20933-1-git-send-email-james-Rly9TSIBl47vnOemgxGiVw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-XVmvHMARGATQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, james-Rly9TSIBl47vnOemgxGiVw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some resources, such as IPPC register etc, shared with device
-driver are moved into common glue layer when xHCI driver is the
-host side of dual-role mode and they should be changed as optional
-properties if they are required ones before. For clarity, add
-a new part of binding to support host side of dual-role mode.
 
-Additionally add optional properties of pinctrl for host only mode
+--PNTmBPCT7hxwcZjr
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Hi James,
+
+[auto build test ERROR on mripard/sunxi/for-next]
+[also build test ERROR on v4.8-rc5 next-20160825]
+[cannot apply to robh/for-next]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+[Suggest to use git(>=2.9.0) format-patch --base=<commit> (or --base=auto for convenience) to record what (public, well-known) commit your patch series was built on]
+[Check https://git-scm.com/docs/git-format-patch for more information]
+
+url:    https://github.com/0day-ci/linux/commits/James-Pettigrew/ARM-dts-sun8i-Add-dts-file-for-the-NanoPi-NEO-SBC/20160905-085509
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git sunxi/for-next
+config: arm-aspeed_g5_defconfig (attached as .config)
+compiler: arm-linux-gnueabi-gcc (Debian 5.4.0-6) 5.4.0 20160609
+reproduce:
+        wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        make.cross ARCH=arm 
+
+All errors (new ones prefixed by >>):
+
+>> Error: arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts:65.21-22 syntax error
+   FATAL ERROR: Unable to parse input tree
+
 ---
- .../devicetree/bindings/usb/mt8173-xhci.txt        |   54 +++++++++++++++++++-
- 1 file changed, 52 insertions(+), 2 deletions(-)
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-index b3a7ffa..2a930bd 100644
---- a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-@@ -2,10 +2,18 @@ MT8173 xHCI
- 
- The device node for Mediatek SOC USB3.0 host controller
- 
-+There are two scenarios: the first one only supports xHCI driver;
-+the second one supports dual-role mode, and the host is based on xHCI
-+driver. Take account of backward compatibility, we divide bindings
-+into two parts.
-+
-+1st: only supports xHCI driver
-+------------------------------------------------------------------------
-+
- Required properties:
-  - compatible : should contain "mediatek,mt8173-xhci"
-- - reg : specifies physical base address and size of the registers,
--	the first one for MAC, the second for IPPC
-+ - reg : specifies physical base address and size of the registers
-+ - reg-names: should be "mac" for xHCI MAC and "ippc" for IP port control
-  - interrupts : interrupt used by the controller
-  - power-domains : a phandle to USB power domain node to control USB's
- 	mtcmos
-@@ -27,12 +35,16 @@ Optional properties:
- 	control register, it depends on "mediatek,wakeup-src".
-  - vbus-supply : reference to the VBUS regulator;
-  - usb3-lpm-capable : supports USB3.0 LPM
-+ - pinctrl-names : a pinctrl state named "default" must be defined
-+ - pinctrl-0 : pin control group
-+	See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
- 
- Example:
- usb30: usb@11270000 {
- 	compatible = "mediatek,mt8173-xhci";
- 	reg = <0 0x11270000 0 0x1000>,
- 	      <0 0x11280700 0 0x0100>;
-+	reg-names = "mac", "ippc";
- 	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
- 	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
- 	clocks = <&topckgen CLK_TOP_USB30_SEL>,
-@@ -49,3 +61,41 @@ usb30: usb@11270000 {
- 	mediatek,syscon-wakeup = <&pericfg>;
- 	mediatek,wakeup-src = <1>;
- };
-+
-+2nd: dual-role mode with xHCI driver
-+------------------------------------------------------------------------
-+
-+In the case, xhci is added as subnode to mtu3. An example and the DT binding
-+details of mtu3 can be found in:
-+Documentation/devicetree/bindings/usb/mtu3.txt
-+
-+Required properties:
-+ - compatible : should contain "mediatek,mt8173-xhci"
-+ - reg : specifies physical base address and size of the registers
-+ - reg-names: should be "mac" for xHCI MAC
-+ - interrupts : interrupt used by the host controller
-+ - power-domains : a phandle to USB power domain node to control USB's
-+	mtcmos
-+ - vusb33-supply : regulator of USB avdd3.3v
-+
-+ - clocks : a list of phandle + clock-specifier pairs, one for each
-+	entry in clock-names
-+ - clock-names : must be
-+	"sys_ck": for clock of xHCI MAC
-+
-+Optional properties:
-+ - vbus-supply : reference to the VBUS regulator;
-+ - usb3-lpm-capable : supports USB3.0 LPM
-+
-+Example:
-+usb30: usb@11270000 {
-+	compatible = "mediatek,mt8173-xhci";
-+	reg = <0 0x11270000 0 0x1000>;
-+	reg-names = "mac";
-+	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
-+	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
-+	clocks = <&topckgen CLK_TOP_USB30_SEL>;
-+	clock-names = "sys_ck";
-+	vusb33-supply = <&mt6397_vusb_reg>;
-+	usb3-lpm-capable;
-+};
 -- 
-1.7.9.5
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--PNTmBPCT7hxwcZjr
+Content-Type: application/octet-stream
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+
+--PNTmBPCT7hxwcZjr--
