@@ -1,97 +1,37 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH v8 15/18] ARM: STi: DT: STiH407: Add uniperif reader dt
- nodes
-Date: Mon, 5 Sep 2016 14:20:06 +0200
-Message-ID: <ae089830-b7c8-ee83-f697-6ff93f2646ed@st.com>
-References: <1472223413-7254-1-git-send-email-peter.griffin@linaro.org>
- <1472223413-7254-16-git-send-email-peter.griffin@linaro.org>
- <20160830100148.GO1661@dell>
- <20160830142112.GA22514@griffinp-ThinkPad-X1-Carbon-2nd>
- <20160831112819.GJ27357@dell>
+From: Khiem Nguyen <khiem.nguyen.xt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 1/5 v2] thermal: rcar_gen3_thermal: Document the R-Car
+ Gen3
+Date: Mon, 5 Sep 2016 12:23:38 +0000
+Message-ID: <SIXPR06MB09066A89EFCBB42C0EA49F3AA8E60@SIXPR06MB0906.apcprd06.prod.outlook.com>
+References: <SIXPR06MB0906D63F01A4C5C79823EED0A8E40@SIXPR06MB0906.apcprd06.prod.outlook.com>
+ <CAMuHMdUO1XptoeW6m1XOPigt5vtNq8eN5sLaTHhbnTRLb47tzA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160831112819.GJ27357@dell>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>, Peter Griffin <peter.griffin@linaro.org>
-Cc: ohad@wizery.com, devicetree@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, linux-remoteproc@vger.kernel.org, patrice.chotard@st.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, airlied@linux.ie, kraxel@redhat.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, bjorn.andersson@linaro.org, virtualization@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdUO1XptoeW6m1XOPigt5vtNq8eN5sLaTHhbnTRLb47tzA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Thao Phuong Le. Nguyen" <thao.nguyen.yb-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>, Hien Dang <hien.dang.eb-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Toru Oishi <toru.oishi.zj-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Khiem Nguyen <khiem.nguyen.xt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello ptere, Lee,
-
-Thanks for your remarks,
-
-Regards
-Arnaud
-On 08/31/2016 01:28 PM, Lee Jones wrote:
-> On Tue, 30 Aug 2016, Peter Griffin wrote:
->> Thanks for reviewing and your very valuable feedback.
->> On Tue, 30 Aug 2016, Lee Jones wrote:
->>> On Fri, 26 Aug 2016, Peter Griffin wrote:
->>>
->>>> This patch adds the DT node for the uniperif reader
->>>> IP block found on STiH407 family silicon.
->>>>
->>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->>>> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
->>>> ---
->>>>  arch/arm/boot/dts/stih407-family.dtsi | 26 ++++++++++++++++++++++++++
->>>>  1 file changed, 26 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
->>>> index d263c96..bdddf2c 100644
->>>> --- a/arch/arm/boot/dts/stih407-family.dtsi
->>>> +++ b/arch/arm/boot/dts/stih407-family.dtsi
->>>> @@ -956,5 +956,31 @@
->>>>  			st,version = <5>;
->>>>  			st,mode = "SPDIF";
->>>>  		};
->>>> +
->>>> +		sti_uni_reader0: sti-uni-reader@0 {
->>>> +			compatible = "st,sti-uni-reader";
->>>> +			status = "disabled";
->>>
->>> I find it's normally nicer to place the status of the node at the
->>> bottom, separated by a '\n'.
->>
->> Ok I'll add a superflous '\n' in the next version.
-> 
-> Everyone loves a smart arse!
-> 
-> In this case I believe the '\n' to be a functional separator and not
-> superfluous at all.
-> 
->>>> +			dai-name = "Uni Reader #0 (PCM IN)";
->>>
->>> Oooo, not seen something like this before.
->>>
->>> If it does not already have one, it would require a DT Ack.
->>
->> No idea, the driver got merged 1 year ago.
-This field could be suppressed and handled in source code, using
-st,uniperiph-id to retreive it.
->>
->> Arnaud did you get a DT ack when you merged this driver & binding? i if i remember well, i had  sent to Alsa mailing list only, I missed
-this obvious...
->>>
->>>> +			st,version = <3>;
->>>
->>> This will likely need a DT Ack too.  We usually encode this sort of
->>> information in the compatible string.
-yes, better to use compatibility
->>
->> See 05c1b4480e86a871b18030d6f3d532dc0ecdf38c
-> 
-> Well Rob's the boss.  We certainly never used to take 'device ID' or
-> 'version' attributes.  I guess something must have changed.
-
-I will try to provide patches for code and bindings rework this week.
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50Lg0KDQo+ID4gLS0tIC9kZXYvbnVs
+bA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3Jj
+YXItZ2VuMy10aGVybWFsLnR4dA0KPiA+IEBAIC0wLDAgKzEsNzkgQEANCj4gPiArKiBEVCBiaW5k
+aW5ncyBmb3IgUmVuZXNhcyBSLUNhciBHZW4zIFRoZXJtYWwgU2Vuc29yIGRyaXZlcg0KPiA+ICsN
+Cj4gPiArT24gUi1DYXIgR2VuMyBTb0NzLCB0aGUgdGhlcm1hbCBzZW5zb3IgY29udHJvbGxlcnMg
+KFRTQykgY29udHJvbCB0aGUNCj4gPiArdGhlcm1hbCBzZW5zb3JzIChUSFMpIHdoaWNoIGFyZSB0
+aGUgYW5hbG9nIGNpcmN1aXRzIGZvciBtZWFzdXJpbmcgdGVtcGVyYXR1cmUNCj4gKFRqKSBpbnNp
+ZGUgdGhlIExTSS4NCj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKy0gY29t
+cGF0aWJsZSAgICAgICAgICAgOiAicmVuZXNhcyw8c29jdHlwZT4tdGhlcm1hbCIsDQo+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICBFeGFtcGxlcyB3aXRoIHNvY3R5cGVzIGFyZToNCj4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgLSAicmVuZXNhcyxyOGE3Nzk1LXRoZXJtYWwiIChS
+LUNhciBIMykNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgLSAicmVuZXNhcyxyOGE3
+Nzk2LXRoZXJtYWwiIChSLUNhciBNMykNCj4gDQo+IE0zLVcNCg0KT0suDQpJIHdpbGwgZm9sbG93
+IHVwc3RyZWFtIHN0eWxlLiBXaWxsIHVwZGF0ZSBpbiB2My4NCg0KQmVzdCByZWdhcmRzLA0KS0hJ
+RU0gTmd1eWVuDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
