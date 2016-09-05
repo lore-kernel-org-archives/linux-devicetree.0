@@ -1,123 +1,95 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 3/7] pinctrl: samsung: Add the support the multiple
- IORESOURCE_MEM for one pin-bank
-Date: Mon, 05 Sep 2016 17:08:28 +0900
-Message-ID: <57CD27FC.2020201@samsung.com>
-References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
- <1472046551-703-4-git-send-email-cw00.choi@samsung.com>
- <CA+Ln22Ew=8S382zn+M8Ys5vztqvzp1+3EOTKtd81WSfuSyvY6w@mail.gmail.com>
- <CGME20160825144434epcas1p42890a972743a8c8787444651f91a4fa6@epcas1p4.samsung.com>
- <CA+Ln22Guw1LghdV64cSKjByDExr+2HnvEK7DNkYz+XPAmVuAzA@mail.gmail.com>
+From: Winter Wang <wente.wang-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx6ul-pico-hobbit: add sgtl5000 sound card support
+Date: Mon, 5 Sep 2016 16:21:47 +0800
+Message-ID: <1473063707-31282-1-git-send-email-wente.wang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CA+Ln22Guw1LghdV64cSKjByDExr+2HnvEK7DNkYz+XPAmVuAzA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: =?UTF-8?B?S3J6eXN6dG9mIEtvesWCb3dza2k=?= <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, "sw0312.kim" <sw0312.kim@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, InKi Dae <inki.dae@samsung.com>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Beomho Seo <beomho.seo@samsung.com>, jaewon02.kim@samsung.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+use simple-audio-card to support sgtl5000 with SAI interface.
 
-I'm sorry for late reply.
+Signed-off-by: Winter Wang <wente.wang-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6ul-pico-hobbit.dts | 29 +++++++++++++++++++++--------
+ arch/arm/boot/dts/imx6ul-pinfunc.h       |  2 +-
+ 2 files changed, 22 insertions(+), 9 deletions(-)
 
-On 2016년 08월 25일 23:41, Tomasz Figa wrote:
-> 2016-08-25 23:30 GMT+09:00 Tomasz Figa <tomasz.figa@gmail.com>:
->>> +       }
->>> +
->>> +#define EXYNOS_PIN_BANK_EINTN_EXT(pins, reg, id, pctl_idx, eint_idx)   \
->>> +       {                                               \
->>> +               .type           = &bank_type_off,       \
->>> +               .pctl_offset    = reg,                  \
->>> +               .nr_pins        = pins,                 \
->>> +               .eint_type      = EINT_TYPE_NONE,       \
->>> +               .name           = id,                   \
->>> +               .pctl_res_idx   = pctl_idx,             \
->>> +               .eint_res_idx   = eint_dix              \
->>> +       }
->>
->> Your patch 4/7 doesn't seem to use this one, so this is dead code for
->> the time being. Please add when there is real need for it.
->>
->> Also it doesn't really make much sense to have index for both pctl and
->> eint. Please define first entry of regs property as always pointing to
->> pctl registers and by also eint registers for usual controllers. Then
->> second regs entry would be eint registers for controllers with
->> separate register blocks. Then there is only a need to have
->> eint_res_idx in the driver and no need for pctl_res_idx, because it
->> would be always 0.
-> 
-> Ah, sorry, I got confused again by which registers are where in these
-> GPF banks. Let's make it the other way around and make DT contain eint
-> registers in first regs entry and hardcode eint_res_idx to 0 for the
-> time being.
-
-I got with slight confusion.
-Do you mean that you want to remove the 'eint_res_idx' because
-it is always zero(0) as your comment. And do you agree to add 'pctl_res_idx'?
-
-Also, as you commented, the eint_res_idx for both GPA and GPFx is zero(0).
-
-Example:
-	pinctrl_alive: pinctrl@10580000 {
-		compatible = "samsung,exynos5433-pinctrl";
-                      /* ALIVE domain    ,  IMEM domain  */
-		reg = <0x10580000 0x1a20>, <0x11090000 0x100>;
-
-		wakeup-interrupt-controller {
-			compatible = "samsung,exynos7-wakeup-eint";
-			interrupts = <GIC_SPI 16 0>;
-		};
-	};
-
-	GPA's eint_res_idx is 0
-	GPA's pctl_res_idx is 0
-
-	GPFx's eint_res_idx is 0
-	GPFx's pctl_res_idx is 1
-
-
- However it should be still beneficial to refactor the code
-> and calculate per-bank eint_base to avoid adding the offset every
-> time, similarly to pctl_base/offset, from my suggestion below.
-
-I agree. I'll modify it according to your comment.
-
-> 
->>> @@ -345,7 +346,8 @@ static void pin_to_reg_bank(struct samsung_pinctrl_drv_data *drvdata,
->>>                         ((b->pin_base + b->nr_pins - 1) < pin))
->>>                 b++;
->>>
->>> -       *reg = drvdata->virt_base + b->pctl_offset;
->>> +       pctl_res_idx = b->pctl_res_idx;
->>> +       *reg = drvdata->virt_base[pctl_res_idx] + b->pctl_offset;
->>
->> I suggested something slightly different. Instead of
->> bank::pctl_res_idx, I proposed bank::pctl_base.
->> bank_info::pctl_res_idx would be specified only in init driver data
->> and bank::pctl_base would be calculated at probe time as
->> drvdata->virt_base[bank_info->pctl_res_idx] + bank_info->pctl_offset.
->> This would eliminate the need to do any indexing and adding further in
->> the code and make things simpler.
->>
->> Taking my other comments above, pctl part would be unchanged and only
->> eint addresses and offsets would be affected.
-> 
-> Ah, scratch this one sentence. I got confused with the register layout
-> again, sorry. Please refactor both eint and pctl as I suggested in the
-> upper paragraph.
-> 
-> Best regards,
-> Tomasz
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
-> 
-
+diff --git a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+index c11ab57..94969bd 100644
+--- a/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
++++ b/arch/arm/boot/dts/imx6ul-pico-hobbit.dts
+@@ -101,15 +101,26 @@
+ 	};
+ 
+ 	sound {
+-		compatible = "fsl,imx-audio-sgtl5000";
+-		model = "imx6ul-sgtl5000";
+-		audio-cpu = <&sai1>;
+-		audio-codec = <&codec>;
+-		audio-routing =
+-			"LINE_IN", "Line In Jack",
+-			"MIC_IN", "Mic Jack",
+-			"Mic Jack", "Mic Bias",
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "imx6ul-sgtl5000";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,bitclock-master = <&dailink_master>;
++		simple-audio-card,frame-master = <&dailink_master>;
++		simple-audio-card,widgets =
++			"Microphone", "Microphone Jack",
++			"Headphone", "Headphone Jack";
++		simple-audio-card,routing =
++			"MIC_IN", "Microphone Jack",
++			"Microphone Jack", "Mic Bias",
+ 			"Headphone Jack", "HP_OUT";
++
++		simple-audio-card,cpu {
++			sound-dai = <&sai1>;
++		};
++
++		dailink_master: simple-audio-card,codec {
++			sound-dai = <&codec>;
++		};
+ 	};
+ 
+ 	sys_mclk: clock-sys-mclk {
+@@ -218,6 +229,7 @@
+ 	status = "okay";
+ 
+ 	codec: sgtl5000@0a {
++		#sound-dai-cells = <0>;
+ 		reg = <0x0a>;
+ 		compatible = "fsl,sgtl5000";
+ 		clocks = <&sys_mclk>;
+@@ -284,6 +296,7 @@
+ };
+ 
+ &sai1 {
++	#sound-dai-cells = <0>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_sai1>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/imx6ul-pinfunc.h b/arch/arm/boot/dts/imx6ul-pinfunc.h
+index 0034eeb..3397b49 100644
+--- a/arch/arm/boot/dts/imx6ul-pinfunc.h
++++ b/arch/arm/boot/dts/imx6ul-pinfunc.h
+@@ -924,7 +924,7 @@
+ #define MX6UL_PAD_CSI_DATA06__ECSPI1_MOSI		0x01fc 0x0488 0x053c 3 1
+ #define MX6UL_PAD_CSI_DATA06__EIM_AD06			0x01fc 0x0488 0x0000 4 0
+ #define MX6UL_PAD_CSI_DATA06__GPIO4_IO27		0x01fc 0x0488 0x0000 5 0
+-#define MX6UL_PAD_CSI_DATA06__SAI1_RX_DATA		0x01fc 0x0488 0x0000 6 0
++#define MX6UL_PAD_CSI_DATA06__SAI1_RX_DATA		0x01fc 0x0488 0x05E4 6 1
+ #define MX6UL_PAD_CSI_DATA06__USDHC1_RESET_B		0x01fc 0x0488 0x0000 8 0
+ #define MX6UL_PAD_CSI_DATA07__CSI_DATA09		0x0200 0x048c 0x04e8 0 1
+ #define MX6UL_PAD_CSI_DATA07__USDHC2_DATA7		0x0200 0x048c 0x0698 1 2
 -- 
-Best Regards,
-Chanwoo Choi
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
