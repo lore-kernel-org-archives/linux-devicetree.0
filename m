@@ -1,268 +1,89 @@
-From: Lin Huang <hl@rock-chips.com>
-Subject: [PATCH v10 3/5] Documentation: bindings: add dt documentation for rk3399 dmc
-Date: Mon,  5 Sep 2016 13:06:09 +0800
-Message-ID: <1473051971-5500-4-git-send-email-hl@rock-chips.com>
-References: <1473051971-5500-1-git-send-email-hl@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473051971-5500-1-git-send-email-hl@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: myungjoo.ham@samsung.com, mark.yao@rock-chips.com, cw00.choi@samsung.com, airlied@linux.ie, mturquette@baylibre.com, dbasehore@chromium.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, tixy@linaro.org, typ@rock-chips.com, sudeep.holla@arm.com, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Lin Huang <hl@rock-chips.com>
+From: Po Liu <po.liu@nxp.com>
+Subject: RE: [PATCH v4 2/2] pci:aer: add support aer interrupt with none
+ MSI/MSI-X/INTx mode
+Date: Mon, 5 Sep 2016 06:05:49 +0000
+Message-ID: <VI1PR0401MB1709ED029763A20726FF5CD392E60@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+References: <1465892645-32381-2-git-send-email-po.liu@nxp.com>
+ <1472625442-23309-1-git-send-email-po.liu@nxp.com>
+ <1472625442-23309-2-git-send-email-po.liu@nxp.com>
+ <20160902151725.GA25273@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160902151725.GA25273@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Roy Zang <roy.zang@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Yoder <stuart.yoder@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Mingkai Hu <mingkai.hu@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>, Yang-Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the documentation for rockchip rk3399 dmc driver.
+Hi Rob,
 
-Signed-off-by: Lin Huang <hl@rock-chips.com>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
----
-Changes in v10:
-- add rockchip prefix in property describe
 
-Changes in v9:
-- add ddr timing property to node
+Best regards,
+Liu Po
 
-Changes in v8:
-- add ddr timing properties
+>  -----Original Message-----
+>  From: Rob Herring [mailto:robh@kernel.org]
+>  Sent: Friday, September 02, 2016 11:17 PM
+>  To: Po Liu
+>  Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+>  linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Bjorn Helgaas;
+>  Shawn Guo; Marc Zyngier; Roy Zang; Mingkai Hu; Stuart Yoder; Yang-Leo Li;
+>  Arnd Bergmann; Minghuan Lian; Murali Karicheri
+>  Subject: Re: [PATCH v4 2/2] pci:aer: add support aer interrupt with none
+>  MSI/MSI-X/INTx mode
+>  
+>  On Wed, Aug 31, 2016 at 02:37:22PM +0800, Po Liu wrote:
+>  > On some platforms, root port doesn't support MSI/MSI-X/INTx in RC mode.
+>  > When chip support the aer interrupt with none MSI/MSI-X/INTx mode,
+>  > maybe there is interrupt line for aer pme etc. Search the interrupt
+>  > number in the fdt file. Then fixup the dev->irq with it.
+>  >
+>  > Signed-off-by: Po Liu <po.liu@nxp.com>
+>  > ---
+>  > Changes for v4:
+>  > 	- re-use the patch changes in the root port driver;
+>  > 	- add binding information;
+>  >
+>  >  .../devicetree/bindings/pci/layerscape-pci.txt     |  4 +--
+>  >  drivers/pci/pcie/portdrv_core.c                    | 31
+>  +++++++++++++++++++---
+>  >  2 files changed, 30 insertions(+), 5 deletions(-)
+>  >
+>  > diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+>  > b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+>  > index 41e9f55..1dfb1da 100644
+>  > --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+>  > +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+>  > @@ -19,7 +19,7 @@ Required properties:
+>  >  - interrupts: A list of interrupt outputs of the controller. Must
+>  contain an
+>  >    entry for each entry in the interrupt-names property.
+>  >  - interrupt-names: Must include the following entries:
+>  > -  "intr": The interrupt that is asserted for controller interrupts
+>  > +  "aer": The interrupt that is asserted for aer interrupts
+>  
+>  You can't just change this. That breaks compatibility with old dts files.
+>  Plus, it is just a name. Why does it even matter? Not to mention having
+>  the name for a single irq is a bit pointless.
+Sorry, this binding comments maybe not clear. 
+"aer" is just one of the interrupt names from host controller. There are "aer" "pme" and so on for further applications. 
+This patch is to fix the Layerscape owning independent aer irq issue. So the 'aer' is used for this patch. The 'intr' will never be used, so removed.
+I may remove the 'must include' for mis-understanding.
 
-Changes in v7:
-- None
+Thanks!
 
-Changes in v6:
--Add more detail in Documentation
+Po Liu
 
-Changes in v5:
--None
-
-Changes in v4:
--None
-
-Changes in v3:
--None
-
-Changes in v2:
--None 
-
-Changes in v1:
--None
- .../devicetree/bindings/devfreq/rk3399_dmc.txt     | 202 +++++++++++++++++++++
- 1 file changed, 202 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-
-diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-new file mode 100644
-index 0000000..84660a3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-@@ -0,0 +1,210 @@
-+* Rockchip rk3399 DMC(Dynamic Memory Controller) device
-+
-+Required properties:
-+- compatible:		 Must be "rockchip,rk3399-dmc".
-+- devfreq-events:	 Node to get DDR loading, Refer to
-+			 Documentation/devicetree/bindings/devfreq/
-+			 rockchip-dfi.txt
-+- interrupts:		 The interrupt number to the CPU. The interrupt
-+			 specifier format depends on the interrupt controller.
-+			 It should be DCF interrupts, when DDR dvfs finish,
-+			 it will happen.
-+- clocks:		 Phandles for clock specified in "clock-names" property
-+- clock-names :		 The name of clock used by the DFI, must be
-+			 "pclk_ddr_mon";
-+- operating-points-v2:	 Refer to Documentation/devicetree/bindings/power/opp.txt
-+			 for details.
-+- center-supply:	 DMC supply node.
-+- status:		 Marks the node enabled/disabled.
-+
-+Following properties are ddr timing:
-+
-+- rockchip,dram_speed_bin :	  Value reference include/dt-bindings/clock/ddr.h,
-+				  it select ddr3 cl-trp-trcd type, default value
-+				  "DDR3_DEFAULT".it must selected according to
-+				  "Speed Bin" in ddr3 datasheet, DO NOT use
-+				  smaller "Speed Bin" than ddr3 exactly is.
-+
-+- rockchip,pd_idle :		  Config the PD_IDLE value, defined the power-down
-+				  idle period, memories are places into power-down
-+				  mode if bus is idle for PD_IDLE DFI clocks.
-+
-+- rockchip,sr_idle :		  Configure the SR_IDLE value, defined the
-+				  selfrefresh idle period, memories are places
-+				  into self-refresh mode if bus is idle for
-+				  SR_IDLE*1024 DFI clocks (DFI clocks freq is
-+				  half of dram's clocks), defaule value is "0".
-+
-+- rockchip,sr_mc_gate_idle :	  Defined the self-refresh with memory and
-+				  controller clock gating idle period, memories
-+				  are places into self-refresh mode and memory
-+				  controller clock arg gating if bus is idle for
-+				  sr_mc_gate_idle*1024 DFI clocks.
-+
-+- rockchip,srpd_lite_idle :	  Defined the self-refresh power down idle
-+				  period, memories are places into self-refresh
-+				  power down mode if bus is idle for
-+				  srpd_lite_idle*1024 DFI clocks. This parameter
-+				  is for LPDDR4 only.
-+
-+- rockchip,standby_idle :	  Defined the standby idle period, memories are
-+				  places into self-refresh than controller, pi,
-+				  phy and dram clock will gating if bus is idle
-+				  for standby_idle * DFI clocks.
-+
-+- rockchip,dram_dll_disb_freq :  It's defined the DDR3 dll bypass frequency in
-+				  MHz, when ddr freq less than DRAM_DLL_DISB_FREQ,
-+				  ddr3 dll will bypssed note: if dll was bypassed,
-+				  the odt also stop working.
-+
-+- rockchip,phy_dll_disb_freq :	  Defined the PHY dll bypass frequency in
-+				  MHz (Mega Hz), when ddr freq less than
-+				  DRAM_DLL_DISB_FREQ, phy dll will bypssed.
-+				  note: phy dll and phy odt are independent.
-+
-+- rockchip,ddr3_odt_disb_freq :  When dram type is DDR3, this parameter defined
-+				  the odt disable frequency in MHz (Mega Hz),
-+				  when ddr frequency less then ddr3_odt_disb_freq,
-+				  the odt on dram side and controller side are
-+				  both disabled.
-+
-+- rockchip,ddr3_drv :		  When dram type is DDR3, this parameter define
-+				  the dram side driver stength in ohm, default
-+				  value is DDR3_DS_40ohm.
-+
-+- rockchip,ddr3_odt :		  When dram type is DDR3, this parameter define
-+				  the dram side ODT stength in ohm, default value
-+				  is DDR3_ODT_120ohm.
-+
-+- rockchip,phy_ddr3_ca_drv :	  When dram type is DDR3, this parameter define
-+				  the phy side CA line(incluing command line,
-+				  address line and clock line) driver strength.
-+				  Default value is PHY_DRV_ODT_40.
-+
-+- rockchip,phy_ddr3_dq_drv :	  When dram type is DDR3, this parameter define
-+				  the phy side DQ line(incluing DQS/DQ/DM line)
-+				  driver strength. default value is PHY_DRV_ODT_40.
-+
-+- rockchip,phy_ddr3_odt : 	  When dram type is DDR3, this parameter define the
-+				  phy side odt strength, default value is
-+				  PHY_DRV_ODT_240.
-+
-+- rockchip,lpddr3_odt_disb_freq : When dram type is LPDDR3, this parameter defined
-+				  then odt disable frequency in MHz (Mega Hz),
-+				  when ddr frequency less then ddr3_odt_disb_freq,
-+				  the odt on dram side and controller side are
-+				  both disabled.
-+
-+- rockchip,lpddr3_drv :	  When dram type is LPDDR3, this parameter define
-+				  the dram side driver stength in ohm, default
-+				  value is LP3_DS_34ohm.
-+
-+- rockchip,lpddr3_odt :	  When dram type is LPDDR3, this parameter define
-+				  the dram side ODT stength in ohm, default value
-+				  is LP3_ODT_240ohm.
-+
-+- rockchip,phy_lpddr3_ca_drv :	  When dram type is LPDDR3, this parameter define
-+				  the phy side CA line(incluing command line,
-+				  address line and clock line) driver strength.
-+				  default value is PHY_DRV_ODT_40.
-+
-+- rockchip,phy_lpddr3_dq_drv :	  When dram type is LPDDR3, this parameter define
-+				  the phy side DQ line(incluing DQS/DQ/DM line)
-+				  driver strength. default value is
-+				  PHY_DRV_ODT_40.
-+
-+- rockchip,phy_lpddr3_odt : 	  When dram type is LPDDR3, this parameter define
-+				  the phy side odt strength, default value is
-+				  PHY_DRV_ODT_240.
-+
-+- rockchip,lpddr4_odt_disb_freq : When dram type is LPDDR4, this parameter
-+				  defined the odt disable frequency in
-+				  MHz (Mega Hz), when ddr frequency less then
-+				  ddr3_odt_disb_freq, the odt on dram side and
-+				  controller side are both disabled.
-+
-+- rockchip,lpddr4_drv :	  When dram type is LPDDR4, this parameter define
-+				  the dram side driver stength in ohm, default
-+				  value is LP4_PDDS_60ohm.
-+
-+- rockchip,lpddr4_dq_odt : 	  When dram type is LPDDR4, this parameter define
-+				  the dram side ODT on dqs/dq line stength in ohm,
-+				  default value is LP4_DQ_ODT_40ohm.
-+
-+- rockchip,lpddr4_ca_odt :	  When dram type is LPDDR4, this parameter define
-+				  the dram side ODT on ca line stength in ohm,
-+				  default value is LP4_CA_ODT_40ohm.
-+
-+- rockchip,phy_lpddr4_ca_drv :	  When dram type is LPDDR4, this parameter define
-+				  the phy side  CA line(incluing command address
-+				  line) driver strength. default value is
-+				  PHY_DRV_ODT_40.
-+
-+- rockchip,phy_lpddr4_ck_cs_drv : When dram type is LPDDR4, this parameter define
-+				  the phy side clock line and cs line driver
-+				  strength. default value is PHY_DRV_ODT_80.
-+
-+- rockchip,phy_lpddr4_dq_drv :	  When dram type is LPDDR4, this parameter define
-+				  the phy side DQ line(incluing DQS/DQ/DM line)
-+				  driver strength. default value is PHY_DRV_ODT_80.
-+
-+- rockchip,phy_lpddr4_odt :	  When dram type is LPDDR4, this parameter define
-+				  the phy side odt strength, default value is
-+				  PHY_DRV_ODT_60.
-+
-+Example:
-+	dmc_opp_table: dmc_opp_table {
-+		compatible = "operating-points-v2";
-+
-+		opp00 {
-+			opp-hz = /bits/ 64 <300000000>;
-+			opp-microvolt = <900000>;
-+		};
-+		opp01 {
-+			opp-hz = /bits/ 64 <666000000>;
-+			opp-microvolt = <900000>;
-+		};
-+	};
-+
-+	dmc: dmc {
-+		compatible = "rockchip,rk3399-dmc";
-+		devfreq-events = <&dfi>;
-+		interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_DDRCLK>;
-+		clock-names = "dmc_clk";
-+		operating-points-v2 = <&dmc_opp_table>;
-+		center-supply = <&ppvar_centerlogic>;
-+		upthreshold = <15>;
-+		downdifferential = <10>;
-+		rockchip,ddr3_speed_bin = <21>;
-+		rockchip,pd_idle = <0x40>;
-+		rockchip,sr_idle = <0x2>;
-+		rockchip,sr_mc_gate_idle = <0x3>;
-+		rockchip,srpd_lite_idle	= <0x4>;
-+		rockchip,standby_idle = <0x2000>;
-+		rockchip,dram_dll_dis_freq = <300>;
-+		rockchip,phy_dll_dis_freq = <125>;
-+		rockchip,auto_pd_dis_freq = <666>;
-+		rockchip,ddr3_odt_dis_freq = <333>;
-+		rockchip,ddr3_drv = <DDR3_DS_40ohm>;
-+		rockchip,ddr3_odt = <DDR3_ODT_120ohm>;
-+		rockchip,phy_ddr3_ca_drv = <PHY_DRV_ODT_40>;
-+		rockchip,phy_ddr3_dq_drv = <PHY_DRV_ODT_40>;
-+		rockchip,phy_ddr3_odt = <PHY_DRV_ODT_240>;
-+		rockchip,lpddr3_odt_dis_freq = <333>;
-+		rockchip,lpddr3_drv = <LP3_DS_34ohm>;
-+		rockchip,lpddr3_odt = <LP3_ODT_240ohm>;
-+		rockchip,phy_lpddr3_ca_drv = <PHY_DRV_ODT_40>;
-+		rockchip,phy_lpddr3_dq_drv = <PHY_DRV_ODT_40>;
-+		rockchip,phy_lpddr3_odt = <PHY_DRV_ODT_240>;
-+		rockchip,lpddr4_odt_dis_freq = <333>;
-+		rockchip,lpddr4_drv = <LP4_PDDS_60ohm>;
-+		rockchip,lpddr4_dq_odt = <LP4_DQ_ODT_40ohm>;
-+		rockchip,lpddr4_ca_odt = <LP4_CA_ODT_40ohm>;
-+		rockchip,phy_lpddr4_ca_drv = <PHY_DRV_ODT_40>;
-+		rockchip,phy_lpddr4_ck_cs_drv = <PHY_DRV_ODT_80>;
-+		rockchip,phy_lpddr4_dq_drv = <PHY_DRV_ODT_80>;
-+		rockchip,phy_lpddr4_odt = <PHY_DRV_ODT_60>;
-+		status = "disabled";
-+	};
-+
--- 
-2.6.6
+>  
+>  Rob
