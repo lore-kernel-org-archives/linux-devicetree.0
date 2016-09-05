@@ -1,201 +1,67 @@
-From: James Pettigrew <james@innovum.com.au>
-Subject: [PATCH v2] ARM: dts: sun8i: Add dts file for the NanoPi NEO SBC
-Date: Mon,  5 Sep 2016 10:42:48 +1000
-Message-ID: <1473036168-20933-1-git-send-email-james@innovum.com.au>
-References: <1472701734-1837-1-git-send-email-james@innovum.com.au>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 4/5] PM / devfreq: rockchip: add devfreq driver for rk3399
+ dmc
+Date: Mon, 05 Sep 2016 09:49:19 +0900
+Message-ID: <57CCC10F.30704@samsung.com>
+References: <CGME20160902012350epcas1p2045d076c7645d3880e95633d66aba0ae@epcas1p2.samsung.com>
+ <201609020953.NltUDqVg%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1472701734-1837-1-git-send-email-james@innovum.com.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: maxime.ripard@free-electrons.com, robh+dt@kernel.com, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org
-Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, james@innovum.com.au, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-reply-to: <201609020953.NltUDqVg%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, typ-TNX95d0MmH7DzftRWevZcw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The NanoPi NEO is a minimal H3 based SBC. It comes with 256/512M RAM, a
-micro SD slot, 10/100Mbit ethernet and a single USB-A port.
-
-Signed-off-by: James Pettigrew <james@innovum.com.au>
----
-
-Changes in v2:
-
-As per Rask's review (thank you):
-	Added vendor prefix
-	Removed unncessary input.h include
-	Fixed underscores and unnecessary unit addresses in node names
-	Added GPIO pin comments to led nodes
-
----
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts          | 125 +++++++++++++++++++++
- 3 files changed, 127 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 1992aa9..7b6bda3 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -98,6 +98,7 @@ ezchip	EZchip Semiconductor
- fcs	Fairchild Semiconductor
- firefly	Firefly
- focaltech	FocalTech Systems Co.,Ltd
-+friendlyarm	Guangzhou FriendlyARM Computer Tech Co., Ltd
- fsl	Freescale Semiconductor
- ge	General Electric Company
- geekbuying	GeekBuying
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7dd4a07..a35f986 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -792,6 +792,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a83t-allwinner-h8homlet-v2.dtb \
- 	sun8i-a83t-cubietruck-plus.dtb \
- 	sun8i-h3-bananapi-m2-plus.dtb \
-+	sun8i-h3-nanopi-neo.dtb \
- 	sun8i-h3-orangepi-2.dtb \
- 	sun8i-h3-orangepi-lite.dtb \
- 	sun8i-h3-orangepi-one.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-new file mode 100644
-index 0000000..cf36696
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
-@@ -0,0 +1,125 @@
-+/*
-+ * Copyright (C) 2016 James Pettigrew <james@innovum.com.au>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-h3.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "FriendlyARM NanoPi NEO";
-+	compatible = "friendlyarm,nanopi-neo", "allwinner,sun8i-h3";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&leds-opc>, <&leds-r-opc>;
-+
-+		pwr {
-+			label = "nanopi:green:pwr";
-+			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
-+			default-state = "on";
-+		};
-+
-+		status {
-+			label = "nanopi:blue:status";
-+			gpios = <&pio 0 10 GPIO_ACTIVE_HIGH>; /* PA10 */
-+		};
-+	};
-+};
-+
-+&ehci3 {
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&ohci3 {
-+	status = "okay";
-+};
-+
-+&pio {
-+	leds-opc: led-pins {
-+		allwinner,pins = "PA10";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
-+&r_pio {
-+	leds-r-opc: led-pins {
-+		allwinner,pins = "PL10";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	/* USB VBUS is always on */
-+	status = "okay";
-+};
--- 
-1.9.1
+RGVhciBhbGwsCgpUaGlzIHBhdGNoIHJlbHkgb24gYm90aCByb2NrY2hpcC5naXQgYW5kIGRldmZy
+ZXEuZ2l0LgpBbHJlYWR5LCBSb2NrY2hpcCBTb0MgTWFpbnRhaW5lciAoSGVpa28gU3R1ZWJuZXIp
+IGNyZWF0ZWQKdGhlIGltbXV0YWJsZSBicmFuY2hbMV0uIFdoZW4gYXBwbHlpbmcgdGhlc2UgcGF0
+Y2hlcwpvbiBkZXZmcmVxLmdpdCB3aXRoIHB1bGxpbmcgdGhlIGltbXV0YWJsZSBicmFuY2hbMV0s
+Ckl0IGxvb2tzIGxpa2UgdGhhdCBzaG91bGQgbm90IGJlIGEgcHJvYmxlbS4KClsxXSBodHRwOi8v
+d3d3LnNwaW5pY3MubmV0L2xpc3RzL2FybS1rZXJuZWwvbXNnNTI4Mjk4Lmh0bWwKCkJlc3QgUmVn
+YXJkcywKQ2hhbndvbyBDaG9pCgpPbiAyMDE264WEIDA57JuUIDAy7J28IDEwOjIzLCBrYnVpbGQg
+dGVzdCByb2JvdCB3cm90ZToKPiBIaSBMaW4sCj4gCj4gW2F1dG8gYnVpbGQgdGVzdCBFUlJPUiBv
+biBuZXh0LTIwMTYwODI1XQo+IFthbHNvIGJ1aWxkIHRlc3QgRVJST1Igb24gdjQuOC1yYzRdCj4g
+W2Nhbm5vdCBhcHBseSB0byByb2NrY2hpcC9mb3ItbmV4dCBkZXZmcmVxL2Zvci1yYWZhZWwgbGlu
+dXMvbWFzdGVyIHY0LjgtcmM0IHY0LjgtcmMzIHY0LjgtcmMyXQo+IFtpZiB5b3VyIHBhdGNoIGlz
+IGFwcGxpZWQgdG8gdGhlIHdyb25nIGdpdCB0cmVlLCBwbGVhc2UgZHJvcCB1cyBhIG5vdGUgdG8g
+aGVscCBpbXByb3ZlIHRoZSBzeXN0ZW1dCj4gW1N1Z2dlc3QgdG8gdXNlIGdpdCg+PTIuOS4wKSBm
+b3JtYXQtcGF0Y2ggLS1iYXNlPTxjb21taXQ+IChvciAtLWJhc2U9YXV0byBmb3IgY29udmVuaWVu
+Y2UpIHRvIHJlY29yZCB3aGF0IChwdWJsaWMsIHdlbGwta25vd24pIGNvbW1pdCB5b3VyIHBhdGNo
+IHNlcmllcyB3YXMgYnVpbHQgb25dCj4gW0NoZWNrIGh0dHBzOi8vZ2l0LXNjbS5jb20vZG9jcy9n
+aXQtZm9ybWF0LXBhdGNoIGZvciBtb3JlIGluZm9ybWF0aW9uXQo+IAo+IHVybDogICAgaHR0cHM6
+Ly9naXRodWIuY29tLzBkYXktY2kvbGludXgvY29tbWl0cy9MaW4tSHVhbmcvcmszMzk5LXN1cHBv
+cnQtZGRyLWZyZXF1ZW5jeS1zY2FsaW5nLzIwMTYwOTAyLTA2MzcwMQo+IGNvbmZpZzogYXJtLWFs
+bG1vZGNvbmZpZyAoYXR0YWNoZWQgYXMgLmNvbmZpZykKPiBjb21waWxlcjogYXJtLWxpbnV4LWdu
+dWVhYmktZ2NjIChEZWJpYW4gNS40LjAtNikgNS40LjAgMjAxNjA2MDkKPiByZXByb2R1Y2U6Cj4g
+ICAgICAgICB3Z2V0IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwvZ2l0
+L3dmZy9sa3AtdGVzdHMuZ2l0L3BsYWluL3NiaW4vbWFrZS5jcm9zcyAtTyB+L2Jpbi9tYWtlLmNy
+b3NzCj4gICAgICAgICBjaG1vZCAreCB+L2Jpbi9tYWtlLmNyb3NzCj4gICAgICAgICAjIHNhdmUg
+dGhlIGF0dGFjaGVkIC5jb25maWcgdG8gbGludXggYnVpbGQgdHJlZQo+ICAgICAgICAgbWFrZS5j
+cm9zcyBBUkNIPWFybSAKPiAKPiBBbGwgZXJyb3JzIChuZXcgb25lcyBwcmVmaXhlZCBieSA+Pik6
+Cj4gCj4+PiBkcml2ZXJzL2RldmZyZXEvcmszMzk5X2RtYy5jOjI5OjM5OiBmYXRhbCBlcnJvcjog
+c29jL3JvY2tjaGlwL3JvY2tjaGlwX3NpcC5oOiBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5Cj4g
+ICAgY29tcGlsYXRpb24gdGVybWluYXRlZC4KPiAKPiB2aW0gKzI5IGRyaXZlcnMvZGV2ZnJlcS9y
+azMzOTlfZG1jLmMKPiAKPiAgICAgMjMJI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5o
+Pgo+ICAgICAyNAkjaW5jbHVkZSA8bGludXgvcG1fb3BwLmg+Cj4gICAgIDI1CSNpbmNsdWRlIDxs
+aW51eC9yZWd1bGF0b3IvY29uc3VtZXIuaD4KPiAgICAgMjYJI2luY2x1ZGUgPGxpbnV4L3J3c2Vt
+Lmg+Cj4gICAgIDI3CSNpbmNsdWRlIDxsaW51eC9zdXNwZW5kLmg+Cj4gICAgIDI4CQo+ICAgPiAy
+OQkjaW5jbHVkZSA8c29jL3JvY2tjaGlwL3JvY2tjaGlwX3NpcC5oPgo+ICAgICAzMAkKPiAgICAg
+MzEJc3RydWN0IGRyYW1fdGltaW5nIHsKPiAgICAgMzIJCXVuc2lnbmVkIGludCBkZHIzX3NwZWVk
+X2JpbjsKPiAKPiAtLS0KPiAwLURBWSBrZXJuZWwgdGVzdCBpbmZyYXN0cnVjdHVyZSAgICAgICAg
+ICAgICAgICBPcGVuIFNvdXJjZSBUZWNobm9sb2d5IENlbnRlcgo+IGh0dHBzOi8vbGlzdHMuMDEu
+b3JnL3BpcGVybWFpbC9rYnVpbGQtYWxsICAgICAgICAgICAgICAgICAgIEludGVsIENvcnBvcmF0
+aW9uCj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+TGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1y
+b2NrY2hpcAo=
