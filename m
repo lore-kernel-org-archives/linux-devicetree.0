@@ -1,37 +1,37 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] ARM: dts: rockchip: fix i2c address L3G4200D on PopMetal-RK3288 board
-Date: Mon, 05 Sep 2016 11:12:49 +0200
-Message-ID: <2908713.CWeP2vUbBj@phil>
-References: <1472977937-758-1-git-send-email-andy.yan@rock-chips.com> <1472978067-868-1-git-send-email-andy.yan@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472978067-868-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH] ARM: dts: omap3-gta04: reduce panel backlight PWM frequency to 83Hz
+Date: Mon,  5 Sep 2016 11:16:38 +0200
+Message-ID: <954d43b570092fe92b8b49cf8f475c027d3d8342.1473066997.git.hns@goldelico.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, marek@goldelico.com
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Sonntag, 4. September 2016, 16:34:27 CEST schrieb Andy Yan:
-> The i2c address of the three-axis digital gyroscope L3G4200D should be
-> 0x69 according to hardware design.
-> Also add power supply reference for L3G3200D and the 3-axis Electronic
-> Compass AK8963.
-> 
-> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+This helps to get 100% intensity closer to "always on".
 
-I've split this into two patches:
-ARM: dts: rockchip: fix L3G4200D i2c address on PopMetal-RK3288 board
-ARM: dts: rockchip: Add sensor-supplies on PopMetal-RK3288 board
-and applied them to my dts32 branch for 4.9
+It compensates for an effect of dmtimer which at 100% still emits short
+"off" impulses and the startup-time of the DC/DC converter makes
+backlight intensity not reach full scale. The lower the PWM frequency
+is, the smaller is this effect.
 
-Please don't mix multiple changes into one patch in the future :-)
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ arch/arm/boot/dts/omap3-gta04.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index c09a057..94f12dd 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -102,7 +102,7 @@
+ 
+ 	backlight {
+ 		compatible = "pwm-backlight";
+-		pwms = <&pwm11 0 2000000 0>;
++		pwms = <&pwm11 0 12000000 0>;
+ 		pwm-names = "backlight";
+ 		brightness-levels = <0 11 20 30 40 50 60 70 80 90 100>;
+ 		default-brightness-level = <9>;	/* => 90 */
+-- 
+2.7.3
