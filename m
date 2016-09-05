@@ -1,42 +1,40 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4] ARM: dts: imx6ul-geam: Add Engicam IMX6UL GEA M6UL
- initial support
-Date: Mon, 5 Sep 2016 10:19:42 +0800
-Message-ID: <20160905021942.GD25778@tiger>
-References: <1472562981-425-1-git-send-email-jagan@amarulasolutions.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v4 1/2] nxp/dts: add pcie aer interrupt-name property in
+ the dts
+Date: Mon, 5 Sep 2016 10:25:38 +0800
+Message-ID: <20160905022537.GF25778@tiger>
+References: <1465892645-32381-2-git-send-email-po.liu@nxp.com>
+ <1472625442-23309-1-git-send-email-po.liu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1472562981-425-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1472625442-23309-1-git-send-email-po.liu@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Po Liu <po.liu@nxp.com>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roy Zang <roy.zang@nxp.com>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 30, 2016 at 06:46:21PM +0530, Jagan Teki wrote:
-> From: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+On Wed, Aug 31, 2016 at 02:37:21PM +0800, Po Liu wrote:
+> NXP some platforms aer interrupt was not MSI/MSI-X/INTx
+> but using interrupt line independently. This patch add a "aer"
+> interrupt-names for aer interrupt.
+> With the interrupt-names "aer", code could probe aer interrupt
+> line for pcie root port, replace the aer interrupt service irq.
+> This is intend to fixup the Layerscape platforms which aer interrupt
+> was not MSI/MSI-X/INTx, but using interrupt line independently.
 > 
-> IMX6UL GEA M6UL modules are system on module solutions manufactured
-> by Engicam with following characteristics:
-> Processor	Freescale i.MX 6UltraLite MCIMX6G2, 528 MHz
-> RAM		128MB, 16-bit DDR3
-> NAND SLC	256MB
-> Power supply	Single 5V
-> MAX LCD RES	up to WXGA, 1366x768
+> Signed-off-by: Po Liu <po.liu@nxp.com>
+> ---
+> changes for V4:
+> 	- Add comments explain why to add this patch
+> 	- Move the binding changes to pci code patch
 > 
-> and more info at
-> http://www.engicam.com/prodotti/embedded/som/sodimm/gea-m6ul
-> 
-> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>  arch/arm/boot/dts/ls1021a.dtsi                 |  6 ++++--
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 18 +++++++++---------
+>  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 16 ++++++++--------
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Do not mix up arm dts changes with arm64 ones.  Use separate patch
+please.
+
+Shawn
