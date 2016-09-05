@@ -1,281 +1,201 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v9 3/5] Documentation: bindings: add dt documentation for
- rk3399 dmc
-Date: Mon, 05 Sep 2016 09:38:24 +0900
-Message-ID: <57CCBE80.8060906@samsung.com>
-References: <1472850525-25273-1-git-send-email-hl@rock-chips.com>
- <CGME20160902210855epcas1p3b0a0db9c3e5d962024d6d10bce5262be@epcas1p3.samsung.com>
- <1472850525-25273-4-git-send-email-hl@rock-chips.com>
+From: James Pettigrew <james@innovum.com.au>
+Subject: [PATCH v2] ARM: dts: sun8i: Add dts file for the NanoPi NEO SBC
+Date: Mon,  5 Sep 2016 10:42:48 +1000
+Message-ID: <1473036168-20933-1-git-send-email-james@innovum.com.au>
+References: <1472701734-1837-1-git-send-email-james@innovum.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1472850525-25273-4-git-send-email-hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, typ-TNX95d0MmH7DzftRWevZcw@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1472701734-1837-1-git-send-email-james@innovum.com.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: maxime.ripard@free-electrons.com, robh+dt@kernel.com, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org
+Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, james@innovum.com.au, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lin,
+The NanoPi NEO is a minimal H3 based SBC. It comes with 256/512M RAM, a
+micro SD slot, 10/100Mbit ethernet and a single USB-A port.
 
-Looks good to me. I add one comment on below.
+Signed-off-by: James Pettigrew <james@innovum.com.au>
+---
 
-If you modify it according to my comment, feel free to add my tag.
-Reviewed-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Changes in v2:
 
-On 2016년 09월 03일 06:08, Lin Huang wrote:
-> This patch adds the documentation for rockchip rk3399 dmc driver.
-> 
-> Signed-off-by: Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> Changes in v9:
-> - add ddr timing property to node
-> 
-> Changes in v8:
-> - add ddr timing properties
-> 
-> Changes in v7:
-> - None
-> 
-> Changes in v6:
-> -Add more detail in Documentation
-> 
-> Changes in v5:
-> -None
-> 
-> Changes in v4:
-> -None
-> 
-> Changes in v3:
-> -None
-> 
-> Changes in v2:
-> -None 
-> 
-> Changes in v1:
-> -None
->  .../devicetree/bindings/devfreq/rk3399_dmc.txt     | 202 +++++++++++++++++++++
->  1 file changed, 202 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-> new file mode 100644
-> index 0000000..f187c8fa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
-> @@ -0,0 +1,202 @@
-> +* Rockchip rk3399 DMC(Dynamic Memory Controller) device
-> +
-> +Required properties:
-> +- compatible:		 Must be "rockchip,rk3399-dmc".
-> +- devfreq-events:	 Node to get DDR loading, Refer to
-> +			 Documentation/devicetree/bindings/devfreq/
-> +			 rockchip-dfi.txt
-> +- interrupts:		 The interrupt number to the CPU. The interrupt
-> +			 specifier format depends on the interrupt controller.
-> +			 It should be DCF interrupts, when DDR dvfs finish,
-> +			 it will happen.
-> +- clocks:		 Phandles for clock specified in "clock-names" property
-> +- clock-names :		 The name of clock used by the DFI, must be
-> +			 "pclk_ddr_mon";
-> +- operating-points-v2:	 Refer to Documentation/devicetree/bindings/power/opp.txt
-> +			 for details.
-> +- center-supply:	 DMC supply node.
-> +- status:		 Marks the node enabled/disabled.
-> +
-> +Following properties are ddr timing:
-> +
-> +- dram_speed_bin :	 Value is defined at include/dt-bindings/clock/ddr.h,
-> +			 it select ddr3 cl-trp-trcd type, default value
-> +			 "DDR3_DEFAULT".it must selected according to
-> +			 "Speed Bin" in ddr3 datasheet, DO NOT use smaller
-> +			 "Speed Bin" than ddr3 exactly is.
-> +
-> +- pd_idle :		 Config the PD_IDLE value, defined the power-down idle
-> +			 period, memories are places into power-down mode if
-> +			 bus is idle for PD_IDLE DFI clocks.
-> +
-> +- sr_idle :		 Configure the SR_IDLE value, defined the selfrefresh
-> +			 idle period, memories are places into self-refresh
-> +			 mode if bus is idle for SR_IDLE*1024 DFI clocks
-> +			 (DFI clocks freq is half of dram's clocks), defaule
-> +			 value is "0".
-> +
-> +- sr_mc_gate_idle :	 Defined the self-refresh with memory and controller
-> +			 clock gating idle period, memories are places into
-> +			 self-refresh mode and memory controller clock arg
-> +			 gating if bus is idle for sr_mc_gate_idle*1024 DFI
-> +			 clocks.
-> +
-> +- srpd_lite_idle :	 Defined the self-refresh power down idle period,
-> +			 memories are places into self-refresh power down
-> +			 mode if bus is idle for srpd_lite_idle*1024 DFI
-> +			 clocks. This parameter is for LPDDR4 only.
-> +
-> +- standby_idle :	 Defined the standby idle period, memories are places
-> +			 into self-refresh than controller, pi, phy and dram
-> +			 clock will gating if bus is idle for
-> +			 standby_idle * DFI clocks.
-> +
-> +- dram_dll_disb_freq :	 It's defined the DDR3 dll bypass frequency in MHz
-> +			 when ddr freq less than DRAM_DLL_DISB_FREQ, ddr3
-> +			 dll will bypssed note: if dll was bypassed, the
-> +			 odt also stop working.
-> +
-> +- phy_dll_disb_freq :	 Defined the PHY dll bypass frequency in MHz (Mega Hz),
-> +			 when ddr freq less than DRAM_DLL_DISB_FREQ, phy dll
-> +			 will bypssed. note: phy dll and phy odt are
-> +			 independent
-> +
-> +- ddr3_odt_disb_freq :	 When dram type is DDR3, this parameter defined the
-> +			 odt disable frequency in MHz (Mega Hz), when ddr
-> +			 frequency less then ddr3_odt_disb_freq, the odt
-> +			 on dram side and controller side are both disabled.
-> +
-> +- ddr3_drv :		 When dram type is DDR3, this parameter define the
-> +			 dram side driver stength in ohm, default value is
-> +			 DDR3_DS_40ohm.
-> +
-> +- ddr3_odt :		 When dram type is DDR3, this parameter define the
-> +			 dram side ODT stength in ohm, default value is
-> +			 DDR3_ODT_120ohm.
-> +
-> +- phy_ddr3_ca_drv :	 When dram type is DDR3, this parameter define the phy
-> +			 side CA line(incluing command line, address line and
-> +			 clock line) driver strength. default value is
-> +			 PHY_DRV_ODT_40.
-> +
-> +- phy_ddr3_dq_drv :	 When dram type is DDR3, this parameter define the phy
-> +			 side DQ line(incluing DQS/DQ/DM line) driver strength.
-> +			 default value is PHY_DRV_ODT_40.
-> +
-> +- phy_ddr3_odt : 	 When dram type is DDR3, this parameter define the
-> +			 phy side odt strength, default value is
-> +			 PHY_DRV_ODT_240.
-> +
-> +- lpddr3_odt_disb_freq : When dram type is LPDDR3, this parameter defined then
-> +			 odt disable frequency in MHz (Mega Hz), when ddr
-> +			 frequency less then ddr3_odt_disb_freq, the odt on
-> +			 dram side and controller side are both disabled.
-> +
-> +- lpddr3_drv :		 When dram type is LPDDR3, this parameter define the
-> +			 dram side driver stength in ohm, default value is
-> +			 LP3_DS_34ohm.
-> +
-> +- lpddr3_odt :		 When dram type is LPDDR3, this parameter define the
-> +			 dram side ODT stength in ohm, default value is
-> +			 LP3_ODT_240ohm.
-> +
-> +- phy_lpddr3_ca_drv :	 When dram type is LPDDR3, this parameter define the
-> +			 phy side CA line(incluing command line, address line
-> +			 and clock line) driver strength. default value is
-> +			 PHY_DRV_ODT_40.
-> +
-> +- phy_lpddr3_dq_drv :	 When dram type is LPDDR3, this parameter define the
-> +			 phy side DQ line(incluing DQS/DQ/DM line) driver
-> +			 strength. default value is PHY_DRV_ODT_40.
-> +
-> +- phy_lpddr3_odt : 	 When dram type is LPDDR3, this parameter define the phy
-> +			 side odt strength, default value is PHY_DRV_ODT_240.
-> +
-> +- lpddr4_odt_disb_freq : When dram type is LPDDR4, this parameter defined the
-> +			 odt disable frequency in MHz (Mega Hz), when ddr
-> +			 frequency less then ddr3_odt_disb_freq, the odt on
-> +			 dram side and controller side are both disabled.
-> +
-> +- lpddr4_drv :		 When dram type is LPDDR4, this parameter define the
-> +			 dram side driver stength in ohm, default value is
-> +			 LP4_PDDS_60ohm.
-> +
-> +- lpddr4_dq_odt : 	 When dram type is LPDDR4, this parameter define the
-> +			 dram side ODT on dqs/dq line stength in ohm, default
-> +			 value is LP4_DQ_ODT_40ohm.
-> +
-> +- lpddr4_ca_odt :	 When dram type is LPDDR4, this parameter define the
-> +			 dram side ODT on ca line stength in ohm, default value
-> +			 is LP4_CA_ODT_40ohm.
-> +
-> +- phy_lpddr4_ca_drv :	 When dram type is LPDDR4, this parameter define the
-> +			 phy side  CA line(incluing command address line)
-> +			 driver strength. default value is PHY_DRV_ODT_40.
-> +
-> +- phy_lpddr4_ck_cs_drv : When dram type is LPDDR4, this parameter define the
-> +			 phy side clock line and cs line driver strength.
-> +			 default value is PHY_DRV_ODT_80.
-> +
-> +- phy_lpddr4_dq_drv :	 When dram type is LPDDR4, this parameter define the
-> +			 phy side DQ line(incluing DQS/DQ/DM line) driver
-> +			 strength. default value is PHY_DRV_ODT_80.
-> +
-> +- phy_lpddr4_odt :	 When dram type is LPDDR4, this parameter define the
-> +			 phy side odt strength, default value is PHY_DRV_ODT_60.
+As per Rask's review (thank you):
+	Added vendor prefix
+	Removed unncessary input.h include
+	Fixed underscores and unnecessary unit addresses in node names
+	Added GPIO pin comments to led nodes
 
-You better to add the 'rockchip,' prefix to property for ddr timing
-because below example include the 'rockchip,'.
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts          | 125 +++++++++++++++++++++
+ 3 files changed, 127 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
 
-> +
-> +Example:
-> +	dmc_opp_table: dmc_opp_table {
-> +		compatible = "operating-points-v2";
-> +
-> +		opp00 {
-> +			opp-hz = /bits/ 64 <300000000>;
-> +			opp-microvolt = <900000>;
-> +		};
-> +		opp01 {
-> +			opp-hz = /bits/ 64 <666000000>;
-> +			opp-microvolt = <900000>;
-> +		};
-> +	};
-> +
-> +	dmc: dmc {
-> +		compatible = "rockchip,rk3399-dmc";
-> +		devfreq-events = <&dfi>;
-> +		interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru SCLK_DDRCLK>;
-> +		clock-names = "dmc_clk";
-> +		operating-points-v2 = <&dmc_opp_table>;
-> +		center-supply = <&ppvar_centerlogic>;
-> +		upthreshold = <15>;
-> +		downdifferential = <10>;
-> +		rockchip,ddr3_speed_bin = <21>;
-> +		rockchip,pd_idle = <0x40>;
-> +		rockchip,sr_idle = <0x2>;
-> +		rockchip,sr_mc_gate_idle = <0x3>;
-> +		rockchip,srpd_lite_idle	= <0x4>;
-> +		rockchip,standby_idle = <0x2000>;
-> +		rockchip,dram_dll_dis_freq = <300>;
-> +		rockchip,phy_dll_dis_freq = <125>;
-> +		rockchip,auto_pd_dis_freq = <666>;
-> +		rockchip,ddr3_odt_dis_freq = <333>;
-> +		rockchip,ddr3_drv = <DDR3_DS_40ohm>;
-> +		rockchip,ddr3_odt = <DDR3_ODT_120ohm>;
-> +		rockchip,phy_ddr3_ca_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_ddr3_dq_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_ddr3_odt = <PHY_DRV_ODT_240>;
-> +		rockchip,lpddr3_odt_dis_freq = <333>;
-> +		rockchip,lpddr3_drv = <LP3_DS_34ohm>;
-> +		rockchip,lpddr3_odt = <LP3_ODT_240ohm>;
-> +		rockchip,phy_lpddr3_ca_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_lpddr3_dq_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_lpddr3_odt = <PHY_DRV_ODT_240>;
-> +		rockchip,lpddr4_odt_dis_freq = <333>;
-> +		rockchip,lpddr4_drv = <LP4_PDDS_60ohm>;
-> +		rockchip,lpddr4_dq_odt = <LP4_DQ_ODT_40ohm>;
-> +		rockchip,lpddr4_ca_odt = <LP4_CA_ODT_40ohm>;
-> +		rockchip,phy_lpddr4_ca_drv = <PHY_DRV_ODT_40>;
-> +		rockchip,phy_lpddr4_ck_cs_drv = <PHY_DRV_ODT_80>;
-> +		rockchip,phy_lpddr4_dq_drv = <PHY_DRV_ODT_80>;
-> +		rockchip,phy_lpddr4_odt = <PHY_DRV_ODT_60>;
-> +		status = "disabled";
-> +	};
-> +
-> 
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 1992aa9..7b6bda3 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -98,6 +98,7 @@ ezchip	EZchip Semiconductor
+ fcs	Fairchild Semiconductor
+ firefly	Firefly
+ focaltech	FocalTech Systems Co.,Ltd
++friendlyarm	Guangzhou FriendlyARM Computer Tech Co., Ltd
+ fsl	Freescale Semiconductor
+ ge	General Electric Company
+ geekbuying	GeekBuying
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 7dd4a07..a35f986 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -792,6 +792,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a83t-allwinner-h8homlet-v2.dtb \
+ 	sun8i-a83t-cubietruck-plus.dtb \
+ 	sun8i-h3-bananapi-m2-plus.dtb \
++	sun8i-h3-nanopi-neo.dtb \
+ 	sun8i-h3-orangepi-2.dtb \
+ 	sun8i-h3-orangepi-lite.dtb \
+ 	sun8i-h3-orangepi-one.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
+new file mode 100644
+index 0000000..cf36696
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-h3-nanopi-neo.dts
+@@ -0,0 +1,125 @@
++/*
++ * Copyright (C) 2016 James Pettigrew <james@innovum.com.au>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun8i-h3.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "FriendlyARM NanoPi NEO";
++	compatible = "friendlyarm,nanopi-neo", "allwinner,sun8i-h3";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&leds-opc>, <&leds-r-opc>;
++
++		pwr {
++			label = "nanopi:green:pwr";
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
++			default-state = "on";
++		};
++
++		status {
++			label = "nanopi:blue:status";
++			gpios = <&pio 0 10 GPIO_ACTIVE_HIGH>; /* PA10 */
++		};
++	};
++};
++
++&ehci3 {
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci3 {
++	status = "okay";
++};
++
++&pio {
++	leds-opc: led-pins {
++		allwinner,pins = "PA10";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&r_pio {
++	leds-r-opc: led-pins {
++		allwinner,pins = "PL10";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	/* USB VBUS is always on */
++	status = "okay";
++};
 -- 
-Best Regards,
-Chanwoo Choi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
