@@ -1,71 +1,76 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] pwm: sunxi: Add H3 support
-Date: Mon, 5 Sep 2016 12:09:19 +0200
-Message-ID: <20160905100919.GD31424@ulmo.ba.sec>
-References: <20160831082520.25962-1-woogyom.kim@gmail.com>
- <20160831082520.25962-5-woogyom.kim@gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v5 0/9] Add MT8173 Video Decoder Driver
+Date: Mon, 5 Sep 2016 12:09:22 +0200
+Message-ID: <91bd60ab-868a-78b8-a09d-544376913387@xs4all.nl>
+References: <1472818800-22558-1-git-send-email-tiffany.lin@mediatek.com>
+ <616d95a4-e6f3-5c42-d435-eb73795bd82c@xs4all.nl>
+ <1473069011.23162.7.camel@mtksdaap41>
+ <2d332670-edfd-5f2e-2c7f-4346e60baf75@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="T7mxYSe680VjQnyC"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160831082520.25962-5-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2d332670-edfd-5f2e-2c7f-4346e60baf75@xs4all.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tiffany Lin <tiffany.lin@mediatek.com>
+Cc: daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
+On 09/05/2016 11:53 AM, Hans Verkuil wrote:
+> On 09/05/2016 11:50 AM, Tiffany Lin wrote:
+>> Hi Hans,
+>>
+>> On Mon, 2016-09-05 at 11:33 +0200, Hans Verkuil wrote:
+>>> On 09/02/2016 02:19 PM, Tiffany Lin wrote:
+>>>> ==============
+>>>>  Introduction
+>>>> ==============
+>>>>
+>>>> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
+>>>> Mediatek Video Codec is able to handle video decoding and encoding of in a range of formats.
+>>>>
+>>>> This patch series rely on MTK VPU driver that have been merged in v4.8-rc1.
+>>>> Mediatek Video Decoder driver rely on VPU driver to load, communicate with VPU.
+>>>>
+>>>> Internally the driver uses videobuf2 framework, and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
+>>>>
+>>>> [1]https://chromium-review.googlesource.com/#/c/245241/
+>>>
+>>> This patch series fails to apply to the media_tree master (patch 3/9). Can you rebase and repost?
+>>>
+>>> I'm ready to make a pull request for this, so I hope you can fix this soon.
+>>>
+>> I saw Encoder fix patches in fixes branch.
+>> This patch series is base on Encoder fix patches. 
+>>
+>> [media] vcodec:mediatek: Refine VP8 encoder driver
+>> [media] vcodec:mediatek: Refine H264 encoder driver
+>> [media] vcodec:mediatek: change H264 profile default to profile high
+>> [media] vcodec:mediatek: Add timestamp and timecode copy for V4L2
+>> Encoder
+>> [media] vcodec:mediatek: Fix visible_height larger than coded_height
+>> issue in s_fmt_out
+>> [media] vcodec:mediatek: Fix fops_vcodec_release flow for V4L2 Encoder
+>> [media] vcodec:mediatek:code refine for v4l2 Encoder driver
+>> [media] dvb_frontend: Use memdup_user() rather than duplicating its
+>> implementation
+>>
+>>
+>> If I do not rebase decoder patch series base on Encoder fix pathces.
+>> Then it will fail after Encoder fix patches merged.
+>>
+>> May I know what parent patch I need to rebase to to fix this issue?
+> 
+> Ah, OK. I will retest placing this on top of those fixes. I forgot about the
+> pending fixes. I'll handle this.
 
---T7mxYSe680VjQnyC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK, that works much better when it is on top of the fixes.
 
-On Wed, Aug 31, 2016 at 05:25:20PM +0900, Milo Kim wrote:
-> H3 PWM controller has same register layout as sun4i driver, so it works
-> by adding H3 specific data.
->=20
-> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-sun4i.txt | 1 +
->  drivers/pwm/pwm-sun4i.c                             | 9 +++++++++
->  2 files changed, 10 insertions(+)
+Only one thing is missing: an entry in the MAINTAINERS file. Strange that that
+wasn't done for the encoder driver, we must have missed that. So can you make a
+patch adding the en/decoder driver to this file? I'm ready to make the pull
+request once I have that.
 
-Applied, thanks.
+Regards,
 
-Thierry
-
---T7mxYSe680VjQnyC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJXzUROAAoJEN0jrNd/PrOhexEP/R7Q5H3A6p3e637LK75PQ7a8
-UTIbIWNaW9OL0j/3u3HY7qRxcSdmtySgp3r8fsYryciw1d0a3WTFB+K3c99YFxtd
-Hiibc8GOvMAJ2yfPldhnbxnGRBG/xkWjMUCQEmncO7XrZclr/QUymGmsXJptTJiZ
-JTGfK26PWt3wyaD8fKwhIlAbiJ2/oJYcdnri9fY+IrfLYxJHbdTdsvnyy16cNfSR
-eeWHyPtVY9UEQTLvhDbkTwvBYGCbBKnUYPQu6ba89kM8PTXlofpyCFWjHGG8NYFJ
-gbipmp/s2YQHxDmZydvBxa6g9SmWAgnMppOozNr0rbI+iSn3e2Ct/h03d2uVkzMY
-7GVacz5wMKQDR+xqwGh5Jsb2HZnAXOpbKjKemBU/IPANPHHLXkGEbYh6WpWfciXz
-Cq5A+NgAohSXl67uM/R5VUMAPMz40pE+w1UjppJ+nDFrPbkZo3q7YHHwcCm5HQoX
-g4WDkRcxOKFTMBlyK3yiE+8PTpPpUsGKrOWIame7uyxky7XTc8fvvNrEIvGKjXjO
-DHgnWYz89YWdJ/+GedYBLK6nifKb53tyCgF/9Yh/dDgU7xsFDPVQNPmiLQA4WhBa
-foPsBnTeTMCc/UYdwP0kPHEJh6em8khlPahMHatFbjY0A+VPOwfaBk9dMla3o6Hy
-tNoNBKwR5VmBYmtbTdXO
-=J2jr
------END PGP SIGNATURE-----
-
---T7mxYSe680VjQnyC--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Hans
