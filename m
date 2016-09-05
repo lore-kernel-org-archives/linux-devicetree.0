@@ -1,30 +1,29 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: dts: r8a7794: fix PWM clock parent
-Date: Mon, 5 Sep 2016 13:59:09 +0200
-Message-ID: <20160905115906.GA24256@verge.net.au>
-References: <1618499.8bcj8adpVO@wasted.cogentembedded.com>
- <1994467.CVFvpbaMyF@wasted.cogentembedded.com>
- <CAMuHMdVezsJ1q0A4TCdhfEEPtnyMeXGGZxRREQucy6kr2BO=EA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Add R8A7792/Wheat QSPI support
+Date: Mon, 5 Sep 2016 14:01:04 +0200
+Message-ID: <20160905120104.GB24256@verge.net.au>
+References: <1648590.FPpmBRoQyh@wasted.cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVezsJ1q0A4TCdhfEEPtnyMeXGGZxRREQucy6kr2BO=EA@mail.gmail.com>
+In-Reply-To: <1648590.FPpmBRoQyh@wasted.cogentembedded.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 05, 2016 at 11:50:41AM +0200, Geert Uytterhoeven wrote:
-> On Sun, Sep 4, 2016 at 9:55 PM, Sergei Shtylyov
-> <sergei.shtylyov@cogentembedded.com> wrote:
-> > When removing the non-existing thermal clock I forgot to remove its
-> > parent from the node's "clocks" property  -- this led to a wrong PWM
-> > clock's parent clock.
-> >
-> > Fixes: 2a29f9d6fea8 ("ARM: dts: r8a7794: add MSTP5 clocks")
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+On Sat, Sep 03, 2016 at 01:04:37AM +0300, Sergei Shtylyov wrote:
+> Hello.
 > 
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>    Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
+> 'renesas-devel-20160902-v4.8-rc4' tag plus the Wheat board patches posted this
+> week. We're adding the R8A7792/Wheat QSPI clocks and device nodes. The board
+> patch depends on the PFC driver QSPI patch in order for the QSPI pins to be
+> configured...
+> 
+> [1/3] ARM: dts: r8a7792: add QSPI clock
+> [2/3] ARM: dts: r8a7792: add QSPI support
+> [3/3] ARM: dts: wheat: add QSPI support
 
-Thanks, I have queued this up.
+Thanks, I have queued these up.
