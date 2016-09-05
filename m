@@ -1,49 +1,193 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2 v5] bus: qcom: add EBI2 device tree bindings
-Date: Mon, 5 Sep 2016 23:42:49 +0200
-Message-ID: <CACRpkdZCgwK6vMXgu0UFghx0DaKMsnOq+w+jb=VFU8+LKu+B+A@mail.gmail.com>
-References: <1473078565-24363-1-git-send-email-linus.walleij@linaro.org> <6058357.4to9qAiSEF@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6058357.4to9qAiSEF@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2 v6] bus: qcom: add EBI2 device tree bindings
+Date: Mon,  5 Sep 2016 23:50:55 +0200
+Message-ID: <1473112255-7790-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 5, 2016 at 3:09 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Monday, September 5, 2016 2:29:24 PM CEST Linus Walleij wrote:
->> +Chip Select                     Physical address base
->> +CS0 GPIO134                     0x1a800000-0x1b000000 (8MB)
->> +CS1 GPIO39 (A) / GPIO123 (B)    0x1b000000-0x1b800000 (8MB)
->> +CS2 GPIO40 (A) / GPIO124 (B)    0x1b800000-0x1c000000 (8MB)
->> +CS3 GPIO133                     0x1d000000-0x25000000 (128 MB)
->> +CS4 GPIO132                     0x1c800000-0x1d000000 (8MB)
->> +CS5 GPIO131                     0x1c000000-0x1c800000 (8MB)
->> +
->
->
->> +- ranges: should be set to:
->> +  ranges = <0 0x0 0x1a800000 0x00800000>,
->> +           <1 0x0 0x1b000000 0x00800000>,
->> +           <2 0x0 0x1b800000 0x00800000>,
->> +           <3 0x0 0x1d000000 0x00800000>,
->> +           <4 0x0 0x1c800000 0x00800000>,
->> +           <5 0x0 0x1c000000 0x00800000>;
->>
->
-> The two lists don't seem to match here: why is the CS3 area only
-> listed with an 8MB mapping here when the documentation says it's
-> 128 MB?
+This adds device tree bindings for the External Bus Interface 2, EBI2
+to the Qualcomm SoC drivers.
 
-Just my bad because I'm not using it, good catch!
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v5->v6:
+- Fix the 128MB range for CS3.
+ChangeLog v4->v5:
+- Skip the array of CS configurations and move them down under
+  the respective device, assuming one device per chipselect.
+  This is identical to the Atmel binding in
+  Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt
+ChangeLog v3->v4:
+- Update device offset from 0x1b800000 to 0x0 as it is in the
+  actual DTS that I am using, respecting the range settings,
+  just a copypaste error...
+- Name subnode <cs>,<offset>, in the example smsc@2,0 {}
+ChangeLog v2->v3:
+- Change subject to bus: to reflect the right subsystem.
+ChangeLog v1->v2:
+- Introduce per-SoC compatible strings for apq8060 and msm8660
+- Move the binding to bus/qcom,ebi2.txt
+- Add a vendor prefix for each chipselect XMEM configuration option
+  "qcom,xmem-foo"
+- Move all CS XMEM settings to the EBI2 node, encode the six
+  different chipselects into an array of settings.
+- Use ranges to specify the address windows for the six different
+  chipselects.
+- Alter #address-cells to <2> using the first as chipselect and the
+  second as offset into the range.
+- Augment the example accordingly.
+---
+ .../devicetree/bindings/bus/qcom,ebi2.txt          | 138 +++++++++++++++++++++
+ 1 file changed, 138 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/qcom,ebi2.txt
 
-Resending.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/bus/qcom,ebi2.txt b/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
+new file mode 100644
+index 000000000000..1d2c2ea09ca6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
+@@ -0,0 +1,138 @@
++Qualcomm External Bus Interface 2 (EBI2)
++
++The EBI2 contains two peripheral blocks: XMEM and LCDC. The XMEM handles any
++external memory (such as NAND or other memory-mapped peripherals) whereas
++LCDC handles LCD displays.
++
++As it says it connects devices to an external bus interface, meaning address
++lines (up to 9 address lines so can only address 1KiB external memory space),
++data lines (16 bits), OE (output enable), ADV (address valid, used on some
++NOR flash memories), WE (write enable). This on top of 6 different chip selects
++(CS0 thru CS5) so that in theory 6 different devices can be connected.
++
++Apparently this bus is clocked at 64MHz. It has dedicated pins on the package
++and the bus can only come out on these pins, however if some of the pins are
++unused they can be left unconnected or remuxed to be used as GPIO or in some
++cases other orthogonal functions as well.
++
++Also CS1 and CS2 has -A and -B signals. Why they have that is unclear to me.
++
++The chip selects have the following memory range assignments. This region of
++memory is referred to as "Chip Peripheral SS FPB0" and is 168MB big.
++
++Chip Select                     Physical address base
++CS0 GPIO134                     0x1a800000-0x1b000000 (8MB)
++CS1 GPIO39 (A) / GPIO123 (B)    0x1b000000-0x1b800000 (8MB)
++CS2 GPIO40 (A) / GPIO124 (B)    0x1b800000-0x1c000000 (8MB)
++CS3 GPIO133                     0x1d000000-0x25000000 (128 MB)
++CS4 GPIO132                     0x1c800000-0x1d000000 (8MB)
++CS5 GPIO131                     0x1c000000-0x1c800000 (8MB)
++
++The APQ8060 Qualcomm Application Processor User Guide, 80-N7150-14 Rev. A,
++August 6, 2012 contains some incomplete documentation of the EBI2.
++
++FIXME: the manual mentions "write precharge cycles" and "precharge cycles".
++We have not been able to figure out which bit fields these correspond to
++in the hardware, or what valid values exist. The current hypothesis is that
++this is something just used on the FAST chip selects and that the SLOW
++chip selects are understood fully. There is also a "byte device enable"
++flag somewhere for 8bit memories.
++
++FIXME: The chipselects have SLOW and FAST configuration registers. It's a bit
++unclear what this means, if they are mutually exclusive or can be used
++together, or if some chip selects are hardwired to be FAST and others are SLOW
++by design.
++
++The XMEM registers are totally undocumented but could be partially decoded
++because the Cypress AN49576 Antioch Westbridge apparently has suspiciously
++similar register layout, see: http://www.cypress.com/file/105771/download
++
++Required properties:
++- compatible: should be one of:
++  "qcom,msm8660-ebi2"
++  "qcom,apq8060-ebi2"
++- #address-cells: shoule be <2>: the first cell is the chipselect,
++  the second cell is the offset inside the memory range
++- #size-cells: should be <1>
++- ranges: should be set to:
++  ranges = <0 0x0 0x1a800000 0x00800000>,
++           <1 0x0 0x1b000000 0x00800000>,
++           <2 0x0 0x1b800000 0x00800000>,
++           <3 0x0 0x1d000000 0x08000000>,
++           <4 0x0 0x1c800000 0x00800000>,
++           <5 0x0 0x1c000000 0x00800000>;
++- reg: two ranges of registers: EBI2 config and XMEM config areas
++- reg-names: should be "ebi2", "xmem"
++- clocks: two clocks, EBI_2X and EBI
++- clock-names: shoule be "ebi2x", "ebi2"
++
++Optional subnodes:
++- Nodes inside the EBI2 will be considered device nodes.
++
++The following optional properties are properties that can be tagged onto
++any device subnode. We are assuming that there can be only ONE device per
++chipselect subnode, else the properties will become ambigous.
++
++Optional properties arrays for SLOW chip selects:
++- qcom,xmem-recovery-cycles: recovery cycles is the time the memory continues to
++  drive the data bus after OE is de-asserted, in order to avoid contention on
++  the data bus. They are inserted when reading one CS and switching to another
++  CS or read followed by write on the same CS. Valid values 0 thru 15. Minimum
++  value is actually 1, so a value of 0 will still yield 1 recovery cycle.
++- qcom,xmem-write-hold-cycles: write hold cycles, these are extra cycles
++  inserted after every write minimum 1. The data out is driven from the time
++  WE is asserted until CS is asserted. With a hold of 1 (value = 0), the CS
++  stays active for 1 extra cycle etc. Valid values 0 thru 15.
++- qcom,xmem-write-delta-cycles: initial latency for write cycles inserted for
++  the first write to a page or burst memory. Valid values 0 thru 255.
++- qcom,xmem-read-delta-cycles: initial latency for read cycles inserted for the
++  first read to a page or burst memory. Valid values 0 thru 255.
++- qcom,xmem-write-wait-cycles: number of wait cycles for every write access, 0=1
++  cycle. Valid values 0 thru 15.
++- qcom,xmem-read-wait-cycles: number of wait cycles for every read access, 0=1
++  cycle. Valid values 0 thru 15.
++
++Optional properties arrays for FAST chip selects:
++- qcom,xmem-address-hold-enable: this is a boolean property stating that we
++  shall hold the address for an extra cycle to meet hold time requirements
++  with ADV assertion.
++- qcom,xmem-adv-to-oe-recovery-cycles: the number of cycles elapsed before an OE
++  assertion, with respect to the cycle where ADV (address valid) is asserted.
++  2 means 2 cycles between ADV and OE. Valid values 0, 1, 2 or 3.
++- qcom,xmem-read-hold-cycles: the length in cycles of the first segment of a
++  read transfer. For a single read trandfer this will be the time from CS
++  assertion to OE assertion. Valid values 0 thru 15.
++
++
++Example:
++
++ebi2@1a100000 {
++	compatible = "qcom,apq8060-ebi2";
++	#address-cells = <2>;
++	#size-cells = <1>;
++	ranges = <0 0x0 0x1a800000 0x00800000>,
++		 <1 0x0 0x1b000000 0x00800000>,
++		 <2 0x0 0x1b800000 0x00800000>,
++		 <3 0x0 0x1d000000 0x08000000>,
++		 <4 0x0 0x1c800000 0x00800000>,
++		 <5 0x0 0x1c000000 0x00800000>;
++	reg = <0x1a100000 0x1000>, <0x1a110000 0x1000>;
++	reg-names = "ebi2", "xmem";
++	clocks = <&gcc EBI2_2X_CLK>, <&gcc EBI2_CLK>;
++	clock-names = "ebi2x", "ebi2";
++	/* Make sure to set up the pin control for the EBI2 */
++	pinctrl-names = "default";
++	pinctrl-0 = <&foo_ebi2_pins>;
++
++ 	foo-ebi2@2,0 {
++		compatible = "foo";
++		reg = <2 0x0 0x100>;
++		(...)
++		qcom,xmem-recovery-cycles = <0>;
++		qcom,xmem-write-hold-cycles = <3>;
++		qcom,xmem-write-delta-cycles = <31>;
++		qcom,xmem-read-delta-cycles = <28>;
++		qcom,xmem-write-wait-cycles = <9>;
++		qcom,xmem-read-wait-cycles = <9>;
++	};
++};
+-- 
+2.7.4
