@@ -1,38 +1,37 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/3] ARM: dts: wheat: add QSPI support
-Date: Mon, 5 Sep 2016 11:10:35 +0200
-Message-ID: <CAMuHMdW+82ePveuVbOrPU0uRj4Uu5f8+NvzHpjWQr8Wa_BoU+A@mail.gmail.com>
-References: <1648590.FPpmBRoQyh@wasted.cogentembedded.com> <3191777.fJ30rYXr4J@wasted.cogentembedded.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: dts: rockchip: fix i2c address L3G4200D on PopMetal-RK3288 board
+Date: Mon, 05 Sep 2016 11:12:49 +0200
+Message-ID: <2908713.CWeP2vUbBj@phil>
+References: <1472977937-758-1-git-send-email-andy.yan@rock-chips.com> <1472978067-868-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <3191777.fJ30rYXr4J@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472978067-868-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 3, 2016 at 12:09 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Define the Wheat board dependent part of the QSPI device node.
-> Add device nodes for Spansion S25FL512S SPI flash and MTD partitions on it.
->
-> Based  on the original (and large) patch by Vladimir Barinov
-> <vladimir.barinov@cogentembedded.com>.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Am Sonntag, 4. September 2016, 16:34:27 CEST schrieb Andy Yan:
+> The i2c address of the three-axis digital gyroscope L3G4200D should be
+> 0x69 according to hardware design.
+> Also add power supply reference for L3G3200D and the 3-axis Electronic
+> Compass AK8963.
+> 
+> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+I've split this into two patches:
+ARM: dts: rockchip: fix L3G4200D i2c address on PopMetal-RK3288 board
+ARM: dts: rockchip: Add sensor-supplies on PopMetal-RK3288 board
+and applied them to my dts32 branch for 4.9
 
-Disclaimer: I have no board schematics nor manuals describing FLASH layout.
+Please don't mix multiple changes into one patch in the future :-)
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
+Thanks
+Heiko
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
