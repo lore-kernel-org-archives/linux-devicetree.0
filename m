@@ -1,61 +1,149 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] dts: sun8i-h3: add UART1-3 to Orange Pi Plus
-Date: Mon, 5 Sep 2016 21:31:11 +0200
-Message-ID: <20160905193111.GC4728@lukather>
-References: <1472671858-29220-1-git-send-email-jorik@kippendief.biz>
- <1472671858-29220-5-git-send-email-jorik@kippendief.biz>
- <20160902070425.GB6313@lukather>
- <20160903120932.GA6289@carbon.kippendief.biz>
+Subject: Re: [PATCH 3/3] ARM: dts: sun8i-q8-common: Add support for SDIO wifi
+ controllers
+Date: Mon, 5 Sep 2016 21:58:14 +0200
+Message-ID: <20160905195814.GA8596@lukather>
+References: <20160826145236.30210-1-hdegoede@redhat.com>
+ <20160826145236.30210-4-hdegoede@redhat.com>
+ <20160829065620.GC7612@lukather>
+ <724a6222-36e3-e230-5071-a7cb23c51697@redhat.com>
+ <20160901203733.GI20462@lukather>
+ <1efbd549-a05b-713e-cbe2-7a5458beaaeb@redhat.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="76DTJ5CE0DCVQemd"
+        protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160903120932.GA6289-fYCmWnekAjb2kgGZbG0gbwQM7Ykfvd1G@public.gmane.org>
+In-Reply-To: <1efbd549-a05b-713e-cbe2-7a5458beaaeb-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wens-jdAy2FN1RRM@public.gmane.org, Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---76DTJ5CE0DCVQemd
+--gBBFr7Ir9EOA20Yy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Jorik,
+Hi,
 
-On Sat, Sep 03, 2016 at 02:09:32PM +0200, Jorik Jonker wrote:
-> On Fri, Sep 02, 2016 at 09:04:25AM +0200, Maxime Ripard wrote:
-> >Unfortunately, these pins can be used for other purposes as well, so
-> >we cannot make force that decision down to our users.
+On Sat, Sep 03, 2016 at 01:33:50PM +0200, Hans de Goede wrote:
+> >On Mon, Aug 29, 2016 at 11:46:14AM +0200, Hans de Goede wrote:
+> >>On 29-08-16 08:56, Maxime Ripard wrote:
+> >>>On Fri, Aug 26, 2016 at 04:52:36PM +0200, Hans de Goede wrote:
+> >>>>Most of the sun8i q8 boards have an usb wifi controller, on the
+> >>>>variants which use an USB wifi controller, this will result in a
+> >>>>couple of error msg-s in dmesg when proving the sdio bus and
+> >>>>an used mmc controller.
+> >>>>
+> >>>>The best way to deal with wifi on this boards really is to simply
+> >>>>let the kernel auto-detect usb or sdio wifi controllers, so we
+> >>>>will just have to live with the few errors in dmesg.
+> >>>
+> >>>No, because that grabs PINs that might or might not be supposed to be
+> >>>used for that, it leaves clocks and regulators enabled, which draw
+> >>>power, to no end. And that's even worth since most boards will not use
+> >>>it.
+> >>>
+> >>>You can put the definition of the nodes in the DTSI, but the final
+> >>>status will have to be in the (relevant) DTS.
+> >>
+> >>This is again the q8-tablet thing where china produces a new variant
+> >>every 2 weeks. So we've sun8i-a23-q8-tablet.dts and sun8i-a33-q8-tablet=
+=2Edts
+> >>which try to be generic dts files for these tablets, since creating
+> >>a custom dts per variant is madness.
+> >
+> >This is almost unrelated, and probably some wishful thinking, but I'd
+> >really prefer to support *one* board properly, with all its features,
+> >rather than supporting every random Allwinner device with half baked
+> >support, because no one ever updated the DT, or there's simply no
+> >driver. But hey, I can't force you to work on something either :)
 >=20
-> Yes, but since the associated peripheral is disabled, the users are free =
-to
-> configure other functions/peripherals, right? I mean something like this =
-in
-> pseudo-DT:
+> The q8 tablets are somewhat special, to the end consumer they
+> are one board, but they differ a lot per badge. These are 40 (or less)
+> usd tablets, which get whatever wifi / touchscreen-controller /
+> accelerometer which is cheapest on the Chenzen market when the
+> badge gets produces.
 >=20
-> /soc/pio: pinctrl@01c20800/uart1_pins:
->   allwinner,pins =3D "PG6, PG7";
-> /soc/pio: pinctrl@01c20800/foo0_pins:
->   allwinner,pins =3D "PG6, PG7";
->   ..
-> /soc/uart1: serial@serial@01c28400:
->   pinctrl-0 =3D <&uart1_pins>;
->   status =3D "disabled";
-> /soc/bar:
->   pinctrl-0 =3D <&uart1_pins>;
->   status =3D "disabled";
+> For the end user to actually figure out what is in there requires
+> opening the tablet, or poking around with adb to learn the exact
+> internals / drivers used by android.
 >=20
-> Assuming Linux/DT allows this, this would force nothing, only offer choice
-> and ease of use.
+> I actually own 10 of these (3 a13, 5 a23, 2 a33) and have access
+> to 2 more a33 models which friends of me have, and they are *all*
+> different. For a list of all tablets I've see:
+> https://github.com/jwrdegoede/sunxi-fedora-scripts/blob/master/hansg-tabl=
+et-info
+>=20
+> Given the price of these they are really nice to thinker with /
+> turn into a little normal linux touch device, so I would like to
+> support them as best as we can in a somewhat user-friendly
+> way. Also see the RFC patch for the q8-hardwaremgr I posted
+> recently. In the end these tablets are the "*one* board"
+> which I'm trying to support properly, except that they are
+> only one board on the outside not on the outside.
+>=20
+> TL;DR: q8 tablets are special, but also quite popular and
+> I would like to support them properly, which requires
+> some special handling.
+>=20
+> >>This commit puts the node in sun8i-q8-common.dtsi because the
+> >>A23 and A33 are pin compatible and we've tablets where the
+> >>only difference is the SoC soldered on there, the use the _exact_
+> >>same PCB and components otherwise, so we have all the sun8i q8
+> >>stuff in a common place for sun8i-a23-q8-tablet.dts and
+> >>sun8i-a33-q8-tablet.dts, those are the only users of this
+> >>dtsi file.
+> >>
+> >>You've already merged the bits which handle the variants with
+> >>an USB attached wifi module (enabling ehci0 also on boards
+> >>where nothing is connected). This is the counter-part for
+> >>PCB's which use a sdio wifi module (about 90% of all boards
+> >>in my experience).
+> >
+> >I'm confused. Are most boards using an USB wifi chip, like you were
+> >stating in your commit log, or an SDIO wifi chip like you just said?
+>=20
+> My bad, the commit msg. is wrong of the 9 sun8i q8 tablets I've
+> access to only 1 uses usb wifi.
+>=20
+> So the first part of the commit msg should read
+> "Most of the sun8i q8 boards have a sdio wifi controller"
+>=20
+> >>As for turning a regulator on unnecessary, both the wifi and sdio
+> >>wifi solution use the same regulator, so that is already turned on
+> >>through the usb bits and it needs to be in either case.
+> >
+> >Ok, so indeed, that's not as bad as it sounds.
+> >
+> >>The only downside of this approach is that we either have
+> >>the USB controller turned on unnecessarily (in most cases)
+> >>or the mmc controller (in the rare A23 tablet which still
+> >>uses an USB wifi module).
+> >>
+> >>This all actually fits neatly into the plans to do hardware
+> >>autodetection for these tablets which I'm working on, in
+> >>this case we can just let the kernel handle things without
+> >>additional code (think the beaglebone capemanager) since
+> >>both busses are discoverable.
+> >>
+> >>Once we have the q8-hardwaremgr I'm working on and hope
+> >>to post an RFC of soon, we could even make that turn off
+> >>the unused controller (as a future enhancement).
+> >
+> >If that's on your to-do-list, that's fine by me.
+>=20
+> I've just added it to my to-do list :)
+>=20
+> So I assume with that done, that you are ok with taking this
+> patch now ? Please fixup the commit msg mistake, or let
+> me know if you want a v2.
 
-Hmm, sorry, I went over your patches too quickly...
+Yeah, I just applied it and fixed the commit log.
 
-That's a great compromise I think. Chen-Yu, any opinion on this?
-
-Thanks,
+Thanks!
 Maxime
 
 --=20
@@ -63,28 +151,28 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---76DTJ5CE0DCVQemd
+--gBBFr7Ir9EOA20Yy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXzcf/AAoJEBx+YmzsjxAgbrUP/1MbqtAoXlvx2dOD9CIJER1h
-cXj+uANuShAos5xOckjrIQo5a29Yx3hrjUueXROYBfpOVY4y9EL0wo3lDFppKir2
-wrdvx6j10jKJLmxK3xGwd486k0taZr2xBxfw2J4afnloSnWDrXDMgRwbkRqhJICO
-773VXnLk6+/EZtMaUoUfoEZZUSgnamB3TDErqU2gJEyyv7lB9So0Haz1GERsTj0M
-DxXT1rVB6wQa08c4gGA5ODGgoxsTRD7UBhNxxPBwOMvccterqN3Ggt5tt6F8dwGX
-5oZj9Qwn3geWet+ucjv5Gw/4tZaIyomhcGMj51KMTH6jIWAAq3Pt/Rit7Qwx/0gP
-cvl8v6lQ3cyMm2lSc1C+NGMBlDU/6oDQ5ko5R0X9mn8S37Cdg1F4NEYhtrb3aM+q
-yuD5CrvOuajYICaLrakPW6IuOF8GfL3U2AKKcXG+QoiPXap5/g8YP/qqkl6TYYCJ
-IYU5L+3ELuBOCPo8N4ppd0p885tZT5Vm7JMzTMDrVLHk3so9ByaXxJQHw4yPrjAy
-paOFl+LXZMcn52txdfxj4WmQhb7ms49W2QgFvRzLoo3mGfC4jR6DA9WR8TZ0JgmF
-Hj1FmtkjcTElruJTEQtbPkygDxt0uMZQ/fg17m1acEA5m8jDsFeDD/dZTQqMJc5T
-sc795W53QFS8y7reJ4QZ
-=3eDq
+iQIcBAEBAgAGBQJXzc5WAAoJEBx+YmzsjxAgYboP/A8jbgTFMDQfOnFljESHwq2d
+BanBVEPsNZdy/I7XmN2Xz/8IBSBTaLVy3PBtJKfSdNQf674ZZhk1u7zK2HJS7Hc7
+oy6Rk0PeidppFy5GLIDY2tDyRyKmy8XTdYraohxq1OZvRzWcaDfCWdW0Qf+5zVCD
+WnoYROeG+jumj11c/vnzkkJSHQqe6qFElNhLC5dlPFh5i+WA2sMqrtdJj6j/aUNf
+wvtbXpM6kvdUqV0kOfE9X3kO1n3Al3BeKS9wIytg9yTF5Hlt+CIqWkwUcM2ArocQ
+2dimZh4M3VPmwwvf97Jr+COb8wPVRtk9BpkNW3IR4NjsVAIgTwbSXbOuhoIBXj1S
+o8K3fnuc0P2lRSA3cbsmot3cCO5AWsGdQLmuP60ZLeQb9UQvu1oM0iaRN4XHHFpR
+nAzEyoi3lRvFMk7kEjF69mHFxp8caYge/+6KJMs0uZl+K68x7BkM3fWGuUUD5JPr
+XQb8oE1Za4P1LadGn9Usbn/VdOMGE/IsyeSFGWL2O/g/rz+wTilodwnYzCX8MBA3
+uEYJ9wOpymFeI5Tqf5HCYhOuUkSLavDoZGPTlTkwy9LMdOj/22qb+kIXXHK173Zn
+GuL8rdAIChjKTHR1VAGAl4lEkXVbtZLKtfZsNf1Q9fFuMbo3RzwgFMtq//nuD7ZT
+04ZAH9A+5hQS8dVZymI+
+=C05n
 -----END PGP SIGNATURE-----
 
---76DTJ5CE0DCVQemd--
+--gBBFr7Ir9EOA20Yy--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
