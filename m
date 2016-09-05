@@ -1,208 +1,270 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 3/5] media: Add Mediatek MDP Driver
-Date: Mon, 5 Sep 2016 12:17:14 +0200
-Message-ID: <cb59f743-66b9-15cd-0281-54510d7f93ca@xs4all.nl>
-References: <1472559944-55114-1-git-send-email-minghsiu.tsai@mediatek.com>
- <1472559944-55114-4-git-send-email-minghsiu.tsai@mediatek.com>
+From: <shh.xie@gmail.com>
+Subject: [PATCH 7/7] [v2] arm64: dts: add LS1046A-QDS board support
+Date: Mon, 5 Sep 2016 18:01:35 +0800
+Message-ID: <1473069695-33092-8-git-send-email-shh.xie@gmail.com>
+References: <1473069695-33092-1-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1472559944-55114-4-git-send-email-minghsiu.tsai@mediatek.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
-Cc: srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1473069695-33092-1-git-send-email-shh.xie@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, shawnguo@kernel.org, linux-kernel@vger.kernel.org
+Cc: Shaohui Xie <Shaohui.Xie@nxp.com>, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On 08/30/2016 02:25 PM, Minghsiu Tsai wrote:
-> Add MDP driver for MT8173
-> 
-> Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-> ---
->  drivers/media/platform/Kconfig                |   17 +
->  drivers/media/platform/Makefile               |    2 +
->  drivers/media/platform/mtk-mdp/Makefile       |    9 +
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c |  159 ++++
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.h |   72 ++
->  drivers/media/platform/mtk-mdp/mtk_mdp_core.c |  294 ++++++
->  drivers/media/platform/mtk-mdp/mtk_mdp_core.h |  260 +++++
->  drivers/media/platform/mtk-mdp/mtk_mdp_ipi.h  |  126 +++
->  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c  | 1270 +++++++++++++++++++++++++
->  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.h  |   22 +
->  drivers/media/platform/mtk-mdp/mtk_mdp_regs.c |  152 +++
->  drivers/media/platform/mtk-mdp/mtk_mdp_regs.h |   31 +
->  drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c  |  145 +++
->  drivers/media/platform/mtk-mdp/mtk_mdp_vpu.h  |   41 +
->  14 files changed, 2600 insertions(+)
->  create mode 100644 drivers/media/platform/mtk-mdp/Makefile
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_core.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_core.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_ipi.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_m2m.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_regs.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_regs.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_vpu.h
-> 
+From: Shaohui Xie <Shaohui.Xie@nxp.com>
 
-<snip>
+The LS1046A QorIQ development system (QDS) board is a high-performance
+computing, evaluation, development, and test platform supporting the
+LS1046A SoC.
 
-> +static inline bool mtk_mdp_is_target_compose(u32 target)
-> +{
-> +	if (target == V4L2_SEL_TGT_COMPOSE_DEFAULT
-> +	    || target == V4L2_SEL_TGT_COMPOSE_BOUNDS
-> +	    || target == V4L2_SEL_TGT_COMPOSE)
-> +		return true;
-> +	return false;
-> +}
-> +
-> +static inline bool mtk_mdp_is_target_crop(u32 target)
-> +{
-> +	if (target == V4L2_SEL_TGT_CROP_DEFAULT
-> +	    || target == V4L2_SEL_TGT_CROP_BOUNDS
-> +	    || target == V4L2_SEL_TGT_CROP)
-> +		return true;
-> +	return false;
-> +}
-> +
-> +static int mtk_mdp_m2m_g_selection(struct file *file, void *fh,
-> +				       struct v4l2_selection *s)
-> +{
-> +	struct mtk_mdp_frame *frame;
-> +	struct mtk_mdp_ctx *ctx = fh_to_ctx(fh);
-> +	bool valid = false;
-> +
-> +	if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
-> +		if (mtk_mdp_is_target_compose(s->target))
-> +			valid = true;
-> +	} else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
-> +		if (mtk_mdp_is_target_crop(s->target))
-> +			valid = true;
-> +	}
-> +	if (!valid) {
-> +		mtk_mdp_dbg(1, "[%d] invalid type:%d,%u", ctx->id, s->type,
-> +			    s->target);
-> +		return -EINVAL;
-> +	}
-> +
-> +	frame = mtk_mdp_ctx_get_frame(ctx, s->type);
-> +
-> +	switch (s->target) {
-> +	case V4L2_SEL_TGT_COMPOSE_DEFAULT:
-> +	case V4L2_SEL_TGT_COMPOSE_BOUNDS:
-> +	case V4L2_SEL_TGT_CROP_BOUNDS:
-> +	case V4L2_SEL_TGT_CROP_DEFAULT:
-> +		s->r.left = 0;
-> +		s->r.top = 0;
-> +		s->r.width = frame->width;
-> +		s->r.height = frame->height;
-> +		return 0;
-> +
-> +	case V4L2_SEL_TGT_COMPOSE:
-> +	case V4L2_SEL_TGT_CROP:
-> +		s->r.left = frame->crop.left;
-> +		s->r.top = frame->crop.top;
-> +		s->r.width = frame->crop.width;
-> +		s->r.height = frame->crop.height;
-> +		return 0;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int mtk_mdp_check_scaler_ratio(struct mtk_mdp_variant *var, int src_w,
-> +				      int src_h, int dst_w, int dst_h, int rot)
-> +{
-> +	int tmp_w, tmp_h;
-> +
-> +	if (rot == 90 || rot == 270) {
-> +		tmp_w = dst_h;
-> +		tmp_h = dst_w;
-> +	} else {
-> +		tmp_w = dst_w;
-> +		tmp_h = dst_h;
-> +	}
-> +
-> +	if ((src_w / tmp_w) > var->h_scale_down_max ||
-> +	    (src_h / tmp_h) > var->v_scale_down_max ||
-> +	    (tmp_w / src_w) > var->h_scale_up_max ||
-> +	    (tmp_h / src_h) > var->v_scale_up_max)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_mdp_m2m_s_selection(struct file *file, void *fh,
-> +				   struct v4l2_selection *s)
-> +{
-> +	struct mtk_mdp_frame *frame;
-> +	struct mtk_mdp_ctx *ctx = fh_to_ctx(fh);
-> +	struct v4l2_rect new_r;
-> +	struct mtk_mdp_variant *variant = ctx->mdp_dev->variant;
-> +	int ret;
-> +	bool valid = false;
-> +
-> +	if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
-> +		if (mtk_mdp_is_target_compose(s->target))
-> +			valid = true;
-> +	} else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
-> +		if (mtk_mdp_is_target_crop(s->target))
-> +			valid = true;
-> +	}
+Signed-off-by: Shaohui Xie <Shaohui.Xie@nxp.com>
+---
+changes in V2:
+1. updated aliases of serial nodes.
 
-These tests are wrong: you can't set the _DEFAULT and _BOUNDS targets.
-Those are read-only. It's easiest to just explicitly check for _CROP or
-_COMPOSE here.
+ arch/arm64/boot/dts/freescale/Makefile            |   1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts | 212 ++++++++++++++++++++++
+ 2 files changed, 213 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
 
-I've added a check to v4l2-compliance to test for this.
-
-> +	if (!valid) {
-> +		mtk_mdp_dbg(1, "[%d] invalid type:%d,%u", ctx->id, s->type,
-> +			    s->target);
-> +		return -EINVAL;
-> +	}
-> +
-> +	new_r = s->r;
-> +	ret = mtk_mdp_try_crop(ctx, s->type, &new_r);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (mtk_mdp_is_target_crop(s->target))
-> +		frame = &ctx->s_frame;
-> +	else
-> +		frame = &ctx->d_frame;
-> +
-> +	/* Check to see if scaling ratio is within supported range */
-> +	if (mtk_mdp_ctx_state_is_set(ctx, MTK_MDP_DST_FMT | MTK_MDP_SRC_FMT)) {
-> +		if (V4L2_TYPE_IS_OUTPUT(s->type)) {
-> +			ret = mtk_mdp_check_scaler_ratio(variant, new_r.width,
-> +				new_r.height, ctx->d_frame.crop.width,
-> +				ctx->d_frame.crop.height,
-> +				ctx->ctrls.rotate->val);
-> +		} else {
-> +			ret = mtk_mdp_check_scaler_ratio(variant,
-> +				ctx->s_frame.crop.width,
-> +				ctx->s_frame.crop.height, new_r.width,
-> +				new_r.height, ctx->ctrls.rotate->val);
-> +		}
-> +
-> +		if (ret) {
-> +			dev_info(&ctx->mdp_dev->pdev->dev,
-> +				"Out of scaler range");
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	s->r = new_r;
-> +	frame->crop = new_r;
-> +
-> +	return 0;
-> +}
-
-
-Regards,
-
-	Hans
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index 9c81b9e..6602718 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -1,5 +1,6 @@
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
++dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-rdb.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+new file mode 100644
+index 0000000..290e5b0
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+@@ -0,0 +1,212 @@
++/*
++ * Device Tree Include file for Freescale Layerscape-1046A family SoC.
++ *
++ * Copyright 2016, Freescale Semiconductor, Inc.
++ *
++ * Shaohui Xie <Shaohui.Xie@nxp.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPLv2 or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "fsl-ls1046a.dtsi"
++
++/ {
++	model = "LS1046A QDS Board";
++	compatible = "fsl,ls1046a-qds", "fsl,ls1046a";
++
++	aliases {
++		gpio0 = &gpio0;
++		gpio1 = &gpio1;
++		gpio2 = &gpio2;
++		gpio3 = &gpio3;
++		serial0 = &duart0;
++		serial1 = &duart1;
++		serial2 = &duart2;
++		serial3 = &duart3;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&dspi {
++	bus-num = <0>;
++	status = "okay";
++
++	flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "n25q128a11", "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <10000000>;
++	};
++
++	flash@1 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "sst25wf040b", "jedec,spi-nor";
++		spi-cpol;
++		spi-cpha;
++		reg = <1>;
++		spi-max-frequency = <10000000>;
++	};
++
++	flash@2 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "en25s64", "jedec,spi-nor";
++		spi-cpol;
++		spi-cpha;
++		reg = <2>;
++		spi-max-frequency = <10000000>;
++	};
++};
++
++&duart0 {
++	status = "okay";
++};
++
++&duart1 {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++
++	pca9547@77 {
++		compatible = "nxp,pca9547";
++		reg = <0x77>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x2>;
++
++			ina220@40 {
++				compatible = "ti,ina220";
++				reg = <0x40>;
++				shunt-resistor = <1000>;
++			};
++
++			ina220@41 {
++				compatible = "ti,ina220";
++				reg = <0x41>;
++				shunt-resistor = <1000>;
++			};
++		};
++
++		i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x3>;
++
++			rtc@51 {
++				compatible = "nxp,pcf2129";
++				reg = <0x51>;
++				/* IRQ10_B */
++				interrupts = <0 150 0x4>;
++			};
++
++			eeprom@56 {
++				compatible = "atmel,24c512";
++				reg = <0x56>;
++			};
++
++			eeprom@57 {
++				compatible = "atmel,24c512";
++				reg = <0x57>;
++			};
++
++			temp-sensor@4c {
++				compatible = "adi,adt7461a";
++				reg = <0x4c>;
++			};
++		};
++	};
++};
++
++&ifc {
++	#address-cells = <2>;
++	#size-cells = <1>;
++	/* NOR, NAND Flashes and FPGA on board */
++	ranges = <0x0 0x0 0x0 0x60000000 0x08000000
++		  0x1 0x0 0x0 0x7e800000 0x00010000
++		  0x2 0x0 0x0 0x7fb00000 0x00000100>;
++	status = "okay";
++
++	nor@0,0 {
++		compatible = "cfi-flash";
++		reg = <0x0 0x0 0x8000000>;
++		bank-width = <2>;
++		device-width = <1>;
++	};
++
++	nand@1,0 {
++		compatible = "fsl,ifc-nand";
++		reg = <0x1 0x0 0x10000>;
++	};
++
++	fpga: board-control@2,0 {
++		compatible = "fsl,ls1046aqds-fpga", "fsl,fpga-qixis";
++		reg = <0x2 0x0 0x0000100>;
++	};
++};
++
++&lpuart0 {
++	status = "okay";
++};
++
++&qspi {
++	num-cs = <2>;
++	bus-num = <0>;
++	status = "okay";
++
++	qflash0: s25fl128s@0 {
++		compatible = "spansion,m25p80";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++	};
++};
+-- 
+2.1.0.27.g96db324
