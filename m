@@ -1,50 +1,90 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v4 4/5] net: stmmac: add a glue driver for the Amlogic
- Meson 8b / GXBB DWMAC
-Date: Mon, 5 Sep 2016 21:07:03 +0200
-Message-ID: <CAFBinCAC3c=o1=8DGfiPhw6w6V42jvYLUfHXHpHLe03pw8P=LQ@mail.gmail.com>
-References: <201609050953.67GKeUAU%fengguang.wu@intel.com> <14789887.lyko4Om94p@wuerfel>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 4/7] dts: sun8i-h3: add UART1-3 to Orange Pi Plus
+Date: Mon, 5 Sep 2016 21:31:11 +0200
+Message-ID: <20160905193111.GC4728@lukather>
+References: <1472671858-29220-1-git-send-email-jorik@kippendief.biz>
+ <1472671858-29220-5-git-send-email-jorik@kippendief.biz>
+ <20160902070425.GB6313@lukather>
+ <20160903120932.GA6289@carbon.kippendief.biz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="76DTJ5CE0DCVQemd"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <14789887.lyko4Om94p@wuerfel>
+Content-Disposition: inline
+In-Reply-To: <20160903120932.GA6289-fYCmWnekAjb2kgGZbG0gbwQM7Ykfvd1G@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+To: wens-jdAy2FN1RRM@public.gmane.org, Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 5, 2016 at 12:53 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Monday, September 5, 2016 9:37:29 AM CEST kbuild test robot wrote:
->> All error/warnings (new ones prefixed by >>):
->>
->> >> drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c:63:18: error: field 'm250_mux' has incomplete type
->>      struct clk_mux  m250_mux;
->>                      ^
->> >> drivers/net/ethernet/stmicro/stmmac/dwmac-meson8b.c:67:21: error: field 'm250_div' has incomplete type
->>      struct clk_divider m250_div;
->>                         ^
->>
->
-> I think this needs a compile-time dependency on COMMON_CLK
-indeed, since we are also a clock provider we have to depend on
-CONFIG_COMMON_CLK.
 
-That brings up a question though:
-so far the new driver uses the same Kconfig symbol as the "old" driver
-(CONFIG_DWMAC_MESON).
-The "old" driver does not need CONFIG_COMMON_CLK while the new one does.
-I see a few options here:
-1. simply adding the dependency (as most configurations will have
-CONFIG_COMMON_CLK enabled anyways)
-2. add some depends on COMMON_CLK || MACH_MESON6 || MACH_MESON8 foo
-3. use a new Kconfig symbol for new new driver (CONFIG_DWMAC_MESON8B?)
+--76DTJ5CE0DCVQemd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-And finally regarding your other mail: I have already changed
-WARN_ON(PTR_ERR_OR_ZERO(...)) to WARN_ON(IS_ERR(...)) in v4
+Hi Jorik,
 
+On Sat, Sep 03, 2016 at 02:09:32PM +0200, Jorik Jonker wrote:
+> On Fri, Sep 02, 2016 at 09:04:25AM +0200, Maxime Ripard wrote:
+> >Unfortunately, these pins can be used for other purposes as well, so
+> >we cannot make force that decision down to our users.
+>=20
+> Yes, but since the associated peripheral is disabled, the users are free =
+to
+> configure other functions/peripherals, right? I mean something like this =
+in
+> pseudo-DT:
+>=20
+> /soc/pio: pinctrl@01c20800/uart1_pins:
+>   allwinner,pins =3D "PG6, PG7";
+> /soc/pio: pinctrl@01c20800/foo0_pins:
+>   allwinner,pins =3D "PG6, PG7";
+>   ..
+> /soc/uart1: serial@serial@01c28400:
+>   pinctrl-0 =3D <&uart1_pins>;
+>   status =3D "disabled";
+> /soc/bar:
+>   pinctrl-0 =3D <&uart1_pins>;
+>   status =3D "disabled";
+>=20
+> Assuming Linux/DT allows this, this would force nothing, only offer choice
+> and ease of use.
 
-Regards,
-Martin
+Hmm, sorry, I went over your patches too quickly...
+
+That's a great compromise I think. Chen-Yu, any opinion on this?
+
+Thanks,
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--76DTJ5CE0DCVQemd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJXzcf/AAoJEBx+YmzsjxAgbrUP/1MbqtAoXlvx2dOD9CIJER1h
+cXj+uANuShAos5xOckjrIQo5a29Yx3hrjUueXROYBfpOVY4y9EL0wo3lDFppKir2
+wrdvx6j10jKJLmxK3xGwd486k0taZr2xBxfw2J4afnloSnWDrXDMgRwbkRqhJICO
+773VXnLk6+/EZtMaUoUfoEZZUSgnamB3TDErqU2gJEyyv7lB9So0Haz1GERsTj0M
+DxXT1rVB6wQa08c4gGA5ODGgoxsTRD7UBhNxxPBwOMvccterqN3Ggt5tt6F8dwGX
+5oZj9Qwn3geWet+ucjv5Gw/4tZaIyomhcGMj51KMTH6jIWAAq3Pt/Rit7Qwx/0gP
+cvl8v6lQ3cyMm2lSc1C+NGMBlDU/6oDQ5ko5R0X9mn8S37Cdg1F4NEYhtrb3aM+q
+yuD5CrvOuajYICaLrakPW6IuOF8GfL3U2AKKcXG+QoiPXap5/g8YP/qqkl6TYYCJ
+IYU5L+3ELuBOCPo8N4ppd0p885tZT5Vm7JMzTMDrVLHk3so9ByaXxJQHw4yPrjAy
+paOFl+LXZMcn52txdfxj4WmQhb7ms49W2QgFvRzLoo3mGfC4jR6DA9WR8TZ0JgmF
+Hj1FmtkjcTElruJTEQtbPkygDxt0uMZQ/fg17m1acEA5m8jDsFeDD/dZTQqMJc5T
+sc795W53QFS8y7reJ4QZ
+=3eDq
+-----END PGP SIGNATURE-----
+
+--76DTJ5CE0DCVQemd--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
