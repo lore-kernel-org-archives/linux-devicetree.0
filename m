@@ -1,56 +1,94 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] arm64: renesas: r8a7796/salvator-x: Add board part number
- to DT bindings
-Date: Mon, 5 Sep 2016 09:22:29 +0200
-Message-ID: <CAMuHMdU_TE0RxDqOvYsUtBOX5p8T7RCuZgXg_uP7Jgn-Bf3NSg@mail.gmail.com>
-References: <1472635054-24372-1-git-send-email-geert+renesas@glider.be> <20160902151955.GA27150@rob-hp-laptop>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 2/9] drivers: irqchip: Add STM32 external interrupts
+ support
+Date: Mon, 5 Sep 2016 09:47:27 +0200
+Message-ID: <d790a3fd-766a-36d3-7a05-40b3198777c6@st.com>
+References: <1472830398-13275-1-git-send-email-alexandre.torgue@st.com>
+ <1472830398-13275-3-git-send-email-alexandre.torgue@st.com>
+ <alpine.DEB.2.20.1609022052470.5647@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160902151955.GA27150@rob-hp-laptop>
+In-Reply-To: <alpine.DEB.2.20.1609022052470.5647@nanos>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Thomas,
 
-On Fri, Sep 2, 2016 at 5:19 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Aug 31, 2016 at 11:17:34AM +0200, Geert Uytterhoeven wrote:
->> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/shmobile.txt | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
->> index 90cf237ee5581978..42a046a97acba00f 100644
->> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
->> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
->> @@ -65,7 +65,7 @@ Boards:
->>      compatible = "renesas,porter", "renesas,r8a7791"
->>    - Salvator-X (RTP0RC7795SIPB0010S)
->>      compatible = "renesas,salvator-x", "renesas,r8a7795";
->> -  - Salvator-X
->> +  - Salvator-X (RTP0RC7796SIPB0011S)
->>      compatible = "renesas,salvator-x", "renesas,r8a7796";
+On 09/02/2016 08:57 PM, Thomas Gleixner wrote:
+> Alexandre,
 >
-> Seems like these should be different compatibles rather than the
-> combination here defining exactly which board.
+> On Fri, 2 Sep 2016, Alexandre TORGUE wrote:
+>
+> This all looks very reasonable. The only complaint I have is your variable
+> declaration ordering or the lack thereof.
+>
+> 1)
+>> +	struct irq_domain *domain = irq_desc_get_handler_data(desc);
+>> +	struct irq_chip_generic *gc = domain->gc->gc[0];
+>> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+>> +	unsigned long pending;
+>> +	int n;
+>
+> 2)
+>> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+>> +	u32 rtsr, ftsr;
+>> +	int pin = data->hwirq;
+>
+> 3)
+>> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+>> +	int pin = data->hwirq;
+>> +	u32 emr;
+>
+> 4)
+>> +	irq_hw_number_t hwirq;
+>> +	struct irq_fwspec *fwspec = data;
+>> +	struct irq_chip_generic *gc = d->gc->gc[0];
+>
+> 5)
+>> +	int nr_irqs, nr_exti, ret, i;
+>> +	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
+>> +	struct irq_domain *domain;
+>> +	struct irq_chip_generic *gc;
+>> +	void *base;
+>
+> #1 and 3 have the ordering which is preferred in the irq code.
+>
+> #2, #4 and #5 are three permutations which are way harder to read.
+>
+>> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+>> +	int pin = data->hwirq;
+>> +	u32 rtsr, ftsr;
+>
+>> +	struct irq_chip_generic *gc = d->gc->gc[0];
+>> +	struct irq_fwspec *fwspec = data;
+>> +	irq_hw_number_t hwirq;
+>
+>> +	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
+>> +	int nr_irqs, nr_exti, ret, i;
+>> +	struct irq_chip_generic *gc;
+>> +	struct irq_domain *domain;
+>> +	void *base;
+>
+> Can you spot the difference?
 
-R-Car H3 (r8a7795) and R-Car M3-W (r8a7796) SiP are (sufficiently)
-pin-compatible that they use the same board. So the only difference is really
-the SoC.
+Thanks for review and for proposal. It Will be in next version.
 
-Gr{oetje,eeting}s,
+Regards
 
-                        Geert
+Alex
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+>
+> Thanks,
+>
+> 	tglx
+>
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
