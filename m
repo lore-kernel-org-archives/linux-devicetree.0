@@ -1,37 +1,46 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: sun8i: Add dts file for the Orange Pi
- Plus2E SBC
-Date: Mon, 5 Sep 2016 13:36:08 +0200
-Message-ID: <20160905113608.GE6322@lukather>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/2] ARM: dts: sun8i: Orange Pi Plus dts is for the Plus
+ and Plus 2
+Date: Mon, 5 Sep 2016 13:35:44 +0200
+Message-ID: <20160905113544.GD6322@lukather>
 References: <20160903110518.8267-1-hdegoede@redhat.com>
- <20160903110518.8267-2-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="BZaMRJmqxGScZ8Mx"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160903110518.8267-2-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1842753592546530745=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160903110518.8267-1-hdegoede@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---BZaMRJmqxGScZ8Mx
+--===============1842753592546530745==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SO98HVl1bnMOfKZd"
+Content-Disposition: inline
+
+
+--SO98HVl1bnMOfKZd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Sep 03, 2016 at 01:05:18PM +0200, Hans de Goede wrote:
-> The Orange Pi Plus2E is an extended version of the Orange Pi Pc Plus,
-> with 2G RAM and an external gbit ethernet phy.
+On Sat, Sep 03, 2016 at 01:05:17PM +0200, Hans de Goede wrote:
+> Update the sun8i-h3-orangepi-plus.dts model string to reflect that it
+> is valid for both the Orange Pi Plus and the Orange Pi Plus 2.
 >=20
-> Note currently the dts is pretty much empty (except for including the
-> pc-plus dts), I've a local patch which enables the emac actually making
-> this dts different from the pc-plus one, but that needs the h3 emac
-> driver to get merged first.
+> This is also meant to help users realize that it is not valid for
+> the new Orange Pi Plus 2E, which will get its own dts.
 >=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
 Applied, thanks!
 Maxime
@@ -41,29 +50,39 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---BZaMRJmqxGScZ8Mx
+--SO98HVl1bnMOfKZd
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJXzVioAAoJEBx+YmzsjxAge+IQAJH6zYoN6t/nD3BZS+IbLJpZ
-wnf0OX40Jj6xW2TvV6HWtSLXiiZrmFgNQQBwaaVA2/e024WGmRsVaMUXybudf+Sh
-R+DO1+DaobVALxuK8+/PexVnPsJo2Y2hNy4nHz2BL2IBFUGN5TBV0XKWNkVQxnqU
-oePv3RKGuJRa9xx6ElvwDOAg1eNDqCP/BhBhmHR4dXjhhsNjptBDG8s5XFt6BkaU
-muJLidbuD6sLJsFbQ7DaDu1s0I6hVcSyWgpUNhC3egxIb6OxDUiJ2ae/BsaxKn0t
-+7EMBqygwo1arWVzHObs7ebvAnKyL/Zpjd/WEVcC8GPe9rXFrhKXGF7RkhzmnmQy
-8vBaeD/qXLv+ACqLHWzZ0qYAkr774JgAIbuB/qEM+nQ8TyPC+joLbEUdugc1kpYD
-ed+YvmyjAwhNq8Q5ZAz9kRMDsWoJnKscY6AjAVllHCCMY3qnp2VWF9uHCn4+GGKI
-FQL7Txg+vTCIRLtVdxz3jRO97l9r9gLRCkL2aOnigNViguMtW1mVYuAXhVjCuGbv
-GtXiuz4am9MylXsfeTdmaPrsRZn8MEsDj/3KqhehDZ+wn6cP8Dtpz3pJfgAj9IOF
-EgTx/QktWTTbKCIsyoaiyBOB30nhBYSgMJAzIWsH/St6xPcg6Rlizr8PPPEf4EVk
-A9qbcjOGMxtI3X5lEOqM
-=JtIC
+iQIcBAEBAgAGBQJXzViQAAoJEBx+YmzsjxAgaDcP/0prAo8lbvJCC53z+p4+rl78
+zLhHzL83ZemCs+92QsIvWCq7DQfwTmv/FCQZ7u+TRg9gk/8nByVJx7KY9YvW/Qye
+SbU1kv6L8SMukT9c3pZFc22Owc1ds3L1YYGPlI8jM4xn8QKsch2fd7iTMC/aEGXD
+KEBDrbk+a/qLNF7gQO809WevICVE5lPSfA9xE/SLgbFlaF977E9MOXS5MJgEZo5A
+8L13/fxvcfh1EhRI0vc85Ij85uq/+4R4eveHxqKxcUpR/qhzeClFOCjPd+mRe6K+
+VHAM/EEJ5o/k7p93qAm+Pxdr5JLhAMpmhwjf/qm3wMZnS+fTzKDvxHY8Ba+Frx63
+qIyYvaOvwhsbwnuG4OZS1gMSPH7SK4BUI9QXqDciBDSArWIjfGJNcWoggtqRsRDt
+5lhTk4xEtMDQMy7uq8W8+97gvUR+X4DObQLCV+EI5QmZg6R6RgMZX5z/r0RGNGTg
+VHKiUYjiPp28leQmYMW1q8D7mQKtldgFhnJFdlzZLaT58TCDxD4nDhofjeU0qoa8
+4J7SPCOY8bCT5+XIJNgHJuzximsoHoett8M99wMTYTpiC20vPiw1RAaPISW6MnI8
+46VkFNtlvWrFtKI+VJ9jwbIpePg83tGhA3FwoiV9mW86BDle/b3EOQd6wsBO0cpQ
+Qp974NvbceEFWndDKMZq
+=Iq3E
 -----END PGP SIGNATURE-----
 
---BZaMRJmqxGScZ8Mx--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--SO98HVl1bnMOfKZd--
+
+
+--===============1842753592546530745==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1842753592546530745==--
