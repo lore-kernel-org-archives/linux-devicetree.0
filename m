@@ -1,87 +1,66 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v9 17/19] drm/virtio: kconfig: Fix recursive dependency issue.
-Date: Mon,  5 Sep 2016 14:16:59 +0100
-Message-ID: <1473081421-16555-18-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v9 15/19] ARM: STi: DT: STiH407: Add uniperif reader dt nodes
+Date: Mon,  5 Sep 2016 14:16:57 +0100
+Message-ID: <1473081421-16555-16-git-send-email-peter.griffin@linaro.org>
 References: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473081421-16555-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, vinod.koul@intel.com, patrice.chotard@st.com, dan.j.williams@intel.com, airlied@linux.ie, kraxel@redhat.com, ohad@wizery.com, bjorn.andersson@linaro.org
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-remoteproc@vger.kernel.org, virtualization@lists.linux-foundation.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473081421-16555-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-ST_SLIM_REMOTEPROC must select REMOTEPROC, which exposes the following
-recursive dependency.
+This patch adds the DT node for the uniperif reader
+IP block found on STiH407 family silicon.
 
-[..]
-drivers/video/fbdev/Kconfig:5:error: recursive dependency detected!
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/video/fbdev/Kconfig:5:	symbol FB is selected by DRM_KMS_FB_HELPER
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/gpu/drm/Kconfig:42:	symbol DRM_KMS_FB_HELPER depends on DRM_KMS_HELPER
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/gpu/drm/Kconfig:36:	symbol DRM_KMS_HELPER is selected by DRM_VIRTIO_GPU
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/gpu/drm/virtio/Kconfig:1:	symbol DRM_VIRTIO_GPU depends on VIRTIO
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/virtio/Kconfig:1:	symbol VIRTIO is selected by REMOTEPROC
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/remoteproc/Kconfig:4:	symbol REMOTEPROC is selected by ST_SLIM_REMOTEPROC
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/remoteproc/Kconfig:103:	symbol ST_SLIM_REMOTEPROC is selected by ST_FDMA
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/dma/Kconfig:440:	symbol ST_FDMA depends on DMADEVICES
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/dma/Kconfig:5:	symbol DMADEVICES is selected by SND_SOC_SH4_SIU
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-sound/soc/sh/Kconfig:29:	symbol SND_SOC_SH4_SIU is selected by SND_SIU_MIGOR
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-sound/soc/sh/Kconfig:64:	symbol SND_SIU_MIGOR depends on I2C
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/i2c/Kconfig:7:	symbol I2C is selected by FB_DDC
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/video/fbdev/Kconfig:63:	symbol FB_DDC is selected by FB_CYBER2000_DDC
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/video/fbdev/Kconfig:378:	symbol FB_CYBER2000_DDC depends on FB_CYBER2000
-For a resolution refer to Documentation/kbuild/kconfig-language.txt
-subsection "Kconfig recursive dependency limitations"
-drivers/video/fbdev/Kconfig:366:	symbol FB_CYBER2000 depends on FB
-
-which is due to drivers/gpu/drm/virtio/Kconfig depending on VIRTIO.
-
-Fix by dropping depend and switching to select VIRTIO.
-
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/gpu/drm/virtio/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/stih407-family.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/gpu/drm/virtio/Kconfig b/drivers/gpu/drm/virtio/Kconfig
-index e1afc3d..90357d9 100644
---- a/drivers/gpu/drm/virtio/Kconfig
-+++ b/drivers/gpu/drm/virtio/Kconfig
-@@ -1,6 +1,7 @@
- config DRM_VIRTIO_GPU
- 	tristate "Virtio GPU driver"
--	depends on DRM && VIRTIO
-+	depends on DRM
-+	select VIRTIO
-         select DRM_KMS_HELPER
-         select DRM_TTM
- 	help
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 1edc36c..883019a 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -960,5 +960,33 @@
+ 
+ 			status = "disabled";
+ 		};
++
++		sti_uni_reader0: sti-uni-reader@8d83000 {
++			compatible = "st,sti-uni-reader";
++			#sound-dai-cells = <0>;
++			st,syscfg = <&syscfg_core>;
++			reg = <0x8d83000 0x158>;
++			interrupts = <GIC_SPI 87 IRQ_TYPE_NONE>;
++			dmas = <&fdma0 5 0 1>;
++			dma-names = "rx";
++			dai-name = "Uni Reader #0 (PCM IN)";
++			st,version = <3>;
++
++			status = "disabled";
++		};
++
++		sti_uni_reader1: sti-uni-reader@8d84000 {
++			compatible = "st,sti-uni-reader";
++			#sound-dai-cells = <0>;
++			st,syscfg = <&syscfg_core>;
++			reg = <0x8d84000 0x158>;
++			interrupts = <GIC_SPI 88 IRQ_TYPE_NONE>;
++			dmas = <&fdma0 6 0 1>;
++			dma-names = "rx";
++			dai-name = "Uni Reader #1 (HDMI RX)";
++			st,version = <3>;
++
++			status = "disabled";
++		};
+ 	};
+ };
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
