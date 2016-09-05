@@ -1,165 +1,83 @@
-From: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v14 4/4] CMDQ: save more energy in idle
-Date: Mon, 5 Sep 2016 09:44:45 +0800
-Message-ID: <1473039885-24009-5-git-send-email-hs.liao@mediatek.com>
-References: <1473039885-24009-1-git-send-email-hs.liao@mediatek.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] arm64: Add DTS support for FSL's LS1012A SoC
+Date: Mon, 5 Sep 2016 09:46:36 +0800
+Message-ID: <20160905014636.GB25778@tiger>
+References: <1472207241-18461-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+ <20160829095239.GM30790@tiger>
+ <1472493061.13245.39.camel@buserror.net>
+ <20160830120220.GC8363@tiger>
+ <HE1PR0401MB2636B40376255680B6A58CFB8DE00@HE1PR0401MB2636.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473039885-24009-1-git-send-email-hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <HE1PR0401MB2636B40376255680B6A58CFB8DE00-B0v07Ae2tarUYqUkpow3g43W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dennis-YC Hsieh <dennis-yc.hsieh-NuS5LvNUpcLQFizaE/u3fw@public.gmane.org>
+To: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bhaskar U <bhaskar.upadhaya-3arQi8VN3Tc@public.gmane.org>, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, "linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org" <linux-devel-XDVM779Km55Y1YpKYGMr2+TW4wlIGRCZ@public.gmane.org>, Pratiyush Srivastava <pratiyush.srivastava-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use clk_disable_unprepare instead of clk_disable to save more energy
-when CMDQ is idle.
+On Tue, Aug 30, 2016 at 02:07:17PM +0000, Stuart Yoder wrote:
+> > On Mon, Aug 29, 2016 at 12:51:01PM -0500, Scott Wood wrote:
+> > > On Mon, 2016-08-29 at 17:52 +0800, Shawn Guo wrote:
+> > > > On Fri, Aug 26, 2016 at 03:57:21PM +0530, Bhaskar Upadhaya wrote:
+> > > > >
+> > > > > +		clockgen: clocking@1ee1000 {
+> > > > > +			compatible = "fsl,ls1012a-clockgen";
+> > > > The compatible cannot be found in binding docs.
+> > >
+> > > From Documentation/devicetree/bindings/clock/qoriq-clock.txt:
+> > >
+> > > - compatible: Should contain a chip-specific clock block compatible
+> > >         string and (if applicable) may contain a chassis-version clock
+> > >         compatible string.
+> > >
+> > >         Chip-specific strings are of the form "fsl,<chip>-clockgen", such as:
+> > >         * "fsl,p2041-clockgen"
+> > >         * "fsl,p3041-clockgen"
+> > >         * "fsl,p4080-clockgen"
+> > >         * "fsl,p5020-clockgen"
+> > >         * "fsl,p5040-clockgen"
+> > >         * "fsl,t4240-clockgen"
+> > >         * "fsl,b4420-clockgen"
+> > >         * "fsl,b4860-clockgen"
+> > >         * "fsl,ls1021a-clockgen"
+> > >         Chassis-version clock strings include:
+> > >         * "fsl,qoriq-clockgen-1.0": for chassis 1.0 clocks
+> > >         * "fsl,qoriq-clockgen-2.0": for chassis 2.0 clocks
+> > >
+> > > I really hope we don't have to update every single fsl,<chip>-whatever binding
+> > > every time a new chip comes out.  There are already other chips not listed,
+> > > FWIW (e.g. t1040, t2080, ls1043a, and ls2080a).  That's why it says "such as".
+> > 
+> > If I remember correctly, DT maintainers want every supported compatible
+> > string explicitly listed in bindings doc.  And they even added a check
+> > into checkpatch.pl with commit bff5da433525 ("checkpatch: add DT
+> > compatible string documentation checks").
+> 
+> See Documentation/devicetree/bindings/submitting-patches.txt:
+> 
+>   5) The wildcard "<chip>" may be used in compatible strings, as in
+>      the following example:
+> 
+>          - compatible: Must contain '"nvidia,<chip>-pcie",
+>            "nvidia,tegra20-pcie"' where <chip> is tegra30, tegra132, ...
+> 
+>      As in the above example, the known values of "<chip>" should be
+>      documented if it is used.
+> 
+> It _is_ allowed to use the <chip> wildcard, and so you will not find all
+> full compatible strings explicitly listed in bindings.  However, the
+> chips themselves "should" be listed.
 
-Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/mailbox/mtk-cmdq.c | 54 +++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 46 insertions(+), 8 deletions(-)
++ Rob and Mark
 
-diff --git a/drivers/mailbox/mtk-cmdq.c b/drivers/mailbox/mtk-cmdq.c
-index daf5561..0bf30cb 100644
---- a/drivers/mailbox/mtk-cmdq.c
-+++ b/drivers/mailbox/mtk-cmdq.c
-@@ -29,6 +29,7 @@
- #include <linux/spinlock.h>
- #include <linux/suspend.h>
- #include <linux/timer.h>
-+#include <linux/workqueue.h>
- 
- #define CMDQ_THR_MAX_COUNT		3 /* main, sub, general(misc) */
- #define CMDQ_INST_SIZE			8 /* instruction is 64-bit */
-@@ -130,10 +131,16 @@ struct cmdq_task {
- 	struct cmdq_task_cb	cb;
- };
- 
-+struct cmdq_clk_release {
-+	struct cmdq		*cmdq;
-+	struct work_struct	release_work;
-+};
-+
- struct cmdq {
- 	struct mbox_controller	mbox;
- 	void __iomem		*base;
- 	u32			irq;
-+	struct workqueue_struct	*clk_release_wq;
- 	struct cmdq_thread	thread[CMDQ_THR_MAX_COUNT];
- 	struct mutex		task_mutex;
- 	struct clk		*clock;
-@@ -279,11 +286,19 @@ static void cmdq_thread_wait_end(struct cmdq_thread *thread,
- static void cmdq_task_exec(struct cmdq_task *task, struct cmdq_thread *thread)
- {
- 	struct cmdq *cmdq = task->cmdq;
--	unsigned long curr_pa, end_pa;
-+	unsigned long curr_pa, end_pa, flags;
- 
- 	task->thread = thread;
- 	if (list_empty(&thread->task_busy_list)) {
--		WARN_ON(clk_enable(cmdq->clock) < 0);
-+		/*
-+		 * Unlock for clk prepare (sleeping function).
-+		 * We are safe to do that since we have task_mutex and
-+		 * only flush will add task.
-+		 */
-+		spin_unlock_irqrestore(&thread->chan->lock, flags);
-+		WARN_ON(clk_prepare_enable(cmdq->clock) < 0);
-+		spin_lock_irqsave(&thread->chan->lock, flags);
-+
- 		WARN_ON(cmdq_thread_reset(cmdq, thread) < 0);
- 
- 		writel(task->pa_base, thread->base + CMDQ_THR_CURR_ADDR);
-@@ -365,6 +380,26 @@ static void cmdq_task_handle_error(struct cmdq_task *task)
- 	cmdq_thread_resume(thread);
- }
- 
-+static void cmdq_clk_release_work(struct work_struct *work_item)
-+{
-+	struct cmdq_clk_release *clk_release = container_of(work_item,
-+			struct cmdq_clk_release, release_work);
-+	struct cmdq *cmdq = clk_release->cmdq;
-+
-+	clk_disable_unprepare(cmdq->clock);
-+	kfree(clk_release);
-+}
-+
-+static void cmdq_clk_release_schedule(struct cmdq *cmdq)
-+{
-+	struct cmdq_clk_release *clk_release;
-+
-+	clk_release = kmalloc(sizeof(*clk_release), GFP_ATOMIC);
-+	clk_release->cmdq = cmdq;
-+	INIT_WORK(&clk_release->release_work, cmdq_clk_release_work);
-+	queue_work(cmdq->clk_release_wq, &clk_release->release_work);
-+}
-+
- static void cmdq_thread_irq_handler(struct cmdq *cmdq,
- 				    struct cmdq_thread *thread)
- {
-@@ -414,7 +449,7 @@ static void cmdq_thread_irq_handler(struct cmdq *cmdq,
- 
- 	if (list_empty(&thread->task_busy_list)) {
- 		cmdq_thread_disable(cmdq, thread);
--		clk_disable(cmdq->clock);
-+		cmdq_clk_release_schedule(cmdq);
- 	} else {
- 		mod_timer(&thread->timeout,
- 			  jiffies + msecs_to_jiffies(CMDQ_TIMEOUT_MS));
-@@ -473,7 +508,7 @@ static void cmdq_thread_handle_timeout(unsigned long data)
- 
- 	cmdq_thread_resume(thread);
- 	cmdq_thread_disable(cmdq, thread);
--	clk_disable(cmdq->clock);
-+	cmdq_clk_release_schedule(cmdq);
- 	spin_unlock_irqrestore(&thread->chan->lock, flags);
- }
- 
-@@ -761,7 +796,7 @@ static int cmdq_suspend(struct device *dev)
- 		msleep(20);
- 	}
- 
--	clk_unprepare(cmdq->clock);
-+	flush_workqueue(cmdq->clk_release_wq);
- 	return 0;
- }
- 
-@@ -769,7 +804,6 @@ static int cmdq_resume(struct device *dev)
- {
- 	struct cmdq *cmdq = dev_get_drvdata(dev);
- 
--	WARN_ON(clk_prepare(cmdq->clock) < 0);
- 	cmdq->suspended = false;
- 	return 0;
- }
-@@ -778,8 +812,8 @@ static int cmdq_remove(struct platform_device *pdev)
- {
- 	struct cmdq *cmdq = platform_get_drvdata(pdev);
- 
-+	destroy_workqueue(cmdq->clk_release_wq);
- 	mbox_controller_unregister(&cmdq->mbox);
--	clk_unprepare(cmdq->clock);
- 	return 0;
- }
- 
-@@ -898,8 +932,12 @@ static int cmdq_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
-+	cmdq->clk_release_wq = alloc_ordered_workqueue(
-+			"%s", WQ_MEM_RECLAIM | WQ_HIGHPRI,
-+			"cmdq_clk_release");
-+
- 	platform_set_drvdata(pdev, cmdq);
--	WARN_ON(clk_prepare(cmdq->clock) < 0);
-+
- 	return 0;
- }
- 
--- 
-1.9.1
+Oops, I'm not aware of this DT document.  In that case, the DT document
+and checkpatch is basically asking for conflicting thing.  Rob, Mark,
+can you guys please clarify?
 
+Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
