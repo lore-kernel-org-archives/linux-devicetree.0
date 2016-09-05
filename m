@@ -1,67 +1,42 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 0/9] Add MT8173 Video Decoder Driver
-Date: Mon, 5 Sep 2016 11:53:48 +0200
-Message-ID: <2d332670-edfd-5f2e-2c7f-4346e60baf75@xs4all.nl>
-References: <1472818800-22558-1-git-send-email-tiffany.lin@mediatek.com>
- <616d95a4-e6f3-5c42-d435-eb73795bd82c@xs4all.nl>
- <1473069011.23162.7.camel@mtksdaap41>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/5 v2] thermal: rcar_gen3_thermal: Document the R-Car Gen3
+Date: Mon, 5 Sep 2016 11:57:38 +0200
+Message-ID: <CAMuHMdUO1XptoeW6m1XOPigt5vtNq8eN5sLaTHhbnTRLb47tzA@mail.gmail.com>
+References: <SIXPR06MB0906D63F01A4C5C79823EED0A8E40@SIXPR06MB0906.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473069011.23162.7.camel@mtksdaap41>
+In-Reply-To: <SIXPR06MB0906D63F01A4C5C79823EED0A8E40@SIXPR06MB0906.apcprd06.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tiffany Lin <tiffany.lin@mediatek.com>
-Cc: daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
+To: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <damm+renesas@opensource.se>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Thao Phuong Le. Nguyen" <thao.nguyen.yb@rvc.renesas.com>, Hien Dang <hien.dang.eb@renesas.com>, Toru Oishi <toru.oishi.zj@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/05/2016 11:50 AM, Tiffany Lin wrote:
-> Hi Hans,
-> 
-> On Mon, 2016-09-05 at 11:33 +0200, Hans Verkuil wrote:
->> On 09/02/2016 02:19 PM, Tiffany Lin wrote:
->>> ==============
->>>  Introduction
->>> ==============
->>>
->>> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
->>> Mediatek Video Codec is able to handle video decoding and encoding of in a range of formats.
->>>
->>> This patch series rely on MTK VPU driver that have been merged in v4.8-rc1.
->>> Mediatek Video Decoder driver rely on VPU driver to load, communicate with VPU.
->>>
->>> Internally the driver uses videobuf2 framework, and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
->>>
->>> [1]https://chromium-review.googlesource.com/#/c/245241/
->>
->> This patch series fails to apply to the media_tree master (patch 3/9). Can you rebase and repost?
->>
->> I'm ready to make a pull request for this, so I hope you can fix this soon.
->>
-> I saw Encoder fix patches in fixes branch.
-> This patch series is base on Encoder fix patches. 
-> 
-> [media] vcodec:mediatek: Refine VP8 encoder driver
-> [media] vcodec:mediatek: Refine H264 encoder driver
-> [media] vcodec:mediatek: change H264 profile default to profile high
-> [media] vcodec:mediatek: Add timestamp and timecode copy for V4L2
-> Encoder
-> [media] vcodec:mediatek: Fix visible_height larger than coded_height
-> issue in s_fmt_out
-> [media] vcodec:mediatek: Fix fops_vcodec_release flow for V4L2 Encoder
-> [media] vcodec:mediatek:code refine for v4l2 Encoder driver
-> [media] dvb_frontend: Use memdup_user() rather than duplicating its
-> implementation
-> 
-> 
-> If I do not rebase decoder patch series base on Encoder fix pathces.
-> Then it will fail after Encoder fix patches merged.
-> 
-> May I know what parent patch I need to rebase to to fix this issue?
+On Sat, Sep 3, 2016 at 7:24 AM, Khiem Nguyen
+<khiem.nguyen.xt@renesas.com> wrote:
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
+> @@ -0,0 +1,79 @@
+> +* DT bindings for Renesas R-Car Gen3 Thermal Sensor driver
+> +
+> +On R-Car Gen3 SoCs, the thermal sensor controllers (TSC) control the thermal sensors (THS)
+> +which are the analog circuits for measuring temperature (Tj) inside the LSI.
+> +
+> +Required properties:
+> +- compatible           : "renesas,<soctype>-thermal",
+> +                         Examples with soctypes are:
+> +                           - "renesas,r8a7795-thermal" (R-Car H3)
+> +                           - "renesas,r8a7796-thermal" (R-Car M3)
 
-Ah, OK. I will retest placing this on top of those fixes. I forgot about the
-pending fixes. I'll handle this.
+M3-W
 
-Regards,
+Gr{oetje,eeting}s,
 
-	Hans
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
