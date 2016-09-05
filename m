@@ -1,57 +1,29 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v5 1/4] arm64: dts: h3ulcb: enable GPIO leds
-Date: Mon, 5 Sep 2016 14:26:56 +0200
-Message-ID: <20160905122656.GH24256@verge.net.au>
-References: <1472833419-26139-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1472833488-26184-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Khiem Nguyen <khiem.nguyen.xt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 3/5 v2] arm64: dts: r8a7795: Add R-Car Gen3 thermal
+ support
+Date: Mon, 5 Sep 2016 12:28:46 +0000
+Message-ID: <SIXPR06MB09063877E4AEC9C967B95473A8E60@SIXPR06MB0906.apcprd06.prod.outlook.com>
+References: <SIXPR06MB090693A361F296F1038319D0A8E40@SIXPR06MB0906.apcprd06.prod.outlook.com>
+ <CAMuHMdU62emt_ujyMx_NgA_KpUD7ekqQQLqVEdE5UVppGgQ51A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1472833488-26184-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdU62emt_ujyMx_NgA_KpUD7ekqQQLqVEdE5UVppGgQ51A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Thao Phuong Le. Nguyen" <thao.nguyen.yb-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>, Hien Dang <hien.dang.eb-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Toru Oishi <toru.oishi.zj-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Khiem Nguyen <khiem.nguyen.xt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 02, 2016 at 07:24:48PM +0300, Vladimir Barinov wrote:
-> This supports GPIO leds on H3ULCB board
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Changes in version 3:
-> - initially added
-> Changes in version 4:
-> - removed led4 in favor of gpio-keys
-> - added label
-> Changes in version 5:
-> - nothing
-> 
->  arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
-> index fb694b8..3329f78 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb.dts
-> @@ -31,6 +31,19 @@
->  		/* first 128MB is reserved for secure area. */
->  		reg = <0x0 0x48000000 0x0 0x38000000>;
->  	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-> +		led5 {
-> +			label = "LED5";
-> +			gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
-> +		};
-> +		led6 {
-> +			label = "LED6";
-> +			gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
-> +		};
-> +	};
->  };
-
-Please remove the label properties.
+SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50Lg0KDQo+ID4gKyAgICAgICAgICAg
+ICAgIHRzYzE6IHRoZXJtYWxAZTYxOTgwMDAgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+IGNvbXBhdGlibGUgPSAicmVuZXNhcyxyOGE3Nzk1LXRoZXJtYWwiOw0KPiA+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIHJlZyA9IDwwIDB4ZTYxOTgwMDAgMCAweDVjPjsNCj4gDQo+IEFjY29yZGlu
+ZyB0byB0aGUgZGF0YXNoZWV0LCBUU0MxIGhhcyAzIG1vcmUgcmVnaXN0ZXJzIGJleW9uZCB0aGlz
+IHJhbmdlLg0KDQpPSy4gDQpXaWxsIHVwZGF0ZSBpbiB2My4NCg0KVGhhbmtzLg0KDQpCZXN0IHJl
+Z2FyZHMsDQpLSElFTSBOZ3V5ZW4NCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
