@@ -1,11 +1,14 @@
 From: <shh.xie@gmail.com>
-Subject: [PATCH 0/7] [v2] arm64: dts: add QorIQ LS1046A SoC and boards support
-Date: Mon, 5 Sep 2016 18:01:28 +0800
-Message-ID: <1473069695-33092-1-git-send-email-shh.xie@gmail.com>
+Subject: [PATCH 1/7] [v2] dt-bindings: fsl: updates bindings for some
+ SoC-specific devices
+Date: Mon, 5 Sep 2016 18:01:29 +0800
+Message-ID: <1473069695-33092-2-git-send-email-shh.xie@gmail.com>
+References: <1473069695-33092-1-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1473069695-33092-1-git-send-email-shh.xie@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,33 +24,54 @@ List-Id: devicetree@vger.kernel.org
 
 From: Shaohui Xie <Shaohui.Xie@nxp.com>
 
-This patchest adds support for QorIQ LS1046A SoC which is based on ARMv8
-architecture, also adds LS1046A-RDB and LS1046A-QDS board support.
+SCFG and DCFG are SoC-specific devices can be found on SoCs like LS1021A,
+LS1043A and LS1046A, this patch updates bindings for SCFG and DCFG to
+reflect more SoCs.
 
-Also, updates bindings for SoC-specific devices SCFG and DCFG,
-and I2C devices.
+Signed-off-by: Shaohui Xie <Shaohui.Xie@nxp.com>
+---
+changes in V2:
+new patch.
 
-Mingkai Hu (2):
-  arm64: dts: add QorIQ LS1046A SoC support
-  arm64: dts: add LS1046A-RDB board support
+ Documentation/devicetree/bindings/arm/fsl.txt | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-Shaohui Xie (5):
-  dt-bindings: fsl: updates bindings for some SoC-specific devices
-  dt-bindings: i2c: adds two more nxp devices
-  Documentation: DT: Add entry for QorIQ LS1046A-RDB board
-  Documentation: DT: Add entry for QorIQ LS1046A-QDS board
-  arm64: dts: add LS1046A-QDS board support
-
- Documentation/devicetree/bindings/arm/fsl.txt      |  20 +-
- .../devicetree/bindings/i2c/trivial-devices.txt    |   2 +
- arch/arm64/boot/dts/freescale/Makefile             |   2 +
- arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts  | 212 +++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts  | 150 ++++++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     | 511 +++++++++++++++++++++
- 6 files changed, 894 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index dbbc095..6f92d0b 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -97,7 +97,7 @@ Freescale LS1021A Platform Device Tree Bindings
+ Required root node compatible properties:
+   - compatible = "fsl,ls1021a";
+ 
+-Freescale LS1021A SoC-specific Device Tree Bindings
++Freescale SoC-specific Device Tree Bindings
+ -------------------------------------------
+ 
+ Freescale SCFG
+@@ -105,7 +105,10 @@ Freescale SCFG
+ configuration and status registers for the chip. Such as getting PEX port
+ status.
+   Required properties:
+-  - compatible: should be "fsl,ls1021a-scfg"
++  - compatible: Should contain a chip-specific compatible string,
++	Chip-specific strings are of the form "fsl,<chip>-scfg", such as:
++	"fsl,ls1021a-scfg"
++
+   - reg: should contain base address and length of SCFG memory-mapped registers
+ 
+ Example:
+@@ -119,7 +122,10 @@ Freescale DCFG
+ configuration and status for the device. Such as setting the secondary
+ core start address and release the secondary core from holdoff and startup.
+   Required properties:
+-  - compatible: should be "fsl,ls1021a-dcfg"
++  - compatible: Should contain a chip-specific compatible string,
++	Chip-specific strings are of the form "fsl,<chip>-dcfg", such as:
++	"fsl,ls1021a-dcfg"
++
+   - reg : should contain base address and length of DCFG memory-mapped registers
+ 
+ Example:
 -- 
 2.1.0.27.g96db324
