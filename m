@@ -1,58 +1,94 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] net: stmmac: add a glue driver for the Amlogic Meson 8b / GXBB DWMAC
-Date: Mon, 05 Sep 2016 11:27:28 +0200
-Message-ID: <8189845.3pyN0uTLGL@wuerfel>
-References: <20160820093538.9707-1-martin.blumenstingl@googlemail.com> <20160830191906.GD12510@codeaurora.org> <CAFBinCCVUhUVyceGc2capcCPOK8MTsn+RcC9gnrtMVvZUENXtQ@mail.gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 3/4] include: dt-bindings: Add more GPIO bank and index definition for rockchip pinctrl
+Date: Mon, 05 Sep 2016 11:33:18 +0200
+Message-ID: <3544284.90s5nXbktR@phil>
+References: <1472977937-758-1-git-send-email-andy.yan@rock-chips.com> <1472978130-919-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCCVUhUVyceGc2capcCPOK8MTsn+RcC9gnrtMVvZUENXtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1472978130-919-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday, September 4, 2016 8:20:15 PM CEST Martin Blumenstingl wrote:
+Hi Andy,
+
+Am Sonntag, 4. September 2016, 16:35:30 CEST schrieb Andy Yan:
+> There are 8 gpio banks on RK3288, so add the missing
+> RK_GPIO7 and RK_GPIO8. Also add gpio index definition
+> to make it easier to description GPIO in dts.
 > 
-> >> +     dwmac->m25_div_clk = devm_clk_register(dev, &dwmac->m25_div.hw);
-> >> +     if (WARN_ON(PTR_ERR_OR_ZERO(dwmac->m25_div_clk)))
-> >> +             return PTR_ERR(dwmac->m25_div_clk);
-> >> +
-> >> +     return 0;
-> >
-> > This could be return WARN_ON(PTR_ERR_OR_ZERO(...))
-> This would work as well but I prefer the way it is right now (as one
-> could easily extend the code without having to touch any existing code
-> apart from the last return).
-> However, as it's always the case with personal preference: if
-> coding-style requires me to change it then I'll do so, just let me
-> know.
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+
+I tend to disagree here.
+
+I consider the bank defines RK_GPIOx to be deprecated and highly discourage 
+them being used in new boards. They only encode the same number again (2 -> 
+RK_GPIO2 etc) and therefore don't bring any useful addition over using the 
+bank number directly.
+
+Slightly similar argument for the per-pin defines. While the external pins are 
+described in the A/B/C/Dx notation for pinmux purposes, the gpio controllers 
+on top use a regular 0-31 numbering. Also you cannot name constants generic 
+GPIO_x, simply because that may conflict with other overly generic constant 
+names.
+
+So I'm not yet convinced that these improve readability, but they would 
+definitly need a RK_* prefix to make them specific.
+
+
+Heiko
+
+> ---
 > 
-> I have addressed all other issues you found (thanks for that!) in v4
-> (which I am about to send in the next few minutes).
-
-
-Both of these are fairly unusual. The most common way to write it is
-
-	if (WARN_ON(IS_ERR(dwmac->m25_div_clk)))
-		return PTR_ERR(dwmac->m25_div_clk);
-   return 0;
-
-However, I now tend to prefer
-
-	ret = PTR_ERR_OR_ZERO(dwmac->m25_div_clk);
-	WARN_ON(ret);
-	return ret;
-
-which is less likely to cause false-positive warnings when building
-with -Wmaybe-uninitialized than any of the other ones.
-
-Please don't use PTR_ERR_OR_ZERO() as a condition, that is what
-IS_ERR() is meant for.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  include/dt-bindings/pinctrl/rockchip.h | 35
+> ++++++++++++++++++++++++++++++++++ 1 file changed, 35 insertions(+)
+> 
+> diff --git a/include/dt-bindings/pinctrl/rockchip.h
+> b/include/dt-bindings/pinctrl/rockchip.h index 743e66a..fd35350 100644
+> --- a/include/dt-bindings/pinctrl/rockchip.h
+> +++ b/include/dt-bindings/pinctrl/rockchip.h
+> @@ -24,6 +24,41 @@
+>  #define RK_GPIO3	3
+>  #define RK_GPIO4	4
+>  #define RK_GPIO6	6
+> +#define RK_GPIO7	7
+> +#define RK_GPIO8	8
+> +
+> +#define GPIO_A0		0
+> +#define GPIO_A1		1
+> +#define GPIO_A2		2
+> +#define GPIO_A3		3
+> +#define GPIO_A4		4
+> +#define GPIO_A5		5
+> +#define GPIO_A6		6
+> +#define GPIO_A7		7
+> +#define GPIO_B0		8
+> +#define GPIO_B1		9
+> +#define GPIO_B2		10
+> +#define GPIO_B3		11
+> +#define GPIO_B4		12
+> +#define GPIO_B5		13
+> +#define GPIO_B6		14
+> +#define GPIO_B7		15
+> +#define GPIO_C0		16
+> +#define GPIO_C1		17
+> +#define GPIO_C2		18
+> +#define GPIO_C3		19
+> +#define GPIO_C4		20
+> +#define GPIO_C5		21
+> +#define GPIO_C6		22
+> +#define GPIO_C7		23
+> +#define GPIO_D0		24
+> +#define GPIO_D1		25
+> +#define GPIO_D2		26
+> +#define GPIO_D3		27
+> +#define GPIO_D4		28
+> +#define GPIO_D5		29
+> +#define GPIO_D6		30
+> +#define GPIO_D7		31
+> 
+>  #define RK_FUNC_GPIO	0
+>  #define RK_FUNC_1	1
