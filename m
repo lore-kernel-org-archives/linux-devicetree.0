@@ -1,69 +1,44 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] arm64: dts: rockchip: support the pmu node for
- rk3399
-Date: Tue, 06 Sep 2016 07:27:10 +0800
-Message-ID: <57CDFF4E.9090907@rock-chips.com>
-References: <1473099435-28198-1-git-send-email-wxt@rock-chips.com> <1473099435-28198-3-git-send-email-wxt@rock-chips.com> <1666797.JgSRLN1JIq@phil>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Ayaka <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Subject: Re: [PATCH v7 3/4] usb: dwc2: assert phy reset when waking up in rk3288 platform
+Date: Tue, 6 Sep 2016 07:38:34 +0800
+Message-ID: <B43AE00F-5B70-4522-B5B7-DB02A5D02E8B@soulik.info>
+References: <1472939729-15187-1-git-send-email-ayaka@soulik.info> <1472939729-15187-4-git-send-email-ayaka@soulik.info> <063D6719AE5E284EB5DD2968C1650D6DB00F483E@AcuExch.aculab.com>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain;
+        charset=big5
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1666797.JgSRLN1JIq@phil>
+In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6DB00F483E-VkEWCZq2GCInGFn1LkZF6NBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On 2016å¹´09æœˆ06æ—¥ 06:27, Heiko Stuebner wrote:
-> Am Dienstag, 6. September 2016, 02:17:15 CEST schrieb Caesar Wang:
->> This patch adds to enable the ARM Performance Monitor Units for rk3399.
->> ARM cores often have a PMU for counting cpu and cache events like cache
->> misses and hits.
->>
->> Also, as the Marc posted the patches [0] to support Partitioning per-cpu
->> interrupts. Let's add this patch to match it on rk3399 SoCs.
->>
->> [0]:
->> https://lkml.org/lkml/2016/4/11/182
->>
->> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->> Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
->> CC: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> I've applied this one but did some corrections [0]:
->
-> - ppi-partitions is supposed to be a subnode of the gic, that is why the code
-> also start search for it starting from the gic node - I've moved it
-> - I've renamed the phandles taking part0/part1 from the example feels a bit to
-> generic, so it's now ppi_cluster0 and ppi_cluster1 matching the cpu-clusters
->
-> I've gave this a spin on my rk3399evb and the ppi-partitions got recognized
-> as well as the pmu instances got created, but please also double check again.
 
+±q§Úªº iPad ¶Ç°e
 
-Yup, thanks the fixes.
-
->
->
-> Thanks
-> Heiko
->
->
-> [0] https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.git/
-> commit/?id=48120b1af6f072bfd6b075bf9be560ad6fda2faa
->
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
-
--- 
-caesar wang | software engineer | wxt-TNX95d0MmH73oGB3hsPCZA@public.gmane.org
-
+> David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org> ©ó 2016¦~9¤ë5¤é ¤U¤È9:35 ¼g¹D¡G
+> 
+> From: Randy Li
+>> Sent: 03 September 2016 22:55
+> ...
+>> +            if (of_device_is_compatible(np, "rockchip,rk3288-usb")
+>> +                    && (NULL != hsotg->phy->ops->reset))
+>> +                hsotg->phy->ops->reset(hsotg->phy);
+>> +
+> 
+> Is this the only place ops->reset() is called?
+Yes.
+> Probably much better to check it first.
+Sure.
+> 
+>            if (hsotg->phy->ops->reset
+>                    && of_device_is_compatible(np, "rockchip,rk3288-usb")
+>                hsotg->phy->ops->reset(hsotg->phy);
+I see, if there is no the other review request for this version, I would submit a new version to fix this problem tonight.
+> 
+>    David
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
