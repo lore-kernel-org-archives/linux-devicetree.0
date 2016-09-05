@@ -1,23 +1,34 @@
-From: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
-Subject: RE: [PATCH 0/5 v2] thermal: rcar_gen3_thermal: Add R-Car Gen3 thermal
- support
-Date: Mon, 5 Sep 2016 12:26:19 +0000
-Message-ID: <SIXPR06MB0906FB31FEEBDF029AAD1385A8E60@SIXPR06MB0906.apcprd06.prod.outlook.com>
-References: <SIXPR06MB0906A90665B5DA288D6E63ECA8E40@SIXPR06MB0906.apcprd06.prod.outlook.com>
- <CAMuHMdUDqh7hzm3bjhf-6mXnBRNEHe2htT+ubL5sJM0-Dp+-DQ@mail.gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v5 4/4] arm64: dts: h3ulcb: Sound SSI support
+Date: Mon, 5 Sep 2016 14:26:37 +0200
+Message-ID: <20160905122636.GG24256@verge.net.au>
+References: <1472833419-26139-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1472833529-26308-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <8737lf42rx.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUDqh7hzm3bjhf-6mXnBRNEHe2htT+ubL5sJM0-Dp+-DQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <damm+renesas@opensource.se>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Thao Phuong Le. Nguyen" <thao.nguyen.yb@rvc.renesas.com>, Hien Dang <hien.dang.eb@renesas.com>, Toru Oishi <toru.oishi.zj@renesas.com>, Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Khiem Nguyen <khiem.nguyen.xt@renesas.co>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8737lf42rx.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsIA0KDQpUaGFua3MgZm9yIHlvdXIgY29tbWVudC4NCg0KPiA+IFRoaXMgcGF0Y2hz
-ZXQgYWRkcyBuZXcgdGhlcm1hbCBzZW5zb3IgZHJpdmVyIHRvIHN1cHBvcnQgMyBzZW5zb3JzIGZv
-dW5kIGluIFItQ2FyDQo+IEdlbjMgc2VyaWVzLg0KDQpbc25pcF0NCiANCj4gWW91IGZvcmdvdCB0
-byBDQyBTaW1vbiBIb3JtYW4gYW5kIHRoZSBsaW51eC1yZW5lc2FzLXNvYyBtYWlsaW5nIGxpc3Qu
-DQoNCk9LLiBXaWxsIGRvIGluIHYzLg0K
+On Mon, Sep 05, 2016 at 12:27:30AM +0000, Kuninori Morimoto wrote:
+> 
+> Hi 
+> 
+> > This supports SSI sound for H3ULCB board.
+> > SSI DMA mode used. CS2000 used as AUDIO_CLK_B.
+> > 
+> > Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> > Acked-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> 
+> Acked-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+
+Thanks, I have queued this up.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
