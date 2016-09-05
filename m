@@ -1,65 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: dts: wheat: add support for tactile switches
-Date: Tue, 06 Sep 2016 00:33:05 +0300
-Message-ID: <10465663.8teCsXZU7y@wasted.cogentembedded.com>
-References: <5383928.8UnDsUpmkz@wasted.cogentembedded.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2 v5] bus: qcom: add EBI2 device tree bindings
+Date: Mon, 5 Sep 2016 23:42:49 +0200
+Message-ID: <CACRpkdZCgwK6vMXgu0UFghx0DaKMsnOq+w+jb=VFU8+LKu+B+A@mail.gmail.com>
+References: <1473078565-24363-1-git-send-email-linus.walleij@linaro.org> <6058357.4to9qAiSEF@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <5383928.8UnDsUpmkz@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6058357.4to9qAiSEF@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add  support for the  tactile switches  SW2/3 (on the debug board) as a
-virtual keyboard like it  was done with the Blanche board).
+On Mon, Sep 5, 2016 at 3:09 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Monday, September 5, 2016 2:29:24 PM CEST Linus Walleij wrote:
+>> +Chip Select                     Physical address base
+>> +CS0 GPIO134                     0x1a800000-0x1b000000 (8MB)
+>> +CS1 GPIO39 (A) / GPIO123 (B)    0x1b000000-0x1b800000 (8MB)
+>> +CS2 GPIO40 (A) / GPIO124 (B)    0x1b800000-0x1c000000 (8MB)
+>> +CS3 GPIO133                     0x1d000000-0x25000000 (128 MB)
+>> +CS4 GPIO132                     0x1c800000-0x1d000000 (8MB)
+>> +CS5 GPIO131                     0x1c000000-0x1c800000 (8MB)
+>> +
+>
+>
+>> +- ranges: should be set to:
+>> +  ranges = <0 0x0 0x1a800000 0x00800000>,
+>> +           <1 0x0 0x1b000000 0x00800000>,
+>> +           <2 0x0 0x1b800000 0x00800000>,
+>> +           <3 0x0 0x1d000000 0x00800000>,
+>> +           <4 0x0 0x1c800000 0x00800000>,
+>> +           <5 0x0 0x1c000000 0x00800000>;
+>>
+>
+> The two lists don't seem to match here: why is the CS3 area only
+> listed with an 8MB mapping here when the documentation says it's
+> 128 MB?
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Just my bad because I'm not using it, good catch!
 
----
-This patch is against the 'renesas-devel-20160905-v4.8-rc5' of Simon Horman's
-'renesas.git' repo plus the Wheat DU patch...
+Resending.
 
- arch/arm/boot/dts/r8a7792-wheat.dts |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7792-wheat.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7792-wheat.dts
-+++ renesas/arch/arm/boot/dts/r8a7792-wheat.dts
-@@ -12,6 +12,7 @@
- /dts-v1/;
- #include "r8a7792.dtsi"
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	model = "Wheat";
-@@ -56,6 +57,25 @@
- 		pinctrl-names = "default";
- 	};
- 
-+	keyboard {
-+		compatible = "gpio-keys";
-+
-+		key-a {
-+			linux,code = <KEY_A>;
-+			label = "SW2";
-+			wakeup-source;
-+			debounce-interval = <20>;
-+			gpios = <&gpio3 20 GPIO_ACTIVE_LOW>;
-+		};
-+		key-b {
-+			linux,code = <KEY_B>;
-+			label = "SW3";
-+			wakeup-source;
-+			debounce-interval = <20>;
-+			gpios = <&gpio11 2 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
- 	vcc_sdhi0: regulator-vcc-sdhi0 {
- 		compatible = "regulator-fixed";
- 
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
