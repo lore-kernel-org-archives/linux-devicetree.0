@@ -1,58 +1,56 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv2 3/3] clk: keystone: Add sci-clk driver support
-Date: Mon, 5 Sep 2016 10:07:05 +0300
-Message-ID: <827e0a46-3771-67a8-1414-0cbaf0e2548e@ti.com>
-References: <1472733635-22661-1-git-send-email-t-kristo@ti.com>
- <1472733635-22661-4-git-send-email-t-kristo@ti.com>
- <20160902233235.GM12510@codeaurora.org>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V2 1/5] Documentation: Add support for TI System Control
+ Interface (TI-SCI) protocol
+Date: Mon, 5 Sep 2016 10:09:10 +0300
+Message-ID: <6c63b044-3db9-9202-b790-350a88b9eab0@ti.com>
+References: <20160830130647.6828-1-nm@ti.com>
+ <20160830130647.6828-2-nm@ti.com> <20160902150628.GA19493@rob-hp-laptop>
+ <CAGo_u6q0xxnUj5ary82OU1uP=kTHfA_3N7_d7OiSEwS1_5dXuw@mail.gmail.com>
+ <57C9E0A8.4010701@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160902233235.GM12510@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: mturquette@baylibre.com, linux-clk@vger.kernel.org, ssantosh@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nm@ti.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57C9E0A8.4010701-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/09/16 02:32, Stephen Boyd wrote:
-> On 09/01, Tero Kristo wrote:
->> +
->> +/**
->> + * _sci_clk_get - Gets a handle for an SCI clock
->> + * @provider: Handle to SCI clock provider
->> + * @dev_id: device ID for the clock to register
->> + * @clk_id: clock ID for the clock to register
->> + * @parse_parents: indicator whether parents for this clock should be handled
->> + *
->> + * Gets a handle to an existing TI SCI hw clock, or builds a new clock
->> + * entry and registers it with the common clock framework. Called from
->> + * the common clock framework, when a corresponding of_clk_get call is
->> + * executed, or recursively from itself when parsing parent clocks.
->> + * Returns a pointer to the hw clock struct, or ERR_PTR value in failure.
->> + */
->> +static struct clk_hw *_sci_clk_get(struct sci_clk_provider *provider,
->> +				   u16 dev_id, u8 clk_id, bool parse_parents)
+On 02/09/16 23:27, Dave Gerlach wrote:
+> On 09/02/2016 12:07 PM, Nishanth Menon wrote:
+>> Rob,
+>>
+>> On Fri, Sep 2, 2016 at 10:06 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Tue, Aug 30, 2016 at 08:06:43AM -0500, Nishanth Menon wrote:
+>> [...]
+>>>> +
+>>>> +TI-SCI Client Device Node:
+>>>> +========================
+>>>> +
+>>>> +Client nodes refer to the required TI-SCI device using the "ti,sci"
+>>>> property.
+>>>
+>>> As I mentioned for power domains, for clients that are self contained
+>>> (i.e. a single function) I think the should be child nodes.
+>>>
+>>
+>> Thanks for the feedback. I think we should be able to do that and also
+>> assume you have no further improvements you'd like to see here.
+>>
+>> Looking at current Documentation/devicetree/bindings/arm/arm,scpi.txt
+>> -> it makes sense to stick along the same lines as you mentioned.
+>>
+>> Dave, Tero: do you guys have any objections?
 >
-> I still don't get it. We should be registering hw pointers in
-> probe and handing them out in the xlate function. Not register
-> hws in the xlate function and then handing them out as well. I
-> haven't reviewed anything else in this patch.
+> No objections, I think this is a logical move.
 
-Ok, let me try to explain the functionality.
-
-Probe time hw pointer registration is only needed for special clocks 
-that require extra flags, like adding the spread spectrum flag. There is 
-ever going to be only handful of these.
-
-Xlate checks out the sci_clk list, and picks up an existing hw clock if 
-it is there. If not, it will create a new one. The reason this is done 
-like this, the device IDs / clock IDs don't mean anything to the driver 
-itself, the driver just passes these forward to the underlying SCI fwk. 
-And, we don't have inherent knowledge of valid device / clock IDs 
-either, the SCI fwk returns a failure if a specific clock ID is bad. The 
-device / clock IDs are going to be different between different 
-generations of SoC also, and in addition there can be holes in the ID 
-ranges.
+Yea, sounds like a valid change. I believe you are going to post a new 
+version so I can modify the clock driver also accordingly?
 
 -Tero
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
