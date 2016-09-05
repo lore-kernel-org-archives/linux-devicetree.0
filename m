@@ -1,121 +1,135 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 3/4] include: dt-bindings: Add more GPIO bank and index
- definition for rockchip pinctrl
-Date: Mon, 5 Sep 2016 18:22:46 +0800
-Message-ID: <0dbac4cd-7f67-5052-16e6-463896bf5929@rock-chips.com>
-References: <1472977937-758-1-git-send-email-andy.yan@rock-chips.com>
- <1472978130-919-1-git-send-email-andy.yan@rock-chips.com>
- <3544284.90s5nXbktR@phil>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 4/6] clk: sunxi-ng: Add A33 CCU support
+Date: Mon, 5 Sep 2016 18:26:59 +0800
+Message-ID: <CAGb2v64T40Kut1qDSLJwRgkHa1q6L1obUdyKWBrZ4r4Wki1siA@mail.gmail.com>
+References: <20160901141617.9777-1-maxime.ripard@free-electrons.com>
+ <20160901141617.9777-5-maxime.ripard@free-electrons.com> <CAGb2v66z4KMbfOr2kcNXSSXzVqXQ1uZ9p_-uNyvb_7_ACdNCqQ@mail.gmail.com>
+ <20160905095153.GC6322@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3544284.90s5nXbktR@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160905095153.GC6322@lukather>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko:
-
-
-On 2016年09月05日 17:33, Heiko Stuebner wrote:
-> Hi Andy,
+On Mon, Sep 5, 2016 at 5:51 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Hi Chen-Yu,
 >
-> Am Sonntag, 4. September 2016, 16:35:30 CEST schrieb Andy Yan:
->> There are 8 gpio banks on RK3288, so add the missing
->> RK_GPIO7 and RK_GPIO8. Also add gpio index definition
->> to make it easier to description GPIO in dts.
+> On Mon, Sep 05, 2016 at 02:34:21PM +0800, Chen-Yu Tsai wrote:
+>> > +static SUNXI_CCU_NKMP_WITH_GATE_LOCK(pll_cpux_clk, "pll-cpux",
+>> > +                                    "osc24M", 0x000,
+>> > +                                    8, 5,              /* N */
+>> > +                                    4, 2,              /* K */
+>> > +                                    0, 2,              /* M */
+>> > +                                    16, 2,             /* P */
 >>
->> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> I tend to disagree here.
+>> Manual says there's no divider for P = 0x3.
+>> You'll need a table here.
 >
-> I consider the bank defines RK_GPIOx to be deprecated and highly discourage
-> them being used in new boards. They only encode the same number again (2 ->
-> RK_GPIO2 etc) and therefore don't bring any useful addition over using the
-> bank number directly.
->
-> Slightly similar argument for the per-pin defines. While the external pins are
-> described in the A/B/C/Dx notation for pinmux purposes, the gpio controllers
-> on top use a regular 0-31 numbering. Also you cannot name constants generic
-> GPIO_x, simply because that may conflict with other overly generic constant
-> names.
->
-> So I'm not yet convinced that these improve readability, but they would
-> definitly need a RK_* prefix to make them specific.
->
->
-> Heiko
-
-         I consider for a people who doesn't familiar with rockchip 
-pinctrl, He
-  may don't know what does these number 2/4/17....stands for in the dts  
-like
-  rockchip,pins = <2 17 RK_FUNC_GPIO &pcfg_pull_up>.
-         But if we use meaningful macro here like : rockchip,pins = 
-<RK_GPIO2 RK_GPIO_C0 RK_FUNC_GPIO &pcfg_pull_up>, I think it easier to 
-tell people this GPIO is GPIO_C0 of BNAK2.
-Especially all the GPIOs in rockchip based schematic are described as 
-GPIOn_A/B/C/Dx. And it is also easier for people to directly use a macro 
-stands for 0~32 than translating A/B/C/Dx from the schematic to 0~32.
->> ---
->>
->>   include/dt-bindings/pinctrl/rockchip.h | 35
->> ++++++++++++++++++++++++++++++++++ 1 file changed, 35 insertions(+)
->>
->> diff --git a/include/dt-bindings/pinctrl/rockchip.h
->> b/include/dt-bindings/pinctrl/rockchip.h index 743e66a..fd35350 100644
->> --- a/include/dt-bindings/pinctrl/rockchip.h
->> +++ b/include/dt-bindings/pinctrl/rockchip.h
->> @@ -24,6 +24,41 @@
->>   #define RK_GPIO3	3
->>   #define RK_GPIO4	4
->>   #define RK_GPIO6	6
->> +#define RK_GPIO7	7
->> +#define RK_GPIO8	8
->> +
->> +#define GPIO_A0		0
->> +#define GPIO_A1		1
->> +#define GPIO_A2		2
->> +#define GPIO_A3		3
->> +#define GPIO_A4		4
->> +#define GPIO_A5		5
->> +#define GPIO_A6		6
->> +#define GPIO_A7		7
->> +#define GPIO_B0		8
->> +#define GPIO_B1		9
->> +#define GPIO_B2		10
->> +#define GPIO_B3		11
->> +#define GPIO_B4		12
->> +#define GPIO_B5		13
->> +#define GPIO_B6		14
->> +#define GPIO_B7		15
->> +#define GPIO_C0		16
->> +#define GPIO_C1		17
->> +#define GPIO_C2		18
->> +#define GPIO_C3		19
->> +#define GPIO_C4		20
->> +#define GPIO_C5		21
->> +#define GPIO_C6		22
->> +#define GPIO_C7		23
->> +#define GPIO_D0		24
->> +#define GPIO_D1		25
->> +#define GPIO_D2		26
->> +#define GPIO_D3		27
->> +#define GPIO_D4		28
->> +#define GPIO_D5		29
->> +#define GPIO_D6		30
->> +#define GPIO_D7		31
->>
->>   #define RK_FUNC_GPIO	0
->>   #define RK_FUNC_1	1
->
->
->
+> Hmmm, Indeed. Or rather, a max value. We discussed that in the past, I
+> guess it's time to introduce it.
 >
 
+Cool.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> > +                                    BIT(31),           /* gate */
+>> > +                                    BIT(28),           /* lock */
+>> > +                                    0);
+>> > +
+>> > +/*
+>> > + * The Audio PLL is supposed to have 4 outputs: 3 fixed factors from
+>> > + * the base (2x, 4x and 8x), and one variable divider (the one true
+>> > + * pll audio).
+>> > + *
+>> > + * We don't have any need for the variable divider for now, so we just
+>> > + * hardcode it to match with the clock names
+>> > + */
+>> > +#define SUN8I_A33_PLL_AUDIO_REG        0x008
+>> > +
+>> > +static SUNXI_CCU_NM_WITH_GATE_LOCK(pll_audio_base_clk, "pll-audio-base",
+>> > +                                  "osc24M", 0x008,
+>> > +                                  8, 7,                /* N */
+>> > +                                  0, 5,                /* M */
+>> > +                                  BIT(31),             /* gate */
+>> > +                                  BIT(28),             /* lock */
+>> > +                                  CLK_SET_RATE_UNGATE);
+>>
+>> Are you sure about this? I suspect CLK_SET_RATE_GATE (clk must be
+>> gated before set rate) is what you want, given the non-DVFS
+>> nature of the PLL. Same for the other PLLs.
+>
+> Yes, I'm sure about it. The lock, on the A33 at least, this has to be
+> confirmed on other SoCs, won't work if the clock is gated.
+>
+> So, every time we call clk_set_rate, we will hit the WARN_ON because
+> of the lock timeout unless the clock runs.
+
+I see. That's a relief. It would be problematic if it were
+actually CLK_SET_RATE_GATE, and multiple blocks were using
+the same PLL, and you tried to switch the display resolution.
+
+It also makes sense. If the PLL is disabled, there is no way
+it would lock. Maybe we could skip the lock check if the PLL
+is disabled?
+
+>> > +static SUNXI_CCU_GATE(bus_mipi_dsi_clk,        "bus-mipi-dsi", "ahb1",
+>> > +                     0x060, BIT(1), 0);
+>>
+>> Nit: we know which bus these peripherals are on.
+>> Can we be more explicit with the names?
+>
+> I wanted to be consistent with the datasheet, and would really prefer
+> to stick to it.
+
+OK. I guess it's just eye candy for some of us. The user or
+board developer (who is going to use the bindings) shouldn't
+care.
+
+>> > +static SUNXI_CCU_GATE(bus_ce_clk,      "bus-ce",       "ahb1",
+>> > +                     0x060, BIT(5), 0);
+>>
+>> Nit: manual says Security System.
+>>
+>> (Maybe I should change the name on sun6i to say Crypto Engine
+>>  if that's what we're going with?)
+>
+> But I can't really use reject that argument there then :)
+
+:)
+
+> The rationale was that it's called CE in the H3 which was already
+> merged, but I'll change it.
+>
+>> [...]
+>>
+>> > +static SUNXI_CCU_GATE(usb_hsic_12M_clk,        "usb-hsic-12M", "osc24M",
+>> > +                     0x0cc, BIT(11), 0);
+>>
+>> A TODO note saying we should have a fixed-factor-gate for this
+>> would be nice.
+>
+> Hmmm? I'm not sure what you're saying.
+
+Some of the USB clocks have known clock rates. The HSIC 12M
+clock here is obviously 12 MHz.
+
+Others such as the OHCI special clocks might run at 48 MHz
+from a dedicated PLL. This number is given in the H3 datasheet,
+in the USB Host Clock Requirement section.
+
+It's not really a blocking issue as we only ever do enable/disable
+on them.
+
+Regards
+ChenYu
+
+> Thanks!
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
