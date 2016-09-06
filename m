@@ -1,54 +1,43 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 1/3] arm64: dts: berlin4ct: add missing unit name to /soc
- node
-Date: Tue, 6 Sep 2016 10:04:36 -0600
-Message-ID: <25d8bfb3-0dbc-8c8d-019c-381d0a1d2994@wwwdotorg.org>
-References: <20160906085557.4019-1-jszhang@marvell.com>
- <20160906085557.4019-2-jszhang@marvell.com>
- <20160906102208.GB1425@leverpostej> <20160906182048.222cec2f@xhacker>
- <20160906105758.GD1425@leverpostej>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v2 2/7] clk: sunxi-ng: div: Allow to set a maximum
+Date: Wed, 7 Sep 2016 00:20:10 +0800
+Message-ID: <CAGb2v66C9GJ5Svm+7NE2cStc5KiNgoriB329K4fhZJMTSbZ8Kw@mail.gmail.com>
+References: <20160906121837.7517-1-maxime.ripard@free-electrons.com> <20160906121837.7517-3-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160906105758.GD1425@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, robh+dt@kernel.org
-Cc: Jisheng Zhang <jszhang@marvell.com>, swarren@nvidia.com, sebastian.hesselbarth@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160906121837.7517-3-maxime.ripard@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/2016 04:57 AM, Mark Rutland wrote:
-> On Tue, Sep 06, 2016 at 06:20:48PM +0800, Jisheng Zhang wrote:
->> Hi Mark,
->>
->> On Tue, 6 Sep 2016 11:22:08 +0100 Mark Rutland wrote:
->>
->>> On Tue, Sep 06, 2016 at 04:55:55PM +0800, Jisheng Zhang wrote:
->>>> This patch fixes the following DTC warning with W=1:
->>>>
->>>> "Node /soc has a reg or ranges property, but no unit name"
->>>>
->>>> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
->>>
->>> The node is only compatible with simple-bus, and so shouldn't have a
->>> reg.
->>
->> IIUC, the warning is caused by "ranges = <0 0 0xf7000000 0x1000000>;"
+On Tue, Sep 6, 2016 at 8:18 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Some dividers might have a maximum value that is lower than the width of
+> the register.
 >
-> Hmm.. I've rather confused by that warning. Per ePAPR and the
-> devicetree.org spec, the unit-addresss is meant to match the reg
-> property, and no mention is made of the ranges property. So I do not
-> think that it is necessary to require this.
+> Add a field to _ccu_div to handle those case properly. If the field is set
+> to 0, the code will assume that the maximum value is the maximum one that
+> can be used with the field register width.
+
+This is a bit confusing. What is the maximum referring to? The raw value
+in the register? Or the actual divider?
+
+Personally I'd go with the maximum valid value of the register. You
+could get rid of the special power-of-2 handling code you added.
+
+Either way I think the message and the field name should be more explicit.
+
 >
-> That warning seems to have gone into DTC in commit c9d9121683b35281
-> ("Warn on node name unit-address presence/absence mismatch").
+> Otherwise, we'll use whatever value has been set.
 >
-> Rob, Stephen, was there some discussion that prompted ranges requiring
-> a matching unit-address?
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-It looks like there was some in response to V2 of the patch which 
-introduced this warning in dtc:
+[...]
 
-https://lkml.org/lkml/2013/9/19/301
+The code looks correct.
 
-I assume that's why Rob added that part to the patch when he reposted it.
+
+Regards
+ChenYu
