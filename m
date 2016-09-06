@@ -1,88 +1,138 @@
-From: Niklas Cassel <niklas.cassel@axis.com>
-Subject: [PATCH 3/3] ARM: dts: artpec: add pcie support
-Date: Tue, 6 Sep 2016 17:00:53 +0200
-Message-ID: <1473174053-5072-1-git-send-email-niklass@axis.com>
+From: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH 1/2] of: Make of_find_property_value_of_size take a length range
+Date: Tue, 6 Sep 2016 16:02:00 +0100
+Message-ID: <1473174121-19742-1-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jespern@axis.com, larper@axis.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Niklas Cassel <niklass@axis.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@axis.com>
+In preparation for adding variable-length array reads, change
+of_find_property_value_of_size so that it takes an optional
+maximum length. If the maximum is passed as 0, the behaviour is
+unchanged and it will return a property if it's >= the requested
+minimum length. If maximum is non-zero it will only return a
+property whose length is min <= l <= max.
 
-Add PCIe support to the ARTPEC-6 SoC. This uses the existing
-pcie-artpec6 driver.
-So, all that is needed is device tree entries in the DTS.
-
-Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 ---
- arch/arm/boot/dts/artpec6-devboard.dts |  4 ++++
- arch/arm/boot/dts/artpec6.dtsi         | 29 ++++++++++++++++++++++++++++-
- 2 files changed, 32 insertions(+), 1 deletion(-)
+ drivers/of/base.c | 39 +++++++++++++++++++++++++++++----------
+ 1 file changed, 29 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/artpec6-devboard.dts b/arch/arm/boot/dts/artpec6-devboard.dts
-index f823ed3..9dfe845 100644
---- a/arch/arm/boot/dts/artpec6-devboard.dts
-+++ b/arch/arm/boot/dts/artpec6-devboard.dts
-@@ -46,6 +46,10 @@
- 	status = "okay";
- };
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 3ce6953..b853737 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1146,16 +1146,18 @@ EXPORT_SYMBOL_GPL(of_property_count_elems_of_size);
+  *
+  * @np:		device node from which the property value is to be read.
+  * @propname:	name of the property to be searched.
+- * @len:	requested length of property value
++ * @min:	minimum allowed length of property value
++ * @max:	maximum allowed length of property value (0 means unlimited)
++ * @len:	if !=NULL, actual length is written to here
+  *
+  * Search for a property in a device node and valid the requested size.
+  * Returns the property value on success, -EINVAL if the property does not
+  *  exist, -ENODATA if property does not have a value, and -EOVERFLOW if the
+- * property data isn't large enough.
++ * property data is too small or too large.
+  *
+  */
+ static void *of_find_property_value_of_size(const struct device_node *np,
+-			const char *propname, u32 len)
++			const char *propname, u32 min, u32 max, size_t *len)
+ {
+ 	struct property *prop = of_find_property(np, propname, NULL);
  
-+&pcie {
-+	status = "okay";
-+};
+@@ -1163,8 +1165,13 @@ static void *of_find_property_value_of_size(const struct device_node *np,
+ 		return ERR_PTR(-EINVAL);
+ 	if (!prop->value)
+ 		return ERR_PTR(-ENODATA);
+-	if (len > prop->length)
++	if (prop->length < min)
+ 		return ERR_PTR(-EOVERFLOW);
++	if (max && prop->length > max)
++		return ERR_PTR(-EOVERFLOW);
 +
- &ethernet {
- 	status = "okay";
++	if (len)
++		*len = prop->length;
  
-diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
-index 3fac4c4..effaa4a 100644
---- a/arch/arm/boot/dts/artpec6.dtsi
-+++ b/arch/arm/boot/dts/artpec6.dtsi
-@@ -66,7 +66,7 @@
- 		};
- 	};
+ 	return prop->value;
+ }
+@@ -1189,7 +1196,9 @@ int of_property_read_u32_index(const struct device_node *np,
+ 				       u32 index, u32 *out_value)
+ {
+ 	const u32 *val = of_find_property_value_of_size(np, propname,
+-					((index + 1) * sizeof(*out_value)));
++					((index + 1) * sizeof(*out_value)),
++					0,
++					NULL);
  
--	syscon {
-+	syscon: syscon@f8000000 {
- 		compatible = "axis,artpec6-syscon", "syscon";
- 		reg = <0xf8000000 0x48>;
- 	};
-@@ -145,6 +145,33 @@
- 		interrupt-parent = <&intc>;
- 	};
+ 	if (IS_ERR(val))
+ 		return PTR_ERR(val);
+@@ -1221,7 +1230,9 @@ int of_property_read_u8_array(const struct device_node *np,
+ 			const char *propname, u8 *out_values, size_t sz)
+ {
+ 	const u8 *val = of_find_property_value_of_size(np, propname,
+-						(sz * sizeof(*out_values)));
++						(sz * sizeof(*out_values)),
++						0,
++						NULL);
  
-+	pcie: pcie@f8050000 {
-+		compatible = "axis,artpec6-pcie", "snps,dw-pcie";
-+		reg = <0xf8050000 0x2000
-+		       0xf8040000 0x1000
-+		       0xc0000000 0x2000>;
-+		reg-names = "dbi", "phy", "config";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		device_type = "pci";
-+			  /* downstream I/O */
-+		ranges = <0x81000000 0 0 0xc0002000 0 0x00010000
-+			  /* non-prefetchable memory */
-+			  0x82000000 0 0xc0012000 0xc0012000 0 0x1ffee000>;
-+		num-lanes = <2>;
-+		bus-range = <0x00 0xff>;
-+		interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "msi";
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0x7>;
-+		interrupt-map = <0 0 0 1 &intc GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 0 2 &intc GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 0 3 &intc GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-+				<0 0 0 4 &intc GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-+		axis,syscon-pcie = <&syscon>;
-+		status = "disabled";
-+	};
-+
- 	amba@0 {
- 		compatible = "simple-bus";
- 		#address-cells = <0x1>;
+ 	if (IS_ERR(val))
+ 		return PTR_ERR(val);
+@@ -1254,7 +1265,9 @@ int of_property_read_u16_array(const struct device_node *np,
+ 			const char *propname, u16 *out_values, size_t sz)
+ {
+ 	const __be16 *val = of_find_property_value_of_size(np, propname,
+-						(sz * sizeof(*out_values)));
++						(sz * sizeof(*out_values)),
++						0,
++						NULL);
+ 
+ 	if (IS_ERR(val))
+ 		return PTR_ERR(val);
+@@ -1286,7 +1299,9 @@ int of_property_read_u32_array(const struct device_node *np,
+ 			       size_t sz)
+ {
+ 	const __be32 *val = of_find_property_value_of_size(np, propname,
+-						(sz * sizeof(*out_values)));
++						(sz * sizeof(*out_values)),
++						0,
++						NULL);
+ 
+ 	if (IS_ERR(val))
+ 		return PTR_ERR(val);
+@@ -1314,7 +1329,9 @@ int of_property_read_u64(const struct device_node *np, const char *propname,
+ 			 u64 *out_value)
+ {
+ 	const __be32 *val = of_find_property_value_of_size(np, propname,
+-						sizeof(*out_value));
++						sizeof(*out_value),
++						0,
++						NULL);
+ 
+ 	if (IS_ERR(val))
+ 		return PTR_ERR(val);
+@@ -1345,7 +1362,9 @@ int of_property_read_u64_array(const struct device_node *np,
+ 			       size_t sz)
+ {
+ 	const __be32 *val = of_find_property_value_of_size(np, propname,
+-						(sz * sizeof(*out_values)));
++						(sz * sizeof(*out_values)),
++						0,
++						NULL);
+ 
+ 	if (IS_ERR(val))
+ 		return PTR_ERR(val);
 -- 
-2.1.4
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
