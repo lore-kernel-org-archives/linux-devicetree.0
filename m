@@ -1,35 +1,81 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: dts: wheat: add support for tactile switches
-Date: Tue, 6 Sep 2016 09:11:41 +0200
-Message-ID: <CAMuHMdUyF6+T3EumGy5eyfqcio+n506fCTn1N40LEsbD2o_UYg@mail.gmail.com>
-References: <5383928.8UnDsUpmkz@wasted.cogentembedded.com> <10465663.8teCsXZU7y@wasted.cogentembedded.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH] video: mxsfb: get supply regulator optionally
+Date: Tue, 6 Sep 2016 11:21:33 +0300
+Message-ID: <f8368040-bb5a-91e0-7511-df462719b949@ti.com>
+References: <20160904042627.30182-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <10465663.8teCsXZU7y@wasted.cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature";
+        boundary="d9rMwqaPJU5gkXo4pw1HjsC1Fq1KWqSli"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160904042627.30182-1-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>, plagnioj@jcrosoft.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 5, 2016 at 11:33 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Add  support for the  tactile switches  SW2/3 (on the debug board) as a
-> virtual keyboard like it  was done with the Blanche board).
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+--d9rMwqaPJU5gkXo4pw1HjsC1Fq1KWqSli
+Content-Type: multipart/mixed; boundary="hTBspXKHnLHCQBupCUn93NEEvpGSsB9fQ";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+To: Stefan Agner <stefan@agner.ch>, plagnioj@jcrosoft.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org,
+ linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Mark Brown <broonie@kernel.org>
+Message-ID: <f8368040-bb5a-91e0-7511-df462719b949@ti.com>
+Subject: Re: [PATCH] video: mxsfb: get supply regulator optionally
+References: <20160904042627.30182-1-stefan@agner.ch>
+In-Reply-To: <20160904042627.30182-1-stefan@agner.ch>
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+--hTBspXKHnLHCQBupCUn93NEEvpGSsB9fQ
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-DT syntax looks OK to me, I have no board schematics or documentation.
+Hi,
 
-Gr{oetje,eeting}s,
+On 04/09/16 07:26, Stefan Agner wrote:
+> The lcd-supply is meant to be optional, there are several device-
+> trees not specifying it and the code handles error values silently.
+> Therefor, avoid creating a dummy regulator (and the associated
+> warning) by using devm_regulator_get_optional.
+>=20
+> While at it, document that fact also in the device-tree bindings.
 
-                        Geert
+The binding change looks correct, but using
+devm_regulator_get_optional() does not sound correct.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+devm_regulator_get_optional() is to be used when the device in question
+truly can function without the power supply. But if the supply is there,
+it's just not controlled by the SW, devm_regulator_get() is to be used.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+At least this is my understanding.
+
+ Tomi
+
+
+--hTBspXKHnLHCQBupCUn93NEEvpGSsB9fQ--
+
+--d9rMwqaPJU5gkXo4pw1HjsC1Fq1KWqSli
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJXznyOAAoJEPo9qoy8lh71DNQP+wQAwufULRTBiNTpC3xkdL5t
+8SY9YP5mG0KEWp6O312QET6nwu5V/b9edVH9l3nQPmKHL9QO7k58f4KTfbeCbawr
+tbc+o5FNKBtA1jJPEddzw4/0gGFbL1VRxCOTsK2Zb0FA5ensWLV3cU/toZ5cFtWw
+FGcWTczcIXXQX9bwdd5R/eoF57dHSpngwL3FN3DBtAl5cWlIIQJBjUMQr2/nXu5a
+m0brO8eGgD+03BQLr3o+YHw93//1x8e/Xa+SsKm1hv+juZhC4zMpNMUtJfonm3Xh
+Xo1Q6DGj9kmDXx+xjnIJJLRQkBEKD9VPH09xioO1poreRK04tgBF+iE/U/7UW01U
+nwt6d3KKmqkH862ulNe0Xd19Dcm2NM/RxZFY/PeHRwcbFA+BitnTNl92ojuvWjBd
+YpFjJSE2pzB19Uky80BDnLQuLGSMI5LyZyhIpMDfhkRNQ2TJpbXJ4IcTdY30rJ7v
+CG9yq+gZh2+F7OnEshtz57TJnmJmsd3FU6x6q+gk8qHZe8+R+YgBQaqYvXK3GPlT
+r9AoKEgzbLkg2ZomLYlf9kjTy6ri41Kgp7JTBzVI6IiUnO4eNja6maTpYCDMPllR
+LzOLl0wSQd+YAgvjClFeWDdziCtD2xI416pcTbf8TO04ETJV/Wnvclq9gUNbUlJh
+CGABOzfKHM0IMIZO3ij5
+=jvPP
+-----END PGP SIGNATURE-----
+
+--d9rMwqaPJU5gkXo4pw1HjsC1Fq1KWqSli--
