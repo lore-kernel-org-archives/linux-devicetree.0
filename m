@@ -1,59 +1,68 @@
 From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH] video: mxsfb: get supply regulator optionally
-Date: Tue, 06 Sep 2016 11:23:31 -0700
-Message-ID: <4b3a7bda2202a536efaf4a693234c273@agner.ch>
-References: <20160904042627.30182-1-stefan@agner.ch>
- <f8368040-bb5a-91e0-7511-df462719b949@ti.com>
+Subject: Re: [PATCH RESEND] ARM: dts: ls1021a: Add of_graph dt nodes to
+ describe the panel
+Date: Tue, 06 Sep 2016 11:32:31 -0700
+Message-ID: <7a10161e5c9d546ac81acbf3de475b75@agner.ch>
+References: <1473155134-36896-1-git-send-email-meng.yi@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f8368040-bb5a-91e0-7511-df462719b949-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1473155134-36896-1-git-send-email-meng.yi-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-09-06 01:21, Tomi Valkeinen wrote:
-> Hi,
+On 2016-09-06 02:45, Meng Yi wrote:
+> add of_graph dt nodes to describe the panel, and removed
+> "fsl,panel" property
 > 
-> On 04/09/16 07:26, Stefan Agner wrote:
->> The lcd-supply is meant to be optional, there are several device-
->> trees not specifying it and the code handles error values silently.
->> Therefor, avoid creating a dummy regulator (and the associated
->> warning) by using devm_regulator_get_optional.
->>
->> While at it, document that fact also in the device-tree bindings.
-> 
-> The binding change looks correct, but using
-> devm_regulator_get_optional() does not sound correct.
-> 
-> devm_regulator_get_optional() is to be used when the device in question
-> truly can function without the power supply. But if the supply is there,
-> it's just not controlled by the SW, devm_regulator_get() is to be used.
+> Signed-off-by: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
 
-The framebuffer device can even function without a display, no problem
-there.. Probably not really useful...
+Shawn, the changes required to the DCU driver made it into v4.8, so this
+can be applied now. I will send out a patch which does the same
+conversion for the remaining boards.
 
-devm_regulator_get creates a dummy regulator and a warning. Afaik, the
-dummy regulator was meant to be as an aid during development, but not as
-a permanent solution. This is what the initial commit of the dummy
-regulator says:
-
-> In order to ease transitions with drivers are boards start using regulators
-> provide an option to cause all regulator_get() calls to succeed, with a
-> dummy always on regulator being supplied where one has not been configured.
-> A warning is printed whenever the dummy regulator is used to aid system
-> development.
-
-I think we should either make the property mandatory and fix the device
-trees or we should fix the driver to support an optional regulator. The
-code already supports the reg_lcd being NULL, which is probably mostly
-pointless right now as devm_regulator_get always returns a dummy
-regulator.
+Acked-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 
 --
 Stefan
+
+> ---
+>  arch/arm/boot/dts/ls1021a-twr.dts | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/ls1021a-twr.dts
+> b/arch/arm/boot/dts/ls1021a-twr.dts
+> index 75ecaed..a8b148a 100644
+> --- a/arch/arm/boot/dts/ls1021a-twr.dts
+> +++ b/arch/arm/boot/dts/ls1021a-twr.dts
+> @@ -108,12 +108,23 @@
+>  
+>  	panel: panel {
+>  		compatible = "nec,nl4827hc19-05b";
+> +
+> +		port {
+> +			panel_in: endpoint {
+> +				remote-endpoint = <&dcu_out>;
+> +			};
+> +		};
+>  	};
+>  };
+>  
+>  &dcu {
+> -	fsl,panel = <&panel>;
+>  	status = "okay";
+> +
+> +	port {
+> +		dcu_out: endpoint {
+> +			remote-endpoint = <&panel_in>;
+> +		};
+> +	};
+>  };
+>  
+>  &dspi1 {
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
