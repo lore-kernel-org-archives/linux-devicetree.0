@@ -1,7 +1,7 @@
 From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 01/10] ARM: dts: berlin2q: Remove skeleton.dtsi inclusion
-Date: Tue, 6 Sep 2016 16:40:04 +0800
-Message-ID: <20160906084013.2887-2-jszhang@marvell.com>
+Subject: [PATCH 07/10] ARM: dts: berlin2q-marvell-dmp: add missing unit name to /memory node
+Date: Tue, 6 Sep 2016 16:40:10 +0800
+Message-ID: <20160906084013.2887-8-jszhang@marvell.com>
 References: <20160906084013.2887-1-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,35 +12,28 @@ To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-As noted in [1], "there are a number of problems with skeleton.dtsi,
-and it would be prefereable to remove it entirely." This patch is to
-remove skeleton.dtsi inclusion from berlin2q.
+This patch fixes the following DTC warning with W=1:
 
-[1] http://www.spinics.net/lists/arm-kernel/msg528080.html
+"Node /memory has a reg or ranges property, but no unit name"
 
 Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/berlin2q.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
-index 2c34bfb..4554945 100644
---- a/arch/arm/boot/dts/berlin2q.dtsi
-+++ b/arch/arm/boot/dts/berlin2q.dtsi
-@@ -37,11 +37,11 @@
- #include <dt-bindings/clock/berlin2q.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
+diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+index 33b2875..f485308 100644
+--- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
++++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+@@ -43,7 +43,7 @@
+ 	model = "Marvell BG2-Q DMP";
+ 	compatible = "marvell,berlin2q-dmp", "marvell,berlin2q", "marvell,berlin";
  
--#include "skeleton.dtsi"
--
- / {
- 	model = "Marvell Armada 1500 pro (BG2-Q) SoC";
- 	compatible = "marvell,berlin2q", "marvell,berlin";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
- 
- 	aliases {
- 		serial0 = &uart0;
+-	memory {
++	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x80000000>;
+ 	};
 -- 
 2.9.3
 
