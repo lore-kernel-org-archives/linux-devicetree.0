@@ -1,93 +1,34 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 1/3] dt-bindings: drm/bridge: adv7511: Add regulators for
- ADV7533
-Date: Tue, 6 Sep 2016 09:52:40 +0530
-Message-ID: <57CE4490.6060406@codeaurora.org>
-References: <1472640730-24326-1-git-send-email-architt@codeaurora.org>
- <1472640730-24326-2-git-send-email-architt@codeaurora.org>
- <20160902155611.GA4226@rob-hp-laptop>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2 v6] bus: qcom: add EBI2 device tree bindings
+Date: Mon, 5 Sep 2016 21:26:17 -0700
+Message-ID: <20160906042617.GA15161@tuxbot>
+References: <1473112255-7790-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160902155611.GA4226@rob-hp-laptop>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1473112255-7790-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon 05 Sep 14:50 PDT 2016, Linus Walleij wrote:
 
+> diff --git a/Documentation/devicetree/bindings/bus/qcom,ebi2.txt b/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
+[..]
+> +Also CS1 and CS2 has -A and -B signals. Why they have that is unclear to me.
+> +
 
-On 09/02/2016 09:26 PM, Rob Herring wrote:
-> On Wed, Aug 31, 2016 at 04:22:08PM +0530, Archit Taneja wrote:
->> Add the regulator supply properties needed for ADV7533. The regulator
->> names are named after the pin names. The exact use of each supply isn't
->> clear from the data sheets.
->>
->> The regulators are specified as optional properties since there can
->> be boards which have a fixed supply directly routed to the pins, and
->> these may not be modelled as regulator supplies.
->>
->> There might be a similar set of regulators for ADV7511, but we don't
->> have the docs at the moment to find out what supplies it needs. The
->> regulator properties needed by ADV7511 can be updated as we get more
->> data on it.
->
-> The ADV7510 is available and there's a pinout comparison with the 7511:
->
-> http://www.analog.com/media/en/technical-documentation/evaluation-documentation/ADV7510_to_ADV7511_differences.pdf
->
-> These 2 seem to have the same supplies...
+Most Qualcomm platforms has a few functions that has a second level of
+muxing, probably as a solution to pin collisions or some other hardware
+constraints.
 
-Thanks. I'll use this.
+It looks like this is what you're seeing.
 
->
->>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Archit Taneja <architt@codeaurora.org>
->> ---
->>   Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->> index 6532a59..669b6f2 100644
->> --- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->> +++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
->> @@ -56,6 +56,12 @@ Optional properties:
->>   - adi,disable-timing-generator: Only for ADV7533. Disables the internal timing
->>     generator. The chip will rely on the sync signals in the DSI data lanes,
->>     rather than generate its own timings for HDMI output.
->> +- avdd-supply: Only for ADV7533. A 1.8V supply that powers up the AVDD, DVDD
->> +  PVDD and A2VDD pins on the chip.
->
-> This sounds wrong. Each input to the chip should be a property even if
-> they are typically from the same supply.
-
-I'll create an entry for each.
-
->
-> The 7511 has DVDD, AVDD, and PVDD.
->
->> +- v1p2-supply: Only for ADV7533. A supply that powers up the V1P2 pin on the
->> +  chip. Can be either 1.2V or 1.8V.
->
-> This appears to be 7533 specific.
->
->> +- v3p3-supply: Only for ADV7533. A 3.3V supply that powers up the V3P3 pin on
->> +  the chip.
->
-> DVDD_3V on 7511
->
-> 7510/7511 also have BGVDD (for Bandgap). Not clear what the voltage is.
-
-I'll add this regulator, and mention that we don't know
-what the voltage is.
-
->
-> Rob
->
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
