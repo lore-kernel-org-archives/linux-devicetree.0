@@ -1,136 +1,85 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH 2/2] ASoC: rockchip: Add DP dai-links to the rk3399-gru machine driver
-Date: Mon,  5 Sep 2016 21:48:55 -0700
-Message-ID: <1473137335-14541-3-git-send-email-zyw@rock-chips.com>
-References: <1473137335-14541-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473137335-14541-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dianders@chromium.org, heiko@sntech.de, zhengxing@rock-chips.com, cychiang@chromium.org
-Cc: linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v7 3/4] usb: dwc2: assert phy reset when waking up in
+ rk3288 platform
+Date: Tue, 6 Sep 2016 10:44:10 +0530
+Message-ID: <57CE50A2.7080502@ti.com>
+References: <1472939729-15187-1-git-send-email-ayaka@soulik.info>
+ <1472939729-15187-4-git-send-email-ayaka@soulik.info>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1472939729-15187-4-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DP audio output support to the rk3300-gru machine
-driver.
+Hi,
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
-hychao@chromium.org, broonie@kernel.org
----
+On Sunday 04 September 2016 03:25 AM, Randy Li wrote:
+> On the rk3288 USB host-only port (the one that's not the OTG-enabled
+> port) the PHY can get into a bad state when a wakeup is asserted (not
+> just a wakeup from full system suspend but also a wakeup from
+> autosuspend).
+> 
+> We can get the PHY out of its bad state by asserting its "port reset",
+> but unfortunately that seems to assert a reset onto the USB bus so it
+> could confuse things if we don't actually deenumerate / reenumerate the
+> device.
+> 
+> We can also get the PHY out of its bad state by fully resetting it using
+> the reset from the CRU (clock reset unit) in chip, which does a more full
+> reset.  The CRU-based reset appears to actually cause devices on the bus
+> to be removed and reinserted, which fixes the problem (albeit in a hacky
+> way).
+> 
+> It's unfortunate that we need to do a full re-enumeration of devices at
+> wakeup time, but this is better than alternative of letting the bus get
+> wedged.
+> 
+> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+> ---
+>  drivers/usb/dwc2/core_intr.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
+> index d85c5c9..08485b7 100644
+> --- a/drivers/usb/dwc2/core_intr.c
+> +++ b/drivers/usb/dwc2/core_intr.c
+> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
+>  static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>  {
+>  	int ret;
+> +	struct device_node *np = hsotg->dev->of_node;
+>  
+>  	/* Clear interrupt */
+>  	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
+> @@ -379,6 +380,17 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>  			/* Restart the Phy Clock */
+>  			pcgcctl &= ~PCGCTL_STOPPCLK;
+>  			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
+> +
+> +			/*
+> +			 * It is a quirk in Rockchip RK3288, causing by
+> +			 * a hardware bug. This will propagate out and
+> +			 * eventually we'll re-enumerate the device. 
+> +			 * Not great but the best we can do 
+> +			 */
+> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb")
+> +					&& (NULL != hsotg->phy->ops->reset))
+> +				hsotg->phy->ops->reset(hsotg->phy);
 
- .../bindings/sound/rockchip,rk3399-gru-sound.txt   | 13 +++---
- sound/soc/rockchip/rk3399_gru_sound.c              | 48 ++++++++++++++++++++++
- 2 files changed, 55 insertions(+), 6 deletions(-)
+never call the phy ops directly from the controller driver. It has to be
+protected as well.
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-index f19b6c8..222124b 100644
---- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-@@ -1,15 +1,16 @@
--ROCKCHIP with MAX98357A/RT5514/DA7219 codecs on GRU boards
-+ROCKCHIP with MAX98357A/RT5514/DA7219 codecs and DP via spdif on GRU boards
- 
- Required properties:
- - compatible: "rockchip,rk3399-gru-sound"
--- rockchip,cpu: The phandle of the Rockchip I2S controller that's
--  connected to the codecs
--- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
-+- rockchip,cpu: The phandle of the Rockchip I2S controller controller that's
-+  connected to the codecs, and the SPDIF controller that's connected to DP
-+- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs and of the
-+  DP encoder node
- 
- Example:
- 
- sound {
- 	compatible = "rockchip,rk3399-gru-sound";
--	rockchip,cpu = <&i2s0>;
--	rockchip,codec = <&max98357a &rt5514 &da7219>;
-+	rockchip,cpu = <&i2s0 &spdif>;
-+	rockchip,codec = <&max98357a &rt5514 &da7219 &cdn_dp 1>;
- };
-diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
-index 164b6da..50e5d9a 100644
---- a/sound/soc/rockchip/rk3399_gru_sound.c
-+++ b/sound/soc/rockchip/rk3399_gru_sound.c
-@@ -25,6 +25,7 @@
- #include <linux/spi/spi.h>
- #include <sound/core.h>
- #include <sound/jack.h>
-+#include <sound/hdmi-codec.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
-@@ -226,10 +227,30 @@ static struct snd_soc_ops rockchip_sound_da7219_ops = {
- 	.hw_params = rockchip_sound_da7219_hw_params,
- };
- 
-+static struct snd_soc_jack cdn_dp_card_jack;
-+
-+static int cdn_dp_init(struct snd_soc_pcm_runtime *runtime)
-+{
-+	struct snd_soc_card *card = runtime->card;
-+	struct snd_soc_codec *codec = runtime->codec;
-+	int ret;
-+
-+	/* enable jack detection */
-+	ret = snd_soc_card_jack_new(card, "DP Jack", SND_JACK_LINEOUT,
-+				    &cdn_dp_card_jack, NULL, 0);
-+	if (ret) {
-+		dev_err(card->dev, "Can't new DP Jack %d\n", ret);
-+		return ret;
-+	}
-+
-+	return hdmi_codec_set_jack_detect(codec, &cdn_dp_card_jack);
-+}
-+
- enum {
- 	DAILINK_MAX98357A,
- 	DAILINK_RT5514,
- 	DAILINK_DA7219,
-+	DAILINK_CDNDP,
- 	DAILINK_RT5514_DSP,
- };
- 
-@@ -264,6 +285,14 @@ static struct snd_soc_dai_link rockchip_dailinks[] = {
- 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
- 			SND_SOC_DAIFMT_CBS_CFS,
- 	},
-+	[DAILINK_CDNDP] = {
-+		.name = "DP",
-+		.stream_name = "DP PCM",
-+		.codec_dai_name = "spdif-hifi",
-+		.init = cdn_dp_init,
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+	},
- 	/* RT5514 DSP for voice wakeup via spi bus */
- 	[DAILINK_RT5514_DSP] = {
- 		.name = "RT5514 DSP",
-@@ -334,6 +363,25 @@ static int rockchip_sound_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	cpu_node = of_parse_phandle(pdev->dev.of_node, "rockchip,cpu", 1);
-+	if (!cpu_node) {
-+		dev_err(&pdev->dev, "Property 'rockchip,cpu 1' missing or invalid\n");
-+		return -EINVAL;
-+	}
-+
-+	rockchip_dailinks[DAILINK_CDNDP].platform_of_node = cpu_node;
-+	rockchip_dailinks[DAILINK_CDNDP].cpu_of_node = cpu_node;
-+
-+	rockchip_dailinks[DAILINK_CDNDP].codec_of_node =
-+		of_parse_phandle(pdev->dev.of_node, "rockchip,codec",
-+				 DAILINK_CDNDP);
-+	if (!rockchip_dailinks[DAILINK_CDNDP].codec_of_node) {
-+		dev_err(&pdev->dev,
-+			"Property[%d] 'rockchip,codec' missing or invalid\n",
-+			DAILINK_CDNDP);
-+		return -EINVAL;
-+	}
-+
- 	rockchip_dailinks[DAILINK_RT5514_DSP].cpu_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
- 	rockchip_dailinks[DAILINK_RT5514_DSP].cpu_dai_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
- 	rockchip_dailinks[DAILINK_RT5514_DSP].platform_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
--- 
-1.9.1
+Thanks
+Kishon
