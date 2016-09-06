@@ -1,143 +1,91 @@
-From: Zach Brown <zach.brown@ni.com>
-Subject: Re: [PATCH 2/2] sdhci-of-arasan: Set controller to test mode when
- fails-without-test-cd is present
-Date: Tue, 6 Sep 2016 13:51:08 -0500
-Message-ID: <20160906185107.GA5124@zach-desktop>
-References: <1472512857-13063-1-git-send-email-zach.brown@ni.com>
- <1472512857-13063-2-git-send-email-zach.brown@ni.com>
- <13c1a30f-fb4f-a813-df0a-3ac9914cfa61@xilinx.com>
+From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v7 3/4] usb: dwc2: assert phy reset when waking up in
+ rk3288 platform
+Date: Tue, 6 Sep 2016 11:54:16 -0700
+Message-ID: <ba3e8239-6909-9de1-9cc5-f7ae80825f58@synopsys.com>
+References: <1472939729-15187-1-git-send-email-ayaka@soulik.info>
+ <1472939729-15187-4-git-send-email-ayaka@soulik.info>
+ <57CE50A2.7080502@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <13c1a30f-fb4f-a813-df0a-3ac9914cfa61@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, soren.brinkmann@xilinx.com
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <57CE50A2.7080502-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 30, 2016 at 07:47:17AM +0200, Michal Simek wrote:
-> On 30.8.2016 01:20, Zach Brown wrote:
-> > The sdhci controller on xilinx zynq devices will not function unless
-> > the CD bit is provided. http://www.xilinx.com/support/answers/61064.html
-> > In cases where it is impossible to provide the CD bit in hardware,
-> > setting the controller to test mode and then setting inserted to true
-> > will get the controller to function without the CD bit.
-> > 
-> > When the device has the property fails-without-test-cd the driver
-> > changes the controller to test mode and sets test inserted to true to
-> > make the controller function.
-> > 
-> > Signed-off-by: Zach Brown <zach.brown@ni.com>
-> > ---
-> >  drivers/mmc/host/sdhci-of-arasan.c | 34 +++++++++++++++++++++++++++++++++-
-> >  drivers/mmc/host/sdhci.h           |  2 ++
-> >  2 files changed, 35 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> > index e0f193f..c3e5145 100644
-> > --- a/drivers/mmc/host/sdhci-of-arasan.c
-> > +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> > @@ -26,6 +26,7 @@
-> >  #include <linux/phy/phy.h>
-> >  #include <linux/regmap.h>
-> >  #include "sdhci-pltfm.h"
-> > +#include <linux/of.h>
-> > 
-> >  #define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
-> >  #define SDHCI_ARASAN_VENDOR_REGISTER	0x78
-> > @@ -92,6 +93,12 @@ struct sdhci_arasan_data {
-> > 
-> >  	struct regmap	*soc_ctl_base;
-> >  	const struct sdhci_arasan_soc_ctl_map *soc_ctl_map;
-> > +
-> > +	unsigned int arasan_quirks; /* Arasan deviations from spec */
-> > +
-> > +/* Controller does not have CD wired and will not function normally without */
-> > +#define SDHCI_ARASAN_QUIRK_FAILS_WITHOUT_TEST_CD (1<<0)
+On 9/5/2016 10:15 PM, Kishon Vijay Abraham I wrote:
+> Hi,
 > 
-> Bit macro instead?
+> On Sunday 04 September 2016 03:25 AM, Randy Li wrote:
+>> On the rk3288 USB host-only port (the one that's not the OTG-enabled
+>> port) the PHY can get into a bad state when a wakeup is asserted (not
+>> just a wakeup from full system suspend but also a wakeup from
+>> autosuspend).
+>>
+>> We can get the PHY out of its bad state by asserting its "port reset",
+>> but unfortunately that seems to assert a reset onto the USB bus so it
+>> could confuse things if we don't actually deenumerate / reenumerate the
+>> device.
+>>
+>> We can also get the PHY out of its bad state by fully resetting it using
+>> the reset from the CRU (clock reset unit) in chip, which does a more full
+>> reset.  The CRU-based reset appears to actually cause devices on the bus
+>> to be removed and reinserted, which fixes the problem (albeit in a hacky
+>> way).
+>>
+>> It's unfortunate that we need to do a full re-enumeration of devices at
+>> wakeup time, but this is better than alternative of letting the bus get
+>> wedged.
+>>
+>> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+>> ---
+>>  drivers/usb/dwc2/core_intr.c | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
+>> index d85c5c9..08485b7 100644
+>> --- a/drivers/usb/dwc2/core_intr.c
+>> +++ b/drivers/usb/dwc2/core_intr.c
+>> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
+>>  static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>>  {
+>>  	int ret;
+>> +	struct device_node *np = hsotg->dev->of_node;
+>>  
+>>  	/* Clear interrupt */
+>>  	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
+>> @@ -379,6 +380,17 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>>  			/* Restart the Phy Clock */
+>>  			pcgcctl &= ~PCGCTL_STOPPCLK;
+>>  			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
+>> +
+>> +			/*
+>> +			 * It is a quirk in Rockchip RK3288, causing by
+>> +			 * a hardware bug. This will propagate out and
+>> +			 * eventually we'll re-enumerate the device. 
+>> +			 * Not great but the best we can do 
+>> +			 */
+>> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb")
+>> +					&& (NULL != hsotg->phy->ops->reset))
+>> +				hsotg->phy->ops->reset(hsotg->phy);
 > 
+> never call the phy ops directly from the controller driver. It has to be
+> protected as well.
 
-Setting bits with notations like (1<<0) is the style which is used for quirks
-in sdhci.h Is there a reason it should be different here?
-> > +
-> 
-> remove this line.
-> 
-> >  };
-> > 
-> >  static const struct sdhci_arasan_soc_ctl_map rk3399_soc_ctl_map = {
-> > @@ -203,12 +210,32 @@ static void sdhci_arasan_hs400_enhanced_strobe(struct mmc_host *mmc,
-> >  	writel(vendor, host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
-> >  }
-> > 
-> > +void sdhci_arasan_reset(struct sdhci_host *host, u8 mask)
-> > +{
-> > +	u8 ctrl;
-> > +	struct sdhci_pltfm_host *pltfm_host;
-> > +	struct sdhci_arasan_data *sdhci_arasan;
-> > +
-> > +	sdhci_reset(host, mask);
-> > +
-> > +	pltfm_host = sdhci_priv(host);
-> > +	sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
-> > +
-> > +	if (sdhci_arasan->arasan_quirks &
-> > +	    SDHCI_ARASAN_QUIRK_FAILS_WITHOUT_TEST_CD) {
-> > +		ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
-> > +		ctrl |= SDHCI_CTRL_CDTEST_INS |
-> > +			SDHCI_CTRL_CDTEST_EN;
-> > +		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> > +	}
-> > +}
-> > +
-> >  static struct sdhci_ops sdhci_arasan_ops = {
-> >  	.set_clock = sdhci_arasan_set_clock,
-> >  	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
-> >  	.get_timeout_clock = sdhci_arasan_get_timeout_clock,
-> >  	.set_bus_width = sdhci_set_bus_width,
-> > -	.reset = sdhci_reset,
-> > +	.reset = sdhci_arasan_reset,
-> >  	.set_uhs_signaling = sdhci_set_uhs_signaling,
-> >  };
-> > 
-> > @@ -516,6 +543,11 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
-> >  	}
-> > 
-> >  	sdhci_get_of_property(pdev);
-> > +
-> > +	if (of_get_property(pdev->dev.of_node, "fails-without-test-cd", NULL))
-> > +		sdhci_arasan->arasan_quirks |=
-> > +				SDHCI_ARASAN_QUIRK_FAILS_WITHOUT_TEST_CD;
-> > +
-> >  	pltfm_host->clk = clk_xin;
-> > 
-> >  	sdhci_arasan_update_baseclkfreq(host);
-> > diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> > index 0411c9f..8d92d6e9 100644
-> > --- a/drivers/mmc/host/sdhci.h
-> > +++ b/drivers/mmc/host/sdhci.h
-> > @@ -84,6 +84,8 @@
-> >  #define   SDHCI_CTRL_ADMA32	0x10
-> >  #define   SDHCI_CTRL_ADMA64	0x18
-> >  #define   SDHCI_CTRL_8BITBUS	0x20
-> > +#define  SDHCI_CTRL_CDTEST_INS   0x40
-> > +#define  SDHCI_CTRL_CDTEST_EN     0x80
-> 
-> You should follow coding style above.
+It looks like we should be calling an API function instead, correct?
 
-I don't understand the issue you're raising. Could you elaborate?
-> 
-> Thanks,
-> Michal
-> 
+Similar to the wrappers for the other ops.
+
+Regards,
+John
