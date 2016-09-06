@@ -1,109 +1,110 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [v11, 7/8] base: soc: introduce soc_device_match() interface
-Date: Tue, 06 Sep 2016 14:46:08 +0200
-Message-ID: <6515108.aCEls7dUuW@wuerfel>
-References: <1473150503-9550-1-git-send-email-yangbo.lu@nxp.com> <1473150503-9550-8-git-send-email-yangbo.lu@nxp.com> <CAPDyKFrvg3Qr5m3xXvywsCoVvaiF7ggHAj0Aw=WCOXg65Pt0PQ@mail.gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v4 2/6] ASoC: codecs: Add msm8916-wcd digital codec
+Date: Tue, 6 Sep 2016 13:54:33 +0100
+Message-ID: <f7dd8339-5f81-8184-9158-8c083d84c982@linaro.org>
+References: <1473155865-13361-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1473155865-13361-3-git-send-email-srinivas.kandagatla@linaro.org>
+ <20160906112456.GN3950@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFrvg3Qr5m3xXvywsCoVvaiF7ggHAj0Aw=WCOXg65Pt0PQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bhupesh
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160906112456.GN3950@sirena.org.uk>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, robh+dt@kernel.org, mark.rutland@arm.com, tiwai@suse.com, devicetree@vger.kernel.org, kwestfie@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, September 6, 2016 1:44:23 PM CEST Ulf Hansson wrote:
-> On 6 September 2016 at 10:28, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org> wrote:
-> > We keep running into cases where device drivers want to know the exact
-> > version of the a SoC they are currently running on. In the past, this has
-> > usually been done through a vendor specific API that can be called by a
-> > driver, or by directly accessing some kind of version register that is
-> > not part of the device itself but that belongs to a global register area
-> > of the chip.
 
-Please add "From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>" as the first line, to
-preserve authorship. If you use "git send-email" or "git format-patch",
-that should happen automatically if the author field is set right
-(if not, use 'git commit --amend --author="Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>"'
-to fix it).
 
-> > +
-> > +/*
-> > + * soc_device_match - identify the SoC in the machine
-> > + * @matches: zero-terminated array of possible matches
-> 
-> Perhaps also express the constraint on the matching entries. As you
-> need at least one of the ->machine(), ->family(), ->revision() or
-> ->soc_id() callbacks implemented, right!?
-
-They are not callbacks, just strings. Having an empty entry indicates
-the end of the array, and this is not called.
-
-> > + *
-> > + * returns the first matching entry of the argument array, or NULL
-> > + * if none of them match.
-> > + *
-> > + * This function is meant as a helper in place of of_match_node()
-> > + * in cases where either no device tree is available or the information
-> > + * in a device node is insufficient to identify a particular variant
-> > + * by its compatible strings or other properties. For new devices,
-> > + * the DT binding should always provide unique compatible strings
-> > + * that allow the use of of_match_node() instead.
-> > + *
-> > + * The calling function can use the .data entry of the
-> > + * soc_device_attribute to pass a structure or function pointer for
-> > + * each entry.
-> 
-> I don't get the use case behind this, could you elaborate?
-> 
-> Perhaps we should postpone adding the .data entry until we actually
-> see a need for it?
-
-I think the interface is rather useless without a way to figure
-out which entry you got. Almost all users of of_match_node()
-actually use the returned ->data field, and I expect this to
-be the same here.
-
-> > + */
-> > +const struct soc_device_attribute *soc_device_match(
-> > +       const struct soc_device_attribute *matches)
-> > +{
-> > +       struct device *dev;
-> > +       int ret;
-> > +
-> > +       for (ret = 0; ret == 0; matches++) {
-> 
-> This loop looks a bit weird and unsafe.
-
-Ah, and I thought I was being clever ;-)
-
-> 1) Perhaps using a while loop makes this more readable?
-> 2) As this is an exported API, I guess validation of the ->matches
-> pointer needs to be done before accessing it.
-
-Sounds fine.
-
-> > +               if (!(matches->machine || matches->family ||
-> > +                     matches->revision || matches->soc_id))
-> > +                       return NULL;
-> > +               dev = NULL;
-> 
-> There's no need to use a struct device just to assign it to NULL.
-> Instead just provide the function below with NULL.
+On 06/09/16 12:24, Mark Brown wrote:
+> On Tue, Sep 06, 2016 at 10:57:41AM +0100, Srinivas Kandagatla wrote:
 >
-> > +               ret = bus_for_each_dev(&soc_bus_type, dev, (void *)matches,
-> > +                                      soc_device_match_one);
+>> +static const struct soc_enum rx_mix2_inp1_chain_enum =
+>> +SOC_ENUM_SINGLE(LPASS_CDC_CONN_RX1_B3_CTL, 0, 3, rx_mix2_text);
+>
+> Indentation again.
+>
+Yep will fix it in next version.
+>> +	case SND_SOC_DAPM_PRE_PMU:
+>> +		if (++msm8916_wcd->dmic_clk_cnt == 1) {
+>> +			snd_soc_update_bits(codec, dmic_clk_reg,
+>
+> This looks like you're open coding a supply widget.
+You are correct, the clk can go in to a supply widget in this case. I 
+will fix it in next version.
 
+>
+>> +		if (dmic == 1)
+>> +			snd_soc_update_bits(codec, LPASS_CDC_TX1_DMIC_CTL,
+>> +					    TXN_DMIC_CTL_CLK_SEL_MASK,
+>> +					    TXN_DMIC_CTL_CLK_SEL_DIV3);
+>> +		if (dmic == 2)
+>> +			snd_soc_update_bits(codec, LPASS_CDC_TX2_DMIC_CTL,
+>> +					    TXN_DMIC_CTL_CLK_SEL_MASK,
+>> +					    TXN_DMIC_CTL_CLK_SEL_DIV3);
+>
+> This looks like you want a switch statement.
+Ok, will do in next versions.
+>
+>> +static int msm8916_wcd_digital_enable_clock_block(struct snd_soc_codec
+>> +						  *codec, int enable)
+>> +{
+>
+>> +static int msm8916_wcd_digital_codec_remove(struct snd_soc_codec *codec)
+>> +{
+>> +	return 0;
+>> +}
+>
+> Remove empty functions.
+Agree.
+>
+>> +static int msm8916_wcd_digital_startup(struct snd_pcm_substream *substream,
+>> +				       struct snd_soc_dai *dai)
+>> +{
+>> +	msm8916_wcd_digital_enable_clock_block(dai->codec, 1);
+>> +	return 0;
+>> +}
+>> +
+>> +static void msm8916_wcd_digital_shutdown(struct snd_pcm_substream *substream,
+>> +					 struct snd_soc_dai *dai)
+>> +{
+>> +	msm8916_wcd_digital_enable_clock_block(dai->codec, 0);
+>> +}
+>
+> Two problems here: one is that the power management should be in DAPM,
+> the other is that the _enable_clock_block() function is totally
+> pointless - it has only these two call locations and there is absolutely
+> no shared code between the enable and disable paths so they should just
+> be inlined.
+>
+Ok, I will inline the code in next verions.
+>> +static int msm8916_wcd_digital_remove(struct platform_device *pdev)
+>> +{
+>> +	struct msm8916_wcd_digital_priv *priv = dev_get_drvdata(&pdev->dev);
+>> +
+>> +	clk_disable_unprepare(priv->mclk);
+>> +	clk_disable_unprepare(priv->ahbclk);
+>> +	snd_soc_unregister_codec(&pdev->dev);
+>
+> This is disabling the clocks while the CODEC is still registered and
+> might be in use, you should unregister first.
+Agree, Will change the order in next version.
+>
+>> +static const struct of_device_id msm8916_wcd_digital_match_table[] = {
+>> +	{.compatible = "qcom,msm8916-wcd-digital-codec"},
+>> +	{}
+>
+> Spaces please.
+>
+Yep.
 
-I don't remember what led to this, I think you are right, we should
-just pass NULL as most other callers.
-
-Thanks for the review.
-
-	ARnd
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +static struct platform_driver msm8916_wcd_digital_driver = {
+>> +	.driver = {
+>> +		   .name = "msm8916-wcd-digital-codec",
+>> +		   .of_match_table = msm8916_wcd_digital_match_table,
+>> +		   },
+>
+> Please line up the }.
+Yep.
+>
