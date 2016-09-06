@@ -1,78 +1,127 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] dts: sun8i-h3: add UART1-3 to Orange Pi Plus
-Date: Tue, 6 Sep 2016 11:04:38 +0800
-Message-ID: <CAGb2v67dnnxOp_yPyC8icu-m0WZ-Rs1STs1tnxJMOLfcRfRzUg@mail.gmail.com>
-References: <1472671858-29220-1-git-send-email-jorik@kippendief.biz>
- <1472671858-29220-5-git-send-email-jorik@kippendief.biz> <20160902070425.GB6313@lukather>
- <20160903120932.GA6289@carbon.kippendief.biz> <20160905193111.GC4728@lukather>
+From: Dawei Chien <dawei.chien@mediatek.com>
+Subject: Re: [PATCH v2 3/3] arm: dts: thermal: add thermal/auxadc node.
+Date: Tue, 6 Sep 2016 11:28:30 +0800
+Message-ID: <1473132510.15922.13.camel@mtksdaap41>
+References: <1471492253-7185-1-git-send-email-dawei.chien@mediatek.com>
+         <1471492253-7185-4-git-send-email-dawei.chien@mediatek.com>
+         <1473121447.2201.20.camel@intel.com> <1473121807.2201.23.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160905193111.GC4728@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1473121807.2201.23.camel@intel.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>
+Cc: Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Fan Chen <fan.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 6, 2016 at 3:31 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi Jorik,
->
-> On Sat, Sep 03, 2016 at 02:09:32PM +0200, Jorik Jonker wrote:
->> On Fri, Sep 02, 2016 at 09:04:25AM +0200, Maxime Ripard wrote:
->> >Unfortunately, these pins can be used for other purposes as well, so
->> >we cannot make force that decision down to our users.
->>
->> Yes, but since the associated peripheral is disabled, the users are free to
->> configure other functions/peripherals, right? I mean something like this in
->> pseudo-DT:
->>
->> /soc/pio: pinctrl@01c20800/uart1_pins:
->>   allwinner,pins = "PG6, PG7";
->> /soc/pio: pinctrl@01c20800/foo0_pins:
->>   allwinner,pins = "PG6, PG7";
->>   ..
->> /soc/uart1: serial@serial@01c28400:
->>   pinctrl-0 = <&uart1_pins>;
->>   status = "disabled";
->> /soc/bar:
->>   pinctrl-0 = <&uart1_pins>;
->>   status = "disabled";
->>
->> Assuming Linux/DT allows this, this would force nothing, only offer choice
->> and ease of use.
->
-> Hmm, sorry, I went over your patches too quickly...
->
-> That's a great compromise I think. Chen-Yu, any opinion on this?
+Dear Rui,
 
-In short, I'm ok with it. But please put an explicit
+On Tue, 2016-09-06 at 08:30 +0800, Zhang Rui wrote:
+> On 二, 2016-09-06 at 08:24 +0800, Zhang Rui wrote:
+> > On 四, 2016-08-18 at 11:50 +0800, Dawei Chien wrote:
+> > > 
+> > > This adds the thermal controller and auxadc nodes
+> > > to the Mediatek MT2701 dtsi file.
+> > > 
+> > > Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+> > > ---
+> > > This patch depned on:
+> > > https://patchwork.kernel.org/patch/9249589/
+> > > https://patchwork.kernel.org/patch/9249589/
+> > Hmm, does this mean that I should take all these three patches and
+> > hold
+> > the patches in next merge window until the above patch has been
+> > merged?
+> > 
+Yes, this patch is base on auxadc patchset.
 
-    status = "disabled";
+> Patch 3/3 can not be applied on top of upstream kernel, so I guess it
+> still has some other dependencies.
+> I think I can apply patch 1, 2 first. And patch 3/3 should be handled
+> in the dt tree.
 
-and probably a comment about how/where the peripheral can be
-used in the board dts.
+Sorry, this patch is also need Mediatek's clock patchset what I miss to
+add in dependency list, I would resend this dt tree once clock patch
+merge, or resend this for right dependency on next version, thank you.
 
-I intended to do this for the Banana Pis. Though my original plan
-was to enable Raspberry Pi compatible peripherals by default, and
-list the other peripherals that are defined by the vendor as
-"disabled".
+> thanks,
+> rui
+> > thanks,
+> > rui 
+> > > 
+> > > ---
+> > >  arch/arm/boot/dts/mt2701.dtsi |   44
+> > > +++++++++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 44 insertions(+)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/mt2701.dtsi
+> > > b/arch/arm/boot/dts/mt2701.dtsi
+> > > index e9150a4..cee4724 100644
+> > > --- a/arch/arm/boot/dts/mt2701.dtsi
+> > > +++ b/arch/arm/boot/dts/mt2701.dtsi
+> > > @@ -87,6 +87,36 @@
+> > >  		clock-output-names = "rtc32k";
+> > >  	};
+> > >  
+> > > +	thermal-zones {
+> > > +		cpu_thermal: cpu_thermal {
+> > > +			polling-delay-passive = <1000>; /*
+> > > milliseconds */
+> > > +			polling-delay = <1000>; /* milliseconds */
+> > > +
+> > > +			thermal-sensors = <&thermal 0>;
+> > > +			sustainable-power = <1000>;
+> > > +
+> > > +			trips {
+> > > +				threshold: trip-point@0 {
+> > > +					temperature = <68000>;
+> > > +					hysteresis = <2000>;
+> > > +					type = "passive";
+> > > +				};
+> > > +
+> > > +				target: trip-point@1 {
+> > > +					temperature = <85000>;
+> > > +					hysteresis = <2000>;
+> > > +					type = "passive";
+> > > +				};
+> > > +
+> > > +				cpu_crit: cpu_crit@0 {
+> > > +					temperature = <115000>;
+> > > +					hysteresis = <2000>;
+> > > +					type = "critical";
+> > > +				};
+> > > +			};
+> > > +		};
+> > > +	};
+> > > +
+> > >  	timer {
+> > >  		compatible = "arm,armv7-timer";
+> > >  		interrupt-parent = <&gic>;
+> > > @@ -222,4 +252,18 @@
+> > >  		clock-names = "baud", "bus";
+> > >  		status = "disabled";
+> > >  	};
+> > > +
+> > > +	thermal: thermal@1100b000 {
+> > > +		#thermal-sensor-cells = <0>;
+> > > +		compatible = "mediatek,mt2701-thermal";
+> > > +		reg = <0 0x1100b000 0 0x1000>;
+> > > +		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
+> > > +		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg
+> > > CLK_PERI_AUXADC>;
+> > > +		clock-names = "therm", "auxadc";
+> > > +		resets = <&pericfg 0x10>;
+> > > +		reset-names = "therm";
+> > > +		mediatek,auxadc = <&auxadc>;
+> > > +		mediatek,apmixedsys = <&apmixedsys>;
+> > > +	};
+> > > +
+> > >  };
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-pm"
+> > in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-"Defined by the vendor" means that the vendor has some sort of
-document associating the gpio header pins with the peripherals,
-as shown in:
 
-    http://www.orangepi.org/Docs/Pindefinition.html#CON3_Definition
-
-This should make it easier for the average user to enable the
-peripherals. I'm not sure we should list _all_ possible ones
-though. That would make the list very large, and some might
-end up never being used.
-
-
-Regards
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
