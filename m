@@ -1,354 +1,83 @@
-From: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH 2/2] of: Add array read functions with min/max size limits
-Date: Tue, 6 Sep 2016 16:02:01 +0100
-Message-ID: <1473174121-19742-2-git-send-email-rf@opensource.wolfsonmicro.com>
-References: <1473174121-19742-1-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v6 00/20] Generic DT bindings for PCI IOMMUs and ARM SMMU
+Date: Tue,  6 Sep 2016 16:33:33 +0100
+Message-ID: <cover.1473173789.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473174121-19742-1-git-send-email-rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new set of array reading functions that take a minimum and
-maximum size limit and will fail if the property size is not within
-the size limits. This makes it more convenient for drivers that
-use variable-size DT arrays which must be bounded at both ends -
-data must be at least N entries but must not overflow the array
-it is being copied into. It is also more efficient than making this
-functionality out of existing public functions and avoids duplication.
+Hi all,
 
-The existing array functions have been left in the API, since there
-are a very large number of clients of those functions and their
-existing functionality is still useful. This avoids turning a small
-API improvement into a major kernel rework.
+Here's v6 to address last week's comments. For the sake of honesty I've
+left Lorenzo's tested-by off everything I've changed since, and Eric's
+reviewed-by off patch 19 having non-trivially reworked the guts of it.
 
-Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Patch 20 is new, but as it's currently a solution waiting for a problem
+as far as we're aware, oughtn't to get in the way; hopefully the rest is
+in good shape for 4.9 now.
+
+Branch here, based on Will's iommu/devel queue:
+
+git://linux-arm.org/linux-rm iommu/generic-v6
+
+Thanks,
+Robin.
 ---
- drivers/of/base.c  | 206 ++++++++++++++++++++++++++++++++++++++++++-----------
- include/linux/of.h |  16 +++++
- 2 files changed, 180 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index b853737..cbad5cf 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1209,6 +1209,47 @@ int of_property_read_u32_index(const struct device_node *np,
- EXPORT_SYMBOL_GPL(of_property_read_u32_index);
- 
- /**
-+ * of_property_read_variable_u8_array - Find and read an array of u8 from a
-+ * property, with bounds on the minimum and maximum array size.
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ * @out_values:	pointer to return value, modified only if return value is 0.
-+ * @sz_min:	minimum number of array elements to read
-+ * @sz_max:	maximum number of array elements to read
-+ *
-+ * Search for a property in a device node and read 8-bit value(s) from
-+ * it. Returns 0 on success, -EINVAL if the property does not exist,
-+ * -ENODATA if property does not have a value, and -EOVERFLOW if the
-+ * property data is smaller than sz_min or longer than sz_max.
-+ *
-+ * dts entry of array should be like:
-+ *	property = /bits/ 8 <0x50 0x60 0x70>;
-+ *
-+ * The out_values is modified only if a valid u8 value can be decoded.
-+ */
-+int of_property_read_variable_u8_array(const struct device_node *np,
-+					const char *propname, u8 *out_values,
-+					size_t sz_min, size_t sz_max)
-+{
-+	size_t sz;
-+	const u8 *val = of_find_property_value_of_size(np, propname,
-+						(sz_min * sizeof(*out_values)),
-+						(sz_max * sizeof(*out_values)),
-+						&sz);
-+
-+	if (IS_ERR(val))
-+		return PTR_ERR(val);
-+
-+	sz /= sizeof(*out_values);
-+
-+	while (sz--)
-+		*out_values++ = *val++;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_property_read_variable_u8_array);
-+
-+/**
-  * of_property_read_u8_array - Find and read an array of u8 from a property.
-  *
-  * @np:		device node from which the property value is to be read.
-@@ -1229,21 +1270,53 @@ EXPORT_SYMBOL_GPL(of_property_read_u32_index);
- int of_property_read_u8_array(const struct device_node *np,
- 			const char *propname, u8 *out_values, size_t sz)
- {
--	const u8 *val = of_find_property_value_of_size(np, propname,
--						(sz * sizeof(*out_values)),
--						0,
--						NULL);
--
--	if (IS_ERR(val))
--		return PTR_ERR(val);
--
--	while (sz--)
--		*out_values++ = *val++;
--	return 0;
-+	return of_property_read_variable_u8_array(np, propname, out_values,
-+						  sz, 0);
- }
- EXPORT_SYMBOL_GPL(of_property_read_u8_array);
- 
- /**
-+ * of_property_read_variable_u16_array - Find and read an array of u16 from a
-+ * property, with bounds on the minimum and maximum array size.
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ * @out_values:	pointer to return value, modified only if return value is 0.
-+ * @sz_min:	minimum number of array elements to read
-+ * @sz_max:	maximum number of array elements to read
-+ *
-+ * Search for a property in a device node and read 16-bit value(s) from
-+ * it. Returns 0 on success, -EINVAL if the property does not exist,
-+ * -ENODATA if property does not have a value, and -EOVERFLOW if the
-+ * property data is smaller than sz_min or longer than sz_max.
-+ *
-+ * dts entry of array should be like:
-+ *	property = /bits/ 16 <0x5000 0x6000 0x7000>;
-+ *
-+ * The out_values is modified only if a valid u16 value can be decoded.
-+ */
-+int of_property_read_variable_u16_array(const struct device_node *np,
-+					const char *propname, u16 *out_values,
-+					size_t sz_min, size_t sz_max)
-+{
-+	size_t sz;
-+	const __be16 *val = of_find_property_value_of_size(np, propname,
-+						(sz_min * sizeof(*out_values)),
-+						(sz_max * sizeof(*out_values)),
-+						&sz);
-+
-+	if (IS_ERR(val))
-+		return PTR_ERR(val);
-+
-+	sz /= sizeof(*out_values);
-+
-+	while (sz--)
-+		*out_values++ = be16_to_cpup(val++);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_property_read_variable_u16_array);
-+
-+/**
-  * of_property_read_u16_array - Find and read an array of u16 from a property.
-  *
-  * @np:		device node from which the property value is to be read.
-@@ -1264,21 +1337,50 @@ EXPORT_SYMBOL_GPL(of_property_read_u8_array);
- int of_property_read_u16_array(const struct device_node *np,
- 			const char *propname, u16 *out_values, size_t sz)
- {
--	const __be16 *val = of_find_property_value_of_size(np, propname,
--						(sz * sizeof(*out_values)),
--						0,
--						NULL);
--
--	if (IS_ERR(val))
--		return PTR_ERR(val);
--
--	while (sz--)
--		*out_values++ = be16_to_cpup(val++);
--	return 0;
-+	return of_property_read_variable_u16_array(np, propname, out_values,
-+						   sz, 0);
- }
- EXPORT_SYMBOL_GPL(of_property_read_u16_array);
- 
- /**
-+ * of_property_read_variable_u32_array - Find and read an array of 32 bit
-+ * integers from a property, with bounds on the minimum and maximum array size.
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ * @out_values:	pointer to return value, modified only if return value is 0.
-+ * @sz_min:	minimum number of array elements to read
-+ * @sz_max:	maximum number of array elements to read
-+ *
-+ * Search for a property in a device node and read 32-bit value(s) from
-+ * it. Returns 0 on success, -EINVAL if the property does not exist,
-+ * -ENODATA if property does not have a value, and -EOVERFLOW if the
-+ * property data is smaller than sz_min or longer than sz_max.
-+ *
-+ * The out_values is modified only if a valid u32 value can be decoded.
-+ */
-+int of_property_read_variable_u32_array(const struct device_node *np,
-+			       const char *propname, u32 *out_values,
-+			       size_t sz_min, size_t sz_max)
-+{
-+	size_t sz;
-+	const __be32 *val = of_find_property_value_of_size(np, propname,
-+						(sz_min * sizeof(*out_values)),
-+						(sz_max * sizeof(*out_values)),
-+						&sz);
-+
-+	if (IS_ERR(val))
-+		return PTR_ERR(val);
-+
-+	sz /= sizeof(*out_values);
-+
-+	while (sz--)
-+		*out_values++ = be32_to_cpup(val++);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_property_read_variable_u32_array);
-+
-+/**
-  * of_property_read_u32_array - Find and read an array of 32 bit integers
-  * from a property.
-  *
-@@ -1298,17 +1400,8 @@ int of_property_read_u32_array(const struct device_node *np,
- 			       const char *propname, u32 *out_values,
- 			       size_t sz)
- {
--	const __be32 *val = of_find_property_value_of_size(np, propname,
--						(sz * sizeof(*out_values)),
--						0,
--						NULL);
--
--	if (IS_ERR(val))
--		return PTR_ERR(val);
--
--	while (sz--)
--		*out_values++ = be32_to_cpup(val++);
--	return 0;
-+	return of_property_read_variable_u32_array(np, propname, out_values,
-+						   sz, 0);
- }
- EXPORT_SYMBOL_GPL(of_property_read_u32_array);
- 
-@@ -1342,39 +1435,68 @@ int of_property_read_u64(const struct device_node *np, const char *propname,
- EXPORT_SYMBOL_GPL(of_property_read_u64);
- 
- /**
-- * of_property_read_u64_array - Find and read an array of 64 bit integers
-- * from a property.
-+ * of_property_read_variable_u64_array - Find and read an array of 64 bit
-+ * integers from a property, with bounds on the minimum and maximum array size.
-  *
-  * @np:		device node from which the property value is to be read.
-  * @propname:	name of the property to be searched.
-  * @out_values:	pointer to return value, modified only if return value is 0.
-- * @sz:		number of array elements to read
-+ * @sz_min:	minimum number of array elements to read
-+ * @sz_max:	maximum number of array elements to read
-  *
-  * Search for a property in a device node and read 64-bit value(s) from
-  * it. Returns 0 on success, -EINVAL if the property does not exist,
-  * -ENODATA if property does not have a value, and -EOVERFLOW if the
-- * property data isn't large enough.
-+ * property data is smaller than sz_min or longer than sz_max.
-  *
-  * The out_values is modified only if a valid u64 value can be decoded.
-  */
--int of_property_read_u64_array(const struct device_node *np,
-+int of_property_read_variable_u64_array(const struct device_node *np,
- 			       const char *propname, u64 *out_values,
--			       size_t sz)
-+			       size_t sz_min, size_t sz_max)
- {
-+	size_t sz;
- 	const __be32 *val = of_find_property_value_of_size(np, propname,
--						(sz * sizeof(*out_values)),
--						0,
--						NULL);
-+						(sz_min * sizeof(*out_values)),
-+						(sz_max * sizeof(*out_values)),
-+						&sz);
- 
- 	if (IS_ERR(val))
- 		return PTR_ERR(val);
- 
-+	sz /= sizeof(*out_values);
-+
- 	while (sz--) {
- 		*out_values++ = of_read_number(val, 2);
- 		val += 2;
- 	}
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(of_property_read_variable_u64_array);
-+
-+/**
-+ * of_property_read_u64_array - Find and read an array of 64 bit integers
-+ * from a property.
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ * @out_values:	pointer to return value, modified only if return value is 0.
-+ * @sz:		number of array elements to read
-+ *
-+ * Search for a property in a device node and read 64-bit value(s) from
-+ * it. Returns 0 on success, -EINVAL if the property does not exist,
-+ * -ENODATA if property does not have a value, and -EOVERFLOW if the
-+ * property data isn't large enough.
-+ *
-+ * The out_values is modified only if a valid u64 value can be decoded.
-+ */
-+int of_property_read_u64_array(const struct device_node *np,
-+			       const char *propname, u64 *out_values,
-+			       size_t sz)
-+{
-+	return of_property_read_variable_u64_array(np, propname, out_values,
-+						   sz, 0);
-+}
- EXPORT_SYMBOL_GPL(of_property_read_u64_array);
- 
- /**
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 3d9ff8e..8e3c508 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -291,16 +291,32 @@ extern int of_property_count_elems_of_size(const struct device_node *np,
- extern int of_property_read_u32_index(const struct device_node *np,
- 				       const char *propname,
- 				       u32 index, u32 *out_value);
-+extern int of_property_read_variable_u8_array(const struct device_node *np,
-+					const char *propname, u8 *out_values,
-+					size_t sz_min, size_t sz_max);
- extern int of_property_read_u8_array(const struct device_node *np,
- 			const char *propname, u8 *out_values, size_t sz);
-+extern int of_property_read_variable_u16_array(const struct device_node *np,
-+					const char *propname, u16 *out_values,
-+					size_t sz_min, size_t sz_max);
- extern int of_property_read_u16_array(const struct device_node *np,
- 			const char *propname, u16 *out_values, size_t sz);
-+extern int of_property_read_variable_u32_array(const struct device_node *np,
-+					const char *propname,
-+					u32 *out_values,
-+					size_t sz_min,
-+					size_t sz_max);
- extern int of_property_read_u32_array(const struct device_node *np,
- 				      const char *propname,
- 				      u32 *out_values,
- 				      size_t sz);
- extern int of_property_read_u64(const struct device_node *np,
- 				const char *propname, u64 *out_value);
-+extern int of_property_read_variable_u64_array(const struct device_node *np,
-+					const char *propname,
-+					u64 *out_values,
-+					size_t sz_min,
-+					size_t sz_max);
- extern int of_property_read_u64_array(const struct device_node *np,
- 				      const char *propname,
- 				      u64 *out_values,
+Mark Rutland (1):
+  Docs: dt: add PCI IOMMU map bindings
+
+Robin Murphy (19):
+  of/irq: Break out msi-map lookup (again)
+  iommu/of: Handle iommu-map property for PCI
+  iommu/of: Introduce iommu_fwspec
+  iommu/arm-smmu: Implement of_xlate() for SMMUv3
+  iommu/arm-smmu: Support non-PCI devices with SMMUv3
+  iommu/arm-smmu: Set PRIVCFG in stage 1 STEs
+  iommu/arm-smmu: Handle stream IDs more dynamically
+  iommu/arm-smmu: Consolidate stream map entry state
+  iommu/arm-smmu: Keep track of S2CR state
+  iommu/arm-smmu: Refactor mmu-masters handling
+  iommu/arm-smmu: Streamline SMMU data lookups
+  iommu/arm-smmu: Add a stream map entry iterator
+  iommu/arm-smmu: Intelligent SMR allocation
+  iommu/arm-smmu: Convert to iommu_fwspec
+  Docs: dt: document ARM SMMU generic binding usage
+  iommu/arm-smmu: Wire up generic configuration support
+  iommu/arm-smmu: Set domain geometry
+  iommu/dma: Add support for mapping MSIs
+  iommu/dma: Avoid PCI host bridge windows
+
+ .../devicetree/bindings/iommu/arm,smmu.txt         |  63 +-
+ .../devicetree/bindings/pci/pci-iommu.txt          | 171 ++++
+ arch/arm64/mm/dma-mapping.c                        |   2 +-
+ drivers/iommu/Kconfig                              |   2 +-
+ drivers/iommu/arm-smmu-v3.c                        | 347 ++++----
+ drivers/iommu/arm-smmu.c                           | 964 ++++++++++-----------
+ drivers/iommu/dma-iommu.c                          | 155 +++-
+ drivers/iommu/of_iommu.c                           | 100 ++-
+ drivers/irqchip/irq-gic-v2m.c                      |   3 +
+ drivers/irqchip/irq-gic-v3-its.c                   |   3 +
+ drivers/of/irq.c                                   |  78 +-
+ drivers/of/of_pci.c                                | 102 +++
+ include/linux/dma-iommu.h                          |  12 +-
+ include/linux/of_iommu.h                           |  15 +
+ include/linux/of_pci.h                             |  10 +
+ 15 files changed, 1243 insertions(+), 784 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.txt
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.8.1.dirty
