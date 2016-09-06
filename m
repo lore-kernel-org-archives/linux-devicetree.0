@@ -1,107 +1,131 @@
-From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/8] binding-doc: power: pwrseq-generic: add binding
- doc for generic power sequence library
-Date: Tue, 6 Sep 2016 11:34:08 +0530
-Message-ID: <3b904eb8-8f32-845e-8b9d-78b7d79ef024@linaro.org>
-References: <1471252398-957-1-git-send-email-peter.chen@nxp.com>
- <1471252398-957-2-git-send-email-peter.chen@nxp.com>
- <6832cc55-831a-1188-4878-bbbf0b3c3be8@linaro.org>
- <20160902010030.GA11262@shlinux2>
+From: Jun Nie <jun.nie@linaro.org>
+Subject: Re: [PATCH 1/3] pinctrl: export pin_request to support parent pin
+Date: Tue, 6 Sep 2016 14:07:22 +0800
+Message-ID: <CABymUCOxD-tgt2S73zebJqZiKK8UiOTp0EeBBOv=gV66eAZ1pQ@mail.gmail.com>
+References: <1472213942-4815-1-git-send-email-jun.nie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160902010030.GA11262@shlinux2>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw3-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1472213942-4815-1-git-send-email-jun.nie@linaro.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: Shawn Guo <shawn.guo@linaro.org>, Jason Liu <jason.liu@linaro.org>, Jun Nie <jun.nie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Friday 02 September 2016 06:30 AM, Peter Chen wrote:
-> On Thu, Sep 01, 2016 at 01:33:22PM +0530, Vaibhav Hiremath wrote:
->>
->> On Monday 15 August 2016 02:43 PM, Peter Chen wrote:
->>> Add binding doc for generic power sequence library.
->>>
->>> Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
->>> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> ---
->>>   .../bindings/power/pwrseq/pwrseq-generic.txt       | 48 ++++++++++++++++++++++
->>>   1 file changed, 48 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
->>> new file mode 100644
->>> index 0000000..ebf0d47
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
->>> @@ -0,0 +1,48 @@
->>> +The generic power sequence library
->>> +
->>> +Some hard-wired devices (eg USB/MMC) need to do power sequence before
->>> +the device can be enumerated on the bus, the typical power sequence
->>> +like: enable USB PHY clock, toggle reset pin, etc. But current
->>> +Linux device driver lacks of such code to do it, it may cause some
->>> +hard-wired devices works abnormal or can't be recognized by
->>> +controller at all. The power sequence will be done before this device
->>> +can be found at the bus.
->>> +
->>> +The power sequence properties is under the device node.
->>> +
->>> +Optional properties:
->>> +- clocks: the input clocks for device.
->>> +- reset-gpios: Should specify the GPIO for reset.
->>> +- reset-duration-us: the duration in microsecond for assert reset signal.
->>> +
->>> +Below is the example of USB power sequence properties on USB device
->>> +nodes which have two level USB hubs.
->>> +
->>> +&usbotg1 {
->>> +	vbus-supply = <&reg_usb_otg1_vbus>;
->>> +	pinctrl-names = "default";
->>> +	pinctrl-0 = <&pinctrl_usb_otg1_id>;
->>> +	status = "okay";
->>> +
->>> +	#address-cells = <1>;
->>> +	#size-cells = <0>;
->>> +	genesys: hub@1 {
->>> +		compatible = "usb5e3,608";
->>> +		reg = <1>;
->>> +
->>> +		clocks = <&clks IMX6SX_CLK_CKO>;
->>> +		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>; /* hub reset pin */
->>> +		reset-duration-us = <10>;
->>> +
->>> +		#address-cells = <1>;
->>> +		#size-cells = <0>;
->>> +		asix: ethernet@1 {
->>> +			compatible = "usbb95,1708";
->> So I assume, with our recent discussion and the change
->> we are proposing, the library would have some knowledge
->> about this compatible string, right?
-> Yes
+2016-08-26 20:19 GMT+08:00 Jun Nie <jun.nie@linaro.org>:
+> Some pin functions may be controlled in 2nd level multiplex.
+> We need configure 1st level multiplex when request such
+> functions. Export pin_request functionality so that parent
+> can be configured automatically with calling it in
+> pinmux_ops->request().
 >
->> what I was asking on other email was, how are you connecting
->> multiple power sequence libraries to their respective consumers ?
->>
-> The consumers has its of_node, then it can find related power sequence
-> library according to compatible string.
+> Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> ---
+>  drivers/pinctrl/core.c          | 20 ++++++++++++++++++++
+>  drivers/pinctrl/pinmux.c        |  3 ++-
+>  drivers/pinctrl/pinmux.h        |  9 +++++++++
+>  include/linux/pinctrl/pinctrl.h |  2 ++
+>  4 files changed, 33 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+> index fb38e20..0782a93 100644
+> --- a/drivers/pinctrl/core.c
+> +++ b/drivers/pinctrl/core.c
+> @@ -688,6 +688,26 @@ int pinctrl_gpio_direction_output(unsigned gpio)
+>  }
+>  EXPORT_SYMBOL_GPL(pinctrl_gpio_direction_output);
+>
+> +/**
+> + * pinctrl_request_pin() - request a single pin to be used
+> + * @offset: the pin number from pinctrl dev pin number space
+> + */
+> +int pinctrl_request_pin(struct pinctrl_dev *pctldev,
+> +                       int offset, const char *owner)
+> +{
+> +       int ret;
+> +
+> +       mutex_lock(&pctldev->mutex);
+> +
+> +       ret = pin_request(pctldev, offset, owner, NULL);
+> +
+> +       mutex_unlock(&pctldev->mutex);
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(pinctrl_request_pin);
+> +
+> +
+>  static struct pinctrl_state *find_state(struct pinctrl *p,
+>                                         const char *name)
+>  {
+> diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+> index ece7028..b18c1f0 100644
+> --- a/drivers/pinctrl/pinmux.c
+> +++ b/drivers/pinctrl/pinmux.c
+> @@ -80,7 +80,7 @@ int pinmux_validate_map(struct pinctrl_map const *map, int i)
+>   * @gpio_range: the range matching the GPIO pin if this is a request for a
+>   *     single GPIO pin
+>   */
+> -static int pin_request(struct pinctrl_dev *pctldev,
+> +int pin_request(struct pinctrl_dev *pctldev,
+>                        int pin, const char *owner,
+>                        struct pinctrl_gpio_range *gpio_range)
+>  {
+> @@ -180,6 +180,7 @@ out:
+>
+>         return status;
+>  }
+> +EXPORT_SYMBOL(pin_request);
+>
+>  /**
+>   * pin_free() - release a single muxed in pin so something else can be muxed
+> diff --git a/drivers/pinctrl/pinmux.h b/drivers/pinctrl/pinmux.h
+> index d1a98b1c..6ff9baf 100644
+> --- a/drivers/pinctrl/pinmux.h
+> +++ b/drivers/pinctrl/pinmux.h
+> @@ -30,6 +30,9 @@ int pinmux_map_to_setting(struct pinctrl_map const *map,
+>  void pinmux_free_setting(struct pinctrl_setting const *setting);
+>  int pinmux_enable_setting(struct pinctrl_setting const *setting);
+>  void pinmux_disable_setting(struct pinctrl_setting const *setting);
+> +int pin_request(struct pinctrl_dev *pctldev,
+> +               int pin, const char *owner,
+> +               struct pinctrl_gpio_range *gpio_range);
+>
+>  #else
+>
+> @@ -83,6 +86,12 @@ static inline void pinmux_disable_setting(
+>  {
+>  }
+>
+> +int pin_request(struct pinctrl_dev *pctldev,
+> +               int pin, const char *owner,
+> +               struct pinctrl_gpio_range *gpio_range)
+> +{
+> +}
+> +
+>  #endif
+>
+>  #if defined(CONFIG_PINMUX) && defined(CONFIG_DEBUG_FS)
+> diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
+> index a42e57d..13bb7a1 100644
+> --- a/include/linux/pinctrl/pinctrl.h
+> +++ b/include/linux/pinctrl/pinctrl.h
+> @@ -167,6 +167,8 @@ pinctrl_find_gpio_range_from_pin(struct pinctrl_dev *pctldev,
+>  extern int pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
+>                                 const char *pin_group, const unsigned **pins,
+>                                 unsigned *num_pins);
+> +extern int pinctrl_request_pin(struct pinctrl_dev *pctldev,
+> +                               int offset, const char *owner);
+>
+>  #ifdef CONFIG_OF
+>  extern struct pinctrl_dev *of_pinctrl_get(struct device_node *np);
+> --
+> 1.9.1
 >
 
-Exactly. Thats what I was referring and wanted to confirm.
+Linus,
 
-Thanks,
-Vaibhav
+Do you have any comments on these change and following ZX pinctrl driver?
 
-
--- 
-Thanks,
-Vaibhav
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thank you!
+Jun
