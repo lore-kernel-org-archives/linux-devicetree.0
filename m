@@ -1,27 +1,43 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: [PATCH 0/3] arm64: dts: berlin: fix dtc warnings
-Date: Tue, 6 Sep 2016 16:55:54 +0800
-Message-ID: <20160906085557.4019-1-jszhang@marvell.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/3] arm64: dts: berlin4ct: add missing unit name to /soc node
+Date: Tue, 6 Sep 2016 16:55:55 +0800
+Message-ID: <20160906085557.4019-2-jszhang@marvell.com>
+References: <20160906085557.4019-1-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160906085557.4019-1-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a clean up series to fix berlin arm64 platforms dtc warnings by
-add missing unit name of /soc node and /memory node.
+This patch fixes the following DTC warning with W=1:
 
-Jisheng Zhang (3):
-  arm64: dts: berlin4ct: add missing unit name to /soc node
-  arm64: dts: berlin4ct-stb: add missing unit name to /memory node
-  arm64: dts: berlin4ct-dmp: add missing unit name to /memory node
+"Node /soc has a reg or ranges property, but no unit name"
 
- arch/arm64/boot/dts/marvell/berlin4ct-dmp.dts | 2 +-
- arch/arm64/boot/dts/marvell/berlin4ct-stb.dts | 2 +-
- arch/arm64/boot/dts/marvell/berlin4ct.dtsi    | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+index 099ad93..2d6f91f 100644
+--- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
++++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+@@ -134,7 +134,7 @@
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 	};
+ 
+-	soc {
++	soc@f7000000 {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
