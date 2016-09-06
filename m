@@ -1,7 +1,7 @@
 From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 07/10] ARM: dts: berlin2q-marvell-dmp: add missing unit name to /memory node
-Date: Tue, 6 Sep 2016 16:40:10 +0800
-Message-ID: <20160906084013.2887-8-jszhang@marvell.com>
+Subject: [PATCH 08/10] ARM: dts: chromecast: add missing unit name to /memory node
+Date: Tue, 6 Sep 2016 16:40:11 +0800
+Message-ID: <20160906084013.2887-9-jszhang@marvell.com>
 References: <20160906084013.2887-1-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -18,21 +18,21 @@ This patch fixes the following DTC warning with W=1:
 
 Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 2 +-
+ arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-index 33b2875..f485308 100644
---- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-+++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-@@ -43,7 +43,7 @@
- 	model = "Marvell BG2-Q DMP";
- 	compatible = "marvell,berlin2q-dmp", "marvell,berlin2q", "marvell,berlin";
+diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+index 8ba8b50..ca24def 100644
+--- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
++++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+@@ -50,7 +50,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
 -	memory {
 +	memory@0 {
  		device_type = "memory";
- 		reg = <0x00000000 0x80000000>;
+ 		reg = <0x00000000 0x20000000>; /* 512 MB */
  	};
 -- 
 2.9.3
