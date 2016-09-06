@@ -1,31 +1,38 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/5] misc: sram: document new compatible
-Date: Tue, 6 Sep 2016 16:44:32 -0500
-Message-ID: <20160906214432.GA3772@rob-hp-laptop>
-References: <20160831161108.8780-1-alexandre.belloni@free-electrons.com>
- <20160831161108.8780-5-alexandre.belloni@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160831161108.8780-5-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v6 0/3] add devicetree support to ath9k
+Date: Tue,  6 Sep 2016 23:46:20 +0200
+Message-ID: <20160906214623.20424-1-martin.blumenstingl@googlemail.com>
+References: <20160821143105.27487-1-martin.blumenstingl@googlemail.com>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160821143105.27487-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org
+Cc: mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn-yOkvZcmFvRU@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 31, 2016 at 06:11:07PM +0200, Alexandre Belloni wrote:
-> Add atmel,sama5d2-securam to the compatible list.
-> 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->  Documentation/devicetree/bindings/sram/sram.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+This series adds support for configuring ath9k based devices via
+devicetree. This was tested on PCI(e) based devices. This should work
+for AHB based devices as well as soon as the ath79 platform is ready
+to populate the ath9k wmac via devicetree.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v5:
+- updated the example in the documentation (keeping it at a bare
+  minimum: removed the PCI bridge, use a better real-world example with
+  less-confusing device/fn numbers, added the actual size of the config
+  space to the reg property)
+
+
+Martin Blumenstingl (3):
+  Documentation: dt: net: add ath9k wireless device binding
+  ath9k: add a helper to get the string representation of ath_bus_type
+  ath9k: parse the device configuration from an OF node
+
+ .../devicetree/bindings/net/wireless/qca,ath9k.txt | 39 +++++++++++++++++
+ drivers/net/wireless/ath/ath.h                     |  6 +++
+ drivers/net/wireless/ath/ath9k/init.c              | 51 ++++++++++++++++++++++
+ drivers/net/wireless/ath/main.c                    |  7 +++
+ 4 files changed, 103 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/qca,ath9k.txt
+
+-- 
+2.9.3
