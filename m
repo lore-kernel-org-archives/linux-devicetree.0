@@ -1,43 +1,50 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v2 2/7] clk: sunxi-ng: div: Allow to set a maximum
-Date: Wed, 7 Sep 2016 00:20:10 +0800
-Message-ID: <CAGb2v66C9GJ5Svm+7NE2cStc5KiNgoriB329K4fhZJMTSbZ8Kw@mail.gmail.com>
-References: <20160906121837.7517-1-maxime.ripard@free-electrons.com> <20160906121837.7517-3-maxime.ripard@free-electrons.com>
+From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v4 1/9] Documentation: dt-bindings: Document STM32 EXTI controller bindings
+Date: Tue, 6 Sep 2016 18:45:33 +0200
+Message-ID: <1473180341-1999-2-git-send-email-alexandre.torgue@st.com>
+References: <1473180341-1999-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160906121837.7517-3-maxime.ripard@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473180341-1999-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 6, 2016 at 8:18 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> Some dividers might have a maximum value that is lower than the width of
-> the register.
->
-> Add a field to _ccu_div to handle those case properly. If the field is set
-> to 0, the code will assume that the maximum value is the maximum one that
-> can be used with the field register width.
+Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
 
-This is a bit confusing. What is the maximum referring to? The raw value
-in the register? Or the actual divider?
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+new file mode 100644
+index 0000000..6e7703d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+@@ -0,0 +1,20 @@
++STM32 External Interrupt Controller
++
++Required properties:
++
++- compatible: Should be "st,stm32-exti"
++- reg: Specifies base physical address and size of the registers
++- interrupt-controller: Indentifies the node as an interrupt controller
++- #interrupt-cells: Specifies the number of cells to encode an interrupt
++  specifier, shall be 2
++- interrupts: interrupts references to primary interrupt controller
++
++Example:
++
++exti: interrupt-controller@40013c00 {
++	compatible = "st,stm32-exti";
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	reg = <0x40013C00 0x400>;
++	interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
++};
+-- 
+1.9.1
 
-Personally I'd go with the maximum valid value of the register. You
-could get rid of the special power-of-2 handling code you added.
-
-Either way I think the message and the field name should be more explicit.
-
->
-> Otherwise, we'll use whatever value has been set.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-
-[...]
-
-The code looks correct.
-
-
-Regards
-ChenYu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
