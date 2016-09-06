@@ -1,92 +1,138 @@
-From: Scott Wood <scott.wood@nxp.com>
-Subject: Re: [linux-devel] [PATCH v2 1/1] arm64: Add DTS support for FSL's
- LS1012A SoC
-Date: Tue, 6 Sep 2016 17:05:35 +0000
-Message-ID: <DB5PR0401MB1928BE0E1C08DD2FAC582FE191F90@DB5PR0401MB1928.eurprd04.prod.outlook.com>
-References: <1472207241-18461-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
- <20160829095239.GM30790@tiger> <1472493061.13245.39.camel@buserror.net>
- <20160830120220.GC8363@tiger>
- <HE1PR0401MB2636B40376255680B6A58CFB8DE00@HE1PR0401MB2636.eurprd04.prod.outlook.com>
- <20160905014636.GB25778@tiger>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Stuart Yoder <stuart.yoder@nxp.com>, Rob
- Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bhaskar U <bhaskar.upadhaya@nxp.com>, Scott Wood <oss@buserror.net>, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, "linux-devel@gforge.freescale.net" <linux-devel@gforge.freescale.net>, Pratiyush Srivastava <pratiyush.srivastava@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [v2 PATCH 2/2] ASoC: rockchip: Add DP dai-links to the rk3399-gru machine driver
+Date: Tue,  6 Sep 2016 10:09:52 -0700
+Message-ID: <1473181792-15398-1-git-send-email-zyw@rock-chips.com>
+References: <1473137335-14541-3-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473137335-14541-3-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dianders@chromium.org, heiko@sntech.de, zhengxing@rock-chips.com, cychiang@chromium.org
+Cc: linux-rockchip@lists.infradead.org, zyw@rock-chips.com, perex@perex.cz, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org, tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/04/2016 08:47 PM, Shawn Guo wrote:
-> On Tue, Aug 30, 2016 at 02:07:17PM +0000, Stuart Yoder wrote:
->>> On Mon, Aug 29, 2016 at 12:51:01PM -0500, Scott Wood wrote:
->>>> On Mon, 2016-08-29 at 17:52 +0800, Shawn Guo wrote:
->>>>> On Fri, Aug 26, 2016 at 03:57:21PM +0530, Bhaskar Upadhaya wrote:
->>>>>>
->>>>>> +		clockgen: clocking@1ee1000 {
->>>>>> +			compatible = "fsl,ls1012a-clockgen";
->>>>> The compatible cannot be found in binding docs.
->>>>
->>>> From Documentation/devicetree/bindings/clock/qoriq-clock.txt:
->>>>
->>>> - compatible: Should contain a chip-specific clock block compatible
->>>>         string and (if applicable) may contain a chassis-version clock
->>>>         compatible string.
->>>>
->>>>         Chip-specific strings are of the form "fsl,<chip>-clockgen", such as:
->>>>         * "fsl,p2041-clockgen"
->>>>         * "fsl,p3041-clockgen"
->>>>         * "fsl,p4080-clockgen"
->>>>         * "fsl,p5020-clockgen"
->>>>         * "fsl,p5040-clockgen"
->>>>         * "fsl,t4240-clockgen"
->>>>         * "fsl,b4420-clockgen"
->>>>         * "fsl,b4860-clockgen"
->>>>         * "fsl,ls1021a-clockgen"
->>>>         Chassis-version clock strings include:
->>>>         * "fsl,qoriq-clockgen-1.0": for chassis 1.0 clocks
->>>>         * "fsl,qoriq-clockgen-2.0": for chassis 2.0 clocks
->>>>
->>>> I really hope we don't have to update every single fsl,<chip>-whatever binding
->>>> every time a new chip comes out.  There are already other chips not listed,
->>>> FWIW (e.g. t1040, t2080, ls1043a, and ls2080a).  That's why it says "such as".
->>>
->>> If I remember correctly, DT maintainers want every supported compatible
->>> string explicitly listed in bindings doc.  And they even added a check
->>> into checkpatch.pl with commit bff5da433525 ("checkpatch: add DT
->>> compatible string documentation checks").
->>
->> See Documentation/devicetree/bindings/submitting-patches.txt:
->>
->>   5) The wildcard "<chip>" may be used in compatible strings, as in
->>      the following example:
->>
->>          - compatible: Must contain '"nvidia,<chip>-pcie",
->>            "nvidia,tegra20-pcie"' where <chip> is tegra30, tegra132, ...
->>
->>      As in the above example, the known values of "<chip>" should be
->>      documented if it is used.
->>
->> It _is_ allowed to use the <chip> wildcard, and so you will not find all
->> full compatible strings explicitly listed in bindings.  However, the
->> chips themselves "should" be listed.
-> 
-> + Rob and Mark
-> 
-> Oops, I'm not aware of this DT document.  In that case, the DT document
-> and checkpatch is basically asking for conflicting thing.  Rob, Mark,
-> can you guys please clarify?
+This patch adds DP audio output support to the rk3399-gru machine
+driver.
 
-Checkpatch is a useful tool but it can't get everything right all the time.
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+---
 
--Scott
+Changes in v2:
+- correct the commit message
+
+ .../bindings/sound/rockchip,rk3399-gru-sound.txt   | 13 +++---
+ sound/soc/rockchip/rk3399_gru_sound.c              | 48 ++++++++++++++++++++++
+ 2 files changed, 55 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
+index f19b6c8..222124b 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
++++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
+@@ -1,15 +1,16 @@
+-ROCKCHIP with MAX98357A/RT5514/DA7219 codecs on GRU boards
++ROCKCHIP with MAX98357A/RT5514/DA7219 codecs and DP via spdif on GRU boards
+ 
+ Required properties:
+ - compatible: "rockchip,rk3399-gru-sound"
+-- rockchip,cpu: The phandle of the Rockchip I2S controller that's
+-  connected to the codecs
+-- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
++- rockchip,cpu: The phandle of the Rockchip I2S controller controller that's
++  connected to the codecs, and the SPDIF controller that's connected to DP
++- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs and of the
++  DP encoder node
+ 
+ Example:
+ 
+ sound {
+ 	compatible = "rockchip,rk3399-gru-sound";
+-	rockchip,cpu = <&i2s0>;
+-	rockchip,codec = <&max98357a &rt5514 &da7219>;
++	rockchip,cpu = <&i2s0 &spdif>;
++	rockchip,codec = <&max98357a &rt5514 &da7219 &cdn_dp 1>;
+ };
+diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
+index 164b6da..50e5d9a 100644
+--- a/sound/soc/rockchip/rk3399_gru_sound.c
++++ b/sound/soc/rockchip/rk3399_gru_sound.c
+@@ -25,6 +25,7 @@
+ #include <linux/spi/spi.h>
+ #include <sound/core.h>
+ #include <sound/jack.h>
++#include <sound/hdmi-codec.h>
+ #include <sound/pcm.h>
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
+@@ -226,10 +227,30 @@ static struct snd_soc_ops rockchip_sound_da7219_ops = {
+ 	.hw_params = rockchip_sound_da7219_hw_params,
+ };
+ 
++static struct snd_soc_jack cdn_dp_card_jack;
++
++static int cdn_dp_init(struct snd_soc_pcm_runtime *runtime)
++{
++	struct snd_soc_card *card = runtime->card;
++	struct snd_soc_codec *codec = runtime->codec;
++	int ret;
++
++	/* enable jack detection */
++	ret = snd_soc_card_jack_new(card, "DP Jack", SND_JACK_LINEOUT,
++				    &cdn_dp_card_jack, NULL, 0);
++	if (ret) {
++		dev_err(card->dev, "Can't new DP Jack %d\n", ret);
++		return ret;
++	}
++
++	return hdmi_codec_set_jack_detect(codec, &cdn_dp_card_jack);
++}
++
+ enum {
+ 	DAILINK_MAX98357A,
+ 	DAILINK_RT5514,
+ 	DAILINK_DA7219,
++	DAILINK_CDNDP,
+ 	DAILINK_RT5514_DSP,
+ };
+ 
+@@ -264,6 +285,14 @@ static struct snd_soc_dai_link rockchip_dailinks[] = {
+ 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
+ 			SND_SOC_DAIFMT_CBS_CFS,
+ 	},
++	[DAILINK_CDNDP] = {
++		.name = "DP",
++		.stream_name = "DP PCM",
++		.codec_dai_name = "spdif-hifi",
++		.init = cdn_dp_init,
++		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
++			SND_SOC_DAIFMT_CBS_CFS,
++	},
+ 	/* RT5514 DSP for voice wakeup via spi bus */
+ 	[DAILINK_RT5514_DSP] = {
+ 		.name = "RT5514 DSP",
+@@ -334,6 +363,25 @@ static int rockchip_sound_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
++	cpu_node = of_parse_phandle(pdev->dev.of_node, "rockchip,cpu", 1);
++	if (!cpu_node) {
++		dev_err(&pdev->dev, "Property 'rockchip,cpu 1' missing or invalid\n");
++		return -EINVAL;
++	}
++
++	rockchip_dailinks[DAILINK_CDNDP].platform_of_node = cpu_node;
++	rockchip_dailinks[DAILINK_CDNDP].cpu_of_node = cpu_node;
++
++	rockchip_dailinks[DAILINK_CDNDP].codec_of_node =
++		of_parse_phandle(pdev->dev.of_node, "rockchip,codec",
++				 DAILINK_CDNDP);
++	if (!rockchip_dailinks[DAILINK_CDNDP].codec_of_node) {
++		dev_err(&pdev->dev,
++			"Property[%d] 'rockchip,codec' missing or invalid\n",
++			DAILINK_CDNDP);
++		return -EINVAL;
++	}
++
+ 	rockchip_dailinks[DAILINK_RT5514_DSP].cpu_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
+ 	rockchip_dailinks[DAILINK_RT5514_DSP].cpu_dai_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
+ 	rockchip_dailinks[DAILINK_RT5514_DSP].platform_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
+-- 
+1.9.1
