@@ -1,44 +1,75 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 1/3] ARM: dts: r7s72100: add ethernet clock to device
- tree
-Date: Tue, 6 Sep 2016 12:49:38 +0200
-Message-ID: <20160906104937.GF16304@verge.net.au>
-References: <20160901155430.23400-1-chris.brandt@renesas.com>
- <20160902014012.9383-1-chris.brandt@renesas.com>
- <20160902082604.GD16669@verge.net.au>
- <SG2PR06MB116533792940F6E3193E7EDB8AE50@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/3] arm64: dts: berlin4ct: add missing unit name to /soc
+ node
+Date: Tue, 6 Sep 2016 11:57:58 +0100
+Message-ID: <20160906105758.GD1425@leverpostej>
+References: <20160906085557.4019-1-jszhang@marvell.com>
+ <20160906085557.4019-2-jszhang@marvell.com>
+ <20160906102208.GB1425@leverpostej>
+ <20160906182048.222cec2f@xhacker>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <SG2PR06MB116533792940F6E3193E7EDB8AE50@SG2PR06MB1165.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+In-Reply-To: <20160906182048.222cec2f@xhacker>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>, robh+dt@kernel.org, swarren@nvidia.com
+Cc: sebastian.hesselbarth@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 02, 2016 at 12:50:39PM +0000, Chris Brandt wrote:
-> On 9/2/2016, Simon Horman wrote:
-> > For future submissions please consider:
-> > 1. Supplying a cover letter (git format-patch has a --cover-letter option)
-> >    for patch-sets comprising more than one patch. This allows you to describe
-> >    an overview of what the series as a whole achieves. And is also
-> >    convenient for maintainers to reply to when accepting your patches.
+On Tue, Sep 06, 2016 at 06:20:48PM +0800, Jisheng Zhang wrote:
+> Hi Mark,
 > 
-> OK. I can do that.
+> On Tue, 6 Sep 2016 11:22:08 +0100 Mark Rutland wrote:
 > 
+> > On Tue, Sep 06, 2016 at 04:55:55PM +0800, Jisheng Zhang wrote:
+> > > This patch fixes the following DTC warning with W=1:
+> > > 
+> > > "Node /soc has a reg or ranges property, but no unit name"
+> > > 
+> > > Signed-off-by: Jisheng Zhang <jszhang@marvell.com>  
+> > 
+> > The node is only compatible with simple-bus, and so shouldn't have a
+> > reg.
 > 
-> > 2. Starting a new thread for each new version of a patch/patch-set.
-> 
-> Does that mean to NOT use --in-reply-to= when submitting a v2,v3,etc... ????
+> IIUC, the warning is caused by "ranges = <0 0 0xf7000000 0x1000000>;"
 
-I think so.
+Hmm.. I've rather confused by that warning. Per ePAPR and the
+devicetree.org spec, the unit-addresss is meant to match the reg
+property, and no mention is made of the ranges property. So I do not
+think that it is necessary to require this.
 
-> One more question:
-> Can I submit a patches series now that just adds all the MSTP clock nodes that I'll be working on for the next couple weeks? (USB, SDHI, MMC)
-> Or, do I have to wait till I have the drivers working?
-> Or, better yet, can I add all the MSTP clocks that will probably get used at some point (basically, everything that we're using today in our 3.14 BSP).
+That warning seems to have gone into DTC in commit c9d9121683b35281
+("Warn on node name unit-address presence/absence mismatch").
 
-I think that would be ok. I would slightly prefer that MSTP patches are
-added in such a way that they can be tested. But in this case I'm not
-sure anyone would test them :^)
+Rob, Stephen, was there some discussion that prompted ranges requiring
+a matching unit-address?
+
+Thanks,
+Mark.
+
+> > Why not remove the reg?
+> > 
+> > Mark
+> > 
+> > > ---
+> > >  arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> > > index 099ad93..2d6f91f 100644
+> > > --- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> > > +++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> > > @@ -134,7 +134,7 @@
+> > >  			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> > >  	};
+> > >  
+> > > -	soc {
+> > > +	soc@f7000000 {
+> > >  		compatible = "simple-bus";
+> > >  		#address-cells = <1>;
+> > >  		#size-cells = <1>;
+> > > -- 
+> > > 2.9.3
+> > >   
+> 
