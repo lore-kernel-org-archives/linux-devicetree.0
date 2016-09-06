@@ -1,64 +1,146 @@
-From: Olliver Schinagl <oliver@schinagl.nl>
-Subject: Re: [PATCH] leds-pca963x: add bindings to invert polarity
-Date: Tue, 06 Sep 2016 11:29:56 +0200
-Message-ID: <1473154196.731.44.camel@schinagl.nl>
-References: <1462182104-21450-1-git-send-email-anders@chargestorm.se>
-         <5729A4AB.5080901@samsung.com> <20160504075508.GA22125@ad.chargestorm.se>
-         <5729AE59.6000009@schinagl.nl>
-         <20160905110210.bxno7zx7exmtu774@ad.chargestorm.se>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH 3/4] include: dt-bindings: Add more GPIO bank and index
+ definition for rockchip pinctrl
+Date: Tue, 6 Sep 2016 17:33:53 +0800
+Message-ID: <b8fd0df8-5f5b-b699-e4c9-fea7387b8277@rock-chips.com>
+References: <1472977937-758-1-git-send-email-andy.yan@rock-chips.com>
+ <3544284.90s5nXbktR@phil>
+ <0dbac4cd-7f67-5052-16e6-463896bf5929@rock-chips.com>
+ <5785582.C1XOtVbxro@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160905110210.bxno7zx7exmtu774@ad.chargestorm.se>
+In-Reply-To: <5785582.C1XOtVbxro@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anders Darander <anders@chargestorm.se>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anders,
+Hi Heiko:
 
-On ma, 2016-09-05 at 13:02 +0200, Anders Darander wrote:
-> Hi,
-> 
-> * Olliver Schinagl <oliver@schinagl.nl> [160504 10:10]:
-> > 
-> > On 04-05-16 09:55, Anders Darander wrote:
-> > > 
-> > > * Jacek Anaszewski <j.anaszewski@samsung.com> [160504 09:28]:
-> > > > 
-> > > > Please note that there has already been an attempt to add
-> > > > the support for inverted output polarity to this driver and
-> > > > related
-> > > > discussion [1]. This thread remains quiet for around two weeks.
-> > > Ah, nice coincidence! Unfortunately, I made the work earlier than
-> > > his
-> > > posting, otherwise I could have spent the time on somethinge
-> > > else. ;)
-> > Sorry to be so slacking with submitting this, I've been sitting on
-> > it for 6
-> > months now :) I just kept postponing in submitting it. But as they
-> > say,
-> > great minds, and all that.
-> 
-> > 
-> > > 
-> > > Well, then I hope v2 of his patches comes along.
-> 
-> Any news on a v2?
-> 
-> Otherwise, could we agree on a dt binding for the inverted output,
-> and
-> look into merging that prior to the rest of the series? I'd like to
-> get
-> rid of my local patch... 
-I almost forgotten about this bit, I'll read back on the mails and
-check/verify my results/discussions from back then.
 
-Thanks for bringing it up again!
+On 2016年09月06日 06:10, Heiko Stuebner wrote:
+> Am Montag, 5. September 2016, 18:22:46 CEST schrieb Andy Yan:
+>> Hi Heiko:
+>>
+>> On 2016年09月05日 17:33, Heiko Stuebner wrote:
+>>> Hi Andy,
+>>>
+>>> Am Sonntag, 4. September 2016, 16:35:30 CEST schrieb Andy Yan:
+>>>> There are 8 gpio banks on RK3288, so add the missing
+>>>> RK_GPIO7 and RK_GPIO8. Also add gpio index definition
+>>>> to make it easier to description GPIO in dts.
+>>>>
+>>>> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>>> I tend to disagree here.
+>>>
+>>> I consider the bank defines RK_GPIOx to be deprecated and highly
+>>> discourage
+>>> them being used in new boards. They only encode the same number again (2
+>>> ->
+>>> RK_GPIO2 etc) and therefore don't bring any useful addition over using the
+>>> bank number directly.
+>>>
+>>> Slightly similar argument for the per-pin defines. While the external pins
+>>> are described in the A/B/C/Dx notation for pinmux purposes, the gpio
+>>> controllers on top use a regular 0-31 numbering. Also you cannot name
+>>> constants generic GPIO_x, simply because that may conflict with other
+>>> overly generic constant names.
+>>>
+>>> So I'm not yet convinced that these improve readability, but they would
+>>> definitly need a RK_* prefix to make them specific.
+>>>
+>>>
+>>> Heiko
+>>           I consider for a people who doesn't familiar with rockchip
+>> pinctrl, He
+>>    may don't know what does these number 2/4/17....stands for in the dts
+>> like
+>>    rockchip,pins = <2 17 RK_FUNC_GPIO &pcfg_pull_up>.
+> That person shouldn't work on devicetrees anyway :-) ... or simply read the
+> dt-binding for the pinctrl at first ... which should normally really be the
+> first step, otherwise we wouldn't need the binding documentation.
 
-Olliver
+     It's true that people who wants to develop in the kernel should 
+know the technical detail  as much as possible.
+But I still thinks it's a good thing if we can write code more clearly 
+to  let people know what it stands for at first sight.
+>>           But if we use meaningful macro here like : rockchip,pins =
+>> <RK_GPIO2 RK_GPIO_C0 RK_FUNC_GPIO &pcfg_pull_up>, I think it easier to
+>> tell people this GPIO is GPIO_C0 of BNAK2.
+> I definitly don't agree for the gpio-bank number, see above .
+>
+>> Especially all the GPIOs in rockchip based schematic are described as
+>> GPIOn_A/B/C/Dx. And it is also easier for people to directly use a macro
+>> stands for 0~32 than translating A/B/C/Dx from the schematic to 0~32.
+> But the pins might in fact really be helpful, but definitly need a prefix and
+> maybe even distinguish between pin and gpio, aka RK_PIN_A0 etc?
+>
 
-> 
-> Cheers,
-> Anders
+     Anyway, very glad to see you think the pin definition is helpful, 
+so let's move on.
+I'll send a new version with the prefix as your suggested  like 
+RK_PA/B/C/Dx.
+
+     Thanks.
+> Heiko
+>
+>>>> ---
+>>>>
+>>>>    include/dt-bindings/pinctrl/rockchip.h | 35
+>>>>
+>>>> ++++++++++++++++++++++++++++++++++ 1 file changed, 35 insertions(+)
+>>>>
+>>>> diff --git a/include/dt-bindings/pinctrl/rockchip.h
+>>>> b/include/dt-bindings/pinctrl/rockchip.h index 743e66a..fd35350 100644
+>>>> --- a/include/dt-bindings/pinctrl/rockchip.h
+>>>> +++ b/include/dt-bindings/pinctrl/rockchip.h
+>>>> @@ -24,6 +24,41 @@
+>>>>
+>>>>    #define RK_GPIO3	3
+>>>>    #define RK_GPIO4	4
+>>>>    #define RK_GPIO6	6
+>>>>
+>>>> +#define RK_GPIO7	7
+>>>> +#define RK_GPIO8	8
+>>>> +
+>>>> +#define GPIO_A0		0
+>>>> +#define GPIO_A1		1
+>>>> +#define GPIO_A2		2
+>>>> +#define GPIO_A3		3
+>>>> +#define GPIO_A4		4
+>>>> +#define GPIO_A5		5
+>>>> +#define GPIO_A6		6
+>>>> +#define GPIO_A7		7
+>>>> +#define GPIO_B0		8
+>>>> +#define GPIO_B1		9
+>>>> +#define GPIO_B2		10
+>>>> +#define GPIO_B3		11
+>>>> +#define GPIO_B4		12
+>>>> +#define GPIO_B5		13
+>>>> +#define GPIO_B6		14
+>>>> +#define GPIO_B7		15
+>>>> +#define GPIO_C0		16
+>>>> +#define GPIO_C1		17
+>>>> +#define GPIO_C2		18
+>>>> +#define GPIO_C3		19
+>>>> +#define GPIO_C4		20
+>>>> +#define GPIO_C5		21
+>>>> +#define GPIO_C6		22
+>>>> +#define GPIO_C7		23
+>>>> +#define GPIO_D0		24
+>>>> +#define GPIO_D1		25
+>>>> +#define GPIO_D2		26
+>>>> +#define GPIO_D3		27
+>>>> +#define GPIO_D4		28
+>>>> +#define GPIO_D5		29
+>>>> +#define GPIO_D6		30
+>>>> +#define GPIO_D7		31
+>>>>
+>>>>    #define RK_FUNC_GPIO	0
+>>>>    #define RK_FUNC_1	1
+>
+>
+>
+>
