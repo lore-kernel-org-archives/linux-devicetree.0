@@ -1,85 +1,107 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 3/4] usb: dwc2: assert phy reset when waking up in
- rk3288 platform
-Date: Tue, 6 Sep 2016 10:44:10 +0530
-Message-ID: <57CE50A2.7080502@ti.com>
-References: <1472939729-15187-1-git-send-email-ayaka@soulik.info>
- <1472939729-15187-4-git-send-email-ayaka@soulik.info>
+From: Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 1/8] binding-doc: power: pwrseq-generic: add binding
+ doc for generic power sequence library
+Date: Tue, 6 Sep 2016 11:34:08 +0530
+Message-ID: <3b904eb8-8f32-845e-8b9d-78b7d79ef024@linaro.org>
+References: <1471252398-957-1-git-send-email-peter.chen@nxp.com>
+ <1471252398-957-2-git-send-email-peter.chen@nxp.com>
+ <6832cc55-831a-1188-4878-bbbf0b3c3be8@linaro.org>
+ <20160902010030.GA11262@shlinux2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1472939729-15187-4-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160902010030.GA11262@shlinux2>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw3-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Sunday 04 September 2016 03:25 AM, Randy Li wrote:
-> On the rk3288 USB host-only port (the one that's not the OTG-enabled
-> port) the PHY can get into a bad state when a wakeup is asserted (not
-> just a wakeup from full system suspend but also a wakeup from
-> autosuspend).
-> 
-> We can get the PHY out of its bad state by asserting its "port reset",
-> but unfortunately that seems to assert a reset onto the USB bus so it
-> could confuse things if we don't actually deenumerate / reenumerate the
-> device.
-> 
-> We can also get the PHY out of its bad state by fully resetting it using
-> the reset from the CRU (clock reset unit) in chip, which does a more full
-> reset.  The CRU-based reset appears to actually cause devices on the bus
-> to be removed and reinserted, which fixes the problem (albeit in a hacky
-> way).
-> 
-> It's unfortunate that we need to do a full re-enumeration of devices at
-> wakeup time, but this is better than alternative of letting the bus get
-> wedged.
-> 
-> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-> ---
->  drivers/usb/dwc2/core_intr.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
-> index d85c5c9..08485b7 100644
-> --- a/drivers/usb/dwc2/core_intr.c
-> +++ b/drivers/usb/dwc2/core_intr.c
-> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
->  static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->  {
->  	int ret;
-> +	struct device_node *np = hsotg->dev->of_node;
->  
->  	/* Clear interrupt */
->  	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
-> @@ -379,6 +380,17 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->  			/* Restart the Phy Clock */
->  			pcgcctl &= ~PCGCTL_STOPPCLK;
->  			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
-> +
-> +			/*
-> +			 * It is a quirk in Rockchip RK3288, causing by
-> +			 * a hardware bug. This will propagate out and
-> +			 * eventually we'll re-enumerate the device. 
-> +			 * Not great but the best we can do 
-> +			 */
-> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb")
-> +					&& (NULL != hsotg->phy->ops->reset))
-> +				hsotg->phy->ops->reset(hsotg->phy);
 
-never call the phy ops directly from the controller driver. It has to be
-protected as well.
+On Friday 02 September 2016 06:30 AM, Peter Chen wrote:
+> On Thu, Sep 01, 2016 at 01:33:22PM +0530, Vaibhav Hiremath wrote:
+>>
+>> On Monday 15 August 2016 02:43 PM, Peter Chen wrote:
+>>> Add binding doc for generic power sequence library.
+>>>
+>>> Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+>>> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> ---
+>>>   .../bindings/power/pwrseq/pwrseq-generic.txt       | 48 ++++++++++++++++++++++
+>>>   1 file changed, 48 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+>>> new file mode 100644
+>>> index 0000000..ebf0d47
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
+>>> @@ -0,0 +1,48 @@
+>>> +The generic power sequence library
+>>> +
+>>> +Some hard-wired devices (eg USB/MMC) need to do power sequence before
+>>> +the device can be enumerated on the bus, the typical power sequence
+>>> +like: enable USB PHY clock, toggle reset pin, etc. But current
+>>> +Linux device driver lacks of such code to do it, it may cause some
+>>> +hard-wired devices works abnormal or can't be recognized by
+>>> +controller at all. The power sequence will be done before this device
+>>> +can be found at the bus.
+>>> +
+>>> +The power sequence properties is under the device node.
+>>> +
+>>> +Optional properties:
+>>> +- clocks: the input clocks for device.
+>>> +- reset-gpios: Should specify the GPIO for reset.
+>>> +- reset-duration-us: the duration in microsecond for assert reset signal.
+>>> +
+>>> +Below is the example of USB power sequence properties on USB device
+>>> +nodes which have two level USB hubs.
+>>> +
+>>> +&usbotg1 {
+>>> +	vbus-supply = <&reg_usb_otg1_vbus>;
+>>> +	pinctrl-names = "default";
+>>> +	pinctrl-0 = <&pinctrl_usb_otg1_id>;
+>>> +	status = "okay";
+>>> +
+>>> +	#address-cells = <1>;
+>>> +	#size-cells = <0>;
+>>> +	genesys: hub@1 {
+>>> +		compatible = "usb5e3,608";
+>>> +		reg = <1>;
+>>> +
+>>> +		clocks = <&clks IMX6SX_CLK_CKO>;
+>>> +		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>; /* hub reset pin */
+>>> +		reset-duration-us = <10>;
+>>> +
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <0>;
+>>> +		asix: ethernet@1 {
+>>> +			compatible = "usbb95,1708";
+>> So I assume, with our recent discussion and the change
+>> we are proposing, the library would have some knowledge
+>> about this compatible string, right?
+> Yes
+>
+>> what I was asking on other email was, how are you connecting
+>> multiple power sequence libraries to their respective consumers ?
+>>
+> The consumers has its of_node, then it can find related power sequence
+> library according to compatible string.
+>
 
-Thanks
-Kishon
+Exactly. Thats what I was referring and wanted to confirm.
+
+Thanks,
+Vaibhav
+
+
+-- 
+Thanks,
+Vaibhav
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
