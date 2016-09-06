@@ -1,62 +1,51 @@
-From: Jisheng Zhang <jszhang@marvell.com>
-Subject: Re: [PATCH 1/3] arm64: dts: berlin4ct: add missing unit name to
- /soc node
-Date: Tue, 6 Sep 2016 18:20:48 +0800
-Message-ID: <20160906182048.222cec2f@xhacker>
-References: <20160906085557.4019-1-jszhang@marvell.com>
-        <20160906085557.4019-2-jszhang@marvell.com>
-        <20160906102208.GB1425@leverpostej>
+From: Meng Yi <meng.yi@nxp.com>
+Subject: [PATCH RESEND] ARM: dts: ls1021a: Add of_graph dt nodes to describe the panel
+Date: Tue, 6 Sep 2016 17:45:34 +0800
+Message-ID: <1473155134-36896-1-git-send-email-meng.yi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160906102208.GB1425@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, shawnguo@kernel.org, stefan@agner.ch
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Meng Yi <meng.yi@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+add of_graph dt nodes to describe the panel, and removed
+"fsl,panel" property
 
-On Tue, 6 Sep 2016 11:22:08 +0100 Mark Rutland wrote:
+Signed-off-by: Meng Yi <meng.yi@nxp.com>
+---
+ arch/arm/boot/dts/ls1021a-twr.dts | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-> On Tue, Sep 06, 2016 at 04:55:55PM +0800, Jisheng Zhang wrote:
-> > This patch fixes the following DTC warning with W=1:
-> > 
-> > "Node /soc has a reg or ranges property, but no unit name"
-> > 
-> > Signed-off-by: Jisheng Zhang <jszhang@marvell.com>  
-> 
-> The node is only compatible with simple-bus, and so shouldn't have a
-> reg.
-
-IIUC, the warning is caused by "ranges = <0 0 0xf7000000 0x1000000>;"
-
-Thanks,
-Jisheng
-
-> 
-> Why not remove the reg?
-> 
-> Mark
-> 
-> > ---
-> >  arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> > index 099ad93..2d6f91f 100644
-> > --- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> > +++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> > @@ -134,7 +134,7 @@
-> >  			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> >  	};
-> >  
-> > -	soc {
-> > +	soc@f7000000 {
-> >  		compatible = "simple-bus";
-> >  		#address-cells = <1>;
-> >  		#size-cells = <1>;
-> > -- 
-> > 2.9.3
-> >   
+diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+index 75ecaed..a8b148a 100644
+--- a/arch/arm/boot/dts/ls1021a-twr.dts
++++ b/arch/arm/boot/dts/ls1021a-twr.dts
+@@ -108,12 +108,23 @@
+ 
+ 	panel: panel {
+ 		compatible = "nec,nl4827hc19-05b";
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&dcu_out>;
++			};
++		};
+ 	};
+ };
+ 
+ &dcu {
+-	fsl,panel = <&panel>;
+ 	status = "okay";
++
++	port {
++		dcu_out: endpoint {
++			remote-endpoint = <&panel_in>;
++		};
++	};
+ };
+ 
+ &dspi1 {
+-- 
+2.1.0.27.g96db324
