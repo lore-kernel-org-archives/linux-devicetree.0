@@ -1,81 +1,77 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH] video: mxsfb: get supply regulator optionally
-Date: Tue, 6 Sep 2016 11:21:33 +0300
-Message-ID: <f8368040-bb5a-91e0-7511-df462719b949@ti.com>
-References: <20160904042627.30182-1-stefan@agner.ch>
+From: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+Subject: [v11, 0/8] Fix eSDHC host version register bug
+Date: Tue, 6 Sep 2016 16:28:15 +0800
+Message-ID: <1473150503-9550-1-git-send-email-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature";
-        boundary="d9rMwqaPJU5gkXo4pw1HjsC1Fq1KWqSli"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160904042627.30182-1-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>, plagnioj@jcrosoft.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, xiaobo.xie-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, leoyang.li-3arQi8VN3Tc@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---d9rMwqaPJU5gkXo4pw1HjsC1Fq1KWqSli
-Content-Type: multipart/mixed; boundary="hTBspXKHnLHCQBupCUn93NEEvpGSsB9fQ";
- protected-headers="v1"
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-To: Stefan Agner <stefan@agner.ch>, plagnioj@jcrosoft.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org,
- linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Mark Brown <broonie@kernel.org>
-Message-ID: <f8368040-bb5a-91e0-7511-df462719b949@ti.com>
-Subject: Re: [PATCH] video: mxsfb: get supply regulator optionally
-References: <20160904042627.30182-1-stefan@agner.ch>
-In-Reply-To: <20160904042627.30182-1-stefan@agner.ch>
+This patchset is used to fix a host version register bug in the T4240-R1.0-R2.0
+eSDHC controller. To match the SoC version and revision, 10 previous version
+patchsets had tried many methods but all of them were rejected by reviewers.
+Such as
+	- dts compatible method
+	- syscon method
+	- ifdef PPC method
+	- GUTS driver getting SVR method
+Anrd suggested a soc_device_match method in v10, and this is the only available
+method left now. This v11 patchset introduces the soc_device_match interface in
+soc driver.
 
---hTBspXKHnLHCQBupCUn93NEEvpGSsB9fQ
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+The first six patches are to add the GUTS driver. This is used to register a
+soc device which contain soc version and revision information.
+The following two patches introduce the soc_device_match method in soc driver
+and apply it on esdhc driver to fix this bug.
 
-Hi,
+Yangbo Lu (8):
+  dt: bindings: update Freescale DCFG compatible
+  ARM64: dts: ls2080a: add device configuration node
+  dt: bindings: move guts devicetree doc out of powerpc directory
+  powerpc/fsl: move mpc85xx.h to include/linux/fsl
+  soc: fsl: add GUTS driver for QorIQ platforms
+  MAINTAINERS: add entry for Freescale SoC drivers
+  base: soc: introduce soc_device_match() interface
+  mmc: sdhci-of-esdhc: fix host version for T4240-R1.0-R2.0
 
-On 04/09/16 07:26, Stefan Agner wrote:
-> The lcd-supply is meant to be optional, there are several device-
-> trees not specifying it and the code handles error values silently.
-> Therefor, avoid creating a dummy regulator (and the associated
-> warning) by using devm_regulator_get_optional.
->=20
-> While at it, document that fact also in the device-tree bindings.
+ Documentation/devicetree/bindings/arm/fsl.txt      |   6 +-
+ .../bindings/{powerpc => soc}/fsl/guts.txt         |   3 +
+ MAINTAINERS                                        |  11 +-
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     |   6 +
+ arch/powerpc/kernel/cpu_setup_fsl_booke.S          |   2 +-
+ arch/powerpc/sysdev/fsl_pci.c                      |   2 +-
+ drivers/base/Kconfig                               |   1 +
+ drivers/base/soc.c                                 |  61 +++
+ drivers/clk/clk-qoriq.c                            |   3 +-
+ drivers/i2c/busses/i2c-mpc.c                       |   2 +-
+ drivers/iommu/fsl_pamu.c                           |   3 +-
+ drivers/mmc/host/Kconfig                           |   1 +
+ drivers/mmc/host/sdhci-of-esdhc.c                  |  20 +
+ drivers/net/ethernet/freescale/gianfar.c           |   2 +-
+ drivers/soc/Kconfig                                |   2 +-
+ drivers/soc/fsl/Kconfig                            |  20 +
+ drivers/soc/fsl/Makefile                           |   1 +
+ drivers/soc/fsl/guts.c                             | 483 +++++++++++++++++++++
+ include/linux/fsl/guts.h                           | 127 ++++--
+ .../asm/mpc85xx.h => include/linux/fsl/svr.h       |   4 +-
+ include/linux/sys_soc.h                            |   3 +
+ 21 files changed, 702 insertions(+), 61 deletions(-)
+ rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/guts.txt (91%)
+ create mode 100644 drivers/soc/fsl/Kconfig
+ create mode 100644 drivers/soc/fsl/guts.c
+ rename arch/powerpc/include/asm/mpc85xx.h => include/linux/fsl/svr.h (97%)
 
-The binding change looks correct, but using
-devm_regulator_get_optional() does not sound correct.
-
-devm_regulator_get_optional() is to be used when the device in question
-truly can function without the power supply. But if the supply is there,
-it's just not controlled by the SW, devm_regulator_get() is to be used.
-
-At least this is my understanding.
-
- Tomi
-
-
---hTBspXKHnLHCQBupCUn93NEEvpGSsB9fQ--
-
---d9rMwqaPJU5gkXo4pw1HjsC1Fq1KWqSli
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXznyOAAoJEPo9qoy8lh71DNQP+wQAwufULRTBiNTpC3xkdL5t
-8SY9YP5mG0KEWp6O312QET6nwu5V/b9edVH9l3nQPmKHL9QO7k58f4KTfbeCbawr
-tbc+o5FNKBtA1jJPEddzw4/0gGFbL1VRxCOTsK2Zb0FA5ensWLV3cU/toZ5cFtWw
-FGcWTczcIXXQX9bwdd5R/eoF57dHSpngwL3FN3DBtAl5cWlIIQJBjUMQr2/nXu5a
-m0brO8eGgD+03BQLr3o+YHw93//1x8e/Xa+SsKm1hv+juZhC4zMpNMUtJfonm3Xh
-Xo1Q6DGj9kmDXx+xjnIJJLRQkBEKD9VPH09xioO1poreRK04tgBF+iE/U/7UW01U
-nwt6d3KKmqkH862ulNe0Xd19Dcm2NM/RxZFY/PeHRwcbFA+BitnTNl92ojuvWjBd
-YpFjJSE2pzB19Uky80BDnLQuLGSMI5LyZyhIpMDfhkRNQ2TJpbXJ4IcTdY30rJ7v
-CG9yq+gZh2+F7OnEshtz57TJnmJmsd3FU6x6q+gk8qHZe8+R+YgBQaqYvXK3GPlT
-r9AoKEgzbLkg2ZomLYlf9kjTy6ri41Kgp7JTBzVI6IiUnO4eNja6maTpYCDMPllR
-LzOLl0wSQd+YAgvjClFeWDdziCtD2xI416pcTbf8TO04ETJV/Wnvclq9gUNbUlJh
-CGABOzfKHM0IMIZO3ij5
-=jvPP
------END PGP SIGNATURE-----
-
---d9rMwqaPJU5gkXo4pw1HjsC1Fq1KWqSli--
+-- 
+2.1.0.27.g96db324
