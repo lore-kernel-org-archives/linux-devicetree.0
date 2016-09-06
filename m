@@ -1,283 +1,272 @@
-From: Sean Paul <seanpaul@google.com>
-Subject: Re: [PATCH v10 5/5] drm/rockchip: Add dmc notifier in vop driver
-Date: Tue, 6 Sep 2016 13:18:06 -0400
-Message-ID: <CAOw6vb+N4ASTAu49VBPyOAUH=S4rrUBOgZOEP-RTvijEgeN7HA@mail.gmail.com>
-References: <1473051971-5500-1-git-send-email-hl@rock-chips.com> <1473051971-5500-6-git-send-email-hl@rock-chips.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v4 2/9] drivers: irqchip: Add STM32 external interrupts
+ support
+Date: Tue, 6 Sep 2016 17:37:37 +0000
+Message-ID: <20160906173737.GU10637@io.lakedaemon.net>
+References: <1473180341-1999-1-git-send-email-alexandre.torgue@st.com>
+ <1473180341-1999-3-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1473051971-5500-6-git-send-email-hl@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lin Huang <hl@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, ??? <myungjoo.ham@samsung.com>, =?UTF-8?B?5aea5pm65oOF?= <mark.yao@rock-chips.com>, cw00.choi@samsung.com, Dave Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, dbasehore@chromium.org, Stephen Boyd <sboyd@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Douglas Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Kyungmin Park <kyungmin.park@samsung.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Jon Medhurst <tixy@linaro.org>, typ@rock-chips.com, sudeep.holla@arm.com, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1473180341-1999-3-git-send-email-alexandre.torgue@st.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre TORGUE <alexandre.torgue@st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 5, 2016 at 1:06 AM, Lin Huang <hl@rock-chips.com> wrote:
-> when in ddr frequency scaling process, vop can not do enable or
-> disable operation, since in dcf we check vop clock to see whether
-> vop work. If vop work, dcf do ddr frequency scaling when vop
-> in vblank status, and we need to read vop register to check whether
-> vop go into vblank status. If vop not work, dcf can do ddr frequency
-> any time. So when do ddr frequency scaling, you disabled or enable
-> vop, there may two bad thing happen: 1, the panel flicker(when vop from
-> disable status change to enable). 2, kernel hang (when vop from enable
-> status change to disable, dcf need to read vblank status, but if you disable
-> vop clock, it can not get the status, it will lead soc dead) So we need
-> register to devfreq notifier, and we can get the dmc status. Also, when
-> there have two vop enabled, we need to disable dmc, since dcf only base
-> on one vop vblank time, so the other panel will flicker when do ddr
-> frequency scaling.
->
-> Signed-off-by: Lin Huang <hl@rock-chips.com>
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
-> Changes in v10:
-> - None
->
-> Changes in v9:
-> - None
->
-> Changes in v8:
-> - None
->
-> Changes in v7:
-> - None
->
-> Changes in v6:
-> - fix a build error
->
-> Changes in v5:
-> - improve some nits
->
-> Changes in v4:
-> - register notifier to devfreq_register_notifier
-> - use DEVFREQ_PRECHANGE and DEVFREQ_POSTCHANGE to get dmc status
-> - when two vop enable, disable dmc
-> - when two vop back to one vop, enable dmc
->
-> Changes in v3:
-> - when do vop eanble/disable, dmc will wait until it finish
->
-> Changes in v2:
-> - None
->
-> Changes in v1:
-> - use wait_event instead usleep
->
->  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 116 ++++++++++++++++++++++++++++
->  1 file changed, 116 insertions(+)
->
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> index efbc41a..a73f3aa 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> @@ -19,6 +19,8 @@
->  #include <drm/drm_crtc_helper.h>
->  #include <drm/drm_plane_helper.h>
->
-> +#include <linux/devfreq.h>
-> +#include <linux/devfreq-event.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> @@ -118,6 +120,13 @@ struct vop {
->
->         const struct vop_data *data;
->
-> +       struct devfreq *devfreq;
-> +       struct devfreq_event_dev *devfreq_event_dev;
-> +       struct notifier_block dmc_nb;
-> +       int dmc_in_process;
-> +       int vop_switch_status;
-> +       wait_queue_head_t wait_dmc_queue;
-> +       wait_queue_head_t wait_vop_switch_queue;
->         uint32_t *regsbak;
->         void __iomem *regs;
->
-> @@ -428,11 +437,47 @@ static void vop_dsp_hold_valid_irq_disable(struct vop *vop)
->         spin_unlock_irqrestore(&vop->irq_lock, flags);
->  }
->
-> +static int dmc_notify(struct notifier_block *nb, unsigned long event,
-> +                     void *data)
+On Tue, Sep 06, 2016 at 06:45:34PM +0200, Alexandre TORGUE wrote:
+> The STM32 external interrupt controller consists of edge detectors that
+> generate interrupts requests or wake-up events.
+> 
+> Each line can be independently configured as interrupt or wake-up source,
+> and triggers either on rising, falling or both edges. Each line can also
+> be masked independently.
+> 
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 7f87289..bc62d1f 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -264,3 +264,7 @@ config EZNPS_GIC
+>  	select IRQ_DOMAIN
+>  	help
+>  	  Support the EZchip NPS400 global interrupt controller
+> +
+> +config STM32_EXTI
+> +	bool
+> +	select IRQ_DOMAIN
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 4c203b6..96383b2 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -71,3 +71,4 @@ obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
+>  obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
+>  obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
+>  obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o
+> +obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
+> diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
+> new file mode 100644
+> index 0000000..763c17c
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-stm32-exti.c
+> @@ -0,0 +1,203 @@
+> +/*
+> + * Copyright (C) Maxime Coquelin 2015
+> + * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> + * License terms:  GNU General Public License (GPL), version 2
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqchip/chained_irq.h>
+
+double paste?
+double paste?
+
+If there are no other critiques, I'll fix this up when I pull in patches
+1 and 2.
+
+thx,
+
+Jason.
+
+> +#include <linux/irqdomain.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +
+> +#define EXTI_IMR	0x0
+> +#define EXTI_EMR	0x4
+> +#define EXTI_RTSR	0x8
+> +#define EXTI_FTSR	0xc
+> +#define EXTI_SWIER	0x10
+> +#define EXTI_PR		0x14
+> +
+> +static void stm32_irq_handler(struct irq_desc *desc)
 > +{
-> +       struct vop *vop = container_of(nb, struct vop, dmc_nb);
+> +	struct irq_domain *domain = irq_desc_get_handler_data(desc);
+> +	struct irq_chip_generic *gc = domain->gc->gc[0];
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	unsigned long pending;
+> +	int n;
 > +
-> +       if (event == DEVFREQ_PRECHANGE) {
-> +               /*
-> +                * check if vop in enable or disable process,
-> +                * if yes, wait until it finishes, use 200ms as
-> +                * timeout.
-> +                */
-> +               if (!wait_event_timeout(vop->wait_vop_switch_queue,
-> +                                       !vop->vop_switch_status, HZ / 5))
-> +                       dev_warn(vop->dev,
-> +                                "Timeout waiting for vop swtich status\n");
-> +               vop->dmc_in_process = 1;
-> +       } else if (event == DEVFREQ_POSTCHANGE) {
-> +               vop->dmc_in_process = 0;
-> +               wake_up(&vop->wait_dmc_queue);
-> +       }
+> +	chained_irq_enter(chip, desc);
 > +
-> +       return NOTIFY_OK;
+> +	while ((pending = irq_reg_readl(gc, EXTI_PR))) {
+> +		for_each_set_bit(n, &pending, BITS_PER_LONG) {
+> +			generic_handle_irq(irq_find_mapping(domain, n));
+> +			irq_reg_writel(gc, BIT(n), EXTI_PR);
+> +		}
+> +	}
+> +
+> +	chained_irq_exit(chip, desc);
 > +}
 > +
->  static int vop_enable(struct drm_crtc *crtc)
->  {
->         struct vop *vop = to_vop(crtc);
-> +       int num_enabled_crtc = 0;
->         int ret;
->
-> +       /*
-> +        * if in dmc scaling frequency process, wait until it finishes
-> +        * use 200ms as timeout time.
-> +        */
-> +       if (!wait_event_timeout(vop->wait_dmc_queue,
-> +                               !vop->dmc_in_process, HZ / 5))
-> +               dev_warn(vop->dev,
-> +                        "Timeout waiting for dmc when vop enable\n");
+> +static int stm32_irq_set_type(struct irq_data *data, unsigned int type)
+> +{
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+> +	int pin = data->hwirq;
+> +	u32 rtsr, ftsr;
 > +
-
-
-This wait_event_timeout code is terribly racey (same goes above and below).
-
-
-> +       vop->vop_switch_status = 1;
+> +	irq_gc_lock(gc);
 > +
->         ret = pm_runtime_get_sync(vop->dev);
->         if (ret < 0) {
->                 dev_err(vop->dev, "failed to get pm runtime: %d\n", ret);
-> @@ -479,6 +524,21 @@ static int vop_enable(struct drm_crtc *crtc)
->
->         drm_crtc_vblank_on(crtc);
->
-> +       vop->vop_switch_status = 0;
-> +       wake_up(&vop->wait_vop_switch_queue);
+> +	rtsr = irq_reg_readl(gc, EXTI_RTSR);
+> +	ftsr = irq_reg_readl(gc, EXTI_FTSR);
 > +
-> +       /* check how many VOPs in use now */
-> +       drm_for_each_crtc(crtc, vop->drm_dev) {
-> +               if (crtc->state->enable)
-
-I think you really want to check active, instead of enable.
-
-> +                       num_enabled_crtc++;
-> +       }
+> +	switch (type) {
+> +	case IRQ_TYPE_EDGE_RISING:
+> +		rtsr |= BIT(pin);
+> +		ftsr &= ~BIT(pin);
+> +		break;
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +		rtsr &= ~BIT(pin);
+> +		ftsr |= BIT(pin);
+> +		break;
+> +	case IRQ_TYPE_EDGE_BOTH:
+> +		rtsr |= BIT(pin);
+> +		ftsr |= BIT(pin);
+> +		break;
+> +	default:
+> +		irq_gc_unlock(gc);
+> +		return -EINVAL;
+> +	}
 > +
-> +       /* if enable two vop, need to disable dmc */
-> +       if ((num_enabled_crtc > 1) && vop->devfreq) {
-> +               if (vop->devfreq_event_dev)
-> +                       devfreq_event_disable_edev(vop->devfreq_event_dev);
-> +               devfreq_suspend_device(vop->devfreq);
-> +       }
-
-This really feels like something that should be handled somewhere
-else. I don't fully understand how this works, but it seems like this
-dependency should be handled where it actually matters, rather than
-building in a seemingly arbitrary restriction in the vop driver.
-
-Even if this is the best place for it, this needs to be refactored to
-eliminate the races that exist now.
-
-Sean
-
->         return 0;
->
->  err_disable_aclk:
-> @@ -489,17 +549,31 @@ err_disable_hclk:
->         clk_disable(vop->hclk);
->  err_put_pm_runtime:
->         pm_runtime_put_sync(vop->dev);
-> +       vop->vop_switch_status = 0;
-> +       wake_up(&vop->wait_vop_switch_queue);
->         return ret;
->  }
->
->  static void vop_crtc_disable(struct drm_crtc *crtc)
->  {
->         struct vop *vop = to_vop(crtc);
-> +       int num_enabled_crtc = 0;
->         int i;
->
->         WARN_ON(vop->event);
->
->         /*
-> +        * if in dmc scaling frequency process, wait until it finish
-> +        * use 200ms as timeout time.
-> +        */
-> +       if (!wait_event_timeout(vop->wait_dmc_queue,
-> +                               !vop->dmc_in_process, HZ / 5))
-> +               dev_warn(vop->dev,
-> +                        "Timeout waiting for dmc when vop disable\n");
+> +	irq_reg_writel(gc, rtsr, EXTI_RTSR);
+> +	irq_reg_writel(gc, ftsr, EXTI_FTSR);
 > +
-> +       vop->vop_switch_status = 1;
+> +	irq_gc_unlock(gc);
 > +
-> +       /*
->          * We need to make sure that all windows are disabled before we
->          * disable that crtc. Otherwise we might try to scan from a destroyed
->          * buffer later.
-> @@ -555,6 +629,24 @@ static void vop_crtc_disable(struct drm_crtc *crtc)
->                 spin_unlock_irq(&crtc->dev->event_lock);
->
->                 crtc->state->event = NULL;
+> +	return 0;
+> +}
 > +
-> +       vop->vop_switch_status = 0;
-> +       wake_up(&vop->wait_vop_switch_queue);
+> +static int stm32_irq_set_wake(struct irq_data *data, unsigned int on)
+> +{
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+> +	int pin = data->hwirq;
+> +	u32 emr;
 > +
-> +       /* check how many VOPs in use now */
-> +       drm_for_each_crtc(crtc, vop->drm_dev) {
-> +               if (crtc->state->enable)
-> +                       num_enabled_crtc++;
-> +       }
+> +	irq_gc_lock(gc);
 > +
-> +       /*
-> +        * if num_enabled_crtc = 1 now, it means 2 vop enabled
-> +        * change to 1 vop enabled  need to enable dmc again.
-> +        */
-> +       if ((num_enabled_crtc == 1) && vop->devfreq) {
-> +               if (vop->devfreq_event_dev)
-> +                       devfreq_event_enable_edev(vop->devfreq_event_dev);
-> +               devfreq_resume_device(vop->devfreq);
->         }
->  }
->
-> @@ -1413,6 +1505,8 @@ static int vop_bind(struct device *dev, struct device *master, void *data)
->         struct drm_device *drm_dev = data;
->         struct vop *vop;
->         struct resource *res;
-> +       struct devfreq *devfreq;
-> +       struct devfreq_event_dev *event_dev;
->         size_t alloc_size;
->         int ret, irq;
->
-> @@ -1474,6 +1568,28 @@ static int vop_bind(struct device *dev, struct device *master, void *data)
->                 return ret;
->
->         pm_runtime_enable(&pdev->dev);
+> +	emr = irq_reg_readl(gc, EXTI_EMR);
+> +	if (on)
+> +		emr |= BIT(pin);
+> +	else
+> +		emr &= ~BIT(pin);
+> +	irq_reg_writel(gc, emr, EXTI_EMR);
 > +
-> +       init_waitqueue_head(&vop->wait_vop_switch_queue);
-> +       vop->vop_switch_status = 0;
-> +       init_waitqueue_head(&vop->wait_dmc_queue);
-> +       vop->dmc_in_process = 0;
+> +	irq_gc_unlock(gc);
 > +
-> +       devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
-> +       if (IS_ERR(devfreq))
-> +               goto out;
+> +	return 0;
+> +}
 > +
-> +       vop->devfreq = devfreq;
-> +       vop->dmc_nb.notifier_call = dmc_notify;
-> +       devfreq_register_notifier(vop->devfreq, &vop->dmc_nb,
-> +                                 DEVFREQ_TRANSITION_NOTIFIER);
+> +static int stm32_exti_alloc(struct irq_domain *d, unsigned int virq,
+> +			    unsigned int nr_irqs, void *data)
+> +{
+> +	struct irq_chip_generic *gc = d->gc->gc[0];
+> +	struct irq_fwspec *fwspec = data;
+> +	irq_hw_number_t hwirq;
 > +
-> +       event_dev = devfreq_event_get_edev_by_phandle(vop->devfreq->dev.parent,
-> +                                                     0);
-> +       if (IS_ERR(event_dev))
-> +               goto out;
+> +	hwirq = fwspec->param[0];
 > +
-> +       vop->devfreq_event_dev = event_dev;
-> +out:
->         return 0;
->  }
->
-> --
-> 2.6.6
->
+> +	irq_map_generic_chip(d, virq, hwirq);
+> +	irq_domain_set_info(d, virq, hwirq, &gc->chip_types->chip, gc,
+> +			    handle_simple_irq, NULL, NULL);
+> +
+> +	return 0;
+> +}
+> +
+> +static void stm32_exti_free(struct irq_domain *d, unsigned int virq,
+> +			    unsigned int nr_irqs)
+> +{
+> +	struct irq_data *data = irq_get_irq_data(virq);
+> +
+> +	irq_gc_mask_clr_bit(data->parent_data);
+> +	irq_domain_reset_irq_data(data);
+> +}
+> +
+> +struct irq_domain_ops irq_exti_domain_ops = {
+> +	.map	= irq_map_generic_chip,
+> +	.xlate	= irq_domain_xlate_onetwocell,
+> +	.alloc  = stm32_exti_alloc,
+> +	.free	= stm32_exti_free,
+> +};
+> +
+> +static int __init stm32_exti_init(struct device_node *node,
+> +				  struct device_node *parent)
+> +{
+> +	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
+> +	int nr_irqs, nr_exti, ret, i;
+> +	struct irq_chip_generic *gc;
+> +	struct irq_domain *domain;
+> +	void *base;
+> +
+> +	base = of_iomap(node, 0);
+> +	if (!base) {
+> +		pr_err("%s: Unable to map registers\n", node->full_name);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	/* Determine number of irqs supported */
+> +	writel_relaxed(~0UL, base + EXTI_RTSR);
+> +	nr_exti = fls(readl_relaxed(base + EXTI_RTSR));
+> +	writel_relaxed(0, base + EXTI_RTSR);
+> +
+> +	pr_info("%s: %d External IRQs detected\n", node->full_name, nr_exti);
+> +
+> +	domain = irq_domain_add_linear(node, nr_exti,
+> +				       &irq_exti_domain_ops, NULL);
+> +	if (!domain) {
+> +		pr_err("%s: Could not register interrupt domain.\n",
+> +				node->name);
+> +		ret = -ENOMEM;
+> +		goto out_unmap;
+> +	}
+> +
+> +	ret = irq_alloc_domain_generic_chips(domain, nr_exti, 1, "exti",
+> +					     handle_edge_irq, clr, 0, 0);
+> +	if (ret) {
+> +		pr_err("%s: Could not allocate generic interrupt chip.\n",
+> +			node->full_name);
+> +		goto out_free_domain;
+> +	}
+> +
+> +	gc = domain->gc->gc[0];
+> +	gc->reg_base                         = base;
+> +	gc->chip_types->type               = IRQ_TYPE_EDGE_BOTH;
+> +	gc->chip_types->chip.name          = gc->chip_types[0].chip.name;
+> +	gc->chip_types->chip.irq_ack       = irq_gc_ack_set_bit;
+> +	gc->chip_types->chip.irq_mask      = irq_gc_mask_clr_bit;
+> +	gc->chip_types->chip.irq_unmask    = irq_gc_mask_set_bit;
+> +	gc->chip_types->chip.irq_set_type  = stm32_irq_set_type;
+> +	gc->chip_types->chip.irq_set_wake  = stm32_irq_set_wake;
+> +	gc->chip_types->regs.ack           = EXTI_PR;
+> +	gc->chip_types->regs.mask          = EXTI_IMR;
+> +	gc->chip_types->handler            = handle_edge_irq;
+> +
+> +	nr_irqs = of_irq_count(node);
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		unsigned int irq = irq_of_parse_and_map(node, i);
+> +
+> +		irq_set_handler_data(irq, domain);
+> +		irq_set_chained_handler(irq, stm32_irq_handler);
+> +	}
+> +
+> +	return 0;
+> +
+> +out_free_domain:
+> +	irq_domain_remove(domain);
+> +out_unmap:
+> +	iounmap(base);
+> +	return ret;
+> +}
+> +
+> +IRQCHIP_DECLARE(stm32_exti, "st,stm32-exti", stm32_exti_init);
+> -- 
+> 1.9.1
+> 
