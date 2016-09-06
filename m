@@ -1,45 +1,102 @@
-From: Ayaka <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Subject: Re: [PATCH v7 3/4] usb: dwc2: assert phy reset when waking up in rk3288 platform
-Date: Tue, 6 Sep 2016 07:38:34 +0800
-Message-ID: <B43AE00F-5B70-4522-B5B7-DB02A5D02E8B@soulik.info>
-References: <1472939729-15187-1-git-send-email-ayaka@soulik.info> <1472939729-15187-4-git-send-email-ayaka@soulik.info> <063D6719AE5E284EB5DD2968C1650D6DB00F483E@AcuExch.aculab.com>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-        charset=big5
-Content-Transfer-Encoding: 8BIT
+From: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] arm: dts: thermal: add thermal/auxadc node.
+Date: Tue, 06 Sep 2016 08:24:07 +0800
+Message-ID: <1473121447.2201.20.camel@intel.com>
+References: <1471492253-7185-1-git-send-email-dawei.chien@mediatek.com>
+         <1471492253-7185-4-git-send-email-dawei.chien@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6DB00F483E-VkEWCZq2GCInGFn1LkZF6NBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1471492253-7185-4-git-send-email-dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-±q§Úªº iPad ¶Ç°e
-
-> David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org> ©ó 2016¦~9¤ë5¤é ¤U¤È9:35 ¼g¹D¡G
+On å››, 2016-08-18 at 11:50 +0800, Dawei Chien wrote:
+> This adds the thermal controller and auxadc nodes
+> to the Mediatek MT2701 dtsi file.
 > 
-> From: Randy Li
->> Sent: 03 September 2016 22:55
-> ...
->> +            if (of_device_is_compatible(np, "rockchip,rk3288-usb")
->> +                    && (NULL != hsotg->phy->ops->reset))
->> +                hsotg->phy->ops->reset(hsotg->phy);
->> +
-> 
-> Is this the only place ops->reset() is called?
-Yes.
-> Probably much better to check it first.
-Sure.
-> 
->            if (hsotg->phy->ops->reset
->                    && of_device_is_compatible(np, "rockchip,rk3288-usb")
->                hsotg->phy->ops->reset(hsotg->phy);
-I see, if there is no the other review request for this version, I would submit a new version to fix this problem tonight.
-> 
->    David
+> Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+> This patch depned on:
+> https://patchwork.kernel.org/patch/9249589/
+> https://patchwork.kernel.org/patch/9249589/
 
+Hmm, does this mean that I should take all these three patches and hold
+the patches in next merge window until the above patch has been merged?
+
+thanks,
+ruiÂ 
+> ---
+> Â arch/arm/boot/dts/mt2701.dtsi |Â Â Â 44
+> +++++++++++++++++++++++++++++++++++++++++
+> Â 1 file changed, 44 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/mt2701.dtsi
+> b/arch/arm/boot/dts/mt2701.dtsi
+> index e9150a4..cee4724 100644
+> --- a/arch/arm/boot/dts/mt2701.dtsi
+> +++ b/arch/arm/boot/dts/mt2701.dtsi
+> @@ -87,6 +87,36 @@
+> Â 		clock-output-names = "rtc32k";
+> Â 	};
+> Â 
+> +	thermal-zones {
+> +		cpu_thermal: cpu_thermal {
+> +			polling-delay-passive = <1000>; /*
+> milliseconds */
+> +			polling-delay = <1000>; /* milliseconds */
+> +
+> +			thermal-sensors = <&thermal 0>;
+> +			sustainable-power = <1000>;
+> +
+> +			trips {
+> +				threshold: trip-point@0 {
+> +					temperature = <68000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				target: trip-point@1 {
+> +					temperature = <85000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				cpu_crit: cpu_crit@0 {
+> +					temperature = <115000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> Â 	timer {
+> Â 		compatible = "arm,armv7-timer";
+> Â 		interrupt-parent = <&gic>;
+> @@ -222,4 +252,18 @@
+> Â 		clock-names = "baud", "bus";
+> Â 		status = "disabled";
+> Â 	};
+> +
+> +	thermal: thermal@1100b000 {
+> +		#thermal-sensor-cells = <0>;
+> +		compatible = "mediatek,mt2701-thermal";
+> +		reg = <0 0x1100b000 0 0x1000>;
+> +		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg
+> CLK_PERI_AUXADC>;
+> +		clock-names = "therm", "auxadc";
+> +		resets = <&pericfg 0x10>;
+> +		reset-names = "therm";
+> +		mediatek,auxadc = <&auxadc>;
+> +		mediatek,apmixedsys = <&apmixedsys>;
+> +	};
+> +
+> Â };
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
