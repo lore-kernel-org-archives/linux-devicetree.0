@@ -1,7 +1,7 @@
 From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 05/10] ARM: dts: berlin2cd: Add missing unit name to /soc node
-Date: Tue, 6 Sep 2016 16:40:08 +0800
-Message-ID: <20160906084013.2887-6-jszhang@marvell.com>
+Subject: [PATCH 04/10] ARM: dts: berlin2q: Add missing unit name to /soc node
+Date: Tue, 6 Sep 2016 16:40:07 +0800
+Message-ID: <20160906084013.2887-5-jszhang@marvell.com>
 References: <20160906084013.2887-1-jszhang@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -18,14 +18,14 @@ This patch fixes the following DTC warning with W=1:
 
 Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/berlin2cd.dtsi | 2 +-
+ arch/arm/boot/dts/berlin2q.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berlin2cd.dtsi
-index d2bf390..4fe1574 100644
---- a/arch/arm/boot/dts/berlin2cd.dtsi
-+++ b/arch/arm/boot/dts/berlin2cd.dtsi
-@@ -79,7 +79,7 @@
+diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+index 4554945..6bd92ffd 100644
+--- a/arch/arm/boot/dts/berlin2q.dtsi
++++ b/arch/arm/boot/dts/berlin2q.dtsi
+@@ -99,7 +99,7 @@
  		clock-frequency = <25000000>;
  	};
  
