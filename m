@@ -1,174 +1,92 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [RESEND v14 PATCH 1/5] Documentation: bindings: add dt doc for Rockchip USB Type-C PHY
-Date: Tue,  6 Sep 2016 10:00:20 -0700
-Message-ID: <1473181220-15123-1-git-send-email-zyw@rock-chips.com>
-References: <1472015825-11365-2-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1472015825-11365-2-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kishon-l0cyMroinI0@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Scott Wood <scott.wood@nxp.com>
+Subject: Re: [linux-devel] [PATCH v2 1/1] arm64: Add DTS support for FSL's
+ LS1012A SoC
+Date: Tue, 6 Sep 2016 17:05:35 +0000
+Message-ID: <DB5PR0401MB1928BE0E1C08DD2FAC582FE191F90@DB5PR0401MB1928.eurprd04.prod.outlook.com>
+References: <1472207241-18461-1-git-send-email-Bhaskar.Upadhaya@nxp.com>
+ <20160829095239.GM30790@tiger> <1472493061.13245.39.camel@buserror.net>
+ <20160830120220.GC8363@tiger>
+ <HE1PR0401MB2636B40376255680B6A58CFB8DE00@HE1PR0401MB2636.eurprd04.prod.outlook.com>
+ <20160905014636.GB25778@tiger>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Stuart Yoder <stuart.yoder@nxp.com>, Rob
+ Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bhaskar U <bhaskar.upadhaya@nxp.com>, Scott Wood <oss@buserror.net>, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, "linux-devel@gforge.freescale.net" <linux-devel@gforge.freescale.net>, Pratiyush Srivastava <pratiyush.srivastava@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a binding that describes the Rockchip USB Type-C PHY
-for rk3399
+On 09/04/2016 08:47 PM, Shawn Guo wrote:
+> On Tue, Aug 30, 2016 at 02:07:17PM +0000, Stuart Yoder wrote:
+>>> On Mon, Aug 29, 2016 at 12:51:01PM -0500, Scott Wood wrote:
+>>>> On Mon, 2016-08-29 at 17:52 +0800, Shawn Guo wrote:
+>>>>> On Fri, Aug 26, 2016 at 03:57:21PM +0530, Bhaskar Upadhaya wrote:
+>>>>>>
+>>>>>> +		clockgen: clocking@1ee1000 {
+>>>>>> +			compatible = "fsl,ls1012a-clockgen";
+>>>>> The compatible cannot be found in binding docs.
+>>>>
+>>>> From Documentation/devicetree/bindings/clock/qoriq-clock.txt:
+>>>>
+>>>> - compatible: Should contain a chip-specific clock block compatible
+>>>>         string and (if applicable) may contain a chassis-version clock
+>>>>         compatible string.
+>>>>
+>>>>         Chip-specific strings are of the form "fsl,<chip>-clockgen", such as:
+>>>>         * "fsl,p2041-clockgen"
+>>>>         * "fsl,p3041-clockgen"
+>>>>         * "fsl,p4080-clockgen"
+>>>>         * "fsl,p5020-clockgen"
+>>>>         * "fsl,p5040-clockgen"
+>>>>         * "fsl,t4240-clockgen"
+>>>>         * "fsl,b4420-clockgen"
+>>>>         * "fsl,b4860-clockgen"
+>>>>         * "fsl,ls1021a-clockgen"
+>>>>         Chassis-version clock strings include:
+>>>>         * "fsl,qoriq-clockgen-1.0": for chassis 1.0 clocks
+>>>>         * "fsl,qoriq-clockgen-2.0": for chassis 2.0 clocks
+>>>>
+>>>> I really hope we don't have to update every single fsl,<chip>-whatever binding
+>>>> every time a new chip comes out.  There are already other chips not listed,
+>>>> FWIW (e.g. t1040, t2080, ls1043a, and ls2080a).  That's why it says "such as".
+>>>
+>>> If I remember correctly, DT maintainers want every supported compatible
+>>> string explicitly listed in bindings doc.  And they even added a check
+>>> into checkpatch.pl with commit bff5da433525 ("checkpatch: add DT
+>>> compatible string documentation checks").
+>>
+>> See Documentation/devicetree/bindings/submitting-patches.txt:
+>>
+>>   5) The wildcard "<chip>" may be used in compatible strings, as in
+>>      the following example:
+>>
+>>          - compatible: Must contain '"nvidia,<chip>-pcie",
+>>            "nvidia,tegra20-pcie"' where <chip> is tegra30, tegra132, ...
+>>
+>>      As in the above example, the known values of "<chip>" should be
+>>      documented if it is used.
+>>
+>> It _is_ allowed to use the <chip> wildcard, and so you will not find all
+>> full compatible strings explicitly listed in bindings.  However, the
+>> chips themselves "should" be listed.
+> 
+> + Rob and Mark
+> 
+> Oops, I'm not aware of this DT document.  In that case, the DT document
+> and checkpatch is basically asking for conflicting thing.  Rob, Mark,
+> can you guys please clarify?
 
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Reviewed-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Checkpatch is a useful tool but it can't get everything right all the time.
 
----
-
-Changes in v14: None
-Changes in v13: None
-Changes in v12: None
-Changes in v11:
-- make a clearer emarcation between usb phy and dp phy
-
-Changes in v10:
-- remove rockchip,uphy-dp-sel property
-
-Changes in v9:
-- change #phy-cells to 1
-
-Changes in v8: None
-Changes in v7: None
-Changes in v6:
-- add assigned-clocks and assigned-clock-rates
-
-Changes in v5: None
-Changes in v4:
-- add a #phy-cells node
-
-Changes in v3:
-- use compatible: rockchip,rk3399-typec-phy
-- use dashes instead of underscores.
-
-Changes in v2:
-- add some registers description
-
-Changes in v1:
-- add extcon node description
-- move the registers in phy driver
-- remove the suffix of reset
-
- .../devicetree/bindings/phy/phy-rockchip-typec.txt | 101 +++++++++++++++++++++
- 1 file changed, 101 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-new file mode 100644
-index 0000000..6ea867e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-@@ -0,0 +1,101 @@
-+* ROCKCHIP type-c PHY
-+---------------------
-+
-+Required properties:
-+ - compatible : must be "rockchip,rk3399-typec-phy"
-+ - reg: Address and length of the usb phy control register set
-+ - rockchip,grf : phandle to the syscon managing the "general
-+   register files"
-+ - clocks : phandle + clock specifier for the phy clocks
-+ - clock-names : string, clock name, must be "tcpdcore", "tcpdphy-ref";
-+ - assigned-clocks: main clock, should be <&cru SCLK_UPHY0_TCPDCORE> or
-+		    <&cru SCLK_UPHY1_TCPDCORE>;
-+ - assigned-clock-rates : the phy core clk frequency, shall be: 50000000
-+ - resets : a list of phandle + reset specifier pairs
-+ - reset-names : string reset name, must be:
-+		 "uphy", "uphy-pipe", "uphy-tcphy"
-+ - extcon : extcon specifier for the Power Delivery
-+
-+Note, there are 2 type-c phys for RK3399, and they are almost identical, except
-+these registers(description below), every register node contains 3 sections:
-+offset, enable bit, write mask bit.
-+ - rockchip,typec-conn-dir : the register of type-c connector direction,
-+   for type-c phy0, it must be <0xe580 0 16>;
-+   for type-c phy1, it must be <0xe58c 0 16>;
-+ - rockchip,usb3tousb2-en : the register of type-c force usb3 to usb2 enable
-+   control.
-+   for type-c phy0, it must be <0xe580 3 19>;
-+   for type-c phy1, it must be <0xe58c 3 19>;
-+ - rockchip,external-psm : the register of type-c phy external psm clock
-+   selection.
-+   for type-c phy0, it must be <0xe588 14 30>;
-+   for type-c phy1, it must be <0xe594 14 30>;
-+ - rockchip,pipe-status : the register of type-c phy pipe status.
-+   for type-c phy0, it must be <0xe5c0 0 0>;
-+   for type-c phy1, it must be <0xe5c0 16 16>;
-+
-+Required nodes : a sub-node is required for each port the phy provides.
-+		 The sub-node name is used to identify dp or usb3 port,
-+		 and shall be the following entries:
-+	* "dp-port" : the name of DP port.
-+	* "usb3-port" : the name of USB3 port.
-+
-+Required properties (port (child) node):
-+- #phy-cells : must be 0, See ./phy-bindings.txt for details.
-+
-+Example:
-+	tcphy0: phy@ff7c0000 {
-+		compatible = "rockchip,rk3399-typec-phy";
-+		reg = <0x0 0xff7c0000 0x0 0x40000>;
-+		rockchip,grf = <&grf>;
-+		extcon = <&fusb0>;
-+		clocks = <&cru SCLK_UPHY0_TCPDCORE>,
-+			 <&cru SCLK_UPHY0_TCPDPHY_REF>;
-+		clock-names = "tcpdcore", "tcpdphy-ref";
-+		assigned-clocks = <&cru SCLK_UPHY0_TCPDCORE>;
-+		assigned-clock-rates = <50000000>;
-+		resets = <&cru SRST_UPHY0>,
-+			 <&cru SRST_UPHY0_PIPE_L00>,
-+			 <&cru SRST_P_UPHY0_TCPHY>;
-+		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
-+		rockchip,typec-conn-dir = <0xe580 0 16>;
-+		rockchip,usb3tousb2-en = <0xe580 3 19>;
-+		rockchip,external-psm = <0xe588 14 30>;
-+		rockchip,pipe-status = <0xe5c0 0 0>;
-+
-+		tcphy0_dp: dp-port {
-+			#phy-cells = <0>;
-+		};
-+
-+		tcphy0_usb3: usb3-port {
-+			#phy-cells = <0>;
-+		};
-+	};
-+
-+	tcphy1: phy@ff800000 {
-+		compatible = "rockchip,rk3399-typec-phy";
-+		reg = <0x0 0xff800000 0x0 0x40000>;
-+		rockchip,grf = <&grf>;
-+		extcon = <&fusb1>;
-+		clocks = <&cru SCLK_UPHY1_TCPDCORE>,
-+			 <&cru SCLK_UPHY1_TCPDPHY_REF>;
-+		clock-names = "tcpdcore", "tcpdphy-ref";
-+		assigned-clocks = <&cru SCLK_UPHY1_TCPDCORE>;
-+		assigned-clock-rates = <50000000>;
-+		resets = <&cru SRST_UPHY1>,
-+			 <&cru SRST_UPHY1_PIPE_L00>,
-+			 <&cru SRST_P_UPHY1_TCPHY>;
-+		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
-+		rockchip,typec-conn-dir = <0xe58c 0 16>;
-+		rockchip,usb3tousb2-en = <0xe58c 3 19>;
-+		rockchip,external-psm = <0xe594 14 30>;
-+		rockchip,pipe-status = <0xe5c0 16 16>;
-+
-+		tcphy1_dp: dp-port {
-+			#phy-cells = <0>;
-+		};
-+
-+		tcphy1_usb3: usb3-port {
-+			#phy-cells = <0>;
-+		};
-+	};
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Scott
