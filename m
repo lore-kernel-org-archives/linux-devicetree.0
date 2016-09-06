@@ -1,75 +1,116 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/3] arm64: dts: berlin4ct: add missing unit name to /soc
- node
-Date: Tue, 6 Sep 2016 11:57:58 +0100
-Message-ID: <20160906105758.GD1425@leverpostej>
-References: <20160906085557.4019-1-jszhang@marvell.com>
- <20160906085557.4019-2-jszhang@marvell.com>
- <20160906102208.GB1425@leverpostej>
- <20160906182048.222cec2f@xhacker>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/6] ASoC: codecs: Add msm8916-wcd analog codec
+Date: Tue, 6 Sep 2016 12:17:10 +0100
+Message-ID: <20160906111710.GM3950@sirena.org.uk>
+References: <1473155865-13361-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1473155865-13361-2-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xP4xvRzdEG0QZ+Pj"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160906182048.222cec2f@xhacker>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <jszhang@marvell.com>, robh+dt@kernel.org, swarren@nvidia.com
-Cc: sebastian.hesselbarth@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1473155865-13361-2-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kwestfie-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 06, 2016 at 06:20:48PM +0800, Jisheng Zhang wrote:
-> Hi Mark,
-> 
-> On Tue, 6 Sep 2016 11:22:08 +0100 Mark Rutland wrote:
-> 
-> > On Tue, Sep 06, 2016 at 04:55:55PM +0800, Jisheng Zhang wrote:
-> > > This patch fixes the following DTC warning with W=1:
-> > > 
-> > > "Node /soc has a reg or ranges property, but no unit name"
-> > > 
-> > > Signed-off-by: Jisheng Zhang <jszhang@marvell.com>  
-> > 
-> > The node is only compatible with simple-bus, and so shouldn't have a
-> > reg.
-> 
-> IIUC, the warning is caused by "ranges = <0 0 0xf7000000 0x1000000>;"
 
-Hmm.. I've rather confused by that warning. Per ePAPR and the
-devicetree.org spec, the unit-addresss is meant to match the reg
-property, and no mention is made of the ranges property. So I do not
-think that it is necessary to require this.
+--xP4xvRzdEG0QZ+Pj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That warning seems to have gone into DTC in commit c9d9121683b35281
-("Warn on node name unit-address presence/absence mismatch").
+On Tue, Sep 06, 2016 at 10:57:40AM +0100, Srinivas Kandagatla wrote:
 
-Rob, Stephen, was there some discussion that prompted ranges requiring
-a matching unit-address?
+> +static const struct soc_enum hph_enum =
+> +SOC_ENUM_SINGLE_VIRT(ARRAY_SIZE(hph_text), hph_text);
 
-Thanks,
-Mark.
+Coding style, let's have some indentation please.
 
-> > Why not remove the reg?
-> > 
-> > Mark
-> > 
-> > > ---
-> > >  arch/arm64/boot/dts/marvell/berlin4ct.dtsi | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> > > index 099ad93..2d6f91f 100644
-> > > --- a/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> > > +++ b/arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> > > @@ -134,7 +134,7 @@
-> > >  			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> > >  	};
-> > >  
-> > > -	soc {
-> > > +	soc@f7000000 {
-> > >  		compatible = "simple-bus";
-> > >  		#address-cells = <1>;
-> > >  		#size-cells = <1>;
-> > > -- 
-> > > 2.9.3
-> > >   
-> 
+> +		if (w->reg == CDC_A_TX_1_EN)
+> +			snd_soc_update_bits(codec, CDC_D_CDC_CONN_TX1_CTL,
+> +					    CONN_TX1_SERIAL_TX1_MUX,
+> +					    CONN_TX1_SERIAL_TX1_ADC_1);
+> +		else if ((w->reg == CDC_A_TX_2_EN) || (w->reg == CDC_A_TX_3_EN))
+> +			snd_soc_update_bits(codec, CDC_D_CDC_CONN_TX2_CTL,
+> +					    CONN_TX2_SERIAL_TX2_MUX,
+> +					    CONN_TX2_SERIAL_TX2_ADC_2);
+
+This looks like it should be a switch statement.
+
+> +	for (reg = 0; reg < ARRAY_SIZE(wcd_reg_defaults_2_0); reg++)
+> +		snd_soc_write(codec, wcd_reg_defaults_2_0[reg].reg,
+> +			      wcd_reg_defaults_2_0[reg].def);
+
+> +static int msm8916_wcd_analog_enable_spk_pa(struct snd_soc_dapm_widget *w,
+> +					    struct snd_kcontrol *kcontrol,
+> +					    int event)
+
+We had some DAPM operations earlier, then the probe now we're back to
+DAPM operations.  Seems a bit confused.
+
+> +	//Path domain ???
+
+C style comments please.
+
+> +static int msm8916_wcd_analog_startup(struct snd_pcm_substream *substream,
+> +				      struct snd_soc_dai *dai)
+> +{
+> +
+> +	snd_soc_update_bits(dai->codec, CDC_A_MASTER_BIAS_CTL,
+> +			    MASTER_BIAS_CTL_MASTER_BIAS_EN_MASK |
+> +			    MASTER_BIAS_CTL_V2L_BUFFER_EN_MASK,
+> +			    MASTER_BIAS_CTL_MASTER_BIAS_EN_ENABLE |
+> +			    MASTER_BIAS_CTL_V2L_BUFFER_EN_ENABLE);
+> +
+> +	snd_soc_update_bits(dai->codec, CDC_D_CDC_RST_CTL,
+> +			    RST_CTL_DIG_SW_RST_N_MASK,
+> +			    RST_CTL_DIG_SW_RST_N_REMOVE_RESET);
+> +
+> +	return 0;
+> +}
+
+I'm not quite sure what this is doing but it looks like something I'd
+expect to be in DAPM and I can't see anything that undoes this on
+teardown either.
+
+> +static int msm8916_wcd_analog_parse_dt(struct device *dev,
+> +				       struct msm8916_wcd_analog_priv *priv)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	int ret, i;
+> +	u32 res[2];
+> +
+> +	ret = of_property_read_u32_array(np, "reg", res, 2);
+> +	if (ret < 0)
+> +		return ret;
+
+That's weird, why are we reading a reg property directly?  Not that we
+ever look at the value we parsed...
+
+> +static const struct of_device_id msm8916_wcd_analog_spmi_match_table[] = {
+> +	{.compatible = "qcom,msm8916-wcd-analog-codec"},
+> +	{}
+> +};
+
+Coding style, let's have somme spaces please.
+
+--xP4xvRzdEG0QZ+Pj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAEBCAAGBQJXzqW1AAoJECTWi3JdVIfQtCQH/jkGuenV0rikC5qVKxL/Ergv
+5xfJwJvy5yBfNZ6UclYQi/Q/Cf9fELZ4O4Ia2/AzHq4qDjUfe91/ItnhHAq8g1WT
+1tU8q55xWGD3bI7I8E3EsPVqZswtbk33ChcJ12WuvedSwwMxsZboRy/wcyMQ8EYG
+zy8Ntco3rI/alif3OgE3mjocwPTaCIi/AMk4TeCI4qbMeIhpMn2Fnhu6PG7+bySt
+aT1iyklm/zDreDoYinOQ1OU0fOPui/vMYWJHzOsBaBdWeEEO72yr4rR29svspvmE
+E8xL3/hnKOj/LReacGCUZ4OPtc+f26EYniGu90DUTqfoNn0Z88sr94/mlCIw9UM=
+=6Igc
+-----END PGP SIGNATURE-----
+
+--xP4xvRzdEG0QZ+Pj--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
