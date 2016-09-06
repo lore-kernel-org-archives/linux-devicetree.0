@@ -1,36 +1,28 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/3] pinctrl: export pin_request to support parent pin
-Date: Tue, 6 Sep 2016 15:55:12 +0200
-Message-ID: <CACRpkdYPfBKshf1jGF85vj+bzwb1kX+2j-kUA+8+w+vSFPuGDQ@mail.gmail.com>
-References: <1472213942-4815-1-git-send-email-jun.nie@linaro.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v2 7/7] ARM: sun8i: Convert the A23 and A33 to the CCU
+Date: Tue, 6 Sep 2016 22:08:05 +0800
+Message-ID: <CAGb2v64r-vURPZNhPhKv2+7kByckdxW=fPH-9qAfBLxH992qWQ@mail.gmail.com>
+References: <20160906121837.7517-1-maxime.ripard@free-electrons.com> <20160906121837.7517-8-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1472213942-4815-1-git-send-email-jun.nie@linaro.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jun Nie <jun.nie@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Jason Liu <jason.liu@linaro.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160906121837.7517-8-maxime.ripard@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 26, 2016 at 2:19 PM, Jun Nie <jun.nie@linaro.org> wrote:
-
-> Some pin functions may be controlled in 2nd level multiplex.
-> We need configure 1st level multiplex when request such
-> functions. Export pin_request functionality so that parent
-> can be configured automatically with calling it in
-> pinmux_ops->request().
+On Tue, Sep 6, 2016 at 8:18 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Now that we have support for the CCU driver in sunxi-ng, convert the A23
+> and A33 DTs to that driver.
 >
-> Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-This looks weird as 1/3, please put the DT bindings first in the
-series.
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 
-We first need to agree on how to represent this before we start
-hacking around in the core to support different shortcuts.
+TODO note for later:
 
-This patch just makes me nervous, but maybe I can be convinced
-otherwise if we get some details on how the hardware works and why
-this is necessary.
-
-Yours,
-Linus Walleij
+    The usb_otg and usbphy node definitions can be moved to the common dtsi
+    file, and there compatibles and regs (for usbphy) defined in the SoC
+    dtsi.
