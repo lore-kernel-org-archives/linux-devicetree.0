@@ -1,256 +1,174 @@
-From: Alexandre TORGUE <alexandre.torgue@st.com>
-Subject: [PATCH v4 2/9] drivers: irqchip: Add STM32 external interrupts support
-Date: Tue, 6 Sep 2016 18:45:34 +0200
-Message-ID: <1473180341-1999-3-git-send-email-alexandre.torgue@st.com>
-References: <1473180341-1999-1-git-send-email-alexandre.torgue@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473180341-1999-1-git-send-email-alexandre.torgue@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [RESEND v14 PATCH 1/5] Documentation: bindings: add dt doc for Rockchip USB Type-C PHY
+Date: Tue,  6 Sep 2016 10:00:20 -0700
+Message-ID: <1473181220-15123-1-git-send-email-zyw@rock-chips.com>
+References: <1472015825-11365-2-git-send-email-zyw@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1472015825-11365-2-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The STM32 external interrupt controller consists of edge detectors that
-generate interrupts requests or wake-up events.
+This patch adds a binding that describes the Rockchip USB Type-C PHY
+for rk3399
 
-Each line can be independently configured as interrupt or wake-up source,
-and triggers either on rising, falling or both edges. Each line can also
-be masked independently.
+Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Reviewed-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+---
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 7f87289..bc62d1f 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -264,3 +264,7 @@ config EZNPS_GIC
- 	select IRQ_DOMAIN
- 	help
- 	  Support the EZchip NPS400 global interrupt controller
-+
-+config STM32_EXTI
-+	bool
-+	select IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 4c203b6..96383b2 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -71,3 +71,4 @@ obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
- obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
- obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
- obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o
-+obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
+Changes in v14: None
+Changes in v13: None
+Changes in v12: None
+Changes in v11:
+- make a clearer emarcation between usb phy and dp phy
+
+Changes in v10:
+- remove rockchip,uphy-dp-sel property
+
+Changes in v9:
+- change #phy-cells to 1
+
+Changes in v8: None
+Changes in v7: None
+Changes in v6:
+- add assigned-clocks and assigned-clock-rates
+
+Changes in v5: None
+Changes in v4:
+- add a #phy-cells node
+
+Changes in v3:
+- use compatible: rockchip,rk3399-typec-phy
+- use dashes instead of underscores.
+
+Changes in v2:
+- add some registers description
+
+Changes in v1:
+- add extcon node description
+- move the registers in phy driver
+- remove the suffix of reset
+
+ .../devicetree/bindings/phy/phy-rockchip-typec.txt | 101 +++++++++++++++++++++
+ 1 file changed, 101 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
 new file mode 100644
-index 0000000..763c17c
+index 0000000..6ea867e
 --- /dev/null
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -0,0 +1,203 @@
-+/*
-+ * Copyright (C) Maxime Coquelin 2015
-+ * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
-+ * License terms:  GNU General Public License (GPL), version 2
-+ */
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+@@ -0,0 +1,101 @@
++* ROCKCHIP type-c PHY
++---------------------
 +
-+#include <linux/bitops.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
++Required properties:
++ - compatible : must be "rockchip,rk3399-typec-phy"
++ - reg: Address and length of the usb phy control register set
++ - rockchip,grf : phandle to the syscon managing the "general
++   register files"
++ - clocks : phandle + clock specifier for the phy clocks
++ - clock-names : string, clock name, must be "tcpdcore", "tcpdphy-ref";
++ - assigned-clocks: main clock, should be <&cru SCLK_UPHY0_TCPDCORE> or
++		    <&cru SCLK_UPHY1_TCPDCORE>;
++ - assigned-clock-rates : the phy core clk frequency, shall be: 50000000
++ - resets : a list of phandle + reset specifier pairs
++ - reset-names : string reset name, must be:
++		 "uphy", "uphy-pipe", "uphy-tcphy"
++ - extcon : extcon specifier for the Power Delivery
 +
-+#define EXTI_IMR	0x0
-+#define EXTI_EMR	0x4
-+#define EXTI_RTSR	0x8
-+#define EXTI_FTSR	0xc
-+#define EXTI_SWIER	0x10
-+#define EXTI_PR		0x14
++Note, there are 2 type-c phys for RK3399, and they are almost identical, except
++these registers(description below), every register node contains 3 sections:
++offset, enable bit, write mask bit.
++ - rockchip,typec-conn-dir : the register of type-c connector direction,
++   for type-c phy0, it must be <0xe580 0 16>;
++   for type-c phy1, it must be <0xe58c 0 16>;
++ - rockchip,usb3tousb2-en : the register of type-c force usb3 to usb2 enable
++   control.
++   for type-c phy0, it must be <0xe580 3 19>;
++   for type-c phy1, it must be <0xe58c 3 19>;
++ - rockchip,external-psm : the register of type-c phy external psm clock
++   selection.
++   for type-c phy0, it must be <0xe588 14 30>;
++   for type-c phy1, it must be <0xe594 14 30>;
++ - rockchip,pipe-status : the register of type-c phy pipe status.
++   for type-c phy0, it must be <0xe5c0 0 0>;
++   for type-c phy1, it must be <0xe5c0 16 16>;
 +
-+static void stm32_irq_handler(struct irq_desc *desc)
-+{
-+	struct irq_domain *domain = irq_desc_get_handler_data(desc);
-+	struct irq_chip_generic *gc = domain->gc->gc[0];
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	unsigned long pending;
-+	int n;
++Required nodes : a sub-node is required for each port the phy provides.
++		 The sub-node name is used to identify dp or usb3 port,
++		 and shall be the following entries:
++	* "dp-port" : the name of DP port.
++	* "usb3-port" : the name of USB3 port.
 +
-+	chained_irq_enter(chip, desc);
++Required properties (port (child) node):
++- #phy-cells : must be 0, See ./phy-bindings.txt for details.
 +
-+	while ((pending = irq_reg_readl(gc, EXTI_PR))) {
-+		for_each_set_bit(n, &pending, BITS_PER_LONG) {
-+			generic_handle_irq(irq_find_mapping(domain, n));
-+			irq_reg_writel(gc, BIT(n), EXTI_PR);
-+		}
-+	}
++Example:
++	tcphy0: phy@ff7c0000 {
++		compatible = "rockchip,rk3399-typec-phy";
++		reg = <0x0 0xff7c0000 0x0 0x40000>;
++		rockchip,grf = <&grf>;
++		extcon = <&fusb0>;
++		clocks = <&cru SCLK_UPHY0_TCPDCORE>,
++			 <&cru SCLK_UPHY0_TCPDPHY_REF>;
++		clock-names = "tcpdcore", "tcpdphy-ref";
++		assigned-clocks = <&cru SCLK_UPHY0_TCPDCORE>;
++		assigned-clock-rates = <50000000>;
++		resets = <&cru SRST_UPHY0>,
++			 <&cru SRST_UPHY0_PIPE_L00>,
++			 <&cru SRST_P_UPHY0_TCPHY>;
++		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
++		rockchip,typec-conn-dir = <0xe580 0 16>;
++		rockchip,usb3tousb2-en = <0xe580 3 19>;
++		rockchip,external-psm = <0xe588 14 30>;
++		rockchip,pipe-status = <0xe5c0 0 0>;
 +
-+	chained_irq_exit(chip, desc);
-+}
++		tcphy0_dp: dp-port {
++			#phy-cells = <0>;
++		};
 +
-+static int stm32_irq_set_type(struct irq_data *data, unsigned int type)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
-+	int pin = data->hwirq;
-+	u32 rtsr, ftsr;
++		tcphy0_usb3: usb3-port {
++			#phy-cells = <0>;
++		};
++	};
 +
-+	irq_gc_lock(gc);
++	tcphy1: phy@ff800000 {
++		compatible = "rockchip,rk3399-typec-phy";
++		reg = <0x0 0xff800000 0x0 0x40000>;
++		rockchip,grf = <&grf>;
++		extcon = <&fusb1>;
++		clocks = <&cru SCLK_UPHY1_TCPDCORE>,
++			 <&cru SCLK_UPHY1_TCPDPHY_REF>;
++		clock-names = "tcpdcore", "tcpdphy-ref";
++		assigned-clocks = <&cru SCLK_UPHY1_TCPDCORE>;
++		assigned-clock-rates = <50000000>;
++		resets = <&cru SRST_UPHY1>,
++			 <&cru SRST_UPHY1_PIPE_L00>,
++			 <&cru SRST_P_UPHY1_TCPHY>;
++		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
++		rockchip,typec-conn-dir = <0xe58c 0 16>;
++		rockchip,usb3tousb2-en = <0xe58c 3 19>;
++		rockchip,external-psm = <0xe594 14 30>;
++		rockchip,pipe-status = <0xe5c0 16 16>;
 +
-+	rtsr = irq_reg_readl(gc, EXTI_RTSR);
-+	ftsr = irq_reg_readl(gc, EXTI_FTSR);
++		tcphy1_dp: dp-port {
++			#phy-cells = <0>;
++		};
 +
-+	switch (type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+		rtsr |= BIT(pin);
-+		ftsr &= ~BIT(pin);
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		rtsr &= ~BIT(pin);
-+		ftsr |= BIT(pin);
-+		break;
-+	case IRQ_TYPE_EDGE_BOTH:
-+		rtsr |= BIT(pin);
-+		ftsr |= BIT(pin);
-+		break;
-+	default:
-+		irq_gc_unlock(gc);
-+		return -EINVAL;
-+	}
-+
-+	irq_reg_writel(gc, rtsr, EXTI_RTSR);
-+	irq_reg_writel(gc, ftsr, EXTI_FTSR);
-+
-+	irq_gc_unlock(gc);
-+
-+	return 0;
-+}
-+
-+static int stm32_irq_set_wake(struct irq_data *data, unsigned int on)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
-+	int pin = data->hwirq;
-+	u32 emr;
-+
-+	irq_gc_lock(gc);
-+
-+	emr = irq_reg_readl(gc, EXTI_EMR);
-+	if (on)
-+		emr |= BIT(pin);
-+	else
-+		emr &= ~BIT(pin);
-+	irq_reg_writel(gc, emr, EXTI_EMR);
-+
-+	irq_gc_unlock(gc);
-+
-+	return 0;
-+}
-+
-+static int stm32_exti_alloc(struct irq_domain *d, unsigned int virq,
-+			    unsigned int nr_irqs, void *data)
-+{
-+	struct irq_chip_generic *gc = d->gc->gc[0];
-+	struct irq_fwspec *fwspec = data;
-+	irq_hw_number_t hwirq;
-+
-+	hwirq = fwspec->param[0];
-+
-+	irq_map_generic_chip(d, virq, hwirq);
-+	irq_domain_set_info(d, virq, hwirq, &gc->chip_types->chip, gc,
-+			    handle_simple_irq, NULL, NULL);
-+
-+	return 0;
-+}
-+
-+static void stm32_exti_free(struct irq_domain *d, unsigned int virq,
-+			    unsigned int nr_irqs)
-+{
-+	struct irq_data *data = irq_get_irq_data(virq);
-+
-+	irq_gc_mask_clr_bit(data->parent_data);
-+	irq_domain_reset_irq_data(data);
-+}
-+
-+struct irq_domain_ops irq_exti_domain_ops = {
-+	.map	= irq_map_generic_chip,
-+	.xlate	= irq_domain_xlate_onetwocell,
-+	.alloc  = stm32_exti_alloc,
-+	.free	= stm32_exti_free,
-+};
-+
-+static int __init stm32_exti_init(struct device_node *node,
-+				  struct device_node *parent)
-+{
-+	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
-+	int nr_irqs, nr_exti, ret, i;
-+	struct irq_chip_generic *gc;
-+	struct irq_domain *domain;
-+	void *base;
-+
-+	base = of_iomap(node, 0);
-+	if (!base) {
-+		pr_err("%s: Unable to map registers\n", node->full_name);
-+		return -ENOMEM;
-+	}
-+
-+	/* Determine number of irqs supported */
-+	writel_relaxed(~0UL, base + EXTI_RTSR);
-+	nr_exti = fls(readl_relaxed(base + EXTI_RTSR));
-+	writel_relaxed(0, base + EXTI_RTSR);
-+
-+	pr_info("%s: %d External IRQs detected\n", node->full_name, nr_exti);
-+
-+	domain = irq_domain_add_linear(node, nr_exti,
-+				       &irq_exti_domain_ops, NULL);
-+	if (!domain) {
-+		pr_err("%s: Could not register interrupt domain.\n",
-+				node->name);
-+		ret = -ENOMEM;
-+		goto out_unmap;
-+	}
-+
-+	ret = irq_alloc_domain_generic_chips(domain, nr_exti, 1, "exti",
-+					     handle_edge_irq, clr, 0, 0);
-+	if (ret) {
-+		pr_err("%s: Could not allocate generic interrupt chip.\n",
-+			node->full_name);
-+		goto out_free_domain;
-+	}
-+
-+	gc = domain->gc->gc[0];
-+	gc->reg_base                         = base;
-+	gc->chip_types->type               = IRQ_TYPE_EDGE_BOTH;
-+	gc->chip_types->chip.name          = gc->chip_types[0].chip.name;
-+	gc->chip_types->chip.irq_ack       = irq_gc_ack_set_bit;
-+	gc->chip_types->chip.irq_mask      = irq_gc_mask_clr_bit;
-+	gc->chip_types->chip.irq_unmask    = irq_gc_mask_set_bit;
-+	gc->chip_types->chip.irq_set_type  = stm32_irq_set_type;
-+	gc->chip_types->chip.irq_set_wake  = stm32_irq_set_wake;
-+	gc->chip_types->regs.ack           = EXTI_PR;
-+	gc->chip_types->regs.mask          = EXTI_IMR;
-+	gc->chip_types->handler            = handle_edge_irq;
-+
-+	nr_irqs = of_irq_count(node);
-+	for (i = 0; i < nr_irqs; i++) {
-+		unsigned int irq = irq_of_parse_and_map(node, i);
-+
-+		irq_set_handler_data(irq, domain);
-+		irq_set_chained_handler(irq, stm32_irq_handler);
-+	}
-+
-+	return 0;
-+
-+out_free_domain:
-+	irq_domain_remove(domain);
-+out_unmap:
-+	iounmap(base);
-+	return ret;
-+}
-+
-+IRQCHIP_DECLARE(stm32_exti, "st,stm32-exti", stm32_exti_init);
++		tcphy1_usb3: usb3-port {
++			#phy-cells = <0>;
++		};
++	};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
