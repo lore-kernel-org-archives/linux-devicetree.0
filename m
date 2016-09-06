@@ -1,43 +1,64 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/3] arm64: dts: berlin4ct-stb: add missing unit name to /memory node
-Date: Tue, 6 Sep 2016 16:55:56 +0800
-Message-ID: <20160906085557.4019-3-jszhang@marvell.com>
-References: <20160906085557.4019-1-jszhang@marvell.com>
+From: Olliver Schinagl <oliver@schinagl.nl>
+Subject: Re: [PATCH] leds-pca963x: add bindings to invert polarity
+Date: Tue, 06 Sep 2016 11:29:56 +0200
+Message-ID: <1473154196.731.44.camel@schinagl.nl>
+References: <1462182104-21450-1-git-send-email-anders@chargestorm.se>
+         <5729A4AB.5080901@samsung.com> <20160504075508.GA22125@ad.chargestorm.se>
+         <5729AE59.6000009@schinagl.nl>
+         <20160905110210.bxno7zx7exmtu774@ad.chargestorm.se>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160906085557.4019-1-jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160905110210.bxno7zx7exmtu774@ad.chargestorm.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anders Darander <anders@chargestorm.se>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the following DTC warning with W=1:
+Hi Anders,
 
-"Node /memory has a reg or ranges property, but no unit name"
+On ma, 2016-09-05 at 13:02 +0200, Anders Darander wrote:
+> Hi,
+> 
+> * Olliver Schinagl <oliver@schinagl.nl> [160504 10:10]:
+> > 
+> > On 04-05-16 09:55, Anders Darander wrote:
+> > > 
+> > > * Jacek Anaszewski <j.anaszewski@samsung.com> [160504 09:28]:
+> > > > 
+> > > > Please note that there has already been an attempt to add
+> > > > the support for inverted output polarity to this driver and
+> > > > related
+> > > > discussion [1]. This thread remains quiet for around two weeks.
+> > > Ah, nice coincidence! Unfortunately, I made the work earlier than
+> > > his
+> > > posting, otherwise I could have spent the time on somethinge
+> > > else. ;)
+> > Sorry to be so slacking with submitting this, I've been sitting on
+> > it for 6
+> > months now :) I just kept postponing in submitting it. But as they
+> > say,
+> > great minds, and all that.
+> 
+> > 
+> > > 
+> > > Well, then I hope v2 of his patches comes along.
+> 
+> Any news on a v2?
+> 
+> Otherwise, could we agree on a dt binding for the inverted output,
+> and
+> look into merging that prior to the rest of the series? I'd like to
+> get
+> rid of my local patch... 
+I almost forgotten about this bit, I'll read back on the mails and
+check/verify my results/discussions from back then.
 
-Signed-off-by: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm64/boot/dts/marvell/berlin4ct-stb.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for bringing it up again!
 
-diff --git a/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts b/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
-index 348c37e..d47edad 100644
---- a/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
-+++ b/arch/arm64/boot/dts/marvell/berlin4ct-stb.dts
-@@ -54,7 +54,7 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@1000000 {
- 		device_type = "memory";
- 		/* the first 16MB is for firmwares' usage */
- 		reg = <0 0x01000000 0 0x7f000000>;
--- 
-2.9.3
+Olliver
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Cheers,
+> Anders
