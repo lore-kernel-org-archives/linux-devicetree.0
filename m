@@ -1,33 +1,63 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2 v6] bus: qcom: add EBI2 device tree bindings
-Date: Mon, 5 Sep 2016 21:26:17 -0700
-Message-ID: <20160906042617.GA15161@tuxbot>
-References: <1473112255-7790-1-git-send-email-linus.walleij@linaro.org>
+From: =?UTF-8?B?TXl1bmdKb28gSGFt?= <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: =?UTF-8?B?UkU6IFtQQVRDSCB2MTAgNS81XSBkcm0vcm9ja2NoaXA6IEFk?=
+ =?UTF-8?B?ZCBkbWMgbm90aWZpZXIgaW4gdm9wIGRyaXZlcg==?=
+Date: Tue, 06 Sep 2016 04:37:54 +0000
+Message-ID: <705204681.416743.1473136674125.JavaMail.weblogic@ep1ml102b>
+References: <1473051971-5500-1-git-send-email-hl@rock-chips.com>
+ <CGME20160905050631epcas1p4ebe75a5f119132f583a5020187382026@epcas1p4.samsung.com>
+Reply-To: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/related;
+ boundary="----=_Part_416742_1983975950.1473136674125"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1473112255-7790-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: =?UTF-8?B?TGluIEh1YW5n?= <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?aGVpa29Ac250ZWNoLmRl?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: =?UTF-8?B?bWFyay55YW9Acm9jay1jaGlwcy5jb20=?= <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?Q2hhbndvbyBDaG9p?= <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?YWlybGllZEBsaW51eC5pZQ==?= <airlied-cv59FeDIM0c@public.gmane.org>, =?UTF-8?B?bXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb20=?= <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?ZGJhc2Vob3JlQGNocm9taXVtLm9yZw==?= <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?B?c2JveWRAY29kZWF1cm9yYS5vcmc=?= <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?UTF-8?B?bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw==?= <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZw==?= <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, =?UTF-8?B?ZGlhbmRlcnNAY2hyb21pdW0ub3Jn?= <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?B?bGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZw==?= <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?B?S3l1bmdtaW4gUGFyaw=
 List-Id: devicetree@vger.kernel.org
 
-On Mon 05 Sep 14:50 PDT 2016, Linus Walleij wrote:
+------=_Part_416742_1983975950.1473136674125
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"
 
-> diff --git a/Documentation/devicetree/bindings/bus/qcom,ebi2.txt b/Documentation/devicetree/bindings/bus/qcom,ebi2.txt
-[..]
-> +Also CS1 and CS2 has -A and -B signals. Why they have that is unclear to me.
-> +
-
-Most Qualcomm platforms has a few functions that has a second level of
-muxing, probably as a solution to pin collisions or some other hardware
-constraints.
-
-It looks like this is what you're seeing.
-
-Regards,
-Bjorn
+PiB3aGVuIGluIGRkciBmcmVxdWVuY3kgc2NhbGluZyBwcm9jZXNzLCB2b3AgY2FuIG5vdCBkbyBl
+bmFibGUgb3INCj4gZGlzYWJsZSBvcGVyYXRpb24sIHNpbmNlIGluIGRjZiB3ZSBjaGVjayB2b3Ag
+Y2xvY2sgdG8gc2VlIHdoZXRoZXINCj4gdm9wIHdvcmsuIElmIHZvcCB3b3JrLCBkY2YgZG8gZGRy
+IGZyZXF1ZW5jeSBzY2FsaW5nIHdoZW4gdm9wDQo+IGluIHZibGFuayBzdGF0dXMsIGFuZCB3ZSBu
+ZWVkIHRvIHJlYWQgdm9wIHJlZ2lzdGVyIHRvIGNoZWNrIHdoZXRoZXINCj4gdm9wIGdvIGludG8g
+dmJsYW5rIHN0YXR1cy4gSWYgdm9wIG5vdCB3b3JrLCBkY2YgY2FuIGRvIGRkciBmcmVxdWVuY3kN
+Cj4gYW55IHRpbWUuIFNvIHdoZW4gZG8gZGRyIGZyZXF1ZW5jeSBzY2FsaW5nLCB5b3UgZGlzYWJs
+ZWQgb3IgZW5hYmxlDQo+IHZvcCwgdGhlcmUgbWF5IHR3byBiYWQgdGhpbmcgaGFwcGVuOiAxLCB0
+aGUgcGFuZWwgZmxpY2tlcih3aGVuIHZvcCBmcm9tDQo+IGRpc2FibGUgc3RhdHVzIGNoYW5nZSB0
+byBlbmFibGUpLiAyLCBrZXJuZWwgaGFuZyAod2hlbiB2b3AgZnJvbSBlbmFibGUNCj4gc3RhdHVz
+IGNoYW5nZSB0byBkaXNhYmxlLCBkY2YgbmVlZCB0byByZWFkIHZibGFuayBzdGF0dXMsIGJ1dCBp
+ZiB5b3UgZGlzYWJsZQ0KPiB2b3AgY2xvY2ssIGl0IGNhbiBub3QgZ2V0IHRoZSBzdGF0dXMsIGl0
+IHdpbGwgbGVhZCBzb2MgZGVhZCkgU28gd2UgbmVlZA0KPiByZWdpc3RlciB0byBkZXZmcmVxIG5v
+dGlmaWVyLCBhbmQgd2UgY2FuIGdldCB0aGUgZG1jIHN0YXR1cy4gQWxzbywgd2hlbg0KPiB0aGVy
+ZSBoYXZlIHR3byB2b3AgZW5hYmxlZCwgd2UgbmVlZCB0byBkaXNhYmxlIGRtYywgc2luY2UgZGNm
+IG9ubHkgYmFzZQ0KPiBvbiBvbmUgdm9wIHZibGFuayB0aW1lLCBzbyB0aGUgb3RoZXIgcGFuZWwg
+d2lsbCBmbGlja2VyIHdoZW4gZG8gZGRyDQo+IGZyZXF1ZW5jeSBzY2FsaW5nLg0KPiANCj4gU2ln
+bmVkLW9mZi1ieTogTGluIEh1YW5nIDxobEByb2NrLWNoaXBzLmNvbT4NCj4gUmV2aWV3ZWQtYnk6
+IENoYW53b28gQ2hvaSA8Y3cwMC5jaG9pQHNhbXN1bmcuY29tPg0KDQoNCkFja2VkLWJ5OiBNeXVu
+Z0pvbyBIYW0gPG15dW5nam9vLmhhbUBzYW1zdW5nLmNvbT4NCg0KDQpUaGUgY29kZSBsb29rcyBm
+aW5lLCBidXQgSSd2ZSBqdXN0IGZvdW5kIHRoYXQgSSBjYW5ub3QgbWVyZ2UgdGhpcw0KY29kZSBh
+cyBJIGFtIG5vdCBoYW5kbGluZyBkcml2ZXJzL2dwdS9kcm0uDQoNClBsZWFzZSB0cnkgdG8gbWVy
+Z2UgdGhpcyBwaWVjZSBpbnRvIGRyaXZlcnMvZ3B1L2RybSB0cmVlLg0KDQpGb3IgdGhlIG90aGVy
+IDQgcGllY2llcyAoMS81IHRvIDQvNSkgSSdtIG9rIHdpdGggdGhlbS4gSSdtIG1lcmdpbmcgdGhl
+bSBub3cuDQoNCg0KPiAtLS0NCj4gQ2hhbmdlcyBpbiB2MTA6DQo+IC0gTm9uZQ0KPiANCj4gQ2hh
+bmdlcyBpbiB2OToNCj4gLSBOb25lDQo+IA0KPiBDaGFuZ2VzIGluIHY4Og0KPiAtIE5vbmUNCj4g
+DQo+IENoYW5nZXMgaW4gdjc6DQo+IC0gTm9uZQ0KPiANCj4gQ2hhbmdlcyBpbiB2NjoNCj4gLSBm
+aXggYSBidWlsZCBlcnJvcg0KPiANCj4gQ2hhbmdlcyBpbiB2NToNCj4gLSBpbXByb3ZlIHNvbWUg
+bml0cw0KPiANCj4gQ2hhbmdlcyBpbiB2NDoNCj4gLSByZWdpc3RlciBub3RpZmllciB0byBkZXZm
+cmVxX3JlZ2lzdGVyX25vdGlmaWVyDQo+IC0gdXNlIERFVkZSRVFfUFJFQ0hBTkdFIGFuZCBERVZG
+UkVRX1BPU1RDSEFOR0UgdG8gZ2V0IGRtYyBzdGF0dXMNCj4gLSB3aGVuIHR3byB2b3AgZW5hYmxl
+LCBkaXNhYmxlIGRtYw0KPiAtIHdoZW4gdHdvIHZvcCBiYWNrIHRvIG9uZSB2b3AsIGVuYWJsZSBk
+bWMNCj4gDQo+IENoYW5nZXMgaW4gdjM6DQo+IC0gd2hlbiBkbyB2b3AgZWFuYmxlL2Rpc2FibGUs
+IGRtYyB3aWxsIHdhaXQgdW50aWwgaXQgZmluaXNoDQo+IA0KPiBDaGFuZ2VzIGluIHYyOg0KPiAt
+IE5vbmUNCj4gDQo+IENoYW5nZXMgaW4gdjE6DQo+IC0gdXNlIHdhaXRfZXZlbnQgaW5zdGVhZCB1
+c2xlZXANCj4gDQo+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcC5j
+IHwgMTE2ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAx
+MTYgaW5zZXJ0aW9ucygrKQ0KPiANCg==
+------=_Part_416742_1983975950.1473136674125--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
