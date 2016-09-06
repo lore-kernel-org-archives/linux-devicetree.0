@@ -1,138 +1,283 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [v2 PATCH 2/2] ASoC: rockchip: Add DP dai-links to the rk3399-gru machine driver
-Date: Tue,  6 Sep 2016 10:09:52 -0700
-Message-ID: <1473181792-15398-1-git-send-email-zyw@rock-chips.com>
-References: <1473137335-14541-3-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473137335-14541-3-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dianders@chromium.org, heiko@sntech.de, zhengxing@rock-chips.com, cychiang@chromium.org
-Cc: linux-rockchip@lists.infradead.org, zyw@rock-chips.com, perex@perex.cz, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org, tiwai@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org
+From: Sean Paul <seanpaul@google.com>
+Subject: Re: [PATCH v10 5/5] drm/rockchip: Add dmc notifier in vop driver
+Date: Tue, 6 Sep 2016 13:18:06 -0400
+Message-ID: <CAOw6vb+N4ASTAu49VBPyOAUH=S4rrUBOgZOEP-RTvijEgeN7HA@mail.gmail.com>
+References: <1473051971-5500-1-git-send-email-hl@rock-chips.com> <1473051971-5500-6-git-send-email-hl@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1473051971-5500-6-git-send-email-hl@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lin Huang <hl@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, ??? <myungjoo.ham@samsung.com>, =?UTF-8?B?5aea5pm65oOF?= <mark.yao@rock-chips.com>, cw00.choi@samsung.com, Dave Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, dbasehore@chromium.org, Stephen Boyd <sboyd@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Douglas Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Kyungmin Park <kyungmin.park@samsung.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Jon Medhurst <tixy@linaro.org>, typ@rock-chips.com, sudeep.holla@arm.com, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DP audio output support to the rk3399-gru machine
-driver.
+On Mon, Sep 5, 2016 at 1:06 AM, Lin Huang <hl@rock-chips.com> wrote:
+> when in ddr frequency scaling process, vop can not do enable or
+> disable operation, since in dcf we check vop clock to see whether
+> vop work. If vop work, dcf do ddr frequency scaling when vop
+> in vblank status, and we need to read vop register to check whether
+> vop go into vblank status. If vop not work, dcf can do ddr frequency
+> any time. So when do ddr frequency scaling, you disabled or enable
+> vop, there may two bad thing happen: 1, the panel flicker(when vop from
+> disable status change to enable). 2, kernel hang (when vop from enable
+> status change to disable, dcf need to read vblank status, but if you disable
+> vop clock, it can not get the status, it will lead soc dead) So we need
+> register to devfreq notifier, and we can get the dmc status. Also, when
+> there have two vop enabled, we need to disable dmc, since dcf only base
+> on one vop vblank time, so the other panel will flicker when do ddr
+> frequency scaling.
+>
+> Signed-off-by: Lin Huang <hl@rock-chips.com>
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+> Changes in v10:
+> - None
+>
+> Changes in v9:
+> - None
+>
+> Changes in v8:
+> - None
+>
+> Changes in v7:
+> - None
+>
+> Changes in v6:
+> - fix a build error
+>
+> Changes in v5:
+> - improve some nits
+>
+> Changes in v4:
+> - register notifier to devfreq_register_notifier
+> - use DEVFREQ_PRECHANGE and DEVFREQ_POSTCHANGE to get dmc status
+> - when two vop enable, disable dmc
+> - when two vop back to one vop, enable dmc
+>
+> Changes in v3:
+> - when do vop eanble/disable, dmc will wait until it finish
+>
+> Changes in v2:
+> - None
+>
+> Changes in v1:
+> - use wait_event instead usleep
+>
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 116 ++++++++++++++++++++++++++++
+>  1 file changed, 116 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> index efbc41a..a73f3aa 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> @@ -19,6 +19,8 @@
+>  #include <drm/drm_crtc_helper.h>
+>  #include <drm/drm_plane_helper.h>
+>
+> +#include <linux/devfreq.h>
+> +#include <linux/devfreq-event.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> @@ -118,6 +120,13 @@ struct vop {
+>
+>         const struct vop_data *data;
+>
+> +       struct devfreq *devfreq;
+> +       struct devfreq_event_dev *devfreq_event_dev;
+> +       struct notifier_block dmc_nb;
+> +       int dmc_in_process;
+> +       int vop_switch_status;
+> +       wait_queue_head_t wait_dmc_queue;
+> +       wait_queue_head_t wait_vop_switch_queue;
+>         uint32_t *regsbak;
+>         void __iomem *regs;
+>
+> @@ -428,11 +437,47 @@ static void vop_dsp_hold_valid_irq_disable(struct vop *vop)
+>         spin_unlock_irqrestore(&vop->irq_lock, flags);
+>  }
+>
+> +static int dmc_notify(struct notifier_block *nb, unsigned long event,
+> +                     void *data)
+> +{
+> +       struct vop *vop = container_of(nb, struct vop, dmc_nb);
+> +
+> +       if (event == DEVFREQ_PRECHANGE) {
+> +               /*
+> +                * check if vop in enable or disable process,
+> +                * if yes, wait until it finishes, use 200ms as
+> +                * timeout.
+> +                */
+> +               if (!wait_event_timeout(vop->wait_vop_switch_queue,
+> +                                       !vop->vop_switch_status, HZ / 5))
+> +                       dev_warn(vop->dev,
+> +                                "Timeout waiting for vop swtich status\n");
+> +               vop->dmc_in_process = 1;
+> +       } else if (event == DEVFREQ_POSTCHANGE) {
+> +               vop->dmc_in_process = 0;
+> +               wake_up(&vop->wait_dmc_queue);
+> +       }
+> +
+> +       return NOTIFY_OK;
+> +}
+> +
+>  static int vop_enable(struct drm_crtc *crtc)
+>  {
+>         struct vop *vop = to_vop(crtc);
+> +       int num_enabled_crtc = 0;
+>         int ret;
+>
+> +       /*
+> +        * if in dmc scaling frequency process, wait until it finishes
+> +        * use 200ms as timeout time.
+> +        */
+> +       if (!wait_event_timeout(vop->wait_dmc_queue,
+> +                               !vop->dmc_in_process, HZ / 5))
+> +               dev_warn(vop->dev,
+> +                        "Timeout waiting for dmc when vop enable\n");
+> +
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
----
 
-Changes in v2:
-- correct the commit message
+This wait_event_timeout code is terribly racey (same goes above and below).
 
- .../bindings/sound/rockchip,rk3399-gru-sound.txt   | 13 +++---
- sound/soc/rockchip/rk3399_gru_sound.c              | 48 ++++++++++++++++++++++
- 2 files changed, 55 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-index f19b6c8..222124b 100644
---- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-@@ -1,15 +1,16 @@
--ROCKCHIP with MAX98357A/RT5514/DA7219 codecs on GRU boards
-+ROCKCHIP with MAX98357A/RT5514/DA7219 codecs and DP via spdif on GRU boards
- 
- Required properties:
- - compatible: "rockchip,rk3399-gru-sound"
--- rockchip,cpu: The phandle of the Rockchip I2S controller that's
--  connected to the codecs
--- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
-+- rockchip,cpu: The phandle of the Rockchip I2S controller controller that's
-+  connected to the codecs, and the SPDIF controller that's connected to DP
-+- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs and of the
-+  DP encoder node
- 
- Example:
- 
- sound {
- 	compatible = "rockchip,rk3399-gru-sound";
--	rockchip,cpu = <&i2s0>;
--	rockchip,codec = <&max98357a &rt5514 &da7219>;
-+	rockchip,cpu = <&i2s0 &spdif>;
-+	rockchip,codec = <&max98357a &rt5514 &da7219 &cdn_dp 1>;
- };
-diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
-index 164b6da..50e5d9a 100644
---- a/sound/soc/rockchip/rk3399_gru_sound.c
-+++ b/sound/soc/rockchip/rk3399_gru_sound.c
-@@ -25,6 +25,7 @@
- #include <linux/spi/spi.h>
- #include <sound/core.h>
- #include <sound/jack.h>
-+#include <sound/hdmi-codec.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
-@@ -226,10 +227,30 @@ static struct snd_soc_ops rockchip_sound_da7219_ops = {
- 	.hw_params = rockchip_sound_da7219_hw_params,
- };
- 
-+static struct snd_soc_jack cdn_dp_card_jack;
-+
-+static int cdn_dp_init(struct snd_soc_pcm_runtime *runtime)
-+{
-+	struct snd_soc_card *card = runtime->card;
-+	struct snd_soc_codec *codec = runtime->codec;
-+	int ret;
-+
-+	/* enable jack detection */
-+	ret = snd_soc_card_jack_new(card, "DP Jack", SND_JACK_LINEOUT,
-+				    &cdn_dp_card_jack, NULL, 0);
-+	if (ret) {
-+		dev_err(card->dev, "Can't new DP Jack %d\n", ret);
-+		return ret;
-+	}
-+
-+	return hdmi_codec_set_jack_detect(codec, &cdn_dp_card_jack);
-+}
-+
- enum {
- 	DAILINK_MAX98357A,
- 	DAILINK_RT5514,
- 	DAILINK_DA7219,
-+	DAILINK_CDNDP,
- 	DAILINK_RT5514_DSP,
- };
- 
-@@ -264,6 +285,14 @@ static struct snd_soc_dai_link rockchip_dailinks[] = {
- 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
- 			SND_SOC_DAIFMT_CBS_CFS,
- 	},
-+	[DAILINK_CDNDP] = {
-+		.name = "DP",
-+		.stream_name = "DP PCM",
-+		.codec_dai_name = "spdif-hifi",
-+		.init = cdn_dp_init,
-+		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+			SND_SOC_DAIFMT_CBS_CFS,
-+	},
- 	/* RT5514 DSP for voice wakeup via spi bus */
- 	[DAILINK_RT5514_DSP] = {
- 		.name = "RT5514 DSP",
-@@ -334,6 +363,25 @@ static int rockchip_sound_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	cpu_node = of_parse_phandle(pdev->dev.of_node, "rockchip,cpu", 1);
-+	if (!cpu_node) {
-+		dev_err(&pdev->dev, "Property 'rockchip,cpu 1' missing or invalid\n");
-+		return -EINVAL;
-+	}
-+
-+	rockchip_dailinks[DAILINK_CDNDP].platform_of_node = cpu_node;
-+	rockchip_dailinks[DAILINK_CDNDP].cpu_of_node = cpu_node;
-+
-+	rockchip_dailinks[DAILINK_CDNDP].codec_of_node =
-+		of_parse_phandle(pdev->dev.of_node, "rockchip,codec",
-+				 DAILINK_CDNDP);
-+	if (!rockchip_dailinks[DAILINK_CDNDP].codec_of_node) {
-+		dev_err(&pdev->dev,
-+			"Property[%d] 'rockchip,codec' missing or invalid\n",
-+			DAILINK_CDNDP);
-+		return -EINVAL;
-+	}
-+
- 	rockchip_dailinks[DAILINK_RT5514_DSP].cpu_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
- 	rockchip_dailinks[DAILINK_RT5514_DSP].cpu_dai_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
- 	rockchip_dailinks[DAILINK_RT5514_DSP].platform_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
--- 
-1.9.1
+> +       vop->vop_switch_status = 1;
+> +
+>         ret = pm_runtime_get_sync(vop->dev);
+>         if (ret < 0) {
+>                 dev_err(vop->dev, "failed to get pm runtime: %d\n", ret);
+> @@ -479,6 +524,21 @@ static int vop_enable(struct drm_crtc *crtc)
+>
+>         drm_crtc_vblank_on(crtc);
+>
+> +       vop->vop_switch_status = 0;
+> +       wake_up(&vop->wait_vop_switch_queue);
+> +
+> +       /* check how many VOPs in use now */
+> +       drm_for_each_crtc(crtc, vop->drm_dev) {
+> +               if (crtc->state->enable)
+
+I think you really want to check active, instead of enable.
+
+> +                       num_enabled_crtc++;
+> +       }
+> +
+> +       /* if enable two vop, need to disable dmc */
+> +       if ((num_enabled_crtc > 1) && vop->devfreq) {
+> +               if (vop->devfreq_event_dev)
+> +                       devfreq_event_disable_edev(vop->devfreq_event_dev);
+> +               devfreq_suspend_device(vop->devfreq);
+> +       }
+
+This really feels like something that should be handled somewhere
+else. I don't fully understand how this works, but it seems like this
+dependency should be handled where it actually matters, rather than
+building in a seemingly arbitrary restriction in the vop driver.
+
+Even if this is the best place for it, this needs to be refactored to
+eliminate the races that exist now.
+
+Sean
+
+>         return 0;
+>
+>  err_disable_aclk:
+> @@ -489,17 +549,31 @@ err_disable_hclk:
+>         clk_disable(vop->hclk);
+>  err_put_pm_runtime:
+>         pm_runtime_put_sync(vop->dev);
+> +       vop->vop_switch_status = 0;
+> +       wake_up(&vop->wait_vop_switch_queue);
+>         return ret;
+>  }
+>
+>  static void vop_crtc_disable(struct drm_crtc *crtc)
+>  {
+>         struct vop *vop = to_vop(crtc);
+> +       int num_enabled_crtc = 0;
+>         int i;
+>
+>         WARN_ON(vop->event);
+>
+>         /*
+> +        * if in dmc scaling frequency process, wait until it finish
+> +        * use 200ms as timeout time.
+> +        */
+> +       if (!wait_event_timeout(vop->wait_dmc_queue,
+> +                               !vop->dmc_in_process, HZ / 5))
+> +               dev_warn(vop->dev,
+> +                        "Timeout waiting for dmc when vop disable\n");
+> +
+> +       vop->vop_switch_status = 1;
+> +
+> +       /*
+>          * We need to make sure that all windows are disabled before we
+>          * disable that crtc. Otherwise we might try to scan from a destroyed
+>          * buffer later.
+> @@ -555,6 +629,24 @@ static void vop_crtc_disable(struct drm_crtc *crtc)
+>                 spin_unlock_irq(&crtc->dev->event_lock);
+>
+>                 crtc->state->event = NULL;
+> +
+> +       vop->vop_switch_status = 0;
+> +       wake_up(&vop->wait_vop_switch_queue);
+> +
+> +       /* check how many VOPs in use now */
+> +       drm_for_each_crtc(crtc, vop->drm_dev) {
+> +               if (crtc->state->enable)
+> +                       num_enabled_crtc++;
+> +       }
+> +
+> +       /*
+> +        * if num_enabled_crtc = 1 now, it means 2 vop enabled
+> +        * change to 1 vop enabled  need to enable dmc again.
+> +        */
+> +       if ((num_enabled_crtc == 1) && vop->devfreq) {
+> +               if (vop->devfreq_event_dev)
+> +                       devfreq_event_enable_edev(vop->devfreq_event_dev);
+> +               devfreq_resume_device(vop->devfreq);
+>         }
+>  }
+>
+> @@ -1413,6 +1505,8 @@ static int vop_bind(struct device *dev, struct device *master, void *data)
+>         struct drm_device *drm_dev = data;
+>         struct vop *vop;
+>         struct resource *res;
+> +       struct devfreq *devfreq;
+> +       struct devfreq_event_dev *event_dev;
+>         size_t alloc_size;
+>         int ret, irq;
+>
+> @@ -1474,6 +1568,28 @@ static int vop_bind(struct device *dev, struct device *master, void *data)
+>                 return ret;
+>
+>         pm_runtime_enable(&pdev->dev);
+> +
+> +       init_waitqueue_head(&vop->wait_vop_switch_queue);
+> +       vop->vop_switch_status = 0;
+> +       init_waitqueue_head(&vop->wait_dmc_queue);
+> +       vop->dmc_in_process = 0;
+> +
+> +       devfreq = devfreq_get_devfreq_by_phandle(dev, 0);
+> +       if (IS_ERR(devfreq))
+> +               goto out;
+> +
+> +       vop->devfreq = devfreq;
+> +       vop->dmc_nb.notifier_call = dmc_notify;
+> +       devfreq_register_notifier(vop->devfreq, &vop->dmc_nb,
+> +                                 DEVFREQ_TRANSITION_NOTIFIER);
+> +
+> +       event_dev = devfreq_event_get_edev_by_phandle(vop->devfreq->dev.parent,
+> +                                                     0);
+> +       if (IS_ERR(event_dev))
+> +               goto out;
+> +
+> +       vop->devfreq_event_dev = event_dev;
+> +out:
+>         return 0;
+>  }
+>
+> --
+> 2.6.6
+>
