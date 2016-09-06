@@ -1,70 +1,287 @@
 Return-Path: <mka@chromium.org>
-MIME-Version: 1.0
-In-Reply-To: <20160906233806.GZ3950@sirena.org.uk>
-References: <20160906210125.GE79728@google.com> <20160906224054.GX3950@sirena.org.uk>
- <20160906233806.GZ3950@sirena.org.uk>
+Date: Tue, 6 Sep 2016 13:14:43 -0700
 From: Matthias Kaehlcke <mka@chromium.org>
-Date: Tue, 6 Sep 2016 16:46:22 -0700
-Message-ID: <CAKZ8rEM_LNtVQhv4RK_epY33KoMR5Q03MVdmFQYUrcb1bRmaYA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] regulator: Add set_voltage_time op
-Content-Type: multipart/alternative; boundary=001a114744867b0b92053bdf6744
-To: Mark Brown <broonie@kernel.org>
-Cc: lgirdwood@gmail.com, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, javier@dowhile0.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v4 1/4] regulator: Add set_voltage_time op
+Message-ID: <20160906201443.GC79728@google.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="liOOAslEiF7prFVr"
+Content-Disposition: inline
+To: Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com
+Cc: Douglas Anderson <dianders@chromium.org>, briannorris@chromium.org, javier@dowhile0.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---001a114744867b0b92053bdf6744
-Content-Type: text/plain; charset=UTF-8
 
-On Tue, Sep 6, 2016 at 4:38 PM, Mark Brown <broonie@kernel.org> wrote:
+--liOOAslEiF7prFVr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-> On Tue, Sep 06, 2016 at 11:40:54PM +0100, Mark Brown wrote:
-> > On Tue, Sep 06, 2016 at 02:01:25PM -0700, Matthias Kaehlcke wrote:
-> > > The new op is analogous to set_voltage_time_sel. It can be used by
-> > > regulators that don't have a table of discrete voltages. The function
->
-> > I've only got patch 1 in this series, what's going on here?
->
-> Actually it turns out I have at least three copies of this, one copy of
-> what's hopefully the reset of the series and none of them are threaded
-> together :(  You probably want to take a look at your patch sending
-> setup...
->
+The new op is analogous to set_voltage_time_sel. It can be used by
+regulators that don't have a table of discrete voltages. The function
+returns the time for the regulator voltage output voltage to stabilize
+after being set to a new value, in microseconds. The actual calculation
+of the stabilization time is done in the same place for both types of
+regulators.
 
-On my side it looked as if the first time the patch wasn't sent at all and
-apparently the second one contained an unintended attachment.
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+Changes in v4:
+- This patch is new for v4.
 
-Sorry for the spam :(
+ drivers/regulator/core.c         | 140 +++++++++++++++++++++++++--------------
+ include/linux/regulator/driver.h |   8 +++
+ 2 files changed, 97 insertions(+), 51 deletions(-)
 
---001a114744867b0b92053bdf6744
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index db320e8..b1cef47 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -2751,6 +2751,7 @@ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
+ 	int best_val = 0;
+ 	unsigned int selector;
+ 	int old_selector = -1;
++	int old_uV = _regulator_get_voltage(rdev);
+ 
+ 	trace_regulator_set_voltage(rdev_get_name(rdev), min_uV, max_uV);
+ 
+@@ -2800,27 +2801,38 @@ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
+ 		ret = -EINVAL;
+ 	}
+ 
+-	/* Call set_voltage_time_sel if successfully obtained old_selector */
+-	if (ret == 0 && !rdev->constraints->ramp_disable && old_selector >= 0
+-		&& old_selector != selector) {
++	if (ret != 0 || rdev->constraints->ramp_disable)
++		goto no_delay;
+ 
+-		delay = rdev->desc->ops->set_voltage_time_sel(rdev,
+-						old_selector, selector);
+-		if (delay < 0) {
+-			rdev_warn(rdev, "set_voltage_time_sel() failed: %d\n",
+-				  delay);
+-			delay = 0;
+-		}
++	if (rdev->desc->ops->set_voltage_time) {
++		int new_uV = _regulator_get_voltage(rdev);
+ 
+-		/* Insert any necessary delays */
+-		if (delay >= 1000) {
+-			mdelay(delay / 1000);
+-			udelay(delay % 1000);
+-		} else if (delay) {
+-			udelay(delay);
+-		}
++		if (old_uV == new_uV)
++			goto no_delay;
++
++		delay =	rdev->desc->ops->set_voltage_time(rdev, old_uV, new_uV);
++	} else if (rdev->desc->ops->set_voltage_time_sel) {
++		if (old_selector < 0 || old_selector == selector)
++			goto no_delay;
++
++		delay = rdev->desc->ops->set_voltage_time_sel(
++			rdev, old_selector, selector);
++	}
++
++	if (delay < 0) {
++		rdev_warn(rdev, "failed to get delay: %d\n", delay);
++		delay = 0;
+ 	}
+ 
++	/* Insert any necessary delays */
++	if (delay >= 1000) {
++		mdelay(delay / 1000);
++		udelay(delay % 1000);
++	} else if (delay) {
++		udelay(delay);
++	}
++
++no_delay:
+ 	if (ret == 0 && best_val >= 0) {
+ 		unsigned long data = best_val;
+ 
+@@ -2993,54 +3005,58 @@ int regulator_set_voltage_time(struct regulator *regulator,
+ {
+ 	struct regulator_dev *rdev = regulator->rdev;
+ 	const struct regulator_ops *ops = rdev->desc->ops;
+-	int old_sel = -1;
+-	int new_sel = -1;
+-	int voltage;
+-	int i;
+ 
+-	/* Currently requires operations to do this */
+-	if (!ops->list_voltage || !ops->set_voltage_time_sel
+-	    || !rdev->desc->n_voltages)
+-		return -EINVAL;
++	if (ops->set_voltage_time) {
++		return ops->set_voltage_time(rdev, old_uV, new_uV);
++	} else if (ops->set_voltage_time_sel) {
++		int old_sel = -1;
++		int new_sel = -1;
++		int voltage;
++		int i;
+ 
+-	for (i = 0; i < rdev->desc->n_voltages; i++) {
+-		/* We only look for exact voltage matches here */
+-		voltage = regulator_list_voltage(regulator, i);
+-		if (voltage < 0)
++		/* Currently requires operations to do this */
++		if (!ops->list_voltage || !rdev->desc->n_voltages)
+ 			return -EINVAL;
+-		if (voltage == 0)
+-			continue;
+-		if (voltage == old_uV)
+-			old_sel = i;
+-		if (voltage == new_uV)
+-			new_sel = i;
+-	}
+ 
+-	if (old_sel < 0 || new_sel < 0)
+-		return -EINVAL;
++		for (i = 0; i < rdev->desc->n_voltages; i++) {
++			/* We only look for exact voltage matches here */
++			voltage = regulator_list_voltage(regulator, i);
++			if (voltage < 0)
++				return -EINVAL;
++			if (voltage == 0)
++				continue;
++			if (voltage == old_uV)
++				old_sel = i;
++			if (voltage == new_uV)
++				new_sel = i;
++		}
++
++		if (old_sel < 0 || new_sel < 0)
++			return -EINVAL;
++
++		return ops->set_voltage_time_sel(rdev, old_sel, new_sel);
++	}
+ 
+-	return ops->set_voltage_time_sel(rdev, old_sel, new_sel);
++	return -EINVAL;
+ }
+ EXPORT_SYMBOL_GPL(regulator_set_voltage_time);
+ 
+ /**
+- * regulator_set_voltage_time_sel - get raise/fall time
+- * @rdev: regulator source device
+- * @old_selector: selector for starting voltage
+- * @new_selector: selector for target voltage
++ * regulator_set_voltage_time_op - get raise/fall time
++ * @regulator: regulator source
++ * @old_uV: starting voltage in microvolts
++ * @new_uV: target voltage in microvolts
+  *
+- * Provided with the starting and target voltage selectors, this function
+- * returns time in microseconds required to rise or fall to this new voltage
++ * Provided with the starting and ending voltage, this function calculates
++ * the time in microseconds required to rise or fall to this new voltage.
+  *
+  * Drivers providing ramp_delay in regulation_constraints can use this as their
+- * set_voltage_time_sel() operation.
++ * set_voltage_time() operation.
+  */
+-int regulator_set_voltage_time_sel(struct regulator_dev *rdev,
+-				   unsigned int old_selector,
+-				   unsigned int new_selector)
++int regulator_set_voltage_time_op(struct regulator_dev *rdev,
++				int old_uV, int new_uV)
+ {
+ 	unsigned int ramp_delay = 0;
+-	int old_volt, new_volt;
+ 
+ 	if (rdev->constraints->ramp_delay)
+ 		ramp_delay = rdev->constraints->ramp_delay;
+@@ -3052,6 +3068,28 @@ int regulator_set_voltage_time_sel(struct regulator_dev *rdev,
+ 		return 0;
+ 	}
+ 
++	return DIV_ROUND_UP(abs(new_uV - old_uV), ramp_delay);
++}
++EXPORT_SYMBOL_GPL(regulator_set_voltage_time_op);
++
++/**
++ * regulator_set_voltage_time_sel - get raise/fall time
++ * @rdev: regulator source device
++ * @old_selector: selector for starting voltage
++ * @new_selector: selector for target voltage
++ *
++ * Provided with the starting and target voltage selectors, this function
++ * returns time in microseconds required to rise or fall to this new voltage
++ *
++ * Drivers providing ramp_delay in regulation_constraints can use this as their
++ * set_voltage_time_sel() operation.
++ */
++int regulator_set_voltage_time_sel(struct regulator_dev *rdev,
++				   unsigned int old_selector,
++				   unsigned int new_selector)
++{
++	int old_volt, new_volt;
++
+ 	/* sanity check */
+ 	if (!rdev->desc->ops->list_voltage)
+ 		return -EINVAL;
+@@ -3059,7 +3097,7 @@ int regulator_set_voltage_time_sel(struct regulator_dev *rdev,
+ 	old_volt = rdev->desc->ops->list_voltage(rdev, old_selector);
+ 	new_volt = rdev->desc->ops->list_voltage(rdev, new_selector);
+ 
+-	return DIV_ROUND_UP(abs(new_volt - old_volt), ramp_delay);
++	return regulator_set_voltage_time_op(rdev, old_volt, new_volt);
+ }
+ EXPORT_SYMBOL_GPL(regulator_set_voltage_time_sel);
+ 
+diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
+index fcfa40a..537ca7f 100644
+--- a/include/linux/regulator/driver.h
++++ b/include/linux/regulator/driver.h
+@@ -113,6 +113,10 @@ struct regulator_linear_range {
+  *               stabilise after being enabled, in microseconds.
+  * @set_ramp_delay: Set the ramp delay for the regulator. The driver should
+  *		select ramp delay equal to or less than(closest) ramp_delay.
++ * @set_voltage_time: Time taken for the regulator voltage output voltage
++ *               to stabilise after being set to a new value, in microseconds.
++ *               The function provides the from and to voltage, the function
++ *               should return the worst case.
+  * @set_voltage_time_sel: Time taken for the regulator voltage output voltage
+  *               to stabilise after being set to a new value, in microseconds.
+  *               The function provides the from and to voltage selector, the
+@@ -168,6 +172,8 @@ struct regulator_ops {
+ 	/* Time taken to enable or set voltage on the regulator */
+ 	int (*enable_time) (struct regulator_dev *);
+ 	int (*set_ramp_delay) (struct regulator_dev *, int ramp_delay);
++	int (*set_voltage_time) (struct regulator_dev *,
++				int old_uV, int new_uV);
+ 	int (*set_voltage_time_sel) (struct regulator_dev *,
+ 				     unsigned int old_selector,
+ 				     unsigned int new_selector);
+@@ -461,6 +467,8 @@ int regulator_set_voltage_sel_regmap(struct regulator_dev *rdev, unsigned sel);
+ int regulator_is_enabled_regmap(struct regulator_dev *rdev);
+ int regulator_enable_regmap(struct regulator_dev *rdev);
+ int regulator_disable_regmap(struct regulator_dev *rdev);
++int regulator_set_voltage_time_op(struct regulator_dev *rdev,
++				int old_uV, int new_uV);
+ int regulator_set_voltage_time_sel(struct regulator_dev *rdev,
+ 				   unsigned int old_selector,
+ 				   unsigned int new_selector);
+-- 
+2.8.0.rc3.226.g39d4020
+
+
+--liOOAslEiF7prFVr
 Content-Type: text/html; charset=UTF-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On T=
-ue, Sep 6, 2016 at 4:38 PM, Mark Brown <span dir=3D"ltr">&lt;<a href=3D"mai=
-lto:broonie@kernel.org" target=3D"_blank">broonie@kernel.org</a>&gt;</span>=
- wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;bor=
-der-left:1px #ccc solid;padding-left:1ex"><div class=3D"HOEnZb"><div class=
-=3D"h5">On Tue, Sep 06, 2016 at 11:40:54PM +0100, Mark Brown wrote:<br>
-&gt; On Tue, Sep 06, 2016 at 02:01:25PM -0700, Matthias Kaehlcke wrote:<br>
-&gt; &gt; The new op is analogous to set_voltage_time_sel. It can be used b=
-y<br>
-&gt; &gt; regulators that don&#39;t have a table of discrete voltages. The =
-function<br>
-<br>
-&gt; I&#39;ve only got patch 1 in this series, what&#39;s going on here?<br=
->
-<br>
-</div></div>Actually it turns out I have at least three copies of this, one=
- copy of<br>
-what&#39;s hopefully the reset of the series and none of them are threaded<=
-br>
-together :(=C2=A0 You probably want to take a look at your patch sending<br=
->
-setup...<br>
-</blockquote></div><br></div><div class=3D"gmail_extra">On my side it looke=
-d as if the first time the patch wasn&#39;t sent at all and apparently the =
-second one contained an unintended attachment.</div><div class=3D"gmail_ext=
-ra"><br></div><div class=3D"gmail_extra">Sorry for the spam :(</div><div cl=
-ass=3D"gmail_extra"><br></div></div>
+<div dir=3D"ltr">Alliant Credit Union, PO Box 255388, Sacramento, CA 95865-=
+5388<br clear=3D"all"><div><br></div>-- <br><div class=3D"gmail_signature">=
+<div dir=3D"ltr"><br><table cellspacing=3D"0" cellpadding=3D"0" style=3D"fo=
+nt-family:&quot;times new roman&quot;"><tbody><tr style=3D"color:rgb(85,85,=
+85);font-family:sans-serif;font-size:small"><td nowrap style=3D"border-top:=
+2px solid rgb(213,15,37)">Matthias Kaehlcke=C2=A0|</td><td nowrap style=3D"=
+border-top:2px solid rgb(51,105,232)">=C2=A0Software Engineer=C2=A0|</td><t=
+d nowrap style=3D"border-top:2px solid rgb(0,153,57)">=C2=A0<a href=3D"mail=
+to:mka@google.com" target=3D"_blank">mka@google.com</a></td><td nowrap styl=
+e=3D"border-top:2px solid rgb(238,178,17)"><br></td></tr></tbody></table><b=
+r></div></div>
+</div>
 
---001a114744867b0b92053bdf6744--
+--liOOAslEiF7prFVr--
