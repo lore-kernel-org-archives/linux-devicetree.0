@@ -1,43 +1,44 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] dt/bindings: Add bindings for Tegra GMI controller
-Date: Tue, 6 Sep 2016 11:35:24 +0100
-Message-ID: <96929bd4-9fca-634f-d8a4-62ad26abdea3@nvidia.com>
-References: <1472045838-22628-1-git-send-email-mirza.krak@gmail.com>
- <1472045838-22628-4-git-send-email-mirza.krak@gmail.com>
- <de2fb909-829e-6c04-4f6a-442cbb9171c9@nvidia.com>
- <CALw8SCVcPymDZ8NyUbeanRF0TCT1TZzL6iRDticYA42FWrEWqw@mail.gmail.com>
- <20160830170636.GA8741@rob-hp-laptop>
- <CALw8SCUYQGWXn7=Jpn=uvFvvPRVFQGrtSNot+-tVgP73yAEEOQ@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/3] ARM: dts: r7s72100: add ethernet clock to device
+ tree
+Date: Tue, 6 Sep 2016 12:49:38 +0200
+Message-ID: <20160906104937.GF16304@verge.net.au>
+References: <20160901155430.23400-1-chris.brandt@renesas.com>
+ <20160902014012.9383-1-chris.brandt@renesas.com>
+ <20160902082604.GD16669@verge.net.au>
+ <SG2PR06MB116533792940F6E3193E7EDB8AE50@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALw8SCUYQGWXn7=Jpn=uvFvvPRVFQGrtSNot+-tVgP73yAEEOQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mirza Krak <mirza.krak-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <SG2PR06MB116533792940F6E3193E7EDB8AE50@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 31/08/16 12:22, Mirza Krak wrote:
-
-...
-
-> Taking your comments in to account I end up with this:
+On Fri, Sep 02, 2016 at 12:50:39PM +0000, Chris Brandt wrote:
+> On 9/2/2016, Simon Horman wrote:
+> > For future submissions please consider:
+> > 1. Supplying a cover letter (git format-patch has a --cover-letter option)
+> >    for patch-sets comprising more than one patch. This allows you to describe
+> >    an overview of what the series as a whole achieves. And is also
+> >    convenient for maintainers to reply to when accepting your patches.
 > 
-> gmi@70090000 {
->         compatible = "nvidia,tegra20-gmi";
->         reg = <0x70009000 0x1000>;
->         #address-cells = <2>;
+> OK. I can do that.
+> 
+> 
+> > 2. Starting a new thread for each new version of a patch/patch-set.
+> 
+> Does that mean to NOT use --in-reply-to= when submitting a v2,v3,etc... ????
 
-Does this need to be 2? Seems simpler if this is 1.
+I think so.
 
-Cheers
-Jon
+> One more question:
+> Can I submit a patches series now that just adds all the MSTP clock nodes that I'll be working on for the next couple weeks? (USB, SDHI, MMC)
+> Or, do I have to wait till I have the drivers working?
+> Or, better yet, can I add all the MSTP clocks that will probably get used at some point (basically, everything that we're using today in our 3.14 BSP).
 
--- 
-nvpublic
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think that would be ok. I would slightly prefer that MSTP patches are
+added in such a way that they can be tested. But in this case I'm not
+sure anyone would test them :^)
