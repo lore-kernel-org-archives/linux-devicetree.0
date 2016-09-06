@@ -1,72 +1,88 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] pinctrl: zx: Add ZTE pinctrl dts document
-Date: Tue, 6 Sep 2016 16:43:19 +0200
-Message-ID: <CACRpkdaDCiwbnXCu2LwEZcKxQHweKpY7nw20w+fDQ7AnsOHY1g@mail.gmail.com>
-References: <1472213965-4899-1-git-send-email-jun.nie@linaro.org> <CACRpkdZ5aHJs8EK29_y7wYZhyHAUdD99wy2RRGD-CZdoJo+NrA@mail.gmail.com>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: [PATCH 3/3] ARM: dts: artpec: add pcie support
+Date: Tue, 6 Sep 2016 17:00:53 +0200
+Message-ID: <1473174053-5072-1-git-send-email-niklass@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZ5aHJs8EK29_y7wYZhyHAUdD99wy2RRGD-CZdoJo+NrA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Liu <jason.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jespern@axis.com, larper@axis.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Niklas Cassel <niklass@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 6, 2016 at 4:15 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+From: Niklas Cassel <niklas.cassel@axis.com>
 
-> pa: pinctrla {
->     compatible = "parent-device-compat";
->     (...)
-> };
->
-> pb: pinctrlb {
->     compatible = "child-device-compat";
->     pinctrl-parent = &pinctrla;
->     (...)
-> };
+Add PCIe support to the ARTPEC-6 SoC. This uses the existing
+pcie-artpec6 driver.
+So, all that is needed is device tree entries in the DTS.
 
-After thinking some more I kind of fancy the GPIO ranges
-approach to be reused:
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+---
+ arch/arm/boot/dts/artpec6-devboard.dts |  4 ++++
+ arch/arm/boot/dts/artpec6.dtsi         | 29 ++++++++++++++++++++++++++++-
+ 2 files changed, 32 insertions(+), 1 deletion(-)
 
-pa: pinctrla {
-    compatible = "parent-device-compat";
-    (...)
-};
-
-pb: pinctrlb {
-    compatible = "child-device-compat";
-    pinctrl-ranges = <&pa 0 31 0>;
-    (...)
-};
-
-The definition and use would be similar to gpio-ranges, see:
-Documentation/devicetree/bindings/gpio/gpio.txt, but these
-bindings are specified in BNF which IMO is just confusing.
-
-Anyways its <phandle local-offset count remote-offset>
-
-Also group names are supported for GPIO ranges.
-
-In the Linux implementation this facilitates reuse of the
-existing GPIO ranges parsing and resolution.
-
-To make cross-calls we need an abstract call akin to the
-existing pinctrl_request_gpio() and pinctrl_free_gpio()
-just named pinctrl_request_hierarchical()
-pinctrl_free_hierarchical() or so so it is chrystal clear
-what is going on when reading the code.
-
-As this passes through the pinctrl driver core, new callbacks
-are needed in struct pinmux_ops such as
-.hierarchical_request(), .hierarchical_free().
-
-This is going to be complex, but a way more maintainable
-solution than doing the hack in patch 1/3 where we totally
-loose control and definition of what happens.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/artpec6-devboard.dts b/arch/arm/boot/dts/artpec6-devboard.dts
+index f823ed3..9dfe845 100644
+--- a/arch/arm/boot/dts/artpec6-devboard.dts
++++ b/arch/arm/boot/dts/artpec6-devboard.dts
+@@ -46,6 +46,10 @@
+ 	status = "okay";
+ };
+ 
++&pcie {
++	status = "okay";
++};
++
+ &ethernet {
+ 	status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
+index 3fac4c4..effaa4a 100644
+--- a/arch/arm/boot/dts/artpec6.dtsi
++++ b/arch/arm/boot/dts/artpec6.dtsi
+@@ -66,7 +66,7 @@
+ 		};
+ 	};
+ 
+-	syscon {
++	syscon: syscon@f8000000 {
+ 		compatible = "axis,artpec6-syscon", "syscon";
+ 		reg = <0xf8000000 0x48>;
+ 	};
+@@ -145,6 +145,33 @@
+ 		interrupt-parent = <&intc>;
+ 	};
+ 
++	pcie: pcie@f8050000 {
++		compatible = "axis,artpec6-pcie", "snps,dw-pcie";
++		reg = <0xf8050000 0x2000
++		       0xf8040000 0x1000
++		       0xc0000000 0x2000>;
++		reg-names = "dbi", "phy", "config";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		device_type = "pci";
++			  /* downstream I/O */
++		ranges = <0x81000000 0 0 0xc0002000 0 0x00010000
++			  /* non-prefetchable memory */
++			  0x82000000 0 0xc0012000 0xc0012000 0 0x1ffee000>;
++		num-lanes = <2>;
++		bus-range = <0x00 0xff>;
++		interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "msi";
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 0x7>;
++		interrupt-map = <0 0 0 1 &intc GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 2 &intc GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 3 &intc GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 4 &intc GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
++		axis,syscon-pcie = <&syscon>;
++		status = "disabled";
++	};
++
+ 	amba@0 {
+ 		compatible = "simple-bus";
+ 		#address-cells = <0x1>;
+-- 
+2.1.4
