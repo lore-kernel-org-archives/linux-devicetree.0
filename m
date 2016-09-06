@@ -1,17 +1,17 @@
 Return-Path: <mka@chromium.org>
-Date: Tue, 6 Sep 2016 13:14:43 -0700
+Date: Tue, 6 Sep 2016 12:03:15 -0700
 From: Matthias Kaehlcke <mka@chromium.org>
 Subject: [PATCH v4 1/4] regulator: Add set_voltage_time op
-Message-ID: <20160906201443.GC79728@google.com>
+Message-ID: <20160906190315.GC92391@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="liOOAslEiF7prFVr"
+Content-Type: multipart/mixed; boundary="lMM8JwqTlfDpEaS6"
 Content-Disposition: inline
 To: Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com
 Cc: Douglas Anderson <dianders@chromium.org>, briannorris@chromium.org, javier@dowhile0.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
 
---liOOAslEiF7prFVr
+--lMM8JwqTlfDpEaS6
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 
@@ -266,22 +266,11 @@ index fcfa40a..537ca7f 100644
 2.8.0.rc3.226.g39d4020
 
 
---liOOAslEiF7prFVr
+
+--lMM8JwqTlfDpEaS6
 Content-Type: text/html; charset=UTF-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr">Alliant Credit Union, PO Box 255388, Sacramento, CA 95865-=
-5388<br clear=3D"all"><div><br></div>-- <br><div class=3D"gmail_signature">=
-<div dir=3D"ltr"><br><table cellspacing=3D"0" cellpadding=3D"0" style=3D"fo=
-nt-family:&quot;times new roman&quot;"><tbody><tr style=3D"color:rgb(85,85,=
-85);font-family:sans-serif;font-size:small"><td nowrap style=3D"border-top:=
-2px solid rgb(213,15,37)">Matthias Kaehlcke=C2=A0|</td><td nowrap style=3D"=
-border-top:2px solid rgb(51,105,232)">=C2=A0Software Engineer=C2=A0|</td><t=
-d nowrap style=3D"border-top:2px solid rgb(0,153,57)">=C2=A0<a href=3D"mail=
-to:mka@google.com" target=3D"_blank">mka@google.com</a></td><td nowrap styl=
-e=3D"border-top:2px solid rgb(238,178,17)"><br></td></tr></tbody></table><b=
-r></div></div>
-</div>
 
---liOOAslEiF7prFVr--
+
+--lMM8JwqTlfDpEaS6--
