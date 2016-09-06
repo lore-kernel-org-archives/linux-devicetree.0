@@ -1,45 +1,52 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v4 1/4] regulator: Add set_voltage_time op
-Date: Tue, 6 Sep 2016 23:40:54 +0100
-Message-ID: <20160906224054.GX3950@sirena.org.uk>
+Date: Wed, 7 Sep 2016 00:38:06 +0100
+Message-ID: <20160906233806.GZ3950@sirena.org.uk>
 References: <20160906210125.GE79728@google.com>
+ <20160906224054.GX3950@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="i3QSQnH4pbmkdUT9"
+        protocol="application/pgp-signature"; boundary="R4k76f8oNWH5pGim"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160906210125.GE79728-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20160906224054.GX3950-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---i3QSQnH4pbmkdUT9
+--R4k76f8oNWH5pGim
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Sep 06, 2016 at 02:01:25PM -0700, Matthias Kaehlcke wrote:
-> The new op is analogous to set_voltage_time_sel. It can be used by
-> regulators that don't have a table of discrete voltages. The function
+On Tue, Sep 06, 2016 at 11:40:54PM +0100, Mark Brown wrote:
+> On Tue, Sep 06, 2016 at 02:01:25PM -0700, Matthias Kaehlcke wrote:
+> > The new op is analogous to set_voltage_time_sel. It can be used by
+> > regulators that don't have a table of discrete voltages. The function
 
-I've only got patch 1 in this series, what's going on here?
+> I've only got patch 1 in this series, what's going on here?
 
---i3QSQnH4pbmkdUT9
+Actually it turns out I have at least three copies of this, one copy of
+what's hopefully the reset of the series and none of them are threaded
+together :(  You probably want to take a look at your patch sending
+setup...
+
+--R4k76f8oNWH5pGim
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEcBAEBCAAGBQJXz0X0AAoJECTWi3JdVIfQVCIH/0KuP4hsNDM8GSuDRT1KQxyH
-BYyBQPLsi1eZbm2R0buGCeU4Tb6g9f7Jo1bK1bpa8aR+OwXSbTB3p9DQZUXvCcqk
-+k85kShbMjSptScbxhRmTWaHs5Mos1858ZeAn3UAT0U2GLXnbKNZ8eu7hNbhyz/Z
-9fIuucs0cuCIFi+W3+6SbRCC/9uIpCvOp6Y4D/kKLOvBfW2QmmT+MraGCIvijwFK
-NByFv1I2LtjNqTdnbabCg2nW58EyA52TLm2POcxmv4sCY1FqJ3zV5DF+ZV8fQ0Q2
-pHQ8IolHG4ptGrhdK91EuBP5sh87LDXb2WX0IGrFqqf2dV3Ua2SmUCXr+KKQbaU=
-=S+ao
+iQEcBAEBCAAGBQJXz1NbAAoJECTWi3JdVIfQAcUH/RPzoNwWudVi697VB49zW1sw
+yC7MvW7MsfoEb2UIEqWJAKcZvimlYdcwi1BeZzDsJ/Ej1Dbo/HVgnZzM7CZ0LAgZ
+K7Obb8AJWXyDEYUjVDa8WozjzUS3u6CUAfuttP4qP1uFsCGPzQ9FpOBzUnUROHtW
+tA6TYwP1/XQYQbaE84q8MIESnMbZ8pcS+JyDSboyUjV/jnpPSVwqhsJaqTlMHLtq
+Vi4uDfnMy8r1nbxD2kePNw58tqVVJQxNhooLzjmYYji7cD6MZNwzQbxJlDz87mtL
+xtxkz+6otsblQmTW7j7TErNyAGuw/gmOC+x9XairWiat8ThMgohcjMdlKB7zQhU=
+=TvXT
 -----END PGP SIGNATURE-----
 
---i3QSQnH4pbmkdUT9--
+--R4k76f8oNWH5pGim--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
