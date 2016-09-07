@@ -1,60 +1,25 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH resend fixes for 4.8 2/2] input: touchscreen: silead_gsl1680: Use "silead/" prefix for firmware loading
-Date: Wed,  7 Sep 2016 22:09:57 +0200
-Message-ID: <20160907200957.3341-3-hdegoede@redhat.com>
-References: <20160907200957.3341-1-hdegoede@redhat.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20160907200957.3341-1-hdegoede@redhat.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH resend 0/5] phy-sun4i-usb: Add support for phy_set_mode
+Date: Wed,  7 Sep 2016 22:20:36 +0200
+Message-ID: <20160907202041.17656-1-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The silead touch-controller ICs use a different firmware per digitizer /
-tablet model. So there are going to be quite a few of then and they really
-should be under a separate subdir.
+Hi Kishon,
 
-This commit prefixes the default firmware names with "silead/" just like
-we are already doing for devicetree specified firmware names.
+There was some discussion about the 6th patch in this set, so I've
+dropped this for now (needs a universal dt binding), but the other
+5 are still useful without this patch and are ready for merging.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/input/touchscreen/silead.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+Can you please add these 5 to your next branch ?
 
-diff --git a/drivers/input/touchscreen/silead.c b/drivers/input/touchscreen/silead.c
-index 7709f5b..c6a1ae9 100644
---- a/drivers/input/touchscreen/silead.c
-+++ b/drivers/input/touchscreen/silead.c
-@@ -414,14 +414,14 @@ static int silead_ts_set_default_fw_name(struct silead_ts_data *data,
- 		if (!acpi_id)
- 			return -ENODEV;
- 
--		snprintf(data->fw_name, sizeof(data->fw_name), "%s.fw",
--			acpi_id->id);
-+		snprintf(data->fw_name, sizeof(data->fw_name),
-+			 "silead/%s.fw", acpi_id->id);
- 
- 		for (i = 0; i < strlen(data->fw_name); i++)
- 			data->fw_name[i] = tolower(data->fw_name[i]);
- 	} else {
--		snprintf(data->fw_name, sizeof(data->fw_name), "%s.fw",
--			id->name);
-+		snprintf(data->fw_name, sizeof(data->fw_name),
-+			 "silead/%s.fw", id->name);
- 	}
- 
- 	return 0;
-@@ -430,7 +430,8 @@ static int silead_ts_set_default_fw_name(struct silead_ts_data *data,
- static int silead_ts_set_default_fw_name(struct silead_ts_data *data,
- 					 const struct i2c_device_id *id)
- {
--	snprintf(data->fw_name, sizeof(data->fw_name), "%s.fw", id->name);
-+	snprintf(data->fw_name, sizeof(data->fw_name),
-+		 "silead/%s.fw", id->name);
- 	return 0;
- }
- #endif
--- 
-2.9.3
+Thanks & Regards,
 
+Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
