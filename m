@@ -1,204 +1,92 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] pcie: qcom: add support to msm8996 PCIE controller
-Date: Wed, 7 Sep 2016 12:57:14 +0100
-Message-ID: <34872e94-9679-5572-e39b-e962842b074e@arm.com>
-References: <1473246412-24616-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH V3 RFT 3/5] ARM64: dts: bcm283x: Use dtsi for USB host
+ mode
+Date: Wed, 7 Sep 2016 14:02:14 +0200
+Message-ID: <18641a83-ddd7-1689-535a-c5a15b8a54f9@i2se.com>
+References: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com>
+ <1471792204-21908-4-git-send-email-stefan.wahren@i2se.com>
+ <bb073ea3-2f89-4fc5-e3af-2e27c54f221e@i2se.com>
+ <1473245956.28663.50.camel@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1473246412-24616-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, linux-pci@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473245956.28663.50.camel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/09/16 12:06, Srinivas Kandagatla wrote:
-> This patch adds support to msm8996/apq8096 pcie, MSM8996 supports
-> Gen 1/2, One lane, 3 pcie root-complex with support to MSI and
-> legacy interrupts and it conforms to PCI Express Base 2.1 specification.
-> 
-> This patch adds post_init callback to qcom_pcie_ops, as this is pcie
-> pipe clocks and smmu configuration are only setup after the phy is
-> powered on. It also adds ltssm_enable callback as it is very much
-> different to other supported SOCs in the driver.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
-> 
-> I tested this patch along with phy driver patch on DB820c based on
-> APQ8096 on port A and port B using sata and ethernet controllers.
-> 
-> Thanks
-> srini
-> 
->  .../devicetree/bindings/pci/qcom,pcie.txt          |  88 +++++++-
->  drivers/pci/host/pcie-qcom.c                       | 237 ++++++++++++++++++++-
->  2 files changed, 318 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> index 4059a6f..1ddfcb4 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> @@ -92,6 +92,18 @@
->  			- "aux"		Auxiliary (AUX) clock
->  			- "bus_master"	Master AXI clock
->  			- "bus_slave"	Slave AXI clock
-> +
-> +- clock-names:
-> +	Usage: required for msm8996/apq8096
-> +	Value type: <stringlist>
-> +	Definition: Should contain the following entries
-> +			- "aux"		Auxiliary (AUX) clock
-> +			- "bus_master"	Master AXI clock
-> +			- "bus_slave"	Slave AXI clock
-> +			- "pipe"	Pipe Clock driving internal logic.
-> +			- "cfg"		Configuration clk.
-> +			- "snoc_axi"	SNOC AXI clk
-> +			- "cnoc_ahb"	CNOC AHB clk
->  - resets:
->  	Usage: required
->  	Value type: <prop-encoded-array>
-> @@ -114,8 +126,15 @@
->  	Definition: Should contain the following entries
->  			- "core" Core reset
->  
-> +- iommus:
-> +	Usage: required for msm8996/apq8096
-> +	Value type: <prop-encoded-array>
-> +	Definition: Should point to the respective IOMMU block with master port
-> +		    as argument, see Documentation/devicetree/bindings/iommu/
-> +		    mediatek,iommu.txt for details.
+Hi Gerd,
 
-Qualcomm have cross-licensed the M4U!? :P
+Am 07.09.2016 um 12:59 schrieb Gerd Hoffmann:
+> On Mi, 2016-08-31 at 09:59 +0200, Stefan Wahren wrote:
+>> Hi Gerd,
+>>
+>> Am 21.08.2016 um 17:10 schrieb Stefan Wahren:
+>>> In case dr_mode isn't passed via DT, the dwc2 driver defaults
+>>> to OTG mode. But the Raspberry Pi 3 is designed only for host mode.
+>>> So fix this issue by linking to the dtsi file which set the dr_mode
+>>> to host.
+>> this patch is pending and the rest has been merged. Since i don't have a
+>> RPi 3 it's only compile tested.
+>>
+>> Could you please test it (requires patch 1 and 2 of this series) on your
+>> RPi 3?
+> Have a git tree to test?  Patch doesn't apply cleanly (using 4.8-rc5
+> with eric's for-next branch which already has 1+2), seems to depend on
+> more device tree changes.
 
-In seriousness, though, it seems a bit odd to list "iommus" as a
-required property - unless the IOMMU is actually an integral part of the
-PCIe root complex being described (in which case it wants its own
-binding documenting as well), then the relationship is merely a
-circumstance of integration of those particular SoCs.
+as i wrote in the changelog the patch series based on Ian Campbell's patches
 
-> +
->  - power-domains:
-> -	Usage: required for apq8084
-> +	Usage: required for apq8084 and msm8996/apq8096
->  	Value type: <prop-encoded-array>
->  	Definition: A phandle and power domain specifier pair to the
->  		    power domain which is responsible for collapsing
-> @@ -137,6 +156,11 @@
->  	Definition: A phandle to the analog power supply for IC which generates
->  		    reference clock
->  
-> +- vdda_1p8-supply:
-> +	Usage: required for msm8996/apq8096
-> +	Value type: <phandle>
-> +	Definition: A phandle to the analog power supply for PCIE_1P8
-> +
->  - phys:
->  	Usage: required for apq8084
->  	Value type: <phandle>
-> @@ -231,3 +255,65 @@
->  		pinctrl-0 = <&pcie0_pins_default>;
->  		pinctrl-names = "default";
->  	};
-> +
-> +* Example for apq8096:
-> +	pcie1: qcom,pcie@00608000 {
-> +		compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
-> +		power-domains = <&gcc PCIE1_GDSC>;
-> +		bus-range = <0x00 0xff>;
-> +		num-lanes = <1>;
-> +
-> +		status  = "disabled";
-> +
-> +		reg = <0x00608000 0x2000>,
-> +		      <0x0d000000 0xf1d>,
-> +		      <0x0d000f20 0xa8>,
-> +		      <0x0d100000 0x100000>;
-> +
-> +		reg-names = "parf", "dbi", "elbi","config";
-> +
-> +		phys = <&pcie_phy 1>;
-> +		phy-names = "pciephy";
-> +
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +		ranges = <0x01000000 0x0 0x0d200000 0x0d200000 0x0 0x100000>,
-> +			<0x02000000 0x0 0x0d300000 0x0d300000 0x0 0xd00000>;
-> +
-> +		interrupts = <GIC_SPI 413 IRQ_TYPE_NONE>;
-> +		interrupt-names = "msi";
-> +		#interrupt-cells = <1>;
-> +		interrupt-map-mask = <0 0 0 0x7>;
-> +		interrupt-map = <0 0 0 1 &intc 0 272 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-> +				<0 0 0 2 &intc 0 273 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-> +				<0 0 0 3 &intc 0 274 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-> +				<0 0 0 4 &intc 0 275 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-> +
-> +		pinctrl-names = "default", "sleep";
-> +		pinctrl-0 = <&pcie1_clkreq_default &pcie1_perst_default &pcie1_wake_default>;
-> +		pinctrl-1 = <&pcie1_clkreq_sleep &pcie1_perst_default &pcie1_wake_sleep>;
-> +
-> +
-> +		vreg-1.8-supply = <&pm8994_l12>;
-> +		vreg-0.9-supply = <&pm8994_l28>;
-> +		iommus = <&anoc0_smmu>;
+ARM: dts: Remove use of skeleton.dtsi from bcm283x.dtsi
+ARM64: dts: bcm: Use a symlink to R-Pi dtsi files from arch=arm
 
-Furthermore, the exact meaning of "iommus" is defined by the relevant
-IOMMU's binding itself - at face value here, you're missing the LARB
-port number :P - but more generally a bare phandle with no arguments for
-something as busy as a root complex smells a bit off.
+Unfortunately i don't have a repo well prepared with this patch series.
+My development repo doesn't contain the final series V3 [1], but the
+master already has the necessary DT patches above.
 
-> +
-> +		linux,pci-domain = <1>;
-> +
-> +		clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-> +			<&gcc GCC_PCIE_1_AUX_CLK>,
-> +			<&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-> +			<&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
-> +			<&gcc GCC_PCIE_1_SLV_AXI_CLK>,
-> +			<&gcc GCC_AGGRE0_SNOC_AXI_CLK>,
-> +			<&gcc GCC_AGGRE0_CNOC_AHB_CLK>;
-> +
-> +		clock-names =  "pipe",
-> +				"aux",
-> +				"cfg",
-> +				"bus_master",
-> +				"bus_slave",
-> +				"snoc_axi",
-> +				"cnoc_ahb";
-> +
-> +	};
-> diff --git a/drivers/pci/host/pcie-qcom.c b/drivers/pci/host/pcie-qcom.c
-> index f2f90c5..7748c11 100644
-> --- a/drivers/pci/host/pcie-qcom.c
-> +++ b/drivers/pci/host/pcie-qcom.c
-[...]
-> +static int qcom_pcie_post_init_msm8996(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_msm8996 *res = &pcie->res.msm8996;
-> +	struct device *dev = pcie->dev;
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(res->pipe_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable pipe clock\n");
-> +		return ret;
-> +	}
-> +	/* SMMU specific registers */
-> +	writel(0, pcie->parf + PCIE20_PARF_BDF_TRANSLATE_CFG);
-> +	writel(0, pcie->parf +	PCIE20_PARF_SID_OFFSET);
+> Also usb is working fine for me on the rpi3 even without this, so why is
+> this needed? 
 
-Ah, so it's another of these RID->SID lookup-table-type things. That
-would be more appropriately described with "iommu-map"[1], particularly
-if you want things to actually work as expected[2]. There is of course a
-fun circular dependency there in that the DT becomes more of a promise
-than an actual description of the hardware state, since the latter
-doesn't necessarily exist until the driver programs it here. It might
-ultimately be cleaner to have the firmware program this and repaint the
-DT accordingly, so that things do look fixed from Linux's perspective.
+In case of a multiplatform config with following settings the driver
+isn't able to "detect" the role:
 
-Robin.
+CONFIG_USB=y
+CONFIG_USB_OTG=y
+CONFIG_USB_DWC2=y
+CONFIG_USB_DWC2_DUAL_ROLE=y
+CONFIG_USB_PHY=y
+CONFIG_NOP_USB_XCEIV=y
+CONFIG_USB_GADGET=y
+CONFIG_USB_ZERO=y
 
-[1]:http://www.mail-archive.com/iommu@lists.linux-foundation.org/msg14165.html
-[2]:http://www.mail-archive.com/iommu@lists.linux-foundation.org/msg14162.html
+Also please refer to my answer here [2] and this bug [3].
+
+> Is dwc2 defaulting to otg mode a recent change?
+
+No, it's a default for all OTG host controller in case no dr_mode is
+defined.
+
+Regards
+Stefan
+
+[1] - https://github.com/lategoodbye/rpi-zero
+[2] -
+http://lists.infradead.org/pipermail/linux-rpi-kernel/2016-August/004242.html
+[3] - http://marc.info/?l=linux-usb&m=147169822213074&w=2
+
+>
+> cheers,
+>   Gerd
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
