@@ -1,63 +1,110 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH resend 1/5] phy-sun4i-usb: Use bool where appropriate
-Date: Wed,  7 Sep 2016 22:20:37 +0200
-Message-ID: <20160907202041.17656-2-hdegoede@redhat.com>
+Subject: [PATCH resend 3/5] phy-sun4i-usb: Simplify missing dr_mode handling
+Date: Wed,  7 Sep 2016 22:20:39 +0200
+Message-ID: <20160907202041.17656-4-hdegoede@redhat.com>
 References: <20160907202041.17656-1-hdegoede@redhat.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20160907202041.17656-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We're using bool as true/false type in most places in phy-sun4i-usb.c
-for consistency fixup the remaining uses of ints which are ever only
-0 or 1 to be bools too.
+If we cannot get dr_mode or no id gpio is specified simply assume
+peripheral mode, as this is always safe.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
 Changes in v2:
--No changes
+-Keep sun4i_usb_phy0_get_id_det() logic as is rather then re-ordering
+ the switch-case
 Changes in v3:
 -No changes
 ---
- drivers/phy/phy-sun4i-usb.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/phy/phy-sun4i-usb.c | 42 ++++++++++++++----------------------------
+ 1 file changed, 14 insertions(+), 28 deletions(-)
 
 diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index fcf4d95e..1cb84a8 100644
+index 02cb65e..fb2d4f3 100644
 --- a/drivers/phy/phy-sun4i-usb.c
 +++ b/drivers/phy/phy-sun4i-usb.c
-@@ -445,7 +445,8 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 	struct sun4i_usb_phy_data *data =
- 		container_of(work, struct sun4i_usb_phy_data, detect.work);
- 	struct phy *phy0 = data->phys[0].phy;
--	int id_det, vbus_det, id_notify = 0, vbus_notify = 0;
-+	bool id_notify = false, vbus_notify = false;
-+	int id_det, vbus_det;
+@@ -124,7 +124,6 @@ struct sun4i_usb_phy_data {
+ 		bool regulator_on;
+ 		int index;
+ 	} phys[MAX_PHYS];
+-	int first_phy;
+ 	/* phy0 / otg related variables */
+ 	struct extcon_dev *extcon;
+ 	bool phy0_init;
+@@ -326,7 +325,10 @@ static int sun4i_usb_phy0_get_id_det(struct sun4i_usb_phy_data *data)
+ {
+ 	switch (data->dr_mode) {
+ 	case USB_DR_MODE_OTG:
+-		return gpiod_get_value_cansleep(data->id_det_gpio);
++		if (data->id_det_gpio)
++			return gpiod_get_value_cansleep(data->id_det_gpio);
++		else
++			return 1; /* Fallback to peripheral mode */
+ 	case USB_DR_MODE_HOST:
+ 		return 0;
+ 	case USB_DR_MODE_PERIPHERAL:
+@@ -539,8 +541,7 @@ static struct phy *sun4i_usb_phy_xlate(struct device *dev,
+ {
+ 	struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
  
- 	if (phy0 == NULL)
- 		return;
-@@ -474,13 +475,13 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 		}
- 		sun4i_usb_phy0_set_id_detect(phy0, id_det);
- 		data->id_det = id_det;
--		id_notify = 1;
-+		id_notify = true;
+-	if (args->args[0] < data->first_phy ||
+-	    args->args[0] >= data->cfg->num_phys)
++	if (args->args[0] >= data->cfg->num_phys)
+ 		return ERR_PTR(-ENODEV);
+ 
+ 	return data->phys[args->args[0]].phy;
+@@ -615,33 +616,18 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
  	}
  
- 	if (vbus_det != data->vbus_det) {
- 		sun4i_usb_phy0_set_vbus_detect(phy0, vbus_det);
- 		data->vbus_det = vbus_det;
--		vbus_notify = 1;
-+		vbus_notify = true;
+ 	data->dr_mode = of_usb_get_dr_mode_by_phy(np, 0);
+-	switch (data->dr_mode) {
+-	case USB_DR_MODE_OTG:
+-		/* otg without id_det makes no sense, and is not supported */
+-		if (!data->id_det_gpio) {
+-			dev_err(dev, "usb0_id_det missing or invalid\n");
+-			return -ENODEV;
+-		}
+-		/* fall through */
+-	case USB_DR_MODE_HOST:
+-	case USB_DR_MODE_PERIPHERAL:
+-		data->extcon = devm_extcon_dev_allocate(dev,
+-							sun4i_usb_phy0_cable);
+-		if (IS_ERR(data->extcon))
+-			return PTR_ERR(data->extcon);
+ 
+-		ret = devm_extcon_dev_register(dev, data->extcon);
+-		if (ret) {
+-			dev_err(dev, "failed to register extcon: %d\n", ret);
+-			return ret;
+-		}
+-		break;
+-	default:
+-		dev_info(dev, "dr_mode unknown, not registering usb phy0\n");
+-		data->first_phy = 1;
++	data->extcon = devm_extcon_dev_allocate(dev, sun4i_usb_phy0_cable);
++	if (IS_ERR(data->extcon))
++		return PTR_ERR(data->extcon);
++
++	ret = devm_extcon_dev_register(dev, data->extcon);
++	if (ret) {
++		dev_err(dev, "failed to register extcon: %d\n", ret);
++		return ret;
  	}
  
- 	mutex_unlock(&phy0->mutex);
+-	for (i = data->first_phy; i < data->cfg->num_phys; i++) {
++	for (i = 0; i < data->cfg->num_phys; i++) {
+ 		struct sun4i_usb_phy *phy = data->phys + i;
+ 		char name[16];
+ 
 -- 
 2.9.3
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
