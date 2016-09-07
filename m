@@ -1,39 +1,37 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] pinctrl: sunxi: Remove unsupported PWM channel
- pinmux in H3
-Date: Wed, 7 Sep 2016 21:41:19 +0200
-Message-ID: <CACRpkdb7rr8Lpc6VZ4Ba=_YOwFDqVwwut1w_BDAfYHm6Qp=W_g@mail.gmail.com>
-References: <20160831082520.25962-1-woogyom.kim@gmail.com> <20160831082520.25962-4-woogyom.kim@gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH] clk: meson-gxbb: Export PWM related clocks for DT
+Date: Wed, 07 Sep 2016 12:51:31 -0700
+Message-ID: <7ha8fjtrng.fsf@baylibre.com>
+References: <1471870177-10609-1-git-send-email-narmstrong@baylibre.com>
+        <20160907005208.GS12510@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160831082520.25962-4-woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Krzysztof Adamski <k@japko.eu>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160907005208.GS12510@codeaurora.org> (Stephen Boyd's message
+        of "Tue, 6 Sep 2016 17:52:08 -0700")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, carlo@caione.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 31, 2016 at 10:25 AM, Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Stephen Boyd <sboyd@codeaurora.org> writes:
 
-> H3 has single PWM channel. The second PWM channel is not supported,
-> so the pinctrl function should be removed.
+> On 08/22, Neil Armstrong wrote:
+>> Add the PWM related clocks in order to be referenced as PWM source
+>> clocks.
+>> 
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
 >
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> Cc: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Krzysztof Adamski <k@japko.eu>
-> Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Milo Kim <woogyom.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+>
+> With some more thought, it should go through whatever tree takes
+> the dts changes. Conflicts in these header files should be
+> managed by the same person and that person is the platform
+> maintainer.
 
-Maxime what is your opinion on this patch?
+OK, I'll pick this up and take it through the amlogic -> arm-soc path.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+
+Kevin
