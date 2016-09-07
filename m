@@ -1,82 +1,52 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2 v3] net: smsc911x: augment device tree bindings
-Date: Wed,  7 Sep 2016 15:53:31 +0200
-Message-ID: <1473256411-13965-1-git-send-email-linus.walleij@linaro.org>
+From: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3 RFT 3/5] ARM64: dts: bcm283x: Use dtsi for USB host
+ mode
+Date: Wed, 07 Sep 2016 16:17:17 +0200
+Message-ID: <1473257837.28663.80.camel@redhat.com>
+References: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com>
+         <1471792204-21908-4-git-send-email-stefan.wahren@i2se.com>
+         <bb073ea3-2f89-4fc5-e3af-2e27c54f221e@i2se.com>
+         <1473245956.28663.50.camel@redhat.com>
+         <18641a83-ddd7-1689-535a-c5a15b8a54f9@i2se.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <18641a83-ddd7-1689-535a-c5a15b8a54f9-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Steve Glendinning <steve.glendinning-nksJyM/082jR7s880joybQ@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>, Kamlakant Patel <kamlakant.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for:
+  Hi,
 
-- An optional GPIO line for releasing the RESET signal to the
-  SMSC911x devices
+> ARM: dts: Remove use of skeleton.dtsi from bcm283x.dtsi
+> ARM64: dts: bcm: Use a symlink to R-Pi dtsi files from arch=arm
 
-- An optional PME (power management event) interrupt line that
-  can be utilized to wake up the system on network activity.
-  This signal exist on all the SMSC911x devices, it is just not
-  very often routed.
+Picked them up.
 
-Both these lines are routed to the SoC on the Qualcomm APQ8060
-Dragonboard and thus needs to be bound in the device tree.
+> In case of a multiplatform config with following settings the driver
+> isn't able to "detect" the role:
+> 
+> CONFIG_USB=y
+> CONFIG_USB_OTG=y
+> CONFIG_USB_DWC2=y
+> CONFIG_USB_DWC2_DUAL_ROLE=y
+> CONFIG_USB_PHY=y
+> CONFIG_NOP_USB_XCEIV=y
+> CONFIG_USB_GADGET=y
+> CONFIG_USB_ZERO=y
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v2->v3:
-- Augment interrupt specificiers to be more to the point and less
-  technical as suggested by Arnd.
-ChangeLog v1->v2:
-- Document for "interrupts", skip mentioning "interrupts-extended"
-  as both are always supported.
----
- Documentation/devicetree/bindings/net/smsc911x.txt | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+Configured my kernel that way so the test actually tests something ;)
 
-diff --git a/Documentation/devicetree/bindings/net/smsc911x.txt b/Documentation/devicetree/bindings/net/smsc911x.txt
-index 3fed3c124411..16c3a9501f5d 100644
---- a/Documentation/devicetree/bindings/net/smsc911x.txt
-+++ b/Documentation/devicetree/bindings/net/smsc911x.txt
-@@ -3,9 +3,11 @@
- Required properties:
- - compatible : Should be "smsc,lan<model>", "smsc,lan9115"
- - reg : Address and length of the io space for SMSC LAN
--- interrupts : Should contain SMSC LAN interrupt line
--- interrupt-parent : Should be the phandle for the interrupt controller
--  that services interrupts for this device
-+- interrupts : one or two interrupt specifiers
-+  - The first interrupt is the SMSC LAN interrupt line
-+  - The second interrupt (if present) is the PME (power
-+    management event) interrupt that is able to wake up the host
-+     system with a 50ms pulse on network activity
- - phy-mode : See ethernet.txt file in the same directory
- 
- Optional properties:
-@@ -21,6 +23,10 @@ Optional properties:
-   external PHY
- - smsc,save-mac-address : Indicates that mac address needs to be saved
-   before resetting the controller
-+- reset-gpios : a GPIO line connected to the RESET (active low) signal
-+  of the device. On many systems this is wired high so the device goes
-+  out of reset at power-on, but if it is under program control, this
-+  optional GPIO can wake up in response to it.
- 
- Examples:
- 
-@@ -29,7 +35,8 @@ lan9220@f4000000 {
- 	reg = <0xf4000000 0x2000000>;
- 	phy-mode = "mii";
- 	interrupt-parent = <&gpio1>;
--	interrupts = <31>;
-+	interrupts = <31>, <32>;
-+	reset-gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
- 	reg-io-width = <4>;
- 	smsc,irq-push-pull;
- };
--- 
-2.7.4
+And ... everything looks fine.  usb ethernet works, and so does the usb
+keyboard.  /proc/device-tree/soc/usb@7e980000/dr_mode exists and
+contains "host".
+
+Tested-by: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+
+cheers,
+  Gerd
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
