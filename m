@@ -1,29 +1,59 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/8] gpio: dt-bindings: Add documentation for Aspeed
- GPIO controllers
-Date: Wed, 7 Sep 2016 16:43:08 +0200
-Message-ID: <CACRpkdYpmSS3jA=r13r-_UPEKxUvO=U=EUXAtwuZLmxnGDhiwA@mail.gmail.com>
-References: <20160830075427.11493-1-andrew@aj.id.au> <20160830075427.11493-5-andrew@aj.id.au>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 5/8] pinctrl: Add core support for Aspeed SoCs
+Date: Wed, 7 Sep 2016 16:50:54 +0200
+Message-ID: <CACRpkdb2ftH5B5VqKW9rPU=LMeWjrfo9jBTP5DKbNYeZAoMC8Q@mail.gmail.com>
+References: <20160830075427.11493-1-andrew@aj.id.au> <20160830075427.11493-6-andrew@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160830075427.11493-5-andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160830075427.11493-6-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Joel Stanley <joel@jms.id.au>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 30, 2016 at 9:54 AM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
+On Tue, Aug 30, 2016 at 9:54 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
 
-> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-> Acked-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> The Aspeed SoCs typically provide more than 200 pins for GPIO and other
+> functions. The signal enabled on a pin is determined on a priority
+> basis, where a given pin can provide a number of different signal types.
+>
+> In addition to the priority levels, the Aspeed pin controllers describe
+> the signal active on a pin by compound logical expressions involving
+> multiple operators, registers and bits. Some difficulty arises as a
+> pin's function bit masks for each priority level are frequently not the
+> same (i.e. we cannot just flip a bit to change from a high to low
+> priority signal), or even in the same register(s). Some configuration
+> bits affect multiple pins, while in other cases the signals for a bus
+> must each be enabled individually.
+>
+> Together, these features give rise to some complexity in the
+> implementation. A more complete description of the complexities is
+> provided in the associated header file.
+>
+> The patch doesn't implement pinctrl/pinmux/pinconf for any particular
+> Aspeed SoC, rather it adds the framework for defining pinmux
+> configurations.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Reviewed-by: Joel Stanley <joel@jms.id.au>
 
-Patch applied to the GPIO tree with Rob's ACK and moved the compatible
-to the first line in the process.
+Patch applied! It's not getting better than this through iteration, it is better
+to get the system up and develop inside the mainline tree from now on.
+
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1027,6 +1027,7 @@ S:        Maintained
+>  F:     arch/arm/mach-aspeed/
+>  F:     arch/arm/boot/dts/aspeed-*
+>  F:     drivers/*/*aspeed*
+> +F:     drivers/pinctrl/aspeed/
+>  F:     Documentation/devicetree/bindings/*/*aspeed*
+
+I dropped this hunk of the patch, because:
+
+(A) I didn't merge the glob patch and
+(B) the glob covers this driver too, it is a tautology/truism
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
