@@ -1,54 +1,104 @@
-From: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] pinctrl: export pin_request to support parent pin
-Date: Wed, 7 Sep 2016 09:38:06 +0800
-Message-ID: <CABymUCMpbxidceZiePz9gTZ=_1hXSjqS34SYCZxLBJFrTVgvwg@mail.gmail.com>
-References: <1472213942-4815-1-git-send-email-jun.nie@linaro.org> <CACRpkdYPfBKshf1jGF85vj+bzwb1kX+2j-kUA+8+w+vSFPuGDQ@mail.gmail.com>
+From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v7 3/4] usb: dwc2: assert phy reset when waking up in
+ rk3288 platform
+Date: Tue, 6 Sep 2016 19:02:20 -0700
+Message-ID: <1ac13d9d-39c4-c110-d5ab-2dee30c0b4aa@synopsys.com>
+References: <1472939729-15187-1-git-send-email-ayaka@soulik.info>
+ <1472939729-15187-4-git-send-email-ayaka@soulik.info>
+ <57CE50A2.7080502@ti.com> <ba3e8239-6909-9de1-9cc5-f7ae80825f58@synopsys.com>
+ <31806DDB-EBF1-4839-81E1-5F7A1D236538@soulik.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdYPfBKshf1jGF85vj+bzwb1kX+2j-kUA+8+w+vSFPuGDQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <31806DDB-EBF1-4839-81E1-5F7A1D236538-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Liu <jason.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Ayaka <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2016-09-06 21:55 GMT+08:00 Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> On Fri, Aug 26, 2016 at 2:19 PM, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
->> Some pin functions may be controlled in 2nd level multiplex.
->> We need configure 1st level multiplex when request such
->> functions. Export pin_request functionality so that parent
->> can be configured automatically with calling it in
->> pinmux_ops->request().
+On 9/6/2016 6:19 PM, Ayaka wrote:
+> 
+> 
+> 從我的 iPad 傳送
+> 
+>> John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> 於 2016年9月7日 上午2:54 寫道：
 >>
->> Signed-off-by: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> This looks weird as 1/3, please put the DT bindings first in the
-> series.
+>>> On 9/5/2016 10:15 PM, Kishon Vijay Abraham I wrote:
+>>> Hi,
+>>>
+>>>> On Sunday 04 September 2016 03:25 AM, Randy Li wrote:
+>>>> On the rk3288 USB host-only port (the one that's not the OTG-enabled
+>>>> port) the PHY can get into a bad state when a wakeup is asserted (not
+>>>> just a wakeup from full system suspend but also a wakeup from
+>>>> autosuspend).
+>>>>
+>>>> We can get the PHY out of its bad state by asserting its "port reset",
+>>>> but unfortunately that seems to assert a reset onto the USB bus so it
+>>>> could confuse things if we don't actually deenumerate / reenumerate the
+>>>> device.
+>>>>
+>>>> We can also get the PHY out of its bad state by fully resetting it using
+>>>> the reset from the CRU (clock reset unit) in chip, which does a more full
+>>>> reset.  The CRU-based reset appears to actually cause devices on the bus
+>>>> to be removed and reinserted, which fixes the problem (albeit in a hacky
+>>>> way).
+>>>>
+>>>> It's unfortunate that we need to do a full re-enumeration of devices at
+>>>> wakeup time, but this is better than alternative of letting the bus get
+>>>> wedged.
+>>>>
+>>>> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+>>>> ---
+>>>> drivers/usb/dwc2/core_intr.c | 12 ++++++++++++
+>>>> 1 file changed, 12 insertions(+)
+>>>>
+>>>> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
+>>>> index d85c5c9..08485b7 100644
+>>>> --- a/drivers/usb/dwc2/core_intr.c
+>>>> +++ b/drivers/usb/dwc2/core_intr.c
+>>>> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
+>>>> static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>>>> {
+>>>>    int ret;
+>>>> +    struct device_node *np = hsotg->dev->of_node;
+>>>>
+>>>>    /* Clear interrupt */
+>>>>    dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
+>>>> @@ -379,6 +380,17 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>>>>            /* Restart the Phy Clock */
+>>>>            pcgcctl &= ~PCGCTL_STOPPCLK;
+>>>>            dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
+>>>> +
+>>>> +            /*
+>>>> +             * It is a quirk in Rockchip RK3288, causing by
+>>>> +             * a hardware bug. This will propagate out and
+>>>> +             * eventually we'll re-enumerate the device. 
+>>>> +             * Not great but the best we can do 
+>>>> +             */
+>>>> +            if (of_device_is_compatible(np, "rockchip,rk3288-usb")
+>>>> +                    && (NULL != hsotg->phy->ops->reset))
+>>>> +                hsotg->phy->ops->reset(hsotg->phy);
+>>>
+>>> never call the phy ops directly from the controller driver. It has to be
+>>> protected as well.
+>>
+>> It looks like we should be calling an API function instead, correct?
+>>
+> Could you give me a example for the wrapper of phy ops?
 
-I thought 1/3 patch does not relate to ZTE driver directly, so I put as the
-2nd patch. Will move it to the very first one as you point out.
+Check these files:
+* include/linux/phy/phy.h
+* drivers/phy/phy-core.c
 
->
-> We first need to agree on how to represent this before we start
-> hacking around in the core to support different shortcuts.
->
-> This patch just makes me nervous, but maybe I can be convinced
-> otherwise if we get some details on how the hardware works and why
-> this is necessary.
+Search for "phy_set_mode".
 
-Hardware has two register regions to control pinmux, one is for normal
-function configuration and the other one is for always on subsystem(AON).
-Some pins are controlled by both normal register and AON register. AON
-register is the first level control for pinmux. If we need any
-function in normal
-register configuration, we need configure related AON pinmux register as
-non-AON function first. Then we configure normal pinmux register to get the
-pin function we want.
+I'm thinking there should be a "phy_reset" API function which calls
+the phy->ops->reset in a similar manner. With the same runtime checks
+and stub function if CONFIG_GENERIC_PHY is not enabled.
 
->
-> Yours,
-> Linus Walleij
+Regards,
+John
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
