@@ -1,94 +1,47 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 1/2] dt-bindings: msm8996-pcie-phy: add support for msm8996 pcie phy
-Date: Wed,  7 Sep 2016 11:55:32 +0100
-Message-ID: <1473245733-17260-2-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1473245733-17260-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1473245733-17260-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V3 RFT 3/5] ARM64: dts: bcm283x: Use dtsi for USB host
+ mode
+Date: Wed, 07 Sep 2016 12:59:16 +0200
+Message-ID: <1473245956.28663.50.camel@redhat.com>
+References: <1471792204-21908-1-git-send-email-stefan.wahren@i2se.com>
+         <1471792204-21908-4-git-send-email-stefan.wahren@i2se.com>
+         <bb073ea3-2f89-4fc5-e3af-2e27c54f221e@i2se.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <bb073ea3-2f89-4fc5-e3af-2e27c54f221e-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds bindings for pcie phy on MSM8996.
+On Mi, 2016-08-31 at 09:59 +0200, Stefan Wahren wrote:
+> Hi Gerd,
+> 
+> Am 21.08.2016 um 17:10 schrieb Stefan Wahren:
+> > In case dr_mode isn't passed via DT, the dwc2 driver defaults
+> > to OTG mode. But the Raspberry Pi 3 is designed only for host mode.
+> > So fix this issue by linking to the dtsi file which set the dr_mode
+> > to host.
+> 
+> this patch is pending and the rest has been merged. Since i don't have a
+> RPi 3 it's only compile tested.
+> 
+> Could you please test it (requires patch 1 and 2 of this series) on your
+> RPi 3?
 
-This PHY has 3 Ports, including a common block. Each port is connected
-to one root complex. Each port has dedicated reset control lines apart
-from common reset and clocks for common block.
+Have a git tree to test?  Patch doesn't apply cleanly (using 4.8-rc5
+with eric's for-next branch which already has 1+2), seems to depend on
+more device tree changes.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- .../bindings/phy/qcom-msm8996-pcie-phy.txt         | 62 ++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
+Also usb is working fine for me on the rpi3 even without this, so why is
+this needed?  Is dwc2 defaulting to otg mode a recent change?
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt b/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
-new file mode 100644
-index 0000000..51930ed
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
-@@ -0,0 +1,62 @@
-+Qualcomm msm8996 pcie PHY
-+------------------------
-+
-+Required properties:
-+- compatible: compatible list, contains "qcom,msm8996-pcie-phy".
-+- reg: offset and length of the pcie PHY register set;
-+- #phy-cells: must be one
-+- clocks: a list of phandles and clock-specifier pairs, one for each entry in
-+  clock-names.
-+- clock-names: must be "cfg" for phy config clock,
-+	"aux" for phy aux clock,
-+	"ref_clk" for 19.2 MHz ref clk and
-+	"ref_clk_src" reference clock source.
-+
-+
-+- resets: a list of phandles and reset controller specifier pairs, one for
-+  each entry in reset-names.
-+- reset-names: must be "phy" for reset of pcie phy block and "common" for
-+  phy common reset.
-+
-+Required properties: (Child node)
-+- reg: lane numer of the pcie phy.
-+- resets: a list of phandles and reset controller specifier pairs, one for
-+  each entry in reset-names.
-+- reset-names: must be "phy" for reset of pcie phy lane.
-+
-+Example:
-+
-+	pcie_phy: qcom,pciephy@34000 {
-+		compatible = "qcom,msm8996-pcie-phy";
-+		reg = <0x00034000 0x4000>;
-+		#phy-cells = <1>;
-+		clocks = <&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
-+			<&gcc GCC_PCIE_PHY_AUX_CLK>,
-+			<&gcc GCC_PCIE_CLKREF_CLK>,
-+			<&rpmcc MSM8996_RPM_SMD_LN_BB_CLK>;
-+		clock-names = "cfg", "aux", "ref_clk", "ref_clk_src";
-+
-+		resets = <&gcc GCC_PCIE_PHY_BCR>,
-+			<&gcc GCC_PCIE_PHY_COM_BCR>;
-+		reset-names = "phy",  "common";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pcie_phy@0{
-+			reg = <0>;
-+			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
-+			reset-names = "phy";
-+		};
-+
-+		pcie_phy@1{
-+			reg = <1>;
-+			resets = <&gcc GCC_PCIE_1_PHY_BCR>;
-+			reset-names = "phy";
-+		};
-+
-+		pcie_phy@2{
-+			reg = <2>;
-+			resets = <&gcc GCC_PCIE_2_PHY_BCR>;
-+			reset-names = "phy";
-+		};
-+	};
--- 
-2.7.4
+cheers,
+  Gerd
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
