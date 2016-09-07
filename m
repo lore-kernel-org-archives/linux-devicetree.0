@@ -1,45 +1,74 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 3/4] pinctrl: sunxi: Remove unsupported PWM channel
- pinmux in H3
-Date: Thu, 8 Sep 2016 01:09:29 +0200
-Message-ID: <CACRpkda8uMuOi41O5Cq3o-PXynoZfkxAD7P2fHS-uCUQt_B_kA@mail.gmail.com>
-References: <20160831082520.25962-1-woogyom.kim@gmail.com>
- <20160831082520.25962-4-woogyom.kim@gmail.com>
+From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND PATCH] ARM: dts: lpc32xx: set default parent clock for
+ pwm1 & pwm2
+Date: Thu, 8 Sep 2016 02:46:28 +0300
+Message-ID: <edf2ee45-7793-7564-9318-ee08909d0ff5@mleia.com>
+References: <1473277073-12093-1-git-send-email-slemieux.tyco@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160831082520.25962-4-woogyom.kim@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Milo Kim <woogyom.kim@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Krzysztof Adamski <k@japko.eu>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jens Kuske <jenskuske@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473277073-12093-1-git-send-email-slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 31, 2016 at 10:25 AM, Milo Kim <woogyom.kim@gmail.com> wrote:
+Hi Sylvain,
 
-> H3 has single PWM channel. The second PWM channel is not supported,
-> so the pinctrl function should be removed.
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Icenowy Zheng <icenowy@aosc.xyz>
-> Cc: Jens Kuske <jenskuske@gmail.com>
-> Cc: Krzysztof Adamski <k@japko.eu>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
+On 07.09.2016 22:37, Sylvain Lemieux wrote:
+> From: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
+> 
+> The change setup the peripheral clock (PERIPH_CLK) as the default 
+> parent clock for PWM1 & PWM2.
+> 
+> Signed-off-by: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/lpc32xx.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+> index e295e1e..ed85b95 100644
+> --- a/arch/arm/boot/dts/lpc32xx.dtsi
+> +++ b/arch/arm/boot/dts/lpc32xx.dtsi
+> @@ -469,6 +469,9 @@
+>  				compatible = "nxp,lpc3220-pwm";
+>  				reg = <0x4005C000 0x4>;
+>  				clocks = <&clk LPC32XX_CLK_PWM1>;
+> +				assigned-clocks = <&clk LPC32XX_CLK_PWM1>,
+> +						  <&clk LPC32XX_CLK_PERIPH>;
 
-Patch applied with Chen-Yu's ACK.
+I believe here "assigned-clocks = <&clk LPC32XX_CLK_PWM1>;" would be
+good enough. In this context the second clock could be potentially
+specified, if you are going to set its rate, but because it is a common
+clock for many controllers it should not be done from a PWM device node.
 
-Yours,
-Linus Walleij
+> +				assigned-clock-parents = <&clk LPC32XX_CLK_PERIPH>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -476,6 +479,9 @@
+>  				compatible = "nxp,lpc3220-pwm";
+>  				reg = <0x4005C004 0x4>;
+>  				clocks = <&clk LPC32XX_CLK_PWM2>;
+> +				assigned-clocks = <&clk LPC32XX_CLK_PWM2>,
+> +						  <&clk LPC32XX_CLK_PERIPH>;
+
+Same as above.
+
+Please remove the second <&clk LPC32XX_CLK_PERIPH> value from the
+assigned-clocks property.
+
+> +				assigned-clock-parents = <&clk LPC32XX_CLK_PERIPH>;
+>  				status = "disabled";
+>  			};
+>  
+> 
+
+--
+With best wishes,
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
