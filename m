@@ -1,76 +1,31 @@
-From: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] clk: rockchip: add I2S internal clock IDs for
- rk3288
-Date: Wed, 7 Sep 2016 19:18:23 +0100
-Message-ID: <20160907191823.7f955ae2.john@metanate.com>
-References: <20160907165330.14607-1-john@metanate.com>
-        <2003903.QOgKKA6m1b@phil>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [v14 PATCH 3/5] arm64: dts: rockchip: add Type-C phy for RK3399
+Date: Wed, 07 Sep 2016 20:21:18 +0200
+Message-ID: <2075415.Y46E4H7SDM@phil>
+References: <1472015825-11365-1-git-send-email-zyw@rock-chips.com> <1472015825-11365-4-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2003903.QOgKKA6m1b@phil>
+In-Reply-To: <1472015825-11365-4-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>Catalin Marinas <c>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 07 Sep 2016 19:58:31 +0200, Heiko Stuebner wrote:
-
-> Am Mittwoch, 7. September 2016, 17:53:29 CEST schrieb John Keeping:
-> > To minimize jitter on the I2S clocks, it is important that the
-> > denominator in the fractional divider is much greater than the
-> > numerator.  Add identifiers for these internal clocks so that the
-> > specific clock topology and rates can be specified in the device tree.  
+Am Dienstag, 23. August 2016, 22:17:03 CEST schrieb Chris Zhong:
+> There are 2 Type-C phy on RK3399, they are almost same, except the
+> address of register. They support USB3.0 Type-C and DisplayPort1.3
+> Alt Mode on USB Type-C. Register a phy, supply it to USB3 controller
+> and DP controller.
 > 
-> The TRM states that the denominator must be bigger than 20. Is this the one 
-> you found or did you find further constraints?
+> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
-Is it not that the denominator must be bigger than 20 times the
-numerator?  That's what we found, although it seems that the greater the
-divisor the better, so our aim is dividing down from 594MHz from GPLL to
-the target rate in i2s_frac.
+applied to my dts64 branch, after moving the rockchip,grf property down
 
-> Did you try teaching the fractional divider to handle these constraints before 
-> going this way?
 
-No, I hadn't looked at doing that.  I'm not sure how that would work,
-we'd need to add support for fractional divider changing the parent rate
-wouldn't we?
-
-> Exporting the internal clocks really would be sort of plan d or e, after 
-> handling this in the clock framework failed. Especially as i2s rates are 
-> probably dependant on the media being handled (frequencies and such), so 
-> setting fractional rates statically in the dts won't help you much in the 
-> general case, as any new playback could trigger a clk_set_rate call anyway?
-
-We're not setting the fractional rate specifically, instead we're
-setting the i2s_pre rate and parent explicitly and banning the i2s_src
-mux setting to i2s_pre, which means that clk_set_rate on sclk_i2s0 will
-always change i2s_frac but leave i2s_pre alone.
-
-> > Signed-off-by: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  include/dt-bindings/clock/rk3288-cru.h | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/include/dt-bindings/clock/rk3288-cru.h
-> > b/include/dt-bindings/clock/rk3288-cru.h index 9a586e2d9c91..9526653383d9
-> > 100644
-> > --- a/include/dt-bindings/clock/rk3288-cru.h
-> > +++ b/include/dt-bindings/clock/rk3288-cru.h
-> > @@ -88,6 +88,9 @@
-> >  #define SCLK_PVTM_GPU		124
-> >  #define SCLK_CRYPTO		125
-> >  #define SCLK_MIPIDSI_24M	126
-> > +#define SCLK_I2S_PRE		127
-> > +#define SCLK_I2S_SRC		128
-> > +#define SCLK_I2S_FRAC		129
-> > 
-> >  #define SCLK_MAC		151
-> >  #define SCLK_MACREF_OUT		152  
-> 
-> 
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
