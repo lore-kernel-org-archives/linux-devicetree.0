@@ -1,115 +1,55 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] hwmon: (lm87) Add channel data from the dts file.
-Date: Tue, 6 Sep 2016 18:35:55 -0700
-Message-ID: <14779db5-8c7f-5e6e-b61c-9cfffa05ac73@roeck-us.net>
-References: <20160905053614.7135-1-mahoda.ratnayaka@alliedtelesis.co.nz>
- <20160906172040.GA18235@roeck-us.net>
- <1473207421452.19824@alliedtelesis.co.nz>
+From: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] pinctrl: export pin_request to support parent pin
+Date: Wed, 7 Sep 2016 09:38:06 +0800
+Message-ID: <CABymUCMpbxidceZiePz9gTZ=_1hXSjqS34SYCZxLBJFrTVgvwg@mail.gmail.com>
+References: <1472213942-4815-1-git-send-email-jun.nie@linaro.org> <CACRpkdYPfBKshf1jGF85vj+bzwb1kX+2j-kUA+8+w+vSFPuGDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <1473207421452.19824@alliedtelesis.co.nz>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Mahoda Ratnayaka <Mahoda.Ratnayaka@alliedtelesis.co.nz>
-Cc: Jean Delvare <jdelvare@suse.com>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, Chris Packham <Chris.Packham@alliedtelesis.co.nz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdYPfBKshf1jGF85vj+bzwb1kX+2j-kUA+8+w+vSFPuGDQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Liu <jason.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/2016 05:17 PM, Mahoda Ratnayaka wrote:
-> Thanks Guenter for the comments, I'll first update the lm87 Documentation to include the
-> device tree information and then I'll update the documentation with my proposed update along
-> with the updated patch for reading the property in the driver.
+2016-09-06 21:55 GMT+08:00 Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> On Fri, Aug 26, 2016 at 2:19 PM, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 >
+>> Some pin functions may be controlled in 2nd level multiplex.
+>> We need configure 1st level multiplex when request such
+>> functions. Export pin_request functionality so that parent
+>> can be configured automatically with calling it in
+>> pinmux_ops->request().
+>>
+>> Signed-off-by: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> This looks weird as 1/3, please put the DT bindings first in the
+> series.
 
-Devicetree documentation needs to be a new file in Documentation/devicetree/bindings/hwmon/.
+I thought 1/3 patch does not relate to ZTE driver directly, so I put as the
+2nd patch. Will move it to the very first one as you point out.
 
-Thanks,
-Guenter
+>
+> We first need to agree on how to represent this before we start
+> hacking around in the core to support different shortcuts.
+>
+> This patch just makes me nervous, but maybe I can be convinced
+> otherwise if we get some details on how the hardware works and why
+> this is necessary.
 
-> Thanks,
-> Mahoda
-> ________________________________________
-> From: linux-hwmon-owner@vger.kernel.org <linux-hwmon-owner@vger.kernel.org> on behalf of Guenter Roeck <linux@roeck-us.net>
-> Sent: Wednesday, 7 September 2016 5:20 a.m.
-> To: Mahoda Ratnayaka
-> Cc: Jean Delvare; linux-hwmon@vger.kernel.org; Chris Packham
-> Subject: Re: [PATCH] hwmon: (lm87) Add channel data from the dts file.
->
-> On Mon, Sep 05, 2016 at 05:36:14PM +1200, Mahoda Ratnayaka wrote:
->> Currently there is no method for setting the channel
->> value from the DTS file. When, the driver uses a dts
->> file to initialize the driver platform_data is not set.
->> As a the result channel variable may not be set correctly.
->>
->> Without the channel variable set correctly, some of the
->> sensors will not be initialized correctly. For example
->> temp3 sensor sysfs entries.
->>
->> This adds the required functionality to set the channel
->> variable from the DTS file. This is done via reading the
->> reading a property named "channel" from the lm87 driver.
->>
-> Devicetree properties need to be documented and approved by devicetree
-> maintainers.
->
->> Signed-off-by: Mahoda Ratnayaka <mahoda.ratnayaka@alliedtelesis.co.nz>
->> ---
->>  drivers/hwmon/lm87.c | 13 ++++++++++++-
->>  1 file changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/hwmon/lm87.c b/drivers/hwmon/lm87.c
->> index a5e2958..ac0018b 100644
->> --- a/drivers/hwmon/lm87.c
->> +++ b/drivers/hwmon/lm87.c
->> @@ -858,14 +858,25 @@ static void lm87_remove_files(struct i2c_client *client)
->>  static void lm87_init_client(struct i2c_client *client)
->>  {
->>       struct lm87_data *data = i2c_get_clientdata(client);
->> +     struct device_node *np = NULL;
->> +     const char *channel = NULL;
->> +     u8 val;
->>
->> -     if (dev_get_platdata(&client->dev)) {
->> +     np = client->dev.of_node;
->> +
->> +     /* Use value read from the dts file to setup channel value. */
->
-> Isn't that obvious from the code ?
->
->> +     if (np && of_property_read_u8(np, "channels", &val) == 0) {
->
-> When using a function, you need to include the file declaring it,
-> in this case linux/of.h. of_property_read_u8( )already checks for
-> np == NULL, so there is no need to check it here. Instead of "== 0",
-> please use "!".
->
->> +             data->channel = val;
->> +             lm87_write_value(client,
->> +                              LM87_REG_CHANNEL_MODE, data->channel);
->> +     } else if (dev_get_platdata(&client->dev)) {
->>               data->channel = *(u8 *)dev_get_platdata(&client->dev);
->>               lm87_write_value(client,
->>                                LM87_REG_CHANNEL_MODE, data->channel);
->>       } else {
->>               data->channel = lm87_read_value(client, LM87_REG_CHANNEL_MODE);
->>       }
->> +
->
-> Please no unnecessary whitespace changes.
->
->>       data->config = lm87_read_value(client, LM87_REG_CONFIG) & 0x6F;
->>
->>       if (!(data->config & 0x01)) {
->> --
->> 2.9.3
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+Hardware has two register regions to control pinmux, one is for normal
+function configuration and the other one is for always on subsystem(AON).
+Some pins are controlled by both normal register and AON register. AON
+register is the first level control for pinmux. If we need any
+function in normal
+register configuration, we need configure related AON pinmux register as
+non-AON function first. Then we configure normal pinmux register to get the
+pin function we want.
 
+>
+> Yours,
+> Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
