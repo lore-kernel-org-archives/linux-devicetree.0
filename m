@@ -1,104 +1,194 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7 3/4] usb: dwc2: assert phy reset when waking up in
- rk3288 platform
-Date: Tue, 6 Sep 2016 19:02:20 -0700
-Message-ID: <1ac13d9d-39c4-c110-d5ab-2dee30c0b4aa@synopsys.com>
-References: <1472939729-15187-1-git-send-email-ayaka@soulik.info>
- <1472939729-15187-4-git-send-email-ayaka@soulik.info>
- <57CE50A2.7080502@ti.com> <ba3e8239-6909-9de1-9cc5-f7ae80825f58@synopsys.com>
- <31806DDB-EBF1-4839-81E1-5F7A1D236538@soulik.info>
+From: Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] pinctrl: zx: Add ZTE pinctrl dts document
+Date: Wed, 7 Sep 2016 11:40:21 +0800
+Message-ID: <CABymUCMPCH+c_heexKo75FxAJV_tBAFeemK8vj8kTNdaJhaiOA@mail.gmail.com>
+References: <1472213965-4899-1-git-send-email-jun.nie@linaro.org> <CACRpkdZ5aHJs8EK29_y7wYZhyHAUdD99wy2RRGD-CZdoJo+NrA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <31806DDB-EBF1-4839-81E1-5F7A1D236538-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+In-Reply-To: <CACRpkdZ5aHJs8EK29_y7wYZhyHAUdD99wy2RRGD-CZdoJo+NrA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ayaka <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Liu <jason.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/6/2016 6:19 PM, Ayaka wrote:
-> 
-> 
-> 從我的 iPad 傳送
-> 
->> John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org> 於 2016年9月7日 上午2:54 寫道：
->>
->>> On 9/5/2016 10:15 PM, Kishon Vijay Abraham I wrote:
->>> Hi,
->>>
->>>> On Sunday 04 September 2016 03:25 AM, Randy Li wrote:
->>>> On the rk3288 USB host-only port (the one that's not the OTG-enabled
->>>> port) the PHY can get into a bad state when a wakeup is asserted (not
->>>> just a wakeup from full system suspend but also a wakeup from
->>>> autosuspend).
->>>>
->>>> We can get the PHY out of its bad state by asserting its "port reset",
->>>> but unfortunately that seems to assert a reset onto the USB bus so it
->>>> could confuse things if we don't actually deenumerate / reenumerate the
->>>> device.
->>>>
->>>> We can also get the PHY out of its bad state by fully resetting it using
->>>> the reset from the CRU (clock reset unit) in chip, which does a more full
->>>> reset.  The CRU-based reset appears to actually cause devices on the bus
->>>> to be removed and reinserted, which fixes the problem (albeit in a hacky
->>>> way).
->>>>
->>>> It's unfortunate that we need to do a full re-enumeration of devices at
->>>> wakeup time, but this is better than alternative of letting the bus get
->>>> wedged.
->>>>
->>>> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
->>>> ---
->>>> drivers/usb/dwc2/core_intr.c | 12 ++++++++++++
->>>> 1 file changed, 12 insertions(+)
->>>>
->>>> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
->>>> index d85c5c9..08485b7 100644
->>>> --- a/drivers/usb/dwc2/core_intr.c
->>>> +++ b/drivers/usb/dwc2/core_intr.c
->>>> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
->>>> static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->>>> {
->>>>    int ret;
->>>> +    struct device_node *np = hsotg->dev->of_node;
->>>>
->>>>    /* Clear interrupt */
->>>>    dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
->>>> @@ -379,6 +380,17 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->>>>            /* Restart the Phy Clock */
->>>>            pcgcctl &= ~PCGCTL_STOPPCLK;
->>>>            dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
->>>> +
->>>> +            /*
->>>> +             * It is a quirk in Rockchip RK3288, causing by
->>>> +             * a hardware bug. This will propagate out and
->>>> +             * eventually we'll re-enumerate the device. 
->>>> +             * Not great but the best we can do 
->>>> +             */
->>>> +            if (of_device_is_compatible(np, "rockchip,rk3288-usb")
->>>> +                    && (NULL != hsotg->phy->ops->reset))
->>>> +                hsotg->phy->ops->reset(hsotg->phy);
->>>
->>> never call the phy ops directly from the controller driver. It has to be
->>> protected as well.
->>
->> It looks like we should be calling an API function instead, correct?
->>
-> Could you give me a example for the wrapper of phy ops?
+2016-09-06 22:15 GMT+08:00 Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> Please always include devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org on subsequent
+> postings of the bindings.
+>
+> Also include Heiko St=C3=BCbner and Doug Andersson who are also
+> interested in hierarchical pin controllers on subsequent postings.
+>
+> On Fri, Aug 26, 2016 at 2:19 PM, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+>> +The pins controlled by ZX pin controller are organized in banks,
+>> +number of pins in each bank may vary.  Each pin has different multiplex=
+ing
+>> +functions. There are two type of pins, normal ones and AON ones.
+>
+> I understand so far. Spell out what the acronym AON means. Does
+> it mean "always-on?"
+>
+>> + AON
+>> +pins control high level multiplex and normal pins may require multiplex
+>> +configuration of parent AON pins.
+>
+> I don't understand this at all.
+>
+> What is "high level multiplex"?
+>
+> Since you mention parents I suspect that what you are referring to is
+> that the pins are hierarchical, and that they are controlled by two
+> levels of pin controllers, such that a physical pin is connected to pin
+> controller A which can multiplex pins to N functions, and then the line
+> from A is connected to another pin controller B that can again multiplex
+> to M other functions?
+>
+> Please describe this hardware set-up with *lots* of detail so we have
+> a chance of understanding it fully. All necessary information shall go
+> into this DT binding document so we know where to look it up.
+>
+Here is more hardware detail. Will add it to document later.
 
-Check these files:
-* include/linux/phy/phy.h
-* drivers/phy/phy-core.c
+Hardware has two register regions to control pinmux, one is for normal
+function configuration and the other one is for always on subsystem(AON).
+Some pins are controlled by both normal register and AON register, while
+some pins are controlled only by normal register. That means some pins
+are hierarchical, AON register is the 1st level control for pinmux. If
+we need any function in normal register pin multiplexing, we need configure
+related AON pinmux register to non-AON function first. Then we configure
+normal pinmux register to get the pin function we want. For those pins
+that are not controlled by AON registers, we just need to configure normal
+pinmux register for function multiplexing.
 
-Search for "phy_set_mode".
+All pin configuration, such as pull up/down, is controlled by registers
+in AON register region, which is layouted just after AON pinmux registers.
+So we need access AON register region even we are configuring normal
+pins which has no AON pin multiplex functions.
 
-I'm thinking there should be a "phy_reset" API function which calls
-the phy->ops->reset in a similar manner. With the same runtime checks
-and stub function if CONFIG_GENERIC_PHY is not enabled.
+>> + As the AON pins number is not as much as
+>> +normal pins, some normal pins are not routed through AON pin side and a=
+re
+>> +under direct control by itself.
+>
+> I don't understand this. I suspect the English language may be a
+> problem here, I think "as much as" should be "as many as", also
+> subject and object is very hard to understand when the pin controller
+> is referred to as "itself". It's just very hard to parse, sorry. Please
+> elaborate and I will try to understand and help as much as I can.
+>
+>> +Required properties:
+>> +- compatible:
+>> +  "zte,zx296718-pinctrl"
+>> +  "zte,zx296718-aonpmx"
+>> +
+>> +- reg: Should contain the register physical address and length for the
+>> +  pin controller.
+>
+> OK
+>
+>> +IO pull up/down etc configuration is supported with unified management =
+of
+>> +normal pins and AON pins. The configuration registers area is just afte=
+r
+>> +AON pinmux reg area, while normal pins regs in different area. So two d=
+ts
+>> +nodes are needed to provides the two reg regions.
+>
+> Again hard to understand, but why do you need two nodes
+> and not just two register areas regs =3D <a b>, <c d>;?
+>
+> I guess because one pin controller is using another one but
+> I'm not sure.
 
-Regards,
-John
+Thanks for pointing the usage of  regs =3D <a b>, <c d>;
+For normal pinmux function, we still need AON registers for pin
+configuration, maybe
+this is what you care.
+
+>
+>> +Below configuration are supported. Please refer to pinctrl-bindings.txt
+>> +in this directory for more details of the common pinctrl bindings used
+>> +by client devices.
+>> +
+>> +bias-pull-up            - pull up the pin
+>> +bias-pull-down          - pull down the pin
+>> +drive-strength          - sink or source at most 7 mA
+>> +input-enable            - enable input on pin (no effect on output)
+>> +power-source            - select power supplies. 1: 1.8V, 0: 3.3V
+>> +slew-rate               - set the slew rate
+>
+> OK
+>
+>> +Pin names are defined by bank sequence and pins number in the bank. For
+>> +example, B2 is the 3rd pin in the second bank. The AON pin has prefix
+>> +AON, like AONC2.
+>
+> OK
+>
+>> +Example dts nodes:
+>> +
+>> +pinctop: pinctrl@01462000 {
+>> +       compatible =3D "zte,zx296718-pinctrl";
+>> +       reg =3D <0x01462000 0x1000>;
+>> +
+>> +       i2c5_pins: i2c5pins {
+>> +               pins =3D "G6", "G7";
+>> +               function =3D "I2C5";
+>> +       }
+>> +};
+>> +
+>> +pmx_aon: pinctrl@00119000 {
+>> +       compatible =3D "zte,zx296718-aonpmx";
+>> +       reg =3D <0x00119000 0x1000>;
+>> +};
+>
+> The problem with this devicetree is that it does not express the hierarch=
+ical
+> nature that you describe above. And I have no idea how the driver
+> handles that relation. These look like two independent pin controller
+> but AFAICT they are not.
+>
+> These are arrangements that make more sense:
+>
+> pinctrla {
+>     compatible =3D "parent-device-compat";
+>     (...)
+>     pinctrlb {
+>         compatible =3D "child-device-compat";
+>         (...)
+>     };
+> };
+>
+> This makes the child pin controller a proper child of the parent and
+> make the child probe instantiate from the parent (in
+> Linux of_platform_default_populate() inside the parent driver)
+> and thus it knows the parent is always available before the child.
+>
+> Another arrangement is:
+>
+> pa: pinctrla {
+>     compatible =3D "parent-device-compat";
+>     (...)
+> };
+>
+> pb: pinctrlb {
+>     compatible =3D "child-device-compat";
+>     pinctrl-parent =3D &pinctrla;
+>     (...)
+> };
+>
+> This is in case we need to have hierarchies defined this way.
+
+Yes, the two arrangements are clearer to show the parent relation.
+
+>
+> I don't know the best way to define hierarchical pin controllers yet
+> so we definately need some discussion about it.
+>
+> Yours,
+> Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
