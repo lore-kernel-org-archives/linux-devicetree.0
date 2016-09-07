@@ -1,56 +1,92 @@
-From: jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org
-Subject: [PATCH v4 0/8] dts: sun8i-h3: complete UART I2C definitions for H3
-Date: Wed,  7 Sep 2016 09:58:53 +0200
-Message-ID: <1473235141-12768-1-git-send-email-jorik@kippendief.biz>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wens-jdAy2FN1RRM@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
+From: jorik@kippendief.biz
+Subject: [PATCH v4 1/8] dts: sun8i-h3: drop _a and address suffix from uart0 pinmux
+Date: Wed,  7 Sep 2016 09:58:54 +0200
+Message-ID: <1473235141-12768-2-git-send-email-jorik@kippendief.biz>
+References: <1473235141-12768-1-git-send-email-jorik@kippendief.biz>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473235141-12768-1-git-send-email-jorik@kippendief.biz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wens@csie.org, maxime.ripard@free-electrons.com
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jorik Jonker <jorik@kippendief.biz>
 List-Id: devicetree@vger.kernel.org
 
-From: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
+From: Jorik Jonker <jorik@kippendief.biz>
 
-Of course, minutes after sending you notice a huge copy/paste error in
-the submitted patch. Mae culpa, and here is a new version.
+These are the only possible pins for UART0 on H3
 
-This is my fourth attempt to complete the UART/I2C definitions on H3.
-Changes since v3:
- * I was sloppy when I copy/pasted the i2c2 peripheral, so it had to
-   share clocks/resets and interrupts with i2c1. This is fixed now.
+Signed-off-by: Jorik Jonker <jorik@kippendief.biz>
+---
+ arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts | 2 +-
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts       | 2 +-
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts     | 2 +-
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts      | 2 +-
+ arch/arm/boot/dts/sun8i-h3.dtsi                 | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-Changes since v2:
- * I have moved the pinmux/peripheral associations to the H3 DTSI file,
-   including already existing associations for UART0 and UART1.
- * I have left out _a and @0 prefixes where there is only one option
- * I have added i2c2, since it is there (although not exposed on my test
-   board)
-
-Best,
-
-Jorik
-
-
-Jorik Jonker (8):
-  dts: sun8i-h3: drop _a and address suffix from uart0 pinmux
-  dts: sun8i-h3: clarify uart1 pinmux definition name
-  dts: sun8i-h3: move uart0 pinmux/peripheral assocation to DSTI
-  dts: sun8i-h3: move uart1 pinmux/peripheral assocation to DSTI
-  dts: sun8i-h3: add pinmux definitions for UART2-3
-  dts: sun8i-h3: associate pinmux/peripherals for UART2-3
-  dts: sun8i-h3: add pinmux definitions for I2C0-2
-  dts: sun8i-h3: add I2C0-2 peripherals to H3 SOC
-
- arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts |  4 --
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts       |  2 -
- arch/arm/boot/dts/sun8i-h3-orangepi-one.dts     |  2 -
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts      |  2 -
- arch/arm/boot/dts/sun8i-h3.dtsi                 | 86 ++++++++++++++++++++++++-
- 5 files changed, 84 insertions(+), 12 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
+index f3b1d5f..3779280 100644
+--- a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
++++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
+@@ -179,7 +179,7 @@
+ 
+ &uart0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&uart0_pins_a>;
++	pinctrl-0 = <&uart0_pins>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+index f93f5d1..6cb29f3 100644
+--- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+@@ -172,7 +172,7 @@
+ 
+ &uart0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&uart0_pins_a>;
++	pinctrl-0 = <&uart0_pins>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+index 0adf932..a1423cc 100644
+--- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+@@ -135,7 +135,7 @@
+ 
+ &uart0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&uart0_pins_a>;
++	pinctrl-0 = <&uart0_pins>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+index daf50b9..772239e 100644
+--- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+@@ -157,7 +157,7 @@
+ 
+ &uart0 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&uart0_pins_a>;
++	pinctrl-0 = <&uart0_pins>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index fdf9fdb..ee10004 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -360,7 +360,7 @@
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
+ 
+-			uart0_pins_a: uart0@0 {
++			uart0_pins: uart0 {
+ 				allwinner,pins = "PA4", "PA5";
+ 				allwinner,function = "uart0";
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
