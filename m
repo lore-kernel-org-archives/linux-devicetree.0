@@ -1,481 +1,456 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] pcie: qcom: add support to msm8996 PCIE controller
-Date: Wed,  7 Sep 2016 12:06:52 +0100
-Message-ID: <1473246412-24616-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Stanimir Varbanov <svarbanov@mm-sol.com>, linux-pci@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Subject: Re: [RESEND PATCH v4 3/3] Input: Add tps65217 power button driver
+Date: Wed, 7 Sep 2016 13:42:41 +0200
+Message-ID: <e24c9dc1-0e7a-0cc1-8f25-521034f09bc8@grinn-global.com>
+References: <20160902103526.5050-1-m.niestroj@grinn-global.com>
+ <20160902103526.5050-4-m.niestroj@grinn-global.com>
+ <20160903175321.GC32345@dtor-ws>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160903175321.GC32345@dtor-ws>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to msm8996/apq8096 pcie, MSM8996 supports
-Gen 1/2, One lane, 3 pcie root-complex with support to MSI and
-legacy interrupts and it conforms to PCI Express Base 2.1 specification.
+On 03.09.2016 19:53, Dmitry Torokhov wrote:
+> On Fri, Sep 02, 2016 at 12:35:26PM +0200, Marcin Niestroj wrote:
+>> This driver enables us to use tps65217's power button as KEY_POWER on
+>> am335x boards (directly connected button in chiliboard, accessible pin
+>> via expansion header in beaglebone). This patch has been tested with
+>> chiliboard.
+>>
+>> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> Was it produces by soing s/65218/65217 over
+> drivers/input/misc/tps65217-pwrbutton.c? I honestly can't see much
+> difference between the 2. Can they be probably be combined?
 
-This patch adds post_init callback to qcom_pcie_ops, as this is pcie
-pipe clocks and smmu configuration are only setup after the phy is
-powered on. It also adds ltssm_enable callback as it is very much
-different to other supported SOCs in the driver.
+I didn't think of that earlier. Below is a patch that adds support for
+tps65217 power button in tps65218-pwrbutton.c. Is this approach ok for
+you? If yes, I will send new patch version with it.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
+Additionally I guess the file should be renamed to tps6521x-pwrbutton.c
+and config option changed to CONFIG_INPUT_TPS6521X_PWRBUTTON?
 
-I tested this patch along with phy driver patch on DB820c based on
-APQ8096 on port A and port B using sata and ethernet controllers.
+diff --git a/drivers/input/misc/tps65218-pwrbutton.c 
+b/drivers/input/misc/tps65218-pwrbutton.c
+index a39b626..19d2bb1 100644
+--- a/drivers/input/misc/tps65218-pwrbutton.c
++++ b/drivers/input/misc/tps65218-pwrbutton.c
+@@ -1,8 +1,9 @@
+  /*
+- * Texas Instruments' TPS65218 Power Button Input Driver
++ * Texas Instruments' TPS65217 and TPS65218 Power Button Input Driver
+   *
+   * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
+   * Author: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
++ * Author: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+   *
+   * This program is free software; you can redistribute it and/or modify
+   * it under the terms of the GNU General Public License version 2 as
+@@ -18,31 +19,73 @@
+  #include <linux/input.h>
+  #include <linux/interrupt.h>
+  #include <linux/kernel.h>
++#include <linux/mfd/tps65217.h>
+  #include <linux/mfd/tps65218.h>
+  #include <linux/module.h>
+  #include <linux/of.h>
+  #include <linux/platform_device.h>
+  #include <linux/slab.h>
 
-Thanks
-srini
-
- .../devicetree/bindings/pci/qcom,pcie.txt          |  88 +++++++-
- drivers/pci/host/pcie-qcom.c                       | 237 ++++++++++++++++++++-
- 2 files changed, 318 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-index 4059a6f..1ddfcb4 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-@@ -92,6 +92,18 @@
- 			- "aux"		Auxiliary (AUX) clock
- 			- "bus_master"	Master AXI clock
- 			- "bus_slave"	Slave AXI clock
-+
-+- clock-names:
-+	Usage: required for msm8996/apq8096
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries
-+			- "aux"		Auxiliary (AUX) clock
-+			- "bus_master"	Master AXI clock
-+			- "bus_slave"	Slave AXI clock
-+			- "pipe"	Pipe Clock driving internal logic.
-+			- "cfg"		Configuration clk.
-+			- "snoc_axi"	SNOC AXI clk
-+			- "cnoc_ahb"	CNOC AHB clk
- - resets:
- 	Usage: required
- 	Value type: <prop-encoded-array>
-@@ -114,8 +126,15 @@
- 	Definition: Should contain the following entries
- 			- "core" Core reset
- 
-+- iommus:
-+	Usage: required for msm8996/apq8096
-+	Value type: <prop-encoded-array>
-+	Definition: Should point to the respective IOMMU block with master port
-+		    as argument, see Documentation/devicetree/bindings/iommu/
-+		    mediatek,iommu.txt for details.
-+
- - power-domains:
--	Usage: required for apq8084
-+	Usage: required for apq8084 and msm8996/apq8096
- 	Value type: <prop-encoded-array>
- 	Definition: A phandle and power domain specifier pair to the
- 		    power domain which is responsible for collapsing
-@@ -137,6 +156,11 @@
- 	Definition: A phandle to the analog power supply for IC which generates
- 		    reference clock
- 
-+- vdda_1p8-supply:
-+	Usage: required for msm8996/apq8096
-+	Value type: <phandle>
-+	Definition: A phandle to the analog power supply for PCIE_1P8
-+
- - phys:
- 	Usage: required for apq8084
- 	Value type: <phandle>
-@@ -231,3 +255,65 @@
- 		pinctrl-0 = <&pcie0_pins_default>;
- 		pinctrl-names = "default";
- 	};
-+
-+* Example for apq8096:
-+	pcie1: qcom,pcie@00608000 {
-+		compatible = "qcom,pcie-msm8996", "snps,dw-pcie";
-+		power-domains = <&gcc PCIE1_GDSC>;
-+		bus-range = <0x00 0xff>;
-+		num-lanes = <1>;
-+
-+		status  = "disabled";
-+
-+		reg = <0x00608000 0x2000>,
-+		      <0x0d000000 0xf1d>,
-+		      <0x0d000f20 0xa8>,
-+		      <0x0d100000 0x100000>;
-+
-+		reg-names = "parf", "dbi", "elbi","config";
-+
-+		phys = <&pcie_phy 1>;
-+		phy-names = "pciephy";
-+
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		ranges = <0x01000000 0x0 0x0d200000 0x0d200000 0x0 0x100000>,
-+			<0x02000000 0x0 0x0d300000 0x0d300000 0x0 0xd00000>;
-+
-+		interrupts = <GIC_SPI 413 IRQ_TYPE_NONE>;
-+		interrupt-names = "msi";
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0x7>;
-+		interrupt-map = <0 0 0 1 &intc 0 272 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-+				<0 0 0 2 &intc 0 273 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-+				<0 0 0 3 &intc 0 274 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-+				<0 0 0 4 &intc 0 275 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-+
-+		pinctrl-names = "default", "sleep";
-+		pinctrl-0 = <&pcie1_clkreq_default &pcie1_perst_default &pcie1_wake_default>;
-+		pinctrl-1 = <&pcie1_clkreq_sleep &pcie1_perst_default &pcie1_wake_sleep>;
-+
-+
-+		vreg-1.8-supply = <&pm8994_l12>;
-+		vreg-0.9-supply = <&pm8994_l28>;
-+		iommus = <&anoc0_smmu>;
-+
-+		linux,pci-domain = <1>;
-+
-+		clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
-+			<&gcc GCC_PCIE_1_AUX_CLK>,
-+			<&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-+			<&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
-+			<&gcc GCC_PCIE_1_SLV_AXI_CLK>,
-+			<&gcc GCC_AGGRE0_SNOC_AXI_CLK>,
-+			<&gcc GCC_AGGRE0_CNOC_AHB_CLK>;
-+
-+		clock-names =  "pipe",
-+				"aux",
-+				"cfg",
-+				"bus_master",
-+				"bus_slave",
-+				"snoc_axi",
-+				"cnoc_ahb";
-+
-+	};
-diff --git a/drivers/pci/host/pcie-qcom.c b/drivers/pci/host/pcie-qcom.c
-index f2f90c5..7748c11 100644
---- a/drivers/pci/host/pcie-qcom.c
-+++ b/drivers/pci/host/pcie-qcom.c
-@@ -32,11 +32,19 @@
- 
- #include "pcie-designware.h"
- 
-+#define PCIE20_PARF_DBI_BASE_ADDR	0x168
-+
-+#define PCIE20_PARF_SYS_CTRL			0x00
- #define PCIE20_PARF_PHY_CTRL			0x40
- #define PCIE20_PARF_PHY_REFCLK			0x4C
- #define PCIE20_PARF_DBI_BASE_ADDR		0x168
- #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16c
-+#define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
- #define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT	0x178
-+#define MSM8996_PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT   0x1A8
-+#define PCIE20_PARF_LTSSM			0x1B0
-+#define PCIE20_PARF_SID_OFFSET			0x234
-+#define PCIE20_PARF_BDF_TRANSLATE_CFG		0x24C
- 
- #define PCIE20_ELBI_SYS_CTRL			0x04
- #define PCIE20_ELBI_SYS_CTRL_LT_ENABLE		BIT(0)
-@@ -68,9 +76,22 @@ struct qcom_pcie_resources_v1 {
- 	struct regulator *vdda;
- };
- 
-+struct qcom_pcie_resources_msm8996 {
-+	struct clk *aux_clk;
-+	struct clk *master_clk;
-+	struct clk *slave_clk;
-+	struct clk *cfg_clk;
-+	struct clk *axi_clk;
-+	struct clk *ahb_clk;
-+	struct clk *pipe_clk;
-+	struct regulator *vdda_1p8;
-+	struct regulator *vdda;
+-struct tps65218_pwrbutton {
++struct tps6521x_data {
++	unsigned int reg_status;
++	unsigned int pb_mask;
++	const char *name;
 +};
 +
- union qcom_pcie_resources {
- 	struct qcom_pcie_resources_v0 v0;
- 	struct qcom_pcie_resources_v1 v1;
-+	struct qcom_pcie_resources_msm8996 msm8996;
- };
- 
- struct qcom_pcie;
-@@ -78,7 +99,9 @@ struct qcom_pcie;
- struct qcom_pcie_ops {
- 	int (*get_resources)(struct qcom_pcie *pcie);
- 	int (*init)(struct qcom_pcie *pcie);
-+	int (*post_init)(struct qcom_pcie *pcie);
- 	void (*deinit)(struct qcom_pcie *pcie);
-+	void (*ltssm_enable)(struct qcom_pcie *pcie);
- };
- 
- struct qcom_pcie {
-@@ -114,17 +137,33 @@ static irqreturn_t qcom_pcie_msi_irq_handler(int irq, void *arg)
- 	return dw_handle_msi_irq(pp);
- }
- 
--static int qcom_pcie_establish_link(struct qcom_pcie *pcie)
-+static void qcom_pcie_v0_v1_ltssm_enable(struct qcom_pcie *pcie)
- {
- 	u32 val;
--
--	if (dw_pcie_link_up(&pcie->pp))
--		return 0;
--
- 	/* enable link training */
- 	val = readl(pcie->elbi + PCIE20_ELBI_SYS_CTRL);
- 	val |= PCIE20_ELBI_SYS_CTRL_LT_ENABLE;
- 	writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
-+}
-+
-+static void qcom_pcie_msm8996_ltssm_enable(struct qcom_pcie *pcie)
-+{
-+	u32 val;
-+	/* enable link training */
-+	val = readl(pcie->parf + PCIE20_PARF_LTSSM);
-+	val |= BIT(8);
-+	writel(val, pcie->parf + PCIE20_PARF_LTSSM);
-+}
-+
-+static int qcom_pcie_establish_link(struct qcom_pcie *pcie)
-+{
-+
-+	if (dw_pcie_link_up(&pcie->pp))
-+		return 0;
-+
-+	/* Enable Link Training state machine */
-+	if (pcie->ops->ltssm_enable)
-+		pcie->ops->ltssm_enable(pcie);
- 
- 	return dw_pcie_wait_for_link(&pcie->pp);
- }
-@@ -419,6 +458,164 @@ err_res:
- 	return ret;
- }
- 
-+static int qcom_pcie_get_resources_msm8996(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_msm8996 *res = &pcie->res.msm8996;
-+	struct device *dev = pcie->dev;
-+
-+	res->vdda_1p8 = devm_regulator_get(dev, "vdda_1p8");
-+	if (IS_ERR(res->vdda_1p8))
-+		return PTR_ERR(res->vdda_1p8);
-+
-+	res->vdda = devm_regulator_get(dev, "vdda");
-+	if (IS_ERR(res->vdda))
-+		return PTR_ERR(res->vdda);
-+
-+	res->axi_clk = devm_clk_get(dev, "snoc_axi");
-+	if (IS_ERR(res->axi_clk))
-+		return PTR_ERR(res->axi_clk);
-+
-+	res->ahb_clk = devm_clk_get(dev, "cnoc_ahb");
-+	if (IS_ERR(res->ahb_clk))
-+		return PTR_ERR(res->ahb_clk);
-+
-+	res->aux_clk = devm_clk_get(dev, "aux");
-+	if (IS_ERR(res->aux_clk))
-+		return PTR_ERR(res->aux_clk);
-+
-+	res->cfg_clk = devm_clk_get(dev, "cfg");
-+	if (IS_ERR(res->cfg_clk))
-+		return PTR_ERR(res->cfg_clk);
-+
-+	res->master_clk = devm_clk_get(dev, "bus_master");
-+	if (IS_ERR(res->master_clk))
-+		return PTR_ERR(res->master_clk);
-+
-+	res->slave_clk = devm_clk_get(dev, "bus_slave");
-+	if (IS_ERR(res->slave_clk))
-+		return PTR_ERR(res->slave_clk);
-+
-+	res->pipe_clk = devm_clk_get(dev, "pipe");
-+	if (IS_ERR(res->pipe_clk))
-+		return PTR_ERR(res->pipe_clk);
-+
-+	return 0;
-+}
-+
-+static int qcom_pcie_init_msm8996(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_msm8996 *res = &pcie->res.msm8996;
-+	struct device *dev = pcie->dev;
-+	u32 val;
-+	int ret = 0;
-+
-+	ret = regulator_enable(res->vdda_1p8);
-+	if (ret) {
-+		dev_err(dev, "cannot enable vdda_1p8 regulator\n");
-+		return ret;
-+	}
-+
-+	ret = regulator_enable(res->vdda);
-+	if (ret) {
-+		dev_err(dev, "cannot enable vdda regulator\n");
-+		goto err_vdda;
-+	}
-+
-+	ret = clk_prepare_enable(res->axi_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable axi clock\n");
-+		goto err_axi_clk;
-+	}
-+
-+	ret = clk_prepare_enable(res->ahb_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable ahb clock\n");
-+		goto err_ahb_clk;
-+	}
-+
-+	ret = clk_prepare_enable(res->aux_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable aux clock\n");
-+		goto err_aux_clk;
-+	}
-+
-+	ret = clk_prepare_enable(res->cfg_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable cfg clock\n");
-+		goto err_cfg_clk;
-+	}
-+
-+	ret = clk_prepare_enable(res->master_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable master clock\n");
-+		goto err_master_clk;
-+	}
-+
-+	ret = clk_prepare_enable(res->slave_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable slave clock\n");
-+		goto err_slave_clk;
-+	}
-+
-+	/* enable PCIe clocks and resets */
-+	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-+	val &= ~BIT(0);
-+	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-+
-+	/* change DBI base address */
-+	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-+
-+	/* MAC PHY_POWERDOWN MUX DISABLE  */
-+	val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
-+	val &= ~BIT(29);
-+	writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
-+
-+	val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-+	val |= BIT(4);
-+	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-+
-+	val = readl(pcie->parf + MSM8996_PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
-+	val |= BIT(31);
-+	writel(val, pcie->parf + MSM8996_PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
-+
-+	return 0;
-+
-+err_slave_clk:
-+	clk_disable_unprepare(res->master_clk);
-+err_master_clk:
-+	clk_disable_unprepare(res->cfg_clk);
-+err_cfg_clk:
-+	clk_disable_unprepare(res->aux_clk);
-+err_aux_clk:
-+	clk_disable_unprepare(res->ahb_clk);
-+err_ahb_clk:
-+	clk_disable_unprepare(res->axi_clk);
-+err_axi_clk:
-+	regulator_disable(res->vdda);
-+err_vdda:
-+	regulator_disable(res->vdda_1p8);
-+
-+	return ret;
-+}
-+
-+static int qcom_pcie_post_init_msm8996(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_msm8996 *res = &pcie->res.msm8996;
-+	struct device *dev = pcie->dev;
-+	int ret;
-+
-+	ret = clk_prepare_enable(res->pipe_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable pipe clock\n");
-+		return ret;
-+	}
-+	/* SMMU specific registers */
-+	writel(0, pcie->parf + PCIE20_PARF_BDF_TRANSLATE_CFG);
-+	writel(0, pcie->parf +	PCIE20_PARF_SID_OFFSET);
-+
-+	return 0;
-+}
-+
- static int qcom_pcie_link_up(struct pcie_port *pp)
- {
- 	struct qcom_pcie *pcie = to_qcom_pcie(pp);
-@@ -427,6 +624,21 @@ static int qcom_pcie_link_up(struct pcie_port *pp)
- 	return !!(val & PCI_EXP_LNKSTA_DLLLA);
- }
- 
-+static void qcom_pcie_deinit_msm8996(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_msm8996 *res = &pcie->res.msm8996;
-+
-+	clk_disable_unprepare(res->slave_clk);
-+	clk_disable_unprepare(res->master_clk);
-+	clk_disable_unprepare(res->cfg_clk);
-+	clk_disable_unprepare(res->aux_clk);
-+	clk_disable_unprepare(res->ahb_clk);
-+	clk_disable_unprepare(res->axi_clk);
-+	clk_disable_unprepare(res->pipe_clk);
-+	regulator_disable(res->vdda);
-+	regulator_disable(res->vdda_1p8);
-+}
-+
- static void qcom_pcie_host_init(struct pcie_port *pp)
- {
- 	struct qcom_pcie *pcie = to_qcom_pcie(pp);
-@@ -437,11 +649,13 @@ static void qcom_pcie_host_init(struct pcie_port *pp)
- 	ret = pcie->ops->init(pcie);
- 	if (ret)
- 		goto err_deinit;
--
- 	ret = phy_power_on(pcie->phy);
- 	if (ret)
- 		goto err_deinit;
- 
-+	if (pcie->ops->post_init)
-+		pcie->ops->post_init(pcie);
-+
- 	dw_pcie_setup_rc(pp);
- 
- 	if (IS_ENABLED(CONFIG_PCI_MSI))
-@@ -485,12 +699,22 @@ static const struct qcom_pcie_ops ops_v0 = {
- 	.get_resources = qcom_pcie_get_resources_v0,
- 	.init = qcom_pcie_init_v0,
- 	.deinit = qcom_pcie_deinit_v0,
-+	.ltssm_enable = qcom_pcie_v0_v1_ltssm_enable,
- };
- 
- static const struct qcom_pcie_ops ops_v1 = {
- 	.get_resources = qcom_pcie_get_resources_v1,
- 	.init = qcom_pcie_init_v1,
- 	.deinit = qcom_pcie_deinit_v1,
-+	.ltssm_enable = qcom_pcie_v0_v1_ltssm_enable,
++static const struct tps6521x_data tps65217_data = {
++	.reg_status = TPS65217_REG_STATUS,
++	.pb_mask = TPS65217_STATUS_PB,
++	.name = "tps65217_pwrbutton",
 +};
 +
-+static const struct qcom_pcie_ops ops_msm8996 = {
-+	.get_resources = qcom_pcie_get_resources_msm8996,
-+	.init = qcom_pcie_init_msm8996,
-+	.post_init = qcom_pcie_post_init_msm8996,
-+	.deinit = qcom_pcie_deinit_msm8996,
-+	.ltssm_enable = qcom_pcie_msm8996_ltssm_enable,
- };
- 
- static int qcom_pcie_probe(struct platform_device *pdev)
-@@ -586,6 +810,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_v0 },
- 	{ .compatible = "qcom,pcie-apq8064", .data = &ops_v0 },
- 	{ .compatible = "qcom,pcie-apq8084", .data = &ops_v1 },
-+	{ .compatible = "qcom,pcie-msm8996", .data = &ops_msm8996 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, qcom_pcie_match);
++static const struct tps6521x_data tps65218_data = {
++	.reg_status = TPS65218_REG_STATUS,
++	.pb_mask = TPS65218_STATUS_PB_STATE,
++	.name = "tps65218_pwrbutton",
++};
++
++struct tps6521x_pwrbutton {
+  	struct device *dev;
+-	struct tps65218 *tps;
++	void *tps;
+  	struct input_dev *idev;
++	const struct tps6521x_data *data;
++	char phys[32];
+  };
+
+-static irqreturn_t tps65218_pwr_irq(int irq, void *_pwr)
++static const struct of_device_id of_tps6521x_pwr_match[] = {
++	{ .compatible = "ti,tps65217-pwrbutton", .data = &tps65217_data },
++	{ .compatible = "ti,tps65218-pwrbutton", .data = &tps65218_data },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, of_tps6521x_pwr_match);
++
++static int tps6521x_reg_read(struct tps6521x_pwrbutton *pwr, unsigned 
+int reg,
++		unsigned int *val)
+  {
+-	struct tps65218_pwrbutton *pwr = _pwr;
++	if (pwr->data == &tps65217_data)
++		return tps65217_reg_read((struct tps65217 *) pwr->tps,
++					reg, val);
++	else if (pwr->data == &tps65218_data)
++		return tps65218_reg_read((struct tps65218 *) pwr->tps,
++					reg, val);
++
++	return -EINVAL;
++}
++
++static irqreturn_t tps6521x_pb_irq(int irq, void *_pwr)
++{
++	struct tps6521x_pwrbutton *pwr = _pwr;
++	const struct tps6521x_data *tps_data = pwr->data;
+  	unsigned int reg;
+  	int error;
+
+-	error = tps65218_reg_read(pwr->tps, TPS65218_REG_STATUS, &reg);
++	error = tps6521x_reg_read(pwr, tps_data->reg_status, &reg);
+  	if (error) {
+  		dev_err(pwr->dev, "can't read register: %d\n", error);
+  		goto out;
+  	}
+
+-	if (reg & TPS65218_STATUS_PB_STATE) {
++	if (reg & tps_data->pb_mask) {
+  		input_report_key(pwr->idev, KEY_POWER, 1);
+  		pm_wakeup_event(pwr->dev, 0);
+  	} else {
+@@ -55,25 +98,34 @@ out:
+  	return IRQ_HANDLED;
+  }
+
+-static int tps65218_pwron_probe(struct platform_device *pdev)
++static int tps6521x_pb_probe(struct platform_device *pdev)
+  {
+-	struct tps65218 *tps = dev_get_drvdata(pdev->dev.parent);
++	void *tps = dev_get_drvdata(pdev->dev.parent);
+  	struct device *dev = &pdev->dev;
+-	struct tps65218_pwrbutton *pwr;
++	struct tps6521x_pwrbutton *pwr;
+  	struct input_dev *idev;
++	const struct of_device_id *match;
+  	int error;
+  	int irq;
+
++	match = of_match_node(of_tps6521x_pwr_match, pdev->dev.of_node);
++	if (!match)
++		return -ENXIO;
++
+  	pwr = devm_kzalloc(dev, sizeof(*pwr), GFP_KERNEL);
+  	if (!pwr)
+  		return -ENOMEM;
+
++	pwr->data = match->data;
++
+  	idev = devm_input_allocate_device(dev);
+  	if (!idev)
+  		return -ENOMEM;
+
+-	idev->name = "tps65218_pwrbutton";
+-	idev->phys = "tps65218_pwrbutton/input0";
++	idev->name = pwr->data->name;
++	snprintf(pwr->phys, sizeof(pwr->phys), "%s/input0",
++		pwr->data->name);
++	idev->phys = pwr->phys;
+  	idev->dev.parent = dev;
+  	idev->id.bustype = BUS_I2C;
+
+@@ -86,11 +138,16 @@ static int tps65218_pwron_probe(struct 
+platform_device *pdev)
+  	device_init_wakeup(dev, true);
+
+  	irq = platform_get_irq(pdev, 0);
+-	error = devm_request_threaded_irq(dev, irq, NULL, tps65218_pwr_irq,
+-					  IRQF_TRIGGER_RISING |
+-						IRQF_TRIGGER_FALLING |
+-						IRQF_ONESHOT,
+-					  "tps65218-pwrbutton", pwr);
++	if (irq < 0) {
++		dev_err(dev, "No IRQ resource!\n");
++		return -EINVAL;
++	}
++
++	error = devm_request_threaded_irq(dev, irq, NULL, tps6521x_pb_irq,
++					IRQF_TRIGGER_RISING |
++					IRQF_TRIGGER_FALLING |
++					IRQF_ONESHOT,
++					pwr->data->name, pwr);
+  	if (error) {
+  		dev_err(dev, "failed to request IRQ #%d: %d\n",
+  			irq, error);
+@@ -106,21 +163,15 @@ static int tps65218_pwron_probe(struct 
+platform_device *pdev)
+  	return 0;
+  }
+
+-static const struct of_device_id of_tps65218_pwr_match[] = {
+-	{ .compatible = "ti,tps65218-pwrbutton" },
+-	{ },
+-};
+-MODULE_DEVICE_TABLE(of, of_tps65218_pwr_match);
+-
+-static struct platform_driver tps65218_pwron_driver = {
+-	.probe	= tps65218_pwron_probe,
++static struct platform_driver tps6521x_pb_driver = {
++	.probe	= tps6521x_pb_probe,
+  	.driver	= {
+-		.name	= "tps65218_pwrbutton",
+-		.of_match_table = of_tps65218_pwr_match,
++		.name	= "tps6521x_pwrbutton",
++		.of_match_table = of_tps6521x_pwr_match,
+  	},
+  };
+-module_platform_driver(tps65218_pwron_driver);
++module_platform_driver(tps6521x_pb_driver);
+
+-MODULE_DESCRIPTION("TPS65218 Power Button");
++MODULE_DESCRIPTION("TPS6521X Power Button");
+  MODULE_LICENSE("GPL v2");
+  MODULE_AUTHOR("Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>");
+
+
+>
+> Thanks.
+>
+>> ---
+>> Depends on patches 1-2 in series and commit
+>> 47d7d5ed68d877269003a392b7008905d65650bb
+>> ("power_supply: tps65217-charger: Add support for IRQs")
+>> in power-supply's -next branch.
+>>
+>> Changes v2 -> v4: none
+>>
+>> Changes v1 -> v2:
+>>  * Added information about parent device in tps65217 power button
+>>    device-tree binding documentation (suggested by Rob)
+>>
+>>  .../bindings/input/tps65217-pwrbutton.txt          |  17 +++
+>>  drivers/input/misc/Kconfig                         |  10 ++
+>>  drivers/input/misc/Makefile                        |   1 +
+>>  drivers/input/misc/tps65217-pwrbutton.c            | 131 +++++++++++++++++++++
+>>  4 files changed, 159 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/input/tps65217-pwrbutton.txt
+>>  create mode 100644 drivers/input/misc/tps65217-pwrbutton.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/input/tps65217-pwrbutton.txt b/Documentation/devicetree/bindings/input/tps65217-pwrbutton.txt
+>> new file mode 100644
+>> index 0000000..d5f5cce
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/input/tps65217-pwrbutton.txt
+>> @@ -0,0 +1,17 @@
+>> +Texas Instruments TPS65217 power button
+>> +
+>> +This module is part of the TPS65217. For more details about the whole
+>> +chip see Documentation/devicetree/bindings/regulator/tps65217.txt.
+>> +
+>> +This module provides a simple power button event via an Interrupt.
+>> +
+>> +Required properties:
+>> +- compatible: should be "ti,tps65217-pwrbutton"
+>> +
+>> +Example:
+>> +
+>> +&tps {
+>> +	tps65217-pwrbutton {
+>> +		compatible = "ti,tps65217-pwrbutton";
+>> +	};
+>> +};
+>> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+>> index efb0ca8..826f62b6 100644
+>> --- a/drivers/input/misc/Kconfig
+>> +++ b/drivers/input/misc/Kconfig
+>> @@ -452,6 +452,16 @@ config INPUT_RETU_PWRBUTTON
+>>  	  To compile this driver as a module, choose M here. The module will
+>>  	  be called retu-pwrbutton.
+>>
+>> +config INPUT_TPS65217_PWRBUTTON
+>> +	tristate "TPS65217 Power button driver"
+>> +	depends on MFD_TPS65217
+>> +	help
+>> +	  Say Y here if you want to enable power button reporting for
+>> +	  the TPS65217 Power Management IC device.
+>> +
+>> +	  To compile this driver as a module, choose M here. The module will
+>> +	  be called tps65217-pwrbutton.
+>> +
+>>  config INPUT_TPS65218_PWRBUTTON
+>>  	tristate "TPS65218 Power button driver"
+>>  	depends on MFD_TPS65218
+>> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+>> index 6a1e5e2..bb5ac44 100644
+>> --- a/drivers/input/misc/Makefile
+>> +++ b/drivers/input/misc/Makefile
+>> @@ -67,6 +67,7 @@ obj-$(CONFIG_INPUT_SGI_BTNS)		+= sgi_btns.o
+>>  obj-$(CONFIG_INPUT_SIRFSOC_ONKEY)	+= sirfsoc-onkey.o
+>>  obj-$(CONFIG_INPUT_SOC_BUTTON_ARRAY)	+= soc_button_array.o
+>>  obj-$(CONFIG_INPUT_SPARCSPKR)		+= sparcspkr.o
+>> +obj-$(CONFIG_INPUT_TPS65217_PWRBUTTON)	+= tps65217-pwrbutton.o
+>>  obj-$(CONFIG_INPUT_TPS65218_PWRBUTTON)	+= tps65218-pwrbutton.o
+>>  obj-$(CONFIG_INPUT_TWL4030_PWRBUTTON)	+= twl4030-pwrbutton.o
+>>  obj-$(CONFIG_INPUT_TWL4030_VIBRA)	+= twl4030-vibra.o
+>> diff --git a/drivers/input/misc/tps65217-pwrbutton.c b/drivers/input/misc/tps65217-pwrbutton.c
+>> new file mode 100644
+>> index 0000000..50372bf
+>> --- /dev/null
+>> +++ b/drivers/input/misc/tps65217-pwrbutton.c
+>> @@ -0,0 +1,131 @@
+>> +/*
+>> + * Texas Instruments' TPS65217 Power Button Input Driver
+>> + *
+>> + * Copyright (C) 2016 Grinn - http://www.grinn-global.com/
+>> + * Author: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/init.h>
+>> +#include <linux/input.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/mfd/tps65217.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/slab.h>
+>> +
+>> +struct tps65217_pwrbutton {
+>> +	struct device *dev;
+>> +	struct tps65217 *tps;
+>> +	struct input_dev *idev;
+>> +};
+>> +
+>> +static irqreturn_t tps65217_pb_irq(int irq, void *data)
+>> +{
+>> +	struct tps65217_pwrbutton *pwr = data;
+>> +	unsigned int reg;
+>> +	int error;
+>> +
+>> +	error = tps65217_reg_read(pwr->tps, TPS65217_REG_STATUS, &reg);
+>> +	if (error) {
+>> +		dev_err(pwr->dev, "can't read register: %d\n", error);
+>> +		goto out;
+>> +	}
+>> +
+>> +	if (reg & TPS65217_STATUS_PB) {
+>> +		input_report_key(pwr->idev, KEY_POWER, 1);
+>> +		pm_wakeup_event(pwr->dev, 0);
+>> +	} else {
+>> +		input_report_key(pwr->idev, KEY_POWER, 0);
+>> +	}
+>> +
+>> +	input_sync(pwr->idev);
+>> +
+>> +out:
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static int tps65217_pb_probe(struct platform_device *pdev)
+>> +{
+>> +	struct tps65217 *tps = dev_get_drvdata(pdev->dev.parent);
+>> +	struct device *dev = &pdev->dev;
+>> +	struct tps65217_pwrbutton *pwr;
+>> +	struct input_dev *idev;
+>> +	int error;
+>> +	int irq;
+>> +
+>> +	pwr = devm_kzalloc(dev, sizeof(*pwr), GFP_KERNEL);
+>> +	if (!pwr)
+>> +		return -ENOMEM;
+>> +
+>> +	idev = devm_input_allocate_device(dev);
+>> +	if (!idev)
+>> +		return -ENOMEM;
+>> +
+>> +	idev->name = "tps65217_pwrbutton";
+>> +	idev->phys = "tps65217_pwrbutton/input0";
+>> +	idev->dev.parent = dev;
+>> +	idev->id.bustype = BUS_I2C;
+>> +
+>> +	input_set_capability(idev, EV_KEY, KEY_POWER);
+>> +
+>> +	pwr->tps = tps;
+>> +	pwr->dev = dev;
+>> +	pwr->idev = idev;
+>> +	platform_set_drvdata(pdev, pwr);
+>> +	device_init_wakeup(dev, true);
+>> +
+>> +	irq = platform_get_irq_byname(pdev, "PB");
+>> +	if (irq < 0) {
+>> +		dev_err(dev, "No IRQ resource!\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	error = devm_request_threaded_irq(dev, irq, NULL, tps65217_pb_irq,
+>> +					IRQF_TRIGGER_RISING |
+>> +					IRQF_TRIGGER_FALLING |
+>> +					IRQF_ONESHOT,
+>> +					"tps65217-pwrbutton", pwr);
+>> +	if (error) {
+>> +		dev_err(dev, "failed to request IRQ #%d: %d\n",
+>> +			irq, error);
+>> +		return error;
+>> +	}
+>> +
+>> +	error = input_register_device(idev);
+>> +	if (error) {
+>> +		dev_err(dev, "Can't register power button: %d\n", error);
+>> +		return error;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id tps65217_pb_match[] = {
+>> +	{ .compatible = "ti,tps65217-pwrbutton" },
+>> +	{ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, tps65217_pb_match);
+>> +
+>> +static struct platform_driver tps65217_pb_driver = {
+>> +	.probe	= tps65217_pb_probe,
+>> +	.driver	= {
+>> +		.name	= "tps65217-pwrbutton",
+>> +		.of_match_table = tps65217_pb_match,
+>> +	},
+>> +};
+>> +module_platform_driver(tps65217_pb_driver);
+>> +
+>> +MODULE_DESCRIPTION("TPS65217 Power Button");
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_AUTHOR("Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>");
+>> --
+>> 2.9.3
+>>
+>
+
 -- 
-2.7.4
+Marcin Niestroj
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
