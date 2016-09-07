@@ -1,39 +1,27 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v3 7/8] ARM64: dts: meson-gxbb: Add SRAM node
-Date: Wed,  7 Sep 2016 17:34:36 +0200
-Message-ID: <1473262477-18045-8-git-send-email-narmstrong@baylibre.com>
-References: <1473262477-18045-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473262477-18045-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, khilman@baylibre.com, heiko@sntech.de, wxt@rock-chips.com, frank.wang@rock-chips.com
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v4 1/2] ARM: dts: Add MDM9615 dtsi
+Date: Wed, 7 Sep 2016 08:52:16 -0700
+Message-ID: <20160907155216.GV12510@codeaurora.org>
+References: <20160903125346.18451-1-narmstrong@baylibre.com>
+ <20160903125346.18451-2-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160903125346.18451-2-narmstrong@baylibre.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 09/03, Neil Armstrong wrote:
+> In order to support the Qualcomm MDM9615 SoC, add the SoC dtsi.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index bdbf6e7..2748007 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -124,6 +124,15 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		sram: sram@c8000000 {
-+			compatible = "amlogic,meson-gxbb-sram", "mmio-sram";
-+			reg = <0x0 0xc8000000 0x0 0x14000>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x0 0xc8000000 0x14000>;
-+		};
-+
- 		cbus: cbus@c1100000 {
- 			compatible = "simple-bus";
- 			reg = <0x0 0xc1100000 0x0 0x100000>;
+Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+
 -- 
-1.9.1
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
