@@ -1,205 +1,68 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 3/3] soc: ti: Add ti_sci_pm_domains driver
-Date: Wed, 07 Sep 2016 11:38:52 -0700
-Message-ID: <7h4m5rv9kz.fsf@baylibre.com>
-References: <20160819235653.26355-1-nm@ti.com>
-        <20160819235653.26355-4-nm@ti.com>
-        <CAPDyKFooDUOPT9dP8HaW3YBO9PsX-1+96PPE7CRMyjEkra7cBQ@mail.gmail.com>
-        <57C0D2C9.1030801@ti.com> <57C5E1DA.2040405@ti.com>
-        <CAPDyKFqszM48nXnnA9D8iCp34k-ZmNvOkHPCc=Fya4nJA7PvBQ@mail.gmail.com>
-        <57CF26DB.4020807@ti.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 1/8] ARM: dts: bcm283x: Define standard pinctrl groups in the gpio node.
+Date: Wed, 07 Sep 2016 11:50:59 -0700
+Message-ID: <87bmzzr1bg.fsf@eliezer.anholt.net>
+References: <1473244289-20728-1-git-send-email-kraxel@redhat.com> <1473244289-20728-2-git-send-email-kraxel@redhat.com> <1564766913.23457.026b1e4b-e35d-48e6-9394-7eeea0ff9add.open-xchange@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <57CF26DB.4020807@ti.com> (Dave Gerlach's message of "Tue, 6 Sep
-        2016 15:28:11 -0500")
-Sender: linux-pm-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Nishanth Menon <nm@ti.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Keerthy <j-keerthy@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1564766913.23457.026b1e4b-e35d-48e6-9394-7eeea0ff9add.open-xchange@email.1und1.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, Gerd Hoffmann <kraxel@redhat.com>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, swarren@wwwdotorg.org, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Dave Gerlach <d-gerlach@ti.com> writes:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> On 08/30/2016 03:26 PM, Ulf Hansson wrote:
->> On 30 August 2016 at 21:43, Dave Gerlach <d-gerlach@ti.com> wrote:
->>> Jon, Ulf,
->>>
->>> On 08/26/2016 06:37 PM, Dave Gerlach wrote:
->>>>
->>>> Hi,
->>>> On 08/25/2016 02:27 AM, Ulf Hansson wrote:
->>>>>
->>>>> + Jon
->>>>>
->>>>> [...]
->>>>>
->>>>>> +
->>>>>> +static int ti_sci_pm_domains_probe(struct platform_device *pdev)
->>>>>> +{
->>>>>> +       struct device *dev = &pdev->dev;
->>>>>> +       struct device_node *np = dev->of_node;
->>>>>> +       struct ti_sci_genpd_data *ti_sci_genpd;
->>>>>> +
->>>>>> +       ti_sci_genpd = devm_kzalloc(dev, sizeof(*ti_sci_genpd),
->>>>>> GFP_KERNEL);
->>>>>> +       if (!ti_sci_genpd)
->>>>>> +               return -ENOMEM;
->>>>>> +
->>>>>> +       ti_sci_genpd->ti_sci = devm_ti_sci_get_handle(dev);
->>>>>> +       if (IS_ERR(ti_sci_genpd->ti_sci))
->>>>>> +               return PTR_ERR(ti_sci_genpd->ti_sci);
->>>>>> +
->>>>>> +       ti_sci_genpd->dev = dev;
->>>>>> +
->>>>>> +       INIT_LIST_HEAD(&ti_sci_genpd->pd_list);
->>>>>> +       mutex_init(&ti_sci_genpd->pd_list_mutex);
->>>>>> +
->>>>>> +       return __of_genpd_add_provider(np,
->>>>>> of_ti_sci_genpd_xlate_onecell,
->>>>>> +                                      ti_sci_genpd);
->>>>>
->>>>>
->>>>> Jon Hunter are working on adding robust method to be able to remove
->>>>> initialized genpds [1].
->>>>>
->>>>> In that series we intend to remove the __of_genpd_add_provider() API,
->>>>> and instead only have of_genpd_add_provider_onecell() and
->>>>> of_genpd_add_provider_simple(). Could you please convert to use any of
->>>>> these APIs instead?
->>>>
->>>>
->>>> Thanks for pointing this out. I took at look at the series you've linked
->>>> and the
->>>> short answer is that I see no good way to directly convert what we've done
->>>> to
->>>> use those APIs.
->>>>
->>>> On this platform each device has it's power state controlled through the
->>>> SCI
->>>> protocol described in the cover letter. The system makes a request for
->>>> powering
->>>> on or off the device using a unique ID number for each device, as provided
->>>> in
->>>> patches 1 and 2. These operations map to those of a genpd, so we decided
->>>> to do a
->>>> 1:1 device to genpd mapping, where each device has it's own genpd.
->>>>
->>>> The split that we took from the provided simple and onecell xlate
->>>> functions
->>>> arises from this mapping. The IDs are not necessarily linear and also they
->>>> are
->>>> not necessarily defined in a fixed way for all SoCs, they are entirely
->>>> data
->>>> driven based on the provided device ID. To make use of these IDs, I
->>>> created a
->>>> new xlate function that takes a onecell value but instead dynamically
->>>> allocates
->>>> a new genpd, at probe time, to give us a genpd that contains the necessary
->>>> SoC
->>>> specific data for that device that probed and is mapped directly to the
->>>> device.
->>>> This lets us only create the genpds we need without having to redefine a
->>>> static
->>>> list of all possible genpds and duplicate the data.
->>>>
->>>> So my question back would be, how critical is it to be able to drop the
->>>> ability
->>>> to provide custom xlate functions?
->>>
->>>
->>> After thinking about this a bit more, I believe I see a way we can use the
->>> of_genpd_add_provider_onecell, although not optimally. The device IDs, and
->>> therefore the genpd IDs (in the last email I mentioned we are doing a 1:1
->>> device to genpd mapping) are fixed and defined by the hardware, and are not
->>> linear, there can be gaps and we won't necessarily always start at 0 even
->>> though we do on this SoC. However, we could build an array of genpds that
->>> map to our IDs similar to how several have done it, like in
->>> drivers/soc/bcm/raspberrypi-power.c, but because our IDs can have gaps,
->>> there will be unused struct generic_pm_domains that get allocated and are
->>> never touched because the index of the element doesn't correspond to a genpd
->>> ID.
->>
->> There are a couple of ways to solve your problem without having to
->> create one genpd instance for each of the platform devices. As a
->> matter of fact, I think that approach should be avoided if possible.
->> Genpd isn't designed for these kind purposes, even if it can be done
->> like that.
->>
->
-> Yes, ok. For K2G and future devices, the kernel will just request the
-> device over the TI_SCI protocol and the firmware will guarantee
-> everything that it needs it on. So we thought the 1:1 device to genpd
-> mapping made sense in that regard, but maybe it is a stretch of the
-> framework in the wrong way.
->
->> Here are some ideas which could be used to solve the problem differently.
->>
->> *)
->> Assuming each platform device has a driver for it!?
->> Then why don't you implement the ->runtime_suspend|resume() callbacks
->> on the driver level and call the SCI interface to power on/off the
->> device from there? This ought to be the most straight forward
->> solution.
->
-> Straightforward yes but not a realistic option as we are using shared
-> drivers from other platforms so sticking in platform specific code
-> won't work.
->
->>
->>
->> **)
->> You may also use genpd's (struct generic_pm_domain)
->> ->attach|detach_dev() callbacks to create the device specific data
->> (the SCI device ID). The ->attach_dev() callback are invoked when a
->> device gets attached to its PM domain (genpd) at probe time.
->>
->> Currently these callbacks are already being used by SoCs that uses the
->> PM clk API from a genpd client. That is needed to create the device
->> specific PM clock list. We would have to do something similar here for
->> the SCI device IDs.
->>
->> Then, you must also assign/implement the ->start() and ->stop()
->> callbacks of the struct gpd_dev_ops, which is a part of the genpd
->> struct. These callbacks can then easily invoke SoC specific code/APIs
->> and perhaps that is the issue with my first suggested approach!?
->
-> I've taken a look at what you have suggested here and I think it could
-> work for us, thanks for the suggestion, I will give it a shot, I think
-> that this will work just as well from a functional perspective.
->
->>
->>>
->>> Based on the ID set provided in patch 2 of this series I see 12 gaps, so
->>> we'd be wasting space the size of 12 genpds. The ID mapping will change on
->>> future SoCs, so this number could be larger. Do you think this is an
->>> acceptable solution? It allows us to play nice with the new genpd framework
->>> changes at the cost of wasting some space allocated to filler genpds.
->>
->> There are other issues as well, which mostly has do to with a
->> unnecessary long execution path, involving taking mutexes etc in
->> genpd.
->>
->> All you actually need, is to be able to power on/off a device from a
->> driver's ->runtime_suspend|resume() callback. Don't you think?
->
-> Yes, but I thought the point of these frameworks was that they let us
-> avoid doing it manually with platform specific code inside the
-> drivers. I'll look at the callbacks in the genpd framework instead,
-> that seems like a good place to do it.
+Stefan Wahren <stefan.wahren@i2se.com> writes:
 
-One more idea...
+> Hi Gerd,
+>
+>> Gerd Hoffmann <kraxel@redhat.com> hat am 7. September 2016 um 12:31
+>> geschrieben:
+>>=20
+>>=20
+>> From: Eric Anholt <eric@anholt.net>
+>>=20
+>> The BCM2835-ARM-Peripherals.pdf documentation specifies what the
+>> function selects do for the pins, and there are a bunch of obvious
+>> groupings to be made.  With these created, we'll be able to replace
+>> bcm2835-rpi.dtsi's main "set all of these pins to alt0" with
+>> references to specific groups we want enabled.
+>
+> on IMX/MXS platform it's unwanted to add all possible muxes in the dtsi f=
+ile. So
+> i would suggest to add only the actually used muxes. That makes it easier=
+ to
+> maintain.
 
-Since you don't really have a domain (a group of devices), what you
-really have is each device having an independent power switch, so as Ulf
-suggested, what you really need is for all the devices to share the same
-set of runtime PM callbacks that call SCI.  The only difference is the
-unique ID.
+On the other hand, I find that having to go back to the docs for
+determining the fsels is worse than just verifying and defining them
+here all at once.  Maintaining has also gotten harder because our DTs
+are split across 32 and 64-bit ARM, so rpi3 changes that require adding
+one of these pinmux definitions back to the dtsi would require painful
+cross-branch merges.
 
-Rather than using all of genpd, you could also just use a pm_domain
-which is what genpd is built on top of (and also omap_device, which
-you're probably familiar with also.)
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-That would allow you to keep the drivers completely generic, yet share
-all the SCI specific "domain" code inside a pm_domain.
+-----BEGIN PGP SIGNATURE-----
 
-Kevin
+iQIcBAEBCgAGBQJX0GGUAAoJELXWKTbR/J7o/RgP/17SLiVvQ67rhs6pRNN3LelF
+xwabJnNPQSZDSJKZJDiq6ne45xQPu/Lrr4RucWYPWMZus7KrHeIPe7ZqmyYZwj+M
+K+f2LbZx4+Q2eMQBvqUjZsvydc7+90m9m8nfpwgorZT5tptKIESm6KQ97nkiOrHT
+sGODF/AK4H+Ot+m8SZlGO8AxFwCOYTemcuJn+KiVugwTJRzKqnoV6M39VDcxWyv2
+17eJUMB6aqKymELJgE7sOqrCP0yzYKvdG6vfsjMZtSabXQ9ZBrIMnxAKgqw3GIUP
+lEjt7pH2B6N3kAFGt/1CA5NAPe1sUX4fC9JbYgyITbaMgu5nhQrZLx4gTEAl7TBM
+P1wn6Bc1P984wKXpaSz1rYotnj2Uy0epsSxQr1ZBQRjbc/2plSsJlUap+M5JTSI9
+kVfQe/u5knt6Ludl8U4Ags94UAhRlJhKO5fumKOgICaflie2vD9ZBut0Js/3sJll
+dy24wmnrN54hUjSa2a6TU9cvsehl0QKpsXBJ8xkTD+8MEFGQpfjdbYLwkXrR8qV6
+uQcHUWLPJT8piC6Rg6slkcj4cWQfNtKpYQc7JaeXqj7r7UZnaZRwK4T26jS8hUyD
+0LeNjx+Or928AsPdeYM742e5oXh+3X/hECC8KiB2oSihj7WU6yb7eHhdr6LNJdzh
+ShEXuYMu3r3tsQt13Yd0
+=TWXO
+-----END PGP SIGNATURE-----
+--=-=-=--
