@@ -1,7 +1,7 @@
 From: jorik@kippendief.biz
-Subject: [PATCH v3 2/8] dts: sun8i-h3: clarify uart1 pinmux definition name
-Date: Wed,  7 Sep 2016 09:41:40 +0200
-Message-ID: <1473234106-32330-3-git-send-email-jorik@kippendief.biz>
+Subject: [PATCH v3 5/8] dts: sun8i-h3: add pinmux definitions for UART2-3
+Date: Wed,  7 Sep 2016 09:41:43 +0200
+Message-ID: <1473234106-32330-6-git-send-email-jorik@kippendief.biz>
 References: <1473234106-32330-1-git-send-email-jorik@kippendief.biz>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1473234106-32330-1-git-send-email-jorik@kippendief.biz>
@@ -12,37 +12,39 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jorik Jonker <jorik@kippendief.biz>
 
+These are the pinmux definitions for uarts2-3 on H3. These are the only
+pins for these UARTS, but one could choose to use reduce them to only
+RX/TX.
+
 Signed-off-by: Jorik Jonker <jorik@kippendief.biz>
 ---
- arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts | 2 +-
- arch/arm/boot/dts/sun8i-h3.dtsi                 | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-index 3779280..45f623b 100644
---- a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-@@ -185,7 +185,7 @@
- 
- &uart1 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&uart1_pins_a>;
-+	pinctrl-0 = <&uart1_rts_cts_pins>;
- 	status = "okay";
- };
- 
 diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index ee10004..933d42c 100644
+index 685755c..5cde54c 100644
 --- a/arch/arm/boot/dts/sun8i-h3.dtsi
 +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -367,7 +367,7 @@
+@@ -373,6 +373,20 @@
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
  				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
  			};
++
++			uart2_rts_cts_pins: uart2_rts_cts {
++				allwinner,pins = "PA0", "PA1", "PA2", "PA3";
++				allwinner,function = "uart2";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			uart3_rts_cts_pins: uart3_rts_cts {
++				allwinner,pins = "PA13", "PA14", "PA15", "PA16";
++				allwinner,function = "uart3";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
+ 		};
  
--			uart1_pins_a: uart1@0 {
-+			uart1_rts_cts_pins: uart1_rts_cts {
- 				allwinner,pins = "PG6", "PG7", "PG8", "PG9";
- 				allwinner,function = "uart1";
- 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 		timer@01c20c00 {
 -- 
 2.7.4
