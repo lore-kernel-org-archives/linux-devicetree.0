@@ -1,35 +1,48 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] hwmon: xgene: Add hwmon driver
-Date: Wed, 07 Sep 2016 23:41:44 +0200
-Message-ID: <13081573.BbD3TmEU5Y@wuerfel>
-References: <1469134557-26869-1-git-send-email-hotran@apm.com> <1469134557-26869-3-git-send-email-hotran@apm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1469134557-26869-3-git-send-email-hotran-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hoan Tran <hotran-qTEPVZfXA3Y@public.gmane.org>
-Cc: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, lho-qTEPVZfXA3Y@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Randy Li <ayaka@soulik.info>
+Subject: [PATCH v6 0/3] Add a new board TOPEET iTOP for Exynos 4412
+Date: Thu,  8 Sep 2016 05:58:52 +0800
+Message-ID: <1473285535-21996-1-git-send-email-ayaka@soulik.info>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, linux@armlinux.org.uk, kgene@kernel.org, krzk@kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, Randy Li <ayaka@soulik.info>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, July 21, 2016 1:55:56 PM CEST Hoan Tran wrote:
-> +               ctx->comm_base_addr = cppc_ss->base_address;
-> +               if (ctx->comm_base_addr) {
-> +                       ctx->pcc_comm_addr =
-> +                                       acpi_os_ioremap(ctx->comm_base_addr,
-> +                                                       cppc_ss->length);
-> 
+Changelog:
+  v6:
+    move pwms pinctrl to pwms node
+    fix the order of the dtb file in Makefile
+ - v5:
+   - correct the mail format
+ - v4:
+   - re-order some nodes in alphabetical order
+   - fix some minor bugs
+   - add a entry in vendor list
+ - v3:
+   - fixing the rtc clock, using clock source from PMIC
+   - enable the tmu
+   - enable the fimc for elite board
+   - suuport the audio codec at elite board
+   - fixing minor bugs in the last commit
+ - v2:
+   - removing rtc node
+     the clock source driver is not done yet.
+   - adding exynos-bus
+   - fixing the MFC
 
-This causes the arm64 allmodconfig build to fail now, according to
-kernelci:
+Randy Li (3):
+  ARM: dts: Add TOPEET itop core board SCP package version
+  ARM: dts: add TOPEET itop elite based board
+  devicetree: bindings: Add vendor prefix for Topeet.
 
-      1  ERROR: "memblock_is_memory" [drivers/hwmon/xgene-hwmon.ko] undefined!
+ .../bindings/arm/samsung/samsung-boards.txt        |   3 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/exynos4412-itop-elite.dts        | 239 ++++++++++
+ arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi    | 490 +++++++++++++++++++++
+ 5 files changed, 734 insertions(+)
+ create mode 100644 arch/arm/boot/dts/exynos4412-itop-elite.dts
+ create mode 100644 arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi
 
-Should this perhaps call ioremap() or memremap() instead?
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.7.4
