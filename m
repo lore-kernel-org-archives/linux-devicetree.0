@@ -1,248 +1,35 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: [PATCH v4 03/22] usb: ulpi: Support device discovery via DT
-Date: Wed,  7 Sep 2016 14:35:00 -0700
-Message-ID: <20160907213519.27340-4-stephen.boyd@linaro.org>
-References: <20160907213519.27340-1-stephen.boyd@linaro.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] hwmon: xgene: Add hwmon driver
+Date: Wed, 07 Sep 2016 23:41:44 +0200
+Message-ID: <13081573.BbD3TmEU5Y@wuerfel>
+References: <1469134557-26869-1-git-send-email-hotran@apm.com> <1469134557-26869-3-git-send-email-hotran@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160907213519.27340-1-stephen.boyd@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-usb@vger.kernel.org
-Cc: Felipe Balbi <balbi@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1469134557-26869-3-git-send-email-hotran-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hoan Tran <hotran-qTEPVZfXA3Y@public.gmane.org>
+Cc: Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, lho-qTEPVZfXA3Y@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The qcom HSIC ULPI phy doesn't have any bits set in the vendor or
-product ID registers. This makes it impossible to make a ULPI
-driver match against the ID registers. Add support to discover
-the ULPI phys via DT help alleviate this problem. In the DT case,
-we'll look for a ULPI bus node underneath the device registering
-the ULPI viewport (or the parent of that device to support
-chipidea's device layout) and then match up the phy node
-underneath that with the ULPI device that's created.
+On Thursday, July 21, 2016 1:55:56 PM CEST Hoan Tran wrote:
+> +               ctx->comm_base_addr = cppc_ss->base_address;
+> +               if (ctx->comm_base_addr) {
+> +                       ctx->pcc_comm_addr =
+> +                                       acpi_os_ioremap(ctx->comm_base_addr,
+> +                                                       cppc_ss->length);
+> 
 
-The side benefit of this is that we can use standard properties
-in the phy node like clks, regulators, gpios, etc. because we
-don't have firmware like ACPI to turn these things on for us. And
-we can use the DT phy binding to point our phy consumer to the
-phy provider.
+This causes the arm64 allmodconfig build to fail now, according to
+kernelci:
 
-The ULPI bus code supports native enumeration by reading the
-vendor ID and product ID registers at device creation time, but
-we can't be certain that those register reads will succeed if the
-phy is not powered up. To avoid any problems with reading the ID
-registers before the phy is powered we fallback to DT matching
-when the ID reads fail.
+      1  ERROR: "memblock_is_memory" [drivers/hwmon/xgene-hwmon.ko] undefined!
 
-If the ULPI spec had some generic power sequencing for these
-registers we could put that into the ULPI bus layer and power up
-the device before reading the ID registers. Unfortunately this
-doesn't exist and the power sequence is usually device specific.
-By having the device matched up with DT we can avoid this
-problem.
+Should this perhaps call ioremap() or memremap() instead?
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: <devicetree@vger.kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
----
- Documentation/devicetree/bindings/usb/ulpi.txt | 20 +++++++
- drivers/usb/common/ulpi.c                      | 77 ++++++++++++++++++++++++--
- 2 files changed, 92 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/ulpi.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/ulpi.txt b/Documentation/devicetree/bindings/usb/ulpi.txt
-new file mode 100644
-index 000000000000..ca179dc4bd50
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ulpi.txt
-@@ -0,0 +1,20 @@
-+ULPI bus binding
-+----------------
-+
-+Phys that are behind a ULPI connection can be described with the following
-+binding. The host controller shall have a "ulpi" named node as a child, and
-+that node shall have one enabled node underneath it representing the ulpi
-+device on the bus.
-+
-+EXAMPLE
-+-------
-+
-+usb {
-+	compatible = "vendor,usb-controller";
-+
-+	ulpi {
-+		phy {
-+			compatible = "vendor,phy";
-+		};
-+	};
-+};
-diff --git a/drivers/usb/common/ulpi.c b/drivers/usb/common/ulpi.c
-index 01c0c0477a9e..24689e05a3df 100644
---- a/drivers/usb/common/ulpi.c
-+++ b/drivers/usb/common/ulpi.c
-@@ -16,6 +16,9 @@
- #include <linux/module.h>
- #include <linux/slab.h>
- #include <linux/acpi.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/clk/clk-conf.h>
- 
- /* -------------------------------------------------------------------------- */
- 
-@@ -39,6 +42,10 @@ static int ulpi_match(struct device *dev, struct device_driver *driver)
- 	struct ulpi *ulpi = to_ulpi_dev(dev);
- 	const struct ulpi_device_id *id;
- 
-+	/* Some ULPI devices don't have a vendor id so rely on OF match */
-+	if (ulpi->id.vendor == 0)
-+		return of_driver_match_device(dev, driver);
-+
- 	for (id = drv->id_table; id->vendor; id++)
- 		if (id->vendor == ulpi->id.vendor &&
- 		    id->product == ulpi->id.product)
-@@ -50,6 +57,11 @@ static int ulpi_match(struct device *dev, struct device_driver *driver)
- static int ulpi_uevent(struct device *dev, struct kobj_uevent_env *env)
- {
- 	struct ulpi *ulpi = to_ulpi_dev(dev);
-+	int ret;
-+
-+	ret = of_device_uevent_modalias(dev, env);
-+	if (ret != -ENODEV)
-+		return ret;
- 
- 	if (add_uevent_var(env, "MODALIAS=ulpi:v%04xp%04x",
- 			   ulpi->id.vendor, ulpi->id.product))
-@@ -60,6 +72,11 @@ static int ulpi_uevent(struct device *dev, struct kobj_uevent_env *env)
- static int ulpi_probe(struct device *dev)
- {
- 	struct ulpi_driver *drv = to_ulpi_driver(dev->driver);
-+	int ret;
-+
-+	ret = of_clk_set_defaults(dev->of_node, false);
-+	if (ret < 0)
-+		return ret;
- 
- 	return drv->probe(to_ulpi_dev(dev));
- }
-@@ -87,8 +104,13 @@ static struct bus_type ulpi_bus = {
- static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
- 			     char *buf)
- {
-+	int len;
- 	struct ulpi *ulpi = to_ulpi_dev(dev);
- 
-+	len = of_device_get_modalias(dev, buf, PAGE_SIZE - 1);
-+	if (len != -ENODEV)
-+		return len;
-+
- 	return sprintf(buf, "ulpi:v%04xp%04x\n",
- 		       ulpi->id.vendor, ulpi->id.product);
- }
-@@ -152,21 +174,44 @@ EXPORT_SYMBOL_GPL(ulpi_unregister_driver);
- 
- /* -------------------------------------------------------------------------- */
- 
--static int ulpi_register(struct device *dev, struct ulpi *ulpi)
-+static int ulpi_of_register(struct ulpi *ulpi)
-+{
-+	struct device_node *np = NULL, *child;
-+
-+	/* Find a ulpi bus underneath the parent or the parent of the parent */
-+	if (ulpi->dev.parent->of_node)
-+		np = of_find_node_by_name(ulpi->dev.parent->of_node, "ulpi");
-+	else if (ulpi->dev.parent->parent && ulpi->dev.parent->parent->of_node)
-+		np = of_find_node_by_name(ulpi->dev.parent->parent->of_node,
-+					  "ulpi");
-+	if (!np)
-+		return 0;
-+
-+	child = of_get_next_available_child(np, NULL);
-+	of_node_put(np);
-+	if (!child)
-+		return -EINVAL;
-+
-+	ulpi->dev.of_node = child;
-+
-+	return 0;
-+}
-+
-+static int ulpi_read_id(struct ulpi *ulpi)
- {
- 	int ret;
- 
- 	/* Test the interface */
- 	ret = ulpi_write(ulpi, ULPI_SCRATCH, 0xaa);
- 	if (ret < 0)
--		return ret;
-+		goto err;
- 
- 	ret = ulpi_read(ulpi, ULPI_SCRATCH);
- 	if (ret < 0)
--		return ret;
-+		goto err;
- 
- 	if (ret != 0xaa)
--		return -ENODEV;
-+		goto err;
- 
- 	ulpi->id.vendor = ulpi_read(ulpi, ULPI_VENDOR_ID_LOW);
- 	ulpi->id.vendor |= ulpi_read(ulpi, ULPI_VENDOR_ID_HIGH) << 8;
-@@ -174,6 +219,21 @@ static int ulpi_register(struct device *dev, struct ulpi *ulpi)
- 	ulpi->id.product = ulpi_read(ulpi, ULPI_PRODUCT_ID_LOW);
- 	ulpi->id.product |= ulpi_read(ulpi, ULPI_PRODUCT_ID_HIGH) << 8;
- 
-+	/* Some ULPI devices don't have a vendor id so rely on OF match */
-+	if (ulpi->id.vendor == 0)
-+		goto err;
-+
-+	request_module("ulpi:v%04xp%04x", ulpi->id.vendor, ulpi->id.product);
-+
-+	return 0;
-+err:
-+	return of_device_request_module(&ulpi->dev);
-+}
-+
-+static int ulpi_register(struct device *dev, struct ulpi *ulpi)
-+{
-+	int ret;
-+
- 	ulpi->dev.parent = dev;
- 	ulpi->dev.bus = &ulpi_bus;
- 	ulpi->dev.type = &ulpi_dev_type;
-@@ -181,7 +241,13 @@ static int ulpi_register(struct device *dev, struct ulpi *ulpi)
- 
- 	ACPI_COMPANION_SET(&ulpi->dev, ACPI_COMPANION(dev));
- 
--	request_module("ulpi:v%04xp%04x", ulpi->id.vendor, ulpi->id.product);
-+	ret = ulpi_of_register(ulpi);
-+	if (ret)
-+		return ret;
-+
-+	ret = ulpi_read_id(ulpi);
-+	if (ret)
-+		return ret;
- 
- 	ret = device_register(&ulpi->dev);
- 	if (ret)
-@@ -232,6 +298,7 @@ EXPORT_SYMBOL_GPL(ulpi_register_interface);
-  */
- void ulpi_unregister_interface(struct ulpi *ulpi)
- {
-+	of_node_put(ulpi->dev.of_node);
- 	device_unregister(&ulpi->dev);
- }
- EXPORT_SYMBOL_GPL(ulpi_unregister_interface);
--- 
-2.9.0.rc2.8.ga28705d
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
