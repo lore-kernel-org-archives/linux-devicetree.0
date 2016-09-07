@@ -1,66 +1,83 @@
-From: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
-Subject: Re: [RESEND PATCH] ARM: tegra: fix erroneous address in dts
-Date: Wed, 7 Sep 2016 15:50:57 +0200
-Message-ID: <78670ccc-83ad-c7be-0377-dea1d794c078@ramses-pyramidenbau.de>
-References: <1468835208-13426-1-git-send-email-ralf@ramses-pyramidenbau.de>
- <20160718095802.GA422@ulmo.ba.sec> <3087941.oHflrW9cm7@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2 v3] net: smsc911x: augment device tree bindings
+Date: Wed,  7 Sep 2016 15:53:31 +0200
+Message-ID: <1473256411-13965-1-git-send-email-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3087941.oHflrW9cm7@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Steve Glendinning <steve.glendinning-nksJyM/082jR7s880joybQ@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>, Kamlakant Patel <kamlakant.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pavel Fedin <p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+This adds device tree bindings for:
 
-may I *poke* you again?
+- An optional GPIO line for releasing the RESET signal to the
+  SMSC911x devices
 
-We're close to the release of 4.8, and this patch (b5c86b749 upstream)
-should still be reverted on mainline....
+- An optional PME (power management event) interrupt line that
+  can be utilized to wake up the system on network activity.
+  This signal exist on all the SMSC911x devices, it is just not
+  very often routed.
 
-  Ralf
+Both these lines are routed to the SoC on the Qualcomm APQ8060
+Dragonboard and thus needs to be bound in the device tree.
 
-On 08/10/2016 10:46 PM, Arnd Bergmann wrote:
-> On Monday, July 18, 2016 11:58:02 AM CEST Thierry Reding wrote:
->> On Mon, Jul 18, 2016 at 11:46:48AM +0200, Ralf Ramsauer wrote:
->>> c90bb7b enabled the high speed UARTs of the Jetson TK1. Due to a merge
->>> quirk, wrong addresses were introduced. Fix it and use the correct
->>> addresses.
->>>
->>> Thierry let me know, that there is another patch (b5896f67ab3c in
->>> linux-next) in preparation which removes all the '0,' prefixes of unit
->>> addresses on Tegra124 and is planned to go upstream in 4.8, so
->>> this patch will get reverted then.
->>>
->>> But for the moment, this patch is necessary to fix current misbehaviour.
->>>
->>> Fixes: c90bb7b9b9 ("ARM: tegra: Add high speed UARTs to Jetson TK1 device tree")
->>> Signed-off-by: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
->>> Acked-by: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> ---
->>>  arch/arm/boot/dts/tegra124-jetson-tk1.dts | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> ARM-SoC maintainers,
->>
->> Just to clarify, this is targetted at v4.7 because the offending patch
->> was merged in v4.7-rc1. If at all possible it'd be great to get this in,
->> even if this is terribly last minute.
->>
-> 
-> I just notice this was still missing in v4.8-rc1, so I added it to
-> the fixes branch now, with a stable tag for v4.7
-> 
-> 	Arnd
-> 
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v2->v3:
+- Augment interrupt specificiers to be more to the point and less
+  technical as suggested by Arnd.
+ChangeLog v1->v2:
+- Document for "interrupts", skip mentioning "interrupts-extended"
+  as both are always supported.
+---
+ Documentation/devicetree/bindings/net/smsc911x.txt | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/net/smsc911x.txt b/Documentation/devicetree/bindings/net/smsc911x.txt
+index 3fed3c124411..16c3a9501f5d 100644
+--- a/Documentation/devicetree/bindings/net/smsc911x.txt
++++ b/Documentation/devicetree/bindings/net/smsc911x.txt
+@@ -3,9 +3,11 @@
+ Required properties:
+ - compatible : Should be "smsc,lan<model>", "smsc,lan9115"
+ - reg : Address and length of the io space for SMSC LAN
+-- interrupts : Should contain SMSC LAN interrupt line
+-- interrupt-parent : Should be the phandle for the interrupt controller
+-  that services interrupts for this device
++- interrupts : one or two interrupt specifiers
++  - The first interrupt is the SMSC LAN interrupt line
++  - The second interrupt (if present) is the PME (power
++    management event) interrupt that is able to wake up the host
++     system with a 50ms pulse on network activity
+ - phy-mode : See ethernet.txt file in the same directory
+ 
+ Optional properties:
+@@ -21,6 +23,10 @@ Optional properties:
+   external PHY
+ - smsc,save-mac-address : Indicates that mac address needs to be saved
+   before resetting the controller
++- reset-gpios : a GPIO line connected to the RESET (active low) signal
++  of the device. On many systems this is wired high so the device goes
++  out of reset at power-on, but if it is under program control, this
++  optional GPIO can wake up in response to it.
+ 
+ Examples:
+ 
+@@ -29,7 +35,8 @@ lan9220@f4000000 {
+ 	reg = <0xf4000000 0x2000000>;
+ 	phy-mode = "mii";
+ 	interrupt-parent = <&gpio1>;
+-	interrupts = <31>;
++	interrupts = <31>, <32>;
++	reset-gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
+ 	reg-io-width = <4>;
+ 	smsc,irq-push-pull;
+ };
 -- 
-Ralf Ramsauer
-PGP: 0x8F10049B
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
