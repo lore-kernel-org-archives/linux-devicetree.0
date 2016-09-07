@@ -1,32 +1,76 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH] clk: meson-gxbb: Export PWM related clocks for DT
-Date: Tue, 6 Sep 2016 17:52:08 -0700
-Message-ID: <20160907005208.GS12510@codeaurora.org>
-References: <1471870177-10609-1-git-send-email-narmstrong@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1471870177-10609-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: carlo@caione.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v1 1/2] include: dt-bindings: Add GPIO pin index definition for rockchip pinctrl
+Date: Wed,  7 Sep 2016 09:00:53 +0800
+Message-ID: <1473210053-23743-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/22, Neil Armstrong wrote:
-> Add the PWM related clocks in order to be referenced as PWM source
-> clocks.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
+Add gpio pin index definition to make it easier to describe
+GPIO in dts.
 
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-With some more thought, it should go through whatever tree takes
-the dts changes. Conflicts in these header files should be
-managed by the same person and that person is the platform
-maintainer.
+---
 
+Changes in v1:
+- remove gpio bank definition RK_GPIO7/8
+- redefine GPIO PIN as RK_PA/B/C/Dx
+
+ include/dt-bindings/pinctrl/rockchip.h | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+
+diff --git a/include/dt-bindings/pinctrl/rockchip.h b/include/dt-bindings/pinctrl/rockchip.h
+index 743e66a..aaec8ba 100644
+--- a/include/dt-bindings/pinctrl/rockchip.h
++++ b/include/dt-bindings/pinctrl/rockchip.h
+@@ -25,6 +25,39 @@
+ #define RK_GPIO4	4
+ #define RK_GPIO6	6
+ 
++#define RK_PA0		0
++#define RK_PA1		1
++#define RK_PA2		2
++#define RK_PA3		3
++#define RK_PA4		4
++#define RK_PA5		5
++#define RK_PA6		6
++#define RK_PA7		7
++#define RK_PB0		8
++#define RK_PB1		9
++#define RK_PB2		10
++#define RK_PB3		11
++#define RK_PB4		12
++#define RK_PB5		13
++#define RK_PB6		14
++#define RK_PB7		15
++#define RK_PC0		16
++#define RK_PC1		17
++#define RK_PC2		18
++#define RK_PC3		19
++#define RK_PC4		20
++#define RK_PC5		21
++#define RK_PC6		22
++#define RK_PC7		23
++#define RK_PD0		24
++#define RK_PD1		25
++#define RK_PD2		26
++#define RK_PD3		27
++#define RK_PD4		28
++#define RK_PD5		29
++#define RK_PD6		30
++#define RK_PD7		31
++
+ #define RK_FUNC_GPIO	0
+ #define RK_FUNC_1	1
+ #define RK_FUNC_2	2
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
