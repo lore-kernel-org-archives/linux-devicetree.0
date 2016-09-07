@@ -1,45 +1,45 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v2 2/2] arm64: dts: rk3399: add powerdomain for typec
-Date: Wed,  7 Sep 2016 16:06:17 -0700
-Message-ID: <1473289577-14101-2-git-send-email-zyw@rock-chips.com>
-References: <1473289577-14101-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473289577-14101-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com, groeck@chromium.org, wulf@rock-chips.com, briannorris@chromium.org, heiko@sntech.de, dianders@chromium.org, kever.yang@rock-chips.com
-Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org, David Wu <david.wu@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 3/4] pinctrl: sunxi: Remove unsupported PWM channel
+ pinmux in H3
+Date: Thu, 8 Sep 2016 01:09:29 +0200
+Message-ID: <CACRpkda8uMuOi41O5Cq3o-PXynoZfkxAD7P2fHS-uCUQt_B_kA@mail.gmail.com>
+References: <20160831082520.25962-1-woogyom.kim@gmail.com>
+ <20160831082520.25962-4-woogyom.kim@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160831082520.25962-4-woogyom.kim@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Milo Kim <woogyom.kim@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Krzysztof Adamski <k@japko.eu>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jens Kuske <jenskuske@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The tcpc power domain will try to power up/down the power of Type-C PHY.
-Hence, we need control it in Type-C PHY driver with the pm_runtime helper.
+On Wed, Aug 31, 2016 at 10:25 AM, Milo Kim <woogyom.kim@gmail.com> wrote:
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
----
+> H3 has single PWM channel. The second PWM channel is not supported,
+> so the pinctrl function should be removed.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Icenowy Zheng <icenowy@aosc.xyz>
+> Cc: Jens Kuske <jenskuske@gmail.com>
+> Cc: Krzysztof Adamski <k@japko.eu>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Milo Kim <woogyom.kim@gmail.com>
 
-Changes in v2: None
+Patch applied with Chen-Yu's ACK.
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 8c51095..3eb52b3 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1262,6 +1262,7 @@
- 		clock-names = "tcpdcore", "tcpdphy-ref";
- 		assigned-clocks = <&cru SCLK_UPHY0_TCPDCORE>;
- 		assigned-clock-rates = <50000000>;
-+		power-domains = <&power RK3399_PD_TCPD0>;
- 		resets = <&cru SRST_UPHY0>,
- 			 <&cru SRST_UPHY0_PIPE_L00>,
- 			 <&cru SRST_P_UPHY0_TCPHY>;
-@@ -1290,6 +1291,7 @@
- 		clock-names = "tcpdcore", "tcpdphy-ref";
- 		assigned-clocks = <&cru SCLK_UPHY1_TCPDCORE>;
- 		assigned-clock-rates = <50000000>;
-+		power-domains = <&power RK3399_PD_TCPD1>;
- 		resets = <&cru SRST_UPHY1>,
- 			 <&cru SRST_UPHY1_PIPE_L00>,
- 			 <&cru SRST_P_UPHY1_TCPHY>;
--- 
-1.9.1
+Yours,
+Linus Walleij
