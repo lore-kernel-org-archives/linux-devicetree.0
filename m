@@ -1,192 +1,56 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH v2 5/7] arm64: dts: exynos: Add dts files for Samsung
- Exynos5433 64bit SoC
-Date: Wed, 7 Sep 2016 09:55:09 +0200
-Message-ID: <38902a3f-6f9d-3a74-f082-dc44afdf928e@osg.samsung.com>
-References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
- <1472046551-703-6-git-send-email-cw00.choi@samsung.com>
- <CGME20160826174936epcas1p3e0fe5d9cd14e17aba25c3109ba899e83@epcas1p3.samsung.com>
- <4341f429-64a9-b14c-aeca-d61aac2ee81d@osg.samsung.com>
- <57C95B88.80909@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57C95B88.80909@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, k.kozlowski@samsung.com, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: krzk@kernel.org, jh80.chung@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, inki.dae@samsung.com, jonghwa3.lee@samsung.com, beomho.seo@samsung.com, jaewon02.kim@samsung.com, human.hwang@samsung.com, ideal.song@samsung.com, ingi2.kim@samsung.com, m.szyprowski@samsung.com, a.hajda@samsung.com, s.nawrocki@samsung.com, chanwoo@kernel.org
+From: jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org
+Subject: [PATCH v4 0/8] dts: sun8i-h3: complete UART I2C definitions for H3
+Date: Wed,  7 Sep 2016 09:58:53 +0200
+Message-ID: <1473235141-12768-1-git-send-email-jorik@kippendief.biz>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wens-jdAy2FN1RRM@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Chanwoo,
+From: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
 
-On 09/02/2016 12:59 PM, Chanwoo Choi wrote:
-> Hi Javier,
-> 
-> On 2016년 08월 27일 02:49, Javier Martinez Canillas wrote:
->> Hello Chanwoo,
->>
+Of course, minutes after sending you notice a huge copy/paste error in
+the submitted patch. Mae culpa, and here is a new version.
 
-[snip]
+This is my fourth attempt to complete the UART/I2C definitions on H3.
+Changes since v3:
+ * I was sloppy when I copy/pasted the i2c2 peripheral, so it had to
+   share clocks/resets and interrupts with i2c1. This is fixed now.
 
->>
->>> +		mipi_phy: video-phy@105C0708 {
->>> +			compatible = "samsung,exynos5433-mipi-video-phy";
->>> +			#phy-cells = <1>;
->>> +			samsung,pmu-syscon = <&pmu_system_controller>;
->>> +			samsung,cam0-sysreg = <&syscon_cam0>;
->>> +			samsung,cam1-sysreg = <&syscon_cam1>;
->>> +			samsung,disp-sysreg = <&syscon_disp>;
->>> +		};
->>
->> This node has a unit name but it doesn't have a reg property so dtc will
->> warn about the mismatch when executed with W=1.
-> 
-> The mipi_phy address are included in the PMU (base 0x105c_0000).
-> There is no memory map for only MIPI_PHY. Instead, the mipi_phy driver[1]
-> uses the regmap (pmu, syscon_cam0/1/disp).
-> [1] drivers/phy/phy-exynos-mipi-video.c don't use
->
-> Also, the first MIPI_PHY's address is 0x105c0710. I'll fix it.
-> 
-> If you want to add the 'reg' property, I can add DT node as following:
-> 
-> 	mipi_phy: video-phy@105c0710 {
-> 		reg = <0x105c0710 0x0>;
-> 		compatible = "samsung,exynos5433-mipi-video-phy";
-> 		...
-> 	};
-> 
-> But it looks strange because the mipi_phy driver[1] never gets
-> the base address with of_iomap().
->
+Changes since v2:
+ * I have moved the pinmux/peripheral associations to the H3 DTSI file,
+   including already existing associations for UART0 and UART1.
+ * I have left out _a and @0 prefixes where there is only one option
+ * I have added i2c2, since it is there (although not exposed on my test
+   board)
 
-The DT should describe the actual HW regardless of the driver implementation.
+Best,
 
-I'm not sure what's the correct way to handle this (i.e: adding an unused reg
-property or not having a unit name) but the mismatch should be fixed to avoid
-dtc to complain about it.
+Jorik
 
->>
->> [snip]
->>
->>> +		usbdrd30: usb@15400000 {
->>> +			compatible = "samsung,exynos5250-dwusb3";
->>> +			clocks = <&cmu_fsys CLK_ACLK_USBDRD30>,
->>> +				<&cmu_fsys CLK_SCLK_USBDRD30>;
->>> +			clock-names = "usbdrd30", "usbdrd30_susp_clk";
->>> +			assigned-clocks =
->>> +				<&cmu_fsys CLK_MOUT_SCLK_USBDRD30_USER>,
->>> +				<&cmu_top CLK_MOUT_SCLK_USBDRD30>,
->>> +				<&cmu_top CLK_DIV_SCLK_USBDRD30>;
->>> +			assigned-clock-parents =
->>> +				<&cmu_top CLK_SCLK_USBDRD30_FSYS>,
->>> +				<&cmu_top CLK_MOUT_BUS_PLL_USER>;
->>> +			assigned-clock-rates = <0>, <0>, <66700000>;
->>> +			#address-cells = <1>;
->>> +			#size-cells = <1>;
->>> +			ranges;
->>> +			status = "disabled";
->>> +
->>
->> Ditto, the node has unit address but no reg property.
-> 
-> The usbdrd[2] driver don't map the base address.
-> So, this DT node don't include any code calling the of_iomap().
-> [2] drivers/usb/dwc3/dwc3-exynos.c
->
 
-Same comment than above.
+Jorik Jonker (8):
+  dts: sun8i-h3: drop _a and address suffix from uart0 pinmux
+  dts: sun8i-h3: clarify uart1 pinmux definition name
+  dts: sun8i-h3: move uart0 pinmux/peripheral assocation to DSTI
+  dts: sun8i-h3: move uart1 pinmux/peripheral assocation to DSTI
+  dts: sun8i-h3: add pinmux definitions for UART2-3
+  dts: sun8i-h3: associate pinmux/peripherals for UART2-3
+  dts: sun8i-h3: add pinmux definitions for I2C0-2
+  dts: sun8i-h3: add I2C0-2 peripherals to H3 SOC
 
-> But, the usbdrd's base address is 0x15400000.
-> 
->>
->>> +			dwc3 {
->>> +				compatible = "snps,dwc3";
->>> +				reg = <0x15400000 0x10000>;
->>
->> Ditto, the node doesn't have a unit address but has reg property.
-> 
-> OK. I'll modify it as following:
-> 			dwc3@15400000 {
->
+ arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts |  4 --
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts       |  2 -
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts     |  2 -
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts      |  2 -
+ arch/arm/boot/dts/sun8i-h3.dtsi                 | 86 ++++++++++++++++++++++++-
+ 5 files changed, 84 insertions(+), 12 deletions(-)
 
-Ok.
-
->>
->>> +				interrupts = <0 231 0>;
->>> +				phys = <&usbdrd30_phy 0>, <&usbdrd30_phy 1>;
->>> +				phy-names = "usb2-phy", "usb3-phy";
->>> +			};
->>> +		};
->>> +
->>> +
->>> +		usbhost30: usb@15a00000 {
->>> +			compatible = "samsung,exynos5250-dwusb3";
->>> +			clocks = <&cmu_fsys CLK_ACLK_USBHOST30>,
->>> +				<&cmu_fsys CLK_SCLK_USBHOST30>;
->>> +			clock-names = "usbdrd30", "usbdrd30_susp_clk";
->>> +			assigned-clocks =
->>> +				<&cmu_fsys CLK_MOUT_SCLK_USBHOST30_USER>,
->>> +				<&cmu_top CLK_MOUT_SCLK_USBHOST30>,
->>> +				<&cmu_top CLK_DIV_SCLK_USBHOST30>;
->>> +			assigned-clock-parents =
->>> +				<&cmu_top CLK_SCLK_USBHOST30_FSYS>,
->>> +				<&cmu_top CLK_MOUT_BUS_PLL_USER>;
->>> +			assigned-clock-rates = <0>, <0>, <66700000>;
->>> +			#address-cells = <1>;
->>> +			#size-cells = <1>;
->>> +			ranges;
->>> +			status = "disabled";
->>> +
->>
->> Ditto, the node has unit address but no reg property.
-> 
-> This case is same with above 'usbdrd30'.
->
-
-Same comment than above. The DT shouldn't leak Linux implementation details.
-
->>
->>> +			usbdrd_dwc3_0: dwc3 {
->>> +				compatible = "snps,dwc3";
->>> +				reg = <0x15a00000 0x10000>;
->>
->> Ditto, the node doesn't have a unit address but has reg property.
-> 
-> I'll modify it as following:
-> 			usbdrd_dwc3_0: dwc3@15a00000 {
-> 
->>
->>> +				interrupts = <0 244 0>;
->>> +				phys = <&usbhost30_phy 0>, <&usbhost30_phy 1>;
->>> +				phy-names = "usb2-phy", "usb3-phy";
->>> +			};
->>> +		};
->>> +
->>
->> [snip]
->>
->>> +		audio-subsystem {
-> 
-> I'll modify it as following:
-> 		audio-subsystem@11400000 {
->
-
-Ok.
-
->>> +			compatible = "samsung,exynos5433-lpass";
->>> +			reg = <0x11400000 0x100>, <0x11500000 0x08>;
->>
->> Ditto, the node doesn't have a unit address but has reg property.
->>
->> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> 
-> Thanks for your review.
-> 
-
-Best regards,
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
