@@ -1,61 +1,38 @@
-From: Zach Brown <zach.brown@ni.com>
-Subject: [PATCH v5 1/2] sdhci-of-arasan: Add device tree parameter xlnx-fails-without-test-cd bit
-Date: Wed, 7 Sep 2016 17:22:40 -0500
-Message-ID: <1473286961-19608-1-git-send-email-zach.brown@ni.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: adrian.hunter@intel.com
-Cc: robh+dt@kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org, zach.brown@ni.com
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 2/3] hwmon: xgene: Add hwmon driver
+Date: Wed, 7 Sep 2016 15:27:54 -0700
+Message-ID: <20160907222754.GA31475@roeck-us.net>
+References: <1469134557-26869-1-git-send-email-hotran@apm.com>
+ <1469134557-26869-3-git-send-email-hotran@apm.com>
+ <13081573.BbD3TmEU5Y@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <13081573.BbD3TmEU5Y@wuerfel>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Hoan Tran <hotran@apm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, lho@apm.com, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The sdhci controller on xilinx zynq devices will not function unless
-the CD bit is provided. http://www.xilinx.com/support/answers/61064.html
-In cases where it is impossible to provide the CD bit in hardware,
-setting the controller to test mode and then setting inserted to true
-will get the controller to function without the CD bit.
+On Wed, Sep 07, 2016 at 11:41:44PM +0200, Arnd Bergmann wrote:
+> On Thursday, July 21, 2016 1:55:56 PM CEST Hoan Tran wrote:
+> > +               ctx->comm_base_addr = cppc_ss->base_address;
+> > +               if (ctx->comm_base_addr) {
+> > +                       ctx->pcc_comm_addr =
+> > +                                       acpi_os_ioremap(ctx->comm_base_addr,
+> > +                                                       cppc_ss->length);
+> > 
+> 
+> This causes the arm64 allmodconfig build to fail now, according to
+> kernelci:
+> 
+>       1  ERROR: "memblock_is_memory" [drivers/hwmon/xgene-hwmon.ko] undefined!
+> 
+How do you even get there ? arm64:allmodconfig fails for me in -next with
 
-The device property "xlnx-fails-without-test-cd" will let the arasan
-driver know the controller does not have the CD line wired and that the
-controller does not function without it.
+drivers/pwm/pwm-berlin.c: In function ‘berlin_pwm_suspend’:
+drivers/pwm/pwm-berlin.c:245:35: error: ‘struct berlin_pwm_chip’ has no member named ‘chips’
 
-Signed-off-by: Zach Brown <zach.brown@ni.com>
----
-v2:
- * improved commit messages
- * removed fake-cd device property
- * removed fake-cd quirk
- * use broken-cd device property
- * documented new usage of broken-cd
-v3:
- * removed new usage of broken-cd
- * created fails-without-test-cd device property
- * created arasan controller specific quirk
-v4:
- * changed fails-without-test-cd to xlnx-fails-without-test-cd
- * removed extra blank line
-v5:
- * Fixed style mistake
- * Changed (1 << 0 ) to BIT(0)
-
-
- Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-index 31b35c3..7407450 100644
---- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-+++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-@@ -17,6 +17,10 @@ Required Properties:
-   - interrupts: Interrupt specifier
-   - interrupt-parent: Phandle for the interrupt controller that services
- 		      interrupts for this device.
-+Optional Properties:
-+- xlnx-fails-without-test-cd: when present, the controller doesn't work when
-+  the CD line is not connected properly, and the line is not connected
-+  properly. Test mode can be used to force the controller to function.
- 
- Required Properties for "arasan,sdhci-5.1":
-   - phys: From PHY bindings: Phandle for the Generic PHY for arasan.
--- 
-2.7.4
-
+Guenter
