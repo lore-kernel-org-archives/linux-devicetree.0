@@ -1,33 +1,29 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 1/8] MAINTAINERS: Add glob for Aspeed devicetree bindings
-Date: Wed, 07 Sep 2016 16:42:42 +0200
-Message-ID: <5593420.8zaAADKfPO@wuerfel>
-References: <20160830075427.11493-1-andrew@aj.id.au> <20160830075427.11493-2-andrew@aj.id.au> <CACRpkdb6Bxg3Unobr=HWj9J1FK5QaMcYrmNTL4G5FOONqU4WfQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/8] gpio: dt-bindings: Add documentation for Aspeed
+ GPIO controllers
+Date: Wed, 7 Sep 2016 16:43:08 +0200
+Message-ID: <CACRpkdYpmSS3jA=r13r-_UPEKxUvO=U=EUXAtwuZLmxnGDhiwA@mail.gmail.com>
+References: <20160830075427.11493-1-andrew@aj.id.au> <20160830075427.11493-5-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdb6Bxg3Unobr=HWj9J1FK5QaMcYrmNTL4G5FOONqU4WfQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160830075427.11493-5-andrew-zrmu5oMJ5Fs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, September 7, 2016 4:37:15 PM CEST Linus Walleij wrote:
-> On Tue, Aug 30, 2016 at 9:54 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
-> 
-> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > Acked-by: Joel Stanley <joel@jms.id.au>
-> 
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> I guess some device tree maintainer or SoC tree should merge this patch.
-> If you think it is proper to apply in the pinctrl or gpio tree, tell me.
-> 
+On Tue, Aug 30, 2016 at 9:54 AM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
 
-I think it's best to take this through arm-soc to avoid conflicts in
-case we add other lines too.
+> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+> Acked-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 
-Maybe add a global regex instead of a growing list of file names though.
+Patch applied to the GPIO tree with Rob's ACK and moved the compatible
+to the first line in the process.
 
-	Arnd
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
