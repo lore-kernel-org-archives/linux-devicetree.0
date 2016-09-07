@@ -1,29 +1,39 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/7] clk: gxbb: expose USB clocks
-Date: Tue, 6 Sep 2016 17:33:55 -0700
-Message-ID: <20160907003355.GQ12510@codeaurora.org>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
- <20160904213152.25837-2-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH] clk: meson-gxbb: Export PWM related clocks for DT
+Date: Tue, 6 Sep 2016 17:34:52 -0700
+Message-ID: <20160907003452.GR12510@codeaurora.org>
+References: <1471870177-10609-1-git-send-email-narmstrong@baylibre.com>
+ <57CACA00.9010306@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160904213152.25837-2-martin.blumenstingl@googlemail.com>
+In-Reply-To: <57CACA00.9010306@baylibre.com>
 Sender: linux-clk-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-clk@vger.kernel.org, linux-usb@vger.kernel.org, linux-amlogic@lists.infradead.org, jbrunet@baylibre.com, johnyoun@synopsys.com, kishon@ti.com, khilman@baylibre.com, carlo@caione.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, mturquette@baylibre.com, will.deacon@arm.com, catalin.marinas@arm.com, gregkh@linuxfoundation.org, mark.rutland@arm.com, robh+dt@kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: carlo@caione.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/04, Martin Blumenstingl wrote:
-> USB0_DDR_BRIDGE and USB1_DDR_BRIDGE1 are needed for the related
-> dwc2 usb controller. USB, USB0 and USB1 are needed for the PHYs.
-> Expose these clocks to DT and comment out in clk driver.
+On 09/03, Neil Armstrong wrote:
 > 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> 
+> Le 22/08/2016 14:49, Neil Armstrong a écrit :
+> > Add the PWM related clocks in order to be referenced as PWM source
+> > clocks.
+> > 
+> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> > ---
+> >  drivers/clk/meson/gxbb.h              | 6 +++---
+> >  include/dt-bindings/clock/gxbb-clkc.h | 3 +++
+> >  2 files changed, 6 insertions(+), 3 deletions(-)
+> 
+> Dear Clock Maintainers,
+> 
+> Could you review this patch since it is a strong requirement to select the PWM clock parents over DT ?
+> 
 
-Is authorship correct on this patch? Did Jerome author it
-instead?
+Looks fine to me. Did you want an ack or an immutable branch?
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
