@@ -1,25 +1,24 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v5 2/6] clk: gxbb: expose MPLL2 clock for use by DT
-Date: Wed, 7 Sep 2016 14:27:20 -0700
-Message-ID: <20160907212720.GZ12510@codeaurora.org>
-References: <20160904182320.671-1-martin.blumenstingl@googlemail.com>
- <20160906213848.17785-1-martin.blumenstingl@googlemail.com>
- <20160906213848.17785-3-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 3/7] clk: gxbb: expose spifc clock
+Date: Wed, 7 Sep 2016 14:27:54 -0700
+Message-ID: <20160907212754.GB12510@codeaurora.org>
+References: <1473261223-15412-1-git-send-email-jbrunet@baylibre.com>
+ <1473261223-15412-4-git-send-email-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160906213848.17785-3-martin.blumenstingl@googlemail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org, mturquette@baylibre.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, manabian@gmail.com, arnd@arndb.de, davem@davemloft.net, b.galvani@gmail.com
+In-Reply-To: <1473261223-15412-4-git-send-email-jbrunet@baylibre.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/06, Martin Blumenstingl wrote:
-> This exposes the MPLL2 clock as this is one of the input clocks of the
-> ethernet controller's internal mux.
+On 09/07, Jerome Brunet wrote:
+> SPI clock is needed for the spifc driver, expose to DT
+> (and comment out in the clk driver)
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
 
 Acked-by: Stephen Boyd <sboyd@codeaurora.org>
