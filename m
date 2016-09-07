@@ -1,35 +1,38 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/2 v3] net: smsc911x: augment device tree bindings
-Date: Wed, 07 Sep 2016 16:31:06 +0200
-Message-ID: <5562302.TqOSBHraW1@wuerfel>
-References: <1473256411-13965-1-git-send-email-linus.walleij@linaro.org>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH v2 1/2] Documentation: dt: add bindings for ti-cpufreq
+Date: Wed, 7 Sep 2016 09:36:24 -0500
+Message-ID: <57D025E8.6030202@ti.com>
+References: <20160901025328.376-1-d-gerlach@ti.com>
+ <20160901025328.376-2-d-gerlach@ti.com> <20160907051215.GN27345@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1473256411-13965-1-git-send-email-linus.walleij@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Steve Glendinning <steve.glendinning@shawell.net>, Guenter Roeck <linux@roeck-us.net>, Jeremy Linton <jeremy.linton@arm.com>, Kamlakant Patel <kamlakant.patel@broadcom.com>, Pavel Fedin <p.fedin@samsung.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160907051215.GN27345@vireshk-i7>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, September 7, 2016 3:53:31 PM CEST Linus Walleij wrote:
-> This adds device tree bindings for:
-> 
-> - An optional GPIO line for releasing the RESET signal to the
->   SMSC911x devices
-> 
-> - An optional PME (power management event) interrupt line that
->   can be utilized to wake up the system on network activity.
->   This signal exist on all the SMSC911x devices, it is just not
->   very often routed.
-> 
-> Both these lines are routed to the SoC on the Qualcomm APQ8060
-> Dragonboard and thus needs to be bound in the device tree.
-> 
-> Cc: devicetree@vger.kernel.org
-> Cc: Jeremy Linton <jeremy.linton@arm.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> 
+On 09/07/2016 12:12 AM, Viresh Kumar wrote:
+> On 31-08-16, 21:53, Dave Gerlach wrote:
+>> +In 'operating-points-v2' table:
+>> +- compatible: Should be
+>> +	- 'operating-points-v2-ti-am3352-cpu' for am335x SoCs
+>> +	- 'operating-points-v2-ti-am4372-cpu' for am43xx SoCs
+>> +	- 'operating-points-v2-ti-dra7-cpu' for dra7xx/am57xx SoCs
+>
+> Why do you need SoC specific compatible here? Are you defining new
+> fields in OPP tables for your SoC ? How are the tables for your case
+> going to differ from the ones using "operating-points-v2" compatible
+> string?
+>
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+I thought you had suggested that I do this in your comments from v1, but 
+I guess that was dependent on whether or not I put the properties I have 
+inserted into the cpu node into the operating-points table instead. I 
+still have gotten no comments from any DT maintainers so I left it as 
+is. I am still not sure if that is acceptable.
+
+Regards,
+Dave
