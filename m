@@ -1,62 +1,34 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 4/8] ARM: dts: bcm283x: Add a new EMMC pin group from
- the downstream tree.
-Date: Wed, 7 Sep 2016 20:13:32 +0200 (CEST)
-Message-ID: <87650770.23554.026b1e4b-e35d-48e6-9394-7eeea0ff9add.open-xchange@email.1und1.de>
-References: <1473244289-20728-1-git-send-email-kraxel@redhat.com>
- <1473244289-20728-5-git-send-email-kraxel@redhat.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v4 6/6] arm64: dts: rockchip: enable the gmac for rk3399 evb board
+Date: Wed, 07 Sep 2016 20:16:47 +0200
+Message-ID: <1587027.EOPyfRoxyJ@phil>
+References: <1472752204-8924-1-git-send-email-wxt@rock-chips.com> <1472752204-8924-7-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473244289-20728-5-git-send-email-kraxel@redhat.com>
+In-Reply-To: <1472752204-8924-7-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gerd Hoffmann <kraxel@redhat.com>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, linux-rockchip@lists.infradead.org, Brian Norris <briannorris@chromium.org>, Douglas Anderson <dianders@chromium.org>, dbasehore@chromium.org, Roger Chen <roger.chen@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <yamada.masahiro@socionext.com>, Frank Wang <frank.wang@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Am Freitag, 2. September 2016, 01:50:04 CEST schrieb Caesar Wang:
+> From: Roger Chen <roger.chen@rock-chips.com>
+> 
+> We add the required and optional properties for evb board.
+> See the [0] to get the detail information.
+> 
+> [0]:
+> Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+> 
+> Signed-off-by: Roger Chen <roger.chen@rock-chips.com>
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
-> Gerd Hoffmann <kraxel@redhat.com> hat am 7. September 2016 um 12:31
-> geschrieben:
-> 
-> 
-> From: Eric Anholt <eric@anholt.net>
-> 
-> This will be used for having EMMC (sdhci-bcm2835.c) drive the
-> wireless.
+applied to my dts64 branch,
 
-sdhci-bcm2835.c has been replaced by sdhci-iproc.c
+after moving clkin_gmac and sorting the gmac properties according to their 
+alphabetical position.
 
-> 
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> ---
->  arch/arm/boot/dts/bcm283x.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-> index 062d09db..b6b1950 100644
-> --- a/arch/arm/boot/dts/bcm283x.dtsi
-> +++ b/arch/arm/boot/dts/bcm283x.dtsi
-> @@ -257,6 +257,11 @@
->  				brcm,pins = <32 33>;
->  				brcm,function = <BCM2835_FSEL_ALT3>;
->  			};
-> +			emmc_gpio34: emmc_gpio34 {
-> +				brcm,pins = <34 35 36 37 38 39>;
-> +				brcm,function = <BCM2835_FSEL_ALT3>;
-> +				brcm,pull = <0 2 2 2 2 2>;
 
-How about adding pull defines to include/dt-bindings/pinctrl/bcm2835.h?
-
-> +			};
->  			emmc_gpio48: emmc_gpio48 {
->  				brcm,pins = <48 49 50 51 52 53>;
->  				brcm,function = <BCM2835_FSEL_ALT3>;
-> -- 
-> 1.8.3.1
-> 
-> 
-> _______________________________________________
-> linux-rpi-kernel mailing list
-> linux-rpi-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel
+Heiko
