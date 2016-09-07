@@ -1,7 +1,7 @@
 From: jorik@kippendief.biz
-Subject: [PATCH v3 5/8] dts: sun8i-h3: add pinmux definitions for UART2-3
-Date: Wed,  7 Sep 2016 09:41:43 +0200
-Message-ID: <1473234106-32330-6-git-send-email-jorik@kippendief.biz>
+Subject: [PATCH v3 7/8] dts: sun8i-h3: add pinmux definitions for I2C0-2
+Date: Wed,  7 Sep 2016 09:41:45 +0200
+Message-ID: <1473234106-32330-8-git-send-email-jorik@kippendief.biz>
 References: <1473234106-32330-1-git-send-email-jorik@kippendief.biz>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1473234106-32330-1-git-send-email-jorik@kippendief.biz>
@@ -12,39 +12,44 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jorik Jonker <jorik@kippendief.biz>
 
-These are the pinmux definitions for uarts2-3 on H3. These are the only
-pins for these UARTS, but one could choose to use reduce them to only
-RX/TX.
+These are the only possible pins for these peripherals.
 
 Signed-off-by: Jorik Jonker <jorik@kippendief.biz>
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 685755c..5cde54c 100644
+index e9528d1..937096a 100644
 --- a/arch/arm/boot/dts/sun8i-h3.dtsi
 +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -373,6 +373,20 @@
- 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 			};
-+
-+			uart2_rts_cts_pins: uart2_rts_cts {
-+				allwinner,pins = "PA0", "PA1", "PA2", "PA3";
-+				allwinner,function = "uart2";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
-+
-+			uart3_rts_cts_pins: uart3_rts_cts {
-+				allwinner,pins = "PA13", "PA14", "PA15", "PA16";
-+				allwinner,function = "uart3";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
- 		};
+@@ -327,6 +327,27 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
  
- 		timer@01c20c00 {
++			i2c0_pins: i2c0 {
++				allwinner,pins = "PA11", "PA12";
++				allwinner,function = "i2c0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			i2c1_pins: i2c1 {
++				allwinner,pins = "PA18", "PA19";
++				allwinner,function = "i2c1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
++			i2c2_pins: i2c2 {
++				allwinner,pins = "PE12", "PE13";
++				allwinner,function = "i2c2";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
++
+ 			mmc0_pins_a: mmc0@0 {
+ 				allwinner,pins = "PF0", "PF1", "PF2", "PF3",
+ 						 "PF4", "PF5";
 -- 
 2.7.4
