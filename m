@@ -1,110 +1,46 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH resend 3/5] phy-sun4i-usb: Simplify missing dr_mode handling
-Date: Wed,  7 Sep 2016 22:20:39 +0200
-Message-ID: <20160907202041.17656-4-hdegoede@redhat.com>
-References: <20160907202041.17656-1-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160907202041.17656-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 00/10] pinctrl: exynos/samsung: Add header with values
+ used for configuration
+Date: Wed, 7 Sep 2016 22:20:52 +0200
+Message-ID: <CACRpkdZuRym=SuAiBA_UsNmKd7N5n9g=z=ZxwcEk7J0BcXDsFw@mail.gmail.com>
+References: <1472714638-15676-1-git-send-email-k.kozlowski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1472714638-15676-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Javier Martinez Canillas <javier@osg.samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-If we cannot get dr_mode or no id gpio is specified simply assume
-peripheral mode, as this is always safe.
+I have one comment though, if you're anyway making changes to all
+the DTS files:
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--Keep sun4i_usb_phy0_get_id_det() logic as is rather then re-ordering
- the switch-case
-Changes in v3:
--No changes
----
- drivers/phy/phy-sun4i-usb.c | 42 ++++++++++++++----------------------------
- 1 file changed, 14 insertions(+), 28 deletions(-)
+On Thu, Sep 1, 2016 at 9:23 AM, Krzysztof Kozlowski
+<k.kozlowski@samsung.com> wrote:
 
-diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index 02cb65e..fb2d4f3 100644
---- a/drivers/phy/phy-sun4i-usb.c
-+++ b/drivers/phy/phy-sun4i-usb.c
-@@ -124,7 +124,6 @@ struct sun4i_usb_phy_data {
- 		bool regulator_on;
- 		int index;
- 	} phys[MAX_PHYS];
--	int first_phy;
- 	/* phy0 / otg related variables */
- 	struct extcon_dev *extcon;
- 	bool phy0_init;
-@@ -326,7 +325,10 @@ static int sun4i_usb_phy0_get_id_det(struct sun4i_usb_phy_data *data)
- {
- 	switch (data->dr_mode) {
- 	case USB_DR_MODE_OTG:
--		return gpiod_get_value_cansleep(data->id_det_gpio);
-+		if (data->id_det_gpio)
-+			return gpiod_get_value_cansleep(data->id_det_gpio);
-+		else
-+			return 1; /* Fallback to peripheral mode */
- 	case USB_DR_MODE_HOST:
- 		return 0;
- 	case USB_DR_MODE_PERIPHERAL:
-@@ -539,8 +541,7 @@ static struct phy *sun4i_usb_phy_xlate(struct device *dev,
- {
- 	struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
- 
--	if (args->args[0] < data->first_phy ||
--	    args->args[0] >= data->cfg->num_phys)
-+	if (args->args[0] >= data->cfg->num_phys)
- 		return ERR_PTR(-ENODEV);
- 
- 	return data->phys[args->args[0]].phy;
-@@ -615,33 +616,18 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 	}
- 
- 	data->dr_mode = of_usb_get_dr_mode_by_phy(np, 0);
--	switch (data->dr_mode) {
--	case USB_DR_MODE_OTG:
--		/* otg without id_det makes no sense, and is not supported */
--		if (!data->id_det_gpio) {
--			dev_err(dev, "usb0_id_det missing or invalid\n");
--			return -ENODEV;
--		}
--		/* fall through */
--	case USB_DR_MODE_HOST:
--	case USB_DR_MODE_PERIPHERAL:
--		data->extcon = devm_extcon_dev_allocate(dev,
--							sun4i_usb_phy0_cable);
--		if (IS_ERR(data->extcon))
--			return PTR_ERR(data->extcon);
- 
--		ret = devm_extcon_dev_register(dev, data->extcon);
--		if (ret) {
--			dev_err(dev, "failed to register extcon: %d\n", ret);
--			return ret;
--		}
--		break;
--	default:
--		dev_info(dev, "dr_mode unknown, not registering usb phy0\n");
--		data->first_phy = 1;
-+	data->extcon = devm_extcon_dev_allocate(dev, sun4i_usb_phy0_cable);
-+	if (IS_ERR(data->extcon))
-+		return PTR_ERR(data->extcon);
-+
-+	ret = devm_extcon_dev_register(dev, data->extcon);
-+	if (ret) {
-+		dev_err(dev, "failed to register extcon: %d\n", ret);
-+		return ret;
- 	}
- 
--	for (i = data->first_phy; i < data->cfg->num_phys; i++) {
-+	for (i = 0; i < data->cfg->num_phys; i++) {
- 		struct sun4i_usb_phy *phy = data->phys + i;
- 		char name[16];
- 
--- 
-2.9.3
+> -               samsung,pin-function = <2>;
+> -               samsung,pin-pud = <0>;
+> -               samsung,pin-drv = <0>;
+> +               samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
+> +               samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +               samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Nowadays we have standard bindings for this, see
+Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+
+Section "Generic pin multiplexing node content".
+
+By patching the driver and bindings to accept also the standard
+bindings with just function and pins and also adding support
+for standard pin configurations like bias-disable
+bias-pull-up with the old samsung,* bindings as a fallback
+etc you can actually modernize the whole binding and
+DTS looks to something simpler.
+
+You will find that this is how newer platforms do it.
+
+But it is admittedly a bigger project.
+
+Yours,
+Linus Walleij
