@@ -1,40 +1,69 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 1/8] ARM: dts: bcm283x: Define standard pinctrl groups
- in the gpio node.
-Date: Wed, 7 Sep 2016 20:09:20 +0200 (CEST)
-Message-ID: <1564766913.23457.026b1e4b-e35d-48e6-9394-7eeea0ff9add.open-xchange@email.1und1.de>
-References: <1473244289-20728-1-git-send-email-kraxel@redhat.com>
- <1473244289-20728-2-git-send-email-kraxel@redhat.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4 5/6] arm64: dts: rockchip: add the gmac needed node for rk3399
+Date: Wed, 07 Sep 2016 20:12:23 +0200
+Message-ID: <2189752.joCqtnIJ7y@phil>
+References: <1472752204-8924-1-git-send-email-wxt@rock-chips.com> <1472752204-8924-6-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473244289-20728-2-git-send-email-kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1472752204-8924-6-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel@vger.
 List-Id: devicetree@vger.kernel.org
 
-Hi Gerd,
-
-> Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> hat am 7. September 2016 um 12:31
-> geschrieben:
+Am Freitag, 2. September 2016, 01:50:03 CEST schrieb Caesar Wang:
+> From: Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
+> The RK3399 GMAC Ethernet Controller provides a complete Ethernet interface
+> from processor to a Reduced Media Independent Interface (RMII) and Reduced
+> Gigabit Media Independent Interface (RGMII) compliant Ethernet PHY.
 > 
-> From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> This patch adds the related needed device information.
+> e.g.: interrupts, grf, clocks, pinctrl and so on.
 > 
-> The BCM2835-ARM-Peripherals.pdf documentation specifies what the
-> function selects do for the pins, and there are a bunch of obvious
-> groupings to be made.  With these created, we'll be able to replace
-> bcm2835-rpi.dtsi's main "set all of these pins to alt0" with
-> references to specific groups we want enabled.
+> The full details are in [0].
+> 
+> [0]:
+> Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+> 
+> Signed-off-by: Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> 
+> Changes in v4:
+> - The Roger had posted patch on https://patchwork.kernel.org/patch/9274561/.
+> - re-fixup to original author.
+> 
+> Changes in v3:
+> - generate a patch from https://patchwork.kernel.org/patch/9306339/.
+> 
+> Changes in v2: None
+> 
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 80
+> ++++++++++++++++++++++++++++++++ 1 file changed, 80 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index 2ab233f..092bb45 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -200,6 +200,26 @@
+>  		};
+>  	};
+> 
+> +	gmac: ethernet@fe300000 {
+> +		compatible = "rockchip,rk3399-gmac";
+> +		reg = <0x0 0xfe300000 0x0 0x10000>;
+> +		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
 
-on IMX/MXS platform it's unwanted to add all possible muxes in the dtsi file. So
-i would suggest to add only the actually used muxes. That makes it easier to
-maintain.
+applied to my dts64 branch, after making this a
++		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH 0>;
 
-Regards
-Stefan
+(due to the 4-cell interrupt change)
+
+
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
