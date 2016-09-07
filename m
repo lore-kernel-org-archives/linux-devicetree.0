@@ -1,46 +1,98 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 00/10] pinctrl: exynos/samsung: Add header with values
- used for configuration
-Date: Wed, 7 Sep 2016 22:20:52 +0200
-Message-ID: <CACRpkdZuRym=SuAiBA_UsNmKd7N5n9g=z=ZxwcEk7J0BcXDsFw@mail.gmail.com>
-References: <1472714638-15676-1-git-send-email-k.kozlowski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1472714638-15676-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Javier Martinez Canillas <javier@osg.samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH resend 2/5] phy-sun4i-usb: Refactor forced session ending
+Date: Wed,  7 Sep 2016 22:20:38 +0200
+Message-ID: <20160907202041.17656-3-hdegoede@redhat.com>
+References: <20160907202041.17656-1-hdegoede@redhat.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160907202041.17656-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I have one comment though, if you're anyway making changes to all
-the DTS files:
+The phy-sun4i-usb code supports forced ending a session on systems
+which lack Vbus detection, to allow switching between host and peripheral
+mode on such systems.
 
-On Thu, Sep 1, 2016 at 9:23 AM, Krzysztof Kozlowski
-<k.kozlowski@samsung.com> wrote:
+Role switching via the musb driver "mode" sysfs attribute requires force
+ending the session too. This commit refactors the code to allow other
+parts of the phy-sun4i-usb code to request a forced session end.
 
-> -               samsung,pin-function = <2>;
-> -               samsung,pin-pud = <0>;
-> -               samsung,pin-drv = <0>;
-> +               samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +               samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> +               samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+-No changes
+Changes in v3:
+-No changes
+---
+ drivers/phy/phy-sun4i-usb.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-Nowadays we have standard bindings for this, see
-Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+index 1cb84a8..02cb65e 100644
+--- a/drivers/phy/phy-sun4i-usb.c
++++ b/drivers/phy/phy-sun4i-usb.c
+@@ -133,6 +133,7 @@ struct sun4i_usb_phy_data {
+ 	struct power_supply *vbus_power_supply;
+ 	struct notifier_block vbus_power_nb;
+ 	bool vbus_power_nb_registered;
++	bool force_session_end;
+ 	int id_det_irq;
+ 	int vbus_det_irq;
+ 	int id_det;
+@@ -445,7 +446,7 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 	struct sun4i_usb_phy_data *data =
+ 		container_of(work, struct sun4i_usb_phy_data, detect.work);
+ 	struct phy *phy0 = data->phys[0].phy;
+-	bool id_notify = false, vbus_notify = false;
++	bool force_session_end, id_notify = false, vbus_notify = false;
+ 	int id_det, vbus_det;
+ 
+ 	if (phy0 == NULL)
+@@ -461,14 +462,17 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 		return;
+ 	}
+ 
++	force_session_end = data->force_session_end;
++	data->force_session_end = false;
++
+ 	if (id_det != data->id_det) {
+-		/*
+-		 * When a host cable (id == 0) gets plugged in on systems
+-		 * without vbus detection report vbus low for long enough for
+-		 * the musb-ip to end the current device session.
+-		 */
++		/* id-change, force session end if we've no vbus detection */
+ 		if (data->dr_mode == USB_DR_MODE_OTG &&
+-		    !sun4i_usb_phy0_have_vbus_det(data) && id_det == 0) {
++		    !sun4i_usb_phy0_have_vbus_det(data))
++			force_session_end = true;
++
++		/* When entering host mode (id = 0) force end the session now */
++		if (force_session_end && id_det == 0) {
+ 			sun4i_usb_phy0_set_vbus_detect(phy0, 0);
+ 			msleep(200);
+ 			sun4i_usb_phy0_set_vbus_detect(phy0, 1);
+@@ -489,13 +493,8 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+ 	if (id_notify) {
+ 		extcon_set_cable_state_(data->extcon, EXTCON_USB_HOST,
+ 					!id_det);
+-		/*
+-		 * When a host cable gets unplugged (id == 1) on systems
+-		 * without vbus detection report vbus low for long enough to
+-		 * the musb-ip to end the current host session.
+-		 */
+-		if (data->dr_mode == USB_DR_MODE_OTG &&
+-		    !sun4i_usb_phy0_have_vbus_det(data) && id_det == 1) {
++		/* When leaving host mode force end the session here */
++		if (force_session_end && id_det == 1) {
+ 			mutex_lock(&phy0->mutex);
+ 			sun4i_usb_phy0_set_vbus_detect(phy0, 0);
+ 			msleep(1000);
+-- 
+2.9.3
 
-Section "Generic pin multiplexing node content".
-
-By patching the driver and bindings to accept also the standard
-bindings with just function and pins and also adding support
-for standard pin configurations like bias-disable
-bias-pull-up with the old samsung,* bindings as a fallback
-etc you can actually modernize the whole binding and
-DTS looks to something simpler.
-
-You will find that this is how newer platforms do it.
-
-But it is admittedly a bigger project.
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
