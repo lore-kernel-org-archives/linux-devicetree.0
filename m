@@ -1,94 +1,63 @@
-From: Vinay Simha <simhavcs@gmail.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: Add jdi lt070me05000 panel bindings
-Date: Wed, 7 Sep 2016 12:10:06 +0530
-Message-ID: <CAGWqDJ4H2K58-_Ai-adG-DsB1CLrQrX3U+zZH5T1Nx2i_He7=A@mail.gmail.com>
-References: <1472179029-9803-1-git-send-email-simhavcs@gmail.com> <1472179029-9803-2-git-send-email-simhavcs@gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v2 4/7] clk: sunxi-ng: Add N-class clocks support
+Date: Wed, 7 Sep 2016 14:45:21 +0800
+Message-ID: <CAGb2v67tM_3Q81=Mb1Nf0cja+oxBjJi=6mhkkpnvRM2i0BAmiQ@mail.gmail.com>
+References: <20160906121837.7517-1-maxime.ripard@free-electrons.com> <20160906121837.7517-5-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472179029-9803-2-git-send-email-simhavcs@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Vinay Simha BN <simhavcs@gmail.com>, Archit Taneja <archit.taneja@gmail.com>, John Stultz <john.stultz@linaro.org>, Sumit Semwal <sumit.semwal@linaro.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160906121837.7517-5-maxime.ripard@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-thierry,
-
-please review.
-
-On Fri, Aug 26, 2016 at 8:07 AM, Vinay Simha BN <simhavcs@gmail.com> wrote:
-> Add documentation for lt070me05000 panel
+On Tue, Sep 6, 2016 at 8:18 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Add support for the class with a single factor, N, being a multiplier.
 >
-> Cc: Archit Taneja <archit.taneja@gmail.com>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
-> Acked-by: Rob Herring <robh@kernel.org>
->
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
 > ---
-> v2:
->  * incorporated rob herring and thierry reviews
->    gpio to gpios, gpio to regulator using fixed regulators
->    and pwm backlight is removed, since it is controlled by
->    dcs commands
->
-> v3:
->  * incorporated thierry reviews
->    - Added gpio polarity details for reset-gpios
->    - proper naming conventions and sequence wrt panel datasheet
->      (vddp-supply, iovcc-supply,
->       enable-gpios, reset-gpios, dcdc-en-gpios)
-> ---
->  .../bindings/display/panel/jdi,lt070me05000.txt    | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
->
-> diff --git a/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
+
+[...]
+
+> diff --git a/drivers/clk/sunxi-ng/ccu_mult.c b/drivers/clk/sunxi-ng/ccu_mult.c
 > new file mode 100644
-> index 0000000..4724952
+> index 000000000000..119b190c0eb5
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/jdi,lt070me05000.txt
-> @@ -0,0 +1,33 @@
-> +JDI model LT070ME05000 1200x1920 7" DSI Panel
-> +
-> +Required properties:
-> +- compatible: should be "jdi,lt070me05000"
-> +- vddp-supply: phandle of the regulator that provides the supply voltage
-> +  Power IC supply (3-5V)
-> +- iovcc-supply: phandle of the regulator that provides the supply voltage
-> +  IOVCC , power supply for LCM (1.8V)
-> +- enable-gpios: phandle of gpio for enable line
-> +  LED_EN, LED backlight enable, High active
-> +- reset-gpios: phandle of gpio for reset line
-> +  This should be 8mA, gpio can be configured using mux, pinctrl, pinctrl-names
-> +  XRES, Reset, Low active
-> +- dcdc-en-gpios: phandle of the gpio for power ic line
-> +  Power IC supply enable, High active
-> +
-> +Example:
-> +
-> +       dsi0: qcom,mdss_dsi@4700000 {
-> +               panel@0 {
-> +                       compatible = "jdi,lt070me05000";
-> +                       reg = <0>;
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&dsi_panel_pinctrl>;
-> +
-> +                       vddp-supply = <&pm8921_l17>;
-> +                       iovcc-supply = <&pm8921_lvs7>;
-> +
-> +                       enable-gpios = <&pm8921_gpio 36 GPIO_ACTIVE_HIGH>;
-> +                       reset-gpios = <&tlmm_pinmux 54 GPIO_ACTIVE_LOW>;
-> +                       dcdc-en-gpios = <&pm8921_gpio 23 GPIO_ACTIVE_HIGH>;
-> +               };
-> +       };
-> --
-> 2.1.2
->
+> +++ b/drivers/clk/sunxi-ng/ccu_mult.c
 
+[...]
 
+> +static int ccu_mult_set_rate(struct clk_hw *hw, unsigned long rate,
+> +                          unsigned long parent_rate)
+> +{
+> +       struct ccu_mult *cm = hw_to_ccu_mult(hw);
+> +       unsigned long flags;
+> +       unsigned int n;
+> +       u32 reg;
+> +
+> +       ccu_mux_helper_adjust_parent_for_prediv(&cm->common, &cm->mux, -1,
+> +                                               &parent_rate);
+> +
 
--- 
-regards,
-vinaysimha
+Git complains about extra whitespace here.
+You can keep my ack after fixing it.
+
+ChenYu
+
+> +       ccu_mult_find_best(parent_rate, rate, 1 << cm->mult.width, &n);
+> +
+> +       spin_lock_irqsave(cm->common.lock, flags);
+> +
+> +       reg = readl(cm->common.base + cm->common.reg);
+> +       reg &= ~GENMASK(cm->mult.width + cm->mult.shift - 1, cm->mult.shift);
+> +
+> +       writel(reg | ((n - 1) << cm->mult.shift),
+> +              cm->common.base + cm->common.reg);
+> +
+> +       spin_unlock_irqrestore(cm->common.lock, flags);
+> +
+> +       return 0;
+> +}
