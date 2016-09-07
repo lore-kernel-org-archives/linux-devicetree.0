@@ -1,141 +1,191 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] video: mxsfb: get supply regulator optionally
-Date: Wed, 7 Sep 2016 10:20:25 +0300
-Message-ID: <1812b2bf-bd66-3553-4c2d-3d2b08603ca0@ti.com>
-References: <20160904042627.30182-1-stefan@agner.ch>
- <f8368040-bb5a-91e0-7511-df462719b949@ti.com>
- <4b3a7bda2202a536efaf4a693234c273@agner.ch>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v2 6/7] clk: sunxi-ng: Add A23 CCU
+Date: Wed, 7 Sep 2016 15:24:11 +0800
+Message-ID: <CAGb2v64jDTWB4faaBdCBCcFrt1WNf=PYwc16kpgsUhaMRudHnQ@mail.gmail.com>
+References: <20160906121837.7517-1-maxime.ripard@free-electrons.com> <20160906121837.7517-7-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature";
-        boundary="xQIPXWJ6PRBxDwwnt5mavbHwwDjMrDd0I"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4b3a7bda2202a536efaf4a693234c273-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160906121837.7517-7-maxime.ripard@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
---xQIPXWJ6PRBxDwwnt5mavbHwwDjMrDd0I
-Content-Type: multipart/mixed; boundary="NBIrhjX6Iatt1ub97pREB7oT0P1sLVPIU";
- protected-headers="v1"
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org,
- devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Message-ID: <1812b2bf-bd66-3553-4c2d-3d2b08603ca0-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] video: mxsfb: get supply regulator optionally
-References: <20160904042627.30182-1-stefan-XLVq0VzYD2Y@public.gmane.org>
- <f8368040-bb5a-91e0-7511-df462719b949-l0cyMroinI0@public.gmane.org>
- <4b3a7bda2202a536efaf4a693234c273-XLVq0VzYD2Y@public.gmane.org>
-In-Reply-To: <4b3a7bda2202a536efaf4a693234c273-XLVq0VzYD2Y@public.gmane.org>
+On Tue, Sep 6, 2016 at 8:18 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Add support for the clock unit found in the A23. Due to the similarities
+> with the A33, it also shares its clock IDs to allow sharing the DTSI.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
---NBIrhjX6Iatt1ub97pREB7oT0P1sLVPIU
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-On 06/09/16 21:23, Stefan Agner wrote:
-> On 2016-09-06 01:21, Tomi Valkeinen wrote:
->> Hi,
->>
->> On 04/09/16 07:26, Stefan Agner wrote:
->>> The lcd-supply is meant to be optional, there are several device-
->>> trees not specifying it and the code handles error values silently.
->>> Therefor, avoid creating a dummy regulator (and the associated
->>> warning) by using devm_regulator_get_optional.
->>>
->>> While at it, document that fact also in the device-tree bindings.
->>
->> The binding change looks correct, but using
->> devm_regulator_get_optional() does not sound correct.
->>
->> devm_regulator_get_optional() is to be used when the device in questio=
-n
->> truly can function without the power supply. But if the supply is ther=
-e,
->> it's just not controlled by the SW, devm_regulator_get() is to be used=
-=2E
->=20
-> The framebuffer device can even function without a display, no problem
-> there.. Probably not really useful...
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
+> new file mode 100644
+> index 000000000000..e9f2d7785001
+> --- /dev/null
+> +++ b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
+> @@ -0,0 +1,732 @@
 
-Yes. Of course, the question then becomes, why is the fb driver even
-dealing with the LCD's regulator. But yes, I know the answer: because
-that's how it has been done =3D).
+[...]
 
-> devm_regulator_get creates a dummy regulator and a warning. Afaik, the
-> dummy regulator was meant to be as an aid during development, but not a=
-s
-> a permanent solution. This is what the initial commit of the dummy
-> regulator says:
+> +static struct clk_hw_onecell_data sun8i_a23_hw_clks = {
+> +       .hws    = {
+> +               [CLK_PLL_CPUX]          = &pll_cpux_clk.common.hw,
+> +               [CLK_PLL_AUDIO_BASE]    = &pll_audio_base_clk.common.hw,
+> +               [CLK_PLL_AUDIO]         = &pll_audio_clk.hw,
+> +               [CLK_PLL_AUDIO_2X]      = &pll_audio_2x_clk.hw,
+> +               [CLK_PLL_AUDIO_4X]      = &pll_audio_4x_clk.hw,
+> +               [CLK_PLL_AUDIO_8X]      = &pll_audio_8x_clk.hw,
+> +               [CLK_PLL_VIDEO]         = &pll_video_clk.common.hw,
+> +               [CLK_PLL_VIDEO_2X]      = &pll_video_2x_clk.hw,
+> +               [CLK_PLL_VE]            = &pll_ve_clk.common.hw,
+> +               [CLK_PLL_DDR0]          = &pll_ddr_clk.common.hw,
+> +               [CLK_PLL_PERIPH]        = &pll_periph_clk.common.hw,
+> +               [CLK_PLL_PERIPH_2X]     = &pll_periph_2x_clk.hw,
+> +               [CLK_PLL_GPU]           = &pll_gpu_clk.common.hw,
+> +               [CLK_PLL_MIPI]          = &pll_mipi_clk.common.hw,
+> +               [CLK_PLL_HSIC]          = &pll_hsic_clk.common.hw,
+> +               [CLK_PLL_DE]            = &pll_de_clk.common.hw,
+> +               [CLK_CPUX]              = &cpux_clk.common.hw,
+> +               [CLK_AXI]               = &axi_clk.common.hw,
+> +               [CLK_AHB1]              = &ahb1_clk.common.hw,
+> +               [CLK_APB1]              = &apb1_clk.common.hw,
+> +               [CLK_APB2]              = &apb2_clk.common.hw,
+> +               [CLK_BUS_MIPI_DSI]      = &bus_mipi_dsi_clk.common.hw,
+> +               [CLK_BUS_DMA]           = &bus_dma_clk.common.hw,
+> +               [CLK_BUS_MMC0]          = &bus_mmc0_clk.common.hw,
+> +               [CLK_BUS_MMC1]          = &bus_mmc1_clk.common.hw,
+> +               [CLK_BUS_MMC2]          = &bus_mmc2_clk.common.hw,
+> +               [CLK_BUS_NAND]          = &bus_nand_clk.common.hw,
+> +               [CLK_BUS_DRAM]          = &bus_dram_clk.common.hw,
+> +               [CLK_BUS_HSTIMER]       = &bus_hstimer_clk.common.hw,
+> +               [CLK_BUS_SPI0]          = &bus_spi0_clk.common.hw,
+> +               [CLK_BUS_SPI1]          = &bus_spi1_clk.common.hw,
+> +               [CLK_BUS_OTG]           = &bus_otg_clk.common.hw,
+> +               [CLK_BUS_EHCI]          = &bus_ehci_clk.common.hw,
+> +               [CLK_BUS_OHCI]          = &bus_ohci_clk.common.hw,
+> +               [CLK_BUS_VE]            = &bus_ve_clk.common.hw,
+> +               [CLK_BUS_LCD]           = &bus_lcd_clk.common.hw,
+> +               [CLK_BUS_CSI]           = &bus_csi_clk.common.hw,
+> +               [CLK_BUS_DE_BE]         = &bus_de_be_clk.common.hw,
+> +               [CLK_BUS_DE_FE]         = &bus_de_fe_clk.common.hw,
+> +               [CLK_BUS_GPU]           = &bus_gpu_clk.common.hw,
+> +               [CLK_BUS_MSGBOX]        = &bus_msgbox_clk.common.hw,
 
-Yep, the fixed regulator is afaik the correct solution to represent
-non-controllable regulators.
+A23 manual and Allwinner sources say there is a bus gate for SPINLOCK.
+Tested it myself, and it indeed exists.
 
->> In order to ease transitions with drivers are boards start using regul=
-ators
->> provide an option to cause all regulator_get() calls to succeed, with =
-a
->> dummy always on regulator being supplied where one has not been config=
-ured.
->> A warning is printed whenever the dummy regulator is used to aid syste=
-m
->> development.
->=20
-> I think we should either make the property mandatory and fix the device=
+> +               [CLK_BUS_DRC]           = &bus_drc_clk.common.hw,
+> +               [CLK_BUS_CODEC]         = &bus_codec_clk.common.hw,
+> +               [CLK_BUS_PIO]           = &bus_pio_clk.common.hw,
+> +               [CLK_BUS_I2S0]          = &bus_i2s0_clk.common.hw,
+> +               [CLK_BUS_I2S1]          = &bus_i2s1_clk.common.hw,
+> +               [CLK_BUS_I2C0]          = &bus_i2c0_clk.common.hw,
+> +               [CLK_BUS_I2C1]          = &bus_i2c1_clk.common.hw,
+> +               [CLK_BUS_I2C2]          = &bus_i2c2_clk.common.hw,
+> +               [CLK_BUS_UART0]         = &bus_uart0_clk.common.hw,
+> +               [CLK_BUS_UART1]         = &bus_uart1_clk.common.hw,
+> +               [CLK_BUS_UART2]         = &bus_uart2_clk.common.hw,
+> +               [CLK_BUS_UART3]         = &bus_uart3_clk.common.hw,
+> +               [CLK_BUS_UART4]         = &bus_uart4_clk.common.hw,
+> +               [CLK_NAND]              = &nand_clk.common.hw,
+> +               [CLK_MMC0]              = &mmc0_clk.common.hw,
+> +               [CLK_MMC0_SAMPLE]       = &mmc0_sample_clk.common.hw,
+> +               [CLK_MMC0_OUTPUT]       = &mmc0_output_clk.common.hw,
+> +               [CLK_MMC1]              = &mmc1_clk.common.hw,
+> +               [CLK_MMC1_SAMPLE]       = &mmc1_sample_clk.common.hw,
+> +               [CLK_MMC1_OUTPUT]       = &mmc1_output_clk.common.hw,
+> +               [CLK_MMC2]              = &mmc2_clk.common.hw,
+> +               [CLK_MMC2_SAMPLE]       = &mmc2_sample_clk.common.hw,
+> +               [CLK_MMC2_OUTPUT]       = &mmc2_output_clk.common.hw,
+> +               [CLK_SPI0]              = &spi0_clk.common.hw,
+> +               [CLK_SPI1]              = &spi1_clk.common.hw,
+> +               [CLK_I2S0]              = &i2s0_clk.common.hw,
+> +               [CLK_I2S1]              = &i2s1_clk.common.hw,
+> +               [CLK_USB_PHY0]          = &usb_phy0_clk.common.hw,
+> +               [CLK_USB_PHY1]          = &usb_phy1_clk.common.hw,
+> +               [CLK_USB_HSIC]          = &usb_hsic_clk.common.hw,
+> +               [CLK_USB_HSIC_12M]      = &usb_hsic_12M_clk.common.hw,
+> +               [CLK_USB_OHCI]          = &usb_ohci_clk.common.hw,
+> +               [CLK_DRAM_VE]           = &dram_ve_clk.common.hw,
+> +               [CLK_DRAM_CSI]          = &dram_csi_clk.common.hw,
+> +               [CLK_DRAM_DRC]          = &dram_drc_clk.common.hw,
+> +               [CLK_DRAM_DE_FE]        = &dram_de_fe_clk.common.hw,
+> +               [CLK_DRAM_DE_BE]        = &dram_de_be_clk.common.hw,
+> +               [CLK_DE_BE]             = &de_be_clk.common.hw,
+> +               [CLK_DE_FE]             = &de_fe_clk.common.hw,
+> +               [CLK_LCD_CH0]           = &lcd_ch0_clk.common.hw,
+> +               [CLK_LCD_CH1]           = &lcd_ch1_clk.common.hw,
+> +               [CLK_CSI_SCLK]          = &csi_sclk_clk.common.hw,
+> +               [CLK_CSI_MCLK]          = &csi_mclk_clk.common.hw,
+> +               [CLK_VE]                = &ve_clk.common.hw,
+> +               [CLK_AC_DIG]            = &ac_dig_clk.common.hw,
+> +               [CLK_AVS]               = &avs_clk.common.hw,
+> +               [CLK_MBUS]              = &mbus_clk.common.hw,
+> +               [CLK_DSI_SCLK]          = &dsi_sclk_clk.common.hw,
+> +               [CLK_DSI_DPHY]          = &dsi_dphy_clk.common.hw,
+> +               [CLK_DRC]               = &drc_clk.common.hw,
+> +               [CLK_GPU]               = &gpu_clk.common.hw,
+> +               [CLK_ATS]               = &ats_clk.common.hw,
+> +       },
+> +       .num    = CLK_NUMBER,
+> +};
+> +
+> +static struct ccu_reset_map sun8i_a23_ccu_resets[] = {
+> +       [RST_USB_PHY0]          =  { 0x0cc, BIT(0) },
+> +       [RST_USB_PHY1]          =  { 0x0cc, BIT(1) },
+> +       [RST_USB_HSIC]          =  { 0x0cc, BIT(2) },
+> +
+> +       [RST_MBUS]              =  { 0x0fc, BIT(31) },
+> +
+> +       [RST_BUS_MIPI_DSI]      =  { 0x2c0, BIT(1) },
+> +       [RST_BUS_DMA]           =  { 0x2c0, BIT(6) },
+> +       [RST_BUS_MMC0]          =  { 0x2c0, BIT(8) },
+> +       [RST_BUS_MMC1]          =  { 0x2c0, BIT(9) },
+> +       [RST_BUS_MMC2]          =  { 0x2c0, BIT(10) },
+> +       [RST_BUS_NAND]          =  { 0x2c0, BIT(13) },
+> +       [RST_BUS_DRAM]          =  { 0x2c0, BIT(14) },
+> +       [RST_BUS_HSTIMER]       =  { 0x2c0, BIT(19) },
+> +       [RST_BUS_SPI0]          =  { 0x2c0, BIT(20) },
+> +       [RST_BUS_SPI1]          =  { 0x2c0, BIT(21) },
+> +       [RST_BUS_OTG]           =  { 0x2c0, BIT(24) },
+> +       [RST_BUS_EHCI]          =  { 0x2c0, BIT(26) },
+> +       [RST_BUS_OHCI]          =  { 0x2c0, BIT(29) },
+> +
+> +       [RST_BUS_VE]            =  { 0x2c4, BIT(0) },
+> +       [RST_BUS_LCD]           =  { 0x2c4, BIT(4) },
+> +       [RST_BUS_CSI]           =  { 0x2c4, BIT(8) },
+> +       [RST_BUS_DE_BE]         =  { 0x2c4, BIT(12) },
+> +       [RST_BUS_DE_FE]         =  { 0x2c4, BIT(14) },
+> +       [RST_BUS_GPU]           =  { 0x2c4, BIT(20) },
 
-> trees or we should fix the driver to support an optional regulator. The=
+Allwinner sources say there is a reset control for MSGBOX.
+Tested it myself, and it indeed exists.
 
-> code already supports the reg_lcd being NULL, which is probably mostly
-> pointless right now as devm_regulator_get always returns a dummy
-> regulator.
+> +       [RST_BUS_SPINLOCK]      =  { 0x2c4, BIT(22) },
+> +       [RST_BUS_DRC]           =  { 0x2c4, BIT(25) },
+> +
+> +       [RST_BUS_LVDS]          =  { 0x2c8, BIT(0) },
+> +
+> +       [RST_BUS_CODEC]         =  { 0x2d0, BIT(0) },
+> +       [RST_BUS_I2S0]          =  { 0x2d0, BIT(12) },
+> +       [RST_BUS_I2S1]          =  { 0x2d0, BIT(13) },
+> +
+> +       [RST_BUS_I2C0]          =  { 0x2d4, BIT(0) },
+> +       [RST_BUS_I2C1]          =  { 0x2d4, BIT(1) },
+> +       [RST_BUS_I2C2]          =  { 0x2d4, BIT(2) },
+> +       [RST_BUS_UART0]         =  { 0x2d4, BIT(16) },
+> +       [RST_BUS_UART1]         =  { 0x2d4, BIT(17) },
+> +       [RST_BUS_UART2]         =  { 0x2d4, BIT(18) },
+> +       [RST_BUS_UART3]         =  { 0x2d4, BIT(19) },
+> +       [RST_BUS_UART4]         =  { 0x2d4, BIT(20) },
+> +};
 
-To really clean this up, the LCD driver should be separated from the fb
-driver. But that's pointless work on a framework that should be
-deprecated (is there a DRM driver for this in the works? =3D).
+[...]
 
-I'm fine with the _optional version, that's the easiest cleanup here.
-And, I guess, it could be even argued that it's correct in some cases,
-as the fb output could go outside the board, to some externally powered
-display.
+Other than these 2 bits, this patch looks good.
 
-I'm fine with doing more cleanups too, if it eases the maintenance
-burden in the future. But I don't see what the cleanups for the device
-trees would really give us here.
-
-Mark, what do you say?
-
- Tomi
-
-
---NBIrhjX6Iatt1ub97pREB7oT0P1sLVPIU--
-
---xQIPXWJ6PRBxDwwnt5mavbHwwDjMrDd0I
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJXz7+5AAoJEPo9qoy8lh71qREP/1HCx1Z4ElLXgT8tlaqIqKIX
-6P6ErzxyLSpoZmb5AEaEQA8ylNO3eO2w/MklDWz4MUnfy4NRwIer8yh50wSqEx1D
-aLz7imsoBGC5JraCJsNsW9JTeKF6DVzjwZ1wL6EvqyfvEXPxfDnMWv43Yg1O9vD2
-/qRmpAI8jVhY7K8AFDi9hdgw47eFtH/VPHUHFHzyB54I8V5xHxQINCSnyigi0naT
-Xyl/sB0WLit/8h8vEhP7Mkj2HihwtrMc6N25Vh8zLRGSV+n+6LFduZT02NrGHZ2S
-0qMjm0unjN4e46gaq1DaP7a50GAWLQEWmE+aZG+5vSz+aGM1x+6uvGJSDSBh1C0u
-3FFa2EeSuwpKLdYTSYzrvZFb3roXSMMsL6oU9z3I4phbQM/N35rse1ghgm8JE8UV
-1nFn2QaRzIqBAIoAUWE4FUL+9JAXo4q4C9oIgexw1cMzu1NJ5rLIiajqTyvE+VV1
-25dsbeXkO87s+FpRailNzQPxHEe6xAt+Klcla5Z4qsQUI4jdRMMuTwsgEI4UT0US
-M9dpwi8x2j6VMS/R06vp+louwRL32bKo/22aoKnW2dmckfmZuOUbPTQvkluk7E4h
-A6E8qiJJLKcg0siu0J16cs0huMIAUUV2sg7GMjgoWBO+CvoCGQYPhJTW7GyIrtov
-fbSruiyaEiMqWkHdqtmw
-=ilaK
------END PGP SIGNATURE-----
-
---xQIPXWJ6PRBxDwwnt5mavbHwwDjMrDd0I--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+ChenYu
