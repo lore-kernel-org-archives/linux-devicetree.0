@@ -1,31 +1,51 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v4 4/8] dts: sun8i-h3: move uart1 pinmux/peripheral
- assocation to DSTI
-Date: Wed, 7 Sep 2016 16:54:41 +0800
-Message-ID: <CAGb2v64PWJdeqBcKDJe05a6yct3_JcztSR9GDH4YXBCny9zb5Q@mail.gmail.com>
-References: <1473235141-12768-1-git-send-email-jorik@kippendief.biz> <1473235141-12768-5-git-send-email-jorik@kippendief.biz>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Subject: Re: [PATCH v11 3/4] tee: add OP-TEE driver
+Date: Wed, 7 Sep 2016 11:18:19 +0200
+Message-ID: <20160907091818.GA15580@ermac>
+References: <1471870856-18684-1-git-send-email-jens.wiklander@linaro.org>
+ <1471870856-18684-4-git-send-email-jens.wiklander@linaro.org>
+ <49a564fc-0d45-9981-b357-a1046a135d33@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473235141-12768-5-git-send-email-jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <49a564fc-0d45-9981-b357-a1046a135d33@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zeng Tao <prime.zeng@hisilicon.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, valentin.manea@huawei.com, Mark Rutland <mark.rutland@arm.com>, javier@javigon.com, emmanuel.michel@st.com, Arnd Bergmann <arnd@arndb.de>, Nishanth Menon <nm@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will.deacon@arm.com>, Michal Simek <michal.simek@xilinx.com>, jean-michel.delorme@st.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>, Andreas Dannenberg <dannenberg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 7, 2016 at 3:58 PM,  <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org> wrote:
-> From: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
->
-> Users using this UART without RTS/CTS should override the association in
-> their board specific DTS. All (1) board using this UART uses RTS/CTS, so
-> this breaks nothing.
+Hi Zengtao,
 
-I'd prefer we only do this for peripherals that have absolutely one
-possible setting, like RSB, or I2C with only one group of pins.
-UARTs with 2/4/8 pin configurations don't fall in this category.
+On Wed, Sep 07, 2016 at 03:49:38PM +0800, Zeng Tao wrote:
+> Hi all:
+> 
+> I have gone through the patch, and i find one limit for RPC call from
+> TEE to REE.  In this patch, RPC commands are fixed and it supports a
+> limited set of commands.  If you want to add your own RPC command then
+> you need to change the source code of the driver.
 
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+All unknown RPC of the OPTEE_SMC_RPC_FUNC_CMD type are forwarded to the
+supplicant in user space. So there's the option to extend with the
+supplicant if needed.
+
+It is true that the RPCs which are dealt with in the driver are fixed.
+
+> 
+> I don't know how much work to do, but unless we are sure that the RPC
+> now are enough to cover all, we 'd better make the RPC more
+> extensible.
+
+It's handle_rpc_func_cmd() that could support dynamic registration of
+RPC commands. Doing so in optee_handle_rpc() also should be avoided as
+it involves updates of an eventual hypervisor.
+
+I'm trying to keep this initial patch set as small as possible to not
+make it harder than it already is to review it. If possible I'd like to
+wait with new features until after this patch set has been accepted.
+
+Thanks,
+Jens
+
+> 
+> BR zengtao
