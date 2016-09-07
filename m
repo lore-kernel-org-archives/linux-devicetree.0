@@ -1,43 +1,51 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH V3 0/5] firmware: Add support for TI System Control Interface (TI-SCI) protocol driver
-Date: Wed, 07 Sep 2016 11:55:38 -0700
-Message-ID: <7hshtbtu8l.fsf@baylibre.com>
-References: <20160906190127.23522-1-nm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20160906190127.23522-1-nm@ti.com> (Nishanth Menon's message of
-        "Tue, 6 Sep 2016 14:01:22 -0500")
-Sender: linux-pm-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Russ Dill <Russ.Dill@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, narmstrong@baylibre.com
+From: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RESEND PATCH] ARM: dts: lpc32xx: set default parent clock for pwm1 & pwm2
+Date: Wed,  7 Sep 2016 15:37:53 -0400
+Message-ID: <1473277073-12093-1-git-send-email-slemieux.tyco@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Nishanth Menon <nm@ti.com> writes:
+From: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
 
-> Hi,
->
-> Version 3 of the series with change in the way we describe the children
-> nodes (no change to drivers required - only the dts description changes).
->
-> Texas Instruments' Keystone generation System on Chips (SoC)
-> starting with 66AK2G02[1], now include a dedicated SoC System Control
-> entity called PMMC(Power Management Micro Controller) in line with
-> ARM architecture recommendations. The function of this module is
-> to integrate all system operations in a centralized location.
-> Communication with the SoC System Control entity from various
-> processing units like ARM/DSP occurs over Message Manager hardware
-> block.
->
-> This series adds the base support for TI System Control Interface
-> (TI-SCI) protocol[2]. The protocol is built on top of Texas
-> Instrument's Message Manager communication mechanism[3].
->
-> Overall architecture is very similar to SCPI[4] as follows:
+The change setup the peripheral clock (PERIPH_CLK) as the default 
+parent clock for PWM1 & PWM2.
 
-Dumb Q: I'm curious about the limitations in SCPI that were found that
-made TI decided to implement its own version.
+Signed-off-by: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/lpc32xx.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Thanks,
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index e295e1e..ed85b95 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -469,6 +469,9 @@
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005C000 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM1>;
++				assigned-clocks = <&clk LPC32XX_CLK_PWM1>,
++						  <&clk LPC32XX_CLK_PERIPH>;
++				assigned-clock-parents = <&clk LPC32XX_CLK_PERIPH>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -476,6 +479,9 @@
+ 				compatible = "nxp,lpc3220-pwm";
+ 				reg = <0x4005C004 0x4>;
+ 				clocks = <&clk LPC32XX_CLK_PWM2>;
++				assigned-clocks = <&clk LPC32XX_CLK_PWM2>,
++						  <&clk LPC32XX_CLK_PERIPH>;
++				assigned-clock-parents = <&clk LPC32XX_CLK_PERIPH>;
+ 				status = "disabled";
+ 			};
+ 
+-- 
+1.8.3.1
 
-Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
