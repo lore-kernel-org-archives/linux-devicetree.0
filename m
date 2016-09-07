@@ -1,54 +1,51 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] eMMC, SD-card and ethernet support for Vega S95 boards
-Date: Wed, 7 Sep 2016 13:50:13 -0700
-Message-ID: <CAOi56cUD5xMbEf3+qsWDJUQYhnWUMN4opfG1HQ+UUcrR6pX8eA@mail.gmail.com>
-References: <20160815133811.19646-1-martin.blumenstingl@googlemail.com>
- <20160904182903.1841-1-martin.blumenstingl@googlemail.com> <7h37lbtqyk.fsf@baylibre.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 6/9] pinctrl: Add IRQ support to STM32 gpios
+Date: Wed, 7 Sep 2016 23:06:12 +0200
+Message-ID: <CACRpkdZ_r0phJeScTYs_LmEHavcjGo6YjHPEHo-rKAv+rLgiFg@mail.gmail.com>
+References: <1473180341-1999-1-git-send-email-alexandre.torgue@st.com> <1473180341-1999-7-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7h37lbtqyk.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-amlogic <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1473180341-1999-7-git-send-email-alexandre.torgue@st.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre TORGUE <alexandre.torgue@st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 7, 2016 at 1:06 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Marrtin,
->
-> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
->
->> This adds support for the internal eMMC, the SD-card slot and ethernet on
->> all Tronsmart S95 Vega boards.
->> There are some S95 Vega Meta clones out there where the bootloader does
->> not configure the ethernet registers correctly, leading to non-working
->> ethernet. This will be fixed in a separate series. Boards which are not
->> suffering from broken bootloaders have fully working ethernet.
->>
->> Changes since v1:
->> - rebased after latest updates which added the IR decoder to
->>   meson-gxbb-vega-s95.dtsi
->>
->> Changes since the RFC:
->> - added eMMC support
->> - renamed fixed 3V3 regulator so it can be re-used for eMMC
->>
->>
->> Martin Blumenstingl (3):
->>   ARM64: dts: amlogic: SD card support for all Tronsmart Vega S95
->>     devices
->>   ARM64: dts: amlogic: eMMC support for all Tronsmart Vega S95 devices
->>   ARM64: dts: amlogic: enable ethernet on all Tronsmart Vega S95 devices
->
-> I've applied the ethernet one, but I'm going to wait on the SD/eMMC
-> patches until the driver is finalized for the other one.
+On Tue, Sep 6, 2016 at 6:45 PM, Alexandre TORGUE
+<alexandre.torgue@st.com> wrote:
 
-Oops, I replied on the wrong thread, but just to be clear, I applied
-v2 of the ethernet patch, though it doesn't make too much difference
-in this case.
+> This patch adds IRQ support to STM32 gpios.
+>
+> The EXTI controller has 16 lines dedicated to GPIOs.
+> EXTI line n can be connected to only line n of one of the GPIO ports, for
+> example EXTI0 can be connected to either PA0, or PB0, or PC0...
+> This port selection is done by specifying the port number into System
+> Config registers.
+>
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +++ b/drivers/pinctrl/stm32/Kconfig
+> @@ -6,6 +6,8 @@ config PINCTRL_STM32
+>         select PINMUX
+>         select GENERIC_PINCONF
+>         select GPIOLIB
+> +       select GPIOLIB_IRQCHIP
+
+But you're not really using GPIOLIB_IRQCHIP. You have a different,
+super-complex irqchip in use.
+
+So just don't select this.
+
+> +       bank->gpio_chip.irqdomain = irq_domain_create_hierarchy(pctl->domain,
+> +                                       0, STM32_GPIO_IRQ_LINE, bank->fwnode,
+> +                                       &stm32_gpio_domain_ops, bank);
+
+Don't use that irqdomain pointer inside the gpio_chip.
+
+Instead declare the irqdomain pointer inside struct stm32_gpio_bank
+or something like that.
+
+Yours,
+Linus Walleij
