@@ -1,109 +1,35 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/7] usb: dwc2: add support for Meson8b and GXBB SoCs
-Date: Wed, 7 Sep 2016 14:04:15 -0700
-Message-ID: <0b42cbc0-1d69-bcfd-1a82-9bbb6242cd08@synopsys.com>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
- <20160904213152.25837-3-martin.blumenstingl@googlemail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 01/17] pinctrl: dt-bindings: samsung: Add header with
+ values used for configuration
+Date: Wed, 7 Sep 2016 23:18:39 +0200
+Message-ID: <CACRpkdb9gq0Zez=_NW8XB6YKiJteC3GB12e-Wi9my52b4Q-C7A@mail.gmail.com>
+References: <1472987060-28293-1-git-send-email-krzk@kernel.org> <1472987060-28293-2-git-send-email-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160904213152.25837-3-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org" <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org" <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org" <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org" <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1472987060-28293-2-git-send-email-krzk@kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Javier Martinez Canillas <javier@osg.samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9/4/2016 2:32 PM, Martin Blumenstingl wrote:
-> From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> 
-> Add compatible strings for amlogic Meson8b and GXBB SoCs with the
-> corresponding configuration parameters.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc2.txt |  2 ++
->  drivers/usb/dwc2/platform.c                    | 34 ++++++++++++++++++++++++++
->  2 files changed, 36 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> index 20a68bf..2c30a54 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> @@ -10,6 +10,8 @@ Required properties:
->    - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
->    - "lantiq,arx100-usb": The DWC2 USB controller instance in Lantiq ARX SoCs;
->    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
-> +  - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
-> +  - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
->    - snps,dwc2: A generic DWC2 USB controller with default parameters.
->  - reg : Should contain 1 register range (address and length)
->  - interrupts : Should contain 1 interrupt
-> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-> index fc6f525..8f7b34c 100644
-> --- a/drivers/usb/dwc2/platform.c
-> +++ b/drivers/usb/dwc2/platform.c
-> @@ -181,6 +181,38 @@ static const struct dwc2_core_params params_ltq = {
->  	.hibernation			= -1,
->  };
->  
-> +static const struct dwc2_core_params params_amlogic = {
-> +	.otg_cap			= DWC2_CAP_PARAM_NO_HNP_SRP_CAPABLE,
-> +	.otg_ver			= -1,
-> +	.dma_enable			= 1,
-> +	.dma_desc_enable		= 0,
-> +	.dma_desc_fs_enable		= 0,
-> +	.speed				= DWC2_SPEED_PARAM_HIGH,
-> +	.enable_dynamic_fifo		= 1,
-> +	.en_multiple_tx_fifo		= -1,
-> +	.host_rx_fifo_size		= 512,
-> +	.host_nperio_tx_fifo_size	= 500,
-> +	.host_perio_tx_fifo_size	= 500,
-> +	.max_transfer_size		= -1,
-> +	.max_packet_count		= -1,
-> +	.host_channels			= 16,
-> +	.phy_type			= DWC2_PHY_TYPE_PARAM_UTMI,
-> +	.phy_utmi_width			= -1,
-> +	.phy_ulpi_ddr			= -1,
-> +	.phy_ulpi_ext_vbus		= -1,
-> +	.i2c_enable			= -1,
-> +	.ulpi_fs_ls			= -1,
-> +	.host_support_fs_ls_low_power	= -1,
-> +	.host_ls_low_power_phy_clk	= -1,
-> +	.ts_dline			= -1,
-> +	.reload_ctl			= 1,
-> +	.ahbcfg				= GAHBCFG_HBSTLEN_INCR8 <<
-> +					  GAHBCFG_HBSTLEN_SHIFT,
-> +	.uframe_sched			= 0,
-> +	.external_id_pin_ctl		= -1,
-> +	.hibernation			= -1,
-> +};
-> +
->  /*
->   * Check the dr_mode against the module configuration and hardware
->   * capabilities.
-> @@ -464,6 +496,8 @@ static const struct of_device_id dwc2_of_match_table[] = {
->  	{ .compatible = "lantiq,xrx200-usb", .data = &params_ltq },
->  	{ .compatible = "snps,dwc2", .data = NULL },
->  	{ .compatible = "samsung,s3c6400-hsotg", .data = NULL},
-> +	{ .compatible = "amlogic,meson8b-usb", .data = &params_amlogic },
-> +	{ .compatible = "amlogic,meson-gxbb-usb", .data = &params_amlogic },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
-> 
+On Sun, Sep 4, 2016 at 1:04 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-Hi,
+> From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>
+> Hard-coded pinctrl configuration values are scattered through DTS files.
+> The numbers are difficult to decode by human, especially without the
+> datasheet.  Additionally the drive strength differs between S3C64xx,
+> S5PV210 and Exynos SoC families increasing the confusion.
+>
+> The header will help making this more readable and maintainable.
+>
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-I have a patch series in the works that deprecates the usage of these
-static parameters in favor of devicetree properties. I'll try to push
-it out soon. I would rather not see any more static params structures
-in the driver so hopefully we can make it work for your platform.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Regards,
-John
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Take this with the rest of the changes into ARM SoC.
+
+Yours,
+Linus Walleij
