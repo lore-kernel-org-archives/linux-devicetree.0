@@ -1,92 +1,96 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v2 1/8] doc: DT: vidc: binding document for Qualcomm video driver
-Date: Wed,  7 Sep 2016 14:37:02 +0300
-Message-ID: <1473248229-5540-2-git-send-email-stanimir.varbanov@linaro.org>
-References: <1473248229-5540-1-git-send-email-stanimir.varbanov@linaro.org>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1473248229-5540-1-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] dt-binding: remoteproc: venus rproc dt binding
+ document
+Date: Wed, 7 Sep 2016 14:52:15 +0300
+Message-ID: <4eb0a339-e861-c2a9-dd94-94f6577ec25a@linaro.org>
+References: <1471622000-1906-4-git-send-email-stanimir.varbanov@linaro.org>
+ <20160823173259.GA13327@rob-hp-laptop>
+ <fbf25a9e-348b-9047-37ef-1b96808dea31@mm-sol.com>
+ <20160825000521.GH15161@tuxbot>
+ <3429173a-d55a-51e1-0973-7e5bd31be297@linaro.org>
+ <20160826222345.GK15161@tuxbot>
+ <5afd7f2f-ec1b-d2ce-b833-81df010e24de@linaro.org>
+ <20160830171742.GN15161@tuxbot>
+ <b7314a89-2215-4961-6e8a-be5ef536624a@linaro.org>
+ <e312d810-3096-d32c-d546-c07e0265808e@samsung.com>
+ <20160902201255.GZ15161@tuxbot>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160902201255.GZ15161@tuxbot>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adds binding document for vidc video encoder/decoder driver
+Hi Bjorn,
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- .../devicetree/bindings/media/qcom,vidc.txt        | 61 ++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/qcom,vidc.txt
+On 09/02/2016 11:12 PM, Bjorn Andersson wrote:
+> On Fri 02 Sep 04:52 PDT 2016, Marek Szyprowski wrote:
+> 
+>> Hi,
+>>
+>>
+>> On 2016-09-01 16:58, Stanimir Varbanov wrote:
+>>> Hi,
+>>>
+>>> Cc: Marek
+>>>
+>>
+>> ...
+>>
+>>>>>> But I presume we have the implementation issue of dma_alloc_coherent()
+>>>>>> failing in either case with the 5MB size. I think we need to look into
+>>>>> I'd be good to include Marek Szyprowski? At least he will know what
+>>>>> design restrictions there are.
+>>>>>
+>>>> Please do. The more I look at this the more I think we must use the
+>>>> existing infrastructure for allocating "dma memory". Getting
+>>>> dma_alloc_coherent() supporting non-power-of-2 memory regions would
+>>> Just to be precise it should be dma_alloc_from_coherent().
+>>>
+>>> Marek, what is your opinion on that, can we make dma_alloc_from_coherent
+>>> able to allocate memory for sizes with bigger granularity.
+>>>
+>>> For your convenience here [1] is the mail thread.
+>>
+>> There should be no technical restrictions to add support for bigger
+>> granularity than power-of-2. dma_alloc_from_coherent uses standard
+>> bitmap based allocator, so it already support tracking allocations of
+>> arbitrary size.
+> 
+> I believe we should be able to change the parameter of
+> bitmap_{find_free,release,allocate}_region() to take a size rather than
+> an order.
+> 
+> The mask used in __reg_op() is an unsigned long, that is stamped over
+> the region to be masked or cleared, so there are some clear restrictions
+> in what parameters we can pass there - without having to break this
+> operation up in steps.
+> 
+> But if drive the offset by taking the next power-of-two of the size and
+> then align the number of bits to min(count, BITS_PER_LONG) we should
+> retain the performance characteristics and requirements of __reg_op().
+> 
+>> However for the small allocations (smaller than 64KiB?, 512KiB?) it
+>> would make sense to keep nearest-power-of-2 round up to prevent memory
+>> fragmentation.
+> 
+> But in our case each bit matches a single page, so by making sure the
+> mask always fills the unsigned long in the larger cases we would end up
+> with having to align things to 128kb (or 256kb if unsigned long is 64
+> bit).
+> 
+> 
+> Does this sound reasonable?
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,vidc.txt b/Documentation/devicetree/bindings/media/qcom,vidc.txt
-new file mode 100644
-index 000000000000..0d50a7b2e3ed
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/qcom,vidc.txt
-@@ -0,0 +1,61 @@
-+* Qualcomm video encoder/decoder accelerator
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Value should contain
-+			- "qcom,vidc-msm8916"
-+			- "qcom,vidc-msm8996"
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Register ranges as listed in the reg-names property
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition:
-+
-+- power-domains:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A phandle and power domain specifier pairs to the
-+		    power domain which is responsible for collapsing
-+		    and restoring power to the peripheral
-+
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: List of phandle and clock specifier pairs as listed
-+		    in clock-names property
-+- clock-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries
-+			- "core"  Core video accelerator clock
-+			- "iface" Video accelerator AHB clock
-+			- "bus"	  Video accelerator AXI clock
-+- rproc:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A phandle to remote processor responsible for
-+		    firmware loading
-+
-+- iommus:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A list of phandle and IOMMU specifier pairs
-+
-+* An Example
-+	qcom,vidc@1d00000 {
-+		compatible = "qcom,vidc-msm8916";
-+		reg = <0x01d00000 0xff000>;
-+		clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
-+			 <&gcc GCC_VENUS0_AHB_CLK>,
-+			 <&gcc GCC_VENUS0_AXI_CLK>;
-+		clock-names = "core", "iface", "bus";
-+		interrupts = <GIC_SPI 44 0>;
-+		power-domains = <&gcc VENUS_GDSC>;
-+		rproc = <&vidc_rproc>;
-+		iommus = <&apps_iommu 5>;
-+	};
+I haven't looked in bitmap details, but can't we reuse genalloc?
+
 -- 
-2.7.4
+regards,
+Stan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
