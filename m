@@ -1,72 +1,186 @@
-From: Liu Gang <Gang.Liu@nxp.com>
-Subject: [PATCH] arm64: dts: ls2080a: Add 'dma-coherent' for ls2080a PCI nodes
-Date: Thu, 8 Sep 2016 10:31:44 +0800
-Message-ID: <1473301904-27259-1-git-send-email-Gang.Liu@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, shawnguo@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, scott.wood@nxp.com
-Cc: minghuan.lian@nxp.com, Liu Gang <Gang.Liu@nxp.com>, mingkai.hu@nxp.com
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH] ARM: dts: sun8i: Move A23/A33 usbphy and usb_otg nodes to common dtsi
+Date: Thu,  8 Sep 2016 11:25:35 +0800
+Message-ID: <20160908032535.12987-1-wens@csie.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The 'dma-coherent' indicates that the hardware IP block can ensure
-the coherency of the data transferred from/to the IP block. This
-can avoid the software cache flush/invalid actions, and improve
-the performance significantly.
+The usbphy and usb_otg nodes in the A23 and A33 dts files only differ
+by compatible, and for the usbphy, the size of one of its register
+regions.
 
-The PCI IP block of ls2080a has this capability, so adding this
-feature to improve the PCI performance.
+Move all the common bits to the A23/A33 common dtsi file.
 
-Signed-off-by: Liu Gang <Gang.Liu@nxp.com>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-index e3b6034..4eba766 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-@@ -588,6 +588,7 @@
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-+			dma-coherent;
- 			num-lanes = <4>;
- 			bus-range = <0x0 0xff>;
- 			ranges = <0x81000000 0x0 0x00000000 0x10 0x00010000 0x0 0x00010000   /* downstream I/O */
-@@ -612,6 +613,7 @@
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-+			dma-coherent;
- 			num-lanes = <4>;
- 			bus-range = <0x0 0xff>;
- 			ranges = <0x81000000 0x0 0x00000000 0x12 0x00010000 0x0 0x00010000   /* downstream I/O */
-@@ -636,6 +638,7 @@
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-+			dma-coherent;
- 			num-lanes = <8>;
- 			bus-range = <0x0 0xff>;
- 			ranges = <0x81000000 0x0 0x00000000 0x14 0x00010000 0x0 0x00010000   /* downstream I/O */
-@@ -660,6 +663,7 @@
- 			#address-cells = <3>;
- 			#size-cells = <2>;
- 			device_type = "pci";
-+			dma-coherent;
- 			num-lanes = <4>;
- 			bus-range = <0x0 0xff>;
- 			ranges = <0x81000000 0x0 0x00000000 0x16 0x00010000 0x0 0x00010000   /* downstream I/O */
+Hi Maxime,
+
+This patch applies on top of your A23/A33 CCU patches.
+
+---
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi | 30 +++++++++++++++++++++++++
+ arch/arm/boot/dts/sun8i-a23.dtsi     | 43 +++++++++---------------------------
+ arch/arm/boot/dts/sun8i-a33.dtsi     | 41 +++++++++-------------------------
+ 3 files changed, 50 insertions(+), 64 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+index 9cb474bf7911..2d1ad55daf2d 100644
+--- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+@@ -201,6 +201,36 @@
+ 			#size-cells = <0>;
+ 		};
+ 
++		usb_otg: usb@01c19000 {
++			/* compatible gets set in SoC specific dtsi file */
++			reg = <0x01c19000 0x0400>;
++			clocks = <&ccu CLK_BUS_OTG>;
++			resets = <&ccu RST_BUS_OTG>;
++			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "mc";
++			phys = <&usbphy 0>;
++			phy-names = "usb";
++			extcon = <&usbphy 0>;
++			status = "disabled";
++		};
++
++		usbphy: phy@01c19400 {
++			/*
++			 * compatible and address regions get set in
++			 * SoC specific dtsi file
++			 */
++			clocks = <&ccu CLK_USB_PHY0>,
++				 <&ccu CLK_USB_PHY1>;
++			clock-names = "usb0_phy",
++				      "usb1_phy";
++			resets = <&ccu RST_USB_PHY0>,
++				 <&ccu RST_USB_PHY1>;
++			reset-names = "usb0_reset",
++				      "usb1_reset";
++			status = "disabled";
++			#phy-cells = <1>;
++		};
++
+ 		ehci0: usb@01c1a000 {
+ 			compatible = "allwinner,sun8i-a23-ehci", "generic-ehci";
+ 			reg = <0x01c1a000 0x100>;
+diff --git a/arch/arm/boot/dts/sun8i-a23.dtsi b/arch/arm/boot/dts/sun8i-a23.dtsi
+index a915feb3a494..54d045dab825 100644
+--- a/arch/arm/boot/dts/sun8i-a23.dtsi
++++ b/arch/arm/boot/dts/sun8i-a23.dtsi
+@@ -48,39 +48,6 @@
+ 	memory {
+ 		reg = <0x40000000 0x40000000>;
+ 	};
+-
+-	soc@01c00000 {
+-		usb_otg: usb@01c19000 {
+-			compatible = "allwinner,sun6i-a31-musb";
+-			reg = <0x01c19000 0x0400>;
+-			clocks = <&ccu CLK_BUS_OTG>;
+-			resets = <&ccu RST_BUS_OTG>;
+-			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-names = "mc";
+-			phys = <&usbphy 0>;
+-			phy-names = "usb";
+-			extcon = <&usbphy 0>;
+-			status = "disabled";
+-		};
+-
+-		usbphy: phy@01c19400 {
+-			compatible = "allwinner,sun8i-a23-usb-phy";
+-			reg = <0x01c19400 0x10>,
+-			      <0x01c1a800 0x4>;
+-			reg-names = "phy_ctrl",
+-				    "pmu1";
+-			clocks = <&ccu CLK_USB_PHY0>,
+-				 <&ccu CLK_USB_PHY1>;
+-			clock-names = "usb0_phy",
+-				      "usb1_phy";
+-			resets = <&ccu RST_USB_PHY0>,
+-				 <&ccu RST_USB_PHY1>;
+-			reset-names = "usb0_reset",
+-				      "usb1_reset";
+-			status = "disabled";
+-			#phy-cells = <1>;
+-		};
+-	};
+ };
+ 
+ &ccu {
+@@ -93,3 +60,13 @@
+ 		     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+ 		     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+ };
++
++&usb_otg {
++	compatible = "allwinner,sun6i-a31-musb";
++};
++
++&usbphy {
++	compatible = "allwinner,sun8i-a23-usb-phy";
++	reg = <0x01c19400 0x10>, <0x01c1a800 0x4>;
++	reg-names = "phy_ctrl", "pmu1";
++};
+diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+index f3d91d2c96ef..bc939c0e317d 100644
+--- a/arch/arm/boot/dts/sun8i-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+@@ -73,37 +73,6 @@
+ 			resets = <&ccu RST_BUS_SS>;
+ 			reset-names = "ahb";
+ 		};
+-
+-		usb_otg: usb@01c19000 {
+-			compatible = "allwinner,sun8i-a33-musb";
+-			reg = <0x01c19000 0x0400>;
+-			clocks = <&ccu CLK_BUS_OTG>;
+-			resets = <&ccu RST_BUS_OTG>;
+-			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-names = "mc";
+-			phys = <&usbphy 0>;
+-			phy-names = "usb";
+-			extcon = <&usbphy 0>;
+-			status = "disabled";
+-		};
+-
+-		usbphy: phy@01c19400 {
+-			compatible = "allwinner,sun8i-a33-usb-phy";
+-			reg = <0x01c19400 0x14>,
+-			      <0x01c1a800 0x4>;
+-			reg-names = "phy_ctrl",
+-				    "pmu1";
+-			clocks = <&ccu CLK_USB_PHY0>,
+-				 <&ccu CLK_USB_PHY1>;
+-			clock-names = "usb0_phy",
+-				      "usb1_phy";
+-			resets = <&ccu RST_USB_PHY0>,
+-				 <&ccu RST_USB_PHY1>;
+-			reset-names = "usb0_reset",
+-				      "usb1_reset";
+-			status = "disabled";
+-			#phy-cells = <1>;
+-		};
+ 	};
+ };
+ 
+@@ -124,3 +93,13 @@
+ 	};
+ 
+ };
++
++&usb_otg {
++	compatible = "allwinner,sun8i-a33-musb";
++};
++
++&usbphy {
++	compatible = "allwinner,sun8i-a33-usb-phy";
++	reg = <0x01c19400 0x14>, <0x01c1a800 0x4>;
++	reg-names = "phy_ctrl", "pmu1";
++};
 -- 
-2.1.0.27.g96db324
+2.9.3
