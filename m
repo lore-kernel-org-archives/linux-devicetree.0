@@ -1,59 +1,42 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] syscon: dt-bindings: Add documentation for Aspeed system
- control units
-Date: Thu, 8 Sep 2016 08:00:02 +0100
-Message-ID: <20160908070002.GF4921@dell>
-References: <1473311598-32722-1-git-send-email-andrew@aj.id.au>
+Subject: Re: [PATCH v3 2/8] syscon: dt-bindings: Add documentation for Aspeed
+ system control units
+Date: Thu, 8 Sep 2016 08:01:31 +0100
+Message-ID: <20160908070131.GG4921@dell>
+References: <20160830075427.11493-1-andrew@aj.id.au>
+ <20160830075427.11493-3-andrew@aj.id.au>
+ <CACRpkdYa5pwQ1zW6BGO429WTOG_y0DPMCVGjpViQc9k5m2_yyA@mail.gmail.com>
+ <1473296480.10397.5.camel@aj.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1473311598-32722-1-git-send-email-andrew@aj.id.au>
+In-Reply-To: <1473296480.10397.5.camel@aj.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, "linux-gpio @ vger . kernel . org" <linux-gpio@vger.kernel.org>, "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>, "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 On Thu, 08 Sep 2016, Andrew Jeffery wrote:
+> On Wed, 2016-09-07 at 16:38 +0200, Linus Walleij wrote:
+> > On Tue, Aug 30, 2016 at 9:54 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
+> > 
+> > > 
+> > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > Acked-by: Rob Herring <robh@kernel.org>
+> > > Acked-by: Joel Stanley <joel@jms.id.au>
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> > 
+> > I guess the MFD maintainer (Lee Jones) should merge this?
+> > 
+> > Why is he not on CC?
+> 
+> I used get_maintainer.pl on the series to construct the CC, but Lee
+> wasn't listed in the output. I'll poke further at MAINTAINERs in the
+> future to make sure I have coverage for affected subsystems.
 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Joel Stanley <joel@jms.id.au>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  Documentation/devicetree/bindings/mfd/aspeed-scu.txt | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-scu.txt
-
-Thanks for resending.
-
-Applied, thanks
-
-> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
-> new file mode 100644
-> index 000000000000..4fc5b83726d6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
-> @@ -0,0 +1,18 @@
-> +The Aspeed System Control Unit manages the global behaviour of the SoC,
-> +configuring elements such as clocks, pinmux, and reset.
-> +
-> +Required properties:
-> +- compatible:	One of:
-> +		"aspeed,ast2400-scu", "syscon", "simple-mfd"
-> +		"aspeed,g4-scu", "syscon", "simple-mfd"
-> +		"aspeed,ast2500-scu", "syscon", "simple-mfd"
-> +		"aspeed,g5-scu", "syscon", "simple-mfd"
-> +
-> +- reg:		contains the offset and length of the SCU memory region
-> +
-> +Example:
-> +
-> +syscon: syscon@1e6e2000 {
-> +	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
-> +	reg = <0x1e6e2000 0x1a8>;
-> +};
+Good point.  Will fix.
 
 -- 
 Lee Jones
