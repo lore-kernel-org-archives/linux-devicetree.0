@@ -1,87 +1,72 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/7] [v2] dt-bindings: fsl: updates bindings for some
- SoC-specific devices
-Date: Thu, 8 Sep 2016 10:30:27 +0800
-Message-ID: <20160908023026.GC2533@x250>
-References: <1473069695-33092-1-git-send-email-shh.xie@gmail.com>
- <1473069695-33092-2-git-send-email-shh.xie@gmail.com>
+From: Liu Gang <Gang.Liu@nxp.com>
+Subject: [PATCH] arm64: dts: ls2080a: Add 'dma-coherent' for ls2080a PCI nodes
+Date: Thu, 8 Sep 2016 10:31:44 +0800
+Message-ID: <1473301904-27259-1-git-send-email-Gang.Liu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1473069695-33092-2-git-send-email-shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, shawnguo@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, scott.wood@nxp.com
+Cc: minghuan.lian@nxp.com, Liu Gang <Gang.Liu@nxp.com>, mingkai.hu@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 05, 2016 at 06:01:29PM +0800, shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
-> 
-> SCFG and DCFG are SoC-specific devices can be found on SoCs like LS1021A,
-> LS1043A and LS1046A, this patch updates bindings for SCFG and DCFG to
-> reflect more SoCs.
-> 
-> Signed-off-by: Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
-> ---
-> changes in V2:
-> new patch.
-> 
->  Documentation/devicetree/bindings/arm/fsl.txt | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-> index dbbc095..6f92d0b 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> @@ -97,7 +97,7 @@ Freescale LS1021A Platform Device Tree Bindings
->  Required root node compatible properties:
->    - compatible = "fsl,ls1021a";
->  
-> -Freescale LS1021A SoC-specific Device Tree Bindings
-> +Freescale SoC-specific Device Tree Bindings
->  -------------------------------------------
->  
->  Freescale SCFG
-> @@ -105,7 +105,10 @@ Freescale SCFG
->  configuration and status registers for the chip. Such as getting PEX port
->  status.
->    Required properties:
-> -  - compatible: should be "fsl,ls1021a-scfg"
-> +  - compatible: Should contain a chip-specific compatible string,
-> +	Chip-specific strings are of the form "fsl,<chip>-scfg", such as:
-> +	"fsl,ls1021a-scfg"
+The 'dma-coherent' indicates that the hardware IP block can ensure
+the coherency of the data transferred from/to the IP block. This
+can avoid the software cache flush/invalid actions, and improve
+the performance significantly.
 
-Per Documentation/devicetree/bindings/submitting-patches.txt, the known
-values of "<chip>" should be documented.
+The PCI IP block of ls2080a has this capability, so adding this
+feature to improve the PCI performance.
 
-Shawn
+Signed-off-by: Liu Gang <Gang.Liu@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> +
->    - reg: should contain base address and length of SCFG memory-mapped registers
->  
->  Example:
-> @@ -119,7 +122,10 @@ Freescale DCFG
->  configuration and status for the device. Such as setting the secondary
->  core start address and release the secondary core from holdoff and startup.
->    Required properties:
-> -  - compatible: should be "fsl,ls1021a-dcfg"
-> +  - compatible: Should contain a chip-specific compatible string,
-> +	Chip-specific strings are of the form "fsl,<chip>-dcfg", such as:
-> +	"fsl,ls1021a-dcfg"
-> +
->    - reg : should contain base address and length of DCFG memory-mapped registers
->  
->  Example:
-> -- 
-> 2.1.0.27.g96db324
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+index e3b6034..4eba766 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+@@ -588,6 +588,7 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
++			dma-coherent;
+ 			num-lanes = <4>;
+ 			bus-range = <0x0 0xff>;
+ 			ranges = <0x81000000 0x0 0x00000000 0x10 0x00010000 0x0 0x00010000   /* downstream I/O */
+@@ -612,6 +613,7 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
++			dma-coherent;
+ 			num-lanes = <4>;
+ 			bus-range = <0x0 0xff>;
+ 			ranges = <0x81000000 0x0 0x00000000 0x12 0x00010000 0x0 0x00010000   /* downstream I/O */
+@@ -636,6 +638,7 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
++			dma-coherent;
+ 			num-lanes = <8>;
+ 			bus-range = <0x0 0xff>;
+ 			ranges = <0x81000000 0x0 0x00000000 0x14 0x00010000 0x0 0x00010000   /* downstream I/O */
+@@ -660,6 +663,7 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
++			dma-coherent;
+ 			num-lanes = <4>;
+ 			bus-range = <0x0 0xff>;
+ 			ranges = <0x81000000 0x0 0x00000000 0x16 0x00010000 0x0 0x00010000   /* downstream I/O */
+-- 
+2.1.0.27.g96db324
