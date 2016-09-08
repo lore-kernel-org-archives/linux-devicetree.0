@@ -1,38 +1,31 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCH 4/4] nios2: dts: 10m50: Add tx-loadsz parameter
-Date: Thu, 8 Sep 2016 11:12:21 -0500
-Message-ID: <1473351141-9239-5-git-send-email-tthayer@opensource.altera.com>
-References: <1473351141-9239-1-git-send-email-tthayer@opensource.altera.com>
+From: Khiem Nguyen <khiem.nguyen.xt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 2/5 v2] thermal: rcar_gen3_thermal: Add R-Car Gen3 thermal
+ driver
+Date: Thu, 8 Sep 2016 16:08:19 +0000
+Message-ID: <SIXPR06MB0906AE44EF420FF82C8AA1DFA8FB0@SIXPR06MB0906.apcprd06.prod.outlook.com>
+References: <SIXPR06MB09069C18D1F37BE5DB1284B3A8E40@SIXPR06MB0906.apcprd06.prod.outlook.com>
+ <1473123076.2201.37.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473351141-9239-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, lftan@altera.com, jslaby@suse.com, arnd@arndb.de, peter@hurleysoftware.com, andriy.shevchenko@linux.intel.com, anton.wuerfel@fau.de, phillip.raffeck@fau.de, yegorslists@googlemail.com, matwey@sai.msu.ru, mail@maciej.szmigiero.name
-Cc: peter.ujfalusi@ti.com, jonathanh@nvidia.com, dongsheng.wang@nxp.com, luis@debethencourt.com, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, nios2-dev@lists.rocketboards.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473123076.2201.37.camel-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Thao Phuong Le. Nguyen" <thao.nguyen.yb-NdPGGYSbX7otW8iMtHSHnA@public.gmane.org>, Hien Dang <hien.dang.eb-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Toru Oishi <toru.oishi.zj-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Khiem Nguyen <khiem.nguyen.xt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@opensource.altera.com>
-
-The tx-loadsz parameter sets the TX FIFO threshold level of
-the Altera 16550-FIFO32 soft IP.
-
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
----
- arch/nios2/boot/dts/10m50_devboard.dts |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/nios2/boot/dts/10m50_devboard.dts b/arch/nios2/boot/dts/10m50_devboard.dts
-index 3e411c6..6be1502 100755
---- a/arch/nios2/boot/dts/10m50_devboard.dts
-+++ b/arch/nios2/boot/dts/10m50_devboard.dts
-@@ -83,6 +83,7 @@
- 			fifo-size = <32>;
- 			reg-io-width = <4>;
- 			reg-shift = <2>;
-+			tx-loadsz = <16>;
- 		};
- 
- 		sysid: sysid@18001528 {
--- 
-1.7.9.5
+SGkgWmhhbmcsDQoNCj4gT24g5YWtLCAyMDE2LTA5LTAzIGF0IDA1OjI1ICswMDAwLCBLaGllbSBO
+Z3V5ZW4gd3JvdGU6DQo+ID4gU2lnbmVkLW9mZi1ieTogSGllbiBEYW5nIDxoaWVuLmRhbmcuZWJA
+cmVuZXNhcy5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogVGhhbyBOZ3V5ZW4gPHRoYW8ubmd1eWVu
+LnliQHJ2Yy5yZW5lc2FzLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBLaGllbSBOZ3V5ZW4gPGto
+aWVtLm5ndXllbi54dEByZW5lc2FzLmNvbT4NCj4gDQo+IFdlbGwsIEkgY2FuIG9ubHkgc2VlIHBh
+dGNoIDQvNSwgNS81IGluIHBhdGNod29yayBidXQgSSBjYW4gbm90IHNlZSB0aGlzIG9uZS4uLi4N
+Cg0KVGhhbmtzIGZvciB5b3VyIGluZm9ybWF0aW9uLg0KV2lsbCB0cnkgdG8gc2VuZCBhbm90aGVy
+IHZlcnNpb24gc29vbi4NCg0KVGhhbmtzLg0KDQpCZXN0IHJlZ2FyZHMsDQpLSElFTSBOZ3V5ZW4N
+Cg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
