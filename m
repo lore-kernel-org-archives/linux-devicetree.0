@@ -1,27 +1,47 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND] ARM: dts: ls1021a: Add of_graph dt nodes to
- describe the panel
-Date: Thu, 8 Sep 2016 22:09:48 +0800
-Message-ID: <20160908140948.GE16911@tiger>
-References: <1473155134-36896-1-git-send-email-meng.yi@nxp.com>
+From: Mars Cheng <mars.cheng@mediatek.com>
+Subject: Re: [PATCH 3/4] arm64: dts: mediatek: add mt6797 support
+Date: Thu, 8 Sep 2016 22:10:36 +0800
+Message-ID: <1473343836.1896.17.camel@mtkswgap22>
+References: <1473331794-27542-1-git-send-email-mars.cheng@mediatek.com>
+         <1473331794-27542-4-git-send-email-mars.cheng@mediatek.com>
+         <57D16470.6050100@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1473155134-36896-1-git-send-email-meng.yi-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <57D16470.6050100@arm.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Erin Lo <erin.lo@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, linux-clk@vger.kernel.org, CC Hwang <cc.hwang@mediatek.com>, Loda Choui <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Scott Shu <scott.shu@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 06, 2016 at 05:45:34PM +0800, Meng Yi wrote:
-> add of_graph dt nodes to describe the panel, and removed
-> "fsl,panel" property
+On Thu, 2016-09-08 at 14:15 +0100, Marc Zyngier wrote:
+> On 08/09/16 11:49, Mars Cheng wrote:
+> > This adds basic chip support for MT6797 SoC.
+> > 
+> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> > ---
+[...]
 > 
-> Signed-off-by: Meng Yi <meng.yi-3arQi8VN3Tc@public.gmane.org>
+> > +	gic: interrupt-controller@19000000 {
+> > +		compatible = "arm,gic-v3";
+> > +		#interrupt-cells = <3>;
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> > +		interrupt-controller;
+> > +		reg = <0 0x19000000 0 0x10000>,    /* GICD */
+> > +		      <0 0x19200000 0 0x200000>,   /* GICR */
+> > +		      <0 0x10240000 0 0x2000>;     /* GICC */
+> 
+> Where are the GICV and GICH regions? No ITS?
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Have confirmed with our HW guys, there is no GICV, GICH, nor ITS in our
+GIC design.
+
+Thanks.
+> 
+> Thanks,
+> 
+> 	M.
+
+
