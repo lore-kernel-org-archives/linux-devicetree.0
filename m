@@ -1,105 +1,84 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] soc: ti: Add ti_sci_pm_domains driver
-Date: Thu, 8 Sep 2016 11:18:08 +0200
-Message-ID: <CAPDyKFrjJYMX_+JT_L8hO75hDnKm+LYuQY6rGTDO02s2Z5vcOw@mail.gmail.com>
-References: <20160819235653.26355-1-nm@ti.com> <20160819235653.26355-4-nm@ti.com>
- <CAPDyKFooDUOPT9dP8HaW3YBO9PsX-1+96PPE7CRMyjEkra7cBQ@mail.gmail.com>
- <57C0D2C9.1030801@ti.com> <57C5E1DA.2040405@ti.com> <CAPDyKFqszM48nXnnA9D8iCp34k-ZmNvOkHPCc=Fya4nJA7PvBQ@mail.gmail.com>
- <57CF26DB.4020807@ti.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 6/7] clk: sunxi-ng: Add A23 CCU
+Date: Thu, 8 Sep 2016 11:20:24 +0200
+Message-ID: <20160908092024.GM8913@lukather>
+References: <20160906121837.7517-1-maxime.ripard@free-electrons.com>
+ <20160906121837.7517-7-maxime.ripard@free-electrons.com>
+ <CAGb2v64jDTWB4faaBdCBCcFrt1WNf=PYwc16kpgsUhaMRudHnQ@mail.gmail.com>
+ <20160908082939.GJ8913@lukather>
+ <CAGb2v64JhY7KoaxGkpeGinLZ2GoYWyDj+UjE_JwLW_4sVYd_9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57CF26DB.4020807-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="zROEGoKAXsG5UqGB"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64JhY7KoaxGkpeGinLZ2GoYWyDj+UjE_JwLW_4sVYd_9w@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
->
->> Here are some ideas which could be used to solve the problem differently.
->>
->> *)
->> Assuming each platform device has a driver for it!?
->> Then why don't you implement the ->runtime_suspend|resume() callbacks
->> on the driver level and call the SCI interface to power on/off the
->> device from there? This ought to be the most straight forward
->> solution.
->
->
-> Straightforward yes but not a realistic option as we are using shared
-> drivers from other platforms so sticking in platform specific code won't
-> work.
 
-Agree, but...
+--zROEGoKAXsG5UqGB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Historically, I think this was *one* of the reasons to why omap's
-hw_mod PM domain was invented.
-At that point we did not have the common clk framework, the pinctrl
-framework, the phy framework, syscon, etc. These device resources can
-now be handled by the drivers themselves via generic interfaces and
-thus they remains to be portable.
+On Thu, Sep 08, 2016 at 04:32:25PM +0800, Chen-Yu Tsai wrote:
+> On Thu, Sep 8, 2016 at 4:29 PM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > On Wed, Sep 07, 2016 at 03:24:11PM +0800, Chen-Yu Tsai wrote:
+> >> > +               [CLK_BUS_MSGBOX]        =3D &bus_msgbox_clk.common.h=
+w,
+> >>
+> >> A23 manual and Allwinner sources say there is a bus gate for SPINLOCK.
+> >> Tested it myself, and it indeed exists.
+> >
+> > Yes, sorry. It was supposed to be spinlock instead of msgbox.
+> >
+> >> > +       [RST_BUS_SPINLOCK]      =3D  { 0x2c4, BIT(22) },
+> >>
+> >> Allwinner sources say there is a reset control for MSGBOX.
+> >> Tested it myself, and it indeed exists.
+> >
+> > However, the msgbox is mentionned nowhere in the datasheet.
+> >
+> > I'd prefer to be able to test that it actually works before adding it
+> > to the clock driver.
+>=20
+> I did in fact test it. With reset asserted, writes get ignored,
+> and reads produce all 0s. With the reset deasserted and clock
+> enabled, reads give the default value and writes stick. Afterwards
+> when I toggle the reset, the values revert to the default.
 
-My point is, let's be sure you don't drop this approach unless it's
-really SoC specific code needed to deal with the device.
+Ok.
 
->
->>
->>
->> **)
->> You may also use genpd's (struct generic_pm_domain)
->> ->attach|detach_dev() callbacks to create the device specific data
->> (the SCI device ID). The ->attach_dev() callback are invoked when a
->> device gets attached to its PM domain (genpd) at probe time.
->>
->> Currently these callbacks are already being used by SoCs that uses the
->> PM clk API from a genpd client. That is needed to create the device
->> specific PM clock list. We would have to do something similar here for
->> the SCI device IDs.
->>
->> Then, you must also assign/implement the ->start() and ->stop()
->> callbacks of the struct gpd_dev_ops, which is a part of the genpd
->> struct. These callbacks can then easily invoke SoC specific code/APIs
->> and perhaps that is the issue with my first suggested approach!?
->
->
-> I've taken a look at what you have suggested here and I think it could work
-> for us, thanks for the suggestion, I will give it a shot, I think that this
-> will work just as well from a functional perspective.
+Maxime
 
-Okay, great!
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
->
->>
->>>
->>> Based on the ID set provided in patch 2 of this series I see 12 gaps, so
->>> we'd be wasting space the size of 12 genpds. The ID mapping will change
->>> on
->>> future SoCs, so this number could be larger. Do you think this is an
->>> acceptable solution? It allows us to play nice with the new genpd
->>> framework
->>> changes at the cost of wasting some space allocated to filler genpds.
->>
->>
->> There are other issues as well, which mostly has do to with a
->> unnecessary long execution path, involving taking mutexes etc in
->> genpd.
->>
->> All you actually need, is to be able to power on/off a device from a
->> driver's ->runtime_suspend|resume() callback. Don't you think?
->
->
-> Yes, but I thought the point of these frameworks was that they let us avoid
-> doing it manually with platform specific code inside the drivers. I'll look
-> at the callbacks in the genpd framework instead, that seems like a good
-> place to do it.
+--zROEGoKAXsG5UqGB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-BTW, as you would need to store your device specific data somewhere,
-we probably need to extend the struct pm_subsys_data or the "struct
-pm_domain_data", to hold a "void *data".
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Kind regards
-Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJX0S1YAAoJEBx+YmzsjxAgXAYP/jzUSAfOuCqc41/KtxjhF4x+
+LJRqSqzyo4dRaEA74kOIFh7nCy3v9J+RBztCO01EHvxWPMS6hVmYUD2swoZU67zU
+wpmKLDneaBSvHWX+nc43Vfdl6IAsuymIkEZTyLt6Z82blPRJC1yD3WfgzuUmynDi
+s4lhBVUSNye8xOWTYyRpsNZaD1oXky1L110kR75O4SHdIFReB4ypUy4qhqhSuq6P
+Dl6ABIJOTsDlGiMirraKa96QjzPDw6ukv6PTkjZjmHaXnpVhsUVY76OSSbcw++an
+RYpnXyTQoRpTbiB/dWPcLVoNw34VjouUfHaR0vSFAbAKfdeGV3v0yrH4bencOA+Q
+52/mS1jj/6ecBsMrHpKNBaCu4x2lhfbwy/Gnur6XV1Cb+n/wFwIYPQ2PmJzdeSxK
+Sluz3jeWqyZ9FqY5uz0b1l+IP9DzmtabGo88SIO7sZyIhlEKr5fjr0Xz0s3e5uZr
+2NecoNRELN7E/kShE+xir80Gdh/qFQLL9VyHph7aSxfG3geZ+ZDR67W9VxlGXqgv
+/eODUWWwrLmrID0bg2oceGE1T+EclyPweDTfdSyxzPNJhb78HuU17HE+7134/p4M
+Jf5Hm+ou27Kyyf42pk/jejrSPfmzXOAB1ZryL302nQvztxvq0AOz4ivxT+pXgyE9
+LiMOdGTZfCX+OMT42Rdi
+=qHX/
+-----END PGP SIGNATURE-----
+
+--zROEGoKAXsG5UqGB--
