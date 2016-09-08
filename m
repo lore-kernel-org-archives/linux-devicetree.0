@@ -1,188 +1,95 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RESEND v14 PATCH 1/5] Documentation: bindings: add dt doc for
- Rockchip USB Type-C PHY
-Date: Thu, 8 Sep 2016 19:06:50 +0530
-Message-ID: <57D16972.9040801@ti.com>
-References: <1472015825-11365-2-git-send-email-zyw@rock-chips.com>
- <1473181220-15123-1-git-send-email-zyw@rock-chips.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCHv2] of: Add generic handling for ePAPR 1.1 fail-sss states
+Date: Thu, 8 Sep 2016 08:38:00 -0500
+Message-ID: <CAL_Jsq+dm5HMkX8DNNZNB2QF-VPg96Esb+Capv88zys9nAPksw@mail.gmail.com>
+References: <20160829223542.18871-1-tony@atomide.com> <57C74306.9020901@gmail.com>
+ <20160831214151.wzq7y54xxs2qj422@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1473181220-15123-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160831214151.wzq7y54xxs2qj422@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Frank Rowand <frowand.list@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Tom Rini <trini@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 31, 2016 at 4:41 PM, Tony Lindgren <tony@atomide.com> wrote:
+> * Frank Rowand <frowand.list@gmail.com> [160831 13:51]:
+>> On 08/29/16 15:35, Tony Lindgren wrote:
+>> >     if (of_device_is_incomplete(pdev->dev.of_node, status)) {
+>> >             if (!strcmp("hw-incomplete-pins", status)) {
+>> >                     dev_info(&pdev->dev,
+>> >                              "Unusable hardware: Not pinned out\n");
+>> >                     err = -ENODEV;
+>> >                     goto out;
+>> >             }
+>> >             if (!strcmp("hw-missing-daughter-card")) {
+>> >                     err = -EPROBE_DEFER;
+>> >                     goto out;
+>> >             }
+>> >             if (!strcmp("hw-buggy-dma")) {
+>> >                     dev_warn(&pdev->dev,
+>> >                              "Replace hardware for working DMA\n");
+>> >             }
+>> >     }
+>>
+>> What if the device has two issues to be reported?  You can not
+>> specify two different values for the status property.
+>
+> That's a good point.
+>
+>> What if the firmware wants to report that the hardware failed
+>> self-test (thus status = "fail-sss") but is already using
+>> status to describe the hardware?
+>
+> Yeah that's true. Do you know what the "sss" stands for here?
+> Status Self teSt, or Side Scan Sonar? :)
 
+String String String!!!?
 
-On Tuesday 06 September 2016 10:30 PM, Chris Zhong wrote:
-> This patch adds a binding that describes the Rockchip USB Type-C PHY
-> for rk3399
-> 
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Reviewed-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+No clue for me.
 
-merged, thanks.
+>
+>> > - Make more generic as suggested by Frank but stick with
+>> >   "operational status of a device" approch most people seem
+>> >   to prefer that
+>>
+>> I am still opposed to using the status property for this purpose.
+>>
+>> The status property is intended to report an operational problem with
+>> a device or a device that the kernel can cause to be operational (such
+>> as a quiescent cpu being enabled).  It is the only property I am aware
+>> of to report _state_.
 
--Kishon
-> 
-> ---
-> 
-> Changes in v14: None
-> Changes in v13: None
-> Changes in v12: None
-> Changes in v11:
-> - make a clearer emarcation between usb phy and dp phy
-> 
-> Changes in v10:
-> - remove rockchip,uphy-dp-sel property
-> 
-> Changes in v9:
-> - change #phy-cells to 1
-> 
-> Changes in v8: None
-> Changes in v7: None
-> Changes in v6:
-> - add assigned-clocks and assigned-clock-rates
-> 
-> Changes in v5: None
-> Changes in v4:
-> - add a #phy-cells node
-> 
-> Changes in v3:
-> - use compatible: rockchip,rk3399-typec-phy
-> - use dashes instead of underscores.
-> 
-> Changes in v2:
-> - add some registers description
-> 
-> Changes in v1:
-> - add extcon node description
-> - move the registers in phy driver
-> - remove the suffix of reset
-> 
->  .../devicetree/bindings/phy/phy-rockchip-typec.txt | 101 +++++++++++++++++++++
->  1 file changed, 101 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-> new file mode 100644
-> index 0000000..6ea867e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-> @@ -0,0 +1,101 @@
-> +* ROCKCHIP type-c PHY
-> +---------------------
-> +
-> +Required properties:
-> + - compatible : must be "rockchip,rk3399-typec-phy"
-> + - reg: Address and length of the usb phy control register set
-> + - rockchip,grf : phandle to the syscon managing the "general
-> +   register files"
-> + - clocks : phandle + clock specifier for the phy clocks
-> + - clock-names : string, clock name, must be "tcpdcore", "tcpdphy-ref";
-> + - assigned-clocks: main clock, should be <&cru SCLK_UPHY0_TCPDCORE> or
-> +		    <&cru SCLK_UPHY1_TCPDCORE>;
-> + - assigned-clock-rates : the phy core clk frequency, shall be: 50000000
-> + - resets : a list of phandle + reset specifier pairs
-> + - reset-names : string reset name, must be:
-> +		 "uphy", "uphy-pipe", "uphy-tcphy"
-> + - extcon : extcon specifier for the Power Delivery
-> +
-> +Note, there are 2 type-c phys for RK3399, and they are almost identical, except
-> +these registers(description below), every register node contains 3 sections:
-> +offset, enable bit, write mask bit.
-> + - rockchip,typec-conn-dir : the register of type-c connector direction,
-> +   for type-c phy0, it must be <0xe580 0 16>;
-> +   for type-c phy1, it must be <0xe58c 0 16>;
-> + - rockchip,usb3tousb2-en : the register of type-c force usb3 to usb2 enable
-> +   control.
-> +   for type-c phy0, it must be <0xe580 3 19>;
-> +   for type-c phy1, it must be <0xe58c 3 19>;
-> + - rockchip,external-psm : the register of type-c phy external psm clock
-> +   selection.
-> +   for type-c phy0, it must be <0xe588 14 30>;
-> +   for type-c phy1, it must be <0xe594 14 30>;
-> + - rockchip,pipe-status : the register of type-c phy pipe status.
-> +   for type-c phy0, it must be <0xe5c0 0 0>;
-> +   for type-c phy1, it must be <0xe5c0 16 16>;
-> +
-> +Required nodes : a sub-node is required for each port the phy provides.
-> +		 The sub-node name is used to identify dp or usb3 port,
-> +		 and shall be the following entries:
-> +	* "dp-port" : the name of DP port.
-> +	* "usb3-port" : the name of USB3 port.
-> +
-> +Required properties (port (child) node):
-> +- #phy-cells : must be 0, See ./phy-bindings.txt for details.
-> +
-> +Example:
-> +	tcphy0: phy@ff7c0000 {
-> +		compatible = "rockchip,rk3399-typec-phy";
-> +		reg = <0x0 0xff7c0000 0x0 0x40000>;
-> +		rockchip,grf = <&grf>;
-> +		extcon = <&fusb0>;
-> +		clocks = <&cru SCLK_UPHY0_TCPDCORE>,
-> +			 <&cru SCLK_UPHY0_TCPDPHY_REF>;
-> +		clock-names = "tcpdcore", "tcpdphy-ref";
-> +		assigned-clocks = <&cru SCLK_UPHY0_TCPDCORE>;
-> +		assigned-clock-rates = <50000000>;
-> +		resets = <&cru SRST_UPHY0>,
-> +			 <&cru SRST_UPHY0_PIPE_L00>,
-> +			 <&cru SRST_P_UPHY0_TCPHY>;
-> +		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
-> +		rockchip,typec-conn-dir = <0xe580 0 16>;
-> +		rockchip,usb3tousb2-en = <0xe580 3 19>;
-> +		rockchip,external-psm = <0xe588 14 30>;
-> +		rockchip,pipe-status = <0xe5c0 0 0>;
-> +
-> +		tcphy0_dp: dp-port {
-> +			#phy-cells = <0>;
-> +		};
-> +
-> +		tcphy0_usb3: usb3-port {
-> +			#phy-cells = <0>;
-> +		};
-> +	};
-> +
-> +	tcphy1: phy@ff800000 {
-> +		compatible = "rockchip,rk3399-typec-phy";
-> +		reg = <0x0 0xff800000 0x0 0x40000>;
-> +		rockchip,grf = <&grf>;
-> +		extcon = <&fusb1>;
-> +		clocks = <&cru SCLK_UPHY1_TCPDCORE>,
-> +			 <&cru SCLK_UPHY1_TCPDPHY_REF>;
-> +		clock-names = "tcpdcore", "tcpdphy-ref";
-> +		assigned-clocks = <&cru SCLK_UPHY1_TCPDCORE>;
-> +		assigned-clock-rates = <50000000>;
-> +		resets = <&cru SRST_UPHY1>,
-> +			 <&cru SRST_UPHY1_PIPE_L00>,
-> +			 <&cru SRST_P_UPHY1_TCPHY>;
-> +		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
-> +		rockchip,typec-conn-dir = <0xe58c 0 16>;
-> +		rockchip,usb3tousb2-en = <0xe58c 3 19>;
-> +		rockchip,external-psm = <0xe594 14 30>;
-> +		rockchip,pipe-status = <0xe5c0 16 16>;
-> +
-> +		tcphy1_dp: dp-port {
-> +			#phy-cells = <0>;
-> +		};
-> +
-> +		tcphy1_usb3: usb3-port {
-> +			#phy-cells = <0>;
-> +		};
-> +	};
-> 
+Yes, in theory a device can go from disabled to okay, but that's
+generally never been supported. Linux takes the simple approach of
+"disabled" means ignore it. I think we'll see that change with
+overlays.
+
+>> It is unfortunate that Linux has adopted the practice of overloading status
+>> to determine whether a piece of hardware exists or does not exist.  This
+>> is extremely useful for the way we structure the .dts and .dtsi files but
+>> should have used a new property name.  We are stuck with that choice of
+>> using the status property for two purposes, first the state of a device,
+>> and secondly the hardware description of existing or not existing.
+
+I don't agree. Generally, disabled means the h/w is there, but don't
+use it. There may be some cases where the hardware doesn't exist for
+the convenience of having a single dts, but that's the exception.
+
+>> Why not just create a new property that describes the hardware?
+>> Perhaps something like:
+>>
+>>    incomplete = "pins_output", "buggy_dma";
+>
+> New property for incomplete works for me. Rob, got any comments here?
+
+Pins not muxed out or connected on the board has to be the #1 reason
+for disabled status. I don't think we need or want another way to
+express that.
+
+We may have discussed this, but why can't the driver that checks fail
+state just check whatever was used to set the device to fail in the
+first place?
+
+Rob
