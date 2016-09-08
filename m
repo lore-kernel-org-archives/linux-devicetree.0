@@ -1,44 +1,84 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH V3 0/5] firmware: Add support for TI System Control Interface (TI-SCI) protocol driver
-Date: Thu, 08 Sep 2016 10:31:03 -0700
-Message-ID: <m2y432nvs8.fsf@baylibre.com>
-References: <20160906190127.23522-1-nm@ti.com> <7hshtbtu8l.fsf@baylibre.com>
-        <f41d968c-46c9-997e-0fa0-edbef34a1fa5@ti.com>
+From: "Sylvain Lemieux" <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: RE: [RESEND PATCH] ARM: dts: lpc32xx: set default parent clock for pwm1 & pwm2
+Date: Thu, 8 Sep 2016 13:31:48 -0400
+Message-ID: <010701d209f6$e205a030$a610e090$@gmail.com>
+References: <1473277073-12093-1-git-send-email-slemieux.tyco@gmail.com> <edf2ee45-7793-7564-9318-ee08909d0ff5@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f41d968c-46c9-997e-0fa0-edbef34a1fa5@ti.com> (Nishanth Menon's
-        message of "Thu, 8 Sep 2016 09:00:37 -0500")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Rob Herring <robh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Russ Dill <Russ.Dill@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, narmstrong@baylibre.com, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, David Griego <david.griego@linaro.org>
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <edf2ee45-7793-7564-9318-ee08909d0ff5-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-ca
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Vladimir Zapolskiy' <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Nishanth Menon <nm@ti.com> writes:
+On Thu, 2016-09-08 at 02:46 +0300, Vladimir Zapolskiy wrote:
+> Hi Sylvain,
+> 
+> On 07.09.2016 22:37, Sylvain Lemieux wrote:
+> > From: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
+> >
+> > The change setup the peripheral clock (PERIPH_CLK) as the default
+> > parent clock for PWM1 & PWM2.
+> >
+> > Signed-off-by: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/lpc32xx.dtsi | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/lpc32xx.dtsi
+> > b/arch/arm/boot/dts/lpc32xx.dtsi index e295e1e..ed85b95 100644
+> > --- a/arch/arm/boot/dts/lpc32xx.dtsi
+> > +++ b/arch/arm/boot/dts/lpc32xx.dtsi
+> > @@ -469,6 +469,9 @@
+> >  				compatible = "nxp,lpc3220-pwm";
+> >  				reg = <0x4005C000 0x4>;
+> >  				clocks = <&clk LPC32XX_CLK_PWM1>;
+> > +				assigned-clocks = <&clk LPC32XX_CLK_PWM1>,
+> > +						  <&clk LPC32XX_CLK_PERIPH>;
+> 
+> I believe here "assigned-clocks = <&clk LPC32XX_CLK_PWM1>;" would be good
+> enough. In this context the second clock could be potentially specified,
+if you
+> are going to set its rate, but because it is a common clock for many
+controllers it
+> should not be done from a PWM device node.
+> 
+Good catch!
+Thanks for the feedback; I will submit a version 2 of the patch.
 
-> On 09/07/2016 01:55 PM, Kevin Hilman wrote:
->> Nishanth Menon <nm@ti.com> writes:
->
-> [...] full mail thread in https://lkml.org/lkml/2016/9/6/747
->
->>> Overall architecture is very similar to SCPI[4] as follows:
->>
->> Dumb Q: I'm curious about the limitations in SCPI that were found that
->> made TI decided to implement its own version.
+> > +				assigned-clock-parents = <&clk
+> LPC32XX_CLK_PERIPH>;
+> >  				status = "disabled";
+> >  			};
+> >
+> > @@ -476,6 +479,9 @@
+> >  				compatible = "nxp,lpc3220-pwm";
+> >  				reg = <0x4005C004 0x4>;
+> >  				clocks = <&clk LPC32XX_CLK_PWM2>;
+> > +				assigned-clocks = <&clk LPC32XX_CLK_PWM2>,
+> > +						  <&clk LPC32XX_CLK_PERIPH>;
+> 
+> Same as above.
+> 
+> Please remove the second <&clk LPC32XX_CLK_PERIPH> value from the
+> assigned-clocks property.
+> 
+> > +				assigned-clock-parents = <&clk
+> LPC32XX_CLK_PERIPH>;
+> >  				status = "disabled";
+> >  			};
+> >
+> >
+> 
+> --
+> With best wishes,
+> Vladimir
 
-[...]
-
-> Long story short, investigation was done into what SCPI was providing
-> (TI internal ofcourse) and SCPI did not fit our SoC generation needs -
-
-Thanks for the detailed explanation.  Very helpful.
-
-To be clear, I'm not a proponent of always using ARM "standards"
-(especially when it's not exactly clear if it's a standard or a Juno
-thing) but I'm seeing several SoCs come out with SCPI derivatives, or
-old ARM versions etc., so was just curious about the decision making
-process.
-
-Thanks for sharing,
-
-Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
