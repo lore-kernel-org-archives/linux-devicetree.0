@@ -1,236 +1,157 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Overlay manager
-Date: Thu, 8 Sep 2016 14:08:20 -0700
-Message-ID: <57D1D344.8010306@gmail.com>
-References: <001a113447d4718cb9053c04f991@google.com>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH v4 00/22] Support qcom's HSIC USB and rewrite USB2 HS
+ support
+Date: Thu, 08 Sep 2016 14:13:28 -0700
+Message-ID: <147336920894.5149.4788295408306540134@sboyd-linaro>
+References: <20160907213519.27340-1-stephen.boyd@linaro.org>
+ <CAL411-ocwAAQ_cn2a+NS08hbFVUMNBvh_QRbPf-fd9=2YMK8kA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <001a113447d4718cb9053c04f991-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dimitrysh-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL411-ocwAAQ_cn2a+NS08hbFVUMNBvh_QRbPf-fd9=2YMK8kA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: Felipe Balbi <balbi@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, "Ivan T. Ivanov" <iivanov.xz@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/16 13:35, dimitrysh-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org wrote:
-> From e14eb45fa5a93c1bff8a6dfe7b6756e4ad72c579 Mon Sep 17 00:00:00 2001
-> From: Dmitry Shmidt <dimitrysh-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Date: Wed, 24 Aug 2016 13:25:52 -0700
-> Subject: [PATCH] of: Overlay manager
+Quoting Peter Chen (2016-09-07 19:06:45)
+> On Thu, Sep 8, 2016 at 5:34 AM, Stephen Boyd <stephen.boyd@linaro.org> wrote:
+> > The state of USB ChipIdea support on Qualcomm's platforms is not great.
+> > The DT description of these devices requires up to three different nodes
+> > for what amounts to be the same hardware block, when there should really
+> > only be one. Furthermore, the "phy" driver that is in mainline (phy-msm-usb.c)
+> > duplicates the OTG state machine and touches the ci controller wrapper
+> > registers when it should really be focused on the phy and the ULPI accesses
+> > needed to get the phy working. There's also a slimmed down phy driver for
+> > the msm8916 platform, but really the phy hardware is the same as other MSMs,
+> > so we have two drivers doing pretty much the same thing. This leads to a
+> > situtaion where we have the chipidea core driver, the "phy" driver, and
+> > sometimes the ehci-msm.c driver operating the same device all at the same
+> > time with very little coordination. This just isn't very safe and is
+> > confusing from a driver perspective when trying to figure out who does what.
+> > Finally, there isn't any HSIC support on platforms like apq8074 so we
+> > should add that.
+> >
+> > This patch series updates the ChipIdea driver and the MSM wrapper
+> > (ci_hdrc_msm.c) to properly handle the PHY and wrapper bits at the right
+> > times in the right places. To get there, we update the ChipIdea core to
+> > have support for the ULPI phy bus introduced by Heikki. Along the way
+> > we fix bugs with the extcon handling for peripheral and OTG mode controllers
+> > and move the parts of phy-usb-msm.c that are touching the CI controller
+> > wrapper into the wrapper driver (ci_hdrc_msm.c). Finally we add support
+> > for the HSIC phy based on the ULPI bus and rewrite the HS phy driver
+> > (phy-usb-msm.c) as a standard ULPI phy driver.
+> >
+> > Once this series is accepted, we should be able to delete the phy-usb-msm.c,
+> > phy-qcom-8x16-usb.c, and ehci-msm.c drivers from the tree and use the ULPI
+> > based phy driver (which also lives in drivers/phy/ instead of drivers/usb/phy/)
+> > and the chipidea host core instead.
+> >
+> > I've also sent separate patches for other minor pieces to make this
+> > all work. The full tree can be found here[3], hacks and all to get
+> > things working. I've tested this on the db410c, apq8074 dragonboard,
+> > and ifc6410 with configfs gadgets and otg cables.
+> >
+> > Patches based on v4.8-rc1
+> >
+> > Changes from v3:
+> >
+> >  * Picked up Acks from Peter
+> >
+> >  * Updated extcon consolidation patch per Peter's comments
+> >
+> >  * Folded in simplification from Heikki for ULPI DT matching
+> >
 > 
-> Overlay manager processes DT entries on demand.
-> It is chosen by CONFIG_OF_OVERLAY_MGR option.
-> These entries can be chosen from kernel command line:
-> overlay_mgr.overlay_dt_entry=hardware_cfg_0
-> DT contains main overlay_mng entry with all possible
-> HW config setups. And then kernel command line option
-> will allow to choose between them.
-> 
->   Kernel DT entry:
->     overlay_mgr {
->         compatible = "linux,overlay_manager";
->         hardware_cfg_0 {
->             overlay@0 {
->                     fragment@0 {
->                             __overlay__ {
->                             };
->                     };
->             };
->             overlay@1 {
->                     fragment@0 {
->                             __overlay__ {
->                             };
->                     };
->             };
->         };
->     };
+> I find the kbuild dependency error when compile your series, I remembered
+> someone met it before, would you have a solution:
 
-What problem(s) are you trying to solve with this?
+Yes. Should I send it through the drm maintainers?
 
-What is the use case?
+---8<---
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: [PATCH] gpu: Remove depends on RESET_CONTROLLER when not a provider
 
--Frank
+These GPU drivers only depend on the RESET_CONTROLLER config
+option to fix build issues that existed when there weren't stub
+reset APIs for reset controller consumers. Given that these
+drivers aren't providing any reset controllers themselves, they
+don't actually depend on the API to build (just to function) so
+they don't need to depend on it. Remove the dependency to fix
+recursive build errors like the following:
 
-> 
-> Signed-off-by: Dmitry Shmidt <dimitrysh-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Tested-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/of/overlay_mgr.txt         | 32 ++++++++
->  drivers/of/Kconfig                                 | 10 +++
->  drivers/of/Makefile                                |  1 +
->  drivers/of/overlay_mgr.c                           | 90 ++++++++++++++++++++++
->  4 files changed, 133 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/of/overlay_mgr.txt
->  create mode 100644 drivers/of/overlay_mgr.c
-> 
-> diff --git a/Documentation/devicetree/bindings/of/overlay_mgr.txt b/Documentation/devicetree/bindings/of/overlay_mgr.txt
-> new file mode 100644
-> index 0000000..5f3ce4c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/of/overlay_mgr.txt
-> @@ -0,0 +1,32 @@
-> +overlay_mgr
-> +
-> +Required properties:
-> +- compatible: "linux,overlay_manager";
-> +
-> +Optional properties:
-> +- starts from the word "hardware": hardware_cfg_0
-> +
-> +These properties can be chosen from kernel command line:
-> +overlay_mgr.overlay_dt_entry=hardware_cfg_0
-> +DT contains main overlay_mng entry with all possible
-> +HW config setups. And then kernel command line option
-> +will allow to choose between them.
-> +
-> +Example:
-> +    overlay_mgr {
-> +        compatible = "linux,overlay_manager";
-> +        hardware_cfg_0 {
-> +            overlay@0 {
-> +                    fragment@0 {
-> +                            __overlay__ {
-> +                            };
-> +                    };
-> +            };
-> +            overlay@1 {
-> +                    fragment@0 {
-> +                            __overlay__ {
-> +                            };
-> +                    };
-> +            };
-> +        };
-> +    };
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index e2a4841..e3eb06d 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -112,4 +112,14 @@ config OF_OVERLAY
->        While this option is selected automatically when needed, you can
->        enable it manually to improve device tree unit test coverage.
-> 
-> +config OF_OVERLAY_MGR
-> +    bool "Enable Overlay manager"
-> +    default n
-> +    depends on OF_OVERLAY
-> +    help
-> +      Enables Overlay manager - it accepts DT entry from command line
-> +      overlay_mgr.overlay_dt_entry=<name> and applies all overlays in
-> +      it to current DT. It is also possible to apply predefined DT
-> +      entry on the fly by writing it to 'current_overlay' sysfs entry.
-> +
->  endif # OF
-> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> index 156c072..3bddd19 100644
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -14,5 +14,6 @@ obj-$(CONFIG_OF_MTD)    += of_mtd.o
->  obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
->  obj-$(CONFIG_OF_RESOLVE)  += resolver.o
->  obj-$(CONFIG_OF_OVERLAY) += overlay.o
-> +obj-$(CONFIG_OF_OVERLAY_MGR) += overlay_mgr.o
-> 
->  obj-$(CONFIG_OF_UNITTEST) += unittest-data/
-> diff --git a/drivers/of/overlay_mgr.c b/drivers/of/overlay_mgr.c
-> new file mode 100644
-> index 0000000..1fdeb0a
-> --- /dev/null
-> +++ b/drivers/of/overlay_mgr.c
-> @@ -0,0 +1,90 @@
-> +/*
-> + * Overlay manager that allows to apply list of overlays from DT entry
-> + *
-> + * Copyright (C) 2016 Google, Inc.
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +
-> +static char *of_overlay_dt_entry;
-> +module_param_named(overlay_dt_entry, of_overlay_dt_entry, charp, 0644);
-> +
-> +static int of_overlay_mgr_apply_overlay(struct device_node *onp)
-> +{
-> +    int ret;
-> +
-> +    ret = of_overlay_create(onp);
-> +    if (ret < 0) {
-> +        pr_err("overlay_mgr: fail to create overlay: %d\n", ret);
-> +        of_node_put(onp);
-> +        return ret;
-> +    }
-> +    pr_info("overlay_mgr: %s overlay applied\n", onp->name);
-> +    return 0;
-> +}
-> +
-> +static int of_overlay_mgr_apply_dt(struct device *dev, char *dt_entry)
-> +{
-> +    struct device_node *enp = dev->of_node;
-> +    struct device_node *next;
-> +    struct device_node *prev = NULL;
-> +
-> +    if (!enp) {
-> +        pr_err("overlay_mgr: no dt entry\n");
-> +        return -ENODEV;
-> +    }
-> +
-> +    enp = of_get_child_by_name(enp, dt_entry);
-> +    if (!enp) {
-> +        pr_err("overlay_mgr: dt entry %s not found\n", dt_entry);
-> +        return -ENODEV;
-> +    }
-> +    pr_info("overlay_mgr: apply %s dt entry\n", enp->name);
-> +    while ((next = of_get_next_available_child(enp, prev)) != NULL) {
-> +        if (strncmp(next->name, "overlay", 7) == 0)
-> +            of_overlay_mgr_apply_overlay(next);
-> +        prev = next;
-> +    }
-> +    return 0;
-> +}
-> +
-> +static int of_overlay_mgr_probe(struct platform_device *pdev)
-> +{
-> +    if (!of_overlay_dt_entry)
-> +        return 0;
-> +    of_overlay_mgr_apply_dt(&pdev->dev, of_overlay_dt_entry);
-> +    return 0;
-> +}
-> +
-> +static const struct of_device_id of_overlay_mgr_match[] = {
-> +    { .compatible = "linux,overlay_manager", },
-> +    {}
-> +};
-> +
-> +static struct platform_driver of_overlay_mgr_driver = {
-> +    .probe    = of_overlay_mgr_probe,
-> +    .driver    = {
-> +        .name = "overlay_manager",
-> +        .of_match_table = of_match_ptr(of_overlay_mgr_match),
-> +    },
-> +};
-> +
-> +static int __init of_overlay_mgr_init(void)
-> +{
-> +    return platform_driver_register(&of_overlay_mgr_driver);
-> +}
-> +
-> +postcore_initcall(of_overlay_mgr_init);
+drivers/usb/Kconfig:39:error: recursive dependency detected!
+drivers/usb/Kconfig:39: symbol USB is selected by MOUSE_APPLETOUCH
+drivers/input/mouse/Kconfig:187:        symbol MOUSE_APPLETOUCH depends on INPUT
+drivers/input/Kconfig:8:        symbol INPUT is selected by VT
+drivers/tty/Kconfig:12: symbol VT is selected by FB_STI
+drivers/video/fbdev/Kconfig:674:        symbol FB_STI depends on FB
+drivers/video/fbdev/Kconfig:5:  symbol FB is selected by DRM_KMS_FB_HELPER
+drivers/gpu/drm/Kconfig:42:     symbol DRM_KMS_FB_HELPER is selected by DRM_KMS_CMA_HELPER
+drivers/gpu/drm/Kconfig:98:     symbol DRM_KMS_CMA_HELPER is selected by DRM_IMX
+drivers/gpu/drm/imx/Kconfig:1:  symbol DRM_IMX depends on IMX_IPUV3_CORE
+drivers/gpu/ipu-v3/Kconfig:1:   symbol IMX_IPUV3_CORE depends on RESET_CONTROLLER
+drivers/reset/Kconfig:4:        symbol RESET_CONTROLLER is selected by USB_CHIPIDEA
+drivers/usb/chipidea/Kconfig:1: symbol USB_CHIPIDEA depends on USB_EHCI_HCD
+drivers/usb/host/Kconfig:84:    symbol USB_EHCI_HCD depends on USB
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: David Airlie <airlied@linux.ie>
+Cc: <dri-devel@lists.freedesktop.org>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Yao <mark.yao@rock-chips.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+---
+ drivers/gpu/drm/rockchip/Kconfig | 1 -
+ drivers/gpu/drm/tegra/Kconfig    | 1 -
+ drivers/gpu/ipu-v3/Kconfig       | 1 -
+ 3 files changed, 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
+index 3c58669a06ce..6f7f9c59f05b 100644
+--- a/drivers/gpu/drm/rockchip/Kconfig
++++ b/drivers/gpu/drm/rockchip/Kconfig
+@@ -1,7 +1,6 @@
+ config DRM_ROCKCHIP
+ 	tristate "DRM Support for Rockchip"
+ 	depends on DRM && ROCKCHIP_IOMMU
+-	depends on RESET_CONTROLLER
+ 	select DRM_GEM_CMA_HELPER
+ 	select DRM_KMS_HELPER
+ 	select DRM_PANEL
+diff --git a/drivers/gpu/drm/tegra/Kconfig b/drivers/gpu/drm/tegra/Kconfig
+index 63ebb154b9b5..bbf5a4b7e0b6 100644
+--- a/drivers/gpu/drm/tegra/Kconfig
++++ b/drivers/gpu/drm/tegra/Kconfig
+@@ -3,7 +3,6 @@ config DRM_TEGRA
+ 	depends on ARCH_TEGRA || (ARM && COMPILE_TEST)
+ 	depends on COMMON_CLK
+ 	depends on DRM
+-	depends on RESET_CONTROLLER
+ 	select DRM_KMS_HELPER
+ 	select DRM_MIPI_DSI
+ 	select DRM_PANEL
+diff --git a/drivers/gpu/ipu-v3/Kconfig b/drivers/gpu/ipu-v3/Kconfig
+index aefdff95356d..08766c6e7856 100644
+--- a/drivers/gpu/ipu-v3/Kconfig
++++ b/drivers/gpu/ipu-v3/Kconfig
+@@ -1,7 +1,6 @@
+ config IMX_IPUV3_CORE
+ 	tristate "IPUv3 core support"
+ 	depends on SOC_IMX5 || SOC_IMX6Q || ARCH_MULTIPLATFORM
+-	depends on RESET_CONTROLLER
+ 	select GENERIC_IRQ_CHIP
+ 	help
+ 	  Choose this if you have a i.MX5/6 system and want to use the Image
+-- 
+2.9.0.rc2.8.ga28705d
