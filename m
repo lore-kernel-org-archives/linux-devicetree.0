@@ -1,81 +1,112 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] dt-binding: remoteproc: Document generic properties
-Date: Thu, 8 Sep 2016 13:32:17 -0500
-Message-ID: <dfa838cf-15f6-c178-f69a-1b5488f74a7a@ti.com>
-References: <1470850622-29816-1-git-send-email-bjorn.andersson@linaro.org>
- <20160812183448.GA32059@rob-hp-laptop> <20160812224223.GJ26240@tuxbot>
- <46d4d351-336c-6d4f-b1b0-243cf3c5d68b@ti.com>
- <20160908165032.GA9526@rob-hp-laptop>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCHv2] of: Add generic handling for ePAPR 1.1 fail-sss states
+Date: Thu, 8 Sep 2016 12:05:12 -0700
+Message-ID: <57D1B668.3070001@gmail.com>
+References: <20160829223542.18871-1-tony@atomide.com>
+ <57C74306.9020901@gmail.com> <20160831214151.wzq7y54xxs2qj422@atomide.com>
+ <CAL_Jsq+dm5HMkX8DNNZNB2QF-VPg96Esb+Capv88zys9nAPksw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160908165032.GA9526@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+dm5HMkX8DNNZNB2QF-VPg96Esb+Capv88zys9nAPksw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
+Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Tom Rini <trini@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 09/08/2016 11:50 AM, Rob Herring wrote:
-> On Fri, Sep 02, 2016 at 04:45:45PM -0500, Suman Anna wrote:
->> On 08/12/2016 05:42 PM, Bjorn Andersson wrote:
->>> On Fri 12 Aug 11:34 PDT 2016, Rob Herring wrote:
+On 09/08/16 06:38, Rob Herring wrote:
+> On Wed, Aug 31, 2016 at 4:41 PM, Tony Lindgren <tony@atomide.com> wrote:
+>> * Frank Rowand <frowand.list@gmail.com> [160831 13:51]:
+>>> On 08/29/16 15:35, Tony Lindgren wrote:
+>>>>     if (of_device_is_incomplete(pdev->dev.of_node, status)) {
+>>>>             if (!strcmp("hw-incomplete-pins", status)) {
+>>>>                     dev_info(&pdev->dev,
+>>>>                              "Unusable hardware: Not pinned out\n");
+>>>>                     err = -ENODEV;
+>>>>                     goto out;
+>>>>             }
+>>>>             if (!strcmp("hw-missing-daughter-card")) {
+>>>>                     err = -EPROBE_DEFER;
+>>>>                     goto out;
+>>>>             }
+>>>>             if (!strcmp("hw-buggy-dma")) {
+>>>>                     dev_warn(&pdev->dev,
+>>>>                              "Replace hardware for working DMA\n");
+>>>>             }
+>>>>     }
 >>>
->>>> On Wed, Aug 10, 2016 at 10:37:02AM -0700, Bjorn Andersson wrote:
->>>>> This documents the generic properties "rprocs" and "rproc-names", used
->>>>> for consumer drivers to reference a remoteproc node.
->>>>
->>>> How do you intend to use this? I wonder if it would not be better to 
->>>> expose a remote proc with existing bindings for a particular purpose 
->>>> (e.g. clocks, resets, etc.) rather than a generic connection. The client 
->>>> side would have to have specific knowledge as to what functions the 
->>>> remote proc provides.
->>>>
->>>
->>> The remoteproc node represents the mechanism and resources needed to
->>> control the life cycle a co-processor, e.g. loading, booting, shutting
->>> gown a video encoder/decoder.
->>>
->>> The proposed reference allows a separate thingie to assert control of
->>> the life cycle of that co-processor.
->>>
->>>
->>> I acknowledge that in some cases there is a fine line between what is
->>> the life cycle management and what is the actual functionality
->>> implemented by that remote processor. But as the remoteproc mechanism is
->>> reusable between various use cases I think it makes sense to not describe
->>> them as one unit.
+>>> What if the device has two issues to be reported?  You can not
+>>> specify two different values for the status property.
 >>
->> What's the current state of this patch, not officially acked yet right?
+>> That's a good point.
+>>
+>>> What if the firmware wants to report that the hardware failed
+>>> self-test (thus status = "fail-sss") but is already using
+>>> status to describe the hardware?
+>>
+>> Yeah that's true. Do you know what the "sss" stands for here?
+>> Status Self teSt, or Side Scan Sonar? :)
 > 
-> Bjorn and I have discussed some, but probably needs more discussion. 
-> This binding alone is simple enough, but I want to understand better how 
-> it will be used and digesting all the QCom h/w is not simple.
-
-OK, thanks. The binding has no bearing on Qcom h/w though.
-
+> String String String!!!?
 > 
->> While we are at this, can we agree upon an alias stem name as well, we
->> can stick to "rproc". Otherwise, I can submit an incremental patch on
->> top of this along with the code that adds an API to retrieve it for
->> client users.
+> No clue for me.
 > 
-> Any alias for this will be NAKed. My position on aliases is well 
-> documented.
+>>
+>>>> - Make more generic as suggested by Frank but stick with
+>>>>   "operational status of a device" approch most people seem
+>>>>   to prefer that
+>>>
+>>> I am still opposed to using the status property for this purpose.
+>>>
+>>> The status property is intended to report an operational problem with
+>>> a device or a device that the kernel can cause to be operational (such
+>>> as a quiescent cpu being enabled).  It is the only property I am aware
+>>> of to report _state_.
+> 
+> Yes, in theory a device can go from disabled to okay, but that's
+> generally never been supported. Linux takes the simple approach of
+> "disabled" means ignore it. I think we'll see that change with
+> overlays.
+> 
+>>> It is unfortunate that Linux has adopted the practice of overloading status
+>>> to determine whether a piece of hardware exists or does not exist.  This
+>>> is extremely useful for the way we structure the .dts and .dtsi files but
+>>> should have used a new property name.  We are stuck with that choice of
+>>> using the status property for two purposes, first the state of a device,
+>>> and secondly the hardware description of existing or not existing.
+> 
+> I don't agree. Generally, disabled means the h/w is there, but don't
+> use it. There may be some cases where the hardware doesn't exist for
+> the convenience of having a single dts, but that's the exception.
 
-Hmm, I don't have the complete background/history on your stance. I do
-have a need for identifying an exact remoteproc instance. How do you
-propose I do that without aliases, and without adding a non-hw related
-property to the DTS node? Like for example, we have 8 identical DSPs on
-Keystone 2 Hawking SoCs, and I need to construct a firmware name based
-on the instance id, and I cannot do this based on probe order.
+That it is not an exception, but instead a frequent pattern for .dtsi files.
+A quick look in arm:
 
-regards
-Suman
+  $ grep status *.dtsi | wc -l
+  4842
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  $ grep status *.dtsi | grep '"disabled"' | wc -l
+  3431
+
+
+>>> Why not just create a new property that describes the hardware?
+>>> Perhaps something like:
+>>>
+>>>    incomplete = "pins_output", "buggy_dma";
+>>
+>> New property for incomplete works for me. Rob, got any comments here?
+> 
+> Pins not muxed out or connected on the board has to be the #1 reason
+> for disabled status. I don't think we need or want another way to
+> express that.
+
+How is that expressed now?
+
+
+> We may have discussed this, but why can't the driver that checks fail
+> state just check whatever was used to set the device to fail in the
+> first place?
+> 
+> Rob
+> 
