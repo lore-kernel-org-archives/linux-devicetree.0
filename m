@@ -1,73 +1,75 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and GXBB
-Date: Thu, 8 Sep 2016 21:20:12 +0100
-Message-ID: <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
- <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
- <m260q6jibf.fsf@baylibre.com>
- <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i: Move A23/A33 usbphy and usb_otg nodes
+ to common dtsi
+Date: Thu, 8 Sep 2016 22:23:20 +0200
+Message-ID: <20160908202320.GU8913@lukather>
+References: <20160908032535.12987-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="bGopQmzlzQgFk3Fg"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160908032535.12987-1-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/16 20:52, Martin Blumenstingl wrote:
-> On Thu, Sep 8, 2016 at 9:35 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->>> +     phy = devm_phy_create(&pdev->dev, NULL, &phy_meson_usb2_ops);
->>> +     if (IS_ERR(phy)) {
->>> +             dev_err(&pdev->dev, "failed to create PHY\n");
->>> +             return PTR_ERR(phy);
->>> +     }
->>> +
->>> +     if (usb_reset_refcnt++ == 0) {
->>> +             ret = device_reset(&pdev->dev);
->>> +             if (ret) {
->>> +                     dev_err(&phy->dev, "Failed to reset USB PHY\n");
->>> +                     return ret;
->>> +             }
->>> +     }
->>
->> The ref count + reset here looks like something that could/should be
->> handled in a runtime PM callback.
-> Unfortunately that doesn't work (as Jerome found out) because both
-> PHYs are sharing the same reset line.
-> So if the second PHY would call device_reset then it would also reset
-> the first PHY!
->
-> There's a comment above the declaration of usb_reset_refcnt which
-> tries to explain this:
-> "The PHYs are sharing a common reset line -> we are only allowed to
-> reset once for all PHYs."
-> Maybe I should move this comment to the "if (usb_reset_refcnt++ == 0)
-> {" line to make it easier to see?
->
 
-pm-runtime has refcounting in it. When one of the nodes turns on,
-the pm-runtime will call your driver to say there is a user when
-this first use turns up.
+--bGopQmzlzQgFk3Fg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If all the sub-phys turn off and drop their refcount then the driver
-is called to say there are no more users and you can go to sleep.
+Hi,
 
-So, in phy_meson_usb2_power_on() you could do:
+On Thu, Sep 08, 2016 at 11:25:35AM +0800, Chen-Yu Tsai wrote:
+> The usbphy and usb_otg nodes in the A23 and A33 dts files only differ
+> by compatible, and for the usbphy, the size of one of its register
+> regions.
+>=20
+> Move all the common bits to the A23/A33 common dtsi file.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>=20
+> Hi Maxime,
+>=20
+> This patch applies on top of your A23/A33 CCU patches.
 
-pm_runtime_get_sync(pdev);
+It was not applying properly. I think I did the proper fixup, but
+you'll probably want to double check.
 
-and in phy_meson_usb2_power_off
+Maxime
 
-pm_runtime_put(pdev);
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-https://www.kernel.org/doc/Documentation/power/runtime_pm.txt
+--bGopQmzlzQgFk3Fg
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJX0ci4AAoJEBx+YmzsjxAg8rkQAJ1AehUAdM0ahC12bMhwc09j
+knmH7ov2bxMFYLQ7OGboaqGVpwUd0zT7ZIPXrc7xCnloKDUCGlFp2ZkhL6kesQW4
+eqTpnaPrCgvZmitkpUNBXjaJHD7UbtTG3OmFeLQDDJdIpFBuQ5t70ymbcRh+QyjD
+TNuCK94VXaisBNQ/LqIbsG4tTwNqQEDsk2LKnlV2fbuDnftVogCUbg2zQptoEae8
+x2v8M3bhsr4AswTc6aDU6oXSOmSNuL7CsCnn9s7sXZzUGoX4xIcztUhrZ1ytPEOs
+p1hPuKN4MfHYd4AE8kLDSP9gupyDbOcvqZXUsBZHd9dTHZNA/Qo4J42JVotqdyeA
+7oC/SU+Q2T4PvquUN0oShTAewoNngVnpDhjJz8Qmzh5khAEATBVa55qULCCVccEI
+/I42ip1R6DcRR2sm29CqpXLsU9kI5OPwBFmRIccg3Or/yApb9MwA1K0kUXv4pRdY
+YLhF6DG0m7wkdZElBNYZ30gzmhsQrXXwf1k74mJUZIAm7F49/HOavldFFafXa+qp
+jW1y8u6sLUKoS7NZJRIqAV4QLrqF6NK1csviJkdBe2P16c6zYYgz0AYTL/zTrSg9
+FHP0mAcu7aYR2ScnNnelb+Cbq/S3PJ3w/UnCSpcsS//znYHcQdC0belwL53cyXbL
+w+sRBkDaD4CwgxQIq7po
+=Co00
+-----END PGP SIGNATURE-----
+
+--bGopQmzlzQgFk3Fg--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
