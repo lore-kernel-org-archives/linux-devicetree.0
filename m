@@ -1,68 +1,61 @@
-From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] hwmon: xgene: Add hwmon driver
-Date: Thu, 08 Sep 2016 11:47:59 +0100
-Message-ID: <57D141DF.2010603@arm.com>
-References: <1469134557-26869-1-git-send-email-hotran@apm.com> <13081573.BbD3TmEU5Y@wuerfel> <20160907223705.GA31582@roeck-us.net> <2992356.ULGoZEEDZp@wuerfel>
+From: Mars Cheng <mars.cheng@mediatek.com>
+Subject: [PATCH 0/4] Add MT6797 SoC basic support
+Date: Thu, 8 Sep 2016 18:49:49 +0800
+Message-ID: <1473331794-27542-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2992356.ULGoZEEDZp@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Hoan Tran <hotran-qTEPVZfXA3Y@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, lho-qTEPVZfXA3Y@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Erin Lo <erin.lo@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>
+Cc: linux-clk@vger.kernel.org, CC Hwang <cc.hwang@mediatek.com>, Loda Choui <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Scott Shu <scott.shu@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch set adds basic chip support for mediatek's first 10-core
+chip, X20, also known as MT6797.
 
-On 08/09/16 09:14, Arnd Bergmann wrote:
-> On Wednesday, September 7, 2016 3:37:05 PM CEST Guenter Roeck wrote:
->> On Wed, Sep 07, 2016 at 11:41:44PM +0200, Arnd Bergmann wrote:
->>> On Thursday, July 21, 2016 1:55:56 PM CEST Hoan Tran wrote:
->>>> +               ctx->comm_base_addr = cppc_ss->base_address;
->>>> +               if (ctx->comm_base_addr) {
->>>> +                       ctx->pcc_comm_addr =
->>>> +                                       acpi_os_ioremap(ctx->comm_base_addr,
->>>> +                                                       cppc_ss->length);
->>>>
->>>
->>> This causes the arm64 allmodconfig build to fail now, according to
->>> kernelci:
->>>
->>>       1  ERROR: "memblock_is_memory" [drivers/hwmon/xgene-hwmon.ko] undefined!
->>>
->>> Should this perhaps call ioremap() or memremap() instead?
->>>
->> Hmmm ... almost sounds to me like blaming the messenger. e7cd190385d1 ("arm64:
->> mark reserved memblock regions explicitly in iomem") starts using a function
->> in acpi_os_ioremap() which is not exported. On top of that, memblock_is_memory()
->> is declared as __init_memblock, which makes me really uncomfortable.
->> If acpi_os_ioremap() must not be used by modules, and possibly only during
->> early (?) initialization, maybe its declaration should state those limitations ?
-> 
-> Ah, I didn't notice that. I guess both patches were correct individually and
-> got added to linux-next around the same time but caused allmodconfig to blow up
-> when used together.
-> 
-> Adding everyone who was involved in the memblock patch to Cc here, maybe one
-> of them has an idea what the correct fix is. There are only two other drivers
-> using acpi_os_ioremap() and one of them is x86-specific, so it's still likely
-> that drivers are not actually supposed to use this symbol. Making
-> acpi_os_ioremap() an exported function in arm64 would also work.
+- Based on 4.8-rc1
+- Based on the MT2701 patch by Erin Lo[1]
+- Modify irq-mtk-sysirq to support 2 base address
 
-You could use acpi_os_map_iomem()/acpi_os_unmap_iomem() from acpi/acpi_io.h.
-If there isn't an existing mapping these end up in acpi_os_ioremap(), and are
-already EXPORT_SYMBOL_GPL().
+[1] https://lkml.org/lkml/2016/8/22/128
 
-(I'm still waiting for allmodconfig on linux-next to finish building)
+Mars Cheng (4):
+  Document: DT: Add bindings for mediatek MT6797 SoC Platform
+  irqchip: mtk-sysirq: support second intpol base
+  arm64: dts: mediatek: add mt6797 support
+  clk: mediatek: Add MT6797 clock support
 
-
-Thanks,
-
-James
-
+ Documentation/devicetree/bindings/arm/mediatek.txt |    4 +
+ .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
+ .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
+ .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
+ .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
+ .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
+ .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
+ .../bindings/arm/mediatek/mediatek,vencsys.txt     |    3 +-
+ .../interrupt-controller/mediatek,sysirq.txt       |    4 +-
+ .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
+ arch/arm64/boot/dts/mediatek/Makefile              |    1 +
+ arch/arm64/boot/dts/mediatek/mt6797-evb.dts        |   36 +
+ arch/arm64/boot/dts/mediatek/mt6797.dtsi           |  237 +++++++
+ drivers/clk/mediatek/Kconfig                       |   36 +
+ drivers/clk/mediatek/Makefile                      |    5 +
+ drivers/clk/mediatek/clk-mt6797-img.c              |   87 +++
+ drivers/clk/mediatek/clk-mt6797-mm.c               |  146 ++++
+ drivers/clk/mediatek/clk-mt6797-vdec.c             |  102 +++
+ drivers/clk/mediatek/clk-mt6797-venc.c             |   86 +++
+ drivers/clk/mediatek/clk-mt6797.c                  |  716 ++++++++++++++++++++
+ drivers/irqchip/irq-mtk-sysirq.c                   |   42 +-
+ include/dt-bindings/clock/mt6797-clk.h             |  281 ++++++++
+ 22 files changed, 1784 insertions(+), 9 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6797.dtsi
+ create mode 100644 drivers/clk/mediatek/clk-mt6797-img.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6797-mm.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6797-vdec.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6797-venc.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6797.c
+ create mode 100644 include/dt-bindings/clock/mt6797-clk.h
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
