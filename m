@@ -1,84 +1,46 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 6/7] clk: sunxi-ng: Add A23 CCU
-Date: Thu, 8 Sep 2016 11:20:24 +0200
-Message-ID: <20160908092024.GM8913@lukather>
-References: <20160906121837.7517-1-maxime.ripard@free-electrons.com>
- <20160906121837.7517-7-maxime.ripard@free-electrons.com>
- <CAGb2v64jDTWB4faaBdCBCcFrt1WNf=PYwc16kpgsUhaMRudHnQ@mail.gmail.com>
- <20160908082939.GJ8913@lukather>
- <CAGb2v64JhY7KoaxGkpeGinLZ2GoYWyDj+UjE_JwLW_4sVYd_9w@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 3/3] soc: ti: Add ti_sci_pm_domains driver
+Date: Thu, 8 Sep 2016 11:27:52 +0200
+Message-ID: <CAPDyKFo0Cb90BbY7ra6VDjb5frC5=VtmE3V6tDK=VosfPmod7Q@mail.gmail.com>
+References: <20160819235653.26355-1-nm@ti.com> <20160819235653.26355-4-nm@ti.com>
+ <CAPDyKFooDUOPT9dP8HaW3YBO9PsX-1+96PPE7CRMyjEkra7cBQ@mail.gmail.com>
+ <57C0D2C9.1030801@ti.com> <57C5E1DA.2040405@ti.com> <CAPDyKFqszM48nXnnA9D8iCp34k-ZmNvOkHPCc=Fya4nJA7PvBQ@mail.gmail.com>
+ <57CF26DB.4020807@ti.com> <7h4m5rv9kz.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="zROEGoKAXsG5UqGB"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v64JhY7KoaxGkpeGinLZ2GoYWyDj+UjE_JwLW_4sVYd_9w@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Hans de Goede <hdegoede@redhat.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7h4m5rv9kz.fsf@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Dave Gerlach <d-gerlach@ti.com>, Nishanth Menon <nm@ti.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Keerthy <j-keerthy@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+[...]
 
---zROEGoKAXsG5UqGB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>
+> One more idea...
+>
+> Since you don't really have a domain (a group of devices), what you
+> really have is each device having an independent power switch, so as Ulf
+> suggested, what you really need is for all the devices to share the same
+> set of runtime PM callbacks that call SCI.  The only difference is the
+> unique ID.
+>
+> Rather than using all of genpd, you could also just use a pm_domain
+> which is what genpd is built on top of (and also omap_device, which
+> you're probably familiar with also.)
 
-On Thu, Sep 08, 2016 at 04:32:25PM +0800, Chen-Yu Tsai wrote:
-> On Thu, Sep 8, 2016 at 4:29 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > On Wed, Sep 07, 2016 at 03:24:11PM +0800, Chen-Yu Tsai wrote:
-> >> > +               [CLK_BUS_MSGBOX]        =3D &bus_msgbox_clk.common.h=
-w,
-> >>
-> >> A23 manual and Allwinner sources say there is a bus gate for SPINLOCK.
-> >> Tested it myself, and it indeed exists.
-> >
-> > Yes, sorry. It was supposed to be spinlock instead of msgbox.
-> >
-> >> > +       [RST_BUS_SPINLOCK]      =3D  { 0x2c4, BIT(22) },
-> >>
-> >> Allwinner sources say there is a reset control for MSGBOX.
-> >> Tested it myself, and it indeed exists.
-> >
-> > However, the msgbox is mentionned nowhere in the datasheet.
-> >
-> > I'd prefer to be able to test that it actually works before adding it
-> > to the clock driver.
->=20
-> I did in fact test it. With reset asserted, writes get ignored,
-> and reads produce all 0s. With the reset deasserted and clock
-> enabled, reads give the default value and writes stick. Afterwards
-> when I toggle the reset, the values revert to the default.
+Even if this would work as well, the downside would be that you need
+to re-invent the parts related to the DT parsing, the probing/removal
+and attaching/detaching of the device to the PM domain.
 
-Ok.
+You probably don't want to go there... :-)
 
-Maxime
+>
+> That would allow you to keep the drivers completely generic, yet share
+> all the SCI specific "domain" code inside a pm_domain.
+>
+> Kevin
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---zROEGoKAXsG5UqGB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJX0S1YAAoJEBx+YmzsjxAgXAYP/jzUSAfOuCqc41/KtxjhF4x+
-LJRqSqzyo4dRaEA74kOIFh7nCy3v9J+RBztCO01EHvxWPMS6hVmYUD2swoZU67zU
-wpmKLDneaBSvHWX+nc43Vfdl6IAsuymIkEZTyLt6Z82blPRJC1yD3WfgzuUmynDi
-s4lhBVUSNye8xOWTYyRpsNZaD1oXky1L110kR75O4SHdIFReB4ypUy4qhqhSuq6P
-Dl6ABIJOTsDlGiMirraKa96QjzPDw6ukv6PTkjZjmHaXnpVhsUVY76OSSbcw++an
-RYpnXyTQoRpTbiB/dWPcLVoNw34VjouUfHaR0vSFAbAKfdeGV3v0yrH4bencOA+Q
-52/mS1jj/6ecBsMrHpKNBaCu4x2lhfbwy/Gnur6XV1Cb+n/wFwIYPQ2PmJzdeSxK
-Sluz3jeWqyZ9FqY5uz0b1l+IP9DzmtabGo88SIO7sZyIhlEKr5fjr0Xz0s3e5uZr
-2NecoNRELN7E/kShE+xir80Gdh/qFQLL9VyHph7aSxfG3geZ+ZDR67W9VxlGXqgv
-/eODUWWwrLmrID0bg2oceGE1T+EclyPweDTfdSyxzPNJhb78HuU17HE+7134/p4M
-Jf5Hm+ou27Kyyf42pk/jejrSPfmzXOAB1ZryL302nQvztxvq0AOz4ivxT+pXgyE9
-LiMOdGTZfCX+OMT42Rdi
-=qHX/
------END PGP SIGNATURE-----
-
---zROEGoKAXsG5UqGB--
+Kind regards
+Uffe
