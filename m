@@ -1,63 +1,104 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] arm64: arch_timer: Add device tree binding for
- A-008585 erratum
-Date: Thu, 8 Sep 2016 13:07:51 +0100
-Message-ID: <57D15497.9030606@arm.com>
-References: <1467877572-10817-1-git-send-email-oss@buserror.net>
- <e69db8b1-5fe2-ed0a-b073-de3efdd854d2@suse.com> <57D14F9A.2050007@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 2/4] ARM: sun5i: a13-olinuxino: Enable VGA bridge
+Date: Thu,  8 Sep 2016 14:17:49 +0200
+Message-ID: <20160908121751.16911-3-maxime.ripard@free-electrons.com>
+References: <20160908121751.16911-1-maxime.ripard@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57D14F9A.2050007-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20160908121751.16911-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/16 12:46, Ding Tianhong wrote:
-> Ping
+Now that we have support for the VGA bridges using our DRM driver, enable
+the display engine for the Olimex A13-Olinuxino.
 
-Oh please! Maybe you could look at the couple of points I've raised in
-this thread and help addressing them, given that you have a vested
-interest in seeing these patches being merged? Pinging people this way
-is not very productive.
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/boot/dts/sun5i-a13-olinuxino.dts | 60 +++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-Thanks,
-
-	M.
-
-> 
-> On 2016/8/25 19:04, Matthias Brugger wrote:
->> Hi all,
->>
->> On 07/07/16 09:46, Scott Wood wrote:
->>> This erratum describes a bug in logic outside the core, so MIDR can't be
->>> used to identify its presence, and reading an SoC-specific revision
->>> register from common arch timer code would be awkward.  So, describe it
->>> in the device tree.
->>>
->>> Signed-off-by: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
->>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> ---
->>
->> As of today I wasn't able to find this series in linux-next. Was this series somehow forgotten? Scott maybe you can resend the patches adding the clocksource maintainer.
->>
->> Regards,
->> Matthias
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
->>
-> 
-> 
-
-
+diff --git a/arch/arm/boot/dts/sun5i-a13-olinuxino.dts b/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
+index b3c234c65ea1..1cc7ff361f49 100644
+--- a/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
++++ b/arch/arm/boot/dts/sun5i-a13-olinuxino.dts
+@@ -72,6 +72,53 @@
+ 			default-state = "on";
+ 		};
+ 	};
++
++	bridge {
++		compatible = "rgb-to-vga-bridge";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0>;
++
++				vga_bridge_in: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&tcon0_out_vga>;
++				};
++			};
++
++			port@1 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <1>;
++
++				vga_bridge_out: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&vga_con_in>;
++				};
++			};
++		};
++	};
++
++	vga {
++		compatible = "vga-connector";
++
++		port {
++			vga_con_in: endpoint {
++				remote-endpoint = <&vga_bridge_out>;
++			};
++		};
++	};
++};
++
++&be0 {
++	status = "okay";
+ };
+ 
+ &ehci0 {
+@@ -211,6 +258,19 @@
+ 	status = "okay";
+ };
+ 
++&tcon0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&lcd_rgb666_pins>;
++	status = "okay";
++};
++
++&tcon0_out {
++	tcon0_out_vga: endpoint@0 {
++		reg = <0>;
++		remote-endpoint = <&vga_bridge_in>;
++	};
++};
++
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins_b>;
 -- 
-Jazz is not dead. It just smells funny...
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
