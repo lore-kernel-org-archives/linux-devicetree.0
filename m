@@ -1,52 +1,81 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH V3 0/5] firmware: Add support for TI System Control
- Interface (TI-SCI) protocol driver
-Date: Thu, 8 Sep 2016 21:19:36 +0300
-Message-ID: <9c609ea5-5ea8-f58a-ae32-f8af2c85dd72@ti.com>
-References: <20160906190127.23522-1-nm@ti.com> <7hshtbtu8l.fsf@baylibre.com>
- <f41d968c-46c9-997e-0fa0-edbef34a1fa5@ti.com> <m2y432nvs8.fsf@baylibre.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] dt-binding: remoteproc: Document generic properties
+Date: Thu, 8 Sep 2016 13:32:17 -0500
+Message-ID: <dfa838cf-15f6-c178-f69a-1b5488f74a7a@ti.com>
+References: <1470850622-29816-1-git-send-email-bjorn.andersson@linaro.org>
+ <20160812183448.GA32059@rob-hp-laptop> <20160812224223.GJ26240@tuxbot>
+ <46d4d351-336c-6d4f-b1b0-243cf3c5d68b@ti.com>
+ <20160908165032.GA9526@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <m2y432nvs8.fsf@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Nishanth Menon <nm@ti.com>
-Cc: Rob Herring <robh@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Russ Dill <Russ.Dill@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, narmstrong@baylibre.com, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, David Griego <david.griego@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160908165032.GA9526@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/16 20:31, Kevin Hilman wrote:
-> Nishanth Menon <nm@ti.com> writes:
->
->> On 09/07/2016 01:55 PM, Kevin Hilman wrote:
->>> Nishanth Menon <nm@ti.com> writes:
->>
->> [...] full mail thread in https://lkml.org/lkml/2016/9/6/747
->>
->>>> Overall architecture is very similar to SCPI[4] as follows:
+Hi Rob,
+
+On 09/08/2016 11:50 AM, Rob Herring wrote:
+> On Fri, Sep 02, 2016 at 04:45:45PM -0500, Suman Anna wrote:
+>> On 08/12/2016 05:42 PM, Bjorn Andersson wrote:
+>>> On Fri 12 Aug 11:34 PDT 2016, Rob Herring wrote:
 >>>
->>> Dumb Q: I'm curious about the limitations in SCPI that were found that
->>> made TI decided to implement its own version.
->
-> [...]
->
->> Long story short, investigation was done into what SCPI was providing
->> (TI internal ofcourse) and SCPI did not fit our SoC generation needs -
->
-> Thanks for the detailed explanation.  Very helpful.
->
-> To be clear, I'm not a proponent of always using ARM "standards"
-> (especially when it's not exactly clear if it's a standard or a Juno
-> thing) but I'm seeing several SoCs come out with SCPI derivatives, or
-> old ARM versions etc., so was just curious about the decision making
-> process.
->
-> Thanks for sharing,
->
-> Kevin
+>>>> On Wed, Aug 10, 2016 at 10:37:02AM -0700, Bjorn Andersson wrote:
+>>>>> This documents the generic properties "rprocs" and "rproc-names", used
+>>>>> for consumer drivers to reference a remoteproc node.
+>>>>
+>>>> How do you intend to use this? I wonder if it would not be better to 
+>>>> expose a remote proc with existing bindings for a particular purpose 
+>>>> (e.g. clocks, resets, etc.) rather than a generic connection. The client 
+>>>> side would have to have specific knowledge as to what functions the 
+>>>> remote proc provides.
+>>>>
+>>>
+>>> The remoteproc node represents the mechanism and resources needed to
+>>> control the life cycle a co-processor, e.g. loading, booting, shutting
+>>> gown a video encoder/decoder.
+>>>
+>>> The proposed reference allows a separate thingie to assert control of
+>>> the life cycle of that co-processor.
+>>>
+>>>
+>>> I acknowledge that in some cases there is a fine line between what is
+>>> the life cycle management and what is the actual functionality
+>>> implemented by that remote processor. But as the remoteproc mechanism is
+>>> reusable between various use cases I think it makes sense to not describe
+>>> them as one unit.
+>>
+>> What's the current state of this patch, not officially acked yet right?
+> 
+> Bjorn and I have discussed some, but probably needs more discussion. 
+> This binding alone is simple enough, but I want to understand better how 
+> it will be used and digesting all the QCom h/w is not simple.
 
-So, any other comments for this series or shall we still try to get it 
-merged for 4.9? We are -rc5 so it might be too late already and probably 
-better to push this for 4.10.
+OK, thanks. The binding has no bearing on Qcom h/w though.
 
--Tero
+> 
+>> While we are at this, can we agree upon an alias stem name as well, we
+>> can stick to "rproc". Otherwise, I can submit an incremental patch on
+>> top of this along with the code that adds an API to retrieve it for
+>> client users.
+> 
+> Any alias for this will be NAKed. My position on aliases is well 
+> documented.
+
+Hmm, I don't have the complete background/history on your stance. I do
+have a need for identifying an exact remoteproc instance. How do you
+propose I do that without aliases, and without adding a non-hw related
+property to the DTS node? Like for example, we have 8 identical DSPs on
+Keystone 2 Hawking SoCs, and I need to construct a firmware name based
+on the instance id, and I cannot do this based on probe order.
+
+regards
+Suman
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
