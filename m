@@ -1,24 +1,45 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] imx53: add support for USB armory board
-Date: Thu, 8 Sep 2016 21:20:08 +0800
-Message-ID: <20160908132008.GC16911@tiger>
-References: <20160905101117.27473-1-andrej@inversepath.com>
+From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: Re: [PATCH 0/2] spi: meson: Add Amlogic GXBB compatible
+Date: Thu, 8 Sep 2016 14:21:04 +0100
+Message-ID: <5f05c488-1889-057b-7068-8e070ff95611@codethink.co.uk>
+References: <1473321206-32284-1-git-send-email-narmstrong@baylibre.com>
+ <293061a8-e867-4d91-20cb-6e5df8e9b543@suse.de>
+ <4a199a95-3ee6-a3a0-bc8a-63bd0912e7d2@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160905101117.27473-1-andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org>
+In-Reply-To: <4a199a95-3ee6-a3a0-bc8a-63bd0912e7d2-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vagrant Cascadian <vagrant-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 05, 2016 at 12:11:15PM +0200, andrej-6l9oX9VzF44FueaiHvvTSg@public.gmane.org wrote:
-> Andrej Rosano (2):
->   devicetree: Add vendor prefix for Inverse Path
->   ARM: dts: imx53: add support for USB armory board
+On 08/09/16 13:50, Andreas Färber wrote:
+> Am 08.09.2016 um 14:04 schrieb Andreas Färber:
+>> Am 08.09.2016 um 09:53 schrieb Neil Armstrong:
+>>> This patchset adds a specific compatible string in the Meson SPIFC driver for
+>>> the Amlogic Meson GXBB SoC.
+>>
+>> Any particular reason? We could just reuse the meson6 one since there
+>> appear to be no code changes so far.
+>
+> So Neil is essentially telling me they don't know whether there are any
+> differences in the IP block, so a separate compatible string was chosen.
+>
+> No objection from my side, but a general clarification from device tree
+> maintainers when and when not to would be appreciated. (+ devicetree)
 
-Applied both, thanks.
+I prefer to add both the device-tree itself, so if there are differences
+found later then it can be dealt with without rebuilding both the DT
+and kernel.
+
+It is nice to have the new ones added to the driver so that you know the
+hardware choices in play.
+
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
