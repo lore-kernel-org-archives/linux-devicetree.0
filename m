@@ -1,35 +1,39 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/7] clk: gxbb: expose spifc clock
-Date: Thu, 08 Sep 2016 11:12:19 -0700
-Message-ID: <m24m5qntvg.fsf@baylibre.com>
-References: <1473261223-15412-1-git-send-email-jbrunet@baylibre.com>
-        <1473261223-15412-4-git-send-email-jbrunet@baylibre.com>
-        <20160907212754.GB12510@codeaurora.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 0/2] spi: meson: Add Amlogic GXBB compatible
+Date: Thu, 08 Sep 2016 11:17:08 -0700
+Message-ID: <m2r38umf2z.fsf@baylibre.com>
+References: <1473321206-32284-1-git-send-email-narmstrong@baylibre.com>
+        <293061a8-e867-4d91-20cb-6e5df8e9b543@suse.de>
+        <4a199a95-3ee6-a3a0-bc8a-63bd0912e7d2@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160907212754.GB12510-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (Stephen Boyd's message
-        of "Wed, 7 Sep 2016 14:27:54 -0700")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4a199a95-3ee6-a3a0-bc8a-63bd0912e7d2@suse.de> ("Andreas
+        =?utf-8?Q?F=C3=A4rber=22's?= message of "Thu, 8 Sep 2016 14:50:37 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, broonie@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+Andreas F=C3=A4rber <afaerber@suse.de> writes:
 
-> On 09/07, Jerome Brunet wrote:
->> SPI clock is needed for the spifc driver, expose to DT
->> (and comment out in the clk driver)
->> 
->> Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
+> Am 08.09.2016 um 14:04 schrieb Andreas F=C3=A4rber:
+>> Am 08.09.2016 um 09:53 schrieb Neil Armstrong:
+>>> This patchset adds a specific compatible string in the Meson SPIFC driv=
+er for
+>>> the Amlogic Meson GXBB SoC.
+>>=20
+>> Any particular reason? We could just reuse the meson6 one since there
+>> appear to be no code changes so far.
 >
-> Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> So Neil is essentially telling me they don't know whether there are any
+> differences in the IP block, so a separate compatible string was chosen.
+>
+> No objection from my side, but a general clarification from device tree
+> maintainers when and when not to would be appreciated. (+ devicetree)
 
-Applied,
+I'm not sure what the "right" way is (Rob?) but I think the usual way is
+to add new compatibles when needed.
 
 Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
