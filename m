@@ -1,73 +1,81 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] ARM: dts: add SMSC ethernet on the APQ8060 Dragonboard
-Date: Thu, 8 Sep 2016 16:03:38 +0200
-Message-ID: <CACRpkdbZjB0Bpb_j4txUHyTNi1xkQ=z1fQpUrfh=aktfnSmcjg@mail.gmail.com>
-References: <1473342103-30554-1-git-send-email-linus.walleij@linaro.org> <7249221.7eA5nsROLb@wuerfel>
+From: Mars Cheng <mars.cheng@mediatek.com>
+Subject: Re: [PATCH 1/4] Document: DT: Add bindings for mediatek MT6797 SoC
+ Platform
+Date: Thu, 8 Sep 2016 22:08:55 +0800
+Message-ID: <1473343735.1896.15.camel@mtkswgap22>
+References: <1473331794-27542-1-git-send-email-mars.cheng@mediatek.com>
+         <1473331794-27542-2-git-send-email-mars.cheng@mediatek.com>
+         <57D15B6C.6080305@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <7249221.7eA5nsROLb@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Brown <david.brown@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <57D15B6C.6080305@arm.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Erin Lo <erin.lo@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, linux-clk@vger.kernel.org, CC Hwang <cc.hwang@mediatek.com>, Loda Choui <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Scott Shu <scott.shu@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 8, 2016 at 3:52 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday, September 8, 2016 3:41:43 PM CEST Linus Walleij wrote:
->> The SMSC9112 ethernet controller is connected to chip select 2
->> on the EBI2 bus on the APQ8060 Dragonboard. We set this up by
->> activating EBI2, creating a chipselect entry as a subnode, and then
->> putting the ethernet controller in a subnode of the chipselect.
->>
->> After the chipselect is configured, the SMSC device will be
->> instantiated.
->>
->> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->> ---
->
-> One more thing I noticed recently is that we still have some
-> hardcoded configuration in the driver:
->
->   #ifdef CONFIG_ARCH_PXA
->     #define SMC_USE_PXA_DMA       1
->     #define SMC_USE_16BIT         0
->     #define SMC_USE_32BIT         1
->     #define SMC_IRQ_SENSE         IRQF_TRIGGER_FALLING
->   #elif defined(CONFIG_SH_MAGIC_PANEL_R2)
->     #define SMC_USE_16BIT         0
->     #define SMC_USE_32BIT         1
->     #define SMC_IRQ_SENSE         IRQF_TRIGGER_LOW
->   #elif defined(CONFIG_ARCH_OMAP3)
->     #define SMC_USE_16BIT         0
->     #define SMC_USE_32BIT         1
->     #define SMC_IRQ_SENSE         IRQF_TRIGGER_LOW
->     #define SMC_MEM_RESERVED      1
->   #elif defined(CONFIG_ARCH_OMAP2)
->     #define SMC_USE_16BIT         0
->     #define SMC_USE_32BIT         1
->     #define SMC_IRQ_SENSE         IRQF_TRIGGER_LOW
->     #define SMC_MEM_RESERVED      1
->   #else
->   /*
->    * Default configuration
->    */
->
->   #define SMC_DYNAMIC_BUS_CONFIG
->   #endif
->
-> and I suspect we have to convert the OMAP2/OMAP3 portion here to use
-> dynamic configuration, otherwise things may go wrong in a multiplatform
-> kernel.
+Hi Marc
 
-Yes, but that is not the driver enabled by this patch. This is
-compatible = "smsc,lan9221", "smsc,lan9115";
-which has the driver smsc911x.c, but the problem
-you're pointing to is in the driver smc911x.c.
-or rather its header file.
+Thanks for your review. the response inlined.
 
-One letter difference I know, the naming of these
-drivers is not human-friendly. I make the mistake
-all the time.
+On Thu, 2016-09-08 at 13:37 +0100, Marc Zyngier wrote:
+> On 08/09/16 11:49, Mars Cheng wrote:
+> > This adds DT binding documentation for Mediatek MT6797.
+> > 
+> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+> > ---
+[...]
+> 
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> > index 9d1d72c..3d97eb4 100644
+> > --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> > @@ -8,6 +8,7 @@ Required properties:
+> >  	"mediatek,mt8173-sysirq"
+> >  	"mediatek,mt8135-sysirq"
+> >  	"mediatek,mt8127-sysirq"
+> > +	"mediatek,mt6797-sysirq"
+> >  	"mediatek,mt6795-sysirq"
+> >  	"mediatek,mt6755-sysirq"
+> >  	"mediatek,mt6592-sysirq"
+> > @@ -21,7 +22,8 @@ Required properties:
+> >  - interrupt-parent: phandle of irq parent for sysirq. The parent must
+> >    use the same interrupt-cells format as GIC.
+> >  - reg: Physical base address of the intpol registers and length of memory
+> > -  mapped region.
+> > +  mapped region. Could be up to 2 registers here at max. Ex: 6797 needs 2 reg,
+> > +  others need 1.
+> 
+> Two things:
+> 
+> - Please make this a separate patch that can be reviewed independently
+> of the rest of the changes, which are just adding new compatible
+> identifiers.
 
-Yours,
-Linus Walleij
+Will fix this in the next patch set.
+
+> 
+> - Why can't you simply expose it as a separate controller? Looking at
+> the way you're changing the corresponding driver, it looks like you're
+> simply adding an extra base/size. If you simply had a base for the
+> corresponding GIC interrupts, you could handle as many region as you
+> want, and have a more generic driver.
+> 
+
+May I know the meaning of "simply expose it as a separate controller"?
+Or you might like to suggest me any similar driver as a reference? I
+will examine it. Current design is based on the fact: We expect
+irq-mtk-sysirq needs the optional second base but the third one will not
+happen.
+
+If we really need more than 2 bases, we can figure out a more generic
+driver at the time, right?
+
+Thanks.
+> Thanks,
+> 
+> 	M.
+
+
