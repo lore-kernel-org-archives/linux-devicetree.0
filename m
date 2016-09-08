@@ -1,50 +1,73 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and GXBB
-Date: Thu, 8 Sep 2016 21:52:45 +0200
-Message-ID: <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
- <20160904213152.25837-5-martin.blumenstingl@googlemail.com> <m260q6jibf.fsf@baylibre.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] clk: sunxi-ng: Introduce support for A23 and A33
+ CCUs
+Date: Thu, 8 Sep 2016 22:09:08 +0200
+Message-ID: <20160908200908.GS8913@lukather>
+References: <20160908094843.14710-1-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="z4IKABJTiQIqPwmW"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <m260q6jibf.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160908094843.14710-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: kishon-l0cyMroinI0@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mylene Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 8, 2016 at 9:35 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->> +     phy = devm_phy_create(&pdev->dev, NULL, &phy_meson_usb2_ops);
->> +     if (IS_ERR(phy)) {
->> +             dev_err(&pdev->dev, "failed to create PHY\n");
->> +             return PTR_ERR(phy);
->> +     }
->> +
->> +     if (usb_reset_refcnt++ == 0) {
->> +             ret = device_reset(&pdev->dev);
->> +             if (ret) {
->> +                     dev_err(&phy->dev, "Failed to reset USB PHY\n");
->> +                     return ret;
->> +             }
->> +     }
->
-> The ref count + reset here looks like something that could/should be
-> handled in a runtime PM callback.
-Unfortunately that doesn't work (as Jerome found out) because both
-PHYs are sharing the same reset line.
-So if the second PHY would call device_reset then it would also reset
-the first PHY!
 
-There's a comment above the declaration of usb_reset_refcnt which
-tries to explain this:
-"The PHYs are sharing a common reset line -> we are only allowed to
-reset once for all PHYs."
-Maybe I should move this comment to the "if (usb_reset_refcnt++ == 0)
-{" line to make it easier to see?
+--z4IKABJTiQIqPwmW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Sep 08, 2016 at 11:48:35AM +0200, Maxime Ripard wrote:
+> Hi everyone,
+>=20
+> Here is the migration for the A23 and A33 clocks to the sunxi-ng
+> framework.
+>=20
+> It has been tested on SinA33 board, and I made sure that everything
+> was reported at the exact same rate, that the MMC was still working in
+> DDR, etc.
+>=20
+> This has also been tested to implement the DRM driver, so I'm
+> confident things will work just fine.
+>=20
+> Let me know what you think,
+> Maxime
 
-Regards,
-Martin
+Applied.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--z4IKABJTiQIqPwmW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJX0cVkAAoJEBx+YmzsjxAgTMoQAJAqpIOZBDxMxxQyPUUoaChK
+bmNDKSAymHqX2NgrEgLkVPS0pKrRFGDL3Bz3JOn1CUDKXdJRTegrDj89IbhW3mnB
+Uz9fCHGvnLJF2Dh+lB/TsKQBN3lMymX1AGVdKnG6TuJ/qJwUJIynZKLgJ0gef5IH
+wjQEDUqEtLLzD3CEp+7MxhVaVLmqqPbzrWmo6AVPjy0G+O22/9yR7iEefoTnY5me
+cI4b/t+Ff75JfclTDvy1N5Ve8VEMctBtnWAzlSKwGly1piKgewGAewKxK/hemmNe
+JFU2+frLkJY84z85FtwVez+yhJrmc+A61kFDFRaAT3guUE1W9WzXQCHqPz9gh0yN
+qzSOpGSvLImk3/lPo7uwEJtJYU7MpFhoyl5BqthTjeIcY8BgKQ/UfLzBvUEAMhHB
+hV8C5Ikw+4G2oukFoJHBd0O/Q1REnqaGGPsRfXK4BA1qQFtGGlRWLVlN2XzMXxX3
+i50EvIPZitAA+YQoCvkoTqVyXWVvhlo5iRyDgL2I1PZd+Wj4/QUddaTZBxendEtl
+gwd8JwnY9j1XT1xAidrSG0/FGzKfHhcLiFGmCf3604B9mFcHlgPUCB31lgS5MGv3
+1l1t9q+Jmea2WeVciHrwTzCvYEhVbyF1eREdRUnaUY2z4cGJYGobaKuUDhiIYPU0
+CWkKODAhnQukGJgQ+LjP
+=g9je
+-----END PGP SIGNATURE-----
+
+--z4IKABJTiQIqPwmW--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
