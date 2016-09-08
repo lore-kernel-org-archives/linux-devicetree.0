@@ -1,45 +1,242 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: Re: [PATCH 0/2] spi: meson: Add Amlogic GXBB compatible
-Date: Thu, 8 Sep 2016 14:21:04 +0100
-Message-ID: <5f05c488-1889-057b-7068-8e070ff95611@codethink.co.uk>
-References: <1473321206-32284-1-git-send-email-narmstrong@baylibre.com>
- <293061a8-e867-4d91-20cb-6e5df8e9b543@suse.de>
- <4a199a95-3ee6-a3a0-bc8a-63bd0912e7d2@suse.de>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/7] [v2] arm64: dts: add QorIQ LS1046A SoC support
+Date: Thu, 8 Sep 2016 14:23:25 +0100
+Message-ID: <57D1664D.3060502@arm.com>
+References: <1473069695-33092-1-git-send-email-shh.xie@gmail.com>
+ <1473069695-33092-4-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4a199a95-3ee6-a3a0-bc8a-63bd0912e7d2-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <1473069695-33092-4-git-send-email-shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mihai Bantea <mihai.bantea-3arQi8VN3Tc@public.gmane.org>, Chenhui Zhao <chenhui.zhao-3arQi8VN3Tc@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>, Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>, Minghuan Lian <Minghuan.Lian-3arQi8VN3Tc@public.gmane.org>, Mingkai Hu <Mingkai.Hu-3arQi8VN3Tc@public.gmane.org>, Horia Geant? <horia.geanta-3arQi8VN3Tc@public.gmane.org>, Gong Qianyu <Qianyu.Gong-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/09/16 13:50, Andreas Färber wrote:
-> Am 08.09.2016 um 14:04 schrieb Andreas Färber:
->> Am 08.09.2016 um 09:53 schrieb Neil Armstrong:
->>> This patchset adds a specific compatible string in the Meson SPIFC driver for
->>> the Amlogic Meson GXBB SoC.
->>
->> Any particular reason? We could just reuse the meson6 one since there
->> appear to be no code changes so far.
->
-> So Neil is essentially telling me they don't know whether there are any
-> differences in the IP block, so a separate compatible string was chosen.
->
-> No objection from my side, but a general clarification from device tree
-> maintainers when and when not to would be appreciated. (+ devicetree)
+On 05/09/16 11:01, shh.xie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Mingkai Hu <Mingkai.Hu-3arQi8VN3Tc@public.gmane.org>
+> 
+> LS1046A is an SoC with 4 ARMv8 A72 cores and most other IP blocks
+> are similar to LS1043A which also complies to Freescale Chassis 2.1
+> spec.
+> 
+> Created LS1046A SoC DTSI file to be included by board level DTS
+> files.
+> 
+> Signed-off-by: Horia Geant? <horia.geanta-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Mihai Bantea <mihai.bantea-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Chenhui Zhao <chenhui.zhao-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Gong Qianyu <Qianyu.Gong-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Minghuan Lian <Minghuan.Lian-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Mingkai Hu <Mingkai.Hu-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Shaohui Xie <Shaohui.Xie-3arQi8VN3Tc@public.gmane.org>
+> ---
+> Changes in V2:
+> 1. addressed Arnd's comments.
+>    removed memory size property.
+>    refined devices' names.
+>    removed PCIe and MSI nodes.
+> 2. updated interrupt properties with readable defines.
+> 3. removed clock-names property from I2C and watchdog nodes.
+> 4. added crypto nodes.
+>    binding of crypto nodes available at:
+>    http://patchwork.ozlabs.org/patch/663184/
+> 5. added CPU idle-states node.
+> 6. added ddr controller node.
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 511 +++++++++++++++++++++++++
+>  1 file changed, 511 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> new file mode 100644
+> index 0000000..9697332
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -0,0 +1,511 @@
+> +/*
+> + * Device Tree Include file for Freescale Layerscape-1046A family SoC.
+> + *
+> + * Copyright 2016, Freescale Semiconductor, Inc.
+> + *
+> + * Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPLv2 or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	compatible = "fsl,ls1046a";
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	aliases {
+> +		crypto = &crypto;
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72";
+> +			reg = <0x0>;
+> +			clocks = <&clockgen 1 0>;
+> +			next-level-cache = <&l2>;
+> +			cpu-idle-states = <&CPU_PH20>;
+> +		};
+> +
+> +		cpu1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72";
+> +			reg = <0x1>;
+> +			clocks = <&clockgen 1 0>;
+> +			next-level-cache = <&l2>;
+> +			cpu-idle-states = <&CPU_PH20>;
+> +		};
+> +
+> +		cpu2: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72";
+> +			reg = <0x2>;
+> +			clocks = <&clockgen 1 0>;
+> +			next-level-cache = <&l2>;
+> +			cpu-idle-states = <&CPU_PH20>;
+> +		};
+> +
+> +		cpu3: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a72";
+> +			reg = <0x3>;
+> +			clocks = <&clockgen 1 0>;
+> +			next-level-cache = <&l2>;
+> +			cpu-idle-states = <&CPU_PH20>;
+> +		};
+> +
+> +		l2: l2-cache {
+> +			compatible = "cache";
+> +		};
+> +	};
+> +
+> +	idle-states {
+> +		entry-method = "arm,psci";
+> +
+> +		CPU_PH20: cpu-ph20 {
+> +			compatible = "arm,idle-state";
+> +			idle-state-name = "PH20";
+> +			arm,psci-suspend-param = <0x00010000>;
+> +			entry-latency-us = <1000>;
+> +			exit-latency-us = <1000>;
+> +			min-residency-us = <3000>;
+> +		};
+> +	};
+> +
+> +	memory@80000000 {
+> +		device_type = "memory";
+> +	};
+> +
+> +	sysclk: sysclk {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <100000000>;
+> +		clock-output-names = "sysclk";
+> +	};
+> +
+> +	reboot {
+> +		compatible ="syscon-reboot";
+> +		regmap = <&dcfg>;
+> +		offset = <0xb0>;
+> +		mask = <0x02>;
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13 IRQ_TYPE_EDGE_RISING>,
+> +			     <GIC_PPI 14 IRQ_TYPE_EDGE_RISING>,
+> +			     <GIC_PPI 11 IRQ_TYPE_EDGE_RISING>,
+> +			     <GIC_PPI 10 IRQ_TYPE_EDGE_RISING>;
 
-I prefer to add both the device-tree itself, so if there are differences
-found later then it can be dealt with without rebuilding both the DT
-and kernel.
+No, this is completely wrong. The timer is always level triggered, and
+you're missing the affinity bits that are described the GIC binding.
 
-It is nice to have the new ones added to the driver so that you know the
-hardware choices in play.
+> +	};
+> +
+> +	pmu {
+> +		compatible = "arm,armv8-pmuv3";
 
+Please add "arm,cortex-a72-pmu".
+
+> +		interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-affinity = <&cpu0>,
+> +				     <&cpu1>,
+> +				     <&cpu2>,
+> +				     <&cpu3>;
+> +	};
+> +
+> +	gic: interrupt-controller@1400000 {
+> +		compatible = "arm,gic-400";
+> +		#interrupt-cells = <3>;
+> +		interrupt-controller;
+> +		reg = <0x0 0x1410000 0 0x10000>, /* GICD */
+> +		      <0x0 0x1420000 0 0x20000>, /* GICC */
+> +		      <0x0 0x1440000 0 0x20000>, /* GICH */
+> +		      <0x0 0x1460000 0 0x20000>; /* GICV */
+> +		interrupts = <1 9 0xf08>;
+
+Please choose between expressing the interrupts entirely with numerals
+or entirely with symbols. At the moment this is a mix between the two.
+
+> +	};
+
+Thanks,
+
+	M.
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
