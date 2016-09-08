@@ -1,88 +1,34 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and GXBB
-Date: Thu, 8 Sep 2016 23:48:53 +0200
-Message-ID: <CAFBinCC4gkMrJtertYevg_hXDLJEZ0PqfKKLL5UKXo8B=SXsPw@mail.gmail.com>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
- <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
- <m260q6jibf.fsf@baylibre.com> <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
- <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk> <m2eg4ui0nl.fsf@baylibre.com>
- <ffdd0188-72bc-4575-f997-e8547f4c31d2@codethink.co.uk>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v5 1/3] mfd: tps65217: Add support for IRQs
+Date: Thu, 8 Sep 2016 16:17:48 -0700
+Message-ID: <20160908231747.t6rbrrlteosad4nv@atomide.com>
+References: <20160908095900.30975-1-m.niestroj@grinn-global.com>
+ <20160908095900.30975-2-m.niestroj@grinn-global.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ffdd0188-72bc-4575-f997-e8547f4c31d2-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160908095900.30975-2-m.niestroj@grinn-global.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Marcin Niestroj <m.niestroj@grinn-global.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Bin Liu <b-liu@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 8, 2016 at 10:53 PM, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
-> On 08/09/16 21:42, Kevin Hilman wrote:
->>
->> Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> writes:
->>
->>> On 08/09/16 20:52, Martin Blumenstingl wrote:
->>>>
->>>> On Thu, Sep 8, 2016 at 9:35 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>> wrote:
->>>>>>
->>>>>> +     phy = devm_phy_create(&pdev->dev, NULL, &phy_meson_usb2_ops);
->>>>>> +     if (IS_ERR(phy)) {
->>>>>> +             dev_err(&pdev->dev, "failed to create PHY\n");
->>>>>> +             return PTR_ERR(phy);
->>>>>> +     }
->>>>>> +
->>>>>> +     if (usb_reset_refcnt++ == 0) {
->>>>>> +             ret = device_reset(&pdev->dev);
->>>>>> +             if (ret) {
->>>>>> +                     dev_err(&phy->dev, "Failed to reset USB PHY\n");
->>>>>> +                     return ret;
->>>>>> +             }
->>>>>> +     }
->>>>>
->>>>>
->>>>> The ref count + reset here looks like something that could/should be
->>>>> handled in a runtime PM callback.
->>>>
->>>> Unfortunately that doesn't work (as Jerome found out) because both
->>>> PHYs are sharing the same reset line.
->>>> So if the second PHY would call device_reset then it would also reset
->>>> the first PHY!
->>>>
->>>> There's a comment above the declaration of usb_reset_refcnt which
->>>> tries to explain this:
->>>> "The PHYs are sharing a common reset line -> we are only allowed to
->>>> reset once for all PHYs."
->>>> Maybe I should move this comment to the "if (usb_reset_refcnt++ == 0)
->>>> {" line to make it easier to see?
->>>>
->>>
->>> pm-runtime has refcounting in it. When one of the nodes turns on,
->>> the pm-runtime will call your driver to say there is a user when
->>> this first use turns up.
->>>
->>> If all the sub-phys turn off and drop their refcount then the driver
->>> is called to say there are no more users and you can go to sleep.
->>
->>
->> After a chat w/Martin on IRC, It turns out runtime PM wont help here.
->>
->> The reason is because there are physically two PHY devices[1].  Those 2
->> devices will be treated independely by runtime PM, and have separate
->> use-counting, which means doing what I proposed would cause a reset to
->> happen when either device was probed.
->>
->> So, I think it's OK as it is.
->
->
-> Surely you can do pm_runtime_get/put on the phy's parent platform
-> device and do it that way?
-could you please be more specific with that (do you mean pdev->dev.parent)?
-so we would use pm_runtime_{get_sync,put} with the parent, while we
-would still define the runtime_resume in our driver.
+* Marcin Niestroj <m.niestroj@grinn-global.com> [160908 02:59]:
+> Add support for handling IRQs: power button, AC and USB power state
+> changes. Mask and interrupt bits are shared within one register, which
+> prevents us to use regmap_irq implementation. New irq_domain is created in
+> order to add interrupt handling for each tps65217's subsystem. IRQ
+> resources have been added for charger subsystem to be able to notify about
+> AC and USB state changes.
+> 
+> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
 
-I'd be happy if that works and we can remove that refcounting hack
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gave this a try with the peripheral USB port on BeagleBone black,
+works fine for me to detect cable events. Will post the musb dsps
+related patches after some clean up in few days. Anyways, feel
+free to add:
+
+Tested-by: Tony Lindgren <tony@atomide.com>
