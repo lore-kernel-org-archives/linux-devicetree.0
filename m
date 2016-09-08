@@ -1,75 +1,83 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: Re: [PATCH v3 2/8] syscon: dt-bindings: Add documentation for
- Aspeed system control units
-Date: Thu, 08 Sep 2016 10:33:01 +0930
-Message-ID: <1473296581.10397.6.camel@aj.id.au>
-References: <20160830075427.11493-1-andrew@aj.id.au>
-         <20160830075427.11493-3-andrew@aj.id.au>
-         <CACRpkdYa5pwQ1zW6BGO429WTOG_y0DPMCVGjpViQc9k5m2_yyA@mail.gmail.com>
-         <20160907163046.GD4921@dell>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 03/22] usb: ulpi: Support device discovery via DT
+Date: Wed, 7 Sep 2016 20:12:32 -0500
+Message-ID: <CAL_JsqJbk2TGmASK974hO0n+Y3DmB3tbggbd9wXCNa9Ug9QdDg@mail.gmail.com>
+References: <20160907213519.27340-1-stephen.boyd@linaro.org> <20160907213519.27340-4-stephen.boyd@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-Vtrs5oezF7pzVhCmVJMJ"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160907163046.GD4921@dell>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Joel Stanley <joel@jms.id.au>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160907213519.27340-4-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Sep 7, 2016 at 4:35 PM, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> The qcom HSIC ULPI phy doesn't have any bits set in the vendor or
+> product ID registers. This makes it impossible to make a ULPI
+> driver match against the ID registers. Add support to discover
+> the ULPI phys via DT help alleviate this problem. In the DT case,
+> we'll look for a ULPI bus node underneath the device registering
+> the ULPI viewport (or the parent of that device to support
+> chipidea's device layout) and then match up the phy node
+> underneath that with the ULPI device that's created.
+>
+> The side benefit of this is that we can use standard properties
+> in the phy node like clks, regulators, gpios, etc. because we
+> don't have firmware like ACPI to turn these things on for us. And
+> we can use the DT phy binding to point our phy consumer to the
+> phy provider.
+>
+> The ULPI bus code supports native enumeration by reading the
+> vendor ID and product ID registers at device creation time, but
+> we can't be certain that those register reads will succeed if the
+> phy is not powered up. To avoid any problems with reading the ID
+> registers before the phy is powered we fallback to DT matching
+> when the ID reads fail.
+>
+> If the ULPI spec had some generic power sequencing for these
+> registers we could put that into the ULPI bus layer and power up
+> the device before reading the ID registers. Unfortunately this
+> doesn't exist and the power sequence is usually device specific.
+> By having the device matched up with DT we can avoid this
+> problem.
+>
+> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> Cc: Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/ulpi.txt | 20 +++++++
+>  drivers/usb/common/ulpi.c                      | 77 ++++++++++++++++++++++++--
+>  2 files changed, 92 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ulpi.txt
 
---=-Vtrs5oezF7pzVhCmVJMJ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-On Wed, 2016-09-07 at 17:30 +0100, Lee Jones wrote:
-> On Wed, 07 Sep 2016, Linus Walleij wrote:
->=20
-> >=20
-> > On Tue, Aug 30, 2016 at 9:54 AM, Andrew Jeffery <andrew@aj.id.au> wrote=
-:
-> >=20
-> > >=20
-> > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > > Acked-by: Rob Herring <robh@kernel.org>
-> > > Acked-by: Joel Stanley <joel@jms.id.au>
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> >=20
-> > I guess the MFD maintainer (Lee Jones) should merge this?
-> >=20
-> > Why is he not on CC?
-> Thanks Linus.
->=20
-> Yes, please resend, so I can take it in.
->=20
+But one concern below.
 
-Will do.
+> -static int ulpi_register(struct device *dev, struct ulpi *ulpi)
+> +static int ulpi_of_register(struct ulpi *ulpi)
+> +{
+> +       struct device_node *np = NULL, *child;
+> +
+> +       /* Find a ulpi bus underneath the parent or the parent of the parent */
 
-Cheers,
+parent of the parent is called the grandparent.
 
-Andrew
---=-Vtrs5oezF7pzVhCmVJMJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+> +       if (ulpi->dev.parent->of_node)
+> +               np = of_find_node_by_name(ulpi->dev.parent->of_node, "ulpi");
+> +       else if (ulpi->dev.parent->parent && ulpi->dev.parent->parent->of_node)
+> +               np = of_find_node_by_name(ulpi->dev.parent->parent->of_node,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+First setting "parent = ulpi->dev.parent" would make this a bit easier
+on the eyes.
 
-iQIcBAABCgAGBQJX0LjFAAoJEJ0dnzgO5LT5VRMQAIzjJG2ZeK2Ht9bFWUaRpQAU
-tWEwy8ip8gyO5KEMBHs+iDiWHsa/dZdTgSBhuZCFoCFg+ImBaGaAYjwW3uzLnbgx
-Dmca9luAeZnvhU2U0g5vmMEopnILdyvHKSFQ67innsmP0bA4msxaTTPFHI60NVzr
-78xirZziHLKxeR9C5Geu0BGdKICV5ArayeOwijbInDy7cpNVvigAp2qRwWsG75dP
-8CpC5VzyqkUf68VA2aHEsWM7UeU5p9MIVZ11xYRFQhwboWiuDYY/k+xu3jIDZkAQ
-NFyT5TaqX2kxp4qG20JKcqfe13RDIUelEFbXu7faroNLIwPhepyaXZjr7CnIjw7J
-eec4VD0617qezFFH8isEi4vzNOfZugtyfNX41gZkm2sfI/4/frOkTITsA4nZjPqe
-ijM9lLQHZksisfAKKYpqUNvKSTEmq3ewU/Ke0o7986G/USX89fAR3Qt38T8sp8q1
-+k4sBz4GrSKOQ823l5jIZWOg1P3glKCgIJhQDdAOHJMRi32Frgkiao7xH/D43L98
-+ZlGNPKfb8NpzVuQkqCmDvoHJWb8KMp+Co/s8x9L8x4A8WH/WpY3zTi7JtAwMtlb
-4NVMvg1lhBWpM97kY0I1PAdunw2ZL1X1m8fYWpEQ2Xxmg/tehes5imxtkVWn7GSJ
-OZHrphMMmr+Ebx0y1nAC
-=DQYd
------END PGP SIGNATURE-----
+When is it valid to be the grandparent? The binding doesn't mention that.
 
---=-Vtrs5oezF7pzVhCmVJMJ--
-
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
