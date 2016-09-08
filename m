@@ -1,211 +1,71 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 0/5] Add MT8173 MDP Driver
-Date: Thu, 8 Sep 2016 08:49:17 +0200
-Message-ID: <ecea3371-8f37-ade5-dc57-a0016fe17a32@xs4all.nl>
-References: <1472559944-55114-1-git-send-email-minghsiu.tsai@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1472559944-55114-1-git-send-email-minghsiu.tsai@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
-Cc: srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org
+From: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 1/2] Documentation: mmc: sdhci-of-arasan: add description of power domain
+Date: Thu,  8 Sep 2016 14:49:04 +0800
+Message-ID: <20160908064905.18080-2-xzy.xu@rock-chips.com>
+References: <20160908064905.18080-1-xzy.xu@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160908064905.18080-1-xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-FYI: I'm missing a MAINTAINERS entry for this driver.
+Add power domain as a optional property for sdhci-of-arasan, which can
+be truned off in the so-called unused condition, such as suspend and
+remove. Aim to lower power requirements.
 
-Please add one when you post v6.
+Signed-off-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Thanks!
+---
 
-	Hans
+Changes in v2:
+- fix a typo
+- add an example code for power-domain
 
-On 08/30/2016 02:25 PM, Minghsiu Tsai wrote:
-> Changes in v5:
-> - Add ack in the comment of dts patch 
-> - Fix s/g_selection()
-> - Separate format V4L2_PIX_FMT_MT21C into new patch  
-> 
-> Changes in v4:
-> - Add "depends on HAS_DMA" in Kconfig.
-> - Fix s/g_selection()
-> - Replace struct v4l2_crop with u32 and struct v4l2_rect
-> - Remove VB2_USERPTR
-> - Move mutex lock after ctx allocation in mtk_mdp_m2m_open()
-> - Add new format V4L2_PIX_FMT_YVU420 to support software on Android platform.
-> - Only width/height of image in format V4L2_PIX_FMT_MT21 is aligned to 16/16,
->   other ones are aligned to 2/2 by default
-> 
-> Changes in v3:
-> - Modify device ndoe as structured one.
-> - Fix conflict in dts on Linux 4.8-rc1
-> 
-> Changes in v2:
-> - Add section to describe blocks function in dts-bindings
-> - Remove the assignment of device_caps in querycap()
-> - Remove format's name assignment
-> - Copy colorspace-related parameters from OUTPUT to CAPTURE
-> - Use m2m helper functions
-> - Fix DMA allocation failure
-> - Initialize lazily vpu instance in streamon()
-> 
-> ==============
->  Introduction
-> ==============
-> 
-> The purpose of this series is to add the driver for Media Data Path HW embedded in the Mediatek's MT8173 SoC.
-> MDP is used for scaling and color space conversion.
-> 
-> It could convert V4L2_PIX_FMT_MT21 to V4L2_PIX_FMT_NV12M or V4L2_PIX_FMT_YUV420M.
-> 
-> NV12M/YUV420M/MT21 -> MDP -> NV12M/YUV420M
-> 
-> This patch series rely on MTK VPU driver in patch series "Add MT8173 Video Encoder Driver and VPU Driver"[1] and "Add MT8173 Video Decoder Driver"[2].
-> MDP driver rely on VPU driver to load, communicate with VPU.
-> 
-> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI both have been merged in v4.6-rc1.
-> 
-> [1]https://patchwork.kernel.org/patch/9002171/
-> [2]https://patchwork.kernel.org/patch/9141245/
-> 
-> ==================
->  Device interface
-> ==================
-> 
-> In principle the driver bases on v4l2 memory-to-memory framework:
-> it provides a single video node and each opened file handle gets its own private context with separate buffer queues. Each context consist of 2 buffer queues: OUTPUT (for source buffers) and CAPTURE (for destination buffers).
-> OUTPUT and CAPTURE buffer could be MMAP or DMABUF memory type.
-> 
-> v4l2-compliance test output:
-> # v4l2-compliance -d /dev/image-proc0
-> v4l2-compliance SHA   : a737a6161485fffb70bf51e4fd7f6e2d910174c1
-> 
-> Driver Info:
->         Driver name   : mtk-mdp
->         Card type     : soc:mdp
->         Bus info      : platform:mt8173
->         Driver version: 4.8.0
->         Capabilities  : 0x84204000
->                 Video Memory-to-Memory Multiplanar
->                 Streaming
->                 Extended Pix Format
->                 Device Capabilities
->         Device Caps   : 0x04204000
->                 Video Memory-to-Memory Multiplanar
->                 Streaming
->                 Extended Pix Format
-> 
-> Compliance test for device /dev/image-proc0 (not using libv4l2):
-> 
-> Required ioctls:
->         test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
->         test second video open: OK
->         test VIDIOC_QUERYCAP: OK
->         test VIDIOC_G/S_PRIORITY: OK
->         test for unlimited opens: OK
-> 
-> Debug ioctls:
->         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->         test VIDIOC_LOG_STATUS: OK (Not Supported)
-> 
-> Input ioctls:
->         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->         Inputs: 0 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
->         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->         Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->         test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
->         Control ioctls:
->                 test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
->                 test VIDIOC_QUERYCTRL: OK
->                 test VIDIOC_G/S_CTRL: OK
->                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
->                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->                 Standard Controls: 5 Private Controls: 0
-> 
->         Format ioctls:
->                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->                 test VIDIOC_G/S_PARM: OK (Not Supported)
->                 test VIDIOC_G_FBUF: OK (Not Supported)
->                 test VIDIOC_G_FMT: OK
->                 test VIDIOC_TRY_FMT: OK
->                 test VIDIOC_S_FMT: OK
->                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->                 test Cropping: OK
->                 test Composing: OK
->                 test Scaling: OK
-> 
->         Codec ioctls:
->                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
->         Buffer ioctls:
->                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->                 test VIDIOC_EXPBUF: OK
-> 
-> Test input 0:
-> 
-> 
-> Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
-> 
-> 
-> Minghsiu Tsai (5):
->   VPU: mediatek: Add mdp support
->   dt-bindings: Add a binding for Mediatek MDP
->   media: Add Mediatek MDP Driver
->   arm64: dts: mediatek: Add MDP for MT8173
->   media: mtk-mdp: support pixelformat V4L2_PIX_FMT_MT21C
-> 
->  .../devicetree/bindings/media/mediatek-mdp.txt     |  109 ++
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   84 ++
->  drivers/media/platform/Kconfig                     |   17 +
->  drivers/media/platform/Makefile                    |    2 +
->  drivers/media/platform/mtk-mdp/Makefile            |    9 +
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c      |  159 +++
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.h      |   72 ++
->  drivers/media/platform/mtk-mdp/mtk_mdp_core.c      |  294 +++++
->  drivers/media/platform/mtk-mdp/mtk_mdp_core.h      |  260 ++++
->  drivers/media/platform/mtk-mdp/mtk_mdp_ipi.h       |  126 ++
->  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c       | 1278 ++++++++++++++++++++
->  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.h       |   22 +
->  drivers/media/platform/mtk-mdp/mtk_mdp_regs.c      |  156 +++
->  drivers/media/platform/mtk-mdp/mtk_mdp_regs.h      |   31 +
->  drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c       |  145 +++
->  drivers/media/platform/mtk-mdp/mtk_mdp_vpu.h       |   41 +
->  drivers/media/platform/mtk-vpu/mtk_vpu.h           |    5 +
->  17 files changed, 2810 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mdp.txt
->  create mode 100644 drivers/media/platform/mtk-mdp/Makefile
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_core.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_core.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_ipi.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_m2m.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_regs.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_regs.h
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_vpu.c
->  create mode 100644 drivers/media/platform/mtk-mdp/mtk_mdp_vpu.h
-> 
+ Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+index 3404afa..eb84d29 100644
+--- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
++++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+@@ -1,12 +1,14 @@
+ Device Tree Bindings for the Arasan SDHCI Controller
+ 
+-  The bindings follow the mmc[1], clock[2], interrupt[3] and phy[4] bindings.
++  The bindings follow the mmc[1], clock[2], interrupt[3], phy[4] and power
++  domain[5] bindings.
+   Only deviations are documented here.
+ 
+   [1] Documentation/devicetree/bindings/mmc/mmc.txt
+   [2] Documentation/devicetree/bindings/clock/clock-bindings.txt
+   [3] Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+   [4] Documentation/devicetree/bindings/phy/phy-bindings.txt
++  [5] Documentation/devicetree/bindings/power/power_domain.txt
+ 
+ Required Properties:
+   - compatible: Compatibility string.  One of:
+@@ -36,6 +38,8 @@ Optional Properties:
+   - #clock-cells: If specified this should be the value <0>.  With this property
+     in place we will export a clock representing the Card Clock.  This clock
+     is expected to be consumed by our PHY.  You must also specify
++  - power-domains: A phandle and PM domain as specifier defined by bindings
++    of the power controller specified by phandle.
+ 
+ Example:
+ 	sdhci@e0100000 {
+@@ -71,5 +75,6 @@ Example:
+ 		phys = <&emmc_phy>;
+ 		phy-names = "phy_arasan";
+ 		#clock-cells = <0>;
++		power-domains = <&power RK3399_PD_EMMC>;
+ 		status = "disabled";
+ 	};
+-- 
+2.9.2
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
