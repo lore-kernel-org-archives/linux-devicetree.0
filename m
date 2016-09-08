@@ -1,284 +1,105 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v4 2/9] drivers: irqchip: Add STM32 external interrupts
- support
-Date: Thu, 8 Sep 2016 11:03:11 +0200
-Message-ID: <550daf4a-0093-0b54-a305-eddd3882d993@st.com>
-References: <1473180341-1999-1-git-send-email-alexandre.torgue@st.com>
- <1473180341-1999-3-git-send-email-alexandre.torgue@st.com>
- <20160906173737.GU10637@io.lakedaemon.net>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] soc: ti: Add ti_sci_pm_domains driver
+Date: Thu, 8 Sep 2016 11:18:08 +0200
+Message-ID: <CAPDyKFrjJYMX_+JT_L8hO75hDnKm+LYuQY6rGTDO02s2Z5vcOw@mail.gmail.com>
+References: <20160819235653.26355-1-nm@ti.com> <20160819235653.26355-4-nm@ti.com>
+ <CAPDyKFooDUOPT9dP8HaW3YBO9PsX-1+96PPE7CRMyjEkra7cBQ@mail.gmail.com>
+ <57C0D2C9.1030801@ti.com> <57C5E1DA.2040405@ti.com> <CAPDyKFqszM48nXnnA9D8iCp34k-ZmNvOkHPCc=Fya4nJA7PvBQ@mail.gmail.com>
+ <57CF26DB.4020807@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160906173737.GU10637@io.lakedaemon.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57CF26DB.4020807-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
-
-On 09/06/2016 07:37 PM, Jason Cooper wrote:
-> On Tue, Sep 06, 2016 at 06:45:34PM +0200, Alexandre TORGUE wrote:
->> The STM32 external interrupt controller consists of edge detectors that
->> generate interrupts requests or wake-up events.
+>
+>> Here are some ideas which could be used to solve the problem differently.
 >>
->> Each line can be independently configured as interrupt or wake-up source,
->> and triggers either on rising, falling or both edges. Each line can also
->> be masked independently.
+>> *)
+>> Assuming each platform device has a driver for it!?
+>> Then why don't you implement the ->runtime_suspend|resume() callbacks
+>> on the driver level and call the SCI interface to power on/off the
+>> device from there? This ought to be the most straight forward
+>> solution.
+>
+>
+> Straightforward yes but not a realistic option as we are using shared
+> drivers from other platforms so sticking in platform specific code won't
+> work.
+
+Agree, but...
+
+Historically, I think this was *one* of the reasons to why omap's
+hw_mod PM domain was invented.
+At that point we did not have the common clk framework, the pinctrl
+framework, the phy framework, syscon, etc. These device resources can
+now be handled by the drivers themselves via generic interfaces and
+thus they remains to be portable.
+
+My point is, let's be sure you don't drop this approach unless it's
+really SoC specific code needed to deal with the device.
+
+>
 >>
->> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 >>
->> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
->> index 7f87289..bc62d1f 100644
->> --- a/drivers/irqchip/Kconfig
->> +++ b/drivers/irqchip/Kconfig
->> @@ -264,3 +264,7 @@ config EZNPS_GIC
->>  	select IRQ_DOMAIN
->>  	help
->>  	  Support the EZchip NPS400 global interrupt controller
->> +
->> +config STM32_EXTI
->> +	bool
->> +	select IRQ_DOMAIN
->> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
->> index 4c203b6..96383b2 100644
->> --- a/drivers/irqchip/Makefile
->> +++ b/drivers/irqchip/Makefile
->> @@ -71,3 +71,4 @@ obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
->>  obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
->>  obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
->>  obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o
->> +obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
->> diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
->> new file mode 100644
->> index 0000000..763c17c
->> --- /dev/null
->> +++ b/drivers/irqchip/irq-stm32-exti.c
->> @@ -0,0 +1,203 @@
->> +/*
->> + * Copyright (C) Maxime Coquelin 2015
->> + * Author:  Maxime Coquelin <mcoquelin.stm32@gmail.com>
->> + * License terms:  GNU General Public License (GPL), version 2
->> + */
->> +
->> +#include <linux/bitops.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/io.h>
->> +#include <linux/irq.h>
->> +#include <linux/irqchip.h>
->> +#include <linux/irqchip/chained_irq.h>
->> +#include <linux/irqchip/chained_irq.h>
->
-> double paste?
-> double paste?
->
-> If there are no other critiques, I'll fix this up when I pull in patches
-> 1 and 2.
->
-Yes bad copy/paste. I have to send a v5 with Linus (W) remarks. So I 
-will fix it in the v5.
-
-Thanks
-
-Alex
-
-
-> thx,
->
-> Jason.
->
->> +#include <linux/irqdomain.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_irq.h>
->> +
->> +#define EXTI_IMR	0x0
->> +#define EXTI_EMR	0x4
->> +#define EXTI_RTSR	0x8
->> +#define EXTI_FTSR	0xc
->> +#define EXTI_SWIER	0x10
->> +#define EXTI_PR		0x14
->> +
->> +static void stm32_irq_handler(struct irq_desc *desc)
->> +{
->> +	struct irq_domain *domain = irq_desc_get_handler_data(desc);
->> +	struct irq_chip_generic *gc = domain->gc->gc[0];
->> +	struct irq_chip *chip = irq_desc_get_chip(desc);
->> +	unsigned long pending;
->> +	int n;
->> +
->> +	chained_irq_enter(chip, desc);
->> +
->> +	while ((pending = irq_reg_readl(gc, EXTI_PR))) {
->> +		for_each_set_bit(n, &pending, BITS_PER_LONG) {
->> +			generic_handle_irq(irq_find_mapping(domain, n));
->> +			irq_reg_writel(gc, BIT(n), EXTI_PR);
->> +		}
->> +	}
->> +
->> +	chained_irq_exit(chip, desc);
->> +}
->> +
->> +static int stm32_irq_set_type(struct irq_data *data, unsigned int type)
->> +{
->> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
->> +	int pin = data->hwirq;
->> +	u32 rtsr, ftsr;
->> +
->> +	irq_gc_lock(gc);
->> +
->> +	rtsr = irq_reg_readl(gc, EXTI_RTSR);
->> +	ftsr = irq_reg_readl(gc, EXTI_FTSR);
->> +
->> +	switch (type) {
->> +	case IRQ_TYPE_EDGE_RISING:
->> +		rtsr |= BIT(pin);
->> +		ftsr &= ~BIT(pin);
->> +		break;
->> +	case IRQ_TYPE_EDGE_FALLING:
->> +		rtsr &= ~BIT(pin);
->> +		ftsr |= BIT(pin);
->> +		break;
->> +	case IRQ_TYPE_EDGE_BOTH:
->> +		rtsr |= BIT(pin);
->> +		ftsr |= BIT(pin);
->> +		break;
->> +	default:
->> +		irq_gc_unlock(gc);
->> +		return -EINVAL;
->> +	}
->> +
->> +	irq_reg_writel(gc, rtsr, EXTI_RTSR);
->> +	irq_reg_writel(gc, ftsr, EXTI_FTSR);
->> +
->> +	irq_gc_unlock(gc);
->> +
->> +	return 0;
->> +}
->> +
->> +static int stm32_irq_set_wake(struct irq_data *data, unsigned int on)
->> +{
->> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
->> +	int pin = data->hwirq;
->> +	u32 emr;
->> +
->> +	irq_gc_lock(gc);
->> +
->> +	emr = irq_reg_readl(gc, EXTI_EMR);
->> +	if (on)
->> +		emr |= BIT(pin);
->> +	else
->> +		emr &= ~BIT(pin);
->> +	irq_reg_writel(gc, emr, EXTI_EMR);
->> +
->> +	irq_gc_unlock(gc);
->> +
->> +	return 0;
->> +}
->> +
->> +static int stm32_exti_alloc(struct irq_domain *d, unsigned int virq,
->> +			    unsigned int nr_irqs, void *data)
->> +{
->> +	struct irq_chip_generic *gc = d->gc->gc[0];
->> +	struct irq_fwspec *fwspec = data;
->> +	irq_hw_number_t hwirq;
->> +
->> +	hwirq = fwspec->param[0];
->> +
->> +	irq_map_generic_chip(d, virq, hwirq);
->> +	irq_domain_set_info(d, virq, hwirq, &gc->chip_types->chip, gc,
->> +			    handle_simple_irq, NULL, NULL);
->> +
->> +	return 0;
->> +}
->> +
->> +static void stm32_exti_free(struct irq_domain *d, unsigned int virq,
->> +			    unsigned int nr_irqs)
->> +{
->> +	struct irq_data *data = irq_get_irq_data(virq);
->> +
->> +	irq_gc_mask_clr_bit(data->parent_data);
->> +	irq_domain_reset_irq_data(data);
->> +}
->> +
->> +struct irq_domain_ops irq_exti_domain_ops = {
->> +	.map	= irq_map_generic_chip,
->> +	.xlate	= irq_domain_xlate_onetwocell,
->> +	.alloc  = stm32_exti_alloc,
->> +	.free	= stm32_exti_free,
->> +};
->> +
->> +static int __init stm32_exti_init(struct device_node *node,
->> +				  struct device_node *parent)
->> +{
->> +	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
->> +	int nr_irqs, nr_exti, ret, i;
->> +	struct irq_chip_generic *gc;
->> +	struct irq_domain *domain;
->> +	void *base;
->> +
->> +	base = of_iomap(node, 0);
->> +	if (!base) {
->> +		pr_err("%s: Unable to map registers\n", node->full_name);
->> +		return -ENOMEM;
->> +	}
->> +
->> +	/* Determine number of irqs supported */
->> +	writel_relaxed(~0UL, base + EXTI_RTSR);
->> +	nr_exti = fls(readl_relaxed(base + EXTI_RTSR));
->> +	writel_relaxed(0, base + EXTI_RTSR);
->> +
->> +	pr_info("%s: %d External IRQs detected\n", node->full_name, nr_exti);
->> +
->> +	domain = irq_domain_add_linear(node, nr_exti,
->> +				       &irq_exti_domain_ops, NULL);
->> +	if (!domain) {
->> +		pr_err("%s: Could not register interrupt domain.\n",
->> +				node->name);
->> +		ret = -ENOMEM;
->> +		goto out_unmap;
->> +	}
->> +
->> +	ret = irq_alloc_domain_generic_chips(domain, nr_exti, 1, "exti",
->> +					     handle_edge_irq, clr, 0, 0);
->> +	if (ret) {
->> +		pr_err("%s: Could not allocate generic interrupt chip.\n",
->> +			node->full_name);
->> +		goto out_free_domain;
->> +	}
->> +
->> +	gc = domain->gc->gc[0];
->> +	gc->reg_base                         = base;
->> +	gc->chip_types->type               = IRQ_TYPE_EDGE_BOTH;
->> +	gc->chip_types->chip.name          = gc->chip_types[0].chip.name;
->> +	gc->chip_types->chip.irq_ack       = irq_gc_ack_set_bit;
->> +	gc->chip_types->chip.irq_mask      = irq_gc_mask_clr_bit;
->> +	gc->chip_types->chip.irq_unmask    = irq_gc_mask_set_bit;
->> +	gc->chip_types->chip.irq_set_type  = stm32_irq_set_type;
->> +	gc->chip_types->chip.irq_set_wake  = stm32_irq_set_wake;
->> +	gc->chip_types->regs.ack           = EXTI_PR;
->> +	gc->chip_types->regs.mask          = EXTI_IMR;
->> +	gc->chip_types->handler            = handle_edge_irq;
->> +
->> +	nr_irqs = of_irq_count(node);
->> +	for (i = 0; i < nr_irqs; i++) {
->> +		unsigned int irq = irq_of_parse_and_map(node, i);
->> +
->> +		irq_set_handler_data(irq, domain);
->> +		irq_set_chained_handler(irq, stm32_irq_handler);
->> +	}
->> +
->> +	return 0;
->> +
->> +out_free_domain:
->> +	irq_domain_remove(domain);
->> +out_unmap:
->> +	iounmap(base);
->> +	return ret;
->> +}
->> +
->> +IRQCHIP_DECLARE(stm32_exti, "st,stm32-exti", stm32_exti_init);
->> --
->> 1.9.1
+>> **)
+>> You may also use genpd's (struct generic_pm_domain)
+>> ->attach|detach_dev() callbacks to create the device specific data
+>> (the SCI device ID). The ->attach_dev() callback are invoked when a
+>> device gets attached to its PM domain (genpd) at probe time.
 >>
+>> Currently these callbacks are already being used by SoCs that uses the
+>> PM clk API from a genpd client. That is needed to create the device
+>> specific PM clock list. We would have to do something similar here for
+>> the SCI device IDs.
+>>
+>> Then, you must also assign/implement the ->start() and ->stop()
+>> callbacks of the struct gpd_dev_ops, which is a part of the genpd
+>> struct. These callbacks can then easily invoke SoC specific code/APIs
+>> and perhaps that is the issue with my first suggested approach!?
+>
+>
+> I've taken a look at what you have suggested here and I think it could work
+> for us, thanks for the suggestion, I will give it a shot, I think that this
+> will work just as well from a functional perspective.
+
+Okay, great!
+
+>
+>>
+>>>
+>>> Based on the ID set provided in patch 2 of this series I see 12 gaps, so
+>>> we'd be wasting space the size of 12 genpds. The ID mapping will change
+>>> on
+>>> future SoCs, so this number could be larger. Do you think this is an
+>>> acceptable solution? It allows us to play nice with the new genpd
+>>> framework
+>>> changes at the cost of wasting some space allocated to filler genpds.
+>>
+>>
+>> There are other issues as well, which mostly has do to with a
+>> unnecessary long execution path, involving taking mutexes etc in
+>> genpd.
+>>
+>> All you actually need, is to be able to power on/off a device from a
+>> driver's ->runtime_suspend|resume() callback. Don't you think?
+>
+>
+> Yes, but I thought the point of these frameworks was that they let us avoid
+> doing it manually with platform specific code inside the drivers. I'll look
+> at the callbacks in the genpd framework instead, that seems like a good
+> place to do it.
+
+BTW, as you would need to store your device specific data somewhere,
+we probably need to extend the struct pm_subsys_data or the "struct
+pm_domain_data", to hold a "void *data".
+
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
