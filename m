@@ -1,84 +1,54 @@
-From: "Sylvain Lemieux" <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: RE: [RESEND PATCH] ARM: dts: lpc32xx: set default parent clock for pwm1 & pwm2
-Date: Thu, 8 Sep 2016 13:31:48 -0400
-Message-ID: <010701d209f6$e205a030$a610e090$@gmail.com>
-References: <1473277073-12093-1-git-send-email-slemieux.tyco@gmail.com> <edf2ee45-7793-7564-9318-ee08909d0ff5@mleia.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 3/3] soc: ti: Add ti_sci_pm_domains driver
+Date: Thu, 08 Sep 2016 10:38:27 -0700
+Message-ID: <m2mvjinvfw.fsf@baylibre.com>
+References: <20160819235653.26355-1-nm@ti.com>
+        <20160819235653.26355-4-nm@ti.com>
+        <CAPDyKFooDUOPT9dP8HaW3YBO9PsX-1+96PPE7CRMyjEkra7cBQ@mail.gmail.com>
+        <57C0D2C9.1030801@ti.com> <57C5E1DA.2040405@ti.com>
+        <CAPDyKFqszM48nXnnA9D8iCp34k-ZmNvOkHPCc=Fya4nJA7PvBQ@mail.gmail.com>
+        <57CF26DB.4020807@ti.com> <7h4m5rv9kz.fsf@baylibre.com>
+        <CAPDyKFo0Cb90BbY7ra6VDjb5frC5=VtmE3V6tDK=VosfPmod7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <edf2ee45-7793-7564-9318-ee08909d0ff5-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Content-Language: en-ca
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Vladimir Zapolskiy' <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFo0Cb90BbY7ra6VDjb5frC5=VtmE3V6tDK=VosfPmod7Q@mail.gmail.com>
+        (Ulf Hansson's message of "Thu, 8 Sep 2016 11:27:52 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Dave Gerlach <d-gerlach@ti.com>, Nishanth Menon <nm@ti.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Keerthy <j-keerthy@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-09-08 at 02:46 +0300, Vladimir Zapolskiy wrote:
-> Hi Sylvain,
-> 
-> On 07.09.2016 22:37, Sylvain Lemieux wrote:
-> > From: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
-> >
-> > The change setup the peripheral clock (PERIPH_CLK) as the default
-> > parent clock for PWM1 & PWM2.
-> >
-> > Signed-off-by: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/lpc32xx.dtsi | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/lpc32xx.dtsi
-> > b/arch/arm/boot/dts/lpc32xx.dtsi index e295e1e..ed85b95 100644
-> > --- a/arch/arm/boot/dts/lpc32xx.dtsi
-> > +++ b/arch/arm/boot/dts/lpc32xx.dtsi
-> > @@ -469,6 +469,9 @@
-> >  				compatible = "nxp,lpc3220-pwm";
-> >  				reg = <0x4005C000 0x4>;
-> >  				clocks = <&clk LPC32XX_CLK_PWM1>;
-> > +				assigned-clocks = <&clk LPC32XX_CLK_PWM1>,
-> > +						  <&clk LPC32XX_CLK_PERIPH>;
-> 
-> I believe here "assigned-clocks = <&clk LPC32XX_CLK_PWM1>;" would be good
-> enough. In this context the second clock could be potentially specified,
-if you
-> are going to set its rate, but because it is a common clock for many
-controllers it
-> should not be done from a PWM device node.
-> 
-Good catch!
-Thanks for the feedback; I will submit a version 2 of the patch.
+Ulf Hansson <ulf.hansson@linaro.org> writes:
 
-> > +				assigned-clock-parents = <&clk
-> LPC32XX_CLK_PERIPH>;
-> >  				status = "disabled";
-> >  			};
-> >
-> > @@ -476,6 +479,9 @@
-> >  				compatible = "nxp,lpc3220-pwm";
-> >  				reg = <0x4005C004 0x4>;
-> >  				clocks = <&clk LPC32XX_CLK_PWM2>;
-> > +				assigned-clocks = <&clk LPC32XX_CLK_PWM2>,
-> > +						  <&clk LPC32XX_CLK_PERIPH>;
-> 
-> Same as above.
-> 
-> Please remove the second <&clk LPC32XX_CLK_PERIPH> value from the
-> assigned-clocks property.
-> 
-> > +				assigned-clock-parents = <&clk
-> LPC32XX_CLK_PERIPH>;
-> >  				status = "disabled";
-> >  			};
-> >
-> >
-> 
-> --
-> With best wishes,
-> Vladimir
+> [...]
+>
+>>
+>> One more idea...
+>>
+>> Since you don't really have a domain (a group of devices), what you
+>> really have is each device having an independent power switch, so as Ulf
+>> suggested, what you really need is for all the devices to share the same
+>> set of runtime PM callbacks that call SCI.  The only difference is the
+>> unique ID.
+>>
+>> Rather than using all of genpd, you could also just use a pm_domain
+>> which is what genpd is built on top of (and also omap_device, which
+>> you're probably familiar with also.)
+>
+> Even if this would work as well, the downside would be that you need
+> to re-invent the parts related to the DT parsing, the probing/removal
+> and attaching/detaching of the device to the PM domain.
+>
+> You probably don't want to go there... :-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+All you'd need to read from DT would be the device-specific ID for
+TI-SCI, and that could be done at bind time with a notifier.  The, in
+that same notifier, if a TI-SCI ID exists, it would get added to the
+pm_domain.
+
+Anyways, your original proposal is much preferred if it can work.  I'm
+just throwing out another option because I really don't like one genpd
+per device.
+
+Kevin
