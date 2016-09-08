@@ -1,74 +1,41 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] arm64: rockchip: fix i2c resource describe error of rk3368
-Date: Thu,  8 Sep 2016 19:03:43 +0800
-Message-ID: <1473332623-31951-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2 1/7] clocksource: exynos_mct: Add the support for ARM64
+Date: Thu, 8 Sep 2016 13:04:58 +0200
+Message-ID: <562e232f-7e69-6d54-e49d-36042d166800@linaro.org>
+References: <1472046551-703-1-git-send-email-cw00.choi@samsung.com>
+ <1472046551-703-2-git-send-email-cw00.choi@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1472046551-703-2-git-send-email-cw00.choi@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, k.kozlowski@samsung.com, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: inki.dae@samsung.com, jonghwa3.lee@samsung.com, s.nawrocki@samsung.com, jy0922.shim@samsung.com, jaewon02.kim@samsung.com, sw0312.kim@samsung.com, krzk@kernel.org, jh80.chung@samsung.com, a.hajda@samsung.com, human.hwang@samsung.com, chanwoo@kernel.org, ingi2.kim@samsung.com, m.szyprowski@samsung.com, Thomas Gleixner <tglx@linutronix.de>, beomho.seo@samsung.com, ideal.song@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-According to the TRM and downstream code from rockchip, the register
-address of i2c1 on rk3368 is 0xff660000 and i2c2 is 0xff140000.
-
-This patch fix the i2c1 & i2c2 register address definition error, also
-fix the clk and pinctrl reference error.
-
-Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
-
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index 0fcb214..2f8e19f 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -315,16 +315,16 @@
- 		status = "disabled";
- 	};
- 
--	i2c1: i2c@ff140000 {
-+	i2c2: i2c@ff140000 {
- 		compatible = "rockchip,rk3368-i2c", "rockchip,rk3288-i2c";
- 		reg = <0x0 0xff140000 0x0 0x1000>;
- 		interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		clock-names = "i2c";
--		clocks = <&cru PCLK_I2C1>;
-+		clocks = <&cru PCLK_I2C2>;
- 		pinctrl-names = "default";
--		pinctrl-0 = <&i2c1_xfer>;
-+		pinctrl-0 = <&i2c2_xfer>;
- 		status = "disabled";
- 	};
- 
-@@ -554,16 +554,16 @@
- 		status = "disabled";
- 	};
- 
--	i2c2: i2c@ff660000 {
-+	i2c1: i2c@ff660000 {
- 		compatible = "rockchip,rk3368-i2c", "rockchip,rk3288-i2c";
- 		reg = <0x0 0xff660000 0x0 0x1000>;
- 		interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		clock-names = "i2c";
--		clocks = <&cru PCLK_I2C2>;
-+		clocks = <&cru PCLK_I2C1>;
- 		pinctrl-names = "default";
--		pinctrl-0 = <&i2c2_xfer>;
-+		pinctrl-0 = <&i2c1_xfer>;
- 		status = "disabled";
- 	};
- 
--- 
-2.7.4
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjQvMDgvMjAxNiAxNTo0OSwgQ2hhbndvbyBDaG9pIHdyb3RlOgo+IFRoaXMgcGF0Y2ggYWRk
+cyB0aGUgc3VwcG9ydCBmb3IgQVJNIDY0Yml0LiBUaGUgZGVsYXlfdGltZXIgaXMgb25seSBzdXBw
+b3J0ZWQKPiBvbiBBUk0gMzJiaXQuCj4gCj4gQ2M6IERhbmllbCBMZXpjYW5vIDxkYW5pZWwubGV6
+Y2Fub0BsaW5hcm8ub3JnPgo+IENjOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5k
+ZT4KPiBDYzogS3VramluIEtpbSA8a2dlbmVAa2VybmVsLm9yZz4KPiBDYzogS3J6eXN6dG9mIEtv
+emxvd3NraSA8ay5rb3psb3dza2lAc2Ftc3VuZy5jb20+Cj4gU2lnbmVkLW9mZi1ieTogQ2hhbndv
+byBDaG9pIDxjdzAwLmNob2lAc2Ftc3VuZy5jb20+Cj4gLS0tCgpJIGRvbid0IHJlYWxseSBsaWtl
+ICNpZmRlZiBpbiB0aGUgY29kZSBpdHNlbGYgYnV0IEkgc3VwcG9zZSB0aGVyZSBpcyBubwptdWNo
+IGNob2ljZS4KCkFja2VkLWJ5OiBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJv
+Lm9yZz4KCgotLSAKIDxodHRwOi8vd3d3LmxpbmFyby5vcmcvPiBMaW5hcm8ub3JnIOKUgiBPcGVu
+IHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKCkZvbGxvdyBMaW5hcm86ICA8aHR0cDovL3d3
+dy5mYWNlYm9vay5jb20vcGFnZXMvTGluYXJvPiBGYWNlYm9vayB8CjxodHRwOi8vdHdpdHRlci5j
+b20vIyEvbGluYXJvb3JnPiBUd2l0dGVyIHwKPGh0dHA6Ly93d3cubGluYXJvLm9yZy9saW5hcm8t
+YmxvZy8+IEJsb2cKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
