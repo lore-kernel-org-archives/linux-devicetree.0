@@ -1,134 +1,43 @@
-From: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-Subject: [PATCH v6 4/6] arm64: dts: mediatek: Add MDP for MT8173
-Date: Thu, 8 Sep 2016 21:09:04 +0800
-Message-ID: <1473340146-6598-5-git-send-email-minghsiu.tsai@mediatek.com>
-References: <1473340146-6598-1-git-send-email-minghsiu.tsai@mediatek.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 5/7] [v2] arm64: dts: add LS1046A-RDB board support
+Date: Thu, 8 Sep 2016 21:12:18 +0800
+Message-ID: <20160908131218.GB16911@tiger>
+References: <1473069695-33092-1-git-send-email-shh.xie@gmail.com>
+ <1473069695-33092-6-git-send-email-shh.xie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1473340146-6598-1-git-send-email-minghsiu.tsai@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
-Cc: devicetree@vger.kernel.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1473069695-33092-6-git-send-email-shh.xie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shh.xie@gmail.com
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, arnd@arndb.de, Mingkai Hu <Mingkai.Hu@nxp.com>, Shaohui Xie <Shaohui.Xie@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add MDP node for MT8173
+On Mon, Sep 05, 2016 at 06:01:33PM +0800, shh.xie@gmail.com wrote:
+> +&ifc {
+> +	status = "okay";
 
-Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi |   84 ++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+For sake of consistency, please have 'status' at the end of property
+list.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 10f638f..cd93228 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -41,6 +41,14 @@
- 		dpi0 = &dpi0;
- 		dsi0 = &dsi0;
- 		dsi1 = &dsi1;
-+		mdp_rdma0 = &mdp_rdma0;
-+		mdp_rdma1 = &mdp_rdma1;
-+		mdp_rsz0 = &mdp_rsz0;
-+		mdp_rsz1 = &mdp_rsz1;
-+		mdp_rsz2 = &mdp_rsz2;
-+		mdp_wdma0 = &mdp_wdma0;
-+		mdp_wrot0 = &mdp_wrot0;
-+		mdp_wrot1 = &mdp_wrot1;
- 	};
- 
- 	cpus {
-@@ -716,6 +724,82 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		mdp {
-+			compatible = "mediatek,mt8173-mdp";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			mediatek,vpu = <&vpu>;
-+
-+			mdp_rdma0: rdma@14001000 {
-+				compatible = "mediatek,mt8173-mdp-rdma";
-+				reg = <0 0x14001000 0 0x1000>;
-+				clocks = <&mmsys CLK_MM_MDP_RDMA0>,
-+					 <&mmsys CLK_MM_MUTEX_32K>;
-+				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+				iommus = <&iommu M4U_PORT_MDP_RDMA0>;
-+				mediatek,larb = <&larb0>;
-+			};
-+
-+			mdp_rdma1: rdma@14002000 {
-+				compatible = "mediatek,mt8173-mdp-rdma";
-+				reg = <0 0x14002000 0 0x1000>;
-+				clocks = <&mmsys CLK_MM_MDP_RDMA1>,
-+					 <&mmsys CLK_MM_MUTEX_32K>;
-+				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+				iommus = <&iommu M4U_PORT_MDP_RDMA1>;
-+				mediatek,larb = <&larb4>;
-+			};
-+
-+			mdp_rsz0: rsz@14003000 {
-+				compatible = "mediatek,mt8173-mdp-rsz";
-+				reg = <0 0x14003000 0 0x1000>;
-+				clocks = <&mmsys CLK_MM_MDP_RSZ0>;
-+				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+			};
-+
-+			mdp_rsz1: rsz@14004000 {
-+				compatible = "mediatek,mt8173-mdp-rsz";
-+				reg = <0 0x14004000 0 0x1000>;
-+				clocks = <&mmsys CLK_MM_MDP_RSZ1>;
-+				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+			};
-+
-+			mdp_rsz2: rsz@14005000 {
-+				compatible = "mediatek,mt8173-mdp-rsz";
-+				reg = <0 0x14005000 0 0x1000>;
-+				clocks = <&mmsys CLK_MM_MDP_RSZ2>;
-+				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+			};
-+
-+			mdp_wdma0: wdma@14006000 {
-+				compatible = "mediatek,mt8173-mdp-wdma";
-+				reg = <0 0x14006000 0 0x1000>;
-+				clocks = <&mmsys CLK_MM_MDP_WDMA>;
-+				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+				iommus = <&iommu M4U_PORT_MDP_WDMA>;
-+				mediatek,larb = <&larb0>;
-+			};
-+
-+			mdp_wrot0: wrot@14007000 {
-+				compatible = "mediatek,mt8173-mdp-wrot";
-+				reg = <0 0x14007000 0 0x1000>;
-+				clocks = <&mmsys CLK_MM_MDP_WROT0>;
-+				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+				iommus = <&iommu M4U_PORT_MDP_WROT0>;
-+				mediatek,larb = <&larb0>;
-+			};
-+
-+			mdp_wrot1: wrot@14008000 {
-+				compatible = "mediatek,mt8173-mdp-wrot";
-+				reg = <0 0x14008000 0 0x1000>;
-+				clocks = <&mmsys CLK_MM_MDP_WROT1>;
-+				power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
-+				iommus = <&iommu M4U_PORT_MDP_WROT1>;
-+				mediatek,larb = <&larb4>;
-+			};
-+		};
-+
- 		ovl0: ovl@1400c000 {
- 			compatible = "mediatek,mt8173-disp-ovl";
- 			reg = <0 0x1400c000 0 0x1000>;
--- 
-1.7.9.5
+Shawn
+
+> +	#address-cells = <2>;
+> +	#size-cells = <1>;
+> +	/* NAND Flashe and CPLD on board */
+> +	ranges = <0x0 0x0 0x0 0x7e800000 0x00010000
+> +		  0x2 0x0 0x0 0x7fb00000 0x00000100>;
+> +
+> +	nand@0,0 {
+> +		compatible = "fsl,ifc-nand";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg = <0x0 0x0 0x10000>;
+> +	};
+> +
+> +	cpld: board-control@2,0 {
+> +		compatible = "fsl,ls1046ardb-cpld";
+> +		reg = <0x2 0x0 0x0000100>;
+> +	};
+> +};
