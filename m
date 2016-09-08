@@ -1,63 +1,123 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-binding: remoteproc: Document generic properties
-Date: Thu, 8 Sep 2016 11:50:32 -0500
-Message-ID: <20160908165032.GA9526@rob-hp-laptop>
-References: <1470850622-29816-1-git-send-email-bjorn.andersson@linaro.org>
- <20160812183448.GA32059@rob-hp-laptop>
- <20160812224223.GJ26240@tuxbot>
- <46d4d351-336c-6d4f-b1b0-243cf3c5d68b@ti.com>
+Subject: Re: [PATCH v1 3/3] PM / AVS: rockchip-cpu-avs: add driver handling
+ Rockchip cpu avs
+Date: Thu, 8 Sep 2016 11:56:23 -0500
+Message-ID: <20160908165623.GA12830@rob-hp-laptop>
+References: <1471315139-28285-1-git-send-email-finley.xiao@rock-chips.com>
+ <20160819133636.GA26913@rob-hp-laptop>
+ <c853c8fd-285a-603d-b294-750cdbf7f200@rock-chips.com>
+ <3008348.gWNc8j0KGA@diego>
+ <4eab5b34-58f8-30bb-1a2c-0b0d6b3e2b2c@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <46d4d351-336c-6d4f-b1b0-243cf3c5d68b-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <4eab5b34-58f8-30bb-1a2c-0b0d6b3e2b2c-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tim.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ulysses.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lin.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 02, 2016 at 04:45:45PM -0500, Suman Anna wrote:
-> On 08/12/2016 05:42 PM, Bjorn Andersson wrote:
-> > On Fri 12 Aug 11:34 PDT 2016, Rob Herring wrote:
-> > 
-> >> On Wed, Aug 10, 2016 at 10:37:02AM -0700, Bjorn Andersson wrote:
-> >>> This documents the generic properties "rprocs" and "rproc-names", used
-> >>> for consumer drivers to reference a remoteproc node.
-> >>
-> >> How do you intend to use this? I wonder if it would not be better to 
-> >> expose a remote proc with existing bindings for a particular purpose 
-> >> (e.g. clocks, resets, etc.) rather than a generic connection. The client 
-> >> side would have to have specific knowledge as to what functions the 
-> >> remote proc provides.
-> >>
-> > 
-> > The remoteproc node represents the mechanism and resources needed to
-> > control the life cycle a co-processor, e.g. loading, booting, shutting
-> > gown a video encoder/decoder.
-> > 
-> > The proposed reference allows a separate thingie to assert control of
-> > the life cycle of that co-processor.
-> > 
-> > 
-> > I acknowledge that in some cases there is a fine line between what is
-> > the life cycle management and what is the actual functionality
-> > implemented by that remote processor. But as the remoteproc mechanism is
-> > reusable between various use cases I think it makes sense to not describe
-> > them as one unit.
+On Tue, Aug 23, 2016 at 05:29:16PM +0800, Finley Xiao wrote:
 > 
-> What's the current state of this patch, not officially acked yet right?
+> 
+> 在 2016/8/23 17:03, Heiko Stübner 写道:
+> >Hi Finley,
+> >
+> >Am Dienstag, 23. August 2016, 12:10:27 schrieb Finley Xiao:
+> >>在 2016/8/19 21:36, Rob Herring 写道:
+> >>>On Tue, Aug 16, 2016 at 10:38:59AM +0800, Finlye Xiao wrote:
+> >>>>From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >>>>
+> >>>>This patch supports adjusting opp's voltage according to leakage
+> >>>>
+> >>>>Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >>>>---
+> >>>>
+> >>>>   .../devicetree/bindings/power/rockchip-cpu-avs.txt |  37 +++
+> >>>>   drivers/power/avs/Kconfig                          |   8 +
+> >>>>   drivers/power/avs/Makefile                         |   1 +
+> >>>>   drivers/power/avs/rockchip-cpu-avs.c               | 314
+> >>>>   +++++++++++++++++++++ 4 files changed, 360 insertions(+)
+> >>>>   create mode 100644
+> >>>>   Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt create
+> >>>>   mode 100644 drivers/power/avs/rockchip-cpu-avs.c
+> >>>>
+> >>>>diff --git a/Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt
+> >>>>b/Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt new file
+> >>>>mode 100644
+> >>>>index 0000000..90f6b08
+> >>>>--- /dev/null
+> >>>>+++ b/Documentation/devicetree/bindings/power/rockchip-cpu-avs.txt
+> >>>>@@ -0,0 +1,37 @@
+> >>>>+Rockchip cpu avs device tree bindings
+> >>>>+-------------------------------------
+> >>>>+
+> >>>>+Under the same frequency, the operating voltage tends to decrease with
+> >>>>+increasing leakage. so it is necessary to adjust opp's voltage according
+> >>>>+to leakage for power.
+> >>>>+
+> >>>>+
+> >>>>+Required properties:
+> >>>>+- compatible: Should be one of the following.
+> >>>>+  - "rockchip,rk3399-cpu-avs" - for RK3399 SoCs.
+> >>>>+- leakage-volt-<name>: Named leakage-volt property. At runtime, the
+> >>>>+  platform can find a cpu's cluster_id according to it's cpu_id and
+> >>>>match
+> >>>>+  leakage-volt-<name> property. The property is an array of 3-tuples
+> >>>>+  items, and each item consists of leakage and voltage like
+> >>>>+  <min-leakage-mA max-leakage-mA vol-uV>.
+> >>>>+	min-leakage: minimum leakage in mA.
+> >>>>+	max-leakage: maximum leakage in mA.
+> >>>>+	vol: voltage in microvolt.
+> >>>How do you determine these values? When do they vary?
+> >>How do you determine these values?
+> >>
+> >>run antutu-benchmark
+> >>leakage     freq 	min_volt
+> >>30mA 	    1608MHz 	1025mV
+> >>40mA 	    1608MHz 	1000mV
+> >>50mA 	    1608MHz 	975mV
+> >>
+> >>  From the table, we see the min_volt decrease with increasing leakage.
+> >>So we can set the default opp-microvolt 1025mV for 1608MHz,
+> >>and add an leakage_volt_cluster0 property as follows.
+> >>leakage_volt_cluster0 = <
+> >>		/*  min(mA)   max(mA)    volt(uV)*/
+> >>		    0         40        0
+> >>		    41        50        (-25000)
+> >>		    51        254       (-50000)
+> >>
+> >>>;
+> >>If the leakage is between 41mA and 50mA，the opp-microvolt will subtract
+> >>25mV。 If the leakage is between 41mA and 50mA，the opp-microvolt will
+> >>subtract 50mV。
+> >>
+> >>When do they vary?
+> >>
+> >>  From the code,
+> >>cpufreq_online
+> >>--cpufreq_driver->init(policy);  /* add new opp table */
+> >>--blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
+> >>CPUFREQ_START, policy);
+> >>--cpufreq_init_policy
+> >>----cpufreq_set_policy
+> >>--------__cpufreq_governor(policy, CPUFREQ_GOV_START);
+> >>
+> >>The cpu's opp table is added in the init function(cpufreq_init)，and I will
+> >>register a cpufreq notifier, once the first cpu of cluster is onlined,
+> >>my notifer will be called, and if the event is CPUFREQ_START，it will modify
+> >>the opp-microvolt according to leakage_volt_cluster0.
+> >I think what Rob was asking with "when do they vary" is, are these leakage
+> >values the same for each and every rk3399 soc or are they determined
+> >separately for each board-type using the rk3399.
+> 
+> Oh, sorry, I misunderstood.
+> They are the same for every rk3399 soc.
 
-Bjorn and I have discussed some, but probably needs more discussion. 
-This binding alone is simple enough, but I want to understand better how 
-it will be used and digesting all the QCom h/w is not simple.
-
-> While we are at this, can we agree upon an alias stem name as well, we
-> can stick to "rproc". Otherwise, I can submit an incremental patch on
-> top of this along with the code that adds an API to retrieve it for
-> client users.
-
-Any alias for this will be NAKed. My position on aliases is well 
-documented.
+Then I think the values should go in the kernel at least until we define 
+a common way to handle this.
 
 Rob
 --
