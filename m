@@ -1,75 +1,120 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] ARM: dts: imx: add gpio-ranges properties to some
- iMX GPIO controllers
-Date: Thu, 8 Sep 2016 17:44:00 +0300
-Message-ID: <cc71f4aa-f0ad-83a4-52b1-4d745af234a8@mentor.com>
-References: <1471723491-15330-1-git-send-email-vladimir_zapolskiy@mentor.com>
- <a97478e5-e423-2c9b-de71-3341c76ff4fe@mentor.com>
- <20160908142617.GG16911@tiger>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/2] of: Add array read functions with min/max size limits
+Date: Thu, 8 Sep 2016 09:46:45 -0500
+Message-ID: <CAL_JsqJpOistyWyKvpVWUNR2d1umNwnZmpO2jFSi574umUNLOA@mail.gmail.com>
+References: <1473174121-19742-1-git-send-email-rf@opensource.wolfsonmicro.com> <1473174121-19742-2-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160908142617.GG16911@tiger>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Deepak Das <deepak_das-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473174121-19742-2-git-send-email-rf@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
-
-On 09/08/2016 05:26 PM, Shawn Guo wrote:
-> On Wed, Sep 07, 2016 at 06:31:15PM +0300, Vladimir Zapolskiy wrote:
->> Hello Shawn, Fabio.
->>
->> On 08/20/2016 11:04 PM, Vladimir Zapolskiy wrote:
->>> % gawk -n '{ sub(/.*__/, ""); if ($1 ~ "^GPIO") print $1, $2/4}' \
->>> 	arch/arm/boot/dts/imxXX-pinfunc.h | sort -n
->>>
->>> Note that this means that potential errors in arch/arm/boot/dts/imx*-pinfunc.h
->>> descriptions may migrate to this change, please double check the values.
->>>
->>> If needed similar changes may be done for the rest of iMX SoCs.
->>>
->>> Changes from v1 to v2:
->>> * in copy-pasted commit messages corrected SoC names
->>>
->>> Vladimir Zapolskiy (7):
->>>  ARM: dts: add gpio-ranges property to iMX50 GPIO controllers
->>>  ARM: dts: add gpio-ranges property to iMX6Q/D GPIO controllers
->>>  ARM: dts: add gpio-ranges property to iMX6DL/S GPIO controllers
->>>  ARM: dts: add gpio-ranges property to iMX6SL GPIO controllers
->>>  ARM: dts: add gpio-ranges property to iMX6SX GPIO controllers
->>>  ARM: dts: add gpio-ranges property to iMX6UL GPIO controllers
->>>  ARM: dts: add gpio-ranges property to iMX7D/S GPIO controllers
->>>
->>> arch/arm/boot/dts/imx50.dtsi  | 16 +++++++++++++
->>> arch/arm/boot/dts/imx6dl.dtsi | 53 +++++++++++++++++++++++++++++++++++++++++++
->>> arch/arm/boot/dts/imx6q.dtsi  | 37 ++++++++++++++++++++++++++++++
->>> arch/arm/boot/dts/imx6sl.dtsi | 52 ++++++++++++++++++++++++++++++++++++++++++
->>> arch/arm/boot/dts/imx6sx.dtsi | 14 ++++++++++++
->>> arch/arm/boot/dts/imx6ul.dtsi | 11 +++++++++
->>> arch/arm/boot/dts/imx7s.dtsi  | 14 ++++++++++++
->>> 7 files changed, 197 insertions(+)
->>>
->>
->> Gentle ping, please provide review comments, the change would be good
->> to have in v4.9.
+On Tue, Sep 6, 2016 at 10:02 AM, Richard Fitzgerald
+<rf@opensource.wolfsonmicro.com> wrote:
+> Add a new set of array reading functions that take a minimum and
+> maximum size limit and will fail if the property size is not within
+> the size limits. This makes it more convenient for drivers that
+> use variable-size DT arrays which must be bounded at both ends -
+> data must be at least N entries but must not overflow the array
+> it is being copied into. It is also more efficient than making this
+> functionality out of existing public functions and avoids duplication.
 >
-> I'm fine to pick them up, but can you please squash them into one patch
+> The existing array functions have been left in the API, since there
+> are a very large number of clients of those functions and their
+> existing functionality is still useful. This avoids turning a small
+> API improvement into a major kernel rework.
 
-I have no strict objections to squashing in this case.
+Thanks for doing this.
 
-> and drop the newline right before gpio-ranges property?
+> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> ---
+>  drivers/of/base.c  | 206 ++++++++++++++++++++++++++++++++++++++++++-----------
+>  include/linux/of.h |  16 +++++
+>  2 files changed, 180 insertions(+), 42 deletions(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index b853737..cbad5cf 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1209,6 +1209,47 @@ int of_property_read_u32_index(const struct device_node *np,
+>  EXPORT_SYMBOL_GPL(of_property_read_u32_index);
+>
+>  /**
+> + * of_property_read_variable_u8_array - Find and read an array of u8 from a
+> + * property, with bounds on the minimum and maximum array size.
+> + *
+> + * @np:                device node from which the property value is to be read.
+> + * @propname:  name of the property to be searched.
+> + * @out_values:        pointer to return value, modified only if return value is 0.
+> + * @sz_min:    minimum number of array elements to read
+> + * @sz_max:    maximum number of array elements to read
+> + *
+> + * Search for a property in a device node and read 8-bit value(s) from
+> + * it. Returns 0 on success, -EINVAL if the property does not exist,
+> + * -ENODATA if property does not have a value, and -EOVERFLOW if the
+> + * property data is smaller than sz_min or longer than sz_max.
+> + *
+> + * dts entry of array should be like:
+> + *     property = /bits/ 8 <0x50 0x60 0x70>;
+> + *
+> + * The out_values is modified only if a valid u8 value can be decoded.
+> + */
+> +int of_property_read_variable_u8_array(const struct device_node *np,
+> +                                       const char *propname, u8 *out_values,
+> +                                       size_t sz_min, size_t sz_max)
+> +{
+> +       size_t sz;
+> +       const u8 *val = of_find_property_value_of_size(np, propname,
+> +                                               (sz_min * sizeof(*out_values)),
+> +                                               (sz_max * sizeof(*out_values)),
+> +                                               &sz);
+> +
+> +       if (IS_ERR(val))
+> +               return PTR_ERR(val);
+> +
+> +       sz /= sizeof(*out_values);
+> +
+> +       while (sz--)
+> +               *out_values++ = *val++;
+> +       return 0;
 
-Sure, I will drop empty lines and send a single patch v3 today or tomorrow.
+I think this needs to return the actual number of elements filled.
 
-Thank you for review.
+> +}
+> +EXPORT_SYMBOL_GPL(of_property_read_variable_u8_array);
+> +
+> +/**
+>   * of_property_read_u8_array - Find and read an array of u8 from a property.
+>   *
+>   * @np:                device node from which the property value is to be read.
+> @@ -1229,21 +1270,53 @@ EXPORT_SYMBOL_GPL(of_property_read_u32_index);
+>  int of_property_read_u8_array(const struct device_node *np,
+>                         const char *propname, u8 *out_values, size_t sz)
+>  {
+> -       const u8 *val = of_find_property_value_of_size(np, propname,
+> -                                               (sz * sizeof(*out_values)),
+> -                                               0,
+> -                                               NULL);
+> -
+> -       if (IS_ERR(val))
+> -               return PTR_ERR(val);
+> -
+> -       while (sz--)
+> -               *out_values++ = *val++;
+> -       return 0;
+> +       return of_property_read_variable_u8_array(np, propname, out_values,
+> +                                                 sz, 0);
 
---
-With best wishes,
-Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This should be min and max both set to sz.
+
+All these can be made a static inline and then we don't need the
+declaration and the dummy empty function. Changing the return value
+here will complicate things as this function should maintain the
+existing return values (i.e. 0 for success).
+
+Similar comments for the other flavors.
+
+Rob
