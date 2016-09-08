@@ -1,54 +1,66 @@
-From: Alexander Shiyan <shc_work@mail.ru>
-Subject: [PATCH 2/2] ASoC: cs4341: Add DT bindings
-	documentation for CS4341 CODEC
-Date: Thu,  8 Sep 2016 19:30:28 +0300
-Message-ID: <1473352228-24044-1-git-send-email-shc_work@mail.ru>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-binding: remoteproc: Document generic properties
+Date: Thu, 8 Sep 2016 11:50:32 -0500
+Message-ID: <20160908165032.GA9526@rob-hp-laptop>
+References: <1470850622-29816-1-git-send-email-bjorn.andersson@linaro.org>
+ <20160812183448.GA32059@rob-hp-laptop>
+ <20160812224223.GJ26240@tuxbot>
+ <46d4d351-336c-6d4f-b1b0-243cf3c5d68b@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: alsa-devel@alsa-project.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Brian Austin <brian.austin@cirrus.com>, Alexander Shiyan <shc_work@mail.ru>, Takashi Iwai <tiwai@suse.com>, Paul Handrigan <Paul.Handrigan@cirrus.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <46d4d351-336c-6d4f-b1b0-243cf3c5d68b-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT bindings documentation for Cirrus Logic
-CS4341 CODEC.
+On Fri, Sep 02, 2016 at 04:45:45PM -0500, Suman Anna wrote:
+> On 08/12/2016 05:42 PM, Bjorn Andersson wrote:
+> > On Fri 12 Aug 11:34 PDT 2016, Rob Herring wrote:
+> > 
+> >> On Wed, Aug 10, 2016 at 10:37:02AM -0700, Bjorn Andersson wrote:
+> >>> This documents the generic properties "rprocs" and "rproc-names", used
+> >>> for consumer drivers to reference a remoteproc node.
+> >>
+> >> How do you intend to use this? I wonder if it would not be better to 
+> >> expose a remote proc with existing bindings for a particular purpose 
+> >> (e.g. clocks, resets, etc.) rather than a generic connection. The client 
+> >> side would have to have specific knowledge as to what functions the 
+> >> remote proc provides.
+> >>
+> > 
+> > The remoteproc node represents the mechanism and resources needed to
+> > control the life cycle a co-processor, e.g. loading, booting, shutting
+> > gown a video encoder/decoder.
+> > 
+> > The proposed reference allows a separate thingie to assert control of
+> > the life cycle of that co-processor.
+> > 
+> > 
+> > I acknowledge that in some cases there is a fine line between what is
+> > the life cycle management and what is the actual functionality
+> > implemented by that remote processor. But as the remoteproc mechanism is
+> > reusable between various use cases I think it makes sense to not describe
+> > them as one unit.
+> 
+> What's the current state of this patch, not officially acked yet right?
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
----
- Documentation/devicetree/bindings/sound/cs4341.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/cs4341.txt
+Bjorn and I have discussed some, but probably needs more discussion. 
+This binding alone is simple enough, but I want to understand better how 
+it will be used and digesting all the QCom h/w is not simple.
 
-diff --git a/Documentation/devicetree/bindings/sound/cs4341.txt b/Documentation/devicetree/bindings/sound/cs4341.txt
-new file mode 100644
-index 0000000..78d45be
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/cs4341.txt
-@@ -0,0 +1,15 @@
-+Cirrus Logic CS4341 DT bindings
-+
-+Required properties:
-+ - compatible: "cirrus,cs4341a"
-+
-+For required properties on SPI, please consult
-+Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Example:
-+	codec: cs4341@0 {
-+		#sound-dai-cells = <0>;
-+		compatible = "cirrus,cs4341a";
-+		reg = <0>;
-+		spi-max-frequency = <6000000>;
-+	};
--- 
-2.7.3
+> While we are at this, can we agree upon an alias stem name as well, we
+> can stick to "rproc". Otherwise, I can submit an incremental patch on
+> top of this along with the code that adds an API to retrieve it for
+> client users.
+
+Any alias for this will be NAKed. My position on aliases is well 
+documented.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
