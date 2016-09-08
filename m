@@ -1,40 +1,30 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH 1/2 v3] net: smsc911x: augment device tree bindings
-Date: Wed, 07 Sep 2016 21:06:09 -0700 (PDT)
-Message-ID: <20160907.210609.2211064731014564027.davem@davemloft.net>
-References: <1473256411-13965-1-git-send-email-linus.walleij@linaro.org>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [RESEND PATCH] ARM: tegra: fix erroneous address in dts
+Date: Wed, 7 Sep 2016 21:18:03 -0700
+Message-ID: <20160908041803.GA20110@localhost>
+References: <1468835208-13426-1-git-send-email-ralf@ramses-pyramidenbau.de>
+ <20160718095802.GA422@ulmo.ba.sec>
+ <3087941.oHflrW9cm7@wuerfel>
+ <78670ccc-83ad-c7be-0377-dea1d794c078@ramses-pyramidenbau.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473256411-13965-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, steve.glendinning-nksJyM/082jR7s880joybQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jeremy.linton-5wv7dgnIgG8@public.gmane.org, kamlakant.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, p.fedin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <78670ccc-83ad-c7be-0377-dea1d794c078-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Wed,  7 Sep 2016 15:53:31 +0200
+On Wed, Sep 07, 2016 at 03:50:57PM +0200, Ralf Ramsauer wrote:
+> Hi all,
+> 
+> may I *poke* you again?
+> 
+> We're close to the release of 4.8, and this patch (b5c86b749 upstream)
+> should still be reverted on mainline....
 
-> This adds device tree bindings for:
-> 
-> - An optional GPIO line for releasing the RESET signal to the
->   SMSC911x devices
-> 
-> - An optional PME (power management event) interrupt line that
->   can be utilized to wake up the system on network activity.
->   This signal exist on all the SMSC911x devices, it is just not
->   very often routed.
-> 
-> Both these lines are routed to the SoC on the Qualcomm APQ8060
-> Dragonboard and thus needs to be bound in the device tree.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Ok, done in fixes now.
 
-Applied.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-Olof
