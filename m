@@ -1,131 +1,288 @@
 From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/4] irqchip: mtk-sysirq: support second intpol base
-Date: Thu, 8 Sep 2016 18:49:51 +0800
-Message-ID: <1473331794-27542-3-git-send-email-mars.cheng@mediatek.com>
+Subject: [PATCH 3/4] arm64: dts: mediatek: add mt6797 support
+Date: Thu, 8 Sep 2016 18:49:52 +0800
+Message-ID: <1473331794-27542-4-git-send-email-mars.cheng@mediatek.com>
 References: <1473331794-27542-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 In-Reply-To: <1473331794-27542-1-git-send-email-mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Choui <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Choui <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Original mtk-sysirq does not support multiple intpol bases. However,
-there are some mtk chips need it.
+This adds basic chip support for MT6797 SoC.
 
 Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/irqchip/irq-mtk-sysirq.c |   42 +++++++++++++++++++++++++++++++-------
- 1 file changed, 35 insertions(+), 7 deletions(-)
+ arch/arm64/boot/dts/mediatek/Makefile       |    1 +
+ arch/arm64/boot/dts/mediatek/mt6797-evb.dts |   36 +++++
+ arch/arm64/boot/dts/mediatek/mt6797.dtsi    |  193 +++++++++++++++++++++++++++
+ 3 files changed, 230 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6797.dtsi
 
-diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
-index 63ac73b..20f488a 100644
---- a/drivers/irqchip/irq-mtk-sysirq.c
-+++ b/drivers/irqchip/irq-mtk-sysirq.c
-@@ -24,7 +24,10 @@
+diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+index 9fbfd32..015eb07 100644
+--- a/arch/arm64/boot/dts/mediatek/Makefile
++++ b/arch/arm64/boot/dts/mediatek/Makefile
+@@ -1,5 +1,6 @@
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
++dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
  
- struct mtk_sysirq_chip_data {
- 	spinlock_t lock;
-+	unsigned int intpol_num;
-+	unsigned int intpol_num_ex;
- 	void __iomem *intpol_base;
-+	void __iomem *intpol_base_ex;
- };
- 
- static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
-@@ -32,14 +35,22 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
- 	irq_hw_number_t hwirq = data->hwirq;
- 	struct mtk_sysirq_chip_data *chip_data = data->chip_data;
- 	u32 offset, reg_index, value;
-+	void __iomem *intpol_base;
- 	unsigned long flags;
- 	int ret;
- 
-+	if (hwirq >= (chip_data->intpol_num)) {
-+		intpol_base = chip_data->intpol_base_ex;
-+		reg_index = (hwirq - chip_data->intpol_num) >> 5;
-+	} else {
-+		intpol_base = chip_data->intpol_base;
-+		reg_index = hwirq >> 5;
-+	}
+ always		:= $(dtb-y)
+diff --git a/arch/arm64/boot/dts/mediatek/mt6797-evb.dts b/arch/arm64/boot/dts/mediatek/mt6797-evb.dts
+new file mode 100644
+index 0000000..7314a14
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt6797-evb.dts
+@@ -0,0 +1,36 @@
++/*
++ * Copyright (c) 2016 MediaTek Inc.
++ * Author: Mars.C <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
- 	offset = hwirq & 0x1f;
--	reg_index = hwirq >> 5;
- 
- 	spin_lock_irqsave(&chip_data->lock, flags);
--	value = readl_relaxed(chip_data->intpol_base + reg_index * 4);
-+	value = readl_relaxed(intpol_base + reg_index * 4);
- 	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
- 		if (type == IRQ_TYPE_LEVEL_LOW)
- 			type = IRQ_TYPE_LEVEL_HIGH;
-@@ -49,7 +60,7 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
- 	} else {
- 		value &= ~(1 << offset);
- 	}
--	writel(value, chip_data->intpol_base + reg_index * 4);
-+	writel(value, intpol_base + reg_index * 4);
- 
- 	data = data->parent_data;
- 	ret = data->chip->irq_set_type(data, type);
-@@ -124,7 +135,7 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
- {
- 	struct irq_domain *domain, *domain_parent;
- 	struct mtk_sysirq_chip_data *chip_data;
--	int ret, size, intpol_num;
-+	int ret, size, total_intpol_num;
- 	struct resource res;
- 
- 	domain_parent = irq_find_host(parent);
-@@ -142,7 +153,8 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
- 		return -ENOMEM;
- 
- 	size = resource_size(&res);
--	intpol_num = size * 8;
-+	chip_data->intpol_num = size * 8;
-+	total_intpol_num = chip_data->intpol_num;
- 	chip_data->intpol_base = ioremap(res.start, size);
- 	if (!chip_data->intpol_base) {
- 		pr_err("mtk_sysirq: unable to map sysirq register\n");
-@@ -150,8 +162,22 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
- 		goto out_free;
- 	}
- 
--	domain = irq_domain_add_hierarchy(domain_parent, 0, intpol_num, node,
--					  &sysirq_domain_ops, chip_data);
-+	/* if we get the second base, handle it, or just go on */
-+	ret = of_address_to_resource(node, 1, &res);
-+	if (!ret) { /* if we get the second base, handle it */
-+		size = resource_size(&res);
-+		chip_data->intpol_num_ex = size * 8;
-+		total_intpol_num += chip_data->intpol_num_ex;
-+		chip_data->intpol_base_ex = ioremap(res.start, size);
-+		if (!chip_data->intpol_base_ex) {
-+			pr_err("mtk_sysirq: unable to map sysirq register\n");
-+			ret = -ENXIO;
-+			goto out_free_ex;
-+		}
-+	}
++/dts-v1/;
++#include "mt6797.dtsi"
 +
-+	domain = irq_domain_add_hierarchy(domain_parent, 0, total_intpol_num,
-+					  node, &sysirq_domain_ops, chip_data);
- 	if (!domain) {
- 		ret = -ENOMEM;
- 		goto out_unmap;
-@@ -161,6 +187,8 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
- 	return 0;
- 
- out_unmap:
-+	iounmap(chip_data->intpol_base_ex);
-+out_free_ex:
- 	iounmap(chip_data->intpol_base);
- out_free:
- 	kfree(chip_data);
++/ {
++	model = "MediaTek MT6797 Evaluation Board";
++	compatible = "mediatek,mt6797-evb", "mediatek,mt6797";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0 0x40000000 0 0x1e800000>;
++	};
++
++	chosen {};
++};
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
+new file mode 100644
+index 0000000..66f6442
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
+@@ -0,0 +1,193 @@
++/* Copyright (c) 2016 MediaTek Inc.
++ * Author: Mars.C <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	compatible = "mediatek,mt6797";
++	interrupt-parent = <&sysirq>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x000>;
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x001>;
++		};
++
++		cpu2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x002>;
++		};
++
++		cpu3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x003>;
++		};
++
++		cpu4: cpu@100 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x100>;
++		};
++
++		cpu5: cpu@101 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x101>;
++		};
++
++		cpu6: cpu@102 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x102>;
++		};
++
++		cpu7: cpu@103 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x103>;
++		};
++
++		cpu8: cpu@200 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a72";
++			enable-method = "psci";
++			reg = <0x200>;
++		};
++
++		cpu9: cpu@201 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a72";
++			enable-method = "psci";
++			reg = <0x201>;
++		};
++	};
++
++	clk26m: oscillator@0 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <26000000>;
++		clock-output-names = "clk26m";
++	};
++
++	clk32k: oscillator@1 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32000>;
++		clock-output-names = "clk32k";
++	};
++
++	uart_clk: dummy26m {
++		compatible = "fixed-clock";
++		clock-frequency = <26000000>;
++		#clock-cells = <0>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_PPI 13
++			     (GIC_CPU_MASK_SIMPLE(10) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14
++			     (GIC_CPU_MASK_SIMPLE(10) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11
++			     (GIC_CPU_MASK_SIMPLE(10) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10
++			     (GIC_CPU_MASK_SIMPLE(10) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++
++	sysirq: intpol-controller@10200620 {
++		compatible = "mediatek,mt6797-sysirq",
++			     "mediatek,mt6577-sysirq";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		#intpol-bases = <2>;
++		interrupt-parent = <&gic>;
++		reg = <0 0x10220620 0 0x20>,
++		      <0 0x10220690 0 0x10>;
++	};
++
++	uart0: serial@11002000 {
++		compatible = "mediatek,mt6797-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11002000 0 0x400>;
++		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&uart_clk>;
++		status = "disabled";
++	};
++
++	uart1: serial@11003000 {
++		compatible = "mediatek,mt6797-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11003000 0 0x400>;
++		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&uart_clk>;
++		status = "disabled";
++	};
++
++	uart2: serial@11004000 {
++		compatible = "mediatek,mt6797-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11004000 0 0x400>;
++		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&uart_clk>;
++		status = "disabled";
++	};
++
++	uart3: serial@11005000 {
++		compatible = "mediatek,mt6797-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11005000 0 0x400>;
++		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&uart_clk>;
++		status = "disabled";
++	};
++
++	gic: interrupt-controller@19000000 {
++		compatible = "arm,gic-v3";
++		#interrupt-cells = <3>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-controller;
++		reg = <0 0x19000000 0 0x10000>,    /* GICD */
++		      <0 0x19200000 0 0x200000>,   /* GICR */
++		      <0 0x10240000 0 0x2000>;     /* GICC */
++	};
++
++};
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
