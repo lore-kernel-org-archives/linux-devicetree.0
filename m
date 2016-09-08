@@ -1,94 +1,86 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH 2/2] ARM: dts: s5p: Add missing unit name to memory nodes for S5PV210 boards
-Date: Thu,  8 Sep 2016 11:26:01 -0400
-Message-ID: <1473348361-15784-3-git-send-email-javier@osg.samsung.com>
-References: <1473348361-15784-1-git-send-email-javier@osg.samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1473348361-15784-1-git-send-email-javier@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC] of: platform: Drop OF_POPULATED_BUS check from of_platform_notify()
+Date: Thu, 8 Sep 2016 10:28:42 -0500
+Message-ID: <CAL_Jsq+FedCOU_w4p+ouqjdDmxJ6dzW4Gq=8vnCx3TUk77-zwA@mail.gmail.com>
+References: <11c8a7bd-142c-d016-e24b-34d1edbdb8cf@nokia.com>
+ <CAL_JsqJWBXqs44vHu4XHAiZhOEghg9X=Q0fvUKHaCVCPnd7kVw@mail.gmail.com> <2e40cd48-35f0-1efa-ee17-566aa728e857@nokia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2e40cd48-35f0-1efa-ee17-566aa728e857-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the following DTC warnings:
+On Thu, Sep 8, 2016 at 9:26 AM, Alexander Sverdlin
+<alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org> wrote:
+> Hello,
+>
+> On 08/09/16 16:17, Rob Herring wrote:
+>>> The comment to OF_POPULATED_BUS says "of_platform_populate recursed to children
+>>> > of this node". Consider the following structure:
+>>> >
+>>> >         ocp {
+>>> >                 compatible = "simple-bus";
+>>> >                 ranges;
+>>> >                 ...
+>>> >                 l4_wkup: l4_wkup@44c00000 {
+>>> >                         compatible = "ti,am3-l4-wkup", "simple-bus";
+>>> >                         ranges = <0 0x44c00000 0x280000>;
+>>> >                         ...
+>>> >                         wkup_m3: wkup_m3@100000 {
+>>> >                                 compatible = "ti,am3352-wkup-m3";
+>>> >                                 ...
+>>> >                         }
+>>> >                 }
+>>> >         }
+>>> >
+>>> > If one DT overlay adds "ocp" node without children then of_platform_notify()
+>>> > creates a platform device, but doesn't set OF_POPULATED_BUS. If second overlay
+>>> > tries to populate children of "ocp" node, corresponding platform devices are
+>>> > not instantiated because of check for OF_POPULATED_BUS flag. If the above
+>>> > example structure is built of several overlays, of_platform_populate() is not
+>>> > involved here at all, so maybe OF_POPULATED_BUS requirement is wrong.
+>> Your example seems a bit made up. While you can craft base DTs and
+>> overlays with any random split between them, I don't necessarily think
+>> we want to support that. There will likely be cases which we say can
+>> only be applied early in boot or we limit which nodes can be overlay
+>> targets for overlays applied from userspace.
+>
+> Yes, I had to construct an example out of the well-known Beaglebone DT pieces,
+> the real use case will only confuse the public.
+>
+> In general I don't understand why my example is so bizarre, it basically shows, you
+> cannot apply an overlay above overlay: the devices will not be registered and actually
+> because of the bogus check. Imagine the well known Beagle: you can construct a bone with
+> whatever SPI/I2C bus controller. On top of it you can sandwich a board with I2C-driven
+> GPIO extenders. Is it absolute unrealistic?
 
-"Node /memory has a reg or ranges property, but no unit name"
+That sounds like a valid example, but that was not the example you
+gave. I would expect that adding an I2C slave device is a working
+usecase.
 
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> There is full support of multilevel overlays. And just one bug preventing it from working
+> properly. Do we really want it?
 
----
+You're only asking if the hunk should be removed. The short answer is
+I don't know just looking at this patch. Show me a real overlay that
+is broken and this change fixes things. Or add a unit test that
+demonstrates the problem. And I also need to know the change wouldn't
+break other users.
 
- arch/arm/boot/dts/s5pv210-aquila.dts   | 2 +-
- arch/arm/boot/dts/s5pv210-goni.dts     | 2 +-
- arch/arm/boot/dts/s5pv210-smdkc110.dts | 2 +-
- arch/arm/boot/dts/s5pv210-smdkv210.dts | 2 +-
- arch/arm/boot/dts/s5pv210-torbreck.dts | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+I think there may be bigger problems here. The point of this flag is
+to make depopulate calls only act on nodes that a prior populate call
+acted on. If we populate the base tree, add an overlay, populate the
+overlay nodes, we have no way to ensure that of_platform_depopulate
+called on a parent node in the base DT would not descend into nodes
+from an overlay. We probably need something better like an owner
+(distinct from the struct device) assigned to each node and only the
+owner can depopulate nodes.
 
-diff --git a/arch/arm/boot/dts/s5pv210-aquila.dts b/arch/arm/boot/dts/s5pv210-aquila.dts
-index da24ab570b0e..d763c5b4c65d 100644
---- a/arch/arm/boot/dts/s5pv210-aquila.dts
-+++ b/arch/arm/boot/dts/s5pv210-aquila.dts
-@@ -29,7 +29,7 @@
- 		bootargs = "console=ttySAC2,115200n8 root=/dev/mmcblk1p5 rw rootwait ignore_loglevel earlyprintk";
- 	};
- 
--	memory {
-+	memory@30000000 {
- 		device_type = "memory";
- 		reg = <0x30000000 0x05000000
- 			0x40000000 0x18000000>;
-diff --git a/arch/arm/boot/dts/s5pv210-goni.dts b/arch/arm/boot/dts/s5pv210-goni.dts
-index 0a33d402138e..c56f51ee7897 100644
---- a/arch/arm/boot/dts/s5pv210-goni.dts
-+++ b/arch/arm/boot/dts/s5pv210-goni.dts
-@@ -29,7 +29,7 @@
- 		bootargs = "console=ttySAC0,115200n8 root=/dev/mmcblk0p5 rw rootwait ignore_loglevel earlyprintk";
- 	};
- 
--	memory {
-+	memory@30000000 {
- 		device_type = "memory";
- 		reg = <0x30000000 0x05000000
- 			0x40000000 0x10000000
-diff --git a/arch/arm/boot/dts/s5pv210-smdkc110.dts b/arch/arm/boot/dts/s5pv210-smdkc110.dts
-index 1eedab7ffe94..5d14da911aa5 100644
---- a/arch/arm/boot/dts/s5pv210-smdkc110.dts
-+++ b/arch/arm/boot/dts/s5pv210-smdkc110.dts
-@@ -29,7 +29,7 @@
- 		bootargs = "console=ttySAC0,115200n8 root=/dev/mmcblk0p1 rw rootwait ignore_loglevel earlyprintk";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		device_type = "memory";
- 		reg = <0x20000000 0x20000000>;
- 	};
-diff --git a/arch/arm/boot/dts/s5pv210-smdkv210.dts b/arch/arm/boot/dts/s5pv210-smdkv210.dts
-index 9eb6aff3e38f..75398318ed57 100644
---- a/arch/arm/boot/dts/s5pv210-smdkv210.dts
-+++ b/arch/arm/boot/dts/s5pv210-smdkv210.dts
-@@ -29,7 +29,7 @@
- 		bootargs = "console=ttySAC0,115200n8 root=/dev/mmcblk0p1 rw rootwait ignore_loglevel earlyprintk";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		device_type = "memory";
- 		reg = <0x20000000 0x40000000>;
- 	};
-diff --git a/arch/arm/boot/dts/s5pv210-torbreck.dts b/arch/arm/boot/dts/s5pv210-torbreck.dts
-index 622599fd2cfa..7cb50bcee888 100644
---- a/arch/arm/boot/dts/s5pv210-torbreck.dts
-+++ b/arch/arm/boot/dts/s5pv210-torbreck.dts
-@@ -29,7 +29,7 @@
- 		bootargs = "console=ttySAC0,115200n8 root=/dev/mmcblk0p1 rw rootwait ignore_loglevel earlyprintk";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		device_type = "memory";
- 		reg = <0x20000000 0x20000000>;
- 	};
--- 
-2.7.4
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
