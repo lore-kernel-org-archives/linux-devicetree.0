@@ -1,51 +1,51 @@
-From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: Re: [PATCH v4 1/4] arm64: arch_timer: Add device tree binding for
- A-008585 erratum
-Date: Thu, 8 Sep 2016 19:46:34 +0800
-Message-ID: <57D14F9A.2050007@huawei.com>
-References: <1467877572-10817-1-git-send-email-oss@buserror.net>
- <e69db8b1-5fe2-ed0a-b073-de3efdd854d2@suse.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 4/8] ARM: dts: bcm283x: Add a new EMMC pin group from the
+ downstream tree.
+Date: Thu, 8 Sep 2016 14:06:52 +0200
+Message-ID: <429647ef-ff1e-4999-5b19-3b4529ad3872@i2se.com>
+References: <1473244289-20728-1-git-send-email-kraxel@redhat.com>
+ <1473244289-20728-5-git-send-email-kraxel@redhat.com>
+ <87650770.23554.026b1e4b-e35d-48e6-9394-7eeea0ff9add.open-xchange@email.1und1.de>
+ <1473320687.6698.25.camel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e69db8b1-5fe2-ed0a-b073-de3efdd854d2@suse.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <mbrugger@suse.com>, Scott Wood <oss@buserror.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: devicetree@vger.kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473320687.6698.25.camel@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Ping
+Am 08.09.2016 um 09:44 schrieb Gerd Hoffmann:
+> On Mi, 2016-09-07 at 20:13 +0200, Stefan Wahren wrote:
+>>> Gerd Hoffmann <kraxel@redhat.com> hat am 7. September 2016 um 12:31
+>>> geschrieben:
+>>>
+>>>
+>>> From: Eric Anholt <eric@anholt.net>
+>>>
+>>> This will be used for having EMMC (sdhci-bcm2835.c) drive the
+>>> wireless.
+>> sdhci-bcm2835.c has been replaced by sdhci-iproc.c
+> Ah, right, I'll update the commit msg for v2.
+>
+>> How about adding pull defines to include/dt-bindings/pinctrl/bcm2835.h?
+> Already there (or do you mean something other than '#define
+> BCM2835_FSEL_*' ?)
 
-On 2016/8/25 19:04, Matthias Brugger wrote:
-> Hi all,
-> 
-> On 07/07/16 09:46, Scott Wood wrote:
->> This erratum describes a bug in logic outside the core, so MIDR can't be
->> used to identify its presence, and reading an SoC-specific revision
->> register from common arch timer code would be awkward.  So, describe it
->> in the device tree.
->>
->> Signed-off-by: Scott Wood <oss@buserror.net>
->> Acked-by: Rob Herring <robh@kernel.org>
->> ---
-> 
-> As of today I wasn't able to find this series in linux-next. Was this series somehow forgotten? Scott maybe you can resend the patches adding the clocksource maintainer.
-> 
-> Regards,
-> Matthias
-> 
+No, i thought of the GPIO pull up/down register values:
+
+BCM2835_PUD_OFF 0
+BCM2835_PUD_DOWN 1
+BCM2835_PUD_UP 2
+
+>
+> cheers,
+>   Gerd
+>
+>
 > _______________________________________________
 > linux-arm-kernel mailing list
 > linux-arm-kernel@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> 
