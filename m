@@ -1,71 +1,62 @@
-From: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 2/2] arm64: dts: rockchip: add eMMC's power domain support for rk3399
-Date: Thu,  8 Sep 2016 14:49:05 +0800
-Message-ID: <20160908064905.18080-3-xzy.xu@rock-chips.com>
-References: <20160908064905.18080-1-xzy.xu@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160908064905.18080-1-xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] syscon: dt-bindings: Add documentation for Aspeed system
+ control units
+Date: Thu, 8 Sep 2016 08:00:02 +0100
+Message-ID: <20160908070002.GF4921@dell>
+References: <1473311598-32722-1-git-send-email-andrew@aj.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1473311598-32722-1-git-send-email-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jeremy Kerr <jk@ozlabs.org>, "linux-gpio @ vger . kernel . org" <linux-gpio@vger.kernel.org>, "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>, "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Control power domain for eMMC via genpd to reduce power consumption.
+On Thu, 08 Sep 2016, Andrew Jeffery wrote:
 
-Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Reviewed-by: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Joel Stanley <joel@jms.id.au>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/aspeed-scu.txt | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-scu.txt
 
----
+Thanks for resending.
 
-Changes in v2:
-- add Shawn's review-tag and Doug's review-tag
+Applied, thanks
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
+> new file mode 100644
+> index 000000000000..4fc5b83726d6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
+> @@ -0,0 +1,18 @@
+> +The Aspeed System Control Unit manages the global behaviour of the SoC,
+> +configuring elements such as clocks, pinmux, and reset.
+> +
+> +Required properties:
+> +- compatible:	One of:
+> +		"aspeed,ast2400-scu", "syscon", "simple-mfd"
+> +		"aspeed,g4-scu", "syscon", "simple-mfd"
+> +		"aspeed,ast2500-scu", "syscon", "simple-mfd"
+> +		"aspeed,g5-scu", "syscon", "simple-mfd"
+> +
+> +- reg:		contains the offset and length of the SCU memory region
+> +
+> +Example:
+> +
+> +syscon: syscon@1e6e2000 {
+> +	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
+> +	reg = <0x1e6e2000 0x1a8>;
+> +};
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index b65c193..064f87b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -269,6 +269,7 @@
- 		#clock-cells = <0>;
- 		phys = <&emmc_phy>;
- 		phy-names = "phy_arasan";
-+		power-domains = <&power RK3399_PD_EMMC>;
- 		status = "disabled";
- 	};
- 
-@@ -690,6 +691,11 @@
- 		status = "disabled";
- 	};
- 
-+	qos_emmc: qos@ffa58000 {
-+		compatible = "syscon";
-+		reg = <0x0 0xffa58000 0x0 0x20>;
-+	};
-+
- 	qos_gmac: qos@ffa5c000 {
- 		compatible = "syscon";
- 		reg = <0x0 0xffa5c000 0x0 0x20>;
-@@ -823,6 +829,11 @@
- 			};
- 
- 			/* These power domains are grouped by VD_LOGIC */
-+			pd_emmc@RK3399_PD_EMMC {
-+				reg = <RK3399_PD_EMMC>;
-+				clocks = <&cru ACLK_EMMC>;
-+				pm_qos = <&qos_emmc>;
-+			};
- 			pd_gmac@RK3399_PD_GMAC {
- 				reg = <RK3399_PD_GMAC>;
- 				clocks = <&cru ACLK_GMAC>;
 -- 
-2.9.2
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
