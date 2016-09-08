@@ -1,57 +1,36 @@
-From: Guenter Roeck <linux@roeck-us.net>
+From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: [PATCH v3 2/3] hwmon: xgene: Add hwmon driver
-Date: Thu, 8 Sep 2016 07:55:44 -0700
-Message-ID: <6c6118cf-f9cf-d5f2-dde0-afea0143687c@roeck-us.net>
-References: <1469134557-26869-1-git-send-email-hotran@apm.com>
- <13081573.BbD3TmEU5Y@wuerfel> <20160907222754.GA31475@roeck-us.net>
- <8664936.LICyesLN7G@wuerfel>
+Date: Thu, 08 Sep 2016 16:59:08 +0200
+Message-ID: <2240578.V3yYtMQl2O@wuerfel>
+References: <1469134557-26869-1-git-send-email-hotran@apm.com> <8664936.LICyesLN7G@wuerfel> <6c6118cf-f9cf-d5f2-dde0-afea0143687c@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <8664936.LICyesLN7G@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <6c6118cf-f9cf-d5f2-dde0-afea0143687c@roeck-us.net>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
 Cc: Hoan Tran <hotran@apm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, lho@apm.com, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/2016 01:15 AM, Arnd Bergmann wrote:
-> On Wednesday, September 7, 2016 3:27:54 PM CEST Guenter Roeck wrote:
->> On Wed, Sep 07, 2016 at 11:41:44PM +0200, Arnd Bergmann wrote:
->>> On Thursday, July 21, 2016 1:55:56 PM CEST Hoan Tran wrote:
->>>> +               ctx->comm_base_addr = cppc_ss->base_address;
->>>> +               if (ctx->comm_base_addr) {
->>>> +                       ctx->pcc_comm_addr =
->>>> +                                       acpi_os_ioremap(ctx->comm_base_addr,
->>>> +                                                       cppc_ss->length);
->>>>
->>>
->>> This causes the arm64 allmodconfig build to fail now, according to
->>> kernelci:
->>>
->>>       1  ERROR: "memblock_is_memory" [drivers/hwmon/xgene-hwmon.ko] undefined!
->>>
->> How do you even get there ? arm64:allmodconfig fails for me in -next with
->>
->> drivers/pwm/pwm-berlin.c: In function ‘berlin_pwm_suspend’:
->> drivers/pwm/pwm-berlin.c:245:35: error: ‘struct berlin_pwm_chip’ has no member named ‘chips’
->
-> That was fixed in yesterday's linux-next.
->
+On Thursday, September 8, 2016 7:55:44 AM CEST Guenter Roeck wrote:
+> Maybe, but now I get
+> 
+> Building arm:allmodconfig ... failed
+> --------------
+> Error log:
+> crypto/crypto_engine.c: In function 'crypto_transfer_hash_request':
+> crypto/crypto_engine.c:234:3: error: implicit declaration of function 'queue_kthread_work'
+> 
+> Building arm64:allmodconfig ... failed
+> --------------
+> Error log:
+> arch/arm64/kvm/../../../virt/kvm/arm/arch_timer.c: In function ‘kvm_timer_hyp_init’:
+> arch/arm64/kvm/../../../virt/kvm/arm/arch_timer.c:457:1: warning: label ‘out_free’ defined but not used
 
-Maybe, but now I get
+Right, I sent fixes for both. I think we had a clean build yesterday,
+probably tomorrow those will both be fixed.
 
-Building arm:allmodconfig ... failed
---------------
-Error log:
-crypto/crypto_engine.c: In function 'crypto_transfer_hash_request':
-crypto/crypto_engine.c:234:3: error: implicit declaration of function 'queue_kthread_work'
+The time between -rc5 and -rc7 seems to be the worst for build testing ;-)
 
-Building arm64:allmodconfig ... failed
---------------
-Error log:
-arch/arm64/kvm/../../../virt/kvm/arm/arch_timer.c: In function ‘kvm_timer_hyp_init’:
-arch/arm64/kvm/../../../virt/kvm/arm/arch_timer.c:457:1: warning: label ‘out_free’ defined but not used
-
-Guenter
-
+	Arnd
