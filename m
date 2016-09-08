@@ -1,54 +1,42 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 3/3] soc: ti: Add ti_sci_pm_domains driver
-Date: Thu, 08 Sep 2016 10:38:27 -0700
-Message-ID: <m2mvjinvfw.fsf@baylibre.com>
-References: <20160819235653.26355-1-nm@ti.com>
-        <20160819235653.26355-4-nm@ti.com>
-        <CAPDyKFooDUOPT9dP8HaW3YBO9PsX-1+96PPE7CRMyjEkra7cBQ@mail.gmail.com>
-        <57C0D2C9.1030801@ti.com> <57C5E1DA.2040405@ti.com>
-        <CAPDyKFqszM48nXnnA9D8iCp34k-ZmNvOkHPCc=Fya4nJA7PvBQ@mail.gmail.com>
-        <57CF26DB.4020807@ti.com> <7h4m5rv9kz.fsf@baylibre.com>
-        <CAPDyKFo0Cb90BbY7ra6VDjb5frC5=VtmE3V6tDK=VosfPmod7Q@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V3] dt: net: enhance DWC EQoS binding to support Tegra186
+Date: Thu, 8 Sep 2016 11:49:31 -0600
+Message-ID: <038d710a-f8fe-b569-11ee-2dc4c3ec6d28@wwwdotorg.org>
+References: <20160901190216.5643-1-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFo0Cb90BbY7ra6VDjb5frC5=VtmE3V6tDK=VosfPmod7Q@mail.gmail.com>
-        (Ulf Hansson's message of "Thu, 8 Sep 2016 11:27:52 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Dave Gerlach <d-gerlach@ti.com>, Nishanth Menon <nm@ti.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Keerthy <j-keerthy@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160901190216.5643-1-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Lars Persson <lars.persson-VrBV9hrLPhE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ulf Hansson <ulf.hansson@linaro.org> writes:
-
-> [...]
+On 09/01/2016 01:02 PM, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 >
->>
->> One more idea...
->>
->> Since you don't really have a domain (a group of devices), what you
->> really have is each device having an independent power switch, so as Ulf
->> suggested, what you really need is for all the devices to share the same
->> set of runtime PM callbacks that call SCI.  The only difference is the
->> unique ID.
->>
->> Rather than using all of genpd, you could also just use a pm_domain
->> which is what genpd is built on top of (and also omap_device, which
->> you're probably familiar with also.)
+> The Synopsys DWC EQoS is a configurable IP block which supports multiple
+> options for bus type, clocking and reset structure, and feature list.
+> Extend the DT binding to define a "compatible value" for the configuration
+> contained in NVIDIA's Tegra186 SoC, and define some new properties and
+> list property entries required by that configuration.
 >
-> Even if this would work as well, the downside would be that you need
-> to re-invent the parts related to the DT parsing, the probing/removal
-> and attaching/detaching of the device to the PM domain.
->
-> You probably don't want to go there... :-)
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> v3:
+> * Document legacy clock-names entries separately, and make it obvious
+>   they're deprecated.
+> * Reword the description of the "rx" clock to better describe the HW.
+> * Add some extra guidance for future extensions of the binding to cover
+>   configurations where additional RX clocks are required.
+> * Explicitly document the list of clocks and resets for every compatible
+>   value; don't miss any out.
 
-All you'd need to read from DT would be the device-specific ID for
-TI-SCI, and that could be done at bind time with a notifier.  The, in
-that same notifier, if a TI-SCI ID exists, it would get added to the
-pm_domain.
+Rob, Mark,
 
-Anyways, your original proposal is much preferred if it can work.  I'm
-just throwing out another option because I really don't like one genpd
-per device.
+Does this version look good (Lars already acked it)? If so, if you could 
+ack it that'd be great; I want to send some U-Boot drivers that use this 
+binding, but don't want to do so before I know it's final.
 
-Kevin
+Thanks.
