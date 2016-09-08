@@ -1,212 +1,189 @@
-Return-Path: <brendanhiggins@google.com>
+Return-Path: <stephen.boyd@linaro.org>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <201609100847.j1qUadzy%fengguang.wu@intel.com> <1473472551-11149-1-git-send-email-brendanhiggins@google.com>
- <1473472551-11149-2-git-send-email-brendanhiggins@google.com>
- <20160919213536.GA19274@rob-hp-laptop> <CAFd5g46WR34A1FLNvuRck84EX1F3gbPDnDuBo2j-SVUEJPvXfg@mail.gmail.com>
-In-Reply-To: <CAFd5g46WR34A1FLNvuRck84EX1F3gbPDnDuBo2j-SVUEJPvXfg@mail.gmail.com>
-From: Brendan Higgins <brendanhiggins@google.com>
-Date: Tue, 20 Sep 2016 18:05:46 +0000
-Message-ID: <CAFd5g46j02sb2w_DwaXAgnfcO=ONmJGZwqdRneNd0QHq-t53rA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] i2c: aspeed: added documentation for Aspeed I2C driver
-Content-Type: multipart/alternative; boundary=001a113dacb8b88a89053cf4470a
-To: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Joel Stanley <joel@jms.id.au>, Jeremy Kerr <jk@ozlabs.org>
+Content-Transfer-Encoding: quoted-printable
+From: Stephen Boyd <stephen.boyd@linaro.org>
+In-Reply-To: <20160908002611.GA3883@voom.fritz.box>
+References: <577ACE0D.9050700@gmail.com> <20160718142037.GS16769@voom.fritz.box>
+ <CAL_JsqLkMA1VHfHpP4oCWtONWq5GeyS731r8PjjeL_DZ4u1Z_g@mail.gmail.com>
+ <20160722042556.GL15941@voom.fritz.box>
+ <147217552167.17958.11590706771471540284@sboyd-linaro>
+ <20160829134511.GC2166@littlecatz>
+ <147252286938.20899.1763773530822329216@sboyd-linaro>
+ <20160830235523.GC1753@littlecatz>
+ <147329189889.27412.12053595745294007737@sboyd-linaro>
+ <20160908002611.GA3883@voom.fritz.box>
+Message-ID: <147337818438.23899.8501369481182352188@sboyd-linaro>
+Subject: Re: DT connectors, thoughts
+Date: Thu, 08 Sep 2016 16:43:04 -0700
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Mark Rutland <mark.rutland@arm.com>, Matt Porter <mporter@konsulko.com>, Koen Kooi <koen@dominion.thruhere.net>, Guenter Roeck <linux@roeck-us.net>, Marek =?utf-8?B?VmHFoXV0?= <marex@denx.de>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-ID: <devicetree@vger.kernel.org>
 
---001a113dacb8b88a89053cf4470a
-Content-Type: text/plain; charset=UTF-8
+Quoting David Gibson (2016-09-07 17:26:11)
+> On Wed, Sep 07, 2016 at 04:44:58PM -0700, Stephen Boyd wrote:
+> > Quoting David Gibson (2016-08-30 16:55:23)
+> > > So, my assumption in this example was that the plugin could plug into
+> > > *any* two widget sockets.  If it needs to connect to specific ones,
+> > > then pretty much by definition, the sockets aren't really of
+> > > indistinguishable type.
+> > =
 
-First off, someone pointed out to me that the mapping that I used between
-addresses and bus numbers is not actually valid for busses 8-14.
+> > Ah ok. It wasn't clear on how we target where the extension board
+> > connects into the full tree. It sounds like the decision of where to
+> > plug in the extension board falls to the overlay manager then?
+> =
 
-This could be fixed by checking the offset, but I am wondering if that is
-the right way to do it. It seems like this is not completely trivial so
-maybe this should be specified in the device tree? If that is the case,
-should I do this as another reg entry or go back to the way I was doing it
-before?
+> Yes.  The whole point of connectors is that they're interchangeable,
+> so neither the "plug" side nor the "socket" side should specify which
+> instance of the other part they're connected to.
 
-On Mon, Sep 19, 2016 at 4:26 PM Brendan Higgins <brendanhiggins@google.com>
-wrote:
+Agreed. Another item in the list!
 
-> Addressed in v3.
->
-> Thanks!
->
-> On Mon, Sep 19, 2016 at 2:35 PM, Rob Herring <robh@kernel.org> wrote:
-> > On Fri, Sep 09, 2016 at 06:55:51PM -0700, Brendan Higgins wrote:
-> >> Added device tree binding documentation for Aspeed I2C controller and
-> >> busses.
-> >>
-> >> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> >> ---
-> >> Changes for v2:
-> >>   - None
-> >> ---
-> >>  .../devicetree/bindings/i2c/i2c-aspeed.txt         | 63
-> ++++++++++++++++++++++
-> >>  1 file changed, 63 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> >> new file mode 100644
-> >> index 0000000..df68f2a
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> >> @@ -0,0 +1,63 @@
-> >> +Device tree configuration for the I2C controller and busses on the
-> AST24XX
-> >> +and AST25XX SoCs.
-> >> +
-> >> +Controller:
-> >> +
-> >> +     Required Properties:
-> >> +     - #address-cells        : should be 1
-> >> +     - #size-cells           : should be 1
-> >> +     - #interrupt-cells      : should be 1
-> >> +     - compatible            : should be
-> "aspeed,ast2400-i2c-controller"
-> >> +                               or "aspeed,ast2500-i2c-controller"
-> >> +     - reg                   : address start and range of controller
-> >> +     - ranges                : defines address offset and range for
-> busses
-> >> +     - interrupts            : interrupt number
-> >> +     - clocks                : root clock of bus, should reference the
-> APB
-> >> +                               clock
-> >> +     - clock-ranges          : specifies that child busses can inherit
-> clocks
-> >> +     - interrupt-controller  : denotes that the controller receives
-> and fires
-> >> +                               new interrupts for child busses
-> >> +
-> >> +Bus:
-> >> +
-> >> +     Required Properties:
-> >> +     - #address-cells        : should be 1
-> >> +     - #size-cells           : should be 0
-> >> +     - reg                   : address offset and range of bus
-> >> +     - compatible            : should be "aspeed,ast2400-i2c-bus"
-> >> +                               or "aspeed,ast2500-i2c-bus"
-> >> +     - bus                   : the bus's number
-> >
-> > Don't use indexes. The reg property is enough to id which bus is which.
->
+> =
 
---001a113dacb8b88a89053cf4470a
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+> So to resolve the whole tree in this case, extra information would be
+> needed.  Ideally it would come from probing (even something ad-hoc
+> like an ID register), failing that it would need to be admin
+> configured.
 
-<div dir=3D"ltr">First off, someone pointed out to me that the mapping that=
- I used between addresses and bus numbers is not actually valid for busses =
-8-14.<div><br></div><div>This could be fixed by checking the offset, but I =
-am wondering if that is the right way to do it. It seems like this is not c=
-ompletely trivial so maybe this should be specified in the device tree? If =
-that is the case, should I do this as another reg entry or go back to the w=
-ay I was doing it before?</div></div><br><div class=3D"gmail_quote"><div di=
-r=3D"ltr">On Mon, Sep 19, 2016 at 4:26 PM Brendan Higgins &lt;<a href=3D"ma=
-ilto:brendanhiggins@google.com">brendanhiggins@google.com</a>&gt; wrote:<br=
-></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-=
-left:1px #ccc solid;padding-left:1ex">Addressed in v3.<br class=3D"gmail_ms=
-g">
-<br class=3D"gmail_msg">
-Thanks!<br class=3D"gmail_msg">
-<br class=3D"gmail_msg">
-On Mon, Sep 19, 2016 at 2:35 PM, Rob Herring &lt;<a href=3D"mailto:robh@ker=
-nel.org" class=3D"gmail_msg" target=3D"_blank">robh@kernel.org</a>&gt; wrot=
-e:<br class=3D"gmail_msg">
-&gt; On Fri, Sep 09, 2016 at 06:55:51PM -0700, Brendan Higgins wrote:<br cl=
-ass=3D"gmail_msg">
-&gt;&gt; Added device tree binding documentation for Aspeed I2C controller =
-and<br class=3D"gmail_msg">
-&gt;&gt; busses.<br class=3D"gmail_msg">
-&gt;&gt;<br class=3D"gmail_msg">
-&gt;&gt; Signed-off-by: Brendan Higgins &lt;<a href=3D"mailto:brendanhiggin=
-s@google.com" class=3D"gmail_msg" target=3D"_blank">brendanhiggins@google.c=
-om</a>&gt;<br class=3D"gmail_msg">
-&gt;&gt; ---<br class=3D"gmail_msg">
-&gt;&gt; Changes for v2:<br class=3D"gmail_msg">
-&gt;&gt;=C2=A0 =C2=A0- None<br class=3D"gmail_msg">
-&gt;&gt; ---<br class=3D"gmail_msg">
-&gt;&gt;=C2=A0 .../devicetree/bindings/i2c/i2c-aspeed.txt=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0| 63 ++++++++++++++++++++++<br class=3D"gmail_msg">
-&gt;&gt;=C2=A0 1 file changed, 63 insertions(+)<br class=3D"gmail_msg">
-&gt;&gt;=C2=A0 create mode 100644 Documentation/devicetree/bindings/i2c/i2c=
--aspeed.txt<br class=3D"gmail_msg">
-&gt;&gt;<br class=3D"gmail_msg">
-&gt;&gt; diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt =
-b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt<br class=3D"gmail_ms=
-g">
-&gt;&gt; new file mode 100644<br class=3D"gmail_msg">
-&gt;&gt; index 0000000..df68f2a<br class=3D"gmail_msg">
-&gt;&gt; --- /dev/null<br class=3D"gmail_msg">
-&gt;&gt; +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt<br clas=
-s=3D"gmail_msg">
-&gt;&gt; @@ -0,0 +1,63 @@<br class=3D"gmail_msg">
-&gt;&gt; +Device tree configuration for the I2C controller and busses on th=
-e AST24XX<br class=3D"gmail_msg">
-&gt;&gt; +and AST25XX SoCs.<br class=3D"gmail_msg">
-&gt;&gt; +<br class=3D"gmail_msg">
-&gt;&gt; +Controller:<br class=3D"gmail_msg">
-&gt;&gt; +<br class=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0Required Properties:<br class=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- #address-cells=C2=A0 =C2=A0 =C2=A0 =C2=A0 :=
- should be 1<br class=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- #size-cells=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0: should be 1<br class=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- #interrupt-cells=C2=A0 =C2=A0 =C2=A0 : shou=
-ld be 1<br class=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- compatible=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 : should be &quot;aspeed,ast2400-i2c-controller&quot;<br class=
-=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0or &quot;aspeed,ast2500-i2c=
--controller&quot;<br class=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- reg=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0: address start and range of controller<br c=
-lass=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- ranges=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 : defines address offset and range for busses<br class=
-=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- interrupts=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 : interrupt number<br class=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- clocks=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 : root clock of bus, should reference the APB<br class=
-=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0clock<br class=3D"gmail_msg=
-">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- clock-ranges=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 : specifies that child busses can inherit clocks<br class=3D"gmail_msg"=
->
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- interrupt-controller=C2=A0 : denotes that t=
-he controller receives and fires<br class=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0new interrupts for child bu=
-sses<br class=3D"gmail_msg">
-&gt;&gt; +<br class=3D"gmail_msg">
-&gt;&gt; +Bus:<br class=3D"gmail_msg">
-&gt;&gt; +<br class=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0Required Properties:<br class=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- #address-cells=C2=A0 =C2=A0 =C2=A0 =C2=A0 :=
- should be 1<br class=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- #size-cells=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0: should be 0<br class=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- reg=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0: address offset and range of bus<br class=
-=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- compatible=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 : should be &quot;aspeed,ast2400-i2c-bus&quot;<br class=3D"gmail=
-_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0or &quot;aspeed,ast2500-i2c=
--bus&quot;<br class=3D"gmail_msg">
-&gt;&gt; +=C2=A0 =C2=A0 =C2=A0- bus=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0: the bus&#39;s number<br class=3D"gmail_msg=
-">
-&gt;<br class=3D"gmail_msg">
-&gt; Don&#39;t use indexes. The reg property is enough to id which bus is w=
-hich.<br class=3D"gmail_msg">
-</blockquote></div>
+Sure.
 
---001a113dacb8b88a89053cf4470a--
+> > =
+
+> > Agreed. How do we express the realias node in the overlay format though?
+> > I was trying to come up with some way to make that work by
+> > redistributing the alias to the fragments but that doesn't work so
+> > well.
+> =
+
+> So, I'm thinking of the overlay dt info in 3 pieces
+> =
+
+> 1) Global metadata
+> =
+
+>   Not much here yet, but it seems like it could be useful.
+> =
+
+> 2) Per-connector metadata
+> =
+
+>   This specifies what sort of "socket" each "plug" on the overlay
+>   needs to connect to, and any other information we need that's
+>   specific to a particular "plug"
+> =
+
+> 3) DT fragments
+> =
+
+>   The actual device info applied once we've resolved all the aliases
+>   and whatnot.
+> =
+
+> The realias information would need to be in part (2)
+> =
+
+> How we encode those pieces into the final overlay dt is pretty close
+> to an arbitrary choice.
+
+Ok. Perhaps we could have a node in the root of the overlay for (2)
+which we can use to lookup the aliases when resolving them.
+
+/ {
+	// Global metadata (1)
+	compatible =3D "foo,whirlgig-widget";
+	=
+
+	// Per-connector metadata (2)
+	socket_a: socket@0 {
+		compatible =3D "foo,widget-socket";
+	};
+
+	socket_b: socket@1 {
+		compatible =3D "foo,widget-socket";
+		realias {
+			i2c-b =3D "i2c";
+			intc-b =3D "intc";
+			mmio-b =3D "mmio";
+		};
+	};
+
+	// Fragments (3)
+	fragment@0 {
+		target-alias =3D "i2c";
+		__overlay__ {
+
+		};
+	};
+};
+
+Then when we resolve aliases we would look through the set of sockets
+and look for realias nodes to figure out which node to target. It may
+also be better if we have a sockets container node and a fragments
+container node to partition the two things.
+
+> > > =
+
+> > > I don't think we need any new constructs here.  If there are
+> > > mismatches we can put dummy bridges with appropriate ranges properties
+> > > on one side or the other.
+> > > =
+
+> > > The only thing I see that might want some help is that the connector
+> > > type should certainly imply a specific set of cell widths for all the
+> > > included buses.  So possibly we should supply some stuff to help
+> > > enforce that.
+> > =
+
+> > I'm specifically thinking that anything that has a #<name>-cells
+> > associated with it (#gpio-cells, #clock-cells, #power-domain-cells,
+> > etc.) would need to have an associated <name>-map property and
+> > associated parsing code so that we can make a consistent cell width for
+> > the connector. If we have existing ways to make this work, e.g.
+> > interrupt-map or ranges, then we don't need.
+> =
+
+> Yes, I agree.  All the "interrupt tree like" things need interrupt
+> tree like nexus nodes, with a map and map-mask.
+> =
+
+> However, we also need some way of ensuring that the #address-cells and
+> #size-cells for any buses we expose match properly.
+> =
+
+> Or maybe we need to invent something like a cross between 'ranges' and
+> 'interrupt-map' that can remap ranges on one address space to the
+> address space attached to a different node.
+
+Ok. I can't think of any use case for remapping reg properties across
+connectors. At least, for plug in boards we typically pass through i2c,
+spi, uart, usb, dsi, hdmi, mi2s, etc. and I don't think we're changing
+the reg properties for the nodes we would be placing on those busses.
+Maybe PCIe is one case where this would matter though? I haven't thought
+of how to handle that.
+
+> > > > 4) Attempt to maintain almost all of the current overlay syntax with
+> > > >    syntactic sugar
+> > > =
+
+> > > I'm not really sure what you mean by that.
+> > > =
+
+> > =
+
+> > I mean that we're not really trying to change the general structure of
+> > the DT overlay syntax. At least from what I can tell we're planning to
+> > convert this /plugin/ format into a DT overlay that gets compiled into
+> > binary all inside DTC.
+> =
+
+> Roughly speaking, yes.  However I think we should take the opportunity
+> to address design flaws in the current overlay encoding as they come
+> up (e.g. the fact that it uses phandles which *always* have to be
+> resolved - better to directly use an alias / symbol / label).
+> =
+
+
+Alright. I was hoping to do some quick prototyping without changing DTC
+to handle a different overlay encoding but that doesn't sound possible.
