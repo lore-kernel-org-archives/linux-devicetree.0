@@ -1,74 +1,54 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCH] ARM: dts: lpc32xx: set default parent clock for
- pwm1 & pwm2
-Date: Thu, 8 Sep 2016 02:46:28 +0300
-Message-ID: <edf2ee45-7793-7564-9318-ee08909d0ff5@mleia.com>
-References: <1473277073-12093-1-git-send-email-slemieux.tyco@gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 4/5] ARM: dts: exynos: add support for ISP power domain
+ to exynos4x12 clocks device
+Date: Wed, 7 Sep 2016 17:22:54 -0700
+Message-ID: <20160908002254.GD13062@codeaurora.org>
+References: <1472737551-15272-1-git-send-email-m.szyprowski@samsung.com>
+ <1472737551-15272-5-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473277073-12093-1-git-send-email-slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1472737551-15272-5-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Inki Dae <inki.dae@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylvain,
-
-On 07.09.2016 22:37, Sylvain Lemieux wrote:
-> From: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
+On 09/01, Marek Szyprowski wrote:
+> Exynos4412 clock controller contains some additional clocks for FIMC-ISP
+> (Camera ISP) subsystem. Registers for those clocks are partially located
+> in the SOC area, which belongs to ISP power domain.
 > 
-> The change setup the peripheral clock (PERIPH_CLK) as the default 
-> parent clock for PWM1 & PWM2.
+> This patch extends clock controller node with ISP clock sub-node and link
+> (phandle) to ISP power domain.
 > 
-> Signed-off-by: Sylvain Lemieux <slemieux-1xCVI8+nB4ZBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
->  arch/arm/boot/dts/lpc32xx.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  arch/arm/boot/dts/exynos4x12.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-> index e295e1e..ed85b95 100644
-> --- a/arch/arm/boot/dts/lpc32xx.dtsi
-> +++ b/arch/arm/boot/dts/lpc32xx.dtsi
-> @@ -469,6 +469,9 @@
->  				compatible = "nxp,lpc3220-pwm";
->  				reg = <0x4005C000 0x4>;
->  				clocks = <&clk LPC32XX_CLK_PWM1>;
-> +				assigned-clocks = <&clk LPC32XX_CLK_PWM1>,
-> +						  <&clk LPC32XX_CLK_PERIPH>;
+> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
+> index 3394bdcf10ae..4daea67546b9 100644
+> --- a/arch/arm/boot/dts/exynos4x12.dtsi
+> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
+> @@ -74,6 +74,11 @@
+>  		compatible = "samsung,exynos4412-clock";
+>  		reg = <0x10030000 0x20000>;
+>  		#clock-cells = <1>;
+> +
+> +		isp-clock-controller {
+> +			compatible = "samsung,exynos4412-isp-clock";
+> +			power-domains = <&pd_isp>;
+> +		};
 
-I believe here "assigned-clocks = <&clk LPC32XX_CLK_PWM1>;" would be
-good enough. In this context the second clock could be potentially
-specified, if you are going to set its rate, but because it is a common
-clock for many controllers it should not be done from a PWM device node.
+Why can't we extend support in power domains code to have
+multiple domains for a single device node? i.e. power-domains =
+<&pd_isp>, <&pd_foo>, <&pd_bar>, and then pick the right one with
+power-domain-names or something like that? Making a subnode
+(which seems to turn into a child platform device?) seems like a
+quick solution for larger problems.
 
-> +				assigned-clock-parents = <&clk LPC32XX_CLK_PERIPH>;
->  				status = "disabled";
->  			};
->  
-> @@ -476,6 +479,9 @@
->  				compatible = "nxp,lpc3220-pwm";
->  				reg = <0x4005C004 0x4>;
->  				clocks = <&clk LPC32XX_CLK_PWM2>;
-> +				assigned-clocks = <&clk LPC32XX_CLK_PWM2>,
-> +						  <&clk LPC32XX_CLK_PERIPH>;
-
-Same as above.
-
-Please remove the second <&clk LPC32XX_CLK_PERIPH> value from the
-assigned-clocks property.
-
-> +				assigned-clock-parents = <&clk LPC32XX_CLK_PERIPH>;
->  				status = "disabled";
->  			};
->  
-> 
-
---
-With best wishes,
-Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
