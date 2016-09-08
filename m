@@ -1,30 +1,50 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [RESEND PATCH] ARM: tegra: fix erroneous address in dts
-Date: Wed, 7 Sep 2016 21:18:03 -0700
-Message-ID: <20160908041803.GA20110@localhost>
-References: <1468835208-13426-1-git-send-email-ralf@ramses-pyramidenbau.de>
- <20160718095802.GA422@ulmo.ba.sec>
- <3087941.oHflrW9cm7@wuerfel>
- <78670ccc-83ad-c7be-0377-dea1d794c078@ramses-pyramidenbau.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <78670ccc-83ad-c7be-0377-dea1d794c078-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Ramsauer <ralf-ex4EvEgDZR1o7HI0AxOeTKwczVv4G7md@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Subject: [PATCH] syscon: dt-bindings: Add documentation for Aspeed system control units
+Date: Thu,  8 Sep 2016 14:43:18 +0930
+Message-ID: <1473311598-32722-1-git-send-email-andrew@aj.id.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "linux-gpio @ vger . kernel . org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel @ vger . kernel . org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree @ vger . kernel . org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 07, 2016 at 03:50:57PM +0200, Ralf Ramsauer wrote:
-> Hi all,
-> 
-> may I *poke* you again?
-> 
-> We're close to the release of 4.8, and this patch (b5c86b749 upstream)
-> should still be reverted on mainline....
+Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/aspeed-scu.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/aspeed-scu.txt
 
-Ok, done in fixes now.
+diff --git a/Documentation/devicetree/bindings/mfd/aspeed-scu.txt b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
+new file mode 100644
+index 000000000000..4fc5b83726d6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/aspeed-scu.txt
+@@ -0,0 +1,18 @@
++The Aspeed System Control Unit manages the global behaviour of the SoC,
++configuring elements such as clocks, pinmux, and reset.
++
++Required properties:
++- compatible:	One of:
++		"aspeed,ast2400-scu", "syscon", "simple-mfd"
++		"aspeed,g4-scu", "syscon", "simple-mfd"
++		"aspeed,ast2500-scu", "syscon", "simple-mfd"
++		"aspeed,g5-scu", "syscon", "simple-mfd"
++
++- reg:		contains the offset and length of the SCU memory region
++
++Example:
++
++syscon: syscon@1e6e2000 {
++	compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
++	reg = <0x1e6e2000 0x1a8>;
++};
+-- 
+2.7.4
 
-
--Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
