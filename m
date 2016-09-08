@@ -1,66 +1,83 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] Documentation: dt: net: add mt76 wireless device binding
-Date: Thu, 08 Sep 2016 13:54:24 +0300
-Message-ID: <87eg4uu0f3.fsf@kamboji.qca.qualcomm.com>
-References: <20160905095128.80560-1-nbd@nbd.name>
-        <20160905095128.80560-2-nbd@nbd.name>
+From: "S.H. Xie" <shaohui.xie@nxp.com>
+Subject: RE: [PATCH 1/7] [v2] dt-bindings: fsl: updates bindings for some
+ SoC-specific devices
+Date: Thu, 8 Sep 2016 10:57:34 +0000
+Message-ID: <DB5PR0401MB2183290FCC833282DB09A264E8FB0@DB5PR0401MB2183.eurprd04.prod.outlook.com>
+References: <1473069695-33092-1-git-send-email-shh.xie@gmail.com>
+ <1473069695-33092-2-git-send-email-shh.xie@gmail.com>
+ <20160908023026.GC2533@x250>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160905095128.80560-2-nbd-Vt+b4OUoWG0@public.gmane.org> (Felix Fietkau's message of
-        "Mon, 5 Sep 2016 11:51:26 +0200")
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160908023026.GC2533@x250>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org> writes:
+> -----Original Message-----
+> From: Shawn Guo [mailto:shawnguo@kernel.org]
+> Sent: Thursday, September 08, 2016 10:30 AM
+> To: shh.xie@gmail.com
+> Cc: devicetree@vger.kernel.org; robh+dt@kernel.org; mark.rutland@arm.com;
+> linux-arm-kernel@lists.infradead.org; catalin.marinas@arm.com;
+> will.deacon@arm.com; linux-kernel@vger.kernel.org; S.H. Xie
+> <shaohui.xie@nxp.com>; arnd@arndb.de
+> Subject: Re: [PATCH 1/7] [v2] dt-bindings: fsl: updates bindings for some SoC-
+> specific devices
+> 
+> On Mon, Sep 05, 2016 at 06:01:29PM +0800, shh.xie@gmail.com wrote:
+> > From: Shaohui Xie <Shaohui.Xie@nxp.com>
+> >
+> > SCFG and DCFG are SoC-specific devices can be found on SoCs like
+> > LS1021A, LS1043A and LS1046A, this patch updates bindings for SCFG and
+> > DCFG to reflect more SoCs.
+> >
+> > Signed-off-by: Shaohui Xie <Shaohui.Xie@nxp.com>
+> > ---
+> > changes in V2:
+> > new patch.
+> >
+> >  Documentation/devicetree/bindings/arm/fsl.txt | 12 +++++++++---
+> >  1 file changed, 9 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/fsl.txt
+> > b/Documentation/devicetree/bindings/arm/fsl.txt
+> > index dbbc095..6f92d0b 100644
+> > --- a/Documentation/devicetree/bindings/arm/fsl.txt
+> > +++ b/Documentation/devicetree/bindings/arm/fsl.txt
+> > @@ -97,7 +97,7 @@ Freescale LS1021A Platform Device Tree Bindings
+> > Required root node compatible properties:
+> >    - compatible = "fsl,ls1021a";
+> >
+> > -Freescale LS1021A SoC-specific Device Tree Bindings
+> > +Freescale SoC-specific Device Tree Bindings
+> >  -------------------------------------------
+> >
+> >  Freescale SCFG
+> > @@ -105,7 +105,10 @@ Freescale SCFG
+> >  configuration and status registers for the chip. Such as getting PEX
+> > port  status.
+> >    Required properties:
+> > -  - compatible: should be "fsl,ls1021a-scfg"
+> > +  - compatible: Should contain a chip-specific compatible string,
+> > +	Chip-specific strings are of the form "fsl,<chip>-scfg", such as:
+> > +	"fsl,ls1021a-scfg"
+> 
+> Per Documentation/devicetree/bindings/submitting-patches.txt, the known values
+> of "<chip>" should be documented.
+Will add the supported chips in next version.
 
-> Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
-> ---
->  .../bindings/net/wireless/mediatek,mt76.txt        | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-> new file mode 100644
-> index 0000000..d51c35f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-> @@ -0,0 +1,26 @@
-> +* MediaTek mt76xx devices
-> +
-> +This node provides properties for configuring the MediaTek mt76xx wireless
-> +device. The node is expected to be specified as a child node of the PCI
-> +controller to which the wireless chip is connected.
-> +
-> +Optional properties:
-> +
-> +- mac-address: See ethernet.txt in the parent directory
-> +- local-mac-address: See ethernet.txt in the parent directory
-> +- mediatek,2ghz: Override the 2.4 GHz band capability from EEPROM
-> +- mediatek,5ghz: Override the 5 GHz band capability from EEPROM
-> +- mediatek,mtd-eeprom: Specify a MTD partition + offset containing EEPROM data
-> +
-> +&pcie {
-> +	status = "okay";
-> +
-> +	pcie0 {
-> +		mt76@0,0 {
-> +			reg = <0x0000 0 0 0 0>;
-> +			device_type = "pci";
-> +			mediatek,mtd-eeprom = <&factory 0x8000>;
-> +			mediatek,2ghz = <0>;
-> +		};
-> +	};
-> +};
+Thank you!
 
-I need an ack from device tree maintainers, CCing the devicetree list.
-Do we need to resend or this ok?
-
-Patchwork link:
-
-https://patchwork.kernel.org/patch/9313309/
-
--- 
-Kalle Valo
+Shaohui
