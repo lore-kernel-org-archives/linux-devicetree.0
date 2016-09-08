@@ -1,28 +1,68 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v3 3/8] clk: sunxi-ng: div: Allow to set a maximum
-Date: Thu, 8 Sep 2016 18:26:34 +0800
-Message-ID: <CAGb2v64Fmzi57xgLn2hx9g_K+PgtNnWHTN+3iLOT9g1MsBz1fg@mail.gmail.com>
-References: <20160908094843.14710-1-maxime.ripard@free-electrons.com> <20160908094843.14710-4-maxime.ripard@free-electrons.com>
+From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] hwmon: xgene: Add hwmon driver
+Date: Thu, 08 Sep 2016 11:47:59 +0100
+Message-ID: <57D141DF.2010603@arm.com>
+References: <1469134557-26869-1-git-send-email-hotran@apm.com> <13081573.BbD3TmEU5Y@wuerfel> <20160907223705.GA31582@roeck-us.net> <2992356.ULGoZEEDZp@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160908094843.14710-4-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2992356.ULGoZEEDZp@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Hoan Tran <hotran-qTEPVZfXA3Y@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, lho-qTEPVZfXA3Y@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 8, 2016 at 5:48 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> Some dividers might have a maximum value that is lower than the width of
-> the register.
->
-> Add a field to _ccu_div to handle those case properly. If the field is set
-> to 0, the code will assume that the maximum value is the maximum one that
-> can be used with the field register width.
->
-> Otherwise, we'll use whatever value has been set.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Hi,
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+On 08/09/16 09:14, Arnd Bergmann wrote:
+> On Wednesday, September 7, 2016 3:37:05 PM CEST Guenter Roeck wrote:
+>> On Wed, Sep 07, 2016 at 11:41:44PM +0200, Arnd Bergmann wrote:
+>>> On Thursday, July 21, 2016 1:55:56 PM CEST Hoan Tran wrote:
+>>>> +               ctx->comm_base_addr = cppc_ss->base_address;
+>>>> +               if (ctx->comm_base_addr) {
+>>>> +                       ctx->pcc_comm_addr =
+>>>> +                                       acpi_os_ioremap(ctx->comm_base_addr,
+>>>> +                                                       cppc_ss->length);
+>>>>
+>>>
+>>> This causes the arm64 allmodconfig build to fail now, according to
+>>> kernelci:
+>>>
+>>>       1  ERROR: "memblock_is_memory" [drivers/hwmon/xgene-hwmon.ko] undefined!
+>>>
+>>> Should this perhaps call ioremap() or memremap() instead?
+>>>
+>> Hmmm ... almost sounds to me like blaming the messenger. e7cd190385d1 ("arm64:
+>> mark reserved memblock regions explicitly in iomem") starts using a function
+>> in acpi_os_ioremap() which is not exported. On top of that, memblock_is_memory()
+>> is declared as __init_memblock, which makes me really uncomfortable.
+>> If acpi_os_ioremap() must not be used by modules, and possibly only during
+>> early (?) initialization, maybe its declaration should state those limitations ?
+> 
+> Ah, I didn't notice that. I guess both patches were correct individually and
+> got added to linux-next around the same time but caused allmodconfig to blow up
+> when used together.
+> 
+> Adding everyone who was involved in the memblock patch to Cc here, maybe one
+> of them has an idea what the correct fix is. There are only two other drivers
+> using acpi_os_ioremap() and one of them is x86-specific, so it's still likely
+> that drivers are not actually supposed to use this symbol. Making
+> acpi_os_ioremap() an exported function in arm64 would also work.
+
+You could use acpi_os_map_iomem()/acpi_os_unmap_iomem() from acpi/acpi_io.h.
+If there isn't an existing mapping these end up in acpi_os_ioremap(), and are
+already EXPORT_SYMBOL_GPL().
+
+(I'm still waiting for allmodconfig on linux-next to finish building)
+
+
+Thanks,
+
+James
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
