@@ -1,37 +1,47 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: rk3399: add powerdomain for typec
-Date: Thu, 08 Sep 2016 17:16:12 +0200
-Message-ID: <1502775.CkB0Rhdvgx@phil>
-References: <1473289577-14101-1-git-send-email-zyw@rock-chips.com>
- <1473289577-14101-2-git-send-email-zyw@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1473289577-14101-2-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH 1/2] ARM: dts: s5p: Remove skeleton.dtsi inclusion for S5PV210
+Date: Thu,  8 Sep 2016 11:26:00 -0400
+Message-ID: <1473348361-15784-2-git-send-email-javier@osg.samsung.com>
+References: <1473348361-15784-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1473348361-15784-1-git-send-email-javier@osg.samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 7. September 2016, 16:06:17 CEST schrieb Chris Zhong:
-> The tcpc power domain will try to power up/down the power of Type-C PHY.
-> Hence, we need control it in Type-C PHY driver with the pm_runtime helper.
-> 
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+The skeleton.dtsi file was removed in ARM64 for different reasons as
+explained in commit ("3ebee5a2e141 arm64: dts: kill skeleton.dtsi").
 
-applied to my dts64 branch for 4.9 (or 4.10) after fixing the subject 
-(rockchip: instead of rk3399:), as even without the advanced logic from patch1 
-the driver core will already make sure to at least powerup the domain before 
-probe and power-down after remove.
+These also applies to ARM and it will also allow to get rid of the
+following DTC warnings in the future:
 
+"Node /memory has a reg or ranges property, but no unit name"
 
-Heiko
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+---
+
+ arch/arm/boot/dts/s5pv210.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
+index ffc36bd24d2f..a853918be43f 100644
+--- a/arch/arm/boot/dts/s5pv210.dtsi
++++ b/arch/arm/boot/dts/s5pv210.dtsi
+@@ -19,11 +19,13 @@
+  * published by the Free Software Foundation.
+ */
+ 
+-#include "skeleton.dtsi"
+ #include <dt-bindings/clock/s5pv210.h>
+ #include <dt-bindings/clock/s5pv210-audss.h>
+ 
+ / {
++	#address-cells = <1>;
++	#size-cells = <1>;
++
+ 	aliases {
+ 		csis0 = &csis0;
+ 		fimc0 = &fimc0;
+-- 
+2.7.4
