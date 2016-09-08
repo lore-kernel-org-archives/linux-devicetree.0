@@ -1,75 +1,108 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: Move A23/A33 usbphy and usb_otg nodes
- to common dtsi
-Date: Thu, 8 Sep 2016 22:23:20 +0200
-Message-ID: <20160908202320.GU8913@lukather>
-References: <20160908032535.12987-1-wens@csie.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and GXBB
+Date: Thu, 08 Sep 2016 13:42:22 -0700
+Message-ID: <m2eg4ui0nl.fsf@baylibre.com>
+References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
+        <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
+        <m260q6jibf.fsf@baylibre.com>
+        <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
+        <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bGopQmzlzQgFk3Fg"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160908032535.12987-1-wens-jdAy2FN1RRM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk> (Ben
+        Dooks's message of "Thu, 8 Sep 2016 21:20:12 +0100")
+Sender: linux-clk-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, johnyoun@synopsys.com, will.deacon@arm.com, mturquette@baylibre.com, linux-usb@vger.kernel.org, sboyd@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, catalin.marinas@arm.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
+Ben Dooks <ben.dooks@codethink.co.uk> writes:
 
---bGopQmzlzQgFk3Fg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 08/09/16 20:52, Martin Blumenstingl wrote:
+>> On Thu, Sep 8, 2016 at 9:35 PM, Kevin Hilman <khilman@baylibre.com> wrote:
+>>>> +     phy = devm_phy_create(&pdev->dev, NULL, &phy_meson_usb2_ops);
+>>>> +     if (IS_ERR(phy)) {
+>>>> +             dev_err(&pdev->dev, "failed to create PHY\n");
+>>>> +             return PTR_ERR(phy);
+>>>> +     }
+>>>> +
+>>>> +     if (usb_reset_refcnt++ == 0) {
+>>>> +             ret = device_reset(&pdev->dev);
+>>>> +             if (ret) {
+>>>> +                     dev_err(&phy->dev, "Failed to reset USB PHY\n");
+>>>> +                     return ret;
+>>>> +             }
+>>>> +     }
+>>>
+>>> The ref count + reset here looks like something that could/should be
+>>> handled in a runtime PM callback.
+>> Unfortunately that doesn't work (as Jerome found out) because both
+>> PHYs are sharing the same reset line.
+>> So if the second PHY would call device_reset then it would also reset
+>> the first PHY!
+>>
+>> There's a comment above the declaration of usb_reset_refcnt which
+>> tries to explain this:
+>> "The PHYs are sharing a common reset line -> we are only allowed to
+>> reset once for all PHYs."
+>> Maybe I should move this comment to the "if (usb_reset_refcnt++ == 0)
+>> {" line to make it easier to see?
+>>
+>
+> pm-runtime has refcounting in it. When one of the nodes turns on,
+> the pm-runtime will call your driver to say there is a user when
+> this first use turns up.
+>
+> If all the sub-phys turn off and drop their refcount then the driver
+> is called to say there are no more users and you can go to sleep.
 
-Hi,
+After a chat w/Martin on IRC, It turns out runtime PM wont help here.
 
-On Thu, Sep 08, 2016 at 11:25:35AM +0800, Chen-Yu Tsai wrote:
-> The usbphy and usb_otg nodes in the A23 and A33 dts files only differ
-> by compatible, and for the usbphy, the size of one of its register
-> regions.
->=20
-> Move all the common bits to the A23/A33 common dtsi file.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->=20
-> Hi Maxime,
->=20
-> This patch applies on top of your A23/A33 CCU patches.
+The reason is because there are physically two PHY devices[1].  Those 2
+devices will be treated independely by runtime PM, and have separate
+use-counting, which means doing what I proposed would cause a reset to
+happen when either device was probed.
 
-It was not applying properly. I think I did the proper fixup, but
-you'll probably want to double check.
+So, I think it's OK as it is.
 
-Maxime
+Kevin
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+[1] from the DT patch:
 
---bGopQmzlzQgFk3Fg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJX0ci4AAoJEBx+YmzsjxAg8rkQAJ1AehUAdM0ahC12bMhwc09j
-knmH7ov2bxMFYLQ7OGboaqGVpwUd0zT7ZIPXrc7xCnloKDUCGlFp2ZkhL6kesQW4
-eqTpnaPrCgvZmitkpUNBXjaJHD7UbtTG3OmFeLQDDJdIpFBuQ5t70ymbcRh+QyjD
-TNuCK94VXaisBNQ/LqIbsG4tTwNqQEDsk2LKnlV2fbuDnftVogCUbg2zQptoEae8
-x2v8M3bhsr4AswTc6aDU6oXSOmSNuL7CsCnn9s7sXZzUGoX4xIcztUhrZ1ytPEOs
-p1hPuKN4MfHYd4AE8kLDSP9gupyDbOcvqZXUsBZHd9dTHZNA/Qo4J42JVotqdyeA
-7oC/SU+Q2T4PvquUN0oShTAewoNngVnpDhjJz8Qmzh5khAEATBVa55qULCCVccEI
-/I42ip1R6DcRR2sm29CqpXLsU9kI5OPwBFmRIccg3Or/yApb9MwA1K0kUXv4pRdY
-YLhF6DG0m7wkdZElBNYZ30gzmhsQrXXwf1k74mJUZIAm7F49/HOavldFFafXa+qp
-jW1y8u6sLUKoS7NZJRIqAV4QLrqF6NK1csviJkdBe2P16c6zYYgz0AYTL/zTrSg9
-FHP0mAcu7aYR2ScnNnelb+Cbq/S3PJ3w/UnCSpcsS//znYHcQdC0belwL53cyXbL
-w+sRBkDaD4CwgxQIq7po
-=Co00
------END PGP SIGNATURE-----
-
---bGopQmzlzQgFk3Fg--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index 2e8a3d9..02dfc54 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -151,6 +151,34 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 
++		usb-phys@c0000000 {
++			compatible = "simple-bus";
++			reg = <0x0 0xc0000000 0x0 0x40>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges = <0x0 0x0 0x0 0xc0000000 0x0 0x40>;
++
++			usb0_phy: usb_phy@0 {
++				compatible = "amlogic,meson-gxbb-usb2-phy";
++				#phy-cells = <0>;
++				reg = <0x0 0x0 0x0 0x20>;
++				resets = <&reset 34>;
++				clocks = <&clkc CLKID_USB &clkc CLKID_USB0>;
++				clock-names = "usb_general", "usb";
++				status = "disabled";
++			};
++
++			usb1_phy: usb_phy@20 {
++				compatible = "amlogic,meson-gxbb-usb2-phy";
++				#phy-cells = <0>;
++				reg = <0x0 0x20 0x0 0x20>;
++				resets = <&reset 34>;
++				clocks = <&clkc CLKID_USB &clkc CLKID_USB1>;
++				clock-names = "usb_general", "usb";
++				status = "disabled";
++			};
++		};
++
