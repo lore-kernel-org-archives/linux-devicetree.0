@@ -1,7 +1,7 @@
 From: Randy Li <ayaka@soulik.info>
-Subject: [PATCH 2/4] phy: rockchip-usb: use rockchip_usb_phy_reset to reset phy during wakeup
-Date: Thu,  8 Sep 2016 22:27:14 +0800
-Message-ID: <1473344836-26707-3-git-send-email-ayaka@soulik.info>
+Subject: [PATCH 1/4] phy: Add reset callback
+Date: Thu,  8 Sep 2016 22:27:13 +0800
+Message-ID: <1473344836-26707-2-git-send-email-ayaka@soulik.info>
 References: <1473344836-26707-1-git-send-email-ayaka@soulik.info>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1473344836-26707-1-git-send-email-ayaka@soulik.info>
@@ -10,83 +10,67 @@ To: linux-usb@vger.kernel.org
 Cc: John.Youn@synopsys.com, kishon@ti.com, felipe.balbi@linux.intel.com, mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, randy.li@rock-chips.com, Randy Li <ayaka@soulik.info>
 List-Id: devicetree@vger.kernel.org
 
-It is a hardware bug in RK3288, the only way to solve it is to
-reset the phy.
+The only use for this is for solving a hardware design problem in
+usb of Rockchip RK3288.
 
 Signed-off-by: Randy Li <ayaka@soulik.info>
 ---
- .../devicetree/bindings/phy/rockchip-usb-phy.txt     |  3 +++
- drivers/phy/phy-rockchip-usb.c                       | 20 ++++++++++++++++++++
- 2 files changed, 23 insertions(+)
+ drivers/phy/phy-core.c  | 14 ++++++++++++++
+ include/linux/phy/phy.h |  3 +++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
-index cc6be96..57dc388 100644
---- a/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
-@@ -27,6 +27,9 @@ Optional Properties:
- - clocks : phandle + clock specifier for the phy clocks
- - clock-names: string, clock name, must be "phyclk"
- - #clock-cells: for users of the phy-pll, should be 0
-+- reset-names: Only allow the following entries:
-+ - phy-reset
-+- resets: Must contain an entry for each entry in reset-names.
- 
- Example:
- 
-diff --git a/drivers/phy/phy-rockchip-usb.c b/drivers/phy/phy-rockchip-usb.c
-index 2a7381f..734987f 100644
---- a/drivers/phy/phy-rockchip-usb.c
-+++ b/drivers/phy/phy-rockchip-usb.c
-@@ -29,6 +29,7 @@
- #include <linux/reset.h>
- #include <linux/regmap.h>
- #include <linux/mfd/syscon.h>
-+#include <linux/delay.h>
- 
- static int enable_usb_uart;
- 
-@@ -64,6 +65,7 @@ struct rockchip_usb_phy {
- 	struct clk_hw	clk480m_hw;
- 	struct phy	*phy;
- 	bool		uart_enabled;
-+	struct reset_control *reset;
- };
- 
- static int rockchip_usb_phy_power(struct rockchip_usb_phy *phy,
-@@ -144,9 +146,23 @@ static int rockchip_usb_phy_power_on(struct phy *_phy)
- 	return clk_prepare_enable(phy->clk480m);
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index 8eca906..32e838d 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -357,6 +357,20 @@ int phy_set_mode(struct phy *phy, enum phy_mode mode)
  }
+ EXPORT_SYMBOL_GPL(phy_set_mode);
  
-+static int rockchip_usb_phy_reset(struct phy *_phy)
++int phy_reset(struct phy *phy)
 +{
-+	struct rockchip_usb_phy *phy = phy_get_drvdata(_phy);
++	int ret;
++	if (!phy || !phy->ops->reset)
++		return 0;
 +
-+	if (phy->reset) {
-+		reset_control_assert(phy->reset);
-+		udelay(10);
-+		reset_control_deassert(phy->reset);
-+	}
++	mutex_lock(&phy->mutex);
++	ret = phy->ops->reset(phy);
++	mutex_unlock(&phy->mutex);
 +
-+	return 0;
++	return ret;
 +}
++EXPORT_SYMBOL_GPL(phy_reset);
 +
- static const struct phy_ops ops = {
- 	.power_on	= rockchip_usb_phy_power_on,
- 	.power_off	= rockchip_usb_phy_power_off,
-+	.reset		= rockchip_usb_phy_reset,
- 	.owner		= THIS_MODULE,
+ /**
+  * _of_phy_get() - lookup and obtain a reference to a phy by phandle
+  * @np: device_node for which to get the phy
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index f08b672..7978df6 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -36,6 +36,7 @@ enum phy_mode {
+  * @power_on: powering on the phy
+  * @power_off: powering off the phy
+  * @set_mode: set the mode of the phy
++ * @reset: reseting the phy
+  * @owner: the module owner containing the ops
+  */
+ struct phy_ops {
+@@ -44,6 +45,7 @@ struct phy_ops {
+ 	int	(*power_on)(struct phy *phy);
+ 	int	(*power_off)(struct phy *phy);
+ 	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
++	int	(*reset)(struct phy *phy);
+ 	struct module *owner;
  };
  
-@@ -185,6 +201,10 @@ static int rockchip_usb_phy_init(struct rockchip_usb_phy_base *base,
- 		return -EINVAL;
- 	}
- 
-+	rk_phy->reset = of_reset_control_get(child, "phy-reset");
-+	if (IS_ERR(rk_phy->reset))
-+		rk_phy->reset = NULL;
-+
- 	rk_phy->reg_offset = reg_offset;
- 
- 	rk_phy->clk = of_clk_get_by_name(child, "phyclk");
+@@ -136,6 +138,7 @@ int phy_exit(struct phy *phy);
+ int phy_power_on(struct phy *phy);
+ int phy_power_off(struct phy *phy);
+ int phy_set_mode(struct phy *phy, enum phy_mode mode);
++int phy_reset(struct phy *phy);
+ static inline int phy_get_bus_width(struct phy *phy)
+ {
+ 	return phy->attrs.bus_width;
 -- 
 2.7.4
