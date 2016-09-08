@@ -1,39 +1,52 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/2] spi: meson: Add Amlogic GXBB compatible
-Date: Thu, 08 Sep 2016 11:17:08 -0700
-Message-ID: <m2r38umf2z.fsf@baylibre.com>
-References: <1473321206-32284-1-git-send-email-narmstrong@baylibre.com>
-        <293061a8-e867-4d91-20cb-6e5df8e9b543@suse.de>
-        <4a199a95-3ee6-a3a0-bc8a-63bd0912e7d2@suse.de>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH V3 0/5] firmware: Add support for TI System Control
+ Interface (TI-SCI) protocol driver
+Date: Thu, 8 Sep 2016 21:19:36 +0300
+Message-ID: <9c609ea5-5ea8-f58a-ae32-f8af2c85dd72@ti.com>
+References: <20160906190127.23522-1-nm@ti.com> <7hshtbtu8l.fsf@baylibre.com>
+ <f41d968c-46c9-997e-0fa0-edbef34a1fa5@ti.com> <m2y432nvs8.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4a199a95-3ee6-a3a0-bc8a-63bd0912e7d2@suse.de> ("Andreas
-        =?utf-8?Q?F=C3=A4rber=22's?= message of "Thu, 8 Sep 2016 14:50:37 +0200")
+In-Reply-To: <m2y432nvs8.fsf@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, broonie@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
+To: Kevin Hilman <khilman@baylibre.com>, Nishanth Menon <nm@ti.com>
+Cc: Rob Herring <robh@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Russ Dill <Russ.Dill@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, narmstrong@baylibre.com, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, David Griego <david.griego@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Andreas F=C3=A4rber <afaerber@suse.de> writes:
-
-> Am 08.09.2016 um 14:04 schrieb Andreas F=C3=A4rber:
->> Am 08.09.2016 um 09:53 schrieb Neil Armstrong:
->>> This patchset adds a specific compatible string in the Meson SPIFC driv=
-er for
->>> the Amlogic Meson GXBB SoC.
->>=20
->> Any particular reason? We could just reuse the meson6 one since there
->> appear to be no code changes so far.
+On 08/09/16 20:31, Kevin Hilman wrote:
+> Nishanth Menon <nm@ti.com> writes:
 >
-> So Neil is essentially telling me they don't know whether there are any
-> differences in the IP block, so a separate compatible string was chosen.
+>> On 09/07/2016 01:55 PM, Kevin Hilman wrote:
+>>> Nishanth Menon <nm@ti.com> writes:
+>>
+>> [...] full mail thread in https://lkml.org/lkml/2016/9/6/747
+>>
+>>>> Overall architecture is very similar to SCPI[4] as follows:
+>>>
+>>> Dumb Q: I'm curious about the limitations in SCPI that were found that
+>>> made TI decided to implement its own version.
 >
-> No objection from my side, but a general clarification from device tree
-> maintainers when and when not to would be appreciated. (+ devicetree)
+> [...]
+>
+>> Long story short, investigation was done into what SCPI was providing
+>> (TI internal ofcourse) and SCPI did not fit our SoC generation needs -
+>
+> Thanks for the detailed explanation.  Very helpful.
+>
+> To be clear, I'm not a proponent of always using ARM "standards"
+> (especially when it's not exactly clear if it's a standard or a Juno
+> thing) but I'm seeing several SoCs come out with SCPI derivatives, or
+> old ARM versions etc., so was just curious about the decision making
+> process.
+>
+> Thanks for sharing,
+>
+> Kevin
 
-I'm not sure what the "right" way is (Rob?) but I think the usual way is
-to add new compatibles when needed.
+So, any other comments for this series or shall we still try to get it 
+merged for 4.9? We are -rc5 so it might be too late already and probably 
+better to push this for 4.10.
 
-Kevin
+-Tero
