@@ -1,76 +1,284 @@
-From: Jorik Jonker <jorik@kippendief.biz>
-Subject: Re: [PATCH v4 4/8] dts: sun8i-h3: move uart1 pinmux/peripheral
- assocation to DSTI
-Date: Thu, 8 Sep 2016 11:51:09 +0200
-Message-ID: <20160908095108.GA14915@carbon.kippendief.biz>
-References: <1473235141-12768-1-git-send-email-jorik@kippendief.biz>
- <1473235141-12768-5-git-send-email-jorik@kippendief.biz>
- <20160908062317.GD8913@lukather>
- <20160908080213.GA32547@carbon.kippendief.biz>
- <20160908090153.GL8913@lukather>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 3/8] clk: sunxi-ng: div: Allow to set a maximum
+Date: Thu,  8 Sep 2016 11:48:38 +0200
+Message-ID: <20160908094843.14710-4-maxime.ripard@free-electrons.com>
+References: <20160908094843.14710-1-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160908090153.GL8913@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: wens@csie.org, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160908094843.14710-1-maxime.ripard@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Mylene Josserand <mylene.josserand@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Some dividers might have a maximum value that is lower than the width of
+the register.
 
---FL5UXtIhxfXey3p5
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add a field to _ccu_div to handle those case properly. If the field is set
+to 0, the code will assume that the maximum value is the maximum one that
+can be used with the field register width.
 
-On Thu, Sep 08, 2016 at 11:01:53AM +0200, Maxime Ripard wrote:
->On Thu, Sep 08, 2016 at 10:02:13AM +0200, Jorik Jonker wrote:
->> So, I'm going for a v5, with these changes:
->> - rename uart0_pins to uart0_pa_pins (as there could be a pf)
->> - associate uart0_pa_pins with uart0 on all H3 board DTS files
->
->Please don't. We use that naming scheme everywhere else. Plus, nothing
->prevents any one from using one PF pin and one PA pin.
+Otherwise, we'll use whatever value has been set.
 
-OK, I will leave uart0 untouched, that's a good point.
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+---
+ drivers/clk/sunxi-ng/ccu_div.h  | 24 ++++++++++++++++++++----
+ drivers/clk/sunxi-ng/ccu_mp.c   | 23 +++++++++++++----------
+ drivers/clk/sunxi-ng/ccu_nkm.c  |  4 ++--
+ drivers/clk/sunxi-ng/ccu_nkmp.c | 21 ++++++++++-----------
+ drivers/clk/sunxi-ng/ccu_nm.c   | 16 ++++++++++------
+ 5 files changed, 55 insertions(+), 33 deletions(-)
 
->> - put rts/cts in seperate pinmux sets for uart1 (2,3: see below)
->> - associate rx/tx for uart1-3 in H3 DTSI (this is the only option)
->
->I'm still a bit skeptical about this. This wouldn't be in any way
->consistant. I prefer to have something consistant and a bit duplicated
->over something without any duplication but that confuses everyone
->about what should be placed where.
->
->> - associate UART1 rts/cts as pinctrl-1 in sun8i-h3-bananapi-m2-plus
->>  (to prevent breakage for existing users)
->
->You can also set it in pinctrl-0.
-
-OK, sounds reasonable, but also a bit contradictive. One the one hand=20
-you prefer consistency (so, let uart2-3 follow uart1 and include rts/cts=20
-in them), on the other hand the common case over the rare (so split off=20
-rts/cts). What should I do with uarts2-3 and should I do that to uart1=20
-too?
-
-Moreover, Chen-Yu prefers to drop _a and @0 when they are redundant,=20
-which does not appear to be the convention, looking at existing=20
-sun*dsti. What's your opinion on this?
-
-Best,
-Jorik
-
---FL5UXtIhxfXey3p5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlfRNIwACgkQ0IyxrguT4//O4wCgjRW6JLUMFqkjSGtCexZCcZBT
-84cAmwXuB01giuBJVYU392fcuPCnUk/L
-=Ha1I
------END PGP SIGNATURE-----
-
---FL5UXtIhxfXey3p5--
+diff --git a/drivers/clk/sunxi-ng/ccu_div.h b/drivers/clk/sunxi-ng/ccu_div.h
+index e1b1326e68a1..34c338832c0d 100644
+--- a/drivers/clk/sunxi-ng/ccu_div.h
++++ b/drivers/clk/sunxi-ng/ccu_div.h
+@@ -23,6 +23,9 @@
+  * struct _ccu_div - Internal divider description
+  * @shift: Bit offset of the divider in its register
+  * @width: Width of the divider field in its register
++ * @max: Maximum value allowed for that divider. This is the
++ *       arithmetic value, not the maximum value to be set in the
++ *       register.
+  * @flags: clk_divider flags to apply on this divider
+  * @table: Divider table pointer (if applicable)
+  *
+@@ -37,6 +40,8 @@ struct _ccu_div {
+ 	u8			shift;
+ 	u8			width;
+ 
++	u32			max;
++
+ 	u32			flags;
+ 
+ 	struct clk_div_table	*table;
+@@ -50,14 +55,25 @@ struct _ccu_div {
+ 		.table	= _table,					\
+ 	}
+ 
+-#define _SUNXI_CCU_DIV_FLAGS(_shift, _width, _flags)			\
+-	_SUNXI_CCU_DIV_TABLE_FLAGS(_shift, _width, NULL, _flags)
+-
+ #define _SUNXI_CCU_DIV_TABLE(_shift, _width, _table)			\
+ 	_SUNXI_CCU_DIV_TABLE_FLAGS(_shift, _width, _table, 0)
+ 
++#define _SUNXI_CCU_DIV_MAX_FLAGS(_shift, _width, _max, _flags) \
++	{								\
++		.shift	= _shift,					\
++		.width	= _width,					\
++		.flags	= _flags,					\
++		.max	= _max,						\
++	}
++
++#define _SUNXI_CCU_DIV_FLAGS(_shift, _width, _flags)			\
++	_SUNXI_CCU_DIV_MAX_FLAGS(_shift, _width, 0, _flags)
++
++#define _SUNXI_CCU_DIV_MAX(_shift, _width, _max)			\
++	_SUNXI_CCU_DIV_MAX_FLAGS(_shift, _width, _max, 0)
++
+ #define _SUNXI_CCU_DIV(_shift, _width)					\
+-	_SUNXI_CCU_DIV_TABLE_FLAGS(_shift, _width, NULL, 0)
++	_SUNXI_CCU_DIV_FLAGS(_shift, _width, 0)
+ 
+ struct ccu_div {
+ 	u32			enable;
+diff --git a/drivers/clk/sunxi-ng/ccu_mp.c b/drivers/clk/sunxi-ng/ccu_mp.c
+index cbf33ef5faa9..ebb1b31568a5 100644
+--- a/drivers/clk/sunxi-ng/ccu_mp.c
++++ b/drivers/clk/sunxi-ng/ccu_mp.c
+@@ -21,9 +21,9 @@ static void ccu_mp_find_best(unsigned long parent, unsigned long rate,
+ 	unsigned int best_m = 0, best_p = 0;
+ 	unsigned int _m, _p;
+ 
+-	for (_p = 0; _p <= max_p; _p++) {
++	for (_p = 1; _p <= max_p; _p <<= 1) {
+ 		for (_m = 1; _m <= max_m; _m++) {
+-			unsigned long tmp_rate = (parent >> _p) / _m;
++			unsigned long tmp_rate = parent / _p / _m;
+ 
+ 			if (tmp_rate > rate)
+ 				continue;
+@@ -46,13 +46,15 @@ static unsigned long ccu_mp_round_rate(struct ccu_mux_internal *mux,
+ 				       void *data)
+ {
+ 	struct ccu_mp *cmp = data;
++	unsigned int max_m, max_p;
+ 	unsigned int m, p;
+ 
+-	ccu_mp_find_best(parent_rate, rate,
+-			 1 << cmp->m.width, (1 << cmp->p.width) - 1,
+-			 &m, &p);
++	max_m = cmp->m.max ?: 1 << cmp->m.width;
++	max_p = cmp->p.max ?: 1 << ((1 << cmp->p.width) - 1);
+ 
+-	return (parent_rate >> p) / m;
++	ccu_mp_find_best(parent_rate, rate, max_m, max_p, &m, &p);
++
++	return parent_rate / p / m;
+ }
+ 
+ static void ccu_mp_disable(struct clk_hw *hw)
+@@ -108,13 +110,14 @@ static int ccu_mp_set_rate(struct clk_hw *hw, unsigned long rate,
+ {
+ 	struct ccu_mp *cmp = hw_to_ccu_mp(hw);
+ 	unsigned long flags;
++	unsigned int max_m, max_p;
+ 	unsigned int m, p;
+ 	u32 reg;
+ 
+-	ccu_mp_find_best(parent_rate, rate,
+-			 1 << cmp->m.width, (1 << cmp->p.width) - 1,
+-			 &m, &p);
++	max_m = cmp->m.max ?: 1 << cmp->m.width;
++	max_p = cmp->p.max ?: 1 << ((1 << cmp->p.width) - 1);
+ 
++	ccu_mp_find_best(parent_rate, rate, max_m, max_p, &m, &p);
+ 
+ 	spin_lock_irqsave(cmp->common.lock, flags);
+ 
+@@ -122,7 +125,7 @@ static int ccu_mp_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	reg &= ~GENMASK(cmp->m.width + cmp->m.shift - 1, cmp->m.shift);
+ 	reg &= ~GENMASK(cmp->p.width + cmp->p.shift - 1, cmp->p.shift);
+ 
+-	writel(reg | (p << cmp->p.shift) | ((m - 1) << cmp->m.shift),
++	writel(reg | (ilog2(p) << cmp->p.shift) | ((m - 1) << cmp->m.shift),
+ 	       cmp->common.base + cmp->common.reg);
+ 
+ 	spin_unlock_irqrestore(cmp->common.lock, flags);
+diff --git a/drivers/clk/sunxi-ng/ccu_nkm.c b/drivers/clk/sunxi-ng/ccu_nkm.c
+index 182452919ede..059fdc3b4f96 100644
+--- a/drivers/clk/sunxi-ng/ccu_nkm.c
++++ b/drivers/clk/sunxi-ng/ccu_nkm.c
+@@ -103,7 +103,7 @@ static unsigned long ccu_nkm_round_rate(struct ccu_mux_internal *mux,
+ 
+ 	_nkm.max_n = 1 << nkm->n.width;
+ 	_nkm.max_k = 1 << nkm->k.width;
+-	_nkm.max_m = 1 << nkm->m.width;
++	_nkm.max_m = nkm->m.max ?: 1 << nkm->m.width;
+ 
+ 	ccu_nkm_find_best(parent_rate, rate, &_nkm);
+ 
+@@ -129,7 +129,7 @@ static int ccu_nkm_set_rate(struct clk_hw *hw, unsigned long rate,
+ 
+ 	_nkm.max_n = 1 << nkm->n.width;
+ 	_nkm.max_k = 1 << nkm->k.width;
+-	_nkm.max_m = 1 << nkm->m.width;
++	_nkm.max_m = nkm->m.max ?: 1 << nkm->m.width;
+ 
+ 	ccu_nkm_find_best(parent_rate, rate, &_nkm);
+ 
+diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.c b/drivers/clk/sunxi-ng/ccu_nkmp.c
+index 9f2b98e19dc9..9769dee99511 100644
+--- a/drivers/clk/sunxi-ng/ccu_nkmp.c
++++ b/drivers/clk/sunxi-ng/ccu_nkmp.c
+@@ -29,14 +29,14 @@ static void ccu_nkmp_find_best(unsigned long parent, unsigned long rate,
+ 	unsigned long _n, _k, _m, _p;
+ 
+ 	for (_k = 1; _k <= nkmp->max_k; _k++) {
+-		for (_p = 0; _p <= nkmp->max_p; _p++) {
++		for (_p = 1; _p <= nkmp->max_p; _p <<= 1) {
+ 			unsigned long tmp_rate;
+ 
+-			rational_best_approximation(rate / _k, parent >> _p,
++			rational_best_approximation(rate / _k, parent / _p,
+ 						    nkmp->max_n, nkmp->max_m,
+ 						    &_n, &_m);
+ 
+-			tmp_rate = (parent * _n * _k >> _p) / _m;
++			tmp_rate = parent * _n * _k / (_m * _p);
+ 
+ 			if (tmp_rate > rate)
+ 				continue;
+@@ -110,13 +110,12 @@ static long ccu_nkmp_round_rate(struct clk_hw *hw, unsigned long rate,
+ 
+ 	_nkmp.max_n = 1 << nkmp->n.width;
+ 	_nkmp.max_k = 1 << nkmp->k.width;
+-	_nkmp.max_m = 1 << nkmp->m.width;
+-	_nkmp.max_p = (1 << nkmp->p.width) - 1;
++	_nkmp.max_m = nkmp->m.max ?: 1 << nkmp->m.width;
++	_nkmp.max_p = nkmp->p.max ?: 1 << ((1 << nkmp->p.width) - 1);
+ 
+-	ccu_nkmp_find_best(*parent_rate, rate,
+-			   &_nkmp);
++	ccu_nkmp_find_best(*parent_rate, rate, &_nkmp);
+ 
+-	return (*parent_rate * _nkmp.n * _nkmp.k >> _nkmp.p) / _nkmp.m;
++	return *parent_rate * _nkmp.n * _nkmp.k / (_nkmp.m * _nkmp.p);
+ }
+ 
+ static int ccu_nkmp_set_rate(struct clk_hw *hw, unsigned long rate,
+@@ -129,8 +128,8 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw, unsigned long rate,
+ 
+ 	_nkmp.max_n = 1 << nkmp->n.width;
+ 	_nkmp.max_k = 1 << nkmp->k.width;
+-	_nkmp.max_m = 1 << nkmp->m.width;
+-	_nkmp.max_p = (1 << nkmp->p.width) - 1;
++	_nkmp.max_m = nkmp->m.max ?: 1 << nkmp->m.width;
++	_nkmp.max_p = nkmp->p.max ?: 1 << ((1 << nkmp->p.width) - 1);
+ 
+ 	ccu_nkmp_find_best(parent_rate, rate, &_nkmp);
+ 
+@@ -145,7 +144,7 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	reg |= (_nkmp.n - 1) << nkmp->n.shift;
+ 	reg |= (_nkmp.k - 1) << nkmp->k.shift;
+ 	reg |= (_nkmp.m - 1) << nkmp->m.shift;
+-	reg |= _nkmp.p << nkmp->p.shift;
++	reg |= ilog2(_nkmp.p) << nkmp->p.shift;
+ 
+ 	writel(reg, nkmp->common.base + nkmp->common.reg);
+ 
+diff --git a/drivers/clk/sunxi-ng/ccu_nm.c b/drivers/clk/sunxi-ng/ccu_nm.c
+index e35ddd8eec8b..b61bdd8c7a7f 100644
+--- a/drivers/clk/sunxi-ng/ccu_nm.c
++++ b/drivers/clk/sunxi-ng/ccu_nm.c
+@@ -61,11 +61,13 @@ static long ccu_nm_round_rate(struct clk_hw *hw, unsigned long rate,
+ 			      unsigned long *parent_rate)
+ {
+ 	struct ccu_nm *nm = hw_to_ccu_nm(hw);
++	unsigned long max_n, max_m;
+ 	unsigned long n, m;
+ 
+-	rational_best_approximation(rate, *parent_rate,
+-				    1 << nm->n.width, 1 << nm->m.width,
+-				    &n, &m);
++	max_n = 1 << nm->n.width;
++	max_m = nm->m.max ?: 1 << nm->m.width;
++
++	rational_best_approximation(rate, *parent_rate, max_n, max_m, &n, &m);
+ 
+ 	return *parent_rate * n / m;
+ }
+@@ -75,6 +77,7 @@ static int ccu_nm_set_rate(struct clk_hw *hw, unsigned long rate,
+ {
+ 	struct ccu_nm *nm = hw_to_ccu_nm(hw);
+ 	unsigned long flags;
++	unsigned long max_n, max_m;
+ 	unsigned long n, m;
+ 	u32 reg;
+ 
+@@ -83,9 +86,10 @@ static int ccu_nm_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	else
+ 		ccu_frac_helper_disable(&nm->common, &nm->frac);
+ 
+-	rational_best_approximation(rate, parent_rate,
+-				    1 << nm->n.width, 1 << nm->m.width,
+-				    &n, &m);
++	max_n = 1 << nm->n.width;
++	max_m = nm->m.max ?: 1 << nm->m.width;
++
++	rational_best_approximation(rate, parent_rate, max_n, max_m, &n, &m);
+ 
+ 	spin_lock_irqsave(nm->common.lock, flags);
+ 
+-- 
+2.9.3
