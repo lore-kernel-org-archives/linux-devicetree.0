@@ -1,65 +1,67 @@
 From: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-Subject: [PATCH v6 5/6] media: mtk-mdp: support pixelformat V4L2_PIX_FMT_MT21C
-Date: Thu, 8 Sep 2016 21:09:05 +0800
-Message-ID: <1473340146-6598-6-git-send-email-minghsiu.tsai@mediatek.com>
+Subject: [PATCH v6 1/6] VPU: mediatek: Add mdp support
+Date: Thu, 8 Sep 2016 21:09:01 +0800
+Message-ID: <1473340146-6598-2-git-send-email-minghsiu.tsai@mediatek.com>
 References: <1473340146-6598-1-git-send-email-minghsiu.tsai@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1473340146-6598-1-git-send-email-minghsiu.tsai@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
-Cc: srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+Cc: devicetree@vger.kernel.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Yingjoe Chen <yingjoe.chen@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add V4L2_PIX_FMT_MT21C in format list.
+VPU driver add mdp support
 
 Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
 ---
- drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c  |    8 ++++++++
- drivers/media/platform/mtk-mdp/mtk_mdp_regs.c |    4 ++++
- 2 files changed, 12 insertions(+)
+ drivers/media/platform/mtk-vpu/mtk_vpu.h |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-index 0655027..a90972e 100644
---- a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-+++ b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
-@@ -54,6 +54,14 @@ static struct mtk_mdp_pix_align mtk_mdp_size_align = {
+diff --git a/drivers/media/platform/mtk-vpu/mtk_vpu.h b/drivers/media/platform/mtk-vpu/mtk_vpu.h
+index f457479..291ae46 100644
+--- a/drivers/media/platform/mtk-vpu/mtk_vpu.h
++++ b/drivers/media/platform/mtk-vpu/mtk_vpu.h
+@@ -53,6 +53,8 @@ typedef void (*ipi_handler_t) (void *data,
+ 			 handle H264 video encoder job, and vice versa.
+  * @IPI_VENC_VP8:	 The interrupt fro vpu is to notify kernel to
+ 			 handle VP8 video encoder job,, and vice versa.
++ * @IPI_MDP:		 The interrupt from vpu is to notify kernel to
++			 handle MDP (Media Data Path) job, and vice versa.
+  * @IPI_MAX:		 The maximum IPI number
+  */
  
- static const struct mtk_mdp_fmt mtk_mdp_formats[] = {
- 	{
-+		.pixelformat	= V4L2_PIX_FMT_MT21C,
-+		.depth		= { 8, 4 },
-+		.row_depth	= { 8, 8 },
-+		.num_planes	= 2,
-+		.num_comp	= 2,
-+		.align		= &mtk_mdp_size_align,
-+		.flags		= MTK_MDP_FMT_FLAG_OUTPUT,
-+	}, {
- 		.pixelformat	= V4L2_PIX_FMT_NV12M,
- 		.depth		= { 8, 4 },
- 		.row_depth	= { 8, 8 },
-diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_regs.c b/drivers/media/platform/mtk-mdp/mtk_mdp_regs.c
-index a5601e1..86d57f3 100644
---- a/drivers/media/platform/mtk-mdp/mtk_mdp_regs.c
-+++ b/drivers/media/platform/mtk-mdp/mtk_mdp_regs.c
-@@ -29,6 +29,8 @@ enum MDP_COLOR_ENUM {
- 	MDP_COLOR_NV12 = MDP_COLORFMT_PACK(0, 2, 1, 1, 1, 8, 1, 0, 12),
- 	MDP_COLOR_I420 = MDP_COLORFMT_PACK(0, 3, 0, 1, 1, 8, 1, 0, 8),
- 	MDP_COLOR_YV12 = MDP_COLORFMT_PACK(0, 3, 0, 1, 1, 8, 1, 1, 8),
-+	/* Mediatek proprietary format */
-+	MDP_COLOR_420_MT21 = MDP_COLORFMT_PACK(5, 2, 1, 1, 1, 256, 1, 0, 12),
+@@ -63,6 +65,7 @@ enum ipi_id {
+ 	IPI_VDEC_VP9,
+ 	IPI_VENC_H264,
+ 	IPI_VENC_VP8,
++	IPI_MDP,
+ 	IPI_MAX,
  };
  
- static int32_t mtk_mdp_map_color_format(int v4l2_format)
-@@ -37,6 +39,8 @@ static int32_t mtk_mdp_map_color_format(int v4l2_format)
- 	case V4L2_PIX_FMT_NV12M:
- 	case V4L2_PIX_FMT_NV12:
- 		return MDP_COLOR_NV12;
-+	case V4L2_PIX_FMT_MT21C:
-+		return MDP_COLOR_420_MT21;
- 	case V4L2_PIX_FMT_YUV420M:
- 	case V4L2_PIX_FMT_YUV420:
- 		return MDP_COLOR_I420;
+@@ -71,11 +74,13 @@ enum ipi_id {
+  *
+  * @VPU_RST_ENC: encoder reset id
+  * @VPU_RST_DEC: decoder reset id
++ * @VPU_RST_MDP: MDP (Media Data Path) reset id
+  * @VPU_RST_MAX: maximum reset id
+  */
+ enum rst_id {
+ 	VPU_RST_ENC,
+ 	VPU_RST_DEC,
++	VPU_RST_MDP,
+ 	VPU_RST_MAX,
+ };
+ 
 -- 
 1.7.9.5
