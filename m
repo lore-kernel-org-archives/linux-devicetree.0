@@ -1,274 +1,58 @@
-From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Subject: [PATCH v6 3/3] Input: Add support for tps65217 power button
-Date: Fri,  9 Sep 2016 10:42:04 +0200
-Message-ID: <20160909084204.26226-4-m.niestroj@grinn-global.com>
-References: <20160909084204.26226-1-m.niestroj@grinn-global.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: add gpio-ranges property to iMX GPIO
+ controllers
+Date: Fri, 9 Sep 2016 11:44:10 +0300
+Message-ID: <729f2fd7-df40-c631-5365-892ee25854b3@mentor.com>
+References: <1473386556-1934-1-git-send-email-vladimir_zapolskiy@mentor.com>
+ <20160909072020.ieehalkgxxjfewhs@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160909084204.26226-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+In-Reply-To: <20160909072020.ieehalkgxxjfewhs-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Deepak Das <deepak_das-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This driver enables us to use tps65217's power button as KEY_POWER on
-am335x boards (directly connected button in chiliboard, accessible pin
-via expansion header in beaglebone). This patch has been tested with
-chiliboard.
+Hi Uwe,
 
-Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
----
-Depends on patches 1-2 in series and commit
-47d7d5ed68d877269003a392b7008905d65650bb
-("power_supply: tps65217-charger: Add support for IRQs")
-in power-supply's -next branch.
+On 09/09/2016 10:20 AM, Uwe Kleine-König wrote:
+> On Fri, Sep 09, 2016 at 05:02:36AM +0300, Vladimir Zapolskiy wrote:
+>> To establish a connection between GPIO controllers and pin multiplexor
+>> controller add gpio-ranges properties to all GPIO controllers found
+>> on iMX50, iMX6Q/D, iMX6DL/S, iMX6SL, iMX6SX, iMX6UL and iMX7D/S
+>> SoCs. The change was done after human parsing of output from
+>
+> When looking at doing the same for i.MX35 there are a few pin pairs that
+> are driven by the same GPIO, e.g.:
+>
+> 	$ grep GPIO3_9 imx35-pinfunc.h
+> 	#define MX35_PAD_CTS1__GPIO3_9					0x194 0x5d8 0x918 0x5 0x0
+> 	#define MX35_PAD_FEC_COL__GPIO3_9				0x2ec 0x750 0x918 0x5 0x1
+>
+> With this it's not possible to correctly add a gpio-ranges, right?
 
-Changes v5 -> v6 (suggested by Dmitry):
- * Use dev_get_regmap() instead of fragile pointer calculations
- * Keep old formatting for flags as single function argument
+this is an interesting exceptional case, I don't think that pinctrl
+and gpio subsystems are ready to handle it.
 
-Changes v4 -> v5:
- * Add support for tps65217 power button in tps65218-pwrbutton driver
-   (as suggested by Dmitry)
- * Device-tree documentation was combined with tps65218-pwrbutton
+If both pads are muxed to the same GPIO, then I presume on output it
+behaves like a tee, but do you know what would be the input value,
+if one line is driven high and another one is low?
 
-Changes v2 -> v4: none
+> i.MX1, i.MX21, i.MX25, i.MX27 and i.MX53 could benefit from such a
+> change though. i.MX35 and i.MX51 have duplicates.
+>
 
-Changes v1 -> v2:
- * Added information about parent device in tps65217 power button
-   device-tree binding documentation (suggested by Rob)
+I keep my hands off it, because I don't have any boards powered by
+these SoCs to be able to test the change. FWIW I hold one i.MX31
+powered board from old times, but I see that i.MX31 has poor DTS
+support in general, there is no GPIO controller device node to
+add the property.
 
- .../bindings/input/tps65218-pwrbutton.txt          | 17 +++-
- drivers/input/misc/Kconfig                         |  4 +-
- drivers/input/misc/tps65218-pwrbutton.c            | 92 +++++++++++++++-------
- 3 files changed, 81 insertions(+), 32 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/input/tps65218-pwrbutton.txt b/Documentation/devicetree/bindings/input/tps65218-pwrbutton.txt
-index e30e0b9..3e5b979 100644
---- a/Documentation/devicetree/bindings/input/tps65218-pwrbutton.txt
-+++ b/Documentation/devicetree/bindings/input/tps65218-pwrbutton.txt
-@@ -1,13 +1,24 @@
--Texas Instruments TPS65218 power button
-+Texas Instruments TPS65217 and TPS65218 power button
-+
-+This module is part of the TPS65217/TPS65218. For more details about the whole
-+TPS65217 chip see Documentation/devicetree/bindings/regulator/tps65217.txt.
- 
- This driver provides a simple power button event via an Interrupt.
- 
- Required properties:
--- compatible: should be "ti,tps65218-pwrbutton"
-+- compatible: should be "ti,tps65217-pwrbutton" or "ti,tps65218-pwrbutton"
-+
-+Required properties for TPS65218:
- - interrupts: should be one of the following
-    - <3 IRQ_TYPE_EDGE_BOTH>: For controllers compatible with tps65218
- 
--Example:
-+Examples:
-+
-+&tps {
-+	tps65217-pwrbutton {
-+		compatible = "ti,tps65217-pwrbutton";
-+	};
-+};
- 
- &tps {
- 	power-button {
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index efb0ca8..dbd5b75 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -454,10 +454,10 @@ config INPUT_RETU_PWRBUTTON
- 
- config INPUT_TPS65218_PWRBUTTON
- 	tristate "TPS65218 Power button driver"
--	depends on MFD_TPS65218
-+	depends on (MFD_TPS65217 || MFD_TPS65218)
- 	help
- 	  Say Y here if you want to enable power buttong reporting for
--	  the TPS65218 Power Management IC device.
-+	  TPS65217 and TPS65218 Power Management IC device.
- 
- 	  To compile this driver as a module, choose M here. The module will
- 	  be called tps65218-pwrbutton.
-diff --git a/drivers/input/misc/tps65218-pwrbutton.c b/drivers/input/misc/tps65218-pwrbutton.c
-index a39b626..3273217 100644
---- a/drivers/input/misc/tps65218-pwrbutton.c
-+++ b/drivers/input/misc/tps65218-pwrbutton.c
-@@ -1,8 +1,9 @@
- /*
-- * Texas Instruments' TPS65218 Power Button Input Driver
-+ * Texas Instruments' TPS65217 and TPS65218 Power Button Input Driver
-  *
-  * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
-  * Author: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-+ * Author: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-@@ -18,31 +19,61 @@
- #include <linux/input.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
-+#include <linux/mfd/tps65217.h>
- #include <linux/mfd/tps65218.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/regmap.h>
- #include <linux/slab.h>
- 
--struct tps65218_pwrbutton {
-+struct tps6521x_data {
-+	unsigned int reg_status;
-+	unsigned int pb_mask;
-+	const char *name;
-+};
-+
-+static const struct tps6521x_data tps65217_data = {
-+	.reg_status = TPS65217_REG_STATUS,
-+	.pb_mask = TPS65217_STATUS_PB,
-+	.name = "tps65217_pwrbutton",
-+};
-+
-+static const struct tps6521x_data tps65218_data = {
-+	.reg_status = TPS65218_REG_STATUS,
-+	.pb_mask = TPS65218_STATUS_PB_STATE,
-+	.name = "tps65218_pwrbutton",
-+};
-+
-+struct tps6521x_pwrbutton {
- 	struct device *dev;
--	struct tps65218 *tps;
-+	struct regmap *regmap;
- 	struct input_dev *idev;
-+	const struct tps6521x_data *data;
-+	char phys[32];
-+};
-+
-+static const struct of_device_id of_tps6521x_pb_match[] = {
-+	{ .compatible = "ti,tps65217-pwrbutton", .data = &tps65217_data },
-+	{ .compatible = "ti,tps65218-pwrbutton", .data = &tps65218_data },
-+	{ },
- };
-+MODULE_DEVICE_TABLE(of, of_tps6521x_pb_match);
- 
--static irqreturn_t tps65218_pwr_irq(int irq, void *_pwr)
-+static irqreturn_t tps6521x_pb_irq(int irq, void *_pwr)
- {
--	struct tps65218_pwrbutton *pwr = _pwr;
-+	struct tps6521x_pwrbutton *pwr = _pwr;
-+	const struct tps6521x_data *tps_data = pwr->data;
- 	unsigned int reg;
- 	int error;
- 
--	error = tps65218_reg_read(pwr->tps, TPS65218_REG_STATUS, &reg);
-+	error = regmap_read(pwr->regmap, tps_data->reg_status, &reg);
- 	if (error) {
- 		dev_err(pwr->dev, "can't read register: %d\n", error);
- 		goto out;
- 	}
- 
--	if (reg & TPS65218_STATUS_PB_STATE) {
-+	if (reg & tps_data->pb_mask) {
- 		input_report_key(pwr->idev, KEY_POWER, 1);
- 		pm_wakeup_event(pwr->dev, 0);
- 	} else {
-@@ -55,42 +86,55 @@ out:
- 	return IRQ_HANDLED;
- }
- 
--static int tps65218_pwron_probe(struct platform_device *pdev)
-+static int tps6521x_pb_probe(struct platform_device *pdev)
- {
--	struct tps65218 *tps = dev_get_drvdata(pdev->dev.parent);
- 	struct device *dev = &pdev->dev;
--	struct tps65218_pwrbutton *pwr;
-+	struct tps6521x_pwrbutton *pwr;
- 	struct input_dev *idev;
-+	const struct of_device_id *match;
- 	int error;
- 	int irq;
- 
-+	match = of_match_node(of_tps6521x_pb_match, pdev->dev.of_node);
-+	if (!match)
-+		return -ENXIO;
-+
- 	pwr = devm_kzalloc(dev, sizeof(*pwr), GFP_KERNEL);
- 	if (!pwr)
- 		return -ENOMEM;
- 
-+	pwr->data = match->data;
-+
- 	idev = devm_input_allocate_device(dev);
- 	if (!idev)
- 		return -ENOMEM;
- 
--	idev->name = "tps65218_pwrbutton";
--	idev->phys = "tps65218_pwrbutton/input0";
-+	idev->name = pwr->data->name;
-+	snprintf(pwr->phys, sizeof(pwr->phys), "%s/input0",
-+		pwr->data->name);
-+	idev->phys = pwr->phys;
- 	idev->dev.parent = dev;
- 	idev->id.bustype = BUS_I2C;
- 
- 	input_set_capability(idev, EV_KEY, KEY_POWER);
- 
--	pwr->tps = tps;
-+	pwr->regmap = dev_get_regmap(pdev->dev.parent, NULL);
- 	pwr->dev = dev;
- 	pwr->idev = idev;
- 	platform_set_drvdata(pdev, pwr);
- 	device_init_wakeup(dev, true);
- 
- 	irq = platform_get_irq(pdev, 0);
--	error = devm_request_threaded_irq(dev, irq, NULL, tps65218_pwr_irq,
-+	if (irq < 0) {
-+		dev_err(dev, "No IRQ resource!\n");
-+		return -EINVAL;
-+	}
-+
-+	error = devm_request_threaded_irq(dev, irq, NULL, tps6521x_pb_irq,
- 					  IRQF_TRIGGER_RISING |
- 						IRQF_TRIGGER_FALLING |
- 						IRQF_ONESHOT,
--					  "tps65218-pwrbutton", pwr);
-+					  pwr->data->name, pwr);
- 	if (error) {
- 		dev_err(dev, "failed to request IRQ #%d: %d\n",
- 			irq, error);
-@@ -106,21 +150,15 @@ static int tps65218_pwron_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id of_tps65218_pwr_match[] = {
--	{ .compatible = "ti,tps65218-pwrbutton" },
--	{ },
--};
--MODULE_DEVICE_TABLE(of, of_tps65218_pwr_match);
--
--static struct platform_driver tps65218_pwron_driver = {
--	.probe	= tps65218_pwron_probe,
-+static struct platform_driver tps6521x_pb_driver = {
-+	.probe	= tps6521x_pb_probe,
- 	.driver	= {
--		.name	= "tps65218_pwrbutton",
--		.of_match_table = of_tps65218_pwr_match,
-+		.name	= "tps6521x_pwrbutton",
-+		.of_match_table = of_tps6521x_pb_match,
- 	},
- };
--module_platform_driver(tps65218_pwron_driver);
-+module_platform_driver(tps6521x_pb_driver);
- 
--MODULE_DESCRIPTION("TPS65218 Power Button");
-+MODULE_DESCRIPTION("TPS6521X Power Button");
- MODULE_LICENSE("GPL v2");
- MODULE_AUTHOR("Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>");
--- 
-2.9.3
-
+--
+With best wishes,
+Vladimir
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
