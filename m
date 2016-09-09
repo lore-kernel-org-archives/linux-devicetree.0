@@ -1,42 +1,73 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v4 0/2] Add support for Allwinner A64 mmc controller
-Date: Fri, 9 Sep 2016 12:12:14 +0200
-Message-ID: <CAPDyKFpqFm0zZvK_0gqSy9iuvRGS6MTs9i4OMPC6OVZ8AvjRgQ@mail.gmail.com>
-References: <20160805025715.5306-1-icenowy@aosc.xyz>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ASoC: rockchip: Add DP dai-links to the
+ rk3399-gru machine driver
+Date: Fri, 9 Sep 2016 11:29:11 +0100
+Message-ID: <20160909102911.GE27946@sirena.org.uk>
+References: <1473181792-15398-1-git-send-email-zyw@rock-chips.com>
+ <1473396235-11769-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160805025715.5306-1-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Suchanek <hramrach@gmail.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============1709932923094484918=="
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1473396235-11769-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hychao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, cychiang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 August 2016 at 04:57, Icenowy Zheng <icenowy@aosc.xyz> wrote:
-> Allwinner A64 has a slightly modified version of the Allwinner MMC controller.
->
-> It do not have "output" or "sample" clock input, instead, it can calibrate the
-> delay internally.
->
-> This series of patch added the calibrate feature to the sunxi-mmc driver. It
-> is based on works by Andre Przywara <andre.przywara@arm.com>, and now it
-> depends on the patch set sent recently by Hans de Goede <hdegoede@redhat.com>,
-> which disabled "output" and "sample" clock on A10/13.
-> ( http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/446187.html )
->
-> As the clock and device tree patch for Allwinner A64 is not yet merged, the
-> patch set contains no patch to enable it.
 
-Thanks, series applied for next!
+--===============1709932923094484918==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="G6nVm6DDWH/FONJq"
+Content-Disposition: inline
 
-Kind regards
-Uffe
+
+--G6nVm6DDWH/FONJq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Sep 08, 2016 at 09:43:55PM -0700, Chris Zhong wrote:
+> This patch adds DP audio output support to the rk3399-gru machine
+> driver.
+
+Please don't resend or update single patches in the middle of a patch
+series, it makes things very confusing.  Please send the entire patch
+series at once.
+
+--G6nVm6DDWH/FONJq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJX0o72AAoJECTWi3JdVIfQW84H/iYk/sSOPrXPbtVbPXq9laSI
+SHbzC8GEG/JF0tp5CyBDyn6GnxmnfK5LCZL5wE/tmuA9WBRu9vYVKU9aQJLb7oO+
+JXDepY1ULEj9IXLvZZTNi4/h9KtP3lzeaHuDJJru5XU8+WY8jOApqOfvs6bfo6Pi
+NGprDEjaO0Nq0t+wRJ97vycm6w0bSbeClAuGEuIsUrRykAmf4vLhWswvZ31yCgq3
+Mgmv6S08pNIJm9bKcTQNVybc0ulGV459jNnvBmkF1KfSLQrezL0SMi63DZFUxT47
+3ujJA337UF7T2+GRrsEVX+rT0RCD+pQJ8d5FbSKwTfIi9nLlI5hsvhZHlDCr7eg=
+=MHwV
+-----END PGP SIGNATURE-----
+
+--G6nVm6DDWH/FONJq--
+
+
+--===============1709932923094484918==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linux-rockchip mailing list
+Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+http://lists.infradead.org/mailman/listinfo/linux-rockchip
+
+--===============1709932923094484918==--
