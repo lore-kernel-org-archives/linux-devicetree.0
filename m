@@ -1,28 +1,88 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] ARM: sun5i: a13-olinuxino: Enable VGA bridge
-Date: Fri, 9 Sep 2016 20:36:13 +0800
-Message-ID: <CAGb2v66C1U8KqSec1Zk8Kyz2n5tQ-Ts4wADfOQR0njbrgnjOzw@mail.gmail.com>
-References: <20160908121751.16911-1-maxime.ripard@free-electrons.com> <20160908121751.16911-3-maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160908121751.16911-3-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v3 0/9] net-next: ethernet: add sun8i-emac driver
+Date: Fri,  9 Sep 2016 14:45:08 +0200
+Message-ID: <1473425117-18645-1-git-send-email-clabbe.montjoie@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, davem@davemloft.net
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 8, 2016 at 8:17 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Now that we have support for the VGA bridges using our DRM driver, enable
-> the display engine for the Olimex A13-Olinuxino.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Hello
 
-Assuming the bridge bindings are good,
+This patch series add the driver for sun8i-emac which handle the Ethernet MAC
+present on Allwinner H3/A83T/A64 SoCs.
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It supports 10/100/1000 Mbit/s speed with half/full duplex.
+It can use an internal PHY (MII 10/100) or an external PHY
+via RGMII/RMII.
+
+This patch series enable the driver only for the H3 SoC since A83T and A64
+doesn't have the necessary clocks present in mainline.
+
+This patch series enable the driver only for OrangePiPC and OrangePIOne boards
+since other board with H3 use external PHY which need optional regulators
+that will be supported later.
+
+The driver have been tested on the following boards:
+- H3 Orange PI PC, Orange PI Plus, BananaPI-M2+
+- A64 Pine64
+- A83T BananaPI-M3
+
+I would like to thanks Chen-Yu Tsai for his help on developing this driver.
+
+Regards
+
+Changes since v2
+- Added patch to support Orange PI One
+- Added a patch to enable SUN8I_EMAC in sunxi_defconfig
+- Added a patch to enable pm_runtime
+- The Emac clock is now used standard syscon/regmap
+- Added netdev_sent_queue/netdev_completed_queue
+- Added lots of documentation on working (locks, memory barrier, etc...)
+- Cleaned DT bindings documentation
+- Added ethernet0 aliases as suggested by Hans de Goede
+- Change prefix of all DEFINE to EMAC_
+- The driver is now endian safe
+- Reworked the internal PHY mechanism
+- Removed dma_set_mask_and_coherent(32) since it is the default for of_platform_driver
+
+Changes since v1
+- Implement NAPI
+- Sorted and reworded all define
+- Reworked ethtools stats strings
+- Removed all unneeded __packked and __aligned
+- Added tuning of RX/TX ring size via ethtool
+- Corrected use of sk/skb naming
+- Added some wmb when needed
+- Moved irq claim/free to emac_open/close
+- Lots of code refactoring
+
+Corentin Labbe (8):
+  ethernet: sun8i-emac: add pm_runtime support
+  ethernet: add sun8i-emac driver
+  MAINTAINERS: Add myself as maintainer of sun8i-emac
+  ARM: sun8i: dt: Add DT bindings documentation for Allwinner sun8i-emac
+  ARM: dts: sun8i-h3: Add dt node for the syscon control module
+  ARM: dts: sun8i-h3: add sun8i-emac ethernet driver
+  ARM: dts: sun8i: Enable sun8i-emac on the Orange PI PC
+  ARM: sunxi: Enable sun8i-emac driver on sunxi_defconfig
+
+Hans de Goede (1):
+  ARM: dts: sun8i: Enable sun8i-emac on the Orange PI One
+
+ .../bindings/net/allwinner,sun8i-emac.txt          |   64 +
+ MAINTAINERS                                        |    6 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        |   10 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |   10 +
+ arch/arm/boot/dts/sun8i-h3.dtsi                    |   24 +
+ arch/arm/configs/sunxi_defconfig                   |    1 +
+ drivers/net/ethernet/allwinner/Kconfig             |   13 +
+ drivers/net/ethernet/allwinner/Makefile            |    1 +
+ drivers/net/ethernet/allwinner/sun8i-emac.c        | 2313 ++++++++++++++++++++
+ 9 files changed, 2442 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/allwinner,sun8i-emac.txt
+ create mode 100644 drivers/net/ethernet/allwinner/sun8i-emac.c
+
+-- 
+2.7.3
