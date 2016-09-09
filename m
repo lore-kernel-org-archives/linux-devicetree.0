@@ -1,68 +1,92 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and GXBB
-Date: Fri, 9 Sep 2016 22:37:25 +0200
-Message-ID: <CAFBinCCWFcy1h-28=xie-2Op79UTXvawDuem_YYypTCYHCgLKQ@mail.gmail.com>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
- <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
- <m260q6jibf.fsf@baylibre.com> <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
- <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk> <m2eg4ui0nl.fsf@baylibre.com>
- <ffdd0188-72bc-4575-f997-e8547f4c31d2@codethink.co.uk> <CAFBinCC4gkMrJtertYevg_hXDLJEZ0PqfKKLL5UKXo8B=SXsPw@mail.gmail.com>
- <m2sht9gkau.fsf@baylibre.com> <CAFBinCCDDwydB+RP0CZKoAW5Suxotn224ZFVWvt2OGW3gNJR1g@mail.gmail.com>
- <b9730890-d98c-2c3a-8af1-96b8c394c30f@codethink.co.uk>
+From: Hoan Tran <hotran-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH] hwmon: xgene: access mailbox as RAM
+Date: Fri, 9 Sep 2016 13:43:17 -0700
+Message-ID: <CAFHUOYyGf0MFtDrYaAMSRjZ5hJ4yxV6wSa3BpGF73tyC6GQBxw@mail.gmail.com>
+References: <1469134557-26869-1-git-send-email-hotran@apm.com>
+ <2529114.aAikiSWl11@wuerfel> <CAFHUOYzm4VH1fc3D0fLVv3bCU=2SHx7tZM4nFnCvWeuY+QfEFw@mail.gmail.com>
+ <2852054.37zytD0HIa@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b9730890-d98c-2c3a-8af1-96b8c394c30f-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2852054.37zytD0HIa@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 9, 2016 at 7:21 PM, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
-> On 09/09/16 17:14, Martin Blumenstingl wrote:
+On Fri, Sep 9, 2016 at 12:58 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Friday, September 9, 2016 12:24:32 PM CEST Hoan Tran wrote:
+>> On Fri, Sep 9, 2016 at 8:38 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> > The newly added hwmon driver fails to build in an allmodconfig
+>> > index bc78a5d10182..e834dfb3acca 100644
+>> > --- a/drivers/hwmon/xgene-hwmon.c
+>> > +++ b/drivers/hwmon/xgene-hwmon.c
+>> > @@ -34,7 +34,8 @@
+>> >  #include <linux/module.h>
+>> >  #include <linux/of.h>
+>> >  #include <linux/platform_device.h>
+>> > -#include <acpi/acpi_io.h>
+>> > +#include <linux/io.h>
 >>
->> On Fri, Sep 9, 2016 at 5:33 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->>>
->>> However, the problem with all of the solutions proposed (runtime PM ones
->>> included) is that we're forcing a board-specific design issue (2 devices
->>> sharing a reset line) into a driver that should not have any
->>> board-specific assumptions in it.
->>>
->>> For example, if this driver is used on another platform where different
->>> PHYs have different reset lines, then one of them (the unlucky one who
->>> is not probed first) will never get reset.  So any form of per-device
->>> ref-counting is not a portable solution.
+>> Alphabetical order.
 >>
->> maybe we should also consider Ben's solution: he played with the USB
->> PHY on his Meson8b board. His approach was to have only one USB PHY
->> driver instance which exposes two PHYs.
->> The downside of this: the driver would have to know the offset of the
->> PHYs (0x0 for the first PHY, 0x20 for the second), but we could handle
->> the reset using runtime PM without any hacks.
+>> >         struct acpi_pcct_shared_memory *generic_comm_base = ctx->pcc_comm_addr;
+>> > -       void *ptr = generic_comm_base + 1;
+>> > +       u32 *ptr = (void*)(generic_comm_base + 1);
 >>
->> I checked the USB PHY reference driver: it seems that there will be a
->> new USB PHY with the GXL/GXM SoCs.
->> So maybe we could live with the assumption that the PHYs are at
->> consecutive addresses.
->>
->>> I'm not sure yet how the reset framework is supposed to handle shared
->>> reset lines, but that needs some investigation.  I quick glance and it
->>> seems that reset controllers can have shared lines, so that should be
->>> investigated.
->>
->> unfortunately shared resets are not allowed to use reset_control_reset,
->> see [0]
->>
->>
->> [0] http://lxr.free-electrons.com/source/drivers/reset/core.c#L102
+>> Space before "*".
 >
+> Ok.
 >
-> If we didn't have the shared reset, we'd have one of node per phy
-> and not have to have two sub-nodes... I don't think any other bits
-> of the PHY framework are shared.
-okay, sounds reasonable - so we should try to get this scenario
-supported through by the reset framework -> see my other mail.
+>> > @@ -652,9 +653,9 @@ static int xgene_hwmon_probe(struct platform_device *pdev)
+>> >                  */
+>> >                 ctx->comm_base_addr = cppc_ss->base_address;
+>> >                 if (ctx->comm_base_addr) {
+>> > -                       ctx->pcc_comm_addr =
+>> > -                                       acpi_os_ioremap(ctx->comm_base_addr,
+>> > -                                                       cppc_ss->length);
+>> > +                       ctx->pcc_comm_addr = memremap(ctx->comm_base_addr,
+>> > +                                                       cppc_ss->length,
+>> > +                                                       MEMREMAP_WT);
+>>
+>> It should be MEMREMAP_WB. As mailbox shared memory is on RAM and our
+>> co-processor is also in the coherency domain.
+>
+> Right, I was wondering about this, since I could not figure out what
+> the other side is (hardware, service processor or firmware).
+> So MEMREMAP_WB makes sense here.
+>
+> Two more questions:
+>
+> * Any comment on the byte ordering of the data in this line:
+>
+>         /* Copy the message to the PCC comm space */
+>         for (i = 0; i < sizeof(struct slimpro_resp_msg) / 4; i++)
+> -               writel_relaxed(msg[i], ptr + i * 4);
+> +               WRITE_ONCE(ptr[i], cpu_to_le32(msg[i]));
+>
+> This assumes that the old code was correct even when running on
+> big-endian kernels and the message data consists of 32-bit data words.
+> If the message has some other format instead, we would need to treat
+> this as a byte stream and not do swapping here but instead do it
+> (if any) in the code that reads or writes the actual data here.
+
+This is 32-bit data words.
+
+>
+> * Are you sure you don't need any smp_rmb()/smp_wmb() barriers
+> between the accesses?
+
+No, we don't need a strict read/write during access PCC subspace. Just
+make sure all access is committed before PCC send message to the
+platform which done by PCC mailbox driver.
+
+Thanks
+Hoan
+
+>
+>         Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
