@@ -1,76 +1,67 @@
-From: "S.H. Xie" <shaohui.xie@nxp.com>
-Subject: RE: [PATCH 3/7] [v2] arm64: dts: add QorIQ LS1046A SoC support
-Date: Fri, 9 Sep 2016 06:55:30 +0000
-Message-ID: <DB5PR0401MB21831908B0438CEA29921A71E8FA0@DB5PR0401MB2183.eurprd04.prod.outlook.com>
-References: <1473069695-33092-1-git-send-email-shh.xie@gmail.com>
- <1473069695-33092-4-git-send-email-shh.xie@gmail.com>
- <20160908131326.GE26570@leverpostej> <20160908131818.GF26570@leverpostej>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 4/8] ARM: dts: bcm283x: Add a new EMMC pin group from the
+ downstream tree.
+Date: Fri, 9 Sep 2016 08:58:05 +0200
+Message-ID: <e61a4efa-3685-6694-5fda-3272f6605665@i2se.com>
+References: <1473244289-20728-1-git-send-email-kraxel@redhat.com>
+ <1473244289-20728-5-git-send-email-kraxel@redhat.com>
+ <87650770.23554.026b1e4b-e35d-48e6-9394-7eeea0ff9add.open-xchange@email.1und1.de>
+ <1473320687.6698.25.camel@redhat.com>
+ <373fe61a-61d4-164e-0760-d68a0c4925dd@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160908131818.GF26570@leverpostej>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mihai Emilian Bantea <mihai.bantea@nxp.com>, Horia Geanta Neag <horia.geanta@nxp.com>, "arnd@arndb.de" <arnd@arndb.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "Z.Q.
- Hou" <zhiqiang.hou@nxp.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "M.H. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Vincent Hu <mingkai.hu@nxp.com>, "Q.Y. Gong" <qianyu.gong@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "C.H. Zhao" <chenhui.zhao@nxp.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <373fe61a-61d4-164e-0760-d68a0c4925dd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> On Thu, Sep 08, 2016 at 02:13:26PM +0100, Mark Rutland wrote:
-> > On Mon, Sep 05, 2016 at 06:01:31PM +0800, shh.xie@gmail.com wrote:
-> > > +	cpus {
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <0>;
-> > > +
-> > > +		cpu0: cpu@0 {
-> > > +			device_type = "cpu";
-> > > +			compatible = "arm,cortex-a72";
-> > > +			reg = <0x0>;
-> > > +			clocks = <&clockgen 1 0>;
-> > > +			next-level-cache = <&l2>;
-> > > +			cpu-idle-states = <&CPU_PH20>;
-> > > +		};
-> >
-> > [...]
-> >
-> > > +	};
-> > > +
-> > > +	idle-states {
-> > > +		entry-method = "arm,psci";
-> > > +
-> > > +		CPU_PH20: cpu-ph20 {
-> > > +			compatible = "arm,idle-state";
-> > > +			idle-state-name = "PH20";
-> > > +			arm,psci-suspend-param = <0x00010000>;
-> > > +			entry-latency-us = <1000>;
-> > > +			exit-latency-us = <1000>;
-> > > +			min-residency-us = <3000>;
-> > > +		};
-> > > +	};
-> >
-> > There's no PSCI node in this file, and none from am included file, so
-> > this doesn't look right.
-> 
-> Looking again, none of the cpu nodes has an enable-method property, and
-> subsequent patches don't seem to add that to any cpu node.
-> 
-> Has this DT actually been tested?
-[S.H] The PSCI node and the enable-method property are added by U-boot. 
-U-boot can determine if using PSCI. If U-boot enables PSCI, it will add these 
-missed parts in the dts. If not, it will not add these missed parts, 
-so kernel will not use PSCI.
+Hi Scott,
 
-In other words, the dts does not enable PSCI by default. 
-It's U-boot which adds the missed part if it determines to use PSCI.
+Am 08.09.2016 um 21:50 schrieb Scott Branden:
+> Hi Gerd/Eric
+>
+> On 16-09-08 12:44 AM, Gerd Hoffmann wrote:
+>> On Mi, 2016-09-07 at 20:13 +0200, Stefan Wahren wrote:
+>>>> Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> hat am 7. September 2016 um 12:31
+>>>> geschrieben:
+>>>>
+>>>>
+>>>> From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>>>>
+>>>> This will be used for having EMMC (sdhci-bcm2835.c) drive the
+>>>> wireless.
+>>>
+>>> sdhci-bcm2835.c has been replaced by sdhci-iproc.c
+>>
+>> Ah, right, I'll update the commit msg for v2.
+>>
+> Should we entirely remove sdhci-bcm2835.c to reduce confusion going
+> forward?
 
-Thanks,
-Shaohui
+did i missed something?
+
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=46cd175c9788e39a1c57698ab58f34844d216428
+
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=7eb16493ecaa41ceeb448717ee2c59690cd9047f
+
+
+>
+>>> How about adding pull defines to include/dt-bindings/pinctrl/bcm2835.h?
+>>
+>> Already there (or do you mean something other than '#define
+>> BCM2835_FSEL_*' ?)
+>>
+>> cheers,
+>>   Gerd
+>>
+>
+> Thanks,
+>  Scott
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
