@@ -1,95 +1,107 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH V4 3/4] ARM: bcm2835: add thermal node to device-tree of bcm283x
-Date: Fri, 9 Sep 2016 20:12:28 +0200
-Message-ID: <185DA6B2-AFC0-4199-A361-0164381AD317@martin.sperl.org>
-References: <1473407397-29395-1-git-send-email-kernel@martin.sperl.org> <1473407397-29395-4-git-send-email-kernel@martin.sperl.org> <19cc8fbf-6ceb-995e-850d-9d82bdaff8d0@i2se.com> <8876586A-98F8-4AAF-AD90-86EB12C22FDC@martin.sperl.org> <2117811305.32861.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2117811305.32861.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 22/20] iommu/arm-smmu: Fall back to global bypass
+Date: Fri,  9 Sep 2016 19:17:47 +0100
+Message-ID: <9c467662ca0fb562cff6d5c9443d77eacb257060.1473443407.git.robin.murphy@arm.com>
+References: <cover.1473173789.git.robin.murphy@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <cover.1473173789.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Unlike SMMUv2, SMMUv3 has no easy way to bypass unknown stream IDs,
+other than allocating and filling in the entire stream table with bypass
+entries, which for some configurations would waste *gigabytes* of RAM.
+Otherwise, all transactions on unknown stream IDs will simply be aborted
+with a C_BAD_STREAMID event.
 
-> On 09.09.2016, at 17:36, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
-> 
-> 
->> Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> hat am 9. September 2016 um 16:58
->> geschrieben:
->> 
->> 
->> 
->>>> On 09.09.2016, at 16:25, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
->>>> 
->>>> Am 09.09.2016 um 09:49 schrieb kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org:
->>>> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->>>> 
->>>> Add the node for the thermal sensor of the bcm2835-soc
->>>> to the device tree.
->>>> 
->>>> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->>>> Reviewed-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->>>> ---
->>>> arch/arm/boot/dts/bcm283x.dtsi | 6 ++++++
->>>> 1 file changed, 6 insertions(+)
->>>> 
->>>> diff --git a/arch/arm/boot/dts/bcm283x.dtsi
->>>> b/arch/arm/boot/dts/bcm283x.dtsi
->>>> index b982522..e2e3a46 100644
->>>> --- a/arch/arm/boot/dts/bcm283x.dtsi
->>>> +++ b/arch/arm/boot/dts/bcm283x.dtsi
->>>> @@ -186,6 +186,12 @@
->>>>           interrupts = <2 14>; /* pwa1 */
->>>>       };
->>>> 
->>>> +        thermal: thermal@0x7e212000 {
->>>> +            compatible = "brcm,bcm2835-thermal";
->>>> +            reg = <0x7e212000 0x8>;
->>>> +            clocks = <&clocks BCM2835_CLOCK_TSENS>;
->>>> +        };
->>>> +
->>> 
->>> Since the driver handles 3 different SoC (2835, 2836, 2837). This node
->>> should be defined in the SoC specific dtsi files, because the BCM2836
->>> includes bcm283x.dtsi too.
->>> 
->>> Be aware the patch for bcm2837 must go to ARM64.
->> 
->> I can not really follow:
->> * the node is defined in the dtsi included by all 3 soc,
->>   and it is available on all so it sits where for example
->>   spi0 or uart0 is located
->> * as for arm64: this describes the registers that are
->>   identical for arm and arm64 and the bcm2837.dtsi
->>   is also including ../../../../arm/boot/dts/bcm283x.dtsi
->> 
->> So what is the problem?
-> 
-> The thermal driver specifies 3 different compatibles with partially different
-> settings.
-> If this patch is applied, all SoC (bcm2835, bcm2836, bcm2837) would use the
-> bcm2835 settings.
-> I can't believe this is intended.
-> 
-> Why does the binding contains 3 different compatibles if only one is used?
+Rather than render the system unusable in the case of an invalid DT,
+avoid enabling the SMMU altogether such that everything bypasses
+(though letting the explicit disable_bypass option take precedence).
 
-Now I understand - did not think of that: good catch!
+Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+---
+ drivers/iommu/arm-smmu-v3.c | 28 +++++++++++++++++++++++-----
+ 1 file changed, 23 insertions(+), 5 deletions(-)
 
-To minimize the patch: what about setting it to 2837 by default (in 283x.dtsi)
-and only change compatible in 2835.dtsi and 2836.dtsi - that is 3 files
-changed instead of 4 or 5...
-
-Or any other ideas how to detect which Soc we run on during runtime?
-I.e: query the root compatible string in the device-tree?
-
-Just before I create a new patch set to fix that.
-
-Martin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index be293b5aa896..859b80c83946 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -126,6 +126,9 @@
+ #define CR2_RECINVSID			(1 << 1)
+ #define CR2_E2H				(1 << 0)
+ 
++#define ARM_SMMU_GBPA			0x44
++#define GBPA_ABORT			(1 << 20)
++
+ #define ARM_SMMU_IRQ_CTRL		0x50
+ #define IRQ_CTRL_EVTQ_IRQEN		(1 << 2)
+ #define IRQ_CTRL_PRIQ_IRQEN		(1 << 1)
+@@ -2242,7 +2245,7 @@ static int arm_smmu_device_disable(struct arm_smmu_device *smmu)
+ 	return ret;
+ }
+ 
+-static int arm_smmu_device_reset(struct arm_smmu_device *smmu)
++static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
+ {
+ 	int ret;
+ 	u32 reg, enables;
+@@ -2343,8 +2346,14 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu)
+ 		return ret;
+ 	}
+ 
+-	/* Enable the SMMU interface */
+-	enables |= CR0_SMMUEN;
++
++	/* Enable the SMMU interface, or ensure bypass */
++	if (!bypass || disable_bypass) {
++		enables |= CR0_SMMUEN;
++	} else {
++		reg = readl_relaxed(smmu->base + ARM_SMMU_GBPA);
++		writel_relaxed(reg & ~GBPA_ABORT, smmu->base + ARM_SMMU_GBPA);
++	}
+ 	ret = arm_smmu_write_reg_sync(smmu, enables, ARM_SMMU_CR0,
+ 				      ARM_SMMU_CR0ACK);
+ 	if (ret) {
+@@ -2543,6 +2552,15 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	struct arm_smmu_device *smmu;
+ 	struct device *dev = &pdev->dev;
++	bool bypass = true;
++	u32 cells;
++
++	if (of_property_read_u32(dev->of_node, "#iommu-cells", &cells))
++		dev_err(dev, "missing #iommu-cells property\n");
++	else if (cells != 1)
++		dev_err(dev, "invalid #iommu-cells value (%d)\n", cells);
++	else
++		bypass = false;
+ 
+ 	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
+ 	if (!smmu) {
+@@ -2595,8 +2613,8 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, smmu);
+ 
+ 	/* Reset the device */
+-	ret = arm_smmu_device_reset(smmu);
+-	if (ret)
++	ret = arm_smmu_device_reset(smmu, bypass);
++	if (ret || bypass)
+ 		return ret;
+ 
+ 	/* And we're up. Go go go! */
+-- 
+2.8.1.dirty
