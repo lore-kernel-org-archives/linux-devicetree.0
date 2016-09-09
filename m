@@ -1,7 +1,7 @@
 From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH 3/8] ARM: dts: rockchip: Remove skeleton.dtsi inclusion in rk3288.dtsi
-Date: Fri,  9 Sep 2016 10:01:04 -0400
-Message-ID: <1473429669-6185-4-git-send-email-javier@osg.samsung.com>
+Subject: [PATCH 4/8] ARM: dts: rockchip: Remove skeleton.dtsi inclusion in rk3xxx.dtsi
+Date: Fri,  9 Sep 2016 10:01:05 -0400
+Message-ID: <1473429669-6185-5-git-send-email-javier@osg.samsung.com>
 References: <1473429669-6185-1-git-send-email-javier@osg.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1473429669-6185-1-git-send-email-javier@osg.samsung.com>
@@ -24,16 +24,16 @@ being removed. So the change should not have a functional impact.
 Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 ---
 
- arch/arm/boot/dts/rk3288.dtsi | 4 +++-
+ arch/arm/boot/dts/rk3xxx.dtsi | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 17ec2e2d7a60..2cf1eb2e6202 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -46,9 +46,11 @@
- #include <dt-bindings/thermal/thermal.h>
- #include <dt-bindings/power/rk3288-power.h>
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index e15beb3c671e..0394312f392d 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -44,9 +44,11 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
  #include <dt-bindings/soc/rockchip,boot-mode.h>
 -#include "skeleton.dtsi"
  
@@ -41,8 +41,8 @@ index 17ec2e2d7a60..2cf1eb2e6202 100644
 +	#address-cells = <1>;
 +	#size-cells = <1>;
 +
- 	compatible = "rockchip,rk3288";
- 
  	interrupt-parent = <&gic>;
+ 
+ 	aliases {
 -- 
 2.7.4
