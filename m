@@ -1,86 +1,42 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v3 2/3] hwmon: xgene: Add hwmon driver
-Date: Fri, 09 Sep 2016 10:31:39 +0100
-Message-ID: <57D2817B.8030007@arm.com>
-References: <1469134557-26869-1-git-send-email-hotran@apm.com> <13081573.BbD3TmEU5Y@wuerfel> <20160907223705.GA31582@roeck-us.net> <2992356.ULGoZEEDZp@wuerfel> <57D141DF.2010603@arm.com> <20160909031809.GG16712@linaro.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v4 0/2] Add support for Allwinner A64 mmc controller
+Date: Fri, 9 Sep 2016 12:12:14 +0200
+Message-ID: <CAPDyKFpqFm0zZvK_0gqSy9iuvRGS6MTs9i4OMPC6OVZ8AvjRgQ@mail.gmail.com>
+References: <20160805025715.5306-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-2022-jp
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20160909031809.GG16712@linaro.org>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Hoan Tran <hotran@apm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, lho@apm.com, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160805025715.5306-1-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Suchanek <hramrach@gmail.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 5 August 2016 at 04:57, Icenowy Zheng <icenowy@aosc.xyz> wrote:
+> Allwinner A64 has a slightly modified version of the Allwinner MMC controller.
+>
+> It do not have "output" or "sample" clock input, instead, it can calibrate the
+> delay internally.
+>
+> This series of patch added the calibrate feature to the sunxi-mmc driver. It
+> is based on works by Andre Przywara <andre.przywara@arm.com>, and now it
+> depends on the patch set sent recently by Hans de Goede <hdegoede@redhat.com>,
+> which disabled "output" and "sample" clock on A10/13.
+> ( http://lists.infradead.org/pipermail/linux-arm-kernel/2016-July/446187.html )
+>
+> As the clock and device tree patch for Allwinner A64 is not yet merged, the
+> patch set contains no patch to enable it.
 
-On 09/09/16 04:18, AKASHI Takahiro wrote:
-> On Thu, Sep 08, 2016 at 11:47:59AM +0100, James Morse wrote:
->> On 08/09/16 09:14, Arnd Bergmann wrote:
->>> On Wednesday, September 7, 2016 3:37:05 PM CEST Guenter Roeck wrote:
->>>> On Wed, Sep 07, 2016 at 11:41:44PM +0200, Arnd Bergmann wrote:
->>>>> On Thursday, July 21, 2016 1:55:56 PM CEST Hoan Tran wrote:
->>>>>> +               ctx->comm_base_addr = cppc_ss->base_address;
->>>>>> +               if (ctx->comm_base_addr) {
->>>>>> +                       ctx->pcc_comm_addr =
->>>>>> +                                       acpi_os_ioremap(ctx->comm_base_addr,
->>>>>> +                                                       cppc_ss->length);
->>>>>>
->>>>>
->>>>> This causes the arm64 allmodconfig build to fail now, according to
->>>>> kernelci:
->>>>>
->>>>>       1  ERROR: "memblock_is_memory" [drivers/hwmon/xgene-hwmon.ko] undefined!
->>>>>
->>>>> Should this perhaps call ioremap() or memremap() instead?
->>>>>
->>>> Hmmm ... almost sounds to me like blaming the messenger. e7cd190385d1 ("arm64:
->>>> mark reserved memblock regions explicitly in iomem") starts using a function
->>>> in acpi_os_ioremap() which is not exported. On top of that, memblock_is_memory()
->>>> is declared as __init_memblock, which makes me really uncomfortable.
->>>> If acpi_os_ioremap() must not be used by modules, and possibly only during
->>>> early (?) initialization, maybe its declaration should state those limitations ?
->>>
->>> Ah, I didn't notice that. I guess both patches were correct individually and
->>> got added to linux-next around the same time but caused allmodconfig to blow up
->>> when used together.
->>>
->>> Adding everyone who was involved in the memblock patch to Cc here, maybe one
->>> of them has an idea what the correct fix is. There are only two other drivers
->>> using acpi_os_ioremap() and one of them is x86-specific, so it's still likely
->>> that drivers are not actually supposed to use this symbol. Making
->>> acpi_os_ioremap() an exported function in arm64 would also work.
->>
->> You could use acpi_os_map_iomem()/acpi_os_unmap_iomem() from acpi/acpi_io.h.
->> If there isn't an existing mapping these end up in acpi_os_ioremap(), and are
->> already EXPORT_SYMBOL_GPL().
-> 
-> acpi_os_ioremap() is re-defined in arm64/include/asm/acpi.h.
-> 
-> The problem is that, as memblock_is_memory() is declared as __init,
+Thanks, series applied for next!
 
-__init_memblock ...
-
-... as is memblock_is_map_memory(), which we call from pfn_valid() which is
-EXPORT_SYMBOL()'d
-and used from modules, (e.g. mac80211.ko). So something fishy is going on...
-
->From include/linux/memblock.h:
-> #ifdef CONFIG_ARCH_DISCARD_MEMBLOCK
-> #define __init_memblock __meminit
-> #define __initdata_memblock __meminitdata
-> #else
-> #define __init_memblock
-> #define __initdata_memblock
-> #endif
-
-arm64 doesn't define ARCH_DISCARD_MEMBLOCK, so we always keep these symbols.
-If we didn't, pfn_valid() would break too.
-
-
-Thanks,
-
-James
-
-
+Kind regards
+Uffe
