@@ -1,97 +1,85 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/2] i2c: aspeed: added documentation for Aspeed I2C driver
-Date: Fri,  9 Sep 2016 12:54:30 -0700
-Message-ID: <1473450870-10333-3-git-send-email-brendanhiggins@google.com>
-References: <1473450870-10333-1-git-send-email-brendanhiggins@google.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473450870-10333-1-git-send-email-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] hwmon: xgene: access mailbox as RAM
+Date: Fri, 09 Sep 2016 21:58:49 +0200
+Message-ID: <2852054.37zytD0HIa@wuerfel>
+References: <1469134557-26869-1-git-send-email-hotran@apm.com>
+ <2529114.aAikiSWl11@wuerfel>
+ <CAFHUOYzm4VH1fc3D0fLVv3bCU=2SHx7tZM4nFnCvWeuY+QfEFw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAFHUOYzm4VH1fc3D0fLVv3bCU=2SHx7tZM4nFnCvWeuY+QfEFw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hoan Tran <hotran@apm.com>
+Cc: linux-hwmon@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Jean Delvare <jdelvare@suse.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-doc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Loc Ho <lho@apm.com>, Guenter Roeck <linux@roeck-us.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Added device tree binding documentation for Aspeed I2C controller and
-busses.
+On Friday, September 9, 2016 12:24:32 PM CEST Hoan Tran wrote:
+> On Fri, Sep 9, 2016 at 8:38 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > The newly added hwmon driver fails to build in an allmodconfig
+> > index bc78a5d10182..e834dfb3acca 100644
+> > --- a/drivers/hwmon/xgene-hwmon.c
+> > +++ b/drivers/hwmon/xgene-hwmon.c
+> > @@ -34,7 +34,8 @@
+> >  #include <linux/module.h>
+> >  #include <linux/of.h>
+> >  #include <linux/platform_device.h>
+> > -#include <acpi/acpi_io.h>
+> > +#include <linux/io.h>
+> 
+> Alphabetical order.
+> 
+> >         struct acpi_pcct_shared_memory *generic_comm_base = ctx->pcc_comm_addr;
+> > -       void *ptr = generic_comm_base + 1;
+> > +       u32 *ptr = (void*)(generic_comm_base + 1);
+> 
+> Space before "*".
 
-Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/i2c/i2c-aspeed.txt         | 63 ++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+Ok.
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-new file mode 100644
-index 0000000..df68f2a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-@@ -0,0 +1,63 @@
-+Device tree configuration for the I2C controller and busses on the AST24XX
-+and AST25XX SoCs.
-+
-+Controller:
-+
-+	Required Properties:
-+	- #address-cells	: should be 1
-+	- #size-cells 		: should be 1
-+	- #interrupt-cells 	: should be 1
-+	- compatible 		: should be "aspeed,ast2400-i2c-controller"
-+				  or "aspeed,ast2500-i2c-controller"
-+	- reg			: address start and range of controller
-+	- ranges		: defines address offset and range for busses
-+	- interrupts		: interrupt number
-+	- clocks		: root clock of bus, should reference the APB
-+				  clock
-+	- clock-ranges		: specifies that child busses can inherit clocks
-+	- interrupt-controller	: denotes that the controller receives and fires
-+				  new interrupts for child busses
-+
-+Bus:
-+
-+	Required Properties:
-+	- #address-cells	: should be 1
-+	- #size-cells		: should be 0
-+	- reg			: address offset and range of bus
-+	- compatible		: should be "aspeed,ast2400-i2c-bus"
-+				  or "aspeed,ast2500-i2c-bus"
-+	- bus			: the bus's number
-+	- interrupts		: interrupt number
-+
-+	Optional Properties:
-+	- clock-frequency	: frequency of the bus clock in Hz
-+				  defaults to 100 kHz when not specified
-+
-+Example:
-+
-+i2c: i2c@1e78a000 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	#interrupt-cells = <1>;
-+
-+	compatible = "aspeed,ast2400-i2c-controller";
-+	reg = <0x1e78a000 0x40>;
-+	ranges = <0 0x1e78a000 0x1000>;
-+	interrupts = <12>;
-+	clocks = <&clk_apb>;
-+	clock-ranges;
-+	interrupt-controller;
-+
-+	i2c0: i2c-bus@40 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x40 0x40>;
-+		compatible = "aspeed,ast2400-i2c-bus";
-+		bus = <0>;
-+		clock-frequency = <100000>;
-+		status = "disabled";
-+		interrupts = <0>;
-+		interrupt-parent = <&i2c>;
-+	};
-+};
-+
--- 
-2.8.0.rc3.226.g39d4020
+> > @@ -652,9 +653,9 @@ static int xgene_hwmon_probe(struct platform_device *pdev)
+> >                  */
+> >                 ctx->comm_base_addr = cppc_ss->base_address;
+> >                 if (ctx->comm_base_addr) {
+> > -                       ctx->pcc_comm_addr =
+> > -                                       acpi_os_ioremap(ctx->comm_base_addr,
+> > -                                                       cppc_ss->length);
+> > +                       ctx->pcc_comm_addr = memremap(ctx->comm_base_addr,
+> > +                                                       cppc_ss->length,
+> > +                                                       MEMREMAP_WT);
+> 
+> It should be MEMREMAP_WB. As mailbox shared memory is on RAM and our
+> co-processor is also in the coherency domain.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Right, I was wondering about this, since I could not figure out what
+the other side is (hardware, service processor or firmware).
+So MEMREMAP_WB makes sense here.
+
+Two more questions:
+
+* Any comment on the byte ordering of the data in this line:
+
+        /* Copy the message to the PCC comm space */
+        for (i = 0; i < sizeof(struct slimpro_resp_msg) / 4; i++)
+-               writel_relaxed(msg[i], ptr + i * 4);
++               WRITE_ONCE(ptr[i], cpu_to_le32(msg[i]));
+
+This assumes that the old code was correct even when running on
+big-endian kernels and the message data consists of 32-bit data words.
+If the message has some other format instead, we would need to treat
+this as a byte stream and not do swapping here but instead do it
+(if any) in the code that reads or writes the actual data here.
+
+* Are you sure you don't need any smp_rmb()/smp_wmb() barriers
+between the accesses?
+
+	Arnd
