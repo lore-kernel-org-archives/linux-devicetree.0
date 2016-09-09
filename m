@@ -1,73 +1,90 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] ASoC: rockchip: Add DP dai-links to the
- rk3399-gru machine driver
-Date: Fri, 9 Sep 2016 11:29:11 +0100
-Message-ID: <20160909102911.GE27946@sirena.org.uk>
-References: <1473181792-15398-1-git-send-email-zyw@rock-chips.com>
- <1473396235-11769-1-git-send-email-zyw@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1709932923094484918=="
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1473396235-11769-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hychao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, cychiang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: imx6ul: Add DTS for liteSOM module
+Date: Fri,  9 Sep 2016 12:39:05 +0200
+Message-ID: <20160909103906.15209-1-m.niestroj@grinn-global.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This is a SOM (System on Module), so it will be part of another boards.
+Hence, this is a "dtsi" file that will be included from another device
+tree files.
 
---===============1709932923094484918==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="G6nVm6DDWH/FONJq"
-Content-Disposition: inline
+Hardware specification:
+ * Freescale i.MX6UL SoC
+ * up to 512 MB RAM
+ * eMMC on uSDHC2
 
+Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6ul-litesom.dtsi | 52 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6ul-litesom.dtsi
 
---G6nVm6DDWH/FONJq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+diff --git a/arch/arm/boot/dts/imx6ul-litesom.dtsi b/arch/arm/boot/dts/imx6ul-litesom.dtsi
+new file mode 100644
+index 0000000..7a7f47d
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6ul-litesom.dtsi
+@@ -0,0 +1,52 @@
++/*
++ * Copyright (C) 2016 Grinn
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include "imx6ul.dtsi"
++
++/ {
++	model = "Grinn i.MX6UL liteSOM";
++	compatible = "grinn,imx6ul-litesom", "fsl,imx6ul";
++
++	memory {
++		reg = <0x80000000 0x20000000>;
++	};
++};
++
++&cpu0 {
++	arm-supply = <&reg_arm>;
++	soc-supply = <&reg_soc>;
++};
++
++&iomuxc {
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX6UL_PAD_NAND_RE_B__USDHC2_CLK	    0x10069
++			MX6UL_PAD_NAND_WE_B__USDHC2_CMD	    0x17059
++			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0 0x17059
++			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1 0x17059
++			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2 0x17059
++			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3 0x17059
++			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4 0x17059
++			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5 0x17059
++			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6 0x17059
++			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7 0x17059
++			MX6UL_PAD_NAND_ALE__USDHC2_RESET_B  0x17059
++		>;
++	};
++};
++
++&usdhc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	no-1-8-v;
++	non-removable;
++	keep-power-in-suspend;
++	wakeup-source;
++	bus-width = <8>;
++	status = "okay";
++};
+-- 
+2.9.3
 
-On Thu, Sep 08, 2016 at 09:43:55PM -0700, Chris Zhong wrote:
-> This patch adds DP audio output support to the rk3399-gru machine
-> driver.
-
-Please don't resend or update single patches in the middle of a patch
-series, it makes things very confusing.  Please send the entire patch
-series at once.
-
---G6nVm6DDWH/FONJq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJX0o72AAoJECTWi3JdVIfQW84H/iYk/sSOPrXPbtVbPXq9laSI
-SHbzC8GEG/JF0tp5CyBDyn6GnxmnfK5LCZL5wE/tmuA9WBRu9vYVKU9aQJLb7oO+
-JXDepY1ULEj9IXLvZZTNi4/h9KtP3lzeaHuDJJru5XU8+WY8jOApqOfvs6bfo6Pi
-NGprDEjaO0Nq0t+wRJ97vycm6w0bSbeClAuGEuIsUrRykAmf4vLhWswvZ31yCgq3
-Mgmv6S08pNIJm9bKcTQNVybc0ulGV459jNnvBmkF1KfSLQrezL0SMi63DZFUxT47
-3ujJA337UF7T2+GRrsEVX+rT0RCD+pQJ8d5FbSKwTfIi9nLlI5hsvhZHlDCr7eg=
-=MHwV
------END PGP SIGNATURE-----
-
---G6nVm6DDWH/FONJq--
-
-
---===============1709932923094484918==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Linux-rockchip mailing list
-Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
---===============1709932923094484918==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
