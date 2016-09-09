@@ -1,63 +1,58 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and GXBB
-Date: Fri, 9 Sep 2016 18:21:14 +0100
-Message-ID: <b9730890-d98c-2c3a-8af1-96b8c394c30f@codethink.co.uk>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
- <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
- <m260q6jibf.fsf@baylibre.com>
- <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
- <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk>
- <m2eg4ui0nl.fsf@baylibre.com>
- <ffdd0188-72bc-4575-f997-e8547f4c31d2@codethink.co.uk>
- <CAFBinCC4gkMrJtertYevg_hXDLJEZ0PqfKKLL5UKXo8B=SXsPw@mail.gmail.com>
- <m2sht9gkau.fsf@baylibre.com>
- <CAFBinCCDDwydB+RP0CZKoAW5Suxotn224ZFVWvt2OGW3gNJR1g@mail.gmail.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 00/20] Generic DT bindings for PCI IOMMUs and ARM SMMU
+Date: Fri, 9 Sep 2016 18:37:36 +0100
+Message-ID: <20160909173736.GF11418@arm.com>
+References: <cover.1473173789.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCCDDwydB+RP0CZKoAW5Suxotn224ZFVWvt2OGW3gNJR1g@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, johnyoun@synopsys.com, will.deacon@arm.com, mturquette@baylibre.com, linux-usb@vger.kernel.org, sboyd@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, catalin.marinas@arm.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1473173789.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/16 17:14, Martin Blumenstingl wrote:
-> On Fri, Sep 9, 2016 at 5:33 PM, Kevin Hilman <khilman@baylibre.com> wrote:
->> However, the problem with all of the solutions proposed (runtime PM ones
->> included) is that we're forcing a board-specific design issue (2 devices
->> sharing a reset line) into a driver that should not have any
->> board-specific assumptions in it.
->>
->> For example, if this driver is used on another platform where different
->> PHYs have different reset lines, then one of them (the unlucky one who
->> is not probed first) will never get reset.  So any form of per-device
->> ref-counting is not a portable solution.
-> maybe we should also consider Ben's solution: he played with the USB
-> PHY on his Meson8b board. His approach was to have only one USB PHY
-> driver instance which exposes two PHYs.
-> The downside of this: the driver would have to know the offset of the
-> PHYs (0x0 for the first PHY, 0x20 for the second), but we could handle
-> the reset using runtime PM without any hacks.
->
-> I checked the USB PHY reference driver: it seems that there will be a
-> new USB PHY with the GXL/GXM SoCs.
-> So maybe we could live with the assumption that the PHYs are at
-> consecutive addresses.
->
->> I'm not sure yet how the reset framework is supposed to handle shared
->> reset lines, but that needs some investigation.  I quick glance and it
->> seems that reset controllers can have shared lines, so that should be
->> investigated.
-> unfortunately shared resets are not allowed to use reset_control_reset, see [0]
->
->
-> [0] http://lxr.free-electrons.com/source/drivers/reset/core.c#L102
-
-If we didn't have the shared reset, we'd have one of node per phy
-and not have to have two sub-nodes... I don't think any other bits
-of the PHY framework are shared.
-
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+SGkgUm9iaW4sCgpPbiBUdWUsIFNlcCAwNiwgMjAxNiBhdCAwNDozMzozM1BNICswMTAwLCBSb2Jp
+biBNdXJwaHkgd3JvdGU6Cj4gSGVyZSdzIHY2IHRvIGFkZHJlc3MgbGFzdCB3ZWVrJ3MgY29tbWVu
+dHMuIEZvciB0aGUgc2FrZSBvZiBob25lc3R5IEkndmUKPiBsZWZ0IExvcmVuem8ncyB0ZXN0ZWQt
+Ynkgb2ZmIGV2ZXJ5dGhpbmcgSSd2ZSBjaGFuZ2VkIHNpbmNlLCBhbmQgRXJpYydzCj4gcmV2aWV3
+ZWQtYnkgb2ZmIHBhdGNoIDE5IGhhdmluZyBub24tdHJpdmlhbGx5IHJld29ya2VkIHRoZSBndXRz
+IG9mIGl0Lgo+IAo+IFBhdGNoIDIwIGlzIG5ldywgYnV0IGFzIGl0J3MgY3VycmVudGx5IGEgc29s
+dXRpb24gd2FpdGluZyBmb3IgYSBwcm9ibGVtCj4gYXMgZmFyIGFzIHdlJ3JlIGF3YXJlLCBvdWdo
+dG4ndCB0byBnZXQgaW4gdGhlIHdheTsgaG9wZWZ1bGx5IHRoZSByZXN0IGlzCj4gaW4gZ29vZCBz
+aGFwZSBmb3IgNC45IG5vdy4KPiAKPiBCcmFuY2ggaGVyZSwgYmFzZWQgb24gV2lsbCdzIGlvbW11
+L2RldmVsIHF1ZXVlOgo+IAo+IGdpdDovL2xpbnV4LWFybS5vcmcvbGludXgtcm0gaW9tbXUvZ2Vu
+ZXJpYy12NgoKSSdtIHByZXR0eSBoYXBweSB3aXRoIHRoaXMgKG1vZHVsbyB0aGUgYmluZGluZyBk
+b2NzIHVwZGF0ZSBldGMgd2UKZGlzY3Vzc2VkIG9mZiBsaXN0KSwgaG93ZXZlciBJJ20gc2VlaW5n
+IGFuIGFsbG1vZGNvbmZpZyBidWlsZCBmYWlsdXJlCndpdGggdGhpcyBhcHBsaWVkLiBFcnJvciBi
+ZWxvdy4KClBsZWFzZSBjYW4geW91IHRha2UgYSBsb29rIGFuZCBzZW5kIGEgZml4dXAgcGF0Y2g/
+CgpDaGVlcnMsCgpXaWxsCgotLS0+OAoKSW4gZmlsZSBpbmNsdWRlZCBmcm9tIGRyaXZlcnMvZ3B1
+L2RybS9leHlub3MvZXh5bm9zX2RybV9kcnYuYzozMzowOgpkcml2ZXJzL2dwdS9kcm0vZXh5bm9z
+L2V4eW5vc19kcm1faW9tbXUuaDogSW4gZnVuY3Rpb24g4oCYX19leHlub3NfaW9tbXVfY3JlYXRl
+X21hcHBpbmfigJk6CmRyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9pb21tdS5oOjY5
+Ojg6IGVycm9yOiB0b28gZmV3IGFyZ3VtZW50cyB0byBmdW5jdGlvbiDigJhpb21tdV9kbWFfaW5p
+dF9kb21haW7igJkKICByZXQgPSBpb21tdV9kbWFfaW5pdF9kb21haW4oZG9tYWluLCBzdGFydCwg
+c2l6ZSk7CiAgICAgICAgXgpJbiBmaWxlIGluY2x1ZGVkIGZyb20gZHJpdmVycy9ncHUvZHJtL2V4
+eW5vcy9leHlub3NfZHJtX2lvbW11Lmg6NTM6MCwKICAgICAgICAgICAgICAgICBmcm9tIGRyaXZl
+cnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kcnYuYzozMzoKLi9pbmNsdWRlL2xpbnV4L2Rt
+YS1pb21tdS5oOjMzOjU6IG5vdGU6IGRlY2xhcmVkIGhlcmUKIGludCBpb21tdV9kbWFfaW5pdF9k
+b21haW4oc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluLCBkbWFfYWRkcl90IGJhc2UsCiAgICAg
+XgptYWtlWzRdOiAqKiogW2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kcnYub10g
+RXJyb3IgMQptYWtlWzNdOiAqKiogW2RyaXZlcnMvZ3B1L2RybS9leHlub3NdIEVycm9yIDIKbWFr
+ZVszXTogKioqIFdhaXRpbmcgZm9yIHVuZmluaXNoZWQgam9icy4uLi4KbWFrZVsyXTogKioqIFtk
+cml2ZXJzL2dwdS9kcm1dIEVycm9yIDIKbWFrZVsxXTogKioqIFtkcml2ZXJzL2dwdV0gRXJyb3Ig
+MgptYWtlWzFdOiAqKiogV2FpdGluZyBmb3IgdW5maW5pc2hlZCBqb2JzLi4uLgptYWtlOiAqKiog
+W2RyaXZlcnNdIEVycm9yIDIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KaW9tbXUgbWFpbGluZyBsaXN0CmlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24u
+b3JnCmh0dHBzOi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lv
+bW11
