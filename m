@@ -1,29 +1,28 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: ls2080a: Add 'dma-coherent' for ls2080a PCI
- nodes
-Date: Fri, 9 Sep 2016 14:05:53 +0800
-Message-ID: <20160909060553.GH16911@tiger>
-References: <1473301904-27259-1-git-send-email-Gang.Liu@nxp.com>
+Subject: Re: [PATCH v3] ARM: dts: add gpio-ranges property to iMX GPIO
+ controllers
+Date: Fri, 9 Sep 2016 14:26:44 +0800
+Message-ID: <20160909062302.GK16911@tiger>
+References: <1473386556-1934-1-git-send-email-vladimir_zapolskiy@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1473301904-27259-1-git-send-email-Gang.Liu-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1473386556-1934-1-git-send-email-vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liu Gang <Gang.Liu-3arQi8VN3Tc@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org, minghuan.lian-3arQi8VN3Tc@public.gmane.org, mingkai.hu-3arQi8VN3Tc@public.gmane.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Deepak Das <deepak_das-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 08, 2016 at 10:31:44AM +0800, Liu Gang wrote:
-> The 'dma-coherent' indicates that the hardware IP block can ensure
-> the coherency of the data transferred from/to the IP block. This
-> can avoid the software cache flush/invalid actions, and improve
-> the performance significantly.
+On Fri, Sep 09, 2016 at 05:02:36AM +0300, Vladimir Zapolskiy wrote:
+> To establish a connection between GPIO controllers and pin multiplexor
+> controller add gpio-ranges properties to all GPIO controllers found
+> on iMX50, iMX6Q/D, iMX6DL/S, iMX6SL, iMX6SX, iMX6UL and iMX7D/S
+> SoCs. The change was done after human parsing of output from
 > 
-> The PCI IP block of ls2080a has this capability, so adding this
-> feature to improve the PCI performance.
+> % gawk -n '{ sub(/.*__/, ""); if ($1 ~ "^GPIO") print $1, $2/4}' imxXX-pinfunc.h | sort -n
 > 
-> Signed-off-by: Liu Gang <Gang.Liu-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 
 Applied, thanks.
 --
