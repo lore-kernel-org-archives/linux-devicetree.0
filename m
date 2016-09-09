@@ -1,13 +1,13 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: [PATCH 2/8] ARM: dts: rockchip: Remove skeleton.dtsi inclusion in rk322x.dtsi
-Date: Fri,  9 Sep 2016 10:01:03 -0400
-Message-ID: <1473429669-6185-3-git-send-email-javier@osg.samsung.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH 3/8] ARM: dts: rockchip: Remove skeleton.dtsi inclusion in rk3288.dtsi
+Date: Fri,  9 Sep 2016 10:01:04 -0400
+Message-ID: <1473429669-6185-4-git-send-email-javier@osg.samsung.com>
 References: <1473429669-6185-1-git-send-email-javier@osg.samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473429669-6185-1-git-send-email-javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473429669-6185-1-git-send-email-javier@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 The skeleton.dtsi file was removed in ARM64 for different reasons as
@@ -21,33 +21,28 @@ following DTC warnings in the future:
 The disassembled DTB are almost the same, besides empty chosen nodes
 being removed. So the change should not have a functional impact.
 
-Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 ---
 
- arch/arm/boot/dts/rk322x.dtsi | 4 +++-
+ arch/arm/boot/dts/rk3288.dtsi | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 9e6bf0e311bb..6ea8126d7a5f 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -44,9 +44,11 @@
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/clock/rk3228-cru.h>
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 17ec2e2d7a60..2cf1eb2e6202 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -46,9 +46,11 @@
  #include <dt-bindings/thermal/thermal.h>
+ #include <dt-bindings/power/rk3288-power.h>
+ #include <dt-bindings/soc/rockchip,boot-mode.h>
 -#include "skeleton.dtsi"
  
  / {
 +	#address-cells = <1>;
 +	#size-cells = <1>;
 +
- 	interrupt-parent = <&gic>;
+ 	compatible = "rockchip,rk3288";
  
- 	aliases {
+ 	interrupt-parent = <&gic>;
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
