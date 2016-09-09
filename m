@@ -1,113 +1,88 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and GXBB
-Date: Fri, 09 Sep 2016 08:33:13 -0700
-Message-ID: <m2sht9gkau.fsf@baylibre.com>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
-        <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
-        <m260q6jibf.fsf@baylibre.com>
-        <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
-        <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk>
-        <m2eg4ui0nl.fsf@baylibre.com>
-        <ffdd0188-72bc-4575-f997-e8547f4c31d2@codethink.co.uk>
-        <CAFBinCC4gkMrJtertYevg_hXDLJEZ0PqfKKLL5UKXo8B=SXsPw@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH V4 3/4] ARM: bcm2835: add thermal node to device-tree of
+ bcm283x
+Date: Fri, 9 Sep 2016 17:36:18 +0200 (CEST)
+Message-ID: <2117811305.32861.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
+References: <1473407397-29395-1-git-send-email-kernel@martin.sperl.org>
+ <1473407397-29395-4-git-send-email-kernel@martin.sperl.org>
+ <19cc8fbf-6ceb-995e-850d-9d82bdaff8d0@i2se.com>
+ <8876586A-98F8-4AAF-AD90-86EB12C22FDC@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCC4gkMrJtertYevg_hXDLJEZ0PqfKKLL5UKXo8B=SXsPw@mail.gmail.com>
-        (Martin Blumenstingl's message of "Thu, 8 Sep 2016 23:48:53 +0200")
-Sender: linux-clk-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, johnyoun@synopsys.com, will.deacon@arm.com, mturquette@baylibre.com, linux-usb@vger.kernel.org, sboyd@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, catalin.marinas@arm.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8876586A-98F8-4AAF-AD90-86EB12C22FDC-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-> On Thu, Sep 8, 2016 at 10:53 PM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
->> On 08/09/16 21:42, Kevin Hilman wrote:
->>>
->>> Ben Dooks <ben.dooks@codethink.co.uk> writes:
->>>
->>>> On 08/09/16 20:52, Martin Blumenstingl wrote:
->>>>>
->>>>> On Thu, Sep 8, 2016 at 9:35 PM, Kevin Hilman <khilman@baylibre.com>
->>>>> wrote:
->>>>>>>
->>>>>>> +     phy = devm_phy_create(&pdev->dev, NULL, &phy_meson_usb2_ops);
->>>>>>> +     if (IS_ERR(phy)) {
->>>>>>> +             dev_err(&pdev->dev, "failed to create PHY\n");
->>>>>>> +             return PTR_ERR(phy);
->>>>>>> +     }
->>>>>>> +
->>>>>>> +     if (usb_reset_refcnt++ == 0) {
->>>>>>> +             ret = device_reset(&pdev->dev);
->>>>>>> +             if (ret) {
->>>>>>> +                     dev_err(&phy->dev, "Failed to reset USB PHY\n");
->>>>>>> +                     return ret;
->>>>>>> +             }
->>>>>>> +     }
->>>>>>
->>>>>>
->>>>>> The ref count + reset here looks like something that could/should be
->>>>>> handled in a runtime PM callback.
->>>>>
->>>>> Unfortunately that doesn't work (as Jerome found out) because both
->>>>> PHYs are sharing the same reset line.
->>>>> So if the second PHY would call device_reset then it would also reset
->>>>> the first PHY!
->>>>>
->>>>> There's a comment above the declaration of usb_reset_refcnt which
->>>>> tries to explain this:
->>>>> "The PHYs are sharing a common reset line -> we are only allowed to
->>>>> reset once for all PHYs."
->>>>> Maybe I should move this comment to the "if (usb_reset_refcnt++ == 0)
->>>>> {" line to make it easier to see?
->>>>>
->>>>
->>>> pm-runtime has refcounting in it. When one of the nodes turns on,
->>>> the pm-runtime will call your driver to say there is a user when
->>>> this first use turns up.
->>>>
->>>> If all the sub-phys turn off and drop their refcount then the driver
->>>> is called to say there are no more users and you can go to sleep.
->>>
->>>
->>> After a chat w/Martin on IRC, It turns out runtime PM wont help here.
->>>
->>> The reason is because there are physically two PHY devices[1].  Those 2
->>> devices will be treated independely by runtime PM, and have separate
->>> use-counting, which means doing what I proposed would cause a reset to
->>> happen when either device was probed.
->>>
->>> So, I think it's OK as it is.
->>
->>
->> Surely you can do pm_runtime_get/put on the phy's parent platform
->> device and do it that way?
-> could you please be more specific with that (do you mean pdev->dev.parent)?
-> so we would use pm_runtime_{get_sync,put} with the parent, while we
-> would still define the runtime_resume in our driver.
+> Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org> hat am 9. September 2016 um 16:58
+> geschrieben:
+> 
+> 
+> 
+> > On 09.09.2016, at 16:25, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
+> > 
+> >> Am 09.09.2016 um 09:49 schrieb kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org:
+> >> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> >> 
+> >> Add the node for the thermal sensor of the bcm2835-soc
+> >> to the device tree.
+> >> 
+> >> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> >> Reviewed-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> >> ---
+> >> arch/arm/boot/dts/bcm283x.dtsi | 6 ++++++
+> >> 1 file changed, 6 insertions(+)
+> >> 
+> >> diff --git a/arch/arm/boot/dts/bcm283x.dtsi
+> >> b/arch/arm/boot/dts/bcm283x.dtsi
+> >> index b982522..e2e3a46 100644
+> >> --- a/arch/arm/boot/dts/bcm283x.dtsi
+> >> +++ b/arch/arm/boot/dts/bcm283x.dtsi
+> >> @@ -186,6 +186,12 @@
+> >>            interrupts = <2 14>; /* pwa1 */
+> >>        };
+> >> 
+> >> +        thermal: thermal@0x7e212000 {
+> >> +            compatible = "brcm,bcm2835-thermal";
+> >> +            reg = <0x7e212000 0x8>;
+> >> +            clocks = <&clocks BCM2835_CLOCK_TSENS>;
+> >> +        };
+> >> +
+> > 
+> > Since the driver handles 3 different SoC (2835, 2836, 2837). This node
+> > should be defined in the SoC specific dtsi files, because the BCM2836
+> > includes bcm283x.dtsi too.
+> > 
+> > Be aware the patch for bcm2837 must go to ARM64.
+> 
+> I can not really follow:
+> * the node is defined in the dtsi included by all 3 soc,
+>    and it is available on all so it sits where for example
+>    spi0 or uart0 is located
+> * as for arm64: this describes the registers that are
+>    identical for arm and arm64 and the bcm2837.dtsi
+>    is also including ../../../../arm/boot/dts/bcm283x.dtsi
+> 
+> So what is the problem?
 
-You'd also need to do get/put on the children, but yes, that's what Ben
-is suggesting.
+The thermal driver specifies 3 different compatibles with partially different
+settings.
+If this patch is applied, all SoC (bcm2835, bcm2836, bcm2837) would use the
+bcm2835 settings.
+I can't believe this is intended.
 
-However, the problem with all of the solutions proposed (runtime PM ones
-included) is that we're forcing a board-specific design issue (2 devices
-sharing a reset line) into a driver that should not have any
-board-specific assumptions in it.
+Why does the binding contains 3 different compatibles if only one is used?
 
-For example, if this driver is used on another platform where different
-PHYs have different reset lines, then one of them (the unlucky one who
-is not probed first) will never get reset.  So any form of per-device
-ref-counting is not a portable solution.
-
-I'm not sure yet how the reset framework is supposed to handle shared
-reset lines, but that needs some investigation.  I quick glance and it
-seems that reset controllers can have shared lines, so that should be
-investigated.
-
-Kevin
-
-
-
-
-
+> 
+> Martin
+> 
+> P.s the patches apply cleanly against master.
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
