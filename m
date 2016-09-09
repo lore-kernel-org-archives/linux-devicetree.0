@@ -1,170 +1,52 @@
-From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: imx6ul: Add DTS for liteBoard
-Date: Fri,  9 Sep 2016 12:39:06 +0200
-Message-ID: <20160909103906.15209-2-m.niestroj@grinn-global.com>
-References: <20160909103906.15209-1-m.niestroj@grinn-global.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160909103906.15209-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [PATCH 2/2] devicetree: bindings: uart: Add new compatible string for
+ ZynqMP
+Date: Fri, 9 Sep 2016 16:23:22 +0530
+Message-ID: <1473418402-34855-2-git-send-email-navam@xilinx.com>
+References: <1473418402-34855-1-git-send-email-navam@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1473418402-34855-1-git-send-email-navam@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, jslaby@suse.com, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Nava kishore Manne <nava.manne@xilinx.com>, Nava kishore Manne <navam@xilinx.com>, Scott Telford <stelford@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-liteBoard is a development board which uses liteSOM as its base.
+From: Nava kishore Manne <nava.manne@xilinx.com>
 
-Hardware specification:
- * liteSOM (i.MX6UL, DRAM, eMMC)
- * Ethernet PHY (id 0)
- * USB host (usb_otg1)
- * MicroSD slot (uSDHC1)
-
-Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Signed-off-by: Nava kishore Manne <navam@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+[stelford@cadence.com: cherry picked from
+https://github.com/Xilinx/linux-xlnx commit
+37b8a9780766422b2437f5166ddef3767bb60887]
+Signed-off-by: Scott Telford <stelford@cadence.com>
 ---
- arch/arm/boot/dts/Makefile             |   1 +
- arch/arm/boot/dts/imx6ul-liteboard.dts | 118 +++++++++++++++++++++++++++++++++
- 2 files changed, 119 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-liteboard.dts
+ Documentation/devicetree/bindings/serial/cdns,uart.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index faacd52..b149313 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -407,6 +407,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
- 	imx6sx-sdb.dtb
- dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-14x14-evk.dtb \
-+	imx6ul-liteboard.dtb \
- 	imx6ul-pico-hobbit.dtb \
- 	imx6ul-tx6ul-0010.dtb \
- 	imx6ul-tx6ul-0011.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-liteboard.dts b/arch/arm/boot/dts/imx6ul-liteboard.dts
-new file mode 100644
-index 0000000..d75b70a
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-liteboard.dts
-@@ -0,0 +1,118 @@
-+/*
-+ * Copyright (C) 2016 Grinn
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6ul-litesom.dtsi"
-+
-+/ {
-+	model = "Grinn i.MX6UL liteBoard";
-+	compatible = "grinn,imx6ul-liteboard", "grinn,imx6ul-litesom",
-+		     "fsl,imx6ul";
-+
-+	chosen {
-+		stdout-path = &uart1;
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg_usb_otg1_vbus: usb_otg1_regulator {
-+			compatible = "regulator-fixed";
-+			pinctrl-names = "defaullt";
-+			pinctrl-0 = <&pinctrl_usb_otg1_vbus>;
-+			regulator-name = "usb_otg1_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			gpio = <&gpio2 8 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl_enet1: enet1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
-+			MX6UL_PAD_GPIO1_IO06__ENET1_MDIO	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00 0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01 0x1b0b0
-+			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00 0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01 0x1b0b0
-+			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
-+			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x17059
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x10071
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usb_otg1_vbus: usb_otg1_vbus {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET2_RX_DATA0__GPIO2_IO08	0x79
-+		>;
-+	};
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy0>;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	vbus-supply = <&reg_usb_otg1_vbus>;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	cd-gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
-+	no-1-8-v;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	status = "okay";
-+};
+diff --git a/Documentation/devicetree/bindings/serial/cdns,uart.txt b/Documentation/devicetree/bindings/serial/cdns,uart.txt
+index a3eb154..4fe7aae 100644
+--- a/Documentation/devicetree/bindings/serial/cdns,uart.txt
++++ b/Documentation/devicetree/bindings/serial/cdns,uart.txt
+@@ -1,7 +1,8 @@
+ Binding for Cadence UART Controller
+ 
+ Required properties:
+-- compatible : should be "cdns,uart-r1p8", or "xlnx,xuartps"
++- compatible : should be "cdns,uart-r1p8", or "xlnx,xuartps" for Zynq and
++               "cdns,uart-r1p12" for Zynq Ultrascale+ MPSoC uart controller.
+ - reg: Should contain UART controller registers location and length.
+ - interrupts: Should contain UART controller interrupts.
+ - clocks: Must contain phandles to the UART clocks
 -- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.2
