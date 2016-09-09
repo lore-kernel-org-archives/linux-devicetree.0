@@ -1,74 +1,43 @@
-From: "S.H. Xie" <shaohui.xie@nxp.com>
-Subject: RE: [PATCH 3/7] [v2] arm64: dts: add QorIQ LS1046A SoC support
-Date: Fri, 9 Sep 2016 09:00:26 +0000
-Message-ID: <DB5PR0401MB2183AF1CB29F26B41192F246E8FA0@DB5PR0401MB2183.eurprd04.prod.outlook.com>
-References: <1473069695-33092-1-git-send-email-shh.xie@gmail.com>
- <1473069695-33092-4-git-send-email-shh.xie@gmail.com>
- <57D1664D.3060502@arm.com>
+From: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: dts: bcm283x: Define standard pinctrl groups
+ in the gpio node.
+Date: Fri, 09 Sep 2016 11:05:24 +0200
+Message-ID: <1473411924.6698.85.camel@redhat.com>
+References: <1473244289-20728-1-git-send-email-kraxel@redhat.com>
+         <1473244289-20728-2-git-send-email-kraxel@redhat.com>
+         <1628308726.55593.220fafc0-57d9-4317-a72d-0875dfb2d658.open-xchange@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <57D1664D.3060502@arm.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>, "shh.xie@gmail.com" <shh.xie@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Mihai Emilian Bantea <mihai.bantea@nxp.com>, "C.H. Zhao" <chenhui.zhao@nxp.com>, "arnd@arndb.de" <arnd@arndb.de>, "Z.Q. Hou" <zhiqiang.hou@nxp.com>, "M.H. Lian" <minghuan.lian@nxp.com>, "Q.Y. Gong" <qianyu.gong@nxp.com>, Horia Geanta Neag <horia.geanta@nxp.com>, Vincent Hu <mingkai.hu@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1628308726.55593.220fafc0-57d9-4317-a72d-0875dfb2d658.open-xchange-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > +	timer {
-> > +		compatible = "arm,armv8-timer";
-> > +		interrupts = <GIC_PPI 13 IRQ_TYPE_EDGE_RISING>,
-> > +			     <GIC_PPI 14 IRQ_TYPE_EDGE_RISING>,
-> > +			     <GIC_PPI 11 IRQ_TYPE_EDGE_RISING>,
-> > +			     <GIC_PPI 10 IRQ_TYPE_EDGE_RISING>;
-> 
-> No, this is completely wrong. The timer is always level triggered, and you're
-> missing the affinity bits that are described the GIC binding.
-[S.H] Will use (GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW) in next version.
+  Hi,
 
+> According to this page [1] the pinctrl group for parallel display interface is
+> missing. Is it intended?
 > 
-> > +	};
-> > +
-> > +	pmu {
-> > +		compatible = "arm,armv8-pmuv3";
-> 
-> Please add "arm,cortex-a72-pmu".
-[S.H] Will use "arm,cortex-a72-pmu" in next version.
+> [1] - http://elinux.org/RPi_BCM2835_GPIOs
 
-> 
-> > +		interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupt-affinity = <&cpu0>,
-> > +				     <&cpu1>,
-> > +				     <&cpu2>,
-> > +				     <&cpu3>;
-> > +	};
-> > +
-> > +	gic: interrupt-controller@1400000 {
-> > +		compatible = "arm,gic-400";
-> > +		#interrupt-cells = <3>;
-> > +		interrupt-controller;
-> > +		reg = <0x0 0x1410000 0 0x10000>, /* GICD */
-> > +		      <0x0 0x1420000 0 0x20000>, /* GICC */
-> > +		      <0x0 0x1440000 0 0x20000>, /* GICH */
-> > +		      <0x0 0x1460000 0 0x20000>; /* GICV */
-> > +		interrupts = <1 9 0xf08>;
-> 
-> Please choose between expressing the interrupts entirely with numerals or entirely
-> with symbols. At the moment this is a mix between the two.
-[S.H] Will fix it in next version.
+Just an oversight I guess.  Eric?
 
-Thank you!
+Does this look correct?
 
-Shaohui
++                       dpi_gpio4: dpi_gpio4 {
++                               brcm,pins = <4 5 6 7 8 9 10 11 12 13
++                                            14 15 16 17 18 19 20 21
++                                            22 23 24 25 26 27>;
++                               brcm,function = <BCM2835_FSEL_ALT2>;
++                       };
+
+thanks,
+  Gerd
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
