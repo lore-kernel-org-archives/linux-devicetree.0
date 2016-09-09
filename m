@@ -1,82 +1,86 @@
-From: "S.H. Xie" <shaohui.xie@nxp.com>
-Subject: RE: [PATCH 3/7] [v2] arm64: dts: add QorIQ LS1046A SoC support
-Date: Fri, 9 Sep 2016 09:17:56 +0000
-Message-ID: <DB5PR0401MB2183647F60C99417FC9C2A39E8FA0@DB5PR0401MB2183.eurprd04.prod.outlook.com>
-References: <1473069695-33092-1-git-send-email-shh.xie@gmail.com>
- <1473069695-33092-4-git-send-email-shh.xie@gmail.com>
- <20160908131326.GE26570@leverpostej> <20160908131818.GF26570@leverpostej>
- <DB5PR0401MB21831908B0438CEA29921A71E8FA0@DB5PR0401MB2183.eurprd04.prod.outlook.com>
- <20160909091052.GA10562@leverpostej>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH v3 2/3] hwmon: xgene: Add hwmon driver
+Date: Fri, 09 Sep 2016 10:31:39 +0100
+Message-ID: <57D2817B.8030007@arm.com>
+References: <1469134557-26869-1-git-send-email-hotran@apm.com> <13081573.BbD3TmEU5Y@wuerfel> <20160907223705.GA31582@roeck-us.net> <2992356.ULGoZEEDZp@wuerfel> <57D141DF.2010603@arm.com> <20160909031809.GG16712@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-2022-jp
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160909091052.GA10562@leverpostej>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mihai Emilian Bantea <mihai.bantea@nxp.com>, Horia Geanta Neag <horia.geanta@nxp.com>, "arnd@arndb.de" <arnd@arndb.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "Z.Q.
- Hou" <zhiqiang.hou@nxp.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "M.H. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Vincent Hu <mingkai.hu@nxp.com>, "Q.Y. Gong" <qianyu.gong@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "C.H. Zhao" <chenhui.zhao@nxp.com>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <20160909031809.GG16712@linaro.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Hoan Tran <hotran@apm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, lho@apm.com, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-> On Fri, Sep 09, 2016 at 06:55:30AM +0000, S.H. Xie wrote:
-> > > On Thu, Sep 08, 2016 at 02:13:26PM +0100, Mark Rutland wrote:
-> > > > On Mon, Sep 05, 2016 at 06:01:31PM +0800, shh.xie@gmail.com wrote:
-> > > > > +	cpus {
-> > > > > +		#address-cells = <1>;
-> > > > > +		#size-cells = <0>;
-> > > > > +
-> > > > > +		cpu0: cpu@0 {
-> > > > > +			device_type = "cpu";
-> > > > > +			compatible = "arm,cortex-a72";
-> > > > > +			reg = <0x0>;
-> > > > > +			clocks = <&clockgen 1 0>;
-> > > > > +			next-level-cache = <&l2>;
-> > > > > +			cpu-idle-states = <&CPU_PH20>;
-> > > > > +		};
-> > > >
-> > > > [...]
-> > > >
-> > > > > +	};
-> > > > > +
-> > > > > +	idle-states {
-> > > > > +		entry-method = "arm,psci";
-> > > > > +
-> > > > > +		CPU_PH20: cpu-ph20 {
-> > > > > +			compatible = "arm,idle-state";
-> > > > > +			idle-state-name = "PH20";
-> > > > > +			arm,psci-suspend-param = <0x00010000>;
-> > > > > +			entry-latency-us = <1000>;
-> > > > > +			exit-latency-us = <1000>;
-> > > > > +			min-residency-us = <3000>;
-> > > > > +		};
-> > > > > +	};
-> > > >
-> > > > There's no PSCI node in this file, and none from am included file,
-> > > > so this doesn't look right.
-> > >
-> > > Looking again, none of the cpu nodes has an enable-method property,
-> > > and subsequent patches don't seem to add that to any cpu node.
-> > >
-> > > Has this DT actually been tested?
-> > [S.H] The PSCI node and the enable-method property are added by U-boot.
-> > U-boot can determine if using PSCI. If U-boot enables PSCI, it will
-> > add these missed parts in the dts. If not, it will not add these
-> > missed parts, so kernel will not use PSCI.
-> >
-> > In other words, the dts does not enable PSCI by default.
-> > It's U-boot which adds the missed part if it determines to use PSCI.
+Hi,
+
+On 09/09/16 04:18, AKASHI Takahiro wrote:
+> On Thu, Sep 08, 2016 at 11:47:59AM +0100, James Morse wrote:
+>> On 08/09/16 09:14, Arnd Bergmann wrote:
+>>> On Wednesday, September 7, 2016 3:37:05 PM CEST Guenter Roeck wrote:
+>>>> On Wed, Sep 07, 2016 at 11:41:44PM +0200, Arnd Bergmann wrote:
+>>>>> On Thursday, July 21, 2016 1:55:56 PM CEST Hoan Tran wrote:
+>>>>>> +               ctx->comm_base_addr = cppc_ss->base_address;
+>>>>>> +               if (ctx->comm_base_addr) {
+>>>>>> +                       ctx->pcc_comm_addr =
+>>>>>> +                                       acpi_os_ioremap(ctx->comm_base_addr,
+>>>>>> +                                                       cppc_ss->length);
+>>>>>>
+>>>>>
+>>>>> This causes the arm64 allmodconfig build to fail now, according to
+>>>>> kernelci:
+>>>>>
+>>>>>       1  ERROR: "memblock_is_memory" [drivers/hwmon/xgene-hwmon.ko] undefined!
+>>>>>
+>>>>> Should this perhaps call ioremap() or memremap() instead?
+>>>>>
+>>>> Hmmm ... almost sounds to me like blaming the messenger. e7cd190385d1 ("arm64:
+>>>> mark reserved memblock regions explicitly in iomem") starts using a function
+>>>> in acpi_os_ioremap() which is not exported. On top of that, memblock_is_memory()
+>>>> is declared as __init_memblock, which makes me really uncomfortable.
+>>>> If acpi_os_ioremap() must not be used by modules, and possibly only during
+>>>> early (?) initialization, maybe its declaration should state those limitations ?
+>>>
+>>> Ah, I didn't notice that. I guess both patches were correct individually and
+>>> got added to linux-next around the same time but caused allmodconfig to blow up
+>>> when used together.
+>>>
+>>> Adding everyone who was involved in the memblock patch to Cc here, maybe one
+>>> of them has an idea what the correct fix is. There are only two other drivers
+>>> using acpi_os_ioremap() and one of them is x86-specific, so it's still likely
+>>> that drivers are not actually supposed to use this symbol. Making
+>>> acpi_os_ioremap() an exported function in arm64 would also work.
+>>
+>> You could use acpi_os_map_iomem()/acpi_os_unmap_iomem() from acpi/acpi_io.h.
+>> If there isn't an existing mapping these end up in acpi_os_ioremap(), and are
+>> already EXPORT_SYMBOL_GPL().
 > 
-> Ok. Could you please place a comment in the dts to that effect?
-[S.H] Yes. Will add it in next version.
+> acpi_os_ioremap() is re-defined in arm64/include/asm/acpi.h.
+> 
+> The problem is that, as memblock_is_memory() is declared as __init,
+
+__init_memblock ...
+
+... as is memblock_is_map_memory(), which we call from pfn_valid() which is
+EXPORT_SYMBOL()'d
+and used from modules, (e.g. mac80211.ko). So something fishy is going on...
+
+>From include/linux/memblock.h:
+> #ifdef CONFIG_ARCH_DISCARD_MEMBLOCK
+> #define __init_memblock __meminit
+> #define __initdata_memblock __meminitdata
+> #else
+> #define __init_memblock
+> #define __initdata_memblock
+> #endif
+
+arm64 doesn't define ARCH_DISCARD_MEMBLOCK, so we always keep these symbols.
+If we didn't, pfn_valid() would break too.
+
 
 Thanks,
-Shaohui
+
+James
+
+
