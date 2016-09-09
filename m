@@ -1,76 +1,46 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 4/8] ARM: dts: bcm283x: Add a new EMMC pin group from the downstream tree.
-Date: Fri, 09 Sep 2016 14:22:24 -0700
-Message-ID: <87zing7oq7.fsf@eliezer.anholt.net>
-References: <1473244289-20728-1-git-send-email-kraxel@redhat.com> <1473244289-20728-5-git-send-email-kraxel@redhat.com> <87650770.23554.026b1e4b-e35d-48e6-9394-7eeea0ff9add.open-xchange@email.1und1.de>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 0/1] misc: Add Allwinner Q8 tablet hardware manager
+Date: Fri, 9 Sep 2016 16:32:06 -0500
+Message-ID: <CAL_JsqJVkPPiDh66nhfh0D7BvkZ7KKN0X7uhfPGgiYbc2Ca1rg@mail.gmail.com>
+References: <20160901190820.21987-1-hdegoede@redhat.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87650770.23554.026b1e4b-e35d-48e6-9394-7eeea0ff9add.open-xchange@email.1und1.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Gerd Hoffmann <kraxel@redhat.com>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJIP47K7MERB3WUZS7AKGQE2OJ4XVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160901190820.21987-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Stefan Wahren <stefan.wahren@i2se.com> writes:
-
->> Gerd Hoffmann <kraxel@redhat.com> hat am 7. September 2016 um 12:31
->> geschrieben:
->>=20
->>=20
->> From: Eric Anholt <eric@anholt.net>
->>=20
->> This will be used for having EMMC (sdhci-bcm2835.c) drive the
->> wireless.
+On Thu, Sep 1, 2016 at 2:08 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> Hi All,
 >
-> sdhci-bcm2835.c has been replaced by sdhci-iproc.c
+> Here is a first RFC for the q8 tablet hw-manager I've been talking
+> about for a while now.
 >
->>=20
->> Signed-off-by: Eric Anholt <eric@anholt.net>
->> ---
->>  arch/arm/boot/dts/bcm283x.dtsi | 5 +++++
->>  1 file changed, 5 insertions(+)
->>=20
->> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.=
-dtsi
->> index 062d09db..b6b1950 100644
->> --- a/arch/arm/boot/dts/bcm283x.dtsi
->> +++ b/arch/arm/boot/dts/bcm283x.dtsi
->> @@ -257,6 +257,11 @@
->>  				brcm,pins =3D <32 33>;
->>  				brcm,function =3D <BCM2835_FSEL_ALT3>;
->>  			};
->> +			emmc_gpio34: emmc_gpio34 {
->> +				brcm,pins =3D <34 35 36 37 38 39>;
->> +				brcm,function =3D <BCM2835_FSEL_ALT3>;
->> +				brcm,pull =3D <0 2 2 2 2 2>;
->
-> How about adding pull defines to include/dt-bindings/pinctrl/bcm2835.h?
+> The touchscreen part is finished, I'll start working on the
+> accelerometer bits next.
 
-A fine idea, but it should not be a requirement for this series.
+This at least partially overlaps with the "overlay manager" just
+posted. A dev board having different devices attached and a production
+device have 2nd source components are not really different problems.
+We need a common solution and can't have each platform making up their
+own scheme. What's different for you is how you select what changes or
+overlay to apply and that is fine to be platform specific. I think you
+should be using overlays here as well.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> Note that this requires the "of: changesets: Introduce changeset
+> helper methods" patch from Pantelis. If that is still not upstream
+> when I'm ready to post a non RFC, I'll post a new version of that
+> myself.
 
------BEGIN PGP SIGNATURE-----
+I'm waiting for it to be reposted. IIRC, I only had some minor comments.
 
-iQIcBAEBCgAGBQJX0ygQAAoJELXWKTbR/J7ofFsP/2MIeSRF6hhE/L/0Og7DLrKc
-02WOB2iFJS0xL/+K8AlKQIIfovVWm8l38i9jzyCognYSOIX3VTJGYkc4/9oqK7Zz
-zMBZN0cJoYU7Hv5ysI/clO22dZn0CRcA8Xgy1z6lrMNYZTY5MH1fAdjAcKS2pmZ0
-dozaziLSoUOTKFQh9sUbx2mmsi3H56kfJJVMR7393DJKz6ZsUwsx1QrjelLl23lR
-T3U4GPedVWZ0MUjdMPR3pe0kzNkYVOntPoS4a4gTWkb/RqI11+cle85UJNtbAla4
-IUu/2T4PiN7CBaXYTJm4KSueY4KDOL/oAamxBghMspBQorOQOkfHwsk1ajXS8J7j
-kF7JBNbbug4fmpOoPCf53mvoVq/H/JJQb/uCGR5W2k7ywulBQBqVgxZVZlQDmZGQ
-fwtQ3/pvyxc+NY4TpZIigM0fD5DL8eQFpzslePuOjKyYUsvLMCWWqVygDXgKevci
-8XXIZ68UVyQoQyPKhedb6SB0ku8OmKfbBrTGPdED5OkwdXf1P8PEAyAlD2uV2y3F
-Piwwspy+YlEDHksNix35i7S6Dq2LZwLva7XC9JaO3B6rZLdbcmv3qzKccz7K/W2t
-PZgHkR5DVGb3aAcs9x8kb6O+uSIIwfAVEID+XCkej8VPWod+vc9uua0oes+0Vk8J
-vw17vQJYpId9FsHvGYEq
-=bfkV
------END PGP SIGNATURE-----
---=-=-=--
+Rob
