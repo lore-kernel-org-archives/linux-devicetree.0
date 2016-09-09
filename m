@@ -1,81 +1,92 @@
-From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Subject: [RESEND PATCH v7 1/4] phy: Add reset callback
-Date: Sat, 10 Sep 2016 02:59:37 +0800
-Message-ID: <1473447580-10369-2-git-send-email-ayaka@soulik.info>
+From: Randy Li <ayaka@soulik.info>
+Subject: [RESEND PATCH v7 2/4] phy: rockchip-usb: use rockchip_usb_phy_reset to reset phy during wakeup
+Date: Sat, 10 Sep 2016 02:59:38 +0800
+Message-ID: <1473447580-10369-3-git-send-email-ayaka@soulik.info>
 References: <1473447580-10369-1-git-send-email-ayaka@soulik.info>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473447580-10369-1-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473447580-10369-1-git-send-email-ayaka@soulik.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org
+Cc: John.Youn@synopsys.com, kishon@ti.com, felipe.balbi@linux.intel.com, mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, randy.li@rock-chips.com, Randy Li <ayaka@soulik.info>
 List-Id: devicetree@vger.kernel.org
 
-The only use for this is for solving a hardware design problem in
-usb of Rockchip RK3288.
+It is a hardware bug in RK3288, the only way to solve it is to
+reset the phy.
 
-Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Signed-off-by: Randy Li <ayaka@soulik.info>
 ---
- drivers/phy/phy-core.c  | 14 ++++++++++++++
- include/linux/phy/phy.h |  3 +++
- 2 files changed, 17 insertions(+)
+ .../devicetree/bindings/phy/rockchip-usb-phy.txt     |  3 +++
+ drivers/phy/phy-rockchip-usb.c                       | 20 ++++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index 8eca906..32e838d 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -357,6 +357,20 @@ int phy_set_mode(struct phy *phy, enum phy_mode mode)
- }
- EXPORT_SYMBOL_GPL(phy_set_mode);
+diff --git a/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
+index cc6be96..57dc388 100644
+--- a/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
++++ b/Documentation/devicetree/bindings/phy/rockchip-usb-phy.txt
+@@ -27,6 +27,9 @@ Optional Properties:
+ - clocks : phandle + clock specifier for the phy clocks
+ - clock-names: string, clock name, must be "phyclk"
+ - #clock-cells: for users of the phy-pll, should be 0
++- reset-names: Only allow the following entries:
++ - phy-reset
++- resets: Must contain an entry for each entry in reset-names.
  
-+int phy_reset(struct phy *phy)
-+{
-+	int ret;
-+	if (!phy || !phy->ops->reset)
-+		return 0;
-+
-+	mutex_lock(&phy->mutex);
-+	ret = phy->ops->reset(phy);
-+	mutex_unlock(&phy->mutex);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(phy_reset);
-+
- /**
-  * _of_phy_get() - lookup and obtain a reference to a phy by phandle
-  * @np: device_node for which to get the phy
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index f08b672..7978df6 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -36,6 +36,7 @@ enum phy_mode {
-  * @power_on: powering on the phy
-  * @power_off: powering off the phy
-  * @set_mode: set the mode of the phy
-+ * @reset: reseting the phy
-  * @owner: the module owner containing the ops
-  */
- struct phy_ops {
-@@ -44,6 +45,7 @@ struct phy_ops {
- 	int	(*power_on)(struct phy *phy);
- 	int	(*power_off)(struct phy *phy);
- 	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
-+	int	(*reset)(struct phy *phy);
- 	struct module *owner;
+ Example:
+ 
+diff --git a/drivers/phy/phy-rockchip-usb.c b/drivers/phy/phy-rockchip-usb.c
+index 2a7381f..734987f 100644
+--- a/drivers/phy/phy-rockchip-usb.c
++++ b/drivers/phy/phy-rockchip-usb.c
+@@ -29,6 +29,7 @@
+ #include <linux/reset.h>
+ #include <linux/regmap.h>
+ #include <linux/mfd/syscon.h>
++#include <linux/delay.h>
+ 
+ static int enable_usb_uart;
+ 
+@@ -64,6 +65,7 @@ struct rockchip_usb_phy {
+ 	struct clk_hw	clk480m_hw;
+ 	struct phy	*phy;
+ 	bool		uart_enabled;
++	struct reset_control *reset;
  };
  
-@@ -136,6 +138,7 @@ int phy_exit(struct phy *phy);
- int phy_power_on(struct phy *phy);
- int phy_power_off(struct phy *phy);
- int phy_set_mode(struct phy *phy, enum phy_mode mode);
-+int phy_reset(struct phy *phy);
- static inline int phy_get_bus_width(struct phy *phy)
- {
- 	return phy->attrs.bus_width;
+ static int rockchip_usb_phy_power(struct rockchip_usb_phy *phy,
+@@ -144,9 +146,23 @@ static int rockchip_usb_phy_power_on(struct phy *_phy)
+ 	return clk_prepare_enable(phy->clk480m);
+ }
+ 
++static int rockchip_usb_phy_reset(struct phy *_phy)
++{
++	struct rockchip_usb_phy *phy = phy_get_drvdata(_phy);
++
++	if (phy->reset) {
++		reset_control_assert(phy->reset);
++		udelay(10);
++		reset_control_deassert(phy->reset);
++	}
++
++	return 0;
++}
++
+ static const struct phy_ops ops = {
+ 	.power_on	= rockchip_usb_phy_power_on,
+ 	.power_off	= rockchip_usb_phy_power_off,
++	.reset		= rockchip_usb_phy_reset,
+ 	.owner		= THIS_MODULE,
+ };
+ 
+@@ -185,6 +201,10 @@ static int rockchip_usb_phy_init(struct rockchip_usb_phy_base *base,
+ 		return -EINVAL;
+ 	}
+ 
++	rk_phy->reset = of_reset_control_get(child, "phy-reset");
++	if (IS_ERR(rk_phy->reset))
++		rk_phy->reset = NULL;
++
+ 	rk_phy->reg_offset = reg_offset;
+ 
+ 	rk_phy->clk = of_clk_get_by_name(child, "phyclk");
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
