@@ -1,7 +1,7 @@
 From: bd-phuc-HEF513clHfp3+QwDJ9on6Q@public.gmane.org
-Subject: [PATCH 5/8] clk: renesas: r8a7796: Add CMT clocks
-Date: Fri,  9 Sep 2016 20:43:11 +0900
-Message-ID: <1473421394-9745-6-git-send-email-bd-phuc@jinso.co.jp>
+Subject: [PATCH 8/8] ARM64: defconfig: Enable SH_TIMER_CMT config option
+Date: Fri,  9 Sep 2016 20:43:14 +0900
+Message-ID: <1473421394-9745-9-git-send-email-bd-phuc@jinso.co.jp>
 References: <1473421394-9745-1-git-send-email-bd-phuc@jinso.co.jp>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1473421394-9745-1-git-send-email-bd-phuc-HEF513clHfp3+QwDJ9on6Q@public.gmane.org>
@@ -12,28 +12,25 @@ List-Id: devicetree@vger.kernel.org
 
 From: Bui Duc Phuc <bd-phuc-HEF513clHfp3+QwDJ9on6Q@public.gmane.org>
 
-This patch adds CMT module clocks for r8a7796 SoC.
+Enable SH CMT driver for R-car Gen3 : SH_TIMER_CMT
 
 Signed-off-by: Bui Duc Phuc <bd-phuc-HEF513clHfp3+QwDJ9on6Q@public.gmane.org>
 ---
- drivers/clk/renesas/r8a7796-cpg-mssr.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/renesas/r8a7796-cpg-mssr.c b/drivers/clk/renesas/r8a7796-cpg-mssr.c
-index c84b549..63607bb 100644
---- a/drivers/clk/renesas/r8a7796-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a7796-cpg-mssr.c
-@@ -97,6 +97,10 @@ static const struct cpg_core_clk r8a7796_core_clks[] __initconst = {
- };
- 
- static const struct mssr_mod_clk r8a7796_mod_clks[] __initconst = {
-+	DEF_MOD("cmt3",		 	 300,	R8A7796_CLK_R),
-+	DEF_MOD("cmt2",		 	 301,	R8A7796_CLK_R),
-+	DEF_MOD("cmt1",		 	 302,	R8A7796_CLK_R),
-+	DEF_MOD("cmt0",		 	 303,	R8A7796_CLK_R),
- 	DEF_MOD("scif2",		 310,	R8A7796_CLK_S3D4),
- 	DEF_MOD("intc-ap",		 408,	R8A7796_CLK_S3D1),
- };
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index eadf485..72f892d 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -3,6 +3,7 @@ CONFIG_POSIX_MQUEUE=y
+ CONFIG_AUDIT=y
+ CONFIG_NO_HZ_IDLE=y
+ CONFIG_HIGH_RES_TIMERS=y
++CONFIG_SH_TIMER_CMT=y
+ CONFIG_BSD_PROCESS_ACCT=y
+ CONFIG_BSD_PROCESS_ACCT_V3=y
+ CONFIG_TASKSTATS=y
 -- 
 2.7.4
 
