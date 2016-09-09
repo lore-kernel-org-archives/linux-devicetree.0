@@ -1,119 +1,124 @@
-From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: imx6q: Add Engicam i.CoreM6 DualLite/Solo initial support
-Date: Sat, 10 Sep 2016 02:05:12 +0530
-Message-ID: <1473453312-2786-2-git-send-email-jagan@amarulasolutions.com>
-References: <1473453312-2786-1-git-send-email-jagan@amarulasolutions.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473453312-2786-1-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and GXBB
+Date: Fri, 9 Sep 2016 22:36:14 +0200
+Message-ID: <CAFBinCDohOoFP_3GC+=tt6S7sPS308ao-yf+oGhdfwo-N-JnAA@mail.gmail.com>
+References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
+ <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
+ <m260q6jibf.fsf@baylibre.com> <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
+ <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk> <m2eg4ui0nl.fsf@baylibre.com>
+ <ffdd0188-72bc-4575-f997-e8547f4c31d2@codethink.co.uk> <CAFBinCC4gkMrJtertYevg_hXDLJEZ0PqfKKLL5UKXo8B=SXsPw@mail.gmail.com>
+ <m2sht9gkau.fsf@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <m2sht9gkau.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-i.CoreM6 DualLite/Solo modules are system on module solutions manufactured
-by Engicam with following characteristics:
-CPU           NXP i.MX6 DL, 800MHz
-RAM           1GB, 32, 64 bit, DDR3-800/1066
-NAND          SLC,512MB
-Power supply  Single 5V
-MAX LCD RES   FULLHD
+On Fri, Sep 9, 2016 at 5:33 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+>
+>> On Thu, Sep 8, 2016 at 10:53 PM, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
+>>> On 08/09/16 21:42, Kevin Hilman wrote:
+>>>>
+>>>> Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> writes:
+>>>>
+>>>>> On 08/09/16 20:52, Martin Blumenstingl wrote:
+>>>>>>
+>>>>>> On Thu, Sep 8, 2016 at 9:35 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>>>>> wrote:
+>>>>>>>>
+>>>>>>>> +     phy = devm_phy_create(&pdev->dev, NULL, &phy_meson_usb2_ops);
+>>>>>>>> +     if (IS_ERR(phy)) {
+>>>>>>>> +             dev_err(&pdev->dev, "failed to create PHY\n");
+>>>>>>>> +             return PTR_ERR(phy);
+>>>>>>>> +     }
+>>>>>>>> +
+>>>>>>>> +     if (usb_reset_refcnt++ == 0) {
+>>>>>>>> +             ret = device_reset(&pdev->dev);
+>>>>>>>> +             if (ret) {
+>>>>>>>> +                     dev_err(&phy->dev, "Failed to reset USB PHY\n");
+>>>>>>>> +                     return ret;
+>>>>>>>> +             }
+>>>>>>>> +     }
+>>>>>>>
+>>>>>>>
+>>>>>>> The ref count + reset here looks like something that could/should be
+>>>>>>> handled in a runtime PM callback.
+>>>>>>
+>>>>>> Unfortunately that doesn't work (as Jerome found out) because both
+>>>>>> PHYs are sharing the same reset line.
+>>>>>> So if the second PHY would call device_reset then it would also reset
+>>>>>> the first PHY!
+>>>>>>
+>>>>>> There's a comment above the declaration of usb_reset_refcnt which
+>>>>>> tries to explain this:
+>>>>>> "The PHYs are sharing a common reset line -> we are only allowed to
+>>>>>> reset once for all PHYs."
+>>>>>> Maybe I should move this comment to the "if (usb_reset_refcnt++ == 0)
+>>>>>> {" line to make it easier to see?
+>>>>>>
+>>>>>
+>>>>> pm-runtime has refcounting in it. When one of the nodes turns on,
+>>>>> the pm-runtime will call your driver to say there is a user when
+>>>>> this first use turns up.
+>>>>>
+>>>>> If all the sub-phys turn off and drop their refcount then the driver
+>>>>> is called to say there are no more users and you can go to sleep.
+>>>>
+>>>>
+>>>> After a chat w/Martin on IRC, It turns out runtime PM wont help here.
+>>>>
+>>>> The reason is because there are physically two PHY devices[1].  Those 2
+>>>> devices will be treated independely by runtime PM, and have separate
+>>>> use-counting, which means doing what I proposed would cause a reset to
+>>>> happen when either device was probed.
+>>>>
+>>>> So, I think it's OK as it is.
+>>>
+>>>
+>>> Surely you can do pm_runtime_get/put on the phy's parent platform
+>>> device and do it that way?
+>> could you please be more specific with that (do you mean pdev->dev.parent)?
+>> so we would use pm_runtime_{get_sync,put} with the parent, while we
+>> would still define the runtime_resume in our driver.
+>
+> You'd also need to do get/put on the children, but yes, that's what Ben
+> is suggesting.
+>
+> However, the problem with all of the solutions proposed (runtime PM ones
+> included) is that we're forcing a board-specific design issue (2 devices
+> sharing a reset line) into a driver that should not have any
+> board-specific assumptions in it.
+>
+> For example, if this driver is used on another platform where different
+> PHYs have different reset lines, then one of them (the unlucky one who
+> is not probed first) will never get reset.  So any form of per-device
+> ref-counting is not a portable solution.
+indeed, so in simple words we would need something like
+reset_control_do_once(rstc, RESET/ASSERT/DEASSERT) which would
+remember internally if any action has already been executed: if not it
+does a _reset, _assert or _deassert and otherwise it does nothing.
 
-and more info at
-http://www.engicam.com/en/products/embedded/som/sodimm/i-core-m6s-dl-d-q
+> I'm not sure yet how the reset framework is supposed to handle shared
+> reset lines, but that needs some investigation.  I quick glance and it
+> seems that reset controllers can have shared lines, so that should be
+> investigated.
+I added Philipp and Hans to this thread - maybe they can comment on this.
+To sum it up, our problem is:
+- there are two separate USB PHYs on Meson GXBB
+- both are sharing the same reset line (provided by the reset-meson driver)
+- during initialization of the PHYs we must only call
+reset_control_reset(rstc) once (if we do it for the first *and* second
+PHY then the first PHY gets confused once the second PHY uses the
+reset because the first PHY's state is reset as well)
 
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- arch/arm/boot/dts/Makefile         |  1 +
- arch/arm/boot/dts/imx6dl-icore.dts | 59 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6dl-icore.dts
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 511510d..6175f44 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -333,6 +333,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-gw552x.dtb \
- 	imx6dl-gw553x.dtb \
- 	imx6dl-hummingboard.dtb \
-+	imx6dl-icore.dtb \
- 	imx6dl-nit6xlite.dtb \
- 	imx6dl-nitrogen6x.dtb \
- 	imx6dl-phytec-pbab01.dtb \
-diff --git a/arch/arm/boot/dts/imx6dl-icore.dts b/arch/arm/boot/dts/imx6dl-icore.dts
-new file mode 100644
-index 0000000..433a420
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6dl-icore.dts
-@@ -0,0 +1,59 @@
-+/*
-+ * Copyright (C) 2016 Amarula Solutions B.V.
-+ * Copyright (C) 2016 Engicam S.r.l.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6dl.dtsi"
-+#include "imx6qdl-icore.dtsi"
-+
-+/ {
-+	model = "Engicam i.CoreM6 DualLite/Solo Starter Kit";
-+	compatible = "fsl,imx6-icore", "fsl,imx6dl";
-+};
-+
-+&can1 {
-+	status = "oaky";
-+};
-+
-+&can2 {
-+	status = "oaky";
-+};
--- 
-2.7.4
-
+Regards,
+Martin
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
