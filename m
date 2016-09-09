@@ -1,58 +1,35 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 00/20] Generic DT bindings for PCI IOMMUs and ARM SMMU
-Date: Fri, 9 Sep 2016 18:37:36 +0100
-Message-ID: <20160909173736.GF11418@arm.com>
-References: <cover.1473173789.git.robin.murphy@arm.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: imx6ul: Add DTS for liteSOM module
+Date: Fri, 9 Sep 2016 14:44:27 -0300
+Message-ID: <CAOMZO5AmXRs9eqzvOc8WOVc_xzZJFN8DOoOddw22WALqU66u6w@mail.gmail.com>
+References: <20160909103906.15209-1-m.niestroj@grinn-global.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1473173789.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160909103906.15209-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iaW4sCgpPbiBUdWUsIFNlcCAwNiwgMjAxNiBhdCAwNDozMzozM1BNICswMTAwLCBSb2Jp
-biBNdXJwaHkgd3JvdGU6Cj4gSGVyZSdzIHY2IHRvIGFkZHJlc3MgbGFzdCB3ZWVrJ3MgY29tbWVu
-dHMuIEZvciB0aGUgc2FrZSBvZiBob25lc3R5IEkndmUKPiBsZWZ0IExvcmVuem8ncyB0ZXN0ZWQt
-Ynkgb2ZmIGV2ZXJ5dGhpbmcgSSd2ZSBjaGFuZ2VkIHNpbmNlLCBhbmQgRXJpYydzCj4gcmV2aWV3
-ZWQtYnkgb2ZmIHBhdGNoIDE5IGhhdmluZyBub24tdHJpdmlhbGx5IHJld29ya2VkIHRoZSBndXRz
-IG9mIGl0Lgo+IAo+IFBhdGNoIDIwIGlzIG5ldywgYnV0IGFzIGl0J3MgY3VycmVudGx5IGEgc29s
-dXRpb24gd2FpdGluZyBmb3IgYSBwcm9ibGVtCj4gYXMgZmFyIGFzIHdlJ3JlIGF3YXJlLCBvdWdo
-dG4ndCB0byBnZXQgaW4gdGhlIHdheTsgaG9wZWZ1bGx5IHRoZSByZXN0IGlzCj4gaW4gZ29vZCBz
-aGFwZSBmb3IgNC45IG5vdy4KPiAKPiBCcmFuY2ggaGVyZSwgYmFzZWQgb24gV2lsbCdzIGlvbW11
-L2RldmVsIHF1ZXVlOgo+IAo+IGdpdDovL2xpbnV4LWFybS5vcmcvbGludXgtcm0gaW9tbXUvZ2Vu
-ZXJpYy12NgoKSSdtIHByZXR0eSBoYXBweSB3aXRoIHRoaXMgKG1vZHVsbyB0aGUgYmluZGluZyBk
-b2NzIHVwZGF0ZSBldGMgd2UKZGlzY3Vzc2VkIG9mZiBsaXN0KSwgaG93ZXZlciBJJ20gc2VlaW5n
-IGFuIGFsbG1vZGNvbmZpZyBidWlsZCBmYWlsdXJlCndpdGggdGhpcyBhcHBsaWVkLiBFcnJvciBi
-ZWxvdy4KClBsZWFzZSBjYW4geW91IHRha2UgYSBsb29rIGFuZCBzZW5kIGEgZml4dXAgcGF0Y2g/
-CgpDaGVlcnMsCgpXaWxsCgotLS0+OAoKSW4gZmlsZSBpbmNsdWRlZCBmcm9tIGRyaXZlcnMvZ3B1
-L2RybS9leHlub3MvZXh5bm9zX2RybV9kcnYuYzozMzowOgpkcml2ZXJzL2dwdS9kcm0vZXh5bm9z
-L2V4eW5vc19kcm1faW9tbXUuaDogSW4gZnVuY3Rpb24g4oCYX19leHlub3NfaW9tbXVfY3JlYXRl
-X21hcHBpbmfigJk6CmRyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9pb21tdS5oOjY5
-Ojg6IGVycm9yOiB0b28gZmV3IGFyZ3VtZW50cyB0byBmdW5jdGlvbiDigJhpb21tdV9kbWFfaW5p
-dF9kb21haW7igJkKICByZXQgPSBpb21tdV9kbWFfaW5pdF9kb21haW4oZG9tYWluLCBzdGFydCwg
-c2l6ZSk7CiAgICAgICAgXgpJbiBmaWxlIGluY2x1ZGVkIGZyb20gZHJpdmVycy9ncHUvZHJtL2V4
-eW5vcy9leHlub3NfZHJtX2lvbW11Lmg6NTM6MCwKICAgICAgICAgICAgICAgICBmcm9tIGRyaXZl
-cnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kcnYuYzozMzoKLi9pbmNsdWRlL2xpbnV4L2Rt
-YS1pb21tdS5oOjMzOjU6IG5vdGU6IGRlY2xhcmVkIGhlcmUKIGludCBpb21tdV9kbWFfaW5pdF9k
-b21haW4oc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluLCBkbWFfYWRkcl90IGJhc2UsCiAgICAg
-XgptYWtlWzRdOiAqKiogW2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kcnYub10g
-RXJyb3IgMQptYWtlWzNdOiAqKiogW2RyaXZlcnMvZ3B1L2RybS9leHlub3NdIEVycm9yIDIKbWFr
-ZVszXTogKioqIFdhaXRpbmcgZm9yIHVuZmluaXNoZWQgam9icy4uLi4KbWFrZVsyXTogKioqIFtk
-cml2ZXJzL2dwdS9kcm1dIEVycm9yIDIKbWFrZVsxXTogKioqIFtkcml2ZXJzL2dwdV0gRXJyb3Ig
-MgptYWtlWzFdOiAqKiogV2FpdGluZyBmb3IgdW5maW5pc2hlZCBqb2JzLi4uLgptYWtlOiAqKiog
-W2RyaXZlcnNdIEVycm9yIDIKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KaW9tbXUgbWFpbGluZyBsaXN0CmlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24u
-b3JnCmh0dHBzOi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lv
-bW11
+On Fri, Sep 9, 2016 at 7:39 AM, Marcin Niestroj
+<m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org> wrote:
+
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6ul-litesom.dtsi
+> @@ -0,0 +1,52 @@
+> +/*
+> + * Copyright (C) 2016 Grinn
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+
+Is it possible to use a dual GPLv2/X11 license?
+
+Patches look good.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
