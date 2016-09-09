@@ -1,145 +1,737 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH V4 3/4] ARM: bcm2835: add thermal node to device-tree of
- bcm283x
-Date: Fri, 9 Sep 2016 21:02:18 +0200 (CEST)
-Message-ID: <677965855.33392.597ccfbe-225b-403b-8ffa-3f42292996d4.open-xchange@email.1und1.de>
-References: <1473407397-29395-1-git-send-email-kernel@martin.sperl.org>
- <1473407397-29395-4-git-send-email-kernel@martin.sperl.org>
- <19cc8fbf-6ceb-995e-850d-9d82bdaff8d0@i2se.com>
- <8876586A-98F8-4AAF-AD90-86EB12C22FDC@martin.sperl.org>
- <2117811305.32861.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
- <185DA6B2-AFC0-4199-A361-0164381AD317@martin.sperl.org>
-Mime-Version: 1.0
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC] misc: Add Allwinner Q8 tablet hardware manager
+Date: Fri, 9 Sep 2016 22:13:20 +0300
+Message-ID: <9E68DE9D-31CE-4F2D-9852-684A8B28A181@konsulko.com>
+References: <20160901190820.21987-1-hdegoede@redhat.com> <20160901190820.21987-2-hdegoede@redhat.com>
+Reply-To: pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <185DA6B2-AFC0-4199-A361-0164381AD317@martin.sperl.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Martin Sperl <kernel@martin.sperl.org>
-Cc: Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Pawel Moll <pawel.moll@arm.com>, Russell King <linux@arm.linux.org.uk>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Mark Rutland <mark.rutland@arm.com>, linux-rpi-kernel@lists.infradead.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCV5BG4UVENBBVMTZS7AKGQE6KH7MNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160901190820.21987-2-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+Hi Hans,
 
-> Martin Sperl <kernel@martin.sperl.org> hat am 9. September 2016 um 20:12
-> geschrieben:
-> 
-> 
-> 
-> > On 09.09.2016, at 17:36, Stefan Wahren <stefan.wahren@i2se.com> wrote:
-> > 
-> > 
-> >> Martin Sperl <kernel@martin.sperl.org> hat am 9. September 2016 um 16:58
-> >> geschrieben:
-> >> 
-> >> 
-> >> 
-> >>>> On 09.09.2016, at 16:25, Stefan Wahren <stefan.wahren@i2se.com> wrote:
-> >>>> 
-> >>>> Am 09.09.2016 um 09:49 schrieb kernel@martin.sperl.org:
-> >>>> From: Martin Sperl <kernel@martin.sperl.org>
-> >>>> 
-> >>>> Add the node for the thermal sensor of the bcm2835-soc
-> >>>> to the device tree.
-> >>>> 
-> >>>> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-> >>>> Reviewed-by: Eric Anholt <eric@anholt.net>
-> >>>> ---
-> >>>> arch/arm/boot/dts/bcm283x.dtsi | 6 ++++++
-> >>>> 1 file changed, 6 insertions(+)
-> >>>> 
-> >>>> diff --git a/arch/arm/boot/dts/bcm283x.dtsi
-> >>>> b/arch/arm/boot/dts/bcm283x.dtsi
-> >>>> index b982522..e2e3a46 100644
-> >>>> --- a/arch/arm/boot/dts/bcm283x.dtsi
-> >>>> +++ b/arch/arm/boot/dts/bcm283x.dtsi
-> >>>> @@ -186,6 +186,12 @@
-> >>>>           interrupts = <2 14>; /* pwa1 */
-> >>>>       };
-> >>>> 
-> >>>> +        thermal: thermal@0x7e212000 {
+> On Sep 1, 2016, at 22:08 , Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>=20
+> Allwinnner A13 / A23 / A33 based Q8 tablets are popular cheap 7" tablets
+> of which a new batch is produced every few weeks. Each batch uses a
+> different mix of touchscreen, accelerometer and wifi peripherals.
+>=20
+> Given that each batch is different creating a devicetree for each variant
+> is not desirable. This commit adds a Q8 tablet hardware manager which
+> auto-detects the touchscreen and accelerometer so that a single generic
+> dts can be used for these tablets.
+>=20
+> The wifi is connected to a discoverable bus (sdio or usb) and will be
+> autodetected by the mmc resp. usb subsystems.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+> .../misc/allwinner,sunxi-q8-hardwaremgr.txt        |  52 +++
+> drivers/misc/Kconfig                               |  12 +
+> drivers/misc/Makefile                              |   1 +
+> drivers/misc/q8-hardwaremgr.c                      | 512 ++++++++++++++++=
++++++
+> 4 files changed, 577 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/misc/allwinner,sunxi=
+-q8-hardwaremgr.txt
+> create mode 100644 drivers/misc/q8-hardwaremgr.c
+>=20
+> diff --git a/Documentation/devicetree/bindings/misc/allwinner,sunxi-q8-ha=
+rdwaremgr.txt b/Documentation/devicetree/bindings/misc/allwinner,sunxi-q8-h=
+ardwaremgr.txt
+> new file mode 100644
+> index 0000000..f428bf5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/allwinner,sunxi-q8-hardwarem=
+gr.txt
+> @@ -0,0 +1,52 @@
+> +Q8 tablet hardware manager
+> +--------------------------
+> +
+> +Allwinnner A13 / A23 / A33 based Q8 tablets are popular cheap 7" tablets=
+ of
+> +which a new batch is produced every few weeks. Each batch uses a differe=
+nt
+> +mix of touchscreen, accelerometer and wifi peripherals.
+> +
+> +Given that each batch is different creating a devicetree for each varian=
+t is
+> +not desirable. The Q8 tablet hardware manager bindings are bindings for =
+an os
+> +module which auto-detects the touchscreen so that a single
+> +generic dts can be used for these tablets.
+> +
+> +The wifi is connected to a discoverable bus and will be autodetected by =
+the os.
+> +
+> +Required properties:
+> + - compatible         : "allwinner,sunxi-q8-hardwaremgr"
+> + - touchscreen        : phandle of a template touchscreen node, this mus=
+t be a
+> +		        child node of the touchscreen i2c bus
+> +
+> +Optional properties:
+> + - touchscreen-supply : regulator phandle for the touchscreen vdd supply
+> +
+> +touschreen node required properties:
+> + - interrupt-parent   : phandle pointing to the interrupt controller
+> +			serving the touchscreen interrupt
+> + - interrupts         : interrupt specification for the touchscreen inte=
+rrupt
+> + - power-gpios        : Specification for the pin connected to the touch=
+screen's
+> +			enable / wake pin. This needs to be driven high to
+> +			enable the touchscreen controller
+> +
+> +Example:
+> +
+> +/ {
+> +	hwmgr {
+> +		compatible =3D "allwinner,sunxi-q8-hardwaremgr";
+> +		touchscreen =3D <&touchscreen>;
+> +		touchscreen-supply =3D <&reg_ldo_io1>;
+> +	};
+> +};
+> +
+> +&i2c0 {
+> +	touchscreen: touchscreen@0 {
+> +		interrupt-parent =3D <&pio>;
+> +		interrupts =3D <1 5 IRQ_TYPE_EDGE_FALLING>; /* PB5 */
+> +		power-gpios =3D <&pio 7 1 GPIO_ACTIVE_HIGH>; /* PH1 */
+> +		/*
+> +		 * Enabled by sunxi-q8-hardwaremgr if it detects a
+> +		 * known model touchscreen.
+> +		 */
+> +		status =3D "disabled";
+> +	};
+> +};
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index a216b46..c3e7772 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -804,6 +804,18 @@ config PANEL_BOOT_MESSAGE
+> 	  An empty message will only clear the display at driver init time. Any =
+other
+> 	  printf()-formatted message is valid with newline and escape codes.
+>=20
+> +config Q8_HARDWAREMGR
+> +	tristate "Allwinner Q8 tablet hardware manager"
+> +	depends on GPIOLIB || COMPILE_TEST
+> +	depends on I2C
+> +	depends on OF
+> +	default	n
+> +	help
+> +	  This option enables support for autodetecting the touchscreen
+> +	  on Allwinner Q8 tablets.
+> +
+> +	  If unsure, say N.
+> +
+> source "drivers/misc/c2port/Kconfig"
+> source "drivers/misc/eeprom/Kconfig"
+> source "drivers/misc/cb710/Kconfig"
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index 7410c6d..cac76b7 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -57,6 +57,7 @@ obj-$(CONFIG_ECHO)		+=3D echo/
+> obj-$(CONFIG_VEXPRESS_SYSCFG)	+=3D vexpress-syscfg.o
+> obj-$(CONFIG_CXL_BASE)		+=3D cxl/
+> obj-$(CONFIG_PANEL)             +=3D panel.o
+> +obj-$(CONFIG_Q8_HARDWAREMGR)    +=3D q8-hardwaremgr.o
+>=20
+> lkdtm-$(CONFIG_LKDTM)		+=3D lkdtm_core.o
+> lkdtm-$(CONFIG_LKDTM)		+=3D lkdtm_bugs.o
+> diff --git a/drivers/misc/q8-hardwaremgr.c b/drivers/misc/q8-hardwaremgr.=
+c
+> new file mode 100644
+> index 0000000..e75625e
+> --- /dev/null
+> +++ b/drivers/misc/q8-hardwaremgr.c
+> @@ -0,0 +1,512 @@
+> +/*
+> + * Allwinner q8 formfactor tablet hardware manager
+> + *
+> + * Copyright (C) 2016 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <asm/unaligned.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
+> +
+> +/*
+> + * We can detect which touchscreen controller is used automatically,
+> + * but some controllers can be wired up differently depending on the
+> + * q8 PCB variant used, so they need different firmware files / settings=
+.
+> + *
+> + * We allow the user to specify a firmware_variant to select a config
+> + * from a list of known configs. We also allow overriding each setting
+> + * individually.
+> + */
+> +
+> +static int touchscreen_variant =3D -1;
+> +module_param(touchscreen_variant, int, 0444);
+> +MODULE_PARM_DESC(touchscreen_variant, "Touchscreen variant 0-x, -1 for a=
+uto");
+> +
+> +static int touchscreen_width =3D -1;
+> +module_param(touchscreen_width, int, 0444);
+> +MODULE_PARM_DESC(touchscreen_width, "Touchscreen width, -1 for auto");
+> +
+> +static int touchscreen_height =3D -1;
+> +module_param(touchscreen_height, int, 0444);
+> +MODULE_PARM_DESC(touchscreen_height, "Touchscreen height, -1 for auto");
+> +
+> +static int touchscreen_invert_x =3D -1;
+> +module_param(touchscreen_invert_x, int, 0444);
+> +MODULE_PARM_DESC(touchscreen_invert_x, "Touchscreen invert x, -1 for aut=
+o");
+> +
+> +static int touchscreen_invert_y =3D -1;
+> +module_param(touchscreen_invert_y, int, 0444);
+> +MODULE_PARM_DESC(touchscreen_invert_y, "Touchscreen invert y, -1 for aut=
+o");
+> +
+> +static int touchscreen_swap_x_y =3D -1;
+> +module_param(touchscreen_swap_x_y, int, 0444);
+> +MODULE_PARM_DESC(touchscreen_swap_x_y, "Touchscreen swap x y, -1 for aut=
+o");
+> +
+> +static char *touchscreen_fw_name;
+> +module_param(touchscreen_fw_name, charp, 0444);
+> +MODULE_PARM_DESC(touchscreen_fw_name, "Touchscreen firmware filename");
+> +
+> +#define TOUCHSCREEN_POWER_ON_DELAY	20
+> +#define SILEAD_REG_ID			0xFC
+> +#define EKTF2127_RESPONSE		0x52
+> +#define EKTF2127_REQUEST		0x53
+> +#define EKTF2127_WIDTH			0x63
+> +
+> +enum touchscreen_model {
+> +	touchscreen_unknown,
+> +	gsl1680_a082,
+> +	gsl1680_b482,
+> +	ektf2127,
+> +	zet6251,
+> +};
+> +
+> +struct q8_hardwaremgr_data {
+> +	struct device *dev;
+> +	bool touchscreen_needs_regulator;
+> +	enum touchscreen_model touchscreen_model;
+> +	int touchscreen_addr;
+> +	int touchscreen_variant;
+> +	int touchscreen_width;
+> +	int touchscreen_height;
+> +	int touchscreen_invert_x;
+> +	int touchscreen_invert_y;
+> +	int touchscreen_swap_x_y;
+> +	const char *touchscreen_compatible;
+> +	const char *touchscreen_fw_name;
+> +};
+> +
+> +typedef int (*probe_func)(struct q8_hardwaremgr_data *data,
+> +			  struct i2c_adapter *adap);
+> +
+> +#if 0
+> +	ret =3D i2c_smbus_xfer(adap, 0x40, 0, I2C_SMBUS_WRITE, 0,
+> +			     I2C_SMBUS_QUICK, NULL);
+> +	if (ret < 0)
+> +		return -ENODEV;
+> +
+> +#endif
+> +
 
-please remove 0x here.
+^^^ crud?
 
-> >>>> +            compatible = "brcm,bcm2835-thermal";
-> >>>> +            reg = <0x7e212000 0x8>;
-> >>>> +            clocks = <&clocks BCM2835_CLOCK_TSENS>;
-> >>>> +        };
-> >>>> +
-> >>> 
-> >>> Since the driver handles 3 different SoC (2835, 2836, 2837). This node
-> >>> should be defined in the SoC specific dtsi files, because the BCM2836
-> >>> includes bcm283x.dtsi too.
-> >>> 
-> >>> Be aware the patch for bcm2837 must go to ARM64.
-> >> 
-> >> I can not really follow:
-> >> * the node is defined in the dtsi included by all 3 soc,
-> >>   and it is available on all so it sits where for example
-> >>   spi0 or uart0 is located
-> >> * as for arm64: this describes the registers that are
-> >>   identical for arm and arm64 and the bcm2837.dtsi
-> >>   is also including ../../../../arm/boot/dts/bcm283x.dtsi
-> >> 
-> >> So what is the problem?
-> > 
-> > The thermal driver specifies 3 different compatibles with partially
-> > different
-> > settings.
-> > If this patch is applied, all SoC (bcm2835, bcm2836, bcm2837) would use the
-> > bcm2835 settings.
-> > I can't believe this is intended.
-> > 
-> > Why does the binding contains 3 different compatibles if only one is used?
-> 
-> Now I understand - did not think of that: good catch!
-> 
-> To minimize the patch: what about setting it to 2837 by default (in 283x.dtsi)
-> and only change compatible in 2835.dtsi and 2836.dtsi - that is 3 files
-> changed instead of 4 or 5...
+> +static int q8_hardwaremgr_probe_touchscreen(struct q8_hardwaremgr_data *=
+data,
+> +					    struct i2c_adapter *adap)
+> +{
+> +	struct i2c_client *client;
+> +	unsigned char buff[24];
+> +	__le32 chip_id;
+> +	int ret;
+> +
+> +	msleep(TOUCHSCREEN_POWER_ON_DELAY);
+> +
+> +	/* Check for silead touchsceen at addr 0x40 */
+> +	client =3D i2c_new_dummy(adap, 0x40);
+> +	if (!client)
+> +		return -ENOMEM;
+> +
+> +	ret =3D i2c_smbus_read_i2c_block_data(client, SILEAD_REG_ID,
+> +					    sizeof(chip_id), (u8 *)&chip_id);
+> +	if (ret =3D=3D sizeof(chip_id)) {
+> +		switch (le32_to_cpu(chip_id)) {
+> +		case 0xa0820000:
+> +			data->touchscreen_addr =3D 0x40;
+> +			data->touchscreen_compatible =3D "silead,gsl1680";
+> +			data->touchscreen_model =3D gsl1680_a082;
+> +			dev_info(data->dev, "Found Silead touchscreen ID: 0xa0820000\n");
+> +			break;
+> +		case 0xb4820000:
+> +			data->touchscreen_addr =3D 0x40;
+> +			data->touchscreen_compatible =3D "silead,gsl1680";
+> +			data->touchscreen_model =3D gsl1680_b482;
+> +			dev_info(data->dev, "Found Silead touchscreen ID: 0xb4820000\n");
+> +			break;
 
-Please don't do this in order avoid to confusion. We have compatible strings for
-each SoC and we have dtsi files for each SoC. So i think the right way would be
-the following:
+> +		default:
+> +			dev_warn(data->dev, "Found Silead touchscreen with unknown ID: 0x%08x=
+\n",
+> +				 le32_to_cpu(chip_id));
+> +		}
+> +		ret =3D 0;
+> +	}
+> +	i2c_unregister_device(client);
+> +	if (ret =3D=3D 0 || ret =3D=3D -ETIMEDOUT /* Bus stuck bail immediately=
+ */)
+> +		return ret;
+> +
+> +	/* Check for Elan eKTF2127 touchsceen at addr 0x15 */
+> +	client =3D i2c_new_dummy(adap, 0x15);
+> +	if (!client)
+> +		return -ENOMEM;
+> +
+> +	do {
+> +		/* Read hello, ignore data, depends on initial power state */
+> +		ret =3D i2c_master_recv(client, buff, 4);
+> +		if (ret !=3D 4)
+> +			break;
+> +
+> +		/* Request width */
+> +		buff[0] =3D EKTF2127_REQUEST;
+> +		buff[1] =3D EKTF2127_WIDTH;
+> +		buff[2] =3D 0x00;
+> +		buff[3] =3D 0x00;
+> +		ret =3D i2c_master_send(client, buff, 4);
+> +		if (ret !=3D 4)
+> +			break;
+> +
+> +		msleep(20);
+> +
+> +		/* Read response */
+> +		ret =3D i2c_master_recv(client, buff, 4);
+> +		if (ret !=3D 4)
+> +			break;
+> +		=09
+> +		if (buff[0] =3D=3D EKTF2127_RESPONSE && buff[1] =3D=3D EKTF2127_WIDTH)=
+ {
+> +			data->touchscreen_addr =3D 0x15;
+> +			data->touchscreen_compatible =3D "elan,ektf2127";
+> +			data->touchscreen_model =3D ektf2127;
+> +			dev_info(data->dev, "Found Elan eKTF2127 touchscreen\n");
+> +			ret =3D 0;
+> +		}
+> +	} while (0);
+> +	i2c_unregister_device(client);
+> +	if (ret =3D=3D 0 || ret =3D=3D -ETIMEDOUT /* Bus stuck bail immediately=
+ */)
+> +		return ret;
+> +
+> +	/* Check for Zeitec zet6251 touchsceen at addr 0x76 */
+> +	client =3D i2c_new_dummy(adap, 0x76);
+> +	if (!client)
+> +		return -ENOMEM;
+> +
+> +	/*
+> +	 * We only do a simple read finger data packet test, because some
+> +	 * versions require firmware to be loaded. If not firmware is loaded
+> +	 * the buffer will be filed with 0xff, so we ignore the contents.
+> +	 */
+> +	ret =3D i2c_master_recv(client, buff, 24);
+> +	if (ret =3D=3D 24) {
+> +		data->touchscreen_addr =3D 0x76;
+> +		data->touchscreen_compatible =3D "zeitec,zet6251";
+> +		data->touchscreen_model =3D zet6251;
+> +		dev_info(data->dev, "Found Zeitec zet6251 touchscreen\n");
+> +		ret =3D 0;
+> +	}
 
-bcm283x.dtsi
+I can understand having a switch here since it=E2=80=99s quite complicated =
+but it would be better to
+have a structure that defines them i.e.
 
-thermal: thermal@7e212000 {
-            reg = <0x7e212000 0x8>;
-            clocks = <&clocks BCM2835_CLOCK_TSENS>;
+struct touchscreen_detect_data {
+	u32 chip_id;
+	int addr;
+	const char *compatible;
+	enum touchscreen_model model;
+=09
 };
 
-
-bcm2835.dtsi
-
-&thermal {
-            compatible = "brcm,bcm2835-thermal";
-            status = "okay";
+static const struct touchscreen_detect_data ts_detect_data[] =3D {
+	{
+		.chip_id =3D 0xa0820000,
+		.addr =3D 0x40,
+		.compatible =3D =E2=80=9Csilead,gsl1680=E2=80=9D,
+		.model =3D gsl1680_a082,
+	}, ...
 };
+=20
+And so on, and restructuring by having different paths by touchscreen model=
+ type.
 
-bcm2836.dtsi
 
-&thermal {
-            compatible = "brcm,bcm2836-thermal";
-            status = "okay";
-};
+> +	i2c_unregister_device(client);
+> +	if (ret =3D=3D 0 || ret =3D=3D -ETIMEDOUT /* Bus stuck bail immediately=
+ */)
+> +		return ret;
+> +
+> +	return -ENODEV;
+> +}
+> +
+> +static int q8_hardwaremgr_do_probe(struct q8_hardwaremgr_data *data,
+> +				   const char *prefix, probe_func func)
+> +{
+> +	struct device *dev =3D data->dev;
+> +	struct device_node *np;
+> +	struct i2c_adapter *adap;
+> +	struct regulator *reg;
+> +	struct gpio_desc *gpio;
+> +	int ret =3D 0;
+> +
+> +	np =3D of_parse_phandle(dev->of_node, prefix, 0);
+> +	if (!np) {
+> +		dev_err(dev, "Error %s not set\n", prefix);
+> +		return -EINVAL;
+> +	}
+> +
+> +	adap =3D of_get_i2c_adapter_by_node(np->parent);
+> +	if (!adap) {
+> +		ret =3D -EPROBE_DEFER;
+> +		goto put_node;
+> +	}
+> +
+> +	reg =3D regulator_get_optional(dev, prefix);
+> +	if (IS_ERR(reg)) {
+> +		ret =3D PTR_ERR(reg);
+> +		if (ret =3D=3D -EPROBE_DEFER)
+> +			goto put_adapter;
+> +		reg =3D NULL;
+> +	}
+> +
+> +	gpio =3D fwnode_get_named_gpiod(&np->fwnode, "power-gpios");
+> +	if (IS_ERR(gpio)) {
+> +		ret =3D PTR_ERR(gpio);
+> +		if (ret =3D=3D -EPROBE_DEFER)
+> +			goto put_reg;
+> +		gpio =3D NULL;
+> +	}
+> +
+> +	/* First try with only the power gpio driven high */
+> +	if (gpio) {
+> +		ret =3D gpiod_direction_output(gpio, 1);
+> +		if (ret)
+> +			goto put_gpio;
+> +	}
+> +
+> +	dev_info(dev, "Looking for %s without a regulator\n", prefix);
+> +	ret =3D func(data, adap);
+> +	if (ret !=3D 0 && reg) {
+> +		/* Second try, also enable the regulator */
+> +		ret =3D regulator_enable(reg);
+> +		if (ret)
+> +			goto restore_gpio;
+> +
+> +		dev_info(dev, "Looking for %s with a regulator\n", prefix);
+> +		ret =3D func(data, adap);
+> +		if (ret =3D=3D 0)
+> +			data->touchscreen_needs_regulator =3D true;=20
+> +
+> +		regulator_disable(reg);
+> +	}
+> +	ret =3D 0; /* Not finding a device is not an error */
+> +
+> +restore_gpio:
+> +	if (gpio)
+> +		gpiod_direction_output(gpio, 0);
+> +put_gpio:
+> +	if (gpio)
+> +		gpiod_put(gpio);
+> +put_reg:
+> +	if (reg)
+> +		regulator_put(reg);
+> +put_adapter:
+> +	i2c_put_adapter(adap);
+> +
+> +put_node:
+> +	of_node_put(np);
+> +
+> +	return ret;
+> +}
+> +
+> +static void q8_hardwaremgr_apply_gsl1680_a082_variant(
+> +	struct q8_hardwaremgr_data *data)
+> +{
+> +	if (touchscreen_variant !=3D -1) {
+> +		data->touchscreen_variant =3D touchscreen_variant;
+> +	} else {
+> +		if (of_machine_is_compatible("allwinner,sun8i-a33"))
+> +			data->touchscreen_variant =3D 1;
+> +		else
+> +			data->touchscreen_variant =3D 0;
+> +	}
+> +
+> +	switch (data->touchscreen_variant) {
+> +	default:
+> +		dev_warn(data->dev, "Error unknown touchscreen_variant %d using 0\n",
+> +			 touchscreen_variant);
+> +		/* Fall through */
+> +	case 0:
+> +		data->touchscreen_width =3D 1024;
+> +		data->touchscreen_height =3D 600;
+> +		data->touchscreen_fw_name =3D "gsl1680-a082-q8-700.fw";
+> +		break;
+> +	case 1:
+> +		data->touchscreen_width =3D 480;
+> +		data->touchscreen_height =3D 800;
+> +		data->touchscreen_swap_x_y =3D 1;
+> +		data->touchscreen_fw_name =3D "gsl1680-a082-q8-a70.fw";
+> +		break;
+> +	}
+> +}
+> +
+> +static void q8_hardwaremgr_apply_gsl1680_b482_variant(
+> +	struct q8_hardwaremgr_data *data)
+> +{
+> +	if (touchscreen_variant !=3D -1)
+> +		data->touchscreen_variant =3D touchscreen_variant;
+> +
+> +	switch (data->touchscreen_variant) {
+> +	default:
+> +		dev_warn(data->dev, "Error unknown touchscreen_variant %d using 0\n",
+> +			 touchscreen_variant);
+> +		/* Fall through */
+> +	case 0:
+> +		data->touchscreen_width =3D 960;
+> +		data->touchscreen_height =3D 640;
+> +		data->touchscreen_fw_name =3D "gsl1680-b482-q8-d702.fw";
+> +		break;
+> +	case 1:
+> +		data->touchscreen_width =3D 960;
+> +		data->touchscreen_height =3D 640;
+> +		data->touchscreen_fw_name =3D "gsl1680-b482-q8-a70.fw";
+> +		break;
+> +	}
+> +}
+> +
+> +static void q8_hardwaremgr_issue_gsl1680_warning(
+> +	struct q8_hardwaremgr_data *data)
+> +{
+> +	dev_warn(data->dev, "gsl1680 touchscreen may require kernel cmdline par=
+ameters to function properly\n");
+> +	dev_warn(data->dev, "Try q8_hardwaremgr.touchscreen_invert_x=3D1 if x c=
+oordinates are inverted\n");
+> +	dev_warn(data->dev, "Try q8_hardwaremgr.touchscreen_variant=3D%d if coo=
+rdinates are all over the place\n",
+> +		 !data->touchscreen_variant);
+> +
+> +#define	show(x) \
+> +	dev_info(data->dev, #x " %d (%s)\n", data->x, \
+> +		 (x =3D=3D -1) ? "auto" : "user supplied")
+> +
+> +	show(touchscreen_variant);
+> +	show(touchscreen_width);
+> +	show(touchscreen_height);
+> +	show(touchscreen_invert_x);
+> +	show(touchscreen_invert_y);
+> +	show(touchscreen_swap_x_y);
+> +	dev_info(data->dev, "touchscreen_fw_name %s (%s)\n",
+> +		 data->touchscreen_fw_name,
+> +		 (touchscreen_fw_name =3D=3D NULL) ? "auto" : "user supplied");
+> +#undef show
+> +}
+> +
+> +static void q8_hardwaremgr_apply_touchscreen(struct q8_hardwaremgr_data =
+*data)
+> +{
+> +	struct device *dev =3D data->dev;
+> +	struct of_changeset cset;
+> +	struct device_node *np;
+> +
+> +	switch (data->touchscreen_model) {
+> +	case touchscreen_unknown:
+> +		return;
+> +	case gsl1680_a082:
+> +		q8_hardwaremgr_apply_gsl1680_a082_variant(data);
+> +		break;
+> +	case gsl1680_b482:
+> +		q8_hardwaremgr_apply_gsl1680_b482_variant(data);
+> +		break;
+> +	case ektf2127:
+> +	case zet6251:
+> +		/* These have only 1 variant */
+> +		break;
+> +	}
+> +
+> +	if (touchscreen_width !=3D -1)
+> +		data->touchscreen_width =3D touchscreen_width;
+> +
+> +	if (touchscreen_height !=3D -1)
+> +		data->touchscreen_height =3D touchscreen_height;
+> +
+> +	if (touchscreen_invert_x !=3D -1)
+> +		data->touchscreen_invert_x =3D touchscreen_invert_x;
+> +
+> +	if (touchscreen_invert_y !=3D -1)
+> +		data->touchscreen_invert_y =3D touchscreen_invert_y;
+> +
+> +	if (touchscreen_swap_x_y !=3D -1)
+> +		data->touchscreen_swap_x_y =3D touchscreen_swap_x_y;
+> +
+> +	if (touchscreen_fw_name)
+> +		data->touchscreen_fw_name =3D touchscreen_fw_name;
+> +
+> +	if (data->touchscreen_model =3D=3D gsl1680_a082 ||
+> +	    data->touchscreen_model =3D=3D gsl1680_b482)
+> +		q8_hardwaremgr_issue_gsl1680_warning(data);
+> +
+> +	np =3D of_parse_phandle(data->dev->of_node, "touchscreen", 0);
+> +	/* Never happens already checked in q8_hardwaremgr_do_probe() */
+> +	if (WARN_ON(!np))
+> +		return;
+> +
+> +	of_changeset_init(&cset);
+> +	of_changeset_add_property_u32(&cset, np, "reg", data->touchscreen_addr)=
+;
+> +	of_changeset_add_property_string(&cset, np, "compatible",
+> +					 data->touchscreen_compatible);
+> +
+> +	if (data->touchscreen_width)
+> +		of_changeset_add_property_u32(&cset, np, "touchscreen-size-x",
+> +					      data->touchscreen_width);
+> +	if (data->touchscreen_height)
+> +		of_changeset_add_property_u32(&cset, np, "touchscreen-size-y",
+> +					      data->touchscreen_height);
+> +	if (data->touchscreen_invert_x)
+> +		of_changeset_add_property_bool(&cset, np,
+> +					       "touchscreen-inverted-x");
+> +	if (data->touchscreen_invert_y)
+> +		of_changeset_add_property_bool(&cset, np,
+> +					       "touchscreen-inverted-y");
+> +	if (data->touchscreen_swap_x_y)
+> +		of_changeset_add_property_bool(&cset, np,
+> +					       "touchscreen-swapped-x-y");
+> +	if (data->touchscreen_fw_name)
+> +		of_changeset_add_property_string(&cset, np, "firmware-name",
+> +						 data->touchscreen_fw_name);
+> +	if (data->touchscreen_needs_regulator) {
+> +		struct property *p;
+> +
+> +		p =3D of_find_property(dev->of_node, "touchscreen-supply", NULL);
+> +		/* Never happens already checked in q8_hardwaremgr_do_probe() */
+> +		if (WARN_ON(!p))
+> +			return;
+> +
+> +		of_changeset_add_property_copy(&cset, np, "vddio-supply",
+> +					       p->value, p->length);
+> +	}
+> +
+> +	of_changeset_update_property_string(&cset, np, "status", "okay");
+> +	of_changeset_apply(&cset);
+> +
+> +	of_node_put(np);
+> +}
+> +
+> +static int q8_hardwaremgr_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct q8_hardwaremgr_data *data;
+> +	int ret =3D 0;
+> +
+> +	data =3D kzalloc(sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->dev =3D &pdev->dev;
+> +
+> +	ret =3D q8_hardwaremgr_do_probe(data, "touchscreen",
+> +				      q8_hardwaremgr_probe_touchscreen);
+> +	if (ret)
+> +		goto error;
+> +
+> +	/*
+> +	 * Our pinctrl may conflict with the pinctrl of the detected devices
+> +	 * we're adding, so remove it before adding detected devices.
+> +	 */
+> +	if (dev->pins) {
+> +		devm_pinctrl_put(dev->pins->p);
+> +		devm_kfree(dev, dev->pins);
+> +		dev->pins =3D NULL;
+> +	}
+> +
 
-bcm2837.dtsi
+Hmm, that=E2=80=99s weird for sure. How can it happen?
 
-&thermal {
-            compatible = "brcm,bcm2837-thermal";
-            status = "okay";
-};
+> +	q8_hardwaremgr_apply_touchscreen(data);
+> +
+> +error:
+> +	kfree(data);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id q8_hardwaremgr_of_match[] =3D {
+> +	{ .compatible =3D "allwinner,sunxi-q8-hardwaremgr", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, q8_hardwaremgr_of_match);
+> +
+> +static struct platform_driver q8_hardwaremgr_driver =3D {
+> +	.driver =3D {
+> +		.name	=3D "q8-hardwaremgr",
+> +		.of_match_table =3D of_match_ptr(q8_hardwaremgr_of_match),
+> +	},
+> +	.probe	=3D q8_hardwaremgr_probe,
+> +};
+> +
+> +module_platform_driver(q8_hardwaremgr_driver);
+> +
+> +MODULE_DESCRIPTION("Allwinner q8 formfactor tablet hardware manager");
+> +MODULE_AUTHOR("Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
+> --=20
+> 2.9.3
+>=20
 
-> 
-> Or any other ideas how to detect which Soc we run on during runtime?
-> I.e: query the root compatible string in the device-tree?
-> 
-> Just before I create a new patch set to fix that.
-> 
-> Martin
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Regards
+
+=E2=80=94 Pantelis
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
