@@ -1,66 +1,73 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 4/8] ARM: dts: bcm283x: Add a new EMMC pin group from the
- downstream tree.
-Date: Fri, 9 Sep 2016 08:58:05 +0200
-Message-ID: <e61a4efa-3685-6694-5fda-3272f6605665@i2se.com>
-References: <1473244289-20728-1-git-send-email-kraxel@redhat.com>
- <1473244289-20728-5-git-send-email-kraxel@redhat.com>
- <87650770.23554.026b1e4b-e35d-48e6-9394-7eeea0ff9add.open-xchange@email.1und1.de>
- <1473320687.6698.25.camel@redhat.com>
- <373fe61a-61d4-164e-0760-d68a0c4925dd@broadcom.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] arm64: arch_timer: Work around QorIQ Erratum
+ A-008585
+Date: Fri, 9 Sep 2016 08:06:44 +0100
+Message-ID: <20160909080644.5fbc2f68@why.wild-wind.fr.eu.org>
+References: <1467877572-10817-1-git-send-email-oss@buserror.net>
+        <1467877572-10817-3-git-send-email-oss@buserror.net>
+        <20160826134004.7e86e798@arm.com>
+        <57D246AE.8040900@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <373fe61a-61d4-164e-0760-d68a0c4925dd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <57D246AE.8040900-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Scott,
+On Fri, 9 Sep 2016 13:20:46 +0800
+Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
 
-Am 08.09.2016 um 21:50 schrieb Scott Branden:
-> Hi Gerd/Eric
->
-> On 16-09-08 12:44 AM, Gerd Hoffmann wrote:
->> On Mi, 2016-09-07 at 20:13 +0200, Stefan Wahren wrote:
->>>> Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> hat am 7. September 2016 um 12:31
->>>> geschrieben:
->>>>
->>>>
->>>> From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->>>>
->>>> This will be used for having EMMC (sdhci-bcm2835.c) drive the
->>>> wireless.
->>>
->>> sdhci-bcm2835.c has been replaced by sdhci-iproc.c
->>
->> Ah, right, I'll update the commit msg for v2.
->>
-> Should we entirely remove sdhci-bcm2835.c to reduce confusion going
-> forward?
+Hi Ding,
 
-did i missed something?
+> > I'm still worried that this series doesn't address Xen or KVM guests
+> > that need to be made aware of the broken timers.
+> >   
+> Hi Marc:
+> 
+> I think "ARCH_TIMER_REG_READ("cntv_tval_el0", arch_timer_get_vtval)"
+> could cover the tval changes in KVM guest, and I fould the guest
+> still use the get_cycles() to get the timer cycles, if I miss
+> something, please remind me, thanks.
 
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=46cd175c9788e39a1c57698ab58f34844d216428
+You're missing the point that to tell the guest that the HW has this
+erratum, we need the DT to be populated with the right property.
 
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=7eb16493ecaa41ceeb448717ee2c59690cd9047f
+> > At the very least, I'd like a kernel command line option that'd let
+> > the user reliably run its VMs. You can do something along the lines
+> > of 46fd5c6b, and have a command line argument like
+> > "clocksource.arm_arch_timer.fsl-a008585=1", which would enable the
+> > workaround.
+> >   
+> 
+> I don't think adding in command line is a good solution for this bug,
+> we should not told the OS user how to fix it by adding command line
+> option, and need to fix it by dts or ACPI.
 
+Sure. I'm happy to review the patches that will:
+- Add a new KVM kernel API describing properties for the timer so that
+  we can expose the erratum from the kernel to userspace
+- Add a similar API for Xen
+- Have all the userspace (QEMU, kvmtool, the Xen tools) to be converted
+  to use this new API so that they can emit the correct DT
+- Point to a change in the ACPI spec so that we can encode errata there
+- Add support for handling this erratum using ACPI in the kernel
+- Allow QEMU and the Xen tools to expose this erratum in the guests
+  ACPI tables
 
->
->>> How about adding pull defines to include/dt-bindings/pinctrl/bcm2835.h?
->>
->> Already there (or do you mean something other than '#define
->> BCM2835_FSEL_*' ?)
->>
->> cheers,
->>   Gerd
->>
->
-> Thanks,
->  Scott
+Unless you're in a position to write all this code (and
+specifications), and post the patches *now*, I'll stand by my
+recommendation to have a command-line option. Not exposing this issue
+to the guest results in unreliable operations. You may not care, but I
+do.
 
+Thanks,
+
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
