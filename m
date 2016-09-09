@@ -1,107 +1,98 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] Documentation: dt: net: add ath9k wireless device binding
-Date: Fri, 9 Sep 2016 22:57:06 +0200
-Message-ID: <CAFBinCAOQmk3KY1b+D1iKAOEBfasYyei681cae4PbD+201mzbQ@mail.gmail.com>
-References: <20160821143105.27487-1-martin.blumenstingl@googlemail.com>
- <20160906214623.20424-1-martin.blumenstingl@googlemail.com>
- <20160906214623.20424-2-martin.blumenstingl@googlemail.com> <3b93ec95-ec7c-863a-06b7-fab4f2688855@rempel-privat.de>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: Overlay manager
+Date: Fri, 9 Sep 2016 16:13:27 -0500
+Message-ID: <CAL_Jsq+ED-6aKxKVjvjVxGF8wv=6vqCeHLiD5M3TLmAj+++EWA@mail.gmail.com>
+References: <001a113447d4718cb9053c04f991@google.com> <57D1D344.8010306@gmail.com>
+ <CAH7ZN-w2U9g4m9hDdD1kY52HLzv+TSbuNVRbmzmE3WMH0wC8Tw@mail.gmail.com>
+ <CAL_JsqKe99WLoeOrRz76mUx-QruhDU+4kqCAepgZa0LhSYbgDg@mail.gmail.com>
+ <CALAqxLVPdZxMy+W0VEJqX+L9CCy4cBsc0s48BwepSA8-ApUhtQ@mail.gmail.com>
+ <CAL_JsqKgGFPKZR8fJ-CRQubNjWH0q_V9B9SsXoHncT9dMGdF1w@mail.gmail.com>
+ <CALAqxLXLNQZMCrgLGa-=nGFbB-XVbs9FHXnGrksCO8V_mAkK0w@mail.gmail.com> <08C47A45-3704-4181-B065-B0E5975B878B@konsulko.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3b93ec95-ec7c-863a-06b7-fab4f2688855-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Cc: ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, mcgrof-3uybbJdB1yH774rrrx3eTA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, arend.vanspriel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn-yOkvZcmFvRU@public.gmane.org, nbd-Vt+b4OUoWG0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <08C47A45-3704-4181-B065-B0E5975B878B-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dmitry Shmidt <dimitrysh-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "<linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 9, 2016 at 9:48 AM, Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org> wrote:
->> +Optional properties:
->> +- reg: Address and length of the register set for the device.
->> +- qca,clk-25mhz: Defines that a 25MHz clock is used
+On Fri, Sep 9, 2016 at 2:26 PM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Hi John,
 >
-> Some SoCs even Atheros WiSoCs use WiFi clock for System Clock. In this
-> case we need to use clock framework any way, so why not in this case too?
-> Provide dummy static clock in DT and connect it with this node?
+>> On Sep 9, 2016, at 06:06 , John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>
+>> On Thu, Sep 8, 2016 at 7:27 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Thu, Sep 8, 2016 at 7:39 PM, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>> On Thu, Sep 8, 2016 at 5:33 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>>> If you can figure out how to change the command line, then you can
+>>>>> just change the dtb. At least for how Android boot works, those aren't
+>>>>> really changed separately.
+>>>>
+>>>> Ehh.. that's not so simple. The dtb is often appended to the kernel on
+>>>> Android devices. Changing the boot arguments is much simpler to do.
+>>>
+>>> How? You typically make a new bootimage assembling the kernel/dtb,
+>>> ramdisk and kernel command-line. If things were done differently such
+>>> that the dtb is part of the bootloader (how it is supposed to be
+>>> done), then I would buy the argument that we can't update the dtb and
+>>> need to either have a way to add and/or select overlays. But Android
+>>> folks like to update *everything*, so I don't buy that here.
+>>
+>> So in many cases the dtb is appended when the kernel is built, not
+>> when the abootimg is assembled.
+>>
+>> So its much easier to use abootimg -u to update a prebuilt boot.img in
+>> place and reflash. That way users don't need to regenerate the kernel
+>> w/ appended dtb.
+>>
 >
->         osc25m: oscillator {
->                 compatible = "fixed-clock";
->                 #clock-cells = <0>;
->                 clock-frequency = <25000000>;
->                 clock-accuracy = <30000>;
+> I understand what you’re trying to do, but it’s not going to work.
+>
+> It will only work for a very small subset of overlays since you can’t
+> have more than a single phandle label.
+
+labels are just shortcuts that have no bearing on the actual dtb. The
+only problem here is if you take 2 standalone overlays and include or
+move them into a single source, then you may have to fixup any label
+collisions.
+
+>
+> For instance this will not work:
+>
+> overlays {
+>         overlay_0 {
+>                 opt: opt_0 { bar; };
 >         };
->
->         acc: clock-controller@80040000 {
->                 compatible = "some-clock-controller";
->                 #clock-cells = <1>;
->                 clocks = <&osc25m>;
->                 reg = <0x80040000 0x204>;
->         };
->
->
-> &pci0 {
->         ath9k@168c,002d {
->                 compatible = "pci168c,002d";
->                 reg = <0x7000 0 0 0 0x1000>;
->                 clocks = <&osc25m>;
->                 qca,disable-5ghz;
+>         overlay_1 {
+>                 opt: opt_1 { baz; };
 >         };
 > };
 >
 >
-> driver will need to use clk_get and compare frequency instead of
-> of_property_read_bool(np, "qca,clk-25mhz"). In this case you will need
-> to define source clock only one time and reuse it by all affected DT
-> nodes. If we have 40MHz clock you will only need to change it in
-> fixed-clock.
-that does sound like a good idea, thanks for that input!
-However, I will remove the property for the first version because I am
-trying to get PCI(e) devices supported. OF support for AHB (WiSoC)
-needs more work (in other places, like ahb.c) anyways.
-But this suggestion should be remembered!
+> frob_device {
+>         compatible = “frob”;
+>         use = <&opt>;
+> };
 
->> +- qca,no-eeprom: Indicates that there is no physical EEPROM connected to the
->> +                     ath9k wireless chip (in this case the calibration /
->> +                     EEPROM data will be loaded from userspace using the
->> +                     kernel firmware loader).
->> +- qca,disable-2ghz: Overrides the settings from the EEPROM and disables the
->> +                     2.4GHz band. Setting this property is only needed
->> +                     when the RF circuit does not support the 2.4GHz band
->> +                     while it is enabled nevertheless in the EEPROM.
->> +- qca,disable-5ghz: Overrides the settings from the EEPROM and disables the
->> +                     5GHz band. Setting this property is only needed when
->> +                     the RF circuit does not support the 5GHz band while
->> +                     it is enabled nevertheless in the EEPROM.
->
-> This option can be reused for every WiFi controller. Not only for qca.
-> So may be instead of adding vendor specific name, make it reusable for
-> all vendors. Instead of qca,disable-5ghz and qca,disable-2ghz make
-> disable-5ghz and disable-2ghz?
-I am personally fine with anything that fits best into the grand
-scheme of things.
-There are three scenarios I can think of which may be influenced by
-devicetree configuration:
-a) let the driver decide automatically whether the 2.4GHz and/or 5GHz
-band is/are enabled
-b) explicitly disable either bands (because the driver thinks due to
-whatever reason that a band is supported while in reality it isn't)
-c) explicitly enable a band (for example because the driver cannot
-automagically detect which band should be enabled)
+I'm trying to think of a real example where we would want the base dt
+point to a phandle in an overlay. If that works, I think we should
+make it not work.
 
-for ath9k we default to a) but also allow b): the EEPROM (device
-specific calibration data) contains information about which bands are
-enabled (or not). But some manufacturers are shipping devices for
-example with the 5G band enabled, while the actual hardware doesn't
-support it.
+We need to back up and decide at what stage/level do we support
+combining base DT and overlays? Doing this at the source level is just
+making me more worried what kind of abuses there could be if the base
+dt and overlays are in the same source and the inability to enforce
+what's supported/allowed. I'm thinking we should require the source be
+separate and let dtc figure out how to merge them. Then we have the
+same source syntax whether the overlay remains separate or combined.
+Maybe it ends up merged like this or we extend the FDT format to
+append overlays.
 
-Felix' mt76 driver for example defaults to case a) but allows
-overriding (= forcefully enabling or disabling) a specific band.
-
-If we decide how this should look like in the devicetree then I can go
-ahead and implement it accordingly.
-
-
-Regards,
-Martin
-
-
-[0] https://github.com/openwrt/mt76/blob/master/eeprom.c#L79
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
