@@ -1,14 +1,16 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v6 1/2] sdhci-of-arasan: Add device tree parameter
- xlnx-fails-without-test-cd bit
-Date: Fri, 9 Sep 2016 08:36:12 +0200
-Message-ID: <541103ba-28d1-1fc0-cc5e-66eea914aa2d@xilinx.com>
-References: <1473363766-12652-1-git-send-email-zach.brown@ni.com>
+From: "S.H. Xie" <shaohui.xie@nxp.com>
+Subject: RE: [PATCH 5/7] [v2] arm64: dts: add LS1046A-RDB board support
+Date: Fri, 9 Sep 2016 06:44:54 +0000
+Message-ID: <DB5PR0401MB2183774C68CD9A7C93DDFE37E8FA0@DB5PR0401MB2183.eurprd04.prod.outlook.com>
+References: <1473069695-33092-1-git-send-email-shh.xie@gmail.com>
+ <1473069695-33092-6-git-send-email-shh.xie@gmail.com>
+ <20160908131218.GB16911@tiger>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1473363766-12652-1-git-send-email-zach.brown@ni.com>
+In-Reply-To: <20160908131218.GB16911@tiger>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,61 +20,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zach Brown <zach.brown@ni.com>, adrian.hunter@intel.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, soren.brinkmann@xilinx.com
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Vincent Hu <mingkai.hu@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8.9.2016 21:42, Zach Brown wrote:
-> The sdhci controller on xilinx zynq devices will not function unless
-> the CD bit is provided. http://www.xilinx.com/support/answers/61064.html
-> In cases where it is impossible to provide the CD bit in hardware,
-> setting the controller to test mode and then setting inserted to true
-> will get the controller to function without the CD bit.
+> -----Original Message-----
+> From: Shawn Guo [mailto:shawnguo@kernel.org]
+> Sent: Thursday, September 08, 2016 9:12 PM
+> To: shh.xie@gmail.com
+> Cc: devicetree@vger.kernel.org; robh+dt@kernel.org; mark.rutland@arm.com;
+> linux-arm-kernel@lists.infradead.org; catalin.marinas@arm.com;
+> will.deacon@arm.com; linux-kernel@vger.kernel.org; arnd@arndb.de; Vincent Hu
+> <mingkai.hu@nxp.com>; S.H. Xie <shaohui.xie@nxp.com>
+> Subject: Re: [PATCH 5/7] [v2] arm64: dts: add LS1046A-RDB board support
 > 
-> The device property "xlnx-fails-without-test-cd" will let the arasan
-> driver know the controller does not have the CD line wired and that the
-> controller does not function without it.
+> On Mon, Sep 05, 2016 at 06:01:33PM +0800, shh.xie@gmail.com wrote:
+> > +&ifc {
+> > +	status = "okay";
 > 
-> Signed-off-by: Zach Brown <zach.brown@ni.com>
-> ---
-> v2:
->  * improved commit messages
->  * removed fake-cd device property
->  * removed fake-cd quirk
->  * use broken-cd device property
->  * documented new usage of broken-cd
-> v3:
->  * removed new usage of broken-cd
->  * created fails-without-test-cd device property
->  * created arasan controller specific quirk
-> v4:
->  * changed fails-without-test-cd to xlnx-fails-without-test-cd
->  * removed extra blank line
-> v5:
->  * Fixed style mistake
->  * Changed (1 << 0 ) to BIT(0)
-> v6:
->  * Fixed style mistakes
->  * Condensed unnecessarily long variable names
->  * Removed line wraps that were no longer necessary.
->  * Rebased changes off Ulf's mmc tree's next branch.
-> 
-> 
->  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> df --gt /Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> index 3404afa..e71f043 100644
-> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> @@ -21,6 +21,10 @@ Required Properties:
->    - interrupts: Interrupt specifier
->    - interrupt-parent: Phandle for the interrupt controller that services
->  		      interrupts for this device.
-> +Optional Properties:
-> +- xlnx-fails-without-test-cd: when present, the controller doesn't work when
-
-xlnx, here.
+> For sake of consistency, please have 'status' at the end of property list.
+[S.H] Will fix it in next version.
 
 Thanks,
-Michal
+Shaohui
