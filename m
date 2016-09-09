@@ -1,90 +1,40 @@
-From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v5 8/9] ARM: dts: Declare push button as GPIO key on stm32f429 boards
-Date: Fri, 9 Sep 2016 16:42:03 +0200
-Message-ID: <1473432124-6784-9-git-send-email-alexandre.torgue@st.com>
-References: <1473432124-6784-1-git-send-email-alexandre.torgue@st.com>
+From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: Remove use of skeleton.dtsi from
+ bcm283x.dtsi
+Date: Fri, 09 Sep 2016 15:45:56 +0100
+Message-ID: <1473432356.28111.60.camel@hellion.org.uk>
+References: <1470233565-30154-1-git-send-email-ijc@hellion.org.uk>
+         <1471504916.6295.32.camel@hellion.org.uk>
+         <20160818102349.GC27045@leverpostej> <7746678.0mZLVD2k0J@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473432124-6784-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <7746678.0mZLVD2k0J@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+On Tue, 2016-08-23 at 12:09 +0200, Arnd Bergmann wrote:
+> I had skipped the new message as well while sorting through 5000
+> messages after my vacation, but I've now put it into my TODO folder
+> and will get to it eventually.
 
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index 6bfc595..0fd78e4 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -47,6 +47,7 @@
- 
- /dts-v1/;
- #include "stm32f429.dtsi"
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	model = "STMicroelectronics STM32429i-EVAL board";
-@@ -82,6 +83,23 @@
- 		};
- 	};
- 
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		autorepeat;
-+		button@0 {
-+			label = "Wake up";
-+			linux,code = <KEY_WAKEUP>;
-+			gpios = <&gpioa 0 0>;
-+		};
-+		button@1 {
-+			label = "Tamper";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&gpioc 13 0>;
-+		};
-+	};
-+
- 	usbotg_hs_phy: usbphy {
- 		#phy-cells = <0>;
- 		compatible = "usb-nop-xceiv";
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index 0140807..7d0415e 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -47,6 +47,7 @@
- 
- /dts-v1/;
- #include "stm32f429.dtsi"
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	model = "STMicroelectronics STM32F429i-DISCO board";
-@@ -75,6 +76,18 @@
- 			linux,default-trigger = "heartbeat";
- 		};
- 	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		autorepeat;
-+		button@0 {
-+			label = "User";
-+			linux,code = <KEY_HOME>;
-+			gpios = <&gpioa 0 0>;
-+		};
-+	};
- };
- 
- &clk_hse {
--- 
-1.9.1
+Is it still on your TODO or should I do...
 
+> We sometimes miss stuff that is meant for arm-soc when it comes
+> from people that don't normally send us patches. If you want to
+> be sure to catch the attention, stick a 'GIT PULL' into the subject
+> or send a ping on IRC.
+
+... one of these?
+
+It'd be great to get this fixed in v4.8 so that the corresponding
+device-tree.git tag will build.
+
+Thanks,
+Ian.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
