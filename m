@@ -1,68 +1,72 @@
-From: Zach Brown <zach.brown@ni.com>
-Subject: [PATCH v7 1/2] sdhci-of-arasan: Add device tree parameter xlnx,fails-without-test-cd bit
-Date: Fri, 9 Sep 2016 11:28:02 -0500
-Message-ID: <1473438483-3857-1-git-send-email-zach.brown@ni.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: adrian.hunter@intel.com
-Cc: robh+dt@kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org, zach.brown@ni.com
+From: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 4/8] ARM: dts: bcm283x: Add a new EMMC pin group from the
+ downstream tree.
+Date: Fri, 9 Sep 2016 09:37:20 -0700
+Message-ID: <5d464384-ba0d-516f-9fde-3a65386d4834@broadcom.com>
+References: <1473244289-20728-1-git-send-email-kraxel@redhat.com>
+ <1473244289-20728-5-git-send-email-kraxel@redhat.com>
+ <87650770.23554.026b1e4b-e35d-48e6-9394-7eeea0ff9add.open-xchange@email.1und1.de>
+ <1473320687.6698.25.camel@redhat.com>
+ <373fe61a-61d4-164e-0760-d68a0c4925dd@broadcom.com>
+ <e61a4efa-3685-6694-5fda-3272f6605665@i2se.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e61a4efa-3685-6694-5fda-3272f6605665-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The sdhci controller on xilinx zynq devices will not function unless
-the CD bit is provided. http://www.xilinx.com/support/answers/61064.html
-In cases where it is impossible to provide the CD bit in hardware,
-setting the controller to test mode and then setting inserted to true
-will get the controller to function without the CD bit.
+Hi Stefan,
 
-The device property "xlnx,fails-without-test-cd" will let the arasan
-driver know the controller does not have the CD line wired and that the
-controller does not function without it.
-
-Signed-off-by: Zach Brown <zach.brown@ni.com>
----
-v2:
- * improved commit messages
- * removed fake-cd device property
- * removed fake-cd quirk
- * use broken-cd device property
- * documented new usage of broken-cd
-v3:
- * removed new usage of broken-cd
- * created fails-without-test-cd device property
- * created arasan controller specific quirk
-v4:
- * changed fails-without-test-cd to xlnx-fails-without-test-cd
- * removed extra blank line
-v5:
- * Fixed style mistake
- * Changed (1 << 0 ) to BIT(0)
-v6:
- * Fixed style mistakes
- * Condensed unnecessarily long variable names
- * Removed line wraps that were no longer necessary.
- * Rebased changes off Ulf's mmc tree's next branch.
-v7:
- * Removed erroneous re-creation of Optional Properties section
- * Changed xlnx-fails-without-test-cd to xlnx,fails-without-test-cd
- * Changed of_get_property to of_property_read_bool
-
-
- Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-index 3404afa..49df630 100644
---- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-+++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-@@ -36,6 +36,9 @@ Optional Properties:
-   - #clock-cells: If specified this should be the value <0>.  With this property
-     in place we will export a clock representing the Card Clock.  This clock
-     is expected to be consumed by our PHY.  You must also specify
-+  - xlnx,fails-without-test-cd: when present, the controller doesn't work when
-+    the CD line is not connected properly, and the line is not connected
-+    properly. Test mode can be used to force the controller to function.
- 
- Example:
- 	sdhci@e0100000 {
--- 
-2.7.4
+On 16-09-08 11:58 PM, Stefan Wahren wrote:
+> Hi Scott,
+>
+> Am 08.09.2016 um 21:50 schrieb Scott Branden:
+>> Hi Gerd/Eric
+>>
+>> On 16-09-08 12:44 AM, Gerd Hoffmann wrote:
+>>> On Mi, 2016-09-07 at 20:13 +0200, Stefan Wahren wrote:
+>>>>> Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> hat am 7. September 2016 um 12:31
+>>>>> geschrieben:
+>>>>>
+>>>>>
+>>>>> From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>>>>>
+>>>>> This will be used for having EMMC (sdhci-bcm2835.c) drive the
+>>>>> wireless.
+>>>>
+>>>> sdhci-bcm2835.c has been replaced by sdhci-iproc.c
+>>>
+>>> Ah, right, I'll update the commit msg for v2.
+>>>
+>> Should we entirely remove sdhci-bcm2835.c to reduce confusion going
+>> forward?
+>
+> did i missed something?
+No - looks like I did.  Everything is cleaned up in latest.
+>
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=46cd175c9788e39a1c57698ab58f34844d216428
+>
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=7eb16493ecaa41ceeb448717ee2c59690cd9047f
+>
+>
+>>
+>>>> How about adding pull defines to include/dt-bindings/pinctrl/bcm2835.h?
+>>>
+>>> Already there (or do you mean something other than '#define
+>>> BCM2835_FSEL_*' ?)
+>>>
+>>> cheers,
+>>>   Gerd
+>>>
+>>
+>> Thanks,
+>>  Scott
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
