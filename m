@@ -1,144 +1,63 @@
-From: Hoan Tran <hotran-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH] hwmon: xgene: access mailbox as RAM
-Date: Fri, 9 Sep 2016 10:05:13 -0700
-Message-ID: <CAFHUOYx=HPN+73WevyBpM_0v1npBHaeExt2Qu24qYT+eHvNacw@mail.gmail.com>
-References: <1469134557-26869-1-git-send-email-hotran@apm.com>
- <13081573.BbD3TmEU5Y@wuerfel> <20160907223705.GA31582@roeck-us.net>
- <2529114.aAikiSWl11@wuerfel> <20160909165855.GB18952@roeck-us.net>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and GXBB
+Date: Fri, 9 Sep 2016 18:21:14 +0100
+Message-ID: <b9730890-d98c-2c3a-8af1-96b8c394c30f@codethink.co.uk>
+References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
+ <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
+ <m260q6jibf.fsf@baylibre.com>
+ <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
+ <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk>
+ <m2eg4ui0nl.fsf@baylibre.com>
+ <ffdd0188-72bc-4575-f997-e8547f4c31d2@codethink.co.uk>
+ <CAFBinCC4gkMrJtertYevg_hXDLJEZ0PqfKKLL5UKXo8B=SXsPw@mail.gmail.com>
+ <m2sht9gkau.fsf@baylibre.com>
+ <CAFBinCCDDwydB+RP0CZKoAW5Suxotn224ZFVWvt2OGW3gNJR1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160909165855.GB18952-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCCDDwydB+RP0CZKoAW5Suxotn224ZFVWvt2OGW3gNJR1g@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, johnyoun@synopsys.com, will.deacon@arm.com, mturquette@baylibre.com, linux-usb@vger.kernel.org, sboyd@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, catalin.marinas@arm.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 9, 2016 at 9:58 AM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> Hi Arnd,
+On 09/09/16 17:14, Martin Blumenstingl wrote:
+> On Fri, Sep 9, 2016 at 5:33 PM, Kevin Hilman <khilman@baylibre.com> wrote:
+>> However, the problem with all of the solutions proposed (runtime PM ones
+>> included) is that we're forcing a board-specific design issue (2 devices
+>> sharing a reset line) into a driver that should not have any
+>> board-specific assumptions in it.
+>>
+>> For example, if this driver is used on another platform where different
+>> PHYs have different reset lines, then one of them (the unlucky one who
+>> is not probed first) will never get reset.  So any form of per-device
+>> ref-counting is not a portable solution.
+> maybe we should also consider Ben's solution: he played with the USB
+> PHY on his Meson8b board. His approach was to have only one USB PHY
+> driver instance which exposes two PHYs.
+> The downside of this: the driver would have to know the offset of the
+> PHYs (0x0 for the first PHY, 0x20 for the second), but we could handle
+> the reset using runtime PM without any hacks.
 >
-> On Fri, Sep 09, 2016 at 05:38:58PM +0200, Arnd Bergmann wrote:
->> The newly added hwmon driver fails to build in an allmodconfig
->> kernel:
->>
->>       1  ERROR: "memblock_is_memory" [drivers/hwmon/xgene-hwmon.ko] undefined!
->>
->> According to comments in the code, the mailbox is a shared memory region,
->> not a set of MMIO registers, so we should use memremap() for mapping it
->> instead of ioremap or acpi_os_ioremap, and pointer dereferences instead
->> of readl/writel.
->>
->> The driver already uses plain kernel pointers, so it's a bit unusual
->> to work with functions that operate on __iomem pointers, and this
->> fixes that part too.
->>
->> I'm using READ_ONCE/WRITE_ONCE here to keep the existing behavior
->> regarding the ordering of the accesses from the CPU, but note that
->> there are no barriers (also unchanged from before).
->>
->> I'm also keeping the endianess behavior, though I'm unsure whether
->> the message data was supposed to be in LE32 format in the first
->> place, it's possible this was meant to be interpreted as a byte
->> stream instead.
->>
->> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->>
+> I checked the USB PHY reference driver: it seems that there will be a
+> new USB PHY with the GXL/GXM SoCs.
+> So maybe we could live with the assumption that the PHYs are at
+> consecutive addresses.
 >
-> Thanks a lot for looking into this.
+>> I'm not sure yet how the reset framework is supposed to handle shared
+>> reset lines, but that needs some investigation.  I quick glance and it
+>> seems that reset controllers can have shared lines, so that should be
+>> investigated.
+> unfortunately shared resets are not allowed to use reset_control_reset, see [0]
 >
-> I'll apply this patch to address the build problem. Much better than
-> my rude "depends on BROKEN". It would be great to get a Tested-by:
-> from someone with access to the hardware.
 >
+> [0] http://lxr.free-electrons.com/source/drivers/reset/core.c#L102
 
-Hi Arnd and Guenter,
+If we didn't have the shared reset, we'd have one of node per phy
+and not have to have two sub-nodes... I don't think any other bits
+of the PHY framework are shared.
 
-Thanks for the patch. I'm testing it out.
-
-Hoan
-
-> Guenter
->
->> diff --git a/drivers/hwmon/xgene-hwmon.c b/drivers/hwmon/xgene-hwmon.c
->> index bc78a5d10182..e834dfb3acca 100644
->> --- a/drivers/hwmon/xgene-hwmon.c
->> +++ b/drivers/hwmon/xgene-hwmon.c
->> @@ -34,7 +34,8 @@
->>  #include <linux/module.h>
->>  #include <linux/of.h>
->>  #include <linux/platform_device.h>
->> -#include <acpi/acpi_io.h>
->> +#include <linux/io.h>
->> +
->>  #include <acpi/pcc.h>
->>
->>  /* SLIMpro message defines */
->> @@ -126,10 +127,10 @@ static u16 xgene_word_tst_and_clr(u16 *addr, u16 mask)
->>  {
->>       u16 ret, val;
->>
->> -     val = readw_relaxed(addr);
->> +     val = le16_to_cpu(READ_ONCE(*addr));
->>       ret = val & mask;
->>       val &= ~mask;
->> -     writew_relaxed(val, addr);
->> +     WRITE_ONCE(*addr, cpu_to_le16(val));
->>
->>       return ret;
->>  }
->> @@ -137,7 +138,7 @@ static u16 xgene_word_tst_and_clr(u16 *addr, u16 mask)
->>  static int xgene_hwmon_pcc_rd(struct xgene_hwmon_dev *ctx, u32 *msg)
->>  {
->>       struct acpi_pcct_shared_memory *generic_comm_base = ctx->pcc_comm_addr;
->> -     void *ptr = generic_comm_base + 1;
->> +     u32 *ptr = (void*)(generic_comm_base + 1);
->>       int rc, i;
->>       u16 val;
->>
->> @@ -146,21 +147,21 @@ static int xgene_hwmon_pcc_rd(struct xgene_hwmon_dev *ctx, u32 *msg)
->>       ctx->resp_pending = true;
->>
->>       /* Write signature for subspace */
->> -     writel_relaxed(PCC_SIGNATURE_MASK | ctx->mbox_idx,
->> -                    &generic_comm_base->signature);
->> +     WRITE_ONCE(generic_comm_base->signature,
->> +                cpu_to_le32(PCC_SIGNATURE_MASK | ctx->mbox_idx));
->>
->>       /* Write to the shared command region */
->> -     writew_relaxed(MSG_TYPE(msg[0]) | PCCC_GENERATE_DB_INT,
->> -                    &generic_comm_base->command);
->> +     WRITE_ONCE(generic_comm_base->command,
->> +                cpu_to_le16(MSG_TYPE(msg[0]) | PCCC_GENERATE_DB_INT));
->>
->>       /* Flip CMD COMPLETE bit */
->> -     val = readw_relaxed(&generic_comm_base->status);
->> +     val = le16_to_cpu(READ_ONCE(generic_comm_base->status));
->>       val &= ~PCCS_CMD_COMPLETE;
->> -     writew_relaxed(val, &generic_comm_base->status);
->> +     WRITE_ONCE(generic_comm_base->status, cpu_to_le16(val));
->>
->>       /* Copy the message to the PCC comm space */
->>       for (i = 0; i < sizeof(struct slimpro_resp_msg) / 4; i++)
->> -             writel_relaxed(msg[i], ptr + i * 4);
->> +             WRITE_ONCE(ptr[i], cpu_to_le32(msg[i]));
->>
->>       /* Ring the doorbell */
->>       rc = mbox_send_message(ctx->mbox_chan, msg);
->> @@ -652,9 +653,9 @@ static int xgene_hwmon_probe(struct platform_device *pdev)
->>                */
->>               ctx->comm_base_addr = cppc_ss->base_address;
->>               if (ctx->comm_base_addr) {
->> -                     ctx->pcc_comm_addr =
->> -                                     acpi_os_ioremap(ctx->comm_base_addr,
->> -                                                     cppc_ss->length);
->> +                     ctx->pcc_comm_addr = memremap(ctx->comm_base_addr,
->> +                                                     cppc_ss->length,
->> +                                                     MEMREMAP_WT);
->>               } else {
->>                       dev_err(&pdev->dev, "Failed to get PCC comm region\n");
->>                       rc = -ENODEV;
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
