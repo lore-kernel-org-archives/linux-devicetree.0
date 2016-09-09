@@ -1,135 +1,83 @@
-From: Hoan Tran <hotran@apm.com>
-Subject: Re: [PATCH] hwmon: xgene: access mailbox as RAM
-Date: Fri, 9 Sep 2016 12:24:32 -0700
-Message-ID: <CAFHUOYzm4VH1fc3D0fLVv3bCU=2SHx7tZM4nFnCvWeuY+QfEFw@mail.gmail.com>
-References: <1469134557-26869-1-git-send-email-hotran@apm.com>
- <13081573.BbD3TmEU5Y@wuerfel> <20160907223705.GA31582@roeck-us.net> <2529114.aAikiSWl11@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH] of: Overlay manager
+Date: Fri, 9 Sep 2016 22:26:25 +0300
+Message-ID: <08C47A45-3704-4181-B065-B0E5975B878B@konsulko.com>
+References: <001a113447d4718cb9053c04f991@google.com> <57D1D344.8010306@gmail.com> <CAH7ZN-w2U9g4m9hDdD1kY52HLzv+TSbuNVRbmzmE3WMH0wC8Tw@mail.gmail.com> <CAL_JsqKe99WLoeOrRz76mUx-QruhDU+4kqCAepgZa0LhSYbgDg@mail.gmail.com> <CALAqxLVPdZxMy+W0VEJqX+L9CCy4cBsc0s48BwepSA8-ApUhtQ@mail.gmail.com> <CAL_JsqKgGFPKZR8fJ-CRQubNjWH0q_V9B9SsXoHncT9dMGdF1w@mail.gmail.com> <CALAqxLXLNQZMCrgLGa-=nGFbB-XVbs9FHXnGrksCO8V_mAkK0w@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2529114.aAikiSWl11@wuerfel>
+In-Reply-To: <CALAqxLXLNQZMCrgLGa-=nGFbB-XVbs9FHXnGrksCO8V_mAkK0w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, Loc Ho <lho@apm.com>, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Devicetree List <devicetree@vger.kernel.org>
+To: John Stultz <john.stultz@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Dmitry Shmidt <dimitrysh@google.com>, Frank Rowand <frowand.list@gmail.com>, "<linux-kernel@vger.kernel.org>" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi John,
 
-On Fri, Sep 9, 2016 at 8:38 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> The newly added hwmon driver fails to build in an allmodconfig
-> kernel:
->
->       1  ERROR: "memblock_is_memory" [drivers/hwmon/xgene-hwmon.ko] undefined!
->
-> According to comments in the code, the mailbox is a shared memory region,
-> not a set of MMIO registers, so we should use memremap() for mapping it
-> instead of ioremap or acpi_os_ioremap, and pointer dereferences instead
-> of readl/writel.
->
-> The driver already uses plain kernel pointers, so it's a bit unusual
-> to work with functions that operate on __iomem pointers, and this
-> fixes that part too.
->
-> I'm using READ_ONCE/WRITE_ONCE here to keep the existing behavior
-> regarding the ordering of the accesses from the CPU, but note that
-> there are no barriers (also unchanged from before).
->
-> I'm also keeping the endianess behavior, though I'm unsure whether
-> the message data was supposed to be in LE32 format in the first
-> place, it's possible this was meant to be interpreted as a byte
-> stream instead.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> diff --git a/drivers/hwmon/xgene-hwmon.c b/drivers/hwmon/xgene-hwmon.c
-> index bc78a5d10182..e834dfb3acca 100644
-> --- a/drivers/hwmon/xgene-hwmon.c
-> +++ b/drivers/hwmon/xgene-hwmon.c
-> @@ -34,7 +34,8 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
-> -#include <acpi/acpi_io.h>
-> +#include <linux/io.h>
+> On Sep 9, 2016, at 06:06 , John Stultz <john.stultz@linaro.org> wrote:
+>=20
+> On Thu, Sep 8, 2016 at 7:27 PM, Rob Herring <robh+dt@kernel.org> =
+wrote:
+>> On Thu, Sep 8, 2016 at 7:39 PM, John Stultz <john.stultz@linaro.org> =
+wrote:
+>>> On Thu, Sep 8, 2016 at 5:33 PM, Rob Herring <robh+dt@kernel.org> =
+wrote:
+>>>> If you can figure out how to change the command line, then you can
+>>>> just change the dtb. At least for how Android boot works, those =
+aren't
+>>>> really changed separately.
+>>>=20
+>>> Ehh.. that's not so simple. The dtb is often appended to the kernel =
+on
+>>> Android devices. Changing the boot arguments is much simpler to do.
+>>=20
+>> How? You typically make a new bootimage assembling the kernel/dtb,
+>> ramdisk and kernel command-line. If things were done differently such
+>> that the dtb is part of the bootloader (how it is supposed to be
+>> done), then I would buy the argument that we can't update the dtb and
+>> need to either have a way to add and/or select overlays. But Android
+>> folks like to update *everything*, so I don't buy that here.
+>=20
+> So in many cases the dtb is appended when the kernel is built, not
+> when the abootimg is assembled.
+>=20
+> So its much easier to use abootimg -u to update a prebuilt boot.img in
+> place and reflash. That way users don't need to regenerate the kernel
+> w/ appended dtb.
+>=20
 
-Alphabetical order.
+I understand what you=E2=80=99re trying to do, but it=E2=80=99s not =
+going to work.
 
-> +
->  #include <acpi/pcc.h>
->
->  /* SLIMpro message defines */
-> @@ -126,10 +127,10 @@ static u16 xgene_word_tst_and_clr(u16 *addr, u16 mask)
->  {
->         u16 ret, val;
->
-> -       val = readw_relaxed(addr);
-> +       val = le16_to_cpu(READ_ONCE(*addr));
->         ret = val & mask;
->         val &= ~mask;
-> -       writew_relaxed(val, addr);
-> +       WRITE_ONCE(*addr, cpu_to_le16(val));
->
->         return ret;
->  }
-> @@ -137,7 +138,7 @@ static u16 xgene_word_tst_and_clr(u16 *addr, u16 mask)
->  static int xgene_hwmon_pcc_rd(struct xgene_hwmon_dev *ctx, u32 *msg)
->  {
->         struct acpi_pcct_shared_memory *generic_comm_base = ctx->pcc_comm_addr;
-> -       void *ptr = generic_comm_base + 1;
-> +       u32 *ptr = (void*)(generic_comm_base + 1);
+It will only work for a very small subset of overlays since you can=E2=80=99=
+t
+have more than a single phandle label.
 
-Space before "*".
+For instance this will not work:
 
->         int rc, i;
->         u16 val;
->
-> @@ -146,21 +147,21 @@ static int xgene_hwmon_pcc_rd(struct xgene_hwmon_dev *ctx, u32 *msg)
->         ctx->resp_pending = true;
->
->         /* Write signature for subspace */
-> -       writel_relaxed(PCC_SIGNATURE_MASK | ctx->mbox_idx,
-> -                      &generic_comm_base->signature);
-> +       WRITE_ONCE(generic_comm_base->signature,
-> +                  cpu_to_le32(PCC_SIGNATURE_MASK | ctx->mbox_idx));
->
->         /* Write to the shared command region */
-> -       writew_relaxed(MSG_TYPE(msg[0]) | PCCC_GENERATE_DB_INT,
-> -                      &generic_comm_base->command);
-> +       WRITE_ONCE(generic_comm_base->command,
-> +                  cpu_to_le16(MSG_TYPE(msg[0]) | PCCC_GENERATE_DB_INT));
->
->         /* Flip CMD COMPLETE bit */
-> -       val = readw_relaxed(&generic_comm_base->status);
-> +       val = le16_to_cpu(READ_ONCE(generic_comm_base->status));
->         val &= ~PCCS_CMD_COMPLETE;
-> -       writew_relaxed(val, &generic_comm_base->status);
-> +       WRITE_ONCE(generic_comm_base->status, cpu_to_le16(val));
->
->         /* Copy the message to the PCC comm space */
->         for (i = 0; i < sizeof(struct slimpro_resp_msg) / 4; i++)
-> -               writel_relaxed(msg[i], ptr + i * 4);
-> +               WRITE_ONCE(ptr[i], cpu_to_le32(msg[i]));
->
->         /* Ring the doorbell */
->         rc = mbox_send_message(ctx->mbox_chan, msg);
-> @@ -652,9 +653,9 @@ static int xgene_hwmon_probe(struct platform_device *pdev)
->                  */
->                 ctx->comm_base_addr = cppc_ss->base_address;
->                 if (ctx->comm_base_addr) {
-> -                       ctx->pcc_comm_addr =
-> -                                       acpi_os_ioremap(ctx->comm_base_addr,
-> -                                                       cppc_ss->length);
-> +                       ctx->pcc_comm_addr = memremap(ctx->comm_base_addr,
-> +                                                       cppc_ss->length,
-> +                                                       MEMREMAP_WT);
+overlays {
+	overlay_0 {
+		opt: opt_0 { bar; };
+	};
+	overlay_1 {
+		opt: opt_1 { baz; };
+	};
+};
 
-It should be MEMREMAP_WB. As mailbox shared memory is on RAM and our
-co-processor is also in the coherency domain.
 
-Thanks
-Hoan
+frob_device {
+	compatible =3D =E2=80=9Cfrob=E2=80=9D;
+	use =3D <&opt>;
+};
 
->                 } else {
->                         dev_err(&pdev->dev, "Failed to get PCC comm region\n");
->                         rc = -ENODEV;
->
+If your use case is simple enough you=E2=80=99ll never hit this, but it =
+does happen in
+more complex examples.
+
+> thanks
+> -john
+
+Regards
+
+=E2=80=94 Pantelis
