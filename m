@@ -1,129 +1,313 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2] hwmon: xgene: access mailbox as RAM
-Date: Fri, 09 Sep 2016 22:10:45 +0200
-Message-ID: <3475893.910N1IvcYZ@wuerfel>
-References: <1469134557-26869-1-git-send-email-hotran@apm.com> <CAFHUOYzm4VH1fc3D0fLVv3bCU=2SHx7tZM4nFnCvWeuY+QfEFw@mail.gmail.com> <2852054.37zytD0HIa@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <2852054.37zytD0HIa@wuerfel>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Hoan Tran <hotran@apm.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, Loc Ho <lho@apm.com>, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Devicetree List <devicetree@vger.kernel.org>
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support
+Date: Sat, 10 Sep 2016 02:05:11 +0530
+Message-ID: <1473453312-2786-1-git-send-email-jagan@amarulasolutions.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The newly added hwmon driver fails to build in an allmodconfig
-kernel:
+i.CoreM6 Quad/Dual modules are system on module solutions manufactured
+by Engicam with following characteristics:
+CPU           NXP i.MX6 DQ, 800MHz
+RAM           1GB, 32, 64 bit, DDR3-800/1066
+NAND          SLC,512MB
+Power supply  Single 5V
+MAX LCD RES   FULLHD
 
-      ERROR: "memblock_is_memory" [drivers/hwmon/xgene-hwmon.ko] undefined!
+and more info at
+http://www.engicam.com/en/products/embedded/som/sodimm/i-core-m6s-dl-d-q
 
-According to comments in the code, the mailbox is a shared memory region,
-not a set of MMIO registers, so we should use memremap() for mapping it
-instead of ioremap or acpi_os_ioremap, and pointer dereferences instead
-of readl/writel.
-
-The driver already uses plain kernel pointers, so it's a bit unusual
-to work with functions that operate on __iomem pointers, and this
-fixes that part too.
-
-I'm using READ_ONCE/WRITE_ONCE here to keep the existing behavior
-regarding the ordering of the accesses from the CPU, but note that
-there are no barriers (also unchanged from before).
-
-I'm also keeping the endianess behavior, though I'm unsure whether
-the message data was supposed to be in LE32 format in the first
-place, it's possible this was meant to be interpreted as a byte
-stream instead.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
-v2: use write-back mapping instead of write-thru,
-    minor coding style changes
+ arch/arm/boot/dts/Makefile           |   1 +
+ arch/arm/boot/dts/imx6q-icore.dts    |  59 +++++++++++
+ arch/arm/boot/dts/imx6qdl-icore.dtsi | 188 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 248 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-icore.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-icore.dtsi
 
-diff --git a/drivers/hwmon/xgene-hwmon.c b/drivers/hwmon/xgene-hwmon.c
-index bc78a5d10182..e5470bd49067 100644
---- a/drivers/hwmon/xgene-hwmon.c
-+++ b/drivers/hwmon/xgene-hwmon.c
-@@ -27,6 +27,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/hwmon.h>
- #include <linux/hwmon-sysfs.h>
-+#include <linux/io.h>
- #include <linux/interrupt.h>
- #include <linux/kfifo.h>
- #include <linux/mailbox_controller.h>
-@@ -34,7 +35,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
--#include <acpi/acpi_io.h>
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index f79cac2..511510d 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -374,6 +374,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-gw553x.dtb \
+ 	imx6q-h100.dtb \
+ 	imx6q-hummingboard.dtb \
++	imx6q-icore.dtb \
+ 	imx6q-icore-rqs.dtb \
+ 	imx6q-marsboard.dtb \
+ 	imx6q-nitrogen6x.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-icore.dts b/arch/arm/boot/dts/imx6q-icore.dts
+new file mode 100644
+index 0000000..3518147
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-icore.dts
+@@ -0,0 +1,59 @@
++/*
++ * Copyright (C) 2016 Amarula Solutions B.V.
++ * Copyright (C) 2016 Engicam S.r.l.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
- #include <acpi/pcc.h>
- 
- /* SLIMpro message defines */
-@@ -126,10 +127,10 @@ static u16 xgene_word_tst_and_clr(u16 *addr, u16 mask)
- {
- 	u16 ret, val;
- 
--	val = readw_relaxed(addr);
-+	val = le16_to_cpu(READ_ONCE(*addr));
- 	ret = val & mask;
- 	val &= ~mask;
--	writew_relaxed(val, addr);
-+	WRITE_ONCE(*addr, cpu_to_le16(val));
- 
- 	return ret;
- }
-@@ -137,7 +138,7 @@ static u16 xgene_word_tst_and_clr(u16 *addr, u16 mask)
- static int xgene_hwmon_pcc_rd(struct xgene_hwmon_dev *ctx, u32 *msg)
- {
- 	struct acpi_pcct_shared_memory *generic_comm_base = ctx->pcc_comm_addr;
--	void *ptr = generic_comm_base + 1;
-+	u32 *ptr = (void *)(generic_comm_base + 1);
- 	int rc, i;
- 	u16 val;
- 
-@@ -146,21 +147,21 @@ static int xgene_hwmon_pcc_rd(struct xgene_hwmon_dev *ctx, u32 *msg)
- 	ctx->resp_pending = true;
- 
- 	/* Write signature for subspace */
--	writel_relaxed(PCC_SIGNATURE_MASK | ctx->mbox_idx,
--		       &generic_comm_base->signature);
-+	WRITE_ONCE(generic_comm_base->signature,
-+		   cpu_to_le32(PCC_SIGNATURE_MASK | ctx->mbox_idx));
- 
- 	/* Write to the shared command region */
--	writew_relaxed(MSG_TYPE(msg[0]) | PCCC_GENERATE_DB_INT,
--		       &generic_comm_base->command);
-+	WRITE_ONCE(generic_comm_base->command,
-+		   cpu_to_le16(MSG_TYPE(msg[0]) | PCCC_GENERATE_DB_INT));
- 
- 	/* Flip CMD COMPLETE bit */
--	val = readw_relaxed(&generic_comm_base->status);
-+	val = le16_to_cpu(READ_ONCE(generic_comm_base->status));
- 	val &= ~PCCS_CMD_COMPLETE;
--	writew_relaxed(val, &generic_comm_base->status);
-+	WRITE_ONCE(generic_comm_base->status, cpu_to_le16(val));
- 
- 	/* Copy the message to the PCC comm space */
- 	for (i = 0; i < sizeof(struct slimpro_resp_msg) / 4; i++)
--		writel_relaxed(msg[i], ptr + i * 4);
-+		WRITE_ONCE(ptr[i], cpu_to_le32(msg[i]));
- 
- 	/* Ring the doorbell */
- 	rc = mbox_send_message(ctx->mbox_chan, msg);
-@@ -652,9 +653,9 @@ static int xgene_hwmon_probe(struct platform_device *pdev)
- 		 */
- 		ctx->comm_base_addr = cppc_ss->base_address;
- 		if (ctx->comm_base_addr) {
--			ctx->pcc_comm_addr =
--					acpi_os_ioremap(ctx->comm_base_addr,
--							cppc_ss->length);
-+			ctx->pcc_comm_addr = memremap(ctx->comm_base_addr,
-+							cppc_ss->length,
-+							MEMREMAP_WB);
- 		} else {
- 			dev_err(&pdev->dev, "Failed to get PCC comm region\n");
- 			rc = -ENODEV;
++/dts-v1/;
++
++#include "imx6q.dtsi"
++#include "imx6qdl-icore.dtsi"
++
++/ {
++	model = "Engicam i.CoreM6 Quad/Dual Starter Kit";
++	compatible = "fsl,imx6-icore", "fsl,imx6q";
++};
++
++&can1 {
++	status = "oaky";
++};
++
++&can2 {
++	status = "oaky";
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+new file mode 100644
+index 0000000..e36ba6c
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+@@ -0,0 +1,188 @@
++/*
++ * Copyright (C) 2016 Amarula Solutions B.V.
++ * Copyright (C) 2016 Engicam S.r.l.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	memory {
++		reg = <0x10000000 0x80000000>;
++	};
++};
++
++&can1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan1>;
++	status = "okay";
++};
++
++&can2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan2>;
++	status = "okay";
++};
++
++&clks {
++	assigned-clocks = <&clks IMX6QDL_CLK_LVDS2_SEL>;
++	assigned-clock-parents = <&clks IMX6QDL_CLK_OSC>;
++};
++
++&gpmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_gpmi_nand>;
++	fsl,legacy-bch-geometry;
++	nand-on-flash-bbt;
++	status = "okay";
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++};
++
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart4>;
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
++	no-1-8-v;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl_flexcan1: flexcan1grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX 0x80000000
++			MX6QDL_PAD_KEY_COL2__FLEXCAN1_TX 0x80000000
++		>;
++	};
++
++	pinctrl_flexcan2: flexcan2grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x80000000
++			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x80000000
++		>;
++	};
++
++	pinctrl_gpmi_nand: gpmi-nand {
++		fsl,pins = <
++			MX6QDL_PAD_NANDF_CLE__NAND_CLE     0xb0b1
++			MX6QDL_PAD_NANDF_ALE__NAND_ALE     0xb0b1
++			MX6QDL_PAD_NANDF_WP_B__NAND_WP_B   0xb0b1
++			MX6QDL_PAD_NANDF_RB0__NAND_READY_B 0xb000
++			MX6QDL_PAD_NANDF_CS0__NAND_CE0_B   0xb0b1
++			MX6QDL_PAD_NANDF_CS1__NAND_CE1_B   0xb0b1
++			MX6QDL_PAD_SD4_CMD__NAND_RE_B      0xb0b1
++			MX6QDL_PAD_SD4_CLK__NAND_WE_B      0xb0b1
++			MX6QDL_PAD_NANDF_D0__NAND_DATA00   0xb0b1
++			MX6QDL_PAD_NANDF_D1__NAND_DATA01   0xb0b1
++			MX6QDL_PAD_NANDF_D2__NAND_DATA02   0xb0b1
++			MX6QDL_PAD_NANDF_D3__NAND_DATA03   0xb0b1
++			MX6QDL_PAD_NANDF_D4__NAND_DATA04   0xb0b1
++			MX6QDL_PAD_NANDF_D5__NAND_DATA05   0xb0b1
++			MX6QDL_PAD_NANDF_D6__NAND_DATA06   0xb0b1
++			MX6QDL_PAD_NANDF_D7__NAND_DATA07   0xb0b1
++			MX6QDL_PAD_SD4_DAT0__NAND_DQS      0x00b1
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
++			MX6QDL_PAD_EIM_D28__I2C1_SDA 0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_EB2__I2C2_SCL  0x4001b8b1
++			MX6QDL_PAD_KEY_ROW3__I2C2_SDA 0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_5__I2C3_SCL  0x4001b8b1
++			MX6QDL_PAD_EIM_D18__I2C3_SDA 0x4001b8b1
++			MX6QDL_PAD_GPIO_0__CCM_CLKO1	0x130b0
++		>;
++	};
++
++	pinctrl_uart4: uart4grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL0__UART4_TX_DATA 0x1b0b1
++			MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA 0x1b0b1
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__SD1_CMD    0x17070
++			MX6QDL_PAD_SD1_CLK__SD1_CLK    0x10070
++			MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x17070
++			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17070
++			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17070
++			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17070
++		>;
++	};
++};
+-- 
+2.7.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
