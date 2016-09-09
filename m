@@ -1,112 +1,60 @@
-From: Olimpiu Dejeu <olimpiu@arcticsand.com>
-Subject: Re: [PATCH] backlight: arcxcnn: devicetree bindings for ArticSand devices
-Date: Fri,  9 Sep 2016 14:50:25 -0400
-Message-ID: <1473447025-11381-1-git-send-email-olimpiu@arcticsand.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jg1.han@samsung.com
+From: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Subject: [RESEND PATCH v7 0/4] the fix for the USB HOST1 at rk3288 platform
+Date: Sat, 10 Sep 2016 02:59:36 +0800
+Message-ID: <1473447580-10369-1-git-send-email-ayaka@soulik.info>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+  At this stage it is the only "full features" and well verified 
+USB EHCI controller in this platform. More review is always necessary.
+
+Changelog:
+ - v7:
+    adding a wrapper for the reset operation for phy
+    using that wrapper
+ - v6:
+    move pwms pinctrl to pwms node
+    fix the order of the dtb file in Makefile
+ - v5:
+   - correct the mail format
+ - v4:
+   - re-order some nodes in alphabetical order
+   - fix some minor bugs
+   - add a entry in vendor list
+ - v3:
+   - fixing the rtc clock, using clock source from PMIC
+   - enable the tmu
+   - enable the fimc for elite board
+   - suuport the audio codec at elite board
+   - fixing minor bugs in the last commit
+ - v2:
+   - removing rtc node
+     the clock source driver is not done yet.
+   - adding exynos-bus
+   - fixing the MFC
+
+Randy Li (4):
+  phy: Add reset callback
+  phy: rockchip-usb: use rockchip_usb_phy_reset to reset phy during
+    wakeup
+  usb: dwc2: assert phy reset when waking up in rk3288 platform
+  ARM: dts: rockchip: Point rk3288 dwc2 usb at the full PHY reset
+
+ .../devicetree/bindings/phy/rockchip-usb-phy.txt     |  3 +++
+ arch/arm/boot/dts/rk3288.dtsi                        |  4 ++++
+ drivers/phy/phy-core.c                               | 14 ++++++++++++++
+ drivers/phy/phy-rockchip-usb.c                       | 20 ++++++++++++++++++++
+ drivers/usb/dwc2/core_intr.c                         | 11 +++++++++++
+ include/linux/phy/phy.h                              |  3 +++
+ 6 files changed, 55 insertions(+)
+
+-- 
+2.7.4
+
 --
-
-On Tue, Aug 23, 2016 at 2:20 PM, Rob Herring <robh@kernel.org> wrote:
-
-> On Mon, Aug 22, 2016 at 03:11:24PM -0400, Olimpiu Dejeu wrote:
-> > This is the device tree bindings documentation file
-> >
-> > Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
-> >
-> > ---
-> >  .../bindings/video/backlight/arcxcnn.txt           | 29
-> ++++++++++++++++++++++
->
->
-> Check your directory location. Things have moved.
->
-
-Not sure what you mean. This seems to be the right place. Please advise.
-
-> >  1 file changed, 29 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/video/backlight/
-> arcxcnn.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/video/backlight/arcxcnn.txt
-> b/Documentation/devicetree/bindings/video/backlight/arcxcnn.txt
-> > new file mode 100644
-> > index 0000000..9cd7315
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/video/backlight/arcxcnn.txt
-> > @@ -0,0 +1,29 @@
-> > +arcxcnn bindings
-> > +
-> > +Required properties:
-> > +  - compatible: "arc,arcxcnn", "arc,arc2c0608"
->
-> One per line please.
->
-> Is arcxcnn a specific chip? If not drop it. No wildcards in compatible
-> strings.
->
-
-Wild-cards can be dropped but there could be a large family of similar
-chips that would be supported with this one driver. How would one add
-support for a range of chips, some of which don't exist yet?
-
-
-> > +  - reg: I2C slave address (u8)
-> > +
-> > +Optional properties:
-> > +  - bl-name: Backlight device name (string)
->
-> Use the common bindings. label?
->
-> > +  - init-brt: Initial value of backlight brightness (u32) low 16 bits
-> used
->
-> Use common bindings.
->
-
-Ok
-
-
-> > +  - pwm-period: PWM period value. Set only PWM input mode used (u32)
-> > +  - prg-addr: Register address of ROM area to be updated (u32) low 8
-> bits used
-> > +  - prg-val: Register value to be updated (u32) low 8 bits used
->
-> What is this for? This should be a specific property or properties to do
-> explicit things, not a generic fill registers/rom with magic values.
->
-
-We need to expose some registers for test without exposing underlying
-functionality. Do you suggest not documenting this in the bindings yet
-keeping the code in the driver? We followed the pattern from the lp855x_bl
-driver.
-
-
-> > +
-> > +Example:
-> > +
-> > +     /* ARC2C0608 */
-> > +     backlight@30 {
-> > +             compatible = "arc,arc2c0608";
-> > +             reg = <0x30>;
-> > +
-> > +             init-brt = <123>;
-> > +
-> > +             /* LED0+1 string enabled */
-> > +             prg_06h {
-> > +                     prg-addr = <0x06>;
-> > +                     prg-val = <0x83>;
-> > +             };
-> > +
-> > +     };
-> > --
-> > 1.9.1
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
