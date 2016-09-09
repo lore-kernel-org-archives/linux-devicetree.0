@@ -1,54 +1,55 @@
-From: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCHv2] of: Add generic handling for ePAPR 1.1 fail-sss states
-Date: Fri, 9 Sep 2016 10:10:55 -0400
-Message-ID: <20160909141055.GZ4990@bill-the-cat>
-References: <20160829223542.18871-1-tony@atomide.com>
- <57C74306.9020901@gmail.com>
- <20160831214151.wzq7y54xxs2qj422@atomide.com>
- <CAL_Jsq+dm5HMkX8DNNZNB2QF-VPg96Esb+Capv88zys9nAPksw@mail.gmail.com>
- <57D1B668.3070001@gmail.com>
- <CAL_JsqKYqQpDrLbV0DZ-CvHfeHsXvMc-gncc9obir4gehriXOw@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: dts: bcm283x: Define standard pinctrl groups in
+ the gpio node.
+Date: Fri, 9 Sep 2016 16:12:02 +0200
+Message-ID: <5ca1637e-58d8-fd04-416e-4619d99c4d12@i2se.com>
+References: <1473244289-20728-1-git-send-email-kraxel@redhat.com>
+ <1473244289-20728-2-git-send-email-kraxel@redhat.com>
+ <1628308726.55593.220fafc0-57d9-4317-a72d-0875dfb2d658.open-xchange@email.1und1.de>
+ <1473411924.6698.85.camel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKYqQpDrLbV0DZ-CvHfeHsXvMc-gncc9obir4gehriXOw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1473411924.6698.85.camel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+To: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 08, 2016 at 09:43:03PM -0500, Rob Herring wrote:
-> On Thu, Sep 8, 2016 at 2:05 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On 09/08/16 06:38, Rob Herring wrote:
-> >> On Wed, Aug 31, 2016 at 4:41 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> >>> * Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [160831 13:51]:
-[snip]
-> >>>> Why not just create a new property that describes the hardware?
-> >>>> Perhaps something like:
-> >>>>
-> >>>>    incomplete = "pins_output", "buggy_dma";
-> >>>
-> >>> New property for incomplete works for me. Rob, got any comments here?
-> >>
-> >> Pins not muxed out or connected on the board has to be the #1 reason
-> >> for disabled status. I don't think we need or want another way to
-> >> express that.
-> >
-> > How is that expressed now?
-> 
-> status = "disabled";
+Am 09.09.2016 um 11:05 schrieb Gerd Hoffmann:
+>   Hi,
+>
+>> According to this page [1] the pinctrl group for parallel display interface is
+>> missing. Is it intended?
+>>
+>> [1] - http://elinux.org/RPi_BCM2835_GPIOs
+> Just an oversight I guess.  Eric?
+>
+> Does this look correct?
+>
+> +                       dpi_gpio4: dpi_gpio4 {
+> +                               brcm,pins = <4 5 6 7 8 9 10 11 12 13
+> +                                            14 15 16 17 18 19 20 21
+> +                                            22 23 24 25 26 27>;
+> +                               brcm,function = <BCM2835_FSEL_ALT2>;
+> +                       };
 
-It might be worth repeating that the problem that needs to be solved is
-that we have an IP block that exists in some sense but needs to be shut
-down (or some similar case the driver can handle) rather than ignored
-like today.  This is not the same as having 5 UARTs available from the
-SoC but only one is actually in some useful physical state, so list all
-5 in the dtsi, status disabled, and then in the board dts file enable
-the exposed ones.
+According to the wiki and the website [1] it starts at gpio 0
 
--- 
-Tom
+[1] -
+https://www.raspberrypi.org/documentation/hardware/raspberrypi/dpi/README.md
+
+>
+> thanks,
+>   Gerd
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
