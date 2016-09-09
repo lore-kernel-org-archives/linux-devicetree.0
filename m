@@ -1,95 +1,76 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] arm64: arch_timer: Work around QorIQ Erratum
- A-008585
-Date: Fri, 9 Sep 2016 07:53:15 +0100
-Message-ID: <20160909075315.36da82b7@why.wild-wind.fr.eu.org>
-References: <1467877572-10817-1-git-send-email-oss@buserror.net>
-        <1467877572-10817-3-git-send-email-oss@buserror.net>
-        <20160826134004.7e86e798@arm.com>
-        <1473383336.30217.96.camel@buserror.net>
+From: "S.H. Xie" <shaohui.xie@nxp.com>
+Subject: RE: [PATCH 3/7] [v2] arm64: dts: add QorIQ LS1046A SoC support
+Date: Fri, 9 Sep 2016 06:55:30 +0000
+Message-ID: <DB5PR0401MB21831908B0438CEA29921A71E8FA0@DB5PR0401MB2183.eurprd04.prod.outlook.com>
+References: <1473069695-33092-1-git-send-email-shh.xie@gmail.com>
+ <1473069695-33092-4-git-send-email-shh.xie@gmail.com>
+ <20160908131326.GE26570@leverpostej> <20160908131818.GF26570@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473383336.30217.96.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, mike.caraman-3arQi8VN3Tc@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160908131818.GF26570@leverpostej>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mihai Emilian Bantea <mihai.bantea@nxp.com>, Horia Geanta Neag <horia.geanta@nxp.com>, "arnd@arndb.de" <arnd@arndb.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "Z.Q.
+ Hou" <zhiqiang.hou@nxp.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "M.H. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Vincent Hu <mingkai.hu@nxp.com>, "Q.Y. Gong" <qianyu.gong@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "C.H. Zhao" <chenhui.zhao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 8 Sep 2016 20:08:56 -0500
-Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org> wrote:
+> On Thu, Sep 08, 2016 at 02:13:26PM +0100, Mark Rutland wrote:
+> > On Mon, Sep 05, 2016 at 06:01:31PM +0800, shh.xie@gmail.com wrote:
+> > > +	cpus {
+> > > +		#address-cells = <1>;
+> > > +		#size-cells = <0>;
+> > > +
+> > > +		cpu0: cpu@0 {
+> > > +			device_type = "cpu";
+> > > +			compatible = "arm,cortex-a72";
+> > > +			reg = <0x0>;
+> > > +			clocks = <&clockgen 1 0>;
+> > > +			next-level-cache = <&l2>;
+> > > +			cpu-idle-states = <&CPU_PH20>;
+> > > +		};
+> >
+> > [...]
+> >
+> > > +	};
+> > > +
+> > > +	idle-states {
+> > > +		entry-method = "arm,psci";
+> > > +
+> > > +		CPU_PH20: cpu-ph20 {
+> > > +			compatible = "arm,idle-state";
+> > > +			idle-state-name = "PH20";
+> > > +			arm,psci-suspend-param = <0x00010000>;
+> > > +			entry-latency-us = <1000>;
+> > > +			exit-latency-us = <1000>;
+> > > +			min-residency-us = <3000>;
+> > > +		};
+> > > +	};
+> >
+> > There's no PSCI node in this file, and none from am included file, so
+> > this doesn't look right.
+> 
+> Looking again, none of the cpu nodes has an enable-method property, and
+> subsequent patches don't seem to add that to any cpu node.
+> 
+> Has this DT actually been tested?
+[S.H] The PSCI node and the enable-method property are added by U-boot. 
+U-boot can determine if using PSCI. If U-boot enables PSCI, it will add these 
+missed parts in the dts. If not, it will not add these missed parts, 
+so kernel will not use PSCI.
 
-> On Fri, 2016-08-26 at 13:40 +0100, Marc Zyngier wrote:
-> > On Thu, 7 Jul 2016 02:46:11 -0500
-> > Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org> wrote:
-> > 
-> > (+Mark)
-> >   
-> > > 
-> > >  static __always_inline
-> > >  u32 arch_timer_reg_read_cp15(int access, enum arch_timer_reg reg)
-> > >  {
-> > > @@ -66,19 +102,19 @@ u32 arch_timer_reg_read_cp15(int access, enum
-> > > arch_timer_reg reg)
-> > >  	if (access == ARCH_TIMER_PHYS_ACCESS) {
-> > >  		switch (reg) {
-> > >  		case ARCH_TIMER_REG_CTRL:
-> > > -			asm volatile("mrs %0,  cntp_ctl_el0" : "=r"
-> > > (val));
-> > > +			asm volatile("mrs %0, cntp_ctl_el0" : "=r"
-> > > (val));  
-> > Spurious change?
-> >   
-> > > 
-> > >  			break;
-> > >  		case ARCH_TIMER_REG_TVAL:
-> > > -			asm volatile("mrs %0, cntp_tval_el0" : "=r"
-> > > (val));
-> > > +			val = _arch_timer_get_ptval();
-> > >  			break;
-> > >  		}
-> > >  	} else if (access == ARCH_TIMER_VIRT_ACCESS) {
-> > >  		switch (reg) {
-> > >  		case ARCH_TIMER_REG_CTRL:
-> > > -			asm volatile("mrs %0,  cntv_ctl_el0" : "=r"
-> > > (val));
-> > > +			asm volatile("mrs %0, cntv_ctl_el0" : "=r"
-> > > (val));  
-> > Here too?  
-> 
-> No, it's not spurious.
-> 
-> I answered this in http://lists.infradead.org/pipermail/linux-arm-kernel/2016-
-> June/438310.html
-> 
-> The extra spacing seemed to be an attempt to get things to line up between the
-> CTRL and TVAL asm statements.  When the TVAL case was converted to a function
-> call, there was nothing for the above to line up with, so I moved it back to
-> normal spacing.
-> 
-> > I'm still worried that this series doesn't address Xen or KVM guests
-> > that need to be made aware of the broken timers.
-> > 
-> > At the very least, I'd like a kernel command line option that'd let the
-> > user reliably run its VMs. You can do something along the lines of
-> > 46fd5c6b, and have a command line argument like
-> > "clocksource.arm_arch_timer.fsl-a008585=1", which would enable the
-> > workaround.  
-> 
-> OK, I'll respin with a command line argument to use for now.  Mike Caraman has
-> said he plans to do a better solution for KVM -- Mike, have you had a chance
-> to look at this?
-
-If there is a plan, we'd all like to hear about it, specially if this
-involves a userspace ABI (which is likely).
+In other words, the dts does not enable PSCI by default. 
+It's U-boot which adds the missed part if it determines to use PSCI.
 
 Thanks,
-
-	M.
--- 
-Without deviation from the norm, progress is not possible.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shaohui
