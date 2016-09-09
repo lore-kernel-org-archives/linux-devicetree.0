@@ -1,128 +1,98 @@
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v3 2/3] hwmon: xgene: Add hwmon driver
-Date: Fri, 9 Sep 2016 12:18:11 +0900
-Message-ID: <20160909031809.GG16712@linaro.org>
-References: <1469134557-26869-1-git-send-email-hotran@apm.com>
- <13081573.BbD3TmEU5Y@wuerfel>
- <20160907223705.GA31582@roeck-us.net>
- <2992356.ULGoZEEDZp@wuerfel>
- <57D141DF.2010603@arm.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] dt-binding: remoteproc: Document generic properties
+Date: Thu, 8 Sep 2016 20:36:13 -0700
+Message-ID: <20160909033613.GB405@tuxbot>
+References: <1470850622-29816-1-git-send-email-bjorn.andersson@linaro.org>
+ <20160812183448.GA32059@rob-hp-laptop>
+ <20160812224223.GJ26240@tuxbot>
+ <46d4d351-336c-6d4f-b1b0-243cf3c5d68b@ti.com>
+ <20160908165032.GA9526@rob-hp-laptop>
+ <dfa838cf-15f6-c178-f69a-1b5488f74a7a@ti.com>
+ <CAL_JsqKF5pqWY2fSoReUrAZ6yqfMTkWLLYrJqCz4ciA8J0a2-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-2022-jp
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <57D141DF.2010603@arm.com>
+In-Reply-To: <CAL_JsqKF5pqWY2fSoReUrAZ6yqfMTkWLLYrJqCz4ciA8J0a2-g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Morse <james.morse@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Guenter Roeck <linux@roeck-us.net>, Hoan Tran <hotran@apm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Duc Dang <dhdang@apm.com>, lho@apm.com, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Suman Anna <s-anna@ti.com>, Mark Rutland <mark.rutland@arm.com>, Ohad Ben-Cohen <ohad@wizery.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 08, 2016 at 11:47:59AM +0100, James Morse wrote:
-> Hi,
-> 
-> On 08/09/16 09:14, Arnd Bergmann wrote:
-> > On Wednesday, September 7, 2016 3:37:05 PM CEST Guenter Roeck wrote:
-> >> On Wed, Sep 07, 2016 at 11:41:44PM +0200, Arnd Bergmann wrote:
-> >>> On Thursday, July 21, 2016 1:55:56 PM CEST Hoan Tran wrote:
-> >>>> +               ctx->comm_base_addr = cppc_ss->base_address;
-> >>>> +               if (ctx->comm_base_addr) {
-> >>>> +                       ctx->pcc_comm_addr =
-> >>>> +                                       acpi_os_ioremap(ctx->comm_base_addr,
-> >>>> +                                                       cppc_ss->length);
+On Thu 08 Sep 19:33 PDT 2016, Rob Herring wrote:
+
+> On Thu, Sep 8, 2016 at 1:32 PM, Suman Anna <s-anna@ti.com> wrote:
+> > Hi Rob,
+> >
+> > On 09/08/2016 11:50 AM, Rob Herring wrote:
+> >> On Fri, Sep 02, 2016 at 04:45:45PM -0500, Suman Anna wrote:
+> >>> On 08/12/2016 05:42 PM, Bjorn Andersson wrote:
+> >>>> On Fri 12 Aug 11:34 PDT 2016, Rob Herring wrote:
 > >>>>
+> >>>>> On Wed, Aug 10, 2016 at 10:37:02AM -0700, Bjorn Andersson wrote:
+> >>>>>> This documents the generic properties "rprocs" and "rproc-names", used
+> >>>>>> for consumer drivers to reference a remoteproc node.
+> >>>>>
+> >>>>> How do you intend to use this? I wonder if it would not be better to
+> >>>>> expose a remote proc with existing bindings for a particular purpose
+> >>>>> (e.g. clocks, resets, etc.) rather than a generic connection. The client
+> >>>>> side would have to have specific knowledge as to what functions the
+> >>>>> remote proc provides.
+> >>>>>
+> >>>>
+> >>>> The remoteproc node represents the mechanism and resources needed to
+> >>>> control the life cycle a co-processor, e.g. loading, booting, shutting
+> >>>> gown a video encoder/decoder.
+> >>>>
+> >>>> The proposed reference allows a separate thingie to assert control of
+> >>>> the life cycle of that co-processor.
+> >>>>
+> >>>>
+> >>>> I acknowledge that in some cases there is a fine line between what is
+> >>>> the life cycle management and what is the actual functionality
+> >>>> implemented by that remote processor. But as the remoteproc mechanism is
+> >>>> reusable between various use cases I think it makes sense to not describe
+> >>>> them as one unit.
 > >>>
-> >>> This causes the arm64 allmodconfig build to fail now, according to
-> >>> kernelci:
-> >>>
-> >>>       1  ERROR: "memblock_is_memory" [drivers/hwmon/xgene-hwmon.ko] undefined!
-> >>>
-> >>> Should this perhaps call ioremap() or memremap() instead?
-> >>>
-> >> Hmmm ... almost sounds to me like blaming the messenger. e7cd190385d1 ("arm64:
-> >> mark reserved memblock regions explicitly in iomem") starts using a function
-> >> in acpi_os_ioremap() which is not exported. On top of that, memblock_is_memory()
-> >> is declared as __init_memblock, which makes me really uncomfortable.
-> >> If acpi_os_ioremap() must not be used by modules, and possibly only during
-> >> early (?) initialization, maybe its declaration should state those limitations ?
-> > 
-> > Ah, I didn't notice that. I guess both patches were correct individually and
-> > got added to linux-next around the same time but caused allmodconfig to blow up
-> > when used together.
-> > 
-> > Adding everyone who was involved in the memblock patch to Cc here, maybe one
-> > of them has an idea what the correct fix is. There are only two other drivers
-> > using acpi_os_ioremap() and one of them is x86-specific, so it's still likely
-> > that drivers are not actually supposed to use this symbol. Making
-> > acpi_os_ioremap() an exported function in arm64 would also work.
+> >>> What's the current state of this patch, not officially acked yet right?
+> >>
+> >> Bjorn and I have discussed some, but probably needs more discussion.
+> >> This binding alone is simple enough, but I want to understand better how
+> >> it will be used and digesting all the QCom h/w is not simple.
+> >
+> > OK, thanks. The binding has no bearing on Qcom h/w though.
 > 
-> You could use acpi_os_map_iomem()/acpi_os_unmap_iomem() from acpi/acpi_io.h.
-> If there isn't an existing mapping these end up in acpi_os_ioremap(), and are
-> already EXPORT_SYMBOL_GPL().
-
-acpi_os_ioremap() is re-defined in arm64/include/asm/acpi.h.
-
-The problem is that, as memblock_is_memory() is declared as __init,
-we cannot build any drivers which call acpi_os_ioremap() as modules.
-
-As far as this specific issue is concerned, if we make a change like:
-
-===8<===
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -207,7 +207,7 @@ static void __init request_standard_resources(void)
-                res = alloc_bootmem_low(sizeof(*res));
-                if (memblock_is_nomap(region)) {
-                        res->name  = "reserved";
--                       res->flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-+                       res->flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-                } else {
-                        res->name  = "System RAM";
-                        res->flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-===>8===
-
-and revert the following hunk from the commit:
-
-===8<===
---- a/arch/arm64/include/asm/acpi.h
-+++ b/arch/arm64/include/asm/acpi.h
-@@ -12,7 +12,7 @@
- #ifndef _ASM_ACPI_H
- #define _ASM_ACPI_H
- 
--#include <linux/mm.h>
-+#include <linux/memblock.h>
- #include <linux/psci.h>
- 
- #include <asm/cputype.h>
-@@ -32,7 +32,11 @@
- static inline void __iomem *acpi_os_ioremap(acpi_physical_address phys,
-                                            acpi_size size)
- {
--       if (!page_is_ram(phys >> PAGE_SHIFT))
-+       /*
-+        * EFI's reserve_regions() call adds memory with the WB attribute
-+        * to memblock via early_init_dt_add_memory_arch().
-+        */
-+       if (!memblock_is_memory(phys))
-                return ioremap(phys, size);
- 
-        return ioremap_cache(phys, size);
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-===>8===
-
-The build error will be gone. (and still kdump should work.)
-
-But I don't know how we should distinguish IORESOURCE_MEM and
-IORESOURCE_SYSTEM_RAM.
-
-Thanks,
--Takahiro AKASHI
-
-> (I'm still waiting for allmodconfig on linux-next to finish building)
+> Doesn't have to be QCom, I just want to see some user and understand the use.
 > 
-> 
-> Thanks,
-> 
-> James
-> 
-> 
+
+For other's reference, we discussed two different cases:
+1) The Qualcomm video accelerator; a single-use-case co-processor that
+when booted provides a video encoder & decoder.
+
+2) The Qualcomm (A)DSP, a multipurpose generic DSP used for audio
+effects, audio control/routing, sensor offloading and general
+computational workloads.
+
+
+In #1 Rob's point is that there's only a single piece of hardware, so it
+should be described in a single node.
+I think it would be beneficial to represent this as two different nodes,
+one for the co-processor management and one for the video-related
+resources, but I need to investigate this a little bit more.
+
+In #2 we have the resources related to controlling the DSP and when
+booted the firmware presents the additional services in a probable
+manner; some of these services interacts with resources or provides
+resources and must as such be represented in DT.
+
+In either case there's no reason for me to reference a remoteproc
+instance - so far at least.
+
+
+There is a third case, which I have not researched fully yet, where we
+need to represent dependencies between remoteprocs; e.g. we must boot
+the audio DSP before booting the modem and if the DSP crashes we must
+restart the modem.
+
+Regards,
+Bjorn
