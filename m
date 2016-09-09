@@ -1,48 +1,124 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 7/8] clocksource: Kconfig: Modify CMT config support 64bit
-Date: Fri, 9 Sep 2016 14:47:37 +0300
-Message-ID: <9b18bc0e-3447-6ab2-3c28-54e54a19dc6f@cogentembedded.com>
-References: <1473421394-9745-1-git-send-email-bd-phuc@jinso.co.jp>
- <1473421394-9745-8-git-send-email-bd-phuc@jinso.co.jp>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v6 2/2] sdhci-of-arasan: Set controller to test mode when
+ xlnx-fails-without-test-cd is present
+Date: Fri, 9 Sep 2016 14:45:13 +0300
+Message-ID: <47ff9881-d144-bade-a5d7-995d1304675a@intel.com>
+References: <1473363766-12652-1-git-send-email-zach.brown@ni.com>
+ <1473363766-12652-2-git-send-email-zach.brown@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473421394-9745-8-git-send-email-bd-phuc-HEF513clHfp3+QwDJ9on6Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bd-phuc-HEF513clHfp3+QwDJ9on6Q@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, ryusuke.sakato.bx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, h-inayoshi-HEF513clHfp3+QwDJ9on6Q@public.gmane.org, cm-hiep-HEF513clHfp3+QwDJ9on6Q@public.gmane.org, nv-dung-HEF513clHfp3+QwDJ9on6Q@public.gmane.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1473363766-12652-2-git-send-email-zach.brown@ni.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Zach Brown <zach.brown@ni.com>
+Cc: robh+dt@kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/9/2016 2:43 PM, bd-phuc-HEF513clHfp3+QwDJ9on6Q@public.gmane.org wrote:
-
-> From: Bui Duc Phuc <bd-phuc-HEF513clHfp3+QwDJ9on6Q@public.gmane.org>
->
-> Modify CMT config to support 64bit
->
-> Signed-off-by: Bui Duc Phuc <bd-phuc-HEF513clHfp3+QwDJ9on6Q@public.gmane.org>
+On 08/09/16 22:42, Zach Brown wrote:
+> The sdhci controller on xilinx zynq devices will not function unless
+> the CD bit is provided. http://www.xilinx.com/support/answers/61064.html
+> In cases where it is impossible to provide the CD bit in hardware,
+> setting the controller to test mode and then setting inserted to true
+> will get the controller to function without the CD bit.
+> 
+> When the device has the property xlnx-fails-without-test-cd the driver
+> changes the controller to test mode and sets test inserted to true to
+> make the controller function.
+> 
+> Signed-off-by: Zach Brown <zach.brown@ni.com>
 > ---
->  drivers/clocksource/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 5677886..62c2bcb 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -408,7 +408,7 @@ config SYS_SUPPORTS_EM_STI
->          bool
->
->  config SH_TIMER_CMT
-> -	bool "Renesas CMT timer driver" if COMPILE_TEST
-> +	bool "Renesas CMT timer driver" if ( ARM64 || COMPILE_TEST )
+>  drivers/mmc/host/sdhci-of-arasan.c | 27 ++++++++++++++++++++++++++-
+>  drivers/mmc/host/sdhci.h           |  2 ++
+>  2 files changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+> index 33601a8..37c8ca0 100644
+> --- a/drivers/mmc/host/sdhci-of-arasan.c
+> +++ b/drivers/mmc/host/sdhci-of-arasan.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/phy/phy.h>
+>  #include <linux/regmap.h>
+>  #include "sdhci-pltfm.h"
+> +#include <linux/of.h>
+>  
+>  #define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
+>  #define SDHCI_ARASAN_VENDOR_REGISTER	0x78
+> @@ -98,6 +99,10 @@ struct sdhci_arasan_data {
+>  
+>  	struct regmap	*soc_ctl_base;
+>  	const struct sdhci_arasan_soc_ctl_map *soc_ctl_map;
+> +	unsigned int	quirks; /* Arasan deviations from spec */
+> +
+> +/* Controller does not have CD wired and will not function normally without */
+> +#define SDHCI_ARASAN_QUIRK_FORCE_CDTEST	BIT(0)
+>  };
+>  
+>  static const struct sdhci_arasan_soc_ctl_map rk3399_soc_ctl_map = {
+> @@ -245,12 +250,27 @@ static void sdhci_arasan_hs400_enhanced_strobe(struct mmc_host *mmc,
+>  	writel(vendor, host->ioaddr + SDHCI_ARASAN_VENDOR_REGISTER);
+>  }
+>  
+> +void sdhci_arasan_reset(struct sdhci_host *host, u8 mask)
+> +{
+> +	u8 ctrl;
+> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +	struct sdhci_arasan_data *sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
+> +
+> +	sdhci_reset(host, mask);
+> +
+> +	if (sdhci_arasan->quirks & SDHCI_ARASAN_QUIRK_FORCE_CDTEST) {
+> +		ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
+> +		ctrl |= SDHCI_CTRL_CDTEST_INS | SDHCI_CTRL_CDTEST_EN;
+> +		sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
+> +	}
+> +}
+> +
+>  static struct sdhci_ops sdhci_arasan_ops = {
+>  	.set_clock = sdhci_arasan_set_clock,
+>  	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
+>  	.get_timeout_clock = sdhci_arasan_get_timeout_clock,
+>  	.set_bus_width = sdhci_set_bus_width,
+> -	.reset = sdhci_reset,
+> +	.reset = sdhci_arasan_reset,
+>  	.set_uhs_signaling = sdhci_set_uhs_signaling,
+>  };
+>  
+> @@ -545,6 +565,7 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+>  	struct sdhci_host *host;
+>  	struct sdhci_pltfm_host *pltfm_host;
+>  	struct sdhci_arasan_data *sdhci_arasan;
+> +	struct device_node *np = pdev->dev.of_node;
+>  
+>  	host = sdhci_pltfm_init(pdev, &sdhci_arasan_pdata,
+>  				sizeof(*sdhci_arasan));
+> @@ -599,6 +620,10 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	sdhci_get_of_property(pdev);
+> +
+> +	if (of_get_property(np, "xlnx-fails-without-test-cd", NULL))
 
-    Parens not needed and the spaces after/before them even less so.
+Sorry, should have spotted this before.  This needs to be
+of_property_read_bool() not of_get_property().
 
-[...]
+> +		sdhci_arasan->quirks |= SDHCI_ARASAN_QUIRK_FORCE_CDTEST;
+> +
+>  	pltfm_host->clk = clk_xin;
+>  
+>  	if (of_device_is_compatible(pdev->dev.of_node,
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index a2bc9e1..c722cd2 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -84,6 +84,8 @@
+>  #define   SDHCI_CTRL_ADMA32	0x10
+>  #define   SDHCI_CTRL_ADMA64	0x18
+>  #define   SDHCI_CTRL_8BITBUS	0x20
+> +#define  SDHCI_CTRL_CDTEST_INS	0x40
+> +#define  SDHCI_CTRL_CDTEST_EN	0x80
+>  
+>  #define SDHCI_POWER_CONTROL	0x29
+>  #define  SDHCI_POWER_ON		0x01
+> 
 
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
