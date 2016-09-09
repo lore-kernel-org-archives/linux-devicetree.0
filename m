@@ -1,111 +1,28 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 6/8] clocksource: sh_cmt: Support separate R-car Gen3 CMT0/1
-Date: Fri, 09 Sep 2016 15:12:26 +0300
-Message-ID: <1868022.yBeGKSLdet@avalon>
-References: <1473421394-9745-1-git-send-email-bd-phuc@jinso.co.jp> <1473421394-9745-7-git-send-email-bd-phuc@jinso.co.jp>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] ARM: sun5i: a13-olinuxino: Enable VGA bridge
+Date: Fri, 9 Sep 2016 20:36:13 +0800
+Message-ID: <CAGb2v66C1U8KqSec1Zk8Kyz2n5tQ-Ts4wADfOQR0njbrgnjOzw@mail.gmail.com>
+References: <20160908121751.16911-1-maxime.ripard@free-electrons.com> <20160908121751.16911-3-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1473421394-9745-7-git-send-email-bd-phuc@jinso.co.jp>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: bd-phuc@jinso.co.jp
-Cc: daniel.lezcano@linaro.org, tglx@linutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, geert+renesas@glider.be, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, magnus.damm@gmail.com, horms@verge.net.au, kuninori.morimoto.gx@renesas.com, yoshihiro.shimoda.uh@renesas.com, ryusuke.sakato.bx@renesas.com, h-inayoshi@jinso.co.jp, cm-hiep@jinso.co.jp, nv-dung@jinso.co.jp
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160908121751.16911-3-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bui Duc,
+On Thu, Sep 8, 2016 at 8:17 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Now that we have support for the VGA bridges using our DRM driver, enable
+> the display engine for the Olimex A13-Olinuxino.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Thank you for the patch.
+Assuming the bridge bindings are good,
 
-On Friday 09 Sep 2016 20:43:12 bd-phuc@jinso.co.jp wrote:
-> From: Bui Duc Phuc <bd-phuc@jinso.co.jp>
-> 
-> Add support for the new R-Car Gen3 CMT0 and CMT1 bindings.
-> 
-> Signed-off-by: Bui Duc Phuc <bd-phuc@jinso.co.jp>
-> ---
->  drivers/clocksource/sh_cmt.c | 21 +++++++++++++++++++--
->  1 file changed, 19 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clocksource/sh_cmt.c b/drivers/clocksource/sh_cmt.c
-> index 103c493..1542aef 100644
-> --- a/drivers/clocksource/sh_cmt.c
-> +++ b/drivers/clocksource/sh_cmt.c
-> @@ -69,6 +69,7 @@ enum sh_cmt_model {
->  	SH_CMT_32BIT_FAST,
->  	SH_CMT_48BIT,
->  	SH_CMT_48BIT_GEN2,
-> +	SH_CMT_48BIT_GEN3,
->  };
-> 
->  struct sh_cmt_info {
-> @@ -230,6 +231,16 @@ static const struct sh_cmt_info sh_cmt_info[] = {
->  		.read_count = sh_cmt_read32,
->  		.write_count = sh_cmt_write32,
->  	},
-> +	[SH_CMT_48BIT_GEN3] = {
-> +		.model = SH_CMT_48BIT_GEN3,
-> +		.width = 32,
-> +		.overflow_bit = SH_CMT32_CMCSR_CMF,
-> +		.clear_bits = ~(SH_CMT32_CMCSR_CMF | SH_CMT32_CMCSR_OVF),
-> +		.read_control = sh_cmt_read32,
-> +		.write_control = sh_cmt_write32,
-> +		.read_count = sh_cmt_read32,
-> +		.write_count = sh_cmt_write32,
-> +	},
->  };
-> 
->  #define CMCSR 0 /* channel register */
-> @@ -864,6 +875,7 @@ static int sh_cmt_setup_channel(struct sh_cmt_channel
-> *ch, unsigned int index, ch->cmt = cmt;
->  	ch->index = index;
->  	ch->hwidx = hwidx;
-> +	ch->timer_bit = hwidx;
-> 
->  	/*
->  	 * Compute the address of the channel control register block. For the
-> @@ -888,6 +900,12 @@ static int sh_cmt_setup_channel(struct sh_cmt_channel
-> *ch, unsigned int index, case SH_CMT_48BIT_GEN2:
->  		ch->iostart = cmt->mapbase + ch->hwidx * 0x100;
->  		ch->ioctrl = ch->iostart + 0x10;
-> +		ch->timer_bit = 0;
-> +		break;
-> +	case SH_CMT_48BIT_GEN3:
-> +		ch->iostart = cmt->mapbase + ch->hwidx * 0x100;
-> +		ch->ioctrl = ch->iostart + 0x10;
-> +		ch->timer_bit = 0;
->  		break;
->  	}
-> 
-> @@ -899,8 +917,6 @@ static int sh_cmt_setup_channel(struct sh_cmt_channel
-> *ch, unsigned int index, ch->match_value = ch->max_match_value;
->  	raw_spin_lock_init(&ch->lock);
-> 
-> -	ch->timer_bit = cmt->info->model == SH_CMT_48BIT_GEN2 ? 0 : ch->hwidx;
-> -
->  	ret = sh_cmt_register(ch, dev_name(&cmt->pdev->dev),
->  			      clockevent, clocksource);
->  	if (ret) {
-> @@ -944,6 +960,7 @@ static const struct of_device_id sh_cmt_of_table[]
-> __maybe_unused = {
->  	{ .compatible = "renesas,cmt-32-fast", .data =
-> &sh_cmt_info[SH_CMT_32BIT_FAST] },
->  	{ .compatible = "renesas,cmt-48", .data = &sh_cmt_info[SH_CMT_48BIT]
-> },
->  	{ .compatible = "renesas,cmt-48-gen2", .data =
-> &sh_cmt_info[SH_CMT_48BIT_GEN2] },
-> +	{ .compatible = "renesas,cmt-48-gen3", .data =
-> &sh_cmt_info[SH_CMT_48BIT_GEN3] },
-
-Given that the Gen2 and Gen3 CMT seem identical based on the above code, how 
-about just using SH_CMT_48BIT_GEN2 here ? You wouldn't need any of the above 
-changes.
-
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, sh_cmt_of_table);
-
--- 
-Regards,
-
-Laurent Pinchart
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
