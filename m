@@ -1,65 +1,62 @@
-From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH 4/4] arm64: dts: hikey: Add pstore support for HiKey
-Date: Fri, 9 Sep 2016 09:31:37 +0100
-Message-ID: <57D27369.3010508@hisilicon.com>
-References: <1471906085-16682-1-git-send-email-john.stultz@linaro.org>
- <1471906085-16682-4-git-send-email-john.stultz@linaro.org>
- <CAGXu5jJjEchF8MxE5vhLEj9wy1NcibLR88YptGm3uG79DD-sxA@mail.gmail.com>
- <CALAqxLVU5kusY=PyQrBX8mZRRcLN08Lzrs6XUKUUVd3fb3VBkw@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 3/3] soc: ti: Add ti_sci_pm_domains driver
+Date: Fri, 9 Sep 2016 10:34:38 +0200
+Message-ID: <CAPDyKFqYy7UOzW5d5JKO=YWoUN8QcX086iBMoWZu4MCtJh-vgA@mail.gmail.com>
+References: <20160819235653.26355-1-nm@ti.com> <20160819235653.26355-4-nm@ti.com>
+ <CAPDyKFooDUOPT9dP8HaW3YBO9PsX-1+96PPE7CRMyjEkra7cBQ@mail.gmail.com>
+ <57C0D2C9.1030801@ti.com> <57C5E1DA.2040405@ti.com> <CAPDyKFqszM48nXnnA9D8iCp34k-ZmNvOkHPCc=Fya4nJA7PvBQ@mail.gmail.com>
+ <57CF26DB.4020807@ti.com> <7h4m5rv9kz.fsf@baylibre.com> <CAPDyKFo0Cb90BbY7ra6VDjb5frC5=VtmE3V6tDK=VosfPmod7Q@mail.gmail.com>
+ <m2mvjinvfw.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALAqxLVU5kusY=PyQrBX8mZRRcLN08Lzrs6XUKUUVd3fb3VBkw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <m2mvjinvfw.fsf@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Dave Gerlach <d-gerlach@ti.com>, Nishanth Menon <nm@ti.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Keerthy <j-keerthy@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kess and John,
-
-On 09/09/2016 01:17, John Stultz wrote:
-> On Thu, Sep 8, 2016 at 5:12 PM, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> On Mon, Aug 22, 2016 at 3:48 PM, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> This patch reserves some memory in the DTS and sets up a
->>> pstore device tree node to enable pstore support on HiKey.
->>>
->>> Cc: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>> Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Cc: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->>> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
->>> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
->>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> Reviewed-by: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>> Signed-off-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 8 September 2016 at 19:38, Kevin Hilman <khilman@baylibre.com> wrote:
+> Ulf Hansson <ulf.hansson@linaro.org> writes:
+>
+>> [...]
 >>
->> I'm going through old emails -- did this get picked up by anyone? I
->> don't see an "applied" reply or similar, though I could have easily
->> missed it. :)
-> 
-> Wei said he picked up the set, but it hasn't shown up in -next yet, as
-> his tree isn't automatically pulled in apparently.
+>>>
+>>> One more idea...
+>>>
+>>> Since you don't really have a domain (a group of devices), what you
+>>> really have is each device having an independent power switch, so as Ulf
+>>> suggested, what you really need is for all the devices to share the same
+>>> set of runtime PM callbacks that call SCI.  The only difference is the
+>>> unique ID.
+>>>
+>>> Rather than using all of genpd, you could also just use a pm_domain
+>>> which is what genpd is built on top of (and also omap_device, which
+>>> you're probably familiar with also.)
+>>
+>> Even if this would work as well, the downside would be that you need
+>> to re-invent the parts related to the DT parsing, the probing/removal
+>> and attaching/detaching of the device to the PM domain.
+>>
+>> You probably don't want to go there... :-)
+>
+> All you'd need to read from DT would be the device-specific ID for
+> TI-SCI, and that could be done at bind time with a notifier.  The, in
+> that same notifier, if a TI-SCI ID exists, it would get added to the
+> pm_domain.
+>
+> Anyways, your original proposal is much preferred if it can work.  I'm
+> just throwing out another option because I really don't like one genpd
+> per device.
 
-I have picked up this series and sent the pull request as [1].
-Thanks for your interesting!
+Okay, then we are in full agreement!
 
-[1] http://www.spinics.net/lists/arm-kernel/msg528380.html
+BTW, I have just been trying to convince other people working on
+Rockchip SoCs, to also avoid using one genpd per device. Feel free to
+join those discussions [1] as well. :-)
 
-Best Regards,
-Wei
+Kind regards
+Uffe
 
-> 
-> thanks
-> -john
-> 
-> .
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1]
+https://lkml.org/lkml/2016/9/1/377
