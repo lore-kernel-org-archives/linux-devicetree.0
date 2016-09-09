@@ -1,73 +1,81 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: Overlay manager
-Date: Thu, 8 Sep 2016 21:27:55 -0500
-Message-ID: <CAL_JsqKgGFPKZR8fJ-CRQubNjWH0q_V9B9SsXoHncT9dMGdF1w@mail.gmail.com>
-References: <001a113447d4718cb9053c04f991@google.com> <57D1D344.8010306@gmail.com>
- <CAH7ZN-w2U9g4m9hDdD1kY52HLzv+TSbuNVRbmzmE3WMH0wC8Tw@mail.gmail.com>
- <CAL_JsqKe99WLoeOrRz76mUx-QruhDU+4kqCAepgZa0LhSYbgDg@mail.gmail.com> <CALAqxLVPdZxMy+W0VEJqX+L9CCy4cBsc0s48BwepSA8-ApUhtQ@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-binding: remoteproc: Document generic properties
+Date: Thu, 8 Sep 2016 21:33:26 -0500
+Message-ID: <CAL_JsqKF5pqWY2fSoReUrAZ6yqfMTkWLLYrJqCz4ciA8J0a2-g@mail.gmail.com>
+References: <1470850622-29816-1-git-send-email-bjorn.andersson@linaro.org>
+ <20160812183448.GA32059@rob-hp-laptop> <20160812224223.GJ26240@tuxbot>
+ <46d4d351-336c-6d4f-b1b0-243cf3c5d68b@ti.com> <20160908165032.GA9526@rob-hp-laptop>
+ <dfa838cf-15f6-c178-f69a-1b5488f74a7a@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALAqxLVPdZxMy+W0VEJqX+L9CCy4cBsc0s48BwepSA8-ApUhtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <dfa838cf-15f6-c178-f69a-1b5488f74a7a-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Dmitry Shmidt <dimitrysh-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "<linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 8, 2016 at 7:39 PM, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Sep 8, 2016 at 5:33 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Thu, Sep 8, 2016 at 4:15 PM, Dmitry Shmidt <dimitrysh-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
->>> On Thu, Sep 8, 2016 at 2:08 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> What problem(s) are you trying to solve with this?
+On Thu, Sep 8, 2016 at 1:32 PM, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> wrote:
+> Hi Rob,
+>
+> On 09/08/2016 11:50 AM, Rob Herring wrote:
+>> On Fri, Sep 02, 2016 at 04:45:45PM -0500, Suman Anna wrote:
+>>> On 08/12/2016 05:42 PM, Bjorn Andersson wrote:
+>>>> On Fri 12 Aug 11:34 PDT 2016, Rob Herring wrote:
+>>>>
+>>>>> On Wed, Aug 10, 2016 at 10:37:02AM -0700, Bjorn Andersson wrote:
+>>>>>> This documents the generic properties "rprocs" and "rproc-names", used
+>>>>>> for consumer drivers to reference a remoteproc node.
+>>>>>
+>>>>> How do you intend to use this? I wonder if it would not be better to
+>>>>> expose a remote proc with existing bindings for a particular purpose
+>>>>> (e.g. clocks, resets, etc.) rather than a generic connection. The client
+>>>>> side would have to have specific knowledge as to what functions the
+>>>>> remote proc provides.
+>>>>>
+>>>>
+>>>> The remoteproc node represents the mechanism and resources needed to
+>>>> control the life cycle a co-processor, e.g. loading, booting, shutting
+>>>> gown a video encoder/decoder.
+>>>>
+>>>> The proposed reference allows a separate thingie to assert control of
+>>>> the life cycle of that co-processor.
+>>>>
+>>>>
+>>>> I acknowledge that in some cases there is a fine line between what is
+>>>> the life cycle management and what is the actual functionality
+>>>> implemented by that remote processor. But as the remoteproc mechanism is
+>>>> reusable between various use cases I think it makes sense to not describe
+>>>> them as one unit.
 >>>
->>> Currently the Linux kernel doesn't provide a way for boot time
->>> selection of different possible board configurations, when the board
->>> peripherals are specified via Device Tree.
+>>> What's the current state of this patch, not officially acked yet right?
 >>
->> Well, the kernel does provide a way. For different h/w you give it a
->> different h/w description (i.e. dtb). The issue is having multiple
->> dtbs for mostly similar h/w is a PIA.
+>> Bjorn and I have discussed some, but probably needs more discussion.
+>> This binding alone is simple enough, but I want to understand better how
+>> it will be used and digesting all the QCom h/w is not simple.
 >
-> Agreed.
->
->> Also, it can be argued this should remain a bootloader problem. For
->> the LCD case, the bootloader is going to need that information to
->> support a splash screen. libfdt is learning how to apply overlays on
->> flat trees.
->
-> I can imagine in many cases like devboards with various attached
-> shields/mezzanines the bootloader doesn't (and likely can't) have this
-> ability.
+> OK, thanks. The binding has no bearing on Qcom h/w though.
 
-Yes. That's the main reason overlays exist. There's a big blocker for
-a major subset of this case that is needing to define a connector
-binding. 96board mezzanine boards for example should have 1 overlay
-independent of the base board and that means we need some indirection
-for things like what i2c controller goes to I2C0 bus on the low speed
-connector. All that is being worked on (slowly).
+Doesn't have to be QCom, I just want to see some user and understand the use.
 
->>>> What is the use case?
->>>
->>> It is usually useful for development board when you can use
->>> different peripherals. For example you want to use special
->>> LCD panel. Using it will go on account of other stuff like GPIOs,
->>> so you don't want it all the time. And it is not convenient to
->>> apply new patches and to recompile the kernel. And this code
->>> allows to choose LCD panel configuration from command line.
+>>> While we are at this, can we agree upon an alias stem name as well, we
+>>> can stick to "rproc". Otherwise, I can submit an incremental patch on
+>>> top of this along with the code that adds an API to retrieve it for
+>>> client users.
 >>
->> If you can figure out how to change the command line, then you can
->> just change the dtb. At least for how Android boot works, those aren't
->> really changed separately.
+>> Any alias for this will be NAKed. My position on aliases is well
+>> documented.
 >
-> Ehh.. that's not so simple. The dtb is often appended to the kernel on
-> Android devices. Changing the boot arguments is much simpler to do.
+> Hmm, I don't have the complete background/history on your stance. I do
+> have a need for identifying an exact remoteproc instance. How do you
+> propose I do that without aliases, and without adding a non-hw related
+> property to the DTS node? Like for example, we have 8 identical DSPs on
+> Keystone 2 Hawking SoCs, and I need to construct a firmware name based
+> on the instance id, and I cannot do this based on probe order.
 
-How? You typically make a new bootimage assembling the kernel/dtb,
-ramdisk and kernel command-line. If things were done differently such
-that the dtb is part of the bootloader (how it is supposed to be
-done), then I would buy the argument that we can't update the dtb and
-need to either have a way to add and/or select overlays. But Android
-folks like to update *everything*, so I don't buy that here.
+If they are identical, then why do you care which firmware goes to
+which DSP? Linux can decide the numbering. There must be some feature
+that is different, and you should describe that.
 
 Rob
 --
