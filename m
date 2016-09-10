@@ -1,89 +1,135 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Heiko Stuebner <heiko@sntech.de>
 Subject: Re: [PATCH 1/2] ARM: dts: add rockchip PX3 board
-Date: Sat, 10 Sep 2016 17:46:51 +0800
-Message-ID: <ba60fea2-0a04-c84e-0943-15c8006061ca@rock-chips.com>
+Date: Sat, 10 Sep 2016 12:03:38 +0200
+Message-ID: <1777115.uSB6Aee8zy@phil>
 References: <1473498094-16279-1-git-send-email-andy.yan@rock-chips.com>
- <9389291.9daRDJEYck@phil>
- <c5a7f275-a8df-58c3-b255-ce9df13c67b4@rock-chips.com>
- <2773686.QIaAl8MGzE@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2773686.QIaAl8MGzE@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473498094-16279-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: devicetree@vger.kernel.org, briannorris@chromium.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko:
+Am Samstag, 10. September 2016, 17:01:34 CEST schrieb Andy Yan:
+> PX3 board is designed by Rockchip for automotive field,
+> which intergrated with CVBS(TP2825)/MIPI DSI/LVDS/HDMI
+> video input/output interface, WIFI/BT/GPS(on a module
+> named S500 which based on MT6620), Gsensor BMA250E and
+> light&proximity sensor STK3410.
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+
+[...]
+
+> diff --git a/arch/arm/boot/dts/rk3188-px3.dts
+> b/arch/arm/boot/dts/rk3188-px3.dts new file mode 100644
+> index 0000000..ece45d7
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/rk3188-px3.dts
+> @@ -0,0 +1,337 @@
+> +/*
+> + * Copyright (c) 2016 Andy Yan <andy.yan@rock-chips.com>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/input/input.h>
+> +#include "rk3188.dtsi"
+> +
+> +/ {
+> +	model = "Rockchip PX3";
+> +	compatible = "rockchip,px3", "rockchip,rk3188";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS2,115200 earlyprintk";
+> +	};
+
+setting bootargs isn't favoured, you can instead use
+	stdout-path = "serial2:115200n8";
+
+to define the default console
 
 
-On 2016年09月10日 17:45, Heiko Stuebner wrote:
-> Am Samstag, 10. September 2016, 17:37:41 CEST schrieb Andy Yan:
->> Hi Heiko:
->>
->> On 2016年09月10日 17:15, Heiko Stuebner wrote:
->>> Hi Andy,
->>>
->>> Am Samstag, 10. September 2016, 17:01:34 CEST schrieb Andy Yan:
->>>> PX3 board is designed by Rockchip for automotive field,
->>>> which intergrated with CVBS(TP2825)/MIPI DSI/LVDS/HDMI
->>>> video input/output interface, WIFI/BT/GPS(on a module
->>>> named S500 which based on MT6620), Gsensor BMA250E and
->>>> light&proximity sensor STK3410.
->>>>
->>>> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>> ---
->>>>
->>>>    Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
->>>>    arch/arm/boot/dts/Makefile                         |   1 +
->>>>    arch/arm/boot/dts/rk3188-px3.dts                   | 337
->>>>
->>>> +++++++++++++++++++++ 3 files changed, 342 insertions(+)
->>>>
->>>>    create mode 100644 arch/arm/boot/dts/rk3188-px3.dts
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt
->>>> b/Documentation/devicetree/bindings/arm/rockchip.txt index
->>>> 6668645..e680105
->>>> 100644
->>>> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
->>>> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
->>>> @@ -21,6 +21,10 @@ Rockchip platforms device tree bindings
->>>>
->>>>        Required root node properties:
->>>>          - compatible = "radxa,rock", "rockchip,rk3188";
->>>>
->>>> +- Rockchip PX3 board:
->>>> +    Required root node properties:
->>>> +      - compatible = "rockchip,px3", "rockchip,rk3188";
->>> Just like to confirm the naming.
->>>
->>> I read the announcement of both the PX3 and PX5 socs, are the boards
->>> really
->>> also named only px3 + px5 - same as the socs they carry, or are they more
->>> likely to be called px3-evb or similar?
->>>
->>> The dts themself look fine on first glance.
->>       We call them px3 or px5 development board in the internal development.
->>       Of course I can change them to px3/px5-evb if you desire.
-> I think I would prefer that ... to not confuse socs with boards :-)
-> All the other Rockchip devboards are always called evb, so I guess it would be
-> the same for the px3+px5 ones.
->
-> so I guess the compatible would be
->        - compatible = "rockchip,px3-evb", "rockchip,px3", "rockchip,rk3188";
->
+> +&i2c0 {
+> +	status = "okay";
+> +
+> +	 /* Accelerometer */
+> +	bma250@18 {
+> +		compatible = "bma250";
+> +		reg = <0x18>;
+> +		interrupt-parent = <&gpio0>;
+> +		interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
+> +	};
 
-     Okay, I will send a V2 with that
-> Heiko
->
->
->
+driver seems to be missing a devicetree binding (module_id_table
+and dt-binding document)
+
+> +	stk3410@48 {
+> +		compatible = "STK3310";
+> +		reg = <0x48>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +};
+
+driver seems to be missing a devicetree binding (module_id_table
+and dt-binding document)
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +&i2c2 {
+> +	gsl1680: touchscreen@40 {
+> +		compatible = "gsl1680";
+> +		reg = <0x40>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
+> +		power-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+> +		touchscreen-size-x = <800>;
+> +		touchscreen-size-y = <1280>;
+> +		silead,max-fingers = <5>;
+> +	};
+
+this should probably be
+
+	"silead,gsl1680"
+
+see https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/input/touchscreen/silead_gsl1680.txt
