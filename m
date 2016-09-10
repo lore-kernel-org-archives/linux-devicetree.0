@@ -1,97 +1,400 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [RESEND PATCH v7 1/4] phy: Add reset callback
-Date: Sat, 10 Sep 2016 10:51:00 +0200
-Message-ID: <8774766.IvFq1IoyNk@phil>
-References: <1473447580-10369-1-git-send-email-ayaka@soulik.info> <1473447580-10369-2-git-send-email-ayaka@soulik.info>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: add rockchip PX3 board
+Date: Sat, 10 Sep 2016 17:01:34 +0800
+Message-ID: <1473498094-16279-1-git-send-email-andy.yan@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473447580-10369-2-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Randy,
+PX3 board is designed by Rockchip for automotive field,
+which intergrated with CVBS(TP2825)/MIPI DSI/LVDS/HDMI
+video input/output interface, WIFI/BT/GPS(on a module
+named S500 which based on MT6620), Gsensor BMA250E and
+light&proximity sensor STK3410.
 
-Am Samstag, 10. September 2016, 02:59:37 CEST schrieb Randy Li:
-> The only use for this is for solving a hardware design problem in
-> usb of Rockchip RK3288.
-> 
-> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
-When sending new versions, please carry over received Reviewed- / Tested- / 
-Acked-by tags received on old versions.
+ Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/rk3188-px3.dts                   | 337 +++++++++++++++++++++
+ 3 files changed, 342 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rk3188-px3.dts
 
-So again, to me this looks good.
-
-Although Kishon suggested earlier to have the init callback do the reset and 
-simply call it again in the reset-case, the whole refcounting done in phy_init 
-and phy_exit (phy->init_count) really shows that init and exit should be 
-called pairwise, so that extra reset callback seems justified, so from my phy-
-noob-pov
-
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-
-> ---
->  drivers/phy/phy-core.c  | 14 ++++++++++++++
->  include/linux/phy/phy.h |  3 +++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index 8eca906..32e838d 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -357,6 +357,20 @@ int phy_set_mode(struct phy *phy, enum phy_mode mode)
->  }
->  EXPORT_SYMBOL_GPL(phy_set_mode);
-> 
-> +int phy_reset(struct phy *phy)
-> +{
-> +	int ret;
-> +	if (!phy || !phy->ops->reset)
-> +		return 0;
-> +
-> +	mutex_lock(&phy->mutex);
-> +	ret = phy->ops->reset(phy);
-> +	mutex_unlock(&phy->mutex);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(phy_reset);
-> +
->  /**
->   * _of_phy_get() - lookup and obtain a reference to a phy by phandle
->   * @np: device_node for which to get the phy
-> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-> index f08b672..7978df6 100644
-> --- a/include/linux/phy/phy.h
-> +++ b/include/linux/phy/phy.h
-> @@ -36,6 +36,7 @@ enum phy_mode {
->   * @power_on: powering on the phy
->   * @power_off: powering off the phy
->   * @set_mode: set the mode of the phy
-> + * @reset: reseting the phy
->   * @owner: the module owner containing the ops
->   */
->  struct phy_ops {
-> @@ -44,6 +45,7 @@ struct phy_ops {
->  	int	(*power_on)(struct phy *phy);
->  	int	(*power_off)(struct phy *phy);
->  	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
-> +	int	(*reset)(struct phy *phy);
->  	struct module *owner;
->  };
-> 
-> @@ -136,6 +138,7 @@ int phy_exit(struct phy *phy);
->  int phy_power_on(struct phy *phy);
->  int phy_power_off(struct phy *phy);
->  int phy_set_mode(struct phy *phy, enum phy_mode mode);
-> +int phy_reset(struct phy *phy);
->  static inline int phy_get_bus_width(struct phy *phy)
->  {
->  	return phy->attrs.bus_width;
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+index 6668645..e680105 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.txt
++++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+@@ -21,6 +21,10 @@ Rockchip platforms device tree bindings
+     Required root node properties:
+       - compatible = "radxa,rock", "rockchip,rk3188";
+ 
++- Rockchip PX3 board:
++    Required root node properties:
++      - compatible = "rockchip,px3", "rockchip,rk3188";
++
+ - Radxa Rock2 Square board:
+     Required root node properties:
+       - compatible = "radxa,rock2-square", "rockchip,rk3288";
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index faacd52..72cd3f5 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -620,6 +620,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+ 	rk3066a-marsboard.dtb \
+ 	rk3066a-rayeager.dtb \
+ 	rk3188-radxarock.dtb \
++	rk3188-px3.dtb \
+ 	rk3228-evb.dtb \
+ 	rk3229-evb.dtb \
+ 	rk3288-evb-act8846.dtb \
+diff --git a/arch/arm/boot/dts/rk3188-px3.dts b/arch/arm/boot/dts/rk3188-px3.dts
+new file mode 100644
+index 0000000..ece45d7
+--- /dev/null
++++ b/arch/arm/boot/dts/rk3188-px3.dts
+@@ -0,0 +1,337 @@
++/*
++ * Copyright (c) 2016 Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include <dt-bindings/input/input.h>
++#include "rk3188.dtsi"
++
++/ {
++	model = "Rockchip PX3";
++	compatible = "rockchip,px3", "rockchip,rk3188";
++
++	chosen {
++		bootargs = "console=ttyS2,115200 earlyprintk";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x60000000 0x80000000>;
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		autorepeat;
++
++		power {
++			gpios = <&gpio0 4 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_POWER>;
++			label = "GPIO Key Power";
++			linux,input-type = <1>;
++			wakeup-source;
++			debounce-interval = <100>;
++		};
++	};
++
++	vcc_sys: vsys-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vsys";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-boot-on;
++	};
++};
++
++&cpu0 {
++	cpu0-supply = <&vdd_cpu>;
++};
++
++&i2c0 {
++	status = "okay";
++
++	 /* Accelerometer */
++	bma250@18 {
++		compatible = "bma250";
++		reg = <0x18>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
++	};
++
++	stk3410@48 {
++		compatible = "STK3310";
++		reg = <0x48>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
++&i2c1 {
++	status = "okay";
++	clock-frequency = <400000>;
++	rk808: pmic@1c {
++		compatible = "rockchip,rk818";
++		reg = <0x1c>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
++		rockchip,system-power-controller;
++		wakeup-source;
++		#clock-cells = <1>;
++		clock-output-names = "xin32k", "rk808-clkout2";
++
++		vcc1-supply = <&vcc_sys>;
++		vcc2-supply = <&vcc_sys>;
++		vcc3-supply = <&vcc_sys>;
++		vcc4-supply = <&vcc_sys>;
++		vcc6-supply = <&vcc_sys>;
++		vcc7-supply = <&vcc_sys>;
++		vcc8-supply = <&vcc_io>;
++		vcc9-supply = <&vcc_io>;
++
++		regulators {
++			vdd_cpu: DCDC_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <750000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-name = "vdd_arm";
++				regulator-state-mem {
++					regulator-off-in-suspend;
++				};
++			};
++
++			vdd_gpu: DCDC_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <850000>;
++				regulator-max-microvolt = <1250000>;
++				regulator-name = "vdd_gpu";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1000000>;
++				};
++			};
++
++			vcc_ddr: DCDC_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vcc_ddr";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++				};
++			};
++
++			vcc_io: DCDC_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcc_io";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			vcc_cif: LDO_REG1 {
++				 regulator-min-microvolt = <3300000>;
++				 regulator-max-microvolt = <3300000>;
++				 regulator-name = "vcc_cif";
++			};
++
++			vcc_jetta33: LDO_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcc_jetta33";
++			};
++
++			vdd_10: LDO_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-name = "vdd_10";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <1000000>;
++				};
++			};
++
++			lvds_12: LDO_REG4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "lvds_12";
++			};
++
++			lvds_25: LDO_REG5 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "lvds_25";
++			};
++
++			cif_18: LDO_REG6 {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-name = "cif_18";
++			};
++
++			vcc_sd: LDO_REG7 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcc_sd";
++				regulator-state-mem {
++					regulator-on-in-suspend;
++					regulator-suspend-microvolt = <3300000>;
++				};
++			};
++
++			wl_18: LDO_REG8 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "wl_18";
++			};
++
++			lcd_33: SWITCH_REG1 {
++				regulator-name = "lcd_33";
++			};
++		};
++	};
++
++};
++
++&i2c2 {
++	gsl1680: touchscreen@40 {
++		compatible = "gsl1680";
++		reg = <0x40>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
++		power-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
++		touchscreen-size-x = <800>;
++		touchscreen-size-y = <1280>;
++		silead,max-fingers = <5>;
++	};
++};
++
++&emmc {
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	disable-wp;
++	non-removable;
++	num-slots = <1>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_clk>, <&emmc_cmd>, <&emmc_rst>;
++	status = "okay";
++};
++
++&mmc0 {
++	num-slots = <1>;
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
++	vmmc-supply = <&vcc_sd>;
++
++	bus-width = <4>;
++	cap-mmc-highspeed;
++	cap-sd-highspeed;
++	disable-wp;
++};
++
++&pwm1 {
++	status = "okay";
++};
++
++&pwm2 {
++	status = "okay";
++};
++
++&pwm3 {
++	status = "okay";
++};
++
++&pinctrl {
++	pcfg_output_low: pcfg-output-low {
++		output-low;
++	};
++
++	usb {
++		host_vbus_drv: host-vbus-drv {
++			rockchip,pins = <0 3 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++		otg_vbus_drv: otg-vbus-drv {
++			rockchip,pins = <2 31 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++};
++
++&usbphy {
++	status = "okay";
++};
++
++&usb_host {
++	status = "okay";
++};
++
++&usb_otg {
++	status = "okay";
++};
++
++&wdt {
++	status = "okay";
++};
+-- 
+2.7.4
 
 
 --
