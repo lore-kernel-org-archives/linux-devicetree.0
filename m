@@ -1,366 +1,103 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH 2/2] arm64: dts: rockchip: Add PX5 board
-Date: Sat, 10 Sep 2016 17:05:29 +0800
-Message-ID: <1473498329-16351-1-git-send-email-andy.yan@rock-chips.com>
-References: <1473498094-16279-1-git-send-email-andy.yan@rock-chips.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH] ARM: dts: omap3-gta04: reduce panel backlight PWM frequency to 83Hz
+Date: Sat, 10 Sep 2016 11:10:17 +0200
+Message-ID: <7C9DF12E-32C6-4D7C-BAAD-5CE9F8BA305A@goldelico.com>
+References: <954d43b570092fe92b8b49cf8f475c027d3d8342.1473066997.git.hns@goldelico.com> <20160910031736.xwnepaoifpedqfbr@squirrel.local> <3188F52F-1372-4D59-B790-C15E584A44F2@goldelico.com> <CAALWOA8ZZBbgCG-5TRbd6=k27PQV2EHcCj6zwk31sKTHY1A7Bg@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473498094-16279-1-git-send-email-andy.yan@rock-chips.com>
+In-Reply-To: <CAALWOA8ZZBbgCG-5TRbd6=k27PQV2EHcCj6zwk31sKTHY1A7Bg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: devicetree@vger.kernel.org, briannorris@chromium.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Andy Yan <andy.yan@rock-chips.com>
+To: Matthijs van Duin <matthijsvanduin@gmail.com>
+Cc: David Rivshin <drivshin@allworx.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Marek Belisko <marek@goldelico.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-PX5 board is designed by Rockchip for automotive field,
-which intergrated with CVBS(TP2825)/MIPI DSI/CSI/LVDS
-HDMI video input/output interface, audio codec ES8396,
-WIFI/BT(on RTL8723BS), Gsensor BMA250E and light&proximity
-sensor STK3410.
+Hi,
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
----
+> Am 10.09.2016 um 10:20 schrieb Matthijs van Duin =
+<matthijsvanduin@gmail.com>:
+>=20
+> On 10 September 2016 at 09:08, H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>> Reducing the PWM frequency is good by itself since it should not be =
+unnecessarily
+>> fast and helps to make the PWM to "average current" translation more =
+linear.
+>>=20
+>> The non-linear effect is that the PWM controlled DC/DC converter =
+reacts almost
+>> immediately to a 1->0 control transition but needs some time (ca. =
+0.5ms) to recover
+>> on a 0->1 transition.
+>=20
+> DT already allows for compensation of many non-linearities by
+> specifying the duty cycle of each brightness increment.  Though, as
+> you observed, there's one limitation it cannot fix here:
+>=20
+>> If we just fix the PWM generator to output a steady 1 signal at 100%, =
+we have a
+>> very significant change if we switch to 99%, depending on PWM =
+frequency.
+>=20
+> Specifically the next-to-brightest step (assuming 0.5ms off-time) =
+would be:
+> 75%  @ 500 Hz
+> 90%  @ 200 Hz
+> 95%  @ 100 Hz
+> 96%  @  83 Hz
 
- Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
- arch/arm64/boot/dts/rockchip/Makefile              |   1 +
- arch/arm64/boot/dts/rockchip/rk3368-px5.dts        | 304 +++++++++++++++++++++
- 3 files changed, 309 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-px5.dts
+Yes.
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-index e680105..06de682 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.txt
-+++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-@@ -107,6 +107,10 @@ Rockchip platforms device tree bindings
-     Required root node properties:
-       - compatible = "rockchip,r88", "rockchip,rk3368";
- 
-+- Rockchip PX5 board:
-+    Required root node properties:
-+      - compatible = "rockchip,px5", "rockchip,rk3368";
-+
- - Rockchip RK3228 Evaluation board:
-     Required root node properties:
-      - compatible = "rockchip,rk3228-evb", "rockchip,rk3228";
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 7037a16..2fddf70 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -1,6 +1,7 @@
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-geekbox.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-px5.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
- 
- always		:= $(dtb-y)
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-px5.dts b/arch/arm64/boot/dts/rockchip/rk3368-px5.dts
-new file mode 100644
-index 0000000..d862667
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-px5.dts
-@@ -0,0 +1,304 @@
-+/*
-+ * Copyright (c) 2016 Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "rk3368.dtsi"
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Rockchip PX5";
-+	compatible = "rockchip,px5", "rockchip,rk3368";
-+
-+	chosen {
-+		stdout-path = "serial4:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>;
-+	};
-+
-+	keys: gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwr_key>;
-+
-+		power {
-+			gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
-+			label = "GPIO Power";
-+			linux,code = <KEY_POWER>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	vcc_sys: vcc-sys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_sys";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&emmc {
-+	status = "okay";
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	clock-frequency = <150000000>;
-+	disable-wp;
-+	keep-power-in-suspend;
-+	non-removable;
-+	num-slots = <1>;
-+	vmmc-supply = <&vcc_io>;
-+	vqmmc-supply = <&vcc18_flash>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_clk>, <&emmc_cmd>, <&emmc_bus8>;
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	rk808: pmic@1b {
-+		compatible = "rockchip,rk808";
-+		reg = <0x1b>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_int>, <&pmic_sleep>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
-+		rockchip,system-power-controller;
-+		vcc1-supply = <&vcc_sys>;
-+		vcc2-supply = <&vcc_sys>;
-+		vcc3-supply = <&vcc_sys>;
-+		vcc4-supply = <&vcc_sys>;
-+		vcc6-supply = <&vcc_sys>;
-+		vcc7-supply = <&vcc_sys>;
-+		vcc8-supply = <&vcc_io>;
-+		vcc9-supply = <&vcc_sys>;
-+		vcc10-supply = <&vcc_sys>;
-+		vcc11-supply = <&vcc_sys>;
-+		vcc12-supply = <&vcc_io>;
-+		clock-output-names = "xin32k", "rk808-clkout2";
-+		#clock-cells = <1>;
-+
-+		regulators {
-+			vdd_cpu: DCDC_REG1 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-name = "vdd_cpu";
-+			};
-+
-+			vdd_log: DCDC_REG2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-name = "vdd_log";
-+			};
-+
-+			vcc_ddr: DCDC_REG3 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-name = "vcc_ddr";
-+			};
-+
-+			vcc_io: DCDC_REG4 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc_io";
-+			};
-+
-+			vcc18_flash: LDO_REG1 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc18_flash";
-+			};
-+
-+			vcca_33: LDO_REG2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcca_33";
-+			};
-+
-+			vdd_10: LDO_REG3 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+				regulator-name = "vdd_10";
-+			};
-+
-+			avdd_33: LDO_REG4 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "avdd_33";
-+			};
-+
-+			vccio_sd: LDO_REG5 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vccio_sd";
-+			};
-+
-+			vdd10_lcd: LDO_REG6 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+				regulator-name = "vdd10_lcd";
-+			};
-+
-+			vcc_18: LDO_REG7 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc_18";
-+			};
-+
-+			vcc18_lcd: LDO_REG8 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc18_lcd";
-+			};
-+
-+			vcc_sd: SWITCH_REG1 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-name = "vcc_sd";
-+			};
-+
-+			vcc33_lcd: SWITCH_REG2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-name = "vcc33_lcd";
-+			};
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+
-+	/* Accelerometer */
-+	bma250@18 {
-+		compatible = "bma250";
-+		reg = <0x18>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	stk3410@48 {
-+		compatible = "STK3310";
-+		reg = <0x48>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+
-+	gsl1680: touchscreen@40 {
-+		compatible = "gsl1680";
-+		reg = <0x40>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <28 IRQ_TYPE_EDGE_FALLING>;
-+		power-gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
-+		touchscreen-size-x = <800>;
-+		touchscreen-size-y = <1280>;
-+		silead,max-fingers = <5>;
-+	};
-+};
-+
-+&pinctrl {
-+
-+	keys {
-+		pwr_key: pwr-key {
-+			rockchip,pins = <0 2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	pmic {
-+		pmic_sleep: pmic-sleep {
-+			rockchip,pins = <0 0 RK_FUNC_2 &pcfg_pull_none>;
-+		};
-+
-+		pmic_int: pmic-int {
-+			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+};
-+
-+&tsadc {
-+	status = "okay";
-+	rockchip,hw-tshut-mode = <0>; /* CRU */
-+	rockchip,hw-tshut-polarity = <1>; /* high */
-+};
-+
-+&uart4 {
-+	status = "okay";
-+};
-+
-+&usb_host0_ehci {
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	status = "okay";
-+};
-+
-+&wdt {
-+	status = "okay";
-+};
--- 
-2.7.4
+>=20
+> Note that perceptually the distance to 100% might be smaller due to
+> non-linear response of the eye. That's my experience with pwm
+> controlled leds anyway, which may or may not apply to backlights
+
+basically it does. Eye is basically logarithmic - but has several =
+auto-exposure
+and auto-iris mechanisms... So perceived brightness is a very complex =
+topic.
+It might even depend on the color and contrast of the image presented. =
+This
+is something we can ever fix by DT...
+
+> (though with my laptop's backlight I never really have use for the
+> distinct steps at the brightest end while those at the darkest end
+> seem disproportionally large).
+>=20
+>> This effect becomes smaller if the PWM frequency is reduced and 83Hz =
+seems more
+>> reasonable (although still a little arbitrary) than the current =
+value.
+>=20
+> While 500Hz is perhaps a bit high, 83Hz actually seems very low to me.
+
+Why? The eye can't even see flicker @ 50 Hz.
+
+And, there is a capacitor that averages the voltage applied, hence it is
+low pass filtered. But the capacitor can't compensate for the startup =
+delay
+of the DC/DC converter.
+
+And, I have tested that on the device targeted by this DTS... No visible
+issue (except that maximum brightness decreases if too high).
+
+> Searching a bit around yielded 175 Hz as common frequency for CCFL
+> backlights and higher for LED backlights (source:
+> http://www.tftcentral.co.uk/articles/pulse_width_modulation.htm).
+
+>=20
+> (I may be reacting a bit twitchy here due to having encountered dimmed
+> LED lighting that was flickering obnoxiously for me while noone else
+> noticed this.)
+>=20
+> Matthijs
+
+But with the patch submitted, I just want to give the dts of a single
+device I have even designed a more reasonable value than in current
+linux/master and don't really want to make it a fundamental =
+discussion...
+
+BR,
+Nikolaus=
