@@ -1,66 +1,30 @@
-From: Matthijs van Duin <matthijsvanduin@gmail.com>
-Subject: Re: [PATCH] ARM: dts: omap3-gta04: reduce panel backlight PWM
- frequency to 83Hz
-Date: Sat, 10 Sep 2016 05:17:36 +0200
-Message-ID: <20160910031736.xwnepaoifpedqfbr@squirrel.local>
-References: <954d43b570092fe92b8b49cf8f475c027d3d8342.1473066997.git.hns@goldelico.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] net-next: ethernet: add sun8i-emac driver
+Date: Fri, 09 Sep 2016 20:58:50 -0700 (PDT)
+Message-ID: <20160909.205850.2007935494579735348.davem@davemloft.net>
+References: <1473425117-18645-1-git-send-email-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <954d43b570092fe92b8b49cf8f475c027d3d8342.1473066997.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>, David Rivshin <drivshin@allworx.com>
-Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, marek@goldelico.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473425117-18645-1-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 05, 2016 at 11:16:38AM +0200, H. Nikolaus Schaller wrote:
-> This helps to get 100% intensity closer to "always on".
-> 
-> It compensates for an effect of dmtimer which at 100% still emits short
-> "off" impulses and the startup-time of the DC/DC converter makes
-> backlight intensity not reach full scale. The lower the PWM frequency
-> is, the smaller is this effect.
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date: Fri,  9 Sep 2016 14:45:08 +0200
 
-Sounds to me like you're working around something that should be fixed
-in the pwm-omap-dmtimer driver instead?
+> This patch series add the driver for sun8i-emac which handle the
+> Ethernet MAC present on Allwinner H3/A83T/A64 SoCs.
 
-Looking at the (baremetal) dmtimer pwm code I wrote ages ago, which
-supports fully off to fully on, I do seem to be handling both endpoints
-in a special way.  A rough conversion of my code into C:
+Please don't post a patch series with some subset of the series
+marked as "RFC".  I will just simply toss the entire series when
+you do this.
 
-// period in timer cycles
-void pwm_init( volatile struct dmtimer *timer, u32 period, bool invert )
-{
-	assert( period >= 2 );
-	timer->if_ctrl = 2;  // reset timer, configure as non-posted
-	timer->reload = -period;
-	timer->trigger = 0;
-	timer->config = 0x1043 | invert << 7;  // pwm initially disabled
-}
-
-// value in timer cycles, 0 <= value <= period
-void pwm_set( volatile struct dmtimer *timer, u32 value )
-{
-	if( value == 0 ) {
-		timer->config &= ~0x800;  // disable pwm
-		return;
-	}
-	u32 period = -timer->reload;
-	if( value >= period )
-		timer->match = 0;
-	else
-		timer->match = value - period - 1;
-	timer->config |= 0x800;  // enable pwm
-}
-
-At the time I used a scope to check the exact behaviour of dmtimer pwm
-on a dm814x.  My notes mention (when pwm enabled):
-	match < reload	output on continuous
-	match == reload	output on 1 cycle, off period-1 cycles
-	match == -2	output on period-1 cycles, off 1 cycle
-	match == -1	output freezes
-
-Hope this helps
-
-Matthijs
+Thank you.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
