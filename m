@@ -1,148 +1,206 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v15 2/5] Documentation: bindings: add dt documentation for cdn DP controller
-Date: Fri,  9 Sep 2016 19:15:45 -0700
-Message-ID: <1473473748-22331-3-git-send-email-zyw@rock-chips.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v15 5/5] ASoC: rockchip: Add DP dai-links to the rk3399-gru machine driver
+Date: Fri,  9 Sep 2016 19:15:48 -0700
+Message-ID: <1473473748-22331-6-git-send-email-zyw@rock-chips.com>
 References: <1473473748-22331-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473473748-22331-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cychiang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hychao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473473748-22331-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, groeck@chromium.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, wulf@rock-chips.com, marcheu@chromium.org, briannorris@chromium.org, zhengxing@rock-chips.com, cychiang@chromium.org, hychao@chromium.org, broonie@kernel.org
+Cc: linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a binding that describes the cdn DP controller for
-rk3399.
+This patch adds DP audio output support to the rk3399-gru machine
+driver.
 
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
 ---
 
 Changes in v15: None
 Changes in v14: None
-Changes in v13:
-- add dptx and apb reset
-
+Changes in v13: None
 Changes in v12: None
-Changes in v11:
-- refer dp phy
-
-Changes in v10:
-- add pclk_vio_grf clock
-
-Changes in v9:
-- modify the reference phy = <&tcphy0 0>, <&tcphy1 0>;
-
+Changes in v11: None
+Changes in v10: None
+Changes in v9: None
 Changes in v8: None
 Changes in v7: None
-Changes in v6:
-- add assigned-clocks and assigned-clock-rates
-- add power-domains
-
+Changes in v6: None
 Changes in v5: None
-Changes in v4:
-- add a reset node
-- support 2 phys
-
+Changes in v4: None
 Changes in v3:
-- add SoC specific compatible string
-- remove reg = <1>;
+- change spdif to i2s2
 
-Changes in v2: None
-Changes in v1:
-- add extcon node description
-- add #sound-dai-cells description
+Changes in v2:
+- correct the commit message
 
- .../bindings/display/rockchip/cdn-dp-rockchip.txt  | 75 ++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
+Changes in v1: None
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
-new file mode 100644
-index 0000000..9bd2c13
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
-@@ -0,0 +1,75 @@
-+Rockchip RK3399 specific extensions to the cdn Display Port
-+================================
+ .../bindings/sound/rockchip,rk3399-gru-sound.txt   | 11 +--
+ sound/soc/rockchip/rk3399_gru_sound.c              | 93 ++++++++++++++++++++++
+ 2 files changed, 99 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
+index f19b6c8..83af540 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
++++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
+@@ -1,15 +1,16 @@
+-ROCKCHIP with MAX98357A/RT5514/DA7219 codecs on GRU boards
++ROCKCHIP with MAX98357A/RT5514/DA7219 codecs and DP via spdif on GRU boards
+ 
+ Required properties:
+ - compatible: "rockchip,rk3399-gru-sound"
+-- rockchip,cpu: The phandle of the Rockchip I2S controller that's
++- rockchip,cpu: The phandle of the Rockchip I2S controller controller that's
+   connected to the codecs
+-- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
++- rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs and of the
++  DP encoder node
+ 
+ Example:
+ 
+ sound {
+ 	compatible = "rockchip,rk3399-gru-sound";
+-	rockchip,cpu = <&i2s0>;
+-	rockchip,codec = <&max98357a &rt5514 &da7219>;
++	rockchip,cpu = <&i2s0 &i2s2>;
++	rockchip,codec = <&max98357a &rt5514 &da7219 &cdn_dp>;
+ };
+diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
+index 164b6da..d9aa2e0 100644
+--- a/sound/soc/rockchip/rk3399_gru_sound.c
++++ b/sound/soc/rockchip/rk3399_gru_sound.c
+@@ -25,6 +25,7 @@
+ #include <linux/spi/spi.h>
+ #include <sound/core.h>
+ #include <sound/jack.h>
++#include <sound/hdmi-codec.h>
+ #include <sound/pcm.h>
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
+@@ -214,6 +215,65 @@ static int rockchip_sound_da7219_init(struct snd_soc_pcm_runtime *rtd)
+ 	return 0;
+ }
+ 
 +
-+Required properties:
-+- compatible: must be "rockchip,rk3399-cdn-dp"
++static int rockchip_sound_cdndp_hw_params(struct snd_pcm_substream *substream,
++					  struct snd_pcm_hw_params *params)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
++	struct snd_soc_dai *codec_dai = rtd->codec_dai;
++	int mclk, ret;
 +
-+- reg: physical base address of the controller and length
++	/* in bypass mode, the mclk has to be one of the frequencies below */
++	switch (params_rate(params)) {
++	case 8000:
++	case 16000:
++	case 24000:
++	case 32000:
++	case 48000:
++	case 64000:
++	case 96000:
++		mclk = 12288000;
++		break;
++	case 11025:
++	case 22050:
++	case 44100:
++	case 88200:
++		mclk = 11289600;
++		break;
++	default:
++		return -EINVAL;
++	}
 +
-+- clocks: from common clock binding: handle to dp clock.
++	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
++				     SND_SOC_CLOCK_OUT);
++	if (ret < 0) {
++		dev_err(codec_dai->dev, "Can't set cpu clock out %d\n", ret);
++		return ret;
++	}
 +
-+- clock-names: from common clock binding:
-+	       Required elements: "core-clk" "pclk" "spdif" "grf"
++	return 0;
++}
 +
-+- resets : a list of phandle + reset specifier pairs
-+- reset-names : string reset name, must be:
-+		"spdif", "dptx", "apb".
-+- power-domains : power-domain property defined with a phandle
-+		  to respective power domain.
-+- assigned-clocks: main clock, should be <&cru SCLK_DP_CORE>
-+- assigned-clock-rates : the DP core clk frequency, shall be: 100000000
++static struct snd_soc_jack cdn_dp_card_jack;
 +
-+- rockchip,grf: this soc should set GRF regs, so need get grf here.
++static int rockchip_sound_cdndp_init(struct snd_soc_pcm_runtime *runtime)
++{
++	struct snd_soc_card *card = runtime->card;
++	struct snd_soc_codec *codec = runtime->codec;
++	int ret;
 +
-+- ports: contain a port nodes with endpoint definitions as defined in
-+	 Documentation/devicetree/bindings/media/video-interfaces.txt.
-+	 contained 2 endpoints, connecting to the output of vop.
++	/* enable jack detection */
++	ret = snd_soc_card_jack_new(card, "DP Jack", SND_JACK_LINEOUT,
++				    &cdn_dp_card_jack, NULL, 0);
++	if (ret) {
++		dev_err(card->dev, "Can't new DP Jack %d\n", ret);
++		return ret;
++	}
 +
-+- phys: from general PHY binding: the phandle for the PHY device.
++	return hdmi_codec_set_jack_detect(codec, &cdn_dp_card_jack);
++}
 +
-+- extcon: extcon specifier for the Power Delivery
+ static struct snd_soc_ops rockchip_sound_max98357a_ops = {
+ 	.hw_params = rockchip_sound_max98357a_hw_params,
+ };
+@@ -226,10 +286,15 @@ static struct snd_soc_ops rockchip_sound_da7219_ops = {
+ 	.hw_params = rockchip_sound_da7219_hw_params,
+ };
+ 
++static struct snd_soc_ops rockchip_sound_cdndp_ops = {
++	.hw_params = rockchip_sound_cdndp_hw_params,
++};
 +
-+- #sound-dai-cells = it must be 1 if your system is using 2 DAIs: I2S, SPDIF
+ enum {
+ 	DAILINK_MAX98357A,
+ 	DAILINK_RT5514,
+ 	DAILINK_DA7219,
++	DAILINK_CDNDP,
+ 	DAILINK_RT5514_DSP,
+ };
+ 
+@@ -264,6 +329,15 @@ static struct snd_soc_dai_link rockchip_dailinks[] = {
+ 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
+ 			SND_SOC_DAIFMT_CBS_CFS,
+ 	},
++	[DAILINK_CDNDP] = {
++		.name = "DP",
++		.stream_name = "DP PCM",
++		.codec_dai_name = "i2s-hifi",
++		.init = rockchip_sound_cdndp_init,
++		.ops = &rockchip_sound_cdndp_ops,
++		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
++			SND_SOC_DAIFMT_CBS_CFS,
++	},
+ 	/* RT5514 DSP for voice wakeup via spi bus */
+ 	[DAILINK_RT5514_DSP] = {
+ 		.name = "RT5514 DSP",
+@@ -334,6 +408,25 @@ static int rockchip_sound_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
++	cpu_node = of_parse_phandle(pdev->dev.of_node, "rockchip,cpu", 1);
++	if (!cpu_node) {
++		dev_err(&pdev->dev, "Property 'rockchip,cpu 1' missing or invalid\n");
++		return -EINVAL;
++	}
 +
-+-------------------------------------------------------------------------------
++	rockchip_dailinks[DAILINK_CDNDP].platform_of_node = cpu_node;
++	rockchip_dailinks[DAILINK_CDNDP].cpu_of_node = cpu_node;
 +
-+Example:
-+	cdn_dp: dp@fec00000 {
-+		compatible = "rockchip,rk3399-cdn-dp";
-+		reg = <0x0 0xfec00000 0x0 0x100000>;
-+		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_DP_CORE>, <&cru PCLK_DP_CTRL>,
-+			 <&cru SCLK_SPDIF_REC_DPTX>, <&cru PCLK_VIO_GRF>;
-+		clock-names = "core-clk", "pclk", "spdif", "grf";
-+		assigned-clocks = <&cru SCLK_DP_CORE>;
-+		assigned-clock-rates = <100000000>;
-+		power-domains = <&power RK3399_PD_HDCP>;
-+		phys = <&tcphy0_dp>, <&tcphy1_dp>;
-+		resets = <&cru SRST_DPTX_SPDIF_REC>, <&cru SRST_P_UPHY0_DPTX>,
-+			 <&cru SRST_P_UPHY0_APB>;
-+		reset-names = "spdif", "dptx", "apb";
-+		extcon = <&fusb0>, <&fusb1>;
-+		rockchip,grf = <&grf>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		#sound-dai-cells = <1>;
++	rockchip_dailinks[DAILINK_CDNDP].codec_of_node =
++		of_parse_phandle(pdev->dev.of_node, "rockchip,codec",
++				 DAILINK_CDNDP);
++	if (!rockchip_dailinks[DAILINK_CDNDP].codec_of_node) {
++		dev_err(&pdev->dev,
++			"Property[%d] 'rockchip,codec' missing or invalid\n",
++			DAILINK_CDNDP);
++		return -EINVAL;
++	}
 +
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			dp_in: port {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				dp_in_vopb: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&vopb_out_dp>;
-+				};
-+
-+				dp_in_vopl: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&vopl_out_dp>;
-+				};
-+			};
-+		};
-+	};
+ 	rockchip_dailinks[DAILINK_RT5514_DSP].cpu_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
+ 	rockchip_dailinks[DAILINK_RT5514_DSP].cpu_dai_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
+ 	rockchip_dailinks[DAILINK_RT5514_DSP].platform_name = kstrdup_const(dev_name(dev), GFP_KERNEL);
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
