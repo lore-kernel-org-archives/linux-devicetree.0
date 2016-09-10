@@ -1,160 +1,82 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: add rockchip PX3 board
-Date: Sat, 10 Sep 2016 15:27:01 +0200
-Message-ID: <113351180.Ph1TMAdx8I@phil>
-References: <1473498094-16279-1-git-send-email-andy.yan@rock-chips.com> <2476266.BiuZDgbs5G@phil> <201609102110352938974@rock-chips.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: omap3-gta04: reduce panel backlight PWM frequency
+ to 83Hz
+Date: Sat, 10 Sep 2016 15:48:28 +0200
+Message-ID: <57D40F2C.7000805@baylibre.com>
+References: <954d43b570092fe92b8b49cf8f475c027d3d8342.1473066997.git.hns@goldelico.com> <20160910031736.xwnepaoifpedqfbr@squirrel.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201609102110352938974-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20160910031736.xwnepaoifpedqfbr-2pNSKKP3PSK44ywRPIzf9A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?6Zer5a2d5Yab?= <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, briannorris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark. rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, David Rivshin <drivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>
+Cc: =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
 
-Am Samstag, 10. September 2016, 21:10:35 CEST schrieb 闫孝军:
-> Hi Heiko：
-> From: Heiko Stuebner
-> Date: 2016-09-10 18:07
-> To: Andy Yan
-> CC: devicetree; briannorris; linux-kernel; robh+dt; mark.rutland
-> Subject: Re: [PATCH 1/2] ARM: dts: add rockchip PX3 board
-> Am Samstag, 10. September 2016, 12:03:38 CEST schrieb Heiko Stuebner:
+
+Le 10/09/2016 05:17, Matthijs van Duin a �crit :
+> On Mon, Sep 05, 2016 at 11:16:38AM +0200, H. Nikolaus Schaller wrote:
+>> This helps to get 100% intensity closer to "always on".
+>>
+>> It compensates for an effect of dmtimer which at 100% still emits short
+>> "off" impulses and the startup-time of the DC/DC converter makes
+>> backlight intensity not reach full scale. The lower the PWM frequency
+>> is, the smaller is this effect.
 > 
-> > Am Samstag, 10. September 2016, 17:01:34 CEST schrieb Andy Yan:
-> > 
-> > > PX3 board is designed by Rockchip for automotive field,
-> > > which intergrated with CVBS(TP2825)/MIPI DSI/LVDS/HDMI
-> > > video input/output interface, WIFI/BT/GPS(on a module
-> > > named S500 which based on MT6620), Gsensor BMA250E and
-> > > light&proximity sensor STK3410.
-> > > 
-> > > Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > 
-> > 
-> > [...]
-> > 
-> > 
-> > > diff --git a/arch/arm/boot/dts/rk3188-px3.dts
-> > > b/arch/arm/boot/dts/rk3188-px3.dts new file mode 100644
-> > > index 0000000..ece45d7
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/rk3188-px3.dts
-> > > @@ -0,0 +1,337 @@
-> > > +/*
-> > > + * Copyright (c) 2016 Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > > + *
-> > > + * This file is dual-licensed: you can use it either under the terms
-> > > + * of the GPL or the X11 license, at your option. Note that this dual
-> > > + * licensing only applies to this file, and not this project as a
-> > > + * whole.
-> > > + *
-> > > + *  a) This file is free software; you can redistribute it and/or
-> > > + *     modify it under the terms of the GNU General Public License as
-> > > + *     published by the Free Software Foundation; either version 2 of
-> > > the
-> > > + *     License, or (at your option) any later version.
-> > > + *
-> > > + *     This file is distributed in the hope that it will be useful,
-> > > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > > + *     GNU General Public License for more details.
-> > > + *
-> > > + * Or, alternatively,
-> > > + *
-> > > + *  b) Permission is hereby granted, free of charge, to any person
-> > > + *     obtaining a copy of this software and associated documentation
-> > > + *     files (the "Software"), to deal in the Software without
-> > > + *     restriction, including without limitation the rights to use,
-> > > + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> > > + *     sell copies of the Software, and to permit persons to whom the
-> > > + *     Software is furnished to do so, subject to the following
-> > > + *     conditions:
-> > > + *
-> > > + *     The above copyright notice and this permission notice shall be
-> > > + *     included in all copies or substantial portions of the Software.
-> > > + *
-> > > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> > > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> > > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> > > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> > > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> > > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> > > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> > > + *     OTHER DEALINGS IN THE SOFTWARE.
-> > > + */
-> > > +
-> > > +/dts-v1/;
-> > > +#include <dt-bindings/input/input.h>
-> > > +#include "rk3188.dtsi"
-> > > +
-> > > +/ {
-> > > + model = "Rockchip PX3";
-> > > + compatible = "rockchip,px3", "rockchip,rk3188";
-> > > +
-> > > + chosen {
-> > > + bootargs = "console=ttyS2,115200 earlyprintk";
-> > > + };
-> > 
-> > 
-> > setting bootargs isn't favoured, you can instead use
-> > stdout-path = "serial2:115200n8";
-> > 
-> > to define the default console
-> > 
-> > 
-> > > +&i2c0 {
-> > > + status = "okay";
-> > > +
-> > > + /* Accelerometer */
-> > > + bma250@18 {
-> > > + compatible = "bma250";
-> > > + reg = <0x18>;
-> > > + interrupt-parent = <&gpio0>;
-> > > + interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
-> > > + };
-> > 
-> > 
-> > driver seems to be missing a devicetree binding (module_id_table
-> > and dt-binding document)
+> Sounds to me like you're working around something that should be fixed
+> in the pwm-omap-dmtimer driver instead?
 > 
+> Looking at the (baremetal) dmtimer pwm code I wrote ages ago, which
+> supports fully off to fully on, I do seem to be handling both endpoints
+> in a special way.  A rough conversion of my code into C:
 > 
-> found it, should be
+> // period in timer cycles
+> void pwm_init( volatile struct dmtimer *timer, u32 period, bool invert )
+> {
+> 	assert( period >= 2 );
+> 	timer->if_ctrl = 2;  // reset timer, configure as non-posted
+> 	timer->reload = -period;
+> 	timer->trigger = 0;
+> 	timer->config = 0x1043 | invert << 7;  // pwm initially disabled
+> }
 > 
-> bosch,bma250
+> // value in timer cycles, 0 <= value <= period
+> void pwm_set( volatile struct dmtimer *timer, u32 value )
+> {
+> 	if( value == 0 ) {
+> 		timer->config &= ~0x800;  // disable pwm
+> 		return;
+> 	}
+> 	u32 period = -timer->reload;
+> 	if( value >= period )
+> 		timer->match = 0;
+> 	else
+> 		timer->match = value - period - 1;
+> 	timer->config |= 0x800;  // enable pwm
+> }
 > 
-> according to Documentation/devicetree/bindings/iio/accel/bma180.txt
+> At the time I used a scope to check the exact behaviour of dmtimer pwm
+> on a dm814x.  My notes mention (when pwm enabled):
+> 	match < reload	output on continuous
+> 	match == reload	output on 1 cycle, off period-1 cycles
+> 	match == -2	output on period-1 cycles, off 1 cycle
+> 	match == -1	output freezes
 > 
+> Hope this helps
+
+Hi,
+
+I think these corner cases should definitely be handled in the dmtimer driver.
+
+I'll try to post a fix to handle these, thanks for the original code dump.
+
 > 
+> Matthijs
 > 
-> 
-> But I found the i2c_device_id in the source code is "bma250", not
-> "bosch,bma250"
- 
-> according to drivers/iio/accel/bma180.c
 
-According to [0]:
-
-"If it is i2c, i2c has the quirk that it will match drv name to
-compatible string with vendor prefix dropped."
-
-so the driver itself doesn't need to specifiy the full compatible after all. 
-Still there should be a binding document and the devicetree side should 
-_always_ specify the full vendor,chip format.
-
-
-So you do "bosch,bma250" in the dts according to the binding document, the 
-i2c-core automatically tries "bma250" from that to match against the driver.
-
-The STK3310 can be done similarly, you only need to add a dts binding 
-document.
-
-
-[0] https://patchwork.kernel.org/patch/9285405/
-
+Neil
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
