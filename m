@@ -1,60 +1,99 @@
-From: Matthijs van Duin <matthijsvanduin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: omap3-gta04: reduce panel backlight PWM
- frequency to 83Hz
-Date: Sat, 10 Sep 2016 10:20:16 +0200
-Message-ID: <CAALWOA8ZZBbgCG-5TRbd6=k27PQV2EHcCj6zwk31sKTHY1A7Bg@mail.gmail.com>
-References: <954d43b570092fe92b8b49cf8f475c027d3d8342.1473066997.git.hns@goldelico.com>
- <20160910031736.xwnepaoifpedqfbr@squirrel.local> <3188F52F-1372-4D59-B790-C15E584A44F2@goldelico.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [RESEND PATCH v7 1/4] phy: Add reset callback
+Date: Sat, 10 Sep 2016 10:51:00 +0200
+Message-ID: <8774766.IvFq1IoyNk@phil>
+References: <1473447580-10369-1-git-send-email-ayaka@soulik.info> <1473447580-10369-2-git-send-email-ayaka@soulik.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3188F52F-1372-4D59-B790-C15E584A44F2-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+In-Reply-To: <1473447580-10369-2-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: David Rivshin <drivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10 September 2016 at 09:08, H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
-> Reducing the PWM frequency is good by itself since it should not be unnecessarily
-> fast and helps to make the PWM to "average current" translation more linear.
->
-> The non-linear effect is that the PWM controlled DC/DC converter reacts almost
-> immediately to a 1->0 control transition but needs some time (ca. 0.5ms) to recover
-> on a 0->1 transition.
+Hi Randy,
 
-DT already allows for compensation of many non-linearities by
-specifying the duty cycle of each brightness increment.  Though, as
-you observed, there's one limitation it cannot fix here:
+Am Samstag, 10. September 2016, 02:59:37 CEST schrieb Randy Li:
+> The only use for this is for solving a hardware design problem in
+> usb of Rockchip RK3288.
+> 
+> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
 
-> If we just fix the PWM generator to output a steady 1 signal at 100%, we have a
-> very significant change if we switch to 99%, depending on PWM frequency.
+When sending new versions, please carry over received Reviewed- / Tested- / 
+Acked-by tags received on old versions.
 
-Specifically the next-to-brightest step (assuming 0.5ms off-time) would be:
-75%  @ 500 Hz
-90%  @ 200 Hz
-95%  @ 100 Hz
-96%  @  83 Hz
+So again, to me this looks good.
 
-Note that perceptually the distance to 100% might be smaller due to
-non-linear response of the eye. That's my experience with pwm
-controlled leds anyway, which may or may not apply to backlights
-(though with my laptop's backlight I never really have use for the
-distinct steps at the brightest end while those at the darkest end
-seem disproportionally large).
+Although Kishon suggested earlier to have the init callback do the reset and 
+simply call it again in the reset-case, the whole refcounting done in phy_init 
+and phy_exit (phy->init_count) really shows that init and exit should be 
+called pairwise, so that extra reset callback seems justified, so from my phy-
+noob-pov
 
-> This effect becomes smaller if the PWM frequency is reduced and 83Hz seems more
-> reasonable (although still a little arbitrary) than the current value.
+Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
-While 500Hz is perhaps a bit high, 83Hz actually seems very low to me.
-Searching a bit around yielded 175 Hz as common frequency for CCFL
-backlights and higher for LED backlights (source:
-http://www.tftcentral.co.uk/articles/pulse_width_modulation.htm).
+> ---
+>  drivers/phy/phy-core.c  | 14 ++++++++++++++
+>  include/linux/phy/phy.h |  3 +++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+> index 8eca906..32e838d 100644
+> --- a/drivers/phy/phy-core.c
+> +++ b/drivers/phy/phy-core.c
+> @@ -357,6 +357,20 @@ int phy_set_mode(struct phy *phy, enum phy_mode mode)
+>  }
+>  EXPORT_SYMBOL_GPL(phy_set_mode);
+> 
+> +int phy_reset(struct phy *phy)
+> +{
+> +	int ret;
+> +	if (!phy || !phy->ops->reset)
+> +		return 0;
+> +
+> +	mutex_lock(&phy->mutex);
+> +	ret = phy->ops->reset(phy);
+> +	mutex_unlock(&phy->mutex);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(phy_reset);
+> +
+>  /**
+>   * _of_phy_get() - lookup and obtain a reference to a phy by phandle
+>   * @np: device_node for which to get the phy
+> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+> index f08b672..7978df6 100644
+> --- a/include/linux/phy/phy.h
+> +++ b/include/linux/phy/phy.h
+> @@ -36,6 +36,7 @@ enum phy_mode {
+>   * @power_on: powering on the phy
+>   * @power_off: powering off the phy
+>   * @set_mode: set the mode of the phy
+> + * @reset: reseting the phy
+>   * @owner: the module owner containing the ops
+>   */
+>  struct phy_ops {
+> @@ -44,6 +45,7 @@ struct phy_ops {
+>  	int	(*power_on)(struct phy *phy);
+>  	int	(*power_off)(struct phy *phy);
+>  	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
+> +	int	(*reset)(struct phy *phy);
+>  	struct module *owner;
+>  };
+> 
+> @@ -136,6 +138,7 @@ int phy_exit(struct phy *phy);
+>  int phy_power_on(struct phy *phy);
+>  int phy_power_off(struct phy *phy);
+>  int phy_set_mode(struct phy *phy, enum phy_mode mode);
+> +int phy_reset(struct phy *phy);
+>  static inline int phy_get_bus_width(struct phy *phy)
+>  {
+>  	return phy->attrs.bus_width;
 
-(I may be reacting a bit twitchy here due to having encountered dimmed
-LED lighting that was flickering obnoxiously for me while noone else
-noticed this.)
 
-Matthijs
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
