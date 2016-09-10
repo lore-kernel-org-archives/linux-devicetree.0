@@ -1,235 +1,115 @@
-Return-Path: <olimpiu@arcticsand.com>
+Return-Path: <kishon@kernel.org>
+Date: Sat, 10 Sep 2016 17:27:47 +0530
+From: Kishon Vijay Abraham I <kishon@a0393678ub>
+Subject: Re: [RESEND PATCH v7 1/4] phy: Add reset callback
+Message-ID: <20160910115747.GA10077@a0393678ub>
+References: <1473447580-10369-1-git-send-email-ayaka@soulik.info>
+ <1473447580-10369-2-git-send-email-ayaka@soulik.info>
+ <8774766.IvFq1IoyNk@phil>
 MIME-Version: 1.0
-In-Reply-To: <20160823182057.GA8472@rob-hp-laptop>
-References: <1471893084-4551-1-git-send-email-olimpiu@arcticsand.com> <20160823182057.GA8472@rob-hp-laptop>
-From: Olimpiu Dejeu <olimpiu@arcticsand.com>
-Date: Fri, 9 Sep 2016 14:18:44 -0400
-Message-ID: <CAF-XLW+v9c-+W2Jr2gjN+6ziijDHRtZ6_a9Rpb6TZ5+4CfALJw@mail.gmail.com>
-Subject: Re: [PATCH] backlight: arcxcnn: devicetree bindings for ArticSand devices
-Content-Type: multipart/alternative; boundary=001a1142b96a433962053c172def
-To: Rob Herring <robh@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jg1.han@samsung.com, Olimpiu Dejeu <olimpiu@arcticsand.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <8774766.IvFq1IoyNk@phil>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Randy Li <ayaka@soulik.info>, linux-usb@vger.kernel.org, John.Youn@synopsys.com, kishon@ti.com, felipe.balbi@linux.intel.com, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, randy.li@rock-chips.com
 List-ID: <devicetree@vger.kernel.org>
 
---001a1142b96a433962053c172def
-Content-Type: text/plain; charset=UTF-8
+Hi,
 
-On Tue, Aug 23, 2016 at 2:20 PM, Rob Herring <robh@kernel.org> wrote:
+On Sat, Sep 10, 2016 at 10:51:00AM +0200, Heiko Stuebner wrote:
+> Hi Randy,
+> 
+> Am Samstag, 10. September 2016, 02:59:37 CEST schrieb Randy Li:
+> > The only use for this is for solving a hardware design problem in
+> > usb of Rockchip RK3288.
+> > 
+> > Signed-off-by: Randy Li <ayaka@soulik.info>
+> 
+> When sending new versions, please carry over received Reviewed- / Tested- / 
+> Acked-by tags received on old versions.
+> 
+> So again, to me this looks good.
+> 
+> Although Kishon suggested earlier to have the init callback do the reset and 
+> simply call it again in the reset-case, the whole refcounting done in phy_init 
+> and phy_exit (phy->init_count) really shows that init and exit should be 
+> called pairwise, so that extra reset callback seems justified, so from my phy-
+> noob-pov
 
-> On Mon, Aug 22, 2016 at 03:11:24PM -0400, Olimpiu Dejeu wrote:
-> > This is the device tree bindings documentation file
-> >
-> > Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
-> >
+yeah, that makes sense. Moreover I see few more users wanting to use reset.
+
+Btw fixed a couple of checkpatch warning before merging this
+
+WARNING: Missing a blank line after declarations
+#82: FILE: drivers/phy/phy-core.c:363:
++       int ret;
++       if (!phy || !phy->ops->reset)
+
+WARNING: 'reseting' may be misspelled - perhaps 'resetting'?
+#104: FILE: include/linux/phy/phy.h:39:
++ * @reset: reseting the phy
+
+-Kishon
+> 
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> 
 > > ---
-> >  .../bindings/video/backlight/arcxcnn.txt           | 29
-> ++++++++++++++++++++++
->
->
-Check your directory location. Things have moved.
->
-> Not sure what you mean. This seems to be the right place. Please advise.
-
-
-> >  1 file changed, 29 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/video/backlight/
-> arcxcnn.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/video/backlight/arcxcnn.txt
-> b/Documentation/devicetree/bindings/video/backlight/arcxcnn.txt
-> > new file mode 100644
-> > index 0000000..9cd7315
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/video/backlight/arcxcnn.txt
-> > @@ -0,0 +1,29 @@
-> > +arcxcnn bindings
+> >  drivers/phy/phy-core.c  | 14 ++++++++++++++
+> >  include/linux/phy/phy.h |  3 +++
+> >  2 files changed, 17 insertions(+)
+> > 
+> > diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+> > index 8eca906..32e838d 100644
+> > --- a/drivers/phy/phy-core.c
+> > +++ b/drivers/phy/phy-core.c
+> > @@ -357,6 +357,20 @@ int phy_set_mode(struct phy *phy, enum phy_mode mode)
+> >  }
+> >  EXPORT_SYMBOL_GPL(phy_set_mode);
+> > 
+> > +int phy_reset(struct phy *phy)
+> > +{
+> > +	int ret;
+> > +	if (!phy || !phy->ops->reset)
+> > +		return 0;
 > > +
-> > +Required properties:
-> > +  - compatible: "arc,arcxcnn", "arc,arc2c0608"
->
-> One per line please.
->
-> Is arcxcnn a specific chip? If not drop it. No wildcards in compatible
-> strings.
->
-> Wild-cards can be dropped but there could be a large family of similar
-chips that would be supported with this one driver. How would one add
-support for a range of chips, some of which don't exist yet?
-
-
-> > +  - reg: I2C slave address (u8)
+> > +	mutex_lock(&phy->mutex);
+> > +	ret = phy->ops->reset(phy);
+> > +	mutex_unlock(&phy->mutex);
 > > +
-> > +Optional properties:
-> > +  - bl-name: Backlight device name (string)
->
-> Use the common bindings. label?
->
-> > +  - init-brt: Initial value of backlight brightness (u32) low 16 bits
-> used
->
-> Use common bindings.
->
-
-Ok
-
-
-> > +  - pwm-period: PWM period value. Set only PWM input mode used (u32)
-> > +  - prg-addr: Register address of ROM area to be updated (u32) low 8
-> bits used
-> > +  - prg-val: Register value to be updated (u32) low 8 bits used
->
-> What is this for? This should be a specific property or properties to do
-> explicit things, not a generic fill registers/rom with magic values.
->
-> We need to expose some registers for test without exposing underlying
-functionality. Do you suggest not documenting this in the bindings yet
-keeping the code in the driver? We followed the pattern from the lp855x_bl
-driver.
-
-
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(phy_reset);
 > > +
-> > +Example:
-> > +
-> > +     /* ARC2C0608 */
-> > +     backlight@30 {
-> > +             compatible = "arc,arc2c0608";
-> > +             reg = <0x30>;
-> > +
-> > +             init-brt = <123>;
-> > +
-> > +             /* LED0+1 string enabled */
-> > +             prg_06h {
-> > +                     prg-addr = <0x06>;
-> > +                     prg-val = <0x83>;
-> > +             };
-> > +
-> > +     };
-> > --
-> > 1.9.1
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-
---001a1142b96a433962053c172def
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><br>
-<div class=3D"gmail_extra"><div class=3D"gmail_quote">On Tue, Aug 23, 2016 =
-at 2:20 PM, Rob Herring <span dir=3D"ltr">&lt;<a href=3D"mailto:robh@kernel=
-.org" target=3D"_blank">robh@kernel.org</a>&gt;</span> wrote:<br><blockquot=
-e class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc sol=
-id;padding-left:1ex">On Mon, Aug 22, 2016 at 03:11:24PM -0400, Olimpiu Deje=
-u wrote:<br>
-&gt; This is the device tree bindings documentation file<br>
-&gt;<br>
-&gt; Signed-off-by: Olimpiu Dejeu &lt;<a href=3D"mailto:olimpiu@arcticsand.=
-com">olimpiu@arcticsand.com</a>&gt;<br>
-&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 .../bindings/video/backlight/<wbr>arcxcnn.txt=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0| 29 ++++++++++++++++++++++<br>
-=C2=A0<br></blockquote><blockquote class=3D"gmail_quote" style=3D"margin:0 =
-0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-Check your directory location. Things have moved.<br>
-<br></blockquote><div>Not sure what you mean. This seems to be the right pl=
-ace. Please advise.<br>=C2=A0<br></div><blockquote class=3D"gmail_quote" st=
-yle=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-&gt;=C2=A0 1 file changed, 29 insertions(+)<br>
-&gt;=C2=A0 create mode 100644 Documentation/devicetree/<wbr>bindings/video/=
-backlight/<wbr>arcxcnn.txt<br>
-&gt;<br>
-&gt; diff --git a/Documentation/devicetree/<wbr>bindings/video/backlight/<w=
-br>arcxcnn.txt b/Documentation/devicetree/<wbr>bindings/video/backlight/<wb=
-r>arcxcnn.txt<br>
-&gt; new file mode 100644<br>
-&gt; index 0000000..9cd7315<br>
-&gt; --- /dev/null<br>
-&gt; +++ b/Documentation/devicetree/<wbr>bindings/video/backlight/<wbr>arcx=
-cnn.txt<br>
-&gt; @@ -0,0 +1,29 @@<br>
-&gt; +arcxcnn bindings<br>
-&gt; +<br>
-&gt; +Required properties:<br>
-&gt; +=C2=A0 - compatible: &quot;arc,arcxcnn&quot;, &quot;arc,arc2c0608&quo=
-t;<br>
-<br>
-One per line please.<br>
-<br></blockquote><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8=
-ex;border-left:1px #ccc solid;padding-left:1ex">
-Is arcxcnn a specific chip? If not drop it. No wildcards in compatible<br>
-strings.<br>
-<br></blockquote><div>Wild-cards can be dropped but there could be a large =
-family of similar chips that would be supported with this one driver. How w=
-ould one add support for a range of chips, some of which don&#39;t exist ye=
-t?<br>=C2=A0<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0=
- 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-&gt; +=C2=A0 - reg: I2C slave address (u8)<br>
-&gt; +<br>
-&gt; +Optional properties:<br>
-&gt; +=C2=A0 - bl-name: Backlight device name (string)<br>
-<br>
-Use the common bindings. label?<br>
-<br>
-&gt; +=C2=A0 - init-brt: Initial value of backlight brightness (u32) low 16=
- bits used<br>
-<br>
-Use common bindings.<br></blockquote><div>=C2=A0<br>Ok<br><br></div><blockq=
-uote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc =
-solid;padding-left:1ex">
-<br>
-&gt; +=C2=A0 - pwm-period: PWM period value. Set only PWM input mode used (=
-u32)<br>
-&gt; +=C2=A0 - prg-addr: Register address of ROM area to be updated (u32) l=
-ow 8 bits used<br>
-&gt; +=C2=A0 - prg-val: Register value to be updated (u32) low 8 bits used<=
-br>
-<br>
-What is this for? This should be a specific property or properties to do<br=
->
-explicit things, not a generic fill registers/rom with magic values.<br>
-<br></blockquote><div>We need to expose some registers for test without exp=
-osing underlying functionality. Do you suggest not documenting this in the =
-bindings yet keeping the code in the driver? We followed the pattern from t=
-he lp855x_bl driver.<br>=C2=A0<br></div><blockquote class=3D"gmail_quote" s=
-tyle=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-&gt; +<br>
-&gt; +Example:<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0/* ARC2C0608 */<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0backlight@30 {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;=
-arc,arc2c0608&quot;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D &lt;0x30&gt;;=
-<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0init-brt =3D &lt;123&=
-gt;;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0/* LED0+1 string enab=
-led */<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0prg_06h {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0prg-addr =3D &lt;0x06&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0prg-val =3D &lt;0x83&gt;;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0};<br>
-<span class=3D"HOEnZb"><font color=3D"#888888">&gt; --<br>
-&gt; 1.9.1<br>
-&gt;<br>
-&gt; --<br>
-&gt; To unsubscribe from this list: send the line &quot;unsubscribe devicet=
-ree&quot; in<br>
-&gt; the body of a message to <a href=3D"mailto:majordomo@vger.kernel.org">=
-majordomo@vger.kernel.org</a><br>
-&gt; More majordomo info at=C2=A0 <a href=3D"http://vger.kernel.org/majordo=
-mo-info.html" rel=3D"noreferrer" target=3D"_blank">http://vger.kernel.org/<=
-wbr>majordomo-info.html</a><br>
-</font></span></blockquote></div><br></div></div>
-
---001a1142b96a433962053c172def--
+> >  /**
+> >   * _of_phy_get() - lookup and obtain a reference to a phy by phandle
+> >   * @np: device_node for which to get the phy
+> > diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+> > index f08b672..7978df6 100644
+> > --- a/include/linux/phy/phy.h
+> > +++ b/include/linux/phy/phy.h
+> > @@ -36,6 +36,7 @@ enum phy_mode {
+> >   * @power_on: powering on the phy
+> >   * @power_off: powering off the phy
+> >   * @set_mode: set the mode of the phy
+> > + * @reset: reseting the phy
+> >   * @owner: the module owner containing the ops
+> >   */
+> >  struct phy_ops {
+> > @@ -44,6 +45,7 @@ struct phy_ops {
+> >  	int	(*power_on)(struct phy *phy);
+> >  	int	(*power_off)(struct phy *phy);
+> >  	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
+> > +	int	(*reset)(struct phy *phy);
+> >  	struct module *owner;
+> >  };
+> > 
+> > @@ -136,6 +138,7 @@ int phy_exit(struct phy *phy);
+> >  int phy_power_on(struct phy *phy);
+> >  int phy_power_off(struct phy *phy);
+> >  int phy_set_mode(struct phy *phy, enum phy_mode mode);
+> > +int phy_reset(struct phy *phy);
+> >  static inline int phy_get_bus_width(struct phy *phy)
+> >  {
+> >  	return phy->attrs.bus_width;
+> 
+> 
