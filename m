@@ -1,96 +1,201 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: [PATCH v2 2/2] i2c: aspeed: added documentation for Aspeed I2C driver
-Date: Fri,  9 Sep 2016 18:55:51 -0700
-Message-ID: <1473472551-11149-2-git-send-email-brendanhiggins@google.com>
-References: <201609100847.j1qUadzy%fengguang.wu@intel.com>
- <1473472551-11149-1-git-send-email-brendanhiggins@google.com>
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1473472551-11149-1-git-send-email-brendanhiggins@google.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au, jk@ozlabs.org, Brendan Higgins <brendanhiggins@google.com>
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v15 0/5] Rockchip Type-C DisplayPort driver
+Date: Fri,  9 Sep 2016 19:15:43 -0700
+Message-ID: <1473473748-22331-1-git-send-email-zyw@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cychiang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hychao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Added device tree binding documentation for Aspeed I2C controller and
-busses.
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
----
-Changes for v2:
-  - None
----
- .../devicetree/bindings/i2c/i2c-aspeed.txt         | 63 ++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+Hi all
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-new file mode 100644
-index 0000000..df68f2a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-@@ -0,0 +1,63 @@
-+Device tree configuration for the I2C controller and busses on the AST24XX
-+and AST25XX SoCs.
-+
-+Controller:
-+
-+	Required Properties:
-+	- #address-cells	: should be 1
-+	- #size-cells 		: should be 1
-+	- #interrupt-cells 	: should be 1
-+	- compatible 		: should be "aspeed,ast2400-i2c-controller"
-+				  or "aspeed,ast2500-i2c-controller"
-+	- reg			: address start and range of controller
-+	- ranges		: defines address offset and range for busses
-+	- interrupts		: interrupt number
-+	- clocks		: root clock of bus, should reference the APB
-+				  clock
-+	- clock-ranges		: specifies that child busses can inherit clocks
-+	- interrupt-controller	: denotes that the controller receives and fires
-+				  new interrupts for child busses
-+
-+Bus:
-+
-+	Required Properties:
-+	- #address-cells	: should be 1
-+	- #size-cells		: should be 0
-+	- reg			: address offset and range of bus
-+	- compatible		: should be "aspeed,ast2400-i2c-bus"
-+				  or "aspeed,ast2500-i2c-bus"
-+	- bus			: the bus's number
-+	- interrupts		: interrupt number
-+
-+	Optional Properties:
-+	- clock-frequency	: frequency of the bus clock in Hz
-+				  defaults to 100 kHz when not specified
-+
-+Example:
-+
-+i2c: i2c@1e78a000 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	#interrupt-cells = <1>;
-+
-+	compatible = "aspeed,ast2400-i2c-controller";
-+	reg = <0x1e78a000 0x40>;
-+	ranges = <0 0x1e78a000 0x1000>;
-+	interrupts = <12>;
-+	clocks = <&clk_apb>;
-+	clock-ranges;
-+	interrupt-controller;
-+
-+	i2c0: i2c-bus@40 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x40 0x40>;
-+		compatible = "aspeed,ast2400-i2c-bus";
-+		bus = <0>;
-+		clock-frequency = <100000>;
-+		status = "disabled";
-+		interrupts = <0>;
-+		interrupt-parent = <&i2c>;
-+	};
-+};
-+
+This series patch is for rockchip Type-C DisplayPort controller driver.
+
+The USB Type-C PHY is designed to support the USB3 and DP applications.
+The PHY basically has two main components: USB3 and DisplyPort. USB3
+operates in SuperSpeed mode and the DP can operate at RBR, HBR and HBR2
+data rates. The Type-C cable orientation detection and Power Delivery
+(PD) is accomplished using a PD PHY or a exernal PD chip.
+
+The DP controller is compliant with DisplayPort Specification,
+Version 1.3, This IP is compatible with the rockchip type-c PHY IP.
+There is a uCPU in DP controller, it need a firmware to work, please
+put the firmware file[0] rockchip/dptx.bin to
+/lib/firmware/rockchip/dptx.bin. The uCPU in charge of aux communication
+and link training, the host use mailbox to communicate with the ucpu.
+
+The DP contoller has register a notification with extcon API, to get the
+alt mode from PD, the PD driver need call the devm_extcon_dev_allocate
+to create a extcon device and use extcon_set_state to notify DP
+controller. And call extcon_set_cable_property to set orientation.
+
+About the DP audio, cdn-dp registered 2 DAIs: 0 is I2S, 1 is SPDIF.
+We can reference them in rk3399-gru machine driver. It base on the
+hdmi-notify patches[1], they are both in reviewing.
+
+This series is based on Mark Yao's branch[2], the extcon API backport
+from linux-next[3].
+
+I test this patches on the rk3399-evb board, with a fusb302 driver,
+this branch has no rk3399.dtsi, so the patch about dts is not included
+in this series.
+
+>From V9, the Type-C PHY is split into two PHYs: DP and USB3. The PHY
+will be init, no matter which PHY be power_on. The DP module will
+enter A2 mode (standby mode) after phy_init, if DP PHY is powered on,
+the DP module will enter to A0 mode(running mode). Then if DP PHY is
+powered off, DP module will back to A2 mode. If everything is
+un-plugged, phy will be deinit.
+
+[0]
+kernel/git/firmware/linux-firmware.git
+[1]
+https://patchwork.kernel.org/patch/8887261/
+https://patchwork.kernel.org/patch/8887251/
+[2]
+https://github.com/markyzq/kernel-drm-rockchip/tree/drm-rockchip-next-2016-05-23
+[3]
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+
+
+Changes in v15:
+Chris Zhong's changes:
+- fix disable phy unbalance
+- support Apple Dock hot-plug in HDMI port
+- retraining when Apple Dock hpd irq coming
+Sean Paul's changes:
+- Restructured the worker
+- Synchronized between worker & drm hooks
+- Properly implemented enable/disable
+- Added error checking
+- Use devm variant of extcon
+- Use DRM_DEV_* logging
+- Refactored code to (hopefully) be more clear
+
+Changes in v14:
+- Modify some grammatical errors
+- remove the mutex around cdn_dp_audio_get_eld
+- power on the power domain after clk_enable
+- retry to read edid
+- change super speed property name to EXTCON_PROP_USB_SS
+- do a correct mode_valid check when bpc is 0
+
+Changes in v13:
+- add dptx and apb reset
+- support suspend/resume
+- switch power domain dynamically
+- re-training when hpd signal is triggered
+
+Changes in v12:
+- use EXTCON_PROP_USB_SUPERSPEED to replace EXTCON_USB_HOST
+
+Changes in v11:
+- refer dp phy
+- add best_encoder back, since it required by drm_atomic_helper_check
+
+Changes in v10:
+- add pclk_vio_grf clock
+- remove best_encoder ops
+- support read sink count from DPCD
+- control the grf_clk in DP
+
+Changes in v9:
+- modify the reference phy = <&tcphy0 0>, <&tcphy1 0>;
+- do not need reset the phy before power_on
+- add a orientation information for set_capability
+- retry to read dpcd in 10 seconds
+
+Changes in v8:
+- optimization the err log
+
+Changes in v7:
+- support firmware standby when no dptx connection
+- optimization the calculation of tu size and valid symbol
+
+Changes in v6:
+- add assigned-clocks and assigned-clock-rates
+- add power-domains
+- add a port struct
+- select SND_SOC_HDMI_CODEC
+- force reset the phy when hpd detected
+
+Changes in v5:
+- alphabetical order
+- do not use long, use u32 or u64
+- return MODE_CLOCK_HIGH when requested > actual
+- Optimized Coding Style
+- add a formula to get better tu size and symbol value.
+- modify according to Sean Paul's comments
+- fixed the fw_wait always 0
+
+Changes in v4:
+- add a reset node
+- support 2 phys
+- use phy framework to control DP phy
+- support 2 phys
+
+Changes in v3:
+- add SoC specific compatible string
+- remove reg = <1>;
+- use EXTCON_DISP_DP and EXTCON_DISP_DP_ALT cable to get dp port state.
+- reset spdif before config it
+- modify the firmware clk to 100Mhz
+- retry load firmware if fw file is requested too early
+- change spdif to i2s2
+
+Changes in v2:
+- Alphabetic order
+- remove excess error message
+- use define clk_rate
+- check all return value
+- remove dev_set_name(dp->dev, "cdn-dp");
+- use schedule_delayed_work
+- remove never-called functions
+- remove some unnecessary ()
+- correct the commit message
+
+Changes in v1:
+- add extcon node description
+- add #sound-dai-cells description
+- use extcon API
+- use hdmi-codec for the DP Asoc
+- do not initialize the "ret"
+- printk a err log when drm_of_encoder_active_endpoint_id
+- modify the dclk pin_pol to a single line
+
+Chris Zhong (5):
+  extcon: Introduce EXTCON_PROP_DISP_HPD property
+  Documentation: bindings: add dt documentation for cdn DP controller
+  drm/rockchip: cdn-dp: add cdn DP support for rk3399
+  drm/rockchip: cdn-dp: support audio hot-plug
+  ASoC: rockchip: Add DP dai-links to the rk3399-gru machine driver
+
+ .../bindings/display/rockchip/cdn-dp-rockchip.txt  |   75 ++
+ .../bindings/sound/rockchip,rk3399-gru-sound.txt   |   11 +-
+ drivers/gpu/drm/rockchip/Kconfig                   |   10 +
+ drivers/gpu/drm/rockchip/Makefile                  |    1 +
+ drivers/gpu/drm/rockchip/cdn-dp-core.c             | 1165 ++++++++++++++++++++
+ drivers/gpu/drm/rockchip/cdn-dp-core.h             |  108 ++
+ drivers/gpu/drm/rockchip/cdn-dp-reg.c              |  956 ++++++++++++++++
+ drivers/gpu/drm/rockchip/cdn-dp-reg.h              |  482 ++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c        |   13 +-
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |    9 +
+ drivers/gpu/drm/rockchip/rockchip_vop_reg.c        |    2 +
+ include/linux/extcon.h                             |   14 +-
+ sound/soc/rockchip/rk3399_gru_sound.c              |   93 ++
+ 13 files changed, 2930 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
+ create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-core.c
+ create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-core.h
+ create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.c
+ create mode 100644 drivers/gpu/drm/rockchip/cdn-dp-reg.h
+
 -- 
-2.8.0.rc3.226.g39d4020
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
