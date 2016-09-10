@@ -1,376 +1,285 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v1 2/2] arm64: dts: rockchip: Add PX5 Evaluation board
-Date: Sun, 11 Sep 2016 01:47:03 +0800
-Message-ID: <1473529623-6268-1-git-send-email-andy.yan@rock-chips.com>
-References: <1473529249-6151-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473529249-6151-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v6 3/3] Input: Add support for tps65217 power button
+Date: Sat, 10 Sep 2016 10:50:48 -0700
+Message-ID: <20160910175048.GB37109@dtor-ws>
+References: <20160909084204.26226-1-m.niestroj@grinn-global.com>
+ <20160909084204.26226-4-m.niestroj@grinn-global.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160909084204.26226-4-m.niestroj@grinn-global.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Marcin Niestroj <m.niestroj@grinn-global.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PX5 EVB is designed by Rockchip for automotive field,
-which intergrated with CVBS(TP2825)/MIPI DSI/CSI/LVDS
-HDMI video input/output interface, audio codec ES8396,
-WIFI/BT(on RTL8723BS), Gsensor BMA250E and light&proximity
-sensor STK3410.
+On Fri, Sep 09, 2016 at 10:42:04AM +0200, Marcin Niestroj wrote:
+> This driver enables us to use tps65217's power button as KEY_POWER on
+> am335x boards (directly connected button in chiliboard, accessible pin
+> via expansion header in beaglebone). This patch has been tested with
+> chiliboard.
+> 
+> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+> ---
+> Depends on patches 1-2 in series and commit
+> 47d7d5ed68d877269003a392b7008905d65650bb
+> ("power_supply: tps65217-charger: Add support for IRQs")
+> in power-supply's -next branch.
 
-Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+Since this dependency is no longer true I went ahead and picked up this
+patch.
 
-Changes in v1:
-- board rename
-- add vendor prefix for i2c interfaced devices
+Thanks.
 
- Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
- arch/arm64/boot/dts/rockchip/Makefile              |   1 +
- arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts    | 304 +++++++++++++++++++++
- 3 files changed, 309 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
+> 
+> Changes v5 -> v6 (suggested by Dmitry):
+>  * Use dev_get_regmap() instead of fragile pointer calculations
+>  * Keep old formatting for flags as single function argument
+> 
+> Changes v4 -> v5:
+>  * Add support for tps65217 power button in tps65218-pwrbutton driver
+>    (as suggested by Dmitry)
+>  * Device-tree documentation was combined with tps65218-pwrbutton
+> 
+> Changes v2 -> v4: none
+> 
+> Changes v1 -> v2:
+>  * Added information about parent device in tps65217 power button
+>    device-tree binding documentation (suggested by Rob)
+> 
+>  .../bindings/input/tps65218-pwrbutton.txt          | 17 +++-
+>  drivers/input/misc/Kconfig                         |  4 +-
+>  drivers/input/misc/tps65218-pwrbutton.c            | 92 +++++++++++++++-------
+>  3 files changed, 81 insertions(+), 32 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/tps65218-pwrbutton.txt b/Documentation/devicetree/bindings/input/tps65218-pwrbutton.txt
+> index e30e0b9..3e5b979 100644
+> --- a/Documentation/devicetree/bindings/input/tps65218-pwrbutton.txt
+> +++ b/Documentation/devicetree/bindings/input/tps65218-pwrbutton.txt
+> @@ -1,13 +1,24 @@
+> -Texas Instruments TPS65218 power button
+> +Texas Instruments TPS65217 and TPS65218 power button
+> +
+> +This module is part of the TPS65217/TPS65218. For more details about the whole
+> +TPS65217 chip see Documentation/devicetree/bindings/regulator/tps65217.txt.
+>  
+>  This driver provides a simple power button event via an Interrupt.
+>  
+>  Required properties:
+> -- compatible: should be "ti,tps65218-pwrbutton"
+> +- compatible: should be "ti,tps65217-pwrbutton" or "ti,tps65218-pwrbutton"
+> +
+> +Required properties for TPS65218:
+>  - interrupts: should be one of the following
+>     - <3 IRQ_TYPE_EDGE_BOTH>: For controllers compatible with tps65218
+>  
+> -Example:
+> +Examples:
+> +
+> +&tps {
+> +	tps65217-pwrbutton {
+> +		compatible = "ti,tps65217-pwrbutton";
+> +	};
+> +};
+>  
+>  &tps {
+>  	power-button {
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index efb0ca8..dbd5b75 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -454,10 +454,10 @@ config INPUT_RETU_PWRBUTTON
+>  
+>  config INPUT_TPS65218_PWRBUTTON
+>  	tristate "TPS65218 Power button driver"
+> -	depends on MFD_TPS65218
+> +	depends on (MFD_TPS65217 || MFD_TPS65218)
+>  	help
+>  	  Say Y here if you want to enable power buttong reporting for
+> -	  the TPS65218 Power Management IC device.
+> +	  TPS65217 and TPS65218 Power Management IC device.
+>  
+>  	  To compile this driver as a module, choose M here. The module will
+>  	  be called tps65218-pwrbutton.
+> diff --git a/drivers/input/misc/tps65218-pwrbutton.c b/drivers/input/misc/tps65218-pwrbutton.c
+> index a39b626..3273217 100644
+> --- a/drivers/input/misc/tps65218-pwrbutton.c
+> +++ b/drivers/input/misc/tps65218-pwrbutton.c
+> @@ -1,8 +1,9 @@
+>  /*
+> - * Texas Instruments' TPS65218 Power Button Input Driver
+> + * Texas Instruments' TPS65217 and TPS65218 Power Button Input Driver
+>   *
+>   * Copyright (C) 2014 Texas Instruments Incorporated - http://www.ti.com/
+>   * Author: Felipe Balbi <balbi@ti.com>
+> + * Author: Marcin Niestroj <m.niestroj@grinn-global.com>
+>   *
+>   * This program is free software; you can redistribute it and/or modify
+>   * it under the terms of the GNU General Public License version 2 as
+> @@ -18,31 +19,61 @@
+>  #include <linux/input.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/kernel.h>
+> +#include <linux/mfd/tps65217.h>
+>  #include <linux/mfd/tps65218.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+>  #include <linux/slab.h>
+>  
+> -struct tps65218_pwrbutton {
+> +struct tps6521x_data {
+> +	unsigned int reg_status;
+> +	unsigned int pb_mask;
+> +	const char *name;
+> +};
+> +
+> +static const struct tps6521x_data tps65217_data = {
+> +	.reg_status = TPS65217_REG_STATUS,
+> +	.pb_mask = TPS65217_STATUS_PB,
+> +	.name = "tps65217_pwrbutton",
+> +};
+> +
+> +static const struct tps6521x_data tps65218_data = {
+> +	.reg_status = TPS65218_REG_STATUS,
+> +	.pb_mask = TPS65218_STATUS_PB_STATE,
+> +	.name = "tps65218_pwrbutton",
+> +};
+> +
+> +struct tps6521x_pwrbutton {
+>  	struct device *dev;
+> -	struct tps65218 *tps;
+> +	struct regmap *regmap;
+>  	struct input_dev *idev;
+> +	const struct tps6521x_data *data;
+> +	char phys[32];
+> +};
+> +
+> +static const struct of_device_id of_tps6521x_pb_match[] = {
+> +	{ .compatible = "ti,tps65217-pwrbutton", .data = &tps65217_data },
+> +	{ .compatible = "ti,tps65218-pwrbutton", .data = &tps65218_data },
+> +	{ },
+>  };
+> +MODULE_DEVICE_TABLE(of, of_tps6521x_pb_match);
+>  
+> -static irqreturn_t tps65218_pwr_irq(int irq, void *_pwr)
+> +static irqreturn_t tps6521x_pb_irq(int irq, void *_pwr)
+>  {
+> -	struct tps65218_pwrbutton *pwr = _pwr;
+> +	struct tps6521x_pwrbutton *pwr = _pwr;
+> +	const struct tps6521x_data *tps_data = pwr->data;
+>  	unsigned int reg;
+>  	int error;
+>  
+> -	error = tps65218_reg_read(pwr->tps, TPS65218_REG_STATUS, &reg);
+> +	error = regmap_read(pwr->regmap, tps_data->reg_status, &reg);
+>  	if (error) {
+>  		dev_err(pwr->dev, "can't read register: %d\n", error);
+>  		goto out;
+>  	}
+>  
+> -	if (reg & TPS65218_STATUS_PB_STATE) {
+> +	if (reg & tps_data->pb_mask) {
+>  		input_report_key(pwr->idev, KEY_POWER, 1);
+>  		pm_wakeup_event(pwr->dev, 0);
+>  	} else {
+> @@ -55,42 +86,55 @@ out:
+>  	return IRQ_HANDLED;
+>  }
+>  
+> -static int tps65218_pwron_probe(struct platform_device *pdev)
+> +static int tps6521x_pb_probe(struct platform_device *pdev)
+>  {
+> -	struct tps65218 *tps = dev_get_drvdata(pdev->dev.parent);
+>  	struct device *dev = &pdev->dev;
+> -	struct tps65218_pwrbutton *pwr;
+> +	struct tps6521x_pwrbutton *pwr;
+>  	struct input_dev *idev;
+> +	const struct of_device_id *match;
+>  	int error;
+>  	int irq;
+>  
+> +	match = of_match_node(of_tps6521x_pb_match, pdev->dev.of_node);
+> +	if (!match)
+> +		return -ENXIO;
+> +
+>  	pwr = devm_kzalloc(dev, sizeof(*pwr), GFP_KERNEL);
+>  	if (!pwr)
+>  		return -ENOMEM;
+>  
+> +	pwr->data = match->data;
+> +
+>  	idev = devm_input_allocate_device(dev);
+>  	if (!idev)
+>  		return -ENOMEM;
+>  
+> -	idev->name = "tps65218_pwrbutton";
+> -	idev->phys = "tps65218_pwrbutton/input0";
+> +	idev->name = pwr->data->name;
+> +	snprintf(pwr->phys, sizeof(pwr->phys), "%s/input0",
+> +		pwr->data->name);
+> +	idev->phys = pwr->phys;
+>  	idev->dev.parent = dev;
+>  	idev->id.bustype = BUS_I2C;
+>  
+>  	input_set_capability(idev, EV_KEY, KEY_POWER);
+>  
+> -	pwr->tps = tps;
+> +	pwr->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+>  	pwr->dev = dev;
+>  	pwr->idev = idev;
+>  	platform_set_drvdata(pdev, pwr);
+>  	device_init_wakeup(dev, true);
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> -	error = devm_request_threaded_irq(dev, irq, NULL, tps65218_pwr_irq,
+> +	if (irq < 0) {
+> +		dev_err(dev, "No IRQ resource!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	error = devm_request_threaded_irq(dev, irq, NULL, tps6521x_pb_irq,
+>  					  IRQF_TRIGGER_RISING |
+>  						IRQF_TRIGGER_FALLING |
+>  						IRQF_ONESHOT,
+> -					  "tps65218-pwrbutton", pwr);
+> +					  pwr->data->name, pwr);
+>  	if (error) {
+>  		dev_err(dev, "failed to request IRQ #%d: %d\n",
+>  			irq, error);
+> @@ -106,21 +150,15 @@ static int tps65218_pwron_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -static const struct of_device_id of_tps65218_pwr_match[] = {
+> -	{ .compatible = "ti,tps65218-pwrbutton" },
+> -	{ },
+> -};
+> -MODULE_DEVICE_TABLE(of, of_tps65218_pwr_match);
+> -
+> -static struct platform_driver tps65218_pwron_driver = {
+> -	.probe	= tps65218_pwron_probe,
+> +static struct platform_driver tps6521x_pb_driver = {
+> +	.probe	= tps6521x_pb_probe,
+>  	.driver	= {
+> -		.name	= "tps65218_pwrbutton",
+> -		.of_match_table = of_tps65218_pwr_match,
+> +		.name	= "tps6521x_pwrbutton",
+> +		.of_match_table = of_tps6521x_pb_match,
+>  	},
+>  };
+> -module_platform_driver(tps65218_pwron_driver);
+> +module_platform_driver(tps6521x_pb_driver);
+>  
+> -MODULE_DESCRIPTION("TPS65218 Power Button");
+> +MODULE_DESCRIPTION("TPS6521X Power Button");
+>  MODULE_LICENSE("GPL v2");
+>  MODULE_AUTHOR("Felipe Balbi <balbi@ti.com>");
+> -- 
+> 2.9.3
+> 
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-index 6da3881..b6f92d6 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.txt
-+++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-@@ -107,6 +107,10 @@ Rockchip platforms device tree bindings
-     Required root node properties:
-       - compatible = "rockchip,r88", "rockchip,rk3368";
- 
-+- Rockchip PX5 Evaluation board:
-+    Required root node properties:
-+      - compatible = "rockchip,px5-evb", "rockchip,px5", "rockchip,rk3368";
-+
- - Rockchip RK3228 Evaluation board:
-     Required root node properties:
-      - compatible = "rockchip,rk3228-evb", "rockchip,rk3228";
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 7037a16..86c74b2 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -1,6 +1,7 @@
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-geekbox.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-r88.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-px5-evb.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-evb.dtb
- 
- always		:= $(dtb-y)
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts b/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
-new file mode 100644
-index 0000000..be0e915
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-px5-evb.dts
-@@ -0,0 +1,304 @@
-+/*
-+ * Copyright (c) 2016 Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "rk3368.dtsi"
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Rockchip PX5 EVB";
-+	compatible = "rockchip,px5-evb", "rockchip,px5", "rockchip,rk3368";
-+
-+	chosen {
-+		stdout-path = "serial4:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>;
-+	};
-+
-+	keys: gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwr_key>;
-+
-+		power {
-+			gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
-+			label = "GPIO Power";
-+			linux,code = <KEY_POWER>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	vcc_sys: vcc-sys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_sys";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&emmc {
-+	status = "okay";
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	clock-frequency = <150000000>;
-+	disable-wp;
-+	keep-power-in-suspend;
-+	non-removable;
-+	num-slots = <1>;
-+	vmmc-supply = <&vcc_io>;
-+	vqmmc-supply = <&vcc18_flash>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_clk>, <&emmc_cmd>, <&emmc_bus8>;
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+
-+	rk808: pmic@1b {
-+		compatible = "rockchip,rk808";
-+		reg = <0x1b>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_int>, <&pmic_sleep>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
-+		rockchip,system-power-controller;
-+		vcc1-supply = <&vcc_sys>;
-+		vcc2-supply = <&vcc_sys>;
-+		vcc3-supply = <&vcc_sys>;
-+		vcc4-supply = <&vcc_sys>;
-+		vcc6-supply = <&vcc_sys>;
-+		vcc7-supply = <&vcc_sys>;
-+		vcc8-supply = <&vcc_io>;
-+		vcc9-supply = <&vcc_sys>;
-+		vcc10-supply = <&vcc_sys>;
-+		vcc11-supply = <&vcc_sys>;
-+		vcc12-supply = <&vcc_io>;
-+		clock-output-names = "xin32k", "rk808-clkout2";
-+		#clock-cells = <1>;
-+
-+		regulators {
-+			vdd_cpu: DCDC_REG1 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-name = "vdd_cpu";
-+			};
-+
-+			vdd_log: DCDC_REG2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-name = "vdd_log";
-+			};
-+
-+			vcc_ddr: DCDC_REG3 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-name = "vcc_ddr";
-+			};
-+
-+			vcc_io: DCDC_REG4 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc_io";
-+			};
-+
-+			vcc18_flash: LDO_REG1 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc18_flash";
-+			};
-+
-+			vcca_33: LDO_REG2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcca_33";
-+			};
-+
-+			vdd_10: LDO_REG3 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+				regulator-name = "vdd_10";
-+			};
-+
-+			avdd_33: LDO_REG4 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "avdd_33";
-+			};
-+
-+			vccio_sd: LDO_REG5 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vccio_sd";
-+			};
-+
-+			vdd10_lcd: LDO_REG6 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+				regulator-name = "vdd10_lcd";
-+			};
-+
-+			vcc_18: LDO_REG7 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc_18";
-+			};
-+
-+			vcc18_lcd: LDO_REG8 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc18_lcd";
-+			};
-+
-+			vcc_sd: SWITCH_REG1 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-name = "vcc_sd";
-+			};
-+
-+			vcc33_lcd: SWITCH_REG2 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-name = "vcc33_lcd";
-+			};
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+
-+	/* Accelerometer */
-+	bma250@18 {
-+		compatible = "bosch,bma250";
-+		reg = <0x18>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	stk3410@48 {
-+		compatible = "sensortek,STK3310";
-+		reg = <0x48>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <19 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+
-+	gsl1680: touchscreen@40 {
-+		compatible = "silead,gsl1680";
-+		reg = <0x40>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <28 IRQ_TYPE_EDGE_FALLING>;
-+		power-gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
-+		touchscreen-size-x = <800>;
-+		touchscreen-size-y = <1280>;
-+		silead,max-fingers = <5>;
-+	};
-+};
-+
-+&pinctrl {
-+
-+	keys {
-+		pwr_key: pwr-key {
-+			rockchip,pins = <0 2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	pmic {
-+		pmic_sleep: pmic-sleep {
-+			rockchip,pins = <0 0 RK_FUNC_2 &pcfg_pull_none>;
-+		};
-+
-+		pmic_int: pmic-int {
-+			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+};
-+
-+&tsadc {
-+	status = "okay";
-+	rockchip,hw-tshut-mode = <0>; /* CRU */
-+	rockchip,hw-tshut-polarity = <1>; /* high */
-+};
-+
-+&uart4 {
-+	status = "okay";
-+};
-+
-+&usb_host0_ehci {
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	status = "okay";
-+};
-+
-+&wdt {
-+	status = "okay";
-+};
 -- 
-2.7.4
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dmitry
