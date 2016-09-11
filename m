@@ -1,45 +1,34 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 5/5] ARM: dts: sun8i: Add touchscreen node for sun8i-a33-ga10h
-Date: Sun, 11 Sep 2016 20:23:27 +0200
-Message-ID: <20160911182327.824-6-hdegoede@redhat.com>
-References: <20160911182327.824-1-hdegoede@redhat.com>
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 0/5] ARM: dts: imx6q: Add Engicam i.CoreM6 dts
+Date: Mon, 12 Sep 2016 00:00:36 +0530
+Message-ID: <1473618641-10159-1-git-send-email-jagan@amarulasolutions.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160911182327.824-1-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The ga10h tablet has a gsl3675 touchscreen, add a dt node describing it.
+This is series add dts support for Engicam I.Core M6 qdl modules.
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Jagan Teki (5):
+  of: Add vendor prefix for Engicam s.r.l company
+  ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support
+  ARM: dts: imx6q: Add Engicam i.CoreM6 DualLite/Solo initial support
+  ARM: dts: imx6qdl-icore: Add usbhost support
+  ARM: dts: imx6qdl-icore: Add usbotg support
 
-diff --git a/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts b/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
-index de6269d..f711599 100644
---- a/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
-+++ b/arch/arm/boot/dts/sun8i-a33-ga10h-v1.1.dts
-@@ -58,6 +58,16 @@
- 	status = "okay";
- };
- 
-+&touchscreen {
-+	reg = <0x40>;
-+	compatible = "silead,gsl3675";
-+	firmware-name = "gsl3675-ga10h.fw";
-+	touchscreen-size-x = <1630>;
-+	touchscreen-size-y = <990>;
-+	touchscreen-inverted-y;
-+	status = "okay";
-+};
-+
- &lradc {
- 	button@600 {
- 		label = "Back";
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/imx6dl-icore.dts                 |  59 ++++++
+ arch/arm/boot/dts/imx6q-icore.dts                  |  59 ++++++
+ arch/arm/boot/dts/imx6qdl-icore.dtsi               | 235 +++++++++++++++++++++
+ 5 files changed, 356 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-icore.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-icore.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-icore.dtsi
+
 -- 
-2.9.3
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
