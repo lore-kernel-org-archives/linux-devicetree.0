@@ -1,112 +1,68 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and GXBB
-Date: Sun, 11 Sep 2016 15:44:03 +0200
-Message-ID: <CAFBinCDnMd0rtrvTMX-D_WNXHpVD8F=8Xn35jcK5jTUCre9ebA@mail.gmail.com>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
- <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
- <m260q6jibf.fsf@baylibre.com> <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
- <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk> <m2eg4ui0nl.fsf@baylibre.com>
- <ffdd0188-72bc-4575-f997-e8547f4c31d2@codethink.co.uk> <CAFBinCC4gkMrJtertYevg_hXDLJEZ0PqfKKLL5UKXo8B=SXsPw@mail.gmail.com>
- <m2sht9gkau.fsf@baylibre.com> <CAFBinCDohOoFP_3GC+=tt6S7sPS308ao-yf+oGhdfwo-N-JnAA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCDohOoFP_3GC+=tt6S7sPS308ao-yf+oGhdfwo-N-JnAA@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, p.zabel@pengutronix.de, hdegoede@redhat.com
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, johnyoun@synopsys.com, will.deacon@arm.com, mturquette@baylibre.com, linux-usb@vger.kernel.org, sboyd@codeaurora.org, kishon@ti.com, robh+dt@kernel.org, catalin.marinas@arm.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] Revert "Input: bma150 - extend chip detection for bma180"
+Date: Sun, 11 Sep 2016 18:43:21 +0200
+Message-ID: <20160911164321.23122-1-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "Dr . H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 9, 2016 at 10:36 PM, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
-> On Fri, Sep 9, 2016 at 5:33 PM, Kevin Hilman <khilman@baylibre.com> wrote:
->> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
->>
->>> On Thu, Sep 8, 2016 at 10:53 PM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
->>>> On 08/09/16 21:42, Kevin Hilman wrote:
->>>>>
->>>>> Ben Dooks <ben.dooks@codethink.co.uk> writes:
->>>>>
->>>>>> On 08/09/16 20:52, Martin Blumenstingl wrote:
->>>>>>>
->>>>>>> On Thu, Sep 8, 2016 at 9:35 PM, Kevin Hilman <khilman@baylibre.com>
->>>>>>> wrote:
->>>>>>>>>
->>>>>>>>> +     phy = devm_phy_create(&pdev->dev, NULL, &phy_meson_usb2_ops);
->>>>>>>>> +     if (IS_ERR(phy)) {
->>>>>>>>> +             dev_err(&pdev->dev, "failed to create PHY\n");
->>>>>>>>> +             return PTR_ERR(phy);
->>>>>>>>> +     }
->>>>>>>>> +
->>>>>>>>> +     if (usb_reset_refcnt++ == 0) {
->>>>>>>>> +             ret = device_reset(&pdev->dev);
->>>>>>>>> +             if (ret) {
->>>>>>>>> +                     dev_err(&phy->dev, "Failed to reset USB PHY\n");
->>>>>>>>> +                     return ret;
->>>>>>>>> +             }
->>>>>>>>> +     }
->>>>>>>>
->>>>>>>>
->>>>>>>> The ref count + reset here looks like something that could/should be
->>>>>>>> handled in a runtime PM callback.
->>>>>>>
->>>>>>> Unfortunately that doesn't work (as Jerome found out) because both
->>>>>>> PHYs are sharing the same reset line.
->>>>>>> So if the second PHY would call device_reset then it would also reset
->>>>>>> the first PHY!
->>>>>>>
->>>>>>> There's a comment above the declaration of usb_reset_refcnt which
->>>>>>> tries to explain this:
->>>>>>> "The PHYs are sharing a common reset line -> we are only allowed to
->>>>>>> reset once for all PHYs."
->>>>>>> Maybe I should move this comment to the "if (usb_reset_refcnt++ == 0)
->>>>>>> {" line to make it easier to see?
->>>>>>>
->>>>>>
->>>>>> pm-runtime has refcounting in it. When one of the nodes turns on,
->>>>>> the pm-runtime will call your driver to say there is a user when
->>>>>> this first use turns up.
->>>>>>
->>>>>> If all the sub-phys turn off and drop their refcount then the driver
->>>>>> is called to say there are no more users and you can go to sleep.
->>>>>
->>>>>
->>>>> After a chat w/Martin on IRC, It turns out runtime PM wont help here.
->>>>>
->>>>> The reason is because there are physically two PHY devices[1].  Those 2
->>>>> devices will be treated independely by runtime PM, and have separate
->>>>> use-counting, which means doing what I proposed would cause a reset to
->>>>> happen when either device was probed.
->>>>>
->>>>> So, I think it's OK as it is.
->>>>
->>>>
->>>> Surely you can do pm_runtime_get/put on the phy's parent platform
->>>> device and do it that way?
->>> could you please be more specific with that (do you mean pdev->dev.parent)?
->>> so we would use pm_runtime_{get_sync,put} with the parent, while we
->>> would still define the runtime_resume in our driver.
->>
->> You'd also need to do get/put on the children, but yes, that's what Ben
->> is suggesting.
->>
->> However, the problem with all of the solutions proposed (runtime PM ones
->> included) is that we're forcing a board-specific design issue (2 devices
->> sharing a reset line) into a driver that should not have any
->> board-specific assumptions in it.
->>
->> For example, if this driver is used on another platform where different
->> PHYs have different reset lines, then one of them (the unlucky one who
->> is not probed first) will never get reset.  So any form of per-device
->> ref-counting is not a portable solution.
-> indeed, so in simple words we would need something like
-> reset_control_do_once(rstc, RESET/ASSERT/DEASSERT) which would
-> remember internally if any action has already been executed: if not it
-> does a _reset, _assert or _deassert and otherwise it does nothing.
-for now I've implemented something less hacky: I made the reset
-optional and only specified it for phy0.
-During Jerome's tests the reset was not needed, while on my board it's
-required to bring both PHYs up.
-Additionally the USB PHY reference driver does not have any reset
-logic for newer SoCs (GXL), so making the reset optional doesn't sound
-that bad to me.
+This reverts commit ef3714fdbc8d ("Input: bma150 - extend chip
+detection for bma180").
+
+The bma180 is not compatible with the bma150 at all, it has 14 bits
+resolution instead of 10, and it has quite different control registers.
+
+Treating the bma180 as a bma150 wrt its data registers will just result
+in throwing away the lowest 4 bits, which is not too bad. But the ctrl
+registers are a different story.
+
+It may be that things happen to just work (I don't have a bma180 to
+test with) but that certainly does not make this right.
+
+Removing the bma180 id also removes overlap wrt the ids in the iio
+bma180 driver which does treat the bma180 properly.
+
+Cc: Dr. H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/input/misc/bma150.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/input/misc/bma150.c b/drivers/input/misc/bma150.c
+index b0d4453..cae4832 100644
+--- a/drivers/input/misc/bma150.c
++++ b/drivers/input/misc/bma150.c
+@@ -70,7 +70,6 @@
+ #define BMA150_CFG_5_REG	0x11
+ 
+ #define BMA150_CHIP_ID		2
+-#define BMA180_CHIP_ID		3
+ #define BMA150_CHIP_ID_REG	BMA150_DATA_0_REG
+ 
+ #define BMA150_ACC_X_LSB_REG	BMA150_DATA_2_REG
+@@ -539,7 +538,7 @@ static int bma150_probe(struct i2c_client *client,
+ 	}
+ 
+ 	chip_id = i2c_smbus_read_byte_data(client, BMA150_CHIP_ID_REG);
+-	if (chip_id != BMA150_CHIP_ID && chip_id != BMA180_CHIP_ID) {
++	if (chip_id != BMA150_CHIP_ID) {
+ 		dev_err(&client->dev, "BMA150 chip id error: %d\n", chip_id);
+ 		return -EINVAL;
+ 	}
+@@ -643,7 +642,6 @@ static UNIVERSAL_DEV_PM_OPS(bma150_pm, bma150_suspend, bma150_resume, NULL);
+ 
+ static const struct i2c_device_id bma150_id[] = {
+ 	{ "bma150", 0 },
+-	{ "bma180", 0 },
+ 	{ "smb380", 0 },
+ 	{ "bma023", 0 },
+ 	{ }
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
