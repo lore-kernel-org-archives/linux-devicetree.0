@@ -1,213 +1,145 @@
-From: Corey Minyard <tcminyard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] misc: Add Aspeed BT IPMI host driver
-Date: Mon, 12 Sep 2016 13:55:40 -0500
-Message-ID: <1ce6c4b4-5938-22fc-7467-d1efc220b772@gmail.com>
-References: <1472664259-23933-1-git-send-email-clg@kaod.org>
- <1472664259-23933-2-git-send-email-clg@kaod.org> <8157811.GypLEN0R9B@wuerfel>
- <c06a8afb-9143-6aef-3425-ad1e50cae35d@kaod.org>
-Reply-To: minyard-HInyCGIudOg@public.gmane.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] regulator: Prevent falling too fast
+Date: Mon, 12 Sep 2016 19:56:33 +0100
+Message-ID: <20160912185633.GH27946@sirena.org.uk>
+References: <20160906190524.GB79728@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="x7gJcYyRf5ZnuMVj"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c06a8afb-9143-6aef-3425-ad1e50cae35d-Bxea+6Xhats@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160906190524.GB79728-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/2016 08:22 AM, Cédric Le Goater wrote:
-> Hello,
->
-> Adding Corey in cc: . I guess I should have done that in the first place.
 
-Yes, probably so.  I've been travelling and didn't see it on the mailing
-lists until now.
+--x7gJcYyRf5ZnuMVj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There is already a BT driver in the kernel, in drivers/char/ipmi, why
-won't that work?
+On Tue, Sep 06, 2016 at 12:05:24PM -0700, Matthias Kaehlcke wrote:
 
--corey
+> On some boards it's possible that transitioning the PWM regulator
+> downwards too fast will trigger the over voltage protection (OVP) on the
+> regulator.  This is because until the voltage actually falls there is a
+> time when the requested voltage is much lower than the actual voltage.
 
->
-> Arnd is suggesting to put this IPMI BT driver under drivers/char/ipmi
-> which is indeed a better place than drivers/misc.
->
-> Below some comments,
->
-> On 08/31/2016 09:57 PM, Arnd Bergmann wrote:
->> On Wednesday, August 31, 2016 7:24:17 PM CEST Cédric Le Goater wrote:
->>> From: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
->>>
->>> This patch adds a simple device driver to expose the iBT interface on
->>> Aspeed chips as a character device (/dev/bt).
->>>
->>> The iBT interface is used to perform in-band IPMI communication from a
->>> BMC to the host.
->>>
->>> Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
->>> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
->>> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
->>> [clg: checkpatch fixes
->>>        devicetree binding documentation]
->>> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
->>> ---
->>>   .../devicetree/bindings/misc/aspeed,bt-host.txt    |  19 +
->>>   drivers/misc/Kconfig                               |   5 +
->>>   drivers/misc/Makefile                              |   1 +
->>>   drivers/misc/bt-host.c                             | 433 +++++++++++++++++++++
->>>   include/uapi/linux/Kbuild                          |   1 +
->>>   include/uapi/linux/bt-host.h                       |  18 +
->>>   6 files changed, 477 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/misc/aspeed,bt-host.txt
->>>   create mode 100644 drivers/misc/bt-host.c
->>>   create mode 100644 include/uapi/linux/bt-host.h
->>>
->>> diff --git a/Documentation/devicetree/bindings/misc/aspeed,bt-host.txt b/Documentation/devicetree/bindings/misc/aspeed,bt-host.txt
->>> new file mode 100644
->>> index 000000000000..938c5998c331
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/misc/aspeed,bt-host.txt
->> "misc" seems like a bad category here. Does this fit nowhere else?
->>
->>> @@ -0,0 +1,19 @@
->>> +* Aspeed BT IPMI interface
->> What does "BT" stand for? IPMI is a more commonly known acronym,
->> but maybe list both with their full name as well.
-> "Block Transfer" which is described in the IPMI specs.
->
-> yes, I need to rephrase the commit log a bit and put some references
-> to the specs.
->
->>> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
->>> index 7410c6d9a34d..71a7b9feb0f0 100644
->>> --- a/drivers/misc/Makefile
->>> +++ b/drivers/misc/Makefile
->>> @@ -57,6 +57,7 @@ obj-$(CONFIG_ECHO)		+= echo/
->>>   obj-$(CONFIG_VEXPRESS_SYSCFG)	+= vexpress-syscfg.o
->>>   obj-$(CONFIG_CXL_BASE)		+= cxl/
->>>   obj-$(CONFIG_PANEL)             += panel.o
->>> +obj-$(CONFIG_ASPEED_BT_IPMI_HOST)	+= bt-host.o
->>>   
->>>   lkdtm-$(CONFIG_LKDTM)		+= lkdtm_core.o
->>>   lkdtm-$(CONFIG_LKDTM)		+= lkdtm_bugs.o
->> Maybe put this in a subdirectory of drivers/char/ipmi?
->> I understand that this is the other end of the protocol,
->> but they are closely related after all.
-> I agree. There are also some definitions we could make common.
->
-> Let's see what Corey thinks about it.
->
->>> +#define DEVICE_NAME	"bt-host"
->> here maybe "ipmi/bt-host" or "ipmi-bt-host"?
-> yes. a name containing 'ipmi' is certainly wanted.
->    
->>> +static ssize_t bt_host_read(struct file *file, char __user *buf,
->>> +				size_t count, loff_t *ppos)
->>> +{
->>> +	struct bt_host *bt_host = file_bt_host(file);
->>> +	char __user *p = buf;
->>> +	u8 len;
->>> +
->>> +	if (!access_ok(VERIFY_WRITE, buf, count))
->>> +		return -EFAULT;
->>> +
->>> +	WARN_ON(*ppos);
->>> +
->>> +	if (wait_event_interruptible(bt_host->queue,
->>> +				bt_inb(bt_host, BT_CTRL) & BT_CTRL_H2B_ATN))
->>> +		return -ERESTARTSYS;
->>> +
->>> +	set_b_busy(bt_host);
->>> +	clr_h2b_atn(bt_host);
->>> +	clr_rd_ptr(bt_host);
->>> +
->>> +	len = bt_read(bt_host);
->>> +	__put_user(len, p++);
->>> +
->>> +	/* We pass the length back as well */
->>> +	if (len + 1 > count)
->>> +		len = count - 1;
->>> +
->>> +	while (len) {
->>> +		if (__put_user(bt_read(bt_host), p))
->>> +			return -EFAULT;
->>> +		len--; p++;
->>> +	}
->> If there are larger chunks of data to be transferred,
->> using a temporary buffer with copy_from_user/copy_to_user
->> would be more efficient. Since the size appears to
->> be limited to 256 bytes anyway, that easily fits on the stack.
-> ok. I will change that.
->
->>> +
->>> +	clr_b_busy(bt_host);
->>> +
->>> +	return p - buf;
->>> +}
->> What is the motivation for only allowing complete messages
->> to be transferred or truncated for short buffers?
->>
->> Have you considered reading the message into a device specific
->> buffer and allowing continued reads?
->>
->> I don't see an obvious reason one way or another, and I suppose
->> you had an idea of what you were doing, so maybe explain it
->> in a comment.
-> The interface is not byte oriented. It is called 'Block Transfer'
-> because an entire message is buffered and then the host or the bmc
-> is notified that there is data to be read.
->
-> I will add a comment on that.
->
->>> +static long bt_host_ioctl(struct file *file, unsigned int cmd,
->>> +		unsigned long param)
->>> +{
->>> +	struct bt_host *bt_host = file_bt_host(file);
->>> +
->>> +	switch (cmd) {
->>> +	case BT_HOST_IOCTL_SMS_ATN:
->>> +		set_sms_atn(bt_host);
->>> +		return 0;
->>> +	}
->>> +	return -EINVAL;
->>> +}
->> Is this ioctl interface defined in a way that makes sense on
->> any IPMI host hardware, or did you just do it like this because
->> it is the easiest way  on the hardware.
-> This platform runs OpenBMC on which a dbus daemon acts as a proxy
-> between the IPMI BT char device and the rest of the system. So yes,
-> the ioctl is relatively easy to use.
->
->> I think it's important for the user interface to be extensible
->> to other implementations if we ever add any.
-> I agree but I don't know of any other BMC side implementations.
-> May be others ?
->
->>> +static int bt_host_config_irq(struct bt_host *bt_host,
->>> +		struct platform_device *pdev)
->>> +{
->>> +	struct device *dev = &pdev->dev;
->>> +	uint32_t reg;
->>> +	int rc;
->>> +
->>> +	bt_host->irq = irq_of_parse_and_map(dev->of_node, 0);
->>> +	if (!bt_host->irq)
->>> +		return -ENODEV;
->> I think platform_get_irq() is the preferred interface here.
-> OK.
->
-> Thanks,
->
-> C.
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+So your PWM regulators are not very good and overshooting?  Do you have
+any numbers on this - what values do you end up setting for both the
+delay and safe fall percentages?
 
+> We'll fix this OVP problem by allowing users to specify the maximum
+> voltage that we can safely fall.  Apparently this maximum safe voltage
+> should be specified as a percentage of the current voltage.  The
+> regulator will then break things into separate steps with a delay in
+> between.
 
+I'd like to see some more thorough analysis than just an "apparently"
+here.  It's making the code more fiddly for something very handwavy.
+
+> @@ -2753,8 +2753,6 @@ static int _regulator_do_set_voltage(struct regulat=
+or_dev *rdev,
+>  	int old_selector =3D -1;
+>  	int old_uV =3D _regulator_get_voltage(rdev);
+> =20
+> -	trace_regulator_set_voltage(rdev_get_name(rdev), min_uV, max_uV);
+> -
+>  	min_uV +=3D rdev->constraints->uV_offset;
+>  	max_uV +=3D rdev->constraints->uV_offset;
+> =20
+> @@ -2842,11 +2840,53 @@ no_delay:
+>  				     (void *)data);
+>  	}
+> =20
+> -	trace_regulator_set_voltage_complete(rdev_get_name(rdev), best_val);
+> -
+>  	return ret;
+
+Let's remove some trace points too because...?  These *are* the actual
+voltage changes in the device, we're just splitting things up into a
+series of transitions.
+
+> +static int _regulator_set_voltage(struct regulator_dev *rdev,
+> +				     int min_uV, int max_uV)
+> +{
+> +	int safe_fall_percent =3D rdev->constraints->safe_fall_percent;
+> +	int slowest_decay_rate =3D rdev->constraints->slowest_decay_rate;
+> +	int orig_uV =3D _regulator_get_voltage(rdev);
+> +	int uV =3D orig_uV;
+> +	int ret;
+> +
+> +	trace_regulator_set_voltage(rdev_get_name(rdev), min_uV, max_uV);
+> +
+> +	 /* If we're rising or we're falling but don't need to slow; easy */
+> +	if (min_uV >=3D uV || !safe_fall_percent)
+
+Indentation is broken, the two lines above don't agree with each other.
+
+> +	ret =3D of_property_read_u32(np, "regulator-slowest-decay-rate", &pval);
+> +	if (!ret)
+> +		constraints->slowest_decay_rate =3D pval;
+> +	else
+> +		constraints->slowest_decay_rate =3D INT_MAX;
+
+The documentation said this is mandatory if we have a safe fall rate
+specified but the code says it's optional and we'll silently default to
+an absurdly high rate instead (it's odd that a large number in a field
+marked slowest is fast BTW).  Complaining loudly seems better than
+ignoring the error.
+
+> +	/* We use the value as int and as divider; sanity check */
+> +	if (constraints->slowest_decay_rate =3D=3D 0) {
+> +		pr_err("%s: regulator-slowest-decay-rate must not be 0\n",
+> +			np->name);
+> +		constraints->slowest_decay_rate =3D INT_MAX;
+> +	} else if (constraints->slowest_decay_rate > INT_MAX) {
+> +		pr_err("%s: regulator-slowest-decay-rate (%u) too big\n",
+> +			np->name, constraints->slowest_decay_rate);
+> +		constraints->slowest_decay_rate =3D INT_MAX;
+> +	}
+
+This should be with the parsing of slowest-decay-rate and checked only
+if we have a safe-fall-percent, there's no error if the value is omitted.
+
+> +	if (constraints->safe_fall_percent > 100) {
+> +		pr_err("%s: regulator-safe-fall-percent (%u) > 100\n",
+> +			np->name, constraints->safe_fall_percent);
+> +		constraints->safe_fall_percent =3D 0;
+> +       }
+
+Again indentation is borked here, I think you have tab/space issues.
+
+> +	if (constraints->safe_fall_percent &&
+> +		!constraints->slowest_decay_rate) {
+> +		pr_err("%s: regulator-slowest-decay-rate requires "
+> +			"regulator-safe-fall-percent\n", np->name);
+
+Don't align the second line of the condition with the body of the if,
+that just makes things hard to read - do what the rest of the code does
+and align with the (.
+
+Don't split text messages over multiple lines, it makes it impossible to
+grep for the error as printed.
+
+--x7gJcYyRf5ZnuMVj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJX1vpgAAoJECTWi3JdVIfQjGMH/2R5bjiH10vU1+/EWcnp0mSA
+0pm7el+VCoeLVK5f7Ds3zkg/MgayN/97k7/WA5Xe/37mHQAmAbasKip7dDSOu9eQ
++XkFUfKF2sZ/3LUzdF9hmcEPZ7N3OpKlUXzK+n3faW8PkCjAymnAXUtQmk68bo8o
+eSq+VPD3IgZNGB/ipfFx1ZExrXbVvFNa5GVS2j8gyLibXfyrmUI2aW/M63ZL9wyP
+E9TTT4ehVT7vl7hy+B7Qa01dpDcrTkmeWUisOtLIviGbpbskcIl2UjFAgDeSFBW2
+iUlS0qJUWfIbZ/2D9ZB04GYdp+MZWqmQzZerihio3nLORXZCOKzjjXY6nSSOS20=
+=otxX
+-----END PGP SIGNATURE-----
+
+--x7gJcYyRf5ZnuMVj--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
