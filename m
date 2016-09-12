@@ -1,65 +1,69 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 01/26] dt-bindings: display: display-timing: Add property
- to configure sync drive edge
-Date: Mon, 12 Sep 2016 16:22:53 +0300
-Message-ID: <57580a7f-2462-3fb9-bb87-ff8387f7be38@ti.com>
-References: <20160901112320.15246-1-peter.ujfalusi@ti.com>
- <20160901112320.15246-2-peter.ujfalusi@ti.com>
- <20160912130520.GA9582@rob-hp-laptop>
+From: Timur Tabi <timur@tabi.org>
+Subject: Re: ARM,SoC: About the use DT-defined properties by 3rd-party drivers
+Date: Mon, 12 Sep 2016 08:23:59 -0500
+Message-ID: <57D6AC6F.5040504@tabi.org>
+References: <57BDAF2E.10502@laposte.net>
+ <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
+ <57D69FB1.2020801@laposte.net> <20160912123809.GB13741@leverpostej>
+ <57D6AA54.6000208@laposte.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160912130520.GA9582@rob-hp-laptop>
+In-Reply-To: <57D6AA54.6000208@laposte.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: thierry.reding@gmail.com, airlied@linux.ie, tomi.valkeinen@ti.com, daniel.vetter@ffwll.ch, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Sebastian Frias <sf84@laposte.net>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Mason <slash.tmp@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/16 16:05, Rob Herring wrote:
-> On Thu, Sep 01, 2016 at 02:22:55PM +0300, Peter Ujfalusi wrote:
->> There are display panels which demands that the sync signal is driven on
->> different edge than the pixel data.
->> With the syncclk-active property we can specify the clk edge to be used to
->> drive the sync signal. When the property is missing it indicates that the
->> sync is driven on the same edge as the pixel data.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> CC: Rob Herring <robh+dt@kernel.org>
->> CC: Mark Rutland <mark.rutland@arm.com>
->> CC: devicetree@vger.kernel.org
->> ---
->>  Documentation/devicetree/bindings/display/panel/display-timing.txt | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/display/panel/display-timing.txt b/Documentation/devicetree/bindings/display/panel/display-timing.txt
->> index e1d4a0b59612..1436292e7a56 100644
->> --- a/Documentation/devicetree/bindings/display/panel/display-timing.txt
->> +++ b/Documentation/devicetree/bindings/display/panel/display-timing.txt
->> @@ -32,6 +32,12 @@ optional properties:
->>  			- active low  = drive pixel data on falling edge/
->>  					sample data on rising edge
->>  			- ignored     = ignored
->> + - syncclk-active: with
->> +			- active high = drive sync on rising edge/
-> 
-> rising edge of what? pixel clk?
+Sebastian Frias wrote:
+> 3rd parties could choose to write a driver (as opposed to use say, a user-mode
+> library) if it fits their programming model better, if they think they would
+> have better performance, or other reasons.
+>
+> The main idea is to make DT the authoritative source of HW description.
 
-Yes, pixel clk, I have copied and modified the 'pixelclk-active' option.
-Probably it would be better to state it explicitly.
+Do you really expect the open-source community to make a serious effort 
+to support out-of-tree drivers written by developers who have no 
+intention of upstreaming?
 
-> 
->> +					sample sync on falling edge
->> +			- active low  = drive sync on falling edge/
->> +					sample sync on rising edge
->> +			- omitted     = same configuration as pixelclk-active
->>   - interlaced (bool): boolean to enable interlaced mode
->>   - doublescan (bool): boolean to enable doublescan mode
->>   - doubleclk (bool): boolean to enable doubleclock mode
->> -- 
->> 2.9.3
->>
+There's a process for writing a Linux kernel driver with a DT binding. 
+That process is not broken.
 
+>> >Putting smoething together that's only sufficient to support some
+>> >out-of-tree driver with implicit assumptions that we are not aware of is
+>> >far from fantastic.
+> That does not seem very positive and it is not the case anyway, otherwise we
+> would not be consulting here:-)
 
--- 
-Péter
+Mark is correct.  Trying to create a device tree binding, and getting it 
+correct 100% the first time, without an actual drivers is just 
+impossible.  To even attempt that is folly.
+
+> Agreed, right now this whole thing seems like a really hypothetical question,
+
+Yes, it is.
+
+> but the intention is good.
+
+I'm not sure I agree with that.
+
+> Actually, I think it would encourage more SoC manufacturers to use DT as a way
+> to document their HW, which is a good thing.
+
+No it isn't.  SOC manufacturers should just release the documentation 
+they have.
+
+> But if I understood correctly your comment, you are basically saying that
+> without an example is hard to say.
+> Since the question seems understood, do you have an example of other SoC's
+> doing something similar?
+
+Similar to what?  Every upstream driver today is written the way we're 
+talking about -- submit the driver with the binding, and both are 
+reviewed together.
+
+> I've seen some big DT descriptions, but it is difficult to know if we are the
+> first ones trying to use the DT in this way.
+
+Hopefully, you'll be the last.
