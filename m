@@ -1,26 +1,34 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 4/4] ARM64: dts: meson-gxbb: Add SPIFC node
-Date: Mon, 12 Sep 2016 10:51:38 -0700
-Message-ID: <7h7fahqa51.fsf@baylibre.com>
-References: <1473409738-27175-1-git-send-email-jbrunet@baylibre.com>
-        <1473409738-27175-5-git-send-email-jbrunet@baylibre.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: dts: wheat: add DU support
+Date: Mon, 12 Sep 2016 20:52:40 +0300
+Message-ID: <ba5b2f8e-13f8-6c7d-17c1-44988d30a947@cogentembedded.com>
+References: <34968644.DhifNderY8@wasted.cogentembedded.com>
+ <15676050.WJW1jK1n2R@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473409738-27175-5-git-send-email-jbrunet@baylibre.com> (Jerome
-        Brunet's message of "Fri, 9 Sep 2016 10:28:58 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <15676050.WJW1jK1n2R@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+On 09/02/2016 12:29 AM, Sergei Shtylyov wrote:
 
-> From: Neil Armstrong <narmstrong@baylibre.com>
+> Define  the  Wheat board dependent  part of the DU device node.
+> Add the device nodes for the Analog Devices ADV7513 HDMI transmitters
+> connected to DU0/1.  Add the necessary subnodes to interconnect DU with
+> HDMI transmitters/connectors.
 >
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> ---
+> This patch is against the 'renesas-devel-20160901-v4.8-rc4' of Simon Horman's
+> 'renesas.git' repo plus the Wheat CAN and SDHI patches posted earlier...
+> The path depends on the 2 DRM patches just posted in order to work correctly!
 
-Applied,
+    In principle, both these patches have been queued by the maintainers... 
+Simon, are you going to wait till they hit media_tree.git? Linus' tree?
 
-Kevin
+MBR, Sergei
