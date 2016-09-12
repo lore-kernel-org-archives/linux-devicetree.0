@@ -1,76 +1,97 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 1/3] Documentation: dt: Add TI SCI clock driver
-Date: Mon, 12 Sep 2016 08:10:38 -0500
-Message-ID: <20160912131038.GA13103@rob-hp-laptop>
-References: <1472733635-22661-1-git-send-email-t-kristo@ti.com>
- <1472733635-22661-2-git-send-email-t-kristo@ti.com>
+From: Sebastian Frias <sf84@laposte.net>
+Subject: Re: ARM,SoC: About the use DT-defined properties by 3rd-party drivers
+Date: Mon, 12 Sep 2016 15:15:00 +0200
+Message-ID: <57D6AA54.6000208@laposte.net>
+References: <57BDAF2E.10502@laposte.net>
+ <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
+ <57D69FB1.2020801@laposte.net> <20160912123809.GB13741@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1472733635-22661-2-git-send-email-t-kristo-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nm-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160912123809.GB13741@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Timur Tabi <timur@tabi.org>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Mason <slash.tmp@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 01, 2016 at 03:40:33PM +0300, Tero Kristo wrote:
-> Add a clock implementation, TI SCI clock, that will hook to the common
-> clock framework, and allow each clock to be controlled via TI SCI
-> protocol.
-> 
-> Signed-off-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-> Tested-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> ---
->  .../devicetree/bindings/clock/ti,sci-clk.txt       | 51 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-> new file mode 100644
-> index 0000000..231cb80
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-> @@ -0,0 +1,51 @@
-> +Texas Instruments TI-SCI Clocks
-> +===============================
-> +
-> +All clocks on Texas Instruments' SoCs that contain a System Controller,
-> +are only controlled by this entity. Communication between a host processor
-> +running an OS and the System Controller happens through a protocol known
-> +as TI-SCI[1]. This clock implementation plugs into the common clock
-> +framework and makes use of the TI-SCI protocol on clock API requests.
-> +
-> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-> +
-> +Required properties:
-> +-------------------
-> +- compatible: Must be "ti,sci-clk"
-> +- #clock-cells: Shall be 2.
-> +  In clock consumers, this cell represents the device ID and clock ID
-> +  exposed by the PM firmware. The assignments can be found in the header
-> +  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
-> +  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where <soc>
-> +  is the SoC involved, for example 'k2g'.
-> +- ti,sci: Phandle to the TI SCI device to use for managing the clocks
-> +
-> +Optional properties:
-> +-------------------
-> +- ti,ssc-clocks: Array of phandle clocks that shall enable spread spectrum
-> +		 clocking while enabled
-> +- ti,allow-freq-change-clocks: Array of phandle clocks that shall allow
-> +			       dynamic clock frequency changes by firmware
-> +- ti,input-term-clocks: Array of phandle clocks that shall enable input
-> +			termination
+Hi Mark,
 
-These seem like a random set of features to control. What determines the 
-clocks for these? If it is based on the SoC, then make your compatible 
-string SoC specific and don't put this into DT.
+On 09/12/2016 02:38 PM, Mark Rutland wrote:
+>>
+>> 3rd party users of said SoC could then write kernel modules for such HW
+>> blocks using the DT description. The DT would thus become the authoritative
+>> source of information regarding register programming for the SoC.
+> 
+> I don't follow this part entirely. Why are you expecting thrid parties
+> to write a driver for those blocks rather than upstreaming a driver for
+> them?
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+3rd parties could choose to write a driver (as opposed to use say, a user-mode
+library) if it fits their programming model better, if they think they would
+have better performance, or other reasons.
+
+The main idea is to make DT the authoritative source of HW description.
+
+> 
+>> Currently, HW blocks for which there is no public driver (that it is
+>> accessed through user-mode libraries or firmware) require a separate
+>> HW description (be it Documentation, headers, etc.)
+>>
+>> Since the DT describes the HW, it would make sense to expose the HW through
+>> DT, that would centralise the HW description.
+> 
+> I would generally agree that the hardware should be described in DT.
+> The difficulty is that without a 'real' user it's not always possible to
+> tell if we're describing the thing correctly.
+> 
+
+That may be true, but so far we are not discussing changing DT's API so it
+should not have big ramifications.
+Besides, what "makes sense now" may "not make sense tomorrow" depending on
+how the HW is modified.
+We have somehow learned the hard-way that "le mieux est l'ennemi du bien"
+(the better is the enemy of the good) and we are trying to take a more
+practical (and flexible) approach.
+
+> Putting smoething together that's only sufficient to support some
+> out-of-tree driver with implicit assumptions that we are not aware of is
+> far from fantastic.
+
+That does not seem very positive and it is not the case anyway, otherwise we
+would not be consulting here :-)
+Agreed, right now this whole thing seems like a really hypothetical question,
+but the intention is good.
+
+Actually, I think it would encourage more SoC manufacturers to use DT as a way
+to document their HW, which is a good thing.
+
+> 
+>> However, after discussing over IRC, it looks like there was no guidance on
+>> this. Some people think submitting DT properties/nodes without a corresponding
+>> Linux driver is frowned upon, while others thought it was an odd limitation
+>> and suggested asking here.
+> 
+> Unfortunately, I think that the area is sufficiently vague that there
+> simply is no clear and general answer.
+> 
+> For the sake of discussion, an example of a particular block, along with
+> what you expect/need to describe would be helpful.
+
+I don't have a more concrete example now.
+
+As I stated, right now HW description is not centralised, and thus different
+bits of information are cherry-picked by hand from HW description into DT for
+bootloader, DT for Linux, Documentation/headers for 3rd-parties, etc.
+
+But if I understood correctly your comment, you are basically saying that
+without an example is hard to say.
+Since the question seems understood, do you have an example of other SoC's
+doing something similar?
+
+I've seen some big DT descriptions, but it is difficult to know if we are the
+first ones trying to use the DT in this way.
+
+Best regards,
+
+Sebastian
