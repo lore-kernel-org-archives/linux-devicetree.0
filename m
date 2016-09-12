@@ -1,69 +1,85 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Subject: Re: [PATCH 1/3] misc: Add Aspeed BT IPMI host driver
-Date: Mon, 12 Sep 2016 23:23:41 +0200
-Message-ID: <b42f1b61-8b00-2412-d51d-6207da8afcd6@kaod.org>
-References: <1472664259-23933-1-git-send-email-clg@kaod.org>
- <c06a8afb-9143-6aef-3425-ad1e50cae35d@kaod.org>
- <1ce6c4b4-5938-22fc-7467-d1efc220b772@gmail.com> <4727554.yt7pF8chOH@wuerfel>
- <7db5ada0-49ea-55eb-089e-d979941ceff5@gmail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 2/3] ARM64: dts: amlogic: Add basic support for Amlogic
+ S905X
+Date: Mon, 12 Sep 2016 23:43:55 +0200
+Message-ID: <28d9160a-ce40-cbbb-b4e9-3ec34be52368@suse.de>
+References: <20160903082227.30559-1-narmstrong@baylibre.com>
+ <20160903082227.30559-3-narmstrong@baylibre.com>
+ <7e27e8c0-bb18-40d8-10d6-3928e66815c7@suse.de>
+ <CAOQ7t2bWLq2XP2rKx3msf=1tUfXkQuBWagun46TaKk73qXr=FQ@mail.gmail.com>
+ <7ha8fcq26c.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7db5ada0-49ea-55eb-089e-d979941ceff5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: minyard-HInyCGIudOg@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7ha8fcq26c.fsf@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Carlo Caione <carlo@endlessm.com>, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello, 
-
-On 09/12/2016 10:33 PM, Corey Minyard wrote:
-> On 09/12/2016 02:15 PM, Arnd Bergmann wrote:
->> On Monday, September 12, 2016 1:55:40 PM CEST Corey Minyard wrote:
->>> On 09/02/2016 08:22 AM, C�dric Le Goater wrote:
->>>> Hello,
->>>>
->>>> Adding Corey in cc: . I guess I should have done that in the first place.
->>> Yes, probably so.  I've been travelling and didn't see it on the mailing
->>> lists until now.
->>>
->>> There is already a BT driver in the kernel, in drivers/char/ipmi, why
->>> won't that work?
->> The new driver is the host side (running on the BMC), the existing one
->> is the client (running on the PC).
+Am 12.09.2016 um 22:43 schrieb Kevin Hilman:
+> Carlo Caione <carlo@caione.org> writes:
+>> On Mon, Sep 12, 2016 at 6:28 PM, Andreas Färber <afaerber@suse.de> wrote:
 >>
->>     Arnd
-> 
-> Ok, that's not really clear from the documentation or the Kconfig.
-> In the IPMI spec the "host" side is the computer side, not the BMC
-> side.  Like:
-> 
->    11.6.1 BT Host Interface Registers
->    The Host BT interface provides an independent set of registers and
->    interrupts to allow the Host driver to
->    communicate with the baseboard management controller without
->    conflicting with the O/S ACPI driver.
-> 
-> In light of that, this should probably be named the bt-bmc driver.
-> 
-> I haven't reviewed this in detail, but I'm ok with putting it in
-> drivers/char/ipmi.  The state machine part looks reasonably
-> generic.  The configuration part isn't, but that could be split
-> out later if necessary.
-> 
-> The biggest thing I don't like is the byte at a time interfaces
-> from userspace.  That seems fairly inefficient if the system
-> does extra work for each userspace access.  IIRC some
-> systems do and some don't.
+>>>> +Boards with the Amlogic Meson GXL SoC shall have the following properties:
+>>>> +  Required root node property:
+>>>> +    compatible: "amlogic,meson-gxl-s905x", "amlogic,meson-gxl";
+>>>
+>>> Can we please use "amlogic,s905x", "amlogic,meson-gxl"? No need to
+>>> complicate the name. Also affects .dtsi and .dts below.
+>>
+>> gxl != s905x.
 
-What about the ioctl to send an SMS ATN event to the host ? Is 
-that ok for you ?
+Huh? You're seemingly completely missing my point...
 
-Thanks,
+But you are right that _Neil's_ heading needs to be fixed, too:
+Clearly not all GXL SoCs need to have an S905X compatible string!
+So it should be "Boards with the Amlogic S905X SoC shall ..." or so.
 
-C.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> AFAWK to the GXL family belong several different SoCs, like S905X,
+>> S905D, etc... (see patch 3/3)
+
+Thanks, I already know that, that's why you have two compatible strings
+instead of just one like for GXBB. We can certainly prepend one for
+symmetry there, too, if it makes you happier.
+
+>> This is why we use meson-gxl-s905x, meson-gxl-s905d, etc...
+> 
+> Correct.
+> 
+>> We could s/meson-gxl-s905x/meson-s905x/ and
+>> s/meson-gxl-s905d/meson-s905d/ but I honestly prefer this way because
+>> we can clearly see which family the SoC belongs to (the Amlogic naming
+>> convention is already messy enough).
+>> I mean, yes it's longer, but it's for the sake of documentation IMO.
+> 
+> +1
+
+I still don't follow that conclusion. The board is called "amlogic,p231"
+because P231 is a unique identifier within the Amlogic namespace, so why
+not call the SoC "amlogic,s905x" for the same reason? The documentation
+is already there in having both "amlogic,s905x" _and_
+"amlogic,meson-gxl" - please re-read my post. There is no S905X in GXL
+family and another S905X in some other Amlogic SoC family, so it's
+unique and there is no reason to encode any hierarchies into its name
+other than vendor,name.
+
+I'm not arguing over the file name, where it perfectly makes sense to
+have a meson-gxl- prefix (already discussed), just about the compatible
+string where we don't have "amlogic,meson-gxl-s905x-p231" either because
+it is completely unnecessary and does _not_ add any value.
+
+Not that we're checking this string anywhere anyway... If you want to
+check for the GXL family you have to use "amlogic,meson-gxl"; if you
+want to check for the specific SoC you use "amlogic,s905x". Simple. We
+never match partial strings, so there is no sense in a hardcoded prefix
+that is duplicating information already available.
+
+Regards,
+Andreas
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
