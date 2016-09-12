@@ -1,317 +1,213 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] Revert "Input: bma150 - extend chip detection for bma180"
-Date: Mon, 12 Sep 2016 20:52:44 +0200
-Message-ID: <c3312699-4821-7311-0540-3c02c806dde7@redhat.com>
-References: <20160911164321.23122-1-hdegoede@redhat.com>
- <2C735D34-7559-4A62-A635-A5719C356D94@goldelico.com>
- <a156f29f-43db-6811-7f7e-ac2c7682d766@redhat.com>
- <4809E76B-7BFE-4D95-8631-079262E958E2@goldelico.com>
+From: Corey Minyard <tcminyard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] misc: Add Aspeed BT IPMI host driver
+Date: Mon, 12 Sep 2016 13:55:40 -0500
+Message-ID: <1ce6c4b4-5938-22fc-7467-d1efc220b772@gmail.com>
+References: <1472664259-23933-1-git-send-email-clg@kaod.org>
+ <1472664259-23933-2-git-send-email-clg@kaod.org> <8157811.GypLEN0R9B@wuerfel>
+ <c06a8afb-9143-6aef-3425-ad1e50cae35d@kaod.org>
+Reply-To: minyard-HInyCGIudOg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4809E76B-7BFE-4D95-8631-079262E958E2-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+In-Reply-To: <c06a8afb-9143-6aef-3425-ad1e50cae35d-Bxea+6Xhats@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>, Lukas Maerdian <lukas-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-HI,
-
-On 12-09-16 19:20, H. Nikolaus Schaller wrote:
-> Hi,
+On 09/02/2016 08:22 AM, Cédric Le Goater wrote:
+> Hello,
 >
->> Am 12.09.2016 um 16:44 schrieb Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
+> Adding Corey in cc: . I guess I should have done that in the first place.
+
+Yes, probably so.  I've been travelling and didn't see it on the mailing
+lists until now.
+
+There is already a BT driver in the kernel, in drivers/char/ipmi, why
+won't that work?
+
+-corey
+
+>
+> Arnd is suggesting to put this IPMI BT driver under drivers/char/ipmi
+> which is indeed a better place than drivers/misc.
+>
+> Below some comments,
+>
+> On 08/31/2016 09:57 PM, Arnd Bergmann wrote:
+>> On Wednesday, August 31, 2016 7:24:17 PM CEST Cédric Le Goater wrote:
+>>> From: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+>>>
+>>> This patch adds a simple device driver to expose the iBT interface on
+>>> Aspeed chips as a character device (/dev/bt).
+>>>
+>>> The iBT interface is used to perform in-band IPMI communication from a
+>>> BMC to the host.
+>>>
+>>> Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+>>> Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+>>> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+>>> [clg: checkpatch fixes
+>>>        devicetree binding documentation]
+>>> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+>>> ---
+>>>   .../devicetree/bindings/misc/aspeed,bt-host.txt    |  19 +
+>>>   drivers/misc/Kconfig                               |   5 +
+>>>   drivers/misc/Makefile                              |   1 +
+>>>   drivers/misc/bt-host.c                             | 433 +++++++++++++++++++++
+>>>   include/uapi/linux/Kbuild                          |   1 +
+>>>   include/uapi/linux/bt-host.h                       |  18 +
+>>>   6 files changed, 477 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/misc/aspeed,bt-host.txt
+>>>   create mode 100644 drivers/misc/bt-host.c
+>>>   create mode 100644 include/uapi/linux/bt-host.h
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/misc/aspeed,bt-host.txt b/Documentation/devicetree/bindings/misc/aspeed,bt-host.txt
+>>> new file mode 100644
+>>> index 000000000000..938c5998c331
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/misc/aspeed,bt-host.txt
+>> "misc" seems like a bad category here. Does this fit nowhere else?
 >>
->> Hi,
+>>> @@ -0,0 +1,19 @@
+>>> +* Aspeed BT IPMI interface
+>> What does "BT" stand for? IPMI is a more commonly known acronym,
+>> but maybe list both with their full name as well.
+> "Block Transfer" which is described in the IPMI specs.
+>
+> yes, I need to rephrase the commit log a bit and put some references
+> to the specs.
+>
+>>> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+>>> index 7410c6d9a34d..71a7b9feb0f0 100644
+>>> --- a/drivers/misc/Makefile
+>>> +++ b/drivers/misc/Makefile
+>>> @@ -57,6 +57,7 @@ obj-$(CONFIG_ECHO)		+= echo/
+>>>   obj-$(CONFIG_VEXPRESS_SYSCFG)	+= vexpress-syscfg.o
+>>>   obj-$(CONFIG_CXL_BASE)		+= cxl/
+>>>   obj-$(CONFIG_PANEL)             += panel.o
+>>> +obj-$(CONFIG_ASPEED_BT_IPMI_HOST)	+= bt-host.o
+>>>   
+>>>   lkdtm-$(CONFIG_LKDTM)		+= lkdtm_core.o
+>>>   lkdtm-$(CONFIG_LKDTM)		+= lkdtm_bugs.o
+>> Maybe put this in a subdirectory of drivers/char/ipmi?
+>> I understand that this is the other end of the protocol,
+>> but they are closely related after all.
+> I agree. There are also some definitions we could make common.
+>
+> Let's see what Corey thinks about it.
+>
+>>> +#define DEVICE_NAME	"bt-host"
+>> here maybe "ipmi/bt-host" or "ipmi-bt-host"?
+> yes. a name containing 'ipmi' is certainly wanted.
+>    
+>>> +static ssize_t bt_host_read(struct file *file, char __user *buf,
+>>> +				size_t count, loff_t *ppos)
+>>> +{
+>>> +	struct bt_host *bt_host = file_bt_host(file);
+>>> +	char __user *p = buf;
+>>> +	u8 len;
+>>> +
+>>> +	if (!access_ok(VERIFY_WRITE, buf, count))
+>>> +		return -EFAULT;
+>>> +
+>>> +	WARN_ON(*ppos);
+>>> +
+>>> +	if (wait_event_interruptible(bt_host->queue,
+>>> +				bt_inb(bt_host, BT_CTRL) & BT_CTRL_H2B_ATN))
+>>> +		return -ERESTARTSYS;
+>>> +
+>>> +	set_b_busy(bt_host);
+>>> +	clr_h2b_atn(bt_host);
+>>> +	clr_rd_ptr(bt_host);
+>>> +
+>>> +	len = bt_read(bt_host);
+>>> +	__put_user(len, p++);
+>>> +
+>>> +	/* We pass the length back as well */
+>>> +	if (len + 1 > count)
+>>> +		len = count - 1;
+>>> +
+>>> +	while (len) {
+>>> +		if (__put_user(bt_read(bt_host), p))
+>>> +			return -EFAULT;
+>>> +		len--; p++;
+>>> +	}
+>> If there are larger chunks of data to be transferred,
+>> using a temporary buffer with copy_from_user/copy_to_user
+>> would be more efficient. Since the size appears to
+>> be limited to 256 bytes anyway, that easily fits on the stack.
+> ok. I will change that.
+>
+>>> +
+>>> +	clr_b_busy(bt_host);
+>>> +
+>>> +	return p - buf;
+>>> +}
+>> What is the motivation for only allowing complete messages
+>> to be transferred or truncated for short buffers?
 >>
->> On 12-09-16 16:31, H. Nikolaus Schaller wrote:
->>> Hi,
->>>
->>>> Am 11.09.2016 um 18:43 schrieb Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
->>>>
->>>> This reverts commit ef3714fdbc8d ("Input: bma150 - extend chip
->>>> detection for bma180").
->>>>
->>>> The bma180 is not compatible with the bma150 at all, it has 14 bits
->>>> resolution instead of 10, and it has quite different control registers.
->>>>
->>>> Treating the bma180 as a bma150 wrt its data registers will just result
->>>> in throwing away the lowest 4 bits, which is not too bad. But the ctrl
->>>> registers are a different story.
->>>>
->>>> It may be that things happen to just work (I don't have a bma180 to
->>>> test with) but that certainly does not make this right.
->>>
->>> Yes, looks as if your observation is right. Thanks for pointing this out!
->>>
->>> This did need me some research to find an answer...
->>>
->>> If I remember correctly, the original patch was based on a recommendation
->>> from someone I don't remember, who said that the chips are the same in a
->>> different package. So we added the chip_id and it worked immediately as
->>> expected. It looks as if we did not check the data sheets. So we did not
->>> question this recommendation.
->>>
->>>>
->>>> Removing the bma180 id also removes overlap wrt the ids in the iio
->>>> bma180 driver which does treat the bma180 properly.
->>>
->>> Nack.
->>>
->>> The problem we get is that an iio driver is not an input driver and can't
->>> easily replace it.
+>> Have you considered reading the message into a device specific
+>> buffer and allowing continued reads?
 >>
->> Actually almost all accelerometer drivers in the Linux kernel are
->> iio drivers,
+>> I don't see an obvious reason one way or another, and I suppose
+>> you had an idea of what you were doing, so maybe explain it
+>> in a comment.
+> The interface is not byte oriented. It is called 'Block Transfer'
+> because an entire message is buffered and then the host or the bmc
+> is notified that there is data to be read.
 >
-> Yes, that is a good move indeed to make them more general.
+> I will add a comment on that.
 >
->> the bma150 driver is the odd duck out,
+>>> +static long bt_host_ioctl(struct file *file, unsigned int cmd,
+>>> +		unsigned long param)
+>>> +{
+>>> +	struct bt_host *bt_host = file_bt_host(file);
+>>> +
+>>> +	switch (cmd) {
+>>> +	case BT_HOST_IOCTL_SMS_ATN:
+>>> +		set_sms_atn(bt_host);
+>>> +		return 0;
+>>> +	}
+>>> +	return -EINVAL;
+>>> +}
+>> Is this ioctl interface defined in a way that makes sense on
+>> any IPMI host hardware, or did you just do it like this because
+>> it is the easiest way  on the hardware.
+> This platform runs OpenBMC on which a dbus daemon acts as a proxy
+> between the IPMI BT char device and the rest of the system. So yes,
+> the ioctl is relatively easy to use.
 >
-> Indeed it seems to be in /misc for some reason.
+>> I think it's important for the user interface to be extensible
+>> to other implementations if we ever add any.
+> I agree but I don't know of any other BMC side implementations.
+> May be others ?
 >
->> that is why
->> we've iio-sensor-proxy for apps which want the accelerometer
->> to behave as an input device:
->>
->> https://github.com/hadess/iio-sensor-proxy
+>>> +static int bt_host_config_irq(struct bt_host *bt_host,
+>>> +		struct platform_device *pdev)
+>>> +{
+>>> +	struct device *dev = &pdev->dev;
+>>> +	uint32_t reg;
+>>> +	int rc;
+>>> +
+>>> +	bt_host->irq = irq_of_parse_and_map(dev->of_node, 0);
+>>> +	if (!bt_host->irq)
+>>> +		return -ENODEV;
+>> I think platform_get_irq() is the preferred interface here.
+> OK.
 >
-> Does this provide an input device /dev/input/event?
-> From a first look it seems to provide a D-Bus abstraction which is
-> not the same as an /dev/input/event.
-
-It also provides a /dev/input/event node through uinput:
-
-https://github.com/hadess/iio-sensor-proxy/blob/master/src/fake-input-accelerometer.c
-
-
-> What about latency?
-> A kernel driver can react on a sensor interrupt, queue results
-> and sleep.
+> Thanks,
 >
-> Isn't a user-space process more resource hungry than a kernel thread?
+> C.
 >
->>
->>> An input driver can be used for gesture applications (e.g. detecting
->>> the device has been turned upside down) and can report X/Y/Z coordinates
->>> to e.g. X11 for games similar to a mouse or joystick (which the iio driver
->>> doesn't).
->>
->> See above.
->>
->>> So it should remain configurable which of both driver options is loaded,
->>> to match user space API needs.
->>>
->>> BTW: id overlap is only a problem if both drivers are configured in parallel.
->>
->> Right, so it is "only" a problem to any generic distro which tries to
->> support both bma150 and bma250 accelerometers, as both the input
->> bma150 as well as the iio bma250 driver claim to be bma180 compatible.
 >
-> Well, it is only a problem if such a generic distro is really run on a device
-> which has a bma180 defined in DT. There do not seem to exist many of these.
-
-True, still the bma180 compatible is simply just wrong here, and as such
-it really should be removed (it really should never have been added).
-
->>> Next, I have tried to find out which devices really use the bma150 and bma180.
->>>
->>> It appears that no in-tree device uses the bma150 while the GTA04 uses
->>> the bma180 (in DT), but not in any defconfig (the GTA04 specific config
->>> is not upstreamable since omap2plus_defconfig exists).
->>>
->>> In user-space the GTA04 requires and actively uses this input driver for Replicant.
->>>
->>> So I would conclude that this revert does not improve/fix any device using a
->>> bma150 (if it exists at all), but breaks an existing device.
->>>
->>> What options do we have?
->>>
->>> a) add proper register number constants and choose conditionally (where they differ)
->>> b) drop bma150 support completely and change registers for bma180
->>> c) clone the bma150 input driver into an bma180 input driver and fix registers
->>> d) extend the bma180 iio driver to optionally provide an input device
->>> e) write a generic input/iio-accel wrapper (which should work with any iio accelerometer)
->>>
->>> I would favour approach e)
->>
->> Good, because that solution already exists :) See:
->> https://github.com/hadess/iio-sensor-proxy
->
-> No, it is yet another option. I would formulate it as:
->
-> f) break user-space compatibility for existing systems and write / require
->    a user-space workaround.
->
-> This is something which is the least favorite in my view.
-
-I'm pretty sure that no-one, really no-one wants to do
-evdev emulation for iio devices in the kernel; and there
-is nothing wrong with doing it in userspace.
-
-> Since we have no control over the user space people have installed and IMHO
-> a kernel shouldn't break APIs too often or only for really good reasons
-> (e.g. completely new functions).
->
-> And we have no means to force user-space developers to integrate such daemons :(
->
-> So we break a device by upgrading to 4.9-kernel but can't give a solution.
-
-The only user of this seems to be the gta04, and I believe gta04 users
-will not just jump to 4.9 without getting that through some sort
-of central distribution point which can make sure userland gets
-fixed first.
-
->>> but it has an issue I have no solution for:
->>>
->>> 	how to define in DT (or CONFIG?) which iio accelerometer(s) should
->>> 	be wrapped and presented as input device(s).
->>
->> I believe currently iio-sensor-proxy simply wraps all accelerometers
->> it can find, which seems the right thing to do. Usually we're running
->> a generic desktop-ish OS / distro which wants these devices
->> to be available as input devices;
->> for special cases like actual
->> robots and stuff running Linux, iio-sensor-proxy can simply be
->> disabled; or not installed at all.
->
-> Well, the GTA04 we talk about falls into a third category: a mobile device.
->
-> Which is not running a desktop-ish OS / distro. It is running Replicant,
-
-For replicant there is:
-
-https://github.com/01org/android-iio-sensors-hal
-
-> QtMoko, SHR, FSO or other user spaces which partially rely on /dev/input/event
-> without starting a daemon.
-
-So either these have a gta04 specific version, which can then
-be fixed in parallel with the kernel, like one would do
-with normal distros in a case like this. Or these are generic
-in which case having them work with iio accelerometers is
-a good thing in general, and they may even already work.
-
-> At least in current releases and we have little
-> influence to have them use a new daemon.
->
-> So I would strongly prefer if we can solve this in the kernel and keep the
-> user-space API for the bma180 input driver stable.
->
->>
->> So all in all I believe that this is a solved problem, since
->> solution e. from above is already implemented.
->
-> Well it is also solved if we do not revert the patch at all, because it
-> works in practice (even if not exactly correct) and is compatible to
-> existing user-space.
->
-> In summary I don't like option f) because it creates more problems than
-> it solves.
->
-> If e) is ruled out, IMHO the second best option seems to be d) to add a
-> CONFIG_BMA180_INPUT_DEVICE and make it present some additional /dev/input/event
-> in parallel to the iio interface.
-
-Ugh, no we don't need more hacks here. I would greatly prefer to
-just keep the "bma180" is in the bma150 input driver over adding
-evdev event generation to iio drivers (either at the driver level
-or the core).
-
-I think that the best solution might be to do do something like this
-in drivers/input/misc/bma150.c
-
-static const struct i2c_device_id bma150_id[] = {
-         { "bma150", 0 },
-#ifndef CONFIG_BMA180 /* Avoid conflict with iio bma180 driver */
-         { "bma180", 0 },
-#endif
-         { "smb380", 0 },
-         { "bma023", 0 },
-         { }
-};
-
-Then people relying on this can keep using it, and iio user
-do not have to worry about it.
-
-Regards,
-
-Hans
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 
-
-> I already have a similar approach in my to-be-upstreamed queue for the tsc2007
-> touch screen driver to provide additional iio channels for raw values, chip
-> temperature and the auxiliary general purpose ADC (which is used as ambient
-> light sensor in the GTA04).
->
-> So let's develop some patch for drivers/iio/accel/bma180.c before we revert
-> this bma150 patch and have nothing.
->
-> BR,
-> Nikolaus Schaller
->
->>
->> Regards,
->>
->> Hans
->>
->>
->>
->>>
->>> Well, it could be as simple as defining a virtual "input-iio-accel" wrapper
->>> driver with no real hardware behind and provide a reference to the iio DT node.
->>> But I think such virtual devices are against DT style.
->>>
->>> So I don't know how to implement it in an acceptable way.
->>>
->>> Ideas?
->>>
->>> BR and thanks,
->>> Nikolaus Schaller
->>>
->>>>
->>>> Cc: Dr. H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
->>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>> drivers/input/misc/bma150.c | 4 +---
->>>> 1 file changed, 1 insertion(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/input/misc/bma150.c b/drivers/input/misc/bma150.c
->>>> index b0d4453..cae4832 100644
->>>> --- a/drivers/input/misc/bma150.c
->>>> +++ b/drivers/input/misc/bma150.c
->>>> @@ -70,7 +70,6 @@
->>>> #define BMA150_CFG_5_REG	0x11
->>>>
->>>> #define BMA150_CHIP_ID		2
->>>> -#define BMA180_CHIP_ID		3
->>>> #define BMA150_CHIP_ID_REG	BMA150_DATA_0_REG
->>>>
->>>> #define BMA150_ACC_X_LSB_REG	BMA150_DATA_2_REG
->>>> @@ -539,7 +538,7 @@ static int bma150_probe(struct i2c_client *client,
->>>> 	}
->>>>
->>>> 	chip_id = i2c_smbus_read_byte_data(client, BMA150_CHIP_ID_REG);
->>>> -	if (chip_id != BMA150_CHIP_ID && chip_id != BMA180_CHIP_ID) {
->>>> +	if (chip_id != BMA150_CHIP_ID) {
->>>> 		dev_err(&client->dev, "BMA150 chip id error: %d\n", chip_id);
->>>> 		return -EINVAL;
->>>> 	}
->>>> @@ -643,7 +642,6 @@ static UNIVERSAL_DEV_PM_OPS(bma150_pm, bma150_suspend, bma150_resume, NULL);
->>>>
->>>> static const struct i2c_device_id bma150_id[] = {
->>>> 	{ "bma150", 0 },
->>>> -	{ "bma180", 0 },
->>>> 	{ "smb380", 0 },
->>>> 	{ "bma023", 0 },
->>>> 	{ }
->>>> --
->>>> 2.9.3
->>>>
->>>
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
