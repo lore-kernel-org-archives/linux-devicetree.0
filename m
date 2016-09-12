@@ -1,43 +1,41 @@
-From: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 0/6] ARM: dts: bcm283x: add and use pinctrl groups
-Date: Mon, 12 Sep 2016 10:22:50 +0200
-Message-ID: <1473668576-22256-1-git-send-email-kraxel@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Gerd Hoffmann <kraxel@redhat.com>
+Subject: [PATCH v2 3/6] ARM: dts: bcm283x: add pinctrl group to &pwm, drop pins from &gpio
+Date: Mon, 12 Sep 2016 10:22:53 +0200
+Message-ID: <1473668576-22256-4-git-send-email-kraxel@redhat.com>
+References: <1473668576-22256-1-git-send-email-kraxel@redhat.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473668576-22256-1-git-send-email-kraxel@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: eric@anholt.net, swarren@wwwdotorg.org, bcm-kernel-feedback-list@broadcom.com, Gerd Hoffmann <kraxel@redhat.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-  Hi,
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ arch/arm/boot/dts/bcm2835-rpi.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Next round:  Patch 1 is new and adds the pull defines to the device tree
-bindings.  Patch 2 adds all the pinctrl groups, in a single patch now,
-list sorting caused too many conflicts.  Patch 3-6 put some pinctrl
-groups into use, they are unmodified (patches 5-8 in v1).
-
-cheers,
-  Gerd
-
-Eric Anholt (1):
-  ARM: dts: bcm283x: Define standard pinctrl groups in the gpio node.
-
-Gerd Hoffmann (5):
-  pinctrl: bcm2835: add pull defines to dt bindings
-  ARM: dts: bcm283x: add pinctrl group to &pwm, drop pins from &gpio
-  ARM: dts: bcm283x: add pinctrl group to &i2c0, drop pins from &gpio
-  ARM: dts: bcm283x: add pinctrl group to &i2c1, drop pins from &gpio
-  ARM: dts: bcm283x: add pinctrl group to &sdhci, drop pins from &gpio
-
- arch/arm/boot/dts/bcm2835-rpi.dtsi    |  12 +-
- arch/arm/boot/dts/bcm283x.dtsi        | 203 ++++++++++++++++++++++++++++++++++
- drivers/pinctrl/bcm/pinctrl-bcm2835.c |   6 -
- include/dt-bindings/pinctrl/bcm2835.h |   5 +
- 4 files changed, 218 insertions(+), 8 deletions(-)
-
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index 88bcd0c..ff62236 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -38,7 +38,7 @@
+ 	};
+ 
+ 	alt0: alt0 {
+-		brcm,pins = <0 1 2 3 4 5 7 8 9 10 11 40 45>;
++		brcm,pins = <0 1 2 3 4 5 7 8 9 10 11>;
+ 		brcm,function = <BCM2835_FSEL_ALT0>;
+ 	};
+ 
+@@ -68,6 +68,8 @@
+ };
+ 
+ &pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm0_gpio40 &pwm1_gpio45>;
+ 	status = "okay";
+ };
+ 
 -- 
 1.8.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
