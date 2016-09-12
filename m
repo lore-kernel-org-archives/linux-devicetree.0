@@ -1,42 +1,47 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 3/5] arm64: arch_timer: Work around QorIQ Erratum
- A-008585
-Date: Mon, 12 Sep 2016 13:30:28 +0100
-Message-ID: <20160912123027.GA13741@leverpostej>
-References: <1473469413-11019-1-git-send-email-oss@buserror.net>
- <1473469413-11019-3-git-send-email-oss@buserror.net>
- <20160912113615.GA20804@leverpostej>
- <20160912114406.GG23211@arm.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [v4 0/2] Fix incorrect capability
+Date: Mon, 12 Sep 2016 14:35:36 +0200
+Message-ID: <CAPDyKFp9K6=Tia3AOX4wT_R_N6x3XizGZoMws1jymKa3iNr8TA@mail.gmail.com>
+References: <20160909020840.2718-1-jaedon.shin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160912114406.GG23211-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20160909020840.2718-1-jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, mike.caraman-3arQi8VN3Tc@public.gmane.org, Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 12, 2016 at 12:44:07PM +0100, Will Deacon wrote:
-> On Mon, Sep 12, 2016 at 12:36:15PM +0100, Mark Rutland wrote:
-> > The changes in arm64's <asm/arch_timer.h> are going to conflict with
-> > some cleanup [1,2] that just landed in the arm64 for-next/core branch.
-> > 
-> > Could you please rebase atop of that?
-> 
-> Well, we should figure out what tree this is going through first. There
-> are a mixture of arm, arm64, driver and dts changes here and not all
-> of it is carrying the appropriate acks for me to queue it.
+On 9 September 2016 at 04:08, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi all,
+>
+> This patch serise fixes incorrect capability bit about ADMA 64-bit on
+> MIPS based BRCMSTB SoCs. This also includes the change of DT bindings.
+>
+> Changes in v4:
+> - Added commit message to change example nodes.
+> - Fixed spelling mistake.
+>
+> Jaedon Shin (2):
+>   mmc: DT: sdhci-brcmstb: Bindings document for common sdhci-brcmstb
+>   mmc: sdhci-brcmstb: Fix incorrect capability
+>
+>  .../mmc/{brcm,bcm7425-sdhci.txt => brcm,sdhci-brcmstb.txt}        | 8 +++++---
+>  drivers/mmc/host/sdhci-brcmstb.c                                  | 3 +++
+>  2 files changed, 8 insertions(+), 3 deletions(-)
+>  rename Documentation/devicetree/bindings/mmc/{brcm,bcm7425-sdhci.txt => brcm,sdhci-brcmstb.txt} (81%)
+>
+> --
+> 2.10.0
+>
 
-Given that mix, I had assumed that this would all go through the arm64
-tree -- I see that Rob has already acked the binding, and I'm happy to
-give my ack for the driver once that's in shape.
+Thanks, applied for next!
 
-The dts change could go through arm-soc in parallel, I guess. It doesn't
-look like arm-soc have been Cc'd for that, though.
+I reverted the change from the DT example code, as Rob pointed out
+it's an unnecessary change.
 
-Thanks,
-Mark.
+Kind regards
+Uffe
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
