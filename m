@@ -1,73 +1,63 @@
-From: Brendan Jackman <brendan.jackman-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 02/16] dt/bindings: Update binding for PM domain idle states
-Date: Mon, 12 Sep 2016 16:19:43 +0100
-Message-ID: <87sht59mcw.fsf@arm.com>
-References: <1472242678-33700-1-git-send-email-lina.iyer@linaro.org> <1472242678-33700-3-git-send-email-lina.iyer@linaro.org> <0b233802-f459-c6bb-ff42-70745a225cfb@arm.com> <20160902201605.GA1705@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] usb: dwc3: Added a property to set GFLADJ register
+Date: Mon, 12 Sep 2016 10:30:18 -0500
+Message-ID: <20160912153018.GA14561@rob-hp-laptop>
+References: <ae2c9b5683820c6456f91a2ef631efa2de0bec28.1472764828.git.johnyoun@synopsys.com>
+ <649b249e86e901b5bd2cf4cbe9db96d04a45f30d.1472764828.git.johnyoun@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20160902201605.GA1705-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brendan.jackman-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, Juri.Lelli-5wv7dgnIgG8@public.gmane.org, Axel Haslam <ahaslam+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Titinger <mtitinger+renesas-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <649b249e86e901b5bd2cf4cbe9db96d04a45f30d.1472764828.git.johnyoun@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Youn <johnyoun@synopsys.com>
+Cc: Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Thinh Nguyen <thinhn@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 01, 2016 at 02:32:33PM -0700, John Youn wrote:
+> From: Thinh Nguyen <thinhn@synopsys.com>
+> 
+> Added gfladj variable to control the core behavior with respect to
+> SOF, ITP, and frame timer functionality.
+> 
+> Currently there is dwc->fladj that holds a single field in GFLADJ
+> register (GFLADJ.GFLADJ_30MHZ). A new variable gfladj is added to
+> dwc structure to allow setting of the entire GFLADJ register. If
+> dwc->gfladj is set, then it has a higher priority than dwc->fladj
+> when writing to the GFLADJ register.
 
-Hi Lina,
+I'm not a fan of magic register values for DT properties.
 
-Sorry for the delay here, Sudeep and I were both been on holiday last week.
+How many fields in this register that you will ever need to touch?
 
-On Fri, Sep 02 2016 at 21:16, Lina Iyer wrote:
-> On Fri, Sep 02 2016 at 07:21 -0700, Sudeep Holla wrote:
-[...]
->>This version is *not very descriptive*. Also the discussion we had on v3
->>version has not yet concluded IMO. So can I take that we agreed on what
->>was proposed there or not ?
->>
-> Sorry, this example is not very descriptive. Pls. check the 8916 dtsi
-> for the new changes in the following patches. Let me know if that makes
-> sense.
+> Synopsys HW setup (HAPS DX and phy board) requires a preset to this
+> register to improve interoperablitity. For example, the value for
+> GFLADJ_REFCLK_LPM_SEL should be set to 0 with ref_clk period of 50.
 
-The not-yet-concluded discussion Sudeep is referring to is at [1].
+This sounds like it should be handled in the driver. Is it a simple, 
+constant correlation of ref_clk period to this value?
 
-In that thread we initially proposed the idea of, instead of splitting
-state phandles between cpu-idle-states and domain-idle-states, putting
-CPUs in their own domains and using domain-idle-states for _all_
-phandles, deprecating cpu-idle-states. I've brought this up in other
-threads [2] but discussion keeps petering out, and neither this example
-nor the 8916 dtsi in this patch series reflect the idea.
-
-It would be great if we could go back to the thread at [1] where Sudeep
-has posted examples and come to a clear consensus on the binding design
-before reviewing implementation patches. Ideally with input from Ulf,
-Rob and Kevin.
-
-[1] https://patchwork.kernel.org/patch/9264507
-[2] http://www.spinics.net/lists/devicetree/msg141024.html
->
-> Thanks,
-> Lina
->
->>We could have better example above *really* based on the discussions we
->>had so far. This example always makes me think it's well crafted to
->>avoid any sort of discussions. We need to consider different use-cases
->>e.g. what about CPU level states ?
->>
->>IMO, we need to discuss this DT binding in detail and arrive at someq
->>conclusion before you take all the troubles to respin the series.
->>Also it's better to keep the DT binding separate until we have some
->>conclusion instead of posting the implementation for each version.
->>That's just my opinion(I would be least bothered about implementation
->>until I know it will be accepted before I can peek into the code, others
->>may differ.
->>
->>--
->>Regards,
->>Sudeep
-
-Cheers,
-Brendan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+> Signed-off-by: John Youn <johnyoun@synopsys.com>
+> ---
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
+>  drivers/usb/dwc3/core.c                        | 5 +++++
+>  drivers/usb/dwc3/core.h                        | 1 +
+>  drivers/usb/dwc3/dwc3-pci.c                    | 1 +
+>  4 files changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> index aa54ba7..cad4bf6 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -52,6 +52,8 @@ Optional properties:
+>     UTMI+ and "ulpi" for ULPI when the DWC_USB3_HSPHY_INTERFACE has value 3.
+>   - snps,ref_clk_per: value for GUTCL.RefClkPer field that sets the period of
+>  			ref_clk in nano seconds.
+> + - snps,gfladj: if set, overides the value in the GFLADJ register. Takes
+> + 			precedence over snps,quirk-frame-length-adjustment.
+>   - snps,quirk-frame-length-adjustment: Value for GFLADJ_30MHZ field 
+of GFLADJ
+>  	register for post-silicon frame length adjustment when the
+>  	fladj_30mhz_sdbnd signal is invalid or incorrect.
