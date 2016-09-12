@@ -1,42 +1,36 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V2 02/10] Documentation: DT: qcom_hidma: correct spelling mistakes
-Date: Mon, 12 Sep 2016 09:02:56 -0400
-Message-ID: <1473685384-19913-3-git-send-email-okaya@codeaurora.org>
+Subject: [PATCH V2 03/10] of: irq: make of_msi_configure accessible from modules
+Date: Mon, 12 Sep 2016 09:02:57 -0400
+Message-ID: <1473685384-19913-4-git-send-email-okaya@codeaurora.org>
 References: <1473685384-19913-1-git-send-email-okaya@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1473685384-19913-1-git-send-email-okaya@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+Cc: agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Fix the spelling mistakes and extra and statements in the sentences.
+The of_msi_configure routine is only accessible by the built-in
+kernel drivers. Export this function so that modules can use it
+too.
+
+This function is useful for configuring MSI on child device tree
+nodes on hierarchical objects.
 
 Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
 ---
- Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/of/irq.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-index 47bfb5a..f99f642 100644
---- a/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-+++ b/Documentation/devicetree/bindings/dma/qcom_hidma_mgmt.txt
-@@ -5,13 +5,13 @@ memcpy and memset capabilities. It has been designed for virtualized
- environments.
- 
- Each HIDMA HW instance consists of multiple DMA channels. These channels
--share the same bandwidth. The bandwidth utilization can be parititioned
-+share the same bandwidth. The bandwidth utilization can be partitioned
- among channels based on the priority and weight assignments.
- 
- There are only two priority levels and 15 weigh assignments possible.
- 
- Other parameters here determine how much of the system bus this HIDMA
--instance can use like maximum read/write request and and number of bytes to
-+instance can use like maximum read/write request and number of bytes to
- read/write in a single burst.
- 
- Main node required properties:
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index a2e68f7..20c09e0 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -767,3 +767,4 @@ void of_msi_configure(struct device *dev, struct device_node *np)
+ 	dev_set_msi_domain(dev,
+ 			   of_msi_get_domain(dev, np, DOMAIN_BUS_PLATFORM_MSI));
+ }
++EXPORT_SYMBOL_GPL(of_msi_configure);
 -- 
 1.9.1
