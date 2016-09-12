@@ -1,73 +1,49 @@
-From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: [PATCH v2 2/3] MIPS: OCTEON: add DTS for D-Link DSR-500N
-Date: Mon, 12 Sep 2016 23:39:09 +0300
-Message-ID: <20160912203910.1164-3-aaro.koskinen@iki.fi>
-References: <20160912203910.1164-1-aaro.koskinen@iki.fi>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160912203910.1164-1-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/3] ARM64: dts: amlogic: Add basic support for Amlogic S905X
+Date: Mon, 12 Sep 2016 13:43:39 -0700
+Message-ID: <7ha8fcq26c.fsf@baylibre.com>
+References: <20160903082227.30559-1-narmstrong@baylibre.com>
+        <20160903082227.30559-3-narmstrong@baylibre.com>
+        <7e27e8c0-bb18-40d8-10d6-3928e66815c7@suse.de>
+        <CAOQ7t2bWLq2XP2rKx3msf=1tUfXkQuBWagun46TaKk73qXr=FQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOQ7t2bWLq2XP2rKx3msf=1tUfXkQuBWagun46TaKk73qXr=FQ@mail.gmail.com>
+        (Carlo Caione's message of "Mon, 12 Sep 2016 19:18:10 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Carlo Caione <carlo@caione.org>
+Cc: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Neil Armstrong <narmstrong@baylibre.com>, devicetree <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Carlo Caione <carlo@endlessm.com>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DTS for D-Link DSR-500N.
+Carlo Caione <carlo@caione.org> writes:
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
----
- .../mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts
+> On Mon, Sep 12, 2016 at 6:28 PM, Andreas F=C3=A4rber <afaerber@suse.de> w=
+rote:
+>
+>>> +Boards with the Amlogic Meson GXL SoC shall have the following propert=
+ies:
+>>> +  Required root node property:
+>>> +    compatible: "amlogic,meson-gxl-s905x", "amlogic,meson-gxl";
+>>
+>> Can we please use "amlogic,s905x", "amlogic,meson-gxl"? No need to
+>> complicate the name. Also affects .dtsi and .dts below.
+>
+> gxl !=3D s905x.
+>
+> AFAWK to the GXL family belong several different SoCs, like S905X,
+> S905D, etc... (see patch 3/3)
+> This is why we use meson-gxl-s905x, meson-gxl-s905d, etc...
 
-diff --git a/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts b/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts
-new file mode 100644
-index 0000000..78886e1
---- /dev/null
-+++ b/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts
-@@ -0,0 +1,40 @@
-+/*
-+ * Device tree source for D-Link DSR-500N.
-+ *
-+ * Written by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/include/ "dlink_dsr-500n-1000n.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "dlink,dsr-500n";
-+	compatible = "dlink,dsr-500n", "cavium,octeon-3860";
-+
-+	soc@0 {
-+		uart0: serial@1180000000800 {
-+			clock-frequency = <300000000>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		usb {
-+			gpios = <&gpio 9 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		wps {
-+			gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		wireless {
-+			label = "2.4g";
-+			gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
--- 
-2.9.2
+Correct.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> We could s/meson-gxl-s905x/meson-s905x/ and
+> s/meson-gxl-s905d/meson-s905d/ but I honestly prefer this way because
+> we can clearly see which family the SoC belongs to (the Amlogic naming
+> convention is already messy enough).
+> I mean, yes it's longer, but it's for the sake of documentation IMO.
+
++1
+
+Kevin
