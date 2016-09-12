@@ -1,95 +1,83 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v5 02/16] dt/bindings: Update binding for PM domain idle
- states
-Date: Mon, 12 Sep 2016 18:09:48 +0100
-Message-ID: <a4fc71ae-6fa5-4142-6dd4-7bc96eb20186@arm.com>
-References: <1472242678-33700-1-git-send-email-lina.iyer@linaro.org>
- <1472242678-33700-3-git-send-email-lina.iyer@linaro.org>
- <0b233802-f459-c6bb-ff42-70745a225cfb@arm.com>
- <20160902201605.GA1705@linaro.org> <87sht59mcw.fsf@arm.com>
- <20160912161600.GA21885@linaro.org>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM64: dts: amlogic: Add basic support for Amlogic S905X
+Date: Mon, 12 Sep 2016 19:18:10 +0200
+Message-ID: <CAOQ7t2bWLq2XP2rKx3msf=1tUfXkQuBWagun46TaKk73qXr=FQ@mail.gmail.com>
+References: <20160903082227.30559-1-narmstrong@baylibre.com>
+ <20160903082227.30559-3-narmstrong@baylibre.com> <7e27e8c0-bb18-40d8-10d6-3928e66815c7@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160912161600.GA21885@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lina Iyer <lina.iyer@linaro.org>, Brendan Jackman <brendan.jackman@arm.com>
-Cc: devicetree@vger.kernel.org, ulf.hansson@linaro.org, lorenzo.pieralisi@arm.com, Juri.Lelli@arm.com, khilman@kernel.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, Axel Haslam <ahaslam+renesas@baylibre.com>, Marc Titinger <mtitinger+renesas@baylibre.com>, Sudeep Holla <sudeep.holla@arm.com>, andy.gross@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7e27e8c0-bb18-40d8-10d6-3928e66815c7-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 12, 2016 at 6:28 PM, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org> wro=
+te:
 
-
-On 12/09/16 17:16, Lina Iyer wrote:
-> On Mon, Sep 12 2016 at 09:19 -0600, Brendan Jackman wrote:
->>
->> Hi Lina,
->>
->> Sorry for the delay here, Sudeep and I were both been on holiday last
->> week.
->>
->> On Fri, Sep 02 2016 at 21:16, Lina Iyer wrote:
->>> On Fri, Sep 02 2016 at 07:21 -0700, Sudeep Holla wrote:
->> [...]
->>>> This version is *not very descriptive*. Also the discussion we had
->>>> on v3
->>>> version has not yet concluded IMO. So can I take that we agreed on what
->>>> was proposed there or not ?
->>>>
->>> Sorry, this example is not very descriptive. Pls. check the 8916 dtsi
->>> for the new changes in the following patches. Let me know if that makes
->>> sense.
-
-Please add all possible use-cases in the bindings. Though one can refer
-the usage examples, it might not cover all usage descriptions. It helps
-preventing people from defining their own when they don't see examples.
-Again DT bindings are like specifications, it should be descriptive
-especially this kind of generic ones.
-
->>
->> The not-yet-concluded discussion Sudeep is referring to is at [1].
->>
->> In that thread we initially proposed the idea of, instead of splitting
->> state phandles between cpu-idle-states and domain-idle-states, putting
->> CPUs in their own domains and using domain-idle-states for _all_
->> phandles, deprecating cpu-idle-states. I've brought this up in other
->> threads [2] but discussion keeps petering out, and neither this example
->> nor the 8916 dtsi in this patch series reflect the idea.
->>
-> Brendan, while your idea is good and will work for CPUs, I do not expect
-> other domains and possibly CPU domains on some architectures to follow
-> this model. There is nothing that prevents you from doing this today,
-> you can specify domains around CPUs in your devicetree and CPU PM will
-> handle the hierarchy. I don't think its fair to force it on all SoCs
-> using CPU domains.
-
-I disagree. We are defining DT bindings here and it *should* be same for
-all the SoC unless there is a compelling reason not to. I am fine if
-those reasons are stated and agreed.
-
-> This patchset does not restrict you from organizing
-> the idle states the way you want it. This revision of the series, clubs
-> CPU and domain idle states under idle-states umbrella. So part of your
-> requirement is also satisfied.
+>> +Boards with the Amlogic Meson GXL SoC shall have the following properti=
+es:
+>> +  Required root node property:
+>> +    compatible: "amlogic,meson-gxl-s905x", "amlogic,meson-gxl";
 >
+> Can we please use "amlogic,s905x", "amlogic,meson-gxl"? No need to
+> complicate the name. Also affects .dtsi and .dts below.
 
-I will look at the DTS changes in the series. But we *must* have more
-description with more examples in the binding document.
+gxl !=3D s905x.
 
-> You can follow up the series with your new additions, I don't see a
-> conflict with this change.
+AFAWK to the GXL family belong several different SoCs, like S905X,
+S905D, etc... (see patch 3/3)
+This is why we use meson-gxl-s905x, meson-gxl-s905d, etc...
+
+We could s/meson-gxl-s905x/meson-s905x/ and
+s/meson-gxl-s905d/meson-s905d/ but I honestly prefer this way because
+we can clearly see which family the SoC belongs to (the Amlogic naming
+convention is already messy enough).
+I mean, yes it's longer, but it's for the sake of documentation IMO.
+
+
+[cut]
+>> +     compatible =3D "amlogic,p212", "amlogic,meson-gxl-s905x", "amlogic=
+,meson-gxl";
+>> +     model =3D "Amlogic Meson GXL (S905X) P212 Development Board";
 >
+> Is that its official name? No objection, just wondering whether we need
+> both GXL and S905X in the name, and then again the SoC name at all if
+> the P212 is unique. Haven't compared the previous Pxxx ones.
 
-If we just need additions, then it should be fine.
+P212 is the official name for the S905X Amlogic dev board. It follows
+the name we used for the other P20x boards.
 
--- 
-Regards,
-Sudeep
+
+[cut]
+>> +
+>> +/* This UART is brought out to the DB9 connector */
+>> +&uart_AO {
+>> +     status =3D "okay";
+>> +};
+>> +
+>
+> Trailing white line - please watch out for that, git-am will complain.
+
+Right.
+
+[cut]
+>> +#include "meson-gxl.dtsi"
+>> +
+>> +/ {
+>> +     compatible =3D "amlogic,meson-gxl", "amlogic,meson-gxl-s905x";
+>
+> This needs to be reversed.
+
+Agree.
+
+Cheers,
+
+--=20
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
