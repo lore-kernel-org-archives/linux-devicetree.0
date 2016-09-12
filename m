@@ -1,88 +1,41 @@
-From: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
+From: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
 Subject: Re: ARM, SoC: About the use DT-defined properties by 3rd-party
  drivers
-Date: Mon, 12 Sep 2016 11:21:29 -0500
-Message-ID: <57D6D609.1090702@tabi.org>
+Date: Mon, 12 Sep 2016 18:26:23 +0200
+Message-ID: <57D6D72F.3080605@laposte.net>
 References: <57BDAF2E.10502@laposte.net>
  <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
  <57D69FB1.2020801@laposte.net> <20160912123809.GB13741@leverpostej>
  <57D6AA54.6000208@laposte.net> <20160912135549.GA14165@leverpostej>
  <57D6D2A9.3010006@laposte.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <57D6D2A9.3010006-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sebastian Frias wrote:
->> You're not changing the code, but you are creating a binding.
->> Bindings
->>> are intended to be stable (i.e. a working DTB from today should
->>> continue to work in future), and thus there are ramifications.
+On 09/12/2016 06:07 PM, Sebastian Frias wrote:
+> Hi Mark,
+> 
+> On 09/12/2016 04:01 PM, Mark Rutland wrote:
+>>> 3rd parties could choose to write a driver (as opposed to use say, a user-mode
+>>> library) if it fits their programming model better, if they think they would
+>>> have better performance, or other reasons.
+>>
+>> A vendor can always choose to "add value" in this manner. The general
+>> expectation of *some* driver being upstreamed remains.
+> 
+> Yes, that's the idea.
 
-> Ok, but who is responsible for such guarantee?
-
-The developers who create the driver and modify it.  Only upstream 
-contributions count.
-
-> How is it enforced and verified?
-
-The upstream reviewers verify it, and if they see a problem, they reject 
-the patch.
-
-> Exactly, that's why to I'm having trouble to understand why there is
->  so much insistence on "getting the DT 100% right", since a HW change
->  could imply that what made 100% sense yesterday, does not today.
-
-I'm not sure what you're getting at. Everything is best-effort. The 
-binding for a given device is supposed to accurately, but minimally, 
-describe the hardware so that the driver can program the device 
-properly. Specific properties are added to the binding to handle 
-specific cases. If a binding includes a description of properties that 
-are not used by the driver, the developer is typically asked to remove 
-those.
-
-So I don't understand the "100% right" comment.
-
-> Could you be more precise on those two issues? Namely: "the effort"
-> and the "lack of benefit for the community"?
-
-1) The effort = the effort by upstream developers to review the binding.
-
-2) lack of benefit = proprietary and out-of-tree drivers do not benefit 
-the community.
-
-> I can understand the effort it takes to review a binding and some
-> driver, but if there's no driver, why would it matter if the DT
-> binding is 100% right?
-
-Why bother creating a binding if there's no driver to use it?
-
- > Hence, why would it take more effort?
-> Furthermore, if there's no driver, there's no backward compatibility
->  to guarantee. Shouldn't it require less effort?
-
-If a developer creates a binding without a driver, then it's very hard 
-to know if that binding is correct.  That's like creating a recipe 
-without attempting to make the food.  How do you know it actually tastes 
-good?  No one would ever ask a chef to create a "technically correct" 
-recipe without cooking it first and tasting it.
-
-> Also, what sort of "benefits" does the community expects or
-> requires? Because the idea behind the proposal is to put the HW
-> description in DT, so basically the HW would be documented. Maybe
-> there wouldn't be a driver right away, but the HW description would
-> allow for drivers to exist.
-
-I'm not sure how many times we need to repeat this, but the idea that 
-the DT binding documentation can be used as official documentation for 
-the hardware is absurd.  What's wrong with the ACTUAL hardware 
-documentation provided by the manufacturer in PDF format?  The DT 
-binding has no value without an actual driver.
+Just to clarify, what I meant is that, using the DT as the authoritative
+source of HW description is a way to "add value" to everybody, because both,
+3rd-parties and the open-source community get the same information.
+This creates the conditions for drivers to exist, with the expectation that
+eventually said drivers would be upstreamed.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
