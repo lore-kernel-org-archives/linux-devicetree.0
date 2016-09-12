@@ -1,53 +1,46 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 9/9] clocksource/drivers/oxnas: Add OX820 compatible
-Date: Mon, 12 Sep 2016 11:15:47 +0200
-Message-ID: <1473671747-9400-9-git-send-email-daniel.lezcano@linaro.org>
-References: <b04803ca-5506-bf69-04df-f28efbc9a94a@linaro.org>
- <1473671747-9400-1-git-send-email-daniel.lezcano@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473671747-9400-1-git-send-email-daniel.lezcano@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de
-Cc: mingo@kernel.org, linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/OXNAS platform
-        support" <linux-arm-kernel@lists.infradead.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD, GPIO and Regulator due
+ for the v4.9 merge window
+Date: Mon, 12 Sep 2016 10:18:39 +0100
+Message-ID: <20160912091839.GC1873@dell>
+References: <1472633892-8261-1-git-send-email-j-keerthy@ti.com>
+ <20160831122435.GD9415@dell>
+ <CACRpkdbfOdaouKEooLsGRYXhbwkjfNoTXTqunumF4bOPjOUD4w@mail.gmail.com>
+ <20160908072646.GH4921@dell>
+ <20160909121140.GQ27946@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160909121140.GQ27946@sirena.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Keerthy <j-keerthy@ti.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+On Fri, 09 Sep 2016, Mark Brown wrote:
 
-In order to support the Oxford Semiconductor OX820 SoC, add new
-compatible string to rps timer driver.
-Also add new string in the dt-bindings.
+> On Thu, Sep 08, 2016 at 08:26:46AM +0100, Lee Jones wrote:
+> > On Wed, 07 Sep 2016, Linus Walleij wrote:
+> 
+> > > Hm it is based on a later release candidate than my tree so I'll wait
+> > > and see if I
+> > > have to pull it (like if there are clashes in linux-next...)
+> 
+> > You use -rc1 as your base?  Crazy man. :)
+> 
+> I do that too for the topic branches.  It's really helpful for cross
+> tree work as it avoids issues like the above - wherever it's being
+> merges it shouldn't pull in any extra dependencies so things are clearer
+> when reviewing diffs/logs and git has an easier time coping.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- Documentation/devicetree/bindings/timer/oxsemi,rps-timer.txt | 2 +-
- drivers/clocksource/timer-oxnas-rps.c                        | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+I've always used -rc2 for everything.  It's usually more stable for
+build-testing purposes.  But I'll bow down, and try to use -rc1 in
+future, if it's preferred.
 
-diff --git a/Documentation/devicetree/bindings/timer/oxsemi,rps-timer.txt b/Documentation/devicetree/bindings/timer/oxsemi,rps-timer.txt
-index 3ca89cd..d191612 100644
---- a/Documentation/devicetree/bindings/timer/oxsemi,rps-timer.txt
-+++ b/Documentation/devicetree/bindings/timer/oxsemi,rps-timer.txt
-@@ -2,7 +2,7 @@ Oxford Semiconductor OXNAS SoCs Family RPS Timer
- ================================================
- 
- Required properties:
--- compatible: Should be "oxsemi,ox810se-rps-timer"
-+- compatible: Should be "oxsemi,ox810se-rps-timer" or "oxsemi,ox820-rps-timer"
- - reg : Specifies base physical address and size of the registers.
- - interrupts : The interrupts of the two timers
- - clocks : The phandle of the timer clock source
-diff --git a/drivers/clocksource/timer-oxnas-rps.c b/drivers/clocksource/timer-oxnas-rps.c
-index bd887e2..d630bf4 100644
---- a/drivers/clocksource/timer-oxnas-rps.c
-+++ b/drivers/clocksource/timer-oxnas-rps.c
-@@ -295,3 +295,5 @@ err_alloc:
- 
- CLOCKSOURCE_OF_DECLARE(ox810se_rps,
- 		       "oxsemi,ox810se-rps-timer", oxnas_rps_timer_init);
-+CLOCKSOURCE_OF_DECLARE(ox820_rps,
-+		       "oxsemi,ox820se-rps-timer", oxnas_rps_timer_init);
 -- 
-2.7.4
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
