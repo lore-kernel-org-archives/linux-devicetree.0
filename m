@@ -1,85 +1,67 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] Documentation: bindings: add documentation for
- ir-spi device driver
-Date: Mon, 12 Sep 2016 08:27:02 -0500
-Message-ID: <20160912132702.GA20044@rob-hp-laptop>
-References: <20160901171629.15422-1-andi.shyti@samsung.com>
- <20160901171629.15422-7-andi.shyti@samsung.com>
- <CGME20160901214120epcas1p3c4e212a695d1575acaf0d3bd8525560d@epcas1p3.samsung.com>
- <CAL_JsqL_AG0m_BctOBV+QOGJcUEup_6ovS6shjo+BrJ974jpaA@mail.gmail.com>
- <20160902053320.wqe5hklklnyvcc5m@samsunx.samsung>
+Subject: Re: [PATCH v4 1/6] net: stmmac: dwmac-rk: add rk3366 & rk3399
+ specific data
+Date: Mon, 12 Sep 2016 08:28:50 -0500
+Message-ID: <20160912132850.GA24241@rob-hp-laptop>
+References: <1472752204-8924-1-git-send-email-wxt@rock-chips.com>
+ <1472752204-8924-2-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160902053320.wqe5hklklnyvcc5m-4M0o0xkwKdT35fTxX1Dczw@public.gmane.org>
+In-Reply-To: <1472752204-8924-2-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Sean Young <sean-hENCXIMQXOg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 02, 2016 at 02:33:20PM +0900, Andi Shyti wrote:
-> Hi Rob,
+On Fri, Sep 02, 2016 at 01:49:59AM +0800, Caesar Wang wrote:
+> From: Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
-> > > Document the ir-spi driver's binding which is a IR led driven
-> > > through the SPI line.
-> > >
-> > > Signed-off-by: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/media/spi-ir.txt | 26 ++++++++++++++++++++++
-> > >  1 file changed, 26 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/spi-ir.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/spi-ir.txt b/Documentation/devicetree/bindings/media/spi-ir.txt
-> > > new file mode 100644
-> > > index 0000000..85cb21b
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/spi-ir.txt
-> > 
-> > Move this to bindings/leds, and CC the leds maintainers.
+> Add constants and callback functions for the dwmac on rk3228/rk3229 socs.
+> As can be seen, the base structure is the same, only registers and the
+> bits in them moved slightly.
 > 
-> More than an LED this is the driver of a remote controller, the
-> driver itself is under drivers/media/rc/.
-
-The hardware is just an LED though and bindings describe h/w. What you 
-are using it for doesn't really matter. You only need to know it's an IR 
-led.
- 
-> Besides all the transmitters have an LED but still they are media
-> devices. This is a bit special because it's so simple that the
-> only hardware left is the LED itself, but still it's a media remote
-> controller.
+> Signed-off-by: Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 > 
-> > > @@ -0,0 +1,26 @@
-> > > +Device tree bindings for IR LED connected through SPI bus which is used as
-> > > +remote controller.
-> > > +
-> > > +The IR LED switch is connected to the MOSI line of the SPI device and the data
-> > > +are delivered thourgh that.
-> > > +
-> > > +Required properties:
-> > > +       - compatible: should be "ir-spi".
-> > 
-> > Really this is just an LED connected to a SPI, so maybe this should
-> > just be "spi-led". If being more specific is helpful, then I'm all for
-> > that, but perhaps spi-ir-led. (Trying to be consistent in naming with
-> > gpio-leds).
+> ---
 > 
-> As I mentioned above, all transmitters have an LED, but they do
-> not have the 'led' name. "ir-spi" is coherent with the device
-> driver name and the driver name is coherent with the media/rc
-> driver's naming.
+> Changes in v4:
+> - Fixes from the original patch on https://patchwork.kernel.org/patch/9274557/
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  .../devicetree/bindings/net/rockchip-dwmac.txt     |   8 +-
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     | 226 +++++++++++++++++++++
+>  2 files changed, 232 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+> index cccd945..95383c5 100644
+> --- a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+> +++ b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+> @@ -3,8 +3,12 @@ Rockchip SoC RK3288 10/100/1000 Ethernet driver(GMAC)
+>  The device node has following properties.
+>  
+>  Required properties:
+> - - compatible: Can be one of "rockchip,rk3228-gmac", "rockchip,rk3288-gmac",
+> -                             "rockchip,rk3368-gmac"
+> + - compatible: should be "rockchip,<name>-gamc"
 
-The driver name is irrelevant to the binding. 
+s/gamc/gmac/
 
-[...]
+Please send a follow-up patch to fix.
 
-> If it's OK for you, I would keep the name and documentation path
-> and fix the rest. Please let me know if I'm missing something :)
-
-It's not OK for me.
-
-Rob
+> +   "rockchip,rk3228-gmac": found on RK322x SoCs
+> +   "rockchip,rk3288-gmac": found on RK3288 SoCs
+> +   "rockchip,rk3366-gmac": found on RK3366 SoCs
+> +   "rockchip,rk3368-gmac": found on RK3368 SoCs
+> +   "rockchip,rk3399-gmac": found on RK3399 SoCs
+>   - reg: addresses and length of the register sets for the device.
+>   - interrupts: Should contain the GMAC interrupts.
+>   - interrupt-names: Should contain the interrupt names "macirq".
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
