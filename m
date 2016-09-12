@@ -1,43 +1,66 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi-meson: Add GXBB Compatible string
-Date: Mon, 12 Sep 2016 20:07:10 +0100
-Message-ID: <20160912190710.GJ27946@sirena.org.uk>
-References: <1473321206-32284-1-git-send-email-narmstrong@baylibre.com>
- <1473321206-32284-2-git-send-email-narmstrong@baylibre.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="b+chlBtRKJDCtqTb"
+Subject: Applied "spi: meson: Add GXBB Compatible string" to the spi tree
+Date: Mon, 12 Sep 2016 20:12:36 +0100
+Message-ID: <E1bjWei-0003iJ-IE@debutante>
+References: <1473261223-15412-6-git-send-email-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1473321206-32284-2-git-send-email-narmstrong@baylibre.com>
+In-Reply-To: <1473261223-15412-6-git-send-email-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: carlo@caione.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Kevin Hilman <khilman@baylibre.com>, Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---b+chlBtRKJDCtqTb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   spi: meson: Add GXBB Compatible string
 
-On Thu, Sep 08, 2016 at 09:53:25AM +0200, Neil Armstrong wrote:
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+has been applied to the spi tree at
 
-Please use subject lines matching the style for the subsystem.
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
---b+chlBtRKJDCtqTb
-Content-Type: application/pgp-signature; name="signature.asc"
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-iQEcBAEBCAAGBQJX1vzdAAoJECTWi3JdVIfQrEcH/0x3aCjMD4suBymsRDgnKVeS
-HTRY2RJFKZr7ZEzTHD/fS0VcUEjPLXmagJWOzbOYNz75V3gNZyi0HVCo/Az2QMuX
-c0CW5LnLARgJ9Pfvng5+JwKKv2kdekrjbhVglPYxdHer8DApeW8Ym7VGdcd8rOKk
-Ta5ztqiYdSkPgNkAszZhXmWFC3Fk3giz02eoJxGfjfmBj2WJBv6+HUEYu4TEZq8g
-VdyKRYpsixzbYbW9ys4sNSdcEGBImkJbV+PGlGHIGpYPQ6/R27sCbWL7vei/SZHb
-yHYu7RzPP3uSqbNWHCle7kq7v9uGn+SDxjdpOOHDCW9b8guJ/yUOdxHkYUQWKQk=
-=eXFE
------END PGP SIGNATURE-----
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
---b+chlBtRKJDCtqTb--
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 164c5cd5ffabfa7a060999f8184927017287c39b Mon Sep 17 00:00:00 2001
+From: Neil Armstrong <narmstrong@baylibre.com>
+Date: Thu, 8 Sep 2016 09:53:25 +0200
+Subject: [PATCH] spi: meson: Add GXBB Compatible string
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Acked-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/spi/spi-meson.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-meson.txt b/Documentation/devicetree/bindings/spi/spi-meson.txt
+index bb52a86f3365..dc6d0313324a 100644
+--- a/Documentation/devicetree/bindings/spi/spi-meson.txt
++++ b/Documentation/devicetree/bindings/spi/spi-meson.txt
+@@ -7,7 +7,7 @@ NOR memories, without DMA support and a 64-byte unified transmit /
+ receive buffer.
+ 
+ Required properties:
+- - compatible: should be "amlogic,meson6-spifc"
++ - compatible: should be "amlogic,meson6-spifc" or "amlogic,meson-gxbb-spifc"
+  - reg: physical base address and length of the controller registers
+  - clocks: phandle of the input clock for the baud rate generator
+  - #address-cells: should be 1
+-- 
+2.8.1
