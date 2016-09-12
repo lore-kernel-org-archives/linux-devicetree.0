@@ -1,134 +1,43 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v2 2/6] ARM: dts: bcm283x: Define standard pinctrl
- groups in the gpio node.
-Date: Mon, 12 Sep 2016 21:05:47 +0200 (CEST)
-Message-ID: <103847685.101383.df740dd1-92f3-4978-9442-1f1b3a81e9da.open-xchange@email.1und1.de>
-References: <1473668576-22256-1-git-send-email-kraxel@redhat.com>
- <1473668576-22256-3-git-send-email-kraxel@redhat.com>
- <1273800480.83718.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: spi-meson: Add GXBB Compatible string
+Date: Mon, 12 Sep 2016 20:07:10 +0100
+Message-ID: <20160912190710.GJ27946@sirena.org.uk>
+References: <1473321206-32284-1-git-send-email-narmstrong@baylibre.com>
+ <1473321206-32284-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="b+chlBtRKJDCtqTb"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1273800480.83718.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
+Content-Disposition: inline
+In-Reply-To: <1473321206-32284-2-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gerd Hoffmann <kraxel@redhat.com>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: carlo@caione.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gerd,
 
-> Stefan Wahren <stefan.wahren@i2se.com> hat am 12. September 2016 um 20:19
-> geschrieben:
-> 
-> 
-> Hi Gerd,
-> 
-> > Gerd Hoffmann <kraxel@redhat.com> hat am 12. September 2016 um 10:22
-> > geschrieben:
-> > 
-> > 
-> > From: Eric Anholt <eric@anholt.net>
-> > 
-> > The BCM2835-ARM-Peripherals.pdf documentation specifies what the
-> > function selects do for the pins, and there are a bunch of obvious
-> > groupings to be made.  With these created, we'll be able to replace
-> > bcm2835-rpi.dtsi's main "set all of these pins to alt0" with
-> > references to specific groups we want enabled.
-> > 
-> > Signed-off-by: Eric Anholt <eric@anholt.net>
-> > 
-> > squashed in:
-> >   ARM: dts: bcm283x: Add the emmc pin group to bcm283x.dtsi.
-> >   ARM: dts: bcm283x: Add a group for mapping pins 48-53 to sdhost.
-> >   ARM: dts: bcm283x: Add a new EMMC pin group from the downstream tree.
-> > 
-> > fixups by kraxel:
-> >   * fix spi0 name
-> >   * sort & group entries
-> >   * use pull defines
-> >   * add dpi group
-> 
-> this looks like a changelog. Please move this at the proper place before the
-> first "diff" and specify the version.
-> 
-> > 
-> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> > ---
-> >  arch/arm/boot/dts/bcm283x.dtsi | 203
-> > +++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 203 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-> > index 4d9f3ab..7b03b63 100644
-> > --- a/arch/arm/boot/dts/bcm283x.dtsi
-> > +++ b/arch/arm/boot/dts/bcm283x.dtsi
-> > @@ -131,6 +131,209 @@
-> >  
-> >  			interrupt-controller;
-> >  			#interrupt-cells = <2>;
-> > +
-> > +			/* Defines pin muxing groups according to
-> > +			 * BCM2835-ARM-Peripherals.pdf page 102.
-> > +			 *
-> > +			 * While each pin can have its mux selected
-> > +			 * for various functions individually, some
-> > +			 * groups only make sense to switch to a
-> > +			 * particular function together.
-> > +			 */
-> > +			dpi_gpio4: dpi_gpio4 {
-> > +				brcm,pins = <0 1 2 3 4 5 6 7 8 9 10 11
-> > +					     12 13 14 15 16 17 18 19
-> > +					     20 21 22 23 24 25 26 27>;
-> > +				brcm,function = <BCM2835_FSEL_ALT2>;
-> > +			};
-> 
-> s/dpi_gpio4/dpi_gpio0
-> 
-> > +			emmc_gpio22: emmc_gpio22 {
-> > +				brcm,pins = <22 23 24 25 26 27>;
-> > +				brcm,function = <BCM2835_FSEL_ALT3>;
-> > +			};
-> > +			emmc_gpio34: emmc_gpio34 {
-> > +				brcm,pins = <34 35 36 37 38 39>;
-> > +				brcm,function = <BCM2835_FSEL_ALT3>;
-> > +				brcm,pull = <BCM2835_PUD_OFF
-> > +					     BCM2835_PUD_UP
-> > +					     BCM2835_PUD_UP
-> > +					     BCM2835_PUD_UP
-> > +					     BCM2835_PUD_UP
-> > +					     BCM2835_PUD_UP>;
-> > +			};
-> > +			emmc_gpio48: emmc_gpio48 {
-> > +				brcm,pins = <48 49 50 51 52 53>;
-> > +				brcm,function = <BCM2835_FSEL_ALT3>;
-> > +			};
-> 
-> Sorry, i didn't notice this before. The naming of these groups suggest 3 muxes
-> for the same eMMC interface. I thought there is a eMMC interface and a SD host
-> interface with different DMA channels.
-> 
-> > +
-> > ...
-> > +
-> > +			sdhost_gpio48: sdhost_gpio48 {
-> > +				brcm,pins = <48 49 50 51 52 53>;
-> > +				brcm,function = <BCM2835_FSEL_ALT0>;
-> > +			};
-> 
-> I think this incorrect. There is no function ALT0 for these pins, only ALT3.
+--b+chlBtRKJDCtqTb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-please forget my last 2 comments. According to this page [1] eMMC is selected by
-ALT3 and sdhost is selected by ALT0.
+On Thu, Sep 08, 2016 at 09:53:25AM +0200, Neil Armstrong wrote:
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-Do you know a reliable source where all muxes for both interface are documented?
-The datasheet isn't very helpful here.
+Please use subject lines matching the style for the subsystem.
 
-Regards
-Stefan
+--b+chlBtRKJDCtqTb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[1] - http://pinout.xyz/pinout/sdio
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> 
-> Regards
-> Stefan
+iQEcBAEBCAAGBQJX1vzdAAoJECTWi3JdVIfQrEcH/0x3aCjMD4suBymsRDgnKVeS
+HTRY2RJFKZr7ZEzTHD/fS0VcUEjPLXmagJWOzbOYNz75V3gNZyi0HVCo/Az2QMuX
+c0CW5LnLARgJ9Pfvng5+JwKKv2kdekrjbhVglPYxdHer8DApeW8Ym7VGdcd8rOKk
+Ta5ztqiYdSkPgNkAszZhXmWFC3Fk3giz02eoJxGfjfmBj2WJBv6+HUEYu4TEZq8g
+VdyKRYpsixzbYbW9ys4sNSdcEGBImkJbV+PGlGHIGpYPQ6/R27sCbWL7vei/SZHb
+yHYu7RzPP3uSqbNWHCle7kq7v9uGn+SDxjdpOOHDCW9b8guJ/yUOdxHkYUQWKQk=
+=eXFE
+-----END PGP SIGNATURE-----
+
+--b+chlBtRKJDCtqTb--
