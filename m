@@ -1,7 +1,7 @@
 From: jorik@kippendief.biz
-Subject: [PATCH v5 3/5] dts: sun8i-h3: associate exposed UARTs on Orange Pi Boards
-Date: Mon, 12 Sep 2016 20:12:45 +0200
-Message-ID: <1473703967-21356-4-git-send-email-jorik@kippendief.biz>
+Subject: [PATCH v5 4/5] dts: sun8i-h3: add pinmux definitions for I2C0-2
+Date: Mon, 12 Sep 2016 20:12:46 +0200
+Message-ID: <1473703967-21356-5-git-send-email-jorik@kippendief.biz>
 References: <1473703967-21356-1-git-send-email-jorik@kippendief.biz>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1473703967-21356-1-git-send-email-jorik@kippendief.biz>
@@ -12,105 +12,45 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jorik Jonker <jorik@kippendief.biz>
 
-These H3 boards all expose UART1-3 on their expansion header. Since
-other functions can be muxed to these pins, they are explicitly
-disabled. To enable them, one could use DT overlays or U-boot commands:
-
- => fdt set /soc/serial@01c28c00 status okay
+These are the only possible pins for these peripherals according to the
+datasheet.
 
 Signed-off-by: Jorik Jonker <jorik@kippendief.biz>
 ---
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts   | 18 ++++++++++++++++++
- arch/arm/boot/dts/sun8i-h3-orangepi-one.dts | 18 ++++++++++++++++++
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts  | 18 ++++++++++++++++++
- 3 files changed, 54 insertions(+)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-index f93f5d1..9aa2bb7 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-@@ -176,6 +176,24 @@
- 	status = "okay";
- };
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index 742bced..ed6628d 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -327,6 +327,27 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
  
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>;
-+	status = "disabled";
-+};
++			i2c0_pins: i2c0 {
++				allwinner,pins = "PA11", "PA12";
++				allwinner,function = "i2c0";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
 +
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins>;
-+	status = "disabled";
-+};
++			i2c1_pins: i2c1 {
++				allwinner,pins = "PA18", "PA19";
++				allwinner,function = "i2c1";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
 +
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins>;
-+	status = "disabled";
-+};
++			i2c2_pins: i2c2 {
++				allwinner,pins = "PE12", "PE13";
++				allwinner,function = "i2c2";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++			};
 +
- &usb1_vbus_pin_a {
- 	allwinner,pins = "PG13";
- };
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-index 0adf932..5c9b5bf 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-@@ -139,6 +139,24 @@
- 	status = "okay";
- };
- 
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>;
-+	status = "disabled";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins>;
-+	status = "disabled";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins>;
-+	status = "disabled";
-+};
-+
- &usbphy {
- 	/* USB VBUS is always on */
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-index daf50b9..3ec9712 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-@@ -161,6 +161,24 @@
- 	status = "okay";
- };
- 
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>;
-+	status = "disabled";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins>;
-+	status = "disabled";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins>;
-+	status = "disabled";
-+};
-+
- &usbphy {
- 	/* USB VBUS is always on */
- 	status = "okay";
+ 			mmc0_pins_a: mmc0@0 {
+ 				allwinner,pins = "PF0", "PF1", "PF2", "PF3",
+ 						 "PF4", "PF5";
 -- 
 2.7.4
