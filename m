@@ -1,393 +1,102 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] drm/bridge: Add RGB to VGA bridge support
-Date: Mon, 12 Sep 2016 14:42:50 +0800
-Message-ID: <CAGb2v66YW5L9KoP3rOshznKXbSE17qM+XAj-h_5+3t1r1ZFvAQ@mail.gmail.com>
-References: <20160908121751.16911-1-maxime.ripard@free-electrons.com> <20160908121751.16911-2-maxime.ripard@free-electrons.com>
+From: Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 0/8] CPUs capacity information for heterogeneous
+ systems
+Date: Mon, 12 Sep 2016 08:24:24 +0100
+Message-ID: <20160912072424.GL10409@e106622-lin>
+References: <1473085372-2840-1-git-send-email-juri.lelli@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160908121751.16911-2-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1473085372-2840-1-git-send-email-juri.lelli-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, morten.rasmussen-5wv7dgnIgG8@public.gmane.org, dietmar.eggemann-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Thu, Sep 8, 2016 at 8:17 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Some boards have an entirely passive RGB to VGA bridge, based on either
-> DACs or resistor ladders.
->
-> Those might or might not have an i2c bus routed to the VGA connector in
-> order to access the screen EDIDs.
->
-> Add a bridge that doesn't do anything but expose the modes available on the
-> screen, either based on the EDIDs if available, or based on the XGA
-> standards.
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../bindings/display/bridge/rgb-to-vga-bridge.txt  |  52 +++++
->  drivers/gpu/drm/bridge/Kconfig                     |   6 +
->  drivers/gpu/drm/bridge/Makefile                    |   1 +
->  drivers/gpu/drm/bridge/rgb-to-vga.c                | 232 +++++++++++++++++++++
->  4 files changed, 291 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.txt
->  create mode 100644 drivers/gpu/drm/bridge/rgb-to-vga.c
->
-> diff --git a/Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.txt b/Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.txt
-> new file mode 100644
-> index 000000000000..83a053fb51a0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/rgb-to-vga-bridge.txt
-> @@ -0,0 +1,52 @@
-> +Passive RGB to VGA bridge
-> +-------------------------
-> +
-> +This binding is aimed for entirely passive RGB to VGA bridges that do not
-> +require any configuration.
-> +
-> +Required properties:
-> +
-> +- compatible: Must be "rgb-to-vga-bridge"
-> +
-> +Required nodes:
-> +
-> +This device has two video ports. Their connections are modeled using the OF
-> +graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-> +
-> +- Video port 0 for RGB input
-> +- Video port 1 for VGA output
-> +
-> +
-> +Example
-> +-------
-> +
-> +bridge {
-> +       compatible = "rgb-to-vga-bridge";
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +
-> +       ports {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               port@0 {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg = <0>;
-> +
-> +                       vga_bridge_in: endpoint {
-> +                               remote-endpoint = <&tcon0_out_vga>;
-> +                       };
-> +               };
-> +
-> +               port@1 {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       reg = <1>;
-> +
-> +                       vga_bridge_out: endpoint {
-> +                               remote-endpoint = <&vga_con_in>;
-> +                       };
-> +               };
-> +       };
-> +};
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index b590e678052d..42b95adf5091 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -17,6 +17,12 @@ config DRM_ANALOGIX_ANX78XX
->           the HDMI output of an application processor to MyDP
->           or DisplayPort.
->
-> +config DRM_RGB_TO_VGA
-> +       tristate "Dumb RGB to VGA Bridge support"
-> +       select DRM_KMS_HELPER
-> +       help
-> +         Support for passive RGB to VGA bridges
-> +
->  config DRM_DW_HDMI
->         tristate
->         select DRM_KMS_HELPER
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> index efdb07e878f5..3bb8cbe09fe9 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -1,6 +1,7 @@
->  ccflags-y := -Iinclude/drm
->
->  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
-> +obj-$(CONFIG_DRM_RGB_TO_VGA) += rgb-to-vga.o
->  obj-$(CONFIG_DRM_DW_HDMI) += dw-hdmi.o
->  obj-$(CONFIG_DRM_DW_HDMI_AHB_AUDIO) += dw-hdmi-ahb-audio.o
->  obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
-> diff --git a/drivers/gpu/drm/bridge/rgb-to-vga.c b/drivers/gpu/drm/bridge/rgb-to-vga.c
-> new file mode 100644
-> index 000000000000..84b1b10198a4
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/rgb-to-vga.c
-> @@ -0,0 +1,232 @@
+this is a ping for people interested in this series. Patches 2,4,7-8
+still needs ACKs.
 
-No beginning file header / copyright statement?
+I know it's only been a week since I posted v7, but this series would
+pair nicely with asym cpu capacity support bits already sitting in
+tip/sched/core. I also know that it might be already late for 4.9 merge
+window; nevertheless, still hoping we can make it.
 
-> +
-> +#include <linux/module.h>
-> +#include <linux/of_graph.h>
-> +
-> +#include <drm/drmP.h>
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_crtc.h>
-> +#include <drm/drm_crtc_helper.h>
-> +
-> +struct dumb_vga {
-> +       struct drm_bridge       bridge;
-> +       struct drm_connector    connector;
-> +
-> +       struct i2c_adapter      *ddc;
-> +};
-> +
-> +static inline struct dumb_vga *
-> +drm_bridge_to_dumb_vga(struct drm_bridge *bridge)
-> +{
-> +       return container_of(bridge, struct dumb_vga, bridge);
-> +}
-> +
-> +static inline struct dumb_vga *
-> +drm_connector_to_dumb_vga(struct drm_connector *connector)
-> +{
-> +       return container_of(connector, struct dumb_vga, connector);
-> +}
-> +
-> +static int dumb_vga_get_modes(struct drm_connector *connector)
-> +{
-> +       struct dumb_vga *vga = drm_connector_to_dumb_vga(connector);
-> +       struct edid *edid;
-> +       int ret;
-> +
-> +       if (IS_ERR(vga->ddc))
-> +               goto fallback;
-> +
-> +       edid = drm_get_edid(connector, vga->ddc);
-> +       if (!edid) {
-> +               DRM_INFO("EDID readout failed, falling back to standard modes\n");
-> +               goto fallback;
-> +       }
-> +
-> +       drm_mode_connector_update_edid_property(connector, edid);
-> +       return drm_add_edid_modes(connector, edid);
-> +
-> +fallback:
-> +       /*
-> +        * In case we cannot retrieve the EDIDs (broken or missing i2c
-> +        * bus), fallback on the XGA standards
-> +        */
-> +       ret = drm_add_modes_noedid(connector, 1920, 1200);
-> +
-> +       /* And prefer a mode pretty much anyone can handle */
-> +       drm_set_preferred_mode(connector, 1024, 768);
-> +
-> +       return ret;
-> +}
-> +
-> +static struct drm_encoder *
-> +dumb_vga_best_encoder(struct drm_connector *connector)
-> +{
-> +       struct dumb_vga *vga = drm_connector_to_dumb_vga(connector);
-> +
-> +       return vga->bridge.encoder;
-> +}
-> +
-> +static struct drm_connector_helper_funcs dumb_vga_con_helper_funcs = {
-> +       .get_modes      = dumb_vga_get_modes,
-> +       .best_encoder   = dumb_vga_best_encoder,
+Thanks!
 
-drm_modeset_helper_vtables.h says the following about .best_encoder:
+Best,
 
-    You can leave this function to NULL if the connector is only
-    attached to a single encoder and you are using the atomic helpers.
-    In this case, the core will call drm_atomic_helper_best_encoder()
-    for you.
+- Juri
 
-IMHO you can drop the callback here.
-
-> +};
-> +
-> +static enum drm_connector_status
-> +dumb_vga_connector_detect(struct drm_connector *connector, bool force)
-> +{
-> +       struct dumb_vga *vga = drm_connector_to_dumb_vga(connector);
-> +
-> +       /*
-> +        * Even if we have an I2C bus, we can't assume that the cable
-> +        * is disconnected if drm_probe_ddc. Some cables don't wire
-> +        * the DDC pins, or the I2C bus might be disfunctional.
-> +        */
-> +       if (!IS_ERR(vga->ddc) && drm_probe_ddc(vga->ddc))
-> +               return connector_status_connected;
-> +
-> +       return connector_status_unknown;
-> +}
-> +
-> +static void
-> +dumb_vga_connector_destroy(struct drm_connector *connector)
-> +{
-> +       drm_connector_cleanup(connector);
-> +}
-> +
-> +static struct drm_connector_funcs dumb_vga_con_funcs = {
-> +       .dpms                   = drm_atomic_helper_connector_dpms,
-> +       .detect                 = dumb_vga_connector_detect,
-> +       .fill_modes             = drm_helper_probe_single_connector_modes,
-> +       .destroy                = dumb_vga_connector_destroy,
-> +       .reset                  = drm_atomic_helper_connector_reset,
-> +       .atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-> +       .atomic_destroy_state   = drm_atomic_helper_connector_destroy_state,
-> +};
-> +
-> +static int dumb_vga_attach(struct drm_bridge *bridge)
-> +{
-> +       struct dumb_vga *vga = drm_bridge_to_dumb_vga(bridge);
-> +       int ret;
-> +
-> +       if (!bridge->encoder) {
-> +               DRM_ERROR("Missing encoder\n");
-> +               return -ENODEV;
-> +       }
-> +
-> +       drm_connector_helper_add(&vga->connector,
-> +                                &dumb_vga_con_helper_funcs);
-> +       ret = drm_connector_init(bridge->dev, &vga->connector,
-> +                                &dumb_vga_con_funcs, DRM_MODE_CONNECTOR_VGA);
-> +       if (ret) {
-> +               DRM_ERROR("Failed to initialize connector\n");
-> +               return ret;
-> +       }
-> +
-> +       drm_mode_connector_attach_encoder(&vga->connector,
-> +                                         bridge->encoder);
-> +
-> +       return 0;
-> +}
-> +
-> +static void dumb_vga_nop(struct drm_bridge *bridge) {};
-> +
-> +static struct drm_bridge_funcs dumb_vga_bridge_funcs = {
-
-const?
-
-> +       .attach         = dumb_vga_attach,
-> +       .enable         = dumb_vga_nop,
-> +       .disable        = dumb_vga_nop,
-> +       .pre_enable     = dumb_vga_nop,
-> +       .post_disable   = dumb_vga_nop,
-
-Nit: The 4 nops can be dropped. The header file states these
-callbacks are optional.
-
-> +};
-> +
-> +static struct i2c_adapter *dumb_vga_retrieve_ddc(struct device *dev)
-> +{
-> +       struct device_node *end_node, *phandle, *remote;
-> +       struct i2c_adapter *ddc;
-> +
-> +       end_node = of_graph_get_endpoint_by_regs(dev->of_node, 1, -1);
-> +       if (!end_node) {
-> +               dev_err(dev, "Missing connector endpoint\n");
-> +               return ERR_PTR(-ENODEV);
-> +       }
-> +
-> +       remote = of_graph_get_remote_port_parent(end_node);
-> +       of_node_put(end_node);
-> +       if (!remote) {
-> +               dev_err(dev, "Enable to parse remote node\n");
-> +               return ERR_PTR(-EINVAL);
-> +       }
-> +
-> +       phandle = of_parse_phandle(remote, "ddc-i2c-bus", 0);
-> +       of_node_put(remote);
-> +       if (!phandle)
-> +               return ERR_PTR(-ENODEV);
-> +
-> +       ddc = of_get_i2c_adapter_by_node(phandle);
-> +       of_node_put(phandle);
-> +       if (!ddc)
-> +               return ERR_PTR(-EPROBE_DEFER);
-> +
-> +       return ddc;
-> +}
-> +
-> +static int dumb_vga_probe(struct platform_device *pdev)
-> +{
-> +       struct dumb_vga *vga;
-> +       int ret;
-> +
-> +       vga = devm_kzalloc(&pdev->dev, sizeof(*vga), GFP_KERNEL);
-> +       if (!vga)
-> +               return -ENOMEM;
-> +       platform_set_drvdata(pdev, vga);
-> +
-> +       vga->ddc = dumb_vga_retrieve_ddc(&pdev->dev);
-> +       if (IS_ERR(vga->ddc)) {
-> +               if (PTR_ERR(vga->ddc) == -ENODEV) {
-> +                       dev_info(&pdev->dev,
-> +                                "No i2c bus specified... Disabling EDID readout\n");
-> +               } else {
-> +                       dev_err(&pdev->dev, "Couldn't retrieve i2c bus\n");
-> +                       return PTR_ERR(vga->ddc);
-> +               }
-> +       }
-> +
-> +       vga->bridge.funcs = &dumb_vga_bridge_funcs;
-> +       vga->bridge.of_node = pdev->dev.of_node;
-> +
-> +       ret = drm_bridge_add(&vga->bridge);
-> +       if (ret && !IS_ERR(vga->ddc))
-> +               i2c_put_adapter(vga->ddc);
-> +
-> +       return ret;
-> +}
-> +
-> +static int dumb_vga_remove(struct platform_device *pdev)
-> +{
-> +       struct dumb_vga *vga = platform_get_drvdata(pdev);
-> +
-> +       drm_bridge_remove(&vga->bridge);
-> +
-> +       if (!IS_ERR(vga->ddc))
-> +               i2c_put_adapter(vga->ddc);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id dumb_vga_match[] = {
-> +       { .compatible = "rgb-to-vga-bridge" },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, dumb_vga_match);
-> +
-> +struct platform_driver dumb_vga_driver = {
-> +       .probe  = dumb_vga_probe,
-> +       .remove = dumb_vga_remove,
-> +       .driver         = {
-> +               .name           = "rgb-to-vga-bridge",
-> +               .of_match_table = dumb_vga_match,
-> +       },
-> +};
-> +module_platform_driver(dumb_vga_driver);
-> +
-> +MODULE_AUTHOR("Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
-> +MODULE_DESCRIPTION("Dumb RGB to VGA bridge driver");
-> +MODULE_LICENSE("GPL");
-
-FWIW the rest looks fine.
-
-
-Regards
-ChenYu
+On 05/09/16 15:22, Juri Lelli wrote:
+> Hi all,
+> 
+> version 7 of "CPUs capacity information for heterogeneous systems" patchset [1]
+> (please refer to previous postings to get some context).
+> 
+> A few changes from v6:
+> 
+>  - rebase on top of mainline (4.8-rc5)
+>  - some ACKs collected
+>  - changelogs fixes
+>  - use cpuinfo.max_freq
+>  - add delayed work to unregister notifier
+> 
+> Patches high level description:
+> 
+>  o 01/08 introduces documentation for the new optional DT binding
+>  o [02-06]/08 add cpu-capacity attribute to TC2, Juno and Juno r2 DTs and
+>    provide parsing of such information at boot time
+>  o [07-08]/08 introduce sysfs attribute
+> 
+> In case you would like to test this out, I pushed a branch here:
+> 
+>  git://linux-arm.org/linux-jl.git upstream/default_caps_v7
+> 
+> This branch contains additional patches, useful to better understand how CPU
+> capacity information is actually used by the scheduler.
+> 
+> These patches also form the basis for Morten/Dietmar's "Clean-ups and
+> asymmetric cpu capacity support" series [2] (and the EAS stack in general).
+> 
+> Best,
+> 
+> - Juri
+> 
+> [1] v1 - https://lkml.org/lkml/2015/11/23/391
+>     v2 - https://lkml.org/lkml/2016/1/8/417
+>     v3 - https://lkml.org/lkml/2016/2/3/405
+>     v4 - https://lkml.org/lkml/2016/3/18/350
+>     v5 - https://lkml.org/lkml/2016/6/15/291
+>     v6 - https://lkml.org/lkml/2016/7/19/419
+> [2] https://lkml.org/lkml/2016/8/31/292 
+> 
+> 
+> Juri Lelli (8):
+>   Documentation: arm: define DT cpu capacity-dmips-mhz bindings
+>   arm: parse cpu capacity-dmips-mhz from DT
+>   arm, dts: add TC2 cpu capacity-dmips-mhz information
+>   arm64: parse cpu capacity-dmips-mhz from DT
+>   arm64, dts: add Juno cpu capacity-dmips-mhz information
+>   arm64, dts: add Juno r2 cpu capacity-dmips-mhz information
+>   arm: add sysfs cpu_capacity attribute
+>   arm64: add sysfs cpu_capacity attribute
+> 
+>  .../devicetree/bindings/arm/cpu-capacity.txt       | 236 +++++++++++++++++++++
+>  Documentation/devicetree/bindings/arm/cpus.txt     |  10 +
+>  arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts         |   5 +
+>  arch/arm/kernel/topology.c                         | 228 +++++++++++++++++++-
+>  arch/arm64/boot/dts/arm/juno-r2.dts                |   6 +
+>  arch/arm64/boot/dts/arm/juno.dts                   |   6 +
+>  arch/arm64/kernel/topology.c                       | 232 +++++++++++++++++++-
+>  7 files changed, 721 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/cpu-capacity.txt
+> 
+> -- 
+> 2.7.0
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
