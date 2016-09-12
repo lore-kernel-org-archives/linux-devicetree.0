@@ -1,47 +1,68 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [v4 0/2] Fix incorrect capability
-Date: Mon, 12 Sep 2016 14:35:36 +0200
-Message-ID: <CAPDyKFp9K6=Tia3AOX4wT_R_N6x3XizGZoMws1jymKa3iNr8TA@mail.gmail.com>
-References: <20160909020840.2718-1-jaedon.shin@gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: ARM,SoC: About the use DT-defined properties by 3rd-party drivers
+Date: Mon, 12 Sep 2016 13:38:09 +0100
+Message-ID: <20160912123809.GB13741@leverpostej>
+References: <57BDAF2E.10502@laposte.net>
+ <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
+ <57D69FB1.2020801@laposte.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160909020840.2718-1-jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57D69FB1.2020801-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
+Cc: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9 September 2016 at 04:08, Jaedon Shin <jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi all,
->
-> This patch serise fixes incorrect capability bit about ADMA 64-bit on
-> MIPS based BRCMSTB SoCs. This also includes the change of DT bindings.
->
-> Changes in v4:
-> - Added commit message to change example nodes.
-> - Fixed spelling mistake.
->
-> Jaedon Shin (2):
->   mmc: DT: sdhci-brcmstb: Bindings document for common sdhci-brcmstb
->   mmc: sdhci-brcmstb: Fix incorrect capability
->
->  .../mmc/{brcm,bcm7425-sdhci.txt => brcm,sdhci-brcmstb.txt}        | 8 +++++---
->  drivers/mmc/host/sdhci-brcmstb.c                                  | 3 +++
->  2 files changed, 8 insertions(+), 3 deletions(-)
->  rename Documentation/devicetree/bindings/mmc/{brcm,bcm7425-sdhci.txt => brcm,sdhci-brcmstb.txt} (81%)
->
-> --
-> 2.10.0
->
+On Mon, Sep 12, 2016 at 02:29:37PM +0200, Sebastian Frias wrote:
+> My question is about submitting DT properties/nodes (describing some HW) for
+> which there is no Linux driver. Like register addresses for HW blocks,
+> including HW capabilities of said HW blocks, which may or may not be setup
+> by Linux directly.
+> 
+> The idea being that since DT describes the HW and is usually shared with the
+> bootloader (yet stored in the Linux kernel tree), all layers of the stack
+> could use the same DT and each layer would use relevant properties. So the
+> DT would describe the whole SoC even if not all HW blocks have a Linux
+> driver.
+> 
+> 3rd party users of said SoC could then write kernel modules for such HW
+> blocks using the DT description. The DT would thus become the authoritative
+> source of information regarding register programming for the SoC.
 
-Thanks, applied for next!
+I don't follow this part entirely. Why are you expecting thrid parties
+to write a driver for those blocks rather than upstreaming a driver for
+them?
 
-I reverted the change from the DT example code, as Rob pointed out
-it's an unnecessary change.
+> Currently, HW blocks for which there is no public driver (that it is
+> accessed through user-mode libraries or firmware) require a separate
+> HW description (be it Documentation, headers, etc.)
+> 
+> Since the DT describes the HW, it would make sense to expose the HW through
+> DT, that would centralise the HW description.
 
-Kind regards
-Uffe
+I would generally agree that the hardware should be described in DT.
+The difficulty is that without a 'real' user it's not always possible to
+tell if we're describing the thing correctly.
+
+Putting smoething together that's only sufficient to support some
+out-of-tree driver with implicit assumptions that we are not aware of is
+far from fantastic.
+
+> However, after discussing over IRC, it looks like there was no guidance on
+> this. Some people think submitting DT properties/nodes without a corresponding
+> Linux driver is frowned upon, while others thought it was an odd limitation
+> and suggested asking here.
+
+Unfortunately, I think that the area is sufficiently vague that there
+simply is no clear and general answer.
+
+For the sake of discussion, an example of a particular block, along with
+what you expect/need to describe would be helpful.
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
