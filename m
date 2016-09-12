@@ -1,83 +1,165 @@
-From: Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>
-Subject: Re: [PATCH 1/3] misc: Add Aspeed BT IPMI host driver
-Date: Mon, 12 Sep 2016 17:06:36 -0500
-Message-ID: <88ec11d5-3683-7ad3-341e-42d951b6574e@acm.org>
-References: <1472664259-23933-1-git-send-email-clg@kaod.org>
- <c06a8afb-9143-6aef-3425-ad1e50cae35d@kaod.org>
- <1ce6c4b4-5938-22fc-7467-d1efc220b772@gmail.com> <4727554.yt7pF8chOH@wuerfel>
- <7db5ada0-49ea-55eb-089e-d979941ceff5@gmail.com>
- <b42f1b61-8b00-2412-d51d-6207da8afcd6@kaod.org>
-Reply-To: minyard-HInyCGIudOg@public.gmane.org
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] nxp/dts: add pcie aer interrupt-name property in
+ the dts
+Date: Mon, 12 Sep 2016 17:13:58 -0500
+Message-ID: <20160912221358.GI23532@localhost>
+References: <1465892645-32381-2-git-send-email-po.liu@nxp.com>
+ <1472625442-23309-1-git-send-email-po.liu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b42f1b61-8b00-2412-d51d-6207da8afcd6-Bxea+6Xhats@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1472625442-23309-1-git-send-email-po.liu-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+To: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Roy Zang <roy.zang-3arQi8VN3Tc@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2016 04:23 PM, Cédric Le Goater wrote:
-> Hello,
->
-> On 09/12/2016 10:33 PM, Corey Minyard wrote:
->> On 09/12/2016 02:15 PM, Arnd Bergmann wrote:
->>> On Monday, September 12, 2016 1:55:40 PM CEST Corey Minyard wrote:
->>>> On 09/02/2016 08:22 AM, Cédric Le Goater wrote:
->>>>> Hello,
->>>>>
->>>>> Adding Corey in cc: . I guess I should have done that in the first place.
->>>> Yes, probably so.  I've been travelling and didn't see it on the mailing
->>>> lists until now.
->>>>
->>>> There is already a BT driver in the kernel, in drivers/char/ipmi, why
->>>> won't that work?
->>> The new driver is the host side (running on the BMC), the existing one
->>> is the client (running on the PC).
->>>
->>>      Arnd
->> Ok, that's not really clear from the documentation or the Kconfig.
->> In the IPMI spec the "host" side is the computer side, not the BMC
->> side.  Like:
->>
->>     11.6.1 BT Host Interface Registers
->>     The Host BT interface provides an independent set of registers and
->>     interrupts to allow the Host driver to
->>     communicate with the baseboard management controller without
->>     conflicting with the O/S ACPI driver.
->>
->> In light of that, this should probably be named the bt-bmc driver.
->>
->> I haven't reviewed this in detail, but I'm ok with putting it in
->> drivers/char/ipmi.  The state machine part looks reasonably
->> generic.  The configuration part isn't, but that could be split
->> out later if necessary.
->>
->> The biggest thing I don't like is the byte at a time interfaces
->> from userspace.  That seems fairly inefficient if the system
->> does extra work for each userspace access.  IIRC some
->> systems do and some don't.
-> What about the ioctl to send an SMS ATN event to the host ? Is
-> that ok for you ?
+On Wed, Aug 31, 2016 at 02:37:21PM +0800, Po Liu wrote:
+> NXP some platforms aer interrupt was not MSI/MSI-X/INTx
+> but using interrupt line independently. This patch add a "aer"
+> interrupt-names for aer interrupt.
+> With the interrupt-names "aer", code could probe aer interrupt
+> line for pcie root port, replace the aer interrupt service irq.
+> This is intend to fixup the Layerscape platforms which aer interrupt
+> was not MSI/MSI-X/INTx, but using interrupt line independently.
+> 
+> Signed-off-by: Po Liu <po.liu-3arQi8VN3Tc@public.gmane.org>
 
-Yeah, that's necessary, there's no way the low-level driver can
-know when to do that.
+Rob and Shawn had comments here, and I'm not sure they ever got resolved.
 
-I have a similar piece of code in the qemu IPMI emulator, even
-the external IPMI emulator has a message it sends to set ATTN.
-
-I did look at similarities between the two pieces of code, but
-the qemu one has to be register-read/write driven, so it's
-completely different in design.
-
--corey
-
-> Thanks,
->
-> C.
-
-
+> ---
+> changes for V4:
+> 	- Add comments explain why to add this patch
+> 	- Move the binding changes to pci code patch
+> 
+>  arch/arm/boot/dts/ls1021a.dtsi                 |  6 ++++--
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 18 +++++++++---------
+>  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 16 ++++++++--------
+>  3 files changed, 21 insertions(+), 19 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+> index 368e219..443e50b 100644
+> --- a/arch/arm/boot/dts/ls1021a.dtsi
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -634,7 +634,8 @@
+>  			reg = <0x00 0x03400000 0x0 0x00010000   /* controller registers */
+>  			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
+> +			interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
+> +			interrupt-names = "aer";
+>  			fsl,pcie-scfg = <&scfg 0>;
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+> @@ -657,7 +658,8 @@
+>  			reg = <0x00 0x03500000 0x0 0x00010000   /* controller registers */
+>  			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
+> +			interrupt-names = "aer";
+>  			fsl,pcie-scfg = <&scfg 1>;
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> index e669fbd..654071d 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> @@ -527,9 +527,9 @@
+>  			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
+>  			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <0 118 0x4>, /* controller interrupt */
+> -				     <0 117 0x4>; /* PME interrupt */
+> -			interrupt-names = "intr", "pme";
+> +			interrupts = <0 117 0x4>, /* PME interrupt */
+> +					 <0 118 0x4>; /* aer interrupt */
+> +			interrupt-names = "pme", "aer";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> @@ -552,9 +552,9 @@
+>  			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
+>  			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <0 128 0x4>,
+> -				     <0 127 0x4>;
+> -			interrupt-names = "intr", "pme";
+> +			interrupts = <0 127 0x4>,
+> +					 <0 128 0x4>;
+> +			interrupt-names = "pme", "aer";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> @@ -577,9 +577,9 @@
+>  			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
+>  			       0x50 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <0 162 0x4>,
+> -				     <0 161 0x4>;
+> -			interrupt-names = "intr", "pme";
+> +			interrupts = <0 161 0x4>,
+> +					 <0 162 0x4>;
+> +			interrupt-names = "pme", "aer";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> index 21023a3..58844e8 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> @@ -583,8 +583,8 @@
+>  			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
+>  			       0x10 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <0 108 0x4>; /* Level high type */
+> -			interrupt-names = "intr";
+> +			interrupts = <0 108 0x4>; /* aer interrupt */
+> +			interrupt-names = "aer";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> @@ -607,8 +607,8 @@
+>  			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
+>  			       0x12 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <0 113 0x4>; /* Level high type */
+> -			interrupt-names = "intr";
+> +			interrupts = <0 113 0x4>; /* aer interrupt */
+> +			interrupt-names = "aer";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> @@ -631,8 +631,8 @@
+>  			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
+>  			       0x14 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <0 118 0x4>; /* Level high type */
+> -			interrupt-names = "intr";
+> +			interrupts = <0 118 0x4>; /* aer interrupt */
+> +			interrupt-names = "aer";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> @@ -655,8 +655,8 @@
+>  			reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
+>  			       0x16 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <0 123 0x4>; /* Level high type */
+> -			interrupt-names = "intr";
+> +			interrupts = <0 123 0x4>; /* aer interrupt */
+> +			interrupt-names = "aer";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> -- 
+> 2.1.0.27.g96db324
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
