@@ -1,138 +1,100 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 4/5] ARM: dts: exynos: add support for ISP power domain
- to exynos4x12 clocks device
-Date: Mon, 12 Sep 2016 15:28:52 -0700
-Message-ID: <20160912222852.GH7243@codeaurora.org>
-References: <1472737551-15272-1-git-send-email-m.szyprowski@samsung.com>
- <1472737551-15272-5-git-send-email-m.szyprowski@samsung.com>
- <20160908002254.GD13062@codeaurora.org>
- <CGME20160912102332eucas1p145e79669788329b44343da62dcbe50ca@eucas1p1.samsung.com>
- <f340cca5-6cd6-6bd1-3b9a-ccd58cbc0091@samsung.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: msm8996-pcie-phy: add support for
+ msm8996 pcie phy
+Date: Mon, 12 Sep 2016 15:51:25 -0700
+Message-ID: <f27f7641-d7ec-25cb-4b7e-42b343b32db0@codeaurora.org>
+References: <1473245733-17260-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1473245733-17260-2-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f340cca5-6cd6-6bd1-3b9a-ccd58cbc0091@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Inki Dae <inki.dae@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473245733-17260-2-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/12, Marek Szyprowski wrote:
-> Hi Stephen,
-> 
-> 
-> On 2016-09-08 02:22, Stephen Boyd wrote:
-> >On 09/01, Marek Szyprowski wrote:
-> >>Exynos4412 clock controller contains some additional clocks for FIMC-ISP
-> >>(Camera ISP) subsystem. Registers for those clocks are partially located
-> >>in the SOC area, which belongs to ISP power domain.
-> >>
-> >>This patch extends clock controller node with ISP clock sub-node and link
-> >>(phandle) to ISP power domain.
-> >>
-> >>Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> >>---
-> >>  arch/arm/boot/dts/exynos4x12.dtsi | 5 +++++
-> >>  1 file changed, 5 insertions(+)
-> >>
-> >>diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
-> >>index 3394bdcf10ae..4daea67546b9 100644
-> >>--- a/arch/arm/boot/dts/exynos4x12.dtsi
-> >>+++ b/arch/arm/boot/dts/exynos4x12.dtsi
-> >>@@ -74,6 +74,11 @@
-> >>  		compatible = "samsung,exynos4412-clock";
-> >>  		reg = <0x10030000 0x20000>;
-> >>  		#clock-cells = <1>;
-> >>+
-> >>+		isp-clock-controller {
-> >>+			compatible = "samsung,exynos4412-isp-clock";
-> >>+			power-domains = <&pd_isp>;
-> >>+		};
-> >Why can't we extend support in power domains code to have
-> >multiple domains for a single device node? i.e. power-domains =
-> ><&pd_isp>, <&pd_foo>, <&pd_bar>, and then pick the right one with
-> >power-domain-names or something like that? Making a subnode
-> >(which seems to turn into a child platform device?) seems like a
-> >quick solution for larger problems.
-> 
-> The larger problem here is the fact that clock controller is
-> partially located
-> in different power areas of SoC. Majority of the clock controllers
-> is located
-> in the area which is typically always powered (besides system sleep case),
-> while a few Camera ISP registers are located in the ISP block, which have
-> separate power domain. Having a separate nodes for sub-parts of the
-> device is
-> rather common approach, already practices by some more complex devices.
-> 
-> I see some serious design problems with multiple entries in power domains
-> property. First how to show that some part of the device IS NOT in
-> any domain?
-
-Is that even possible? Every device should be in some power
-domain, even if it's just an "always on" power domain that we
-don't really control from software.
-
-> The question is how the automated assignment to domains would be handled for
-> such case?
-
-I don't get this part. Do you mean how we indicate to the driver
-which power domain to use at the right time?
-
-> 
-> The second is related to Linux kernel internals. Right now device
-> drivers are
-> not aware of the power domains - there are no direct calls to power domains
-> code, everything is hidden behind runtime pm which does all the hard work.
-
-Right. Runtime PM will need to be improved to allow this case.
-
-> 
-> Similar situation is on Exynos 542x/5800, which will look more or less like
-> this:
-> 
->         clock: clock-controller@10010000 {
->              compatible = "samsung,exynos5420-clock";
->              reg = <0x10010000 0x30000>;
->              #clock-cells = <1>;
+On 09/07/2016 03:55 AM, Srinivas Kandagatla wrote:
+> This patch adds bindings for pcie phy on MSM8996.
+>
+> This PHY has 3 Ports, including a common block. Each port is connected
+> to one root complex. Each port has dedicated reset control lines apart
+> from common reset and clocks for common block.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/phy/qcom-msm8996-pcie-phy.txt         | 62 ++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
+>
+> diff --git a/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt b/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
+> new file mode 100644
+> index 0000000..51930ed
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom-msm8996-pcie-phy.txt
+> @@ -0,0 +1,62 @@
+> +Qualcomm msm8996 pcie PHY
+> +------------------------
 > +
-> +            gsc-clock-controller {
-> +                 compatible = "samsung,exynos5420-gsc-clock";
-> +                 power-domains = <&gsc_pd>;
-> +            };
+> +Required properties:
+> +- compatible: compatible list, contains "qcom,msm8996-pcie-phy".
+> +- reg: offset and length of the pcie PHY register set;
+> +- #phy-cells: must be one
+> +- clocks: a list of phandles and clock-specifier pairs, one for each entry in
+> +  clock-names.
+> +- clock-names: must be "cfg" for phy config clock,
+> +	"aux" for phy aux clock,
+> +	"ref_clk" for 19.2 MHz ref clk and
+> +	"ref_clk_src" reference clock source.
 > +
-> +            isp-clock-controller {
-> +                 compatible = "samsung,exynos5420-isp-clock";
-> +                 power-domains = <&isp_pd>;
-> +            };
 > +
-> +            mfc-clock-controller {
-> +                 compatible = "samsung,exynos5420-mfc-clock";
-> +                 power-domains = <&mfc_pd>;
-> +            };
+> +- resets: a list of phandles and reset controller specifier pairs, one for
+> +  each entry in reset-names.
+> +- reset-names: must be "phy" for reset of pcie phy block and "common" for
+> +  phy common reset.
 > +
-> +            msc-clock-controller {
-> +                 compatible = "samsung,exynos5420-msc-clock";
-> +                 power-domains = <&msc_pd>;
-> +            };
+> +Required properties: (Child node)
+> +- reg: lane numer of the pcie phy.
+> +- resets: a list of phandles and reset controller specifier pairs, one for
+> +  each entry in reset-names.
+> +- reset-names: must be "phy" for reset of pcie phy lane.
 > +
-> +            disp-clock-controller {
-> +                 compatible = "samsung,exynos5420-disp-clock";
-> +                 power-domains = <&disp_pd>;
-> +            };
->          };
-> 
-> The patch is not yet ready, so I didn't include it in this patchset.
+> +Example:
+> +
+> +	pcie_phy: qcom,pciephy@34000 {
 
-Ok. From a DT perspective the sub-nodes seem to be a workaround
-for how the linux device model is mapped to power domains. I'm
-not sure we want to make subnodes in the clk controller just to
-make sub devices that we can target from the clk registration
-path. Those sub nodes aren't devices at all. I understand why
-it's being done this way, I just don't see how it fits into DT
-design methodologies.
+phy for node name? Or pcie-phy?
+
+> +		compatible = "qcom,msm8996-pcie-phy";
+> +		reg = <0x00034000 0x4000>;
+> +		#phy-cells = <1>;
+> +		clocks = <&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
+> +			<&gcc GCC_PCIE_PHY_AUX_CLK>,
+> +			<&gcc GCC_PCIE_CLKREF_CLK>,
+> +			<&rpmcc MSM8996_RPM_SMD_LN_BB_CLK>;
+> +		clock-names = "cfg", "aux", "ref_clk", "ref_clk_src";
+> +
+> +		resets = <&gcc GCC_PCIE_PHY_BCR>,
+> +			<&gcc GCC_PCIE_PHY_COM_BCR>;
+> +		reset-names = "phy",  "common";
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		pcie_phy@0{
+> +			reg = <0>;
+> +			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
+> +			reset-names = "phy";
+> +		};
+
+Why not just have reset-names with strings like "lane0", "lane1",
+"lane2" in the toplevel node?
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
