@@ -1,35 +1,35 @@
 From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: [PATCH v2 3/3] MIPS: OCTEON: fix PCI interrupt routing on D-Link DSR-500N
-Date: Mon, 12 Sep 2016 23:39:10 +0300
-Message-ID: <20160912203910.1164-4-aaro.koskinen@iki.fi>
-References: <20160912203910.1164-1-aaro.koskinen@iki.fi>
+Subject: [PATCH v2 0/3] MIPS: OCTEON: Add support for D-Link DSR-500N router
+Date: Mon, 12 Sep 2016 23:39:07 +0300
+Message-ID: <20160912203910.1164-1-aaro.koskinen@iki.fi>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160912203910.1164-1-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Fix PCI interrupt routing on D-Link DSR-500N.
+Hi,
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
----
- arch/mips/pci/pci-octeon.c | 2 ++
- 1 file changed, 2 insertions(+)
+D-Link DSR-500N is close to 1000N and with small changes we
+can support both.
 
-diff --git a/arch/mips/pci/pci-octeon.c b/arch/mips/pci/pci-octeon.c
-index c258cd4..308d051 100644
---- a/arch/mips/pci/pci-octeon.c
-+++ b/arch/mips/pci/pci-octeon.c
-@@ -204,6 +204,8 @@ const char *octeon_get_pci_interrupts(void)
- 	 * Interrupt Number (INTA# = 0, INTB# = 1, INTC# = 2, and
- 	 * INTD# = 3)
- 	 */
-+	if (of_machine_is_compatible("dlink,dsr-500n"))
-+		return "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC";
- 	switch (octeon_bootinfo->board_type) {
- 	case CVMX_BOARD_TYPE_NAO38:
- 		/* This is really the NAC38 */
+	v2: Delete redudant led labels from dlink_dsr-500n.dts.
+
+A.
+
+Aaro Koskinen (3):
+  MIPS: OCTEON: split dlink_dsr-1000n.dts
+  MIPS: OCTEON: add DTS for D-Link DSR-500N
+  MIPS: OCTEON: fix PCI interrupt routing on D-Link DSR-500N
+
+ .../boot/dts/cavium-octeon/dlink_dsr-1000n.dts     | 45 +----------------
+ .../dts/cavium-octeon/dlink_dsr-500n-1000n.dtsi    | 58 ++++++++++++++++++++++
+ .../mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts | 40 +++++++++++++++
+ arch/mips/pci/pci-octeon.c                         |  2 +
+ 4 files changed, 101 insertions(+), 44 deletions(-)
+ create mode 100644 arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n-1000n.dtsi
+ create mode 100644 arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts
+
 -- 
 2.9.2
 
