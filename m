@@ -1,65 +1,89 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v10 1/5] Documentation: bindings: add dt documentation
- for dfi controller
-Date: Mon, 12 Sep 2016 11:18:37 -0500
-Message-ID: <20160912161836.GA16533@rob-hp-laptop>
-References: <1473051971-5500-1-git-send-email-hl@rock-chips.com>
- <1473051971-5500-2-git-send-email-hl@rock-chips.com>
+From: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
+Subject: Re: ARM, SoC: About the use DT-defined properties by 3rd-party
+ drivers
+Date: Mon, 12 Sep 2016 11:21:29 -0500
+Message-ID: <57D6D609.1090702@tabi.org>
+References: <57BDAF2E.10502@laposte.net>
+ <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
+ <57D69FB1.2020801@laposte.net> <20160912123809.GB13741@leverpostej>
+ <57D6AA54.6000208@laposte.net> <20160912135549.GA14165@leverpostej>
+ <57D6D2A9.3010006@laposte.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1473051971-5500-2-git-send-email-hl@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lin Huang <hl@rock-chips.com>
-Cc: tixy@linaro.org, mark.rutland@arm.com, devicetree@vger.kernel.org, typ@rock-chips.com, linux-rockchip@lists.infradead.org, mturquette@baylibre.com, dbasehore@chromium.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dianders@chromium.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, myungjoo.ham@samsung.com, sudeep.holla@arm.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57D6D2A9.3010006-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBTZXAgMDUsIDIwMTYgYXQgMDE6MDY6MDdQTSArMDgwMCwgTGluIEh1YW5nIHdyb3Rl
-Ogo+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgZG9jdW1lbnRhdGlvbiBmb3Igcm9ja2NoaXAgZGZpIGRl
-dmZyZXEtZXZlbnQgZHJpdmVyLgo+IAo+IFNpZ25lZC1vZmYtYnk6IExpbiBIdWFuZyA8aGxAcm9j
-ay1jaGlwcy5jb20+Cj4gQWNrZWQtYnk6IENoYW53b28gQ2hvaSA8Y3cwMC5jaG9pQHNhbXN1bmcu
-Y29tPgo+IC0tLQo+IENoYW5nZXMgaW4gdjEwOgo+IC0gTm9uZQo+IAo+IENoYW5nZXMgaW4gdjk6
-Cj4gLSByZW9yZGVyIGNvbXBhdGlibGUgYW5kIHJlZwo+IAo+IENoYW5nZXMgaW4gdjg6Cj4gLSBk
-ZWxldGUgYSB1bnVzZSBibGFuayBsaW5lCj4gCj4gQ2hhbmdlcyBpbiB2NzoKPiAtIE5vbmUKPiAK
-PiBDaGFuZ2VzIGluIHY2Ogo+IC0gTm9uZQo+IAo+IENoYW5nZXMgaW4gdjU6Cj4gLSBOb25lCj4g
-Cj4gQ2hhbmdlcyBpbiB2NDoKPiAtIE5vbmUKPiAKPiBDaGFuZ2VzIGluIHYzOgo+IC0gTm9uZQo+
-IAo+IENoYW5nZXMgaW4gdjI6Cj4gLSBOb25lIAo+IAo+IENoYW5nZXMgaW4gdjE6Cj4gLSBOb25l
-Cj4gCj4gIC4uLi9iaW5kaW5ncy9kZXZmcmVxL2V2ZW50L3JvY2tjaGlwLWRmaS50eHQgICAgICAg
-ICAgIHwgMTkgKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTkgaW5zZXJ0
-aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2RldmZyZXEvZXZlbnQvcm9ja2NoaXAtZGZpLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGV2ZnJlcS9ldmVudC9yb2NrY2hpcC1k
-ZmkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RldmZyZXEvZXZlbnQv
-cm9ja2NoaXAtZGZpLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4u
-ZjIyMzMxMwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGV2ZnJlcS9ldmVudC9yb2NrY2hpcC1kZmkudHh0Cj4gQEAgLTAsMCArMSwxOSBA
-QAo+ICsKPiArKiBSb2NrY2hpcCByazMzOTkgREZJIGRldmljZQo+ICsKPiArUmVxdWlyZWQgcHJv
-cGVydGllczoKPiArLSBjb21wYXRpYmxlOiBNdXN0IGJlICJyb2NrY2hpcCxyazMzOTktZGZpIi4K
-PiArLSByZWc6IHBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiBlYWNoIERGSSBhbmQgbGVuZ3RoIG9m
-IG1lbW9yeSBtYXBwZWQgcmVnaW9uCj4gKy0gcm9ja2NoaXAscG11OiBwaGFuZGxlIHRvIHRoZSBz
-eXNjb24gbWFuYWdpbmcgdGhlICJwbXUgZ2VuZXJhbCByZWdpc3RlciBmaWxlcyIKPiArLSBjbG9j
-a3M6IHBoYW5kbGVzIGZvciBjbG9jayBzcGVjaWZpZWQgaW4gImNsb2NrLW5hbWVzIiBwcm9wZXJ0
-eQo+ICstIGNsb2NrLW5hbWVzIDogdGhlIG5hbWUgb2YgY2xvY2sgdXNlZCBieSB0aGUgREZJLCBt
-dXN0IGJlICJwY2xrX2Rkcl9tb24iOwo+ICsKPiArRXhhbXBsZToKPiArCWRmaTogZGZpQDB4ZmY2
-MzAwMDAgewoKRHJvcCB0aGUgJzB4Jy4gV2l0aCB0aGF0LAoKQWNrZWQtYnk6IFJvYiBIZXJyaW5n
-IDxyb2JoQGtlcm5lbC5vcmc+Cgo+ICsJCWNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMzk5LWRm
-aSI7Cj4gKwkJcmVnID0gPDB4MDAgMHhmZjYzMDAwMCAweDAwIDB4NDAwMD47Cj4gKwkJcm9ja2No
-aXAscG11ID0gPCZwbXVncmY+Owo+ICsJCWNsb2NrcyA9IDwmY3J1IFBDTEtfRERSX01PTj47Cj4g
-KwkJY2xvY2stbmFtZXMgPSAicGNsa19kZHJfbW9uIjsKPiArCQlzdGF0dXMgPSAiZGlzYWJsZWQi
-Owo+ICsJfTsKPiAtLSAKPiAyLjYuNgo+IAo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlz
-IGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGRldmljZXRyZWUiIGluCj4gdGhlIGJv
-ZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9y
-ZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Sebastian Frias wrote:
+>> You're not changing the code, but you are creating a binding.
+>> Bindings
+>>> are intended to be stable (i.e. a working DTB from today should
+>>> continue to work in future), and thus there are ramifications.
+
+> Ok, but who is responsible for such guarantee?
+
+The developers who create the driver and modify it.  Only upstream 
+contributions count.
+
+> How is it enforced and verified?
+
+The upstream reviewers verify it, and if they see a problem, they reject 
+the patch.
+
+> Exactly, that's why to I'm having trouble to understand why there is
+>  so much insistence on "getting the DT 100% right", since a HW change
+>  could imply that what made 100% sense yesterday, does not today.
+
+I'm not sure what you're getting at. Everything is best-effort. The 
+binding for a given device is supposed to accurately, but minimally, 
+describe the hardware so that the driver can program the device 
+properly. Specific properties are added to the binding to handle 
+specific cases. If a binding includes a description of properties that 
+are not used by the driver, the developer is typically asked to remove 
+those.
+
+So I don't understand the "100% right" comment.
+
+> Could you be more precise on those two issues? Namely: "the effort"
+> and the "lack of benefit for the community"?
+
+1) The effort = the effort by upstream developers to review the binding.
+
+2) lack of benefit = proprietary and out-of-tree drivers do not benefit 
+the community.
+
+> I can understand the effort it takes to review a binding and some
+> driver, but if there's no driver, why would it matter if the DT
+> binding is 100% right?
+
+Why bother creating a binding if there's no driver to use it?
+
+ > Hence, why would it take more effort?
+> Furthermore, if there's no driver, there's no backward compatibility
+>  to guarantee. Shouldn't it require less effort?
+
+If a developer creates a binding without a driver, then it's very hard 
+to know if that binding is correct.  That's like creating a recipe 
+without attempting to make the food.  How do you know it actually tastes 
+good?  No one would ever ask a chef to create a "technically correct" 
+recipe without cooking it first and tasting it.
+
+> Also, what sort of "benefits" does the community expects or
+> requires? Because the idea behind the proposal is to put the HW
+> description in DT, so basically the HW would be documented. Maybe
+> there wouldn't be a driver right away, but the HW description would
+> allow for drivers to exist.
+
+I'm not sure how many times we need to repeat this, but the idea that 
+the DT binding documentation can be used as official documentation for 
+the hardware is absurd.  What's wrong with the ACTUAL hardware 
+documentation provided by the manufacturer in PDF format?  The DT 
+binding has no value without an actual driver.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
