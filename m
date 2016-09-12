@@ -1,59 +1,53 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 01/26] dt-bindings: display: display-timing: Add property
- to configure sync drive edge
-Date: Mon, 12 Sep 2016 08:05:20 -0500
-Message-ID: <20160912130520.GA9582@rob-hp-laptop>
-References: <20160901112320.15246-1-peter.ujfalusi@ti.com>
- <20160901112320.15246-2-peter.ujfalusi@ti.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 3/5] arm64: arch_timer: Work around QorIQ Erratum
+ A-008585
+Date: Mon, 12 Sep 2016 14:07:25 +0100
+Message-ID: <57D6A88D.7000002@arm.com>
+References: <1473469413-11019-1-git-send-email-oss@buserror.net>
+ <1473469413-11019-3-git-send-email-oss@buserror.net>
+ <20160912113615.GA20804@leverpostej> <20160912114406.GG23211@arm.com>
+ <20160912123027.GA13741@leverpostej> <20160912125948.GB13899@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20160901112320.15246-2-peter.ujfalusi@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, daniel.vetter@ffwll.ch, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160912125948.GB13899@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, mike.caraman-3arQi8VN3Tc@public.gmane.org, Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBTZXAgMDEsIDIwMTYgYXQgMDI6MjI6NTVQTSArMDMwMCwgUGV0ZXIgVWpmYWx1c2kg
-d3JvdGU6Cj4gVGhlcmUgYXJlIGRpc3BsYXkgcGFuZWxzIHdoaWNoIGRlbWFuZHMgdGhhdCB0aGUg
-c3luYyBzaWduYWwgaXMgZHJpdmVuIG9uCj4gZGlmZmVyZW50IGVkZ2UgdGhhbiB0aGUgcGl4ZWwg
-ZGF0YS4KPiBXaXRoIHRoZSBzeW5jY2xrLWFjdGl2ZSBwcm9wZXJ0eSB3ZSBjYW4gc3BlY2lmeSB0
-aGUgY2xrIGVkZ2UgdG8gYmUgdXNlZCB0bwo+IGRyaXZlIHRoZSBzeW5jIHNpZ25hbC4gV2hlbiB0
-aGUgcHJvcGVydHkgaXMgbWlzc2luZyBpdCBpbmRpY2F0ZXMgdGhhdCB0aGUKPiBzeW5jIGlzIGRy
-aXZlbiBvbiB0aGUgc2FtZSBlZGdlIGFzIHRoZSBwaXhlbCBkYXRhLgo+IAo+IFNpZ25lZC1vZmYt
-Ynk6IFBldGVyIFVqZmFsdXNpIDxwZXRlci51amZhbHVzaUB0aS5jb20+Cj4gQ0M6IFJvYiBIZXJy
-aW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Cj4gQ0M6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5k
-QGFybS5jb20+Cj4gQ0M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gLS0tCj4gIERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2Rpc3BsYXktdGltaW5n
-LnR4dCB8IDYgKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKykKPiAKPiBk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
-ZWwvZGlzcGxheS10aW1pbmcudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcGFuZWwvZGlzcGxheS10aW1pbmcudHh0Cj4gaW5kZXggZTFkNGEwYjU5NjEyLi4x
-NDM2MjkyZTdhNTYgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcGFuZWwvZGlzcGxheS10aW1pbmcudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvZGlzcGxheS10aW1pbmcudHh0Cj4g
-QEAgLTMyLDYgKzMyLDEyIEBAIG9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gIAkJCS0gYWN0aXZlIGxv
-dyAgPSBkcml2ZSBwaXhlbCBkYXRhIG9uIGZhbGxpbmcgZWRnZS8KPiAgCQkJCQlzYW1wbGUgZGF0
-YSBvbiByaXNpbmcgZWRnZQo+ICAJCQktIGlnbm9yZWQgICAgID0gaWdub3JlZAo+ICsgLSBzeW5j
-Y2xrLWFjdGl2ZTogd2l0aAo+ICsJCQktIGFjdGl2ZSBoaWdoID0gZHJpdmUgc3luYyBvbiByaXNp
-bmcgZWRnZS8KCnJpc2luZyBlZGdlIG9mIHdoYXQ/IHBpeGVsIGNsaz8KCj4gKwkJCQkJc2FtcGxl
-IHN5bmMgb24gZmFsbGluZyBlZGdlCj4gKwkJCS0gYWN0aXZlIGxvdyAgPSBkcml2ZSBzeW5jIG9u
-IGZhbGxpbmcgZWRnZS8KPiArCQkJCQlzYW1wbGUgc3luYyBvbiByaXNpbmcgZWRnZQo+ICsJCQkt
-IG9taXR0ZWQgICAgID0gc2FtZSBjb25maWd1cmF0aW9uIGFzIHBpeGVsY2xrLWFjdGl2ZQo+ICAg
-LSBpbnRlcmxhY2VkIChib29sKTogYm9vbGVhbiB0byBlbmFibGUgaW50ZXJsYWNlZCBtb2RlCj4g
-ICAtIGRvdWJsZXNjYW4gKGJvb2wpOiBib29sZWFuIHRvIGVuYWJsZSBkb3VibGVzY2FuIG1vZGUK
-PiAgIC0gZG91YmxlY2xrIChib29sKTogYm9vbGVhbiB0byBlbmFibGUgZG91YmxlY2xvY2sgbW9k
-ZQo+IC0tIAo+IDIuOS4zCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+On 12/09/16 13:59, Mark Rutland wrote:
+> On Mon, Sep 12, 2016 at 01:30:28PM +0100, Mark Rutland wrote:
+>> On Mon, Sep 12, 2016 at 12:44:07PM +0100, Will Deacon wrote:
+>>> On Mon, Sep 12, 2016 at 12:36:15PM +0100, Mark Rutland wrote:
+>>>> The changes in arm64's <asm/arch_timer.h> are going to conflict with
+>>>> some cleanup [1,2] that just landed in the arm64 for-next/core branch.
+>>>>
+>>>> Could you please rebase atop of that?
+>>>
+>>> Well, we should figure out what tree this is going through first. There
+>>> are a mixture of arm, arm64, driver and dts changes here and not all
+>>> of it is carrying the appropriate acks for me to queue it.
+>>
+>> Given that mix, I had assumed that this would all go through the arm64
+>> tree -- I see that Rob has already acked the binding, and I'm happy to
+>> give my ack for the driver once that's in shape.
+> 
+> Now I see that I'd missed the arch/arm changes in patch 4, which lack a
+> relevant ack.
+> 
+> Given that, I don't know what to suggest.
+
+I wouldn't mind delaying patch 4 until it gets acked by RMK, as it
+doesn't impact the functionality.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
