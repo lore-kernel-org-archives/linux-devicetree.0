@@ -1,90 +1,65 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/3] Documentation: devicetree: add qca8k binding
-Date: Mon, 12 Sep 2016 14:53:19 +0300
-Message-ID: <c6c64bcc-50ad-0cbb-3e56-0f8dab45c413@cogentembedded.com>
-References: <1473669337-21221-1-git-send-email-john@phrozen.org>
- <1473669337-21221-2-git-send-email-john@phrozen.org>
+From: Sebastian Frias <sf84@laposte.net>
+Subject: Re: ARM,SoC: About the use DT-defined properties by 3rd-party drivers
+Date: Mon, 12 Sep 2016 14:29:37 +0200
+Message-ID: <57D69FB1.2020801@laposte.net>
+References: <57BDAF2E.10502@laposte.net>
+ <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1473669337-21221-2-git-send-email-john@phrozen.org>
+In-Reply-To: <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Crispin <john@phrozen.org>, "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, qsdk-review@qca.qualcomm.com, devicetree@vger.kernel.org
+To: Timur Tabi <timur@tabi.org>
+Cc: devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Mason <slash.tmp@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-On 9/12/2016 11:35 AM, John Crispin wrote:
+Hi Timur,
 
-> Add device-tree binding for ar8xxx switch families.
->
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: John Crispin <john@phrozen.org>
-> ---
->  .../devicetree/bindings/net/dsa/qca8k.txt          |   53 ++++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/dsa/qca8k.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/dsa/qca8k.txt b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> new file mode 100644
-> index 0000000..2a1ad06
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/dsa/qca8k.txt
-> @@ -0,0 +1,53 @@
-> +* Qualcomm Atheros QCA8xxx switch family
-> +
-> +Required properties:
-> +
-> +- compatible: should be "qca,qca8337"
-> +- #size-cells: must be 0
-> +- #address-cells: must be 1
-> +
-> +Subnodes:
-> +
-> +The integrated switch subnode should be specified according to the binding
-> +described in dsa/dsa.txt.
-> +
-> +Example:
-> +
-> +	&mdio0 {
-> +		switch@0 {
-> +			compatible = "qca,qca8337";
-> +
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <30>;
-> +
-> +			ports {
-> +				port@0 {
-> +					reg = <11>;
-> +					label = "cpu";
-> +					ethernet = <&gmac1>;
-> +					phy-mode = "rgmii";
-> +				};
-> +
-> +				port@1 {
-> +					reg = <0>;
-> +					label = "lan1";
-> +				};
-> +
-> +				port@2 {
-> +					reg = <1>;
-> +					label = "lan2";
-> +				};
-> +
-> +				port@3 {
-> +					reg = <2>;
-> +					label = "lan3";
-> +				};
-> +
-> +				port@4 {
-> +					reg = <3>;
-> +					label = "lan4";
-> +				};
+On 08/28/2016 10:36 PM, Timur Tabi wrote:
+> On Wed, Aug 24, 2016 at 9:29 AM, Sebastian Frias <sf84@laposte.net> wrote:
+>>
+>> If this is really not possible, it forces the SoC manufacturer to expose
+>> those properties in a different way, thus wasting a (seemingly) perfectly
+>> fine way of doing so: the DT and its documentation.
+> 
+> When you submit a new driver upstream, that patch also includes the
+> new device tree nodes and documentation for those nodes.  Everything
+> is peer-reviewed together.  I don't understand what you think the
+> problem is.
+> 
 
-    The <unit-address> part of the node name should correspond to the "reg" 
-prop. I think modern 'dtc' even warns about that...
+Thanks for your comment and sorry for the late reply.
 
-[...]
+My question is about submitting DT properties/nodes (describing some HW) for
+which there is no Linux driver. Like register addresses for HW blocks,
+including HW capabilities of said HW blocks, which may or may not be setup
+by Linux directly.
 
-MBR, Sergei
+The idea being that since DT describes the HW and is usually shared with the
+bootloader (yet stored in the Linux kernel tree), all layers of the stack
+could use the same DT and each layer would use relevant properties. So the
+DT would describe the whole SoC even if not all HW blocks have a Linux
+driver.
+
+3rd party users of said SoC could then write kernel modules for such HW
+blocks using the DT description. The DT would thus become the authoritative
+source of information regarding register programming for the SoC.
+
+Currently, HW blocks for which there is no public driver (that it is
+accessed through user-mode libraries or firmware) require a separate
+HW description (be it Documentation, headers, etc.)
+
+Since the DT describes the HW, it would make sense to expose the HW through
+DT, that would centralise the HW description.
+
+However, after discussing over IRC, it looks like there was no guidance on
+this. Some people think submitting DT properties/nodes without a corresponding
+Linux driver is frowned upon, while others thought it was an odd limitation
+and suggested asking here.
+
+Does that clarifies the scope of the question?
+
+Best regards,
+
+Sebastian
