@@ -1,58 +1,68 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 6/8 v2] arm: orion5x: Add DT-based support for Netgear WNR854T
-Date: Mon, 12 Sep 2016 23:19:31 +0200
-Message-ID: <2622432.deEWxomPCF@wuerfel>
-References: <1472203264-21089-7-git-send-email-jm@lentin.co.uk> <20160912170625.GA7420@rob-hp-laptop> <2920481.EgEQnLmOkM@wuerfel>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
+Subject: Re: [PATCH 1/3] misc: Add Aspeed BT IPMI host driver
+Date: Mon, 12 Sep 2016 23:23:41 +0200
+Message-ID: <b42f1b61-8b00-2412-d51d-6207da8afcd6@kaod.org>
+References: <1472664259-23933-1-git-send-email-clg@kaod.org>
+ <c06a8afb-9143-6aef-3425-ad1e50cae35d@kaod.org>
+ <1ce6c4b4-5938-22fc-7467-d1efc220b772@gmail.com> <4727554.yt7pF8chOH@wuerfel>
+ <7db5ada0-49ea-55eb-089e-d979941ceff5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2920481.EgEQnLmOkM@wuerfel>
+In-Reply-To: <7db5ada0-49ea-55eb-089e-d979941ceff5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: minyard-HInyCGIudOg@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, September 12, 2016 11:13:33 PM CEST Arnd Bergmann wrote:
-> On Monday, September 12, 2016 12:06:25 PM CEST Rob Herring wrote:
-> > On Mon, Sep 05, 2016 at 10:07:26PM +0100, Jamie Lentin wrote:
-> > > This is a router based on the mv88f5181 chipset.
-> > > 
-> > > http://www.netgear.com/support/product/WNR854T.aspx
-> > > http://wiki.openwrt.org/toh/netgear/wnr854t
-> > > 
-> > > Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-> > > ---
-> > > This removes the contentious vendor partitioning scheme and goes back
-> > > to the original partitioning scheme used in non-DT ports to this board.
-> > > Using the same partitioning scheme should mean less surprises for
-> > > someone trying to upgrade their router.
-> > > 
-> > > The non-DT PCI setup is still here, as there are other orion5x DT boards
-> > > doing very similar things, and can all be converted at the same time.
-> > 
-> > If we keep accepting this duplicated, legacy PCI setup, who is going to 
-> > be motivated to clean things up. But it's ultimately up to Arnd and 
-> > Olof.
-> > 
-> 
-> I mentioned before that I'm feeling a bit uneasy about this too.
-> 
-> Maybe we can instead leave out the PCI support from the new
-> file for now and not delete the legacy board file?
-> 
+Hello, 
 
-Another idea that has worked in the past is that we ask everyone
-to do one piece of the puzzle. In this case that could be to
-convert the existing PCI support to a proper host driver
-in arch/arm/mach-orion5x/pci.c that is separate from the PCIe
-support (for which we already have a driver IIRC) and have
-it probed by calling pci_scan_root_bus() from a platform
-driver init function. The next person who wants DT suppor for
-an existing orion machine can then add DT support to that driver.
+On 09/12/2016 10:33 PM, Corey Minyard wrote:
+> On 09/12/2016 02:15 PM, Arnd Bergmann wrote:
+>> On Monday, September 12, 2016 1:55:40 PM CEST Corey Minyard wrote:
+>>> On 09/02/2016 08:22 AM, Cédric Le Goater wrote:
+>>>> Hello,
+>>>>
+>>>> Adding Corey in cc: . I guess I should have done that in the first place.
+>>> Yes, probably so.  I've been travelling and didn't see it on the mailing
+>>> lists until now.
+>>>
+>>> There is already a BT driver in the kernel, in drivers/char/ipmi, why
+>>> won't that work?
+>> The new driver is the host side (running on the BMC), the existing one
+>> is the client (running on the PC).
+>>
+>>     Arnd
+> 
+> Ok, that's not really clear from the documentation or the Kconfig.
+> In the IPMI spec the "host" side is the computer side, not the BMC
+> side.  Like:
+> 
+>    11.6.1 BT Host Interface Registers
+>    The Host BT interface provides an independent set of registers and
+>    interrupts to allow the Host driver to
+>    communicate with the baseboard management controller without
+>    conflicting with the O/S ACPI driver.
+> 
+> In light of that, this should probably be named the bt-bmc driver.
+> 
+> I haven't reviewed this in detail, but I'm ok with putting it in
+> drivers/char/ipmi.  The state machine part looks reasonably
+> generic.  The configuration part isn't, but that could be split
+> out later if necessary.
+> 
+> The biggest thing I don't like is the byte at a time interfaces
+> from userspace.  That seems fairly inefficient if the system
+> does extra work for each userspace access.  IIRC some
+> systems do and some don't.
 
-	Arnd
+What about the ioctl to send an SMS ATN event to the host ? Is 
+that ok for you ?
 
+Thanks,
+
+C.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
