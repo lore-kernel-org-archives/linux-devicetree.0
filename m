@@ -1,49 +1,65 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: add the regulator optional properties
-Date: Mon, 12 Sep 2016 11:16:55 -0500
-Message-ID: <20160912161655.GA12672@rob-hp-laptop>
-References: <1473027116-13892-1-git-send-email-wxt@rock-chips.com>
+Subject: Re: [PATCH v10 1/5] Documentation: bindings: add dt documentation
+ for dfi controller
+Date: Mon, 12 Sep 2016 11:18:37 -0500
+Message-ID: <20160912161836.GA16533@rob-hp-laptop>
+References: <1473051971-5500-1-git-send-email-hl@rock-chips.com>
+ <1473051971-5500-2-git-send-email-hl@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1473027116-13892-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Caesar Wang <wxt@rock-chips.com>
-Cc: Jiri Kosina <jikos@kernel.org>, linux-rockchip@lists.infradead.org, dbasehore@chromium.org, Douglas Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <1473051971-5500-2-git-send-email-hl@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lin Huang <hl@rock-chips.com>
+Cc: tixy@linaro.org, mark.rutland@arm.com, devicetree@vger.kernel.org, typ@rock-chips.com, linux-rockchip@lists.infradead.org, mturquette@baylibre.com, dbasehore@chromium.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, dianders@chromium.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, myungjoo.ham@samsung.com, sudeep.holla@arm.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 05, 2016 at 06:11:55AM +0800, Caesar Wang wrote:
-> Add the regulator properties that will be used to power on/off
-> the regulator.
-> 
-> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Jiri Kosina <jikos@kernel.org>
-> Cc: linux-input@vger.kernel.org
-> ---
-> 
->  Documentation/devicetree/bindings/input/hid-over-i2c.txt | 3 +++
->  1 file changed, 3 insertions(+)
-
-I find this binding a bit questionable. The compatible should describe 
-the actual device, not just the protocol it uses.
-
-> diff --git a/Documentation/devicetree/bindings/input/hid-over-i2c.txt b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
-> index 488edcb..e648e44 100644
-> --- a/Documentation/devicetree/bindings/input/hid-over-i2c.txt
-> +++ b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
-> @@ -17,6 +17,9 @@ Required properties:
->  - interrupt-parent: the phandle for the interrupt controller
->  - interrupts: interrupt line
->  
-> +Optional properties:
-> +- power-supply: phandle of the regulator that provides the supply voltage.
-
-This needs to be actual supplies for devices. What if a device has 2 
-supplies?
-
-Add a device compatible string and make this property specific to that 
-device, then it's fine.
-
-Rob
+T24gTW9uLCBTZXAgMDUsIDIwMTYgYXQgMDE6MDY6MDdQTSArMDgwMCwgTGluIEh1YW5nIHdyb3Rl
+Ogo+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgZG9jdW1lbnRhdGlvbiBmb3Igcm9ja2NoaXAgZGZpIGRl
+dmZyZXEtZXZlbnQgZHJpdmVyLgo+IAo+IFNpZ25lZC1vZmYtYnk6IExpbiBIdWFuZyA8aGxAcm9j
+ay1jaGlwcy5jb20+Cj4gQWNrZWQtYnk6IENoYW53b28gQ2hvaSA8Y3cwMC5jaG9pQHNhbXN1bmcu
+Y29tPgo+IC0tLQo+IENoYW5nZXMgaW4gdjEwOgo+IC0gTm9uZQo+IAo+IENoYW5nZXMgaW4gdjk6
+Cj4gLSByZW9yZGVyIGNvbXBhdGlibGUgYW5kIHJlZwo+IAo+IENoYW5nZXMgaW4gdjg6Cj4gLSBk
+ZWxldGUgYSB1bnVzZSBibGFuayBsaW5lCj4gCj4gQ2hhbmdlcyBpbiB2NzoKPiAtIE5vbmUKPiAK
+PiBDaGFuZ2VzIGluIHY2Ogo+IC0gTm9uZQo+IAo+IENoYW5nZXMgaW4gdjU6Cj4gLSBOb25lCj4g
+Cj4gQ2hhbmdlcyBpbiB2NDoKPiAtIE5vbmUKPiAKPiBDaGFuZ2VzIGluIHYzOgo+IC0gTm9uZQo+
+IAo+IENoYW5nZXMgaW4gdjI6Cj4gLSBOb25lIAo+IAo+IENoYW5nZXMgaW4gdjE6Cj4gLSBOb25l
+Cj4gCj4gIC4uLi9iaW5kaW5ncy9kZXZmcmVxL2V2ZW50L3JvY2tjaGlwLWRmaS50eHQgICAgICAg
+ICAgIHwgMTkgKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTkgaW5zZXJ0
+aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2RldmZyZXEvZXZlbnQvcm9ja2NoaXAtZGZpLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGV2ZnJlcS9ldmVudC9yb2NrY2hpcC1k
+ZmkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RldmZyZXEvZXZlbnQv
+cm9ja2NoaXAtZGZpLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMC4u
+ZjIyMzMxMwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGV2ZnJlcS9ldmVudC9yb2NrY2hpcC1kZmkudHh0Cj4gQEAgLTAsMCArMSwxOSBA
+QAo+ICsKPiArKiBSb2NrY2hpcCByazMzOTkgREZJIGRldmljZQo+ICsKPiArUmVxdWlyZWQgcHJv
+cGVydGllczoKPiArLSBjb21wYXRpYmxlOiBNdXN0IGJlICJyb2NrY2hpcCxyazMzOTktZGZpIi4K
+PiArLSByZWc6IHBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiBlYWNoIERGSSBhbmQgbGVuZ3RoIG9m
+IG1lbW9yeSBtYXBwZWQgcmVnaW9uCj4gKy0gcm9ja2NoaXAscG11OiBwaGFuZGxlIHRvIHRoZSBz
+eXNjb24gbWFuYWdpbmcgdGhlICJwbXUgZ2VuZXJhbCByZWdpc3RlciBmaWxlcyIKPiArLSBjbG9j
+a3M6IHBoYW5kbGVzIGZvciBjbG9jayBzcGVjaWZpZWQgaW4gImNsb2NrLW5hbWVzIiBwcm9wZXJ0
+eQo+ICstIGNsb2NrLW5hbWVzIDogdGhlIG5hbWUgb2YgY2xvY2sgdXNlZCBieSB0aGUgREZJLCBt
+dXN0IGJlICJwY2xrX2Rkcl9tb24iOwo+ICsKPiArRXhhbXBsZToKPiArCWRmaTogZGZpQDB4ZmY2
+MzAwMDAgewoKRHJvcCB0aGUgJzB4Jy4gV2l0aCB0aGF0LAoKQWNrZWQtYnk6IFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+Cgo+ICsJCWNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMzk5LWRm
+aSI7Cj4gKwkJcmVnID0gPDB4MDAgMHhmZjYzMDAwMCAweDAwIDB4NDAwMD47Cj4gKwkJcm9ja2No
+aXAscG11ID0gPCZwbXVncmY+Owo+ICsJCWNsb2NrcyA9IDwmY3J1IFBDTEtfRERSX01PTj47Cj4g
+KwkJY2xvY2stbmFtZXMgPSAicGNsa19kZHJfbW9uIjsKPiArCQlzdGF0dXMgPSAiZGlzYWJsZWQi
+Owo+ICsJfTsKPiAtLSAKPiAyLjYuNgo+IAo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlz
+IGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGRldmljZXRyZWUiIGluCj4gdGhlIGJv
+ZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9y
+ZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
