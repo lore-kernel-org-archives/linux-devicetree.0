@@ -1,151 +1,58 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/4] Document: DT: Add bindings for mediatek MT6797 SoC
- Platform
-Date: Mon, 12 Sep 2016 08:57:26 +0100
-Message-ID: <57D65FE6.5040706@arm.com>
-References: <1473331794-27542-1-git-send-email-mars.cheng@mediatek.com>
- <1473331794-27542-2-git-send-email-mars.cheng@mediatek.com>
- <57D15B6C.6080305@arm.com> <1473343735.1896.15.camel@mtkswgap22>
- <57D17667.1020201@arm.com> <1473645103.27628.6.camel@mtkswgap22>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 1/6] pinctrl: bcm2835: add pull defines to dt bindings
+Date: Mon, 12 Sep 2016 10:22:51 +0200
+Message-ID: <1473668576-22256-2-git-send-email-kraxel@redhat.com>
+References: <1473668576-22256-1-git-send-email-kraxel@redhat.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1473645103.27628.6.camel@mtkswgap22>
+In-Reply-To: <1473668576-22256-1-git-send-email-kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Choui <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Scott Shu <scott.shu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:PIN CONTROL SUBSYSTEM" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/09/16 02:51, Mars Cheng wrote:
-> On Thu, 2016-09-08 at 15:32 +0100, Marc Zyngier wrote:
->> On 08/09/16 15:08, Mars Cheng wrote:
->>> Hi Marc
->>>
->>> Thanks for your review. the response inlined.
->>>
->>> On Thu, 2016-09-08 at 13:37 +0100, Marc Zyngier wrote:
->>>> On 08/09/16 11:49, Mars Cheng wrote:
->>>>> This adds DT binding documentation for Mediatek MT6797.
->>>>>
->>>>> Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>>>> ---
->>> [...]
->>>>
->>>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
->>>>> index 9d1d72c..3d97eb4 100644
->>>>> --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
->>>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
->>>>> @@ -8,6 +8,7 @@ Required properties:
->>>>>  	"mediatek,mt8173-sysirq"
->>>>>  	"mediatek,mt8135-sysirq"
->>>>>  	"mediatek,mt8127-sysirq"
->>>>> +	"mediatek,mt6797-sysirq"
->>>>>  	"mediatek,mt6795-sysirq"
->>>>>  	"mediatek,mt6755-sysirq"
->>>>>  	"mediatek,mt6592-sysirq"
->>>>> @@ -21,7 +22,8 @@ Required properties:
->>>>>  - interrupt-parent: phandle of irq parent for sysirq. The parent must
->>>>>    use the same interrupt-cells format as GIC.
->>>>>  - reg: Physical base address of the intpol registers and length of memory
->>>>> -  mapped region.
->>>>> +  mapped region. Could be up to 2 registers here at max. Ex: 6797 needs 2 reg,
->>>>> +  others need 1.
->>>>
->>>> Two things:
->>>>
->>>> - Please make this a separate patch that can be reviewed independently
->>>> of the rest of the changes, which are just adding new compatible
->>>> identifiers.
->>>
->>> Will fix this in the next patch set.
->>>
->>>>
->>>> - Why can't you simply expose it as a separate controller? Looking at
->>>> the way you're changing the corresponding driver, it looks like you're
->>>> simply adding an extra base/size. If you simply had a base for the
->>>> corresponding GIC interrupts, you could handle as many region as you
->>>> want, and have a more generic driver.
->>>>
->>>
->>> May I know the meaning of "simply expose it as a separate controller"?
->>
->> At the moment, you have something like this:
->>
->> 	sysirq: intpol-controller@10200620 {
->> 		compatible = "mediatek,mt6755-sysirq",
->> 			     "mediatek,mt6577-sysirq";
->> 		interrupt-controller;
->> 		#interrupt-cells = <3>;
->> 		interrupt-parent = <&gic>;
->> 		reg = <0 0x10200620 0 0x20>;
->> 	};
->>
->> I suggest that, when you have a second base (which is effectively
->> another controller), you add:
->>
->> 	sysirq2: intpol-controller@10201620 {
->> 		compatible = "mediatek,mt6755-sysirq",
->> 			     "mediatek,mt6577-sysirq";
->> 		interrupt-controller;
->> 		#interrupt-cells = <3>;
->> 		interrupt-parent = <&gic>;
->> 		irq-base = <32>;
->> 		reg = <0 0x10201620 0 0x20>;
->> 	};
->>
->> Where irq-base is the first SPI this is connected to (the lack of
->> property indicates implies that irq-base is 0). This becomes a very
->> simple change in the driver.
->>
->>> Or you might like to suggest me any similar driver as a reference? I
->>> will examine it. Current design is based on the fact: We expect
->>> irq-mtk-sysirq needs the optional second base but the third one will not
->>> happen.
->>>
->>> If we really need more than 2 bases, we can figure out a more generic
->>> driver at the time, right?
->>
->> I'd rather fix the driver and the binding to do the right thing once and
->> for all. In my experience, you will need to add a third base in six
->> months, and a fourth soon after. I'd rather either support an arbitrary
->> number of bases, or a single one per controller (and have multiple
->> controllers).
-> Hi Marc
-> 
-> Thanks for suggesting this approach I never thought.
-> 
-> However, I will modify the irq-mtk-sysirq driver to handle as many bases
-> as we specify in current node in the next patch set. Will not use the
-> second interrupt node in DT. The main reason is to simplify the writing
-> of DT. Or we need to know which interrupt node to be specified for other
-> nodes. As you said that might be the third or fourth bases, that will
-> complicate the writing of DT more.
-> 
-> Would you think this is OK?
+Also delete (unused) private enum from driver.
+The pull defines can be used instead if needed.
 
-There is still one thing that is not completely obvious to me: How do
-you map a new set of registers to the corresponding base GIC SPI?
+Signed-off-by: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 6 ------
+ include/dt-bindings/pinctrl/bcm2835.h | 5 +++++
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-At the moment, this is an implicit SPI0 (hwirq 32 on the GIC). I don't
-think assuming that all the banks will forever be contiguous is a safe
-bet, so introducing some form of sparseness support seems beneficial.
-
-As for simplifying the DT, I'm not convinced either. You already deal
-with two interrupt controllers (the GIC and this intpol), which means
-you need to locally annotate some DT nodes to point to the GIC. With my
-scheme, you keep annotating more (or use the extended interrupt
-specifier notation), but that doesn't feel like a massive burden. How
-often do you write a DT from scratch?
-
-Anyway, this is up to you. My only requirements is about being able to
-support an arbitrary numbers of register sets, with arbitrary SPI bases.
-
-Thanks,
-
-	M.
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+index fa77165..4cf612b 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+@@ -76,12 +76,6 @@ enum bcm2835_pinconf_param {
+ 	BCM2835_PINCONF_PARAM_PULL,
+ };
+ 
+-enum bcm2835_pinconf_pull {
+-	BCM2835_PINCONFIG_PULL_NONE,
+-	BCM2835_PINCONFIG_PULL_DOWN,
+-	BCM2835_PINCONFIG_PULL_UP,
+-};
+-
+ #define BCM2835_PINCONF_PACK(_param_, _arg_) ((_param_) << 16 | (_arg_))
+ #define BCM2835_PINCONF_UNPACK_PARAM(_conf_) ((_conf_) >> 16)
+ #define BCM2835_PINCONF_UNPACK_ARG(_conf_) ((_conf_) & 0xffff)
+diff --git a/include/dt-bindings/pinctrl/bcm2835.h b/include/dt-bindings/pinctrl/bcm2835.h
+index 6f0bc37..e4e4fdf 100644
+--- a/include/dt-bindings/pinctrl/bcm2835.h
++++ b/include/dt-bindings/pinctrl/bcm2835.h
+@@ -24,4 +24,9 @@
+ #define BCM2835_FSEL_ALT2	6
+ #define BCM2835_FSEL_ALT3	7
+ 
++/* brcm,pull property */
++#define BCM2835_PUD_OFF		0
++#define BCM2835_PUD_DOWN	1
++#define BCM2835_PUD_UP		2
++
+ #endif /* __DT_BINDINGS_PINCTRL_BCM2835_H__ */
 -- 
-Jazz is not dead. It just smells funny...
+1.8.3.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
