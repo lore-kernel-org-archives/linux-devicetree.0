@@ -1,32 +1,47 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 6/9] pinctrl: Add IRQ support to STM32 gpios
-Date: Mon, 12 Sep 2016 14:58:34 +0200
-Message-ID: <CACRpkdYYoMqCqq=L53LFUxCM=q00q5YhcxB=+-ZhxkAUbJEB5Q@mail.gmail.com>
-References: <1473180341-1999-1-git-send-email-alexandre.torgue@st.com>
- <1473180341-1999-7-git-send-email-alexandre.torgue@st.com>
- <CACRpkdZ_r0phJeScTYs_LmEHavcjGo6YjHPEHo-rKAv+rLgiFg@mail.gmail.com> <0063a1ef-1b09-7cfc-f18b-76f2bb07eb84@st.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 3/5] arm64: arch_timer: Work around QorIQ Erratum
+ A-008585
+Date: Mon, 12 Sep 2016 13:59:48 +0100
+Message-ID: <20160912125948.GB13899@leverpostej>
+References: <1473469413-11019-1-git-send-email-oss@buserror.net>
+ <1473469413-11019-3-git-send-email-oss@buserror.net>
+ <20160912113615.GA20804@leverpostej>
+ <20160912114406.GG23211@arm.com>
+ <20160912123027.GA13741@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <0063a1ef-1b09-7cfc-f18b-76f2bb07eb84@st.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160912123027.GA13741@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, mike.caraman-3arQi8VN3Tc@public.gmane.org, Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 8, 2016 at 5:47 PM, Alexandre Torgue
-<alexandre.torgue@st.com> wrote:
+On Mon, Sep 12, 2016 at 01:30:28PM +0100, Mark Rutland wrote:
+> On Mon, Sep 12, 2016 at 12:44:07PM +0100, Will Deacon wrote:
+> > On Mon, Sep 12, 2016 at 12:36:15PM +0100, Mark Rutland wrote:
+> > > The changes in arm64's <asm/arch_timer.h> are going to conflict with
+> > > some cleanup [1,2] that just landed in the arm64 for-next/core branch.
+> > > 
+> > > Could you please rebase atop of that?
+> > 
+> > Well, we should figure out what tree this is going through first. There
+> > are a mixture of arm, arm64, driver and dts changes here and not all
+> > of it is carrying the appropriate acks for me to queue it.
+> 
+> Given that mix, I had assumed that this would all go through the arm64
+> tree -- I see that Rob has already acked the binding, and I'm happy to
+> give my ack for the driver once that's in shape.
 
-> Just one question, when you say "super-complex irqchip in use", do you mean
-> I could use another (simplest) solution to handle this EXTI controller?
+Now I see that I'd missed the arch/arm changes in patch 4, which lack a
+relevant ack.
 
-I don't know, GPIOLIB_IRQCHIP is to be used for some specific
-cases documented in Documentation/gpio/driver.txt.
+Given that, I don't know what to suggest.
 
-For anything complex, we either need to have this hairy code
-or invent new abstractions.
-
-For now, I assume this is needed...
-
-Yours,
-Linus Walleij
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
