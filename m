@@ -1,47 +1,45 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv5] watchdog: xilinx: Add clock support
-Date: Mon, 12 Sep 2016 15:19:38 +0530
-Message-ID: <CAKfKVtFYEqz2Be81hBBX3Nb9kRR+4QUpdP5iJs88HoyYoC3-jQ@mail.gmail.com>
-References: <1470984421-3494-1-git-send-email-shubhrajyoti.datta@xilinx.com> <20160812190123.GB16954@rob-hp-laptop>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCHv3 0/3] Devicetree bindings for Ion
+Date: Mon, 12 Sep 2016 12:22:39 +0200
+Message-ID: <20160912102239.GA5034@kroah.com>
+References: <1472601869-19469-1-git-send-email-labbott@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160812190123.GB16954@rob-hp-laptop>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1472601869-19469-1-git-send-email-labbott@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laura Abbott <labbott@redhat.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Sumit Semwal <sumit.semwal@linaro.org>, Andrew Andrianov <andrew@ncrmnt.org>, arve@android.com, Riley Andrews <riandrews@android.com>, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Tom Gall <tom.gall@linaro.org>, romlem@google.com, linux-kernel@vger.kernel.org, Colin Cross <ccross@google.com>, Bryan Huntsman <bryanh@codeaurora.org>, John Stultz <john.stultz@linaro.org>, Chen Feng <puck.chen@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 13, 2016 at 12:31 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Aug 12, 2016 at 12:17:01PM +0530, Shubhrajyoti Datta wrote:
->> Add support for the clock. Currently we enable
->> at probe and relinquish at remove.
->>
->> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->> Acked-by: S=C3=B6ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> ---
->> v2:
->> fix spaces and error path.
->> v3
->> do not fail existing dts
->> v4:
->> fix the error prints as the clock is optional
->> v5:
->> remove some more prints
->>
->>  .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  3 +++
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Tue, Aug 30, 2016 at 05:04:26PM -0700, Laura Abbott wrote:
+> Hi,
+> 
+> This is a long overdue resend and slight update from the last version[1] of
+> Ion devicetree bindings.
+> 
+> The goal here is to keep the Ion bindings minimalist. I experimented with
+> dropping all but a dummy devicetree node and just matching on the machine
+> name in the platform file. This ends up being a nightmare for the DMA (i.e. CMA)
+> heap type. That heap requires a device structure to do its allocation and
+> setting up a device structure properly isn't pretty. I have other ideas for
+> working with that heap if this gets NAKed.
+> 
+> I've thought about the idea of a devicetree overlay for specifying more
+> platform configuration but that a) requires Android actually load the overlay
+> at the right time in the framework and b) opens up an entirely new can of
+> worms.
+> 
+> In conclusion, if we assume that Ion platform support is something anyone
+> actually wants, this is still the least bad and intrusive idea I've come up
+> with. There exists hisilicon Ion code but it came in without being fully acked.
+> I've converted it over as an example of how it might look.
+> 
+> As always, feedback appreciated.
 
-If there are no further comments can this be applied.
+Give a total lack of feeback, I've now applied these patches :)
 
->
->>  drivers/watchdog/of_xilinx_wdt.c                   | 25 +++++++++++++++=
-+++++--
->>  2 files changed, 26 insertions(+), 2 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks,
+
+greg k-h
