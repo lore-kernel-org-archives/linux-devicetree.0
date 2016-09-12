@@ -1,146 +1,105 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] regulator: Prevent falling too fast
-Date: Mon, 12 Sep 2016 19:56:33 +0100
-Message-ID: <20160912185633.GH27946@sirena.org.uk>
-References: <20160906190524.GB79728@google.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCHv3 1/3] devicetree: bindings for Ion
+Date: Mon, 12 Sep 2016 11:57:30 -0700
+Message-ID: <57D6FA9A.3020206@gmail.com>
+References: <1472601869-19469-1-git-send-email-labbott@redhat.com>
+ <1472601869-19469-2-git-send-email-labbott@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="x7gJcYyRf5ZnuMVj"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160906190524.GB79728-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1472601869-19469-2-git-send-email-labbott@redhat.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Laura Abbott <labbott@redhat.com>, Rob Herring <robh+dt@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, Andrew Andrianov <andrew@ncrmnt.org>, arve@android.com, Riley Andrews <riandrews@android.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Tom Gall <tom.gall@linaro.org>, romlem@google.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Colin Cross <ccross@google.com>, Bryan Huntsman <bryanh@codeaurora.org>, John Stultz <john.stultz@linaro.org>, Chen Feng <puck.chen@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---x7gJcYyRf5ZnuMVj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Sep 06, 2016 at 12:05:24PM -0700, Matthias Kaehlcke wrote:
-
-> On some boards it's possible that transitioning the PWM regulator
-> downwards too fast will trigger the over voltage protection (OVP) on the
-> regulator.  This is because until the voltage actually falls there is a
-> time when the requested voltage is much lower than the actual voltage.
-
-So your PWM regulators are not very good and overshooting?  Do you have
-any numbers on this - what values do you end up setting for both the
-delay and safe fall percentages?
-
-> We'll fix this OVP problem by allowing users to specify the maximum
-> voltage that we can safely fall.  Apparently this maximum safe voltage
-> should be specified as a percentage of the current voltage.  The
-> regulator will then break things into separate steps with a delay in
-> between.
-
-I'd like to see some more thorough analysis than just an "apparently"
-here.  It's making the code more fiddly for something very handwavy.
-
-> @@ -2753,8 +2753,6 @@ static int _regulator_do_set_voltage(struct regulat=
-or_dev *rdev,
->  	int old_selector =3D -1;
->  	int old_uV =3D _regulator_get_voltage(rdev);
-> =20
-> -	trace_regulator_set_voltage(rdev_get_name(rdev), min_uV, max_uV);
-> -
->  	min_uV +=3D rdev->constraints->uV_offset;
->  	max_uV +=3D rdev->constraints->uV_offset;
-> =20
-> @@ -2842,11 +2840,53 @@ no_delay:
->  				     (void *)data);
->  	}
-> =20
-> -	trace_regulator_set_voltage_complete(rdev_get_name(rdev), best_val);
-> -
->  	return ret;
-
-Let's remove some trace points too because...?  These *are* the actual
-voltage changes in the device, we're just splitting things up into a
-series of transitions.
-
-> +static int _regulator_set_voltage(struct regulator_dev *rdev,
-> +				     int min_uV, int max_uV)
-> +{
-> +	int safe_fall_percent =3D rdev->constraints->safe_fall_percent;
-> +	int slowest_decay_rate =3D rdev->constraints->slowest_decay_rate;
-> +	int orig_uV =3D _regulator_get_voltage(rdev);
-> +	int uV =3D orig_uV;
-> +	int ret;
+On 08/30/16 17:04, Laura Abbott wrote:
+> This adds a base set of devicetree bindings for the Ion memory
+> manager. This supports setting up the generic set of heaps and
+> their properties.
+> 
+> Signed-off-by: Laura Abbott <labbott@redhat.com>
+> ---
+>  drivers/staging/android/ion/devicetree.txt | 51 ++++++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 drivers/staging/android/ion/devicetree.txt
+> 
+> diff --git a/drivers/staging/android/ion/devicetree.txt b/drivers/staging/android/ion/devicetree.txt
+> new file mode 100644
+> index 0000000..16871527
+> --- /dev/null
+> +++ b/drivers/staging/android/ion/devicetree.txt
+> @@ -0,0 +1,51 @@
+> +Ion Memory Manager
 > +
-> +	trace_regulator_set_voltage(rdev_get_name(rdev), min_uV, max_uV);
+> +Ion is a memory manager that allows for sharing of buffers via dma-buf.
+> +Ion allows for different types of allocation via an abstraction called
+> +a 'heap'. A heap represents a specific type of memory. Each heap has
+> +a different type. There can be multiple instances of the same heap
+> +type.
 > +
-> +	 /* If we're rising or we're falling but don't need to slow; easy */
-> +	if (min_uV >=3D uV || !safe_fall_percent)
-
-Indentation is broken, the two lines above don't agree with each other.
-
-> +	ret =3D of_property_read_u32(np, "regulator-slowest-decay-rate", &pval);
-> +	if (!ret)
-> +		constraints->slowest_decay_rate =3D pval;
-> +	else
-> +		constraints->slowest_decay_rate =3D INT_MAX;
-
-The documentation said this is mandatory if we have a safe fall rate
-specified but the code says it's optional and we'll silently default to
-an absurdly high rate instead (it's odd that a large number in a field
-marked slowest is fast BTW).  Complaining loudly seems better than
-ignoring the error.
-
-> +	/* We use the value as int and as divider; sanity check */
-> +	if (constraints->slowest_decay_rate =3D=3D 0) {
-> +		pr_err("%s: regulator-slowest-decay-rate must not be 0\n",
-> +			np->name);
-> +		constraints->slowest_decay_rate =3D INT_MAX;
-> +	} else if (constraints->slowest_decay_rate > INT_MAX) {
-> +		pr_err("%s: regulator-slowest-decay-rate (%u) too big\n",
-> +			np->name, constraints->slowest_decay_rate);
-> +		constraints->slowest_decay_rate =3D INT_MAX;
+> +Specific heap instances are tied to heap IDs. Heap IDs are not to be specified
+> +in the devicetree.
+> +
+> +Required properties for Ion
+> +
+> +- compatible: "linux,ion" PLUS a compatible property for the device
+> +
+> +All child nodes of a linux,ion node are interpreted as heaps
+> +
+> +required properties for heaps
+> +
+> +- compatible: compatible string for a heap type PLUS a compatible property
+> +for the specific instance of the heap. Current heap types
+> +-- linux,ion-heap-system
+> +-- linux,ion-heap-system-contig
+> +-- linux,ion-heap-carveout
+> +-- linux,ion-heap-chunk
+> +-- linux,ion-heap-dma
+> +-- linux,ion-heap-custom
+> +
+> +Optional properties
+> +- memory-region: A phandle to a memory region. Required for DMA heap type
+> +(see reserved-memory.txt for details on the reservation)
+> +
+> +Example:
+> +
+> +	ion {
+> +		compatbile = "hisilicon,ion", "linux,ion";
+> +
+> +		ion-system-heap {
+> +			compatbile = "hisilicon,system-heap", "linux,ion-heap-system"
+> +		};
+> +
+> +		ion-camera-region {
+> +			compatible = "hisilicon,camera-heap", "linux,ion-heap-dma"
+> +			memory-region = <&camera_region>;
+> +		};
+> +
+> +		ion-fb-region {
+> +			compatbile = "hisilicon,fb-heap", "linux,ion-heap-dma"
+> +			memory-region = <&fb_region>;
+> +		};
 > +	}
+> 
 
-This should be with the parsing of slowest-decay-rate and checked only
-if we have a safe-fall-percent, there's no error if the value is omitted.
+This is extra complexity that does not appear to be needed.  As pointed out
+in comments to earlier versions, the indirection pointing to memory regions
+does not seem to be needed.  Why not just look for the ion memory regions in
+the reserved-memory node?
 
-> +	if (constraints->safe_fall_percent > 100) {
-> +		pr_err("%s: regulator-safe-fall-percent (%u) > 100\n",
-> +			np->name, constraints->safe_fall_percent);
-> +		constraints->safe_fall_percent =3D 0;
-> +       }
+The example in reserved-memory.txt does provide an example with the extra level
+of indirection, but that is a different model where the nodes with references
+to the reserved memory nodes are actually devices.  In the case of ion, the
+heaps are not additional devices.
 
-Again indentation is borked here, I think you have tab/space issues.
-
-> +	if (constraints->safe_fall_percent &&
-> +		!constraints->slowest_decay_rate) {
-> +		pr_err("%s: regulator-slowest-decay-rate requires "
-> +			"regulator-safe-fall-percent\n", np->name);
-
-Don't align the second line of the condition with the body of the if,
-that just makes things hard to read - do what the rest of the code does
-and align with the (.
-
-Don't split text messages over multiple lines, it makes it impossible to
-grep for the error as printed.
-
---x7gJcYyRf5ZnuMVj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJX1vpgAAoJECTWi3JdVIfQjGMH/2R5bjiH10vU1+/EWcnp0mSA
-0pm7el+VCoeLVK5f7Ds3zkg/MgayN/97k7/WA5Xe/37mHQAmAbasKip7dDSOu9eQ
-+XkFUfKF2sZ/3LUzdF9hmcEPZ7N3OpKlUXzK+n3faW8PkCjAymnAXUtQmk68bo8o
-eSq+VPD3IgZNGB/ipfFx1ZExrXbVvFNa5GVS2j8gyLibXfyrmUI2aW/M63ZL9wyP
-E9TTT4ehVT7vl7hy+B7Qa01dpDcrTkmeWUisOtLIviGbpbskcIl2UjFAgDeSFBW2
-iUlS0qJUWfIbZ/2D9ZB04GYdp+MZWqmQzZerihio3nLORXZCOKzjjXY6nSSOS20=
-=otxX
------END PGP SIGNATURE-----
-
---x7gJcYyRf5ZnuMVj--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Frank
