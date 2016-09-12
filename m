@@ -1,97 +1,81 @@
-From: Sebastian Frias <sf84@laposte.net>
-Subject: Re: ARM,SoC: About the use DT-defined properties by 3rd-party drivers
-Date: Mon, 12 Sep 2016 15:15:00 +0200
-Message-ID: <57D6AA54.6000208@laposte.net>
-References: <57BDAF2E.10502@laposte.net>
- <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
- <57D69FB1.2020801@laposte.net> <20160912123809.GB13741@leverpostej>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] drm/msm/hdmi: Clean up HDMI gpio DT bindings
+Date: Mon, 12 Sep 2016 08:19:14 -0500
+Message-ID: <20160912131914.GA15499@rob-hp-laptop>
+References: <1467957354-7620-1-git-send-email-architt@codeaurora.org>
+ <1472737015-29382-1-git-send-email-architt@codeaurora.org>
+ <1472737015-29382-3-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160912123809.GB13741@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Timur Tabi <timur@tabi.org>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Mason <slash.tmp@free.fr>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1472737015-29382-3-git-send-email-architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On 09/12/2016 02:38 PM, Mark Rutland wrote:
->>
->> 3rd party users of said SoC could then write kernel modules for such HW
->> blocks using the DT description. The DT would thus become the authoritative
->> source of information regarding register programming for the SoC.
+On Thu, Sep 01, 2016 at 07:06:52PM +0530, Archit Taneja wrote:
+> Make the following changes in the HDMI gpio bindings:
 > 
-> I don't follow this part entirely. Why are you expecting thrid parties
-> to write a driver for those blocks rather than upstreaming a driver for
-> them?
-
-3rd parties could choose to write a driver (as opposed to use say, a user-mode
-library) if it fits their programming model better, if they think they would
-have better performance, or other reasons.
-
-The main idea is to make DT the authoritative source of HW description.
-
+> - Use "-gpios" as the suffix for all the gpio names
+> - Move all the gpios to optional, since there are platforms that use none
+>   of them.
+> - The HPD gpio is a standard one, remove the "qcom,hdmi-tx-" prefix from
+>   it.
+> - Add a missing lpm gpio used on some platforms.
 > 
->> Currently, HW blocks for which there is no public driver (that it is
->> accessed through user-mode libraries or firmware) require a separate
->> HW description (be it Documentation, headers, etc.)
->>
->> Since the DT describes the HW, it would make sense to expose the HW through
->> DT, that would centralise the HW description.
+> Make the necessary changes in the driver to incorporate these changes.
 > 
-> I would generally agree that the hardware should be described in DT.
-> The difficulty is that without a 'real' user it's not always possible to
-> tell if we're describing the thing correctly.
+> There hasn't been any upstream DT that uses the HDMI bindings, so it's
+> okay to change and move around these properties.
 > 
-
-That may be true, but so far we are not discussing changing DT's API so it
-should not have big ramifications.
-Besides, what "makes sense now" may "not make sense tomorrow" depending on
-how the HW is modified.
-We have somehow learned the hard-way that "le mieux est l'ennemi du bien"
-(the better is the enemy of the good) and we are trying to take a more
-practical (and flexible) approach.
-
-> Putting smoething together that's only sufficient to support some
-> out-of-tree driver with implicit assumptions that we are not aware of is
-> far from fantastic.
-
-That does not seem very positive and it is not the case anyway, otherwise we
-would not be consulting here :-)
-Agreed, right now this whole thing seems like a really hypothetical question,
-but the intention is good.
-
-Actually, I think it would encourage more SoC manufacturers to use DT as a way
-to document their HW, which is a good thing.
-
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+> v2:
+> - Keep "qcom,hdmi-tx-" suffix for all gpios except for hpd.
+> - Use "-gpios" suffix instead of "-gpio".
+> - Move all the gpios to optional properties.
 > 
->> However, after discussing over IRC, it looks like there was no guidance on
->> this. Some people think submitting DT properties/nodes without a corresponding
->> Linux driver is frowned upon, while others thought it was an odd limitation
->> and suggested asking here.
+>  .../devicetree/bindings/display/msm/hdmi.txt        | 11 ++++++-----
+>  drivers/gpu/drm/msm/hdmi/hdmi.c                     | 21 +++++++++++++++++++--
+>  2 files changed, 25 insertions(+), 7 deletions(-)
 > 
-> Unfortunately, I think that the area is sufficiently vague that there
-> simply is no clear and general answer.
-> 
-> For the sake of discussion, an example of a particular block, along with
-> what you expect/need to describe would be helpful.
+> diff --git a/Documentation/devicetree/bindings/display/msm/hdmi.txt b/Documentation/devicetree/bindings/display/msm/hdmi.txt
+> index ce84459..f1a83ab 100644
+> --- a/Documentation/devicetree/bindings/display/msm/hdmi.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/hdmi.txt
+> @@ -13,17 +13,18 @@ Required properties:
+>  - interrupts: The interrupt signal from the hdmi block.
+>  - clocks: device clocks
+>    See ../clocks/clock-bindings.txt for details.
+> -- qcom,hdmi-tx-ddc-clk-gpio: ddc clk pin
+> -- qcom,hdmi-tx-ddc-data-gpio: ddc data pin
+> -- qcom,hdmi-tx-hpd-gpio: hpd pin
+>  - core-vdda-supply: phandle to supply regulator
+>  - hdmi-mux-supply: phandle to mux regulator
+>  - phys: the phandle for the HDMI PHY device
+>  - phy-names: the name of the corresponding PHY device
+>  
+>  Optional properties:
+> -- qcom,hdmi-tx-mux-en-gpio: hdmi mux enable pin
+> -- qcom,hdmi-tx-mux-sel-gpio: hdmi mux select pin
+> +- qcom,hdmi-tx-ddc-clk-gpios: ddc clk pin
+> +- qcom,hdmi-tx-ddc-data-gpios: ddc data pin
 
-I don't have a more concrete example now.
+Sorry, for raising another point, but couldn't you use the i2c-gpio 
+binding for these instead?
 
-As I stated, right now HW description is not centralised, and thus different
-bits of information are cherry-picked by hand from HW description into DT for
-bootloader, DT for Linux, Documentation/headers for 3rd-parties, etc.
-
-But if I understood correctly your comment, you are basically saying that
-without an example is hard to say.
-Since the question seems understood, do you have an example of other SoC's
-doing something similar?
-
-I've seen some big DT descriptions, but it is difficult to know if we are the
-first ones trying to use the DT in this way.
-
-Best regards,
-
-Sebastian
+> +- hpd-gpios: hpd pin
+> +- qcom,hdmi-tx-mux-en-gpios: hdmi mux enable pin
+> +- qcom,hdmi-tx-mux-sel-gpios: hdmi mux select pin
+> +- qcom,hdmi-tx-mux-lpm-gpios: hdmi mux lpm pin
+>  - power-domains: reference to the power domain(s), if available.
+>  - pinctrl-names: the pin control state names; should contain "default"
+>  - pinctrl-0: the default pinctrl state (active)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
