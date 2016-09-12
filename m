@@ -1,105 +1,134 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCHv3 1/3] devicetree: bindings for Ion
-Date: Mon, 12 Sep 2016 11:57:30 -0700
-Message-ID: <57D6FA9A.3020206@gmail.com>
-References: <1472601869-19469-1-git-send-email-labbott@redhat.com>
- <1472601869-19469-2-git-send-email-labbott@redhat.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v2 2/6] ARM: dts: bcm283x: Define standard pinctrl
+ groups in the gpio node.
+Date: Mon, 12 Sep 2016 21:05:47 +0200 (CEST)
+Message-ID: <103847685.101383.df740dd1-92f3-4978-9442-1f1b3a81e9da.open-xchange@email.1und1.de>
+References: <1473668576-22256-1-git-send-email-kraxel@redhat.com>
+ <1473668576-22256-3-git-send-email-kraxel@redhat.com>
+ <1273800480.83718.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1472601869-19469-2-git-send-email-labbott@redhat.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Laura Abbott <labbott@redhat.com>, Rob Herring <robh+dt@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, Andrew Andrianov <andrew@ncrmnt.org>, arve@android.com, Riley Andrews <riandrews@android.com>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Tom Gall <tom.gall@linaro.org>, romlem@google.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Colin Cross <ccross@google.com>, Bryan Huntsman <bryanh@codeaurora.org>, John Stultz <john.stultz@linaro.org>, Chen Feng <puck.chen@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1273800480.83718.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gerd Hoffmann <kraxel@redhat.com>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/30/16 17:04, Laura Abbott wrote:
-> This adds a base set of devicetree bindings for the Ion memory
-> manager. This supports setting up the generic set of heaps and
-> their properties.
-> 
-> Signed-off-by: Laura Abbott <labbott@redhat.com>
-> ---
->  drivers/staging/android/ion/devicetree.txt | 51 ++++++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 drivers/staging/android/ion/devicetree.txt
-> 
-> diff --git a/drivers/staging/android/ion/devicetree.txt b/drivers/staging/android/ion/devicetree.txt
-> new file mode 100644
-> index 0000000..16871527
-> --- /dev/null
-> +++ b/drivers/staging/android/ion/devicetree.txt
-> @@ -0,0 +1,51 @@
-> +Ion Memory Manager
-> +
-> +Ion is a memory manager that allows for sharing of buffers via dma-buf.
-> +Ion allows for different types of allocation via an abstraction called
-> +a 'heap'. A heap represents a specific type of memory. Each heap has
-> +a different type. There can be multiple instances of the same heap
-> +type.
-> +
-> +Specific heap instances are tied to heap IDs. Heap IDs are not to be specified
-> +in the devicetree.
-> +
-> +Required properties for Ion
-> +
-> +- compatible: "linux,ion" PLUS a compatible property for the device
-> +
-> +All child nodes of a linux,ion node are interpreted as heaps
-> +
-> +required properties for heaps
-> +
-> +- compatible: compatible string for a heap type PLUS a compatible property
-> +for the specific instance of the heap. Current heap types
-> +-- linux,ion-heap-system
-> +-- linux,ion-heap-system-contig
-> +-- linux,ion-heap-carveout
-> +-- linux,ion-heap-chunk
-> +-- linux,ion-heap-dma
-> +-- linux,ion-heap-custom
-> +
-> +Optional properties
-> +- memory-region: A phandle to a memory region. Required for DMA heap type
-> +(see reserved-memory.txt for details on the reservation)
-> +
-> +Example:
-> +
-> +	ion {
-> +		compatbile = "hisilicon,ion", "linux,ion";
-> +
-> +		ion-system-heap {
-> +			compatbile = "hisilicon,system-heap", "linux,ion-heap-system"
-> +		};
-> +
-> +		ion-camera-region {
-> +			compatible = "hisilicon,camera-heap", "linux,ion-heap-dma"
-> +			memory-region = <&camera_region>;
-> +		};
-> +
-> +		ion-fb-region {
-> +			compatbile = "hisilicon,fb-heap", "linux,ion-heap-dma"
-> +			memory-region = <&fb_region>;
-> +		};
-> +	}
-> 
+Hi Gerd,
 
-This is extra complexity that does not appear to be needed.  As pointed out
-in comments to earlier versions, the indirection pointing to memory regions
-does not seem to be needed.  Why not just look for the ion memory regions in
-the reserved-memory node?
+> Stefan Wahren <stefan.wahren@i2se.com> hat am 12. September 2016 um 20:19
+> geschrieben:
+> 
+> 
+> Hi Gerd,
+> 
+> > Gerd Hoffmann <kraxel@redhat.com> hat am 12. September 2016 um 10:22
+> > geschrieben:
+> > 
+> > 
+> > From: Eric Anholt <eric@anholt.net>
+> > 
+> > The BCM2835-ARM-Peripherals.pdf documentation specifies what the
+> > function selects do for the pins, and there are a bunch of obvious
+> > groupings to be made.  With these created, we'll be able to replace
+> > bcm2835-rpi.dtsi's main "set all of these pins to alt0" with
+> > references to specific groups we want enabled.
+> > 
+> > Signed-off-by: Eric Anholt <eric@anholt.net>
+> > 
+> > squashed in:
+> >   ARM: dts: bcm283x: Add the emmc pin group to bcm283x.dtsi.
+> >   ARM: dts: bcm283x: Add a group for mapping pins 48-53 to sdhost.
+> >   ARM: dts: bcm283x: Add a new EMMC pin group from the downstream tree.
+> > 
+> > fixups by kraxel:
+> >   * fix spi0 name
+> >   * sort & group entries
+> >   * use pull defines
+> >   * add dpi group
+> 
+> this looks like a changelog. Please move this at the proper place before the
+> first "diff" and specify the version.
+> 
+> > 
+> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> > ---
+> >  arch/arm/boot/dts/bcm283x.dtsi | 203
+> > +++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 203 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+> > index 4d9f3ab..7b03b63 100644
+> > --- a/arch/arm/boot/dts/bcm283x.dtsi
+> > +++ b/arch/arm/boot/dts/bcm283x.dtsi
+> > @@ -131,6 +131,209 @@
+> >  
+> >  			interrupt-controller;
+> >  			#interrupt-cells = <2>;
+> > +
+> > +			/* Defines pin muxing groups according to
+> > +			 * BCM2835-ARM-Peripherals.pdf page 102.
+> > +			 *
+> > +			 * While each pin can have its mux selected
+> > +			 * for various functions individually, some
+> > +			 * groups only make sense to switch to a
+> > +			 * particular function together.
+> > +			 */
+> > +			dpi_gpio4: dpi_gpio4 {
+> > +				brcm,pins = <0 1 2 3 4 5 6 7 8 9 10 11
+> > +					     12 13 14 15 16 17 18 19
+> > +					     20 21 22 23 24 25 26 27>;
+> > +				brcm,function = <BCM2835_FSEL_ALT2>;
+> > +			};
+> 
+> s/dpi_gpio4/dpi_gpio0
+> 
+> > +			emmc_gpio22: emmc_gpio22 {
+> > +				brcm,pins = <22 23 24 25 26 27>;
+> > +				brcm,function = <BCM2835_FSEL_ALT3>;
+> > +			};
+> > +			emmc_gpio34: emmc_gpio34 {
+> > +				brcm,pins = <34 35 36 37 38 39>;
+> > +				brcm,function = <BCM2835_FSEL_ALT3>;
+> > +				brcm,pull = <BCM2835_PUD_OFF
+> > +					     BCM2835_PUD_UP
+> > +					     BCM2835_PUD_UP
+> > +					     BCM2835_PUD_UP
+> > +					     BCM2835_PUD_UP
+> > +					     BCM2835_PUD_UP>;
+> > +			};
+> > +			emmc_gpio48: emmc_gpio48 {
+> > +				brcm,pins = <48 49 50 51 52 53>;
+> > +				brcm,function = <BCM2835_FSEL_ALT3>;
+> > +			};
+> 
+> Sorry, i didn't notice this before. The naming of these groups suggest 3 muxes
+> for the same eMMC interface. I thought there is a eMMC interface and a SD host
+> interface with different DMA channels.
+> 
+> > +
+> > ...
+> > +
+> > +			sdhost_gpio48: sdhost_gpio48 {
+> > +				brcm,pins = <48 49 50 51 52 53>;
+> > +				brcm,function = <BCM2835_FSEL_ALT0>;
+> > +			};
+> 
+> I think this incorrect. There is no function ALT0 for these pins, only ALT3.
 
-The example in reserved-memory.txt does provide an example with the extra level
-of indirection, but that is a different model where the nodes with references
-to the reserved memory nodes are actually devices.  In the case of ion, the
-heaps are not additional devices.
+please forget my last 2 comments. According to this page [1] eMMC is selected by
+ALT3 and sdhost is selected by ALT0.
 
--Frank
+Do you know a reliable source where all muxes for both interface are documented?
+The datasheet isn't very helpful here.
+
+Regards
+Stefan
+
+[1] - http://pinout.xyz/pinout/sdio
+
+> 
+> Regards
+> Stefan
