@@ -1,69 +1,137 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH/RFC v3 00/22] soc: renesas: Add R-Car RST driver for
- obtaining mode pin state
-Date: Mon, 12 Sep 2016 15:16:40 -0700
-Message-ID: <20160912221640.GG7243@codeaurora.org>
-References: <1464808880-343-1-git-send-email-geert+renesas@glider.be>
- <20160630201407.GA27880@codeaurora.org>
- <CAMuHMdWu34OQSS6J3bf=0-1TYULc=coiVomBjtBatwGta5F3HQ@mail.gmail.com>
+Subject: Re: [PATCH 4/5] ARM: dts: exynos: add support for ISP power domain
+ to exynos4x12 clocks device
+Date: Mon, 12 Sep 2016 15:28:52 -0700
+Message-ID: <20160912222852.GH7243@codeaurora.org>
+References: <1472737551-15272-1-git-send-email-m.szyprowski@samsung.com>
+ <1472737551-15272-5-git-send-email-m.szyprowski@samsung.com>
+ <20160908002254.GD13062@codeaurora.org>
+ <CGME20160912102332eucas1p145e79669788329b44343da62dcbe50ca@eucas1p1.samsung.com>
+ <f340cca5-6cd6-6bd1-3b9a-ccd58cbc0091@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdWu34OQSS6J3bf=0-1TYULc=coiVomBjtBatwGta5F3HQ@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Dirk Behme <dirk.behme@de.bosch.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <f340cca5-6cd6-6bd1-3b9a-ccd58cbc0091@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Inki Dae <inki.dae@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/01, Geert Uytterhoeven wrote:
+On 09/12, Marek Szyprowski wrote:
 > Hi Stephen,
 > 
-> On Thu, Jun 30, 2016 at 10:14 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> > On 06/01, Geert Uytterhoeven wrote:
-> >> Currently the R-Car Clock Pulse Generator (CPG) drivers obtains the
-> >> state of the mode pins either by a call from the board code, or directly
-> >> by using a hardcoded register access. This is a bit messy, and creates a
-> >> dependency between driver and platform code.
+> 
+> On 2016-09-08 02:22, Stephen Boyd wrote:
+> >On 09/01, Marek Szyprowski wrote:
+> >>Exynos4412 clock controller contains some additional clocks for FIMC-ISP
+> >>(Camera ISP) subsystem. Registers for those clocks are partially located
+> >>in the SOC area, which belongs to ISP power domain.
 > >>
-> >> This RFC patch series converts the various Renesas R-Car clock drivers
-> >> and support code from reading the mode pin states using a hardcoded
-> >> register access to using a new R-Car RST driver.
-> >
-> > Dumb question, can we use the nvmem reading APIs instead of an
-> > SoC specific function to read the modes?
+> >>This patch extends clock controller node with ISP clock sub-node and link
+> >>(phandle) to ISP power domain.
+> >>
+> >>Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> >>---
+> >>  arch/arm/boot/dts/exynos4x12.dtsi | 5 +++++
+> >>  1 file changed, 5 insertions(+)
+> >>
+> >>diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
+> >>index 3394bdcf10ae..4daea67546b9 100644
+> >>--- a/arch/arm/boot/dts/exynos4x12.dtsi
+> >>+++ b/arch/arm/boot/dts/exynos4x12.dtsi
+> >>@@ -74,6 +74,11 @@
+> >>  		compatible = "samsung,exynos4412-clock";
+> >>  		reg = <0x10030000 0x20000>;
+> >>  		#clock-cells = <1>;
+> >>+
+> >>+		isp-clock-controller {
+> >>+			compatible = "samsung,exynos4412-isp-clock";
+> >>+			power-domains = <&pd_isp>;
+> >>+		};
+> >Why can't we extend support in power domains code to have
+> >multiple domains for a single device node? i.e. power-domains =
+> ><&pd_isp>, <&pd_foo>, <&pd_bar>, and then pick the right one with
+> >power-domain-names or something like that? Making a subnode
+> >(which seems to turn into a child platform device?) seems like a
+> >quick solution for larger problems.
 > 
-> Thanks for your suggestion, the nvmem API indeed looks like a suitable API,
-> as it does support read-only nvmems.
+> The larger problem here is the fact that clock controller is
+> partially located
+> in different power areas of SoC. Majority of the clock controllers
+> is located
+> in the area which is typically always powered (besides system sleep case),
+> while a few Camera ISP registers are located in the ISP block, which have
+> separate power domain. Having a separate nodes for sub-parts of the
+> device is
+> rather common approach, already practices by some more complex devices.
 > 
-> Unfortunately I also see a few disadvantages:
->   1. nvmem_init() is a subsys_initcall(), while most of our users (except for
->      the recent renesas-cpg-mssr driver) are clock drivers using
->      CLK_OF_DECLARE(), and are thus initialized from of_clk_init() at much
->      earlier time_init() time.
->      Of course the mvmem subsystem and/or the clock drivers can be changed, if
->      deemed useful.
+> I see some serious design problems with multiple entries in power domains
+> property. First how to show that some part of the device IS NOT in
+> any domain?
 
-Sounds like this is solvable.
+Is that even possible? Every device should be in some power
+domain, even if it's just an "always on" power domain that we
+don't really control from software.
 
->   2. Using the nvmem DT bindings means we have to add more DT glue from the
->      nvmem consumer(s) to the nvmem provider. As we need to provide backwards
->      compatibility with old DTSes, this means we need more C code or DT fixup
->      code to handle that.
+> The question is how the automated assignment to domains would be handled for
+> such case?
 
-Ah I wasn't aware we were keeping backwards compatibility around.
+I don't get this part. Do you mean how we indicate to the driver
+which power domain to use at the right time?
 
+> 
+> The second is related to Linux kernel internals. Right now device
+> drivers are
+> not aware of the power domains - there are no direct calls to power domains
+> code, everything is hidden behind runtime pm which does all the hard work.
 
->   3. The nvmem subsystem may be overkill to provide access to a simple 32-bit
->      read-only register that never changes value after boot.
+Right. Runtime PM will need to be improved to allow this case.
 
-The nvmem subsystem is designed to read values from things that
-mostly never change. Overkill may be true, but the nice thing
-about using nvmem APIs is that the driver doesn't have to use
-some platform specific function that duplicates similar
-functionality. It's unfortunate that backwards incompatibility
-limits our ability to move to common linux frameworks when they
-are created after the binding is used.
+> 
+> Similar situation is on Exynos 542x/5800, which will look more or less like
+> this:
+> 
+>         clock: clock-controller@10010000 {
+>              compatible = "samsung,exynos5420-clock";
+>              reg = <0x10010000 0x30000>;
+>              #clock-cells = <1>;
+> +
+> +            gsc-clock-controller {
+> +                 compatible = "samsung,exynos5420-gsc-clock";
+> +                 power-domains = <&gsc_pd>;
+> +            };
+> +
+> +            isp-clock-controller {
+> +                 compatible = "samsung,exynos5420-isp-clock";
+> +                 power-domains = <&isp_pd>;
+> +            };
+> +
+> +            mfc-clock-controller {
+> +                 compatible = "samsung,exynos5420-mfc-clock";
+> +                 power-domains = <&mfc_pd>;
+> +            };
+> +
+> +            msc-clock-controller {
+> +                 compatible = "samsung,exynos5420-msc-clock";
+> +                 power-domains = <&msc_pd>;
+> +            };
+> +
+> +            disp-clock-controller {
+> +                 compatible = "samsung,exynos5420-disp-clock";
+> +                 power-domains = <&disp_pd>;
+> +            };
+>          };
+> 
+> The patch is not yet ready, so I didn't include it in this patchset.
+
+Ok. From a DT perspective the sub-nodes seem to be a workaround
+for how the linux device model is mapped to power domains. I'm
+not sure we want to make subnodes in the clk controller just to
+make sub devices that we can target from the clk registration
+path. Those sub nodes aren't devices at all. I understand why
+it's being done this way, I just don't see how it fits into DT
+design methodologies.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
