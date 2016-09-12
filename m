@@ -1,40 +1,101 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] iio: sx9500: add final devicetree support
-Date: Mon, 12 Sep 2016 10:44:52 -0500
-Message-ID: <20160912154452.GA29955@rob-hp-laptop>
-References: <1472827740.1929.26.camel@googlemail.com>
- <CAOMZO5BeL1EKOQvZQoXXObttHSKxL7UQ1s2r8H4EOuROOb_YnQ@mail.gmail.com>
- <1472828671.1929.32.camel@googlemail.com>
- <CAOMZO5BVDS=AaSyRS0ELBiEKx3RxdstXgA_xJ6ANUzKDxdyBxg@mail.gmail.com>
- <1472829819.12668.3.camel@googlemail.com>
- <CAOMZO5DbJLnH1wm2KuML+O36O-eSYWeGwrxE5pdKSRtB-Js-yA@mail.gmail.com>
- <1472834833.12668.11.camel@googlemail.com>
- <CAOMZO5B8ttBvf-zimO5R_kgpzR2bxF73Ur0vZpBKUX8Ytbs8uQ@mail.gmail.com>
- <1472898600.1918.4.camel@googlemail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 1/3] ARM64: dts: amlogic: Add Meson GX dtsi from GXBB
+Date: Mon, 12 Sep 2016 17:46:56 +0200
+Message-ID: <4da162ac-5912-c8e1-49ba-4ce70ae48999@suse.de>
+References: <20160903082227.30559-1-narmstrong@baylibre.com>
+ <20160903082227.30559-2-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1472898600.1918.4.camel-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vlad Dogaru <ddvlad-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160903082227.30559-2-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: khilman@baylibre.com, carlo@caione.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 03, 2016 at 12:30:00PM +0200, Christoph Fritz wrote:
-> This makes sx9500 driver usable on devicetree based platforms too.
+Am 03.09.2016 um 10:22 schrieb Neil Armstrong:
+> Move all non-gxbb specific nodes to a common GX dtsi.
 > 
-> Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
+>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi   | 181 ++++++++++++++++
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 320 +++++++++-------------------
+>  2 files changed, 280 insertions(+), 221 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gx.dtsi
 > 
-> Changes in v2:
-> 
->  - fix docu: add optional property reset-gpios
->  - adapt docu: change example "reset-gpios"
-> 
->  .../devicetree/bindings/iio/proximity/sx9500.txt   | 24 ++++++++++++++++++++++
->  drivers/iio/proximity/sx9500.c                     |  7 +++++++
->  2 files changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/sx9500.txt
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> new file mode 100644
+> index 0000000..fb393e9
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> @@ -0,0 +1,181 @@
+> +/*
+> + * Copyright (c) 2016 BayLibre, SAS.
+> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+> + *
+> + * Copyright (c) 2016 Endless Computers, Inc.
+> + * Author: Carlo Caione <carlo@endlessm.com>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+This seems to be lacking my copyright as initial contributor of gxbb.
+
+Regards,
+Andreas
+
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+[...]
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> index 2ea7bbd..ff20932 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+
+/*
+ * Copyright (c) 2016 Andreas Färber
+ *
+ * This file is dual-licensed: you can use it either under the terms
+
+Regards,
+Andreas
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
