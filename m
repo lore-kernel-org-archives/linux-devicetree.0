@@ -1,65 +1,43 @@
-From: Sebastian Frias <sf84@laposte.net>
-Subject: Re: ARM,SoC: About the use DT-defined properties by 3rd-party drivers
-Date: Mon, 12 Sep 2016 14:29:37 +0200
-Message-ID: <57D69FB1.2020801@laposte.net>
-References: <57BDAF2E.10502@laposte.net>
- <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 3/5] arm64: arch_timer: Work around QorIQ Erratum
+ A-008585
+Date: Mon, 12 Sep 2016 13:30:28 +0100
+Message-ID: <20160912123027.GA13741@leverpostej>
+References: <1473469413-11019-1-git-send-email-oss@buserror.net>
+ <1473469413-11019-3-git-send-email-oss@buserror.net>
+ <20160912113615.GA20804@leverpostej>
+ <20160912114406.GG23211@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Timur Tabi <timur@tabi.org>
-Cc: devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Mason <slash.tmp@free.fr>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160912114406.GG23211-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, mike.caraman-3arQi8VN3Tc@public.gmane.org, Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Timur,
-
-On 08/28/2016 10:36 PM, Timur Tabi wrote:
-> On Wed, Aug 24, 2016 at 9:29 AM, Sebastian Frias <sf84@laposte.net> wrote:
->>
->> If this is really not possible, it forces the SoC manufacturer to expose
->> those properties in a different way, thus wasting a (seemingly) perfectly
->> fine way of doing so: the DT and its documentation.
+On Mon, Sep 12, 2016 at 12:44:07PM +0100, Will Deacon wrote:
+> On Mon, Sep 12, 2016 at 12:36:15PM +0100, Mark Rutland wrote:
+> > The changes in arm64's <asm/arch_timer.h> are going to conflict with
+> > some cleanup [1,2] that just landed in the arm64 for-next/core branch.
+> > 
+> > Could you please rebase atop of that?
 > 
-> When you submit a new driver upstream, that patch also includes the
-> new device tree nodes and documentation for those nodes.  Everything
-> is peer-reviewed together.  I don't understand what you think the
-> problem is.
-> 
+> Well, we should figure out what tree this is going through first. There
+> are a mixture of arm, arm64, driver and dts changes here and not all
+> of it is carrying the appropriate acks for me to queue it.
 
-Thanks for your comment and sorry for the late reply.
+Given that mix, I had assumed that this would all go through the arm64
+tree -- I see that Rob has already acked the binding, and I'm happy to
+give my ack for the driver once that's in shape.
 
-My question is about submitting DT properties/nodes (describing some HW) for
-which there is no Linux driver. Like register addresses for HW blocks,
-including HW capabilities of said HW blocks, which may or may not be setup
-by Linux directly.
+The dts change could go through arm-soc in parallel, I guess. It doesn't
+look like arm-soc have been Cc'd for that, though.
 
-The idea being that since DT describes the HW and is usually shared with the
-bootloader (yet stored in the Linux kernel tree), all layers of the stack
-could use the same DT and each layer would use relevant properties. So the
-DT would describe the whole SoC even if not all HW blocks have a Linux
-driver.
-
-3rd party users of said SoC could then write kernel modules for such HW
-blocks using the DT description. The DT would thus become the authoritative
-source of information regarding register programming for the SoC.
-
-Currently, HW blocks for which there is no public driver (that it is
-accessed through user-mode libraries or firmware) require a separate
-HW description (be it Documentation, headers, etc.)
-
-Since the DT describes the HW, it would make sense to expose the HW through
-DT, that would centralise the HW description.
-
-However, after discussing over IRC, it looks like there was no guidance on
-this. Some people think submitting DT properties/nodes without a corresponding
-Linux driver is frowned upon, while others thought it was an odd limitation
-and suggested asking here.
-
-Does that clarifies the scope of the question?
-
-Best regards,
-
-Sebastian
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
