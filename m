@@ -1,157 +1,73 @@
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-Subject: [PATCH v2 1/3] MIPS: OCTEON: split dlink_dsr-1000n.dts
-Date: Mon, 12 Sep 2016 23:39:08 +0300
-Message-ID: <20160912203910.1164-2-aaro.koskinen@iki.fi>
+From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Subject: [PATCH v2 2/3] MIPS: OCTEON: add DTS for D-Link DSR-500N
+Date: Mon, 12 Sep 2016 23:39:09 +0300
+Message-ID: <20160912203910.1164-3-aaro.koskinen@iki.fi>
 References: <20160912203910.1164-1-aaro.koskinen@iki.fi>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160912203910.1164-1-aaro.koskinen@iki.fi>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160912203910.1164-1-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Split dlink_dsr-1000n.dts to allow reuse with D-Link DSR-500N.
+Add DTS for D-Link DSR-500N.
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 ---
- .../boot/dts/cavium-octeon/dlink_dsr-1000n.dts     | 45 +----------------
- .../dts/cavium-octeon/dlink_dsr-500n-1000n.dtsi    | 58 ++++++++++++++++++++++
- 2 files changed, 59 insertions(+), 44 deletions(-)
- create mode 100644 arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n-1000n.dtsi
+ .../mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts
 
-diff --git a/arch/mips/boot/dts/cavium-octeon/dlink_dsr-1000n.dts b/arch/mips/boot/dts/cavium-octeon/dlink_dsr-1000n.dts
-index b134798..cfa2915 100644
---- a/arch/mips/boot/dts/cavium-octeon/dlink_dsr-1000n.dts
-+++ b/arch/mips/boot/dts/cavium-octeon/dlink_dsr-1000n.dts
-@@ -8,55 +8,16 @@
-  * published by the Free Software Foundation.
-  */
- 
--/include/ "octeon_3xxx.dtsi"
-+/include/ "dlink_dsr-500n-1000n.dtsi"
- #include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "dlink,dsr-1000n";
- 
- 	soc@0 {
--		smi0: mdio@1180000001800 {
--			phy8: ethernet-phy@8 {
--				reg = <8>;
--				compatible = "ethernet-phy-ieee802.3-c22";
--			};
--		};
--
--		pip: pip@11800a0000000 {
--			interface@0 {
--				ethernet@0 {
--					fixed-link {
--						speed = <1000>;
--						full-duplex;
--					};
--				};
--				ethernet@1 {
--					fixed-link {
--						speed = <1000>;
--						full-duplex;
--					};
--				};
--				ethernet@2 {
--					phy-handle = <&phy8>;
--				};
--			};
--		};
--
--		twsi0: i2c@1180000001000 {
--			rtc@68 {
--				compatible = "dallas,ds1337";
--				reg = <0x68>;
--			};
--		};
--
- 		uart0: serial@1180000000800 {
- 			clock-frequency = <500000000>;
- 		};
--
--		usbn: usbn@1180068000000 {
--			refclk-frequency = <12000000>;
--			refclk-type = "crystal";
--		};
- 	};
- 
- 	leds {
-@@ -87,8 +48,4 @@
- 			gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
- 		};
- 	};
--
--	aliases {
--		pip = &pip;
--	};
- };
-diff --git a/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n-1000n.dtsi b/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n-1000n.dtsi
+diff --git a/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts b/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts
 new file mode 100644
-index 0000000..246b598
+index 0000000..78886e1
 --- /dev/null
-+++ b/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n-1000n.dtsi
-@@ -0,0 +1,58 @@
++++ b/arch/mips/boot/dts/cavium-octeon/dlink_dsr-500n.dts
+@@ -0,0 +1,40 @@
 +/*
-+ * Device tree source for D-Link DSR-500N/1000N (common parts).
++ * Device tree source for D-Link DSR-500N.
 + *
-+ * Written by: Aaro Koskinen <aaro.koskinen@iki.fi>
++ * Written by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
 + * published by the Free Software Foundation.
 + */
 +
-+/include/ "octeon_3xxx.dtsi"
++/include/ "dlink_dsr-500n-1000n.dtsi"
++#include <dt-bindings/gpio/gpio.h>
 +
 +/ {
++	model = "dlink,dsr-500n";
++	compatible = "dlink,dsr-500n", "cavium,octeon-3860";
++
 +	soc@0 {
-+		smi0: mdio@1180000001800 {
-+			phy8: ethernet-phy@8 {
-+				reg = <8>;
-+				compatible = "ethernet-phy-ieee802.3-c22";
-+			};
-+		};
-+
-+		pip: pip@11800a0000000 {
-+			interface@0 {
-+				ethernet@0 {
-+					fixed-link {
-+						speed = <1000>;
-+						full-duplex;
-+					};
-+				};
-+				ethernet@1 {
-+					fixed-link {
-+						speed = <1000>;
-+						full-duplex;
-+					};
-+				};
-+				ethernet@2 {
-+					phy-handle = <&phy8>;
-+				};
-+			};
-+		};
-+
-+		twsi0: i2c@1180000001000 {
-+			rtc@68 {
-+				compatible = "dallas,ds1337";
-+				reg = <0x68>;
-+			};
-+		};
-+
-+		usbn: usbn@1180068000000 {
-+			refclk-frequency = <12000000>;
-+			refclk-type = "crystal";
++		uart0: serial@1180000000800 {
++			clock-frequency = <300000000>;
 +		};
 +	};
 +
-+	aliases {
-+		pip = &pip;
++	leds {
++		compatible = "gpio-leds";
++
++		usb {
++			gpios = <&gpio 9 GPIO_ACTIVE_LOW>;
++		};
++
++		wps {
++			gpios = <&gpio 11 GPIO_ACTIVE_LOW>;
++		};
++
++		wireless {
++			label = "2.4g";
++			gpios = <&gpio 18 GPIO_ACTIVE_LOW>;
++		};
 +	};
 +};
 -- 
 2.9.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
