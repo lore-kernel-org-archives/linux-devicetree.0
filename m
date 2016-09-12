@@ -1,69 +1,53 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: ARM,SoC: About the use DT-defined properties by 3rd-party drivers
-Date: Mon, 12 Sep 2016 13:38:09 +0100
-Message-ID: <20160912123809.GB13741@leverpostej>
-References: <57BDAF2E.10502@laposte.net>
- <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
- <57D69FB1.2020801@laposte.net>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCHv5] watchdog: xilinx: Add clock support
+Date: Mon, 12 Sep 2016 05:45:36 -0700
+Message-ID: <47c40b8c-664e-e2ff-9059-6f566448cf76@roeck-us.net>
+References: <1470984421-3494-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+ <20160812190123.GB16954@rob-hp-laptop>
+ <CAKfKVtFYEqz2Be81hBBX3Nb9kRR+4QUpdP5iJs88HoyYoC3-jQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <57D69FB1.2020801-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
-Cc: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKfKVtFYEqz2Be81hBBX3Nb9kRR+4QUpdP5iJs88HoyYoC3-jQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 12, 2016 at 02:29:37PM +0200, Sebastian Frias wrote:
-> My question is about submitting DT properties/nodes (describing some HW) for
-> which there is no Linux driver. Like register addresses for HW blocks,
-> including HW capabilities of said HW blocks, which may or may not be setup
-> by Linux directly.
-> 
-> The idea being that since DT describes the HW and is usually shared with the
-> bootloader (yet stored in the Linux kernel tree), all layers of the stack
-> could use the same DT and each layer would use relevant properties. So the
-> DT would describe the whole SoC even if not all HW blocks have a Linux
-> driver.
-> 
-> 3rd party users of said SoC could then write kernel modules for such HW
-> blocks using the DT description. The DT would thus become the authoritative
-> source of information regarding register programming for the SoC.
+On 09/12/2016 02:49 AM, Shubhrajyoti Datta wrote:
+> On Sat, Aug 13, 2016 at 12:31 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Fri, Aug 12, 2016 at 12:17:01PM +0530, Shubhrajyoti Datta wrote:
+>>> Add support for the clock. Currently we enable
+>>> at probe and relinquish at remove.
+>>>
+>>> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+>>> Acked-by: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>> v2:
+>>> fix spaces and error path.
+>>> v3
+>>> do not fail existing dts
+>>> v4:
+>>> fix the error prints as the clock is optional
+>>> v5:
+>>> remove some more prints
+>>>
+>>>  .../devicetree/bindings/watchdog/of-xilinx-wdt.txt |  3 +++
+>>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> If there are no further comments can this be applied.
 
-I don't follow this part entirely. Why are you expecting thrid parties
-to write a driver for those blocks rather than upstreaming a driver for
-them?
+Please be patient. Wim usually sends "applied" e-mails shortly before
+the commit window opens, and I'll send him a reminder about pending
+patches.
 
-> Currently, HW blocks for which there is no public driver (that it is
-> accessed through user-mode libraries or firmware) require a separate
-> HW description (be it Documentation, headers, etc.)
-> 
-> Since the DT describes the HW, it would make sense to expose the HW through
-> DT, that would centralise the HW description.
+Guenter
 
-I would generally agree that the hardware should be described in DT.
-The difficulty is that without a 'real' user it's not always possible to
-tell if we're describing the thing correctly.
 
-Putting smoething together that's only sufficient to support some
-out-of-tree driver with implicit assumptions that we are not aware of is
-far from fantastic.
-
-> However, after discussing over IRC, it looks like there was no guidance on
-> this. Some people think submitting DT properties/nodes without a corresponding
-> Linux driver is frowned upon, while others thought it was an odd limitation
-> and suggested asking here.
-
-Unfortunately, I think that the area is sufficiently vague that there
-simply is no clear and general answer.
-
-For the sake of discussion, an example of a particular block, along with
-what you expect/need to describe would be helpful.
-
-Thanks,
-Mark.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
