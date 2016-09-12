@@ -1,103 +1,147 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V7] clk: bcm: Add driver for BCM53573 ILP clock
-Date: Mon, 12 Sep 2016 11:56:37 -0500
-Message-ID: <20160912165637.GA4462@rob-hp-laptop>
-References: <20160826122511.19047-1-zajec5@gmail.com>
- <20160905142935.4550-1-zajec5@gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: ARM, SoC: About the use DT-defined properties by 3rd-party
+ drivers
+Date: Mon, 12 Sep 2016 17:56:37 +0100
+Message-ID: <20160912165637.GF14165@leverpostej>
+References: <57BDAF2E.10502@laposte.net>
+ <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
+ <57D69FB1.2020801@laposte.net>
+ <20160912123809.GB13741@leverpostej>
+ <57D6AA54.6000208@laposte.net>
+ <20160912135549.GA14165@leverpostej>
+ <57D6D2A9.3010006@laposte.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160905142935.4550-1-zajec5@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Mark Rutland <mark.rutland@arm.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Eric Anholt <eric@anholt.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <57D6D2A9.3010006-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 05, 2016 at 04:29:27PM +0200, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal@milecki.pl>
+On Mon, Sep 12, 2016 at 06:07:05PM +0200, Sebastian Frias wrote:
+> On 09/12/2016 04:01 PM, Mark Rutland wrote:
+> > Few devices these says are entirely independent, and most devices can be
+> > instantiated multiple times (even if there happens to only be a single
+> > instance in practice). For the example of a userspace driver there are
+> > very real ABI concerns, such as how the device(s) are discovered, how
+> > any related components like regulators and clocks are controlled, etc.
+> > 
+> > There are ramifications here, and it's a dangerous over simplification
+> > to say that this doesn't matter because we're not changing kernel code.
+> > 
+> >> Besides, what "makes sense now" may "not make sense tomorrow" depending on
+> >> how the HW is modified.
+> > 
+> > That's always the case when a new generation of hardware comes out, so I
+> > don't think that's relevant to the topic at hand.
 > 
-> This clock is present on BCM53573 devices (including BCM47189) that use
-> Cortex-A7. ILP is a part of PMU (Power Management Unit) multi-function
-> device so we use syscon (and regmap) for it.
+> Exactly, that's why to I'm having trouble to understand why there is so much
+> insistence on "getting the DT 100% right", since a HW change could imply
+> that what made 100% sense yesterday, does not today.
+> Since that is a possibility we have to live with, then the "100% right" goal
+> is most likely unachievable.
+> That's different from "backwards compatibility" for which some technique,
+> like alternate descriptions, can be put in place.
+
+I'm not on about "100% right", but more "a reasonable chance of being
+good enough". The latter is extremely difficult to judge when you just
+get a binding document with little or no additional context.
+
+Backwards compatibility is with regards to new software supporting old
+bindings. If new HW comes out, we can create new bindings. Old bindings
+should remain supported regardless.
+
+> >> Actually, I think it would encourage more SoC manufacturers to use DT as a way
+> >> to document their HW, which is a good thing.
+> > 
+> > Writing and reviewing bindings is a very tricky topic, as it can require
+> > fairly intimate knowledge of a piece of hardware. I've repeatedly found
+> > that binding descriptions did not match the realities of the hardware,
+> > and I've only managed to do so by looking at accompanying driver code.
+> > 
+> > Given that manuals and other information on devices are often not freely
+> > available (if they exist at all), the proposal effectively limits myself
+> > and others to spot common (anti)patterns, which is far less than ideal,
+> > and will result in more mistakes.
+> > 
+> > As it stands, the proposal asks for effort for the community (in terms
+> > of review and maintenance of bindings), with no benefit to the kernel
+> > community, and a number of pitfalls that we would rather avoid.
 > 
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-> ---
-> V2: Rebase on top of clk-next
->     Use ALP as parent clock
->     Improve comments
->     Switch from ioremap_nocache to ioremap
->     Check of_clk_add_provide result for error
-> V3: Drop #include <linux/moduleh>
->     Make ILP DT entry part of PMU
->     Describe ILP as subdevice of PMU in Documentation
-> V4: Use BCM53573 name as suggested by Jon and Ray. It seems "Northstar"
->     (even if used in some resources) should be used in relation to
->     Cortex-A9 devices only.
-> V5: Rename remaining "ns" references to "bcm53573", sorry, I sent V4 too
->     early.
-> V6: Drop #include <linux/clk.h>
->     Use "int" as type where it matches usage
->     Add cpu_relax() in the loop
->     Add disable callback
->     Use _hw_ functions for registering struct clk_hw (new API)
+> Could you be more precise on those two issues? Namely:
+> "the effort" and the "lack of benefit for the community"?
+
+As above, reviewing is tricky. One has to spend the time gaining an
+understanding of a particular piece of hardware, the class of hardware
+it falls in, and also the bigger picture that it fits in. Once you have
+that, you have to review the binding in that context, and that takes
+time and effort.
+
+As things evolve, perhaps mistakes or inconsistencies are found, or new
+ways to generalise things. As that occurs, there is a maintenance burden
+for existing bindings.
+
+All of that takes time and effort.
+
+If, at the end of that, a proprietary vendor driver is using a different
+version of the binding anyway, because "there's no backward
+compatibility to guarantee", then there is no benefit to the document.
+
+Even if that proprietary driver does remain stable, the Linux community
+will have done work that only benefits the authors of that driver. We
+would prefer that the results of our efforts are open, and benefit all.
+
+> I can understand the effort it takes to review a binding and some
+> driver, but if there's no driver, why would it matter if the DT binding is
+> 100% right? Hence, why would it take more effort?
+> Furthermore, if there's no driver, there's no backward compatibility to
+> guarantee. Shouldn't it require less effort?
+
+I don't follow. If there's no compatibility to guarantee, why do you
+want a binding?
+
+A binding is a form of contract -- if you describe the HW this way, then
+some software will understand it. You can extend a binding over time,
+certainly, but if the baseline of that binding is a moving target, that
+benefits nobody.
+
+[...]
+
+> >> But if I understood correctly your comment, you are basically saying that
+> >> without an example is hard to say.
+> >> Since the question seems understood, do you have an example of other SoC's
+> >> doing something similar?
+> > 
+> > I do not have an example. I know that others are using DT for data
+> > beyond what Linux or another OS requires, but it's my understanding that
+> > that is typically in a separate DTB.
 > 
->     Thanks a lot Stephen!
-> V7: Use syscon and regmap (thanks Rob!)
-> ---
->  .../bindings/clock/brcm,bcm53573-ilp.txt           |  36 +++++
->  drivers/clk/bcm/Makefile                           |   1 +
->  drivers/clk/bcm/clk-bcm53573-ilp.c                 | 148 +++++++++++++++++++++
->  3 files changed, 185 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
->  create mode 100644 drivers/clk/bcm/clk-bcm53573-ilp.c
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt b/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
-> new file mode 100644
-> index 0000000..4554f70
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/brcm,bcm53573-ilp.txt
-> @@ -0,0 +1,36 @@
-> +Broadcom BCM53573 ILP clock
-> +===========================
-> +
-> +This binding uses the common clock binding:
-> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +This binding is used for ILP clock (sometimes referred as "slow clock")
-> +on Broadcom BCM53573 devices using Cortex-A7 CPU.
-> +
-> +ILP's rate has to be calculated on runtime and it depends on ALP clock
-> +which has to be referenced.
-> +
-> +This clock is part of PMU (Power Management Unit), a Broadcom's device
-> +handing power-related aspects. Its node must be sub-node of the PMU
-> +device.
-> +
-> +Required properties:
-> +- compatible: "brcm,bcm53573-ilp"
-> +- reg: iomem address range of PMU (Power Management Unit)
-> +- reg-names: "pmu", the only needed & supported reg right now
+> I see, although I don't understand how accepting such solution (i.e.: having the
+> information in a different DT) benefits the open-source community, since it
+> basically means that the open-source community settles for less information.
 
-There's no reg prop in the example.
+As with all things, it depends on context. If someone's using a DT to
+describe details of the secure world of a platform with trustzone to a
+secure OS, then not all of that information is relevant to Linux.
+Likewise if configuration details specific to FW are embedded.
 
-> +- clocks: has to reference an ALP clock
-> +- #clock-cells: should be <0>
-> +
-> +Example:
-> +
-> +pmu@18012000 {
-> +	compatible = "simple-mfd", "syscon";
-> +	reg = <0x18012000 0x00001000>;
-> +
-> +	ilp: ilp@0 {
+If there's information relevant to a general purpose OS, then I would
+expect it to be described. By the same token, I would expect a general
+purpose OS to actually be making use of the information. In practice,
+we've used Linux as the benchmark for that. That needn't necessarily be
+the case if another OS can demonstrate that the binding is worthwhile --
+ideally we'd have multiple OSs using bindings so as to "keep us honest"
+and free from implementation details.
 
-Drop the unit address if there is in fact no reg prop.
+As I mentioned before, an example would help. The theoretical envelope
+is very large and likely far beyond what you envisage. We need something
+to focus on, or we're arguing about what we conceive differently.
 
-> +		compatible = "brcm,bcm53573-ilp";
-> +		clocks = <&alp>;
-> +		#clock-cells = <0>;
-> +		clock-output-names = "ilp";
-> +	};
-> +};
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
