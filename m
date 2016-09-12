@@ -1,55 +1,100 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] video: mxsfb: get supply regulator optionally
-Date: Tue, 13 Sep 2016 00:47:58 +0100
-Message-ID: <20160912234758.GM27946@sirena.org.uk>
-References: <20160904042627.30182-1-stefan@agner.ch>
- <f8368040-bb5a-91e0-7511-df462719b949@ti.com>
- <4b3a7bda2202a536efaf4a693234c273@agner.ch>
- <1812b2bf-bd66-3553-4c2d-3d2b08603ca0@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 1/4] regulator: Add set_voltage_time op
+Date: Tue, 13 Sep 2016 00:57:58 +0100
+Message-ID: <20160912235758.GO27946@sirena.org.uk>
+References: <20160906190315.GC92391@google.com>
+ <20160912183230.GF27946@sirena.org.uk>
+ <20160912231851.GA62872@google.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ByWDhVrfOLxO82cA"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="gIhrS3Q23Nl70UJ5"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1812b2bf-bd66-3553-4c2d-3d2b08603ca0-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20160912231851.GA62872@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: lgirdwood@gmail.com, Douglas Anderson <dianders@chromium.org>, briannorris@chromium.org, javier@dowhile0.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---ByWDhVrfOLxO82cA
+--gIhrS3Q23Nl70UJ5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Sep 07, 2016 at 10:20:25AM +0300, Tomi Valkeinen wrote:
+On Mon, Sep 12, 2016 at 04:18:51PM -0700, Matthias Kaehlcke wrote:
+> El Mon, Sep 12, 2016 at 07:32:30PM +0100 Mark Brown ha dit:
+> > On Tue, Sep 06, 2016 at 12:03:15PM -0700, Matthias Kaehlcke wrote:
 
-> I'm fine with the _optional version, that's the easiest cleanup here.
-> And, I guess, it could be even argued that it's correct in some cases,
-> as the fb output could go outside the board, to some externally powered
-> display.
+> > > -	/* Call set_voltage_time_sel if successfully obtained old_selector */
+> > > -	if (ret == 0 && !rdev->constraints->ramp_disable && old_selector >= 0
+> > > -		&& old_selector != selector) {
+> > > +	if (ret != 0 || rdev->constraints->ramp_disable)
+> > > +		goto no_delay;
 
-I'd *prefer* to see the supplies being specified, if only for the
-encouragement of the others.  But if you want to do the optional thing
-anyway...
+> > You probably want to do the refactoring for splitting out decisions
+> > about old_selector separately, it'll make the diff clearer.
 
---ByWDhVrfOLxO82cA
+> The old_selector conditions could be moved into the "else if
+> (rdev->desc->ops->set_voltage_sel)" branch above, is that you mean?
+
+No, what I mean is this change is doing a bunch of moving code around as
+well as adding new things which makes it hard to spot where the new
+things are.  Moving the code around separately (that is, in a separate
+patch) would make the review easier.
+
+> > > +	/* Insert any necessary delays */
+> > > +	if (delay >= 1000) {
+> > > +		mdelay(delay / 1000);
+> > > +		udelay(delay % 1000);
+> > > +	} else if (delay) {
+> > > +		udelay(delay);
+> > > +	}
+
+> > > +no_delay:
+
+> > Why were the gotos there?
+
+> Not sure how to interpret your question. Would you prefer no to use
+> gotos, should the notification be skipped in case the voltage is not
+> changed, do you expect a comment, ...?
+
+I mean I couldn't tell why a goto was a good idea for what seemed like
+perfectly normal conditional logic.  Either I couldn't tell because it's
+not a good idea or it is a good idea but should be clearer in some way
+but since I didn't really understand what the purpose of doing the gotos
+was I can't say for sure either way.
+
+> > The diff and I expect the resulting code would be a lot clearer if we
+> > just left most of the function indented as it is and simply directly
+> > returned set_voltage_time().  Which is what we do anyway so no need to
+> > reindent the rest of the code.
+
+> Ok, with your comment below on a default implementation this would
+> become something like:
+
+> if (ops->set_voltage_time) {
+> 	return ops->set_voltage_time(...);
+> } else if (!ops->set_voltage_time_sel) {
+> 	return _regulator_set_voltage_time(..);
+> }
+
+I suspect you'll end up with more refactoring than that around
+_set_voltage_time() and this'll be inside that function but I've lost
+context here so ICBW.
+
+--gIhrS3Q23Nl70UJ5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJX1z6sAAoJECTWi3JdVIfQPx0H/Rob1teZTAdgg2Rq1R0+QqN8
-6jstfiwLPXQd2SOvX1JREjAmt7oDxF0whT+vNgTKBtHETom9ROXqXh7qYPqjWQD9
-r6Mi+3da4GQoR5DTacRffbeO0zT9WMHmWmUTJau1jhs6BLxQQq8BspBmN9cz6YoT
-JvEd0QoYXlBp8F55VOmT73aIzrFtMm6QviubhChzSh1tdJ02qXEKRC7+0mefHdvd
-gYwTXImWNg7QnxcWwGj4Pe5GmMY8R+TdINVF9nUGwPDY0KpjcLxnP6cQZGeOyoFs
-4MSq3DsnOqyIMX9JeCbArbhjY32uXWFzRwwzuotH4a/zkVo11Y3IVWeAGku3dZM=
-=ZoSB
+iQEcBAEBCAAGBQJX10EFAAoJECTWi3JdVIfQFgwH/RETMB3876FkTFLs4beTbuje
+HtC19YNJ25UxHB8LHf7dHWmyT9JezPXs4PTroY8OwXqlt2Wp5nENfXB+Y7AivWUQ
+PQt5iRT6OTtBr1t7Ve0yyN0eZ0ucpIZewiYTCaquP4nfZnzHmfdiGsNkeQcgd62G
+fx5bGB/XOfsLB3ssr64iUtTYuicP5rjy71oQQ7Uapu3wErepEI3hxp3zCFW2eV27
+tynvzid9kohmFj4KxDzRL8Xr797CnePbZAqgp7CQYoKtPh1beyAkyFJRz3BMklnd
+ljIg1q/oaBz4Jz216brH7K+FAPCGwTgu3a1I84DdLO4ciwa3R2kT9CIwP8lEkNQ=
+=aUvg
 -----END PGP SIGNATURE-----
 
---ByWDhVrfOLxO82cA--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--gIhrS3Q23Nl70UJ5--
