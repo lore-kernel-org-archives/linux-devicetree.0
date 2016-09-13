@@ -1,51 +1,49 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH V4 3/4] ARM: bcm2835: add thermal node to device-tree of
- bcm283x
-Date: Tue, 13 Sep 2016 11:17:23 +0200
-Message-ID: <e0bff5b1-533c-fdc0-3e61-54974571e385@i2se.com>
-References: <1473407397-29395-1-git-send-email-kernel@martin.sperl.org>
- <1473407397-29395-4-git-send-email-kernel@martin.sperl.org>
- <19cc8fbf-6ceb-995e-850d-9d82bdaff8d0@i2se.com>
- <8876586A-98F8-4AAF-AD90-86EB12C22FDC@martin.sperl.org>
- <2117811305.32861.15854341-2f8e-4e20-95f4-e76f81e6fd56.open-xchange@email.1und1.de>
- <185DA6B2-AFC0-4199-A361-0164381AD317@martin.sperl.org>
- <677965855.33392.597ccfbe-225b-403b-8ffa-3f42292996d4.open-xchange@email.1und1.de>
- <704dd583-5bd8-fa77-a4ab-18f0845b9c4e@martin.sperl.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <704dd583-5bd8-fa77-a4ab-18f0845b9c4e-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH] iio: dt-bindings: add documentation for Light&Proximity sensor STK331x
+Date: Tue, 13 Sep 2016 17:27:02 +0800
+Message-ID: <1473758822-17955-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 13.09.2016 um 11:06 schrieb Martin Sperl:
->
->
-> On 09.09.2016 21:02, Stefan Wahren wrote:
->> bcm2837.dtsi
->>
->> &thermal {
->>             compatible = "brcm,bcm2837-thermal";
->>             status = "okay";
->> };
->
-> Note that there is only a bcm2837.dtsi in arm64/boot/dts/broadcom/
-> but not in arm/boot/dts - at least with the current upstream kernel.
->
-> So I will just patch those dtsi that exist right now.
+Add the device tree binding documentation for Light & Proximity sensor
+STK331X from Sensortek
 
-That's correct as long as the bcm2837.dtsi change is a separate patch
-for ARM64 and this was the reason for my "warning" in my first reply.
+Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
-Stefan
+ .../devicetree/bindings/iio/light/stk3310.txt       | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/stk3310.txt
 
->
-> Martin
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/light/stk3310.txt b/Documentation/devicetree/bindings/iio/light/stk3310.txt
+new file mode 100644
+index 0000000..d697118
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/stk3310.txt
+@@ -0,0 +1,21 @@
++* Sensortek STK331X I2C Light&Proximity sensor
++
++Required properties:
++- compatible: should be "sensortek,STK3310" or "sensortek,STK3311"
++- reg: the I2C address of the device
++- interrupt-parent: phandle to the parent interrupt controller
++- interrupts: interrupt mapping for GPIO IRQ
++
++Example:
++	&i2c1 {
++		/* ... */
++
++		stk3310@48 {
++			compatible = "sensortek,STK3310";
++			reg = <0x48>;
++			interrupt-parent = <&gpio1>;
++			interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
++		};
++
++		/* ... */
++	};
+-- 
+2.7.4
