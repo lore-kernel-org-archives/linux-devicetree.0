@@ -1,62 +1,37 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: ARM, SoC: About the use DT-defined properties by 3rd-party
- drivers
-Date: Tue, 13 Sep 2016 14:23:57 +0100
-Message-ID: <20160913132357.GB23336@leverpostej>
-References: <57BDAF2E.10502@laposte.net>
- <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
- <57D69FB1.2020801@laposte.net>
- <20160912123809.GB13741@leverpostej>
- <57D6AA54.6000208@laposte.net>
- <20160912135549.GA14165@leverpostej>
- <57D6D2A9.3010006@laposte.net>
- <20160912165637.GF14165@leverpostej>
- <57D7CF17.2050905@laposte.net>
- <57D7E4EC.6050509@tabi.org>
+From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH] Documentation: dt-bindings: Fix "st,syscfg" definition for STM32 pinctrl
+Date: Tue, 13 Sep 2016 15:28:12 +0200
+Message-ID: <1473773292-10225-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <57D7E4EC.6050509-N01EOCouUvQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
-Cc: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Timur,
+"st,syscfg" entry was bad described.
 
-On Tue, Sep 13, 2016 at 06:37:16AM -0500, Timur Tabi wrote:
-> Sebastian Frias wrote:
-> >Let's make an abstraction of the word 'binding', 'create a binding', etc. and
-> >just focus on this:
-> >- Somebody submits a DT file that contains properties and nodes that are
-> >*not used*  by any Linux driver.
-> >- Said properties and nodes serve as HW description for HW blocks for which
-> >*there is no*  Linux driver.
-> >
-> >The goal of the above is to use the DT as the authoritative (and single)
-> >source of HW definition.
-> 
-> No.
-> 
-> I've grown weary of this discussion.  We have explained multiple
-> times why this is impractical.  Using the DT to document hardware
-> makes no sense.  No one is going to do that, and anyone who attempts
-> to submit a DT binding without an actual driver will get rejected.
+Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
 
-Please don't make the same mistake of trivialising this in either
-direction.
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+index a0eed99..f9753c4 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+@@ -16,7 +16,9 @@ Required properies:
+    gpio-bank node (children).
+  - interrupt-parent: phandle of the interrupt parent to which the external
+    GPIO interrupts are forwarded to.
+- - st,syscfg: phandle of the syscfg node used for IRQ mux selection.
++ - st,syscfg: Should be phandle/offset pair. The phandle to the syscon node
++   which includes IRQ mux selection register, and the offset of the IRQ mux
++   selection register.
+  - pins-are-numbered: Specify the subnodes are using numbered pinmux to
+    specify pins.
+ 
+-- 
+1.9.1
 
-While we appear to be going in circles, in general there are potentially
-valid cases to consider -- there may be system properties/devices that
-don't happen to matter to Linux, but are generic, well-defined, and
-matter to others. Bindings for those should be considered.
-
-In the absence of any example, as with this thread, there is nothing to
-consider, however.
-
-Thanks,
-Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
