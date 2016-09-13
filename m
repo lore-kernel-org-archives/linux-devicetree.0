@@ -1,79 +1,191 @@
-From: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH] clk: hisilicon: add CRG driver for Hi3798CV200 SoC
-Date: Tue, 13 Sep 2016 10:45:39 +0800
-Message-ID: <57D76853.4080900@hisilicon.com>
-References: <201609122155.oR2E2oL7%fengguang.wu@intel.com>
+From: Po Liu <po.liu@nxp.com>
+Subject: RE: [PATCH v4 1/2] nxp/dts: add pcie aer interrupt-name property in
+ the dts
+Date: Tue, 13 Sep 2016 03:02:05 +0000
+Message-ID: <VI1PR0401MB170970A4F177949FCE4827A892FE0@VI1PR0401MB1709.eurprd04.prod.outlook.com>
+References: <1465892645-32381-2-git-send-email-po.liu@nxp.com>
+ <1472625442-23309-1-git-send-email-po.liu@nxp.com>
+ <20160912221358.GI23532@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201609122155.oR2E2oL7%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, scott.bambrough-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.gregotski-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160912221358.GI23532@localhost>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Yoder <stuart.yoder@nxp.com>, "M.H. Lian" <minghuan.lian@nxp.com>, Murali Karicheri <m-karicheri2@ti.com>, Vincent Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>, Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Hi Bjorn, Shawn, Rob,
 
-Sorry. I'll fixed this compiling error in the next version.
+Thanks for reply. I'll upload new patches:
+ - separate the patches with arm and arm64 dts for new version.
+ - Modify the binding comments to make it clear for explain the 'aer' property.
 
-Regards,
-Jiancheng
+Best regards,
+Liu Po
 
-On 2016/9/12 21:55, kbuild test robot wrote:
-> Hi Jiancheng,
+-----Original Message-----
+From: Bjorn Helgaas [mailto:helgaas@kernel.org] 
+Sent: Tuesday, September 13, 2016 6:14 AM
+To: Po Liu
+Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Bjorn Helgaas; Shawn Guo; Marc Zyngier; Rob Herring; Roy Zang; Vincent Hu; Stuart Yoder; Leo Li; Arnd Bergmann; M.H. Lian; Murali Karicheri
+Subject: Re: [PATCH v4 1/2] nxp/dts: add pcie aer interrupt-name property in the dts
+
+On Wed, Aug 31, 2016 at 02:37:21PM +0800, Po Liu wrote:
+> NXP some platforms aer interrupt was not MSI/MSI-X/INTx but using 
+> interrupt line independently. This patch add a "aer"
+> interrupt-names for aer interrupt.
+> With the interrupt-names "aer", code could probe aer interrupt line 
+> for pcie root port, replace the aer interrupt service irq.
+> This is intend to fixup the Layerscape platforms which aer interrupt 
+> was not MSI/MSI-X/INTx, but using interrupt line independently.
 > 
-> [auto build test ERROR on clk/clk-next]
-> [also build test ERROR on v4.8-rc6 next-20160912]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> [Suggest to use git(>=2.9.0) format-patch --base=<commit> (or --base=auto for convenience) to record what (public, well-known) commit your patch series was built on]
-> [Check https://git-scm.com/docs/git-format-patch for more information]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Jiancheng-Xue/clk-hisilicon-add-CRG-driver-for-Hi3798CV200-SoC/20160912-175733
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-> config: arm-allmodconfig (attached as .config)
-> compiler: arm-linux-gnueabi-gcc (Debian 5.4.0-6) 5.4.0 20160609
-> reproduce:
->         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=arm 
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
->    In file included from drivers/clk/hisilicon/crg-hi3798cv200.c:22:0:
->>> drivers/clk/hisilicon/crg-hi3798cv200.c:245:25: error: 'hi3798cv200_clk_match_table' undeclared here (not in a function)
->     MODULE_DEVICE_TABLE(of, hi3798cv200_clk_match_table);
->                             ^
->    include/linux/module.h:213:21: note: in definition of macro 'MODULE_DEVICE_TABLE'
->     extern const typeof(name) __mod_##type##__##name##_device_table  \
->                         ^
->>> include/linux/module.h:213:27: error: '__mod_of__hi3798cv200_clk_match_table_device_table' aliased to undefined symbol 'hi3798cv200_clk_match_table'
->     extern const typeof(name) __mod_##type##__##name##_device_table  \
->                               ^
->>> drivers/clk/hisilicon/crg-hi3798cv200.c:245:1: note: in expansion of macro 'MODULE_DEVICE_TABLE'
->     MODULE_DEVICE_TABLE(of, hi3798cv200_clk_match_table);
->     ^
-> 
-> vim +/hi3798cv200_clk_match_table +245 drivers/clk/hisilicon/crg-hi3798cv200.c
-> 
->    239		{ .compatible = "hisilicon,hi3798cv200-crg",
->    240			.data = &hi3798cv200_crg_funcs},
->    241		{ .compatible = "hisilicon,hi3798cv200-sysctrl",
->    242			.data = &hi3798cv200_sysctrl_funcs},
->    243		{ }
->    244	};
->  > 245	MODULE_DEVICE_TABLE(of, hi3798cv200_clk_match_table);
->    246	
->    247	static int hi3798cv200_crg_probe(struct platform_device *pdev)
->    248	{
-> 
+> Signed-off-by: Po Liu <po.liu@nxp.com>
+
+Rob and Shawn had comments here, and I'm not sure they ever got resolved.
+
 > ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> changes for V4:
+> 	- Add comments explain why to add this patch
+> 	- Move the binding changes to pci code patch
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  arch/arm/boot/dts/ls1021a.dtsi                 |  6 ++++--
+>  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 18 
+> +++++++++---------  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 
+> 16 ++++++++--------
+>  3 files changed, 21 insertions(+), 19 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/ls1021a.dtsi 
+> b/arch/arm/boot/dts/ls1021a.dtsi index 368e219..443e50b 100644
+> --- a/arch/arm/boot/dts/ls1021a.dtsi
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -634,7 +634,8 @@
+>  			reg = <0x00 0x03400000 0x0 0x00010000   /* controller registers */
+>  			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
+> +			interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
+> +			interrupt-names = "aer";
+>  			fsl,pcie-scfg = <&scfg 0>;
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+> @@ -657,7 +658,8 @@
+>  			reg = <0x00 0x03500000 0x0 0x00010000   /* controller registers */
+>  			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
+> +			interrupt-names = "aer";
+>  			fsl,pcie-scfg = <&scfg 1>;
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi 
+> b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> index e669fbd..654071d 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> @@ -527,9 +527,9 @@
+>  			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
+>  			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <0 118 0x4>, /* controller interrupt */
+> -				     <0 117 0x4>; /* PME interrupt */
+> -			interrupt-names = "intr", "pme";
+> +			interrupts = <0 117 0x4>, /* PME interrupt */
+> +					 <0 118 0x4>; /* aer interrupt */
+> +			interrupt-names = "pme", "aer";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> @@ -552,9 +552,9 @@
+>  			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
+>  			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <0 128 0x4>,
+> -				     <0 127 0x4>;
+> -			interrupt-names = "intr", "pme";
+> +			interrupts = <0 127 0x4>,
+> +					 <0 128 0x4>;
+> +			interrupt-names = "pme", "aer";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> @@ -577,9 +577,9 @@
+>  			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
+>  			       0x50 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <0 162 0x4>,
+> -				     <0 161 0x4>;
+> -			interrupt-names = "intr", "pme";
+> +			interrupts = <0 161 0x4>,
+> +					 <0 162 0x4>;
+> +			interrupt-names = "pme", "aer";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi 
+> b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> index 21023a3..58844e8 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
+> @@ -583,8 +583,8 @@
+>  			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
+>  			       0x10 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <0 108 0x4>; /* Level high type */
+> -			interrupt-names = "intr";
+> +			interrupts = <0 108 0x4>; /* aer interrupt */
+> +			interrupt-names = "aer";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> @@ -607,8 +607,8 @@
+>  			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
+>  			       0x12 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <0 113 0x4>; /* Level high type */
+> -			interrupt-names = "intr";
+> +			interrupts = <0 113 0x4>; /* aer interrupt */
+> +			interrupt-names = "aer";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> @@ -631,8 +631,8 @@
+>  			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
+>  			       0x14 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <0 118 0x4>; /* Level high type */
+> -			interrupt-names = "intr";
+> +			interrupts = <0 118 0x4>; /* aer interrupt */
+> +			interrupt-names = "aer";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> @@ -655,8 +655,8 @@
+>  			reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
+>  			       0x16 0x00000000 0x0 0x00002000>; /* configuration space */
+>  			reg-names = "regs", "config";
+> -			interrupts = <0 123 0x4>; /* Level high type */
+> -			interrupt-names = "intr";
+> +			interrupts = <0 123 0x4>; /* aer interrupt */
+> +			interrupt-names = "aer";
+>  			#address-cells = <3>;
+>  			#size-cells = <2>;
+>  			device_type = "pci";
+> --
+> 2.1.0.27.g96db324
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" 
+> in the body of a message to majordomo@vger.kernel.org More majordomo 
+> info at  http://vger.kernel.org/majordomo-info.html
