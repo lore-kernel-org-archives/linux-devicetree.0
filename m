@@ -1,28 +1,125 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 5/9] Documentation: dt-bindings: Add IRQ related
- properties of STM32 pinctrl
-Date: Tue, 13 Sep 2016 14:47:04 +0200
-Message-ID: <CACRpkdYGHHFDRq1jc1FYcjAw1nmAd0pLnFigR_Q55wQMTu4LCw@mail.gmail.com>
-References: <1473432124-6784-1-git-send-email-alexandre.torgue@st.com>
- <1473432124-6784-6-git-send-email-alexandre.torgue@st.com>
- <CACRpkdbZtNscuJ0bQMYt09ZKACQ0PBG8XMmGo7XnDy5fMGk9_g@mail.gmail.com> <0359b2c7-cda5-b744-7051-4b19af0fcfcd@st.com>
+From: Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 00/22] Generic DT bindings for PCI IOMMUs and ARM SMMU
+Date: Tue, 13 Sep 2016 14:57:59 +0200
+Message-ID: <88a3891b-643c-8db0-5219-d113d3c99cca@redhat.com>
+References: <cover.1473695704.git.robin.murphy@arm.com>
+ <92f27a6b-9752-516d-3924-c552fc6a5ace@redhat.com>
+ <e24821be-5cc4-52b3-f961-1eb32cf58293@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <0359b2c7-cda5-b744-7051-4b19af0fcfcd@st.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e24821be-5cc4-52b3-f961-1eb32cf58293-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org, punit.agrawal-5wv7dgnIgG8@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 13, 2016 at 2:34 PM, Alexandre Torgue
-<alexandre.torgue@st.com> wrote:
+Hi Robin,
 
-> I'll send a patch for Documentation.
-> Do I need to wait  this series is officially released (4.9-rc1) or can I
-> send it now ?
+On 13/09/2016 14:40, Robin Murphy wrote:
+> Hi Eric,
+> 
+> On 13/09/16 13:14, Auger Eric wrote:
+>> Hi Robin
+>>
+>> On 12/09/2016 18:13, Robin Murphy wrote:
+>>> Hi all,
+>>>
+>>> To any more confusing fixups and crazily numbered extra patches, here's
+>>> a quick v7 with everything rebased into the right order. The significant
+>>> change this time is to implement iommu_fwspec properly from the start,
+>>> which ends up being far simpler and more robust than faffing about
+>>> introducing it somewhere 'less intrusive' to move toward core code later.
+>>>
+>>> New branch in the logical place:
+>>>
+>>> git://linux-arm.org/linux-rm iommu/generic-v7
+>> I just tested your branch on AMD overdrive *without* updating the device
+>> tree description according to the new syntax and I get a kernel oops.
+>> See logs attached. Continuing my investigations ...
+> 
+> Looking at that backtrace, it seems the offending commit is actually in
+> Will's devel branch _underneath_ this series; what's blowing up there is
+> the short-descriptor io-pgtable selftests, which you should be able to
+> reproduce on anything back to 4.6-rc1 with
+> CONFIG_IOMMU_IO_PGTABLE_ARMV7S_SELFTEST=y.
+I confirm that when disabling the option, I don't get the oops anymore.
 
-No just send it now, I'll apply it directly on top.
+Thanks!
 
-Yours,
-Linus Walleij
+Eric
+> 
+> The short-descriptor code is never going to work on Seattle due to the
+> lack of 32-bit addressable memory - in normal use it would fail
+> gracefully because it couldn't allocate anything, but since the
+> selftests bypass the DMA API and corresponding checks, you end up with
+> nastiness happening via truncated addresses. A while back I did start
+> looking into generalising the selftests to remove all the "if
+> (!selftest_running)" special-casing; might be time to pick that up again.
+> 
+> Robin.
+> 
+>>
+>> Best Regards
+>>
+>> Eric
+>>>
+>>> Robin.
+>>>
+>>> Mark Rutland (1):
+>>>   Docs: dt: add PCI IOMMU map bindings
+>>>
+>>> Robin Murphy (21):
+>>>   of/irq: Break out msi-map lookup (again)
+>>>   iommu/of: Handle iommu-map property for PCI
+>>>   iommu: Introduce iommu_fwspec
+>>>   Docs: dt: document ARM SMMUv3 generic binding usage
+>>>   iommu/arm-smmu: Fall back to global bypass
+>>>   iommu/arm-smmu: Implement of_xlate() for SMMUv3
+>>>   iommu/arm-smmu: Support non-PCI devices with SMMUv3
+>>>   iommu/arm-smmu: Set PRIVCFG in stage 1 STEs
+>>>   iommu/arm-smmu: Handle stream IDs more dynamically
+>>>   iommu/arm-smmu: Consolidate stream map entry state
+>>>   iommu/arm-smmu: Keep track of S2CR state
+>>>   iommu/arm-smmu: Refactor mmu-masters handling
+>>>   iommu/arm-smmu: Streamline SMMU data lookups
+>>>   iommu/arm-smmu: Add a stream map entry iterator
+>>>   iommu/arm-smmu: Intelligent SMR allocation
+>>>   iommu/arm-smmu: Convert to iommu_fwspec
+>>>   Docs: dt: document ARM SMMU generic binding usage
+>>>   iommu/arm-smmu: Wire up generic configuration support
+>>>   iommu/arm-smmu: Set domain geometry
+>>>   iommu/dma: Add support for mapping MSIs
+>>>   iommu/dma: Avoid PCI host bridge windows
+>>>
+>>>  .../devicetree/bindings/iommu/arm,smmu-v3.txt      |   8 +-
+>>>  .../devicetree/bindings/iommu/arm,smmu.txt         |  63 +-
+>>>  .../devicetree/bindings/pci/pci-iommu.txt          | 171 ++++
+>>>  arch/arm64/mm/dma-mapping.c                        |   2 +-
+>>>  drivers/gpu/drm/exynos/exynos_drm_iommu.h          |   2 +-
+>>>  drivers/iommu/Kconfig                              |   2 +-
+>>>  drivers/iommu/arm-smmu-v3.c                        | 386 +++++----
+>>>  drivers/iommu/arm-smmu.c                           | 962 ++++++++++-----------
+>>>  drivers/iommu/dma-iommu.c                          | 161 +++-
+>>>  drivers/iommu/iommu.c                              |  56 ++
+>>>  drivers/iommu/of_iommu.c                           |  52 +-
+>>>  drivers/irqchip/irq-gic-v2m.c                      |   3 +
+>>>  drivers/irqchip/irq-gic-v3-its.c                   |   3 +
+>>>  drivers/of/irq.c                                   |  78 +-
+>>>  drivers/of/of_pci.c                                | 102 +++
+>>>  include/linux/device.h                             |   3 +
+>>>  include/linux/dma-iommu.h                          |  12 +-
+>>>  include/linux/iommu.h                              |  38 +
+>>>  include/linux/of_pci.h                             |  10 +
+>>>  19 files changed, 1323 insertions(+), 791 deletions(-)
+>>>  create mode 100644 Documentation/devicetree/bindings/pci/pci-iommu.txt
+>>>
+>>
+>>
+>>
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
