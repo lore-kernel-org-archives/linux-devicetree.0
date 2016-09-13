@@ -1,209 +1,81 @@
-From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: dts: imx6ul: Add DTS for liteBoard
-Date: Tue, 13 Sep 2016 11:49:51 +0200
-Message-ID: <20160913094951.26394-2-m.niestroj@grinn-global.com>
-References: <20160913094951.26394-1-m.niestroj@grinn-global.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160913094951.26394-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] iio: dt-bindings: add documentation for Light&Proximity sensor STK331x
+Date: Tue, 13 Sep 2016 11:53:20 +0200
+Message-ID: <2244323.LAARBqky8d@phil>
+References: <1473758822-17955-1-git-send-email-andy.yan@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1473758822-17955-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: jic23@kernel.org, knaack.h@gmx.de, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, lars@metafoo.de, mark.rutland@arm.com, pmeerw@pmeerw.net
 List-Id: devicetree@vger.kernel.org
 
-liteBoard is a development board which uses liteSOM as its base.
+Hi,
 
-Hardware specification:
- * liteSOM (i.MX6UL, DRAM, eMMC)
- * Ethernet PHY (id 0)
- * USB host (usb_otg1)
- * MicroSD slot (uSDHC1)
+Am Dienstag, 13. September 2016, 17:27:02 CEST schrieb Andy Yan:
+> Add the device tree binding documentation for Light & Proximity sensor
+> STK331X from Sensortek
+> 
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> ---
+> 
+>  .../devicetree/bindings/iio/light/stk3310.txt       | 21
+> +++++++++++++++++++++ 1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/stk3310.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/stk3310.txt
+> b/Documentation/devicetree/bindings/iio/light/stk3310.txt new file mode
+> 100644
+> index 0000000..d697118
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/stk3310.txt
+> @@ -0,0 +1,21 @@
+> +* Sensortek STK331X I2C Light&Proximity sensor
+> +
+> +Required properties:
+> +- compatible: should be "sensortek,STK3310" or "sensortek,STK3311"
 
-Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
----
-Changes v1 -> v2:
- * Use dual license
- * Fix typo "defaullt" -> "default"
+I guess that is more a question for Rob / Jonathan regarding the casing.
 
- arch/arm/boot/dts/Makefile             |   1 +
- arch/arm/boot/dts/imx6ul-liteboard.dts | 153 +++++++++++++++++++++++++++++++++
- 2 files changed, 154 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-liteboard.dts
+The stk3310 drivers currently provides both an acpi as well as an i2c module 
+table and in both the naming is in upper-case ... probably the i2c table being 
+simply a copy of the acpi table.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index faacd52..b149313 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -407,6 +407,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
- 	imx6sx-sdb.dtb
- dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-14x14-evk.dtb \
-+	imx6ul-liteboard.dtb \
- 	imx6ul-pico-hobbit.dtb \
- 	imx6ul-tx6ul-0010.dtb \
- 	imx6ul-tx6ul-0011.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-liteboard.dts b/arch/arm/boot/dts/imx6ul-liteboard.dts
-new file mode 100644
-index 0000000..f2e04f2
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-liteboard.dts
-@@ -0,0 +1,153 @@
-+/*
-+ * Copyright 2016 Grinn
-+ *
-+ * Author: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6ul-litesom.dtsi"
-+
-+/ {
-+	model = "Grinn i.MX6UL liteBoard";
-+	compatible = "grinn,imx6ul-liteboard", "grinn,imx6ul-litesom",
-+		     "fsl,imx6ul";
-+
-+	chosen {
-+		stdout-path = &uart1;
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg_usb_otg1_vbus: usb_otg1_regulator {
-+			compatible = "regulator-fixed";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usb_otg1_vbus>;
-+			regulator-name = "usb_otg1_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			gpio = <&gpio2 8 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl_enet1: enet1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_GPIO1_IO07__ENET1_MDC		0x1b0b0
-+			MX6UL_PAD_GPIO1_IO06__ENET1_MDIO	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00 0x1b0b0
-+			MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01 0x1b0b0
-+			MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00 0x1b0b0
-+			MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01 0x1b0b0
-+			MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX	0x1b0b1
-+			MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x17059
-+			MX6UL_PAD_SD1_CMD__USDHC1_CMD		0x17059
-+			MX6UL_PAD_SD1_CLK__USDHC1_CLK		0x10071
-+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0	0x17059
-+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1	0x17059
-+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2	0x17059
-+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3	0x17059
-+		>;
-+	};
-+
-+	pinctrl_usb_otg1_vbus: usb_otg1_vbus {
-+		fsl,pins = <
-+			MX6UL_PAD_ENET2_RX_DATA0__GPIO2_IO08	0x79
-+		>;
-+	};
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy0>;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			reg = <0>;
-+		};
-+	};
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	vbus-supply = <&reg_usb_otg1_vbus>;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	cd-gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
-+	no-1-8-v;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	status = "okay";
-+};
--- 
-2.9.3
+By using the i2c-quirk of extracting the i2c-id from the compatible, the 
+binding here would codify this upper case, while normally i2c tables as well 
+as dt-bindings are all lower case. 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Looking at kernel c-code and current mainline devicetree files, it doesn't look 
+like the i2c-ids gets used anywhere yet, so I guess we could do:
+
+- keep acpi-ids as they are
+- make i2c-ids lower-case
+- make dt-binding lower-case (and it can still use the i2c quirk to not need a 
+separate of id-table)
+
+alternatively we could also just add a separate of-id table with the lower-
+case compatible elements.
+
+
+Heiko
+
+> +- reg: the I2C address of the device
+> +- interrupt-parent: phandle to the parent interrupt controller
+> +- interrupts: interrupt mapping for GPIO IRQ
+> +
+> +Example:
+> +	&i2c1 {
+> +		/* ... */
+> +
+> +		stk3310@48 {
+> +			compatible = "sensortek,STK3310";
+> +			reg = <0x48>;
+> +			interrupt-parent = <&gpio1>;
+> +			interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
+> +		};
+> +
+> +		/* ... */
+> +	};
