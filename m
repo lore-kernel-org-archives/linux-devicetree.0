@@ -1,79 +1,55 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 1/8] ARM: dts: bcm283x: Define standard pinctrl groups in the gpio node.
-Date: Mon, 12 Sep 2016 23:09:30 -0700
-Message-ID: <87bmzse3fp.fsf@eliezer.anholt.net>
-References: <1473244289-20728-1-git-send-email-kraxel@redhat.com> <1473244289-20728-2-git-send-email-kraxel@redhat.com> <1628308726.55593.220fafc0-57d9-4317-a72d-0875dfb2d658.open-xchange@email.1und1.de> <1473411924.6698.85.camel@redhat.com> <8737l893d2.fsf@eliezer.anholt.net> <7f432ebf-78d9-9089-f79d-d0584de89887@destevenson.freeserve.co.uk>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: ARM, SoC: About the use DT-defined properties by 3rd-party
+ drivers
+Date: Tue, 13 Sep 2016 16:47:30 +0100
+Message-ID: <20160913154722.GD23336@leverpostej>
+References: <CAOZdJXVjsR3NTWiJX33yT3jYk=FU65raWoMooTLD7OMN3sqP-A@mail.gmail.com>
+ <57D69FB1.2020801@laposte.net>
+ <20160912123809.GB13741@leverpostej>
+ <57D6AA54.6000208@laposte.net>
+ <20160912135549.GA14165@leverpostej>
+ <57D6D2A9.3010006@laposte.net>
+ <20160912165637.GF14165@leverpostej>
+ <57D7CF17.2050905@laposte.net>
+ <20160913131208.GA23336@leverpostej>
+ <57D8137F.8040508@laposte.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7f432ebf-78d9-9089-f79d-d0584de89887@destevenson.freeserve.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Stevenson <linux-rpi-kernel@destevenson.freeserve.co.uk>, Gerd Hoffmann <kraxel@redhat.com>, Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57D8137F.8040508-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Tue, Sep 13, 2016 at 04:55:59PM +0200, Sebastian Frias wrote:
+> On 09/13/2016 03:12 PM, Mark Rutland wrote:
+> >> Exactly, that is why I was thinking it would take less "review" time.
+> >> Indeed, if there is no driver, why would it matter what those bindings
+> >> are?
+> > 
+> > If you believe that the bindings don't matter, then there is absolutely
+> > no reason for them to exist in the first place.
+> > 
+> > If those binding matter to *anyone*, then those collating the bindings
+> > have some responsibility of stewardship, and that includes
+> > review/maintenance/etc.
+> 
+> The thing is that right now it seems the "responsibility of stewardship"
+> lies only within "Linux", whereas DT is proposed as open for everybody,
+> Bootloaders, FreeBSD, etc.
+> 
+> In that case, shouldn't the "responsibility" be shared?
 
-Dave Stevenson <linux-rpi-kernel@destevenson.freeserve.co.uk> writes:
+Ideally, yes.
 
-> On 09/09/16 22:20, Eric Anholt wrote:
->> e<#secure method=3Dpgpmime mode=3Dsign>
->> Gerd Hoffmann <kraxel@redhat.com> writes:
->>
->>>    Hi,
->>>
->>>> According to this page [1] the pinctrl group for parallel display inte=
-rface is
->>>> missing. Is it intended?
->>>>
->>>> [1] - http://elinux.org/RPi_BCM2835_GPIOs
->>> Just an oversight I guess.  Eric?
->>>
->>> Does this look correct?
->>>
->>> +                       dpi_gpio4: dpi_gpio4 {
->>> +                               brcm,pins =3D <4 5 6 7 8 9 10 11 12 13
->>> +                                            14 15 16 17 18 19 20 21
->>> +                                            22 23 24 25 26 27>;
->>> +                               brcm,function =3D <BCM2835_FSEL_ALT2>;
->>> +                       };
->> For DPI, you also need pins 0-3 in there for clock and syncs.
->>
->> That set of data pins would be for a 24-bit mode, which is what we
->> should be using for the Adafruit kippah + 7" panel combo.
-> The Kippah is only 18bit, RGB666.
-> https://www.adafruit.com/products/2454
-> "The pins used are GPIO 2 through 21 inclusive. That means you don't get=
-=20
-> the UART RX/TX pins (no console cable) and you don't get the standard=20
-> user I2C pins, the EEPROM I2C pins, or hardware SPI pins. You do get to=20
-> use pins #22, #23, #24, #25, #26 and #27, and the USB ports are fine to=20
-> use too."
+Which is one of the reasons devicetree.org was set up as a common forum
+for projects to collaborate on devicetree.
 
-I was confused because my pinctrl was set up for 18, but the panel
-driver for it is set up for 24.  It looks like 18 is right, so I should
-probably correct the panel driver.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCgAGBQJX15gaAAoJELXWKTbR/J7otZMP/05pwgw3YPwXMHLbUupm/zuA
-9y27V4auuxd5UXzYOkMB8imZhSlxm8BhSBSBtz2wVTVZpYPcw5RWUCwbb3XV/x7g
-1Cyi7eCh7c38o2SwE8QvedIG6hGqihM18lLVsS0piMwLSY6lMSbeLaHJNW0Qw1/l
-XIGUxR86F3pvYJvfDIfQVWlpcTDJsN/37C7KrdHPswhTuEghsP6CfB9beohwDS6Y
-w3YAutkR4fZ6WW0MeSlPvH3Zhb0mUtNPx3jWw+oQQ6QceIJlSlLGpM/1EzqqvzdT
-YnA2YJwYqP73dXakZWZ7d1vEeLLyBAJ74cyLg6+u/69F8zqeHapUe4Yi5dV/Mz3S
-fDoj03fprj0FKOPKg/gyThCNBsWheeSA8al4fgllbboor48XOKyvmqAhabg1R8no
-uJR8UTMnS31zr/DU1QI/fjWNKLqL6ZKrC3EMhuxnKHPt9MjcU57OUo6eNN+6pTVI
-DRpY/J7k5bPNnKJQJN+Wy3q6qvPrbu5eUYEDK1AnUMvPG91otVq5cLSl9atzVsWm
-9WqarA6+YCAKbVXmURFxiIGRBm0x8jGrtJrqN0nxHVsUdsx3u+Inww0qJRwCvjkH
-csp3g/nCXVJEYI2NrZbs7+Rqz64ZLH9V0nib0GK3KanyN+NLjou5G8N6WKuroL5X
-3mo1FdfN8rz2b6kC6QgB
-=j95d
------END PGP SIGNATURE-----
---=-=-=--
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
