@@ -1,99 +1,132 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] mfd: Add HiSilicon Flash Memory Controller(FMC) driver
-Date: Tue, 13 Sep 2016 09:56:07 -0500
-Message-ID: <20160913145607.GA11998@rob-hp-laptop>
-References: <1473130643-12310-1-git-send-email-linshunquan1@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1473130643-12310-1-git-send-email-linshunquan1@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linshunquan 00354166 <linshunquan1@hisilicon.com>
-Cc: mark.rutland@arm.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, howell.yang@hisilicon.com, xuejiancheng@hisilicon.com, jalen.hsu@hisilicon.com, lvkuanliang@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, kevin.lixu@hisilicon.com
+From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v3 4/4] arm: dts: qcom: apq8064-ifc6410: Add HDMI support
+Date: Tue, 13 Sep 2016 20:51:37 +0530
+Message-ID: <1473780097-11388-5-git-send-email-architt@codeaurora.org>
+References: <1472737015-29382-1-git-send-email-architt@codeaurora.org>
+ <1473780097-11388-1-git-send-email-architt@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1473780097-11388-1-git-send-email-architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 06, 2016 at 10:57:22AM +0800, linshunquan 00354166 wrote:
-> From: Shunquan Lin <linshunquan1@hisilicon.com>
-> 
-> This patch adds driver support for HiSilicon Flash Memory
-> Controller(FMC). HiSilicon FMC is a multi-functions device which
-> supports SPI Nor flash controller, SPI nand Flash controller and
-> parallel nand flash controller.
-> 
-> Signed-off-by: Shunquan Lin <linshunquan1@hisilicon.com>
-> ---
->  .../devicetree/bindings/mfd/hisilicon,hisi-fmc.txt |  54 ++++++++++
->  drivers/mfd/Kconfig                                |  10 ++
->  drivers/mfd/Makefile                               |   1 +
->  drivers/mfd/hisi_fmc.c                             | 109 +++++++++++++++++++++
->  include/linux/mfd/hisi_fmc.h                       |  92 +++++++++++++++++
->  5 files changed, 266 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hisi-fmc.txt
->  create mode 100644 drivers/mfd/hisi_fmc.c
->  create mode 100644 include/linux/mfd/hisi_fmc.h
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/hisilicon,hisi-fmc.txt b/Documentation/devicetree/bindings/mfd/hisilicon,hisi-fmc.txt
-> new file mode 100644
-> index 0000000..cdaa0bf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/hisilicon,hisi-fmc.txt
-> @@ -0,0 +1,54 @@
-> +HiSilicon Flash Memory Controller
-> +
-> +The HiSilicon Flash Memory Controller(FMC) is a feature-rich controller
-> +that supports SPI Nor, SPI Nand and Parallel Nand devices. This document
-> +describes the binding for HiSilicon FMC device and its sub-notes.
-> +
-> +Required properties:
-> +- compatible : Should be "hisilicon,hisi-fmc".
-> +- reg : Offset and length of the register set for the controller device.
-> +- reg-names : Must include the following two entries: "control", "memory".
-> +- address-cells : Should be 1.
-> +- size-cells : Should be 0.
-> +- clocks : A phandle to the HiSilicon FMC controller clock.
-> +
-> +Optional sub-nodes:
-> +	- spi-nor:
-> +	Required properties:
-> +		- compatible : "hisilicon,fmc-spi-nor"
-> +	see "Documentation/devicetree/bindings/mtd/hisilicon,fmc-spi-nor.txt
-> +
-> +	- spi-nand:
-> +	Required properties:
-> +		- compatible : "hisilicon,fmc-spi-nand"
-> +		- reg : The chipselect for spi-nand devices
-> +		- address-cells : Should be 1.
-> +		- size-cells : Should be 0.
-> +
-> +	- nand:
-> +	Required properties:
-> +		- compatible : "hisilicon,fmc-nand"
-> +		- reg : The chipselect for nand devices
-> +		- address-cells : Should be 1.
-> +		- size-cells : Should be 0.
-> +
-> +Example:
-> +fmc: spi-nor-controller@10000000 {
-> +		 compatible = "hisilicon,hisi-fmc";
-> +		 reg = <0x10000000 0x1000>, <0x14000000 0x1000000>;
-> +		 reg-names = "control", "memory";
-> +		 clocks = <&crg FMC_CLK>;
-> +		 #address-cells = <1>;
-> +		 #size-cells = <0>;
-> +
-> +		 hisfc:spi-nor@0 {
-> +				   compatible = "hisilicon,fmc-spi-nor";
+Add HDMI support on IFC6410. Populate the regulators required by HDMI-TX
+and PHY. Establish the link between the MDP4 DTV encoder and HDMI. Create
+a generic micro HDMI connector DT node. The msm drm driver doesn't parse
+for HDMI connectors in DT, but it will do so later.
 
-Is this an actual h/w sub-block? If not remove this node and make the 
-spi-nor the immediate child.
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-> +				   #address-cells = <1>;
-> +				   #size-cells = <0>;
-> +				   hi_sfc {
-> +					   compatible = "jedec,spi-nor";
-> +					   reg = <0>;
-> +				   };
-> +		};
-> +
-> +};
+Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 74 ++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+index 2eeb090..3d37cab 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+@@ -43,6 +43,17 @@
+ 		};
+ 	};
+ 
++	hdmi-out {
++		compatible = "hdmi-connector";
++		type = "d";
++
++		port {
++			hdmi_con: endpoint {
++				remote-endpoint = <&hdmi_out>;
++			};
++		};
++	};
++
+ 	soc {
+ 		pinctrl@800000 {
+ 			card_detect: card_detect {
+@@ -64,6 +75,25 @@
+ 					bias-disable;
+ 				};
+ 			};
++
++			hdmi_pinctrl: hdmi-pinctrl {
++				mux {
++					pins = "gpio70", "gpio71", "gpio72";
++					function = "hdmi";
++				};
++
++				pinconf_ddc {
++					pins = "gpio70", "gpio71";
++					bias-pull-up;
++					drive-strength = <2>;
++				};
++
++				pinconf_hpd {
++					pins = "gpio72";
++					bias-pull-down;
++					drive-strength = <16>;
++				};
++			};
+ 		};
+ 
+ 		rpm@108000 {
+@@ -329,5 +359,49 @@
+ 				mmc-pwrseq = <&sdcc4_pwrseq>;
+ 			};
+ 		};
++
++		hdmi-tx@4a00000 {
++			status = "okay";
++
++			core-vdda-supply = <&pm8921_hdmi_switch>;
++			hdmi-mux-supply = <&ext_3p3v>;
++
++			hpd-gpios = <&tlmm_pinmux 72 GPIO_ACTIVE_HIGH>;
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&hdmi_pinctrl>;
++
++			ports {
++				port@0 {
++					endpoint {
++						remote-endpoint = <&mdp_dtv_out>;
++					};
++				};
++
++				port@1 {
++					endpoint {
++						remote-endpoint = <&hdmi_con>;
++					};
++				};
++			};
++		};
++
++		hdmi-phy@4a00400 {
++			status = "okay";
++
++			core-vdda-supply = <&pm8921_hdmi_switch>;
++		};
++
++		mdp@5100000 {
++			status = "okay";
++
++			ports {
++				port@3 {
++					endpoint {
++						remote-endpoint = <&hdmi_in>;
++					};
++				};
++			};
++		};
+ 	};
+ };
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
