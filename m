@@ -1,150 +1,79 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 4/7] phy: meson: add USB2 PHY support for Meson8b and
- GXBB
-Date: Tue, 13 Sep 2016 17:28:28 +0200
-Message-ID: <1473780508.10237.22.camel@pengutronix.de>
-References: <20160904213152.25837-1-martin.blumenstingl@googlemail.com>
-         <20160904213152.25837-5-martin.blumenstingl@googlemail.com>
-         <m260q6jibf.fsf@baylibre.com>
-         <CAFBinCA4Yvw5pbOFmJ8SqyOASADavyEPmHywSdOiUazcqe_Zmg@mail.gmail.com>
-         <e3b1f611-d6f6-c98b-a53b-98e94ef5bd96@codethink.co.uk>
-         <m2eg4ui0nl.fsf@baylibre.com>
-         <ffdd0188-72bc-4575-f997-e8547f4c31d2@codethink.co.uk>
-         <CAFBinCC4gkMrJtertYevg_hXDLJEZ0PqfKKLL5UKXo8B=SXsPw@mail.gmail.com>
-         <m2sht9gkau.fsf@baylibre.com>
-         <CAFBinCDohOoFP_3GC+=tt6S7sPS308ao-yf+oGhdfwo-N-JnAA@mail.gmail.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 1/8] ARM: dts: bcm283x: Define standard pinctrl groups in the gpio node.
+Date: Mon, 12 Sep 2016 23:09:30 -0700
+Message-ID: <87bmzse3fp.fsf@eliezer.anholt.net>
+References: <1473244289-20728-1-git-send-email-kraxel@redhat.com> <1473244289-20728-2-git-send-email-kraxel@redhat.com> <1628308726.55593.220fafc0-57d9-4317-a72d-0875dfb2d658.open-xchange@email.1und1.de> <1473411924.6698.85.camel@redhat.com> <8737l893d2.fsf@eliezer.anholt.net> <7f432ebf-78d9-9089-f79d-d0584de89887@destevenson.freeserve.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCDohOoFP_3GC+=tt6S7sPS308ao-yf+oGhdfwo-N-JnAA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7f432ebf-78d9-9089-f79d-d0584de89887@destevenson.freeserve.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dave Stevenson <linux-rpi-kernel@destevenson.freeserve.co.uk>, Gerd Hoffmann <kraxel@redhat.com>, Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Am Freitag, den 09.09.2016, 22:36 +0200 schrieb Martin Blumenstingl:
-> On Fri, Sep 9, 2016 at 5:33 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> > Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
-> >
-> >> On Thu, Sep 8, 2016 at 10:53 PM, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
-> >>> On 08/09/16 21:42, Kevin Hilman wrote:
-> >>>>
-> >>>> Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> writes:
-> >>>>
-> >>>>> On 08/09/16 20:52, Martin Blumenstingl wrote:
-> >>>>>>
-> >>>>>> On Thu, Sep 8, 2016 at 9:35 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> >>>>>> wrote:
-> >>>>>>>>
-> >>>>>>>> +     phy = devm_phy_create(&pdev->dev, NULL, &phy_meson_usb2_ops);
-> >>>>>>>> +     if (IS_ERR(phy)) {
-> >>>>>>>> +             dev_err(&pdev->dev, "failed to create PHY\n");
-> >>>>>>>> +             return PTR_ERR(phy);
-> >>>>>>>> +     }
-> >>>>>>>> +
-> >>>>>>>> +     if (usb_reset_refcnt++ == 0) {
-> >>>>>>>> +             ret = device_reset(&pdev->dev);
-> >>>>>>>> +             if (ret) {
-> >>>>>>>> +                     dev_err(&phy->dev, "Failed to reset USB PHY\n");
-> >>>>>>>> +                     return ret;
-> >>>>>>>> +             }
-> >>>>>>>> +     }
-> >>>>>>>
-> >>>>>>>
-> >>>>>>> The ref count + reset here looks like something that could/should be
-> >>>>>>> handled in a runtime PM callback.
-> >>>>>>
-> >>>>>> Unfortunately that doesn't work (as Jerome found out) because both
-> >>>>>> PHYs are sharing the same reset line.
-> >>>>>> So if the second PHY would call device_reset then it would also reset
-> >>>>>> the first PHY!
-> >>>>>>
-> >>>>>> There's a comment above the declaration of usb_reset_refcnt which
-> >>>>>> tries to explain this:
-> >>>>>> "The PHYs are sharing a common reset line -> we are only allowed to
-> >>>>>> reset once for all PHYs."
-> >>>>>> Maybe I should move this comment to the "if (usb_reset_refcnt++ == 0)
-> >>>>>> {" line to make it easier to see?
-> >>>>>>
-> >>>>>
-> >>>>> pm-runtime has refcounting in it. When one of the nodes turns on,
-> >>>>> the pm-runtime will call your driver to say there is a user when
-> >>>>> this first use turns up.
-> >>>>>
-> >>>>> If all the sub-phys turn off and drop their refcount then the driver
-> >>>>> is called to say there are no more users and you can go to sleep.
-> >>>>
-> >>>>
-> >>>> After a chat w/Martin on IRC, It turns out runtime PM wont help here.
-> >>>>
-> >>>> The reason is because there are physically two PHY devices[1].  Those 2
-> >>>> devices will be treated independely by runtime PM, and have separate
-> >>>> use-counting, which means doing what I proposed would cause a reset to
-> >>>> happen when either device was probed.
-> >>>>
-> >>>> So, I think it's OK as it is.
-> >>>
-> >>>
-> >>> Surely you can do pm_runtime_get/put on the phy's parent platform
-> >>> device and do it that way?
-> >> could you please be more specific with that (do you mean pdev->dev.parent)?
-> >> so we would use pm_runtime_{get_sync,put} with the parent, while we
-> >> would still define the runtime_resume in our driver.
-> >
-> > You'd also need to do get/put on the children, but yes, that's what Ben
-> > is suggesting.
-> >
-> > However, the problem with all of the solutions proposed (runtime PM ones
-> > included) is that we're forcing a board-specific design issue (2 devices
-> > sharing a reset line) into a driver that should not have any
-> > board-specific assumptions in it.
-> >
-> > For example, if this driver is used on another platform where different
-> > PHYs have different reset lines, then one of them (the unlucky one who
-> > is not probed first) will never get reset.  So any form of per-device
-> > ref-counting is not a portable solution.
-> indeed, so in simple words we would need something like
-> reset_control_do_once(rstc, RESET/ASSERT/DEASSERT) which would
-> remember internally if any action has already been executed: if not it
-> does a _reset, _assert or _deassert and otherwise it does nothing.
-> 
-> > I'm not sure yet how the reset framework is supposed to handle shared
-> > reset lines, but that needs some investigation.  I quick glance and it
-> > seems that reset controllers can have shared lines, so that should be
-> > investigated.
-> I added Philipp and Hans to this thread - maybe they can comment on this.
-> To sum it up, our problem is:
-> - there are two separate USB PHYs on Meson GXBB
-> - both are sharing the same reset line (provided by the reset-meson driver)
-> - during initialization of the PHYs we must only call
-> reset_control_reset(rstc) once (if we do it for the first *and* second
-> PHY then the first PHY gets confused once the second PHY uses the
-> reset because the first PHY's state is reset as well)
+Dave Stevenson <linux-rpi-kernel@destevenson.freeserve.co.uk> writes:
 
-If you have an initially asserted reset line and you can enable the
-first module by deasserting the reset via reset_control_deassert (and
-reset_control_assert to signal when the module may be disabled again
-after use), shared resets are for you.
+> On 09/09/16 22:20, Eric Anholt wrote:
+>> e<#secure method=3Dpgpmime mode=3Dsign>
+>> Gerd Hoffmann <kraxel@redhat.com> writes:
+>>
+>>>    Hi,
+>>>
+>>>> According to this page [1] the pinctrl group for parallel display inte=
+rface is
+>>>> missing. Is it intended?
+>>>>
+>>>> [1] - http://elinux.org/RPi_BCM2835_GPIOs
+>>> Just an oversight I guess.  Eric?
+>>>
+>>> Does this look correct?
+>>>
+>>> +                       dpi_gpio4: dpi_gpio4 {
+>>> +                               brcm,pins =3D <4 5 6 7 8 9 10 11 12 13
+>>> +                                            14 15 16 17 18 19 20 21
+>>> +                                            22 23 24 25 26 27>;
+>>> +                               brcm,function =3D <BCM2835_FSEL_ALT2>;
+>>> +                       };
+>> For DPI, you also need pins 0-3 in there for clock and syncs.
+>>
+>> That set of data pins would be for a 24-bit mode, which is what we
+>> should be using for the Adafruit kippah + 7" panel combo.
+> The Kippah is only 18bit, RGB666.
+> https://www.adafruit.com/products/2454
+> "The pins used are GPIO 2 through 21 inclusive. That means you don't get=
+=20
+> the UART RX/TX pins (no console cable) and you don't get the standard=20
+> user I2C pins, the EEPROM I2C pins, or hardware SPI pins. You do get to=20
+> use pins #22, #23, #24, #25, #26 and #27, and the USB ports are fine to=20
+> use too."
 
-If you need a reset pulse or have no direct control over the reset line,
-(device_reset), the reset framework currently has no solution for this.
-The ugly thing about reset_control_once would be that it can't re-reset
-modules when unloading and reloading driver modules.
+I was confused because my pinctrl was set up for 18, but the panel
+driver for it is set up for 24.  It looks like 18 is right, so I should
+probably correct the panel driver.
 
-A real solution for shared reset lines with reset pulses would have to
-be some kind of reset request framework where if one module requests a
-reset, the other module sharing the reset could be notified, and then
-either veto the reset or, if possible, cease operations, store its
-state, and prepare to be reset, too, and afterwards restore state. I'd
-prefer not to think about this too much unless absolutely necessary.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-regards
-Philipp
+-----BEGIN PGP SIGNATURE-----
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBCgAGBQJX15gaAAoJELXWKTbR/J7otZMP/05pwgw3YPwXMHLbUupm/zuA
+9y27V4auuxd5UXzYOkMB8imZhSlxm8BhSBSBtz2wVTVZpYPcw5RWUCwbb3XV/x7g
+1Cyi7eCh7c38o2SwE8QvedIG6hGqihM18lLVsS0piMwLSY6lMSbeLaHJNW0Qw1/l
+XIGUxR86F3pvYJvfDIfQVWlpcTDJsN/37C7KrdHPswhTuEghsP6CfB9beohwDS6Y
+w3YAutkR4fZ6WW0MeSlPvH3Zhb0mUtNPx3jWw+oQQ6QceIJlSlLGpM/1EzqqvzdT
+YnA2YJwYqP73dXakZWZ7d1vEeLLyBAJ74cyLg6+u/69F8zqeHapUe4Yi5dV/Mz3S
+fDoj03fprj0FKOPKg/gyThCNBsWheeSA8al4fgllbboor48XOKyvmqAhabg1R8no
+uJR8UTMnS31zr/DU1QI/fjWNKLqL6ZKrC3EMhuxnKHPt9MjcU57OUo6eNN+6pTVI
+DRpY/J7k5bPNnKJQJN+Wy3q6qvPrbu5eUYEDK1AnUMvPG91otVq5cLSl9atzVsWm
+9WqarA6+YCAKbVXmURFxiIGRBm0x8jGrtJrqN0nxHVsUdsx3u+Inww0qJRwCvjkH
+csp3g/nCXVJEYI2NrZbs7+Rqz64ZLH9V0nib0GK3KanyN+NLjou5G8N6WKuroL5X
+3mo1FdfN8rz2b6kC6QgB
+=j95d
+-----END PGP SIGNATURE-----
+--=-=-=--
