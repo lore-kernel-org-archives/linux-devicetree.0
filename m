@@ -1,70 +1,126 @@
-From: jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org
-Subject: Re: [PATCH v4 1/1] iio:pressure: initial zpa2326 barometer support
-Date: Tue, 13 Sep 2016 09:52:31 +0100
-Message-ID: <0ebc56794afc97cf31782ccb6225446f@jic23.retrosnub.co.uk>
-References: <cover.1473432897.git.gregor.boirie@parrot.com>
- <68c225245eb4f4972f5acaa56bdbf9d25971f0f7.1473432897.git.gregor.boirie@parrot.com>
- <d6122349-5e8c-6708-b5af-a38f9e8bb898@kernel.org>
- <57D7B0F1.6030607@parrot.com>
+From: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v3] mfd: arizona: Add DT options for
+ max_channels_clocked and PDM speaker config
+Date: Tue, 13 Sep 2016 09:54:32 +0100
+Message-ID: <1473756872.4359.28.camel@rf-debian.wolfsonmicro.main>
+References: <1473076585-9823-1-git-send-email-rf@opensource.wolfsonmicro.com>
+         <20160912165342.GA25141@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57D7B0F1.6030607-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20160912165342.GA25141@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vlad Dogaru <ddvlad-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ludovic Tancerel <ludovic.tancerel-sbt5i+FMW2pmsedzY7GhzwC/G2K4zDHf@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Crestez Dan Leonard <leonard.crestez-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13.09.2016 08:55, Gregor Boirie wrote:
-> Hi,
+On Mon, 2016-09-12 at 11:53 -0500, Rob Herring wrote:
+> On Mon, Sep 05, 2016 at 12:56:25PM +0100, Richard Fitzgerald wrote:
+> > This patch adds DT settings for the max_channels_clocked, spk_fmt and
+> > spk_mute pdata.
+> > 
+> > Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/arizona.txt | 18 ++++++++++++++
+> >  drivers/mfd/arizona-core.c                        | 30 +++++++++++++++++++++++
+> >  2 files changed, 48 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> > index a6e2ea41..8f2e282 100644
+> > --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> > @@ -85,6 +85,24 @@ Optional properties:
+> >      present, the number of values should be less than or equal to the
+> >      number of inputs, unspecified inputs will use the chip default.
+> >  
+> > +  - wlf,max-channels-clocked : The maximum number of channels to be clocked on
+> > +    each AIF, useful for I2S systems with multiple data lines being mastered.
+> > +    Specify one cell for each AIF to be configured, specify zero for AIFs that
+> > +    should be handled normally.
+> > +    If present, number of cells must be less than or equal to the number of
+> > +    AIFs. If less than the number of AIFs, for cells that have not been
+> > +    specified the corresponding AIFs will be treated as default setting.
+> > +
+> > +  - wlf,spk-fmt : PDM speaker data format, must contain 2 cells (OUT5 and OUT6).
+> > +    See the datasheet for values.
+> > +    The second cell is ignored for codecs that do not have OUT6 (wm5102, wm8997,
+> > +      wm8998, wm1814)
+> > +
+> > +  - wlf,spk-mute : PDM speaker mute setting, must contain 2 cells (OUT5 and OUT6).
+> > +    See the datasheet for values.
+> > +    The second cell is ignored for codecs that do not have OUT6 (wm5102, wm8997,
+> > +    wm8998, wm1814)
+> > +
+> >    - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
+> >      they are being externally supplied. As covered in
+> >      Documentation/devicetree/bindings/regulator/regulator.txt
+> > diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+> > index fa267fa..c621c46 100644
+> > --- a/drivers/mfd/arizona-core.c
+> > +++ b/drivers/mfd/arizona-core.c
+> > @@ -813,6 +813,7 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
+> >  	struct property *prop;
+> >  	const __be32 *cur;
+> >  	u32 val;
+> > +	u32 pdm_val[ARIZONA_MAX_PDM_SPK];
+> >  	int ret, i;
+> >  	int count = 0;
+> >  
+> > @@ -869,6 +870,35 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
+> >  		count++;
+> >  	}
+> >  
+> > +	count = 0;
+> > +	of_property_for_each_u32(arizona->dev->of_node,
+> > +				 "wlf,max-channels-clocked",
+> > +				 prop, cur, val) {
+> > +		if (count == ARRAY_SIZE(pdata->max_channels_clocked))
+> > +			break;
+> > +
+> > +		pdata->max_channels_clocked[count] = val;
+> > +		count++;
+> > +	}
+> > +
+> > +	ret = of_property_read_u32_array(arizona->dev->of_node,
+> > +					 "wlf,spk-fmt",
+> > +					 pdm_val,
+> > +					 ARRAY_SIZE(pdm_val));
 > 
-> On 09/10/2016 05:37 PM, Jonathan Cameron wrote:
->> On 09/09/16 16:01, Gregor Boirie wrote:
->>> Introduce driver for Murata ZPA2326 pressure and temperature sensor:
->>> http://www.murata.com/en-us/products/productdetail?partno=ZPA2326-0311A-R
->>> 
->>> Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
->> This looks pretty good to me now.  A few minor bits and bobs inline.
->> 
->> I almost took it as is, but would like to have it sit on the list
->> in it's current form for a few more days anyway so might as well get
->> these few corners tidied up!
-> [...]
->> 
->> +/*
->> + * Debugfs stuff
->> + *
->> + * We want to prevent debugfs hooks from altering configuration while 
->> chip
->> + * sampling is ongoing to preserve data consistency. Moreover, a few 
->> registers,
->> + * when read, change hardware state, e.g. interrupt acknowlege on 
->> read. This is
->> + * why debugfs read and write hooks acquire exclusive access to 
->> register space.
->> + *
->> + * Also note this is mostly unusable with power management enabled 
->> systems since
->> + * registers content is lost during power off -> on transitions.
->> + */
->> It would be nice perhaps to tighten up the range of addresses that
->> we are protecting.  Thus allow reading of any addresses that are not
->> 'fragile'.  Only supported limited debug access is hardly a big
->> issue however ;)
-> Quite frankly, I wonder if this debugfs stuff should not be thrown
-> away given that
-> regmap already provides a way to access registers over debugfs (with
-> very limited
-> protection...).
-> What do you think ?
+> Why are you using this intermediate buffer?
 > 
-> [...]
-Agreed. Bin it.
+
+Because targets are not u32
+
+> > +
+> > +	if (ret >= 0)
+> > +		for (count = 0; count < ARRAY_SIZE(pdata->spk_fmt); ++count)
+> > +			pdata->spk_fmt[count] = pdm_val[count];
+> > +
+> > +	ret = of_property_read_u32_array(arizona->dev->of_node,
+> > +					 "wlf,spk-mute",
+> > +					 pdm_val,
+> > +					 ARRAY_SIZE(pdm_val));
+> > +
+> > +	if (ret >= 0)
+> > +		for (count = 0; count < ARRAY_SIZE(pdata->spk_fmt); ++count)
 > 
-> Regards,
-> Grégor.
+> s/spk_fmt/spk_mute/
+> 
+
+Damn!, I read and re-read and re-re-read that code so many times to make
+sure I had the right names
+
+> > +			pdata->spk_mute[count] = pdm_val[count];
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > -- 
+> > 1.9.1
+> > 
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
