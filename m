@@ -1,42 +1,120 @@
-From: Bui Duc Phuc <bd-phuc@jinso.co.jp>
-Subject: Re: [PATCH 1/8] devicetree: binding: R-car Gen3 CMT0 and CMT1
- bindings
-Date: Tue, 13 Sep 2016 00:12:08 +0900
-Message-ID: <7916c4bd-94a1-0d87-e2dc-2fd852976cfc@jinso.co.jp>
-References: <1473421394-9745-1-git-send-email-bd-phuc@jinso.co.jp>
- <1473421394-9745-2-git-send-email-bd-phuc@jinso.co.jp>
- <CAMuHMdVAuyWUid6GEJXNoyw4bH3h=QWmo7eMLyiCayc5UQaoFA@mail.gmail.com>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] regulator: Add set_voltage_time op
+Date: Mon, 12 Sep 2016 18:18:31 -0700
+Message-ID: <20160913011831.GB62872@google.com>
+References: <20160906190315.GC92391@google.com>
+ <20160912183230.GF27946@sirena.org.uk>
+ <20160912231851.GA62872@google.com>
+ <20160912235758.GO27946@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVAuyWUid6GEJXNoyw4bH3h=QWmo7eMLyiCayc5UQaoFA@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-sh list <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-arm-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Ryusuke Sakato <ryusuke.sakato.bx@renesas.com>, =?UTF-8?B?56iy5ZCJ?= <h-inayoshi@jinso.co.jp>, Cao Minh Hiep <cm-hiep@jinso.co.jp>, =?UTF-8?B?RHVuZ++8muS6uuOCvQ==?= <nv->
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160912235758.GO27946-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Geert,
+El Tue, Sep 13, 2016 at 12:57:58AM +0100 Mark Brown ha dit:
 
-> I think the plan was to get rid of the renesas,cmt-48-* bindings, as they do
-> not allow to differentiate between CMT0 and CMT1, which have different feature
-> sets.
->
-> Cfr. Magnus' series "clocksource: sh_cmt: DT binding rework V4"
-> (https://lkml.org/lkml/2016/3/14/433).
->
-> Magnus: What's the status of your series?
-Thank for your comments. I will update in V2.
-I am still waiting for Magnus's comments, but from my point of 
-view,Magnus's patches seem
-support 32 bit counter only, they are not suitable for 48bit counter.
-According to hardware manual, there has to be registers ( CMCSRH, 
-CMCNTH,CMCORH) set for 48 bit counter,
-but I do not see the registers ( CMCSRH, CMCNTH,CMCORH) in Magnus's patches.
+> On Mon, Sep 12, 2016 at 04:18:51PM -0700, Matthias Kaehlcke wrote:
+> > El Mon, Sep 12, 2016 at 07:32:30PM +0100 Mark Brown ha dit:
+> > > On Tue, Sep 06, 2016 at 12:03:15PM -0700, Matthias Kaehlcke wrote:
+> 
+> > > > -	/* Call set_voltage_time_sel if successfully obtained old_selector */
+> > > > -	if (ret == 0 && !rdev->constraints->ramp_disable && old_selector >= 0
+> > > > -		&& old_selector != selector) {
+> > > > +	if (ret != 0 || rdev->constraints->ramp_disable)
+> > > > +		goto no_delay;
+> 
+> > > You probably want to do the refactoring for splitting out decisions
+> > > about old_selector separately, it'll make the diff clearer.
+> 
+> > The old_selector conditions could be moved into the "else if
+> > (rdev->desc->ops->set_voltage_sel)" branch above, is that you mean?
+> 
+> No, what I mean is this change is doing a bunch of moving code around as
+> well as adding new things which makes it hard to spot where the new
+> things are.  Moving the code around separately (that is, in a separate
+> patch) would make the review easier.
+
+Moving the code around is related with the gotos, which are related
+with the new set_voltage_sel. If we can agree that using goto is the
+right thing to do (please see my rationale below) I could create a
+separate patch introducing it. However this will only somewhat
+mitigate the code moving around, since we still need separate paths
+for set_voltage_time and set_voltage_time_sel.
+
+> > > > +	/* Insert any necessary delays */
+> > > > +	if (delay >= 1000) {
+> > > > +		mdelay(delay / 1000);
+> > > > +		udelay(delay % 1000);
+> > > > +	} else if (delay) {
+> > > > +		udelay(delay);
+> > > > +	}
+> 
+> > > > +no_delay:
+> 
+> > > Why were the gotos there?
+> 
+> > Not sure how to interpret your question. Would you prefer no to use
+> > gotos, should the notification be skipped in case the voltage is not
+> > changed, do you expect a comment, ...?
+> 
+> I mean I couldn't tell why a goto was a good idea for what seemed like
+> perfectly normal conditional logic.  Either I couldn't tell because it's
+> not a good idea or it is a good idea but should be clearer in some way
+> but since I didn't really understand what the purpose of doing the gotos
+> was I can't say for sure either way.
+
+The main purpose is to avoid deeply nested code branches.
+
+Without gotos I think we'd end up with something like this:
+
+static int _regulator_do_set_voltage(struct regulator_dev *rdev,
+                                     int min_uV, int max_uV)
+{
+	...
+	if (ret == 0 && !rdev->constraints->ramp_disable) {
+		if (rdev->desc->ops->set_voltage_time_sel) {
+			if (old_selector >= 0 && old_selector != selector)
+				  rdev->desc->ops->set_voltage_time_sel(rdev, old_selector, selector);
+		} else {
+		       if (old_uV != new_uV) {
+				if (rdev->desc->ops->set_voltage_time)
+					delay = rdev->desc->ops->set_voltage_time(rdev, old_uV, new_uV);
+				else
+					delay = _regulator_set_voltage_time(rdev, old_uV, new_uV);
+		       }
+		}
+
+		// delay
+	}
+}
+
+I can change the patch accordingly if this is preferred.
+
+> > > The diff and I expect the resulting code would be a lot clearer if we
+> > > just left most of the function indented as it is and simply directly
+> > > returned set_voltage_time().  Which is what we do anyway so no need to
+> > > reindent the rest of the code.
+> 
+> > Ok, with your comment below on a default implementation this would
+> > become something like:
+> 
+> > if (ops->set_voltage_time) {
+> > 	return ops->set_voltage_time(...);
+> > } else if (!ops->set_voltage_time_sel) {
+> > 	return _regulator_set_voltage_time(..);
+> > }
+> 
+> I suspect you'll end up with more refactoring than that around
+> _set_voltage_time() and this'll be inside that function but I've lost
+> context here so ICBW.
 
 
--- 
-Regards,
-
-Bui Duc Phuc
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
